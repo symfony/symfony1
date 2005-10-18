@@ -1,0 +1,110 @@
+a {
+    color:           #990000;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #FF0000;
+}
+
+body {
+    margin:    15px;
+}
+
+h1 {
+    font-size:   1.8em;
+    font-weight: bold;
+    margin:      0;
+}
+
+h2 {
+    font-size:   1.6em;
+    font-weight: bold;
+    margin:      0;
+}
+
+h3 {
+    font-size:   1.4em;
+    font-weight: bold;
+    margin:      0;
+}
+
+h4 {
+    font-size:   1.2em;
+    font-weight: bold;
+    margin:      5px 0 0 0;
+}
+
+h5 {
+    font-size:   1.0em;
+    font-weight: bold;
+    margin:      0;
+}
+
+hr {
+    margin:  15px 0 15px 0;
+    padding: 0;
+}
+
+pre {
+    font-family: "courier new", courier;
+    font-size:   1.1em;
+    margin:      15px 0 15px 0;
+}
+
+/* ---------- ID's ---------- */
+
+#class-list {
+    font-family:    arial, helvetica, sans-serif;
+    font-size:      76%;
+    vertical-align: top;
+    padding-right:  20px;
+}
+
+#class-list li {
+    font-size:   1.0em;
+    font-weight: bold;
+    list-style:  none;
+    margin:      0;
+    padding:     2px 0 2px 0;
+}
+
+#class-list li a {
+    font-weight: normal;
+}
+
+#class-list ul {
+    margin:  0 0 10px 0;
+    padding: 0;
+}
+
+#content {
+    font-family:    arial, helvetica, sans-serif;
+    font-size:      76%;
+    vertical-align: top;
+    width:          100%;
+}
+
+#header {
+    font-family: arial, helvetica, sans-serif;
+    font-size:   76%;
+    padding:     0;
+    width:       100%;
+}
+
+#header-package {
+    font-size:      1.8em;
+    text-align:     right;
+    vertical-align: bottom;
+}
+
+/* ---------- Classes ---------- */
+
+.tag-list dl {
+    margin: 5px 0 0 40px;
+}
+
+.tag-list dd {
+    display: inline;
+}
+

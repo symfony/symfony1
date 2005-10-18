@@ -1,0 +1,52 @@
+Templating in practice : Other helpers
+=====================================
+
+Overview
+--------
+
+Symfony offers a few helpers to quickly manipulate text.
+
+Text helpers
+------------
+
+For no-wrap width-limited blocs - for instance in `select` tags - you may need to allow a maximum number of characters and truncate the rest if needed. To that purpose, you should use the `truncate_text` helper:
+
+    <?php use_helper('Text') ?>
+    
+    <?= truncate_text($text, $length , $truncate_string = '...') ?>
+    
+    // For instance, if $text="You can't stop me ! You can't stop me ! You can't stop me ! You can't stop me !"
+    <?= truncate_text($text, 30) ?>
+    // will be outputted as
+    You can't stop me ! You can't ...
+    
+Websites that offer full-text search need to show where the text was found. This is another type of truncation, and the helper that does it is `excerpt_text`:
+
+    <?= excerpt_text($text, $sentence, $radius = 100 , $truncate_string = '...') ?>
+    
+    // For instance, if $text="Finding a word in an ocean of text can sometimes be a real pain."
+    <?= excerpt_text($text, 'ocean', 10) ?>
+    // will be outputted as
+    ...ord in an ocean of text c...
+
+Maybe you need to highlight a sentence in a text:
+
+    <?= highlight_text($text, $sentence, [$highlighter]) ?>
+    //$highlighter is the class 'highlight' by defaut
+    
+    // For instance, if $text='The best PHP framework is symfony'
+    <?= highlight_text($text, 'symfony') ?>
+    // will be outputted as
+    The best PHP framework is <span class="highlight">symfony</span>
+
+Or maybe you need to format an ASCII text to HTML:
+
+    <?= simple_format_text($text) ?>
+
+`simple_format_text` surrounds paragraphs with `<p>...</p>` tags, and converts line breaks into `<br />`. Two consecutive newlines (\n\n) are considered as a paragraph, one newline (\n) is considered a linebreak, three or more consecutive newlines are turned into two newlines. It might be useful to display, for instance, data entered by the user in a textarea.
+
+Another useful helpers finds all the URLs in a text and turns them into hyperlinks
+
+    <?= auto_link_text('my homesite is www.mysite.com') ?>
+    // will generate in HTML
+    my homesite is <a href="http://www.mysite.com">www.mysite.com</a>

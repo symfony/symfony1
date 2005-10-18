@@ -1,0 +1,6 @@
+all:
+  adapter:  mysql
+  host:     localhost
+  database: symfony
+  username: root
+  password: 

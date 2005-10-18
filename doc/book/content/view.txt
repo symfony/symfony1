@@ -1,0 +1,296 @@
+Symfony View: templates, layouts, slots and fragments
+=====================================================
+
+Overview
+--------
+
+The implementation of the [MVC][1] View paradigm in symfony uses templates, possibly included in a Layout. Reusable parts of code are available in slots, when they result of an action, or in fragments, when they don't need applicative logic. The naming conventions and the tigh integration with the symfony Controller implementation make template management an easy task.
+
+Templating
+----------
+
+The result of an action execution is a View. In symfony, a View is the combination of a **template** described by a classic PHP file, and a configuration file describing the way this template will fit with other interface elements. 
+
+Here is a typical template, typically named `indexSuccess.php`:
+
+    <h1>Welcome</h1>
+    <p>Welcome back, <?= $name ?> !</p>
+    <ul>What would you like yo do ?
+      <li><?= link_to('Read the last articles', 'article/read/') ?></li>
+      <li><?= link_to('Start writing a new one', 'article/write/') ?></li>
+    </ul>
+
+It contains some HTML code and some basic PHP code, usually calls to variables defined in the action and helpers. 
+
+The variables called in the templates must be either one of the usual shortcuts (see below) or attributes of the action object defined in the related action file. For instance, to define a value for the `$name` variable use here, the action must contain such a line:
+
+    $this->name = 'myvalue';
+
+Developpers like to keep as few PHP code as possible in templates, since these files are the ones used to design the GUI of the application, and are sometimes created and maintained by another team, specialized in presentation but not in applicative logic.
+
+Shortcuts
+---------
+
+Symfony profides the templates with a few useful pre-defined variables, or **shorcuts**, allowing it to access the most commonly needed information:
+
+    $context        //the whole context object
+    $request        //the origin request 
+    $params         //parameters of the origin request
+    $user           //the current sfUser object
+    $view           //the calling sfView object
+
+For instance, if the action call included a parameter `total`, the value of the parameter is available in the template with:
+
+    <?= $params->get('total'); ?>
+
+This is true whether the parameter was sent to the action with POST or GET methods, or using the symfony routing system:
+
+    index.php/test/index&total=123   //GET
+    index.php/test/index/total/123   //routed action call
+
+And since the first action call can lead to other action calls (for instance if there is a `forward`), you may need to access the action stack. A few additionnal shortcuts will make it easy for you:
+
+    $first-module   //first module called
+    $last-module    //last module called
+    $first-action   //first action called
+    $last-action    //last action called
+
+Helpers
+-------
+
+**Helpers** (like the `link_to` function in the template example above) are php functions that facilitate the process of writing  templates and produce the best possible html code in terms of performance and accessibility. Three types of helpers are available:
+
+*   The standard compulsory helpers, that must be used instead of the corresponding HTML code because they allow internal SymFony mechanisms (like routing, automated form management, internationalization, etc.) to work.
+
+    This includes all the HTML tags that handle URLs : they are replaced by SymFony shortcuts to allow the routing.
+
+*   The standard optional helpers, that use less code than classic HTML for the same purpose. 
+
+    In addition, they take advantage of the SymFony architecture : by using these helpers, you make sure that your code will even work after any subsequent change in the file tree structure.
+
+*   The helpers defined specifically for an application (learn more about that feature in the [custom helper creation](custom_helper.txt) chapter).
+
+Using helpers speeds up the template development; they are described in detail in the following chapters.
+
+In order to use helper functions, the file that contains this helper has to be loaded. 
+
+A few helpers are loaded for every application:
+
+* Helper: defines the `use_helper()` helpers, needed for helper inclusion
+* Tag: defines the basic tag operations
+* Url: link and url management helpers
+* Asset: head, include, images and javascript call helpers
+
+By default, the application configuration specifies additionnal helpers to be loaded for all requests in the `settings.yml`:
+
+    default:
+      .settings:
+        standard_helpers:    Partial,Cache,Form
+
+You can define the helpers that need to be included in your application in addition to those ones. For instance, if you know that your application will use a lot of 
+text and internationalization functions, you can write in the `settings.yml`:
+
+    all:
+      .settings:
+        standard_helpers:    Partial,Cache,Form,Text,I18N
+
+If you need to use a helper that is not loaded by default, the template that will use it has to call the `use_helper()` function:
+
+    <?= use_helper('Date') ?>
+    ...
+    <?= format_date($date, 'd', 'en') ?>
+
+Global template
+---------------
+
+All the templates can be included into a **global template**, or **layout**, located in `myproject/myapp/templates/layout.php`. Here is its default content:
+
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/2000/REC-xhtml1-200000126/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+    
+    <?= include_http_metas() ?>
+    <?= include_metas() ?>
+    
+    <?= include_title() ?>
+    
+    <?= include_stylesheets() ?>
+    <?= include_javascripts() ?>
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    
+    </head>
+    <body>
+    
+    <?= $content ?>
+    
+    </body>
+    </html>
+
+The content of the `<head>` tag might be a little cryptic for now, but if will be explained in detail in the [next chapter](templating_configuration.txt). Just keep in mind that with the default configuration, and our previous template, the processed view should look like this:
+
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/2000/REC-xhtml1-200000126/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="robots" content="index, follow" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <title>symfony project</title>
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <link rel="shortcut icon" href="/favicon.ico">
+    </head>
+    <body>
+    
+    <h1>Welcome</h1>
+    <p>Welcome back, <?= $name ?> !</p>
+    <ul>What would you like yo do ?
+      <li><?= link_to('Read the last articles', 'article/read/') ?></li>
+      <li><?= link_to('Start writing a new one', 'article/write/') ?></li>
+    </ul>
+    
+    </body>
+    </html>
+
+This is an application of the [decorator design pattern][2]: the content of the template called by the action is integrated into the global template with the help of the `$content` variable.
+
+The global template can be entirely customized for each application. 
+
+It is also possible to request the use of another global template from within a specific action: 
+
+    $this->setLayout('mylayout.php');
+
+You can also disable the use of any global template, so that the HTML code generated by the view can be sent without any modification. This can be useful if the action answers an AJAX request that needs and XML answer with no layout:
+
+    $this->setHasLayout(false);
+
+Naming conventions
+------------------
+
+Now you may wonder how symfony links actions with templates.  To avoid repeated explicit call of templates when the name of the template can be easily deduced from the one of the action, symfony has a few naming conventions. 
+
+A template name is made of two parts: the first part is related to the action, the second to is result. For instance, the typical template of an action called `index` that executed successfully is `indexSuccess.php`.
+
+This is an implicit rule in symfony: if the value returned by the action is `sfView::SUCCESS`, then the name of the template called will be the name of the action concatenated with `Success.php`.
+
+For instance, with two actions `index` and `list` in a `product` module :
+
+    class productActions extends sfActions
+    {
+      public function executeIndex()
+      {
+        ...
+        return sfView::SUCCESS;
+      }
+      public function executeList()
+      {
+        ...
+        return sfView::SUCCESS;
+      }
+    }
+
+The templates called at the end of the execution of each action will be located in `myproject/myapp/modules/product/templates/` and named:
+
+    indexSuccess.php
+    listSuccess.php
+
+Because this is the default behaviour, if an action returns nothing, the framework considers that the success view has to be called as if the `return sfView::SUCCESS;` was implied.
+
+For any other return value (different from `sfView::NONE`), the template called will have a name finishing with this value. For instance, if the action returns `sfView::ERROR`, the template name must finish by `Error.php`.
+
+An action can also set an alternate template:
+
+    $this->setTemplate('myCustomTemplate');
+
+According to the value returned by the action, the template called can be `myCustomTemplateSuccess.php` or `myCustomTemplateError.php`. 
+    
+Now let's see all these possibilities in action:
+
+    class productActions extends sfActions
+    {
+      public function executeIndex()
+      {
+        if ($test == 1) 
+        {
+          ...
+          return sfView::SUCCESS;
+        } 
+        else if ($test == 2)
+        {
+          ...
+          return 'MyResult';
+        }
+        else if ($test == 3)
+        {
+          ...
+          $this->setTemplate('myCustomTemplate');
+          return sfView::SUCCESS;
+        }
+        else 
+        {
+          return sfView::ERROR;
+        }
+      }
+    }
+
+The templates called in `myapp/modules/product/templates/`, according to the value of `$test`, are named:
+
+    indexSuccess.php
+    indexMyResult.php
+    myCustomTemplateSuccess.php
+    indexError.php
+
+Slots
+-----
+
+One very interesting feature of the symfony View implementation is the use of **slots**. A slot is simply the result of an action call made available in a variable. This means that you can call a second action from a main action, and use the result of the call (the view) in the template of the main action. This is especially useful for consistent interface components like navigation menus, headers and footers. 
+
+Let's imagine a slot that defines the application navigation menu:
+
+    class testActions extends sfActions
+    {
+      ...
+      
+      public function preExecute()
+      {
+        $this->setSlot('navigation_slot', 'navigation', 'menu');
+      }
+    }
+
+In the view, we'll now have in the `$navigation_slot` variable the result of the execution of the `menu` action of the `navigation` module. This action will be executed separately from the current action. The templates of the `test` module can now include the result of this action by simply calling:
+
+    <?= $navigation_slot ?>
+
+View configuration
+------------------
+
+Applications and modules can have a `view.yml` configuration file describing how the templates are integrated with other interface components (layouts, slots, stylesheets, etc.) in the module and each of its actions.
+
+So the `view.yml` file is an alternative solution to the function calls concerning the view from within the action:
+
+    layout:       $this->setLayout();
+    template:     $this->setTemplate();
+    slots:        $this->setSlot();
+    javascripts:  $this->addJavascript();
+    stylesheets:  $this->addStylesheets();
+
+Read more about the `view.yml` files in the [next chapter](templating_configuration.txt).
+
+Fragments
+---------
+
+If you need to include some template code into various pages, but without any preprocessing, the slot mechanism can be a little cumbersome. To avoid the use of an action when all you need is some factorised html code, use a **fragment** instead of a slot.
+
+For instance, if many of the templates of your `test` module use a fragment of code used to show a special footer, save this piece of code in a file called `_my_special_footer` in the `myproject/myapp/modules/test/templates` directory. Now, when you need this piece of code in a template, just call the `include_partial` function:
+
+    <?= include_partial('my_special_footer') ?>
+
+Notice the '_' difference between the file name and the fragment name in the code. This helps to keep your code clean and to show the fragments ahead of the other templates in a file explorer.
+
+If your need is not restricted to one module, save your fragment in the main template directory (in `myproject/myapp/templates`). To call it from any module template, you now need:
+
+    <?= include_partial('global/my_special_footer') ?>
+
+
+[1]: http://en.wikipedia.org/wiki/Model-view-controller "Model-View-Controller definition at Wikipedia"
+[2]: http://en.wikipedia.org/wiki/Decorator_pattern     "Decorator pattern definition at Wikipedia"

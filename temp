@@ -1,0 +1,3511 @@
+.:
+total 40
+4 drwxr-xr-x   7  501   80 4096 oct 18 16:26 .
+4 drwxr-xr-x   3 root root 4096 oct 18 16:10 ..
+4 drwxr-xr-x   2  501   80 4096 oct 18 16:22 bin
+4 drwxr-xr-x   3  501   80 4096 oct 18 16:22 data
+4 drwxr-xr-x   6  501   80 4096 oct 18 16:22 doc
+4 drwxr-xr-x   8  501   80 4096 oct 18 16:22 lib
+4 -rw-r--r--   1  501   80 1065 sep 12 09:53 LICENSE
+4 -rw-r--r--   1  501   80 2988 oct 18 12:20 package.xml.tmpl
+4 -rw-r--r--   1  501   80 3317 oct 18 12:20 pakefile.php
+0 -rw-r--r--   1 root root    0 oct 18 16:26 temp
+4 drwxr-xr-x  10  501   80 4096 oct 18 16:22 test
+
+./bin:
+total 20
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:26 ..
+4 -rw-r--r--  1 501 80 1852 oct  8 15:55 symfony.bat
+4 -rw-r--r--  1 501 80  719 oct 17 15:11 symfony.php
+4 -rw-r--r--  1 501 80  747 sep 20 14:36 symfony.sh
+
+./data:
+total 12
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:26 ..
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 symfony
+
+./data/symfony:
+total 28
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 bin
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 config
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 modules
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 skeleton
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 web
+
+./data/symfony/bin:
+total 24
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  7 501 80  4096 oct 18 16:22 ..
+ 4 -rw-r--r--  1 501 80   880 oct 17 10:34 build.xml
+12 -rw-r--r--  1 501 80 11992 oct 18 13:42 pakefile.php
+
+./data/symfony/config:
+total 56
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  743 oct 15 13:23 autoload.yml
+4 -rw-r--r--  1 501 80 1047 oct  6 17:58 bootstrap_compile.yml
+4 -rw-r--r--  1 501 80 1131 oct  6 17:47 config_handlers.yml
+4 -rw-r--r--  1 501 80 2242 oct  6 22:28 constants.php
+4 -rw-r--r--  1 501 80 1755 oct  6 17:58 core_compile.yml
+4 -rw-r--r--  1 501 80  338 oct  6 17:47 factories.yml
+4 -rw-r--r--  1 501 80   38 oct  6 17:47 logging.yml
+4 -rw-r--r--  1 501 80   22 oct  6 17:47 module.yml
+4 -rw-r--r--  1 501 80  155 oct  6 17:47 php.yml
+4 -rw-r--r--  1 501 80   13 oct  6 17:47 security.yml
+4 -rw-r--r--  1 501 80 1408 oct 18 10:08 settings.yml
+4 -rw-r--r--  1 501 80   14 oct  6 17:47 view.yml
+
+./data/symfony/modules:
+total 12
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 default
+
+./data/symfony/modules/default:
+total 20
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 actions
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 config
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 templates
+
+./data/symfony/modules/default/actions:
+total 12
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 1212 oct  6 17:56 actions.class.php
+
+./data/symfony/modules/default/config:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+
+./data/symfony/modules/default/templates:
+total 32
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80   35 oct  6 17:55 disabledSuccess.php
+4 -rw-r--r--  1 501 80  850 oct  6 17:55 error404Success.php
+4 -rw-r--r--  1 501 80  318 oct  6 17:55 indexSuccess.php
+4 -rw-r--r--  1 501 80   58 oct  6 17:55 loginSuccess.php
+4 -rw-r--r--  1 501 80   36 oct  6 17:55 secureSuccess.php
+4 -rw-r--r--  1 501 80   36 oct  6 17:55 unavailableSuccess.php
+
+./data/symfony/skeleton:
+total 20
+4 drwxr-xr-x   5 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x   7 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 app
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 module
+4 drwxr-xr-x  12 501 80 4096 oct 18 16:22 project
+
+./data/symfony/skeleton/app:
+total 16
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 app
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 web
+
+./data/symfony/skeleton/app/app:
+total 28
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 config
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 i18n
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 lib
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 modules
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 templates
+
+./data/symfony/skeleton/app/app/config:
+total 56
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80   22 oct  6 17:48 app.yml
+4 -rw-r--r--  1 501 80   63 oct  6 17:48 cache.yml
+4 -rw-r--r--  1 501 80  991 oct  6 22:37 config.php
+4 -rw-r--r--  1 501 80  602 oct  6 17:48 databases.yml
+4 -rw-r--r--  1 501 80  406 oct  6 17:48 factories.yml
+0 -rw-r--r--  1 501 80    0 oct  6 17:48 filters.yml
+0 -rw-r--r--  1 501 80    0 oct  6 17:48 head.yml
+4 -rw-r--r--  1 501 80   72 oct  6 17:48 logging.yml
+4 -rw-r--r--  1 501 80   95 oct  6 17:48 orm.yml
+4 -rw-r--r--  1 501 80  255 oct  6 17:48 routing.yml
+4 -rw-r--r--  1 501 80   26 oct  6 17:48 security.yml
+4 -rw-r--r--  1 501 80 1865 oct  6 17:48 settings.yml
+4 -rw-r--r--  1 501 80  206 oct  6 17:48 tidy.conf
+4 -rw-r--r--  1 501 80  349 oct 18 07:51 view.yml
+
+./data/symfony/skeleton/app/app/i18n:
+total 12
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 global
+0 -rw-r--r--  1 501 80    0 oct  8 13:46 .sf
+
+./data/symfony/skeleton/app/app/i18n/global:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+0 -rw-r--r--  1 501 80    0 oct  8 13:46 .sf
+
+./data/symfony/skeleton/app/app/lib:
+total 36
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80   46 oct  6 17:48 myAction.class.php
+4 -rw-r--r--  1 501 80   68 oct  6 17:48 myConsoleController.class.php
+4 -rw-r--r--  1 501 80   62 oct  6 17:48 myConsoleRequest.class.php
+4 -rw-r--r--  1 501 80   71 oct  6 17:48 myFrontWebController.class.php
+4 -rw-r--r--  1 501 80   55 oct  6 17:48 myUser.class.php
+4 -rw-r--r--  1 501 80   42 oct  6 17:48 myView.class.php
+4 -rw-r--r--  1 501 80   54 oct  6 17:48 myWebRequest.class.php
+
+./data/symfony/skeleton/app/app/modules:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+0 -rw-r--r--  1 501 80    0 oct  8 13:46 .sf
+
+./data/symfony/skeleton/app/app/templates:
+total 20
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 2301 oct  6 17:48 error.php
+4 -rw-r--r--  1 501 80  477 oct  6 17:48 error.txt
+4 -rw-r--r--  1 501 80  449 oct  6 17:48 layout.php
+
+./data/symfony/skeleton/app/web:
+total 16
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  351 oct  6 17:48 index_dev.php
+4 -rw-r--r--  1 501 80  353 oct  6 17:48 index.php
+
+./data/symfony/skeleton/module:
+total 16
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 module
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 test
+
+./data/symfony/skeleton/module/module:
+total 28
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 actions
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 config
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 lib
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 templates
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 validate
+
+./data/symfony/skeleton/module/module/actions:
+total 12
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  334 oct 15 13:14 actions.class.php
+
+./data/symfony/skeleton/module/module/config:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+0 -rw-r--r--  1 501 80    0 oct  8 13:45 .sf
+
+./data/symfony/skeleton/module/module/lib:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+0 -rw-r--r--  1 501 80    0 oct  8 13:45 .sf
+
+./data/symfony/skeleton/module/module/templates:
+total 12
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80   57 oct  6 17:48 indexSuccess.php
+
+./data/symfony/skeleton/module/module/validate:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+0 -rw-r--r--  1 501 80    0 oct  8 13:45 .sf
+
+./data/symfony/skeleton/module/test:
+total 12
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  512 oct  6 17:48 actionsTest.php
+
+./data/symfony/skeleton/project:
+total 48
+4 drwxr-xr-x  12 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x   5 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 batch
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 build
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 cache
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 config
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 data
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 doc
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 lib
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 log
+0 -rw-r--r--   1 501 80    0 oct  6 17:48 SYMFONY
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 test
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 web
+
+./data/symfony/skeleton/project/batch:
+total 8
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  12 501 80 4096 oct 18 16:22 ..
+0 -rw-r--r--   1 501 80    0 oct  8 13:44 .sf
+
+./data/symfony/skeleton/project/build:
+total 8
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  12 501 80 4096 oct 18 16:22 ..
+
+./data/symfony/skeleton/project/cache:
+total 8
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  12 501 80 4096 oct 18 16:22 ..
+0 -rw-r--r--   1 501 80    0 oct  8 13:44 .sf
+
+./data/symfony/skeleton/project/config:
+total 88
+ 4 drwxr-xr-x   2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  12 501 80  4096 oct 18 16:22 ..
+ 4 -rw-r--r--   1 501 80   338 oct  8 19:19 apache.conf
+ 4 -rw-r--r--   1 501 80     9 oct  6 17:48 config.php
+ 4 -rw-r--r--   1 501 80    18 oct  6 17:48 doc_footer.html
+ 4 -rw-r--r--   1 501 80   139 oct  6 17:48 doc_header.html
+48 -rw-r--r--   1 501 80 47708 oct  6 17:48 doxygen.cfg
+ 4 -rw-r--r--   1 501 80  1719 oct 15 13:38 propel.ini
+ 4 -rw-r--r--   1 501 80    34 oct 17 13:33 properties.ini
+ 4 -rw-r--r--   1 501 80    54 oct  6 17:48 rsync_exclude.txt
+ 4 -rw-r--r--   1 501 80   104 oct  6 17:48 schema.xml.sample
+
+./data/symfony/skeleton/project/data:
+total 16
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  12 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 model
+0 -rw-r--r--   1 501 80    0 oct  8 13:44 .sf
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 sql
+
+./data/symfony/skeleton/project/data/model:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+0 -rw-r--r--  1 501 80    0 oct  8 13:44 .sf
+
+./data/symfony/skeleton/project/data/sql:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+0 -rw-r--r--  1 501 80    0 oct  8 13:44 .sf
+
+./data/symfony/skeleton/project/doc:
+total 8
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  12 501 80 4096 oct 18 16:22 ..
+0 -rw-r--r--   1 501 80    0 oct  8 13:44 .sf
+
+./data/symfony/skeleton/project/lib:
+total 8
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  12 501 80 4096 oct 18 16:22 ..
+0 -rw-r--r--   1 501 80    0 oct  8 13:44 .sf
+
+./data/symfony/skeleton/project/log:
+total 8
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  12 501 80 4096 oct 18 16:22 ..
+0 -rw-r--r--   1 501 80    0 oct  8 13:44 .sf
+
+./data/symfony/skeleton/project/test:
+total 12
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  12 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 project
+
+./data/symfony/skeleton/project/test/project:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+
+./data/symfony/skeleton/project/web:
+total 24
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  12 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 css
+4 -rw-r--r--   1 501 80   28 oct  6 17:48 error.php
+4 -rw-r--r--   1 501 80  554 oct  6 17:48 .htaccess
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 uploads
+
+./data/symfony/skeleton/project/web/css:
+total 12
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  379 oct  6 17:48 main.css
+
+./data/symfony/skeleton/project/web/uploads:
+total 12
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 assets
+0 -rw-r--r--  1 501 80    0 oct  8 13:44 .sf
+
+./data/symfony/skeleton/project/web/uploads/assets:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+0 -rw-r--r--  1 501 80    0 oct  8 13:44 .sf
+
+./data/symfony/web:
+total 16
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:25 admin
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 sf
+
+./data/symfony/web/admin:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:25 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+
+./data/symfony/web/sf:
+total 20
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 css
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 images
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 js
+
+./data/symfony/web/sf/css:
+total 12
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  609 oct  6 18:00 dtree.css
+
+./data/symfony/web/sf/images:
+total 16
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 sf_debug_stats
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 sf_stats
+
+./data/symfony/web/sf/images/sf_debug_stats:
+total 32
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  663 oct  6 18:00 close.png
+4 -rw-r--r--  1 501 80  656 oct  6 18:00 error.png
+4 -rw-r--r--  1 501 80  594 oct  6 18:00 info.png
+4 -rw-r--r--  1 501 80  998 oct  6 18:00 reload.png
+4 -rw-r--r--  1 501 80  845 oct  6 18:00 toggle.gif
+4 -rw-r--r--  1 501 80  621 oct  6 18:00 warning.png
+
+./data/symfony/web/sf/images/sf_stats:
+total 12
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80   43 oct  6 18:00 spacer.gif
+
+./data/symfony/web/sf/js:
+total 116
+ 4 drwxr-xr-x  4 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  5 501 80  4096 oct 18 16:22 ..
+ 4 drwxr-xr-x  4 501 80  4096 oct 18 16:22 calendar
+12 -rw-r--r--  1 501 80 11970 oct  6 18:00 dtree.js
+ 4 -rw-r--r--  1 501 80    34 oct  6 18:00 index.html
+24 -rw-r--r--  1 501 80 23596 oct  6 18:00 prado_validator.js
+24 -rw-r--r--  1 501 80 21149 oct  6 18:00 prototype.js
+16 -rw-r--r--  1 501 80 12698 oct  6 18:00 sffindmissinglinks.user.js
+ 4 -rw-r--r--  1 501 80   721 oct  6 18:00 sf.js
+ 8 -rw-r--r--  1 501 80  7906 oct  6 18:00 sftracking.user.js
+ 4 -rw-r--r--  1 501 80  1904 oct  6 18:00 styleswitcher.js
+ 4 drwxr-xr-x  5 501 80  4096 oct 18 16:22 tiny_mce
+ 4 -rw-r--r--  1 501 80  2799 oct  6 18:01 xmlhttprequest.js
+
+./data/symfony/web/sf/js/calendar:
+total 136
+ 4 drwxr-xr-x  4 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  4 501 80  4096 oct 18 16:22 ..
+56 -rw-r--r--  1 501 80 49237 oct  6 18:00 calendar.js
+12 -rw-r--r--  1 501 80  8853 oct  6 18:00 calendar-setup.js
+ 8 -rw-r--r--  1 501 80  4919 oct  6 18:00 calendar-setup_stripped.js
+36 -rw-r--r--  1 501 80 34315 oct  6 18:00 calendar_stripped.js
+ 8 -rw-r--r--  1 501 80  5722 oct  6 18:00 calendar-system.css
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 lang
+ 4 drwxr-xr-x  3 501 80  4096 oct 18 16:22 skins
+
+./data/symfony/web/sf/js/calendar/lang:
+total 188
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 1011 oct  6 18:00 calendar-af.js
+4 -rw-r--r--  1 501 80 2135 oct  6 18:00 calendar-al.js
+4 -rw-r--r--  1 501 80 3723 oct  6 18:00 calendar-bg.js
+4 -rw-r--r--  1 501 80 3290 oct  6 18:00 calendar-big5.js
+4 -rw-r--r--  1 501 80 3525 oct  6 18:00 calendar-big5-utf8.js
+4 -rw-r--r--  1 501 80 3706 oct  6 18:00 calendar-br.js
+4 -rw-r--r--  1 501 80 3597 oct  6 18:00 calendar-ca.js
+4 -rw-r--r--  1 501 80 2824 oct  6 18:00 calendar-cs-utf8.js
+4 -rw-r--r--  1 501 80 2705 oct  6 18:00 calendar-cs-win.js
+4 -rw-r--r--  1 501 80 3500 oct  6 18:00 calendar-da.js
+4 -rw-r--r--  1 501 80 3863 oct  6 18:00 calendar-de.js
+4 -rw-r--r--  1 501 80 1143 oct  6 18:00 calendar-du.js
+4 -rw-r--r--  1 501 80 3241 oct  6 18:00 calendar-el.js
+4 -rw-r--r--  1 501 80 3600 oct  6 18:00 calendar-en.js
+4 -rw-r--r--  1 501 80 3917 oct  6 18:00 calendar-es.js
+4 -rw-r--r--  1 501 80 2782 oct  6 18:00 calendar-fi.js
+4 -rw-r--r--  1 501 80 3743 oct  6 18:00 calendar-fr.js
+4 -rw-r--r--  1 501 80 3919 oct  6 18:00 calendar-he-utf8.js
+4 -rw-r--r--  1 501 80 3088 oct  6 18:00 calendar-hr.js
+4 -rw-r--r--  1 501 80 1553 oct  6 18:00 calendar-hr-utf8.js
+4 -rw-r--r--  1 501 80 3603 oct  6 18:00 calendar-hu.js
+4 -rw-r--r--  1 501 80 3633 oct  6 18:00 calendar-it.js
+4 -rw-r--r--  1 501 80  913 oct  6 18:00 calendar-jp.js
+4 -rw-r--r--  1 501 80 3256 oct  6 18:00 calendar-ko.js
+4 -rw-r--r--  1 501 80 3568 oct  6 18:00 calendar-ko-utf8.js
+4 -rw-r--r--  1 501 80 3400 oct  6 18:00 calendar-lt.js
+4 -rw-r--r--  1 501 80 3432 oct  6 18:00 calendar-lt-utf8.js
+4 -rw-r--r--  1 501 80 3603 oct  6 18:00 calendar-lv.js
+4 -rw-r--r--  1 501 80 2234 oct  6 18:00 calendar-nl.js
+4 -rw-r--r--  1 501 80 3178 oct  6 18:00 calendar-no.js
+4 -rw-r--r--  1 501 80 2414 oct  6 18:00 calendar-pl.js
+4 -rw-r--r--  1 501 80 2635 oct  6 18:00 calendar-pl-utf8.js
+4 -rw-r--r--  1 501 80 3526 oct  6 18:00 calendar-pt.js
+4 -rw-r--r--  1 501 80 2058 oct  6 18:00 calendar-ro.js
+8 -rw-r--r--  1 501 80 4357 oct  6 18:00 calendar-ru.js
+4 -rw-r--r--  1 501 80 3643 oct  6 18:00 calendar-ru_win_.js
+4 -rw-r--r--  1 501 80 2684 oct  6 18:00 calendar-si.js
+4 -rw-r--r--  1 501 80 2661 oct  6 18:00 calendar-sk.js
+4 -rw-r--r--  1 501 80 3015 oct  6 18:00 calendar-sp.js
+4 -rw-r--r--  1 501 80 3205 oct  6 18:00 calendar-sv.js
+4 -rw-r--r--  1 501 80 1736 oct  6 18:00 calendar-tr.js
+4 -rw-r--r--  1 501 80 3082 oct  6 18:00 calendar-zh.js
+8 -rw-r--r--  1 501 80 4630 oct  6 18:00 cn_utf8.js
+
+./data/symfony/web/sf/js/calendar/skins:
+total 12
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 aqua
+
+./data/symfony/web/sf/js/calendar/skins/aqua:
+total 52
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80   89 oct  6 18:00 active-bg.gif
+4 -rw-r--r--  1 501 80   85 oct  6 18:00 dark-bg.gif
+4 -rw-r--r--  1 501 80   89 oct  6 18:00 hover-bg.gif
+4 -rw-r--r--  1 501 80   49 oct  6 18:00 menuarrow.gif
+4 -rw-r--r--  1 501 80  110 oct  6 18:00 normal-bg.gif
+4 -rw-r--r--  1 501 80  110 oct  6 18:00 rowhover-bg.gif
+4 -rw-r--r--  1 501 80  116 oct  6 18:00 status-bg.gif
+8 -rw-r--r--  1 501 80 5630 oct  6 18:00 theme.css
+4 -rw-r--r--  1 501 80  116 oct  6 18:00 title-bg.gif
+4 -rw-r--r--  1 501 80 1122 oct  6 18:00 today-bg.gif
+
+./data/symfony/web/sf/js/tiny_mce:
+total 280
+  4 drwxr-xr-x   5 501 80   4096 oct 18 16:22 .
+  4 drwxr-xr-x   4 501 80   4096 oct 18 16:22 ..
+  4 -rw-r--r--   1 501 80    215 oct  6 18:00 blank.htm
+  4 drwxr-xr-x   2 501 80   4096 oct 18 16:22 langs
+  4 drwxr-xr-x  16 501 80   4096 oct 18 16:22 plugins
+  4 drwxr-xr-x   5 501 80   4096 oct 18 16:22 themes
+108 -rw-r--r--   1 501 80 105067 oct  6 18:01 tiny_mce.js
+  4 -rw-r--r--   1 501 80   2580 oct  6 18:01 tiny_mce_popup.js
+144 -rw-r--r--   1 501 80 143237 oct  6 18:01 tiny_mce_src.js
+
+./data/symfony/web/sf/js/tiny_mce/langs:
+total 104
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 3603 oct  6 18:00 ar.js
+4 -rw-r--r--  1 501 80 2159 oct  6 18:00 cs.js
+4 -rw-r--r--  1 501 80 2204 oct  6 18:00 da.js
+4 -rw-r--r--  1 501 80 2311 oct  6 18:00 de.js
+4 -rw-r--r--  1 501 80 2314 oct  6 18:00 el.js
+4 -rw-r--r--  1 501 80 2072 oct  6 18:00 en.js
+4 -rw-r--r--  1 501 80 2223 oct  6 18:00 es.js
+4 -rw-r--r--  1 501 80 2449 oct  6 18:00 fa.js
+4 -rw-r--r--  1 501 80 2161 oct  6 18:00 fi.js
+4 -rw-r--r--  1 501 80 2297 oct  6 18:00 fr_ca.js
+4 -rw-r--r--  1 501 80 2399 oct  6 18:00 fr.js
+4 -rw-r--r--  1 501 80 2515 oct  6 18:00 hu.js
+4 -rw-r--r--  1 501 80 2215 oct  6 18:00 it.js
+4 -rw-r--r--  1 501 80 2247 oct  6 18:00 ja.js
+4 -rw-r--r--  1 501 80 1922 oct  6 18:00 ko.js
+4 -rw-r--r--  1 501 80 2198 oct  6 18:00 nl.js
+4 -rw-r--r--  1 501 80 1966 oct  6 18:00 no.js
+4 -rw-r--r--  1 501 80 2178 oct  6 18:00 pl.js
+4 -rw-r--r--  1 501 80 2326 oct  6 18:00 pt.js
+4 -rw-r--r--  1 501 80  101 oct  6 18:00 readme.txt
+4 -rw-r--r--  1 501 80 2273 oct  6 18:00 ru.js
+4 -rw-r--r--  1 501 80 2298 oct  6 18:00 sv.js
+4 -rw-r--r--  1 501 80 2028 oct  6 18:00 th.js
+4 -rw-r--r--  1 501 80 2000 oct  6 18:00 zh_cn.js
+
+./data/symfony/web/sf/js/tiny_mce/plugins:
+total 68
+4 drwxr-xr-x  16 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x   5 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 advhr
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 advimage
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 advlink
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 contextmenu
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 emotions
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 flash
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 iespell
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 insertdatetime
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 preview
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 print
+4 -rw-r--r--   1 501 80   49 oct  6 18:01 readme.txt
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 save
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 searchreplace
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 table
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 zoom
+
+./data/symfony/web/sf/js/tiny_mce/plugins/advhr:
+total 36
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  16 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 1995 oct  6 18:00 editor_plugin.js
+4 -rw-r--r--   1 501 80 2749 oct  6 18:00 editor_plugin_src.js
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 langs
+4 -rw-r--r--   1 501 80  692 oct  6 18:00 readme.txt
+8 -rw-r--r--   1 501 80 4361 oct  6 18:00 rule.htm
+
+./data/symfony/web/sf/js/tiny_mce/plugins/advhr/images:
+total 12
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  209 oct  6 18:00 advhr.gif
+
+./data/symfony/web/sf/js/tiny_mce/plugins/advhr/langs:
+total 44
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  268 oct  6 18:00 cs.js
+4 -rw-r--r--  1 501 80  289 oct  6 18:00 de.js
+4 -rw-r--r--  1 501 80  265 oct  6 18:00 en.js
+4 -rw-r--r--  1 501 80  441 oct  6 18:00 fa.js
+4 -rw-r--r--  1 501 80  285 oct  6 18:00 fr_ca.js
+4 -rw-r--r--  1 501 80  316 oct  6 18:00 fr.js
+4 -rw-r--r--  1 501 80  276 oct  6 18:00 pl.js
+4 -rw-r--r--  1 501 80  268 oct  6 18:00 sv.js
+4 -rw-r--r--  1 501 80  306 oct  6 18:00 zh_cn.js
+
+./data/symfony/web/sf/js/tiny_mce/plugins/advimage:
+total 44
+ 4 drwxr-xr-x   3 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  16 501 80  4096 oct 18 16:22 ..
+ 4 -rw-r--r--   1 501 80   552 oct  6 18:00 editor_plugin.js
+ 4 -rw-r--r--   1 501 80   815 oct  6 18:00 editor_plugin_src.js
+20 -rw-r--r--   1 501 80 19161 oct  6 18:00 image.htm
+ 4 drwxr-xr-x   2 501 80  4096 oct 18 16:22 langs
+ 4 -rw-r--r--   1 501 80   698 oct  6 18:00 readme.txt
+
+./data/symfony/web/sf/js/tiny_mce/plugins/advimage/langs:
+total 48
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  280 oct  6 18:00 cs.js
+4 -rw-r--r--  1 501 80  302 oct  6 18:00 de.js
+4 -rw-r--r--  1 501 80  274 oct  6 18:00 en.js
+4 -rw-r--r--  1 501 80  296 oct  6 18:00 fa_ca.js
+4 -rw-r--r--  1 501 80  538 oct  6 18:00 fa.js
+4 -rw-r--r--  1 501 80  321 oct  6 18:00 fr.js
+4 -rw-r--r--  1 501 80  275 oct  6 18:00 ko.js
+4 -rw-r--r--  1 501 80  290 oct  6 18:00 pl.js
+4 -rw-r--r--  1 501 80  316 oct  6 18:00 sv.js
+4 -rw-r--r--  1 501 80  314 oct  6 18:00 zh_cn.js
+
+./data/symfony/web/sf/js/tiny_mce/plugins/advlink:
+total 48
+ 4 drwxr-xr-x   3 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  16 501 80  4096 oct 18 16:22 ..
+ 4 -rw-r--r--   1 501 80   450 oct  6 18:00 editor_plugin.js
+ 4 -rw-r--r--   1 501 80   617 oct  6 18:00 editor_plugin_src.js
+ 4 drwxr-xr-x   2 501 80  4096 oct 18 16:22 langs
+24 -rw-r--r--   1 501 80 23568 oct  6 18:01 link.htm
+ 4 -rw-r--r--   1 501 80   691 oct  6 18:01 readme.txt
+
+./data/symfony/web/sf/js/tiny_mce/plugins/advlink/langs:
+total 48
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 1327 oct  6 18:01 cs.js
+4 -rw-r--r--  1 501 80 1403 oct  6 18:01 de.js
+4 -rw-r--r--  1 501 80 1319 oct  6 18:01 en.js
+4 -rw-r--r--  1 501 80 1745 oct  6 18:01 fa.js
+4 -rw-r--r--  1 501 80 1375 oct  6 18:01 fr_ca.js
+4 -rw-r--r--  1 501 80 1539 oct  6 18:01 fr.js
+4 -rw-r--r--  1 501 80 1198 oct  6 18:01 ko.js
+4 -rw-r--r--  1 501 80 1423 oct  6 18:01 pl.js
+4 -rw-r--r--  1 501 80 1419 oct  6 18:01 sv.js
+4 -rw-r--r--  1 501 80 1284 oct  6 18:01 zh_cn.js
+
+./data/symfony/web/sf/js/tiny_mce/plugins/contextmenu:
+total 36
+ 4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+ 4 drwxr-xr-x  16 501 80 4096 oct 18 16:22 ..
+ 4 -rw-r--r--   1 501 80  995 oct  6 18:01 contextmenu.css
+ 8 -rw-r--r--   1 501 80 8041 oct  6 18:01 editor_plugin.js
+12 -rw-r--r--   1 501 80 9847 oct  6 18:01 editor_plugin_src.js
+ 4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+
+./data/symfony/web/sf/js/tiny_mce/plugins/contextmenu/images:
+total 12
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80   43 oct  6 18:01 spacer.gif
+
+./data/symfony/web/sf/js/tiny_mce/plugins/emotions:
+total 32
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  16 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80  951 oct  6 18:01 editor_plugin.js
+4 -rw-r--r--   1 501 80 1246 oct  6 18:01 editor_plugin_src.js
+4 -rw-r--r--   1 501 80 3410 oct  6 18:01 emotions.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 langs
+4 -rw-r--r--   1 501 80  753 oct  6 18:01 readme.txt
+
+./data/symfony/web/sf/js/tiny_mce/plugins/emotions/images:
+total 80
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 1127 oct  6 18:01 emotions.gif
+4 -rw-r--r--  1 501 80  150 oct  6 18:01 readme.txt
+4 -rw-r--r--  1 501 80 1135 oct  6 18:01 smiley-cool.gif
+4 -rw-r--r--  1 501 80 1127 oct  6 18:01 smiley-cry.gif
+4 -rw-r--r--  1 501 80 1134 oct  6 18:01 smiley-embarassed.gif
+4 -rw-r--r--  1 501 80 1120 oct  6 18:01 smiley-foot-in-mouth.gif
+4 -rw-r--r--  1 501 80 1116 oct  6 18:01 smiley-frown.gif
+4 -rw-r--r--  1 501 80 1139 oct  6 18:01 smiley-innocent.gif
+4 -rw-r--r--  1 501 80 1129 oct  6 18:01 smiley-kiss.gif
+4 -rw-r--r--  1 501 80 1122 oct  6 18:01 smiley-laughing.gif
+4 -rw-r--r--  1 501 80 1112 oct  6 18:01 smiley-money-mouth.gif
+4 -rw-r--r--  1 501 80 1110 oct  6 18:01 smiley-sealed.gif
+4 -rw-r--r--  1 501 80 1116 oct  6 18:01 smiley-smile.gif
+4 -rw-r--r--  1 501 80 1122 oct  6 18:01 smiley-surprised.gif
+4 -rw-r--r--  1 501 80 1112 oct  6 18:01 smiley-tongue-out.gif
+4 -rw-r--r--  1 501 80 1117 oct  6 18:01 smiley-undecided.gif
+4 -rw-r--r--  1 501 80 1124 oct  6 18:01 smiley-wink.gif
+4 -rw-r--r--  1 501 80 1132 oct  6 18:01 smiley-yell.gif
+
+./data/symfony/web/sf/js/tiny_mce/plugins/emotions/langs:
+total 56
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  138 oct  6 18:01 cs.js
+4 -rw-r--r--  1 501 80  146 oct  6 18:01 de.js
+4 -rw-r--r--  1 501 80  189 oct  6 18:01 el.js
+4 -rw-r--r--  1 501 80  138 oct  6 18:01 en.js
+4 -rw-r--r--  1 501 80  304 oct  6 18:01 fa.js
+4 -rw-r--r--  1 501 80  148 oct  6 18:01 fr_ca.js
+4 -rw-r--r--  1 501 80  185 oct  6 18:01 fr.js
+4 -rw-r--r--  1 501 80  145 oct  6 18:01 it.js
+4 -rw-r--r--  1 501 80  137 oct  6 18:01 ko.js
+4 -rw-r--r--  1 501 80  140 oct  6 18:01 pl.js
+4 -rw-r--r--  1 501 80  138 oct  6 18:01 sv.js
+4 -rw-r--r--  1 501 80  187 oct  6 18:01 zh_cn.js
+
+./data/symfony/web/sf/js/tiny_mce/plugins/flash:
+total 48
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  16 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--   1 501 80 5381 oct  6 18:01 editor_plugin.js
+8 -rw-r--r--   1 501 80 7206 oct  6 18:01 editor_plugin_src.js
+4 -rw-r--r--   1 501 80  189 oct  6 18:01 flash.css
+8 -rw-r--r--   1 501 80 7377 oct  6 18:01 flash.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 langs
+4 -rw-r--r--   1 501 80 2134 oct  6 18:01 readme.txt
+
+./data/symfony/web/sf/js/tiny_mce/plugins/flash/images:
+total 12
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  664 oct  6 18:01 flash.gif
+
+./data/symfony/web/sf/js/tiny_mce/plugins/flash/langs:
+total 44
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  268 oct  6 18:01 cs.js
+4 -rw-r--r--  1 501 80  337 oct  6 18:01 de.js
+4 -rw-r--r--  1 501 80  316 oct  6 18:01 en.js
+4 -rw-r--r--  1 501 80  410 oct  6 18:01 fa.js
+4 -rw-r--r--  1 501 80  284 oct  6 18:01 fr_ca.js
+4 -rw-r--r--  1 501 80  369 oct  6 18:01 fr.js
+4 -rw-r--r--  1 501 80  336 oct  6 18:01 pl.js
+4 -rw-r--r--  1 501 80  320 oct  6 18:01 sv.js
+4 -rw-r--r--  1 501 80  367 oct  6 18:01 zh_cn.js
+
+./data/symfony/web/sf/js/tiny_mce/plugins/iespell:
+total 28
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  16 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 1156 oct  6 18:01 editor_plugin.js
+4 -rw-r--r--   1 501 80 1508 oct  6 18:01 editor_plugin_src.js
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 langs
+4 -rw-r--r--   1 501 80  774 oct  6 18:01 readme.txt
+
+./data/symfony/web/sf/js/tiny_mce/plugins/iespell/images:
+total 12
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  151 oct  6 18:01 iespell.gif
+
+./data/symfony/web/sf/js/tiny_mce/plugins/iespell/langs:
+total 52
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  196 oct  6 18:01 cs.js
+4 -rw-r--r--  1 501 80  223 oct  6 18:01 de.js
+4 -rw-r--r--  1 501 80  249 oct  6 18:01 el.js
+4 -rw-r--r--  1 501 80  179 oct  6 18:01 en.js
+4 -rw-r--r--  1 501 80  232 oct  6 18:01 fr_ca.js
+4 -rw-r--r--  1 501 80  289 oct  6 18:01 fr.js
+4 -rw-r--r--  1 501 80  203 oct  6 18:01 it.js
+4 -rw-r--r--  1 501 80  192 oct  6 18:01 ko.js
+4 -rw-r--r--  1 501 80  200 oct  6 18:01 pl.js
+4 -rw-r--r--  1 501 80  203 oct  6 18:01 sv.js
+4 -rw-r--r--  1 501 80  225 oct  6 18:01 zh_cn.js
+
+./data/symfony/web/sf/js/tiny_mce/plugins/insertdatetime:
+total 28
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  16 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 3005 oct  6 18:01 editor_plugin.js
+4 -rw-r--r--   1 501 80 3628 oct  6 18:01 editor_plugin_src.js
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 langs
+4 -rw-r--r--   1 501 80 1568 oct  6 18:01 readme.txt
+
+./data/symfony/web/sf/js/tiny_mce/plugins/insertdatetime/images:
+total 16
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 1031 oct  6 18:01 insertdate.gif
+4 -rw-r--r--  1 501 80  958 oct  6 18:01 inserttime.gif
+
+./data/symfony/web/sf/js/tiny_mce/plugins/insertdatetime/langs:
+total 56
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  650 oct  6 18:01 cs.js
+4 -rw-r--r--  1 501 80  725 oct  6 18:01 de.js
+4 -rw-r--r--  1 501 80  738 oct  6 18:01 el.js
+4 -rw-r--r--  1 501 80  706 oct  6 18:01 en.js
+4 -rw-r--r--  1 501 80  309 oct  6 18:01 fa.js
+4 -rw-r--r--  1 501 80  718 oct  6 18:01 fr_ca.js
+4 -rw-r--r--  1 501 80  748 oct  6 18:01 fr.js
+4 -rw-r--r--  1 501 80  721 oct  6 18:01 it.js
+4 -rw-r--r--  1 501 80  654 oct  6 18:01 ko.js
+4 -rw-r--r--  1 501 80  761 oct  6 18:01 pl.js
+4 -rw-r--r--  1 501 80  706 oct  6 18:01 sv.js
+4 -rw-r--r--  1 501 80  767 oct  6 18:01 zh_cn.js
+
+./data/symfony/web/sf/js/tiny_mce/plugins/preview:
+total 32
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  16 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 1904 oct  6 18:01 editor_plugin.js
+4 -rw-r--r--   1 501 80 2409 oct  6 18:01 editor_plugin_src.js
+4 -rw-r--r--   1 501 80  339 oct  6 18:01 example.html
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 langs
+4 -rw-r--r--   1 501 80  919 oct  6 18:01 readme.txt
+
+./data/symfony/web/sf/js/tiny_mce/plugins/preview/images:
+total 12
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 1024 oct  6 18:01 preview.gif
+
+./data/symfony/web/sf/js/tiny_mce/plugins/preview/langs:
+total 60
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80   68 oct  6 18:01 cs.js
+4 -rw-r--r--  1 501 80   87 oct  6 18:01 de.js
+4 -rw-r--r--  1 501 80  110 oct  6 18:01 el.js
+4 -rw-r--r--  1 501 80   71 oct  6 18:01 en.js
+4 -rw-r--r--  1 501 80  236 oct  6 18:01 fa.js
+4 -rw-r--r--  1 501 80   84 oct  6 18:01 fr_ca.js
+4 -rw-r--r--  1 501 80  107 oct  6 18:01 fr.js
+4 -rw-r--r--  1 501 80   73 oct  6 18:01 it.js
+4 -rw-r--r--  1 501 80   72 oct  6 18:01 ko.js
+4 -rw-r--r--  1 501 80   75 oct  6 18:01 pl.js
+4 -rw-r--r--  1 501 80   80 oct  6 18:01 pt.js
+4 -rw-r--r--  1 501 80   79 oct  6 18:01 sv.js
+4 -rw-r--r--  1 501 80  127 oct  6 18:01 zh_cn.js
+
+./data/symfony/web/sf/js/tiny_mce/plugins/print:
+total 28
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  16 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80  810 oct  6 18:01 editor_plugin.js
+4 -rw-r--r--   1 501 80  987 oct  6 18:01 editor_plugin_src.js
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 langs
+4 -rw-r--r--   1 501 80  485 oct  6 18:01 readme.txt
+
+./data/symfony/web/sf/js/tiny_mce/plugins/print/images:
+total 12
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 1013 oct  6 18:01 print.gif
+
+./data/symfony/web/sf/js/tiny_mce/plugins/print/langs:
+total 40
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80   70 oct  6 18:01 de.js
+4 -rw-r--r--  1 501 80   67 oct  6 18:01 en.js
+4 -rw-r--r--  1 501 80  223 oct  6 18:01 fa.js
+4 -rw-r--r--  1 501 80   73 oct  6 18:01 fr_ca.js
+4 -rw-r--r--  1 501 80   90 oct  6 18:01 fr.js
+4 -rw-r--r--  1 501 80   71 oct  6 18:01 pl.js
+4 -rw-r--r--  1 501 80   70 oct  6 18:01 sv.js
+4 -rw-r--r--  1 501 80  125 oct  6 18:01 zh_cn.js
+
+./data/symfony/web/sf/js/tiny_mce/plugins/save:
+total 28
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  16 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 1137 oct  6 18:01 editor_plugin.js
+4 -rw-r--r--   1 501 80 1507 oct  6 18:01 editor_plugin_src.js
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 langs
+4 -rw-r--r--   1 501 80  614 oct  6 18:01 readme.txt
+
+./data/symfony/web/sf/js/tiny_mce/plugins/save/images:
+total 12
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 1001 oct  6 18:01 save.gif
+
+./data/symfony/web/sf/js/tiny_mce/plugins/save/langs:
+total 40
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80   66 oct  6 18:01 cs.js
+4 -rw-r--r--  1 501 80   70 oct  6 18:01 de.js
+4 -rw-r--r--  1 501 80   64 oct  6 18:01 en.js
+4 -rw-r--r--  1 501 80  221 oct  6 18:01 fa.js
+4 -rw-r--r--  1 501 80   74 oct  6 18:01 fr_ca.js
+4 -rw-r--r--  1 501 80   88 oct  6 18:01 fr.js
+4 -rw-r--r--  1 501 80   73 oct  6 18:01 pl.js
+4 -rw-r--r--  1 501 80   64 oct  6 18:01 zh_cn.js
+
+./data/symfony/web/sf/js/tiny_mce/plugins/searchreplace:
+total 44
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  16 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--   1 501 80 4419 oct  6 18:01 editor_plugin.js
+8 -rw-r--r--   1 501 80 5822 oct  6 18:01 editor_plugin_src.js
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 langs
+4 -rw-r--r--   1 501 80  588 oct  6 18:01 readme.txt
+4 -rw-r--r--   1 501 80 3555 oct  6 18:01 replace.htm
+4 -rw-r--r--   1 501 80 2794 oct  6 18:01 search.htm
+
+./data/symfony/web/sf/js/tiny_mce/plugins/searchreplace/images:
+total 16
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  152 oct  6 18:01 replace.gif
+4 -rw-r--r--  1 501 80  990 oct  6 18:01 search.gif
+
+./data/symfony/web/sf/js/tiny_mce/plugins/searchreplace/langs:
+total 40
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 1219 oct  6 18:01 de.js
+4 -rw-r--r--  1 501 80 1139 oct  6 18:01 en.js
+4 -rw-r--r--  1 501 80 1466 oct  6 18:01 fa.js
+4 -rw-r--r--  1 501 80 1180 oct  6 18:01 fr_ca.js
+4 -rw-r--r--  1 501 80 1264 oct  6 18:01 fr.js
+4 -rw-r--r--  1 501 80 1197 oct  6 18:01 pl.js
+4 -rw-r--r--  1 501 80 1114 oct  6 18:01 sv.js
+4 -rw-r--r--  1 501 80 1102 oct  6 18:01 zh_cn.js
+
+./data/symfony/web/sf/js/tiny_mce/plugins/table:
+total 80
+ 4 drwxr-xr-x   4 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  16 501 80  4096 oct 18 16:22 ..
+ 8 -rw-r--r--   1 501 80  5675 oct  6 18:01 cell.htm
+16 -rw-r--r--   1 501 80 15422 oct  6 18:01 editor_plugin.js
+20 -rw-r--r--   1 501 80 20154 oct  6 18:01 editor_plugin_src.js
+ 4 drwxr-xr-x   2 501 80  4096 oct 18 16:22 images
+ 4 drwxr-xr-x   2 501 80  4096 oct 18 16:22 langs
+ 4 -rw-r--r--   1 501 80  2224 oct  6 18:01 readme.txt
+ 8 -rw-r--r--   1 501 80  5330 oct  6 18:01 row.htm
+ 8 -rw-r--r--   1 501 80  6579 oct  6 18:01 table.htm
+
+./data/symfony/web/sf/js/tiny_mce/plugins/table/images:
+total 48
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 1367 oct  6 18:01 buttons.gif
+4 -rw-r--r--  1 501 80  369 oct  6 18:01 table_cell_props.gif
+4 -rw-r--r--  1 501 80  929 oct  6 18:01 table_delete_col.gif
+4 -rw-r--r--  1 501 80  942 oct  6 18:01 table_delete_row.gif
+4 -rw-r--r--  1 501 80 1018 oct  6 18:01 table.gif
+4 -rw-r--r--  1 501 80  936 oct  6 18:01 table_insert_col_after.gif
+4 -rw-r--r--  1 501 80  935 oct  6 18:01 table_insert_col_before.gif
+4 -rw-r--r--  1 501 80  928 oct  6 18:01 table_insert_row_after.gif
+4 -rw-r--r--  1 501 80  928 oct  6 18:01 table_insert_row_before.gif
+4 -rw-r--r--  1 501 80  367 oct  6 18:01 table_row_props.gif
+
+./data/symfony/web/sf/js/tiny_mce/plugins/table/langs:
+total 100
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 2591 oct  6 18:01 ar.js
+4 -rw-r--r--  1 501 80 1930 oct  6 18:01 cs.js
+4 -rw-r--r--  1 501 80 1987 oct  6 18:01 da.js
+4 -rw-r--r--  1 501 80 1998 oct  6 18:01 de.js
+4 -rw-r--r--  1 501 80 1931 oct  6 18:01 el.js
+4 -rw-r--r--  1 501 80 1877 oct  6 18:01 en.js
+4 -rw-r--r--  1 501 80 1989 oct  6 18:01 es.js
+4 -rw-r--r--  1 501 80 2050 oct  6 18:01 fa.js
+4 -rw-r--r--  1 501 80 1941 oct  6 18:01 fi.js
+4 -rw-r--r--  1 501 80 1972 oct  6 18:01 fr_ca.js
+4 -rw-r--r--  1 501 80 2112 oct  6 18:01 fr.js
+4 -rw-r--r--  1 501 80 2115 oct  6 18:01 hu.js
+4 -rw-r--r--  1 501 80 1967 oct  6 18:01 it.js
+4 -rw-r--r--  1 501 80 1970 oct  6 18:01 ja.js
+4 -rw-r--r--  1 501 80 1812 oct  6 18:01 ko.js
+4 -rw-r--r--  1 501 80 1919 oct  6 18:01 nl.js
+4 -rw-r--r--  1 501 80 1894 oct  6 18:01 no.js
+4 -rw-r--r--  1 501 80 1834 oct  6 18:01 pl.js
+4 -rw-r--r--  1 501 80 1935 oct  6 18:01 pt.js
+4 -rw-r--r--  1 501 80  135 oct  6 18:01 readme.txt
+4 -rw-r--r--  1 501 80 1944 oct  6 18:01 sv.js
+4 -rw-r--r--  1 501 80 1862 oct  6 18:01 tw.js
+4 -rw-r--r--  1 501 80 1814 oct  6 18:01 zh_cn.js
+
+./data/symfony/web/sf/js/tiny_mce/plugins/zoom:
+total 24
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  16 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80  888 oct  6 18:01 editor_plugin.js
+4 -rw-r--r--   1 501 80 1205 oct  6 18:01 editor_plugin_src.js
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 langs
+4 -rw-r--r--   1 501 80  734 oct  6 18:01 readme.txt
+
+./data/symfony/web/sf/js/tiny_mce/plugins/zoom/langs:
+total 20
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  236 oct  6 18:01 fa.js
+4 -rw-r--r--  1 501 80   70 oct  6 18:01 fr_ca.js
+4 -rw-r--r--  1 501 80  111 oct  6 18:01 pl.js
+
+./data/symfony/web/sf/js/tiny_mce/themes:
+total 20
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 advanced
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 default
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 simple
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced:
+total 140
+ 4 drwxr-xr-x   5 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x   5 501 80  4096 oct 18 16:22 ..
+ 4 -rw-r--r--   1 501 80  1726 oct  6 18:01 anchor.htm
+20 -rw-r--r--   1 501 80 17932 oct  6 18:01 charmap.htm
+ 8 -rw-r--r--   1 501 80  6642 oct  6 18:01 color_picker.htm
+ 4 drwxr-xr-x  18 501 80  4096 oct 18 16:22 docs
+ 4 -rw-r--r--   1 501 80   564 oct  6 18:01 editor_content.css
+ 4 -rw-r--r--   1 501 80  2111 oct  6 18:01 editor_popup.css
+24 -rw-r--r--   1 501 80 23644 oct  6 18:01 editor_template.js
+32 -rw-r--r--   1 501 80 31358 oct  6 18:01 editor_template_src.js
+ 4 -rw-r--r--   1 501 80  2948 oct  6 18:01 editor_ui.css
+ 8 -rw-r--r--   1 501 80  7881 oct  6 18:01 image.htm
+ 4 drwxr-xr-x   2 501 80  4096 oct 18 16:22 images
+ 4 drwxr-xr-x   2 501 80  4096 oct 18 16:22 langs
+ 8 -rw-r--r--   1 501 80  4970 oct  6 18:01 link.htm
+ 4 -rw-r--r--   1 501 80  3136 oct  6 18:01 source_editor.htm
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs:
+total 72
+4 drwxr-xr-x  18 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x   5 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 ca_fr
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 cs
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 cz
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 de
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 en
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 es
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 fi
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 fr
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 fr_ca
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 hu
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 it
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 nl
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 pl
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 sv
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 zh_cn
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/ca_fr:
+total 12
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  18 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/ca_fr/images:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/cs:
+total 44
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  18 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 1012 oct  6 18:01 about.htm
+8 -rw-r--r--   1 501 80 5793 oct  6 18:01 common_buttons.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 -rw-r--r--   1 501 80 1013 oct  6 18:01 index.htm
+4 -rw-r--r--   1 501 80 1968 oct  6 18:01 insert_image_button.htm
+4 -rw-r--r--   1 501 80 1103 oct  6 18:01 insert_link_button.htm
+4 -rw-r--r--   1 501 80 1860 oct  6 18:01 insert_table_button.htm
+4 -rw-r--r--   1 501 80 1306 oct  6 18:01 style.css
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/cs/images:
+total 28
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--  1 501 80 4799 oct  6 18:01 insert_image_window.png
+4 -rw-r--r--  1 501 80 3833 oct  6 18:01 insert_link_window.png
+8 -rw-r--r--  1 501 80 4620 oct  6 18:01 insert_table_window.png
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/cz:
+total 12
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  18 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/cz/images:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/de:
+total 36
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  18 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 1034 oct  6 18:01 about.htm
+4 -rw-r--r--   1 501 80 3775 oct  6 18:01 common_buttons.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 -rw-r--r--   1 501 80  977 oct  6 18:01 index.htm
+4 -rw-r--r--   1 501 80 1107 oct  6 18:01 insert_image_button.htm
+4 -rw-r--r--   1 501 80 1202 oct  6 18:01 insert_link_button.htm
+4 -rw-r--r--   1 501 80 1322 oct  6 18:01 style.css
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/de/images:
+total 24
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--  1 501 80 4822 oct  6 18:01 insert_image_window.gif
+8 -rw-r--r--  1 501 80 5135 oct  6 18:01 insert_link_window.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/en:
+total 48
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  18 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80  959 oct  6 18:01 about.htm
+8 -rw-r--r--   1 501 80 5563 oct  6 18:01 common_buttons.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 -rw-r--r--   1 501 80 1035 oct  6 18:01 index.htm
+4 -rw-r--r--   1 501 80 1014 oct  6 18:01 insert_anchor_button.htm
+4 -rw-r--r--   1 501 80 1911 oct  6 18:01 insert_image_button.htm
+4 -rw-r--r--   1 501 80 1030 oct  6 18:01 insert_link_button.htm
+4 -rw-r--r--   1 501 80 1898 oct  6 18:01 insert_table_button.htm
+4 -rw-r--r--   1 501 80 1322 oct  6 18:01 style.css
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/en/images:
+total 40
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--  1 501 80 5189 oct  6 18:01 insert_anchor_window.gif
+8 -rw-r--r--  1 501 80 7195 oct  6 18:01 insert_image_window.gif
+8 -rw-r--r--  1 501 80 5658 oct  6 18:01 insert_link_window.gif
+8 -rw-r--r--  1 501 80 7094 oct  6 18:01 insert_table_window.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/es:
+total 44
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  18 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80  963 oct  6 18:01 about.htm
+8 -rw-r--r--   1 501 80 5335 oct  6 18:01 common_buttons.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 -rw-r--r--   1 501 80  941 oct  6 18:01 index.htm
+4 -rw-r--r--   1 501 80 2028 oct  6 18:01 insert_image_button.htm
+4 -rw-r--r--   1 501 80 1086 oct  6 18:01 insert_link_button.htm
+4 -rw-r--r--   1 501 80 1815 oct  6 18:01 insert_table_button.htm
+4 -rw-r--r--   1 501 80 1322 oct  6 18:01 style.css
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/es/images:
+total 32
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--  1 501 80 7195 oct  6 18:01 insert_image_window.gif
+8 -rw-r--r--  1 501 80 5658 oct  6 18:01 insert_link_window.gif
+8 -rw-r--r--  1 501 80 6747 oct  6 18:01 insert_table_window.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/fi:
+total 44
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  18 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80  982 oct  6 18:01 about.htm
+8 -rw-r--r--   1 501 80 5269 oct  6 18:01 common_buttons.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 -rw-r--r--   1 501 80  966 oct  6 18:01 index.htm
+4 -rw-r--r--   1 501 80 1899 oct  6 18:01 insert_image_button.htm
+4 -rw-r--r--   1 501 80 1148 oct  6 18:01 insert_link_button.htm
+4 -rw-r--r--   1 501 80 1856 oct  6 18:01 insert_table_button.htm
+4 -rw-r--r--   1 501 80 1322 oct  6 18:01 style.css
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/fi/images:
+total 44
+ 4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+ 4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+12 -rw-r--r--  1 501 80 8825 oct  6 18:01 insert_image_window.gif
+12 -rw-r--r--  1 501 80 8223 oct  6 18:01 insert_link_window.gif
+12 -rw-r--r--  1 501 80 8442 oct  6 18:01 insert_table_window.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/fr:
+total 44
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  18 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 1097 oct  6 18:01 about.htm
+8 -rw-r--r--   1 501 80 6116 oct  6 18:01 common_buttons.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 -rw-r--r--   1 501 80 1014 oct  6 18:01 index.htm
+4 -rw-r--r--   1 501 80 2201 oct  6 18:01 insert_image_button.htm
+4 -rw-r--r--   1 501 80 1083 oct  6 18:01 insert_link_button.htm
+4 -rw-r--r--   1 501 80 2018 oct  6 18:01 insert_table_button.htm
+4 -rw-r--r--   1 501 80 1322 oct  6 18:01 style.css
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/fr/images:
+total 104
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  3 501 80  4096 oct 18 16:22 ..
+40 -rw-r--r--  1 501 80 38920 oct  6 18:01 insert_image_window.gif
+24 -rw-r--r--  1 501 80 20970 oct  6 18:01 insert_link_window.gif
+32 -rw-r--r--  1 501 80 32353 oct  6 18:01 insert_table_window.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/fr_ca:
+total 48
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  18 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 1097 oct  6 18:01 about.htm
+8 -rw-r--r--   1 501 80 6116 oct  6 18:01 common_buttons.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 -rw-r--r--   1 501 80 1014 oct  6 18:01 index.htm
+4 -rw-r--r--   1 501 80 1025 oct  6 18:01 insert_anchor_button.htm
+4 -rw-r--r--   1 501 80 2201 oct  6 18:01 insert_image_button.htm
+4 -rw-r--r--   1 501 80 1083 oct  6 18:01 insert_link_button.htm
+4 -rw-r--r--   1 501 80 2018 oct  6 18:01 insert_table_button.htm
+4 -rw-r--r--   1 501 80 1322 oct  6 18:01 style.css
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/fr_ca/images:
+total 120
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  3 501 80  4096 oct 18 16:22 ..
+16 -rw-r--r--  1 501 80 12662 oct  6 18:01 insert_anchor_window.gif
+40 -rw-r--r--  1 501 80 38920 oct  6 18:01 insert_image_window.gif
+24 -rw-r--r--  1 501 80 20970 oct  6 18:01 insert_link_window.gif
+32 -rw-r--r--  1 501 80 32353 oct  6 18:01 insert_table_window.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/hu:
+total 36
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  18 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 1182 oct  6 18:01 about.htm
+4 -rw-r--r--   1 501 80 3606 oct  6 18:01 common_buttons.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 -rw-r--r--   1 501 80  902 oct  6 18:01 index.htm
+4 -rw-r--r--   1 501 80 1271 oct  6 18:01 insert_image_button.htm
+4 -rw-r--r--   1 501 80 1233 oct  6 18:01 insert_link_button.htm
+4 -rw-r--r--   1 501 80 1322 oct  6 18:01 style.css
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/hu/images:
+total 24
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--  1 501 80 5486 oct  6 18:01 insert_image_window.gif
+8 -rw-r--r--  1 501 80 5762 oct  6 18:01 insert_link_window.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/images:
+total 36
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  18 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80  929 oct  6 18:01 table_delete_col.gif
+4 -rw-r--r--   1 501 80  942 oct  6 18:01 table_delete_row.gif
+4 -rw-r--r--   1 501 80 1018 oct  6 18:01 table.gif
+4 -rw-r--r--   1 501 80  936 oct  6 18:01 table_insert_col_after.gif
+4 -rw-r--r--   1 501 80  935 oct  6 18:01 table_insert_col_before.gif
+4 -rw-r--r--   1 501 80  928 oct  6 18:01 table_insert_row_after.gif
+4 -rw-r--r--   1 501 80  928 oct  6 18:01 table_insert_row_before.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/it:
+total 48
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  18 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 1121 oct  6 18:01 about.htm
+8 -rw-r--r--   1 501 80 6147 oct  6 18:01 common_buttons.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 -rw-r--r--   1 501 80 1144 oct  6 18:01 index.htm
+4 -rw-r--r--   1 501 80 1104 oct  6 18:01 insert_anchor_button.htm
+4 -rw-r--r--   1 501 80 2103 oct  6 18:01 insert_image_button.htm
+4 -rw-r--r--   1 501 80 1212 oct  6 18:01 insert_link_button.htm
+4 -rw-r--r--   1 501 80 2032 oct  6 18:01 insert_table_button.htm
+4 -rw-r--r--   1 501 80 1322 oct  6 18:01 style.css
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/it/images:
+total 40
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--  1 501 80 5336 oct  6 18:01 insert_anchor_window.gif
+8 -rw-r--r--  1 501 80 7248 oct  6 18:01 insert_image_window.gif
+8 -rw-r--r--  1 501 80 5909 oct  6 18:01 insert_link_window.gif
+8 -rw-r--r--  1 501 80 7379 oct  6 18:01 insert_table_window.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/nl:
+total 52
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  18 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 1042 oct  6 18:01 about.htm
+8 -rw-r--r--   1 501 80 7776 oct  6 18:01 common_buttons.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 -rw-r--r--   1 501 80 1239 oct  6 18:01 index.htm
+4 -rw-r--r--   1 501 80 1577 oct  6 18:01 insert_anchor_button.htm
+4 -rw-r--r--   1 501 80 2375 oct  6 18:01 insert_image_button.htm
+4 -rw-r--r--   1 501 80 1216 oct  6 18:01 insert_link_button.htm
+4 -rw-r--r--   1 501 80 1236 oct  6 18:01 insert_specchar_button.htm
+4 -rw-r--r--   1 501 80 2358 oct  6 18:01 insert_table_button.htm
+4 -rw-r--r--   1 501 80 1328 oct  6 18:01 style.css
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/nl/images:
+total 68
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  3 501 80  4096 oct 18 16:22 ..
+16 -rw-r--r--  1 501 80 16012 oct  6 18:01 html_source_window.gif
+ 4 -rw-r--r--  1 501 80  4031 oct  6 18:01 insert_anchor_window.gif
+12 -rw-r--r--  1 501 80  8363 oct  6 18:01 insert_image_window.gif
+ 8 -rw-r--r--  1 501 80  5569 oct  6 18:01 insert_link_window.gif
+12 -rw-r--r--  1 501 80 10407 oct  6 18:01 insert_specchar_window.gif
+ 8 -rw-r--r--  1 501 80  7337 oct  6 18:01 insert_table_window.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/pl:
+total 48
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  18 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 1111 oct  6 18:01 about.htm
+8 -rw-r--r--   1 501 80 5819 oct  6 18:01 common_buttons.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 -rw-r--r--   1 501 80 1204 oct  6 18:01 index.htm
+4 -rw-r--r--   1 501 80 1183 oct  6 18:01 insert_anchor_button.htm
+4 -rw-r--r--   1 501 80 2115 oct  6 18:01 insert_image_button.htm
+4 -rw-r--r--   1 501 80 1159 oct  6 18:01 insert_link_button.htm
+4 -rw-r--r--   1 501 80 2053 oct  6 18:01 insert_table_button.htm
+4 -rw-r--r--   1 501 80 1322 oct  6 18:01 style.css
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/pl/images:
+total 40
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--  1 501 80 5401 oct  6 18:01 insert_anchor_window.gif
+8 -rw-r--r--  1 501 80 7532 oct  6 18:01 insert_image_window.gif
+8 -rw-r--r--  1 501 80 5781 oct  6 18:01 insert_link_window.gif
+8 -rw-r--r--  1 501 80 7418 oct  6 18:01 insert_table_window.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/sv:
+total 48
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  18 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 1092 oct  6 18:01 about.htm
+8 -rw-r--r--   1 501 80 5630 oct  6 18:01 common_buttons.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 -rw-r--r--   1 501 80 1101 oct  6 18:01 index.htm
+4 -rw-r--r--   1 501 80 1069 oct  6 18:01 insert_anchor_button.htm
+4 -rw-r--r--   1 501 80 2223 oct  6 18:01 insert_image_button.htm
+4 -rw-r--r--   1 501 80 1017 oct  6 18:01 insert_link_button.htm
+4 -rw-r--r--   1 501 80 1922 oct  6 18:01 insert_table_button.htm
+4 -rw-r--r--   1 501 80 1322 oct  6 18:01 style.css
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/sv/images:
+total 40
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--  1 501 80 5229 oct  6 18:01 insert_anchor_window.gif
+8 -rw-r--r--  1 501 80 7844 oct  6 18:01 insert_image_window.gif
+8 -rw-r--r--  1 501 80 5767 oct  6 18:01 insert_link_window.gif
+8 -rw-r--r--  1 501 80 7099 oct  6 18:01 insert_table_window.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/zh_cn:
+total 48
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  18 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80  855 oct  6 18:01 about.htm
+8 -rw-r--r--   1 501 80 5598 oct  6 18:01 common_buttons.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 -rw-r--r--   1 501 80  976 oct  6 18:01 index.htm
+4 -rw-r--r--   1 501 80  909 oct  6 18:01 insert_anchor_button.htm
+4 -rw-r--r--   1 501 80 1963 oct  6 18:01 insert_image_button.htm
+4 -rw-r--r--   1 501 80  904 oct  6 18:01 insert_link_button.htm
+4 -rw-r--r--   1 501 80 2064 oct  6 18:01 insert_table_button.htm
+4 -rw-r--r--   1 501 80 1322 oct  6 18:01 style.css
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/docs/zh_cn/images:
+total 76
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  3 501 80  4096 oct 18 16:22 ..
+12 -rw-r--r--  1 501 80 10444 oct  6 18:01 insert_anchor_window.gif
+24 -rw-r--r--  1 501 80 21752 oct  6 18:01 insert_image_window.gif
+12 -rw-r--r--  1 501 80 12005 oct  6 18:01 insert_link_window.gif
+20 -rw-r--r--  1 501 80 19062 oct  6 18:01 insert_table_window.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/images:
+total 208
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  943 oct  6 18:01 anchor.gif
+4 -rw-r--r--  1 501 80  943 oct  6 18:01 backcolor.gif
+4 -rw-r--r--  1 501 80   79 oct  6 18:01 bold_de_se.gif
+4 -rw-r--r--  1 501 80   78 oct  6 18:01 bold_fr.gif
+4 -rw-r--r--  1 501 80  864 oct  6 18:01 bold.gif
+4 -rw-r--r--  1 501 80   77 oct  6 18:01 bold_ru.gif
+4 -rw-r--r--  1 501 80  113 oct  6 18:01 browse.gif
+4 -rw-r--r--  1 501 80  883 oct  6 18:01 bullist.gif
+4 -rw-r--r--  1 501 80 3889 oct  6 18:01 buttons.gif
+4 -rw-r--r--  1 501 80  855 oct  6 18:01 center.gif
+4 -rw-r--r--  1 501 80  958 oct  6 18:01 charmap.gif
+4 -rw-r--r--  1 501 80  977 oct  6 18:01 cleanup.gif
+4 -rw-r--r--  1 501 80  110 oct  6 18:01 code.gif
+4 -rw-r--r--  1 501 80  987 oct  6 18:01 copy.gif
+4 -rw-r--r--  1 501 80  854 oct  6 18:01 custom_1.gif
+4 -rw-r--r--  1 501 80  358 oct  6 18:01 cut.gif
+4 -rw-r--r--  1 501 80  981 oct  6 18:01 forecolor.gif
+4 -rw-r--r--  1 501 80  856 oct  6 18:01 full.gif
+4 -rw-r--r--  1 501 80 1027 oct  6 18:01 help.gif
+4 -rw-r--r--  1 501 80  844 oct  6 18:01 hr.gif
+4 -rw-r--r--  1 501 80  194 oct  6 18:01 image.gif
+4 -rw-r--r--  1 501 80  890 oct  6 18:01 indent.gif
+4 -rw-r--r--  1 501 80   81 oct  6 18:01 italic_de_se.gif
+4 -rw-r--r--  1 501 80  860 oct  6 18:01 italic.gif
+4 -rw-r--r--  1 501 80   78 oct  6 18:01 italic_ru.gif
+4 -rw-r--r--  1 501 80  856 oct  6 18:01 left.gif
+4 -rw-r--r--  1 501 80  545 oct  6 18:01 link.gif
+4 -rw-r--r--  1 501 80  889 oct  6 18:01 numlist.gif
+4 -rw-r--r--  1 501 80  887 oct  6 18:01 outdent.gif
+4 -rw-r--r--  1 501 80 1022 oct  6 18:01 paste.gif
+4 -rw-r--r--  1 501 80  942 oct  6 18:01 redo.gif
+4 -rw-r--r--  1 501 80  152 oct  6 18:01 removeformat.gif
+4 -rw-r--r--  1 501 80  855 oct  6 18:01 right.gif
+4 -rw-r--r--  1 501 80   43 oct  6 18:01 spacer.gif
+4 -rw-r--r--  1 501 80  873 oct  6 18:01 strikethrough.gif
+4 -rw-r--r--  1 501 80  900 oct  6 18:01 sub.gif
+4 -rw-r--r--  1 501 80  906 oct  6 18:01 sup.gif
+4 -rw-r--r--  1 501 80  929 oct  6 18:01 table_delete_col.gif
+4 -rw-r--r--  1 501 80  942 oct  6 18:01 table_delete_row.gif
+4 -rw-r--r--  1 501 80 1018 oct  6 18:01 table.gif
+4 -rw-r--r--  1 501 80  936 oct  6 18:01 table_insert_col_after.gif
+4 -rw-r--r--  1 501 80  935 oct  6 18:01 table_insert_col_before.gif
+4 -rw-r--r--  1 501 80  928 oct  6 18:01 table_insert_row_after.gif
+4 -rw-r--r--  1 501 80  928 oct  6 18:01 table_insert_row_before.gif
+4 -rw-r--r--  1 501 80  125 oct  6 18:01 underline_fr.gif
+4 -rw-r--r--  1 501 80  872 oct  6 18:01 underline.gif
+4 -rw-r--r--  1 501 80   77 oct  6 18:01 underline_ru.gif
+4 -rw-r--r--  1 501 80  945 oct  6 18:01 undo.gif
+4 -rw-r--r--  1 501 80  561 oct  6 18:01 unlink.gif
+4 -rw-r--r--  1 501 80 1006 oct  6 18:01 visualaid.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/advanced/langs:
+total 108
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--  1 501 80 4298 oct  6 18:01 ar.js
+4 -rw-r--r--  1 501 80 3367 oct  6 18:01 cs.js
+4 -rw-r--r--  1 501 80 3408 oct  6 18:01 da.js
+4 -rw-r--r--  1 501 80 3581 oct  6 18:01 de.js
+4 -rw-r--r--  1 501 80 3377 oct  6 18:01 el.js
+4 -rw-r--r--  1 501 80 3246 oct  6 18:01 en.js
+4 -rw-r--r--  1 501 80 3369 oct  6 18:01 es.js
+4 -rw-r--r--  1 501 80 3192 oct  6 18:01 fa.js
+4 -rw-r--r--  1 501 80 3332 oct  6 18:01 fi.js
+4 -rw-r--r--  1 501 80 3468 oct  6 18:01 fr_ca.js
+4 -rw-r--r--  1 501 80 3656 oct  6 18:01 fr.js
+4 -rw-r--r--  1 501 80 3518 oct  6 18:01 hu.js
+4 -rw-r--r--  1 501 80 3448 oct  6 18:01 it.js
+4 -rw-r--r--  1 501 80 3186 oct  6 18:01 ja.js
+4 -rw-r--r--  1 501 80 3210 oct  6 18:01 ko.js
+4 -rw-r--r--  1 501 80 3482 oct  6 18:01 nl.js
+4 -rw-r--r--  1 501 80 3415 oct  6 18:01 no.js
+4 -rw-r--r--  1 501 80 3325 oct  6 18:01 pl.js
+4 -rw-r--r--  1 501 80 3423 oct  6 18:01 pt.js
+4 -rw-r--r--  1 501 80  135 oct  6 18:01 readme.txt
+4 -rw-r--r--  1 501 80 3457 oct  6 18:01 sv.js
+8 -rw-r--r--  1 501 80 4376 oct  6 18:01 tw.js
+4 -rw-r--r--  1 501 80 3104 oct  6 18:01 zh_cn.js
+
+./data/symfony/web/sf/js/tiny_mce/themes/default:
+total 60
+ 4 drwxr-xr-x   4 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x   5 501 80  4096 oct 18 16:22 ..
+ 4 drwxr-xr-x  13 501 80  4096 oct 18 16:22 docs
+ 4 -rw-r--r--   1 501 80   566 oct  6 18:01 editor_content.css
+ 4 -rw-r--r--   1 501 80   821 oct  6 18:01 editor_popup.css
+12 -rw-r--r--   1 501 80 10539 oct  6 18:01 editor_template.js
+12 -rw-r--r--   1 501 80 11322 oct  6 18:01 editor_template_src.js
+ 4 -rw-r--r--   1 501 80  2122 oct  6 18:01 editor_ui.css
+ 4 -rw-r--r--   1 501 80  1819 oct  6 18:01 image.htm
+ 4 drwxr-xr-x   2 501 80  4096 oct 18 16:22 images
+ 4 -rw-r--r--   1 501 80  2167 oct  6 18:01 link.htm
+
+./data/symfony/web/sf/js/tiny_mce/themes/default/docs:
+total 52
+4 drwxr-xr-x  13 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 cs
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 de
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 en
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 es
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 fr
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 fr_ca
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 hu
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 it
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 pl
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 sv
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 zh_cn
+
+./data/symfony/web/sf/js/tiny_mce/themes/default/docs/cs:
+total 36
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  13 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 1012 oct  6 18:01 about.htm
+4 -rw-r--r--   1 501 80 4092 oct  6 18:01 common_buttons.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 -rw-r--r--   1 501 80  924 oct  6 18:01 index.htm
+4 -rw-r--r--   1 501 80 1053 oct  6 18:01 insert_image_button.htm
+4 -rw-r--r--   1 501 80 1103 oct  6 18:01 insert_link_button.htm
+4 -rw-r--r--   1 501 80 1306 oct  6 18:01 style.css
+
+./data/symfony/web/sf/js/tiny_mce/themes/default/docs/cs/images:
+total 16
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 3332 oct  6 18:01 insert_image_window.png
+4 -rw-r--r--  1 501 80 3833 oct  6 18:01 insert_link_window.png
+
+./data/symfony/web/sf/js/tiny_mce/themes/default/docs/de:
+total 36
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  13 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 1034 oct  6 18:01 about.htm
+4 -rw-r--r--   1 501 80 3775 oct  6 18:01 common_buttons.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 -rw-r--r--   1 501 80  977 oct  6 18:01 index.htm
+4 -rw-r--r--   1 501 80 1107 oct  6 18:01 insert_image_button.htm
+4 -rw-r--r--   1 501 80 1202 oct  6 18:01 insert_link_button.htm
+4 -rw-r--r--   1 501 80 1322 oct  6 18:01 style.css
+
+./data/symfony/web/sf/js/tiny_mce/themes/default/docs/de/images:
+total 24
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--  1 501 80 4822 oct  6 18:01 insert_image_window.gif
+8 -rw-r--r--  1 501 80 5135 oct  6 18:01 insert_link_window.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/default/docs/en:
+total 36
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  13 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80  959 oct  6 18:01 about.htm
+4 -rw-r--r--   1 501 80 3607 oct  6 18:01 common_buttons.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 -rw-r--r--   1 501 80  863 oct  6 18:01 index.htm
+4 -rw-r--r--   1 501 80 1032 oct  6 18:01 insert_image_button.htm
+4 -rw-r--r--   1 501 80 1030 oct  6 18:01 insert_link_button.htm
+4 -rw-r--r--   1 501 80 1322 oct  6 18:01 style.css
+
+./data/symfony/web/sf/js/tiny_mce/themes/default/docs/en/images:
+total 24
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--  1 501 80 5680 oct  6 18:01 insert_image_window.gif
+8 -rw-r--r--  1 501 80 5658 oct  6 18:01 insert_link_window.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/default/docs/es:
+total 36
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  13 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80  963 oct  6 18:01 about.htm
+4 -rw-r--r--   1 501 80 3651 oct  6 18:01 common_buttons.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 -rw-r--r--   1 501 80  854 oct  6 18:01 index.htm
+4 -rw-r--r--   1 501 80 1065 oct  6 18:01 insert_image_button.htm
+4 -rw-r--r--   1 501 80 1086 oct  6 18:01 insert_link_button.htm
+4 -rw-r--r--   1 501 80 1322 oct  6 18:01 style.css
+
+./data/symfony/web/sf/js/tiny_mce/themes/default/docs/es/images:
+total 24
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--  1 501 80 5680 oct  6 18:01 insert_image_window.gif
+8 -rw-r--r--  1 501 80 5658 oct  6 18:01 insert_link_window.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/default/docs/fr:
+total 36
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  13 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 1097 oct  6 18:01 about.htm
+4 -rw-r--r--   1 501 80 4009 oct  6 18:01 common_buttons.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 -rw-r--r--   1 501 80  924 oct  6 18:01 index.htm
+4 -rw-r--r--   1 501 80 1119 oct  6 18:01 insert_image_button.htm
+4 -rw-r--r--   1 501 80 1083 oct  6 18:01 insert_link_button.htm
+4 -rw-r--r--   1 501 80 1322 oct  6 18:01 style.css
+
+./data/symfony/web/sf/js/tiny_mce/themes/default/docs/fr/images:
+total 56
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  3 501 80  4096 oct 18 16:22 ..
+24 -rw-r--r--  1 501 80 23088 oct  6 18:01 insert_image_window.gif
+24 -rw-r--r--  1 501 80 23206 oct  6 18:01 insert_link_window.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/default/docs/fr_ca:
+total 36
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  13 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 1097 oct  6 18:01 about.htm
+4 -rw-r--r--   1 501 80 4009 oct  6 18:01 common_buttons.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 -rw-r--r--   1 501 80  924 oct  6 18:01 index.htm
+4 -rw-r--r--   1 501 80 1119 oct  6 18:01 insert_image_button.htm
+4 -rw-r--r--   1 501 80 1083 oct  6 18:01 insert_link_button.htm
+4 -rw-r--r--   1 501 80 1322 oct  6 18:01 style.css
+
+./data/symfony/web/sf/js/tiny_mce/themes/default/docs/fr_ca/images:
+total 56
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  3 501 80  4096 oct 18 16:22 ..
+24 -rw-r--r--  1 501 80 23088 oct  6 18:01 insert_image_window.gif
+24 -rw-r--r--  1 501 80 23206 oct  6 18:01 insert_link_window.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/default/docs/hu:
+total 36
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  13 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 1182 oct  6 18:01 about.htm
+4 -rw-r--r--   1 501 80 3606 oct  6 18:01 common_buttons.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 -rw-r--r--   1 501 80  902 oct  6 18:01 index.htm
+4 -rw-r--r--   1 501 80 1271 oct  6 18:01 insert_image_button.htm
+4 -rw-r--r--   1 501 80 1233 oct  6 18:01 insert_link_button.htm
+4 -rw-r--r--   1 501 80 1322 oct  6 18:01 style.css
+
+./data/symfony/web/sf/js/tiny_mce/themes/default/docs/hu/images:
+total 24
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--  1 501 80 5486 oct  6 18:01 insert_image_window.gif
+8 -rw-r--r--  1 501 80 5762 oct  6 18:01 insert_link_window.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/default/docs/it:
+total 40
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  13 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 1121 oct  6 18:01 about.htm
+8 -rw-r--r--   1 501 80 4100 oct  6 18:01 common_buttons.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 -rw-r--r--   1 501 80  957 oct  6 18:01 index.htm
+4 -rw-r--r--   1 501 80 1166 oct  6 18:01 insert_image_button.htm
+4 -rw-r--r--   1 501 80 1212 oct  6 18:01 insert_link_button.htm
+4 -rw-r--r--   1 501 80 1322 oct  6 18:01 style.css
+
+./data/symfony/web/sf/js/tiny_mce/themes/default/docs/it/images:
+total 24
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--  1 501 80 6010 oct  6 18:01 insert_image_window.gif
+8 -rw-r--r--  1 501 80 5909 oct  6 18:01 insert_link_window.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/default/docs/pl:
+total 36
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  13 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 1111 oct  6 18:01 about.htm
+4 -rw-r--r--   1 501 80 3838 oct  6 18:01 common_buttons.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 -rw-r--r--   1 501 80 1018 oct  6 18:01 index.htm
+4 -rw-r--r--   1 501 80 1163 oct  6 18:01 insert_image_button.htm
+4 -rw-r--r--   1 501 80 1159 oct  6 18:01 insert_link_button.htm
+4 -rw-r--r--   1 501 80 1322 oct  6 18:01 style.css
+
+./data/symfony/web/sf/js/tiny_mce/themes/default/docs/pl/images:
+total 24
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--  1 501 80 6037 oct  6 18:01 insert_image_window.gif
+8 -rw-r--r--  1 501 80 5781 oct  6 18:01 insert_link_window.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/default/docs/sv:
+total 36
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  13 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 1092 oct  6 18:01 about.htm
+4 -rw-r--r--   1 501 80 3636 oct  6 18:01 common_buttons.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 -rw-r--r--   1 501 80  925 oct  6 18:01 index.htm
+4 -rw-r--r--   1 501 80 1098 oct  6 18:01 insert_image_button.htm
+4 -rw-r--r--   1 501 80 1011 oct  6 18:01 insert_link_button.htm
+4 -rw-r--r--   1 501 80 1322 oct  6 18:01 style.css
+
+./data/symfony/web/sf/js/tiny_mce/themes/default/docs/sv/images:
+total 24
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--  1 501 80 5824 oct  6 18:01 insert_image_window.gif
+8 -rw-r--r--  1 501 80 5767 oct  6 18:01 insert_link_window.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/default/docs/zh_cn:
+total 36
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  13 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80  855 oct  6 18:01 about.htm
+4 -rw-r--r--   1 501 80 4012 oct  6 18:01 common_buttons.htm
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 images
+4 -rw-r--r--   1 501 80  819 oct  6 18:01 index.htm
+4 -rw-r--r--   1 501 80  905 oct  6 18:01 insert_image_button.htm
+4 -rw-r--r--   1 501 80  902 oct  6 18:01 insert_link_button.htm
+4 -rw-r--r--   1 501 80 1322 oct  6 18:01 style.css
+
+./data/symfony/web/sf/js/tiny_mce/themes/default/docs/zh_cn/images:
+total 36
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  3 501 80  4096 oct 18 16:22 ..
+16 -rw-r--r--  1 501 80 12822 oct  6 18:01 insert_image_window.gif
+12 -rw-r--r--  1 501 80 11984 oct  6 18:01 insert_link_window.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/default/images:
+total 124
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80   79 oct  6 18:01 bold_de_se.gif
+4 -rw-r--r--  1 501 80   78 oct  6 18:01 bold_fr.gif
+4 -rw-r--r--  1 501 80  864 oct  6 18:01 bold.gif
+4 -rw-r--r--  1 501 80   77 oct  6 18:01 bold_ru.gif
+4 -rw-r--r--  1 501 80  883 oct  6 18:01 bullist.gif
+4 -rw-r--r--  1 501 80  855 oct  6 18:01 center.gif
+4 -rw-r--r--  1 501 80  977 oct  6 18:01 cleanup.gif
+4 -rw-r--r--  1 501 80  987 oct  6 18:01 copy.gif
+4 -rw-r--r--  1 501 80  358 oct  6 18:01 cut.gif
+4 -rw-r--r--  1 501 80  856 oct  6 18:01 full.gif
+4 -rw-r--r--  1 501 80 1027 oct  6 18:01 help.gif
+4 -rw-r--r--  1 501 80  194 oct  6 18:01 image.gif
+4 -rw-r--r--  1 501 80  890 oct  6 18:01 indent.gif
+4 -rw-r--r--  1 501 80   81 oct  6 18:01 italic_de_se.gif
+4 -rw-r--r--  1 501 80  860 oct  6 18:01 italic.gif
+4 -rw-r--r--  1 501 80   78 oct  6 18:01 italic_ru.gif
+4 -rw-r--r--  1 501 80  856 oct  6 18:01 left.gif
+4 -rw-r--r--  1 501 80  545 oct  6 18:01 link.gif
+4 -rw-r--r--  1 501 80  889 oct  6 18:01 numlist.gif
+4 -rw-r--r--  1 501 80  887 oct  6 18:01 outdent.gif
+4 -rw-r--r--  1 501 80 1022 oct  6 18:01 paste.gif
+4 -rw-r--r--  1 501 80  942 oct  6 18:01 redo.gif
+4 -rw-r--r--  1 501 80  855 oct  6 18:01 right.gif
+4 -rw-r--r--  1 501 80   43 oct  6 18:01 spacer.gif
+4 -rw-r--r--  1 501 80  873 oct  6 18:01 strikethrough.gif
+4 -rw-r--r--  1 501 80  872 oct  6 18:01 underline.gif
+4 -rw-r--r--  1 501 80   77 oct  6 18:01 underline_ru.gif
+4 -rw-r--r--  1 501 80  945 oct  6 18:01 undo.gif
+4 -rw-r--r--  1 501 80  561 oct  6 18:01 unlink.gif
+
+./data/symfony/web/sf/js/tiny_mce/themes/simple:
+total 40
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  566 oct  6 18:01 editor_content.css
+4 -rw-r--r--  1 501 80  821 oct  6 18:01 editor_popup.css
+8 -rw-r--r--  1 501 80 5186 oct  6 18:01 editor_template.js
+8 -rw-r--r--  1 501 80 5467 oct  6 18:01 editor_template_src.js
+4 -rw-r--r--  1 501 80 1912 oct  6 18:01 editor_ui.css
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 images
+
+./data/symfony/web/sf/js/tiny_mce/themes/simple/images:
+total 72
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80   79 oct  6 18:01 bold_de_se.gif
+4 -rw-r--r--  1 501 80   78 oct  6 18:01 bold_fr.gif
+4 -rw-r--r--  1 501 80  864 oct  6 18:01 bold.gif
+4 -rw-r--r--  1 501 80   77 oct  6 18:01 bold_ru.gif
+4 -rw-r--r--  1 501 80  883 oct  6 18:01 bullist.gif
+4 -rw-r--r--  1 501 80  977 oct  6 18:01 cleanup.gif
+4 -rw-r--r--  1 501 80   81 oct  6 18:01 italic_de_se.gif
+4 -rw-r--r--  1 501 80  860 oct  6 18:01 italic.gif
+4 -rw-r--r--  1 501 80   78 oct  6 18:01 italic_ru.gif
+4 -rw-r--r--  1 501 80  889 oct  6 18:01 numlist.gif
+4 -rw-r--r--  1 501 80  942 oct  6 18:01 redo.gif
+4 -rw-r--r--  1 501 80   43 oct  6 18:01 spacer.gif
+4 -rw-r--r--  1 501 80  873 oct  6 18:01 strikethrough.gif
+4 -rw-r--r--  1 501 80  129 oct  6 18:01 underline.gif
+4 -rw-r--r--  1 501 80   77 oct  6 18:01 underline_ru.gif
+4 -rw-r--r--  1 501 80  945 oct  6 18:01 undo.gif
+
+./doc:
+total 28
+4 drwxr-xr-x  6 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:26 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:16 api
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:26 book
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 phpdoc
+4 -rw-r--r--  1 501 80 2112 sep 12 08:39 phpdoc.ini
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 refcard
+
+./doc/api:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:16 .
+4 drwxr-xr-x  6 501 80 4096 oct 18 16:22 ..
+
+./doc/book:
+total 92
+ 4 drwxr-xr-x  4 501 80  4096 oct 18 16:26 .
+ 4 drwxr-xr-x  6 501 80  4096 oct 18 16:22 ..
+ 4 -rwxr-xr-x  1 501 80   569 oct 18 16:12 book.yml
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 content
+ 8 -rwxr-xr-x  1 501 80  5963 sep 27 08:58 convert2docbook.php
+ 4 -rwxr-xr-x  1 501 80   513 sep 15 15:50 generate.sh
+60 -rw-r--r--  1 501 80 56081 sep 15 11:51 markdown.php
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 stylesheets
+
+./doc/book/content:
+total 360
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  4 501 80  4096 oct 18 16:26 ..
+ 4 -rwxr-xr-x  1 501 80  2238 oct 15 11:05 404.txt
+ 4 -rwxr-xr-x  1 501 80  2600 oct 18 15:02 about.txt
+ 4 -rwx------  1 501 80   222 aoû 26 09:17 ajax.txt
+ 4 -rwx------  1 501 80   122 aoû 25 09:21 batch.txt
+ 8 -rwx------  1 501 80  6576 sep 15 10:35 breadcrumb_configuration.txt
+ 4 -rwx------  1 501 80  2073 sep 15 10:36 breadcrumb_use.txt
+12 -rwx------  1 501 80 10354 aoû 29 10:13 cache.txt
+ 4 -rw-r--r--  1 501 80  1429 oct 18 15:02 changenames.txt
+28 -rwxr-xr-x  1 501 80 25755 oct 18 15:02 configuration_practice.txt
+12 -rwxr-xr-x  1 501 80 11576 oct 18 15:02 configuration.txt
+12 -rwxr-xr-x  1 501 80 10805 oct 15 11:05 controller.txt
+ 4 -rwxr-xr-x  1 501 80  1842 oct 15 11:05 custom_helper.txt
+ 4 -rw-r--r--  1 501 80  2903 oct 18 15:02 default_locations.txt
+ 4 -rwx------  1 501 80   594 aoû 19 17:56 deployment.txt
+ 4 -rwx------  1 501 80   145 aoû 25 09:18 development_guidelines.txt
+ 4 -rwx------  1 501 80   167 aoû 26 09:20 documentation.txt
+ 4 -rwx------  1 501 80   939 aoû 25 17:56 email.txt
+12 -rwxr-xr-x  1 501 80 10072 oct 18 15:02 file_structure.txt
+ 4 -rwx------  1 501 80   134 aoû 25 14:24 form.txt
+ 8 -rwxr-xr-x  1 501 80  4560 oct 18 15:02 generator.txt
+ 4 -rwxr-xr-x  1 501 80  2696 oct 18 15:02 howtos.txt
+ 4 -rwx------  1 501 80  3349 aoû 27 10:50 i18n.txt
+ 8 -rwxr-xr-x  1 501 80  7498 oct 18 15:02 installation.txt
+ 4 -rwxr-xr-x  1 501 80  3063 oct 18 15:02 introduction.txt
+20 -rwxr-xr-x  1 501 80 16962 oct 18 15:02 model.txt
+ 4 -rw-r--r--  1 501 80  3982 oct 18 15:02 mvc.txt
+ 4 -rwx------  1 501 80   522 aoû 25 14:28 object_form.txt
+12 -rwxr-xr-x  1 501 80 11073 oct 18 15:02 pager.txt
+ 8 -rw-r--r--  1 501 80  7891 oct  5 09:31 parameter_holder.txt
+12 -rwxr-xr-x  1 501 80 10168 oct 18 15:02 project_creation.txt
+16 -rwxr-xr-x  1 501 80 13420 oct 18 15:02 routing.txt
+ 8 -rwxr-xr-x  1 501 80  4901 oct 18 15:02 security.txt
+12 -rwxr-xr-x  1 501 80 10674 oct 15 11:05 shopping_cart.txt
+16 -rw-r--r--  1 501 80 13083 oct  5 13:42 templating_configuration.txt
+12 -rwxr-xr-x  1 501 80 10378 oct 18 15:02 templating_form_helpers.txt
+ 8 -rwxr-xr-x  1 501 80  4638 oct 18 15:02 templating_i18n_helpers.txt
+12 -rwxr-xr-x  1 501 80 11847 oct 18 15:02 templating_link_helpers.txt
+ 4 -rw-r--r--  1 501 80  2303 oct 18 15:02 templating_other_helpers.txt
+ 4 -rwx------  1 501 80   334 aoû 19 17:56 test_unit_testing.txt
+ 4 -rwx------  1 501 80   246 aoû 19 17:56 test_web_debug.txt
+ 4 -rwxr-xr-x  1 501 80  4091 sep 27 08:54 user_session.txt
+12 -rwxr-xr-x  1 501 80 10203 oct 15 11:05 validate_form.txt
+16 -rwxr-xr-x  1 501 80 13605 oct 18 15:02 view.txt
+
+./doc/book/stylesheets:
+total 24
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:26 ..
+4 -rw-r--r--  1 501 80 1117 sep 15 11:35 book1.xsl
+4 -rw-r--r--  1 501 80 1770 sep 15 11:35 book.css
+8 -rw-r--r--  1 501 80 6155 sep 27 09:15 book.xsl
+
+./doc/phpdoc:
+total 16
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  6 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 smarty_plugins
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 template
+
+./doc/phpdoc/smarty_plugins:
+total 20
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 1257 aoû  6 09:25 function.append.php
+4 -rw-r--r--  1 501 80 3201 aoû  6 09:25 function.build_argument_list.php
+4 -rw-r--r--  1 501 80 1795 aoû  6 09:25 function.extract_attribute.php
+
+./doc/phpdoc/template:
+total 32
+ 4 drwxr-xr-x  4 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  4 501 80  4096 oct 18 16:22 ..
+16 -rw-r--r--  1 501 80 12717 aoû  6 09:25 options.ini
+ 4 drwxr-xr-x  3 501 80  4096 oct 18 16:22 templates
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 templates_c
+
+./doc/phpdoc/template/templates:
+total 148
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+0 -rw-r--r--  1 501 80    0 aoû  6 09:25 basicindex.tpl
+4 -rw-r--r--  1 501 80  908 aoû  6 09:25 _class_declaration.tpl
+4 -rw-r--r--  1 501 80  131 aoû  6 09:25 _class_description.tpl
+4 -rw-r--r--  1 501 80  359 sep 12 08:39 classleft.tpl
+4 -rw-r--r--  1 501 80   30 aoû  6 09:25 _class_list.tpl
+4 -rw-r--r--  1 501 80  694 sep 12 08:39 class.tpl
+4 -rw-r--r--  1 501 80  211 aoû  6 09:25 classtrees.tpl
+4 -rw-r--r--  1 501 80 1128 aoû  6 09:25 _constant_details.tpl
+4 -rw-r--r--  1 501 80  821 aoû  6 09:25 _constant_summary.tpl
+4 -rw-r--r--  1 501 80 2217 aoû  6 09:25 _constructor_details.tpl
+4 -rw-r--r--  1 501 80 1107 aoû  6 09:25 _constructor_summary.tpl
+4 -rw-r--r--  1 501 80    2 aoû  6 09:25 define.tpl
+4 -rw-r--r--  1 501 80 2215 aoû  6 09:25 _destructor_details.tpl
+4 -rw-r--r--  1 501 80 1103 aoû  6 09:25 _destructor_summary.tpl
+0 -rw-r--r--  1 501 80    0 aoû  6 09:25 docblock.tpl
+0 -rw-r--r--  1 501 80    0 aoû  6 09:25 elementindex.tpl
+4 -rw-r--r--  1 501 80  654 aoû  6 09:25 errors.tpl
+4 -rw-r--r--  1 501 80  351 aoû  6 09:25 fileleft.tpl
+0 -rw-r--r--  1 501 80    0 aoû  6 09:25 filetags.tpl
+4 -rw-r--r--  1 501 80  393 aoû  6 09:25 _footer.tpl
+4 -rw-r--r--  1 501 80    2 aoû  6 09:25 function.tpl
+4 -rw-r--r--  1 501 80  226 aoû  6 09:25 _get_constant_type.tpl
+4 -rw-r--r--  1 501 80 1305 sep 12 08:39 _header.tpl
+4 -rw-r--r--  1 501 80    2 aoû  6 09:25 include.tpl
+4 -rw-r--r--  1 501 80  215 sep 12 08:39 index.tpl
+4 -rw-r--r--  1 501 80 1223 aoû  6 09:25 _inherited_constants.tpl
+4 -rw-r--r--  1 501 80 1866 aoû  6 09:25 _inherited_methods.tpl
+4 -rw-r--r--  1 501 80  247 aoû  6 09:25 _inheritence_tree.tpl
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 media
+4 -rw-r--r--  1 501 80 2894 aoû  6 09:25 _method_details.tpl
+4 -rw-r--r--  1 501 80 2019 aoû  6 09:25 _method_summary.tpl
+4 -rw-r--r--  1 501 80  118 aoû  6 09:25 packages.tpl
+8 -rw-r--r--  1 501 80 7184 aoû  6 09:25 page.tpl
+4 -rw-r--r--  1 501 80   58 aoû  6 09:25 pkgelementindex.tpl
+4 -rw-r--r--  1 501 80  540 aoû  6 09:25 _sub_classes.tpl
+4 -rw-r--r--  1 501 80  373 sep 12 08:39 _tags.tpl
+4 -rw-r--r--  1 501 80  594 aoû  6 09:25 tags.tpl
+4 -rw-r--r--  1 501 80 1456 aoû  6 09:25 var.tpl
+
+./doc/phpdoc/template/templates/media:
+total 32
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  450 aoû  6 09:25 class.css
+4 -rw-r--r--  1 501 80 1582 sep 12 08:39 common.css
+4 -rw-r--r--  1 501 80 1428 sep 12 08:39 constants.css
+8 -rw-r--r--  1 501 80 4707 aoû  6 09:25 logo.gif
+4 -rw-r--r--  1 501 80 1821 sep 12 08:39 methods.css
+
+./doc/phpdoc/template/templates_c:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+
+./doc/refcard:
+total 28
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  6 501 80  4096 oct 18 16:22 ..
+ 4 -rw-r--r--  1 501 80  1210 sep 12 08:35 refcard.css
+16 -rw-r--r--  1 501 80 16312 sep 12 08:35 refcard.html
+
+./lib:
+total 32
+4 drwxr-xr-x   8 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x   7 501 80 4096 oct 18 16:26 ..
+4 drwxr-xr-x   6 501 80 4096 oct 18 16:22 creole
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 i18n
+4 drwxr-xr-x   8 501 80 4096 oct 18 16:22 propel
+4 drwxr-xr-x   8 501 80 4096 oct 18 16:22 propel-generator
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 spyc
+4 drwxr-xr-x  24 501 80 4096 oct 18 16:22 symfony
+
+./lib/creole:
+total 116
+ 4 drwxr-xr-x  6 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  8 501 80  4096 oct 18 16:22 ..
+ 8 -rw-r--r--  1 501 80  6222 sep  1 12:34 CallableStatement.php
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 common
+ 8 -rw-r--r--  1 501 80  7225 sep  1 12:34 Connection.php
+16 -rw-r--r--  1 501 80 13956 sep  1 12:34 Creole.php
+ 8 -rw-r--r--  1 501 80  7407 sep  1 12:34 CreoleTypes.php
+ 4 drwxr-xr-x  9 501 80  4096 oct 18 16:22 drivers
+ 4 -rw-r--r--  1 501 80  1985 sep  1 12:34 IdGenerator.php
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 metadata
+12 -rw-r--r--  1 501 80  8549 sep  1 12:34 PreparedStatement.php
+ 4 -rw-r--r--  1 501 80  3428 sep  1 12:34 ResultSetIterator.php
+20 -rw-r--r--  1 501 80 17735 sep  1 12:34 ResultSet.php
+ 4 -rw-r--r--  1 501 80  3290 sep  1 12:34 SQLException.php
+ 8 -rw-r--r--  1 501 80  5647 sep  1 12:34 Statement.php
+ 4 drwxr-xr-x  3 501 80  4096 oct 18 16:22 util
+
+./lib/creole/common:
+total 64
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  6 501 80  4096 oct 18 16:22 ..
+ 8 -rw-r--r--  1 501 80  7626 sep  1 12:34 ConnectionCommon.php
+20 -rw-r--r--  1 501 80 18194 sep  1 12:34 PreparedStatementCommon.php
+16 -rw-r--r--  1 501 80 12995 sep  1 12:34 ResultSetCommon.php
+12 -rw-r--r--  1 501 80  9598 sep  1 12:34 StatementCommon.php
+
+./lib/creole/drivers:
+total 36
+4 drwxr-xr-x  9 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  6 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 mssql
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 mysql
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 mysqli
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 odbc
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 oracle
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 pgsql
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 sqlite
+
+./lib/creole/drivers/mssql:
+total 64
+ 4 drwxr-xr-x  3 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  9 501 80  4096 oct 18 16:22 ..
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 metadata
+16 -rw-r--r--  1 501 80 16095 sep  1 12:34 MSSQLCallableStatement.php
+12 -rw-r--r--  1 501 80  8708 sep  1 12:34 MSSQLConnection.php
+ 4 -rw-r--r--  1 501 80  1256 sep  1 12:34 MSSQLIdGenerator.php
+ 4 -rw-r--r--  1 501 80  3509 sep  1 12:34 MSSQLPreparedStatement.php
+ 8 -rw-r--r--  1 501 80  5219 sep  1 12:34 MSSQLResultSet.php
+ 4 -rw-r--r--  1 501 80  2939 sep  1 12:34 MSSQLStatement.php
+ 4 -rw-r--r--  1 501 80  3910 sep  1 12:34 MSSQLTypes.php
+
+./lib/creole/drivers/mssql/metadata:
+total 20
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 2387 sep  1 12:34 MSSQLDatabaseInfo.php
+8 -rw-r--r--  1 501 80 7369 sep  1 12:34 MSSQLTableInfo.php
+
+./lib/creole/drivers/mysql:
+total 52
+ 4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 .
+ 4 drwxr-xr-x  9 501 80 4096 oct 18 16:22 ..
+ 4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 metadata
+12 -rw-r--r--  1 501 80 9448 sep  1 12:34 MySQLConnection.php
+ 4 -rw-r--r--  1 501 80 1856 sep  1 12:34 MySQLIdGenerator.php
+ 4 -rw-r--r--  1 501 80 1695 sep  1 12:34 MySQLPreparedStatement.php
+ 8 -rw-r--r--  1 501 80 5767 sep  1 12:34 MySQLResultSet.php
+ 4 -rw-r--r--  1 501 80 1465 sep  1 12:34 MySQLStatement.php
+ 8 -rw-r--r--  1 501 80 4493 sep  1 12:34 MySQLTypes.php
+
+./lib/creole/drivers/mysql/metadata:
+total 24
+ 4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+ 4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+ 4 -rw-r--r--  1 501 80 2118 sep  1 12:34 MySQLDatabaseInfo.php
+12 -rw-r--r--  1 501 80 8525 sep  1 12:34 MySQLTableInfo.php
+
+./lib/creole/drivers/mysqli:
+total 44
+ 4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 .
+ 4 drwxr-xr-x  9 501 80 4096 oct 18 16:22 ..
+ 4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 metadata
+12 -rw-r--r--  1 501 80 8981 sep  1 12:34 MySQLiConnection.php
+ 4 -rw-r--r--  1 501 80 2925 sep  1 12:34 MySQLiIdGenerator.php
+ 4 -rw-r--r--  1 501 80 1729 sep  1 12:34 MySQLiPreparedStatement.php
+ 8 -rw-r--r--  1 501 80 5865 sep  1 12:34 MySQLiResultSet.php
+ 4 -rw-r--r--  1 501 80 1415 sep  1 12:34 MySQLiStatement.php
+
+./lib/creole/drivers/mysqli/metadata:
+total 20
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 2210 sep  1 12:34 MySQLiDatabaseInfo.php
+8 -rw-r--r--  1 501 80 5562 sep  1 12:34 MySQLiTableInfo.php
+
+./lib/creole/drivers/odbc:
+total 80
+ 4 drwxr-xr-x  4 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  9 501 80  4096 oct 18 16:22 ..
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 adapters
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 metadata
+ 8 -rw-r--r--  1 501 80  6675 sep  1 12:34 ODBCCachedResultSet.php
+12 -rw-r--r--  1 501 80 10316 sep  1 12:34 ODBCConnection.php
+ 4 -rw-r--r--  1 501 80  2930 sep  1 12:34 ODBCIdGenerator.php
+ 8 -rw-r--r--  1 501 80  7259 sep  1 12:34 ODBCPreparedStatement.php
+ 8 -rw-r--r--  1 501 80  5990 sep  1 12:34 ODBCResultSetCommon.php
+ 8 -rw-r--r--  1 501 80  6469 sep  1 12:34 ODBCResultSet.php
+ 4 -rw-r--r--  1 501 80  2148 sep  1 12:34 ODBCStatement.php
+ 8 -rw-r--r--  1 501 80  6905 sep  1 12:34 ODBCTypes.php
+ 4 -rw-r--r--  1 501 80  3943 sep  1 12:34 README
+
+./lib/creole/drivers/odbc/adapters:
+total 20
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 2792 sep  1 12:34 CodeBaseAdapter.php
+4 -rw-r--r--  1 501 80 2500 sep  1 12:34 MySQLAdapter.php
+4 -rw-r--r--  1 501 80 3052 sep  1 12:34 ODBCAdapter.php
+
+./lib/creole/drivers/odbc/metadata:
+total 20
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 2286 sep  1 12:34 ODBCDatabaseInfo.php
+8 -rw-r--r--  1 501 80 4738 sep  1 12:34 ODBCTableInfo.php
+
+./lib/creole/drivers/oracle:
+total 52
+ 4 drwxr-xr-x  3 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  9 501 80  4096 oct 18 16:22 ..
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 metadata
+12 -rw-r--r--  1 501 80  9679 sep  1 12:34 OCI8Connection.php
+ 4 -rw-r--r--  1 501 80  1410 sep  1 12:34 OCI8IdGenerator.php
+12 -rw-r--r--  1 501 80 11535 sep  1 12:34 OCI8PreparedStatement.php
+ 4 -rw-r--r--  1 501 80  3577 sep  1 12:34 OCI8ResultSet.php
+ 4 -rw-r--r--  1 501 80  1382 sep  1 12:34 OCI8Statement.php
+ 4 -rw-r--r--  1 501 80  3593 sep  1 12:34 OCI8Types.php
+
+./lib/creole/drivers/oracle/metadata:
+total 24
+ 4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+ 4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+ 4 -rw-r--r--  1 501 80 2943 sep  1 12:34 OCI8DatabaseInfo.php
+12 -rw-r--r--  1 501 80 8664 sep  1 12:34 OCI8TableInfo.php
+
+./lib/creole/drivers/pgsql:
+total 56
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  9 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 metadata
+8 -rw-r--r--  1 501 80 7671 sep  1 12:34 PgSQLConnection.php
+4 -rw-r--r--  1 501 80 2536 sep  1 12:34 PgSQLIdGenerator.php
+8 -rw-r--r--  1 501 80 5321 sep  1 12:34 PgSQLPreparedStatement.php
+4 -rw-r--r--  1 501 80 2921 sep  1 12:34 PgSQLResultSetIterator.php
+8 -rw-r--r--  1 501 80 7542 sep  1 12:34 PgSQLResultSet.php
+4 -rw-r--r--  1 501 80 1414 sep  1 12:34 PgSQLStatement.php
+8 -rw-r--r--  1 501 80 4117 sep  1 12:34 PgSQLTypes.php
+
+./lib/creole/drivers/pgsql/metadata:
+total 28
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  3 501 80  4096 oct 18 16:22 ..
+ 4 -rw-r--r--  1 501 80  2983 sep  1 12:34 PgSQLDatabaseInfo.php
+16 -rw-r--r--  1 501 80 16123 sep  1 12:34 PgSQLTableInfo.php
+
+./lib/creole/drivers/sqlite:
+total 52
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  9 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 metadata
+8 -rw-r--r--  1 501 80 7550 sep  1 12:34 SQLiteConnection.php
+4 -rw-r--r--  1 501 80 1179 sep  1 12:34 SQLiteIdGenerator.php
+4 -rw-r--r--  1 501 80 2271 sep  1 12:34 SQLitePreparedStatement.php
+4 -rw-r--r--  1 501 80 2519 sep  1 12:34 SQLiteResultSetIterator.php
+8 -rw-r--r--  1 501 80 4116 sep  1 12:34 SQLiteResultSet.php
+4 -rw-r--r--  1 501 80 1366 sep  1 12:34 SQLiteStatement.php
+8 -rw-r--r--  1 501 80 4735 sep  1 12:34 SQLiteTypes.php
+
+./lib/creole/drivers/sqlite/metadata:
+total 20
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 2367 sep  1 12:34 SQLiteDatabaseInfo.php
+8 -rw-r--r--  1 501 80 4974 sep  1 12:34 SQLiteTableInfo.php
+
+./lib/creole/metadata:
+total 48
+ 4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+ 4 drwxr-xr-x  6 501 80 4096 oct 18 16:22 ..
+ 8 -rw-r--r--  1 501 80 5683 sep  1 12:34 ColumnInfo.php
+ 8 -rw-r--r--  1 501 80 5830 sep  1 12:34 DatabaseInfo.php
+ 4 -rw-r--r--  1 501 80 3000 sep  1 12:34 ForeignKeyInfo.php
+ 4 -rw-r--r--  1 501 80 2283 sep  1 12:34 IndexInfo.php
+ 4 -rw-r--r--  1 501 80 2409 sep  1 12:34 PrimaryKeyInfo.php
+12 -rw-r--r--  1 501 80 8456 sep  1 12:34 TableInfo.php
+
+./lib/creole/util:
+total 28
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  6 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 2083 sep  1 12:34 Blob.php
+4 -rw-r--r--  1 501 80 3661 sep  1 12:34 Clob.php
+8 -rw-r--r--  1 501 80 7818 sep  1 12:34 Lob.php
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 sql
+
+./lib/creole/util/sql:
+total 16
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--  1 501 80 5841 sep  1 12:34 SQLStatementExtractor.php
+
+./lib/i18n:
+total 220
+ 4 drwxr-xr-x  4 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  8 501 80  4096 oct 18 16:22 ..
+ 8 -rw-r--r--  1 501 80  4955 sep  1 12:34 ChoiceFormat.php
+16 -rw-r--r--  1 501 80 15775 sep  1 12:34 CultureInfo.php
+12 drwxr-xr-x  2 501 80 12288 oct 18 16:22 data
+16 -rw-r--r--  1 501 80 15432 sep  1 12:34 DateFormat.php
+16 -rw-r--r--  1 501 80 14689 sep 15 11:08 DateTimeFormatInfo.php
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 Gettext
+ 4 -rw-r--r--  1 501 80  3006 sep  1 12:34 HTTPNegotiator.php
+ 4 -rw-r--r--  1 501 80  3859 sep  1 12:34 IMessageSource.php
+ 8 -rw-r--r--  1 501 80  4165 sep  1 12:34 MessageCache.php
+ 8 -rw-r--r--  1 501 80  4927 sep  1 12:34 MessageFormat.php
+12 -rw-r--r--  1 501 80  9973 sep  1 12:34 MessageSource_gettext.php
+12 -rw-r--r--  1 501 80 10412 sep  1 12:34 MessageSource_MySQL.php
+12 -rw-r--r--  1 501 80  8514 sep  1 12:34 MessageSource.php
+12 -rw-r--r--  1 501 80  8777 sep  1 12:34 MessageSource_SQLite.php
+12 -rw-r--r--  1 501 80 11663 sep  1 12:34 MessageSource_XLIFF.php
+20 -rw-r--r--  1 501 80 16982 sep  1 12:34 NumberFormatInfo.php
+ 8 -rw-r--r--  1 501 80  7504 sep  1 12:34 NumberFormat.php
+20 -rw-r--r--  1 501 80 17912 sep  1 12:34 TCache_Lite.php
+ 8 -rw-r--r--  1 501 80  4624 sep  1 12:34 util.php
+
+./lib/i18n/data:
+total 2588
+12 drwxr-xr-x  2 501 80 12288 oct 18 16:22 .
+ 4 drwxr-xr-x  4 501 80  4096 oct 18 16:22 ..
+ 8 -rw-r--r--  1 501 80  6022 sep  1 12:34 af.dat
+ 4 -rw-r--r--  1 501 80   431 sep  1 12:34 af_ZA.dat
+16 -rw-r--r--  1 501 80 12502 sep  1 12:34 am.dat
+ 4 -rw-r--r--  1 501 80   620 sep  1 12:34 am_ET.dat
+ 4 -rw-r--r--  1 501 80    40 sep  1 12:34 ar_AE.dat
+ 4 -rw-r--r--  1 501 80    40 sep  1 12:34 ar_BH.dat
+20 -rw-r--r--  1 501 80 17219 sep  1 12:34 ar.dat
+ 4 -rw-r--r--  1 501 80   224 sep  1 12:34 ar_DZ.dat
+ 4 -rw-r--r--  1 501 80   153 sep  1 12:34 ar_EG.dat
+ 4 -rw-r--r--  1 501 80   578 sep  1 12:34 ar_IN.dat
+ 4 -rw-r--r--  1 501 80   169 sep  1 12:34 ar_IQ.dat
+ 4 -rw-r--r--  1 501 80  1132 sep  1 12:34 ar_JO.dat
+ 4 -rw-r--r--  1 501 80   169 sep  1 12:34 ar_KW.dat
+ 4 -rw-r--r--  1 501 80  1003 sep  1 12:34 ar_LB.dat
+ 4 -rw-r--r--  1 501 80   169 sep  1 12:34 ar_LY.dat
+ 4 -rw-r--r--  1 501 80   224 sep  1 12:34 ar_MA.dat
+ 4 -rw-r--r--  1 501 80    40 sep  1 12:34 ar_OM.dat
+ 4 -rw-r--r--  1 501 80   443 sep  1 12:34 ar_QA.dat
+ 4 -rw-r--r--  1 501 80   443 sep  1 12:34 ar_SA.dat
+ 4 -rw-r--r--  1 501 80    40 sep  1 12:34 ar_SD.dat
+ 4 -rw-r--r--  1 501 80  1250 sep  1 12:34 ar_SY.dat
+ 4 -rw-r--r--  1 501 80   627 sep  1 12:34 ar_TN.dat
+ 4 -rw-r--r--  1 501 80   443 sep  1 12:34 ar_YE.dat
+ 4 -rw-r--r--  1 501 80   159 sep  1 12:34 be_BY.dat
+ 4 -rw-r--r--  1 501 80  1901 sep  1 12:34 be.dat
+ 4 -rw-r--r--  1 501 80   167 sep  1 12:34 bg_BG.dat
+48 -rw-r--r--  1 501 80 48927 sep  1 12:34 bg.dat
+ 8 -rw-r--r--  1 501 80  7167 sep  1 12:34 bn.dat
+ 4 -rw-r--r--  1 501 80   578 sep  1 12:34 bn_IN.dat
+16 -rw-r--r--  1 501 80 12873 sep  1 12:34 ca.dat
+ 4 -rw-r--r--  1 501 80   167 sep  1 12:34 ca_ES.dat
+ 4 -rw-r--r--  1 501 80   165 sep  1 12:34 cs_CZ.dat
+40 -rw-r--r--  1 501 80 40901 sep  1 12:34 cs.dat
+ 4 -rw-r--r--  1 501 80  1052 sep  1 12:34 cy.dat
+ 4 -rw-r--r--  1 501 80   489 sep  1 12:34 cy_GB.dat
+56 -rw-r--r--  1 501 80 52421 sep  1 12:34 da.dat
+ 4 -rw-r--r--  1 501 80   167 sep  1 12:34 da_DK.dat
+ 4 -rw-r--r--  1 501 80   776 sep  1 12:34 de_AT.dat
+ 4 -rw-r--r--  1 501 80   913 sep  1 12:34 de_BE.dat
+ 4 -rw-r--r--  1 501 80   782 sep  1 12:34 de_CH.dat
+40 -rw-r--r--  1 501 80 40755 sep  1 12:34 de.dat
+ 4 -rw-r--r--  1 501 80   167 sep  1 12:34 de_DE.dat
+ 4 -rw-r--r--  1 501 80   316 sep  1 12:34 de_LU.dat
+48 -rw-r--r--  1 501 80 47656 sep  1 12:34 el.dat
+ 4 -rw-r--r--  1 501 80   309 sep  1 12:34 el_GR.dat
+ 4 -rw-r--r--  1 501 80   384 sep  1 12:34 en_AU.dat
+ 4 -rw-r--r--  1 501 80   832 sep  1 12:34 en_BE.dat
+ 4 -rw-r--r--  1 501 80   300 sep  1 12:34 en_BW.dat
+ 4 -rw-r--r--  1 501 80   567 sep  1 12:34 en_CA.dat
+60 -rw-r--r--  1 501 80 56447 sep  1 12:34 en.dat
+ 4 -rw-r--r--  1 501 80   531 sep  1 12:34 en_GB.dat
+ 4 -rw-r--r--  1 501 80   560 sep  1 12:34 en_HK.dat
+ 4 -rw-r--r--  1 501 80   601 sep  1 12:34 en_IE.dat
+ 4 -rw-r--r--  1 501 80   578 sep  1 12:34 en_IN.dat
+ 4 -rw-r--r--  1 501 80   452 sep  1 12:34 en_MT.dat
+ 4 -rw-r--r--  1 501 80   383 sep  1 12:34 en_NZ.dat
+ 4 -rw-r--r--  1 501 80   499 sep  1 12:34 en_PH.dat
+ 4 -rw-r--r--  1 501 80   452 sep  1 12:34 en_PK.dat
+ 4 -rw-r--r--  1 501 80   605 sep  1 12:34 en_SG.dat
+ 4 -rw-r--r--  1 501 80   334 sep  1 12:34 en_US.dat
+ 4 -rw-r--r--  1 501 80   409 sep  1 12:34 en_US_POSIX.dat
+ 4 -rw-r--r--  1 501 80   166 sep  1 12:34 en_VI.dat
+ 4 -rw-r--r--  1 501 80   306 sep  1 12:34 en_ZA.dat
+ 4 -rw-r--r--  1 501 80   382 sep  1 12:34 en_ZW.dat
+16 -rw-r--r--  1 501 80 14102 sep  1 12:34 eo.dat
+ 4 -rw-r--r--  1 501 80   638 sep  1 12:34 es_AR.dat
+ 4 -rw-r--r--  1 501 80   512 sep  1 12:34 es_BO.dat
+ 4 -rw-r--r--  1 501 80   758 sep  1 12:34 es_CL.dat
+ 4 -rw-r--r--  1 501 80   634 sep  1 12:34 es_CO.dat
+ 4 -rw-r--r--  1 501 80   512 sep  1 12:34 es_CR.dat
+48 -rw-r--r--  1 501 80 46417 sep  1 12:34 es.dat
+ 4 -rw-r--r--  1 501 80   331 sep  1 12:34 es_DO.dat
+ 4 -rw-r--r--  1 501 80   624 sep  1 12:34 es_EC.dat
+ 4 -rw-r--r--  1 501 80   778 sep  1 12:34 es_ES.dat
+ 4 -rw-r--r--  1 501 80   328 sep  1 12:34 es_GT.dat
+ 4 -rw-r--r--  1 501 80   333 sep  1 12:34 es_HN.dat
+ 4 -rw-r--r--  1 501 80   455 sep  1 12:34 es_MX.dat
+ 4 -rw-r--r--  1 501 80   331 sep  1 12:34 es_NI.dat
+ 4 -rw-r--r--  1 501 80   331 sep  1 12:34 es_PA.dat
+ 4 -rw-r--r--  1 501 80   456 sep  1 12:34 es_PE.dat
+ 4 -rw-r--r--  1 501 80   411 sep  1 12:34 es_PR.dat
+ 4 -rw-r--r--  1 501 80   633 sep  1 12:34 es_PY.dat
+ 4 -rw-r--r--  1 501 80   331 sep  1 12:34 es_SV.dat
+ 4 -rw-r--r--  1 501 80   547 sep  1 12:34 es_US.dat
+ 4 -rw-r--r--  1 501 80   639 sep  1 12:34 es_UY.dat
+ 4 -rw-r--r--  1 501 80   638 sep  1 12:34 es_VE.dat
+12 -rw-r--r--  1 501 80 11321 sep  1 12:34 et.dat
+ 4 -rw-r--r--  1 501 80   167 sep  1 12:34 et_EE.dat
+ 8 -rw-r--r--  1 501 80  5218 sep  1 12:34 eu.dat
+ 4 -rw-r--r--  1 501 80   526 sep  1 12:34 eu_ES.dat
+ 8 -rw-r--r--  1 501 80  6153 sep  1 12:34 fa_AF.dat
+24 -rw-r--r--  1 501 80 22712 sep  1 12:34 fa.dat
+ 4 -rw-r--r--  1 501 80   455 sep  1 12:34 fa_IR.dat
+60 -rw-r--r--  1 501 80 55297 sep  1 12:34 fi.dat
+ 4 -rw-r--r--  1 501 80   167 sep  1 12:34 fi_FI.dat
+ 8 -rw-r--r--  1 501 80  5866 sep  1 12:34 fo.dat
+ 4 -rw-r--r--  1 501 80   166 sep  1 12:34 fo_FO.dat
+ 4 -rw-r--r--  1 501 80   493 sep  1 12:34 fr_BE.dat
+ 4 -rw-r--r--  1 501 80   710 sep  1 12:34 fr_CA.dat
+ 4 -rw-r--r--  1 501 80   611 sep  1 12:34 fr_CH.dat
+48 -rw-r--r--  1 501 80 47229 sep  1 12:34 fr.dat
+ 4 -rw-r--r--  1 501 80    40 sep  1 12:34 fr_FR.dat
+ 4 -rw-r--r--  1 501 80   362 sep  1 12:34 fr_LU.dat
+40 -rw-r--r--  1 501 80 39328 sep  1 12:34 ga.dat
+ 4 -rw-r--r--  1 501 80   511 sep  1 12:34 ga_IE.dat
+ 4 -rw-r--r--  1 501 80  1317 sep  1 12:34 gl.dat
+ 4 -rw-r--r--  1 501 80   485 sep  1 12:34 gl_ES.dat
+ 4 -rw-r--r--  1 501 80  2333 sep  1 12:34 gu.dat
+ 4 -rw-r--r--  1 501 80   584 sep  1 12:34 gu_IN.dat
+ 4 -rw-r--r--  1 501 80  1253 sep  1 12:34 gv.dat
+ 4 -rw-r--r--  1 501 80   480 sep  1 12:34 gv_GB.dat
+20 -rw-r--r--  1 501 80 16728 sep  1 12:34 he.dat
+ 4 -rw-r--r--  1 501 80   167 sep  1 12:34 he_IL.dat
+20 -rw-r--r--  1 501 80 17535 sep  1 12:34 hi.dat
+ 4 -rw-r--r--  1 501 80   578 sep  1 12:34 hi_IN.dat
+28 -rw-r--r--  1 501 80 28548 sep  1 12:34 hr.dat
+ 4 -rw-r--r--  1 501 80    40 sep  1 12:34 hr_HR.dat
+44 -rw-r--r--  1 501 80 41602 sep  1 12:34 hu.dat
+ 4 -rw-r--r--  1 501 80   167 sep  1 12:34 hu_HU.dat
+ 4 -rw-r--r--  1 501 80   169 sep  1 12:34 hy_AM.dat
+ 4 -rw-r--r--  1 501 80   837 sep  1 12:34 hy_AM_REVISED.dat
+12 -rw-r--r--  1 501 80 10450 sep  1 12:34 hy.dat
+20 -rw-r--r--  1 501 80 17797 sep  1 12:34 id.dat
+ 4 -rw-r--r--  1 501 80   292 sep  1 12:34 id_ID.dat
+ 4 -rw-r--r--  1 501 80    39 sep  1 12:34 in.dat
+ 4 -rw-r--r--  1 501 80    42 sep  1 12:34 in_ID.dat
+44 -rw-r--r--  1 501 80 42364 sep  1 12:34 is.dat
+ 4 -rw-r--r--  1 501 80   167 sep  1 12:34 is_IS.dat
+ 4 -rw-r--r--  1 501 80   611 sep  1 12:34 it_CH.dat
+60 -rw-r--r--  1 501 80 56968 sep  1 12:34 it.dat
+ 4 -rw-r--r--  1 501 80   442 sep  1 12:34 it_IT.dat
+ 4 -rw-r--r--  1 501 80    39 sep  1 12:34 iw.dat
+ 4 -rw-r--r--  1 501 80    42 sep  1 12:34 iw_IL.dat
+60 -rw-r--r--  1 501 80 56906 sep  1 12:34 ja.dat
+ 4 -rw-r--r--  1 501 80   159 sep  1 12:34 ja_JP.dat
+ 4 -rw-r--r--  1 501 80    66 sep  1 12:34 ja_JP_TRADITIONAL.dat
+ 4 -rw-r--r--  1 501 80  1758 sep  1 12:34 kk.dat
+ 4 -rw-r--r--  1 501 80   167 sep  1 12:34 kk_KZ.dat
+ 4 -rw-r--r--  1 501 80  1327 sep  1 12:34 kl.dat
+ 4 -rw-r--r--  1 501 80   426 sep  1 12:34 kl_GL.dat
+ 4 -rw-r--r--  1 501 80  2020 sep  1 12:34 kn.dat
+ 4 -rw-r--r--  1 501 80   583 sep  1 12:34 kn_IN.dat
+64 -rw-r--r--  1 501 80 59264 sep  1 12:34 ko.dat
+12 -rw-r--r--  1 501 80  8803 sep  1 12:34 kok.dat
+ 4 -rw-r--r--  1 501 80   578 sep  1 12:34 kok_IN.dat
+ 4 -rw-r--r--  1 501 80   490 sep  1 12:34 ko_KR.dat
+ 4 -rw-r--r--  1 501 80  1182 sep  1 12:34 kw.dat
+ 4 -rw-r--r--  1 501 80   483 sep  1 12:34 kw_GB.dat
+12 -rw-r--r--  1 501 80 11775 sep  1 12:34 lt.dat
+ 4 -rw-r--r--  1 501 80   166 sep  1 12:34 lt_LT.dat
+12 -rw-r--r--  1 501 80 11612 sep  1 12:34 lv.dat
+ 4 -rw-r--r--  1 501 80   167 sep  1 12:34 lv_LV.dat
+32 -rw-r--r--  1 501 80 31893 sep  1 12:34 mk.dat
+ 4 -rw-r--r--  1 501 80   168 sep  1 12:34 mk_MK.dat
+ 4 -rw-r--r--  1 501 80  1714 sep  1 12:34 ml.dat
+ 4 -rw-r--r--  1 501 80   574 sep  1 12:34 ml_IN.dat
+12 -rw-r--r--  1 501 80  8649 sep  1 12:34 mr.dat
+ 4 -rw-r--r--  1 501 80   578 sep  1 12:34 mr_IN.dat
+ 4 -rw-r--r--  1 501 80   590 sep  1 12:34 ms_BN.dat
+12 -rw-r--r--  1 501 80  9789 sep  1 12:34 ms.dat
+ 4 -rw-r--r--  1 501 80   436 sep  1 12:34 ms_MY.dat
+28 -rw-r--r--  1 501 80 27378 sep  1 12:34 mt.dat
+ 4 -rw-r--r--  1 501 80   165 sep  1 12:34 mt_MT.dat
+44 -rw-r--r--  1 501 80 43790 sep  1 12:34 nb.dat
+ 4 -rw-r--r--  1 501 80   168 sep  1 12:34 nb_NO.dat
+ 4 -rw-r--r--  1 501 80   483 sep  1 12:34 nl_BE.dat
+48 -rw-r--r--  1 501 80 47120 sep  1 12:34 nl.dat
+ 4 -rw-r--r--  1 501 80   167 sep  1 12:34 nl_NL.dat
+12 -rw-r--r--  1 501 80 10389 sep  1 12:34 nn.dat
+ 4 -rw-r--r--  1 501 80   167 sep  1 12:34 nn_NO.dat
+ 4 -rw-r--r--  1 501 80    39 sep  1 12:34 no.dat
+ 4 -rw-r--r--  1 501 80    42 sep  1 12:34 no_NO.dat
+ 4 -rw-r--r--  1 501 80    42 sep  1 12:34 no_NO_NY.dat
+ 4 -rw-r--r--  1 501 80  1263 sep  1 12:34 om.dat
+ 4 -rw-r--r--  1 501 80   587 sep  1 12:34 om_ET.dat
+ 4 -rw-r--r--  1 501 80   477 sep  1 12:34 om_KE.dat
+ 4 -rw-r--r--  1 501 80  1330 sep  1 12:34 or.dat
+ 4 -rw-r--r--  1 501 80   580 sep  1 12:34 or_IN.dat
+ 4 -rw-r--r--  1 501 80  1905 sep  1 12:34 pa.dat
+ 4 -rw-r--r--  1 501 80   581 sep  1 12:34 pa_IN.dat
+40 -rw-r--r--  1 501 80 36911 sep  1 12:34 pl.dat
+ 4 -rw-r--r--  1 501 80   167 sep  1 12:34 pl_PL.dat
+ 4 -rw-r--r--  1 501 80   453 sep  1 12:34 ps_AF.dat
+ 8 -rw-r--r--  1 501 80  5402 sep  1 12:34 ps.dat
+ 4 -rw-r--r--  1 501 80   338 sep  1 12:34 pt_BR.dat
+60 -rw-r--r--  1 501 80 56775 sep  1 12:34 pt.dat
+ 4 -rw-r--r--  1 501 80  3314 sep  1 12:34 pt_PT.dat
+12 -rw-r--r--  1 501 80 11482 sep  1 12:34 ro.dat
+12 -rw-r--r--  1 501 80 10099 sep  1 12:34 root.dat
+ 4 -rw-r--r--  1 501 80   167 sep  1 12:34 ro_RO.dat
+44 -rw-r--r--  1 501 80 44342 sep  1 12:34 ru.dat
+ 4 -rw-r--r--  1 501 80   347 sep  1 12:34 ru_RU.dat
+ 4 -rw-r--r--  1 501 80   618 sep  1 12:34 ru_UA.dat
+ 4 -rw-r--r--  1 501 80    44 sep  1 12:34 sh.dat
+ 4 -rw-r--r--  1 501 80    48 sep  1 12:34 sh_YU.dat
+36 -rw-r--r--  1 501 80 35607 sep  1 12:34 sk.dat
+ 4 -rw-r--r--  1 501 80   167 sep  1 12:34 sk_SK.dat
+16 -rw-r--r--  1 501 80 12702 sep  1 12:34 sl.dat
+ 4 -rw-r--r--  1 501 80    40 sep  1 12:34 sl_SI.dat
+ 8 -rw-r--r--  1 501 80  5099 sep  1 12:34 so.dat
+ 4 -rw-r--r--  1 501 80   275 sep  1 12:34 so_DJ.dat
+ 4 -rw-r--r--  1 501 80   275 sep  1 12:34 so_ET.dat
+ 4 -rw-r--r--  1 501 80   165 sep  1 12:34 so_KE.dat
+ 4 -rw-r--r--  1 501 80   275 sep  1 12:34 so_SO.dat
+ 4 -rw-r--r--  1 501 80   165 sep  1 12:34 sq_AL.dat
+ 8 -rw-r--r--  1 501 80  7051 sep  1 12:34 sq.dat
+ 4 -rw-r--r--  1 501 80    40 sep  1 12:34 sr_Cyrl.dat
+ 4 -rw-r--r--  1 501 80    40 sep  1 12:34 sr_Cyrl_YU.dat
+20 -rw-r--r--  1 501 80 19649 sep  1 12:34 sr.dat
+16 -rw-r--r--  1 501 80 13041 sep  1 12:34 sr_Latn.dat
+ 4 -rw-r--r--  1 501 80    40 sep  1 12:34 sr_Latn_YU.dat
+ 4 -rw-r--r--  1 501 80    48 sep  1 12:34 sr_YU.dat
+60 -rw-r--r--  1 501 80 55359 sep  1 12:34 sv.dat
+ 4 -rw-r--r--  1 501 80   167 sep  1 12:34 sv_FI.dat
+ 4 -rw-r--r--  1 501 80   168 sep  1 12:34 sv_SE.dat
+ 8 -rw-r--r--  1 501 80  4289 sep  1 12:34 sw.dat
+ 4 -rw-r--r--  1 501 80   165 sep  1 12:34 sw_KE.dat
+ 4 -rw-r--r--  1 501 80   167 sep  1 12:34 sw_TZ.dat
+20 -rw-r--r--  1 501 80 17889 sep  1 12:34 ta.dat
+ 4 -rw-r--r--  1 501 80   578 sep  1 12:34 ta_IN.dat
+ 4 -rw-r--r--  1 501 80  1918 sep  1 12:34 te.dat
+ 4 -rw-r--r--  1 501 80   580 sep  1 12:34 te_IN.dat
+20 -rw-r--r--  1 501 80 20426 sep  1 12:34 th.dat
+ 4 -rw-r--r--  1 501 80   165 sep  1 12:34 th_TH.dat
+ 4 -rw-r--r--  1 501 80    66 sep  1 12:34 th_TH_TRADITIONAL.dat
+ 4 -rw-r--r--  1 501 80  1410 sep  1 12:34 ti.dat
+ 4 -rw-r--r--  1 501 80  1509 sep  1 12:34 ti_ER.dat
+ 4 -rw-r--r--  1 501 80   553 sep  1 12:34 ti_ET.dat
+40 -rw-r--r--  1 501 80 40150 sep  1 12:34 tr.dat
+ 4 -rw-r--r--  1 501 80   167 sep  1 12:34 tr_TR.dat
+56 -rw-r--r--  1 501 80 51378 sep  1 12:34 uk.dat
+ 4 -rw-r--r--  1 501 80   167 sep  1 12:34 uk_UA.dat
+12 -rw-r--r--  1 501 80 11567 sep  1 12:34 vi.dat
+ 4 -rw-r--r--  1 501 80    40 sep  1 12:34 vi_VN.dat
+ 4 -rw-r--r--  1 501 80    48 sep  1 12:34 zh_CN.dat
+60 -rw-r--r--  1 501 80 56954 sep  1 12:34 zh.dat
+ 4 -rw-r--r--  1 501 80   468 sep  1 12:34 zh_Hans_CN.dat
+ 4 -rw-r--r--  1 501 80    40 sep  1 12:34 zh_Hans.dat
+ 4 -rw-r--r--  1 501 80   795 sep  1 12:34 zh_Hans_SG.dat
+48 -rw-r--r--  1 501 80 48833 sep  1 12:34 zh_Hant.dat
+ 4 -rw-r--r--  1 501 80   822 sep  1 12:34 zh_Hant_HK.dat
+ 4 -rw-r--r--  1 501 80   826 sep  1 12:34 zh_Hant_MO.dat
+ 4 -rw-r--r--  1 501 80   165 sep  1 12:34 zh_Hant_TW.dat
+ 4 -rw-r--r--  1 501 80    48 sep  1 12:34 zh_HK.dat
+ 4 -rw-r--r--  1 501 80    48 sep  1 12:34 zh_MO.dat
+ 4 -rw-r--r--  1 501 80    48 sep  1 12:34 zh_SG.dat
+ 4 -rw-r--r--  1 501 80    48 sep  1 12:34 zh_TW.dat
+
+./lib/i18n/Gettext:
+total 36
+ 4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+ 4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+12 -rw-r--r--  1 501 80 9354 sep  1 12:34 MO.php
+ 8 -rw-r--r--  1 501 80 4636 sep  1 12:34 PO.php
+ 8 -rw-r--r--  1 501 80 7992 sep  1 12:34 TGettext.php
+
+./lib/propel:
+total 56
+ 4 drwxr-xr-x  8 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  8 501 80  4096 oct 18 16:22 ..
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 adapter
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 logger
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 map
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 om
+ 4 -rw-r--r--  1 501 80  1952 sep  1 12:34 PropelException.php
+20 -rw-r--r--  1 501 80 16903 sep 10 10:49 Propel.php
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 util
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 validator
+
+./lib/propel/adapter:
+total 44
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  8 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--  1 501 80 6161 sep 10 10:49 DBAdapter.php
+4 -rw-r--r--  1 501 80 1440 sep  1 12:34 DBMSSQL.php
+4 -rw-r--r--  1 501 80 3729 sep  1 12:34 DBMySQL.php
+4 -rw-r--r--  1 501 80 3605 sep  1 12:34 DBNone.php
+4 -rw-r--r--  1 501 80 3872 sep  1 12:34 DBOracle.php
+4 -rw-r--r--  1 501 80 3478 sep  1 12:34 DBPostgres.php
+4 -rw-r--r--  1 501 80 3320 sep  1 12:34 DBSQLite.php
+4 -rw-r--r--  1 501 80 3897 sep  1 12:34 DBSybase.php
+
+./lib/propel/logger:
+total 20
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  8 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 3727 sep  1 12:34 BasicLogger.php
+8 -rw-r--r--  1 501 80 5290 sep  1 12:34 MojaviLogAdapter.php
+
+./lib/propel/map:
+total 48
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  8 501 80  4096 oct 18 16:22 ..
+12 -rw-r--r--  1 501 80  8485 sep  1 12:34 ColumnMap.php
+ 4 -rw-r--r--  1 501 80  4092 sep  1 12:34 DatabaseMap.php
+ 4 -rw-r--r--  1 501 80  3087 sep  1 12:34 MapBuilder.php
+16 -rw-r--r--  1 501 80 13348 sep  1 12:34 TableMap.php
+ 4 -rw-r--r--  1 501 80  3271 sep  1 12:34 ValidatorMap.php
+
+./lib/propel/om:
+total 24
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  8 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--  1 501 80 5676 sep  1 12:34 BaseObject.php
+4 -rw-r--r--  1 501 80 3533 sep  1 12:34 Persistent.php
+4 -rw-r--r--  1 501 80 2711 sep  1 12:34 PreOrderNodeIterator.php
+
+./lib/propel/util:
+total 132
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  8 501 80  4096 oct 18 16:22 ..
+40 -rw-r--r--  1 501 80 37371 sep 12 07:44 BasePeer.php
+56 -rw-r--r--  1 501 80 51714 sep 12 07:44 Criteria.php
+ 8 -rw-r--r--  1 501 80  5525 sep  1 12:34 PeerInfo.php
+12 -rw-r--r--  1 501 80  9980 sep  1 12:34 PropelPager.php
+ 8 -rw-r--r--  1 501 80  5730 sep  1 12:34 Transaction.php
+
+./lib/propel/validator:
+total 52
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  8 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 1763 sep  1 12:34 BasicValidator.php
+4 -rw-r--r--  1 501 80 2900 sep  1 12:34 MatchValidator.php
+4 -rw-r--r--  1 501 80 1918 sep  1 12:34 MaxLengthValidator.php
+4 -rw-r--r--  1 501 80 2014 sep  1 12:34 MaxValueValidator.php
+4 -rw-r--r--  1 501 80 1748 sep  1 12:34 MinLengthValidator.php
+4 -rw-r--r--  1 501 80 1998 sep  1 12:34 MinValueValidator.php
+4 -rw-r--r--  1 501 80 2780 sep  1 12:34 NotMatchValidator.php
+4 -rw-r--r--  1 501 80 1758 sep  1 12:34 RequiredValidator.php
+4 -rw-r--r--  1 501 80 2140 sep  1 12:34 UniqueValidator.php
+4 -rw-r--r--  1 501 80 2973 sep  1 12:34 ValidationFailed.php
+4 -rw-r--r--  1 501 80 1739 sep  1 12:34 ValidValuesValidator.php
+
+./lib/propel-generator:
+total 120
+ 4 drwxr-xr-x  8 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  8 501 80  4096 oct 18 16:22 ..
+ 4 drwxr-xr-x  5 501 80  4096 oct 18 16:22 build
+20 -rw-r--r--  1 501 80 18342 sep 12 08:33 build-propel.xml
+ 8 -rw-r--r--  1 501 80  6885 sep 12 08:33 build.properties-sample
+ 8 -rw-r--r--  1 501 80  4236 sep 12 08:33 build.xml
+ 8 -rw-r--r--  1 501 80  5755 sep 12 08:33 CHANGELOG
+ 4 drwxr-xr-x  3 501 80  4096 oct 18 16:22 classes
+ 8 -rw-r--r--  1 501 80  6336 sep 12 08:33 default.properties
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 dtd
+ 8 -rw-r--r--  1 501 80  7062 sep 12 08:33 INSTALL
+28 -rw-r--r--  1 501 80 26469 sep 12 08:33 LICENSE
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 pear
+ 4 drwxr-xr-x  3 501 80  4096 oct 18 16:22 projects
+ 4 drwxr-xr-x  6 501 80  4096 oct 18 16:22 templates
+
+./lib/propel-generator/build:
+total 20
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  8 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 classes
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 conf
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 sql
+
+./lib/propel-generator/build/classes:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+
+./lib/propel-generator/build/conf:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+
+./lib/propel-generator/build/sql:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+
+./lib/propel-generator/classes:
+total 12
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  8 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 propel
+
+./lib/propel-generator/classes/propel:
+total 16
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 engine
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 phing
+
+./lib/propel-generator/classes/propel/engine:
+total 24
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 builder
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 database
+4 -rw-r--r--  1 501 80 1407 sep 12 08:33 EngineException.php
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 platform
+
+./lib/propel-generator/classes/propel/engine/builder:
+total 20
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--  1 501 80 5197 sep 12 08:33 DataModelBuilder.php
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 om
+
+./lib/propel-generator/classes/propel/engine/builder/om:
+total 44
+ 4 drwxr-xr-x  3 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  3 501 80  4096 oct 18 16:22 ..
+ 4 -rw-r--r--  1 501 80  3555 sep 12 08:33 ClassTools.php
+ 8 -rw-r--r--  1 501 80  5117 sep 12 08:33 ObjectBuilder.php
+12 -rw-r--r--  1 501 80 11287 sep 12 08:33 OMBuilder.php
+ 8 -rw-r--r--  1 501 80  7811 sep 12 08:33 PeerBuilder.php
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 php5
+
+./lib/propel-generator/classes/propel/engine/builder/om/php5:
+total 264
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  3 501 80  4096 oct 18 16:22 ..
+40 -rw-r--r--  1 501 80 40377 sep 12 08:33 PHP5BasicObjectBuilder.php
+44 -rw-r--r--  1 501 80 41215 sep 12 08:33 PHP5BasicPeerBuilder.php
+40 -rw-r--r--  1 501 80 37728 sep 12 08:33 PHP5ComplexObjectBuilder.php
+32 -rw-r--r--  1 501 80 30566 sep 12 08:33 PHP5ComplexPeerBuilder.php
+ 4 -rw-r--r--  1 501 80  3753 sep 12 08:33 PHP5ExtensionNodeBuilder.php
+ 4 -rw-r--r--  1 501 80  3926 sep 12 08:33 PHP5ExtensionNodePeerBuilder.php
+ 4 -rw-r--r--  1 501 80  3743 sep 12 08:33 PHP5ExtensionObjectBuilder.php
+ 4 -rw-r--r--  1 501 80  3898 sep 12 08:33 PHP5ExtensionPeerBuilder.php
+ 4 -rw-r--r--  1 501 80  3665 sep 12 08:33 PHP5InterfaceBuilder.php
+12 -rw-r--r--  1 501 80  8930 sep 12 08:33 PHP5MapBuilderBuilder.php
+ 8 -rw-r--r--  1 501 80  5943 sep 12 08:33 PHP5MultiExtendObjectBuilder.php
+32 -rw-r--r--  1 501 80 32011 sep 12 08:33 PHP5NodeBuilder.php
+28 -rw-r--r--  1 501 80 27686 sep 12 08:33 PHP5NodePeerBuilder.php
+
+./lib/propel-generator/classes/propel/engine/database:
+total 16
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 model
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 transform
+
+./lib/propel-generator/classes/propel/engine/database/model:
+total 188
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  4 501 80  4096 oct 18 16:22 ..
+ 8 -rw-r--r--  1 501 80  5687 sep 12 08:33 AppData.php
+24 -rw-r--r--  1 501 80 22709 sep 12 08:33 Column.php
+ 4 -rw-r--r--  1 501 80  3078 sep 12 08:33 ConstraintNameGenerator.php
+16 -rw-r--r--  1 501 80 14604 sep 12 08:33 Database.php
+ 8 -rw-r--r--  1 501 80  8178 sep 12 08:33 Domain.php
+ 8 -rw-r--r--  1 501 80  7785 sep 12 08:33 ForeignKey.php
+ 4 -rw-r--r--  1 501 80  3194 sep 12 08:33 IdMethodParameter.php
+ 4 -rw-r--r--  1 501 80  1652 sep 12 08:33 IDMethod.php
+ 8 -rw-r--r--  1 501 80  7278 sep 12 08:33 Index.php
+ 4 -rw-r--r--  1 501 80  4065 sep 12 08:33 Inheritance.php
+ 4 -rw-r--r--  1 501 80  3795 sep 12 08:33 NameFactory.php
+ 4 -rw-r--r--  1 501 80  2567 sep 12 08:33 NameGenerator.php
+ 8 -rw-r--r--  1 501 80  4841 sep 12 08:33 PhpNameGenerator.php
+16 -rw-r--r--  1 501 80 12472 sep 12 08:33 PropelTypes.php
+ 8 -rw-r--r--  1 501 80  6547 sep 12 08:33 Rule.php
+36 -rw-r--r--  1 501 80 33804 sep 12 08:33 Table.php
+ 4 -rw-r--r--  1 501 80  2401 sep 12 08:33 Unique.php
+ 8 -rw-r--r--  1 501 80  5210 sep 12 08:33 Validator.php
+ 4 -rw-r--r--  1 501 80  3009 sep 12 08:33 XMLElement.php
+
+./lib/propel-generator/classes/propel/engine/database/transform:
+total 32
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  4 501 80  4096 oct 18 16:22 ..
+16 -rw-r--r--  1 501 80 13694 sep 12 08:33 XmlToAppData.php
+ 8 -rw-r--r--  1 501 80  5235 sep 12 08:33 XmlToData.php
+
+./lib/propel-generator/classes/propel/engine/platform:
+total 44
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--  1 501 80 4209 sep 12 08:33 PlatformDefaultImpl.php
+4 -rw-r--r--  1 501 80 2140 sep 12 08:33 PlatformFactory.php
+4 -rw-r--r--  1 501 80 3346 sep 12 08:33 PlatformMssqlImpl.php
+4 -rw-r--r--  1 501 80 3427 sep 12 08:33 PlatformMysqlImpl.php
+4 -rw-r--r--  1 501 80 3481 sep 12 08:33 PlatformOracleImpl.php
+4 -rw-r--r--  1 501 80 3792 sep 12 08:33 PlatformPgsqlImpl.php
+4 -rw-r--r--  1 501 80 3608 sep 12 08:33 Platform.php
+4 -rw-r--r--  1 501 80 2909 sep 12 08:33 PlatformSqliteImpl.php
+
+./lib/propel-generator/classes/propel/phing:
+total 148
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  4 501 80  4096 oct 18 16:22 ..
+16 -rw-r--r--  1 501 80 15857 sep 12 08:33 AbstractPropelDataModelTask.php
+24 -rw-r--r--  1 501 80 22335 sep 12 08:33 PropelCreoleTransformTask.php
+ 4 -rw-r--r--  1 501 80  3239 sep 12 08:33 PropelDataDTDTask.php
+16 -rw-r--r--  1 501 80 12321 sep 12 08:33 PropelDataDumpTask.php
+ 8 -rw-r--r--  1 501 80  4305 sep 12 08:33 PropelDataModelTask.php
+ 8 -rw-r--r--  1 501 80  6744 sep 12 08:33 PropelDataSQLTask.php
+ 8 -rw-r--r--  1 501 80  4918 sep 12 08:33 PropelGraphvizTask.php
+ 0 -rw-r--r--  1 501 80     0 sep 12 08:42 PropelNewOMTask.php
+12 -rw-r--r--  1 501 80 11378 sep 12 08:33 PropelOldOMTask.php
+ 8 -rw-r--r--  1 501 80  7886 sep 12 08:33 PropelOMTask.php
+24 -rw-r--r--  1 501 80 20765 sep 12 08:33 PropelSQLExec.php
+12 -rw-r--r--  1 501 80  9381 sep 12 08:33 PropelSQLTask.php
+
+./lib/propel-generator/dtd:
+total 16
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  8 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--  1 501 80 4263 sep 12 08:33 database.dtd
+
+./lib/propel-generator/pear:
+total 40
+ 4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+ 4 drwxr-xr-x  8 501 80 4096 oct 18 16:22 ..
+12 -rw-r--r--  1 501 80 9891 sep 12 08:33 build-pear-package.xml
+ 8 -rw-r--r--  1 501 80 6722 sep 12 08:33 build.properties
+ 4 -rw-r--r--  1 501 80 3598 sep 12 08:33 pear-build.xml
+ 4 -rw-r--r--  1 501 80  885 sep 12 08:33 pear-propel-gen
+ 4 -rw-r--r--  1 501 80 1119 sep 12 08:33 pear-propel-gen.bat
+
+./lib/propel-generator/projects:
+total 12
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  8 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 build
+
+./lib/propel-generator/projects/build:
+total 12
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 sql
+
+./lib/propel-generator/projects/build/sql:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+
+./lib/propel-generator/templates:
+total 28
+4 drwxr-xr-x  6 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  8 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 conf
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 data
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 om
+4 -rw-r--r--  1 501 80  343 sep 12 08:33 README
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 sql
+
+./lib/propel-generator/templates/conf:
+total 16
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  6 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  794 sep 12 08:33 Control.tpl
+4 -rw-r--r--  1 501 80 2157 sep 12 08:33 xml.tpl
+
+./lib/propel-generator/templates/data:
+total 16
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  6 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 dtd
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 dump
+
+./lib/propel-generator/templates/data/dtd:
+total 16
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  202 sep 12 08:33 dataset.tpl
+4 -rw-r--r--  1 501 80  283 sep 12 08:33 table.tpl
+
+./lib/propel-generator/templates/data/dump:
+total 20
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80   12 sep 12 08:33 bottom.tpl
+4 -rw-r--r--  1 501 80   26 sep 12 08:33 row.tpl
+4 -rw-r--r--  1 501 80  215 sep 12 08:33 top.tpl
+
+./lib/propel-generator/templates/om:
+total 16
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  6 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 php4
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 php5
+
+./lib/propel-generator/templates/om/php4:
+total 228
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  4 501 80  4096 oct 18 16:22 ..
+ 4 -rw-r--r--  1 501 80   954 sep 12 08:33 ExtensionNodePeer.tpl
+ 4 -rw-r--r--  1 501 80   925 sep 12 08:33 ExtensionNode.tpl
+ 4 -rw-r--r--  1 501 80   938 sep 12 08:33 ExtensionObject.tpl
+ 4 -rw-r--r--  1 501 80  1084 sep 12 08:33 ExtensionPeer.tpl
+ 4 -rw-r--r--  1 501 80   799 sep 12 08:33 Interface.tpl
+ 8 -rw-r--r--  1 501 80  5157 sep 12 08:33 MapBuilder.tpl
+ 4 -rw-r--r--  1 501 80  1445 sep 12 08:33 MultiExtendObject.tpl
+24 -rw-r--r--  1 501 80 23178 sep 12 08:33 NodePeer.tpl
+32 -rw-r--r--  1 501 80 30965 sep 12 08:33 Node.tpl
+64 -rw-r--r--  1 501 80 60673 sep 12 08:33 Object.tpl
+68 -rw-r--r--  1 501 80 61521 sep 12 08:33 Peer.tpl
+
+./lib/propel-generator/templates/om/php5:
+total 204
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  4 501 80  4096 oct 18 16:22 ..
+ 4 -rw-r--r--  1 501 80   958 sep 12 08:33 ExtensionNodePeer.tpl
+ 4 -rw-r--r--  1 501 80   929 sep 12 08:33 ExtensionNode.tpl
+ 4 -rw-r--r--  1 501 80  1265 sep 12 08:33 ExtensionObject.tpl
+ 4 -rw-r--r--  1 501 80  1049 sep 12 08:33 ExtensionPeer.tpl
+ 4 -rw-r--r--  1 501 80   840 sep 12 08:33 Interface.tpl
+ 8 -rw-r--r--  1 501 80  5082 sep 12 08:33 MapBuilder.tpl
+ 4 -rw-r--r--  1 501 80  1462 sep 12 08:33 MultiExtendObject.tpl
+20 -rw-r--r--  1 501 80 19974 sep 12 08:33 NodePeer.tpl
+28 -rw-r--r--  1 501 80 28025 sep 12 08:33 Node.tpl
+60 -rw-r--r--  1 501 80 56680 sep 12 08:33 Object.tpl
+56 -rw-r--r--  1 501 80 50322 sep 12 08:33 Peer.tpl
+
+./lib/propel-generator/templates/sql:
+total 20
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  6 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 base
+4 drwxr-xr-x  6 501 80 4096 oct 18 16:22 db-init
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 load
+
+./lib/propel-generator/templates/sql/base:
+total 28
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 mssql
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 mysql
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 oracle
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 pgsql
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 sqlite
+
+./lib/propel-generator/templates/sql/base/mssql:
+total 40
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  583 sep 12 08:33 columns.tpl
+4 -rw-r--r--  1 501 80 1753 sep 12 08:33 drop.tpl
+4 -rw-r--r--  1 501 80  524 sep 12 08:33 foreignkey.tpl
+4 -rw-r--r--  1 501 80  236 sep 12 08:33 index.tpl
+4 -rw-r--r--  1 501 80  154 sep 12 08:33 primarykey.tpl
+4 -rw-r--r--  1 501 80  346 sep 12 08:33 tablefk.tpl
+4 -rw-r--r--  1 501 80  936 sep 12 08:33 table.tpl
+4 -rw-r--r--  1 501 80  116 sep 12 08:33 unique.tpl
+
+./lib/propel-generator/templates/sql/base/mysql:
+total 48
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 1047 sep 12 08:33 columns.tpl
+4 -rw-r--r--  1 501 80  111 sep 12 08:33 database-end.tpl
+4 -rw-r--r--  1 501 80  149 sep 12 08:33 database-start.tpl
+4 -rw-r--r--  1 501 80   66 sep 12 08:33 drop.tpl
+4 -rw-r--r--  1 501 80 3431 sep 12 08:33 foreignkey.tpl
+4 -rw-r--r--  1 501 80  526 sep 12 08:33 index.tpl
+4 -rw-r--r--  1 501 80  265 sep 12 08:33 primarykey.tpl
+4 -rw-r--r--  1 501 80    3 sep 12 08:33 tablefk.tpl
+4 -rw-r--r--  1 501 80 1325 sep 12 08:33 table.tpl
+4 -rw-r--r--  1 501 80  398 sep 12 08:33 unique.tpl
+
+./lib/propel-generator/templates/sql/base/oracle:
+total 44
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  629 sep 12 08:33 columns.tpl
+4 -rw-r--r--  1 501 80  179 sep 12 08:33 drop.tpl
+4 -rw-r--r--  1 501 80  392 sep 12 08:33 foreignkey.tpl
+4 -rw-r--r--  1 501 80  237 sep 12 08:33 index.tpl
+4 -rw-r--r--  1 501 80  453 sep 12 08:33 primarykey.tpl
+4 -rw-r--r--  1 501 80  177 sep 12 08:33 sequence.tpl
+4 -rw-r--r--  1 501 80   81 sep 12 08:33 tablefk.tpl
+4 -rw-r--r--  1 501 80  850 sep 12 08:33 table.tpl
+4 -rw-r--r--  1 501 80  162 sep 12 08:33 unique.tpl
+
+./lib/propel-generator/templates/sql/base/pgsql:
+total 44
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  278 sep 12 08:33 columns.tpl
+4 -rw-r--r--  1 501 80  174 sep 12 08:33 drop.tpl
+4 -rw-r--r--  1 501 80  747 sep 12 08:33 foreignkey.tpl
+4 -rw-r--r--  1 501 80  239 sep 12 08:33 index.tpl
+4 -rw-r--r--  1 501 80  116 sep 12 08:33 primarykey.tpl
+4 -rw-r--r--  1 501 80  123 sep 12 08:33 sequence.tpl
+4 -rw-r--r--  1 501 80  418 sep 12 08:33 tablefk.tpl
+4 -rw-r--r--  1 501 80 1479 sep 12 08:33 table.tpl
+4 -rw-r--r--  1 501 80  163 sep 12 08:33 unique.tpl
+
+./lib/propel-generator/templates/sql/base/sqlite:
+total 36
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  644 sep 12 08:33 columns.tpl
+4 -rw-r--r--  1 501 80   45 sep 12 08:33 drop.tpl
+4 -rw-r--r--  1 501 80  296 sep 12 08:33 foreignkey.tpl
+4 -rw-r--r--  1 501 80  190 sep 12 08:33 index.tpl
+4 -rw-r--r--  1 501 80    4 sep 12 08:33 tablefk.tpl
+4 -rw-r--r--  1 501 80  797 sep 12 08:33 table.tpl
+4 -rw-r--r--  1 501 80  117 sep 12 08:33 unique.tpl
+
+./lib/propel-generator/templates/sql/db-init:
+total 28
+4 drwxr-xr-x  6 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  405 sep 12 08:33 Control.tpl
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 mssql
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 mysql
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 oracle
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 pgsql
+
+./lib/propel-generator/templates/sql/db-init/mssql:
+total 16
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  6 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  126 sep 12 08:33 unix.tpl
+4 -rw-r--r--  1 501 80   22 sep 12 08:33 windows.tpl
+
+./lib/propel-generator/templates/sql/db-init/mysql:
+total 12
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  6 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  180 sep 12 08:33 createdb.tpl
+
+./lib/propel-generator/templates/sql/db-init/oracle:
+total 12
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  6 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  120 sep 12 08:33 createdb.tpl
+
+./lib/propel-generator/templates/sql/db-init/pgsql:
+total 12
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  6 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  170 sep 12 08:33 createdb.tpl
+
+./lib/propel-generator/templates/sql/load:
+total 28
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 mssql
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 mysql
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 oracle
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 pgsql
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 sqlite
+
+./lib/propel-generator/templates/sql/load/mssql:
+total 16
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  437 sep 12 08:33 row.tpl
+4 -rw-r--r--  1 501 80  249 sep 12 08:33 val.tpl
+
+./lib/propel-generator/templates/sql/load/mysql:
+total 16
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  416 sep 12 08:33 row.tpl
+4 -rw-r--r--  1 501 80  230 sep 12 08:33 val.tpl
+
+./lib/propel-generator/templates/sql/load/oracle:
+total 16
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  438 sep 12 08:33 row.tpl
+4 -rw-r--r--  1 501 80  226 sep 12 08:33 val.tpl
+
+./lib/propel-generator/templates/sql/load/pgsql:
+total 16
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  437 sep 12 08:33 row.tpl
+4 -rw-r--r--  1 501 80  414 sep 12 08:33 val.tpl
+
+./lib/propel-generator/templates/sql/load/sqlite:
+total 16
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  438 sep 12 08:33 row.tpl
+4 -rw-r--r--  1 501 80  141 sep 12 08:33 val.tpl
+
+./lib/spyc:
+total 32
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  8 501 80  4096 oct 18 16:22 ..
+24 -rw-r--r--  1 501 80 24371 sep  1 12:34 spyc.php
+
+./lib/symfony:
+total 112
+4 drwxr-xr-x  24 501  80 4096 oct 18 16:22 .
+4 drwxr-xr-x   8 501  80 4096 oct 18 16:22 ..
+4 drwxr-xr-x   2 501  80 4096 oct 18 16:22 action
+4 drwxr-xr-x   5 501  80 4096 oct 18 16:22 addon
+4 drwxr-xr-x   2 501  80 4096 oct 18 16:22 cache
+4 drwxr-xr-x   2 501  80 4096 oct 18 16:22 config
+4 drwxr-xr-x   2 501  80 4096 oct 18 16:22 controller
+4 drwxr-xr-x   2 501  80 4096 oct 18 16:22 core
+4 drwxr-xr-x   2 501  80 4096 oct 18 16:22 database
+4 drwxr-xr-x   2 501  80 4096 oct 18 16:22 debug
+4 drwxr-xr-x   2 501  80 4096 oct 18 16:22 exception
+4 drwxr-xr-x   2 501  80 4096 oct 18 16:22 filter
+4 drwxr-xr-x   4 501  80 4096 oct 18 16:22 generator
+4 drwxr-xr-x   2 501  80 4096 oct 18 16:22 helper
+4 drwxr-xr-x   2 501  80 4096 oct 18 16:22 i18n
+4 drwxr-xr-x   4 501  80 4096 oct 18 16:22 log
+4 -rw-r--r--   1 501 501  122 oct  6 22:33 pear.php
+4 drwxr-xr-x   2 501  80 4096 oct 18 16:22 request
+4 drwxr-xr-x   2 501  80 4096 oct 18 16:22 stat
+4 drwxr-xr-x   2 501  80 4096 oct 18 16:22 storage
+8 -rw-r--r--   1 501  80 4211 oct  6 17:41 symfony.php
+4 drwxr-xr-x   2 501  80 4096 oct 18 16:22 test
+4 drwxr-xr-x   2 501  80 4096 oct 18 16:22 user
+4 drwxr-xr-x   2 501  80 4096 oct 18 16:22 util
+4 drwxr-xr-x   2 501  80 4096 oct 18 16:22 validator
+4 -rw-r--r--   1 501  80 1194 sep  1 12:34 version.php
+4 drwxr-xr-x   2 501  80 4096 oct 18 16:22 view
+
+./lib/symfony/action:
+total 36
+ 4 drwxr-xr-x   2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  24 501 80  4096 oct 18 16:22 ..
+16 -rw-r--r--   1 501 80 12506 oct 17 16:02 sfAction.class.php
+ 4 -rw-r--r--   1 501 80  2297 oct  5 20:10 sfActions.class.php
+ 4 -rw-r--r--   1 501 80  2257 sep  7 14:00 sfActionStack.class.php
+ 4 -rw-r--r--   1 501 80  2207 sep  7 14:00 sfActionStackEntry.class.php
+
+./lib/symfony/addon:
+total 76
+4 drwxr-xr-x   5 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  24 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 creole
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 propel
+4 -rw-r--r--   1 501 80  770 sep  1 12:34 sfBookmark.class.php.tobedone
+4 -rw-r--r--   1 501 80 2782 sep  1 12:34 sfBreadCrumb.class.php
+4 -rw-r--r--   1 501 80 2596 sep  1 12:34 sfHistory.class.php
+4 drwxr-xr-x   3 501 80 4096 oct 18 16:22 sfMail
+4 -rw-r--r--   1 501 80 4025 sep 17 21:03 sfMail.class.php
+8 -rw-r--r--   1 501 80 7028 sep  1 12:34 sfMediaLibrary.class.php
+8 -rw-r--r--   1 501 80 6595 oct 18 15:02 sfPager.class.php
+8 -rw-r--r--   1 501 80 7657 oct  5 09:31 sfShoppingCart.class.php
+4 -rw-r--r--   1 501 80 4072 sep 13 10:10 sfShoppingCartItem.class.php
+4 -rw-r--r--   1 501 80 2396 sep  1 12:34 sfSmallObjectCache.class.php
+8 -rw-r--r--   1 501 80 6588 sep  1 12:34 sfThumbnail.class.php
+
+./lib/symfony/addon/creole:
+total 12
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 drivers
+
+./lib/symfony/addon/creole/drivers:
+total 16
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--  1 501 80 6170 sep  1 12:34 sfDebugConnection.php
+
+./lib/symfony/addon/propel:
+total 16
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 builder
+4 -rw-r--r--  1 501 80 1054 sep  8 12:47 sfPropelAutoload.php
+
+./lib/symfony/addon/propel/builder:
+total 16
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 3597 sep 11 19:41 sfObjectBuilder.php
+4 -rw-r--r--  1 501 80 3716 sep 11 19:22 sfPeerBuilder.php
+
+./lib/symfony/addon/sfMail:
+total 16
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 phpmailer
+4 -rw-r--r--  1 501 80 3759 sep 17 15:36 PhpMailer.class.php
+
+./lib/symfony/addon/sfMail/phpmailer:
+total 96
+ 4 drwxr-xr-x  3 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  3 501 80  4096 oct 18 16:22 ..
+48 -rwxr-xr-x  1 501 80 46992 sep 20 13:37 class.phpmailer.php
+36 -rwxr-xr-x  1 501 80 34571 sep 20 13:37 class.smtp.php
+ 4 drwxr-xr-x  2 501 80  4096 oct 18 16:22 language
+
+./lib/symfony/addon/sfMail/phpmailer/language:
+total 88
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+4 -rwxr-xr-x  1 501 80 1150 sep 20 13:38 phpmailer.lang-br.php
+4 -rw-r--r--  1 501 80 1090 sep 20 13:38 phpmailer.lang-ca.php
+4 -rwxr-xr-x  1 501 80 1117 sep 20 13:38 phpmailer.lang-cz.php
+4 -rwxr-xr-x  1 501 80 1246 sep 20 13:38 phpmailer.lang-de.php
+4 -rw-r--r--  1 501 80 1117 sep 20 13:38 phpmailer.lang-dk.php
+4 -rwxr-xr-x  1 501 80 1062 sep 20 13:38 phpmailer.lang-en.php
+4 -rwxr-xr-x  1 501 80 1141 sep 20 13:38 phpmailer.lang-es.php
+4 -rw-r--r--  1 501 80 1197 sep 20 13:38 phpmailer.lang-fi.php
+4 -rw-r--r--  1 501 80 1238 sep 20 13:38 phpmailer.lang-fo.php
+4 -rwxr-xr-x  1 501 80 1162 sep 20 13:38 phpmailer.lang-fr.php
+4 -rw-r--r--  1 501 80 1106 sep 20 13:38 phpmailer.lang-hu.php
+4 -rwxr-xr-x  1 501 80 1352 sep 20 13:38 phpmailer.lang-it.php
+4 -rw-r--r--  1 501 80 1177 sep 20 13:38 phpmailer.lang-ja.php
+4 -rwxr-xr-x  1 501 80 1116 sep 20 13:38 phpmailer.lang-nl.php
+4 -rwxr-xr-x  1 501 80 1042 sep 20 13:38 phpmailer.lang-no.php
+4 -rw-r--r--  1 501 80 1199 sep 20 13:38 phpmailer.lang-pl.php
+4 -rw-r--r--  1 501 80 1120 sep 20 13:38 phpmailer.lang-ro.php
+4 -rw-r--r--  1 501 80 1122 sep 20 13:38 phpmailer.lang-ru.php
+4 -rwxr-xr-x  1 501 80 1093 sep 20 13:38 phpmailer.lang-se.php
+4 -rwxr-xr-x  1 501 80 1119 sep 20 13:38 phpmailer.lang-tr.php
+
+./lib/symfony/cache:
+total 32
+ 4 drwxr-xr-x   2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  24 501 80  4096 oct 18 16:22 ..
+ 4 -rw-r--r--   1 501 80  2697 sep 12 08:39 sfCache.class.php
+16 -rw-r--r--   1 501 80 13116 oct 17 16:22 sfFileCache.class.php
+ 4 -rw-r--r--   1 501 80  2748 oct  8 09:50 sfFunctionCache.class.php
+
+./lib/symfony/config:
+total 116
+ 4 drwxr-xr-x   2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  24 501 80  4096 oct 18 16:22 ..
+ 4 -rw-r--r--   1 501 80  3243 sep  8 10:05 sfAutoloadConfigHandler.class.php
+ 4 -rw-r--r--   1 501 80  3543 oct 18 14:43 sfCacheConfigHandler.class.php
+ 4 -rw-r--r--   1 501 80  4034 sep 18 09:08 sfCompileConfigHandler.class.php
+12 -rw-r--r--   1 501 80  8978 oct  6 17:57 sfConfigCache.class.php
+ 4 -rw-r--r--   1 501 80  3870 sep  8 10:05 sfConfigHandler.class.php
+ 8 -rw-r--r--   1 501 80  4512 sep 18 10:58 sfDatabaseConfigHandler.class.php
+ 4 -rw-r--r--   1 501 80  3822 oct  6 17:54 sfDefineEnvironmentConfigHandler.class.php
+ 8 -rw-r--r--   1 501 80  6277 oct  6 17:54 sfFactoryConfigHandler.class.php
+ 4 -rw-r--r--   1 501 80  2999 sep  8 10:05 sfFilterConfigHandler.class.php
+ 4 -rw-r--r--   1 501 80  2152 sep  8 10:05 sfGeneratorConfigHandler.class.php
+ 4 -rw-r--r--   1 501 80  2087 oct  2 11:42 sfModuleConfigHandler.class.php
+ 4 -rw-r--r--   1 501 80  3167 sep 18 10:57 sfPhpConfigHandler.class.php
+ 4 -rw-r--r--   1 501 80  2772 sep 14 13:53 sfPropelConfigHandler.class.php
+ 4 -rw-r--r--   1 501 80  3510 sep  8 10:06 sfRootConfigHandler.class.php
+ 4 -rw-r--r--   1 501 80  1759 sep  8 10:04 sfRoutingConfigHandler.class.php
+ 4 -rw-r--r--   1 501 80  2397 oct  5 21:55 sfSecurityConfigHandler.class.php
+16 -rw-r--r--   1 501 80 15244 sep 13 16:23 sfValidatorConfigHandler.class.php
+ 8 -rw-r--r--   1 501 80  5127 oct  6 22:09 sfViewConfigHandler.class.php
+ 4 -rw-r--r--   1 501 80  3255 oct  5 21:24 sfYamlConfigHandler.class.php
+
+./lib/symfony/controller:
+total 52
+ 4 drwxr-xr-x   2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  24 501 80  4096 oct 18 16:22 ..
+ 4 -rw-r--r--   1 501 80  1399 sep  7 13:14 sfConsoleController.class.php
+16 -rw-r--r--   1 501 80 15194 oct  7 10:47 sfController.class.php
+ 4 -rw-r--r--   1 501 80  2369 oct  5 17:42 sfFrontWebController.class.php
+12 -rw-r--r--   1 501 80 10042 oct 17 10:23 sfRouting.class.php
+ 8 -rw-r--r--   1 501 80  5195 oct 17 17:46 sfWebController.class.php
+
+./lib/symfony/core:
+total 16
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  24 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--   1 501 80 6440 oct  7 10:47 sfContext.class.php
+
+./lib/symfony/database:
+total 48
+ 4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+ 4 drwxr-xr-x  24 501 80 4096 oct 18 16:22 ..
+12 -rw-r--r--   1 501 80 8290 sep  1 12:34 sfCreoleDatabase.class.php
+ 4 -rw-r--r--   1 501 80 3053 sep  1 12:34 sfDatabase.class.php
+ 4 -rw-r--r--   1 501 80 2491 sep  1 12:34 sfDatabaseManager.class.php
+ 8 -rw-r--r--   1 501 80 6635 sep  1 12:34 sfMySQLDatabase.class.php
+ 4 -rw-r--r--   1 501 80 1903 sep  1 12:34 sfPDODatabase.class.php
+ 8 -rw-r--r--   1 501 80 6828 sep  1 12:34 sfPostgreSQLDatabase.class.php
+
+./lib/symfony/debug:
+total 20
+ 4 drwxr-xr-x   2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  24 501 80  4096 oct 18 16:22 ..
+12 -rw-r--r--   1 501 80 12158 sep 19 08:30 sfWebDebug.class.php
+
+./lib/symfony/exception:
+total 96
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  24 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80  854 sep  7 19:49 sfActionException.class.php
+4 -rw-r--r--   1 501 80  839 sep 25 13:14 sfActionStopException.class.php
+4 -rw-r--r--   1 501 80  879 sep  7 19:50 sfAutoloadException.class.php
+4 -rw-r--r--   1 501 80  860 sep  7 19:50 sfCacheException.class.php
+4 -rw-r--r--   1 501 80  905 sep  7 19:50 sfConfigurationException.class.php
+4 -rw-r--r--   1 501 80  847 sep  7 19:50 sfContextException.class.php
+4 -rw-r--r--   1 501 80  892 sep  7 19:50 sfControllerException.class.php
+4 -rw-r--r--   1 501 80  863 sep  7 19:50 sfDatabaseException.class.php
+4 -rw-r--r--   1 501 80  934 sep 25 09:50 sfError404Exception.class.php
+8 -rw-r--r--   1 501 80 4255 sep  7 19:50 sfException.class.php
+4 -rw-r--r--   1 501 80  912 sep  7 19:51 sfFactoryException.class.php
+4 -rw-r--r--   1 501 80  865 sep  7 19:51 sfFileException.class.php
+4 -rw-r--r--   1 501 80  895 sep  7 19:51 sfFilterException.class.php
+4 -rw-r--r--   1 501 80  887 sep  7 19:51 sfForwardException.class.php
+4 -rw-r--r--   1 501 80  883 sep  7 19:51 sfInitializationException.class.php
+4 -rw-r--r--   1 501 80  876 sep  7 19:51 sfParseException.class.php
+4 -rw-r--r--   1 501 80  857 sep  7 19:51 sfRenderException.class.php
+4 -rw-r--r--   1 501 80  863 sep  7 19:52 sfSecurityException.class.php
+4 -rw-r--r--   1 501 80  936 sep  7 19:52 sfStorageException.class.php
+4 -rw-r--r--   1 501 80  865 sep  7 19:52 sfValidatorException.class.php
+4 -rw-r--r--   1 501 80  845 sep  7 19:52 sfViewException.class.php
+
+./lib/symfony/filter:
+total 36
+ 4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+ 4 drwxr-xr-x  24 501 80 4096 oct 18 16:22 ..
+ 4 -rw-r--r--   1 501 80 2230 sep  7 14:00 sfBasicSecurityFilter.class.php
+12 -rw-r--r--   1 501 80 8449 oct 18 14:41 sfExecutionFilter.class.php
+ 4 -rw-r--r--   1 501 80 1263 sep  7 14:01 sfFilterChain.class.php
+ 4 -rw-r--r--   1 501 80 1608 sep 13 16:24 sfFilter.class.php
+ 4 -rw-r--r--   1 501 80 1413 sep  7 14:01 sfSecurityFilter.class.php
+
+./lib/symfony/generator:
+total 24
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  24 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 1321 sep  7 14:03 sfGenerator.class.php
+4 -rw-r--r--   1 501 80  944 oct 17 16:21 sfGeneratorManager.class.php
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 sfPropelAdmin
+4 drwxr-xr-x   4 501 80 4096 oct 18 16:22 sfPropelCrud
+
+./lib/symfony/generator/sfPropelAdmin:
+total 20
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 2958 oct 17 15:27 sfPropelAdminGenerator.class.php
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 skeleton
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 template
+
+./lib/symfony/generator/sfPropelAdmin/skeleton:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+
+./lib/symfony/generator/sfPropelAdmin/template:
+total 20
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 actions
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 templates
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 validate
+
+./lib/symfony/generator/sfPropelAdmin/template/actions:
+total 12
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 1696 sep 12 10:53 actions.class.php
+
+./lib/symfony/generator/sfPropelAdmin/template/templates:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+
+./lib/symfony/generator/sfPropelAdmin/template/validate:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  5 501 80 4096 oct 18 16:22 ..
+
+./lib/symfony/generator/sfPropelCrud:
+total 24
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--  1 501 80 7763 oct 17 17:28 sfPropelCrudGenerator.class.php
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 skeleton
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 template
+
+./lib/symfony/generator/sfPropelCrud/skeleton:
+total 28
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 actions
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 config
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 lib
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 templates
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 validate
+
+./lib/symfony/generator/sfPropelCrud/skeleton/actions:
+total 12
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  266 sep 12 10:58 actions.class.php
+
+./lib/symfony/generator/sfPropelCrud/skeleton/config:
+total 12
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  102 sep 12 10:56 generator.yml
+
+./lib/symfony/generator/sfPropelCrud/skeleton/lib:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+0 -rw-r--r--  1 501 80    0 oct  8 13:46 .sf
+
+./lib/symfony/generator/sfPropelCrud/skeleton/templates:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+0 -rw-r--r--  1 501 80    0 oct  8 13:46 .sf
+
+./lib/symfony/generator/sfPropelCrud/skeleton/validate:
+total 8
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  7 501 80 4096 oct 18 16:22 ..
+0 -rw-r--r--  1 501 80    0 oct  8 13:47 .sf
+
+./lib/symfony/generator/sfPropelCrud/template:
+total 12
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 templates
+
+./lib/symfony/generator/sfPropelCrud/template/templates:
+total 20
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  3 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80 2287 oct 17 16:24 editSuccess.php
+4 -rw-r--r--  1 501 80  772 oct 17 16:00 listSuccess.php
+4 -rw-r--r--  1 501 80  403 oct 17 16:00 showSuccess.php
+
+./lib/symfony/helper:
+total 92
+ 4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+ 4 drwxr-xr-x  24 501 80 4096 oct 18 16:22 ..
+ 8 -rw-r--r--   1 501 80 7246 oct  5 17:42 AssetHelper.php
+ 4 -rw-r--r--   1 501 80 2262 sep  1 12:34 CacheHelper.php
+ 4 -rw-r--r--   1 501 80 2849 sep 15 09:18 DateHelper.php
+12 -rw-r--r--   1 501 80 9124 oct 18 15:02 FormHelper.php
+ 4 -rw-r--r--   1 501 80  175 sep  1 12:34 HelperHelper.php
+ 4 -rw-r--r--   1 501 80  359 oct 18 11:13 I18NHelper.php
+12 -rw-r--r--   1 501 80 8998 sep 15 11:22 JavascriptHelper.php
+ 4 -rw-r--r--   1 501 80  611 sep 20 12:06 NumberHelper.php
+ 8 -rw-r--r--   1 501 80 6940 oct  5 09:32 ObjectHelper.php
+ 4 -rw-r--r--   1 501 80 1657 sep 27 20:45 PartialHelper.php
+ 4 -rw-r--r--   1 501 80 1963 oct 15 11:04 TagHelper.php
+ 8 -rw-r--r--   1 501 80 7598 sep 15 11:22 TextHelper.php
+ 4 -rw-r--r--   1 501 80 3900 oct 18 11:44 UrlHelper.php
+ 4 -rw-r--r--   1 501 80 2935 sep 16 09:27 ValidationHelper.php
+
+./lib/symfony/i18n:
+total 16
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  24 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 2121 sep  7 14:30 sfI18N.class.php
+4 -rw-r--r--   1 501 80 1545 sep  7 14:30 sfMessageFormat.class.php
+
+./lib/symfony/log:
+total 40
+ 4 drwxr-xr-x   4 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  24 501 80  4096 oct 18 16:22 ..
+ 4 drwxr-xr-x   2 501 80  4096 oct 18 16:22 Log
+20 -rw-r--r--   1 501 80 18781 oct  6 17:57 Log.class.php
+ 4 drwxr-xr-x   2 501 80  4096 oct 18 16:22 sfLogger
+ 4 -rw-r--r--   1 501 80  3162 sep  8 10:12 sfLogger.class.php
+
+./lib/symfony/log/Log:
+total 112
+ 4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+ 4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+ 8 -rw-r--r--  1 501 80 4948 sep  1 12:34 composite.class.php
+ 8 -rw-r--r--  1 501 80 5580 sep  1 12:34 console.class.php
+ 8 -rw-r--r--  1 501 80 6908 sep  1 12:34 daemon.class.php
+ 4 -rw-r--r--  1 501 80 3499 sep  1 12:34 display.class.php
+ 4 -rw-r--r--  1 501 80 3126 sep  1 12:34 error_log.class.php
+ 8 -rw-r--r--  1 501 80 8179 sep  1 12:34 file.class.php
+ 8 -rw-r--r--  1 501 80 6495 sep  1 12:34 mail.class.php
+ 8 -rw-r--r--  1 501 80 5111 sep  1 12:34 mcal.class.php
+ 4 -rw-r--r--  1 501 80 2123 sep  1 12:34 null.class.php
+ 8 -rw-r--r--  1 501 80 4167 sep  1 12:34 observer.class.php
+ 8 -rw-r--r--  1 501 80 6859 sep  1 12:34 sql.class.php
+12 -rw-r--r--  1 501 80 8394 sep  1 12:34 sqlite.class.php
+ 8 -rw-r--r--  1 501 80 5035 sep  1 12:34 syslog.class.php
+ 8 -rw-r--r--  1 501 80 8075 sep  1 12:34 win.class.php
+
+./lib/symfony/log/sfLogger:
+total 16
+4 drwxr-xr-x  2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  4 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--  1 501 80  696 sep  8 10:12 no.class.php
+4 -rw-r--r--  1 501 80 3816 sep  8 10:12 var.class.php
+
+./lib/symfony/request:
+total 36
+ 4 drwxr-xr-x   2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  24 501 80  4096 oct 18 16:22 ..
+ 4 -rw-r--r--   1 501 80  1083 sep  7 13:16 sfConsoleRequest.class.php
+ 8 -rw-r--r--   1 501 80  7217 sep 13 14:51 sfRequest.class.php
+16 -rw-r--r--   1 501 80 13823 sep 21 15:34 sfWebRequest.class.php
+
+./lib/symfony/stat:
+total 12
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  24 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 2615 sep 28 21:07 sfStats.class.php
+0 -rw-r--r--   1 501 80    0 sep  1 12:34 sfTracking.class.php
+
+./lib/symfony/storage:
+total 44
+ 4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+ 4 drwxr-xr-x  24 501 80 4096 oct 18 16:22 ..
+12 -rw-r--r--   1 501 80 8557 sep  7 14:03 sfMySQLSessionStorage.class.php
+12 -rw-r--r--   1 501 80 8470 sep  7 14:03 sfPostgreSQLSessionStorage.class.php
+ 4 -rw-r--r--   1 501 80 2944 sep 28 21:05 sfSessionStorage.class.php
+ 4 -rw-r--r--   1 501 80 3276 sep  7 14:05 sfSessionTestStorage.class.php
+ 4 -rw-r--r--   1 501 80 3922 sep  7 14:04 sfStorage.class.php
+
+./lib/symfony/test:
+total 16
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  24 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--   1 501 80 4140 oct  7 10:55 sfTestBrowser.class.php
+
+./lib/symfony/user:
+total 24
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  24 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--   1 501 80 5437 sep  7 14:06 sfBasicSecurityUser.class.php
+4 -rw-r--r--   1 501 80 1670 sep  7 14:05 sfSecurityUser.class.php
+4 -rw-r--r--   1 501 80 4081 sep 14 10:19 sfUser.class.php
+
+./lib/symfony/util:
+total 128
+ 4 drwxr-xr-x   2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  24 501 80  4096 oct 18 16:22 ..
+ 4 -rw-r--r--   1 501 80  1788 sep  7 14:30 sfInflector.class.php
+40 -rw-r--r--   1 501 80 38970 sep 15 11:48 sfMarkdown.class.php
+48 -rw-r--r--   1 501 80 45728 sep 11 09:43 sfMyYaml.class.php
+ 8 -rw-r--r--   1 501 80  6839 sep 14 14:29 sfParameterHolder.class.php
+ 4 -rw-r--r--   1 501 80  1297 sep 12 08:31 sfRegistry.class.php
+ 4 -rw-r--r--   1 501 80  2826 sep  7 14:27 sfTidy.class.php
+ 8 -rw-r--r--   1 501 80  5731 sep 19 20:00 sfToolkit.class.php
+ 4 -rw-r--r--   1 501 80  1326 sep  8 09:28 sfYaml.class.php
+
+./lib/symfony/validator:
+total 44
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  24 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80  866 sep  7 14:25 sfDateValidator.class.php
+4 -rw-r--r--   1 501 80 1557 sep  7 14:30 sfEmailValidator.class.php
+4 -rw-r--r--   1 501 80 1310 sep  7 14:30 sfHtmlValidator.class.php
+4 -rw-r--r--   1 501 80 4047 sep  7 14:25 sfNumberValidator.class.php
+4 -rw-r--r--   1 501 80 2718 sep  7 14:25 sfRegexValidator.class.php
+4 -rw-r--r--   1 501 80 4042 sep  7 14:25 sfStringValidator.class.php
+4 -rw-r--r--   1 501 80 1688 sep  7 14:26 sfValidator.class.php
+8 -rw-r--r--   1 501 80 7060 sep  7 14:26 sfValidatorManager.class.php
+
+./lib/symfony/view:
+total 48
+ 4 drwxr-xr-x   2 501 80  4096 oct 18 16:22 .
+ 4 drwxr-xr-x  24 501 80  4096 oct 18 16:22 ..
+ 8 -rw-r--r--   1 501 80  6628 oct 18 14:45 sfPHPView.class.php
+ 4 -rw-r--r--   1 501 80  1978 oct  6 18:02 sfRenderView.class.php
+12 -rw-r--r--   1 501 80  9154 oct 18 14:41 sfViewCacheManager.class.php
+16 -rw-r--r--   1 501 80 12817 sep 18 12:16 sfView.class.php
+
+./test:
+total 40
+4 drwxr-xr-x  10 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x   7 501 80 4096 oct 18 16:26 ..
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 addon
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 cache
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 controller
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 helper
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 liveapp
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 request
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 user
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 util
+
+./test/addon:
+total 20
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  10 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80  857 sep  1 13:06 sfBreadCrumbTest.php
+8 -rw-r--r--   1 501 80 5058 sep  1 13:06 sfShoppingCartTest.php
+
+./test/cache:
+total 12
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  10 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 2333 sep  1 13:05 sfFileCacheTest.php
+
+./test/controller:
+total 24
+ 4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+ 4 drwxr-xr-x  10 501 80 4096 oct 18 16:22 ..
+12 -rw-r--r--   1 501 80 8272 oct 15 20:14 sfRoutingTest.php
+ 4 -rw-r--r--   1 501 80 1721 oct  7 16:02 sfWebControllerTest.php
+
+./test/helper:
+total 36
+ 4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+ 4 drwxr-xr-x  10 501 80 4096 oct 18 16:22 ..
+12 -rw-r--r--   1 501 80 9155 sep 15 10:05 sfAssetTagHelperTest.php
+ 4 -rw-r--r--   1 501 80 3775 sep 15 10:07 sfFormTagHelperTest.php
+ 4 -rw-r--r--   1 501 80 2106 sep 15 08:47 sfTagHelperTest.php
+ 8 -rw-r--r--   1 501 80 5041 sep 15 10:10 sfTextHelperTest.php
+
+./test/liveapp:
+total 16
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  10 501 80 4096 oct 18 16:22 ..
+8 -rw-r--r--   1 501 80 6944 oct 15 13:53 sfLiveAppTest.php
+
+./test/request:
+total 20
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  10 501 80 4096 oct 18 16:22 ..
+8 -rwxr-xr-x   1 501 80 5302 sep 12 08:35 sfRequestTest.php
+4 -rwxr-xr-x   1 501 80 2191 sep 20 14:44 sfWebRequestTest.php
+
+./test/user:
+total 12
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  10 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80  881 sep  1 13:05 sfUserTest.php
+
+./test/util:
+total 24
+4 drwxr-xr-x   2 501 80 4096 oct 18 16:22 .
+4 drwxr-xr-x  10 501 80 4096 oct 18 16:22 ..
+4 -rw-r--r--   1 501 80 3271 sep  1 13:05 sfInflectorTest.php
+8 -rw-r--r--   1 501 80 5255 sep  1 13:06 sfParameterHolderTest.php
+4 -rw-r--r--   1 501 80  105 sep 15 08:47 sfToolkitTest.class.php

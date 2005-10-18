@@ -1,0 +1,215 @@
+Configuration explained
+=======================
+
+Overview
+--------
+
+To be simple an easy to use, SymFony uses a default configuration that should answer the most common needs of standard applications without modification. However, it is possible to customize almost everything about how the framework and your application run with the help of a set of simple and powerful configuration files. With these files, you will also be able to add specific parameters for your applications.
+
+Introduction
+------------
+
+The great advantage of web application frameworks is that they give full control on many aspects of a web application just with configuration files - no unreadable code. No need to look for a specific class to change the logging behaviour or to transform the way the urls show: just write some configuration, and you're done.
+
+However, this tactic has two serious drawbacks:
+
+* developpers end up writing endless hard-to-type XML files 
+* in a PHP architecture, every request takes much longer to process
+
+Symfony takes the best of configuration files and gets rid of the worst ones. As a matter of fact, the ambition of the configuration system in symfony is to be:
+
+* **powerful**: almost every aspect that can be managed using configuration files is managed using configuration files
+* **simple**: many aspects of configuration are not shown in a normal application, since they rarely need to be changed
+* **easy**: configuration files are easy to read, to modify and to create by the final user (the application developper)
+* **customizable**: the default configuration language is YAML, but it can be INI or XML or whatever the preference is
+* **fast**: the configuration files are never processed by the application but by the configuration system, which compiles them into a fast-processing chunk of code for the PHP server
+
+Is is not just a pious hope, since the PHP implementation of the configuration system actually allows it.
+
+Why YAML ?
+----------
+
+Symfony uses by default the [YAML][1] format instead of more traditionnal INI or XML formats. This decision is based on the great advantages of YAML, hereafter reproduced extensively from the YAML website:
+
+* YAML documents are very readable by humans.
+* YAML interacts well with scripting languages.
+* YAML uses host languages' native data structures.
+* YAML has a consistent information model.
+* YAML enables stream-based processing.
+* YAML is expressive and extensible.
+* YAML is easy to implement.
+
+Contrary to INI, it supports hierarchy. Contrary to XML, it doesn't use a complicated syntax with lots of <, > and closing tags. The only disadvantage of YAML is that its is not widely known by developpers for now, as compared to the other formats. However, it is so simple to learn that it would be a pity to miss its features just for a lack of fame. As of now, if you are not familiar with the YAML syntax, you should [get started][2] right away.
+
+But for those who are attached to other configuration file formats, keep reassured: symfony supports any type of configuration file, since they are processed by special handler that can be easily adapted.
+
+Configuration handlers
+----------------------
+
+The configuration files, whatever their format, are processed by some special classes called **handlers** that transform them into fast-processing PHP code. To allow a good reactivity in the develoment environment, the handlers parse the configuration at each request so that you can see immediately a change in a YAML file. But of course, in the production environment, the processing occurs once during the first request, and then the processed PHP code is stored in the cache. The perfomance is guaranteed since every request in production will just execute some well-optimized PHP code.
+
+For instance, if your `app.yml` contains:
+
+    all:
+      mail:
+        webmaster:         webmaster@mysite.com
+
+Then the file `config_app.yml.php`, located in the `cache` folder of your project, will contain:
+
+    <?php
+    @define('APP_MAIL_WEBMASTER', 'webmaster@mysite.com');
+    ?>
+
+This is a major advantage over many PHP frameworks, where configuration files are compiled at every request even in production. Unlike Java, PHP doesn't share an execution context between requests. For other PHP frameworks, keeping the flexibility of XML configuration files requires a major fall in performance to process all the configuration at every request. This is not the case in symfony: thanks to the cache system, the overhead caused by configuration very low.
+
+The other main advantage of using configuration handlers is that it allows you to use other formats than YAML. The configuration handlers just transform configuration files into optimized PHP code. If you have a parser for another language - and PHP has native support of XML and INI files - it is very easy to write a custom handler that will read you own configuration file format.
+
+Environments
+------------
+
+As a reminder, symfony provides three default environments : production (**prod**), test (**test**) and development (**dev**); you can add as many custom environments as you wish.
+
+The different environments share the same php code (apart from the front web controller), but can have completely different configuration files. Consequently, each environment can connect to a different database. 
+
+In the development environment, the logging and debugging settings are all set to on, since maintenance is more important than performance. On the contrary, the produciton environment has settings optimized for performance by default, so the production coniguration turns many features off.
+
+The case of the test environment is a little special. This environment is used when you execute some code of your project from a command line, and that would mostly happen for unit testing. Consequently, it is close to the production configuration, but as it doesn't communicate with a web browser, it simulates the use of cookies and other http specific components.
+
+To add a new environment, you don't need to create a directory or to use the `symfony` command. Simply duplicate the production front controller (`myproject/myapp/web/index.php`) to a file called, say, `index_myenv.php`, and change the `SF_ENVIRONMENT` definition to `myenv` in this file. That's it, you have your new environment. As you will see just now, this environment inherits all the default configuration plus the settings that are common to all environments.
+
+Configuration levels 
+--------------------
+
+There are several configuration levels in SymFony:
+
+*   a default configuration located in the framework
+*   a global configuration for the whole project
+*   a local configuration for each application of the project
+*   custom module configuration
+
+Of all the properties that can be customized, many are environnement-dependant. So many YAML configuration files are divided by environment, plus a tail section for all environments. Typical symfony configuration files result looking like:
+
+    ;Prodution environment settings
+    prod:
+      ...
+    
+    ;Development environment settings
+    dev:
+      ...
+    
+    ;Test environment settings
+    test:
+      ...
+    
+    ;Setting for all environments
+    all:
+      ...
+
+In addition, the framework defines default values in files that are not located in the project tree structure, but in the `$data_dir/symfony/config` directory of your symfony installation. These settings are inherited by all applications:
+    
+    ;Default settings:
+    default:
+      ...
+
+Part of these default definitions are repeated in the project/app/module configuration files as comments (prefixed with `;`), so that you know that some parameters are defined by default and that they can be modified:
+
+    all:
+    ;  default_module:         default
+    ;  default_action:         index
+    ;  
+    ;  error_404_module:       default
+    ;  error_404_action:       error404
+    ;  
+    ;  login_module:           default
+    ;  login_action:           login
+
+This means that a property can be defined several times, and the actual value results from the definition cascade with the following priority:
+
+1.  environment specific
+2.  all environments
+3.  default
+
+All configuration files are not environment-dependant.
+
+Structure
+---------
+
+To allow a better readability of the configuration files, symfony puts the parameter definitions in categories. Here is an example `app.yml`:
+
+    all:
+      .general:
+        tax:               19.6
+        
+      pager:
+        max_per_page:      5
+        
+      mail:
+        webmaster:         webmaster@mysite.com
+        commercial:        commerce@mysite.com
+
+The `.general`, `pager` and `mail` lines are category headers. Headers starting with `.` are only for readability and information, whereas the others define a **namespace**. A namespace allows you to use the same key name for several parameters, provided that they don't share the same namespace. This is especially useful when you need to access the values with constants.
+
+Constants and names
+-------------------
+
+In some cases, the configuration files are used to define constants, and the values of these constants have to be used in the actions.
+
+If you need to access the values defined in the previous example from your PHP code, you have to call the constants:
+
+    APP_TAX
+    APP_PAGER_MAX_PER_PAGE
+    APP_MAIL_WEBMASTER
+    APP_MAIL_COMMERCIAL
+
+The constant name is the concatenation of:
+
+*   A prefix related to the configuration file name (`SF_` for `settings.yml`, `APP_` for `app.yml`)
+*   the namespace, if it is defined, in upper case
+*   the name of the key in upper case
+
+The environment is not included, since your PHP code will only have access to the values defined for the envronment it's executed in.
+
+How to add a custom setting ?
+-----------------------------
+
+As you already saw, all the values defined in the `app.yml` file are available to the PHP code via constants. This implies that the only type of value accepted is a string. To give a boolean value, use either `on`, `1` or `true` for a positive value and `off`, `0` or `false` for a negative one.
+
+So if you need to add the credit card operators accepted in you site, you can write:
+
+    all:
+      creditcards:
+        fake:             off
+        visa:             on
+        americanexpress:  on
+    
+    dev:
+      creditcards:
+        fake:             on
+
+To know if the `fake` credit cards are accepted in the current environment, get the value of:
+
+    APP_CREDITCARDS_FAKE
+
+But maybe you need to add an array, an associative array or a lot of new parameters. In this case it is better to create a new configuration file, together with the corresponding configuration handler. Refer to the [related chapter](sfConfigHandler) for more details.
+
+Wrap up
+-------
+
+To sum up, just remember the syntax of configuration files:
+
+    environment:
+      .header1:
+        key1:      value1
+        key2:      value2
+      
+      namespace1:
+        key3:      value3
+        key4:      value4
+      
+      ; comment
+
+But now, enough of these general considerations, let's dig into the real configuration files and all their marvellous possibilities.
+
+[1]: http://www.yaml.org/                   "YAML" 
+[2]: http://www.yaml.org/start.html         "Get started with YAML"
+[3]: http://www.w3.org/People/Raggett/tidy/ "HTML Tidy"

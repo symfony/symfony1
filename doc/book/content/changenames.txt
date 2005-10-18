@@ -1,0 +1,35 @@
+How to rename a module or an action
+===================================
+
+Overview
+--------
+
+During the development of any application, the need to reorganize its components may arise. With symfony, it is easy to change names and locations of modules and actions. But the routing feature might be a more obvious solution to display custom names for your controller components.
+
+Renaming a module
+-----------------
+
+1. rename the module directory
+
+        myproject/myapp/modules/oldmodulename
+        //becomes
+        myproject/myapp/modules/newmodulename
+        
+2. modify the name of the module in the `actions.class.php` file (or in the various `action.class.php` files if you separated it)
+
+        class oldmodulenameActions extends sfActions
+        //becomes
+        class newmodulenameActions extends sfActions
+
+3. search the previous module name in the **actions**. Replace it when used in `->forward()` and `->redirect()`.
+4. search the previous module name in the **templates**. Replace it when used in a `link_to()` or `url_for()` helper.
+5. search the previous module name in the **configuration files**. Replace it when found (except under a `url` key in the `routing.yml` file).
+
+Renaming an action
+------------------
+
+Transferring an action from one module to another
+-------------------------------------------------
+
+Why not use routing instead ?
+-----------------------------

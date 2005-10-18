@@ -1,0 +1,14 @@
+= Passer en production =
+
+== Résumé ==
+
+SymFony fournit en standard les outils nécessaire pour gérer plusieurs environnements. Il permet notamment la synchronisation d'un environnement de développement vers un environnement de test puis un environnement de production de façon complètement automatisée, sans interruption de service et rapidement.
+
+== Introduction ==
+
+TODO
+
++ Gestion de Subversion lors d'un passage en prod avec branches ou tags
++ Gestion des patchs intermédiaires
++ Revenir en arrière en cas de problème
++ Mise à jour du schéma de base de données.

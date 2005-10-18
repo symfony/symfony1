@@ -1,0 +1,110 @@
+How to build an application scaffolding
+=======================================
+
+Overview
+--------
+
+Many applications are based on data stored in a database, and offer an interface to access it. Symfony automates the repetitive task of creating a simple CRUD (Create, Retrieve, Update, Delete) based on a table with its Propel CRUD Generator.
+
+Introduction
+------------
+
+User data access in a web application can most of the time be reduced to :
+
+* Create a record
+* Retrieve records (requesting the database) 
+* Update a record (and modify its fields)
+* Delete a record
+
+These operations are so common that they have a dedicated acronym : [C.R.U.D.][1]
+
+During the process of application creation, developpers always need to redevelop this part many times. There are actually many ways to do code it, but the skeleton of these actions can be reused. This means that the scaffolding of all the parts of an application that deal with data access can be automated.
+
+Symfony proposes a CRUD Generator based on the [Propel][2] data access layer.
+
+There are two ways of initiating a CRUD interface: 
+
+* you can mask the php code of the actions and the templates to avoid modifying it. This is useful if your data structure is not final, or if you want to completely rewrite some of the actions and keep the others. This is also useful if you just need to check that you can access the data in the database.
+* you can generate the code of the actions and the templates so that it can be modified.
+
+Initiating a CRUD
+-----------------
+
+To initiate a Propel CRUD that will create an 'article' module to deal with the records of the 'Article' table, type:
+
+    symfony init-propelcrud myapp article Article
+
+Access it with the default action:
+
+    http://myapp.example.com/index.php/article/
+
+And start using your simple application ! You can now create new records, modify them, delete them and see the content of the table.
+
+If you check the newly created `actions.class.php`, you will see that it is empty : everything is inherited from a Propel CRUD generator class.
+
+<?php
+
+class articleActions extends autoarticleActions
+{
+}
+
+?>
+
+If you are curious of the code behind these actions and templates, check the cache of your application (`myproject\cache\myapp\prod\module\autoArticle\`) or read below.
+
+Generating a CRUD
+-----------------
+
+Generating a Propel CRUD is really equivalent to building a scaffolding. It is actually creating a set of usable actions and templates that can access and modify the data of a given table.
+
+    Action           Purpose
+    -------          -------
+    index            forwards to the list action below
+    list             displays the list of all the records of the table
+    show             Displays the detailled view (line by line) of one record
+    edit             Displays a form to modify the fields of a record
+    update           action called by the form of the edit action above
+    delete           deletes a record
+    create           creates a new record
+                
+    Template         Purpose
+    --------         -------
+    editSuccess.php  Record edition form
+    listSuccess.php  list of all records
+    showSuccess.php  detail of one record
+
+
+To generate the Propel CRUD for the 'Article' table, type:
+
+    symfony generate-propelcrud myapp article Article
+
+If you access it with the default action, you will see no difference with the initiated version:
+
+    http://myapp.example.com/index.php/article/
+    
+However, the php code is there, in the `myproject/myapp/modules/articles/` directory, ready to be modified for your own needs. As an exampe, here is the beginning of the `actions.class.php` file:
+
+    class articleActions extends sfActions
+    {
+      public function executeIndex ()
+      {
+        return $this->forward('article', 'list');
+      }
+    
+      public function executeList ()
+      {
+        $this->articles = ArticlePeer::doSelect(new Criteria());
+      }
+    
+      public function executeShow ()
+      {
+        $this->article = ArticlePeer::retrieveByPk($this->getRequestParameter('id'));
+    
+        $this->forward404_unless($this->article instanceof Article);
+      }
+      ...
+
+Repeat the CRUD generation for all the tables that you want to interact with, and you have a working scaffolding for a web application.
+
+[1]: http://en.wikipedia.org/wiki/CRUD_(acronym)  "CRUD definition at Wikipedia"
+[2]: http://propel.phpdb.org/trac/ "Propel project site"

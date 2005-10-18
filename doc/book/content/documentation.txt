@@ -1,0 +1,12 @@
+How to document a project
+=========================
+
+Overview
+--------
+
+phpdoc + génération htmldoc, html, PDF, ...
+
+Introduction
+------------
+
+**TODO**

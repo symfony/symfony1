@@ -1,0 +1,17 @@
+- %SF_SYMFONY_LIB_DIR%/symfony/util/sfParameterHolder.class.php
+- %SF_SYMFONY_LIB_DIR%/spyc/spyc.php
+- %SF_SYMFONY_LIB_DIR%/symfony/util/sfYaml.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/cache/sfCache.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/cache/sfFileCache.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/config/sfConfigCache.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/config/sfConfigHandler.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/config/sfYamlConfigHandler.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/config/sfAutoloadConfigHandler.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/config/sfRootConfigHandler.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/exception/sfException.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/exception/sfAutoloadException.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/exception/sfCacheException.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/exception/sfConfigurationException.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/exception/sfParseException.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/util/sfToolkit.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/symfony.php

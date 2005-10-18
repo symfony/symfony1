@@ -1,0 +1,39 @@
+How to add a breadcrumb
+=======================
+
+Introduction
+------------
+
+SymFony can automate the display of a breadcrumb in the pages of a website, provided that you defined a site structure (see more about this configuration file in the [site structure](BreadCrumb.txt) chapter). Defined as a *slot*, the breadcrumb can be included in the global template or in the templates of the only modules in which you need it to be displayed. By default, the breadcrumb class computes the breadcrumb for a page from the information of the site structure, but you can override this behaviour in a module if you need it to display specific information.
+
+Default breadcrumb
+------------------
+
+### Rules
+
+If the breadcrumb *slot* is in the template of an action, then the name of the pages and the links of the breadcrumb are build according to the following logic:
+
+ 1. The couple `module/action` is searched in the `treestructure.xml` file
+ 2. If it is found
+   1. The name of the node containing the action is given to the final leaf of the breadcrumb. This is generally the name of the current page, or page group.
+   2. If it is found in a `branch` type node
+     1. The tree structure of this particular node is browsed through, up until the last father node, to build the other parts of the breadcrumb
+     2. The `root` node is added at the beginning of the breadcrumb
+   3. If it is found in a `slip` type node
+     1. If this node is already present in the previous breadcrumb
+       1. The previous breadcrumb is truncated to the node corresponding to the action
+     2. If this node is not present in the previous breadcrumb
+       1. The new breadcrum is the addition of the previous breadcrumb and the the newly created leaf
+   4. The breadcrumb template is called for the display and the HTML translation of the elements
+ 3. If it is not found
+   1. The breadcrumb is reseted. It is not displayed in the page
+
+**TODO**: case of a *slip* node with a son node
+
+### Syntax
+
+Custom breadcrumb
+-----------------
+
+### Rules
+### Syntax

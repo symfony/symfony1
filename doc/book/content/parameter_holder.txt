@@ -1,0 +1,175 @@
+Parameter Holders
+=================
+
+Overview
+--------
+
+Many of the objects available in symfony have the ability to be extended. They host a parameter holder, in which new data can be kept. This can be particularly useful to add punctually a custom attribute without overriding the full class.
+
+Introduction
+------------
+
+When dealing with web requests, user sessions or custom business objects like shopping carts, the need of extension often arises. If the extension carries a logic, it has to be done by extending (or overriding) the class, but if the need is simply data storage, the solution is the parameter holder.
+
+The `sfRequest`, `sfUser` and `sfShoppingCart` objects, among other, have an attribute of class `sfParameterHolder` in which additional data can be stored and retrieved without any need to override the class.
+
+**Note**: the addition of an attribute holder to an object is made by a [composition][1] of the `sfParameterHolder` and the object, rather than by inheritance. This avoids problems during further extensions of the classes.
+
+The parameter holder class
+--------------------------
+
+The `sfParameterHolder` object is an extensible repository for data of any kind (string, associative array, object, etc.). 
+
+The `->set($key,$value)` and `->get($key, $default_value)` methods are used to set a new parameter and get its value.
+
+    $myPH = new sfParameterHolder();
+    
+    $myPH->set('weather','sunny');
+    $myPH->set('temperature','cool');
+    
+    $myPH->get('weather','no idea')   =>  sunny
+    $myPH->get('temperature')         =>  cool
+
+The `->has($key)` method is used to check if a parameter exists.
+
+    $myPH->has('temperature')         =>  true
+    $myPH->has('humidity')            =>  false
+
+The `->getAll()` method is used to get all the parameters as an associative array. The `->getNames()` method is used to get only the names of the parameters hold:
+
+    $myPH->getAll()                   =>   { 'weather' => 'sunny' , 'temperature' => 'cool' }
+    $myPH->getNames()                 =>   [ 'weather' , 'temperature' ]
+
+If you need to add several parameters at once, use the `->add()` method with an associative array as argument:
+
+    $myParameters = { 'humidity' => 0.8, 'forecast' => $forecast };
+    $myPH->add($myParameters);
+
+Use the `->remove($key)` method to delete one parameter and its key, or the `->clear()` method to reset the whole parameter holder.
+
+    $myPH->remove('temperature');
+    $myPH->has('temperature')         =>  false
+
+Namespaces
+----------
+
+Parameter holders also have the ability to deal with namespaces. The namespaces are completely isolated from each other. When no namespace is precised, as in the examples above, the default namespace 'symfony/default' is used.
+
+    $myPH->set('weather','sunny');
+    $myPH->set('weather','foggy','symfony/my/namespace');
+    
+    $myPH->get('weather')                              =>  sunny
+    $myPH->get('weather',null,'symfony/my/namespace')  =>  foggy
+
+>**Note**: when you do a `->get()` over a namespace, the second argument (the default value) is required.
+
+The `->getAll()` method is limited to a namespace. Without any argument, it returns the parameters of the default namespace. If a namespace is passed as an argument, only the parameters of this namespace are returned:
+
+    $myPH->getAll('symfony/my/namespace') =>  { 'weather', 'foggy' }
+
+The `->hasNamespace($ns)`, `->getNamespaces()` and `->removeNamespace($ns)` work as you imagine they do:
+
+    $myPH->hasNamespace('symfony/my/namespace')       =>  true
+    $myPH->hasNamespace('symfony/other')              =>  false
+    
+    $myPH->getNamespaces()                            => ['symfony/default','symfony/my/namespace']
+    
+    $myPH->removeNamespace('symfony/my/namespace');
+    $myPH->has('weather',null,'symfony/my/namespace') =>  false
+
+If you want that all the `sfParameterHolder` methods use a default namespace doifferent from 'symfony/default', you have to set it during initialization:
+
+    $mySpecialPH = new sfParameterHolder('symfony/special');
+    $mySpecialPH->getNamespaces()                     => ['symfony/special']
+
+sfRequest parameter holders
+---------------------------
+
+The `sfRequest` object has two prebuilt parameter holders, and convenient shortcuts to their content:
+
+* the **ParameterHolder** contains the parameters of the request (passed as GET, POST or via the symfony routing policy). They can be read but not written.
+
+        $myPH = $this->getRequest()->getParameterHolder();
+
+* the **AttributeHolder** can pass data between the action and the template, or between several actions; it is erased at every new request
+
+        $myPH = $this->getRequest()->getAttributeHolder();
+
+They are both of class `sfParameterHolder`.
+
+As a matter of fact, the logic of the parameter holders is almost hidden since the `sfAction` and the `sfRequest` obects have shortcuts that bypass the parameter holder logic.
+
+    $param = $this->getRequestParameter('param','default');
+    //is equivalent to
+    $param = $this->getRequest()->getParameter('param','default');
+    //is equivalent to
+    $param = $this->getRequest()->getParameterHolder()->get('param','default');
+    
+    $this->getRequest()->setAttribute('attrib', $value);
+    //is equivalent to
+    $this->getRequest()->getAttributeHolder()->set('attrib', $value);  
+      
+    $attrib = $this->getRequest()->getAttribute('attrib');
+    //is equivalent to
+    $attrib = $this->getRequest()->getAttributeHolder()->get('attrib');
+
+For instance, if you need to get the parameter `id` in a request called by:
+
+    http://myapp.example.com/index.php/module/article/action/read/id/234
+    // or
+    http://myapp.example.com/index.php/module/article/action/read?id=234
+    // or
+    http://myapp.example.com/index.php/module/article/action/read
+    //with id=234 in the POST HTTP header
+    
+You simply need to write, in the action `read` of the `article` module:
+
+    $id = $this->getRequestParameter('id',null);
+
+Now let's imagine that you need to display a list in two columns. The switch to the second column must occur after the fifth element is displayed. Yor template would look like:
+
+    <table><tr><td><ul>
+    <?php $request->setAttribute('itemsdisplayed', 0) ?>
+    <?php foreach ($items as $item): ?>
+      <li>Item <?= $item->to_s() ?></li>
+      <?php $request->setAttribute('itemsdisplayed', $request->getAttribute('itemsdisplayed')+1) ?>
+      <?php if ($request->getAttribute('itemsdisplayed')>5): ?>
+         </ul></td><td><ul>
+         <?php $request->setAttribute('itemsdisplayed', -50) ?>
+      <?php endif ?> 
+    <?php endforeach ?>
+    </ul></td></tr></table>
+
+sfUser parameter holders
+-----------------------
+
+The `sfUser` object also has two parameter holders:
+
+* the **ParameterHolder** is not persistent; it is erased at every new request
+
+        $myPH = $this->getUser()->getParameterHolder();
+
+* the **AttributeHolder** keeps data throughout requests; you should use it as soon as you need persistent session data
+
+        $myPH = $this->getUser()->getAttributeHolder();
+
+As for the `sfRequest` object, the `sfUser` objects has shortcut methods to access its parameter holders:
+
+    $this->getUser()->setAttribute('attrib', $value);
+    //is equivalent to
+    $this->getUser()->getAttributeHolder()->set('attrib', $value);  
+    
+Other objects
+-------------
+
+Lots of other objects in the symfony framework also have one parameter holder. For instance:
+
+* `sfShoppingCart`
+* `sfShoppingCartItem`
+* `sfPager`
+* `sfFilter`
+* ...
+
+For these objects, the common `->getAttribute()` and `->setAttribute()` shortcut methods are available.
+
+[1]: http://en.wikipedia.org/wiki/Object_composition    "Object composition definition at Wikipedia"

@@ -1,0 +1,269 @@
+How to speed up a site with the caching system
+==============================================
+
+Introduction
+------------
+
+SymFony gère en natif le cache HTML. 2 niveaux de cache sont disponibles :
+
+ * cache du résultat d'une action ;
+ * cache d'un fragment d'une template d'une action.
+
+Dans le cas du cache du résultat d'une action, seule la partie HTML de la template de l'action est mise en cache. Les templates globales (décorateurs) ne sont jamais mises en cache.
+
+SymFony ne gère que du cache HTML sur disque. Il n'est pas possible de stocker ce cache en mémoire ou en base de données. Cette décision permet d'avoir à la fois une gestion simple du système de cache tout en gardant de bonnes performances.
+
+Le cache est stocké dans le répertoire cache/app/html de votre projet (app étant le nom de l'application concernée) dans une arborescence à 3 niveaux.
+
+Le cache est géré par la classe `sfCache` et les raccourcis par `CacheHelper`.
+
+Caching the result of an action
+-------------------------------
+
+La configuration de la gestion du cache s'effectue directement au niveau de l'initialisation de l'action :
+
+    class Action_Actions extends sfAction
+    {
+      public function initAction()
+      {
+        $this->setCache(86400, 'Index', 'List');
+    
+        $this->setCache(array(
+          'lifeTime' => 86400,
+          'addParametersFrom' => array($this->getUser()),
+          'ignoreParameters' => array('key_request_param1', 'key_request_param2');
+          'actions' => array('Index', 'List'),
+          'id' => 'unique/id/for/this/action',
+        ));
+    
+        ...
+      }
+    
+      public function runIndex()
+      {
+        ...
+      }
+    
+      public function runList()
+      {
+        ...
+      }
+    
+      public function runSave()
+      {
+        ...
+      }
+    }
+    
+    ...
+
+
+La methode `->setCache()` permet de définir les actions à mettre en cache. Il existe 2 versions de cette méthode :
+
+ * une version simple pour gérer la plupart des cas ;
+ * une version plus complète et plus souple pour les situations plus complexes.
+
+Dans l'exemple précédent, les actions ''Index'' et ''List'' seront mise en cache durant 1 journée (86400 secondes).
+
+Il est également possible de mettre en cache toutes les actions :
+
+    $this->setCache(86400, sfAction::ALL);
+
+ou d'utiliser plusieurs directives `->setCache()` pour obtenir des configurations plus complexes :
+
+    $this->setCache(); // durée par défaut 86400 et actions sfAction::ALL
+    $this->setCache(60 * 5, 'Index');
+
+Dans cet exemple, toutes les actions seront mises en cache pour 1 journée sauf l'action ''Index'' qui sera en cache pour 5 minutes.
+
+Caching a template fragment
+---------------------------
+
+Il n'est parfois pas possible de mettre en cache une action complète, notamment si certaines informations dépendent trop du contexte. Néanmoins, afin d'optimiser les performances, certains fragments de la template pourraient être mis en cache. Dans ce cas, il est possible d'utiliser le cache directement au niveau de la template grâce à des raccourcis spécifiques :
+
+    ...
+    
+    <?php if (!cache()): ?>
+      ... HTML complexe à calculer ...
+    
+      <?php cache_save() ?>
+    <?php endif ?>
+    
+    ...
+
+La partie entre le test et l'appel de la fonction `cache_save()` sera mise en cache. Par défaut, le fragment sera mis en cache pour 1 journée. Pour modifier ce temps, il suffit de passer le temps en 2ème paramètre de la fonction `cache()` :
+
+    ...
+    <?php if (!cache(null, 60 * 5)): ?>
+    ...
+
+Il est également possible de mettre en cache plusieurs fragments indépendants d'une même template :
+
+    ...
+    
+    <?php if (!cache()): ?>
+      ... HTML complexe à calculer ...
+    
+      <?php cache_save() ?>
+    <?php endif ?>
+    
+    ...
+    
+    <?php if (!cache()): ?>
+      ... Autre HTML complexe à calculer ...
+    
+      <?php cache_save() ?>
+    <?php endif ?>
+
+De la même manière qu'il existe une version complète de la méthode `->setCache()` pour les actions, la fonction `cache()` possède une version complète :
+
+    cache(array(
+      'fragmentName' => ''',
+      'lifeTime' => ''',
+      'addParametersFrom' => ''',
+      'ignoreParameters' => ''',
+      'id' => ''',
+    ));
+
+Les paramètres sont les mêmes que pour la méthode `->setCache()` et sont détaillés dans la suite de ce chapitre.
+
+Configuration and optimization
+------------------------------
+
+Si vous mettez en place la configuration précédente, vous serez déçu par les gains du système de cache. En effet, par défaut, le framework va exécuter l'action mais n'exécutera la template que si nécessaire. Hors, les portions de codes les plus gourmandes se trouvent dans l'action. Il faut donc distinguer dans l'exécution de l'action 2 types de code :
+
+ * le code qui doit s'exécuter indépendamment du cache ;
+ * le code qui ne doit être exécuté que si le cache n'existe pas ou est périmé.
+
+Prenons par exemple le cas où l'on souhaite conserver la dernier article vu par l'utilisateur durant une session. L'action pourrait être :
+
+    class Article_Actions extends sfAction
+    {
+      public function runRead()
+      {
+        $this->getUser->setLastArticle($this->getRequestParameter('id'));
+    
+        $this->article = ArticlePeer::retrieveByPK($this->getRequestParameter('id'));
+    
+        ...
+      }
+    
+      ...
+    }
+
+Cet exemple montre que la méthode `->setLastArticle()` doit toujours être exécutée alors que la définition de la variable ''$article'' (la plus couteuse en temps) n'est nécessaire que si le cache doit être créé. Nous pouvons donc réécrire le code précédent en indiquant au framework les portions obligatoires et les portions optionnelles :
+
+    class Article_Actions extends sfAction
+    {
+      public function runRead()
+      {
+        $this->getUser->setLastArticle($this->getRequestParameter('id'));
+    
+        if ($this->mustRun())
+          $this->article = ArticlePeer::retrieveByPK($this->getRequestParameter('id'));
+    
+        ...
+      }
+    
+      ...
+    }
+
+Le code dans la condition `->mustRun()` ne sera exécuté que si la template doit être exécutée.
+
+Pour optimiser l'exécution du code lié au cache des fragments, il existe la méthode `->mustRunForFragment()` :
+
+    class Article_Actions extends sfAction
+    {
+      public function runRead()
+      {
+        $this->getUser->setLastArticle($this->getRequestParameter('id'));
+    
+        if ($this->mustRun())
+          $this->article = ArticlePeer::retrieveByPK($this->getRequestParameter('id'));
+    
+        if ($this->mustRunForFragment('fragment_name'))
+          $this->comments = CommentsPeer::doSelectForArticle($this->getRequestParameter('id'));
+    
+        ...
+      }
+    
+      ...
+    }
+
+Dans cet exemple, la récupération des commentaires sur l'article ne sera exécutée que si le fragment ''fragment_name'' n'est pas en cache.
+
+Cache parts identification
+--------------------------
+
+Par défaut, chaque action mise en cache est identifiée par un identifiant calculé à partir :
+
+ * du nom de domaine ;
+ * du script appelant ;
+ * du nom du module ;
+ * du nom de l'action ;
+ * du nom de la template ;
+ * des paramètres de la requête ;
+ * de la langue de l'internaute.
+
+L'identifiant pour le cache des fragments est le même que pour l'action correspondante avec un paramètre supplémentaire ''__cache_fragment'' indiquant l'ordre du fragment parmi tous les fragments de la template. Le premier fragment a donc pour valeur du paramètre 1. Il est possible de modifier le nom du fragment utilisé par le système de cache :
+
+    ...
+    
+    <?php if (!cache('fragment_name')): ?>
+    
+    ...
+
+Le nommage des fragments permet un code plus explicite, notamment lors de l'expiration du cache dans une action.
+
+Cette méthode d'identification du cache est satisfaisante dans la plupart des cas. Il existe néanmoins des situations où l'on souhaite avoir un schéma plus complexe. Prenons l'exemple d'un site où le rendu d'une page dépend d'un paramètre choisi par l'utilisateur (pays par exemple). Si une action est différente selon le pays de l'utilisateur, il faut que l'identifiant du cache intègre le pays comme paramètre. Pour cela, il suffit de préciser les objets permettant de définir l'unicité d'une page :
+
+    class Action_Actions extends sfAction
+    {
+      public function initAction()
+      {
+        $this->setCache(array(
+          'lifeTime' => 86400,
+          'addParametersFrom' => array($this->getUser()),
+          'actions' => array('Index', 'List'),
+        ));
+    
+        ...
+      }
+    
+      ...
+    }
+
+Dans ce cas, le système de cache ajoutera en plus des paramètres par défaut, un paramètre pour chaque objet passé en argument. Chaque paramètre ayant pour clé la classe de l'objet et pour valeur le résultat de l'appel de la méthode `->getCacheSignature()` sur l'objet.
+
+Il faut donc que notre classe `myUser` définisse une méthode `->getCacheSignature()` :
+
+    class myUser extends sfUser
+    {
+      public function getCacheSignature()
+      {
+        return $this->getCountry();
+      }
+    }
+
+Il est également possible de supprimer explicitement un paramètre dans la génération de l'identifiant du cache, grâce au paramètre ''ignoreParameters''.
+
+    $this->setCache(array(
+      'lifeTime' => 86400,
+      'ignoreParameters' => array('key_request_param1', 'key_request_param2');
+      'actions' => array('Index', 'List'),
+    ));
+
+Enfin, il est possible de contourner complètement le système de génération de l'identifiant pour le cache et de passer directement l'identifiant souhaité :
+
+    $this->setCache(array(
+      'lifeTime' => 86400,
+      'actions' => array('Index', 'List'),
+      'id' => 'unique/id/for/this/action',
+    ));
+
+La responsabilité de l'unicité de l'identifiant est alors de la responsabilité du développeur. Par sécurité, SymFony préfixe toujours ces identifiants par le nom du script et le nom de l'hôte http.
+
+Expiration prématurée du cache
+------------------------------
+
+TODO

@@ -1,0 +1,9 @@
+= Tester un projet =
+
+== Résumé ==
+
+Toute application développée dans les règles de l'art comportent une batterie de tests unitaires et un protocole de test Web permettant de garantir une très grande stabilité dans les développements et de minimiser les régressions lors des mises à jour.
+
+== Introduction ==
+
+TODO

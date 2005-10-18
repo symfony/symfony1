@@ -1,0 +1,226 @@
+Symfony Controllers: actions and the front controller
+=====================================================
+
+Overview
+--------
+
+The implementation of the [MVC][1] Controller paradigm in symfony uses a front controller and a set of actions. Naming conventions and fallback rules allow the PHP code of the Actions to remain clean and readable.
+
+Front controller
+----------------
+
+All web requests are handled by a single **front controller**, which is the unique entry point to the whole application in a given environment. The default front controller, called `index.php` and located in the `myproject/myapp/web/` directory, is a simple PHP file:
+
+    <?php
+    
+    define('SF_ROOT_DIR',    realpath(dirname(__FILE__).'/..'));
+    define('SF_APP',         '##APP_NAME##');
+    define('SF_ENVIRONMENT', 'prod');
+    define('SF_DEBUG',       false);
+    
+    require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
+    
+    sfContext::getInstance()->getController()->dispatch();
+    
+    ?>
+
+There is one front controller by environment. As a matter of fact, it is the very existence of a front controller that defines an environment. The name of the environment is set in the `SF_ENVIRONMENT` constant, after setting the root path of the application and its name.
+
+The front controller requires the code of the `constants.php` file, and this file includes all the necessary compiled configuration to allow symfony to run.
+
+The call to the `->dispatch()` method of the Controller object does several things:
+
+*   choice of the action to execute
+*   if the action does not exist, redirection to the 404 action as defined by default
+*   inscription of filters for the request (for instance if the request needs authentication)
+*   execution of the selected action
+
+>**Note**: for your information, the [singleton][2] `sfContext::getInstance()` stores the main elements of the request: 
+>
+>* the controller object (given by the method `->getController()`)
+>* the request object (given by the method `->getRequest()`)
+>* the logger object (given by the method `->getLogger()`)
+
+You will see a little further how configuration files and routing allow the Front Controller to handle any request format. But to keep it simple, the front controller basically knows how to read an URL like:
+
+    http://myapp.example.com/index.php/mymodule/myaction
+
+And transform this into a call to the `myaction` action of the `mymodule` module. And the action will deal with the request.
+
+Actions
+-------
+
+The **actions** are the heart of the application, because they contain all the applicative logic, they use the Model and define variables for the View. When you do a web request in a symfony application, the URL points to an action.
+
+Actions are located inside **module** directories. And if, to create applications and modules, you just needed to use the `symfony` command, now it is time to start doing some PHP coding.
+
+Actions are located in files called `actions.class.php` found in the `actions` subdirectory of each module directory.
+
+So let's imagine that you created a module called `mymodule` in your `myapp` application using the `sympfony` command. The default file `actions.class.php` located in the `myapp/modules/mymodule/actions/` directory defines a single action called `index`, and it looks like that:
+
+    class mymoduleActions extends sfActions
+    {
+      public function executeIndex()
+      {
+      
+      }
+    }
+
+>**Note**: If you happen to look at an actual `actions.class.php` file, you will find more than these few lines, including a lot of comments. This is because symfony recommends to use PHP comments to document your project and prepares each class file to be compatible with the [phpdoc][3] tool. You will learn more about documentation in the [related chapter](documentation.txt)
+
+In order to call an action you need pass the parameter 'module/action' to the front controller: 
+
+    http://myapp.example.com/index.php/module_name/action_name
+
+Note that the character between the front controller php file and its parameters is not a `?`, as you may expect, but a `/`. This is because actual parameters can be added to this action call if the calling page contains a form in GET mode:
+
+    http://myapp.example.com/index.php/module_name/action_name?param=value
+
+If this request is a real GET (i.e. if it doesn't modify the model), you can also make the same call if you replace the `?` and `=` characters by `/`. Symfony will understand which are the parameters, and which are the values:
+
+    http://myapp.example.com/index.php/module_name/action_name/param/value
+
+>**Note**: symfony contains a **routing** mechanism that allow you to have a complete separation between the actual parameters of an action call and the shape of the URL. For instance, the call to the action `index` of a module called `article`, with the parameter `id`, usually written:
+>
+>     http://myapp.example.com/index.php/article/index/id/132
+>
+>can be written in a completely different way with a simple change in the `routing.yml` configuration file:
+>
+>     http://myapp.example.com/articles/europe/france/finance.html
+>
+>You will learn more about this feature in the [routing chapter](routing.txt).
+
+So let's try to call the `index` action:
+
+    http://myapp.example.com/index.php/mymodule/index
+
+This new action seems to do absolutely nothing. But it can easily communicate with the view using public variables:
+
+    class testActions extends sfActions
+    {
+      public function executeIndex()
+      {
+        $this->mytext = 'Text example';
+      }
+    }
+
+In this example, the `Index` action gives the view the opportunity to use a variable called `mytext`. In the view (the result of the action), the variable will be called like this:
+
+    Text: <?= $mytext ?>
+
+But you may wonder how the action can choose the view to display its content, since it apparently does nothing. The answer is in the Action return. And, for your information, the action in this example actually did something: it called the default view.
+
+Action return
+-------------
+
+Various behaviours are possible at the end of the execution of an action:
+
+*   if there is a default view to call (this is the most common case):
+
+        return sfView::SUCCESS;
+
+*   if there is an error view to call:
+
+        return sfView::ERROR;
+
+*   if there is a non-default view to call:
+
+        return 'MyResult';
+
+*   if there is no view to call, for instance in the case of an action executed in a batch process:
+ 
+        return sfView::NONE; 
+
+*   if there is no view to call, but a value to return:
+ 
+        return sfView::VAR;
+
+    The returned value can be read with `$controller->getActionStock()->getFirstEntry()->getPresentation()`. This is mostly useful for unit testing (see more in the chapter dealing with the [sfTestBrowser](#))
+
+*   if the action forwards the call to another action:
+
+        $this->forward('otherModule', 'index');
+
+*   if the action results in a web redirection:
+
+        $this->redirect('/otherModule/index');
+        $this->redirect('http://www.google.com/');
+
+>**Note**: the code located after a `forward` or a `redirect` in an action is never executed. You can consider that these calls are equivalent to a `return` statement.
+
+Because calling the default view is the default behaviour, if an action returns nothing, the framework considers that the success view has to be called as if the `return sfView::SUCCESS;` was implied.
+
+Naming conventions
+------------------
+
+The actions are regrouped in a logical way inside modules, in a directory structure such as `myproject/myapp/modules/MODULE_NAME/actions/`, in files named `actions.class.php`. The function implementing an action in the `actions.class.php` file of the module is named with the name of the action prefixed with `execute`.
+
+For instance, if you have two actions `index` and `list` in a module called `product`, the file `actions.class.php` located in `myapp/modules/product/actions/` will have the following structure:
+
+    class productActions extends sfActions
+    {
+      public function executeIndex()
+      {
+        ...
+      }
+      public function executeList()
+      {
+        ...
+      }
+    }
+
+If your module has several actions and if the size of the code of an action grows so much that you need to keep it separated from the other actions of the module, you can write it in a new file, still in the same directory. You could then have an equivalent of the previous action file with two files:
+
+*   file `myapp/modules/product/actions/indexAction.class.php`:
+
+        class indexAction extends sfAction
+        {
+          public function execute()
+          {
+            ...
+          }
+        }
+
+*   file `myapp/modules/product/actions/listAction.class.php`:
+
+        class listAction extends sfAction
+        {
+          public function execute()
+          {
+            ...
+          }
+        }
+
+>**Note**: in this case, the action class inherits the class `sfAction` instead of `sfActions`, and the name of the action doesn't need to be repeated in the name of the `execute` function.
+
+If you need to repeat several statements in each action before starting, or if you have similar slot inclusions for all (see below for the definition of *slots*), you should probably extract them into the `preExecute()` method of your action class:
+
+    class productActions extends sfActions
+    {
+      public function preExecute()
+      {
+        //The code inserted here is executed at the beginning of each action call
+        ...
+      }
+      public function executeIndex()
+      {
+        ...
+      }
+      public function executeList()
+      {
+        ...
+      }
+    }
+
+Guess how to repeat statements *after* every action is executed ? Wrap them in a `postExecute()` method.
+
+Redirect or Forward
+-------------------
+
+The choice between a `redirect` or a `forward` is sometimes tricky. To choose the best solution, keep in mind that a `forward` is internal to the application and transparent for the user : as far as he is concerned, the displayed URL is the same as the one requested. On the contrary, a `redirect` is a message to the user's browser, involving a  new request from it and a change in the final resulting URL.
+
+If the action was called from a submitted form with `action="post"`, you should always do a `redirect`. The main advantage is that if the user refreshes the resulting page, the form will not be submitted again; in addition, the 'back' button works as expected.
+
+[1]: http://en.wikipedia.org/wiki/Model-view-controller "Model-View-Controller definition at Wikipedia"
+[2]: http://en.wikipedia.org/wiki/Singleton_pattern     "Singleton pattern definition at Wikipedia"
+[3]: http://www.phpdoc.org/                             "phpDocumentor"

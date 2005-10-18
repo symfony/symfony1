@@ -1,0 +1,35 @@
+databases:
+  default:  Creole
+  mysql:    MySQL
+  pgsql:    PostgreSQL
+
+Creole:
+  class:  sfCreoleDatabase
+  param:
+    dsn:       mysql://root:@localhost/db
+    phptype:   mysql
+    hostspec:  localhost
+    username:  root
+    password:  
+    database:  
+    method:    normal
+
+MySQL:
+  class:  sfMySQLDatabase
+  param:
+    user:        
+    password:    
+    database:    
+    host:        
+    persistent:  
+    method:      normal
+
+PostgreSQL:
+  class:  sfPostgreSQLDatabase
+  param:
+    user:        
+    password:    
+    database:    
+    host:        
+    persistent:  
+    method:      normal

@@ -1,0 +1,85 @@
+prod:
+
+dev:
+  .settings:
+    # E_ALL | E_STRICT = 4095
+    error_reporting:        4095
+    web_debug:              on
+    cache:                  off
+    stats:                  off
+    no_script_name:         off
+    compressed:             on
+    tidy:                   on
+
+test:
+  .settings:
+    cache:                  off
+    stats:                  off
+    web_debug:              off
+
+all:
+;  .actions:
+;    default_module:         default
+;    default_action:         index
+;    
+;    error_404_module:       default
+;    error_404_action:       error404
+;    
+;    login_module:           default
+;    login_action:           login
+;    
+;    module_disabled_module: default
+;    module_disabled_action: disabled
+;    
+;    secure_module:          default
+;    secure_action:          secure
+;    
+;    unavailable_module:     default
+;    unavailable_action:     unavailable
+;
+;  .settings:
+;    available:              on
+;
+;    module_accessor:        module
+;    action_accessor:        action
+;
+;    content_type:           html
+;    
+;    path_info_array:        SERVER
+;    path_info_key:          PATH_INFO
+;    
+;    url_format:             PATH
+;    
+;    use_database:           off
+;
+;    use_security:           on
+;    
+;    compressed:             on
+;    
+;    tidy:                   on
+;    
+;    is_i18n:                off
+;    default_culture:        en
+;    
+;    timeout:                1800
+;    
+;    suffix:                 .html
+;    
+;    module_default:         on
+;
+;    helper_standard:        Partial,Cache,Form
+;
+;    max_forwards:           20
+;
+;    web_debug:              off
+;
+;    cache:                  on
+;    default_cache_lifetime: 86400
+;
+;    routing:                on
+;    no_script_name:         on
+;
+;    stats:                  off
+;
+;    # E_ERROR | E_USER_ERROR = 257
+;    error_reporting:        257

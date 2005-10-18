@@ -1,0 +1,12 @@
+How to add AJAX interactions
+============================
+
+Overview
+--------
+
+SymFony provides some very useful shortcuts to insert AJAX interactions in a web applications.
+
+Introduction
+------------
+
+**TODO**

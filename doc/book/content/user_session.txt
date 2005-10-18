@@ -1,0 +1,91 @@
+How to manage a user session
+============================
+
+Overview
+--------
+
+To store and retrieve data about the user session, use the `sfUser` class and its standard methods, or override it to encapsulate user logic into a custom `myUser` class.
+
+Introduction
+------------
+
+Information about the current user and his/her session can be found in the `sfUser` object.
+
+Getting access to this object and its methods differs whether you are in an action:
+
+    $this->getUser();
+    
+or if you are in a template:
+
+    $user
+
+The `sfUser` class owns a few default attributes used by symfony to deal with classical user session interactions:
+
+* `culture` holds the user Culture (language and country) 
+* authentication attributes (these are described in detail in the [authentication and rigths](security.txt) chapter)
+
+In adition, the `sfUser` class owns a [parameter holder](parameter_holder.txt) in which you can store custom attributes.
+
+Custom user attributes
+----------------------
+
+If you need to store information about a user until his/her session is closed, use the `->getAttribute()` and `->setAttribute()` methods. Attributes can store any type of data (strings, arrays, associative arrays, even objects).
+
+For instance, to set and get an attribute `nickname` in an action:
+
+    $this->getUser()->setAttribute('nickname', 'foo');
+    ...
+    $this->getUser()->getAttribute('nickname');
+
+These informations are stored whatever the user, whether he/she is identified or not.
+
+To check whether an attribute has been defined for a user, use the `->hasAttribute()` method.
+
+    $hasNickname = $this->getUser()->hasAttribute('nickname');
+
+>**Note**: if you need to store information just for the duration of one request - for instance to pass information through a chain of action calls - you may prefer the `sfRequest` class, which also has `->getAttribute()` and `->setAttribute()` methods.
+
+Extending the session class
+---------------------------
+
+When the application needs to hold key information in the session, it is better to encapsulate this logic into an extension of the `sfUser` class. 
+
+Let's imagine you are building a chat website where users have to choose a nickname. A simple way to store and read this nickname would be:
+
+    $this->getUser()->setAttribute('nickname', 'foo');
+    $this->getUser()->getAttribute('nickname');
+
+Although this is exactly the previous example, this is not a very good solution, partly because it shows the real attribute and doesn't encapsulate the inner logic of the class. What would happen, for instance, if you decided suddenly to change the attribute name from 'nickname' to 'name' ? To settle this problem, you just need to extend the `sfUser` class. Check the `myproject/myapp/lib/` directory of your application: an empty `myUser` class just waits to be completed.
+
+    class myUser extends sfUser
+    {
+      public function getNickname()
+      {
+        return $this->getAttribute('nickname');
+      }
+    
+      public function setNickname($nickname)
+      {
+        return $this->setAttribute('nickname', $nickname);
+      }
+    }
+
+Then, in the action, the calls would be:
+
+    $this->getUser()->setNickname('foo');
+    $this->getUser()->getNickname();
+
+The reason why symfony uses the custom `myUser` class instead of the prebuilt `sfUser` is that the `factories.yml` configuration file of the application specifies it. You could decide to write a completely new user class, with your own custom methods, and call it `myproject/myapp/lib/myCustomUser.php`. But then, you would have to force symfony to use it instead of the `myUser` class by writing in the `factories.yml`:
+
+    all:
+       user:
+         class: myCustomUser
+
+Session expiration
+------------------
+
+Session expiration occurs automatically after `SF_TIMEOUT` seconds. This constant is of 30 minutes by default and can be modified for each environment in the `myproject/myapp/config/settings.yml` configuration file:
+
+    default:
+      .settings:
+        timeout:     1800

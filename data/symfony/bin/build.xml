@@ -1,0 +1,27 @@
+<project name="sf" default="main" basedir=".">
+
+<property name="project.dir" value="${application.startdir}/config" />
+<property file="${project.dir}/propel.ini" />
+
+<target name="build-om">
+  <phing dir="${propel_generator_dir}" target="om">
+    <property name="project.dir" value="${application.startdir}/config" />
+    <property name="project" value="${project}" />
+  </phing>
+</target>
+
+<target name="build-sql">
+  <phing dir="${propel_generator_dir}" target="sql">
+    <property name="project.dir" value="${application.startdir}/config" />
+    <property name="project" value="${project}" />
+  </phing>
+</target>
+
+<target name="build-model-schema">
+  <phing dir="${propel_generator_dir}" target="build-model-schema">
+    <property name="project.dir" value="${application.startdir}/config" />
+    <property name="project" value="${project}" />
+  </phing>
+</target>
+
+</project>

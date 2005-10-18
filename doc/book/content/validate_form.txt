@@ -1,0 +1,242 @@
+How to validate a form
+======================
+
+Overview
+--------
+
+Form validation can occur on the server side and/or on the client side. The server side validation is compulsory - to avoid wrong data to corrupt a script or a database - and the client side validation is optional, though it greatly enhances the user experience. Symfony automates the server side validation to spped up the development of common web applications.
+
+Base example
+------------
+
+Let's illustrate the validation features of SymFony starting with a normal Contact form, without any kind validation, showing the following fields:
+
+*   name
+*   email
+*   age
+*   message
+
+In a newly created `contact` module, the first action to write is the one that displays the form by calling the default template:
+
+    class contactActions extends sfActions
+    {
+      public function executeIndex()
+      {
+        return sfView::SUCCESS;
+      }
+    }
+
+And the corresponding `indexSuccess.php` template contains:
+
+    <?= form_tag('contact/send') ?>
+      <label for="name">Name</label> : <?= input_tag('name') ?><br />
+      <label for="email">Email</label> : <?= input_tag('email') ?><br />
+      <label for="age">Age</label> : <?= input_tag('age') ?><br />
+      <label for="message">Message</label> : <?= textarea_tag('message') ?><br />
+      <?= submit_tag() ?>
+    </form>
+
+If you wonder what  the `_tag()` functions do, you should probably take a look at the [form helpers chapter](templating_form_helpers.txt). The form can now be displayed in the browser by typing the URL `index.php/contact`.
+
+To handle the form submission, the `send` action must be created. For this example, we just need the application to display an "OK" message after submission:
+
+    class contactActions extends sfActions
+    {
+    
+      ...
+    
+      public function executeSend()
+      {
+        $this->email = $this->getRequestParameter('email');
+      }
+    }
+
+The `sendSuccess.php` template just contains:
+
+    Your message was sent to our services. The answer will be sent at <?= $email ?> 
+
+You can test the whole process of submitting the form and getting the confirmation, it already works fine. Except that if you try to enter invalid data in the fields, the action may very well crash. The fields do require validation.
+
+Rules
+-----
+
+Let's write the validation rules in plain text:
+
+*   name: required text field, size must be between 2 and 100 characters
+*   email: required text field, must contain a valid email address
+*   age: required number field, must contain a integer between 0 and 120
+*   message : required field
+
+SymFony can apply these rules almost automatically, provided that you add a new configuration file to the module and change a few details in the template.
+
+Configuration file
+------------------
+
+By convention, if you want to validate the form data on the call to the `send` action, a configuration file called `Send.yml` must be created in the `validate` directory of the module. To validate only the `name` field, you need the following configuration:
+
+    methods:
+      get:            [name]
+      post:           [name]
+    
+    names:
+      name:
+        required:     Yes
+        required_msg: The name field cannot be left blank
+        validators:   nameValidator
+    
+    nameValidator:
+      class:          StringValidator
+      param:
+        min:          2
+        min_error:    You didn't enter a valid name (at least 2 characters). Please try again.
+        max:          100
+        max_error:    You didn't enter a valid name (less than 100 characters). Please try again.
+
+Let's have a closer look at this file:
+
+First, under the `methods` header, the list of fields to be validated is defined for the method of the formulary (post by default). To be able to change your mind in the future,  you should double the statement for the other method.
+
+Then, under the `names` header, the list of the the fields to be checked, along with their 'required' flag, corresponding error message and mention of any specific validation rules header, are specified.
+
+Eventually, as the 'name' field is declared to have a specific set of validation rules, they are detailed under the corresponding header.
+
+Action modification
+-------------------
+
+The default behaviour makes symfony call a predefined `handleError` method whenever an error is detected in the validation process. This method will simply display the `sendError` template.
+
+But if you rather need the form to be displayed again with an error message, you need to override the default `handleError` method and end it with a redirection to the `index` action of the `contact` module. Add the following code to your contact actions:
+
+    class ContactActions extends sfActions
+    {
+    
+      ...
+    
+      public function handleError()
+      {
+        $this->forward('contact', 'index');
+      }
+    }
+
+If you try to fill in the form with this new confiuration, and type a wrong name, the form is displayed again, but the data you entered is lost and no error message explains the reason of the failure.
+
+Template modification
+---------------------
+
+To address these two issues, you just need to modify the `indexSuccess.php` template.
+
+Since the *forward* method kept the original request, the template has access to the data entered by the user:
+
+    <?= form_tag('contact/send') ?>
+      <label for="name">Name</label> : <?= input_tag('name', $request->getParameter('name')) ?><br />
+      <label for="email">Email</label> : <?= input_tag('email', $request->getParameter('email')) ?><br />
+      <label for="age">Age</label> : <?= input_tag('age', $request->getParameter('age')) ?><br />
+      <label for="message">Message</label> : <?= textarea_tag('message', $request->getParameter('message')) ?><br />
+      <?= submit_tag() ?>
+    </form>
+
+You can detect whether the form has errors by calling the `->hasErrors()` method of the `sfRequest` object. To get the list of the error messages, you need the method `->getErrors()`. So you should add the following lines at the top of the template:
+
+    <?php if ($request->hasErrors()): ?>
+      <p>The data you entered seems to be incorrect.
+      Please correct the following errors and resubmit:</p>
+      <ul>
+      <?php foreach($request->getErrors() as $error): ?>
+        <li><?= $error ?></li>
+      <?php endforeach ?>
+      </ul>
+    <?php endif ?>
+
+Now you may suggest that the field with incorrect data should be highlited, for instance with a repetition of the error message clearly attached to the label with a ↓. To that extent, simply add the following line before every field:
+
+    <?php if ($request->hasError('name')): ?>↓ <?= $request->getError('name') ?> ↓<?php endif ?><br />
+
+Complete configuration file
+---------------------------
+
+You can add the other rules to the `send.yml` configuration file to force the validation of all fields:
+
+    methods:
+      get:      [name,email,age,message]
+      post:     [name,email,age,message]
+    
+    names:
+      name:
+        required:       Yes
+        required_msg:   The name field cannot be left blank
+        validators:     nameValidator
+      email:
+        required:       Yes
+        required_msg:   The name field cannot be left blank
+        validators:     emailValidator
+      age:
+        required:       No
+        validators:     ageValidator
+      message:
+        required:       Yes
+        required_msg:   The message field cannot be left blank
+    
+    nameValidator:
+      class:          StringValidator
+      param:
+        min:          2
+        min_error:    You didn't enter a valid name (at least 2 characters). Please try again.
+        max:          100
+        max_error:    You didn't enter a valid name (less than 100 characters). Please try again.
+    
+    ageValidator:
+      class:          NumberValidator
+      param:
+        nan_error:    Please enter an integer
+        min:          0
+        min_error:    You're not even born. How do you want to send a message ?
+        max:          120
+        max_error:    Hey, grandma, aren't you too old to surf on the Internet ?
+    
+    emailValidator:
+      class:          RegexValidator
+      param:
+        match:        Yes
+        match_error:  You didn't enter a valid email address (for example: name@domain.com). Please try again.
+        pattern:      /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/i
+
+Custom validator
+----------------
+
+Each `Validator` is a particular class that can have certain parameters. If the validation classes shipped with SymFony are not enough for your needs, you can easily create new ones. Here is the example of a validation class for email addresses, the actually existing `sfEmailValidator`:
+
+    class sfEmailValidator extends Validator
+    {
+      public function execute (&$value, &$error)
+      {
+        if (!preg_match('~^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$~i', $value))
+        {
+          $error = $this->getParameter('email_error');
+          return false;
+        }
+        return true;
+      }
+    
+      public function initialize ($context, $parameters = null)
+      {
+        // set defaults
+        $this->setParameter('email_error', 'Invalid input');    
+        // initialize parent
+        parent::initialize($context, $parameters);
+        return true;
+      }
+    }
+
+Now the last part of the `send.yml` file can be replaced with:
+
+    emailValidator:
+      class:          sfEmailValidator
+      param:
+       email_error:   You didn't enter a valid email address (for example: name@domain.com). Please try again.
+
+If you need to create a new validation class and if it is a generic one, you should ask to have it included in the framework.
+
+Client side validation
+----------------------
+
+The client side validation is done by some javascript code. Symfony will soon provide built-in client-side validation features based on the YAML validation configuration files. Make sure you get the latest version !

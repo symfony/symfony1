@@ -1,0 +1,91 @@
+How to internationalize a project
+=================================
+
+Overview
+--------
+
+SymFony has native internationalization automatisms that make the development of multilingual and locally adapted web applications a painless task.
+
+Introduction
+------------
+
+The internationalization (i18n) of an application covers two aspects:
+
+*   text translation (interface and content)
+*   standards and formats (dates, amounts, numbers, etc.).
+
+SymFony brings a solution to each of these issues.
+
+User culture
+------------
+
+The `sfUser` class, used to manage the user session, has a native implementation of the user language and country, which is called *culture*.:
+
+    class TextActions extends sfActions
+    {
+      ...
+      
+      public function runIndex()
+      {
+        ...
+        
+        $culture = $this->getUser()->getCulture();
+        $this->getUser()->setCulture('en_US');
+      }
+    }
+
+Keeping both the language and the country in the culture is necessary because you may have a different French translation for users from France, Belgium or Canada, and a different Spanish translation for users from Spain or Mexico.
+
+The language is coded in two lower-case characters, according to the [ISO 639-1 norm](http://www.w3.org/WAI/ER/IG/ert/iso639.htm) (for instance `en` for english).
+
+The country is coded in two upper-case characters, according to the [ISO 3166-1 norm](http://www.iso.org/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1.html) (for instance `GB` for Great-Britain).
+
+By default, any new user will take the culture set in the `SF_DEFAULT_CULTURE` constant. You can change it in the `app.php` configuration file:
+
+    define(SF_DEFAULT_CULTURE, 'en_GB');
+
+Interface translation
+---------------------
+
+SymFony stores the user interface translations in XML configuration files in the standard [XLIFF](http://www.xliff.org/) format. Here is an extract of a XLIFF file `messages.en.xml`, where a website originally written in French is translated in English:
+
+    <?xml version="1.0" ?>
+    <xliff version="1.0">
+      <file orginal="global" source-language="FR" datatype="plaintext" date="2004-12-28T18:10:19Z">
+        <body>
+          <trans-unit id="1">
+          <source>source en français</source>
+          <target>english translation</target>
+          </trans-unit>
+        </body>
+      </file>
+    </xliff>
+
+These files must be stored in the `app/i18n` directory.
+
+The use of the XLIFF format allows you to use common translation tools to reference all text in your website and translate it, without the need of a specific tool to build for translators.
+
+Localization
+------------
+
+**TODO**
+
+Template adaptation
+-------------------
+
+Let's see how to introduce some text to be translated in a template. If the base template is:
+
+    Welcome to our website. Today's date is <?= date() ?>
+
+The internationalized version should be:
+
+    <?= __('Welcome to our website.') ?>
+    <?= __('Today's date is ') ?>
+    <?= date() ?>
+
+The `__()` shortcuts require as single argument the text to be translated. This text must match a node in the XLIFF file. During display, the localised version adapted to the user culture will automatically replace the text of the template.
+
+Data translation
+----------------
+
+**TODO**

@@ -1,0 +1,12 @@
+Developent guidelines
+=====================
+
+Overview
+--------
+
+Introduction
+------------
+
+*TODO*
+
+naming conventions, callbacks, etc.

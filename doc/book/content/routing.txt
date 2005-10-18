@@ -1,0 +1,279 @@
+How to setup a routing policy
+=============================
+
+Overview
+--------
+
+One of the main problems faced by frameworks is the aspect of the generated URLs : they are generally long, complex and not search engine friendly. SymFony introduces a new *routing* system that brings you total control on the urls of your applications.
+
+Introduction
+------------
+
+Let's consider the case of a blogging application where users publish articles. In symfony, in order to display an article, you would need a URL looking like:
+
+    http://myapp.example.com/index.php/article/read/id/100
+
+This URL calls the `read` action of the `article` module with an `id` parameter taking he value 100.
+
+In order to optimize the way the search engines index the pages of dynamic websites, and to make the URLs more readable, some blogging tools propose a *permalink* feature. A permalink is simply a defined and permanent URL address aimed at browser bookmarks and search engines. In the previous example, the permalink could look like:
+
+    http://myapp.example.com/index.php/article/permalink/title/my_article_title
+
+The only difference with the first URL is the use of more descriptive keywords. The `permalink` action will have to transform the `title` argument into an article `id`, by looking in a table of permalinked pages, to point correctly to the previous action.
+
+This process could be pushed further to display URLs even more simple and explicit, for instance like:
+
+     http://myapp.example.com/article/my_article_title
+     // or why not
+     http://myapp.example.com/2005/06/25/my_article_title
+
+The most common way to address this need is to use the `mod_rewrite` module of the Apache server, together with URL rewriting rules. These rules transform the URLs into something that Apache can understand before submission of the request:
+
+ 1. Apache receives a request for `http://myapp.example.com/2005/06/25/my_article_title`
+ 2. `mod_rewrite` transforms this URL into `http://myapp.example.com/index.php/article/read/title/my_article_title`
+ 3. Now Apache knows that it has to execute `index.php` with `/article/read/title/my_article_title` as a value for the `path_info` argument
+
+However, this method has two serious issues:
+
+*   you need an Apache server and the `mod_rewrite` module
+*   the rewriting is only one-way
+
+As a matter of fact, if you wish to create an URL to this article, you will need to transform manually the base URL into a "smart" URL. The input URLs (handled by `mod_rewrite`) and the output URLs (handled by the application) are completely unrelated.
+
+Symfony can natively transform output URLs and interpret input URLs. Consequently, you can create bijective associations between URLs and the Front Controller. This rewriting, called *routing* in symfony, relies on a configuration file called `routing.yml` that can be found in the `config/` directory of every application.
+
+Routing input URLs
+------------------
+
+### Rules and patterns
+
+The `routing.yml` contains **rules**, or bijective associations between a URL pattern and the "real" request parameter. A typical rule file contains:
+
+* a label, which is there for legibility and can be used by the [link helpers](templating_link_helpers.txt)
+* an `url` key showing the pattern to be matched
+* a `param` used to set default values for some of the arguments of the "real" call
+
+Here is an extract of the `routing.yml` file that illustrates the rewriting of our example blog URL:
+
+    article_by_title_with_date:
+      url:    /:year/:month/:day/:title
+      param:  { module: article, action: permalink }
+
+The rule stipulates that every request showing the pattern `/:year/:month/:day/:title` will have to be transformed into a call to the `permalink` action of the `article` module with arguments `year`, `month`, `day` and `title` taken from the base URL.
+
+So the example URL
+
+    http://myapp.example.com/index.php/2005/06/25/my_article_title
+
+Will be understood as if written
+
+    http://myapp.example.com/index.php/article/permalink/year/2005/month/06/day/25/title/my_article_title
+
+...and call the `permalink` action of the `article` module with the following arguments:
+
+    $this->getRequestParameter('year') => 2005
+    $this->getRequestParameter('month') => 06
+    $this->getRequestParameter('day') => 25
+    $this->getRequestParameter('title') => my_article_title
+
+Let's add a second rule to handle URLs like:
+
+    http://myapp.example.com/index.php/article/100
+
+Simply add the following lines in the `routing.yml` file:
+
+    article_by_id:
+      url:          /article/:id
+      param:        { module: article, action: read }
+
+Notice that in the pattern, the word `article` is a string whereas `id` is a variable (because it starts with a `:`).
+
+>**Note**: you smart readers may have guessed that as soon as a rule such as the one mentionned above is added, the default rule (which is `/:module/:action/*`) will not work anymore with the `article` module, because the module name will match the pattern `/article/:id` first. If you start creating rules with strings that match the names of your modules, you probably need to change the default rule to something like:
+>
+>     default:
+        url:   /action/:module/:action/*
+
+### Pattern constraints
+
+Now what if you needed to have access to articles from their title:
+
+    http://myapp.example.com/index.php/article/my_article_title
+
+Well, this looks problematic. This URL should be routed to the `permalink` action, but it already satisfies the `articl_by_id` rule and will be automatically routed to the `read` action. To solve this issue, each entry can take a third parameter called `requirements` to specify constraints in the pattern (in the shape of a regular expression). That means that you can modify the previous rule to route URLs to `read` only if the `id` argument is an integer:
+
+    article_by_id:
+      url:          /article/:id
+      param:        { module: article, action: read }
+      requirements: { id: ^\d+$ }
+
+Now you can add a third rule to gain access to articles from their title:
+
+    article_by_title:
+      url:          /article/:permalink
+      param:        { module: article, action: permalink }
+
+Rules are ordered and the routing engine takes the first one that satisfies the pattern and the pattern constraints. That's why you don't need to add a constraint to the last rule (specifying that `permalink` can not be an integer):
+
+*   `/article/100` matches the first rule and will be handed to `read`
+*   `/article/my_article_title` doesn't match the first rule but matches the second, so it will be handed to `permalink`
+
+Now that you know about pattern constraints, that would be a good thing to add some to the very first rule:
+
+    article_by_title_with_date:
+      url:          /:year/:month/:day/:title
+      param:        { module: article, action: permalink }
+      requirements: { year: ^\d{4}$, month: ^\d\d$, day: ^\d\d$ }
+
+The routing engine allows you to handle a large set of rules; however, you have to add the most precise constraints and order them properly so that no ambiguity may arise.
+
+>**Hint**: the YAML syntax allows you to write more legible configuration files if you write associative arrays line by line. For instance, the last rule can also be written:
+>
+>     article_by_title_with_date:
+>       url:        /:year/:month/:day/:title
+>       param:
+>         module:   article
+>         action:   permalink
+>       requirements:
+>         year:     ^\d{4}$
+>         month:    ^\d\d$
+>         day:      ^\d\d$
+
+### Default values
+
+Here is a new example:
+
+    article_by_id:
+      url:          /article/:id
+      param:        { module: article, action: read, id: 1 }
+
+This rule defines the default value for the `id` argument. This means that a `/article/100` URL will behave as previously, but in addition, the URL `/article/` will be equivalent to `/article/1`. The default parameters don't need to be variables found in the pattern. Consider the following example:
+
+    article_by_id:
+      url:          /article/:id
+      param:        { module: article, action: read, id: 1, display: true }
+
+The `display` argument will be passed with the value `true`, whatever the pattern. And, if you look carefully, you will see that `article` and `read` are also default values for variables not found in the pattern.
+
+### Default rules
+
+The default `routing.yml` has a few default rules. To allow the old style 'module/action' URLs to work:
+
+    default:
+      url:   /:module/:action/*
+
+As mentionned above, you may need to change this rule if some of your modules have names that can match other patterns.
+
+The other default rules are used to set the root URL to point the default module and action:
+
+    homepage:
+      url:   /
+      param: { module: #SF_DEFAULT_MODULE#, action: #SF_DEFAULT_ACTION# }
+      
+    default_index:
+      url:   /:module
+      param: { action: #SF_DEFAULT_ACTION# }
+    
+The default module and action themselves are configured in the `settings.yml` file.
+
+### How to avoid mentionning the front controller ?
+
+In all previous examples, the URLs still have contain the `index.php` header to be processed. This is because the front controller has to be called first so that the routing feature can work. 
+
+If you have the `mod_rewrite` module activated, use the following configuration (which is the default configuration bundled with symfony) to tell apache to call the `index.php` file by default:
+
+    Options +FollowSymLinks +ExecCGI
+    
+    RewriteEngine On
+    
+    # we skip all files with .something
+    RewriteCond %{REQUEST_URI} \..+$
+    RewriteRule .* - [L]
+    
+    # we check if the .html version is here (caching)
+    RewriteRule ^$ index.html [QSA]
+    RewriteRule ^([^.]+)$ $1.html [QSA]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    
+    # if no rule matched the url, we redirect to our front web controller
+    RewriteRule ^(.*)$ index.php [QSA,L]
+    
+    # big crash from our front web controller
+    ErrorDocument 500 "<h2>Application error</h2>SymFony application failed to start properly"
+
+Now a call to 
+
+    http://myapp.example.com/article/read/id/100
+    
+Will be properly understood as 
+
+    http://myapp.example.com/index.php/article/read/id/100
+
+Outputting smart URLs
+--------------------
+
+### Matching patterns
+
+Until now, the `routing.yml` file only helped to reproduce the `mod_rewrite` behaviour, i.e. understanding properly formatted URLs. The good news is, now that you defined routing rules, they will be automatically used to transform URLs *from* your application.
+
+In symfony, when you write a link in a template, you use the `link_to()` helper:
+
+    <?= link_to($article->getTitle(), '/article/read?id='.$article->getId()) ?>
+
+To read more about this helper, check the chapter about [link helpers](templating_link_helpers.txt). With the default routing configuration, this outputs the following HTML code:
+
+    <a href="/index.php/article/read/id/100">my_article_title</a>
+
+But since you wrote routing rules, symfony will automatially interpret them in the other way and generate:
+
+    <a href="/index.php/article/100">my_article_title</a>
+
+The rules will be parsed with the same order as for the interpretation of an input request, and the first rule matching the arguments of the `link_to()` second argument will determine the pattern to be used to create the output URL.
+
+### Getting rid of `index.php`
+
+As for now, the link helpers still output the name of the front controller. If the web server is configured to handle calls without mention of the front controller, as described above, the routing system can be told not to include it.
+
+This is done in the application `settings.yml` configuration file. To turn off the display of the front controller in the production environment, write:
+
+    prod:
+      .settings
+        no_script_name:  on
+
+### Adding a `.html`
+
+Having an output URL like:
+
+    http://myapp.example.com/2005/06/25/my_article_title
+
+is not bad, but
+
+    http://myapp.example.com/2005/06/25/my_article_title.html
+    
+is much better. It changes the way your application is perceived by the user, from "a dynamic thing with cryptic calls" to "a deep and well organized web directory". All that with a simple suffix. In addition, the search engines will grant more stability to a page named like that.
+
+As before, this is simply done in the `settings.yml` configuration file of the application:
+
+    prod:
+      .settings
+        suffix:         .html
+
+Routing activation
+------------------
+
+The routing can be activated and deactivated on demand without any modification of the application code, provided that all the URLs generated in the templates use the `link_to()` helper.
+
+By default, the routing is activated. To deactivate it, change the value of the `routing` parameter in the `settings.yml` file:
+
+    all:
+      .settings:
+        routing:        off
+
+You can have a different value for each environment.
+
+With routing deactivated, a call to 
+
+    <?= link_to($article->getTitle(), '/article/read?id='.$article->getId()) ?>
+
+will generate in HTML
+
+    <a href="/index.php?module=article&action=read&id=100">my_article_title</a>

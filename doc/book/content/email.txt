@@ -1,0 +1,31 @@
+How to send an email
+====================
+
+Introduction
+------------
+
+Email sending is handled by the `sfMail` class. It is a proxy class that offers an interface with [PhpMailer](http://phpmailer.sourceforge.net/).
+
+This proxy class allows you to define your own interface if required.
+
+Example
+-------
+
+    require_once 'sf/sfMail.class.php';
+    
+    // class initialisation
+    $mail = sfMail::newInstance('PhpMailer');
+    $mail->initialize();
+    $mail->setMailer('sendmail');
+    
+    // definition of the required parameters
+    $mail->addAddress('client@client.com');
+    $mail->setSender('me@symfony.com', 'SymFony');
+    $mail->setFrom('me@symfony.com', 'SymFony');
+    $mail->addReplyTo('you@symfony.com');
+    $mail->setCharset('utf-8');
+    $mail->setSubject('A very important matter');
+    $mail->setBody('First of all, you should know that...');
+    
+    // send the email
+    $mail->send();

@@ -1,0 +1,105 @@
+h1,h2,h3,ul,li,pre
+{
+  padding: 0;
+  margin: 0;
+}
+
+body
+{
+  padding: 10px;
+  margin: 0;
+  font-family: Arial, Verdana, sans-serif;
+  font-size: 9px;
+  color: #333;
+}
+
+.col
+{
+  float: left;
+}
+
+.subcol
+{
+  width: 300px;
+  margin-right: 3px;
+  margin-bottom: 3px;
+  background-color: #eee;
+  border: 1px solid #aaa;
+}
+
+.minisubcol
+{
+  width: 180px;
+  margin-right: 3px;
+  margin-bottom: 3px;
+  background-color: #eee;
+  border: 1px solid #aaa;
+}
+
+h1
+{
+  margin-bottom: 3px;
+  padding: 2px;
+  font-size: 16px;
+  background-color: #a20202;
+  color: #eee;
+  text-align: center;
+}
+
+h2
+{
+  padding: 1px;
+  padding-left: 3px;
+  margin-bottom: 1px;
+  font-size: 12px;
+  background-color: #a20202;
+  color: #eee;
+}
+
+h3
+{
+  padding: 1px;
+  padding-left: 3px;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  font-size: 11px;
+  background-color: #aae;
+  color: #eee;
+}
+
+hr
+{
+  border-bottom: 1px solid #aaa;
+}
+
+.content
+{
+  padding: 2px;
+}
+
+.method
+{
+  font-weight: bold;
+}
+
+ul
+{
+  list-style: none;
+}
+
+li
+{
+  list-style: none;
+}
+
+.footnote
+{
+  position: absolute;
+  text-align: right;
+  bottom: 10px;
+}
+
+pre
+{
+  font-size: 8px;
+}

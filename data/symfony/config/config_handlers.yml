@@ -1,0 +1,61 @@
+autoload.yml:
+  class:    sfAutoloadConfigHandler
+
+php.yml:
+  class:    sfPhpConfigHandler
+
+databases.yml:
+  class:    sfDatabaseConfigHandler
+
+settings.yml:
+  class:    sfDefineEnvironmentConfigHandler
+  param:
+    prefix: SF_
+
+app.yml:
+  class:    sfDefineEnvironmentConfigHandler
+  param:
+    prefix: APP_
+
+orm.yml:
+  class:    sfPropelConfigHandler
+
+factories.yml:
+  class:    sfFactoryConfigHandler
+
+bootstrap_compile.yml:
+  class:    sfCompileConfigHandler
+
+core_compile.yml:
+  class:    sfCompileConfigHandler
+
+filters.yml:
+  class:    sfFilterConfigHandler
+
+logging.yml:
+  class:    sfDefineEnvironmentConfigHandler
+  param:
+    prefix: SF_LOGGING_
+
+modules/*/config/generator.yml:
+  class:    sfGeneratorConfigHandler
+
+modules/*/config/view.yml:
+  class:    sfViewConfigHandler
+
+modules/*/config/security.yml:
+  class:    sfSecurityConfigHandler
+
+modules/*/config/cache.yml:
+  class:    sfCacheConfigHandler
+
+modules/*/validate/*.yml:
+  class:    sfValidatorConfigHandler
+
+modules/*/config/module.yml:
+  class:    sfDefineEnvironmentConfigHandler
+  param:
+    prefix: MOD_
+
+routing.yml:
+  class:    sfRoutingConfigHandler

@@ -1,0 +1,31 @@
+﻿// PL lang variables
+
+tinyMCELang['lang_table_desc'] = 'Wstaw nową tabelę';
+tinyMCELang['lang_table_insert_row_before_desc'] = 'Wstaw wiersz przed';
+tinyMCELang['lang_table_insert_row_after_desc'] = 'Wstaw wiersz po';
+tinyMCELang['lang_table_delete_row_desc'] = 'Skasuj wiersz';
+tinyMCELang['lang_table_insert_col_before_desc'] = 'Wstaw kolumnę przed';
+tinyMCELang['lang_table_insert_col_after_desc'] = 'Wstaw kolumnę po';
+tinyMCELang['lang_table_delete_col_desc'] = 'Skasuj kolumnę';
+tinyMCELang['lang_insert_table_title'] = 'Wstaw/Modyfikuj tabelę';
+tinyMCELang['lang_insert_table_width'] = 'Szerokość';
+tinyMCELang['lang_insert_table_height'] = 'Wysokość';
+tinyMCELang['lang_insert_table_cols'] = 'Kolumny';
+tinyMCELang['lang_insert_table_rows'] = 'Wiersze';
+tinyMCELang['lang_insert_table_cellspacing'] = 'Cellspacing';
+tinyMCELang['lang_insert_table_cellpadding'] = 'Cellpadding';
+tinyMCELang['lang_insert_table_border'] = 'Ramka';
+tinyMCELang['lang_insert_table_align'] = 'Wyrównanie';
+tinyMCELang['lang_insert_table_align_default'] = 'Domyślny';
+tinyMCELang['lang_insert_table_align_left'] = 'Do lewej';
+tinyMCELang['lang_insert_table_align_right'] = 'Do prawej';
+tinyMCELang['lang_insert_table_align_middle'] = 'Wycentrowanie';
+tinyMCELang['lang_insert_table_class'] = 'Klasa';
+tinyMCELang['lang_table_row_title'] = 'Właściwości wiersza';
+tinyMCELang['lang_table_cell_title'] = 'Właściwości komórki';
+tinyMCELang['lang_table_row_desc'] = 'Właściwości wiersza';
+tinyMCELang['lang_table_cell_desc'] = 'Właściwości komórki';
+tinyMCELang['lang_insert_table_valign'] = 'Wyrównanie pionowe';
+tinyMCELang['lang_insert_table_align_top'] = 'do góry';
+tinyMCELang['lang_insert_table_align_bottom'] = 'do dołu';
+tinyMCELang['lang_table_props_desc'] = 'Właściwości tabeli';

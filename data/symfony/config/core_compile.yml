@@ -1,0 +1,29 @@
+- %SF_SYMFONY_LIB_DIR%/symfony/action/sfAction.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/action/sfActions.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/action/sfActionStack.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/action/sfActionStackEntry.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/core/sfContext.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/controller/sfController.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/filter/sfFilter.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/filter/sfExecutionFilter.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/filter/sfFilterChain.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/request/sfRequest.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/storage/sfStorage.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/user/sfUser.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/validator/sfValidator.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/validator/sfValidatorManager.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/view/sfView.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/view/sfViewCacheManager.class.php
+
+# these classes are optionals but very likely to be used (in web context)
+- %SF_SYMFONY_LIB_DIR%/symfony/controller/sfWebController.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/controller/sfFrontWebController.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/request/sfWebRequest.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/storage/sfSessionStorage.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/view/sfPHPView.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/view/sfRenderView.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/controller/sfRouting.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/user/sfSecurityUser.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/user/sfBasicSecurityUser.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/filter/sfSecurityFilter.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/filter/sfBasicSecurityFilter.class.php

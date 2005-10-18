@@ -1,0 +1,31 @@
+autoload:
+
+  -
+    name:        symfony core classes
+    ext:         .class.php
+    path:        %SF_SYMFONY_LIB_DIR%/symfony
+    recursive:   on
+    exclude:     [module]
+
+  -
+    name:         symfony core classes (continued)
+    files:
+      Propel:     %SF_SYMFONY_LIB_DIR%/symfony/addon/propel/sfPropelAutoload.php
+      Criteria:   %SF_SYMFONY_LIB_DIR%/propel/util/Criteria.php
+
+  -
+    name:         project classes
+    ext:          .class.php
+    path:         %SF_LIB_DIR%
+    recursive:    on
+    exclude:      [model]
+
+  -
+    name:         project model classes
+    ext:          .php
+    path:         %SF_LIB_DIR%/model
+
+  -
+    name:         application classes
+    ext:          .class.php
+    path:         %SF_APP_DIR%/lib

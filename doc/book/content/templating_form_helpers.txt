@@ -1,0 +1,222 @@
+Templating in practice : Form helpers
+=====================================
+
+Overview
+--------
+
+Synfony provides form helpers to avoid repeating code in templates that contain forms, especially when the default value is linked to the application Model.
+
+Introduction
+------------
+
+In templates, HTML tags of form elements are very oten mixed with PHP code. Form helpers in symfony aim to simplify this task and to avoid opening `<?=` tags in the middle of an element tag. They also duplicate the `name` attribute to define the `id` value.
+
+In addition, if form controls are linked to objets in your data model, symfony can automate the hassle of defining a default value or listing the possible values.
+
+Symfony also provides helpers for form validation. A detailed presentation of this feature can be found in the [form validation](validate_form.txt) chapter.
+
+Main form tag 
+-------------
+
+Some helpers are here to facilitate the writing of form tags, especially since they are often mixed with php code.
+
+To create a form, you have to use the SymFony `form_tag` function since it transforms the action given as a parameter into a routed url:
+
+    <?= form_tag('test/save') ?>
+    // will generate in HTML
+    <form mehod="post" enctype="multipart/form-data" action="http://www.mysite.com/index.php/test/save">
+
+This will route the form to the `save` action of the `test` module. You can learn more about the URL management in the [routing chapter](routing.txt).
+
+To change the default `method`, the default `enctype` or to specify other attributes, use  the second argument:
+
+    // options argument with the associative array syntax
+    <?= form_tag('test/save', Array('method' => 'get', 'id' => 'myForm', 'class' => 'simpleForm')) ?>
+    // options argument with the string syntax
+    <?= form_tag('test/save', 'method=get id=myForm class=simpleForm') ?>
+
+As there is no need for a closing form helper, you should use the HTML `</form>` tag, even if it doesn't look good in your source code.
+
+Standard form elements
+----------------------
+
+Each element in a formulary will have by default an `id` attribute equal to its `name` attribute. You can specify custom attributes by adding a last argument, using the associative array syntax or the string syntax.
+
+Here are the standard form element helpers:
+
+ * text field (input):
+
+        <?= input_tag('name', 'default value') ?>
+        // will generate in HTML
+        <input type="text" name="name" id="name" value="default value" />
+
+ * long text field (textarea):
+
+        <?= textarea_tag('name', 'default content', 'size=10x20')) ?>
+        // will generate in HTML
+        <textarea name="name" id="name" rows="20" cols="10">default content</textarea>
+
+ * checkbox:
+
+        <?= checkbox_tag('married', '1', true) ?>
+        <?= checkbox_tag('driverslicence', 'B', false) ?>
+        // will generate in HTML
+        <input type="checkbox" name="married" id="married" value="1" checked="checked" />
+        <input type="checkbox" name="driverslicence" id="driverslicence" value="B" />
+
+ * radio button:
+
+        <?= radiobutton_tag('status', 'value1', true) ?>
+        <?= radiobutton_tag('status', 'value2', false) ?>
+        // will generate in HTML
+        <input type="radio" name="status" value="value1" checked="checked" />
+        <input type="radio" name="status" value="value2" />
+
+> Note that the `id` attribute is not defined by default with the value of the `name` attribute for the radio button helper. That's because you need to have several radio button tags with the same name to obtain the automated 'deselecting the previous one when selecting another' feature, and that would imply having several HTML tags with the same `id` attribute in your page - which is stritcly forbidden.
+
+ * value selection field (select):
+
+        <?= select_tag('name', options_for_select(Array('0' => 'Steve', '1' => 'Bob', '2' => 'Albert', '3' => 'Ian', '4' => 'Buck'), 3)) ?>
+        // will generate in HTML
+        <select name="name" id="name">
+          <option value="0">Steve</option>
+          <option value="1">Bob</option>
+          <option value="2">Albert</option>
+          <option value="3" selected="selected">Ian</option>
+          <option value="4">Buck</option>
+        </select>
+
+        // When the value is the same as the text to display, use an array instead of an associative array
+        <?= select_tag('payment', options_for_select(Array('Visa', 'Eurocard', 'Mastercard'), 'Visa')) ?>
+        // will generate in HTML
+        <select name="payment" id="payment">
+          <option selected="selected">Visa</option>
+          <option>Eurocard</option>
+          <option>Mastercard</option>
+        </select>
+
+        //Multiple selection field uses the same syntax, and the selected values can then be an array
+         <?= select_tag('payment', options_for_select(Array('Visa', 'Eurocard', 'Mastercard'), Array('Visa', 'Mastecard'), 'multiple=multiple') ?>
+        // will generate in HTML
+        <select name="payment" id="payment" multiple="multiple">
+          <option selected="selected">Visa</option>
+          <option>Eurocard</option>
+          <option selected="selected">Mastercard</option>
+        </select>       
+
+ * field to upload a file:
+
+        <?= input_file_tag('name') ?>
+        // will generate in HTML
+        <input type="file" name="name" id="name" value="" />
+
+ * field to enter a password:
+
+        <?= input_password_tag('name', 'value') ?>
+        // will generate in HTML
+        <input type="password" name="name" id="name" value="value" />
+
+ * hidden field:
+
+        <?= input_hidden_tag('name', 'value') ?>
+        // will generate in HTML
+        <input type="hidden" name="name" id="name" value="value" />
+
+ * submit button (as text):
+
+        <?= submit_tag('Save') ?>
+        // will generate in HTML
+        <input type="submit" name="submit" value="Save" />
+
+ * submit button (as image):
+
+        <?= submit_image_tag('submit_img') ?>
+        // will generate in HTML
+        <input type="image" name="submit" src="/images/submit_img.png" />
+
+> This last helper uses the same syntax and has the same advantages as the `image_tag` helper, described in the [link helpers](templating_link_helpers.txt) chapter.
+
+Rich form elements
+------------------
+
+Forms are often used to get **dates**. Date format is also culture dependant, and wrong dates is the main reason of unvalidated forms. The `input_date_tag` can assists the user with a javascript calendar:
+
+        <?= input_date_tag('dateofbirth', '2005-05-03', 'rich=true') ?>
+        // will generate in HTML
+        // a text input tag together with a calendar widget
+
+The last argument specifies that the rich form has to be used. If it was set to `false` (which is the default value), the normal date entry widget (three text inputs for day, month and year) would be used in place.
+
+**Rich text editing** in a textarea is also possible, since symfony implements the [TinyMCE](http://tinymce.moxiecode.com/) widget that inputs html code:
+
+        <?= textarea_tag('name', 'default content', 'rich=true size=10x20')) ?>
+        // will generate in HTML
+        // a rich text edition zone powered by TinyMCE
+
+You will probably need to display a **country selection field**. The `select_country_tag` helper can do it for you; it uses the default culture to choose in which language the countries will be displayed.
+
+        <?= select_country_tag('country', 'Albania') ?>
+        // will generate in HTML
+        <select name="country" id="country">
+          <option>Afghanistan</option>
+          <option selected="selected">Albania</option>
+          <option>Algeria</option>
+          <option>American Samoa</option>
+          <option>Andorra</option>
+          ...
+
+Form helpers for objects
+------------------------
+
+In many cases form elements are linked to fields in a database table. As you use an object-relationnal mapping, the form elements are actually linked to attribute accessors and setters. Symfony provides an alternate version to all the previous helpers, where the `$value` argument - which defines the default value - is replaced by two arguments, `$object` and `$method`. The method must be the attribute accessor of the object. The method name is also given to the `name` and `id` attributes of the generated HTML tag, so the first argument is suppressed.
+
+The simple text input tag now looks like:
+
+    <?= object_input_tag($customer, 'getTelephone') ?>
+    // will generate in HTML
+    <input type="text" name="getTelephone" id="getTelephone" value="0123456789" />
+
+...provided that `$customer->getTelephone() = '0123456789'`.
+
+So simply add the `object_` prefix in front of the name of the form helpers to get the name of the related object form helper:
+
+    object_input_tag($object, $method, $options)
+    object_textarea_tag($object, $method, $options)
+    object_checkbox_tag($object, $method, $options)
+    ...
+
+The most useful helper of this type is the `object_select_tag`, since it can get the list of values from the result of a method call:
+
+    object_select_tag($author, 'getArticles')
+    // is a shorcut for calls like
+    select_tag('getArticles', options_for_select($author->getArticles))
+
+>**Note**: the `object_select_tag` helper uses the Propel layer; it might not work if you use another data abstraction layer.
+
+Easy object update
+------------------
+
+The object relationnal mapping given by Propel allows you to easily modify a record in a table from a form if the fields of the forms are properly named.
+
+For instance, if you have an object `Author` with attributes `name`, `age` and `address`, and that you created a template looking like:
+
+    <?= form_tag('author/update') ?>
+    Name : <?= object_input_tag($author, 'getName') ?><br />
+    Age : <?= object_input_tag($author, 'getAge') ?><br />
+    Address:<br />
+    <?= object_textarea_tag($author, 'getAddress') ?>
+    </form>
+
+Then the `update` action of the `author` module can simply use the `fromArray` modifier:
+
+    public function executeUpdate ()
+    {
+      $author = IdeaPeer::retrieveByPk($this->getRequestParameter('id'));
+  
+      $this->forward404_unless($author instanceof Author);
+
+      $author->fromArray($this->getRequest()->getParameterHolder()->getAll(), Author::TYPE_FIELDNAME);
+      $author->save();
+  
+      return $this->redirect('/author/show?id='.$author->getId());
+    }

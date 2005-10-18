@@ -1,0 +1,7 @@
+stats
+.svn
+web/uploads
+cache
+log
+web/index.php
+config

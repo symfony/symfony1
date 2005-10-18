@@ -1,0 +1,145 @@
+ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,body,html,p,blockquote,fieldset,input
+{ margin: 0; padding: 0; }
+a img,:link img,:visited img { border: none; }
+
+body
+{
+  font-family: arial, helvetica, verdana, sans-serif;
+  font-size: 11px;
+  color: #333;
+  background-color: white;
+}
+
+td
+{
+  font-size: 11px;
+}
+
+p
+{
+  margin-bottom: 10px;
+}
+
+.important, .note, .warning, .tip, .caution
+{
+  padding: 5px;
+  background-color: #ff9;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  -moz-border-radius: 6px;
+}
+
+hr
+{
+  display: none;
+}
+
+.sect1, .sect2, .sect3, .sect4
+{
+  margin: 10px;
+}
+
+.toc
+{
+  font-size: 10px;
+  margin: 10px;
+  padding: 5px;
+  background-color: #d2f1f6;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  -moz-border-radius: 6px;
+}
+
+.toc p
+{
+  display: none;
+}
+
+.abstract
+{
+  background-color: #83dfed;
+  border: 1px solid #ddd;
+  padding: 5px;
+  margin: 10px;
+  border-radius: 6px;
+  -moz-border-radius: 6px;
+}
+
+.abstract p.title
+{
+  display: none;
+}
+
+.navheader
+{
+  background-color: #eee;
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
+.navfooter
+{
+  background-color: #eee;
+  padding: 5px;
+  margin-top: 10px;
+}
+
+.myheader, .myfooter
+{
+  margin: 10px;
+}
+
+.myfooter
+{
+  font-size: 8px;
+}
+
+.myheader
+{
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.productname
+{
+  font-weight: bold;
+}
+
+h2.title
+{
+  text-align: left;
+  font-size: 18px;
+  margin-bottom: 10px;
+  margin: 10px;
+  border-bottom: 1px solid #666;
+}
+
+.programlisting
+{
+  padding: 5px;
+  margin-bottom: 10px;
+  background-color: #eee;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  -moz-border-radius: 6px;
+}
+
+li, ol
+{
+  margin-left: 20px;
+}
+
+.title, .subtitle, .authorgroup, .releaseinfo, .copyright, .pubdate
+{
+  text-align: center;
+}
+
+.title
+{
+  margin-top: 20px;
+}
+
+.subtitle
+{
+  margin-bottom: 20px;
+}

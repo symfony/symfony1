@@ -1,0 +1,74 @@
+<?php
+
+/*
+ * This file is part of the symfony package.
+ * (c) 2004, 2005 Fabien Potencier <fabien.potencier@gmail.com>
+ * (c) 2004, 2005 Sean Kerr.
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+/**
+ * sfAction executes all the logic for the current request.
+ *
+ * @package    symfony
+ * @subpackage action
+ * @author     Fabien Potencier <fabien.potencier@gmail.com>
+ * @author     Sean Kerr <skerr@mojavi.org>
+ * @version    SVN: $Id: sfAction.class.php 374 2005-08-20 08:57:25Z fabien $
+ */
+abstract class sfActions extends sfAction
+{
+  const ALL = 'ALL';
+
+  /**
+   * Execute any application/business logic for this action.
+   *
+   * In a typical database-driven application, execute() handles application
+   * logic itself and then proceeds to create a model instance. Once the model
+   * instance is initialized it handles all business logic for the action.
+   *
+   * A model should represent an entity in your application. This could be a
+   * user account, a shopping cart, or even a something as simple as a
+   * single product.
+   *
+   * @return mixed A string containing the view name associated with this action.
+   *
+   *               Or an array with the following indices:
+   *
+   *               - The parent module of the view that will be executed.
+   *               - The view that will be executed.
+   */
+  public function execute()
+  {
+    // Dispatch action
+    $actionToRun = '';
+    if (method_exists($this, 'execute'.$this->getActionName()))
+    {
+      $actionToRun = 'execute'.$this->getActionName();
+    }
+    else
+    {
+      // action not found
+      $error = 'sfAction initialization failed for module "%s", action "%s"';
+      $error = sprintf($error, $this->getModuleName(), $this->getActionName());
+      throw new sfInitializationException($error);
+    }
+
+    if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfActions} call "'.get_class($this).'->'.$actionToRun.'()'.'"');
+
+    // disable Layout by default if called via Ajax
+    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest')
+    {
+      $this->hasLayout(false);
+    }
+
+    // run action
+    $ret = $this->$actionToRun();
+
+    return $ret;
+  }
+}
+
+?>

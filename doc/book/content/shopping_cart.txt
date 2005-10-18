@@ -1,0 +1,240 @@
+How to manage a shopping cart
+=============================
+
+Overview
+--------
+
+SymFony offers helpers to manage shopping carts in ebusiness websites. Adding an item, changing quantities and displaying the content of a shopping cart is made easy and painless.
+
+Introduction
+------------
+
+The `sfShoppingCart` class is aimed to manage shopping carts. It can contain any kind of object.
+
+The constructor allows to declare the tax rate to apply to the shopping cart:
+
+    $my_shopping_cart = new sfShoppingCart(APP_CART_TAX);
+
+In this example, the shopping cart tax rate is written in the `app.yml` configuration file of the application for easy change:
+
+    all:
+      cart:
+        tax:  19.6
+
+Create a user shopping cart
+--------------------------
+
+You can easily create a new `sfShoppingCart` object in an action with the `new` constructor. However, it will not be of any use if it is not linked to a user session. The easiest way to keep a user's choice in a shopping cart is to make a [composition][1] of an `sfShoppingCart` object into the `sfUser` class. To do that, add a custom method to the `myproject/myapp/lib/myUser.php` class:
+
+    class myUser extends sfUser
+    {
+      public function getShoppingCart()
+      {
+        if (!$this->hasAttribute('shopping_cart'))
+          $this->setAttribute('shopping_cart', new sfShoppingCart(APP_CART_TAX));
+    
+        return $this->getAttribute('shopping_cart');
+      }
+    
+      ...
+    }
+
+The `$user->getShoppingCart()` method will create a new shopping cart if the user doesn't already have one.
+
+>**Note**: if you need more information about the way to override the default `sfUser` class by a custom `myUser` class, you should read the section about **factories** in the [configuration chapter](configuration_practice.txt).
+
+Add, modify and remove items
+-----------------------------
+
+The shopping cart can contain any quantity of objects from different classes. Each item stored in the shopping cart is an instance of the `sfShoppingCartItem` class.
+
+The `sfShoppingCart` class has `->addItem()` and `->deleteItem()` methods. As you can add or delete any type of object, the first argument of these method calls is the class name of the object. 
+
+To modify the quantity of one item, first get the `sfShoppingCartItem` object itself (via the `->getItems()` method of the `sfShoppingCart` object) and call its `->setQuantity()` method.
+
+### The shoppingcart module
+
+Here is a possible module implementation of the shopping cart management where objects of class 'Product' (representing products) can be added, modified or suppressed with the actions 'index', 'update' and 'delete':
+
+    class shoppingcartActions extends sfActions
+    {
+      ...
+      
+      public function executeIndex()
+      {
+        ...
+  
+        if ($this->hasRequestParameter('id'))
+        {
+          $product = ProductPeer::retrieveByPk($this->getRequestParameter('id'));
+          $shopping_cart = $this->getUser()->getShoppingCart();
+          $shopping_cart->addItem('Product', $this->getRequestParameter('id'), 1, $product->getPrice());
+        }
+  
+        ...
+      }
+  
+      public function executeUpdate()
+      {
+        $shopping_cart = $this->getUser()->getShoppingCart();
+        foreach ($shopping_cart->getItems() as $item)
+        {
+          if ($this->hasRequestParameter('quantity_'.$item->getId()))
+            $item->setQuantity($this->getRequestParameter('quantity_'.$item->getId()));
+        }
+    
+        ...
+      } 
+       
+      public function executeDelete()
+      {
+        if ($this->hasRequestParameter('id'))
+        {
+          $shopping_cart = $this->getUser()->getShoppingCart();
+          $shopping_cart->deleteItem('Product', $this->getRequestParameter('id'));
+        }
+    
+        ...
+      }
+
+  
+      ...
+    }
+
+### Add an item
+
+Let's take a closer look at this code.
+
+To add an item to the shopping cart, you call the `->addItem()` method with four arguments: the object class, the unique id of the object, the quantity to be added and the price of the item. The price is stored at this moment to avoid difference of price between the product addition and the checkout if a product price is modified in between in a back-office. This also allows to apply price discount according to the amount ordered by the client:
+
+    if ($quantity > 10)
+      $shopping_cart->addItem('Product', $this->getRequestParameter('id'), $quantity, $product->getPrice() * 0.8);
+    else
+      $shopping_cart->addItem('Product', $this->getRequestParameter('id'), $quantity, $product->getPrice());
+
+The problem is that you loose the original price if you apply the discount this way. That's why the `->addItem()` method can accept a fifth argument containing a discount:
+
+    if ($quantity > 10)
+      $shopping_cart->addItem('Product', $this->getRequestParameter('id'), $quantity, $product->getPrice(), 20);
+    else
+      $shopping_cart->addItem('Product', $this->getRequestParameter('id'), $quantity, $product->getPrice());
+
+You can also change directly the discount applied to an item in the shopping cart with the `->setDiscount()` method of the `sfShoppingCartItem` class:
+
+    if ($quantity > 10)
+      $item->setDiscount(20); // 20% discount
+    else
+      $item->setDiscount(0);
+
+### Modify an item
+
+To change the quantity of an item, use the method `->setQuantity()` of the `sfShoppingCartItem` object. To delete an item, you can either call the `->deleteItem()` method or change the quantity to 0 by calling `->setQuantity(0)`.
+
+If a user adds the same item (same class and same id) several times, the shopping cart will increase the quantity othe item and not add a new one:
+
+    $shopping_cart->addItem('Product', $this->getRequestParameter('id'), 1, $product->getPrice());
+    $shopping_cart->addItem('Product', $this->getRequestParameter('id'), 1, $product->getPrice());
+    
+    // same as
+    
+    $shopping_cart->addItem('Product', $this->getRequestParameter('id'), 2, $product->getPrice());
+    
+Eventually, you may wonder why the `update` action uses arguments like 'quantity_2313=4' instead of 'id=2313&quantity=4'. As a matter of fact, the way this action is implemented allows the update of multiple article quantities at one time.
+
+### Delete an entire shopping cart
+
+To reset the shopping cart, simply call the `->clear()` method of the `sfShoppingCart` instance.
+
+    $this->getUser()->getShoppingCart()->clear();
+
+Display the shopping cart in a template
+---------------------------------------
+
+### Get the content of the shopping cart
+
+Three methods will help you get the content of a shopping cart:
+
+* `->getItems()`: array of all the `sfShoppingCartItem` objects in the shopping cart
+* `->getItem($class_name, $object_id)`: one specific `sfShoppingCartItem` object
+* `->getTotal()`: Total amount of the shopping cart (sum of the quantity*price for each item)
+
+Shopping cart items also have a [parameter holder](parameter_holder.txt). This means that you can add custom information to any item.
+
+For instance, in a website that sells auto parts, the `sfShoppingCartItem` objects need to store the objects added, but also the vehicle for which the part was bought. This can be simply done by adding:
+
+    $item->setParameter('vehicle', $vehicle_id);
+
+>**Note**: you may need a `->getObjects()` method instead of `->getItems()`. This method exists but it relies on the [Propel][2] data access layer. As the use of Propel is optionnal, you might not be able to use it. Learn more about the data access layer in the [model chapter](model.txt).
+
+### Pass the values to the template
+
+In order to display the content of the shopping cart, the action has to define a few variables accessible to the template:
+
+    ...
+    $this->shopping_cart = $shopping_cart;
+    $this->items = $shopping_cart->getItems();
+
+The following example shows a simple `shoppingcartSuccess.php` template based on an iteration over all the items of the shopping cart to display information about each of them:
+
+    <?php if ($shopping_cart->isEmpty()): ?>
+    
+      Your shopping cart is empty.
+    
+    <?php else: ?>
+    
+      <?php foreach ($items as $item): ?>
+        <?php $object = call_user_func(array($item->getClass().'Peer', 'retrieveByPK'), $item->getId()) ?> 
+        <?= $object->getLabel() ?><br />
+        <?= $item->getQuantity() ?><br />
+        <?= currency_format($item->getPrice(), 'EUR' ) ?> 
+        <?php if ($item->getDiscount()): >
+           (- <?= $item->getDiscount() ?> %)
+        <?php endif ?><br />
+      <?php endforeach ?>
+      
+      Total : <?= currency_format($shopping_cart->getTotal(), 'EUR' ) ?><br />
+    
+    <?php endif ?>
+
+Note that this example uses the Propel data access layer. If your project uses another data access layer, this example might need adaptations.
+
+With or without taxes
+---------------------
+
+By default, all the operations (addition with `$shopping_cart->addItem()`, access with `$item->getPrice()` and `$shopping_cart->getTotal()` use prices **without taxes**. 
+
+To get the total amount with taxes, you have to call:
+
+    $total_with_taxes = $shopping_cart->getTotalWithTaxes()
+
+If you need it, the `sfShoppingCart` object can be initialized so that the `add` and `get` method use the price including taxes:
+
+    class myUser extends sfUser
+    {
+      public function getShoppingCart()
+      {
+        if (!$this->hasAttribute('shopping_cart'))
+          $this->setAttribute('shopping_cart', new sfShoppingCart(APP_CART_TAX));
+        $this->getAttribute('shopping_cart')->setUnitPriceWithTaxes(APP_CART_WITHTAXES);
+        return $this->getAttribute('shopping_cart');
+      }
+    
+      ...
+    }
+
+If `APP_CART_WITHTAXES` is set to `true`, the `$shopping_cart->addItem()` and `$item->getPrice()` methods will use prices with taxes. The `->getTotal()` and `->getTotalWithTaxes()` methods still give the correct results.
+
+Once again, it is a good habit to keep the tax configuration in a configuration file: that's why the example above uses a constant `APP_CART_WITHTAXES` instead of a simple `true`. The `myproject/myapp/config/app.yml` should contain:
+
+    all:
+      cart:
+        tax:       19.6
+        withtaxes: true
+
+If you are unsure of the way taxes are handled, just ask the shopping cart:
+
+    $uses_tax = $shopping_cart->getUnitPriceWithTaxes();
+
+
+[1]: http://en.wikipedia.org/wiki/Object_composition    "Object composition definition at Wikipedia"
+[2]: http://propel.phpdb.org/trac/  "Propel"

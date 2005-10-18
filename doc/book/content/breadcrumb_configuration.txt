@@ -1,0 +1,165 @@
+How to create site structure
+============================
+
+Overview
+--------
+
+SymFony offers automated components to generate breadcrumbs and site maps. The necessary information underlying these features is a description of the tree structure of the website actions, contained in a XML configuration file called `treestructure.xml`. 
+
+Concepts
+--------
+
+### Node
+In a breadcrumb are shown the names of the previous pages seen by the user, together with hyperlinks leading to these pages.
+
+When the pages are static, the hyperlink can simply be the name of the file to request. However, when the page was dynamically created according to parameters and session data, the link points to an action and its parameters.
+
+In this chapter, we'll call *node* the pair page name/page hyperlink 
+
+### Node type
+
+In websites where the information is organized as in a directory, the breadcrumb often shows a real tree structure:
+
+    Home > Category > Sub-Category > Article
+
+In transactionnal and e-business websites, the breadcrumb is more like a history of past actions:
+
+    Home > Search > Result list > Detail > Shopping Cart
+
+This shows that two different types of nodes coexist in websites:
+
+*   *branch*-type nodes: they rely on a father branch and can have children branches; their position in a breadcrumb is fixed, and the knowledge of a *branch* node normally brings the knowledge of all its ancestors
+*   *slip*-type nodes: they can stick to any existing action, and generally appear as an addition to the previous breadcrumb - if they were not already in the breadcrumb; and possibly give birth to child actions.
+
+A third type of node, *root*, is used to describe the root of the website, and it is most of the time the home page. It is the first element of the breadcrumb.
+
+According to the main organization of a website, its actions will be described either with *branch*-type or with *slip*-type actions. SymFony allows to mix different types of actions in one website structure, and once properly defined, a good site structure will generate relevant breadcrumbs.
+
+File format
+-----------
+
+In order to determine the correct breadcrumb, the engine needs:
+
+*	  the current position of the user
+*	  the history of previous nodes seen by the user
+*	  the site structure
+
+If the two first data can be deduced, the site structure has to be defined and therefore is stored in a configuration file. The XML format is chosen here because of its ability to describe tree structures.
+
+The `treestructure.xml` DTD is:
+
+    ELEMENT node (name | action* | node*)
+    ATTLIST node type (root | branch | slip) #IMPLIED
+    ELEMENT name (#PCDATA)
+    ELEMENT action (#PCDATA)
+
+It reads the following way :
+
+*   the XML document contains `node` tags
+*   a `node` tag must have a `name` tag, can have one or more `action` tags and possibly one or more children `node` tags
+*   a `node` tag can have an optionnal `type` attribute, and its possible values are `root`, `branch` and `slip`
+*   `name` and `action` tags can contain text data
+
+Example
+-------
+
+    <node type="root">
+    	<name>Home</name>
+    	<action>Home/Index</action>
+    	<action>Home/Reset</action>
+    </node>
+    <node type="branch">
+    	<name>Product list</name>
+    	<action>Product/List</action>
+    	<node>
+    		<name>Category $category</name>
+    		<action>Product/CategoryList</action>
+    	</node>
+    </node>
+    <node type="branch">
+    	<name>Product search</name>
+    	<action>Product/Search</action>
+    	<node>
+    		<name>Result list</name>
+    		<action>Product/ResultList</action>
+    	</node>
+    </node>
+    <node type="branch">
+    	<name>My account</name>
+    	<action>Account/Overview</action>
+    	<node>
+    		<name>Preferences</name>
+    		<action>Account/Preferences</action>
+    	</node>
+    	<node>
+    		<name>Previous orders</name>
+    		<action>Account/Orders</action>
+    	</node>
+    </node>
+    <node type="branch">
+    	<name>Help</name>
+    	<node>
+    		<name>F.A.Q</name>
+    		<action>Content/FAQ</action>
+    	</node>
+    	<node>
+    		<action>Security policy</action>
+    		<action>Content/Security</action>
+    </node>	
+    <node type="branch">
+    <name>Contact</name>
+      <action>Mail/Contact</action>
+    	<node>
+    		<name>Confirmation</name>
+    		<action>Mail/ContactConfirmation</action>
+    	</node>
+    </node>
+    <node type="slip">
+    	<name>Product description</name>
+    	<action>Product/Detail</action>
+    </node>
+    <node type="slip">
+    	<name>Shopping cart</name>
+    	<action>ShoppingCart/Index</action>
+    </node>
+    <node type="slip">
+    	<name>Page not found</name>
+    	<action>Error/404</action>
+    </node>
+
+With this file, the call to actions will bring the following breadcrumb:
+
+
+*   Product/ResultList: `Home > Product search > Result list`
+*   Content/Security : `Home > Help > Security policy`
+*   ShoppingCart/Index : `[breadcrumb of the previous page] > Shopping cart`
+
+You can see more about the way to inclue a breadcrumb in your templates in the [related page](UseBreadCrumb.txt).
+
+How to write a site strucure 
+----------------------------
+
+### Which actions have to be included ? ###
+
+Most of a the actions of a website are often included in the site structure configuration file. However, some of the actions of your application don't need to appear in the file, like the following ones:
+
+*   actions that redirect to another action (server-side)
+*   actions associated to popups
+*   actions associated to a template without breadcrumb
+
+### How to determine the type of a node ? ###
+
+Apart from the home page, consider that all actions correspond to *branch*-type nodes by default. You will detect the *slip*-type nodes easily because they can appear in a breadcrumb at different positions.
+
+For instance, consider the following beadcrumbs:
+
+    Home > Search > Result list > Detail 
+    Home > Search > Detail
+
+When processing a search, websites often bypass the result list page if there is only one result, and display directly the detail of the product - or article - found. This is a good clue that the Detail node, and its associated actions, should be of type `slip` in this case.
+
+Here are a few examples of pages often coded as *slip* nodes:
+
+*   Shopping cart
+*   Product description, article (especially if there is more than one way to access it, for instance from a directory browse, a full-text search, or a list of previous orders)
+*   404 error
