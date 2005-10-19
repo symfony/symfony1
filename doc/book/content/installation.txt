@@ -34,7 +34,7 @@ That's it: symfony is installed. You may now create a new project with the new c
 
 Symfony needs a few other packages to run; some are included in the installation, and some require you to installe theif they are not present:
 
-* [pake](http:..www.pake-project.com) : installed automatically. You will learn more about the Pake utility in the [next chapter](project_creation.txt).
+* [pake](http://www.pake-project.org/) : installed automatically. You will learn more about the Pake utility in the [next chapter](project_creation.txt).
 * [creole](http://creole.tigris.org/) : installed automatically (used for database access)
 * [propel](http://propel.phpdb.org/trac/) : installed automatically (used for object/relationnal mapping)
 * [phing](http://phing.info/wiki/index.php) : requires manual installation
