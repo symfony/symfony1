@@ -42,7 +42,7 @@ class sfFormTagHelperTest extends UnitTestCase
   public function test_form_radiobutton_tag()
   {
     $actual = radiobutton_tag("people", "david");
-    $expected = '<input type="radio" name="people" id="people" value="david" />';
+    $expected = '<input type="radio" name="people" value="david" />';
 
     $this->assertEqual($expected, $actual);
   }
