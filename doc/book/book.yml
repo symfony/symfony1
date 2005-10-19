@@ -15,7 +15,7 @@ parts:
     - view
     - templating_configuration
     - templating_link_helpers
-    - templating_form_helper
+    - templating_form_helpers
     - templating_i18n_helpers
     - templating_other_helpers
     - parameter_holder

@@ -1,6 +1,3 @@
->**Fabien, dans le fichier de conf, je ne sais pas comment décrire un OU et un ET (par exemple, dire qu'une action est accessible à un utilisateur ayant les credentials `customer` ET `admin`, et une autre à un utilisateur ayant soit `customer` soit `admin`**
->
-
 How to manage user credentials
 ==============================
 
