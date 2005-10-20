@@ -26,7 +26,7 @@ All web requests are handled by a single **front controller**, which is the uniq
 
 There is one front controller by environment. As a matter of fact, it is the very existence of a front controller that defines an environment. The name of the environment is set in the `SF_ENVIRONMENT` constant, after setting the root path of the application and its name.
 
-The front controller requires the code of the `constants.php` file, and this file includes all the necessary compiled configuration to allow symfony to run.
+The front controller requires the code of the `config.php` file, and this file includes all the necessary compiled configuration to allow symfony to run.
 
 The call to the `->dispatch()` method of the Controller object does several things:
 
@@ -71,14 +71,6 @@ So let's imagine that you created a module called `mymodule` in your `myapp` app
 In order to call an action you need pass the parameter 'module/action' to the front controller: 
 
     http://myapp.example.com/index.php/module_name/action_name
-
-Note that the character between the front controller php file and its parameters is not a `?`, as you may expect, but a `/`. This is because actual parameters can be added to this action call if the calling page contains a form in GET mode:
-
-    http://myapp.example.com/index.php/module_name/action_name?param=value
-
-If this request is a real GET (i.e. if it doesn't modify the model), you can also make the same call if you replace the `?` and `=` characters by `/`. Symfony will understand which are the parameters, and which are the values:
-
-    http://myapp.example.com/index.php/module_name/action_name/param/value
 
 >**Note**: symfony contains a **routing** mechanism that allow you to have a complete separation between the actual parameters of an action call and the shape of the URL. For instance, the call to the action `index` of a module called `article`, with the parameter `id`, usually written:
 >
@@ -153,7 +145,7 @@ Because calling the default view is the default behaviour, if an action returns 
 Naming conventions
 ------------------
 
-The actions are regrouped in a logical way inside modules, in a directory structure such as `myproject/myapp/modules/MODULE_NAME/actions/`, in files named `actions.class.php`. The function implementing an action in the `actions.class.php` file of the module is named with the name of the action prefixed with `execute`.
+The actions are grouped in a logical way inside modules, in a directory structure such as `myproject/myapp/modules/MODULE_NAME/actions/`, in files named `actions.class.php`. The function implementing an action in the `actions.class.php` file of the module is named with the name of the action prefixed with `execute`.
 
 For instance, if you have two actions `index` and `list` in a module called `product`, the file `actions.class.php` located in `myapp/modules/product/actions/` will have the following structure:
 
@@ -217,7 +209,7 @@ Guess how to repeat statements *after* every action is executed ? Wrap them in a
 Redirect or Forward
 -------------------
 
-The choice between a `redirect` or a `forward` is sometimes tricky. To choose the best solution, keep in mind that a `forward` is internal to the application and transparent for the user : as far as he is concerned, the displayed URL is the same as the one requested. On the contrary, a `redirect` is a message to the user's browser, involving a  new request from it and a change in the final resulting URL.
+The choice between a `redirect` or a `forward` is sometimes tricky. To choose the best solution, keep in mind that a `forward` is internal to the application and transparent for the user: as far as he is concerned, the displayed URL is the same as the one requested. On the contrary, a `redirect` is a message to the user's browser, involving a new request from it and a change in the final resulting URL.
 
 If the action was called from a submitted form with `action="post"`, you should always do a `redirect`. The main advantage is that if the user refreshes the resulting page, the form will not be submitted again; in addition, the 'back' button works as expected.
 

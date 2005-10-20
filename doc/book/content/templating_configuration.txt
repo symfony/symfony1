@@ -4,7 +4,7 @@ View Configuration
 Overview
 --------
 
-The View if made of :
+The View if made of:
 
 * one part resulting of the action execution (the template)
 * all the rest (headers, metas, file inclusions, slots and ayout)

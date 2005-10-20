@@ -4,7 +4,7 @@ How to display a custom 404 error page
 Overview
 --------
 
-With Symfony, you can define easily a custom 404 page. You even have several ways to do it.
+With symfony, you can define easily a custom 404 page. You even have several ways to do it.
 
 Introduction
 ------------
@@ -16,7 +16,7 @@ The module and action to be called when a 404 error occurs is defined in the `se
         error_404_module:       default
         error_404_action:       error404
 
-The `error404` action of the `default` module doesn't appear in the application directory, since it is part of Symfony.
+The `error404` action of the `default` module doesn't appear in the application directory, since it is part of symfony.
 
 Solution 1 : change the configuration
 -------------------------------------
@@ -28,7 +28,7 @@ You can specify a custom module and action in the `settings.yml` file:
         error_404_module:       errors
         error_404_action:       error404
 
-Just initialize the new module with
+Just initialize the new module with:
 
     symfony init-module myapp errors
 

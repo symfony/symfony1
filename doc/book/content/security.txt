@@ -4,12 +4,12 @@ How to manage user credentials
 Overview
 --------
 
-SymFony offers simple mechanisms to identify a user, manage his credentials and restrict access to certain parts of your applications to authenticated users with certain credentials only.
+Symfony offers simple mechanisms to identify a user, manage his credentials and restrict access to certain parts of your applications to authenticated users with certain credentials only.
 
 User identification
 -------------------
 
-The authenticated status of the user is set by the `->setAuthenticated()` method of a `sfUser` object. For instance, if you need to implement a simple version of user identification in a module called `myAccount` with two actions `login` and `logout`, you can write: 
+The authenticated status of the user is set by the `->setAuthenticated()` method of a `sfUser/myUser` object. For instance, if you need to implement a simple version of user identification in a module called `myAccount` with two actions `login` and `logout`, you can write: 
 
     class myAccountActions extends sfActions
     {
@@ -30,7 +30,7 @@ The authenticated status of the user is set by the `->setAuthenticated()` method
 User credentials
 ----------------
 
-For authenticated users, symfony provides an array of credentials in the `sfUser` class that can be set via simple access methods `has`, `add`, `remove` and `clear`. Each credential can have any value, provided it is of the String type.
+For authenticated users, symfony provides an array of credentials in the `sfUser` class that can be set via simple access methods `has`, `add`, `remove` and `clear`. Each credential can have any value.
 
     $user = $this->getUser();
     // add a credential

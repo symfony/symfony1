@@ -4,18 +4,18 @@ Symfony model
 Overview
 --------
 
-Symfony has an object/relational abstraction layer based on the [Propel][1] project. Accessing data stored in a database and modifying it is made easy through an object translation of the database. This chapter explains the creation of such a object data  model, the way to access and modify the data in Propel. It also illustrates  the integration of Propel in Symfony.
+Symfony has an object/relational abstraction layer based on the [Propel][1] project. Accessing data stored in a database and modifying it is made easy through an object translation of the database. This chapter explains the creation of such an object data model, the way to access and modify the data in Propel. It also illustrates the integration of Propel in Symfony.
 
 Why use an abstraction layer ?
 ------------------------------
 
-Databases are relationnal. PHP5, and symfony, are object oriented. In order to access the database in an object-oriented way, an interface translating the object logic to te relationnal logic is required. 
+Databases are relationnal. PHP5 and symfony are object oriented. In order to access the database in an object-oriented way, an interface translating the object logic to the relationnal logic is required. 
 
-Using objects instead of records, and classes instead of tables, allow you to add new accessors to your tables. For instance, if you have a table called 'client' with two fields 'FirstName' and 'LastnName', you might like to be able to require just a 'name'. On an object-oriented world, this is very easy: just add a new accessor method.
+Using objects instead of records, and classes instead of tables, allow you to add new accessors to your tables. For instance, if you have a table called 'client' with two fields 'FirstName' and 'LastName', you might like to be able to require just a 'name'. On an object-oriented world, this is very easy: just add a new accessor method.
 
     public function getName()
     {
-        return $this->getFirstName.' '.$this->getLastName();
+      return $this->getFirstName.' '.$this->getLastName();
     }
 
 All the repeated data access functions and the business logic of the data itself can be kept in such objects. Imagine a class 'ShoppingCart' in which you keep items (which are objects). To get the full amount of the shopping cart for the checkout, you can add the following method:
@@ -32,13 +32,13 @@ All the repeated data access functions and the business logic of the data itself
 
 And that's it. Imagine how long it would have required to write a SQL request doing the same ? Anyway, the question is irrelevant, since symfony and PHP5 get you used to object orientation and its benefits. Why apply new constraints when its comes to the data models ?
 
-This is the **Model** layer of the symony MVC architecture. Objects that give access to data and keep business rules within themselves.
+This is the **Model** layer of the symfony MVC architecture. Objects that give access to data and keep business rules within themselves.
 
-There is one last benefit of an object/relationnal abstraction layer : you can change your database in the middle of a project. The abstraction layer prevents you from using a syntax that is specific to a given database. But it translates the methods calls to requests specific to the configured database.
+There is one last benefit of an object/relationnal abstraction layer: you can change your database in the middle of a project. The abstraction layer prevents you from using a syntax that is specific to a given database. But it translates the methods calls to requests specific to the configured database.
 
 Imagine that you have to write a quick prototype for an application, but the client hasn't decided yet which database system would best suit his needs. You can start building your application with SQLite, for instance, and switch to MySQL, PostgreSQL or Oracle when the client is ready to. Just change one line in a configuration file, and it works.
 
-[Propel][1] is currently the best object/relational abstraction layer for PHP5. Instead of reriting it, symfony uses integrates it seamlessly into the framework.
+[Propel][1] is currently one of the best object/relational abstraction layer for PHP5. Instead of reriting it, symfony uses integrates it seamlessly into the framework.
 
 XML Data model 
 --------------
@@ -59,7 +59,7 @@ The `name` of the database must keep the value `symfony` to allow the integratio
 
 ### Example
 
-Now, let's imagine that you have a database 'blog' already containing data in two tables : 'blog_article' and 'blog_comment' with the following structure:
+Now, let's imagine that you have a database 'blog' already containing data in two tables: 'blog_article' and 'blog_comment' with the following structure:
 
     blog_article          blog_comment
     ------------          ------------
@@ -97,9 +97,9 @@ The related `schema.xml` should look like:
 
 In this file format, a `<database>` contains several `<table>`, each having a set of `<column>`, `<index>` and `<foreign-key>` in no particular order.
 
-The `phpName` given to the tables is the name of the object name that will give you access to the data, as you will see in the nex part. If you don't mention it, the actual `name` will be used in place, after removing undescores and capitalizing the first letter of inner words (in the example, the default `phpname` of the tables would be `blogArticle` and `blogComment`). Columns also have a `phpname`, which is the capitalized version of the `name` (`ID`, `TITLE`, `CONTENT`, etc.) and doesn't need overriding in most cases.
+The `phpName` given to the tables is the name of the object name that will give you access to the data, as you will see in the next part. If you don't mention it, the actual `name` will be used in place, after removing undescores and capitalizing the first letter of inner words (in the example, the default `phpname` of the tables would be `blogArticle` and `blogComment`). Columns also have a `phpname`, which is the capitalized version of the `name` (`ID`, `TITLE`, `CONTENT`, etc.) and doesn't need overriding in most cases.
 
-Columns have a `type` attribute that can take the usual values: `boolean`, `integer`, `float`, `date`, `varchar`, `longvarchar`, etc. The `varchar`-type columns can have a `size` attributes that specifies the maximum number of characters of the column. For text content over 256 characters, you need to use the `longchar` type, which has no size but can not exceed 65Ko. Note thate the `date` and `timestamp` types have the usual limitations of Unix dates and can not be set to a date prior to 1970-01-01. As you may need to set older dates (for instance for dates of birth), a format of dates 'before unix' can be used with `bu_date` and `bu_timestamp`.
+Columns have a `type` attribute that can take the usual values: `boolean`, `integer`, `float`, `date`, `varchar`, `longvarchar`, etc. The `varchar`-type columns can have a `size` attributes that specifies the maximum number of characters of the column. For text content over 256 characters, you need to use the `longchar` type, which has no size but can not exceed 65Ko (mysql specific). Note thate the `date` and `timestamp` types have the usual limitations of Unix dates and can not be set to a date prior to 1970-01-01. As you may need to set older dates (for instance for dates of birth), a format of dates 'before unix' can be used with `bu_date` and `bu_timestamp`.
 
 The `primaryKey` attribute identifies primary key fields. Columns that are primary keys often have the same attributes (`type="integer" required="true" autoincrement="true"`). If you need to create an index, simply add an `<index>` tab. If you need to create a foreign key, siply add a `<foreign-key>` tag identifying the corresponding colomn in a foreign table.
 
@@ -160,34 +160,35 @@ You only defined two tables and you end up with eight files. What's the deal her
 
 ### Base and current model 
 
-Why keep two versions of the data object model, one one `model/om/` and another in `model` ? Well, this model is likely to change during your project developement. And you will probably need to add custom methods and attributes that need to be kept even if the model changes. So this architecture allows you to keep using the `symfony build-model` command even after you added custom code to your classes. Here is how it works : the `Base` classes kept in the `model/om/` directory are the ones generated by Propel. You should **never** modify them since every new build of the model will completely erase these files. But if you need to add custom methods, use the regular object classes of the `model/` directory that actually inherit from the previous ones. 
+Why keep two versions of the data object model, one one `model/om` and another in `model` ? Well, this model is likely to change during your project developement. And you will probably need to add custom methods and attributes that need to be kept even if the model changes. So this architecture allows you to keep using the `symfony build-model` command even after you added custom code to your classes. Here is how it works : the `Base` classes kept in the `model/om` directory are the ones generated by Propel. You should **never** modify them since every new build of the model will completely erase these files. But if you need to add custom methods, use the regular object classes of the `model` directory that actually inherit from the previous ones.
 
 For example, here is the content of the newly created `Article.php` file:
 
     require_once 'model/om/BaseArticle.php';
-    class Article extends BaseArticle {
+    class Article extends BaseArticle
+    {
     }
 
 It inherits all the methods of the `BaseArticle` class, but a modification in the model will not affect it. You then have a structure that is both customizable and evolutionary.
 
 ### Peer classes
 
-The classes `Article` and `Comment` will allow you to access attributes of the records of the related tables. This means that you will be able to know the title of an article by calling a method of an `Article` object (you will se how in a minute).
+The classes `Article` and `Comment` will allow you to access attributes of the records of the related tables. This means that you will be able to know the title of an article by calling a method of an `Article` object (you will see how in a minute).
 
-But there is more to databases than reading what's inside records : you also need to actually find records. That's the purpose of the `Peer` classes. They offer methods to find records, that return lists of objects.
+But there is more to databases than reading what's inside records: you also need to actually find records. That's the purpose of the `Peer` classes. They offer methods to find records, that return lists of objects.
 
-From a data model point of view, note that the can not be any `Peer` object, only classes. That's why the methods of the `Peer` classes will be called with a `::` (for class method call) instead of the usual `->` (for object method call).
+From a data model point of view, note that the can not be any `Peer` object. That's why the methods of the `Peer` classes will be called with a `::` (for class method call) instead of the usual `->` (for object method call).
 
 Data access
 -----------
 
 ### Field access
 
-Propel provides one class for each the tables defined in the `scheme.xml` file. These classes heve default creators, accessors and mutators with the `new`, `get` and `set` methods to give access to the Columns:
+Propel provides one class for each the tables defined in the `schema.xml` file. These classes have default creators, accessors and mutators with the `new`, `get` and `set` methods to give access to the Columns:
 
     $article = new Article();
     $article->setTitle('My first article');
-    $article->setContent('This is my very first article.\n Hope you enjoy it !');
+    $article->setContent('This is my very first article.\n Hope you enjoy it!');
     
     $title = $article->getTitle();
     $content = $article->getContent();
@@ -217,9 +218,9 @@ Let's check all the comments about your new article:
 
 Note the plural used here in the `get` method: as Propel knows that your relationnal model specified that an article can have several comments, you can simply use a standard accessor to get the array of related objects. Now your `$comments` variable contains an array of objects of class `Article`, and you can display the first one with:
 
-    echo $comments[0];
+    print_r($comments[0]);
 
-If you read comments to your articles, you might change your mind about the interest of publishing on the Internet. And if you don't appeciate the irony of article reveiwers, you can delete your article very efficiently with the `delete()` method:
+If you read comments to your articles, you might change your mind about the interest of publishing on the Internet. And if you don't appeciate the irony of article reviewers, you can delete your article very efficiently with the `delete()` method:
 
     $article->delete();
 
@@ -227,11 +228,11 @@ Find more about these methods and their syntax in the [Propel documentation][4].
 
 ### Records access
 
-If you know the primary key of a particular record, use the `RetrieveByPk()` class method of the `Peer` class of the table to get the related object.
+If you know the primary key of a particular record, use the `retrieveByPk()` class method of the `Peer` class of the table to get the related object.
 
 For instance, to retrieve the article that has id #7, call:
 
-    $article = ArticlePeer::RetrieveByPk(7); 
+    $article = ArticlePeer::retrieveByPk(7); 
 
 As you use the primary key, you know that only one record will be returned. So the `$article` variable contains an object of the `Article` class.
 
@@ -249,7 +250,7 @@ The class method `doSelect()` applies the selection filter received as a paramet
       echo $article->getTitle();
     }
 
-But there is more to requests than getting all records or one record by its key. The power of the `Criteria` object is that you can add rules ro it just like you would add 'WHERE' or 'ORDER BY' statements in an SQL query.
+But there is more to requests than getting all records or one record by its key. The power of the `Criteria` object is that you can add rules so it just like you would add 'WHERE' or 'ORDER BY' statements in an SQL query.
 
 To get all comments written by Steve, use:
 
@@ -275,7 +276,7 @@ Propel in symfony
 All the details given above are not specific to symfony. As a matter of fact, you are not obliged to use Propel as your object/relationnal abstraction layer. But symfony works more seamlessly with Propel, since:
 
 * All the object data model classes and the `Criteria` classes are auto-loading classes. As soon as you will use them, symfony will include the right files, but you don't need to manually inclde the file inclusion
-* In symfony, Propel doesn't need to be launched nor initialized. When an object uses Propel , the library initiates by itself.
+* In symfony, Propel doesn't need to be launched nor initialized. When an object uses Propel, the library initiates by itself.
 * Results of a request can be easily paginated (see more in the [pager chapter](pager.txt)).
 
 And, as Propel is independant of the database used, so is symfony. As a matter of fact, you might need the SQL request that creates the actual database from the XML configuration file - for instance to rebuild the database in another environment or to change RDBMS. To get it, go to your root project directory and type:
