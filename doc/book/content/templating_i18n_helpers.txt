@@ -9,9 +9,9 @@ Displaying localized content is not a worry in Symfony thanks to the internation
 Date helpers
 ------------
 
-SymFony simplifies the display of dates and numbers according to the user culture. For an international website, all dates and numbers should be output through a internationalization filter, and that's what the following helpers do.
+Symfony simplifies the display of dates and numbers according to the user culture. For an international website, all dates and numbers should be output through a internationalization filter, and that's what the following helpers do.
 
-All these helpers have a culture argument, which is the last argument and is optionnal. If omitted, the helper uses the user culture instead. To learn more about cultures and internationalization, read the [i18n](i18n.txt) chapter.
+All these helpers have a culture argument, which is the last argument and is optional. If omitted, the helper uses the user culture instead. To learn more about cultures and internationalization, read the [i18n](i18n.txt) chapter.
 
 First, declare the need of the helper at the top of your template:
 
@@ -54,7 +54,7 @@ The last three arguments specify the text to be used when:
 
 The `%s` are replaced by the formatted dates.
 
-For instance, if `$start_date` is the 1st of april 2005 and `$end_date` the 3rd of july 2005, the displayed text will be `from 04/05 to 07/05`.
+For instance, if `$start_date` is the 1st of April 2005 and `$end_date` the 3rd of July 2005, the displayed text will be `from 04/05 to 07/05`.
 
 Number helpers
 --------------
@@ -104,6 +104,6 @@ In order to use the internationalization helpers, you must include the `I18N` he
     // will generate in HTML for a French user
     anglais
 
-Countries and languages are often displayed in selection lists for data input in forms. If you do so, you shouldn't need the previous helpers since sensio provides a `select_country_tag` helper, described in the [form helpers](templating_form_helpers.txt) chapter.
+Countries and languages are often displayed in selection lists for data input in forms. If you do so, you shouldn't need the previous helpers since Sensio provides a `select_country_tag` helper, described in the [form helpers](templating_form_helpers.txt) chapter.
     
     

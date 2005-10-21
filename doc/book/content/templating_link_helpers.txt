@@ -15,7 +15,7 @@ The way to call an action with an URL has already been explained: put the module
     // is equivalent to
     http:/myapp.example.com/index.php/article/read/title/Finance_in_France
     
-    // additionnally, the following works if the routing is deactivated
+    // additionally, the following works if the routing is deactivated
     http://myapp.example.com/index.php?module=article&action=read&title=Finance_in_France
 
 Imagine that you want to add a hyperlink to this page in a template. In PHP, you could be tempted to write:
@@ -24,14 +24,14 @@ Imagine that you want to add a hyperlink to this page in a template. In PHP, you
 
 This is a bad idea, because: 
 
-* by writing `index.php`, you point to a particular environment (in this case, the production environment). All links must be environment-independant if you don't want to accidentally change environment while navigating
+* by writing `index.php`, you point to a particular environment (in this case, the production environment). All links must be environment-independent if you don't want to accidentally change environment while navigating
 * if you later decide to change the **routing** policy (you can learn more about this feature in the [routing chapter](routing.txt) chapter), and to display another format of URL, you would have to parse all of your template files and replace by hand the URLs already entered to URLs like:
 
             <a href="/index.php/articles/europe/france/finance.html">Finance in France</a>
 
 If you ever built a website, you know that these problems occur all the time.
 
-The link helpers are there for you. They allow symfony to create URLs and hyperlinks to actions compliant to the routing policy, without any dependance to the environment.
+The link helpers are there for you. They allow symfony to create URLs and hyperlinks to actions compliant to the routing policy, without any dependence to the environment.
 
 Link helpers
 ------------
@@ -54,7 +54,7 @@ Enter in the link helper just the same URL as you would have written in a `<a hr
 
     <a href="http://myapp.example.com/articles/europe/france/finance.html" title="interesting article">interesting article</a>
 
-Link helpers are the key to a double way routing. Interpreting URLs is not a big deal, but generating them requires that all hyperlink tags pass by the same filter. That's why these helpers are compulsory as soon as you may use the routing feature. Make sure you take a look at the [routing chapter](routing.txt) to see how to change the shape of urls, get rid of the controller name or add a '.html' to the generated urls for more efficient caching and indexing.
+Link helpers are the key to a double way routing. Interpreting URLs is not a big deal, but generating them requires that all hyperlink tags pass by the same filter. That's why these helpers are compulsory as soon as you may use the routing feature. Make sure you take a look at the [routing chapter](routing.txt) to see how to change the shape of URLs, get rid of the controller name or add a '.html' to the generated URLs for more efficient caching and indexing.
 
 ### Using the rule instead of the module/action
 
@@ -87,7 +87,7 @@ The best choice depends on the project. In the long run, it's up to you.
 
 ### Fake GET
 
-Sometimes, web developpers tend to use GET requests to actually do a POST. For instance, consider the following URL:
+Sometimes, web developers tend to use GET requests to actually do a POST. For instance, consider the following URL:
 
     http://myapp.example.com/index.php/shopping_cart/add?id=100
 
@@ -112,7 +112,7 @@ This helper takes two parameters : the actual email address, and a secure flag. 
     // will generate in HTML
     <a href="mailto:myaddress@mydomain.com'>myaddress@mydomain.com</a>
 
-If the flag is set to `true`, and this is the default behaviour, the displayed and pointed addresses are processed by a random decimal and hexadecimal entity encoder. This will probably not stop all address-harvesting spambots, but it will keep most of them away. Future versions of this helper will probably evolve as the harvesting techniques become more accurate.
+If the flag is set to `true`, and this is the default behavior, the displayed and pointed addresses are processed by a random decimal and hexadecimal entity encoder. This will probably not stop all address-harvesting spambots, but it will keep most of them away. Future versions of this helper will probably evolve as the harvesting techniques become more accurate.
 
     <?= mail_to('myaddress@mydomain.com') ?>
     // will generate in HTML something like
@@ -121,7 +121,7 @@ If the flag is set to `true`, and this is the default behaviour, the displayed a
 Image helper
 ------------
 
-Considering that all your html pages are handled by actions, the `href` attribute is no worry anymore. But what about all those tags having a `src` attribute ? Symfony has image and javascript helpers that are faster to write and to most of the job themselves. 
+Considering that all your HTML pages are handled by actions, the `href` attribute is no worry anymore. But what about all those tags having a `src` attribute ? Symfony has image and javascript helpers that are faster to write and to most of the job themselves. 
 
 In addition, future versions will support configuration for the default location of media files. This may prove helpful if you decided suddenly to host all of your project media files (css, js, pdf, jpg, gif, etc.) in a new server to increase performance.
 
@@ -143,13 +143,13 @@ If you need to change the default file type or the default location, you can pas
     // will generate in HTML
     <img href="/my_images/test.gif" alt="Test" />
 
-You can add a second argument to specify additional html attributes; this argument must be an array. 
+You can add a second argument to specify additional HTML attributes; this argument must be an array. 
 
     <?= image_tag('/my_images/test.gif', array('class' => 'shortImage')) ?>
     // will generate in HTML
     <img href="/my_images/test.gif" alt="Test" class="shortImage"/>
 
-Don't bother to specify a `alt` attribute if your media file has an explicit name, since SymFony will determine it for you.
+Don't bother to specify a `alt` attribute if your media file has an explicit name, since symfony will determine it for you.
 
 To fix the size of an image, use the attribute `size`:
 
@@ -174,7 +174,7 @@ To link to javascript files, you can omit the path and the suffix:
     // will generate in HTML
     <script language="javascript" type="text/javascript" src="/js/myscript.js">
 
-Once again, the default location can be overriden in a function call for punctual needs, or redefined for the whole site in the configuration files for major changes.
+Once again, the default location can be overridden in a function call for punctual needs, or redefined for the whole site in the configuration files for major changes.
 
 If you read the whole documentation, you will see that symfony gives you three different ways to require an additional javascript file. You should use them with this order of preference:
 

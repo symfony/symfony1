@@ -32,7 +32,7 @@ Websites that offer full-text search need to show where the text was found. This
 Maybe you need to highlight a sentence in a text:
 
     <?= highlight_text($text, $sentence, [$highlighter]) ?>
-    //$highlighter is the class 'highlight' by defaut
+    //$highlighter is the class 'highlight' by default
     
     // For instance, if $text='The best PHP framework is symfony'
     <?= highlight_text($text, 'symfony') ?>
@@ -43,7 +43,7 @@ Or maybe you need to format an ASCII text to HTML:
 
     <?= simple_format_text($text) ?>
 
-`simple_format_text` surrounds paragraphs with `<p>...</p>` tags, and converts line breaks into `<br />`. Two consecutive newlines (\n\n) are considered as a paragraph, one newline (\n) is considered a linebreak, three or more consecutive newlines are turned into two newlines. It might be useful to display, for instance, data entered by the user in a textarea.
+`simple_format_text` surrounds paragraphs with `<p>...</p>` tags, and converts line breaks into `<br />`. Two consecutive newlines (\n\n) are considered as a paragraph, one newline (\n) is considered a line break, three or more consecutive newlines are turned into two newlines. It might be useful to display, for instance, data entered by the user in a textarea.
 
 Another useful helpers finds all the URLs in a text and turns them into hyperlinks
 

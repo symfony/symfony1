@@ -56,7 +56,7 @@ Actions are located inside **module** directories. And if, to create application
 
 Actions are located in files called `actions.class.php` found in the `actions` subdirectory of each module directory.
 
-So let's imagine that you created a module called `mymodule` in your `myapp` application using the `sympfony` command. The default file `actions.class.php` located in the `myapp/modules/mymodule/actions/` directory defines a single action called `index`, and it looks like that:
+So let's imagine that you created a module called `mymodule` in your `myapp` application using the `symfony` command. The default file `actions.class.php` located in the `myapp/modules/mymodule/actions/` directory defines a single action called `index`, and it looks like that:
 
     class mymoduleActions extends sfActions
     {
@@ -105,7 +105,7 @@ But you may wonder how the action can choose the view to display its content, si
 Action return
 -------------
 
-Various behaviours are possible at the end of the execution of an action:
+Various behaviors are possible at the end of the execution of an action:
 
 *   if there is a default view to call (this is the most common case):
 
@@ -140,7 +140,7 @@ Various behaviours are possible at the end of the execution of an action:
 
 >**Note**: the code located after a `forward` or a `redirect` in an action is never executed. You can consider that these calls are equivalent to a `return` statement.
 
-Because calling the default view is the default behaviour, if an action returns nothing, the framework considers that the success view has to be called as if the `return sfView::SUCCESS;` was implied.
+Because calling the default view is the default behavior, if an action returns nothing, the framework considers that the success view has to be called as if the `return sfView::SUCCESS;` was implied.
 
 Naming conventions
 ------------------

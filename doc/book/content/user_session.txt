@@ -24,7 +24,7 @@ The `sfUser` class owns a few default attributes used by symfony to deal with cl
 * `culture` holds the user Culture (language and country) 
 * authentication attributes (these are described in detail in the [authentication and rigths](security.txt) chapter)
 
-In adition, the `sfUser` class owns a [parameter holder](parameter_holder.txt) in which you can store custom attributes.
+In addition, the `sfUser` class owns a [parameter holder](parameter_holder.txt) in which you can store custom attributes.
 
 Custom user attributes
 ----------------------

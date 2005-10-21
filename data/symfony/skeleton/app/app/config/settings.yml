@@ -8,8 +8,6 @@ dev:
     cache:                  off
     stats:                  off
     no_script_name:         off
-    compressed:             on
-    tidy:                   on
 
 test:
   .settings:

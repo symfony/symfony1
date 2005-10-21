@@ -39,7 +39,7 @@ For authenticated users, symfony provides an array of credentials in the `sfUser
     $user->addCredentials($credential1, $credential2);
     // check if the user has a credential
     $user->hasCredential($credential)                  =>   true
-    // check if the user has one of the credenials
+    // check if the user has one of the credentials
     $user->hasCredentials($credential1, $credential3)  =>   true
     // remove a credential
     $user->removeCredential($credential);
@@ -108,7 +108,7 @@ For example, to restrict the `read` action of the `myAccount` module to users wi
 
 What happens when a user tries to access a restricted action depends on his credentials:
 
-*   If the user is identified and has the proper credentials, the action will be excuted
+*   If the user is identified and has the proper credentials, the action will be executed
 *   If the user is not identified, he/she will be redirected to the default `login` action  (default/login). You can configure this action in the `myproject/myapp/config/settings.yml` file.
 *   If the user is identified but doesn't have the proper credentials, he/she will be redirected to the default `secure` action (default/secure). You can configure this action in the `myproject/myapp/config/settings.yml` file.
 

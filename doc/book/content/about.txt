@@ -1,7 +1,7 @@
 About symfony
 =============
 
-**Symfony is an open-source web framework written in PHP5**. Based on the best practices of web development, thorougly tried on several active websites, symfony aims to speed up the creation and maintenance of web applications, and to replace the repetitive coding tasks by power, control and pleasure.
+**Symfony is an open-source web framework written in PHP5**. Based on the best practices of web development, thoroughly tried on several active websites, symfony aims to speed up the creation and maintenance of web applications, and to replace the repetitive coding tasks by power, control and pleasure.
 
 If you have been looking for a [Rails][1]/[Django][2]-like framework for PHP projects with features such as:
 
@@ -19,13 +19,13 @@ If you have been looking for a [Rails][1]/[Django][2]-like framework for PHP pro
 
 Its very small number of prerequisites make it easy to install on any configuration; you just need Unix or Windows with a web server and PHP 5 installed. It is compatible with almost every database system. In addition, it has a very small overhead, so the benefits of the framework don't come at the cost of an increase of hosting costs.
 
-Using symfony is so natural and easy for people used to PHP and the design patterns of Internet applications that the learning curve is reduced to less than a day. The clean design and code readability will keep your delays short. Developpers can apply agile development principles (such as [DRY][3], [KISS][4] or the [XP][5] philosophy) and focus on applicative logic without losing time to write endless XML configuration files.
+Using symfony is so natural and easy for people used to PHP and the design patterns of Internet applications that the learning curve is reduced to less than a day. The clean design and code readability will keep your delays short. Developers can apply agile development principles (such as [DRY][3], [KISS][4] or the [XP][5] philosophy) and focus on applicative logic without losing time to write endless XML configuration files.
 
 Symfony is aimed at building robust applications in an enterprise context. This means that you have full control over the configuration: from the directory structure to the foreign libraries, almost everything can be customized. To match your enterprise's development guidelines, symfony is bundled with additional tools helping you to test, debug and document your project. 
 
 Last but not least, by choosing symfony you get the benefits of an active open-source community. It is entirely free and published under the MIT license.
 
-Symfony is sponsored by [Sensio][6], a French Web Agency well known for its innovative views on web developement.
+Symfony is sponsored by [Sensio][6], a French Web Agency well known for its innovative views on web development.
 
 [1]:  http://www.rubyonrails.org/               "Ruby on Rails"
 [2]:  http://www.djangoproject.com/             "Django"

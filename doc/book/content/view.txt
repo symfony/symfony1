@@ -4,7 +4,7 @@ Symfony View: templates, layouts, slots and fragments
 Overview
 --------
 
-The implementation of the [MVC][1] View paradigm in symfony uses templates, possibly included in a Layout. Reusable parts of code are available in slots, when they result of an action, or in fragments, when they don't need applicative logic. The naming conventions and the tigh integration with the symfony Controller implementation make template management an easy task.
+The implementation of the [MVC][1] View paradigm in symfony uses templates, possibly included in a Layout. Reusable parts of code are available in slots, when they result of an action, or in fragments, when they don't need applicative logic. The naming conventions and the tight integration with the symfony Controller implementation make template management an easy task.
 
 Templating
 ----------
@@ -26,12 +26,12 @@ The variables called in the templates must be either one of the usual shortcuts 
 
     $this->name = 'myvalue';
 
-Developpers like to keep as few PHP code as possible in templates, since these files are the ones used to design the GUI of the application, and are sometimes created and maintained by another team, specialized in presentation but not in applicative logic.
+Developers like to keep as few PHP code as possible in templates, since these files are the ones used to design the GUI of the application, and are sometimes created and maintained by another team, specialized in presentation but not in applicative logic.
 
 Shortcuts
 ---------
 
-Symfony profides the templates with a few useful pre-defined variables, or **shorcuts**, allowing it to access the most commonly needed information:
+Symfony provides the templates with a few useful pre-defined variables, or **shorcuts**, allowing it to access the most commonly needed information:
 
     $context        //the whole context object
     $request        //the origin request 
@@ -48,7 +48,7 @@ This is true whether the parameter was sent to the action with POST or GET metho
     index.php/test/index&total=123   //GET
     index.php/test/index/total/123   //routed action call
 
-And since the first action call can lead to other action calls (for instance if there is a `forward`), you may need to access the action stack. A few additionnal shortcuts will make it easy for you:
+And since the first action call can lead to other action calls (for instance if there is a `forward`), you may need to access the action stack. A few additional shortcuts will make it easy for you:
 
     $first-module   //first module called
     $last-module    //last module called
@@ -58,15 +58,15 @@ And since the first action call can lead to other action calls (for instance if 
 Helpers
 -------
 
-**Helpers** (like the `link_to` function in the template example above) are php functions that facilitate the process of writing  templates and produce the best possible html code in terms of performance and accessibility. Three types of helpers are available:
+**Helpers** (like the `link_to` function in the template example above) are php functions that facilitate the process of writing  templates and produce the best possible HTML code in terms of performance and accessibility. Three types of helpers are available:
 
-*   The standard compulsory helpers, that must be used instead of the corresponding HTML code because they allow internal SymFony mechanisms (like routing, automated form management, internationalization, etc.) to work.
+*   The standard compulsory helpers, that must be used instead of the corresponding HTML code because they allow internal symfony mechanisms (like routing, automated form management, internationalization, etc.) to work.
 
-    This includes all the HTML tags that handle URLs : they are replaced by SymFony shortcuts to allow the routing.
+    This includes all the HTML tags that handle URLs : they are replaced by symfony shortcuts to allow the routing.
 
 *   The standard optional helpers, that use less code than classic HTML for the same purpose. 
 
-    In addition, they take advantage of the SymFony architecture : by using these helpers, you make sure that your code will even work after any subsequent change in the file tree structure.
+    In addition, they take advantage of the symfony architecture : by using these helpers, you make sure that your code will even work after any subsequent change in the file tree structure.
 
 *   The helpers defined specifically for an application (learn more about that feature in the [custom helper creation](custom_helper.txt) chapter).
 
@@ -78,10 +78,10 @@ A few helpers are loaded for every application:
 
 * Helper: defines the `use_helper()` helpers, needed for helper inclusion
 * Tag: defines the basic tag operations
-* Url: link and url management helpers
+* Url: link and URL management helpers
 * Asset: head, include, images and javascript call helpers
 
-By default, the application configuration specifies additionnal helpers to be loaded for all requests in the `settings.yml`:
+By default, the application configuration specifies additional helpers to be loaded for all requests in the `settings.yml`:
 
     default:
       .settings:
@@ -194,7 +194,7 @@ The templates called at the end of the execution of each action will be located 
     indexSuccess.php
     listSuccess.php
 
-Because this is the default behaviour, if an action returns nothing, the framework considers that the success view has to be called as if the `return sfView::SUCCESS;` was implied.
+Because this is the default behavior, if an action returns nothing, the framework considers that the success view has to be called as if the `return sfView::SUCCESS;` was implied.
 
 For any other return value (different from `sfView::NONE`), the template called will have a name finishing with this value. For instance, if the action returns `sfView::ERROR`, the template name must finish by `Error.php`.
 
@@ -279,7 +279,7 @@ Read more about the `view.yml` files in the [next chapter](templating_configurat
 Fragments
 ---------
 
-If you need to include some template code into various pages, but without any preprocessing, the slot mechanism can be a little cumbersome. To avoid the use of an action when all you need is some factorised html code, use a **fragment** instead of a slot.
+If you need to include some template code into various pages, but without any preprocessing, the slot mechanism can be a little cumbersome. To avoid the use of an action when all you need is some factorized HTML code, use a **fragment** instead of a slot.
 
 For instance, if many of the templates of your `test` module use a fragment of code used to show a special footer, save this piece of code in a file called `_my_special_footer` in the `myproject/myapp/modules/test/templates` directory. Now, when you need this piece of code in a template, just call the `include_partial` function:
 

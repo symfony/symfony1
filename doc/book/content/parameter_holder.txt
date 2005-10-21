@@ -77,7 +77,7 @@ The `->hasNamespace($ns)`, `->getNamespaces()` and `->removeNamespace($ns)` work
     $myPH->removeNamespace('symfony/my/namespace');
     $myPH->has('weather',null,'symfony/my/namespace') =>  false
 
-If you want that all the `sfParameterHolder` methods use a default namespace doifferent from 'symfony/default', you have to set it during initialization:
+If you want that all the `sfParameterHolder` methods use a default namespace different from 'symfony/default', you have to set it during initialization:
 
     $mySpecialPH = new sfParameterHolder('symfony/special');
     $mySpecialPH->getNamespaces()                     => ['symfony/special']
@@ -97,7 +97,7 @@ The `sfRequest` object has two prebuilt parameter holders, and convenient shortc
 
 They are both of class `sfParameterHolder`.
 
-As a matter of fact, the logic of the parameter holders is almost hidden since the `sfAction` and the `sfRequest` obects have shortcuts that bypass the parameter holder logic.
+As a matter of fact, the logic of the parameter holders is almost hidden since the `sfAction` and the `sfRequest` objects have shortcuts that bypass the parameter holder logic.
 
     $param = $this->getRequestParameter('param','default');
     //is equivalent to
@@ -126,7 +126,7 @@ You simply need to write, in the action `read` of the `article` module:
 
     $id = $this->getRequestParameter('id',null);
 
-Now let's imagine that you need to display a list in two columns. The switch to the second column must occur after the fifth element is displayed. Yor template would look like:
+Now let's imagine that you need to display a list in two columns. The switch to the second column must occur after the fifth element is displayed. Your template would look like:
 
     <table><tr><td><ul>
     <?php $request->setAttribute('itemsdisplayed', 0) ?>

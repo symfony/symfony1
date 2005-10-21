@@ -4,7 +4,7 @@ How to internationalize a project
 Overview
 --------
 
-SymFony has native internationalization automatisms that make the development of multilingual and locally adapted web applications a painless task.
+Symfony has native internationalization automatisms that make the development of multilingual and locally adapted web applications a painless task.
 
 Introduction
 ------------
@@ -14,18 +14,18 @@ The internationalization (i18n) of an application covers two aspects:
 *   text translation (interface and content)
 *   standards and formats (dates, amounts, numbers, etc.).
 
-SymFony brings a solution to each of these issues.
+Symfony brings a solution to each of these issues.
 
 User culture
 ------------
 
 The `sfUser` class, used to manage the user session, has a native implementation of the user language and country, which is called *culture*.:
 
-    class TextActions extends sfActions
+    class textActions extends sfActions
     {
       ...
       
-      public function runIndex()
+      public function executeIndex()
       {
         ...
         
@@ -47,7 +47,7 @@ By default, any new user will take the culture set in the `SF_DEFAULT_CULTURE` c
 Interface translation
 ---------------------
 
-SymFony stores the user interface translations in XML configuration files in the standard [XLIFF](http://www.xliff.org/) format. Here is an extract of a XLIFF file `messages.en.xml`, where a website originally written in French is translated in English:
+Symfony stores the user interface translations in XML configuration files in the standard [XLIFF](http://www.xliff.org/) format. Here is an extract of a XLIFF file `messages.en.xml`, where a website originally written in French is translated in English:
 
     <?xml version="1.0" ?>
     <xliff version="1.0">
@@ -83,7 +83,7 @@ The internationalized version should be:
     <?= __('Today's date is ') ?>
     <?= date() ?>
 
-The `__()` shortcuts require as single argument the text to be translated. This text must match a node in the XLIFF file. During display, the localised version adapted to the user culture will automatically replace the text of the template.
+The `__()` shortcuts require as single argument the text to be translated. This text must match a node in the XLIFF file. During display, the localized version adapted to the user culture will automatically replace the text of the template.
 
 Data translation
 ----------------

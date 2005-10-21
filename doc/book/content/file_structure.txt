@@ -4,7 +4,7 @@ File structure explained
 Overview
 --------
 
-The tree structure of a Symfony project is consistent, although it can be completely customised. This chapter will help you to get used to this structure and to understand its logic.
+The tree structure of a Symfony project is consistent, although it can be completely customized. This chapter will help you to get used to this structure and to understand its logic.
 
 Introduction
 ------------
@@ -15,13 +15,13 @@ All the web projects usually share the same architecture needs:
 *   static files (HTML, images, javascripts, stylesheets, etc.)
 *   files uploaded by the site users and administrators
 *   PHP classes and libraries
-*   foreign librairies
+*   foreign libraries
 *   batch files
 *   logs files
 *   configuration files
 *   etc.
 
-To allow developpers to adapt to any existing Symfony project, it is recommended to follow the default tree structure described below. This also speeds up project creation, since the default tree structure is automatically created when initializing every projet, application or module.
+To allow developers to adapt to any existing Symfony project, it is recommended to follow the default tree structure described below. This also speeds up project creation, since the default tree structure is automatically created when initializing every project, application or module.
 
 Root tree structure
 -------------------
@@ -57,13 +57,13 @@ The `doc` directory stores the project documentation, including your own documen
 
 The `lib` directory is dedicated to foreign classes or libraries. You can add here the code that needs to be shared among your applications. The `model` subdirectory stores the object model of the project. 
 
-The `log` directory stores the applicative log files generated directly by SymFony. It can also contain web server log files, database log files or log files from any part of the project. There is normally one file per application and per environment (ex: `myapp_prod.log`)
+The `log` directory stores the applicative log files generated directly by symfony. It can also contain web server log files, database log files or log files from any part of the project. There is normally one file per application and per environment (ex: `myapp_prod.log`)
 
 The `test` directory contains unit tests written in PHP and compatible with [Simple Test][3] testing framework. During project setup, Symfony automatically adds some stubs with a few basic tests.
 
-The `web` directory is the root for the web server. The only files accessible from the internet are the ones located in this directory. It will be described in detail in a few moments.
+The `web` directory is the root for the web server. The only files accessible from the Internet are the ones located in this directory. It will be described in detail in a few moments.
 
-Last but not least, the root directory contains one directory fo each application of the project (typically `fo` and `bo` for the front and back office, `myapp` in the example).
+Last but not least, the root directory contains one directory for each application of the project (typically `fo` and `bo` for the front and back office, `myapp` in the example).
 
 Application tree structure
 --------------------------
@@ -79,7 +79,7 @@ The tree structure of all application directories is the same:
       error.php
       error.txt
 
-The `config` directory holds a hefty set of [YAML][4] configuration files. This is where most of the application configuration is, apart from the default parameters that can be found in the framework itself. Note that the default parameters can still can be overriden here if you need. Find more about application configuration in the [next chapter](configuration_practice.txt).
+The `config` directory holds a hefty set of [YAML][4] configuration files. This is where most of the application configuration is, apart from the default parameters that can be found in the framework itself. Note that the default parameters can still can be overridden here if you need. Find more about application configuration in the [next chapter](configuration_practice.txt).
 
 The `i18n` directory contains files used for the internationalization of the application. These files can be in the [XLIFF][5] or in the [GetText][6] format. You can even bypass this directory is you choose to use a database for your internationalization.
 
@@ -93,9 +93,9 @@ The directories `i18n`, `lib` and `modules` are empty for a new application.
 
 The directory name of an application is to be determined during its setup. This name is accessible in the `SF_APP_DIR` constant.
 
-The classes of an application are not able to access methods or attributes in other applications of the same project. Even more, hyperlinks between two applications of the same project mustbe in the absolute form.
+The classes of an application are not able to access methods or attributes in other applications of the same project. Even more, hyperlinks between two applications of the same project must be in the absolute form.
 
-Module tree stucture
+Module tree structure
 --------------------
 
 Each application contains one or more modules. Each module has its own subdirectory in the `modules` directory, and the name of this directory is chosen during the setup.
@@ -116,7 +116,7 @@ The `config` directory can contain custom configuration files with local paramet
 
 The `lib` directory contains classes and libraries specific to the module.
 
-The `templates` directory contains the templates corresponding to the actions of the module. A default template is created during module setup, called `indexSussess.php`.
+The `templates` directory contains the templates corresponding to the actions of the module. A default template is created during module setup, called `indexSuccess.php`.
 
 And the `validate` directory is dedicated to configuration files used for form validation.
 
@@ -125,7 +125,7 @@ The directories `config`, `lib` and `validate` are empty for a new application.
 Web tree structure
 ------------------
 
-There a very few constraints for the `web` directory, but following a few basic naming conventions will provide default behaviours and useful shortcuts in the templates.
+There a very few constraints for the `web` directory, but following a few basic naming conventions will provide default behaviors and useful shortcuts in the templates.
 
 Conventionally, the static files are distributed in the following directories:
 
@@ -133,14 +133,14 @@ Conventionally, the static files are distributed in the following directories:
 *   `js/`: javascripts with a .js extension 
 *   `images/`: images with a .jpg, .png or .gif format
 
-The files uploaded by the users have to be stored in the `uploads` directory. Even if it contains most of the time images, it is distinct from the image directory so that the synchronisations of the development and production environments do not affect the uploaded images.
+The files uploaded by the users have to be stored in the `uploads` directory. Even if it contains most of the time images, it is distinct from the image directory so that the synchronizations of the development and production environments do not affect the uploaded images.
 
 Tree structure customization
 ----------------------------
 
 Even if it is highly recommended to keep the default tree structure, it is possible to modify it for specific needs, for instance in order to match the requirements of a client who already has its own tree structure and coding conventions.
 
-To customize the tree structure of an application, you just need to modify the configuration file `config/constants.php` of the application directory since every path to a key directory is determined with a constant ending with `_DIR`. This file is not present in the default tree structure; you will have to copy it from the symfony directory if you need to modfy it - the detailed explanation come in the [configuration chapter](configuration_practice.txt). Here is an extract of the standard configuration file:
+To customize the tree structure of an application, you just need to modify the configuration file `config/constants.php` of the application directory since every path to a key directory is determined with a constant ending with `_DIR`. This file is not present in the default tree structure; you will have to copy it from the symfony directory if you need to modify it - the detailed explanation come in the [configuration chapter](configuration_practice.txt). Here is an extract of the standard configuration file:
 
     // root directory structure
     define('SF_CACHE_DIR_NAME', 'cache');
@@ -176,11 +176,11 @@ To customize the tree structure of an application, you just need to modify the c
 
 Names and paths are both defined here, and the directory separator has its own constant (`DS`). So this file is not that easy to read, but you will find it easy to modify. 
 
-> **Important**: it is strongly recommended to use these constants when building and coding a project, so that the applications created are independant of the tree structure, more particularly for the first level directories.
+> **Important**: it is strongly recommended to use these constants when building and coding a project, so that the applications created are independent of the tree structure, more particularly for the first level directories.
 
 [1]: http://www.sqlite.org/                   "SQLite database"
 [2]: http://www.phpdoc.org                    "phpdoc"
 [3]: http://www.lastcraft.com/simple_test.php "Simple Test framework"
-[4]: http://www.yaml.org/                     "Yet Another Makup Language"
+[4]: http://www.yaml.org/                     "Yet Another Markup Language"
 [5]: http://www.xliff.org/                    "XLIFF"
 [6]: http://www.gnu.org/software/gettext/     "gettext"

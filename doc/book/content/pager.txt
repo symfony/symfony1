@@ -28,7 +28,7 @@ If you wanted to have the non-paginated result of a criteria request showing onl
       }
     }
 
-The `$articles` variable, accessible from the template, would contain an array of all the `Article` objects mathing the request.
+The `$articles` variable, accessible from the template, would contain an array of all the `Article` objects matching the request.
 
 To get a paginated list, you need a slightly different approach; the results have to be put in a `sfPager` object instead of an array:
 

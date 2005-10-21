@@ -9,7 +9,7 @@ This chapter describes the steps to install the symfony framework, either from a
 Introduction
 ------------
 
-The symfony framework can be used for several projects, and updated independantly of any project using it. That's why the installation isn't as simple as dezipping some files in one directory. However, once installed properly, projects based on symfony won't need a specific update each time the global libraries are modified.
+The symfony framework can be used for several projects, and updated independently of any project using it. That's why the installation isn't as simple as dezipping some files in one directory. However, once installed properly, projects based on symfony won't need a specific update each time the global libraries are modified.
 
 Installing symfony from a PEAR Package
 --------------------------------------
@@ -26,22 +26,22 @@ To see the libraries available in this channel:
 
     pear remote-list -c symfony
 
-Now you are ready to install the latest stable version of symfony and all its dependancies with:
+Now you are ready to install the latest stable version of symfony and all its dependencies with:
 
     pear install symfony/symfony
 
 That's it: symfony is installed. You may now create a new project with the new command line tool `symfony` and use the classes and methods of the libraries.
 
-Symfony needs a few other packages to run; some are included in the installation, and some require you to installe theif they are not present:
+Symfony needs a few other packages to run; some are included in the installation, and some require you to install them if they are not present:
 
 * [pake](http://www.pake-project.org/) : installed automatically. You will learn more about the Pake utility in the [next chapter](project_creation.txt).
 * [creole](http://creole.tigris.org/) : installed automatically (used for database access)
-* [propel](http://propel.phpdb.org/trac/) : installed automatically (used for object/relationnal mapping)
+* [propel](http://propel.phpdb.org/trac/) : installed automatically (used for object/relational mapping)
 * [phing](http://phing.info/wiki/index.php) : requires manual installation
 
         pear install http://phing.info/pear/phing-current.tgz 
 
-To have a glimpse of all the tasks that you can perfom directly with the command-line tool, type:
+To have a glimpse of all the tasks that you can perform directly with the command-line tool, type:
 
      symfony -T
 
@@ -59,9 +59,9 @@ The `_dir` variables are part of your PEAR configuration. To see their value, ty
 
     pear config-show
 
-As a matter of fact, the exact location of files is not very important, since the installation provides you with a new executable, `symfony`, which will do all the work for you (project creation, application installation and initialization, etc.). Only the `$doc_dir` directory will be needed in your web server configuration, since it contains some default files (stylesheets and images) that can e required by some pages of symfony projects. This configuration will be detailled in the [next chapter](project_creation.txt).
+As a matter of fact, the exact location of files is not very important, since the installation provides you with a new executable, `symfony`, which will do all the work for you (project creation, application installation and initialization, etc.). Only the `$doc_dir` directory will be needed in your web server configuration, since it contains some default files (stylesheets and images) that can e required by some pages of symfony projects. This configuration will be detailed in the [next chapter](project_creation.txt).
 
-Just as a reminder, the default locations for unix and Windows are as follow:
+Just as a reminder, the default locations for Unix and Windows are as follow:
 
     Unix                             Windows
     ----                             -------
@@ -73,7 +73,7 @@ Just as a reminder, the default locations for unix and Windows are as follow:
 Getting nightly builds
 ----------------------
 
-The process decribed above will install the latest stable version. In order to have the latest bug corrections between two stable versions, you may wish to install the latest nighly build. These builds are published in the symfony channel with a 'beta' tag, and you can install them with:
+The process described above will install the latest stable version. In order to have the latest bug corrections between two stable versions, you may wish to install the latest nightly build. These builds are published in the symfony channel with a 'beta' tag, and you can install them with:
 
     pear install symfony/symfony-beta
 
@@ -104,7 +104,7 @@ In addition, you will have to make the shortcuts to allow the call to the comman
 Installing symfony without command line
 ---------------------------------------
 
-If you want to host your website in a server that you can't acces with a command line (and that might happen if your hosting provider only allows FTP access), you will need to install the two symfony directories manually in your project tree structure.
+If you want to host your website in a server that you can't access with a command line (and that might happen if your hosting provider only allows FTP access), you will need to install the two symfony directories manually in your project tree structure.
 
 First, get the .tgz file of the symfony framework package from the symfony project website. Uncompress it into a temporary folder. You will see the following file structure:
 

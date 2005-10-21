@@ -7,7 +7,7 @@ Overview
 The View if made of:
 
 * one part resulting of the action execution (the template)
-* all the rest (headers, metas, file inclusions, slots and ayout)
+* all the rest (headers, metas, file inclusions, slots and layout)
 
 Symfony offers two convenient ways to modify the components of the View that are not part of the template.
 
@@ -29,7 +29,7 @@ Ideally, all these parameters should be defined in a configuration file, so that
 
 According to the nature of the values that you need to give to these parameters, you will prefer one method or another. It is recommended that you keep as much configuration in the `view.yml` files as possible, since it separates clearly logic from presentation.
 
->**Note**: the `view.yml` solution offers the advantage of inheritane and specialization. If you have to use the helpers in the action but you don't want to repeat them for every action, use the `preExecute()` and `postExecute()` methods of the module class to avoid repeating helpers for every action of a module.
+>**Note**: the `view.yml` solution offers the advantage of inheritance and specialization. If you have to use the helpers in the action but you don't want to repeat them for every action, use the `preExecute()` and `postExecute()` methods of the module class to avoid repeating helpers for every action of a module.
  
 View.yml structure
 ------------------
@@ -55,7 +55,7 @@ The next sections will detail how the parameter definitions in this file can aff
 * metas: _(associative array)_
  * key: value _(string)_
 * title: page_name _(string)_
-* stylesheets: [stylesheet1, stlesheet2, ...] _(array)_
+* stylesheets: [stylesheet1, stylesheet2, ...] _(array)_
 * javascripts: [javascript1, javascript2, ...] _(array)_
 * layout: layout_name _(string)_
 * slots: _(associative array)_
@@ -136,9 +136,9 @@ When applied to the layout, these settings produce the following `<head>` sectio
     </body>
     </html>
 
-Besides the ovious use of the parameter definitions in the `view.yml`, this example shows that the `<head>` section of a page can be modified even if the code for this section is normally in a file shared by all modules.
+Besides the obvious use of the parameter definitions in the `view.yml`, this example shows that the `<head>` section of a page can be modified even if the code for this section is normally in a file shared by all modules.
 
-And view configuration could stop at that point if you wish. There is no absolute necessity to define view parameters for each module, since the default behaviours of actions will manage for you the choice of the template to be used. However, as soon as your application uses more than one layout, custom javascripts or styleheets, of if the interfaces shows common components on every page, writing `view.yml` files for your modules will save you time and ease your work.
+And view configuration could stop at that point if you wish. There is no absolute necessity to define view parameters for each module, since the default behaviors of actions will manage for you the choice of the template to be used. However, as soon as your application uses more than one layout, custom javascripts or stylesheets, of if the interfaces shows common components on every page, writing `view.yml` files for your modules will save you time and ease your work.
 
 >**Note**: If you want to create custom layouts, you can use the `include_` functions to get the values of the head parameters and take advantage of the configuration files.
 
@@ -233,7 +233,7 @@ For instance, in an action called `subscribe` using a calendar widget, the view 
 
     subscribeSuccess:
       stylesheets: [calendar/skins/aqua/theme]
-      javascripts: [calendar/calendar_stripped, alendar/calendar-en, calendar/calendar-setup_stripped]
+      javascripts: [calendar/calendar_stripped, calendar/calendar-en, calendar/calendar-setup_stripped]
 
 Alternatively, you could require the files from the action with:
 
@@ -253,7 +253,7 @@ The `<head>` of the resulting view would then show:
 Layout configuration
 --------------------
 
-According to the graphical charter of your website, you may have serveral layouts. Classical websites have at least two : the default layout, and the popup layout.
+According to the graphical charter of your website, you may have several layouts. Classical websites have at least two : the default layout, and the popup layout.
 
 You already saw that the default layout is `myproject/myapp/templates/layout.php`.  You don't need to set it in the application-level view configuration. Additional layouts have to be added in the same directory.
 
@@ -261,7 +261,7 @@ If you need to use a different layout for a view, use:
 
     layout: $layoutname
 
-Or in the ation:
+Or in the action:
 
     $this->setLayout($layoutname);
 
@@ -317,7 +317,7 @@ Imagine that you have a layout with a zone for contextual advices:
     </div>
     ...
 
-You also have a module `advice` with contextual actions `forIndex` and `forList`. Now, if you ant to associate a contextual action with the views of a module `article` with actions `view` and `list`, you could wrtie the folling `myproject/myapp/modules/article/config/view.yml`:
+You also have a module `advice` with contextual actions `forIndex` and `forList`. Now, if you ant to associate a contextual action with the views of a module `article` with actions `view` and `list`, you could write the following `myproject/myapp/modules/article/config/view.yml`:
 
     indexSuccess:
       slots:

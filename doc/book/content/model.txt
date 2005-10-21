@@ -9,7 +9,7 @@ Symfony has an object/relational abstraction layer based on the [Propel][1] proj
 Why use an abstraction layer ?
 ------------------------------
 
-Databases are relationnal. PHP5 and symfony are object oriented. In order to access the database in an object-oriented way, an interface translating the object logic to the relationnal logic is required. 
+Databases are relational. PHP5 and symfony are object oriented. In order to access the database in an object-oriented way, an interface translating the object logic to the relational logic is required. 
 
 Using objects instead of records, and classes instead of tables, allow you to add new accessors to your tables. For instance, if you have a table called 'client' with two fields 'FirstName' and 'LastName', you might like to be able to require just a 'name'. On an object-oriented world, this is very easy: just add a new accessor method.
 
@@ -34,11 +34,11 @@ And that's it. Imagine how long it would have required to write a SQL request do
 
 This is the **Model** layer of the symfony MVC architecture. Objects that give access to data and keep business rules within themselves.
 
-There is one last benefit of an object/relationnal abstraction layer: you can change your database in the middle of a project. The abstraction layer prevents you from using a syntax that is specific to a given database. But it translates the methods calls to requests specific to the configured database.
+There is one last benefit of an object/relational abstraction layer: you can change your database in the middle of a project. The abstraction layer prevents you from using a syntax that is specific to a given database. But it translates the methods calls to requests specific to the configured database.
 
 Imagine that you have to write a quick prototype for an application, but the client hasn't decided yet which database system would best suit his needs. You can start building your application with SQLite, for instance, and switch to MySQL, PostgreSQL or Oracle when the client is ready to. Just change one line in a configuration file, and it works.
 
-[Propel][1] is currently one of the best object/relational abstraction layer for PHP5. Instead of reriting it, symfony uses integrates it seamlessly into the framework.
+[Propel][1] is currently one of the best object/relational abstraction layer for PHP5. Instead of rewriting it, symfony integrates it seamlessly into the framework.
 
 XML Data model 
 --------------
@@ -97,18 +97,18 @@ The related `schema.xml` should look like:
 
 In this file format, a `<database>` contains several `<table>`, each having a set of `<column>`, `<index>` and `<foreign-key>` in no particular order.
 
-The `phpName` given to the tables is the name of the object name that will give you access to the data, as you will see in the next part. If you don't mention it, the actual `name` will be used in place, after removing undescores and capitalizing the first letter of inner words (in the example, the default `phpname` of the tables would be `blogArticle` and `blogComment`). Columns also have a `phpname`, which is the capitalized version of the `name` (`ID`, `TITLE`, `CONTENT`, etc.) and doesn't need overriding in most cases.
+The `phpName` given to the tables is the name of the object name that will give you access to the data, as you will see in the next part. If you don't mention it, the actual `name` will be used in place, after removing underscores and capitalizing the first letter of inner words (in the example, the default `phpname` of the tables would be `blogArticle` and `blogComment`). Columns also have a `phpname`, which is the capitalized version of the `name` (`ID`, `TITLE`, `CONTENT`, etc.) and doesn't need overriding in most cases.
 
-Columns have a `type` attribute that can take the usual values: `boolean`, `integer`, `float`, `date`, `varchar`, `longvarchar`, etc. The `varchar`-type columns can have a `size` attributes that specifies the maximum number of characters of the column. For text content over 256 characters, you need to use the `longchar` type, which has no size but can not exceed 65Ko (mysql specific). Note thate the `date` and `timestamp` types have the usual limitations of Unix dates and can not be set to a date prior to 1970-01-01. As you may need to set older dates (for instance for dates of birth), a format of dates 'before unix' can be used with `bu_date` and `bu_timestamp`.
+Columns have a `type` attribute that can take the usual values: `boolean`, `integer`, `float`, `date`, `varchar`, `longvarchar`, etc. The `varchar`-type columns can have a `size` attributes that specifies the maximum number of characters of the column. For text content over 256 characters, you need to use the `longchar` type, which has no size but can not exceed 65Ko (mysql specific). Note that the `date` and `timestamp` types have the usual limitations of Unix dates and can not be set to a date prior to 1970-01-01. As you may need to set older dates (for instance for dates of birth), a format of dates 'before Unix' can be used with `bu_date` and `bu_timestamp`.
 
-The `primaryKey` attribute identifies primary key fields. Columns that are primary keys often have the same attributes (`type="integer" required="true" autoincrement="true"`). If you need to create an index, simply add an `<index>` tab. If you need to create a foreign key, siply add a `<foreign-key>` tag identifying the corresponding colomn in a foreign table.
+The `primaryKey` attribute identifies primary key fields. Columns that are primary keys often have the same attributes (`type="integer" required="true" autoincrement="true"`). If you need to create an index, simply add an `<index>` tab. If you need to create a foreign key, simply add a `<foreign-key>` tag identifying the corresponding column in a foreign table.
 
 To learn more about this file format and its specificities, refer to the [documentation][2] and the [getting started][3] section that can be found in the Propel project website. 
 
 Configuration
 -------------
 
-The data model is independant from the database used, but you will definitely use a database. The minimum information required by symfony to handle requests to the project database is the name, the access codes and the type of the database. This data should be entered in the `orm.yml` file located in the `myproject/myapp/config/` directory:
+The data model is independent from the database used, but you will definitely use a database. The minimum information required by symfony to handle requests to the project database is the name, the access codes and the type of the database. This data should be entered in the `orm.yml` file located in the `myproject/myapp/config/` directory:
 
     prod:
       host:     mydataserver
@@ -129,8 +129,8 @@ The permitted values of the `adapter` parameter are the ones of the RDBMS suppor
 
 * mysql
 * sqlserver
-* postgresql
-* sqlite
+* PostgreSQL
+* SQLite
 * oracle
 
 Object data model files
@@ -160,7 +160,7 @@ You only defined two tables and you end up with eight files. What's the deal her
 
 ### Base and current model 
 
-Why keep two versions of the data object model, one one `model/om` and another in `model` ? Well, this model is likely to change during your project developement. And you will probably need to add custom methods and attributes that need to be kept even if the model changes. So this architecture allows you to keep using the `symfony build-model` command even after you added custom code to your classes. Here is how it works : the `Base` classes kept in the `model/om` directory are the ones generated by Propel. You should **never** modify them since every new build of the model will completely erase these files. But if you need to add custom methods, use the regular object classes of the `model` directory that actually inherit from the previous ones.
+Why keep two versions of the data object model, one one `model/om` and another in `model` ? Well, this model is likely to change during your project development. And you will probably need to add custom methods and attributes that need to be kept even if the model changes. So this architecture allows you to keep using the `symfony build-model` command even after you added custom code to your classes. Here is how it works : the `Base` classes kept in the `model/om` directory are the ones generated by Propel. You should **never** modify them since every new build of the model will completely erase these files. But if you need to add custom methods, use the regular object classes of the `model` directory that actually inherit from the previous ones.
 
 For example, here is the content of the newly created `Article.php` file:
 
@@ -216,11 +216,11 @@ Let's check all the comments about your new article:
 
     $comments = $article->getComments();
 
-Note the plural used here in the `get` method: as Propel knows that your relationnal model specified that an article can have several comments, you can simply use a standard accessor to get the array of related objects. Now your `$comments` variable contains an array of objects of class `Article`, and you can display the first one with:
+Note the plural used here in the `get` method: as Propel knows that your relational model specified that an article can have several comments, you can simply use a standard accessor to get the array of related objects. Now your `$comments` variable contains an array of objects of class `Article`, and you can display the first one with:
 
     print_r($comments[0]);
 
-If you read comments to your articles, you might change your mind about the interest of publishing on the Internet. And if you don't appeciate the irony of article reviewers, you can delete your article very efficiently with the `delete()` method:
+If you read comments to your articles, you might change your mind about the interest of publishing on the Internet. And if you don't appreciate the irony of article reviewers, you can delete your article very efficiently with the `delete()` method:
 
     $article->delete();
 
@@ -236,7 +236,7 @@ For instance, to retrieve the article that has id #7, call:
 
 As you use the primary key, you know that only one record will be returned. So the `$article` variable contains an object of the `Article` class.
 
-For more elaborate requests, Propel doesn't use SQL, to allow databse abstraction, but offers a `Criteria` object in place. It has the same power and is very easy to use.
+For more elaborate requests, Propel doesn't use SQL, to allow database abstraction, but offers a `Criteria` object in place. It has the same power and is very easy to use.
 
 For instance, to retrieve all articles, type:
 
@@ -273,13 +273,13 @@ Refer to the [Propel Documentation][5] for more details about the `Criteria` obj
 Propel in symfony
 -----------------
 
-All the details given above are not specific to symfony. As a matter of fact, you are not obliged to use Propel as your object/relationnal abstraction layer. But symfony works more seamlessly with Propel, since:
+All the details given above are not specific to symfony. As a matter of fact, you are not obliged to use Propel as your object/relational abstraction layer. But symfony works more seamlessly with Propel, since:
 
-* All the object data model classes and the `Criteria` classes are auto-loading classes. As soon as you will use them, symfony will include the right files, but you don't need to manually inclde the file inclusion
+* All the object data model classes and the `Criteria` classes are auto-loading classes. As soon as you will use them, symfony will include the right files, but you don't need to manually include the file inclusion
 * In symfony, Propel doesn't need to be launched nor initialized. When an object uses Propel, the library initiates by itself.
 * Results of a request can be easily paginated (see more in the [pager chapter](pager.txt)).
 
-And, as Propel is independant of the database used, so is symfony. As a matter of fact, you might need the SQL request that creates the actual database from the XML configuration file - for instance to rebuild the database in another environment or to change RDBMS. To get it, go to your root project directory and type:
+And, as Propel is independent of the database used, so is symfony. As a matter of fact, you might need the SQL request that creates the actual database from the XML configuration file - for instance to rebuild the database in another environment or to change RDBMS. To get it, go to your root project directory and type:
 
     symfony build-sql
 

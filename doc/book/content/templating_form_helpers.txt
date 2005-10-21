@@ -4,14 +4,14 @@ Templating in practice : Form helpers
 Overview
 --------
 
-Synfony provides form helpers to avoid repeating code in templates that contain forms, especially when the default value is linked to the application Model.
+Symfony provides form helpers to avoid repeating code in templates that contain forms, especially when the default value is linked to the application Model.
 
 Introduction
 ------------
 
-In templates, HTML tags of form elements are very oten mixed with PHP code. Form helpers in symfony aim to simplify this task and to avoid opening `<?=` tags in the middle of an element tag. They also duplicate the `name` attribute to define the `id` value.
+In templates, HTML tags of form elements are very often mixed with PHP code. Form helpers in symfony aim to simplify this task and to avoid opening `<?=` tags in the middle of an element tag. They also duplicate the `name` attribute to define the `id` value.
 
-In addition, if form controls are linked to objets in your data model, symfony can automate the hassle of defining a default value or listing the possible values.
+In addition, if form controls are linked to objects in your data model, symfony can automate the hassle of defining a default value or listing the possible values.
 
 Symfony also provides helpers for form validation. A detailed presentation of this feature can be found in the [form validation](validate_form.txt) chapter.
 
@@ -20,11 +20,11 @@ Main form tag
 
 Some helpers are here to facilitate the writing of form tags, especially since they are often mixed with php code.
 
-To create a form, you have to use the SymFony `form_tag` function since it transforms the action given as a parameter into a routed url:
+To create a form, you have to use the symfony `form_tag` function since it transforms the action given as a parameter into a routed URL:
 
     <?= form_tag('test/save') ?>
     // will generate in HTML
-    <form mehod="post" enctype="multipart/form-data" action="http://www.mysite.com/index.php/test/save">
+    <form method="post" enctype="multipart/form-data" action="http://www.mysite.com/index.php/test/save">
 
 This will route the form to the `save` action of the `test` module. You can learn more about the URL management in the [routing chapter](routing.txt).
 
@@ -40,7 +40,7 @@ As there is no need for a closing form helper, you should use the HTML `</form>`
 Standard form elements
 ----------------------
 
-Each element in a formulary will have by default an `id` attribute equal to its `name` attribute. You can specify custom attributes by adding a last argument, using the associative array syntax or the string syntax.
+Each element in a form will have by default an `id` attribute equal to its `name` attribute. You can specify custom attributes by adding a last argument, using the associative array syntax or the string syntax.
 
 Here are the standard form element helpers:
 
@@ -72,7 +72,7 @@ Here are the standard form element helpers:
         <input type="radio" name="status" value="value1" checked="checked" />
         <input type="radio" name="status" value="value2" />
 
-> Note that the `id` attribute is not defined by default with the value of the `name` attribute for the radio button helper. That's because you need to have several radio button tags with the same name to obtain the automated 'deselecting the previous one when selecting another' feature, and that would imply having several HTML tags with the same `id` attribute in your page - which is stritcly forbidden.
+> Note that the `id` attribute is not defined by default with the value of the `name` attribute for the radio button helper. That's because you need to have several radio button tags with the same name to obtain the automated 'deselecting the previous one when selecting another' feature, and that would imply having several HTML tags with the same `id` attribute in your page - which is strictly forbidden.
 
  * value selection field (select):
 
@@ -139,7 +139,7 @@ Here are the standard form element helpers:
 Rich form elements
 ------------------
 
-Forms are often used to get **dates**. Date format is also culture dependant, and wrong dates is the main reason of unvalidated forms. The `input_date_tag` can assists the user with a javascript calendar:
+Forms are often used to get **dates**. Date format is also culture dependent, and wrong dates is the main reason of unvalidated forms. The `input_date_tag` can assists the user with a javascript calendar:
 
         <?= input_date_tag('dateofbirth', '2005-05-03', 'rich=true') ?>
         // will generate in HTML
@@ -168,7 +168,7 @@ You will probably need to display a **country selection field**. The `select_cou
 Form helpers for objects
 ------------------------
 
-In many cases form elements are linked to fields in a database table. As you use an object-relationnal mapping, the form elements are actually linked to attribute accessors and setters. Symfony provides an alternate version to all the previous helpers, where the `$value` argument - which defines the default value - is replaced by two arguments, `$object` and `$method`. The method must be the attribute accessor of the object. The method name is also given to the `name` and `id` attributes of the generated HTML tag, so the first argument is suppressed.
+In many cases form elements are linked to fields in a database table. As you use an object-relational mapping, the form elements are actually linked to attribute accessors and setters. Symfony provides an alternate version to all the previous helpers, where the `$value` argument - which defines the default value - is replaced by two arguments, `$object` and `$method`. The method must be the attribute accessor of the object. The method name is also given to the `name` and `id` attributes of the generated HTML tag, so the first argument is suppressed.
 
 The simple text input tag now looks like:
 
@@ -188,7 +188,7 @@ So simply add the `object_` prefix in front of the name of the form helpers to g
 The most useful helper of this type is the `object_select_tag`, since it can get the list of values from the result of a method call:
 
     object_select_tag($author, 'getArticles')
-    // is a shorcut for calls like
+    // is a shortcut for calls like
     select_tag('getArticles', options_for_select($author->getArticles))
 
 >**Note**: the `object_select_tag` helper uses the Propel layer; it might not work if you use another data abstraction layer.
@@ -196,7 +196,7 @@ The most useful helper of this type is the `object_select_tag`, since it can get
 Easy object update
 ------------------
 
-The object relationnal mapping given by Propel allows you to easily modify a record in a table from a form if the fields of the forms are properly named.
+The object relational mapping given by Propel allows you to easily modify a record in a table from a form if the fields of the forms are properly named.
 
 For instance, if you have an object `Author` with attributes `name`, `age` and `address`, and that you created a template looking like:
 

@@ -20,11 +20,11 @@ It is based on the following concepts :
 *   convention rather than configuration, supporting fallback calls
 *   simple in most cases, but still flexible enough to adapt to complex cases
 *   most common web features included
-*   compliant with most of the web "bests pratices" and with web "design patterns"
+*   compliant with most of the web "bests practices" and with web "design patterns"
 *   very readable code with easy maintenance
 *   open source
 
-The main concept underlying the Symfony framework is that the most common tasks have to be done automatically so that the developper can focus entirely on the specificities of an application. There is no need to reinvent the wheel every time a new web application is built.
+The main concept underlying the Symfony framework is that the most common tasks have to be done automatically so that the developer can focus entirely on the specificities of an application. There is no need to reinvent the wheel every time a new web application is built.
 
 To fulfill these requirements, Symfony was written entirely in [PHP5](http://www.php.net/manual/en/migration5.php). It has been thoroughly tried on various real world projects, and is actually in use for high demand e-business websites. It is compatible with most of the available databases, among which :
 
@@ -37,7 +37,7 @@ To fulfill these requirements, Symfony was written entirely in [PHP5](http://www
 The Symfony object model relies on three distinct layers:
 
 *   a database abstraction
-*   an objet-relational mapping 
+*   an object-relational mapping 
 *   a Model-View-Controller model for the front and back-office 
 
 Common features of web projects are made easy since Symfony natively automates them:

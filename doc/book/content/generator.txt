@@ -18,7 +18,7 @@ User data access in a web application can most of the time be reduced to:
 
 These operations are so common that they have a dedicated acronym : [C.R.U.D.][1]
 
-During the process of application creation, developpers always need to redevelop this part many times. There are actually many ways to do code it, but the skeleton of these actions can be reused. This means that the scaffolding of all the parts of an application that deal with data access can be automated.
+During the process of application creation, developers always need to redevelop this part many times. There are actually many ways to do code it, but the skeleton of these actions can be reused. This means that the scaffolding of all the parts of an application that deal with data access can be automated.
 
 Symfony proposes a CRUD Generator based on the [Propel][2] data access layer.
 
@@ -61,7 +61,7 @@ Generating a Propel CRUD is really equivalent to building a scaffolding. It is a
     -------          -------
     index            forwards to the list action below
     list             displays the list of all the records of the table
-    show             displays the detailled view (line by line) of one record
+    show             displays the detailed view (line by line) of one record
     edit             displays a form to modify the fields of a record
     update           action called by the form of the edit action above
     delete           deletes a record
@@ -82,7 +82,7 @@ If you access it with the default action, you will see no difference with the in
 
     http://myapp.example.com/index.php/article/
     
-However, the php code is there, in the `myproject/myapp/modules/articles/` directory, ready to be modified for your own needs. As an exampe, here is the beginning of the `actions.class.php` file:
+However, the php code is there, in the `myproject/myapp/modules/articles/` directory, ready to be modified for your own needs. As an example, here is the beginning of the `actions.class.php` file:
 
     class articleActions extends sfActions
     {

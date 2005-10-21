@@ -4,7 +4,7 @@ How to manage a shopping cart
 Overview
 --------
 
-SymFony offers helpers to manage shopping carts in ebusiness websites. Adding an item, changing quantities and displaying the content of a shopping cart is made easy and painless.
+Symfony offers helpers to manage shopping carts in ebusiness websites. Adding an item, changing quantities and displaying the content of a shopping cart is made easy and painless.
 
 Introduction
 ------------
@@ -130,7 +130,7 @@ You can also change directly the discount applied to an item in the shopping car
 
 To change the quantity of an item, use the method `->setQuantity()` of the `sfShoppingCartItem` object. To delete an item, you can either call the `->deleteItem()` method or change the quantity to 0 by calling `->setQuantity(0)`.
 
-If a user adds the same item (same class and same id) several times, the shopping cart will increase the quantity othe item and not add a new one:
+If a user adds the same item (same class and same id) several times, the shopping cart will increase the quantity of the item and not add a new one:
 
     $shopping_cart->addItem('Product', $this->getRequestParameter('id'), 1, $product->getPrice());
     $shopping_cart->addItem('Product', $this->getRequestParameter('id'), 1, $product->getPrice());
@@ -164,7 +164,7 @@ For instance, in a website that sells auto parts, the `sfShoppingCartItem` objec
 
     $item->setParameter('vehicle', $vehicle_id);
 
->**Note**: you may need a `->getObjects()` method instead of `->getItems()`. This method exists but it relies on the [Propel][2] data access layer. As the use of Propel is optionnal, you might not be able to use it. Learn more about the data access layer in the [model chapter](model.txt).
+>**Note**: you may need a `->getObjects()` method instead of `->getItems()`. This method exists but it relies on the [Propel][2] data access layer. As the use of Propel is optional, you might not be able to use it. Learn more about the data access layer in the [model chapter](model.txt).
 
 ### Pass the values to the template
 

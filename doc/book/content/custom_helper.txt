@@ -20,7 +20,7 @@ To use a helper in a template, you must first declare the helper in the action:
 Example
 -------
 
-Let's imagine that your application uses the wiki syntax to format the data entered by users. The wiki to HTML convertion may occur quite often, so you will factorize the code in a 'wiki_to_html()' helper function:
+Let's imagine that your application uses the wiki syntax to format the data entered by users. The wiki to HTML conversion may occur quite often, so you will factorize the code in a 'wiki_to_html()' helper function:
 
 Here is the `WikiHelper.php` file stored in the `myapp/lib/sf/sfViewHelpers/` directory:
 

@@ -4,12 +4,12 @@ How to validate a form
 Overview
 --------
 
-Form validation can occur on the server side and/or on the client side. The server side validation is compulsory - to avoid wrong data to corrupt a script or a database - and the client side validation is optional, though it greatly enhances the user experience. Symfony automates the server side validation to spped up the development of common web applications.
+Form validation can occur on the server side and/or on the client side. The server side validation is compulsory - to avoid wrong data to corrupt a script or a database - and the client side validation is optional, though it greatly enhances the user experience. Symfony automates the server side validation to speed up the development of common web applications.
 
 Base example
 ------------
 
-Let's illustrate the validation features of SymFony starting with a normal Contact form, without any kind validation, showing the following fields:
+Let's illustrate the validation features of Symfony starting with a normal Contact form, without any kind validation, showing the following fields:
 
 *   name
 *   email
@@ -67,12 +67,12 @@ Let's write the validation rules in plain text:
 *   age: required number field, must contain a integer between 0 and 120
 *   message : required field
 
-SymFony can apply these rules almost automatically, provided that you add a new configuration file to the module and change a few details in the template.
+Symfony can apply these rules almost automatically, provided that you add a new configuration file to the module and change a few details in the template.
 
 Configuration file
 ------------------
 
-By convention, if you want to validate the form data on the call to the `send` action, a configuration file called `Send.yml` must be created in the `validate` directory of the module. To validate only the `name` field, you need the following configuration:
+By convention, if you want to validate the form data on the call to the `send` action, a configuration file called `send.yml` must be created in the `validate` directory of the module. To validate only the `name` field, you need the following configuration:
 
     methods:
       get:            [name]
@@ -85,7 +85,7 @@ By convention, if you want to validate the form data on the call to the `send` a
         validators:   nameValidator
     
     nameValidator:
-      class:          StringValidator
+      class:          sfStringValidator
       param:
         min:          2
         min_error:    You didn't enter a valid name (at least 2 characters). Please try again.
@@ -94,7 +94,7 @@ By convention, if you want to validate the form data on the call to the `send` a
 
 Let's have a closer look at this file:
 
-First, under the `methods` header, the list of fields to be validated is defined for the method of the formulary (post by default). To be able to change your mind in the future,  you should double the statement for the other method.
+First, under the `methods` header, the list of fields to be validated is defined for the method of the form (post by default). To be able to change your mind in the future,  you should double the statement for the other method.
 
 Then, under the `names` header, the list of the the fields to be checked, along with their 'required' flag, corresponding error message and mention of any specific validation rules header, are specified.
 
@@ -103,7 +103,7 @@ Eventually, as the 'name' field is declared to have a specific set of validation
 Action modification
 -------------------
 
-The default behaviour makes symfony call a predefined `handleError` method whenever an error is detected in the validation process. This method will simply display the `sendError` template.
+The default behavior makes symfony call a predefined `handleError` method whenever an error is detected in the validation process. This method will simply display the `sendError` template.
 
 But if you rather need the form to be displayed again with an error message, you need to override the default `handleError` method and end it with a redirection to the `index` action of the `contact` module. Add the following code to your contact actions:
 
@@ -118,7 +118,7 @@ But if you rather need the form to be displayed again with an error message, you
       }
     }
 
-If you try to fill in the form with this new confiuration, and type a wrong name, the form is displayed again, but the data you entered is lost and no error message explains the reason of the failure.
+If you try to fill in the form with this new configuration, and type a wrong name, the form is displayed again, but the data you entered is lost and no error message explains the reason of the failure.
 
 Template modification
 ---------------------
@@ -147,9 +147,9 @@ You can detect whether the form has errors by calling the `->hasErrors()` method
       </ul>
     <?php endif ?>
 
-Now you may suggest that the field with incorrect data should be highlited, for instance with a repetition of the error message clearly attached to the label with a ↓. To that extent, simply add the following line before every field:
+Now you may suggest that the field with incorrect data should be highlighted, for instance with a repetition of the error message clearly attached to the label with a ‚Üì. To that extent, simply add the following line before every field:
 
-    <?php if ($request->hasError('name')): ?>↓ <?= $request->getError('name') ?> ↓<?php endif ?><br />
+    <?php if ($request->hasError('name')): ?>‚Üì <?= $request->getError('name') ?> ‚Üì<?php endif ?><br />
 
 Complete configuration file
 ---------------------------
@@ -157,8 +157,8 @@ Complete configuration file
 You can add the other rules to the `send.yml` configuration file to force the validation of all fields:
 
     methods:
-      get:      [name,email,age,message]
-      post:     [name,email,age,message]
+      get:      [name, email, age, message]
+      post:     [name, email, age, message]
     
     names:
       name:
@@ -177,7 +177,7 @@ You can add the other rules to the `send.yml` configuration file to force the va
         required_msg:   The message field cannot be left blank
     
     nameValidator:
-      class:          StringValidator
+      class:          sfStringValidator
       param:
         min:          2
         min_error:    You didn't enter a valid name (at least 2 characters). Please try again.
@@ -185,7 +185,7 @@ You can add the other rules to the `send.yml` configuration file to force the va
         max_error:    You didn't enter a valid name (less than 100 characters). Please try again.
     
     ageValidator:
-      class:          NumberValidator
+      class:          sfNumberValidator
       param:
         nan_error:    Please enter an integer
         min:          0
@@ -194,7 +194,7 @@ You can add the other rules to the `send.yml` configuration file to force the va
         max_error:    Hey, grandma, aren't you too old to surf on the Internet ?
     
     emailValidator:
-      class:          RegexValidator
+      class:          sfRegexValidator
       param:
         match:        Yes
         match_error:  You didn't enter a valid email address (for example: name@domain.com). Please try again.
@@ -203,7 +203,7 @@ You can add the other rules to the `send.yml` configuration file to force the va
 Custom validator
 ----------------
 
-Each `Validator` is a particular class that can have certain parameters. If the validation classes shipped with SymFony are not enough for your needs, you can easily create new ones. Here is the example of a validation class for email addresses, the actually existing `sfEmailValidator`:
+Each `Validator` is a particular class that can have certain parameters. If the validation classes shipped with Symfony are not enough for your needs, you can easily create new ones. Here is the example of a validation class for email addresses, the actually existing `sfEmailValidator`:
 
     class sfEmailValidator extends Validator
     {

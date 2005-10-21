@@ -13,16 +13,16 @@ Example
 
     require_once 'sf/sfMail.class.php';
     
-    // class initialisation
+    // class initialization
     $mail = sfMail::newInstance('PhpMailer');
     $mail->initialize();
     $mail->setMailer('sendmail');
     
     // definition of the required parameters
     $mail->addAddress('client@client.com');
-    $mail->setSender('me@symfony.com', 'SymFony');
-    $mail->setFrom('me@symfony.com', 'SymFony');
-    $mail->addReplyTo('you@symfony.com');
+    $mail->setSender('me@symfony-project.com', 'Symfony');
+    $mail->setFrom('me@symfony-project.com', 'Symfony');
+    $mail->addReplyTo('you@symfony-project.com');
     $mail->setCharset('utf-8');
     $mail->setSubject('A very important matter');
     $mail->setBody('First of all, you should know that...');

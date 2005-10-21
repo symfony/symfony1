@@ -4,7 +4,7 @@ How to setup a routing policy
 Overview
 --------
 
-One of the main problems faced by frameworks is the aspect of the generated URLs : they are generally long, complex and not search engine friendly. SymFony introduces a new *routing* system that brings you total control on the urls of your applications.
+One of the main problems faced by frameworks is the aspect of the generated URLs : they are generally long, complex and not search engine friendly. Symfony introduces a new *routing* system that brings you total control on the URLs of your applications.
 
 Introduction
 ------------
@@ -88,7 +88,7 @@ Simply add the following lines in the `routing.yml` file:
 
 Notice that in the pattern, the word `article` is a string whereas `id` is a variable (because it starts with a `:`).
 
->**Note**: you smart readers may have guessed that as soon as a rule such as the one mentionned above is added, the default rule (which is `/:module/:action/*`) will not work anymore with the `article` module, because the module name will match the pattern `/article/:id` first. If you start creating rules with strings that match the names of your modules, you probably need to change the default rule to something like:
+>**Note**: you smart readers may have guessed that as soon as a rule such as the one mentioned above is added, the default rule (which is `/:module/:action/*`) will not work anymore with the `article` module, because the module name will match the pattern `/article/:id` first. If you start creating rules with strings that match the names of your modules, you probably need to change the default rule to something like:
 >
 >     default:
         url:   /action/:module/:action/*
@@ -99,7 +99,7 @@ Now what if you needed to have access to articles from their title:
 
     http://myapp.example.com/index.php/article/my_article_title
 
-Well, this looks problematic. This URL should be routed to the `permalink` action, but it already satisfies the `articl_by_id` rule and will be automatically routed to the `read` action. To solve this issue, each entry can take a third parameter called `requirements` to specify constraints in the pattern (in the shape of a regular expression). That means that you can modify the previous rule to route URLs to `read` only if the `id` argument is an integer:
+Well, this looks problematic. This URL should be routed to the `permalink` action, but it already satisfies the `article_by_id` rule and will be automatically routed to the `read` action. To solve this issue, each entry can take a third parameter called `requirements` to specify constraints in the pattern (in the shape of a regular expression). That means that you can modify the previous rule to route URLs to `read` only if the `id` argument is an integer:
 
     article_by_id:
       url:          /article/:id
@@ -161,7 +161,7 @@ The default `routing.yml` has a few default rules. To allow the old style 'modul
     default:
       url:   /:module/:action/*
 
-As mentionned above, you may need to change this rule if some of your modules have names that can match other patterns.
+As mentioned above, you may need to change this rule if some of your modules have names that can match other patterns.
 
 The other default rules are used to set the root URL to point the default module and action:
 
@@ -175,7 +175,7 @@ The other default rules are used to set the root URL to point the default module
     
 The default module and action themselves are configured in the `settings.yml` file.
 
-### How to avoid mentionning the front controller ?
+### How to avoid mentioning the front controller ?
 
 In all previous examples, the URLs still have contain the `index.php` header to be processed. This is because the front controller has to be called first so that the routing feature can work. 
 
@@ -198,7 +198,7 @@ If you have the `mod_rewrite` module activated, use the following configuration 
     RewriteRule ^(.*)$ index.php [QSA,L]
     
     # big crash from our front web controller
-    ErrorDocument 500 "<h2>Application error</h2>SymFony application failed to start properly"
+    ErrorDocument 500 "<h2>Application error</h2>symfony application failed to start properly"
 
 Now a call to 
 
@@ -213,7 +213,7 @@ Outputting smart URLs
 
 ### Matching patterns
 
-Until now, the `routing.yml` file only helped to reproduce the `mod_rewrite` behaviour, i.e. understanding properly formatted URLs. The good news is, now that you defined routing rules, they will be automatically used to transform URLs *from* your application.
+Until now, the `routing.yml` file only helped to reproduce the `mod_rewrite` behavior, i.e. understanding properly formatted URLs. The good news is, now that you defined routing rules, they will be automatically used to transform URLs *from* your application.
 
 In symfony, when you write a link in a template, you use the `link_to()` helper:
 
@@ -223,7 +223,7 @@ To read more about this helper, check the chapter about [link helpers](templatin
 
     <a href="/index.php/article/read/id/100">my_article_title</a>
 
-But since you wrote routing rules, symfony will automatially interpret them in the other way and generate:
+But since you wrote routing rules, symfony will automatically interpret them in the other way and generate:
 
     <a href="/index.php/article/100">my_article_title</a>
 
