@@ -1,6 +1,7 @@
 <?php
 
 require_once 'symfony/controller/sfRouting.class.php';
+require_once 'symfony/exception/sfException.class.php';
 require_once 'symfony/exception/sfConfigurationException.class.php';
 
 Mock::generate('', 'sfContext');
