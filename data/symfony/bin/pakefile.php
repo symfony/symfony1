@@ -401,7 +401,7 @@ function run_generate_propelcrud($task, $args)
 
   // copy our generated module
   $finder = pakeFinder::type('any');
-  pake_mirror($finder, $tmp_dir.'/auto'.$module, getcwd().'/'.$app.'/modules/'.$module);
+  pake_mirror($finder, $tmp_dir.'/auto'.ucfirst($module), getcwd().'/'.$app.'/modules/'.$module);
 
   // change module name
   pake_replace_tokens($app.'/modules/'.$module.'/actions/actions.class.php', getcwd(), '', '', array('auto'.ucfirst($module) => $module));
