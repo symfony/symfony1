@@ -114,6 +114,8 @@ or, in debug mode:
 
     http://myapp.example.com/myapp_dev.php/
 
+>**Note**: at that point, symfony will raise an exception if `magic_quotes_gpc` and `register_globals` are not set to `off` in your `php.ini`. Symfony recommends this configuration as a good practice; however, you can disable the exception if you want to stick to another configuration. To do that, override the `php.yml` application configuration file, as described in the [configuration in practice](configuration_practice.txt) chapter.
+
 Module setup
 ------------
 
