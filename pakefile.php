@@ -112,12 +112,12 @@ function run_release($task, $args)
 
     $result = pake_sh('svn status -u '.getcwd());
 
-    if (preg_match('/Status against revision\:\s*(\d+)/is', $result, $match))
+    if (preg_match('/(\d+)\s*/is', $result, $match))
     {
       $version = $match[1];
     }
 
-    if (!$version)
+    if (!isset($version))
     {
       throw new Exception('unable to find last svn revision');
     }
