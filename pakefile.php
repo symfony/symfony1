@@ -48,7 +48,7 @@ function run_alltests($task, $args)
 
 function run_create_pear_package($task, $args)
 {
-  if (!$args[0])
+  if (!isset($args[0]))
   {
     throw new Exception('you must provide pake version to release');
   }
@@ -94,12 +94,12 @@ function run_create_pear_package($task, $args)
 
 function run_release($task, $args)
 {
-  if (!$args[0])
+  if (!isset($args[0]))
   {
     throw new Exception('you must provide version prefix (0.5 for beta release or 0.6.0 for stable release)');
   }
 
-  if (!$args[1])
+  if (!isset($args[1]))
   {
     throw new Exception('you must provide stability status (alpha/beta/stable)');
   }

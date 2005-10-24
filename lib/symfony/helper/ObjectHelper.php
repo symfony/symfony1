@@ -54,38 +54,6 @@ function object_htmltext_tag($object, $method, $options = array(), $default_valu
 */
 
 /**
- * Returns an image control.
- *
- * @param object An object.
- * @param string An object column.
- * @param array Image options.
- * @param bool Image default value.
- *
- * @return string An html string which represents an image control.
- *
- */
-/* FIXME
-function object_image_tag($object, $method, $options = array(), $default_value = null)
-{
-  $ctl = new sfUploadControl();
-  $ctl->init();
-  $ctl->setName(strtolower($method));
-  $ctl->setAttribute('id', strtolower($method));
-  $ctl->setIsImage(true);
-  sfUploadControl::$uploadWebDir = '/uploads/'.get_class($object);
-
-  $ctl->setValue(
-    $object->getByName(constant(get_class($object).'Peer::'.strtoupper($method)))
-    .'|'.$object->getByName(constant(get_class($object).'Peer::'.strtoupper($method.'_name')))
-  );
-
-  $ctl = _setControlCommonAttributes($ctl, $options);
-
-  return $ctl->render();
-}
-*/
-
-/**
  * Returns a html date control.
  *
  * @param object An object.

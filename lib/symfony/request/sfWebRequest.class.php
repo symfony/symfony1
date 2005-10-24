@@ -70,7 +70,7 @@ class sfWebRequest extends sfRequest
    */
   public function getFileError ($name)
   {
-    return (isset($_FILES[$name]) ? $_FILES[$name]['error'] : $retval);
+    return (isset($_FILES[$name]) ? $_FILES[$name]['error'] : UPLOAD_ERR_NO_FILE);
   }
 
   /**

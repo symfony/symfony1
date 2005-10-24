@@ -80,7 +80,7 @@ function form_tag($url_for_options = '', $options = array())
   if (array_key_exists('multipart', $html_options))
   {
     $html_options['enctype'] = 'multipart/form-data';
-    unsset($html_options['multipart']);
+    unset($html_options['multipart']);
   }
 
   $html_options['action'] = url_for($url_for_options);
@@ -173,6 +173,15 @@ function radiobutton_tag($name, $value, $checked = false, $options = array())
   if ($checked) $html_options['checked'] = 'checked';
 
   return tag('input', $html_options);
+}
+
+function input_upload_tag($name, $options = array())
+{
+  $options = _parse_attributes($options);
+
+  $options['type'] = 'file';
+
+  return input_tag($name, '', $options);
 }
 
 function input_date_tag($name, $value, $options = array())
