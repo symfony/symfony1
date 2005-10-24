@@ -23,10 +23,12 @@ abstract class sfAction
   const ALL = 'ALL';
 
   private
-    $context    = null,
-    $var_holder = null,
-    $security   = array(),
-    $template   = '';
+    $context                  = null,
+    $var_holder               = null,
+    $security                 = array(),
+    $request                  = null,
+    $request_parameter_holder = null,
+    $template                 = '';
 
   /**
    * Execute any application/business logic for this action.
@@ -77,8 +79,10 @@ abstract class sfAction
    */
   public function initialize($context)
   {
-    $this->context = $context;
-    $this->var_holder = new sfParameterHolder();
+    $this->context                  = $context;
+    $this->var_holder               = new sfParameterHolder();
+    $this->request                  = $context->getRequest();
+    $this->request_parameter_holder = $this->request->getParameterHolder();
 
     // include security configuration
     require(sfConfigCache::checkConfig('modules/'.$this->getModuleName().'/'.SF_APP_MODULE_CONFIG_DIR_NAME.'/security.yml', true, array('moduleName' => $this->getModuleName())));
@@ -135,7 +139,7 @@ abstract class sfAction
     }
 
     // ignore cache? (only in debug mode)
-    if (SF_DEBUG && $this->getRequest()->getParameter('ignore_cache', false, 'symfony/request/sfWebRequest') == true)
+    if (SF_DEBUG && $this->request->getParameter('ignore_cache', false, 'symfony/request/sfWebRequest') == true)
     {
       return 1;
     }
@@ -283,7 +287,7 @@ abstract class sfAction
    */
   public function getRequestParameter($name, $default = null)
   {
-    return $this->getRequest()->getParameterHolder()->get($name, $default);
+    return $this->request_parameter_holder->get($name, $default);
   }
 
   /**
@@ -298,7 +302,7 @@ abstract class sfAction
    */
   public function hasRequestParameter($name)
   {
-    return $this->getRequest()->getParameterHolder()->has($name);
+    return $this->request_parameter_holder->has($name);
   }
 
   /**
@@ -312,7 +316,7 @@ abstract class sfAction
    */
   public function getRequest()
   {
-    return $this->getContext()->getRequest();
+    return $this->request;
   }
 
   /**
@@ -498,33 +502,33 @@ abstract class sfAction
 
   public function addHttpMeta($key, $value, $override = true)
   {
-    if ($override || !$this->getRequest()->hasAttribute($key, 'helper/asset/auto/httpmeta'))
+    if ($override || !$this->request->hasAttribute($key, 'helper/asset/auto/httpmeta'))
     {
-      $this->getRequest()->setAttribute($key, $value, 'helper/asset/auto/httpmeta');
+      $this->request->setAttribute($key, $value, 'helper/asset/auto/httpmeta');
     }
   }
 
   public function addMeta($key, $value, $override = true)
   {
-    if ($override || !$this->getRequest()->hasAttribute($key, 'helper/asset/auto/meta'))
+    if ($override || !$this->request->hasAttribute($key, 'helper/asset/auto/meta'))
     {
-      $this->getRequest()->setAttribute($key, $value, 'helper/asset/auto/meta');
+      $this->request->setAttribute($key, $value, 'helper/asset/auto/meta');
     }
   }
 
   public function setTitle($title)
   {
-    $this->getRequest()->getAttributeHolder()->set('title', $title, 'helper/asset/auto/meta');
+    $this->request->getAttributeHolder()->set('title', $title, 'helper/asset/auto/meta');
   }
 
   public function addStylesheet($css)
   {
-    $this->getRequest()->setAttribute($css, $css, 'helper/asset/auto/stylesheet');
+    $this->request->setAttribute($css, $css, 'helper/asset/auto/stylesheet');
   }
 
   public function addJavascript($js)
   {
-    $this->getRequest()->setAttribute($js, $js, 'helper/asset/auto/javascript');
+    $this->request->setAttribute($js, $js, 'helper/asset/auto/javascript');
   }
 }
 
