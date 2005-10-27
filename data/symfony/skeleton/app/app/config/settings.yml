@@ -11,6 +11,8 @@ dev:
 
 test:
   .settings:
+    # E_ALL | E_STRICT & ~E_NOTICE = 2047
+    error_reporting:        2047
     cache:                  off
     stats:                  off
     web_debug:              off
@@ -76,6 +78,7 @@ all:
 ;
 ;    routing:                on
 ;    no_script_name:         on
+;    relative_url_root:      
 ;
 ;    stats:                  off
 ;

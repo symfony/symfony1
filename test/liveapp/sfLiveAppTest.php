@@ -80,8 +80,8 @@ class sfLiveAppTest extends UnitTestCase
   public function shutdown()
   {
     // remove all temporary files and directories
-//    sfToolkit::clearDirectory($this->tmp_dir);
-//    rmdir($this->tmp_dir);
+    sfToolkit::clearDirectory($this->tmp_dir);
+    rmdir($this->tmp_dir);
   }
 
   public function SetUp()

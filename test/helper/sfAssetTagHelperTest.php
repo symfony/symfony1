@@ -49,10 +49,11 @@ class sfAssetTagHelperTest extends UnitTestCase
   public function SetUp()
   {
     $this->context = new MockSfContext($this);
+    @define('SF_RELATIVE_URL_ROOT', '');
   }
 
-    public function test_image_tag()
-    {
+  public function test_image_tag()
+  {
     $this->assertEqual(image_tag(''), '');
     $this->assertEqual(image_tag('test'), '<img src="/images/test.png" alt="Test" />');
     $this->assertEqual(image_tag('test.png'), '<img src="/images/test.png" alt="Test" />');
