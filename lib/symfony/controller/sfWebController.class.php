@@ -48,13 +48,14 @@ abstract class sfWebController extends sfController
        return $parameters;
      }
 
-     if ($url == null && SF_NO_SCRIPT_NAME)
-     {
-       $url = '';
-     }
-     else
+     $url = '';
+     if (!SF_NO_SCRIPT_NAME)
      {
        $url = $_SERVER['SCRIPT_NAME'];
+     }
+     else if (SF_RELATIVE_URL_ROOT && SF_NO_SCRIPT_NAME)
+     {
+       $url = SF_RELATIVE_URL_ROOT;
      }
 
      $route_name   = '';

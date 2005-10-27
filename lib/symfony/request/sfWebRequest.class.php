@@ -278,7 +278,10 @@ class sfWebRequest extends sfRequest
     // simulate PATH_INFO if needed
     if (!isset($pathArray[SF_PATH_INFO_KEY]))
     {
-      $pathInfo = preg_replace('/^'.preg_quote($pathArray['SCRIPT_NAME'], '/').'/', '', $pathArray['REQUEST_URI']);
+      $script_name = $pathArray['SCRIPT_NAME'];
+      $pathInfo = preg_replace('/^'.preg_quote($script_name, '/').'/', '', $pathArray['REQUEST_URI']);
+      $prefix_name = preg_replace('#\/[^/]+$#', '', $script_name);
+      $pathInfo = preg_replace('/^'.preg_quote($prefix_name, '/').'/', '', $pathArray['REQUEST_URI']);
       $pathInfo = preg_replace('/'.preg_quote($pathArray['QUERY_STRING'], '/').'$/', '', $pathInfo);
     }
     else

@@ -157,8 +157,7 @@
     if (strpos($source, '/') === false) $source = '/'.$dir.'/'.$source;
     if (strpos($source, '.') === false) $source = $source.'.'.$ext;
 
-//$source = "#{@request.relative_url_root}#{source}" 
-    return $source;
+    return SF_RELATIVE_URL_ROOT.$source;
   }
 
   function include_stylesheets()

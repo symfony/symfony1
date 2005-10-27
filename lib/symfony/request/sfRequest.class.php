@@ -66,7 +66,12 @@ abstract class sfRequest
     $array = array();
 
     foreach ($this->parameters as $key => &$value)
-      if (in_array($key, $names)) $array[$key] =& $value;
+    {
+      if (in_array($key, $names))
+      {
+        $array[$key] =& $value;
+      }
+    }
 
     return $array;
   }
@@ -83,7 +88,9 @@ abstract class sfRequest
     $retval = null;
 
     if (isset($this->errors[$name]))
+    {
       $retval = $this->errors[$name];
+    }
 
     return $retval;
   }
