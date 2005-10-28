@@ -58,12 +58,6 @@ abstract class sfActions extends sfAction
 
     if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfActions} call "'.get_class($this).'->'.$actionToRun.'()'.'"');
 
-    // disable Layout by default if called via Ajax
-    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest')
-    {
-      $this->hasLayout(false);
-    }
-
     // run action
     $ret = $this->$actionToRun();
 
