@@ -21,6 +21,7 @@ parts:
     - parameter_holder
 
   in_depth:
+    - web_server
     - routing
     - user_session
     - security

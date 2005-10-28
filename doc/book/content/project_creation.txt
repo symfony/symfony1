@@ -9,13 +9,13 @@ This chapter describes the logical structure a Symfony project, and details the 
 Introduction
 ------------
 
-In symfony, a **project** is a set of services and functionalities available under a given domain name, and sharing the same object model. 
+In symfony, a **project** is a set of services and functionnalities available under a given domain name, and sharing the same object model. 
 
-Inside a project, the functionalities are regrouped logically in **applications**; an application can normally run independently of the other applications of the same project.
+Inside a project, the functionnalities are regrouped logically in **applications**; an application can normally run independantly of the other applications of the same project.
 
 In most cases, a project will contain two applications, one for the front-office, and one for the back-office, sharing the same database. But you can also have one project containing  lots of mini-sites, each site being a different application. Note that hyperlinks between applications have to be in the absolute form.
 
-Each application is a set of one or more **modules**, each module bringing a particular feature. A module usually represents a page or a group of page with similar purpose. Example modules could be `home`, `articles`, `help`, `shoppingCart`, `account`, etc.
+Each application is a set of one or more **modules**, each module bringing a particular feature. A module usually represents a page or a group of page with similar purpose. Exemple modules could be `home`, `articles`, `help`, `shoppingCart`, `account`, etc.
 
 Modules contain **actions**. They represent the various actions that can be done in a module, for instance a `shoppingCart` module can have `add`, `show` and `update` actions. Dealing with actions is almost like dealing with pages in a classic web application.
 
@@ -28,7 +28,7 @@ For instance, a test environment will log alerts and errors, while a production 
 Pake
 ----
 
-Symfony uses a dedicated tool called [Pake][1] to administer projects, applications modules: it is a php tool similar to the [Rake][2] command, a Ruby translation of the `make` command. It automates some administration tasks according to a specific configuration file called `pakefile.php`. But since you use the `pake` tool just by typing `symfony` in a command line, everything becomes much simpler than it sounds.
+SymFony uses a dedicated tool called [Pake][1] to administer projects, applications modules: it is a php tool similar to the [Rake][2] command, a Ruby translation of the `make` command. It automates some administration tasks according to a specific configuration file called `pakefile.php`. But since you use the `pake` tool just by typing `symfony` in a command line, everything becomes much simpler than it sounds.
 
 To get the full list of the available administration operations, simply type from your project directory:
 
@@ -106,7 +106,7 @@ To be able to access and test the new application, the web server has to be conf
       </Directory>
     </VirtualHost>
 
-Restart Apache, and that's it : the newly created application can now be called and viewed through a standard web browser at the URL:
+Restart Apache, and that's it: the newly created application can now be called and viewed through a standard web browser at the url:
 
     http://myapp.example.com/index.php/
 
@@ -114,7 +114,7 @@ or, in debug mode:
 
     http://myapp.example.com/myapp_dev.php/
 
->**Note**: at that point, symfony will raise an exception if `magic_quotes_gpc` and `register_globals` are not set to `off` in your `php.ini`. Symfony recommends this configuration as a good practice; however, you can disable the exception if you want to stick to another configuration. To do that, override the `php.yml` application configuration file, as described in the [configuration in practice](configuration_practice.txt) chapter.
+Symfony is compatible with other server configurations. You can, for instance, access a symfony application using an alias instead of a virtual host. To discover more about web server configuration, refer to the [related chapter](web_server.txt).
 
 Module setup
 ------------
@@ -162,7 +162,7 @@ This will be your first revision. Now you have to **import** the files of the pr
     cd /home/steve/myproject
     svn import -m "initial import" . file:///$SVNREP_DIR/myproject/trunk
 
-Check the committed files by typing
+Check the commited files by typing
 
     svn ls file:///$SVNREP_DIR/myproject/trunk/
 
@@ -177,7 +177,7 @@ Thats seems good. Now the SVN repository has the reference version (and the hist
 
 That's it. Now you can work on the files located in `/home/steve/myproject` and **commit** your modifications to the repository. Don't forget to do some cleanup and erase the `myproject.origin` directory, which is now useless.
 
-There is one remaining thing to setup. If you commit your work directory to the repository, you may copy some unwanted files, like the ones located in the `cache` and `log` directories of your project. So you need to specify an ignore list to svn for this project.
+There is one remaining thing to setup. If you commit your work directory to the repository, you may copy some unwanted files, like the ones located in the `cache` and `log` directores of your project. So you need to specify an ignore list to svn for this project.
 
     cd /home/steve/myproject
     svn propedit svn:ignore .

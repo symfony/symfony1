@@ -1,0 +1,188 @@
+How to configure a web server
+=============================
+
+Overview
+--------
+
+There is more than one way to configure a web server to enable it to access symfony applications. This chapter illustrates the different configuration possibilities and some tricks to optimize your access.
+
+Introduction
+------------
+
+In the examples described above, the `myproject` project contains a `myapp` application. The front controller of this application is called `index.php` and lies in `/home/steve/myproject/web/`. The symfony data directory is `$data_dir`.
+
+Virtual host
+------------
+
+Virtual hosting allows you to setup your web server so that your symfony application appears at the root of a domain (or a sub domain):
+
+    http://myapp.example.com/
+
+Let's assume that you run an Apache server. To setup a virtual host for the `myapp` application, add the following lines to the `httpd.conf` file:
+
+    <VirtualHost *:80>
+      ServerName myapp.example.com
+      DocumentRoot "/home/steve/myproject/web"
+      DirectoryIndex index.php
+      Alias /sf /$data_dir/symfony/web/sf
+
+      <Directory "/home/steve/myproject/web">
+       AllowOverride All
+      </Directory>
+    </VirtualHost>
+
+The `Alias` statement in the middle is necessary for the images of the debug sidebar to be displayed.
+
+Restart Apache, and that's it: the webapp can now be called and viewed through a standard web browser at the URL:
+
+    http://myapp.example.com/
+
+or, in debug mode:
+
+    http://myapp.example.com/myapp_dev.php/
+
+URL rewriting
+-------------
+
+By default, the web server is configured to avoid mentioning the production front controller (`index.php`) in the URL. This means that instead of displaying:
+
+    http://myapp.example.com/index.php/
+
+your server displays and recognizes:
+
+    http://myapp.example.com/
+
+This uses the `mod_rewrite` Apache module, and requires the following lines to be present in the `myproject/web/.htaccess` (which is the case by default):
+
+    # all files with .something are skipped
+    RewriteCond %{REQUEST_URI} \..+$
+    RewriteCond %{REQUEST_URI} !\.html$
+    RewriteRule .* - [L]
+    # the others are redirected to the front web controller
+    RewriteRule ^(.*)$ index.php [QSA,L]
+
+There is one more cosmetic addition that you may wish to add to your URLs : a `.html` at the end. Normally, when calling the `index` action of the `main` module, with default routing configuration, the URL displayed would be:
+
+    http://myapp.example.com/main/index
+
+But the default `settings.yml` of the application contains a `suffix` parameter that tells what has to be added to all the action names:
+
+    all:
+      .settings:
+        suffix:        .html
+
+This is why the `index` action of the `main` module appears like:
+
+    http://myapp.example.com/main/index.html
+    
+Of course, you're free to remove this suffix by writing in place:
+
+    all:
+      .settings:
+        suffix:        
+
+Alias
+-----
+
+If you already have a website on a domain name, and if you wish that your symfony application can be accessed within this domain, then the virtual host solution cannot work. For instance, let's assume that you want to access our symfony application with:
+
+    http://www.example.com/myapp/
+
+To do that, open the `httpd.conf` and add the following lines:
+
+    Alias /webapp/ /home/steve/myproject/web/
+    <Directory "/home/steve/myproject/web">
+       AllowOverride All
+    </Directory>
+
+You also need to edit the `.htaccess` file located in your `myproject/web/` directory and change the last rewrite rule from 
+
+    RewriteRule ^(.*)$ index.php [QSA,L]
+
+to
+
+    RewriteRule ^(.*)$ /webapp/index.php [QSA,L]
+
+In addition, in the `settings.yml` configuration file of your application (located in `myproject/myapp/config/`, add the following line under the `.settings` of all environments:
+
+    all:
+      .settings:
+        relative_url_root:    /webapp
+
+Restart Apache, and try to access your webapp:
+
+    http://www.example.com/myapp/
+
+Multiple applications within one project
+----------------------------------------
+
+During the course of project design, you will meet one day or another the problem of multiple applications access. For instance, in our `myproject` project, you might have a `myapp` application for the public and an `admin` application o manage the content (usually called a back-office). How to authorize access to multiple applications within one project ?
+
+### Virtual hosts
+
+You can add a new virtual host in your Apache `httpd.conf` That's fairly easy to understand:
+
+    <VirtualHost *:80>
+      ServerName myapp.example.com
+      DocumentRoot "/home/steve/myproject/web"
+      DirectoryIndex index.php
+      Alias /sf /$data_dir/symfony/web/sf
+
+      <Directory "/home/steve/myproject/web">
+       AllowOverride All
+      </Directory>
+    </VirtualHost>
+        
+    <VirtualHost *:80>
+      ServerName admin.example.com
+      DocumentRoot "/home/steve/myproject/web"
+      DirectoryIndex admin.php
+      Alias /sf /$data_dir/symfony/web/sf
+
+      <Directory "/home/steve/myproject/web">
+        AllowOverride All
+      </Directory>
+    </VirtualHost>
+
+### Aliases
+
+Alternatively, you can add a new alias. This will allow you to have separated web contents (.css, .js, images, etc.) for each application. This also avoids direct modification of the `httpd.conf` file.
+
+First, create a new directory in your `web` directory:
+
+    mkdir /home/steve/myproject/web/admin
+
+Then, move the front controllers of the `admin` application to this new directory, and copy the `.htaccess` to have one for this new app:
+
+    cd /home/steve/myproject/web
+    mv admin.php admin/index.php
+    mv admin_dev.php admin/
+    cp .htaccess admin/
+    
+Then, execute the two last steps steps described above to setup the alias. Edit the `.htaccess` file located in your `myproject/web/admin/` directory and change
+
+    RewriteRule ^(.*)$ index.php [QSA,L]
+
+to
+
+    RewriteRule ^(.*)$ /admin/index.php [QSA,L]
+
+In the `settings.yml` configuration file of the application (located in `myproject/admin/config/`, add the following line under the `.settings` of all environments:
+
+    all:
+      .settings:
+        relative_url_root:    /admin
+
+Eventually, edit both front controllers (`myproject/web/admin/index.php` and `myproject/web/admin/admin_dev.php`) and change:
+
+    define('SF_ROOT_DIR',    realpath(dirname(__FILE__).'/..'));
+
+to:
+
+    define('SF_ROOT_DIR',    realpath(dirname(__FILE__).'/../..'));
+    
+And this is enough to be able to access the `admin` application by:
+
+    http://whateveryourmainurlis/admin/
+
+>**Note**: you will need to recreate the same file structure in your `web/admin` directory as in a classic `web` directory (with `css`, `js`, `images`, `uploads` directories) since all the paths to the root now point to this `admin/` directory.
