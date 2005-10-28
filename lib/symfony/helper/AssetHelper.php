@@ -162,6 +162,7 @@
 
   function include_stylesheets()
   {
+    $already_seen = array();
     foreach (sfContext::getInstance()->getRequest()->getAttributeHolder()->getAll('helper/asset/auto/stylesheet') as $files)
     {
       if (!is_array($files))
@@ -171,6 +172,9 @@
 
       foreach ($files as $file)
       {
+        if (isset($already_seen[$file])) continue;
+
+        $already_seen[$file] = 1;
         echo stylesheet_tag($file);
       }
     }
@@ -178,6 +182,7 @@
 
   function include_javascripts()
   {
+    $already_seen = array();
     foreach (sfContext::getInstance()->getRequest()->getAttributeHolder()->getAll('helper/asset/auto/javascript') as $files)
     {
       if (!is_array($files))
@@ -187,6 +192,9 @@
 
       foreach ($files as $file)
       {
+        if (isset($already_seen[$file])) continue;
+
+        $already_seen[$file] = 1;
         echo javascript_include_tag($file);
       }
     }

@@ -278,6 +278,12 @@
   */
   function update_element_function($element_id, $options = array())
   {
+    sfContext::getInstance()->getRequest()->setAttribute(
+      'javascript_update_element_function',
+      array('/sf/js/prototype'),
+      'helper/asset/auto/javascript'
+    );
+
     $content = escape_javascript(isset($options['content']) ? $options['content'] : '');
 
     $value = isset($options['action']) ? $options['action'] : 'update';
@@ -332,6 +338,12 @@
   */
   function remote_function($options)
   {
+    sfContext::getInstance()->getRequest()->setAttribute(
+      'javascript_remote_function',
+      array('/sf/js/prototype'),
+      'helper/asset/auto/javascript'
+    );
+
     $javascript_options = _options_for_ajax($options);
 
     $update = '';
@@ -405,6 +417,12 @@
   */
   function observe_field($field_id, $options = array())
   {
+    sfContext::getInstance()->getRequest()->setAttribute(
+      'javascript_observe_field',
+      array('/sf/js/prototype'),
+      'helper/asset/auto/javascript'
+    );
+
     if (isset($options['frequency']) && $options['frequency'] > 0)
     {
       return _build_observer('Form.Element.Observer', $field_id, $options);
@@ -423,6 +441,12 @@
   */
   function observe_form($form_id, $options = array())
   {
+    sfContext::getInstance()->getRequest()->setAttribute(
+      'javascript_observe_form',
+      array('/sf/js/prototype'),
+      'helper/asset/auto/javascript'
+    );
+
     if (isset($options['frequency']) && $options['frequency'] > 0)
     {
       return _build_observer('Form.Observer', $form_id, $options);
@@ -457,6 +481,12 @@
   */
   function visual_effect($name, $element_id = false, $js_options = array())
   {
+    sfContext::getInstance()->getRequest()->setAttribute(
+      'javascript_visual_effect',
+      array('/sf/js/prototype', '/sf/js/effects'),
+      'helper/asset/auto/javascript'
+    );
+
     $element = $element_id ? "'$element_id'" : 'element';
 
     return "new Effect.".sfInflector::camelize($name)."($element,"._options_for_javascript($js_options).");";
@@ -482,6 +512,12 @@
   */
   function sortable_element($element_id, $options = array())
   {
+    sfContext::getInstance()->getRequest()->setAttribute(
+      'javascript_sortable_element',
+      array('/sf/js/prototype', '/sf/js/effects', '/sf/js/dragdrop'),
+      'helper/asset/auto/javascript'
+    );
+
     if (!isset($options['with']))
     {
       $options['with'] = "Sortable.serialize('$element_id')";
@@ -531,6 +567,12 @@
   */
   function draggable_element($element_id, $options = array())
   {
+    sfContext::getInstance()->getRequest()->setAttribute(
+      'javascript_draggable_element',
+      array('/sf/js/prototype', '/sf/js/effects', '/sf/js/dragdrop'),
+      'helper/asset/auto/javascript'
+    );
+
     return javascript_tag("new Draggable('$element_id', "._options_for_javascript($options).")");
   }
 
@@ -550,6 +592,12 @@
   */
   function drop_receiving_element($element_id, $options = array())
   {
+    sfContext::getInstance()->getRequest()->setAttribute(
+      'javascript_drop_receiving_element',
+      array('/sf/js/prototype', '/sf/js/effects', '/sf/js/dragdrop'),
+      'helper/asset/auto/javascript'
+    );
+
     if (!isset($options['with']))
     {
       $options['with'] = "'id=' + encodeURIComponent(element.id)";
