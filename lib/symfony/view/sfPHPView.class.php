@@ -79,11 +79,15 @@ abstract class sfPHPView extends sfView
    */
   private function loadHelpers($helpers)
   {
-    foreach ($helpers as $helper)
+    foreach ($helpers as $helperName)
     {
-      if (!@include_once('symfony/helper/'.$helper.'Helper.php'))
+      if (is_readable(SF_SYMFONY_LIB_DIR.'/symfony/helper/'.$helperName.'Helper.php'))
       {
-        include_once('helper/'.$helper.'Helper.php');
+        include_once('symfony/helper/'.$helperName.'Helper.php');
+      }
+      else
+      {
+        include_once('helper/'.$helperName.'Helper.php');
       }
     }
   }
