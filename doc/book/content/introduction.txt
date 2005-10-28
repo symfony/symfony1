@@ -4,7 +4,7 @@ Symfony at a glance
 Overview
 --------
 
-Symfony is a PHP5 framework, object-oriented and based on the MVC model. It allows to separate easily the business rules, the server logic and the presentation of a web application. It also contains numerous tools and classes aimed at shortening the time of a complex web application development.
+Symfony is an object-oriented PHP5 framework based on the MVC model. It allows to separate easily the business rules, the server logic and the presentation of a web application. It also contains numerous tools and classes aimed at shortening the time of a complex web application development.
 
 Introduction
 ------------
