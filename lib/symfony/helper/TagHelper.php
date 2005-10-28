@@ -43,6 +43,11 @@ function content_tag($name, $content = '', $options = array())
   return '<'.$name._tag_options($options).'>'.$content.'</'.$name.'>';
 }
 
+function cdata_section($content)
+{
+  return "<![CDATA[$content]]>";
+}
+
 function _tag_options($options = array())
 {
   $options = _parse_attributes($options);

@@ -55,7 +55,7 @@
       #     <script language="JavaScript" type="text/javascript" src="/js/common.javascript"></script>
       #     <script language="JavaScript" type="text/javascript" src="/elsewhere/cools.js"></script>
   */
-  function javascript_tag()
+  function javascript_include_tag()
   {
     $html = '';
     foreach (func_get_args() as $source)
@@ -187,7 +187,7 @@
 
       foreach ($files as $file)
       {
-        echo javascript_tag($file);
+        echo javascript_include_tag($file);
       }
     }
   }
