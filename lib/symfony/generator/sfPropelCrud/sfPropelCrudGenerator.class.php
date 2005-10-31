@@ -62,16 +62,27 @@ class sfPropelCrudGenerator extends sfGenerator
     $this->generatedModuleName = 'auto'.ucfirst($moduleName);
     $this->moduleName = $moduleName;
 
-    // get some model metadata
     $c = $this->className;
 
-    $class_map_builder = $c.'MapBuilder';
-    require_once('model/'.$c.'.php');
-    $this->map = new $class_map_builder();
-    if (!$this->map->isBuilt())
+    // we must load all map builder classes to be able to deal with foreign keys (cf. editSuccess.php template)
+    $classes = pakeFinder::type('file')->name('*MapBuilder.php')->relative()->in('lib/model');
+    foreach ($classes as $class)
     {
-      $this->map->doBuild();
+      $class_map_builder = str_replace('.php', '', $class);
+      $class_map_builder = str_replace('map/', '', $class_map_builder);
+      require_once('model/'.$class);
+      $this->maps[$class] = new $class_map_builder();
+      if (!$this->maps[$class]->isBuilt())
+      {
+        $this->maps[$class]->doBuild();
+      }
+
+      if ($c == str_replace('MapBuilder', '', $class_map_builder))
+      {
+        $this->map = $this->maps[$class];
+      }
     }
+
     $this->tableMap = $this->map->getDatabaseMap()->getTable(constant($c.'Peer::TABLE_NAME'));
 
     // find primary key

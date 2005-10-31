@@ -11,11 +11,11 @@
 <th><?php echo $column->getPhpName() ?><?php if ($column->isNotNull()): ?>*<?php endif ?>:</th>
 <td>[?php echo <?php
   $type = $column->getCreoleType();
-  if ($column->getRelatedTableName())
+  if ($column->isForeignKey())
   {
-//    $relatedTable = $map->getDatabaseMap()->getTable($column->getRelatedTableName());
-//echo "object_select(\$object, '{$column->getPhpName()}', array('related_class' => '{$relatedTable->getPhpName()}'))";
-    echo "object_select_tag(\$object, 'get{$column->getPhpName()}')";
+    // load map for related table
+    $relatedTable = $this->map->getDatabaseMap()->getTable($column->getRelatedTableName());
+    echo "object_select_tag(\$object, 'get{$column->getPhpName()}', array('related_class' => '{$relatedTable->getPhpName()}'))";
   }
   else if ($type == CreoleTypes::DATE)
   {
