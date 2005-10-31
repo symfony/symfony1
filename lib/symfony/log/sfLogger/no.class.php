@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project>
+ * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,7 +12,7 @@
  *
  * @package    symfony
  * @subpackage log
- * @author     Fabien Potencier <fabien.potencier@symfony-project>
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id: no.class.php 434 2005-09-08 08:12:29Z fabien $
  */
 class sfNoLogger

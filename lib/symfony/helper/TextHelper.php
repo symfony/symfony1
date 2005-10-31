@@ -27,7 +27,7 @@ text_helper.rb
  * @package   sf_runtime
  * @subpackage helper
  *
- * @author    Fabien POTENCIER (fabien.potencier@symfony-project)
+ * @author    Fabien POTENCIER (fabien.potencier@symfony-project.com)
  *  (c) Fabien POTENCIER
  * @since     1.0.0
  * @version   $Id: TextHelper.php 455 2005-09-15 09:22:40Z fabien $

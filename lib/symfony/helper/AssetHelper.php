@@ -10,7 +10,7 @@
  * @package   sf_runtime
  * @subpackage helper
  *
- * @author    Fabien POTENCIER (fabien.potencier@symfony-project)
+ * @author    Fabien POTENCIER (fabien.potencier@symfony-project.com)
  *  (c) Fabien POTENCIER
  * @since     1.0.0
  * @version   $Id: AssetHelper.php 495 2005-10-05 15:42:11Z fabien $

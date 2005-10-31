@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project>
+ * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,7 +13,7 @@
  * sfMail class.
  *
  * @package    symfony.runtime.addon
- * @author     Fabien Potencier <fabien.potencier@symfony-project>
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id: sfMail.class.php 466 2005-09-17 19:03:25Z fabien $
  */
 abstract class sfMail

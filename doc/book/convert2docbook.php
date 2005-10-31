@@ -52,7 +52,7 @@ $book = <<<EOF
 </authorgroup>
 <copyright>
   <year>2005</year>
-  <holder role="mailto:fabien.potencier@symfony-project">Fabien POTENCIER</holder>
+  <holder role="mailto:fabien.potencier@symfony-project.com">Fabien POTENCIER</holder>
 </copyright>
 <pubdate role="rcs">\$Date\$</pubdate>
 <edition>Beta</edition>

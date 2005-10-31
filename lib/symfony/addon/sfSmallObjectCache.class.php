@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project>
+ * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,7 +10,7 @@
 
 /**
  * @package    symfony.runtime.addon
- * @author     Fabien Potencier <fabien.potencier@symfony-project>
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id: sfSmallObjectCache.class.php 370 2005-08-18 09:00:01Z fabien $
  */
 
@@ -19,7 +19,7 @@
  * sfSmallObjectCache class.
  *
  * @package    symfony.runtime.addon
- * @author     Fabien Potencier <fabien.potencier@symfony-project>
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id: sfSmallObjectCache.class.php 370 2005-08-18 09:00:01Z fabien $
  */
 abstract class sfSmallObjectCache

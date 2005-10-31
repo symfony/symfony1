@@ -18,7 +18,7 @@ tag_helper.rb
  * @package   sf_runtime
  * @subpackage helper
  *
- * @author    Fabien POTENCIER (fabien.potencier@symfony-project)
+ * @author    Fabien POTENCIER (fabien.potencier@symfony-project.com)
  *  (c) Fabien POTENCIER
  * @since     1.0.0
  * @version   $Id: TagHelper.php 518 2005-10-15 09:04:27Z root $

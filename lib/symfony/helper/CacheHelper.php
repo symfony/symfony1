@@ -10,7 +10,7 @@
  * @package   sf_runtime
  * @subpackage helper
  *
- * @author    Fabien POTENCIER (fabien.potencier@symfony-project)
+ * @author    Fabien POTENCIER (fabien.potencier@symfony-project.com)
  *  (c) Fabien POTENCIER
  * @since     1.0.0
  * @version   $Id: CacheHelper.php 375 2005-08-25 10:46:12Z fabien $

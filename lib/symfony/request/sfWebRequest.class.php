@@ -3,8 +3,8 @@
 /**
  * @package    symfony
  * @subpackage request
- * @author     Fabien Potencier <fabien.potencier@symfony-project>
- * @copyright  2004-2005 Fabien Potencier <fabien.potencier@symfony-project>
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @copyright  2004-2005 Fabien Potencier <fabien.potencier@symfony-project.com>
  * @license    SymFony License 1.0
  * @version    SVN: $Id: sfWebRequest.class.php 480 2005-09-21 13:33:58Z fabien $
  */
@@ -18,9 +18,9 @@
  *
  * @package    symfony
  * @subpackage request
- * @author     Fabien Potencier <fabien.potencier@symfony-project>
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr (skerr@mojavi.org)
- * @copyright  2004-2005 Fabien Potencier <fabien.potencier@symfony-project>
+ * @copyright  2004-2005 Fabien Potencier <fabien.potencier@symfony-project.com>
  * @license    SymFony License 1.0
  * @version    SVN: $Id: sfWebRequest.class.php 480 2005-09-21 13:33:58Z fabien $
  */
