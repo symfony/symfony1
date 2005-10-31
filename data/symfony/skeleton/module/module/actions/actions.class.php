@@ -5,7 +5,7 @@
  *
  * @package    ##PROJECT_NAME##
  * @subpackage ##MODULE_NAME##
- * @author     Fabien Potencier <fabien.potencier@gmail.com>
+ * @author     Your name here
  * @version    SVN: $Id$
  */
 class ##MODULE_NAME##Actions extends sfActions
