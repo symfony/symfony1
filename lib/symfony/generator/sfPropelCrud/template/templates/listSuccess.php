@@ -3,7 +3,7 @@
 <table>
 <thead>
 <tr>
-<?php foreach ($table->getColumns() as $name => $column): ?>
+<?php foreach ($this->tableMap->getColumns() as $name => $column): ?>
   <th><b><?php echo $column->getPhpName() ?></b></th>
 <?php endforeach ?>
 </tr>
@@ -11,7 +11,7 @@
 <tbody>
 [?php foreach ($objects as $object): ?]
 <tr>
-  <?php foreach ($table->getColumns() as $name => $column): ?>
+  <?php foreach ($this->tableMap->getColumns() as $name => $column): ?>
   <?php if ($column->isPrimaryKey()): ?>
   <td>[?php echo link_to($object->get<?php echo $column->getPhpName() ?>(), '/'.$last_module.'/show?id='.$object->get<?php echo $column->getPhpName() ?>()) ?]</td>
   <?php else: ?>

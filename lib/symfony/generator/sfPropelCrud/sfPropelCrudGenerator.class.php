@@ -26,6 +26,9 @@ class sfPropelCrudGenerator extends sfGenerator
     $peerClassName       = '',
     $generatedModuleName = '',
     $moduleName          = '',
+    $map                 = null,
+    $tableMap            = null,
+    $primaryKeyMethod    = '',
     $className           = '';
 
   public function generate($generator, $class, $param)
@@ -59,6 +62,27 @@ class sfPropelCrudGenerator extends sfGenerator
     $this->generatedModuleName = 'auto'.ucfirst($moduleName);
     $this->moduleName = $moduleName;
 
+    // get some model metadata
+    $c = $this->className;
+
+    $class_map_builder = $c.'MapBuilder';
+    require_once('model/'.$c.'.php');
+    $this->map = new $class_map_builder();
+    if (!$this->map->isBuilt())
+    {
+      $this->map->doBuild();
+    }
+    $this->tableMap = $this->map->getDatabaseMap()->getTable(constant($c.'Peer::TABLE_NAME'));
+
+    // find primary key
+    foreach ($this->tableMap->getColumns() as $name => $column)
+    {
+      if ($column->isPrimaryKey())
+      {
+        $this->primaryKeyMethod = 'get'.$column->getPhpName();
+      }
+    }
+
     // generate actions class
     $actions = "class {$this->generatedModuleName}"."Actions extends sfActions\n".
                "{\n".
@@ -80,18 +104,6 @@ class sfPropelCrudGenerator extends sfGenerator
     $templates = array('listSuccess', 'editSuccess', 'showSuccess');
     foreach ($templates as $template)
     {
-      // get some model metadata
-      $c = $this->className;
-
-      $class_map_builder = $c.'MapBuilder';
-      require_once('model/'.$c.'.php');
-      $map = new $class_map_builder();
-      if (!$map->isBuilt())
-      {
-        $map->doBuild();
-      }
-      $table = $map->getDatabaseMap()->getTable(constant($c.'Peer::TABLE_NAME'));
-
       // eval template template file
       ob_start();
       require(dirname(__FILE__).'/template/templates/'.$template.'.php');
@@ -209,7 +221,7 @@ class sfPropelCrudGenerator extends sfGenerator
               "    \${$s}->fromArray(\$this->getRequest()->getParameterHolder()->getAll(), $c"."::TYPE_FIELDNAME);\n".
               "    \${$s}->save();\n".
               "\n".
-              "    return \$this->redirect('/".$this->moduleName."/show?id='.\${$s}->getId());\n".
+              "    return \$this->redirect('/".$this->moduleName."/show?id='.\${$s}->".$this->primaryKeyMethod."());\n".
               "  }\n";
 
     return $action;

@@ -3,7 +3,7 @@
 [?php echo form_tag(''.$last_module.'/update') ?]
 
 <table>
-<?php foreach ($table->getColumns() as $name => $column): ?>
+<?php foreach ($this->tableMap->getColumns() as $name => $column): ?>
 <?php if ($column->isPrimaryKey()): ?>
 [?php echo object_input_hidden_tag($object, '<?php echo 'get'.$column->getPhpName() ?>'); ?]
 <?php else: ?>
@@ -53,9 +53,9 @@
 </table>
 <hr />
 [?php echo submit_tag('save') ?]
-[?php if ($object->getId()): ?]
-  &nbsp;[?php echo link_to('cancel', '<?php echo $moduleName ?>/show?id='.$object->getId()) ?]
-  &nbsp;[?php echo link_to('delete', '<?php echo $moduleName ?>/delete?id='.$object->getId()) ?]
+[?php if ($object-><?php echo $this->primaryKeyMethod ?>()): ?]
+  &nbsp;[?php echo link_to('cancel', '<?php echo $moduleName ?>/show?id='.$object-><?php echo $this->primaryKeyMethod ?>()) ?]
+  &nbsp;[?php echo link_to('delete', '<?php echo $moduleName ?>/delete?id='.$object-><?php echo $this->primaryKeyMethod ?>()) ?]
 [?php else: ?]
   &nbsp;[?php echo link_to('cancel', '<?php echo $moduleName ?>/list') ?]
 [?php endif ?]
