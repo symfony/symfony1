@@ -24,7 +24,7 @@ url_helper.rb
  * @package   sf_runtime
  * @subpackage helper
  *
- * @author    Fabien POTENCIER (fabien.potencier@gmail.com)
+ * @author    Fabien POTENCIER (fabien.potencier@symfony-project)
  *  (c) Fabien POTENCIER
  * @since     1.0.0
  * @version   $Id: UrlHelper.php 531 2005-10-18 09:43:40Z fabien $

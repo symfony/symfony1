@@ -5,7 +5,7 @@ require_once 'i18n/DateFormat.php';
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@gmail.com>
+ * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,7 +15,7 @@ require_once 'i18n/DateFormat.php';
  *
  * @package    symfony
  * @subpackage i18n
- * @author     Fabien Potencier <fabien.potencier@gmail.com>
+ * @author     Fabien Potencier <fabien.potencier@symfony-project>
  * @version    SVN: $Id: sfI18N.class.php 432 2005-09-07 12:30:24Z fabien $
  */
 class sfI18N

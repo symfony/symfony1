@@ -9,7 +9,7 @@
  *
  * @package   sf_runtime
  *
- * @author    Fabien POTENCIER (fabien.potencier@gmail.com)
+ * @author    Fabien POTENCIER (fabien.potencier@symfony-project)
  *  (c) Fabien POTENCIER
  * @since     1.0.0
  * @version   $Id$

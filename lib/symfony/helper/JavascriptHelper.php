@@ -10,7 +10,7 @@
  * @package   sf_runtime
  * @subpackage helper
  *
- * @author    Fabien POTENCIER (fabien.potencier@gmail.com)
+ * @author    Fabien POTENCIER (fabien.potencier@symfony-project)
  *  (c) Fabien POTENCIER
  * @since     1.0.0
      * @version   $Id: JavascriptHelper.php 455 2005-09-15 09:22:40Z fabien $

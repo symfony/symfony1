@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@gmail.com>
+ * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,7 +10,7 @@
 
 /**
  * @package    symfony
- * @author     Fabien Potencier <fabien.potencier@gmail.com>
+ * @author     Fabien Potencier <fabien.potencier@symfony-project>
  * @version    SVN: $Id$
  */
 
@@ -18,7 +18,7 @@
  * Pakefile.
  *
  * @package    symfony
- * @author     Fabien Potencier <fabien.potencier@gmail.com>
+ * @author     Fabien Potencier <fabien.potencier@symfony-project>
  * @version    SVN: $Id$
  */
 

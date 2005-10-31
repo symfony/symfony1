@@ -86,7 +86,7 @@ class sfTextHelperTest extends UnitTestCase
 
   public function test_auto_linking()
   {
-    $email_raw = 'fabien.potencier@gmail.com';
+    $email_raw = 'fabien.potencier@symfony-project';
     $email_result = '<a href="mailto:'.$email_raw.'">'.$email_raw.'</a>';
     $link_raw = 'http://www.google.com';
     $link_result = '<a href="'.$link_raw.'">'.$link_raw.'</a>';

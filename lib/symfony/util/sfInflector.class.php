@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@gmail.com>
+ * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,7 +12,7 @@
  *
  * @package    symfony
  * @subpackage util
- * @author     Fabien Potencier <fabien.potencier@gmail.com>
+ * @author     Fabien Potencier <fabien.potencier@symfony-project>
  * @version    SVN: $Id: sfInflector.class.php 432 2005-09-07 12:30:24Z fabien $
  */
 class sfInflector

@@ -12,7 +12,7 @@ require_once('symfony/helper/ValidationHelper.php');
  * @package   sf_runtime
  * @subpackage helper
  *
- * @author    Fabien POTENCIER (fabien.potencier@gmail.com)
+ * @author    Fabien POTENCIER (fabien.potencier@symfony-project)
  *  (c) Fabien POTENCIER
  * @since     1.0.0
  * @version   $Id: FormHelper.php 535 2005-10-18 13:01:23Z root $

@@ -12,7 +12,7 @@ require_once('symfony/helper/FormHelper.php');
  * @package   sf_runtime
  * @subpackage helper
  *
- * @author    Fabien POTENCIER (fabien.potencier@gmail.com)
+ * @author    Fabien POTENCIER (fabien.potencier@symfony-project)
  *  (c) Fabien POTENCIER
  * @since     1.0.0
  * @version   $Id: ObjectHelper.php 493 2005-10-05 07:32:12Z fabien $

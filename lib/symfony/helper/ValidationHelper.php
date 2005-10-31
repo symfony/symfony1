@@ -10,7 +10,7 @@
  * @package   sf_runtime
  * @subpackage helper
  *
- * @author    Fabien POTENCIER (fabien.potencier@gmail.com)
+ * @author    Fabien POTENCIER (fabien.potencier@symfony-project)
  *  (c) Fabien POTENCIER
  * @since     1.0.0
  * @version   $Id: ValidationHelper.php 461 2005-09-16 07:27:06Z fabien $

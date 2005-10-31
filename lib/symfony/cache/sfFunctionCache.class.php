@@ -3,8 +3,8 @@
 /**
  * @package    symfony
  * @subpackage cache
- * @author     Fabien Potencier <fabien.potencier@gmail.com>
- * @copyright  2004-2005 Fabien Potencier <fabien.potencier@gmail.com>
+ * @author     Fabien Potencier <fabien.potencier@symfony-project>
+ * @copyright  2004-2005 Fabien Potencier <fabien.potencier@symfony-project>
  * @license    SymFony License 1.0
  * @version    SVN: $Id: sfCache.class.php 369 2005-08-16 08:18:15Z fabien $
  */
@@ -19,9 +19,9 @@
  *
  * @package    symfony
  * @subpackage cache
- * @author     Fabien Potencier <fabien.potencier@gmail.com>
+ * @author     Fabien Potencier <fabien.potencier@symfony-project>
  * @author     Fabien Marty <fab@php.net>
- * @copyright  2004-2005 Fabien Potencier <fabien.potencier@gmail.com>
+ * @copyright  2004-2005 Fabien Potencier <fabien.potencier@symfony-project>
  * @license    SymFony License 1.0
  * @version    SVN: $Id: sfCache.class.php 369 2005-08-16 08:18:15Z fabien $
  */

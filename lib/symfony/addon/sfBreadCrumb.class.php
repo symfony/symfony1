@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@gmail.com>
+ * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,7 +10,7 @@
 
 /**
  * @package    symfony.runtime.addon
- * @author     Fabien Potencier <fabien.potencier@gmail.com>
+ * @author     Fabien Potencier <fabien.potencier@symfony-project>
  * @version    SVN: $Id$
  */
 
@@ -19,7 +19,7 @@
  * sfBreadCrumb class.
  *
  * @package    symfony.runtime.addon
- * @author     Fabien Potencier <fabien.potencier@gmail.com>
+ * @author     Fabien Potencier <fabien.potencier@symfony-project>
  * @version    SVN: $Id$
  */
 class sfBreadCrumb
@@ -99,8 +99,8 @@ class sfBreadCrumb
  * BreadCrumbNode class.
  *
  * @package    SymFony.runtime.core
- * @author     Fabien Potencier <fabien.potencier@gmail.com>
- * @copyright  2004-2005 Fabien Potencier <fabien.potencier@gmail.com>
+ * @author     Fabien Potencier <fabien.potencier@symfony-project>
+ * @copyright  2004-2005 Fabien Potencier <fabien.potencier@symfony-project>
  * @license    SymFony License 1.0
  * @version    SVN: $Id$
  */
