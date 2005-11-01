@@ -1,6 +1,8 @@
 SVN
 ---
 
+* [fabien] module helpers support (lib/helper directory of a module)
+
 * [fabien] propel CRUD generator enhancements (primary id != id, foreign keys support)
 
 * [fabien] better Ajax support (prototype and script.aculo.us)

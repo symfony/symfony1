@@ -70,6 +70,20 @@ function link_to_if($condition, $name = '', $options = '', $html_options = array
   {
     return link_to($name, $options, $html_options, $parameters_for_method_reference);
   }
+  else
+  {
+    if (isset($html_options['tag']))
+    {
+      $tag = $html_options['tag'];
+      unset($html_options['tag']);
+    }
+    else
+    {
+      $tag = 'span';
+    }
+
+    return content_tag($tag, $name, $html_options);
+  }
 }
 
 function link_to_unless($condition, $name = '', $options = '', $html_options = array(), $parameters_for_method_reference = array())
