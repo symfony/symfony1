@@ -308,7 +308,7 @@ class sfRouting
     // we remove multiple /
     $url = preg_replace('#/+#', '/', $url);
 
-    foreach ($this->routes as $name => $route) 
+    foreach ($this->routes as $route_name => $route) 
     {
       $out = array();
       $r = null;
@@ -392,7 +392,7 @@ class sfRouting
 
         if ($break)
         {
-          if (SF_LOGGING_ACTIVE) sfLogger::getInstance()->info('{sfRouting} match route "'.$route.'"');
+          if (SF_LOGGING_ACTIVE) sfLogger::getInstance()->info('{sfRouting} match route ['.$route_name.'] "'.$route.'"');
           break;
         }
       }
