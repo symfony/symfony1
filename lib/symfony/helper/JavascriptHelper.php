@@ -483,7 +483,7 @@
   {
     sfContext::getInstance()->getRequest()->setAttribute(
       'javascript_visual_effect',
-      array('/sf/js/prototype', '/sf/js/effects'),
+      array('/sf/js/prototype', '/sf/js/builder', '/sf/js/effects'),
       'helper/asset/auto/javascript'
     );
 
@@ -514,7 +514,7 @@
   {
     sfContext::getInstance()->getRequest()->setAttribute(
       'javascript_sortable_element',
-      array('/sf/js/prototype', '/sf/js/effects', '/sf/js/dragdrop'),
+      array('/sf/js/prototype', '/sf/js/builder', '/sf/js/effects', '/sf/js/dragdrop'),
       'helper/asset/auto/javascript'
     );
 
@@ -569,7 +569,7 @@
   {
     sfContext::getInstance()->getRequest()->setAttribute(
       'javascript_draggable_element',
-      array('/sf/js/prototype', '/sf/js/effects', '/sf/js/dragdrop'),
+      array('/sf/js/prototype', '/sf/js/builder', '/sf/js/effects', '/sf/js/dragdrop'),
       'helper/asset/auto/javascript'
     );
 
@@ -594,7 +594,7 @@
   {
     sfContext::getInstance()->getRequest()->setAttribute(
       'javascript_drop_receiving_element',
-      array('/sf/js/prototype', '/sf/js/effects', '/sf/js/dragdrop'),
+      array('/sf/js/prototype', '/sf/js/builder', '/sf/js/effects', '/sf/js/dragdrop'),
       'helper/asset/auto/javascript'
     );
 
@@ -647,9 +647,7 @@
 
   function javascript_cdata_section($content)
   {
-    return $content;
-//FIXME
-//    return "\n//".cdata_section("\n$content\n//")."\n";
+    return "\n//".cdata_section("\n$content\n//")."\n";
   }
 
   function _options_for_javascript($options)
