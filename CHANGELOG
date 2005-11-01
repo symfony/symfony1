@@ -1,0 +1,10 @@
+SVN
+---
+
+* [fabien] propel CRUD generator enhancements (primary id != id, foreign keys support)
+
+* [fabien] better Ajax support (prototype and script.aculo.us)
+
+* [fabien] support for non virtual host configurations
+
+* [fabien] easier helpers debugging
