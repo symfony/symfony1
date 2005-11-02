@@ -96,12 +96,12 @@ This will be done with the `security.yml` module configuration file. This file c
 For example, to restrict the `read` action of the `myAccount` module to users with 'customer' credential, and the `update` action to the users with 'admin' or 'superuser' credentials, the `security.yml` file of the `myproject/myapp/modules/myAccount/config/` directory will have to look like:
 
     read:
-      is_secure:  on
-      credential: customer
+      is_secure:   on
+      credentials: customer
     
     update:
-      is_secure:  on
-      credential: [admin, superuser]
+      is_secure:   on
+      credentials: [admin, superuser]
     
     all:
       is_secure:  off

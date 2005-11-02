@@ -191,6 +191,20 @@ The most useful helper of this type is the `object_select_tag`, since it can get
     // is a shortcut for calls like
     select_tag('getArticles', options_for_select($author->getArticles))
 
+In addition, imagine that you have a `Person` and a `Group` table, where persons belong to one group. This means that the `Person` table has a `group_id` column:
+
+    Person        Group
+    ------        -----
+    id            id
+    group_id      name
+    name
+
+There is an easy way to get the list of the group names when editing the `GroupId` column in an object form:
+
+    object_select_tag($person, 'getGroupId', 'related_class=Group')
+
+Symfony will use the `->toString()` method of class `Group` to display the names of the groups in a list. If the method is undefined, the identifiers of the groups are displayed instead.
+
 >**Note**: the `object_select_tag` helper uses the Propel layer; it might not work if you use another data abstraction layer.
 
 Easy object update
