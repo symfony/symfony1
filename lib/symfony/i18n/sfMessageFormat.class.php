@@ -22,18 +22,25 @@ class sfMessageFormat extends MessageFormat
   public function __construct($culture = null, $dir = 'global')
   {
     $source = MessageSource::factory('XLIFF', SF_APP_I18N_DIR.DIRECTORY_SEPARATOR.$dir);
-    $cache_dir = SF_I18N_CACHE_DIR.'/'.$dir;
+    $cache_dir = SF_I18N_CACHE_DIR.DIRECTORY_SEPARATOR.$dir;
+
+    // create cache dir if needed
     if (!is_dir($cache_dir))
     {
-      // create cache dir if needed
-      // FIXME: not portable
-      $dirs = explode('/', $cache_dir);
+      $dirs = explode(DIRECTORY_SEPARATOR, $cache_dir);
       $root = '';
       $current_umask = umask();
       umask(0000);
       foreach($dirs as $dir)
       {
-        $root = $root.DIRECTORY_SEPARATOR.$dir;
+        if ($root == '')
+        {
+          $root = $dir.DIRECTORY_SEPARATOR;
+        }
+        else
+        {
+          $root = $root.DIRECTORY_SEPARATOR.$dir;
+        }
         if (!is_dir($root))
         {
           @mkdir($root, 0777);
