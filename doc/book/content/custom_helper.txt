@@ -9,9 +9,13 @@ Symfony offers various helpers to accelerate template development (see more in t
 Naming conventions
 ------------------
 
-To add custom helpers available in the whole application, simply create a PHP file ending with `Helper.php` and place it in a subdirectory of the PHP `include_path` named `sf/sfViewHelpers`, for instance in the directory `myapp/lib/sf/sfViewHelpers`.
+To add custom helpers available to your templates, simply create a PHP file ending with `Helper.php` and place it in a subdirectory of the PHP `include_path` named `helper`. The directory where the helper is placed will determine its availability. For instance:
 
-To add custom helpers available from a single module, put the file ending with `Helper.php` in the `lib` directory of the module.
+    Helper placed in                  Is available for
+    ----------------                  ----------------
+    lib/helper                        all applicationsof the project
+    myapp/lib/helper                  all the modules of the 'myapp' application
+    myapp/modules/mymodule/lib/helper all the templates of the 'mymodule' module
 
 To use a helper in a template, you must first declare the helper in the action:
 
@@ -22,7 +26,7 @@ Example
 
 Let's imagine that your application uses the wiki syntax to format the data entered by users. The wiki to HTML conversion may occur quite often, so you will factorize the code in a 'wiki_to_html()' helper function:
 
-Here is the `WikiHelper.php` file stored in the `myapp/lib/sf/sfViewHelpers/` directory:
+Here is the `WikiHelper.php` file stored in the `myapp/lib/helper/` directory:
 
     <?php
     
@@ -50,3 +54,10 @@ Here is an example module using the helper:
 And here is the call to the helper in a template of this module:
 
     <p><?= wiki_to_html('Text with a WikiLink.') ?></p>
+    
+Accessing context objects
+-------------------------
+
+In a helper, shortcuts like `$request` or `$user` don't work, neither do the action-style calls (`$this->getRequest()`, `$this->getUser()`, etc.) since the function is not in an object context. So, in order to access the context objects, you have to use the `sfContext` singleton (`sfContext::getInstance()`). For instance, to get the request parameters, write:
+
+    $id = sfContext::getInstance()->getRequest()->getParameter('id');

@@ -185,26 +185,33 @@ So simply add the `object_` prefix in front of the name of the form helpers to g
     object_checkbox_tag($object, $method, $options)
     ...
 
-The most useful helper of this type is the `object_select_tag`, since it can get the list of values from the result of a method call:
+The most useful helper of this type is the `object_select_tag`, since it can get the list of values from another table. For instance, imagine that you have an `Article` and an `Author` table, where one or more articles are written by one author. This means that the `Article` table has a `author_id` column:
 
-    object_select_tag($author, 'getArticles')
-    // is a shortcut for calls like
-    select_tag('getArticles', options_for_select($author->getArticles))
-
-In addition, imagine that you have a `Person` and a `Group` table, where persons belong to one group. This means that the `Person` table has a `group_id` column:
-
-    Person        Group
+    Article       Author
     ------        -----
     id            id
-    group_id      name
-    name
+    author_id     name
+    title
 
-There is an easy way to get the list of the group names when editing the `GroupId` column in an object form:
+Now, picture a form built to edit the data of an article. There is an easy way to get the list of the author names when editing the `AuthorId` column:
 
-    object_select_tag($person, 'getGroupId', 'related_class=Group')
+    object_select_tag($article, 'getAuthorId', 'related_class=Author')
 
-Symfony will use the `->toString()` method of class `Group` to display the names of the groups in a list. If the method is undefined, the identifiers of the groups are displayed instead.
+Symfony will use the `->toString()` method of the `Author` class to display the names of the authors in a list. If the method is undefined, the primary key (in the example, the `id` column) of the `Author` table is used instead.
 
+A few other options can define the content of an object select tag. `include_title` and `include_blank` allow to add a title or a first empty line to the list:
+
+    object_select_tag($article, 'getAuthorId', 'related_class=Author')
+    object_select_tag($article, 'getAuthorId', 'related_class=Author include_blank')
+    object_select_tag($article, 'getAuthorId', 'related_class=Author include_title')
+    //will display three selects with lists of values looking like:
+    -------      -------      -------
+    |Steve |     |      |     |Author|
+    |John  |     |Steve |     |Steve |
+    |Mark  |     |John  |     |John  |
+    -------      |Mark  |     |Mark  |
+                 -------      -------
+                 
 >**Note**: the `object_select_tag` helper uses the Propel layer; it might not work if you use another data abstraction layer.
 
 Easy object update
@@ -225,7 +232,7 @@ Then the `update` action of the `author` module can simply use the `fromArray` m
 
     public function executeUpdate ()
     {
-      $author = IdeaPeer::retrieveByPk($this->getRequestParameter('id'));
+      $author = AuthorPeer::retrieveByPk($this->getRequestParameter('id'));
   
       $this->forward404_unless($author instanceof Author);
 
