@@ -9,12 +9,12 @@ This chapter describes the steps to install the symfony framework, either from a
 Introduction
 ------------
 
-The symfony framework can be used for several projects, and updated independently of any project using it. That's why the installation isn't as simple as dezipping some files in one directory. However, once installed properly, projects based on symfony won't need a specific update each time the global libraries are modified.
+The symfony framework can be used for several projects, and updated independently of any project using it. That's why the installation isn't as simple as unzipping some files into a directory. However, once installed properly, projects based on symfony won't need a specific update each time the global libraries are modified.
 
 Installing symfony from a PEAR Package
 --------------------------------------
 
-[PEAR][1] is used by PHP to install libraries from a central repository. The symfony project has its own repository, or channel. Note that channels are only available since version 1.4.0 of PEAR, so you should update if your version is older:
+[PEAR][1] is used by PHP to install libraries from a central repository. The symfony project has its own repository, or channel. Note that channels are only available since version 1.4.0 of PEAR, so you should upgrade if your version is older:
 
     pear upgrade PEAR
 
@@ -59,7 +59,7 @@ The `_dir` variables are part of your PEAR configuration. To see their value, ty
 
     pear config-show
 
-As a matter of fact, the exact location of files is not very important, since the installation provides you with a new executable, `symfony`, which will do all the work for you (project creation, application installation and initialization, etc.). Only the `$doc_dir` directory will be needed in your web server configuration, since it contains some default files (stylesheets and images) that can e required by some pages of symfony projects. This configuration will be detailed in the [next chapter](project_creation.txt).
+As a matter of fact, the exact location of files is not very important, since the installation provides you with a new executable, `symfony`, which will do all the work for you (project creation, application installation and initialization, etc.). Only the `$doc_dir` directory will be needed in your web server configuration, since it contains some default files (stylesheets and images) that can be required by some pages of symfony projects. This configuration will be detailed in the [next chapter](project_creation.txt).
 
 Just as a reminder, the default locations for Unix and Windows are as follow:
 
@@ -92,7 +92,7 @@ If you don't want to use PEAR, you can still download the latest version directl
     cd /home/steve/mysymfony
     svn co http://svn.symfony-project.com/symfony/trunk/ .
 
-In order to let your project use this installation, you will have to create two symbolic links in you project from the `vendor` directory to the symfony `lib` directory:
+For your project to make use of this installation, you will have to create two symbolic links in you project from the `vendor` directory to the symfony `lib` directory:
 
     cd /home/steve/myproject
     ln -sf /home/steve/mysymfony/lib lib/symfony
@@ -134,7 +134,7 @@ Let's suppose that you already transferred your symfony-enabled project to a dis
 
 To learn more about the file structure of symfony projects, read the [related chapter](file_structure.txt).
 
-Now you need to copy some files of the symfony package into your project directory. First, create a `symfony` subdirectory in the `data` and `lib` directories of your distant project. Then, transfer the files as follow:
+Now you need to copy some files from the symfony package into your project directory. First, create a `symfony` subdirectory in the `data` and `lib` directories of your distant project. Then, transfer the files as follow:
 
             local                            distant
             -----                            -------
