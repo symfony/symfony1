@@ -56,7 +56,7 @@ class sfLogger extends Log
         $file_logger->setMask(Log::UPTO(constant('PEAR_LOG_'.strtoupper(SF_LOGGING_LEVEL))));
         $logger->addChild($file_logger);
 
-        if (SF_WEB_DEBUG)
+        if (defined('SF_WEB_DEBUG') && SF_WEB_DEBUG)
         {
           require_once 'symfony/log/sfLogger/var.class.php';
           $var_logger = &Log::singleton('var', '', 'symfony');

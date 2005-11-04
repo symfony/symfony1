@@ -89,7 +89,7 @@ th {
         <td>v. <?php print PHP_VERSION ?></td>
     </tr>
     <tr id="help">
-        <td colspan="2">for help resolving this issue, please visit <a href="http://www.symfony-project.org">www.symfony-project.org</a>.</td>
+        <td colspan="2">for help resolving this issue, please visit <a href="http://www.symfony-project.com/">www.symfony-project.com</a>.</td>
     </tr>
 </table>
 
