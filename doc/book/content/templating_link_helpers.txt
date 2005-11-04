@@ -56,6 +56,16 @@ Enter in the link helper just the same URL as you would have written in a `<a hr
 
 Link helpers are the key to a double way routing. Interpreting URLs is not a big deal, but generating them requires that all hyperlink tags pass by the same filter. That's why these helpers are compulsory as soon as you may use the routing feature. Make sure you take a look at the [routing chapter](routing.txt) to see how to change the shape of URLs, get rid of the controller name or add a '.html' to the generated URLs for more efficient caching and indexing.
 
+### Linking an image
+
+Adding a link to an image is as simple as combining two helpers:
+
+    <?= link_to(image_tag('read.gif'), 'article/read?title=Finance_in_France') ?>
+    //will generate in html
+    <a href="/article/read/title/Finance_in_France.html"><img src="/images/read.gif" alt="Read" /></a>
+
+The `image_tag` helper is described later in this chapter.
+
 ### Using the rule instead of the module/action
 
 If you had a look at the [routing chapter](routing.txt), you saw that the routing is defined by rules. The link helpers accept a rule name instead of a pair `module/action` if a `@` is written before. For instance, if the `routing.yml` file contains the rule:
@@ -85,7 +95,7 @@ On the other hand,
 
 The best choice depends on the project. In the long run, it's up to you.
 
-### Fake GET
+### Fake GET and `post` option
 
 Sometimes, web developers tend to use GET requests to actually do a POST. For instance, consider the following URL:
 
@@ -93,15 +103,68 @@ Sometimes, web developers tend to use GET requests to actually do a POST. For in
 
 This request will change the data contained in the application, so it should be considered as a POST. 
 
-This URL can be bookmarked, cached and indexed by search engines. Imagine all the nasty things that might happen to the users or to the statistics of a website using this technique. In addition, the same result can be easily achieved with forms or javascript.
+This URL can be bookmarked, cached and indexed by search engines. Imagine all the nasty things that might happen to the users or to the statistics of a website using this technique. 
 
-Well, there is one more bad consequence: the default symfony routing rules will transform this kind of URL into
+Symfony provides a way to transform a call to a `link_to` helper into an actual post. Just write:
 
-    http://myapp.example.com/index.php/shopping_cart/add/id/100
+    <?= link_to('go to shopping cart', 'shoppingCart/add?id=100', 'post=true') ?>
+    // will generate in HTML
+    <a onclick="f = document.createElement('form'); document.body.appendChild(f); f.method = 'POST'; f.action = this.href; f.submit();return false;" href="/shoppingCart/add/id/100.html">go to shopping cart</a>
 
-This looks like a completely static page while obviously, the page behind it is dynamic. So this will create even more confusion and risks of errors. All in all, there is no good reason to use that kind of URL. 
+This `<a>` tag has an `href` attribute, so browsers without javascript support will follow the link doing the default GET. But for those with javascript support, the click on the link will actually do a POST request to the same URL, thanks to a dynamically-generated form in the `onclick` behavior. 
 
-Mailto Helper
+It is a good habit to tag as POST the links that actually post data. Don't hesitate to use this possibility.
+
+### Additionnal options
+
+In addition to the `post` option, the `link_to` helper accepts two other options : `confirm` and `popup`.
+
+    <?= link_to('add to cart', 'shoppingCart/add?id=100', 'confirm=Are you sure?') ?>
+    // will generate in HTML
+    <a onclick="return confirm('Are you sure?');" href="/fo_dev.php/shoppingCart/add/id/100.html">add to cart</a>
+    
+    <?= link_to('add to cart', 'shoppingCart/add?id=100', 'popup=true') ?>
+    // will generate in HTML
+    <a onclick="window.open(this.href);return false;" href="/fo_dev.php/shoppingCart/add/id/100.html">add to cart</a>
+    
+    <?= link_to('add to cart', 'shoppingCart/add?id=100', Array('popup' => Array('Window title','width=310,height=400,left=320,top=0'))) ?>
+    // will generate in HTML
+    <a onclick="window.open(this.href,'Window title','width=310,height=400,left=320,top=0');return false;" href="/fo_dev.php/shoppingCart/add/id/100.html">add to cart</a>
+
+The options can be combined:
+
+    <?= link_to('add to cart', 'shoppingCart/add?id=100', 'confirm=Are you sure? post=true') ?>
+    // will generate in HTML
+    <a onclick="if (confirm('Are you sure?')) { f = document.createElement('form'); document.body.appendChild(f); f.method = 'POST'; f.action = this.href; f.submit(); };return false;" href="/fo_dev.php/shoppingCart/add/id/100.html">add to cart</a>
+    
+    <?= link_to('add to cart', 'shoppingCart/add?id=100', 'confirm=Are you sure? popup=true') ?>
+    // will generate in HTML
+    <a onclick="if (confirm('Are you sure?')) { window.open(this.href); };return false;" href="/fo_dev.php/shoppingCart/add/id/100.html">add to cart</a>
+
+button_to helper
+----------------
+
+When dealing with forms, you might want to use buttons instead of links. This is where the `button_to` helper enters:
+
+    <?= button_to('add to cart', 'shoppingCart/add?id=100') ?>
+    // will generate in HTML
+    <input value="add to cart" type="button" onclick="document.location.href='/fo_dev.php/shoppingCart/add/id/100.html';" />
+
+Note that, by default, this button will do a GET request. If you want to do a POST, add the related option:
+
+    <?= button_to('add to cart', 'shoppingCart/add?id=100', 'post=true') ?>
+    // will generate in HTML
+    <form method="post" class="button_to" action="/fo_dev.php/shoppingCart/add/id/100.html"><input value="add to cart" type="submit" /></form>
+
+Beware not to use the POST mode when in a form, since it adds a new `<form>` tag: you would end up with a form inside another, and the additional button would submit the first form.
+
+As for `link_to`, the `confirm` and `popup` options can be added and combined:
+
+    <?= button_to('add to cart', 'shoppingCart/add?id=100', 'confirm=Are you sure? popup=true') ?>
+    // will generate in HTML
+    <input value="add to cart" type="button" onclick="if (confirm('Are you sure?')) {window.open('/fo_dev.php/shoppingCart/add/id/100.html');}" />
+
+mail_to helper
 -------------
 
 The reason why symfony ships a `mail_to()` helper is that nowadays, email farming robots prowl about the web, and you can't display an email address on a website without becoming a spam victim within days.
