@@ -40,12 +40,34 @@ function content_tag($name, $content = '', $options = array())
   {
     return '';
   }
+  
+  // remove unneeded options
+  foreach ($options as $key => $opt) {
+    if (strpos($key, '_') !== false
+     || $key == 'match'
+     || $key == 'rich'
+     || preg_match('/^tag[1-9]?$/', $key) ) {
+        unset($options[$key]);
+    }        
+  }
+  
   return '<'.$name._tag_options($options).'>'.$content.'</'.$name.'>';
 }
 
 function cdata_section($content)
 {
   return "<![CDATA[$content]]>";
+}
+
+/**
+  # Escape carrier returns and single and double quotes for Javascript segments.
+*/
+function escape_javascript($javascript = '')
+{
+  $javascript = preg_replace('/\r\n|\n|\r/', "\\n", $javascript);
+  $javascript = preg_replace('/(["\'])/', '\\\\1', $javascript);
+
+  return $javascript;
 }
 
 function _tag_options($options = array())

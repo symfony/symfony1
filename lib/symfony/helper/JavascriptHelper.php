@@ -618,17 +618,6 @@
   }
 
   /**
-    # Escape carrier returns and single and double quotes for Javascript segments.
-  */
-  function escape_javascript($javascript = '')
-  {
-    $javascript = preg_replace('/\r\n|\n|\r/', "\\n", $javascript);
-    $javascript = preg_replace('/(["\'])/', '\\\\1', $javascript);
-
-    return $javascript;
-  }
-
-  /**
     # Returns a JavaScript tag with the +content+ inside. Example:
     #   javascript_tag "alert('All is good')" # => <script type="text/javascript">alert('All is good')</script>
   */
