@@ -461,8 +461,6 @@
     # Returns a JavaScript snippet to be used on the AJAX callbacks for starting
     # visual effects.
     #
-    # This method requires the inclusion of the script.aculo.us JavaScript library.
-    #
     # Example:
     #   <%= link_to_remote "Reload", :update => "posts", 
     #         :url => { :action => "reload" }, 
@@ -497,8 +495,6 @@
     # by drag-and-drop and make an AJAX call whenever the sort order has
     # changed. By default, the action called gets the serialized sortable
     # element as parameters.
-    #
-    # This method requires the inclusion of the script.aculo.us JavaScript library.
     #
     # Example:
     #   <%= sortable_element("my_list", :url => { :action => "order" }) %>
@@ -557,8 +553,6 @@
   /**
     # Makes the element with the DOM ID specified by +element_id+ draggable.
     #
-    # This method requires the inclusion of the script.aculo.us JavaScript library.
-    #
     # Example:
     #   <%= draggable_element("my_image", :revert => true)
     # 
@@ -581,8 +575,6 @@
     # dropped draggable elements (created by draggable_element).
     # and make an AJAX call  By default, the action called gets the DOM ID of the
     # element as parameter.
-    #
-    # This method requires the inclusion of the script.aculo.us JavaScript library.
     #
     # Example:
     #   <%= drop_receiving_element("my_cart", :url => { :controller => "cart", :action => "add" }) %>
