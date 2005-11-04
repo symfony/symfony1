@@ -289,6 +289,12 @@ class sfWebRequest extends sfRequest
       $pathInfo = $pathArray[SF_PATH_INFO_KEY];
     }
 
+    // for IIS
+    if (stripos($pathInfo, '.php') > 0)
+    {
+      $pathInfo = substr($pathInfo, stripos($pathInfo, '.php') + 4);
+    }
+
     return $pathInfo;
   }
 
