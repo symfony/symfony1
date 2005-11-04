@@ -40,17 +40,7 @@ function content_tag($name, $content = '', $options = array())
   {
     return '';
   }
-  
-  // remove unneeded options
-  foreach ($options as $key => $opt) {
-    if (strpos($key, '_') !== false
-     || $key == 'match'
-     || $key == 'rich'
-     || preg_match('/^tag[1-9]?$/', $key) ) {
-        unset($options[$key]);
-    }        
-  }
-  
+
   return '<'.$name._tag_options($options).'>'.$content.'</'.$name.'>';
 }
 
