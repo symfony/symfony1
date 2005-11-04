@@ -24,7 +24,7 @@ url_helper.rb
  * @package   sf_runtime
  * @subpackage helper
  *
- * @author    Fabien POTENCIER (fabien.potencier@gmail.com)
+ * @author    Fabien POTENCIER (fabien.potencier@symfony-project.com)
  *  (c) Fabien POTENCIER
  * @since     1.0.0
  * @version   $Id: UrlHelper.php 531 2005-10-18 09:43:40Z fabien $
@@ -65,6 +65,20 @@ function link_to_if($condition, $name = '', $options = '', $html_options = array
   if ($condition)
   {
     return link_to($name, $options, $html_options, $parameters_for_method_reference);
+  }
+  else
+  {
+    if (isset($html_options['tag']))
+    {
+      $tag = $html_options['tag'];
+      unset($html_options['tag']);
+    }
+    else
+    {
+      $tag = 'span';
+    }
+
+    return content_tag($tag, $name, $html_options);
   }
 }
 
