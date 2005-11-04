@@ -3,7 +3,7 @@
 <table>
 <thead>
 <tr>
-<?php foreach ($this->tableMap->getColumns() as $name => $column): ?>
+<?php foreach ($this->tableMap->getColumns() as $column): ?>
   <th><b><?php echo $column->getPhpName() ?></b></th>
 <?php endforeach ?>
 </tr>
@@ -11,16 +11,16 @@
 <tbody>
 [?php foreach ($objects as $object): ?]
 <tr>
-  <?php foreach ($this->tableMap->getColumns() as $name => $column): ?>
+<?php foreach ($this->tableMap->getColumns() as $column): ?>
   <?php if ($column->isPrimaryKey()): ?>
-  <td>[?php echo link_to($object->get<?php echo $column->getPhpName() ?>(), '/'.$last_module.'/show?id='.$object->get<?php echo $column->getPhpName() ?>()) ?]</td>
+  <td>[?php echo link_to($object->get<?php echo $column->getPhpName() ?>(), '<?php echo $moduleName ?>/show?<?php echo $this->getPrimaryKeyUrlParams() ?>) ?]</td>
   <?php else: ?>
   <td>[?php echo $object->get<?php echo $column->getPhpName() ?>() ?]</td>
   <?php endif ?>
-  <?php endforeach ?>
+<?php endforeach ?>
 </tr>
 [?php endforeach ?]
 </tbody>
 </table>
 
-[?php echo link_to ('create', '/<?php echo $moduleName ?>/edit') ?]
+[?php echo link_to ('create', '<?php echo $moduleName ?>/edit') ?]

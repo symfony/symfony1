@@ -28,7 +28,7 @@ class sfPropelCrudGenerator extends sfGenerator
     $moduleName          = '',
     $map                 = null,
     $tableMap            = null,
-    $primaryKeyMethod    = '',
+    $primaryKey          = array(),
     $className           = '';
 
   public function generate($generator, $class, $param)
@@ -62,35 +62,34 @@ class sfPropelCrudGenerator extends sfGenerator
     $this->generatedModuleName = 'auto'.ucfirst($moduleName);
     $this->moduleName = $moduleName;
 
+    // get some model metadata
     $c = $this->className;
 
     // we must load all map builder classes to be able to deal with foreign keys (cf. editSuccess.php template)
     $classes = pakeFinder::type('file')->name('*MapBuilder.php')->relative()->in('lib/model');
     foreach ($classes as $class)
     {
-      $class_map_builder = str_replace('.php', '', $class);
-      $class_map_builder = str_replace('map/', '', $class_map_builder);
+      $class_map_builder = basename($class, '.php');
       require_once('model/'.$class);
-      $this->maps[$class] = new $class_map_builder();
-      if (!$this->maps[$class]->isBuilt())
+      $maps[$class] = new $class_map_builder();
+      if (!$maps[$class]->isBuilt())
       {
-        $this->maps[$class]->doBuild();
+        $maps[$class]->doBuild();
       }
 
       if ($c == str_replace('MapBuilder', '', $class_map_builder))
       {
-        $this->map = $this->maps[$class];
+        $this->map = $maps[$class];
       }
     }
-
     $this->tableMap = $this->map->getDatabaseMap()->getTable(constant($c.'Peer::TABLE_NAME'));
 
-    // find primary key
-    foreach ($this->tableMap->getColumns() as $name => $column)
+    // get all primary keys
+    foreach ($this->tableMap->getColumns() as $column)
     {
       if ($column->isPrimaryKey())
       {
-        $this->primaryKeyMethod = 'get'.$column->getPhpName();
+        $this->primaryKey[] = $column;
       }
     }
 
@@ -106,7 +105,7 @@ class sfPropelCrudGenerator extends sfGenerator
                $this->getGetObjectOrCreate()."\n".
                "}\n";
 
-    $retval = $this->generateClass($actions);
+    $retval = $this->generateClass($actions, __CLASS__);
 
     // save actions class
     $generator->getCache()->set('actions.class.php', $this->generatedModuleName.DIRECTORY_SEPARATOR.'actions', $retval);
@@ -128,7 +127,7 @@ class sfPropelCrudGenerator extends sfGenerator
       // replace [?php and ?]
       $content = $this->replacePhpMarks($content);
 
-      $retval = $this->generateTemplate($content);
+      $retval = $this->generateTemplate($content, __CLASS__);
 
       // save actions class
       $generator->getCache()->set($template.'.php', $this->generatedModuleName.DIRECTORY_SEPARATOR.'templates', $retval);
@@ -170,9 +169,16 @@ class sfPropelCrudGenerator extends sfGenerator
     $p = $this->pluralName;
     $c = $this->className;
 
+    $params = array();
+    foreach ($this->getPrimaryKey() as $pk)
+    {
+      $params[] = "\$this->getRequestParameter('".$this->translateFieldName($pk->getPhpName())."')";
+    }
+    $param = implode(",\n".str_repeat(' ', 49 - strlen($c.$s)), $params);
+
     $action = "  public function executeShow ()\n".
               "  {\n".
-              "    \$this->$s = $c"."Peer::retrieveByPk(\$this->getRequestParameter('id'));\n".
+              "    \$this->$s = $c"."Peer::retrieveByPk($param);\n".
               "\n".
               "    \$this->forward404_unless(\$this->$s instanceof $c);\n".
               "  }\n";
@@ -200,15 +206,30 @@ class sfPropelCrudGenerator extends sfGenerator
     $p = $this->pluralName;
     $c = $this->className;
 
-    $action = "  private function get{$c}OrCreate (\$name = 'id')\n".
+    $function_params = array();
+    $test_pks        = array();
+    $retrieve_params = array();
+    foreach ($this->getPrimaryKey() as $pk)
+    {
+      $fieldName = $this->translateFieldName($pk->getPhpName());
+
+      $function_params[] = "\$$fieldName = '$fieldName'";
+      $test_pks[]        = "!\$this->getRequestParameter(\$$fieldName, 0)";
+      $retrieve_params[] = "\$this->getRequestParameter(\$$fieldName)";
+    }
+    $function_param = implode(', ', $function_params);
+    $test_pk        = implode("\n     || ", $test_pks);
+    $retrieve_param = implode(",\n".str_repeat(' ', 45 - strlen($c.$s)), $retrieve_params);
+
+    $action = "  private function get{$c}OrCreate ($function_param)\n".
               "  {\n".
-              "    if (!\$this->getRequestParameter(\$name, 0))\n".
+              "    if ($test_pk)\n".
               "    {\n".
               "      \$$s = new $c();\n".
               "    }\n".
               "    else\n".
               "    {\n".
-              "      \$$s = $c"."Peer::retrieveByPk(\$this->getRequestParameter(\$name));\n".
+              "      \$$s = $c"."Peer::retrieveByPk($retrieve_param);\n".
               "\n".
               "      \$this->forward404_unless(\$$s instanceof $c);\n".
               "    }\n".
@@ -232,7 +253,7 @@ class sfPropelCrudGenerator extends sfGenerator
               "    \${$s}->fromArray(\$this->getRequest()->getParameterHolder()->getAll(), $c"."::TYPE_FIELDNAME);\n".
               "    \${$s}->save();\n".
               "\n".
-              "    return \$this->redirect('/".$this->moduleName."/show?id='.\${$s}->".$this->primaryKeyMethod."());\n".
+              "    return \$this->redirect('".$this->moduleName."/show?".$this->getPrimaryKeyUrlParams().");\n".
               "  }\n";
 
     return $action;
@@ -244,15 +265,23 @@ class sfPropelCrudGenerator extends sfGenerator
     $p = $this->pluralName;
     $c = $this->className;
 
+    $params = array();
+    foreach ($this->getPrimaryKey() as $pk)
+    {
+      $params[] = "\$this->getRequestParameter('".$this->translateFieldName($pk->getPhpName())."')";
+    }
+
+    $sep = ",\n".str_repeat(' ', 43 - strlen($c.$s));
+    $pks = implode($sep, $params);
     $action = "  public function executeDelete ()\n".
               "  {\n".
-              "    \$$s = $c"."Peer::retrieveByPk(\$this->getRequestParameter('id'));\n".
+              "    \$$s = $c"."Peer::retrieveByPk($pks);\n".
               "\n".
               "    \$this->forward404_unless(\$$s instanceof $c);\n".
               "\n".
               "    \${$s}->delete();\n".
               "\n".
-              "    return \$this->redirect('/".$this->moduleName."/list');\n".
+              "    return \$this->redirect('".$this->moduleName."/list');\n".
               "  }\n";
 
     return $action;
@@ -265,9 +294,9 @@ class sfPropelCrudGenerator extends sfGenerator
    */
   public function setScaffoldingClassName($className)
   {
-    $this->singularName = sfInflector::underscore($className);
-    $this->pluralName = $this->singularName.'s';
-    $this->className = $className;
+    $this->singularName  = sfInflector::underscore($className);
+    $this->pluralName    = $this->singularName.'s';
+    $this->className     = $className;
     $this->peerClassName = $className.'Peer';
   }
 
@@ -299,6 +328,41 @@ class sfPropelCrudGenerator extends sfGenerator
   public function getClassScaffoldName()
   {
     return $this->className;
+  }
+
+  public function getPrimaryKey()
+  {
+    return $this->primaryKey;
+  }
+
+  public function translateFieldName($name, $fromType = 'phpName', $toType = 'fieldName')
+  {
+    return call_user_func(array($this->className, 'translateFieldName'), $name, $fromType, $toType);
+  }
+
+  public function getPrimaryKeyUrlParams()
+  {
+    $params = array();
+    foreach ($this->getPrimaryKey() as $pk)
+    {
+      $phpName   = $pk->getPhpName();
+      $fieldName = $this->translateFieldName($phpName);
+      $params[]  = "$fieldName='.\$object->get$phpName()";
+    }
+
+    return implode(".'&", $params);
+  }
+
+  public function getPrimaryKeyIsSet()
+  {
+    $params = array();
+    foreach ($this->getPrimaryKey() as $pk)
+    {
+      $phpName  = $pk->getPhpName();
+      $params[] = "\$object->get$phpName()";
+    }
+
+    return implode(' && ', $params);
   }
 }
 
