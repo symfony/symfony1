@@ -91,21 +91,32 @@ function button_to($name, $target, $options = array())
 {
   $html_options = _convert_options($options);
   $html_options['value']   = $name;
-
+ 
   if (isset($html_options['post']) && $html_options['post'])
   {
+    if (isset($html_options['popup']))
+    {
+      throw new sfConfigurationException('You can\'t use "popup" and "post" together');
+    }
     $html_options['type'] = 'submit';
     unset($html_options['post']);
     $html_options = _convert_options_to_javascript($html_options);
-
+ 
     return form_tag($target, array('method' => 'post', 'class' => 'button_to')).tag('input', $html_options).'</form>';
+  }
+  else if (isset($html_options['popup']))
+  {
+    $html_options['type']    = 'button';
+    $html_options = _convert_options_to_javascript($html_options, $target);
+ 
+    return tag('input', $html_options);
   }
   else
   {
     $html_options['type']    = 'button';
     $html_options['onclick'] = "document.location.href='".url_for($target)."';";
     $html_options = _convert_options_to_javascript($html_options);
-
+ 
     return tag('input', $html_options);
   }
 }
@@ -124,7 +135,7 @@ function mail_to($email, $encode = true)
   }
 }
 
-function _convert_options_to_javascript($html_options)
+function _convert_options_to_javascript($html_options, $target = '')
 {
   // confirm
   $confirm = isset($html_options['confirm']) ? $html_options['confirm'] : '';
@@ -142,11 +153,11 @@ function _convert_options_to_javascript($html_options)
 
   if ($popup && $post)
   {
-    throw new sfConfigurationException('You can\'t use "popup" and "post" together');
+    throw new sfConfigurationException('You can\'t use "popup" and "post" in the same link');
   }
   else if ($confirm && $popup)
   {
-    $html_options['onclick'] = $onclick.'if ('._confirm_javascript_function($confirm).') { '._popup_javascript_function($popup).' };return false;';
+    $html_options['onclick'] = $onclick.'if ('._confirm_javascript_function($confirm).') { '._popup_javascript_function($popup, $target).' };return false;';
   }
   else if ($confirm && $post)
   {
@@ -169,7 +180,7 @@ function _convert_options_to_javascript($html_options)
   }
   else if ($popup)
   {
-    $html_options['onclick'] = $onclick._popup_javascript_function($popup).'return false;';
+    $html_options['onclick'] = $onclick._popup_javascript_function($popup, $target).'return false;';
   }
 
   return $html_options;
@@ -180,9 +191,25 @@ function _confirm_javascript_function($confirm)
   return "confirm('".escape_javascript($confirm)."')";
 }
 
-function _popup_javascript_function($popup)
+function _popup_javascript_function($popup, $target = '')
 {
-  return is_array($popup) ? "window.open(this.href,'".$popup[0]."','".$popup[-1]."');" : "window.open(this.href);";
+  $url = $target == '' ? 'this.href' : "'".url_for($target)."'";
+
+  if (is_array($popup))
+  {
+    if (isset($popup[1]))
+    {
+      return "window.open(".$url.",'".$popup[0]."','".$popup[1]."');";
+    }
+    else
+    {
+      return "window.open(".$url.",'".$popup[0]."');";
+    }
+  }
+  else
+  {
+    return "window.open(".$url.");";
+  }
 }
 
 function _post_javascript_function()
