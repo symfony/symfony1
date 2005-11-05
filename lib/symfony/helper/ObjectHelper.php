@@ -102,6 +102,7 @@ function object_textarea_tag($object, $method, $options = array(), $default_valu
  */
 function object_select_tag($object, $method, $options = array(), $default_value = null)
 {
+  $options = _parse_attributes($options);
   if (!isset($options['related_class']) && preg_match('/^get(.+?)Id$/', $method, $match))
   {
     $options['related_class'] = $match[1];
@@ -110,7 +111,6 @@ function object_select_tag($object, $method, $options = array(), $default_value 
   $value = _get_object_value($object, $method, $default_value);
 
   $select_options = array();
-  $options = _parse_attributes($options);
   if (isset($options['include_blank']))
   {
     $select_options[0] = '';
@@ -126,7 +126,18 @@ function object_select_tag($object, $method, $options = array(), $default_value 
   {
     $tmp_object = new $options['related_class']();
     $tmp_object->hydrate($rs);
-    $select_options[$tmp_object->getPrimaryKey()] = method_exists($tmp_object, 'toString') ? $tmp_object->toString() : $tmp_object->getPrimaryKey();
+
+    // multi primary keys handling
+    if (is_array($tmp_object->getPrimaryKey()))
+    {
+      $pk = implode('/', $tmp_object->getPrimaryKey());
+    }
+    else
+    {
+      $pk = $tmp_object->getPrimaryKey();
+    }
+
+    $select_options[$pk] = method_exists($tmp_object, 'toString') ? $tmp_object->toString() : $tmp_object->getPrimaryKey();
   }
 
   $option_tags = options_for_select(array_flip($select_options), $value);
@@ -205,9 +216,18 @@ function _convert_method_to_name ($method)
 }
 
 // returns default_value if object value is null
-function _get_object_value ($object, $method, $default_value)
+function _get_object_value ($object, $method, $default_value = null)
 {
-  $object_value = call_user_func(array($object, $method));
+  // method exists?
+  if (!method_exists($object, $method))
+  {
+    $error = 'Method "%s" doesn\'t exist for object of class "%s"';
+    $error = sprintf($error, $method, get_class($object));
+
+    throw new sfViewException($error);
+  }
+
+  $object_value = $object->$method();
 
   return ($default_value !== null && $object_value === null) ? $default_value : $object_value;
 }

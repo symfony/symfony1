@@ -4,7 +4,7 @@
 [class]       <?php print $class ?> 
 [file]        <?php print $file ?> 
 [line]        <?php print $line ?> 
-[symfony]     v. <?php print SF_APP_VERSION ?> (symfony-project.coom)
+[symfony]     v. <?php print SF_APP_VERSION ?> (symfony-project.com)
 [PHP]         v. <?php print PHP_VERSION ?> 
 <?php if (count($trace) > 0): ?>
 [stack trace]

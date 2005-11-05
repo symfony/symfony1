@@ -73,7 +73,7 @@ function objects_for_select($options = array(), $value_method, $text_method = nu
     // text method exists?
     if ($text_method && !method_exists($option, $text_method))
     {
-      $error = 'Method "%s" does\'t exists for object of class "%s"';
+      $error = 'Method "%s" doesn\'t exist for object of class "%s"';
       $error = sprintf($error, $text_method, get_class($option));
 
       throw new sfViewException($error);
@@ -82,7 +82,7 @@ function objects_for_select($options = array(), $value_method, $text_method = nu
     // value method exists?
     if (!method_exists($option, $value_method))
     {
-      $error = 'Method "%s" does\'t exists for object of class "%s"';
+      $error = 'Method "%s" doesn\'t exist for object of class "%s"';
       $error = sprintf($error, $value_method, get_class($option));
 
       throw new sfViewException($error);

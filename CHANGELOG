@@ -1,9 +1,11 @@
 SVN
 ---
 
+* [marc]   IIS support
+
 * [fabien] module helpers support (lib/helper directory of a module)
 
-* [fabien] propel CRUD generator enhancements (primary id != id, foreign keys support)
+* [fabien] propel CRUD generator enhancements (primary id != id, foreign keys, multi primary keys)
 
 * [fabien] better Ajax support (prototype and script.aculo.us)
 
