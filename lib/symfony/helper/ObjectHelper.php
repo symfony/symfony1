@@ -2,20 +2,21 @@
 
 require_once('symfony/helper/FormHelper.php');
 
-// +---------------------------------------------------------------------------+
-// | This file is part of the SymFony Framework project.                        |
-// | Copyright (c) 2004, 2005 Fabien POTENCIER.                                          |
-// +---------------------------------------------------------------------------+
+/*
+ * This file is part of the symfony package.
+ * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 /**
+ * ObjectHelper.
  *
- * @package   sf_runtime
+ * @package    symfony
  * @subpackage helper
- *
- * @author    Fabien POTENCIER (fabien.potencier@symfony-project.com)
- *  (c) Fabien POTENCIER
- * @since     1.0.0
- * @version   $Id: ObjectHelper.php 493 2005-10-05 07:32:12Z fabien $
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @version    SVN: $Id$
  */
 
 /**

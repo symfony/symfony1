@@ -2,20 +2,21 @@
 
 require_once('symfony/helper/ValidationHelper.php');
 
-// +---------------------------------------------------------------------------+
-// | This file is part of the SymFony Framework project.                        |
-// | Copyright (c) 2004, 2005 Fabien POTENCIER.                                          |
-// +---------------------------------------------------------------------------+
+/*
+ * This file is part of the symfony package.
+ * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 /**
+ * FormHelper.
  *
- * @package   sf_runtime
+ * @package    symfony
  * @subpackage helper
- *
- * @author    Fabien POTENCIER (fabien.potencier@symfony-project.com)
- *  (c) Fabien POTENCIER
- * @since     1.0.0
- * @version   $Id: FormHelper.php 535 2005-10-18 13:01:23Z root $
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @version    SVN: $Id$
  */
 
 /*

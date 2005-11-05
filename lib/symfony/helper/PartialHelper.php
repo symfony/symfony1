@@ -1,5 +1,22 @@
 <?php
 
+/*
+ * This file is part of the symfony package.
+ * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+/**
+ * PartialHelper.
+ *
+ * @package    symfony
+ * @subpackage helper
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @version    SVN: $Id$
+ */
+
 function include_partial($name, $vars = array())
 {
   // partial is in another module?

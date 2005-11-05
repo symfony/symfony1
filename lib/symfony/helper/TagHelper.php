@@ -1,29 +1,30 @@
 <?php
 
-/* PHP port of tag helpers from Rails
-
-tag_helper.rb
-  tag             OK    OK
-  content_tag         OK    OK
-
-*/
-
-// +---------------------------------------------------------------------------+
-// | This file is part of the SymFony Framework project.                        |
-// | Copyright (c) 2004, 2005 Fabien POTENCIER.                                          |
-// +---------------------------------------------------------------------------+
-
-/**
- *
- * @package   sf_runtime
- * @subpackage helper
- *
- * @author    Fabien POTENCIER (fabien.potencier@symfony-project.com)
- *  (c) Fabien POTENCIER
- * @since     1.0.0
- * @version   $Id: TagHelper.php 518 2005-10-15 09:04:27Z root $
+/*
+ * This file is part of the symfony package.
+ * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
+/**
+ * TagHelper defines some base helpers to construct html tags.
+ *
+ * @package    symfony
+ * @subpackage helper
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @version    SVN: $Id$
+ */
+
+/**
+ * Constructs an html tag.
+ *
+ * @param  $name    string  tag name
+ * @param  $options array   tag options
+ * @param  $open    boolean true to leave tag open
+ * @return string
+ */
 function tag($name, $options = array(), $open = false)
 {
   if (!$name)

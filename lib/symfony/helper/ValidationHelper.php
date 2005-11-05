@@ -1,19 +1,20 @@
 <?php
 
-// +---------------------------------------------------------------------------+
-// | This file is part of the SymFony Framework project.                        |
-// | Copyright (c) 2004, 2005 Fabien POTENCIER.                                          |
-// +---------------------------------------------------------------------------+
+/*
+ * This file is part of the symfony package.
+ * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 /**
+ * ValidationHelper.
  *
- * @package   sf_runtime
+ * @package    symfony
  * @subpackage helper
- *
- * @author    Fabien POTENCIER (fabien.potencier@symfony-project.com)
- *  (c) Fabien POTENCIER
- * @since     1.0.0
- * @version   $Id: ValidationHelper.php 461 2005-09-16 07:27:06Z fabien $
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @version    SVN: $Id$
  */
 
 function form_has_error($param)

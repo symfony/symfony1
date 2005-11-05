@@ -1,36 +1,20 @@
 <?php
 
-/* PHP port of tag helpers from Rails
-
-text_helper.rb
-  concat            NA    NA
-  truncate          OK    OK
-  highlight         OK    OK
-  excerpt           OK    OK
-  pluralize         --
-  textilize         --
-  textilize_without_paragraph --
-  markdown          --
-  simple_format       OK    OK
-  auto_link         OK    OK
-  strip_links         OK    OK
-
-*/
-
-// +---------------------------------------------------------------------------+
-// | This file is part of the SymFony Framework project.                        |
-// | Copyright (c) 2004, 2005 Fabien POTENCIER.                                          |
-// +---------------------------------------------------------------------------+
+/*
+ * This file is part of the symfony package.
+ * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 /**
+ * TextHelper.
  *
- * @package   sf_runtime
+ * @package    symfony
  * @subpackage helper
- *
- * @author    Fabien POTENCIER (fabien.potencier@symfony-project.com)
- *  (c) Fabien POTENCIER
- * @since     1.0.0
- * @version   $Id: TextHelper.php 455 2005-09-15 09:22:40Z fabien $
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @version    SVN: $Id$
  */
 
   /*

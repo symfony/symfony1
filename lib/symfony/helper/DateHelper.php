@@ -1,5 +1,22 @@
 <?php
 
+/*
+ * This file is part of the symfony package.
+ * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+/**
+ * DateHelper.
+ *
+ * @package    symfony
+ * @subpackage helper
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @version    SVN: $Id$
+ */
+
 function format_daterange($start_date, $end_date, $format = 'd', $full_text, $start_text, $end_text, $culture = null)
 {
   if (!$culture) $culture = sfContext::getInstance()->getUser()->getCulture();
