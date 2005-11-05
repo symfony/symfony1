@@ -28,12 +28,12 @@ In a newly created `contact` module, the first action to write is the one that d
 
 And the corresponding `indexSuccess.php` template contains:
 
-    <?= form_tag('contact/send') ?>
-      <label for="name">Name</label> : <?= input_tag('name') ?><br />
-      <label for="email">Email</label> : <?= input_tag('email') ?><br />
-      <label for="age">Age</label> : <?= input_tag('age') ?><br />
-      <label for="message">Message</label> : <?= textarea_tag('message') ?><br />
-      <?= submit_tag() ?>
+    <?php echo form_tag('contact/send') ?>
+      <label for="name">Name</label> : <?php echo input_tag('name') ?><br />
+      <label for="email">Email</label> : <?php echo input_tag('email') ?><br />
+      <label for="age">Age</label> : <?php echo input_tag('age') ?><br />
+      <label for="message">Message</label> : <?php echo textarea_tag('message') ?><br />
+      <?php echo submit_tag() ?>
     </form>
 
 If you wonder what  the `_tag()` functions do, you should probably take a look at the [form helpers chapter](templating_form_helpers.txt). The form can now be displayed in the browser by typing the URL `index.php/contact`.
@@ -53,7 +53,7 @@ To handle the form submission, the `send` action must be created. For this examp
 
 The `sendSuccess.php` template just contains:
 
-    Your message was sent to our services. The answer will be sent at <?= $email ?> 
+    Your message was sent to our services. The answer will be sent at <?php echo $email ?> 
 
 You can test the whole process of submitting the form and getting the confirmation, it already works fine. Except that if you try to enter invalid data in the fields, the action may very well crash. The fields do require validation.
 
@@ -127,12 +127,12 @@ To address these two issues, you just need to modify the `indexSuccess.php` temp
 
 Since the *forward* method kept the original request, the template has access to the data entered by the user:
 
-    <?= form_tag('contact/send') ?>
-      <label for="name">Name</label> : <?= input_tag('name', $request->getParameter('name')) ?><br />
-      <label for="email">Email</label> : <?= input_tag('email', $request->getParameter('email')) ?><br />
-      <label for="age">Age</label> : <?= input_tag('age', $request->getParameter('age')) ?><br />
-      <label for="message">Message</label> : <?= textarea_tag('message', $request->getParameter('message')) ?><br />
-      <?= submit_tag() ?>
+    <?php echo form_tag('contact/send') ?>
+      <label for="name">Name</label> : <?php echo input_tag('name', $request->getParameter('name')) ?><br />
+      <label for="email">Email</label> : <?php echo input_tag('email', $request->getParameter('email')) ?><br />
+      <label for="age">Age</label> : <?php echo input_tag('age', $request->getParameter('age')) ?><br />
+      <label for="message">Message</label> : <?php echo textarea_tag('message', $request->getParameter('message')) ?><br />
+      <?php echo submit_tag() ?>
     </form>
 
 You can detect whether the form has errors by calling the `->hasErrors()` method of the `sfRequest` object. To get the list of the error messages, you need the method `->getErrors()`. So you should add the following lines at the top of the template:
@@ -142,14 +142,14 @@ You can detect whether the form has errors by calling the `->hasErrors()` method
       Please correct the following errors and resubmit:</p>
       <ul>
       <?php foreach($request->getErrors() as $error): ?>
-        <li><?= $error ?></li>
+        <li><?php echo $error ?></li>
       <?php endforeach ?>
       </ul>
     <?php endif ?>
 
 Now you may suggest that the field with incorrect data should be highlighted, for instance with a repetition of the error message clearly attached to the label with a ‚Üì. To that extent, simply add the following line before every field:
 
-    <?php if ($request->hasError('name')): ?>‚Üì <?= $request->getError('name') ?> ‚Üì<?php endif ?><br />
+    <?php if ($request->hasError('name')): ?>‚Üì <?php echo $request->getError('name') ?> ‚Üì<?php endif ?><br />
 
 Complete configuration file
 ---------------------------

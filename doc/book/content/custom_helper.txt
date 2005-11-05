@@ -53,7 +53,7 @@ Here is an example module using the helper:
 
 And here is the call to the helper in a template of this module:
 
-    <p><?= wiki_to_html('Text with a WikiLink.') ?></p>
+    <p><?php echo wiki_to_html('Text with a WikiLink.') ?></p>
     
 Accessing context objects
 -------------------------

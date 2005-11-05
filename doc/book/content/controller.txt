@@ -98,7 +98,7 @@ This new action seems to do absolutely nothing. But it can easily communicate wi
 
 In this example, the `Index` action gives the view the opportunity to use a variable called `mytext`. In the view (the result of the action), the variable will be called like this:
 
-    Text: <?= $mytext ?>
+    Text: <?php echo $mytext ?>
 
 But you may wonder how the action can choose the view to display its content, since it apparently does nothing. The answer is in the Action return. And, for your information, the action in this example actually did something: it called the default view.
 

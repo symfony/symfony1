@@ -60,14 +60,14 @@ The template `listSuccess.php` can now access the `sfPager` object. This object 
 
 To display the total number of results, use the `->getNbResults()` method:
 
-    <?= $pager->getNbResults() ?> results found.<br />
-    Displaying results <?= $pager->getFirstIndice() ?> to  <?= $pager->getLastIndice() ?>.
+    <?php echo $pager->getNbResults() ?> results found.<br />
+    Displaying results <?php echo $pager->getFirstIndice() ?> to  <?php echo $pager->getLastIndice() ?>.
 
 To display the articles of the requested page, use the `->getResults()` method of the `pager` object to retrieve the objects in the page:
 
     <?php foreach ($pager->getResults() as $article): ?>
-      <?= link_to($article->getTitle(), 'article/read?id='.$article->getId()) ?>
-      <?= $article->getOverview() ?>
+      <?php echo link_to($article->getTitle(), 'article/read?id='.$article->getId()) ?>
+      <?php echo $article->getOverview() ?>
     <?php endforeach ?>
 
 Navigating across pages
@@ -80,14 +80,14 @@ To add the page navigation links at the bottom of the list (« < > »), use the 
 To point to a specific page, loop through the collection of links obtained by a call to the `->getLinks()` method:
 
     <?php if ($pager->haveToPaginate()): ?>
-      <?= link_to('&laquo;', 'article/list?page='.$pager->getFirstPage()) ?>
-      <?= link_to('&lt;', 'article/list?page='.$pager->getPreviousPage()) ?>
+      <?php echo link_to('&laquo;', 'article/list?page='.$pager->getFirstPage()) ?>
+      <?php echo link_to('&lt;', 'article/list?page='.$pager->getPreviousPage()) ?>
       <?php $links = $pager->getLinks(); foreach ($links as $page): ?>
-        <?= ($page == $pager->getPage()) ? $page : link_to($page, 'article/list?page='.$page) ?>
+        <?php echo ($page == $pager->getPage()) ? $page : link_to($page, 'article/list?page='.$page) ?>
         <?php if ($page != $pager->getCurrentMaxLink(): ?> - <?php endif ?>
       <?php endforeach ?>
-      <?= link_to('&gt;', 'article/list?page='.$pager->getNextPage()) ?>
-      <?= link_to('&raquo;', 'article/list?page='.$pager->getLastPage()) ?>
+      <?php echo link_to('&gt;', 'article/list?page='.$pager->getNextPage()) ?>
+      <?php echo link_to('&raquo;', 'article/list?page='.$pager->getLastPage()) ?>
     <?php endif ?>
 
 This should render something like:
@@ -104,8 +104,8 @@ Navigating page by page within the list is easy, but the users might not want to
 This will allow an article by article navigation in the `readSuccess.php` template. First, let's modify a bit of the code of the `listSuccess.php` template:
 
     <?php $cursor = $pager->getFirstIndice(); foreach ($pager->getResults() as $article): ?>
-      <?= link_to($article->getTitle(), 'article/read?cursor='.$cursor) ?>
-      <?= $article->getOverview() ?>
+      <?php echo link_to($article->getTitle(), 'article/read?cursor='.$cursor) ?>
+      <?php echo $article->getOverview() ?>
     <?php ++$cursor; endforeach ?>
 
 The `read` action will need to know how to handle a `cursor` parameter:
@@ -161,14 +161,14 @@ This means that the `read` action can pass to the template the necessary informa
 
 The `readSuccess.php` template could look like:
 
-    <h1><?= $article->getTitle() ?></h1>
-    <p class="overview"><?= $article->getOverview() ?></p>
+    <h1><?php echo $article->getTitle() ?></h1>
+    <p class="overview"><?php echo $article->getOverview() ?></p>
     <div class="content">
-      <?= $article->getContent() ?>
+      <?php echo $article->getContent() ?>
     </div>
-    &lt; <?= link_to_if($previous_article, $previous_article->getTitle(), 'article/read?id='.$previous_article->getId()) ?>
+    &lt; <?php echo link_to_if($previous_article, $previous_article->getTitle(), 'article/read?id='.$previous_article->getId()) ?>
     -
-    &gt; <?= link_to_if($next_article, $next_article->getTitle(), 'article/read?id='.$next_article->getId()) ?>
+    &gt; <?php echo link_to_if($next_article, $next_article->getTitle(), 'article/read?id='.$next_article->getId()) ?>
 
 Changing the sort order
 -----------------------
@@ -208,7 +208,7 @@ You can add the choice of the sort column to the list navigation interface:
 
 Add the following to the `listSuccess.php` template:
 
-    Sort by : <?= link_to('Title', 'article/list?sort=Title' ?> - <?= link_to('Id', 'article/list?sort=Id' ?>
+    Sort by : <?php echo link_to('Title', 'article/list?sort=Title' ?> - <?php echo link_to('Id', 'article/list?sort=Id' ?>
 
 Changing the number of results per page
 ---------------------------------------
@@ -244,7 +244,7 @@ The `->setMaxPerPage($max)` method changes the number of results displayed per p
 
 So you can add the following to the `listSuccess.php` template:
 
-    Display : <?= link_to('10', 'article/list?maxperpage=10' ?> - <?= link_to('20', 'article/list?maxperpage=20' ?> results per page
+    Display : <?php echo link_to('10', 'article/list?maxperpage=10' ?> - <?php echo link_to('20', 'article/list?maxperpage=20' ?> results per page
 
 Storing additional information in the pager
 -----------------------------------------

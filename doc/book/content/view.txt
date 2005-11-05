@@ -14,10 +14,10 @@ The result of an action execution is a View. In symfony, a View is the combinati
 Here is a typical template, typically named `indexSuccess.php`:
 
     <h1>Welcome</h1>
-    <p>Welcome back, <?= $name ?> !</p>
+    <p>Welcome back, <?php echo $name ?> !</p>
     <ul>What would you like yo do ?
-      <li><?= link_to('Read the last articles', 'article/read/') ?></li>
-      <li><?= link_to('Start writing a new one', 'article/write/') ?></li>
+      <li><?php echo link_to('Read the last articles', 'article/read/') ?></li>
+      <li><?php echo link_to('Start writing a new one', 'article/write/') ?></li>
     </ul>
 
 It contains some HTML code and some basic PHP code, usually calls to variables defined in the action and helpers. 
@@ -41,7 +41,7 @@ Symfony provides the templates with a few useful pre-defined variables, or **sho
 
 For instance, if the action call included a parameter `total`, the value of the parameter is available in the template with:
 
-    <?= $params->get('total'); ?>
+    <?php echo $params->get('total'); ?>
 
 This is true whether the parameter was sent to the action with POST or GET methods, or using the symfony routing system:
 
@@ -96,9 +96,9 @@ text and internationalization functions, you can write in the `settings.yml`:
 
 If you need to use a helper that is not loaded by default, the template that will use it has to call the `use_helper()` function:
 
-    <?= use_helper('Date') ?>
+    <?php echo use_helper('Date') ?>
     ...
-    <?= format_date($date, 'd', 'en') ?>
+    <?php echo format_date($date, 'd', 'en') ?>
 
 Global template
 ---------------
@@ -109,20 +109,20 @@ All the templates can be included into a **global template**, or **layout**, loc
     <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
     
-    <?= include_http_metas() ?>
-    <?= include_metas() ?>
+    <?php echo include_http_metas() ?>
+    <?php echo include_metas() ?>
     
-    <?= include_title() ?>
+    <?php echo include_title() ?>
     
-    <?= include_stylesheets() ?>
-    <?= include_javascripts() ?>
+    <?php echo include_stylesheets() ?>
+    <?php echo include_javascripts() ?>
     
     <link rel="shortcut icon" href="/favicon.ico">
     
     </head>
     <body>
     
-    <?= $content ?>
+    <?php echo $content ?>
     
     </body>
     </html>
@@ -143,10 +143,10 @@ The content of the `<head>` tag might be a little cryptic for now, but if will b
     <body>
     
     <h1>Welcome</h1>
-    <p>Welcome back, <?= $name ?> !</p>
+    <p>Welcome back, <?php echo $name ?> !</p>
     <ul>What would you like yo do ?
-      <li><?= link_to('Read the last articles', 'article/read/') ?></li>
-      <li><?= link_to('Start writing a new one', 'article/write/') ?></li>
+      <li><?php echo link_to('Read the last articles', 'article/read/') ?></li>
+      <li><?php echo link_to('Start writing a new one', 'article/write/') ?></li>
     </ul>
     
     </body>
@@ -259,7 +259,7 @@ Let's imagine a slot that defines the application navigation menu:
 
 In the view, we'll now have in the `$navigation_slot` variable the result of the execution of the `menu` action of the `navigation` module. This action will be executed separately from the current action. The templates of the `test` module can now include the result of this action by simply calling:
 
-    <?= $navigation_slot ?>
+    <?php echo $navigation_slot ?>
 
 View configuration
 ------------------
@@ -283,13 +283,13 @@ If you need to include some template code into various pages, but without any pr
 
 For instance, if many of the templates of your `test` module use a fragment of code used to show a special footer, save this piece of code in a file called `_my_special_footer` in the `myproject/myapp/modules/test/templates` directory. Now, when you need this piece of code in a template, just call the `include_partial` function:
 
-    <?= include_partial('my_special_footer') ?>
+    <?php echo include_partial('my_special_footer') ?>
 
 Notice the '_' difference between the file name and the fragment name in the code. This helps to keep your code clean and to show the fragments ahead of the other templates in a file explorer.
 
 If your need is not restricted to one module, save your fragment in the main template directory (in `myproject/myapp/templates`). To call it from any module template, you now need:
 
-    <?= include_partial('global/my_special_footer') ?>
+    <?php echo include_partial('global/my_special_footer') ?>
 
 
 [1]: http://en.wikipedia.org/wiki/Model-view-controller "Model-View-Controller definition at Wikipedia"

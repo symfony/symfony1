@@ -184,15 +184,15 @@ The following example shows a simple `shoppingcartSuccess.php` template based on
     
       <?php foreach ($items as $item): ?>
         <?php $object = call_user_func(array($item->getClass().'Peer', 'retrieveByPK'), $item->getId()) ?> 
-        <?= $object->getLabel() ?><br />
-        <?= $item->getQuantity() ?><br />
-        <?= currency_format($item->getPrice(), 'EUR' ) ?> 
+        <?php echo $object->getLabel() ?><br />
+        <?php echo $item->getQuantity() ?><br />
+        <?php echo currency_format($item->getPrice(), 'EUR' ) ?> 
         <?php if ($item->getDiscount()): >
-           (- <?= $item->getDiscount() ?> %)
+           (- <?php echo $item->getDiscount() ?> %)
         <?php endif ?><br />
       <?php endforeach ?>
       
-      Total : <?= currency_format($shopping_cart->getTotal(), 'EUR' ) ?><br />
+      Total : <?php echo currency_format($shopping_cart->getTotal(), 'EUR' ) ?><br />
     
     <?php endif ?>
 

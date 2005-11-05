@@ -75,13 +75,13 @@ Template adaptation
 
 Let's see how to introduce some text to be translated in a template. If the base template is:
 
-    Welcome to our website. Today's date is <?= date() ?>
+    Welcome to our website. Today's date is <?php echo date() ?>
 
 The internationalized version should be:
 
-    <?= __('Welcome to our website.') ?>
-    <?= __('Today's date is ') ?>
-    <?= date() ?>
+    <?php echo __('Welcome to our website.') ?>
+    <?php echo __('Today's date is ') ?>
+    <?php echo date() ?>
 
 The `__()` shortcuts require as single argument the text to be translated. This text must match a node in the XLIFF file. During display, the localized version adapted to the user culture will automatically replace the text of the template.
 

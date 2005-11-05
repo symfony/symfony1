@@ -70,20 +70,20 @@ The default global template created when you initialize an application, is calle
     <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
     
-    <?= include_http_metas() ?>
-    <?= include_metas() ?>
+    <?php echo include_http_metas() ?>
+    <?php echo include_metas() ?>
     
-    <?= include_title() ?>
+    <?php echo include_title() ?>
     
-    <?= include_stylesheets() ?>
-    <?= include_javascripts() ?>
+    <?php echo include_stylesheets() ?>
+    <?php echo include_javascripts() ?>
     
     <link rel="shortcut icon" href="/favicon.ico">
     
     </head>
     <body>
     
-    <?= $content ?>
+    <?php echo $content ?>
     
     </body>
     </html>
@@ -131,7 +131,7 @@ When applied to the layout, these settings produce the following `<head>` sectio
     </head>
     <body>
     
-    <?= $content ?>
+    <?php echo $content ?>
     
     </body>
     </html>
@@ -183,7 +183,7 @@ When the template is included in the layout, the `include_` helpers of the `<hea
     <meta name="description" content="Finance in France" />
     <meta name="keywords" content="finance, France" />   
 
-As a bonus, the HTTP header of the HTML file will also contain the `http-metas` setting. This means this if you need to modify the HTTP headers, the `http-metas` section of the `view.yml` is the solution, even if you don't have any `<?= include_http_metas() ?>` in the layout -- or if you have no layout. For instance, if you need to send a page as plain text, type:
+As a bonus, the HTTP header of the HTML file will also contain the `http-metas` setting. This means this if you need to modify the HTTP headers, the `http-metas` section of the `view.yml` is the solution, even if you don't have any `<?php echo include_http_metas() ?>` in the layout -- or if you have no layout. For instance, if you need to send a page as plain text, type:
 
     http_metas:
       content-type: text/plain
@@ -195,7 +195,7 @@ Title configuration
 
 Page title is a key part to search engine indexing; it is also very useful with modern browsers that propose tabbed-browsing.
 
-To have a custom title for every page, take advantage of the  `<?= include_title() ?>` call in the `<head>` part of the layout.
+To have a custom title for every page, take advantage of the  `<?php echo include_title() ?>` call in the `<head>` part of the layout.
 
 If your title only depends on the view, you should specify `title` in the `view.yml`:
 
@@ -313,7 +313,7 @@ Imagine that you have a layout with a zone for contextual advices:
 
     ...
     <div id="adviceBlock">
-      <?= $advices ?>
+      <?php echo $advices ?>
     </div>
     ...
 

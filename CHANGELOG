@@ -1,6 +1,7 @@
 SVN
 ---
 
+* [fabien] removed tiny mce from symfony package
 * [fabien] rich text support (tinymce) for textarea_tag helper
 * [marc]   IIS support
 * [fabien] module helpers support (lib/helper directory of a module)

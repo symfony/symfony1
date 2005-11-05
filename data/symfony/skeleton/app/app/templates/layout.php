@@ -2,20 +2,20 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 
-<?= include_http_metas() ?>
-<?= include_metas() ?>
+<?php echo include_http_metas() ?>
+<?php echo include_metas() ?>
 
-<?= include_title() ?>
+<?php echo include_title() ?>
 
-<?= include_stylesheets() ?>
-<?= include_javascripts() ?>
+<?php echo include_stylesheets() ?>
+<?php echo include_javascripts() ?>
 
 <link rel="shortcut icon" href="/favicon.ico">
 
 </head>
 <body>
 
-<?= $content ?>
+<?php echo $content ?>
 
 </body>
 </html>

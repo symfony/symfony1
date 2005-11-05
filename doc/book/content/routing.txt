@@ -217,7 +217,7 @@ Until now, the `routing.yml` file only helped to reproduce the `mod_rewrite` beh
 
 In symfony, when you write a link in a template, you use the `link_to()` helper:
 
-    <?= link_to($article->getTitle(), '/article/read?id='.$article->getId()) ?>
+    <?php echo link_to($article->getTitle(), '/article/read?id='.$article->getId()) ?>
 
 To read more about this helper, check the chapter about [link helpers](templating_link_helpers.txt). With the default routing configuration, this outputs the following HTML code:
 
@@ -272,7 +272,7 @@ You can have a different value for each environment.
 
 With routing deactivated, a call to 
 
-    <?= link_to($article->getTitle(), '/article/read?id='.$article->getId()) ?>
+    <?php echo link_to($article->getTitle(), '/article/read?id='.$article->getId()) ?>
 
 will generate in HTML
 

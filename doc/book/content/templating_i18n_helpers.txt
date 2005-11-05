@@ -19,10 +19,10 @@ First, declare the need of the helper at the top of your template:
 
 Here are two functions aimed at date and date plus time display:
 
-    <?= format_date($date) ?>
-    <?= format_date($date, 'd', 'en') ?>
+    <?php echo format_date($date) ?>
+    <?php echo format_date($date, 'd', 'en') ?>
 
-    <?= format_datetime($date) ?>
+    <?php echo format_datetime($date) ?>
     
 The second argument is the format, that can be specified either with predefined patterns:
 
@@ -40,11 +40,11 @@ Or directly with the basic keys.
 
 For instance, to display the month with 2 digits and the year with 4, you can write:
 
-    <?= format_date($date, 'MM/yyyy') ?>
+    <?php echo format_date($date, 'MM/yyyy') ?>
 
 And if you have a date interval, another helper manages all the cases for you:
 
-    <?= format_daterange($start_date, $end_date, 'MM/yy', 'from %s to %s', 'starting from %s', 'until %s') ?>
+    <?php echo format_daterange($start_date, $end_date, 'MM/yy', 'from %s to %s', 'starting from %s', 'until %s') ?>
 
 The last three arguments specify the text to be used when:
 
@@ -63,7 +63,7 @@ It is also possible to format a number:
 
     <?php use_helper('Number') ?>
     
-    <?= format_number(12000.10) ?>
+    <?php echo format_number(12000.10) ?>
     // will generate in HTML for an American user
     12,000.10
     // will generate in HTML for a French user
@@ -71,7 +71,7 @@ It is also possible to format a number:
     
 To format a monetary amount, use the `currency_format` function. It takes as optional argument the ISO currency code of your amount.
 
-    <?= format_currency(12000.10, 'EUR') ?>
+    <?php echo format_currency(12000.10, 'EUR') ?>
     // will generate in HTML for an American user
     €12,000.10
     // will generate in HTML for a French user
@@ -79,8 +79,8 @@ To format a monetary amount, use the `currency_format` function. It takes as opt
 
 The last two helpers are here to return a text version of the interval separating two dates:
 
-    <?= distance_of_time_in_words($from_time, $to_time, $include_seconds = false) ?>
-    <?= time_ago_in_words($from_time, $include_seconds = false) ?>
+    <?php echo distance_of_time_in_words($from_time, $to_time, $include_seconds = false) ?>
+    <?php echo time_ago_in_words($from_time, $include_seconds = false) ?>
 
 Country and language names
 --------------------------
@@ -92,13 +92,13 @@ In order to use the internationalization helpers, you must include the `I18N` he
 
     <?php use_helper('I18N') ?>
 
-    <?= format_country('GB') ?>    
+    <?php echo format_country('GB') ?>    
     // will generate in HTML for an American user
     Great Britain
     // will generate in HTML for a French user
     Grande-Bretagne
     
-    <?= format_language('EN') ?>    
+    <?php echo format_language('EN') ?>    
     // will generate in HTML for an American user
     English
     // will generate in HTML for a French user
