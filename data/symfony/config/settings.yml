@@ -65,3 +65,5 @@ default:
 
     # E_ERROR | E_USER_ERROR = 257
     error_reporting:        257
+
+    rich_text_js_dir:       js/tiny_mce

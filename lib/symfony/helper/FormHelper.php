@@ -180,9 +180,22 @@ function input_password_tag($name = 'password', $value = null, $options = array(
   return input_tag($name, $value, $options);
 }
 
+/**
+ * example user css file
+ / * user: foo * / => without spaces. 'foo' is the name in the select box
+ .cool {
+ color: #f00;
+ }
+ */
 function textarea_tag($name, $content = null, $options = array())
 {
   $options = _parse_attributes($options);
+
+  if (array_key_exists('size', $options))
+  {
+    list($options['cols'], $options['rows']) = split('x', $options['size'], 2);
+    unset($options['size']);
+  }
 
   // rich control?
   $rich = false;
@@ -194,16 +207,70 @@ function textarea_tag($name, $content = null, $options = array())
 
   if ($rich)
   {
-    throw new sfException('input_date_tag (rich=on) is not yet implemented');
-  }
+    // tinymce installed?
+    $js_path = defined('SF_RICH_TEXT_JS_DIR') ? '/'.SF_RICH_TEXT_JS_DIR.'/tiny_mce.js' : '/sf/js/tinymce/tiny_mce.js';
+    if (!is_readable(SF_WEB_DIR.$js_path))
+    {
+      throw new sfConfigurationException('You must install Tiny MCE to use this helper (see rich_text_js_dir settings).');
+    }
 
-  if (array_key_exists('size', $options))
+    sfContext::getInstance()->getRequest()->setAttribute('tinymce', $js_path, 'helper/asset/auto/javascript');
+
+    require_once('symfony/helper/JavascriptHelper.php');
+
+    $tinymce_options = '';
+    $style_selector  = '';
+
+    // custom CSS file?
+    if (isset($options['css']))
+    {
+      $css_file = $options['css'];
+      unset($options['css']);
+
+      $css_path = stylesheet_path($css_file);
+
+      sfContext::getInstance()->getRequest()->setAttribute('tinymce', $css_path, 'helper/asset/auto/stylesheet');
+
+      $css    = file_get_contents(SF_WEB_DIR.DIRECTORY_SEPARATOR.$css_path);
+      $styles = array();
+      preg_match_all('#^/\*\s*user\:\s*(.+?)\s*\*/\s*\015?\012\s*\.([^\s]+)#smi', $css, $matches, PREG_SET_ORDER);
+      foreach ($matches as $match)
+      {
+        $styles[] = $match[1].'='.$match[2];
+      }
+
+      $tinymce_options .= '  content_css: "'.$css_path.'",'."\n";
+      $tinymce_options .= '  theme_advanced_styles: "'.implode(';', $styles).'",'."\n";
+      $style_selector   = 'styleselect,separator,';
+    }
+
+    $tinymce_js = '
+tinyMCE.init({
+  mode: "exact",
+  language: "en",
+  elements: "'.$name.'",
+  plugins: "table,advimage,advlink,flash",
+  theme: "advanced",
+  theme_advanced_toolbar_location: "top",
+  theme_advanced_toolbar_align: "left",
+  theme_advanced_path_location: "bottom",
+  theme_advanced_buttons1: "'.$style_selector.'justifyleft,justifycenter,justifyright,justifyfull,separator,bold,italic,strikethrough,separator,sub,sup,separator,charmap",
+  theme_advanced_buttons2: "bullist,numlist,separator,outdent,indent,separator,undo,redo,separator,link,unlink,image,flash,separator,cleanup,removeformat,separator,code",
+  theme_advanced_buttons3: "tablecontrols",
+  extended_valid_elements: "img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name]",
+  relative_urls: false,
+  debug: false,
+  '.$tinymce_options.'
+});';
+
+    return 
+      content_tag('script', javascript_cdata_section($tinymce_js), array('type' => 'text/javascript')).
+      content_tag('textarea', $content, array_merge(array('name' => $name, 'id' => $name), _convert_options($options)));
+  }
+  else
   {
-    list($options['cols'], $options['rows']) = split('x', $options['size'], 2);
-    unset($options['size']);
+    return content_tag('textarea', htmlspecialchars($content), array_merge(array('name' => $name, 'id' => $name), _convert_options($options)));
   }
-
-  return content_tag('textarea', htmlspecialchars($content), array_merge(array('name' => $name, 'id' => $name), _convert_options($options)));
 }
 
 function checkbox_tag($name, $value = '1', $checked = false, $options = array())

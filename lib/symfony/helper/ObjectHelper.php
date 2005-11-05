@@ -20,41 +20,6 @@ require_once('symfony/helper/FormHelper.php');
  */
 
 /**
- * Returns an html textarea html tag.
- *
- * @param object An object.
- * @param string An object column.
- * @param array Html textarea options.
- * @param bool Html textarea default value.
- *
- * @return string An html string which represents an html textarea tag.
- *
- */
-/* FIXME
-function object_htmltext_tag($object, $method, $options = array(), $default_value = null)
-{
-  $ctl = new sfHtmlTextControl();
-  $ctl->init();
-  $ctl->setName(strtolower($method));
-  $ctl->setAttribute('id', strtolower($method));
-  if ($value !== null)
-  {
-    $ctl->setValue($value);
-  }
-  else
-  {
-    $ctl->setValue($object->getByName(constant(get_class($object).'Peer::'.strtoupper($method))));
-  }
-
-  sfContext::getInstance()->getRequest()->setAttribute('htmltext', $ctl->getJs(), 'helper/asset/auto/javascript');
-
-  $ctl = _setControlCommonAttributes($ctl, $options);
-
-  return $ctl->render();
-}
-*/
-
-/**
  * Returns a html date control.
  *
  * @param object An object.
