@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version $Revision: 1.2 $  $Date: 2005/01/05 03:15:14 $
+ * @version $Revision: 1.3 $  $Date: 2005/08/04 05:27:19 $
  * @package System.I18N.core
  */
  
@@ -280,7 +280,8 @@ class NumberFormatInfo
 		$info['posPref'] = $posfix[0];
 		$info['posPost'] = $posfix[1];
 
-		
+		//var_dump($pattern);
+		//var_dump($decimalPos);
 		if(is_int($groupPos1))
 		{
 			//get the second group
@@ -290,15 +291,7 @@ class NumberFormatInfo
 			if(is_int($decimalPos))
 			{
 				$groupSize1 = $decimalPos - $groupPos1-1;
-				for($i=strlen($pattern)-1; $i>=0; $i--)
-				{
-					if($pattern{$i} == $dot) break;
-					if($pattern{$i} == $digit)
-					{
-						$decimalPoints = $i - $decimalPos;
-						break;
-					}
-				}
+	
 			}
 			else
 			{
@@ -317,6 +310,19 @@ class NumberFormatInfo
 			//get the second group size
 			if(is_int($groupPos2))
 				$groupSize2 = $groupPos1 - $groupPos2-1;
+		}
+
+		if(is_int($decimalPos))
+		{
+			for($i=strlen($pattern)-1; $i>=0; $i--)
+			{
+				if($pattern{$i} == $dot) break;
+				if($pattern{$i} == $digit)
+				{
+					$decimalPoints = $i - $decimalPos;
+					break;
+				}
+			}
 		}
 
 		$info['groupPos1'] = $groupPos1;

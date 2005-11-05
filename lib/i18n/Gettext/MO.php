@@ -12,7 +12,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version $Revision: 1.2 $  $Date: 2005/01/05 03:15:14 $
+ * @version $Revision: 1.3 $  $Date: 2005/08/27 03:21:12 $
  * @package System.I18N.core
  */
 
@@ -29,7 +29,7 @@
 // | Copyright (c) 2004 Michael Wallner <mike@iworks.at>                  |
 // +----------------------------------------------------------------------+
 //
-// $Id: MO.php,v 1.2 2005/01/05 03:15:14 weizhuo Exp $
+// $Id: MO.php,v 1.3 2005/08/27 03:21:12 weizhuo Exp $
 
 /**
  * File::Gettext::MO
@@ -46,7 +46,7 @@ require_once dirname(__FILE__).'/TGettext.php';
  * GNU MO file reader and writer.
  *
  * @author      Michael Wallner <mike@php.net>
- * @version     $Revision: 1.2 $
+ * @version     $Revision: 1.3 $
  * @access      public
  * @package System.I18N.core 
  */
@@ -106,7 +106,9 @@ class TGettext_MO extends TGettext
      */
     function _readInt($bigendian = false)
     {
-        return array_shift(unpack($bigendian ? 'N' : 'V', $this->_read(4)));
+		//unpack returns a reference????
+		$unpacked = unpack($bigendian ? 'N' : 'V', $this->_read(4));
+        return array_shift($unpacked);
     }
     
     /**
@@ -183,7 +185,10 @@ class TGettext_MO extends TGettext
         }
         
         // read (part of) magic number from MO file header and define endianess
-        switch ($magic = array_shift(unpack('c', $this->_read(4))))
+
+		//unpack returns a reference????
+		$unpacked = unpack('c', $this->_read(4));
+        switch ($magic = array_shift($unpacked))
         {
             case -34:
                 $be = false;

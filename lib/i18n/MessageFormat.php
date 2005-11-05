@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version $Revision: 1.3 $  $Date: 2005/01/09 22:15:32 $
+ * @version $Revision: 1.5 $  $Date: 2005/08/27 03:21:12 $
  * @package System.I18N.core
  */
 
@@ -21,6 +21,11 @@
  * Get the MessageSource classes.
  */
 require_once(dirname(__FILE__).'/MessageSource.php');
+
+/**
+ * Get the encoding utilities
+ */
+require_once(dirname(__FILE__).'/util.php');
 
 /**
  * MessageFormat class.
@@ -85,14 +90,40 @@ class MessageFormat
 	public $Catalogue;
 
 	/**
+	 * Output encoding charset
+	 * @var string
+	 */
+	protected $charset = 'UTF-8'; 
+
+	/**
 	 * Constructor.
 	 * Create a new instance of MessageFormat using the messages
 	 * from the supplied message source.
 	 * @param MessageSource the source of translation messages.
+	 * @param string charset for the message output.
 	 */
-	function __construct(IMessageSource $source)
+	function __construct(IMessageSource $source, $charset='UTF-8')
 	{
 		$this->source = $source;	
+		$this->setCharset($charset);
+	}
+
+	/** 
+	 * Sets the charset for message output.
+	 * @param string charset, default is UTF-8
+	 */
+	public function setCharset($charset)
+	{
+		$this->charset = $charset;
+	}
+
+	/**
+	 * Gets the charset for message output. Default is UTF-8.
+	 * @return string charset, default UTF-8
+	 */
+	public function getCharset()
+	{
+		return $this->charset;
 	}
 	
 	/**
@@ -119,13 +150,30 @@ class MessageFormat
 	 * the corresponding translation. Variable subsitution is performed
 	 * for the $args parameter. A different catalogue can be specified
 	 * using the $catalogue parameter.
+	 * The output charset is determined by $this->getCharset();
+	 * @param string the string to translate.
+	 * @param array a list of string to substitute.
+	 * @param string get the translation from a particular message
+	 * @param string charset, the input AND output charset
+	 * catalogue.
+	 * @return string translated string.
+	 */
+	public function format($string,$args=array(), $catalogue=null, $charset=null) 
+	{
+		if(empty($charset)) $charset = $this->getCharset();
+		$s = $this->formatString(I18N_toUTF8($string, $charset),$args,$catalogue);
+		return I18N_toEncoding($s, $charset);
+	}
+
+	/**
+	 * Do string translation.
 	 * @param string the string to translate.
 	 * @param array a list of string to substitute.
 	 * @param string get the translation from a particular message
 	 * catalogue.
 	 * @return string translated string.
 	 */
-	function format($string, $args=array(), $catalogue=null)
+	protected function formatString($string, $args=array(), $catalogue=null)
 	{		
 		if(empty($catalogue))
 		{

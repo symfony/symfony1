@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version $Revision: 1.3 $  $Date: 2005/04/24 00:21:15 $
+ * @version $Revision: 1.4 $  $Date: 2005/08/27 03:21:12 $
  * @package System.I18N.core
  */
 
@@ -21,6 +21,13 @@
  * Get the NumberFormatInfo class file.
  */
 require_once(dirname(__FILE__).'/NumberFormatInfo.php');
+
+
+/**
+ * Get the encoding utilities
+ */
+require_once(dirname(__FILE__).'/util.php');
+
 
 /**
  * NumberFormat class.
@@ -56,7 +63,7 @@ require_once(dirname(__FILE__).'/NumberFormatInfo.php');
  *  $ja = new NumberFormat('ja_JP');
  * 
  *  //Japanese currency pattern, and using Japanese Yen symbol
- *  $ja->format(123.14,'c','JPY'); //￥123 (Yen 123)
+ *  $ja->format(123.14,'c','JPY'); //�?123 (Yen 123)
  * </code>
  * For each culture, the symbol for each currency may be different.
  * 
@@ -106,7 +113,7 @@ class NumberFormat
 	 * "USD" represents the US Dollar and "EUR" represents the Euro currency.
 	 * @return string formatted number string 
 	 */
-	function format($number, $pattern='d', $currency='USD')
+	function format($number, $pattern='d', $currency='USD', $charset='UTF-8')
 	{
 		$this->setPattern($pattern);
 				
@@ -142,7 +149,7 @@ class NumberFormat
 
 		$result = str_replace('¤',$symbol, $result);
 		
-		return $result;
+		return I18N_toEncoding($result, $charset);
 	}
 		
 	/**

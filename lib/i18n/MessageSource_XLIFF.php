@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version $Revision: 1.5 $  $Date: 2005/02/25 09:59:40 $
+ * @version $Revision: 1.6 $  $Date: 2005/08/27 03:21:12 $
  * @package System.I18N.core
  */
 
@@ -265,8 +265,7 @@ class MessageSource_XLIFF extends MessageSource
 	 */
 	public function save($catalogue='messages')
 	{
-		$messages = $this->untranslated;
-		
+		$messages = $this->untranslated;	
 		if(count($messages) <= 0) return false;		
 
 		$variants = $this->getVariants($catalogue);

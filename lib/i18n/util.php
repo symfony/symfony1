@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version $Revision: 1.2 $  $Date: 2005/01/05 03:15:14 $
+ * @version $Revision: 1.3 $  $Date: 2005/08/27 03:21:12 $
  * @package System.I18N.core
  */
 
@@ -138,5 +138,38 @@
 
         return $parsed;
     }
+    
+   
+	/**
+	 * Convert strings to UTF-8 via iconv. NB, the result may not by UTF-8 
+	 * if the conversion failed.
+	 * @param string string to convert to UTF-8
+	 * @return string UTF-8 encoded string, original string if iconv failed.
+	 */
+	function I18N_toUTF8($string, $from)
+	{
+		if($from != 'UTF-8')
+		{
+			$s = iconv($from,'UTF-8',$string); //to UTF-8
+			return $s !== false ? $s : $string; //it could return false
+		}
+		return $string;
+	}
+
+	/** 
+	 * Convert UTF-8 strings to a different encoding. NB. The result
+	 * may not have been encoded if iconv fails.
+	 * @param string the UTF-8 string for conversion
+	 * @return string encoded string.
+	 */
+	function I18N_toEncoding($string, $to)
+	{
+		if($to != 'UTF-8')
+		{
+			$s = iconv('UTF-8', $to, $string);
+			return $s !== false ? $s : $string;
+		}
+		return $string;
+	} 
     
 ?>

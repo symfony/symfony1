@@ -12,7 +12,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version $Revision: 1.4 $  $Date: 2005/01/05 03:15:14 $
+ * @version $Revision: 1.7 $  $Date: 2005/08/27 03:21:12 $
  * @package System.I18N.core
  */
 
@@ -20,6 +20,11 @@
  * Get the DateTimeFormatInfo class.
  */
 require_once(dirname(__FILE__).'/DateTimeFormatInfo.php');
+
+/**
+ * Get the encoding utilities
+ */
+require_once(dirname(__FILE__).'/util.php');
 
 /**
  * DateFormat class.
@@ -103,7 +108,7 @@ class DateFormat
 	 * @param mixed the time as integer or string in strtotime format.
 	 * @return string formatted date time. 
 	 */
-	public function format($time, $pattern='F')
+	public function format($time, $pattern='F', $charset='UTF-8')
 	{
 		if(is_string($time))
 			$time = strtotime($time);
@@ -143,9 +148,9 @@ class DateFormat
 			}
 		}
 		
-		return implode('',$tokens);
+		return I18N_toEncoding(implode('',$tokens), $charset);
 	}
-	
+		
 	/**
 	 * For a particular token, get the corresponding function to call.
 	 * @param string token
@@ -540,7 +545,7 @@ class DateFormat
 		if($pattern != 'z')
 			throw new Exception('The pattern for time zone is "z".');
 
-		return date('T',$date[0]);
+		return date('T', mktime($date['hours'], $date['minutes'], $date['seconds'], $date['mon'], $date['mday'], $date['year']));
 	}
 
 	/**
@@ -559,18 +564,22 @@ class DateFormat
 
 	/**
 	 * Get day in the month. 
-	 * Not sure on how to implement this.
-	 * @todo Implement day in the month.
-	 * @return string
+	 * @param array getdate format.
+	 * @param string a pattern.
+	 * @return int day in month
 	 */	
-	protected function getDayInMonth($date, $pattern='F')
+	protected function getDayInMonth($date, $pattern='FF')
 	{
-		
-		if($pattern != 'F')
-			throw new Exception('The pattern for day in month is "F".');
-
-		//any ideas?
-		return 0;
+		switch ($pattern) {
+		    case 'F':
+		      return date('j', mktime(0, 0, 0, $date['mon'], $date['mday'], $date['year']));
+		      break;
+		    case 'FF':
+		      return date('d', mktime(0, 0, 0, $date['mon'], $date['mday'], $date['year']));
+		      break;
+		    default:
+		      throw new Exception('The pattern for day in month is "F" or "FF".');
+		}
 	}
 	
 	/**
@@ -584,22 +593,20 @@ class DateFormat
 		if($pattern != 'w')
 			throw new Exception('The pattern for week in year is "w".');
 
-		return intval(strftime('%V',$date[0]));
+		return date('W', mktime(0, 0, 0, $date['mon'], $date['mday'], $date['year']));
 	}
 
 	/**
 	 * Get week in the month. 
-	 * Not sure on how to implemen this.
-	 * @todo Implement week in the month.
-	 * @return int
+	 * @param array getdate format.
+	 * @return int week in month
 	 */
 	protected function getWeekInMonth($date, $pattern='W')
 	{
 		if($pattern != 'W')
 			throw new Exception('The pattern for week in month is "W".');
 		
-		//hmm, what to do?
-		return 0;
+		return date('W', mktime(0, 0, 0, $date['mon'], $date['mday'], $date['year'])) - date('W', mktime(0, 0, 0, $date['mon'], 1, $date['year']));
 	}
 
 	/**

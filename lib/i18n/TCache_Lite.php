@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version $Revision: 1.2 $  $Date: 2005/01/05 03:15:14 $
+ * @version $Revision: 1.3 $  $Date: 2005/10/09 10:24:12 $
  * @package System.I18N.core
  */
  
@@ -38,7 +38,7 @@
 * Mike BENOIT <ipso@snappymail.ca>
 *
 * @package System.I18N.core
-* @version $Id: TCache_Lite.php,v 1.2 2005/01/05 03:15:14 weizhuo Exp $
+* @version $Id: TCache_Lite.php,v 1.3 2005/10/09 10:24:12 weizhuo Exp $
 * @author Fabien MARTY <fab@php.net>
 */
 class TCache_Lite
@@ -292,7 +292,7 @@ class TCache_Lite
             if (($data) and ($this->_memoryCaching)) {
                 $this->_memoryCacheAdd($this->_file, $data);
             }
-            if ($this->_automaticSerialization) {
+            if ($this->_automaticSerialization && is_string($data)) {
                 $data = unserialize($data);
             }
             return $data;
