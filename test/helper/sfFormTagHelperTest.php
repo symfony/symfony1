@@ -3,6 +3,8 @@
 require_once 'symfony/helper/TagHelper.php';
 require_once 'symfony/helper/FormHelper.php';
 require_once 'symfony/core/sfContext.class.php';
+require_once 'symfony/exception/sfException.class.php';
+require_once 'symfony/exception/sfViewException.class.php';
 
 Mock::generate('sfContext');
 
@@ -83,6 +85,46 @@ class sfFormTagHelperTest extends UnitTestCase
     $actual = input_tag('title', 'Hello!', 'class=admin');
     $expected = '<input type="text" name="title" id="title" value="Hello!" class="admin" />';
     $this->assertEqual($expected, $actual);
+  }
+
+  public function test_object_for_select()
+  {
+    require_once('TestObject.php');
+
+    $obj1 = new TestObject();
+    $obj2 = new TestObject();
+
+    $actual = objects_for_select(Array($obj1, $obj2), 'getValue', 'getText');
+    $expected = '<option value="value">text</option><option value="value">text</option>';
+    $this->assertEqual($expected, $actual);
+
+    $actual = objects_for_select(Array($obj1, $obj2), 'getValue');
+    $expected = '<option value="value">value</option><option value="value">value</option>';
+    $this->assertEqual($expected, $actual);
+
+    try
+    {
+      $actual = objects_for_select(Array($obj1, $obj2), 'getNonExistantMethod');
+      $this->assertEqual($expected, $actual);
+
+      $this->assertTrue(0);
+    }
+    catch (sfViewException $e)
+    {
+      $this->assertTrue(1);
+    }
+
+    try
+    {
+      $actual = objects_for_select(Array($obj1, $obj2), 'getValue', 'getNonExistantMethod');
+      $this->assertEqual($expected, $actual);
+
+      $this->assertTrue(0);
+    }
+    catch (sfViewException $e)
+    {
+      $this->assertTrue(1);
+    }
   }
 
 /*

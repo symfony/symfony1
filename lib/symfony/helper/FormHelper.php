@@ -61,6 +61,52 @@ function options_for_select($options = array(), $selected = null)
 }
 
 /*
+      # Accepts a container of objects, the method name to use for the value, and the method name to use for the display. It returns 
+      # a string of option tags. 
+      # NOTE: Only the option tags are returned, you have to wrap this call in a regular HTML select tag.
+*/
+function objects_for_select($options = array(), $value_method, $text_method = null, $selected = null)
+{
+  $html_options = '';
+  foreach($options as $option)
+  {
+    // text method exists?
+    if ($text_method && !method_exists($option, $text_method))
+    {
+      $error = 'Method "%s" does\'t exists for object of class "%s"';
+      $error = sprintf($error, $text_method, get_class($option));
+
+      throw new sfViewException($error);
+    }
+
+    // value method exists?
+    if (!method_exists($option, $value_method))
+    {
+      $error = 'Method "%s" does\'t exists for object of class "%s"';
+      $error = sprintf($error, $value_method, get_class($option));
+
+      throw new sfViewException($error);
+    }
+
+    $value = $option->$value_method();
+    $key = ($text_method != null) ? $option->$text_method() : $value;
+
+    $html_options .= '<option value="'.$value.'"';
+    if (
+      (is_array($selected) && in_array($key, $selected))
+      ||
+      ($value == $selected)
+    )
+    {
+      $html_options .= ' selected="selected"';
+    }
+    $html_options .= '>'.$key.'</option>';
+  }
+
+  return $html_options;
+}
+
+/*
     # Starts a form tag that points the action to an url configured with <tt>url_for_options</tt> just like
     # ActionController::Base#url_for. The method for the form defaults to POST.
     #
