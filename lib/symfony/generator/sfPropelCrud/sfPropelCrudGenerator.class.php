@@ -31,7 +31,7 @@ class sfPropelCrudGenerator extends sfGenerator
     $primaryKey          = array(),
     $className           = '';
 
-  public function generate($generator, $class, $param)
+  public function generate($class, $param)
   {
     $required_parameters = array('model_class', 'moduleName');
     foreach ($required_parameters as $entry)
@@ -95,32 +95,12 @@ class sfPropelCrudGenerator extends sfGenerator
     // template directory
     $template_dir = dirname(__FILE__).'/template';
 
-    $this->generatePhpFiles($generator, $template_dir);
+    $this->generatePhpFiles($this->generatedModuleName, $template_dir);
 
     // require generated action class
     $data = "require_once(SF_MODULE_CACHE_DIR.'/{$this->generatedModuleName}/actions/actions.class.php')\n";
 
     return $data;
-  }
-
-  public function generatePhpFiles($generator, $template_dir)
-  {
-    // eval actions file
-    $retval = $this->evalTemplate($template_dir.'/actions/actions.class.php', __CLASS__);
-
-    // save actions class
-    $generator->getCache()->set('actions.class.php', $this->generatedModuleName.DIRECTORY_SEPARATOR.'actions', $retval);
-
-    // generate template files
-    $templates = array('listSuccess', 'editSuccess', 'showSuccess');
-    foreach ($templates as $template)
-    {
-      // eval template file
-      $retval = $this->evalTemplate($template_dir.'/templates/'.$template.'.php', __CLASS__);
-
-      // save actions class
-      $generator->getCache()->set($template.'.php', $this->generatedModuleName.DIRECTORY_SEPARATOR.'templates', $retval);
-    }
   }
 
   public function getGeneratedModuleName()
