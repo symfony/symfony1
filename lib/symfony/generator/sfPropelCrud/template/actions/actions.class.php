@@ -37,7 +37,17 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
   {
     $<?php echo $this->getSingularName() ?> = $this->get<?php echo $this->getClassName() ?>OrCreate();
 
-    $<?php echo $this->getSingularName() ?>->fromArray($this->getRequest()->getParameterHolder()->getAll(), <?php echo $this->getClassName() ?>::TYPE_FIELDNAME);
+<?php foreach ($this->getTableMap()->getColumns() as $column): $type = $column->getCreoleType(); ?>
+<?php if ($type == CreoleTypes::DATE): ?>
+    list($d, $m, $y) = sfI18N::getDateForCulture($this->getRequestParameter('<?php echo $this->translateFieldName($column->getPhpName()) ?>'), $this->getUser()->getCulture());
+    $<?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>("$y-$m-$d");
+<?php elseif ($type == CreoleTypes::BOOLEAN): ?>
+    $<?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>($this->getRequestParameter('<?php echo $this->translateFieldName($column->getPhpName()) ?>', 0));
+<?php else: ?>
+    $<?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>($this->getRequestParameter('<?php echo $this->translateFieldName($column->getPhpName()) ?>'));
+<?php endif ?>
+<?php endforeach ?>
+
     $<?php echo $this->getSingularName() ?>->save();
 
     return $this->redirect('<?php echo $this->getModuleName() ?>/show?<?php echo $this->getPrimaryKeyUrlParams() ?>);<?php //' ?>

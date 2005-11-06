@@ -24,8 +24,6 @@ class sfPropelCrudGenerator extends sfGenerator
     $singularName        = '',
     $pluralName          = '',
     $peerClassName       = '',
-    $generatedModuleName = '',
-    $moduleName          = '',
     $map                 = null,
     $tableMap            = null,
     $primaryKey          = array(),
@@ -58,8 +56,8 @@ class sfPropelCrudGenerator extends sfGenerator
     $this->setScaffoldingClassName($modelClass);
 
     // generated module name
-    $this->generatedModuleName = 'auto'.ucfirst($param['moduleName']);
-    $this->moduleName = $param['moduleName'];
+    $this->setGeneratedModuleName('auto'.ucfirst($param['moduleName']));
+    $this->setModuleName($param['moduleName']);
 
     // get some model metadata
     $c = $this->className;
@@ -101,16 +99,6 @@ class sfPropelCrudGenerator extends sfGenerator
     $data = "require_once(SF_MODULE_CACHE_DIR.'/{$this->generatedModuleName}/actions/actions.class.php')\n";
 
     return $data;
-  }
-
-  public function getGeneratedModuleName()
-  {
-    return $this->generatedModuleName;
-  }
-
-  public function getModuleName()
-  {
-    return $this->moduleName;
   }
 
   public function getRetrieveByPkParamsForShow()

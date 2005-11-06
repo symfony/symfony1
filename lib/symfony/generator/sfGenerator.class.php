@@ -18,7 +18,10 @@
  */
 abstract class sfGenerator
 {
-  protected $generatorManager = null;
+  protected
+    $generatorManager    = null,
+    $generatedModuleName = '',
+    $moduleName          = '';
 
   public function initialize($generatorManager)
   {
@@ -78,6 +81,26 @@ abstract class sfGenerator
   protected function getGeneratorManager()
   {
     return $this->generatorManager;
+  }
+
+  public function getGeneratedModuleName()
+  {
+    return $this->generatedModuleName;
+  }
+
+  public function setGeneratedModuleName($module_name)
+  {
+    $this->generatedModuleName = $module_name;
+  }
+
+  public function getModuleName()
+  {
+    return $this->moduleName;
+  }
+
+  public function setModuleName($module_name)
+  {
+    $this->moduleName = $module_name;
   }
 }
 
