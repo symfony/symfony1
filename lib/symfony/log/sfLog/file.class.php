@@ -1,23 +1,23 @@
 <?php
 /**
- * $Header: /repository/pear/Log/Log/file.php,v 1.37 2004/01/19 08:02:40 jon Exp $
+ * $Header: /repository/pear/sfLog/sfLog/file.php,v 1.37 2004/01/19 08:02:40 jon Exp $
  *
  * @version $Revision: 1.37 $
- * @package Log
+ * @package sfLog
  */
 
 /**
- * The Log_file class is a concrete implementation of the Log abstract
+ * The sfLog_file class is a concrete implementation of the sfLog abstract
  * class that logs messages to a text file.
  * 
  * @author  Jon Parise <jon@php.net>
  * @author  Roman Neuhauser <neuhauser@bellavista.cz>
- * @since   Log 1.0
- * @package Log
+ * @since   sfLog 1.0
+ * @package sfLog
  *
  * @example file.php    Using the file handler.
  */
-class Log_file extends Log
+class sfLog_file extends sfLog
 {
     /**
      * String containing the name of the log file.
@@ -84,21 +84,21 @@ class Log_file extends Log
     private $_eol = "\n";
 
     /**
-     * Constructs a new Log_file object.
+     * Constructs a new sfLog_file object.
      *
      * @param string $name     Ignored.
      * @param string $ident    The identity string.
      * @param array  $conf     The configuration array.
-     * @param int    $level    Log messages up to and including this level.
+     * @param int    $level    sfLog messages up to and including this level.
      * @access public
      */
-    function Log_file($name, $ident = '', $conf = array(),
+    function sfLog_file($name, $ident = '', $conf = array(),
                       $level = PEAR_LOG_DEBUG)
     {
         $this->_id = md5(microtime());
         $this->_filename = $name;
         $this->_ident = $ident;
-        $this->_mask = Log::UPTO($level);
+        $this->_mask = sfLog::UPTO($level);
 
         if (isset($conf['append'])) {
             $this->_append = $conf['append'];
@@ -124,13 +124,13 @@ class Log_file extends Log
             $this->_eol = (strstr(PHP_OS, 'WIN')) ? "\r\n" : "\n";
         }
 
-        register_shutdown_function(array(&$this, '_Log_file'));
+        register_shutdown_function(array(&$this, '_sfLog_file'));
     }
 
     /**
      * Destructor
      */
-    function _Log_file()
+    function _sfLog_file()
     {
         if ($this->_opened) {
             $this->close();
@@ -229,7 +229,7 @@ class Log_file extends Log
      * Flushes all pending data to the file handle.
      *
      * @access public
-     * @since Log 1.8.2
+     * @since sfLog 1.8.2
      */
     function flush()
     {
@@ -237,8 +237,8 @@ class Log_file extends Log
     }
 
     /**
-     * Logs $message to the output window.  The message is also passed along
-     * to any Log_observer instances that are observing this Log.
+     * sfLogs $message to the output window.  The message is also passed along
+     * to any sfLog_observer instances that are observing this sfLog.
      *
      * @param mixed  $message  String or object containing the message to log.
      * @param string $priority The priority of the message.  Valid

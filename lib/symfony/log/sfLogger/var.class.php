@@ -15,7 +15,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id: var.class.php 434 2005-09-08 08:12:29Z fabien $
  */
-class Log_var extends Log
+class sfLog_var extends sfLog
 {
     /**
      * String containing the format of a log line.
@@ -52,11 +52,11 @@ class Log_var extends Log
      */
     private $_eol = "\n";
 
-    public function Log_var($name, $ident = '', $conf = array(), $level = PEAR_LOG_DEBUG)
+    public function sfLog_var($name, $ident = '', $conf = array(), $level = PEAR_LOG_DEBUG)
     {
         $this->_id = $name.'_'.$ident;
         $this->_ident = $ident;
-        $this->_mask = Log::UPTO($level);
+        $this->_mask = sfLog::UPTO($level);
 
         if (!empty($conf['lineFormat']))
             $this->_lineFormat = str_replace(array_keys($this->_formatMap), array_values($this->_formatMap), $conf['lineFormat']);

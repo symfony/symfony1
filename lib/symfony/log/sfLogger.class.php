@@ -10,14 +10,14 @@
 
 /**
  * sfLogger manage all logging in symfony projects. It implements the Singleton pattern.
- * It's a wrapper around Pear_Log class. Logs are stored in the SF_APP.log file in SF_LOG_DIR directory.
+ * It's a wrapper around Pear_sfLog class. sfLogs are stored in the SF_APP.log file in SF_LOG_DIR directory.
  * If SF_STATS_DEBUG is true, all logging information is also available trough the web debug console.
  *
- * Logging can be controlled by 2 constants:
+ * sfLogging can be controlled by 2 constants:
  * - SF_LOGGING_ACTIVE: set to false to disable all logging
  * - SF_LOGGING_LEVEL:  level of logging
  *
- * Same log levels as Pear_Log.
+ * Same log levels as Pear_sfLog.
  * This list is ordered by highest priority (PEAR_LOG_EMERG) to lowest priority (PEAR_LOG_DEBUG):
  * - EMERG:   System is unusable
  * - ALERT:   Immediate action required
@@ -33,7 +33,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id: sfLogger.class.php 434 2005-09-08 08:12:29Z fabien $
  */
-class sfLogger extends Log
+class sfLogger extends sfLog
 {
   private static $logger = null;
 
@@ -48,19 +48,19 @@ class sfLogger extends Log
     {
       if (SF_LOGGING_ACTIVE)
       {
-        require_once 'symfony/log/Log/composite.class.php';
-        require_once 'symfony/log/Log/file.class.php';
-        $logger = &Log::singleton('composite');
+        require_once 'symfony/log/sfLog/composite.class.php';
+        require_once 'symfony/log/sfLog/file.class.php';
+        $logger = &sfLog::singleton('composite');
         $conf = array('mode' => 0666);
-        $file_logger = &Log::singleton('file', SF_LOG_DIR.DIRECTORY_SEPARATOR.SF_APP.'_'.SF_ENVIRONMENT.'.log', 'symfony', $conf);
-        $file_logger->setMask(Log::UPTO(constant('PEAR_LOG_'.strtoupper(SF_LOGGING_LEVEL))));
+        $file_logger = &sfLog::singleton('file', SF_LOG_DIR.DIRECTORY_SEPARATOR.SF_APP.'_'.SF_ENVIRONMENT.'.log', 'symfony', $conf);
+        $file_logger->setMask(sfLog::UPTO(constant('PEAR_LOG_'.strtoupper(SF_LOGGING_LEVEL))));
         $logger->addChild($file_logger);
 
         if (defined('SF_WEB_DEBUG') && SF_WEB_DEBUG)
         {
           require_once 'symfony/log/sfLogger/var.class.php';
-          $var_logger = &Log::singleton('var', '', 'symfony');
-          $var_logger->setMask(Log::UPTO(constant('PEAR_LOG_'.strtoupper(SF_LOGGING_LEVEL))));
+          $var_logger = &sfLog::singleton('var', '', 'symfony');
+          $var_logger->setMask(sfLog::UPTO(constant('PEAR_LOG_'.strtoupper(SF_LOGGING_LEVEL))));
           $logger->addChild($var_logger);
         }
 
@@ -69,7 +69,7 @@ class sfLogger extends Log
       else
       {
         require_once 'symfony/log/sfLogger/no.class.php';
-        sfLogger::$logger = new sfNoLogger();
+        sfLogger::$logger = new sfNosfLogger();
       }
     }
 
@@ -78,7 +78,7 @@ class sfLogger extends Log
 
   public static function errorHandler($code, $message, $file, $line)
   {
-    /* Map the PHP error to a Log priority. */
+    /* Map the PHP error to a sfLog priority. */
     switch ($code)
     {
       case E_WARNING:

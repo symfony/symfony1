@@ -1,29 +1,29 @@
 <?php
 /**
- * $Header: /repository/pear/Log/Log/composite.php,v 1.23 2004/08/09 06:04:11 jon Exp $
- * $Horde: horde/lib/Log/composite.php,v 1.2 2000/06/28 21:36:13 jon Exp $
+ * $Header: /repository/pear/sfLog/sfLog/composite.php,v 1.23 2004/08/09 06:04:11 jon Exp $
+ * $Horde: horde/lib/sfLog/composite.php,v 1.2 2000/06/28 21:36:13 jon Exp $
  *
  * @version $Revision: 1.23 $
- * @package Log
+ * @package sfLog
  */
 
 /**
- * The Log_composite:: class implements a Composite pattern which
- * allows multiple Log implementations to receive the same events.
+ * The sfLog_composite:: class implements a Composite pattern which
+ * allows multiple sfLog implementations to receive the same events.
  *
  * @author  Chuck Hagenbuch <chuck@horde.org>
  * @author  Jon Parise <jon@php.net>
  *
  * @since Horde 1.3
- * @since Log 1.0
- * @package Log
+ * @since sfLog 1.0
+ * @package sfLog
  *
  * @example composite.php   Using the composite handler.
  */
-class Log_composite extends Log
+class sfLog_composite extends sfLog
 {
     /**
-     * Array holding all of the Log instances to which log events should be
+     * Array holding all of the sfLog instances to which log events should be
      * sent.
      *
      * @var array
@@ -33,7 +33,7 @@ class Log_composite extends Log
 
 
     /**
-     * Constructs a new composite Log object.
+     * Constructs a new composite sfLog object.
      *
      * @param boolean   $name       This parameter is ignored.
      * @param boolean   $ident      This parameter is ignored.
@@ -42,7 +42,7 @@ class Log_composite extends Log
      *
      * @access public
      */
-    function Log_composite($name = false, $ident = false, $conf = false,
+    function sfLog_composite($name = false, $ident = false, $conf = false,
                            $level = PEAR_LOG_DEBUG)
     {
     }
@@ -81,7 +81,7 @@ class Log_composite extends Log
      * Flushes all open child instances.
      *
      * @access public
-     * @since Log 1.8.2
+     * @since sfLog 1.8.2
      */
     function flush()
     {
@@ -142,7 +142,7 @@ class Log_composite extends Log
      * @param string    $ident      The new identification string.
      *
      * @access public
-     * @since  Log 1.6.7
+     * @since  sfLog 1.6.7
      */
     function setIdent($ident)
     {
@@ -152,18 +152,18 @@ class Log_composite extends Log
     }
 
     /**
-     * Adds a Log instance to the list of children.
+     * Adds a sfLog instance to the list of children.
      *
-     * @param object    $child      The Log instance to add.
+     * @param object    $child      The sfLog instance to add.
      *
-     * @return boolean  True if the Log instance was successfully added.
+     * @return boolean  True if the sfLog instance was successfully added.
      *
      * @access public
      */
     function addChild(&$child)
     {
-        /* Make sure this is a Log instance. */
-        if (!($child instanceof Log)) {
+        /* Make sure this is a sfLog instance. */
+        if (!($child instanceof sfLog)) {
             return false;
         }
 
@@ -173,17 +173,17 @@ class Log_composite extends Log
     }
 
     /**
-     * Removes a Log instance from the list of children.
+     * Removes a sfLog instance from the list of children.
      *
-     * @param object    $child      The Log instance to remove.
+     * @param object    $child      The sfLog instance to remove.
      *
-     * @return boolean  True if the Log instance was successfully removed.
+     * @return boolean  True if the sfLog instance was successfully removed.
      *
      * @access public
      */
     function removeChild($child)
     {
-        if (!($child instanceof Log) || !isset($this->_children[$child->_id])) {
+        if (!($child instanceof sfLog) || !isset($this->_children[$child->_id])) {
             return false;
         }
 

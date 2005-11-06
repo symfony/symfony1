@@ -1,22 +1,22 @@
 <?php
 /**
- * $Header: /repository/pear/Log/Log/console.php,v 1.19 2004/01/19 08:02:40 jon Exp $
+ * $Header: /repository/pear/sfLog/sfLog/console.php,v 1.19 2004/01/19 08:02:40 jon Exp $
  *
  * @version $Revision: 1.19 $
- * @package Log
+ * @package sfLog
  */
 
 /**
- * The Log_console class is a concrete implementation of the Log::
+ * The sfLog_console class is a concrete implementation of the sfLog::
  * abstract class which writes message to the text console.
  * 
  * @author  Jon Parise <jon@php.net>
- * @since   Log 1.1
- * @package Log
+ * @since   sfLog 1.1
+ * @package sfLog
  *
  * @example console.php     Using the console handler.
  */
-class Log_console extends Log
+class sfLog_console extends sfLog
 {
     /**
      * Handle to the current output stream.
@@ -68,20 +68,20 @@ class Log_console extends Log
                             '%\{'           => '%%{');
 
     /**
-     * Constructs a new Log_console object.
+     * Constructs a new sfLog_console object.
      * 
      * @param string $name     Ignored.
      * @param string $ident    The identity string.
      * @param array  $conf     The configuration array.
-     * @param int    $level    Log messages up to and including this level.
+     * @param int    $level    sfLog messages up to and including this level.
      * @access public
      */
-    function Log_console($name, $ident = '', $conf = array(),
+    function sfLog_console($name, $ident = '', $conf = array(),
                          $level = PEAR_LOG_DEBUG)
     {
         $this->_id = md5(microtime());
         $this->_ident = $ident;
-        $this->_mask = Log::UPTO($level);
+        $this->_mask = sfLog::UPTO($level);
 
         if (!empty($conf['stream'])) {
             $this->_stream = $conf['stream'];
@@ -106,14 +106,14 @@ class Log_console extends Log
          * shutdown function that will dump the buffer upon termination.
          */
         if ($this->_buffering) {
-            register_shutdown_function(array(&$this, '_Log_console'));
+            register_shutdown_function(array(&$this, '_sfLog_console'));
         }
     }
 
     /**
      * Destructor
      */
-    function _Log_console()
+    function _sfLog_console()
     {
         $this->flush();
     }
@@ -122,7 +122,7 @@ class Log_console extends Log
      * Flushes all pending ("buffered") data to the output stream.
      *
      * @access public
-     * @since Log 1.8.2
+     * @since sfLog 1.8.2
      */
     function flush()
     {
@@ -140,7 +140,7 @@ class Log_console extends Log
 
     /**
      * Writes $message to the text console. Also, passes the message
-     * along to any Log_observer instances that are observing this Log.
+     * along to any sfLog_observer instances that are observing this sfLog.
      * 
      * @param mixed  $message    String or object containing the message to log.
      * @param string $priority The priority of the message.  Valid

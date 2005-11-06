@@ -19,22 +19,22 @@ define('PEAR_LOG_DEBUG',    7);     /** Debug-level messages */
 define('PEAR_LOG_ALL',      bindec('11111111'));  /** All messages */
 define('PEAR_LOG_NONE',     bindec('00000000'));  /** No message */
 
-/* Log types for PHP's native error_log() function. */
+/* sfLog types for PHP's native error_log() function. */
 define('PEAR_LOG_TYPE_SYSTEM',  0); /** Use PHP's system logger */
 define('PEAR_LOG_TYPE_MAIL',    1); /** Use PHP's mail() function */
 define('PEAR_LOG_TYPE_DEBUG',   2); /** Use PHP's debugging connection */
 define('PEAR_LOG_TYPE_FILE',    3); /** Append to a file */
 
 /**
- * The Log:: class implements both an abstraction for various logging
+ * The sfLog:: class implements both an abstraction for various logging
  * mechanisms and the Subject end of a Subject-Observer pattern.
  *
  * @author  Chuck Hagenbuch <chuck@horde.org>
  * @author  Jon Parise <jon@php.net>
  * @since   Horde 1.3
- * @package Log
+ * @package sfLog
  */
-class Log
+class sfLog
 {
     /**
      * Indicates whether or not the log can been opened / connected.
@@ -85,9 +85,9 @@ class Log
 
 
     /**
-     * Attempts to return a concrete Log instance of type $handler.
+     * Attempts to return a concrete sfLog instance of type $handler.
      *
-     * @param string $handler   The type of concrete Log subclass to return.
+     * @param string $handler   The type of concrete sfLog subclass to return.
      *                          Attempt to dynamically include the code for
      *                          this subclass. Currently, valid values are
      *                          'console', 'syslog', 'sql', 'file', and 'mcal'.
@@ -102,19 +102,19 @@ class Log
      * @param array  $conf      A hash containing any additional configuration
      *                          information that a subclass might need.
      *
-     * @param int $level        Log messages up to and including this level.
+     * @param int $level        sfLog messages up to and including this level.
      *
-     * @return object Log       The newly created concrete Log instance, or an
+     * @return object sfLog       The newly created concrete sfLog instance, or an
      *                          false on an error.
      * @access public
-     * @since Log 1.0
+     * @since sfLog 1.0
      */
     static public function &factory($handler, $name = '', $ident = '', $conf = array(),
                       $level = PEAR_LOG_DEBUG)
     {
         $handler = strtolower($handler);
-        $class = 'Log_'.$handler;
-        $classfile = SF_SYMFONY_LIB_DIR.'/symfony/log/Log/'.$handler.'.php';
+        $class = 'sfLog_'.$handler;
+        $classfile = SF_SYMFONY_LIB_DIR.'/symfony/log/sfLog/'.$handler.'.php';
 
         /*
          * Attempt to include our version of the named class, but don't treat
@@ -138,7 +138,7 @@ class Log
     }
 
     /**
-     * Attempts to return a reference to a concrete Log instance of type
+     * Attempts to return a reference to a concrete sfLog instance of type
      * $handler, only creating a new instance if no log instance with the same
      * parameters currently exists.
      *
@@ -147,11 +147,11 @@ class Log
      * check for the existance of one each time. The singleton pattern does all
      * the checking work for you.
      *
-     * <b>You MUST call this method with the $var = &Log::singleton() syntax.
+     * <b>You MUST call this method with the $var = &sfLog::singleton() syntax.
      * Without the ampersand (&) in front of the method name, you will not get
      * a reference, you will get a copy.</b>
      *
-     * @param string $handler   The type of concrete Log subclass to return.
+     * @param string $handler   The type of concrete sfLog subclass to return.
      *                          Attempt to dynamically include the code for
      *                          this subclass. Currently, valid values are
      *                          'console', 'syslog', 'sql', 'file', and 'mcal'.
@@ -166,12 +166,12 @@ class Log
      * @param array $conf       A hash containing any additional configuration
      *                          information that a subclass might need.
      *
-     * @param int $level        Log messages up to and including this level.
+     * @param int $level        sfLog messages up to and including this level.
      *
-     * @return object Log       The newly created concrete Log instance, or an
+     * @return object sfLog       The newly created concrete sfLog instance, or an
      *                          false on an error.
      * @access public
-     * @since Log 1.0
+     * @since sfLog 1.0
      */
     static public function &singleton($handler, $name = '', $ident = '', $conf = array(),
                         $level = PEAR_LOG_DEBUG)
@@ -181,7 +181,7 @@ class Log
 
         $signature = serialize(array($handler, $name, $ident, $conf, $level));
         if (!isset($instances[$signature])) {
-            $instances[$signature] = &Log::factory($handler, $name, $ident,
+            $instances[$signature] = &sfLog::factory($handler, $name, $ident,
                                                    $conf, $level);
         }
 
@@ -190,7 +190,7 @@ class Log
 
     /**
      * Abstract implementation of the open() method.
-     * @since Log 1.0
+     * @since sfLog 1.0
      */
     function open()
     {
@@ -199,7 +199,7 @@ class Log
 
     /**
      * Abstract implementation of the close() method.
-     * @since Log 1.0
+     * @since sfLog 1.0
      */
     function close()
     {
@@ -208,7 +208,7 @@ class Log
 
     /**
      * Abstract implementation of the flush() method.
-     * @since Log 1.8.2
+     * @since sfLog 1.8.2
      */
     function flush()
     {
@@ -217,7 +217,7 @@ class Log
 
     /**
      * Abstract implementation of the log() method.
-     * @since Log 1.0
+     * @since sfLog 1.0
      */
     function log($message, $priority = null)
     {
@@ -234,7 +234,7 @@ class Log
      * @return  boolean True if the message was successfully logged.
      *
      * @access  public
-     * @since   Log 1.7.0
+     * @since   sfLog 1.7.0
      */
     function emerg($message)
     {
@@ -251,7 +251,7 @@ class Log
      * @return  boolean True if the message was successfully logged.
      *
      * @access  public
-     * @since   Log 1.7.0
+     * @since   sfLog 1.7.0
      */
     function alert($message)
     {
@@ -268,7 +268,7 @@ class Log
      * @return  boolean True if the message was successfully logged.
      *
      * @access  public
-     * @since   Log 1.7.0
+     * @since   sfLog 1.7.0
      */
     function crit($message)
     {
@@ -285,7 +285,7 @@ class Log
      * @return  boolean True if the message was successfully logged.
      *
      * @access  public
-     * @since   Log 1.7.0
+     * @since   sfLog 1.7.0
      */
     function err($message)
     {
@@ -302,7 +302,7 @@ class Log
      * @return  boolean True if the message was successfully logged.
      *
      * @access  public
-     * @since   Log 1.7.0
+     * @since   sfLog 1.7.0
      */
     function warning($message)
     {
@@ -319,7 +319,7 @@ class Log
      * @return  boolean True if the message was successfully logged.
      *
      * @access  public
-     * @since   Log 1.7.0
+     * @since   sfLog 1.7.0
      */
     function notice($message)
     {
@@ -336,7 +336,7 @@ class Log
      * @return  boolean True if the message was successfully logged.
      *
      * @access  public
-     * @since   Log 1.7.0
+     * @since   sfLog 1.7.0
      */
     function info($message)
     {
@@ -353,7 +353,7 @@ class Log
      * @return  boolean True if the message was successfully logged.
      *
      * @access  public
-     * @since   Log 1.7.0
+     * @since   sfLog 1.7.0
      */
     function debug($message)
     {
@@ -415,7 +415,7 @@ class Log
      *
      * @return string           The string representation of $level.
      *
-     * @since   Log 1.0
+     * @since   sfLog 1.0
      */
     function priorityToString($priority)
     {
@@ -441,7 +441,7 @@ class Log
      * @return integer  The calculated log mask.
      *
      * @access  public
-     * @since   Log 1.7.0
+     * @since   sfLog 1.7.0
      */
     public static function MASK($priority)
     {
@@ -456,7 +456,7 @@ class Log
      * @return integer  The calculated log mask.
      *
      * @access  public
-     * @since   Log 1.7.0
+     * @since   sfLog 1.7.0
      */
     public static function UPTO($priority)
     {
@@ -464,14 +464,14 @@ class Log
     }
 
     /**
-     * Set and return the level mask for the current Log instance.
+     * Set and return the level mask for the current sfLog instance.
      *
      * @param integer $mask     A bitwise mask of log levels.
      *
      * @return integer          The current level mask.
      *
      * @access  public
-     * @since   Log 1.7.0
+     * @since   sfLog 1.7.0
      */
     function setMask($mask)
     {
@@ -486,7 +486,7 @@ class Log
      * @return interger         The current level mask.
      *
      * @access  public
-     * @since   Log 1.7.0
+     * @since   sfLog 1.7.0
      */
     function getMask()
     {
@@ -502,11 +502,11 @@ class Log
      *                  log mask.
      *
      * @access  private
-     * @since   Log 1.7.0
+     * @since   sfLog 1.7.0
      */
     function _isMasked($priority)
     {
-        return (Log::MASK($priority) & $this->_mask);
+        return (sfLog::MASK($priority) & $this->_mask);
     }
 
     /**
@@ -515,7 +515,7 @@ class Log
      * @return integer  The current default priority.
      *
      * @access  public
-     * @since   Log 1.8.4
+     * @since   sfLog 1.8.4
      */
     function getPriority()
     {
@@ -528,7 +528,7 @@ class Log
      * @param   integer $priority   The new default priority.
      *
      * @access  public
-     * @since   Log 1.8.4
+     * @since   sfLog 1.8.4
      */
     function setPriority($priority)
     {
@@ -536,20 +536,20 @@ class Log
     }
 
     /**
-     * Adds a Log_observer instance to the list of observers that are listening
-     * for messages emitted by this Log instance.
+     * Adds a sfLog_observer instance to the list of observers that are listening
+     * for messages emitted by this sfLog instance.
      *
-     * @param object    $observer   The Log_observer instance to attach as a
+     * @param object    $observer   The sfLog_observer instance to attach as a
      *                              listener.
      *
      * @param boolean   True if the observer is successfully attached.
      *
      * @access  public
-     * @since   Log 1.0
+     * @since   sfLog 1.0
      */
     function attach(&$observer)
     {
-        if (!($observer instanceof Log_observer)) {
+        if (!($observer instanceof sfLog_observer)) {
             return false;
         }
 
@@ -559,19 +559,19 @@ class Log
     }
 
     /**
-     * Removes a Log_observer instance from the list of observers.
+     * Removes a sfLog_observer instance from the list of observers.
      *
-     * @param object    $observer   The Log_observer instance to detach from
+     * @param object    $observer   The sfLog_observer instance to detach from
      *                              the list of listeners.
      *
      * @param boolean   True if the observer is successfully detached.
      *
      * @access  public
-     * @since   Log 1.0
+     * @since   sfLog 1.0
      */
     function detach($observer)
     {
-        if (!($observer instanceof Log_observer) ||
+        if (!($observer instanceof sfLog_observer) ||
             !isset($this->_listeners[$observer->_id])) {
             return false;
         }
@@ -604,7 +604,7 @@ class Log
      * @return boolean          True if this is a composite class.
      *
      * @access  public
-     * @since   Log 1.0
+     * @since   sfLog 1.0
      */
     function isComposite()
     {
@@ -612,12 +612,12 @@ class Log
     }
 
     /**
-     * Sets this Log instance's identification string.
+     * Sets this sfLog instance's identification string.
      *
      * @param string    $ident      The new identification string.
      *
      * @access  public
-     * @since   Log 1.6.3
+     * @since   sfLog 1.6.3
      */
     function setIdent($ident)
     {
@@ -627,10 +627,10 @@ class Log
     /**
      * Returns the current identification string.
      *
-     * @return string   The current Log instance's identification string.
+     * @return string   The current sfLog instance's identification string.
      *
      * @access  public
-     * @since   Log 1.6.3
+     * @since   sfLog 1.6.3
      */
     function getIdent()
     {

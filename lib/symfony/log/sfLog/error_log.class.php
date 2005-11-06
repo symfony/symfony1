@@ -1,22 +1,22 @@
 <?php
 /**
- * $Header: /repository/pear/Log/Log/error_log.php,v 1.6 2004/01/19 08:02:40 jon Exp $
+ * $Header: /repository/pear/sfLog/sfLog/error_log.php,v 1.6 2004/01/19 08:02:40 jon Exp $
  *
  * @version $Revision: 1.6 $
- * @package Log
+ * @package sfLog
  */
 
 /**
- * The Log_error_log class is a concrete implementation of the Log abstract
+ * The sfLog_error_log class is a concrete implementation of the sfLog abstract
  * class that logs messages using PHP's error_log() function.
  * 
  * @author  Jon Parise <jon@php.net>
- * @since   Log 1.7.0
- * @package Log
+ * @since   sfLog 1.7.0
+ * @package sfLog
  * 
  * @example error_log.php   Using the error_log handler.
  */
-class Log_error_log extends Log
+class sfLog_error_log extends sfLog
 {
     /**
      * The error_log() log type.
@@ -41,21 +41,21 @@ class Log_error_log extends Log
     var $_extra_headers = '';
 
     /**
-     * Constructs a new Log_error_log object.
+     * Constructs a new sfLog_error_log object.
      * 
      * @param string $name     Ignored.
      * @param string $ident    The identity string.
      * @param array  $conf     The configuration array.
-     * @param int    $level    Log messages up to and including this level.
+     * @param int    $level    sfLog messages up to and including this level.
      * @access public
      */
-    function Log_error_log($name, $ident = '', $conf = array(),
+    function sfLog_error_log($name, $ident = '', $conf = array(),
                            $level = PEAR_LOG_DEBUG)
     {
         $this->_id = md5(microtime());
         $this->_type = $name;
         $this->_ident = $ident;
-        $this->_mask = Log::UPTO($level);
+        $this->_mask = sfLog::UPTO($level);
 
         if (!empty($conf['destination'])) {
             $this->_destination = $conf['destination'];
@@ -66,8 +66,8 @@ class Log_error_log extends Log
     }
 
     /**
-     * Logs $message using PHP's error_log() function.  The message is also
-     * passed along to any Log_observer instances that are observing this Log.
+     * sfLogs $message using PHP's error_log() function.  The message is also
+     * passed along to any sfLog_observer instances that are observing this sfLog.
      * 
      * @param mixed  $message   String or object containing the message to log.
      * @param string $priority The priority of the message.  Valid
