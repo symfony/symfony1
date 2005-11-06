@@ -39,7 +39,7 @@ function run_alltests($task, $args)
   );
 
   define('SF_LOGGING_ACTIVE', false);
-  require_once 'symfony/log/Log.class.php';
+  require_once 'symfony/log/sfLog.class.php';
   require_once 'symfony/log/sfLogger.class.php';
 
   pake_import('simpletest', false);
