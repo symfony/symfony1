@@ -94,7 +94,7 @@ Here are the standard form element helpers:
           <option>Eurocard</option>
           <option>Mastercard</option>
         </select>
-
+        
         //Multiple selection field uses the same syntax, and the selected values can then be an array
          <?php echo select_tag('payment', options_for_select(Array('Visa', 'Eurocard', 'Mastercard'), Array('Visa', 'Mastecard'), 'multiple=multiple') ?>
         // will generate in HTML
@@ -102,7 +102,14 @@ Here are the standard form element helpers:
           <option selected="selected">Visa</option>
           <option>Eurocard</option>
           <option selected="selected">Mastercard</option>
-        </select>       
+        </select>
+        
+        // When the data needed to set the value and the text to display can be obtained via methods of an object, you can
+        // simply pass an array of the objects, and the names of the methods to use to retrieve the value and display text.
+        <?php echo select_tag('blogs', objects_for_select($blogs, "getId", "getTitle", 1) ) ?> 
+        // This will iterate through the $blogs array, using the current object by calling the getId() for the value, and getTitle() 
+        // for the display text. 
+               
 
  * field to upload a file:
 
