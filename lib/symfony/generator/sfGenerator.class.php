@@ -30,6 +30,19 @@ abstract class sfGenerator
     return $text;
   }
 
+  protected function evalTemplate($template_file, $clazz = __CLASS__)
+  {
+    // eval template template file
+    ob_start();
+    require($template_file);
+    $content = ob_get_clean();
+
+    // replace [?php and ?]
+    $content = $this->replacePhpMarks($content);
+
+    return $this->generateTemplate($content, $clazz);
+  }
+
   public function generateClass($content, $clazz = __CLASS__)
   {
     $retval = "<?php\n".

@@ -58,9 +58,8 @@ class sfPropelCrudGenerator extends sfGenerator
     $this->setScaffoldingClassName($modelClass);
 
     // generated module name
-    $moduleName = $param['moduleName'];
-    $this->generatedModuleName = 'auto'.ucfirst($moduleName);
-    $this->moduleName = $moduleName;
+    $this->generatedModuleName = 'auto'.ucfirst($param['moduleName']);
+    $this->moduleName = $param['moduleName'];
 
     // get some model metadata
     $c = $this->className;
@@ -93,19 +92,21 @@ class sfPropelCrudGenerator extends sfGenerator
       }
     }
 
-    // generate actions class
-    $actions = "class {$this->generatedModuleName}"."Actions extends sfActions\n".
-               "{\n".
-               $this->getIndexMethod()."\n".
-               $this->getListMethod()."\n".
-               $this->getShowMethod()."\n".
-               $this->getEditMethod()."\n".
-               $this->getUpdateMethod()."\n".
-               $this->getDeleteMethod()."\n".
-               $this->getGetObjectOrCreate()."\n".
-               "}\n";
+    // template directory
+    $template_dir = dirname(__FILE__).'/template';
 
-    $retval = $this->generateClass($actions, __CLASS__);
+    $this->generatePhpFiles($generator, $template_dir);
+
+    // require generated action class
+    $data = "require_once(SF_MODULE_CACHE_DIR.'/{$this->generatedModuleName}/actions/actions.class.php')\n";
+
+    return $data;
+  }
+
+  public function generatePhpFiles($generator, $template_dir)
+  {
+    // eval actions file
+    $retval = $this->evalTemplate($template_dir.'/actions/actions.class.php', __CLASS__);
 
     // save actions class
     $generator->getCache()->set('actions.class.php', $this->generatedModuleName.DIRECTORY_SEPARATOR.'actions', $retval);
@@ -114,177 +115,87 @@ class sfPropelCrudGenerator extends sfGenerator
     $templates = array('listSuccess', 'editSuccess', 'showSuccess');
     foreach ($templates as $template)
     {
-      // eval template template file
-      ob_start();
-      require(dirname(__FILE__).'/template/templates/'.$template.'.php');
-      $content = ob_get_clean();
-
-      // replace object names
-      $content = str_replace('$objects',  '$'.$this->pluralName,   $content);
-      $content = str_replace('$object',   '$'.$this->singularName, $content);
-      $content = str_replace('ClassName', '$'.$this->className,    $content);
-
-      // replace [?php and ?]
-      $content = $this->replacePhpMarks($content);
-
-      $retval = $this->generateTemplate($content, __CLASS__);
+      // eval template file
+      $retval = $this->evalTemplate($template_dir.'/templates/'.$template.'.php', __CLASS__);
 
       // save actions class
       $generator->getCache()->set($template.'.php', $this->generatedModuleName.DIRECTORY_SEPARATOR.'templates', $retval);
     }
-
-    // require generated action class
-    $data = "require_once(SF_MODULE_CACHE_DIR.'/{$this->generatedModuleName}/actions/actions.class.php')\n";
-
-    return $data;
   }
 
-  public function getIndexMethod ()
+  public function getGeneratedModuleName()
   {
-    $action = "  public function executeIndex ()\n".
-              "  {\n".
-              "    return \$this->forward('".$this->moduleName."', 'list');\n".
-              "  }\n";
-
-    return $action;
+    return $this->generatedModuleName;
   }
 
-  public function getListMethod ()
+  public function getModuleName()
   {
-    $s = $this->singularName;
-    $p = $this->pluralName;
-    $c = $this->className;
-
-    $action = "  public function executeList ()\n".
-              "  {\n".
-              "    \$this->$p = $c"."Peer::doSelect(new Criteria());\n".
-              "  }\n";
-
-    return $action;
+    return $this->moduleName;
   }
 
-  public function getShowMethod()
+  public function getRetrieveByPkParamsForShow()
   {
-    $s = $this->singularName;
-    $p = $this->pluralName;
-    $c = $this->className;
-
     $params = array();
     foreach ($this->getPrimaryKey() as $pk)
     {
       $params[] = "\$this->getRequestParameter('".$this->translateFieldName($pk->getPhpName())."')";
     }
-    $param = implode(",\n".str_repeat(' ', 49 - strlen($c.$s)), $params);
 
-    $action = "  public function executeShow ()\n".
-              "  {\n".
-              "    \$this->$s = $c"."Peer::retrieveByPk($param);\n".
-              "\n".
-              "    \$this->forward404_unless(\$this->$s instanceof $c);\n".
-              "  }\n";
-
-    return $action;
+    return implode(",\n".str_repeat(' ', 49 - strlen($this->singularName.$this->className)), $params);
   }
 
-  public function getEditMethod()
+  public function getMethodParamsForGetOrCreate()
   {
-    $s = $this->singularName;
-    $p = $this->pluralName;
-    $c = $this->className;
+    $method_params = array();
+    foreach ($this->getPrimaryKey() as $pk)
+    {
+      $fieldName       = $this->translateFieldName($pk->getPhpName());
+      $method_params[] = "\$$fieldName = '$fieldName'";
+    }
 
-    $action = "  public function executeEdit ()\n".
-              "  {\n".
-              "    \$this->$s = \$this->get{$c}OrCreate();\n".
-              "  }\n";
-
-    return $action;
+    return implode(', ', $method_params);
   }
 
-  public function getGetObjectOrCreate()
+  public function getTestPksForGetOrCreate()
   {
-    $s = $this->singularName;
-    $p = $this->pluralName;
-    $c = $this->className;
+    $test_pks = array();
+    foreach ($this->getPrimaryKey() as $pk)
+    {
+      $fieldName  = $this->translateFieldName($pk->getPhpName());
+      $test_pks[] = "!\$this->getRequestParameter(\$$fieldName, 0)";
+    }
 
-    $function_params = array();
-    $test_pks        = array();
+    return implode("\n     || ", $test_pks);
+  }
+
+  public function getRetrieveByPkParamsForGetOrCreate()
+  {
     $retrieve_params = array();
     foreach ($this->getPrimaryKey() as $pk)
     {
-      $fieldName = $this->translateFieldName($pk->getPhpName());
-
-      $function_params[] = "\$$fieldName = '$fieldName'";
-      $test_pks[]        = "!\$this->getRequestParameter(\$$fieldName, 0)";
+      $fieldName         = $this->translateFieldName($pk->getPhpName());
       $retrieve_params[] = "\$this->getRequestParameter(\$$fieldName)";
     }
-    $function_param = implode(', ', $function_params);
-    $test_pk        = implode("\n     || ", $test_pks);
-    $retrieve_param = implode(",\n".str_repeat(' ', 45 - strlen($c.$s)), $retrieve_params);
 
-    $action = "  private function get{$c}OrCreate ($function_param)\n".
-              "  {\n".
-              "    if ($test_pk)\n".
-              "    {\n".
-              "      \$$s = new $c();\n".
-              "    }\n".
-              "    else\n".
-              "    {\n".
-              "      \$$s = $c"."Peer::retrieveByPk($retrieve_param);\n".
-              "\n".
-              "      \$this->forward404_unless(\$$s instanceof $c);\n".
-              "    }\n".
-              "\n".
-              "    return \$$s;\n".
-              "  }\n";
-
-    return $action;
+    return implode(",\n".str_repeat(' ', 45 - strlen($this->singularName.$this->className)), $retrieve_params);
   }
 
-  public function getUpdateMethod()
+  public function getRetrieveByPkParamsForDelete()
   {
-    $s = $this->singularName;
-    $p = $this->pluralName;
-    $c = $this->className;
-
-    $action = "  public function executeUpdate ()\n".
-              "  {\n".
-              "    \$$s = \$this->get{$c}OrCreate();\n".
-              "\n".
-              "    \${$s}->fromArray(\$this->getRequest()->getParameterHolder()->getAll(), $c"."::TYPE_FIELDNAME);\n".
-              "    \${$s}->save();\n".
-              "\n".
-              "    return \$this->redirect('".$this->moduleName."/show?".$this->getPrimaryKeyUrlParams().");\n".
-              "  }\n";
-
-    return $action;
-  }
-
-  public function getDeleteMethod()
-  {
-    $s = $this->singularName;
-    $p = $this->pluralName;
-    $c = $this->className;
-
     $params = array();
     foreach ($this->getPrimaryKey() as $pk)
     {
       $params[] = "\$this->getRequestParameter('".$this->translateFieldName($pk->getPhpName())."')";
     }
 
-    $sep = ",\n".str_repeat(' ', 43 - strlen($c.$s));
-    $pks = implode($sep, $params);
-    $action = "  public function executeDelete ()\n".
-              "  {\n".
-              "    \$$s = $c"."Peer::retrieveByPk($pks);\n".
-              "\n".
-              "    \$this->forward404_unless(\$$s instanceof $c);\n".
-              "\n".
-              "    \${$s}->delete();\n".
-              "\n".
-              "    return \$this->redirect('".$this->moduleName."/list');\n".
-              "  }\n";
+    $sep = ",\n".str_repeat(' ', 43 - strlen($this->singularName.$this->className));
 
-    return $action;
+    return implode($sep, $params);
+  }
+
+  public function getTableMap()
+  {
+    return $this->tableMap;
   }
 
   /**
@@ -292,7 +203,7 @@ class sfPropelCrudGenerator extends sfGenerator
    *
    * @param  string class name
    */
-  public function setScaffoldingClassName($className)
+  protected function setScaffoldingClassName($className)
   {
     $this->singularName  = sfInflector::underscore($className);
     $this->pluralName    = $this->singularName.'s';
@@ -305,7 +216,7 @@ class sfPropelCrudGenerator extends sfGenerator
    *
    * @return string
    */
-  public function getSingularScaffoldName()
+  public function getSingularName()
   {
     return $this->singularName;
   }
@@ -315,7 +226,7 @@ class sfPropelCrudGenerator extends sfGenerator
    *
    * @return string
    */
-  public function getPluralScaffoldName()
+  public function getPluralName()
   {
     return $this->pluralName;
   }
@@ -325,7 +236,7 @@ class sfPropelCrudGenerator extends sfGenerator
    *
    * @return string
    */
-  public function getClassScaffoldName()
+  public function getClassName()
   {
     return $this->className;
   }
@@ -347,7 +258,7 @@ class sfPropelCrudGenerator extends sfGenerator
     {
       $phpName   = $pk->getPhpName();
       $fieldName = $this->translateFieldName($phpName);
-      $params[]  = "$fieldName='.\$object->get$phpName()";
+      $params[]  = "$fieldName='.\$".$this->singularName."->get$phpName()";
     }
 
     return implode(".'&", $params);
@@ -359,7 +270,7 @@ class sfPropelCrudGenerator extends sfGenerator
     foreach ($this->getPrimaryKey() as $pk)
     {
       $phpName  = $pk->getPhpName();
-      $params[] = "\$object->get$phpName()";
+      $params[] = "\$".$this->singularName."->get$phpName()";
     }
 
     return implode(' && ', $params);

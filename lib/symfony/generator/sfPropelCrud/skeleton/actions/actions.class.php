@@ -5,7 +5,7 @@
  *
  * @package    ##PROJECT_NAME##
  * @subpackage ##MODULE_NAME##
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author     Your name here
  * @version    SVN: $Id$
  */
 class ##MODULE_NAME##Actions extends auto##MODULE_NAME##Actions
