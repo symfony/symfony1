@@ -37,7 +37,8 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
   {
     $<?php echo $this->getSingularName() ?> = $this->get<?php echo $this->getClassName() ?>OrCreate();
 
-<?php foreach ($this->getTableMap()->getColumns() as $column): $type = $column->getCreoleType(); ?>
+<?php foreach ($this->getTableMap()->getColumns() as $name => $column): $type = $column->getCreoleType(); ?>
+<?php if ($name == 'CREATED_AT' || $name == 'UPDATED_AT') continue ?>
 <?php if ($type == CreoleTypes::DATE): ?>
     list($d, $m, $y) = sfI18N::getDateForCulture($this->getRequestParameter('<?php echo $this->translateFieldName($column->getPhpName()) ?>'), $this->getUser()->getCulture());
     $<?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>("$y-$m-$d");

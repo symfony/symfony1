@@ -145,6 +145,39 @@ $script .= '
       }
     }
   }
+
+  protected function addSave(&$script)
+  {
+    $tmp = '';
+    parent::addSave($tmp);
+
+    $date_script = '';
+
+    foreach ($this->getTable()->getColumns() as $col)
+    {
+      $clo = strtolower($col->getName());
+
+      // add automatic UpdatedAt updating
+      if ($clo == 'updated_at')
+      {
+        $date_script .= "        \$this->setUpdatedAt(time());\n";
+      }
+
+      // add automatic CreatedAt updating
+      if ($clo == 'created_at')
+      {
+        $date_script .= "
+    if (!\$this->getId())
+    {
+      \$this->setCreatedAt(time());
+    }
+";
+      }
+    }
+
+    $tmp = preg_replace('/{/', '{'.$date_script, $tmp, 1);
+    $script .= $tmp;
+  }
 }
 
 ?>

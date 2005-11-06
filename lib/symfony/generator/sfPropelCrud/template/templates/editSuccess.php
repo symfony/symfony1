@@ -8,8 +8,9 @@
 
 <table>
 <tbody>
-<?php foreach ($this->getTableMap()->getColumns() as $column): ?>
+<?php foreach ($this->getTableMap()->getColumns() as $name => $column): ?>
 <?php if ($column->isPrimaryKey()) continue ?>
+<?php if ($name == 'CREATED_AT' || $name == 'UPDATED_AT') continue ?>
 <tr>
 <th><?php echo sfInflector::humanize(sfInflector::underscore($column->getPhpName())) ?><?php if ($column->isNotNull()): ?>*<?php endif ?>:</th>
 <td>[?php echo <?php

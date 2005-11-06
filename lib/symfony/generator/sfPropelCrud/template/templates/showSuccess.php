@@ -1,6 +1,6 @@
 <table>
 <tbody>
-<?php foreach ($this->getTableMap()->getColumns() as $name => $column): ?>
+<?php foreach ($this->getTableMap()->getColumns() as $column): ?>
 <tr>
 <th><?php echo sfInflector::humanize(sfInflector::underscore($column->getPhpName())) ?>: </th>
 <td>[?= $<?php echo $this->getSingularName() ?>->get<?php echo $column->getPhpName() ?>() ?]</td>
