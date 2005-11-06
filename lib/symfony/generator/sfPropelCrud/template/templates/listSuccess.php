@@ -4,7 +4,7 @@
 <thead>
 <tr>
 <?php foreach ($this->getTableMap()->getColumns() as $column): ?>
-  <th><b><?php echo $column->getPhpName() ?></b></th>
+  <th><?php echo sfInflector::humanize(sfInflector::underscore($column->getPhpName())) ?></th>
 <?php endforeach ?>
 </tr>
 </thead>

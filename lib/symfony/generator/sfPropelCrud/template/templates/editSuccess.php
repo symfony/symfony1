@@ -11,7 +11,7 @@
 <?php foreach ($this->getTableMap()->getColumns() as $column): ?>
 <?php if ($column->isPrimaryKey()) continue ?>
 <tr>
-<th><?php echo $column->getPhpName() ?><?php if ($column->isNotNull()): ?>*<?php endif ?>:</th>
+<th><?php echo sfInflector::humanize(sfInflector::underscore($column->getPhpName())) ?><?php if ($column->isNotNull()): ?>*<?php endif ?>:</th>
 <td>[?php echo <?php
   $type = $column->getCreoleType();
   if ($column->isForeignKey())

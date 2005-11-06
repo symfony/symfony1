@@ -1,11 +1,14 @@
 SVN
 ---
 
+* [fabien] renamed internal Log class to sfLog to avoid class name collision
 * [fabien] removed tiny mce from symfony package
 * [fabien] rich text support (tinymce) for textarea_tag helper
 * [marc]   IIS support
 * [fabien] module helpers support (lib/helper directory of a module)
-* [fabien] propel CRUD generator enhancements and refactoring (primary id != id, foreign keys, multi primary keys)
+* [fabien] many symfony generators enhancements:
+           * refactoring
+           * propel CRUD (primary id != id, foreign keys, multi primary keys, post link and confirm for delete, ...)
 * [fabien] better Ajax support (prototype and script.aculo.us)
 * [fabien] support for non virtual host configurations
 * [fabien] easier helpers debugging
