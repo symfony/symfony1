@@ -15,6 +15,13 @@ else
   define('PAKEFILE_SYMFONY_LIB_DIR', PAKEFILE_LIB_DIR.'/symfony');
 }
 
+define('PAKEFILE_SYMFONY_DATA_DIR', PAKEFILE_DATA_DIR);
+
+if (!defined('SF_SYMFONY_DATA_DIR'))
+{
+  define('SF_SYMFONY_DATA_DIR', PAKEFILE_DATA_DIR.'/symfony');
+}
+
 set_include_path(PAKEFILE_SYMFONY_LIB_DIR.PATH_SEPARATOR.get_include_path());
 
 /* tasks registration */
@@ -351,7 +358,7 @@ function run_init_propelcrud($task, $args)
 
   // create basic application structure
   $finder = pakeFinder::type('any')->prune('.svn')->discard('.svn');
-  pake_mirror($finder, PAKEFILE_SYMFONY_LIB_DIR.'/symfony/generator/sfPropelCrud/skeleton/', getcwd().'/'.$app.'/modules/'.$module);
+  pake_mirror($finder, PAKEFILE_SYMFONY_DATA_DIR.'/symfony/generator/sfPropelCrud/skeleton/', getcwd().'/'.$app.'/modules/'.$module);
 
   // create basic test
   pake_copy(PAKEFILE_DATA_DIR.'/symfony/skeleton/module/test/actionsTest.php', getcwd().'/test/'.$app.'/'.$module.'ActionsTest.php');

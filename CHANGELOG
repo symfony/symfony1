@@ -1,6 +1,9 @@
 SVN
 ---
 
+* [fabien] new helpers:
+           * objects_for_select
+           * button_to
 * [fabien] automatic support for created_at and updated_at columns (Propel + generator)
 * [fabien] renamed internal Log class to sfLog to avoid class name collision
 * [fabien] removed tiny mce from symfony package
