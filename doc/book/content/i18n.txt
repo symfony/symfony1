@@ -9,40 +9,116 @@ Symfony has native internationalization automatisms that make the development of
 Introduction
 ------------
 
-The internationalization (i18n) of an application covers two aspects:
+The internationalization (i18n) of an application covers three aspects:
 
-*   text translation (interface and content)
 *   standards and formats (dates, amounts, numbers, etc.).
+*   text information contained in the database
+*   text translation (interface and content)
 
 Symfony brings a solution to each of these issues.
 
 User culture
 ------------
 
-The `sfUser` class, used to manage the user session, has a native implementation of the user language and country, which is called *culture*.:
+The `sfUser` class, used to manage the user session, has a native implementation of the user language and country, which is called *culture*. Symfony provides a getter and a setter method for this attribute. Here is an example of their use in an action:
 
-    class textActions extends sfActions
-    {
-      ...
-      
-      public function executeIndex()
-      {
-        ...
-        
-        $culture = $this->getUser()->getCulture();
-        $this->getUser()->setCulture('en_US');
-      }
-    }
+    // getter
+    $culture = $this->getUser()->getCulture();
+    // setter
+    $this->getUser()->setCulture('en_US');
+    
+This culture is persistent between pages because it is serialized in the user session.
 
 Keeping both the language and the country in the culture is necessary because you may have a different French translation for users from France, Belgium or Canada, and a different Spanish translation for users from Spain or Mexico.
 
-The language is coded in two lower-case characters, according to the [ISO 639-1 norm](http://www.w3.org/WAI/ER/IG/ert/iso639.htm) (for instance `en` for english).
+The language is coded in two lower-case characters, according to the [ISO 639-1 norm](http://www.w3.org/WAI/ER/IG/ert/iso639.htm) (for instance `en` for English).
 
 The country is coded in two upper-case characters, according to the [ISO 3166-1 norm](http://www.iso.org/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1.html) (for instance `GB` for Great-Britain).
 
 By default, any new user will take the culture set in the `SF_DEFAULT_CULTURE` constant. You can change it in the `app.php` configuration file:
 
     define(SF_DEFAULT_CULTURE, 'en_GB');
+
+All the culture-dependent contents are displayed transparently according to the user culture.
+
+Standards and formats
+---------------------
+
+Once the culture is defined, the helpers depending on it will automatically have a proper output. Here is a list of helpers that take into account the user culture for their output:
+
+    // formatting helpers
+    format_date($date, $format)
+    format_datetime($date, $format)
+    format_number($number)
+    format_currency($amount, $currency)
+    format_country($country_iso)
+    // form helpers
+    input_date_tag($name, $value, $options)
+    select_country_tag($name, $value, $options)
+
+For instance,
+
+     <?php echo format_number(12000.10) ?>
+    // will generate in HTML with a culture set to en_US
+    12,000.10
+    // will generate in HTML with a culture set fr_FR
+    12 000,10
+
+If you want to know more about the helpers that depend on culture, refer to the [form helpers](templating_form_helpers.txt), [i18n helpers](templating_i18n_helpers.txt) and [other helpers](templating_other_helpers.txt) documentation.
+
+Text information in the database
+-------------------------------
+
+For each table that contains some i18n data, it is recommended to split the table in two parts: one table with no i18n column, and the other one with only the i18n columns. This setup lets you add more languages when needed without a change to your model. Let's take an example with a Product table.
+
+First, create tables in the schema.xml file:
+
+    <table name="my_product" phpName="Product" isI18N="true" i18nTable="my_product_i18n">
+      <column name="id" type="integer" required="true" primaryKey="true" autoincrement="true" />
+      <column name="price" type="float" />
+    </table>
+    
+    <table name="my_product_i18n" phpName="ProductI18n">
+      <column name="id" type="integer" required="true" primaryKey="true" />
+        <foreign-key foreignTable="my_product">
+         <reference local="id" foreign="id"/>
+        </foreign-key>
+      <column name="culture" isCulture="true" type="varchar" size="7" required="true" primaryKey="true" />
+      <column name="name" type="varchar" size="50" />
+    </table>
+
+Notice the `isI18N` and `i18nTable` attributes of the `table` tag, and the special `culture` column. Also, the `_i18n` suffix of the second table is a convention that automates many data access mechanisms. All these are symfony specific Propel enhancements.
+
+Once the corresponding object model is built (don't forget to call `symfony build-model` and clear the cache with a `symfony cc` after each modification of the `schema.xml`), you can use your Product class with i18n support as if there was only one table:
+
+    $product = ProductPeer::retrieveByPk(1);
+    $product->setCulture('fr');
+    $product->setName('Nom du produit');
+    $product->save();
+    
+    $product->setCulture('en');
+    $product->setName('Product name');
+    $product->save();
+    
+    echo $product->getName();           =>    'Product name'
+    $product->setCulture('fr');
+    echo $product->getName();           =>    'Nom du produit'
+
+>**Note**: If you don't want to remember to change the culture each time you use an i18n object, you can also change the `hydrate` method in the object class. In the previous example, add the following function to the `myproject/lib/model/Product.php`:
+>
+>    public function hydrate(ResultSet $rs, $startcol = 1)
+>    {
+>      parent::hydrate($rs, $startcol);
+>      $this->setCulture(SF_DEFAULT_CULTURE);
+>    }
+>  
+>or even, to get the actual user culture:
+>
+>    public function hydrate(ResultSet $rs, $startcol = 1)
+>    {
+>      parent::hydrate($rs, $startcol);
+>      $this->setCulture(sfContext::getInstance()->getUser()->getCulture());
+>    }
 
 Interface translation
 ---------------------
@@ -65,11 +141,6 @@ These files must be stored in the `app/i18n` directory.
 
 The use of the XLIFF format allows you to use common translation tools to reference all text in your website and translate it, without the need of a specific tool to build for translators.
 
-Localization
-------------
-
-**TODO**
-
 Template adaptation
 -------------------
 
@@ -84,8 +155,3 @@ The internationalized version should be:
     <?php echo date() ?>
 
 The `__()` shortcuts require as single argument the text to be translated. This text must match a node in the XLIFF file. During display, the localized version adapted to the user culture will automatically replace the text of the template.
-
-Data translation
-----------------
-
-**TODO**

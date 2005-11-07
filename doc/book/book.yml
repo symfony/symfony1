@@ -25,6 +25,7 @@ parts:
     - routing
     - user_session
     - security
+    - i18n
     - pager
     - generator
     - shopping_cart
