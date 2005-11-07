@@ -24,20 +24,22 @@
  */
 class sfPager
 {
-  private $page = 1;
-  private $maxPerPage = 0;
-  private $lastPage = 1;
-  private $nbResults = 0;
-  private $class = '';
-  private $tableName = '';
-  private $criteria = null;
-  private $objects = null;
-  private $cursor = 1;
-  private $sort = '';
-  private $sortType = '';
-  private $parameters = array();
-  private $currentMaxLink = 1;
-  private $parameter_holder = null;
+  private
+    $page             = 1,
+    $maxPerPage       = 0,
+    $lastPage         = 1,
+    $nbResults        = 0,
+    $class            = '',
+    $tableName        = '',
+    $criteria         = null,
+    $objects          = null,
+    $cursor           = 1,
+    $sort             = '',
+    $sortType         = '',
+    $parameters       = array(),
+    $currentMaxLink   = 1,
+    $parameter_holder = null,
+    $peer_method_name = 'doSelect';
 
   public function __construct($class, $defaultMaxPerPage = 10)
   {
@@ -63,13 +65,25 @@ class sfPager
     $c->setLimit(0);
 
     if (($this->getPage() == 0 || $this->getMaxPerPage() == 0))
+    {
       $this->setLastPage(0);
+    }
     else
     {
       $this->setLastPage(ceil($this->getNbResults() / $this->getMaxPerPage()));
       $c->setOffset(($this->getPage() - 1) * $this->getMaxPerPage());
       $c->setLimit($this->getMaxPerPage());
     }
+  }
+
+  public function getPeerMethod()
+  {
+    return $this->peer_method_name;
+  }
+
+  public function setPeerMethod($peer_method_name)
+  {
+    $this->peer_method_name = $peer_method_name;
   }
 
   public function getCurrentMaxLink()
@@ -83,7 +97,9 @@ class sfPager
     $begin = ($this->page - floor($nb_links / 2) > 0) ? $this->page - floor($nb_links / 2) : 1;
     $i = $begin;
     while (($i < $begin + $nb_links) && ($i <= $this->lastPage))
+    {
       $links[] = $i++;
+    }
 
     $this->currentMaxLink = $links[count($links) - 1];
 
@@ -98,7 +114,10 @@ class sfPager
   public function setSort($sort, $type = 'asc')
   {
     $this->sort = $sort;
-    if (($type != 'asc') && ($type != 'desc')) $type = 'asc';
+    if (($type != 'asc') && ($type != 'desc'))
+    {
+      $type = 'asc';
+    }
     $this->sortType = $type;
 
     $c = $this->getCriteria();
@@ -158,12 +177,6 @@ class sfPager
     return $this->getCurrent();
   }
 
-  /* DEPRECATED : use getCurrent() */
-  public function getCurrentObject()
-  {
-    return $this->retrieveObject($this->cursor);
-  }
-
   public function getCurrent()
   {
     return $this->retrieveObject($this->cursor);
@@ -172,17 +185,25 @@ class sfPager
   public function getNext()
   {
     if (($this->cursor + 1) > $this->nbResults)
+    {
       return null;
+    }
     else
+    {
       return $this->retrieveObject($this->cursor + 1);
+    }
   }
 
   public function getPrevious()
   {
     if (($this->cursor - 1) < 1)
+    {
       return null;
+    }
     else
+    {
       return $this->retrieveObject($this->cursor - 1);
+    }
   }
 
   private function retrieveObject($offset)
@@ -191,33 +212,45 @@ class sfPager
     $c->setOffset($offset - 1);
     $c->setLimit(1);
 
-    return call_user_func_array(array($this->getClass().'Peer', 'doSelectOne'), array($c));
+    $results = call_user_func_array(array($this->getClass().'Peer', $this->getPeerMethod()), array($c));
+
+    return $results[0];
   }
 
   public function getResults()
   {
     $c = $this->getCriteria();
-    return call_user_func_array(array($this->getClass().'Peer', 'doSelect'), array($c));
+    return call_user_func_array(array($this->getClass().'Peer', $this->getPeerMethod()), array($c));
   }
 
   public function getFirstIndice()
   {
     if ($this->page == 0)
+    {
       return 1;
+    }
     else
+    {
       return ($this->page - 1) * $this->maxPerPage + 1;
+    }
   }
 
   public function getLastIndice()
   {
     if ($this->page == 0)
+    {
       return $this->nbResults;
+    }
     else
     {
       if (($this->page * $this->maxPerPage) >= $this->nbResults)
+      {
         return $this->nbResults;
+      }
       else
+      {
         return ($this->page * $this->maxPerPage);
+      }
     }
   }
 
@@ -264,7 +297,10 @@ class sfPager
   private function setLastPage($page)
   {
     $this->lastPage = $page;
-    if ($this->getPage() > $page) $this->setPage($page);
+    if ($this->getPage() > $page)
+    {
+      $this->setPage($page);
+    }
   }
 
   public function getPage()
@@ -284,9 +320,7 @@ class sfPager
 
   public function setPage($page)
   {
-    if ($page < 0) $page = 1;
-
-    $this->page = $page;
+    $this->page = ($page < 0) ? 1 : $page;
   }
 
   public function getMaxPerPage()
@@ -299,7 +333,10 @@ class sfPager
     if ($max > 0)
     {
       $this->maxPerPage = $max;
-      if ($this->page == 0) $this->page = 1;
+      if ($this->page == 0)
+      {
+        $this->page = 1;
+      }
     }
     else if ($max == 0)
     {
@@ -309,7 +346,10 @@ class sfPager
     else
     {
       $this->maxPerPage = 1;
-      if ($this->page == 0) $this->page = 1;
+      if ($this->page == 0)
+      {
+        $this->page = 1;
+      }
     }
   }
 
