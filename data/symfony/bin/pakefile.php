@@ -358,7 +358,7 @@ function run_init_propelcrud($task, $args)
 
   // create basic application structure
   $finder = pakeFinder::type('any')->prune('.svn')->discard('.svn');
-  pake_mirror($finder, PAKEFILE_SYMFONY_DATA_DIR.'/symfony/generator/sfPropelCrud/skeleton/', getcwd().'/'.$app.'/modules/'.$module);
+  pake_mirror($finder, PAKEFILE_SYMFONY_DATA_DIR.'/symfony/generator/sfPropelCrud/default/skeleton/', getcwd().'/'.$app.'/modules/'.$module);
 
   // create basic test
   pake_copy(PAKEFILE_DATA_DIR.'/symfony/skeleton/module/test/actionsTest.php', getcwd().'/test/'.$app.'/'.$module.'ActionsTest.php');
@@ -398,7 +398,7 @@ function run_generate_propelcrud($task, $args)
   require_once('symfony/cache/sfFileCache.class.php');
   require_once('symfony/generator/sfGenerator.class.php');
   require_once('symfony/generator/sfGeneratorManager.class.php');
-  require_once('symfony/generator/sfPropelCrud/sfPropelCrudGenerator.class.php');
+  require_once('symfony/generator/sfPropelCrudGenerator.class.php');
   require_once('symfony/util/sfInflector.class.php');
   require_once('propel/Propel.php');
   require_once('lib/model/'.$model_class.'.php');

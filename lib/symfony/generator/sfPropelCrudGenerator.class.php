@@ -91,7 +91,7 @@ class sfPropelCrudGenerator extends sfGenerator
     }
 
     // template directory
-    $template_dir = SF_SYMFONY_DATA_DIR.'/generator/sfPropelCrud/template';
+    $template_dir = SF_SYMFONY_DATA_DIR.'/generator/sfPropelCrud/default/template';
 
     $this->generatePhpFiles($this->generatedModuleName, $template_dir);
 
