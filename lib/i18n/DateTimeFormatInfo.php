@@ -166,7 +166,7 @@ class DateTimeFormatInfo
      * @return DateTimeFormatInfo DateTimeFormatInfo for the specified 
      * culture. 
      */
-    function getInstance($culture=null)
+    static function getInstance($culture=null)
     {
     	
         if ($culture instanceof CultureInfo)
