@@ -56,11 +56,11 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler
     $class = $config['class'];
 
     // generate class and add a reference to it
-    $generator = new sfGeneratorManager();
-    $generator->initialize();
+    $generator_manager = new sfGeneratorManager();
+    $generator_manager->initialize();
     $generator_param = (isset($config['param']) ? $config['param'] : array());
     $param = array_merge($param, $generator_param);
-    $data .= $generator->generate($class, $param);
+    $data .= $generator_manager->generate($class, $param);
 
     // compile data
     $retval = "<?php\n" .

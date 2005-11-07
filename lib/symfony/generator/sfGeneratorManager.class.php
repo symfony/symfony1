@@ -32,11 +32,11 @@ class sfGeneratorManager
     return $this->cache;
   }
 
-  public function generate ($class, $param)
+  public function generate ($generator_class, $param)
   {
-    $generator = new $class();
+    $generator = new $generator_class();
     $generator->initialize($this);
-    $data = $generator->generate($class, $param);
+    $data = $generator->generate($param);
 
     return $data;
   }

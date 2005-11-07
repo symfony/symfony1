@@ -19,7 +19,7 @@ define('PAKEFILE_SYMFONY_DATA_DIR', PAKEFILE_DATA_DIR);
 
 if (!defined('SF_SYMFONY_DATA_DIR'))
 {
-  define('SF_SYMFONY_DATA_DIR', PAKEFILE_DATA_DIR.'/symfony');
+  define('SF_SYMFONY_DATA_DIR', PAKEFILE_DATA_DIR);
 }
 
 set_include_path(PAKEFILE_SYMFONY_LIB_DIR.PATH_SEPARATOR.get_include_path());
@@ -383,6 +383,8 @@ function run_generate_propelcrud($task, $args)
     throw new Exception('you must provide your model class name');
   }
 
+  $theme = isset($args[3]) ? $args[3] : 'default';
+
   $app         = $args[0];
   $module      = $args[1];
   $model_class = $args[2];
@@ -394,6 +396,7 @@ function run_generate_propelcrud($task, $args)
   require_once('symfony/exception/sfException.class.php');
   require_once('symfony/exception/sfInitializationException.class.php');
   require_once('symfony/exception/sfParseException.class.php');
+  require_once('symfony/exception/sfConfigurationException.class.php');
   require_once('symfony/cache/sfCache.class.php');
   require_once('symfony/cache/sfFileCache.class.php');
   require_once('symfony/generator/sfGenerator.class.php');
@@ -402,9 +405,9 @@ function run_generate_propelcrud($task, $args)
   require_once('symfony/util/sfInflector.class.php');
   require_once('propel/Propel.php');
   require_once('lib/model/'.$model_class.'.php');
-  $generator = new sfGeneratorManager();
-  $generator->initialize();
-  $generator->generate('sfPropelCrudGenerator', array('model_class' => $model_class, 'moduleName' => $module));
+  $generator_manager = new sfGeneratorManager();
+  $generator_manager->initialize();
+  $generator_manager->generate('sfPropelCrudGenerator', array('model_class' => $model_class, 'moduleName' => $module, 'theme' => $theme));
 
   // copy our generated module
   $finder = pakeFinder::type('any');

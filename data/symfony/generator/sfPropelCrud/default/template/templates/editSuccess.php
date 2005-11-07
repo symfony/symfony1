@@ -12,46 +12,8 @@
 <?php if ($column->isPrimaryKey()) continue ?>
 <?php if ($name == 'CREATED_AT' || $name == 'UPDATED_AT') continue ?>
 <tr>
-<th><?php echo sfInflector::humanize(sfInflector::underscore($column->getPhpName())) ?><?php if ($column->isNotNull()): ?>*<?php endif ?>:</th>
-<td>[?php echo <?php
-  $type = $column->getCreoleType();
-  if ($column->isForeignKey())
-  {
-    $relatedTable = $this->map->getDatabaseMap()->getTable($column->getRelatedTableName()); 
-    echo "object_select_tag(\${$this->getSingularName()}, 'get{$column->getPhpName()}', array('related_class' => '{$relatedTable->getPhpName()}'))";
-  }
-  else if ($type == CreoleTypes::DATE)
-  {
-    // rich=false not yet implemented
-    echo "object_input_date_tag(\${$this->getSingularName()}, 'get{$column->getPhpName()}', array('rich' => true))";
-  }
-  else if ($type == CreoleTypes::BOOLEAN)
-  {
-    echo "object_checkbox_tag(\${$this->getSingularName()}, 'get{$column->getPhpName()}')";
-  }
-  else if ($type == CreoleTypes::CHAR || $type == CreoleTypes::VARCHAR || $type == CreoleTypes::LONGVARCHAR)
-  {
-    $size = ($column->getSize() > 20 ? ($column->getSize() < 80 ? $column->getSize() : 80) : 20);
-    echo "object_input_tag(\${$this->getSingularName()}, 'get{$column->getPhpName()}', array('size' => $size))";
-  }
-  else if ($type == CreoleTypes::INTEGER || $type == CreoleTypes::TINYINT || $type == CreoleTypes::SMALLINT || $type == CreoleTypes::BIGINT)
-  {
-    echo "object_input_tag(\${$this->getSingularName()}, 'get{$column->getPhpName()}', array('size' => 7))";
-  }
-  else if ($type == CreoleTypes::FLOAT || $type == CreoleTypes::DOUBLE || $type == CreoleTypes::DECIMAL || $type == CreoleTypes::NUMERIC || $type == CreoleTypes::REAL)
-  {
-    echo "object_input_tag(\${$this->getSingularName()}, 'get{$column->getPhpName()}', array('size' => 7))";
-  }
-  else if ($type == CreoleTypes::TEXT || $type == CreoleTypes::LONGVARCHAR)
-  {
-    echo "object_textarea_tag(\${$this->getSingularName()}, 'get{$column->getPhpName()}')";
-  }
-  else
-  {
-    echo "object_input_tag(\${$this->getSingularName()}, 'get{$column->getPhpName()}', array('disabled' => true))";
-  }
-  ?>
-  ?]</td>
+  <th><?php echo sfInflector::humanize(sfInflector::underscore($column->getPhpName())) ?><?php if ($column->isNotNull()): ?>*<?php endif ?>:</th>
+  <td>[?php echo <?php echo $this->getColumnEditTag($column) ?> ?]</td>
 </tr>
 <?php endforeach ?>
 </tbody>
