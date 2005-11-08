@@ -1,0 +1,9 @@
+errors:
+  err0001: |
+    Symfony enforces some php.ini values threw the php.yml configuration file (check category).
+
+    It seems you have a key in your php.ini configuration file with a "un-authorized" value (according to the symfony php.yml configuration file).
+
+    How can you fix this problem?
+    * change the value in php.ini
+    * change the php.yml file (you must copy the original file referenced in the error message to yourpoject/config/php.yml to override it)

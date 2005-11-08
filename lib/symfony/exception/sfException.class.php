@@ -137,6 +137,13 @@ class sfException extends Exception
       }
     }
 
+    // extract error reference from message
+    $error_reference = '';
+    if (preg_match('/\[(err\d+)\]/', $message, $matches))
+    {
+      $error_reference = $matches[1];
+    }
+
     $error_file = 'error';
     $error_ext = 'txt';
     switch ($format)

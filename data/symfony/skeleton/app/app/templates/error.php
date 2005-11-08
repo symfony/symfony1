@@ -54,7 +54,11 @@ th {
     </tr>
     <tr>
         <td class="title">message:</td>
-        <td class="message"><?php print $message ?></td>
+        <td class="message"><?php print $message ?>
+        <?php if ($error_reference): ?>
+          <a href='http://www.symfony-project.com/errors/<?php echo $error_reference ?>'>learn more about this issue</a>
+        <?php endif ?>
+        </td>
     </tr>
     <tr>
         <td class="title">code:</td>

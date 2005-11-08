@@ -92,7 +92,7 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
 
         if (ini_get($key) != $value)
         {
-          $error = 'Configuration file "%s" specifies that php.ini "%s" key must be set to "%s"';
+          $error = 'Configuration file "%s" specifies that php.ini "%s" key must be set to "%s" [err0001]';
           $error = sprintf($error, $configFile, $key, $value);
 
           throw new sfInitializationException($error);
