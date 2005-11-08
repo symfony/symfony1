@@ -17,11 +17,6 @@ else
 
 define('PAKEFILE_SYMFONY_DATA_DIR', PAKEFILE_DATA_DIR);
 
-if (!defined('SF_SYMFONY_DATA_DIR'))
-{
-  define('SF_SYMFONY_DATA_DIR', PAKEFILE_DATA_DIR);
-}
-
 set_include_path(PAKEFILE_SYMFONY_LIB_DIR.PATH_SEPARATOR.get_include_path());
 
 /* tasks registration */
@@ -381,6 +376,11 @@ function run_generate_propelcrud($task, $args)
   if (count($args) < 3)
   {
     throw new Exception('you must provide your model class name');
+  }
+
+  if (!defined('SF_SYMFONY_DATA_DIR'))
+  {
+    define('SF_SYMFONY_DATA_DIR', PAKEFILE_DATA_DIR);
   }
 
   $theme = isset($args[3]) ? $args[3] : 'default';
