@@ -88,8 +88,14 @@ function run_test($task, $args)
   // get configuration
   require_once SF_ROOT_DIR.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php';
 
+  $dirs_to_test = array($app);
+  if (is_dir('test/project'))
+  {
+    $dirs_to_test[] = 'project';
+  }
+
   pake_import('simpletest', false);
-  pakeSimpletestTask::call_simpletest($task, 'text', array('project', $app));
+  pakeSimpletestTask::call_simpletest($task, 'text', $dirs_to_test);
 }
 
 function run_fix()
