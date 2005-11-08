@@ -32,10 +32,11 @@
 class sfRouting
 {
   private static
-    $instance = null;
+    $current_route_name = '',
+    $instance           = null;
 
   private
-    $routes   = array();
+    $routes             = array();
 
   /**
    * Returns the sfRouting instance.
@@ -50,6 +51,16 @@ class sfRouting
     }
 
     return self::$instance;
+  }
+
+  private function setCurrentRouteName($name)
+  {
+    $this->current_route_name = $name;
+  }
+
+  public function getCurrentRouteName()
+  {
+    return $this->current_route_name;
   }
 
   public function getRoutes()
@@ -392,6 +403,9 @@ class sfRouting
 
         if ($break)
         {
+          // we store route name
+          $this->setCurrentRouteName($route_name);
+
           if (SF_LOGGING_ACTIVE) sfLogger::getInstance()->info('{sfRouting} match route ['.$route_name.'] "'.$route.'"');
           break;
         }
