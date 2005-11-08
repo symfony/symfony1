@@ -287,7 +287,7 @@ class sfWebRequest extends sfRequest
     else
     {
       $pathInfo = $pathArray[SF_PATH_INFO_KEY];
-      if (SF_RELATIVE_URL_ROOT)
+      if (defined('SF_RELATIVE_URL_ROOT') && SF_RELATIVE_URL_ROOT)
       {
         $pathInfo = preg_replace('/^'.str_replace('/', '\\/', SF_RELATIVE_URL_ROOT).'\//', '', $pathInfo);
       }
