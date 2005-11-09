@@ -114,6 +114,13 @@ or, in debug mode:
 
     http://myapp.example.com/myapp_dev.php/
 
+>**Note**: symfony uses the `mod_rewrite` module to display 'smart' urls. If your version of apche is not compiled with `mod_rewrite`, check you have the mod_rewrite DSO installed and the following lines in your `httpd.conf`:
+>
+>     AddModule mod_rewrite.c
+>     LoadModule rewrite_module modules/mod_rewrite.so
+>
+>You will learn more about the smart urls in the [routing chapter](http://www.symfony-project.com/content/book/page/routing.html).
+
 Symfony is compatible with other server configurations. You can, for instance, access a symfony application using an alias instead of a virtual host. To discover more about web server configuration, refer to the [related chapter](web_server.txt).
 
 Module setup

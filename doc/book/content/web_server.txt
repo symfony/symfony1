@@ -186,3 +186,8 @@ And this is enough to be able to access the `admin` application by:
     http://whateveryourmainurlis/admin/
 
 >**Note**: you will need to recreate the same file structure in your `web/admin` directory as in a classic `web` directory (with `css`, `js`, `images`, `uploads` directories) since all the paths to the root now point to this `admin/` directory.
+
+IIS
+---
+
+Symfony is compatible with IIS. To learn all about the installation and configuration of a symfony project in a IIS environment, read the [related tutorial](http://www.symfony-project.com/tutorial/symfony_on_iis.html).
