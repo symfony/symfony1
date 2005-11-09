@@ -19,6 +19,11 @@
 
 function __($text, $culture = null)
 {
+  if (!SF_IS_I18N)
+  {
+    throw new sfConfigurationException('you must set is_i18n to "on" in your settings.yml to enable I18N support');
+  }
+
   return sfContext::getInstance()->getRequest()->getAttribute('gm')->_($text);
 }
 
