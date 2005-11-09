@@ -406,7 +406,7 @@ function run_generate_propelcrud($task, $args)
   // generate module
   $tmp_dir = getcwd().DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.md5(uniqid(rand(), true));
   define('SF_MODULE_CACHE_DIR', $tmp_dir);
-  set_include_path(getcwd().DIRECTORY_SEPARATOR.'lib'.PATH_SEPARATOR.PAKEFILE_LIB_DIR.PATH_SEPARATOR.get_include_path());
+  set_include_path(getcwd().PATH_SEPARATOR.getcwd().DIRECTORY_SEPARATOR.'lib'.PATH_SEPARATOR.PAKEFILE_LIB_DIR.PATH_SEPARATOR.get_include_path());
   require_once('symfony/exception/sfException.class.php');
   require_once('symfony/exception/sfInitializationException.class.php');
   require_once('symfony/exception/sfParseException.class.php');
