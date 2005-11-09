@@ -54,7 +54,7 @@ echo variable to your local symfony installation!
 goto cleanup
 
 :set_classpath
-set PHP_CLASSPATH="%SYMFONY_HOME%\lib"
+set PHP_CLASSPATH=%SYMFONY_HOME%\lib
 goto init
 
 :cleanup
