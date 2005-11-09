@@ -74,16 +74,16 @@ class sfPropelCrudGenerator extends sfGenerator
     foreach ($classes as $class)
     {
       $class_map_builder = basename($class, '.php');
-      require_once('model/'.$class);
-      $maps[$class] = new $class_map_builder();
-      if (!$maps[$class]->isBuilt())
+      require_once('model/map/'.$class_map_builder.'.php');
+      $maps[$class_map_builder] = new $class_map_builder();
+      if (!$maps[$class_map_builder]->isBuilt())
       {
-        $maps[$class]->doBuild();
+        $maps[$class_map_builder]->doBuild();
       }
 
       if ($c == str_replace('MapBuilder', '', $class_map_builder))
       {
-        $this->map = $maps[$class];
+        $this->map = $maps[$class_map_builder];
       }
     }
     $this->tableMap = $this->map->getDatabaseMap()->getTable(constant($c.'Peer::TABLE_NAME'));
