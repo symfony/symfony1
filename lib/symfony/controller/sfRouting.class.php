@@ -32,10 +32,10 @@
 class sfRouting
 {
   private static
-    $current_route_name = '',
     $instance           = null;
 
   private
+    $current_route_name = '',
     $routes             = array();
 
   /**
