@@ -17,6 +17,14 @@
  * @version    SVN: $Id$
  */
 
+function use_helpers()
+{
+  foreach (func_get_args() as $helperName)
+  {
+    use_helper($helperName);
+  }
+}
+
 function use_helper($helperName)
 {
   if (is_readable(SF_SYMFONY_LIB_DIR.'/symfony/helper/'.$helperName.'Helper.php'))
