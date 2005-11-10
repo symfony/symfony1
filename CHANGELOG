@@ -1,6 +1,8 @@
 SVN
 ---
 
+* [fabien] lot a small fixes for Windows users
+* [fabien] extended error messages support
 * [fabien] new helpers:
            * objects_for_select
            * button_to (patch from francois)
