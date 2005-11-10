@@ -109,7 +109,7 @@ try
   }
 
   // set exception format
-  sfException::setFormat((isset($_SERVER['argc']) && $_SERVER['argc'] > 0) ? 'plain' : 'html');
+  sfException::setFormat(isset($_SERVER['HTTP_HOST']) ? 'html' : 'plain');
 
   if (SF_DEBUG)
   {
