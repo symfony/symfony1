@@ -200,6 +200,40 @@ You can add the other rules to the `send.yml` configuration file to force the va
         match_error:  You didn't enter a valid email address (for example: name@domain.com). Please try again.
         pattern:      /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/i
 
+Available validators
+--------------------
+
+The available validators can be found in the symfony lib `validator` directory. For the moment, they are:
+
+- `sfStringValidator`: allows you to apply string-related constraints to a parameter
+- `sfNumberValidator`: verifies if a parameter is a number and allows you to apply size constraints
+- `sfRegexValidator`: allows you to match a value against a regular expression pattern	
+- `sfEmailValidator`: verifies if a parameter contains a value that qualifies as an email address 	
+- `sfCompareValidator`: checks the equality of two different request parameters; very useful for password check
+
+Let's illustrate this last validator. Imagine that you have a form with two password fields named `password1` and `password2`. The second field is there to check that the user enters the same password twice. The YAML validation file should then look like:
+
+    methods:
+      get:      [password1, password2]
+      post:     [password1, password2]
+
+    names:
+      password1:
+        required:       Yes
+        required_msg:   Please enter a password
+      password2:
+        required:       Yes
+        required_msg:   Please retype the password
+        validators:     passwordValidator
+        
+    passwordValidator:
+       class:            sfCompareValidator
+       param:
+         check:          password1
+         compare_error:  The passwords you entered do not match. Please try again.
+
+For a detailed description of the parameters of each of these validators, refer to the source code.
+
 Custom validator
 ----------------
 
