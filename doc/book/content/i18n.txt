@@ -1,4 +1,4 @@
-How to internationalize a project
+﻿How to internationalize a project
 =================================
 
 Overview
@@ -137,21 +137,55 @@ Symfony stores the user interface translations in XML configuration files in the
       </file>
     </xliff>
 
-These files must be stored in the `app/i18n` directory.
+These files must be stored in the `app/i18n/global` directory.
 
 The use of the XLIFF format allows you to use common translation tools to reference all text in your website and translate it, without the need of a specific tool to build for translators.
 
 Template adaptation
 -------------------
 
-Let's see how to introduce some text to be translated in a template. If the base template is:
+Lets say we want to have a website in English and French, with English being the default language. We want to display the phrase 'Welcome to our website. Today's date is ' followed by the actual date.
 
-    Welcome to our website. Today's date is <?php echo date() ?>
+For this to work we need to:
 
-The internationalized version should be:
+1) Activate the I18N helper by adding `,I18N` to `standard_helpers:` to in our settings.yml file.
+Or put `<?php use_helper('I18N') ?>` at the top of the template where we want to use internationalisation.
 
-    <?php echo __('Welcome to our website.') ?>
-    <?php echo __('Today's date is ') ?>
-    <?php echo date() ?>
+The same goes for the 'Date' helper to make sure the date is being formatted right.
 
-The `__()` shortcuts require as single argument the text to be translated. This text must match a node in the XLIFF file. During display, the localized version adapted to the user culture will automatically replace the text of the template.
+2) Make a `messages.fr.xml` file in the `app/i18n/global` directory. Containing:
+
+	<?xml version="1.0" ?>
+	<xliff version="1.0">
+	  <file orginal="global" source-language="en_US" datatype="plaintext">
+	    <body>
+  	    <trans-unit id="1">
+	    <source>Welcome to our website.</source>
+	    <target>Bienvenue sur notre site web</target>
+	    </trans-unit>
+
+	    <trans-unit id="2">
+	    <source>Today's date is </source>
+	    <target>La date d'aujourd'hui est </target>
+	    </trans-unit>
+	    </body>
+	  </file>
+	</xliff>	
+
+
+Notice the source-language="...". Put the full iso code of your default culture here.
+
+3) Write our template using the __('') function, according to the nodes used in the messages.fr.xml file.
+
+
+For example (assuming the helpers are activated in the settings.yml file):
+
+    <?php echo __('Welcome to our website.') ?> (this matches the first trans-unit's source node)
+    <?php echo __('Today's date is ') ?> (this matches the second trans-unit's source node)
+    <?php echo format_date(date()) ?>
+
+The default user culture is set to `en_US`, so the text outputs in English.
+If however the culture is changed to `fr_BE` with `$this->getUser()->setCulture('fr_BE');`, the text outputs in French.
+
+
+Lets assume we want to add another language at a later date. Lets take the dutch language for example. All we have to do is duplicate `messages.fr.xml` and call it `messages.nl.xml`. Then we open the newly created file and change all the `<target>` nodes to contain the dutch translation.
