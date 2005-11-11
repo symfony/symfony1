@@ -117,7 +117,13 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
    */
   public function setCulture ($culture)
   {
-    $this->culture = $culture;
+    if ($this->culture != $culture)
+    {
+      $this->culture = $culture;
+
+      // change the message format object with the new culture
+      $this->getContext()->getRequest()->setAttribute('message_format', new sfMessageFormat($culture), 'symfony/i18n');
+    }
   }
 
   /**
@@ -150,7 +156,9 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfUser} user is '.($authenticated === true ? '' : 'not').' authenticated');
 
     if ($authenticated === true)
+    {
       $this->authenticated = true;
+    }
     else
     {
       $this->authenticated = false;
@@ -195,7 +203,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     // i18n
     if (SF_IS_I18N)
     {
-      $context->getRequest()->setAttribute('gm', new sfMessageFormat($context->getUser()->getCulture()));
+      $context->getRequest()->setAttribute('message_format', new sfMessageFormat($context->getUser()->getCulture()), 'symfony/i18n');
     }
   }
 
