@@ -1,5 +1,10 @@
 <?php
 
+if (ini_get('zend.ze1_compatibility_mode'))
+{
+  die("symfony cannot run with zend.ze1_compatibility_mode enabled.\nPlease turn zend.ze1_compatibility_mode to Off in your php.ini.\n");
+}
+
 // define some PEAR directory constants
 define('PAKEFILE_LIB_DIR',  '@PEAR-DIR@');
 define('PAKEFILE_DATA_DIR', '@DATA-DIR@');

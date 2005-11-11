@@ -1,8 +1,9 @@
 set:
-  magic_quotes_runtime: off
-  log_errors:           on
-  arg_separator.output: \&amp;
+  magic_quotes_runtime:        off
+  log_errors:                  on
+  arg_separator.output:        \&amp;
 
 check:
-  magic_quotes_gpc:     off
-  register_globals:     off
+  magic_quotes_gpc:            off
+  register_globals:            off
+  zend.ze1_compatibility_mode: off
