@@ -131,7 +131,7 @@ class sfRouting
 
     $parsed = array();
     $names  = array();
-    $suffix = SF_SUFFIX;
+    $suffix = (SF_SUFFIX == '.') ? '' : SF_SUFFIX;
 
     // used for performance reasons
     $names_hash = array();
@@ -163,19 +163,15 @@ class sfRouting
       if (preg_match('/^(.+)(\.\w*)$/i', $elements[count($elements) - 1], $matches))
       {
         $suffix = ($matches[2] == '.') ? '' : $matches[2];
-        $regexp_suffix = ($matches[2] == '.') ? '' : preg_quote($matches[2]);
         $elements[count($elements) - 1] = $matches[1];
         $route = '/'.implode('/', $elements);
       }
       else if ($route{strlen($route) - 1} == '/')
       {
         $suffix = '/';
-        $regexp_suffix = '/';
       }
-      else
-      {
-        $regexp_suffix = preg_quote($suffix);
-      }
+
+      $regexp_suffix = preg_quote($suffix);
 
       foreach ($elements as $element)
       {

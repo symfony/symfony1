@@ -1,6 +1,7 @@
 SVN
 ---
 
+* [fabien] changed default suffix from .html to / (breaks backward compatibility)
 * [fabien] added configurable suffix by route (with directory and no suffix support) and enforced one URL for one ressource
 * [fabien] dev environment is much more faster
 * [fabien] better debug sidebar

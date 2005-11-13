@@ -92,9 +92,6 @@ class sfViewCacheManager
     $hostName = preg_replace('/_+/', '_', $hostName);
     $uri = '/'.$hostName.'/'.$uri;
 
-    // remove suffix (.html)
-    $uri = preg_replace('/'.SF_SUFFIX.'$/', '', $uri);
-
     // add suffix (slot, fragment, ...)
     if ($suffix)
     {
