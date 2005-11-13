@@ -30,12 +30,6 @@ if (SF_DEBUG && SF_LOGGING_ACTIVE)
   sfDebugConnection::setLogger(sfLogger::getInstance());
 }
 
-// set propel logger
-if (SF_LOGGING_ACTIVE)
-{
-  Propel::setLogger(sfLogger::getInstance());
-}
-
 // propel initialization
 Propel::init(sfConfigCache::getCacheName($orm_config));
 
