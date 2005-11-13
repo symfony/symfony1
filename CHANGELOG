@@ -1,6 +1,8 @@
 SVN
 ---
 
+* [fabien] better debug sidebar
+* [fabien] better i18n support (variable substitution)
 * [fabien] lot a small fixes for Windows users
 * [fabien] extended error messages support
 * [fabien] new helpers:
