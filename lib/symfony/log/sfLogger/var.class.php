@@ -52,65 +52,99 @@ class sfLog_var extends sfLog
      */
     private $_eol = "\n";
 
+    private $web_debug = null;
+
     public function sfLog_var($name, $ident = '', $conf = array(), $level = PEAR_LOG_DEBUG)
     {
-        $this->_id = $name.'_'.$ident;
-        $this->_ident = $ident;
-        $this->_mask = sfLog::UPTO($level);
+      $this->_id = $name.'_'.$ident;
+      $this->_ident = $ident;
+      $this->_mask = sfLog::UPTO($level);
 
-        if (!empty($conf['lineFormat']))
-            $this->_lineFormat = str_replace(array_keys($this->_formatMap), array_values($this->_formatMap), $conf['lineFormat']);
+      if (!empty($conf['lineFormat']))
+      {
+        $this->_lineFormat = str_replace(array_keys($this->_formatMap), array_values($this->_formatMap), $conf['lineFormat']);
+      }
 
-        if (!empty($conf['timeFormat']))
-            $this->_timeFormat = $conf['timeFormat'];
+      if (!empty($conf['timeFormat']))
+      {
+        $this->_timeFormat = $conf['timeFormat'];
+      }
 
-        if (!empty($conf['eol']))
-            $this->_eol = $conf['eol'];
-        else
-            $this->_eol = (strstr(PHP_OS, 'WIN')) ? "\r\n" : "\n";
+      if (!empty($conf['eol']))
+      {
+        $this->_eol = $conf['eol'];
+      }
+      else
+      {
+        $this->_eol = (strstr(PHP_OS, 'WIN')) ? "\r\n" : "\n";
+      }
+
+      $this->web_debug = sfWebDebug::getInstance();
     }
 
     public function log($message, $priority = null)
     {
-        /* Abort early if the priority is above the maximum logging level. */
-        if (!$this->_isMasked($priority))
-            return false;
+      /* Abort early if the priority is above the maximum logging level. */
+      if (!$this->_isMasked($priority))
+      {
+        return false;
+      }
 
-        /* If a priority hasn't been specified, use the default value. */
-        if ($priority === null)
-            $priority = $this->_priority;
+      $logEntry = new sfLogEntry();
 
-        /* Extract the string representation of the message. */
-        $message = $this->_extractMessage($message);
+      /* If a priority hasn't been specified, use the default value. */
+      if ($priority === null)
+      {
+        $priority = $this->_priority;
+      }
 
-        /* If we have xdebug, add some stack information */
-        if (function_exists('xdebug_get_function_stack'))
+      /* Extract the string representation of the message. */
+      $message = $this->_extractMessage($message);
+
+      /* If we have xdebug, add some stack information */
+      $debug_stack = array();
+      if (function_exists('xdebug_get_function_stack'))
+      {
+        foreach (xdebug_get_function_stack() as $i => $stack)
         {
-          $message .= '[BEGIN_STACK]';
-          foreach (xdebug_get_function_stack() as $i => $stack)
+          if (
+            (isset($stack['function']) && !in_array($stack['function'], array('emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'debug', 'log')))
+            || !isset($stack['function'])
+          )
           {
-            if (
-              (isset($stack['function']) && !in_array($stack['function'], array('emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'debug', 'log')))
-              || !isset($stack['function'])
-            )
+            $tmp = 'called at "'.$stack['file'].'" line '.$stack['line'];
+            if (isset($stack['function']))
             {
-              $message .= '[n]called at "'.$stack['file'].'" line '.$stack['line'];
-              if (isset($stack['function'])) $message .= ' from "'.$stack['function'].'"';
+              $tmp .= ' from "'.$stack['function'].'"';
             }
+            $debug_stack[] = $tmp;
           }
-          $message .= '[END_STACK]';
         }
+      }
 
-        /* Build the string containing the complete log line. */
-        $line = sprintf($this->_lineFormat, strftime($this->_timeFormat), $this->_ident, $this->priorityToString($priority), $message) . $this->_eol;
+      // get log type in {}
+      $type = 'sfOther';
+      if (preg_match('/^\s*{([^}]+)}\s*(.+?)$/', $message, $matches))
+      {
+        $type    = $matches[1];
+        $message = $matches[2];
+      }
 
-        /* Write the log line to the var. */
-        sfWebDebug::log($line);
+      /* Build the object containing the complete log information. */
+      $logEntry->setPriority($priority);
+      $logEntry->setPriorityString($this->priorityToString($priority));
+      $logEntry->setTime(time());
+      $logEntry->setMessage($message);
+      $logEntry->setType($type);
+      $logEntry->setDebugStack($debug_stack);
 
-        /* Notify observers about this log message. */
-        $this->_announce(array('priority' => $priority, 'message' => $message));
+      /* Send the log object. */
+      $this->web_debug->log($logEntry);
 
-        return true;
+      /* Notify observers about this log message. */
+      $this->_announce(array('priority' => $priority, 'message' => $message));
+
+      return true;
     }
 }
 

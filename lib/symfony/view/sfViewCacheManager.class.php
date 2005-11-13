@@ -215,7 +215,7 @@ class sfViewCacheManager
 
     if (SF_WEB_DEBUG && $data)
     {
-      $data = sfWebDebug::decorateContentWithDebug($moduleName, $actionName, $suffix, $data, '#f00', '#ff9');
+      $data = sfWebDebug::getInstance()->decorateContentWithDebug($moduleName, $actionName, $suffix, $data, '#f00', '#ff9');
     }
 
     return $data;
@@ -278,7 +278,7 @@ class sfViewCacheManager
 
     if (SF_WEB_DEBUG)
     {
-      $data = sfWebDebug::decorateContentWithDebug($moduleName, $actionName, $suffix, $data, '#f00', '#9ff');
+      $data = sfWebDebug::getInstance()->decorateContentWithDebug($moduleName, $actionName, $suffix, $data, '#f00', '#9ff');
     }
 
     return $data;

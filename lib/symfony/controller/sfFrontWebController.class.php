@@ -71,9 +71,8 @@ class sfFrontWebController extends sfWebController
       // send web debug information if needed
       if (SF_WEB_DEBUG)
       {
-        sfWebDebug::printResults();
+        sfWebDebug::getInstance()->printResults();
       }
-
     }
     catch (sfException $e)
     {

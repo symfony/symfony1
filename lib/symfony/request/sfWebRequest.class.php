@@ -233,6 +233,12 @@ class sfWebRequest extends sfRequest
     // load parameters from GET/PATH_INFO/POST
     $this->loadParameters();
 
+    // register sfWebDebug assets
+    if (SF_WEB_DEBUG)
+    {
+      sfWebDebug::getInstance()->registerAssets();
+    }
+
     // sfStats call
     if (SF_STATS)
     {
