@@ -204,17 +204,17 @@ class sfWebDebug
           {
             $debug_info .= '#'.$i.' &raquo; '.$this->formatLogLine($log_line).'<br />';
           }
-          $debug_info .= '</div>'."\n";
+          $debug_info .= "</div>\n";
         }
 
         // format log
         $log = $this->formatLogLine($log);
 
         ++$line_nb;
-        $format = "<tr class='sfStats%s %s'><td>%s</td><td>%s</td><td>+%s&nbsp;</td><td><span class='sfStatsLogType'>%s</span></td><td>%s%s</td></tr>\n";
-        $logs .= sprintf($format, $class, $logEntry->getType(), $line_nb, image_tag($this->base_image_path.'/'.$priority.'.png', 'align=absmiddle'), $logEntry->getElapsedTime(), $type, $log, $debug_info);
+        $format = "<tr class='sfStats%s %s'><td>%s</td><td>%s</td><td>+%s&nbsp;</td><td><span class=\"sfStatsLogType\">%s</span></td><td>%s%s</td></tr>\n";
+        $logs .= sprintf($format, $class, $logEntry->getType(), $line_nb, image_tag($this->base_image_path.'/'.$priority.'.png', 'align=middle'), $logEntry->getElapsedTime(), $type, $log, $debug_info);
       }
-      $logs . '</table>';
+      $logs .= '</table>';
 
       $result .= javascript_tag('
       function toggleMessages(myclass)
@@ -249,10 +249,10 @@ class sfWebDebug
       $result .= '
       <div id="sfStatsLogMain" style="display: none">
         <div id="sfStatsLogMenu">
-          <div style="float:right">'.
+          <div class="float">'.
           implode('&nbsp;-&nbsp;', $types).'&nbsp;&nbsp;
-          <a href="#" onclick="toggleMessages(\'sfStatsGreen\')">'.image_tag($this->base_image_path.'/info.png', 'align=absmiddle').'</a>&nbsp;
-          <a href="#" onclick="Element.hide(\'sfStatsLogMain\')">'.image_tag($this->base_image_path.'/close.png', 'align=absmiddle').'</a>
+          <a href="#" onclick="toggleMessages(\'sfStatsGreen\')">'.image_tag($this->base_image_path.'/info.png', 'align=middle').'</a>&nbsp;
+          <a href="#" onclick="Element.hide(\'sfStatsLogMain\')">'.image_tag($this->base_image_path.'/close.png', 'align=middle').'</a>
           </div>
           <strong>Log messages</strong>
         </div>
@@ -270,19 +270,19 @@ class sfWebDebug
 
     if (SF_LOGGING_ACTIVE)
     {
-      $result .= '<a href="#" onclick="Element.show(\'sfStatsLogMain\')">'.image_tag($this->base_image_path.'/'.$log_image.'.png', 'align=absmiddle').'</a>&nbsp;';
+      $result .= '<a href="#" onclick="Element.show(\'sfStatsLogMain\')">'.image_tag($this->base_image_path.'/'.$log_image.'.png', 'align=middle').'</a>&nbsp;';
     }
 
     if (SF_DEBUG && SF_CACHE)
     {
       $self_url = $_SERVER['PHP_SELF'].((!preg_match('/ignore_cache/', $_SERVER['PHP_SELF'])) ? '?ignore_cache=1' : '');
-      $result .= '<a href="'.$self_url.'" title="reload and ignore cache">'.image_tag($this->base_image_path.'/reload.png', 'align=absmiddle').'</a>';
+      $result .= '<a href="'.$self_url.'" title="reload and ignore cache">'.image_tag($this->base_image_path.'/reload.png', 'align=middle').'</a>';
     }
 
     $result .= '
-    <a href="#" onclick="Element.hide(\'sfStats'.ucfirst($log_image).'\')">'.image_tag($this->base_image_path.'/close.png', 'align=absmiddle').'</a>
+    <a href="#" onclick="Element.hide(\'sfStats'.ucfirst($log_image).'\')">'.image_tag($this->base_image_path.'/close.png', 'align=middle').'</a>
     </div>
-    <div id="sfStatsLeftMenu"><strong><a href="#" onclick="Element.toggle(\'sfStatsDetails\', \'sfStatsTime\')">symfony</a></strong></div>
+    <div id="sfStatsLeftMenu"><a href="#" class="bold" onclick="Element.toggle(\'sfStatsDetails\', \'sfStatsTime\')">symfony</a></div>
     ';
 
     return $result;
@@ -304,7 +304,7 @@ class sfWebDebug
     $result = '';
     foreach ($config as $key => $value)
     {
-      $result .= '<div class="is'.$value.'"><span style="float:right"><strong>['.$value.']</strong></span>'.$key.'</div>';
+      $result .= '<div class="is'.$value.'"><span class="float bold">['.$value.']</span>'.$key.'</div>';
     }
 
     if (SF_DEBUG)
@@ -313,7 +313,7 @@ class sfWebDebug
       try
       {
         $con = Propel::getConnection();
-        $result .= '<div><span style="float:right"><strong>['.$con->getNumQueriesExecuted().']</strong></span>db requests</div>';
+        $result .= '<div><span class="float bold">['.$con->getNumQueriesExecuted().']</span>db requests</div>';
       }
       catch (Exception $e)
       {
@@ -334,7 +334,7 @@ class sfWebDebug
     $retval = '
       <div id="main_'.$id.'" class="sfWebDebugActionCache" style="border: 1px solid '.$border_color.'">
       <div id="sub_main_'.$id.'" class="sfStatsCache" style="background-color: '.$bg_color.'; border-right: 1px solid '.$border_color.'; border-bottom: 1px solid '.$border_color.';">
-      <div style="height: 16px; padding: 2px"><a href="#" onclick="Element.toggle(\''.$id.'\')"><strong>cache information</strong></a>&nbsp;<a href="#" onclick="Element.hide(\'sub_main_'.$id.'\'); document.getElementById(\'main_'.$id.'\').style.border = \'none\'">'.image_tag($this->base_image_path.'/close.png', 'align=absmiddle').'</a>&nbsp;</div>
+      <div style="height: 16px; padding: 2px"><a href="#" onclick="Element.toggle(\''.$id.'\')"><strong>cache information</strong></a>&nbsp;<a href="#" onclick="Element.hide(\'sub_main_'.$id.'\'); document.getElementById(\'main_'.$id.'\').style.border = \'none\'">'.image_tag($this->base_image_path.'/close.png', 'align=middle').'</a>&nbsp;</div>
         <div style="padding: 2px; display: none" id="'.$id.'">
         [uri]&nbsp;'.$uri.'<br />
         [life&nbsp;time]&nbsp;'.$cache->getLifeTime($moduleName, $actionName, $suffix).'&nbsp;seconds<br />

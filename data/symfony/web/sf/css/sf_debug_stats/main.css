@@ -98,6 +98,17 @@
   color: red;
 }
 
+.float
+{
+  float: right;
+  clear: right;
+}
+
+.bold
+{
+  font-weight: bold;
+}
+
 #sfStatsLogMain
 {
   z-index: 999;
