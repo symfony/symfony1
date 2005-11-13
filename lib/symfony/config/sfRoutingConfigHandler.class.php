@@ -52,9 +52,6 @@ class sfRoutingConfigHandler extends sfYamlConfigHandler
               "// date: %s\n\$routes = sfRouting::getInstance();\n\$routes->setRoutes(\n%s\n);\n?>";
     $retval = sprintf($retval, date('m/d/Y H:i:s'), var_export($routes->getRoutes(), 1));
 
-    // clear routes
-    $routes->clearRoutes();
-
     return $retval;
   }
 }
