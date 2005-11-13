@@ -129,10 +129,9 @@ class sfRouting
       throw new sfConfigurationException($error);
     }
 
-    if (SF_LOGGING_ACTIVE) sfLogger::getInstance()->info('{sfRouting} connect "'.$route.'"');
-
     $parsed = array();
-    $names = array();
+    $names  = array();
+    $suffix = SF_SUFFIX;
 
     // used for performance reasons
     $names_hash = array();
@@ -141,19 +140,41 @@ class sfRouting
     if (($route == '') || ($route == '/'))
     {
       $regexp = '/^[\/]*$/';
-      $this->routes[$name] = array($route, $regexp, array(), array(), $default, $requirements);
+      $this->routes[$name] = array($route, $regexp, array(), array(), $default, $requirements, $suffix);
     }
     else
     {
       $elements = array();
       foreach (explode('/', $route) as $element)
       {
-        if (trim($element)) $elements[] = $element;
+        if (trim($element))
+        {
+          $elements[] = $element;
+        }
       }
 
       if (!isset($elements[0]))
       {
         return false;
+      }
+
+      // specific suffix for this route?
+      // or /$ directory
+      if (preg_match('/^(.+)(\.\w*)$/i', $elements[count($elements) - 1], $matches))
+      {
+        $suffix = ($matches[2] == '.') ? '' : $matches[2];
+        $regexp_suffix = ($matches[2] == '.') ? '' : preg_quote($matches[2]);
+        $elements[count($elements) - 1] = $matches[1];
+        $route = '/'.implode('/', $elements);
+      }
+      else if ($route{strlen($route) - 1} == '/')
+      {
+        $suffix = '/';
+        $regexp_suffix = '/';
+      }
+      else
+      {
+        $regexp_suffix = preg_quote($suffix);
       }
 
       foreach ($elements as $element)
@@ -173,10 +194,12 @@ class sfRouting
           $parsed[] = '/'.$element;
         }
       }
-      $regexp = '#^'.join('', $parsed).'[\/]*$#';
+      $regexp = '#^'.join('', $parsed).$regexp_suffix.'$#';
 
-      $this->routes[$name] = array($route, $regexp, $names, $names_hash, $default, $requirements);
+      $this->routes[$name] = array($route, $regexp, $names, $names_hash, $default, $requirements, $suffix);
     }
+
+    if (SF_LOGGING_ACTIVE) sfLogger::getInstance()->info('{sfRouting} connect "'.$route.'"'.($suffix ? ' ("'.$suffix.'" suffix)' : ''));
 
     return $this->routes;
   }
@@ -204,7 +227,7 @@ class sfRouting
         throw new sfConfigurationException($error);
       }
 
-      list($url, $regexp, $names, $names_hash, $defaults) = $this->routes[$name];
+      list($url, $regexp, $names, $names_hash, $defaults, $requirements, $suffix) = $this->routes[$name];
     }
     else
     {
@@ -212,7 +235,7 @@ class sfRouting
       $found = false;
       foreach ($this->routes as $name => $route)
       {
-        list($url, $regexp, $names, $names_hash, $defaults) = $route;
+        list($url, $regexp, $names, $names_hash, $defaults, $requirements, $suffix) = $route;
 
         // we must match all names (all $names keys must be in $params array)
         foreach ($names as $key)
@@ -228,7 +251,7 @@ class sfRouting
           if (!isset($params[$key]) || $params[$key] != $value) continue 2;
         }
 
-        // we must have consume all $params keys if there is no * in route
+        // we must have consumed all $params keys if there is no * in route
         if (!strpos($url, '*'))
         {
           if (count(array_diff(array_keys($params), $names, array_keys($defaults))))
@@ -283,7 +306,7 @@ class sfRouting
 
     if ($real_url != '/')
     {
-      $real_url .= SF_SUFFIX;
+      $real_url .= $suffix;
     }
 
     return $real_url;
@@ -313,22 +336,19 @@ class sfRouting
       $url = substr($url, 0, $pos);
     }
 
-    // we remove the suffix
-    $url = preg_replace('/'.SF_SUFFIX.'$/', '', $url);
-
     // we remove multiple /
     $url = preg_replace('#/+#', '/', $url);
 
-    foreach ($this->routes as $route_name => $route) 
+    foreach ($this->routes as $route_name => $route)
     {
       $out = array();
       $r = null;
 
-      list($route, $regexp, $names, $names_hash, $defaults, $requirements) = $route;
+      list($route, $regexp, $names, $names_hash, $defaults, $requirements, $suffix) = $route;
 
       $break = false;
 
-      if (preg_match($regexp, $url, $r)) 
+      if (preg_match($regexp, $url, $r))
       {
         $break = true;
 
@@ -339,7 +359,7 @@ class sfRouting
         foreach ($names as $name) $out[$name] = null;
 
         // defaults
-        foreach ($defaults as $name => $value) 
+        foreach ($defaults as $name => $value)
         {
           if (preg_match('#[a-z_\-]#i', $name))
           {
