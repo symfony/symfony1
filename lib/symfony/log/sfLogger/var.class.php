@@ -18,34 +18,6 @@
 class sfLog_var extends sfLog
 {
     /**
-     * String containing the format of a log line.
-     * @var string
-     * @access private
-     */
-    private $_lineFormat = '%1$s %2$s [%3$s] %4$s';
-
-    /**
-     * String containing the timestamp format.  It will be passed directly to
-     * strftime().  Note that the timestamp string will generated using the
-     * current locale.
-     * @var string
-     * @access private
-     */
-    private $_timeFormat = '%b %d %H:%M:%S';
-
-    /**
-     * Hash that maps canonical format keys to position arguments for the
-     * "line format" string.
-     * @var array
-     * @access private
-     */
-    private $_formatMap = array('%{timestamp}'  => '%1$s',
-                            '%{ident}'      => '%2$s',
-                            '%{priority}'   => '%3$s',
-                            '%{message}'    => '%4$s',
-                            '%\{'           => '%%{');
-
-    /**
      * String containing the end-on-line character sequence.
      * @var string
      * @access private
@@ -59,16 +31,6 @@ class sfLog_var extends sfLog
       $this->_id = $name.'_'.$ident;
       $this->_ident = $ident;
       $this->_mask = sfLog::UPTO($level);
-
-      if (!empty($conf['lineFormat']))
-      {
-        $this->_lineFormat = str_replace(array_keys($this->_formatMap), array_values($this->_formatMap), $conf['lineFormat']);
-      }
-
-      if (!empty($conf['timeFormat']))
-      {
-        $this->_timeFormat = $conf['timeFormat'];
-      }
 
       if (!empty($conf['eol']))
       {
@@ -112,11 +74,12 @@ class sfLog_var extends sfLog
             || !isset($stack['function'])
           )
           {
-            $tmp = 'called at "'.$stack['file'].'" line '.$stack['line'];
+            $tmp = '';
             if (isset($stack['function']))
             {
-              $tmp .= ' from "'.$stack['function'].'"';
+              $tmp .= 'in "'.$stack['function'].'" ';
             }
+            $tmp .= 'from "'.$stack['file'].'" line '.$stack['line'];
             $debug_stack[] = $tmp;
           }
         }

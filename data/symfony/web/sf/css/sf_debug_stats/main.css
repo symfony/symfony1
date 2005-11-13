@@ -78,11 +78,6 @@
   color: #fff;
 }
 
-.sfStatsGreen, .sfStatsOrange, .sfStatsRed
-{
-  padding-bottom: 3px;
-}
-
 .sfStatsLogType
 {
   color: darkgreen;
@@ -137,18 +132,29 @@
   padding: 0;
   margin: 0;
   border: 0;
-  border-bottom: 1px solid #ccc;
 }
 
 #sfStatsLogs td
 {
-  padding: 0;
   margin: 0;
   border: 0;
-  padding: 0 3px;
+  padding: 1px 3px;
   font-family: Arial;
   font-size: 11px;
   vertical-align: top;
+  background-color: #ddd;
+}
+
+#sfStatsLogs th
+{
+  margin: 0;
+  border: 0;
+  padding: 1px 3px;
+  font-family: Arial;
+  font-size: 11px;
+  vertical-align: top;
+  background-color: #666;
+  color: #eee;
 }
 
 #sfStatsLogMenu
@@ -161,7 +167,7 @@
 {
   margin-left: 10px;
   padding-left: 5px;
-  border-left: 1px solid #ccc;
+  border-left: 1px solid #aaa;
 }
 
 .sfStatsCache
@@ -177,4 +183,14 @@
   filter:alpha(opacity=85);
   -moz-opacity:0.85;
   opacity: 0.85;
+}
+
+#sfStatsLogs tr.sfStatsRed td
+{
+  background-color: #f00;
+}
+
+#sfStatsLogs tr.sfStatsOrange td
+{
+  background-color: orange;
 }

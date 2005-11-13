@@ -164,7 +164,14 @@ class sfWebDebug
 
     if (SF_LOGGING_ACTIVE)
     {
-      $logs = '<table id="sfStatsLogs">';
+      $logs  = '<table id="sfStatsLogs">';
+      $logs .= "<tr>
+        <th>#</th>
+        <th>&nbsp;</th>
+        <th>ms</th>
+        <th>type</th>
+        <th>message</th>
+      </tr>\n";
       $line_nb = 0;
       foreach($this->log as $logEntry)
       {
@@ -204,8 +211,8 @@ class sfWebDebug
         $log = $this->formatLogLine($log);
 
         ++$line_nb;
-        $format = "<tr class='sfStats%s %s'><td>#%s</td><td>%s</td><td><span class='sfStatsLogType'>%s</span></td><td>%s%s</td></tr>\n";
-        $logs .= sprintf($format, $class, $logEntry->getType(), $line_nb, image_tag($this->base_image_path.'/'.$priority.'.png', 'align=absmiddle'), $type, $log, $debug_info);
+        $format = "<tr class='sfStats%s %s'><td>%s</td><td>%s</td><td>+%s&nbsp;</td><td><span class='sfStatsLogType'>%s</span></td><td>%s%s</td></tr>\n";
+        $logs .= sprintf($format, $class, $logEntry->getType(), $line_nb, image_tag($this->base_image_path.'/'.$priority.'.png', 'align=absmiddle'), $logEntry->getElapsedTime(), $type, $log, $debug_info);
       }
       $logs . '</table>';
 
