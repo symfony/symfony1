@@ -139,7 +139,7 @@ try
 
   // required core classes for the framework
   // we create a temp var to avoid substitution during compilation
-  if (!SF_TEST)
+  if (!SF_DEBUG && !SF_TEST)
   {
     $core_classes = SF_APP_CONFIG_DIR_NAME.'/core_compile.yml';
     sfConfigCache::import($core_classes);
