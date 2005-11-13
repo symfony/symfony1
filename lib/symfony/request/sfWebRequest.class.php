@@ -234,7 +234,7 @@ class sfWebRequest extends sfRequest
     $this->loadParameters();
 
     // register sfWebDebug assets
-    if (SF_WEB_DEBUG)
+    if (defined('SF_WEB_DEBUG') && SF_WEB_DEBUG)
     {
       sfWebDebug::getInstance()->registerAssets();
     }
