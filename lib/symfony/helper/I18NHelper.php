@@ -17,14 +17,14 @@
  * @version    SVN: $Id$
  */
 
-function __($text, $culture = null)
+function __($text, $args = array(), $culture = null)
 {
   if (!SF_IS_I18N)
   {
     throw new sfConfigurationException('you must set is_i18n to "on" in your settings.yml to enable I18N support');
   }
 
-  return sfContext::getInstance()->getRequest()->getAttribute('message_format', null, 'symfony/i18n')->_($text);
+  return sfContext::getInstance()->getRequest()->getAttribute('message_format', null, 'symfony/i18n')->_($text, $args);
 }
 
 function format_country($country_iso)
