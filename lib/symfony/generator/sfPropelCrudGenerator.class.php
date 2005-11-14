@@ -1,5 +1,7 @@
 <?php
 
+require_once('pake/pakeFinder.class.php');
+
 /*
  * This file is part of the symfony package.
  * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
