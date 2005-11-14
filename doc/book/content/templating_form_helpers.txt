@@ -76,7 +76,7 @@ Here are the standard form element helpers:
 
  * value selection field (select):
 
-        <?php echo select_tag('name', options_for_select(Array('0' => 'Steve', '1' => 'Bob', '2' => 'Albert', '3' => 'Ian', '4' => 'Buck'), 3)) ?>
+        <?php echo select_tag('name', options_for_select(Array('Steve' => '0', 'Bob' => '1', 'Albert' => '2', 'Ian' => '3', 'Buck' => '4'), 3)) ?>
         // will generate in HTML
         <select name="name" id="name">
           <option value="0">Steve</option>
@@ -106,8 +106,8 @@ Here are the standard form element helpers:
         
         // When the data needed to set the value and the text to display can be obtained via methods of an object, you can
         // simply pass an array of the objects, and the names of the methods to use to retrieve the value and display text.
-        <?php echo select_tag('blogs', objects_for_select($blogs, "getId", "getTitle", 1) ) ?> 
-        // This will iterate through the $blogs array, using the current object by calling the getId() for the value, and getTitle() 
+        <?php echo select_tag('articles', objects_for_select($articles, 'getId', 'getTitle', 1) ) ?> 
+        // This will iterate through the $articles array, using the current object by calling the getId() for the value, and getTitle() 
         // for the display text. 
                
 
