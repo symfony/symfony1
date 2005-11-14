@@ -240,7 +240,7 @@ function textarea_tag($name, $content = null, $options = array())
       }
 
       $tinymce_options .= '  content_css: "'.$css_path.'",'."\n";
-      $tinymce_options .= '  theme_advanced_styles: "'.implode(';', $styles).'",'."\n";
+      $tinymce_options .= '  theme_advanced_styles: "'.implode(';', $styles).'"'."\n";
       $style_selector   = 'styleselect,separator,';
     }
 
@@ -259,8 +259,8 @@ tinyMCE.init({
   theme_advanced_buttons3: "tablecontrols",
   extended_valid_elements: "img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name]",
   relative_urls: false,
-  debug: false,
-  '.$tinymce_options.'
+  debug: false
+  '.($tinymce_options ? ','.$tinymce_options : '').'
 });';
 
     return 
