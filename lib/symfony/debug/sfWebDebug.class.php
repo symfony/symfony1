@@ -128,7 +128,10 @@ class sfWebDebug
 
   public function getResults()
   {
-    if (!SF_WEB_DEBUG) return;
+    if (!SF_WEB_DEBUG || sfContext::getInstance()->getRequest()->getAttribute('disable_web_debug', false, 'debug/web'))
+    {
+      return '';
+    }
 
     $result = '';
 
