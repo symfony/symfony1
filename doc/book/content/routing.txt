@@ -257,6 +257,20 @@ As before, this is simply done in the `settings.yml` configuration file of the a
       .settings
         suffix:         .html
 
+The default suffix is set to `.`, which means that nothing is appended to the end of the routed url. You can specify any type of suffix, including `/` to have an URL looking like:
+
+    http://myapp.example.com/2005/06/25/my_article_title/
+
+It is sometimes necessary to specify a suffix for a unique routing rule. In that case, directly write the suffix in the related `url:` line of the `routing.yml` file; the global suffix will be ignored.
+
+    article_list_feed:
+      url:          /latest_articles.rss
+      param:        { module: article, action: list, type: rss }
+    
+    update_directory:
+      url:          /updates/
+      param:        { module: update, action: list }
+
 Routing activation
 ------------------
 

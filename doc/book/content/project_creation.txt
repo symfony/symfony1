@@ -164,9 +164,11 @@ Then the base structure (layout) of the repository is created with the `trunk`,`
 
     svn mkdir -m "layout creation" file:///$SVNREP_DIR/myproject/trunk file:///$SVNREP_DIR/myproject/tags file:///$SVNREP_DIR/myproject/branches
 
-This will be your first revision. Now you have to **import** the files of the project:
+This will be your first revision. Now you have to **import** the files of the project except the cache and log temporary files:
 
     cd /home/steve/myproject
+    rm -rf cache/*
+    rm -rf log/*
     svn import -m "initial import" . file:///$SVNREP_DIR/myproject/trunk
 
 Check the commited files by typing

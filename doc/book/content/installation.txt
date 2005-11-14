@@ -81,7 +81,16 @@ If you already have a beta version installed, get the latest build with:
 
     pear upgrade symfony/symfony-beta
 
->**Note**: in some Windows platforms, it appears that the PEAR utility uses its own web cache and doesn't actually require the symfony channel to check the latest version. Make sure you empty your PEAR cache before you ask for an upgrade (use `pear config-show` to get the location of the cache folder).
+>**Note**: in some Windows platforms, it appears that the PEAR utility uses its own web cache and doesn't actually require the symfony channel to check the latest version. Make sure you empty your PEAR cache before you ask for an upgrade (use `pear config-show` to get the location of the cache folder).   
+ 
+When upgrading your symfony installation, don't forget to clear the cache of all the applications using it:
+
+    cd myproject
+    symfony clear-cache
+
+You can check which version of symfony is installed by typing:
+
+    symfony -V
 
 Installing symfony by hand
 --------------------------

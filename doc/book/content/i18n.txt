@@ -123,69 +123,84 @@ Once the corresponding object model is built (don't forget to call `symfony buil
 Interface translation
 ---------------------
 
-Symfony stores the user interface translations in XML configuration files in the standard [XLIFF](http://www.xliff.org/) format. Here is an extract of a XLIFF file `messages.en.xml`, where a website originally written in French is translated in English:
+Symfony stores the user interface translations in XML configuration files in the standard [XLIFF](http://www.xliff.org/) format. Here is an extract of a XLIFF file `messages.fr.xml`, where a website originally written in English is translated in French:
 
     <?xml version="1.0" ?>
     <xliff version="1.0">
-      <file orginal="global" source-language="FR" datatype="plaintext" date="2004-12-28T18:10:19Z">
+      <file orginal="global" source-language="en_US" datatype="plaintext" date="2004-12-28T18:10:19Z">
         <body>
           <trans-unit id="1">
-          <source>source en français</source>
-          <target>english translation</target>
+            <source>original English text</source>
+            <target>French translation of the text</target>
           </trans-unit>
         </body>
       </file>
     </xliff>
 
-These files must be stored in the `app/i18n/global` directory.
+If additional translations need to be done, simply add a new `messages.XX.xml` translation file. These files must be stored in the `app/i18n/global` directory.
 
 The use of the XLIFF format allows you to use common translation tools to reference all text in your website and translate it, without the need of a specific tool to build for translators.
 
-Template adaptation
--------------------
+Lets say you want to have a website in English and French, with English being the default language. The example page is supposed to display the phrase 'Welcome to our website. Today's date is ' followed by the actual date.
 
-Lets say we want to have a website in English and French, with English being the default language. We want to display the phrase 'Welcome to our website. Today's date is ' followed by the actual date.
+For this to work you need to:
 
-For this to work we need to:
+1. Activate the I18N helper by adding `,I18N` to `standard_helpers:` in the `settings.yml` file. Alternatively, you can put `<?php use_helper('I18N') ?>` at the top of the template where you want to use internationalisation.
 
-1) Activate the I18N helper by adding `,I18N` to `standard_helpers:` to in our settings.yml file.
-Or put `<?php use_helper('I18N') ?>` at the top of the template where we want to use internationalisation.
+  The same goes for the 'Date' helper to make sure the date is being formatted right.
 
-The same goes for the 'Date' helper to make sure the date is being formatted right.
+2. In the template, enclose all the texts in calls to the `__()` function. So, to have an internationalized template displaying:
 
-2) Make a `messages.fr.xml` file in the `app/i18n/global` directory. Containing:
+        Welcome to our website. Today's date is
+        <?php echo format_date(date()) ?>
+    
+  It must be written like this: 
 
-	<?xml version="1.0" ?>
-	<xliff version="1.0">
-	  <file orginal="global" source-language="en_US" datatype="plaintext">
-	    <body>
-  	    <trans-unit id="1">
-	    <source>Welcome to our website.</source>
-	    <target>Bienvenue sur notre site web</target>
-	    </trans-unit>
+        <?php echo __('Welcome to our website.') ?>     // (this matches the first trans-unit's source node)
+        <?php echo __('Today's date is ') ?>            // (this matches the second trans-unit's source node)
+        <?php echo format_date(date()) ?>
 
-	    <trans-unit id="2">
-	    <source>Today's date is </source>
-	    <target>La date d'aujourd'hui est </target>
-	    </trans-unit>
-	    </body>
-	  </file>
-	</xliff>	
+3. Make a `messages.fr.xml` file in the `app/i18n/global` directory, according to the XLIFF format, containing one `trans-unit` node for eah call to the `__()` function:
 
+        <?xml version="1.0" ?>
+        <xliff version="1.0">
+          <file orginal="global" source-language="en_US" datatype="plaintext">
+            <body>   
+              <trans-unit id="1">
+                <source>Welcome to our website.</source>
+                <target>Bienvenue sur notre site web</target>
+              </trans-unit>              
+              <trans-unit id="2">
+                <source>Today's date is </source>
+                <target>La date d'aujourd'hui est </target>
+              </trans-unit>
+            </body>
+          </file>
+        </xliff>
 
-Notice the source-language="...". Put the full iso code of your default culture here.
+Notice the `source-language="..."`: put the full iso code of your default culture here.
 
-3) Write our template using the __('') function, according to the nodes used in the messages.fr.xml file.
+The default user culture is set to `en_US`, so the text outputs in English. However, if the culture is changed to `fr_BE` with:
 
+    $this->getUser()->setCulture('fr_BE');
+    
+...the text then outputs in French.
 
-For example (assuming the helpers are activated in the settings.yml file):
+If, in the near future, you want to add a Dutch translation, all you have to do is duplicate `messages.fr.xml` and call it `messages.nl.xml`. Then, open the newly created file and change all the text contained in the `<target>` nodes to the dutch translation.
 
-    <?php echo __('Welcome to our website.') ?> (this matches the first trans-unit's source node)
-    <?php echo __('Today's date is ') ?> (this matches the second trans-unit's source node)
-    <?php echo format_date(date()) ?>
-
-The default user culture is set to `en_US`, so the text outputs in English.
-If however the culture is changed to `fr_BE` with `$this->getUser()->setCulture('fr_BE');`, the text outputs in French.
-
-
-Lets assume we want to add another language at a later date. Lets take the dutch language for example. All we have to do is duplicate `messages.fr.xml` and call it `messages.nl.xml`. Then we open the newly created file and change all the `<target>` nodes to contain the dutch translation.
+>**Note**: translation only makes sense if the translation files contains full sentences. But as you sometimes have formatting or variables in the text, you could be tempted to cut the sentence into several parts. For instance, to translate:
+>
+>     Welcome to all the <b>new</b> users.<br />
+>     There are <?= count_logged() ?> persons logged.
+>
+>You could to write:
+>
+>     <?php echo __('Welcome to all the') ?><b><?php echo __('new') ?> </b><?php echo __('users') ?> <br />
+>     <?php echo __('There are') ?><?= count_logged() ?><?php echo __('persons logged') ?>
+>
+>But with this template, your translation file would be totally incomprehensible for translators. You'd better do:
+>
+>     <?php echo __('Welcome to all the <b>new</b> users') ?> <br />
+>     <?php echo __('There are %1% persons logged', array('%1%', count_logged())) ?>
+>
+>The syntax of the last lines illustrates the ability to do a simple substitution within the `__()` function, to avoid unnecessary chunking of text.
