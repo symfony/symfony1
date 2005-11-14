@@ -99,7 +99,7 @@ In this file format, a `<database>` contains several `<table>`, each having a se
 
 The `phpName` given to the tables is the name of the object name that will give you access to the data, as you will see in the next part. If you don't mention it, the actual `name` will be used in place, after removing underscores and capitalizing the first letter of inner words (in the example, the default `phpname` of the tables would be `blogArticle` and `blogComment`). Columns also have a `phpname`, which is the capitalized version of the `name` (`ID`, `TITLE`, `CONTENT`, etc.) and doesn't need overriding in most cases.
 
-Columns have a `type` attribute that can take the usual values: `boolean`, `integer`, `float`, `date`, `varchar`, `longvarchar`, etc. The `varchar`-type columns can have a `size` attributes that specifies the maximum number of characters of the column. For text content over 256 characters, you need to use the `longchar` type, which has no size but can not exceed 65Ko (mysql specific). Note that the `date` and `timestamp` types have the usual limitations of Unix dates and can not be set to a date prior to 1970-01-01. As you may need to set older dates (for instance for dates of birth), a format of dates 'before Unix' can be used with `bu_date` and `bu_timestamp`.
+Columns have a `type` attribute that can take the usual values: `boolean`, `integer`, `float`, `date`, `varchar`, `longvarchar`, etc. The `varchar`-type columns can have a `size` attributes that specifies the maximum number of characters of the column. For text content over 256 characters, you need to use the `longchar` type, which has no size but can not exceed 65Kb (mysql specific). Note that the `date` and `timestamp` types have the usual limitations of Unix dates and can not be set to a date prior to 1970-01-01. As you may need to set older dates (for instance for dates of birth), a format of dates 'before Unix' can be used with `bu_date` and `bu_timestamp`.
 
 The `primaryKey` attribute identifies primary key fields. Columns that are primary keys often have the same attributes (`type="integer" required="true" autoincrement="true"`). If you need to create an index, simply add an `<index>` tab. If you need to create a foreign key, simply add a `<foreign-key>` tag identifying the corresponding column in a foreign table.
 
@@ -129,8 +129,8 @@ The permitted values of the `adapter` parameter are the ones of the RDBMS suppor
 
 * mysql
 * sqlserver
-* PostgreSQL
-* SQLite
+* pgsql
+* sqlite
 * oracle
 
 Object data model files
@@ -177,7 +177,7 @@ The classes `Article` and `Comment` will allow you to access attributes of the r
 
 But there is more to databases than reading what's inside records: you also need to actually find records. That's the purpose of the `Peer` classes. They offer methods to find records, that return lists of objects.
 
-From a data model point of view, note that the can not be any `Peer` object. That's why the methods of the `Peer` classes will be called with a `::` (for class method call) instead of the usual `->` (for object method call).
+From a data model point of view, note that there cannot be any `Peer` object. That's why the methods of the `Peer` classes will be called with a `::` (for class method call) instead of the usual `->` (for object method call).
 
 Data access
 -----------

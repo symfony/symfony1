@@ -150,11 +150,11 @@ And since you need to start getting to work right away, edit the file `myapp/mod
 
 Save it, refresh the page in the browser and voilà !
 
-Source versionning
+Source versioning
 ------------------
 
 Once the setup of the application is done, it is recommended to 
-start a source versionning process. Symfony natively supports [CVS][3], although [Subversion][4] is recommended. The following examples will show the commands for Subversion, and take for granted that you already have a Subversion server installed and that you wish to create a new repository for your project. For Windows users, a recommended Subversion client is [TortoiseSVN][5]. For more information about source versioning and the commands used here, please consult the [Subversion documentation][6].
+start a source versioning process. Symfony natively supports [CVS][3], although [Subversion][4] is recommended. The following examples will show the commands for Subversion, and take for granted that you already have a Subversion server installed and that you wish to create a new repository for your project. For Windows users, a recommended Subversion client is [TortoiseSVN][5]. For more information about source versioning and the commands used here, please consult the [Subversion documentation][6].
 
 So lets **create** the new repository for the `myproject` project:
 
@@ -175,7 +175,7 @@ Check the commited files by typing
 
     svn ls file:///$SVNREP_DIR/myproject/trunk/
 
-Thats seems good. Now the SVN repository has the reference version (and the history) of all your project files. This means that the files of the actual `/home/steve/myproject` directory need to refer to the repository. To do hat, first rename the `myproject` directory - you will erase it soon if everything works well - and do a **checkout** of the repository in a new directory:
+That seems good. Now the SVN repository has the reference version (and the history) of all your project files. This means that the files of the actual `/home/steve/myproject` directory need to refer to the repository. To do hat, first rename the `myproject` directory - you will erase it soon if everything works well - and do a **checkout** of the repository in a new directory:
 
     cd /home/steve
     mv myproject myproject.origin
@@ -184,7 +184,7 @@ Thats seems good. Now the SVN repository has the reference version (and the hist
 
 That's it. Now you can work on the files located in `/home/steve/myproject` and **commit** your modifications to the repository. Don't forget to do some cleanup and erase the `myproject.origin` directory, which is now useless.
 
-There is one remaining thing to setup. If you commit your working directory to the repository, you may copy some unwanted files, like the ones located in the `cache` and `log` directores of your project. So you need to specify an ignore list to svn for this project.
+There is one remaining thing to setup. If you commit your working directory to the repository, you may copy some unwanted files, like the ones located in the `cache` and `log` directories of your project. So you need to specify an ignore list to svn for this project.
 
     cd /home/steve/myproject
     svn propedit svn:ignore .

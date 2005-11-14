@@ -9,7 +9,7 @@ To be simple and easy to use, symfony uses a default configuration that should a
 Introduction
 ------------
 
-The great advantage of web application frameworks is that they give developers full control over many aspects of a web application using configuration files - no unreadable code. No need to look for a specific class to change the logging behavior or to transform the way the URLs show: just write some configuration, and you're done.
+The great advantage of web application frameworks is that they give developers full control over many aspects of a web application using configuration files - not unreadable code. No need to look for a specific class to change the logging behavior or to transform the way the URLs show: just write some configuration, and you're done.
 
 However, this tactic has two serious drawbacks:
 
@@ -24,7 +24,7 @@ Symfony takes the best of configuration files and gets rid of the worst ones. As
 * **customizable**: the default configuration language is YAML, but it can be INI or XML or whatever the preference is
 * **fast**: the configuration files are never processed by the application but by the configuration system, which compiles them into a fast-processing chunk of code for the PHP server
 
-Is is not just a pious hope, since the PHP implementation of the configuration system actually allows it.
+It is not just a pious hope, since the PHP implementation of the configuration system actually allows it.
 
 Why YAML ?
 ----------
@@ -60,9 +60,9 @@ Then the file `config_app.yml.php`, located in the `cache` folder of your projec
     @define('APP_MAIL_WEBMASTER', 'webmaster@mysite.com');
     ?>
 
-This is a major advantage over many PHP frameworks, where configuration files are compiled at every request even in production. Unlike Java, PHP doesn't share an execution context between requests. For other PHP frameworks, keeping the flexibility of XML configuration files requires a major fall in performance to process all the configuration at every request. This is not the case in symfony: thanks to the cache system, the overhead caused by configuration very low.
+This is a major advantage over many PHP frameworks, where configuration files are compiled at every request even in production. Unlike Java, PHP doesn't share an execution context between requests. For other PHP frameworks, keeping the flexibility of XML configuration files requires a major performance hit to process all the configuration at every request. This is not the case in symfony: thanks to the cache system, the overhead caused by configuration is very low.
 
-The other main advantage of using configuration handlers is that it allows you to use other formats than YAML. The configuration handlers just transform configuration files into optimized PHP code. If you have a parser for another language - and PHP has native support of XML and INI files - it is very easy to write a custom handler that will read you own configuration file format.
+The other main advantage of using configuration handlers is that it allows you to use formats other than YAML. The configuration handlers just transform configuration files into optimized PHP code. If you have a parser for another language - and PHP has native support of XML and INI files - it is very easy to write a custom handler that will read your own configuration file format.
 
 Environments
 ------------

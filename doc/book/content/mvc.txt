@@ -24,7 +24,7 @@ Symfony implements the MVC model in a simple and light way so that developers ge
 Example
 -------
 
-To makes things clear, let's see how the symfony implementation of the MVC architecture work for an *add to cart* interaction. 
+To make things clear, let's see how the symfony implementation of the MVC architecture works for an *add to cart* interaction. 
 
 1. First, the user interacts with the user interface by selecting a product and pressing a button; this probably validates a form and sends a web request to the server. 
 
@@ -36,7 +36,7 @@ To makes things clear, let's see how the symfony implementation of the MVC archi
 
 5. The View then assembles the answer from the action and the skinning from the template to produce the HTML code of the shopping cart page.
 
-6. It is finally held to the web server that sends it to the user, who will use his browser to read and interact with the new information.
+6. It is finally transferred to the web server that sends it to the user, who will use his browser to read and interact with the new information.
 
 Symfony classes
 ---------------
