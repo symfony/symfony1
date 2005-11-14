@@ -219,23 +219,11 @@ class sfWebDebug
       $result .= javascript_tag('
       function toggleMessages(myclass)
       {
-        var xpathResult = document.evaluate("//*[contains(@class, \'" + myclass + "\')]", document, null, 0, null);
-        var elements = new Array();
-        while ((elements[elements.length] = xpathResult.iterateNext())) {}
+        elements = document.getElementsByClassName(myclass);
         for (i = 0; i < elements.length; i++)
         {
-          if (!elements[i]) continue;
-  
-          if (elements[i].style.display == "none")
-            elements[i].style.display = "block";
-          else
-            elements[i].style.display = "none";
+          Element.toggle(elements[i]);
         }
-
-        if (elements[0].style.display == "none")
-          document.getElementById(myclass).style.color = "blue";
-        else
-          document.getElementById(myclass).style.color = "red";
       }
       ');
 
@@ -243,7 +231,7 @@ class sfWebDebug
       $types = array();
       foreach ($this->types as $type => $nb)
       {
-        $types[] = '<a id="'.$type.'" href="#" onclick="toggleMessages(\''.$type.'\')">'.$type.'</a>';
+        $types[] = '<a id="'.$type.'" href="#" onclick="toggleMessages(\''.$type.'\')">'.$type."</a>\n";
       }
 
       $result .= '
