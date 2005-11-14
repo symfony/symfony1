@@ -188,19 +188,19 @@ The default user culture is set to `en_US`, so the text outputs in English. Howe
 
 If, in the near future, you want to add a Dutch translation, all you have to do is duplicate `messages.fr.xml` and call it `messages.nl.xml`. Then, open the newly created file and change all the text contained in the `<target>` nodes to the dutch translation.
 
->**Note**: translation only makes sense if the translation files contains full sentences. But as you sometimes have formatting or variables in the text, you could be tempted to cut the sentence into several parts. For instance, to translate:
->
->     Welcome to all the <b>new</b> users.<br />
->     There are <?= count_logged() ?> persons logged.
->
->You could to write:
->
->     <?php echo __('Welcome to all the') ?><b><?php echo __('new') ?> </b><?php echo __('users') ?> <br />
->     <?php echo __('There are') ?><?= count_logged() ?><?php echo __('persons logged') ?>
->
->But with this template, your translation file would be totally incomprehensible for translators. You'd better do:
->
->     <?php echo __('Welcome to all the <b>new</b> users') ?> <br />
->     <?php echo __('There are %1% persons logged', array('%1%', count_logged())) ?>
->
->The syntax of the last lines illustrates the ability to do a simple substitution within the `__()` function, to avoid unnecessary chunking of text.
+Note that translation only makes sense if the translation files contains full sentences. However, as you sometimes have formatting or variables in the text, you could be tempted to cut the sentence into several parts. For instance, to translate:
+
+     Welcome to all the <b>new</b> users.<br />
+     There are <?php echo count_logged() ?> persons logged.
+
+You could to write:
+
+     <?php echo __('Welcome to all the') ?><b><?php echo __('new') ?> </b><?php echo __('users') ?> <br />
+     <?php echo __('There are') ?><?php echo count_logged() ?><?php echo __('persons logged') ?>
+
+But with this template, your translation file would be totally incomprehensible for translators. You'd better do:
+
+     <?php echo __('Welcome to all the <b>new</b> users') ?> <br />
+     <?php echo __('There are %1% persons logged', array('%1%', count_logged())) ?>
+
+The syntax of the last lines illustrates the ability to do a simple substitution within the `__()` function, to avoid unnecessary chunking of text.
