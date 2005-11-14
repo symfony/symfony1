@@ -44,7 +44,7 @@ default:
     
     timeout:                1800
     
-    suffix:                 /
+    suffix:                 .
 
     module_default:         on
 
