@@ -201,6 +201,6 @@ You could to write:
 But with this template, your translation file would be totally incomprehensible for translators. You'd better do:
 
      <?php echo __('Welcome to all the <b>new</b> users') ?> <br />
-     <?php echo __('There are %1% persons logged', array('%1%', count_logged())) ?>
+     <?php echo __('There are %1% persons logged', array('%1%' => count_logged())) ?>
 
 The syntax of the last lines illustrates the ability to do a simple substitution within the `__()` function, to avoid unnecessary chunking of text.
