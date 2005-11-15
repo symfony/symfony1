@@ -58,7 +58,7 @@ abstract class sfWebController extends sfController
        $url = SF_RELATIVE_URL_ROOT;
      }
 
-     $route_name   = '';
+     $route_name = '';
 
      if (!is_array($parameters))
      {
@@ -126,56 +126,45 @@ abstract class sfWebController extends sfController
        $url = substr($url, 0, $pos);
      }
 
-     if ($url == '/')
+     // 2 url forms
+     // @route_name?key1=value1&key2=value2...
+     // module/action?key1=value1&key2=value2...
+
+     // first slash optional
+     if ($url{0} == '/')
      {
-       $params = array('module' => SF_DEFAULT_MODULE, 'action' => SF_DEFAULT_ACTION);
+       $url = substr($url, 1);
      }
-     else if (!$url)
+
+     // route_name?
+     if ($url{0} == '@')
      {
-       $params = array();
+       $route_name = substr($url, 1);
      }
      else
      {
-       // 2 url forms
-       // @route_name?key1=value1&key2=value2...
-       // module/action?key1=value1&key2=value2...
+       $tmp = explode('/', $url);
 
-       // first slash optional
-       if ($url{0} == '/')
+       $params['module'] = $tmp[0];
+       $params['action'] = isset($tmp[1]) ? $tmp[1] : SF_DEFAULT_ACTION;
+     }
+
+     $url_params = explode('&', $query_string);
+     $ind_max = count($url_params) - 1;
+     for ($i = 0; $i <= $ind_max; $i++)
+     {
+       if (!$url_params[$i]) continue;
+
+       $pos = strpos($url_params[$i], '=');
+       if ($pos === false)
        {
-         $url = substr($url, 1);
+         $error = 'Unable to parse url ("%s").';
+         $error = sprintf($error, $url);
+
+         throw new sfParseException($error);
        }
 
-       // route_name?
-       if ($url{0} == '@')
-       {
-         $route_name = substr($url, 1);
-       }
-       else
-       {
-         $tmp = explode('/', $url);
-
-         $params['module'] = $tmp[0];
-         $params['action'] = isset($tmp[1]) ? $tmp[1] : SF_DEFAULT_ACTION;
-       }
-
-       $url_params = explode('&', $query_string);
-       $ind_max = count($url_params) - 1;
-       for ($i = 0; $i <= $ind_max; $i++)
-       {
-         if (!$url_params[$i]) continue;
-
-         $pos = strpos($url_params[$i], '=');
-         if ($pos === false)
-         {
-           $error = 'Unable to parse url ("%s").';
-           $error = sprintf($error, $url);
-
-           throw new sfParseException($error);
-         }
-
-         $params[substr($url_params[$i], 0, $pos)] = substr($url_params[$i], $pos + 1);
-       }
+       $params[substr($url_params[$i], 0, $pos)] = substr($url_params[$i], $pos + 1);
      }
 
      return array($route_name, $params);
