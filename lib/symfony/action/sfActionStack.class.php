@@ -34,10 +34,10 @@ class sfActionStack
    *
    * @return sfActionEntry sfActionEntry instance
    */
-  public function addEntry ($moduleName, $actionName, $actionInstance)
+  public function addEntry ($moduleName, $actionName, $actionInstance, $isSlot = false)
   {
     // create our action stack entry and add it to our stack
-    $actionEntry = new sfActionStackEntry($moduleName, $actionName, $actionInstance);
+    $actionEntry = new sfActionStackEntry($moduleName, $actionName, $actionInstance, $isSlot);
 
     $this->stack[] = $actionEntry;
     

@@ -108,7 +108,7 @@ abstract class sfView
       $index = $actionStack->getSize();
 
       // forward to the first slot action
-      $controller->forward($slot['module_name'], $slot['action_name']);
+      $controller->forward($slot['module_name'], $slot['action_name'], true);
 
       // grab the action entry from this forward
       $actionEntry = $actionStack->getEntry($index);

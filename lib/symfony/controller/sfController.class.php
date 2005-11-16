@@ -93,8 +93,9 @@ abstract class sfController
   /**
    * Forward the request to another action.
    *
-   * @param string A module name.
-   * @param string An action name.
+   * @param string  A module name.
+   * @param string  An action name.
+   * @param boolean Is this action is a slot context
    *
    * @return void
    *
@@ -103,7 +104,7 @@ abstract class sfController
    * @throws <b>sfInitializationException</b> If the action could not be initialized.
    * @throws <b>sfSecurityException</b> If the action requires security but the user implementation is not of type sfSecurityUser.
    */
-  public function forward ($moduleName, $actionName)
+  public function forward ($moduleName, $actionName, $isSlot = false)
   {
     // replace unwanted characters
     $moduleName = preg_replace('/[^a-z0-9\-_]+/i', '', $moduleName);
@@ -147,7 +148,7 @@ abstract class sfController
       // track the requested module so we have access to the data in the error 404 page
       $this->context->getRequest()->setAttribute('requested_action', $actionName);
       $this->context->getRequest()->setAttribute('requested_module', $moduleName);
-      $this->context->getRequest()->setAttribute('requested_uri', $_SERVER['PHP_SELF']);
+      $this->context->getRequest()->setAttribute('requested_uri',    $_SERVER['PHP_SELF']);
 
       // switch to error 404 action
       $moduleName = SF_ERROR_404_MODULE;
@@ -167,7 +168,7 @@ abstract class sfController
     $actionInstance = $this->getAction($moduleName, $actionName);
 
     // add a new action stack entry
-    $this->getActionStack()->addEntry($moduleName, $actionName, $actionInstance);
+    $this->getActionStack()->addEntry($moduleName, $actionName, $actionInstance, $isSlot);
 
     // include module configuration
     sfConfigCache::import('modules/'.$moduleName.'/'.SF_APP_MODULE_CONFIG_DIR_NAME.'/module.yml', true, array('prefix' => $moduleName.'_'));
