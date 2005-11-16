@@ -19,9 +19,9 @@ class sfRenderView extends sfPHPView
 {
   public function execute()
   {
-    $context     = $this->getContext();
-    $actionStack = $context->getController()->getActionStack()->getLastEntry();
-    $action      = $actionStack->getActionInstance();
+    $context          = $this->getContext();
+    $actionStackEntry = $context->getController()->getActionStack()->getLastEntry();
+    $action           = $actionStackEntry->getActionInstance();
 
     // require our configuration
     $viewConfigFile = $this->moduleName.'/'.SF_APP_MODULE_CONFIG_DIR_NAME.'/view.yml';

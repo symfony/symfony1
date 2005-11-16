@@ -75,7 +75,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
         $data[] = "  \$templateName = \$action->getTemplate() ? \$action->getTemplate() : \$this->getContext()->getActionName();\n";
       }
 
-      $data[] = "  if (!SF_SAFE_SLOT || (SF_SAFE_SLOT && !\$actionStack->isSlot()))\n";
+      $data[] = "  if (!SF_SAFE_SLOT || (SF_SAFE_SLOT && !\$actionStackEntry->isSlot()))\n";
       $data[] = "  {\n";
 
       $data[] = $this->addLayout($viewName);
@@ -95,7 +95,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     $data[] = ($first ? '' : "else\n{")."\n".
               "  \$templateName = \$action->getTemplate() ? \$action->getTemplate() : \$this->getContext()->getActionName();\n";
 
-    $data[] = "  if (!SF_SAFE_SLOT || (SF_SAFE_SLOT && !\$actionStack->isSlot()))\n";
+    $data[] = "  if (!SF_SAFE_SLOT || (SF_SAFE_SLOT && !\$actionStackEntry->isSlot()))\n";
     $data[] = "  {\n";
 
     $data[] = $this->addLayout();
