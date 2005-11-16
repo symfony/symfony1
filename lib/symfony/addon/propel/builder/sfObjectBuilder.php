@@ -167,7 +167,7 @@ $script .= '
       if ($clo == 'created_at')
       {
         $date_script .= "
-    if (!\$this->isNew())
+    if (\$this->isNew())
     {
       \$this->setCreatedAt(time());
     }
