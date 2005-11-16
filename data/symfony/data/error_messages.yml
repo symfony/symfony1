@@ -1,9 +1,27 @@
 errors:
   err0001: |
-    Symfony enforces some php.ini values threw the php.yml configuration file (check category).
+    Symfony enforces some `php.ini` values threw the `php.yml` configuration file (under `check` category).
 
-    It seems you have a key in your php.ini configuration file with a "un-authorized" value (according to the symfony php.yml configuration file).
+    It seems you have a key in your `php.ini` configuration file with a "un-authorized" value (according to the symfony `php.yml` configuration file).
 
     How can you fix this problem?
-    * change the value in php.ini
-    * change the php.yml file (you must copy the original file referenced in the error message to yourpoject/config/php.yml to override it)
+
+    * change the value in `php.ini`
+
+    * change the `php.yml` file (you must copy the original file referenced in the error message to `yourpoject/config/php.yml` to override it)
+
+    * add `php_value magic_quotes_gpc 0` to the .htaccess of your project
+
+    Here is a sample `php.yml` file:
+
+      set:
+        magic_quotes_runtime: off
+        log_errors:           on
+        arg_separator.output: \&amp;
+
+      check:
+        magic_quotes_gpc:     off
+        register_globals:     off
+
+  err0002: |
+    You want to check a `php.ini` value but the key you specified doesn't exist in `php.ini`.

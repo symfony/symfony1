@@ -84,7 +84,7 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
         // key exists?
         if (!array_key_exists($key, $configs))
         {
-          $error = 'Configuration file "%s" specifies key "%s" with is not a php.ini directive';
+          $error = 'Configuration file "%s" specifies key "%s" with is not a php.ini directive [err0002]';
           $error = sprintf($error, $configFile, $key);
 
           throw new sfParseException($error);
