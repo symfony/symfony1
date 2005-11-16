@@ -52,7 +52,7 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
         // key exists?
         if (!array_key_exists($key, $configs))
         {
-          $error = 'Configuration file "%s" specifies key "%s" with is not a php.ini directive';
+          $error = 'Configuration file "%s" specifies key "%s" which is not a php.ini directive';
           $error = sprintf($error, $configFile, $key);
 
           throw new sfParseException($error);
@@ -61,7 +61,7 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
         // key is overridable?
         if ($configs[$key]['access'] != 7)
         {
-          $error = 'Configuration file "%s" specifies key "%s" with cannot be overrided';
+          $error = 'Configuration file "%s" specifies key "%s" which cannot be overrided';
           $error = sprintf($error, $configFile, $key);
 
           throw new sfParseException($error);
@@ -84,7 +84,7 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
         // key exists?
         if (!array_key_exists($key, $configs))
         {
-          $error = 'Configuration file "%s" specifies key "%s" with is not a php.ini directive [err0002]';
+          $error = 'Configuration file "%s" specifies key "%s" which is not a php.ini directive [err0002]';
           $error = sprintf($error, $configFile, $key);
 
           throw new sfParseException($error);
@@ -92,8 +92,8 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
 
         if (ini_get($key) != $value)
         {
-          $error = 'Configuration file "%s" specifies that php.ini "%s" key must be set to "%s" [err0001]';
-          $error = sprintf($error, $configFile, $key, $value);
+          $error = 'Configuration file "%s" specifies that php.ini "%s" key must be set to "%s". The current value is "%s" (%s). [err0001]';
+          $error = sprintf($error, $configFile, $key, $value, ini_get($key), $this->get_ini_path());
 
           throw new sfInitializationException($error);
         }
@@ -107,6 +107,22 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
     $retval = sprintf($retval, date('m/d/Y H:i:s'), implode("\n", $data));
 
     return $retval;
+  }
+
+  private function get_ini_path()
+  {
+    $cfg_path = get_cfg_var('cfg_file_path');
+    if ($cfg_path == '')
+    {
+      $ini_path = 'WARNING: system is not using a php.ini file';
+    }
+    else 
+    {
+      $ini_path = 'php.ini location: "%s"';
+      $ini_path = sprintf($ini_path, $cfg_path);
+    }
+
+    return $ini_path;
   }
 }
 
