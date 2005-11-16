@@ -75,9 +75,16 @@ class sfViewConfigHandler extends sfYamlConfigHandler
         $data[] = "  \$templateName = \$action->getTemplate() ? \$action->getTemplate() : \$this->getContext()->getActionName();\n";
       }
 
+      $data[] = "  if (!SF_SAFE_SLOT || (SF_SAFE_SLOT && !\$actionStack->isSlot()))\n";
+      $data[] = "  {\n";
+
       $data[] = $this->addLayout($viewName);
       $data[] = $this->addSlots($viewName);
       $data[] = $this->addHtmlHead($viewName);
+
+      $data[] = "  }\n";
+
+      $data[] = $this->addHtmlAsset($viewName);
 
       $data[] = "}\n";
 
@@ -87,9 +94,17 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     // general view configuration
     $data[] = ($first ? '' : "else\n{")."\n".
               "  \$templateName = \$action->getTemplate() ? \$action->getTemplate() : \$this->getContext()->getActionName();\n";
+
+    $data[] = "  if (!SF_SAFE_SLOT || (SF_SAFE_SLOT && !\$actionStack->isSlot()))\n";
+    $data[] = "  {\n";
+
     $data[] = $this->addLayout();
     $data[] = $this->addSlots();
     $data[] = $this->addHtmlHead();
+
+    $data[] = "  }\n";
+
+    $data[] = $this->addHtmlAsset();
     $data[] = ($first ? '' : "}")."\n";
 
     // compile data
@@ -112,8 +127,8 @@ class sfViewConfigHandler extends sfYamlConfigHandler
       {
         if (count($slot) > 1)
         {
-          $data .= "  \$this->setSlot('$name', '{$slot[0]}', '{$slot[1]}');\n";
-          $data .= "  if (SF_LOGGING_ACTIVE) \$context->getLogger()->info('{sfRenderView} set slot \"$name\" ({$slot[0]}/{$slot[1]})');\n";
+          $data .= "    \$this->setSlot('$name', '{$slot[0]}', '{$slot[1]}');\n";
+          $data .= "    if (SF_LOGGING_ACTIVE) \$context->getLogger()->info('{sfRenderView} set slot \"$name\" ({$slot[0]}/{$slot[1]})');\n";
         }
       }
     }
@@ -129,8 +144,8 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     if ($has_layout)
     {
       $layout = $this->getconfigValue('layout', $viewName);
-      $data .= "  \$this->setDecoratorDirectory(SF_APP_TEMPLATE_DIR);\n".
-               "  \$this->setDecoratorTemplate('$layout.php');\n";
+      $data .= "    \$this->setDecoratorDirectory(SF_APP_TEMPLATE_DIR);\n".
+               "    \$this->setDecoratorTemplate('$layout.php');\n";
     }
 
     return $data;
@@ -140,17 +155,24 @@ class sfViewConfigHandler extends sfYamlConfigHandler
   {
     $data = array();
 
-    $tmp = "  \$action->addHttpMeta('%s', '%s', false);";
+    $tmp = "    \$action->addHttpMeta('%s', '%s', false);";
     foreach ($this->mergeConfigValue('http_metas', $viewName) as $httpequiv => $content)
     {
       $data[] = sprintf($tmp, $httpequiv, $content);
     }
 
-    $tmp = "  \$action->addMeta('%s', '%s', false);";
+    $tmp = "    \$action->addMeta('%s', '%s', false);";
     foreach ($this->mergeConfigValue('metas', $viewName) as $name => $content)
     {
       $data[] = sprintf($tmp, $name, $content);
     }
+
+    return implode("\n", $data)."\n";
+  }
+
+  private function addHtmlAsset($viewName = '')
+  {
+    $data = array();
 
     $tmp = "  \$action->addStylesheet('%s');";
     $stylesheets = $this->mergeConfigValue('stylesheets', $viewName);
