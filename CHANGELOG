@@ -1,9 +1,16 @@
 SVN
 ---
 
+* [fabien] better cache support
+* [fabien] safeguard for recursive slots
+* [fabien] added the possibility to disable the web debug sidebar for specific action (RSS, XML, SVG, ...)
+
+Version 0.4.2
+-------------
+
 * [fabien] changed default suffix from .html to / (breaks backward compatibility)
 * [fabien] added configurable suffix by route (with directory and no suffix support) and enforced one URL for one ressource
-* [fabien] dev environment is much more faster
+* [fabien] dev environment is much faster
 * [fabien] better debug sidebar
 * [fabien] better i18n support (variable substitution)
 * [fabien] lot a small fixes for Windows users
@@ -23,3 +30,8 @@ SVN
 * [fabien] better Ajax support (prototype and script.aculo.us)
 * [fabien] support for non virtual host configurations
 * [fabien] easier helpers debugging
+
+Version 0.4.1
+-------------
+
+Initial public release

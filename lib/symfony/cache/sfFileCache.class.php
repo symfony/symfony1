@@ -203,11 +203,17 @@ class sfFileCache extends sfCache
 
     if ($doNotTestCacheValidity)
     {
-      if (file_exists($path.$file)) $data = $this->read($path, $file);
+      if (file_exists($path.$file))
+      {
+        $data = $this->read($path, $file);
+      }
     }
     else
     {
-      if ((file_exists($path.$file)) && (@filemtime($path.$file) > $this->refreshTime)) $data = $this->read($path, $file);
+      if ((file_exists($path.$file)) && (@filemtime($path.$file) > $this->refreshTime))
+      {
+        $data = $this->read($path, $file);
+      }
     }
 
     if ($data)
@@ -252,7 +258,10 @@ class sfFileCache extends sfCache
     if ($this->automaticCleaningFactor > 0)
     {
       $rand = rand(1, $this->automaticCleaningFactor);
-      if ($rand == 1) $this->clean(false, 'old');
+      if ($rand == 1)
+      {
+        $this->clean(false, 'old');
+      }
     }
 
     if ($this->writeControl)
@@ -332,7 +341,9 @@ class sfFileCache extends sfCache
     {
       $hash = md5($file);
       for ($i = 0; $i < $this->hashedDirectoryLevel; $i++)
+      {
         $path = $path.substr($hash, 0, $i + 1).'/';
+      }
     }
 
     return array($path, $file);
@@ -346,10 +357,7 @@ class sfFileCache extends sfCache
   */
   private function unlink($file)
   {
-    if (!@unlink($file))
-      throw new sfCacheException('Unable to remove cache file "'.$file.'"');
-    else
-      return 1;
+    return @unlink($file) ? 1 : 0;
   }
 
   /**
@@ -363,7 +371,9 @@ class sfFileCache extends sfCache
   private function cleanDir($dir, $mode)
   {
     if (!($dh = opendir($dir)))
+    {
       throw new sfCacheException('Unable to open cache directory "'.$dir.'"');
+    }
 
     $result = true;
     while ($file = readdir($dh))
@@ -378,11 +388,15 @@ class sfFileCache extends sfCache
           {
             // files older than lifeTime get deleted from cache
             if ((mktime() - filemtime($file2)) < $this->lifeTime)
+            {
               $unlink = 0;
+            }
           }
 
-          if  ($unlink)
+          if ($unlink)
+          {
             $result = ($result and ($this->unlink($file2)));
+          }
         }
         else if (is_dir($file2))
         {
@@ -402,7 +416,10 @@ class sfFileCache extends sfCache
   private function read($path, $file)
   {
     $fp = @fopen($path.$file, "rb");
-    if ($this->fileLocking) @flock($fp, LOCK_SH);
+    if ($this->fileLocking)
+    {
+      @flock($fp, LOCK_SH);
+    }
     if ($fp)
     {
       clearstatcache(); // because the filesize can be cached by PHP itself...
@@ -416,7 +433,10 @@ class sfFileCache extends sfCache
       } 
       $data = ($length) ? @fread($fp, $length) : '';
       set_magic_quotes_runtime($mqr);
-      if ($this->fileLocking) @flock($fp, LOCK_UN);
+      if ($this->fileLocking)
+      {
+        @flock($fp, LOCK_UN);
+      }
       @fclose($fp);
       if ($this->readControl)
       {
@@ -427,6 +447,7 @@ class sfFileCache extends sfCache
           return false;
         }
       }
+
       return $data;
     }
 
@@ -447,11 +468,20 @@ class sfFileCache extends sfCache
       $fp = @fopen($path.$file, 'wb');
       if ($fp)
       {
-        if ($this->fileLocking) @flock($fp, LOCK_EX);
-        if ($this->readControl) @fwrite($fp, $this->hash($data), 32);
+        if ($this->fileLocking)
+        {
+          @flock($fp, LOCK_EX);
+        }
+        if ($this->readControl)
+        {
+          @fwrite($fp, $this->hash($data), 32);
+        }
         $len = strlen($data);
         @fwrite($fp, $data, $len);
-        if ($this->fileLocking) @flock($fp, LOCK_UN);
+        if ($this->fileLocking)
+        {
+          @flock($fp, LOCK_UN);
+        }
         @fclose($fp);
 
         // change file mode

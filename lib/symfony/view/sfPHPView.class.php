@@ -156,8 +156,9 @@ abstract class sfPHPView extends sfView
    */
   public function &render()
   {
-    $template = $this->getDirectory().'/'.$this->getTemplate();
-    $actionInstance = $this->getContext()->getActionStack()->getLastEntry()->getActionInstance();
+    $template         = $this->getDirectory().'/'.$this->getTemplate();
+    $actionStackEntry = $this->getContext()->getActionStack()->getLastEntry();
+    $actionInstance   = $actionStackEntry->getActionInstance();
 
     $moduleName = $actionInstance->getModuleName();
     $actionName = $actionInstance->getActionName();
@@ -184,9 +185,10 @@ abstract class sfPHPView extends sfView
         else
         {
           // retrieve content from cache
-          $retval = $this->getContext()->getViewCacheManager()->get($moduleName, $actionName);
+          list($internalUri, $suffix) = $this->getInternalUri($actionStackEntry);
+          $retval = $this->getContext()->getViewCacheManager()->get($internalUri, $suffix);
 
-          if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfPHPView} cache '.($retval ? 'exists' : 'does not exist'));
+          if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfPHPView} cache '.($retval !== null ? 'exists' : 'does not exist'));
         }
       }
 
@@ -205,7 +207,8 @@ abstract class sfPHPView extends sfView
         // no cache for POST and GET action
         if (SF_CACHE && !count($_GET) && !count($_POST))
         {
-          $retval = $this->getContext()->getViewCacheManager()->set($retval, $moduleName, $actionName);
+          list($internalUri, $suffix) = $this->getInternalUri($actionStackEntry);
+          $retval = $this->getContext()->getViewCacheManager()->set($retval, $internalUri, $suffix);
         }
       }
 
@@ -224,7 +227,7 @@ abstract class sfPHPView extends sfView
         // no cache for POST action
         if (SF_CACHE && $this->getContext()->getRequest()->getMethod() != sfRequest::POST)
         {
-          $retval = $this->getContext()->getViewCacheManager()->set($retval, $moduleName, $actionName, 'page');
+          $retval = $this->getContext()->getViewCacheManager()->set($retval, sfRouting::getInstance()->getCurrentInternalUri(), 'page');
         }
 
         echo $retval;
@@ -233,6 +236,30 @@ abstract class sfPHPView extends sfView
     }
 
     return $retval;
+  }
+
+  private function getInternalUri($actionStackEntry)
+  {
+    $internalUri = sfRouting::getInstance()->getCurrentInternalUri();
+    $suffix      = 'slot';
+
+    if ($actionStackEntry->isSlot())
+    {
+      $suffix = preg_replace('/[^a-z0-9]/i', '_', $internalUri);
+      $suffix = preg_replace('/_+/', '_', $suffix);
+
+      $actionInstance = $actionStackEntry->getActionInstance();
+      $moduleName     = $actionInstance->getModuleName();
+      $actionName     = $actionInstance->getActionName();
+      $internalUri    = $moduleName.'/'.$actionName;
+
+      // we add cache information based on slot configuration for this module/action
+      $cacheManager = $this->getContext()->getViewCacheManager();
+      $lifeTime     = $cacheManager->getLifeTime($internalUri, 'slot');
+      $cacheManager->addCache($moduleName, $actionName, $suffix, $lifeTime);
+    }
+
+    return array($internalUri, $suffix);
   }
 }
 

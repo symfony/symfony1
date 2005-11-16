@@ -63,6 +63,53 @@ class sfRouting
     return $this->current_route_name;
   }
 
+  public function getCurrentInternalUri($with_route_name = false)
+  {
+    if ($this->current_route_name)
+    {
+      list($url, $regexp, $names, $names_hash, $defaults, $requirements, $suffix) = $this->routes[$this->current_route_name];
+
+      $request = sfContext::getInstance()->getRequest();
+
+      if ($with_route_name)
+      {
+        $internal_uri = '@'.$this->current_route_name;
+      }
+      else
+      {
+        $internal_uri = $request->getParameter('module', isset($defaults['module']) ? $defaults['module'] : '').'/'.$request->getParameter('action', isset($defaults['action']) ? $defaults['action'] : '');
+      }
+
+      $params = array();
+
+      // add parameters
+      foreach ($names as $name)
+      {
+        if ($name == 'module' || $name == 'action') continue;
+
+        $params[] = $name.'='.$request->getParameter($name, isset($defaults[$name]) ? $defaults[$name] : '');
+      }
+
+      // add * parameters if needed
+      if (strpos($url, '*'))
+      {
+        foreach ($request->getParameterHolder()->getAll() as $key => $value)
+        {
+          if ($key == 'module' || $key == 'action') continue;
+
+          if (in_array($key, $names)) continue;
+
+          $params[] = $key.'='.$value;
+        }
+      }
+
+      // sort to guaranty unicity
+      sort($params);
+
+      return $internal_uri.($params ? '?'.implode('&', $params) : '');
+    }
+  }
+
   public function getRoutes()
   {
     return $this->routes;
@@ -101,10 +148,9 @@ class sfRouting
   * - :string: :string denotes a named paramater (available later as $request->getParameter('string'))
   * - *: * match an indefinite number of parameters in a route
   *
-  * Here is the 2 most common rules in a SymFony project:
+  * Here is the a very common rule in a symfony project:
   *
   * <code>
-  * $r->connect('/', array('module' => SF_DEFAULT_MODULE, 'action' => SF_DEFAULT_ACTION));
   * $r->connect('/:module/:action/*');
   * </code>
   *

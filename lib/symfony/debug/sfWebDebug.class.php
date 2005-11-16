@@ -314,21 +314,20 @@ class sfWebDebug
     return $result;
   }
 
-  public function decorateContentWithDebug($moduleName, $actionName, $suffix, $retval, $border_color, $bg_color)
+  public function decorateContentWithDebug($internalUri, $suffix, $retval, $border_color, $bg_color)
   {
     $context = sfContext::getInstance();
     $cache   = $context->getViewCacheManager();
 
-    $last_modified = $cache->lastModified($moduleName, $actionName, $suffix);
-    $uri           = $cache->getUri($moduleName, $actionName, $suffix);
-    $id            = md5($uri);
+    $last_modified = $cache->lastModified($internalUri, $suffix);
+    $id            = md5($internalUri);
     $retval = '
       <div id="main_'.$id.'" class="sfWebDebugActionCache" style="border: 1px solid '.$border_color.'">
       <div id="sub_main_'.$id.'" class="sfStatsCache" style="background-color: '.$bg_color.'; border-right: 1px solid '.$border_color.'; border-bottom: 1px solid '.$border_color.';">
       <div style="height: 16px; padding: 2px"><a href="#" onclick="Element.toggle(\''.$id.'\')"><strong>cache information</strong></a>&nbsp;<a href="#" onclick="Element.hide(\'sub_main_'.$id.'\'); document.getElementById(\'main_'.$id.'\').style.border = \'none\'">'.image_tag($this->base_image_path.'/close.png', 'align=middle').'</a>&nbsp;</div>
         <div style="padding: 2px; display: none" id="'.$id.'">
-        [uri]&nbsp;'.$uri.'<br />
-        [life&nbsp;time]&nbsp;'.$cache->getLifeTime($moduleName, $actionName, $suffix).'&nbsp;seconds<br />
+        [uri]&nbsp;'.$internalUri.'<br />
+        [life&nbsp;time]&nbsp;'.$cache->getLifeTime($internalUri, $suffix).'&nbsp;seconds<br />
         [last&nbsp;modified]&nbsp;'.(time() - $last_modified).'&nbsp;seconds<br />
         &nbsp;<br />&nbsp;
         </div>

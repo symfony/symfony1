@@ -19,7 +19,7 @@
 
 /* Usage
 
-<?php if (!cache()): ?>
+<?php if (!cache('name')): ?>
 
 ... HTML ...
 
@@ -27,30 +27,28 @@
 <?php endif ?>
 
 */
-function cache($lifeTime = SF_DEFAULT_CACHE_LIFETIME, $uri = sfViewCacheManager::CURRENT_URI)
+function cache($suffix, $lifeTime = SF_DEFAULT_CACHE_LIFETIME)
 {
   if (!SF_CACHE)
+  {
     return null;
+  }
 
   $context = sfContext::getInstance();
   $request = $context->getRequest();
   $cache   = $context->getViewCacheManager();
 
-  // get the current action instance
-  $actionInstance = $context->getController()->getActionStack()->getLastEntry()->getActionInstance();
-
-  // get the current action information
-  $moduleName = $context->getModuleName();
-  $actionName = $context->getActionName();
-
   if ($request->getAttribute('cache_started') !== null)
+  {
     throw new sfCacheException('Cache already started');
+  }
 
-  $data = $cache->start($moduleName, $actionName, $lifeTime, $uri);
+  $data = $cache->start($suffix, $lifeTime);
 
   if ($data === null)
   {
     $request->setAttribute('started', 1, 'symfony/action/sfAction/cache');
+    $request->setAttribute('current_suffix', $suffix, 'symfony/action/sfAction/cache');
 
     return 0;
   }
@@ -65,24 +63,24 @@ function cache($lifeTime = SF_DEFAULT_CACHE_LIFETIME, $uri = sfViewCacheManager:
 function cache_save()
 {
   if (!SF_CACHE)
+  {
     return null;
+  }
 
   $context = sfContext::getInstance();
   $request = $context->getRequest();
 
   if ($request->getAttribute('started', null, 'symfony/action/sfAction/cache') === null)
+  {
     throw new sfCacheException('Cache not started');
+  }
 
-  // get the current action instance
-  $actionInstance = $context->getController()->getActionStack()->getLastEntry()->getActionInstance();
+  $suffix = $request->getAttribute('current_suffix', '', 'symfony/action/sfAction/cache');
 
-  // get the current action information
-  $moduleName = $context->getModuleName();
-  $actionName = $context->getActionName();
-
-  $data = $context->getViewCacheManager()->stop($moduleName, $actionName);
+  $data = $context->getViewCacheManager()->stop($suffix);
 
   $request->setAttribute('started', null, 'symfony/action/sfAction/cache');
+  $request->setAttribute('current_suffix', null, 'symfony/action/sfAction/cache');
 
   echo $data;
 }

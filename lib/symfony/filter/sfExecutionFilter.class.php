@@ -84,7 +84,7 @@ class sfExecutionFilter extends sfFilter
         // register our cache configuration
         if (SF_CACHE)
         {
-          $cacheManager = $context->getViewCacheManager();
+          $cacheManager    = $context->getViewCacheManager();
           $cacheConfigFile = $moduleName.'/'.SF_APP_MODULE_CONFIG_DIR_NAME.'/cache.yml';
           if (is_readable(SF_APP_MODULE_DIR.'/'.$cacheConfigFile))
           {
@@ -103,7 +103,7 @@ class sfExecutionFilter extends sfFilter
           else
           {
             // retrieve page content from cache
-            $retval = $cacheManager->get($moduleName, $actionName, 'page');
+            $retval = $cacheManager->get(sfRouting::getInstance()->getCurrentInternalUri(), 'page');
 
             if (SF_LOGGING_ACTIVE) $context->getLogger()->info('{sfExecutionFilter} page cache '.($retval ? 'exists' : 'does not exist'));
 
