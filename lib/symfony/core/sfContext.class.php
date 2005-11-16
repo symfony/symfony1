@@ -10,13 +10,6 @@
  */
 
 /**
- * @package    symfony
- * @subpackage core
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
- */
-
-/**
  * sfContext provides information about the current application context, such as
  * the module and action names and the module directory. References to the
  * current controller, request, and user implementation instances are also

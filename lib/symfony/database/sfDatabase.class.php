@@ -1,25 +1,23 @@
 <?php
 
-// +---------------------------------------------------------------------------+
-// | This file is part of the Mojavi package.                                  |
-// | Copyright (c) 2003, 2004 Sean Kerr.                                       |
-// |                                                                           |
-// | For the full copyright and license information, please view the LICENSE   |
-// | file that was distributed with this source code. You can also view the    |
-// | LICENSE file online at http://www.mojavi.org.                             |
-// +---------------------------------------------------------------------------+
+/*
+ * This file is part of the symfony package.
+ * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004, 2005 Sean Kerr.
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 /**
  * sfDatabase is a base abstraction class that allows you to setup any type of
  * database connection via a configuration file.
  *
- * @package    mojavi
+ * @package    symfony
  * @subpackage database
- *
- * @author    Sean Kerr (skerr@mojavi.org)
- * @copyright (c) Sean Kerr, {@link http://www.mojavi.org}
- * @since     3.0.0
- * @version   $Id: Database.class.php 612 2004-12-07 03:14:53Z seank $
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author     Sean Kerr <skerr@mojavi.org>
+ * @version    SVN: $Id$
  */
 abstract class sfDatabase
 {

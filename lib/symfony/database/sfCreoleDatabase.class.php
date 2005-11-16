@@ -1,13 +1,13 @@
 <?php
 
-// +---------------------------------------------------------------------------+
-// | This file is part of the Mojavi package.                                  |
-// | Copyright (c) 2003, 2004 Sean Kerr.                                       |
-// |                                                                           |
-// | For the full copyright and license information, please view the LICENSE   |
-// | file that was distributed with this source code. You can also view the    |
-// | LICENSE file online at http://www.mojavi.org.                             |
-// +---------------------------------------------------------------------------+
+/*
+ * This file is part of the symfony package.
+ * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004, 2005 Sean Kerr.
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 /**
  * sfCreoleDatabase provides connectivity for the Creole database abstraction
@@ -40,13 +40,11 @@
  *                                      etc).
  * # <b>username</b>       - [none]   - The database user.
  *
- * @package    mojavi
+ * @package    symfony
  * @subpackage database
- *
- * @author    Sean Kerr (skerr@mojavi.org)
- * @copyright (c) Sean Kerr, {@link http://www.mojavi.org}
- * @since     3.0.0
- * @version   $Id: CreoleDatabase.class.php 743 2005-01-06 15:53:16Z seank $
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author     Sean Kerr <skerr@mojavi.org>
+ * @version    SVN: $Id$
  */
 class sfCreoleDatabase extends sfDatabase
 {

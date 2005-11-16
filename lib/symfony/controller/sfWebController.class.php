@@ -10,13 +10,6 @@
  */
 
 /**
- * @package    symfony
- * @subpackage controller
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
- */
-
-/**
  * sfWebController provides web specific methods to sfController such as, url redirection.
  *
  * @package    symfony

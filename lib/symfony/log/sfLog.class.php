@@ -31,8 +31,8 @@ define('PEAR_LOG_TYPE_FILE',    3); /** Append to a file */
  *
  * @author  Chuck Hagenbuch <chuck@horde.org>
  * @author  Jon Parise <jon@php.net>
- * @since   Horde 1.3
- * @package sfLog
+ * @package    symfony
+ * @subpackage sfLog
  */
 class sfLog
 {

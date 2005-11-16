@@ -10,13 +10,6 @@
  */
 
 /**
- * @package    symfony
- * @subpackage controller
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFrontWebController.class.php 495 2005-10-05 15:42:11Z fabien $
- */
-
-/**
  * sfFrontWebController allows you to centralize your entry point in your web
  * application, but at the same time allow for any module and action combination
  * to be requested.

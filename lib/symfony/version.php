@@ -10,7 +10,7 @@
  */
 
 /**
- * @package    symfony.runtime
+ * @package    symfony
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */

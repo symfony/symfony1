@@ -1,27 +1,24 @@
 <?php
 
-/**
- * @package    symfony
- * @subpackage request
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @copyright  2004-2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * @license    SymFony License 1.0
- * @version    SVN: $Id: sfRequest.class.php 359 2005-08-09 11:10:33Z fabien $
+/*
+ * This file is part of the symfony package.
+ * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004, 2005 Sean Kerr.
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 /**
- *
- * Request provides methods for manipulating client request information such
+ * sfRequest provides methods for manipulating client request information such
  * as attributes, errors and parameters. It is also possible to manipulate the
  * request method originally sent by the user.
  *
  * @package    symfony
  * @subpackage request
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr (skerr@mojavi.org)
- * @copyright  2004-2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * @license    SymFony License 1.0
- * @version    SVN: $Id: sfRequest.class.php 359 2005-08-09 11:10:33Z fabien $
+ * @author     Sean Kerr <skerr@mojavi.org>
+ * @version    SVN: $Id: sfAction.class.php 527 2005-10-17 14:02:12Z fabien $
  */
 abstract class sfRequest
 {

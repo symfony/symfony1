@@ -1,17 +1,15 @@
 <?php
 
-/**
- * @package    symfony
- * @subpackage cache
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @copyright  2004-2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * @license    SymFony License 1.0
- * @version    SVN: $Id: sfCache.class.php 369 2005-08-16 08:18:15Z fabien $
+/*
+ * This file is part of the symfony package.
+ * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 /**
- *
- * Cache class to cache the HTML results for Actions and Templates.
+ * Cache class to cache the HTML results for actions and templates.
  *
  * This class is based on the PEAR_Cache_Lite class.
  * All cache files are stored in files in the SF_ROOT_DIR.'/cache/'.SF_APP.'/html' directory.
@@ -21,9 +19,7 @@
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Fabien Marty <fab@php.net>
- * @copyright  2004-2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * @license    SymFony License 1.0
- * @version    SVN: $Id: sfCache.class.php 369 2005-08-16 08:18:15Z fabien $
+ * @version    SVN: $Id: sfAction.class.php 527 2005-10-17 14:02:12Z fabien $
  */
 class sfFileCache extends sfCache
 {

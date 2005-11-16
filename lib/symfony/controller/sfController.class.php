@@ -10,13 +10,6 @@
  */
 
 /**
- * @package    symfony
- * @subpackage controller
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
- */
-
-/**
  * sfController directs application flow.
  *
  * @package    symfony

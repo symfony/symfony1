@@ -1,20 +1,20 @@
 <?php
 
-// +---------------------------------------------------------------------------+
-// | This file is part of the SymFony Framework project.                       |
-// | Copyright (c) 2004, 2005 Fabien POTENCIER.                                |
-// +---------------------------------------------------------------------------+
+/*
+ * This file is part of the symfony package.
+ * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 /**
  *
- * @package   sf_runtime
- *
- * @author    Fabien POTENCIER (fabien.potencier@symfony-project.com)
- *  (c) Fabien POTENCIER
- * @since     1.0.0
- * @version   $Id$
+ * @package    symfony
+ * @subpackage stat
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @version    SVN: $Id$
  */
-
 class sfStats
 {
   public static function getClicksForUriAsXml($uri)

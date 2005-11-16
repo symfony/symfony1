@@ -1,28 +1,25 @@
 <?php
 
-/**
- * @package    symfony
- * @subpackage request
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @copyright  2004-2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * @license    SymFony License 1.0
- * @version    SVN: $Id: sfWebRequest.class.php 480 2005-09-21 13:33:58Z fabien $
+/*
+ * This file is part of the symfony package.
+ * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004, 2005 Sean Kerr.
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
- 
+
 /**
- *
- * Request class.
+ * sfWebRequest class.
  *
  * This class manages web requests. It parses input from the request and store them as parameters.
- * sfRequest is able to parse request with routing support enabled.
+ * sfWebRequest is able to parse request with routing support enabled.
  *
  * @package    symfony
  * @subpackage request
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Sean Kerr (skerr@mojavi.org)
- * @copyright  2004-2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * @license    SymFony License 1.0
- * @version    SVN: $Id: sfWebRequest.class.php 480 2005-09-21 13:33:58Z fabien $
+ * @author     Sean Kerr <skerr@mojavi.org>
+ * @version    SVN: $Id: sfAction.class.php 527 2005-10-17 14:02:12Z fabien $
  */
 class sfWebRequest extends sfRequest
 {

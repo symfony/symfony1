@@ -9,13 +9,6 @@
  */
 
 /**
- * @package    symfony
- * @subpackage controller
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfRouting.class.php 522 2005-10-17 08:23:26Z fabien $
- */
-
-/**
  * sfRouting class controls the creation of URLs and parses URLs. It maps an array of parameters to URLs definition.
  * Each map is called a route.
  * It implements the Singleton pattern.
