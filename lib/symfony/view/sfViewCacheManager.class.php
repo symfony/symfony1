@@ -220,13 +220,8 @@ class sfViewCacheManager
     }
     else
     {
-      $this->doRemove($internalUri, 'page');
-      $this->doRemove($internalUri, 'slot');
-      $i = 1;
-      while ($this->doRemove($internalUri, 'fragment'.$i) !== null)
-      {
-        ++$i;
-      }
+      $namespace = $this->generateNamespace($internalUri);
+      $this->clean($namespace);
     }
   }
 
