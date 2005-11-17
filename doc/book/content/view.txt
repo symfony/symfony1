@@ -264,18 +264,6 @@ The above configuration would refer to a method in the test module:
       }
     }
 
-Currently, you will need to add a configuration to the `view.yml` of the module that contains the slot action
-to turn of the navigation slot. In this case, the following configuration would be added to the `myapp/modules/test/config/view.yml`:
-
-    navigationSuccess:
-        slots: {}
-        has_layout: off
-    
-    all:
-        tmp:  1 
-
->**Note**: You currently must add the all: entry as it is a required category in the `view.yml` configuration of a module
-
 In the layout, you will now have in the `$nav_slot` variable the result of the execution of the `navigation` action of the `test` module. This action will be executed separately from the current action. The layout template of the application can now include the result of this action by simply calling:
 
     <?php echo $nav_slot ?>
