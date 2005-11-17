@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Domain.php 88 2005-05-18 02:32:43Z hans $
+ *  $Id: Domain.php 239 2005-10-20 11:13:47Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -24,7 +24,7 @@
  *
  * @author  Hans Lellelid <hans@xmpl.org> (Propel)
  * @author  Martin Poeschl <mpoeschl@marmot.at> (Torque)
- * @version $Revision: 88 $
+ * @version $Revision: 239 $
  * @package propel.engine.database.model
  */
 class Domain extends XMLElement {
@@ -246,8 +246,8 @@ class Domain extends XMLElement {
 		} elseif ($this->propelType === PropelTypes::DATE || $this->propelType === PropelTypes::TIME || $this->propelType === PropelTypes::TIMESTAMP) {
 			// DATE/TIME vals need to be converted to integer timestamp
 			$ts = strtotime($this->defaultValue);
-			if ($ts === -1) {
-				throw new EngineException("Unable to parse default value for ".$table->getName().".".$col->getName()." as date/time value: " . var_export($val, true));
+			if ($ts === -1 || $ts === false) { // in PHP 5.1 return value changes to FALSE
+				throw new EngineException("Unable to parse default value as date/time value: " . var_export($this->defaultValue, true));
 			}
 			return $ts;
 		} else {

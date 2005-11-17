@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: PlatformOracleImpl.php 94 2005-05-23 14:27:02Z david $
+ *  $Id$
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -19,17 +19,17 @@
  * <http://propel.phpdb.org>.
  */
  
-require_once 'propel/engine/platform/PlatformDefaultImpl.php';
+require_once 'propel/engine/platform/DefaultPlatform.php';
 
 /**
  * Oracle Platform implementation.
  *
  * @author Hans Lellelid <hans@xmpl.org> (Propel)
  * @author Martin Poeschl <mpoeschl@marmot.at> (Torque)
- * @version $Revision: 94 $
+ * @version $Revision: 256 $
  * @package propel.engine.platform
  */
-class PlatformOracleImpl extends PlatformDefaultImpl {
+class OraclePlatform extends DefaultPlatform {
 
     /**
      * Initializes db specific domain mapping.

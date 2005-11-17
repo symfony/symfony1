@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: Index.php 105 2005-06-04 23:21:07Z david $
+ *  $Id: Index.php 253 2005-11-04 21:06:58Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,7 +28,7 @@ include_once 'propel/engine/EngineException.php';
  *
  * @author Jason van Zyl <vanzyl@apache.org>
  * @author Daniel Rall <dlr@finemaltcoding.com>
- * @version $Revision: 105 $
+ * @version $Revision: 253 $
  * @package propel.engine.database.model
  */
 class Index extends XMLElement {
@@ -228,7 +228,7 @@ class Index extends XMLElement {
      */
     public function getColumnList()
     {
-        return Column::makeList($this->getColumns());
+        return Column::makeList($this->getColumns(), $this->getTable()->getDatabase()->getPlatform());
     }
 
     /**

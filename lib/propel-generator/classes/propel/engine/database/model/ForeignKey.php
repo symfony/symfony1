@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: ForeignKey.php 117 2005-06-14 13:22:21Z hans $
+ *  $Id: ForeignKey.php 253 2005-11-04 21:06:58Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@ require_once 'propel/engine/database/model/XMLElement.php';
  * @author Hans Lellelid <hans@xmpl.org>
  * @author Fedor <fedor.karpelevitch@home.com>
  * @author Daniel Rall <dlr@finemaltcoding.com>
- * @version $Revision: 117 $
+ * @version $Revision: 253 $
  * @package propel.engine.database.model
  */
 class ForeignKey extends XMLElement {
@@ -66,7 +66,7 @@ class ForeignKey extends XMLElement {
      */
     private function normalizeFKey($attrib)
     {
-        if ($attrib === null) {
+        if ($attrib === null  || strtoupper($attrib) == "NONE") {
             $attrib = self::NONE;
         }
         $attrib = strtoupper($attrib);
@@ -198,7 +198,7 @@ class ForeignKey extends XMLElement {
      */
     public function getLocalColumnNames()
     {
-        return Column::makeList($this->getLocalColumns());
+        return Column::makeList($this->getLocalColumns(), $this->getTable()->getDatabase()->getPlatform());
     }
 
     /**
@@ -206,7 +206,7 @@ class ForeignKey extends XMLElement {
      */
     public function getForeignColumnNames()
     {
-        return Column::makeList($this->getForeignColumns());
+        return Column::makeList($this->getForeignColumns(), $this->getTable()->getDatabase()->getPlatform());
     }
 
     /**

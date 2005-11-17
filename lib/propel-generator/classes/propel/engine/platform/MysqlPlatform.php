@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: PlatformMysqlImpl.php 152 2005-07-22 09:07:59Z david $
+ *  $Id$
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -19,17 +19,17 @@
  * <http://propel.phpdb.org>.
  */
 
-require_once 'propel/engine/platform/PlatformDefaultImpl.php';
+require_once 'propel/engine/platform/DefaultPlatform.php';
 
 /**
  * MySql Platform implementation.
  *
  * @author Hans Lellelid <hans@xmpl.org> (Propel)
  * @author Martin Poeschl <mpoeschl@marmot.at> (Torque)
- * @version $Revision: 152 $
+ * @version $Revision: 256 $
  * @package propel.engine.platform
  */
-class PlatformMysqlImpl extends PlatformDefaultImpl {
+class MysqlPlatform extends DefaultPlatform {
 
     /**
      * Initializes db specific domain mapping.
@@ -94,4 +94,12 @@ class PlatformMysqlImpl extends PlatformDefaultImpl {
     public function escapeText($text) {
         return mysql_escape_string($text);
     }
+	
+	/**
+	 * @see Platform::quoteIdentifier()
+	 */
+	public function quoteIdentifier($text)
+	{
+		return '`' . $text . '`';
+	}
 }

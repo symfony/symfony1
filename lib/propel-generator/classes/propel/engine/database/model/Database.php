@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: Database.php 64 2005-05-13 02:43:56Z root $
+ *  $Id: Database.php 263 2005-11-07 20:55:12Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -24,7 +24,6 @@ require_once 'propel/engine/database/model/XMLElement.php';
 include_once 'propel/engine/database/model/IDMethod.php';
 include_once 'propel/engine/database/model/NameGenerator.php';
 include_once 'propel/engine/database/model/Table.php';
-include_once 'propel/engine/platform/PlatformFactory.php';
 
 /**
  * A class for holding application data structures.
@@ -35,12 +34,12 @@ include_once 'propel/engine/platform/PlatformFactory.php';
  * @author Martin Poeschl<mpoeschl@marmot.at> (Torque)
  * @author Daniel Rall<dlr@collab.net> (Torque)
  * @author Byron Foster <byron_foster@yahoo.com> (Torque)
- * @version $Revision: 64 $
+ * @version $Revision: 263 $
  * @package propel.engine.database.model
  */
 class Database extends XMLElement {
 
-    private $databaseType = null;
+	private $platform;
     private $tableList = array();
     private $curColumn;
     private $name;
@@ -84,7 +83,17 @@ class Database extends XMLElement {
      */
     public function getPlatform()
     {
-        return PlatformFactory::getPlatformFor($this->databaseType);
+        return $this->platform;
+    }
+
+    /**
+     * Sets the Platform implementation for this database.
+     *
+     * @param Platform $platform A Platform implementation
+     */
+    public function setPlatform($platform)
+    {
+        $this->platform = $platform;
     }
 
     /**
@@ -241,20 +250,28 @@ class Database extends XMLElement {
 
     /**
      * Return the table with the specified name.
-     * @return A Table object.  If it does not exist it returns null
+	 * @param string $name The name of the table (e.g. 'my_table')
+     * @return Table a Table object or null if it doesn't exist
      */
     public function getTable($name)
     {
-        return @$this->tablesByName[$name];
+		if (isset($this->tablesByName[$name])) {
+		    return $this->tablesByName[$name];
+		}
+		return null; // just to be explicit
     }
 
     /**
      * Return the table with the specified phpName.
-     * @return A Table object.  If it does not exist it returns null
+	 * @param string $phpName the PHP Name of the table (e.g. 'MyTable')
+     * @return Table a Table object or null if it doesn't exist
      */
     public function getTableByPhpName($phpName)
     {
-        return @$this->tablesByPhpName[$phpName];
+		if (isset($this->tablesByPhpName[$phpName])) {
+		    return $this->tablesByPhpName[$phpName];
+		}
+        return null; // just to be explicit
     }
 
     /**
@@ -294,16 +311,6 @@ class Database extends XMLElement {
     public function getAppData()
     {
         return $this->dbParent;
-    }
-
-    public function getDatabaseType()
-    {
-        return $this->databaseType;
-    }
-
-    public function setDatabaseType($databaseType)
-    {
-        $this->databaseType = $databaseType;
     }
 	
 	/**

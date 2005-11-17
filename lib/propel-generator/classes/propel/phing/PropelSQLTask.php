@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: PropelSQLTask.php 180 2005-08-30 09:04:00Z david $
+ *  $Id: PropelSQLTask.php 258 2005-11-07 16:12:09Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,7 +29,7 @@ include_once 'propel/engine/database/model/AppData.php';
  * @author Hans Lellelid <hans@xmpl.org> (Propel)
  * @author Jason van Zyl <jvanzyl@periapt.com> (Torque)
  * @author John McNally <jmcnally@collab.net> (Torque)
- * @version $Revision: 180 $
+ * @version $Revision: 258 $
  * @package propel.phing
  */
 class PropelSQLTask extends AbstractPropelDataModelTask {
@@ -243,14 +243,16 @@ class PropelSQLTask extends AbstractPropelDataModelTask {
 			$dataModels = $this->getDataModels();
 			$dataModel = array_shift($dataModels);
 			$packagedDataModels = array();
-
+			
+			$platform = $this->getPlatformForTargetDatabase();
+			
 			foreach ($dataModel->getDatabases() as $db) {
 				foreach ($db->getTables() as $table) {
 					$package = $table->getPackage();
 					if (!isset($packagedDataModels[$package])) {
 						$dbClone = $this->cloneDatabase($db);
 						$dbClone->setPackage($package);
-						$ad = new AppData($db->getDatabaseType());
+						$ad = new AppData($platform);
 						$ad->setName($dataModel->getName());
 						$ad->addDatabase($dbClone);
 						$packagedDataModels[$package] = $ad;

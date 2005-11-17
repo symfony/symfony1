@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: PHP5ComplexObjectBuilder.php 188 2005-09-09 00:37:36Z hans $
+ *  $Id: PHP5ComplexObjectBuilder.php 237 2005-10-18 17:31:46Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -523,6 +523,10 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 		if (\$criteria === null) {
 			\$criteria = new Criteria();
 		}
+		elseif (\$criteria instanceof Criteria)
+		{
+			\$criteria = clone \$criteria;
+		}
 
 		if (\$this->$collName === null) {
 			if (\$this->isNew()) {
@@ -706,6 +710,10 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 		if (\$criteria === null) {
 			\$criteria = new Criteria();
 		}
+		elseif (\$criteria instanceof Criteria)
+		{
+			\$criteria = clone \$criteria;
+		}
 ";
 		foreach ($refFK->getForeignColumns() as $columnName) {
 			$column = $this->getTable()->getColumn($columnName);
@@ -757,6 +765,10 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 		include_once '".$fkPeerBuilder->getClassFilePath()."';
 		if (\$criteria === null) {
 			\$criteria = new Criteria();
+		}
+		elseif (\$criteria instanceof Criteria)
+		{
+			\$criteria = clone \$criteria;
 		}
 
 		if (\$this->$collName === null) {
@@ -902,7 +914,9 @@ $script .= "
 
 		foreach ($table->getReferrers() as $fk) {
 			$collName = $this->getRefFKCollVarName($fk);
-			if ( $fk->getTable()->getName() != $table->getName() ) {
+			//HL: commenting out self-referrential check below
+			//		it seems to work as expected and is desireable since we are also enabling the copy()ing of these related rows
+			//if ( $fk->getTable()->getName() != $table->getName() ) {
 				$script .= "
 			if (\$this->$collName !== null) {
 				foreach(\$this->$collName as \$referrerFK) {
@@ -912,7 +926,8 @@ $script .= "
 				}
 			}
 ";
-			} /* if tableFK != table */
+			//HL: commenting out close of self-referrential check
+			//} /* if tableFK != table */
 		} /* foreach getReferrers() */
 		$script .= "
 			\$this->alreadyInSave = false;
@@ -935,7 +950,7 @@ $script .= "
 	 * by another object which falls in this transaction.
 	 * @var boolean
 	 */
-	private \$alreadyInSave = false;
+	protected \$alreadyInSave = false;
 ";
 	}
 	
@@ -992,7 +1007,7 @@ $script .= "
 	 * by another object which falls in this transaction.
 	 * @var boolean
 	 */
-	private \$alreadyInValidation = false;
+	protected \$alreadyInValidation = false;
 ";
 	}
 	
@@ -1189,13 +1204,16 @@ $script .= "
 			\$copyObj->setNew(false);
 ";
 			foreach ($table->getReferrers() as $fk) {
-				if ( $fk->getTable()->getName() != $table->getName() ) {
+				//HL: commenting out self-referrential check below
+				//		it seems to work as expected and is probably desireable to have those referrers from same table deep-copied.
+				//if ( $fk->getTable()->getName() != $table->getName() ) {
 					$script .= "
 			foreach(\$this->get".$this->getRefFKPhpNameAffix($fk, true)."() as \$relObj) {
-				\$copyObj->add".$this->getRefFKPhpNameAffix($fk)."(\$relObj->copy());
+				\$copyObj->add".$this->getRefFKPhpNameAffix($fk)."(\$relObj->copy(\$deepCopy));
 			}
 ";
-				} /* if tblFK != table */
+				// HL: commenting out close of self-referential check
+				// } /* if tblFK != table */
 			} /* foreach */
 			$script .= "
 		} // if (\$deepCopy)

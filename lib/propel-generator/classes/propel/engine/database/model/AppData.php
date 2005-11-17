@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: AppData.php 75 2005-05-16 13:04:37Z sven $
+ *  $Id: AppData.php 258 2005-11-07 16:12:09Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,7 +29,7 @@ include_once 'propel/engine/database/model/Database.php';
  * @author Leon Messerschmidt <leon@opticode.co.za> (Torque)
  * @author John McNally <jmcnally@collab.net> (Torque)
  * @author Daniel Rall <dlr@finemaltcoding.com> (Torque)
- * @version $Revision: 75 $
+ * @version $Revision: 258 $
  * @package propel.engine.database.model
  */
 class AppData {
@@ -41,10 +41,10 @@ class AppData {
     private $dbList = array();
 
     /**
-     * The type for our databases.
+     * The platform class for our database(s).
      * @var string
      */
-    private $databaseType;
+    private $platform;
 
     /**
      * Name of the database. Only one database definition
@@ -61,12 +61,11 @@ class AppData {
     /**
      * Creates a new instance for the specified database type.
      *
-     * @param databaseType The default type for any databases added to
-     * this application model.
+     * @param Platform $platform The platform class to use for any databases added to this application model.
      */
-    public function __construct($databaseType)
+    public function __construct(Platform $platform)
     {
-        $this->databaseType = $databaseType;
+        $this->platform = $platform;
     }
 
     /**
@@ -161,8 +160,8 @@ class AppData {
     {
         if ($db instanceof Database) {
             $db->setAppData($this);
-            if ($db->getDatabaseType() === null) {
-                $db->setDatabaseType($this->databaseType);
+            if ($db->getPlatform() === null) {
+                $db->setPlatform($this->platform);
             }
             $this->dbList[] = $db;
             return $db;

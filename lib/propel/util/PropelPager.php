@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: PropelPager.php 64 2005-05-13 02:43:56Z root $
+ *  $Id: PropelPager.php 244 2005-10-21 16:54:00Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -96,7 +96,7 @@
  *
  * 
  * @author	Rob Halff <info@rhalff.com>
- * @version   $Revision: 64 $
+ * @version   $Revision: 244 $
  * @copyright Copyright (c) 2004 Rob Halff: LGPL - See LICENCE
  * @package   propel.util 
  */
@@ -105,7 +105,8 @@ class PropelPager {
 	private $recordCount;
 	private $pages;
 	private $peerClass;
-	private $peerMethod;
+	private $peerSelectMethod;
+	private $peerCountMethod;
 	private $criteria;
 	private $countCriteria;
 	private $page;
@@ -120,19 +121,20 @@ class PropelPager {
 	/**
 	 * Create a new Propel Pager.
 	 * @param Criteria $c
-	 * @param string $peerClass 
-	 * @param string $peerMethod
-	 * @param int $page
-	 * @param int $rowsPerPage
+	 * @param string $peerClass The name of the static Peer class.
+	 * @param string $peerSelectMethod The name of the static method for selecting content from the Peer class.
+	 * @param int $page The current page (1-based).
+	 * @param int $rowsPerPage The number of rows that should be displayed per page.
 	 */
-	public function __construct($c = null, $peerClass = null, $peerMethod = null, $page = 1, $rowsPerPage = 25)
+	public function __construct($c = null, $peerClass = null, $peerSelectMethod = null, $page = 1, $rowsPerPage = 25)
 	{
-        if(!isset($c)) { 
-            $c = new Criteria;
+        if(!isset($c)) {
+            $c = new Criteria();
         }
         $this->setCriteria($c);
 		$this->setPeerClass($peerClass);
-		$this->setPeerMethod($peerMethod);
+		$this->setPeerSelectMethod($peerSelectMethod);
+		$this->guessPeerCountMethod();
 		$this->setPage($page);
 		$this->setRowsPerPage($rowsPerPage);
 	}
@@ -177,23 +179,86 @@ class PropelPager {
 	}
 	
 	/**
-	 * Set the Peer Method 
-	 * 
-	 * @param string $class
+	 * Set the Peer select method.
+	 * This exists for legacy support, please use setPeerSelectMethod().
+	 * @param string $method The name of the static method to call on the Peer class.
 	 * @return void
+	 * @see setPeerSelectMethod()
+	 * @deprecated
 	 */
 	public function setPeerMethod($method)
 	{
-		$this->peerMethod = $method;
+		$this->setPeerSelectMethod($method);
 	}
 
 	/**
-	 * Return the Peer Method.
+	 * Return the Peer select method.
+	 * This exists for legacy support, please use getPeerSelectMethod().
 	 * @return string
+	 * @see getPeerSelectMethod()
+	 * @deprecated
 	 */
 	public function getPeerMethod()
 	{
-		return $this->peerMethod;
+		return $this->getPeerSelectMethod();
+	}
+	
+	/**
+	 * Set the Peer select method.
+	 * 
+	 * @param string $method The name of the static method to call on the Peer class.
+	 * @return void
+	 */
+	public function setPeerSelectMethod($method)
+	{
+		$this->peerSelectMethod = $method;
+	}
+	
+	/**
+	 * Return the Peer select method.
+	 * @return string
+	 */
+	public function getPeerSelectMethod()
+	{
+		return $this->peerSelectMethod;
+	}
+	
+	/**
+	 * Sets the Count method.
+	 * This is set based on the Peer method, for example if Peer method is doSelectJoin*() then the 
+	 * count method will be doCountJoin*().
+	 * @param string $method The name of the static method to call on the Peer class.
+	 */
+	public function setPeerCountMethod($method)
+	{
+		$this->peerCountMethod = $method;
+	}
+	
+	/**
+	 * Return the Peer count method.
+	 */
+	public function getPeerCountMethod()
+	{
+		return $this->peerCountMethod;
+	}
+	
+	/**
+	 * Guesses the Peer count method based on the select method.
+	 */
+	private function guessPeerCountMethod()
+	{
+		$selectMethod = $this->getPeerSelectMethod();
+		if ($selectMethod == 'doSelect') {
+			$countMethod = 'doCount';
+		} elseif ( ($pos = stripos($selectMethod, 'doSelectJoin')) === 0) {
+			$countMethod = 'doCount' . substr($selectMethod, strlen('doSelect'));
+		} else {
+			// we will fall back to doCount() if we don't understand the join
+			// method; however, it probably won't be accurate.  Maybe triggering an error would 
+			// be appropriate ...
+			$countMethod = 'doCount';
+		}
+		$this->setPeerCountMethod($countMethod);
 	}
 	
 	/**
@@ -221,7 +286,7 @@ class PropelPager {
 	{   
 		$this->criteria->setOffset($this->start);
 		$this->criteria->setLimit($this->max);
-		$this->rs = call_user_func(array($this->peerClass, $this->peerMethod), $this->criteria);
+		$this->rs = call_user_func(array($this->getPeerClass(), $this->getPeerSelectMethod()), $this->criteria);
 	}
 	
 	/**
@@ -440,8 +505,8 @@ class PropelPager {
 
                         $this->recordCount = call_user_func(
                                         array(
-                                                $this->peerClass,
-                                                'doCount'
+                                                $this->getPeerClass(),
+												$this->getPeerCountMethod()
                                              ),
                                         $this->countCriteria
                                         );

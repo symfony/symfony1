@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: PlatformDefaultImpl.php 166 2005-08-12 15:45:10Z hans $
+ *  $Id$
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,10 +26,10 @@ include_once 'propel/engine/database/model/Domain.php';
  * Default implementation for the Platform interface.
  *
  * @author Martin Poeschl <mpoeschl@marmot.at> (Torque)
- * @version $Revision: 166 $
+ * @version $Revision: 258 $
  * @package propel.engine.platform
  */
-class PlatformDefaultImpl implements Platform {
+class DefaultPlatform implements Platform {
 
     private $schemaDomainMap;
     
@@ -57,6 +57,18 @@ class PlatformDefaultImpl implements Platform {
         $this->schemaDomainMap[$domain->getType()] = $domain;
     }
     
+	/**
+	 * Returns the short name of the database type that this platform represents.
+	 * For example MysqlPlatform->getDatabaseType() returns 'mysql'.
+	 * @return string
+	 */
+	public function getDatabaseType()
+	{
+		$clazz = get_class($this);
+		$pos = strpos($clazz, 'Platform');
+		return strtolower(substr($clazz,0,$pos));
+	}
+	
     /**
      * @see Platform::getMaxColumnNameLength()
      */
@@ -130,6 +142,14 @@ class PlatformDefaultImpl implements Platform {
         return str_replace("'", "''", $text);
     }
     
+	/**
+	 * @see Platform::quoteIdentifier()
+	 */
+	public function quoteIdentifier($text)
+	{
+		return '"' . $text . '"';
+	}
+	
     /**
      * @see Platform::supportsNativeDeleteTrigger()
      */

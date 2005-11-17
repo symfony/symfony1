@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Platform.php 64 2005-05-13 02:43:56Z root $
+ *  $Id: Platform.php 258 2005-11-07 16:12:09Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -24,7 +24,7 @@
  *
  * @author Hans Lellelid <hans@xmpl.org> (Propel)
  * @author Martin Poeschl <mpoeschl@marmot.at> (Torque)
- * @version $Revision: 64 $
+ * @version $Revision: 258 $
  * @package propel.engine.platform
  */
 interface Platform {
@@ -35,6 +35,13 @@ interface Platform {
     /** constant for native id method */
     const SEQUENCE = "sequence";
     
+	/**
+	 * Returns the short name of the database type that this platform represents.
+	 * For example MysqlPlatform->getDatabaseType() returns 'mysql'.
+	 * @return string
+	 */
+	public function getDatabaseType();
+	
     /**
      * Returns the native IdMethod (sequence|identity)
      *
@@ -91,6 +98,13 @@ interface Platform {
      */ 
     public function escapeText($text);
     
+	/**
+	 * Quotes identifiers used in database SQL.
+	 * @param string $text
+	 * @return string Quoted identifier.
+	 */
+	public function quoteIdentifier($text);
+	
     /**
      * Whether RDBMS supports native ON DELETE triggers (e.g. ON DELETE CASCADE).
      * @return boolean

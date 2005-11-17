@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: ColumnMap.php 64 2005-05-13 02:43:56Z root $
+ *  $Id: ColumnMap.php 272 2005-11-08 15:02:48Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -40,7 +40,7 @@ include_once 'propel/map/ValidatorMap.php';
  * 
  * @author Hans Lellelid <hans@xmpl.org> (Propel)
  * @author John D. McNally <jmcnally@collab.net> (Torque)
- * @version $Revision: 64 $
+ * @version $Revision: 272 $
  * @package propel.map
  */
 class ColumnMap {
@@ -77,8 +77,7 @@ class ColumnMap {
 
     /** validators for this column */
     private $validators = array();
-
-
+	
     /**
      * Constructor.
      *
@@ -205,7 +204,16 @@ class ColumnMap {
     {
         $this->notNull = $nn;
     }
-
+	
+	/**
+	 * Gets the default value for this column.
+	 * @return mixed String or NULL
+	 */
+	public function getDefaultValue()
+	{
+		return $this->defaultValue;
+	}
+	
     /**
      * Set the foreign key for this column.
      *

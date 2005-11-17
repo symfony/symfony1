@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: PropelCreoleTransformTask.php 137 2005-07-14 00:46:58Z hans $
+ *  $Id: PropelCreoleTransformTask.php 270 2005-11-08 04:26:33Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,7 +30,7 @@ require_once 'phing/Task.php';
  * @author Hans Lellelid <hans@xmpl.org> (Propel)
  * @author Jason van Zyl <jvanzyl@periapt.com> (Torque)
  * @author Fedor Karpelevitch <fedor.karpelevitch@barra.com> (Torque)
- * @version $Revision: 137 $
+ * @version $Revision: 270 $
  * @package propel.phing
  */
 class PropelCreoleTransformTask extends Task {
@@ -404,6 +404,26 @@ class PropelCreoleTransformTask extends Task {
 			$indexNode = $this->createIndexNode($index);
 			$node->appendChild($indexNode);
 		}
+		
+		// add an id-method-parameter if we have a sequence that matches table_colname_seq
+		// 
+		// 
+		$pkey = $table->getPrimaryKey();
+		if ($pkey) {
+		    $cols = $pkey->getColumns();
+			if (count($cols) === 1) {
+				$col = array_shift($cols);
+				if ($col->isAutoIncrement()) {
+					$seq_name = $table->getName().'_'.$col->getName().'_seq';					
+					if ($table->getDatabase()->isSequence($seq_name)) {
+						$idMethodParameterNode = $this->doc->createElement("id-method-parameter");
+						$idMethodParameterNode->setAttribute("name", $seq_name);
+						$node->appendChild($idMethodParameterNode);
+					}
+				}
+			}
+		}
+		
 
 		// Create and add validator and rule nodes.
 		$nodes = array();

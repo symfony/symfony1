@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: XmlToData.php 137 2005-07-14 00:46:58Z hans $
+ *  $Id: XmlToData.php 262 2005-11-07 20:19:14Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -31,7 +31,7 @@ require_once 'phing/parser/AbstractHandler.php';
  * @author Jason van Zyl <jvanzyl@apache.org> (Torque)
  * @author Martin Poeschl <mpoeschl@marmot.at> (Torque)
  * @author Fedor Karpelevitch <fedor.karpelevitch@home.com> (Torque)
- * @version $Revision: 137 $
+ * @version $Revision: 262 $
  * @package propel.engine.database.transform
  */
 class XmlToData extends AbstractHandler {
@@ -67,7 +67,7 @@ class XmlToData extends AbstractHandler {
         try {
 
             $this->data = array();
-
+			
             try {
                 $fr = new FileReader($xmlFile);
             } catch (Exception $e) {

@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: PHP5ComplexPeerBuilder.php 190 2005-09-09 11:14:51Z hans $
+ *  $Id: PHP5ComplexPeerBuilder.php 227 2005-10-09 14:00:40Z david $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -149,12 +149,13 @@ class PHP5ComplexPeerBuilder extends PHP5BasicPeerBuilder {
 	 */
 	public static function doSelectJoin".$thisTableObjectBuilder->getFKPhpNameAffix($fk, $plural = false)."(Criteria \$c, \$con = null)
 	{
-	
+		\$c = clone \$c;
+
 		// Set the correct dbName if it has not been overridden
 		if (\$c->getDbName() == Propel::getDefaultDB()) {
 			\$c->setDbName(self::DATABASE_NAME);
 		}
-	
+
 		".$this->getPeerClassname()."::addSelectColumns(\$c);
 		\$startcol = (".$this->getPeerClassname()."::NUM_COLUMNS - ".$this->getPeerClassname()."::NUM_LAZY_LOAD_COLUMNS) + 1;
 		".$joinedTablePeerBuilder->getPeerClassname()."::addSelectColumns(\$c);
@@ -264,7 +265,7 @@ class PHP5ComplexPeerBuilder extends PHP5BasicPeerBuilder {
 	 * @param Connection \$con
 	 * @return int Number of matching rows.
 	 */
-	public static function doCountJoin".$thisTableObjectBuilder->getFKPhpNameAffix($fk, $plural = false)."(Criteria \$c, \$distinct = false, \$con = null)
+	public static function doCountJoin".$thisTableObjectBuilder->getFKPhpNameAffix($fk, $plural = false)."(Criteria \$criteria, \$distinct = false, \$con = null)
 	{
 		// we're going to modify criteria, so copy it first
 		\$criteria = clone \$criteria;
@@ -328,6 +329,8 @@ class PHP5ComplexPeerBuilder extends PHP5BasicPeerBuilder {
 	 */
 	public static function doSelectJoinAll(Criteria \$c, \$con = null)
 	{
+		\$c = clone \$c;
+
 		// Set the correct dbName if it has not been overridden
 		if (\$c->getDbName() == Propel::getDefaultDB()) {
 			\$c->setDbName(self::DATABASE_NAME);
@@ -406,7 +409,6 @@ class PHP5ComplexPeerBuilder extends PHP5BasicPeerBuilder {
 			// FIXME -- why not? -because we'd have to alias the tables in the JOIN
 			if ( $fk->getForeignTableName() != $table->getName() ) {
 				
-				/*
 				$joinTable = $table->getDatabase()->getTable($fk->getForeignTableName());
 				$joinClassName = $joinTable->getPhpName();
 				$interfaceName = $joinTable->getPhpName();
@@ -414,6 +416,7 @@ class PHP5ComplexPeerBuilder extends PHP5BasicPeerBuilder {
 					$interfaceName = $joinTable->getInterface();
 				}
 				
+				/*
 				$partJoinName = "";
 				foreach ($fk->getLocalColumns() as $columnName ) {
 					$column = $table->getColumn($columnName);
@@ -508,9 +511,9 @@ class PHP5ComplexPeerBuilder extends PHP5BasicPeerBuilder {
 	 * @param Connection \$con
 	 * @return int Number of matching rows.
 	 */
-	public static function doCountJoinAll(Criteria \$c, \$distinct = false, \$con = null)
+	public static function doCountJoinAll(Criteria \$criteria, \$distinct = false, \$con = null)
 	{
-		\$criteria = clone \$c;
+		\$criteria = clone \$criteria;
 
 		// clear out anything that might confuse the ORDER BY clause
 		\$criteria->clearSelectColumns()->clearOrderByColumns();
@@ -616,6 +619,8 @@ class PHP5ComplexPeerBuilder extends PHP5BasicPeerBuilder {
 	 */
 	public static function doSelectJoinAllExcept".$thisTableObjectBuilder->getFKPhpNameAffix($fk, $plural = false)."(Criteria \$c, \$con = null)
 	{
+		\$c = clone \$c;
+
 		// Set the correct dbName if it has not been overridden
 		// \$c->getDbName() will return the same object if not set to another value
 		// so == check is okay and faster
@@ -804,7 +809,7 @@ class PHP5ComplexPeerBuilder extends PHP5BasicPeerBuilder {
 	 * @param Connection \$con
 	 * @return int Number of matching rows.
 	 */
-	public static function doCountJoinAllExcept".$thisTableObjectBuilder->getFKPhpNameAffix($fk, $plural = false)."(Criteria \$c, \$distinct = false, \$con = null)
+	public static function doCountJoinAllExcept".$thisTableObjectBuilder->getFKPhpNameAffix($fk, $plural = false)."(Criteria \$criteria, \$distinct = false, \$con = null)
 	{
 		// we're going to modify criteria, so copy it first
 		\$criteria = clone \$criteria;

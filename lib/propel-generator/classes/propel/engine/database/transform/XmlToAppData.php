@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: XmlToAppData.php 149 2005-07-18 22:19:13Z david $
+ *  $Id: XmlToAppData.php 258 2005-11-07 16:12:09Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -35,7 +35,7 @@ include_once 'phing/system/io/FileReader.php';
  * @author Jason van Zyl <jvanzyl@apache.org> (Torque)
  * @author Martin Poeschl <mpoeschl@marmot.at> (Torque)
  * @author Daniel Rall <dlr@collab.net> (Torque)
- * @version $Revision: 149 $
+ * @version $Revision: 258 $
  * @package propel.engine.database.transform
  */
 class XmlToAppData extends AbstractHandler {
@@ -44,7 +44,7 @@ class XmlToAppData extends AbstractHandler {
     const DEBUG = false;
 
     private $app;
-    private $databaseType;
+    private $platform;
     private $currDB;
     private $currTable;
     private $currColumn;
@@ -71,13 +71,14 @@ class XmlToAppData extends AbstractHandler {
     /**
      * Creates a new instance for the specified database type.
      *
-     * @param string $databaseType The type of database for the application.
+     * @param Platform $platform The type of database for the application.
      * @param string $defaultPackage the default PHP package used for the om
+	 * @param string $encoding The database encoding.
      */
-    public function __construct($databaseType, $defaultPackage, $encoding = 'iso-8859-1')
+    public function __construct(Platform $platform, $defaultPackage, $encoding = 'iso-8859-1')
     {
-        $this->app = new AppData($databaseType);
-        $this->databaseType = $databaseType;
+        $this->app = new AppData($platform);
+        $this->platform = $platform;
         $this->defaultPackage = $defaultPackage;
         $this->firstPass = true;
         $this->encoding = $encoding;
@@ -97,10 +98,25 @@ class XmlToAppData extends AbstractHandler {
             return;
         }
 
-        // store current schema file path
-        $this->schemasTagsStack[$xmlFile] = array();
+			$domDocument = new DomDocument('1.0', 'UTF-8');
+			$domDocument->load($xmlFile);
 
-        $this->currentXmlFile = $xmlFile;
+			$xsl = new XsltProcessor();
+			$xsl->importStyleSheet(DomDocument::load(realpath(dirname(__FILE__) . "/xsl/database.xsl")));
+			$transformed = $xsl->transformToDoc($domDocument);
+
+			$xmlFile = $xmlFile . "transformed.xml";
+			$transformed->save($xmlFile);
+
+        	// store current schema file path
+        	$this->schemasTagsStack[$xmlFile] = array();
+
+        	$this->currentXmlFile = $xmlFile;
+
+
+			if ($transformed->getElementsByTagName("database")->item(0)->getAttribute("noxsd") != "true")
+				if (!$transformed->schemaValidate(realpath(dirname(__FILE__) . "/xsd/database.xsd")))
+					throw new EngineException("XML schema does not validate, sorry...");
 
         try {
             $fr = new FileReader($xmlFile);
@@ -311,7 +327,7 @@ class XmlToAppData extends AbstractHandler {
 
                 switch($name) {
                     case "parameter":
-                        if($this->currVendorObject->isCompatible($this->databaseType)) {
+                        if($this->currVendorObject->isCompatible($this->platform->getDatabaseType())) {
                             $this->currVendorObject->setVendorParameter($attributes['name'], iconv('utf-8',$this->encoding, $attributes['value']));
                         }
                     break;
@@ -390,7 +406,7 @@ class XmlToAppData extends AbstractHandler {
 
 /**
  * Utility class used for objects with vendor data.
- * 
+ *
  * @package propel.engine.database.transform
  */
 class ObjectWithVendorSpecificData

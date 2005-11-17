@@ -247,29 +247,29 @@ class ".$this->getClassname()." {
 			$tfc=$table->getPhpName();
 			$cfc=$col->getPhpName();
 			$cup=strtoupper($col->getName());
+			if (!$col->getSize()) {
+				$size = "null";
+			} else {
+				$size = $col->getSize();
+			}
 			if($col->isPrimaryKey()) {
 				if($col->isForeignKey()) {
 					$script .= "
-		\$tMap->addForeignPrimaryKey('$cup', '$cfc', '".$col->getPhpType()."' , CreoleTypes::".$col->getType().", '".$col->getRelatedTableName()."', '".strtoupper($col->getRelatedColumnName())."', ".($col->isNotNull() ? 'true' : 'false').");
+		\$tMap->addForeignPrimaryKey('$cup', '$cfc', '".$col->getPhpType()."' , CreoleTypes::".$col->getType().", '".$col->getRelatedTableName()."', '".strtoupper($col->getRelatedColumnName())."', ".($col->isNotNull() ? 'true' : 'false').", ".$size.");
 ";
 				} else {
 					$script .= "
-		\$tMap->addPrimaryKey('$cup', '$cfc', '".$col->getPhpType()."', CreoleTypes::".$col->getType().", ".($col->isNotNull() ? 'true' : 'false').");
+		\$tMap->addPrimaryKey('$cup', '$cfc', '".$col->getPhpType()."', CreoleTypes::".$col->getType().", ".var_export($col->isNotNull(), true).", ".$size.");
 ";
 				} 
 			} else {
 				if($col->isForeignKey()) {
 					$script .= "
-		\$tMap->addForeignKey('$cup', '$cfc', '".$col->getPhpType()."', CreoleTypes::".$col->getType().", '".$col->getRelatedTableName()."', '".strtoupper($col->getRelatedColumnName())."', ".($col->isNotNull() ? 'true' : 'false').");
+		\$tMap->addForeignKey('$cup', '$cfc', '".$col->getPhpType()."', CreoleTypes::".$col->getType().", '".$col->getRelatedTableName()."', '".strtoupper($col->getRelatedColumnName())."', ".($col->isNotNull() ? 'true' : 'false').", ".$size.");
 ";
-				} else { 
-					if (!$col->getSize()) {
-						$size = "null";
-					} else {
-						$size = $col->getSize();
-					}
+            } else { 
 					$script .= "
-		\$tMap->addColumn('$cup', '$cfc', '".$col->getPhpType()."', CreoleTypes::".$col->getType().", ".($col->isNotNull() ? 'true' : 'false' ).", ".$size .");
+		\$tMap->addColumn('$cup', '$cfc', '".$col->getPhpType()."', CreoleTypes::".$col->getType().", ".var_export($col->isNotNull(), true).");
 ";
 				} 
 			} // if col-is prim key
@@ -281,7 +281,7 @@ class ".$this->getClassname()." {
 			foreach($val->getRules() as $rule) {
 				if ($val->getTranslate() !== Validator::TRANSLATE_NONE) {
 					$script .= "
-		\$tMap->addValidator('$cup', '".$rule->getName()."', '".$rule->getClass()."', '".$rule->getValue()."', ".$val->getTranslate()."('".str_replace("'", "\'", $rule->getMessage())."');
+		\$tMap->addValidator('$cup', '".$rule->getName()."', '".$rule->getClass()."', '".$rule->getValue()."', ".$val->getTranslate()."('".str_replace("'", "\'", $rule->getMessage())."'));
 ";
 				} else {
 					$script .= "

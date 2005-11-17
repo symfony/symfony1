@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: DataModelBuilder.php 186 2005-09-08 13:33:09Z hans $
+ *  $Id: DataModelBuilder.php 258 2005-11-07 16:12:09Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -72,22 +72,40 @@ abstract class DataModelBuilder {
 	}
 	
 	/**
+	 * Imports and returns the classname of the builder class for specified 'type'.
+	 * @param $type The "key" for class to load.
+	 * @return string The unqualified classname.
+	 */
+	public static function getBuilderClass($type)
+	{
+		if (empty(self::$buildProperties)) {
+		    throw new BuildException("Cannot determine builder class when no build properties have been loaded (hint: Did you call DataModelBuilder::setBuildProperties(\$props) first?)");
+		}
+		$propname = 'builder' . ucfirst(strtolower($type)) . 'Class';
+		$classpath = self::getBuildProperty($propname);
+			
+		if (empty($classpath)) {
+			throw new BuildException("Unable to find class path for '$propname' property.");
+		}
+			
+		// This is a slight hack to workaround camel case inconsistencies for the DDL classes.
+		// Basically, we want to turn ?.?.?.sqliteDDLBuilder into ?.?.?.SqliteDDLBuilder
+		$lastdotpos = strrpos($classpath, '.');
+		if ($lastdotpos) $classpath{$lastdotpos+1} = strtoupper($classpath{$lastdotpos+1});
+		else ucfirst($classpath);
+		
+		return Phing::import($classpath);
+	}
+	
+	/**
 	 * Factory method to load a new builder instance based on specified type.
 	 * @param Table $table
-	 * @param $type
+	 * @param $type The "key" for class to load.
 	 * @throws BuildException if specified class cannot be found / loaded.
 	 */
 	public static function builderFactory(Table $table, $type)
 	{
-		if (empty(self::$buildProperties)) {
-		    throw new BuildException("Cannot call builderFactory() method when no build properties have been loaded (hint: Did you call DataModelBuilder::setBuildProperties(\$props) first?)");
-		}
-		$propname = 'builder' . ucfirst(strtolower($type)) . 'Class';
-		$classpath = self::getBuildProperty($propname);
-		if (empty($classpath)) {
-			throw new BuildException("Unable to find class path for '$propname' property.");
-		}
-		$classname = Phing::import($classpath);
+		$classname = self::getBuilderClass($type);
 		return new $classname($table);
 	}
 	
@@ -124,6 +142,12 @@ abstract class DataModelBuilder {
 	private $table;	
 
 	/**
+	 * An array of warning messages that can be retrieved for display (e.g. as part of phing build process).
+	 * @var array string[]
+	 */
+	private $warnings = array();
+	
+	/**
 	 * Creates new instance of DataModelBuilder subclass.
 	 * @param Table $table The Table which we are using to build [OM, DDL, etc.].
 	 */
@@ -159,4 +183,21 @@ abstract class DataModelBuilder {
 		return $this->table;
 	}	
 	
+	/**
+	 * Pushes a message onto the stack of warnings.
+	 * @param string $msg The warning message.
+	 */
+	protected function warn($msg)
+	{
+		$this->warnings[] = $msg;
+	}
+	
+	/**
+	 * Gets array of warning messages.
+	 * @return array string[]
+	 */
+	public function getWarnings()
+	{
+		return $this->warnings;
+	}
 }

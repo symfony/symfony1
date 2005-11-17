@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: PlatformPgsqlImpl.php 179 2005-08-25 17:26:01Z hans $
+ *  $Id$
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -19,17 +19,17 @@
  * <http://propel.phpdb.org>.
  */
  
-require_once 'propel/engine/platform/PlatformDefaultImpl.php';
+require_once 'propel/engine/platform/DefaultPlatform.php';
 
 /**
  * Postgresql Platform implementation.
  *
  * @author Hans Lellelid <hans@xmpl.org> (Propel)
  * @author Martin Poeschl <mpoeschl@marmot.at> (Torque)
- * @version $Revision: 179 $
+ * @version $Revision: 256 $
  * @package propel.engine.platform
  */
-class PlatformPgsqlImpl extends PlatformDefaultImpl {
+class PgsqlPlatform extends DefaultPlatform {
 
     /**
      * Initializes db specific domain mapping.

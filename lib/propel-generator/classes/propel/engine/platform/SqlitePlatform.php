@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: PlatformSqliteImpl.php 105 2005-06-04 23:21:07Z david $
+ *  $Id$
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -19,16 +19,16 @@
  * <http://propel.phpdb.org>.
  */
 
-require_once 'propel/engine/platform/PlatformDefaultImpl.php';
+require_once 'propel/engine/platform/DefaultPlatform.php';
 
 /**
  * SQLite Platform implementation.
  *
  * @author Hans Lellelid <hans@xmpl.org>
- * @version $Revision: 105 $
+ * @version $Revision: 268 $
  * @package propel.engine.platform
  */
-class PlatformSqliteImpl extends PlatformDefaultImpl {
+class SqlitePlatform extends DefaultPlatform {
 
     /**
      * Initializes db specific domain mapping.
@@ -47,11 +47,13 @@ class PlatformSqliteImpl extends PlatformDefaultImpl {
     }
 
     /**
-     * @see Platform#getAutoIncrement()
+	 * @see Platform#getAutoIncrement()
+	 * @link http://www.sqlite.org/autoinc.html
      */
     public function getAutoIncrement()
     {
-        return "INTEGER PRIMARY KEY";
+		
+        return "PRIMARY KEY";
     }
 
     /**
@@ -79,4 +81,12 @@ class PlatformSqliteImpl extends PlatformDefaultImpl {
     public function escapeText($text) {
         return sqlite_escape_string($text);
     }
+
+	/**
+	 * @see Platform::quoteIdentifier()
+	 */
+	public function quoteIdentifier($text)
+	{
+		return '[' . $text . ']';
+	}
 }

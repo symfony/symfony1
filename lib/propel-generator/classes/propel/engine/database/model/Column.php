@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Column.php 166 2005-08-12 15:45:10Z hans $
+ *  $Id: Column.php 264 2005-11-07 20:55:35Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,7 +34,7 @@ include_once 'propel/engine/database/model/Domain.php';
  * @author Jon S. Stevens <jon@latchkey.com> (Torque)
  * @author Daniel Rall <dlr@finemaltcoding.com> (Torque)
  * @author Byron Foster <byron_foster@yahoo.com> (Torque)
- * @version $Revision: 166 $
+ * @version $Revision: 264 $
  * @package propel.engine.database.model
  */
 class Column extends XMLElement {
@@ -114,7 +114,7 @@ class Column extends XMLElement {
 	 * @param columns Either a list of <code>Column</code> objects, or
 	 * a list of <code>String</code> objects with column names.
 	 */
-	public function makeList($columns)
+	public static function makeList($columns, Platform $platform)
 	{
 		$obj = $columns[0];
 		$isColumnList = ($obj instanceof Column);
@@ -122,16 +122,15 @@ class Column extends XMLElement {
 			$obj = $obj->getName();
 		}
 
-		$buf = $obj;
+		$buf = $platform->quoteIdentifier($obj);
 
 		for ($i=1, $size=count($columns); $i < $size; $i++) {
 			$obj = $columns[$i];
 			if ($isColumnList) {
 				$obj = $obj->getName();
 			}
-			$buf .= ", " . $obj;
+			$buf .= ", " . $platform->quoteIdentifier($obj);
 		}
-
 		return $buf;
 	}
 
@@ -641,7 +640,7 @@ class Column extends XMLElement {
 	 */
 	public function isString()
 	{
-		return (is_string($this->columnType));
+		return PropelTypes::isTextxType($this->propelType);
 	}
 
 	/**
@@ -939,7 +938,7 @@ class Column extends XMLElement {
 	public function getSqlString()
 	{
 		$sb = "";
-		$sb .= $this->getName() . " ";
+		$sb .= $this->getPlatform()->quoteIdentifier($this->getName()) . " ";
 		$sb .= $this->getDomain()->getSqlType();
 		if ($this->getPlatform()->hasSize($this->getDomain()->getSqlType())) {
 			$sb .= $this->getDomain()->printSize();
@@ -948,6 +947,6 @@ class Column extends XMLElement {
 		$sb .= $this->getDefaultSetting() . " ";
 		$sb .= $this->getNotNullString() . " ";
 		$sb .= $this->getAutoIncrementString();
-		return $sb;
+		return trim($sb);
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: TableMap.php 64 2005-05-13 02:43:56Z root $
+ *  $Id: TableMap.php 273 2005-11-08 15:25:43Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -41,7 +41,7 @@ include_once 'propel/map/ValidatorMap.php';
  * @author Hans Lellelid <hans@xmpl.org> (Propel)
  * @author John D. McNally <jmcnally@collab.net> (Torque)
  * @author Daniel Rall <dlr@finemaltcoding.com> (Torque)
- * @version $Revision: 64 $
+ * @version $Revision: 273 $
  * @package propel.map
  */
 class TableMap {
@@ -241,6 +241,7 @@ class TableMap {
      * @param string $fkColumn A String with the foreign key column name.
      * @param boolean $isNotNull Whether column does not allow NULL values.
      * @param int $size An int specifying the size.
+	 * @param string $defaultValue The default value for this column.
      * @return ColumnMap Newly added ForeignKey column.
      */
     public function addForeignKey($columnName, $phpName, $type, $creoleType, $fkTable, $fkColumn, $isNotNull = false, $size = 0)
@@ -258,6 +259,7 @@ class TableMap {
      * @param string $fkColumn A String with the foreign key column name.
      * @param boolean $isNotNull Whether column does not allow NULL values.
      * @param int $size An int specifying the size.
+	 * @param string $defaultValue The default value for this column.
      * @return ColumnMap Newly created foreign pkey column.
      */
     public function addForeignPrimaryKey($columnName, $phpName, $type, $creoleType, $fkTable, $fkColumn, $isNotNull = false, $size = 0)
@@ -289,6 +291,7 @@ class TableMap {
      * @param boolean $pk True if column is a primary key.
      * @param string $fkTable A String with the foreign key table name.
      * @param $fkColumn A String with the foreign key column name.
+	 * @param string $defaultValue The default value for this column.
      * @return ColumnMap The newly created column.
      */
     public function addColumn($name, $phpName, $type, $creoleType, $isNotNull = false, $size = null, $pk = null, $fkTable = null, $fkColumn = null)
@@ -309,6 +312,7 @@ class TableMap {
         $col->setSize($size);
         $col->setPhpName($phpName);
         $col->setNotNull($isNotNull);
+		
         $this->columns[$name] = $col;
 
         return $this->columns[$name];

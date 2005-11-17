@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: PropelOMTask.php 176 2005-08-24 15:44:58Z hans $
+ *  $Id: PropelOMTask.php 258 2005-11-07 16:12:09Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -22,7 +22,7 @@
  
 require_once 'propel/phing/AbstractPropelDataModelTask.php';
 include_once 'propel/engine/builder/om/ClassTools.php';
-require_once 'propel/engine/builder/DataModelBuilder.php';
+require_once 'propel/engine/builder/om/OMBuilder.php';
 
 /**
  * This Task creates the OM classes based on the XML schema file.
@@ -72,10 +72,11 @@ class PropelOMTask extends AbstractPropelDataModelTask {
 	/**
 	 * Uses a builder class to create the output class.
 	 * This method assumes that the DataModelBuilder class has been initialized with the build properties.
-	 * @param DataModelBuilder $builder
+	 * @param OMBuilder $builder
 	 * @param boolean $overwrite Whether to overwrite existing files with te new ones (default is YES).
+	 * @todo -cPropelOMTask Consider refactoring build() method into AbstractPropelDataModelTask (would need to be more generic).
 	 */
-	protected function build(DataModelBuilder $builder, $overwrite = true)
+	protected function build(OMBuilder $builder, $overwrite = true)
 	{
 		
 		$path = $builder->getClassFilePath();
@@ -86,6 +87,9 @@ class PropelOMTask extends AbstractPropelDataModelTask {
 			$this->log("\t\t-> " . $builder->getClassname() . " [builder: " . get_class($builder) . "]");
 			$script = $builder->build();
 			file_put_contents($_f->getAbsolutePath(), $script);
+			foreach($builder->getWarnings() as $warning) {
+				$this->log($warning, PROJECT_MSG_WARN);
+			}
 		} else {
 			$this->log("\t\t-> (exists) " . $builder->getClassname());
 		}
@@ -112,6 +116,8 @@ class PropelOMTask extends AbstractPropelDataModelTask {
 		$basePrefix = $generator->get('basePrefix');
 		$project = $generator->get('project');
 		
+		DataModelBuilder::setBuildProperties($this->getPropelProperties());
+		
 		foreach ($this->getDataModels() as $dataModel) {
 			$this->log("Processing Datamodel : " . $dataModel->getName());
 			
@@ -124,8 +130,6 @@ class PropelOMTask extends AbstractPropelDataModelTask {
 				foreach ($database->getTables() as $table) {					
 				
 					if (!$table->isForReferenceOnly()) {
-					
-						DataModelBuilder::setBuildProperties($this->getPropelProperties());
 						
 						$this->log("\t+ " . $table->getName());
 						

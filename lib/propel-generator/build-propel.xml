@@ -12,13 +12,14 @@
 
   <property name="build.properties" value="build.properties"/>
   <property name="propel.contextProperties" value="./${build.properties}"/>
-  <property file="./build.properties"/>
+  <property name="propel.home" value="."/>
+  <property file="${propel.home}/build.properties"/>
 
   <!--
     The default.properties file will map old properties to the new ones along
     with setting the corret defaults.
   -->
-  <property file="default.properties"/>
+  <property file="${propel.home}/default.properties"/>
 
   <!--
     Do forward declarations of all of our tasks to
@@ -26,7 +27,7 @@
   -->
 
   <path id="propelclasses">
-    <pathelement dir="classes/"/>
+    <pathelement dir="${propel.home}/classes/"/>
   </path>
 
   <taskdef
@@ -53,6 +54,9 @@
   <taskdef
     name="propel-sql"
     classname="propel.phing.PropelSQLTask" classpathRef="propelclasses"/>
+  <taskdef
+    name="propel-new-sql"
+    classname="propel.phing.PropelNewSQLTask" classpathRef="propelclasses"/>
   <taskdef
     name="propel-sql-exec"
     classname="propel.phing.PropelSQLExec" classpathRef="propelclasses"/>
@@ -152,6 +156,39 @@
     </propel-sql>
   </target>
 
+  
+  <target
+    name="new-sql"
+    depends="sql-check"
+    unless="propel.internal.sql.uptodate"
+    description="==> generates the SQL for your project">
+
+    <echo message="+------------------------------------------+"/>
+    <echo message="|                                          |"/>
+    <echo message="| Generating SQL for YOUR Propel project!  |"/>
+    <echo message="|                                          |"/>
+    <echo message="+------------------------------------------+"/>
+
+    <phingcall target="new-sql-template"/>
+
+  </target>
+
+  <target name="new-sql-template">
+    <propel-new-sql
+      outputDirectory="${propel.sql.dir}"
+      sqldbmap="${propel.sql.dir}/sqldb.map"
+      targetDatabase="${propel.database}"
+      templatePath="${propel.templatePath}"
+      packageObjectModel="${propel.packageObjectModel}"
+      >
+      <mapper type="glob" from="${propel.sql.mapper.from}" to="${propel.sql.mapper.to}"/>
+      <schemafileset dir="${propel.schema.dir}"
+        includes="${propel.schema.sql.includes}"
+        excludes="${propel.schema.sql.excludes}"
+      />
+    </propel-new-sql>
+  </target>
+  
   <!-- ================================================================ -->
   <!-- C R E A T E  T A R G E T  D A T A B A S E                        -->
   <!-- ================================================================ -->
@@ -456,7 +493,8 @@
     <propel-graphviz
       outputDirectory="${propel.graph.dir}"
       targetDatabase="${propel.database}"
-      sqldbmap="${propel.sql.dir}/sqldb.map">
+      sqldbmap="${propel.sql.dir}/sqldb.map"
+      packageObjectModel="${propel.packageObjectModel}">
       <mapper type="glob" from="${propel.sql.mapper.from}" to="${propel.sql.mapper.to}"/>
       <schemafileset dir="${propel.schema.dir}"
         includes="${propel.schema.sql.includes}"

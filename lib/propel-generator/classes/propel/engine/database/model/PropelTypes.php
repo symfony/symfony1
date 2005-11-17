@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: PropelTypes.php 64 2005-05-13 02:43:56Z root $
+ *  $Id: PropelTypes.php 216 2005-09-28 13:16:42Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,7 +26,7 @@ require_once 'creole/CreoleTypes.php';
  *
  * @author Hans Lellelid <hans@xmpl.org> (Propel)
  * @author Jason van Zyl <jvanzyl@apache.org> (Torque)
- * @version $Revision: 64 $
+ * @version $Revision: 216 $
  * @package propel.engine.database.model
  */
 class PropelTypes {
@@ -71,7 +71,7 @@ class PropelTypes {
     const TINYINT_NATIVE_TYPE = "int";
     const SMALLINT_NATIVE_TYPE = "int";
     const INTEGER_NATIVE_TYPE = "int";
-    const BIGINT_NATIVE_TYPE = "int";
+    const BIGINT_NATIVE_TYPE = "string";
     const REAL_NATIVE_TYPE = "double";
     const FLOAT_NATIVE_TYPE = "double";
     const DOUBLE_NATIVE_TYPE = "double";

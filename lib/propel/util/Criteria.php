@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Criteria.php 191 2005-09-11 23:10:23Z hans $
+ *  $Id: Criteria.php 223 2005-10-05 12:37:23Z ron $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -32,7 +32,7 @@
  * @author Eric Dobbs <eric@dobbse.net> (Torque)
  * @author Henning P. Schmiedehausen <hps@intermeta.de> (Torque)
  * @author Sam Joseph <sam@neurogrid.com> (Torque)
- * @version $Revision: 191 $
+ * @version $Revision: 223 $
  * @package propel.util
  */
 class Criteria implements IteratorAggregate {
@@ -87,6 +87,12 @@ class Criteria implements IteratorAggregate {
     
     /** Comparison type. */
     const JOIN = "JOIN";
+
+    /** Binary math operator: AND */
+    const BINARY_AND = "&";
+
+    /** Binary math operator: OR */
+    const BINARY_OR = "|";
 
     /** "Order by" qualifier - ascending */
     const ASC = "ASC";

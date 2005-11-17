@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: Table.php 105 2005-06-04 23:21:07Z david $
+ *  $Id: Table.php 253 2005-11-04 21:06:58Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -40,7 +40,7 @@ include_once 'propel/engine/database/model/Validator.php';
  * @author John McNally <jmcnally@collab.net> (Torque)
  * @author Daniel Rall <dlr@collab.net> (Torque)
  * @author Byron Foster <byron_foster@yahoo.com> (Torque)
- * @version $Revision: 105 $
+ * @version $Revision: 253 $
  * @package propel.engine.database.model
  */
 class Table extends XMLElement implements IDMethod {
@@ -1148,7 +1148,7 @@ class Table extends XMLElement implements IDMethod {
         for($i=0,$_i=count($list); $i < $_i; $i++) {
             $col = $list[$i];
             if ($col->isPrimaryKey()) {
-                $result .= ($comma++ ? ',' : '') . $col->getName();
+                $result .= ($comma++ ? ',' : '') . $this->getDatabase()->getPlatform()->quoteIdentifier($col->getName());
             }
         }
         return $result;
