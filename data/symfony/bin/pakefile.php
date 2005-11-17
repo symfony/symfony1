@@ -237,8 +237,34 @@ function run_clear_cache($task, $args)
     throw new Exception('cache directory does not exist');
   }
 
+  $cache_dir = 'cache';
+  // app
+  if (isset($args[0]))
+  {
+    $cache_dir .= '/'.$args[0];
+  }
+
+  // type (template, i18n or config)
+  $type = '';
+  if (isset($args[1]))
+  {
+    $type = $args[1];
+  }
+
   $finder = pakeFinder::type('file')->prune('.svn')->discard('.svn', '.sf');
-  pake_remove($finder, getcwd().'/cache');
+  if (!$type)
+  {
+    pake_remove($finder, getcwd().'/'.$cache_dir);
+  }
+  else
+  {
+    // we remove cache for all environments
+    $env_finder = pakeFinder::type('dir')->prune('.svn')->discard('.svn', '.sf')->maxdepth(0)->relative();
+    foreach ($env_finder->in($cache_dir) as $env)
+    {
+      pake_remove($finder, getcwd().'/'.$cache_dir.'/'.$env.'/'.$type);
+    }
+  }
 }
 
 function run_init_project($task, $args)
