@@ -37,4 +37,14 @@ function format_country($country_iso)
   return $countries[$country_iso];
 }
 
+function format_language($language_iso)
+{
+  require_once('i18n/CultureInfo.php');
+
+  $c = new CultureInfo(sfContext::getInstance()->getUser()->getCulture());
+  $languages = $c->getLanguages();
+
+  return $languages[$language_iso];
+}
+
 ?>
