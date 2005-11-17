@@ -1,269 +1,325 @@
 How to speed up a site with the caching system
 ==============================================
 
+Overview
+--------
+
+The powerful and flexible symfony cache system can speed up a website by saving chunks of generated HTML code, or even full pages, for future requests. Easy to set up thanks to YAML files, the cache can also be cleared with a simple command.
+
 Introduction
 ------------
 
-SymFony gère en natif le cache HTML. 2 niveaux de cache sont disponibles :
+The principle of HTML cache is simple: part or all of the HTML code that is sent to a user upon a request can be reused for a similar request, so this HTML code is stored in a special place (the `cache` folder in symfony), where the front controller will look for it before executing the action. If a cached version is found, it is sent without executing the action, thus speeding up greatly the answer. If it is not found, the action is executed, and its result (the view) stored in the cache folder for future requests.
 
- * cache du résultat d'une action ;
- * cache d'un fragment d'une template d'une action.
+As all the pages may contain dynamic information, the HTML cache is disabled by default. It is up to the site administrator to activate it in order to gain performance.
 
-Dans le cas du cache du résultat d'une action, seule la partie HTML de la template de l'action est mise en cache. Les templates globales (décorateurs) ne sont jamais mises en cache.
+Symfony handles three different types of HTML cache:
 
-SymFony ne gère que du cache HTML sur disque. Il n'est pas possible de stocker ce cache en mémoire ou en base de données. Cette décision permet d'avoir à la fois une gestion simple du système de cache tout en gardant de bonnes performances.
+* cache of the result of an action
+* cache of an entire page
+* cache of a fragment of a template
 
-Le cache est stocké dans le répertoire cache/app/html de votre projet (app étant le nom de l'application concernée) dans une arborescence à 3 niveaux.
+The two first types are handled with YAML configuration files, the last one is managed by calls to helper functions in the template.
 
-Le cache est géré par la classe `sfCache` et les raccourcis par `CacheHelper`.
+The symfony cache system uses files stored in the hard drive of the system. This keeps the cache simple and efficient, without any other prerequisites than the framework itself. For now, it is not possible to handle memory cache or database cache.
+
+Global cache settings
+---------------------
+
+In each application of a project, the cache mechanism can be activated or deactivated completely per environment. In the `settings.yml` configuration file, notice the `cache` parameter:
+
+    prod:
+    
+    dev:
+      .settings:
+        ...
+        cache:                  off
+        ...
+
+The default value of this parameter is `on`, so it is `on` even when not specified - for instance in the production environment. It is set to `off` in the development environment to allow live modifications of the configuration.
+
+This means that if you decide to add cache abilities to one of your apps, you will not be able to see the effect of it in the development environment with the default configuration. The boost given by HTML cache is only perceptible in the production environment - or in any other environment where `cache:   on`.
+
+One other parameter can be changed in the `settings.yml` file: the default cache lifetime, i.e. the number of seconds after which a cached file is overwritten and the page processed again. The default `default_cache_lifetime` is set to one day, or 86400 seconds.
 
 Caching the result of an action
 -------------------------------
 
-La configuration de la gestion du cache s'effectue directement au niveau de l'initialisation de l'action :
+Actions that display static information (i.e. without any call to a database) or actions that read the information in a database but without modifying it are often good clients for cache.
 
-    class Action_Actions extends sfAction
-    {
-      public function initAction()
-      {
-        $this->setCache(86400, 'Index', 'List');
+For instance, imagine an action that returns the list of all the users of your website (`user/list`). Unless a user is modified, added or removed (and this matter will be discussed later), this list always displays in the same way, so it can be cached.
+
+The result of this action is a processed template (`listSuccess.php`), and that's what is going to be cached.
+
+To activate the cache on this action, simply add a `cache.yml` file in the `myproject/myapp/modules/user/config/` directory, with the following content: 
+
+    list:
+      activate:   on
+      type:       slot
     
-        $this->setCache(array(
-          'lifeTime' => 86400,
-          'addParametersFrom' => array($this->getUser()),
-          'ignoreParameters' => array('key_request_param1', 'key_request_param2');
-          'actions' => array('Index', 'List'),
-          'id' => 'unique/id/for/this/action',
-        ));
+    all:
+      lifeTime:   86400
+  
+This configuration stipulates that the cache is `on` for the `list` action, and that it is of the `slot` type (i.e. caching the result of an action, as opposed to caching the whole page, which will be described later). The `lifeTime` is the time (in seconds) after which the page will be processed again and the cache version replaced. 
+
+Now, if you try to call this action from your browser (probably by requesting an URL like `http://myapp.example.com/user/list`), you will notice no difference the first time, but refreshing the page will probably show a notable boost in response time. 
+
+The caching system also works for pages with arguments. The `user` module may have, for instance, a `show` action that expects an `id` argument to display the details of a user. You would then just need to add the following lines at the top of the module `cache.yml` file:
+
+    show:
+      activate:   on
+      type:       slot
+
+Now, requests like `http://myapp.example.com/user/show/id/12` will create new records in the cache folder and if you repeat this request, it will be much faster the second time. 
+
+Caching an entire page
+----------------------
+
+The final page is the combination of the template and the layout, according to the [decorator design pattern][1]. Until now, all that was written in the cache was the template, so every request ended up in a decoration process (putting the cached template into a processed layout). But if the layout has no dynamic element, you can put the whole page in cache instead of just the template.
+
+Let's say this is the case for the test application described above: the layout simply contains navigation links, nothing dynamic, and can easily be cached. The cache can then be setup to the `page` type instead of a `slot`. Modify the `cache.yml` as follows:
+
+    show:
+      activate:   on
+      type:       page
+      
+    list:
+      activate:   on
+      type:       page
     
-        ...
-      }
+    all:
+      lifeTime:   86400
+
+If you request again the aforementioned pages:
+
+    http://myapp.example.com/user/list
+    http://myapp.example.com/user/show/id/12
     
-      public function runIndex()
-      {
-        ...
-      }
-    
-      public function runList()
-      {
-        ...
-      }
-    
-      public function runSave()
-      {
-        ...
-      }
-    }
-    
-    ...
+...the full pages will be completely cached, and the second time you request them, the response will be even faster than with the action result cache.
 
-
-La methode `->setCache()` permet de définir les actions à mettre en cache. Il existe 2 versions de cette méthode :
-
- * une version simple pour gérer la plupart des cas ;
- * une version plus complète et plus souple pour les situations plus complexes.
-
-Dans l'exemple précédent, les actions ''Index'' et ''List'' seront mise en cache durant 1 journée (86400 secondes).
-
-Il est également possible de mettre en cache toutes les actions :
-
-    $this->setCache(86400, sfAction::ALL);
-
-ou d'utiliser plusieurs directives `->setCache()` pour obtenir des configurations plus complexes :
-
-    $this->setCache(); // durée par défaut 86400 et actions sfAction::ALL
-    $this->setCache(60 * 5, 'Index');
-
-Dans cet exemple, toutes les actions seront mises en cache pour 1 journée sauf l'action ''Index'' qui sera en cache pour 5 minutes.
+Unfortunately, the layout often contains some dynamic elements, including [slots](view.txt). So the cases where the whole page can be cached are not very common. As a matter of fact, this type is often most used for RSS feeds, pop-ups, or pages with a layout that doesn't depend on a cookie.
 
 Caching a template fragment
 ---------------------------
 
-Il n'est parfois pas possible de mettre en cache une action complète, notamment si certaines informations dépendent trop du contexte. Néanmoins, afin d'optimiser les performances, certains fragments de la template pourraient être mis en cache. Dans ce cas, il est possible d'utiliser le cache directement au niveau de la template grâce à des raccourcis spécifiques :
+Many times the `slot` and `page` types will be too large for the templates of an application. The list of users can mention, for instance, a link to the last accessed user, and this information is dynamic. Does that mean that nothing can be cached?
 
-    ...
+Hopefully not. Symfony allows you to cache fragments of a template with the `cache()` helper. The `listSuccess.php` template could be written as follows:
+
+    <!-- uncached HTML -->
+    <?php echo link_to('last accessed user', 'user/show?id='.$last_accessed_user_id) ?>
+    <!-- /uncached HTML -->
     
-    <?php if (!cache()): ?>
-      ... HTML complexe à calculer ...
-    
+    <?php if (!cache('users')): ?>
+      <!-- cached HTML -->
+      <?php foreach ($users as $user): ?>
+        <?php echo $user->getName() ?>
+        ...
+      <?php end foreach ?>
+      <!-- /cached HTML -->
       <?php cache_save() ?>
     <?php endif ?>
     
+    <!-- uncached HTML -->
+    ...
+    <!-- /uncached HTML -->...
+
+Here's how it works: if a cached version of the fragment named 'users' is found, it is used to replace the code between the `<?php if (!cache('unique_fragment_name')): ?>` and the `<?php endif ?>` lines. If not, then the code between theses lines is processed and saved in the cache, identified with the unique fragment name ('users' in the example). The code not included between such lines is always processed.
+
+Note that the `list` action must not have a `slot`- or `page`- type cache enabled, since this would bypass the whole template execution and ignore the fragment cache declaration. So either remove the `list` part of the `cache.yml` file, or write in place:
+
+    list:
+      activate:   off
+
+After requesting twice the `http://myapp.example.com/user/list` URL, notice that the second execution is faster than the first. However, the answer is not as fast as when the cache was set to `slot` or `page`, since the template is partially processed and the decoration is made for every request.
+
+You can declare additional fragments in the same template; however, you need to give each of them a unique name so that the symfony cache system can find them afterwards.
+
+As for the `slot` and `page` caches, the cached fragment can be given a lifetime in seconds:
+
+    <?php if (!cache('users', 43200)): ?>
+    ...
+ 
+The default cache lifetime (86400 seconds/one day) is used if no parameter is given to the `cache()` function.
+
+Cache file structure
+--------------------
+
+You don't need to know how the cache files are structured to make it work, so jump to the next part if you are not a _what's-behind-the-curtain_ kind of person.
+
+You probably noticed that each symfony project has a `cache` folder. The tree structure of its subdirectories is:
+
+    cache/[APP_NAME]/[ENV_NAME]/
+    
+... in which you can find three directories, `config`, `i18n` and `template`. As mentioned in the introduction, the HTML cache is stored in the `template` directory, so for the `myapp` application in the `prod` environment, focus on the `myproject/cache/myapp/prod/template/` directory.
+
+It contains a tree structure that matches the requested URLs. In the previous parts, you requested:
+
+    http://myapp.example.com/user/list
+    http://myapp.example.com/user/show/id/12
+
+So the tree structure of `myproject/cache/myapp/prod/template/` is:
+
+    myapp.example.com/
+      user/
+        list/
+        show/
+          id/
+            12/
+
+That's as simple as it can be. The domain name is part of this path because you can host one app in different domains, and you don't want the cache of one domain to mess up with the others (imagine a multilingual website with different domain names like `myapp.example.com` and `myapp.example.fr`: they need distinct cache folders).
+
+The files stored in these folders depend on the type of cache that is used:
+
+    cache type        file name
+    ----------        ---------
+    slot              slot.cache
+    page              page.cache
+    fragment          fragment_users.cache
+                      fragment_other_unique_name.cache
+                      ...
+      
+The name given to a fragment in the `cache()` helper is concatenated after `fragment_`. Here, the second fragment was generated by:
+
+    <?php if (!cache('other_unique_name', SF_DEFAULT_CACHE_LIFETIME)): ?>
     ...
 
-La partie entre le test et l'appel de la fonction `cache_save()` sera mise en cache. Par défaut, le fragment sera mis en cache pour 1 journée. Pour modifier ce temps, il suffit de passer le temps en 2ème paramètre de la fonction `cache()` :
+If you use slots in the layout, remember that their cache files are found in a tree structure relative to the module/action of the slot, not the module/action initially called.
+      
+Feel free to browse the cache folder to look at the chunks of code that are saved; you might feel more comfortable with the cache if you see that it only saves what it is supposed to save.
 
-    ...
-    <?php if (!cache(null, 60 * 5)): ?>
-    ...
+Removing something from the cache
+---------------------------------
 
-Il est également possible de mettre en cache plusieurs fragments indépendants d'une même template :
+### Clearing the cache for all actions
 
-    ...
-    
-    <?php if (!cache()): ?>
-      ... HTML complexe à calculer ...
-    
-      <?php cache_save() ?>
-    <?php endif ?>
-    
-    ...
-    
-    <?php if (!cache()): ?>
-      ... Autre HTML complexe à calculer ...
-    
-      <?php cache_save() ?>
-    <?php endif ?>
+When you modify a template or an action, you will need to clean the cache to avoid errors. The symfony command line can launch a `clear-cache` process which will erase all the cache (`config` and `i18n` included, see below). From the root folder of a project, call:
 
-De la même manière qu'il existe une version complète de la méthode `->setCache()` pour les actions, la fonction `cache()` possède une version complète :
+    symfony clear-cache
+    // or use the short syntax
+    symfony cc
 
-    cache(array(
-      'fragmentName' => ''',
-      'lifeTime' => ''',
-      'addParametersFrom' => ''',
-      'ignoreParameters' => ''',
-      'id' => ''',
-    ));
+In the production environment, once the cache is cleared, the first request will reprocess the configuration files and recreate the `config` cache. Then, if the HTML cache is set to on for some actions, the first call to these actions will regenerate the corresponding cache.
 
-Les paramètres sont les mêmes que pour la méthode `->setCache()` et sont détaillés dans la suite de ce chapitre.
+You may want to be more specific about what to clear:
 
-Configuration and optimization
-------------------------------
+    symfony clear-cache myapp
+    // will erase only the cache of the myapp application
+    symfony clear-cache myapp template
+    // will erase only the HTML cache of the myapp application
+    symfony clear-cache myapp config
+    // will erase only the config cache of the myapp application
+        
+This is pretty straightforward, but maybe a little too brutal for specific needs.
 
-Si vous mettez en place la configuration précédente, vous serez déçu par les gains du système de cache. En effet, par défaut, le framework va exécuter l'action mais n'exécutera la template que si nécessaire. Hors, les portions de codes les plus gourmandes se trouvent dans l'action. Il faut donc distinguer dans l'exécution de l'action 2 types de code :
+### Clearing the cache for specific actions
 
- * le code qui doit s'exécuter indépendamment du cache ;
- * le code qui ne doit être exécuté que si le cache n'existe pas ou est périmé.
+When the model is updated, the cache of the actions related to this model have to be cleared. Imagine that the `update` action of the `user` module modifies the columns of the `User` object. The cache of the `list` and `show` action has to be cleared, or else the old version of the templates, with erroneous data, will be displayed. This is where the `->remove()` method of the `sfViewCacheManager` object (a singleton) enters.
 
-Prenons par exemple le cas où l'on souhaite conserver la dernier article vu par l'utilisateur durant une session. L'action pourrait être :
+In the `update` action of the `user` module, you need to add:
 
-    class Article_Actions extends sfAction
+    public function executeUpdate()
     {
-      public function runRead()
-      {
-        $this->getUser->setLastArticle($this->getRequestParameter('id'));
-    
-        $this->article = ArticlePeer::retrieveByPK($this->getRequestParameter('id'));
-    
-        ...
-      }
-    
+      ...
+      $this->getContext()->getViewCacheManager()->remove('user/list');
+      $this->getContext()->getViewCacheManager()->remove('user/show?id='.$this->getRequestParameter('id'));
       ...
     }
 
-Cet exemple montre que la méthode `->setLastArticle()` doit toujours être exécutée alors que la définition de la variable ''$article'' (la plus couteuse en temps) n'est nécessaire que si le cache doit être créé. Nous pouvons donc réécrire le code précédent en indiquant au framework les portions obligatoires et les portions optionnelles :
+The `->remove()` method expects the same kind of target as you would provide a `url_for()` helper, so it is quite easy to figure out how to clear the cached files. As an optional second argument, it accepts a type precision to target specific files:
 
-    class Article_Actions extends sfAction
+      // removes all files
+      $this->getContext()->getViewCacheManager()->remove('user/list');
+      // removes only the page.cache file
+      $this->getContext()->getViewCacheManager()->remove('user/list', 'page');
+      // removes only the slot.cache file
+      $this->getContext()->getViewCacheManager()->remove('user/list', 'slot');
+      // removes only the fragment_users.cache files
+      $this->getContext()->getViewCacheManager()->remove('user/list', 'fragment_users');
+
+The trickiest part is to determine which actions are influenced by a change in an object of the model. For instance, imagine that the current application has a `publication` module where publications are listed (`list` action) and described (`show` action), along with the details of their author (an instance of the `User` class). Modifying one User record will affect all the publication descriptions of which this user is the author. This means that you need to add to the `update` action of the `user` module something like:
+
+    $c = new Criteria();
+    $c->add(PublicationPeer::AUTHOR_ID, $this->getRequestParameter('id'));
+    $publications = PublicationPeer::doSelect($c);
+    
+    foreach ($publications as $publication)
     {
-      public function runRead()
-      {
-        $this->getUser->setLastArticle($this->getRequestParameter('id'));
-    
-        if ($this->mustRun())
-          $this->article = ArticlePeer::retrieveByPK($this->getRequestParameter('id'));
-    
-        ...
-      }
-    
-      ...
+      $this->getContext()->getViewCacheManager()->remove('publication/show?id='.$publication->getId(''));
     }
+    $this->getContext()->getViewCacheManager()->remove('publication/list');
 
-Le code dans la condition `->mustRun()` ne sera exécuté que si la template doit être exécutée.
+When you start using the HTML cache, you need to keep a clear view of the dependencies of the actions, so that new errors don't appear because of a misunderstood relationship. Keep in mind that all the actions that modify the model should probably contain a bunch of calls to the `->remove()` method if the HTML cache is used somewhere in the application.
 
-Pour optimiser l'exécution du code lié au cache des fragments, il existe la méthode `->mustRunForFragment()` :
+### Clearing the cache of another application
 
-    class Article_Actions extends sfAction
-    {
-      public function runRead()
-      {
-        $this->getUser->setLastArticle($this->getRequestParameter('id'));
+If you deal with several applications and do caching in at least one of them, you will probably end up with the problem of clearing the cache of another application.
+
+Just picture a back-office application that modifies the details of a user: all the cached pages that display the information about this user in the front-office have to be cleared, but that's in another application.
+
+What you should do is to setup an action in the front-office application that will behave like a web service. The back-office will call this action trough HTTP, passing it the detail of the modification in the model. The web service will determine which pages need to be cleared according to the part of the model that was modified.
+
+A tutorial will soon be published to describe this procedure.
+
+Testing and monitoring the cache improvements
+---------------------------------------------
+
+### Staging environment
+
+The cache system is prone to new errors in the production environment that can't be detected in the development environment, since the HTML cache is deactivated by default in development. If you use the HTML cache, it is strongly recommended to add a new environment, that will be called `staging` here, which is a copy of the production environment (thus with cache activated) but with the web debug set to on.
+
+To set it up, edit the `settings.yml` of your application and add at the top:
+
+    staging:
+      .settings:
+        web_debug:              on
+        cache:                  on
+        no_script_name:         off
+
+In addition, create a new front controller by copying the production one (probably named `index.php` in the `myproject/web/` directory) to a new `myapp_staging.php` and edit it to change the `SF_ENVIRONMENT` value:
+
+    define('SF_ENVIRONMENT', 'staging');
     
-        if ($this->mustRun())
-          $this->article = ArticlePeer::retrieveByPK($this->getRequestParameter('id'));
-    
-        if ($this->mustRunForFragment('fragment_name'))
-          $this->comments = CommentsPeer::doSelectForArticle($this->getRequestParameter('id'));
-    
-        ...
-      }
-    
-      ...
-    }
+That's it, you have a new environment. Use it by adding the front controller name after the domain name:
 
-Dans cet exemple, la récupération des commentaires sur l'article ne sera exécutée que si le fragment ''fragment_name'' n'est pas en cache.
+        http://myapp.example.com/myapp_staging.php/user/list
+        
+### Monitor the performance improvement
 
-Cache parts identification
---------------------------
+You will notice the familiar web debug box at the top right corner of the browser window, showing that the cache is set to `on`.
 
-Par défaut, chaque action mise en cache est identifiée par un identifiant calculé à partir :
+After a bunch of flags, this debug box also displays the the process time. Go ahead, clear the cache and make some tests: the second time you request a page can be, according to the complexity of the action and template, several times faster if the cache is activated.        
 
- * du nom de domaine ;
- * du script appelant ;
- * du nom du module ;
- * du nom de l'action ;
- * du nom de la template ;
- * des paramètres de la requête ;
- * de la langue de l'internaute.
+To get more details about the cache influence, activate the debug mode by editing the `myapp_staging.php` and changing the `SF_DEBUG` value:
 
-L'identifiant pour le cache des fragments est le même que pour l'action correspondante avec un paramètre supplémentaire ''__cache_fragment'' indiquant l'ordre du fragment parmi tous les fragments de la template. Le premier fragment a donc pour valeur du paramètre 1. Il est possible de modifier le nom du fragment utilisé par le système de cache :
+    define('SF_DEBUG', true);
+ 
+Don't forget to clear the cache before requesting the page again.
 
-    ...
-    
-    <?php if (!cache('fragment_name')): ?>
-    
-    ...
+Beware that the debug mode greatly decreases the speed of your application, since a lot of information is logged and made available to the web debug box. So the processed time in debug mode is not representative of what it will be when the debug mode is turned off. 
 
-Le nommage des fragments permet un code plus explicite, notamment lors de l'expiration du cache dans une action.
+On the other hand, the web debug mode allows you to get additional information: the number of database requests needed to display the page, the ability to reload the page ignoring the cache (the middle button in the top part of the debug box) and full detail about the events met by the framework objects (the information bubble in the top part of the box).
 
-Cette méthode d'identification du cache est satisfaisante dans la plupart des cas. Il existe néanmoins des situations où l'on souhaite avoir un schéma plus complexe. Prenons l'exemple d'un site où le rendu d'une page dépend d'un paramètre choisi par l'utilisateur (pays par exemple). Si une action est différente selon le pays de l'utilisateur, il faut que l'identifiant du cache intègre le pays comme paramètre. Pour cela, il suffit de préciser les objets permettant de définir l'unicité d'une page :
+### Identifying cache parts
 
-    class Action_Actions extends sfAction
-    {
-      public function initAction()
-      {
-        $this->setCache(array(
-          'lifeTime' => 86400,
-          'addParametersFrom' => array($this->getUser()),
-          'actions' => array('Index', 'List'),
-        ));
-    
-        ...
-      }
-    
-      ...
-    }
+In pages that contain cached parts (slots, page or fragments), the web_debug mode allows you to display information about each part. By clicking on the 'cache information' link, you reveal a detail box showing:
+ 
+* the internal URI of the fragment,
+* the lifetime of the fragment,
+* the moment when it was last modified
 
-Dans ce cas, le système de cache ajoutera en plus des paramètres par défaut, un paramètre pour chaque objet passé en argument. Chaque paramètre ayant pour clé la classe de l'objet et pour valeur le résultat de l'appel de la méthode `->getCacheSignature()` sur l'objet.
+This will help you identify problems when dealing with out-of-context fragments, to see when the fragment was created and which parts of a template you can actually put in cache.
 
-Il faut donc que notre classe `myUser` définisse une méthode `->getCacheSignature()` :
+Client-side cache
+-----------------
 
-    class myUser extends sfUser
-    {
-      public function getCacheSignature()
-      {
-        return $this->getCountry();
-      }
-    }
+An HTTP answer can define, in the header, that the content can be cached in the client browser or a specific period of time.
 
-Il est également possible de supprimer explicitement un paramètre dans la génération de l'identifiant du cache, grâce au paramètre ''ignoreParameters''.
+TO DO: ability to define client-side page caching from the cache.yml, VARY, etc.
 
-    $this->setCache(array(
-      'lifeTime' => 86400,
-      'ignoreParameters' => array('key_request_param1', 'key_request_param2');
-      'actions' => array('Index', 'List'),
-    ));
+Postscript
+----------
 
-Enfin, il est possible de contourner complètement le système de génération de l'identifiant pour le cache et de passer directement l'identifiant souhaité :
+In addition to the HTML cache, symfony has two other cache mechanisms, which are completely automated and transparent for the developer. In the production environment, the _configuration_ and the _template translations_ are cached in files stored in the `myproject/cache/config/` and `myproject/cache/i18n/` directories without any intervention. This already speeds up the delivery of pages a lot, but the most powerful feature, the HTML cache, can not be fully automated. That's why it relies on configuration and additional code.
 
-    $this->setCache(array(
-      'lifeTime' => 86400,
-      'actions' => array('Index', 'List'),
-      'id' => 'unique/id/for/this/action',
-    ));
-
-La responsabilité de l'unicité de l'identifiant est alors de la responsabilité du développeur. Par sécurité, SymFony préfixe toujours ces identifiants par le nom du script et le nom de l'hôte http.
-
-Expiration prématurée du cache
-------------------------------
-
-TODO
+[1]: http://en.wikipedia.org/wiki/Decorator_pattern     "Decorator pattern definition at Wikipedia"

@@ -23,6 +23,7 @@ parts:
   in_depth:
     - web_server
     - routing
+    - cache
     - user_session
     - security
     - i18n
