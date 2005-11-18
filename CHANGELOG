@@ -1,6 +1,7 @@
 SVN
 ---
 
+* [fabien] new class to easily load test datas from YAML files into databases (Propel)
 * [fabien] better cache support
 * [fabien] safeguard for recursive slots
 * [fabien] added the possibility to disable the web debug sidebar for specific action (RSS, XML, SVG, ...)
