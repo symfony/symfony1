@@ -258,7 +258,7 @@ The above configuration would refer to a method in the test module:
       /*
        * Slot action
        */
-      public function navigationExecute()
+      public function executeNavigation()
       {
         ...
       }
