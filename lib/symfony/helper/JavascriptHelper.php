@@ -353,11 +353,11 @@
       $update = array();
       if (isset($options['update']['success']))
       {
-        $update[] = "success:'".$options['update']['success']."}'";
+        $update[] = "success:'".$options['update']['success']."'";
       }
       if (isset($options['update']['failure']))
       {
-        $update[] = "failure:'".$options['update']['failure']."}'";
+        $update[] = "failure:'".$options['update']['failure']."'";
       }
       $update = '{'.join(',', $update).'}';
     }
