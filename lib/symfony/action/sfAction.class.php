@@ -119,6 +119,26 @@ abstract class sfAction
   }
 
   /**
+   * Log $message using sfLogger object.
+   * 
+   * @param mixed  String or object containing the message to log.
+   * @param string The priority of the message
+   *               (available priorities: emerg, alert, crit, err, warning, notice, info, debug).
+   */
+  public function logMessage ($message, $priority = 'info')
+  {
+    return $this->context->getLogger()->log($message, constant('PEAR_LOG_'.strtoupper($priority)));
+  }
+
+  public function debugMessage ($message)
+  {
+    if (SF_WEB_DEBUG)
+    {
+      sfWebDebug::getInstance()->logShortMessage($message);
+    }
+  }
+
+  /**
    * Returns true if current action template will be executed by the view.
    *
    * This is the case if:

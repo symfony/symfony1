@@ -20,6 +20,7 @@ class sfWebDebug
 {
   private
     $log             = array(),
+    $short_log       = array(),
     $max_priority    = 1000,
     $types           = array(),
     $last_time_log   = 0,
@@ -68,6 +69,11 @@ class sfWebDebug
     );
   }
 
+  public function logShortMessage($message)
+  {
+    $this->short_log[] = $message;
+  }
+
   public function log($logEntry)
   {
     if (!$this->last_time_log)
@@ -114,6 +120,9 @@ class sfWebDebug
 
   private function formatLogLine($log_line)
   {
+    // escape HTML
+    $log_line = htmlspecialchars(strip_tags($log_line));
+
     foreach (array('SF_APP_DIR', 'SF_ROOT_DIR', 'SF_SYMFONY_LIB_DIR', 'SF_SYMFONY_DATA_DIR') as $constant)
     {
       $log_line = str_replace(realpath(constant($constant)), $constant, $log_line);
@@ -157,11 +166,19 @@ class sfWebDebug
       }
     }
 
+    // short messages
+    $short_messages = '';
+    if ($this->short_log)
+    {
+      $short_messages = '<div id="sfStatsShortMessages">&raquo;&nbsp;'.implode('<br />&raquo;&nbsp;', $this->short_log).'</div>';
+    }
+
     $result .= '
       <div class="sfStats" id="sfStats'.ucfirst($log_image).'">
       '.$this->displayMenu($log_image).'
       <div id="sfStatsDetails">'.$this->displayCurrentConfig().'</div>
       <div id="sfStatsTime">processed in <strong>'.$total_time.'</strong> ms</div>
+      '.$short_messages.'
       </div>
     ';
 
