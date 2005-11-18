@@ -232,7 +232,7 @@ class sfPropelCrudGenerator extends sfGenerator
 
   public function translateFieldName($name, $fromType = 'phpName', $toType = 'fieldName')
   {
-    return call_user_func(array($this->className, 'translateFieldName'), $name, $fromType, $toType);
+    return call_user_func(array($this->peerClassName, 'translateFieldName'), $name, $fromType, $toType);
   }
 
   public function getPrimaryKeyUrlParams()
