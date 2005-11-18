@@ -327,6 +327,7 @@ class sfFileCache extends sfCache
 
     if ($namespace)
     {
+      $namespace = str_replace('/', DIRECTORY_SEPARATOR, $namespace);
       $path = $this->cacheDir.DIRECTORY_SEPARATOR.$namespace.DIRECTORY_SEPARATOR;
     }
     else
@@ -338,7 +339,7 @@ class sfFileCache extends sfCache
       $hash = md5($file);
       for ($i = 0; $i < $this->hashedDirectoryLevel; $i++)
       {
-        $path = $path.substr($hash, 0, $i + 1).'/';
+        $path = $path.substr($hash, 0, $i + 1).DIRECTORY_SEPARATOR;
       }
     }
 
@@ -396,7 +397,7 @@ class sfFileCache extends sfCache
         }
         else if (is_dir($file2))
         {
-          $result = ($result and ($this->cleanDir($file2.'/', $mode)));
+          $result = ($result and ($this->cleanDir($file2.DIRECTORY_SEPARATOR, $mode)));
         }
       }
     }
