@@ -28,8 +28,9 @@ class sfLiveAppTest extends UnitTestCase
     $this->current_dir = getcwd();
 
     // sandbox initialization
-    $root_dir = '/tmp/symfonylivetest';
-    $this->tmp_dir = $root_dir.'/'.md5(uniqid(rand(), true));
+    $root_dir = tempnam('/tmp/symfonylivetest', 'tmp');
+    unlink($root_dir);
+    $this->tmp_dir = $root_dir.DIRECTORY_SEPARATOR.md5(uniqid(rand(), true));
     if (!is_dir($root_dir))
     {
       mkdir($root_dir, 0777);
