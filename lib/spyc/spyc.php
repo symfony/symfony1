@@ -43,7 +43,7 @@
      * @return void
      */
     function YAMLNode() {
-      $this->id = uniqid('');
+      $this->id = uniqid();
     }
   }
 
