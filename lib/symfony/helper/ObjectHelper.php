@@ -118,6 +118,13 @@ function object_select_country_tag($object, $method, $options = array(), $defaul
   return select_country_tag(_convert_method_to_name($method), $value, $options);
 }
 
+function object_select_language_tag($object, $method, $options = array(), $default_value = null)
+{
+  $value = _get_object_value($object, $method, $default_value);
+
+  return select_language_tag(_convert_method_to_name($method), $value, $options);
+}
+
 /**
  * Returns a hidden input html tag.
  *

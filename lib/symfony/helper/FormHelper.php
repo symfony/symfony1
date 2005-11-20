@@ -142,11 +142,26 @@ function select_tag($name, $option_tags = null, $options = array())
 
 function select_country_tag($name, $value, $options = array())
 {
+  require_once('i18n/CultureInfo.php');
+
   $c = new CultureInfo(sfContext::getInstance()->getUser()->getCulture());
   $countries = $c->getCountries();
   asort($countries);
 
   $option_tags = options_for_select(array_flip($countries), $value);
+
+  return select_tag($name, $option_tags, $options);
+}
+
+function select_language_tag($name, $value, $options = array())
+{
+  require_once('i18n/CultureInfo.php');
+
+  $c = new CultureInfo(sfContext::getInstance()->getUser()->getCulture());
+  $languages = $c->getLanguages();
+  asort($languages);
+
+  $option_tags = options_for_select(array_flip($languages), $value);
 
   return select_tag($name, $option_tags, $options);
 }
