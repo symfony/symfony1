@@ -317,6 +317,9 @@ function _safe_cache_remove($finder, $sub_dir, $lock_name)
   // create a lock file
   pake_touch(getcwd().'/'.$lock_name.'.lck', '');
 
+  // change mode so the web user can remove it if we die
+  pake_chmod($lock_name.'.lck', getcwd(), 0777);
+
   // remove cache files
   pake_remove($finder, getcwd().'/'.$sub_dir);
 
