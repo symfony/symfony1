@@ -13,7 +13,7 @@ if (is_readable(SF_ROOT_DIR.'/lib/symfony'))
 else
 {
   // PEAR config
-  if ((include 'symfony/symfony/pear.php') != 'OK')
+  if ((include('symfony/symfony/pear.php')) != 'OK')
   {
     throw new Exception('Unable to find symfony librairies');
   }
@@ -21,8 +21,6 @@ else
 
 // directory layout
 require(SF_SYMFONY_DATA_DIR.'/symfony/config/constants.php');
-
-require_once(dirname(__FILE__).'/../../config/config.php');
 
 // include path
 set_include_path(
@@ -32,6 +30,18 @@ set_include_path(
   SF_MODEL_DIR.PATH_SEPARATOR.
   get_include_path()
 );
+
+// check to see if we're not in a cache cleaning process
+require_once('symfony/util/sfToolkit.class.php');
+if (sfToolkit::hasLockFile(SF_ROOT_DIR.DIRECTORY_SEPARATOR.SF_APP.'_'.SF_ENVIRONMENT.'.lck', 5))
+{
+  // application is not yet available
+  include(SF_WEB_DIR.'/unavailable.html');
+  die(1);
+}
+
+// require project configuration
+require_once(dirname(__FILE__).'/../../config/config.php');
 
 // test mode
 @define('SF_TEST', false);

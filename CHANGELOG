@@ -1,6 +1,12 @@
 SVN
 ---
 
+* [fabien] cleaning cache is safer (based on a patch from jgchristopher)
+           applications are now unavailable when you are in the process of cleaning the config cache
+           WARNING: To use this new feature in your existing projects, you must override your
+                    config.php file with the one in 'data/symfony/skeleton/app/app/config/config.php'
+                    and create an unavailable.html file in your web directory
+                    (see an example in data/symfony/skeleton/project/web/unavailable.html)
 * [fabien] added new shortcuts to help debugging
 * [fabien] new class to easily load test datas from YAML files into databases (Propel)
 * [fabien] better cache support

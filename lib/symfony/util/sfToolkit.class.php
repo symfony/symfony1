@@ -113,6 +113,34 @@ class sfToolkit
     return false;
   }
 
+  /**
+   * Determine if a lock file is present.
+   *
+   * @param integer A max amount of life time for the lock file.
+   *
+   * @return bool true, if the lock file is present, otherwise false.
+   */
+  public static function hasLockFile($lockFile, $maxLockFileLifeTime)
+  {
+    $isLocked = false;
+    if (is_readable($lockFile) && ($last_access = fileatime($lockFile)))
+    {
+      $now = time();
+      $timeDiff = $now - $last_access;
+
+      if ($timeDiff < $maxLockFileLifeTime)
+      {
+        $isLocked = true;
+      }
+      else
+      {
+        unlink($lockFile);
+      }
+    }
+
+    return $isLocked;
+  }
+
   public static function stripComments ($source)
   {
     /* T_ML_COMMENT does not exist in PHP 5.

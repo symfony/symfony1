@@ -238,33 +238,90 @@ function run_clear_cache($task, $args)
   }
 
   $cache_dir = 'cache';
+
   // app
+  $main_app = '';
   if (isset($args[0]))
   {
-    $cache_dir .= '/'.$args[0];
+    $main_app = $args[0];
   }
 
   // type (template, i18n or config)
-  $type = '';
+  $main_type = '';
   if (isset($args[1]))
   {
-    $type = $args[1];
+    $main_type = $args[1];
   }
 
+  // declare type that must be cleaned safely (with a lock file during cleaning)
+  $safe_types = array('config', 'i18n');
+
+  // finder to remove all files in a cache directory
   $finder = pakeFinder::type('file')->prune('.svn')->discard('.svn', '.sf');
-  if (!$type)
+
+  // finder to find directories (1 level) in a directory
+  $dir_finder = pakeFinder::type('dir')->prune('.svn')->discard('.svn', '.sf')->maxdepth(0)->relative();
+
+  // iterate through applications
+  $apps = array();
+  if ($main_app)
   {
-    pake_remove($finder, getcwd().'/'.$cache_dir);
+    $apps[] = $main_app;
   }
   else
   {
-    // we remove cache for all environments
-    $env_finder = pakeFinder::type('dir')->prune('.svn')->discard('.svn', '.sf')->maxdepth(0)->relative();
-    foreach ($env_finder->in($cache_dir) as $env)
+    $apps = $dir_finder->in($cache_dir);
+  }
+
+  foreach ($apps as $app)
+  {
+    if (!is_dir($cache_dir.'/'.$app)) continue;
+
+    // remove cache for all environments
+    foreach ($dir_finder->in($cache_dir.'/'.$app) as $env)
     {
-      pake_remove($finder, getcwd().'/'.$cache_dir.'/'.$env.'/'.$type);
+      // which types?
+      $types = array();
+      if ($main_type)
+      {
+        $types[] = $main_type;
+      }
+      else
+      {
+        $types = $dir_finder->in($cache_dir.'/'.$app.'/'.$env);
+      }
+
+      foreach ($types as $type)
+      {
+        $sub_dir = $cache_dir.'/'.$app.'/'.$env.'/'.$type;
+
+        if (!is_dir($sub_dir)) continue;
+
+        // remove cache files
+        if (in_array($type, $safe_types))
+        {
+          $lock_name = $app.'_'.$env;
+          _safe_cache_remove($finder, $sub_dir, $lock_name);
+        }
+        else
+        {
+          pake_remove($finder, getcwd().'/'.$sub_dir);
+        }
+      }
     }
   }
+}
+
+function _safe_cache_remove($finder, $sub_dir, $lock_name)
+{
+  // create a lock file
+  pake_touch(getcwd().'/'.$lock_name.'.lck', '');
+
+  // remove cache files
+  pake_remove($finder, getcwd().'/'.$sub_dir);
+
+  // release lock
+  pake_remove(getcwd().'/'.$lock_name.'.lck', '');
 }
 
 function run_init_project($task, $args)
