@@ -99,7 +99,6 @@ try
 
     // utils
     require_once('symfony/util/sfParameterHolder.class.php');
-    require_once('symfony/util/sfToolkit.class.php');
 
     // create bootstrap file for next time
     if (!SF_DEBUG && !SF_TEST)
