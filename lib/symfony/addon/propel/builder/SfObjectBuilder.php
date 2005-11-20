@@ -130,7 +130,6 @@ $script .= '
       {
         $this->set'.$className.'ForCulture(new '.$className.'(), $this->culture);
         $this->current_i18n[$this->culture]->set'.$culture.'($this->culture);
-        $this->add'.$className.'($this->current_i18n[$this->culture]);
       }
     }
 
@@ -140,6 +139,7 @@ $script .= '
   public function set'.$className.'ForCulture($object, $culture)
   {
     $this->current_i18n[$culture] = $object;
+    $this->add'.$className.'($object);
   }
 ';
       }
