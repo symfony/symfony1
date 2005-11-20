@@ -63,7 +63,7 @@ all:
 ;    
 ;    timeout:                1800
 ;    
-;    suffix:                 .html
+;    suffix:                 .
 ;    
 ;    module_default:         on
 ;
