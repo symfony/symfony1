@@ -147,9 +147,9 @@ You can detect whether the form has errors by calling the `->hasErrors()` method
       </ul>
     <?php endif ?>
 
-Now you may suggest that the field with incorrect data should be highlighted, for instance with a repetition of the error message clearly attached to the label with a ‚Üì. To that extent, simply add the following line before every field:
+Now you may suggest that the field with incorrect data should be highlighted, for instance with a repetition of the error message clearly attached to the label with a ↓. To that extent, simply add the following line before every field:
 
-    <?php if ($request->hasError('name')): ?>‚Üì <?php echo $request->getError('name') ?> ‚Üì<?php endif ?><br />
+    <?php if ($request->hasError('name')): ?>↓ <?php echo $request->getError('name') ?> ↓<?php endif ?><br />
 
 Complete configuration file
 ---------------------------

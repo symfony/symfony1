@@ -322,4 +322,8 @@ Postscript
 
 In addition to the HTML cache, symfony has two other cache mechanisms, which are completely automated and transparent for the developer. In the production environment, the _configuration_ and the _template translations_ are cached in files stored in the `myproject/cache/config/` and `myproject/cache/i18n/` directories without any intervention. This already speeds up the delivery of pages a lot, but the most powerful feature, the HTML cache, can not be fully automated. That's why it relies on configuration and additional code.
 
+One last word about speeding up PHP applications: [Eaccelerator][2] also increases performance of symfony PHP scripts by caching them in compiled state, so that the overhead of compiling is almost completely eliminated. This is particularly true for the [Propel][3] libraries, which contain a great amount of code. Eaccelarator is compatible with symfony, and their effects can be combined. 
+
 [1]: http://en.wikipedia.org/wiki/Decorator_pattern     "Decorator pattern definition at Wikipedia"
+[2]: http://eaccelerator.net/HomeUk                     "Eaccelerator project website"
+[3]: http://propel.phpdb.org/trac/                      "Propel"

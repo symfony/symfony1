@@ -24,6 +24,7 @@ parts:
     - web_server
     - routing
     - cache
+    - debug
     - user_session
     - security
     - i18n

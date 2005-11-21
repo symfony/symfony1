@@ -54,7 +54,7 @@ To modify the quantity of one item, first get the `sfShoppingCartItem` object it
 
 ### The shoppingcart module
 
-Here is a possible module implementation of the shopping cart management where objects of class 'Product' (representing products) can be added, modified or suppressed with the actions 'index', 'update' and 'delete':
+Here is a possible module implementation of the shopping cart management where objects of class 'Product' (representing products) can be added, modified or suppressed with the actions 'add', 'update' and 'delete':
 
     class shoppingcartActions extends sfActions
     {
@@ -62,13 +62,25 @@ Here is a possible module implementation of the shopping cart management where o
       
       public function executeIndex()
       {
+        $this->shopping_cart = $shopping_cart;
+        $this->items = $shopping_cart->getItems();
+
+        ...
+      }
+      
+      
+      public function executeAdd()
+      {
         ...
   
         if ($this->hasRequestParameter('id'))
         {
           $product = ProductPeer::retrieveByPk($this->getRequestParameter('id'));
+          $item = new sfShoppingCartItem('Product', $this->getRequestParameter('id'));
+          $item->setQuantity(1);
+          $item->setPrice($product->getPrice());
           $shopping_cart = $this->getUser()->getShoppingCart();
-          $shopping_cart->addItem('Product', $this->getRequestParameter('id'), 1, $product->getPrice());
+          $shopping_cart->addItem($item);
         }
   
         ...
@@ -80,7 +92,9 @@ Here is a possible module implementation of the shopping cart management where o
         foreach ($shopping_cart->getItems() as $item)
         {
           if ($this->hasRequestParameter('quantity_'.$item->getId()))
+          {
             $item->setQuantity($this->getRequestParameter('quantity_'.$item->getId()));
+          }
         }
     
         ...
@@ -105,26 +119,30 @@ Here is a possible module implementation of the shopping cart management where o
 
 Let's take a closer look at this code.
 
-To add an item to the shopping cart, you call the `->addItem()` method with four arguments: the object class, the unique id of the object, the quantity to be added and the price of the item. The price is stored at this moment to avoid difference of price between the product addition and the checkout if a product price is modified in between in a back-office. This also allows to apply price discount according to the amount ordered by the client:
+To add an item to the shopping cart, you call the `->addItem()` method, passing it a `sfShoppingCartItem` object. This object contains the object class and the unique id of the item to be added, the quantity to be added and the price of the item. This allows the shopping cart to contain objects of any class. For example, you could have a shopping cart containing books and CDs.
+
+The price is stored at this moment to avoid difference of price between the product addition and the checkout if a product price is modified in between in a back-office (or if the cart can be kept between sessions). This also allows to apply price discount according to the amount ordered by the client:
 
     if ($quantity > 10)
-      $shopping_cart->addItem('Product', $this->getRequestParameter('id'), $quantity, $product->getPrice() * 0.8);
+    {
+      $item->setPrice($product->getPrice() * 0.8);
+    }
     else
-      $shopping_cart->addItem('Product', $this->getRequestParameter('id'), $quantity, $product->getPrice());
+    {
+      $item->setPrice($product->getPrice());
+    }
 
-The problem is that you loose the original price if you apply the discount this way. That's why the `->addItem()` method can accept a fifth argument containing a discount:
+The problem is that you loose the original price if you apply the discount this way. That's why the the `sfShoppingCartItem` object has a `->setDiscount()` method that expects a discount percentage:
 
     if ($quantity > 10)
-      $shopping_cart->addItem('Product', $this->getRequestParameter('id'), $quantity, $product->getPrice(), 20);
+    {
+      $item->setPrice($product->getPrice());
+      $item->setDiscount(20);
+    }
     else
-      $shopping_cart->addItem('Product', $this->getRequestParameter('id'), $quantity, $product->getPrice());
-
-You can also change directly the discount applied to an item in the shopping cart with the `->setDiscount()` method of the `sfShoppingCartItem` class:
-
-    if ($quantity > 10)
-      $item->setDiscount(20); // 20% discount
-    else
-      $item->setDiscount(0);
+    {
+      $item->setPrice($product->getPrice());
+    }
 
 ### Modify an item
 
@@ -132,12 +150,20 @@ To change the quantity of an item, use the method `->setQuantity()` of the `sfSh
 
 If a user adds the same item (same class and same id) several times, the shopping cart will increase the quantity of the item and not add a new one:
 
-    $shopping_cart->addItem('Product', $this->getRequestParameter('id'), 1, $product->getPrice());
-    $shopping_cart->addItem('Product', $this->getRequestParameter('id'), 1, $product->getPrice());
+    $item = new sfShoppingCartItem('Product', $this->getRequestParameter('id'));
+    $item->setQuantity(1);
+    $item->setPrice($product->getPrice());
+    $shopping_cart = $this->getUser()->getShoppingCart();
+    $shopping_cart->addItem($item);
+    $shopping_cart->addItem($item);
     
     // same as
     
-    $shopping_cart->addItem('Product', $this->getRequestParameter('id'), 2, $product->getPrice());
+    $item = new sfShoppingCartItem('Product', $this->getRequestParameter('id'));
+    $item->setQuantity(2);
+    $item->setPrice($product->getPrice());
+    $shopping_cart = $this->getUser()->getShoppingCart();
+    $shopping_cart->addItem($item);
     
 Eventually, you may wonder why the `update` action uses arguments like 'quantity_2313=4' instead of 'id=2313&quantity=4'. As a matter of fact, the way this action is implemented allows the update of multiple article quantities at one time.
 
@@ -150,9 +176,11 @@ To reset the shopping cart, simply call the `->clear()` method of the `sfShoppin
 Display the shopping cart in a template
 ---------------------------------------
 
+The action `shoppingcart/index` should display the content of the shopping cart. Let's examine a possible implementation.
+
 ### Get the content of the shopping cart
 
-Three methods will help you get the content of a shopping cart:
+Three methods of the `sfShoppingCart` object will help you get the content of a shopping cart:
 
 * `->getItems()`: array of all the `sfShoppingCartItem` objects in the shopping cart
 * `->getItem($class_name, $object_id)`: one specific `sfShoppingCartItem` object
@@ -168,13 +196,13 @@ For instance, in a website that sells auto parts, the `sfShoppingCartItem` objec
 
 ### Pass the values to the template
 
-In order to display the content of the shopping cart, the action has to define a few variables accessible to the template:
+In order to display the content of the shopping cart, the `index` action has to define a few variables accessible to the template:
 
     ...
     $this->shopping_cart = $shopping_cart;
     $this->items = $shopping_cart->getItems();
 
-The following example shows a simple `shoppingcartSuccess.php` template based on an iteration over all the items of the shopping cart to display information about each of them:
+The following example shows a simple `indexSuccess.php` template based on an iteration over all the items of the shopping cart to display information about each of them:
 
     <?php if ($shopping_cart->isEmpty()): ?>
     
@@ -207,14 +235,16 @@ To get the total amount with taxes, you have to call:
 
     $total_with_taxes = $shopping_cart->getTotalWithTaxes()
 
-If you need it, the `sfShoppingCart` object can be initialized so that the `add` and `get` method use the price including taxes:
+If you need it, the `sfShoppingCart` object can be initialized so that the `add` and `get` methods use the price including taxes:
 
     class myUser extends sfUser
     {
       public function getShoppingCart()
       {
         if (!$this->hasAttribute('shopping_cart'))
+        {
           $this->setAttribute('shopping_cart', new sfShoppingCart(APP_CART_TAX));
+        }
         $this->getAttribute('shopping_cart')->setUnitPriceWithTaxes(APP_CART_WITHTAXES);
         return $this->getAttribute('shopping_cart');
       }
