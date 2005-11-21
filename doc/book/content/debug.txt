@@ -126,7 +126,7 @@ To activate the web debug toolbar for an application, open the `settings.yml` an
 
 Next time you display a page in an environment with web debug toolbar enabled, you will see a semi-transparent box on the top right corner of the window, showing the value of a few important settings:
 
-![Default web debug toolbar](images/book/webdebug1.gif)
+![Default web debug toolbar](images/book/web_debug1.gif)
 
 To hide it, press the red cross button on the top right corner.
 
@@ -136,7 +136,7 @@ To hide it, press the red cross button on the top right corner.
 
 All the messages logged in the symfony log file for the current request are accessible with the web debug toolbar: just press the information bubble to display a list of the messages:
 
-![List of messages](images/book/webdebug2.gif)
+![List of messages](images/book/web_debug2.gif)
  
 The top bar contains filter links that allow you to toggle the visibility of messages of a certain type. By default, all the messages are visible, so clicking on the 'sfActions' link will hide the `sfActions`-labeled messages.
 
@@ -148,7 +148,7 @@ The red cross closes the log messages table.
 
 In XDebug mode, the log messages are much richer. Each line of the log messages table has a double-arrow button which, when pressed, reveals further details about the related request:
 
-![Messages in Xdebug mode](images/book/webdebug3.gif)
+![Messages in Xdebug mode](images/book/web_debug3.gif)
  
 All the PHP script files and the functions that are called are logged in XDebug mode, and symfony knows how to link this information with its internal log. If something goes wrong, the XDebug mode gives you the maximum detail to find why.
 
@@ -177,11 +177,11 @@ If you use the template version, don't forget to declare the use of the `Debug` 
 
 ...then if you have a `$problem` the web debug toolbar will show:
 
-![Toolbar with Error message](images/book/webdebug4.gif)
+![Toolbar with Error message](images/book/web_debug4.gif)
 
 The red color of the header shows that at least one message of `err` level was raised. Click on the information bubble icon to display the messages. The list will contain:
 
-![Logged error message](images/book/webdebug5.gif)
+![Logged error message](images/book/web_debug5.gif)
 
 ### Debug short message
 
@@ -203,7 +203,7 @@ For instance, for a template call:
 
 ...will display:
 
-![Toolbar with debug message](images/book/webdebug6.gif)
+![Toolbar with debug message](images/book/web_debug6.gif)
 
 [1]:  http://xdebug.org/                    "XDebug extention website"
 [2]:	http://fr.php.net/error_reporting			"Error reporting manual at PHP.net"
