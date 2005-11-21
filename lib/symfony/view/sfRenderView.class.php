@@ -28,8 +28,7 @@ class sfRenderView extends sfPHPView
     require(sfConfigCache::checkConfig(SF_APP_MODULE_DIR_NAME.'/'.$viewConfigFile));
 
     $viewType = sfView::SUCCESS;
-    $regexp = sfView::SUCCESS.'|'.sfView::ERROR;
-    if (preg_match("/($regexp)$/i", $this->viewName, $match))
+    if (preg_match('/^'.$action->getActionName().'(.+)$/i', $this->viewName, $match))
     {
       $viewType = $match[1];
     }
