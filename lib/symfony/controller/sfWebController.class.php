@@ -112,6 +112,12 @@ abstract class sfWebController extends sfController
      $query_string = '';
      $route_name   = '';
 
+     // empty url?
+     if (!$url)
+     {
+       $url = '/';
+     }
+
      // we get the query string out of the url
      if ($pos = strpos($url, '?'))
      {
