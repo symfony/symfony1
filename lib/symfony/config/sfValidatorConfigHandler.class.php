@@ -120,6 +120,11 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
       // setup validator array
       $data[] = "\t\$validators = array();";
 
+      if (!isset($methods[$method]))
+      {
+        $methods[$method] = array();
+      }
+
       // determine which validators we need to create for this request method
       foreach ($methods[$method] as $name)
       {
