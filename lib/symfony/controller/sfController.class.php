@@ -369,7 +369,7 @@ abstract class sfController
     }
 
     // default view
-    return new sfRenderView($viewName);
+    return new sfRenderView();
   }
 
   /**
