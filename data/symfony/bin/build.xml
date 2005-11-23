@@ -18,7 +18,7 @@
 </target>
 
 <target name="build-model-schema">
-  <phing dir="${propel_generator_dir}" target="build-model-schema">
+  <phing dir="${propel_generator_dir}" target="creole">
     <property name="project.dir" value="${application.startdir}/config" />
     <property name="project" value="${project}" />
   </phing>

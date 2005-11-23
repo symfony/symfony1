@@ -58,6 +58,9 @@ pake_task('build-model', 'project_exists');
 pake_desc('create sql for current model');
 pake_task('build-sql', 'project_exists');
 
+pake_desc('create schema.xml from existing database');
+pake_task('build-schema', 'project_exists');
+
 pake_desc('synchronise project with another machine');
 pake_task('sync', 'project_exists');
 
@@ -200,6 +203,11 @@ function run_build_model($task, $args)
 function run_build_sql($task, $args)
 {
   _call_phing($task, 'build-sql');
+}
+
+function run_build_schema($task, $args)
+{
+  _call_phing($task, 'build-model-schema');
 }
 
 function _call_phing($task, $task_name, $check_schema = true)
