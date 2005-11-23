@@ -97,6 +97,8 @@ class sfPropelData
         }
         $tableMap = $maps[$class]->getDatabaseMap()->getTable(constant($peer_class.'::TABLE_NAME'));
 
+        $column_names = call_user_func_array(array($peer_class, 'getFieldNames'), array(BasePeer::TYPE_FIELDNAME));
+
         // iterate through datas for this class
         foreach ($datas as $key => $data)
         {
@@ -105,14 +107,35 @@ class sfPropelData
           foreach ($data as $name => $value)
           {
             // foreign key?
-            $column = $tableMap->getColumn($name);
-            if ($column->isForeignKey())
+            try
             {
-              $relatedTable = $maps[$class]->getDatabaseMap()->getTable($column->getRelatedTableName());
-              $value = $objects[$relatedTable->getPhpName().'_'.$value];
+              $column = $tableMap->getColumn($name);
+              if ($column->isForeignKey())
+              {
+                $relatedTable = $maps[$class]->getDatabaseMap()->getTable($column->getRelatedTableName());
+                $value = $objects[$relatedTable->getPhpName().'_'.$value];
+              }
+            }
+            catch (PropelException $e)
+            {
             }
 
-            $obj->setByName($name, $value, BasePeer::TYPE_FIELDNAME);
+            $pos = array_search($name, $column_names);
+            $method = 'set'.sfInflector::camelize($name);
+            if ($pos)
+            {
+              $obj->setByPosition($pos, $value);
+            }
+            else if (method_exists($obj, $method))
+            {
+              $obj->$method($value);
+            }
+            else
+            {
+              $error = 'Column "%s" does not exist for class "%s"';
+              $error = sprintf($error, $name, $class);
+              throw new sfException($error);
+            }
           }
           $obj->save();
 
