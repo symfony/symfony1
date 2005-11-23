@@ -31,9 +31,7 @@
   */
   function auto_discovery_link_tag($type = 'rss', $options = array())
   {
-    $options = _parse_attributes($options);
-    $options['only_path'] = 'false';
-    return tag('link', array('rel' => 'alternate', 'type' => 'application/'.$type.'+xml', 'title' => ucfirst($type), 'href' => url_for($options)));
+    return tag('link', array('rel' => 'alternate', 'type' => 'application/'.$type.'+xml', 'title' => ucfirst($type), 'href' => url_for($options, true)));
   }
 
   /*
