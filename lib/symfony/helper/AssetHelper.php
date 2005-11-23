@@ -153,10 +153,11 @@
 
   function _compute_public_path($source, $dir, $ext)
   {
-    if (strpos($source, '/') === false) $source = '/'.$dir.'/'.$source;
+    if (strpos($source, '/') === false) $source = SF_RELATIVE_URL_ROOT.'/'.$dir.'/'.$source;
     if (strpos($source, '.') === false) $source = $source.'.'.$ext;
+    if (SF_RELATIVE_URL_ROOT && strpos($source, SF_RELATIVE_URL_ROOT) !== 0) $source = SF_RELATIVE_URL_ROOT.$source;
 
-    return SF_RELATIVE_URL_ROOT.$source;
+    return $source;
   }
 
   function include_stylesheets()
