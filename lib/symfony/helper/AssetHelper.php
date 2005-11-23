@@ -171,6 +171,8 @@
 
       foreach ($files as $file)
       {
+        $file = stylesheet_path($file);
+
         if (isset($already_seen[$file])) continue;
 
         $already_seen[$file] = 1;
@@ -191,6 +193,8 @@
 
       foreach ($files as $file)
       {
+        $file = javascript_path($file);
+
         if (isset($already_seen[$file])) continue;
 
         $already_seen[$file] = 1;
