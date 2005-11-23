@@ -92,8 +92,16 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     }
 
     // general view configuration
-    $data[] = ($first ? '' : "else\n{")."\n".
-              "  \$templateName = \$action->getTemplate() ? \$action->getTemplate() : \$this->getContext()->getActionName();\n";
+    $data[] = ($first ? '' : "else\n{")."\n";
+    $templateName = $this->getConfigValue('template', 'all');
+    if ($templateName)
+    {
+      $data[] = "  \$templateName = \$action->getTemplate() ? \$action->getTemplate() : '$templateName';\n";
+    }
+    else
+    {
+      $data[] = "  \$templateName = \$action->getTemplate() ? \$action->getTemplate() : \$this->getContext()->getActionName();\n";
+    }
 
     $data[] = "  if (!SF_SAFE_SLOT || (SF_SAFE_SLOT && !\$actionStackEntry->isSlot()))\n";
     $data[] = "  {\n";
