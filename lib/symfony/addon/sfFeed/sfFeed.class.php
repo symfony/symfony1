@@ -31,7 +31,7 @@ class sfFeed
     $authorLink,
     $subtitle,
     $categories = array(),
-    $feedItemRouteName = '',
+    $feedItemsRouteName = '',
     $feedUrl;
 
   private
