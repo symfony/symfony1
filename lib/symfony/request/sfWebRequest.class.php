@@ -269,7 +269,9 @@ class sfWebRequest extends sfRequest
 
   public function getUri()
   {
-    return 'http://'.$this->getHost().$_SERVER['REQUEST_URI'];
+    $pathArray = $this->getPathInfoArray();
+
+    return 'http://'.$pathArray['HTTP_HOST'].$pathArray['REQUEST_URI'];
   }
 
   public function getPathInfo ()
