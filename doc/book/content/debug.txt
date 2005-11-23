@@ -4,7 +4,7 @@ How to debug a project
 Overview
 --------
 
-No matter how good a coder you are, you will face errors one day or another - even if you use symfony. Detecting and understanding errors is one key of fast application development. Hopefully, symfony provides several debug tools for the developer.
+No matter how good a coder you are, you will face errors one day or another - even if you use symfony. Detecting and understanding errors is one key of fast application development. Fortunately, symfony provides several debug tools for the developer.
 
 Debug modes
 -----------

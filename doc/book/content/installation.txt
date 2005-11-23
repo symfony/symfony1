@@ -88,6 +88,12 @@ When upgrading your symfony installation, don't forget to clear the cache of all
     cd myproject
     symfony clear-cache
 
+If you want to be be more selective in clearing the cache (to keep any existing HTML cache and clear only the configuration of each application), you'd rather use:
+
+    cd myproject
+    symfony clear-cache myapp1 config
+    symfony clear-cache myapp2 config
+
 You can check which version of symfony is installed by typing:
 
     symfony -V
