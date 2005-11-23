@@ -17,9 +17,9 @@
  * @version    SVN: $Id$
  */
 
-function url_for($url)
+function url_for($url, $absolute = false)
 {
-  return sfContext::getInstance()->getController()->genUrl(null, $url);
+  return sfContext::getInstance()->getController()->genUrl(null, $url, $absolute);
 }
  
 /*
@@ -32,13 +32,20 @@ function url_for($url)
     # Example:
     #   link_to "Delete this page", { :action => "destroy", :id => @page.id }, :confirm => "Are you sure?"
 */
-function link_to($name = '', $options = '', $html_options = array(), $parameters_for_method_reference = array())
+function link_to($name = '', $options = '', $html_options = array())
 {
   $html_options = _parse_attributes($html_options);
 
   $html_options = _convert_options_to_javascript($html_options);
 
-  $html_options['href'] = url_for($options, $parameters_for_method_reference);
+  $absolute = false;
+  if (isset($html_options['absolute_url']))
+  {
+    unset($html_options['absolute_url']);
+    $absolute = true;
+  }
+
+  $html_options['href'] = url_for($options, $absolute);
   if (!strlen($name))
   {
     $name = $html_options['href'];

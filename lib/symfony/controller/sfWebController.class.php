@@ -28,10 +28,10 @@ abstract class sfWebController extends sfController
    *
    * @return string A URL to a symfony resource.
    */
-   public function genURL($url = null, $parameters = array())
+   public function genURL($url = null, $parameters = array(), $absolute = false)
    {
      // absolute URL or symfony URL?
-     if (!is_array($parameters) && preg_match('/^(http|ftp)/', $parameters))
+     if (!is_array($parameters) && preg_match('#^[a-z]+\://#', $parameters))
      {
        return $parameters;
      }
@@ -101,6 +101,11 @@ abstract class sfWebController extends sfController
 
        // strip off last divider character
        $url = rtrim($url, $divider);
+     }
+
+     if ($absolute)
+     {
+       $url = 'http://'.$this->getContext()->getRequest()->getHost().$url;
      }
 
      return $url;
