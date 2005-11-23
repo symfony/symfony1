@@ -47,7 +47,7 @@ class sfRss201rev2Feed extends sfRssFeed
       }
       if ($this->getItemFeedComments($item))
       {
-        $xml[] = '  <comments>'.$this->getItemFeedComments($item).'</comments>';
+        $xml[] = '  <comments>'.htmlspecialchars($this->getItemFeedComments($item)).'</comments>';
       }
 
       // enclosure

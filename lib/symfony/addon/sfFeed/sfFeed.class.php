@@ -31,20 +31,11 @@ class sfFeed
     $authorLink,
     $subtitle,
     $categories = array(),
+    $feedItemRouteName = '',
     $feedUrl;
 
   private
     $context = null;
-
-  /**
-   * Initialize this RSS object.
-   *
-   * @return void
-   */
-  public function initialize ($context)
-  {
-    $this->context = $context;
-  }
 
   /**
    * Retrieve a new sfFeed implementation instance.
@@ -73,6 +64,8 @@ class sfFeed
           throw new sfFactoryException($error);
       }
 
+      $object->context = sfContext::getInstance();
+
       return $object;
     }
     catch (sfException $e)
@@ -99,6 +92,7 @@ class sfFeed
   public function addItemFromArray($item_array)
   {
     $item = new sfSyndicationItem();
+  
     $item->setItemTitle($item_array['title']);
     $item->setItemLink($item_array['link']);
     $item->setItemDescription($item_array['description']);
@@ -117,6 +111,16 @@ class sfFeed
   public function getFeed()
   {
     throw new sfException('You must use newInstance to get a real feed.');
+  }
+
+  public function setFeedItemsRouteName($routeName)
+  {
+    $this->feedItemsRouteName = $routeName;
+  }
+
+  public function getFeedItemsRouteName()
+  {
+    return $this->feedItemsRouteName;
   }
 
   public function setTitle ($title)
@@ -248,16 +252,49 @@ class sfFeed
 
   public function getItemFeedLink ($item)
   {
-    $context = sfContext::getInstance();
+    if ($routeName = $this->getFeedItemsRouteName())
+    {
+      $routing = sfRouting::getInstance();
+      $route = $routing->getRouteByName($routeName);
+
+      $url = $route[0];
+
+      // we get all parameters
+      $params = array();
+      if (preg_match('/\:([^\/]+)/', $url, $matches))
+      {
+        $value = null;
+        $name = ucfirst(sfInflector::camelize($matches[1]));
+        foreach (array('getFeed'.$name, 'get'.$name) as $methodName)
+        {
+          if (method_exists($item, $methodName))
+          {
+            $value = $item->$methodName();
+          }
+        }
+
+        if ($value === null)
+        {
+          $error = 'Cannot find a matching method name for "%s" parameter to generate URL for the "%s" route name';
+          $error = sprintf($error, $name, $routeName);
+          throw new sfException($error);
+        }
+
+        $params[] = $matches[1].'='.$value;
+      }
+
+      return $this->context->getController()->genUrl(null, $routeName.($params ? '?'.implode('&', $params) : ''), true);
+    }
+
     foreach (array('getFeedLink', 'getLink', 'getUrl') as $methodName)
     {
       if (method_exists($item, $methodName))
       {
-        return $context->getController()->genUrl(null, $item->$methodName(), true);
+        return $this->context->getController()->genUrl(null, $item->$methodName(), true);
       }
     }
 
-    return $context->getController()->genUrl(null, '/', true);
+    return $this->context->getController()->genUrl(null, '/', true);
   }
 
   public function getItemFeedUniqueId ($item)
@@ -312,6 +349,31 @@ class sfFeed
     if ($author = $this->getItemFeedAuthor($item))
     {
       foreach (array('getName', '__toString') as $methodName)
+      {
+        if (method_exists($author, $methodName))
+        {
+          return $author->$methodName();
+        }
+      }
+    }
+
+    return '';
+  }
+
+  public function getItemFeedAuthorLink ($item)
+  {
+    foreach (array('getFeedAuthorLink', 'getAuthorLink') as $methodName)
+    {
+      if (method_exists($item, $methodName))
+      {
+        return $item->$methodName();
+      }
+    }
+
+    // author as an object link
+    if ($author = $this->getItemFeedAuthor($item))
+    {
+      foreach (array('getLink') as $methodName)
       {
         if (method_exists($author, $methodName))
         {

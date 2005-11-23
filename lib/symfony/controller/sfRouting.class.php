@@ -116,11 +116,34 @@ class sfRouting
   /**
    * Has this instance some routes.
    *
-   * @return  object the sfLogger instance
+   * @return  boolean
    */
   public function hasRoutes()
   {
     return count($this->routes) ? true : false;
+  }
+
+  /**
+   * Get a route by its name.
+   *
+   * @return  array a route array
+   */
+  public function getRouteByName($name)
+  {
+    if ($name{0} == '@')
+    {
+      $name = substr($name, 1);
+    }
+
+    if (!isset($this->routes[$name]))
+    {
+      $error = 'The route "%s" does not exist.';
+      $error = sprintf($error, $name);
+
+      throw new sfConfigurationException($error);
+    }
+
+    return $this->routes[$name];
   }
 
   /**

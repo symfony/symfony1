@@ -83,7 +83,7 @@ class sfAtom1Feed extends sfFeed
     foreach ($this->getItems() as $item)
     {
       $xml[] = '<entry>';
-      $xml[] = '  <title>'.$this->getItemFeedTitle($item).'</title>';
+      $xml[] = '  <title>'.htmlspecialchars($this->getItemFeedTitle($item)).'</title>';
       $xml[] = '  <link href="'.sfContext::getInstance()->getController()->genUrl(null, $this->getItemFeedLink($item), true).'"></link>';
       if ($this->getItemFeedPubdate($item))
       {
@@ -120,7 +120,7 @@ class sfAtom1Feed extends sfFeed
       // summary
       if ($this->getItemFeedDescription($item))
       {
-        $xml[] = sprintf('  <summary type="html">%s</summary>', $this->getItemFeedDescription($item));
+        $xml[] = sprintf('  <summary type="html">%s</summary>', htmlspecialchars($this->getItemFeedDescription($item)));
       }
 
       // enclosure
