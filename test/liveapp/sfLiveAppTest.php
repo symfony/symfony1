@@ -11,9 +11,7 @@ require_once 'symfony/test/sfTestBrowser.class.php';
 
 if (!function_exists('pake_task'))
 {
-  //require_once 'pake.php';
-  // FIXME
-  require_once dirname(__FILE__).'/../../../pake/bin/pake.php';
+  require_once('pake/pakeFunction.php');
 }
 
 class sfLiveAppTest extends UnitTestCase
