@@ -56,7 +56,28 @@ class sfActionStack
     $retval = null;
 
     if ($index > -1 && $index < count($this->stack))
+    {
       $retval = $this->stack[$index];
+    }
+
+    return $retval;
+  }
+
+  /**
+   * Remove the entry at a specific index.
+   *
+   * @param int An entry index.
+   *
+   * @return ActionStackEntry An action stack entry implementation.
+   */
+  public function removeEntry ($index)
+  {
+    $retval = $this->getEntry($index);
+
+    if ($retval)
+    {
+      unset($this->stack[$index]);
+    }
 
     return $retval;
   }
@@ -71,7 +92,9 @@ class sfActionStack
     $retval = null;
 
     if (isset($this->stack[0]))
+    {
       $retval = $this->stack[0];
+    }
 
     return $retval;
   }
@@ -87,7 +110,9 @@ class sfActionStack
     $retval = null;
 
     if (isset($this->stack[0]))
+    {
       $retval = $this->stack[$count - 1];
+    }
 
     return $retval;
   }
