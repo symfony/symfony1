@@ -256,8 +256,9 @@ class sfPHPView extends sfView
     return $retval;
   }
 
-  protected function getInternalUri($actionStackEntry)
+  protected function getInternalUri()
   {
+    $actionStackEntry = $this->getContext()->getController()->getActionStack()->getLastEntry();
     $internalUri = sfRouting::getInstance()->getCurrentInternalUri();
     $suffix      = 'slot';
 
@@ -274,7 +275,10 @@ class sfPHPView extends sfView
       // we add cache information based on slot configuration for this module/action
       $cacheManager = $this->getContext()->getViewCacheManager();
       $lifeTime     = $cacheManager->getLifeTime($internalUri, 'slot');
-      $cacheManager->addCache($moduleName, $actionName, $suffix, $lifeTime);
+      if ($lifeTime)
+      {
+        $cacheManager->addCache($moduleName, $actionName, $suffix, $lifeTime);
+      }
     }
 
     return array($internalUri, $suffix);
@@ -286,7 +290,7 @@ class sfPHPView extends sfView
     // no cache for POST and GET action
     if (SF_CACHE && !count($_GET) && !count($_POST))
     {
-      list($internalUri, $suffix) = $this->getInternalUri($actionStackEntry);
+      list($internalUri, $suffix) = $this->getInternalUri();
       $retval = $this->getContext()->getViewCacheManager()->set($retval, $internalUri, $suffix);
     }
 
@@ -319,7 +323,7 @@ class sfPHPView extends sfView
       else
       {
         // retrieve content from cache
-        list($internalUri, $suffix) = $this->getInternalUri($actionStackEntry);
+        list($internalUri, $suffix) = $this->getInternalUri();
         $retval = $this->getContext()->getViewCacheManager()->get($internalUri, $suffix);
 
         if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfView} cache '.($retval !== null ? 'exists' : 'does not exist'));
