@@ -269,9 +269,14 @@ abstract class sfAction
     $this->forwardUnless($condition, $module, $action);
   }
 
-  public function getPresentationFor($module, $action)
+  public function sendEmail($module, $action)
   {
-    if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfAction} get presentation for action "'.$module.'/'.$action.'"');
+    return $this->getPresentationFor($module, $action, 'sfMail');
+  }
+
+  public function getPresentationFor($module, $action, $viewName = null)
+  {
+    if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfAction} get presentation for action "'.$module.'/'.$action.'" (view class: "'.$viewName.'")');
 
     $controller = $this->getController();
 
@@ -287,8 +292,20 @@ abstract class sfAction
     // grab this next forward's action stack index
     $index = $actionStack->getSize();
 
+    // set viewName if needed
+    if ($viewName)
+    {
+      $this->getRequest()->setAttribute('view_name', $viewName, 'symfony/action/view');
+    }
+
     // forward to the mail action
     $controller->forward($module, $action);
+
+    // remove viewName
+    if ($viewName)
+    {
+      $this->getRequest()->setAttribute('view_name', '', 'symfony/action/view');
+    }
 
     // grab the action entry from this forward
     $actionEntry = $actionStack->getEntry($index);
@@ -486,7 +503,7 @@ abstract class sfAction
     {
       return $this->security[$this->getActionName()]['is_secure'];
     }
-    else if (isset($this->security['all']['is_secure']))
+    else if (isset($this->security['all']) && isset($this->security['all']['is_secure']))
     {
       return $this->security['all']['is_secure'];
     }
@@ -508,7 +525,7 @@ abstract class sfAction
     {
       return $this->security[$this->getActionName()]['credentials'];
     }
-    else if (isset($this->security['all']['credentials']))
+    else if (isset($this->security['all']) && isset($this->security['all']['credentials']))
     {
       return $this->security['all']['credentials'];
     }

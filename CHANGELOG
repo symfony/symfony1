@@ -1,6 +1,12 @@
 SVN
 ---
 
+* [fabien] new email support
+* [fabien] modules can now be declared internal only (for slots and emails modules for example)
+* [fabien] view classes are now configurable (per module)
+* [fabien] all category in configuration files is now optional
+* [fabien] added build-schema to pakefile
+* [fabien] new RSS feed classes
 * [fabien] cleaning cache is safer (based on a patch from jgchristopher)
            applications are now unavailable when you are in the process of cleaning the config cache
            WARNING: To use this new feature in your existing projects, you must override your
