@@ -241,6 +241,42 @@ abstract class sfAction
     }
   }
 
+  public function getPresentationFor($module, $action)
+  {
+    if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfAction} get presentation for action "'.$module.'/'.$action.'"');
+
+    $controller = $this->getController();
+
+    // get original render mode
+    $renderMode = $controller->getRenderMode();
+
+    // set render mode to var
+    $controller->setRenderMode(sfView::RENDER_VAR);
+
+    // grab the action stack
+    $actionStack = $controller->getActionStack();
+
+    // grab this next forward's action stack index
+    $index = $actionStack->getSize();
+
+    // forward to the mail action
+    $controller->forward($module, $action);
+
+    // grab the action entry from this forward
+    $actionEntry = $actionStack->getEntry($index);
+
+    // get raw email content
+    $presentation =& $actionEntry->getPresentation();
+
+    // put render mode back
+    $controller->setRenderMode($renderMode);
+
+    // remove the action entry
+    $actionEntry = $actionStack->removeEntry($index);
+
+    return $presentation;
+  }
+
   /**
    * Redirects current request to a new URL.
    *
