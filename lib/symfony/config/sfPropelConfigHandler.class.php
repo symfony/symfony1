@@ -32,7 +32,7 @@ class sfPropelConfigHandler extends sfYamlConfigHandler
     $config = $this->parseYaml($configFile);
 
     // merge all configuration with specific environment configuration
-    $myConfig = isset($config['all']) : $config['all'] : array();
+    $myConfig = isset($config['all']) ? $config['all'] : array();
     if (isset($config[SF_ENVIRONMENT]) && is_array($config[SF_ENVIRONMENT]))
     {
       $myConfig = sfToolkit::array_deep_merge($myConfig, $config[SF_ENVIRONMENT]);
