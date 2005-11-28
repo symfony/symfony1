@@ -113,14 +113,17 @@ class sfMail
     return $this->mailer->Mailer;
   }
 
-  public function setSender($address)
+  public function setSender($address, $name = null)
   {
     if (!$address)
     {
       return;
     }
 
-    list($address, $name) = $this->splitAddress($address);
+    if ($name == null)
+    {
+      list($address, $name) = $this->splitAddress($address);
+    }
     $this->mailer->Sender = $address;
   }
 
@@ -129,14 +132,17 @@ class sfMail
     return $this->mailer->Sender;
   }
 
-  public function setFrom($address)
+  public function setFrom($address, $name = null)
   {
     if (!$address)
     {
       return;
     }
 
-    list($address, $name) = $this->splitAddress($address);
+    if ($name == null)
+    {
+      list($address, $name) = $this->splitAddress($address);
+    }
     $this->mailer->From     = $address;
     $this->mailer->FromName = $name;
   }
@@ -187,32 +193,44 @@ class sfMail
     }
   }
 
-  public function addAddress($address)
+  public function addAddress($address, $name = null)
   {
-    list($address, $name) = $this->splitAddress($address);
+    if ($name == null)
+    {
+      list($address, $name) = $this->splitAddress($address);
+    }
     $this->mailer->AddAddress($address, $name);
   }
 
-  public function addCc($address)
+  public function addCc($address, $name = null)
   {
-    list($address, $name) = $this->splitAddress($address);
+    if ($name == null)
+    {
+      list($address, $name) = $this->splitAddress($address);
+    }
     $this->mailer->AddCc($address, $name);
   }
 
-  public function addBcc($address)
+  public function addBcc($address, $name = null)
   {
-    list($address, $name) = $this->splitAddress($address);
+    if ($name == null)
+    {
+      list($address, $name) = $this->splitAddress($address);
+    }
     $this->mailer->AddBcc($address, $name);
   }
 
-  public function addReplyTo($address)
+  public function addReplyTo($address, $name = null)
   {
     if (!$address)
     {
       return;
     }
 
-    list($address, $name) = $this->splitAddress($address);
+    if ($name == null)
+    {
+      list($address, $name) = $this->splitAddress($address);
+    }
     $this->mailer->AddReplyTo($address, $name);
   }
 
