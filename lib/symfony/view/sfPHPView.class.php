@@ -163,7 +163,7 @@ class sfPHPView extends sfView
       }
     }
 
-    if (SF_LOGGING_ACTIVE) $context->getLogger()->info('{sfRenderView} execute view for template "'.$templateName.$viewType.'.php"');
+    if (SF_LOGGING_ACTIVE) $context->getLogger()->info('{sfPHPView} execute view for template "'.$templateName.$viewType.'.php"');
   }
 
   /**

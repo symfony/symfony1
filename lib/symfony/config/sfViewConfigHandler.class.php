@@ -136,7 +136,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
         if (count($slot) > 1)
         {
           $data .= "    \$this->setSlot('$name', '{$slot[0]}', '{$slot[1]}');\n";
-          $data .= "    if (SF_LOGGING_ACTIVE) \$context->getLogger()->info('{sfRenderView} set slot \"$name\" ({$slot[0]}/{$slot[1]})');\n";
+          $data .= "    if (SF_LOGGING_ACTIVE) \$context->getLogger()->info('{sfViewConfig} set slot \"$name\" ({$slot[0]}/{$slot[1]})');\n";
         }
       }
     }

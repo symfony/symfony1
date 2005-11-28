@@ -21,7 +21,6 @@
 - %SF_SYMFONY_LIB_DIR%/symfony/request/sfWebRequest.class.php
 - %SF_SYMFONY_LIB_DIR%/symfony/storage/sfSessionStorage.class.php
 - %SF_SYMFONY_LIB_DIR%/symfony/view/sfPHPView.class.php
-- %SF_SYMFONY_LIB_DIR%/symfony/view/sfRenderView.class.php
 - %SF_SYMFONY_LIB_DIR%/symfony/controller/sfRouting.class.php
 - %SF_SYMFONY_LIB_DIR%/symfony/user/sfSecurityUser.class.php
 - %SF_SYMFONY_LIB_DIR%/symfony/user/sfBasicSecurityUser.class.php
