@@ -248,6 +248,12 @@ class sfPHPView extends sfView
 
         $retval = $this->setPageCacheContent($retval);
 
+        // send custom headers
+        foreach ($this->getContext()->getRequest()->getAttributeHolder()->getAll('helper/asset/auto/httpmeta') as $httpequiv => $value)
+        {
+          header($httpequiv.': '.$value);
+        }
+
         echo $retval;
         $retval = null;
       }

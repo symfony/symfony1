@@ -217,7 +217,6 @@
     foreach (sfContext::getInstance()->getRequest()->getAttributeHolder()->getAll('helper/asset/auto/httpmeta') as $httpequiv => $value)
     {
       echo tag('meta', array('http-equiv' => $httpequiv, 'content' => $value))."\n";
-      header($httpequiv.': '.$value);
     }
   }
 
