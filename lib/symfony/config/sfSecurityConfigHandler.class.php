@@ -38,11 +38,6 @@ class sfSecurityConfigHandler extends sfYamlConfigHandler
     // parse the yaml
     $this->config = $this->parseYaml($configFile);
 
-    // init our data array
-    $data = array();
-
-    $this->moduleName = $param['moduleName'];
-
     // get default configuration
     $this->defaultConfig = array();
     $defaultConfigFile = SF_APP_CONFIG_DIR.'/'.basename($configFile);
