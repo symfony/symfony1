@@ -25,6 +25,7 @@ parts:
     - routing
     - cache
     - debug
+    - populate
     - user_session
     - security
     - i18n
