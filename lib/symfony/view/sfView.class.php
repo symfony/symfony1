@@ -139,6 +139,13 @@ abstract class sfView
   abstract function execute ();
 
   /**
+   * Configure template.
+   *
+   * @return void
+   */
+  abstract function configure ();
+
+  /**
    * Retrieve the current application context.
    *
    * @return Context The current Context instance.
@@ -321,6 +328,9 @@ abstract class sfView
 
     $this->decoratorDirectory = SF_APP_MODULE_DIR.'/'.$module.'/'.SF_APP_MODULE_TEMPLATE_DIR_NAME;
     $this->directory          = $this->decoratorDirectory;
+
+    // include view configuration
+    $this->configure();
 
     return true;
   }

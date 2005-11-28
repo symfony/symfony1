@@ -166,6 +166,15 @@ abstract class sfController
     // include module configuration
     sfConfigCache::import('modules/'.$moduleName.'/'.SF_APP_MODULE_CONFIG_DIR_NAME.'/module.yml', true, array('prefix' => $moduleName.'_'));
 
+    // check if this module is internal
+    if ($this->getActionStack()->getSize() == 1 && constant('MOD_'.strtoupper($moduleName).'_IS_INTERNAL'))
+    {
+      $error = 'Action "%s" from module "%s" cannot be called directly';
+      $error = sprintf($error, $actionName, $moduleName);
+
+      throw new sfConfigurationException($error);
+    }
+
     if (constant('MOD_'.strtoupper($moduleName).'_ENABLED'))
     {
       // module is enabled
@@ -368,8 +377,15 @@ abstract class sfController
       return new $class();
     }
 
-    // default view
-    return new sfRenderView();
+    // view class (as configured in module.yml or defined in action)
+    $viewName = $this->getContext()->getRequest()->getAttribute('view_name', '', 'symfony/action/view') ? $this->getContext()->getRequest()->getAttribute('view_name', '', 'symfony/action/view') : constant('MOD_'.strtoupper($moduleName).'_VIEW_CLASS');
+    $file     = SF_SYMFONY_LIB_DIR.'/symfony/view/'.$viewName.'View.class.php';
+    if (is_readable($file))
+    {
+      $class = $viewName.'View';
+
+      return new $class();
+    }
   }
 
   /**
