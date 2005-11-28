@@ -291,3 +291,37 @@ With routing deactivated, a call to
 will generate in HTML
 
     <a href="/index.php?module=article&action=read&id=100">my_article_title</a>
+    
+Retrieve information about the current route
+--------------------------------------------
+
+If you need to retrieve information about the current route, for instance to prepare a future 'back to page xxx' link, you should use the methods of the `sfRouting` object. For instance, if your `routing.yml` defines:
+
+    my_rule:
+      url:   /call_my_rule
+      param: { module: mymodule, action: myaction }
+ 
+Use the following calls in the action:
+ 
+    // if you require an URL like
+    http://myapp.example.com/call_my_rule/param1/xxx/param2/yyy
+
+    $uri = sfRouting::getInstance()->getCurrentInternalUri();
+    // will return 'mymodule/myaction?param1=xxx&param2=yyy'
+    
+    $uri = sfRouting::getInstance()->getCurrentInternalUri(true);
+    // will return '@myrule?param1=xxx&param2=yyy'
+
+    $route = sfRouting::getInstance()->getCurrentRouteName();
+    // will return 'myrule'
+
+The URIs returned by the `->getCurrentInternalUri()` method can be used in a call to a `link_to()` helper.
+
+In addition, you might want to get the first or the last action called in a template. The following variables are automatically updated at each request and are available to templates:
+
+    $first_action
+    $first_module
+    $last_action
+    $last_module
+
+You might ask: why can't I simply retrieve the current module/action ? Because the calls to actions is a stack, and several calls can be made for a unique request. For instance, if the end of an action contents a `forward` statement, or if the layout of the view contains a slot, several actions will be called.    
