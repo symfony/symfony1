@@ -149,9 +149,9 @@ class sfMail
   /*
    * $recipents:
    * test@example.com
-   * test@example.com <Example email>
+   * Example email <test@example.com>
    * array('test@example.com', 'test1@example.com')
-   * array('test@example.com <Example email>', 'test1@example.com')
+   * array('Example email <test@example.com>', 'test1@example.com')
    */
   public function addAddresses($addresses)
   {
@@ -179,7 +179,7 @@ class sfMail
   {
     if (preg_match('/^(.+)\s<(.+?)>$/', $address, $matches))
     {
-      return array($matches[1], $matches[2]);
+      return array($matches[2], $matches[1]);
     }
     else
     {
