@@ -180,7 +180,7 @@ abstract class sfAction
     throw new sfError404Exception();
   }
 
-  public function forward404_unless ($condition)
+  public function forward404Unless ($condition)
   {
     if (!$condition)
     {
@@ -188,12 +188,26 @@ abstract class sfAction
     }
   }
 
-  public function forward404_if ($condition)
+  public function forward404If ($condition)
   {
     if ($condition)
     {
       throw new sfError404Exception();
     }
+  }
+
+  /** DEPRECATED */
+  public function forward404_unless ($condition)
+  {
+    if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->err('{sfAction} forward404_unless is deprecated. Please use forward404Unless.');
+    return $this->forward404Unless($condition);
+  }
+
+  /** DEPRECATED */
+  public function forward404_if ($condition)
+  {
+    if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->err('{sfAction} forward404_if is deprecated. Please use forward404If.');
+    return $this->forward404If($condition);
   }
 
   /**
@@ -225,7 +239,7 @@ abstract class sfAction
     throw new sfActionStopException();
   }
 
-  public function forward_if ($condition, $module, $action)
+  public function forwardIf ($condition, $module, $action)
   {
     if ($condition)
     {
@@ -233,12 +247,26 @@ abstract class sfAction
     }
   }
 
-  public function forward_unless ($condition, $module, $action)
+  public function forwardUnless ($condition, $module, $action)
   {
     if (!$condition)
     {
       $this->forward($module, $action);
     }
+  }
+
+  /** DEPRECATED */
+  public function forward_if ($condition, $module, $action)
+  {
+    if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->err('{sfAction} forward_if is deprecated. Please use forwardIf.');
+    $this->forwardIf($condition, $module, $action);
+  }
+
+  /** DEPRECATED */
+  public function forward_unless ($condition, $module, $action)
+  {
+    if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->err('{sfAction} forward_unless is deprecated. Please use forwardUnless.');
+    $this->forwardUnless($condition, $module, $action);
   }
 
   public function getPresentationFor($module, $action)
