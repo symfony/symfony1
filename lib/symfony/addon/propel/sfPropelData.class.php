@@ -20,16 +20,16 @@ require_once('pake/pakeFinder.class.php');
 class sfPropelData
 {
   private
-    $deleteCurrentDatas = true;
+    $deleteCurrentData = true;
 
-  public function setDeleteCurrentDatas($boolean)
+  public function setDeleteCurrentData($boolean)
   {
-    $this->deleteCurrentDatas = $boolean;
+    $this->deleteCurrentData = $boolean;
   }
 
-  public function getDeleteCurrentDatas()
+  public function getDeleteCurrentData()
   {
-    return $this->deleteCurrentDatas;
+    return $this->deleteCurrentData;
   }
 
   // data/ -> name voir c2 test en tableaux
@@ -60,7 +60,7 @@ class sfPropelData
     $objects = array();
 
     // delete all current datas in database
-    if ($this->deleteCurrentDatas)
+    if ($this->deleteCurrentData)
     {
       rsort($fixture_files);
       foreach ($fixture_files as $fixture_file)
