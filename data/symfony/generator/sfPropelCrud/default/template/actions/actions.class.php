@@ -25,7 +25,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
   {
     $this-><?php echo $this->getSingularName() ?> = <?php echo $this->getClassName() ?>Peer::retrieveByPk(<?php echo $this->getRetrieveByPkParamsForShow() ?>);
 
-    $this->forward404_unless($this-><?php echo $this->getSingularName() ?> instanceof <?php echo $this->getClassName() ?>);
+    $this->forward404Unless($this-><?php echo $this->getSingularName() ?> instanceof <?php echo $this->getClassName() ?>);
   }
 
   public function executeEdit ()
@@ -59,7 +59,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
   {
     $<?php echo $this->getSingularName() ?> = <?php echo $this->getClassName() ?>Peer::retrieveByPk(<?php echo $this->getRetrieveByPkParamsForDelete() ?>);
 
-    $this->forward404_unless($<?php echo $this->getSingularName() ?> instanceof <?php echo $this->getClassName() ?>);
+    $this->forward404Unless($<?php echo $this->getSingularName() ?> instanceof <?php echo $this->getClassName() ?>);
 
     $<?php echo $this->getSingularName() ?>->delete();
 
@@ -76,7 +76,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     {
       $<?php echo $this->getSingularName() ?> = <?php echo $this->getClassName() ?>Peer::retrieveByPk(<?php echo $this->getRetrieveByPkParamsForGetOrCreate() ?>);
 
-      $this->forward404_unless($<?php echo $this->getSingularName() ?> instanceof <?php echo $this->getClassName() ?>);
+      $this->forward404Unless($<?php echo $this->getSingularName() ?> instanceof <?php echo $this->getClassName() ?>);
     }
 
     return $<?php echo $this->getSingularName() ?>;
