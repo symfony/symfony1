@@ -93,7 +93,6 @@ class sfViewCacheManager
   public function addCache($moduleName, $actionName, $suffix = 'slot', $lifeTime)
   {
     $entry = $moduleName.'_'.$actionName.'_'.$suffix;
-
     $this->config[$entry] = array(
       'lifeTime' => $lifeTime,
     );
