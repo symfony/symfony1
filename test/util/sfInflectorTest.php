@@ -49,6 +49,7 @@ class sfInflectorTest extends UnitTestCase
 
     $this->assertEqual("html_tidy", sfInflector::underscore("HTMLTidy"));
     $this->assertEqual("html_tidy_generator", sfInflector::underscore("HTMLTidyGenerator"));
+    $this->assertEqual("phone2_ext", sfInflector::underscore("Phone2Ext"));
   }
 
   public function test_camelize_with_module()

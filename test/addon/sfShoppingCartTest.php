@@ -1,7 +1,7 @@
 <?php
 
-require_once 'symfony/addon/sfShoppingCart.class.php';
-require_once 'symfony/addon/sfShoppingCartItem.class.php';
+require_once 'symfony/addon/sfShoppingCart/sfShoppingCart.class.php';
+require_once 'symfony/addon/sfShoppingCart/sfShoppingCartItem.class.php';
 
 Mock::generate('sfContext');
 

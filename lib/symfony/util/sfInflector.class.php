@@ -30,8 +30,8 @@ class sfInflector
   {
     $tmp = $camel_cased_word;
     $tmp = preg_replace('/::/', '/', $tmp);
-    $tmp = preg_replace('/([A-Z]+)([A-Z])/', '\\1_\\2', $tmp);
-    $tmp = preg_replace('/([a-z])([A-Z])/', '\\1_\\2', $tmp);
+    $tmp = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1_\\2', $tmp);
+    $tmp = preg_replace('/([a-z\d])([A-Z])/', '\\1_\\2', $tmp);
 
     return strtolower($tmp);
   }
