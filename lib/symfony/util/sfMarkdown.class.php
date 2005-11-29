@@ -13,7 +13,7 @@
  * License: GPL 2 (http://www.gnu.org/copyleft/gpl.html)
  */
 
-/**
+/*
  * Markdown formatter class for creating an html document from Markdown text
  */
 class sfMarkdown

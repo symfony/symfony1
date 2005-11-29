@@ -9,6 +9,8 @@
  */
 
 /**
+ * sfYaml class.
+ *
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
