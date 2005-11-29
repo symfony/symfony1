@@ -128,13 +128,46 @@ class sfViewConfigHandler extends sfYamlConfigHandler
   {
     $data = '';
 
-    $slots = $this->mergeConfigValue('slots', $viewName);
+    $slots = null;
+
+    $use_default_slots = $this->getConfigValue('use_default_slots', $viewName);
+
+    if ($use_default_slots )
+    {
+      $slots = $this->mergeConfigValue('slots', $viewName);
+    }
+    else
+    {
+      if ($viewName == '')
+      {
+        // is category all: turning off default_slots or was it just not set?
+        if (isset($this->config['all']['use_default_slots']))
+        {
+          // only use slots defined within all
+          if (isset($this->config['all']['slots']))
+          {
+            $slots = $this->config['all']['slots'];
+          }
+        } 
+        else
+        {
+          // all: didn't define anything, default slots are on by default
+          $slots = $this->getConfigValue('slots', $viewName);
+        }
+      }
+      else
+      {
+        $slots = isset($this->config[$viewName]['slots']) ? $this->config[$viewName]['slots'] : null;
+      }
+    }
+
     if (is_array($slots))
     {
       foreach ($slots as $name => $slot)
       {
         if (count($slot) > 1)
         {
+          sfLogger::getInstance()->info("{sfViewConfigHandler} setting slots for view: $viewName  $name : {$slot[0]} : {$slot[1]}");
           $data .= "    \$this->setSlot('$name', '{$slot[0]}', '{$slot[1]}');\n";
           $data .= "    if (SF_LOGGING_ACTIVE) \$context->getLogger()->info('{sfViewConfig} set slot \"$name\" ({$slot[0]}/{$slot[1]})');\n";
         }
