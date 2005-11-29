@@ -1,5 +1,7 @@
 <h1>symfony API</h1>
 
+{sortfilelist}
+
 {foreach key=subpackage item=files from=$classleftindex}
   {if $subpackage != ""}<h2>{$subpackage}</h2>{/if}
   <ul>
