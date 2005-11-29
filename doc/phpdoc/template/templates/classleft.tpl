@@ -1,8 +1,10 @@
+<h1>symfony API</h1>
+
 {foreach key=subpackage item=files from=$classleftindex}
-    <ul>
-        {if $subpackage != ""}<li>symfony.{$subpackage}</li>{/if}
-        {section name=files loop=$files}
-            <li>{if $files[files].link != ''}<a href="{$files[files].link}">{/if}{$files[files].title}{if $files[files].link != ''}</a>{/if}</li>
-        {/section}
-    </ul>
+  {if $subpackage != ""}<h2>{$subpackage}</h2>{/if}
+  <ul>
+  {section name=files loop=$files}
+      <li>{if $files[files].link != ''}<a href="{$files[files].link}">{/if}{$files[files].title}{if $files[files].link != ''}</a>{/if}</li>
+  {/section}
+  </ul>
 {/foreach}
