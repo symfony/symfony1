@@ -32,7 +32,7 @@ define('PEAR_LOG_TYPE_FILE',    3); /** Append to a file */
  * @author  Chuck Hagenbuch <chuck@horde.org>
  * @author  Jon Parise <jon@php.net>
  * @package    symfony
- * @subpackage sfLog
+ * @subpackage log
  */
 class sfLog
 {

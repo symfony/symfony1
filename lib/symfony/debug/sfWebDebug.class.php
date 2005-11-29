@@ -336,6 +336,11 @@ class sfWebDebug
     $context = sfContext::getInstance();
     $cache   = $context->getViewCacheManager();
 
+    if ($context->getRequest()->getAttribute('disable_web_debug', false, 'debug/web'))
+    {
+      return $retval;
+    }
+
     $last_modified = $cache->lastModified($internalUri, $suffix);
     $id            = md5($internalUri);
     $retval = '
