@@ -145,7 +145,6 @@ Let's suppose that you already transferred your symfony-enabled project to a dis
       myapp/
       test/
       web/
-      pakefile.php
 
 To learn more about the file structure of symfony projects, read the [related chapter](file_structure.txt).
 
