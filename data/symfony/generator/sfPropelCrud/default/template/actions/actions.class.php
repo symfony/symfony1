@@ -39,13 +39,14 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 
 <?php foreach ($this->getTableMap()->getColumns() as $name => $column): $type = $column->getCreoleType(); ?>
 <?php if ($name == 'CREATED_AT' || $name == 'UPDATED_AT') continue ?>
+<?php $name = sfInflector::underscore($column->getPhpName()) ?>
 <?php if ($type == CreoleTypes::DATE): ?>
-    list($d, $m, $y) = sfI18N::getDateForCulture($this->getRequestParameter('<?php echo $this->translateFieldName($column->getPhpName()) ?>'), $this->getUser()->getCulture());
+    list($d, $m, $y) = sfI18N::getDateForCulture($this->getRequestParameter('<?php echo $name ?>'), $this->getUser()->getCulture());
     $<?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>("$y-$m-$d");
 <?php elseif ($type == CreoleTypes::BOOLEAN): ?>
-    $<?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>($this->getRequestParameter('<?php echo $this->translateFieldName($column->getPhpName()) ?>', 0));
+    $<?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>($this->getRequestParameter('<?php echo $name ?>', 0));
 <?php else: ?>
-    $<?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>($this->getRequestParameter('<?php echo $this->translateFieldName($column->getPhpName()) ?>'));
+    $<?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>($this->getRequestParameter('<?php echo $name ?>'));
 <?php endif ?>
 <?php endforeach ?>
 

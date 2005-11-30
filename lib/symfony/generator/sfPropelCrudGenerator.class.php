@@ -88,6 +88,10 @@ class sfPropelCrudGenerator extends sfGenerator
         $this->map = $maps[$class_map_builder];
       }
     }
+    if (!$this->map)
+    {
+      throw new sfException('The model class "'.$c.'" does not exist.');
+    }
     $this->tableMap = $this->map->getDatabaseMap()->getTable(constant($c.'Peer::TABLE_NAME'));
 
     // get all primary keys
@@ -122,7 +126,7 @@ class sfPropelCrudGenerator extends sfGenerator
     $params = array();
     foreach ($this->getPrimaryKey() as $pk)
     {
-      $params[] = "\$this->getRequestParameter('".$this->translateFieldName($pk->getPhpName())."')";
+      $params[] = "\$this->getRequestParameter('".sfInflector::underscore($pk->getPhpName())."')";
     }
 
     return implode(",\n".str_repeat(' ', 49 - strlen($this->singularName.$this->className)), $params);
@@ -133,7 +137,7 @@ class sfPropelCrudGenerator extends sfGenerator
     $method_params = array();
     foreach ($this->getPrimaryKey() as $pk)
     {
-      $fieldName       = $this->translateFieldName($pk->getPhpName());
+      $fieldName       = sfInflector::underscore($pk->getPhpName());
       $method_params[] = "\$$fieldName = '$fieldName'";
     }
 
@@ -145,7 +149,7 @@ class sfPropelCrudGenerator extends sfGenerator
     $test_pks = array();
     foreach ($this->getPrimaryKey() as $pk)
     {
-      $fieldName  = $this->translateFieldName($pk->getPhpName());
+      $fieldName  = sfInflector::underscore($pk->getPhpName());
       $test_pks[] = "!\$this->getRequestParameter(\$$fieldName, 0)";
     }
 
@@ -157,7 +161,7 @@ class sfPropelCrudGenerator extends sfGenerator
     $retrieve_params = array();
     foreach ($this->getPrimaryKey() as $pk)
     {
-      $fieldName         = $this->translateFieldName($pk->getPhpName());
+      $fieldName         = sfInflector::underscore($pk->getPhpName());
       $retrieve_params[] = "\$this->getRequestParameter(\$$fieldName)";
     }
 
@@ -169,7 +173,7 @@ class sfPropelCrudGenerator extends sfGenerator
     $params = array();
     foreach ($this->getPrimaryKey() as $pk)
     {
-      $params[] = "\$this->getRequestParameter('".$this->translateFieldName($pk->getPhpName())."')";
+      $params[] = "\$this->getRequestParameter('".sfInflector::underscore($pk->getPhpName())."')";
     }
 
     $sep = ",\n".str_repeat(' ', 43 - strlen($this->singularName.$this->className));
@@ -230,18 +234,13 @@ class sfPropelCrudGenerator extends sfGenerator
     return $this->primaryKey;
   }
 
-  public function translateFieldName($name, $fromType = 'phpName', $toType = 'fieldName')
-  {
-    return call_user_func(array($this->peerClassName, 'translateFieldName'), $name, $fromType, $toType);
-  }
-
   public function getPrimaryKeyUrlParams()
   {
     $params = array();
     foreach ($this->getPrimaryKey() as $pk)
     {
       $phpName   = $pk->getPhpName();
-      $fieldName = $this->translateFieldName($phpName);
+      $fieldName = sfInflector::underscore($phpName);
       $params[]  = "$fieldName='.\$".$this->singularName."->get$phpName()";
     }
 
