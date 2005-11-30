@@ -499,6 +499,13 @@ abstract class sfAction
    */
   public function isSecure()
   {
+    // disable security on SF_LOGIN_MODULE / SF_LOGIN_ACTION
+    if ((SF_LOGIN_MODULE == $this->getModuleName()) && (SF_LOGIN_ACTION == $this->getActionName()))
+    {
+      return false;
+    }
+
+    // read security.yml configuration
     if (isset($this->security[$this->getActionName()]['is_secure']))
     {
       return $this->security[$this->getActionName()]['is_secure'];
@@ -507,10 +514,8 @@ abstract class sfAction
     {
       return $this->security['all']['is_secure'];
     }
-    else
-    {
-      return false;
-    }
+
+    return false;
   }
 
   /**
