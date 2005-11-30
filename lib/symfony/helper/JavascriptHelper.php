@@ -14,6 +14,7 @@
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author     John Christopher <john.christopher@symfony-project.com>
  * @version    SVN: $Id$
  */
 
@@ -632,6 +633,198 @@
     return "\n//".cdata_section("\n$content\n//")."\n";
   }
 
+  /**
+   * wrapper for script.aculo.us/prototype Ajax.Autocompleter.
+   * @param string name value of input field
+   * @param string default value for input field
+   * @param array input tag options. (size, autocomplete, etc...)
+   * @param array completion options. (use_style, etc...)
+   * 
+   * @return string input field tag, div for completion results, and
+   *                 auto complete javascript tags
+   */
+  function input_auto_complete_tag($name, $value, $url, $tag_options = array(), $completion_options = array())
+  {
+    $context = sfContext::getInstance();
+
+    $context->getRequest()->setAttribute(
+      'input_auto_complete_tag',
+      array('/sf/js/prototype', '/sf/js/controls', '/sf/js/effects'),
+      'helper/asset/auto/javascript'
+    );
+
+    $comp_options = _convert_options($completion_options);
+    if (isset($comp_options['use_style']) && $comp_options['use_style'] == 'true')
+    {
+      $context->getRequest()->setAttribute('input_auto_complete_tag', 
+        array('/sf/css/sf_helpers/input_auto_complete_tag'), 
+        'helper/asset/auto/stylesheet'
+      );
+    }
+
+    $javascript  = input_tag($name, $value, $tag_options);
+    $javascript .= content_tag('div', '' , array('id' => "{$name}_auto_complete", 'class' => 'auto_complete'));
+    $javascript .= _auto_complete_field($name, $url, $comp_options);
+
+    return $javascript;
+  }
+
+  /**
+   * wrapper for script.aculo.us/prototype Ajax.Autocompleter.
+   * @param string name id of field that can be edited
+   * @param string url of module/action to be called when ok is clicked
+   * @param array editor tag options. (rows, cols, highlightcolor, highlightendcolor, etc...)
+   * 
+   * @return string javascript to manipulate the id field to allow click and edit functionality
+   */
+  function input_in_place_editor_tag($name, $url, $editor_options = array())
+  {
+    sfContext::getInstance()->getRequest()->setAttribute(
+      'input_in_place_editor_tag',
+      array('/sf/js/prototype', '/sf/js/controls', '/sf/js/effects'),
+      'helper/asset/auto/javascript'
+    );
+
+    $editor_options = _convert_options($editor_options);
+    $default_options = array('tag' => 'span', 'id' => '\''. $name . '_in_place_editor', 'class' => 'in_place_editor_field');
+
+    return _in_place_editor($name, $url, array_merge($editor_options, $default_options));
+  }
+
+  /*
+      # Makes an HTML element specified by the DOM ID +field_id+ become an in-place
+      # editor of a property.
+      #
+      # A form is automatically created and displayed when the user clicks the element,
+      # something like this:
+      # <form id="myElement-in-place-edit-form" target="specified url">
+      #   <input name="value" text="The content of myElement"/>
+      #   <input type="submit" value="ok"/>
+      #   <a onclick="javascript to cancel the editing">cancel</a>
+      # </form>
+      # 
+      # The form is serialized and sent to the server using an AJAX call, the action on
+      # the server should process the value and return the updated value in the body of
+      # the reponse. The element will automatically be updated with the changed value
+      # (as returned from the server).
+      # 
+      # Required +options+ are:
+      # <tt>:url</tt>::       Specifies the url where the updated value should
+      #                       be sent after the user presses "ok".
+      # 
+      # Addtional +options+ are:
+      # <tt>:rows</tt>::              Number of rows (more than 1 will use a TEXTAREA)
+      # <tt>:cancel_text</tt>::       The text on the cancel link. (default: "cancel")
+      # <tt>:save_text</tt>::         The text on the save link. (default: "ok")
+      # <tt>:external_control</tt>::  The id of an external control used to enter edit mode.
+      # <tt>:options</tt>::           Pass through options to the AJAX call (see prototype's Ajax.Updater)
+      # <tt>:with</tt>::              JavaScript snippet that should return what is to be sent
+      #                               in the AJAX call, +form+ is an implicit parameter
+    */
+    function _in_place_editor($field_id, $url, $options = array())
+    {
+      $javascript = "new Ajax.InPlaceEditor(";
+
+      $javascript .= "'$field_id', ";
+      $javascript .= "'" . url_for($url) . "'";
+
+      $js_options = array();
+
+      if (isset($options['tokens'])) $js_options['tokens'] = _array_or_string_for_javascript($options['tokens']);
+
+      if (isset($options['cancel_text']))
+      {
+        $js_options['cancelText'] = $options['cancel_text'];
+      }
+      if (isset($options['save_text']))
+      {
+        $js_options['okText'] = $options['save_text'];
+      }
+      if (isset($options['rows']))
+      {
+        $js_options['rows'] = $options['rows'];
+      }
+      if (isset($options['external_control']))
+      {
+        $js_options['externalControl'] = $options['external_control'];
+      }
+      if (isset($options['options']))
+      {
+        $js_options['ajaxOptions'] = $options['options'];
+      }
+      if (isset($options['with']))
+      {
+        $js_options['callback'] = "function(form) { return".$options['with']."}";
+      }
+      if (isset($options['highlightcolor']))
+      {
+        $js_options['highlightcolor'] = "'".$options['highlightcolor']."'";
+      }
+      if (isset($options['highlightendcolor']))
+      {
+        $js_options['highlightendcolor'] = "'".$options['highlightendcolor']."'";
+      }
+
+      $javascript .= ', '._options_for_javascript($js_options);
+      $javascript .= ');';
+
+      return javascript_tag($javascript);
+    }
+
+  /**
+   * wrapper for script.aculo.us/prototype Ajax.Autocompleter.
+   * @param string id value of input field
+   * @param string url of module/action to execute for autocompletion
+   * @param array completion options
+   * @return string javascript tag for Ajax.Autocompleter
+   */
+  function _auto_complete_field($field_id, $url, $options = array())
+  {
+    $javascript = "new Ajax.Autocompleter(";
+
+    $javascript .= "'$field_id', ";
+    if (isset($options['update']))
+    {
+      $javascript .= "'".$options['update']."', ";
+    }
+    else
+    {
+      $javascript .= "'{$field_id}_auto_complete', ";
+    }
+
+    $javascript .= "'".url_for($url)."'";
+
+    $js_options = array();
+    if (isset($options['tokens']))
+    {
+      $js_options['tokens'] = _array_or_string_for_javascript($options['tokens']);
+    }
+    if (isset ($options['with']))
+    {
+      $js_options['callback'] = "function(element, value) { return".$options['with']."}";
+    }
+    if (isset($options['indicator']))
+    {
+      $js_options['indicator']  = "'".$options['indicator']."}'"; 
+    }
+    if (isset($options['on_show']))
+    {
+      $js_options['onShow'] = $options['on_show'];
+    }
+    if (isset($options['on_hide']))
+    {
+      $js_options['onHide'] = $options['on_hide'];
+    }
+    if (isset($options['min_chars']))
+    {
+      $js_options['min_chars'] = $options['min_chars'];
+    }
+
+    $javascript .= ', '._options_for_javascript($js_options).');';
+
+    return javascript_tag($javascript);
+  }
+
   function _options_for_javascript($options)
   {
     $opts = array();
@@ -663,7 +856,7 @@
     $js_options['asynchronous'] = (isset($options['type'])) ? ($options['type'] != 'synchronous') : 'true';
     if (isset($options['method'])) $js_options['method'] = _method_option_to_s($options['method']);
     if (isset($options['insertion'])) $js_options['insertion'] = "Insertion.".sfInflector::camelize($options['position']);
-    $js_options['evalScripts'] = !isset($options['script']) || $options['script'];
+    $js_options['evalScripts'] = (!isset($options['script']) || $options['script'] == 'false') ? 'false' : 'true';
 
     if (isset($options['form']))
     {
@@ -681,7 +874,7 @@
     return _options_for_javascript($js_options);
   }
 
-  function method_option_to_s($method)
+  function _method_option_to_s($method)
   {
     return (is_string($method) && $method{0} != "'") ? $method : "'$method'";
   }
@@ -693,16 +886,15 @@
       $options['with'] = 'value';
     }
 
-    $callback = remote_function(options);
+    $callback = remote_function($options);
 
-    $javascript .= 'new '.$klass.'("'.$name.'", ';
+    $javascript  = 'new '.$klass.'("'.$name.'", ';
     if (isset($options['frequency']))
     {
       $javascript .= $options['frequency'].", ";
     }
     $javascript .= "function(element, value) {";
-    $javascript .= $options['frequency'].', function(element, value) {';
-    $javascript .= $callback.'})';
+    $javascript .= $callback.'});';
 
     return javascript_tag($javascript);
   }

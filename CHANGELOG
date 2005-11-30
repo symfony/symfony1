@@ -1,23 +1,24 @@
 SVN
 ---
 
-* [fabien] new email support
-* [fabien] modules can now be declared internal only (for slots and emails modules for example)
-* [fabien] view classes are now configurable (per module)
-* [fabien] all category in configuration files is now optional
-* [fabien] added build-schema to pakefile
-* [fabien] new RSS feed classes
-* [fabien] cleaning cache is safer (based on a patch from jgchristopher)
-           applications are now unavailable when you are in the process of cleaning the config cache
-           WARNING: To use this new feature in your existing projects, you must override your
-                    config.php file with the one in 'data/symfony/skeleton/app/app/config/config.php'
-                    and create an unavailable.html file in your web directory
-                    (see an example in data/symfony/skeleton/project/web/unavailable.html)
-* [fabien] added new shortcuts to help debugging
-* [fabien] new class to easily load test datas from YAML files into databases (Propel)
-* [fabien] better cache support
-* [fabien] safeguard for recursive slots
-* [fabien] added the possibility to disable the web debug sidebar for specific action (RSS, XML, SVG, ...)
+* [jgchristopher] new input_in_place_editor_tag and input_auto_complete_tag helpers
+* [fabien]        new email support
+* [fabien]        modules can now be declared internal only (for slots and emails modules for example)
+* [fabien]        view classes are now configurable (per module)
+* [fabien]        all category in configuration files is now optional
+* [fabien]        added build-schema to pakefile
+* [fabien]        new RSS feed classes
+* [fabien]        cleaning cache is safer (based on a patch from jgchristopher)
+                  applications are now unavailable when you are in the process of cleaning the config cache
+                  WARNING: To use this new feature in your existing projects, you must override your
+                           config.php file with the one in 'data/symfony/skeleton/app/app/config/config.php'
+                           and create an unavailable.html file in your web directory
+                           (see an example in data/symfony/skeleton/project/web/unavailable.html)
+* [fabien]        added new shortcuts to help debugging
+* [fabien]        new class to easily load test datas from YAML files into databases (Propel)
+* [fabien]        better cache support
+* [fabien]        safeguard for recursive slots
+* [fabien]        added the possibility to disable the web debug sidebar for specific action (RSS, XML, SVG, ...)
 
 Version 0.4.2
 -------------
