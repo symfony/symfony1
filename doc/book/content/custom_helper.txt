@@ -11,15 +11,15 @@ Naming conventions
 
 To add custom helpers available to your templates, simply create a PHP file ending with `Helper.php` and place it in a subdirectory of the PHP `include_path` named `helper`. The directory where the helper is placed will determine its availability. For instance:
 
-    Helper placed in                  Is available for
-    ----------------                  ----------------
-    lib/helper                        all applicationsof the project
-    myapp/lib/helper                  all the modules of the 'myapp' application
-    myapp/modules/mymodule/lib/helper all the templates of the 'mymodule' module
+| Helper placed in                    | Is available for
+| ----------------------------------- | ----------------
+| `lib/helper`                        | all applications of the project
+| `myapp/lib/helper`                  | all the modules of the 'myapp' application
+| `myapp/modules/mymodule/lib/helper` | all the templates of the 'mymodule' module
 
-To use a helper in a template, you must first declare the helper in the action:
+To use a custom helper in a template, you must first declare it on top of the template, as for other helpers:
 
-    $this->userHelper('Name');
+    <?php use_helper('Name') ?>
 
 Example
 -------
@@ -39,20 +39,10 @@ Here is the `WikiHelper.php` file stored in the `myapp/lib/helper/` directory:
     
     ?>
 
-Here is an example module using the helper:
+Here is an example template using the helper:
 
-    class articleActions extends sfActions
-    {
-      public function preExecute()
-      {
-        $this->useHelper('Wiki');
-      }
-    
-      ...
-    }
-
-And here is the call to the helper in a template of this module:
-
+    <?php use_helper('Wiki') ?>
+    ...
     <p><?php echo wiki_to_html('Text with a WikiLink.') ?></p>
     
 Accessing context objects
