@@ -182,7 +182,7 @@ class sfRouting
       return array();
     }
 
-    // route already exists
+    // route already exists?
     if (isset($this->routes[$name]))
     {
       $error = 'This named route already exists ("%s").';
@@ -257,7 +257,7 @@ class sfRouting
       $this->routes[$name] = array($route, $regexp, $names, $names_hash, $default, $requirements, $suffix);
     }
 
-    if (SF_LOGGING_ACTIVE) sfLogger::getInstance()->info('{sfRouting} connect "'.$route.'"'.($suffix ? ' ("'.$suffix.'" suffix)' : ''));
+    if (SF_LOGGING_ACTIVE) sfLogger::getInstance()->info('{sfRouting} connect ['.$name.'] "'.$route.'"'.($suffix ? ' ("'.$suffix.'" suffix)' : ''));
 
     return $this->routes;
   }
