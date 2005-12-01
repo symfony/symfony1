@@ -281,7 +281,7 @@ class sfWebRequest extends sfRequest
     $pathArray = $this->getPathInfoArray();
 
     // simulate PATH_INFO if needed
-    if (!isset($pathArray[SF_PATH_INFO_KEY]))
+    if (!isset($pathArray[SF_PATH_INFO_KEY]) || !$pathArray[SF_PATH_INFO_KEY])
     {
       $script_name = $pathArray['SCRIPT_NAME'];
       $pathInfo = preg_replace('/^'.preg_quote($script_name, '/').'/', '', $pathArray['REQUEST_URI']);
