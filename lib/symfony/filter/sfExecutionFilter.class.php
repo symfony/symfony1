@@ -147,7 +147,8 @@ class sfExecutionFilter extends sfFilter
         if (SF_LOGGING_ACTIVE) $this->context->getLogger()->info('{sfExecutionFilter} action validation failed');
 
         // validation failed
-        $viewName = $actionInstance->handleError();
+        $handleErrorToRun = 'handleError'.ucfirst($actionName);
+        $viewName = method_exists($actionInstance, $handleErrorToRun) ? $actionInstance->$handleErrorToRun() : $actionInstance->handleError();
       }
     }
 
