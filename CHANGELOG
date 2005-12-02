@@ -1,6 +1,9 @@
 SVN
 ---
 
+Version 0.4.3
+-------------
+
 * [jgchristopher] new input_in_place_editor_tag and input_auto_complete_tag helpers
 * [fabien]        new email support
 * [fabien]        modules can now be declared internal only (for slots and emails modules for example)
