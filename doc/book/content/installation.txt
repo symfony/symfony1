@@ -16,19 +16,19 @@ Installing symfony from a PEAR Package
 
 [PEAR][1] is used by PHP to install libraries from a central repository. The symfony project has its own repository, or channel. Note that channels are only available since version 1.4.0 of PEAR, so you should upgrade if your version is older:
 
-    pear upgrade PEAR
+    $ pear upgrade PEAR
 
 The first thing to do is to add the 'symfony' channel:
 
-    pear channel-discover pear.symfony-project.com
+    $ pear channel-discover pear.symfony-project.com
 
 To see the libraries available in this channel:
 
-    pear remote-list -c symfony
+    $ pear remote-list -c symfony
 
 Now you are ready to install the latest stable version of symfony and all its dependencies with:
 
-    pear install symfony/symfony
+    $ pear install symfony/symfony
 
 That's it: symfony is installed. You may now create a new project with the new command line tool `symfony` and use the classes and methods of the libraries.
 
@@ -39,11 +39,11 @@ Symfony needs a few other packages to run; some are included in the installation
 * [propel](http://propel.phpdb.org/trac/) : installed automatically (used for object/relational mapping)
 * [phing](http://phing.info/wiki/index.php) : requires manual installation
 
-        pear install http://phing.info/pear/phing-current.tgz 
+    $ pear install http://phing.info/pear/phing-current.tgz 
 
 To have a glimpse of all the tasks that you can perform directly with the command-line tool, type:
 
-     symfony -T
+     $ symfony -T
 
 Where are the symfony files ?
 -----------------------------
@@ -57,7 +57,7 @@ The symfony libraries are now installed in:
 
 The `_dir` variables are part of your PEAR configuration. To see their value, type:
 
-    pear config-show
+    $ pear config-show
 
 As a matter of fact, the exact location of files is not very important, since the installation provides you with a new executable, `symfony`, which will do all the work for you (project creation, application installation and initialization, etc.). Only the `$doc_dir` directory will be needed in your web server configuration, since it contains some default files (stylesheets and images) that can be required by some pages of symfony projects. This configuration will be detailed in the [next chapter](project_creation.txt).
 
@@ -75,43 +75,43 @@ Getting nightly builds
 
 The process described above will install the latest stable version. In order to have the latest bug corrections between two stable versions, you may wish to install the latest nightly build. These builds are published in the symfony channel with a 'beta' tag, and you can install them with:
 
-    pear install symfony/symfony-beta
+    $ pear install symfony/symfony-beta
 
 If you already have a beta version installed, get the latest build with:
 
-    pear upgrade symfony/symfony-beta
+    $ pear upgrade symfony/symfony-beta
 
 >**Note**: in some Windows platforms, it appears that the PEAR utility uses its own web cache and doesn't actually require the symfony channel to check the latest version. Make sure you empty your PEAR cache before you ask for an upgrade (use `pear config-show` to get the location of the cache folder).   
  
 When upgrading your symfony installation, don't forget to clear the cache of all the applications using it:
 
-    cd myproject
-    symfony clear-cache
+    $ cd myproject
+    $ symfony clear-cache
 
 If you want to be be more selective in clearing the cache (to keep any existing HTML cache and clear only the configuration of each application), you'd rather use:
 
-    cd myproject
-    symfony clear-cache myapp1 config
-    symfony clear-cache myapp2 config
+    $ cd myproject
+    $ symfony clear-cache myapp1 config
+    $ symfony clear-cache myapp2 config
 
 You can check which version of symfony is installed by typing:
 
-    symfony -V
+    $ symfony -V
 
 Installing symfony by hand
 --------------------------
 
 If you don't want to use PEAR, you can still download the latest version directly from the  SVN repository, by requesting a checkout, and install it by hand:
 
-    mkdir /home/steve/mysymfony
-    cd /home/steve/mysymfony
-    svn co http://svn.symfony-project.com/symfony/trunk/ .
+    $ mkdir /home/steve/mysymfony
+    $ cd /home/steve/mysymfony
+    $ svn co http://svn.symfony-project.com/symfony/trunk/ .
 
 For your project to make use of this installation, you will have to create two symbolic links in you project from the `vendor` directory to the symfony `lib` directory:
 
-    cd /home/steve/myproject
-    ln -sf /home/steve/mysymfony/lib lib/symfony
-    ln -sf /home/steve/mysymfony/data data/symfony
+    $ cd /home/steve/myproject
+    $ ln -sf /home/steve/mysymfony/lib lib/symfony
+    $ ln -sf /home/steve/mysymfony/data data/symfony
 
 
 In addition, you will have to make the shortcuts to allow the call to the command line tools `pake` and `symfony`.

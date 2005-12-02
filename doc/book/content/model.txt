@@ -61,13 +61,13 @@ The `name` of the database must keep the value `symfony` to allow the integratio
 
 Now, let's imagine that you have a database 'blog' already containing data in two tables: 'blog_article' and 'blog_comment' with the following structure:
 
-    blog_article          blog_comment
-    ------------          ------------
-    id                    id
-    title                 article_id
-    content               author
-                          date
-                          content
+| blog_article |        | blog_comment |
+| ------------ |--------| ------------ |
+| id           |        | id           |
+| title        |        | article_id   |
+| content      |        | author       |
+|              |        | date         |
+|              |        | content      |
 
 The related `schema.xml` should look like:
 
@@ -117,7 +117,7 @@ In order to do this, you have to make sure that Propel knows how to access your 
 
 If this is correct, you can call the `build-schema` command:
 
-    symfony build-schema
+    $ symfony build-schema
     
 And a brand new `schema.xml` built from your database structure is written in your `myproject/config/` directory.
 
@@ -156,7 +156,7 @@ Object data model files
 
 Now that the object data model is described, the PHP classes are ready to be generated. In your project directory, type the command:
 
-    symfony build-model
+    $ symfony build-model
 
 The base data access classes will be automatically created in the `myproject/lib/model/om/` directory:
 
@@ -297,7 +297,7 @@ All the details given above are not specific to symfony. As a matter of fact, yo
 
 And, as Propel is independent of the database used, so is symfony. As a matter of fact, you might need the SQL request that creates the actual database from the XML configuration file - for instance to rebuild the database in another environment or to change RDBMS. To get it, go to your root project directory and type:
 
-    symfony build-sql
+    $ symfony build-sql
 
 The SQL creating the tables according to the `schema.xml` description will be generated in the `myproject/data/sql/schema.sql` file.
 

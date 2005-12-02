@@ -194,11 +194,11 @@ So simply add the `object_` prefix in front of the name of the form helpers to g
 
 The most useful helper of this type is the `object_select_tag`, since it can get the list of values from another table. For instance, imagine that you have an `Article` and an `Author` table, where one or more articles are written by one author. This means that the `Article` table has a `author_id` column:
 
-    Article       Author
-    ------        -----
-    id            id
-    author_id     name
-    title
+| Article   |   | Author |
+| --------- |-- | ------ |
+| id        |   | id     |
+| author_id |   | name   |
+| title     |   |        |
 
 Now, picture a form built to edit the data of an article. There is an easy way to get the list of the author names when editing the `AuthorId` column:
 

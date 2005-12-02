@@ -32,7 +32,7 @@ Initiating a CRUD
 
 To initiate a Propel CRUD that will create an 'article' module to deal with the records of the 'Article' table, type:
 
-    symfony init-propelcrud myapp article Article
+    $ symfony init-propelcrud myapp article Article
 
 Access it with the default action:
 
@@ -76,7 +76,7 @@ Generating a Propel CRUD is really equivalent to building a scaffolding. It is a
 
 To generate the Propel CRUD for the 'Article' table, type:
 
-    symfony generate-propelcrud myapp article Article
+    $ symfony generate-propelcrud myapp article Article
 
 If you access it with the default action, you will see no difference with the initiated version:
 

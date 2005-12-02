@@ -195,19 +195,19 @@ Removing something from the cache
 
 When you modify a template or an action, you will need to clean the cache to avoid errors. The symfony command line can launch a `clear-cache` process which will erase all the cache (`config` and `i18n` included, see below). From the root folder of a project, call:
 
-    symfony clear-cache
+    $ symfony clear-cache
     // or use the short syntax
-    symfony cc
+    $ symfony cc
 
 In the production environment, once the cache is cleared, the first request will reprocess the configuration files and recreate the `config` cache. Then, if the HTML cache is set to on for some actions, the first call to these actions will regenerate the corresponding cache.
 
 You may want to be more specific about what to clear:
 
-    symfony clear-cache myapp
+    $ symfony clear-cache myapp
     // will erase only the cache of the myapp application
-    symfony clear-cache myapp template
+    $ symfony clear-cache myapp template
     // will erase only the HTML cache of the myapp application
-    symfony clear-cache myapp config
+    $ symfony clear-cache myapp config
     // will erase only the config cache of the myapp application
         
 This is pretty straightforward, but maybe a little too brutal for specific needs.
@@ -282,7 +282,7 @@ In addition, create a new front controller by copying the production one (probab
     
 That's it, you have a new environment. Use it by adding the front controller name after the domain name:
 
-        http://myapp.example.com/myapp_staging.php/user/list
+    http://myapp.example.com/myapp_staging.php/user/list
         
 ### Monitor the performance improvement
 

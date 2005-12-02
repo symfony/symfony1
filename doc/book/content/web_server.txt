@@ -150,14 +150,14 @@ Alternatively, you can add a new alias. This will allow you to have separated we
 
 First, create a new directory in your `web` directory:
 
-    mkdir /home/steve/myproject/web/admin
+    $ mkdir /home/steve/myproject/web/admin
 
 Then, move the front controllers of the `admin` application to this new directory, and copy the `.htaccess` to have one for this new app:
 
-    cd /home/steve/myproject/web
-    mv admin.php admin/index.php
-    mv admin_dev.php admin/
-    cp .htaccess admin/
+    $ cd /home/steve/myproject/web
+    $ mv admin.php admin/index.php
+    $ mv admin_dev.php admin/
+    $ cp .htaccess admin/
     
 Then, execute the two last steps steps described above to setup the alias. Edit the `.htaccess` file located in your `myproject/web/admin/` directory and change
 

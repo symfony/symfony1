@@ -32,7 +32,7 @@ SymFony uses a dedicated tool called [Pake][1] to administer projects, applicati
 
 To get the full list of the available administration operations, simply type from your project directory:
 
-    symfony -T
+    $ symfony -T
 
 The description of the most common administration operations follows.
 
@@ -41,12 +41,12 @@ Project setup
 
 First of all, you must create the directory that will contain all your project files:
 
-    mkdir /home/steve/myproject
+    $ mkdir /home/steve/myproject
 
 Then, in order to initialize the project and generate the basic files and directories necessary for runtime, simply type:
 
-    cd /home/steve/myproject
-    symfony init-project myproject
+    $ cd /home/steve/myproject
+    $ symfony init-project myproject
 
 Here is an overview of the file structure created:
 
@@ -67,7 +67,7 @@ Application Setup
 
 The project is not yet ready to be seen : it requires at least one application. To initialize it, use the `symfony init-app` command and pass the name of the application as an argument:
 
-    symfony init-app myapp
+    $ symfony init-app myapp
 
 This will create a `myapp` directory in the project root with a default application configuration and a set of directories ready to host the file of your website: 
 
@@ -128,7 +128,7 @@ Module setup
 
 Your new application is not very impressive; it dramatically lacks functionalities. If you want functionalities, you need a module to put them into. Once again, the `symfony` command will be used for that, with the parameters `init-module`, the application name and the new module name:
 
-    symfony init-module myapp mymodule
+    $ symfony init-module myapp mymodule
 
 The created tree structure is:
 
@@ -158,41 +158,43 @@ start a source versioning process. Symfony natively supports [CVS][3], although 
 
 So lets **create** the new repository for the `myproject` project:
 
-    svnadmin create $SVNREP_DIR/myproject
+    $ svnadmin create $SVNREP_DIR/myproject
 
 Then the base structure (layout) of the repository is created with the `trunk`,`tags` and `branches` directories with this pretty long command:
 
-    svn mkdir -m "layout creation" file:///$SVNREP_DIR/myproject/trunk file:///$SVNREP_DIR/myproject/tags file:///$SVNREP_DIR/myproject/branches
+    $ svn mkdir -m "layout creation" file:///$SVNREP_DIR/myproject/trunk file:///$SVNREP_DIR/myproject/tags file:///$SVNREP_DIR/myproject/branches
 
 This will be your first revision. Now you have to **import** the files of the project except the cache and log temporary files:
 
-    cd /home/steve/myproject
-    rm -rf cache/*
-    rm -rf log/*
-    svn import -m "initial import" . file:///$SVNREP_DIR/myproject/trunk
+    $ cd /home/steve/myproject
+    $ rm -rf cache/*
+    $ rm -rf log/*
+    $ svn import -m "initial import" . file:///$SVNREP_DIR/myproject/trunk
 
 Check the commited files by typing
 
-    svn ls file:///$SVNREP_DIR/myproject/trunk/
+    $ svn ls file:///$SVNREP_DIR/myproject/trunk/
 
-That seems good. Now the SVN repository has the reference version (and the history) of all your project files. This means that the files of the actual `/home/steve/myproject` directory need to refer to the repository. To do hat, first rename the `myproject` directory - you will erase it soon if everything works well - and do a **checkout** of the repository in a new directory:
+That seems good. Now the SVN repository has the reference version (and the history) of all your project files. This means that the files of the actual `/home/steve/myproject` directory need to refer to the repository. To do that, first rename the `myproject` directory - you will erase it soon if everything works well - and do a **checkout** of the repository in a new directory:
 
-    cd /home/steve
-    mv myproject myproject.origin
-    svn co file:///$SVNREP_DIR/myproject/trunk myproject
-    ls myproject
+    $ cd /home/steve
+    $ mv myproject myproject.origin
+    $ svn co file:///$SVNREP_DIR/myproject/trunk myproject
+    $ ls myproject
 
 That's it. Now you can work on the files located in `/home/steve/myproject` and **commit** your modifications to the repository. Don't forget to do some cleanup and erase the `myproject.origin` directory, which is now useless.
 
-There is one remaining thing to setup. If you commit your working directory to the repository, you may copy some unwanted files, like the ones located in the `cache` and `log` directories of your project. So you need to specify an ignore list to svn for this project.
+There is one remaining thing to setup. If you commit your working directory to the repository, you may copy some unwanted files, like the ones located in the `cache` and `log` directories of your project. So you need to specify an ignore list to svn for this project. You also need to set full access to the `cache/` and `log/` directories again - SVN doesn't store the access rights:
 
-    cd /home/steve/myproject
-    svn propedit svn:ignore .
+    $ cd /home/steve/myproject
+    $ svn propedit svn:ignore .
+    $ chmod 777 cache
+    $ chmod 777 log
 
 The default text editor configured for SVN should launch. If this doesn't happen, make subversion use your prefered editor by typing 
 
-    export SVN_EDITOR=<name of editor>
-    svn propedit svn:ignore .
+    $ export SVN_EDITOR=<name of editor>
+    $ svn propedit svn:ignore .
 
 Now simply add the subdirectories of `myproject` that SVN should ignore when committing:
 

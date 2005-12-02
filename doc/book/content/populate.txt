@@ -94,8 +94,8 @@ Create a `load_data.php` script in the `myproject/batch/` directory starting wit
 
 To launch the script, just type in a command line:
 
-    cd myproject/batch
-    php load_data.php
+    $ cd myproject/batch
+    $ php load_data.php
 
 This batch will put the two records labeled `bob_walter` and `peter_clive` in the database - provided that the database connection settings are properly entered in the `myproject/myapp/config/orm.yml` configuration file.
 
@@ -195,7 +195,6 @@ Alternate YAML syntax
 ---------------------
 
 YAML has an alternate syntax for associative arrays that may make your data files more readable, especially for the tables that contain many foreign keys:
-
 
     Comments:
       c123:

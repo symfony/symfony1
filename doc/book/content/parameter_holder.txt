@@ -13,7 +13,7 @@ When dealing with web requests, user sessions or custom business objects like sh
 
 The `sfRequest`, `sfUser` and `sfShoppingCart` objects, among other, have an attribute of class `sfParameterHolder` in which additional data can be stored and retrieved without any need to override the class.
 
-**Note**: the addition of an attribute holder to an object is made by a [composition][1] of the `sfParameterHolder` and the object, rather than by inheritance. This avoids problems during further extensions of the classes.
+>**Note**: the addition of an attribute holder to an object is made by a [composition][1] of the `sfParameterHolder` and the object, rather than by inheritance. This avoids problems during further extensions of the classes.
 
 The parameter holder class
 --------------------------
@@ -147,11 +147,11 @@ The `sfUser` object also has two parameter holders:
 
 * the **ParameterHolder** is not persistent; it is erased at every new request
 
-        $myPH = $this->getUser()->getParameterHolder();
+    $myPH = $this->getUser()->getParameterHolder();
 
 * the **AttributeHolder** keeps data throughout requests; you should use it as soon as you need persistent session data
 
-        $myPH = $this->getUser()->getAttributeHolder();
+    $myPH = $this->getUser()->getAttributeHolder();
 
 As for the `sfRequest` object, the `sfUser` objects has shortcut methods to access its parameter holders:
 

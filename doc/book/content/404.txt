@@ -30,7 +30,7 @@ You can specify a custom module and action in the `settings.yml` file:
 
 Just initialize the new module with:
 
-    symfony init-module myapp errors
+    $ symfony init-module myapp errors
 
 You need to create the action `error404` in the file `myproject/myapp/modules/errors/actions/Action.class.php`, and the template `error404Success.php` in the directory `myproject/myapp/modules/errors/templates/`. You now have full control over the content of your 404 error page.
 
@@ -39,14 +39,14 @@ Solution 2 : override the default template
 
 A simpler way to do it is to override the default `error404Success.php` template. It must be located in the `default` module, so create it if it doesn't exist already.
 
-    cd myapp/modules
-    mkdir default
+    $ cd myapp/modules
+    $ mkdir default
 
 Symfony will first look for an action or a template here before calling the default ones. So create a file called `error404Success.php` in a newly created `templates` directory, write whatever you need into it, and you're done.
 
-    cd default
-    mkdir templates
-    cd templates
-    vi "error404Success.php"
+    $ cd default
+    $ mkdir templates
+    $ cd templates
+    $ vi "error404Success.php"
 
 >**Note**: Why not use the `symfony init-module` here ? Because it would create an `Actions.class.php` file that would override all the actions of the default `default` module, including `index`, `login`, `disabled`, `secure` and `unavailable`. So using the `symfony init-module` command would imply _erasing_ the newly created `Actions.class.php` file to focus only on the template.
