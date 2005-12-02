@@ -156,6 +156,7 @@ There is no `constants.php` file in a default application configuration director
 
 Every path to a key directory is determined with a constant ending with `_DIR`. Here is an extract of the standard configuration file:
 
+    [php]
     // root directory structure
     define('SF_CACHE_DIR_NAME', 'cache');
     define('SF_LOG_DIR_NAME', 'log');
@@ -245,6 +246,7 @@ But if you want to use completely different factories, well, you can. Just modif
 
 The very first application configuration is actually found in the front controller. Take a look at this default `web/index.php`:
 
+    [php]
     <?php
     
     define('SF_ROOT_DIR', dirname(__FILE__).'/..');

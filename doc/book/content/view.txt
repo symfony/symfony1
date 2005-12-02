@@ -13,6 +13,7 @@ The result of an action execution is a View. In symfony, a View is the combinati
 
 Here is a typical template, typically named `indexSuccess.php`:
 
+    [php]
     <h1>Welcome</h1>
     <p>Welcome back, <?php echo $name ?> !</p>
     <ul>What would you like yo do ?
@@ -24,6 +25,7 @@ It contains some HTML code and some basic PHP code, usually calls to variables d
 
 The variables called in the templates must be either one of the usual shortcuts (see below) or attributes of the action object defined in the related action file. For instance, to define a value for the `$name` variable use here, the action must contain such a line:
 
+    [php]
     $this->name = 'myvalue';
 
 Developers like to keep as few PHP code as possible in templates, since these files are the ones used to design the GUI of the application, and are sometimes created and maintained by another team, specialized in presentation but not in applicative logic.
@@ -33,6 +35,7 @@ Shortcuts
 
 Symfony provides the templates with a few useful pre-defined variables, or **shortcuts**, allowing it to access the most commonly needed information:
 
+    [php]
     $context        //the whole context object
     $request        //the origin request 
     $params         //parameters of the origin request
@@ -41,15 +44,18 @@ Symfony provides the templates with a few useful pre-defined variables, or **sho
 
 For instance, if the action call included a parameter `total`, the value of the parameter is available in the template with:
 
+    [php]
     <?php echo $params->get('total'); ?>
 
 This is true whether the parameter was sent to the action with POST or GET methods, or using the symfony routing system:
 
+    [php]
     index.php/test/index&total=123   //GET
     index.php/test/index/total/123   //routed action call
 
 And since the first action call can lead to other action calls (for instance if there is a `forward`), you may need to access the action stack. A few additional shortcuts will make it easy for you:
 
+    [php]
     $first-module   //first module called
     $last-module    //last module called
     $first-action   //first action called
@@ -96,6 +102,7 @@ text and internationalization functions, you can write in the `settings.yml`:
 
 If you need to use a helper that is not loaded by default, the template that will use it has to call the `use_helper()` function:
 
+    [php]
     <?php echo use_helper('Date') ?>
     ...
     <?php echo format_date($date, 'd', 'en') ?>
@@ -105,6 +112,7 @@ Global template
 
 All the templates can be included into a **global template**, or **layout**, located in `myproject/myapp/templates/layout.php`. Here is its default content:
 
+    [php]
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/2000/REC-xhtml1-200000126/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
@@ -129,6 +137,7 @@ All the templates can be included into a **global template**, or **layout**, loc
 
 The content of the `<head>` tag might be a little cryptic for now, but if will be explained in detail in the [next chapter](templating_configuration.txt). Just keep in mind that with the default configuration, and our previous template, the processed view should look like this:
 
+    [php]
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/2000/REC-xhtml1-200000126/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
@@ -167,6 +176,7 @@ This is an implicit rule in symfony: if the value returned by the action is `sfV
 
 For instance, with two actions `index` and `list` in a `product` module :
 
+    [php]
     class productActions extends sfActions
     {
       public function executeIndex()
@@ -192,12 +202,14 @@ For any other return value (different from `sfView::NONE`), the template called 
 
 An action can also set an alternate template:
 
+    [php]
     $this->setTemplate('myCustomTemplate');
 
 According to the value returned by the action, the template called can be `myCustomTemplateSuccess.php` or `myCustomTemplateError.php`. 
     
 Now let's see all these possibilities in action:
 
+    [php]
     class productActions extends sfActions
     {
       public function executeIndex()
@@ -251,6 +263,7 @@ to the application `view.yml` located in `myapp/config/view.yml`:
 
 The above configuration would refer to a method in the test module:
 
+    [php]
     class testActions extends sfActions
     {
       ...
@@ -266,6 +279,7 @@ The above configuration would refer to a method in the test module:
 
 In the layout, you will now have in the `$nav_slot` variable the result of the execution of the `navigation` action of the `test` module. This action will be executed separately from the current action. The layout template of the application can now include the result of this action by simply calling:
 
+    [php]
     <?php echo $nav_slot ?>
 
 Suppose that you have a module that will not require the `nav_slot` defined above. You can simply turn off default slot execution in your modules `config/view.yml`.
@@ -315,12 +329,14 @@ If you need to include some template code into various pages, but without any pr
 
 For instance, if many of the templates of your `test` module use a fragment of code used to show a special footer, save this piece of code in a file called `_my_special_footer` in the `myproject/myapp/modules/test/templates` directory. Now, when you need this piece of code in a template, just call the `include_partial` function:
 
+    [php]
     <?php echo include_partial('my_special_footer') ?>
 
 Notice the '_' difference between the file name and the fragment name in the code. This helps to keep your code clean and to show the fragments ahead of the other templates in a file explorer.
 
 If your need is not restricted to one module, save your fragment in the main template directory (in `myproject/myapp/templates`). To call it from any module template, you now need:
 
+    [php]
     <?php echo include_partial('global/my_special_footer') ?>
 
 

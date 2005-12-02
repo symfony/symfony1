@@ -18,6 +18,7 @@ Let's illustrate the validation features of Symfony starting with a normal Conta
 
 In a newly created `contact` module, the first action to write is the one that displays the form by calling the default template:
 
+    [php]
     class contactActions extends sfActions
     {
       public function executeIndex()
@@ -28,6 +29,7 @@ In a newly created `contact` module, the first action to write is the one that d
 
 And the corresponding `indexSuccess.php` template contains:
 
+    [php]
     <?php echo form_tag('contact/send') ?>
       <label for="name">Name</label> : <?php echo input_tag('name') ?><br />
       <label for="email">Email</label> : <?php echo input_tag('email') ?><br />
@@ -40,6 +42,7 @@ If you wonder what  the `_tag()` functions do, you should probably take a look a
 
 To handle the form submission, the `send` action must be created. For this example, we just need the application to display an "OK" message after submission:
 
+    [php]
     class contactActions extends sfActions
     {
     
@@ -53,6 +56,7 @@ To handle the form submission, the `send` action must be created. For this examp
 
 The `sendSuccess.php` template just contains:
 
+    [php]
     Your message was sent to our services. The answer will be sent at <?php echo $email ?> 
 
 You can test the whole process of submitting the form and getting the confirmation, it already works fine. Except that if you try to enter invalid data in the fields, the action may very well crash. The fields do require validation.
@@ -107,6 +111,7 @@ The default behavior makes symfony call a predefined `handleError` method whenev
 
 But if you rather need the form to be displayed again with an error message, you need to override the default `handleError` method and end it with a redirection to the `index` action of the `contact` module. Add the following code to your contact actions:
 
+    [php]
     class ContactActions extends sfActions
     {
     
@@ -127,6 +132,7 @@ To address these two issues, you just need to modify the `indexSuccess.php` temp
 
 Since the *forward* method kept the original request, the template has access to the data entered by the user:
 
+    [php]
     <?php echo form_tag('contact/send') ?>
       <label for="name">Name</label> : <?php echo input_tag('name', $request->getParameter('name')) ?><br />
       <label for="email">Email</label> : <?php echo input_tag('email', $request->getParameter('email')) ?><br />
@@ -137,6 +143,7 @@ Since the *forward* method kept the original request, the template has access to
 
 You can detect whether the form has errors by calling the `->hasErrors()` method of the `sfRequest` object. To get the list of the error messages, you need the method `->getErrors()`. So you should add the following lines at the top of the template:
 
+    [php]
     <?php if ($request->hasErrors()): ?>
       <p>The data you entered seems to be incorrect.
       Please correct the following errors and resubmit:</p>
@@ -149,6 +156,7 @@ You can detect whether the form has errors by calling the `->hasErrors()` method
 
 Now you may suggest that the field with incorrect data should be highlighted, for instance with a repetition of the error message clearly attached to the label with a ↓. To that extent, simply add the following line before every field:
 
+    [php]
     <?php if ($request->hasError('name')): ?>↓ <?php echo $request->getError('name') ?> ↓<?php endif ?><br />
 
 Complete configuration file
@@ -239,6 +247,7 @@ Custom validator
 
 Each `Validator` is a particular class that can have certain parameters. If the validation classes shipped with Symfony are not enough for your needs, you can easily create new ones. Here is the example of a validation class for email addresses, the actually existing `sfEmailValidator`:
 
+    [php]
     class sfEmailValidator extends Validator
     {
       public function execute (&$value, &$error)

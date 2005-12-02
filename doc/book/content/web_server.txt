@@ -175,10 +175,12 @@ In the `settings.yml` configuration file of the application (located in `myproje
 
 Eventually, edit both front controllers (`myproject/web/admin/index.php` and `myproject/web/admin/admin_dev.php`) and change:
 
+    [php]
     define('SF_ROOT_DIR',    realpath(dirname(__FILE__).'/..'));
 
 to:
 
+    [php]
     define('SF_ROOT_DIR',    realpath(dirname(__FILE__).'/../..'));
     
 And this is enough to be able to access the `admin` application by:

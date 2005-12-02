@@ -15,35 +15,39 @@ All these helpers have a culture argument, which is the last argument and is opt
 
 First, declare the need of the helper at the top of your template:
 
+    [php]
     <?php use_helper('Date') ?>
 
 Here are two functions aimed at date and date plus time display:
 
+    [php]
     <?php echo format_date($date) ?>
     <?php echo format_date($date, 'd', 'en') ?>
-
+    
     <?php echo format_datetime($date) ?>
     
 The second argument is the format, that can be specified either with predefined patterns:
 
-     d                   ShortDatePattern        MM/dd/yyyy 
-     D                   LongDatePattern         dddd, dd MMMM yyyy 
-     F                   FullDateTimePattern     dddd, dd MMMM yyyy HH:mm:ss
-     m, M                MonthDayPattern         MMMM dd 
-     r, R                RFC1123Pattern          ddd, dd MMM yyyy HH':'mm':'ss 'GMT'
-     s                   SortableDateTimePattern yyyy'-'MM'-'dd'T'HH':'mm':'ss 
-     t                   ShortTimePattern        HH:mm 
-     T                   LongTimePattern         HH:mm:ss 
-     Y                   YearMonthPattern        yyyy MMMM 
+| d    | ShortDatePattern        | MM/dd/yyyy 
+| D    | LongDatePattern         | dddd, dd MMMM yyyy 
+| F    | FullDateTimePattern     | dddd, dd MMMM yyyy HH:mm:ss
+| m, M | MonthDayPattern         | MMMM dd 
+| r, R | RFC1123Pattern          | ddd, dd MMM yyyy HH':'mm':'ss 'GMT'
+| s    | SortableDateTimePattern | yyyy'-'MM'-'dd'T'HH':'mm':'ss 
+| t    | ShortTimePattern        | HH:mm 
+| T    | LongTimePattern         | HH:mm:ss 
+| Y    | YearMonthPattern        | yyyy MMMM 
 
 Or directly with the basic keys.
 
 For instance, to display the month with 2 digits and the year with 4, you can write:
 
+    [php]
     <?php echo format_date($date, 'MM/yyyy') ?>
 
 And if you have a date interval, another helper manages all the cases for you:
 
+    [php]
     <?php echo format_daterange($start_date, $end_date, 'MM/yy', 'from %s to %s', 'starting from %s', 'until %s') ?>
 
 The last three arguments specify the text to be used when:
@@ -61,6 +65,7 @@ Number helpers
 
 It is also possible to format a number:
 
+    [php]
     <?php use_helper('Number') ?>
     
     <?php echo format_number(12000.10) ?>
@@ -71,6 +76,7 @@ It is also possible to format a number:
     
 To format a monetary amount, use the `currency_format` function. It takes as optional argument the ISO currency code of your amount.
 
+    [php]
     <?php echo format_currency(12000.10, 'EUR') ?>
     // will generate in HTML for an American user
     €12,000.10
@@ -79,6 +85,7 @@ To format a monetary amount, use the `currency_format` function. It takes as opt
 
 The last two helpers are here to return a text version of the interval separating two dates:
 
+    [php]
     <?php echo distance_of_time_in_words($from_time, $to_time, $include_seconds = false) ?>
     <?php echo time_ago_in_words($from_time, $include_seconds = false) ?>
 
@@ -90,8 +97,9 @@ You will probably need to display country names, for instance in addresses. Coun
 
 In order to use the internationalization helpers, you must include the `I18N` helper module. 
 
+    [php]
     <?php use_helper('I18N') ?>
-
+      
     <?php echo format_country('GB') ?>    
     // will generate in HTML for an American user
     Great Britain
@@ -105,5 +113,3 @@ In order to use the internationalization helpers, you must include the `I18N` he
     anglais
 
 Countries and languages are often displayed in selection lists for data input in forms. If you do so, you shouldn't need the previous helpers since Sensio provides a `select_country_tag` helper, described in the [form helpers](templating_form_helpers.txt) chapter.
-    
-    

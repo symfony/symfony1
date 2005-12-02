@@ -39,11 +39,11 @@ Symfony needs a few other packages to run; some are included in the installation
 * [propel](http://propel.phpdb.org/trac/) : installed automatically (used for object/relational mapping)
 * [phing](http://phing.info/wiki/index.php) : requires manual installation
 
-    $ pear install http://phing.info/pear/phing-current.tgz 
+      $ pear install http://phing.info/pear/phing-current.tgz 
 
 To have a glimpse of all the tasks that you can perform directly with the command-line tool, type:
 
-     $ symfony -T
+    $ symfony -T
 
 Where are the symfony files ?
 -----------------------------
@@ -63,12 +63,12 @@ As a matter of fact, the exact location of files is not very important, since th
 
 Just as a reminder, the default locations for Unix and Windows are as follow:
 
-    Unix                             Windows
-    ----                             -------
-    usr/local/lib/php/symfony/       c:/Program Files/php/pear/symfony/       main executable, main libraries
-    usr/local/lib/php/data/symfony/  c:/Program Files/php/pear/data/symfony/  skeleton of symfony applications
-    usr/local/lib/php/doc/symfony/   c:/Program Files/php/pear/doc/symfony/   documentation
-    usr/local/lib/php/test/symfony/  c:/Program Files/php/pear/test/symfony/  unit tests
+Unix                            | Windows                                 |
+------------------------------- | --------------------------------------- | --
+usr/local/lib/php/symfony/      | c:/Program Files/php/pear/symfony/      | main executable, main libraries
+usr/local/lib/php/data/symfony/ | c:/Program Files/php/pear/data/symfony/ | skeleton of symfony applications
+usr/local/lib/php/doc/symfony/  | c:/Program Files/php/pear/doc/symfony/  | documentation
+usr/local/lib/php/test/symfony/ | c:/Program Files/php/pear/test/symfony/ | unit tests
 
 Getting nightly builds
 ----------------------
@@ -150,10 +150,10 @@ To learn more about the file structure of symfony projects, read the [related ch
 
 Now you need to copy some files from the symfony package into your project directory. First, create a `symfony` subdirectory in the `data` and `lib` directories of your distant project. Then, transfer the files as follow:
 
-            local                            distant
-            -----                            -------
-    copy    symfony/data/*            to     myproject/data/symfony/
-    copy    symfony/lib/*             to     myproject/lib/symfony/  
+     | local          |    | distant
+---- | -------------- | -- | -------
+copy | symfony/data/* | to | myproject/data/symfony/
+copy | symfony/lib/*  | to | myproject/lib/symfony/  
     
 You're done : the distant project should now work.
 

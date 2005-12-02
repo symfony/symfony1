@@ -15,6 +15,7 @@ Symfony has a debug mode that facilitates the development and the debug. When it
 
 As the debug mode has to be set very early in the process of answering a request, it is not defined in a YAML configuration file but in the front controller. For instance, if your main application is called `myapp`, you probably have in the `myproject/web` two PHP scripts with a different debug mode configuration:
 
+    [php]
     // in index.php, the production front controller,
     // the debug mode is deactivated
     define('SF_DEBUG', false);
@@ -161,6 +162,7 @@ Getting access to the framework debug messages is good, but being able to log yo
 
 You can manually add a message in the log file (and, consequently, to the log messages table):
 
+    [php]
     // in an action
     $this->logMessage($message, $level);
     // in a template
@@ -168,6 +170,7 @@ You can manually add a message in the log file (and, consequently, to the log me
 
 If you use the template version, don't forget to declare the use of the `Debug` helper. The `$level` can have the same values as in the log messages (`emerg`, `alert`, `crit`, `err`, `warning`, `notice`, `info` and `debug`). For instance, if your `indexSuccess.php` template of the `main` module looks like:
 
+    [php]
     <?php use_helper('Debug') ?>
     ...
     <?php if ($problem): ?>
@@ -187,6 +190,7 @@ The red color of the header shows that at least one message of `err` level was r
 
 If you don't want to add a line to the debug log, but just trace an short message or a value, you should use `debug_message` instead of `log_message`. The message will appear directly at the bottom of the web debug toolbar.
 
+    [php]
     // in an action
     <?php echo debug_message($message) ?> 
     // in a template
@@ -194,6 +198,7 @@ If you don't want to add a line to the debug log, but just trace an short messag
 
 For instance, for a template call:
 
+    [php]
     <?php use_helper('Debug') ?>
     ...
     <?php if ($problem): ?>

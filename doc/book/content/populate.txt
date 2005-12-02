@@ -22,6 +22,7 @@ Imagine a project where registered users are stored in a `User` table with the f
 
 The `User` Propel object contains standard accessors. For this example project, a `->setPassword()` method that sets the value of the `hashed_password` field from a password in clear is added to the `myproject/lib/model/User.class.php` class file:
 
+    [php]
     class User extends BaseUser
     { 
       ...
@@ -70,6 +71,7 @@ Import Batch
 
 An import batch is a PHP script that reads the data from YAML files and transfers it to the database. Since it has to access the Propel classes and use the symfony configuration, such a script must start just like any front controller:
 
+    [php]
     <?php
     
     define('SF_ROOT_DIR',    realpath(dirname(__FILE__).'/..'));
@@ -87,6 +89,7 @@ The `sfPropelData` is an object who knows how to read a YAML data file and use i
 
 Create a `load_data.php` script in the `myproject/batch/` directory starting with the previous lines, plus the following ones:
 
+    [php]
     $data = new sfPropelData();
     $data->loadData(SF_DATA_DIR.'/fixtures');
 
@@ -103,10 +106,12 @@ This batch will put the two records labeled `bob_walter` and `peter_clive` in th
 
 By default, the `->loadData()` method will not only add the records from the YAML files given as parameters, it will also erase the existing records in the tables that are modified. To change this behavior, you need to set the `deleteCurrentData` property to false before calling the `->loadData()` method:
 
+    [php]
     $data->setDeleteCurrentData(false);
  
 To get the current value of the `deleteCurrentData` property, use the associated getter:
 
+    [php]
     $status = $data->getDeleteCurrentData(false);
 
 Linked tables
@@ -185,10 +190,12 @@ It is getting quite long. Symfony allows you to cut the file in pieces, that wil
 
 The same `->loadData()` method call still works, since the parameter was a directory:
 
+    [php]
     $data->loadData(SF_DATA_DIR.'/fixtures');
 
 You can, if you wish, use only one of these files for the batch:
 
+    [php]
     $data->loadData(SF_DATA_DIR.'/fixtures/100_user_import_data.yml');
 
 Alternate YAML syntax

@@ -11,6 +11,7 @@ User identification
 
 The authenticated status of the user is set by the `->setAuthenticated()` method of a `sfUser/myUser` object. For instance, if you need to implement a simple version of user identification in a module called `myAccount` with two actions `login` and `logout`, you can write: 
 
+    [php]
     class myAccountActions extends sfActions
     {
       public function executeLogin()
@@ -32,6 +33,7 @@ User credentials
 
 For authenticated users, symfony provides an array of credentials in the `sfUser` class that can be set via simple access methods `has`, `add`, `remove` and `clear`. Each credential can have any value.
 
+    [php]
     $user = $this->getUser();
     // add a credential
     $user->addCredential($credential);
@@ -50,6 +52,7 @@ For authenticated users, symfony provides an array of credentials in the `sfUser
 
 Here is an example of credential definition:
 
+    [php]
     class myAccountActions extends sfActions
     {
       public function executeLogin()

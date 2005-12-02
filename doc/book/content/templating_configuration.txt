@@ -66,6 +66,7 @@ Default configuration
 
 The default global template created when you initialize an application, is called `layout.php` and looks like this:
 
+    [php]
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/2000/REC-xhtml1-200000126/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
@@ -112,6 +113,7 @@ The default settings of the view, set in the application view configuration file
 
 When applied to the layout, these settings produce the following `<head>` section:
 
+    [php]
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/2000/REC-xhtml1-200000126/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
@@ -157,6 +159,7 @@ To set these parameters for a modules, use these keys in a `view.yml` file:
 
 To modify these settings from within an action, use these functions:
 
+    [php]
     $this->addHttpMeta($key, $value)
     $this->addMeta($key, $value)
 
@@ -173,12 +176,14 @@ Let's image that you display an article about finance in France that will not ch
 
 Or, alternatively, call in the action:
 
+    [php]
     $this->addHttpMeta('cache-control', 'public');
     $this->addMeta('description','Finance in France');
     $this->addMeta('keywords', 'finance, France');
 
 When the template is included in the layout, the `include_` helpers of the `<head>` part will give:
 
+    [php]
     <meta http-equiv="cache-control" content="public">
     <meta name="description" content="Finance in France" />
     <meta name="keywords" content="finance, France" />   
@@ -210,6 +215,7 @@ If your title only depends on the view, you should specify `title` in the `view.
 
 On the other hand, if an action can give pages with various titles, you should use the  `setTitle($title)` function:
 
+    [php]
     $this->setTitle($title);
 
 >**Note**: the `<meta name="title"...` is not modified by the `setTitle` function. Modify the `head.yml` or use the `addMeta` function if you want to change it.
@@ -224,6 +230,7 @@ To include a specific stylesheet or a specific javascript file in the view confi
 
 To do it from an action, use:
 
+    [php]
     $this->addStylesheet($css);
     $this->addJavascript($js);
 
@@ -237,6 +244,7 @@ For instance, in an action called `subscribe` using a calendar widget, the view 
 
 Alternatively, you could require the files from the action with:
 
+    [php]
     $this->addStylesheet('calendar/skins/aqua/theme');
     $this->addJavascript('calendar/calendar_stripped');
     $this->addJavascript('calendar/calendar-en');
@@ -244,6 +252,7 @@ Alternatively, you could require the files from the action with:
 
 The `<head>` of the resulting view would then show:
 
+    [php]
     <link rel="stylesheet" type="text/css" media="screen" href="/js/calendar/skins/aqua/theme.css" />
     <script language="javascript" type="text/javascript" src="/js/calendar/calendar_stripped.js"></script>
     
@@ -263,6 +272,7 @@ If you need to use a different layout for a view, use:
 
 Or in the action:
 
+    [php]
     $this->setLayout($layoutname);
 
 For instance, if all the actions of the `rules` module use the `content.php` layout, except the `securitypolicy` action for which you need the `popup.php` layout, you can write:
@@ -275,6 +285,7 @@ For instance, if all the actions of the `rules` module use the `content.php` lay
 
 The same is possible in the `Actions.class.php` file:
 
+    [php]
     class rulesActions extends sfActions
     {
       public function preExecute()
@@ -295,6 +306,7 @@ Some views don't need any layout at all (for instance plain text pages). In that
 
 Or, in the action:
 
+    [php]
     $this->hasLayout(false);
 
 Slots configuration
@@ -307,10 +319,12 @@ Common interface components with dynamic content (breadcrumbs, navigation bars, 
 
 Alternatively, in an action:
 
+    [php]
     $slotname = $this->setSlot($module, $action);
     
 Imagine that you have a layout with a zone for contextual advices:
 
+    [php]
     ...
     <div id="adviceBlock">
       <?php echo $advices ?>

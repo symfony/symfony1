@@ -56,6 +56,7 @@ For instance, if your `app.yml` contains:
 
 Then the file `config_app.yml.php`, located in the `cache` folder of your project, will contain:
 
+    [php]
     <?php
     @define('APP_MAIL_WEBMASTER', 'webmaster@mysite.com');
     ?>

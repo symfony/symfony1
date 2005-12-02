@@ -22,6 +22,7 @@ Some helpers are here to facilitate the writing of form tags, especially since t
 
 To create a form, you have to use the symfony `form_tag` function since it transforms the action given as a parameter into a routed URL:
 
+    [php]
     <?php echo form_tag('test/save') ?>
     // will generate in HTML
     <form method="post" enctype="multipart/form-data" action="http://www.mysite.com/index.php/test/save">
@@ -30,6 +31,7 @@ This will route the form to the `save` action of the `test` module. You can lear
 
 To change the default `method`, the default `enctype` or to specify other attributes, use  the second argument:
 
+    [php]
     // options argument with the associative array syntax
     <?php echo form_tag('test/save', Array('method' => 'get', 'id' => 'myForm', 'class' => 'simpleForm')) ?>
     // options argument with the string syntax
@@ -46,18 +48,21 @@ Here are the standard form element helpers:
 
  * text field (input):
 
+        [php]
         <?php echo input_tag('name', 'default value') ?>
         // will generate in HTML
         <input type="text" name="name" id="name" value="default value" />
 
  * long text field (textarea):
 
+        [php]
         <?php echo textarea_tag('name', 'default content', 'size=10x20')) ?>
         // will generate in HTML
         <textarea name="name" id="name" rows="20" cols="10">default content</textarea>
 
  * checkbox:
 
+        [php]
         <?php echo checkbox_tag('married', '1', true) ?>
         <?php echo checkbox_tag('driverslicence', 'B', false) ?>
         // will generate in HTML
@@ -66,6 +71,7 @@ Here are the standard form element helpers:
 
  * radio button:
 
+        [php]
         <?php echo radiobutton_tag('status', 'value1', true) ?>
         <?php echo radiobutton_tag('status', 'value2', false) ?>
         // will generate in HTML
@@ -76,6 +82,7 @@ Here are the standard form element helpers:
 
  * value selection field (select):
 
+        [php]
         <?php echo select_tag('name', options_for_select(Array('Steve' => '0', 'Bob' => '1', 'Albert' => '2', 'Ian' => '3', 'Buck' => '4'), 3)) ?>
         // will generate in HTML
         <select name="name" id="name">
@@ -85,7 +92,7 @@ Here are the standard form element helpers:
           <option value="3" selected="selected">Ian</option>
           <option value="4">Buck</option>
         </select>
-
+        
         // When the value is the same as the text to display, use an array instead of an associative array
         <?php echo select_tag('payment', options_for_select(Array('Visa', 'Eurocard', 'Mastercard'), 'Visa')) ?>
         // will generate in HTML
@@ -113,30 +120,35 @@ Here are the standard form element helpers:
 
  * field to upload a file:
 
+        [php]
         <?php echo input_file_tag('name') ?>
         // will generate in HTML
         <input type="file" name="name" id="name" value="" />
 
  * field to enter a password:
 
+        [php]
         <?php echo input_password_tag('name', 'value') ?>
         // will generate in HTML
         <input type="password" name="name" id="name" value="value" />
 
  * hidden field:
 
+        [php]
         <?php echo input_hidden_tag('name', 'value') ?>
         // will generate in HTML
         <input type="hidden" name="name" id="name" value="value" />
 
  * submit button (as text):
 
+        [php]
         <?php echo submit_tag('Save') ?>
         // will generate in HTML
         <input type="submit" name="submit" value="Save" />
 
  * submit button (as image):
 
+        [php]
         <?php echo submit_image_tag('submit_img') ?>
         // will generate in HTML
         <input type="image" name="submit" src="/images/submit_img.png" />
@@ -148,29 +160,32 @@ Rich form elements
 
 Forms are often used to get **dates**. Date format is also culture dependent, and wrong dates is the main reason of unvalidated forms. The `input_date_tag` can assists the user with a javascript calendar:
 
-        <?php echo input_date_tag('dateofbirth', '2005-05-03', 'rich=true') ?>
-        // will generate in HTML
-        // a text input tag together with a calendar widget
+    [php]
+    <?php echo input_date_tag('dateofbirth', '2005-05-03', 'rich=true') ?>
+    // will generate in HTML
+    // a text input tag together with a calendar widget
 
 The last argument specifies that the rich form has to be used. If it was set to `false` (which is the default value), the normal date entry widget (three text inputs for day, month and year) would be used in place.
 
 **Rich text editing** in a textarea is also possible, since symfony implements the [TinyMCE](http://tinymce.moxiecode.com/) widget that inputs html code:
 
-        <?php echo textarea_tag('name', 'default content', 'rich=true size=10x20')) ?>
-        // will generate in HTML
-        // a rich text edition zone powered by TinyMCE
+    [php]
+    <?php echo textarea_tag('name', 'default content', 'rich=true size=10x20')) ?>
+    // will generate in HTML
+    // a rich text edition zone powered by TinyMCE
 
 You will probably need to display a **country selection field**. The `select_country_tag` helper can do it for you; it uses the default culture to choose in which language the countries will be displayed.
 
-        <?php echo select_country_tag('country', 'Albania') ?>
-        // will generate in HTML
-        <select name="country" id="country">
-          <option>Afghanistan</option>
-          <option selected="selected">Albania</option>
-          <option>Algeria</option>
-          <option>American Samoa</option>
-          <option>Andorra</option>
-          ...
+    [php]
+    <?php echo select_country_tag('country', 'Albania') ?>
+    // will generate in HTML
+    <select name="country" id="country">
+      <option>Afghanistan</option>
+      <option selected="selected">Albania</option>
+      <option>Algeria</option>
+      <option>American Samoa</option>
+      <option>Andorra</option>
+      ...
 
 Form helpers for objects
 ------------------------
@@ -179,6 +194,7 @@ In many cases form elements are linked to fields in a database table. As you use
 
 The simple text input tag now looks like:
 
+    [php]
     <?php echo object_input_tag($customer, 'getTelephone') ?>
     // will generate in HTML
     <input type="text" name="getTelephone" id="getTelephone" value="0123456789" />
@@ -187,6 +203,7 @@ The simple text input tag now looks like:
 
 So simply add the `object_` prefix in front of the name of the form helpers to get the name of the related object form helper:
 
+    [php]
     object_input_tag($object, $method, $options)
     object_textarea_tag($object, $method, $options)
     object_checkbox_tag($object, $method, $options)
@@ -194,20 +211,22 @@ So simply add the `object_` prefix in front of the name of the form helpers to g
 
 The most useful helper of this type is the `object_select_tag`, since it can get the list of values from another table. For instance, imagine that you have an `Article` and an `Author` table, where one or more articles are written by one author. This means that the `Article` table has a `author_id` column:
 
-| Article   |   | Author |
-| --------- |-- | ------ |
-| id        |   | id     |
-| author_id |   | name   |
-| title     |   |        |
+| Article   | Author |
+| --------- | ------ |
+| id        | id     |
+| author_id | name   |
+| title     |        |
 
 Now, picture a form built to edit the data of an article. There is an easy way to get the list of the author names when editing the `AuthorId` column:
 
+    [php]
     object_select_tag($article, 'getAuthorId', 'related_class=Author')
 
 Symfony will use the `->toString()` method of the `Author` class to display the names of the authors in a list. If the method is undefined, the primary key (in the example, the `id` column) of the `Author` table is used instead.
 
 A few other options can define the content of an object select tag. `include_title` and `include_blank` allow to add a title or a first empty line to the list:
 
+    [php]
     object_select_tag($article, 'getAuthorId', 'related_class=Author')
     object_select_tag($article, 'getAuthorId', 'related_class=Author include_blank')
     object_select_tag($article, 'getAuthorId', 'related_class=Author include_title')
@@ -228,6 +247,7 @@ The object relational mapping given by Propel allows you to easily modify a reco
 
 For instance, if you have an object `Author` with attributes `name`, `age` and `address`, and that you created a template looking like:
 
+    [php]
     <?php echo form_tag('author/update') ?>
     Name : <?php echo object_input_tag($author, 'getName') ?><br />
     Age : <?php echo object_input_tag($author, 'getAge') ?><br />
@@ -237,6 +257,7 @@ For instance, if you have an object `Author` with attributes `name`, `age` and `
 
 Then the `update` action of the `author` module can simply use the `fromArray` modifier:
 
+    [php]
     public function executeUpdate ()
     {
       $author = AuthorPeer::retrieveByPk($this->getRequestParameter('id'));

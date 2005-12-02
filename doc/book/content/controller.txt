@@ -11,6 +11,7 @@ Front controller
 
 All web requests are handled by a single **front controller**, which is the unique entry point to the whole application in a given environment. The default front controller, called `index.php` and located in the `myproject/myapp/web/` directory, is a simple PHP file:
 
+    [php]
     <?php
     
     define('SF_ROOT_DIR',    realpath(dirname(__FILE__).'/..'));
@@ -58,6 +59,7 @@ Actions are located in files called `actions.class.php` found in the `actions` s
 
 So let's imagine that you created a module called `mymodule` in your `myapp` application using the `symfony` command. The default file `actions.class.php` located in the `myapp/modules/mymodule/actions/` directory defines a single action called `index`, and it looks like that:
 
+    [php]
     class mymoduleActions extends sfActions
     {
       public function executeIndex()
@@ -88,6 +90,7 @@ So let's try to call the `index` action:
 
 This new action seems to do absolutely nothing. But it can easily communicate with the view using public variables:
 
+    [php]
     class testActions extends sfActions
     {
       public function executeIndex()
@@ -98,6 +101,7 @@ This new action seems to do absolutely nothing. But it can easily communicate wi
 
 In this example, the `Index` action gives the view the opportunity to use a variable called `mytext`. In the view (the result of the action), the variable will be called like this:
 
+    [php]
     Text: <?php echo $mytext ?>
 
 But you may wonder how the action can choose the view to display its content, since it apparently does nothing. The answer is in the Action return. And, for your information, the action in this example actually did something: it called the default view.
@@ -109,32 +113,39 @@ Various behaviors are possible at the end of the execution of an action:
 
 *   if there is a default view to call (this is the most common case):
 
+        [php]
         return sfView::SUCCESS;
 
 *   if there is an error view to call:
 
+        [php]
         return sfView::ERROR;
 
 *   if there is a non-default view to call:
 
+        [php]
         return 'MyResult';
 
 *   if there is no view to call, for instance in the case of an action executed in a batch process:
  
+        [php]
         return sfView::NONE; 
 
 *   if there is no view to call, but a value to return:
  
+        [php]
         return sfView::VAR;
 
     The returned value can be read with `$controller->getActionStock()->getFirstEntry()->getPresentation()`. This is mostly useful for unit testing (see more in the chapter dealing with the [sfTestBrowser](#))
 
 *   if the action forwards the call to another action:
 
+        [php]
         $this->forward('otherModule', 'index');
 
 *   if the action results in a web redirection:
 
+        [php]
         $this->redirect('/otherModule/index');
         $this->redirect('http://www.google.com/');
 
@@ -149,6 +160,7 @@ The actions are grouped in a logical way inside modules, in a directory structur
 
 For instance, if you have two actions `index` and `list` in a module called `product`, the file `actions.class.php` located in `myapp/modules/product/actions/` will have the following structure:
 
+    [php]
     class productActions extends sfActions
     {
       public function executeIndex()
@@ -165,6 +177,7 @@ If your module has several actions and if the size of the code of an action grow
 
 *   file `myapp/modules/product/actions/indexAction.class.php`:
 
+        [php]
         class indexAction extends sfAction
         {
           public function execute()
@@ -175,6 +188,7 @@ If your module has several actions and if the size of the code of an action grow
 
 *   file `myapp/modules/product/actions/listAction.class.php`:
 
+        [php]
         class listAction extends sfAction
         {
           public function execute()
@@ -187,6 +201,7 @@ If your module has several actions and if the size of the code of an action grow
 
 If you need to repeat several statements in each action before starting, or if you have similar slot inclusions for all (see below for the definition of *slots*), you should probably extract them into the `preExecute()` method of your action class:
 
+    [php]
     class productActions extends sfActions
     {
       public function preExecute()

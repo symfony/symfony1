@@ -13,6 +13,7 @@ The `sfShoppingCart` class is aimed to manage shopping carts. It can contain any
 
 The constructor allows to declare the tax rate to apply to the shopping cart:
 
+    [php]
     $my_shopping_cart = new sfShoppingCart(APP_CART_TAX);
 
 In this example, the shopping cart tax rate is written in the `app.yml` configuration file of the application for easy change:
@@ -26,6 +27,7 @@ Create a user shopping cart
 
 You can easily create a new `sfShoppingCart` object in an action with the `new` constructor. However, it will not be of any use if it is not linked to a user session. The easiest way to keep a user's choice in a shopping cart is to make a [composition][1] of an `sfShoppingCart` object into the `sfUser` class. To do that, add a custom method to the `myproject/myapp/lib/myUser.php` class:
 
+    [php]
     class myUser extends sfUser
     {
       public function getShoppingCart()
@@ -56,6 +58,7 @@ To modify the quantity of one item, first get the `sfShoppingCartItem` object it
 
 Here is a possible module implementation of the shopping cart management where objects of class 'Product' (representing products) can be added, modified or suppressed with the actions 'add', 'update' and 'delete':
 
+    [php]
     class shoppingcartActions extends sfActions
     {
       ...
@@ -123,6 +126,7 @@ To add an item to the shopping cart, you call the `->addItem()` method, passing 
 
 The price is stored at this moment to avoid difference of price between the product addition and the checkout if a product price is modified in between in a back-office (or if the cart can be kept between sessions). This also allows to apply price discount according to the amount ordered by the client:
 
+    [php]
     if ($quantity > 10)
     {
       $item->setPrice($product->getPrice() * 0.8);
@@ -134,6 +138,7 @@ The price is stored at this moment to avoid difference of price between the prod
 
 The problem is that you loose the original price if you apply the discount this way. That's why the the `sfShoppingCartItem` object has a `->setDiscount()` method that expects a discount percentage:
 
+    [php]
     if ($quantity > 10)
     {
       $item->setPrice($product->getPrice());
@@ -150,6 +155,7 @@ To change the quantity of an item, use the method `->setQuantity()` of the `sfSh
 
 If a user adds the same item (same class and same id) several times, the shopping cart will increase the quantity of the item and not add a new one:
 
+    [php]
     $item = new sfShoppingCartItem('Product', $this->getRequestParameter('id'));
     $item->setQuantity(1);
     $item->setPrice($product->getPrice());
@@ -171,6 +177,7 @@ Eventually, you may wonder why the `update` action uses arguments like 'quantity
 
 To reset the shopping cart, simply call the `->clear()` method of the `sfShoppingCart` instance.
 
+    [php]
     $this->getUser()->getShoppingCart()->clear();
 
 Display the shopping cart in a template
@@ -190,6 +197,7 @@ Shopping cart items also have a [parameter holder](parameter_holder.txt). This m
 
 For instance, in a website that sells auto parts, the `sfShoppingCartItem` objects need to store the objects added, but also the vehicle for which the part was bought. This can be simply done by adding:
 
+    [php]
     $item->setParameter('vehicle', $vehicle_id);
 
 >**Note**: you may need a `->getObjects()` method instead of `->getItems()`. This method exists but it relies on the [Propel][2] data access layer. As the use of Propel is optional, you might not be able to use it. Learn more about the data access layer in the [model chapter](model.txt).
@@ -198,12 +206,14 @@ For instance, in a website that sells auto parts, the `sfShoppingCartItem` objec
 
 In order to display the content of the shopping cart, the `index` action has to define a few variables accessible to the template:
 
+    [php]
     ...
     $this->shopping_cart = $shopping_cart;
     $this->items = $shopping_cart->getItems();
 
 The following example shows a simple `indexSuccess.php` template based on an iteration over all the items of the shopping cart to display information about each of them:
 
+    [php]
     <?php if ($shopping_cart->isEmpty()): ?>
     
       Your shopping cart is empty.
@@ -233,10 +243,12 @@ By default, all the operations (addition with `$shopping_cart->addItem()`, acces
 
 To get the total amount with taxes, you have to call:
 
+    [php]
     $total_with_taxes = $shopping_cart->getTotalWithTaxes()
 
 If you need it, the `sfShoppingCart` object can be initialized so that the `add` and `get` methods use the price including taxes:
 
+    [php]
     class myUser extends sfUser
     {
       public function getShoppingCart()
@@ -263,8 +275,8 @@ Once again, it is a good habit to keep the tax configuration in a configuration 
 
 If you are unsure of the way taxes are handled, just ask the shopping cart:
 
+    [php]
     $uses_tax = $shopping_cart->getUnitPriceWithTaxes();
-
 
 [1]: http://en.wikipedia.org/wiki/Object_composition    "Object composition definition at Wikipedia"
 [2]: http://propel.phpdb.org/trac/  "Propel"

@@ -21,6 +21,7 @@ To add custom helpers available to your templates, simply create a PHP file endi
 
 To use a custom helper in a template, you must first declare it on top of the template, as for other helpers:
 
+    [php]
     <?php use_helper('Name') ?>
 
 ### Example
@@ -29,6 +30,7 @@ Let's imagine that your application uses the wiki syntax to format the data ente
 
 Here is the `WikiHelper.php` file stored in the `myapp/lib/helper/` directory:
 
+    [php]
     <?php
     
     public function wiki_to_html($text)
@@ -42,6 +44,7 @@ Here is the `WikiHelper.php` file stored in the `myapp/lib/helper/` directory:
 
 Here is an example template using the helper:
 
+    [php]
     <?php use_helper('Wiki') ?>
     ...
     <p><?php echo wiki_to_html('Text with a WikiLink.') ?></p>
@@ -63,6 +66,7 @@ If you need to extend your actions by a custom class, you can take advantage of 
 
 For instance, create a new `myTools.class.php` under the `myproject/lib/` directory:
 
+    [php]
     class myTools
     {
       public static function stripText($text)
@@ -85,7 +89,8 @@ For instance, create a new `myTools.class.php` under the `myproject/lib/` direct
     
 Now, from any action of your project, you can use the `stripText` method of this class without declaring it previously. Just ask:
 
-    $my_tripped_text = myTools::stripText($my_text);
+    [php]
+    $my_stripped_text = myTools::stripText($my_text);
 
 ...and symfony will load the `myTools` class automatically.
 
@@ -94,4 +99,5 @@ Accessing context objects
 
 In a custom helper, shortcuts like `$request` or `$user` don't work. In a custom class, the action-style calls (`$this->getRequest()`, `$this->getUser()`, etc.) don't work either. This is because these functions and classes are not in a request context. So, in order to access the context objects, you have to use the `sfContext` singleton (`sfContext::getInstance()`). For instance, to get the request parameters, write:
 
+    [php]
     $id = sfContext::getInstance()->getRequest()->getParameter('id');

@@ -22,6 +22,7 @@ The `sfParameterHolder` object is an extensible repository for data of any kind 
 
 The `->set($key,$value)` and `->get($key, $default_value)` methods are used to set a new parameter and get its value.
 
+    [php]
     $myPH = new sfParameterHolder();
     
     $myPH->set('weather','sunny');
@@ -32,21 +33,25 @@ The `->set($key,$value)` and `->get($key, $default_value)` methods are used to s
 
 The `->has($key)` method is used to check if a parameter exists.
 
+    [php]
     $myPH->has('temperature')         =>  true
     $myPH->has('humidity')            =>  false
 
 The `->getAll()` method is used to get all the parameters as an associative array. The `->getNames()` method is used to get only the names of the parameters hold:
 
+    [php]
     $myPH->getAll()                   =>   { 'weather' => 'sunny' , 'temperature' => 'cool' }
     $myPH->getNames()                 =>   [ 'weather' , 'temperature' ]
 
 If you need to add several parameters at once, use the `->add()` method with an associative array as argument:
 
+    [php]
     $myParameters = { 'humidity' => 0.8, 'forecast' => $forecast };
     $myPH->add($myParameters);
 
 Use the `->remove($key)` method to delete one parameter and its key, or the `->clear()` method to reset the whole parameter holder.
 
+    [php]
     $myPH->remove('temperature');
     $myPH->has('temperature')         =>  false
 
@@ -55,6 +60,7 @@ Namespaces
 
 Parameter holders also have the ability to deal with namespaces. The namespaces are completely isolated from each other. When no namespace is precised, as in the examples above, the default namespace 'symfony/default' is used.
 
+    [php]
     $myPH->set('weather','sunny');
     $myPH->set('weather','foggy','symfony/my/namespace');
     
@@ -65,10 +71,12 @@ Parameter holders also have the ability to deal with namespaces. The namespaces 
 
 The `->getAll()` method is limited to a namespace. Without any argument, it returns the parameters of the default namespace. If a namespace is passed as an argument, only the parameters of this namespace are returned:
 
+    [php]
     $myPH->getAll('symfony/my/namespace') =>  { 'weather', 'foggy' }
 
 The `->hasNamespace($ns)`, `->getNamespaces()` and `->removeNamespace($ns)` work as you imagine they do:
 
+    [php]
     $myPH->hasNamespace('symfony/my/namespace')       =>  true
     $myPH->hasNamespace('symfony/other')              =>  false
     
@@ -79,6 +87,7 @@ The `->hasNamespace($ns)`, `->getNamespaces()` and `->removeNamespace($ns)` work
 
 If you want that all the `sfParameterHolder` methods use a default namespace different from 'symfony/default', you have to set it during initialization:
 
+    [php]
     $mySpecialPH = new sfParameterHolder('symfony/special');
     $mySpecialPH->getNamespaces()                     => ['symfony/special']
 
@@ -89,16 +98,19 @@ The `sfRequest` object has two prebuilt parameter holders, and convenient shortc
 
 * the **ParameterHolder** contains the parameters of the request (passed as GET, POST or via the symfony routing policy). They can be read but not written.
 
+        [php]
         $myPH = $this->getRequest()->getParameterHolder();
 
 * the **AttributeHolder** can pass data between the action and the template, or between several actions; it is erased at every new request
 
+        [php]
         $myPH = $this->getRequest()->getAttributeHolder();
 
 They are both of class `sfParameterHolder`.
 
 As a matter of fact, the logic of the parameter holders is almost hidden since the `sfAction` and the `sfRequest` objects have shortcuts that bypass the parameter holder logic.
 
+    [php]
     $param = $this->getRequestParameter('param','default');
     //is equivalent to
     $param = $this->getRequest()->getParameter('param','default');
@@ -124,10 +136,12 @@ For instance, if you need to get the parameter `id` in a request called by:
     
 You simply need to write, in the action `read` of the `article` module:
 
+    [php]
     $id = $this->getRequestParameter('id',null);
 
 Now let's imagine that you need to display a list in two columns. The switch to the second column must occur after the fifth element is displayed. Your template would look like:
 
+    [php]
     <table><tr><td><ul>
     <?php $request->setAttribute('itemsdisplayed', 0) ?>
     <?php foreach ($items as $item): ?>
@@ -147,14 +161,17 @@ The `sfUser` object also has two parameter holders:
 
 * the **ParameterHolder** is not persistent; it is erased at every new request
 
+    [php]
     $myPH = $this->getUser()->getParameterHolder();
 
 * the **AttributeHolder** keeps data throughout requests; you should use it as soon as you need persistent session data
 
+    [php]
     $myPH = $this->getUser()->getAttributeHolder();
 
 As for the `sfRequest` object, the `sfUser` objects has shortcut methods to access its parameter holders:
 
+    [php]
     $this->getUser()->setAttribute('attrib', $value);
     //is equivalent to
     $this->getUser()->getAttributeHolder()->set('attrib', $value);  

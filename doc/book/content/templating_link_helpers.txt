@@ -20,6 +20,7 @@ The way to call an action with an URL has already been explained: put the module
 
 Imagine that you want to add a hyperlink to this page in a template. In PHP, you could be tempted to write:
 
+    [php]
     <a href="/index.php/article/read?title=Finance_in_France">Finance in France</a>
 
 This is a bad idea, because: 
@@ -27,7 +28,8 @@ This is a bad idea, because:
 * by writing `index.php`, you point to a particular environment (in this case, the production environment). All links must be environment-independent if you don't want to accidentally change environment while navigating
 * if you later decide to change the **routing** policy (you can learn more about this feature in the [routing chapter](routing.txt) chapter), and to display another format of URL, you would have to parse all of your template files and replace by hand the URLs already entered to URLs like:
 
-            <a href="/index.php/articles/europe/france/finance.html">Finance in France</a>
+          [php]
+          <a href="/index.php/articles/europe/france/finance.html">Finance in France</a>
 
 If you ever built a website, you know that these problems occur all the time.
 
@@ -40,6 +42,7 @@ Link helpers
 
 The `url_for()` helper returns an URL, the `link_to()` helper returns a hyperlink. You may never use the first one, but you will use `link_to()` a lot.
 
+    [php]
     <?php echo url_for('article/read?title=Finance_in_France') ?>
     // will generate in HTML
     http://myapp.example.com/index.php/article/read/title/Finance_in_France
@@ -52,6 +55,7 @@ Notice that the default routing rules transform all the `?`, `=` and `&` charact
 
 Enter in the link helper just the same URL as you would have written in a `<a href="...` tag, and it will transform it for you into a "smart" link according to the current routing policy. And when the customer decides to change some of the rules, just modify the `routing.yml` configuration file and the generated URL can now look like:
 
+    [php]
     <a href="http://myapp.example.com/articles/europe/france/finance.html" title="interesting article">interesting article</a>
 
 Link helpers are the key to a double way routing. Interpreting URLs is not a big deal, but generating them requires that all hyperlink tags pass by the same filter. That's why these helpers are compulsory as soon as you may use the routing feature. Make sure you take a look at the [routing chapter](routing.txt) to see how to change the shape of URLs, get rid of the controller name or add a '.html' to the generated URLs for more efficient caching and indexing.
@@ -60,6 +64,7 @@ Link helpers are the key to a double way routing. Interpreting URLs is not a big
 
 Adding a link to an image is as simple as combining two helpers:
 
+    [php]
     <?php echo link_to(image_tag('read.gif'), 'article/read?title=Finance_in_France') ?>
     //will generate in html
     <a href="/article/read/title/Finance_in_France.html"><img src="/images/read.gif" alt="Read" /></a>
@@ -76,10 +81,12 @@ If you had a look at the [routing chapter](routing.txt), you saw that the routin
 
 Then you can write
 
+    [php]
     <?php echo link_to('go to shopping cart', '@cart') ?>
 
 instead of
 
+    [php]
     <?php echo link_to('go to shopping cart', 'shoppingCart/index') ?>
     
 There are pros and cons to this trick:
@@ -107,6 +114,7 @@ This URL can be bookmarked, cached and indexed by search engines. Imagine all th
 
 Symfony provides a way to transform a call to a `link_to` helper into an actual post. Just write:
 
+    [php]
     <?php echo link_to('go to shopping cart', 'shoppingCart/add?id=100', 'post=true') ?>
     // will generate in HTML
     <a onclick="f = document.createElement('form'); document.body.appendChild(f); f.method = 'POST'; f.action = this.href; f.submit();return false;" href="/shoppingCart/add/id/100.html">go to shopping cart</a>
@@ -119,6 +127,7 @@ It is a good habit to tag as POST the links that actually post data. Don't hesit
 
 In addition to the `post` option, the `link_to` helper accepts two other options : `confirm` and `popup`.
 
+    [php]
     <?php echo link_to('add to cart', 'shoppingCart/add?id=100', 'confirm=Are you sure?') ?>
     // will generate in HTML
     <a onclick="return confirm('Are you sure?');" href="/fo_dev.php/shoppingCart/add/id/100.html">add to cart</a>
@@ -133,6 +142,7 @@ In addition to the `post` option, the `link_to` helper accepts two other options
 
 The options can be combined:
 
+    [php]
     <?php echo link_to('add to cart', 'shoppingCart/add?id=100', 'confirm=Are you sure? post=true') ?>
     // will generate in HTML
     <a onclick="if (confirm('Are you sure?')) { f = document.createElement('form'); document.body.appendChild(f); f.method = 'POST'; f.action = this.href; f.submit(); };return false;" href="/fo_dev.php/shoppingCart/add/id/100.html">add to cart</a>
@@ -146,12 +156,14 @@ button_to helper
 
 When dealing with forms, you might want to use buttons instead of links. This is where the `button_to` helper enters:
 
+    [php]
     <?php echo button_to('add to cart', 'shoppingCart/add?id=100') ?>
     // will generate in HTML
     <input value="add to cart" type="button" onclick="document.location.href='/fo_dev.php/shoppingCart/add/id/100.html';" />
 
 Note that, by default, this button will do a GET request. If you want to do a POST, add the related option:
 
+    [php]
     <?php echo button_to('add to cart', 'shoppingCart/add?id=100', 'post=true') ?>
     // will generate in HTML
     <form method="post" class="button_to" action="/fo_dev.php/shoppingCart/add/id/100.html"><input value="add to cart" type="submit" /></form>
@@ -160,6 +172,7 @@ Beware not to use the POST mode when in a form, since it adds a new `<form>` tag
 
 As for `link_to`, the `confirm` and `popup` options can be added and combined:
 
+    [php]
     <?php echo button_to('add to cart', 'shoppingCart/add?id=100', 'confirm=Are you sure? popup=true') ?>
     // will generate in HTML
     <input value="add to cart" type="button" onclick="if (confirm('Are you sure?')) {window.open('/fo_dev.php/shoppingCart/add/id/100.html');}" />
@@ -171,12 +184,14 @@ The reason why symfony ships a `mail_to()` helper is that nowadays, email farmin
 
 This helper takes two parameters : the actual email address, and a secure flag. If the flag is set to `false`, the email address is written non-crypted:
 
+    [php]
     <?php echo mail_to('myaddress@mydomain.com', false) ?>
     // will generate in HTML
     <a href="mailto:myaddress@mydomain.com'>myaddress@mydomain.com</a>
 
 If the flag is set to `true`, and this is the default behavior, the displayed and pointed addresses are processed by a random decimal and hexadecimal entity encoder. This will probably not stop all address-harvesting spambots, but it will keep most of them away. Future versions of this helper will probably evolve as the harvesting techniques become more accurate.
 
+    [php]
     <?php echo mail_to('myaddress@mydomain.com') ?>
     // will generate in HTML something like
     <a href="&#x6d;&#x61;&#x69;&#108;&#116;&#x6f;&#x3a;&#109;&#x79;&#x61;&#x64;&#x64;re&#x73;&#115;&#64;m&#121;&#100;&#111;&#109;&#x61;&#105;&#x6e;.&#99;&#111;&#x6d;">myaddress@mydomain.com</a>
@@ -190,6 +205,7 @@ In addition, future versions will support configuration for the default location
 
 To create an `<img>` tag:
 
+    [php]
     <?php echo image_tag('test') ?>
     // will generate in HTML
     <img href="/images/test.png" alt="Test" />
@@ -198,6 +214,7 @@ By default, the image `test.png` will be looked for in the `/images/` directory 
 
 If you need to change the default file type or the default location, you can pass a more defined URL:
 
+    [php]
     <?php echo image_tag('test.gif') ?>
     // will generate in HTML
     <img href="/images/test.gif" alt="Test" />
@@ -208,6 +225,7 @@ If you need to change the default file type or the default location, you can pas
 
 You can add a second argument to specify additional HTML attributes; this argument must be an array. 
 
+    [php]
     <?php echo image_tag('/my_images/test.gif', array('class' => 'shortImage')) ?>
     // will generate in HTML
     <img href="/my_images/test.gif" alt="Test" class="shortImage"/>
@@ -216,12 +234,14 @@ Don't bother to specify a `alt` attribute if your media file has an explicit nam
 
 To fix the size of an image, use the attribute `size`:
 
+    [php]
     <?php echo image_tag('/my_images/test.gif', array('size' => '100x20')) ?>
     // will generate in HTML
     <img href="/my_images/test.gif" alt="Test" width="100" height="20"/>
 
 To keep the code readable and let you write templates fast, the options argument can use an abbreviated string syntax:
 
+    [php]
     <?php echo image_tag('/my_images/test.gif', 'size=100x20 alt=My new car class=shortImage onclick=showNextImage(); ') ?>
     // is the same as
     <?php echo image_tag('/my_images/test.gif', array('size' => '100x20', 'alt' => 'My new car', 'class' => 'shortImage' , 'onclick' => 'showNextImage();') ) ?>
@@ -233,6 +253,7 @@ Javascript helper
 
 To link to javascript files, you can omit the path and the suffix: 
 
+    [php]
     <?php echo javascript_tag('myscript') ?>
     // will generate in HTML
     <script language="javascript" type="text/javascript" src="/js/myscript.js">

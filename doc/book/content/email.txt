@@ -11,6 +11,7 @@ This proxy class allows you to define your own interface if required.
 Example
 -------
 
+    [php]
     require_once 'sf/sfMail.class.php';
     
     // class initialization

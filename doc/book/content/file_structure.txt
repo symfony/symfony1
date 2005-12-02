@@ -142,6 +142,7 @@ Even if it is highly recommended to keep the default tree structure, it is possi
 
 To customize the tree structure of an application, you simply need to modify the configuration file `config/constants.php` of the application directory since every path to a key directory is determined with a constant ending with `_DIR`. This file is not present in the default tree structure; you will have to copy it from the symfony directory if you need to modify it - a detailed explanation is available in the [configuration chapter](configuration_practice.txt). Here is an extract of the standard configuration file:
 
+    [php]
     // root directory structure
     define('SF_CACHE_DIR_NAME', 'cache');
     define('SF_LOG_DIR_NAME', 'log');

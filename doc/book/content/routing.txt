@@ -23,15 +23,15 @@ The only difference with the first URL is the use of more descriptive keywords. 
 
 This process could be pushed further to display URLs even more simple and explicit, for instance like:
 
-     http://myapp.example.com/article/my_article_title
-     // or why not
-     http://myapp.example.com/2005/06/25/my_article_title
+    http://myapp.example.com/article/my_article_title
+    // or why not
+    http://myapp.example.com/2005/06/25/my_article_title
 
 The most common way to address this need is to use the `mod_rewrite` module of the Apache server, together with URL rewriting rules. These rules transform the URLs into something that Apache can understand before submission of the request:
 
- 1. Apache receives a request for `http://myapp.example.com/2005/06/25/my_article_title`
- 2. `mod_rewrite` transforms this URL into `http://myapp.example.com/index.php/article/read/title/my_article_title`
- 3. Now Apache knows that it has to execute `index.php` with `/article/read/title/my_article_title` as a value for the `path_info` argument
+1. Apache receives a request for `http://myapp.example.com/2005/06/25/my_article_title`
+2. `mod_rewrite` transforms this URL into `http://myapp.example.com/index.php/article/read/title/my_article_title`
+3. Now Apache knows that it has to execute `index.php` with `/article/read/title/my_article_title` as a value for the `path_info` argument
 
 However, this method has two serious issues:
 
@@ -71,6 +71,7 @@ Will be understood as if written
 
 ...and call the `permalink` action of the `article` module with the following arguments:
 
+    [php]
     $this->getRequestParameter('year') => 2005
     $this->getRequestParameter('month') => 06
     $this->getRequestParameter('day') => 25
@@ -217,14 +218,17 @@ Until now, the `routing.yml` file only helped to reproduce the `mod_rewrite` beh
 
 In symfony, when you write a link in a template, you use the `link_to()` helper:
 
+    [php]
     <?php echo link_to($article->getTitle(), '/article/read?id='.$article->getId()) ?>
 
 To read more about this helper, check the chapter about [link helpers](templating_link_helpers.txt). With the default routing configuration, this outputs the following HTML code:
 
+    [php]
     <a href="/index.php/article/read/id/100">my_article_title</a>
 
 But since you wrote routing rules, symfony will automatially interpret them in the other way and generate:
 
+    [php]
     <a href="/index.php/article/100">my_article_title</a>
 
 The rules will be parsed with the same order as for the interpretation of an input request, and the first rule matching the arguments of the `link_to()` second argument will determine the pattern to be used to create the output URL.
@@ -286,10 +290,12 @@ You can have a different value for each environment.
 
 With routing deactivated, a call to 
 
+    [php]
     <?php echo link_to($article->getTitle(), '/article/read?id='.$article->getId()) ?>
 
 will generate in HTML
 
+    [php]
     <a href="/index.php?module=article&action=read&id=100">my_article_title</a>
     
 Retrieve information about the current route
@@ -303,15 +309,16 @@ If you need to retrieve information about the current route, for instance to pre
  
 Use the following calls in the action:
  
+    [php]
     // if you require an URL like
     http://myapp.example.com/call_my_rule/param1/xxx/param2/yyy
-
+    
     $uri = sfRouting::getInstance()->getCurrentInternalUri();
     // will return 'mymodule/myaction?param1=xxx&param2=yyy'
     
     $uri = sfRouting::getInstance()->getCurrentInternalUri(true);
     // will return '@myrule?param1=xxx&param2=yyy'
-
+    
     $route = sfRouting::getInstance()->getCurrentRouteName();
     // will return 'myrule'
 

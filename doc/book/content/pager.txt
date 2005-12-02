@@ -15,6 +15,7 @@ This chapter will illustrate the way to use the `sfPager` methods with a simple 
 
 If you wanted to have the non-paginated result of a criteria request showing only published articles, you would need:
 
+    [php]
     class articleActions extends sfActions
     {
       public function executeList()
@@ -32,6 +33,7 @@ The `$articles` variable, accessible from the template, would contain an array o
 
 To get a paginated list, you need a slightly different approach; the results have to be put in a `sfPager` object instead of an array:
 
+    [php]
     class articleActions extends sfActions
     {
       public function executeList()
@@ -60,11 +62,13 @@ The template `listSuccess.php` can now access the `sfPager` object. This object 
 
 To display the total number of results, use the `->getNbResults()` method:
 
+    [php]
     <?php echo $pager->getNbResults() ?> results found.<br />
     Displaying results <?php echo $pager->getFirstIndice() ?> to  <?php echo $pager->getLastIndice() ?>.
 
 To display the articles of the requested page, use the `->getResults()` method of the `pager` object to retrieve the objects in the page:
 
+    [php]
     <?php foreach ($pager->getResults() as $article): ?>
       <?php echo link_to($article->getTitle(), 'article/read?id='.$article->getId()) ?>
       <?php echo $article->getOverview() ?>
@@ -79,6 +83,7 @@ To add the page navigation links at the bottom of the list (« < > »), use the 
 
 To point to a specific page, loop through the collection of links obtained by a call to the `->getLinks()` method:
 
+    [php]
     <?php if ($pager->haveToPaginate()): ?>
       <?php echo link_to('&laquo;', 'article/list?page='.$pager->getFirstPage()) ?>
       <?php echo link_to('&lt;', 'article/list?page='.$pager->getPreviousPage()) ?>
@@ -103,6 +108,7 @@ Navigating page by page within the list is easy, but the users might not want to
 
 This will allow an article by article navigation in the `readSuccess.php` template. First, let's modify a bit of the code of the `listSuccess.php` template:
 
+    [php]
     <?php $cursor = $pager->getFirstIndice(); foreach ($pager->getResults() as $article): ?>
       <?php echo link_to($article->getTitle(), 'article/read?cursor='.$cursor) ?>
       <?php echo $article->getOverview() ?>
@@ -110,6 +116,7 @@ This will allow an article by article navigation in the `readSuccess.php` templa
 
 The `read` action will need to know how to handle a `cursor` parameter:
 
+    [php]
     class articleActions extends sfActions
     {
       public function executeRead()
@@ -135,6 +142,7 @@ You can set the cursor without getting the resulting object with the `->setCurso
 
 This means that the `read` action can pass to the template the necessary information for an article-by-article navigation with a few modifications:
 
+    [php]
     class articleActions extends sfActions
     {
       public function executeRead()
@@ -161,6 +169,7 @@ This means that the `read` action can pass to the template the necessary informa
 
 The `readSuccess.php` template could look like:
 
+    [php]
     <h1><?php echo $article->getTitle() ?></h1>
     <p class="overview"><?php echo $article->getOverview() ?></p>
     <div class="content">
@@ -175,12 +184,14 @@ Changing the sort order
 
 Ordering a list means redoing the request. But the `sfPager` object has a `->setSort()` methods that acts as a shortcut to set a new sort order. Specify which column in the table has to be used for sorting, and the sorting order ('asc' or 'desc'):
 
+    [php]
     $pager->setSort('date'); // 'ascending' sort by default
     $pager->setSort('date', 'asc');
     $pager->setSort('date', 'desc');
 
 You can add the choice of the sort column to the list navigation interface:
 
+    [php]
     class articleActions extends sfActions
     {
       public function executeList()
@@ -208,6 +219,7 @@ You can add the choice of the sort column to the list navigation interface:
 
 Add the following to the `listSuccess.php` template:
 
+    [php]
     Sort by : <?php echo link_to('Title', 'article/list?sort=Title' ?> - <?php echo link_to('Id', 'article/list?sort=Id' ?>
 
 Changing the number of results per page
@@ -215,6 +227,7 @@ Changing the number of results per page
 
 The `->setMaxPerPage($max)` method changes the number of results displayed per page, without the need to reprocess the pager (no need to call `init()` again). If you pass the value `0` for parameter, the pager will display all the results in one single page.
 
+    [php]
     class articleActions extends sfActions
     {
       public function executeList()
@@ -244,6 +257,7 @@ The `->setMaxPerPage($max)` method changes the number of results displayed per p
 
 So you can add the following to the `listSuccess.php` template:
 
+    [php]
     Display : <?php echo link_to('10', 'article/list?maxperpage=10' ?> - <?php echo link_to('20', 'article/list?maxperpage=20' ?> results per page
 
 Storing additional information in the pager
@@ -251,6 +265,7 @@ Storing additional information in the pager
 
 You may need sometimes to keep a certain context in a pager object. That's why the `sfPager` class can handle *parameters* in the usual way:
 
+    [php]
     $pager->setParameter('foo', 'bar');
     
     if ($pager->hasParameter('foo'))

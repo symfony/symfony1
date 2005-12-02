@@ -13,10 +13,12 @@ Information about the current user and his/her session can be found in the `sfUs
 
 Getting access to this object and its methods differs whether you are in an action:
 
+    [php]
     $this->getUser();
     
 or if you are in a template:
 
+    [php]
     $user
 
 The `sfUser` class owns a few default attributes used by symfony to deal with classical user session interactions:
@@ -33,6 +35,7 @@ If you need to store information about a user until his/her session is closed, u
 
 For instance, to set and get an attribute `nickname` in an action:
 
+    [php]
     $this->getUser()->setAttribute('nickname', 'foo');
     ...
     $this->getUser()->getAttribute('nickname');
@@ -41,6 +44,7 @@ These informations are stored whatever the user, whether he/she is identified or
 
 To check whether an attribute has been defined for a user, use the `->hasAttribute()` method.
 
+    [php]
     $hasNickname = $this->getUser()->hasAttribute('nickname');
 
 >**Note**: if you need to store information just for the duration of one request - for instance to pass information through a chain of action calls - you may prefer the `sfRequest` class, which also has `->getAttribute()` and `->setAttribute()` methods.
@@ -52,11 +56,13 @@ When the application needs to hold key information in the session, it is better 
 
 Let's imagine you are building a chat website where users have to choose a nickname. A simple way to store and read this nickname would be:
 
+    [php]
     $this->getUser()->setAttribute('nickname', 'foo');
     $this->getUser()->getAttribute('nickname');
 
 Although this is exactly the previous example, this is not a very good solution, partly because it shows the real attribute and doesn't encapsulate the inner logic of the class. What would happen, for instance, if you decided suddenly to change the attribute name from 'nickname' to 'name' ? To settle this problem, you just need to extend the `sfUser` class. Check the `myproject/myapp/lib/` directory of your application: an empty `myUser` class just waits to be completed.
 
+    [php]
     class myUser extends sfUser
     {
       public function getNickname()
@@ -72,6 +78,7 @@ Although this is exactly the previous example, this is not a very good solution,
 
 Then, in the action, the calls would be:
 
+    [php]
     $this->getUser()->setNickname('foo');
     $this->getUser()->getNickname();
 
