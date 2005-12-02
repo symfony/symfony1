@@ -89,6 +89,12 @@ abstract class sfRequest
       $retval = $this->errors[$name];
     }
 
+    // translate error message if needed
+    if (SF_IS_I18N)
+    {
+      $retval = $this->getAttribute('message_format', null, 'symfony/i18n')->_($retval);
+    }
+
     return $retval;
   }
 

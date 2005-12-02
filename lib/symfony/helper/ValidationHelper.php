@@ -57,7 +57,9 @@ function form_error($param, $options = array())
     unset($options['suffix']);
   }
 
-  return content_tag('div', $prefix.$request->getError($param).$suffix, $options)."\n";
+  $error = $request->getError($param);
+
+  return content_tag('div', $prefix.$error.$suffix, $options)."\n";
 }
 
 function add_dynamic_validation()

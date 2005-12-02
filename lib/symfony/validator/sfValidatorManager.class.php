@@ -280,7 +280,9 @@ class sfValidatorManager
         foreach ($data['validators'] as $validator)
         {
           if (!$validator->execute($value, $error))
+          {
             $retval = false;
+          }
         }
       }
     }
