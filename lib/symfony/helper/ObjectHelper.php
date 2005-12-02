@@ -85,6 +85,10 @@ function object_select_tag($object, $method, $options = array(), $default_value 
   {
     $select_options[0] = '-- '._convert_method_to_name($method).' --';
   }
+  else if (isset($options['include_custom'])) 
+  {
+    $select_options[0] = $options['include_custom'];
+  }
 
   // FIXME: drop Propel dependency
   $rs = call_user_func_array(array($options['related_class'].'Peer', 'doSelectRS'), array(new Criteria()));
