@@ -4,7 +4,7 @@ Templating in practice : Link helpers
 Overview
 --------
 
-One of the common needs in templates is the automation of the URL generation, and the inclusion of local files regardless of the file structure. The link and image helpers, for instance, naturally replace the `<a>` and `<img>` tags and do all the tedious job for you. Their use is compulsory to enable routing and relative links affected by configuration.
+One of the common needs in templates is the automation of the URL generation, and the inclusion of local files regardless of the file structure. The link and image helpers, for instance, naturally replace the `<a>` and `<img>` tags and do all the tedious jobs for you. Their use is compulsory to enable routing and relative links affected by configuration.
 
 Introduction
 ------------
@@ -51,9 +51,9 @@ The `url_for()` helper returns an URL, the `link_to()` helper returns a hyperlin
     // will generate in HTML
     <a href="http://myapp.example.com/index.php/article/read/title/Finance_in_France" title="interesting article">interesting article</a>
     
-Notice that the default routing rules transform all the `?`, `=` and `&` characters into by `/`. Also note that the `link_to()` helper gives a bonus `title` attribute for the `<a>` tag, based on the content of the tag that is provided.
+Notice that the default routing rules transform all the `?`, `=` and `&` characters into `/`. Also note that the `link_to()` helper gives a bonus `title` attribute for the `<a>` tag, based on the content of the tag that is provided.
 
-Enter in the link helper just the same URL as you would have written in a `<a href="...` tag, and it will transform it for you into a "smart" link according to the current routing policy. And when the customer decides to change some of the rules, just modify the `routing.yml` configuration file and the generated URL can now look like:
+Enter in the link helper exactly the same URL as you would have written in a `<a href="...` tag, and it will transform it for you into a "smart" link according to the current routing policy. And when the customer decides to change some of the rules, just modify the `routing.yml` configuration file and the generated URL can now look like:
 
     [php]
     <a href="http://myapp.example.com/articles/europe/france/finance.html" title="interesting article">interesting article</a>
@@ -73,7 +73,7 @@ The `image_tag` helper is described later in this chapter.
 
 ### Using the rule instead of the module/action
 
-If you had a look at the [routing chapter](routing.txt), you saw that the routing is defined by rules. The link helpers accept a rule name instead of a pair `module/action` if a `@` is written before. For instance, if the `routing.yml` file contains the rule:
+If you had a look at the [routing chapter](routing.txt), you saw that the routing is defined by rules. The link helpers accept a rule name instead of a `module/action` pair if an `@` is written before. For instance, if the `routing.yml` file contains the rule:
 
     cart:
       url: /shopping_cart
@@ -89,16 +89,16 @@ instead of
     [php]
     <?php echo link_to('go to shopping cart', 'shoppingCart/index') ?>
     
-There are pros and cons to this trick:
+There are pros and cons to this trick.  The advantages are:
 
-* the routing is done much faster, since symfony doesn't have to browse all the rules to find the one that matches the link. In a page with a great number of routed hyperlinks, the boost will be noticeable if you use rules instead of `module/action`
-* using the rule helps to abstract the logic behind an action. If the need to plug another action behind a given URL arises, then only the `routing.yml` file will need to be changed - all the `link_to()` calls will still work without intervention
-* the logic of the call is more apparent with a rule name. Even if your modules and actions have explicit names, it is often better to call "display_article_by_title" than "article/display"
+* The routing is done much faster, since symfony doesn't have to browse all the rules to find the one that matches the link. In a page with a great number of routed hyperlinks, the boost will be noticeable if you use rules instead of `module/action`.
+* Using the rule helps to abstract the logic behind an action. If the need to plug another action behind a given URL arises, then only the `routing.yml` file will need to be changed - all the `link_to()` calls will still work without intervention.
+* The logic of the call is more apparent with a rule name. Even if your modules and actions have explicit names, it is often better to call "display_article_by_title" than "article/display".
 
 On the other hand,
 
-* if you write rules in your `link_to()`, you can not deactivate the routing anymore.
-* it becomes less evident to debug an application since you always need to refer to the `routing.yml` file to discover which action is called by a link.
+* If you write rules in your `link_to()`, you can not deactivate the routing anymore.
+* Debugging an application becomes less self-evident since you always need to refer to the `routing.yml` file to discover which action is called by a link.
 
 The best choice depends on the project. In the long run, it's up to you.
 
@@ -180,7 +180,7 @@ As for `link_to`, the `confirm` and `popup` options can be added and combined:
 mail_to helper
 -------------
 
-The reason why symfony ships a `mail_to()` helper is that nowadays, email farming robots prowl about the web, and you can't display an email address on a website without becoming a spam victim within days.
+The reason why symfony ships a `mail_to()` helper is that nowadays, email harvesting robots prowl about the web, and you can't display an email address on a website without becoming a spam victim within days.
 
 This helper takes two parameters : the actual email address, and a secure flag. If the flag is set to `false`, the email address is written non-crypted:
 
@@ -199,7 +199,7 @@ If the flag is set to `true`, and this is the default behavior, the displayed an
 Image helper
 ------------
 
-Considering that all your HTML pages are handled by actions, the `href` attribute is no worry anymore. But what about all those tags having a `src` attribute ? Symfony has image and javascript helpers that are faster to write and to most of the job themselves. 
+Considering that all your HTML pages are handled by actions, the `href` attribute is not a worry anymore. But what about all those tags having a `src` attribute? Symfony has image and javascript helpers that are faster to write and do most of the job themselves. 
 
 In addition, future versions will support configuration for the default location of media files. This may prove helpful if you decided suddenly to host all of your project media files (css, js, pdf, jpg, gif, etc.) in a new server to increase performance.
 
@@ -258,7 +258,7 @@ To link to javascript files, you can omit the path and the suffix:
     // will generate in HTML
     <script language="javascript" type="text/javascript" src="/js/myscript.js">
 
-Once again, the default location can be overridden in a function call for punctual needs, or redefined for the whole site in the configuration files for major changes.
+Once again, the default location can be overridden in a function call for quick needs, or redefined for the whole site in the configuration files for major changes.
 
 If you read the whole documentation, you will see that symfony gives you three different ways to require an additional javascript file. You should use them with this order of preference:
 
@@ -266,6 +266,6 @@ If you read the whole documentation, you will see that symfony gives you three d
 * `addJavascript()` function call from the action: when the name of the files to include depend on calculations made in the action
 * `javascript_tag` helpers in the template: to include a javascript file at a given position inside a template and not in the head.
 
-The last solution is rarely good; if you need it, check whether your code needs some refactoring (for instance write a javascript function call in the code and require the script inclusion in the head). However, you sometime don't have the choice, for instance if you have to include traffic measure scripts at the end of your pages.
+The last solution is rarely good; if you need it, check whether your code needs some refactoring (for instance write a javascript function call in the code and require the script inclusion in the head). However, you sometimes don't have the choice, for instance if you have to include traffic measure scripts at the end of your pages.
 
 >**Note**: you may be looking for a `stylesheet_tag()` helper, but there is none. If you need to include a custom stylesheet, you should not do it in the template but rather in the view or in the action, as described in the [view configuration chapter](templating_configuration.txt).

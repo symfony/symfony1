@@ -4,7 +4,7 @@ How to create site structure
 Overview
 --------
 
-SymFony offers automated components to generate breadcrumbs and site maps. The necessary information underlying these features is a description of the tree structure of the website actions, contained in a XML configuration file called `treestructure.xml`. 
+Symfony offers automated components to generate breadcrumbs and site maps. The necessary information underlying these features is a description of the tree structure of the website actions, contained in a XML configuration file called `treestructure.xml`. 
 
 Concepts
 --------

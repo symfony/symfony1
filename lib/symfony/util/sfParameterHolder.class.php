@@ -12,6 +12,9 @@
 /**
  * sfParameterHolder provides a base class for managing parameters.
  *
+ * Parameters, in this case, are used to extend classes with additional data
+ * that requires no additional logic to manage.
+ *
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
@@ -23,11 +26,28 @@ class sfParameterHolder
   protected $default_namespace = null;
   protected $parameters = array();
 
+  /**
+   * The constructor for sfParameterHolder.
+   * 
+   * The default namespace may be overridden at initialization as follows:
+   * <code>
+   * <?php
+   * $mySpecialPH = new sfParameterHolder('symfony/special');
+   * ?>
+   * </code>
+   */
   public function __construct($namespace = 'symfony/default')
   {
     $this->default_namespace = $namespace;
   }
 
+  /**
+   * Get the default namespace value.
+   *
+   * The $default_namespace is defined as 'symfony/default'.
+   *
+   * @return string The default namespace.
+   */
   public function getDefaultNamespace ()
   {
     return $this->default_namespace;
@@ -45,7 +65,11 @@ class sfParameterHolder
   }
 
   /**
-   * Retrieve a parameter.
+   * Retrieve a parameter with an optionally specified namespace.
+   *
+   * An isolated namespace may be identified by providing a value for the third
+   * argument.  If not specified, the default namespace is 'symfony/default' is
+   * used.
    *
    * @param string A parameter name.
    * @param mixed  A default parameter value.
@@ -71,7 +95,7 @@ class sfParameterHolder
   }
 
   /**
-   * Retrieve an array of parameter names.
+   * Retrieve an array of parameter names from an optionally specified namespace.
    *
    * @param string A parameter namespace.
    *
@@ -103,7 +127,12 @@ class sfParameterHolder
   }
 
   /**
-   * Retrieve an array of parameters.
+   * Retrieve an array of parameters, within a namespace.
+   *
+   * This method is limited to a namespace.  Without any argument,
+   * it returns the parameters of the default namespace.  If a 
+   * namespace is passed as an argument, only the parameters of the
+   * specified namespace are returned.
    *
    * @param string A parameter namespace.
    *

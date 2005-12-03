@@ -9,7 +9,7 @@ The powerful and flexible symfony cache system can speed up a website by saving 
 Introduction
 ------------
 
-The principle of HTML cache is simple: part or all of the HTML code that is sent to a user upon a request can be reused for a similar request, so this HTML code is stored in a special place (the `cache` folder in symfony), where the front controller will look for it before executing the action. If a cached version is found, it is sent without executing the action, thus speeding up greatly the answer. If it is not found, the action is executed, and its result (the view) stored in the cache folder for future requests.
+The principle of HTML cache is simple: part or all of the HTML code that is sent to a user upon a request can be reused for a similar request, so this HTML code is stored in a special place (the `cache` folder in symfony), where the front controller will look for it before executing the action. If a cached version is found, it is sent without executing the action, thus greatly speeding up the answer. If it is not found, the action is executed, and its result (the view) stored in the cache folder for future requests.
 
 As all the pages may contain dynamic information, the HTML cache is disabled by default. It is up to the site administrator to activate it in order to gain performance.
 

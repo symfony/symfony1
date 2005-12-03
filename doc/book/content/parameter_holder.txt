@@ -4,14 +4,14 @@ Parameter Holders
 Overview
 --------
 
-Many of the objects available in symfony have the ability to be extended. They host a parameter holder, in which new data can be kept. This can be particularly useful to add punctually a custom attribute without overriding the full class.
+Many of the objects available in symfony have the ability to be extended. They host a parameter holder, in which new data can be kept. This can be particularly useful to quickly add a custom attribute without overriding the full class.
 
 Introduction
 ------------
 
-When dealing with web requests, user sessions or custom business objects like shopping carts, the need of extension often arises. If the extension carries a logic, it has to be done by extending (or overriding) the class, but if the need is simply data storage, the solution is the parameter holder.
+When dealing with web requests, user sessions or custom business objects like shopping carts, the need for extension often arises. If the extension carries a logic, it has to be done by extending (or overriding) the class, but if the need is simply data storage, the solution is the parameter holder.
 
-The `sfRequest`, `sfUser` and `sfShoppingCart` objects, among other, have an attribute of class `sfParameterHolder` in which additional data can be stored and retrieved without any need to override the class.
+The `sfRequest`, `sfUser` and `sfShoppingCart` objects, among others, have an attribute of class `sfParameterHolder` in which additional data can be stored and retrieved without any need to override the class.
 
 >**Note**: the addition of an attribute holder to an object is made by a [composition][1] of the `sfParameterHolder` and the object, rather than by inheritance. This avoids problems during further extensions of the classes.
 
@@ -58,7 +58,7 @@ Use the `->remove($key)` method to delete one parameter and its key, or the `->c
 Namespaces
 ----------
 
-Parameter holders also have the ability to deal with namespaces. The namespaces are completely isolated from each other. When no namespace is precised, as in the examples above, the default namespace 'symfony/default' is used.
+Parameter holders also have the ability to deal with namespaces. The namespaces are completely isolated from each other. When no namespace is defined, as in the examples above, the default namespace 'symfony/default' is used.
 
     [php]
     $myPH->set('weather','sunny');

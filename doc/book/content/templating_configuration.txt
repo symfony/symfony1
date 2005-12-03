@@ -4,7 +4,7 @@ View Configuration
 Overview
 --------
 
-The View if made of:
+The View is made of:
 
 * one part resulting of the action execution (the template)
 * all the rest (headers, metas, file inclusions, slots and layout)
@@ -14,15 +14,15 @@ Symfony offers two convenient ways to modify the components of the View that are
 The two ways to modify the view
 -------------------------------
 
-Apart from the template itself, which integrates the variables calculated in the action into the view, every action need control over other parts of the view:
+Apart from the template itself, which integrates the variables calculated in the action into the view, every action needs control over other parts of the view:
 
 * **meta declarations**: keywords, description or cache duration 
-* **page title**: not only does it help users with several browser windows to find yours, but it is also very important for search sites indexing
+* **page title**: not only does it help users with several browser windows open to find yours, but it is also very important for search sites indexing
 * **file inclusions**: javascript and stylesheet files
 * **slots inclusions**: navigation bar, header, footer, breadcrumb, etc.
 * **layout**: some actions require a custom layout (popups, ads, ajax, etc.)
 
-Ideally, all these parameters should be defined in a configuration file, so that the action can deal only with applicative logic and leave presentation to the view. However, in many cases, these parameters have dynamic values (for instance, page titles often show the title of articles) and cannot be only kept in static configuration files. That's why symfony provides two ways to modify them:
+Ideally, all these parameters should be defined in a configuration file, so that the action can deal only with applicative logic and leave presentation to the view. However, in many cases, these parameters have dynamic values (for instance, page titles often show the title of articles) and cannot be kept in static configuration files. That's why symfony provides two ways to modify them:
 
 * the `view.yml` file, in which these parameters can be set at the application, module and action levels
 * the **view helpers**, which are methods accessible from within the action.
@@ -64,7 +64,7 @@ The next sections will detail how the parameter definitions in this file can aff
 Default configuration
 ---------------------
 
-The default global template created when you initialize an application, is called `layout.php` and looks like this:
+The default global template, created when you initialize an application, is called `layout.php` and looks like this:
 
     [php]
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/2000/REC-xhtml1-200000126/DTD/xhtml1-transitional.dtd">
@@ -140,7 +140,7 @@ When applied to the layout, these settings produce the following `<head>` sectio
 
 Besides the obvious use of the parameter definitions in the `view.yml`, this example shows that the `<head>` section of a page can be modified even if the code for this section is normally in a file shared by all modules.
 
-And view configuration could stop at that point if you wish. There is no absolute necessity to define view parameters for each module, since the default behaviors of actions will manage for you the choice of the template to be used. However, as soon as your application uses more than one layout, custom javascripts or stylesheets, of if the interfaces shows common components on every page, writing `view.yml` files for your modules will save you time and ease your work.
+View configuration could stop at that point if you wish. There is no absolute necessity to define view parameters for each module, since the default behaviors of actions will manage for you the choice of the template to be used. However, as soon as your application uses more than one layout, custom javascripts or stylesheets, or if the interface shows common components on every page, writing `view.yml` files for your modules will save you time and ease your work.
 
 >**Note**: If you want to create custom layouts, you can use the `include_` functions to get the values of the head parameters and take advantage of the configuration files.
 
@@ -198,7 +198,7 @@ As a bonus, the HTTP header of the HTML file will also contain the `http-metas` 
 Title configuration
 -------------------
 
-Page title is a key part to search engine indexing; it is also very useful with modern browsers that propose tabbed-browsing.
+Page title is a key part to search engine indexing; it is also very useful with modern browsers that provide tabbed-browsing.
 
 To have a custom title for every page, take advantage of the  `<?php echo include_title() ?>` call in the `<head>` part of the layout.
 
@@ -331,7 +331,7 @@ Imagine that you have a layout with a zone for contextual advices:
     </div>
     ...
 
-You also have a module `advice` with contextual actions `forIndex` and `forList`. Now, if you ant to associate a contextual action with the views of a module `article` with actions `view` and `list`, you could write the following `myproject/myapp/modules/article/config/view.yml`:
+You also have a module `advice` with contextual actions `forIndex` and `forList`. Now, if you want to associate a contextual action with the views of a module `article` with actions `view` and `list`, you could write the following `myproject/myapp/modules/article/config/view.yml`:
 
     indexSuccess:
       slots:
@@ -344,6 +344,6 @@ You also have a module `advice` with contextual actions `forIndex` and `forList`
 How about template configuration ?
 ----------------------------------
 
-You could expect to see a way to set a custom template with one of the two ways described here. But there is none.
+Though you could expect to see a way to set a custom template with one of the two ways described here, there is none.
 
-The reason for that is that when you need to set a custom template for an action, you should do either a `redirect` or a `forward` of this action to another one. The context will be much cleaner and the logic of your application will be preserved.
+The reason is that when you need to set a custom template for an action, you should do either a `redirect` or a `forward` of this action to another one. The context will be much cleaner and the logic of your application will be preserved.
