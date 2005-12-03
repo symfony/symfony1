@@ -4,7 +4,7 @@ How to add a breadcrumb
 Introduction
 ------------
 
-SymFony can automate the display of a breadcrumb in the pages of a website, provided that you defined a site structure (see more about this configuration file in the [site structure](BreadCrumb.txt) chapter). Defined as a *slot*, the breadcrumb can be included in the global template or in the templates of the only modules in which you need it to be displayed. By default, the breadcrumb class computes the breadcrumb for a page from the information of the site structure, but you can override this behaviour in a module if you need it to display specific information.
+Symfony can automate the display of a breadcrumb in the pages of a website, provided that you defined a site structure (see more about this configuration file in the [site structure](BreadCrumb.txt) chapter). Defined as a *slot*, the breadcrumb can be included in the global template or in the templates of the only modules in which you need it to be displayed. By default, the breadcrumb class computes the breadcrumb for a page from the information of the site structure, but you can override this behaviour in a module if you need it to display specific information.
 
 Default breadcrumb
 ------------------
