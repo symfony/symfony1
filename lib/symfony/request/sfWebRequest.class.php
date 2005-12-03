@@ -360,7 +360,7 @@ class sfWebRequest extends sfRequest
         $parameters .= ''.$key.' => "'.$value.'", ';
       }
 
-      $this->getContext()->getLogger()->info('{sfRequest} request parameters {'.$parameters.'}');
+      $this->getContext()->getLogger()->info('{sfWebRequest} request parameters {'.$parameters.'}');
     }
 
     // move some parameters in other namespaces
