@@ -20,6 +20,7 @@ class sfRequestTest extends UnitTestCase
     @define('SF_STATS', false);
     @define('SF_PATH_INFO_ARRAY', 'SERVER');
     @define('SF_PATH_INFO_KEY', 'SERVER');
+    @define('SF_IS_I18N', '0');
     $this->populateVariables('/', true);
 
     $this->context = new MockSfContext($this);
