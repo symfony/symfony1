@@ -69,32 +69,36 @@ function object_textarea_tag($object, $method, $options = array(), $default_valu
 function object_select_tag($object, $method, $options = array(), $default_value = null)
 {
   $options = _parse_attributes($options);
+  $related_class = isset($options['related_class']) ? $options['related_class'] : '';
   if (!isset($options['related_class']) && preg_match('/^get(.+?)Id$/', $method, $match))
   {
-    $options['related_class'] = $match[1];
+    $related_class = $match[1];
   }
-
-  $value = _get_object_value($object, $method, $default_value);
+  unset($options['related_class']);
 
   $select_options = array();
   if (isset($options['include_blank']))
   {
     $select_options[0] = '';
+    unset($options['include_blank']);
   }
   else if (isset($options['include_title']))
   {
     $select_options[0] = '-- '._convert_method_to_name($method).' --';
+    unset($options['include_title']);
   }
   else if (isset($options['include_custom'])) 
   {
     $select_options[0] = $options['include_custom'];
+    unset($options['include_custom']);
   }
 
   // FIXME: drop Propel dependency
-  $rs = call_user_func_array(array($options['related_class'].'Peer', 'doSelectRS'), array(new Criteria()));
+  $rs = call_user_func_array(array($related_class.'Peer', 'doSelectRS'), array(new Criteria()));
+  $methodToCall = '';
   while ($rs->next())
   {
-    $tmp_object = new $options['related_class']();
+    $tmp_object = new $related_class();
     $tmp_object->hydrate($rs);
 
     // multi primary keys handling
@@ -107,9 +111,23 @@ function object_select_tag($object, $method, $options = array(), $default_value 
       $pk = $tmp_object->getPrimaryKey();
     }
 
-    $select_options[$pk] = method_exists($tmp_object, 'toString') ? $tmp_object->toString() : $tmp_object->getPrimaryKey();
+    // which method to call?
+    if (!$methodToCall)
+    {
+      foreach (array('toString', '__toString', 'getPrimaryKey') as $tmp_method)
+      {
+        if (method_exists($tmp_object, $tmp_method))
+        {
+          $methodToCall = $tmp_method;
+          break;
+        }
+      }
+    }
+
+    $select_options[$pk] = $tmp_object->$methodToCall();
   }
 
+  $value = _get_object_value($object, $method, $default_value);
   $option_tags = options_for_select(array_flip($select_options), $value);
 
   return select_tag(_convert_method_to_name($method), $option_tags, $options);
