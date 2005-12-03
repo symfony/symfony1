@@ -89,7 +89,7 @@ To point to a specific page, loop through the collection of links obtained by a 
       <?php echo link_to('&lt;', 'article/list?page='.$pager->getPreviousPage()) ?>
       <?php $links = $pager->getLinks(); foreach ($links as $page): ?>
         <?php echo ($page == $pager->getPage()) ? $page : link_to($page, 'article/list?page='.$page) ?>
-        <?php if ($page != $pager->getCurrentMaxLink(): ?> - <?php endif ?>
+        <?php if ($page != $pager->getCurrentMaxLink()): ?> - <?php endif ?>
       <?php endforeach ?>
       <?php echo link_to('&gt;', 'article/list?page='.$pager->getNextPage()) ?>
       <?php echo link_to('&raquo;', 'article/list?page='.$pager->getLastPage()) ?>
