@@ -49,7 +49,6 @@ For instance, if the action call included a parameter `total`, the value of the 
 
 This is true whether the parameter was sent to the action with POST or GET methods, or using the symfony routing system:
 
-    [php]
     index.php/test/index&total=123   //GET
     index.php/test/index/total/123   //routed action call
 
