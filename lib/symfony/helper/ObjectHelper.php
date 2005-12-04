@@ -94,7 +94,8 @@ function object_select_tag($object, $method, $options = array(), $default_value 
   }
 
   // FIXME: drop Propel dependency
-  $rs = call_user_func_array(array($related_class.'Peer', 'doSelectRS'), array(new Criteria()));
+  require_once('model/'.$related_class.'Peer.php');
+  $rs = call_user_func(array($related_class.'Peer', 'doSelectRS'), new Criteria());
   $methodToCall = '';
   while ($rs->next())
   {

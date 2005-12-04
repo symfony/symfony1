@@ -58,7 +58,9 @@ class sfPager
     $cForCount->setLimit(0);
     $cForCount->clearGroupByColumns();
 
-    $this->setNbResults(call_user_func_array(array($this->getClass().'Peer', 'doCount'), array($cForCount)));
+    // require the model class (because autoloading can crash under some conditions)
+    require_once('model/'.$this->getClassPeer().'.php');
+    $this->setNbResults(call_user_func(array($this->getClassPeer(), 'doCount'), $cForCount));
 
     $c = $this->getCriteria();
     $c->setOffset(0);
@@ -212,7 +214,7 @@ class sfPager
     $c->setOffset($offset - 1);
     $c->setLimit(1);
 
-    $results = call_user_func_array(array($this->getClass().'Peer', $this->getPeerMethod()), array($c));
+    $results = call_user_func(array($this->getClassPeer(), $this->getPeerMethod()), $c);
 
     return $results[0];
   }
@@ -220,7 +222,7 @@ class sfPager
   public function getResults()
   {
     $c = $this->getCriteria();
-    return call_user_func_array(array($this->getClass().'Peer', $this->getPeerMethod()), array($c));
+    return call_user_func(array($this->getClassPeer(), $this->getPeerMethod()), $c);
   }
 
   public function getFirstIndice()
@@ -272,6 +274,11 @@ class sfPager
   public function setClass($class)
   {
     $this->class = $class;
+  }
+
+  public function getClassPeer()
+  {
+    return $this->class.'Peer';
   }
 
   public function getNbResults()
