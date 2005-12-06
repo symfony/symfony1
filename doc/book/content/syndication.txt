@@ -1,10 +1,10 @@
 How to build a syndication feed
--------------------------------
+===============================
 
 Overview
 --------
 
-Whether your application lists posts, images, news, questions or anything else, if the update rate is higher than once a month, you must provide a syndication feed (RSS, Atom, etc.) to your users so that they can keep up-to-date about your website from within a feed aggregator. The good news is, if your object model is built in the right way, this won't take you more than a couple line to develop, since symfony provides a feed builder tool that does it all for you.
+Whether your application lists posts, images, news, questions or anything else, if the update rate is higher than once a month, you must provide a syndication feed (RSS, Atom, etc.) to your users so that they can keep up-to-date about your website from within a feed aggregator. The good news is, if your object model is built in the right way, this won't take you more than a couple lines to develop, since symfony provides a feed builder tool that does it all for you.
 
 Introduction
 ------------
@@ -107,7 +107,7 @@ The feed action has to output an [Atom][1] feed. As a reminder of all the inform
 Build the feed by hand
 ----------------------
 
-In the `rss` module, create a `lastPosts` action:
+In the `feed` module, create a `lastPosts` action:
 
     [php]
     public function executeLastPosts()
@@ -161,7 +161,7 @@ When called from a feed aggregator, the result of the action is now exactly the 
 Use the short syntax
 --------------------
 
-The use of all the setters for the items can be a little annoying, since there is a lot of information to define. Symfony provides a short hand syntax that produces the same effect, using an associative array:
+The use of all the setters for the item construction can be a little annoying, since there is a lot of information to define. Symfony provides a short hand syntax that produces the same effect, using an associative array:
 
     [php]
     public function executeLastPosts()
