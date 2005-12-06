@@ -22,6 +22,7 @@ parts:
 
   in_depth:
     - web_server
+    - web_server_iis
     - routing
     - cache
     - debug
@@ -29,6 +30,7 @@ parts:
     - user_session
     - security
     - i18n
+    - syndication
     - pager
     - generator
     - shopping_cart
