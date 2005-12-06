@@ -55,7 +55,7 @@ function __autoload($class)
   if (!isset($classes[$class]))
   {
     // unspecified class
-    $error = 'Autoloading of class "%s" failed';
+    $error = 'Autoloading of class "%s" failed. Try to clear the symfony cache and refresh. [err0003]';
     $error = sprintf($error, $class);
     $e = new sfAutoloadException($error);
 
