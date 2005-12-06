@@ -215,7 +215,15 @@ Propel provides one class for each the tables defined in the `schema.xml` file. 
     $title = $article->getTitle();
     $content = $article->getContent();
 
-Note that the `phpname` attribute of the `table` is used for the class name; the accessors use a variant of the column names in which the first letter of each word is capitalized and underscores are suppressed.
+Note that the `phpname` attribute of the `table` is used for the class name; the accessors use a [CamelCase][6] variant of the column names in which the first letter of each word is capitalized and underscores are suppressed.
+
+>**Note**: To set several fields at one time, you can use the `->fromArray()` methods of the Propel objects:
+>
+>    $article->fromArray(array(
+>       'title'   =>   'My first article',
+>       'content' =>   'This is my very first article.\n Hope you enjoy it!',
+>    ));
+>
 
 To create a record in a table related to another, simply pass the object as a foreign key:
 
@@ -318,8 +326,9 @@ And, as Propel is independent of the database used, so is symfony. As a matter o
 
 The SQL creating the tables according to the `schema.xml` description will be generated in the `myproject/data/sql/schema.sql` file.
 
-[1]: http://propel.phpdb.org/trac/  "Propel"
-[2]: http://propel.phpdb.org/docs/user_guide/  "Propel XML data model format"
-[3]: http://propel.phpdb.org/docs/user_guide/chapters/GettingStarted.html  "Getting started with propel"
-[4]: http://propel.phpdb.org/docs/user_guide/chapters/ManipulatingObjects.html   "Persisting objects with propel"
-[5]: http://propel.phpdb.org/docs/user_guide/chapters/FindingObjects.html  "Fining objects with Propel"
+[1]: http://propel.phpdb.org/trac/                                              "Propel"
+[2]: http://propel.phpdb.org/docs/user_guide/                                   "Propel XML data model format"
+[3]: http://propel.phpdb.org/docs/user_guide/chapters/GettingStarted.html       "Getting started with propel"
+[4]: http://propel.phpdb.org/docs/user_guide/chapters/ManipulatingObjects.html  "Persisting objects with propel"
+[5]: http://propel.phpdb.org/docs/user_guide/chapters/FindingObjects.html       "Finding objects with Propel"
+[6]: http://en.wikipedia.org/wiki/CamelCase                                     "CamelCase definition at Wikipedia" 
