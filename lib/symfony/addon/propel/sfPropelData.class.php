@@ -70,7 +70,7 @@ class sfPropelData
         krsort($classes);
         foreach ($classes as $class)
         {
-          $peer_class = $class.'Peer';
+          $peer_class = trim($class.'Peer');
 
           call_user_func(array($peer_class, 'doDeleteAll'));
         }
@@ -85,6 +85,8 @@ class sfPropelData
       $main_datas = sfYaml::load($fixture_file);
       foreach ($main_datas as $class => $datas)
       {
+        $class = trim($class);
+
         $peer_class = $class.'Peer';
 
         // load map class
