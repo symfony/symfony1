@@ -226,7 +226,7 @@ class sfFeed
   // item feed methods
   public function getItemFeedTitle ($item)
   {
-    foreach (array('getFeedTitle', 'getTitle', 'getName') as $methodName)
+    foreach (array('getFeedTitle', 'getTitle', 'getName', '__toString') as $methodName)
     {
       if (method_exists($item, $methodName))
       {
