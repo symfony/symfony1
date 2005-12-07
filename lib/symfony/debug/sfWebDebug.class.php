@@ -31,7 +31,6 @@ class sfWebDebug
 
   public function initialize()
   {
-    $this->loadHelpers();
   }
 
   /**
@@ -106,6 +105,7 @@ class sfWebDebug
 
   public function printResults()
   {
+    $this->loadHelpers();
     echo $this->getResults();
   }
 
