@@ -203,7 +203,7 @@ You can add the choice of the sort column to the list navigation interface:
         $pager->setCriteria($c);
         if ($this->getRequestParameter('sort'))
         {
-          $pager->setSort{$this->getRequestParameter('sort'));
+          $pager->setSort($this->getRequestParameter('sort'));
         }
         else
         {
@@ -220,7 +220,7 @@ You can add the choice of the sort column to the list navigation interface:
 Add the following to the `listSuccess.php` template:
 
     [php]
-    Sort by : <?php echo link_to('Title', 'article/list?sort=Title' ?> - <?php echo link_to('Id', 'article/list?sort=Id' ?>
+    Sort by : <?php echo link_to('Title', 'article/list?sort=Title') ?> - <?php echo link_to('Id', 'article/list?sort=Id' ?>
 
 Changing the number of results per page
 ---------------------------------------
