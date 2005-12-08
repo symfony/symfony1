@@ -200,19 +200,18 @@
     #
     # By default the fall-through action is the same as the one specified in the :url (and the default method is :post).
   */
-  function form_remote_tag($options = array())
+  function form_remote_tag($options = array(), $options_html = array())
   {
+    $options = _parse_attributes($options);
+    $options_html = _parse_attributes($options_html);
+
     $options['form'] = true;
 
-    if (!array_key_exists('html', $options))
-    {
-      $options['html'] = array();
-    }
-    $options['html']['onsubmit'] = remote_function($options).'; return false;';
-    $options['html']['action'] = isset($options['html']['action']) ? $options['html']['action'] : url_for($options['url']);
-    $options['html']['method'] = isset($options['html']['method']) ? $options['html']['method'] : 'post';
+    $options_html['onsubmit'] = remote_function($options).'; return false;';
+    $options_html['action'] = isset($options_html['action']) ? $options_html['action'] : url_for($options['url']);
+    $options_html['method'] = isset($options_html['method']) ? $options_html['method'] : 'post';
 
-    return tag('form', $options['html'], true);
+    return tag('form', $options_html, true);
   }
 
   /**
