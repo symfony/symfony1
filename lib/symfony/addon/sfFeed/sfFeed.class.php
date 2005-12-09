@@ -261,26 +261,30 @@ class sfFeed
 
       // we get all parameters
       $params = array();
-      if (preg_match('/\:([^\/]+)/', $url, $matches))
+      if (preg_match_all('/\:([^\/]+)/', $url, $matches))
       {
-        $value = null;
-        $name = ucfirst(sfInflector::camelize($matches[1]));
-        foreach (array('getFeed'.$name, 'get'.$name) as $methodName)
+        foreach ($matches[1] as $paramName)
         {
-          if (method_exists($item, $methodName))
+          $value = null;
+          $name = ucfirst(sfInflector::camelize($paramName));
+
+          foreach (array('getFeed'.$name, 'get'.$name) as $methodName)
           {
-            $value = $item->$methodName();
+            if (method_exists($item, $methodName))
+            {
+              $value = $item->$methodName();
+            }
           }
-        }
 
-        if ($value === null)
-        {
-          $error = 'Cannot find a matching method name for "%s" parameter to generate URL for the "%s" route name';
-          $error = sprintf($error, $name, $routeName);
-          throw new sfException($error);
-        }
+          if ($value === null)
+          {
+            $error = 'Cannot find a matching method name for "%s" parameter to generate URL for the "%s" route name';
+            $error = sprintf($error, $name, $routeName);
+            throw new sfException($error);
+          }
 
-        $params[] = $matches[1].'='.$value;
+          $params[] = $paramName.'='.$value;
+        }
       }
 
       return $this->context->getController()->genUrl(null, $routeName.($params ? '?'.implode('&', $params) : ''), true);
