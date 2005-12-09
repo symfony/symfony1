@@ -294,7 +294,14 @@ class sfFeed
       }
     }
 
-    return $this->context->getController()->genUrl(null, '/', true);
+    if ($this->getLink())
+    {
+      return sfContext::getInstance()->getController()->genUrl(null, $this->getLink(), true);
+    }
+    else
+    {
+      return $this->context->getController()->genUrl(null, '/', true);
+    }
   }
 
   public function getItemFeedUniqueId ($item)

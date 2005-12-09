@@ -39,7 +39,7 @@ class sfAtom1Feed extends sfFeed
     $xml[] = '  <link rel="alternate" href="'.sfContext::getInstance()->getController()->genUrl(null, $this->getLink(), true).'"></link>';
     if ($this->getFeedUrl())
     {
-      $xml[] = '  <link rel="self" href="'.sfContext::getInstance()->getController()->genUrl(null, $this->geFeedUrl(), true).'"></link>';
+      $xml[] = '  <link rel="self" href="'.sfContext::getInstance()->getController()->genUrl(null, $this->getFeedUrl(), true).'"></link>';
     }
     $xml[] = '  <id>'.sfContext::getInstance()->getController()->genUrl(null, $this->getLink(), true).'</id>';
     $xml[] = '  <updated>'.strftime('%Y-%m-%dT%H:%M:%SZ', $this->getLatestPostDate()).'</updated>';
