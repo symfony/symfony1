@@ -24,9 +24,12 @@ function run_build_schema($task, $args)
   _call_phing($task, 'build-model-schema', false);
 
   // fix database name
-//  $schema = file_get_contents('config/schema.xml');
-//  $schema = preg_replace('//', '', $schema);
-//  file_put_contents($schema, 'config/schema.xml');
+  if (file_exists('config/schema.xml'))
+  {
+    $schema = file_get_contents('config/schema.xml');
+    $schema = preg_replace('/<database\s+name="[^"]+"/s', '<database name="symfony"', $schema);
+    file_put_contents('config/schema.xml', $schema);
+  }
 }
 
 function _call_phing($task, $task_name, $check_schema = true)
@@ -40,9 +43,13 @@ function _call_phing($task, $task_name, $check_schema = true)
 
   $propel_generator_dir = PAKEFILE_SYMFONY_LIB_DIR.'/propel-generator';
 
+  $current_dir = getcwd();
+
   // call phing targets
   pake_import('Phing', false);
-  pakePhingTask::call_phing($task, array($task_name), dirname(__FILE__).'/build.xml', array('project' => $task->get_property('name', 'symfony'), 'lib_dir' => PAKEFILE_LIB_DIR, 'data_dir' => PAKEFILE_DATA_DIR, 'propel_generator_dir' => $propel_generator_dir));
+  pakePhingTask::call_phing($task, array($task_name), dirname(__FILE__).'/../bin/build.xml', array('project' => $task->get_property('name', 'symfony'), 'lib_dir' => PAKEFILE_LIB_DIR, 'data_dir' => PAKEFILE_DATA_DIR, 'propel_generator_dir' => $propel_generator_dir));
+
+  chdir($current_dir);
 }
 
 ?>
