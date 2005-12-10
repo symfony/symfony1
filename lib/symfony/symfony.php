@@ -54,16 +54,28 @@ function __autoload($class)
 
   if (!isset($classes[$class]))
   {
-    // unspecified class
-    $error = 'Autoloading of class "%s" failed. Try to clear the symfony cache and refresh. [err0003]';
-    $error = sprintf($error, $class);
-    $e = new sfAutoloadException($error);
+    // see if the file exists in the current module lib directory
+    $current_module = sfContext::getInstance()->getModuleName();
+    $module_lib = SF_APP_MODULE_DIR.'/'.$current_module.'/'.SF_APP_MODULE_LIB_DIR_NAME.'/'.$class.'.class.php';
+    if (is_readable($module_lib))
+    {
+      require_once($module_lib);
+    }
+    else
+    {
+      // unspecified class
+      $error = 'Autoloading of class "%s" failed. Try to clear the symfony cache and refresh. [err0003]';
+      $error = sprintf($error, $class);
+      $e = new sfAutoloadException($error);
 
-    $e->printStackTrace();
+      $e->printStackTrace();
+    }
   }
-
-  // class exists, let's include it
-  require_once($classes[$class]);
+  else
+  {
+    // class exists, let's include it
+    require_once($classes[$class]);
+  }
 }
 
 try
