@@ -213,6 +213,11 @@ class sfViewCacheManager
 
   public function remove($internalUri, $suffix = null)
   {
+    if (!SF_CACHE)
+    {
+      return null;
+    }
+
     if ($suffix !== null)
     {
       $this->doRemove($internalUri, $suffix);
