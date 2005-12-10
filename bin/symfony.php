@@ -16,25 +16,36 @@ require_once 'pake.php';
 // we trap -V before pake
 require_once 'pake/pakeGetopt.class.php';
 $OPTIONS = array(
-  array('--version',  '-V', pakeGetopt::NO_ARGUMENT, ''),
+  array('--version', '-V', pakeGetopt::NO_ARGUMENT, ''),
+  array('--pakefile', '-f', pakeGetopt::OPTIONAL_ARGUMENT, ''),
 );
 $opt = new pakeGetopt($OPTIONS);
 try
 {
   $opt->parse();
+
   foreach ($opt->get_options() as $opt => $value)
   {
     if ($opt == 'version')
     {
       echo 'symfony version '.SYMFONY_VERSION."\n";
+      exit(0);
     }
-    exit(0);
   }
 }
-catch (Exception $e)
+catch (pakeException $e)
 {
+  print $e->getMessage();
 }
 
-pakeApp::get_instance()->run(PAKEFILE_DATA_DIR.'/symfony/bin/pakefile.php');
+$pake = pakeApp::get_instance();
+try
+{
+  $pake->run(PAKEFILE_DATA_DIR.'/symfony/bin/pakefile.php');
+}
+catch (pakeException $e)
+{
+  echo "ERROR: symfony - ".$e->getMessage()."\n";
+}
 
 ?>
