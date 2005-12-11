@@ -105,7 +105,7 @@ If you don't want to use PEAR, you can still download the latest version directl
 
     $ mkdir /home/steve/mysymfony
     $ cd /home/steve/mysymfony
-    $ svn co http://svn.symfony-project.com/symfony/trunk/ .
+    $ svn co http://svn.symfony-project.com/trunk/ .
 
 For your project to make use of this installation, you will have to create two symbolic links in you project from the `vendor` directory to the symfony `lib` directory:
 
@@ -115,6 +115,8 @@ For your project to make use of this installation, you will have to create two s
 
 
 In addition, you will have to make the shortcuts to allow the call to the command line tools `pake` and `symfony`.
+
+>**Note**: You must also install Phing and Pake. Just install them under the `lib/symfony` directory.
 
 Installing symfony without command line
 ---------------------------------------
@@ -151,7 +153,7 @@ To learn more about the file structure of symfony projects, read the [related ch
 Now you need to copy some files from the symfony package into your project directory. First, create a `symfony` subdirectory in the `data` and `lib` directories of your distant project. Then, transfer the files as follow:
 
      | local          |    | distant
----- | -------------- | -- | -------
+-----|----------------|----|------------------------
 copy | symfony/data/* | to | myproject/data/symfony/
 copy | symfony/lib/*  | to | myproject/lib/symfony/  
     

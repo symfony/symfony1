@@ -30,7 +30,7 @@ There are two ways of initiating a CRUD interface:
 Initiating a CRUD
 -----------------
 
-To initiate a Propel CRUD that will create an 'article' module to deal with the records of the 'Article' table, type:
+To initiate a Propel CRUD that will create an 'article' module to deal with the records of the 'Article' model class name, type:
 
     $ symfony init-propelcrud myapp article Article
 
@@ -75,7 +75,7 @@ editSuccess.php | record edition form
 listSuccess.php | list of all records
 showSuccess.php | detail of one record
 
-To generate the Propel CRUD for the 'Article' table, type:
+To generate the Propel CRUD for the 'Article' model class name, type:
 
     $ symfony generate-propelcrud myapp article Article
 

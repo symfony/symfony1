@@ -56,10 +56,11 @@ Custom classes
 
 If you need to extend your actions by a custom class, you can take advantage of the class auto-loading feature. If the class file has the same name as the class itself, symfony will auto-load it when needed, provided it is located in one of the two directories below:
 
-| Class placed in  | Is available for
-| ---------------- | ----------------
-| `lib/`           | all applications of the project
-| `myapp/lib/`     | all the modules of the 'myapp' application
+| Class placed in               | Is available for
+| ----------------------------- | ------------------------------------------
+| `lib/`                        | all applications of the project
+| `myapp/lib/`                  | all the modules of the 'myapp' application
+| `myapp/modules/mymodule/lib/` | all the templates of the 'mymodule' module
 
 
 ### Example
