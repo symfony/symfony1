@@ -45,7 +45,7 @@ class sfConsoleController extends sfController
     catch (Exception $e)
     {
       // most likely an exception from a third-party library
-      $e = new AgaviException($e->getMessage());
+      $e = new sfException($e->getMessage());
 
       $e->printStackTrace();
     }

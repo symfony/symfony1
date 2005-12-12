@@ -79,6 +79,9 @@ class sfActionStack
       unset($this->stack[$index]);
     }
 
+    // rearranged keys
+    sort($this->stack);
+
     return $retval;
   }
 
