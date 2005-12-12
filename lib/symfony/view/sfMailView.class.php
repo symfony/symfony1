@@ -84,12 +84,6 @@ class sfMailView extends sfPHPView
 //      $retval = $this->setCacheContent($retval);
 //    }
 
-    // now render decorator template, if one exists
-    if ($this->isDecorator())
-    {
-      $retval =& $this->decorate($retval);
-    }
-
 //    $this->setPageCacheContent($retval);
 
     // send email
