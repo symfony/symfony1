@@ -143,7 +143,7 @@ abstract class sfView
    *
    * @return void
    */
-  abstract function configure ();
+  abstract function configure ($extension = '.php');
 
   /**
    * Retrieve the current application context.

@@ -126,7 +126,7 @@ class sfPHPView extends sfView
     return null;
   }
 
-  public function configure()
+  public function configure($extension = '.php')
   {
     $context          = $this->getContext();
     $actionStackEntry = $context->getController()->getActionStack()->getLastEntry();
@@ -143,7 +143,7 @@ class sfPHPView extends sfView
     }
 
     // set template name
-    $templateFile = $templateName.$viewType.'.php';
+    $templateFile = $templateName.$viewType.$extension;
     $this->setTemplate($templateFile);
 
     // set template directory
@@ -163,7 +163,7 @@ class sfPHPView extends sfView
       }
     }
 
-    if (SF_LOGGING_ACTIVE) $context->getLogger()->info('{sfPHPView} execute view for template "'.$templateName.$viewType.'.php"');
+    if (SF_LOGGING_ACTIVE) $context->getLogger()->info('{sfPHPView} execute view for template "'.$templateName.$viewType.$extension.'"');
   }
 
   /**
