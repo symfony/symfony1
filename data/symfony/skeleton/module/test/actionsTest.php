@@ -5,7 +5,7 @@ class ##MODULE_NAME##ActionsWebBrowserTest extends UnitTestCase
   private
     $browser = null;
 
-  public function SetUp ()
+  public function setUp ()
   {
     // create a new test browser
     $this->browser = new sfTestBrowser();

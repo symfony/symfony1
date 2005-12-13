@@ -60,6 +60,11 @@ abstract class sfGenerator
       if (!is_readable($template_template))
       {
         $template_template = $default_template_dir.'/templates/'.$template.'.php';
+        if (!is_readable($template_template))
+        {
+          // this template does not exist for this generator
+          continue;
+        }
       }
       $retval = $this->evalTemplate($template_template);
 
