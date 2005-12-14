@@ -143,6 +143,12 @@ class sfToolkit
 
   public static function stripComments ($source)
   {
+    // tokenizer available?
+    if (!function_exists('token_get_all'))
+    {
+      return $source;
+    }
+
     /* T_ML_COMMENT does not exist in PHP 5.
      * The following three lines define it in order to
      * preserve backwards compatibility.
@@ -151,7 +157,9 @@ class sfToolkit
      * which we will mask as T_ML_COMMENT for PHP 4.
      */
     if (!defined('T_ML_COMMENT'))
+    {
       define('T_ML_COMMENT', T_COMMENT);
+    }
     else
     {
       if (!defined('T_DOC_COMMENT')) define('T_DOC_COMMENT', T_ML_COMMENT);
