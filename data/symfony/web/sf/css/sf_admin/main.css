@@ -1,0 +1,86 @@
+ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,body,html,p,blockquote,fieldset,input
+{ margin: 0; padding: 0; }
+a img,:link img,:visited img { border: none; }
+
+a:link, a:visited
+{
+  text-decoration: none;
+}
+
+a:hover
+{
+  text-decoration: underline;
+}
+
+body, td
+{
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  background-color: #fff;
+}
+
+.module
+{
+  margin-bottom: 5px;
+  border: 1px solid #ccc;
+}
+
+.module h2
+{
+  margin: 0;
+  padding: 3px 5px;
+  text-align: left;
+  background: #7CA0C7 url(../img/admin/default-bg.gif) left top repeat-x;
+  color: white;
+  font-weight: bold;
+  font-size: 100%;
+}
+
+label
+{
+  display: block;
+  padding: 0 1em 3px 0;
+  float: left;
+  text-align: left;
+  width: 8em;
+  color: #666;
+  font-weight: normal !important;
+}
+
+label.required
+{
+  color: #333 !important;
+  font-weight: bold !important;
+}
+
+.form-row
+{
+  clear: both;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.form-errors
+{
+  border: 1px solid #000;
+}
+
+ul.messagelist li { font-size:12px; display:block; padding:4px 5px 4px 25px; margin:0 0 3px 0; border-bottom:1px solid #ddd; color:#666; background:#ffc url(../img/admin/icon_success.gif) 5px .3em no-repeat; }
+
+.form-error
+{
+  color: #f00;
+}
+
+.form-error input, .form-error select
+{
+  border: 1px solid red;
+}
+
+fieldset.collapsed * { display:none; }
+fieldset.collapsed h2, fieldset.collapsed { display:block !important; }
+fieldset.collapsed .collapse-toggle { display: inline !important; }
+fieldset.collapse h2 a.collapse-toggle { color:#ffc; }
+fieldset.collapse h2 a.collapse-toggle:hover { text-decoration:underline; }
