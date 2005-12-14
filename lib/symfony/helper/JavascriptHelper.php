@@ -685,7 +685,7 @@
     );
 
     $editor_options = _convert_options($editor_options);
-    $default_options = array('tag' => 'span', 'id' => '\''. $name . '_in_place_editor', 'class' => 'in_place_editor_field');
+    $default_options = array('tag' => 'span', 'id' => '\''.$name.'_in_place_editor', 'class' => 'in_place_editor_field');
 
     return _in_place_editor($name, $url, array_merge($editor_options, $default_options));
   }
@@ -733,11 +733,15 @@
 
       if (isset($options['cancel_text']))
       {
-        $js_options['cancelText'] = $options['cancel_text'];
+        $js_options['cancelText'] = "'".$options['cancel_text']."'";
       }
       if (isset($options['save_text']))
       {
-        $js_options['okText'] = $options['save_text'];
+        $js_options['okText'] = "'".$options['save_text']."'";
+      }
+      if (isset($options['cols']))
+      {
+        $js_options['cols'] = $options['cols'];
       }
       if (isset($options['rows']))
       {
