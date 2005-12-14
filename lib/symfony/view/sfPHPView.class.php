@@ -140,10 +140,14 @@ class sfPHPView extends sfView
     if (preg_match('/^'.$action->getActionName().'(.+)$/i', $this->viewName, $match))
     {
       $viewType = $match[1];
+      $templateFile = $templateName.$viewType.$extension;
+    }
+    else
+    {
+      $templateFile = $this->viewName.$extension;
     }
 
     // set template name
-    $templateFile = $templateName.$viewType.$extension;
     $this->setTemplate($templateFile);
 
     // set template directory
