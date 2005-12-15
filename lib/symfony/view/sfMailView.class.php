@@ -29,7 +29,7 @@ class sfMailView extends sfPHPView
     return 'sfMail';
   }
 
-  public function configure()
+  public function configure($extension = '.php')
   {
     // view.yml configure
     parent::configure();
