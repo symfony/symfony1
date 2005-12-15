@@ -130,7 +130,7 @@ class sfRouting
    */
   public function getRouteByName($name)
   {
-    if ($name{0} == '@')
+    if ($name[0] == '@')
     {
       $name = substr($name, 1);
     }
@@ -357,7 +357,7 @@ class sfRouting
     }
 
     // strip off last divider character
-    if (isset($real_url{1}))
+    if (isset($real_url[1]))
     {
       $real_url = rtrim($real_url, $divider);
     }

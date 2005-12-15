@@ -135,13 +135,13 @@ abstract class sfWebController extends sfController
      // module/action?key1=value1&key2=value2...
 
      // first slash optional
-     if ($url{0} == '/')
+     if ($url[0] == '/')
      {
        $url = substr($url, 1);
      }
 
      // route_name?
-     if ($url{0} == '@')
+     if ($url[0] == '@')
      {
        $route_name = substr($url, 1);
      }

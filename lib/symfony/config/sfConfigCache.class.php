@@ -172,7 +172,7 @@ class sfConfigCache
    */
   public static function getCacheName ($config)
   {
-    if (strlen($config) > 3 && ctype_alpha($config{0}) && $config{1} == ':' && $config{2} == '\\')
+    if (strlen($config) > 3 && ctype_alpha($config[0]) && $config[1] == ':' && $config[2] == '\\')
     {
       // file is a windows absolute path, strip off the drive letter
       $config = substr($config, 3);

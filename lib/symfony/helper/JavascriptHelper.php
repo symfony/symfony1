@@ -879,7 +879,7 @@
 
   function _method_option_to_s($method)
   {
-    return (is_string($method) && $method{0} != "'") ? $method : "'$method'";
+    return (is_string($method) && $method[0] != "'") ? $method : "'$method'";
   }
 
   function _build_observer($klass, $name, $options = array())

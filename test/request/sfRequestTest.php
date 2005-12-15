@@ -114,7 +114,7 @@ class sfRequestTest extends UnitTestCase
     $_SERVER['REQUEST_URI'] = $request_uri;
     $_SERVER['SCRIPT_NAME'] = '/index.php';
 
-    if ($request_uri{0} != '/')
+    if ($request_uri[0] != '/')
     {
       $request_uri = '/'.$request_uri;
     }
