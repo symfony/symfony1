@@ -65,6 +65,26 @@ abstract class sfFilter
 
     return true;
   }
+
+  public function getParameterHolder()
+  {
+    return $this->parameter_holder;
+  }
+
+  public function getParameter($name, $default = null, $ns = null)
+  {
+    return $this->parameter_holder->get($name, $default, $ns);
+  }
+
+  public function hasParameter($name, $ns = null)
+  {
+    return $this->parameter_holder->has($name, $ns);
+  }
+
+  public function setParameter($name, $value, $ns = null)
+  {
+    return $this->parameter_holder->set($name, $value, $ns);
+  }
 }
 
 ?>
