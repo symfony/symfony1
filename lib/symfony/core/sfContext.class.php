@@ -183,7 +183,7 @@ class sfContext
     // get the last action stack entry
     $actionEntry = $this->actionStack->getLastEntry();
 
-    return SF_APP_MODULE_DIR.'/'.$actionEntry->getModuleName();
+    return $actionEntry ? SF_APP_MODULE_DIR.'/'.$actionEntry->getModuleName() : null;
   }
 
   /**
@@ -197,7 +197,7 @@ class sfContext
     // get the last action stack entry
     $actionEntry = $this->actionStack->getLastEntry();
 
-    return $actionEntry->getModuleName();
+    return $actionEntry ? $actionEntry->getModuleName() : null;
   }
 
   /**
