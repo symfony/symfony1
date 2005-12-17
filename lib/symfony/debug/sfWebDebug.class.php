@@ -118,7 +118,7 @@ class sfWebDebug
     }
   }
 
-  private function formatLogLine($log_line)
+  private function formatLogLine($type, $log_line)
   {
     // escape HTML
     $log_line = htmlspecialchars(strip_tags($log_line));
@@ -131,6 +131,12 @@ class sfWebDebug
     $log_line = preg_replace('/"(.+?)"/s', '"<span class="sfStatsFileInfo">\\1</span>"', $log_line);
     $log_line = preg_replace('/^(.+?)\(\)\:/s', '<span class="sfStatsFileInfo">\\1()</span>:', $log_line);
     $log_line = preg_replace('/in (.+?) at line (\d+)/s', 'in <span class="sfStatsFileInfo">\\1</span> at line <span class="sfStatsFileInfo">\\2</span>', $log_line);
+
+    // special formatting for creole/SQL lines
+    if (strtolower($type) == 'creole')
+    {
+      $log_line = preg_replace('/\b(SELECT|FROM|AS|LIMIT|ASC|COUNT|DESC|WHERE|LEFT JOIN|INNER JOIN|RIGHT JOIN|ORDER BY|GROUP BY|IN|LIKE|DISTINCT)\b/', '<span class="sfStatsFileInfo">\\1</span>', $log_line);
+    }
 
     return $log_line;
   }
@@ -222,13 +228,13 @@ class sfWebDebug
           $debug_info .= '&nbsp;<a href="#" onclick="Element.toggle(\'debug_'.$line_nb.'\')">'.image_tag($this->base_image_path.'/toggle.gif').'</a><div class="sfStatsDebugInfo" id="debug_'.$line_nb.'" style="display:none">';
           foreach ($logEntry->getDebugStack() as $i => $log_line)
           {
-            $debug_info .= '#'.$i.' &raquo; '.$this->formatLogLine($log_line).'<br />';
+            $debug_info .= '#'.$i.' &raquo; '.$this->formatLogLine('', $log_line).'<br />';
           }
           $debug_info .= "</div>\n";
         }
 
         // format log
-        $log = $this->formatLogLine($log);
+        $log = $this->formatLogLine($type, $log);
 
         ++$line_nb;
         $format = "<tr class='sfStats%s %s'><td>%s</td><td>%s</td><td>+%s&nbsp;</td><td><span class=\"sfStatsLogType\">%s</span></td><td>%s%s</td></tr>\n";
