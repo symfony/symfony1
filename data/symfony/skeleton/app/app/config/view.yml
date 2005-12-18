@@ -17,3 +17,5 @@ default:
   layout:         layout
 
   slots:          {}
+
+  use_default_slots: on

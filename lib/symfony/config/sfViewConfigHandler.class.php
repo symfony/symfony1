@@ -132,7 +132,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
 
     $use_default_slots = $this->getConfigValue('use_default_slots', $viewName);
 
-    if ($use_default_slots )
+    if ($use_default_slots)
     {
       $slots = $this->mergeConfigValue('slots', $viewName);
     }
