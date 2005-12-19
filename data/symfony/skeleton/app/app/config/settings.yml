@@ -1,4 +1,5 @@
 prod:
+  no_script_name:           ##NO_SCRIPT_NAME##
 
 dev:
   .settings:
