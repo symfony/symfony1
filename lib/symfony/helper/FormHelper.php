@@ -218,7 +218,7 @@ function input_password_tag($name = 'password', $value = null, $options = array(
  */
 function textarea_tag($name, $content = null, $options = array())
 {
-  if ($value === null && _get_request_value($name))
+  if ($content === null && _get_request_value($name))
   {
     $content = _get_request_value($name);
   }
