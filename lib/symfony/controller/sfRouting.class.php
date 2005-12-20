@@ -421,7 +421,7 @@ class sfRouting
         {
           if (preg_match('#[a-z_\-]#i', $name))
           {
-            $out[$name] = $value;
+            $out[$name] = urldecode($value);
           }
           else
           {
@@ -441,7 +441,7 @@ class sfRouting
               $break = false;
               break;
             }
-            $out[$names[$pos]] = $found;
+            $out[$names[$pos]] = urldecode($found);
           }
           // unnamed elements go in as 'pass'
           else 
@@ -461,11 +461,11 @@ class sfRouting
                 if (substr($key, -2) == '[]')
                 {
                   if (!isset($out[$key])) $out[$key] = array();
-                  $out[$key][] = $value;
+                  $out[$key][] = urldecode($value);
                 }
                 else
                 {
-                  $out[$key] = $value;
+                  $out[$key] = urldecode($value);
                 }
               }
             }
