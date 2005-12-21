@@ -53,7 +53,7 @@ function form_error($param, $options = array())
   $suffix = '&nbsp;&darr;';
   if (isset($options['suffix']))
   {
-    $prefix = $options['suffix'];
+    $suffix = $options['suffix'];
     unset($options['suffix']);
   }
 
