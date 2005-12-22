@@ -219,10 +219,10 @@ Note that the `phpname` attribute of the `table` is used for the class name; the
 
 >**Note**: To set several fields at one time, you can use the `->fromArray()` methods of the Propel objects:
 >
->    $article->fromArray(array(
->       'title'   =>   'My first article',
->       'content' =>   'This is my very first article.\n Hope you enjoy it!',
->    ));
+>     $article->fromArray(array(
+>        'title'   =>   'My first article',
+>        'content' =>   'This is my very first article.\n Hope you enjoy it!',
+>     ));
 >
 
 To create a record in a table related to another, simply pass the object as a foreign key:

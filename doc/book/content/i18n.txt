@@ -112,21 +112,21 @@ Once the corresponding object model is built (don't forget to call `symfony buil
 
 >**Note**: If you don't want to remember to change the culture each time you use an i18n object, you can also change the `hydrate` method in the object class. In the previous example, add the following function to the `myproject/lib/model/Product.php`:
 >
->    [php]
->    public function hydrate(ResultSet $rs, $startcol = 1)
->    {
->      parent::hydrate($rs, $startcol);
->      $this->setCulture(SF_DEFAULT_CULTURE);
->    }
+>     [php]
+>     public function hydrate(ResultSet $rs, $startcol = 1)
+>     {
+>       parent::hydrate($rs, $startcol);
+>       $this->setCulture(SF_DEFAULT_CULTURE);
+>     }
 >  
 >or even, to get the actual user culture:
 >
->    [php]
->    public function hydrate(ResultSet $rs, $startcol = 1)
->    {
->      parent::hydrate($rs, $startcol);
->      $this->setCulture(sfContext::getInstance()->getUser()->getCulture());
->    }
+>     [php]
+>     public function hydrate(ResultSet $rs, $startcol = 1)
+>     {
+>       parent::hydrate($rs, $startcol);
+>       $this->setCulture(sfContext::getInstance()->getUser()->getCulture());
+>     }
 
 Interface translation
 ---------------------

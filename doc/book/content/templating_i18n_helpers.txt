@@ -28,15 +28,17 @@ Here are two functions aimed at date and date plus time display:
     
 The second argument is the format, that can be specified either with predefined patterns:
 
-| d    | ShortDatePattern        | MM/dd/yyyy 
-| D    | LongDatePattern         | dddd, dd MMMM yyyy 
-| F    | FullDateTimePattern     | dddd, dd MMMM yyyy HH:mm:ss
-| m, M | MonthDayPattern         | MMMM dd 
-| r, R | RFC1123Pattern          | ddd, dd MMM yyyy HH':'mm':'ss 'GMT'
-| s    | SortableDateTimePattern | yyyy'-'MM'-'dd'T'HH':'mm':'ss 
-| t    | ShortTimePattern        | HH:mm 
-| T    | LongTimePattern         | HH:mm:ss 
-| Y    | YearMonthPattern        | yyyy MMMM 
+-     | -                       | -   
+----- | ----------------------- | ------------
+ d    | ShortDatePattern        | MM/dd/yyyy 
+ D    | LongDatePattern         | dddd, dd MMMM yyyy 
+ F    | FullDateTimePattern     | dddd, dd MMMM yyyy HH:mm:ss
+ m, M | MonthDayPattern         | MMMM dd 
+ r, R | RFC1123Pattern          | ddd, dd MMM yyyy HH':'mm':'ss 'GMT'
+ s    | SortableDateTimePattern | yyyy'-'MM'-'dd'T'HH':'mm':'ss 
+ t    | ShortTimePattern        | HH:mm 
+ T    | LongTimePattern         | HH:mm:ss 
+ Y    | YearMonthPattern        | yyyy MMMM 
 
 Or directly with the basic keys.
 

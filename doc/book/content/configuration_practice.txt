@@ -412,6 +412,14 @@ The last usual module configuration file concerns form validation and is not loc
 
 For more information about form validation and the use of the validation configuration files, report to the [form validation chapter](validate_form.txt).
 
+Browsing your own YAML file
+---------------------------
+
+Whether you want to create a new config handler, or to read a YAML file directly, you can use the `sfYaml` class. It is a YAML parser that can turn a YAML file into an associative array:
+
+    [php]
+    $myarray = sfYaml::load('/tmp/myfile.yml');
+
 [1]: http://www.w3.org/People/Raggett/tidy/ "HTML Tidy"
 [2]: http://www.mojavi.org/                 "Mojavi"
 [3]: http://www.mojavi.org/                 "Mojavi project"
