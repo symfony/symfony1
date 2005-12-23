@@ -20,7 +20,6 @@ class defaultActions extends sfActions
 {
   public function executeUnavailable()
   {
-    $this->hasLayout(false);
   }
 
   public function executeIndex()
