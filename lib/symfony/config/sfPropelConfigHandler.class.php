@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -33,9 +33,9 @@ class sfPropelConfigHandler extends sfYamlConfigHandler
 
     // merge all configuration with specific environment configuration
     $myConfig = isset($config['all']) ? $config['all'] : array();
-    if (isset($config[SF_ENVIRONMENT]) && is_array($config[SF_ENVIRONMENT]))
+    if (isset($config[sfConfig::get('sf_environment')]) && is_array($config[sfConfig::get('sf_environment')]))
     {
-      $myConfig = sfToolkit::array_deep_merge($myConfig, $config[SF_ENVIRONMENT]);
+      $myConfig = sfToolkit::array_deep_merge($myConfig, $config[sfConfig::get('sf_environment')]);
     }
 
     if (!isset($myConfig['adapter']))

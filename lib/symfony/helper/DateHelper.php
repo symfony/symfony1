@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -21,8 +21,7 @@ function format_daterange($start_date, $end_date, $format = 'd', $full_text, $st
 {
   if (!$culture) $culture = sfContext::getInstance()->getUser()->getCulture();
 
-  require_once 'i18n/DateFormat.php';
-  $dateFormat = new DateFormat($culture);
+  $dateFormat = new sfDateFormat($culture);
 
   if ($start_date != '' && $end_date != '')
   {
@@ -41,9 +40,8 @@ function format_daterange($start_date, $end_date, $format = 'd', $full_text, $st
 function format_date($date, $format = 'd', $culture = null)
 {
   if (!$culture) $culture = sfContext::getInstance()->getUser()->getCulture();
-  
-  require_once 'i18n/DateFormat.php';
-  $dateFormat = new DateFormat($culture);
+
+  $dateFormat = new sfDateFormat($culture);
   return $dateFormat->format($date, $format);
 }
 
@@ -51,8 +49,7 @@ function format_datetime($date, $format = 'F', $culture = null)
 {
   if (!$culture) $culture = sfContext::getInstance()->getUser()->getCulture();
 
-  require_once 'i18n/DateFormat.php';
-  $dateFormat = new DateFormat($culture);
+  $dateFormat = new sfDateFormat($culture);
   return $dateFormat->format($date, $format);
 }
 

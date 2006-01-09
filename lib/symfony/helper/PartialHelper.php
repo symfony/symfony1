@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -39,15 +39,22 @@ function include_partial($name, $vars = array())
 
   // global variables
   $vars = array_merge($vars, array(
-    'context'       => $context,
-    'params'        => $context->getRequest()->getParameterHolder(),
-    'request'       => $context->getRequest(),
-    'user'          => $context->getUser(),
-    'last_module'   => $lastActionEntry->getModuleName(),
-    'last_action'   => $lastActionEntry->getActionName(),
-    'first_module'  => $firstActionEntry->getModuleName(),
-    'first_action'  => $firstActionEntry->getActionName(),
+    'sf_context'       => $context,
+    'sf_params'        => $context->getRequest()->getParameterHolder(),
+    'sf_request'       => $context->getRequest(),
+    'sf_user'          => $context->getUser(),
+    'sf_last_module'   => $lastActionEntry->getModuleName(),
+    'sf_last_action'   => $lastActionEntry->getActionName(),
+    'sf_first_module'  => $firstActionEntry->getModuleName(),
+    'sf_first_action'  => $firstActionEntry->getActionName(),
   ));
+
+  if (sfConfig::get('sf_use_flash'))
+  {
+    $sf_flash = new sfParameterHolder();
+    $sf_flash->add($context->getUser()->getAttributeHolder()->getAll('symfony/flash'));
+    $vars['sf_flash'] = $sf_flash;
+  }
 
   // local action variables
   $action = $context->getActionStack()->getLastEntry()->getActionInstance();
@@ -61,17 +68,51 @@ function include_partial($name, $vars = array())
   // render to client
   if ($sep && $type == 'global')
   {
-    require SF_APP_TEMPLATE_DIR.DS.$filename;
+    $partial = sfConfig::get('sf_app_template_dir').DIRECTORY_SEPARATOR.$filename;
   }
   else if ($sep)
   {
-    require SF_APP_MODULE_DIR.DS.$type.DS.SF_APP_MODULE_TEMPLATE_DIR_NAME.DS.$filename;
+    $partial = sfConfig::get('sf_app_module_dir').DIRECTORY_SEPARATOR.$type.DIRECTORY_SEPARATOR.sfConfig::get('sf_app_module_template_dir_name').DIRECTORY_SEPARATOR.$filename;
   }
   else
   {
     $current_module = sfContext::getInstance()->getActionStack()->getLastEntry()->getModuleName();
-    require SF_APP_DIR.DS.SF_APP_MODULE_DIR_NAME.DS.$current_module.DS.SF_APP_MODULE_TEMPLATE_DIR_NAME.DS.$filename;
+    $partial = sfConfig::get('sf_app_dir').DIRECTORY_SEPARATOR.sfConfig::get('sf_app_module_dir_name').DIRECTORY_SEPARATOR.$current_module.DIRECTORY_SEPARATOR.sfConfig::get('sf_app_module_template_dir_name').DIRECTORY_SEPARATOR.$filename;
   }
+
+  if (!is_readable($partial))
+  {
+    $ok = false;
+
+    $current_module = sfContext::getInstance()->getActionStack()->getLastEntry()->getModuleName();
+
+    // search partial for generated templates in cache
+    $partial = sfConfig::get('sf_module_cache_dir').'/auto'.ucfirst($current_module).'/templates/'.$filename;
+    if (is_readable($partial))
+    {
+      $ok = true;
+    }
+    else
+    {
+      // search partial in a symfony module directory
+      $partial = sfConfig::get('sf_symfony_data_dir').'/symfony/modules/'.$current_module.'/templates/'.$filename;
+      if (is_readable($partial))
+      {
+        $ok = true;
+      }
+    }
+
+    if (!$ok)
+    {
+      // the partial isn't readable
+      $error = 'The partial "%s" does not exist or is unreadable';
+      $error = sprintf($error, $filename);
+
+      throw new sfRenderException($error);
+    }
+  }
+
+  require $partial;
 }
 
 ?>

@@ -1,0 +1,3 @@
+all:
+  adapter:  sqlite
+  database: ##DB_PATH##

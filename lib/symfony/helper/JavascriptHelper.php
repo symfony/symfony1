@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -234,7 +234,7 @@
     $options['html']['name'] = $name;
     $options['html']['value'] = $value;
 
-    tag('input', $options['html'], false);
+    return tag('input', $options['html'], false);
   }
 
   /**
@@ -281,7 +281,7 @@
   {
     sfContext::getInstance()->getRequest()->setAttribute(
       'javascript_update_element_function',
-      array('/sf/js/prototype'),
+      array('/sf/js/prototype/prototype'),
       'helper/asset/auto/javascript'
     );
 
@@ -341,7 +341,7 @@
   {
     sfContext::getInstance()->getRequest()->setAttribute(
       'javascript_remote_function',
-      array('/sf/js/prototype'),
+      array('/sf/js/prototype/prototype'),
       'helper/asset/auto/javascript'
     );
 
@@ -420,7 +420,7 @@
   {
     sfContext::getInstance()->getRequest()->setAttribute(
       'javascript_observe_field',
-      array('/sf/js/prototype'),
+      array('/sf/js/prototype/prototype'),
       'helper/asset/auto/javascript'
     );
 
@@ -444,7 +444,7 @@
   {
     sfContext::getInstance()->getRequest()->setAttribute(
       'javascript_observe_form',
-      array('/sf/js/prototype'),
+      array('/sf/js/prototype/prototype'),
       'helper/asset/auto/javascript'
     );
 
@@ -482,7 +482,7 @@
   {
     sfContext::getInstance()->getRequest()->setAttribute(
       'javascript_visual_effect',
-      array('/sf/js/prototype', '/sf/js/builder', '/sf/js/effects'),
+      array('/sf/js/prototype/prototype', '/sf/js/prototype/builder', '/sf/js/prototype/effects'),
       'helper/asset/auto/javascript'
     );
 
@@ -511,7 +511,7 @@
   {
     sfContext::getInstance()->getRequest()->setAttribute(
       'javascript_sortable_element',
-      array('/sf/js/prototype', '/sf/js/builder', '/sf/js/effects', '/sf/js/dragdrop'),
+      array('/sf/js/prototype/prototype', '/sf/js/prototype/builder', '/sf/js/prototype/effects', '/sf/js/prototype/dragdrop'),
       'helper/asset/auto/javascript'
     );
 
@@ -564,7 +564,7 @@
   {
     sfContext::getInstance()->getRequest()->setAttribute(
       'javascript_draggable_element',
-      array('/sf/js/prototype', '/sf/js/builder', '/sf/js/effects', '/sf/js/dragdrop'),
+      array('/sf/js/prototype/prototype', '/sf/js/prototype/builder', '/sf/js/prototype/effects', '/sf/js/prototype/dragdrop'),
       'helper/asset/auto/javascript'
     );
 
@@ -587,7 +587,7 @@
   {
     sfContext::getInstance()->getRequest()->setAttribute(
       'javascript_drop_receiving_element',
-      array('/sf/js/prototype', '/sf/js/builder', '/sf/js/effects', '/sf/js/dragdrop'),
+      array('/sf/js/prototype/prototype', '/sf/js/prototype/builder', '/sf/js/prototype/effects', '/sf/js/prototype/dragdrop'),
       'helper/asset/auto/javascript'
     );
 
@@ -648,7 +648,7 @@
 
     $context->getRequest()->setAttribute(
       'input_auto_complete_tag',
-      array('/sf/js/prototype', '/sf/js/controls', '/sf/js/effects'),
+      array('/sf/js/prototype/prototype', '/sf/js/prototype/controls', '/sf/js/prototype/effects'),
       'helper/asset/auto/javascript'
     );
 
@@ -680,7 +680,7 @@
   {
     sfContext::getInstance()->getRequest()->setAttribute(
       'input_in_place_editor_tag',
-      array('/sf/js/prototype', '/sf/js/controls', '/sf/js/effects'),
+      array('/sf/js/prototype/prototype', '/sf/js/prototype/controls', '/sf/js/prototype/effects'),
       'helper/asset/auto/javascript'
     );
 
@@ -808,7 +808,7 @@
     }
     if (isset($options['indicator']))
     {
-      $js_options['indicator']  = "'".$options['indicator']."}'"; 
+      $js_options['indicator']  = "'".$options['indicator']."'"; 
     }
     if (isset($options['on_show']))
     {

@@ -1,5 +1,6 @@
 <?php
 
+require_once 'symfony/config/sfConfig.class.php';
 require_once 'symfony/controller/sfRouting.class.php';
 require_once 'symfony/exception/sfException.class.php';
 require_once 'symfony/exception/sfConfigurationException.class.php';
@@ -8,15 +9,18 @@ Mock::generate('', 'sfContext');
 
 class sfRoutingTest extends UnitTestCase
 {
-  private $context;
-  private $routing;
+  private
+    $context = null,
+    $config  = null,
+    $routing = null;
 
   public function SetUp()
   {
     $this->context = new MockSfContext($this);
     $this->routing = sfRouting::getInstance();
-    if (!defined('SF_ROUTING')) define('SF_ROUTING', true);
-    if (!defined('SF_SUFFIX')) define('SF_SUFFIX', '.html');
+
+    sfConfig::set('sf_routing', true);
+    sfConfig::set('sf_suffix', '.html');
   }
 
   public function test_simple()
@@ -29,7 +33,7 @@ class sfRoutingTest extends UnitTestCase
       'module' => 'HomePage',
       'action' => 'Index',
     );
-    $url = '/HomePage/Index'.SF_SUFFIX;
+    $url = '/HomePage/Index'.sfConfig::get('sf_suffix');
     $this->assertEqual($params, $r->parse($url));
 
     $this->assertEqual($url, $r->generate('', $params, '/', '/'));
@@ -49,7 +53,7 @@ class sfRoutingTest extends UnitTestCase
     $r->connect('foo3', '/foo3/:module/:action/:param3/', array('module' => 'HomePage', 'action' => 'Index3'));
     $url3 = '/foo3/HomePage/Index3/foo3/';
     $r->connect('foo4', '/foo4/:module/:action/:param4', array('module' => 'HomePage', 'action' => 'Index4'));
-    $url4 = '/foo4/HomePage/Index4/foo4'.SF_SUFFIX;
+    $url4 = '/foo4/HomePage/Index4/foo4'.sfConfig::get('sf_suffix');
 
     $this->assertEqual($url,  $r->generate('', array('module' => 'HomePage', 'action' => 'Index',  'param'  => 'foo'),  '/', '/'));
     $this->assertEqual($url1, $r->generate('', array('module' => 'HomePage', 'action' => 'Index1', 'param1' => 'foo1'), '/', '/'));
@@ -91,7 +95,7 @@ class sfRoutingTest extends UnitTestCase
       'module' => 'HomePage',
       'action' => 'Index',
     );
-    $url = '/index.php/HomePage/Index'.SF_SUFFIX.'?test=1&toto=2';
+    $url = '/index.php/HomePage/Index'.sfConfig::get('sf_suffix').'?test=1&toto=2';
     $this->assertEqual($params, $r->parse($url));
   }
 
@@ -105,7 +109,7 @@ class sfRoutingTest extends UnitTestCase
       'module' => 'HomePage',
       'action' => 'Index',
     );
-    $url = '/HomePage/Index'.SF_SUFFIX;
+    $url = '/HomePage/Index'.sfConfig::get('sf_suffix');
     $this->assertEqual($params, $r->parse($url));
 
     $this->assertEqual($url, $r->generate('', $params, '/', '/'));
@@ -122,7 +126,7 @@ class sfRoutingTest extends UnitTestCase
       'action' => 'Index',
       'id' => 4,
     );
-    $url = '/HomePage/Index/test/4'.SF_SUFFIX;
+    $url = '/HomePage/Index/test/4'.sfConfig::get('sf_suffix');
     $this->assertEqual($params, $r->parse($url));
 
     $this->assertEqual($url, $r->generate('', $params, '/', '/'));
@@ -140,7 +144,7 @@ class sfRoutingTest extends UnitTestCase
       'action' => 'Index',
       'id' => 'foo',
     );
-    $url = '/HomePage/Index/test/foo'.SF_SUFFIX;
+    $url = '/HomePage/Index/test/foo'.sfConfig::get('sf_suffix');
     $this->assertEqual($params, $r->parse($url));
 
     $this->assertEqual($url, $r->generate('', $params, '/', '/'));
@@ -158,7 +162,7 @@ class sfRoutingTest extends UnitTestCase
       'test' => 'foo',
       'id' => 'bar',
     );
-    $url = '/HomePage/Index/foo/bar'.SF_SUFFIX;
+    $url = '/HomePage/Index/foo/bar'.sfConfig::get('sf_suffix');
     $this->assertEqual($params, $r->parse($url));
 
     $this->assertEqual($url, $r->generate('', $params, '/', '/'));
@@ -169,7 +173,7 @@ class sfRoutingTest extends UnitTestCase
       'test' => 'foo',
       'id' => 'toto',
     );
-    $url = '/HomePage/Index/foo'.SF_SUFFIX;
+    $url = '/HomePage/Index/foo'.sfConfig::get('sf_suffix');
     $this->assertEqual($params, $r->parse($url));
 
     $r = $this->routing;
@@ -182,7 +186,7 @@ class sfRoutingTest extends UnitTestCase
       'test' => 'foo',
       'id' => 'bar',
     );
-    $this->assertEqual($params, $r->parse('/HomePage/Index'.SF_SUFFIX));
+    $this->assertEqual($params, $r->parse('/HomePage/Index'.sfConfig::get('sf_suffix')));
   }
 
   public function test_params_star()
@@ -199,10 +203,10 @@ class sfRoutingTest extends UnitTestCase
       'titi' => 'toto',
       'OK' => true,
     );
-    $url = '/HomePage/Index/test/page/4.html/toto/1/titi/toto/OK/1'.SF_SUFFIX;
+    $url = '/HomePage/Index/test/page/4.html/toto/1/titi/toto/OK/1'.sfConfig::get('sf_suffix');
     $this->assertEqual($params, $r->parse($url));
-    $this->assertEqual($params, $r->parse('/HomePage/Index/test/page/4.html/toto/1/titi/toto/OK/1/module/test/action/tutu'.SF_SUFFIX));
-    $this->assertEqual($params, $r->parse('/HomePage/Index/test/page/4.html////toto//1/titi//toto//OK/1'.SF_SUFFIX));
+    $this->assertEqual($params, $r->parse('/HomePage/Index/test/page/4.html/toto/1/titi/toto/OK/1/module/test/action/tutu'.sfConfig::get('sf_suffix')));
+    $this->assertEqual($params, $r->parse('/HomePage/Index/test/page/4.html////toto//1/titi//toto//OK/1'.sfConfig::get('sf_suffix')));
 
     $this->assertEqual($url, $r->generate('', $params, '/', '/'));
 
@@ -215,7 +219,7 @@ class sfRoutingTest extends UnitTestCase
       'action' => 'Index',
       'toto'   => 'titi',
     );
-    $url = '/HomePage/Index/toto/titi'.SF_SUFFIX;
+    $url = '/HomePage/Index/toto/titi'.sfConfig::get('sf_suffix');
     $this->assertEqual($params, $r->parse($url));
 
     $this->assertEqual($url, $r->generate('', $params, '/', '/'));
@@ -224,7 +228,7 @@ class sfRoutingTest extends UnitTestCase
       'module' => 'HomePage',
       'action' => 'Index',
     );
-    $url = '/HomePage'.SF_SUFFIX;
+    $url = '/HomePage'.sfConfig::get('sf_suffix');
     $this->assertEqual($params, $r->parse($url));
 
     $this->assertEqual($url, $r->generate('', $params, '/', '/'));
@@ -242,10 +246,10 @@ class sfRoutingTest extends UnitTestCase
       'foo' => true,
       'bar' => 'foobar',
     );
-    $url = '/HomePage/Index/foo/1/bar/foobar/test'.SF_SUFFIX;
+    $url = '/HomePage/Index/foo/1/bar/foobar/test'.sfConfig::get('sf_suffix');
     $this->assertEqual($params, $r->parse($url));
 
-    $url = '/HomePage/Index/foo/1/bar/foobar/test'.SF_SUFFIX;
+    $url = '/HomePage/Index/foo/1/bar/foobar/test'.sfConfig::get('sf_suffix');
     $this->assertEqual($url, $r->generate('', $params, '/', '/'));
   }
 
@@ -261,7 +265,7 @@ class sfRoutingTest extends UnitTestCase
       'action' => 'Integer',
       'id' => 12,
     );
-    $url = '/HomePage/Integer/12'.SF_SUFFIX;
+    $url = '/HomePage/Integer/12'.sfConfig::get('sf_suffix');
     $this->assertEqual($params, $r->parse($url));
     $this->assertEqual($url, $r->generate('', $params, '/', '/'));
 
@@ -270,7 +274,7 @@ class sfRoutingTest extends UnitTestCase
       'action' => 'String',
       'id' => 'NOTANINTEGER',
     );
-    $url = '/HomePage/String/NOTANINTEGER'.SF_SUFFIX;
+    $url = '/HomePage/String/NOTANINTEGER'.sfConfig::get('sf_suffix');
     $this->assertEqual($params, $r->parse($url));
     $this->assertEqual($url, $r->generate('', $params, '/', '/'));
   }
@@ -286,7 +290,7 @@ class sfRoutingTest extends UnitTestCase
       'action' => 'Integer',
       'id' => 12,
     );
-    $url = '/test/12'.SF_SUFFIX;
+    $url = '/test/12'.sfConfig::get('sf_suffix');
     $named_params = array(
       'id' => 12,
     );

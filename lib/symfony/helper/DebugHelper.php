@@ -2,7 +2,7 @@
 
 function debug_message($message)
 {
-  if (SF_WEB_DEBUG)
+  if (sfConfig::get('sf_web_debug'))
   {
     sfWebDebug::getInstance()->logShortMessage($message);
   }

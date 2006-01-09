@@ -2,8 +2,8 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * (c) 2004, 2005 Sean Kerr.
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Sean Kerr.
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -47,6 +47,7 @@ abstract class sfRequest
 
   protected
     $parameter_holder = null,
+    $config           = null,
     $attribute_holder = null;
 
   /**
@@ -90,9 +91,9 @@ abstract class sfRequest
     }
 
     // translate error message if needed
-    if (SF_IS_I18N)
+    if (sfConfig::get('sf_i18n'))
     {
-      $retval = $this->getAttribute('message_format', null, 'symfony/i18n')->_($retval);
+      $retval = $this->context->getI18N()->__($retval);
     }
 
     return $retval;
@@ -234,7 +235,7 @@ abstract class sfRequest
    */
   public function setError ($name, $message)
   {
-    if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfRequest} error in form for parameter "'.$name.'" (with message "'.$message.'")');
+    if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfRequest} error in form for parameter "'.$name.'" (with message "'.$message.'")');
 
     $this->errors[$name] = $message;
   }

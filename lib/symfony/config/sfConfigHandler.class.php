@@ -2,8 +2,8 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * (c) 2004, 2005 Sean Kerr.
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Sean Kerr.
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -22,7 +22,8 @@
  */
 abstract class sfConfigHandler
 {
-  protected $parameter_holder = null;
+  protected
+    $parameter_holder = null;
 
   /**
    * Add a set of replacement values.
@@ -50,7 +51,7 @@ abstract class sfConfigHandler
    * @throws <b>sfParseException</b> If a requested configuration file is
    *                               improperly formatted.
    */
-  abstract function & execute ($config, $param = array());
+  abstract function & execute ($configPath, $param = array());
 
   /**
    * Initialize this ConfigHandler.
@@ -124,7 +125,13 @@ abstract class sfConfigHandler
    */
   public static function & replaceConstants ($value)
   {
-    $value = preg_replace('/%(.+?)%/e', 'constant("\\1")', $value);
+    static $config;
+
+    if (!$config)
+    {
+    }
+
+    $value = preg_replace('/%(.+?)%/e', 'sfConfig::get(strtolower("\\1"))', $value);
 
     return $value;
   }
@@ -141,7 +148,7 @@ abstract class sfConfigHandler
     if (!sfToolkit::isPathAbsolute($path))
     {
       // not an absolute path so we'll prepend to it
-      $path = SF_APP_DIR.'/'.$path;
+      $path = sfConfig::get('sf_app_dir').'/'.$path;
     }
 
     return $path;

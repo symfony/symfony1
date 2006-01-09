@@ -1,5 +1,6 @@
 <?php
 
+require_once 'symfony/config/sfConfig.class.php';
 require_once 'symfony/request/sfRequest.class.php';
 require_once 'symfony/request/sfWebRequest.class.php';
 
@@ -7,8 +8,9 @@ Mock::generate('sfContext');
 
 class sfRequestTest extends UnitTestCase
 {
-  private $context;
-  private $request;
+  private
+    $context = null,
+    $request = null;
 
   public function SetUp()
   {
@@ -17,17 +19,18 @@ class sfRequestTest extends UnitTestCase
     // can't initialize directly the sfRequest class (abstract)
     // using sfWebRequest class to test sfRequest
 
-    @define('SF_STATS', false);
-    @define('SF_PATH_INFO_ARRAY', 'SERVER');
-    @define('SF_PATH_INFO_KEY', 'SERVER');
-    @define('SF_IS_I18N', '0');
+    sfConfig::set('sf_stats', false);
+    sfConfig::set('sf_path_info_array', 'SERVER');
+    sfConfig::set('sf_path_info_key', true);
+    sfConfig::set('sf_logging_active', false);
+    sfConfig::set('sf_i18n', 0);
     $this->populateVariables('/', true);
 
     $this->context = new MockSfContext($this);
     $this->request = sfRequest::newInstance('sfWebRequest');
     $this->request->initialize($this->context);
   }
-  
+
   public function test_single_error()
   {
     $key = "test";

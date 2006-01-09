@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -59,7 +59,7 @@ class sfThumbnail
   * @access private
   * @var array
   */
-  private $types;
+  private $imgTypes;
 
   /**
   * Stores function names for each image type e.g. imagecreatefromjpeg
@@ -200,7 +200,7 @@ class sfThumbnail
   * @throws Exception
   */
   function loadData ($image,$mime) {
-    if ( in_array($mime,$this->types) ) {
+    if ( in_array($mime,$this->imgTypes) ) {
       $this->source=imagecreatefromstring($image);
       $this->sourceWidth=imagesx($this->source);
       $this->sourceHeight=imagesy($this->source);

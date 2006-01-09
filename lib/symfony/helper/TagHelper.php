@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -78,6 +78,21 @@ function _tag_options($options = array())
 function _parse_attributes($string)
 {
   return is_array($string) ? $string : sfToolkit::stringToArray($string);
+}
+
+function _get_option(&$options, $name, $default = null)
+{
+  if (isset($options[$name]))
+  {
+    $value = $options[$name];
+    unset($options[$name]);
+  }
+  else
+  {
+    $value = $default;
+  }
+
+  return $value;
 }
 
 ?>

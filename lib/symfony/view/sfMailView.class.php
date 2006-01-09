@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -35,8 +35,8 @@ class sfMailView extends sfPHPView
     parent::configure();
 
     // require our configuration
-    $viewConfigFile = $this->moduleName.'/'.SF_APP_MODULE_CONFIG_DIR_NAME.'/mailer.yml';
-    require(sfConfigCache::checkConfig(SF_APP_MODULE_DIR_NAME.'/'.$viewConfigFile, array('prefix' => $this->moduleName.'_')));
+    $viewConfigFile = $this->moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/mailer.yml';
+    require(sfConfigCache::checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$viewConfigFile, array('prefix' => $this->moduleName.'_')));
   }
 
   /**
@@ -57,7 +57,15 @@ class sfMailView extends sfPHPView
     // execute pre-render check
     $this->preRenderCheck();
 
-    if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfMailView} render "'.$template.'"');
+    if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfMailView} render "'.$template.'"');
+
+    // get sfMail object from action
+    $mail = $actionInstance->getVarHolder()->get('mail');
+    if (!$mail)
+    {
+      $error = 'You must define a sfMail object named $action in your action to be able to use a sfMailView.';
+      throw new sfActionException($error);
+    }
 
 // FIXME: cache support (be careful: must implement cache for alternate templates!)
 //    $retval = $this->getCacheContent();
@@ -88,13 +96,10 @@ class sfMailView extends sfPHPView
 //    $this->setPageCacheContent($retval);
 
     // send email
-    if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfMailView} send email to client');
+    if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfMailView} send email to client');
 
     // configuration prefix
-    $config_prefix = 'SF_MAILER_'.strtoupper($this->moduleName).'_';
-
-    // get sfMail object from action
-    $mail = $actionInstance->getVarHolder()->get('mail');
+    $config_prefix = 'sf_mailer_'.strtolower($this->moduleName).'_';
 
     $vars = array(
       'mailer',
@@ -105,7 +110,7 @@ class sfMailView extends sfPHPView
     {
       $setter = 'set'.sfInflector::camelize($var);
       $getter = 'get'.sfInflector::camelize($var);
-      $value  = $mail->$getter() ? $mail->$getter() : constant($config_prefix.strtoupper($var));
+      $value  = $mail->$getter() ? $mail->$getter() : sfConfig::get($config_prefix.strtolower($var));
       $mail->$setter($value);
     }
 
@@ -130,7 +135,7 @@ class sfMailView extends sfPHPView
     $mail->prepare();
 
     // send e-mail
-    if (constant($config_prefix.'DELIVER'))
+    if (sfConfig::get($config_prefix.'deliver'))
     {
       $mail->send();
     }

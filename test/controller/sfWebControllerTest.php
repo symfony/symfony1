@@ -1,5 +1,6 @@
 <?php
 
+require_once 'symfony/config/sfConfig.class.php';
 require_once 'symfony/controller/sfController.class.php';
 require_once 'symfony/controller/sfWebController.class.php';
 require_once 'symfony/controller/sfFrontWebController.class.php';
@@ -61,7 +62,7 @@ class sfWebControllerTest extends UnitTestCase
 
   public function SetUp()
   {
-    define('SF_MAX_FORWARDS', 10);
+    sfConfig::set('sf_max_forwards', 10);
     $this->context = new MockSfContext($this);
     $this->controller = sfController::newInstance('sfFrontWebController');
     $this->controller->initialize($this->context, null);

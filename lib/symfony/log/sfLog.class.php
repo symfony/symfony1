@@ -114,7 +114,7 @@ class sfLog
     {
         $handler = strtolower($handler);
         $class = 'sfLog_'.$handler;
-        $classfile = SF_SYMFONY_LIB_DIR.'/symfony/log/sfLog/'.$handler.'.php';
+        $classfile = sfConfig::get('sf_symfony_lib_dir').'/symfony/log/sfLog/'.$handler.'.php';
 
         /*
          * Attempt to include our version of the named class, but don't treat

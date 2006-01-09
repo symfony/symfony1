@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -27,14 +27,20 @@
 <?php endif ?>
 
 */
-function cache($suffix, $lifeTime = SF_DEFAULT_CACHE_LIFETIME)
+function cache($suffix, $lifeTime = null)
 {
-  if (!SF_CACHE)
+  $context = sfContext::getInstance();
+
+  if ($lifeTime === null)
+  {
+    $lifeTime = sfConfig::get('sf_default_cache_lifetime');
+  }
+
+  if (!sfConfig::get('sf_cache'))
   {
     return null;
   }
 
-  $context = sfContext::getInstance();
   $request = $context->getRequest();
   $cache   = $context->getViewCacheManager();
 
@@ -62,12 +68,13 @@ function cache($suffix, $lifeTime = SF_DEFAULT_CACHE_LIFETIME)
 
 function cache_save()
 {
-  if (!SF_CACHE)
+  $context = sfContext::getInstance();
+
+  if (!sfConfig::get('sf_cache'))
   {
     return null;
   }
 
-  $context = sfContext::getInstance();
   $request = $context->getRequest();
 
   if ($request->getAttribute('started', null, 'symfony/action/sfAction/cache') === null)

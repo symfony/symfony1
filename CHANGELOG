@@ -1,6 +1,15 @@
 SVN
 ---
 
+* [fabien] new sfConfig object to deal with all symfony configuration
+           WARNING: This breaks backward compatibility. To upgrade your existing projects,
+           read the UPGRADE file before upgrading
+
+Version 0.4.4
+-------------
+
+* [fabien]        bug fixes
+
 Version 0.4.3
 -------------
 

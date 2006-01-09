@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -17,21 +17,39 @@
  * @version    SVN: $Id$
  */
 
+if (!sfConfig::get('sf_i18n'))
+{
+  throw new sfConfigurationException('you must set sf_i18n to on in settings.yml to be able to use these helpers.');
+}
+
+sfConfig::set('sf_i18n_instance', sfContext::getInstance()->getI18N());
+
 function __($text, $args = array(), $culture = null)
 {
-  if (!SF_IS_I18N)
+  return sfConfig::get('sf_i18n_instance')->__($text, $args);
+}
+
+function format_number_choice($text, $args = array(), $number, $culture = null)
+{
+  $translated = sfConfig::get('sf_i18n_instance')->__($text, $args);
+
+  $choice = new sfChoiceFormat();
+
+  $retval = $choice->format($translated, $number);
+
+  if ($retval === false)
   {
-    throw new sfConfigurationException('you must set is_i18n to "on" in your settings.yml to enable I18N support');
+    $error = 'Unable to parse your choice "%s"';
+    $error = sprintf($error, $translated);
+    throw new sfException($error);
   }
 
-  return sfContext::getInstance()->getRequest()->getAttribute('message_format', null, 'symfony/i18n')->_($text, $args);
+  return $retval;
 }
 
 function format_country($country_iso)
 {
-  require_once('i18n/CultureInfo.php');
-
-  $c = new CultureInfo(sfContext::getInstance()->getUser()->getCulture());
+  $c = new sfCultureInfo(sfContext::getInstance()->getUser()->getCulture());
   $countries = $c->getCountries();
 
   return $countries[$country_iso];
@@ -39,9 +57,7 @@ function format_country($country_iso)
 
 function format_language($language_iso)
 {
-  require_once('i18n/CultureInfo.php');
-
-  $c = new CultureInfo(sfContext::getInstance()->getUser()->getCulture());
+  $c = new sfCultureInfo(sfContext::getInstance()->getUser()->getCulture());
   $languages = $c->getLanguages();
 
   return $languages[$language_iso];

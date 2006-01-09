@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -42,7 +42,7 @@ class sfSessionTestStorage extends sfStorage
       $this->sessionId = $_SERVER['session_id'];
 
       // we read session data from temp file
-      $file = SF_TEST_CACHE_DIR.'/'.$this->sessionId.'.session';
+      $file = sfConfig::get('sf_test_cache_dir').'/'.$this->sessionId.'.session';
       if (file_exists($file))
         $this->sessionData = unserialize(file_get_contents($file));
       else
@@ -110,9 +110,9 @@ class sfSessionTestStorage extends sfStorage
   {
     if ($this->sessionId)
     {
-      @mkdir(SF_CACHE_DIR.'/session');
-      file_put_contents(SF_CACHE_DIR.'/session/'.$this->sessionId.'.session', serialize($this->sessionData));
-      $this->sessionId = '';
+      @mkdir(sfConfig::get('sf_cache_dir').'/session');
+      file_put_contents(sfConfig::get('sf_cache_dir').'/session/'.$this->sessionId.'.session', serialize($this->sessionData));
+      $this->sessionId   = '';
       $this->sessionData = array();
     }
   }

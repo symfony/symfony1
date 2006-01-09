@@ -33,7 +33,7 @@ goto run
 goto cleanup
 
 :run
-IF EXIST "%@PEAR-DIR@%" (
+IF EXIST "@PEAR-DIR@" (
   %PHP_COMMAND% -d html_errors=off -qC "@PEAR-DIR@\symfony.php" %1 %2 %3 %4 %5 %6 %7 %8 %9
 ) ELSE (
   %PHP_COMMAND% -d html_errors=off -qC "%SYMFONY_HOME%\bin\symfony.php" %1 %2 %3 %4 %5 %6 %7 %8 %9

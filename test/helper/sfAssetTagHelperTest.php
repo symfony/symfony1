@@ -1,5 +1,6 @@
 <?php
 
+require_once 'symfony/config/sfConfig.class.php';
 require_once 'symfony/helper/TagHelper.php';
 require_once 'symfony/helper/AssetHelper.php';
 require_once 'symfony/core/sfContext.class.php';
@@ -8,7 +9,9 @@ Mock::generate('sfContext');
 
 class sfAssetTagHelperTest extends UnitTestCase
 {
-  private $context;
+  private
+    $context = null,
+    $config  = null;
 
   private static $AutoDiscoveryToTag = array(
     'return auto_discovery_link_tag();' => '<link href="http://www.example.com" rel="alternate" title="RSS" type="application/rss+xml" />',
@@ -49,7 +52,7 @@ class sfAssetTagHelperTest extends UnitTestCase
   public function SetUp()
   {
     $this->context = new MockSfContext($this);
-    @define('SF_RELATIVE_URL_ROOT', '');
+    sfConfig::set('sf_relative_url_root', '');
   }
 
   public function test_image_tag()

@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -25,18 +25,23 @@ class sfTestBrowser
     - redirect support?
 
   */
+  private
+    $presentation = '';
+
   private static
     $current_context = null;
 
   public function initialize ($hostname = null)
   {
     // setup our fake environment
-    $_SERVER['HTTP_HOST'] = ($hostname ? $hostname : SF_APP.'-'.SF_ENVIRONMENT);
+    $_SERVER['HTTP_HOST'] = ($hostname ? $hostname : sfConfig::get('sf_app').'-'.sfConfig::get('sf_environment'));
     $_SERVER['HTTP_USER_AGENT'] = 'PHP5/CLI';
     $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
     // we set a session id (fake cookie / persistence)
     $_SERVER['session_id'] = md5(uniqid(rand(), true));
+
+    sfConfig::set('sf_path_info_array', 'SERVER');
 
     // register our shutdown function
     register_shutdown_function(array($this, 'shutdown'));
@@ -61,10 +66,16 @@ class sfTestBrowser
     $this->populateVariables($request_uri, $with_layout);
 
     // launch request via controller
-    $context = sfContext::getInstance();
+    $context    = sfContext::getInstance();
     $controller = $context->getController();
-    $controller->setRenderMode(sfView::RENDER_VAR);
+    $request    = $context->getRequest();
+
+    $request->getParameterHolder()->clear();
+    $request->initialize($context);
+
+    ob_start();
     $controller->dispatch();
+    $this->presentation = ob_get_clean();
 
     // manually shutdown user to save current session data
     $context->getUser()->shutdown();
@@ -86,10 +97,7 @@ class sfTestBrowser
       throw new sfException('a request must be active');
     }
 
-    // get result
-    $html = self::$current_context->getController()->getActionStack()->getFirstEntry()->getPresentation();
-
-    return $html;
+    return $this->presentation;
   }
 
   public function closeRequest()
@@ -108,14 +116,13 @@ class sfTestBrowser
   public function shutdown()
   {
     // we remove all session data
-    sfToolkit::clearDirectory(SF_TEST_CACHE_DIR);
+    sfToolkit::clearDirectory(sfConfig::get('sf_test_cache_dir'));
   }
 
   protected function populateVariables($request_uri, $with_layout)
   {
     $_SERVER['GATEWAY_INTERFACE'] = 'CGI/1.1';
     $_SERVER['REQUEST_METHOD'] = 'GET';
-    $_SERVER['REQUEST_URI'] = $request_uri;
     $_SERVER['SCRIPT_NAME'] = '/index.php';
 
     if ($request_uri[0] != '/')
@@ -128,6 +135,8 @@ class sfTestBrowser
     {
       $request_uri = '/index.php'.$request_uri;
     }
+
+    $_SERVER['REQUEST_URI'] = $request_uri;
 
     // query string
     $_SERVER['QUERY_STRING'] = '';

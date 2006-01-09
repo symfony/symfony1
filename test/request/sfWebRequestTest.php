@@ -1,5 +1,6 @@
 <?php
 
+require_once 'symfony/config/sfConfig.class.php';
 require_once 'symfony/request/sfRequest.class.php';
 require_once 'symfony/request/sfWebRequest.class.php';
 
@@ -7,16 +8,19 @@ Mock::generate('sfContext');
 
 class sfWebRequestTest extends UnitTestCase
 {
-  private $context;
-  private $request;
+  private
+    $context = null,
+    $request = null;
 
   public function SetUp()
   {
     sfRouting::getInstance()->clearRoutes();
 
-    @define('SF_STATS', false);
-    @define('SF_PATH_INFO_ARRAY', 'SERVER');
-    @define('SF_PATH_INFO_KEY', 'PATH_INFO');
+    sfConfig::set('sf_stats', false);
+    sfConfig::set('sf_path_info_array', 'SERVER');
+    sfConfig::set('sf_path_info_key', true);
+    sfConfig::set('sf_logging_active', false);
+    sfConfig::set('sf_i18n', 0);
     $this->populateVariables('/', true);
 
     $this->context = new MockSfContext($this);

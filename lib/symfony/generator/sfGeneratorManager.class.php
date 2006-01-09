@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -23,7 +23,7 @@ class sfGeneratorManager
   public function initialize ()
   {
     // create cache instance
-    $this->cache = new sfFileCache(SF_MODULE_CACHE_DIR);
+    $this->cache = new sfFileCache(sfConfig::get('sf_module_cache_dir'));
     $this->cache->setSuffix('');
   }
 

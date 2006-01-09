@@ -1,15 +1,15 @@
-[exception]   <?php print $name ?> 
-[message]     <?php print $message ?> 
-[code]        <?php print $code ?> 
-[class]       <?php print $class ?> 
-[file]        <?php print $file ?> 
-[line]        <?php print $line ?> 
-[symfony]     v. <?php print SF_APP_VERSION ?> (symfony-project.com)
-[PHP]         v. <?php print PHP_VERSION ?> 
+[exception]   <?php echo $name ?> 
+[message]     <?php echo $message ?> 
+[code]        <?php echo $code ?> 
+[class]       <?php echo $class ?> 
+[file]        <?php echo $file ?> 
+[line]        <?php echo $line ?> 
+[symfony]     v. <?php echo sfConfig::get('sf_version') ?> (symfony-project.com)
+[PHP]         v. <?php echo PHP_VERSION ?> 
 <?php if (count($trace) > 0): ?>
 [stack trace]
 <?php foreach ($trace as $line): ?>
-  <?php print $line ?>
+  <?php echo $line ?>
 
 <?php endforeach ?>
 <?php endif ?>

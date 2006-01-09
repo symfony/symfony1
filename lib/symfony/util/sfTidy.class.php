@@ -2,8 +2,8 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * (c) 2004, 2005 Sean Kerr.
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Sean Kerr.
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -22,18 +22,19 @@ class sfTidy
 {
   public static function tidy($html, $name)
   {
+
     if (!function_exists('tidy_parse_string')) return $html;
 
-    if (SF_LOGGING_ACTIVE) $log = sfLogger::getInstance();
+    if (sfConfig::get('sf_logging_active')) $log = sfLogger::getInstance();
 
-    if (SF_LOGGING_ACTIVE) $log->info('{sfView} tidy output for "'.$name.'"');
+    if (sfConfig::get('sf_logging_active')) $log->info('{sfView} tidy output for "'.$name.'"');
 
     $tidy = new tidy();
-    $tidy->parseString($html, SF_APP_DIR.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'tidy.conf');
+    $tidy->parseString($html, sfConfig::get('sf_app_dir').DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'tidy.conf');
     $tidy->cleanRepair();
 
     // warnings and errors
-    if (SF_LOGGING_ACTIVE)
+    if (sfConfig::get('sf_logging_active'))
     {
       $tidy->diagnose();
 

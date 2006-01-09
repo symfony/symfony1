@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -36,11 +36,11 @@ class sfSecurityConfigHandler extends sfYamlConfigHandler
     $this->initialize($categories);
 
     // parse the yaml
-    $this->config = $this->parseYaml($configFile);
+    $this->yamlConfig = $this->parseYaml($configFile);
 
     // get default configuration
     $this->defaultConfig = array();
-    $defaultConfigFile = SF_APP_CONFIG_DIR.'/'.basename($configFile);
+    $defaultConfigFile = sfConfig::get('sf_app_config_dir').'/'.basename($configFile);
     if (is_readable($defaultConfigFile))
     {
       $categories = array('required_categories' => array('default'));
@@ -51,7 +51,7 @@ class sfSecurityConfigHandler extends sfYamlConfigHandler
 
     // iterate through all action names
     $mergedConfig = array();
-    foreach ($this->config as $actionName => $values)
+    foreach ($this->yamlConfig as $actionName => $values)
     {
       $mergedConfig[$actionName] = array(
         'is_secure'   => $this->getConfigValue('is_secure', $actionName),

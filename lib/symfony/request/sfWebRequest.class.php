@@ -2,8 +2,8 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * (c) 2004, 2005 Sean Kerr.
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Sean Kerr.
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -230,14 +230,8 @@ class sfWebRequest extends sfRequest
     // load parameters from GET/PATH_INFO/POST
     $this->loadParameters();
 
-    // register sfWebDebug assets
-    if (defined('SF_WEB_DEBUG') && SF_WEB_DEBUG)
-    {
-      sfWebDebug::getInstance()->registerAssets();
-    }
-
     // sfStats call
-    if (SF_STATS)
+    if (sfConfig::get('sf_stats'))
     {
       sfStats::record($this->context);
     }
@@ -246,14 +240,14 @@ class sfWebRequest extends sfRequest
   /**
    * Returns the array that contains all request information ($_SERVER or $_ENV).
    *
-   * This information is stored in the SF_PATH_INFO_ARRAY constant.
+   * This information is stored in the [sf_path_info_array] constant.
    *
    * @return  array
    */
   private function getPathInfoArray()
   {
     // parse PATH_INFO
-    switch (SF_PATH_INFO_ARRAY)
+    switch (sfConfig::get('sf_path_info_array'))
     {
       case 'SERVER':
         $pathArray =& $_SERVER;
@@ -281,7 +275,7 @@ class sfWebRequest extends sfRequest
     $pathArray = $this->getPathInfoArray();
 
     // simulate PATH_INFO if needed
-    if (!isset($pathArray[SF_PATH_INFO_KEY]) || !$pathArray[SF_PATH_INFO_KEY])
+    if (!isset($pathArray[sfConfig::get('sf_path_info_key')]) || !$pathArray[sfConfig::get('sf_path_info_key')])
     {
       if (isset($pathArray['REQUEST_URI']))
       {
@@ -294,10 +288,10 @@ class sfWebRequest extends sfRequest
     }
     else
     {
-      $pathInfo = $pathArray[SF_PATH_INFO_KEY];
-      if (defined('SF_RELATIVE_URL_ROOT') && SF_RELATIVE_URL_ROOT)
+      $pathInfo = $pathArray[sfConfig::get('sf_path_info_key')];
+      if (sfConfig::get('sf_relative_url_root'))
       {
-        $pathInfo = preg_replace('/^'.str_replace('/', '\\/', SF_RELATIVE_URL_ROOT).'\//', '', $pathInfo);
+        $pathInfo = preg_replace('/^'.str_replace('/', '\\/', sfConfig::get('sf_relative_url_root')).'\//', '', $pathInfo);
       }
     }
     // for IIS
@@ -333,8 +327,8 @@ class sfWebRequest extends sfRequest
         }
         else
         {
-          $this->setParameter('module', SF_ERROR_404_MODULE);
-          $this->setParameter('action', SF_ERROR_404_ACTION);
+          $this->setParameter('module', sfConfig::get('sf_error_404_module'));
+          $this->setParameter('action', sfConfig::get('sf_error_404_action'));
         }
       }
       else
@@ -347,7 +341,9 @@ class sfWebRequest extends sfRequest
           // see if there's a value associated with this parameter,
           // if not we're done with path data
           if ($count > ($i + 1))
+          {
             $this->getParameterHolder()->setByRef($array[$i], $array[++$i]);
+          }
         }
       }
     }
@@ -355,7 +351,7 @@ class sfWebRequest extends sfRequest
     // merge POST parameters
     $this->getParameterHolder()->addByRef($_POST);
 
-    if (SF_LOGGING_ACTIVE)
+    if (sfConfig::get('sf_logging_active'))
     {
       $parameters = '';
       foreach ($this->getParameterHolder()->getAll() as $key => $value)
@@ -363,7 +359,7 @@ class sfWebRequest extends sfRequest
         $parameters .= ''.$key.' => "'.$value.'", ';
       }
 
-      $this->getContext()->getLogger()->info('{sfWebRequest} request parameters {'.$parameters.'}');
+      if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfWebRequest} request parameters { '.$parameters.'}');
     }
 
     // move some parameters in other namespaces

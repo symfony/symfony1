@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,7 +13,7 @@
  * Each map is called a route.
  * It implements the Singleton pattern.
  *
- * Routing is disabled when SF_ROUTING is set to false.
+ * Routing can be disabled when [sf_routing] is set to false.
  *
  * This class is based on the Routes class of Cake framework.
  *
@@ -152,7 +152,7 @@ class sfRouting
    */
   public function clearRoutes()
   {
-    if (SF_LOGGING_ACTIVE) sfLogger::getInstance()->info('{sfRouting} clear all current routes');
+    if (sfConfig::get('sf_logging_active')) sfLogger::getInstance()->info('{sfRouting} clear all current routes');
 
     $this->routes = array();
   }
@@ -177,11 +177,6 @@ class sfRouting
   */
   public function connect($name, $route, $default = array(), $requirements = array())
   {
-    if (!SF_ROUTING)
-    {
-      return array();
-    }
-
     // route already exists?
     if (isset($this->routes[$name]))
     {
@@ -193,7 +188,7 @@ class sfRouting
 
     $parsed = array();
     $names  = array();
-    $suffix = (SF_SUFFIX == '.') ? '' : SF_SUFFIX;
+    $suffix = (sfConfig::get('sf_suffix') == '.') ? '' : sfConfig::get('sf_suffix');
 
     // used for performance reasons
     $names_hash = array();
@@ -257,7 +252,7 @@ class sfRouting
       $this->routes[$name] = array($route, $regexp, $names, $names_hash, $default, $requirements, $suffix);
     }
 
-    if (SF_LOGGING_ACTIVE) sfLogger::getInstance()->info('{sfRouting} connect ['.$name.'] "'.$route.'"'.($suffix ? ' ("'.$suffix.'" suffix)' : ''));
+    if (sfConfig::get('sf_logging_active')) sfLogger::getInstance()->info('{sfRouting} connect "'.$route.'"'.($suffix ? ' ("'.$suffix.'" suffix)' : ''));
 
     return $this->routes;
   }
@@ -272,7 +267,7 @@ class sfRouting
   */
   public function generate($name, $params, $divider, $equals)
   {
-    if (!SF_ROUTING) return array();
+    $global_defaults = sfConfig::get('sf_routing_defaults', null);
 
     // named route?
     if ($name)
@@ -286,6 +281,10 @@ class sfRouting
       }
 
       list($url, $regexp, $names, $names_hash, $defaults, $requirements, $suffix) = $this->routes[$name];
+      if ($global_defaults !== null)
+      {
+        $defaults = array_merge($defaults, $global_defaults);
+      }
     }
     else
     {
@@ -294,6 +293,10 @@ class sfRouting
       foreach ($this->routes as $name => $route)
       {
         list($url, $regexp, $names, $names_hash, $defaults, $requirements, $suffix) = $route;
+        if ($global_defaults !== null)
+        {
+          $defaults = array_merge($defaults, $global_defaults);
+        }
 
         // we must match all names (all $names keys must be in $params array)
         foreach ($names as $key)
@@ -357,7 +360,7 @@ class sfRouting
     }
 
     // strip off last divider character
-    if (isset($real_url[1]))
+    if (strlen($real_url) > 1)
     {
       $real_url = rtrim($real_url, $divider);
     }
@@ -378,10 +381,8 @@ class sfRouting
   * @param  string URL to be parsed
   * @return array  parameters
   */
-  public function parse($url) 
+  public function parse($url)
   {
-    if (!SF_ROUTING) return array();
-
     // an URL should start with a '/', mod_rewrite doesn't respect that, but no-mod_rewrite version does.
     if ($url && ('/' != $url[0]))
     {
@@ -484,7 +485,7 @@ class sfRouting
           // we store route name
           $this->setCurrentRouteName($route_name);
 
-          if (SF_LOGGING_ACTIVE) sfLogger::getInstance()->info('{sfRouting} match route ['.$route_name.'] "'.$route.'"');
+          if (sfConfig::get('sf_logging_active')) sfLogger::getInstance()->info('{sfRouting} match route ['.$route_name.'] "'.$route.'"');
           break;
         }
       }

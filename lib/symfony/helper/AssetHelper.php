@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -153,9 +153,18 @@
 
   function _compute_public_path($source, $dir, $ext)
   {
-    if (strpos($source, '/') === false) $source = SF_RELATIVE_URL_ROOT.'/'.$dir.'/'.$source;
-    if (strpos($source, '.') === false) $source = $source.'.'.$ext;
-    if (SF_RELATIVE_URL_ROOT && strpos($source, SF_RELATIVE_URL_ROOT) !== 0) $source = SF_RELATIVE_URL_ROOT.$source;
+    if (strpos($source, '/') !== 0)
+    {
+      $source = sfConfig::get('sf_relative_url_root').'/'.$dir.'/'.$source;
+    }
+    if (strpos(basename($source), '.') === false)
+    {
+      $source = $source.'.'.$ext;
+    }
+    if (sfConfig::get('sf_relative_url_root') && strpos($source, sfConfig::get('sf_relative_url_root')) !== 0)
+    {
+      $source = sfConfig::get('sf_relative_url_root').$source;
+    }
 
     return $source;
   }
@@ -163,21 +172,24 @@
   function include_stylesheets()
   {
     $already_seen = array();
-    foreach (sfContext::getInstance()->getRequest()->getAttributeHolder()->getAll('helper/asset/auto/stylesheet') as $files)
+    foreach (array('/first', '', '/last') as $position)
     {
-      if (!is_array($files))
+      foreach (sfContext::getInstance()->getRequest()->getAttributeHolder()->getAll('helper/asset/auto/stylesheet'.$position) as $files)
       {
-        $files = array($files);
-      }
+        if (!is_array($files))
+        {
+          $files = array($files);
+        }
 
-      foreach ($files as $file)
-      {
-        $file = stylesheet_path($file);
+        foreach ($files as $file)
+        {
+          $file = stylesheet_path($file);
 
-        if (isset($already_seen[$file])) continue;
+          if (isset($already_seen[$file])) continue;
 
-        $already_seen[$file] = 1;
-        echo stylesheet_tag($file);
+          $already_seen[$file] = 1;
+          echo stylesheet_tag($file);
+        }
       }
     }
   }

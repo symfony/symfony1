@@ -4,7 +4,7 @@ require_once('symfony/helper/ValidationHelper.php');
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -41,7 +41,7 @@ require_once('symfony/helper/ValidationHelper.php');
       #
       # NOTE: Only the option tags are returned, you have to wrap this call in a regular HTML select tag.
 */
-function options_for_select($options = array(), $selected = null)
+function options_for_select($options = array(), $selected = '')
 {
   $html_options = '';
   foreach($options as $key => $value)
@@ -50,7 +50,7 @@ function options_for_select($options = array(), $selected = null)
     if (
       (is_array($selected) && in_array($key, $selected))
       ||
-      ($value == $selected)
+      (strval($value) == strval($selected))
     )
     {
       $html_options .= ' selected="selected"';
@@ -96,7 +96,7 @@ function objects_for_select($options = array(), $value_method, $text_method = nu
     if (
       (is_array($selected) && in_array($key, $selected))
       ||
-      ($value == $selected)
+      (strval($value) == strval($selected))
     )
     {
       $html_options .= ' selected="selected"';
@@ -142,9 +142,7 @@ function select_tag($name, $option_tags = null, $options = array())
 
 function select_country_tag($name, $value, $options = array())
 {
-  require_once('i18n/CultureInfo.php');
-
-  $c = new CultureInfo(sfContext::getInstance()->getUser()->getCulture());
+  $c = new sfCultureInfo(sfContext::getInstance()->getUser()->getCulture());
   $countries = $c->getCountries();
   asort($countries);
 
@@ -155,9 +153,7 @@ function select_country_tag($name, $value, $options = array())
 
 function select_language_tag($name, $value, $options = array())
 {
-  require_once('i18n/CultureInfo.php');
-
-  $c = new CultureInfo(sfContext::getInstance()->getUser()->getCulture());
+  $c = new sfCultureInfo(sfContext::getInstance()->getUser()->getCulture());
   $languages = $c->getLanguages();
   asort($languages);
 
@@ -241,9 +237,10 @@ function textarea_tag($name, $content = null, $options = array())
 
   if ($rich)
   {
+
     // tinymce installed?
-    $js_path = defined('SF_RICH_TEXT_JS_DIR') ? '/'.SF_RICH_TEXT_JS_DIR.'/tiny_mce.js' : '/sf/js/tinymce/tiny_mce.js';
-    if (!is_readable(SF_WEB_DIR.$js_path))
+    $js_path = sfConfig::get('sf_rich_text_js_dir') ? '/'.sfConfig::get('sf_rich_text_js_dir').'/tiny_mce.js' : '/sf/js/tinymce/tiny_mce.js';
+    if (!is_readable(sfConfig::get('sf_web_dir').$js_path))
     {
       throw new sfConfigurationException('You must install Tiny MCE to use this helper (see rich_text_js_dir settings).');
     }
@@ -265,7 +262,7 @@ function textarea_tag($name, $content = null, $options = array())
 
       sfContext::getInstance()->getRequest()->setAttribute('tinymce', $css_path, 'helper/asset/auto/stylesheet');
 
-      $css    = file_get_contents(SF_WEB_DIR.DIRECTORY_SEPARATOR.$css_path);
+      $css    = file_get_contents(sfConfig::get('sf_web_dir').DIRECTORY_SEPARATOR.$css_path);
       $styles = array();
       preg_match_all('#^/\*\s*user\:\s*(.+?)\s*\*/\s*\015?\012\s*\.([^\s]+)#smi', $css, $matches, PREG_SET_ORDER);
       foreach ($matches as $match)
@@ -344,8 +341,6 @@ function input_upload_tag($name, $options = array())
 
 function input_date_tag($name, $value, $options = array())
 {
-  require_once('i18n/DateFormat.php');
-
   $options = _parse_attributes($options);
 
   $context = sfContext::getInstance();
@@ -373,18 +368,20 @@ function input_date_tag($name, $value, $options = array())
   }
 
   // parse date
-  $date = $value;
-  if (($date !== null) && ($date != '') && (!is_int($date)))
+  if (($value !== null) && ($value != '') && (!is_int($value)))
   {
-    $date = strtotime($date);
-    if ($date === -1)
+    $value = strtotime($value);
+    if ($value === -1)
     {
-      $date = 0;
+      $value = 0;
 //      throw new Exception("Unable to parse value of date as date/time value");
     }
+    else
+    {
+      $dateFormat = new sfDateFormat($culture);
+      $value = $dateFormat->format($value, 'd');
+    }
   }
-  $dateFormat = new DateFormat($culture);
-  $value = $dateFormat->format($date, 'd');
 
   // register our javascripts and stylesheets
   $js = array(
@@ -397,7 +394,7 @@ function input_date_tag($name, $value, $options = array())
   $context->getRequest()->setAttribute('date', '/sf/js/calendar/skins/aqua/theme', 'helper/asset/auto/stylesheet');
 
   // date format
-  $dateFormatInfo = DateTimeFormatInfo::getInstance($culture);
+  $dateFormatInfo = sfDateTimeFormatInfo::getInstance($culture);
   $date_format = strtolower($dateFormatInfo->getShortDatePattern());
 
   // calendar date format
@@ -415,16 +412,54 @@ function input_date_tag($name, $value, $options = array())
     });
   ';
 
-  return
-    input_tag($name, $value).
-    content_tag('button', '...', array('disabled' => 'disabled', 'onclick' => 'return false', 'id' => 'trigger_'.$name)).
-    '('.$date_format.')'.
-    content_tag('script', $js, array('type' => 'text/javascript'));
+  // construct html
+  $html = input_tag($name, $value);
+
+  // calendar button
+  $calendar_button = '...';
+  $calendar_button_type = 'txt';
+  if (isset($options['calendar_button_img']))
+  {
+    $calendar_button = $options['calendar_button_img'];
+    $calendar_button_type = 'img';
+    unset($options['calendar_button']);
+  }
+  else if (isset($options['calendar_button_txt']))
+  {
+    $calendar_button = $options['calendar_button_txt'];
+    $calendar_button_type = 'txt';
+    unset($options['calendar_button']);
+  }
+
+  if ($calendar_button_type == 'img')
+  {
+    $html .= image_tag($calendar_button, array('id' => 'trigger_'.$name, 'style' => 'cursor: pointer', 'align' => 'absmiddle'));
+  }
+  else
+  {
+    $html .= content_tag('button', $calendar_button, array('disabled' => 'disabled', 'onclick' => 'return false', 'id' => 'trigger_'.$name));
+  }
+
+  if (isset($options['with_format']))
+  {
+    $html .= '('.$date_format.')';
+    unset($options['with_format']);
+  }
+
+  // add javascript
+  $html .= content_tag('script', $js, array('type' => 'text/javascript'));
+
+  return $html;
 }
 
 function submit_tag($value = 'Save changes', $options = array())
 {
   return tag('input', array_merge(array('type' => 'submit', 'name' => 'submit', 'value' => $value), _convert_options($options)));
+}
+
+function reset_tag($value = 'Reset', $options = array())
+{
+  return tag('input', array_merge(array('type' => 'reset', 'name' => 'reset', 'value' => $value), _convert_options($options)));
 }
 
 function submit_image_tag($source, $options = array())

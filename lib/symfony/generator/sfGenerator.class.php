@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -32,13 +32,13 @@ abstract class sfGenerator
 
   abstract public function generate($params = array());
 
-  protected function generatePhpFiles($generatedModuleName)
+  protected function generatePhpFiles($generatedModuleName, $templateFiles = array())
   {
     // template directory
-    $template_dir = SF_SYMFONY_DATA_DIR.'/symfony/generator/'.$this->getGeneratorClass().'/'.$this->getTheme().'/template';
+    $template_dir = sfConfig::get('sf_symfony_data_dir').'/symfony/generator/'.$this->getGeneratorClass().'/'.$this->getTheme().'/template';
 
     // default template directory
-    $default_template_dir = SF_SYMFONY_DATA_DIR.'/symfony/generator/'.$this->getGeneratorClass().'/default/template';
+    $default_template_dir = sfConfig::get('sf_symfony_data_dir').'/symfony/generator/'.$this->getGeneratorClass().'/default/template';
 
     // eval actions file
     $action_template = $template_dir.'/actions/actions.class.php';
@@ -52,8 +52,7 @@ abstract class sfGenerator
     $this->getGeneratorManager()->getCache()->set('actions.class.php', $generatedModuleName.DIRECTORY_SEPARATOR.'actions', $retval);
 
     // generate template files
-    $templates = array('listSuccess', 'editSuccess', 'showSuccess');
-    foreach ($templates as $template)
+    foreach ($templateFiles as $template)
     {
       // eval template file
       $template_template = $template_dir.'/templates/'.$template.'.php';

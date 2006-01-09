@@ -10,12 +10,12 @@ databases.yml:
 settings.yml:
   class:    sfDefineEnvironmentConfigHandler
   param:
-    prefix: SF_
+    prefix: sf_
 
 app.yml:
   class:    sfDefineEnvironmentConfigHandler
   param:
-    prefix: APP_
+    prefix: app_
 
 orm.yml:
   class:    sfPropelConfigHandler
@@ -35,7 +35,7 @@ filters.yml:
 logging.yml:
   class:    sfDefineEnvironmentConfigHandler
   param:
-    prefix: SF_LOGGING_
+    prefix: sf_logging_
 
 modules/*/config/generator.yml:
   class:    sfGeneratorConfigHandler
@@ -46,7 +46,7 @@ modules/*/config/view.yml:
 modules/*/config/mailer.yml:
   class:    sfDefineEnvironmentConfigHandler
   param:
-    prefix: SF_MAILER_
+    prefix: sf_mailer_
 
 modules/*/config/security.yml:
   class:    sfSecurityConfigHandler
@@ -60,7 +60,12 @@ modules/*/validate/*.yml:
 modules/*/config/module.yml:
   class:    sfDefineEnvironmentConfigHandler
   param:
-    prefix: MOD_
+    prefix: mod_
 
 routing.yml:
   class:    sfRoutingConfigHandler
+
+i18n.yml:
+  class:    sfDefineEnvironmentConfigHandler
+  param:
+    prefix: sf_i18n_

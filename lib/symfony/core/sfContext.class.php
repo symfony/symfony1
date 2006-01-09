@@ -2,8 +2,8 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * (c) 2004, 2005 Sean Kerr.
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Sean Kerr.
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -31,6 +31,7 @@ class sfContext
     $storage           = null,
     $securityFilter    = null,
     $viewCacheManager  = null,
+    $i18n              = null,
     $logger            = null,
     $user              = null;
 
@@ -49,21 +50,21 @@ class sfContext
 
   private function initialize()
   {
-    if (SF_LOGGING_ACTIVE)
+    if (sfConfig::get('sf_logging_active'))
     {
       $this->logger = sfLogger::getInstance();
     }
 
-    if (SF_LOGGING_ACTIVE) $this->logger->info('{sfContext} initialization');
+    if (sfConfig::get('sf_logging_active')) $this->logger->info('{sfContext} initialization');
 
-    if (SF_USE_DATABASE)
+    if (sfConfig::get('sf_use_database'))
     {
       // setup our database connections
       $this->databaseManager = new sfDatabaseManager();
       $this->databaseManager->initialize();
     }
 
-    if (SF_CACHE)
+    if (sfConfig::get('sf_cache'))
     {
       $this->viewCacheManager = new sfViewCacheManager();
     }
@@ -72,11 +73,17 @@ class sfContext
     $this->actionStack = new sfActionStack();
 
     // include the factories configuration
-    require(sfConfigCache::checkConfig(SF_APP_CONFIG_DIR_NAME.'/factories.yml'));
+    require(sfConfigCache::checkConfig(sfConfig::get('sf_app_config_dir_name').'/factories.yml'));
 
-    if (SF_CACHE)
+    if (sfConfig::get('sf_cache'))
     {
-      $this->viewCacheManager->initialize($this);
+      $this->viewCacheManager->initialize($this, $this->config);
+    }
+
+    if (sfConfig::get('sf_i18n'))
+    {
+      $this->i18n = new sfI18N();
+      $this->i18n->initialize($this);
     }
 
     // register our shutdown function
@@ -86,7 +93,7 @@ class sfContext
   /**
    * Retrieve the singleton instance of this class.
    *
-   * @return sfContext A sfController implementation instance.
+   * @return sfContext A sfContext implementation instance.
    */
   public static function getInstance()
   {
@@ -146,7 +153,7 @@ class sfContext
    * This is a shortcut to manually getting a connection from an existing
    * database implementation instance.
    *
-   * If the SF_USE_DATABASE setting is off, this will return null.
+   * If the [sf_use_database] setting is off, this will return null.
    *
    * @param name A database name.
    *
@@ -157,7 +164,9 @@ class sfContext
   public function getDatabaseConnection ($name = 'default')
   {
     if ($this->databaseManager != null)
+    {
       return $this->databaseManager->getDatabase($name)->getConnection();
+    }
 
     return null;
   }
@@ -165,7 +174,7 @@ class sfContext
   /**
    * Retrieve the database manager.
    *
-   * @return DatabaseManager The current DatabaseManager instance.
+   * @return sfDatabaseManager The current sfDatabaseManager instance.
    */
   public function getDatabaseManager ()
   {
@@ -183,7 +192,7 @@ class sfContext
     // get the last action stack entry
     $actionEntry = $this->actionStack->getLastEntry();
 
-    return $actionEntry ? SF_APP_MODULE_DIR.'/'.$actionEntry->getModuleName() : null;
+    return $actionEntry ? sfConfig::get('sf_app_module_dir').'/'.$actionEntry->getModuleName() : null;
   }
 
   /**
@@ -203,7 +212,7 @@ class sfContext
   /**
    * Retrieve the request.
    *
-   * @return Request The current Request implementation instance.
+   * @return sfRequest The current sfRequest implementation instance.
    */
   public function getRequest ()
   {
@@ -213,7 +222,7 @@ class sfContext
   /**
    * Retrieve the storage.
    *
-   * @return Storage The current Storage implementation instance.
+   * @return sfStorage The current sfStorage implementation instance.
    */
   public function getStorage ()
   {
@@ -223,7 +232,7 @@ class sfContext
   /**
    * Retrieve the securityFilter
    *
-   * @return SecurityFilter The current SecurityFilter implementation instance.
+   * @return sfSecurityFilter The current sfSecurityFilter implementation instance.
    */
   public function getSecurityFilter ()
   {
@@ -231,9 +240,9 @@ class sfContext
   }
 
   /**
-   * Retrieve the securityFilter
+   * Retrieve the view cache manager
    *
-   * @return SecurityFilter The current SecurityFilter implementation instance.
+   * @return sfViewCacheManager The current sfViewCacheManager implementation instance.
    */
   public function getViewCacheManager ()
   {
@@ -241,9 +250,19 @@ class sfContext
   }
 
   /**
+   * Retrieve the i18n instance
+   *
+   * @return sfI18N The current sfI18N implementation instance.
+   */
+  public function getI18N ()
+  {
+    return $this->i18n;
+  }
+
+  /**
    * Retrieve the user.
    *
-   * @return User The current User implementation instance.
+   * @return sfUser The current sfUser implementation instance.
    */
   public function getUser ()
   {
@@ -262,12 +281,12 @@ class sfContext
     $this->getStorage()->shutdown();
     $this->getRequest()->shutdown();
 
-    if (SF_USE_DATABASE)
+    if (sfConfig::get('sf_use_database'))
     {
       $this->getDatabaseManager()->shutdown();
     }
 
-    if (SF_CACHE)
+    if (sfConfig::get('sf_cache'))
     {
       $this->getViewCacheManager()->shutdown();
     }

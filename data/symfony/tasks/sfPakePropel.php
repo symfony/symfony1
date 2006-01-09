@@ -9,6 +9,12 @@ pake_task('build-sql', 'project_exists');
 pake_desc('create schema.xml from existing database');
 pake_task('build-schema', 'project_exists');
 
+pake_desc('create database for current model');
+pake_task('build-db', 'project_exists');
+
+pake_desc('insert sql for current model');
+pake_task('insert-sql', 'project_exists');
+
 function run_build_model($task, $args)
 {
   _call_phing($task, 'build-om');
@@ -17,6 +23,16 @@ function run_build_model($task, $args)
 function run_build_sql($task, $args)
 {
   _call_phing($task, 'build-sql');
+}
+
+function run_build_db($task, $args)
+{
+  _call_phing($task, 'build-db');
+}
+
+function run_insert_sql($task, $args)
+{
+  _call_phing($task, 'insert-sql');
 }
 
 function run_build_schema($task, $args)
@@ -41,13 +57,13 @@ function _call_phing($task, $task_name, $check_schema = true)
 
   // FIXME: we update propel.ini with uptodate values
 
-  $propel_generator_dir = PAKEFILE_SYMFONY_LIB_DIR.'/propel-generator';
+  $propel_generator_dir = sfConfig::get('sf_symfony_lib_dir').'/propel-generator';
 
   $current_dir = getcwd();
 
   // call phing targets
   pake_import('Phing', false);
-  pakePhingTask::call_phing($task, array($task_name), dirname(__FILE__).'/../bin/build.xml', array('project' => $task->get_property('name', 'symfony'), 'lib_dir' => PAKEFILE_LIB_DIR, 'data_dir' => PAKEFILE_DATA_DIR, 'propel_generator_dir' => $propel_generator_dir));
+  pakePhingTask::call_phing($task, array($task_name), dirname(__FILE__).'/../bin/build.xml', array('project' => $task->get_property('name', 'symfony'), 'lib_dir' => sfConfig::get('sf_symfony_lib_dir'), 'data_dir' => sfConfig::get('sf_symfony_data_dir'), 'propel_generator_dir' => $propel_generator_dir));
 
   chdir($current_dir);
 }

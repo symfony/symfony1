@@ -2,19 +2,19 @@ default:
   .actions:
     default_module:         default
     default_action:         index
-    
+
     error_404_module:       default
     error_404_action:       error404
-    
+
     login_module:           default
     login_action:           login
-    
+
     module_disabled_module: default
     module_disabled_action: disabled
-    
+
     secure_module:          default
     secure_action:          secure
-    
+
     unavailable_module:     default
     unavailable_action:     unavailable
 
@@ -25,32 +25,31 @@ default:
     action_accessor:        action
 
     content_type:           html
-    
+
     path_info_array:        SERVER
     path_info_key:          PATH_INFO
-    
+
     url_format:             PATH
-    
-    use_database:           off
+
+    use_database:           on
 
     use_security:           on
-    
+
     compressed:             off
-    
+
     tidy:                   off
-    
-    is_i18n:                off
-    default_culture:        en
-    
+
+    i18n:                   off
+
     timeout:                1800
-    
+
     suffix:                 .
 
     module_default:         on
 
-    standard_helpers:       Partial,Cache,Form
+    standard_helpers:       [Partial, Cache, Form]
 
-    max_forwards:           20
+    max_forwards:           10
 
     web_debug:              off
 
@@ -63,9 +62,11 @@ default:
 
     stats:                  off
 
-    # E_ERROR | E_USER_ERROR = 257
-    error_reporting:        257
+    # E_COMPILE_ERROR | E_ERROR | E_CORE_ERROR | E_USER_ERROR = 337
+    error_reporting:        337
 
     rich_text_js_dir:       js/tiny_mce
 
     safe_slot:              on
+
+    use_flash:              on

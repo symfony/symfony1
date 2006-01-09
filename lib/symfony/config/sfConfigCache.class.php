@@ -2,8 +2,8 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * (c) 2004, 2005 Sean Kerr.
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Sean Kerr.
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -23,7 +23,7 @@
 class sfConfigCache
 {
   private static
-      $handlers = array();
+    $handlers = array();
 
   /**
    * Load a configuration handler.
@@ -107,7 +107,7 @@ class sfConfigCache
    * recompile the cache file associated with it.
    *
    * If the configuration file path is relative, the path itself is relative
-   * to the symfony SF_APP_DIR application setting.
+   * to the symfony [sf_app_dir] application setting.
    *
    * @param string A filesystem path to a configuration file.
    *
@@ -115,20 +115,20 @@ class sfConfigCache
    *
    * @throws <b>sfConfigurationException</b> If a requested configuration file does not exist.
    */
-  public static function checkConfig ($config, $param = array())
+  public static function checkConfig ($configPath, $param = array())
   {
     // full filename path to the config
-    $filename = $config;
+    $filename = $configPath;
 
     if (!sfToolkit::isPathAbsolute($filename))
     {
-      if (!is_readable(SF_APP_DIR.'/'.$filename))
+      if (!is_readable(sfConfig::get('sf_app_dir').'/'.$filename))
       {
-        $filename = SF_SYMFONY_DATA_DIR.'/symfony/config/'.basename($filename);
+        $filename = sfConfig::get('sf_symfony_data_dir').'/symfony/config/'.basename($filename);
       }
       else
       {
-        $filename = SF_APP_DIR.'/'.$filename;
+        $filename = sfConfig::get('sf_app_dir').'/'.$filename;
       }
     }
 
@@ -142,12 +142,12 @@ class sfConfigCache
     }
 
     // the cache filename we'll be using
-    $cache = self::getCacheName($config);
+    $cache = self::getCacheName($configPath);
 
     if (!is_readable($cache) || filemtime($filename) > filemtime($cache))
     {
       // configuration file has changed so we need to reparse it
-      self::callHandler($config, $filename, $cache, $param);
+      self::callHandler($configPath, $filename, $cache, $param);
     }
 
     return $cache;
@@ -160,7 +160,7 @@ class sfConfigCache
    */
   public static function clear ()
   {
-    sfToolkit::clearDirectory(SF_CONFIG_CACHE_DIR);
+    sfToolkit::clearDirectory(sfConfig::get('sf_config_cache_dir'));
   }
 
   /**
@@ -172,7 +172,7 @@ class sfConfigCache
    */
   public static function getCacheName ($config)
   {
-    if (strlen($config) > 3 && ctype_alpha($config[0]) && $config[1] == ':' && $config[2] == '\\')
+    if (strlen($config) > 3 && ctype_alpha($config[0]) && $config[1] == ':' && ($config[2] == '\\' || $config[2] == '/'))
     {
       // file is a windows absolute path, strip off the drive letter
       $config = substr($config, 3);
@@ -182,14 +182,14 @@ class sfConfigCache
     $config  = str_replace(array('\\', '/'), '_', $config);
     $config .= '.php';
 
-    return SF_CONFIG_CACHE_DIR.'/'.$config;
+    return sfConfig::get('sf_config_cache_dir').'/'.$config;
   }
 
   /**
    * Import a configuration file.
    *
    * If the configuration file path is relative, the path itself is relative
-   * to the symfony SF_APP_DIR application setting.
+   * to the symfony [sf_app_dir] application setting.
    *
    * @param string A filesystem path to a configuration file.
    * @param bool   Only allow this configuration file to be included once per request?
@@ -228,27 +228,27 @@ class sfConfigCache
 
     // application configuration handlers
 
-    require_once(self::checkConfig(SF_APP_CONFIG_DIR_NAME.'/config_handlers.yml'));
+    require_once(self::checkConfig(sfConfig::get('sf_app_config_dir_name').'/config_handlers.yml'));
 
     // module level configuration handlers
 
     // make sure our modules directory exists
-    if (is_readable(SF_APP_MODULE_DIR))
+    if (is_readable(sfConfig::get('sf_app_module_dir')))
     {
       // ignore names
       $ignore = array('.', '..', 'CVS', '.svn');
 
       // create a file pointer to the module dir
-      $fp = opendir(SF_APP_MODULE_DIR);
+      $fp = opendir(sfConfig::get('sf_app_module_dir'));
 
       // loop through the directory and grab the modules
       while (($directory = readdir($fp)) !== false)
       {
         if (!in_array($directory, $ignore))
         {
-          $config = SF_APP_MODULE_DIR.'/'.$directory.'/'.SF_APP_MODULE_CONFIG_DIR_NAME.'/config_handlers.yml';
+          $configPath = sfConfig::get('sf_app_module_dir').'/'.$directory.'/'.sfConfig::get('sf_app_module_config_dir_name').'/config_handlers.yml';
 
-          if (is_readable($config))
+          if (is_readable($configPath))
           {
             // initialize the root configuration handler with this module name
             $params = array('module_level' => true, 'module_name' => $directory);
@@ -257,9 +257,9 @@ class sfConfigCache
 
             // replace module dir path with a special keyword that
             // checkConfig knows how to use
-            $config = SF_APP_MODULE_DIR_NAME.'/'.$directory.'/'.SF_APP_MODULE_CONFIG_DIR_NAME.'/config_handlers.yml';
+            $configPath = sfConfig::get('sf_app_module_dir_name').'/'.$directory.'/'.sfConfig::get('sf_app_module_config_dir_name').'/config_handlers.yml';
 
-            require_once(self::checkConfig($config));
+            require_once(self::checkConfig($configPath));
           }
         }
       }
@@ -271,7 +271,7 @@ class sfConfigCache
     {
       // module directory doesn't exist or isn't readable
       $error = 'Module directory "%s" does not exist or is not readable';
-      $error = sprintf($error, SF_APP_MODULE_DIR);
+      $error = sprintf($error, sfConfig::get('sf_app_module_dir'));
 
       throw new sfConfigurationException($error);
     }

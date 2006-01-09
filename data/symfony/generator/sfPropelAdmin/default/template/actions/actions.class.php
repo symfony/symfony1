@@ -13,11 +13,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 {
   public function preExecute ()
   {
-    // add our css file automatically
-    $this->getRequest()->setAttribute('admin_generator_main',
-      array('/sf/css/sf_admin/main'),
-      'helper/asset/auto/stylesheet'
-    );
+    $this->addStylesheet('/sf/css/sf_admin/main', 'last');
   }
 
   public function executeIndex ()
@@ -27,16 +23,35 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 
   public function executeList ()
   {
-    $this-><?php echo $this->getPluralName() ?> = <?php echo $this->getClassName() ?>Peer::doSelect(new Criteria());
+    $this->processSort();
+
+    $this->processFilters();
+
+    // pager
+    $this->pager = new sfPropelPager('<?php echo $this->getSingularName() ?>', <?php echo $this->getParameterValue('list.max_per_page', 20) ?>);
+    $c = new Criteria();
+    $this->addSortCriteria($c);
+    $this->addFiltersCriteria($c);
+    $this->pager->setCriteria($c);
+    $this->pager->setPage($this->getRequestParameter('page', 1));
+    $this->pager->init();
+  }
+
+  public function executeCreate ()
+  {
+    return $this->forward('<?php echo $this->getModuleName() ?>', 'edit');
+  }
+
+  public function executeSave ()
+  {
+    return $this->forward('<?php echo $this->getModuleName() ?>', 'edit');
   }
 
   public function executeEdit ()
   {
-    // add our js file automatically
-    $this->getRequest()->setAttribute('admin_generator_main',
-      array('/sf/js/prototype', '/sf/js/sf_admin/collapse'),
-      'helper/asset/auto/javascript'
-    );
+    // add javascript
+    $this->addJavascript('/sf/js/prototype/prototype');
+    $this->addJavascript('/sf/js/sf_admin/collapse');
 
     $this-><?php echo $this->getSingularName() ?> = $this->get<?php echo $this->getClassName() ?>OrCreate();
 
@@ -44,6 +59,8 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     {
       $this->update<?php echo $this->getClassName() ?>FromRequest();
       $this-><?php echo $this->getSingularName() ?>->save();
+
+      $this->setFlash('notice', 'Your modifications has been saved');
 
       return $this->redirect('<?php echo $this->getModuleName() ?>/edit?<?php echo $this->getPrimaryKeyUrlParams('this->') ?>);
 <?php //' ?>
@@ -69,24 +86,27 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     return sfView::SUCCESS;
   }
 
-  private function update<?php echo $this->getClassName() ?>FromRequest()
+  protected function update<?php echo $this->getClassName() ?>FromRequest()
   {
-<?php foreach ($this->getColumnCategories('edit_fields') as $category): ?>
-<?php foreach ($this->getColumns('edit_fields', $category) as $name => $column): $type = $column->getCreoleType(); ?>
+    $<?php echo $this->getSingularName() ?> = $this->getRequestParameter('<?php echo $this->getSingularName() ?>');
+
+<?php foreach ($this->getColumnCategories('edit.display') as $category): ?>
+<?php foreach ($this->getColumns('edit.display', $category) as $name => $column): $type = $column->getCreoleType(); ?>
 <?php $name = $column->getName() ?>
-<?php if ($type == CreoleTypes::DATE): ?>
-    list($d, $m, $y) = sfI18N::getDateForCulture($this->getRequestParameter('<?php echo $name ?>'), $this->getUser()->getCulture());
+<?php if ($column->isPrimaryKey()) continue ?>
+<?php if ($type == CreoleTypes::DATE || $type == CreoleTypes::TIMESTAMP): ?>
+    list($d, $m, $y) = sfI18N::getDateForCulture($<?php echo $this->getSingularName() ?>['<?php echo $name ?>'], $this->getUser()->getCulture());
     $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>("$y-$m-$d");
 <?php elseif ($type == CreoleTypes::BOOLEAN): ?>
-    $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>($this->getRequestParameter('<?php echo $name ?>', 0));
+    $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>(isset($<?php echo $this->getSingularName() ?>['<?php echo $name ?>']) ? $<?php echo $this->getSingularName() ?>['<?php echo $name ?>'] : 0);
 <?php else: ?>
-    $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>($this->getRequestParameter('<?php echo $name ?>'));
+    $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>($<?php echo $this->getSingularName() ?>['<?php echo $name ?>']);
 <?php endif ?>
 <?php endforeach ?>
 <?php endforeach ?>
   }
 
-  private function get<?php echo $this->getClassName() ?>OrCreate (<?php echo $this->getMethodParamsForGetOrCreate() ?>)
+  protected function get<?php echo $this->getClassName() ?>OrCreate (<?php echo $this->getMethodParamsForGetOrCreate() ?>)
   {
     if (<?php echo $this->getTestPksForGetOrCreate() ?>)
     {
@@ -96,10 +116,54 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     {
       $<?php echo $this->getSingularName() ?> = <?php echo $this->getClassName() ?>Peer::retrieveByPk(<?php echo $this->getRetrieveByPkParamsForGetOrCreate() ?>);
 
-      $this->forward404Unless($<?php echo $this->getSingularName() ?> instanceof <?php echo $this->getClassName() ?>);
+      $this->forward404Unless($<?php echo $this->getSingularName() ?>);
     }
 
     return $<?php echo $this->getSingularName() ?>;
+  }
+
+  protected function processFilters ()
+  {
+<?php if ($this->getParameterValue('list.filters')): ?>
+    $this->getUser()->getAttributeHolder()->add($this->getRequestParameter('filters'), 'sf_admin/<?php echo $this->getSingularName() ?>/filters');
+<?php endif ?>
+  }
+
+  protected function processSort ()
+  {
+    if ($this->getRequestParameter('sort'))
+    {
+      $this->getUser()->setAttribute('sort', $this->getRequestParameter('sort'), 'sf_admin/<?php echo $this->getSingularName() ?>/sort');
+      $this->getUser()->setAttribute('type', $this->getRequestParameter('type', 'asc'), 'sf_admin/<?php echo $this->getSingularName() ?>/sort');
+    }
+  }
+
+  protected function addFiltersCriteria (&$c)
+  {
+<?php if ($this->getParameterValue('list.filters')): ?>
+    $this->filters = $this->getUser()->getAttributeHolder()->getAll('sf_admin/<?php echo $this->getSingularName() ?>/filters');
+<?php foreach ($this->getColumns('list.filters') as $column): $type = $column->getCreoleType() ?>
+    if (isset($this->filters['<?php echo $column->getName() ?>']) && $this->filters['<?php echo $column->getName() ?>'] != '')
+    {
+      $c->add(<?php echo $this->getPeerClassName() ?>::<?php echo strtoupper($column->getName()) ?>, $this->filters['<?php echo $column->getName() ?>']);
+    }
+<?php endforeach ?>
+<?php endif ?>
+  }
+
+  protected function addSortCriteria (&$c)
+  {
+    if ($sort_column = $this->getUser()->getAttribute('sort', null, 'sf_admin/<?php echo $this->getSingularName() ?>/sort'))
+    {
+      if ($this->getUser()->getAttribute('type', null, 'sf_admin/<?php echo $this->getSingularName() ?>/sort') == 'asc')
+      {
+        $c->addAscendingOrderByColumn($sort_column);
+      }
+      else
+      {
+        $c->addDescendingOrderByColumn($sort_column);
+      }
+    }
   }
 }
 

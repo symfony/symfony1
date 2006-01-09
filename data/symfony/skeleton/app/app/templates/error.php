@@ -50,11 +50,11 @@ th {
 
 <table id="exception" cellpadding="0" cellspacing="0">
     <tr>
-        <th colspan="2"><?php print $name ?></th>
+        <th colspan="2"><?php echo $name ?></th>
     </tr>
     <tr>
         <td class="title">message:</td>
-        <td class="message"><?php print $message ?>
+        <td class="message"><?php echo $message ?>
         <?php if ($error_reference): ?>
           <a href='http://www.symfony-project.com/errors/<?php echo $error_reference ?>'>learn more about this issue</a>
         <?php endif ?>
@@ -62,35 +62,35 @@ th {
     </tr>
     <tr>
         <td class="title">code:</td>
-        <td><?php print $code ?></td>
+        <td><?php echo $code ?></td>
     </tr>
     <tr>
         <td class="title">class:</td>
-        <td><?php print $class ?></td>
+        <td><?php echo $class ?></td>
     </tr>
     <tr>
         <td class="title">file:</td>
-        <td><?php print $file ?></td>
+        <td><?php echo $file ?></td>
     </tr>
     <tr>
         <td class="title">line:</td>
-        <td><?php print $line ?></td>
+        <td><?php echo $line ?></td>
     </tr>
 <?php if (count($trace) > 0): ?>
     <tr><th colspan="2">stack trace</th></tr>
     <?php foreach ($trace as $line): ?>
-    <tr><td colspan="2"><?php print $line ?></td></tr>
+    <tr><td colspan="2"><?php echo $line ?></td></tr>
     <?php endforeach ?>
 <?php endif ?>
 
   <tr><th colspan="2">info</th></tr>
     <tr>
         <td class="title">symfony</td>
-        <td>v. <?php print SF_APP_VERSION ?></td>
+        <td>v. <?php echo sfConfig::get('sf_version') ?></td>
     </tr>
     <tr>
         <td class="title">PHP</td>
-        <td>v. <?php print PHP_VERSION ?></td>
+        <td>v. <?php echo PHP_VERSION ?></td>
     </tr>
     <tr id="help">
         <td colspan="2">for help resolving this issue, please visit <a href="http://www.symfony-project.com/">www.symfony-project.com</a>.</td>

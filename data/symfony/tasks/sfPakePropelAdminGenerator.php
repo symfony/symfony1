@@ -28,11 +28,11 @@ function run_init_propeladmin($task, $args)
 
   // create basic application structure
   $finder = pakeFinder::type('any')->prune('.svn')->discard('.svn');
-  pake_mirror($finder, PAKEFILE_SYMFONY_DATA_DIR.'/symfony/generator/sfPropelAdmin/default/skeleton/', getcwd().'/'.$app.'/modules/'.$module);
+  pake_mirror($finder, sfConfig::get('sf_symfony_data_dir').'/symfony/generator/sfPropelAdmin/default/skeleton/', getcwd().'/apps/'.$app.'/modules/'.$module);
 
   // customize php and yml files
   $finder = pakeFinder::type('file')->name('*.php', '*.yml');
-  pake_replace_tokens($finder, getcwd().'/'.$app.'/modules/'.$module, '##', '##', $constants);
+  pake_replace_tokens($finder, getcwd().'/apps/'.$app.'/modules/'.$module, '##', '##', $constants);
 }
 
 ?>

@@ -2,8 +2,8 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * (c) 2004, 2005 Sean Kerr.
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Sean Kerr.
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -57,7 +57,7 @@ class sfDatabaseManager
   public function initialize ()
   {
     // load database configuration
-    require_once(sfConfigCache::checkConfig(SF_APP_CONFIG_DIR_NAME.'/databases.yml'));
+    require_once(sfConfigCache::checkConfig(sfConfig::get('sf_app_config_dir_name').'/databases.yml'));
   }
 
   /**

@@ -153,23 +153,43 @@ $script .= '
 
     $date_script = '';
 
+    $updated = false;
+    $created = false;
     foreach ($this->getTable()->getColumns() as $col)
     {
       $clo = strtolower($col->getName());
 
-      // add automatic UpdatedAt updating
-      if ($clo == 'updated_at')
+      if (!$updated && $clo == 'updated_at')
       {
+        // add automatic UpdatedAt updating
+        $updated = true;
         $date_script .= "        \$this->setUpdatedAt(time());\n";
       }
-
-      // add automatic CreatedAt updating
-      if ($clo == 'created_at')
+      else if (!$updated && $clo == 'updated_on')
       {
+        // add automatic UpdatedOn updating
+        $updated = true;
+        $date_script .= "        \$this->setUpdatedOn(time());\n";
+      }
+      else if (!$created && $clo == 'created_at')
+      {
+        // add automatic CreatedAt updating
+        $created = true;
         $date_script .= "
     if (\$this->isNew())
     {
       \$this->setCreatedAt(time());
+    }
+";
+      }
+      else if (!$created && $clo == 'created_on')
+      {
+        // add automatic CreatedOn updating
+        $created = true;
+        $date_script .= "
+    if (\$this->isNew())
+    {
+      \$this->setCreatedOn(time());
     }
 ";
       }

@@ -2,8 +2,8 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * (c) 2004, 2005 Sean Kerr.
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Sean Kerr.
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -42,13 +42,13 @@ abstract class sfWebController extends sfController
      }
 
      $url = '';
-     if (!SF_NO_SCRIPT_NAME)
+     if (!sfConfig::get('sf_no_script_name'))
      {
        $url = $_SERVER['SCRIPT_NAME'];
      }
-     else if (SF_RELATIVE_URL_ROOT && SF_NO_SCRIPT_NAME)
+     else if (sfConfig::get('sf_relative_url_root') && sfConfig::get('sf_no_script_name'))
      {
-       $url = SF_RELATIVE_URL_ROOT;
+       $url = sfConfig::get('sf_relative_url_root');
      }
 
      $route_name = '';
@@ -58,7 +58,7 @@ abstract class sfWebController extends sfController
        list($route_name, $parameters) = $this->convertUrlStringToParameters($parameters);
      }
 
-     if (SF_URL_FORMAT == 'PATH')
+     if (sfConfig::get('sf_url_format') == 'PATH')
      {
        // use PATH format
        $divider = '/';
@@ -76,13 +76,13 @@ abstract class sfWebController extends sfController
      // default module
      if (!isset($parameters['module']))
      {
-       $parameters['module'] = SF_DEFAULT_MODULE;
+       $parameters['module'] = sfConfig::get('sf_default_module');
      }
 
      // default action
      if (!isset($parameters['action']))
      {
-       $parameters['action'] = SF_DEFAULT_ACTION;
+       $parameters['action'] = sfConfig::get('sf_default_action');
      }
 
      $r = sfRouting::getInstance();
@@ -150,7 +150,7 @@ abstract class sfWebController extends sfController
        $tmp = explode('/', $url);
 
        $params['module'] = $tmp[0];
-       $params['action'] = isset($tmp[1]) ? $tmp[1] : SF_DEFAULT_ACTION;
+       $params['action'] = isset($tmp[1]) ? $tmp[1] : sfConfig::get('sf_default_action');
      }
 
      $url_params = explode('&', $query_string);
@@ -173,17 +173,6 @@ abstract class sfWebController extends sfController
 
      return array($route_name, $params);
    }
-
-  /**
-   * Initialize this controller.
-   *
-   * @return void
-   */
-  public function initialize ($context)
-  {
-    // initialize parent
-    parent::initialize($context);
-  }
 
   /**
    * Redirect the request to another URL.

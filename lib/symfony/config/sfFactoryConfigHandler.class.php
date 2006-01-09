@@ -2,8 +2,8 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * (c) 2004, 2005 Sean Kerr.
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Sean Kerr.
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -37,7 +37,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
     $config = $this->parseYaml($configFile);
 
     // get default configuration
-    $defaultConfigFile = SF_SYMFONY_DATA_DIR.'/symfony/config/'.basename($configFile);
+    $defaultConfigFile = sfConfig::get('sf_symfony_data_dir').'/symfony/config/'.basename($configFile);
     if (is_readable($defaultConfigFile))
     {
       $defaultConfig = $this->parseYaml($defaultConfigFile);
@@ -60,9 +60,9 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
 
     // merge with environment configuration if needed
     $myConfig = sfToolkit::array_deep_merge($defaultConfig, $allConfig);
-    if (isset($config[SF_ENVIRONMENT]) && is_array($config[SF_ENVIRONMENT]))
+    if (isset($config[sfConfig::get('sf_environment')]) && is_array($config[sfConfig::get('sf_environment')]))
     {
-      $myConfig = sfToolkit::array_deep_merge($myConfig, $config[SF_ENVIRONMENT]);
+      $myConfig = sfToolkit::array_deep_merge($myConfig, $config[sfConfig::get('sf_environment')]);
     }
 
     // init our data and includes arrays
@@ -123,8 +123,8 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           $instances[] = sprintf($tmp, $class);
 
           // append instance initialization
-          $tmp     = "  \$this->controller->initialize(\$this, %s);";
-          $inits[] = sprintf($tmp, $parameters);
+          $tmp     = "  \$this->controller->initialize(\$this);";
+          $inits[] = sprintf($tmp);
 
           break;
 
@@ -141,7 +141,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
 
         case 'security_filter':
           // append creation/initialization in one swipe
-          $tmp     = "\n  if (SF_USE_SECURITY)\n  {\n" .
+          $tmp     = "\n  if (sfConfig::get('sf_use_security'))\n  {\n" .
                      "    \$this->securityFilter = sfSecurityFilter::newInstance('%s');\n".
                      "    \$this->securityFilter->initialize(\$this, %s);\n  }\n";
           $inits[] = sprintf($tmp, $class, $parameters);
@@ -179,9 +179,9 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
 
         case 'view_cache':
           // append view cache class name
-          $tmp     = "\n  if (SF_CACHE)\n  {\n".
+          $tmp     = "\n  if (sfConfig::get('sf_cache'))\n  {\n".
                      "    \$this->viewCacheManager->setViewCacheClassName('%s');\n  }\n";
-          $inits[] = sprintf($tmp, $class, $parameters);
+          $inits[] = sprintf($tmp, $class);
 
           break;
       }

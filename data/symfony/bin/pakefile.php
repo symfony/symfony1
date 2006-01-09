@@ -1,23 +1,43 @@
 <?php
 
-// PEAR?
-if (!defined('PAKEFILE_LIB_DIR'))
+// symfony directories
+if (is_readable(dirname(__FILE__).'/../../../lib/symfony'))
 {
-  $base_dir = realpath(dirname(__FILE__).'/../../..');
-  define('PAKEFILE_LIB_DIR',  $base_dir.'/lib');
-  define('PAKEFILE_DATA_DIR', $base_dir.'/data');
-  define('PAKEFILE_SYMLINK',  true);
-
-  define('PAKEFILE_SYMFONY_LIB_DIR', PAKEFILE_LIB_DIR);
+  // symlink exists
+  $sf_symfony_lib_dir  = realpath(dirname(__FILE__).'/../../../lib');
+  $sf_symfony_data_dir = realpath(dirname(__FILE__).'/../..');
+  $symlink = true;
 }
 else
 {
-  define('PAKEFILE_SYMFONY_LIB_DIR', PAKEFILE_LIB_DIR.'/symfony');
+  // PEAR config
+  if ((include('symfony/symfony/pear.php')) != 'OK')
+  {
+    throw new Exception('Unable to find symfony librairies');
+  }
+  $symlink = false;
 }
 
-define('PAKEFILE_SYMFONY_DATA_DIR', PAKEFILE_DATA_DIR);
+require_once($sf_symfony_lib_dir.'/symfony/config/sfConfig.class.php');
 
-set_include_path(PAKEFILE_SYMFONY_LIB_DIR.PATH_SEPARATOR.get_include_path());
+sfConfig::add(array(
+  'sf_root_dir'         => getcwd(),
+  'sf_symfony_lib_dir'  => $sf_symfony_lib_dir,
+  'sf_symfony_data_dir' => $sf_symfony_data_dir,
+  'sf_symfony_symlink'          => $symlink,
+));
+
+// directory layout
+include($sf_symfony_data_dir.'/symfony/config/constants.php');
+
+// include path
+set_include_path(
+  sfConfig::get('sf_lib_dir').PATH_SEPARATOR.
+  sfConfig::get('sf_symfony_lib_dir').PATH_SEPARATOR.
+  sfConfig::get('sf_app_lib_dir').PATH_SEPARATOR.
+  sfConfig::get('sf_model_dir').PATH_SEPARATOR.
+  get_include_path()
+);
 
 /* tasks registration */
 pake_task('project_exists');
@@ -47,7 +67,7 @@ function run_app_exists($task, $args)
     throw new Exception('you must provide your application name');
   }
 
-  if (!is_dir(getcwd().'/'.$args[0]))
+  if (!is_dir(getcwd().'/apps/'.$args[0]))
   {
     throw new Exception('application "'.$args[0].'" does not exist');
   }

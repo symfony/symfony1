@@ -13,4 +13,5 @@
 - %SF_SYMFONY_LIB_DIR%/symfony/exception/sfCacheException.class.php
 - %SF_SYMFONY_LIB_DIR%/symfony/exception/sfConfigurationException.class.php
 - %SF_SYMFONY_LIB_DIR%/symfony/exception/sfParseException.class.php
+- %SF_SYMFONY_LIB_DIR%/symfony/symfony_autoload.php
 - %SF_SYMFONY_LIB_DIR%/symfony/symfony.php

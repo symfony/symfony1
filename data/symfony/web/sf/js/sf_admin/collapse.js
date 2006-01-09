@@ -1,7 +1,7 @@
 // django javascript file
 
 // Finds all fieldsets with class="collapse", collapses them, and gives each
-// one a "Show" link that uncollapses it. The "Show" link becomes a "Hide"
+// one a "show" link that uncollapses it. The "show" link becomes a "hide"
 // link when the fieldset is visible.
 
 function findForm(node) {
@@ -27,17 +27,17 @@ var CollapsedFieldsets = {
         collapsed_seen = true;
         // Give it an additional class, used by CSS to hide it.
         fs.className += ' ' + CollapsedFieldsets.collapsed_class;
-        // (<a id="fieldsetcollapser3" class="collapse-toggle" href="#">Show</a>)
+        // (<a id="fieldsetcollapser3" class="collapse-toggle" href="#">show</a>)
         var collapse_link = document.createElement('a');
         collapse_link.className = 'collapse-toggle';
         collapse_link.id = 'fieldsetcollapser' + i;
         collapse_link.onclick = new Function('CollapsedFieldsets.show('+i+'); return false;');
         collapse_link.href = '#';
-        collapse_link.innerHTML = 'Show';
+        collapse_link.innerHTML = 'show';
         var h2 = fs.getElementsByTagName('h2')[0];
-        h2.appendChild(document.createTextNode(' ('));
+        h2.appendChild(document.createTextNode(' ['));
         h2.appendChild(collapse_link);
-        h2.appendChild(document.createTextNode(')'));
+        h2.appendChild(document.createTextNode(']'));
       }
     }
     if (collapsed_seen) {
@@ -59,19 +59,19 @@ var CollapsedFieldsets = {
     var fs = document.getElementsByTagName('fieldset')[fieldset_index];
     // Remove the class name that causes the "display: none".
     fs.className = fs.className.replace(CollapsedFieldsets.collapsed_re, '');
-    // Toggle the "Show" link to a "Hide" link
+    // Toggle the "show" link to a "hide" link
     var collapse_link = document.getElementById('fieldsetcollapser' + fieldset_index);
     collapse_link.onclick = new Function('CollapsedFieldsets.hide('+fieldset_index+'); return false;');
-    collapse_link.innerHTML = 'Hide';
+    collapse_link.innerHTML = 'hide';
   },
   hide: function(fieldset_index) {
     var fs = document.getElementsByTagName('fieldset')[fieldset_index];
     // Add the class name that causes the "display: none".
     fs.className += ' ' + CollapsedFieldsets.collapsed_class;
-    // Toggle the "Hide" link to a "Show" link
+    // Toggle the "hide" link to a "show" link
     var collapse_link = document.getElementById('fieldsetcollapser' + fieldset_index);
         collapse_link.onclick = new Function('CollapsedFieldsets.show('+fieldset_index+'); return false;');
-    collapse_link.innerHTML = 'Show';
+    collapse_link.innerHTML = 'show';
   },
   
   uncollapse_all: function() {

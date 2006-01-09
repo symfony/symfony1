@@ -2,8 +2,8 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * (c) 2004, 2005 Sean Kerr.
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Sean Kerr.
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -37,32 +37,38 @@ class sfFrontWebController extends sfWebController
       // get the application context
       $context = $this->getContext();
 
-      if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfFrontWebController} dispatch request');
+      if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfFrontWebController} dispatch request');
 
       // determine our module and action
-      $moduleName = $context->getRequest()->getParameter(SF_MODULE_ACCESSOR);
-      $actionName = $context->getRequest()->getParameter(SF_ACTION_ACCESSOR);
+      $moduleName = $context->getRequest()->getParameter(sfConfig::get('sf_module_accessor'));
+      $actionName = $context->getRequest()->getParameter(sfConfig::get('sf_action_accessor'));
 
       if ($moduleName == null)
       {
-        $moduleName = SF_DEFAULT_MODULE;
+        $moduleName = sfConfig::get('sf_default_module');
 
-        if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfFrontWebController} no module, set default ('.$moduleName.')');
+        if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfFrontWebController} no module, set default ('.$moduleName.')');
       }
 
       if ($actionName == null)
       {
         // no action has been specified
-        $actionName = SF_DEFAULT_ACTION;
+        $actionName = sfConfig::get('sf_default_action');
 
-        if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfFrontWebController} no action, set default ('.$actionName.')');
+        if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfFrontWebController} no action, set default ('.$actionName.')');
+      }
+
+      // register sfWebDebug assets
+      if (sfConfig::get('sf_web_debug'))
+      {
+        sfWebDebug::getInstance()->registerAssets();
       }
 
       // make the first request
       $this->forward($moduleName, $actionName);
 
       // send web debug information if needed
-      if (SF_WEB_DEBUG)
+      if (sfConfig::get('sf_web_debug'))
       {
         sfWebDebug::getInstance()->printResults();
       }

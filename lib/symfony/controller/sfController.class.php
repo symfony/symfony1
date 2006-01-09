@@ -2,8 +2,8 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * (c) 2004, 2005 Sean Kerr.
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Sean Kerr.
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -22,7 +22,7 @@ abstract class sfController
 {
   private
     $context                  = null,
-    $maxForwards              = 20,
+    $maxForwards              = 10,
     $renderMode               = sfView::RENDER_CLIENT,
     $executionFilterClassName = null,
     $viewCacheClassName       = null;
@@ -47,10 +47,10 @@ abstract class sfController
    */
   public function actionExists ($moduleName, $actionName)
   {
-    $file = SF_APP_MODULE_DIR.'/'.$moduleName.'/'.SF_APP_MODULE_ACTION_DIR_NAME.'/'.$actionName.'Action.class.php';
-    $module_file = SF_APP_MODULE_DIR.'/'.$moduleName.'/'.SF_APP_MODULE_ACTION_DIR_NAME.'/actions.class.php';
-    $core_module_file = SF_SYMFONY_DATA_DIR.'/symfony/modules/'.$moduleName.'/actions/actions.class.php';
-    $constant_name = 'SF_MODULE_'.strtoupper($moduleName);
+    $module_dir = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_action_dir_name');
+    $file = $module_dir.'/'.$actionName.'Action.class.php';
+    $module_file = $module_dir.'/actions.class.php';
+    $core_module_file = sfConfig::get('sf_symfony_data_dir').'/symfony/modules/'.$moduleName.'/actions/actions.class.php';
 
     $exists = false;
 
@@ -72,7 +72,7 @@ abstract class sfController
         $exists = true;
       }
     }
-    else if (defined($constant_name) && constant($constant_name) && is_readable($core_module_file))
+    else if (sfConfig::get('sf_module_'.strtolower($moduleName)) && is_readable($core_module_file))
     {
       // core module file exists and is active (see settings.yml)
       $exists = true;
@@ -110,16 +110,16 @@ abstract class sfController
       throw new sfForwardException($error);
     }
 
-    if (!SF_AVAILABLE)
+    if (!sfConfig::get('sf_available'))
     {
       // application is unavailable
-      $moduleName = SF_UNAVAILABLE_MODULE;
-      $actionName = SF_UNAVAILABLE_ACTION;
+      $moduleName = sfConfig::get('sf_unavailable_module');
+      $actionName = sfConfig::get('sf_unavailable_action');
 
       if (!$this->actionExists($moduleName, $actionName))
       {
         // cannot find unavailable module/action
-        $error = 'Invalid configuration settings: SF_UNAVAILABLE_MODULE "%s", SF_UNAVAILABLE_ACTION "%s"';
+        $error = 'Invalid configuration settings: [sf_unavailable_module] "%s", [sf_unavailable_action] "%s"';
         $error = sprintf($error, $moduleName, $actionName);
 
         throw new sfConfigurationException($error);
@@ -127,7 +127,7 @@ abstract class sfController
     }
 
     // check for a module generator config file
-    $generatorConfig = SF_APP_MODULE_DIR.'/'.$moduleName.'/'.SF_APP_MODULE_CONFIG_DIR_NAME.'/generator.yml';
+    $generatorConfig = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/generator.yml';
     if (is_readable($generatorConfig))
     {
       sfConfigCache::import($generatorConfig, true, array('moduleName' => $moduleName));
@@ -136,7 +136,7 @@ abstract class sfController
     if (!$this->actionExists($moduleName, $actionName))
     {
       // the requested action doesn't exist
-      if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfController} action does not exist');
+      if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfController} action does not exist');
 
       // track the requested module so we have access to the data in the error 404 page
       $this->context->getRequest()->setAttribute('requested_action', $actionName);
@@ -144,13 +144,13 @@ abstract class sfController
       $this->context->getRequest()->setAttribute('requested_uri',    $_SERVER['PHP_SELF']);
 
       // switch to error 404 action
-      $moduleName = SF_ERROR_404_MODULE;
-      $actionName = SF_ERROR_404_ACTION;
+      $moduleName = sfConfig::get('sf_error_404_module');
+      $actionName = sfConfig::get('sf_error_404_action');
 
       if (!$this->actionExists($moduleName, $actionName))
       {
         // cannot find unavailable module/action
-        $error = 'Invalid configuration settings: SF_ERROR_404_MODULE "%s", SF_ERROR_404_ACTION "%s"';
+        $error = 'Invalid configuration settings: [sf_error_404_module] "%s", [sf_error_404_action] "%s"';
         $error = sprintf($error, $moduleName, $actionName);
 
         throw new sfConfigurationException($error);
@@ -164,10 +164,10 @@ abstract class sfController
     $this->getActionStack()->addEntry($moduleName, $actionName, $actionInstance, $isSlot);
 
     // include module configuration
-    sfConfigCache::import('modules/'.$moduleName.'/'.SF_APP_MODULE_CONFIG_DIR_NAME.'/module.yml', true, array('prefix' => $moduleName.'_'));
+    sfConfigCache::import('modules/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/module.yml', true, array('prefix' => $moduleName.'_'));
 
     // check if this module is internal
-    if ($this->getActionStack()->getSize() == 1 && constant('MOD_'.strtoupper($moduleName).'_IS_INTERNAL'))
+    if ($this->getActionStack()->getSize() == 1 && sfConfig::get('mod_'.strtolower($moduleName).'_is_internal'))
     {
       $error = 'Action "%s" from module "%s" cannot be called directly';
       $error = sprintf($error, $actionName, $moduleName);
@@ -175,12 +175,12 @@ abstract class sfController
       throw new sfConfigurationException($error);
     }
 
-    if (constant('MOD_'.strtoupper($moduleName).'_ENABLED'))
+    if (sfConfig::get('mod_'.strtolower($moduleName).'_enabled'))
     {
       // module is enabled
 
       // check for a module config.php
-      $moduleConfig = SF_APP_MODULE_DIR.'/'.$moduleName.'/'.SF_APP_MODULE_CONFIG_DIR_NAME.'/config.php';
+      $moduleConfig = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/config.php';
       if (is_readable($moduleConfig))
       {
         require_once($moduleConfig);
@@ -192,13 +192,13 @@ abstract class sfController
         // create a new filter chain
         $filterChain = new sfFilterChain();
 
-        if (SF_AVAILABLE)
+        if (sfConfig::get('sf_available'))
         {
           // the application is available so we'll register
           // global and module filters, otherwise skip them
 
           // does this action require security?
-          if (SF_USE_SECURITY && $actionInstance->isSecure())
+          if (sfConfig::get('sf_use_security') && $actionInstance->isSecure())
           {
             if (!in_array('sfSecurityUser', class_implements($this->context->getUser())))
             {
@@ -217,16 +217,37 @@ abstract class sfController
           $this->loadModuleFilters($filterChain);
         }
 
+        if (sfConfig::get('sf_use_flash'))
+        {
+          // register flash filter before execution filter
+          $flashFilter = new sfFlashBeforeFilter();
+          $flashFilter->initialize($this->context);
+          $filterChain->register($flashFilter);
+        }
+
         // register the execution filter
         $execFilter = new $this->executionFilterClassName();
-
         $execFilter->initialize($this->context);
         $filterChain->register($execFilter);
 
-        if ($moduleName == SF_ERROR_404_MODULE && $actionName == SF_ERROR_404_ACTION && !headers_sent())
+        if (sfConfig::get('sf_use_flash'))
+        {
+          // register flash filter after execution filter
+          $flashFilter = new sfFlashAfterFilter();
+          $flashFilter->initialize($this->context);
+          $filterChain->register($flashFilter);
+        }
+
+        if ($moduleName == sfConfig::get('sf_error_404_module') && $actionName == sfConfig::get('sf_error_404_action') && !headers_sent())
         {
           header('HTTP/1.0 404 Not Found');
           header('Status: 404 Not Found');
+        }
+
+        // change i18n message source directory to our module
+        if (sfConfig::get('sf_i18n'))
+        {
+          $this->context->getI18N()->setMessageSourceDir(sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_i18n_dir_name'), $this->context->getUser()->getCulture());
         }
 
         // process the filter chain
@@ -244,13 +265,13 @@ abstract class sfController
     else
     {
       // module is disabled
-      $moduleName = SF_MODULE_DISABLED_MODULE;
-      $actionName = SF_MODULE_DISABLED_ACTION;
+      $moduleName = sfConfig::get('sf_module_disabled_module');
+      $actionName = sfConfig::get('sf_module_disabled_action');
 
       if (!$this->actionExists($moduleName, $actionName))
       {
         // cannot find mod disabled module/action
-        $error = 'Invalid configuration settings: SF_MODULE_DISABLED_MODULE "%s", SF_MODULE_DISABLED_ACTION "%s"';
+        $error = 'Invalid configuration settings: [sf_module_disabled_module] "%s", [sf_module_disabled_action] "%s"';
         $error = sprintf($error, $moduleName, $actionName);
 
         throw new sfConfigurationException($error);
@@ -270,7 +291,7 @@ abstract class sfController
    */
   public function getAction ($moduleName, $actionName)
   {
-    $file = SF_APP_MODULE_DIR.'/'.$moduleName.'/'.SF_APP_MODULE_ACTION_DIR_NAME.'/'.$actionName.'Action.class.php';
+    $file = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_action_dir_name').'/'.$actionName.'Action.class.php';
 
     if (is_readable($file))
     {
@@ -351,14 +372,15 @@ abstract class sfController
    * Retrieve a View implementation instance.
    *
    * @param string A module name.
+   * @param string An action name.
    * @param string A view name.
    *
    * @return View A View implementation instance, if the view exists, otherwise null.
    */
-  public function getView ($moduleName, $viewName)
+  public function getView ($moduleName, $actionName, $viewName)
   {
     // user view exists?
-    $file = SF_APP_MODULE_DIR.'/'.$moduleName.'/'.SF_APP_MODULE_VIEW_DIR_NAME.'/'.$viewName.'View.class.php';
+    $file = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_view_dir_name').'/'.$viewName.'View.class.php';
 
     if (is_readable($file))
     {
@@ -378,8 +400,8 @@ abstract class sfController
     }
 
     // view class (as configured in module.yml or defined in action)
-    $viewName = $this->getContext()->getRequest()->getAttribute('view_name', '', 'symfony/action/view') ? $this->getContext()->getRequest()->getAttribute('view_name', '', 'symfony/action/view') : constant('MOD_'.strtoupper($moduleName).'_VIEW_CLASS');
-    $file     = SF_SYMFONY_LIB_DIR.'/symfony/view/'.$viewName.'View.class.php';
+    $viewName = $this->getContext()->getRequest()->getAttribute($moduleName.'_'.$actionName.'_view_name', '', 'symfony/action/view') ? $this->getContext()->getRequest()->getAttribute($moduleName.'_'.$actionName.'_view_name', '', 'symfony/action/view') : sfConfig::get('mod_'.strtolower($moduleName).'_view_class');
+    $file     = sfConfig::get('sf_symfony_lib_dir').'/symfony/view/'.$viewName.'View.class.php';
     if (is_readable($file))
     {
       $class = $viewName.'View';
@@ -392,11 +414,12 @@ abstract class sfController
    * Indicates whether or not a module has a specific view.
    *
    * @param string A module name.
+   * @param string An action name.
    * @param string A view name.
    *
    * @return bool true, if the view exists, otherwise false.
    */
-  public function viewExists ($moduleName, $viewName)
+  public function viewExists ($moduleName, $actionName, $viewName)
   {
     // view always exists in symfony
     return 1;
@@ -423,10 +446,10 @@ abstract class sfController
   {
     $this->context = $context;
 
-    if (SF_LOGGING_ACTIVE) $this->context->getLogger()->info('{sfController} initialization');
+    if (sfConfig::get('sf_logging_active')) $this->context->getLogger()->info('{sfController} initialization');
 
     // set max forwards
-    $this->maxForwards = SF_MAX_FORWARDS;
+    $this->maxForwards = sfConfig::get('sf_max_forwards');
   }
 
   /**
@@ -441,13 +464,13 @@ abstract class sfController
     static $list = array();
 
     // grab our global filter ini and preset the module name
-    $config     = SF_APP_CONFIG_DIR.'/filters.yml';
+    $config     = sfConfig::get('sf_app_config_dir').'/filters.yml';
     $moduleName = 'global';
 
     if (!isset($list[$moduleName]) && is_readable($config))
     {
       // load global filters
-      require_once(sfConfigCache::checkConfig(SF_APP_CONFIG_DIR_NAME.'/filters.yml'));
+      require_once(sfConfigCache::checkConfig(sfConfig::get('sf_app_config_dir_name').'/filters.yml'));
     }
 
     // register filters
@@ -475,10 +498,12 @@ abstract class sfController
     if (!isset($list[$moduleName]))
     {
       // we haven't loaded a filter list for this module yet
-      $config = SF_APP_MODULE_DIR.'/'.$moduleName.'/'.SF_APP_MODULE_CONFIG_DIR_NAME.'/filters.yml';
+      $config = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/filters.yml';
 
       if (is_readable($config))
+      {
         require_once(sfConfigCache::checkConfig($config));
+      }
       else
       {
         // add an emptry array for this module since no filters exist
@@ -488,7 +513,9 @@ abstract class sfController
 
     // register filters
     foreach ($list[$moduleName] as $filter)
+    {
       $filterChain->register($filter);
+    }
   }
 
   /**

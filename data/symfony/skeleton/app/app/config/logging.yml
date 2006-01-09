@@ -1,4 +1,5 @@
 prod:
+  active: off
   level:  err
 
 dev:

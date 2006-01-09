@@ -1,56 +1,61 @@
 <?php
 
-if (!defined('DS'))
-{
-  define('DS', DIRECTORY_SEPARATOR);
-}
+$sf_root_dir    = sfConfig::get('sf_root_dir');
+$sf_app         = sfConfig::get('sf_app');
+$sf_environment = sfConfig::get('sf_environment');
 
-// root directory structure
-define('SF_CACHE_DIR_NAME', 'cache');
-define('SF_LOG_DIR_NAME',   'log');
-define('SF_LIB_DIR_NAME',   'lib');
-define('SF_MODEL_DIR_NAME', 'model');
-define('SF_WEB_DIR_NAME',   'web');
-define('SF_DATA_DIR_NAME',  'data');
+sfConfig::add(array(
+  // root directory structure
+  'sf_cache_dir_name'   => 'cache',
+  'sf_log_dir_name'     => 'log',
+  'sf_lib_dir_name'     => 'lib',
+  'sf_model_dir_name'   => 'model',
+  'sf_web_dir_name'     => 'web',
+  'sf_data_dir_name'    => 'data',
+  'sf_config_dir_name'  => 'config',
+  'sf_apps_dir_name'    => 'apps',
 
-// global directory structure
-define('SF_APP_DIR',        SF_ROOT_DIR.DS.SF_APP);
-define('SF_MODEL_DIR',      SF_ROOT_DIR.DS.SF_MODEL_DIR_NAME);
-define('SF_LIB_DIR',        SF_ROOT_DIR.DS.SF_LIB_DIR_NAME);
-define('SF_WEB_DIR',        SF_ROOT_DIR.DS.SF_WEB_DIR_NAME);
-define('SF_UPLOAD_DIR',     SF_WEB_DIR.DS.'uploads');
-define('SF_BASE_CACHE_DIR', SF_ROOT_DIR.DS.SF_CACHE_DIR_NAME.DS.SF_APP);
-define('SF_CACHE_DIR',      SF_BASE_CACHE_DIR.DS.SF_ENVIRONMENT);
-define('SF_LOG_DIR',        SF_ROOT_DIR.DS.SF_LOG_DIR_NAME);
-define('SF_DATA_DIR',       SF_ROOT_DIR.DS.SF_DATA_DIR_NAME);
+  // global directory structure
+  'sf_app_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$sf_app,
+  'sf_model_dir'      => $sf_root_dir.DIRECTORY_SEPARATOR.'model',
+  'sf_lib_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.'lib',
+  'sf_web_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.'web',
+  'sf_upload_dir'     => $sf_root_dir.DIRECTORY_SEPARATOR.'web'.DIRECTORY_SEPARATOR.'uploads',
+  'sf_base_cache_dir' => $sf_root_dir.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.$sf_app,
+  'sf_cache_dir'      => $sf_root_dir.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.$sf_app.DIRECTORY_SEPARATOR.$sf_environment,
+  'sf_log_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.'log',
+  'sf_data_dir'       => $sf_root_dir.DIRECTORY_SEPARATOR.'data',
+  'sf_config_dir'     => $sf_root_dir.DIRECTORY_SEPARATOR.'config',
 
-// SF_CACHE_DIR directory structure
-define('SF_TEMPLATE_CACHE_DIR', SF_CACHE_DIR.DS.'template');
-define('SF_I18N_CACHE_DIR',     SF_CACHE_DIR.DS.'i18n');
-define('SF_CONFIG_CACHE_DIR',   SF_CACHE_DIR.DS.'config');
-define('SF_TEST_CACHE_DIR',     SF_CACHE_DIR.DS.'test');
-define('SF_MODULE_CACHE_DIR',   SF_CACHE_DIR.DS.'module');
+  // SF_CACHE_DIR directory structure
+  'sf_template_cache_dir' => $sf_root_dir.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.$sf_app.DIRECTORY_SEPARATOR.$sf_environment.DIRECTORY_SEPARATOR.'template',
+  'sf_i18n_cache_dir'     => $sf_root_dir.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.$sf_app.DIRECTORY_SEPARATOR.$sf_environment.DIRECTORY_SEPARATOR.'i18n',
+  'sf_config_cache_dir'   => $sf_root_dir.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.$sf_app.DIRECTORY_SEPARATOR.$sf_environment.DIRECTORY_SEPARATOR.'config',
+  'sf_test_cache_dir'     => $sf_root_dir.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.$sf_app.DIRECTORY_SEPARATOR.$sf_environment.DIRECTORY_SEPARATOR.'test',
+  'sf_module_cache_dir'   => $sf_root_dir.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.$sf_app.DIRECTORY_SEPARATOR.$sf_environment.DIRECTORY_SEPARATOR.'module',
 
-// SF_APP_DIR sub-directories names
-define('SF_APP_I18N_DIR_NAME',     'i18n');
-define('SF_APP_CONFIG_DIR_NAME',   'config');
-define('SF_APP_LIB_DIR_NAME',      'lib');
-define('SF_APP_MODULE_DIR_NAME',   'modules');
-define('SF_APP_TEMPLATE_DIR_NAME', 'templates');
+  // SF_APP_DIR sub-directories names
+  'sf_app_i18n_dir_name'     => 'i18n',
+  'sf_app_config_dir_name'   => 'config',
+  'sf_app_lib_dir_name'      => 'lib',
+  'sf_app_module_dir_name'   => 'modules',
+  'sf_app_template_dir_name' => 'templates',
 
-// SF_APP_DIR directory structure
-define('SF_APP_CONFIG_DIR',   SF_APP_DIR.DS.SF_APP_CONFIG_DIR_NAME);
-define('SF_APP_LIB_DIR',      SF_APP_DIR.DS.SF_APP_LIB_DIR_NAME);
-define('SF_APP_MODULE_DIR',   SF_APP_DIR.DS.SF_APP_MODULE_DIR_NAME);
-define('SF_APP_TEMPLATE_DIR', SF_APP_DIR.DS.SF_APP_TEMPLATE_DIR_NAME);
-define('SF_APP_I18N_DIR',     SF_APP_DIR.DS.SF_APP_I18N_DIR_NAME);
+  // SF_APP_DIR directory structure
+  'sf_app_config_dir'   => $sf_root_dir.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$sf_app.DIRECTORY_SEPARATOR.'config',
+  'sf_app_lib_dir'      => $sf_root_dir.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$sf_app.DIRECTORY_SEPARATOR.'lib',
+  'sf_app_module_dir'   => $sf_root_dir.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$sf_app.DIRECTORY_SEPARATOR.'modules',
+  'sf_app_template_dir' => $sf_root_dir.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$sf_app.DIRECTORY_SEPARATOR.'templates',
+  'sf_app_i18n_dir'     => $sf_root_dir.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$sf_app.DIRECTORY_SEPARATOR.'i18n',
 
-// SF_APP_MODULE_DIR sub-directories names
-define('SF_APP_MODULE_ACTION_DIR_NAME',   'actions');
-define('SF_APP_MODULE_TEMPLATE_DIR_NAME', 'templates');
-define('SF_APP_MODULE_LIB_DIR_NAME',      'lib');
-define('SF_APP_MODULE_VIEW_DIR_NAME',     'views');
-define('SF_APP_MODULE_VALIDATE_DIR_NAME', 'validate');
-define('SF_APP_MODULE_CONFIG_DIR_NAME',   'config');
+  // SF_APP_MODULE_DIR sub-directories names
+  'sf_app_module_action_dir_name'   => 'actions',
+  'sf_app_module_template_dir_name' => 'templates',
+  'sf_app_module_lib_dir_name'      => 'lib',
+  'sf_app_module_view_dir_name'     => 'views',
+  'sf_app_module_validate_dir_name' => 'validate',
+  'sf_app_module_config_dir_name'   => 'config',
+  'sf_app_module_i18n_dir_name'   => 'i18n',
+));
 
 ?>

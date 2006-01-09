@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -35,9 +35,10 @@ class sfStats
 
   public static function record($context)
   {
-    if (!SF_STATS) return;
 
-    switch (SF_PATH_INFO_ARRAY)
+    if (!sfConfig::get('sf_stats')) return;
+
+    switch (sfConfig::get('sf_path_info_array'))
     {
       case 'SERVER':
         $pathArray =& $_SERVER;

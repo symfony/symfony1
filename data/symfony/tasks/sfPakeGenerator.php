@@ -28,7 +28,7 @@ function run_init_project($task, $args)
 
   // create basic project structure
   $finder = pakeFinder::type('any')->prune('.svn')->discard('.svn');
-  pake_mirror($finder, PAKEFILE_DATA_DIR.'/symfony/skeleton/project', getcwd());
+  pake_mirror($finder, sfConfig::get('sf_symfony_data_dir').'/symfony/skeleton/project', getcwd());
 
   $finder = pakeFinder::type('file')->name('properties.ini', 'apache.conf', 'propel.ini');
   pake_replace_tokens($finder, getcwd(), '##', '##', array('PROJECT_NAME' => $project_name));
@@ -37,10 +37,10 @@ function run_init_project($task, $args)
   pake_replace_tokens($finder, getcwd(), '##', '##', array('PROJECT_DIR' => getcwd()));
 
   // create symlink if needed
-  if (PAKEFILE_SYMLINK)
+  if (sfConfig::get('sf_symfony_symlink'))
   {
-    pake_symlink(PAKEFILE_LIB_DIR,  getcwd().'/lib/symfony');
-    pake_symlink(PAKEFILE_DATA_DIR, getcwd().'/data/symfony');
+    pake_symlink(sfConfig::get('sf_symfony_lib_dir'),  getcwd().'/lib/symfony');
+    pake_symlink(sfConfig::get('sf_symfony_data_dir'), getcwd().'/data/symfony');
   }
 
   run_fix_perms($task, $args);
@@ -57,19 +57,22 @@ function run_init_app($task, $args)
 
   // create basic application structure
   $finder = pakeFinder::type('any')->prune('.svn')->discard('.svn');
-  pake_mirror($finder, PAKEFILE_DATA_DIR.'/symfony/skeleton/app/app', getcwd().'/'.$app);
+  pake_mirror($finder, sfConfig::get('sf_symfony_data_dir').'/symfony/skeleton/app/app', getcwd().'/apps/'.$app);
 
-  // create $app.php or index.php if it is our first app, and set no_script_name appropriately
+  // create $app.php or index.php if it is our first app
   $index_name = 'index';
-  if(file_exists(getcwd().'/web/index.php'))
+  $first_app = file_exists(getcwd().'/web/index.php') ? false : true;
+  if (!$first_app)
   {
     $index_name = $app;
-    $finder = pakeFinder::type('file')->name('settings.yml');
-    pake_replace_tokens($finder, getcwd().'/'.$app.'/config', '##', '##', array('NO_SCRIPT_NAME' => 'off'));
   }
 
-  pake_copy(PAKEFILE_DATA_DIR.'/symfony/skeleton/app/web/index.php', getcwd().'/web/'.$index_name.'.php');
-  pake_copy(PAKEFILE_DATA_DIR.'/symfony/skeleton/app/web/index_dev.php', getcwd().'/web/'.$app.'_dev.php');
+  // set no_script_name value in settings.yml for production environment
+  $finder = pakeFinder::type('file')->name('settings.yml');
+  pake_replace_tokens($finder, getcwd().'/apps/'.$app.'/config', '##', '##', array('NO_SCRIPT_NAME' => ($first_app ? 'on' : 'off')));
+
+  pake_copy(sfConfig::get('sf_symfony_data_dir').'/symfony/skeleton/app/web/index.php', getcwd().'/web/'.$index_name.'.php');
+  pake_copy(sfConfig::get('sf_symfony_data_dir').'/symfony/skeleton/app/web/index_dev.php', getcwd().'/web/'.$app.'_dev.php');
 
   $finder = pakeFinder::type('file')->name($index_name.'.php', $app.'_dev.php');
   pake_replace_tokens($finder, getcwd().'/web', '##', '##', array('APP_NAME' => $app));
@@ -98,17 +101,17 @@ function run_init_module($task, $args)
 
   // create basic application structure
   $finder = pakeFinder::type('any')->prune('.svn')->discard('.svn');
-  pake_mirror($finder, PAKEFILE_DATA_DIR.'/symfony/skeleton/module/module/', getcwd().'/'.$app.'/modules/'.$module);
+  pake_mirror($finder, sfConfig::get('sf_symfony_data_dir').'/symfony/skeleton/module/module/', getcwd().'/apps/'.$app.'/modules/'.$module);
 
   // create basic test
-  pake_copy(PAKEFILE_DATA_DIR.'/symfony/skeleton/module/test/actionsTest.php', getcwd().'/test/'.$app.'/'.$module.'ActionsTest.php');
+  pake_copy(sfConfig::get('sf_symfony_data_dir').'/symfony/skeleton/module/test/actionsTest.php', getcwd().'/test/'.$app.'/'.$module.'ActionsTest.php');
 
   // customize test file
   pake_replace_tokens($module.'ActionsTest.php', getcwd().'/test/'.$app, '##', '##', $constants);
 
   // customize php and yml files
   $finder = pakeFinder::type('file')->name('*.php', '*.yml');
-  pake_replace_tokens($finder, getcwd().'/'.$app.'/modules/'.$module, '##', '##', $constants);
+  pake_replace_tokens($finder, getcwd().'/apps/'.$app.'/modules/'.$module, '##', '##', $constants);
 }
 
 ?>

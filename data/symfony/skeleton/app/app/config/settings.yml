@@ -51,7 +51,7 @@ all:
 ;    
 ;    url_format:             PATH
 ;    
-;    use_database:           off
+;    use_database:           on
 ;
 ;    use_security:           on
 ;    
@@ -59,8 +59,7 @@ all:
 ;    
 ;    tidy:                   on
 ;    
-;    is_i18n:                off
-;    default_culture:        en
+;    i18n:                   off
 ;    
 ;    timeout:                1800
 ;    
@@ -68,9 +67,9 @@ all:
 ;    
 ;    module_default:         on
 ;
-;    standard_helpers:       Partial,Cache,Form
+;    standard_helpers:       [Partial, Cache, Form]
 ;
-;    max_forwards:           20
+;    max_forwards:           10
 ;
 ;    web_debug:              off
 ;
@@ -83,5 +82,11 @@ all:
 ;
 ;    stats:                  off
 ;
-;    # E_ERROR | E_USER_ERROR = 257
-;    error_reporting:        257
+;    # E_COMPILE_ERROR | E_ERROR | E_CORE_ERROR | E_USER_ERROR = 337
+;    error_reporting:        337
+;
+;    rich_text_js_dir:       js/tiny_mce
+;
+;    safe_slot:              on
+;
+;    use_flash:              on

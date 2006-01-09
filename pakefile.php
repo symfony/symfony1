@@ -33,17 +33,41 @@ pake_task('release', 'alltests');
 function run_alltests($task, $args)
 {
   set_include_path(
-    dirname(__FILE__).PATH_SEPARATOR.
     dirname(__FILE__).'/lib'.PATH_SEPARATOR.
     get_include_path()
   );
 
-  define('SF_LOGGING_ACTIVE', false);
-  require_once 'symfony/log/sfLog.class.php';
-  require_once 'symfony/log/sfLogger.class.php';
+  // initialize our test environment
+  require_once(dirname(__FILE__).'/lib/symfony/util/sfToolkit.class.php');
+  sfToolkit::clearDirectory('/tmp/symfonytest');
+  $root_dir = tempnam('/tmp/symfonytest', 'tmp');
+  unlink($root_dir);
+  $tmp_dir = $root_dir.DIRECTORY_SEPARATOR.md5(uniqid(rand(), true));
+  if (!is_dir($root_dir))
+  {
+    mkdir($root_dir, 0777);
+  }
+  mkdir($tmp_dir, 0777);
+
+  require_once(dirname(__FILE__).'/lib/symfony/config/sfConfig.class.php');
+  sfConfig::add(array(
+    'sf_root_dir'         => $tmp_dir,
+    'sf_app'              => 'test',
+    'sf_environment'      => 'test',
+    'sf_debug'            => true,
+    'sf_symfony_lib_dir'  => dirname(__FILE__).'/lib',
+    'sf_symfony_data_dir' => dirname(__FILE__).'/data',
+    'sf_test'             => false,
+    'sf_version'          => 'test',
+  ));
+  require_once(dirname(__FILE__).'/data/symfony/config/constants.php');
+  require_once(dirname(__FILE__).'/lib/symfony/symfony_autoload.php');
 
   pake_import('simpletest', false);
-  pakeSimpletestTask::call_simpletest($task, 'text');
+
+  pakeSimpletestTask::run_test($task, $args);
+
+  sfToolkit::clearDirectory($tmp_dir);
 }
 
 function run_create_pear_package($task, $args)
@@ -106,7 +130,7 @@ function run_release($task, $args)
 
   $stability = $args[1];
 
-  if ($stability == 'beta')
+  if ($stability == 'beta' || $stability == 'alpha')
   {
     $version_prefix = $args[0];
 
@@ -130,7 +154,10 @@ function run_release($task, $args)
     $version = $args[0];
   }
 
-  if ($task->is_verbose()) print 'releasing symfony version "'.$version."\"\n";
+  if ($task->is_verbose())
+  {
+    print 'releasing symfony version "'.$version."\"\n";
+  }
 
   $args[0] = $version;
 

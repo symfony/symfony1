@@ -2,8 +2,8 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * (c) 2004, 2005 Sean Kerr.
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Sean Kerr.
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -63,49 +63,54 @@ class sfExecutionFilter extends sfFilter
       // set default validated status
       $validated = true;
 
-      // get the current action validation configuration
-      $validationConfig = $moduleName.'/'.SF_APP_MODULE_VALIDATE_DIR_NAME.'/'.$actionName.'.yml';
-      if (is_readable(SF_APP_MODULE_DIR.'/'.$validationConfig))
+      // process manual validation
+      $validateToRun = 'validate'.ucfirst($actionName);
+      $validated = method_exists($actionInstance, $validateToRun) ? $actionInstance->$validateToRun() : $actionInstance->validate();
+
+      if ($validated)
       {
-        // load validation configuration
-        // do NOT use require_once
-        require(sfConfigCache::checkConfig(SF_APP_MODULE_DIR_NAME.'/'.$validationConfig));
+        // get the current action validation configuration
+        $validationConfig = $moduleName.'/'.sfConfig::get('sf_app_module_validate_dir_name').'/'.$actionName.'.yml';
+        if (is_readable(sfConfig::get('sf_app_module_dir').'/'.$validationConfig))
+        {
+          // load validation configuration
+          // do NOT use require_once
+          require(sfConfigCache::checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$validationConfig));
+        }
+
+        // manually load validators
+        $actionInstance->registerValidators($validatorManager);
+
+        // process validators
+        $validated = $validatorManager->execute();
       }
 
-      // manually load validators
-      $actionInstance->registerValidators($validatorManager);
-
-      // process validators
-      $validated = $validatorManager->execute();
-
-      // process manual validation
-      if ($validated && $actionInstance->validate())
+      if ($validated)
       {
         // register our cache configuration
-        if (SF_CACHE)
+        if (sfConfig::get('sf_cache'))
         {
           $cacheManager    = $context->getViewCacheManager();
-          $cacheConfigFile = $moduleName.'/'.SF_APP_MODULE_CONFIG_DIR_NAME.'/cache.yml';
-          if (is_readable(SF_APP_MODULE_DIR.'/'.$cacheConfigFile))
+          $cacheConfigFile = $moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/cache.yml';
+          if (is_readable(sfConfig::get('sf_app_module_dir').'/'.$cacheConfigFile))
           {
-            require(sfConfigCache::checkConfig(SF_APP_MODULE_DIR_NAME.'/'.$cacheConfigFile, array('moduleName' => $moduleName)));
+            require(sfConfigCache::checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$cacheConfigFile, array('moduleName' => $moduleName)));
           }
-
         }
 
         // page in cache?
-        if (SF_CACHE && !count($_GET) && !count($_POST))
+        if (sfConfig::get('sf_cache') && !count($_GET) && !count($_POST))
         {
-          if (SF_DEBUG && $context->getRequest()->getParameter('ignore_cache', false, 'symfony/request/sfWebRequest') == true)
+          if (sfConfig::get('sf_debug') && $context->getRequest()->getParameter('ignore_cache', false, 'symfony/request/sfWebRequest') == true)
           {
-            if (SF_LOGGING_ACTIVE) $context->getLogger()->info('{sfExecutionFilter} discard page cache');
+            if (sfConfig::get('sf_logging_active')) $context->getLogger()->info('{sfExecutionFilter} discard page cache');
           }
           else
           {
             // retrieve page content from cache
             $retval = $cacheManager->get(sfRouting::getInstance()->getCurrentInternalUri(), 'page');
 
-            if (SF_LOGGING_ACTIVE) $context->getLogger()->info('{sfExecutionFilter} page cache '.($retval ? 'exists' : 'does not exist'));
+            if (sfConfig::get('sf_logging_active')) $context->getLogger()->info('{sfExecutionFilter} page cache '.($retval ? 'exists' : 'does not exist'));
 
             if ($retval !== null)
             {
@@ -136,6 +141,7 @@ class sfExecutionFilter extends sfFilter
         // execute the action
         $actionInstance->preExecute();
         $viewName = $actionInstance->execute();
+
         if ($viewName == '')
         {
           $viewName = sfView::SUCCESS;
@@ -144,7 +150,7 @@ class sfExecutionFilter extends sfFilter
       }
       else
       {
-        if (SF_LOGGING_ACTIVE) $this->context->getLogger()->info('{sfExecutionFilter} action validation failed');
+        if (sfConfig::get('sf_logging_active')) $this->context->getLogger()->info('{sfExecutionFilter} action validation failed');
 
         // validation failed
         $handleErrorToRun = 'handleError'.ucfirst($actionName);
@@ -167,10 +173,10 @@ class sfExecutionFilter extends sfFilter
       }
 
       // display this view
-      if (!$controller->viewExists($moduleName, $viewName))
+      if (!$controller->viewExists($moduleName, $actionName, $viewName))
       {
         // the requested view doesn't exist
-        $file = SF_APP_MODULE_DIR.'/'.$moduleName.'/'.SF_APP_MODULE_VIEW_DIR_NAME.'/'.$viewName.'View.class.php';
+        $file = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_view_dir_name').'/'.$viewName.'View.class.php';
 
         $error = 'Module "%s" does not contain the view "%sView" or the file "%s" is unreadable';
         $error = sprintf($error, $moduleName, $viewName, $file);
@@ -179,7 +185,7 @@ class sfExecutionFilter extends sfFilter
       }
 
       // get the view instance
-      $viewInstance = $controller->getView($moduleName, $viewName);
+      $viewInstance = $controller->getView($moduleName, $actionName, $viewName);
 
       // initialize the view
       if ($viewInstance->initialize($context, $moduleName, $viewName))
@@ -205,6 +211,9 @@ class sfExecutionFilter extends sfFilter
         throw new sfInitializationException($error);
       }
     }
+
+    // execute next filter
+    $filterChain->execute();
   }
 
   private function doConditionalGet($timestamp)

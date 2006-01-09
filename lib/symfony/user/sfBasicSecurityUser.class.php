@@ -2,8 +2,8 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * (c) 2004, 2005 Sean Kerr.
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Sean Kerr.
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -54,7 +54,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
       {
         if ($credential == $this->credentials[$i])
         {
-          if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfUser} remove credential "'.$credential.'"');
+          if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfUser} remove credential "'.$credential.'"');
 
           unset($this->credentials[$i]);
           return;
@@ -85,10 +85,15 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     // Add all credentials
     $credentials = (is_array(func_get_arg(0))) ? func_get_arg(0) : func_get_args();
 
-    if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfUser} add credential(s) "'.implode(', ', $credentials).'"');
+    if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfUser} add credential(s) "'.implode(', ', $credentials).'"');
 
     foreach ($credentials as $aCredential)
-      if (!in_array($aCredential, $this->credentials)) $this->credentials[] = $aCredential;
+    {
+      if (!in_array($aCredential, $this->credentials))
+      {
+        $this->credentials[] = $aCredential;
+      }
+    }
   }
 
   /**
@@ -99,15 +104,38 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
    */
   public function hasCredential($credential)
   {
-    if (func_num_args() == 0) return false;
+    if (is_array($credential))
+    {
+      $credentials = (array)$credential;
+      foreach ($credentials as $credential)
+      {
+        if (is_array($credential))
+        {
+          foreach ($credential as $subcred)
+          {
+            if (in_array($subcred, $this->credentials, true))
+            {
+              continue 2;
+            }
+          }
 
-    // Get all credentials
-    $credentials = (is_array(func_get_arg(0))) ? func_get_arg(0) : func_get_args();
+          return false;
+        }
+        else
+        {
+          if (!in_array($credential, $this->credentials, true))
+          {
+            return false;
+          }
+        }
+      }
 
-    foreach ($credentials as $aCredential)
-      if (in_array($aCredential, $this->credentials)) return true;
-
-    return false;
+      return true;
+    }
+    else
+    {
+      return in_array($credential, $this->credentials, true);
+    }
   }
 
   /**
@@ -122,7 +150,10 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
       $this->culture = $culture;
 
       // change the message format object with the new culture
-      $this->getContext()->getRequest()->setAttribute('message_format', new sfMessageFormat($culture), 'symfony/i18n');
+      if (sfConfig::get('sf_i18n'))
+      {
+        $this->context->getI18N()->setCulture($culture);
+      }
     }
   }
 
@@ -153,7 +184,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
    */
   public function setAuthenticated($authenticated)
   {
-    if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfUser} user is '.($authenticated === true ? '' : 'not').' authenticated');
+    if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfUser} user is '.($authenticated === true ? '' : 'not').' authenticated');
 
     if ($authenticated === true)
     {
@@ -176,7 +207,6 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
 
     $this->authenticated = $storage->read(self::AUTH_NAMESPACE);
     $this->credentials   = $storage->read(self::CREDENTIAL_NAMESPACE);
-    $this->culture       = $storage->read(self::CULTURE_NAMESPACE);
     $this->lastRequest   = $storage->read(self::LAST_REQUEST_NAMESPACE);
 
     if ($this->authenticated == null)
@@ -185,26 +215,23 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
       $this->credentials   = array();
     }
 
-    // Automatic logout if no request for more than SF_TIMEOUT
-    if ((time() - $this->lastRequest) > SF_TIMEOUT)
+    // Automatic logout if no request for more than [sf_timeout]
+    if ((time() - $this->lastRequest) > sfConfig::get('sf_timeout'))
     {
-      if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfUser} automatic user logout');
+      if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfUser} automatic user logout');
       $this->clearCredentials();
       $this->setAuthenticated(false);
     }
 
     $this->lastRequest = time();
 
+    $culture = $storage->read(self::CULTURE_NAMESPACE);
     if ($this->culture == null)
     {
-      $this->culture = SF_DEFAULT_CULTURE;
+      $culture = sfConfig::get('sf_i18n_default_culture');
     }
 
-    // i18n
-    if (SF_IS_I18N)
-    {
-      $context->getRequest()->setAttribute('message_format', new sfMessageFormat($context->getUser()->getCulture()), 'symfony/i18n');
-    }
+    $this->setCulture($culture);
   }
 
   public function shutdown ()

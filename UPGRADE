@@ -1,0 +1,84 @@
+Upgrade symfony to 0.6.X/0.7.X from 0.4.X/0.5.X
+===============================================
+
+When you upgrade to symfony release 0.6.X or 0.7.X from 0.4.X or 0.5.X, you must upgrade your projects.
+
+Automatically
+-------------
+
+  1 - make a backup of your project (this is the most important step!)
+
+  2 - move all your apps directory under a new `app` directory (see section 9 of the `Manually` section below)
+
+  3 - launch the following command in your project root directory:
+
+    $ symfony upgrade 0.6
+
+  4 - check the changes made by the symfony upgrade command (svn diff if you use subversion)
+
+  5 - make some manual changes asked by the script (see XX in the `manually` section below)
+
+Be careful if you have external libraries that can contains `SF_XXX`, `MOD_XXX` or `APP_XXX` constants! (the `geshi` library is one of them)
+
+You can launch this command several times without a problem.
+
+Manually
+--------
+
+For all your application within a project:
+
+  1 - update your `app/config/config.php` file with the new one (`data/symfony/skeleton/app/app/config/config.php`)
+
+  2 - change all symfony configuration constants to the new sfConfig class (SF_XXX, APP_XXX, MOD_XXX)
+    except constants in index.php (SF_ROOT_DIR, SF_APP, SF_ENVIRONMENT, SF_DEBUG)
+
+    0.4.X/0.5.X              | 0.6.X/0.7.X
+    -------------------------|-----------------------------------
+    define('SF_FOO', 'bar')  | sfConfig::set('sf_foo', 'bar')
+    defined('SF_FOO')        | sfConfig::get('sf_foo') or nothing
+    SF_FOO                   | sfConfig::get('sf_foo')
+
+  3 - change shortcuts names in your templates files by adding a `sf_` prefix:
+
+    0.4.X/0.5.X              | 0.6.X/0.7.X
+    -------------------------|-----------------
+    $context                 | $sf_context
+    $params                  | $sf_params
+    $request                 | $sf_request
+    $user                    | $sf_user
+    $view                    | $sf_view
+    $last_module             | $sf_last_module
+    $last_action             | $sf_last_action
+    $first_module            | $sf_first_module
+    $first_action            | $sf_first_action
+
+  4 - update the `settings.yml` configuration file:
+  
+    0.4.X/0.5.X                           | 0.6.X/0.7.X
+    --------------------------------------|-----------------------------------------
+    standard_helpers: Partial,Cache,Form  | standard_helpers: [Partial, Cache, Form]
+    is_i18n: on                           | i18n: on
+    default_culture: en                   | -> new i18n.yml configuration file
+
+  5 - move your `messages.xml` i18n XML file from `i18n/global` to `i18n` directory.
+
+  6 - change the use of `disable_web_debug` with `sfConfig::set('sf_web_debug', false)`
+
+  7 - rename sfPager to sfPropelPager
+  
+  8 - mail_to has a new parameter
+
+    0.4.X/0.5.X                           | 0.6.X/0.7.X
+    --------------------------------------|-----------------------------------
+    mail_to($email, true)                 | mail_to($email, $name, 'encode=1')
+
+  9 - move all your apps under an `apps` directory
+
+    0.4.X/0.5.X                           | 0.6.X/0.7.X
+    --------------------------------------|--------------------------
+    SF_ROOT_DIR/frontend                  | SF_ROOT_DIR/apps/frontend
+    SF_ROOT_DIR/backend                   | SF_ROOT_DIR/apps/backend
+
+    Change the path to `config.php` in `index.php`
+
+  10 - clear the symfony cache

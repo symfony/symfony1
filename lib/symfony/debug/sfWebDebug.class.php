@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -23,11 +23,14 @@ class sfWebDebug
     $short_log       = array(),
     $max_priority    = 1000,
     $types           = array(),
-    $last_time_log   = 0,
+    $last_time_log   = -1,
     $base_image_path = '/sf/images/sf_debug_stats';
 
   private static
     $instance        = null;
+
+  protected
+    $context         = null;
 
   public function initialize()
   {
@@ -52,19 +55,25 @@ class sfWebDebug
 
   public function registerAssets()
   {
-    $context = sfContext::getInstance();
+    if (!$this->context)
+    {
+      $this->context = sfContext::getInstance();
+    }
+
+    // load helpers
+    $this->loadHelpers();
 
     // register our css and js
-    $context->getRequest()->setAttribute(
+    $this->context->getRequest()->setAttribute(
       'sf_web_debug',
-      array('/sf/js/prototype'),
+      array('/sf/js/prototype/prototype'),
       'helper/asset/auto/javascript'
     );
 
-    $context->getRequest()->setAttribute(
+    $this->context->getRequest()->setAttribute(
       'sf_web_debug',
       array('/sf/css/sf_debug_stats/main'),
-      'helper/asset/auto/stylesheet'
+      'helper/asset/auto/stylesheet/last'
     );
   }
 
@@ -75,12 +84,12 @@ class sfWebDebug
 
   public function log($logEntry)
   {
-    if (!$this->last_time_log)
+    // elapsed time
+    if ($this->last_time_log == -1)
     {
-      $this->last_time_log = SF_TIMER_START;
+      $this->last_time_log = sfConfig::get('sf_timer_start');
     }
 
-    // elapsed time
     $logEntry->setElapsedTime(sprintf('%.0f', (microtime(true) - $this->last_time_log) * 1000));
     $this->last_time_log = microtime(true);
 
@@ -114,7 +123,7 @@ class sfWebDebug
     // require needed helpers
     foreach (array('Tag', 'Url', 'Asset', 'Javascript') as $helperName)
     {
-      include_once(SF_SYMFONY_LIB_DIR.'/symfony/helper/'.$helperName.'Helper.php');
+      include_once(sfConfig::get('sf_symfony_lib_dir').'/symfony/helper/'.$helperName.'Helper.php');
     }
   }
 
@@ -123,14 +132,13 @@ class sfWebDebug
     // escape HTML
     $log_line = htmlspecialchars(strip_tags($log_line));
 
-    foreach (array('SF_APP_DIR', 'SF_ROOT_DIR', 'SF_SYMFONY_LIB_DIR', 'SF_SYMFONY_DATA_DIR') as $constant)
+    foreach (array('sf_app_dir', 'sf_root_dir', 'sf_symfony_lib_dir', 'sf_symfony_data_dir') as $constant)
     {
-      $log_line = str_replace(realpath(constant($constant)), $constant, $log_line);
+      $log_line = str_replace(realpath(sfConfig::get($constant)), $constant, $log_line);
     }
 
-    $log_line = preg_replace('/"(.+?)"/s', '"<span class="sfStatsFileInfo">\\1</span>"', $log_line);
+    $log_line = preg_replace('/&quot;(.+?)&quot;/s', '&quot;<span class="sfStatsFileInfo">\\1</span>&quot;', $log_line);
     $log_line = preg_replace('/^(.+?)\(\)\:/s', '<span class="sfStatsFileInfo">\\1()</span>:', $log_line);
-    $log_line = preg_replace('/in (.+?) at line (\d+)/s', 'in <span class="sfStatsFileInfo">\\1</span> at line <span class="sfStatsFileInfo">\\2</span>', $log_line);
 
     // special formatting for creole/SQL lines
     if (strtolower($type) == 'creole')
@@ -143,7 +151,7 @@ class sfWebDebug
 
   public function getResults()
   {
-    if (!SF_WEB_DEBUG || sfContext::getInstance()->getRequest()->getAttribute('disable_web_debug', false, 'debug/web'))
+    if (!sfConfig::get('sf_web_debug'))
     {
       return '';
     }
@@ -151,12 +159,16 @@ class sfWebDebug
     $result = '';
 
     // total time elapsed
-    $total_time = (microtime(true) - SF_TIMER_START) * 1000;
-    $total_time = sprintf(($total_time < 1) ? '%.2f' : '%.0f', $total_time);
+    $total_time = 0;
+    if (sfConfig::get('sf_debug'))
+    {
+      $total_time = (microtime(true) - sfConfig::get('sf_timer_start')) * 1000;
+      $total_time = sprintf(($total_time < 1) ? '%.2f' : '%.0f', $total_time);
+    }
 
     // max priority
     $log_image = '';
-    if (SF_LOGGING_ACTIVE)
+    if (sfConfig::get('sf_logging_active'))
     {
       if ($this->max_priority >= 6)
       {
@@ -188,7 +200,7 @@ class sfWebDebug
       </div>
     ';
 
-    if (SF_LOGGING_ACTIVE)
+    if (sfConfig::get('sf_logging_active'))
     {
       $logs  = '<table id="sfStatsLogs">';
       $logs .= "<tr>
@@ -282,12 +294,12 @@ class sfWebDebug
   {
     $result = '<div id="sfStatsRightMenu">';
 
-    if (SF_LOGGING_ACTIVE)
+    if (sfConfig::get('sf_logging_active'))
     {
       $result .= '<a href="#" onclick="Element.show(\'sfStatsLogMain\')">'.image_tag($this->base_image_path.'/'.$log_image.'.png', 'align=middle').'</a>&nbsp;';
     }
 
-    if (SF_DEBUG && SF_CACHE)
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_cache'))
     {
       $self_url = $_SERVER['PHP_SELF'].((!preg_match('/ignore_cache/', $_SERVER['PHP_SELF'])) ? '?ignore_cache=1' : '');
       $result .= '<a href="'.$self_url.'" title="reload and ignore cache">'.image_tag($this->base_image_path.'/reload.png', 'align=middle').'</a>';
@@ -305,14 +317,14 @@ class sfWebDebug
   private function displayCurrentConfig()
   {
     $config = array(
-      'debug'        => SF_DEBUG          ? 'on' : 'off',
+      'debug'        => sfConfig::get('sf_debug')          ? 'on' : 'off',
       'xdebug'       => (function_exists('xdebug_get_function_stack')) ? 'on' : 'off',
-      'logging'      => SF_LOGGING_ACTIVE ? 'on' : 'off',
-      'routing'      => SF_ROUTING        ? 'on' : 'off',
-      'cache'        => SF_CACHE          ? 'on' : 'off',
+      'logging'      => sfConfig::get('sf_logging_active') ? 'on' : 'off',
+      'routing'      => sfConfig::get('sf_routing')        ? 'on' : 'off',
+      'cache'        => sfConfig::get('sf_cache')          ? 'on' : 'off',
       'eaccelerator' => (function_exists('eaccelerator') && ini_get('eaccelerator.enable')) ? 'on' : 'off',
-      'compression'  => SF_COMPRESSED     ? 'on' : 'off',
-      'tidy'         => (function_exists('tidy_parse_string')) ? 'on' : 'off',
+      'compression'  => sfConfig::get('sf_compressed')     ? 'on' : 'off',
+      'tidy'         => (function_exists('tidy_parse_string'))  ? 'on' : 'off',
     );
 
     $result = '';
@@ -321,16 +333,21 @@ class sfWebDebug
       $result .= '<div class="is'.$value.'"><span class="float bold">['.$value.']</span>'.$key.'</div>';
     }
 
-    if (SF_DEBUG)
+    if (sfConfig::get('sf_debug'))
     {
       // get Propel statistics if available (user created a model and a db)
-      try
+      // we require Propel here to avoid autoloading and automatic connection
+      require_once('propel/Propel.php');
+      if (Propel::isInit())
       {
-        $con = Propel::getConnection();
-        $result .= '<div><span class="float bold">['.$con->getNumQueriesExecuted().']</span>db requests</div>';
-      }
-      catch (Exception $e)
-      {
+        try
+        {
+          $con = Propel::getConnection();
+          $result .= '<div><span class="float bold">['.$con->getNumQueriesExecuted().']</span>db requests</div>';
+        }
+        catch (Exception $e)
+        {
+        }
       }
     }
 
@@ -339,10 +356,9 @@ class sfWebDebug
 
   public function decorateContentWithDebug($internalUri, $suffix, $retval, $border_color, $bg_color)
   {
-    $context = sfContext::getInstance();
-    $cache   = $context->getViewCacheManager();
+    $cache = $this->context->getViewCacheManager();
 
-    if ($context->getRequest()->getAttribute('disable_web_debug', false, 'debug/web'))
+    if (!sfConfig::get('sf_web_debug'))
     {
       return $retval;
     }

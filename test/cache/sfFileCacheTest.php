@@ -1,5 +1,6 @@
 <?php
 
+require_once 'symfony/config/sfConfig.class.php';
 require_once 'symfony/cache/sfCache.class.php';
 require_once 'symfony/cache/sfFileCache.class.php';
 require_once 'symfony/exception/sfException.class.php';
@@ -13,7 +14,7 @@ class sfFileCacheTest extends UnitTestCase
 
   public function setUp()
   {
-    @define(SF_LOGGING_ACTIVE, 0);
+    sfConfig::set('sf_logging_active', 0);
     $temp = tempnam('/tmp/cachedir', 'tmp');
     unlink($temp);
     @mkdir($temp);

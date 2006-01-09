@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -20,7 +20,7 @@
 abstract class sfYamlConfigHandler extends sfConfigHandler
 {
   protected
-    $config        = null,
+    $yamlConfig    = null,
     $defaultConfig = null;
 
   /**
@@ -81,14 +81,14 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
       $values = $this->defaultConfig['default'][$keyName];
     }
 
-    if (isset($this->config['all']) && isset($this->config['all'][$keyName]) && is_array($this->config['all'][$keyName]))
+    if (isset($this->yamlConfig['all']) && isset($this->yamlConfig['all'][$keyName]) && is_array($this->yamlConfig['all'][$keyName]))
     {
-      $values = array_merge($values, $this->config['all'][$keyName]);
+      $values = array_merge($values, $this->yamlConfig['all'][$keyName]);
     }
 
-    if ($category && isset($this->config[$category][$keyName]) && is_array($this->config[$category][$keyName]))
+    if ($category && isset($this->yamlConfig[$category][$keyName]) && is_array($this->yamlConfig[$category][$keyName]))
     {
-      $values = array_merge($values, $this->config[$category][$keyName]);
+      $values = array_merge($values, $this->yamlConfig[$category][$keyName]);
     }
 
     return $values;
@@ -96,13 +96,13 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
 
   protected function getConfigValue($keyName, $category)
   {
-    if ($category && isset($this->config[$category][$keyName]))
+    if ($category && isset($this->yamlConfig[$category][$keyName]))
     {
-      return $this->config[$category][$keyName];
+      return $this->yamlConfig[$category][$keyName];
     }
-    else if (isset($this->config['all']) && isset($this->config['all'][$keyName]))
+    else if (isset($this->yamlConfig['all']) && isset($this->yamlConfig['all'][$keyName]))
     {
-      return $this->config['all'][$keyName];
+      return $this->yamlConfig['all'][$keyName];
     }
     else if (isset($this->defaultConfig['default'][$keyName]))
     {

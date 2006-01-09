@@ -2,8 +2,8 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * (c) 2004, 2005 Sean Kerr.
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Sean Kerr.
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -43,7 +43,7 @@ class sfException extends Exception
 
     parent::__construct($message, $code);
 
-    if (defined('SF_LOGGING_ACTIVE') && SF_LOGGING_ACTIVE)
+    if (sfConfig::get('sf_logging_active'))
     {
       sfLogger::getInstance()->err('{'.$this->getName().'} '.$message);
     }
@@ -157,15 +157,15 @@ class sfException extends Exception
         break;
     }
 
-    if (file_exists(SF_APP_TEMPLATE_DIR.DIRECTORY_SEPARATOR.$error_file.'_'.SF_ENVIRONMENT.'.'.$error_ext))
+    if (file_exists(sfConfig::get('sf_app_template_dir').DIRECTORY_SEPARATOR.$error_file.'_'.sfConfig::get('sf_environment').'.'.$error_ext))
     {
-      $error_file = 'error_'.SF_ENVIRONMENT;
+      $error_file = 'error_'.sfConfig::get('sf_environment');
     }
 
-    include(SF_APP_TEMPLATE_DIR.DIRECTORY_SEPARATOR.$error_file.'.'.$error_ext);
+    include(sfConfig::get('sf_app_template_dir').DIRECTORY_SEPARATOR.$error_file.'.'.$error_ext);
 
     // if test, do not exit
-    if (!SF_TEST)
+    if (!sfConfig::get('sf_test'))
     {
       exit(1);
     }

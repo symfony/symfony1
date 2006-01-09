@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,11 +15,12 @@
  */
 require_once 'propel/Propel.php';
 
+
 // check orm configuration
-$orm_config = SF_APP_CONFIG_DIR_NAME.'/orm.yml';
+$orm_config = sfConfig::get('sf_app_config_dir_name').'/orm.yml';
 sfConfigCache::checkConfig($orm_config);
 
-if (SF_DEBUG && SF_LOGGING_ACTIVE)
+if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_active'))
 {
   // register debug driver
   require_once 'creole/Creole.php';

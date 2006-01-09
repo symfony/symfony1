@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,8 +12,8 @@
  * This class can be used to cache the result and output of functions/methods.
  *
  * This class is based on the PEAR_Cache_Lite class.
- * All cache files are stored in files in the SF_ROOT_DIR.'/cache/'.SF_APP.'/function' directory.
- * To disable all caching, you can set to false SF_CACHE constant.
+ * All cache files are stored in files in the [sf_root_dir].'/cache/'.[sf_app].'/function' directory.
+ * To disable all caching, you can set to false [sf_cache] constant.
  *
  * @package    symfony
  * @subpackage cache

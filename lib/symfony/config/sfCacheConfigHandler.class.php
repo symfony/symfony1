@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -49,7 +49,7 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
 
     // get default configuration
     $this->defaultConfig = array();
-    $defaultConfigFile = SF_APP_CONFIG_DIR.'/'.basename($configFile);
+    $defaultConfigFile = sfConfig::get('sf_app_config_dir').'/'.basename($configFile);
     if (is_readable($defaultConfigFile))
     {
       $categories = array('required_categories' => array('default'));

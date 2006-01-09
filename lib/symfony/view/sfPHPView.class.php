@@ -2,8 +2,8 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * (c) 2004, 2005 Sean Kerr.
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Sean Kerr.
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -29,7 +29,7 @@ class sfPHPView extends sfView
   /**
    * Assigns some common variables to the template.
    */
-  protected function assignGlobalVars()
+  protected function getGlobalVars()
   {
     $context = $this->getContext();
 
@@ -37,27 +37,35 @@ class sfPHPView extends sfView
     $firstActionEntry = $context->getActionStack()->getFirstEntry();
 
     $shortcuts = array(
-      'context'       => $context,
-      'params'        => $context->getRequest()->getParameterHolder(),
-      'request'       => $context->getRequest(),
-      'user'          => $context->getUser(),
-      'view'          => $this,
-      'last_module'   => $lastActionEntry->getModuleName(),
-      'last_action'   => $lastActionEntry->getActionName(),
-      'first_module'  => $firstActionEntry->getModuleName(),
-      'first_action'  => $firstActionEntry->getActionName(),
+      'sf_context'       => $context,
+      'sf_params'        => $context->getRequest()->getParameterHolder(),
+      'sf_request'       => $context->getRequest(),
+      'sf_user'          => $context->getUser(),
+      'sf_view'          => $this,
+      'sf_last_module'   => $lastActionEntry->getModuleName(),
+      'sf_last_action'   => $lastActionEntry->getActionName(),
+      'sf_first_module'  => $firstActionEntry->getModuleName(),
+      'sf_first_action'  => $firstActionEntry->getActionName(),
     );
 
-    $this->attribute_holder->add($shortcuts);
+    if (sfConfig::get('sf_use_flash'))
+    {
+      $sf_flash = new sfParameterHolder();
+      $sf_flash->add($context->getUser()->getAttributeHolder()->getAll('symfony/flash'));
+      $shortcuts['sf_flash'] = $sf_flash;
+    }
+
+    return $shortcuts;
   }
 
   /**
    * Assigns some action variables to the template.
    */
-  protected function assignModuleVars()
+  protected function getModuleVars()
   {
     $action = $this->getContext()->getActionStack()->getLastEntry()->getActionInstance();
-    $this->attribute_holder->add($action->getVarHolder()->getAll());
+
+    return $action->getVarHolder()->getAll();
   }
 
   protected function loadCoreAndStandardHelpers()
@@ -70,7 +78,7 @@ class sfPHPView extends sfView
     self::$coreHelpersLoaded = 1;
 
     $core_helpers = array('Helper', 'Url', 'Asset', 'Tag');
-    $standard_helpers = explode(',', SF_STANDARD_HELPERS);
+    $standard_helpers = sfConfig::get('sf_standard_helpers');
 
     $helpers = array_unique(array_merge($core_helpers, $standard_helpers));
     $this->loadHelpers($helpers);
@@ -83,11 +91,12 @@ class sfPHPView extends sfView
    */
   protected function loadHelpers($helpers)
   {
+    $helper_base_dir = sfConfig::get('sf_symfony_lib_dir').'/symfony/helper/';
     foreach ($helpers as $helperName)
     {
-      if (is_readable(SF_SYMFONY_LIB_DIR.'/symfony/helper/'.$helperName.'Helper.php'))
+      if (is_readable($helper_base_dir.$helperName.'Helper.php'))
       {
-        include_once('symfony/helper/'.$helperName.'Helper.php');
+        include_once($helper_base_dir.$helperName.'Helper.php');
       }
       else
       {
@@ -98,8 +107,8 @@ class sfPHPView extends sfView
 
   protected function renderFile($file)
   {
-    $this->assignGlobalVars();
-    $this->assignModuleVars();
+    $this->attribute_holder->add($this->getGlobalVars());
+    $this->attribute_holder->add($this->getModuleVars());
 
     extract($this->attribute_holder->getAll());
 
@@ -133,8 +142,8 @@ class sfPHPView extends sfView
     $action           = $actionStackEntry->getActionInstance();
 
     // require our configuration
-    $viewConfigFile = $this->moduleName.'/'.SF_APP_MODULE_CONFIG_DIR_NAME.'/view.yml';
-    require(sfConfigCache::checkConfig(SF_APP_MODULE_DIR_NAME.'/'.$viewConfigFile));
+    $viewConfigFile = $this->moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/view.yml';
+    require(sfConfigCache::checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$viewConfigFile));
 
     $viewType = sfView::SUCCESS;
     if (preg_match('/^'.$action->getActionName().'(.+)$/i', $this->viewName, $match))
@@ -155,19 +164,19 @@ class sfPHPView extends sfView
     if (!is_readable($this->getDirectory().'/'.$templateFile))
     {
       // search template in a symfony module directory
-      if (is_readable(SF_SYMFONY_DATA_DIR.'/symfony/modules/'.$module.'/templates/'.$templateFile))
+      if (is_readable(sfConfig::get('sf_symfony_data_dir').'/symfony/modules/'.$module.'/templates/'.$templateFile))
       {
-        $this->setDirectory(SF_SYMFONY_DATA_DIR.'/symfony/modules/'.$module.'/templates');
+        $this->setDirectory(sfConfig::get('sf_symfony_data_dir').'/symfony/modules/'.$module.'/templates');
       }
 
       // search template for generated templates in cache
-      if (is_readable(SF_MODULE_CACHE_DIR.'/auto'.ucfirst($module).'/templates/'.$templateFile))
+      if (is_readable(sfConfig::get('sf_module_cache_dir').'/auto'.ucfirst($module).'/templates/'.$templateFile))
       {
-        $this->setDirectory(SF_MODULE_CACHE_DIR.'/auto'.ucfirst($module).'/templates');
+        $this->setDirectory(sfConfig::get('sf_module_cache_dir').'/auto'.ucfirst($module).'/templates');
       }
     }
 
-    if (SF_LOGGING_ACTIVE) $context->getLogger()->info('{sfPHPView} execute view for template "'.$templateName.$viewType.$extension.'"');
+    if (sfConfig::get('sf_logging_active')) $context->getLogger()->info('{sfPHPView} execute view for template "'.$templateName.$viewType.$extension.'"');
   }
 
   /**
@@ -182,7 +191,7 @@ class sfPHPView extends sfView
   {
     $template = $this->getDecoratorDirectory().'/'.$this->getDecoratorTemplate();
 
-    if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfPHPView} decorate content with "'.$template.'"');
+    if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfPHPView} decorate content with "'.$template.'"');
 
     // call our parent decorate() method
     parent::decorate($content);
@@ -221,7 +230,7 @@ class sfPHPView extends sfView
 
     if ($mode != sfView::RENDER_NONE)
     {
-      if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfPHPView} render "'.$template.'"');
+      if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfPHPView} render "'.$template.'"');
 
       $retval = $this->getCacheContent();
 
@@ -231,7 +240,7 @@ class sfPHPView extends sfView
         $retval = $this->renderFile($template);
 
         // tidy our cache content
-        if (SF_TIDY)
+        if (sfConfig::get('sf_tidy'))
         {
           $retval = sfTidy::tidy($retval, $template);
         }
@@ -248,7 +257,7 @@ class sfPHPView extends sfView
       // render to client
       if ($mode == sfView::RENDER_CLIENT)
       {
-        if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfPHPView} render to client');
+        if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfPHPView} render to client');
 
         $retval = $this->setPageCacheContent($retval);
 
@@ -298,7 +307,7 @@ class sfPHPView extends sfView
   {
     // save content in cache
     // no cache for POST and GET action
-    if (SF_CACHE && !count($_GET) && !count($_POST))
+    if (sfConfig::get('sf_cache') && !count($_GET) && !count($_POST))
     {
       list($internalUri, $suffix) = $this->getInternalUri();
       $retval = $this->getContext()->getViewCacheManager()->set($retval, $internalUri, $suffix);
@@ -311,7 +320,7 @@ class sfPHPView extends sfView
   {
     // save content in cache
     // no cache for POST action
-    if (SF_CACHE && $this->getContext()->getRequest()->getMethod() != sfRequest::POST)
+    if (sfConfig::get('sf_cache') && $this->getContext()->getRequest()->getMethod() != sfRequest::POST)
     {
       $retval = $this->getContext()->getViewCacheManager()->set($retval, sfRouting::getInstance()->getCurrentInternalUri(), 'page');
     }
@@ -324,11 +333,11 @@ class sfPHPView extends sfView
     $retval = null;
 
     // ignore cache parameter? (only available in debug mode)
-    if (SF_CACHE && !count($_GET) && !count($_POST))
+    if (sfConfig::get('sf_cache') && !count($_GET) && !count($_POST))
     {
-      if (SF_DEBUG && $this->getContext()->getRequest()->getParameter('ignore_cache', false, 'symfony/request/sfWebRequest') == true)
+      if (sfConfig::get('sf_debug') && $this->getContext()->getRequest()->getParameter('ignore_cache', false, 'symfony/request/sfWebRequest') == true)
       {
-        if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfView} discard cache for "'.$template.'"');
+        if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfView} discard cache for "'.$template.'"');
       }
       else
       {
@@ -336,7 +345,7 @@ class sfPHPView extends sfView
         list($internalUri, $suffix) = $this->getInternalUri();
         $retval = $this->getContext()->getViewCacheManager()->get($internalUri, $suffix);
 
-        if (SF_LOGGING_ACTIVE) $this->getContext()->getLogger()->info('{sfView} cache '.($retval !== null ? 'exists' : 'does not exist'));
+        if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfView} cache '.($retval !== null ? 'exists' : 'does not exist'));
       }
     }
 

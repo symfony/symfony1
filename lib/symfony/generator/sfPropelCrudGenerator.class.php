@@ -4,7 +4,7 @@ require_once('pake/pakeFinder.class.php');
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -76,7 +76,7 @@ class sfPropelCrudGenerator extends sfGenerator
 
     // theme exists?
     $theme = isset($params['theme']) ? $params['theme'] : 'default';
-    if (!is_dir(SF_SYMFONY_DATA_DIR.'/symfony/generator/sfPropelCrud/'.$theme.'/template'))
+    if (!is_dir(sfConfig::get('sf_symfony_data_dir').'/symfony/generator/sfPropelCrud/'.$theme.'/template'))
     {
       $error = 'The theme "%s" does not exist.';
       $error = sprintf($error, $theme);
@@ -84,10 +84,10 @@ class sfPropelCrudGenerator extends sfGenerator
     }
 
     $this->setTheme($theme);
-    $this->generatePhpFiles($this->generatedModuleName);
+    $this->generatePhpFiles($this->generatedModuleName, array('listSuccess', 'editSuccess', 'showSuccess'));
 
     // require generated action class
-    $data = "require_once(SF_MODULE_CACHE_DIR.'/".$this->generatedModuleName."/actions/actions.class.php')\n";
+    $data = "require_once(sfConfig::get('sf_module_cache_dir').'/".$this->generatedModuleName."/actions/actions.class.php')\n";
 
     return $data;
   }
@@ -106,7 +106,7 @@ class sfPropelCrudGenerator extends sfGenerator
   protected function loadMapBuilderClasses()
   {
     // we must load all map builder classes to be able to deal with foreign keys (cf. editSuccess.php template)
-    $classes = pakeFinder::type('file')->name('*MapBuilder.php')->relative()->in(defined('SF_LIB_DIR') ? SF_LIB_DIR.'/model' : 'lib/model');
+    $classes = pakeFinder::type('file')->name('*MapBuilder.php')->relative()->in(sfConfig::get('sf_lib_dir') ? sfConfig::get('sf_lib_dir').'/model' : 'lib/model');
     foreach ($classes as $class)
     {
       $class_map_builder = basename($class, '.php');
@@ -126,6 +126,7 @@ class sfPropelCrudGenerator extends sfGenerator
     {
       throw new sfException('The model class "'.$this->className.'" does not exist.');
     }
+
     $this->tableMap = $this->map->getDatabaseMap()->getTable(constant($this->className.'Peer::TABLE_NAME'));
   }
 
@@ -237,9 +238,19 @@ class sfPropelCrudGenerator extends sfGenerator
     return $this->className;
   }
 
+  public function getPeerClassName()
+  {
+    return $this->peerClassName;
+  }
+
   public function getPrimaryKey()
   {
     return $this->primaryKey;
+  }
+
+  public function getMap()
+  {
+    return $this->map;
   }
 
   public function getPrimaryKeyUrlParams($prefix = '')
@@ -272,20 +283,41 @@ class sfPropelCrudGenerator extends sfGenerator
     return var_export(array_merge($default_params, $params), true);
   }
 
+  public function getColumnListTag($column, $params = array())
+  {
+    $type = $column->getCreoleType();
+
+    if ($type == CreoleTypes::DATE || $type == CreoleTypes::TIMESTAMP)
+    {
+      return "format_date(\${$this->getSingularName()}->get{$column->getPhpName()}(), 'f')";
+    }
+    else
+    {
+      return "\${$this->getSingularName()}->get{$column->getPhpName()}()";
+    }
+  }
+
   public function getColumnEditTag($column, $params = array())
   {
     $type = $column->getCreoleType();
+
     if ($column->isForeignKey())
     {
-      $relatedTable = $this->map->getDatabaseMap()->getTable($column->getRelatedTableName());
+      $relatedTable = $this->getMap()->getDatabaseMap()->getTable($column->getRelatedTableName());
       $params = $this->getObjectTagParams($params, array('related_class' => $relatedTable->getPhpName()));
       return "object_select_tag(\${$this->getSingularName()}, 'get{$column->getPhpName()}', $params)";
     }
     else if ($type == CreoleTypes::DATE)
     {
       // rich=false not yet implemented
-      $params = $this->getObjectTagParams(array('rich' => true), $params);
-      return "object_input_date_tag(\${$this->getSingularName()}, 'get{$column->getPhpName()}')";
+      $params = $this->getObjectTagParams($params, array('rich' => true));
+      return "object_input_date_tag(\${$this->getSingularName()}, 'get{$column->getPhpName()}', $params)";
+    }
+    else if ($type == CreoleTypes::TIMESTAMP)
+    {
+      // rich=false not yet implemented
+      $params = $this->getObjectTagParams($params, array('rich' => true, 'withtime' => true));
+      return "object_input_date_tag(\${$this->getSingularName()}, 'get{$column->getPhpName()}', $params)";
     }
     else if ($type == CreoleTypes::BOOLEAN)
     {
@@ -310,7 +342,7 @@ class sfPropelCrudGenerator extends sfGenerator
     }
     else if ($type == CreoleTypes::TEXT || $type == CreoleTypes::LONGVARCHAR)
     {
-      $params = $this->getObjectTagParams($params, array('rows' => 3, 'cols' => 30));
+      $params = $this->getObjectTagParams($params, array('size' => '30x3'));
       return "object_textarea_tag(\${$this->getSingularName()}, 'get{$column->getPhpName()}', $params)";
     }
     else

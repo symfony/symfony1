@@ -2,8 +2,8 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * (c) 2004, 2005 Sean Kerr.
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Sean Kerr.
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -61,13 +61,13 @@ class sfBasicSecurityFilter extends sfSecurityFilter
       else
       {
         // the user doesn't have access, exit stage left
-        $controller->forward(SF_SECURE_MODULE, SF_SECURE_ACTION);
+        $controller->forward(sfConfig::get('sf_secure_module'), sfConfig::get('sf_secure_action'));
       }
     }
     else
     {
       // the user is not authenticated
-      $controller->forward(SF_LOGIN_MODULE, SF_LOGIN_ACTION);
+      $controller->forward(sfConfig::get('sf_login_module'), sfConfig::get('sf_login_action'));
     }
   }
 }
