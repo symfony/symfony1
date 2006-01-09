@@ -81,4 +81,13 @@ For all your application within a project:
 
     Change the path to `config.php` in `index.php`
 
-  10 - clear the symfony cache
+  10 - change all deprecated methods in your actions
+
+    0.4.X/0.5.X       | 0.6.X/0.7.X
+    ------------------|-----------------
+    forward404_if     | forward404If
+    forward404_unless | forward404Unless
+    forward_if        | forwardIf
+    forward_unless    | forwardUnless
+
+  11 - clear the symfony cache

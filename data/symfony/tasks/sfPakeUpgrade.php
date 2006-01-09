@@ -47,7 +47,7 @@ function run_upgrade_to_0_6($task, $args)
     _upgrade_0_6_constants(array($app_dir.'/modules', $app_dir.'/templates', $app_dir.'/lib'));
 
     // change view shortcuts in global and modules template directories
-    $template_dirs = pakeFinder::type('directory')->name('templates')->mindepth(1)->maxdepth(1)->in($app_dir.'/modules');
+    $template_dirs   = pakeFinder::type('directory')->name('templates')->mindepth(1)->maxdepth(1)->in($app_dir.'/modules');
     $template_dirs[] = $app_dir.'/templates';
 
     _upgrade_0_6_view_shortcuts($template_dirs);
@@ -64,6 +64,11 @@ function run_upgrade_to_0_6($task, $args)
 
     // change disable_web_debug usage
     _upgrade_0_6_disable_web_debug($app_dir);
+
+    // rename deprecated methods in actions
+    $action_dirs = pakeFinder::type('directory')->name('actions')->mindepth(1)->maxdepth(1)->in($app_dir.'/modules');
+
+    _upgrade_0_6_action($action_dirs);
   }
 
   // constants in global libraries
@@ -74,6 +79,31 @@ function run_upgrade_to_0_6($task, $args)
 
   // clear cache
   run_clear_cache($task, array());
+}
+
+function _upgrade_0_6_action($dir)
+{
+  $verbose = pakeApp::get_instance()->get_verbose();
+
+  $php_files = pakeFinder::type('file')->name('*.php')->in($dir);
+
+  $regex = '(forward(404)_(if|unless))';
+
+  foreach ($php_files as $php_file)
+  {
+    $content = file_get_contents($php_file);
+
+    if (!preg_match('/'.$regex.'/', $content))
+    {
+      continue;
+    }
+
+    if ($verbose) echo '>> file      '.pakeApp::excerpt('rename deprecated forward methods for "'.$php_file.'"')."\n";
+
+    $content = preg_replace('/'.$regex.'/e', "'forward'.'\\2'.ucfirst('\\3')", $content);
+
+    file_put_contents($php_file, $content);
+  }
 }
 
 function _upgrade_0_6_sfpager($dir)
