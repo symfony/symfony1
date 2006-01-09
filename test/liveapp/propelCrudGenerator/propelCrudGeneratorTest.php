@@ -12,11 +12,11 @@ class propelCrudGeneratorTest extends sfLiveProjectUnitTestCase
     // copy fixtures data
     copy($this->getFixturesDir().'/data/fixtures.yml', sfConfig::get('sf_data_dir').'/fixtures.yml');
 
-    // copy orm.yml configuration file
+    // copy databases.yml configuration file
     // fix db path and switch to sqlite
-    $orm_config = file_get_contents($this->getFixturesDir().'/config/orm.yml');
+    $orm_config = file_get_contents($this->getFixturesDir().'/config/databases.yml');
     $orm_config = preg_replace('/##DB_PATH##/', sfConfig::get('sf_data_dir').'/test.db', $orm_config);
-    file_put_contents(sfConfig::get('sf_app_config_dir').'/orm.yml', $orm_config);
+    file_put_contents(sfConfig::get('sf_app_config_dir').'/databases.yml', $orm_config);
 
     // switch to sqlite
     $propel_config = file_get_contents(sfConfig::get('sf_config_dir').'/propel.ini');

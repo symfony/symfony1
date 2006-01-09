@@ -49,7 +49,7 @@ default:
 
     standard_helpers:       [Partial, Cache, Form]
 
-    max_forwards:           10
+    max_forwards:           5
 
     web_debug:              off
 

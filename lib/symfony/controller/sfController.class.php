@@ -22,7 +22,7 @@ abstract class sfController
 {
   private
     $context                  = null,
-    $maxForwards              = 10,
+    $maxForwards              = 5,
     $renderMode               = sfView::RENDER_CLIENT,
     $executionFilterClassName = null,
     $viewCacheClassName       = null;
