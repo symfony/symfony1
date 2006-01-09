@@ -29,7 +29,7 @@
  *                                     persistent.
  * # <b>port</b>       - [none]      - TCP/IP port on which PostgreSQL is
  *                                     listening.
- * # <b>user</b>       - [none]      - The database user.
+ * # <b>username</b>       - [none]  - The database username.
  *
  * @package    symfony
  * @subpackage database
@@ -39,150 +39,113 @@
  */
 class sfPostgreSQLDatabase extends sfDatabase
 {
+  /**
+   * Connect to the database.
+   *
+   * @throws <b>sfDatabaseException</b> If a connection could not be created.
+   */
+  public function connect ()
+  {
+    // determine how to get our parameters
+    $method = $this->getParameter('method', 'normal');
 
-    // +-----------------------------------------------------------------------+
-    // | METHODS                                                               |
-    // +-----------------------------------------------------------------------+
-
-    /**
-     * Connect to the database.
-     *
-     * @throws <b>sfDatabaseException</b> If a connection could not be created.
-     *
-     * @author Sean Kerr (skerr@mojavi.org)
-     * @since  3.0.0
-     */
-    public function connect ()
+    // get parameters
+    switch ($method)
     {
-
-        // determine how to get our parameters
-        $method = $this->getParameterHolder()->get('method', 'normal');
-
-        // get parameters
-        switch ($method)
-        {
-
-            case 'normal':
-
-                // get parameters normally
-                $database = $this->getParameterHolder()->get('database');
-                $host     = $this->getParameterHolder()->get('host');
-                $password = $this->getParameterHolder()->get('password');
-                $port     = $this->getParameterHolder()->get('port');
-                $user     = $this->getParameterHolder()->get('user');
-
-                // construct connection string
-                $string = (($database != null) ? (' dbname='   . $database) : '') .
-                          (($host != null)     ? (' host='     . $host)     : '') .
-                          (($password != null) ? (' password=' . $password) : '') .
-                          (($port != null)     ? (' port='     . $port)     : '') .
-                          (($user != null)     ? (' user='     . $user)     : '');
-
-                break;
-
-            case 'server':
-
-                // construct a connection string from existing $_SERVER values
-                $string = $this->loadParameters($_SERVER);
-
-                break;
-
-            case 'env':
-
-                // construct a connection string from existing $_ENV values
-                $string = $this->loadParameters($_ENV);
-
-                break;
-
-            default:
-
-                // who knows what the user wants...
-                $error = 'Invalid PostgreSQLDatabase parameter retrieval ' .
-                         'method "%s"';
-                $error = sprintf($error, $method);
-
-                throw new sfDatabaseException($error);
-
-        }
-
-        // let's see if we need a persistent connection
-        $persistent = $this->getParameterHolder()->get('persistent', false);
-        $connect    = ($persistent) ? 'pg_pconnect' : 'pg_connect';
-
-        $this->connection = @$connect($string);
-
-        // make sure the connection went through
-        if ($this->connection === false)
-        {
-
-            // the connection's foobar'd
-            $error = 'Failed to create a PostgreSQLDatabase connection';
-
-            throw new sfDatabaseException($error);
-
-        }
-
-        // since we're not an abstraction layer, we copy the connection
-        // to the resource
-        $this->resource =& $this->connection;
-
-    }
-
-    // -------------------------------------------------------------------------
-
-    /**
-     * Load connection parameters from an existing array.
-     *
-     * @return string A connection string.
-     *
-     * @author Sean Kerr (skerr@mojavi.org)
-     * @since  3.0.0
-     */
-    private function loadParameters (&$array)
-    {
-
-        $database = $this->getParameterHolder()->get('database');
-        $host     = $this->getParameterHolder()->get('host');
-        $password = $this->getParameterHolder()->get('password');
-        $port     = $this->getParameterHolder()->get('port');
-        $user     = $this->getParameterHolder()->get('user');
+      case 'normal':
+        // get parameters normally
+        $database = $this->getParameter('database');
+        $host     = $this->getParameter('host');
+        $password = $this->getParameter('password');
+        $port     = $this->getParameter('port');
+        $username = $this->getParameter('username');
 
         // construct connection string
-        $string = (($database != null) ? (' dbname='   . $array[$database]) : '') .
-                  (($host != null)     ? (' host='     . $array[$host])     : '') .
-                  (($password != null) ? (' password=' . $array[$password]) : '') .
-                  (($port != null)     ? (' port='     . $array[$port])     : '') .
-                  (($user != null)     ? (' user='     . $array[$user])     : '');
+        $string = (($database != null) ? (' dbname='   .$database) : '').
+                  (($host != null)     ? (' host='     .$host)     : '').
+                  (($password != null) ? (' password=' .$password) : '').
+                  (($port != null)     ? (' port='     .$port)     : '').
+                  (($username != null) ? (' user='     .$username) : '');
 
-        return $string;
+        break;
 
+      case 'server':
+        // construct a connection string from existing $_SERVER values
+        $string = $this->loadParameters($_SERVER);
+
+        break;
+
+      case 'env':
+        // construct a connection string from existing $_ENV values
+        $string = $this->loadParameters($_ENV);
+
+        break;
+
+      default:
+        // who knows what the user wants...
+        $error = 'Invalid PostgreSQLDatabase parameter retrieval method "%s"';
+        $error = sprintf($error, $method);
+
+        throw new sfDatabaseException($error);
     }
 
-    // -------------------------------------------------------------------------
+    // let's see if we need a persistent connection
+    $persistent = $this->getParameter('persistent', false);
+    $connect    = ($persistent) ? 'pg_pconnect' : 'pg_connect';
 
-    /**
-     * Execute the shutdown procedure.
-     *
-     * @return void
-     *
-     * @throws <b>sfDatabaseException</b> If an error occurs while shutting down
-     *                                 this database.
-     *
-     * @author Sean Kerr (skerr@mojavi.org)
-     * @since  3.0.0
-     */
-    public function shutdown ()
+    $this->connection = @$connect($string);
+
+    // make sure the connection went through
+    if ($this->connection === false)
     {
+      // the connection's foobar'd
+      $error = 'Failed to create a PostgreSQLDatabase connection';
 
-        if ($this->connection != null)
-        {
-
-            @pg_close($this->connection);
-
-        }
-
+      throw new sfDatabaseException($error);
     }
 
+    // since we're not an abstraction layer, we copy the connection
+    // to the resource
+    $this->resource =& $this->connection;
+  }
+
+  /**
+   * Load connection parameters from an existing array.
+   *
+   * @return string A connection string.
+   */
+  private function loadParameters (&$array)
+  {
+    $database = $this->getParameter('database');
+    $host     = $this->getParameter('host');
+    $password = $this->getParameter('password');
+    $port     = $this->getParameter('port');
+    $username = $this->getParameter('username');
+
+    // construct connection string
+    $string = (($database != null) ? (' dbname='   .$array[$database]) : '') .
+              (($host != null)     ? (' host='     .$array[$host])     : '') .
+              (($password != null) ? (' password=' .$array[$password]) : '') .
+              (($port != null)     ? (' port='     .$array[$port])     : '') .
+              (($username != null) ? (' user='     .$array[$username]) : '');
+
+    return $string;
+  }
+
+  /**
+   * Execute the shutdown procedure.
+   *
+   * @return void
+   *
+   * @throws <b>sfDatabaseException</b> If an error occurs while shutting down this database.
+   */
+  public function shutdown ()
+  {
+    if ($this->connection != null)
+    {
+      @pg_close($this->connection);
+    }
+  }
 }
 
 ?>

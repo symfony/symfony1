@@ -15,11 +15,6 @@
  */
 require_once 'propel/Propel.php';
 
-
-// check orm configuration
-$orm_config = sfConfig::get('sf_app_config_dir_name').'/orm.yml';
-sfConfigCache::checkConfig($orm_config);
-
 if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_active'))
 {
   // register debug driver
@@ -32,6 +27,7 @@ if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_active'))
 }
 
 // propel initialization
-Propel::init(sfConfigCache::getCacheName($orm_config));
+Propel::setConfiguration(sfPropelDatabase::getDefaultConfiguration());
+Propel::initialize();
 
 ?>

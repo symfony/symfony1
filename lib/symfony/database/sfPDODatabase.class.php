@@ -14,48 +14,76 @@
  *
  * @package    symfony
  * @subpackage database
+ * @author     Daniel Swarbrick (daniel@pressure.net.nz)
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <skerr@mojavi.org>
  * @version    SVN: $Id$
  */
 class sfPDODatabase extends sfDatabase
 {
+  /**
+   * Connect to the database.
+   *
+   * @throws <b>DatabaseException</b> If a connection could not be created.
+   */
+  public function connect ()
+  {
+    // determine how to get our parameters
+    $method = $this->getParameter('method', 'dsn');
 
-    // +-----------------------------------------------------------------------+
-    // | METHODS                                                               |
-    // +-----------------------------------------------------------------------+
-
-    /**
-     * Connect to the database.
-     *
-     * @throws <b>sfDatabaseException</b> If a connection could not be created.
-     *
-     * @author Sean Kerr (skerr@mojavi.org)
-     * @since  3.0.0
-     */
-    public function connect ()
+    // get parameters
+    switch ($method)
     {
+      case 'dsn':
+        $dsn = $this->getParameter('dsn');
 
+        if ($dsn == null)
+        {
+          // missing required dsn parameter
+          $error = 'Database configuration specifies method "dsn", but is missing dsn parameter';
+
+          throw new DatabaseException($error);
+        }
+
+        break;
     }
 
-    // -------------------------------------------------------------------------
-
-    /**
-     * Execute the shutdown procedure.
-     *
-     * @return void
-     *
-     * @throws <b>sfDatabaseException</b> If an error occurs while shutting down
-     *                                 this database.
-     *
-     * @author Sean Kerr (skerr@mojavi.org)
-     * @since  3.0.0
-     */
-    public function shutdown ()
+    try
     {
-
+      $pdo_username = $this->getParameter('username');
+      $pdo_password = $this->getParameter('password');
+      $this->connection = new PDO($dsn, $pdo_username, $pdo_password);
+    }
+    catch (PDOException $e)
+    {
+      throw new DatabaseException($e->getMessage());
     }
 
+    // lets generate exceptions instead of silent failures
+    if (defined('PDO::ATTR_ERRMODE'))
+    {
+      $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    }
+    else
+    {
+      $this->connection->setAttribute(PDO_ATTR_ERRMODE, PDO_ERRMODE_EXCEPTION);
+    }
+  }
+
+  /**
+   * Execute the shutdown procedure.
+   *
+   * @return void
+   *
+   * @throws <b>DatabaseException</b> If an error occurs while shutting down this database.
+   */
+  public function shutdown ()
+  {
+    if ($this->connection !== null)
+    {
+      @$this->connection = null;
+    }
+  }
 }
 
 ?>

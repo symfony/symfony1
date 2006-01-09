@@ -46,7 +46,9 @@ abstract class sfDatabase
   public function getConnection ()
   {
     if ($this->connection == null)
+    {
       $this->connect();
+    }
 
     return $this->connection;
   }
@@ -61,7 +63,9 @@ abstract class sfDatabase
   public function getResource ()
   {
     if ($this->resource == null)
+    {
       $this->connect();
+    }
 
     return $this->resource;
   }
@@ -86,16 +90,27 @@ abstract class sfDatabase
     return $this->parameter_holder;
   }
 
+  public function getParameter($name, $default = null, $ns = null)
+  {
+    return $this->parameter_holder->get($name, $default, $ns);
+  }
+
+  public function hasParameter($name, $ns = null)
+  {
+    return $this->parameter_holder->has($name, $ns);
+  }
+
+  public function setParameter($name, $value, $ns = null)
+  {
+    return $this->parameter_holder->set($name, $value, $ns);
+  }
+
   /**
    * Execute the shutdown procedure.
    *
    * @return void
    *
-   * @throws <b>sfDatabaseException</b> If an error occurs while shutting down
-   *                                 this database.
-   *
-   * @author Sean Kerr (skerr@mojavi.org)
-   * @since  3.0.0
+   * @throws <b>sfDatabaseException</b> If an error occurs while shutting down this database.
    */
   abstract function shutdown ();
 }

@@ -17,9 +17,6 @@ app.yml:
   param:
     prefix: app_
 
-orm.yml:
-  class:    sfPropelConfigHandler
-
 factories.yml:
   class:    sfFactoryConfigHandler
 

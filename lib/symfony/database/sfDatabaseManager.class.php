@@ -38,7 +38,9 @@ class sfDatabaseManager
   public function getDatabase ($name = 'default')
   {
     if (isset($this->databases[$name]))
+    {
       return $this->databases[$name];
+    }
 
     // nonexistent database name
     $error = 'Database "%s" does not exist';
@@ -71,7 +73,9 @@ class sfDatabaseManager
   {
     // loop through databases and shutdown connections
     foreach ($this->databases as $database)
+    {
       $database->shutdown();
+    }
   }
 }
 

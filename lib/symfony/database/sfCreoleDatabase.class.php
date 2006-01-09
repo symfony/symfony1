@@ -38,7 +38,7 @@
  *                                      persistent.
  * # <b>phptype</b>        - [none]   - The type of database (mysql, pgsql,
  *                                      etc).
- * # <b>username</b>       - [none]   - The database user.
+ * # <b>username</b>       - [none]   - The database username.
  *
  * @package    symfony
  * @subpackage database
@@ -48,207 +48,158 @@
  */
 class sfCreoleDatabase extends sfDatabase
 {
-    /**
-     * Connect to the database.
-     *
-     * @throws <b>sfDatabaseException</b> If a connection could not be created.
-     *
-     * @author Sean Kerr (skerr@mojavi.org)
-     * @since  3.0.0
-     */
-    public function connect ()
+  /**
+   * Connect to the database.
+   *
+   * @throws <b>sfDatabaseException</b> If a connection could not be created.
+   */
+  public function connect ()
+  {
+    try
     {
-        try
-        {
-            // determine how to get our settings
-            $method = $this->getParameterHolder()->get('method', 'normal');
+      // determine how to get our settings
+      $method = $this->getParameter('method', 'normal');
 
-            switch ($method)
-            {
-                case 'normal':
+      switch ($method)
+      {
+        case 'normal':
+          // get parameters normally, and all are required
+          $database = $this->getParameter('database', null);
+          $hostspec = $this->getParameter('hostspec', null);
+          $password = $this->getParameter('password', null);
+          $phptype  = $this->getParameter('phptype',  null);
+          $username = $this->getParameter('username', null);
 
-                    // get parameters normally, and all are required
-                    $database = $this->getParameterHolder()->get('database', null);
-                    $hostspec = $this->getParameterHolder()->get('hostspec', null);
-                    $password = $this->getParameterHolder()->get('password', null);
-                    $phptype  = $this->getParameterHolder()->get('phptype', null);
-                    $username = $this->getParameterHolder()->get('username', null);
+          $dsn = array('database' => $database,
+                       'hostspec' => $hostspec,
+                       'password' => $password,
+                       'phptype'  => $phptype,
+                       'username' => $username);
 
-                    $dsn = array('database' => $database,
-                                 'hostspec' => $hostspec,
-                                 'password' => $password,
-                                 'phptype'  => $phptype,
-                                 'username' => $username);
+          break;
 
-                    break;
+        case 'dsn':
+          $dsn = $this->getParameter('dsn');
 
-                case 'dsn':
+          if ($dsn == null)
+          {
+            // missing required dsn parameter
+            $error = 'Database configuration specifies method "dsn", but is missing dsn parameter';
 
-                    $dsn = $this->getParameterHolder()->get('dsn');
+            throw new sfDatabaseException($error);
+          }
 
-                    if ($dsn == null)
-                    {
+          break;
 
-                        // missing required dsn parameter
-                        $error = 'Database configuration specifies method ' .
-                                 '"dsn", but is missing dsn parameter';
+        case 'server':
+          // construct a DSN connection string from existing $_SERVER values
+          $dsn =& $this->loadDSN($_SERVER);
 
-                        throw new sfDatabaseException($error);
+          break;
 
-                    }
+        case 'env':
+          // construct a DSN connection string from existing $_ENV values
+          $dsn =& $this->loadDSN($_ENV);
 
-                    break;
+          break;
 
-                case 'server':
+        default:
+          // who knows what the user wants...
+          $error = 'Invalid CreoleDatabase parameter retrieval method "%s"';
+          $error = sprintf($error, $method);
 
-                    // construct a DSN connection string from existing $_SERVER
-                    // values
-                    $dsn =& $this->loadDSN($_SERVER);
+          throw new sfDatabaseException($error);
+      }
 
-                    break;
+      // get creole class path
+      $classPath = $this->getParameter('classpath');
 
-                case 'env':
+      // include the creole file
+      if ($classPath == null)
+      {
+        require_once('creole/Creole.php');
+      }
+      else
+      {
+        require_once($classPath);
+      }
 
-                    // construct a DSN connection string from existing $_ENV
-                    // values
-                    $dsn =& $this->loadDSN($_ENV);
+      // set our flags
+      $noAssocLower = $this->getParameter('no_assoc_lower', false);
+      $persistent   = $this->getParameter('persistent', false);
 
-                    break;
+      $flags  = 0;
+      $flags |= ($noAssocLower) ? Creole::NO_ASSOC_LOWER : 0;
+      $flags |= ($persistent) ? Creole::PERSISTENT : 0;
 
-                default:
+      // do the duuuurtay work, right thurr
+      if ($flags > 0)
+      {
+        $this->connection = Creole::getConnection($dsn, $flags);
+      }
+      else
+      {
+        $this->connection = Creole::getConnection($dsn);
+      }
 
-                    // who knows what the user wants...
-                    $error = 'Invalid CreoleDatabase parameter retrieval ' .
-                             'method "%s"';
-                    $error = sprintf($error, $method);
+      // get our resource
+      $this->resource =& $this->connection->getResource();
+    }
+    catch (SQLException $e)
+    {
+      // the connection's foobar'd
+      throw new sfDatabaseException($e->toString());
+    }
+  }
 
-                    throw new sfDatabaseException($error);
+  /**
+   * Load a DSN connection string from an existing array.
+   *
+   * @return array An associative array of connection parameters.
+   */
+  protected function & loadDSN (&$array)
+  {
+    // determine if a dsn is set, otherwise use separate parameters
+    $dsn = $this->getParameter('dsn');
 
-            }
+    if ($dsn == null)
+    {
+      // list of available parameters
+      $available = array('database', 'hostspec', 'password', 'phptype', 'username');
 
-            // get creole class path
-            $classPath = $this->getParameterHolder()->get('classpath');
+      $dsn = array();
 
-            // include the creole file
-            if ($classPath == null)
-            {
+      // yes, i know variable variables are ugly, but let's avoid using
+      // an array for array's sake in this single spot in the source
+      foreach ($available as $parameter)
+      {
+        $$parameter = $this->getParameter($parameter);
 
-                require_once('creole/Creole.php');
-
-            } else
-            {
-
-                require_once($classPath);
-
-            }
-
-            // set our flags
-            $noAssocLower = $this->getParameterHolder()->get('no_assoc_lower', false);
-            $persistent   = $this->getParameterHolder()->get('persistent', false);
-
-            $flags  = 0;
-            $flags |= ($noAssocLower) ? Creole::NO_ASSOC_LOWER : 0;
-            $flags |= ($persistent) ? Creole::PERSISTENT : 0;
-
-            // do the duuuurtay work, right thurr
-            if ($flags > 0)
-            {
-
-                $this->connection = Creole::getConnection($dsn, $flags);
-
-            } else
-            {
-
-                $this->connection = Creole::getConnection($dsn);
-
-            }
-
-            // get our resource
-            $this->resource =& $this->connection->getResource();
-
-        } catch (SQLException $e)
-        {
-
-            // the connection's foobar'd
-            throw new sfDatabaseException($e->toString());
-
-        }
-
+        $dsn[$parameter] = ($$parameter != null) ? $array[$$parameter] : null;
+      }
+    }
+    else
+    {
+      $dsn = $array[$dsn];
     }
 
-    // -------------------------------------------------------------------------
+    return $dsn;
+  }
 
-    /**
-     * Load a DSN connection string from an existing array.
-     *
-     * @return array An associative array of connection parameters.
-     *
-     * @author Sean Kerr (skerr@mojavi.org)
-     * @since  3.0.0
-     */
-    private function & loadDSN (&$array)
+  /**
+   * Execute the shutdown procedure.
+   *
+   * @return void
+   *
+   * @throws <b>sfDatabaseException</b> If an error occurs while shutting down this database.
+   */
+  public function shutdown ()
+  {
+    if ($this->connection !== null)
     {
-
-        // determine if a dsn is set, otherwise use separate parameters
-        $dsn = $this->getParameterHolder()->get('dsn');
-
-        if ($dsn == null)
-        {
-
-            // list of available parameters
-            $available = array('database', 'hostspec', 'password', 'phptype',
-                               'username');
-
-            $dsn = array();
-
-            // yes, i know variable variables are ugly, but let's avoid using
-            // an array for array's sake in this single spot in the source
-            foreach ($available as $parameter)
-            {
-
-                $$parameter = $this->getParameterHolder()->get($parameter);
-
-                $dsn[$parameter] = ($$parameter != null)
-                                   ? $array[$$parameter] : null;
-
-            }
-
-        } else
-        {
-
-            $dsn = $array[$dsn];
-
-        }
-
-        return $dsn;
-
+      @$this->connection->close();
     }
-
-    // -------------------------------------------------------------------------
-
-    /**
-     * Execute the shutdown procedure.
-     *
-     * @return void
-     *
-     * @throws <b>sfDatabaseException</b> If an error occurs while shutting down
-     *                                 this database.
-     *
-     * @author Sean Kerr (skerr@mojavi.org)
-     * @since  3.0.0
-     */
-    public function shutdown ()
-    {
-
-        if ($this->connection !== null)
-        {
-
-            @$this->connection->close();
-
-        }
-
-    }
-
+  }
 }
 
 ?>
