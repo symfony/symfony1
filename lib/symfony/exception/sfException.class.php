@@ -162,7 +162,23 @@ class sfException extends Exception
       $error_file = 'error_'.sfConfig::get('sf_environment');
     }
 
-    include(sfConfig::get('sf_app_template_dir').DIRECTORY_SEPARATOR.$error_file.'.'.$error_ext);
+    $error_file = sfConfig::get('sf_app_template_dir').DIRECTORY_SEPARATOR.$error_file.'.'.$error_ext;
+    if (is_readable($error_file))
+    {
+      include($error_file);
+    }
+    else
+    {
+      $error_message = 'Exception: %s from "%s" line "%s"'."\n\n";
+      $error_message = sprintf($error_message, $message, $file, $line);
+
+      foreach ($trace as $line)
+      {
+        $error_message .= $line."\n";
+      }
+
+      echo $error_message;
+    }
 
     // if test, do not exit
     if (!sfConfig::get('sf_test'))

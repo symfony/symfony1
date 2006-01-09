@@ -1,7 +1,5 @@
 <?php
 
-require_once 'symfony/util/sfParameterHolder.class.php';
-
 class sfParameterHolderTest extends UnitTestCase
 {
   public function test_clear()

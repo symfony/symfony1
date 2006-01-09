@@ -1,7 +1,5 @@
 <?php
 
-require_once 'symfony/config/sfConfig.class.php';
-
 class sfConfigTest extends UnitTestCase
 {
   public function test_getset()

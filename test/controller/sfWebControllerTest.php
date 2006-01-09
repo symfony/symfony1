@@ -1,13 +1,6 @@
 <?php
 
-require_once 'symfony/config/sfConfig.class.php';
-require_once 'symfony/controller/sfController.class.php';
-require_once 'symfony/controller/sfWebController.class.php';
-require_once 'symfony/controller/sfFrontWebController.class.php';
-require_once 'symfony/exception/sfParseException.class.php';
-require_once 'symfony/view/sfView.class.php';
-
-Mock::generate('', 'sfContext');
+Mock::generate('sfContext');
 
 class sfWebControllerTest extends UnitTestCase
 {

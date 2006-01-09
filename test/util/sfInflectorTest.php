@@ -1,7 +1,5 @@
 <?php
 
-require_once 'symfony/util/sfInflector.class.php';
-
 class sfInflectorTest extends UnitTestCase
 {
   private static $CamelToUnderscore = array(

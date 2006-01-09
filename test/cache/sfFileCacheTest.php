@@ -1,12 +1,5 @@
 <?php
 
-require_once 'symfony/config/sfConfig.class.php';
-require_once 'symfony/cache/sfCache.class.php';
-require_once 'symfony/cache/sfFileCache.class.php';
-require_once 'symfony/exception/sfException.class.php';
-require_once 'symfony/exception/sfCacheException.class.php';
-require_once 'symfony/util/sfToolkit.class.php';
-
 class sfFileCacheTest extends UnitTestCase
 {
   private $cache = null;

@@ -1,7 +1,6 @@
 <?php
 
 require_once 'symfony/helper/TagHelper.php';
-require_once 'symfony/core/sfContext.class.php';
 
 Mock::generate('sfContext');
 

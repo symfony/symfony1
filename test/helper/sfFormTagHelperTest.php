@@ -2,9 +2,6 @@
 
 require_once 'symfony/helper/TagHelper.php';
 require_once 'symfony/helper/FormHelper.php';
-require_once 'symfony/core/sfContext.class.php';
-require_once 'symfony/exception/sfException.class.php';
-require_once 'symfony/exception/sfViewException.class.php';
 
 Mock::generate('sfContext');
 

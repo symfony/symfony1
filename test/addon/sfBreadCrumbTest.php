@@ -1,7 +1,5 @@
 <?php
 
-require_once 'symfony/addon/sfBreadCrumb.class.php';
-
 Mock::generate('sfContext');
 
 class sfBreadCrumbTest extends UnitTestCase

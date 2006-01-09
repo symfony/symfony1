@@ -1,8 +1,5 @@
 <?php
 
-require_once 'symfony/addon/sfShoppingCart/sfShoppingCart.class.php';
-require_once 'symfony/addon/sfShoppingCart/sfShoppingCartItem.class.php';
-
 Mock::generate('sfContext');
 
 class sfShoppingCartTest extends UnitTestCase

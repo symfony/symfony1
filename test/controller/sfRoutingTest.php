@@ -1,11 +1,6 @@
 <?php
 
-require_once 'symfony/config/sfConfig.class.php';
-require_once 'symfony/controller/sfRouting.class.php';
-require_once 'symfony/exception/sfException.class.php';
-require_once 'symfony/exception/sfConfigurationException.class.php';
-
-Mock::generate('', 'sfContext');
+Mock::generate('sfContext');
 
 class sfRoutingTest extends UnitTestCase
 {

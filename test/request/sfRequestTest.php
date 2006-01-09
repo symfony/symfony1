@@ -1,9 +1,5 @@
 <?php
 
-require_once 'symfony/config/sfConfig.class.php';
-require_once 'symfony/request/sfRequest.class.php';
-require_once 'symfony/request/sfWebRequest.class.php';
-
 Mock::generate('sfContext');
 
 class sfRequestTest extends UnitTestCase
