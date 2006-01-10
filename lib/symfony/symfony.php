@@ -75,7 +75,9 @@ try
 
   if (sfConfig::get('sf_routing'))
   {
-    sfConfigCache::import($sf_app_config_dir_name.'/routing.yml');
+    // we cannot cache the routing rules because if configuration problem
+    $routing = $sf_app_config_dir_name.'/routing.yml';
+    sfConfigCache::import($routing);
   }
 }
 catch (sfException $e)
