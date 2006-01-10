@@ -1,5 +1,5 @@
 all:
-  default:
+  propel:
     class:          sfPropelDatabase
     param:
       datasource:   symfony
