@@ -13,7 +13,7 @@
  * 
  * <b>Optional parameters:</b>
  *
- * # <b>datasource</b>     - [default] - datasource to use for the connection
+ * # <b>datasource</b>     - [symfony] - datasource to use for the connection
  * # <b>is_default</b>     - [false]   - use as default if multiple connections
  *                                       are specified. The parameters 
  *                                       that has been flagged using this param
@@ -63,7 +63,7 @@ class sfPropelDatabase extends sfCreoleDatabase
       array (
         'datasources' =>
         array (
-          $this->getParameter('datasource') =>
+          $this->getParameter('datasource', 'symfony') =>
           array (
             'adapter' =>    $this->getParameter('phptype'),
             'connection' =>
@@ -75,7 +75,7 @@ class sfPropelDatabase extends sfCreoleDatabase
               'password' => $this->getParameter('password'),
             ),
           ),
-          'default' => $this->getParameter('datasource'),
+          'default' => $this->getParameter('datasource', 'symfony'),
         ),
       ),
     );
