@@ -214,32 +214,32 @@ class sfToolkit
         {
           foreach (array_unique(array_merge(array_keys($args[0]),array_keys($args[1]))) as $key)
           {
-            if( is_string($key) && isset($args[0][$key]) && isset($args[1][$key]) && is_array($args[0][$key]) && is_array($args[1][$key]) )
+            if (is_string($key) && array_key_exists($key, $args[0]) && array_key_exists($key, $args[1]) && is_array($args[0][$key]) && is_array($args[1][$key]))
             {
-              $args[2][$key] = sfToolkit::array_deep_merge( $args[0][$key], $args[1][$key] );
+              $args[2][$key] = sfToolkit::array_deep_merge($args[0][$key], $args[1][$key]);
             }
-            else if( is_string($key) && isset($args[0][$key]) && isset($args[1][$key]) )
+            else if (is_string($key) && array_key_exists($key, $args[0]) && array_key_exists($key, $args[1]))
             {
               $args[2][$key] = $args[1][$key];
             }
-            else if( is_integer($key) && isset($args[0][$key]) && isset($args[1][$key]) )
+            else if (is_integer($key) && array_key_exists($key, $args[0]) && array_key_exists($key, $args[1]))
             {
               $args[2][] = $args[0][$key];
               $args[2][] = $args[1][$key];
             }
-            else if( is_integer($key) && isset($args[0][$key]) )
+            else if (is_integer($key) && array_key_exists($key, $args[0]))
             {
               $args[2][] = $args[0][$key];
             }
-            else if( is_integer($key) && isset($args[1][$key]) )
+            else if (is_integer($key) && array_key_exists($key, $args[1]))
             {
               $args[2][] = $args[1][$key];
             }
-            else if( ! isset($args[1][$key]) )
+            else if (!array_key_exists($key, $args[1]))
             {
               $args[2][$key] = $args[0][$key];
             }
-            else if( ! isset($args[0][$key]) )
+            else if (!array_key_exists($key, $args[0]))
             {
               $args[2][$key] = $args[1][$key];
             }
