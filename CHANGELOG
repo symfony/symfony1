@@ -1,9 +1,29 @@
 SVN
 ---
 
-* [fabien] new sfConfig object to deal with all symfony configuration
-           WARNING: This breaks backward compatibility. To upgrade your existing projects,
-           read the UPGRADE file before upgrading
+Version 0.6.0
+-------------
+
+WARNING: This release breaks backward compatibility.
+Please read the UPGRADE file before upgrading your projects.
+
+* [fabien] removed orm.yml configuration file in favor of databases.yml
+* [fabien] updated spyc library
+* [fabien] support to be able to pass some variables/objects to the next next request/forward
+* [fabien] more fine grained credentials
+* [fabien] application are now in an apps directory
+* [fabien] new validateXXX() method for action
+* [fabien] renamed all classes that are Propel dependant with Propel in their names
+* [fabien] symfony now automatically clear the cache when upgrading
+* [fabien] dynamic defaults to routing 
+* [fabien] module i18n translations
+* [fabien] new i18n.yml configuration file
+* [fabien] new sfPropelAdmin generator
+* [fabien] autoloading is now more configurable at runtime
+* [fabien] new build-db / insert-sql pakefile tasks
+* [fabien] more unit tests
+* [fabien] disabled logging by default in production environment
+* [fabien] new sfConfig object to deal with all symfony configuration (no more constant)
 
 Version 0.4.4
 -------------
