@@ -72,9 +72,17 @@ abstract class sfController
         $exists = true;
       }
     }
-    else if (sfConfig::get('sf_module_'.strtolower($moduleName)) && is_readable($core_module_file))
+    else if (is_readable($core_module_file))
     {
-      // core module file exists and is active (see settings.yml)
+      // core module activated?
+      if (!in_array($moduleName, sfConfig::get('sf_activated_modules')))
+      {
+        $error = 'The module "%s" is not activated.';
+        $error = sprintf($error, $moduleName);
+
+        throw new sfConfigurationException($error);
+      }
+
       $exists = true;
 
       require_once($core_module_file);
@@ -107,6 +115,7 @@ abstract class sfController
     {
       // let's kill this party before it turns into cpu cycle hell
       $error = 'Too many forwards have been detected for this request';
+
       throw new sfForwardException($error);
     }
 

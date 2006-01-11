@@ -45,8 +45,6 @@ default:
 
     suffix:                 .
 
-    module_default:         on
-
     standard_helpers:       [Partial, Cache, Form]
 
     max_forwards:           5
@@ -70,3 +68,5 @@ default:
     safe_slot:              on
 
     use_flash:              on
+
+    activated_modules:      [default]
