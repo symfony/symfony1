@@ -436,6 +436,24 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     return '[?php echo __(\''.$value.'\', array('.implode(', ', $vars).')) ?]';
   }
 
+  public function getColumnListTag($column, $params = array())
+  {
+    $type = $column->getCreoleType();
+
+    if ($type == CreoleTypes::DATE || $type == CreoleTypes::TIMESTAMP)
+    {
+      return "format_date(\${$this->getSingularName()}->get{$column->getPhpName()}(), 'f')";
+    }
+    elseif ($type == CreoleTypes::BOOLEAN)
+    {
+      return "\${$this->getSingularName()}->get{$column->getPhpName()}() ? image_tag('/sf/images/sf_admin/ok.png') : ''";
+    }
+    else
+    {
+      return "\${$this->getSingularName()}->get{$column->getPhpName()}()";
+    }
+  }
+
   public function getColumnFilterTag($column, $params = array())
   {
     $type = $column->getCreoleType();
