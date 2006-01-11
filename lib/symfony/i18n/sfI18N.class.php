@@ -89,7 +89,7 @@ class sfI18N
 
     if (sfConfig::get('sf_debug') && sfConfig::get('sf_i18n_debug'))
     {
-      $messageFormat->setUntranslatedPS(array('[T]','[/T]'));
+      $messageFormat->setUntranslatedPS(array(sfConfig::get('sf_i18n_untranslated_prefix'), sfConfig::get('sf_i18n_untranslated_suffix')));
     }
 
     return $messageFormat;
