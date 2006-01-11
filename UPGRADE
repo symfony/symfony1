@@ -16,7 +16,7 @@ Automatically
 
   4 - check the changes made by the symfony upgrade command (svn diff if you use subversion)
 
-  5 - make some manual changes asked by the script (see XX in the `manually` section below)
+  5 - update your databases.yml configuration file (see section 11 of the `Manually` section below)
 
 Be careful if you have external libraries that can contains `SF_XXX`, `MOD_XXX` or `APP_XXX` constants! (the `geshi` library is one of them)
 
@@ -90,4 +90,29 @@ For all your application within a project:
     forward_if        | forwardIf
     forward_unless    | forwardUnless
 
-  11 - clear the symfony cache
+  11 - update your `databases.yml` configuration file. The `orm.yml` configuration file
+       is not needed anymore. All database configuration occur now in the `databases.yml`
+       configuration file.
+       
+       [0.4.X/0.5.X > orm.yml]
+
+       all:
+         adapter:  mysql
+         host:     localhost
+         database: dbname
+         username: root
+         password:
+
+       [0.6.X/0.7.X > databases.yml]
+       all:
+         propel:
+           class:          sfPropelDatabase
+           param:
+             datasource:   symfony
+             phptype:      mysql
+             hostspec:     localhost
+             database:     dbname
+             username:     root
+             password:     
+
+  12 - clear the symfony cache
