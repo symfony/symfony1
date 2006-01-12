@@ -17,15 +17,13 @@
  * @version    SVN: $Id$
  */
 
-if (!sfConfig::get('sf_i18n'))
-{
-  throw new sfConfigurationException('you must set sf_i18n to on in settings.yml to be able to use these helpers.');
-}
-
-sfConfig::set('sf_i18n_instance', sfContext::getInstance()->getI18N());
-
 function __($text, $args = array(), $culture = null)
 {
+  if (!sfConfig::get('sf_i18n'))
+  {
+    throw new sfConfigurationException('you must set sf_i18n to on in settings.yml to be able to use these helpers.');
+  }
+
   return sfConfig::get('sf_i18n_instance')->__($text, $args);
 }
 

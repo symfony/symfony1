@@ -84,6 +84,7 @@ class sfContext
     {
       $this->i18n = new sfI18N();
       $this->i18n->initialize($this);
+      sfConfig::set('sf_i18n_instance', $this->i18n);
     }
 
     // register our shutdown function
