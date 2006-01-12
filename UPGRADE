@@ -1,14 +1,14 @@
 Upgrade symfony to 0.6.X/0.7.X from 0.4.X/0.5.X
 ===============================================
 
-When you upgrade to symfony release 0.6.X or 0.7.X from 0.4.X or 0.5.X, you must upgrade your projects.
+When you upgrade the symfony framework from 0.4.X or 0.5.X to a 0.6.X or 0.7.X release, you must upgrade all the projects depending on symfony.
 
 Automatically
 -------------
 
   1 - make a backup of your project (this is the most important step!)
 
-  2 - move all your apps directory under a new `app` directory (see section 9 of the `Manually` section below)
+  2 - move all your apps directories under a new `apps` directory (see section 9 of the `Manually` section below)
 
   3 - launch the following command in your project root directory:
 
@@ -18,14 +18,14 @@ Automatically
 
   5 - update your databases.yml configuration file (see section 11 of the `Manually` section below)
 
-Be careful if you have external libraries that can contains `SF_XXX`, `MOD_XXX` or `APP_XXX` constants! (the `geshi` library is one of them)
+Be careful if your project directory contains external libraries using `SF_XXX`, `MOD_XXX` or `APP_XXX` constants (for instance the `geshi` library). The `upgrade` command transforms these constants into a class method call, so you ought to overwrite the upgraded library by the the backup copy.
 
-You can launch this command several times without a problem.
+You can launch this command several times without problem.
 
 Manually
 --------
 
-For all your application within a project:
+For all your applications within a project:
 
   1 - update your `app/config/config.php` file with the new one (`data/symfony/skeleton/app/app/config/config.php`)
 
@@ -38,7 +38,7 @@ For all your application within a project:
     defined('SF_FOO')        | sfConfig::get('sf_foo') or nothing
     SF_FOO                   | sfConfig::get('sf_foo')
 
-  3 - change shortcuts names in your templates files by adding a `sf_` prefix:
+  3 - change the shortcuts to the symfony objects in your templates files by adding a `sf_` prefix:
 
     0.4.X/0.5.X              | 0.6.X/0.7.X
     -------------------------|-----------------
