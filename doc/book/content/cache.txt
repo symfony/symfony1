@@ -51,7 +51,7 @@ For instance, imagine an action that returns the list of all the users of your w
 
 The result of this action is a processed template (`listSuccess.php`), and that's what is going to be cached.
 
-To activate the cache on this action, simply add a `cache.yml` file in the `myproject/myapp/modules/user/config/` directory, with the following content: 
+To activate the cache on this action, simply add a `cache.yml` file in the `myproject/apps/myapp/modules/user/config/` directory, with the following content: 
 
     list:
       activate:   on

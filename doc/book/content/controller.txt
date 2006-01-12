@@ -19,7 +19,7 @@ All web requests are handled by a single **front controller**, which is the uniq
     define('SF_ENVIRONMENT', 'prod');
     define('SF_DEBUG',       false);
     
-    require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
+    require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
     
     sfContext::getInstance()->getController()->dispatch();
     
@@ -41,6 +41,7 @@ The call to the `->dispatch()` method of the Controller object does several thin
 >* the controller object (given by the method `->getController()`)
 >* the request object (given by the method `->getRequest()`)
 >* the logger object (given by the method `->getLogger()`)
+>* ...
 
 You will see a little further how configuration files and routing allow the Front Controller to handle any request format. But to keep it simple, the front controller basically knows how to read an URL like:
 
@@ -57,7 +58,7 @@ Actions are located inside **module** directories. And if, to create application
 
 Actions are located in files called `actions.class.php` found in the `actions` subdirectory of each module directory.
 
-So let's imagine that you created a module called `mymodule` in your `myapp` application using the `symfony` command. The default file `actions.class.php` located in the `myapp/modules/mymodule/actions/` directory defines a single action called `index`, and it looks like that:
+So let's imagine that you created a module called `mymodule` in your `myapp` application using the `symfony` command. The default file `actions.class.php` located in the `apps/myapp/modules/mymodule/actions/` directory defines a single action called `index`, and it looks like that:
 
     [php]
     class mymoduleActions extends sfActions
@@ -156,7 +157,7 @@ Because calling the default view is the default behavior, if an action returns n
 Naming conventions
 ------------------
 
-The actions are grouped in a logical way inside modules, in a directory structure such as `myproject/myapp/modules/MODULE_NAME/actions/`, in files named `actions.class.php`. The function implementing an action in the `actions.class.php` file of the module is named with the name of the action prefixed with `execute`.
+The actions are grouped in a logical way inside modules, in a directory structure such as `myproject/apps/MYAPP/modules/MODULE_NAME/actions/`, in files named `actions.class.php`. The function implementing an action in the `actions.class.php` file of the module is named with the name of the action prefixed with `execute`.
 
 For instance, if you have two actions `index` and `list` in a module called `product`, the file `actions.class.php` located in `myapp/modules/product/actions/` will have the following structure:
 

@@ -25,6 +25,7 @@ The `sfUser` class, used to manage the user session, has a native implementation
     [php]
     // getter
     $culture = $this->getUser()->getCulture();
+
     // setter
     $this->getUser()->setCulture('en_US');
     
@@ -36,10 +37,10 @@ The language is coded in two lower-case characters, according to the [ISO 639-1 
 
 The country is coded in two upper-case characters, according to the [ISO 3166-1 norm](http://www.iso.org/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1.html) (for instance `GB` for Great-Britain).
 
-By default, any new user will take the culture set in the `SF_DEFAULT_CULTURE` constant. You can change it in the `app.php` configuration file:
+By default, any new user will take the culture set in the `default_culture` configuration parameter. You can change it in the `i18n.yml` configuration file:
 
-    [php]
-    define(SF_DEFAULT_CULTURE, 'en_GB');
+    default:
+      default_culture:     fr
 
 All the culture-dependent contents are displayed transparently according to the user culture.
 

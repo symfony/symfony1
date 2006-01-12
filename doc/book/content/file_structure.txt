@@ -4,7 +4,7 @@ File structure explained
 Overview
 --------
 
-The tree structure of a Symfony project is consistent, although it can be completely customized. This chapter will help you to get used to this structure and to understand the logic behind it.
+The tree structure of a symfony project is consistent, although it can be completely customized. This chapter will help you to get used to this structure and to understand the logic behind it.
 
 Introduction
 ------------
@@ -21,13 +21,16 @@ All web projects generally share the same architectural needs:
 *   configuration files
 *   etc.
 
-To allow developers to adapt to any existing Symfony project, it is recommended to follow the default tree structure described below. This also speeds up project creation, since the default tree structure is automatically created when initializing every project, application or module.
+To allow developers to adapt to any existing symfony project, it is recommended to follow the default tree structure described below. This also speeds up project creation, since the default tree structure is automatically created when initializing every project, application or module.
 
 Root tree structure
 -------------------
 
 These are the directories found at the root of a Symfony project:
 
+    apps/
+      fo/
+      bo/
     batch/
     cache/
     config/
@@ -63,7 +66,7 @@ The `test` directory contains unit tests written in PHP and compatible with [Sim
 
 The `web` directory is the root for the web server. The only files accessible from the Internet are the ones located in this directory. It will be described in detail in a few moments.
 
-Last but not least, the root directory contains one directory for each application of the project (typically `fo` and `bo` for the front and back office, `myapp` in the example).
+Last but not least, the `apps` directory contains one directory for each application of the project (typically `fo` and `bo` for the front and back office, `myapp` in the example).
 
 Application tree structure
 --------------------------
@@ -144,40 +147,30 @@ To customize the tree structure of an application, you simply need to modify the
 
     [php]
     // root directory structure
-    define('SF_CACHE_DIR_NAME', 'cache');
-    define('SF_LOG_DIR_NAME', 'log');
-    define('SF_LIB_DIR_NAME', 'lib');
-    define('SF_MODEL_DIR_NAME', 'model');
-    define('SF_WEB_DIR_NAME', 'web');
-    define('SF_DATA_DIR_NAME', 'data');
-    
+    'sf_cache_dir_name'   => 'cache',
+    'sf_log_dir_name'     => 'log',
+    'sf_lib_dir_name'     => 'lib',
+    'sf_model_dir_name'   => 'model',
+    'sf_web_dir_name'     => 'web',
+    'sf_data_dir_name'    => 'data',
+    'sf_config_dir_name'  => 'config',
+    'sf_apps_dir_name'    => 'apps',
+
     // global directory structure
-    define('SF_APP_DIR', SF_ROOT_DIR.DS.SF_APP);
-    define('SF_MODEL_DIR', SF_ROOT_DIR.DS.SF_MODEL_DIR_NAME);
-    define('SF_LIB_DIR', SF_ROOT_DIR.DS.SF_LIB_DIR_NAME);
-    define('SF_VENDOR_LIB_DIR', SF_LIB_DIR.DS.'vendor');
-    define('SF_WEB_DIR', SF_ROOT_DIR.DS.SF_WEB_DIR_NAME);
-    define('SF_UPLOAD_DIR', SF_WEB_DIR.DS.'uploads');
-    define('SF_BASE_CACHE_DIR', SF_ROOT_DIR.DS.SF_CACHE_DIR_NAME.DS.SF_APP);
-    define('SF_CACHE_DIR', SF_BASE_CACHE_DIR.DS.SF_ENVIRONMENT);
-    define('SF_LOG_DIR', SF_ROOT_DIR.DS.SF_LOG_DIR_NAME);
-    define('SF_DATA_DIR', SF_ROOT_DIR.DS.SF_DATA_DIR_NAME);
-    
-    // SF_APP_DIR sub-directories names
-    define('SF_APP_CONFIG_DIR_NAME', 'config');
-    define('SF_APP_LIB_DIR_NAME', 'lib');
-    define('SF_APP_MODULE_DIR_NAME', 'modules');
-    define('SF_APP_TEMPLATE_DIR_NAME', 'templates');
-    
-    // SF_APP_DIR directory structure
-    define('SF_APP_CONFIG_DIR', SF_APP_DIR.DS.SF_APP_CONFIG_DIR_NAME);
-    define('SF_APP_LIB_DIR', SF_APP_DIR.DS.SF_APP_LIB_DIR_NAME);
-    define('SF_APP_MODULE_DIR', SF_APP_DIR.DS.SF_APP_MODULE_DIR_NAME);
-    define('SF_APP_TEMPLATE_DIR', SF_APP_DIR.DS.SF_APP_TEMPLATE_DIR_NAME);
+    'sf_app_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$sf_app,
+    'sf_model_dir'      => $sf_root_dir.DIRECTORY_SEPARATOR.'model',
+    'sf_lib_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.'lib',
+    'sf_web_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.'web',
+    'sf_upload_dir'     => $sf_root_dir.DIRECTORY_SEPARATOR.'web'.DIRECTORY_SEPARATOR.'uploads',
+    'sf_base_cache_dir' => $sf_root_dir.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.$sf_app,
+    'sf_cache_dir'      => $sf_root_dir.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.$sf_app.DIRECTORY_SEPARATOR.$sf_environment,
+    'sf_log_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.'log',
+    'sf_data_dir'       => $sf_root_dir.DIRECTORY_SEPARATOR.'data',
+    'sf_config_dir'     => $sf_root_dir.DIRECTORY_SEPARATOR.'config',
 
-Names and paths are both defined here, and the directory separator has its own constant (`DS`). While this file is not that easy to read, it is easy to modify. 
+Names and paths are both defined here. While this file is not that easy to read, it is easy to modify. 
 
-> **Important**: it is strongly recommended to use these constants when building and coding a project, so that the applications created are independent of the tree structure, more particularly for the first level directories.
+> **Important**: it is strongly recommended to use these parameters (via the sfConfig object) when building and coding a project, so that the applications created are independent of the tree structure, more particularly for the first level directories.
 
 [1]: http://www.sqlite.org/                   "SQLite database"
 [2]: http://www.phpdoc.org                    "phpdoc"

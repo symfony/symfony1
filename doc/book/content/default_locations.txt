@@ -29,21 +29,21 @@ Were does symfony look for...
 
 * the default layout
 
-        [myproject]/[myapp]/templates/layout.php
+        [myproject]/apps/[myapp]/templates/layout.php
 
 * the default 404 page
 
         symfony/modules/default/templates/error404Success.php
         // can be overriden for a given application at
-        [myproject]/[myapp]/modules/default/templates/error404Success.php
+        [myproject]/apps/[myapp]/modules/default/templates/error404Success.php
 
 * the database access configuration
 
-        [myproject]/[myapp]/config/orm.yml
+        [myproject]/apps/[myapp]/config/orm.yml
 
 * the interface translation files of an internationalized application
 
-        [myproject]/[myapp]/i18n/
+        [myproject]/apps/[myapp]/i18n/
 
 * the cached web pages
 
@@ -51,10 +51,10 @@ Were does symfony look for...
 
 * the title of a web page
 
-        //default title
-        [myproject]/[myapp]/config/view.yml
-        //title action by action
-        [myproject]/[myapp]/modules/[mymodule]/config/view.yml
+        // default title
+        [myproject]/apps/[myapp]/config/view.yml
+        // title action by action
+        [myproject]/apps/[myapp]/modules/[mymodule]/config/view.yml
 
 * the complete settings file
 

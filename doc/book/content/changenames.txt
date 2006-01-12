@@ -11,14 +11,14 @@ Renaming a module
 
 1. rename the module directory
 
-        myproject/myapp/modules/oldmodulename
-        //becomes
-        myproject/myapp/modules/newmodulename
+        myproject/apps/myapp/modules/oldmodulename
+        // becomes
+        myproject/apps/myapp/modules/newmodulename
         
 2. modify the name of the module in the `actions.class.php` file (or in the various `action.class.php` files if you separated it)
 
         class oldmodulenameActions extends sfActions
-        //becomes
+        // becomes
         class newmodulenameActions extends sfActions
 
 3. search the previous module name in the **actions**. Replace it when used in `->forward()` and `->redirect()`.

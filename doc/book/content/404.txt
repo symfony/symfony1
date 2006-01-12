@@ -32,7 +32,7 @@ Just initialize the new module with:
 
     $ symfony init-module myapp errors
 
-You need to create the action `error404` in the file `myproject/myapp/modules/errors/actions/Action.class.php`, and the template `error404Success.php` in the directory `myproject/myapp/modules/errors/templates/`. You now have full control over the content of your 404 error page.
+You need to create the action `error404` in the file `myproject/myapp/modules/errors/actions/action.class.php`, and the template `error404Success.php` in the directory `myproject/myapp/modules/errors/templates/`. You now have full control over the content of your 404 error page.
 
 Solution 2 : override the default template
 ------------------------------------------
@@ -49,4 +49,4 @@ Symfony will first look for an action or a template here before calling the defa
     $ cd templates
     $ vi "error404Success.php"
 
->**Note**: Why not use the `symfony init-module` here ? Because it would create an `Actions.class.php` file that would override all the actions of the default `default` module, including `index`, `login`, `disabled`, `secure` and `unavailable`. So using the `symfony init-module` command would imply _erasing_ the newly created `Actions.class.php` file to focus only on the template.
+>**Note**: Why not use the `symfony init-module` here? Because it would create an `actions.class.php` file that would override all the actions of the default `default` module, including `index`, `login`, `disabled`, `secure` and `unavailable`. So using the `symfony init-module` command would imply _erasing_ the newly created `actions.class.php` file to focus only on the template.

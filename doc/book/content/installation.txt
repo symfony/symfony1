@@ -137,6 +137,7 @@ The `bin` directory will not be of any use since you can't call a command.
 Let's suppose that you already transferred your symfony-enabled project to a distant server. The distant tree structure will look like:
 
     myproject/
+      apps/
       batch/
       cache/
       config/
