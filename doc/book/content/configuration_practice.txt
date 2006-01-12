@@ -85,33 +85,33 @@ The `settings.yml` file, which is environment dependent, contains the main appli
         web_debug:              off
     
     all:
-    ;  .actions:
-    ;    default_module:         default
-    ;    default_action:         index
-    ;    
-    ;    error_404_module:       default
-    ;    error_404_action:       error404
-    ;    
-    ;    login_module:           default
-    ;    login_action:           login
-    ;    
-    ;    module_disabled_module: default
-    ;    module_disabled_action: disabled
-    ;    
-    ;    secure_module:          default
-    ;    secure_action:          secure
-    ;    
-    ;    unavailable_module:     default
-    ;    unavailable_action:     unavailable
-    ;
-    ;  .settings:
-    ;    available:              on
-    ;    module_accessor:        module
-    ;    action_accessor:        action
-    ;    content_type:           html
+    #  .actions:
+    #    default_module:         default
+    #    default_action:         index
+    #    
+    #    error_404_module:       default
+    #    error_404_action:       error404
+    #    
+    #    login_module:           default
+    #    login_action:           login
+    #    
+    #    module_disabled_module: default
+    #    module_disabled_action: disabled
+    #    
+    #    secure_module:          default
+    #    secure_action:          secure
+    #    
+    #    unavailable_module:     default
+    #    unavailable_action:     unavailable
+    #
+    #  .settings:
+    #    available:              on
+    #    module_accessor:        module
+    #    action_accessor:        action
+    #    content_type:           html
     ...
 
-First of all, you may notice that most of the configuration is inherited from the `default` definition : the statements starting with a `;` in the configuration for `all` environments are comments. This means that, for those parameters, the default configuration is used instead. If you need to override it, just decomment the line and modify the value.
+First of all, you may notice that most of the configuration is inherited from the `default` definition : the statements starting with a `#` in the configuration for `all` environments are **comments**. This means that, for those parameters, the default configuration is used instead. If you need to override it, just decomment the line and modify the value.
 
 The parameters defined in the `.action` category define the modules and actions to be used in certain situations. In particular:
 
@@ -214,8 +214,8 @@ The `logging.yml` file defines the log level to be output. By default, all level
     test:
     
     all:
-    ;  active:  on
-    ;  level:   debug
+    #  active:  on
+    #  level:   debug
 
 You can add your custom logging settings in this file, for instance if you need to monitor the input and output of an external API. You should definitely include there the I/O of requests to a payment API:
 
@@ -228,14 +228,14 @@ Symfony uses classes such as sfFrontWebController, sfUser, sfRequest, sfShopping
 
     ...
     all:
-    ;  controller:
-    ;    class: myFrontWebController
-    ;
-    ;  request:
-    ;    class: myWebRequest
-    ;
-    ;  user:
-    ;    class: myUser
+    #  controller:
+    #    class: myFrontWebController
+    #
+    #  request:
+    #    class: myWebRequest
+    #
+    #  user:
+    #    class: myUser
     ...
 
 This means that you already have a prebuilt mechanism to change the **factories** of symfony, the big classes that run behind the curtain, by adding or inheriting methods to the 'my-' classes.
