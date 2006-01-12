@@ -28,7 +28,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     $this->processFilters();
 
     // pager
-    $this->pager = new sfPropelPager('<?php echo $this->getSingularName() ?>', <?php echo $this->getParameterValue('list.max_per_page', 20) ?>);
+    $this->pager = new sfPropelPager('<?php echo $this->getClassName() ?>', <?php echo $this->getParameterValue('list.max_per_page', 20) ?>);
     $c = new Criteria();
     $this->addSortCriteria($c);
     $this->addFiltersCriteria($c);
