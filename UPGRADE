@@ -115,4 +115,6 @@ For all your applications within a project:
              username:     root
              password:     
 
-  12 - clear the symfony cache
+  12 - change all comments in your YAML file from ; to #
+
+  13 - clear the symfony cache

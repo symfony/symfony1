@@ -53,6 +53,9 @@ function run_upgrade_to_0_6($task, $args)
     _upgrade_0_6_view_shortcuts($template_dirs);
     _upgrade_0_6_mail_to($template_dirs);
 
+    // change comment character in YML files
+    _upgrade_0_6_yml_comments($app_dir.'/config');
+
     // change standard_helpers and i18n format
     _upgrade_0_6_settings($app_dir);
 
@@ -79,6 +82,31 @@ function run_upgrade_to_0_6($task, $args)
 
   // clear cache
   run_clear_cache($task, array());
+}
+
+function _upgrade_0_6_yml_comments($dir)
+{
+  $verbose = pakeApp::get_instance()->get_verbose();
+
+  $yml_files = pakeFinder::type('file')->name('*.yml')->in($dir);
+
+  $regex = '/^;/m';
+
+  foreach ($yml_files as $yml_file)
+  {
+    $content = file_get_contents($yml_file);
+
+    if (!preg_match($regex, $content))
+    {
+      continue;
+    }
+
+    if ($verbose) echo '>> file      '.pakeApp::excerpt('change YML comment character for "'.$yml_file.'"')."\n";
+
+    $content = preg_replace($regex, '#', $content);
+
+    file_put_contents($yml_file, $content);
+  }
 }
 
 function _upgrade_0_6_action($dir)
