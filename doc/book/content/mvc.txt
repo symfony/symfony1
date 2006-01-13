@@ -48,7 +48,7 @@ The names of the classes that are part of the symfony package are prefixed by `s
     sfView
     ...
     
-If you need to add custom methods to these classes for a given project, modify the `my`-prefixed classes that can be found in the `myproject/myapp/lib` directory:
+If you need to add custom methods to these classes for a given project, modify the `my`-prefixed classes that can be found in the `myproject/apps/myapp/lib` directory:
 
     myAction
     myRequest

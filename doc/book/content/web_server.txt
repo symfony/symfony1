@@ -103,7 +103,7 @@ to
 
     RewriteRule ^(.*)$ /webapp/index.php [QSA,L]
 
-In addition, in the `settings.yml` configuration file of your application (located in `myproject/myapp/config/`, add the following line under the `.settings` of all environments:
+In addition, in the `settings.yml` configuration file of your application (located in `myproject/apps/myapp/config/`, add the following line under the `.settings` of all environments:
 
     all:
       .settings:

@@ -17,7 +17,7 @@ To add custom helpers available to your templates, simply create a PHP file endi
 | ------------------------------------ | ----------------
 | `lib/helper/`                        | all applications of the project
 | `myapp/lib/helper/`                  | all the modules of the 'myapp' application
-| `myapp/modules/mymodule/lib/helper/` | all the templates of the 'mymodule' module
+| `mymodule/lib/helper/`               | all the templates of the 'mymodule' module
 
 To use a custom helper in a template, you must first declare it on top of the template, as for other helpers:
 

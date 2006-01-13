@@ -83,7 +83,7 @@ If you access it with the default action, you will see no difference with the in
 
     http://myapp.example.com/index.php/article/
     
-However, the php code is there, in the `myproject/myapp/modules/articles/` directory, ready to be modified for your own needs. As an example, here is the beginning of the `actions.class.php` file:
+However, the php code is there, in the `myproject/apps/myapp/modules/articles/` directory, ready to be modified for your own needs. As an example, here is the beginning of the `actions.class.php` file:
 
     [php]
     class articleActions extends sfActions

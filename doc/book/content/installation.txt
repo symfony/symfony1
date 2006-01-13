@@ -138,6 +138,7 @@ Let's suppose that you already transferred your symfony-enabled project to a dis
 
     myproject/
       apps/
+        myapp/
       batch/
       cache/
       config/
@@ -145,7 +146,6 @@ Let's suppose that you already transferred your symfony-enabled project to a dis
       doc/
       lib/
       log/
-      myapp/
       test/
       web/
 
@@ -160,7 +160,7 @@ copy | symfony/lib/*  | to | myproject/lib/symfony/
     
 You're done : the distant project should now work.
 
->**Hint**: some hosting providers won't run scripts in php5 unless their suffix is `.php5`. If this is the case of your distant server, you will need to rename the `index.php` file found in `myproject/myapp/web/` into `index.php5`. Don't bother to rename the other files : since symfony uses a front controller, only the `index.php` file will have to be declared as a php5 script (learn more about the front controller feature in the [controller chapter](controller.txt))       
+>**Hint**: some hosting providers won't run scripts in php5 unless their suffix is `.php5`. If this is the case of your distant server, you will need to rename the `index.php` file found in `myproject/web/` into `index.php5`. Don't bother to rename the other files : since symfony uses a front controller, only the `index.php` file will have to be declared as a php5 script (learn more about the front controller feature in the [controller chapter](controller.txt))       
 
 [1]: http://pear.php.net          "Pear"
 [2]: http://www.pake-project.com  "Pake"

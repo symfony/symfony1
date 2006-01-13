@@ -99,7 +99,7 @@ You may restart IIS.
 Configuring symfony
 -------------------
 
-The last step is editing the file `settings.yml` located in the config directory of our symfony project (`c:\myproject\myapp\config\` in our example). You won't be surprised to find a little difference between our two options, so:
+The last step is editing the file `settings.yml` located in the config directory of our symfony project (`c:\myproject\apps\myapp\config\` in our example). You won't be surprised to find a little difference between our two options, so:
 
 - for URLs like `http://myproject/`, we need these lines:
 
@@ -146,7 +146,7 @@ Add these lines at the end of your `httpd.ini` file:
       # finally we redirect to our front web controller
       RewriteRule /myapp/(.*) /myapp/index.php [L]
 
-Edit the file `settings.yml` of `myapp` application (`c:\myproject\myapp\config\settings.yml`) and make sure you have the following lines:
+Edit the file `settings.yml` of `myapp` application (`c:\myproject\apps\myapp\config\settings.yml`) and make sure you have the following lines:
 
       all:
        .settings:

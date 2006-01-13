@@ -109,7 +109,7 @@ If you need to use a helper that is not loaded by default, the template that wil
 Global template
 ---------------
 
-All the templates can be included into a **global template**, or **layout**, located in `myproject/myapp/templates/layout.php`. Here is its default content:
+All the templates can be included into a **global template**, or **layout**, located in `myproject/apps/myapp/templates/layout.php`. Here is its default content:
 
     [php]
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/2000/REC-xhtml1-200000126/DTD/xhtml1-transitional.dtd">
@@ -190,7 +190,7 @@ For instance, with two actions `index` and `list` in a `product` module :
       }
     }
 
-The templates called at the end of the execution of each action will be located in `myproject/myapp/modules/product/templates/` and named:
+The templates called at the end of the execution of each action will be located in `myproject/apps/myapp/modules/product/templates/` and named:
 
     indexSuccess.php
     listSuccess.php
@@ -326,14 +326,14 @@ Fragments
 
 If you need to include some template code into various pages, but without any preprocessing, the slot mechanism can be a little cumbersome. To avoid the use of an action when all you need is some factorized HTML code, use a **fragment** instead of a slot.
 
-For instance, if many of the templates of your `test` module use a fragment of code used to show a special footer, save this piece of code in a file called `_my_special_footer` in the `myproject/myapp/modules/test/templates` directory. Now, when you need this piece of code in a template, just call the `include_partial` function:
+For instance, if many of the templates of your `test` module use a fragment of code used to show a special footer, save this piece of code in a file called `_my_special_footer` in the `myproject/apps/myapp/modules/test/templates` directory. Now, when you need this piece of code in a template, just call the `include_partial` function:
 
     [php]
     <?php echo include_partial('my_special_footer') ?>
 
 Notice the '_' difference between the file name and the fragment name in the code. This helps to keep your code clean and to show the fragments ahead of the other templates in a file explorer.
 
-If your need is not restricted to one module, save your fragment in the main template directory (in `myproject/myapp/templates`). To call it from any module template, you now need:
+If your need is not restricted to one module, save your fragment in the main template directory (in `myproject/apps/myapp/templates`). To call it from any module template, you now need:
 
     [php]
     <?php echo include_partial('global/my_special_footer') ?>

@@ -60,7 +60,7 @@ Let's imagine you are building a chat website where users have to choose a nickn
     $this->getUser()->setAttribute('nickname', 'foo');
     $this->getUser()->getAttribute('nickname');
 
-Although this is exactly the previous example, this is not a very good solution, partly because it shows the real attribute and doesn't encapsulate the inner logic of the class. What would happen, for instance, if you decided suddenly to change the attribute name from 'nickname' to 'name' ? To settle this problem, you just need to extend the `sfUser` class. Check the `myproject/myapp/lib/` directory of your application: an empty `myUser` class just waits to be completed.
+Although this is exactly the previous example, this is not a very good solution, partly because it shows the real attribute and doesn't encapsulate the inner logic of the class. What would happen, for instance, if you decided suddenly to change the attribute name from 'nickname' to 'name' ? To settle this problem, you just need to extend the `sfUser` class. Check the `myproject/apps/myapp/lib/` directory of your application: an empty `myUser` class just waits to be completed.
 
     [php]
     class myUser extends sfUser
@@ -82,7 +82,7 @@ Then, in the action, the calls would be:
     $this->getUser()->setNickname('foo');
     $this->getUser()->getNickname();
 
-The reason why symfony uses the custom `myUser` class instead of the prebuilt `sfUser` is that the `factories.yml` configuration file of the application specifies it. You could decide to write a completely new user class, with your own custom methods, and call it `myproject/myapp/lib/myCustomUser.php`. But then, you would have to force symfony to use it instead of the `myUser` class by writing in the `factories.yml`:
+The reason why symfony uses the custom `myUser` class instead of the prebuilt `sfUser` is that the `factories.yml` configuration file of the application specifies it. You could decide to write a completely new user class, with your own custom methods, and call it `myproject/apps/myapp/lib/myCustomUser.php`. But then, you would have to force symfony to use it instead of the `myUser` class by writing in the `factories.yml`:
 
     all:
        user:
@@ -91,7 +91,7 @@ The reason why symfony uses the custom `myUser` class instead of the prebuilt `s
 Session expiration
 ------------------
 
-Session expiration occurs automatically after `SF_TIMEOUT` seconds. This constant is of 30 minutes by default and can be modified for each environment in the `myproject/myapp/config/settings.yml` configuration file:
+Session expiration occurs automatically after `SF_TIMEOUT` seconds. This constant is of 30 minutes by default and can be modified for each environment in the `myproject/apps/myapp/config/settings.yml` configuration file:
 
     default:
       .settings:

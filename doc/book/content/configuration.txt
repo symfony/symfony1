@@ -1,4 +1,4 @@
-£onfiguration explained
+Configuration explained
 =======================
 
 Overview

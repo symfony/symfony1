@@ -210,7 +210,7 @@ To create an `<img>` tag:
     // will generate in HTML
     <img href="/images/test.png" alt="Test" />
 
-By default, the image `test.png` will be looked for in the `/images/` directory of the web server (which is the `myproject/myapp/web/image/` directory of your file structure, unless you customized it). 
+By default, the image `test.png` will be looked for in the `/images/` directory of the web server (which is the `myproject/web/image/` directory of your file structure, unless you customized it). 
 
 If you need to change the default file type or the default location, you can pass a more defined URL:
 

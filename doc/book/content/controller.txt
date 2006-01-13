@@ -9,7 +9,7 @@ The implementation of the [MVC][1] Controller paradigm in symfony uses a front c
 Front controller
 ----------------
 
-All web requests are handled by a single **front controller**, which is the unique entry point to the whole application in a given environment. The default front controller, called `index.php` and located in the `myproject/myapp/web/` directory, is a simple PHP file:
+All web requests are handled by a single **front controller**, which is the unique entry point to the whole application in a given environment. The default front controller, called `index.php` and located in the `myproject/web/` directory, is a simple PHP file:
 
     [php]
     <?php

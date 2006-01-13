@@ -69,7 +69,7 @@ The project is not yet ready to be seen : it requires at least one application. 
 
     $ symfony init-app myapp
 
-This will create a `myapp` directory in the project root with a default application configuration and a set of directories ready to host the file of your website: 
+This will create a `myapp` directory in the `apps/` folder of the project root, with a default application configuration and a set of directories ready to host the file of your website: 
 
     myapp/
       config/

@@ -36,8 +36,8 @@ View.yml structure
 
 The scope of a `view.yml` varies according to the place where it is stored:
 
-* in `myproject/myapp/config/`, the definitions will apply to all modules and all actions of the application
-* in `myproject/myapp/modules/mymodule/config/`, the definitions will apply only to one module and override the application-level definitions
+* in `myproject/apps/myapp/config/`, the definitions will apply to all modules and all actions of the application
+* in `myproject/apps/myapp/modules/mymodule/config/`, the definitions will apply only to one module and override the application-level definitions
 
 In addition, for the module-level files, you have the ability to specify custom definitions for a specific view (pair action/result of the action):
 
@@ -90,7 +90,7 @@ The default global template, created when you initialize an application, is call
     </html>
 
 
-The default settings of the view, set in the application view configuration file `myproject/myapp/config/view.yml`, are:
+The default settings of the view, set in the application view configuration file `myproject/apps/myapp/config/view.yml`, are:
 
     all:
       http_metas:
@@ -264,7 +264,7 @@ Layout configuration
 
 According to the graphical charter of your website, you may have several layouts. Classical websites have at least two : the default layout, and the popup layout.
 
-You already saw that the default layout is `myproject/myapp/templates/layout.php`.  You don't need to set it in the application-level view configuration. Additional layouts have to be added in the same directory.
+You already saw that the default layout is `myproject/apps/myapp/templates/layout.php`.  You don't need to set it in the application-level view configuration. Additional layouts have to be added in the same directory.
 
 If you need to use a different layout for a view, use:
 
@@ -331,7 +331,7 @@ Imagine that you have a layout with a zone for contextual advices:
     </div>
     ...
 
-You also have a module `advice` with contextual actions `forIndex` and `forList`. Now, if you want to associate a contextual action with the views of a module `article` with actions `view` and `list`, you could write the following `myproject/myapp/modules/article/config/view.yml`:
+You also have a module `advice` with contextual actions `forIndex` and `forList`. Now, if you want to associate a contextual action with the views of a module `article` with actions `view` and `list`, you could write the following `myproject/apps/myapp/modules/article/config/view.yml`:
 
     indexSuccess:
       slots:

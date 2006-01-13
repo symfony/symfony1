@@ -94,9 +94,9 @@ Access restriction
 
 Now that the user can be authenticated and given credentials, it is time to restrict access to some of your actions to grant access only to a subset of users.
 
-This will be done with the `security.yml` module configuration file. This file can be found in the `myproject/myapp/modules/mymodule/config/` (if it doesn't exist for your module, create it).
+This will be done with the `security.yml` module configuration file. This file can be found in the `myproject/apps/myapp/modules/mymodule/config/` (if it doesn't exist for your module, create it).
 
-For example, to restrict the `read` action of the `myAccount` module to users with 'customer' credential, and the `update` action to the users with 'admin' or 'superuser' credentials, the `security.yml` file of the `myproject/myapp/modules/myAccount/config/` directory will have to look like:
+For example, to restrict the `read` action of the `myAccount` module to users with 'customer' credential, and the `update` action to the users with 'admin' or 'superuser' credentials, the `security.yml` file of the `myproject/apps/myapp/modules/myAccount/config/` directory will have to look like:
 
     read:
       is_secure:   on
@@ -112,7 +112,7 @@ For example, to restrict the `read` action of the `myAccount` module to users wi
 What happens when a user tries to access a restricted action depends on his credentials:
 
 *   If the user is identified and has the proper credentials, the action will be executed
-*   If the user is not identified, he/she will be redirected to the default `login` action  (default/login). You can configure this action in the `myproject/myapp/config/settings.yml` file.
+*   If the user is not identified, he/she will be redirected to the default `login` action  (default/login). You can configure this action in the `myproject/apps/myapp/config/settings.yml` file.
 *   If the user is identified but doesn't have the proper credentials, he/she will be redirected to the default `secure` action (default/secure). You can configure this action in the `myproject/myapp/config/settings.yml` file.
 
 Session expiration

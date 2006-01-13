@@ -25,7 +25,7 @@ In this example, the shopping cart tax rate is written in the `app.yml` configur
 Create a user shopping cart
 --------------------------
 
-You can easily create a new `sfShoppingCart` object in an action with the `new` constructor. However, it will not be of any use if it is not linked to a user session. The easiest way to keep a user's choice in a shopping cart is to make a [composition][1] of an `sfShoppingCart` object into the `sfUser` class. To do that, add a custom method to the `myproject/myapp/lib/myUser.php` class:
+You can easily create a new `sfShoppingCart` object in an action with the `new` constructor. However, it will not be of any use if it is not linked to a user session. The easiest way to keep a user's choice in a shopping cart is to make a [composition][1] of an `sfShoppingCart` object into the `sfUser` class. To do that, add a custom method to the `myproject/apps/myapp/lib/myUser.php` class:
 
     [php]
     class myUser extends sfUser
@@ -266,7 +266,7 @@ If you need it, the `sfShoppingCart` object can be initialized so that the `add`
 
 If `APP_CART_WITHTAXES` is set to `true`, the `$shopping_cart->addItem()` and `$item->getPrice()` methods will use prices with taxes. The `->getTotal()` and `->getTotalWithTaxes()` methods still give the correct results.
 
-Once again, it is a good habit to keep the tax configuration in a configuration file: that's why the example above uses a constant `APP_CART_WITHTAXES` instead of a simple `true`. The `myproject/myapp/config/app.yml` should contain:
+Once again, it is a good habit to keep the tax configuration in a configuration file: that's why the example above uses a constant `APP_CART_WITHTAXES` instead of a simple `true`. The `myproject/apps/myapp/config/app.yml` should contain:
 
     all:
       cart:

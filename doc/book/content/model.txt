@@ -58,7 +58,7 @@ When you create an application with the `symfony init-app` command, a file calle
      <database name="symfony" defaultIdMethod="native">
      </database>
 
-The `name` of the database must keep the value `symfony` to allow the integration of Propel and Symfony. It is not the actual name of your database, because this name depends on the application configuration - and the environment - that you will describe in the file `myproject/myapp/config/orm.yml`.
+The `name` of the database must keep the value `symfony` to allow the integration of Propel and Symfony. It is not the actual name of your database, because this name depends on the application configuration - and the environment - that you will describe in the file `myproject/apps/myapp/config/orm.yml`.
 
 ### Example
 
@@ -128,7 +128,7 @@ And a brand new `schema.xml` built from your database structure is written in yo
 Database access configuration
 -----------------------------
 
-The data model is independent from the database used, but you will definitely use a database. The minimum information required by symfony to handle requests to the project database is the name, the access codes and the type of the database. This data should be entered in the `orm.yml` file located in the `myproject/myapp/config/` directory:
+The data model is independent from the database used, but you will definitely use a database. The minimum information required by symfony to handle requests to the project database is the name, the access codes and the type of the database. This data should be entered in the `orm.yml` file located in the `myproject/apps/myapp/config/` directory:
 
     prod:
       host:     mydataserver
