@@ -89,7 +89,7 @@ If you have a symfony application running, take a look at its log files. The syn
 		Nov 15 16:30:25 symfony [info] {sfPHPView} render to client
 		Nov 15 16:30:25 symfony [error] {sfActionStopException} 
 
-Lots of information can be found in these files, including the actual SQL queries sent to the database, the templates called, the chain of calls between objects, and so on.
+Lots of information can be found in these files, including the actual SQL queries sent to the database, the templates called, the chain of calls between objects, and so on. You can easily add your own logs, as explained [later in this chapter](#addlog).
 
 By the way, don't forget to periodically purge the `log/` directory of your applications, because theses files have the strange habit of growing of several megabytes in a few days - depending, of course, on your traffic.
 
@@ -158,7 +158,7 @@ Manual debugging
 
 Getting access to the framework debug messages is good, but being able to log your own is better. Symfony provides shortcuts, accessible from both actions and templates, to help you trace events and/or values during request execution.
 
-### Adding a log message
+### Adding a log message                                   {#addlog}
 
 You can manually add a message in the log file (and, consequently, to the log messages table):
 

@@ -1,14 +1,282 @@
-= Passer en production =
+How to deploy a project to production
+=====================================
 
-== Résumé ==
+Overview
+--------
 
-SymFony fournit en standard les outils nécessaire pour gérer plusieurs environnements. Il permet notamment la synchronisation d'un environnement de développement vers un environnement de test puis un environnement de production de façon complètement automatisée, sans interruption de service et rapidement.
+Symfony offers shorthand commands to synchronize two versions of a website. They are mostly used to deploy a website from a development server to a final host, connected to the Internet.
 
-== Introduction ==
+Synchronization
+---------------
+
+### Good practices
+
+There are a lot of ways to synchronize two environments for a website. The basic file transfers can be achieved by an [FTP](http://en.wikipedia.org/wiki/Ftp) connection, but there are two major drawbacks to this solution. First, it is not secure, the data stream transmits in the clear over the Internet and can be intercepted. Second, sending the root project directory by FTP is fine for the first transfer, but when you have to upload an update of your application, where only a few files changed, this is not a good and fast way to do it. Either you transfer the whole project again which, can be long or you browse to the directories where you know that some files changed, and transfer only the ones with different modification dates. That's a long job, and it is prone to error. In addition, the website can be unavailable or buggy during the time of the transfer.
+
+The solution that is supported by symfony is **rsync** synchronization through a **SSH** layer.
+
+[Rsync](http://samba.anu.edu.au/rsync/) is a command line utility that provides fast incremental file transfer, and it's open source. By 'incremental', it means that only the modified data will be transferred. If a file didn't change, it won't be sent to the host. If a file changed only partially, only the differential will be sent. The major advantages is that rsync synchronizations transfer only a little data and are very fast.
+
+Symfony adds [SSH](http://en.wikipedia.org/wiki/Secure_Shell) on top of rsync to secure the data transfer. More and more commercial hosts support an SSH tunnel to secure file uploads on their servers, and that's a good practice that symfony encourages.
+
+For notes on installing rsync and SSH on Linux, read the instructions in the related websites. For Windows users, an open-source alternative called [cwRsync](http://www.itefix.no/phpws/index.php?module=pagemaster&PAGE_user_op=view_page&PAGE_id=6&MMN_position=23:23) exists, or you can try to install the binaries by hand (instructions can be found [here](http://optics.ph.unimelb.edu.au/help/rsync/rsync_pc1.html)). Of course, to be able to setup an SSH tunnel between an integration server and a host server, the SSH service has to be installed and running on _both_ computers.
+
+### The `symfony sync` command
+
+Doing a rsync over SSH requires several commands, and synchronization can occur a lot of times in the life of an application. Fortunately, symfony automates this process with just one command:
+
+    $ symfony sync production
+
+This command, called from the root directory of a symfony project, launches the synchronization of the project code with the `production` hosted server. The connection details of this server are to be written in the project `properties.ini`, found in `myproject/config/`:
+
+    [symfony]
+      name=myproject
+    
+    [production]
+      host=myapp.example.com
+      port=22
+      user=myuser
+      dir=/home/myaccount/myproject/
+
+The connection settings will be used by the SSH client call enclosed in the symfony `sync` command line.
+
+>**Note**: don't mix up the `production` environment (the host server, as defined in the `properties.ini` of the project)
+ with the `prod` environment (the front controller and configuration used in production, as refferred to in the configuration files of an application)
+ 
+If you just call `symfony sync` like mentioned above, the rsync utility will run in dry mode by default (`--dry-run`), i. e. it will show you which files have to be synchronized but _without actually synchronizing them_. If you want the synchronization to be done, you have to mention it explicitly:
+
+    $ symfony sync production go
+
+### Ignore irrelevant files
+
+If you synchronize your symfony project with a production host, there are a few files and directories that should not be transferred:
+
+* All the `.svn` directories and their content: They contain source version control information, only necessary for development and integration
+* `myproject/web/fronted_dev.php`: The web front controller for the development environment must not be available to the final users. The debugging and logging tools available when using the application through this front controller slow down the application, and give information about the core variables of your actions. It is something to keep off of the host server.
+* The `cache/` and `log/` directories of a project must not be erased in the host server each time you do a synchronization. These directories must be ignored as well. If you have a `stats/` directory, it should probably be treated the same.
+* The files uploaded by users: one of the good practices of symfony projects is to store the uploaded files in the `web/uploads/` directory. This allows us to exclude all these files by pointing to only one directory.
+
+To exclude files from rsync synchronizations, open and edit the `rsync_exclude.txt` file under the `myproject/config/` directory. Each line can contain either a file, a directory, or a pattern:
+
+    .svn
+    cache
+    log
+    stats
+    web/uploads
+    web/myapp_dev.php
+
+Thanks to the symfony file structure, you don't have too many files or directories to exclude manually from the synchronization. If you want to learn more about the way the files are organized in a symfony project, refer to the [file structure chapter](file_structure.txt).
+
+>**Note**: The `cache/` and `log/` directories must not be synchronized with the development server, but they must at least exist in the production server. Create them by hand if the `myproject/` project tree structure doesn't contain them.
+
+Production server configuration
+-------------------------------
+
+For your project to work in the production server, the symfony framework has to be installed in the host.
+
+### Install symfony in a production server
+
+There are several ways to install symfony on a server, but they are not all adapted to a production environment. For instance, doing a PEAR install requires administrator rights on directories that might not be open to you if you share a web server.
+
+Based on the principle that you will probably host several projects using symfony on the production web server, the recommended symfony installation is to uncompress the archive of the framework in a specific directory. Only the `lib/` and `data/` directories are necessary in a production server, so you can get rid of the other files (`bin/`, `doc/`, `test/` and the files from the root directory).
+
+You should end up with a file structure looking like:
+
+    /home/myaccount/    
+      symfony/
+        lib/
+        data/
+      myproject/
+        apps/
+        batch/
+        cache/
+        config/
+        data/
+        doc/
+        lib/
+        log/
+        test/
+        web/
+        
+For the `myproject` project to use the symfony classes, you have to set up two symbolic links between the application `lib/symfony` and `data/symfony`, and the related directories in the `symfony` installation:
+
+    $ cd /home/myaccount/myproject
+    $ ln -sf /home/myaccount/symfony/lib lib/symfony
+    $ ln -sf /home/myaccount/symfony/data data/symfony
+
+Alternatively, if you don't have command line access, the files of the framework can be copied directly into the project `lib/` and `data/` directories:
+
+    copy /home/myaccount/symfony/lib/*   into /home/myaccount/myproject/lib/symfony
+    copy /home/myaccount/symfony/data/*  into /home/myaccount/myproject/data/symfony
+    
+Beware that in this case, each time you update the framework, you have to do it in all your projects.
+
+For more information, all the possible ways to install symfony are described in the [installation chapter](installation.txt).
+
+### Access to the symfony commands in production
+
+While developing, you probably use a lok the following command:
+
+    $ symfony clear-cache
+
+It is necessary at least each time you change the configuration or the object model of the project. When you upload a new version of your project in production, the cache also needs to be cleared if you want the application to work. You can easily do it by deleting the full content of the `myproject/cache/` directory (by ftp or with a ssh console). Alternatively, you can have the power of the symfony command line in the production host at the price of a slightly longer installation.
+
+To use the command line, you need to install the [pake utility](http://www.pake-project.org). Pake is a PHP tool similar to the make command. It automates some administration tasks according to a specific configuration file called `pakefile.php`. The symfony command line uses the pake utility, and each time you type `symfony`, you actually call `pake` with a special `pakefile.php` located in the `symfony/bin/` directory (find more about pake in symfony in the [project creation chapter](project_creation.txt)). If you install symfony via PEAR, pake is installed as a requirement, so you usually don't see it at all and don't need to bother about what comes next. But if you do a manual installation, you have to uncompress the pake directory (get it from your symfony pear installation or [download it](http://www.pake-project.org/download.html) from the pake website) into your directory in the production server. Just like for the symfony libs, you also have to add a symlink in order to enable symfony to use pake:
+
+    $ ln -sf /home/myaccount/pake/lib lib/pake
+
+You should end up with something like this:
+
+    /home/myaccount/
+      pake/
+        lib/      
+      symfony/
+        lib/
+        data/
+      myproject/
+        apps/
+        batch/
+        cache/
+        config/
+        data/
+          symfony/ -> /home/myaccount/symfony/data
+        doc/
+        lib/
+          symfony/ -> /home/myaccount/symfony/lib
+          pake     -> /home/myaccount/pake/data
+        log/
+        test/
+        web/
+
+To call the symfony command to do a clear-cache, you need to do:
+
+    $ cd /home/myaccount/myproject/
+    $ php lib/pake/bin/pake.php -f lib/symfony/data/symfony/bin/pakefile.php clear-cache
+
+Alternatively, you can create a file called `symfony` in the `home/myaccount/myproject/` with:
+
+    #!/bin/sh
+    
+    php lib/pake/bin/pake.php -f lib/symfony/data/symfony/bin/pakefile.php $@
+
+Then, all you need to do in order to clear the cache is that good old
+
+    $ symfony clear-cache
+
+### Web command
+
+If you want to have the power of the pake utility but without command line access, you can also create a web access for the clear-cache command.
+
+For instance, you could save the following `webpake.php` in your `/home/myaccount/myproject/web/` directory:
+
+    [php]
+    <?php
+    
+    // as we are in the web/ dir, we need to go up one level to get to the project root
+    chdir(dirname(__FILE__).DIRECTORY_SEPARATOR.'..');
+    
+    include_once('/lib/symfony/pake/bin/pake.php');
+    
+    $pake = pakeApp::get_instance();
+    try
+    {
+      $ret = $pake->run('/data/symfony/bin/pakefile.php', 'clear-cache');
+    }
+    catch (pakeException $e)
+    {
+      print "<strong>ERROR</strong>: ".$e->getMessage();
+    }
+    
+    ?>
+
+Then, clearing the cache could be done by navigating to:
+
+    http://myapp.example.com/webpake.php
+    
+>**Note**: Beware that by letting web access to administration tools, you can compromise the safety of your website.
+
+Upgrading your application
+--------------------------
+
+There will be times in the life of your project when you need to switch between two versions of an application. It can be in order to correct bugs, or to upload new features. You can also be faced with the problem of switching between two versions of the database. If you follow a few good practices, these actions will prove easy and harmless.
+
+### Show unavailability notice
+
+Between the moment when you start the data transfer and the moment you clear the cache (if you modify the configuration or the data model), there are sometimes more than a few seconds of delay. You must plan to display an unavailability notice for users trying to browse the site at that very moment.
+
+In the application `settings.yml`, define the `unavailable_module` and `unavailable_action` settings:
+
+    all:
+      .settings:
+        unavailable_module:     content
+        unavailable_action:     unavailable
+
+Create an empty `content/unavailable` action and a `unavailableSuccess.php` template:
+
+    [php]
+    // myproject/frontend/modules/content/actions/actions.class.php
+    public function executeUnavailable()
+    {
+      $this->setTitle('website maintenance');
+    }
+
+    // myproject/frontend/modules/content/templates/unavailableSuccess.php
+    <h1>Site maintenance</h1>
+    
+    <p>The website is currently being updated.</p>
+    
+    <p>Please try again in a few minutes.</p>
+
+Now each time that you want to make your application unavailable, just change the `available` setting:
+
+    all:
+
+      .settings:
+    
+        available:              off
+
+Don't forget that for a configuration change to be taken into account in production, you need to clear the cache.
+
+>**Note**: The fact that the whole application can be turned off with only a single parameter is possible because symfony applications use a single entry point, the front web controller. You will find more information about it in the [controller chapter](controller.txt).
+
+### Use two versions of your application
+
+A good way to avoid unavailability is to have the project root folder configured as a symlink. For instance, imagine that you are currently using the version 123 of your application, and that you want to switch to the version 134. If your web server root is set to `/home/myaccount/myproject/web/` and that the production folder looks like that:
+
+    /home/myaccount/
+      pake/
+        lib/      
+      symfony/
+        lib/
+        data/
+      myproject/     -> /home/production/myproject.123/
+      myproject.123/
+      myproject.134/
+
+Then you can instantly switch between the two versions by changing the symlink:
+
+    $ ln -sf /home/myaccount/myproject/ /home/myaccount/myproject.134/
+
+The users will see no interruption, and yet all the files used after the change of the symlink will be the ones of the new release. If, in addition, you emptied the `cache/` folder of your release 134, you don't even need to launch a clear-cache after switching applications.
+
+### Switch databases
+
+You can extrapolate that technique to switching databases. Remember that the address of the database used by your application is defined in the `orm.yml` configuration file. If you create a copy of the database with a new name, say `myproject.134`, you just need to write in the `myproject.134/frontend/config/orm.yml`:
+
+    all:
+      adapter:  mysql
+      host:     localhost
+      database: myproject.134
+      username: myuser
+      password: mypassword
+
+As the `orm.yml` will be switched as the same time as the application itself, your application will instantly start querying the new database.
+ 
+This technique is especially useful if your application has a big traffic and if you can't afford any service interruption.
 
 TODO
+----
 
-+ Gestion de Subversion lors d'un passage en prod avec branches ou tags
-+ Gestion des patchs intermédiaires
-+ Revenir en arrière en cas de problème
-+ Mise à jour du schéma de base de données.
+* Upgrading the data model
+* Synchronization and source versionning
+* reverting to a previous version

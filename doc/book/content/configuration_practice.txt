@@ -6,8 +6,6 @@ Overview
 
 The configuration can be defined for several levels : project, application, module. It can also be defined in several environments : development, test, production, and any additional environment needed. By modifying YAML files, you get the power of configuration at the tip of your fingers.
 
-Environment-dependent configuration files will be identified with a star `*` in this documentation .
-
 Introduction
 ------------
 
@@ -17,14 +15,18 @@ Configuration is distributed into files, by subject. The files contain parameter
 
 The parameter can be set according to a cascade of definitions : for instance, a given parameter can be defined at the project level, specialized at the application level, and specialized again at the module level. But the cascade is also valid for environments : a parameter definition in a named environment has precedence over a parameter definition for all environments, which has precedence over a definition in the default configuration.
 
+>**Note**: Environment-dependent configuration files will be identified by a star `*` in this documentation.
+
 Project configuration
 ---------------------
 
 There are a few project configuration files by default. Here are the files that can be found in the `myproject/config/` directory:
 
-* `config.php`: can hold general project configuration. If you add some `define` statements in this file, the constants will be accessible from every application of the project. This file is empty by default.
-* `properties.ini`: holds a few parameters used by the pakefile (including the project name)
-* `rsync_exclude.txt`: this file specifies which directories have to be excluded from the synchronization between environments. The default content should illustrate well its interest:
+* `apache.conf`: This file is not really a configuration file, since it is not used by the project. It is given as an example of an Apache configuration for a typical symfony project.
+* `config.php`: Can hold general project configuration. If you add some `define` statements in this file, the constants will be accessible from every application of the project. This file is empty by default.
+* `constants.php`: Overrides the default project file structure. This file doesn't exist by default. [_see more below_](#constants)
+* `properties.ini`: Holds a few parameters used by the pakefile (including the project name)
+* `rsync_exclude.txt`: this file specifies which directories have to be excluded from the [synchronization between environments](deployment.txt). The default content should illustrate well its interest:
 
         stats
         .svn
@@ -34,36 +36,29 @@ There are a few project configuration files by default. Here are the files that 
         web/index.php
         config
 
-* `apache.conf`: this file is not really a configuration file, since it is not used by the project. It is given as an example of an Apache configuration for a typical symfony project.
-* `schema.xml` and `propel.ini` are data access configuration files used by Propel. They are automatically generated to plug the Propel libraries with the symfony classes and the data of your project, so you should probably not need to modify them. If you don't use Propel, these files are not needed.
+* `schema.xml` and `propel.ini` are data access configuration files used by Propel (symfony's [ORM layer](model.txt)). They are used to plug the Propel libraries with the symfony classes and the data of your project. The `schema.xml` contains an XML translation of the project's relational data model. The `propel.ini` is automatically generated, so you should probably not need to modify it. If you don't use Propel, these files are not needed.
 
 So until now, you probably doubt the great efficiency of the YAML format in symfony since none of the project configuration files use it. But there is a good reason to that: these files are used by external components or need to be processed even before any YAML parsing program can be loaded to the framework. The real candy actually starts with the application configuration.
 
 Application configuration
 -------------------------
 
-The main part of the configuration is the application configuration. The files located in `myproject/myapp/config/` will be briefly described here before a deeper look at how to modify them.
+The main part of the configuration is the application configuration. The files located in `myproject/apps/myapp/config/` will be briefly described here before a deeper look at how to modify them.
 
-* `*app.yml`: this file should contain the application-specific configuration, i.e. global variables that don't really need to be stored in a database. VAT rates, shipping fares, emails are often stored in this file. It is empty by default.
-* `config.php`: this file bootstraps the application, which means that it does all the very basic initializations to allow the application to start. It normally includes the project configuration (`myproject/config/config.php`), defines the directories layout (by inclusion of the `constants.php` file), defines the include path used to look for libraries, loads the necessary symfony classes, and includes some of the parsed .yml files of the application configuration (the others are loaded on demand). It is in PHP rather than YAML because the YAML interpreter isn't loaded when `config.php` is processed. 
-* `*factories.yml`: the framework uses some classes to do the job; this file can force the use of alternate classes to manage the session, the actions, the front web controller... You shouldn't need to change this one, as you will see a little further. _see more below_
-* `filters.yml`: symfony allows the execution of filters before actions. For instance, the Security filter is configured by default to check credentials for restricted actions. If you need to add a custom filter, for instance to calculate the time to execute an action, that's the file that you need to modify.
-* `*logging.yml`: define which degree of log has to be recorded, to help you supervise and debug your application. See below for more details. _see more below_
-* `*orm.yml`: this is where you define the access and the connection settings to the database (host, login, password, database name). _see more below_
-* `routing.yml`: the routing rules, that allow transforming unreadable and unbookmarkable URLs into "smart" and explicit ones, are stored in this file. For new applications, a few default rules exist. To learn more about the use of this file, see the [Routing chapter](routing.txt).
-* `*settings.yml`: the main settings of a symfony application are defined in this files. There you can specify is your application has internationalization, and if yes, what is its default language. You can define the request timeout, activate or deactivate the cache or the routing. If you need to shut off completely the application, a single change in this file will suffice, and that's another good proof of the interest of using a single front web controller. _see more below_
-* `*tidy.yml`: if the use of [HTML Tidy][1] is activated in the `settings.yml`, then you can modify the options of this utility that alters the outputted HTML code to, for instance, re-indent the tags properly, or remove comments, or collapse all spaces and carriage returns to save bandwidth, or to correct missing closing tags if you have absentminded developers.
-* `view.yml`: the structure of the default View (name of the layout, title and metas, default .js and .css files to be included, name of the included slots, etc.) is set in this file, that can be overridden for each module. It also defines the default value of the `meta` and `title` tags. The [View configuration chapter](templating_configuration.txt) explains its structure.
+### Overview
 
-A second set of configuration files is in the symfony installation directory; the settings defined there are default settings that don't often need to be modified, or that are global to all projects. However, if you need to modify them, just copy the required file from the `symfony/config` directory to your `myproject/myapp/config/` directory. The settings defined in an application always have priority.
+* `app.yml*`: This file should contain the application-specific configuration, i.e. global variables that don't really need to be stored in a database. VAT rates, shipping fares, emails are often stored in this file. It is empty by default. See more in the [configuration chapter](configuration.txt).
+* `config.php`: This file bootstraps the application, which means that it does all the very basic initializations to allow the application to start. It normally includes the project configuration (`myproject/config/config.php`), defines the directories layout (by inclusion of the `constants.php` file), defines the include path used to look for libraries, loads the necessary symfony classes, and includes some of the parsed .yml files of the application configuration (the others are loaded on demand). It is in PHP rather than YAML because the YAML interpreter isn't loaded when `config.php` is processed. 
+* `database.yml*`: This is where you define the access and the connection settings to the database (host, login, password, database name). [_see more below_](#database)
+* `factories.yml*`: The framework uses some classes to do the job; this file can force the use of alternate classes to manage the session, the actions, the front web controller... You shouldn't need to change this one, as you will see a little further. [_see more below_](#factories)
+* `filters.yml`: Symfony allows the execution of filters before actions. For instance, the Security filter is configured by default to check credentials for restricted actions. If you need to add a custom filter, for instance to calculate the time to execute an action, that's the file that you need to modify.
+* `logging.yml*`: Defines which degree of log has to be recorded, to help you supervise and debug your application. See below for more details. [_see more below_](#logging)
+* `routing.yml`: The routing rules, that allow transforming unreadable and unbookmarkable URLs into "smart" and explicit ones, are stored in this file. For new applications, a few default rules exist. See more in the [routing chapter](routing.txt).
+* `settings.yml*`: The main settings of a symfony application are defined in this files. There you can specify is your application has internationalization, and if yes, what is its default language. You can define the request timeout, activate or deactivate the cache or the routing. If you need to shut off completely the application, a single change in this file will suffice, and that's another good proof of the interest of using a single front web controller. [_see more below_](#settings)
+* `tidy.yml*`: If the use of [HTML Tidy][1] is activated in the `settings.yml`, then you can modify the options of this utility that alters the outputted HTML code to, for instance, re-indent the tags properly, or remove comments, or collapse all spaces and carriage returns to save bandwidth, or to correct missing closing tags if you have absentminded developers.
+* `view.yml`: The structure of the default View (name of the layout, title and metas, default .js and .css files to be included, name of the included slots, etc.) is set in this file, which can be overridden for each module. It also defines the default value of the `meta` and `title` tags. [_see more below_](#view)
 
-* `autoload.yml`: in this file, class names are bound to file names. For classes that are located in the `myproject/lib/`, `myproject/lib/model` and `myproject/myapp/lib/` directories, this exempts you from requiring them in your code : when the PHP parser meets a `New myclass` statement, it looks for a path to this 'myclass' file in the `autoload.yml`, loads the required library and include it automatically. This means that you don't need to require libraries at the head of your classes if they may not be used in every case: just let the framework do the job for you, and it will load only the very necessary classes, just in time.
-* `constants.php`: this file defines the directory layouts, the directory separator, and everything that the framework needs to find your actions (normally in `actions`), your modules (normally in `modules`), your libraries (normally in `lib`), etc. You will probably need to modify this file if you develop an application for a client who already has a defined directory structure and who is not willing to change it to comply with the symfony logic (how would that be possible ?). _see more below_
-* `core_compile.yml` and `bootstrap_compile.yml` are lists of classes to be included to start an application (in `bootstrap_compile.yml`) and to process a request (in `core_compile.yml`). These classes are actually concatenated into an optimized PHP file without comments, which will accelerate the execution by minimizing the file access operations (1 file is loaded instead of more than 40 for each request). This is especially useful if you don't use a PHP accelerator.
-* `config_handlers.yml`: do you remember handlers ? This is where you can add or modify the handlers used to process each configuration file, for instance to use nasty INI or XML files instead of nice YAML files. Each configuration file having a handler class definition, you will find the customization quite clear.
-* `php.yml`: checks that the variables of the `php.ini` file are properly defined, and allows you to override them if necessary. _see more below_
-
-### General settings
+### `settings.yml`: General settings                       {#settings}
 
 The `settings.yml` file, which is environment dependent, contains the main application configuration. Here is the beginning of its default content:
 
@@ -111,87 +106,59 @@ The `settings.yml` file, which is environment dependent, contains the main appli
     #    content_type:           html
     ...
 
-First of all, you may notice that most of the configuration is inherited from the `default` definition : the statements starting with a `#` in the configuration for `all` environments are **comments**. This means that, for those parameters, the default configuration is used instead. If you need to override it, just decomment the line and modify the value.
+First of all, you may notice that most of the configuration is inherited from the `default` definition (the statements starting with a `#` in the configuration for `all` environments are **comments**) This means that, for those parameters, the default configuration is used instead. If you need to override it, just decomment the line and modify the value.
 
 The parameters defined in the `.action` category define the modules and actions to be used in certain situations. In particular:
 
-* `default_*`: specifies which action of which module has to be called when nothing is passed. This is especially useful to set the home page action of your website (the one that will be called with the relative URL '/')
-* `error_404_*`: the default module/action to be called when a 404 error (page not found) occurs is `default/error404`. This action is not explicit in a new application, but you can override it or choose a completely different module/action
-* `login_*`: when a page requesting credentials will be accessed by an unidentified user, he/she will be automatically redirected to a login page. This parameter defines the module/action to use for that purpose.
+* `default_*`: Specifies which action of which module has to be called when nothing is passed. This is especially useful to set the home page action of your website (the one that will be called with the relative URL '/')
+* `error_404_*`: The default module/action to be called when a 404 error (page not found) occurs is `default/error404`. This action is not explicit in a new application, but you can override it or choose a completely different module/action
+* `login_*`: When a page requesting credentials will be accessed by an unidentified user, he/she will be automatically redirected to a login page. This parameter defines the module/action to use for that purpose.
 
 A few clues about of some of the `.settings` parameters will also be useful:
     
-* `available`: switches on (or off) the whole application
-* `use_database`: for a website that doesn't need a database, this parameter is set to `off` (its default value)
-* `use_security`: required for websites that have restricted areas, authentication and credentials (see the [chapter about security](security.txt) for more details)
-* `compressed`: activates the HTML compression to decrease the bandwidth
-* `tidy`: activates the use of [HTML Tidy][1]
-* `is_i18n`: needs to be set to `on` if the site is published in several languages
-* `default_culture`: specifies the default parameter used to format dates, numbers, currencies (`en` in the default configuration)
-* `web_debug`: activation of the web debug frame, a tool that gives access to debug info on every page. The quantity of logged information is related to the entries of the `logging.yml` file, and needs the `SF_DEBUG` constant to be set to `true` in the front controller.
-* `cache`: activates the cache feature to speed up page generation by recording chunks of compiled code
-* `routing`: activates the routing feature to transform the outputted URLs and allow "smart" URLs to be interpreted. See more in the [routing chapter](routing.txt).
-* `stats`: activates the recording of applicative statistics
+* `available`: Switches on (or off) the whole application
+* `use_database`: For a website that doesn't need a database, this parameter can be set to `off`
+* `use_security`: Required for websites that have restricted areas, authentication and credentials (see the [security chapter](security.txt) for more details)
+* `compressed`: Activates the HTML compression to decrease the bandwidth
+* `tidy`: Activates the use of [HTML Tidy][1]
+* `is_i18n`: Needs to be set to `on` if the site is published in several languages
+* `default_culture`: Specifies the default parameter used to format dates, numbers, currencies (`en` in the default configuration)
+* `web_debug`: Activation of the web debug frame, a tool that gives access to debug info on every page. The quantity of logged information is related to the entries of the `logging.yml` file, and needs the `SF_DEBUG` constant to be set to `true` in the front controller. See more in the [debug chapter](debug.txt).
+* `cache`: Activates the cache feature to speed up page generation by recording chunks of compiled code
+* `routing`: Activates the routing feature to transform the outputted URLs and allow "smart" URLs to be interpreted. See more in the [routing chapter](routing.txt).
+* `stats`: Activates the recording of applicative statistics
 
-Remember that each one of these settings is accessible from inside the PHP code via a constant; the constant name if the upper-cased parameter name prefixed with `SF_`. For instance, if you want the value of the `cache` parameter, you just need to call the constant `SF_CACHE`. 
+Remember that each one of these settings is accessible from inside the PHP code via the `sfConfig` class, as explained in the [configuration chapter](configuration.txt). The parameter name is the setting name prefixed with `sf_`. For instance, if you want the value of the `cache` parameter, you just need to call `sfConfig::get('sf_cache')`. 
 
-### Database settings
+### `database.yml`: Database settings                      {#database}
 
-If you need to use data stored in a database in your application, you first need to set the `use_database` setting of the `settings.yml` filer to `on`. Then, you can configure the access to your database (s) by entering data in the `orm.yml` file.
+If you need to use data stored in a database in your application, you have to configure the access to your database(s) by entering data in the `database.yml` file.
 
     all:
-      adapter:  mysql
-      host:     localhost
-      database: mydatabase
-      username: root
-      password: 
+      default:
+        class:          sfPropelDatabase
+        param:
+          datasource:   symfony
+          dsn:          mysql://root:@localhost/mydatabase
 
-The names of the parameters are pretty explicit, the most important being the `database` name. To learn more about data binding and the access to a database, go to the [data access](model.txt) chapter.
+This is a shorthand syntax for the setting of all the data access parameters:
 
->**Note**: an additional database configuration file, the `database.yml` file, is used to keep compatibility between symfony and [Mojavi][2]. It is necessary to modify it.
+    all:
+      default:
+        class:          sfPropelDatabase
+        param:
+          datasource:   symfony
+          phptype:      mysql
+          hostspec:     localhost
+          database:     mydatabase
+          username:     root
+          password:     
+          
+To learn more about data binding and the access to a database, go to the [data access](model.txt) chapter.
 
-### File structure settings
+>**Note**: If your application dosn't use a database, you can spped it up by setting `use_database` to `off` in the `settings.yml`.
 
-There is no `constants.php` file in a default application configuration directory. This means that if you need to change the file structure of your application, you have to copy the default `constants.php` file from the symfony installation directory into your `myproject/myapp/config/` directory and modify the values.
-
-Every path to a key directory is determined with a constant ending with `_DIR`. Here is an extract of the standard configuration file:
-
-    [php]
-    // root directory structure
-    define('SF_CACHE_DIR_NAME', 'cache');
-    define('SF_LOG_DIR_NAME', 'log');
-    define('SF_LIB_DIR_NAME', 'lib');
-    define('SF_MODEL_DIR_NAME', 'model');
-    define('SF_WEB_DIR_NAME', 'web');
-    define('SF_DATA_DIR_NAME', 'data');
-    
-    // global directory structure
-    define('SF_APP_DIR', SF_ROOT_DIR.DS.SF_APP);
-    define('SF_MODEL_DIR', SF_ROOT_DIR.DS.SF_MODEL_DIR_NAME);
-    define('SF_LIB_DIR', SF_ROOT_DIR.DS.SF_LIB_DIR_NAME);
-    define('SF_VENDOR_LIB_DIR', SF_LIB_DIR.DS.'vendor');
-    define('SF_WEB_DIR', SF_ROOT_DIR.DS.SF_WEB_DIR_NAME);
-    define('SF_UPLOAD_DIR', SF_WEB_DIR.DS.'uploads');
-    define('SF_BASE_CACHE_DIR', SF_ROOT_DIR.DS.SF_CACHE_DIR_NAME.DS.SF_APP);
-    define('SF_CACHE_DIR', SF_BASE_CACHE_DIR.DS.SF_ENVIRONMENT);
-    define('SF_LOG_DIR', SF_ROOT_DIR.DS.SF_LOG_DIR_NAME);
-    define('SF_DATA_DIR', SF_ROOT_DIR.DS.SF_DATA_DIR_NAME);
-    
-    // SF_APP_DIR sub-directories names
-    define('SF_APP_CONFIG_DIR_NAME', 'config');
-    define('SF_APP_LIB_DIR_NAME', 'lib');
-    define('SF_APP_MODULE_DIR_NAME', 'modules');
-    define('SF_APP_TEMPLATE_DIR_NAME', 'templates');
-    
-    // SF_APP_DIR directory structure
-    define('SF_APP_CONFIG_DIR', SF_APP_DIR.DS.SF_APP_CONFIG_DIR_NAME);
-    define('SF_APP_LIB_DIR', SF_APP_DIR.DS.SF_APP_LIB_DIR_NAME);
-    define('SF_APP_MODULE_DIR', SF_APP_DIR.DS.SF_APP_MODULE_DIR_NAME);
-    define('SF_APP_TEMPLATE_DIR', SF_APP_DIR.DS.SF_APP_TEMPLATE_DIR_NAME);
-
-To learn more about the default tree structure, consult the [file structure chapter](file_structure.txt).
-
-### Logging settings
+### `logging.yml`: Logging settings                        {#logging}
 
 Symfony offers two ways to watch the log messages. 
 
@@ -202,9 +169,9 @@ Classically, the logs are output to files. Symfony stores message logs in files 
 
 Don't forget to periodically rotate these files, since symfony will not do it automatically.
 
-If the `web_debug` function is set to on in your application (in `settings.yml`), the logs of each request are also available in the browser, in a special layer that appears on the right of the screen. Note that this option is activated by default in the development environment. 
+If the `web_debug` feature is set to `on` in your application (in `settings.yml`), the logs of each request are also available in the browser, in a special layer that appears on the right of the screen. Note that this option is activated by default in the development environment. Refer to the [debug chapter](debug.txt) for more information.
 
-The `logging.yml` file defines the log level to be output. By default, all levels are included (from alerts to unrecoverable errors). In the production environment, only the errors are logged.
+The `logging.yml` file defines the level of log messages to be output. By default, all levels are included (from alerts to unrecoverable errors). In the production environment, only the errors are logged.
 
     prod:
       level:    err
@@ -217,14 +184,9 @@ The `logging.yml` file defines the log level to be output. By default, all level
     #  active:  on
     #  level:   debug
 
-You can add your custom logging settings in this file, for instance if you need to monitor the input and output of an external API. You should definitely include there the I/O of requests to a payment API:
+### Factories settings                                     {#factories}
 
-    prod:
-      payment:  on
-
-### Factories settings
-
-Symfony uses classes such as sfFrontWebController, sfUser, sfRequest, sfShoppingCart that are part of the framework. In the `myproject/myapp/lib/` directory, you will find some files defining classes called myFrontWebController, myUser, myRequest, myShoppingCart, etc. They all simply inherit of the 'sf-' classes, and this allows you to specialize them. Symfony knows it needs to use these classes instead of the 'sf-' ones because of the configuration written in the `factories.yml` file:
+Symfony uses classes such as `sfFrontWebController`, `sfUser`, `sfRequest` that are part of the framework. In the `myproject/apps/myapp/lib/` directory, you will find some files defining classes called `myFrontWebController`, `myUser`, `myRequest`, etc. They all simply inherit of the 'sf-' classes, and this allows you to specialize them. The framework knows that it needs to use the 'my-' classes instead of the 'sf-' ones because of the configuration written in the `factories.yml` file:
 
     ...
     all:
@@ -244,7 +206,7 @@ But if you want to use completely different factories, well, you can. Just modif
 
 ### Front controller configuration
 
-The very first application configuration is actually found in the front controller. Take a look at this default `web/index.php`:
+The very first application configuration is actually found in the **front controller**. Take a look at this default `web/index.php`:
 
     [php]
     <?php
@@ -254,22 +216,49 @@ The very first application configuration is actually found in the front controll
     define('SF_ENVIRONMENT', 'prod');
     define('SF_DEBUG', true);
     
-    require_once SF_ROOT_DIR.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'webapp'.DIRECTORY_SEPARATOR.'config.php';
-
-    Controller::newInstance('sfFrontWebController')->dispatch();
+    require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
+  
+    sfContext::getInstance()->getController()->dispatch();
     
     ?>
 
 After defining the name of the application (`fo`) and the environment (`prod`), the general configuration file is called before the dispatching. So a few useful constants are defined here:
 
-* `SF_ROOT_DIR`: project root path (normally, to be let to the defaults value `dirname(__FILE__).'/..' `)
-* `SF_APP`: application name in the project
-* `SF_ENVIRONMENT`: environment name (`prod`, `dev` or any other project-specific environment)
-* `SF_DEBUG`: activation of the debug mode
+* `SF_ROOT_DIR`: Project root path (normally, to be let to the defaults value `dirname(__FILE__).'/..' `)
+* `SF_APP`: Ppplication name in the project
+* `SF_ENVIRONMENT`: Environment name (`prod`, `dev` or any other project-specific environment)
+* `SF_DEBUG`: Activation of the debug mode
 
-### PHP configuration
+If you need to change one of these values, you probably need an additional front controller. The [controller chapter](controller.txt) will tell you more about it.
 
-The `php.yml` file modifies the php configuration to have a php environment compatible with the rules and the best practices used by symfony. Here is the default `php.yml`:
+### Additional application configuration
+
+A second set of configuration files is in the symfony installation directory; the settings defined there are default settings that seldom need to be modified, or that are global to all projects. However, if you need to modify them, just copy the required file from the `$pear_data_dir/symfony/skeleton/app/app/config/` directory to your `myproject/apps/myapp/config/` directory. The settings defined in an application always have priority.
+
+* `autoload.yml`: Settings of the autoloading feature. This feature exempts you from requiring custom classes in your code if they are located in specific directories. [_see more below_](#autoload)
+* `constants.php`: Overrides the default application file structure. [_see more below_](#constants)
+* `core_compile.yml` and `bootstrap_compile.yml` are lists of classes to be included to start an application (in `bootstrap_compile.yml`) and to process a request (in `core_compile.yml`). These classes are actually concatenated into an optimized PHP file without comments, which will accelerate the execution by minimizing the file access operations (1 file is loaded instead of more than 40 for each request). This is especially useful if you don't use a PHP accelerator.
+* `config_handlers.yml`: Do you remember about [configuration handlers](configuration.txt)? This is where you can add or modify the handlers used to process each configuration file, for instance to use nasty INI or XML files instead of nice YAML files. Each configuration file having a handler class definition, you will find the customization quite clear.
+* `php.yml`: Checks that the variables of the `php.ini` file are properly defined, and allows you to override them if necessary. [_see more below_](#phpyml)
+
+### `autoload.yml`: Autoloading settings              {#autoload}
+
+When the PHP parser meets a `new myClass` statement in the code of an application, it looks for a 'myClass.class.php' file in the paths defined in the`autoload.yml`. If the file is found, the framework loads the required library and includes it automatically. 
+
+In other words, the autoloading feature exempts you from requiring custom classes in your code, provided that they are located in a directory defined in the `autoload.yml`. This means that you don't need to require libraries at the head of your classes if they may not be used in every case: just let the framework do the job for you, and it will load only the very necessary classes, just in time.
+
+By default, the autoloading works for classes that are located in the following directories:
+
+* `myproject/lib/`, 
+* `myproject/lib/model`, 
+* `myproject/apps/myapp/lib/` and 
+* `myproject/apps/myapp/modules/mymodule/lib`.
+
+If you want to autoload classes lying somewhere else in your file structure, you need to copy the `autoload.yml` in your `myproject/apps/myapp/config/` folder and edit it.
+
+### `php.yml`: PHP configuration                           {#phpyml}
+
+In order to have a php environment compatible with the rules and the best practices of agile development, symfony checks and overrides a few settings of the `php.ini` configuration. This is what the `php.yml` file is used for. Here is the default `php.yml`:
 
     set:
       magic_quotes_runtime: off
@@ -280,76 +269,56 @@ The `php.yml` file modifies the php configuration to have a php environment comp
       magic_quotes_gpc:     off
       register_globals:     off
 
-The variables defined under the `set` category are modified (despite how they were defined in the `php.ini`); the variables defined under the `check` category cannot be modified on the fly, so their values are checked and an exception raised if your current configuration doesn't match these criterias.
+The variables defined under the `set` category are modified (despite how they were defined in the `php.ini`). The variables defined under the `check` category cannot be modified on the fly, so their values are checked and an exception raised if your current configuration doesn't match these criterias.
 
 For instance, the default `php.yml` sets the `log_errors` to `on` so that you can trace errors in symfony projects. It also recommends the `register_globals` to be set to `off` to avoid security breaches.
 
-If you need to use another value for these parameters, copy the default `php.yml` in your application `config` directory, and change the values to be set or checked. Alternatively, you can delete the lines that are not compatible with your environment in the application copy of the file.
-
-### Handlers and additional configuration files
-
-If you need a completely specific configuration file for your application, create both a new configuration file and a handler to decode it, as described in the [configuration handler chapter](sfConfigHandler.txt).
+If you don't want symfony to apply these settings, or if you want to run a project with `magic_quotes_gpc` and `register_globals` set to `on` (wich we strongly advise against), copy the default `php.yml` into your application `config` directory, and change the values to be set or checked. Alternatively, you can delete the lines that are not compatible with your environment in the application copy of the file.
 
 Module configuration
 --------------------
 
-By default, a module has no specific configuration. But, according to your needs, you can override existing configuration for a given module, or add new parameters restricted to this module.
+By default, a module has no specific configuration. But, according to your needs, you can override some application level settings for a given module, or add new parameters restricted to this module.
 
-As you may expect, module configuration files have to be located in a `myproject/myapp/modules/mymodule/config/` directory. They are:
+As you may expect, module configuration files have to be located in a `myproject/apps/myapp/modules/mymodule/config/` directory. They are:
 
-* `app.yml`: custom parameters specific for a module
-* `view.yml`: configuration for the views associated to the actions of a module
-* `security.yml`: access restrictions for actions
-* `generator.yml`: to create a data access interface (useful for back-office generation)
-* data validation files: although located in the `validate/` directory instead of the `config/` one, the YAML data validation files, used to control the data entered in forms, are also specific to a module
+* `app.yml*`: Custom values for application level settings. [_see more below_](#moduleapp)
+* `generator.yml`: To create a data access interface (useful for back-office generation) [_see more below_](#generator)
+* `module.yml*`: Custom parameters specific to a module. [_see more below_](#module)
+* `security.yml`: Access restrictions for actions. [_see more below_](#security) 
+* `view.yml`: Configuration for the views of one or all of the actions of a module. [_see more below_](#view)
+* data validation files: Although located in the `validate/` directory instead of the `config/` one, the YAML data validation files, used to control the data entered in forms, are also specific to a module. [_see more below_](#validate) 
 
 Most module configuration files give the ability to define parameters for all the views or all the actions of a module, or for a subset of them.
 
-### Custom parameters
+### `app.yml`: Custom parameters value for a module        {#moduleapp}
 
-If you need to override constants defined in the application `app.yml`, just create a new `app.yml` file here and assign specific values for you module. 
+If you need to override constants defined in the application `app.yml`, just create a new `app.yml` file in the module `config/` directory and assign specific values for you module. 
 
-For instance, if the `notax` module is a duty-free shop where the VAT is reduced to zero, create a `app.yml` file in your `myproject/myapp/modules/notax/config/` directory with the following content:
+For instance, if the `notax` module is a duty-free shop where the VAT is reduced to zero, create a `app.yml` file in your `myproject/apps/myapp/modules/notax/config/` directory with the following content:
 
     all:
       .general:
         tax:               0
 
+### `module.yml`: Custom module parameters                 {#module}
+
+Modules can have settings of their own. In that case, they are defined in a `module.yml` file. For instance, a 'poll' module may need a `max_votes` parameter:
+
+    all:
+       .settings:
+         max_votes:      150
+         
+As mentioned in the [configuration chapter](configuration.txt), the parameter is accessible from the code with the following call:
+
+    [php]
+    $max_votes_parameter = sfConfig::get('mod_max_votes');
+
 But maybe you need a completely specific configuration file. In that case, as for custom app configuration, create a `myconfig.yml` file together with a `config_handlers.yml` file to handle its data (read the [configuration handler chapter](sfConfigHandler.txt) for more information).
 
-### View
+### `security.yml`: Access restriction configuration       {#security}
 
-The interface components for a given module, and specifically for views of this module, can be customized by adding a `view.yml` file.
-
-Here is an example module view configuration file:
-
-    indexSuccess:
-      javascripts:  [myinteraction]
-
-    indexError:
-      layout:       error
-      stylesheets:  [error]
-    
-    listSuccess:  
-      template:     listtemplate
-      slots:
-        breadcrumb: []
-        
-    all:
-      layout:       mylayout
-      slots:
-        navigation: [bar, navigation]
-        breadcrumb: [bar, breadcrumb]
-
-The default layout for all the actions of this module is set to `mylayout.php` (as opposed to the default layout for the whole application, called `layout.php`). The `navigation` and `breadcrumb` slots are defined for all the actions of the module, except for the action `list` where the `breadcrumb` slot is suppressed. For this action, the template to be used will not be `listSucess.php` but `listtemplate.php`. If the result of the `index` action is `sfView::ERROR`, the template `indexError.php` will be integrated into the `error.php` layout, including a special `error.css` stylesheet. In addition, the `index` action requires a special javascript called `myinteraction.js` to be included in the page header so that the template can work correctly.
-
-As this file also exists at the application level, adding it at the module level allows you to override the application-wide view parameters at the module level. 
-
-Refer to the chapter describing the [view configuration](templating_configuration.txt) to learn more about this feature.
-
-### Security
-
-To restrict access to an action to a subset of authenticated users having special credentials, you will use a special module configuration file called `security.yml`. 
+To restrict access to an action to a subset of authenticated users having special credentials, you need to add a module configuration file called `security.yml`. 
 
 Here is an example module security configuration file:
 
@@ -368,15 +337,15 @@ Here is an example module security configuration file:
 
 The `update`, `save` and `orders` actions of this module will only work for authenticated users with the `customer` credential.
 
-To learn more about security and the way to set credentials, report to the [related chapter](security.txt).
+To learn more about security and the way to set credentials, report to the [security chapter](security.txt).
 
-### Generator
+### `generator.yml`: generated module configuration        {#generator}
 
 One commonly used module configuration file is the `generator.yml` file. When you setup a 'Create Read Update Delete' (CRUD) basic layout for a data object, the module created will have a `generator.yml` file that you can modify. Read more about CRUDs and scaffolding in the [generator chapter](generator.txt).
 
-### Form validation
+### `validate.yml`: Form validation                        {#validate}
 
-The last usual module configuration file concerns form validation and is not located in the `myproject/myapp/modules/mymodule/config/` directory but in the `myproject/myapp/modules/mymodule/validate/` directory. YAML validation files look like the following:
+The last usual module configuration file concerns form validation. It is not located in the `myproject/apps/myapp/modules/mymodule/config/` directory but in the `myproject/apps/myapp/modules/mymodule/validate/` directory. YAML validation files look like the following:
 
     methods:
       get:  [new_email, new_password, new_password2]
@@ -411,6 +380,83 @@ The last usual module configuration file concerns form validation and is not loc
           email_error:  The email you entered is not valid
 
 For more information about form validation and the use of the validation configuration files, report to the [form validation chapter](validate_form.txt).
+
+Multiple level configuration
+----------------------------
+
+### `view.yml`: View configuration                         {#view}
+
+The rules and parameters governing the View (interface components, layout, headers, etc.) are set in the `view.yml` configuration file. The file exists by default in the application configuration directory (`myproject/apps/myapp/config/`), and the settings can be overridden at the module level by adding a `view.yml` file to a `myproject/apps/myapp/modules/mymoduleconfig/` directory.
+
+Refer to the chapter describing the [view configuration](templating_configuration.txt) to learn more about this feature.
+
+Here is an example module view configuration file:
+
+    indexSuccess:
+      javascripts:  [myinteraction]
+
+    indexError:
+      title:        Sorry, but there is an error
+      layout:       error
+      stylesheets:  [error]
+    
+    listSuccess:  
+      template:     listtemplate
+      slots:
+        breadcrumb: []
+        
+    all:
+      layout:       mylayout
+      slots:
+        navigation: [bar, navigation]
+        breadcrumb: [bar, breadcrumb]
+
+The default layout for all the actions of this module is set to `mylayout.php` (as opposed to the default layout for the whole application, called `layout.php` by convention). The `navigation` and `breadcrumb` slots are defined for all the actions of the module, except for the action `list` where the `breadcrumb` slot is suppressed. For this action, the template to be used will not be `listSucess.php` but `listtemplate.php`. If the result of the `index` action is `sfView::ERROR`, the template `indexError.php` will be integrated into the `error.php` layout, including a special `error.css` stylesheet and a custom page title. In addition, the `index` action requires a special javascript called `myinteraction.js` to be included in the page header so that the template can work correctly.
+
+### File structure settings                                {#constants}
+
+The `constants.php` file defines the directory layouts, the directory separator, and everything that the framework needs to find your actions (normally in `actions`), your modules (normally in `modules`), your libraries (normally in `lib`), etc. 
+
+Every path to a key directory is determined by a parameter ending with `_dir`. Here is an extract of the standard `constants.php` configuration file:
+
+    [php]
+    ...
+    sfConfig::add(array(
+      // root directory structure
+      'sf_cache_dir_name'   => 'cache',
+      'sf_log_dir_name'     => 'log',
+      'sf_lib_dir_name'     => 'lib',
+      'sf_model_dir_name'   => 'model',
+      'sf_web_dir_name'     => 'web',
+      'sf_data_dir_name'    => 'data',
+      'sf_config_dir_name'  => 'config',
+      'sf_apps_dir_name'    => 'apps',
+  
+      // global directory structure
+      'sf_app_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$sf_app,
+      'sf_model_dir'      => $sf_root_dir.DIRECTORY_SEPARATOR.'model',
+      'sf_lib_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.'lib',
+      'sf_web_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.'web',
+      'sf_upload_dir'     => $sf_root_dir.DIRECTORY_SEPARATOR.'web'.DIRECTORY_SEPARATOR.'uploads',
+      'sf_base_cache_dir' => $sf_root_dir.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.$sf_app,
+      'sf_cache_dir'      => $sf_root_dir.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.$sf_app.DIRECTORY_SEPARATOR.$sf_environment,
+      'sf_log_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.'log',
+      'sf_data_dir'       => $sf_root_dir.DIRECTORY_SEPARATOR.'data',
+      'sf_config_dir'     => $sf_root_dir.DIRECTORY_SEPARATOR.'config',
+      ...
+      
+To learn more about the default tree structure, refer to the [file structure chapter](file_structure.txt).
+
+You will probably need to modify this file if you develop an application for a client who already has a defined directory structure and who is not willing to change it to comply with the symfony logic (how would that be possible ?).
+
+There is no `constants.php` file in a default configuration directory. This means that if you need to change the file structure of your project or application, you have to copy the default `constants.php` file from the symfony installation directory (`$pear_data_dir/symfony/config/`) and modify the values.
+
+The file structure configuration can be changed at different levels, according to the directory where you put a `constants.php` file: 
+
+* `myproject/config/` for the whole project
+* `myproject/apps/myapp/config` for a specific application
+
+In an application level `constants.php`, you can override some path definitions for the scope of the application only.
 
 Browsing your own YAML file
 ---------------------------

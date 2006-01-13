@@ -143,7 +143,7 @@ Tree structure customization
 
 Even if it is highly recommended to keep the default tree structure, it is possible to modify it for specific needs, for instance in order to match the requirements of a client who already has its own tree structure and coding conventions.
 
-To customize the tree structure of an application, you simply need to modify the configuration file `config/constants.php` of the application directory since every path to a key directory is determined with a constant ending with `_DIR`. This file is not present in the default tree structure; you will have to copy it from the symfony directory if you need to modify it - a detailed explanation is available in the [configuration chapter](configuration_practice.txt). Here is an extract of the standard configuration file:
+To customize the tree structure of an application, you simply need to modify the configuration file `config/constants.php` of the application directory since every path to a key directory is determined by a parameter ending with `_dir`. This file is not present in the default tree structure; you will have to copy it from the symfony directory if you need to modify it - a detailed explanation is available in the [configuration chapter](configuration_practice.txt). Here is an extract of the standard configuration file:
 
     [php]
     // root directory structure
@@ -170,7 +170,13 @@ To customize the tree structure of an application, you simply need to modify the
 
 Names and paths are both defined here. While this file is not that easy to read, it is easy to modify. 
 
-> **Important**: it is strongly recommended to use these parameters (via the sfConfig object) when building and coding a project, so that the applications created are independent of the tree structure, more particularly for the first level directories.
+> **Important**: it is strongly recommended to use these parameters (via the `sfConfig` object) instead of their values when building and coding a project. That way, the applications created can be independent of the tree structure, more particularly for the first level directories.
+>
+>      [php]
+>      // always prefer
+>      if(file_exists(sfConfig::get('sf_log_dir').'myLogFile.log'))
+>      // instead of
+>      if(file_exists('/home/myproject/log/myLogFile.log'))
 
 [1]: http://www.sqlite.org/                   "SQLite database"
 [2]: http://www.phpdoc.org                    "phpdoc"
