@@ -7,6 +7,7 @@ Version 0.6.0
 WARNING: This release breaks backward compatibility.
 Please read the UPGRADE file before upgrading your projects.
 
+* [fabien] new plugin system
 * [fabien] removed orm.yml configuration file in favor of databases.yml
 * [fabien] updated spyc library
 * [fabien] support to be able to pass some variables/objects to the next next request/forward
