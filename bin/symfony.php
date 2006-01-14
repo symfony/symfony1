@@ -38,10 +38,22 @@ catch (pakeException $e)
   print $e->getMessage();
 }
 
+// find pakefile (local or PEAR)
+if (is_readable('lib/symfony'))
+{
+  // local
+  $pakefile = SF_ROOT_DIR.'/data/symfony/bin/pakefile.php';
+}
+else
+{
+  // PEAR
+  $pakefile = PAKEFILE_DATA_DIR.'/symfony/bin/pakefile.php';
+}
+
 $pake = pakeApp::get_instance();
 try
 {
-  $pake->run(PAKEFILE_DATA_DIR.'/symfony/bin/pakefile.php');
+  $pake->run($pakefile);
 }
 catch (pakeException $e)
 {
