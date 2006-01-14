@@ -34,8 +34,6 @@ class sfPropelPager
     $criteria               = null,
     $objects                = null,
     $cursor                 = 1,
-    $sort                   = '',
-    $sortType               = '',
     $parameters             = array(),
     $currentMaxLink         = 1,
     $parameter_holder       = null,
@@ -122,44 +120,6 @@ class sfPropelPager
   public function haveToPaginate()
   {
     return (($this->getPage() != 0) && ($this->getNbResults() > $this->getMaxPerPage()));
-  }
-
-  public function setSort($sort, $type = 'asc')
-  {
-    $this->sort = $sort;
-    if (($type != 'asc') && ($type != 'desc'))
-    {
-      $type = 'asc';
-    }
-    $this->sortType = $type;
-
-    $c = $this->getCriteria();
-    $sort = strtoupper($sort);
-    $c->clearOrderByColumns();
-
-    if ($type == 'asc')
-    {
-      $c->addDescendingOrderByColumn($this->tableName.'.'.$sort);
-    }
-    else if ($type == 'desc')
-    {
-      $c->addAscendingOrderByColumn($this->tableName.'.'.$sort);
-    }
-
-    if ($this->getPage() > 0)
-    {
-      $this->setPage(1);
-    }
-  }
-
-  public function getSort()
-  {
-    return $this->sort;
-  }
-
-  public function getSortType()
-  {
-    return $this->sortType;
   }
 
   public function getCursor()

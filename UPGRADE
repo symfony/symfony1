@@ -17,6 +17,8 @@ Automatically
   4 - check the changes made by the symfony upgrade command (svn diff if you use subversion)
 
   5 - update your databases.yml configuration file (see section 11 of the `Manually` section below)
+  
+  6 - do some the manual steps numbered: 13
 
 Be careful if your project directory contains external libraries using `SF_XXX`, `MOD_XXX` or `APP_XXX` constants (for instance the `geshi` library). The `upgrade` command transforms these constants into a class method call, so you ought to overwrite the upgraded library by the the backup copy.
 
@@ -117,4 +119,6 @@ For all your applications within a project:
 
   12 - change all comments in your YAML file from ; to #
 
-  13 - clear the symfony cache
+  13 - change all setSort() calls from sfPropelPager to the equivalent Criteria methods
+
+  14 - clear the symfony cache
