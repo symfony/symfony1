@@ -39,16 +39,14 @@ if (!sfConfig::get('sf_in_bootstrap'))
  */
 function __autoload($class)
 {
-  static $loaded = false;
-
-  if (!$loaded)
+  if (!sfConfig::get('sf_class_autoload_loaded'))
   {
     try
     {
       // load the list of autoload classes
       $config = sfConfigCache::checkConfig(sfConfig::get('sf_app_config_dir_name').'/autoload.yml');
 
-      $loaded = true;
+      sfConfig::set('sf_class_autoload_loaded', true);
     }
     catch (sfException $e)
     {
@@ -66,20 +64,22 @@ function __autoload($class)
   }
 
   $classes = sfConfig::get('sf_class_autoload', array());
-
   if (!isset($classes[$class]))
   {
-    // see if the file exists in the current module lib directory
-    // must be in a module context
-    $current_module = sfContext::getInstance()->getModuleName();
-    if ($current_module)
+    if (sfContext::hasInstance())
     {
-      $module_lib = sfConfig::get('sf_app_module_dir').'/'.$current_module.'/'.sfConfig::get('sf_app_module_lib_dir_name').'/'.$class.'.class.php';
-      if (is_readable($module_lib))
+      // see if the file exists in the current module lib directory
+      // must be in a module context
+      $current_module = sfContext::getInstance()->getModuleName();
+      if ($current_module)
       {
-        require_once($module_lib);
+        $module_lib = sfConfig::get('sf_app_module_dir').'/'.$current_module.'/'.sfConfig::get('sf_app_module_lib_dir_name').'/'.$class.'.class.php';
+        if (is_readable($module_lib))
+        {
+          require_once($module_lib);
 
-        return;
+          return;
+        }
       }
     }
 

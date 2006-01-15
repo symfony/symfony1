@@ -108,6 +108,11 @@ class sfContext
     return self::$instance;
   }
 
+  public static function hasInstance()
+  {
+    return isset(self::$instance);
+  }
+
   /**
    * Retrieve the action name for this context.
    *
@@ -205,9 +210,9 @@ class sfContext
   public function getModuleName ()
   {
     // get the last action stack entry
-    $actionEntry = $this->actionStack->getLastEntry();
+    $actionStack = $this->actionStack;
 
-    return $actionEntry ? $actionEntry->getModuleName() : null;
+    return $actionStack ? $actionStack->getLastEntry()->getModuleName() : null;
   }
 
   /**
