@@ -6,7 +6,16 @@ Overview
 
 The configuration can be defined for several levels : project, application, module. It can also be defined in several environments : development, test, production, and any additional environment needed. By modifying YAML files, you get the power of configuration at the tip of your fingers.
 
-Introduction
+Table of contents                         | Quick access A-L            | Quick access M-S            
+----------------------------------------- | --------------------------- | --------------------------- 
+[Introduction](#introduction)             | [autoload.yml](#autoload)   | [module.yml](#module)                                                        
+[Project configuration](#project)         | [constants.php](#constants) | [php.yml](#phpyml)                                                           
+[Application configuration](#application) | [database.yml](#database)   | [security.yml](#security)                                                    
+[Module configuration](#module)           | [factories.yml](#factories) | [settings.yml](#settings)   
+[Multiple level configuration](#multiple) | [generator.yml](#generator) | [validate.yml](#validate)   
+[Browsing your own YAML files](#yaml)     | [logging.yml](#logging)     | [view.yml](#view)        
+
+Introduction                                               {#introduction}
 ------------
 
 The symfony configuration system is inspired by the way [Mojavi][3] handles configuration. Although not appreciated by everybody, this system is extremely powerful.
@@ -17,7 +26,7 @@ The parameter can be set according to a cascade of definitions : for instance, a
 
 >**Note**: Environment-dependent configuration files will be identified by a star `*` in this documentation.
 
-Project configuration
+Project configuration                                      {#project}
 ---------------------
 
 There are a few project configuration files by default. Here are the files that can be found in the `myproject/config/` directory:
@@ -40,7 +49,7 @@ There are a few project configuration files by default. Here are the files that 
 
 So until now, you probably doubt the great efficiency of the YAML format in symfony since none of the project configuration files use it. But there is a good reason to that: these files are used by external components or need to be processed even before any YAML parsing program can be loaded to the framework. The real candy actually starts with the application configuration.
 
-Application configuration
+Application configuration                                  {#application}
 -------------------------
 
 The main part of the configuration is the application configuration. The files located in `myproject/apps/myapp/config/` will be briefly described here before a deeper look at how to modify them.
@@ -184,7 +193,7 @@ The `logging.yml` file defines the level of log messages to be output. By defaul
     #  active:  on
     #  level:   debug
 
-### Factories settings                                     {#factories}
+### `factories.yml`: Factories settings                    {#factories}
 
 Symfony uses classes such as `sfFrontWebController`, `sfUser`, `sfRequest` that are part of the framework. In the `myproject/apps/myapp/lib/` directory, you will find some files defining classes called `myFrontWebController`, `myUser`, `myRequest`, etc. They all simply inherit of the 'sf-' classes, and this allows you to specialize them. The framework knows that it needs to use the 'my-' classes instead of the 'sf-' ones because of the configuration written in the `factories.yml` file:
 
@@ -241,7 +250,7 @@ A second set of configuration files is in the symfony installation directory; th
 * `config_handlers.yml`: Do you remember about [configuration handlers](configuration.txt)? This is where you can add or modify the handlers used to process each configuration file, for instance to use nasty INI or XML files instead of nice YAML files. Each configuration file having a handler class definition, you will find the customization quite clear.
 * `php.yml`: Checks that the variables of the `php.ini` file are properly defined, and allows you to override them if necessary. [_see more below_](#phpyml)
 
-### `autoload.yml`: Autoloading settings              {#autoload}
+### `autoload.yml`: Autoloading settings                   {#autoload}
 
 When the PHP parser meets a `new myClass` statement in the code of an application, it looks for a 'myClass.class.php' file in the paths defined in the`autoload.yml`. If the file is found, the framework loads the required library and includes it automatically. 
 
@@ -275,14 +284,13 @@ For instance, the default `php.yml` sets the `log_errors` to `on` so that you ca
 
 If you don't want symfony to apply these settings, or if you want to run a project with `magic_quotes_gpc` and `register_globals` set to `on` (wich we strongly advise against), copy the default `php.yml` into your application `config` directory, and change the values to be set or checked. Alternatively, you can delete the lines that are not compatible with your environment in the application copy of the file.
 
-Module configuration
+Module configuration                                       {#module}
 --------------------
 
 By default, a module has no specific configuration. But, according to your needs, you can override some application level settings for a given module, or add new parameters restricted to this module.
 
 As you may expect, module configuration files have to be located in a `myproject/apps/myapp/modules/mymodule/config/` directory. They are:
 
-* `app.yml*`: Custom values for application level settings. [_see more below_](#moduleapp)
 * `generator.yml`: To create a data access interface (useful for back-office generation) [_see more below_](#generator)
 * `module.yml*`: Custom parameters specific to a module. [_see more below_](#module)
 * `security.yml`: Access restrictions for actions. [_see more below_](#security) 
@@ -290,16 +298,6 @@ As you may expect, module configuration files have to be located in a `myproject
 * data validation files: Although located in the `validate/` directory instead of the `config/` one, the YAML data validation files, used to control the data entered in forms, are also specific to a module. [_see more below_](#validate) 
 
 Most module configuration files give the ability to define parameters for all the views or all the actions of a module, or for a subset of them.
-
-### `app.yml`: Custom parameters value for a module        {#moduleapp}
-
-If you need to override constants defined in the application `app.yml`, just create a new `app.yml` file in the module `config/` directory and assign specific values for you module. 
-
-For instance, if the `notax` module is a duty-free shop where the VAT is reduced to zero, create a `app.yml` file in your `myproject/apps/myapp/modules/notax/config/` directory with the following content:
-
-    all:
-      .general:
-        tax:               0
 
 ### `module.yml`: Custom module parameters                 {#module}
 
@@ -381,7 +379,7 @@ The last usual module configuration file concerns form validation. It is not loc
 
 For more information about form validation and the use of the validation configuration files, report to the [form validation chapter](validate_form.txt).
 
-Multiple level configuration
+Multiple level configuration                               {#multiple}
 ----------------------------
 
 ### `view.yml`: View configuration                         {#view}
@@ -458,7 +456,7 @@ The file structure configuration can be changed at different levels, according t
 
 In an application level `constants.php`, you can override some path definitions for the scope of the application only.
 
-Browsing your own YAML file
+Browsing your own YAML file                                {#yaml}
 ---------------------------
 
 Whether you want to create a new config handler, or to read a YAML file directly, you can use the `sfYaml` class. It is a YAML parser that can turn a YAML file into an associative array:
