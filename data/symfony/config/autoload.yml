@@ -1,33 +1,37 @@
 autoload:
 
-  -
+  symfony_core:
     name:           symfony core classes
     ext:            .class.php
     path:           %SF_SYMFONY_LIB_DIR%/symfony
     recursive:      on
-    exclude:        [module]
 
-  -
-    name:           symfony core classes (continued)
+  symfony_orm:
+    name:           symfony orm classes
     files:
       Propel:       %SF_SYMFONY_LIB_DIR%/symfony/addon/propel/sfPropelAutoload.php
       Criteria:     %SF_SYMFONY_LIB_DIR%/propel/util/Criteria.php
       SQLException: %SF_SYMFONY_LIB_DIR%/creole/SQLException.php
       DatabaseMap:  %SF_SYMFONY_LIB_DIR%/propel/map/DatabaseMap.php
 
-  -
+  symfony_plugins:
+    name:           symfony plugins
+    ext:            .class.php
+    path:           %SF_PLUGIN_DIR%
+
+  project:
     name:           project classes
     ext:            .class.php
     path:           %SF_LIB_DIR%
     recursive:      on
-    exclude:        [model]
+    exclude:        [model, plugins]
 
-  -
+  model:
     name:           project model classes
     ext:            .php
-    path:           %SF_LIB_DIR%/model
+    path:           %SF_MODEL_LIB_DIR%
 
-  -
+  application:
     name:           application classes
     ext:            .class.php
-    path:           %SF_APP_DIR%/lib
+    path:           %SF_APP_LIB_DIR%

@@ -43,7 +43,7 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
     $data = array();
 
     // let's do our fancy work
-    foreach ($config['autoload'] as $entry)
+    foreach ($config['autoload'] as $name => $entry)
     {
       if (isset($entry['name']))
       {
