@@ -7,14 +7,14 @@ function run_test($task, $args)
 {
   if (!count($args))
   {
-    throw new Exception('you must provide the app to test');
+    throw new Exception('You must provide the app to test.');
   }
 
   $app = $args[0];
 
   if (!is_dir($app))
   {
-    throw new Exception('you must provide the app to test');
+    throw new Exception('You must provide the app to test.');
   }
 
   // define constants

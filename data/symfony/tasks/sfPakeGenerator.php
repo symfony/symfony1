@@ -16,12 +16,12 @@ function run_init_project($task, $args)
 {
   if (file_exists('SYMFONY'))
   {
-    throw new Exception('a symfony project already exists in this directory');
+    throw new Exception('A symfony project already exists in this directory.');
   }
 
   if (!count($args))
   {
-    throw new Exception('you must provide a project name');
+    throw new Exception('You must provide a project name.');
   }
 
   $project_name = $args[0];
@@ -50,7 +50,7 @@ function run_init_app($task, $args)
 {
   if (!count($args))
   {
-    throw new Exception('you must provide your application name');
+    throw new Exception('You must provide your application name.');
   }
 
   $app = $args[0];
@@ -87,7 +87,7 @@ function run_init_module($task, $args)
 {
   if (count($args) < 2)
   {
-    throw new Exception('you must provide your module name');
+    throw new Exception('You must provide your module name.');
   }
 
   $app    = $args[0];

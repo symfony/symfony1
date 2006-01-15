@@ -23,7 +23,7 @@ function run_clear_cache($task, $args)
 {
   if (!file_exists('cache'))
   {
-    throw new Exception('cache directory does not exist');
+    throw new Exception('Cache directory does not exist.');
   }
 
   $cache_dir = 'cache';

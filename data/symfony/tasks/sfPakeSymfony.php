@@ -10,7 +10,7 @@ function run_freeze($task, $args)
 {
   if (!count($args))
   {
-    throw new Exception('you must provide the release version you want to freeze (stable or beta or rXXX)');
+    throw new Exception('You must provide the release version you want to freeze (stable or beta or rXXX).');
   }
 
   $version = strtolower($args[0]);
@@ -35,7 +35,7 @@ function run_freeze($task, $args)
   }
   else
   {
-    throw new Exception('you must provide a release version that I understand! (stable or beta or rXXX)');
+    throw new Exception('You must provide a release version that I understand! (stable or beta or rXXX).');
   }
 }
 

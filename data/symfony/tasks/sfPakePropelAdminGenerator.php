@@ -7,12 +7,12 @@ function run_init_propeladmin($task, $args)
 {
   if (count($args) < 2)
   {
-    throw new Exception('you must provide your module name');
+    throw new Exception('You must provide your module name.');
   }
 
   if (count($args) < 3)
   {
-    throw new Exception('you must provide your model class name');
+    throw new Exception('You must provide your model class name.');
   }
 
   $app         = $args[0];

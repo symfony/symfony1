@@ -10,7 +10,7 @@ function run_upgrade($task, $args)
 {
   if (!isset($args[0]))
   {
-    throw new Exception('you must provide the upgrade script to use (0.6 to upgrade to 0.6 for example)');
+    throw new Exception('You must provide the upgrade script to use (0.6 to upgrade to 0.6 for example).');
   }
 
   $version = $args[0];
@@ -21,7 +21,7 @@ function run_upgrade($task, $args)
   }
   else
   {
-    throw new Exception('i have no upgrade script for this release.');
+    throw new Exception('I have no upgrade script for this release.');
   }
 }
 

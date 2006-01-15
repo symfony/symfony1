@@ -7,7 +7,7 @@ function run_sync($task, $args)
 {
   if (!count($args))
   {
-    throw new Exception('you must provide an environment to synchronize');
+    throw new Exception('You must provide an environment to synchronize.');
   }
 
   $env = $args[0];
@@ -16,25 +16,25 @@ function run_sync($task, $args)
 
   if (!file_exists('config/rsync_exclude.txt'))
   {
-    throw new Exception('you must create a rsync_exclude file for your project');
+    throw new Exception('You must create a rsync_exclude file for your project.');
   }
 
   $host = $task->get_property('host', $env);
   if (!$host)
   {
-    throw new Exception('you must set "host" variable in your properties.ini file');
+    throw new Exception('You must set "host" variable in your properties.ini file.');
   }
 
   $user = $task->get_property('user', $env);
   if (!$user)
   {
-    throw new Exception('you must set "user" variable in your properties.ini file');
+    throw new Exception('You must set "user" variable in your properties.ini file.');
   }
 
   $dir = $task->get_property('dir', $env);
   if (!$dir)
   {
-    throw new Exception('you must set "dir" variable in your properties.ini file');
+    throw new Exception('You must set "dir" variable in your properties.ini file.');
   }
 
   if (substr($dir, -1) != '/')

@@ -10,12 +10,12 @@ function run_init_propelcrud($task, $args)
 {
   if (count($args) < 2)
   {
-    throw new Exception('you must provide your module name');
+    throw new Exception('You must provide your module name.');
   }
 
   if (count($args) < 3)
   {
-    throw new Exception('you must provide your model class name');
+    throw new Exception('You must provide your model class name.');
   }
 
   $app         = $args[0];
@@ -48,12 +48,12 @@ function run_generate_propelcrud($task, $args)
 {
   if (count($args) < 2)
   {
-    throw new Exception('you must provide your module name');
+    throw new Exception('You must provide your module name.');
   }
 
   if (count($args) < 3)
   {
-    throw new Exception('you must provide your model class name');
+    throw new Exception('You must provide your model class name.');
   }
 
   $theme = isset($args[3]) ? $args[3] : 'default';
@@ -65,7 +65,7 @@ function run_generate_propelcrud($task, $args)
   // model class exists?
   if (!is_readable('lib/model/'.$model_class.'.php'))
   {
-    $error = 'the model class "%s" does not exist';
+    $error = 'The model class "%s" does not exist.';
     $error = sprintf($error, $model_class);
     throw new Exception($error);
   }

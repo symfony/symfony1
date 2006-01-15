@@ -52,7 +52,7 @@ function _call_phing($task, $task_name, $check_schema = true)
 {
   if ($check_schema && !file_exists('config/schema.xml'))
   {
-    throw new Exception('you must create a schema.xml file');
+    throw new Exception('You must create a schema.xml file.');
   }
 
   // FIXME: we update propel.ini with uptodate values
