@@ -5,11 +5,11 @@ $sf_app         = sfConfig::get('sf_app');
 $sf_environment = sfConfig::get('sf_environment');
 
 sfConfig::add(array(
-  // root directory structure
+  // root directory names
+  'sf_bin_dir_name'     => 'batch',
   'sf_cache_dir_name'   => 'cache',
   'sf_log_dir_name'     => 'log',
   'sf_lib_dir_name'     => 'lib',
-  'sf_model_dir_name'   => 'model',
   'sf_web_dir_name'     => 'web',
   'sf_data_dir_name'    => 'data',
   'sf_config_dir_name'  => 'config',
@@ -17,8 +17,8 @@ sfConfig::add(array(
 
   // global directory structure
   'sf_app_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$sf_app,
-  'sf_model_dir'      => $sf_root_dir.DIRECTORY_SEPARATOR.'model',
   'sf_lib_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.'lib',
+  'sf_bin_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.'batch',
   'sf_web_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.'web',
   'sf_upload_dir'     => $sf_root_dir.DIRECTORY_SEPARATOR.'web'.DIRECTORY_SEPARATOR.'uploads',
   'sf_base_cache_dir' => $sf_root_dir.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.$sf_app,
@@ -26,6 +26,20 @@ sfConfig::add(array(
   'sf_log_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.'log',
   'sf_data_dir'       => $sf_root_dir.DIRECTORY_SEPARATOR.'data',
   'sf_config_dir'     => $sf_root_dir.DIRECTORY_SEPARATOR.'config',
+
+  // lib directory names
+  'sf_model_dir_name'      => 'model',
+  'sf_plugin_lib_dir_name' => 'plugins',
+
+  // lib directory structure
+  'sf_model_lib_dir'  => $sf_root_dir.DIRECTORY_SEPARATOR.'lib'.DIRECTORY_SEPARATOR.'model',
+  'sf_plugin_lib_dir' => $sf_root_dir.DIRECTORY_SEPARATOR.'lib'.DIRECTORY_SEPARATOR.'plugins',
+
+  // data directory names
+  'sf_plugin_data_dir'  => $sf_root_dir.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'plugins',
+
+  // data directory structure
+  'sf_plugin_dir' => $sf_root_dir.DIRECTORY_SEPARATOR.'lib'.DIRECTORY_SEPARATOR.'plugins',
 
   // SF_CACHE_DIR directory structure
   'sf_template_cache_dir' => $sf_root_dir.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.$sf_app.DIRECTORY_SEPARATOR.$sf_environment.DIRECTORY_SEPARATOR.'template',
@@ -55,7 +69,7 @@ sfConfig::add(array(
   'sf_app_module_view_dir_name'     => 'views',
   'sf_app_module_validate_dir_name' => 'validate',
   'sf_app_module_config_dir_name'   => 'config',
-  'sf_app_module_i18n_dir_name'   => 'i18n',
+  'sf_app_module_i18n_dir_name'     => 'i18n',
 ));
 
 ?>
