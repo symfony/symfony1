@@ -70,6 +70,16 @@ class sfConfig
   }
 
   /**
+   * Retrieve all configuration parameters.
+   *
+   * @return array An associative array of configuration parameters.
+   */
+  public function getAll ()
+  {
+    return self::$config;
+  }
+
+  /**
    * Clear all current config parameters.
    *
    * @return void

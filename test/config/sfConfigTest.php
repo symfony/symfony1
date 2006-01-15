@@ -2,6 +2,20 @@
 
 class sfConfigTest extends UnitTestCase
 {
+  private
+    $config_backup = array();
+
+  public function setUp()
+  {
+    $this->config_backup = sfConfig::getAll();
+  }
+
+  public function tearDown()
+  {
+    sfConfig::clear();
+    sfConfig::add($this->config_backup);
+  }
+
   public function test_getset()
   {
     sfConfig::clear();
