@@ -9,7 +9,7 @@
  */
 
 /**
- * sfSyndication.
+ * sfFeed.
  *
  * based on feedgenerator.py from django project
  *
@@ -91,7 +91,7 @@ class sfFeed
 
   public function addItemFromArray($item_array)
   {
-    $item = new sfSyndicationItem();
+    $item = new sfFeedItem();
   
     $item->setItemTitle($item_array['title']);
     $item->setItemLink($item_array['link']);
