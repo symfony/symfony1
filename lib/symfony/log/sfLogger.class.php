@@ -48,8 +48,9 @@ class sfLogger extends sfLog
     {
       if (sfConfig::get('sf_logging_active'))
       {
-        require_once 'symfony/log/sfLog/composite.class.php';
-        require_once 'symfony/log/sfLog/file.class.php';
+        $sf_symfony_lib_dir = sfConfig::get('sf_symfony_lib_dir');
+        require_once $sf_symfony_lib_dir.'/symfony/log/sfLog/composite.class.php';
+        require_once $sf_symfony_lib_dir.'/symfony/log/sfLog/file.class.php';
         $logger = &sfLog::singleton('composite');
         $conf = array('mode' => 0666);
         $file_logger = &sfLog::singleton('file', sfConfig::get('sf_log_dir').DIRECTORY_SEPARATOR.sfConfig::get('sf_app').'_'.sfConfig::get('sf_environment').'.log', 'symfony', $conf);
@@ -58,7 +59,7 @@ class sfLogger extends sfLog
 
         if (sfConfig::get('sf_web_debug'))
         {
-          require_once 'symfony/log/sfLogger/var.class.php';
+          require_once $sf_symfony_lib_dir.'/symfony/log/sfLogger/var.class.php';
           $var_logger = &sfLog::singleton('var', '', 'symfony');
           $var_logger->setMask(sfLog::UPTO(constant('PEAR_LOG_'.strtoupper(sfConfig::get('sf_logging_level')))));
           $logger->addChild($var_logger);
@@ -68,7 +69,7 @@ class sfLogger extends sfLog
       }
       else
       {
-        require_once 'symfony/log/sfLogger/no.class.php';
+        require_once $sf_symfony_lib_dir.'/symfony/log/sfLogger/no.class.php';
         sfLogger::$logger = new sfNoLogger();
       }
     }

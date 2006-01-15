@@ -44,12 +44,11 @@ set_include_path(
   sfConfig::get('sf_lib_dir').PATH_SEPARATOR.
   sfConfig::get('sf_symfony_lib_dir').PATH_SEPARATOR.
   sfConfig::get('sf_app_lib_dir').PATH_SEPARATOR.
-  sfConfig::get('sf_model_dir').PATH_SEPARATOR.
   get_include_path()
 );
 
 // check to see if we're not in a cache cleaning process
-require_once('symfony/util/sfToolkit.class.php');
+require_once(sfConfig::get('sf_symfony_lib_dir').'/symfony/util/sfToolkit.class.php');
 if (sfToolkit::hasLockFile(SF_ROOT_DIR.DIRECTORY_SEPARATOR.SF_APP.'_'.SF_ENVIRONMENT.'.lck', 5))
 {
   // application is not yet available
@@ -82,7 +81,7 @@ if (is_readable($bootstrap))
 }
 else
 {
-  require_once 'symfony/symfony.php';
+  require_once(sfConfig::get('sf_symfony_lib_dir').'/symfony/symfony.php');
 }
 
 ?>
