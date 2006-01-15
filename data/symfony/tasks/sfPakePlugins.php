@@ -3,6 +3,9 @@
 pake_desc('install a new plugin');
 pake_task('plugin-install', 'project_exists');
 
+pake_desc('upgrade a plugin');
+pake_task('plugin-upgrade', 'project_exists');
+
 pake_desc('uninstall a plugin');
 pake_task('plugin-uninstall', 'project_exists');
 
@@ -24,6 +27,27 @@ function run_plugin_install($task, $args)
   $packages = array($args[0]);
   if ($verbose) echo '>> plugin    '.pakeApp::excerpt('installing plugin "'.$args[0].'"')."\n";
   $ret = _pear_run_command($config, 'install', array('offline' => true), $packages);
+  if ($ret && !strpos($ret, 'not installed'))
+  {
+    throw new Exception($ret);
+  }
+}
+
+function run_plugin_upgrade($task, $args)
+{
+  $verbose = pakeApp::get_instance()->get_verbose();
+
+  if (!isset($args[0]))
+  {
+    throw new Exception('you must provide the plugin name');
+  }
+
+  $config = _pear_init();
+
+  // upgrade plugin
+  $packages = array($args[0]);
+  if ($verbose) echo '>> plugin    '.pakeApp::excerpt('upgrading plugin "'.$args[0].'"')."\n";
+  $ret = _pear_run_command($config, 'upgrade', array('offline' => true), $packages);
   if ($ret && !strpos($ret, 'not installed'))
   {
     throw new Exception($ret);
@@ -113,8 +137,8 @@ function _pear_init()
   require_once 'PEAR/Command.php';
   require_once 'PEAR/Remote.php';
 
-  $install_lib_dir  = sfConfig::get('sf_lib_dir').DIRECTORY_SEPARATOR.'plugins';
-  $install_data_dir = sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.'plugins';
+  $install_lib_dir  = sfConfig::get('sf_plugin_lib_dir');
+  $install_data_dir = sfConfig::get('sf_plugin_data_dir');
 
   if (!is_dir($install_lib_dir))
   {
@@ -146,6 +170,7 @@ function _pear_init()
   $config = &PEAR_Config::singleton();
   $config->set('php_dir',  $install_lib_dir);
   $config->set('data_dir', $install_data_dir);
+  $config->set('bin_dir',  sfConfig::get('sf_bin_dir'));
   $config->set('verbose', 0);
   $ui->setConfig($config);
 
