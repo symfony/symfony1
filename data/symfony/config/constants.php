@@ -14,6 +14,8 @@ sfConfig::add(array(
   'sf_data_dir_name'    => 'data',
   'sf_config_dir_name'  => 'config',
   'sf_apps_dir_name'    => 'apps',
+  'sf_test_dir_name'    => 'test',
+  'sf_doc_dir_name'    => 'doc',
 
   // global directory structure
   'sf_app_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$sf_app,
@@ -26,6 +28,8 @@ sfConfig::add(array(
   'sf_log_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.'log',
   'sf_data_dir'       => $sf_root_dir.DIRECTORY_SEPARATOR.'data',
   'sf_config_dir'     => $sf_root_dir.DIRECTORY_SEPARATOR.'config',
+  'sf_test_dir'       => $sf_root_dir.DIRECTORY_SEPARATOR.'test',
+  'sf_doc_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'doc',
 
   // lib directory names
   'sf_model_dir_name'      => 'model',
