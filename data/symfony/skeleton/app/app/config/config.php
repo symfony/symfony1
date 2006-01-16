@@ -41,6 +41,7 @@ include($sf_symfony_data_dir.'/symfony/config/constants.php');
 
 // include path
 set_include_path(
+  sfConfig::get('sf_plugin_lib_dir').PATH_SEPARATOR.
   sfConfig::get('sf_lib_dir').PATH_SEPARATOR.
   sfConfig::get('sf_symfony_lib_dir').PATH_SEPARATOR.
   sfConfig::get('sf_app_lib_dir').PATH_SEPARATOR.
