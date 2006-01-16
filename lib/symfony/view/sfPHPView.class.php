@@ -160,19 +160,30 @@ class sfPHPView extends sfView
     $this->setTemplate($templateFile);
 
     // set template directory
-    $module = $context->getModuleName();
-    if (!is_readable($this->getDirectory().'/'.$templateFile))
-    {
-      // search template in a symfony module directory
-      if (is_readable(sfConfig::get('sf_symfony_data_dir').'/symfony/modules/'.$module.'/templates/'.$templateFile))
-      {
-        $this->setDirectory(sfConfig::get('sf_symfony_data_dir').'/symfony/modules/'.$module.'/templates');
-      }
 
-      // search template for generated templates in cache
-      if (is_readable(sfConfig::get('sf_module_cache_dir').'/auto'.ucfirst($module).'/templates/'.$templateFile))
+    // all directories to look for templates
+    $moduleName = $context->getModuleName();
+    $dirs = array(
+      // application
+      $this->getDirectory(),
+
+      // local plugin
+      sfConfig::get('sf_plugin_data_dir').'/symfony/modules/'.$moduleName.'/templates',
+
+      // core modules or global plugins
+      sfConfig::get('sf_symfony_data_dir').'/symfony/modules/'.$moduleName.'/templates',
+
+      // generated templates in cache
+      sfConfig::get('sf_module_cache_dir').'/auto'.ucfirst($moduleName).'/templates',
+    );
+
+    foreach ($dirs as $dir)
+    {
+      if (is_readable($dir.'/'.$templateFile))
       {
-        $this->setDirectory(sfConfig::get('sf_module_cache_dir').'/auto'.ucfirst($module).'/templates');
+        $this->setDirectory($dir);
+
+        break;
       }
     }
 

@@ -22,6 +22,7 @@ abstract class sfController
 {
   private
     $context                  = null,
+    $actionClasses            = array(),
     $maxForwards              = 5,
     $renderMode               = sfView::RENDER_CLIENT,
     $executionFilterClassName = null,
@@ -47,35 +48,22 @@ abstract class sfController
    */
   public function actionExists ($moduleName, $actionName)
   {
-    $module_dir = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_action_dir_name');
-    $file = $module_dir.'/'.$actionName.'Action.class.php';
-    $module_file = $module_dir.'/actions.class.php';
-    $core_module_file = sfConfig::get('sf_symfony_data_dir').'/symfony/modules/'.$moduleName.'/actions/actions.class.php';
+    // all directories to look for modules
+    $dirs = array(
+      // application
+      sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_action_dir_name') => false,
 
-    $exists = false;
+      // local plugin
+      sfConfig::get('sf_plugin_data_dir').'/symfony/modules/'.$moduleName.'/actions' => true,
 
-    if (is_readable($file))
+      // core modules or global plugins
+      sfConfig::get('sf_symfony_data_dir').'/symfony/modules/'.$moduleName.'/actions' => true,
+    );
+
+    foreach ($dirs as $dir => $checkActivated)
     {
-      // action class exists
-      $exists = true;
-
-      require_once($file);
-    }
-    else if (is_readable($module_file))
-    {
-      // module class exists
-      require_once($module_file);
-
-      // action is defined in this class?
-      if (is_callable(array($moduleName.'Actions', 'execute'.$actionName)))
-      {
-        $exists = true;
-      }
-    }
-    else if (is_readable($core_module_file))
-    {
-      // core module activated?
-      if (!in_array($moduleName, sfConfig::get('sf_activated_modules')))
+      // plugin module activated?
+      if ($checkActivated && !in_array($moduleName, sfConfig::get('sf_activated_modules')))
       {
         $error = 'The module "%s" is not activated.';
         $error = sprintf($error, $moduleName);
@@ -83,12 +71,36 @@ abstract class sfController
         throw new sfConfigurationException($error);
       }
 
-      $exists = true;
+      // one action per file or one file for all actions
+      $file        = $dir.'/'.$actionName.'Action.class.php';
+      $module_file = $dir.'/actions.class.php';
+      if (is_readable($file))
+      {
+        // action class exists
+        require_once($file);
 
-      require_once($core_module_file);
+        $this->actionClasses[$moduleName.'_'.$actionName] = $actionName.'Action';
+
+        return true;
+      }
+      else if (is_readable($module_file))
+      {
+        // module class exists
+        require_once($module_file);
+
+        // action is defined in this class?
+        $defined = (is_callable(array($moduleName.'Actions', 'execute'.$actionName)));
+
+        if ($defined)
+        {
+          $this->actionClasses[$moduleName.'_'.$actionName] = $moduleName.'Actions';
+        }
+
+        return $defined;
+      }
     }
 
-    return $exists;
+    return false;
   }
 
   /**
@@ -150,7 +162,6 @@ abstract class sfController
       // track the requested module so we have access to the data in the error 404 page
       $this->context->getRequest()->setAttribute('requested_action', $actionName);
       $this->context->getRequest()->setAttribute('requested_module', $moduleName);
-      $this->context->getRequest()->setAttribute('requested_uri',    $_SERVER['PHP_SELF']);
 
       // switch to error 404 action
       $moduleName = sfConfig::get('sf_error_404_module');
@@ -300,23 +311,19 @@ abstract class sfController
    */
   public function getAction ($moduleName, $actionName)
   {
-    $file = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_action_dir_name').'/'.$actionName.'Action.class.php';
-
-    if (is_readable($file))
+    if (!isset($this->actionClasses[$moduleName.'_'.$actionName]))
     {
-      $class = $actionName.'Action';
-
-      // fix for same name classes
-      $moduleClass = $moduleName.'_'.$class;
-
-      if (class_exists($moduleClass, false))
-      {
-        $class = $moduleClass;
-      }
+      $this->actionExists($moduleName, $actionName);
     }
-    else
+
+    $class = $this->actionClasses[$moduleName.'_'.$actionName];
+
+    // fix for same name classes
+    $moduleClass = $moduleName.'_'.$class;
+
+    if (class_exists($moduleClass, false))
     {
-      $class = $moduleName.'Actions';
+      $class = $moduleClass;
     }
 
     return new $class();
