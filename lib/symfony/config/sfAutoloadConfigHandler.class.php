@@ -58,7 +58,7 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
     {
       if (isset($entry['name']))
       {
-        $tmp = "\n// %s\n";
+        $tmp    = "\n// %s\n";
         $data[] = sprintf($tmp, $entry['name']);
       }
 
@@ -68,17 +68,16 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
         // file mapping
         foreach ($entry['files'] as $class => $path)
         {
-          $path = $this->replaceConstants($path);
-          $path = $this->replacePath($path);
+          $path   = $this->replaceConstants($path);
 
-          $tmp = "'%s' => '%s',";
+          $tmp    = "'%s' => '%s',";
           $data[] = sprintf($tmp, $class, $path);
         }
       }
       else
       {
         // directory mapping
-        $ext = $entry['ext'];
+        $ext  = $entry['ext'];
         $path = $entry['path'];
 
         $path = $this->replaceConstants($path);
@@ -111,7 +110,7 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
         $files = $finder->in($path);
         foreach ($files as $file)
         {
-          $tmp = "'%s' => '%s',";
+          $tmp    = "'%s' => '%s',";
           $data[] = sprintf($tmp, basename($file, $ext), $file);
         }
       }
