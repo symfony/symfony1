@@ -242,7 +242,7 @@ If you need to change one of these values, you probably need an additional front
 
 ### Additional application configuration
 
-A second set of configuration files is in the symfony installation directory; the settings defined there are default settings that seldom need to be modified, or that are global to all projects. However, if you need to modify them, just copy the required file from the `$pear_data_dir/symfony/skeleton/app/app/config/` directory to your `myproject/apps/myapp/config/` directory. The settings defined in an application always have priority.
+A second set of configuration files is in the symfony installation directory; the settings defined there are default settings that seldom need to be modified, or that are global to all projects. However, if you need to modify them, just copy the required file from the `$pear_data_dir/symfony/config/` directory to your `myproject/apps/myapp/config/` directory. The settings defined in an application always have priority.
 
 * `autoload.yml`: Settings of the autoloading feature. This feature exempts you from requiring custom classes in your code if they are located in specific directories. [_see more below_](#autoload)
 * `constants.php`: Overrides the default application file structure. [_see more below_](#constants)
@@ -252,7 +252,7 @@ A second set of configuration files is in the symfony installation directory; th
 
 ### `autoload.yml`: Autoloading settings                   {#autoload}
 
-When the PHP parser meets a `new myClass` statement in the code of an application, it looks for a 'myClass.class.php' file in the paths defined in the`autoload.yml`. If the file is found, the framework loads the required library and includes it automatically. 
+When the PHP parser meets a `new myClass` statement in the code of an application, it looks for a 'myClass.class.php' file in the paths defined in the `autoload.yml`. If the file is found, the framework loads the required library and includes it automatically. 
 
 In other words, the autoloading feature exempts you from requiring custom classes in your code, provided that they are located in a directory defined in the `autoload.yml`. This means that you don't need to require libraries at the head of your classes if they may not be used in every case: just let the framework do the job for you, and it will load only the very necessary classes, just in time.
 
@@ -263,11 +263,39 @@ By default, the autoloading works for classes that are located in the following 
 * `myproject/apps/myapp/lib/` and 
 * `myproject/apps/myapp/modules/mymodule/lib`.
 
-If you want to autoload classes lying somewhere else in your file structure, you need to copy the `autoload.yml` in your `myproject/apps/myapp/config/` folder and edit it.
+Here is an extract of the default `autoload.yml` (found in `$pear_data_dir/symfony/config/autoload.yml`):
+
+    autoload:
+      symfony_core:
+        name:           symfony core classes
+        ext:            .class.php
+        path:           %SF_SYMFONY_LIB_DIR%/symfony
+        recursive:      on
+    
+      symfony_orm:
+        name:           symfony orm classes
+        files:
+          Propel:       %SF_SYMFONY_LIB_DIR%/symfony/addon/propel/sfPropelAutoload.php
+          Criteria:     %SF_SYMFONY_LIB_DIR%/propel/util/Criteria.php
+          SQLException: %SF_SYMFONY_LIB_DIR%/creole/SQLException.php
+          DatabaseMap:  %SF_SYMFONY_LIB_DIR%/propel/map/DatabaseMap.php
+    
+      project:
+        name:           project classes
+        ext:            .class.php
+        path:           %SF_LIB_DIR%
+        recursive:      on
+        exclude:        [model, plugins]
+        
+      ...
+
+Each autoloading rule has a label, both for visual organization and ability to override it. 
+
+If you want to autoload classes lying somewhere else in your file structure, you need to create a new `autoload.yml` in your `myproject/apps/myapp/config/` folder and edit it. You can either override existing rules or add new ones.
 
 ### `php.yml`: PHP configuration                           {#phpyml}
 
-In order to have a php environment compatible with the rules and the best practices of agile development, symfony checks and overrides a few settings of the `php.ini` configuration. This is what the `php.yml` file is used for. Here is the default `php.yml`:
+In order to have a php environment compatible with the rules and the best practices of agile development, symfony checks and overrides a few settings of the `php.ini` configuration. This is what the `php.yml` file is used for. Here is the default `php.yml` (found in `$pear_data_dir/symfony/config/`):
 
     set:
       magic_quotes_runtime: off
