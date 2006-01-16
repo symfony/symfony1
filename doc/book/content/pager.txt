@@ -182,14 +182,9 @@ The `readSuccess.php` template could look like:
 Changing the sort order
 -----------------------
 
-Ordering a list means redoing the request. But the `sfPager` object has a `->setSort()` methods that acts as a shortcut to set a new sort order. Specify which column in the table has to be used for sorting, and the sorting order ('asc' or 'desc'):
+As the `sfPager` object relies on a `Criteria` object, changing the order of the pager is simply done by adding a sort to the criteria, before assigning it to the pager object.
 
-    [php]
-    $pager->setSort('date'); // 'ascending' sort by default
-    $pager->setSort('date', 'asc');
-    $pager->setSort('date', 'desc');
-
-You can add the choice of the sort column to the list navigation interface:
+For instance, you can add the choice of the sort column to the list navigation interface:
 
     [php]
     class articleActions extends sfActions
@@ -199,28 +194,27 @@ You can add the choice of the sort column to the list navigation interface:
         ...
         $c = new Criteria();
         $c->add(ArticlePeer::PUBLISHED, true);
-        $pager = new sfPager('Article', 10);
-        $pager->setCriteria($c);
         if ($this->getRequestParameter('sort'))
         {
-          $pager->setSort($this->getRequestParameter('sort'));
+          $c->addAscendingOrderByColumn(ArticlePeer::translateFieldName($this->getRequestParameter('sort'), BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_COLNAME));
         }
         else
         {
-          $pager->setPage($this->getRequestParameter('page', 1));
+          // sorted by date by default
+          $c->addAscendingOrderByColumn(ArticlePeer::UPDATED_AT);
         }
+        $pager = new sfPager('Article', 10);
+        $pager->setCriteria($c);
         $pager->init();
         $this->pager = $pager;
         ...
       }
     }
 
->**Note**: the field passed to `->setSort()` will replace any existing sort parameter, and not add up to it. If no second parameter is passed, the list will be ordered in ascending order by default.
-
 Add the following to the `listSuccess.php` template:
 
     [php]
-    Sort by : <?php echo link_to('Title', 'article/list?sort=Title') ?> - <?php echo link_to('Id', 'article/list?sort=Id' ?>
+    Sort by : <?php echo link_to('Title', 'article/list?sort=title') ?> - <?php echo link_to('Id', 'article/list?sort=Id' ?>
 
 Changing the number of results per page
 ---------------------------------------
@@ -237,14 +231,6 @@ The `->setMaxPerPage($max)` method changes the number of results displayed per p
         $c->add(ArticlePeer::PUBLISHED, true);
         $pager = new sfPager('Article', 10);
         $pager->setCriteria($c);
-        if ($this->getRequestParameter('sort'))
-        {
-          $pager->setSort{$this->getRequestParameter('sort'));
-        }
-        else
-        { 
-          $pager->setPage($this->getRequestParameter('page', 1));
-        }
         if ($this->getRequestParameter('maxperpage'))
         {
           $pager->setMaxPerPage($this->getRequestParameter('maxperpage'));
