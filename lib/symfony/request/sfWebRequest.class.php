@@ -556,6 +556,16 @@ class sfWebRequest extends sfRequest
   }
 
   /**
+   * Return true id the request is a XMLHttpRequest (via prototype 'HTTP_X_REQUESTED_WITH' header).
+   *
+   * @return boolean
+   */
+  public function isXmlHttpRequest ()
+  {
+    return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest');
+  }
+
+  /**
    * Execute the shutdown procedure.
    *
    * @return void
