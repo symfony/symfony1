@@ -42,7 +42,7 @@ catch (pakeException $e)
 if (is_readable('lib/symfony'))
 {
   // local
-  $pakefile = SF_ROOT_DIR.'/data/symfony/bin/pakefile.php';
+  $pakefile = 'data/symfony/symfony/bin/pakefile.php';
 }
 else
 {
