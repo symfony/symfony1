@@ -149,22 +149,6 @@ class sfToolkit
       return $source;
     }
 
-    /* T_ML_COMMENT does not exist in PHP 5.
-     * The following three lines define it in order to
-     * preserve backwards compatibility.
-     *
-     * The next two lines define the PHP 5-only T_DOC_COMMENT,
-     * which we will mask as T_ML_COMMENT for PHP 4.
-     */
-    if (!defined('T_ML_COMMENT'))
-    {
-      define('T_ML_COMMENT', T_COMMENT);
-    }
-    else
-    {
-      if (!defined('T_DOC_COMMENT')) define('T_DOC_COMMENT', T_ML_COMMENT);
-    }
-
     $output = '';
 
     $tokens = token_get_all($source);
@@ -179,11 +163,11 @@ class sfToolkit
       {
         // token array
         list($id, $text) = $token;
+
         switch ($id)
         {
           case T_COMMENT:
-          case T_ML_COMMENT:  // we've defined this
-          case T_DOC_COMMENT: // and this
+          case T_DOC_COMMENT:
             // no action on comments
             break;
           default:
