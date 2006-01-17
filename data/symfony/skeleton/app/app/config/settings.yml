@@ -90,3 +90,5 @@ all:
 ;    use_flash:              on
 ;
 ;    activated_modules:      [default]
+;
+;    strip_comments:         off

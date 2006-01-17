@@ -143,6 +143,11 @@ class sfToolkit
 
   public static function stripComments ($source)
   {
+    if (!sfConfig::get('sf_strip_comments'))
+    {
+      return $source;
+    }
+
     // tokenizer available?
     if (!function_exists('token_get_all'))
     {
