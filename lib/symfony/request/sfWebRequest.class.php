@@ -281,7 +281,7 @@ class sfWebRequest extends sfRequest
       {
         $script_name = $pathArray['SCRIPT_NAME'];
         $pathInfo = preg_replace('/^'.preg_quote($script_name, '/').'/', '', $pathArray['REQUEST_URI']);
-        $prefix_name = preg_replace('#\/[^/]+$#', '', $script_name);
+        $prefix_name = preg_replace('#/[^/]+$#', '', $script_name);
         $pathInfo = preg_replace('/^'.preg_quote($prefix_name, '/').'/', '', $pathArray['REQUEST_URI']);
         $pathInfo = preg_replace('/'.preg_quote($pathArray['QUERY_STRING'], '/').'$/', '', $pathInfo);
       }
@@ -291,7 +291,7 @@ class sfWebRequest extends sfRequest
       $pathInfo = $pathArray[sfConfig::get('sf_path_info_key')];
       if (sfConfig::get('sf_relative_url_root'))
       {
-        $pathInfo = preg_replace('/^'.str_replace('/', '\\/', sfConfig::get('sf_relative_url_root')).'\//', '', $pathInfo);
+        $pathInfo = preg_replace('#^'.preg_quote(sfConfig::get('sf_relative_url_root')).'/#', '', $pathInfo);
       }
     }
     // for IIS
