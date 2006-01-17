@@ -82,9 +82,9 @@ class sfCompileConfigHandler extends sfYamlConfigHandler
     $data = str_replace("\r",   "\n", $data);
 
     // strip php tags
-    $data = preg_replace("/<\?php/", '', $data);
-    $data = preg_replace("/<\?/",    '', $data);
-    $data = preg_replace("/\?>/",    '', $data);
+    $data = preg_replace("/^\s*<\?php/m", '', $data);
+    $data = preg_replace("/^\s*<\?/m",    '', $data);
+    $data = preg_replace("/^\s*\?>/m",    '', $data);
 
     // replace multiple new lines with a single newline
     $data = preg_replace("/\n\s+\n/s", "\n", $data);
