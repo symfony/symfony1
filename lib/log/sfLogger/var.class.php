@@ -26,7 +26,7 @@ class sfLog_var extends sfLog
 
     private $web_debug = null;
 
-    public function sfLog_var($name, $ident = '', $conf = array(), $level = PEAR_LOG_DEBUG)
+    public function sfLog_var($name, $ident = '', $conf = array(), $level = SF_PEAR_LOG_DEBUG)
     {
       $this->_id = $name.'_'.$ident;
       $this->_ident = $ident;

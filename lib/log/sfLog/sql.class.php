@@ -89,7 +89,7 @@ class sfLog_sql extends sfLog {
      * @access public     
      */
     function sfLog_sql($name, $ident = '', $conf = array(),
-                     $level = PEAR_LOG_DEBUG)
+                     $level = SF_PEAR_LOG_DEBUG)
     {
         $this->_id = md5(microtime());
         $this->_table = $name;
@@ -178,9 +178,9 @@ class sfLog_sql extends sfLog {
      *
      * @param mixed  $message  String or object containing the message to log.
      * @param string $priority The priority of the message.  Valid
-     *                  values are: PEAR_LOG_EMERG, PEAR_LOG_ALERT,
-     *                  PEAR_LOG_CRIT, PEAR_LOG_ERR, PEAR_LOG_WARNING,
-     *                  PEAR_LOG_NOTICE, PEAR_LOG_INFO, and PEAR_LOG_DEBUG.
+     *                  values are: SF_PEAR_LOG_EMERG, SF_PEAR_LOG_ALERT,
+     *                  SF_PEAR_LOG_CRIT, SF_PEAR_LOG_ERR, SF_PEAR_LOG_WARNING,
+     *                  SF_PEAR_LOG_NOTICE, SF_PEAR_LOG_INFO, and SF_PEAR_LOG_DEBUG.
      * @return boolean  True on success or false on failure.
      * @access public     
      */

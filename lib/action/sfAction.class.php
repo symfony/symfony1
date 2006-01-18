@@ -127,7 +127,7 @@ abstract class sfAction
    */
   public function logMessage ($message, $priority = 'info')
   {
-    return $this->context->getLogger()->log($message, constant('PEAR_LOG_'.strtoupper($priority)));
+    return $this->context->getLogger()->log($message, constant('SF_PEAR_LOG_'.strtoupper($priority)));
   }
 
   public function debugMessage ($message)

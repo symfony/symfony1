@@ -38,7 +38,7 @@ class sfLog_syslog extends sfLog
      * @access public
      */
     function sfLog_syslog($name, $ident = '', $conf = array(),
-                        $level = PEAR_LOG_DEBUG)
+                        $level = SF_PEAR_LOG_DEBUG)
     {
         /* Ensure we have a valid integer value for $name. */
         if (empty($name) || !is_int($name)) {
@@ -87,9 +87,9 @@ class sfLog_syslog extends sfLog
      *
      * @param mixed $message String or object containing the message to log.
      * @param int $priority (optional) The priority of the message.  Valid
-     *                  values are: PEAR_LOG_EMERG, PEAR_LOG_ALERT,
-     *                  PEAR_LOG_CRIT, PEAR_LOG_ERR, PEAR_LOG_WARNING,
-     *                  PEAR_LOG_NOTICE, PEAR_LOG_INFO, and PEAR_LOG_DEBUG.
+     *                  values are: SF_PEAR_LOG_EMERG, SF_PEAR_LOG_ALERT,
+     *                  SF_PEAR_LOG_CRIT, SF_PEAR_LOG_ERR, SF_PEAR_LOG_WARNING,
+     *                  SF_PEAR_LOG_NOTICE, SF_PEAR_LOG_INFO, and SF_PEAR_LOG_DEBUG.
      * @return boolean  True on success or false on failure.
      * @access public
      */
@@ -123,14 +123,14 @@ class sfLog_syslog extends sfLog
     }
 
     /**
-     * Converts a PEAR_LOG_* constant into a syslog LOG_* constant.
+     * Converts a SF_PEAR_LOG_* constant into a syslog LOG_* constant.
      *
      * This function exists because, under Windows, not all of the LOG_*
-     * constants have unique values.  Instead, the PEAR_LOG_* were introduced
+     * constants have unique values.  Instead, the SF_PEAR_LOG_* were introduced
      * for global use, with the conversion to the LOG_* constants kept local to
      * to the syslog driver.
      *
-     * @param int $priority     PEAR_LOG_* value to convert to LOG_* value.
+     * @param int $priority     SF_PEAR_LOG_* value to convert to LOG_* value.
      *
      * @return  The LOG_* representation of $priority.
      *
@@ -139,14 +139,14 @@ class sfLog_syslog extends sfLog
     function _toSyslog($priority)
     {
         static $priorities = array(
-            PEAR_LOG_EMERG   => LOG_EMERG,
-            PEAR_LOG_ALERT   => LOG_ALERT,
-            PEAR_LOG_CRIT    => LOG_CRIT,
-            PEAR_LOG_ERR     => LOG_ERR,
-            PEAR_LOG_WARNING => LOG_WARNING,
-            PEAR_LOG_NOTICE  => LOG_NOTICE,
-            PEAR_LOG_INFO    => LOG_INFO,
-            PEAR_LOG_DEBUG   => LOG_DEBUG
+            SF_PEAR_LOG_EMERG   => LOG_EMERG,
+            SF_PEAR_LOG_ALERT   => LOG_ALERT,
+            SF_PEAR_LOG_CRIT    => LOG_CRIT,
+            SF_PEAR_LOG_ERR     => LOG_ERR,
+            SF_PEAR_LOG_WARNING => LOG_WARNING,
+            SF_PEAR_LOG_NOTICE  => LOG_NOTICE,
+            SF_PEAR_LOG_INFO    => LOG_INFO,
+            SF_PEAR_LOG_DEBUG   => LOG_DEBUG
         );
 
         /* If we're passed an unknown priority, default to LOG_INFO. */

@@ -43,14 +43,14 @@ class sfLog_win extends sfLog
      * @access private
      */
     var $_colors = array(
-                        PEAR_LOG_EMERG   => 'red',
-                        PEAR_LOG_ALERT   => 'orange',
-                        PEAR_LOG_CRIT    => 'yellow',
-                        PEAR_LOG_ERR     => 'green',
-                        PEAR_LOG_WARNING => 'blue',
-                        PEAR_LOG_NOTICE  => 'indigo',
-                        PEAR_LOG_INFO    => 'violet',
-                        PEAR_LOG_DEBUG   => 'black'
+                        SF_PEAR_LOG_EMERG   => 'red',
+                        SF_PEAR_LOG_ALERT   => 'orange',
+                        SF_PEAR_LOG_CRIT    => 'yellow',
+                        SF_PEAR_LOG_ERR     => 'green',
+                        SF_PEAR_LOG_WARNING => 'blue',
+                        SF_PEAR_LOG_NOTICE  => 'indigo',
+                        SF_PEAR_LOG_INFO    => 'violet',
+                        SF_PEAR_LOG_DEBUG   => 'black'
                     );
 
     /**
@@ -70,7 +70,7 @@ class sfLog_win extends sfLog
      * @access public
      */
     function sfLog_win($name, $ident = '', $conf = array(),
-                          $level = PEAR_LOG_DEBUG)
+                          $level = SF_PEAR_LOG_DEBUG)
     {
         $this->_id = md5(microtime());
         $this->_name = $name;
@@ -209,9 +209,9 @@ END_OF_SCRIPT;
      * 
      * @param mixed  $message  String or object containing the message to log.
      * @param string $priority The priority of the message.  Valid
-     *                  values are: PEAR_LOG_EMERG, PEAR_LOG_ALERT,
-     *                  PEAR_LOG_CRIT, PEAR_LOG_ERR, PEAR_LOG_WARNING,
-     *                  PEAR_LOG_NOTICE, PEAR_LOG_INFO, and PEAR_LOG_DEBUG.
+     *                  values are: SF_PEAR_LOG_EMERG, SF_PEAR_LOG_ALERT,
+     *                  SF_PEAR_LOG_CRIT, SF_PEAR_LOG_ERR, SF_PEAR_LOG_WARNING,
+     *                  SF_PEAR_LOG_NOTICE, SF_PEAR_LOG_INFO, and SF_PEAR_LOG_DEBUG.
      * @return boolean  True on success or false on failure.
      * @access public
      */

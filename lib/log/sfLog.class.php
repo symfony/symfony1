@@ -7,23 +7,23 @@
  * @package Log
  */
 
-define('PEAR_LOG_EMERG',    0);     /** System is unusable */
-define('PEAR_LOG_ALERT',    1);     /** Immediate action required */
-define('PEAR_LOG_CRIT',     2);     /** Critical conditions */
-define('PEAR_LOG_ERR',      3);     /** Error conditions */
-define('PEAR_LOG_WARNING',  4);     /** Warning conditions */
-define('PEAR_LOG_NOTICE',   5);     /** Normal but significant */
-define('PEAR_LOG_INFO',     6);     /** Informational */
-define('PEAR_LOG_DEBUG',    7);     /** Debug-level messages */
+define('SF_PEAR_LOG_EMERG',    0);     /** System is unusable */
+define('SF_PEAR_LOG_ALERT',    1);     /** Immediate action required */
+define('SF_PEAR_LOG_CRIT',     2);     /** Critical conditions */
+define('SF_PEAR_LOG_ERR',      3);     /** Error conditions */
+define('SF_PEAR_LOG_WARNING',  4);     /** Warning conditions */
+define('SF_PEAR_LOG_NOTICE',   5);     /** Normal but significant */
+define('SF_PEAR_LOG_INFO',     6);     /** Informational */
+define('SF_PEAR_LOG_DEBUG',    7);     /** Debug-level messages */
 
-define('PEAR_LOG_ALL',      bindec('11111111'));  /** All messages */
-define('PEAR_LOG_NONE',     bindec('00000000'));  /** No message */
+define('SF_PEAR_LOG_ALL',      bindec('11111111'));  /** All messages */
+define('SF_PEAR_LOG_NONE',     bindec('00000000'));  /** No message */
 
 /* sfLog types for PHP's native error_log() function. */
-define('PEAR_LOG_TYPE_SYSTEM',  0); /** Use PHP's system logger */
-define('PEAR_LOG_TYPE_MAIL',    1); /** Use PHP's mail() function */
-define('PEAR_LOG_TYPE_DEBUG',   2); /** Use PHP's debugging connection */
-define('PEAR_LOG_TYPE_FILE',    3); /** Append to a file */
+define('SF_PEAR_LOG_TYPE_SYSTEM',  0); /** Use PHP's system logger */
+define('SF_PEAR_LOG_TYPE_MAIL',    1); /** Use PHP's mail() function */
+define('SF_PEAR_LOG_TYPE_DEBUG',   2); /** Use PHP's debugging connection */
+define('SF_PEAR_LOG_TYPE_FILE',    3); /** Append to a file */
 
 /**
  * The sfLog:: class implements both an abstraction for various logging
@@ -66,14 +66,14 @@ class sfLog
      * @var integer
      * @access private
      */
-    protected $_priority = PEAR_LOG_INFO;
+    protected $_priority = SF_PEAR_LOG_INFO;
 
     /**
      * The bitmask of allowed log levels.
      * @var integer
      * @access private
      */
-    protected $_mask = PEAR_LOG_ALL;
+    protected $_mask = SF_PEAR_LOG_ALL;
 
     /**
      * Holds all Log_observer objects that wish to be notified of new messages.
@@ -109,8 +109,7 @@ class sfLog
      * @access public
      * @since sfLog 1.0
      */
-    static public function &factory($handler, $name = '', $ident = '', $conf = array(),
-                      $level = PEAR_LOG_DEBUG)
+    static public function &factory($handler, $name = '', $ident = '', $conf = array(), $level = SF_PEAR_LOG_DEBUG)
     {
         $handler = strtolower($handler);
         $class = 'sfLog_'.$handler;
@@ -173,8 +172,7 @@ class sfLog
      * @access public
      * @since sfLog 1.0
      */
-    static public function &singleton($handler, $name = '', $ident = '', $conf = array(),
-                        $level = PEAR_LOG_DEBUG)
+    static public function &singleton($handler, $name = '', $ident = '', $conf = array(), $level = SF_PEAR_LOG_DEBUG)
     {
         static $instances;
         if (!isset($instances)) $instances = array();
@@ -226,7 +224,7 @@ class sfLog
 
     /**
      * A convenience function for logging a emergency event.  It will log a
-     * message at the PEAR_LOG_EMERG log level.
+     * message at the SF_PEAR_LOG_EMERG log level.
      *
      * @param   mixed   $message    String or object containing the message
      *                              to log.
@@ -238,12 +236,12 @@ class sfLog
      */
     function emerg($message)
     {
-        return $this->log($message, PEAR_LOG_EMERG);
+        return $this->log($message, SF_PEAR_LOG_EMERG);
     }
 
     /**
      * A convenience function for logging an alert event.  It will log a
-     * message at the PEAR_LOG_ALERT log level.
+     * message at the SF_PEAR_LOG_ALERT log level.
      *
      * @param   mixed   $message    String or object containing the message
      *                              to log.
@@ -255,12 +253,12 @@ class sfLog
      */
     function alert($message)
     {
-        return $this->log($message, PEAR_LOG_ALERT);
+        return $this->log($message, SF_PEAR_LOG_ALERT);
     }
 
     /**
      * A convenience function for logging a critical event.  It will log a
-     * message at the PEAR_LOG_CRIT log level.
+     * message at the SF_PEAR_LOG_CRIT log level.
      *
      * @param   mixed   $message    String or object containing the message
      *                              to log.
@@ -272,12 +270,12 @@ class sfLog
      */
     function crit($message)
     {
-        return $this->log($message, PEAR_LOG_CRIT);
+        return $this->log($message, SF_PEAR_LOG_CRIT);
     }
 
     /**
      * A convenience function for logging a error event.  It will log a
-     * message at the PEAR_LOG_ERR log level.
+     * message at the SF_PEAR_LOG_ERR log level.
      *
      * @param   mixed   $message    String or object containing the message
      *                              to log.
@@ -289,12 +287,12 @@ class sfLog
      */
     function err($message)
     {
-        return $this->log($message, PEAR_LOG_ERR);
+        return $this->log($message, SF_PEAR_LOG_ERR);
     }
 
     /**
      * A convenience function for logging a warning event.  It will log a
-     * message at the PEAR_LOG_WARNING log level.
+     * message at the SF_PEAR_LOG_WARNING log level.
      *
      * @param   mixed   $message    String or object containing the message
      *                              to log.
@@ -306,12 +304,12 @@ class sfLog
      */
     function warning($message)
     {
-        return $this->log($message, PEAR_LOG_WARNING);
+        return $this->log($message, SF_PEAR_LOG_WARNING);
     }
 
     /**
      * A convenience function for logging a notice event.  It will log a
-     * message at the PEAR_LOG_NOTICE log level.
+     * message at the SF_PEAR_LOG_NOTICE log level.
      *
      * @param   mixed   $message    String or object containing the message
      *                              to log.
@@ -323,12 +321,12 @@ class sfLog
      */
     function notice($message)
     {
-        return $this->log($message, PEAR_LOG_NOTICE);
+        return $this->log($message, SF_PEAR_LOG_NOTICE);
     }
 
     /**
      * A convenience function for logging a information event.  It will log a
-     * message at the PEAR_LOG_INFO log level.
+     * message at the SF_PEAR_LOG_INFO log level.
      *
      * @param   mixed   $message    String or object containing the message
      *                              to log.
@@ -340,12 +338,12 @@ class sfLog
      */
     function info($message)
     {
-        return $this->log($message, PEAR_LOG_INFO);
+        return $this->log($message, SF_PEAR_LOG_INFO);
     }
 
     /**
      * A convenience function for logging a debug event.  It will log a
-     * message at the PEAR_LOG_DEBUG log level.
+     * message at the SF_PEAR_LOG_DEBUG log level.
      *
      * @param   mixed   $message    String or object containing the message
      *                              to log.
@@ -357,14 +355,14 @@ class sfLog
      */
     function debug($message)
     {
-        return $this->log($message, PEAR_LOG_DEBUG);
+        return $this->log($message, SF_PEAR_LOG_DEBUG);
     }
 
     /**
      * Returns the string representation of the message data.
      *
      * If $message is an object, _extractMessage() will attempt to extract
-     * the message text using a known method (such as a PEAR_Error object's
+     * the message text using a known method (such as a SF_PEAR_Error object's
      * getMessage() method).  If a known method, cannot be found, the
      * serialized representation of the object will be returned.
      *
@@ -409,9 +407,9 @@ class sfLog
     }
 
     /**
-     * Returns the string representation of a PEAR_LOG_* integer constant.
+     * Returns the string representation of a SF_PEAR_LOG_* integer constant.
      *
-     * @param int $priority     A PEAR_LOG_* integer constant.
+     * @param int $priority     A SF_PEAR_LOG_* integer constant.
      *
      * @return string           The string representation of $level.
      *
@@ -420,14 +418,14 @@ class sfLog
     function priorityToString($priority)
     {
         $levels = array(
-            PEAR_LOG_EMERG   => 'emergency',
-            PEAR_LOG_ALERT   => 'alert',
-            PEAR_LOG_CRIT    => 'critical',
-            PEAR_LOG_ERR     => 'error',
-            PEAR_LOG_WARNING => 'warning',
-            PEAR_LOG_NOTICE  => 'notice',
-            PEAR_LOG_INFO    => 'info',
-            PEAR_LOG_DEBUG   => 'debug'
+            SF_PEAR_LOG_EMERG   => 'emergency',
+            SF_PEAR_LOG_ALERT   => 'alert',
+            SF_PEAR_LOG_CRIT    => 'critical',
+            SF_PEAR_LOG_ERR     => 'error',
+            SF_PEAR_LOG_WARNING => 'warning',
+            SF_PEAR_LOG_NOTICE  => 'notice',
+            SF_PEAR_LOG_INFO    => 'info',
+            SF_PEAR_LOG_DEBUG   => 'debug'
         );
 
         return $levels[$priority];

@@ -18,7 +18,7 @@
  * - [sf_logging_level]:  level of logging
  *
  * Same log levels as Pear_sfLog.
- * This list is ordered by highest priority (PEAR_LOG_EMERG) to lowest priority (PEAR_LOG_DEBUG):
+ * This list is ordered by highest priority (SF_PEAR_LOG_EMERG) to lowest priority (SF_PEAR_LOG_DEBUG):
  * - EMERG:   System is unusable
  * - ALERT:   Immediate action required
  * - CRIT:    Critical conditions
@@ -54,14 +54,14 @@ class sfLogger extends sfLog
         $logger = &sfLog::singleton('composite');
         $conf = array('mode' => 0666);
         $file_logger = &sfLog::singleton('file', sfConfig::get('sf_log_dir').DIRECTORY_SEPARATOR.sfConfig::get('sf_app').'_'.sfConfig::get('sf_environment').'.log', 'symfony', $conf);
-        $file_logger->setMask(sfLog::UPTO(constant('PEAR_LOG_'.strtoupper(sfConfig::get('sf_logging_level')))));
+        $file_logger->setMask(sfLog::UPTO(constant('SF_PEAR_LOG_'.strtoupper(sfConfig::get('sf_logging_level')))));
         $logger->addChild($file_logger);
 
         if (sfConfig::get('sf_web_debug'))
         {
           require_once $sf_symfony_lib_dir.'/log/sfLogger/var.class.php';
           $var_logger = &sfLog::singleton('var', '', 'symfony');
-          $var_logger->setMask(sfLog::UPTO(constant('PEAR_LOG_'.strtoupper(sfConfig::get('sf_logging_level')))));
+          $var_logger->setMask(sfLog::UPTO(constant('SF_PEAR_LOG_'.strtoupper(sfConfig::get('sf_logging_level')))));
           $logger->addChild($var_logger);
         }
 
@@ -84,18 +84,18 @@ class sfLogger extends sfLog
     {
       case E_WARNING:
       case E_USER_WARNING:
-        $priority = PEAR_LOG_WARNING;
+        $priority = SF_PEAR_LOG_WARNING;
         break;
       case E_NOTICE:
       case E_USER_NOTICE:
-        $priority = PEAR_LOG_NOTICE;
+        $priority = SF_PEAR_LOG_NOTICE;
         break;
       case E_ERROR:
       case E_USER_ERROR:
-        $priority = PEAR_LOG_ERR;
+        $priority = SF_PEAR_LOG_ERR;
         break;
       default:
-        $priority = PEAR_LOG_INFO;
+        $priority = SF_PEAR_LOG_INFO;
     }
 
     sfLogger::$logger->log($message.' in '.$file.' at line '.$line, $priority);
