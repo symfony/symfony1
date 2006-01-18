@@ -46,7 +46,7 @@ function run_plugin_install($task, $args)
   // install plugin
   $packages = array($args[1]);
   if ($verbose) echo '>> plugin    '.pakeApp::excerpt('installing plugin "'.$args[1].'"')."\n";
-  $ret = _pear_run_command($config, 'install', array('offline' => true), $packages);
+  $ret = _pear_run_command($config, 'install', array(), $packages);
   if ($ret && !strpos($ret, 'not installed'))
   {
     throw new Exception($ret);
