@@ -5,7 +5,7 @@ if (!sfConfig::get('sf_in_bootstrap'))
   $sf_symfony_lib_dir = sfConfig::get('sf_symfony_lib_dir');
 
   // YAML support
-  require_once($sf_symfony_lib_dir.'/spyc/spyc.php');
+  require_once($sf_symfony_lib_dir.'/symfony/util/Spyc.class.php');
   require_once($sf_symfony_lib_dir.'/symfony/util/sfYaml.class.php');
 
   // cache support
