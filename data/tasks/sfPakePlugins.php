@@ -179,12 +179,12 @@ function _pear_init($method = 'local')
   // current symfony release
   if (is_readable('lib/symfony'))
   {
-    $sf_version = file_get_contents('lib/symfony/symfony/BRANCH');
+    $sf_version = file_get_contents('lib/symfony/BRANCH');
   }
   else
   {
     // PEAR config
-    if ((include('symfony/symfony/pear.php')) != 'OK')
+    if ((include('symfony/pear.php')) != 'OK')
     {
       throw new Exception('Unable to find symfony librairies.');
     }

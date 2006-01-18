@@ -15,7 +15,7 @@ sfConfig::add(array(
   'sf_config_dir_name'  => 'config',
   'sf_apps_dir_name'    => 'apps',
   'sf_test_dir_name'    => 'test',
-  'sf_doc_dir_name'    => 'doc',
+  'sf_doc_dir_name'     => 'doc',
 
   // global directory structure
   'sf_app_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$sf_app,

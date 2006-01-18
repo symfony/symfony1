@@ -29,6 +29,7 @@ pake_task('alltests');
 
 pake_desc('release a new symfony version');
 //pake_task('release', 'alltests');
+
 pake_task('release');
 
 function run_alltests($task, $args)
@@ -70,7 +71,7 @@ function run_alltests($task, $args)
 
   pake_import('simpletest', false);
 
-  pakeSimpletestTask::run_test($task, $args);
+  pakeSimpletestTask::run_test($task, array());
 
   sfToolkit::clearDirectory($tmp_dir);
 }
