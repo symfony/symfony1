@@ -18,24 +18,24 @@
      * @access public
      * @var string
      */ 
-    var $parent;
-    var $id;
+    public $parent;
+    public $id;
     /**#@+*/
     /** 
      * @access public
      * @var mixed
      */
-    var $data;
+    public $data;
     /** 
      * @access public
      * @var int
      */
-    var $indent;
+    public $indent;
     /** 
      * @access public
      * @var bool
      */
-    var $children = false;
+    public $children = false;
 
     /**
      * The constructor assigns the node a unique ID.
@@ -325,14 +325,14 @@
      * @access private
      * @var mixed
      */ 
-    var $_haveRefs;
-    var $_allNodes;
-    var $_lastIndent;
-    var $_lastNode;
-    var $_inBlock;
-    var $_isInline;
-    var $_dumpIndent;
-    var $_dumpWordWrap;
+    public $_haveRefs;
+    public $_allNodes;
+    public $_lastIndent;
+    public $_lastNode;
+    public $_inBlock;
+    public $_isInline;
+    public $_dumpIndent;
+    public $_dumpWordWrap;
     /**#@+*/
 
     /**** Private Methods ****/
