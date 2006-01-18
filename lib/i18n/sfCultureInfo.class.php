@@ -188,7 +188,7 @@ class sfCultureInfo
    */
   protected static function dataDir()
   {
-    return sfConfig::get('sf_symfony_data_dir').'/symfony/i18n/';
+    return sfConfig::get('sf_symfony_data_dir').'/i18n/';
   }
   
   /**

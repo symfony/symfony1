@@ -5,29 +5,29 @@ if (!sfConfig::get('sf_in_bootstrap'))
   $sf_symfony_lib_dir = sfConfig::get('sf_symfony_lib_dir');
 
   // YAML support
-  require_once($sf_symfony_lib_dir.'/symfony/util/Spyc.class.php');
-  require_once($sf_symfony_lib_dir.'/symfony/util/sfYaml.class.php');
+  require_once($sf_symfony_lib_dir.'/util/Spyc.class.php');
+  require_once($sf_symfony_lib_dir.'/util/sfYaml.class.php');
 
   // cache support
-  require_once($sf_symfony_lib_dir.'/symfony/cache/sfCache.class.php');
-  require_once($sf_symfony_lib_dir.'/symfony/cache/sfFileCache.class.php');
+  require_once($sf_symfony_lib_dir.'/cache/sfCache.class.php');
+  require_once($sf_symfony_lib_dir.'/cache/sfFileCache.class.php');
 
   // config support
-  require_once($sf_symfony_lib_dir.'/symfony/config/sfConfigCache.class.php');
-  require_once($sf_symfony_lib_dir.'/symfony/config/sfConfigHandler.class.php');
-  require_once($sf_symfony_lib_dir.'/symfony/config/sfYamlConfigHandler.class.php');
-  require_once($sf_symfony_lib_dir.'/symfony/config/sfAutoloadConfigHandler.class.php');
-  require_once($sf_symfony_lib_dir.'/symfony/config/sfRootConfigHandler.class.php');
+  require_once($sf_symfony_lib_dir.'/config/sfConfigCache.class.php');
+  require_once($sf_symfony_lib_dir.'/config/sfConfigHandler.class.php');
+  require_once($sf_symfony_lib_dir.'/config/sfYamlConfigHandler.class.php');
+  require_once($sf_symfony_lib_dir.'/config/sfAutoloadConfigHandler.class.php');
+  require_once($sf_symfony_lib_dir.'/config/sfRootConfigHandler.class.php');
 
   // basic exception classes
-  require_once($sf_symfony_lib_dir.'/symfony/exception/sfException.class.php');
-  require_once($sf_symfony_lib_dir.'/symfony/exception/sfAutoloadException.class.php');
-  require_once($sf_symfony_lib_dir.'/symfony/exception/sfCacheException.class.php');
-  require_once($sf_symfony_lib_dir.'/symfony/exception/sfConfigurationException.class.php');
-  require_once($sf_symfony_lib_dir.'/symfony/exception/sfParseException.class.php');
+  require_once($sf_symfony_lib_dir.'/exception/sfException.class.php');
+  require_once($sf_symfony_lib_dir.'/exception/sfAutoloadException.class.php');
+  require_once($sf_symfony_lib_dir.'/exception/sfCacheException.class.php');
+  require_once($sf_symfony_lib_dir.'/exception/sfConfigurationException.class.php');
+  require_once($sf_symfony_lib_dir.'/exception/sfParseException.class.php');
 
   // utils
-  require_once($sf_symfony_lib_dir.'/symfony/util/sfParameterHolder.class.php');
+  require_once($sf_symfony_lib_dir.'/util/sfParameterHolder.class.php');
 }
 
 /**

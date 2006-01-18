@@ -1,7 +1,7 @@
 <?php
 
-require_once 'symfony/helper/TagHelper.php';
-require_once 'symfony/helper/AssetHelper.php';
+require_once 'helper/TagHelper.php';
+require_once 'helper/AssetHelper.php';
 
 Mock::generate('sfContext');
 

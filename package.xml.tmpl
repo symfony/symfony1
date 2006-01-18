@@ -43,13 +43,13 @@
 
    ##CLASS_FILES##
 
-   <file role="php" baseinstalldir="symfony" install-as="symfony/pear.php" name="lib/symfony/pear.php">
+   <file role="php" baseinstalldir="symfony" install-as="symfony/pear.php" name="lib/pear.php">
     <tasks:replace type="pear-config" from="@DATA-DIR@" to="data_dir" />
     <tasks:replace type="pear-config" from="@PEAR-DIR@" to="php_dir" />
     <tasks:replace type="package-info" from="@SYMFONY-VERSION@" to="version" />
    </file>
 
-   <file role="php" baseinstalldir="symfony" install-as="symfony/symfony.php" name="lib/symfony/symfony.php">
+   <file role="php" baseinstalldir="symfony" install-as="symfony/symfony.php" name="lib/symfony.php">
     <tasks:replace type="package-info" from="@DEV@" to="version" />
    </file>
 

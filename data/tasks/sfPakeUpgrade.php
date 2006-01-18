@@ -41,7 +41,7 @@ function run_upgrade_to_0_6($task, $args)
 
     // upgrade config.php script file
     if ($verbose) echo '>> app       '.pakeApp::excerpt('upgrading config.php')."\n";
-    pake_copy(sfConfig::get('sf_symfony_data_dir').'/symfony/skeleton/app/app/config/config.php', $app_dir.'/config/config.php', array('override' => true));
+    pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/app/app/config/config.php', $app_dir.'/config/config.php', array('override' => true));
 
     // change all constants to use sfConfig object
     _upgrade_0_6_constants(array($app_dir.'/modules', $app_dir.'/templates', $app_dir.'/lib'));

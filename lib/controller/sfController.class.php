@@ -54,10 +54,10 @@ abstract class sfController
       sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_action_dir_name') => false,
 
       // local plugin
-      sfConfig::get('sf_plugin_data_dir').'/symfony/modules/'.$moduleName.'/actions' => true,
+      sfConfig::get('sf_plugin_data_dir').'/modules/'.$moduleName.'/actions' => true,
 
       // core modules or global plugins
-      sfConfig::get('sf_symfony_data_dir').'/symfony/modules/'.$moduleName.'/actions' => true,
+      sfConfig::get('sf_symfony_data_dir').'/modules/'.$moduleName.'/actions' => true,
     );
 
     foreach ($dirs as $dir => $checkActivated)
@@ -416,8 +416,8 @@ abstract class sfController
     }
 
     // view class (as configured in module.yml or defined in action)
-    $viewName = $this->getContext()->getRequest()->getAttribute($moduleName.'_'.$actionName.'_view_name', '', 'symfony/action/view') ? $this->getContext()->getRequest()->getAttribute($moduleName.'_'.$actionName.'_view_name', '', 'symfony/action/view') : sfConfig::get('mod_'.strtolower($moduleName).'_view_class');
-    $file     = sfConfig::get('sf_symfony_lib_dir').'/symfony/view/'.$viewName.'View.class.php';
+    $viewName = $this->getContext()->getRequest()->getAttribute($moduleName.'_'.$actionName.'_view_name', '', 'action/view') ? $this->getContext()->getRequest()->getAttribute($moduleName.'_'.$actionName.'_view_name', '', 'action/view') : sfConfig::get('mod_'.strtolower($moduleName).'_view_class');
+    $file     = sfConfig::get('sf_symfony_lib_dir').'/view/'.$viewName.'View.class.php';
     if (is_readable($file))
     {
       $class = $viewName.'View';

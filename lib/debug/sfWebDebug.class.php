@@ -123,7 +123,7 @@ class sfWebDebug
     // require needed helpers
     foreach (array('Tag', 'Url', 'Asset', 'Javascript') as $helperName)
     {
-      include_once(sfConfig::get('sf_symfony_lib_dir').'/symfony/helper/'.$helperName.'Helper.php');
+      include_once(sfConfig::get('sf_symfony_lib_dir').'/helper/'.$helperName.'Helper.php');
     }
   }
 

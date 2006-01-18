@@ -74,7 +74,7 @@ class sfPropelCrudGenerator extends sfGenerator
 
     // theme exists?
     $theme = isset($params['theme']) ? $params['theme'] : 'default';
-    if (!is_dir(sfConfig::get('sf_symfony_data_dir').'/symfony/generator/sfPropelCrud/'.$theme.'/template'))
+    if (!is_dir(sfConfig::get('sf_symfony_data_dir').'/generator/sfPropelCrud/'.$theme.'/template'))
     {
       $error = 'The theme "%s" does not exist.';
       $error = sprintf($error, $theme);

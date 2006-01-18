@@ -17,9 +17,9 @@
  * @version    SVN: $Id$
  */
 
-require_once 'symfony/config/sfConfig.class.php';
-require_once 'symfony/util/sfToolkit.class.php';
-require_once 'symfony/test/sfTestBrowser.class.php';
+require_once(sfConfig::get('sf_symfony_lib_dir').'/config/sfConfig.class.php');
+require_once(sfConfig::get('sf_symfony_lib_dir').'/util/sfToolkit.class.php');
+require_once(sfConfig::get('sf_symfony_lib_dir').'/test/sfTestBrowser.class.php');
 
 if (!function_exists('pake_task'))
 {
@@ -62,7 +62,7 @@ class sfLiveProjectUnitTestCase extends UnitTestCase
 
   public function getPakefilePath()
   {
-    return dirname(__FILE__).'/../../../data/symfony/bin/pakefile.php';
+    return sfConfig::get('sf_symfony_data_dir').'/bin/pakefile.php';
   }
 
   public function getProjectName()
@@ -87,12 +87,12 @@ class sfLiveProjectUnitTestCase extends UnitTestCase
 
   public function getSymfonyLibDir()
   {
-    return dirname(__FILE__).'/../..';
+    return dirname(__FILE__).'/..';
   }
 
   public function getSymfonyDataDir()
   {
-    return dirname(__FILE__).'/../../../data';
+    return dirname(__FILE__).'/../../data';
   }
 
   public function SetUp()
@@ -149,10 +149,10 @@ class sfLiveProjectUnitTestCase extends UnitTestCase
     ));
 
     // get configuration
-    require_once(sfConfig::get('sf_symfony_lib_dir').'/symfony/config/sfConfig.class.php');
+    require_once(sfConfig::get('sf_symfony_lib_dir').'/config/sfConfig.class.php');
 
     // directory layout
-    include(sfConfig::get('sf_symfony_data_dir').'/symfony/config/constants.php');
+    include(sfConfig::get('sf_symfony_data_dir').'/config/constants.php');
 
     // include path
     set_include_path(
@@ -163,7 +163,7 @@ class sfLiveProjectUnitTestCase extends UnitTestCase
       get_include_path()
     );
 
-    require_once 'symfony/symfony.php';
+    require_once(sfConfig::get('sf_symfony_lib_dir').'/symfony.php');
 
     register_shutdown_function(array($this, 'shutdown'));
 
@@ -225,8 +225,8 @@ class sfLiveProjectUnitTestCase extends UnitTestCase
   public function shutdown()
   {
     // remove all temporary files and directories
-    sfToolkit::clearDirectory($this->getWorkDir());
-    rmdir($this->getWorkDir());
+//    sfToolkit::clearDirectory($this->getWorkDir());
+//    rmdir($this->getWorkDir());
   }
 }
 

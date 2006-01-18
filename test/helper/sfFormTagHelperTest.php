@@ -1,7 +1,7 @@
 <?php
 
-require_once 'symfony/helper/TagHelper.php';
-require_once 'symfony/helper/FormHelper.php';
+require_once 'helper/TagHelper.php';
+require_once 'helper/FormHelper.php';
 
 Mock::generate('sfContext');
 

@@ -42,7 +42,7 @@ class sfDefineEnvironmentConfigHandler extends sfYamlConfigHandler
     }
 
     // get default configuration
-    $defaultConfigFile = sfConfig::get('sf_symfony_data_dir').'/symfony/config/'.basename($configFile);
+    $defaultConfigFile = sfConfig::get('sf_symfony_data_dir').'/config/'.basename($configFile);
     if (is_readable($defaultConfigFile))
     {
       $defaultConfig = $this->parseYaml($defaultConfigFile);

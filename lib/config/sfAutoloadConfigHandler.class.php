@@ -40,7 +40,7 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
     $config = $this->parseYaml($configFile);
 
     // get default configuration
-    $defaultConfigFile = sfConfig::get('sf_symfony_data_dir').'/symfony/config/'.basename($configFile);
+    $defaultConfigFile = sfConfig::get('sf_symfony_data_dir').'/config/'.basename($configFile);
     $defaultConfig = array();
     if (is_readable($defaultConfigFile))
     {
@@ -89,7 +89,7 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
         }
 
         // we automatically add our php classes
-        require_once(sfConfig::get('sf_symfony_lib_dir').'/symfony/util/sfFinder.class.php');
+        require_once(sfConfig::get('sf_symfony_lib_dir').'/util/sfFinder.class.php');
         $finder = sfFinder::type('file')->name('*'.$ext);
 
         // recursive mapping?

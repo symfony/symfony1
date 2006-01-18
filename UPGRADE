@@ -18,7 +18,7 @@ Automatically
 
   5 - update your databases.yml configuration file (see section 11 of the `Manually` section below)
   
-  6 - do some the manual steps numbered: 13
+  6 - do some the manual steps numbered: 13, 14
 
 Be careful if your project directory contains external libraries using `SF_XXX`, `MOD_XXX` or `APP_XXX` constants (for instance the `geshi` library). The `upgrade` command transforms these constants into a class method call, so you ought to overwrite the upgraded library by the the backup copy.
 
@@ -121,4 +121,10 @@ For all your applications within a project:
 
   13 - change all setSort() calls from sfPropelPager to the equivalent Criteria methods
 
-  14 - clear the symfony cache
+  14 - change your symlinks or apache configuration to move the `web/sf` directory:
+
+    0.4.X/0.5.X                 | 0.6.X/0.7.X
+    ----------------------------|--------------------
+    symfony/data/symfony/web/sf | symfony/data/web/sf
+
+  15 - clear the symfony cache

@@ -1,34 +1,34 @@
 <?php
 
 // symfony directories
-if (is_readable(dirname(__FILE__).'/../../../lib/symfony'))
+if (is_readable(dirname(__FILE__).'/../../lib'))
 {
   // symlink exists
-  $sf_symfony_lib_dir  = realpath(dirname(__FILE__).'/../../../lib');
-  $sf_symfony_data_dir = realpath(dirname(__FILE__).'/../..');
+  $sf_symfony_lib_dir  = realpath(dirname(__FILE__).'/../../lib');
+  $sf_symfony_data_dir = realpath(dirname(__FILE__).'/..');
   $symlink = true;
 }
 else
 {
   // PEAR config
-  if ((include('symfony/symfony/pear.php')) != 'OK')
+  if ((include('symfony/pear.php')) != 'OK')
   {
     throw new Exception('Unable to find symfony librairies');
   }
   $symlink = false;
 }
 
-require_once($sf_symfony_lib_dir.'/symfony/config/sfConfig.class.php');
+require_once($sf_symfony_lib_dir.'/config/sfConfig.class.php');
 
 sfConfig::add(array(
   'sf_root_dir'         => getcwd(),
   'sf_symfony_lib_dir'  => $sf_symfony_lib_dir,
   'sf_symfony_data_dir' => $sf_symfony_data_dir,
-  'sf_symfony_symlink'          => $symlink,
+  'sf_symfony_symlink'  => $symlink,
 ));
 
 // directory layout
-include($sf_symfony_data_dir.'/symfony/config/constants.php');
+include($sf_symfony_data_dir.'/config/constants.php');
 
 // include path
 set_include_path(
@@ -36,6 +36,7 @@ set_include_path(
   sfConfig::get('sf_symfony_lib_dir').PATH_SEPARATOR.
   sfConfig::get('sf_app_lib_dir').PATH_SEPARATOR.
   sfConfig::get('sf_model_dir').PATH_SEPARATOR.
+  sfConfig::get('sf_symfony_lib_dir').DIRECTORY_SEPARATOR.'vendor'.PATH_SEPARATOR.
   get_include_path()
 );
 

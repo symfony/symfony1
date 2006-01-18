@@ -124,7 +124,7 @@ class sfConfigCache
     {
       if (!is_readable(sfConfig::get('sf_app_dir').'/'.$filename))
       {
-        $filename = sfConfig::get('sf_symfony_data_dir').'/symfony/config/'.basename($filename);
+        $filename = sfConfig::get('sf_symfony_data_dir').'/config/'.basename($filename);
       }
       else
       {

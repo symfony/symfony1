@@ -95,7 +95,7 @@ function include_partial($name, $vars = array())
     else
     {
       // search partial in a symfony module directory
-      $partial = sfConfig::get('sf_symfony_data_dir').'/symfony/modules/'.$current_module.'/templates/'.$filename;
+      $partial = sfConfig::get('sf_symfony_data_dir').'/modules/'.$current_module.'/templates/'.$filename;
       if (is_readable($partial))
       {
         $ok = true;

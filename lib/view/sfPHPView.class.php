@@ -91,7 +91,7 @@ class sfPHPView extends sfView
    */
   protected function loadHelpers($helpers)
   {
-    $helper_base_dir = sfConfig::get('sf_symfony_lib_dir').'/symfony/helper/';
+    $helper_base_dir = sfConfig::get('sf_symfony_lib_dir').'/helper/';
     foreach ($helpers as $helperName)
     {
       if (is_readable($helper_base_dir.$helperName.'Helper.php'))
@@ -168,10 +168,10 @@ class sfPHPView extends sfView
       $this->getDirectory(),
 
       // local plugin
-      sfConfig::get('sf_plugin_data_dir').'/symfony/modules/'.$moduleName.'/templates',
+      sfConfig::get('sf_plugin_data_dir').'/modules/'.$moduleName.'/templates',
 
       // core modules or global plugins
-      sfConfig::get('sf_symfony_data_dir').'/symfony/modules/'.$moduleName.'/templates',
+      sfConfig::get('sf_symfony_data_dir').'/modules/'.$moduleName.'/templates',
 
       // generated templates in cache
       sfConfig::get('sf_module_cache_dir').'/auto'.ucfirst($moduleName).'/templates',

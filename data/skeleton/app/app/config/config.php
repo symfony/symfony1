@@ -1,7 +1,7 @@
 <?php
 
 // symfony directories
-if (is_readable(SF_ROOT_DIR.'/lib/symfony'))
+if (is_readable(SF_ROOT_DIR.'/lib/symfony/symfony.php'))
 {
   // symlink exists
   $sf_symfony_lib_dir  = SF_ROOT_DIR.'/lib/symfony';
@@ -11,13 +11,13 @@ if (is_readable(SF_ROOT_DIR.'/lib/symfony'))
 else
 {
   // PEAR config
-  if ((include('symfony/symfony/pear.php')) != 'OK')
+  if ((include('symfony/pear.php')) != 'OK')
   {
     throw new Exception('Unable to find symfony librairies');
   }
 }
 
-require_once($sf_symfony_lib_dir.'/symfony/config/sfConfig.class.php');
+require_once($sf_symfony_lib_dir.'/config/sfConfig.class.php');
 
 sfConfig::add(array(
   'sf_root_dir'         => SF_ROOT_DIR,
@@ -37,7 +37,7 @@ if (sfConfig::get('sf_debug'))
 }
 
 // directory layout
-include($sf_symfony_data_dir.'/symfony/config/constants.php');
+include($sf_symfony_data_dir.'/config/constants.php');
 
 // include path
 set_include_path(
@@ -45,11 +45,12 @@ set_include_path(
   sfConfig::get('sf_lib_dir').PATH_SEPARATOR.
   sfConfig::get('sf_symfony_lib_dir').PATH_SEPARATOR.
   sfConfig::get('sf_app_lib_dir').PATH_SEPARATOR.
+  sfConfig::get('sf_symfony_lib_dir').DIRECTORY_SEPARATOR.'vendor'.PATH_SEPARATOR.
   get_include_path()
 );
 
 // check to see if we're not in a cache cleaning process
-require_once(sfConfig::get('sf_symfony_lib_dir').'/symfony/util/sfToolkit.class.php');
+require_once(sfConfig::get('sf_symfony_lib_dir').'/util/sfToolkit.class.php');
 if (sfToolkit::hasLockFile(SF_ROOT_DIR.DIRECTORY_SEPARATOR.SF_APP.'_'.SF_ENVIRONMENT.'.lck', 5))
 {
   // application is not yet available
@@ -82,7 +83,7 @@ if (is_readable($bootstrap))
 }
 else
 {
-  require_once(sfConfig::get('sf_symfony_lib_dir').'/symfony/symfony.php');
+  require_once(sfConfig::get('sf_symfony_lib_dir').'/symfony.php');
 }
 
 ?>

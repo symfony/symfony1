@@ -1,7 +1,5 @@
 <?php
 
-require_once 'symfony/test/sfLiveProjectUnitTestCase.class.php';
-
 class propelCrudGeneratorTest extends sfLiveProjectUnitTestCase
 {
   public function test_simple()

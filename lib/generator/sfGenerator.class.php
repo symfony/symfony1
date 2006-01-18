@@ -35,10 +35,10 @@ abstract class sfGenerator
   protected function generatePhpFiles($generatedModuleName, $templateFiles = array())
   {
     // template directory
-    $template_dir = sfConfig::get('sf_symfony_data_dir').'/symfony/generator/'.$this->getGeneratorClass().'/'.$this->getTheme().'/template';
+    $template_dir = sfConfig::get('sf_symfony_data_dir').'/generator/'.$this->getGeneratorClass().'/'.$this->getTheme().'/template';
 
     // default template directory
-    $default_template_dir = sfConfig::get('sf_symfony_data_dir').'/symfony/generator/'.$this->getGeneratorClass().'/default/template';
+    $default_template_dir = sfConfig::get('sf_symfony_data_dir').'/generator/'.$this->getGeneratorClass().'/default/template';
 
     // eval actions file
     $action_template = $template_dir.'/actions/actions.class.php';

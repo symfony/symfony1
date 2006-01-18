@@ -22,8 +22,8 @@ class sfMail
 
   public function __construct()
   {
-    require_once 'symfony/addon/sfMail/phpmailer/class.phpmailer.php';
-    require_once 'symfony/addon/sfMail/phpmailer/class.smtp.php';
+    require_once(sfConfig::get('sf_symfony_lib_dir').'/addon/sfMail/phpmailer/class.phpmailer.php');
+    require_once(sfConfig::get('sf_symfony_lib_dir').'/addon/sfMail/phpmailer/class.smtp.php');
 
     $this->mailer = new PHPMailer();
   }

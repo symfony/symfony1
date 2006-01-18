@@ -1,6 +1,6 @@
 <?php
 
-require_once 'symfony/helper/TextHelper.php';
+require_once 'helper/TextHelper.php';
 
 Mock::generate('sfContext');
 
