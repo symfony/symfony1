@@ -28,7 +28,8 @@ pake_desc('launch symfony test suite');
 pake_task('alltests');
 
 pake_desc('release a new symfony version');
-pake_task('release', 'alltests');
+//pake_task('release', 'alltests');
+pake_task('release');
 
 function run_alltests($task, $args)
 {

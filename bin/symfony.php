@@ -42,7 +42,7 @@ catch (pakeException $e)
 if (is_readable('lib/symfony'))
 {
   // local
-  $pakefile = 'data/symfony/symfony/bin/pakefile.php';
+  $pakefile = 'data/symfony/bin/pakefile.php';
 }
 else
 {
@@ -55,7 +55,7 @@ try
 {
   $pake->run($pakefile);
 }
-catch (pakeException $e)
+catch (Exception $e)
 {
   echo "ERROR: symfony - ".$e->getMessage()."\n";
 }
