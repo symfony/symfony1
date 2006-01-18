@@ -1,7 +1,5 @@
 <?php
 
-require_once('pake/pakeFinder.class.php');
-
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
@@ -181,7 +179,7 @@ class sfPropelData
     }
     else if (is_dir($directory_or_file))
     {
-      $fixture_files = pakeFinder::type('file')->name('*.yml')->in($directory_or_file);
+      $fixture_files = sfFinder::type('file')->name('*.yml')->in($directory_or_file);
     }
     else
     {

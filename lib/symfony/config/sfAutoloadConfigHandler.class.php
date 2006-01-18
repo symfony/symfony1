@@ -89,8 +89,8 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
         }
 
         // we automatically add our php classes
-        require_once 'pake/pakeFinder.class.php';
-        $finder = pakeFinder::type('file')->name('*'.$ext);
+        require_once(sfConfig::get('sf_symfony_lib_dir').'/symfony/util/sfFinder.class.php');
+        $finder = sfFinder::type('file')->name('*'.$ext);
 
         // recursive mapping?
         $recursive = ((isset($entry['recursive'])) ? $entry['recursive'] : false);

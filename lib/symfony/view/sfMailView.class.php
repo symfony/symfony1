@@ -77,10 +77,9 @@ class sfMailView extends sfPHPView
       $retval = $this->renderFile($template);
 
       // render main and alternate templates
-      require_once('pake/pakeFinder.class.php');
       $all_template_dir  = dirname($template);
       $all_template_regex = preg_replace('/\\.php$/', '\..+\.php', basename($template));
-      $all_templates = pakeFinder::type('file')->name('/^'.$all_template_regex.'$/')->in($all_template_dir);
+      $all_templates = sfFinder::type('file')->name('/^'.$all_template_regex.'$/')->in($all_template_dir);
       $all_retvals = array();
       foreach ($all_templates as $templateFile)
       {

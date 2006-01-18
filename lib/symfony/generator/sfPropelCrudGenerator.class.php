@@ -1,7 +1,5 @@
 <?php
 
-require_once('pake/pakeFinder.class.php');
-
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
@@ -106,7 +104,7 @@ class sfPropelCrudGenerator extends sfGenerator
   protected function loadMapBuilderClasses()
   {
     // we must load all map builder classes to be able to deal with foreign keys (cf. editSuccess.php template)
-    $classes = pakeFinder::type('file')->name('*MapBuilder.php')->relative()->in(sfConfig::get('sf_lib_dir') ? sfConfig::get('sf_lib_dir').'/model' : 'lib/model');
+    $classes = sfFinder::type('file')->name('*MapBuilder.php')->relative()->in(sfConfig::get('sf_lib_dir') ? sfConfig::get('sf_lib_dir').'/model' : 'lib/model');
     foreach ($classes as $class)
     {
       $class_map_builder = basename($class, '.php');
