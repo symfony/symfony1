@@ -58,7 +58,7 @@ class sfPropelPager
     $cForCount->clearGroupByColumns();
 
     // require the model class (because autoloading can crash under some conditions)
-    require_once('model/'.$this->getClassPeer().'.php');
+    require_once(sfConfig::get('sf_model_lib_dir').'/'.$this->getClassPeer().'.php');
     $this->setNbResults(call_user_func(array($this->getClassPeer(), $this->getPeerCountMethod()), $cForCount));
 
     $c = $this->getCriteria();

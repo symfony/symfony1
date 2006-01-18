@@ -156,7 +156,7 @@ class sfPropelData
         {
           $peer_class = trim($class.'Peer');
 
-          require_once('model/'.$peer_class.'.php');
+          require_once(sfConfig::get('sf_model_lib_dir').'/'.$peer_class.'.php');
 
           call_user_func(array($peer_class, 'doDeleteAll'));
         }
@@ -194,7 +194,7 @@ class sfPropelData
     $class_map_builder = $class.'MapBuilder';
     if (!isset($this->maps[$class]))
     {
-      require_once('model/map/'.$class_map_builder.'.php');
+      require_once(sfConfig::get('sf_model_lib_dir').'/map/'.$class_map_builder.'.php');
       $this->maps[$class] = new $class_map_builder();
       $this->maps[$class]->doBuild();
     }

@@ -19,10 +19,10 @@ if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_active'))
 {
   // register debug driver
   require_once 'creole/Creole.php';
-  Creole::registerDriver('*', 'addon.creole.drivers.sfDebugConnection');
+  Creole::registerDriver('*', 'symfony.addon.creole.drivers.sfDebugConnection');
 
   // register our logger
-  require_once 'addon/creole/drivers/sfDebugConnection.php';
+  require_once(sfConfig::get('sf_symfony_lib_dir').'/addon/creole/drivers/sfDebugConnection.php');
   sfDebugConnection::setLogger(sfLogger::getInstance());
 }
 

@@ -108,7 +108,7 @@ class sfPropelCrudGenerator extends sfGenerator
     foreach ($classes as $class)
     {
       $class_map_builder = basename($class, '.php');
-      require_once('model/map/'.$class_map_builder.'.php');
+      require_once(sfConfig::get('sf_model_lib_dir').'/map/'.$class_map_builder.'.php');
       $maps[$class_map_builder] = new $class_map_builder();
       if (!$maps[$class_map_builder]->isBuilt())
       {
