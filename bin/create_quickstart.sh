@@ -53,7 +53,7 @@ chmod 755 symfony.sh
 
 echo ">>> create a new project and a new app"
 ./symfony.sh init-project ${SANDBOX_NAME}
-./symfony.sh -f data/symfony/bin/pakefile.php init-app ${APP_NAME}
+./symfony.sh init-app ${APP_NAME}
 
 # phing
 
