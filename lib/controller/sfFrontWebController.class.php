@@ -43,21 +43,6 @@ class sfFrontWebController extends sfWebController
       $moduleName = $context->getRequest()->getParameter(sfConfig::get('sf_module_accessor'));
       $actionName = $context->getRequest()->getParameter(sfConfig::get('sf_action_accessor'));
 
-      if ($moduleName == null)
-      {
-        $moduleName = sfConfig::get('sf_default_module');
-
-        if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfFrontWebController} no module, set default ('.$moduleName.')');
-      }
-
-      if ($actionName == null)
-      {
-        // no action has been specified
-        $actionName = sfConfig::get('sf_default_action');
-
-        if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfFrontWebController} no action, set default ('.$actionName.')');
-      }
-
       // register sfWebDebug assets
       if (sfConfig::get('sf_web_debug'))
       {

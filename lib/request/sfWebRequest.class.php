@@ -300,6 +300,11 @@ class sfWebRequest extends sfRequest
       $pathInfo = substr($pathInfo, stripos($pathInfo, '.php') + 4);
     }
 
+    if (!$pathInfo)
+    {
+      $pathInfo = '/';
+    }
+
     return $pathInfo;
   }
 
