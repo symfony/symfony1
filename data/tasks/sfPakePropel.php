@@ -55,7 +55,7 @@ function _call_phing($task, $task_name, $check_schema = true)
     throw new Exception('You must create a schema.xml file.');
   }
 
-  // FIXME: we update propel.ini with uptodate values
+  // update propel root dir in propel.ini
   $propelIni = file_get_contents(sfConfig::get('sf_config_dir').DIRECTORY_SEPARATOR.'propel.ini');
   $propelIni = preg_replace('/^\s*propel.output.dir\s*=\s*.+?$/m', 'propel.output.dir = '.sfConfig::get('sf_root_dir'), $propelIni);
   file_put_contents(sfConfig::get('sf_config_dir').DIRECTORY_SEPARATOR.'propel.ini', $propelIni);
