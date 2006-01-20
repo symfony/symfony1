@@ -46,16 +46,16 @@ function options_for_select($options = array(), $selected = '')
   $html_options = '';
   foreach($options as $key => $value)
   {
-    $html_options .= '<option value="'.$value.'"';
+    $html_options .= '<option value="'.$key.'"';
     if (
-      (is_array($selected) && in_array($key, $selected))
+      (is_array($selected) && in_array($value, $selected))
       ||
-      (strval($value) == strval($selected))
+      (strval($key) == strval($selected))
     )
     {
       $html_options .= ' selected="selected"';
     }
-    $html_options .= '>'.$key.'</option>';
+    $html_options .= '>'.$value.'</option>';
   }
 
   return $html_options;
@@ -146,7 +146,7 @@ function select_country_tag($name, $value, $options = array())
   $countries = $c->getCountries();
   asort($countries);
 
-  $option_tags = options_for_select(array_flip($countries), $value);
+  $option_tags = options_for_select($countries, $value);
 
   return select_tag($name, $option_tags, $options);
 }
@@ -157,7 +157,7 @@ function select_language_tag($name, $value, $options = array())
   $languages = $c->getLanguages();
   asort($languages);
 
-  $option_tags = options_for_select(array_flip($languages), $value);
+  $option_tags = options_for_select($languages, $value);
 
   return select_tag($name, $option_tags, $options);
 }

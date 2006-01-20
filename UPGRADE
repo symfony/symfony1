@@ -18,7 +18,7 @@ Automatically
 
   5 - update your databases.yml configuration file (see section 11 of the `Manually` section below)
   
-  6 - do some the manual steps numbered: 13, 14, 15
+  6 - do some the manual steps numbered: 13, 14, 15, 16
 
 Be careful if your project directory contains external libraries using `SF_XXX`, `MOD_XXX` or `APP_XXX` constants (for instance the `geshi` library). The `upgrade` command transforms these constants into a class method call, so you ought to overwrite the upgraded library by the the backup copy.
 
@@ -137,4 +137,11 @@ For all your applications within a project:
     pear install symfony/sfFeed (equivalent to the `global` install)
     pear install symfony/sfShoppingCart
 
-  16 - clear the symfony cache
+  16 - options_for_select() first parameter changed its format to be more intuitive:
+
+    0.4.X/0.5.X                                            | 0.6.X/0.7.X
+    -------------------------------------------------------|-----------------------------------------------------
+    options_for_select(array('France' => 1, 'USA' => 2))   | options_for_select(array(1 => 'France', 2 => 'USA'))
+    options_for_select(array_flip(array('France', 'USA'))) | options_for_select(array('France', 'USA'))
+
+  17 - clear the symfony cache
