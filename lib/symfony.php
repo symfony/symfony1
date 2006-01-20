@@ -27,6 +27,19 @@ try
 {
   ini_set('unserialize_callback_func', '__autoload');
 
+  // force setting default timezone if not set
+  if (function_exists('date_default_timezone_get'))
+  {
+    if ($default_timezone = sfConfig::get('sf_default_timezone'))
+    {
+      date_default_timezone_set($default_timezone);
+    }
+    else if (sfConfig::get('sf_force_default_timezone', true))
+    {
+      date_default_timezone_set(date_default_timezone_get());
+    }
+  }
+
   // get config instance
   $sf_app_config_dir_name = sfConfig::get('sf_app_config_dir_name');
 
