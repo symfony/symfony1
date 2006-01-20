@@ -7,6 +7,10 @@ Version 0.6.0
 WARNING: This release breaks backward compatibility.
 Please read the UPGRADE file before upgrading your projects.
 
+* [rovert] console controller
+* [fabien] new sfFinder class to ease file and directories searching
+* [fabien] new quickstart package system
+* [rovert] use syck when available to speed yaml parsing
 * [fabien] new plugin system
 * [fabien] removed orm.yml configuration file in favor of databases.yml
 * [fabien] updated spyc library
