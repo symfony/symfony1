@@ -19,9 +19,16 @@
 
 function url_for($url, $absolute = false)
 {
-  return sfContext::getInstance()->getController()->genUrl(null, $url, $absolute);
+  static $controller;
+
+  if (!isset($controller))
+  {
+    $controller = sfContext::getInstance()->getController();
+  }
+
+  return $controller->genUrl(null, $url, $absolute);
 }
- 
+
 /*
     # Creates a link tag of the given +name+ using an URL created by the set of +options+. See the valid options in
     # link:classes/ActionController/Base.html#M000021. It's also possible to pass a string instead of an options hash to
