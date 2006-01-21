@@ -59,14 +59,9 @@ class sfConfig
    *
    * @return void
    */
-  public static function add ($parameters)
+  public static function add ($parameters = array())
   {
-    if ($parameters === null) return;
-
-    foreach ($parameters as $key => $value)
-    {
-      self::$config[$key] = $value;
-    }
+    self::$config = array_merge(self::$config, $parameters);
   }
 
   /**
