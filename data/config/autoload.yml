@@ -26,7 +26,7 @@ autoload:
     ext:            .class.php
     path:           %SF_LIB_DIR%
     recursive:      on
-    exclude:        [model, plugins]
+    exclude:        [model, plugins, symfony]
 
   model:
     name:           project model classes
