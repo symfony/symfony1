@@ -85,7 +85,7 @@ abstract class sfAction
     $this->request_parameter_holder = $this->request->getParameterHolder();
 
     // include security configuration
-    require(sfConfigCache::checkConfig('modules/'.$this->getModuleName().'/'.sfConfig::get('sf_app_module_config_dir_name').'/security.yml', true, array('moduleName' => $this->getModuleName())));
+    require(sfConfigCache::getInstance()->checkConfig('modules/'.$this->getModuleName().'/'.sfConfig::get('sf_app_module_config_dir_name').'/security.yml', true, array('moduleName' => $this->getModuleName())));
 
     return true;
   }

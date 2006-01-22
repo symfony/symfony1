@@ -143,7 +143,7 @@ class sfPHPView extends sfView
 
     // require our configuration
     $viewConfigFile = $this->moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/view.yml';
-    require(sfConfigCache::checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$viewConfigFile));
+    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$viewConfigFile));
 
     $viewType = sfView::SUCCESS;
     if (preg_match('/^'.$action->getActionName().'(.+)$/i', $this->viewName, $match))

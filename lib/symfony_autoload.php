@@ -44,7 +44,7 @@ function __autoload($class)
     try
     {
       // load the list of autoload classes
-      $config = sfConfigCache::checkConfig(sfConfig::get('sf_app_config_dir_name').'/autoload.yml');
+      $config = sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/autoload.yml');
 
       sfConfig::set('sf_class_autoload_loaded', true);
     }

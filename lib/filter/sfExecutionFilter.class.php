@@ -75,7 +75,7 @@ class sfExecutionFilter extends sfFilter
         {
           // load validation configuration
           // do NOT use require_once
-          require(sfConfigCache::checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$validationConfig));
+          require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$validationConfig));
         }
 
         // manually load validators
@@ -94,7 +94,7 @@ class sfExecutionFilter extends sfFilter
           $cacheConfigFile = $moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/cache.yml';
           if (is_readable(sfConfig::get('sf_app_module_dir').'/'.$cacheConfigFile))
           {
-            require(sfConfigCache::checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$cacheConfigFile, array('moduleName' => $moduleName)));
+            require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$cacheConfigFile, array('moduleName' => $moduleName)));
           }
         }
 

@@ -25,6 +25,8 @@ if (!sfConfig::get('sf_in_bootstrap'))
 
 try
 {
+  $configCache = sfConfigCache::getInstance();
+
   ini_set('unserialize_callback_func', '__autoload');
 
   // force setting default timezone if not set
@@ -46,7 +48,7 @@ try
   // create bootstrap file for next time
   if (!sfConfig::get('sf_in_bootstrap') && !sfConfig::get('sf_debug') && !sfConfig::get('sf_test'))
   {
-    sfConfigCache::checkConfig($sf_app_config_dir_name.'/bootstrap_compile.yml');
+    $configCache->checkConfig($sf_app_config_dir_name.'/bootstrap_compile.yml');
   }
 
   // set exception format
@@ -55,14 +57,14 @@ try
   if (sfConfig::get('sf_debug'))
   {
     // clear our config and module cache
-    sfConfigCache::clear();
+    $configCache->clear();
   }
 
   // load base settings
-  include(sfConfigCache::checkConfig($sf_app_config_dir_name.'/logging.yml'));
-  sfConfigCache::import($sf_app_config_dir_name.'/php.yml');
-  include(sfConfigCache::checkConfig($sf_app_config_dir_name.'/settings.yml'));
-  include(sfConfigCache::checkConfig($sf_app_config_dir_name.'/app.yml'));
+  include($configCache->checkConfig($sf_app_config_dir_name.'/logging.yml'));
+  $configCache->import($sf_app_config_dir_name.'/php.yml');
+  include($configCache->checkConfig($sf_app_config_dir_name.'/settings.yml'));
+  include($configCache->checkConfig($sf_app_config_dir_name.'/app.yml'));
 
   // error settings
   ini_set('display_errors', sfConfig::get('sf_debug') ? 'on' : 'off');
@@ -83,14 +85,14 @@ try
   if (!sfConfig::get('sf_debug') && !sfConfig::get('sf_test'))
   {
     $core_classes = $sf_app_config_dir_name.'/core_compile.yml';
-    sfConfigCache::import($core_classes);
+    $configCache->import($core_classes);
   }
 
   if (sfConfig::get('sf_routing'))
   {
     // we cannot cache the routing rules because if configuration problem
     $routing = $sf_app_config_dir_name.'/routing.yml';
-    sfConfigCache::import($routing);
+    $configCache->import($routing);
   }
 }
 catch (sfException $e)

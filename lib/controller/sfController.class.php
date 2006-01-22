@@ -151,7 +151,7 @@ abstract class sfController
     $generatorConfig = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/generator.yml';
     if (is_readable($generatorConfig))
     {
-      sfConfigCache::import($generatorConfig, true, array('moduleName' => $moduleName));
+      sfConfigCache::getInstance()->import($generatorConfig, true, array('moduleName' => $moduleName));
     }
 
     if (!$this->actionExists($moduleName, $actionName))
@@ -184,7 +184,7 @@ abstract class sfController
     $this->getActionStack()->addEntry($moduleName, $actionName, $actionInstance, $isSlot);
 
     // include module configuration
-    sfConfigCache::import('modules/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/module.yml', true, array('prefix' => $moduleName.'_'));
+    sfConfigCache::getInstance()->import('modules/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/module.yml', true, array('prefix' => $moduleName.'_'));
 
     // check if this module is internal
     if ($this->getActionStack()->getSize() == 1 && sfConfig::get('mod_'.strtolower($moduleName).'_is_internal'))
@@ -486,7 +486,7 @@ abstract class sfController
     if (!isset($list[$moduleName]) && is_readable($config))
     {
       // load global filters
-      require_once(sfConfigCache::checkConfig(sfConfig::get('sf_app_config_dir_name').'/filters.yml'));
+      require_once(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/filters.yml'));
     }
 
     // register filters
@@ -518,7 +518,7 @@ abstract class sfController
 
       if (is_readable($config))
       {
-        require_once(sfConfigCache::checkConfig($config));
+        require_once(sfConfigCache::getInstance()->checkConfig($config));
       }
       else
       {
