@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Column.php 264 2005-11-07 20:55:35Z hans $
+ *  $Id: Column.php 315 2005-12-24 20:48:31Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,7 +34,7 @@ include_once 'propel/engine/database/model/Domain.php';
  * @author Jon S. Stevens <jon@latchkey.com> (Torque)
  * @author Daniel Rall <dlr@finemaltcoding.com> (Torque)
  * @author Byron Foster <byron_foster@yahoo.com> (Torque)
- * @version $Revision: 264 $
+ * @version $Revision: 315 $
  * @package propel.engine.database.model
  */
 class Column extends XMLElement {
@@ -90,8 +90,7 @@ class Column extends XMLElement {
 	private $isInheritance;
 	private $isEnumeratedClasses;
 	private $inheritanceList;
-	private $needsTransactionInPostgres;//maybe this can be retrieved from vendorSpecificInfo?
-	private $vendorSpecificInfo = array();
+	private $needsTransactionInPostgres; //maybe this can be retrieved from vendorSpecificInfo
 
 	/** class name to do input validation on this column */
 	private $inputValidator = null;
@@ -116,22 +115,14 @@ class Column extends XMLElement {
 	 */
 	public static function makeList($columns, Platform $platform)
 	{
-		$obj = $columns[0];
-		$isColumnList = ($obj instanceof Column);
-		if ($isColumnList) {
-			$obj = $obj->getName();
-		}
-
-		$buf = $platform->quoteIdentifier($obj);
-
-		for ($i=1, $size=count($columns); $i < $size; $i++) {
-			$obj = $columns[$i];
-			if ($isColumnList) {
-				$obj = $obj->getName();
+		$list = array();
+		foreach($columns as $col) {
+			if ($col instanceof Column) {
+				$col = $col->getName();
 			}
-			$buf .= ", " . $platform->quoteIdentifier($obj);
+			$list[] = $platform->quoteIdentifier($col);
 		}
-		return $buf;
+		return implode(", ", $list);
 	}
 
 	/**
@@ -885,30 +876,6 @@ class Column extends XMLElement {
 	{
 		$t = $this->getPhpNative();
 		return in_array($t, array("boolean", "int", "double", "string"));
-	}
-
-	/**
-	 * Sets vendor specific parameter
-	 */
-	public function setVendorParameter($name, $value)
-	{
-		$this->vendorSpecificInfo[$name] = $value;
-	}
-
-	/**
-	 * Sets vendor specific information to a table.
-	 */
-	public function setVendorSpecificInfo($info)
-	{
-		$this->vendorSpecificInfo = $info;
-	}
-
-	/**
-	 * Retrieves vendor specific information to an index.
-	 */
-	public function getVendorSpecificInfo()
-	{
-		return $this->vendorSpecificInfo;
 	}
 
   /**

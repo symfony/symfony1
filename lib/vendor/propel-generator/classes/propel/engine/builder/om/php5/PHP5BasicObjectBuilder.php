@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: PHP5BasicObjectBuilder.php 228 2005-10-15 10:28:42Z david $
+ *  $Id: PHP5BasicObjectBuilder.php 298 2005-12-09 13:47:25Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -171,7 +171,8 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		$this->addHydrate($script);
 
 		$this->addManipulationMethods($script);
-
+		$this->addValidationMethods($script);
+		
 		if ($this->isAddGenericAccessors()) {
 			$this->addGetByName($script);
 			$this->addGetByPosition($script);
@@ -328,12 +329,16 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		// these default values are based on the Creole defaults
 		// the date and time default formats are locale-sensitive
 		if ($col->getType() === PropelTypes::DATE) {
-			$defaultfmt = '%x';
+			$defaultfmt = $this->getBuildProperty('defaultDateFormat');
 		} elseif ($col->getType() === PropelTypes::TIME) {
-			$defaultfmt = '%X';
+			$defaultfmt = $this->getBuildProperty('defaultTimeFormat');
 		} elseif ($col->getType() === PropelTypes::TIMESTAMP) {
-			$defaultfmt = 'Y-m-d H:i:s';
+			$defaultfmt = $this->getBuildProperty('defaultTimeStampFormat');
 		}
+		
+		// if the default format property was an empty string, then we'll set it
+		// to NULL, which will return the "native" integer timestamp
+		if (empty($defaultfmt)) { $defaultfmt = null; }
 
 		$script .= "
 	/**
@@ -344,7 +349,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 * @return mixed Formatted date/time value as string or integer unix timestamp (if format is NULL).
 	 * @throws PropelException - if unable to convert the date/time to timestamp.
 	 */
-	public function get$cfc(\$format = '$defaultfmt'";
+	public function get$cfc(\$format = ".var_export($defaultfmt, true)."";
 		if ($col->isLazyLoad()) $script .= ", \$con = null";
 		$script .= ")
 	{
@@ -808,7 +813,6 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 */
 	public function getByName(\$name, \$type = BasePeer::TYPE_PHPNAME)
 	{
-		\$names = ".$this->getPeerClassname()."::getFieldNames(\$type);
 		\$pos = ".$this->getPeerClassname()."::translateFieldName(\$name, \$type, BasePeer::TYPE_NUM);
 		return \$this->getByPosition(\$pos);
 	}
@@ -864,8 +868,7 @@ $script .= "
 	 */
 	public function setByName(\$name, \$value, \$type = BasePeer::TYPE_PHPNAME)
 	{
-		\$names = ".$this->getPeerClassname()."::getFieldNames(\$type);
-		\$pos = array_search(\$name, \$names);
+		\$pos = ".$this->getPeerClassname()."::translateFieldName(\$name, \$type, BasePeer::TYPE_NUM);
 		return \$this->setByPosition(\$pos, \$value);
 	}
 ";
@@ -976,14 +979,25 @@ $script .= "
 
 	/**
 	 * Adds the methods related to saving and deleting the object.
+	 * @param string &$script The script will be modified in this method.
 	 */
 	protected function addManipulationMethods(&$script)
 	{
 		$this->addDelete($script);
 		$this->addSave($script);
+	}
+	
+	/**
+	 * Adds the methods related to validationg the object.
+	 * @param string &$script The script will be modified in this method.
+	 */
+	protected function addValidationMethods(&$script)
+	{
+		$this->addValidationFailuresAttribute($script);
+		$this->addGetValidationFailures($script);
 		$this->addValidate($script);
 	}
-
+	
 	/**
 	 * Adds the save() method.
 	 * @param string &$script The script will be modified in this method.
@@ -1039,6 +1053,21 @@ $script .= "
 	} // addSave()
 
 	/**
+	 * Adds the $validationFailures attribute to store ValidationFailed objects.
+	 * @param string &$script The script will be modified in this method.
+	 */
+	protected function addValidationFailuresAttribute(&$script)
+	{
+		$script .= "
+	/**
+	 * Array of ValidationFailed objects.
+	 * @var array ValidationFailed[]
+	 */
+	protected \$validationFailures = array();
+";
+	}
+
+	/**
 	 * Adds the validate() method.
 	 * @param string &$script The script will be modified in this method.
 	 */
@@ -1066,6 +1095,27 @@ $script .= "
 ";
 
 	} // addValidate()
+
+	/**
+	 * Adds the getValidationFailures() method.
+	 * @param string &$script The script will be modified in this method.
+	 */
+	protected function addGetValidationFailures(&$script)
+	{
+		$script .= "
+	/**
+	 * Gets any ValidationFailed objects that resulted from last call to validate().
+	 *
+	 *
+	 * @return array ValidationFailed[]
+	 * @see validate()
+	 */
+	public function getValidationFailures()
+	{
+		return \$this->validationFailures;
+	}
+";
+	} // addGetValidationFailures()
 
 	/**
 	 * Adds the correct getPrimaryKey() method for this object.

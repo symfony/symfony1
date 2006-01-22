@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: ODBCConnection.php,v 1.4 2004/10/23 03:18:03 hlellelid Exp $
+ *  $Id: ODBCConnection.php,v 1.6 2006/01/17 19:44:39 hlellelid Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@ require_once 'creole/drivers/odbc/adapters/ODBCAdapter.php';
  * ODBC implementation of Connection.
  *
  * @author    Dave Lawson <dlawson@masterytech.com>
- * @version   $Revision: 1.4 $
+ * @version   $Revision: 1.6 $
  * @package   creole.drivers.odbc
  */
 class ODBCConnection extends ConnectionCommon implements Connection {
@@ -52,7 +52,7 @@ class ODBCConnection extends ConnectionCommon implements Connection {
 		if (!function_exists('odbc_connect'))
             throw new SQLException('odbc extension not loaded');
 
-        $adapterclass = @$dsninfo['adapter'];
+        $adapterclass = isset($dsninfo['adapter']) ? $dsninfo['adapter'] : null;
 
         if (!$adapterclass)
             $adapterclass = 'ODBCAdapter';
@@ -65,12 +65,12 @@ class ODBCConnection extends ConnectionCommon implements Connection {
         $this->dsn = $dsninfo;
         $this->flags = $flags;
 
-        if (($this->flags & Creole::NO_ASSOC_LOWER) && !$this->adapter->preservesColumnCase())
+        if ( !($this->flags & Creole::COMPAT_ASSOC_LOWER) && !$this->adapter->preservesColumnCase())
         {
-            trigger_error('Connection created with Creole::NO_ASSOC_LOWER, ' .
+            trigger_error('Connection created without Creole::COMPAT_ASSOC_LOWER, ' .
                           'but driver does not support case preservation.',
                           E_USER_WARNING);
-            $this->flags &= ~Creole::NO_ASSOC_LOWER;
+            $this->flags != Creole::COMPAT_ASSOC_LOWER;
         }
 
         $persistent = ($flags & Creole::PERSISTENT) === Creole::PERSISTENT;
@@ -87,7 +87,7 @@ class ODBCConnection extends ConnectionCommon implements Connection {
 
         $connect_function = $persistent ? 'odbc_pconnect' : 'odbc_connect';
 
-        $conn = @$connect_function($odbcdsn, $user, $pw);
+        $conn = @$connect_function($odbcdsn, $user, $pw, SQL_CUR_USE_IF_NEEDED);
 
         if (!is_resource($conn))
             throw new SQLException('connect failed', $this->nativeError(), $odbcdsn);
@@ -259,9 +259,11 @@ class ODBCConnection extends ConnectionCommon implements Connection {
      */
     protected function beginTrans()
     {
-        @odbc_autocommit($this->dblink, false);
-        if (odbc_error($this->dblink) == 'S1C00') {
-            throw new SQLException('Could not begin transaction', $this->nativeError());
+        if ($this->adapter->supportsTransactions()) {
+            @odbc_autocommit($this->dblink, false);
+            if (odbc_error($this->dblink) == 'S1C00') {
+                throw new SQLException('Could not begin transaction', $this->nativeError());
+            }
         }
     }
     
@@ -272,13 +274,15 @@ class ODBCConnection extends ConnectionCommon implements Connection {
      */
     protected function commitTrans()
     {
-        $result = @odbc_commit($this->dblink);
-        if (!$result) {
-            throw new SQLException('Could not commit transaction', $this->nativeError());
-        }
-        @odbc_autocommit($this->dblink, true);
-        if (odbc_error($this->dblink) == 'S1C00') {
-            throw new SQLException('Could not commit transaction (autocommit failed)', $this->nativeError());
+        if ($this->adapter->supportsTransactions()) {
+            $result = @odbc_commit($this->dblink);
+            if (!$result) {
+                throw new SQLException('Could not commit transaction', $this->nativeError());
+            }
+            @odbc_autocommit($this->dblink, true);
+            if (odbc_error($this->dblink) == 'S1C00') {
+                throw new SQLException('Could not commit transaction (autocommit failed)', $this->nativeError());
+            }
         }
     }
 
@@ -289,13 +293,15 @@ class ODBCConnection extends ConnectionCommon implements Connection {
      */
     protected function rollbackTrans()
     {
-        $result = @odbc_rollback($this->dblink);
-        if (!$result) {
-            throw new SQLException('Could not rollback transaction', $this->nativeError());
-        }
-        @odbc_autocommit($this->dblink, true);
-        if (odbc_error($this->dblink) == 'S1C00') {
-            throw new SQLException('Could not rollback transaction (autocommit failed)', $this->nativeError());
+        if ($this->adapter->supportsTransactions()) {
+            $result = @odbc_rollback($this->dblink);
+            if (!$result) {
+                throw new SQLException('Could not rollback transaction', $this->nativeError());
+            }
+            @odbc_autocommit($this->dblink, true);
+            if (odbc_error($this->dblink) == 'S1C00') {
+                throw new SQLException('Could not rollback transaction (autocommit failed)', $this->nativeError());
+            }
         }
     }
 

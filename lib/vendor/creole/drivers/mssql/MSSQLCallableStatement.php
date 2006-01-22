@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: MSSQLCallableStatement.php,v 1.19 2004/10/23 03:18:03 hlellelid Exp $
+ *  $Id: MSSQLCallableStatement.php,v 1.20 2005/09/16 13:09:50 hlellelid Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -36,7 +36,7 @@ include_once 'creole/CreoleTypes.php';
  *    CallableStatement class.
  *
  * @author Hans Lellelid <hans@xmpl.org>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  * @package creole.drivers.mssql
  */
 class MSSQLCallableStatement extends MSSQLPreparedStatement implements CallableStatement {
@@ -383,7 +383,7 @@ class MSSQLCallableStatement extends MSSQLPreparedStatement implements CallableS
         if ($this->boundOutVars[$paramIndex] === null) { return null; }
         
         $ts = strtotime($this->boundOutVars[$paramIndex]);        
-        if ($ts === -1) {
+        if ($ts === -1 || $ts === false) { // in PHP 5.1 return value changes to FALSE
             throw new SQLException("Unable to convert value at column " . $paramIndex . " to timestamp: " . $this->boundOutVars[$paramIndex]);
         }        
         if (strpos($format, '%') !== false) {
@@ -443,7 +443,7 @@ class MSSQLCallableStatement extends MSSQLPreparedStatement implements CallableS
         if ($this->boundOutVars[$paramIndex] === null) { return null; }
         
         $ts = strtotime($this->boundOutVars[$paramIndex]);        
-        if ($ts === -1) {
+        if ($ts === -1  || $ts === false) { // in PHP 5.1 return value changes to FALSE
             throw new SQLException("Unable to convert value at column " . $paramIndex . " to timestamp: " . $this->boundOutVars[$paramIndex]);
         }        
         if (strpos($format, '%') !== false) {
@@ -465,7 +465,7 @@ class MSSQLCallableStatement extends MSSQLPreparedStatement implements CallableS
         if ($this->boundOutVars[$paramIndex] === null) { return null; }
                 
         $ts = strtotime($this->boundOutVars[$paramIndex]);        
-        if ($ts === -1) {
+        if ($ts === -1 || $ts === false) { // in PHP 5.1 return value changes to FALSE
             throw new SQLException("Unable to convert value at column " . $paramIndex . " to timestamp: " . $this->boundOutVars[$paramIndex]);
         }        
         if (strpos($format, '%') !== false) {

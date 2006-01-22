@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: SQLiteConnection.php,v 1.12 2004/09/01 14:00:29 dlawson_mi Exp $
+ *  $Id: SQLiteConnection.php,v 1.15 2006/01/17 19:44:41 hlellelid Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,7 +28,7 @@ require_once 'creole/common/ConnectionCommon.php';
  * @author    Hans Lellelid <hans@xmpl.org>
  * @author    Stig Bakken <ssb@fast.no> 
  * @author    Lukas Smith
- * @version   $Revision: 1.12 $
+ * @version   $Revision: 1.15 $
  * @package   creole.drivers.sqlite
  */ 
 class SQLiteConnection extends ConnectionCommon implements Connection {   
@@ -57,7 +57,12 @@ class SQLiteConnection extends ConnectionCommon implements Connection {
         
         $persistent = ($flags & Creole::PERSISTENT === Creole::PERSISTENT);
         
-        $nochange = (($flags & Creole::NO_ASSOC_LOWER) === Creole::NO_ASSOC_LOWER);
+        if (PHP_VERSION == '5.0.4' || PHP_VERSION == '5.0.5') {
+            $nochange = TRUE;
+        } else {
+            $nochange = !(($flags & Creole::COMPAT_ASSOC_LOWER) === Creole::COMPAT_ASSOC_LOWER);
+        }
+        
         if ($nochange) {     
             $this->sqliteAssocCase = 0;
         } else {
@@ -165,9 +170,10 @@ class SQLiteConnection extends ConnectionCommon implements Connection {
     public function executeQuery($sql, $fetchmode = null)
     {    
         ini_set('sqlite.assoc_case', $this->sqliteAssocCase);
-        $result = @sqlite_query($this->dblink, $sql);
+        $this->lastQuery = $sql;
+        $result = @sqlite_query($this->dblink, $this->lastQuery);
         if (!$result) {
-            throw new SQLException('Could not execute query', $php_errormsg, $sql); //sqlite_error_string(sqlite_last_error($this->dblink))
+            throw new SQLException('Could not execute query', $php_errormsg, $this->lastQuery); //sqlite_error_string(sqlite_last_error($this->dblink))
         }
         require_once 'creole/drivers/sqlite/SQLiteResultSet.php';
         return new SQLiteResultSet($this, $result, $fetchmode);    
@@ -178,9 +184,10 @@ class SQLiteConnection extends ConnectionCommon implements Connection {
      */
     function executeUpdate($sql)
     {
-        $result = @sqlite_query($this->dblink, $sql);
+        $this->lastQuery = $sql;
+        $result = @sqlite_query($this->dblink, $this->lastQuery);
         if (!$result) {            
-            throw new SQLException('Could not execute update', $php_errormsg, $sql); //sqlite_error_string(sqlite_last_error($this->dblink))
+            throw new SQLException('Could not execute update', $php_errormsg, $this->lastQuery); //sqlite_error_string(sqlite_last_error($this->dblink))
         }
         return (int) @sqlite_changes($this->dblink);
     }

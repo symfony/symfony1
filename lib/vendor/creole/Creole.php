@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Creole.php,v 1.11 2005/06/15 13:15:34 gamr Exp $
+ *  $Id: Creole.php,v 1.14 2006/01/17 20:06:31 hlellelid Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -40,7 +40,7 @@ include_once 'creole/Connection.php';
  *
  *
  * @author    Hans Lellelid <hans@xmpl.org>
- * @version   $Revision: 1.11 $
+ * @version   $Revision: 1.14 $
  * @package   creole
  */
 class Creole {
@@ -53,9 +53,27 @@ class Creole {
     /**
      * Flag to pass to the connection to indicate that no case conversions
      * should be performed by ResultSet on keys of fetched rows.
+	 * @deprecated use COMPAT_ASSOC_LOWER
      */
     const NO_ASSOC_LOWER = 16;
+	
+    /**
+     * Flag to pass to the connection to indicate that a to-lower case conversion
+     * should be performed by ResultSet on keys of fetched rows.
+     */
+	const COMPAT_ASSOC_LOWER = 32;
 
+    /**
+     * Flag to pass to the connection to indicate that an rtrim() should be performed
+	 * on strings (using ResultSet->getString(), etc.).
+     */
+	const COMPAT_RTRIM_STRING = 64;
+	
+	/**
+	 * Flag to indicate that all compatibility flags should be set.
+	 */
+	const COMPAT_ALL = 96;
+	
     /**
      * Map of built-in drivers.
      * Change or add your own using registerDriver()
@@ -157,11 +175,21 @@ class Creole {
         } else {
             $dsninfo = self::parseDSN($dsn);
         }
+		
+		// gather any flags from the DSN
+		if (!empty($dsninfo['persistent'])) $flags |= Creole::PERSISTENT;
+		if (!empty($dsninfo['compat_assoc_lower'])) $flags |= Creole::COMPAT_ASSOC_LOWER;
+		if (!empty($dsninfo['compat_rtrim_string'])) $flags |= Creole::COMPAT_RTRIM_STRING;
+		if (!empty($dsninfo['compat_all'])) $flags |= Creole::COMPAT_ALL;
+		
+		if ($flags & Creole::NO_ASSOC_LOWER) {
+			trigger_error("The Creole::NO_ASSOC_LOWER flag has been deprecated, and is now the default behavior. Use Creole::COMPAT_ASSOC_LOWER to lowercase resulset keys.", E_USER_WARNING);
+		}
 
         // sort $dsninfo by keys so the serialized result is always the same
         // for identical connection parameters, no matter what their order is
         ksort($dsninfo);
-        $connectionMapKey = crc32(serialize($dsninfo + array('no_assoc_lower' => ($flags & Creole::NO_ASSOC_LOWER) === Creole::NO_ASSOC_LOWER)));
+        $connectionMapKey = crc32(serialize($dsninfo + array('compat_flags' => ($flags & Creole::COMPAT_ALL))));
 
         // see if we already have a connection with these parameters cached
         if(isset(self::$connectionMap[$connectionMapKey]))
@@ -176,14 +204,18 @@ class Creole {
             if( isset(self::$connectionMap[$connectionMapKey][1]) ) { // is persistent
                 // a persistent connection with these parameters is already there,
                 // so we return it, no matter what was specified as persistent flag
-                return self::$connectionMap[$connectionMapKey][1];
+                $con = self::$connectionMap[$connectionMapKey][1];
             } else {
                 // we don't have a persistent connection, and since the persistent
                 // flag wasn't set either, we just return the non-persistent connection
-                return self::$connectionMap[$connectionMapKey][0];
+                $con = self::$connectionMap[$connectionMapKey][0];
             }
+
             // if we're here, a non-persistent connection was already there, but
             // the user wants a persistent one, so it will be created
+            
+            if ($con->isConnected())
+                return $con;            
         }
 
         // support "catchall" drivers which will themselves handle the details of connecting
@@ -212,7 +244,7 @@ class Creole {
             $sqle->setUserInfo($dsninfo);
             throw $sqle;
         }
-	$persistent = ($flags & Creole::PERSISTENT) === Creole::PERSISTENT;
+		$persistent = ($flags & Creole::PERSISTENT) === Creole::PERSISTENT;
         return self::$connectionMap[$connectionMapKey][(int)$persistent] = $obj;
     }
 

@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: DBMySQL.php 64 2005-05-13 02:43:56Z root $
+ *  $Id: DBMySQL.php 286 2005-11-25 17:12:29Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,7 +29,7 @@ require_once 'propel/adapter/DBAdapter.php';
  * @author Jon S. Stevens <jon@clearink.com> (Torque)
  * @author Brett McLaughlin <bmclaugh@algx.net> (Torque)
  * @author Daniel Rall <dlr@finemaltcoding.com> (Torque)
- * @version $Revision: 64 $
+ * @version $Revision: 286 $
  * @package propel.adapter
  */
 class DBMySQL extends DBAdapter {  
@@ -121,5 +121,13 @@ class DBMySQL extends DBAdapter {
         $statement = $con->createStatement();
         $statement->executeUpdate("UNLOCK TABLES");
     }
+	
+	/**
+	 * @see DBAdapter::quoteIdentifier()
+	 */
+	public function quoteIdentifier($text)
+	{
+		return '`' . $text . '`';
+	}
 
 }

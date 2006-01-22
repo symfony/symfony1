@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: NameFactory.php 64 2005-05-13 02:43:56Z root $
+ *  $Id: NameFactory.php 289 2005-11-27 19:13:01Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -21,13 +21,14 @@
  */
 
 include_once 'propel/engine/EngineException.php';
+include_once 'propel/engine/database/model/NameGenerator.php';
 
 /**
  * A name generation factory.
  *
  * @author Hans Lellelid <hans@xmpl.org> (Propel)
  * @author Daniel Rall <dlr@finemaltcoding.com> (Torque)
- * @version $Revision: 64 $
+ * @version $Revision: 289 $
  * @package propel.engine.database.model
  */
 class NameFactory {

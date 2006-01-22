@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: PropelPager.php 244 2005-10-21 16:54:00Z hans $
+ *  $Id: PropelPager.php 308 2005-12-23 16:16:40Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -96,7 +96,7 @@
  *
  * 
  * @author	Rob Halff <info@rhalff.com>
- * @version   $Revision: 244 $
+ * @version   $Revision: 308 $
  * @copyright Copyright (c) 2004 Rob Halff: LGPL - See LICENCE
  * @package   propel.util 
  */
@@ -319,8 +319,12 @@ class PropelPager {
 	 */
 	public function getLastPage()
 	{
-		$lastPage = $this->getTotalPages();
-		return $lastPage;
+		$totalPages = $this->getTotalPages();
+		if ($totalPages == 0) {
+			return 1;
+		} else {
+			return $totalPages;
+		}
 	}
 	
 	/**

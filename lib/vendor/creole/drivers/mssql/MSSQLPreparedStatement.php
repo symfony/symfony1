@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: MSSQLPreparedStatement.php,v 1.12 2004/06/13 02:31:07 hlellelid Exp $
+ *  $Id: MSSQLPreparedStatement.php,v 1.13 2005/11/13 01:29:01 gamr Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,7 +26,7 @@ require_once 'creole/common/PreparedStatementCommon.php';
  * MSSQL specific PreparedStatement functions.
  * 
  * @author    Hans Lellelid <hans@xmpl.org>
- * @version   $Revision: 1.12 $
+ * @version   $Revision: 1.13 $
  * @package   creole.drivers.mssql
  */
 class MSSQLPreparedStatement extends PreparedStatementCommon implements PreparedStatement {
@@ -44,6 +44,7 @@ class MSSQLPreparedStatement extends PreparedStatementCommon implements Prepared
      */
     function setBlob($paramIndex, $blob) 
     {
+    	$this->sql_cache_valid = false;
         if ($blob === null) {
             $this->setNull($paramIndex);
         } else {

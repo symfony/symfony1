@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: OCI8ResultSet.php,v 1.12 2004/11/02 23:31:49 comprock Exp $
+ *  $Id: OCI8ResultSet.php,v 1.13 2006/01/17 19:44:40 hlellelid Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@ require_once 'creole/common/ResultSetCommon.php';
  *
  * @author    David Giffin <david@giffin.org>
  * @author    Hans Lellelid <hans@xmpl.org>
- * @version   $Revision: 1.12 $
+ * @version   $Revision: 1.13 $
  * @package   creole.drivers.oracle
  */
 class OCI8ResultSet extends ResultSetCommon implements ResultSet
@@ -92,11 +92,9 @@ class OCI8ResultSet extends ResultSetCommon implements ResultSet
 
 		// Oracle returns all field names in uppercase and associative indices
 		// in the result array will be uppercased too.
-        if ( ! $this->ignoreAssocCase )
+        if ($this->fetchmode === ResultSet::FETCHMODE_ASSOC && $this->lowerAssocCase)
 		{
-			$this->fields		= array_change_key_case( $this->fields
-									, CASE_LOWER
-								);
+			$this->fields = array_change_key_case($this->fields, CASE_LOWER);
         }
         
         // Advance cursor position

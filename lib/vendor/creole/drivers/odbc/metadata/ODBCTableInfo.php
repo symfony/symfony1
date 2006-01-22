@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: ODBCTableInfo.php,v 1.1 2004/07/27 23:08:30 hlellelid Exp $
+ *  $Id: ODBCTableInfo.php,v 1.2 2006/01/17 19:44:39 hlellelid Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -25,7 +25,7 @@ require_once 'creole/metadata/TableInfo.php';
  * ODBC implementation of TableInfo.
  *
  * @author    Dave Lawson <dlawson@masterytech.com>
- * @version   $Revision: 1.1 $
+ * @version   $Revision: 1.2 $
  * @package   creole.drivers.odbc.metadata
  */
 class ODBCTableInfo extends TableInfo {
@@ -40,7 +40,7 @@ class ODBCTableInfo extends TableInfo {
 
         ODBCTypes::loadTypeMap($this->conn);
 
-        $result = @odbc_columns($this->dblink, $this->dbname, '', $this->name);
+        $result = @odbc_columns($this->conn->getResource(), $this->dbname, '', $this->name);
 
         if (!$result)
             throw new SQLException('Could not get column names', $this->conn->nativeError());
@@ -71,7 +71,7 @@ class ODBCTableInfo extends TableInfo {
         // columns have to be loaded first
         if (!$this->colsLoaded) $this->initColumns();
 
-        $result = @odbc_primarykeys($this->dblink, $this->dbname, '', $this->name);
+        $result = @odbc_primarykeys($this->conn->getResource(), $this->dbname, '', $this->name);
 
         while (odbc_fetch_row($result))
         {
@@ -104,7 +104,7 @@ class ODBCTableInfo extends TableInfo {
         // columns have to be loaded first
         if (!$this->colsLoaded) $this->initColumns();
 
-        $result = @odbc_foreignkeys($this->dblink, '', '', '', $this->dbname, '', $this->name);
+        $result = @odbc_foreignkeys($this->conn->getResource(), '', '', '', $this->dbname, '', $this->name);
 
         while (odbc_fetch_row($result))
         {

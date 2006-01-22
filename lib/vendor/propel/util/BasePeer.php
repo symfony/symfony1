@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: BasePeer.php 276 2005-11-14 17:23:20Z hans $
+ *  $Id: BasePeer.php 282 2005-11-25 14:20:51Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -42,7 +42,7 @@ include_once 'propel/validator/ValidationFailed.php';
  * @author John D. McNally <jmcnally@collab.net> (Torque)
  * @author Brett McLaughlin <bmclaugh@algx.net> (Torque)
  * @author Stephen Haberman <stephenh@chase3000.com> (Torque)
- * @version $Revision: 276 $
+ * @version $Revision: 282 $
  * @package propel.util
  */
 class BasePeer
@@ -475,10 +475,12 @@ class BasePeer
 		$failureMap = array(); // map of ValidationFailed objects
 		foreach($columns as $colName => $colValue) {
 			if ($tableMap->containsColumn($colName)) {
-				foreach($tableMap->getColumn($colName)->getValidators() as $validatorMap) {
-					if(($validator = BasePeer::getValidator($validatorMap->getClass())) !== null && $validator->isValid($validatorMap, $colValue) === false) {
+				$col = $tableMap->getColumn($colName);
+				foreach($col->getValidators() as $validatorMap) {
+					$validator = BasePeer::getValidator($validatorMap->getClass());
+					if($validator && ($col->isNotNull() || $colValue !== null) && $validator->isValid($validatorMap, $colValue) === false) {
 						if (!isset($failureMap[$colName])) { // for now we do one ValidationFailed per column, not per rule
-							$failureMap[$colName] = new ValidationFailed($colName, $validatorMap->getMessage());
+							$failureMap[$colName] = new ValidationFailed($colName, $validatorMap->getMessage(), $validator);
 						}
 					}
 				}

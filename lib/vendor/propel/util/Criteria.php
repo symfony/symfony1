@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Criteria.php 223 2005-10-05 12:37:23Z ron $
+ *  $Id: Criteria.php 299 2005-12-09 14:51:19Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -32,7 +32,7 @@
  * @author Eric Dobbs <eric@dobbse.net> (Torque)
  * @author Henning P. Schmiedehausen <hps@intermeta.de> (Torque)
  * @author Sam Joseph <sam@neurogrid.com> (Torque)
- * @version $Revision: 223 $
+ * @version $Revision: 299 $
  * @package propel.util
  */
 class Criteria implements IteratorAggregate {
@@ -1472,7 +1472,7 @@ class Criterion  {
                 if ($this->value !== null) {
                 
                     // ANSI SQL functions get inserted right into SQL (not escaped, etc.)                    
-                    if ($this->value === Criteria::CURRENT_DATE || $this->value === Criteria::CURRENT_TIME) {
+                    if ($this->value === Criteria::CURRENT_DATE || $this->value === Criteria::CURRENT_TIME || $this->value === Criteria::CURRENT_TIMESTAMP) {
                         $sb .= $field . $this->comparison . $this->value;
                     } else {
                         // default case, it is a normal col = value expression; value

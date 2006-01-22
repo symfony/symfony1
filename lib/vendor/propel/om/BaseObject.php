@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: BaseObject.php 64 2005-05-13 02:43:56Z root $
+ *  $Id: BaseObject.php 316 2005-12-29 14:33:08Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,7 +29,7 @@ require_once 'propel/om/Persistent.php';
  * @author Hans Lellelid <hans@xmpl.org> (Propel)
  * @author Frank Y. Kim <frank.kim@clearink.com> (Torque)
  * @author John D. McNally <jmcnally@collab.net> (Torque)
- * @version $Revision: 64 $
+ * @version $Revision: 316 $
  * @package propel.om
  */
 abstract class BaseObject {
@@ -52,11 +52,6 @@ abstract class BaseObject {
      * @var array
      */
     protected $modifiedColumns = array();
-
-    /**
-     * Cache the logger to avoid looking it up every time its needed.
-     */
-    private $_log;
     
     /**
      * Returns whether the object has been modified.

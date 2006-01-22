@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: Table.php 253 2005-11-04 21:06:58Z hans $
+ *  $Id: Table.php 315 2005-12-24 20:48:31Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -40,7 +40,7 @@ include_once 'propel/engine/database/model/Validator.php';
  * @author John McNally <jmcnally@collab.net> (Torque)
  * @author Daniel Rall <dlr@collab.net> (Torque)
  * @author Byron Foster <byron_foster@yahoo.com> (Torque)
- * @version $Revision: 253 $
+ * @version $Revision: 315 $
  * @package propel.engine.database.model
  */
 class Table extends XMLElement implements IDMethod {
@@ -79,7 +79,6 @@ class Table extends XMLElement implements IDMethod {
     private $heavyIndexing;
     private $forReferenceOnly;
     private $isTree;
-    private $vendorSpecificInfo = array();
 
     /**
      * Constructs a table object with a name
@@ -968,31 +967,7 @@ class Table extends XMLElement implements IDMethod {
     {
         $this->isTree = (boolean) $v;
     }
-
-    /**
-     * Sets vendor specific parameter
-     */
-    public function setVendorParameter($name, $value)
-    {
-        $this->vendorSpecificInfo[$name] = $value;
-    }
-
-    /**
-     * Sets vendor specific information to a table.
-     */
-    public function setVendorSpecificInfo($info)
-    {
-        $this->vendorSpecificInfo = $info;
-    }
-
-    /**
-     * Retrieves vendor specific information to an index.
-     */
-    public function getVendorSpecificInfo()
-    {
-        return $this->vendorSpecificInfo;
-    }
-
+	
     /**
      * Returns a XML representation of this table.
      *
@@ -1120,13 +1095,31 @@ class Table extends XMLElement implements IDMethod {
     /**
      * Determine whether this table has a primary key.
      *
-     * @return Whether this table has any primary key parts.
+     * @return boolean Whether this table has any primary key parts.
      */
     public function hasPrimaryKey()
     {
         return (count($this->getPrimaryKey()) > 0);
     }
-
+	
+	/**
+	 * Determine whether this table has any auto-increment primary key(s).
+	 * 
+	 * @return boolean Whether this table has a non-"none" id method and has a primary key column that is auto-increment.
+	 */
+	public function hasAutoIncrementPrimaryKey()
+	{
+		if ($this->getIdMethod() != IDMethod::NO_ID_METHOD) {
+			$pks =$this->getPrimaryKey();
+			foreach ($pks as $pk) {
+				if ($pk->isAutoIncrement()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
     /**
      * Returns all parts of the primary key, separated by commas.
      *

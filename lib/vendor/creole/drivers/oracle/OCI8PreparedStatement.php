@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: OCI8PreparedStatement.php,v 1.19 2005/07/21 22:00:46 sethr Exp $
+ *  $Id: OCI8PreparedStatement.php,v 1.25 2005/11/21 17:54:11 sethr Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@ require_once 'creole/common/PreparedStatementCommon.php';
  * 
  * @author    David Giffin <david@giffin.org>
  * @author    Hans Lellelid <hans@xmpl.org>
- * @version   $Revision: 1.19 $
+ * @version   $Revision: 1.25 $
  * @package   creole.drivers.oracle
  */
 class OCI8PreparedStatement extends PreparedStatementCommon implements PreparedStatement {
@@ -47,6 +47,13 @@ class OCI8PreparedStatement extends PreparedStatementCommon implements PreparedS
      * @var array Lob[]
      */
     private $lobs = array();        
+
+    /**
+     * Array to store the columns in an insert or update statement.
+     * This is necessary for the proper handling of lob variables
+     * @var arrary columns[]
+     */
+    private $columns = array();
     
     /**
      * If the statement is set, free it.
@@ -134,14 +141,15 @@ class OCI8PreparedStatement extends PreparedStatementCommon implements PreparedS
 
         if($this->resultSet) $this->resultSet->close();
         $this->resultSet = null; // reset
-        
+
         $stmt = oci_parse($this->conn->getResource(), $this->sqlToOracleBindVars($this->sql));
+
         if (!$stmt) {
             throw new SQLException("Unable to prepare update", $this->conn->nativeError(), $this->sqlToOracleBindVars($this->sql));
         }
         
         // bind all variables
-        $this->bindVars($stmt);        
+        $this->bindVars($stmt); 
 
         // Even if autocommit is on, delay commit until after LOBS have been saved
         $success = oci_execute($stmt, OCI_DEFAULT);
@@ -190,13 +198,20 @@ class OCI8PreparedStatement extends PreparedStatementCommon implements PreparedS
     {
         foreach ($this->boundInVars as $idx => $val) {
             $idxName = ":var" . $idx;
-            if ((class_exists('Blob') && ($val instanceof Blob)) && !oci_bind_by_name($stmt, $idxName, $this->lobDescriptors[$idx], -1, OCI_B_BLOB)) {
-                throw new SQLException("Erorr binding blob to placeholder " . $idx);
-            } elseif ((class_exists('Clob') && $val instanceof Clob) && !oci_bind_by_name($stmt, $idxName, $this->lobDescriptors[$idx], -1, OCI_B_CLOB)) {
-                throw new SQLException("Erorr binding clob to placeholder " . $idx);
-            } elseif (!oci_bind_by_name($stmt, $idxName, $this->boundInVars[$idx], -1)) {
+            if (!oci_bind_by_name($stmt, $idxName, $this->boundInVars[$idx], -1)) {
                 throw new SQLException("Erorr binding value to placeholder " . $idx);
-            }            
+            } 
+        } // foreach
+
+        foreach ($this->lobs as $idx => $val) {
+            $idxName = ":var" . $idx;
+            if (class_exists('Blob') && $val instanceof Blob){
+                if (!oci_bind_by_name($stmt, $idxName, $this->lobDescriptors[$idx], -1, OCI_B_BLOB))
+                    throw new SQLException("Erorr binding blob to placeholder " . $idx);
+            } elseif (class_exists('Clob') && $val instanceof Clob){
+                if (!oci_bind_by_name($stmt, $idxName, $this->lobDescriptors[$idx], -1, OCI_B_CLOB))
+                    throw new SQLException("Erorr binding clob to placeholder " . $idx);
+            }
         } // foreach
     }
 
@@ -222,11 +237,38 @@ class OCI8PreparedStatement extends PreparedStatementCommon implements PreparedS
                 $in_literal = ~$in_literal;
             }
             if (strcmp($char,"?")==0 && !$in_literal) {
-                $out .= ":var" . $idxNum++;
+                if (array_key_exists($idxNum, $this->lobs)){
+                    if (class_exists('Blob') && ($this->lobs[$idxNum] instanceof Blob))
+                        $out .= "empty_blob()";
+                    if (class_exists('Clob') && ($this->lobs[$idxNum] instanceof Clob))
+                        $out .= "empty_clob()";
+                } else
+                    $out .= ":var" . $idxNum;
+                $idxNum++;
             } else {
                 $out .= $char;
             }
         }
+
+        if (isset($this->lobs) && !empty($this->lobs)) {
+            $this->setColumnArray();
+
+            $retstmt = " Returning ";
+            $collist = "";
+            $bindlist = "";
+            foreach ($this->lobs as $idx=>$val) {
+                $idxName = ":var" . $idx;
+                if ((class_exists('Blob') && $val instanceof Blob) || (class_exists('Clob') && $val instanceof Clob)) {
+                    //the columns array starts at zero instead of 1 like the lobs array
+                    $collist .= $this->columns[$idx-1] . ",";
+                    $bindlist .= $idxName . ",";
+                }
+            }
+
+            if (!empty($collist))
+                $out .= $retstmt . rtrim($collist, ",") . " into " . rtrim($bindlist, ",");
+        }
+
         return $out;
     }
 
@@ -306,5 +348,77 @@ class OCI8PreparedStatement extends PreparedStatementCommon implements PreparedS
             $this->boundInVars[$paramIndex] = $this->escape($value);
         }
     }
+
+    /**
+     * Please note the format used with date() matches that of NLS_DATE_FORMAT set in
+     * OCI8Connection.php
+     *
+     * @param int $paramIndex
+     * @param string $value
+     * @return void
+     */
+    function setDate($paramIndex, $value)
+    {
+        if ($value === null) {
+            $this->setNull($paramIndex);
+        } else {
+            if (is_numeric($value)) $value = date("Y-m-d", $value);
+            elseif (is_object($value)) $value = date("Y-m-d", $value->getTime());
+            $this->boundInVars[$paramIndex] = $this->escape($value);
+        }
+    }
+
+    /**
+     * In order to send lob data (clob/blob) to the Oracle data base, the 
+     * sqlToOracleBindVars function needs to have an ordered list of the
+     * columns being addressed in the sql statement.
+     * Since only insert and update statements require special handling,
+     * there are two ways to find the columns:
+     *  1) find the first set of () and parse out the columns names based on
+     *     the token ','
+     *  2) find all the text strings to the left of the equal signs.
+     *
+     * @param void
+     * @return void
+     */
+    private function setColumnArray()
+    {
+        $this->columns = array();
+
+        //handle the simple insert case first
+        if(strtoupper(substr($this->sql, 0, 6)) == 'INSERT') {
+            $firstPos = strpos($this->sql, '(');
+            $secPos = strpos($this->sql, ')');
+            $collist = substr($this->sql, $firstPos + 1, $secPos - $firstPos - 1);
+            $this->columns = explode(',', $collist);
+        }
+        if (strtoupper(substr($this->sql, 0, 6)) == 'UPDATE') {
+            //handle more complex update case
+            //first get the string setup so we can explode based on '=?'
+            //second split results from previous action based on ' '
+            // the last token from this should be a column name
+            $tmp = $this->sql;
+            $tmp = str_replace(" =", "=", $this->sql);
+            $tmp = str_replace("= ", "=", $tmp);
+            $tmp = str_replace(",", " ", $tmp);
+            $stage1 = explode("=?",$tmp);
+            
+            foreach($stage1 as $chunk) {
+                $stage2 = explode(' ', $chunk);
+                $this->columns[count($this->columns)] = $stage2[count($stage2) - 1];
+            }
+        }
+   }
+
+   /**
+     * @param int $paramIndex
+     * @return void
+     */
+    function setNull($paramIndex)
+    {
+        $this->boundInVars[$paramIndex] = '';
+    }
+
+
 }
 

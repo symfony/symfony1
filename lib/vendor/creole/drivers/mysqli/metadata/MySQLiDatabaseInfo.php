@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: MySQLiDatabaseInfo.php,v 1.2 2004/09/17 17:21:13 sb Exp $
+ * $Id: MySQLiDatabaseInfo.php,v 1.3 2006/01/17 19:44:39 hlellelid Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -25,7 +25,7 @@ require_once 'creole/metadata/DatabaseInfo.php';
  * MySQLi implementation of DatabaseInfo.
  *
  * @author    Sebastian Bergmann <sb@sebastian-bergmann.de>
- * @version   $Revision: 1.2 $
+ * @version   $Revision: 1.3 $
  * @package   creole.drivers.mysqli.metadata
  */
 class MySQLiDatabaseInfo extends DatabaseInfo {
@@ -37,10 +37,10 @@ class MySQLiDatabaseInfo extends DatabaseInfo {
     {
         include_once 'creole/drivers/mysqli/metadata/MySQLiTableInfo.php';
         
-        $result = @mysqli_query($this->dblink, 'SHOW TABLES FROM ' . $this->dbname);
+        $result = @mysqli_query($this->conn->getResource(), 'SHOW TABLES FROM ' . $this->dbname);
     
         if (!$result) {
-            throw new SQLException("Could not list tables", mysqli_error($this->dblink));
+            throw new SQLException("Could not list tables", mysqli_error($this->conn->getResource()));
         }
         
         while ($row = mysqli_fetch_row($result)) {

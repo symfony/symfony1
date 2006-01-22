@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: PgSQLConnection.php,v 1.20 2004/12/04 05:41:48 gamr Exp $
+ *  $Id: PgSQLConnection.php,v 1.21 2005/08/03 17:56:22 hlellelid Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,7 +29,7 @@ include_once 'creole/drivers/pgsql/PgSQLResultSet.php';
  * @author    Hans Lellelid <hans@xmpl.org> (Creole)
  * @author    Stig Bakken <ssb@fast.no> (PEAR::DB)
  * @author    Lukas Smith (PEAR::MDB)
- * @version   $Revision: 1.20 $
+ * @version   $Revision: 1.21 $
  * @package   creole.drivers.pgsql
  */ 
 class PgSQLConnection extends ConnectionCommon implements Connection {        
@@ -100,7 +100,9 @@ class PgSQLConnection extends ConnectionCommon implements Connection {
         }
         
         if (!$conn) {
-            throw new SQLException('Could not connect', $php_errormsg, $connstr);
+			// hide the password from connstr
+			$cleanconnstr = preg_replace('/password=\'.*?\'($|\s)/', 'password=\'*********\'', $connstr);
+            throw new SQLException('Could not connect', $php_errormsg, $cleanconnstr);
         }
         
         $this->dblink = $conn;        

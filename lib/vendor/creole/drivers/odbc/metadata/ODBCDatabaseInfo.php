@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: ODBCDatabaseInfo.php,v 1.1 2004/07/27 23:08:30 hlellelid Exp $
+ *  $Id: ODBCDatabaseInfo.php,v 1.2 2006/01/17 19:44:39 hlellelid Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,7 +28,7 @@ require_once 'creole/metadata/DatabaseInfo.php';
  * @todo This might need to be an {@link ODBCAdapter} method.
  *
  * @author    Dave Lawson <dlawson@masterytech.com>
- * @version   $Revision: 1.1 $
+ * @version   $Revision: 1.2 $
  * @package   creole.drivers.odbc.metadata
  */
 class ODBCDatabaseInfo extends DatabaseInfo {
@@ -40,7 +40,7 @@ class ODBCDatabaseInfo extends DatabaseInfo {
     {
         include_once 'creole/drivers/odbc/metadata/ODBCTableInfo.php';
 
-        $result = @odbc_tables($this->dblink);
+        $result = @odbc_tables($this->conn->getResource());
 
         if (!$result)
             throw new SQLException('Could not list tables', $this->conn->nativeError());

@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: CreoleTypes.php,v 1.16 2004/03/20 04:16:49 hlellelid Exp $
+ *  $Id: CreoleTypes.php,v 1.18 2005/11/07 22:38:52 hlellelid Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -24,7 +24,7 @@
  * 
  * @author    David Giffin <david@giffin.org>
  * @author    Hans Lellelid <hans@xmpl.org>
- * @version   $Revision: 1.16 $
+ * @version   $Revision: 1.18 $
  * @package   creole
  */
 abstract class CreoleTypes {
@@ -61,7 +61,7 @@ abstract class CreoleTypes {
         /** Map of Creole type integers to the setter/getter affix. */
         protected static $affixMap = array(
                 self::BOOLEAN => 'Boolean',
-                self::BIGINT => 'Int',
+                self::BIGINT => 'String',
                 self::CHAR => 'String',
                 self::DATE => 'Date',
                 self::DOUBLE => 'Float',
@@ -149,7 +149,6 @@ abstract class CreoleTypes {
         {
             if (!isset(self::$affixMap[$creoleType])) {
                 $e = new SQLException("Unable to return 'affix' for unknown CreoleType: " . $creoleType);
-                print $e;
                 throw $e;
             }
             return self::$affixMap[$creoleType];

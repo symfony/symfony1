@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: DBSQLite.php 64 2005-05-13 02:43:56Z root $
+ *  $Id: DBSQLite.php 286 2005-11-25 17:12:29Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,7 +26,7 @@ require_once 'propel/adapter/DBAdapter.php';
  * This is used in order to connect to a SQLite database.
  *
  * @author Hans Lellelid <hans@xmpl.org>
- * @version $Revision: 64 $
+ * @version $Revision: 286 $
  * @package propel.adapter
  */
 class DBSQLite extends DBAdapter {
@@ -112,5 +112,13 @@ class DBSQLite extends DBAdapter {
     public function unlockTable(Connection $con, $table)
     {        
     }
+	
+	/**
+	 * @see DBAdapter::quoteIdentifier()
+	 */
+	public function quoteIdentifier($text)
+	{
+		return '[' . $text . ']';
+	}
 
 }

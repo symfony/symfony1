@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Domain.php 239 2005-10-20 11:13:47Z hans $
+ *  $Id: Domain.php 289 2005-11-27 19:13:01Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -19,12 +19,14 @@
  * <http://propel.phpdb.org>.
  */
 
+require_once 'propel/engine/database/model/XMLElement.php';
+ 
 /**
  * A Class for holding data about a column used in an Application.
  *
  * @author  Hans Lellelid <hans@xmpl.org> (Propel)
  * @author  Martin Poeschl <mpoeschl@marmot.at> (Torque)
- * @version $Revision: 239 $
+ * @version $Revision: 289 $
  * @package propel.engine.database.model
  */
 class Domain extends XMLElement {

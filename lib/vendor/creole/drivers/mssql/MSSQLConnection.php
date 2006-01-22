@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: MSSQLConnection.php,v 1.24 2005/01/21 19:13:08 hlellelid Exp $
+ *  $Id: MSSQLConnection.php,v 1.25 2005/10/17 19:03:51 dlawson_mi Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -43,7 +43,7 @@ include_once 'creole/drivers/mssql/MSSQLResultSet.php';
  * @author    Hans Lellelid <hans@xmpl.org>
  * @author    Stig Bakken <ssb@fast.no> 
  * @author    Lukas Smith
- * @version   $Revision: 1.24 $
+ * @version   $Revision: 1.25 $
  * @package   creole.drivers.mssql
  */ 
 class MSSQLConnection extends ConnectionCommon implements Connection {        
@@ -154,7 +154,9 @@ class MSSQLConnection extends ConnectionCommon implements Connection {
      */
     function close()
     {
-        @mssql_close($this->dblink);
+        $ret = @mssql_close($this->dblink);
+        $this->dblink = null;
+        return $ret;
     }
     
     /**

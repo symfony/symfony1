@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: DBSybase.php 64 2005-05-13 02:43:56Z root $
+ *  $Id: DBSybase.php 286 2005-11-25 17:12:29Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -32,7 +32,7 @@ require_once 'propel/adapter/DBAdapter.php';
  *
  * @author Hans Lellelid <hans@xmpl.org> (Propel)
  * @author Jeff Brekke <ekkerbj@netscape.net> (Torque)
- * @version $Revision: 64 $
+ * @version $Revision: 286 $
  * @package propel.adapter
  */
 class DBSybase extends DBAdapter {
@@ -122,5 +122,12 @@ class DBSybase extends DBAdapter {
         // user may have issued a commit but do it here to be sure.
         $con->commit();
     }
-
+	
+	/**
+	 * @see DBAdapter::quoteIdentifier()
+	 */
+	public function quoteIdentifier($text)
+	{
+		return '[' . $text . ']';
+	}
 }

@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: ODBCAdapter.php,v 1.2 2004/11/18 21:43:12 dlawson_mi Exp $
+ *  $Id: ODBCAdapter.php,v 1.3 2005/10/17 19:03:51 dlawson_mi Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -23,7 +23,7 @@
  * Default class for ODBC driver-specific behavior.
  *
  * @author    Dave Lawson <dlawson@masterytech.com>
- * @version   $Revision: 1.2 $
+ * @version   $Revision: 1.3 $
  * @package   creole.drivers.odbc
  */
 class ODBCAdapter
@@ -100,7 +100,16 @@ class ODBCAdapter
         require_once 'creole/drivers/odbc/ODBCIdGenerator.php';
         return new ODBCIdGenerator($conn);
     }
-    
+
+    /**
+     * Returns true if driver support transactions.
+     * 
+     * @return boolean
+     */
+    public function supportsTransactions()
+    {
+        return true;
+    }
 }
 
 ?>

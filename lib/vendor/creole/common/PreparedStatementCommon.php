@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: PreparedStatementCommon.php,v 1.14 2005/04/16 18:55:28 hlellelid Exp $
+ *  $Id: PreparedStatementCommon.php,v 1.16 2005/11/13 01:30:00 gamr Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,7 +28,7 @@
  * to work with BLOB and CLOB values w/o needing special LOB-specific routines.
  *
  * @author    Hans Lellelid <hans@xmpl.org>
- * @version   $Revision: 1.14 $
+ * @version   $Revision: 1.16 $
  * @package   creole.common
  */
 abstract class PreparedStatementCommon {
@@ -57,6 +57,21 @@ abstract class PreparedStatementCommon {
      * @var string
      */
     protected $sql;
+
+    /**
+     * Possibly contains a cached prepared SQL Statement.
+     * Gives an early out to replaceParams if the same
+     * query is run multiple times without changing the
+     * params.
+     * @var string
+     */
+    protected $sql_cache;
+
+    /**
+     * Flag to set if the cache is upto date or not
+     * @var boolean
+     */
+    protected $sql_cache_valid = false;
 
     /**
      * The string positions of the parameters in the SQL.
@@ -251,6 +266,11 @@ abstract class PreparedStatementCommon {
      */
     protected function replaceParams()
     {
+    	// early out if we still have the same query ready
+    	if ( $this->sql_cache_valid === true ) {
+		return $this->sql_cache;
+	}
+
         // Default behavior for this function is to behave in 'emulated' mode.    
         $sql = '';    
         $last_position = 0;
@@ -266,8 +286,15 @@ abstract class PreparedStatementCommon {
         }
         // append the rest of the query
         $sql .= substr($this->sql, $last_position);
-        
-        return $sql;
+
+	// just so we dont touch anything with a blob/clob
+	if ( strlen ( $sql ) > 2048 ) { 
+		$this->sql_cache = $sql;
+    		$this->sql_cache_valid = true;
+		return $this->sql_cache;
+	} else {
+		return $sql;
+	}
     }
 
     /**
@@ -376,6 +403,7 @@ abstract class PreparedStatementCommon {
 		//case 'gmp':
 	    }
             $setter = 'set' . ucfirst($type); // PHP types are case-insensitive, but we'll do this in case that changes
+	    $this->sql_cache_valid = false;
             $this->$setter($paramIndex, $value);
         }        
     }
@@ -390,6 +418,7 @@ abstract class PreparedStatementCommon {
      */
     function setArray($paramIndex, $value) 
     {        
+	    $this->sql_cache_valid = false;
         if ($value === null) {
             $this->setNull($paramIndex);
         } else {
@@ -406,6 +435,7 @@ abstract class PreparedStatementCommon {
      */
     function setBoolean($paramIndex, $value) 
     {                
+	    $this->sql_cache_valid = false;
         if ($value === null) {
             $this->setNull($paramIndex);
         } else {
@@ -419,6 +449,7 @@ abstract class PreparedStatementCommon {
      */
     function setBlob($paramIndex, $blob) 
     {        
+	    $this->sql_cache_valid = false;
         if ($blob === null) {
             $this->setNull($paramIndex);
         } else {
@@ -436,6 +467,7 @@ abstract class PreparedStatementCommon {
      */
     function setClob($paramIndex, $clob) 
     {
+	    $this->sql_cache_valid = false;
         if ($clob === null) {
             $this->setNull($paramIndex);
         } else {      
@@ -455,6 +487,7 @@ abstract class PreparedStatementCommon {
      */
     function setDate($paramIndex, $value) 
     {
+	    $this->sql_cache_valid = false;
         if ($value === null) {
             $this->setNull($paramIndex);
         } else {
@@ -471,6 +504,7 @@ abstract class PreparedStatementCommon {
      */
     function setDecimal($paramIndex, $value) 
     {
+	    $this->sql_cache_valid = false;
         if ($value === null) {
             $this->setNull($paramIndex);
         } else {
@@ -485,6 +519,7 @@ abstract class PreparedStatementCommon {
      */
     function setDouble($paramIndex, $value) 
     {
+	    $this->sql_cache_valid = false;
         if ($value === null) {
             $this->setNull($paramIndex);
         } else {
@@ -499,6 +534,7 @@ abstract class PreparedStatementCommon {
      */
     function setFloat($paramIndex, $value) 
     {
+	    $this->sql_cache_valid = false;
         if ($value === null) {
             $this->setNull($paramIndex);
         } else {
@@ -513,6 +549,7 @@ abstract class PreparedStatementCommon {
      */
     function setInt($paramIndex, $value) 
     {
+	    $this->sql_cache_valid = false;
         if ($value === null) {
             $this->setNull($paramIndex);
         } else {
@@ -527,6 +564,7 @@ abstract class PreparedStatementCommon {
      */
     function setInteger($paramIndex, $value)
     {
+	    $this->sql_cache_valid = false;
         $this->setInt($paramIndex, $value);
     }
 
@@ -536,6 +574,7 @@ abstract class PreparedStatementCommon {
      */
     function setNull($paramIndex) 
     {
+	    $this->sql_cache_valid = false;
         $this->boundInVars[$paramIndex] = 'NULL';
     }
 
@@ -546,6 +585,7 @@ abstract class PreparedStatementCommon {
      */
     function setString($paramIndex, $value) 
     {
+	    $this->sql_cache_valid = false;
         if ($value === null) {
             $this->setNull($paramIndex);
         } else {
@@ -566,6 +606,7 @@ abstract class PreparedStatementCommon {
      */
     function setTime($paramIndex, $value) 
     {        
+	    $this->sql_cache_valid = false;
         if ($value === null) {
             $this->setNull($paramIndex);
         } else {
@@ -585,6 +626,7 @@ abstract class PreparedStatementCommon {
      */
     function setTimestamp($paramIndex, $value) 
     {        
+	    $this->sql_cache_valid = false;
         if ($value === null) {
             $this->setNull($paramIndex);
         } else {

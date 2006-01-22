@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: OCI8TableInfo.php,v 1.12 2004/11/03 21:49:56 comprock Exp $
+ *  $Id: OCI8TableInfo.php,v 1.14 2006/01/17 19:44:40 hlellelid Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,7 +26,7 @@ require_once 'creole/metadata/TableInfo.php';
  * 
  * @author    David Giffin <david@giffin.org>
  * @author    Hans Lellelid <hans@xmpl.org>
- * @version   $Revision: 1.12 $
+ * @version   $Revision: 1.14 $
  * @package   creole.drivers.oracle.metadata
  */
 class OCI8TableInfo extends TableInfo {
@@ -64,7 +64,7 @@ class OCI8TableInfo extends TableInfo {
             WHERE table_name = '{$this->name}'
                 AND OWNER = '{$this->schema}'";
 
-        $statement = @oci_parse($this->dblink,$sql);
+        $statement = @oci_parse($this->conn->getResource(),$sql);
         $success = @oci_execute($statement,OCI_DEFAULT);
 		if (!$success) {
             throw new SQLException("Could Not Get Columns");
@@ -107,7 +107,7 @@ class OCI8TableInfo extends TableInfo {
             ";
 
 
-        $statement = @oci_parse($this->dblink,$sql);
+        $statement = @oci_parse($this->conn->getResource(),$sql);
         $success = @oci_execute($statement,OCI_DEFAULT);
         if (!$success) {
             throw new SQLException("Could Not Get Primary Keys");
@@ -138,19 +138,24 @@ class OCI8TableInfo extends TableInfo {
 
         // Indexes
         $sql = "SELECT
-            index_name,
-            table_name,
-            index_type,
-            uniqueness
-            FROM all_indexes
-            WHERE table_owner = '{$this->schema}'
-            AND table_name = '{$this->name}'
-            AND index_name NOT IN (SELECT
+            allind.index_name,
+            allind.table_name,
+            allind.index_type,
+            allind.uniqueness,
+            indcol.column_name
+            FROM all_indexes allind INNER JOIN all_ind_columns indcol
+                ON allind.owner = indcol.index_owner
+                AND allind.index_name = indcol.index_name
+            WHERE allind.table_owner = '{$this->schema}'
+            AND allind.table_name = '{$this->name}'
+            AND allind.index_name NOT IN (SELECT
                     constraint_name
                     FROM all_constraints
-                    WHERE constraint_type = 'P')";
+                    WHERE constraint_type = 'P')
+            ORDER BY allind.index_name,
+                indcol.column_position";
 
-        $statement = @oci_parse($this->dblink,$sql);
+        $statement = @oci_parse($this->conn->getResource(),$sql);
         $success = @oci_execute($statement,OCI_DEFAULT);
         if (!$success) {
             throw new SQLException("Could Not Get Primary Keys");
@@ -163,13 +168,14 @@ class OCI8TableInfo extends TableInfo {
         while ( $statement && $row = oci_fetch_assoc( $statement )) {
             $row = array_change_key_case($row,CASE_LOWER);
 
-            $name = $row['index_name'];            
+            $name = $row['index_name'];
+            $index_col_name = $row['column_name'];
 
             if (!isset($this->indexes[$name])) {
                 $this->indexes[$name] = new IndexInfo($name);
             }
 
-            $this->indexes[$name]->addColumn($this->columns[ $name ]);
+            $this->indexes[$name]->addColumn($this->columns[ $index_col_name ]);
         }
         
                 
@@ -211,7 +217,7 @@ class OCI8TableInfo extends TableInfo {
 				AND a.owner = '{$this->schema}'
 		";
 
-        $statement = @oci_parse($this->dblink,$sql);
+        $statement = @oci_parse($this->conn->getResource(),$sql);
         $success = @oci_execute($statement,OCI_DEFAULT);
         if (!$success) {
             throw new SQLException("Could Not Get Primary Keys");

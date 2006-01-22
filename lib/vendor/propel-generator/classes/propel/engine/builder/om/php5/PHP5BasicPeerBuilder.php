@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: PHP5BasicPeerBuilder.php 236 2005-10-18 16:27:01Z hans $
+ *  $Id: PHP5BasicPeerBuilder.php 306 2005-12-19 20:57:11Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -182,11 +182,10 @@ if (Propel::isInit()) {
 	private static \$phpNameMap = null;
 
 ";
-		// TODO [sv] methods do not exist
-		if ($this->isAddGenericAccessors() || $this->isAddGenericMutators()) {
-			$this->addFieldNamesAttribute($script);
-			$this->addFieldKeysAttribute($script);
-		}
+
+		$this->addFieldNamesAttribute($script);
+		$this->addFieldKeysAttribute($script);
+		
 	}
 
 	/**
@@ -363,7 +362,7 @@ if (Propel::isInit()) {
 	 * @return array The PHP to DB name map for this peer
 	 * @throws PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
-	 * @todo Consider having template build the array rather than doing it at runtime.
+	 * @deprecated Use the getFieldNames() and translateFieldName() methods instead of this.
 	 */
 	public static function getPhpNameMap()
 	{
@@ -437,7 +436,7 @@ if (Propel::isInit()) {
 	 */
 	public static function alias(\$alias, \$column)
 	{
-		return \$alias . substr(\$column, strlen(".$this->getPeerClassname()."::TABLE_NAME));
+		return str_replace(".$this->getPeerClassname()."::TABLE_NAME.'.', \$alias.'.', \$column);
 	}
 ";
 	} // addAliasMethod

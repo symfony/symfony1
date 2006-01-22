@@ -1,7 +1,7 @@
 <?php
 
 /**
- *  $Id: OCI8Connection.php,v 1.16 2005/07/21 21:43:57 sethr Exp $
+ *  $Id: OCI8Connection.php,v 1.18 2005/10/17 19:03:51 dlawson_mi Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -31,7 +31,7 @@ include_once 'creole/drivers/oracle/OCI8ResultSet.php';
  * @author    Hans Lellelid <hans@xmpl.org>
  * @author    Stig Bakken <ssb@fast.no> 
  * @author    Lukas Smith
- * @version   $Revision: 1.16 $
+ * @version   $Revision: 1.18 $
  * @package   creole.drivers.oracle
  */ 
 class OCI8Connection extends ConnectionCommon implements Connection
@@ -106,7 +106,7 @@ class OCI8Connection extends ConnectionCommon implements Connection
         $this->dblink			= $conn;
 
         //connected ok, need to set a few environment settings
-        //please note, if this is changed, the function setTimestamp in OCI8PreparedStatement.php
+        //please note, if this is changed, the function setTimestamp and setDate in OCI8PreparedStatement.php
         //must be changed to match
         $sql = "ALTER SESSION SET NLS_DATE_FORMAT='YYYY-MM-DD HH24:MI:SS'";
         $this->executeQuery($sql);
@@ -118,7 +118,9 @@ class OCI8Connection extends ConnectionCommon implements Connection
      */
     function close()
     {
-        @oci_close( $this->dblink );
+        $ret = @oci_close( $this->dblink );
+        $this->dblink = null;
+        return $ret;
     }        
     
     /**

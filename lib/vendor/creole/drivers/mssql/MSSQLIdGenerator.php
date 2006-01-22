@@ -6,7 +6,7 @@ require_once 'creole/IdGenerator.php';
  * MSSQL IdGenerator implimenation.
  *
  * @author    Hans Lellelid <hans@xmpl.org>
- * @version   $Revision: 1.5 $
+ * @version   $Revision: 1.6 $
  * @package   creole.drivers.mssql
  */
 class MSSQLIdGenerator implements IdGenerator {
@@ -53,7 +53,7 @@ class MSSQLIdGenerator implements IdGenerator {
      */
     public function getId($unused = null)
     {
-        $rs = $this->conn->executeQuery("select @@identity", ResultSet::FETCHMODE_NUM);
+        $rs = $this->conn->executeQuery("SELECT SCOPE_IDENTITY()", ResultSet::FETCHMODE_NUM);
         $rs->next();
         return $rs->getInt(1);        
     }

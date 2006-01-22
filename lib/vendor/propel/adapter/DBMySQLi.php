@@ -1,6 +1,7 @@
 <?php
+
 /*
- * $Id: MySQLiPreparedStatement.php,v 1.3 2004/09/18 09:15:49 sb Exp $
+ *  $Id$
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,27 +17,18 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information please see
- * <http://creole.phpdb.org>.
+ * <http://propel.phpdb.org>.
  */
 
-require_once 'creole/PreparedStatement.php';
-require_once 'creole/common/PreparedStatementCommon.php';
+require_once 'propel/adapter/DBMySQL.php';
 
 /**
- * MySQLi implementation of PreparedStatement.
+ * This is used in order to connect to a MySQL database using the new mysqli API.
  *
- * @author    Sebastian Bergmann <sb@sebastian-bergmann.de>
- * @version   $Revision: 1.3 $
- * @package   creole.drivers.mysqli
+ * @author Hans Lellelid <hans@xmpl.org> (Propel)
+ * @version $Revision$
+ * @package propel.adapter
  */
-class MySQLiPreparedStatement extends PreparedStatementCommon implements PreparedStatement {
-    /**
-     * Quotes string using native MySQL function.
-     * @param string $str
-     * @return string
-     */
-    protected function escape($str)
-    {
-        return mysqli_real_escape_string($this->getConnection()->getResource(), $str);
-    }
+class DBMySQLi extends DBMySQL {
+
 }

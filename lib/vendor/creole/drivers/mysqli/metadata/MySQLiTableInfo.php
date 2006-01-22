@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: MySQLiTableInfo.php,v 1.2 2004/09/17 17:21:13 sb Exp $
+ * $Id: MySQLiTableInfo.php,v 1.3 2006/01/17 19:44:39 hlellelid Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -25,7 +25,7 @@ require_once 'creole/metadata/TableInfo.php';
  * MySQLi implementation of TableInfo.
  *
  * @author    Sebastian Bergmann <sb@sebastian-bergmann.de>
- * @version   $Revision: 1.2 $
+ * @version   $Revision: 1.3 $
  * @package   creole.drivers.mysqli.metadata
  */
 class MySQLiTableInfo extends TableInfo {
@@ -35,13 +35,13 @@ class MySQLiTableInfo extends TableInfo {
         require_once 'creole/metadata/ColumnInfo.php';
         require_once 'creole/drivers/mysql/MySQLTypes.php';
 
-        if (!@mysqli_select_db($this->dblink, $this->dbname)) {
+        if (!@mysqli_select_db($this->conn->getResource(), $this->dbname)) {
             throw new SQLException('No database selected');
         }
 
         // To get all of the attributes we need, we use
         // the MySQL "SHOW COLUMNS FROM $tablename" SQL.
-        $res = mysqli_query($this->dblink, "SHOW COLUMNS FROM " . $this->name);
+        $res = mysqli_query($this->conn->getResource(), "SHOW COLUMNS FROM " . $this->name);
 
         $defaults = array();
         $nativeTypes = array();
@@ -88,12 +88,12 @@ class MySQLiTableInfo extends TableInfo {
             $this->initColumns();
         }
 
-        if (!@mysqli_select_db($this->dblink, $this->dbname)) {
+        if (!@mysqli_select_db($this->conn->getResource(), $this->dbname)) {
             throw new SQLException('No database selected');
         }
 
         // Primary Keys
-        $res = mysqli_query($this->dblink, "SHOW KEYS FROM " . $this->name);
+        $res = mysqli_query($this->conn->getResource(), "SHOW KEYS FROM " . $this->name);
 
         // Loop through the returned results, grouping the same key_name together
         // adding each column for that key.
@@ -118,12 +118,12 @@ class MySQLiTableInfo extends TableInfo {
             $this->initColumns();
         }
 
-        if (!@mysqli_select_db($this->dblink, $this->dbname)) {
+        if (!@mysqli_select_db($this->conn->getResource(), $this->dbname)) {
             throw new SQLException('No database selected');
         }
 
         // Indexes
-        $res = mysqli_query($this->dblink . "SHOW INDEX FROM " . $this->name);
+        $res = mysqli_query($this->conn->getResource() . "SHOW INDEX FROM " . $this->name);
 
         // Loop through the returned results, grouping the same key_name together
         // adding each column for that key.

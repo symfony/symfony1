@@ -6,10 +6,10 @@ require_once 'creole/IdGenerator.php';
  * Oracle (OCI8) IdGenerator implimenation.
  *
  * @author    Hans Lellelid <hans@xmpl.org>
- * @version   $Revision: 1.4 $
+ * @version   $Revision: 1.5 $
  * @package   creole.drivers.oracle
  */
-class OCI8IdGenerator extends IdGenerator {
+class OCI8IdGenerator implements IdGenerator {
     
     /** Connection object that instantiated this class */
     private $conn;

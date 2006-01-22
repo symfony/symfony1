@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: ODBCPreparedStatement.php,v 1.3 2005/04/01 17:08:37 dlawson_mi Exp $
+ *  $Id: ODBCPreparedStatement.php,v 1.4 2005/11/13 01:29:01 gamr Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@ require_once 'creole/util/Lob.php';
  * ODBC specific PreparedStatement functions.
  *
  * @author    Dave Lawson <dlawson@masterytech.com>
- * @version   $Revision: 1.3 $
+ * @version   $Revision: 1.4 $
  * @package   creole.drivers.odbc
  */
 class ODBCPreparedStatement extends PreparedStatementCommon implements PreparedStatement
@@ -181,6 +181,7 @@ class ODBCPreparedStatement extends PreparedStatementCommon implements PreparedS
      */
     function setNull($paramIndex)
     {
+    	$this->sql_cache_valid = false;
         $this->boundInVars[$paramIndex] = null;
     }
 
@@ -192,6 +193,7 @@ class ODBCPreparedStatement extends PreparedStatementCommon implements PreparedS
         if ($this->conn->getAdapter()->emulatePrepareStmt())
             return parent::setBlob($paramIndex, $blob);
             
+    	$this->sql_cache_valid = false;
         if ($blob === null)
         {
             $this->setNull($paramIndex);
@@ -220,6 +222,7 @@ class ODBCPreparedStatement extends PreparedStatementCommon implements PreparedS
         if ($this->conn->getAdapter()->emulatePrepareStmt())
             return parent::setClob($paramIndex, $clob);
 
+    	$this->sql_cache_valid = false;
         if ($clob === null)
         {
             $this->setNull($paramIndex);

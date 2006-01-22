@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: MySQLPreparedStatement.php,v 1.6 2004/03/20 04:16:49 hlellelid Exp $
+ *  $Id: MySQLPreparedStatement.php,v 1.7 2005/12/10 13:46:55 hlellelid Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,19 +26,19 @@ require_once 'creole/common/PreparedStatementCommon.php';
  * MySQL subclass for prepared statements.
  * 
  * @author    Hans Lellelid <hans@xmpl.org>
- * @version   $Revision: 1.6 $
+ * @version   $Revision: 1.7 $
  * @package   creole.drivers.mysql
  */
 class MySQLPreparedStatement extends PreparedStatementCommon implements PreparedStatement {        
     
     /**
-     * Quotes string using native mysql function.
+     * Quotes string using native mysql function (mysql_real_escape_string()).
      * @param string $str
      * @return string
      */
     protected function escape($str)
     {
-        return mysql_escape_string($str);
+        return mysql_real_escape_string($str, $this->conn->getResource());
     }    
     
 }

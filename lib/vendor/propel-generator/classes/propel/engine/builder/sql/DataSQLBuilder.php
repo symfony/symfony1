@@ -82,10 +82,10 @@ abstract class DataSQLBuilder extends DataModelBuilder {
 	
 	
 	/**
-     * Gets a boolean value.
+     * Gets a representation of a binary value suitable for use in a SQL statement.
      * Default behavior is true = 1, false = 0.
      * @param boolean $value
-     * @return string SQL to insert
+     * @return int
      */
     protected function getBooleanSql($value) 
     {      
@@ -94,9 +94,11 @@ abstract class DataSQLBuilder extends DataModelBuilder {
     
 
     /**
-     * 
+     * Gets a representation of a BLOB/LONGVARBINARY value suitable for use in a SQL statement.
+	 * @param mixed $blob Blob object or string data.
+	 * @return string
      */
-    function getBlobSql($blob) 
+    protected function getBlobSql($blob) 
     {        
         // they took magic __toString() out of PHP5.0.0; this sucks
 		if (is_object($blob)) {
@@ -107,9 +109,11 @@ abstract class DataSQLBuilder extends DataModelBuilder {
     } 
 
     /**
-     * 
+     * Gets a representation of a CLOB/LONGVARCHAR value suitable for use in a SQL statement.
+	 * @param mixed $clob Clob object or string data.
+	 * @return string
      */
-    function getClobSql($clob) 
+    protected function getClobSql($clob) 
     {
 		// they took magic __toString() out of PHP5.0.0; this sucks
 		if (is_object($clob)) {
@@ -120,92 +124,92 @@ abstract class DataSQLBuilder extends DataModelBuilder {
     }     
 
     /**
-     * 
+     * Gets a representation of a date value suitable for use in a SQL statement.
      * @param string $value
-     * @return void
+     * @return string
      */
-    function getDateSql($value) 
+    protected function getDateSql($value) 
     {
-        return $this->getStringSql($value);
+        return "'" . date('Y-m-d', strtotime($value)) . "'";
     } 
     
     /**
-     * 
+     * Gets a representation of a decimal value suitable for use in a SQL statement.
      * @param double $value
-     * @return void
+     * @return float
      */
-    function getDecimalSql($value) 
+    protected function getDecimalSql($value) 
     {
         return (float) $value;
     }             
 
     /**
-     * 
+     * Gets a representation of a double value suitable for use in a SQL statement.
      * @param double $value
-     * @return void
+     * @return double
      */
-    function getDoubleSql($value) 
+    protected function getDoubleSql($value) 
     {
         return (double) $value;
     } 
         
     /**
-     * 
+     * Gets a representation of a float value suitable for use in a SQL statement.
      * @param float $value
-     * @return void
+     * @return float
      */
-    function getFloatSql($value) 
+    protected function getFloatSql($value) 
     {
         return (float) $value;
     } 
 
     /**
-     * 
+     * Gets a representation of an integer value suitable for use in a SQL statement.
      * @param int $value
-     * @return void
+     * @return int
      */
-    function getIntSql($value) 
+    protected function getIntSql($value) 
     {
 		return (int) $value;
     }
 
     /**
-     * 
-     * @return void
+     * Gets a representation of a NULL value suitable for use in a SQL statement.
+     * @return null
      */
-    function getNullSql() 
+    protected function getNullSql() 
     {
         return 'NULL';
     }
 
     /**
-     * 
+     * Gets a representation of a string value suitable for use in a SQL statement.
 	 * @param string $value
-     * @return void
+     * @return string
      */
-    function getStringSql($value) 
+    protected function getStringSql($value) 
     {
 		return "'" . $this->getPlatform()->escapeText($value) . "'";
     }
     
     /**
-     * 
+     * Gets a representation of a time value suitable for use in a SQL statement.
      * @param string $value
-     * @return void
+     * @return string
      */
-    function getTimeSql($paramIndex, $value) 
+    protected function getTimeSql($paramIndex, $value) 
     {
-		return $this->getStringSql($value);
+		return "'" . date('H:i:s', strtotime($value)) . "'";
     }
     
     /**
-     * 
+     * Gets a representation of a timestamp value suitable for use in a SQL statement.
      * @param string $value
-     * @return void
+     * @return string
      */
     function getTimestampSql($value) 
     {
-		return $this->getStringSql($value);
+		return "'" . date('Y-m-d H:i:s', strtotime($value)) . "'";
     }
 	
 }

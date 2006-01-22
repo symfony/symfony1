@@ -23,14 +23,18 @@
 include_once 'propel/engine/database/model/AppData.php';
 
 /**
- * The task for building SQL DDL based on the XML datamodel.
+ * An extended Capsule task used for generating SQL source from an XML schema describing a database structure.
  * 
- * This class uses the new DDLBuilder classes instead of the Capsule PHP templates.
- * 
- * @author Hans Lellelid <hans@xmpl.org>
+ * This is deprecated; the new PropelSQLTask should be used instead.
+ *
+ * @author Hans Lellelid <hans@xmpl.org> (Propel)
+ * @author Jason van Zyl <jvanzyl@periapt.com> (Torque)
+ * @author John McNally <jmcnally@collab.net> (Torque)
+ * @version $Revision: 277 $
  * @package propel.phing
+ * @deprecated
  */
-class PropelNewSQLTask extends AbstractPropelDataModelTask {
+class PropelOldSQLTask extends AbstractPropelDataModelTask {
 
     /**
      * The properties file that maps an SQL file to a particular database.
@@ -150,9 +154,21 @@ class PropelNewSQLTask extends AbstractPropelDataModelTask {
         // 2) Now actually create the DDL based on the datamodel(s) from XML schema file.
         $targetDatabase = $this->getTargetDatabase();
 
-		DataModelBuilder::setBuildProperties($this->getPropelProperties());
-		$builderClazz = DataModelBuilder::getBuilderClass('ddl');
-		
+        $basepath = "sql/base/$targetDatabase";
+
+        $generator = $this->createContext();
+    	$generator->put("basepath", $basepath); // make available to sub-templates
+
+
+    	$fname = "sql/base/$targetDatabase/table.tpl" ;
+    	// $generator->put("fname", $fname); // make available to sub-templates
+
+    	$fnamekeys= "sql/base/$targetDatabase/tablefk.tpl";
+	    //$generator->put("fnamekeys", $fnamekeys); // make available to sub-templates
+
+        $ddlStartFile = new PhingFile($this->getTemplatePath(), "sql/base/$targetDatabase/database-start.tpl");
+        $ddlEndFile = new PhingFile($this->getTemplatePath(), "sql/base/$targetDatabase/database-end.tpl");
+
 	    foreach ($dataModels as $package => $dataModel) {
 
             foreach ($dataModel->getDatabases() as $database) {
@@ -163,36 +179,49 @@ class PropelNewSQLTask extends AbstractPropelDataModelTask {
 				} else {
 					$name = ($package ? $package . '.' : '') . 'schema.xml';
 				}
-
                 $outFile = $this->getMappedFile($name);
+
+                $generator->put("database", $database); // make available to sub-templates
+                $generator->put("platform", $database->getPlatform());
+
+                $this->log("Generating SQL tables for database: " . $database->getName());
 
                 $this->log("Writing to SQL file: " . $outFile->getPath());
 
-                // First add any "header" SQL
-				$ddl = call_user_func(array($builderClazz, 'getDatabaseStartDDL'));
-					
-                foreach($database->getTables() as $table) {
-				
-                    if (!$table->isSkipSql()) {
-						$builder = DataModelBuilder::builderFactory($table, 'ddl');
-						$this->log("\t+ " . $table->getName() . " [builder: " . get_class($builder) . "]");
-						$ddl .= $builder->build();
-						foreach($builder->getWarnings() as $warning) {
-							$this->log($warning, PROJECT_MSG_WARN);
-						}
+
+                // this variable helps us overwrite the first time we write to file
+                // and then append thereafter
+                $append=false;
+
+                // First check to see if there is a "header" SQL file
+                if ($ddlStartFile->exists()) {
+                    $generator->parse($ddlStartFile->getAbsolutePath(), $outFile->getAbsolutePath(), false);
+                    $append = true;
+                }
+
+                foreach($database->getTables() as $tbl) {
+                    if (!$tbl->isSkipSql()) {
+                        $this->log("\t + " . $tbl->getName());
+                        $generator->put("table", $tbl);
+                        $generator->parse($fname, $outFile->getAbsolutePath(), $append);
+                        if ($append === false) $append = true;
                     } else {
-                        $this->log("\t + (skipping) " . $table->getName());
+                        $this->log("\t + (skipping) " . $tbl->getName());
                     }
-					
                 } // foreach database->getTables()
 
-                // Finally check to see if there is any "footer" SQL
-                $ddl .= call_user_func(array($builderClazz, 'getDatabaseEndDDL'));
-				
-				
-				// Now we're done.  Write the file!
-				file_put_contents($outFile->getAbsolutePath(), $ddl);
-				
+                foreach ($database->getTables() as $tbl) {
+                    if (!$tbl->isSkipSql()) {
+                        $generator->put("tablefk", $tbl);
+                        $generator->parse($fnamekeys, $outFile->getAbsolutePath(), true); // always append
+                    }
+                }
+
+                // Finally check to see if there is a "footer" SQL file
+                if ($ddlEndFile->exists()) {
+                    $generator->parse($ddlEndFile->getAbsolutePath(), $outFile->getAbsolutePath(), true);
+                }
+
             } // foreach database
         } //foreach datamodels
 

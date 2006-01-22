@@ -210,11 +210,8 @@
 	</xs:complexType>
 
 	<xs:complexType name="id-method-parameter">
-		<xs:sequence>
-			<xs:element name="rule" type="rule" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="column" type="xs:string" default="default"/>
-		<xs:attribute name="translate" type="xs:string" use="required"/>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+		<xs:attribute name="value" type="xs:string" use="required"/>
 	</xs:complexType>
 
 	<xs:complexType name="index">
@@ -262,7 +259,7 @@
 	<xs:complexType name="column">
 		<xs:sequence>
 			<xs:element name="inheritance" type="inheritance" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="vendor" type="inheritance" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="vendor" type="vendor" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="column_name" use="required"/>
 		<xs:attribute name="phpName" type="php_name" use="optional"/>
@@ -282,11 +279,12 @@
 		<xs:attribute name="lazyLoad" type="xs:boolean" default="false"/>
 		<xs:attribute name="nodeKeySep" type="xs:string" use="optional"/> <!-- missing in the old DTD, but required to keep the treetest example working -->
 		<xs:attribute name="nodeKey" type="xs:string" use="optional"/> <!-- missing in the old DTD, but required to keep the treetest example working -->
+		<xs:attribute name="require" type="xs:string" use="optional"/>
 	</xs:complexType>
 
 	<xs:complexType name="foreign-key">
 		<xs:sequence>
-			<xs:element name="reference" type="reference"/>
+			<xs:element name="reference" type="reference" minOccurs="1" maxOccurs="unbounded"/>
 			<xs:element name="vendor" type="vendor" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="foreignTable" type="table_name" use="required"/>

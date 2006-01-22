@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: PHP5ComplexObjectBuilder.php 237 2005-10-18 17:31:46Z hans $
+ *  $Id: PHP5ComplexObjectBuilder.php 324 2006-01-06 14:30:01Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -136,15 +136,22 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 	
 	/**
 	 * Adds the methods related to validating, saving and deleting the object.
+	 * @param string &$script The script will be modified in this method.
 	 */
 	protected function addManipulationMethods(&$script)
 	{
 		$this->addDelete($script);
-		
 		$this->addSave($script);
 		$this->addDoSave($script);
-		
-		$this->addValidate($script);
+	}
+	
+	/**
+	 * Adds the methods related to validationg the object.
+	 * @param string &$script The script will be modified in this method.
+	 */
+	protected function addValidationMethods(&$script)
+	{
+		parent::addValidationMethods($script);
 		$this->addDoValidate($script);
 	}
 	
@@ -700,10 +707,11 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 	 * Returns the number of related $relCol.
 	 *
 	 * @param Criteria \$criteria
+	 * @param boolean \$distinct
 	 * @param Connection \$con
 	 * @throws PropelException
 	 */
-	public function count$relCol(\$criteria = null, \$con = null)
+	public function count$relCol(\$criteria = null, \$distinct = false, \$con = null)
 	{
 		// include the Peer class
 		include_once '".$fkPeerBuilder->getClassFilePath()."';
@@ -725,7 +733,7 @@ class PHP5ComplexObjectBuilder extends PHP5BasicObjectBuilder {
 ";
 		} // end foreach ($fk->getForeignColumns()
 		$script .="
-		return ".$fkPeerBuilder->getPeerClassname()."::doCount(\$criteria, \$con);
+		return ".$fkPeerBuilder->getPeerClassname()."::doCount(\$criteria, \$distinct, \$con);
 	}
 ";
 	} // addRefererCount
@@ -883,14 +891,25 @@ $script .= "
 		$script .= "	
 
 			// If this object has been modified, then save it to the database.
-			if (\$this->isModified()) {
+			if (\$this->isModified()";
+		
+		/*
+		FIXME: this doesn't work right now because the BasePeer::doInsert() method
+		expects to be passed a Criteria object that contains columns (which tell BasePeer
+		which table is being updated)
+		if ($table->hasAutoIncrementPrimaryKey()) {
+			$script .= " || \$this->isNew()";
+		}
+		*/
+		
+		$script .= ") {
 				if (\$this->isNew()) {
 					\$pk = ".$this->getPeerClassname()."::doInsert(\$this, \$con);
 					\$affectedRows += 1; // we are assuming that there is only 1 row per doInsert() which 
 										 // should always be true here (even though technically 
 										 // BasePeer::doInsert() can insert multiple rows).
 ";
-		if ($table->getIdMethod() != "none") {
+		if ($table->getIdMethod() != IDMethod::NO_ID_METHOD) {
 	
 			if (count($pks = $table->getPrimaryKey())) {
 				foreach ($pks as $pk) {
@@ -1025,17 +1044,20 @@ $script .= "
 	 * only those columns are validated.
 	 *
 	 * @param mixed \$columns Column name or an array of column names.
-	 *
-	 * @return mixed <code>true</code> if all columns pass validation
-	 *			  or an array of <code>ValidationFailed</code> objects for columns that fail.
+	 * @return boolean Whether all columns pass validation.
 	 * @see doValidate()
+	 * @see getValidationFailures()
 	 */
 	public function validate(\$columns = null)
 	{
-	  if (\$columns) {
-		return ".$this->getPeerClassname()."::doValidate(\$this, \$columns);
-	  }
-		return \$this->doValidate();
+		\$res = \$this->doValidate(\$columns);
+		if (\$res === true) {
+			\$this->validationFailures = array();
+			return true;
+		} else {
+			\$this->validationFailures = \$res;
+			return false;
+		}
 	}
 ";
 	} // addValidate()
@@ -1056,9 +1078,10 @@ $script .= "
 	 * also be validated.  If all pass then <code>true</code> is returned; otherwise
 	 * an aggreagated array of ValidationFailed objects will be returned.
 	 *
+	 * @param array \$columns Array of column names to validate.
 	 * @return mixed <code>true</code> if all validations pass; array of <code>ValidationFailed</code> objets otherwise.
 	 */
-	protected function doValidate()
+	protected function doValidate(\$columns = null)
 	{
 		if (!\$this->alreadyInValidation) {
 			\$this->alreadyInValidation = true;
@@ -1077,9 +1100,9 @@ $script .= "
 			foreach($table->getForeignKeys() as $fk) {
 				$aVarName = $this->getFKVarName($fk);
 				$script .= "
-			if (\$this->$aVarName !== null) {
-				if ((\$retval = \$this->".$aVarName."->validate()) !== true) {
-					\$failureMap = array_merge(\$failureMap, \$retval);
+			if (\$this->".$aVarName." !== null) {
+				if (!\$this->".$aVarName."->validate(\$columns)) {
+					\$failureMap = array_merge(\$failureMap, \$this->".$aVarName."->getValidationFailures());
 				}
 			}
 ";
@@ -1088,7 +1111,7 @@ $script .= "
 		
 		$script .= "
 
-			if ((\$retval = ".$this->getPeerClassname()."::doValidate(\$this)) !== true) {
+			if ((\$retval = ".$this->getPeerClassname()."::doValidate(\$this, \$columns)) !== true) {
 				\$failureMap = array_merge(\$failureMap, \$retval);
 			}
 
@@ -1101,8 +1124,8 @@ $script .= "
 				$script .= "
 				if (\$this->$collName !== null) {
 					foreach(\$this->$collName as \$referrerFK) {
-						if ((\$retval = \$referrerFK->validate()) !== true) {
-							\$failureMap = array_merge(\$failureMap, \$retval);
+						if (!\$referrerFK->validate(\$columns)) {
+							\$failureMap = array_merge(\$failureMap, \$referrerFK->getValidationFailures());
 						}
 					}
 				}
@@ -1119,7 +1142,7 @@ $script .= "
 	}
 ";
 	} // addDoValidate()
-
+		
 	/**
 	 * Adds the copy() method, which (in complex OM) includes the $deepCopy param for making copies of related objects.
 	 * @param string &$script The script will be modified in this method.
@@ -1209,7 +1232,9 @@ $script .= "
 				//if ( $fk->getTable()->getName() != $table->getName() ) {
 					$script .= "
 			foreach(\$this->get".$this->getRefFKPhpNameAffix($fk, true)."() as \$relObj) {
-				\$copyObj->add".$this->getRefFKPhpNameAffix($fk)."(\$relObj->copy(\$deepCopy));
+				if(\$relObj !== \$this) {  // ensure that we don't try to copy a reference to ourselves
+					\$copyObj->add".$this->getRefFKPhpNameAffix($fk)."(\$relObj->copy(\$deepCopy));
+				}
 			}
 ";
 				// HL: commenting out close of self-referential check

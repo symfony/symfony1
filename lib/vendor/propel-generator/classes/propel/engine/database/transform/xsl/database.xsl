@@ -152,11 +152,10 @@
 
 	<xsl:template match='id-method-parameter'>
 		<id-method-parameter>
-			<xsl:if test='not(boolean(@default))'>
-				<xsl:attribute name='default'>default</xsl:attribute>
+			<xsl:if test='not(boolean(@name))'>
+				<xsl:attribute name='name'>default</xsl:attribute>
 			</xsl:if>
 			<xsl:apply-templates select='@*'/>
-			<xsl:apply-templates select='rule'/>
 		</id-method-parameter>
 	</xsl:template>
 

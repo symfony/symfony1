@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Connection.php,v 1.28 2004/09/01 14:00:27 dlawson_mi Exp $
+ *  $Id: Connection.php,v 1.29 2005/10/17 19:03:50 dlawson_mi Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -29,7 +29,7 @@ include_once 'creole/ResultSet.php'; // we need this for the fetchmode ResultSet
  *  (1) Make sure that your Connection class can be serialized.  See the ConnectionCommon __sleep() and __wakeup() implimentation.
  * 
  * @author    Hans Lellelid <hans@xmpl.org>
- * @version   $Revision: 1.28 $
+ * @version   $Revision: 1.29 $
  * @package   creole
  */
 interface Connection {
@@ -164,6 +164,12 @@ interface Connection {
      * @return void
      */
     public function close();
+    
+    /**
+     * Returns false if connection is closed.
+     * @return boolean
+     */
+    public function isConnected();
     
     /**
      * Get auto-commit status.

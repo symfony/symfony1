@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: XMLElement.php 64 2005-05-13 02:43:56Z root $
+ *  $Id: XMLElement.php 315 2005-12-24 20:48:31Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -23,13 +23,15 @@
  * An abstract class for elements represented by XML tags (e.g. Column, Table).
  *
  * @author Hans Lellelid <hans@xmpl.org>
- * @version $Revision: 64 $
+ * @version $Revision: 315 $
  * @package propel.engine.database.model
  */
 abstract class XMLElement {
 	
 	protected $attributes = array();
 	
+	protected $vendorSpecificInfo = array();
+	 
 	/**
 	 * Replaces the old loadFromXML() so that we can use loadFromXML() to load the attribs into the class.
 	 */
@@ -82,4 +84,58 @@ abstract class XMLElement {
             return (in_array(strtolower($val), array('true', 't', 'y', 'yes'), true) ? true : false);
         }
     }
+	
+	/**
+     * Sets vendor specific parameter that applies to this object.
+	 * @param string $name
+	 * @param string $value
+     */
+    public function setVendorParameter($name, $value)
+    {
+        $this->vendorSpecificInfo[$name] = $value;
+    }
+	
+	/**
+     * Whether specified vendor specific information is set.
+	 * @param string $name
+	 * @return boolean
+     */
+    public function hasVendorParameter($name)
+    {
+        return isset($this->vendorSpecificInfo[$name]);
+    }
+	
+	/**
+     * Returns specified vendor specific information is set.
+	 * @param string $name
+	 * @return string
+     */
+    public function getVendorParameter($name)
+    {
+		if (isset($this->vendorSpecificInfo[$name])) {
+		    return $this->vendorSpecificInfo[$name];
+		}
+        return null; // just to be explicit
+    }
+	
+    /**
+     * Sets vendor specific information for this object.
+	 * @param array $info
+     */
+    public function setVendorSpecificInfo($info)
+    {
+        $this->vendorSpecificInfo = $info;
+    }
+
+    /**
+     * Retrieves vendor specific information for this object.
+	 * @return array
+     */
+    public function getVendorSpecificInfo()
+    {
+        return $this->vendorSpecificInfo;
+    }
+	
+	
+
 }

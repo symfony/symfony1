@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: ResultSet.php,v 1.27 2004/03/11 15:38:38 hlellelid Exp $
+ *  $Id: ResultSet.php,v 1.28 2006/01/17 19:44:38 hlellelid Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -47,7 +47,7 @@
  * </code>
  * 
  * @author    Hans Lellelid <hans@xmpl.org>
- * @version   $Revision: 1.27 $
+ * @version   $Revision: 1.28 $
  * @package   creole
  */
 interface ResultSet extends IteratorAggregate {
@@ -90,18 +90,17 @@ interface ResultSet extends IteratorAggregate {
     public function getFetchmode();       
     
     /**
-     * Whether assoc result keys get left alone -- as opposed to converted to lowercase.
-     * If the case change stuff goes back to being more complicated (allowing conver to upper,
-     * e.g.) then we'll add new methods but this method will always indicate whether any
-     * case conversions should be (or have been) performed at all.
-     * This defaults to true unless Creole::NO_ASSOC_LOWER flag has been passed to connection.
+     * Whether assoc result keys get converted to lowercase for compatibility.
+     * 
+     * This defaults to FALSE unless Creole::COMPAT_ASSOC_LOWER flag has been passed to connection.
      * This property is read-only since it must be set when connection is created.  The
      * reason for this behavior is some drivers (e.g. SQLite) do the case conversions internally
      * based on a PHP ini value; it would not be possible to change the behavior from the ResultSet
      * (since query has already been executed).
+	 * 
      * @return boolean
      */
-    public function isIgnoreAssocCase();
+    public function isLowerAssocCase();
         
     /**
      * Moves the internal cursor to the next position and fetches the row at that position.

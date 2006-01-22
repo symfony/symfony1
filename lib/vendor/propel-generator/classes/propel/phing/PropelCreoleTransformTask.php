@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: PropelCreoleTransformTask.php 270 2005-11-08 04:26:33Z hans $
+ *  $Id: PropelCreoleTransformTask.php 321 2006-01-03 17:44:56Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,7 +30,7 @@ require_once 'phing/Task.php';
  * @author Hans Lellelid <hans@xmpl.org> (Propel)
  * @author Jason van Zyl <jvanzyl@periapt.com> (Torque)
  * @author Fedor Karpelevitch <fedor.karpelevitch@barra.com> (Torque)
- * @version $Revision: 270 $
+ * @version $Revision: 321 $
  * @package propel.phing
  */
 class PropelCreoleTransformTask extends Task {
@@ -417,7 +417,7 @@ class PropelCreoleTransformTask extends Task {
 					$seq_name = $table->getName().'_'.$col->getName().'_seq';					
 					if ($table->getDatabase()->isSequence($seq_name)) {
 						$idMethodParameterNode = $this->doc->createElement("id-method-parameter");
-						$idMethodParameterNode->setAttribute("name", $seq_name);
+						$idMethodParameterNode->setAttribute("value", $seq_name);
 						$node->appendChild($idMethodParameterNode);
 					}
 				}

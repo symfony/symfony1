@@ -1,5 +1,4 @@
 <?php
-
 /*
  *  $Id$
  *
@@ -20,38 +19,40 @@
  * <http://propel.phpdb.org>.
  */
 
-require_once 'propel/engine/builder/sql/DataSQLBuilder.php';
+require_once 'propel/engine/platform/MysqlPlatform.php';
 
 /**
- * PostgreSQL class for building data dump SQL.
- * 
- * @author Hans Lellelid <hans@xmpl.org>
- * @package propel.engine.builder.sql.pgsql
+ * MySql Platform implementation, using new mysqli API.
+ *
+ * @author Hans Lellelid <hans@xmpl.org> (Propel)
+ * @version $Revision$
+ * @package propel.engine.platform
  */
-class PgsqlDataSQLBuilder extends DataSQLBuilder {
-	
-	/**
-     * Get SQL value to insert for Postgres BOOLEAN column.
-     * @param boolean $value
-     * @return string The representation of boolean for Postgres ('t' or 'f').
+class MysqliPlatform extends MysqlPlatform {
+
+    /**
+     * Initializes db specific domain mapping.
      */
-    protected function getBooleanSql($value) 
+    protected function initialize()
     {
-		return ($value ? "'t'" : "'f'");
+        parent::initialize();
+
+		// set these back to the SQL standard, since newer MySQL doesn't have a weird
+		// meaning for TIMESTAMP
+        $this->setSchemaDomainMapping(new Domain(PropelTypes::TIMESTAMP, "TIMESTAMP"));
+        $this->setSchemaDomainMapping(new Domain(PropelTypes::BU_TIMESTAMP, "TIMESTAMP"));
     }
 
     /**
-     * 
-     * @param mixed $blob Blob object or string containing data.
+     * Escape the string for MySQL.
+	 * 
+     * @param string $text
      * @return string
      */
-    protected function getBlobSql($blob) 
-    {    
-		// they took magic __toString() out of PHP5.0.0; this sucks
-		if (is_object($blob)) {
-		    $blob = $blob->__toString();
-		}            
-		return "'" . pg_escape_bytea($blob) . "'";
+    public function escapeText($text) {
+		// Because mysqli requires open connection, we are using addslashes() here.
+		// This needs to be fixed in a better way ...
+        return addslashes($text);
     }
 	
 }

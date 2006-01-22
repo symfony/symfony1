@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: ForeignKey.php 253 2005-11-04 21:06:58Z hans $
+ *  $Id: ForeignKey.php 315 2005-12-24 20:48:31Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@ require_once 'propel/engine/database/model/XMLElement.php';
  * @author Hans Lellelid <hans@xmpl.org>
  * @author Fedor <fedor.karpelevitch@home.com>
  * @author Daniel Rall <dlr@finemaltcoding.com>
- * @version $Revision: 253 $
+ * @version $Revision: 315 $
  * @package propel.engine.database.model
  */
 class ForeignKey extends XMLElement {
@@ -39,7 +39,6 @@ class ForeignKey extends XMLElement {
     private $parentTable;
     private $localColumns = array();
     private $foreignColumns = array();
-    private $vendorSpecificInfo = array();
 
     // the uppercase equivalent of the onDelete/onUpdate values in the dtd
     const NONE     = "";            // No "ON [ DELETE | UPDATE]" behaviour specified.
@@ -249,30 +248,6 @@ class ForeignKey extends XMLElement {
             $h[ $this->foreignColumns[$i] ] = $this->localColumns[$i];
         }
         return $h;
-    }
-
-    /**
-     * Sets vendor specific parameter
-     */
-    public function setVendorParameter($name, $value)
-    {
-        $this->vendorSpecificInfo[$name] = $value;
-    }
-
-    /**
-     * Sets vendor specific information to a table.
-     */
-    public function setVendorSpecificInfo($info)
-    {
-        $this->vendorSpecificInfo = $info;
-    }
-
-    /**
-     * Retrieves vendor specific information to an index.
-     */
-    public function getVendorSpecificInfo()
-    {
-        return $this->vendorSpecificInfo;
     }
 
     /**

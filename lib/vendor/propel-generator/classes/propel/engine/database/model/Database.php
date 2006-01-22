@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: Database.php 263 2005-11-07 20:55:12Z hans $
+ *  $Id: Database.php 315 2005-12-24 20:48:31Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,7 +34,7 @@ include_once 'propel/engine/database/model/Table.php';
  * @author Martin Poeschl<mpoeschl@marmot.at> (Torque)
  * @author Daniel Rall<dlr@collab.net> (Torque)
  * @author Byron Foster <byron_foster@yahoo.com> (Torque)
- * @version $Revision: 263 $
+ * @version $Revision: 315 $
  * @package propel.engine.database.model
  */
 class Database extends XMLElement {
@@ -56,8 +56,6 @@ class Database extends XMLElement {
     private $heavyIndexing;
 
     private $domainMap = array();
-
-    private $vendorSpecificInfo = array();
 
     /**
      * Sets up the Database object based on the attributes that were passed to loadFromXML().
@@ -341,30 +339,6 @@ class Database extends XMLElement {
             return null;
         }
         return $this->domainMap[$domainName];
-    }
-
-    /**
-     * Sets vendor specific parameter
-     */
-    public function setVendorParameter($name, $value)
-    {
-        $this->vendorSpecificInfo[$name] = $value;
-    }
-
-    /**
-     * Sets vendor specific information to a table.
-     */
-    public function setVendorSpecificInfo($info)
-    {
-        $this->vendorSpecificInfo = $info;
-    }
-
-    /**
-     * Retrieves vendor specific information to an index.
-     */
-    public function getVendorSpecificInfo()
-    {
-        return $this->vendorSpecificInfo;
     }
 
     public function doFinalInitialization()

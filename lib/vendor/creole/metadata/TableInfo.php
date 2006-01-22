@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: TableInfo.php,v 1.15 2005/04/13 02:37:40 hlellelid Exp $
+ *  $Id: TableInfo.php,v 1.16 2005/10/17 19:05:10 dlawson_mi Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -24,7 +24,7 @@
  * Represents a table.
  *
  * @author    Hans Lellelid <hans@xmpl.org>
- * @version   $Revision: 1.15 $
+ * @version   $Revision: 1.16 $
  * @package   creole.metadata
  */
 abstract class TableInfo {
@@ -167,6 +167,7 @@ abstract class TableInfo {
      */
     public function hasColumn($name)
     {
+        if(!$this->colsLoaded) $this->initColumns();
         return isset($this->columns[$name]);
     }
 

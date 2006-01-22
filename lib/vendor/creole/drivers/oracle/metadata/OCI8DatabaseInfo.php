@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: OCI8DatabaseInfo.php,v 1.10 2004/11/02 23:31:50 comprock Exp $
+ *  $Id: OCI8DatabaseInfo.php,v 1.11 2006/01/17 19:44:40 hlellelid Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -25,7 +25,7 @@ require_once 'creole/metadata/DatabaseInfo.php';
  * Oracle (OCI8) implementation of DatabaseInfo.
  * 
  * @author    Hans Lellelid <hans@xmpl.org>
- * @version   $Revision: 1.10 $
+ * @version   $Revision: 1.11 $
  * @package   creole.drivers.oracle.metadata
  */ 
 class OCI8DatabaseInfo extends DatabaseInfo {
@@ -63,11 +63,11 @@ class OCI8DatabaseInfo extends DatabaseInfo {
             FROM all_tables
             WHERE owner = '{$this->schema}'";
 
-        $statement = @oci_parse($this->dblink,$sql);
+        $statement = @oci_parse($this->conn->getResource(),$sql);
 
         $success = @oci_execute($statement,OCI_DEFAULT);        
         if (!$success) {
-            throw new SQLException("Could not get tables", $this->dblink->nativeError($statement));
+            throw new SQLException("Could not get tables", $this->conn->getResource()->nativeError($statement));
         }
         while ( $statement && $row = oci_fetch_assoc( $statement ) )
 		{

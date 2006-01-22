@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: DBAdapter.php 184 2005-09-04 14:36:31Z hans $
+ *  $Id: DBAdapter.php 325 2006-01-17 19:12:40Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -41,7 +41,7 @@ include_once 'creole/Connection.php';
  * @author Jon S. Stevens <jon@latchkey.com> (Torque)
  * @author Brett McLaughlin <bmclaugh@algx.net> (Torque)
  * @author Daniel Rall <dlr@finemaltcoding.com> (Torque)
- * @version $Revision: 184 $
+ * @version $Revision: 325 $
  * @package propel.adapter
  */
 abstract class DBAdapter {
@@ -52,6 +52,7 @@ abstract class DBAdapter {
      */
     private static $adapters = array(
                                     'mysql' => 'DBMySQL',
+									'mysqli' => 'DBMySQLi',
                                     'mssql' => 'DBMSSQL',
                                     'sybase' => 'DBSyabase',
                                     'oracle' => 'DBOracle',
@@ -168,5 +169,16 @@ abstract class DBAdapter {
      * @return string 
      */
     public abstract function strLength($s);
+	
+	
+	/**
+	 * Quotes database objec identifiers (table names, col names, sequences, etc.).
+	 * @param string $text The identifier to quote.
+	 * @return string The quoted identifier.
+	 */
+	public function quoteIdentifier($text)
+	{
+		return '"' . $text . '"';
+	}
     
 }

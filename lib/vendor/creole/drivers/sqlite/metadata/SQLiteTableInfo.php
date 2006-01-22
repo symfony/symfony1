@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: SQLiteTableInfo.php,v 1.7 2004/11/29 13:40:12 micha Exp $
+ *  $Id: SQLiteTableInfo.php,v 1.8 2005/10/18 02:27:50 hlellelid Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -25,7 +25,7 @@ require_once 'creole/metadata/TableInfo.php';
  * MySQL implementation of TableInfo.
  * 
  * @author    Hans Lellelid <hans@xmpl.org>
- * @version   $Revision: 1.7 $
+ * @version   $Revision: 1.8 $
  * @package   creole.drivers.sqlite.metadata
  */
 class SQLiteTableInfo extends TableInfo {
@@ -72,7 +72,7 @@ class SQLiteTableInfo extends TableInfo {
             
             $this->columns[$name] = new ColumnInfo($this, $name, SQLiteTypes::getType($type), $type, $size, $scale, $is_nullable, $default_val);
             
-            if (strtolower($type) == 'integer primary key') {
+            if (($row['pk'] == 1) || (strtolower($type) == 'integer primary key')) {
                 if ($this->primaryKey === null) {
                     $this->primaryKey = new PrimaryKeyInfo($name);
                 }

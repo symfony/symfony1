@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: ConnectionCommon.php,v 1.4 2004/09/01 14:00:28 dlawson_mi Exp $
+ *  $Id: ConnectionCommon.php,v 1.5 2005/10/17 19:03:51 dlawson_mi Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,7 +26,7 @@
  * In reality this class is not very useful yet, so there's not much incentive for drivers to extend this.
  * 
  * @author    Hans Lellelid <hans@xmpl.org>
- * @version   $Revision: 1.4 $
+ * @version   $Revision: 1.5 $
  * @package   creole.common
  */
 abstract class ConnectionCommon {
@@ -246,5 +246,13 @@ abstract class ConnectionCommon {
     protected function rollbackTrans() 
     {
     }
-    
+ 
+    /**
+     * Returns false if connection is closed.
+     * @return boolean
+     */
+    public function isConnected()
+    {
+        return !empty($this->dblink);
+    }
 }

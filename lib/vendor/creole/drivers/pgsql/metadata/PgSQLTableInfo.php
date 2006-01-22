@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: PgSQLTableInfo.php,v 1.30 2005/04/21 14:48:44 hlellelid Exp $
+ *  $Id: PgSQLTableInfo.php,v 1.31 2006/01/17 19:44:40 hlellelid Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,7 +34,7 @@ require_once 'creole/metadata/TableInfo.php';
  * @todo -c Eventually move to supporting only Postgres >= 7.4, which has the information_schema
  *
  * @author    Hans Lellelid <hans@xmpl.org>
- * @version   $Revision: 1.30 $
+ * @version   $Revision: 1.31 $
  * @package   creole.drivers.pgsql.metadata
  */
 class PgSQLTableInfo extends TableInfo {
@@ -70,7 +70,7 @@ class PgSQLTableInfo extends TableInfo {
 
     	// Get the columns, types, etc.
     	// Based on code from pgAdmin3 (http://www.pgadmin.org/)
-    	$result = pg_query ($this->dblink, sprintf ("SELECT 
+    	$result = pg_query ($this->conn->getResource(), sprintf ("SELECT 
     								att.attname,
     								att.atttypmod,
     								att.atthasdef,
@@ -94,7 +94,7 @@ class PgSQLTableInfo extends TableInfo {
 								ORDER BY att.attnum", $this->oid));
 
         if (!$result) {
-            throw new SQLException("Could not list fields for table: " . $this->name, pg_last_error($this->dblink));
+            throw new SQLException("Could not list fields for table: " . $this->name, pg_last_error($this->conn->getResource()));
         }
         while($row = pg_fetch_assoc($result)) {
         	// Check to ensure that this column isn't an array data type
@@ -196,7 +196,7 @@ class PgSQLTableInfo extends TableInfo {
     	{
     		throw new SQLException ("Invalid domain name [" . $strDomain . "]");
     	} // if (strlen (trim ($strDomain)) < 1)
-    	$result = pg_query ($this->dblink, sprintf ("SELECT
+    	$result = pg_query ($this->conn->getResource(), sprintf ("SELECT
 														d.typname as domname,
 														b.typname as basetype,
 														d.typlen,
@@ -211,7 +211,7 @@ class PgSQLTableInfo extends TableInfo {
 													ORDER BY d.typname", $strDomain));
 
         if (!$result) {
-            throw new SQLException("Query for domain [" . $strDomain . "] failed.", pg_last_error($this->dblink));
+            throw new SQLException("Query for domain [" . $strDomain . "] failed.", pg_last_error($this->conn->getResource()));
         }
 
         $row = pg_fetch_assoc ($result);
@@ -237,7 +237,7 @@ class PgSQLTableInfo extends TableInfo {
     {
         include_once 'creole/metadata/ForeignKeyInfo.php';
 
-        $result = pg_query ($this->dblink, sprintf ("SELECT
+        $result = pg_query ($this->conn->getResource(), sprintf ("SELECT
 						      conname,
 						      confupdtype,
 						      confdeltype,
@@ -257,7 +257,7 @@ class PgSQLTableInfo extends TableInfo {
 						     AND a1.attnum = ct.confkey[1]
 						ORDER BY conname", $this->oid));
         if (!$result) {
-            throw new SQLException("Could not list foreign keys for table: " . $this->name, pg_last_error($this->dblink));
+            throw new SQLException("Could not list foreign keys for table: " . $this->name, pg_last_error($this->conn->getResource()));
         }
 
         while($row = pg_fetch_assoc($result)) {
@@ -322,7 +322,7 @@ class PgSQLTableInfo extends TableInfo {
         // columns have to be loaded first
         if (!$this->colsLoaded) $this->initColumns();
 
-		$result = pg_query ($this->dblink, sprintf ("SELECT
+		$result = pg_query ($this->conn->getResource(), sprintf ("SELECT
 													      DISTINCT ON(cls.relname)
 													      cls.relname as idxname,
 													      indkey,
@@ -334,7 +334,7 @@ class PgSQLTableInfo extends TableInfo {
 
 
         if (!$result) {
-            throw new SQLException("Could not list indexes keys for table: " . $this->name, pg_last_error($this->dblink));
+            throw new SQLException("Could not list indexes keys for table: " . $this->name, pg_last_error($this->conn->getResource()));
         }
 
         while($row = pg_fetch_assoc($result)) {
@@ -346,13 +346,13 @@ class PgSQLTableInfo extends TableInfo {
             $arrColumns = explode (' ', $row['indkey']);
             foreach ($arrColumns as $intColNum)
             {
-	            $result2 = pg_query ($this->dblink, sprintf ("SELECT a.attname
+	            $result2 = pg_query ($this->conn->getResource(), sprintf ("SELECT a.attname
 															FROM pg_catalog.pg_class c JOIN pg_catalog.pg_attribute a ON a.attrelid = c.oid
 															WHERE c.oid = '%s' AND a.attnum = %d AND NOT a.attisdropped
 															ORDER BY a.attnum", $this->oid, $intColNum));
 				if (!$result2)
 				{
-            		throw new SQLException("Could not list indexes keys for table: " . $this->name, pg_last_error($this->dblink));
+            		throw new SQLException("Could not list indexes keys for table: " . $this->name, pg_last_error($this->conn->getResource()));
 				}
 				$row2 = pg_fetch_assoc($result2);
 	            $this->indexes[$name]->addColumn($this->columns[ $row2['attname'] ]);
@@ -373,7 +373,7 @@ class PgSQLTableInfo extends TableInfo {
 
         // Primary Keys
         
-        $result = pg_query($this->dblink, sprintf ("SELECT
+        $result = pg_query($this->conn->getResource(), sprintf ("SELECT
 													      DISTINCT ON(cls.relname)
 													      cls.relname as idxname,
 													      indkey,
@@ -383,7 +383,7 @@ class PgSQLTableInfo extends TableInfo {
 													WHERE indrelid = %s AND indisprimary
 													ORDER BY cls.relname", $this->oid));
         if (!$result) {
-            throw new SQLException("Could not list primary keys for table: " . $this->name, pg_last_error($this->dblink));
+            throw new SQLException("Could not list primary keys for table: " . $this->name, pg_last_error($this->conn->getResource()));
         }
 
         // Loop through the returned results, grouping the same key_name together
@@ -393,13 +393,13 @@ class PgSQLTableInfo extends TableInfo {
             $arrColumns = explode (' ', $row['indkey']);
             foreach ($arrColumns as $intColNum)
             {
-	            $result2 = pg_query ($this->dblink, sprintf ("SELECT a.attname
+	            $result2 = pg_query ($this->conn->getResource(), sprintf ("SELECT a.attname
 															FROM pg_catalog.pg_class c JOIN pg_catalog.pg_attribute a ON a.attrelid = c.oid
 															WHERE c.oid = '%s' AND a.attnum = %d AND NOT a.attisdropped
 															ORDER BY a.attnum", $this->oid, $intColNum));
 				if (!$result2)
 				{
-            		throw new SQLException("Could not list indexes keys for table: " . $this->name, pg_last_error($this->dblink));
+            		throw new SQLException("Could not list indexes keys for table: " . $this->name, pg_last_error($this->conn->getResource()));
 				}
 				$row2 = pg_fetch_assoc($result2);
 				if (!isset($this->primaryKey)) {

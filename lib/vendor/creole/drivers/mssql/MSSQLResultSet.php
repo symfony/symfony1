@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: MSSQLResultSet.php,v 1.20 2004/03/20 04:16:49 hlellelid Exp $
+ *  $Id: MSSQLResultSet.php,v 1.21 2006/01/17 19:44:38 hlellelid Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,7 +30,7 @@ require_once 'creole/common/ResultSetCommon.php';
  * that this behaves the same as RDBMS drivers using native OFFSET/LIMIT.
  * 
  * @author    Hans Lellelid <hans@xmpl.org>
- * @version   $Revision: 1.20 $
+ * @version   $Revision: 1.21 $
  * @package   creole.drivers.mssql
  */
 class MSSQLResultSet extends ResultSetCommon implements ResultSet {    
@@ -121,7 +121,7 @@ class MSSQLResultSet extends ResultSetCommon implements ResultSet {
              }          
         }
         
-        if (!$this->ignoreAssocCase) {
+        if ($this->fetchmode === ResultSet::FETCHMODE_ASSOC && $this->lowerAssocCase) {
             $this->fields = array_change_key_case($this->fields, CASE_LOWER);
         }
         

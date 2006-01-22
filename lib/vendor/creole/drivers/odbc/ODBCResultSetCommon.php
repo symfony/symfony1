@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: ODBCResultSetCommon.php,v 1.2 2005/04/01 17:12:09 dlawson_mi Exp $
+ *  $Id: ODBCResultSetCommon.php,v 1.3 2006/01/17 19:44:39 hlellelid Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,7 +26,7 @@ require_once 'creole/common/ResultSetCommon.php';
  * Base class for ODBC implementation of ResultSet.
  *
  * @author    Dave Lawson <dlawson@masterytech.com>
- * @version   $Revision: 1.2 $
+ * @version   $Revision: 1.3 $
  * @package   creole.drivers.odbc
  */
 abstract class ODBCResultSetCommon extends ResultSetCommon
@@ -61,7 +61,7 @@ abstract class ODBCResultSetCommon extends ResultSetCommon
         $this->fetchmode = null;
         $this->cursorPos = 0;
         $this->fields = null;
-        $this->ignoreAssocCase = false;
+        $this->lowerAssocCase = false;
         $this->limit = 0;
         $this->offset = 0;
     }
@@ -172,9 +172,10 @@ abstract class ODBCResultSetCommon extends ResultSetCommon
             {
                 $colname = @odbc_field_name($this->result->getHandle(), $i+1);
                 
-                if (!$this->ignoreAssocCase)
+                if ($this->lowerAssocCase) {
                     $colname = strtolower($colname);
-                    
+                }
+				
                 $newrow[$colname] = $row[$i];
             }
             

@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: ForeignKeyInfo.php,v 1.8 2005/02/25 15:47:02 pachanga Exp $
+ *  $Id: ForeignKeyInfo.php,v 1.9 2005/08/02 14:42:36 sethr Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -24,7 +24,7 @@
  * Represents a foreign key.
  *
  * @author    Hans Lellelid <hans@xmpl.org>
- * @version   $Revision: 1.8 $
+ * @version   $Revision: 1.9 $
  * @package   creole.metadata
  */
 class ForeignKeyInfo {
@@ -39,12 +39,12 @@ class ForeignKeyInfo {
     protected $vendorSpecificInfo = array();
 
 
-    const NONE     = "";            // No "ON [ DELETE | UPDATE]" behaviour specified.
-    const CASCADE  = "NO ACTION";
-    const CASCADE  = "CASCADE";
-    const RESTRICT = "RESTRICT";
-    const SETNULL  = "SET DEFAULT";
-    const SETNULL  = "SET NULL";
+    const NONE       = "";            // No "ON [ DELETE | UPDATE]" behaviour specified.
+    const NOACTION   = "NO ACTION";
+    const CASCADE    = "CASCADE";
+    const RESTRICT   = "RESTRICT";
+    const SETDEFAULT = "SET DEFAULT";
+    const SETNULL    = "SET NULL";
 
     /**
      * @param string $name The name of the foreign key.

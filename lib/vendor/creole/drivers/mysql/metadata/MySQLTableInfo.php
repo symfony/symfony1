@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: MySQLTableInfo.php,v 1.18 2005/03/01 12:29:32 micha Exp $
+ *  $Id: MySQLTableInfo.php,v 1.20 2006/01/17 19:44:39 hlellelid Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -25,7 +25,7 @@ require_once 'creole/metadata/TableInfo.php';
  * MySQL implementation of TableInfo.
  *
  * @author    Hans Lellelid <hans@xmpl.org>
- * @version   $Revision: 1.18 $
+ * @version   $Revision: 1.20 $
  * @package   creole.drivers.mysql.metadata
  */
 class MySQLTableInfo extends TableInfo {
@@ -36,7 +36,7 @@ class MySQLTableInfo extends TableInfo {
         include_once 'creole/metadata/ColumnInfo.php';
         include_once 'creole/drivers/mysql/MySQLTypes.php';
 
-        if (!@mysql_select_db($this->dbname, $this->dblink)) {
+        if (!@mysql_select_db($this->dbname, $this->conn->getResource())) {
             throw new SQLException('No database selected');
         }
 
@@ -46,7 +46,7 @@ class MySQLTableInfo extends TableInfo {
         // do not return complete information -- e.g. precision / scale, default
         // values).
 
-        $res = mysql_query("SHOW COLUMNS FROM `" . $this->name . "`", $this->dblink);
+        $res = mysql_query("SHOW COLUMNS FROM `" . $this->name . "`", $this->conn->getResource());
 
         $defaults = array();
         $nativeTypes = array();
@@ -100,12 +100,12 @@ class MySQLTableInfo extends TableInfo {
         // columns have to be loaded first
         if (!$this->colsLoaded) $this->initColumns();
 
-        if (!@mysql_select_db($this->dbname, $this->dblink)) {
+        if (!@mysql_select_db($this->dbname, $this->conn->getResource())) {
             throw new SQLException('No database selected');
         }
 
         // Primary Keys
-        $res = mysql_query("SHOW KEYS FROM `" . $this->name . "`", $this->dblink);
+        $res = mysql_query("SHOW KEYS FROM `" . $this->name . "`", $this->conn->getResource());
 
         // Loop through the returned results, grouping the same key_name together
         // adding each column for that key.
@@ -133,12 +133,12 @@ class MySQLTableInfo extends TableInfo {
         // columns have to be loaded first
         if (!$this->colsLoaded) $this->initColumns();
 
-        if (!@mysql_select_db($this->dbname, $this->dblink)) {
+        if (!@mysql_select_db($this->dbname, $this->conn->getResource())) {
             throw new SQLException('No database selected');
         }
 
         // Indexes
-        $res = mysql_query("SHOW INDEX FROM `" . $this->name . "`", $this->dblink);
+        $res = mysql_query("SHOW INDEX FROM `" . $this->name . "`", $this->conn->getResource());
 
         // Loop through the returned results, grouping the same key_name together
         // adding each column for that key.
@@ -182,21 +182,22 @@ class MySQLTableInfo extends TableInfo {
 
     // columns have to be loaded first
     if (!$this->colsLoaded) $this->initColumns();
-    if (!@mysql_select_db($this->dbname, $this->dblink)) {
+    if (!@mysql_select_db($this->dbname, $this->conn->getResource())) {
       throw new SQLException('No database selected');
     }
        // Get the CREATE TABLE syntax
-    $res = mysql_query("SHOW CREATE TABLE `" . $this->name . "`", $this->dblink);
+    $res = mysql_query("SHOW CREATE TABLE `" . $this->name . "`", $this->conn->getResource());
     $row = mysql_fetch_row($res);
 
     // Get the information on all the foreign keys
-    $regEx = '/FOREIGN KEY \(`([^`]*)`\) REFERENCES `([^`]*)` \(`([^`]*)`\)/';
+    $regEx = '/FOREIGN KEY \(`([^`]*)`\) REFERENCES `([^`]*)` \(`([^`]*)`\)(.*)/';
     if (preg_match_all($regEx,$row[1],$matches)) {
       $tmpArray = array_keys($matches[0]);
       foreach ($tmpArray as $curKey) {
         $name = $matches[1][$curKey];
         $ftbl = $matches[2][$curKey];
         $fcol = $matches[3][$curKey];
+        $fkey = $matches[4][$curKey];
         if (!isset($this->foreignKeys[$name])) {
           $this->foreignKeys[$name] = new ForeignKeyInfo($name);
           if ($this->database->hasTable($ftbl)) {
@@ -211,16 +212,35 @@ class MySQLTableInfo extends TableInfo {
             $foreignCol = new ColumnInfo($foreignTable, $fcol);
             $foreignTable->addColumn($foreignCol);
           }
-          $this->foreignKeys[$name]->addReference($this->columns[$name], $foreignCol);
+
+          //typical for mysql is RESTRICT
+          $fkactions = array(
+            'ON DELETE'	=> ForeignKeyInfo::RESTRICT,
+            'ON UPDATE'	=> ForeignKeyInfo::RESTRICT,
+          );
+                              
+          if ($fkey) {
+            //split foreign key information -> search for ON DELETE and afterwords for ON UPDATE action
+            foreach (array_keys($fkactions) as $fkaction) {
+              $result = NULL;
+              preg_match('/' . $fkaction . ' (' . ForeignKeyInfo::CASCADE . '|' . ForeignKeyInfo::SETNULL . ')/', $fkey, $result);
+              if ($result && is_array($result) && isset($result[1])) {
+                $fkactions[$fkaction] = $result[1];
+              }
+            }
+          }
+
+          $this->foreignKeys[$name]->addReference($this->columns[$name], $foreignCol, $fkactions['ON DELETE'], $fkactions['ON UPDATE']);
         }
       }
     }
     $this->fksLoaded = true;
+    
   }
 
   protected function initVendorSpecificInfo()
   {
-      $res = mysql_query("SHOW TABLE STATUS LIKE '" . $this->name . "'", $this->dblink);
+      $res = mysql_query("SHOW TABLE STATUS LIKE '" . $this->name . "'", $this->conn->getResource());
       $this->vendorSpecificInfo = mysql_fetch_assoc($res);
 
       $this->vendorLoaded = true;

@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: MSSQLDatabaseInfo.php,v 1.10 2004/06/27 04:26:13 hlellelid Exp $
+ *  $Id: MSSQLDatabaseInfo.php,v 1.11 2006/01/17 19:44:39 hlellelid Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -25,7 +25,7 @@ require_once 'creole/metadata/DatabaseInfo.php';
  * MSSQL impementation of DatabaseInfo.
  *
  * @author    Hans Lellelid
- * @version   $Revision: 1.10 $
+ * @version   $Revision: 1.11 $
  * @package   creole.drivers.mssql.metadata
  */ 
 class MSSQLDatabaseInfo extends DatabaseInfo {
@@ -41,11 +41,11 @@ class MSSQLDatabaseInfo extends DatabaseInfo {
         $dsn = $this->conn->getDSN();
         
         
-        if (!@mssql_select_db($this->dbname, $this->dblink)) {
+        if (!@mssql_select_db($this->dbname, $this->conn->getResource())) {
             throw new SQLException('No database selected');
         }
              
-        $result = mssql_query("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME <> 'dtproperties'", $this->dblink);
+        $result = mssql_query("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME <> 'dtproperties'", $this->conn->getResource());
     
         if (!$result) {
             throw new SQLException("Could not list tables", mssql_get_last_message());            

@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: CodeBaseAdapter.php,v 1.2 2005/04/01 17:14:03 dlawson_mi Exp $
+ *  $Id: CodeBaseAdapter.php,v 1.3 2005/10/17 19:03:51 dlawson_mi Exp $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -46,7 +46,7 @@ require_once 'creole/drivers/odbc/adapters/ODBCAdapter.php';
  *    when running tests for the driver.
  *
  * @author    Dave Lawson <dlawson@masterytech.com>
- * @version   $Revision: 1.2 $
+ * @version   $Revision: 1.3 $
  * @package   creole.drivers.odbc
  */
 class CodeBaseAdapter extends ODBCAdapter
@@ -64,8 +64,8 @@ class CodeBaseAdapter extends ODBCAdapter
      */
     public function createResultSet($conn, $odbcresult, $fetchmode)
     {
-        require_once 'creole/drivers/odbc/ODBCCachedResultSet.php';
-        return new ODBCCachedResultSet($conn, $odbcresult, $fetchmode, true);
+        require_once 'creole/drivers/odbc/ODBCResultSet.php';
+        return new ODBCResultSet($conn, $odbcresult, $fetchmode, true);
     }
 
 }
