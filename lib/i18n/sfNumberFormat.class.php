@@ -140,8 +140,8 @@ class sfNumberFormat
     $symbol = @$this->formatInfo->getCurrencySymbol($currency); 
     if(is_null($symbol))
       $symbol = $currency;
-
-    $result = str_replace('Â¤',$symbol, $result);
+error_log("***".$result."***");
+    $result = str_replace('¤',$symbol, $result);
     
     return I18N_toEncoding($result, $charset);
   }
