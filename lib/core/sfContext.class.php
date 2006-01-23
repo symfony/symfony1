@@ -71,19 +71,19 @@ class sfContext
     // create a new action stack
     $this->actionStack = new sfActionStack();
 
+    if (sfConfig::get('sf_i18n'))
+    {
+      $this->i18n = new sfI18N();
+      $this->i18n->initialize($this);
+      sfConfig::set('sf_i18n_instance', $this->i18n);
+    }
+
     // include the factories configuration
     require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/factories.yml'));
 
     if ($sf_cache)
     {
       $this->viewCacheManager->initialize($this);
-    }
-
-    if (sfConfig::get('sf_i18n'))
-    {
-      $this->i18n = new sfI18N();
-      $this->i18n->initialize($this);
-      sfConfig::set('sf_i18n_instance', $this->i18n);
     }
 
     // register our shutdown function

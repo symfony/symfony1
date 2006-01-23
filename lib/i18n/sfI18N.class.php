@@ -96,7 +96,11 @@ class sfI18N
 
   public function setCulture($culture)
   {
-    $this->messageSource->setCulture($culture);
+    if ($this->messageSource)
+    {
+      $this->messageSource->setCulture($culture);
+    }
+
     $this->globalMessageSource->setCulture($culture);
   }
 
