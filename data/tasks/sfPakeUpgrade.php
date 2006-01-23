@@ -83,8 +83,22 @@ function run_upgrade_to_0_6($task, $args)
   // location of config/config.php
   _upgrade_0_6_config(sfConfig::get('sf_web_dir_name'));
 
+  // change propelpropel builder paths
+  _upgrade_0_6_propel_builder();
+
   // clear cache
   run_clear_cache($task, array());
+}
+
+function _upgrade_0_6_propel_builder()
+{
+  $verbose = pakeApp::get_instance()->get_verbose();
+
+  $propel_ini = file_get_contents(sfConfig::get('sf_config_dir').DIRECTORY_SEPARATOR.'propel.ini');
+
+  $propel_ini = str_replace('symfony.symfony.addon.propel.builder', 'symfony.addon.propel.builder', $propel_ini);
+
+  file_put_contents($propel_ini, $content);
 }
 
 function _upgrade_0_6_yml_comments($dir)
