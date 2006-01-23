@@ -20,12 +20,10 @@
  */
 class sfBasicSecurityUser extends sfUser implements sfSecurityUser
 {
-  const CULTURE_NAMESPACE = 'symfony/user/sfUser/culture';
   const LAST_REQUEST_NAMESPACE = 'symfony/user/sfUser/lastRequest';
   const AUTH_NAMESPACE = 'symfony/user/sfUser/authenticated';
   const CREDENTIAL_NAMESPACE = 'symfony/user/sfUser/credentials';
 
-  private $culture = null;
   private $lastRequest = null;
 
   private $credentials = null;
@@ -139,35 +137,6 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
   }
 
   /**
-   * Sets culture.
-   *
-   * @param  string culture
-   */
-  public function setCulture ($culture)
-  {
-    if ($this->culture != $culture)
-    {
-      $this->culture = $culture;
-
-      // change the message format object with the new culture
-      if (sfConfig::get('sf_i18n'))
-      {
-        $this->context->getI18N()->setCulture($culture);
-      }
-    }
-  }
-
-  /**
-   * Gets culture.
-   *
-   * @return string
-   */
-  public function getCulture()
-  {
-    return $this->culture;
-  }
-
-  /**
    * Returns true if user is authenticated.
    *
    * @return boolean
@@ -224,22 +193,11 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     }
 
     $this->lastRequest = time();
-
-    $culture = $storage->read(self::CULTURE_NAMESPACE);
-    if ($this->culture == null)
-    {
-      $culture = sfConfig::get('sf_i18n_default_culture');
-    }
-
-    $this->setCulture($culture);
   }
 
   public function shutdown ()
   {
     $storage = $this->getContext()->getStorage();
-
-    // write culture to the storage
-    $storage->write(self::CULTURE_NAMESPACE,      $this->culture);
 
     // write the last request time to the storage
     $storage->write(self::LAST_REQUEST_NAMESPACE, $this->lastRequest);

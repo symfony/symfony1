@@ -29,9 +29,12 @@ class sfUser
    */
   const ATTRIBUTE_NAMESPACE = 'symfony/user/sfUser/attributes';
 
+  const CULTURE_NAMESPACE = 'symfony/user/sfUser/culture';
+
   private
     $parameter_holder = null,
-    $attribute_holder = null;
+    $attribute_holder = null,
+    $culture = null;
 
   protected
     $context          = null;
@@ -75,6 +78,14 @@ class sfUser
         $this->attribute_holder->add($values, $namespace);
       }
     }
+
+    $culture = $storage->read(self::CULTURE_NAMESPACE);
+    if ($this->culture == null)
+    {
+      $culture = sfConfig::get('sf_i18n_default_culture');
+    }
+
+    $this->setCulture($culture);
   }
 
   /**
@@ -101,6 +112,35 @@ class sfUser
     }
 
     return $object;
+  }
+
+  /**
+   * Sets culture.
+   *
+   * @param  string culture
+   */
+  public function setCulture ($culture)
+  {
+    if ($this->culture != $culture)
+    {
+      $this->culture = $culture;
+
+      // change the message format object with the new culture
+      if (sfConfig::get('sf_i18n'))
+      {
+        $this->context->getI18N()->setCulture($culture);
+      }
+    }
+  }
+
+  /**
+   * Gets culture.
+   *
+   * @return string
+   */
+  public function getCulture()
+  {
+    return $this->culture;
   }
 
   public function getParameterHolder()
@@ -150,6 +190,8 @@ class sfUser
    */
   public function shutdown ()
   {
+    $storage = $this->getContext()->getStorage();
+
     $attributes = array();
     foreach ($this->attribute_holder->getNamespaces() as $namespace)
     {
@@ -157,7 +199,10 @@ class sfUser
     }
 
     // write attributes to the storage
-    $this->getContext()->getStorage()->write(self::ATTRIBUTE_NAMESPACE, $attributes);
+    $storage->write(self::ATTRIBUTE_NAMESPACE, $attributes);
+
+    // write culture to the storage
+    $storage->write(self::CULTURE_NAMESPACE, $this->culture);
   }
 }
 
