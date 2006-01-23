@@ -84,7 +84,7 @@ svn export http://svn.symfony-project.com/${SVN_PATH}/doc/SANDBOX_README README
 # remove mod_rewrite
 
 echo ">>> remove mod_rewrite"
-rm -f web/.htaccess
+mv web/.htaccess web/.htaccess.sample
 
 # configuration
 

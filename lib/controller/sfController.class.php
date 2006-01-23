@@ -63,7 +63,7 @@ abstract class sfController
     foreach ($dirs as $dir => $checkActivated)
     {
       // plugin module activated?
-      if ($checkActivated && !in_array($moduleName, sfConfig::get('sf_activated_modules')))
+      if ($checkActivated && !in_array($moduleName, sfConfig::get('sf_activated_modules')) && is_readable($dir))
       {
         $error = 'The module "%s" is not activated.';
         $error = sprintf($error, $moduleName);
