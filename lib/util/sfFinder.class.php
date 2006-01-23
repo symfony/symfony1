@@ -37,15 +37,16 @@
  */
 class sfFinder
 {
-  private $type     = 'file';
-  private $names    = array();
-  private $prunes   = array();
-  private $discards = array();
-  private $execs    = array();
-  private $mindepth = 0;
-  private $sizes    = array();
-  private $maxdepth = 1000000;
-  private $relative = false;
+  private $type        = 'file';
+  private $names       = array();
+  private $prunes      = array();
+  private $discards    = array();
+  private $execs       = array();
+  private $mindepth    = 0;
+  private $sizes       = array();
+  private $maxdepth    = 1000000;
+  private $relative    = false;
+  private $follow_link = false;
 
   /**
    * Sets maximum directory depth.
@@ -273,6 +274,18 @@ class sfFinder
   }
 
   /**
+   * Symlink following.
+   *
+   * @return object current sfFinder object
+   */
+  public function follow_link()
+  {
+    $this->follow_link = true;
+
+    return $this;
+  }
+
+  /**
    * Searches files and directories which match defined rules.
    *
    * @return array list of files and directories
@@ -330,6 +343,11 @@ class sfFinder
       return array();
     }
 
+    if (is_link($dir) && !$this->follow_link)
+    {
+      return array();
+    }
+
     $files = array();
 
     if (is_dir($dir))
@@ -340,6 +358,11 @@ class sfFinder
         if ($entryname == '.' || $entryname == '..') continue;
 
         $current_entry = $dir.DIRECTORY_SEPARATOR.$entryname;
+        if (is_link($current_entry) && !$this->follow_link)
+        {
+          next;
+        }
+
         if (is_dir($current_entry))
         {
           if (($this->type == 'directory' || $this->type == 'any') && ($depth >= $this->mindepth) && !$this->is_discarded($dir, $entryname) && $this->match_names($dir, $entryname) && $this->exec_ok($dir, $entryname))
