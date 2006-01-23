@@ -392,7 +392,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
       $validator = trim($validator);
 
       // add this validator name to our entry
-      $entry['validators'][] =& $validator;
+      $entry['validators'][] = $validator;
 
       // make sure the specified validator exists
       if (!isset($config[$validator]))
