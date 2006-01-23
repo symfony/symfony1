@@ -133,9 +133,13 @@ For all your applications within a project:
 
   14 - change your symlinks or apache configuration to move the `web/sf` directory:
 
-    0.4.X/0.5.X                 | 0.6.X/0.7.X
-    ----------------------------|--------------------
-    symfony/data/symfony/web/sf | symfony/data/web/sf
+    0.4.X/0.5.X                         | 0.6.X/0.7.X
+    ------------------------------------|----------------------------
+    SVN                                 |
+    /SYMFONY_PATH/data/symfony/web/sf   | /SYMFONY_PATH/data/web/sf
+                                        |
+    PEAR                                |
+    /PEAR_DATA_PATH/data/symfony/web/sf | /PEAR_DATA_PATH/data/web/sf
 
   15 - if your project use the sfShoppingCart or sfFeed classes, install the sfShoppingCart and/or sfFeed plugin
   
