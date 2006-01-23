@@ -116,6 +116,16 @@ For all your applications within a project:
              database:     dbname
              username:     root
              password:     
+             compat_assoc_lower:  true
+             compat_rtrim_string: true
+
+       To get a dabatase connection, you must now use the symfony database manager:
+
+       0.4.X/0.5.X                 | 0.6.X/0.7.X
+       ----------------------------|--------------------
+       Propel::getConnection()     | sfContext::getInstance()->getDatabaseConnection($connection_name)
+
+       `$connection_name` is the name of your connection (`propel` in the example above).
 
   12 - change all comments in your YAML file from ; to #
 

@@ -127,10 +127,14 @@ class sfCreoleDatabase extends sfDatabase
       // set our flags
       $noAssocLower = $this->getParameter('no_assoc_lower', false);
       $persistent   = $this->getParameter('persistent', false);
+      $compatAssocLower  = $this->getParameter('compat_assoc_lower', false);
+      $compatRtrimString = $this->getParameter('compat_rtrim_string', false);
 
       $flags  = 0;
-      $flags |= ($noAssocLower) ? Creole::NO_ASSOC_LOWER : 0;
-      $flags |= ($persistent) ? Creole::PERSISTENT : 0;
+      $flags |= ($noAssocLower)      ? Creole::NO_ASSOC_LOWER : 0;
+      $flags |= ($persistent)        ? Creole::PERSISTENT : 0;
+      $flags |= ($compatAssocLower)  ? Creole::COMPAT_ASSOC_LOWER : 0;
+      $flags |= ($compatRtrimString) ? Creole::COMPAT_RTRIM_STRING : 0;
 
       // do the duuuurtay work, right thurr
       if ($flags > 0)
