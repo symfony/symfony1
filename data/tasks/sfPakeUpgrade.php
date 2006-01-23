@@ -30,11 +30,11 @@ function run_upgrade_to_0_6($task, $args)
   $verbose = pakeApp::get_instance()->get_verbose();
 
   // find all applications for this project
-  $apps = pakeFinder::type('directory')->name(sfConfig::get('sf_module_dir_name'))->mindepth(1)->maxdepth(1)->relative()->in(sfConfig::get('sf_apps_dir_name'));
+  $apps = pakeFinder::type('directory')->name(sfConfig::get('sf_app_module_dir_name'))->mindepth(1)->maxdepth(1)->relative()->in(sfConfig::get('sf_apps_dir_name'));
 
   foreach ($apps as $app_module_dir)
   {
-    $app = str_replace(DIRECTORY_SEPARATOR.sfConfig::get('sf_module_dir_name'), '', $app_module_dir);
+    $app = str_replace(DIRECTORY_SEPARATOR.sfConfig::get('sf_app_module_dir_name'), '', $app_module_dir);
     if ($verbose) echo '>> app       '.pakeApp::excerpt('converting "'.$app.'"'.' application')."\n";
 
     $app_dir = sfConfig::get('sf_apps_dir_name').'/'.$app;
@@ -47,7 +47,7 @@ function run_upgrade_to_0_6($task, $args)
     _upgrade_0_6_constants(array($app_dir.'/'.sfConfig::get('sf_app_module_dir_name'), $app_dir.'/'.sfConfig::get('sf_app_module_dir_name'), $app_dir.'/'.sfConfig::get('sf_app_lib_dir_name')));
 
     // change view shortcuts in global and modules template directories
-    $template_dirs[] = pakeFinder::type('directory')->name('templates')->mindepth(1)->maxdepth(1)->in($app_dir.'/'.sfConfig::get('sf_app_module_dir_name'));
+    $template_dirs   = pakeFinder::type('directory')->name('templates')->mindepth(1)->maxdepth(1)->in($app_dir.'/'.sfConfig::get('sf_app_module_dir_name'));
     $template_dirs[] = $app_dir.'/'.sfConfig::get('sf_app_template_dir_name');
 
     _upgrade_0_6_view_shortcuts($template_dirs);
