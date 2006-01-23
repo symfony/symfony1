@@ -81,11 +81,6 @@ svn export http://svn.symfony-project.com/${SVN_PATH}/LICENSE LICENSE
 echo ">>> add README"
 svn export http://svn.symfony-project.com/${SVN_PATH}/doc/SANDBOX_README README
 
-# remove mod_rewrite
-
-echo ">>> remove mod_rewrite"
-mv web/.htaccess web/.htaccess.sample
-
 # configuration
 
 echo ">>> change default configuration"
