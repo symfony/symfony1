@@ -12,7 +12,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version $Revision: 1.4 $  $Date: 2005/01/09 23:36:23 $
+ * @version $Revision$  $Date$
  * @package System.I18N.core
  */
 
@@ -28,7 +28,7 @@
 // | Copyright (c) 2004 Michael Wallner <mike@iworks.at>                  |
 // +----------------------------------------------------------------------+
 //
-// $Id: TGettext.php,v 1.4 2005/01/09 23:36:23 qiangxue Exp $
+// $Id$
 
 /**
  * File::Gettext
@@ -52,7 +52,7 @@
  * #################################################################
  *
  * @author      Michael Wallner <mike@php.net>
- * @version     $Revision: 1.4 $
+ * @version     $Revision$
  * @access      public
  * @package System.I18N.core 
  */

@@ -26,21 +26,23 @@ function run_init_project($task, $args)
 
   $project_name = $args[0];
 
+  $sf_root_dir = sfConfig::get('sf_root_dir');
+
   // create basic project structure
-  $finder = pakeFinder::type('any')->prune('.svn')->discard('.svn');
-  pake_mirror($finder, sfConfig::get('sf_symfony_data_dir').'/skeleton/project', getcwd());
+  $finder = pakeFinder::type('any')->prune('.svn')->discard('.svn', '.sf');
+  pake_mirror($finder, sfConfig::get('sf_symfony_data_dir').'/skeleton/project', $sf_root_dir);
 
   $finder = pakeFinder::type('file')->name('properties.ini', 'apache.conf', 'propel.ini');
-  pake_replace_tokens($finder, getcwd(), '##', '##', array('PROJECT_NAME' => $project_name));
+  pake_replace_tokens($finder, $sf_root_dir, '##', '##', array('PROJECT_NAME' => $project_name));
 
   $finder = pakeFinder::type('file')->name('propel.ini');
-  pake_replace_tokens($finder, getcwd(), '##', '##', array('PROJECT_DIR' => getcwd()));
+  pake_replace_tokens($finder, $sf_root_dir, '##', '##', array('PROJECT_DIR' => $sf_root_dir));
 
   // create symlink if needed
   if (sfConfig::get('sf_symfony_symlink'))
   {
-    pake_symlink(sfConfig::get('sf_symfony_lib_dir'),  getcwd().'/lib/symfony');
-    pake_symlink(sfConfig::get('sf_symfony_data_dir'), getcwd().'/data/symfony');
+    pake_symlink(sfConfig::get('sf_symfony_lib_dir'),  $sf_root_dir.'/lib');
+    pake_symlink(sfConfig::get('sf_symfony_data_dir'), $sf_root_dir.'/data');
   }
 
   run_fix_perms($task, $args);
@@ -55,13 +57,15 @@ function run_init_app($task, $args)
 
   $app = $args[0];
 
+  $sf_root_dir = sfConfig::get('sf_root_dir');
+
   // create basic application structure
-  $finder = pakeFinder::type('any')->prune('.svn')->discard('.svn');
-  pake_mirror($finder, sfConfig::get('sf_symfony_data_dir').'/skeleton/app/app', getcwd().'/apps/'.$app);
+  $finder = pakeFinder::type('any')->prune('.svn')->discard('.svn', '.sf');
+  pake_mirror($finder, sfConfig::get('sf_symfony_data_dir').'/skeleton/app/app', $sf_root_dir.'/'.sfConfig::get('sf_apps_dir_name').'/'.$app);
 
   // create $app.php or index.php if it is our first app
   $index_name = 'index';
-  $first_app = file_exists(getcwd().'/web/index.php') ? false : true;
+  $first_app = file_exists(sfConfig::get('sf_web_dir').'/index.php') ? false : true;
   if (!$first_app)
   {
     $index_name = $app;
@@ -69,18 +73,18 @@ function run_init_app($task, $args)
 
   // set no_script_name value in settings.yml for production environment
   $finder = pakeFinder::type('file')->name('settings.yml');
-  pake_replace_tokens($finder, getcwd().'/apps/'.$app.'/config', '##', '##', array('NO_SCRIPT_NAME' => ($first_app ? 'on' : 'off')));
+  pake_replace_tokens($finder, $sf_root_dir.'/'.sfConfig::get('sf_apps_dir_name').'/'.$app.'/'.sfConfig::get('sf_app_config_dir_name'), '##', '##', array('NO_SCRIPT_NAME' => ($first_app ? 'on' : 'off')));
 
-  pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/app/web/index.php', getcwd().'/web/'.$index_name.'.php');
-  pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/app/web/index_dev.php', getcwd().'/web/'.$app.'_dev.php');
+  pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/app/web/index.php', sfConfig::get('sf_web_dir').'/'.$index_name.'.php');
+  pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/app/web/index_dev.php', sfConfig::get('sf_web_dir').'/'.$app.'_dev.php');
 
   $finder = pakeFinder::type('file')->name($index_name.'.php', $app.'_dev.php');
-  pake_replace_tokens($finder, getcwd().'/web', '##', '##', array('APP_NAME' => $app));
+  pake_replace_tokens($finder, sfConfig::get('sf_web_dir'), '##', '##', array('APP_NAME' => $app));
 
   run_fix_perms($task, $args);
 
   // create test dir
-  pake_mkdirs(getcwd().'/test/'.$app);
+  pake_mkdirs($sf_root_dir.'/test/'.$app);
 }
 
 function run_init_module($task, $args)
@@ -99,19 +103,21 @@ function run_init_module($task, $args)
     'MODULE_NAME'  => $module,
   );
 
+  $sf_root_dir = sfConfig::get('sf_root_dir');
+
   // create basic application structure
-  $finder = pakeFinder::type('any')->prune('.svn')->discard('.svn');
-  pake_mirror($finder, sfConfig::get('sf_symfony_data_dir').'/skeleton/module/module/', getcwd().'/apps/'.$app.'/modules/'.$module);
+  $finder = pakeFinder::type('any')->prune('.svn')->discard('.svn', '.sf');
+  pake_mirror($finder, sfConfig::get('sf_symfony_data_dir').'/skeleton/module/module/', $sf_root_dir.'/'.sfConfig::get('sf_apps_dir_name').'/'.$app.'/'.sfConfig::get('sf_app_module_dir_name').'/'.$module);
 
   // create basic test
-  pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/module/test/actionsTest.php', getcwd().'/test/'.$app.'/'.$module.'ActionsTest.php');
+  pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/module/test/actionsTest.php', $sf_root_dir.'/test/'.$app.'/'.$module.'ActionsTest.php');
 
   // customize test file
-  pake_replace_tokens($module.'ActionsTest.php', getcwd().'/test/'.$app, '##', '##', $constants);
+  pake_replace_tokens($module.'ActionsTest.php', $sf_root_dir.'/test/'.$app, '##', '##', $constants);
 
   // customize php and yml files
   $finder = pakeFinder::type('file')->name('*.php', '*.yml');
-  pake_replace_tokens($finder, getcwd().'/apps/'.$app.'/modules/'.$module, '##', '##', $constants);
+  pake_replace_tokens($finder, $sf_root_dir.'/'.sfConfig::get('sf_apps_dir_name').'/'.$app.'/'.sfConfig::get('sf_app_module_dir_name').'/'.$module, '##', '##', $constants);
 }
 
 ?>

@@ -19,7 +19,7 @@
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <skerr@mojavi.org>
- * @version    SVN: $Id: sfView.class.php 422 2005-09-03 16:11:31Z fabien $
+ * @version    SVN: $Id$
  */
 class sfParameterHolder
 {

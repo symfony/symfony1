@@ -4,7 +4,7 @@
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * (c) 2004-2006 Sean Kerr.
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -16,7 +16,7 @@
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <skerr@mojavi.org>
- * @version    SVN: $Id: sfView.class.php 422 2005-09-03 16:11:31Z fabien $
+ * @version    SVN: $Id$
  */
 class sfToolkit
 {
@@ -151,6 +151,9 @@ class sfToolkit
     // tokenizer available?
     if (!function_exists('token_get_all'))
     {
+      $source = sfToolkit::pregtr($source, array('#/\*((?!\*/)[\d\D\s])*\*/#' => '',   // remove /* ... */
+                                                 '#^\s*//.*$#m'               => '')); // remove // ...
+
       return $source;
     }
 
@@ -192,43 +195,43 @@ class sfToolkit
     {
       case 0:
         return false;
-        break;
       case 1:
         return func_get_arg(0);
-        break;
       case 2:
         $args = func_get_args();
         $args[2] = array();
-        if( is_array($args[0]) && is_array($args[1]))
+        if (is_array($args[0]) && is_array($args[1]))
         {
           foreach (array_unique(array_merge(array_keys($args[0]),array_keys($args[1]))) as $key)
           {
-            if (is_string($key) && array_key_exists($key, $args[0]) && array_key_exists($key, $args[1]) && is_array($args[0][$key]) && is_array($args[1][$key]))
+            $isKey0 = array_key_exists($key, $args[0]);
+            $isKey1 = array_key_exists($key, $args[1]);
+            if (is_string($key) && $isKey0 && $isKey1 && is_array($args[0][$key]) && is_array($args[1][$key]))
             {
-              $args[2][$key] = sfToolkit::array_deep_merge($args[0][$key], $args[1][$key]);
+              $args[2][$key] = self::array_deep_merge($args[0][$key], $args[1][$key]);
             }
-            else if (is_string($key) && array_key_exists($key, $args[0]) && array_key_exists($key, $args[1]))
+            else if (is_string($key) && $isKey0 && $isKey1)
             {
               $args[2][$key] = $args[1][$key];
             }
-            else if (is_integer($key) && array_key_exists($key, $args[0]) && array_key_exists($key, $args[1]))
+            else if (is_integer($key) && $isKey0 && $isKey1)
             {
               $args[2][] = $args[0][$key];
               $args[2][] = $args[1][$key];
             }
-            else if (is_integer($key) && array_key_exists($key, $args[0]))
+            else if (is_integer($key) && $isKey0)
             {
               $args[2][] = $args[0][$key];
             }
-            else if (is_integer($key) && array_key_exists($key, $args[1]))
+            else if (is_integer($key) && $isKey1)
             {
               $args[2][] = $args[1][$key];
             }
-            else if (!array_key_exists($key, $args[1]))
+            else if (!$isKey1)
             {
               $args[2][$key] = $args[0][$key];
             }
-            else if (!array_key_exists($key, $args[0]))
+            else if (!$isKey0)
             {
               $args[2][$key] = $args[1][$key];
             }
@@ -239,14 +242,10 @@ class sfToolkit
         {
           return $args[1];
         }
-        break;
       default :
         $args = func_get_args();
-        $args[1] = self::array_deep_merge($args[0], $args[1]);
-        array_shift($args);
-//        return call_user_func_array(array(self, 'array_deep_merge'), $args);
-        return $args;
-        break;
+        $arr = self::array_deep_merge($args[0], $args[1]);
+        return $arr;
     }
   }
 
@@ -271,6 +270,16 @@ class sfToolkit
 
     return $attributes;
   }
+
+    /**
+     * Returns subject replaced with regular expression matchs
+     *
+     * @param mixed subject to search
+     * @param array array of search => replace pairs
+     */
+    public static function pregtr($search, $replacePairs) {
+        return preg_replace(array_keys($replacePairs), array_values($replacePairs), $search);
+    }
 }
 
 ?>

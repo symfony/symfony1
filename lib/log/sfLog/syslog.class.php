@@ -3,7 +3,7 @@
  * $Header: /repository/pear/sfLog/sfLog/syslog.php,v 1.22 2004/01/19 08:02:40 jon Exp $
  * $Horde: horde/lib/sfLog/syslog.php,v 1.6 2000/06/28 21:36:13 jon Exp $
  *
- * @version $Revision: 1.22 $
+ * @version $Revision$
  * @package sfLog
  */
 

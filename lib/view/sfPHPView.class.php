@@ -4,7 +4,7 @@
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * (c) 2004-2006 Sean Kerr.
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -15,7 +15,7 @@
  * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <skerr@mojavi.org>
- * @version    SVN: $Id: sfPHPView.class.php 533 2005-10-18 12:44:42Z fabien $
+ * @version    SVN: $Id$
  */
 class sfPHPView extends sfView
 {
@@ -187,7 +187,10 @@ class sfPHPView extends sfView
       }
     }
 
-    if (sfConfig::get('sf_logging_active')) $context->getLogger()->info('{sfPHPView} execute view for template "'.$templateName.$viewType.$extension.'"');
+    if (sfConfig::get('sf_logging_active'))
+    {
+      $context->getLogger()->info('{sfPHPView} execute view for template "'.$templateName.$viewType.$extension.'"');
+    }
   }
 
   /**
@@ -202,12 +205,15 @@ class sfPHPView extends sfView
   {
     $template = $this->getDecoratorDirectory().'/'.$this->getDecoratorTemplate();
 
-    if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfPHPView} decorate content with "'.$template.'"');
+    if (sfConfig::get('sf_logging_active'))
+    {
+      $this->getContext()->getLogger()->info('{sfPHPView} decorate content with "'.$template.'"');
+    }
 
     // call our parent decorate() method
     parent::decorate($content);
 
-    // render the decorator template and return the result 
+    // render the decorator template and return the result
     $retval = $this->renderFile($template);
 
     return $retval;
@@ -241,7 +247,10 @@ class sfPHPView extends sfView
 
     if ($mode != sfView::RENDER_NONE)
     {
-      if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfPHPView} render "'.$template.'"');
+      if ($sf_logging_active = sfConfig::get('sf_logging_active'))
+      {
+        $this->getContext()->getLogger()->info('{sfPHPView} render "'.$template.'"');
+      }
 
       $retval = $this->getCacheContent();
 
@@ -268,7 +277,10 @@ class sfPHPView extends sfView
       // render to client
       if ($mode == sfView::RENDER_CLIENT)
       {
-        if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfPHPView} render to client');
+        if ($sf_logging_active)
+        {
+          $this->getContext()->getLogger()->info('{sfPHPView} render to client');
+        }
 
         $retval = $this->setPageCacheContent($retval);
 
@@ -348,7 +360,10 @@ class sfPHPView extends sfView
     {
       if (sfConfig::get('sf_debug') && $this->getContext()->getRequest()->getParameter('ignore_cache', false, 'symfony/request/sfWebRequest') == true)
       {
-        if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfView} discard cache for "'.$template.'"');
+        if (sfConfig::get('sf_logging_active'))
+        {
+          $this->getContext()->getLogger()->info('{sfView} discard cache for "'.$template.'"');
+        }
       }
       else
       {
@@ -356,7 +371,10 @@ class sfPHPView extends sfView
         list($internalUri, $suffix) = $this->getInternalUri();
         $retval = $this->getContext()->getViewCacheManager()->get($internalUri, $suffix);
 
-        if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfView} cache '.($retval !== null ? 'exists' : 'does not exist'));
+        if (sfConfig::get('sf_logging_active'))
+        {
+          $this->getContext()->getLogger()->info('{sfView} cache '.($retval !== null ? 'exists' : 'does not exist'));
+        }
       }
     }
 

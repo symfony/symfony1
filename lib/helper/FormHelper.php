@@ -5,7 +5,7 @@ require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/ValidationHelper.php')
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -43,68 +43,63 @@ require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/ValidationHelper.php')
 */
 function options_for_select($options = array(), $selected = '')
 {
-  $html_options = '';
-  foreach($options as $key => $value)
+  if (is_array($selected))
   {
-    $html_options .= '<option value="'.$key.'"';
-    if (
-      (is_array($selected) && in_array($value, $selected))
-      ||
-      (strval($key) == strval($selected))
-    )
-    {
-      $html_options .= ' selected="selected"';
-    }
-    $html_options .= '>'.$value.'</option>';
+    $valid = array_values($selected);
+    $valid = array_map('strval', $valid);
   }
 
-  return $html_options;
+  $html = '';
+  foreach($options as $key => $value)
+  {
+    $html_options = array('value' => $value);
+    if (
+        isset($selected)
+        &&
+        (is_array($selected) && in_array(strval($key), $valid, true))
+        ||
+        (strval($key) == strval($selected))
+       )
+    {
+      $html_options['selected'] = 'selected';
+    }
+    $html .= content_tag('option', $key, $html_options) . "\n";
+  }
+
+  return $html;
 }
 
 /*
-      # Accepts a container of objects, the method name to use for the value, and the method name to use for the display. It returns 
-      # a string of option tags. 
+      # Accepts a container of objects, the method name to use for the value, and the method name to use for the display. It returns
+      # a string of option tags.
       # NOTE: Only the option tags are returned, you have to wrap this call in a regular HTML select tag.
 */
 function objects_for_select($options = array(), $value_method, $text_method = null, $selected = null)
 {
-  $html_options = '';
+  $select_options = array();
   foreach($options as $option)
   {
     // text method exists?
     if ($text_method && !method_exists($option, $text_method))
     {
-      $error = 'Method "%s" doesn\'t exist for object of class "%s"';
-      $error = sprintf($error, $text_method, get_class($option));
-
+      $error = sprintf('Method "%s" doesn\'t exist for object of class "%s"', $text_method, get_class($option));
       throw new sfViewException($error);
     }
 
     // value method exists?
     if (!method_exists($option, $value_method))
     {
-      $error = 'Method "%s" doesn\'t exist for object of class "%s"';
-      $error = sprintf($error, $value_method, get_class($option));
-
+      $error = sprintf('Method "%s" doesn\'t exist for object of class "%s"', $value_method, get_class($option));
       throw new sfViewException($error);
     }
 
     $value = $option->$value_method();
     $key = ($text_method != null) ? $option->$text_method() : $value;
 
-    $html_options .= '<option value="'.$value.'"';
-    if (
-      (is_array($selected) && in_array($key, $selected))
-      ||
-      (strval($value) == strval($selected))
-    )
-    {
-      $html_options .= ' selected="selected"';
-    }
-    $html_options .= '>'.$key.'</option>';
+    $select_options[$key] = $value;
   }
 
-  return $html_options;
+  return options_for_select($select_options, $selected);
 }
 
 /*
@@ -264,7 +259,7 @@ function textarea_tag($name, $content = null, $options = array())
 
       $css    = file_get_contents(sfConfig::get('sf_web_dir').DIRECTORY_SEPARATOR.$css_path);
       $styles = array();
-      preg_match_all('#^/\*\s*user\:\s*(.+?)\s*\*/\s*\015?\012\s*\.([^\s]+)#smi', $css, $matches, PREG_SET_ORDER);
+      preg_match_all('#^/\*\s*user:\s*(.+?)\s*\*/\s*\015?\012\s*\.([^\s]+)#Smi', $css, $matches, PREG_SET_ORDER);
       foreach ($matches as $match)
       {
         $styles[] = $match[1].'='.$match[2];
@@ -294,7 +289,7 @@ tinyMCE.init({
   '.($tinymce_options ? ','.$tinymce_options : '').'
 });';
 
-    return 
+    return
       content_tag('script', javascript_cdata_section($tinymce_js), array('type' => 'text/javascript')).
       content_tag('textarea', $content, array_merge(array('name' => $name, 'id' => $name), _convert_options($options)));
   }
@@ -385,10 +380,10 @@ function input_date_tag($name, $value, $options = array())
 
   // register our javascripts and stylesheets
   $js = array(
-    '/sf/js/calendar/calendar_stripped',
+    '/sf/js/calendar/calendar',
 //  '/sf/js/calendar/lang/calendar-'.substr($culture, 0, 2),
     '/sf/js/calendar/lang/calendar-en',
-    '/sf/js/calendar/calendar-setup_stripped',
+    '/sf/js/calendar/calendar-setup',
   );
   $context->getRequest()->setAttribute('date', $js, 'helper/asset/auto/javascript');
   $context->getRequest()->setAttribute('date', '/sf/js/calendar/skins/aqua/theme', 'helper/asset/auto/stylesheet');
@@ -399,9 +394,8 @@ function input_date_tag($name, $value, $options = array())
 
   // calendar date format
   $calendar_date_format = $date_format;
-  $calendar_date_format = preg_replace('~M~', 'm', $calendar_date_format);
-  $calendar_date_format = preg_replace('~y~', 'Y', $calendar_date_format);
-  $calendar_date_format = preg_replace('~([mdy])+~i', '%$1', $calendar_date_format);
+  $calendar_date_format = strtr($calendar_date_format, array('M' => 'm', 'y' => 'Y'));
+  $calendar_date_format = preg_replace('/([mdy])+/i', '%\\1', $calendar_date_format);
 
   $js = '
     document.getElementById("trigger_'.$name.'").disabled = false;

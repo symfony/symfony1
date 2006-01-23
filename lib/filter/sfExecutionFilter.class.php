@@ -4,7 +4,7 @@
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * (c) 2004-2006 Sean Kerr.
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -87,8 +87,10 @@ class sfExecutionFilter extends sfFilter
 
       if ($validated)
       {
+        $sf_logging_active = sfConfig::get('sf_logging_active');
+
         // register our cache configuration
-        if (sfConfig::get('sf_cache'))
+        if ($sf_cache = sfConfig::get('sf_cache'))
         {
           $cacheManager    = $context->getViewCacheManager();
           $cacheConfigFile = $moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/cache.yml';
@@ -99,18 +101,24 @@ class sfExecutionFilter extends sfFilter
         }
 
         // page in cache?
-        if (sfConfig::get('sf_cache') && !count($_GET) && !count($_POST))
+        if ($sf_cache && !count($_GET) && !count($_POST))
         {
           if (sfConfig::get('sf_debug') && $context->getRequest()->getParameter('ignore_cache', false, 'symfony/request/sfWebRequest') == true)
           {
-            if (sfConfig::get('sf_logging_active')) $context->getLogger()->info('{sfExecutionFilter} discard page cache');
+            if ($sf_logging_active)
+            {
+              $context->getLogger()->info('{sfExecutionFilter} discard page cache');
+            }
           }
           else
           {
             // retrieve page content from cache
             $retval = $cacheManager->get(sfRouting::getInstance()->getCurrentInternalUri(), 'page');
 
-            if (sfConfig::get('sf_logging_active')) $context->getLogger()->info('{sfExecutionFilter} page cache '.($retval ? 'exists' : 'does not exist'));
+            if ($sf_logging_active)
+            {
+              $context->getLogger()->info('{sfExecutionFilter} page cache '.($retval ? 'exists' : 'does not exist'));
+            }
 
             if ($retval !== null)
             {
@@ -150,7 +158,10 @@ class sfExecutionFilter extends sfFilter
       }
       else
       {
-        if (sfConfig::get('sf_logging_active')) $this->context->getLogger()->info('{sfExecutionFilter} action validation failed');
+        if ($sf_logging_active)
+        {
+          $this->context->getLogger()->info('{sfExecutionFilter} action validation failed');
+        }
 
         // validation failed
         $handleErrorToRun = 'handleError'.ucfirst($actionName);
@@ -230,7 +241,7 @@ class sfExecutionFilter extends sfFilter
     // asctime
     $ctime = gmdate('D M j H:i:s', $timestamp);
 
-    // Send the headers 
+    // Send the headers
     header("Last-Modified: $rfc1123");
     header("ETag: $etag");
 

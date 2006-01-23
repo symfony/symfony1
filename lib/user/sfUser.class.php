@@ -20,7 +20,7 @@
  * @subpackage user
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <skerr@mojavi.org>
- * @version    SVN: $Id: sfUser.class.php 451 2005-09-14 08:19:27Z fabien $
+ * @version    SVN: $Id$
  */
 class sfUser
 {

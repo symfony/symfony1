@@ -90,13 +90,15 @@ class sfFormTagHelperTest extends UnitTestCase
 
     $obj1 = new TestObject();
     $obj2 = new TestObject();
+    $obj2->setText('text2');
+    $obj2->setValue('value2');
 
     $actual = objects_for_select(Array($obj1, $obj2), 'getValue', 'getText');
-    $expected = '<option value="value">text</option><option value="value">text</option>';
+    $expected = "<option value=\"value\">text</option>\n<option value=\"value2\">text2</option>\n";
     $this->assertEqual($expected, $actual);
 
     $actual = objects_for_select(Array($obj1, $obj2), 'getValue');
-    $expected = '<option value="value">value</option><option value="value">value</option>';
+    $expected = "<option value=\"value\">value</option>\n<option value=\"value2\">value2</option>\n";
     $this->assertEqual($expected, $actual);
 
     try
@@ -132,23 +134,42 @@ class sfFormTagHelperTest extends UnitTestCase
 
     $this->assertEqual($expected, $actual);
   }
+
+  public function test_form_tag_multipart()
+  {
+    $actual = form_tag(null, array('multipart' => true ));
+    $expected = '<form action="http://www.example.com" enctype="multipart/form-data" method="post">';
+
+    $this->assert_equal($expected, $actual);
+  }
 */
 
-/*
+  public function test_boolean_optios()
+  {
+    $actual = checkbox_tag('admin', 1, true, array('disabled' => true, 'readonly' => 'yes'));
+    $expected = '<input type="checkbox" name="admin" id="admin" value="1" disabled="disabled" readonly="readonly" checked="checked" />';
+    $this->assertEqual($actual, $expected);
 
-  def test_form_tag_multipart
-    actual = form_tag({}, { 'multipart' => true })
-    expected = %(<form action="http://www.example.com" enctype="multipart/form-data" method="post">)
-    assert_equal expected, actual
-  end
+    $actual = checkbox_tag('admin', 1, true, array('disabled' => false, 'readonly' => null));
+    $expected = '<input type="checkbox" name="admin" id="admin" value="1" checked="checked" />';
+    $this->assertEqual($actual, $expected);
 
-  def test_boolean_optios
-    assert_equal %(<input checked="checked" disabled="disabled" id="admin" name="admin" readonly="readonly" type="checkbox" value="1" />), check_box_tag("admin", 1, true, 'disabled' => true, :readonly => "yes")
-    assert_equal %(<input checked="checked" id="admin" name="admin" type="checkbox" value="1" />), check_box_tag("admin", 1, true, :disabled => false, :readonly => nil)
-    assert_equal %(<select id="people" multiple="multiple" name="people"><option>david</option></select>), select_tag("people", "<option>david</option>", :multiple => true)
-    assert_equal %(<select id="people" name="people"><option>david</option></select>), select_tag("people", "<option>david</option>", :multiple => nil)
-  end
-*/
+    $actual = select_tag('people', "<option>david</option>", array('multiple' => true));
+    $expected = '<select name="people" id="people" multiple="multiple"><option>david</option></select>';
+    $this->assertEqual($actual, $expected);
+
+    $actual = select_tag('people', "<option>david</option>", array('multiple' => null));
+    $expected = '<select name="people" id="people"><option>david</option></select>';
+    $this->assertEqual($actual, $expected);
+  }
+
+  public function test_stringify_symbol_keys()
+  {
+    $actual = input_tag('title', 'Hello!', array('id'=> 'admin'));
+    $expected = '<input type="text" name="title" id="admin" value="Hello!" />';
+    $this->assertEqual($expected, $actual);
+  }
+
 }
 
 ?>

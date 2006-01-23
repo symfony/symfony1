@@ -11,7 +11,7 @@
 /**
  * @package    symfony.runtime.addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelPager.class.php 535 2005-10-18 13:01:23Z root $
+ * @version    SVN: $Id$
  */
 
 /**
@@ -20,7 +20,7 @@
  *
  * @package    symfony.runtime.addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelPager.class.php 535 2005-10-18 13:01:23Z root $
+ * @version    SVN: $Id$
  */
 class sfPropelPager
 {

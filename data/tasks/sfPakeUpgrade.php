@@ -30,25 +30,25 @@ function run_upgrade_to_0_6($task, $args)
   $verbose = pakeApp::get_instance()->get_verbose();
 
   // find all applications for this project
-  $apps = pakeFinder::type('directory')->name('modules')->mindepth(1)->maxdepth(1)->relative()->in('apps');
+  $apps = pakeFinder::type('directory')->name(sfConfig::get('sf_module_dir_name'))->mindepth(1)->maxdepth(1)->relative()->in(sfConfig::get('sf_apps_dir_name'));
 
   foreach ($apps as $app_module_dir)
   {
-    $app = str_replace('/modules', '', $app_module_dir);
+    $app = str_replace(DIRECTORY_SEPARATOR.sfConfig::get('sf_module_dir_name'), '', $app_module_dir);
     if ($verbose) echo '>> app       '.pakeApp::excerpt('converting "'.$app.'"'.' application')."\n";
 
-    $app_dir = 'apps/'.$app;
+    $app_dir = sfConfig::get('sf_apps_dir_name').'/'.$app;
 
     // upgrade config.php script file
     if ($verbose) echo '>> app       '.pakeApp::excerpt('upgrading config.php')."\n";
     pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/app/app/config/config.php', $app_dir.'/config/config.php', array('override' => true));
 
     // change all constants to use sfConfig object
-    _upgrade_0_6_constants(array($app_dir.'/modules', $app_dir.'/templates', $app_dir.'/lib'));
+    _upgrade_0_6_constants(array($app_dir.'/'.sfConfig::get('sf_app_module_dir_name'), $app_dir.'/'.sfConfig::get('sf_app_module_dir_name'), $app_dir.'/'.sfConfig::get('sf_app_lib_dir_name')));
 
     // change view shortcuts in global and modules template directories
-    $template_dirs   = pakeFinder::type('directory')->name('templates')->mindepth(1)->maxdepth(1)->in($app_dir.'/modules');
-    $template_dirs[] = $app_dir.'/templates';
+    $template_dirs[] = pakeFinder::type('directory')->name('templates')->mindepth(1)->maxdepth(1)->in($app_dir.'/'.sfConfig::get('sf_app_module_dir_name'));
+    $template_dirs[] = $app_dir.'/'.sfConfig::get('sf_app_template_dir_name');
 
     _upgrade_0_6_view_shortcuts($template_dirs);
     _upgrade_0_6_mail_to($template_dirs);
@@ -69,16 +69,19 @@ function run_upgrade_to_0_6($task, $args)
     _upgrade_0_6_disable_web_debug($app_dir);
 
     // rename deprecated methods in actions
-    $action_dirs = pakeFinder::type('directory')->name('actions')->mindepth(1)->maxdepth(1)->in($app_dir.'/modules');
+    $action_dirs = pakeFinder::type('directory')->name('actions')->mindepth(1)->maxdepth(1)->in($app_dir.'/'.sfConfig::get('sf_app_module_dir_name'));
 
     _upgrade_0_6_action($action_dirs);
   }
 
   // constants in global libraries
-  _upgrade_0_6_constants('lib');
+  _upgrade_0_6_constants(sfConfig::get('sf_lib_dir_name'));
 
   // sfPager in global libraries
-  _upgrade_0_6_sfpager('lib');
+  _upgrade_0_6_sfpager(sfConfig::get('sf_lib_dir_name'));
+
+  // location of config/config.php
+  _upgrade_0_6_config(sfConfig::get('sf_web_dir_name'));
 
   // clear cache
   run_clear_cache($task, array());
@@ -201,9 +204,10 @@ function _upgrade_0_6_i18n($app)
     else
     {
       $finder = pakeFinder::type('any')->prune('.svn')->discard('.svn');
-      pake_mirror($finder, $app.'/i18n/global', $app.'/i18n');
-      pake_remove($finder, $app.'/i18n/global');
-      pake_remove($app.'/i18n/global', '');
+      $sf_app_i18n_dir_name = sfConfig::get('sf_app_i18n_dir_name');
+      pake_mirror($finder, $app.'/'.$sf_app_i18n_dir_name.'/global', $app.'/'.$sf_app_i18n_dir_name);
+      pake_remove($finder, $app.'/'.$sf_app_i18n_dir_name.'/global');
+      pake_remove($app.'/'.$sf_app_i18n_dir_name.'/global', '');
     }
   }
 }
@@ -212,7 +216,9 @@ function _upgrade_0_6_settings($app)
 {
   $verbose = pakeApp::get_instance()->get_verbose();
 
-  $content = file_get_contents($app.'/config/settings.yml');
+  $sf_app_config_dir_name = sfConfig::get('sf_app_config_dir_name');
+
+  $content = file_get_contents($app.'/'.$sf_app_config_dir_name.'/settings.yml');
 
   if ($verbose) echo '>> file      '.pakeApp::excerpt('converting settings.yml')."\n";
 
@@ -231,15 +237,15 @@ function _upgrade_0_6_settings($app)
     $content = preg_replace('/^.+default_culture\:\s*.+$/m', '', $content);
 
     // create the new i18n configuration file
-    if (!is_readable($app.'/config/i18n.yml'))
+    if (!is_readable($app.'/'.$sf_app_config_dir_name.'/i18n.yml'))
     {
       if ($verbose) echo '>> file+     '.pakeApp::excerpt('new i18n.yml configuration file')."\n";
       $i18n = "all:\n  default_culture: $default_culture\n";
-      file_put_contents($app.'/config/i18n.yml', $i18n);
+      file_put_contents($app.'/'.$sf_app_config_dir_name.'/i18n.yml', $i18n);
     }
   }
 
-  file_put_contents($app.'/config/settings.yml', $content);
+  file_put_contents($app.'/'.$sf_app_config_dir_name.'/settings.yml', $content);
 }
 
 function _upgrade_0_6_view_shortcuts($dirs)
@@ -314,6 +320,31 @@ function _upgrade_0_6_constants($dirs)
     $content = preg_replace('/defined\(\''.$regex.'\'\)/e', "'sfConfig::get(\''.strtolower('\\1').'\')'", $content);
     $content = preg_replace('/define\(\''.$regex.'\',\s*(.+?)\)/e', "'sfConfig::set(\''.strtolower('\\1').'\', \\3)'", $content);
     $content = preg_replace('/'.$regex.'/e', "'sfConfig::get(\''.strtolower('\\1').'\')'", $content);
+
+    file_put_contents($php_file, $content);
+  }
+}
+
+function _upgrade_0_6_config($dirs)
+{
+  $verbose = pakeApp::get_instance()->get_verbose();
+
+  $php_files = pakeFinder::type('file')->name('*.php')->in($dirs);
+
+  $search = "SF_ROOT_DIR.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.";
+
+  foreach ($php_files as $php_file)
+  {
+    $content = file_get_contents($php_file);
+
+    if (strpos($content, $search) === false)
+    {
+      continue;
+    }
+
+    if ($verbose) echo '>> file      '.pakeApp::excerpt('updating location of config.php for "'.$php_file.'"')."\n";
+
+    $content = str_replace($search, "SF_ROOT_DIR.DIRECTORY_SEPARATOR.'".sfConfig::get('sf_apps_dir_name')."'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.", $content);
 
     file_put_contents($php_file, $content);
   }

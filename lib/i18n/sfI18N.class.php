@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -55,10 +55,9 @@ class sfI18N
       // create cache dir if needed
       if (!is_dir($cache_dir))
       {
-        $dirs = explode(DIRECTORY_SEPARATOR, $cache_dir);
+        $dirs = explode(DIRECTORY_SEPARATOR, str_replace('/', DIRECTORY_SEPARATOR, $cache_dir));
         $root = '';
-        $current_umask = umask();
-        umask(0000);
+        $current_umask = umask(0000);
         foreach($dirs as $dir)
         {
           if ($root == '')
@@ -163,8 +162,8 @@ class sfI18N
     $dateFormat = $dateFormatInfo->getShortDatePattern();
 
     // We construct the regexp based on date format
-    $dateRegexp = preg_replace('~[dmy]+~i', '(\d+)', $dateFormat);
-  
+    $dateRegexp = preg_replace('/[dmy]+/i', '(\d+)', $dateFormat);
+
     // We parse date format to see where things are (m, d, y)
     $a = array(
       'd' => strpos($dateFormat, 'd'),

@@ -3,7 +3,7 @@
  * $Header: /repository/pear/sfLog/sfLog/sql.php,v 1.34 2004/08/19 06:35:57 jon Exp $
  * $Horde: horde/lib/sfLog/sql.php,v 1.12 2000/08/16 20:27:34 chuck Exp $
  *
- * @version $Revision: 1.34 $
+ * @version $Revision$
  * @package sfLog
  */
 

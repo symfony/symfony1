@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -57,7 +57,10 @@ class sfMailView extends sfPHPView
     // execute pre-render check
     $this->preRenderCheck();
 
-    if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfMailView} render "'.$template.'"');
+    if ($sf_logging_active = sfConfig::get('sf_logging_active'))
+    {
+      $this->getContext()->getLogger()->info('{sfMailView} render "'.$template.'"');
+    }
 
     // get sfMail object from action
     $mail = $actionInstance->getVarHolder()->get('mail');
@@ -95,7 +98,10 @@ class sfMailView extends sfPHPView
 //    $this->setPageCacheContent($retval);
 
     // send email
-    if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfMailView} send email to client');
+    if ($sf_logging_active)
+    {
+      $this->getContext()->getLogger()->info('{sfMailView} send email to client');
+    }
 
     // configuration prefix
     $config_prefix = 'sf_mailer_'.strtolower($this->moduleName).'_';

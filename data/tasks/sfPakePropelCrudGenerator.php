@@ -29,19 +29,22 @@ function run_init_propelcrud($task, $args)
     'MODEL_CLASS'  => $model_class,
   );
 
+  $sf_root_dir = sfConfig::get('sf_root_dir');
+  $moduleDir   = $sf_root_dir.'/'.sfConfig::get('sf_apps_dir_name').'/'.$app.'/'.sfConfig::get('sf_app_module_dir_name').'/'.$module;
+
   // create basic application structure
-  $finder = pakeFinder::type('any')->prune('.svn')->discard('.svn');
-  pake_mirror($finder, sfConfig::get('sf_symfony_data_dir').'/generator/sfPropelCrud/default/skeleton/', getcwd().'/apps/'.$app.'/modules/'.$module);
+  $finder = pakeFinder::type('any')->prune('.svn')->discard('.svn', '.sf');
+  pake_mirror($finder, sfConfig::get('sf_symfony_data_dir').'/generator/sfPropelCrud/default/skeleton/', $moduleDir);
 
   // create basic test
-  pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/module/test/actionsTest.php', getcwd().'/test/'.$app.'/'.$module.'ActionsTest.php');
+  pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/module/test/actionsTest.php', $sf_root_dir.'/test/'.$app.'/'.$module.'ActionsTest.php');
 
   // customize test file
-  pake_replace_tokens($module.'ActionsTest.php', getcwd().'/test/'.$app, '##', '##', $constants);
+  pake_replace_tokens($module.'ActionsTest.php', $sf_root_dir.'/test/'.$app, '##', '##', $constants);
 
   // customize php and yml files
   $finder = pakeFinder::type('file')->name('*.php', '*.yml');
-  pake_replace_tokens($finder, getcwd().'/apps/'.$app.'/modules/'.$module, '##', '##', $constants);
+  pake_replace_tokens($finder, $moduleDir, '##', '##', $constants);
 }
 
 function run_generate_propelcrud($task, $args)
@@ -65,37 +68,41 @@ function run_generate_propelcrud($task, $args)
   // model class exists?
   if (!is_readable('lib/model/'.$model_class.'.php'))
   {
-    $error = 'The model class "%s" does not exist.';
-    $error = sprintf($error, $model_class);
+    $error = sprintf('The model class "%s" does not exist.', $model_class);
     throw new Exception($error);
   }
 
+  $sf_root_dir = sfConfig::get('sf_root_dir');
+
   // generate module
-  $tmp_dir = getcwd().DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.md5(uniqid(rand(), true));
+  $tmp_dir = $sf_root_dir.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.md5(uniqid(rand(), true));
   sfConfig::set('sf_module_cache_dir', $tmp_dir);
-  require_once(sfConfig::get('sf_symfony_lib_dir').'/config/sfConfig.class.php');
-  require_once(sfConfig::get('sf_symfony_lib_dir').'/exception/sfException.class.php');
-  require_once(sfConfig::get('sf_symfony_lib_dir').'/exception/sfInitializationException.class.php');
-  require_once(sfConfig::get('sf_symfony_lib_dir').'/exception/sfParseException.class.php');
-  require_once(sfConfig::get('sf_symfony_lib_dir').'/exception/sfConfigurationException.class.php');
-  require_once(sfConfig::get('sf_symfony_lib_dir').'/cache/sfCache.class.php');
-  require_once(sfConfig::get('sf_symfony_lib_dir').'/cache/sfFileCache.class.php');
-  require_once(sfConfig::get('sf_symfony_lib_dir').'/generator/sfGenerator.class.php');
-  require_once(sfConfig::get('sf_symfony_lib_dir').'/generator/sfGeneratorManager.class.php');
-  require_once(sfConfig::get('sf_symfony_lib_dir').'/generator/sfPropelCrudGenerator.class.php');
-  require_once(sfConfig::get('sf_symfony_lib_dir').'/util/sfInflector.class.php');
-  require_once(sfConfig::get('sf_symfony_lib_dir').'/vendor/propel/Propel.php');
+  $sf_symfony_lib_dir = sfConfig::get('sf_symfony_lib_dir');
+  require_once($sf_symfony_lib_dir.'/config/sfConfig.class.php');
+  require_once($sf_symfony_lib_dir.'/exception/sfException.class.php');
+  require_once($sf_symfony_lib_dir.'/exception/sfInitializationException.class.php');
+  require_once($sf_symfony_lib_dir.'/exception/sfParseException.class.php');
+  require_once($sf_symfony_lib_dir.'/exception/sfConfigurationException.class.php');
+  require_once($sf_symfony_lib_dir.'/cache/sfCache.class.php');
+  require_once($sf_symfony_lib_dir.'/cache/sfFileCache.class.php');
+  require_once($sf_symfony_lib_dir.'/generator/sfGenerator.class.php');
+  require_once($sf_symfony_lib_dir.'/generator/sfGeneratorManager.class.php');
+  require_once($sf_symfony_lib_dir.'/generator/sfPropelCrudGenerator.class.php');
+  require_once($sf_symfony_lib_dir.'/util/sfInflector.class.php');
+  require_once($sf_symfony_lib_dir.'/vendor/propel/Propel.php');
   require_once('lib/model/'.$model_class.'.php');
   $generator_manager = new sfGeneratorManager();
   $generator_manager->initialize();
   $generator_manager->generate('sfPropelCrudGenerator', array('model_class' => $model_class, 'moduleName' => $module, 'theme' => $theme));
 
+  $moduleDir = $sf_root_dir.'/'.sfConfig::get('sf_apps_dir_name').'/'.$app.'/'.sfConfig::get('sf_app_module_dir_name').'/'.$module;
+
   // copy our generated module
   $finder = pakeFinder::type('any');
-  pake_mirror($finder, $tmp_dir.'/auto'.ucfirst($module), getcwd().'/apps/'.$app.'/modules/'.$module);
+  pake_mirror($finder, $tmp_dir.'/auto'.ucfirst($module), $moduleDir);
 
   // change module name
-  pake_replace_tokens('apps/'.$app.'/modules/'.$module.'/actions/actions.class.php', getcwd(), '', '', array('auto'.ucfirst($module) => $module));
+  pake_replace_tokens($moduleDir.'/actions/actions.class.php', getcwd(), '', '', array('auto'.ucfirst($module) => $module));
 
   // delete temp files
   $finder = pakeFinder::type('any');

@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -27,7 +27,7 @@ class sfDefineEnvironmentConfigHandler extends sfYamlConfigHandler
    * @throws sfConfigurationException If a requested configuration file does not exist or is not readable.
    * @throws sfParseException If a requested configuration file is improperly formatted.
    */
-  public function & execute($configFile, $param = array())
+  public function execute($configFile, $param = array())
   {
     // parse the yaml
     $config = $this->parseYaml($configFile);
@@ -65,9 +65,10 @@ class sfDefineEnvironmentConfigHandler extends sfYamlConfigHandler
 
     // merge with environment configuration if needed
     $myConfig = sfToolkit::array_deep_merge($defaultConfig, $allConfig);
-    if (isset($config[sfConfig::get('sf_environment')]) && is_array($config[sfConfig::get('sf_environment')]))
+    $sf_environment = sfConfig::get('sf_environment');
+    if (isset($config[$sf_environment]) && is_array($config[$sf_environment]))
     {
-      $myConfig = sfToolkit::array_deep_merge($myConfig, $config[sfConfig::get('sf_environment')]);
+      $myConfig = sfToolkit::array_deep_merge($myConfig, $config[$sf_environment]);
     }
 
     $values = array();
@@ -102,7 +103,7 @@ class sfDefineEnvironmentConfigHandler extends sfYamlConfigHandler
     $category = $this->fixCategoryName($category, $prefix);
 
     // loop through all key/value pairs
-    foreach ($keys as $key => &$value)
+    foreach ($keys as $key => $value)
     {
       list($key, $value) = $this->fixCategoryValue($category, $key, $value);
       $values[$key] = $value;

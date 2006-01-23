@@ -24,7 +24,7 @@ function run_test($task, $args)
   define('SF_DEBUG',       true);
 
   // get configuration
-  require_once SF_ROOT_DIR.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php';
+  require_once SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php';
 
   $dirs_to_test = array($app);
   if (is_dir('test/project'))

@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -60,7 +60,7 @@
     foreach (func_get_args() as $source)
     {
       $source = javascript_path($source);
-      $html .= content_tag('script', '', array('language' => 'javascript', 'type' => 'text/javascript', 'src' => $source))."\n";
+      $html .= content_tag('script', '', array('type' => 'text/javascript', 'src' => $source))."\n";
     }
 
     return $html;
@@ -153,17 +153,23 @@
 
   function _compute_public_path($source, $dir, $ext)
   {
+    if (strpos($source, '://'))
+    {
+      return $source;
+    }
+
+    $sf_relative_url_root = sfConfig::get('sf_relative_url_root');
     if (strpos($source, '/') !== 0)
     {
-      $source = sfConfig::get('sf_relative_url_root').'/'.$dir.'/'.$source;
+      $source = $sf_relative_url_root.'/'.$dir.'/'.$source;
     }
     if (strpos(basename($source), '.') === false)
     {
-      $source = $source.'.'.$ext;
+      $source .= '.'.$ext;
     }
-    if (sfConfig::get('sf_relative_url_root') && strpos($source, sfConfig::get('sf_relative_url_root')) !== 0)
+    if ($sf_relative_url_root && strpos($source, $sf_relative_url_root) !== 0)
     {
-      $source = sfConfig::get('sf_relative_url_root').$source;
+      $source = $sf_relative_url_root.$source;
     }
 
     return $source;

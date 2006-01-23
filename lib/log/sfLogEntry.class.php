@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage log
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebug.class.php 467 2005-09-19 06:30:23Z fabien $
+ * @version    SVN: $Id$
  */
 class sfLogEntry
 {

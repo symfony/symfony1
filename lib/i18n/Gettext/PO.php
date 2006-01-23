@@ -12,7 +12,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version $Revision: 1.2 $  $Date: 2005/01/05 03:15:14 $
+ * @version $Revision$  $Date$
  * @package System.I18N.core
  */
 
@@ -28,7 +28,7 @@
 // | Copyright (c) 2004 Michael Wallner <mike@iworks.at>                  |
 // +----------------------------------------------------------------------+
 //
-// $Id: PO.php,v 1.2 2005/01/05 03:15:14 weizhuo Exp $
+// $Id$
 
 /**
  * File::Gettext::PO
@@ -45,7 +45,7 @@ require_once dirname(__FILE__).'/TGettext.php';
  * GNU PO file reader and writer.
  * 
  * @author      Michael Wallner <mike@php.net>
- * @version     $Revision: 1.2 $
+ * @version     $Revision$
  * @access      public
  * @package System.I18N.core 
  */

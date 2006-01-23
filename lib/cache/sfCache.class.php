@@ -14,7 +14,7 @@
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Fabien Marty <fab@php.net>
- * @version    SVN: $Id: sfAction.class.php 527 2005-10-17 14:02:12Z fabien $
+ * @version    SVN: $Id$
  */
 abstract class sfCache
 {

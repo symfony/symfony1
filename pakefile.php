@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004, 2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -45,11 +45,10 @@ function run_alltests($task, $args)
   $root_dir = tempnam('/tmp/symfonytest', 'tmp');
   unlink($root_dir);
   $tmp_dir = $root_dir.DIRECTORY_SEPARATOR.md5(uniqid(rand(), true));
-  if (!is_dir($root_dir))
+  if (!is_dir($tmp_dir))
   {
-    mkdir($root_dir, 0777);
+    mkdir($tmp_dir, 0777, true);
   }
-  mkdir($tmp_dir, 0777);
 
   require_once(dirname(__FILE__).'/lib/config/sfConfig.class.php');
   sfConfig::add(array(
@@ -71,9 +70,14 @@ function run_alltests($task, $args)
 
   pake_import('simpletest', false);
 
-  pakeSimpletestTask::run_test($task, array());
+  try {
+    pakeSimpletestTask::run_test($task, $args);
+  } catch(Exception $e) {}
 
+  // cleanup our test enviroment
   sfToolkit::clearDirectory($tmp_dir);
+  rmdir($tmp_dir);
+  rmdir($root_dir);
 }
 
 function run_create_pear_package($task, $args)

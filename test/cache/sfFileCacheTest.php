@@ -18,6 +18,7 @@ class sfFileCacheTest extends UnitTestCase
   public function tearDown()
   {
     sfToolkit::clearDirectory($this->dir);
+    rmdir($this->dir);
   }
 
   public function test_set()

@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -80,14 +80,14 @@
       # Returns +text+ transformed into html using very simple formatting rules
       # Surrounds paragraphs with <tt>&lt;p&gt;</tt> tags, and converts line breaks into <tt>&lt;br /&gt;</tt>
       # Two consecutive newlines(<tt>\n\n</tt>) are considered as a paragraph, one newline (<tt>\n</tt>) is
-      # considered a linebreak, three or more consecutive newlines are turned into two newlines 
+      # considered a linebreak, three or more consecutive newlines are turned into two newlines
   */
   function simple_format_text($text)
   {
-    $text = preg_replace("/(\r\n|\n|\r)/", "\n", $text); // lets make them newlines crossplatform
-    $text = preg_replace("/\n\n+/", "\n\n", $text); // zap dupes
-    $text = preg_replace("/\n\n/", "</p>\\0<p>", $text); // turn two newlines into paragraph
-    $text = preg_replace("/([^\n])(\n)([^\n])/", "\\1\\2<br />\\3", $text); // turn single newline into <br />
+    $text = sfToolkit::pregtr($text, array("/(\r\n|\r)/"        => "\n",               // lets make them newlines crossplatform
+                                           "/\n{3,}/"           => "\n\n",             // zap dupes
+                                           "/\n\n/"             => "</p>\\0<p>",       // turn two newlines into paragraph
+                                           "/([^\n])\n([^\n])/" => "\\1\n<br />\\2")); // turn single newline into <br/>
 
     return '<p>'.$text.'</p>'; // wrap the first and last line in paragraphs before we're done
   }
@@ -176,7 +176,7 @@
       def strip_links(text)
         text.gsub(/<a.*>(.*)<\/a>/m, '\1')
       end
-      
+
       private
     end
   end
@@ -189,7 +189,7 @@
   function _auto_link_urls($text)
   {
     return preg_replace_callback(
-      '/(<\w+.*?>|[^=!:\'"\/]|^)((?:http[s]?:\/\/)|(?:www\.))([^\s<]+\/?)([[:punct:]]|\s|<|$)/', 
+      '/(<\w+.*?>|[^=!:\'"\/]|^)((?:http[s]?:\/\/)|(?:www\.))([^\s<]+\/?)([[:punct:]]|\s|<|$)/',
       create_function('$matches', '
         if (preg_match("/<a\s/i", $matches[1]))
           return $matches[0];

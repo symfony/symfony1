@@ -14,7 +14,7 @@
  *
  * @package    symfony.runtime.addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfMail.class.php 466 2005-09-17 19:03:25Z fabien $
+ * @version    SVN: $Id$
  */
 class sfMail
 {

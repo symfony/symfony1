@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -29,14 +29,14 @@
  * and for some functions script.aculo.us (which both come with symfony) on your pages.
  * Choose one of these options:
  *
- * * Use <tt><%= javascript_include_tag :defaults %></tt> in the HEAD section of your page (recommended):
+ * * Use <tt><?php echo javascript_include_tag :defaults ?></tt> in the HEAD section of your page (recommended):
  *   The function will return references to the JavaScript files created by the +rails+ command in your
  *   <tt>public/javascripts</tt> directory. Using it is recommended as the browser can then cache the libraries
  *   instead of fetching all the functions anew on every request.
- * * Use <tt><%= javascript_include_tag 'prototype' %></tt>: As above, but will only include the Prototype core library,
+ * * Use <tt><?php echo javascript_include_tag 'prototype' ?></tt>: As above, but will only include the Prototype core library,
  *   which means you are able to use all basic AJAX functionality. For the script.aculo.us-based JavaScript helpers,
  *   like visual effects, autocompletion, drag and drop and so on, you should use the method described above.
- * * Use <tt><%= define_javascript_functions %></tt>: this will copy all the JavaScript support functions within a single
+ * * Use <tt><?php echo define_javascript_functions ?></tt>: this will copy all the JavaScript support functions within a single
  *   script block.
  *
  * For documentation on +javascript_include_tag+ see ActionView::Helpers::AssetTagHelper.
@@ -47,12 +47,12 @@
 
   function get_callbacks()
   {
-    $callbacks = array(
-      'uninitialized', 'loading', 'loaded', 'interactive', 'complete', 'failure', 'success'
-    );
-    for ($i = 100; $i <= 599; $i++)
+    static $callbacks;
+    if (!$callbacks)
     {
-      $callbacks[] = $i;
+      $callbacks = array_merge(array(
+        'uninitialized', 'loading', 'loaded', 'interactive', 'complete', 'failure', 'success'
+        ), range(100, 599));
     }
 
     return $callbacks;
@@ -60,16 +60,20 @@
 
   function get_ajax_options()
   {
-    $ajax_options = array(
-      'before', 'after', 'condition', 'url', 'asynchronous', 'method',
-      'insertion', 'position', 'form', 'with', 'update', 'script'
-    );
+    static $ajax_options;
+    if (!$ajax_options)
+    {
+      $ajax_options = array_merge(array(
+        'before', 'after', 'condition', 'url', 'asynchronous', 'method',
+        'insertion', 'position', 'form', 'with', 'update', 'script'
+        ), get_callbacks());
+    }
 
-    return array_merge($ajax_options, get_callbacks());
+    return $ajaxOptions;
   }
 
   /**
-   * Returns a link that'll trigger a javascript function using the 
+   * Returns a link that'll trigger a javascript function using the
    * onclick handler and return false after the fact.
    *
    * Examples:
@@ -85,12 +89,12 @@
   }
 
   /**
-   * Returns a link to a remote action defined by 'url' 
-   * (using the 'url_for()' format) that's called in the background using 
+   * Returns a link to a remote action defined by 'url'
+   * (using the 'url_for()' format) that's called in the background using
    * XMLHttpRequest. The result of that request can then be inserted into a
-   * DOM object whose id can be specified with 'update'. 
+   * DOM object whose id can be specified with 'update'.
    * Usually, the result would be a partial prepared by the controller with
-   * either 'render_partial()'. 
+   * either 'render_partial()'.
    *
    * Examples:
    *  <?php echo link_to_remote('Delete this post'), array(
@@ -112,13 +116,13 @@
    *  )) ?>
    *
    * Optionally, you can use the 'position' parameter to influence
-   * how the target DOM element is updated. It must be one of 
+   * how the target DOM element is updated. It must be one of
    * 'before', 'top', 'bottom', or 'after'.
    *
-   * By default, these remote requests are processed asynchronous during 
+   * By default, these remote requests are processed asynchronous during
    * which various JavaScript callbacks can be triggered (for progress indicators and
    * the likes). All callbacks get access to the 'request' object,
-   * which holds the underlying XMLHttpRequest. 
+   * which holds the underlying XMLHttpRequest.
    *
    * To access the server response, use 'request.responseText', to
    * find out the HTTP status, use 'request.status'.
@@ -131,22 +135,22 @@
    *
    * The callbacks that may be specified are (in order):
    *
-   * 'loading'                 Called when the remote document is being 
+   * 'loading'                 Called when the remote document is being
    *                           loaded with data by the browser.
    * 'loaded'                  Called when the browser has finished loading
    *                           the remote document.
-   * 'interactive'             Called when the user can interact with the 
-   *                           remote document, even though it has not 
+   * 'interactive'             Called when the user can interact with the
+   *                           remote document, even though it has not
    *                           finished loading.
    * 'success'                 Called when the XMLHttpRequest is completed,
    *                           and the HTTP status code is in the 2XX range.
    * 'failure'                 Called when the XMLHttpRequest is completed,
    *                           and the HTTP status code is not in the 2XX
    *                           range.
-   * 'complete'                Called when the XMLHttpRequest is complete 
+   * 'complete'                Called when the XMLHttpRequest is complete
    *                           (fires after success/failure if they are present).,
-   *                     
-   * You can further refine 'success' and 'failure' by adding additional 
+   *
+   * You can further refine 'success' and 'failure' by adding additional
    * callbacks for specific status codes:
    *
    * Example:
@@ -159,7 +163,7 @@
    * A status code callback overrides the success/failure handlers if present.
    *
    * If you for some reason or another need synchronous processing (that'll
-   * block the browser while the request is happening), you can specify 
+   * block the browser while the request is happening), you can specify
    * 'type' => 'synchronous'.
    *
    * You can customize further browser side call logic by passing
@@ -175,7 +179,7 @@
    * 'after'               Called immediately after request was
    *                       initiated and before 'loading'.
    * 'submit'              Specifies the DOM element ID that's used
-   *                       as the parent of the form elements. By 
+   *                       as the parent of the form elements. By
    *                       default this is the current form, but
    *                       it could just as well be the ID of a
    *                       table row or any other DOM element.
@@ -199,12 +203,12 @@
   }
 
   /**
-   * Returns a form tag that will submit using XMLHttpRequest in the background instead of the regular 
-   * reloading POST arrangement. Even though it's using JavaScript to serialize the form elements, the form submission 
+   * Returns a form tag that will submit using XMLHttpRequest in the background instead of the regular
+   * reloading POST arrangement. Even though it's using JavaScript to serialize the form elements, the form submission
    * will work just like a regular submission as viewed by the receiving side (all elements available in 'params').
    * The options for specifying the target with 'url' and defining callbacks are the same as 'link_to_remote()'.
    *
-   * A "fall-through" target for browsers that don't do JavaScript can be specified 
+   * A "fall-through" target for browsers that don't do JavaScript can be specified
    * with the 'action'/'method' options on '$options_html'
    *
    * Example:
@@ -297,9 +301,9 @@
    *  # Returning view
    *  <php echo update_element_function('cart', array(
    *      'action'   => 'update',
-   *      'position' => 'bottom', 
+   *      'position' => 'bottom',
    *      'content'  => '<p>New Product: '.$product->getName().'</p>',
-   *  )) %>
+   *  )) ?>
    */
   function update_element_function($element_id, $options = array())
   {
@@ -343,7 +347,7 @@
   }
 
   /**
-   * Returns 'eval(request.responseText)', which is the Javascript function that 
+   * Returns 'eval(request.responseText)', which is the Javascript function that
    * 'form_remote_tag()' can call in 'complete' to evaluate a multiple update return document
    * using 'update_element_function()' calls.
    */
@@ -355,9 +359,9 @@
   /**
    * Returns the javascript needed for a remote function.
    * Takes the same arguments as 'link_to_remote()'.
-   * 
+   *
    * Example:
-   *   <select id="options" onchange="<?= remote_function(array('update' => 'options', 'url' => '@update_options')) %>">
+   *   <select id="options" onchange="<?= remote_function(array('update' => 'options', 'url' => '@update_options')) ?>">
    *     <option value="0">Hello</option>
    *     <option value="1">World</option>
    *   </select>
@@ -419,23 +423,23 @@
   /**
    * Observes the field with the DOM ID specified by '$field_id' and makes
    * an AJAX call when its contents have changed.
-   * 
+   *
    * Required '$options' are:
    * 'url'                 'url_for()'-style options for the action to call
    *                       when the field has changed.
-   * 
+   *
    * Additional options are:
    * 'frequency'           The frequency (in seconds) at which changes to
    *                       this field will be detected. Not setting this
    *                       option at all or to a value equal to or less than
    *                       zero will use event based observation instead of
    *                       time based observation.
-   * 'update'              Specifies the DOM ID of the element whose 
+   * 'update'              Specifies the DOM ID of the element whose
    *                       innerHTML should be updated with the
    *                       XMLHttpRequest response text.
    * 'with'                A JavaScript expression specifying the
    *                       parameters for the XMLHttpRequest. This defaults
-   *                       to 'value', which in the evaluated context 
+   *                       to 'value', which in the evaluated context
    *                       refers to the new field value.
    *
    * Additionally, you may specify any of the options documented in
@@ -461,7 +465,7 @@
 
   /**
    * Like 'observe_field()', but operates on an entire form identified by the
-   * DOM ID '$form_id'. '$options' are the same as 'observe_field()', except 
+   * DOM ID '$form_id'. '$options' are the same as 'observe_field()', except
    * the default value of the 'with' option evaluates to the
    * serialized (request string) value of the form.
    */
@@ -489,8 +493,8 @@
    *
    * Example:
    *  <?php echo link_to_remote('Reload', array(
-   *        'update'  => 'posts', 
-   *        'url'     => '@reload', 
+   *        'update'  => 'posts',
+   *        'url'     => '@reload',
    *        'complete => visual_effect('highlight', 'posts', array('duration' => 0.5 )),
    *  )) ?>
    *
@@ -532,8 +536,8 @@
    *      'url' => '@order',
    *   )) ?>
    *
-   * In the example, the action gets a '$my_list' array parameter 
-   * containing the values of the ids of elements the sortable consists 
+   * In the example, the action gets a '$my_list' array parameter
+   * containing the values of the ids of elements the sortable consists
    * of, in the current order.
    *
    * You can change the behaviour with various options, see
@@ -590,9 +594,9 @@
    *   <?php echo draggable_element('my_image', array(
    *      'revert' => true,
    *   )) ?>
-   * 
+   *
    * You can change the behaviour with various options, see
-   * http://script.aculo.us for more documentation. 
+   * http://script.aculo.us for more documentation.
    */
   function draggable_element($element_id, $options = array())
   {
@@ -675,7 +679,7 @@
    * @param string default value for input field
    * @param array input tag options. (size, autocomplete, etc...)
    * @param array completion options. (use_style, etc...)
-   * 
+   *
    * @return string input field tag, div for completion results, and
    *                 auto complete javascript tags
    */
@@ -692,8 +696,8 @@
     $comp_options = _convert_options($completion_options);
     if (isset($comp_options['use_style']) && $comp_options['use_style'] == 'true')
     {
-      $context->getRequest()->setAttribute('input_auto_complete_tag', 
-        array('/sf/css/sf_helpers/input_auto_complete_tag'), 
+      $context->getRequest()->setAttribute('input_auto_complete_tag',
+        array('/sf/css/sf_helpers/input_auto_complete_tag'),
         'helper/asset/auto/stylesheet'
       );
     }
@@ -710,7 +714,7 @@
    * @param string name id of field that can be edited
    * @param string url of module/action to be called when ok is clicked
    * @param array editor tag options. (rows, cols, highlightcolor, highlightendcolor, etc...)
-   * 
+   *
    * @return string javascript to manipulate the id field to allow click and edit functionality
    */
   function input_in_place_editor_tag($name, $url, $editor_options = array())
@@ -724,7 +728,7 @@
     $editor_options = _convert_options($editor_options);
     $default_options = array('tag' => 'span', 'id' => '\''.$name.'_in_place_editor', 'class' => 'in_place_editor_field');
 
-    return _in_place_editor($name, $url, array_merge($editor_options, $default_options));
+    return _in_place_editor($name, $url, array_merge($default_options, $editor_options));
   }
 
   /*
@@ -738,16 +742,16 @@
    *   <input type="submit" value="ok"/>
    *   <a onclick="javascript to cancel the editing">cancel</a>
    * </form>
-   * 
+   *
    * The form is serialized and sent to the server using an AJAX call, the action on
    * the server should process the value and return the updated value in the body of
    * the reponse. The element will automatically be updated with the changed value
    * (as returned from the server).
-   * 
+   *
    * Required '$options' are:
    * 'url'                 Specifies the url where the updated value should
    *                       be sent after the user presses "ok".
-   * 
+   *
    * Addtional '$options' are:
    * 'rows'                Number of rows (more than 1 will use a TEXTAREA)
    * 'cancel_text'         The text on the cancel link. (default: "cancel")
@@ -845,7 +849,7 @@
     }
     if (isset($options['indicator']))
     {
-      $js_options['indicator']  = "'".$options['indicator']."'"; 
+      $js_options['indicator']  = "'".$options['indicator']."'";
     }
     if (isset($options['on_show']))
     {

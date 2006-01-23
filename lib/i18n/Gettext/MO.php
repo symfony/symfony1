@@ -12,7 +12,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version $Revision: 1.3 $  $Date: 2005/08/27 03:21:12 $
+ * @version $Revision$  $Date$
  * @package System.I18N.core
  */
 
@@ -29,7 +29,7 @@
 // | Copyright (c) 2004 Michael Wallner <mike@iworks.at>                  |
 // +----------------------------------------------------------------------+
 //
-// $Id: MO.php,v 1.3 2005/08/27 03:21:12 weizhuo Exp $
+// $Id$
 
 /**
  * File::Gettext::MO
@@ -46,7 +46,7 @@ require_once dirname(__FILE__).'/TGettext.php';
  * GNU MO file reader and writer.
  *
  * @author      Michael Wallner <mike@php.net>
- * @version     $Revision: 1.3 $
+ * @version     $Revision$
  * @access      public
  * @package System.I18N.core 
  */

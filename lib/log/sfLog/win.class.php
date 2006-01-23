@@ -2,7 +2,7 @@
 /**
  * $Header: /repository/pear/sfLog/sfLog/win.php,v 1.16 2004/09/08 23:35:53 jon Exp $
  *
- * @version $Revision: 1.16 $
+ * @version $Revision$
  * @package sfLog
  */
 

@@ -31,7 +31,7 @@
  * @package    symfony
  * @subpackage log
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfLogger.class.php 434 2005-09-08 08:12:29Z fabien $
+ * @version    SVN: $Id$
  */
 class sfLogger extends sfLog
 {

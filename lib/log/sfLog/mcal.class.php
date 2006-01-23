@@ -3,7 +3,7 @@
  * $Header: /repository/pear/sfLog/sfLog/mcal.php,v 1.17 2004/01/19 08:02:40 jon Exp $
  * $Horde: horde/lib/sfLog/mcal.php,v 1.2 2000/06/28 21:36:13 jon Exp $
  *
- * @version $Revision: 1.17 $
+ * @version $Revision$
  * @package sfLog 
  */
 

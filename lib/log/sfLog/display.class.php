@@ -2,7 +2,7 @@
 /**
  * $Header: /repository/pear/sfLog/sfLog/display.php,v 1.6 2004/11/27 21:46:50 jon Exp $
  *
- * @version $Revision: 1.6 $
+ * @version $Revision$
  * @package sfLog
  */
 

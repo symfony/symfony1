@@ -25,7 +25,6 @@ The `sfUser` class, used to manage the user session, has a native implementation
     [php]
     // getter
     $culture = $this->getUser()->getCulture();
-
     // setter
     $this->getUser()->setCulture('en_US');
     

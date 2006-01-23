@@ -31,6 +31,17 @@ class sfTagHelperTest extends UnitTestCase
     $this->assertEqual(content_tag('p', 'Toto'), '<p>Toto</p>');
     $this->assertEqual(content_tag('p', ''), '<p></p>');
   }
+
+  public function test_cdata_section()
+  {
+    $this->assertEqual(cdata_section(''), '<![CDATA[]]>');
+    $this->assertEqual(cdata_section('foobar'), '<![CDATA[foobar]]>');
+  }
+
+  public function test_escape_javascript()
+  {
+    $this->assertEqual(escape_javascript("alert('foo');\nalert(\"bar\");"), 'alert(\\\'foo\\\');\\nalert(\\"bar\\");');
+  }
 }
 
 ?>

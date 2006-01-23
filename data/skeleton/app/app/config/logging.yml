@@ -3,9 +3,9 @@ prod:
   level:  err
 
 dev:
-  
+
 test:
 
 all:
-;  active: on
-;  level:  debug
+#  active: on
+#  level:  debug

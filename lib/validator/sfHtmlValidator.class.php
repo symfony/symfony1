@@ -15,7 +15,7 @@
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <skerr@mojavi.org>
- * @version    SVN: $Id: sfHtmlValidator.class.php 432 2005-09-07 12:30:24Z fabien $
+ * @version    SVN: $Id$
  */
 class sfHtmlValidator extends sfValidator
 {

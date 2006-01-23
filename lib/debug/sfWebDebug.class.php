@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage debug
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebDebug.class.php 467 2005-09-19 06:30:23Z fabien $
+ * @version    SVN: $Id$
  */
 class sfWebDebug
 {
@@ -129,16 +129,23 @@ class sfWebDebug
 
   private function formatLogLine($type, $log_line)
   {
+    static $constants;
+    if (!$constants) {
+      foreach (array('sf_app_dir', 'sf_root_dir', 'sf_symfony_lib_dir', 'sf_symfony_data_dir') as $constant)
+      {
+        $constants[realpath(sfConfig::get($constant)).DIRECTORY_SEPARATOR] = $constant.DIRECTORY_SEPARATOR;
+      }
+    }
+
     // escape HTML
     $log_line = htmlspecialchars(strip_tags($log_line));
 
-    foreach (array('sf_app_dir', 'sf_root_dir', 'sf_symfony_lib_dir', 'sf_symfony_data_dir') as $constant)
-    {
-      $log_line = str_replace(realpath(sfConfig::get($constant)), $constant, $log_line);
-    }
+    // replace constants value with constant name
+    $log_line = strtr($log_line, $constants);
 
-    $log_line = preg_replace('/&quot;(.+?)&quot;/s', '&quot;<span class="sfStatsFileInfo">\\1</span>&quot;', $log_line);
-    $log_line = preg_replace('/^(.+?)\(\)\:/s', '<span class="sfStatsFileInfo">\\1()</span>:', $log_line);
+    $log_line = sfToolkit::pregtr($log_line, array('/&quot;(.+?)&quot;/s' => '"<span class="sfStatsFileInfo">\\1</span>"',
+                                                   '/^(.+?)\(\)\:/S'      => '<span class="sfStatsFileInfo">\\1()</span>:',
+                                                   '/line (\d+)$/'        => 'line <span class="sfStatsFileInfo">\\1</span>'));
 
     // special formatting for creole/SQL lines
     if (strtolower($type) == 'creole')
@@ -163,12 +170,12 @@ class sfWebDebug
     if (sfConfig::get('sf_debug'))
     {
       $total_time = (microtime(true) - sfConfig::get('sf_timer_start')) * 1000;
-      $total_time = sprintf(($total_time < 1) ? '%.2f' : '%.0f', $total_time);
+      $total_time = sprintf(($total_time <= 1) ? '%.2f' : '%.0f', $total_time);
     }
 
     // max priority
     $log_image = '';
-    if (sfConfig::get('sf_logging_active'))
+    if ($sf_logging_active = sfConfig::get('sf_logging_active'))
     {
       if ($this->max_priority >= 6)
       {
@@ -200,7 +207,7 @@ class sfWebDebug
       </div>
     ';
 
-    if (sfConfig::get('sf_logging_active'))
+    if ($sf_logging_active)
     {
       $logs  = '<table id="sfStatsLogs">';
       $logs .= "<tr>
@@ -231,16 +238,18 @@ class sfWebDebug
           $priority = 'error';
         }
 
-        $type = preg_replace('/^sf/', '', $logEntry->getType());
+        if (strpos($type = $logEntry->getType(), 'sf') === 0) {
+            $type = substr($type, 2);
+        }
 
         // xdebug information
         $debug_info = '';
         if ($logEntry->getDebugStack())
         {
-          $debug_info .= '&nbsp;<a href="#" onclick="Element.toggle(\'debug_'.$line_nb.'\')">'.image_tag($this->base_image_path.'/toggle.gif').'</a><div class="sfStatsDebugInfo" id="debug_'.$line_nb.'" style="display:none">';
+          $debug_info .= '&nbsp;<a href="#" onclick="Element.toggle(\'debug_'.$line_nb.'\'); return false;">'.image_tag($this->base_image_path.'/toggle.gif').'</a><div class="sfStatsDebugInfo" id="debug_'.$line_nb.'" style="display:none">';
           foreach ($logEntry->getDebugStack() as $i => $log_line)
           {
-            $debug_info .= '#'.$i.' &raquo; '.$this->formatLogLine('', $log_line).'<br />';
+            $debug_info .= '#'.$i.' &raquo; '.$this->formatLogLine($type, $log_line).'<br/>';
           }
           $debug_info .= "</div>\n";
         }
@@ -249,8 +258,7 @@ class sfWebDebug
         $log = $this->formatLogLine($type, $log);
 
         ++$line_nb;
-        $format = "<tr class='sfStats%s %s'><td>%s</td><td>%s</td><td>+%s&nbsp;</td><td><span class=\"sfStatsLogType\">%s</span></td><td>%s%s</td></tr>\n";
-        $logs .= sprintf($format, $class, $logEntry->getType(), $line_nb, image_tag($this->base_image_path.'/'.$priority.'.png', 'align=middle'), $logEntry->getElapsedTime(), $type, $log, $debug_info);
+        $logs .= sprintf("<tr class='sfStats%s %s'><td>%s</td><td>%s</td><td>+%s&nbsp;</td><td><span class=\"sfStatsLogType\">%s</span></td><td>%s%s</td></tr>\n", $class, $logEntry->getType(), $line_nb, image_tag($this->base_image_path.'/'.$priority.'.png', 'align=middle'), $logEntry->getElapsedTime(), $type, $log, $debug_info);
       }
       $logs .= '</table>';
 
@@ -258,7 +266,7 @@ class sfWebDebug
       function toggleMessages(myclass)
       {
         elements = document.getElementsByClassName(myclass);
-        for (i = 0; i < elements.length; i++)
+        for (i = 0, x = elements.length; i < x; ++i)
         {
           Element.toggle(elements[i]);
         }
@@ -269,7 +277,7 @@ class sfWebDebug
       $types = array();
       foreach ($this->types as $type => $nb)
       {
-        $types[] = '<a id="'.$type.'" href="#" onclick="toggleMessages(\''.$type.'\')">'.$type."</a>\n";
+        $types[] = '<a id="'.$type.'" href="#" onclick="toggleMessages(\''.$type.'\'); return false;">'.$type."</a>\n";
       }
 
       $result .= '
@@ -296,19 +304,19 @@ class sfWebDebug
 
     if (sfConfig::get('sf_logging_active'))
     {
-      $result .= '<a href="#" onclick="Element.show(\'sfStatsLogMain\')">'.image_tag($this->base_image_path.'/'.$log_image.'.png', 'align=middle').'</a>&nbsp;';
+      $result .= '<a href="#" onclick="Element.show(\'sfStatsLogMain\'); return false;">'.image_tag($this->base_image_path.'/'.$log_image.'.png', 'align=middle').'</a>&nbsp;';
     }
 
     if (sfConfig::get('sf_debug') && sfConfig::get('sf_cache'))
     {
-      $self_url = $_SERVER['PHP_SELF'].((!preg_match('/ignore_cache/', $_SERVER['PHP_SELF'])) ? '?ignore_cache=1' : '');
+      $self_url = $_SERVER['PHP_SELF'].((strpos($_SERVER['PHP_SELF'], 'ignore_cache') !== false) ? '?ignore_cache=1' : '');
       $result .= '<a href="'.$self_url.'" title="reload and ignore cache">'.image_tag($this->base_image_path.'/reload.png', 'align=middle').'</a>';
     }
 
     $result .= '
-    <a href="#" onclick="Element.hide(\'sfStats'.ucfirst($log_image).'\')">'.image_tag($this->base_image_path.'/close.png', 'align=middle').'</a>
+    <a href="#" onclick="Element.hide(\'sfStats'.ucfirst($log_image).'\'); return false;">'.image_tag($this->base_image_path.'/close.png', 'align=middle').'</a>
     </div>
-    <div id="sfStatsLeftMenu"><a href="#" class="bold" onclick="Element.toggle(\'sfStatsDetails\', \'sfStatsTime\')">symfony</a></div>
+    <div id="sfStatsLeftMenu"><a href="#" class="bold" onclick="Element.toggle(\'sfStatsDetails\', \'sfStatsTime\'); return false;">symfony</a></div>
     ';
 
     return $result;
@@ -324,7 +332,7 @@ class sfWebDebug
       'cache'        => sfConfig::get('sf_cache')          ? 'on' : 'off',
       'eaccelerator' => (function_exists('eaccelerator') && ini_get('eaccelerator.enable')) ? 'on' : 'off',
       'compression'  => sfConfig::get('sf_compressed')     ? 'on' : 'off',
-      'tidy'         => (function_exists('tidy_parse_string'))  ? 'on' : 'off',
+      'tidy'         => (function_exists('tidy_parse_string')) ? 'on' : 'off',
     );
 
     $result = '';
@@ -368,7 +376,7 @@ class sfWebDebug
     $retval = '
       <div id="main_'.$id.'" class="sfWebDebugActionCache" style="border: 1px solid '.$border_color.'">
       <div id="sub_main_'.$id.'" class="sfStatsCache" style="background-color: '.$bg_color.'; border-right: 1px solid '.$border_color.'; border-bottom: 1px solid '.$border_color.';">
-      <div style="height: 16px; padding: 2px"><a href="#" onclick="Element.toggle(\''.$id.'\')"><strong>cache information</strong></a>&nbsp;<a href="#" onclick="Element.hide(\'sub_main_'.$id.'\'); document.getElementById(\'main_'.$id.'\').style.border = \'none\'">'.image_tag($this->base_image_path.'/close.png', 'align=middle').'</a>&nbsp;</div>
+      <div style="height: 16px; padding: 2px"><a href="#" onclick="Element.toggle(\''.$id.'\'); return false;"><strong>cache information</strong></a>&nbsp;<a href="#" onclick="Element.hide(\'sub_main_'.$id.'\'); document.getElementById(\'main_'.$id.'\').style.border = \'none\'; return false;">'.image_tag($this->base_image_path.'/close.png', 'align=middle').'</a>&nbsp;</div>
         <div style="padding: 2px; display: none" id="'.$id.'">
         [uri]&nbsp;'.$internalUri.'<br />
         [life&nbsp;time]&nbsp;'.$cache->getLifeTime($internalUri, $suffix).'&nbsp;seconds<br />

@@ -2,7 +2,7 @@
 /**
  * $Header: /repository/pear/sfLog/sfLog/mail.php,v 1.21 2004/01/19 08:02:40 jon Exp $
  *
- * @version $Revision: 1.21 $
+ * @version $Revision$
  * @package sfLog
  */
 

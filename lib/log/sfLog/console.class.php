@@ -2,7 +2,7 @@
 /**
  * $Header: /repository/pear/sfLog/sfLog/console.php,v 1.19 2004/01/19 08:02:40 jon Exp $
  *
- * @version $Revision: 1.19 $
+ * @version $Revision$
  * @package sfLog
  */
 

@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -27,6 +27,11 @@ function use_helpers()
 
 function use_helper($helperName)
 {
+  static $loaded = array();
+  if (isset($loaded[$helperName]))
+  {
+    return;
+  }
 
   if (is_readable(sfConfig::get('sf_symfony_lib_dir').'/helper/'.$helperName.'Helper.php'))
   {
@@ -43,6 +48,8 @@ function use_helper($helperName)
     // helper in include_path
     include_once('helper/'.$helperName.'Helper.php');
   }
+
+  $loaded[$helperName] = true;
 }
 
 ?>

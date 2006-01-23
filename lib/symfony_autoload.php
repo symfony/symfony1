@@ -5,7 +5,9 @@ if (!sfConfig::get('sf_in_bootstrap'))
   $sf_symfony_lib_dir = sfConfig::get('sf_symfony_lib_dir');
 
   // YAML support
-  require_once($sf_symfony_lib_dir.'/util/Spyc.class.php');
+  if (!function_exists('syck_load')) {
+    require_once($sf_symfony_lib_dir.'/util/Spyc.class.php');
+  }
   require_once($sf_symfony_lib_dir.'/util/sfYaml.class.php');
 
   // cache support
@@ -84,8 +86,7 @@ function __autoload($class)
     }
 
     // unspecified class
-    $error = 'Autoloading of class "%s" failed. Try to clear the symfony cache and refresh. [err0003]';
-    $error = sprintf($error, $class);
+    $error = sprintf('Autoloading of class "%s" failed. Try to clear the symfony cache and refresh. [err0003]', $class);
     $e = new sfAutoloadException($error);
 
     $e->printStackTrace();

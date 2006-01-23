@@ -3,7 +3,7 @@
  * $Header: /repository/pear/sfLog/sfLog/composite.php,v 1.23 2004/08/09 06:04:11 jon Exp $
  * $Horde: horde/lib/sfLog/composite.php,v 1.2 2000/06/28 21:36:13 jon Exp $
  *
- * @version $Revision: 1.23 $
+ * @version $Revision$
  * @package sfLog
  */
 

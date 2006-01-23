@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -19,7 +19,7 @@
  * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @copyright  2004-2005 Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCache.class.php 374 2005-08-20 08:57:25Z fabien $
+ * @version    SVN: $Id$
  */
 class sfViewCacheManager
 {
@@ -31,19 +31,16 @@ class sfViewCacheManager
     $cacheConfig        = array(),
     $viewCacheClassName = '',
     $context            = null,
-    $config             = null,
     $controller         = null;
 
-  public function initialize($context, $config)
+  public function initialize($context)
   {
     $this->context = $context;
-    $this->config  = $config;
 
     // cache only works with routing
     if (!sfConfig::get('sf_routing'))
     {
-      $error = 'You must activate routing to use cache system';
-      throw new sfConfigurationException($error);
+      throw new sfConfigurationException('You must activate routing to use cache system');
     }
 
     $this->controller = $context->getController();
@@ -178,13 +175,13 @@ class sfViewCacheManager
     $namespace = $this->generateNamespace($internalUri);
     $id        = $suffix;
 
-    if (sfConfig::get('sf_logging_active'))
+    if ($sf_logging_active = sfConfig::get('sf_logging_active'))
     {
       $length = strlen($data);
     }
 
     $ret = $this->cache->set($id, $namespace, $data);
-    if (sfConfig::get('sf_logging_active'))
+    if ($sf_logging_active)
     {
       if (!$ret)
       {

@@ -1,5 +1,5 @@
 <?php
-// $Id: daemon.php,v 1.1 2004/12/21 06:55:38 jon Exp $
+// $Id$
 
 /**
  * The sfLog_daemon class is a concrete implementation of the sfLog::
@@ -7,7 +7,7 @@
  * This class uses the syslog protocol: http://www.ietf.org/rfc/rfc3164.txt
  *
  * @author  Bart van der Schans <schans@dds.nl>
- * @version $Revision: 1.1 $
+ * @version $Revision$
  * @package sfLog
  */
 class sfLog_daemon extends sfLog {

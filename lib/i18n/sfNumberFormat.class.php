@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version $Revision: 1.6 $  $Date: 2005/12/20 09:32:42 $
+ * @version $Revision$  $Date$
  * @package System.I18N.core
  */
 

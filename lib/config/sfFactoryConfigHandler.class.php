@@ -4,7 +4,7 @@
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * (c) 2004-2006 Sean Kerr.
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -31,7 +31,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
    * @throws <b>sfConfigurationException</b> If a requested configuration file does not exist or is not readable.
    * @throws <b>sfParseException</b> If a requested configuration file is improperly formatted.
    */
-  public function & execute ($configFile, $param = array())
+  public function execute($configFile, $param = array())
   {
     // parse the yaml
     $config = $this->parseYaml($configFile);
@@ -60,9 +60,10 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
 
     // merge with environment configuration if needed
     $myConfig = sfToolkit::array_deep_merge($defaultConfig, $allConfig);
-    if (isset($config[sfConfig::get('sf_environment')]) && is_array($config[sfConfig::get('sf_environment')]))
+    $sf_environment = sfConfig::get('sf_environment');
+    if (isset($config[$sf_environment]) && is_array($config[$sf_environment]))
     {
-      $myConfig = sfToolkit::array_deep_merge($myConfig, $config[sfConfig::get('sf_environment')]);
+      $myConfig = sfToolkit::array_deep_merge($myConfig, $config[$sf_environment]);
     }
 
     // init our data and includes arrays
@@ -82,9 +83,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
       if (!isset($keys['class']))
       {
         // missing class key
-        $error = 'Configuration file "%s" specifies category "%s" with missing class key';
-        $error = sprintf($error, $configFile, $factory);
-
+        $error = sprintf('Configuration file "%s" specifies category "%s" with missing class key', $configFile, $factory);
         throw new sfParseException($error);
       }
 
@@ -93,22 +92,19 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
       if (isset($keys['file']))
       {
         // we have a file to include
-        $file =& $keys['file'];
-        $file =  $this->replaceConstants($file);
-        $file =  $this->replacePath($file);
+        $file = $this->replaceConstants($keys['file']);
+        $file = $this->replacePath($file);
 
         if (!is_readable($file))
         {
             // factory file doesn't exist
-            $error = 'Configuration file "%s" specifies class "%s" with nonexistent or unreadablefile "%s"';
-            $error = sprintf($error, $configFile, $class, $file);
-
+            $error = sprintf('Configuration file "%s" specifies class "%s" with nonexistent or unreadablefile "%s"',
+                             $configFile, $class, $file);
             throw new sfParseException($error);
         }
 
         // append our data
-        $tmp        = "require_once('%s');";
-        $includes[] = sprintf($tmp, $file);
+        $includes[] = sprintf("require_once('%s');", $file);
       }
 
       // parse parameters
@@ -119,79 +115,64 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
       {
         case 'controller':
           // append instance creation
-          $tmp         = "  \$this->controller = sfController::newInstance('%s');";
-          $instances[] = sprintf($tmp, $class);
+          $instances[] = sprintf("  \$this->controller = sfController::newInstance('%s');", $class);
 
           // append instance initialization
-          $tmp     = "  \$this->controller->initialize(\$this);";
-          $inits[] = sprintf($tmp);
-
+          $inits[] = "  \$this->controller->initialize(\$this);";
           break;
 
         case 'request':
           // append instance creation
-          $tmp         = "  \$this->request = sfRequest::newInstance('%s');";
-          $instances[] = sprintf($tmp, $class);
+          $instances[] = sprintf("  \$this->request = sfRequest::newInstance('%s');", $class);
 
           // append instance initialization
-          $tmp     = "  \$this->request->initialize(\$this, %s);";
-          $inits[] = sprintf($tmp, $parameters);
-
+          $inits[] = sprintf("  \$this->request->initialize(\$this, %s);", $parameters);
           break;
 
         case 'security_filter':
           // append creation/initialization in one swipe
-          $tmp     = "\n  if (sfConfig::get('sf_use_security'))\n  {\n" .
-                     "    \$this->securityFilter = sfSecurityFilter::newInstance('%s');\n".
-                     "    \$this->securityFilter->initialize(\$this, %s);\n  }\n";
-          $inits[] = sprintf($tmp, $class, $parameters);
-
+          $inits[] = sprintf("\n  if (sfConfig::get('sf_use_security'))\n  {\n" .
+                             "    \$this->securityFilter = sfSecurityFilter::newInstance('%s');\n".
+                             "    \$this->securityFilter->initialize(\$this, %s);\n  }\n",
+                             $class, $parameters);
           break;
 
         case 'storage':
           // append instance creation
-          $tmp         = "  \$this->storage = sfStorage::newInstance('%s');";
-          $instances[] = sprintf($tmp, $class);
+          $instances[] = sprintf("  \$this->storage = sfStorage::newInstance('%s');", $class);
 
           // append instance initialization
-          $tmp     = "  \$this->storage->initialize(\$this, %s);";
-          $inits[] = sprintf($tmp, $parameters);
-
+          $inits[] = sprintf("  \$this->storage->initialize(\$this, %s);", $parameters);
           break;
 
         case 'user':
           // append instance creation
-          $tmp         = "  \$this->user = sfUser::newInstance('%s');";
-          $instances[] = sprintf($tmp, $class);
+          $instances[] = sprintf("  \$this->user = sfUser::newInstance('%s');", $class);
 
           // append instance initialization
-          $tmp     = "  \$this->user->initialize(\$this, %s);";
-          $inits[] = sprintf($tmp, $parameters);
-
+          $inits[] = sprintf("  \$this->user->initialize(\$this, %s);", $parameters);
           break;
 
         case 'execution_filter':
           // append execution filter class name
-          $tmp     = "  \$this->controller->setExecutionFilterClassName('%s');";
-          $inits[] = sprintf($tmp, $class);
-
+          $inits[] = sprintf("  \$this->controller->setExecutionFilterClassName('%s');", $class);
           break;
 
         case 'view_cache':
           // append view cache class name
-          $tmp     = "\n  if (sfConfig::get('sf_cache'))\n  {\n".
-                     "    \$this->viewCacheManager->setViewCacheClassName('%s');\n  }\n";
-          $inits[] = sprintf($tmp, $class);
-
+          $inits[] = sprintf("\n  if (sfConfig::get('sf_cache'))\n  {\n".
+                             "    \$this->viewCacheManager->setViewCacheClassName('%s');\n  }",
+                             $class);
           break;
       }
     }
 
     // compile data
-    $retval = "<?php\n".
-              "// auth-generated by sfFactoryConfigHandler\n".
-              "// date: %s\n%s\n%s\n%s\n?>";
-    $retval = sprintf($retval, date('m/d/Y H:i:s'), implode("\n", $includes), implode("\n", $instances), implode("\n", $inits));
+    $retval = sprintf("<?php\n".
+                      "// auto-generated by sfFactoryConfigHandler\n".
+                      "// date: %s\n%s\n%s\n%s\n?>",
+                      date('Y/m/d H:i:s'), implode("\n", $includes),
+                      implode("\n", $instances), implode("\n", $inits));
 
     return $retval;
   }

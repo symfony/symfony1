@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -20,7 +20,7 @@
  * @package    symfony
  * @subpackage controller
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfRouting.class.php 522 2005-10-17 08:23:26Z fabien $
+ * @version    SVN: $Id$
  */
 class sfRouting
 {
@@ -88,9 +88,9 @@ class sfRouting
       {
         foreach ($request->getParameterHolder()->getAll() as $key => $value)
         {
-          if ($key == 'module' || $key == 'action') continue;
-
-          if (in_array($key, $names)) continue;
+          if ($key == 'module' || $key == 'action' || in_array($key, $names)) {
+            continue;
+          }
 
           $params[] = $key.'='.$value;
         }
@@ -152,7 +152,10 @@ class sfRouting
    */
   public function clearRoutes()
   {
-    if (sfConfig::get('sf_logging_active')) sfLogger::getInstance()->info('{sfRouting} clear all current routes');
+    if (sfConfig::get('sf_logging_active'))
+    {
+      sfLogger::getInstance()->info('{sfRouting} clear all current routes');
+    }
 
     $this->routes = array();
   }
@@ -172,7 +175,7 @@ class sfRouting
   *
   * @param  string a route string
   * @param  array  default parameter values
-  * @param  array  regexps parameters must match 
+  * @param  array  regexps parameters must match
   * @return array  current routes
   */
   public function connect($name, $route, $default = array(), $requirements = array())
@@ -188,7 +191,7 @@ class sfRouting
 
     $parsed = array();
     $names  = array();
-    $suffix = (sfConfig::get('sf_suffix') == '.') ? '' : sfConfig::get('sf_suffix');
+    $suffix = (($sf_suffix = sfConfig::get('sf_suffix')) == '.') ? '' : $sf_suffix;
 
     // used for performance reasons
     $names_hash = array();
@@ -252,7 +255,10 @@ class sfRouting
       $this->routes[$name] = array($route, $regexp, $names, $names_hash, $default, $requirements, $suffix);
     }
 
-    if (sfConfig::get('sf_logging_active')) sfLogger::getInstance()->info('{sfRouting} connect "'.$route.'"'.($suffix ? ' ("'.$suffix.'" suffix)' : ''));
+    if (sfConfig::get('sf_logging_active'))
+    {
+      sfLogger::getInstance()->info('{sfRouting} connect "'.$route.'"'.($suffix ? ' ("'.$suffix.'" suffix)' : ''));
+    }
 
     return $this->routes;
   }
@@ -445,7 +451,7 @@ class sfRouting
             $out[$names[$pos]] = urldecode($found);
           }
           // unnamed elements go in as 'pass'
-          else 
+          else
           {
             $pass = explode('/', $found);
             for ($i = 0, $max = count($pass); $i < $max; $i += 2)
@@ -477,7 +483,9 @@ class sfRouting
         // we must have found all :var stuffs in url? except if default values exists
         foreach ($names as $name)
         {
-          if ($out[$name] == null) $break = false;
+          if ($out[$name] == null) {
+            $break = false;
+          }
         }
 
         if ($break)
@@ -485,7 +493,10 @@ class sfRouting
           // we store route name
           $this->setCurrentRouteName($route_name);
 
-          if (sfConfig::get('sf_logging_active')) sfLogger::getInstance()->info('{sfRouting} match route ['.$route_name.'] "'.$route.'"');
+          if (sfConfig::get('sf_logging_active'))
+          {
+            sfLogger::getInstance()->info('{sfRouting} match route ['.$route_name.'] "'.$route.'"');
+          }
           break;
         }
       }

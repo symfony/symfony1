@@ -225,8 +225,8 @@ class sfLiveProjectUnitTestCase extends UnitTestCase
   public function shutdown()
   {
     // remove all temporary files and directories
-//    sfToolkit::clearDirectory($this->getWorkDir());
-//    rmdir($this->getWorkDir());
+    sfToolkit::clearDirectory($this->getWorkDir());
+    rmdir($this->getWorkDir());
   }
 }
 

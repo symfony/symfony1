@@ -13,7 +13,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfRegistry.class.php 438 2005-09-12 06:31:12Z fabien $
+ * @version    SVN: $Id$
  */
 class sfRegistry
 {

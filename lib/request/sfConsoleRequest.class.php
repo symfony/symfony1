@@ -4,7 +4,7 @@
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * (c) 2004-2006 Sean Kerr.
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -15,7 +15,7 @@
  * @subpackage request
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <skerr@mojavi.org>
- * @version    SVN: $Id: sfAction.class.php 527 2005-10-17 14:02:12Z fabien $
+ * @version    SVN: $Id$
  */
 class sfConsoleRequest extends sfRequest
 {
@@ -31,6 +31,7 @@ class sfConsoleRequest extends sfRequest
    */
   public function initialize ($context, $parameters = null)
   {
+    $this->getParameterHolder()->add($_SERVER['argv']);
   }
 
   /**

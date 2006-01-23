@@ -50,7 +50,7 @@ function run_build_schema($task, $args)
 
 function _call_phing($task, $task_name, $check_schema = true)
 {
-  if ($check_schema && !file_exists('config/schema.xml'))
+  if ($check_schema && !glob('config/*schema.xml'))
   {
     throw new Exception('You must create a schema.xml file.');
   }
@@ -62,13 +62,11 @@ function _call_phing($task, $task_name, $check_schema = true)
 
   $propel_generator_dir = sfConfig::get('sf_symfony_lib_dir').'/vendor/propel-generator';
 
-  $current_dir = getcwd();
-
   // call phing targets
   pake_import('Phing', false);
   pakePhingTask::call_phing($task, array($task_name), sfConfig::get('sf_symfony_data_dir').'/bin/build.xml', array('project' => $task->get_property('name', 'symfony'), 'lib_dir' => sfConfig::get('sf_symfony_lib_dir'), 'data_dir' => sfConfig::get('sf_symfony_data_dir'), 'propel_generator_dir' => $propel_generator_dir));
 
-  chdir($current_dir);
+  chdir(sfConfig::get('sf_root_dir'));
 }
 
 ?>

@@ -102,6 +102,14 @@ class sfDebugConnection implements Connection
   }
 
   /**
+   * @see Connection::isConnected()
+   */
+  public function isConnected()
+  {
+    return $this->childConnection->isConnected();
+  }
+
+  /**
    * @see Connection::prepareStatement()
    */
   public function prepareStatement($sql)
@@ -245,6 +253,10 @@ class sfDebugConnection implements Connection
     return $this->childConnection->getAutoCommit();
   }
 
+  /**
+   * Private function that logs message using specified logger (if provided).
+   * @param string $msg Message to log.
+   */
   private function log($msg)
   {
     if (self::$logger)

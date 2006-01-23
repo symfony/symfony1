@@ -4,7 +4,7 @@
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * (c) 2004-2006 Sean Kerr.
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -33,7 +33,7 @@ abstract class sfConfigHandler
    *
    * @return void
    */
-  public function addReplacement ($oldValue, $newValue)
+  public function addReplacement($oldValue, $newValue)
   {
     $this->oldValues[] = $oldValue;
     $this->newValues[] = $newValue;
@@ -51,7 +51,7 @@ abstract class sfConfigHandler
    * @throws <b>sfParseException</b> If a requested configuration file is
    *                               improperly formatted.
    */
-  abstract function & execute ($configPath, $param = array());
+  abstract function execute($configPath, $param = array());
 
   /**
    * Initialize this ConfigHandler.
@@ -62,7 +62,7 @@ abstract class sfConfigHandler
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this ConfigHandler.
    */
-  public function initialize ($parameters = null)
+  public function initialize($parameters = null)
   {
     $this->getParameterHolder()->add($parameters);
   }
@@ -79,7 +79,7 @@ abstract class sfConfigHandler
    *
    * @return string A literalized value.
    */
-  public static function literalize ($value)
+  public static function literalize($value)
   {
     static
       $keys = array("\\", "%'", "'"),
@@ -123,17 +123,9 @@ abstract class sfConfigHandler
    *
    * @return string The new value.
    */
-  public static function & replaceConstants ($value)
+  public static function replaceConstants($value)
   {
-    static $config;
-
-    if (!$config)
-    {
-    }
-
-    $value = preg_replace('/%(.+?)%/e', 'sfConfig::get(strtolower("\\1"))', $value);
-
-    return $value;
+    return preg_replace('/%(.+?)%/e', 'sfConfig::get(strtolower("\\1"))', $value);
   }
 
   /**
@@ -143,7 +135,7 @@ abstract class sfConfigHandler
    *
    * @return string The new path.
    */
-  public static function & replacePath ($path)
+  public static function replacePath($path)
   {
     if (!sfToolkit::isPathAbsolute($path))
     {

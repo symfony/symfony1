@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -38,16 +38,14 @@ function include_partial($name, $vars = array())
   $firstActionEntry = $context->getActionStack()->getFirstEntry();
 
   // global variables
-  $vars = array_merge($vars, array(
-    'sf_context'       => $context,
-    'sf_params'        => $context->getRequest()->getParameterHolder(),
-    'sf_request'       => $context->getRequest(),
-    'sf_user'          => $context->getUser(),
-    'sf_last_module'   => $lastActionEntry->getModuleName(),
-    'sf_last_action'   => $lastActionEntry->getActionName(),
-    'sf_first_module'  => $firstActionEntry->getModuleName(),
-    'sf_first_action'  => $firstActionEntry->getActionName(),
-  ));
+  $vars['sf_context']      = $context;
+  $vars['sf_params']       = $context->getRequest()->getParameterHolder();
+  $vars['sf_request']      = $context->getRequest();
+  $vars['sf_user']         = $context->getUser();
+  $vars['sf_last_module']  = $lastActionEntry->getModuleName();
+  $vars['sf_last_action']  = $lastActionEntry->getActionName();
+  $vars['sf_first_module'] = $firstActionEntry->getModuleName();
+  $vars['sf_first_action'] = $firstActionEntry->getActionName();
 
   if (sfConfig::get('sf_use_flash'))
   {
@@ -105,9 +103,7 @@ function include_partial($name, $vars = array())
     if (!$ok)
     {
       // the partial isn't readable
-      $error = 'The partial "%s" does not exist or is unreadable';
-      $error = sprintf($error, $filename);
-
+      $error = sprintf('The partial "%s" does not exist or is unreadable', $filename);
       throw new sfRenderException($error);
     }
   }

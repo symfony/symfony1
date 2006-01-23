@@ -3,7 +3,7 @@
  * $Header: /repository/pear/sfLog/sfLog/observer.php,v 1.12 2004/01/11 20:49:49 jon Exp $
  * $Horde: horde/lib/sfLog/observer.php,v 1.5 2000/06/28 21:36:13 jon Exp $
  *
- * @version $Revision: 1.12 $
+ * @version $Revision$
  * @package sfLog
  */
 
