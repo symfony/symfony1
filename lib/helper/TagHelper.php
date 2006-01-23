@@ -68,7 +68,7 @@ function _tag_options($options = array())
   $html = '';
   foreach ($options as $key => $value)
   {
-    $html .= ' '.$key.'="'.htmlentities($value).'"';
+    $html .= ' '.$key.'="'.$value.'"';
   }
 
   return $html;
