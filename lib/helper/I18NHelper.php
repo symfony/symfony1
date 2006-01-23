@@ -50,7 +50,7 @@ function format_country($country_iso)
   $c = new sfCultureInfo(sfContext::getInstance()->getUser()->getCulture());
   $countries = $c->getCountries();
 
-  return $countries[$country_iso];
+  return isset($countries[$country_iso]) ? $countries[$country_iso] : '';
 }
 
 function format_language($language_iso)
@@ -58,7 +58,7 @@ function format_language($language_iso)
   $c = new sfCultureInfo(sfContext::getInstance()->getUser()->getCulture());
   $languages = $c->getLanguages();
 
-  return $languages[$language_iso];
+  return isset($languages[$language_iso]) ? $languages[$language_iso] : '';
 }
 
 ?>

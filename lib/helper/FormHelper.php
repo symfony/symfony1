@@ -50,9 +50,9 @@ function options_for_select($options = array(), $selected = '')
   }
 
   $html = '';
-  foreach($options as $key => $value)
+  foreach ($options as $key => $value)
   {
-    $html_options = array('value' => $value);
+    $html_options = array('value' => $key);
     if (
         isset($selected)
         &&
@@ -63,7 +63,8 @@ function options_for_select($options = array(), $selected = '')
     {
       $html_options['selected'] = 'selected';
     }
-    $html .= content_tag('option', $key, $html_options) . "\n";
+
+    $html .= content_tag('option', $value, $html_options)."\n";
   }
 
   return $html;
