@@ -94,11 +94,16 @@ function _upgrade_0_6_propel_builder()
 {
   $verbose = pakeApp::get_instance()->get_verbose();
 
-  $propel_ini = file_get_contents(sfConfig::get('sf_config_dir').DIRECTORY_SEPARATOR.'propel.ini');
+  $propel_file = sfConfig::get('sf_config_dir').DIRECTORY_SEPARATOR.'propel.ini';
 
-  $propel_ini = str_replace('symfony.symfony.addon.propel.builder', 'symfony.addon.propel.builder', $propel_ini);
+  if (is_readable($propel_file))
+  {
+    $propel_ini = file_get_contents($propel_file);
 
-  file_put_contents($propel_ini, $content);
+    $propel_ini = str_replace('symfony.symfony.addon.propel.builder', 'symfony.addon.propel.builder', $propel_ini);
+
+    file_put_contents($propel_file, $propel_ini);
+  }
 }
 
 function _upgrade_0_6_yml_comments($dir)
