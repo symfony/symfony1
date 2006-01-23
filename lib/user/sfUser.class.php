@@ -79,7 +79,7 @@ class sfUser
       }
     }
 
-    $culture = $storage->read(self::CULTURE_NAMESPACE);
+    $culture = $this->getContext()->getStorage()->read(self::CULTURE_NAMESPACE);
     if ($this->culture == null)
     {
       $culture = sfConfig::get('sf_i18n_default_culture');
