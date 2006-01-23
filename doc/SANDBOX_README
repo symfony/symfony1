@@ -14,9 +14,14 @@ The sandbox project will work "out of the box", provided that you extract the
 
 After unpacking the archive, test the sandbox by requesting the following URL:
 
-    http://localhost/sf_sandbox/web/
+    http://localhost/sf_sandbox/web/index.php
     
 You should see a congratulations page.
+
+If your web server supports mod_rewrite, rename the `.htaccess.sample` of the
+`web/` directory into `.htaccess` so that you can simply call:
+
+    http://localhost/sf_sandbox/web/
 
 Command line
 ------------
