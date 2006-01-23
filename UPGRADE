@@ -18,7 +18,7 @@ Automatically
 
   5 - update your databases.yml configuration file (see section 11 of the `Manually` section below)
   
-  6 - do some the manual steps numbered: 13, 14, 15, 16
+  6 - do some the manual steps numbered: 13, 14, 15, 16, 17
 
 Be careful if your project directory contains external libraries using `SF_XXX`, `MOD_XXX` or `APP_XXX` constants (for instance the `geshi` library). The `upgrade` command transforms these constants into a class method call, so you ought to overwrite the upgraded library by the the backup copy.
 
@@ -158,4 +158,8 @@ For all your applications within a project:
     options_for_select(array('France' => 1, 'USA' => 2))   | options_for_select(array(1 => 'France', 2 => 'USA'))
     options_for_select(array_flip(array('France', 'USA'))) | options_for_select(array('France', 'USA'))
 
-  17 - clear the symfony cache
+  17 - If you have some batch files which use database connection, you now have to initialize the context. Add the following line after `config.php` loading:
+  
+    sfContext::getInstance();
+
+  18 - clear the symfony cache
