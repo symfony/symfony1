@@ -19,7 +19,7 @@ test:
     web_debug:              off
 
 all:
-  .actions:
+#  .actions:
 #    default_module:         default
 #    default_action:         index
 #
@@ -38,7 +38,7 @@ all:
 #    unavailable_module:     default
 #    unavailable_action:     unavailable
 #
-  .settings:
+#  .settings:
 #    available:              on
 #
 #    module_accessor:        module
