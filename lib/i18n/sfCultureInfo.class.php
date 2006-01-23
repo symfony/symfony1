@@ -28,7 +28,7 @@
  * The sfCultureInfo class holds culture-specific information, such as the 
  * associated language, sublanguage, country/region, calendar, and cultural 
  * conventions. This class also provides access to culture-specific 
- * instances of sfDateTimeFormatInfo and NumberFormatInfo. These objects
+ * instances of sfDateTimeFormatInfo and sfNumberFormatInfo. These objects
  * contain the information required for culture-specific operations,
  * such as formatting dates, numbers and currency.
  *  
@@ -87,7 +87,7 @@ class sfCultureInfo
 
   /**
    * The current number format info.
-   * @var NumberFormatInfo 
+   * @var sfNumberFormatInfo 
    */
   private $numberFormat;
   
@@ -457,9 +457,9 @@ class sfCultureInfo
   }
 
   /**
-   * Gets the NumberFormatInfo that defines the culturally appropriate
+   * Gets the sfNumberFormatInfo that defines the culturally appropriate
    * format of displaying numbers, currency, and percentage.
-   * @return NumberFormatInfo the number format info for current culture. 
+   * @return sfNumberFormatInfo the number format info for current culture. 
    */
   function getNumberFormat()
   {
@@ -472,14 +472,14 @@ class sfCultureInfo
               'NumberPatterns'=>$patterns,
               'Currencies' => $currencies);
       
-      $this->setNumberFormat(new NumberFormatInfo($data));
+      $this->setNumberFormat(new sfNumberFormatInfo($data));
     }
     return $this->numberFormat;
   }
 
   /**
    * Set the number format information.
-   * @param NumberFormatInfo the new number format info.
+   * @param sfNumberFormatInfo the new number format info.
    */
   function setNumberFormat($numberFormat)
   {
