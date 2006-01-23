@@ -304,7 +304,7 @@ function _upgrade_0_6_view_shortcuts($dirs)
 
   $php_files = pakeFinder::type('file')->name('*.php')->in($dirs);
 
-  $regex = '(context\-|params\[|request\-|user\-|view\-|last_module|last_action|first_module|first_action)';
+  $regex = '(context\-|params\-|request\-|user\-|view\-|last_module|last_action|first_module|first_action)';
 
   foreach ($php_files as $php_file)
   {
@@ -329,7 +329,7 @@ function _upgrade_0_6_mail_to($dirs)
 
   $php_files = pakeFinder::type('file')->name('*.php')->in($dirs);
 
-  $regex = 'mail_to\s*\(\s*([^,]+?), ([^,]+?)\)';
+  $regex = 'mail_to\s*\(\s*([^,\)]+?), ([^,\)]+?)\)';
 
   foreach ($php_files as $php_file)
   {
