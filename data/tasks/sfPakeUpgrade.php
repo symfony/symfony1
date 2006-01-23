@@ -72,6 +72,9 @@ function run_upgrade_to_0_6($task, $args)
     $action_dirs = pakeFinder::type('directory')->name('actions')->mindepth(1)->maxdepth(1)->in($app_dir.'/'.sfConfig::get('sf_app_module_dir_name'));
 
     _upgrade_0_6_action($action_dirs);
+
+    // rename sf_default_culture to sf_i18n_default_culture in all libraries
+    _upgrade_0_6_i18n_config($app_dir);
   }
 
   // constants in global libraries
@@ -85,6 +88,9 @@ function run_upgrade_to_0_6($task, $args)
 
   // change propelpropel builder paths
   _upgrade_0_6_propel_builder();
+
+  // rename sf_default_culture to sf_i18n_default_culture in all libraries
+  _upgrade_0_6_i18n_config(sfConfig::get('sf_lib_dir_name'));
 
   // clear cache
   run_clear_cache($task, array());
@@ -128,6 +134,31 @@ function _upgrade_0_6_yml_comments($dir)
     $content = preg_replace($regex, '#', $content);
 
     file_put_contents($yml_file, $content);
+  }
+}
+
+function _upgrade_0_6_i18n_config($dir)
+{
+  $verbose = pakeApp::get_instance()->get_verbose();
+
+  $php_files = pakeFinder::type('file')->name('*.php')->in($dir);
+
+  $regex = '/sf_default_culture/m';
+
+  foreach ($php_files as $php_file)
+  {
+    $content = file_get_contents($php_file);
+
+    if (!preg_match($regex, $content))
+    {
+      continue;
+    }
+
+    if ($verbose) echo '>> file      '.pakeApp::excerpt('change i18n constants for "'.$php_file.'"')."\n";
+
+    $content = preg_replace($regex, 'sf_i18n_default_culture', $content);
+
+    file_put_contents($php_file, $content);
   }
 }
 
