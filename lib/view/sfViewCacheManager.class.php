@@ -185,17 +185,17 @@ class sfViewCacheManager
     {
       if (!$ret)
       {
-        $this->context->getLogger()->err('{sfViewCacheManager} error writing cache for "'.$namespace.'" and id "'.$id.'"');
+        if (sfConfig::get('sf_logging_active')) $this->context->getLogger()->err('{sfViewCacheManager} error writing cache for "'.$namespace.'" and id "'.$id.'"');
       }
       else
       {
         if (strlen($data) - $length)
         {
-          $this->context->getLogger()->info('{sfViewCacheManager} save optimized content ('.sprintf('%d', strlen($data) - $length).' &raquo; '.sprintf('%.0f', ((strlen($data) - $length) / $length) * 100).'%)');
+          if (sfConfig::get('sf_logging_active')) $this->context->getLogger()->info('{sfViewCacheManager} save optimized content ('.sprintf('%d', strlen($data) - $length).' &raquo; '.sprintf('%.0f', ((strlen($data) - $length) / $length) * 100).'%)');
         }
         else
         {
-          $this->context->getLogger()->info('{sfViewCacheManager} save content');
+          if (sfConfig::get('sf_logging_active')) $this->context->getLogger()->info('{sfViewCacheManager} save content');
         }
       }
     }
@@ -231,7 +231,7 @@ class sfViewCacheManager
     $namespace = $this->generateNamespace($internalUri);
     $id        = $suffix;
 
-    $this->context->getLogger()->info('{sfViewCacheManager} remove cache for "'.$internalUri.'" / "'.$suffix.'"');
+    if (sfConfig::get('sf_logging_active')) $this->context->getLogger()->info('{sfViewCacheManager} remove cache for "'.$internalUri.'" / "'.$suffix.'"');
 
     $this->cache->remove($id, $namespace);
   }
