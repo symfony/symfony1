@@ -69,7 +69,7 @@
         ), get_callbacks());
     }
 
-    return $ajaxOptions;
+    return $ajax_options;
   }
 
   /**
