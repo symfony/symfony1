@@ -360,7 +360,7 @@ class sfFinder
         $current_entry = $dir.DIRECTORY_SEPARATOR.$entryname;
         if (is_link($current_entry) && !$this->follow_link)
         {
-          next;
+          continue;
         }
 
         if (is_dir($current_entry))
