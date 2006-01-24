@@ -30,26 +30,26 @@ class sfPropelDatabase extends sfCreoleDatabase
 {
   static $config = array();
 
-  public function initialize ($parameters = null)
+  public function initialize ($parameters = null, $datasource = 'symfony')
   {
     parent::initialize($parameters);
 
-    $this->addConfig();
+    $this->addConfig($datasource);
 
     $is_default = $this->getParameter('is_default', false);
 
     // first defined if none listed as default
     if ($is_default || count(self::$config['propel']['datasources']) == 1)
     {
-      $this->setDefaultConfig();
+      $this->setDefaultConfig($datasource);
     }
   }
 
-  public function setDefaultConfig () {
-    self::$config['propel']['datasources']['default'] = $this->getParameter('datasource', 'symfony');
+  public function setDefaultConfig ($datasource) {
+    self::$config['propel']['datasources']['default'] = $this->getParameter('datasource', $datasource);
   }
 
-  public function addConfig ()
+  public function addConfig ($datasource)
   {
     $dsn = $this->getParameter('dsn');
 
@@ -65,7 +65,7 @@ class sfPropelDatabase extends sfCreoleDatabase
       $this->setParameter('password', $params['password']);
     }
 
-    $datasource = $this->getParameter('datasource', 'symfony');
+    $datasource = $this->getParameter('datasource', $datasource);
     self::$config['propel']['datasources'][$datasource] =
       array(
         'adapter' =>    $this->getParameter('phptype'),

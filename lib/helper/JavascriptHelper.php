@@ -522,7 +522,14 @@
 
     $element = $element_id ? "'$element_id'" : 'element';
 
-    return "new Effect.".sfInflector::camelize($name)."($element,"._options_for_javascript($js_options).");";
+    if (in_array($name, array('toggle_appear', 'toggle_blind', 'toggle_slide')))
+    {
+      return "new Effect.toggle($element, ". substr($name, 7)  .", "._options_for_javascript($js_options).");";
+    }
+    else
+    {
+      return "new Effect.".sfInflector::camelize($name)."($element, "._options_for_javascript($js_options).");";
+    }
   }
 
   /**

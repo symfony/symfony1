@@ -131,8 +131,8 @@ function _pear_run_command($config, $command, $opts, $params)
 
 function _pear_run_upgrade($config, $install_dir)
 {
-  $registry = &new PEAR_Registry($install_dir);
-  $remote = &new PEAR_Remote($config);
+  $registry = new PEAR_Registry($install_dir);
+  $remote = new PEAR_Remote($config);
   $cmd = &PEAR_Command::factory('upgrade', $config);
 
   $pkgs = $registry->listPackages();

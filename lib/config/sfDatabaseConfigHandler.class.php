@@ -97,9 +97,9 @@ class sfDatabaseConfigHandler extends sfYamlConfigHandler
 
       // append new data
       $data[] = sprintf("\n\$database = new %s();\n" .
-                        "\$database->initialize(%s);\n" .
+                        "\$database->initialize(%s, '%s');\n" .
                         "\$this->databases['%s'] = \$database;",
-                        $dbConfig['class'], $parameters, $key);
+                        $dbConfig['class'], $parameters, $key, $key);
     }
 
     // compile data

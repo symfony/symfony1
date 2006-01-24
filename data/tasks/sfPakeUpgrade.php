@@ -84,7 +84,7 @@ function run_upgrade_to_0_6($task, $args)
   _upgrade_0_6_sfpager(sfConfig::get('sf_lib_dir_name'));
 
   // location of config/config.php
-  _upgrade_0_6_config(sfConfig::get('sf_web_dir_name'));
+  _upgrade_0_6_config(array(sfConfig::get('sf_web_dir_name'), sfConfig::get('sf_bin_dir_name')));
 
   // change propelpropel builder paths
   _upgrade_0_6_propel_builder();

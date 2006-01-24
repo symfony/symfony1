@@ -1,3 +1,7 @@
+cli:
+  controller: myConsoleController
+  request:    myConsoleRequest
+
 test:
   storage:
     class: sfSessionTestStorage
