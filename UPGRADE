@@ -1,165 +1,196 @@
-Upgrade symfony to 0.6.X/0.7.X from 0.4.X/0.5.X
-===============================================
+Upgrading symfony to 0.6/0.7 from 0.4/0.5
+=========================================
 
-When you upgrade the symfony framework from 0.4.X or 0.5.X to a 0.6.X or 0.7.X release, you must upgrade all the projects depending on symfony.
+If you have a project based on symfony 0.4.X or 0.5.X, it has to be upgraded 
+in order to work with a 0.6.X or 0.7.X release. The process is quick and  
+partly automated.
 
-Automatically
--------------
+Main steps
+----------
 
-  1 - make a backup of your project (this is the most important step!)
-
-  2 - move all your apps directories under a new `apps` directory (see section 9 of the `Manually` section below)
-
-  3 - launch the following command in your project root directory:
-
-    $ symfony upgrade 0.6
-
-  4 - check the changes made by the symfony upgrade command (svn diff if you use subversion)
-
-  5 - update your databases.yml configuration file (see section 11 of the `Manually` section below)
+ 0. Update symfony to 0.6.XX (if it is not already done)
   
-  6 - do some the manual steps numbered: 13, 14, 15, 16, 17
+        $ pear upgrade symfony/symfony
 
-Be careful if your project directory contains external libraries using `SF_XXX`, `MOD_XXX` or `APP_XXX` constants (for instance the `geshi` library). The `upgrade` command transforms these constants into a class method call, so you ought to overwrite the upgraded library by the the backup copy.
+ 1. Make a backup of your project (this is the most important step!)
 
-You can launch this command several times without problem.
+ 2. Move all your application directories under a new `apps/` directory 
+ (see step 1-2 of the _Application modifications_ section below)
 
-Manually
---------
+ 3. Launch the following command in your project root directory:
+
+        $ symfony upgrade 0.6
+        
+    Or do manually the steps 3-12 described below
+
+ 4. Check the changes made to your project by the symfony upgrade command
+ (`svn diff` if you use subversion) and make sure your code is still there.
+
+ 5. Update your `databases.yml` configuration file 
+ (see step 13 of the _Application modifications_ section below)
+  
+ 6. Follow the manual steps numbered 14 to 19 below
+
+Be careful if your project directory contains external libraries using
+`SF_XXX`, `MOD_XXX` or `APP_XXX` constants. As the `upgrade` command 
+transforms these constants into a class method call, you will probably need to 
+overwrite the upgraded libraries by the the backup copy (for instance, this 
+happens for the 'geshi' library).
+
+You can launch the `symfony upgrade 0.6` command several times without 
+problem.
+
+Application modifications
+-------------------------
 
 For all your applications within a project:
 
-  1 - update your `app/config/config.php` file with the new one (`data/symfony/skeleton/app/app/config/config.php`)
-
-  2 - change all symfony configuration constants to the new sfConfig class (SF_XXX, APP_XXX, MOD_XXX)
-    except constants in index.php (SF_ROOT_DIR, SF_APP, SF_ENVIRONMENT, SF_DEBUG)
+ 1. Move all your apps under an `apps/` directory
 
     0.4.X/0.5.X              | 0.6.X/0.7.X
-    -------------------------|-----------------------------------
-    define('SF_FOO', 'bar')  | sfConfig::set('sf_foo', 'bar')
-    defined('SF_FOO')        | sfConfig::get('sf_foo') or nothing
-    SF_FOO                   | sfConfig::get('sf_foo')
+    -------------------------|----------------------------
+    `SF_ROOT_DIR/frontend`   | `SF_ROOT_DIR/apps/frontend`
+    `SF_ROOT_DIR/backend`    | `SF_ROOT_DIR/apps/backend`
 
-  3 - change the shortcuts to the symfony objects in your templates files by adding a `sf_` prefix:
+ 2. Change the path to `config.php` in your `index.php` and all the other
+ front controllers.
+    
+        require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
 
-    0.4.X/0.5.X              | 0.6.X/0.7.X
-    -------------------------|-----------------
-    $context                 | $sf_context
-    $params                  | $sf_params
-    $request                 | $sf_request
-    $user                    | $sf_user
-    $view                    | $sf_view
-    $last_module             | $sf_last_module
-    $last_action             | $sf_last_action
-    $first_module            | $sf_first_module
-    $first_action            | $sf_first_action
+ 3. Update your `myapp/config/config.php` file with the new one 
+ (`data/symfony/skeleton/app/app/config/config.php`).
 
-  4 - update the `settings.yml` configuration file:
+ 4. Change the calls to all the symfony configuration constants  in the php code
+ (`SF_XXX`, `APP_XXX`, `MOD_XXX`) to calls to the new `sfConfig` class, except
+ for the constants called in `index.php` (`SF_ROOT_DIR`, `SF_APP`,
+ `SF_ENVIRONMENT, SF_DEBUG`):
+
+    0.4.X/0.5.X                | 0.6.X/0.7.X
+    ---------------------------|-------------------------------------
+    `define('SF_FOO', 'bar')`  | `sfConfig::set('sf_foo', 'bar')`
+    `defined('SF_FOO')`        | `sfConfig::get('sf_foo') or nothing`
+    `SF_FOO`                   | `sfConfig::get('sf_foo')`
+
+ 5. In your template files, change the shortcuts to the symfony objects 
+ by adding a `sf_` prefix:
+
+    0.4.X/0.5.X        | 0.6.X/0.7.X
+    -------------------|-------------------
+    `$context`         | `$sf_context`
+    `$params`          | `$sf_params`
+    `$request`         | `$sf_request`
+    `$user`            | `$sf_user`
+    `$view`            | `$sf_view`
+    `$last_module`     | `$sf_last_module`
+    `$last_actio`      | `$sf_last_action`
+    `$first_module`    | `$sf_first_module`
+    `$first_action`    | `$sf_first_action`
+
+ 6. Update the `settings.yml` configuration file:
   
-    0.4.X/0.5.X                           | 0.6.X/0.7.X
-    --------------------------------------|-----------------------------------------
-    standard_helpers: Partial,Cache,Form  | standard_helpers: [Partial, Cache, Form]
-    is_i18n: on                           | i18n: on
-    default_culture: en                   | -> new i18n.yml configuration file
+    0.4.X/0.5.X                             | 0.6.X/0.7.X
+    ----------------------------------------|-------------------------------------------
+    `standard_helpers: Partial,Cache,Form`  | `standard_helpers: [Partial, Cache, Form]`
+    `is_i18n: on`                           | `i18n: on`
+    `default_culture: en`                   | -> new `i18n.yml` configuration file
 
-  5 - move your `messages.xml` i18n XML file from `i18n/global` to `i18n` directory.
+ 7. Move your `messages.xml` i18n XML file from `i18n/global` to the `i18n`
+ directory.
 
-  6 - change the use of `disable_web_debug` with `sfConfig::set('sf_web_debug', false)`
-
-  7 - rename sfPager to sfPropelPager
+ 8. Replace any definition of the `disable_web_debug` attribute by a call to:
   
-  8 - mail_to has a new parameter
+        sfConfig::set('sf_web_debug', false);
+        
+    (this is used to disable the web debug toolbar in development for
+    non-html views).
 
-    0.4.X/0.5.X                           | 0.6.X/0.7.X
-    --------------------------------------|-----------------------------------
-    mail_to($email, true)                 | mail_to($email, $name, 'encode=1')
+ 9. Rename the calls to the `sfPager` class to `sfPropelPager`
+  
+ 10. `mail_to` has a new parameter
 
-  9 - move all your apps under an `apps` directory
+    0.4.X/0.5.X                   | 0.6.X/0.7.X
+    ------------------------------|-------------------------------------
+    `mail_to($email, true)`       | `mail_to($email, $name, 'encode=1')`
 
-    0.4.X/0.5.X                           | 0.6.X/0.7.X
-    --------------------------------------|--------------------------
-    SF_ROOT_DIR/frontend                  | SF_ROOT_DIR/apps/frontend
-    SF_ROOT_DIR/backend                   | SF_ROOT_DIR/apps/backend
+ 11. Change all the deprecated methods in your actions
 
-    Change the path to `config.php` in `index.php`
+    0.4.X/0.5.X                  | 0.6.X/0.7.X
+    -----------------------------|----------------------------
+    `$this->forward404_if()`     | `$this->forward404If()`
+    `$this->forward404_unless()` | `$this->forward404Unless()`
+    `$this->forward_if()`        | `$this->forwardIf()`
+    `$this->forward_unless()`    | `$this->forwardUnless()`
 
-  10 - change all deprecated methods in your actions
+ 12. Change all the comments in your YAML files from `;` to `#`
 
-    0.4.X/0.5.X       | 0.6.X/0.7.X
-    ------------------|-----------------
-    forward404_if     | forward404If
-    forward404_unless | forward404Unless
-    forward_if        | forwardIf
-    forward_unless    | forwardUnless
-
-  11 - update your `databases.yml` configuration file. The `orm.yml` configuration file
-       is not needed anymore. All database configuration occur now in the `databases.yml`
-       configuration file.
+ 13. Update your `databases.yml` configuration file. The `orm.yml`
+ configuration file is not needed anymore. All database configuration now occur
+ in the `databases.yml`.
        
-       [0.4.X/0.5.X > orm.yml]
+        [0.4.X/0.5.X > orm.yml]
+        all:
+          adapter:  mysql
+          host:     localhost
+          database: dbname
+          username: root
+          password:
+         
+        [0.6.X/0.7.X > databases.yml]
+        all:
+          propel:
+            class:          sfPropelDatabase
+            param:
+              datasource:   symfony
+              phptype:      mysql
+              hostspec:     localhost
+              database:     dbname
+              username:     root
+              password:     
+              compat_assoc_lower:  true
+              compat_rtrim_string: true
 
-       all:
-         adapter:  mysql
-         host:     localhost
-         database: dbname
-         username: root
-         password:
+    To get a dabatase connection, you must now use the symfony database manager:
 
-       [0.6.X/0.7.X > databases.yml]
-       all:
-         propel:
-           class:          sfPropelDatabase
-           param:
-             datasource:   symfony
-             phptype:      mysql
-             hostspec:     localhost
-             database:     dbname
-             username:     root
-             password:     
-             compat_assoc_lower:  true
-             compat_rtrim_string: true
+       0.4.X/0.5.X                  | 0.6.X/0.7.X
+       -----------------------------|--------------------------------------------------------------------
+       `Propel::getConnection()`    | `sfContext::getInstance()->getDatabaseConnection($connection_name)`
 
-       To get a dabatase connection, you must now use the symfony database manager:
+    `$connection_name` is the name of your connection (`propel` in the example above).
 
-       0.4.X/0.5.X                 | 0.6.X/0.7.X
-       ----------------------------|--------------------
-       Propel::getConnection()     | sfContext::getInstance()->getDatabaseConnection($connection_name)
+ 14. Change all calls to the `->setSort()` method of the `sfPropelPager` object
+ to the equivalent `Criteria` methods.
 
-       `$connection_name` is the name of your connection (`propel` in the example above).
+ 15. Change your symlinks or apache configuration to move the `web/sf` directory:
 
-  12 - change all comments in your YAML file from ; to #
+    0.4.X/0.5.X                           | 0.6.X/0.7.X
+    --------------------------------------|----------------------------
+    SVN                                   |
+    `/SYMFONY_PATH/data/symfony/web/sf`   | `/SYMFONY_PATH/data/web/sf`
+                                          |
+    PEAR                                  |
+    `/PEAR_DATA_PATH/data/symfony/web/sf` | `/PEAR_DATA_PATH/data/web/sf`
 
-  13 - change all setSort() calls from sfPropelPager to the equivalent Criteria methods
+ 16. If your project use the `sfShoppingCart` or `sfFeed` classes, install the
+ related plugins, since they are no longer shipped with the default symfony
+ installation:
+   
+        $ symfony plugin-install [local|global] symfony/sfFeed
+        $ symfony plugin-install [local|global] symfony/sfShoppingCart        
+        or       
+        $ pear install symfony/sfFeed (equivalent to the `global` install)
+        $ pear install symfony/sfShoppingCart
 
-  14 - change your symlinks or apache configuration to move the `web/sf` directory:
+ 17. The first parameter of the `options_for_select()` helper changed to be
+ more intuitive:
 
-    0.4.X/0.5.X                         | 0.6.X/0.7.X
-    ------------------------------------|----------------------------
-    SVN                                 |
-    /SYMFONY_PATH/data/symfony/web/sf   | /SYMFONY_PATH/data/web/sf
-                                        |
-    PEAR                                |
-    /PEAR_DATA_PATH/data/symfony/web/sf | /PEAR_DATA_PATH/data/web/sf
+    0.4.X/0.5.X                                              | 0.6.X/0.7.X
+    ---------------------------------------------------------|-------------------------------------------------------
+    `options_for_select(array('France' => 1, 'USA' => 2))`   | `options_for_select(array(1 => 'France', 2 => 'USA'))`
+    `options_for_select(array_flip(array('France', 'USA')))` | `options_for_select(array('France', 'USA'))`
 
-  15 - if your project use the sfShoppingCart or sfFeed classes, install the sfShoppingCart and/or sfFeed plugin
+ 18. If you have some batch files using database connection, you now have to
+ initialize the context. Add the following line after `config.php` loading:
   
-    symfony plugin-install [local|global] symfony/sfFeed
-    symfony plugin-install [local|global] symfony/sfShoppingCart
+        sfContext::getInstance();
 
-    or
-
-    pear install symfony/sfFeed (equivalent to the `global` install)
-    pear install symfony/sfShoppingCart
-
-  16 - options_for_select() first parameter changed its format to be more intuitive:
-
-    0.4.X/0.5.X                                            | 0.6.X/0.7.X
-    -------------------------------------------------------|-----------------------------------------------------
-    options_for_select(array('France' => 1, 'USA' => 2))   | options_for_select(array(1 => 'France', 2 => 'USA'))
-    options_for_select(array_flip(array('France', 'USA'))) | options_for_select(array('France', 'USA'))
-
-  17 - If you have some batch files which use database connection, you now have to initialize the context. Add the following line after `config.php` loading:
-  
-    sfContext::getInstance();
-
-  18 - clear the symfony cache
+ 19. Clear the symfony cache
