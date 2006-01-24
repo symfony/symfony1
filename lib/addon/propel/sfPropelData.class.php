@@ -34,12 +34,12 @@ class sfPropelData
 
   // symfony load-data (file|dir)
   // todo: symfony dump-data
-  public function loadData($directory_or_file = null)
+  public function loadData($directory_or_file = null, $connectionName = 'default')
   {
     $fixture_files = $this->getFiles($directory_or_file);
 
     // wrap all databases operations in a single transaction
-    $con = sfContext::getInstance()->getDatabaseConnection();
+    $con = sfContext::getInstance()->getDatabaseConnection($connectionName);
     try
     {
       $con->begin();
