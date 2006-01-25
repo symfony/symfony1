@@ -27,6 +27,7 @@ parts:
     - cache
     - debug
     - populate
+    - test_unit_testing
     - deployment
     - user_session
     - security
