@@ -5,6 +5,12 @@ If you have a project based on symfony 0.4.X or 0.5.X, it has to be upgraded
 in order to work with a 0.6.X or 0.7.X release. The process is quick and  
 partly automated.
 
+>**Note**: Stable releases have even second digit, nightly releases have odd second digit. For instance:
+>
+>* release 0.6.0 is stable
+>* releases 0.6.xxx are also stable, and contain bug fixes to the 0.6.0
+>* releases 0.6.xxx are subversion trunk nightly releases and bring additionnal features to the 0.6.0
+
 Main steps
 ----------
 
