@@ -27,12 +27,14 @@ parts:
     - cache
     - debug
     - populate
+    - deployment
     - user_session
     - security
     - i18n
     - syndication
     - pager
     - generator
+    - finder
     - shopping_cart
     - custom_helper
     - validate_form
