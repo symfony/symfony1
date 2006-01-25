@@ -126,6 +126,8 @@ For all your applications within a project:
     `$this->forward404_unless()` | `$this->forward404Unless()`
     `$this->forward_if()`        | `$this->forwardIf()`
     `$this->forward_unless()`    | `$this->forwardUnless()`
+    `$this->redirect_if()`       | `$this->redirectIf()`
+    `$this->redirect_unless()`   | `$this->redirectUnless()`
 
  12. Change all the comments in your YAML files from `;` to `#`
 

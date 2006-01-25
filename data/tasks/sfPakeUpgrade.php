@@ -168,7 +168,7 @@ function _upgrade_0_6_action($dir)
 
   $php_files = pakeFinder::type('file')->name('*.php')->in($dir);
 
-  $regex = '(forward(404)_(if|unless))';
+  $regex = '(forward404|forward|redirect)_(if|unless)';
 
   foreach ($php_files as $php_file)
   {
@@ -179,9 +179,9 @@ function _upgrade_0_6_action($dir)
       continue;
     }
 
-    if ($verbose) echo '>> file      '.pakeApp::excerpt('rename deprecated forward methods for "'.$php_file.'"')."\n";
+    if ($verbose) echo '>> file      '.pakeApp::excerpt('rename deprecated forward/redirect methods for "'.$php_file.'"')."\n";
 
-    $content = preg_replace('/'.$regex.'/e', "'forward'.'\\2'.ucfirst('\\3')", $content);
+    $content = preg_replace('/'.$regex.'/e', "'\\1'.ucfirst('\\2')", $content);
 
     file_put_contents($php_file, $content);
   }
