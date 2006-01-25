@@ -211,6 +211,13 @@ class sfExecutionFilter extends sfFilter
         {
           $actionEntry->setPresentation($viewData);
         }
+        else
+        {
+          // send response
+          $response = $this->getContext()->getResponse();
+          $response->sendHeaders();
+          $response->sendContent();
+        }
       }
       else
       {

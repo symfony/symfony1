@@ -170,8 +170,7 @@ abstract class sfWebController extends sfController
     // redirect
     header('Location: '.$url);
 
-    printf('<html><head><meta http-equiv="refresh" content="%d;url=%s"/></head></html>',
-      $delay, $url);
+    printf('<html><head><meta http-equiv="refresh" content="%d;url=%s"/></head></html>', $delay, $url);
 
     // empty any buffers
     flush();

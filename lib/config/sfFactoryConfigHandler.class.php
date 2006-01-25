@@ -72,7 +72,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
     $instances = array();
 
     // available list of factories
-    $factories = array('controller', 'request', 'storage', 'user', 'security_filter', 'execution_filter', 'view_cache');
+    $factories = array('controller', 'request', 'response', 'storage', 'user', 'security_filter', 'execution_filter', 'view_cache');
 
     // let's do our fancy work
     foreach ($factories as $factory)
@@ -127,6 +127,14 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
 
           // append instance initialization
           $inits[] = sprintf("  \$this->request->initialize(\$this, %s);", $parameters);
+          break;
+
+        case 'response':
+          // append instance creation
+          $instances[] = sprintf("  \$this->response = sfResponse::newInstance('%s');", $class);
+
+          // append instance initialization
+          $inits[] = sprintf("  \$this->response->initialize(\$this);");
           break;
 
         case 'security_filter':

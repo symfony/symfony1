@@ -28,6 +28,7 @@ class sfContext
     $controller        = null,
     $databaseManager   = null,
     $request           = null,
+    $response          = null,
     $storage           = null,
     $securityFilter    = null,
     $viewCacheManager  = null,
@@ -222,6 +223,16 @@ class sfContext
   public function getRequest ()
   {
     return $this->request;
+  }
+
+  /**
+   * Retrieve the response.
+   *
+   * @return sfResponse The current sfResponse implementation instance.
+   */
+  public function getResponse ()
+  {
+    return $this->response;
   }
 
   /**

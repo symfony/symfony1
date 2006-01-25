@@ -583,6 +583,23 @@ class sfWebRequest extends sfRequest
   }
 
   /**
+   * Get cookie value.
+   *
+   * @return mixed
+   */
+  public function getCookie ($name, $defaultValue = null)
+  {
+    $retval = $defaultValue;
+
+    if (isset($_COOKIE[$name]))
+    {
+      $retval = $_COOKIE[$name];
+    }
+
+    return $retval;
+  }
+
+  /**
    * Execute the shutdown procedure.
    *
    * @return void
