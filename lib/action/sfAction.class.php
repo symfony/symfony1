@@ -332,7 +332,7 @@ abstract class sfAction
   {
     if ($condition)
     {
-      $this->redirecti($url);
+      $this->redirect($url);
     }
   }
 
