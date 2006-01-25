@@ -12,9 +12,9 @@ function run_test($task, $args)
 
   $app = $args[0];
 
-  if (!is_dir($app))
+  if (!is_dir(sfConfig::get('sf_app_dir').DIRECTORY_SEPARATOR.$app))
   {
-    throw new Exception('You must provide the app to test.');
+    throw new Exception('The app "'.$app.'" does not exist.');
   }
 
   // define constants
