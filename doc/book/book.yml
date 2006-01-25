@@ -36,6 +36,7 @@ parts:
     - pager
     - generator
     - finder
+    - plugin
     - shopping_cart
     - custom_helper
     - validate_form
