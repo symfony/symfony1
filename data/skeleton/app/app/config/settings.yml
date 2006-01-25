@@ -1,5 +1,6 @@
 prod:
-  no_script_name:           ##NO_SCRIPT_NAME##
+  .settings:
+    no_script_name:           ##NO_SCRIPT_NAME##
 
 dev:
   .settings:
@@ -17,6 +18,7 @@ test:
     cache:                  off
     stats:                  off
     web_debug:              off
+    no_script_name:         off
 
 all:
 #  .actions:
