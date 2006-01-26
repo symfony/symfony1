@@ -78,7 +78,7 @@ class sfViewCacheManager
     $request = $this->context->getRequest();
     $hostName = $request->getHost();
     $hostName = preg_replace('/[^a-z0-9]/i', '_', $hostName);
-    $hostName = preg_replace('/_+/', '_', $hostName);
+    $hostName = strtolower(preg_replace('/_+/', '_', $hostName));
     $uri = '/'.$hostName.'/'.$uri;
 
     // replace multiple /
