@@ -69,7 +69,7 @@ class sfLogger extends sfLog
       }
       else
       {
-        require_once $sf_symfony_lib_dir.'/log/sfLogger/no.class.php';
+        require_once sfConfig::get('sf_symfony_lib_dir').'/log/sfLogger/no.class.php';
         sfLogger::$logger = new sfNoLogger();
       }
     }
