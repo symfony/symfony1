@@ -88,6 +88,8 @@ function run_generate_propelcrud($task, $args)
   require_once($sf_symfony_lib_dir.'/generator/sfGenerator.class.php');
   require_once($sf_symfony_lib_dir.'/generator/sfGeneratorManager.class.php');
   require_once($sf_symfony_lib_dir.'/generator/sfPropelCrudGenerator.class.php');
+  require_once($sf_symfony_lib_dir.'/util/sfToolkit.class.php');
+  require_once($sf_symfony_lib_dir.'/util/sfFinder.class.php');
   require_once($sf_symfony_lib_dir.'/util/sfInflector.class.php');
   require_once($sf_symfony_lib_dir.'/vendor/propel/Propel.php');
   require_once('lib/model/'.$model_class.'.php');
