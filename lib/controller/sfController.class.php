@@ -26,6 +26,7 @@ abstract class sfController
     $maxForwards              = 5,
     $renderMode               = sfView::RENDER_CLIENT,
     $executionFilterClassName = null,
+    $renderingFilterClassName = null,
     $viewCacheClassName       = null;
 
   /**
@@ -259,8 +260,8 @@ abstract class sfController
 
         if ($sf_use_flash = sfConfig::get('sf_use_flash'))
         {
-          // register flash filter before execution filter
-          $flashFilter = new sfFlashBeforeFilter();
+          // register flash filter
+          $flashFilter = new sfFlashFilter();
           $flashFilter->initialize($this->context);
           $filterChain->register($flashFilter);
         }
@@ -270,13 +271,10 @@ abstract class sfController
         $execFilter->initialize($this->context);
         $filterChain->register($execFilter);
 
-        if ($sf_use_flash)
-        {
-          // register flash filter after execution filter
-          $flashFilter = new sfFlashAfterFilter();
-          $flashFilter->initialize($this->context);
-          $filterChain->register($flashFilter);
-        }
+        // register the rendering filter
+        $renderFilter = new $this->renderingFilterClassName();
+        $renderFilter->initialize($this->context);
+        $filterChain->register($renderFilter);
 
         if ($moduleName == sfConfig::get('sf_error_404_module') && $actionName == sfConfig::get('sf_error_404_action'))
         {
@@ -490,6 +488,18 @@ abstract class sfController
   public function setExecutionFilterClassName($className)
   {
     $this->executionFilterClassName = $className;
+  }
+
+  /**
+   * Set the name of the RenderingFilter class that is used in forward()
+   *
+   * @param string The class name of the RenderingFilter to use
+   *
+   * @return void
+   */
+  public function setRenderingFilterClassName($className)
+  {
+    $this->renderingFilterClassName = $className;
   }
 
   /**

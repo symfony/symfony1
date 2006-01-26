@@ -15,7 +15,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfFlashAfterFilter extends sfFilter
+class sfFlashFilter extends sfFilter
 {
   /**
    * Execute this filter.
@@ -25,6 +25,41 @@ class sfFlashAfterFilter extends sfFilter
    * @return void
    */
   public function execute ($filterChain)
+  {
+    static $loaded;
+
+    // execute this filter only once
+    if (!isset($loaded))
+    {
+      // load the filter
+      $loaded = true;
+
+      // flag current flash to be removed after the execution filter
+      $context = $this->getContext();
+      $userAttributeHolder = $context->getUser()->getAttributeHolder();
+      $names = $userAttributeHolder->getNames('symfony/flash');
+      if ($names)
+      {
+        $context->getLogger()->info('{sfController} flag old flash messages ("'.implode('", "', $names).'")');
+        foreach ($names as $name)
+        {
+          $userAttributeHolder->set($name, true, 'symfony/flash/remove');
+        }
+      }
+    }
+
+    // execute next filter
+    $filterChain->execute();
+  }
+
+  /**
+   * Execute this filter.
+   *
+   * @param FilterChain A FilterChain instance.
+   *
+   * @return void
+   */
+  public function executeBeforeRendering ($filterChain)
   {
     static $loaded;
 

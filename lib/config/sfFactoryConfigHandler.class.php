@@ -72,7 +72,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
     $instances = array();
 
     // available list of factories
-    $factories = array('controller', 'request', 'response', 'storage', 'user', 'security_filter', 'execution_filter', 'view_cache');
+    $factories = array('controller', 'request', 'response', 'storage', 'user', 'security_filter', 'execution_filter', 'rendering_filter', 'view_cache');
 
     // let's do our fancy work
     foreach ($factories as $factory)
@@ -164,6 +164,11 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
         case 'execution_filter':
           // append execution filter class name
           $inits[] = sprintf("  \$this->controller->setExecutionFilterClassName('%s');", $class);
+          break;
+
+        case 'rendering_filter':
+          // append rendering filter class name
+          $inits[] = sprintf("  \$this->controller->setRenderingFilterClassName('%s');", $class);
           break;
 
         case 'view_cache':

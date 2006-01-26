@@ -280,11 +280,6 @@ class sfPHPView extends sfView
       // render to client
       if ($mode == sfView::RENDER_CLIENT)
       {
-        if ($sf_logging_active)
-        {
-          $this->getContext()->getLogger()->info('{sfPHPView} render to client');
-        }
-
         $retval = $this->setPageCacheContent($retval);
 
         $this->getContext()->getResponse()->setContent($retval);

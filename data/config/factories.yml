@@ -19,6 +19,9 @@ default:
   execution_filter:
     class: sfExecutionFilter
 
+  rendering_filter:
+    class: sfRenderingFilter
+
   security_filter:
     class: sfBasicSecurityFilter
 
