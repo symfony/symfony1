@@ -25,6 +25,8 @@ An application can run in various **environments** to use, for instance, differe
 
 For instance, a test environment will log alerts and errors, while a production environment will only log errors. The cache acceleration is often deactivated in a development environment but activated in test and production environments. And the development and tests may need test data, stored in a database distinct from the production one. All environments can live together on the same machine, although a production server generally contains only the production environment.
 
+>**Note**: If you use symfony from a [sandbox](installation.txt), you don't need to setup a project nor an application, since the sandbox already has one 'sf_sandbox' project and one 'frontend' application. You don't need to setup the web server either, since your application is in the `web/` root directory.
+
 Pake
 ----
 
@@ -50,6 +52,7 @@ Then, in order to initialize the project and generate the basic files and direct
 
 Here is an overview of the file structure created:
 
+    apps/
     batch/
     cache/
     config/
@@ -71,12 +74,13 @@ The project is not yet ready to be seen : it requires at least one application. 
 
 This will create a `myapp` directory in the `apps/` folder of the project root, with a default application configuration and a set of directories ready to host the file of your website: 
 
-    myapp/
-      config/
-      i18n/
-      lib/
-      modules/
-      templates/
+    apps/
+      myapp/
+        config/
+        i18n/
+        lib/
+        modules/
+        templates/
 
 Some php files corresponding to the front controllers of each default environment are also created in the project root `web` directory:
 
@@ -106,6 +110,12 @@ To be able to access and test the new application, the web server has to be conf
       </Directory>
     </VirtualHost>
 
+>**Note**: In the above configuration, the `$data_dir` in the `Alias` line has to be replaced by your PEAR data directory. For example, for *nix, you should type:
+>
+>         Alias /sf /usr/local/lib/php/data/symfony/web/sf
+>
+>You will find more about the PEAR directories in the [installation chapter](installation.txt).
+
 Restart Apache, and that's it: the newly created application can now be called and viewed through a standard web browser at the url:
 
     http://myapp.example.com/index.php/
@@ -114,7 +124,7 @@ or, in debug mode:
 
     http://myapp.example.com/myapp_dev.php/
 
->**Note**: symfony uses the `mod_rewrite` module to display 'smart' urls. If your version of apche is not compiled with `mod_rewrite`, check you have the mod_rewrite DSO installed and the following lines in your `httpd.conf`:
+>**Note**: Symfony uses the `mod_rewrite` module to display 'smart' urls. If your version of apache is not compiled with `mod_rewrite`, check that you have the mod_rewrite DSO installed and the following lines in your `httpd.conf`:
 >
 >     AddModule mod_rewrite.c
 >     LoadModule rewrite_module modules/mod_rewrite.so
@@ -182,7 +192,7 @@ That seems good. Now the SVN repository has the reference version (and the histo
     $ svn co file:///$SVNREP_DIR/myproject/trunk myproject
     $ ls myproject
 
-That's it. Now you can work on the files located in `/home/steve/myproject` and **commit** your modifications to the repository. Don't forget to do some cleanup and erase the `myproject.origin` directory, which is now useless.
+That's it. Now you can work on the files located in `/home/steve/myproject/` and **commit** your modifications to the repository. Don't forget to do some cleanup and erase the `myproject.origin` directory, which is now useless.
 
 There is one remaining thing to setup. If you commit your working directory to the repository, you may copy some unwanted files, like the ones located in the `cache` and `log` directories of your project. So you need to specify an ignore list to svn for this project. You also need to set full access to the `cache/` and `log/` directories again - SVN doesn't store the access rights:
 
