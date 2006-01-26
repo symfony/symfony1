@@ -4,15 +4,70 @@ Installing symfony
 Overview
 --------
 
-This chapter describes the steps to install the symfony framework, either from a PEAR package or manually from the source repository.
+This chapter describes the steps to install the symfony framework, either from a 'sandbox' archive, from a PEAR package or manually from the source repository.
 
 Introduction
 ------------
 
-The symfony framework can be used for several projects, and updated independently of any project using it. That's why the installation isn't as simple as unzipping some files into a directory. However, once installed properly, projects based on symfony won't need a specific update each time the global libraries are modified.
+The symfony framework is a set of files written in PHP. A project based on symfony uses these files, so installing symfony means getting these files and making them available for your project.
+
+Symfony can be used for one or many projects. If you work on a single project, you may want to embed the framework within the application you develop. On the other hand, if you choose to use symfony for more than one project, you will prefer to keep all the symfony files in one single place to make the upgrade easier. 
+
+In addition, when developing an application, you will probably need to install symfony twice: Once for your development environment, and once for the host server (unless your hosts already has symfony installed).
+
+All these different needs have different answers, that's why you have several alternatives to install symfony:
+
+- The **sandbox** is an empty symfony project where all the required libraries are already included, and where the basic configuration is already done. It is made mostly for symfony beginners, who want to play with the framework or try the tutorials without installing anything.
+- The **PEAR installation** is recommended to those who want to run several symfony-based projects, with an easy way to upgrade. It requires PEAR version 1.4.0 or higher, which is bundled in most PHP distributions.
+- The **manual installation** is meant to be used only by advanced PHP developers, who what to take advantage of the latest patches or add features of their own.
+
+Note that the symfony framework evolves quickly, and that a new stable version can come out only a few days after your first installation. You have to think of the framework upgrade as a major concern, and that's why the first solution is not recommended if you develop a website for real. In fact, an application develop with the sandbox can not be upgraded easily.
+
+Prerequisites
+-------------
+
+In order to use symfony, you need to have PHP5 and a web server installed. If you want to use the PEAR install, you will also need [PEAR][1]. If you plan on using persistent data, a database will be needed. Symfony is compatible with MySQL, PostgreSQL, Oracle, MSSQL, and any other database having a [Creole](http://creole.phpdb.org/wiki/) driver.
+
+>**Note**: You can find many [LAMP](http://en.wikipedia.org/wiki/LAMP_%28software_bundle%29) packages offered for download, which contain the Apache server, the MySQL database and PHP all bundled together and configured for a given platform ([XAMPP](http://www.apachefriends.org/en/xampp.html) for many platforms, [MAMP](http://www.mamp.info/en/home/) for Mackintosh, [WAMP](http://en.wikipedia.org/wiki/WAMP) for Windows, etc.). If you don't have PHP5 installed, they are probably the best option for you to start.
+
+The standard distributions of PHP5 normally work perfectly with symfony. However, as all the installations are different, and because many of the developers compile PHP themselves, it sometimes happens that your web server throws errors because of missing components in PHP. If you can't manage to have symfony working, check out the [installation forum](http://www.symfony-project.com/forum/index.php/f/6/), where many individual cases were solved and can help to solve yours.
+
+>**Note**: Some packages sometimes embed both PHP4 and PHP5. Symfony only works with PHP5. To check the version of PHP that you are using, type in a command line:
+>
+>         $ php -v
+>
+
+The sandbox
+-----------
+
+The sandbox is a simple archive of files. It contains an empty symfony project where all the required libraries	(symfony, pake, creole, propel and phing) are already included. To install it, just unpack the archive under the root web directory configured for your server (usually	`web/`). It will work "out of the box", without configuration or any additional package.
+
+The sandbox is intended for you to practice with symfony in a local computer, not really to develop complex applications that may end up on the web. However, the version of symfony shipped with the sandbox is fully functional and equivalent to the one you can install via PEAR. Beware that the sandbox is not easily upgradeable.
+
+Get the sandbox here: [http://www.symfony-project.com/get/sf_sandbox.tgz](http://www.symfony-project.com/get/sf_sandbox.tgz). After unpacking the archive, test the sandbox by requesting the following URL:
+    
+    http://localhost/sf_sandbox/web/
+    
+You should see a congratulations page.
+
+f you are in the `sf_sandbox/` directory, you can use the command line to do usual site management operations. For instance, to clear the cache, type:
+
+    $ ./symfony.sh clear-cache                      (*nix)
+    symfony clear-cache                             (Windows)
+    
+To discover all the available actions of the symfony command line, type:
+
+    $ ./symfony.sh -T                               (*nix)
+    symfony -T            
+
+Refer to the included README file for more information.
+
+After downloading the sandbox, you might want to follow the [My first project](http://www.symfony-project.com/tutorial/my_first_project.html) tutorial to discover the basics of symfony development.
 
 Installing symfony from a PEAR Package
 --------------------------------------
+
+### PEAR setup
 
 [PEAR][1] is used by PHP to install libraries from a central repository. The symfony project has its own repository, or channel. Note that channels are only available since version 1.4.0 of PEAR, so you should upgrade if your version is older:
 
@@ -25,6 +80,8 @@ The first thing to do is to add the 'symfony' channel:
 To see the libraries available in this channel:
 
     $ pear remote-list -c symfony
+    
+### Symfony installation
 
 Now you are ready to install the latest stable version of symfony and all its dependencies with:
 
@@ -34,10 +91,10 @@ That's it: symfony is installed. You may now create a new project with the new c
 
 Symfony needs a few other packages to run; some are included in the installation, and some require you to install them if they are not present:
 
-* [pake](http://www.pake-project.org/) : installed automatically. You will learn more about the Pake utility in the [next chapter](project_creation.txt).
-* [creole](http://creole.tigris.org/) : installed automatically (used for database access)
-* [propel](http://propel.phpdb.org/trac/) : installed automatically (used for object/relational mapping)
-* [phing](http://phing.info/wiki/index.php) : requires manual installation
+* [pake](http://www.pake-project.org/): installed automatically. You will learn more about the Pake utility in the [next chapter](project_creation.txt).
+* [creole](http://creole.tigris.org/): installed automatically (used for database access)
+* [propel](http://propel.phpdb.org/trac/): installed automatically (used for object/relational mapping)
+* [phing](http://phing.info/wiki/index.php): requires manual installation
 
     $ pear install http://phing.info/pear/phing-current.tgz 
 
@@ -45,8 +102,7 @@ To have a glimpse of all the tasks that you can perform directly with the comman
 
     $ symfony -T
 
-Where are the symfony files ?
------------------------------
+### Where are the symfony files ?
 
 The symfony libraries are now installed in:
 
@@ -101,18 +157,17 @@ You can check which version of symfony is installed by typing:
 Installing symfony by hand
 --------------------------
 
-If you don't want to use PEAR, you can still download the latest version directly from the  SVN repository, by requesting a checkout, and install it by hand:
+If you don't want to use PEAR, you can still download the latest version directly from the SVN repository, by requesting a checkout, and install it by hand:
 
     $ mkdir /home/steve/mysymfony
     $ cd /home/steve/mysymfony
     $ svn co http://svn.symfony-project.com/trunk/ .
 
-For your project to make use of this installation, you will have to create two symbolic links in you project from the `vendor` directory to the symfony `lib` directory:
+For your project to make use of this installation, you will have to create two symbolic links in you project from the `lib` directory to the symfony `lib` directory:
 
     $ cd /home/steve/myproject
     $ ln -sf /home/steve/mysymfony/lib lib/symfony
     $ ln -sf /home/steve/mysymfony/data data/symfony
-
 
 In addition, you will have to make the shortcuts to allow the call to the command line tools `pake` and `symfony`.
 
@@ -123,7 +178,7 @@ Installing symfony without command line
 
 If you want to host your website in a server that you can't access with a command line (and that might happen if your hosting provider only allows FTP access), you will need to install the two symfony directories manually in your project tree structure.
 
-First, get the .tgz file of the symfony framework package from the symfony project website. Uncompress it into a temporary folder. You will see the following file structure:
+First, get the .tgz file of the symfony framework package from the symfony project website. Unpack it into a temporary folder. You will see the following file structure:
 
     package.xml
     symfony/
@@ -158,9 +213,16 @@ Now you need to copy some files from the symfony package into your project direc
 copy | symfony/data/* | to | myproject/data/symfony/
 copy | symfony/lib/*  | to | myproject/lib/symfony/  
     
-You're done : the distant project should now work.
+If you're unsure of what to expect, you can [download the sandbox](http://www.symfony-project.com/get/sf_sandbox.tgz) to see how a project embedded with the framework should look like. In addition, the [sandox creation script](http://www.symfony-project.com/trac/browser/trunk/bin/create_quickstart.sh) details all the operations needed to built a project able to run on its own.
 
 >**Hint**: some hosting providers won't run scripts in php5 unless their suffix is `.php5`. If this is the case of your distant server, you will need to rename the `index.php` file found in `myproject/web/` into `index.php5`. Don't bother to rename the other files : since symfony uses a front controller, only the `index.php` file will have to be declared as a php5 script (learn more about the front controller feature in the [controller chapter](controller.txt))       
+
+User-contributed guides
+-----------------------
+
+The [symfony wiki](http://www.symfony-project.com/trac/wiki) contains a few articles describing step-by-step installations on various platforms.
+
+The [forum](http://www.symfony-project.com/forum/index.php/f/6/) has a dedicated section where many installation issues have already been solved, and where you will find a symfony user willing to help you in minutes if you have a new problem.
 
 [1]: http://pear.php.net          "Pear"
 [2]: http://www.pake-project.com  "Pake"
