@@ -70,6 +70,7 @@ abstract class sfView
     $decoratorTemplate  = null,
     $directory          = null,
     $slots              = array(),
+    $componentSlots     = array(),
     $template           = null;
 
   protected
@@ -495,7 +496,51 @@ abstract class sfView
    */
   public function hasSlot($name)
   {
-    return array_key_exists($name, $this->slots);
+    return isset($this->slots[$name]);
+  }
+
+  /**
+   * Set the module and action to be executed in place of a particular
+   * template attribute.
+   *
+   * @param string A template attribute name.
+   * @param string A module name.
+   * @param string A omponent name.
+   *
+   * @return void
+   */
+  public function setComponentSlot ($attributeName, $moduleName, $componentName)
+  {
+    $this->componentSlots[$attributeName]                   = array();
+    $this->componentSlots[$attributeName]['module_name']    = $moduleName;
+    $this->componentSlots[$attributeName]['component_name'] = $componentName;
+  }
+
+  /**
+   * Indicates whether or not a component slot exists.
+   *
+   * @param  string component slot name
+   * @return bool true, if the component slot exists, otherwise false.
+   */
+  public function hasComponentSlot($name)
+  {
+    return isset($this->componentSlots[$name]);
+  }
+
+  /**
+   * Get a component slot.
+   *
+   * @param  string component slot name
+   * @return array component slot.
+   */
+  public function getComponentSlot($name)
+  {
+    if (isset($this->componentSlots[$name]))
+    {
+      return array($this->componentSlots[$name]['module_name'], $this->componentSlots[$name]['component_name']);
+    }
+
+    return null;
   }
 
   /**

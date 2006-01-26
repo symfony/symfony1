@@ -17,6 +17,85 @@
  * @version    SVN: $Id$
  */
 
+function include_component_slot($name)
+{
+  $context = sfContext::getInstance();
+
+  $actionStackEntry = $context->getController()->getActionStack()->getLastEntry();
+  $viewInstance     = $actionStackEntry->getViewInstance();
+
+  if (!$viewInstance->hasComponentSlot($name))
+  {
+    // cannot find component slot
+    $error = 'The component slot "%s" is not set';
+    $error = sprintf($error, $name);
+
+    throw new sfConfigurationException($error);
+  }
+
+  $componentSlot = $viewInstance->getComponentSlot($name);
+
+  include_component($componentSlot[0], $componentSlot[1]);
+}
+
+function include_component($moduleName, $componentName, $vars = array())
+{
+  $context    = sfContext::getInstance();
+  $controller = $context->getController();
+
+  if (!$controller->componentExists($moduleName, $componentName))
+  {
+    // cannot find component
+    $error = 'The component does not exist: "%s", "%s"';
+    $error = sprintf($error, $moduleName, $componentName);
+
+    throw new sfConfigurationException($error);
+  }
+
+  // create an instance of the action
+  $componentInstance = $controller->getComponent($moduleName, $componentName);
+
+  // initialize the action
+  if ($componentInstance->initialize($context))
+  {
+    // dispatch component
+    $componentToRun = 'execute'.ucfirst($componentName);
+    if (!method_exists($componentInstance, $componentToRun))
+    {
+      if (method_exists($componentInstance, 'execute'))
+      {
+        $componentToTun = 'execute';
+      }
+      else
+      {
+        // component not found
+        $error = 'sfComponent initialization failed for module "%s", component "%s"';
+        $error = sprintf($error, $moduleName, $componentName);
+        throw new sfInitializationException($error);
+      }
+    }
+
+    if (sfConfig::get('sf_logging_active')) $context->getLogger()->info('{sfComponent} call "'.$moduleName.'->'.$componentToRun.'()'.'"');
+
+    // run component
+    $componentInstance->$componentToRun();
+
+    // get component vars
+    $componentVars = $componentInstance->getVarHolder()->getAll();
+
+    // include partial
+    include_partial($moduleName.'/'.$componentName, array_merge($vars, $componentVars));
+  }
+  else
+  {
+    // component failed to initialize
+    $error = 'Component initialization failed for module "%s", component "%s"';
+    $error = sprintf($error, $moduleName, $componentName);
+
+    throw new sfInitializationException($error);
+  }
+}
+
 function include_partial($name, $vars = array())
 {
   // partial is in another module?
@@ -34,7 +113,7 @@ function include_partial($name, $vars = array())
 
   $context = sfContext::getInstance();
 
-  $lastActionEntry = $context->getActionStack()->getLastEntry();
+  $lastActionEntry  = $context->getActionStack()->getLastEntry();
   $firstActionEntry = $context->getActionStack()->getFirstEntry();
 
   // global variables

@@ -22,7 +22,7 @@ abstract class sfController
 {
   private
     $context                  = null,
-    $actionClasses            = array(),
+    $controllerClasses        = array(),
     $maxForwards              = 5,
     $renderMode               = sfView::RENDER_CLIENT,
     $executionFilterClassName = null,
@@ -39,6 +39,19 @@ abstract class sfController
   }
 
   /**
+   * Indicates whether or not a module has a specific component.
+   *
+   * @param string A module name.
+   * @param string An component name.
+   *
+   * @return bool true, if the component exists, otherwise false.
+   */
+  public function componentExists ($moduleName, $componentName)
+  {
+    return $this->controllerExists($moduleName, $componentName, 'component');
+  }
+
+  /**
    * Indicates whether or not a module has a specific action.
    *
    * @param string A module name.
@@ -47,6 +60,11 @@ abstract class sfController
    * @return bool true, if the action exists, otherwise false.
    */
   public function actionExists ($moduleName, $actionName)
+  {
+    return $this->controllerExists($moduleName, $actionName, 'action');
+  }
+
+  private function controllerExists ($moduleName, $controllerName, $extension)
   {
     // all directories to look for modules
     $dirs = array(
@@ -72,14 +90,16 @@ abstract class sfController
       }
 
       // one action per file or one file for all actions
-      $file        = $dir.'/'.$actionName.'Action.class.php';
-      $module_file = $dir.'/actions.class.php';
+      $classFile   = strtolower($extension);
+      $classSuffix = ucfirst(strtolower($extension));
+      $file        = $dir.'/'.$controllerName.$classSuffix.'.class.php';
+      $module_file = $dir.'/'.$classFile.'s.class.php';
       if (is_readable($file))
       {
         // action class exists
         require_once($file);
 
-        $this->actionClasses[$moduleName.'_'.$actionName] = $actionName.'Action';
+        $this->controllerClasses[$moduleName.'_'.$controllerName.'_'.$classSuffix] = $controllerName.$classSuffix;
 
         return true;
       }
@@ -89,11 +109,10 @@ abstract class sfController
         require_once($module_file);
 
         // action is defined in this class?
-        $defined = in_array('execute'.ucfirst($actionName), get_class_methods($moduleName.'Actions'));
-
+        $defined = in_array(strtolower('execute'.$controllerName), array_map('strtolower', get_class_methods($moduleName.$classSuffix.'s')));
         if ($defined)
         {
-          $this->actionClasses[$moduleName.'_'.$actionName] = $moduleName.'Actions';
+          $this->controllerClasses[$moduleName.'_'.$controllerName.'_'.$classSuffix] = $moduleName.$classSuffix.'s';
         }
 
         return $defined;
@@ -312,12 +331,31 @@ abstract class sfController
    */
   public function getAction ($moduleName, $actionName)
   {
-    if (!isset($this->actionClasses[$moduleName.'_'.$actionName]))
+    return $this->getController($moduleName, $actionName, 'action');
+  }
+
+  /**
+   * Retrieve a Component implementation instance.
+   *
+   * @param  string A module name.
+   * @param  string A component name.
+   *
+   * @return Component A Component implementation instance, if the component exists, otherwise null.
+   */
+  public function getComponent ($moduleName, $componentName)
+  {
+    return $this->getController($moduleName, $componentName, 'component');
+  }
+
+  private function getController ($moduleName, $controllerName, $extension)
+  {
+    $classSuffix = ucfirst(strtolower($extension));
+    if (!isset($this->controllerClasses[$moduleName.'_'.$controllerName.'_'.$classSuffix]))
     {
-      $this->actionExists($moduleName, $actionName);
+      $this->controllerExists($moduleName, $controllerName, $extension);
     }
 
-    $class = $this->actionClasses[$moduleName.'_'.$actionName];
+    $class = $this->controllerClasses[$moduleName.'_'.$controllerName.'_'.$classSuffix];
 
     // fix for same name classes
     $moduleClass = $moduleName.'_'.$class;

@@ -20,8 +20,6 @@
  */
 abstract class sfActions extends sfAction
 {
-  const ALL = 'ALL';
-
   /**
    * Execute any application/business logic for this action.
    *

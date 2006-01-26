@@ -216,6 +216,20 @@ class sfContext
   }
 
   /**
+   * Retrieve the curretn view instance for this context.
+   *
+   * @return sfView The currently view instance, if one is set,
+   *                otherwise null.
+   */
+  public function getCurrentViewInstance ()
+  {
+    // get the last action stack entry
+    $actionEntry = $this->actionStack->getLastEntry();
+
+    return $actionEntry ? $actionEntry->getViewInstance() : null;
+  }
+
+  /**
    * Retrieve the request.
    *
    * @return sfRequest The current sfRequest implementation instance.

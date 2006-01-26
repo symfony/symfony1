@@ -82,6 +82,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
 
       $data[] = $this->addLayout($viewName);
       $data[] = $this->addSlots($viewName);
+      $data[] = $this->addComponentSlots($viewName);
       $data[] = $this->addHtmlHead($viewName);
 
       $data[] = "  }\n";
@@ -110,6 +111,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
 
     $data[] = $this->addLayout();
     $data[] = $this->addSlots();
+    $data[] = $this->addComponentSlots();
     $data[] = $this->addHtmlHead();
 
     $data[] = "  }\n";
@@ -124,6 +126,24 @@ class sfViewConfigHandler extends sfYamlConfigHandler
                       date('Y/m/d H:i:s'), implode('', $data));
 
     return $retval;
+  }
+
+  private function addComponentSlots($viewName = '')
+  {
+    $data = '';
+
+    $components = $this->mergeConfigValue('components', $viewName);
+    foreach ($components as $name => $component)
+    {
+      if (count($component) > 1)
+      {
+        if (sfConfig::get('sf_logging_active')) sfLogger::getInstance()->info("{sfViewConfigHandler} setting components for view: $viewName  $name : {$component[0]} : {$component[1]}");
+        $data .= "    \$this->setComponentSlot('$name', '{$component[0]}', '{$component[1]}');\n";
+        $data .= "    if (sfConfig::get('sf_logging_active')) \$context->getLogger()->info('{sfViewConfig} set component \"$name\" ({$component[0]}/{$component[1]})');\n";
+      }
+    }
+
+    return $data;
   }
 
   private function addSlots($viewName = '')
@@ -169,7 +189,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
       {
         if (count($slot) > 1)
         {
-          sfLogger::getInstance()->info("{sfViewConfigHandler} setting slots for view: $viewName  $name : {$slot[0]} : {$slot[1]}");
+          if (sfConfig::get('sf_logging_active')) sfLogger::getInstance()->info("{sfViewConfigHandler} setting slots for view: $viewName  $name : {$slot[0]} : {$slot[1]}");
           $data .= "    \$this->setSlot('$name', '{$slot[0]}', '{$slot[1]}');\n";
           $data .= "    if (sfConfig::get('sf_logging_active')) \$context->getLogger()->info('{sfViewConfig} set slot \"$name\" ({$slot[0]}/{$slot[1]})');\n";
         }

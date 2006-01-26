@@ -141,6 +141,9 @@ class sfPHPView extends sfView
     $actionStackEntry = $context->getController()->getActionStack()->getLastEntry();
     $action           = $actionStackEntry->getActionInstance();
 
+    // store our current view
+    $actionStackEntry->setViewInstance($this);
+
     // require our configuration
     $viewConfigFile = $this->moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/view.yml';
     require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$viewConfigFile));
