@@ -49,36 +49,38 @@ XML Data model
 
 In order to create the data object model that PHP will be using, you need to translate whatever relational model your database has to an object data model. Propel does that with an XML format file called `schema.xml`.
 
-As there can be only one object data model per project, the `schema.xml` file must be located in the `myproject/config/` directory. This implies that all applications of your project will share the same data object model.
+The `schema.xml` file must be located in the `myproject/config/` directory. This implies that all applications of your project will share the same data object model.
 
 When you create an application with the `symfony init-app` command, a file called `schema.xml.sample`, containing the first lines of any `schema.xml`, is provided as a sample in the same directory (feel free to erase it as soon as your own schema is written):
 
     [xml]
     <?xml version="1.0" encoding="UTF-8"?>
-     <database name="symfony" defaultIdMethod="native">
+     <database name="symfony" defaultIdMethod="native" noxsd="true">
      </database>
 
-The `name` of the database must keep the value `symfony` to allow the integration of Propel and Symfony. It is not the actual name of your database, because this name depends on the application configuration - and the environment - that you will describe in the file `myproject/apps/myapp/config/orm.yml`.
+The `name` attribute of the `<database>` tag is the name of the database connection. It is not the actual name of your database, because this name depends on the application configuration - and the environment - that you will describe in the file `myproject/apps/myapp/config/orm.yml`.
+
+>**Note**: As a matter of fact, you can setup several database connections for one project, to be able to dispatch your data in several databases. To that extent, you can either write several `schema.xml` files (prefix them with a spacial name, but keep the `schema.xml` at the end so that they are recognozed) or add other `<database>` tags to your `schema.xml` file.
 
 ### Example
 
 Now, let's imagine that you have a database 'blog' already containing data in two tables: 'blog_article' and 'blog_comment' with the following structure:
 
-| blog_article | blog_comment |
-| ------------ | ------------ |
-| id           | id           |
-| title        | article_id   |
-| content      | author       |
-|              | date         |
-|              | content      |
+  | blog_article | blog_comment |
+  | ------------ | ------------ |
+  | id           | id           |
+  | title        | article_id   |
+  | content      | author       |
+  |              | date         |
+  |              | content      |
 
 The related `schema.xml` should look like:
 
     [xml]
     <?xml version="1.0" encoding="UTF-8"?>
-     <database name="symfony" defaultIdMethod="native">
+     <database name="symfony" defaultIdMethod="native" noxsd="true">
         <table name="blog_article" phpName="Article">
-          <column name="id" type="integer" required="true" primaryKey="true" autoincrement="true" />
+          <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
           <column name="title" type="varchar" size="100" />
           <index name="title_index">
             <index-column name="title"/>
@@ -86,7 +88,7 @@ The related `schema.xml` should look like:
           <column name="content" type="longvarchar" />
         </table>
         <table name="blog_comment" phpName="Comment">
-          <column name="id" type="integer" required="true" primaryKey="true" autoincrement="true" />
+          <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
           <column name="article_id" type="integer" />
           <foreign-key foreignTable="blog_article">
             <reference local="article_id" foreign="id"/>
@@ -105,7 +107,7 @@ The `phpName` given to the tables is the name of the object that will give you a
 
 Columns have a `type` attribute that can take the usual values: `boolean`, `integer`, `float`, `date`, `varchar`, `longvarchar`, etc. The `varchar`-type columns can have a `size` attributes that specifies the maximum number of characters of the column. For text content over 256 characters, you need to use the `longchar` type, which has no size but can not exceed 65Kb (mysql specific). Note that the `date` and `timestamp` types have the usual limitations of Unix dates and can not be set to a date prior to 1970-01-01. As you may need to set older dates (for instance for dates of birth), a format of dates 'before Unix' can be used with `bu_date` and `bu_timestamp`.
 
-The `primaryKey` attribute identifies primary key fields. Columns that are primary keys often have the same attributes (`type="integer" required="true" autoincrement="true"`). If you need to create an index, simply add an `<index>` tab. If you need to create a foreign key, simply add a `<foreign-key>` tag identifying the corresponding column in a foreign table.
+The `primaryKey` attribute identifies primary key fields. Columns that are primary keys often have the same attributes (`type="integer" required="true" autoIncrement="true"`). If you need to create an index, simply add an `<index>` tab. If you need to create a foreign key, simply add a `<foreign-key>` tag identifying the corresponding column in a foreign table.
 
 To learn more about this file format and its specifications, refer to the [documentation][2] and the [getting started][3] section that can be found in the Propel project website. 
 
@@ -128,24 +130,29 @@ And a brand new `schema.xml` built from your database structure is written in yo
 Database access configuration
 -----------------------------
 
-The data model is independent from the database used, but you will definitely use a database. The minimum information required by symfony to handle requests to the project database is the name, the access codes and the type of the database. This data should be entered in the `orm.yml` file located in the `myproject/apps/myapp/config/` directory:
+The data model is independent from the database used, but you will definitely use a database. The minimum information required by symfony to handle requests to the project database is the name, the access codes and the type of the database. This data should be entered in the `database.yml` file located in the `myproject/apps/myapp/config/` directory:
 
     prod:
-      host:     mydataserver
-      database: mydatabase
-      username: myusername
-      password: xxxxxxxxxx
-    
-    dev:
-      host:     localhost
-      database: mydatabase
-      username: root
-      password: xxxxxxxxx
+      symfony:
+        param:
+          host:     mydataserver
+          username: myusername
+          password: xxxxxxxxxx  
     
     all:
-      adapter:  mysql
+      symfony:
+        class: sfPropelDatabase
+        param:
+          phptype:  mysql
+          host:     localhost
+          database: mydatabase
+          username: root
+          password: xxxxxxxxx
+          compat_assoc_lower: true
 
-The permitted values of the `adapter` parameter are the ones of the RDBMS supported by Propel:
+The label given to the connection settings (`symfony` in this example) refers to the `name` attribute of the `<database>` tag in the `schema.xml`.
+
+The permitted values of the `phptype` parameter are the ones of the RDBMS supported by Propel:
 
 * mysql
 * sqlserver
@@ -161,6 +168,8 @@ Object data model files
 Now that the object data model is described, the PHP classes are ready to be generated. In your project directory, type the command:
 
     $ symfony build-model
+
+>**Note**: Some versions of Propel raise a "`Fatal error: Class 'XsltProcessor' not found`" at that point. This is because Propel tries to validate the schema using the 'xsd' PHP extension, and this extension is not installed by default. If this is the case, you can either install the xsd extension by hand or simply add a `noxsd="true"` attribute to the `<database>` tag in the `schema.xml` configuration.
 
 The base data access classes will be automatically created in the `myproject/lib/model/om/` directory:
 
@@ -281,7 +290,7 @@ For instance, to retrieve all articles, type:
     $c = new Criteria();
     $articles = ArticlePeer::doSelect($c);
 
-The class method `doSelect()` applies the selection filter received as a parameter. In this example, the `$c` object has no rules so the `doSelect()` call will return all the records of the `Article` table; the variable `$articles` will contain an array of all the objects of class `Article`. To access them one by one, you can simply use a `foreach` statement:
+The class method `doSelect()` applies the selection filter received as a parameter. In this example, the `$c` object has no rules so the `doSelect()` call will return all the records of the `Article` table (it's equivalent to a '`SELECT *`' in SQL). The variable `$articles` will contain an array of all the objects of class `Article`. To access them one by one, you can simply use a `foreach` statement:
 
     [php]
     foreach ($articles as $article)
@@ -289,7 +298,7 @@ The class method `doSelect()` applies the selection filter received as a paramet
       echo $article->getTitle();
     }
 
-But there is more to requests than getting all records or one record by its key. The power of the `Criteria` object is that you can add rules so it just like you would add 'WHERE' or 'ORDER BY' statements in an SQL query.
+But there is more to requests than getting all records or one record by its key. The power of the `Criteria` object is that you can add rules so it just like you would add '`WHERE`' or '`ORDER BY`' statements in an SQL query.
 
 To get all comments written by Steve, use:
 
