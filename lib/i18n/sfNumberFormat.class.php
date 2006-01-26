@@ -77,16 +77,16 @@ class sfNumberFormat
   /**
    * Create a new number format instance. The constructor can be instantiated
    * with a string that represent a culture/locale. Similarly, passing
-   * a CultureInfo or sfNumberFormatInfo instance will instantiated a instance
+   * a sfCultureInfo or sfNumberFormatInfo instance will instantiated a instance
    * for that particular culture. 
-   * @param mixed either null, a CultureInfo, a sfNumberFormatInfo, or string
+   * @param mixed either null, a sfCultureInfo, a sfNumberFormatInfo, or string
    * @return sfNumberFormat 
    */
   function __construct($formatInfo=null)
   {
     if(is_null($formatInfo))
       $this->formatInfo = sfNumberFormatInfo::getInvariantInfo();
-    else if($formatInfo instanceof CultureInfo)
+    else if($formatInfo instanceof sfCultureInfo)
       $this->formatInfo = $formatInfo->sfNumberFormat;
     else if($formatInfo instanceof sfNumberFormatInfo)
       $this->formatInfo = $formatInfo;
