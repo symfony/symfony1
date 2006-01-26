@@ -54,8 +54,8 @@ class sfHTTPNegotiator
     if (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
             return $this->languages;
 
-    //$basedir = CultureInfo::dataDir();
-    //$ext = CultureInfo::fileExt();
+    //$basedir = sfCultureInfo::dataDir();
+    //$ext = sfCultureInfo::fileExt();
 
     foreach(explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']) as $lang) 
     {
@@ -86,7 +86,7 @@ class sfHTTPNegotiator
         }
             }
 
-      if(CultureInfo::validCulture($lang))
+      if(sfCultureInfo::validCulture($lang))
         $this->languages[] = $lang;
         }
     
