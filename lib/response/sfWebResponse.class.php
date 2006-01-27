@@ -35,9 +35,11 @@ class sfWebResponse extends sfResponse
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this Response.
    */
-  public function initialize ($context)
+  public function initialize ($context, $parameters = array())
   {
-    parent::initialize($context);
+    parent::initialize($context, $parameters);
+
+    $this->headers['Content-Type'] = 'text/html';
 
     $this->statusText = array(
       '100' => 'Continue',
@@ -152,6 +154,28 @@ class sfWebResponse extends sfResponse
     }
 
     return $retval;
+  }
+
+  /**
+   * Set response content type.
+   *
+   * @param string value
+   *
+   * @return void
+   */
+  public function setContentType ($value)
+  {
+    $this->headers['Content-Type'] = $value;
+  }
+
+  /**
+   * Get response content type.
+   *
+   * @return array
+   */
+  public function getContentType ()
+  {
+    return $this->headers['Content-Type'];
   }
 
   /**

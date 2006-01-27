@@ -19,6 +19,9 @@
  */
 abstract class sfResponse
 {
+  protected
+    $parameter_holder = null;
+
   private
     $context = null,
     $content = '';
@@ -32,9 +35,12 @@ abstract class sfResponse
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this Response.
    */
-  public function initialize ($context)
+  public function initialize ($context, $parameters = array())
   {
     $this->context = $context;
+
+    $this->parameter_holder = new sfParameterHolder();
+    $this->parameter_holder->add($parameters);
   }
 
   public function getContext ()
@@ -103,6 +109,26 @@ abstract class sfResponse
     }
 
     echo $this->content;
+  }
+
+  public function getParameterHolder()
+  {
+    return $this->parameter_holder;
+  }
+
+  public function getParameter($name, $default = null, $ns = null)
+  {
+    return $this->parameter_holder->get($name, $default, $ns);
+  }
+
+  public function hasParameter($name, $ns = null)
+  {
+    return $this->parameter_holder->has($name, $ns);
+  }
+
+  public function setParameter($name, $value, $ns = null)
+  {
+    return $this->parameter_holder->set($name, $value, $ns);
   }
 
   /**
