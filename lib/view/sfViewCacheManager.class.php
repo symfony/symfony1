@@ -87,6 +87,38 @@ class sfViewCacheManager
     return $uri;
   }
 
+  public function getInternalUri($suffix = 'slot')
+  {
+    $internalUri = sfRouting::getInstance()->getCurrentInternalUri();
+
+    if ($suffix == 'page')
+    {
+      return array($internalUri, $suffix);
+    }
+
+    // our action is used in a slot context?
+    $actionStackEntry = $this->getContext()->getController()->getActionStack()->getLastEntry();
+    if ($actionStackEntry->isSlot())
+    {
+      $suffix = preg_replace('/[^a-z0-9]/i', '_', $internalUri);
+      $suffix = preg_replace('/_+/', '_', $suffix);
+
+      $actionInstance = $actionStackEntry->getActionInstance();
+      $moduleName     = $actionInstance->getModuleName();
+      $actionName     = $actionInstance->getActionName();
+      $internalUri    = $moduleName.'/'.$actionName;
+
+      // we add cache information based on slot configuration for this module/action
+      $lifeTime = $this->getLifeTime($internalUri, 'slot');
+      if ($lifeTime)
+      {
+        $this->addCache($moduleName, $actionName, $suffix, $lifeTime);
+      }
+    }
+
+    return array($internalUri, $suffix);
+  }
+
   public function addCache($moduleName, $actionName, $suffix = 'slot', $lifeTime)
   {
     $entry = $moduleName.'_'.$actionName.'_'.$suffix;
@@ -114,7 +146,7 @@ class sfViewCacheManager
     return $lifeTime;
   }
 
-  private function hasCacheConfig($internalUri, $suffix)
+  public function hasCacheConfig($internalUri, $suffix)
   {
     list($route_name, $params) = $this->controller->convertUrlStringToParameters($internalUri);
     $entry = $params['module'].'_'.$params['action'].'_'.$suffix;

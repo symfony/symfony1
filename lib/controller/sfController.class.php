@@ -266,6 +266,14 @@ abstract class sfController
           $filterChain->register($webDebugFilter);
         }
 
+        if (sfConfig::get('sf_cache'))
+        {
+          // register cache filter
+          $cacheFilter = new sfCacheFilter();
+          $cacheFilter->initialize($this->context);
+          $filterChain->register($cacheFilter);
+        }
+
         if (sfConfig::get('sf_use_flash'))
         {
           // register flash filter

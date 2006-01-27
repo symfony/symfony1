@@ -112,7 +112,7 @@ class sfWebDebug
   private function loadHelpers()
   {
     // require needed helpers
-    foreach (array('Tag', 'Url', 'Asset', 'Javascript') as $helperName)
+    foreach (array('Helper', 'Url', 'Asset', 'Tag', 'Javascript') as $helperName)
     {
       include_once(sfConfig::get('sf_symfony_lib_dir').'/helper/'.$helperName.'Helper.php');
     }
@@ -357,12 +357,13 @@ class sfWebDebug
 
   public function decorateContentWithDebug($internalUri, $suffix, $retval, $border_color, $bg_color)
   {
-    $cache = $this->context->getViewCacheManager();
-
     if (!sfConfig::get('sf_web_debug'))
     {
       return $retval;
     }
+
+    $cache = $this->context->getViewCacheManager();
+    $this->loadHelpers();
 
     $last_modified = $cache->lastModified($internalUri, $suffix);
     $id            = md5($internalUri);

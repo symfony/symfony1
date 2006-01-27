@@ -113,12 +113,12 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
     // add cache information to cache manager
     if ($uri)
     {
-      $data[] = sprintf("  \$cacheManager->addCache('%s', '%s', '%s', %s, '%s');\n\n",
+      $data[] = sprintf("  \$this->cacheManager->addCache('%s', '%s', '%s', %s, '%s');\n\n",
                         $this->moduleName, $actionName, $type, $lifeTime, $uri);
     }
     else
     {
-      $data[] = sprintf("  \$cacheManager->addCache('%s', '%s', '%s', %s);\n\n",
+      $data[] = sprintf("  \$this->cacheManager->addCache('%s', '%s', '%s', %s);\n\n",
                         $this->moduleName, $actionName, $type, $lifeTime);
     }
 
