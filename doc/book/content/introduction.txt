@@ -26,7 +26,7 @@ What is symfony?
 
 Symfony is a complete framework designed to help and speedup the development of web applications.
 
-It is based on the following concepts :
+It is based on the following concepts:
 
 *   compatible with as many environments as possible
 *   easy to install and configure
@@ -35,7 +35,7 @@ It is based on the following concepts :
 *   convention rather than configuration, supporting fallback calls
 *   simple in most cases, but still flexible enough to adapt to complex cases
 *   most common web features included
-*   compliant with most of the web "bests practices" and web "design patterns"
+*   compliant with most of the web "best practices" and web "design patterns"
 *   very readable code with easy maintenance
 *   open source
 
