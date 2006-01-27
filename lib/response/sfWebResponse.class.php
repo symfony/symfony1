@@ -39,8 +39,6 @@ class sfWebResponse extends sfResponse
   {
     parent::initialize($context, $parameters);
 
-    $this->headers['Content-Type'] = 'text/html';
-
     $this->statusText = array(
       '100' => 'Continue',
       '101' => 'Switching Protocols',
@@ -130,8 +128,14 @@ class sfWebResponse extends sfResponse
   public function setHeader ($name, $value, $replace = true)
   {
     $name = $this->normalizeHeaderName($name);
+    $exists = isset($this->headers[$name]);
 
-    if (!isset($this->headers[$name]) || $replace)
+    if ($exists && !$replace)
+    {
+      return;
+    }
+
+    if (!$exists || $replace)
     {
       $this->headers[$name] = array();
     }
@@ -146,7 +150,7 @@ class sfWebResponse extends sfResponse
    */
   public function getHeader ($name, $defaultValue = null)
   {
-    $retval = $defaultValue;
+    $retval = array($defaultValue);
 
     if (isset($this->headers[$this->normalizeHeaderName($name)]))
     {
@@ -165,7 +169,7 @@ class sfWebResponse extends sfResponse
    */
   public function setContentType ($value)
   {
-    $this->headers['Content-Type'] = $value;
+    $this->setHeader('Content-Type', $value, true);
   }
 
   /**
@@ -175,7 +179,9 @@ class sfWebResponse extends sfResponse
    */
   public function getContentType ()
   {
-    return $this->headers['Content-Type'];
+    $ct = $this->getHeader('Content-Type', 'text/html');
+
+    return $ct[0];
   }
 
   /**
@@ -206,7 +212,7 @@ class sfWebResponse extends sfResponse
     // set headers from HTTP meta
     foreach ($this->getContext()->getRequest()->getAttributeHolder()->getAll('helper/asset/auto/httpmeta') as $name => $value)
     {
-      $this->setHeader($name, $value);
+      $this->setHeader($name, $value, false);
     }
 
     // headers
