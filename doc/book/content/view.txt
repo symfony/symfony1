@@ -357,7 +357,7 @@ Now, every time you need the component in a template, just call it by:
     
 Just like the partials, components accept additional parameters in the shape of an associative array.
 
-You can include components in components, or in the global layout, as in any regular template. Like actions, component classes accept `preExecute()`, `postExecute()`, `handleError()` or `validate()` methods. Like actions, components `execute` methods can pass variables to the related partial and have access to the same shortcuts. But the similarities stop there: A partial doesn't handle security, doesn't have various `return` possibilities, and is much faster than an action to execute.
+You can include components in components, or in the global layout, as in any regular template. Like actions, components `execute` methods can pass variables to the related partial and have access to the same shortcuts. But the similarities stop there: A partial doesn't handle security, doesn't have various `return` possibilities, and is much faster than an action to execute.
 
 ### Component slots
 
