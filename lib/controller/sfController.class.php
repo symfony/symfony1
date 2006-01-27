@@ -278,7 +278,7 @@ abstract class sfController
 
         if ($moduleName == sfConfig::get('sf_error_404_module') && $actionName == sfConfig::get('sf_error_404_action'))
         {
-          $this->getContext()->getResponse()->setStatus('404', 'Not Found');
+          $this->getContext()->getResponse()->setStatus(404);
           $this->getContext()->getResponse()->setHeader('Status', '404 Not Found');
         }
 
