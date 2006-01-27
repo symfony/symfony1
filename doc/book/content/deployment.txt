@@ -11,7 +11,7 @@ Synchronization
 
 ### Good practices
 
-There are a lot of ways to synchronize two environments for a website. The basic file transfers can be achieved by an [FTP](http://en.wikipedia.org/wiki/Ftp) connection, but there are two major drawbacks to this solution. First, it is not secure, the data stream transmits in the clear over the Internet and can be intercepted. Second, sending the root project directory by FTP is fine for the first transfer, but when you have to upload an update of your application, where only a few files changed, this is not a good and fast way to do it. Either you transfer the whole project again which, can be long or you browse to the directories where you know that some files changed, and transfer only the ones with different modification dates. That's a long job, and it is prone to error. In addition, the website can be unavailable or buggy during the time of the transfer.
+There are a lot of ways to synchronize two environments for a website. The basic file transfers can be achieved by an [FTP](http://en.wikipedia.org/wiki/Ftp) connection, but there are two major drawbacks to this solution. First, it is not secure, the data stream transmits in the clear over the Internet and can be intercepted. Second, sending the root project directory by FTP is fine for the first transfer, but when you have to upload an update of your application, where only a few files changed, this is not a good and fast way to do it. Either you transfer the whole project again, which can be long, or you browse to the directories where you know that some files changed, and transfer only the ones with different modification dates. That's a long job, and it is prone to error. In addition, the website can be unavailable or buggy during the time of the transfer.
 
 The solution that is supported by symfony is **rsync** synchronization through a **SSH** layer.
 
@@ -41,7 +41,7 @@ This command, called from the root directory of a symfony project, launches the 
 The connection settings will be used by the SSH client call enclosed in the symfony `sync` command line.
 
 >**Note**: don't mix up the `production` environment (the host server, as defined in the `properties.ini` of the project)
- with the `prod` environment (the front controller and configuration used in production, as refferred to in the configuration files of an application)
+ with the `prod` environment (the front controller and configuration used in production, as referred to in the configuration files of an application)
  
 If you just call `symfony sync` like mentioned above, the rsync utility will run in dry mode by default (`--dry-run`), i. e. it will show you which files have to be synchronized but _without actually synchronizing them_. If you want the synchronization to be done, you have to mention it explicitly:
 
@@ -115,11 +115,11 @@ For more information, all the possible ways to install symfony are described in 
 
 ### Access to the symfony commands in production
 
-While developing, you probably use a lok the following command:
+While developing, you probably often use the following command:
 
     $ symfony clear-cache
 
-It is necessary at least each time you change the configuration or the object model of the project. When you upload a new version of your project in production, the cache also needs to be cleared if you want the application to work. You can easily do it by deleting the full content of the `myproject/cache/` directory (by ftp or with a ssh console). Alternatively, you can have the power of the symfony command line in the production host at the price of a slightly longer installation.
+It is necessary, at least, each time you change the configuration or the object model of the project. When you upload a new version of your project in production, the cache also needs to be cleared if you want the application to work. You can easily do it by deleting the full content of the `myproject/cache/` directory (by ftp or with a ssh console). Alternatively, you can have the power of the symfony command line in the production host at the price of a slightly longer installation.
 
 To use the command line, you need to install the [pake utility](http://www.pake-project.org). Pake is a PHP tool similar to the make command. It automates some administration tasks according to a specific configuration file called `pakefile.php`. The symfony command line uses the pake utility, and each time you type `symfony`, you actually call `pake` with a special `pakefile.php` located in the `symfony/bin/` directory (find more about pake in symfony in the [project creation chapter](project_creation.txt)). If you install symfony via PEAR, pake is installed as a requirement, so you usually don't see it at all and don't need to bother about what comes next. But if you do a manual installation, you have to uncompress the pake directory (get it from your symfony pear installation or [download it](http://www.pake-project.org/download.html) from the pake website) into your directory in the production server. Just like for the symfony libs, you also have to add a symlink in order to enable symfony to use pake:
 
@@ -261,22 +261,28 @@ The users will see no interruption, and yet all the files used after the change 
 
 ### Switch databases
 
-You can extrapolate that technique to switching databases. Remember that the address of the database used by your application is defined in the `orm.yml` configuration file. If you create a copy of the database with a new name, say `myproject.134`, you just need to write in the `myproject.134/frontend/config/orm.yml`:
+You can extrapolate that technique to switching databases. Remember that the address of the database used by your application is defined in the `databases.yml` configuration file. If you create a copy of the database with a new name, say `myproject.134`, you just need to write in the `myproject.134/frontend/config/databases.yml`:
 
     all:
-      adapter:  mysql
-      host:     localhost
-      database: myproject.134
-      username: myuser
-      password: mypassword
+      propel:
+        class:        sfPropelDatabase
+        param:
+          datasource: symfony
+          phptype:    mysql
+          hostspec:   localhost
+          database:   myproject.134
+          username:   myuser
+          password:   mypassword
+          compat_assoc_lower: true
+          compat_rtrim_string: true
 
-As the `orm.yml` will be switched as the same time as the application itself, your application will instantly start querying the new database.
+As the `databases.yml` will be switched as the same time as the application itself, your application will instantly start querying the new database.
  
-This technique is especially useful if your application has a big traffic and if you can't afford any service interruption.
+This technique is especially useful if your application has lots of traffic and if you can't afford any service interruption.
 
 TODO
 ----
 
 * Upgrading the data model
-* Synchronization and source versionning
+* Synchronization and source versioning
 * reverting to a previous version
