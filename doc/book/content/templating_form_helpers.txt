@@ -167,7 +167,15 @@ Forms are often used to get **dates**. Date format is also culture dependent, an
 
 The last argument specifies that the rich form has to be used. If it was set to `false` (which is the default value), the normal date entry widget (three text inputs for day, month and year) would be used in place.
 
-**Rich text editing** in a textarea is also possible, since symfony implements the [TinyMCE](http://tinymce.moxiecode.com/) widget that inputs html code:
+**Rich text editing** in a textarea is also possible, since symfony provides an interface with the [TinyMCE](http://tinymce.moxiecode.com/) widget that inputs html code.
+
+In order to use TinyMCE, you have to download it first from [this page](http://tinymce.moxiecode.com/download.php) and unpack it in a temporary folder. Copy the `tinymce/jscripts/tiny_mce` directory into your project `web/js/` directory, and add to your `settings.yml`:
+
+    all:
+      .settings:      
+        rich_text_js_dir:  js/tiny_mce
+
+Now you can run the rich version of the textarea input tag:
 
     [php]
     <?php echo textarea_tag('name', 'default content', 'rich=true size=10x20')) ?>
