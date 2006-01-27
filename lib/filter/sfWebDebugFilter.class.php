@@ -59,14 +59,15 @@ class sfWebDebugFilter extends sfFilter
       // load the filter
       $loaded = true;
 
+      $response = $this->getContext()->getResponse();
+
       // don't add debug toolbar on XHR requests
-      if ($this->getContext()->getRequest()->isXmlHttpRequest())
+      if ($this->getContext()->getRequest()->isXmlHttpRequest() || strpos($response->getContentType(), 'text/html') === false)
       {
         $filterChain->execute();
         return;
       }
 
-      $response = $this->getContext()->getResponse();
       $content  = $response->getContent();
       $webDebug = sfWebDebug::getInstance()->getResults();
 
