@@ -40,7 +40,10 @@ class sfFlashFilter extends sfFilter
       $names = $userAttributeHolder->getNames('symfony/flash');
       if ($names)
       {
-        $context->getLogger()->info('{sfController} flag old flash messages ("'.implode('", "', $names).'")');
+        if (sfConfig::get('sf_logging_active'))
+        {
+          $context->getLogger()->info('{sfController} flag old flash messages ("'.implode('", "', $names).'")');
+        }
         foreach ($names as $name)
         {
           $userAttributeHolder->set($name, true, 'symfony/flash/remove');
@@ -75,7 +78,10 @@ class sfFlashFilter extends sfFilter
       $names = $userAttributeHolder->getNames('symfony/flash/remove');
       if ($names)
       {
-        $context->getLogger()->info('{sfController} remove old flash messages ("'.implode('", "', $names).'")');
+        if (sfConfig::get('sf_logging_active'))
+        {
+          $context->getLogger()->info('{sfController} remove old flash messages ("'.implode('", "', $names).'")');
+        }
         foreach ($names as $name)
         {
           $userAttributeHolder->remove($name, 'symfony/flash');
