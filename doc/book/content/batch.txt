@@ -4,7 +4,63 @@ How to write a batch process
 Overview
 --------
 
+Creating batch processes in symfony is a simple process and can be used to automate any function that might need to be repeated on a regular basis.  Some examples of useful batch functions might include a tool to load the development database with test data, or a production tool to periodically expire accounts, or send batched emails at a scheduled time.
+
 Introduction
 ------------
 
+In symfony, a batch process is any process that would be run outside of the normal web front controller.  To create a batch process, you need to define the location, app and environment that the batch process is to use.
+
+This is easily accomplished by creating a php file the myproject/batch directory and starting it with the following:
+
+    [php]
+    <?php
+
+    define('SF_ROOT_DIR',      realpath(dirname(__file__).'/..'));
+    define('SF_APP',           'myapp'));
+    define('SF_ENVIRONMENT',   'prod'));
+    define('SF_DEBUG,          false));
+
+    require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
+    sfContext::getInstance();  // Required for batch processes that access the database in symfony >0.6x
+ 
+    // batch process here
+    ?>   
+
+This script does nothing, or close to nothing: it defines a path, an application and an environment to get to a configuration, and loads that configuration.  But that's already a lot because it means that all of the code written in your batch process will take advantage of the auto-loading of classes, automatic connection to Propel objects, and the symfony root classes.
+
+> **Note:** If you examine symfony's front controllers (like `web/index.php`) you would find this code extremely familiar.  That's because every web request requires access to the same objects and configuration that a batch process does.
+
+The value that you define for *SF_APP* could be the name of any of the applications that you have defined in your project.
+
+You have three choices for *SF_ENVIRONMENT*.  These choices are *prod*, *dev*, and *test*.
+
+In the *prod* environment you would want the *SF_DEBUG* to be `false`, but it should be `true` in the other environments.
+
+Creating batch processes
+------------------------
+
+Below are some examples of batch process that you might create.
+
+### Loading Test Data
+
+Loading test data in the development and/or test environments is something that would happen repeatedly.  The askeet tutorial provides an example of how to define data in a YAML file and then on demand load it into the database.
+
+The following script excerpt reads all YAML files in the `fixtures` directory and loads the data into the database defined in the `app/config/databases.yml` configuration file.
+
+    [php]
+    // batch process here
+    $data = new sfPropelData();
+    $data->loadData(SF_DATA_DIR.DIRECTORY_SEPARATOR.'fixtures');
+
+To use this script:
+
+*    Create the `fixtures` directory in your project
+*    Create one or more YAML data files.  You can find more about how to create the data population files in the [data files chapter](populate.txt).
+
+### Processing 
+
 *TODO*
+
+*   Create additional examples
+*   Scheduling batches
