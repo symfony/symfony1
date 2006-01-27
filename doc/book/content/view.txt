@@ -361,7 +361,7 @@ You can include components in components, or in the global layout, as in any reg
 
 ### Component slots
 
-You sometimes need to include a component which varies according to the module calling it. For instance, the main layout of an application can disaplay in the right part of the window a set of contextual information and links.
+You sometimes need to include a component which varies according to the module calling it. For instance, the main layout of an application can display in the right part of the window a set of contextual information and links.
 
 Symfony makes it easy to handle with the `include_component_slot()` helper. This function expects a label as parameter, and this label will be used to define a component for each module, using the `view.yml` configuration file.
 
