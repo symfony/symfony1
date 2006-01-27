@@ -11,7 +11,7 @@ Why use an abstraction layer?
 
 Databases are relational. PHP5 and symfony are object oriented. In order to access the database in an object-oriented way, an interface translating the object logic to the relational logic is required. 
 
-Using objects instead of records, and classes instead of tables, allow you to add new accessors to your tables. For instance, if you have a table called 'client' with two fields 'FirstName' and 'LastName', you might like to be able to require just a 'name'. On an object-oriented world, this is very easy: just add a new accessor method.
+Using objects instead of records, and classes instead of tables, allows you to add new accessors to your tables. For instance, if you have a table called 'client' with two fields 'FirstName' and 'LastName', you might like to be able to require just a 'name'. In an object-oriented world, this is very easy: just add a new accessor method.
 
     [php]
     public function getName()
@@ -34,7 +34,7 @@ All the repeated data access functions and the business logic of the data itself
 
 And that's it. Imagine how long it would have required to write a SQL request doing the same? Anyway, the question is irrelevant, since symfony and PHP5 get you used to object orientation and its benefits. Why apply new constraints when its comes to the data models?
 
-This is the **Model** layer of the symfony MVC architecture. Objects that give access to data and keep business rules within themselves.
+This is the **Model** layer of the symfony MVC architecture. It is made up of Objects that give access to data and keep business rules within themselves.
 
 There is one last benefit of an object/relational abstraction layer: you can change your database in the middle of a project. The abstraction layer prevents you from using a syntax that is specific to a given database. It translates the methods calls to requests specific to the configured database.
 
@@ -58,9 +58,9 @@ When you create an application with the `symfony init-app` command, a file calle
      <database name="symfony" defaultIdMethod="native" noxsd="true">
      </database>
 
-The `name` attribute of the `<database>` tag is the name of the database connection. It is not the actual name of your database, because this name depends on the application configuration - and the environment - that you will describe in the file `myproject/apps/myapp/config/orm.yml`.
+The `name` attribute of the `<database>` tag is the name of the database connection. It is not the actual name of your database, because this name depends on the application configuration - and the environment - that you will describe in the file `myproject/apps/myapp/config/databases.yml`.
 
->**Note**: As a matter of fact, you can setup several database connections for one project, to be able to dispatch your data in several databases. To that extent, you can either write several `schema.xml` files (prefix them with a spacial name, but keep the `schema.xml` at the end so that they are recognozed) or add other `<database>` tags to your `schema.xml` file.
+>**Note**: As a matter of fact, you can setup several database connections for one project, to be able to dispatch your data in several databases. To that extent, you can either write several `schema.xml` files (prefix them with a spacial name, but keep the `schema.xml` at the end so that they are recognized) or add other `<database>` tags to your `schema.xml` file.
 
 ### Example
 
@@ -103,7 +103,7 @@ The related `schema.xml` should look like:
 
 In this file format, a `<database>` contains several `<table>`, each having a set of `<column>`, `<index>` and `<foreign-key>` in no particular order.
 
-The `phpName` given to the tables is the name of the object that will give you access to the data, as you will see in the next part. If you don't mention it, the value of the `name` attribute will be used in place, after removing underscores and capitalizing the first letter of inner words (in the example, the default `phpname` of the tables would be `blogArticle` and `blogComment`). Columns also have a `phpname`, which is the capitalized version of the `name` (`ID`, `TITLE`, `CONTENT`, etc.) and doesn't need overriding in most cases.
+The `phpName` given to the table is the name of the object that will give you access to the data, as you will see in the next part. If you don't mention it, the value of the `name` attribute will be used in place, after removing underscores and capitalizing the first letter of inner words (in the example, the default `phpname` of the tables would be `blogArticle` and `blogComment`). Columns also have a `phpName`, which is the capitalized version of the `name` (`ID`, `TITLE`, `CONTENT`, etc.) and doesn't need overriding in most cases.
 
 Columns have a `type` attribute that can take the usual values: `boolean`, `integer`, `float`, `date`, `varchar`, `longvarchar`, etc. The `varchar`-type columns can have a `size` attributes that specifies the maximum number of characters of the column. For text content over 256 characters, you need to use the `longchar` type, which has no size but can not exceed 65Kb (mysql specific). Note that the `date` and `timestamp` types have the usual limitations of Unix dates and can not be set to a date prior to 1970-01-01. As you may need to set older dates (for instance for dates of birth), a format of dates 'before Unix' can be used with `bu_date` and `bu_timestamp`.
 
@@ -130,7 +130,7 @@ And a brand new `schema.xml` built from your database structure is written in yo
 Database access configuration
 -----------------------------
 
-The data model is independent from the database used, but you will definitely use a database. The minimum information required by symfony to handle requests to the project database is the name, the access codes and the type of the database. This data should be entered in the `database.yml` file located in the `myproject/apps/myapp/config/` directory:
+The data model is independent from the database used, but you will definitely use a database. The minimum information required by symfony to handle requests to the project database is the name, the access codes and the type of the database. This data should be entered in the `databases.yml` file located in the `myproject/apps/myapp/config/` directory:
 
     prod:
       symfony:
@@ -224,7 +224,7 @@ Propel provides one class for each the tables defined in the `schema.xml` file. 
     $title = $article->getTitle();
     $content = $article->getContent();
 
-Note that the `phpname` attribute of the `table` is used for the class name; the accessors use a [CamelCase][6] variant of the column names in which the first letter of each word is capitalized and underscores are suppressed.
+Note that the `phpName` attribute of the `table` is used for the class name; the accessors use a [CamelCase][6] variant of the column names in which the first letter of each word is capitalized and underscores are suppressed.
 
 >**Note**: To set several fields at one time, you can use the `->fromArray()` methods of the Propel objects:
 >
