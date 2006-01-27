@@ -61,4 +61,13 @@
 
 </form>
 
+<ul class="sf_admin_actions">
+<?php
+/*
+ * WARNING: delete is a form, it must be outside the main form
+ */
+?>
+  <?php echo $this->getButtonToAction('_delete', array(), true) ?>
+</ul>
+
 </div>
