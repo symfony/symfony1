@@ -85,7 +85,7 @@ svn export http://svn.symfony-project.com/${SVN_PATH}/doc/SANDBOX_README README
 
 echo ">>> change default configuration"
 sed -i -e "s#all:#all:\\
-  relative_url_root: /${SANDBOX_NAME}/web/#" apps/${APP_NAME}/config/settings.yml
+  relative_url_root: /${SANDBOX_NAME}/web#" apps/${APP_NAME}/config/settings.yml
 
 # create archive
 
