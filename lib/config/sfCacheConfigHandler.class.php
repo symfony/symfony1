@@ -40,7 +40,7 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
     $this->initialize($categories);
 
     // parse the yaml
-    $this->config = $this->parseYaml($configFile);
+    $this->yamlConfig = $this->parseYaml($configFile);
 
     // init our data array
     $data = array();
@@ -60,7 +60,7 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
 
     // iterate through all action names
     $first = true;
-    foreach ($this->config as $actionName => $values)
+    foreach ($this->yamlConfig as $actionName => $values)
     {
       if ($actionName == 'all')
       {
