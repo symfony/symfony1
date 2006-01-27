@@ -36,16 +36,18 @@ Shortcuts
 Symfony provides the templates with a few useful pre-defined variables, or **shortcuts**, allowing it to access the most commonly needed information:
 
     [php]
-    $context        //the whole context object
-    $request        //the origin request 
-    $params         //parameters of the origin request
-    $user           //the current sfUser object
-    $view           //the calling sfView object
+    $sf_context        //the whole context object
+    $sf_request        //the origin request 
+    $sf_params         //parameters of the origin request
+    $sf_user           //the current sfUser object
+    $sf_view           //the calling sfView object
 
 For instance, if the action call included a parameter `total`, the value of the parameter is available in the template with:
 
     [php]
     <?php echo $params->get('total'); ?>
+    // equivalent to the following action code:
+    echo $this->getRequestParameter('total');
 
 This is true whether the parameter was sent to the action with POST or GET methods, or using the symfony routing system:
 
@@ -55,15 +57,15 @@ This is true whether the parameter was sent to the action with POST or GET metho
 And since the first action call can lead to other action calls (for instance if there is a `forward`), you may need to access the action stack. A few additional shortcuts will make it easy for you:
 
     [php]
-    $first-module   //first module called
-    $last-module    //last module called
-    $first-action   //first action called
-    $last-action    //last action called
+    $sf_first_module   //first module called
+    $sf_last_module    //last module called
+    $sf_first_action   //first action called
+    $sf_last_action    //last action called
 
 Helpers
 -------
 
-**Helpers** (like the `link_to` function in the template example above) are php functions that facilitate the process of writing  templates and produce the best possible HTML code in terms of performance and accessibility. Three types of helpers are available:
+**Helpers** (like the `link_to()` function in the template example above) are PHP functions that facilitate the process of writing templates and produce the best possible HTML code in terms of performance and accessibility. Three types of helpers are available:
 
 *   The standard compulsory helpers, that must be used instead of the corresponding HTML code because they allow internal symfony mechanisms (like routing, automated form management, internationalization, etc.) to work.
 
@@ -90,21 +92,24 @@ By default, the application configuration specifies additional helpers to be loa
 
     default:
       .settings:
-        standard_helpers:    Partial,Cache,Form
+        standard_helpers:    [Partial, Cache, Form]
 
-You can define the helpers that need to be included in your application in addition to those ones. For instance, if you know that your application will use a lot of 
-text and internationalization functions, you can write in the `settings.yml`:
+You can define the helpers that need to be included in your application in addition to those ones. For instance, if you know that your application will use a lot of text and internationalization functions, you can write in the `settings.yml`:
 
     all:
       .settings:
-        standard_helpers:    Partial,Cache,Form,Text,I18N
+        standard_helpers:    [Partial, Cache, Form, Text, I18N]
 
 If you need to use a helper that is not loaded by default, the template that will use it has to call the `use_helper()` function:
 
     [php]
+    // use a specific in this template
     <?php echo use_helper('Date') ?>
     ...
     <?php echo format_date($date, 'd', 'en') ?>
+    
+    // you can call more than one helper at once
+    <?php echo use_helpers('Date', 'I18N') ?>
 
 Global template
 ---------------
@@ -243,73 +248,6 @@ The templates called in `myapp/modules/product/templates/`, according to the val
     myCustomTemplateSuccess.php
     indexError.php
 
-Slots
------
-
-One very interesting feature of the symfony View implementation is the use of **slots**. A slot, is simply a way to add a common, dynamic  section of data to your applications layout. This means that a slot action will be called along with the main action. The result of the slot call (a view) can be added to the application layout. This is especially useful for consistent interface components like navigation menus, headers, and footers. 
-
-Let's imagine a slot that defines the application navigation menu. First, add the slot configuration
-to the application `view.yml` located in `myapp/config/view.yml`:
-
-    default:
-        http_metas:
-            content-type: text/html; charset=utf-8
-
-        ...
-
-        slots: 
-            nav_slot: [test, navigation]
-
-The above configuration would refer to a method in the test module:
-
-    [php]
-    class testActions extends sfActions
-    {
-      ...
-      
-      /*
-       * Slot action
-       */
-      public function executeNavigation()
-      {
-        ...
-      }
-    }
-
-In the layout, you will now have in the `$nav_slot` variable the result of the execution of the `navigation` action of the `test` module. This action will be executed separately from the current action. The layout template of the application can now include the result of this action by simply calling:
-
-    [php]
-    <?php echo $nav_slot ?>
-
-Suppose that you have a module that will not require the `nav_slot` defined above. You can simply turn off default slot execution in your modules `config/view.yml`.
-
-    all:
-      use_default_slots: off
-
-If you only have specific actions for a module that don't require the `nav_slot`, you can turn off the default slot execution for that specific action in your modules `config/view.yml`.
-
-    actionnameSuccess:
-      use_default_slots: off
-
-The combinations for this configuration are unlimited. The following would turn off the `nav_slot` execution for all actions in a module except for the one action.
-
-    actionnameSuccess:
-      use_default_slots: on
-
-    all:
-      use_default_slots: off
-
-One more configuration option scenario would be if you wanted to turn off the `nav_slot` for all actions in a module and execute a new slot and change the layout for this module.
-
-    all:
-      has_layout: on
-      layout: some_new_layout
-      use_default_slots: off
-      slots:
-        new_slot: [module, action]
-
->**Note**: The `config/view.yml` file for your module is not automatically generated by the module initialization. You will need to create this file manually.
-
 View configuration
 ------------------
 
@@ -321,22 +259,162 @@ So the `view.yml` file is an alternative solution to the function calls concerni
 
 Read more about the `view.yml` files in the [next chapter](templating_configuration.txt).
 
-Fragments
----------
+Code fragments
+--------------
 
-If you need to include some template code into various pages, but without any preprocessing, the slot mechanism can be a little cumbersome. To avoid the use of an action when all you need is some factorized HTML code, use a **fragment** instead of a slot.
+You may often need to include some HTML or PHP code into several pages, to avoid repeating it, or to display the same piece of content throughout more that one page. The PHP `include()` statement will suffice most of the time for that purpose. But what if you need to access the symfony objects and helpers, or pass parameters to this code fragment? Symfony provides three helpers for that:
 
-For instance, if many of the templates of your `test` module use a fragment of code used to show a special footer, save this piece of code in a file called `_my_special_footer` in the `myproject/apps/myapp/modules/test/templates` directory. Now, when you need this piece of code in a template, just call the `include_partial` function:
+* If the logic is lightweight, you will just want to include a template file having access to some data you pass to it. For that, you will use a **partial**.
+* If the logic is heavier (for instance if you need to access the data model and/or moify the content according to the session), you will prefer to separate the presentation from the logic. For that, you will use a **component**
+* If the nature of the fragment depends on the context (for instance if the fragment needs to be different for the actions of a given module), you will use a **component slot**.
+
+These three helpers are available from any symfony template.
+
+### Include
+
+If the content type is static HTML, you can use a classic `include()` PHP statement:
 
     [php]
-    <?php echo include_partial('my_special_footer') ?>
+    // include some HTML code into the current template
+    <?php include('myfile.html') ?> 
 
-Notice the '_' difference between the file name and the fragment name in the code. This helps to keep your code clean and to show the fragments ahead of the other templates in a file explorer.
+The most common need is to include a piece of PHP code. If this code doesn't require the symfony objects and methods, the `include()` statement is still enough. For instance, if many of the templates of your `test` module use a fragment of code showing the current time, save this piece of code in a file called `time.php` in the global template directory (`myproject/apps/myapp/templates`). Now, when you need this piece of code in a template, just call the `include()` function:
+
+    [php]
+    // include some PHP code into the current template
+    <?php echo include(sfConfig::get('sf_app_template_dir').'/time.php') ?>
+
+### Partial
+
+Partials are template fragments that can be called from different modules throughout an application. A partial has access to the usual symfony helpers and template shorcuts, but not to the variables defined in the action calling it, unless passed explicitely as an argument.
+
+Let's imagine an application where the user has a selection of items in a shopping cart. In some pages of the application, a block displays the number of items in the cart and a link to it. The shopping cart object is provided by the action. First, let's see what the template partial would look like:
+
+    [php]
+    <div>
+      <h1>Selected items</h1>
+      <?php echo $cart->getCount() ?><br />
+      <?php echo link_to('Modify', 'cart/edit?cart_id='.cart->Id()) ?>
+    </div>
+
+This template partial is saved in a `cart` module, in a file called `templates/_sidebar.php`.
+
+Now, let's go back to the templates using this partial. For each of them, the action defines a `$myShoppingCart` object containing the current selection of items. To pass this value to a partial, the templates will use the `include_partial()` helper:
+
+    [php]
+    <?php echo include_partial('cart/sidebar', array($cart => $myShoppingCart )) ?>
+
+The first argument is the module/template name, the second is an array of variables that are needed by the partial. Notice the '_' difference between partial name in the `include_partial()` call and the actual file name in the `templates/` directory. This helps to keep your code clean and to show the fragments ahead of the other templates in a file explorer.
 
 If your need is not restricted to one module, save your fragment in the main template directory (in `myproject/apps/myapp/templates`). To call it from any module template, you now need:
 
     [php]
-    <?php echo include_partial('global/my_special_footer') ?>
+    <?php echo include_partial('global/sidebar', array($cart => $myShoppingCart )) ?>
+
+### Components
+
+In the previous example, the logic of the partial is light and doesn't require an action. If you need a partial with a logic behind, you should use a component. A component is like an action, it can pass variables to a template partial - except it's much faster than an action. The logic is kept in a `components.class.php` file in the `actions/` directory, and the template is a regular partial. 
+
+For instance, a news component could display in a sidebar the latest news headlines for a given subject, depending on the user's profile. The queries necessary to get the news headlines are too complex to appear in a simple partial, so they have to be moved to an action-like file.
+
+In a `news` module, create a file called `components.class.php` in the `actions/` folder with the following content:
+
+    [php]
+    <?php
+    
+    class newsComponents extends sfComponents
+    {
+      public function executeHeadlines()
+      {
+        $c = new Criteria();
+        $c->addDescendingOrderByColumn(NewsPeer::PUBLISHED_AT);
+        $c->setLimit(5);
+        $this->news = NewsPeer::doSelect($c);
+      }
+    }
+    
+    ?>
+
+In the same `news` module, create a `_headlines.php` partial in the `templates/` directory:
+
+    [php]
+    <div>
+      <h1>Latest news</h1>
+      <ul>
+      <?php foreach($news as $headline): ?>
+        <li>
+          <?php echo $headline->getPublishedAt() ?>
+          <?php echo link_to($headline->getTitle(), 'news/show?id='.$headline->getId()) ?>
+        </li>
+      <?php endforeach ?>
+      </ul>
+    </div>
+
+Now, every time you need the component in a template, just call it by:
+
+    [php]
+    <?php echo include_component('news', 'headlines') ?>
+    
+Just like the partials, components accept additional parameters in the shape of an associative array.
+
+You can include components in components, or in the global layout, as in any regular template. Like actions, component classes accept `preExecute()`, `postExecute()`, `handleError()` or `validate()` methods. Like actions, components `execute` methods can pass variables to the related partial and have access to the same shortcuts. But the similarities stop there: A partial doesn't handle security, doesn't have various `return` possibilities, and is much faster than an action to execute.
+
+### Component slots
+
+You sometimes need to include a component which varies according to the module calling it. For instance, the main layout of an application can disaplay in the right part of the window a set of contextual information and links.
+
+Symfony makes it easy to handle with the `include_component_slot()` helper. This function expects a label as parameter, and this label will be used to define a component for each module, using the `view.yml` configuration file.
+
+For instance, let's imagine that the `layout.php` of the application contains:
+
+    [php]
+    ...
+    <div id="#sidebar">
+      <?php echo include_component_slot('sidebar') ?>
+    </div> 
+
+In the main `view.yml` configuration file (located in the `myapp/config/` directory), you define the default value for this slot:
+
+    default:
+      components:
+        sidebar:  [bar, default]
+
+By default, this sidebar will call the `executeDefault()` method of the `barComponents` class located in the `bar` module, and this method will display the `_default.php` partial located in `modules/bar/templates/`. But you can override this setting for a given module. For instance, in a `user` module, you may want the contextual component to display the user name, and the number of articles he/she published. In that case, add to the `view.yml` of the `modules/user/config/` directory:
+
+    all:
+      components:
+        sidebar:  [bar, user]
+        
+>**Note**: The `config/view.yml` file for your module is not automatically generated by the module initialization. You will need to create this file manually.
+
+In the `modules/bar/actions/components.class.php`, add this new method:
+
+    [php]
+    class barComponents extends sfComponents
+    {
+      ...
+      public function executeUser()
+      {
+        $current_user = $this->getUser()->getCurrentUser();
+        $c = new Criteria();
+        $c->add(ArticlePeer::AUTHOR_ID, $current_user->getId());
+        $this->nb_articles = ArticlePeer::doCount($c);
+        $this->current_user = $current_user;
+      }
+    }
+
+Then, create the following `modules/bar/templates/_user.php`:
+
+    [php]
+    User name: <?php echo $current_user->getName() ?><br />
+    (already published <?php echo $nb_articles ?> articles)
+
+Component slots can be used for breadcrumbs, contextual navigations, and dynamic insertions of all kinds. As components, they can be used in the global layout and in regular templates, or even in other components. The configuration setting the component of a slot is always the one of the last action called.
+
+>**Note**: If you need to suspend the use of a component slot for a given module, just declare an empty module/component for it:
+>     all:
+>       components:
+>         sidebar:  []
 
 
 [1]: http://en.wikipedia.org/wiki/Model-view-controller "Model-View-Controller definition at Wikipedia"
