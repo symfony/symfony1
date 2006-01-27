@@ -55,7 +55,7 @@ When you create an application with the `symfony init-app` command, a file calle
 
     [xml]
     <?xml version="1.0" encoding="UTF-8"?>
-     <database name="symfony" defaultIdMethod="native" noxsd="true">
+     <database name="propel" defaultIdMethod="native" noxsd="true">
      </database>
 
 The `name` attribute of the `<database>` tag is the name of the database connection. It is not the actual name of your database, because this name depends on the application configuration - and the environment - that you will describe in the file `myproject/apps/myapp/config/databases.yml`.
@@ -78,7 +78,7 @@ The related `schema.xml` should look like:
 
     [xml]
     <?xml version="1.0" encoding="UTF-8"?>
-     <database name="symfony" defaultIdMethod="native" noxsd="true">
+     <database name="propel" defaultIdMethod="native" noxsd="true">
         <table name="blog_article" phpName="Article">
           <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
           <column name="title" type="varchar" size="100" />
@@ -133,24 +133,27 @@ Database access configuration
 The data model is independent from the database used, but you will definitely use a database. The minimum information required by symfony to handle requests to the project database is the name, the access codes and the type of the database. This data should be entered in the `databases.yml` file located in the `myproject/apps/myapp/config/` directory:
 
     prod:
-      symfony:
+      propel:
         param:
-          host:     mydataserver
-          username: myusername
-          password: xxxxxxxxxx  
+          host:               mydataserver
+          username:           myusername
+          password:           xxxxxxxxxx  
     
     all:
-      symfony:
-        class: sfPropelDatabase
+      propel:
+        class:                sfPropelDatabase
         param:
-          phptype:  mysql
-          host:     localhost
-          database: mydatabase
-          username: root
-          password: xxxxxxxxx
+          phptype:            mysql
+          host:               localhost
+          database:           mydatabase
+          username:           root
+          password:           xxxxxxxxx
           compat_assoc_lower: true
+          # datasource:       propel
 
-The label given to the connection settings (`symfony` in this example) refers to the `name` attribute of the `<database>` tag in the `schema.xml`.
+The `datasource` parameter refers to the database connection as defined in the the `name` attribute of the `<database>` tag in the `schema.xml`.
+
+>**Note**: If you don't specify the `datasource` param, it takes the value of the label given to the connection settings.
 
 The permitted values of the `phptype` parameter are the ones of the RDBMS supported by Propel:
 

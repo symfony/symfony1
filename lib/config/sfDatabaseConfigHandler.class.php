@@ -96,8 +96,8 @@ class sfDatabaseConfigHandler extends sfYamlConfigHandler
       $parameters = (isset($dbConfig['param']) ? var_export($dbConfig['param'], true) : 'null');
 
       // append new data
-      $data[] = sprintf("\n\$database = new %s();\n" .
-                        "\$database->initialize(%s, '%s');\n" .
+      $data[] = sprintf("\n\$database = new %s();\n".
+                        "\$database->initialize(%s, '%s');\n".
                         "\$this->databases['%s'] = \$database;",
                         $dbConfig['class'], $parameters, $key, $key);
     }

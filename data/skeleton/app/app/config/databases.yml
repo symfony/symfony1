@@ -2,5 +2,4 @@ all:
   propel:
     class:          sfPropelDatabase
     param:
-      datasource:   symfony
       dsn:          mysql://root:@localhost/dbname

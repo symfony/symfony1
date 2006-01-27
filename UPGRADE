@@ -157,6 +157,10 @@ For all your applications within a project:
               compat_assoc_lower:  true
               compat_rtrim_string: true
 
+    The `datasource` parameter (`symfony` in this example) refers to the database connection as defined in the the `name` attribute of the `<database>` tag in the `schema.xml`.
+
+    If you don't specify the `datasource` param, it takes the value of the label given to the connection settings (`propel` in this example).
+
     To get a dabatase connection, you must now use the symfony database manager:
 
        0.4.X/0.5.X                  | 0.6.X/0.7.X
