@@ -21,16 +21,16 @@ All these different needs have different answers, that's why you have several al
 - The **PEAR installation** is recommended to those who want to run several symfony-based projects, with an easy way to upgrade. It requires PEAR version 1.4.0 or higher, which is bundled in most PHP distributions.
 - The **manual installation** is meant to be used only by advanced PHP developers, who what to take advantage of the latest patches or add features of their own.
 
-Note that the symfony framework evolves quickly, and that a new stable version can come out only a few days after your first installation. You have to think of the framework upgrade as a major concern, and that's why the first solution is not recommended if you develop a website for real. In fact, an application develop with the sandbox can not be upgraded easily.
+Note that the symfony framework evolves quickly, and that a new stable version can come out only a few days after your first installation. You have to think of the framework upgrade as a major concern, and that's why the first solution is not recommended if you develop a website for real. In fact, an application developed with the sandbox can not be upgraded easily.
 
 Prerequisites
 -------------
 
 In order to use symfony, you need to have PHP5 and a web server installed. If you want to use the PEAR install, you will also need [PEAR][1]. If you plan on using persistent data, a database will be needed. Symfony is compatible with MySQL, PostgreSQL, Oracle, MSSQL, and any other database having a [Creole](http://creole.phpdb.org/wiki/) driver.
 
->**Note**: You can find many [LAMP](http://en.wikipedia.org/wiki/LAMP_%28software_bundle%29) packages offered for download, which contain the Apache server, the MySQL database and PHP all bundled together and configured for a given platform ([XAMPP](http://www.apachefriends.org/en/xampp.html) for many platforms, [MAMP](http://www.mamp.info/en/home/) for Mackintosh, [WAMP](http://en.wikipedia.org/wiki/WAMP) for Windows, etc.). If you don't have PHP5 installed, they are probably the best option for you to start.
+>**Note**: You can find many [LAMP](http://en.wikipedia.org/wiki/LAMP_%28software_bundle%29) packages offered for download, which contain the Apache server, the MySQL database and PHP all bundled together and configured for a given platform ([XAMPP](http://www.apachefriends.org/en/xampp.html) for many platforms, [MAMP](http://www.mamp.info/en/home/) for Macintosh, [WAMP](http://en.wikipedia.org/wiki/WAMP) for Windows, etc.). If you don't have PHP5 installed, they are probably the best option for you to start.
 
-The standard distributions of PHP5 normally work perfectly with symfony. However, as all the installations are different, and because many of the developers compile PHP themselves, it sometimes happens that your web server throws errors because of missing components in PHP. If you can't manage to have symfony working, check out the [installation forum](http://www.symfony-project.com/forum/index.php/f/6/), where many individual cases were solved and can help to solve yours.
+The standard distributions of PHP5 normally work perfectly with symfony. However, as all the installations are different, and because many of the developers compile PHP themselves, it sometimes happens that your web server throws errors because of missing components in PHP. If you can't manage to get symfony working, check out the [installation forum](http://www.symfony-project.com/forum/index.php/f/6/), where many individual cases were solved and can help to solve yours.
 
 >**Note**: Some packages sometimes embed both PHP4 and PHP5. Symfony only works with PHP5. To check the version of PHP that you are using, type in a command line:
 >
@@ -206,7 +206,7 @@ Let's suppose that you already transferred your symfony-enabled project to a dis
 
 To learn more about the file structure of symfony projects, read the [related chapter](file_structure.txt).
 
-Now you need to copy some files from the symfony package into your project directory. First, create a `symfony` subdirectory in the `data` and `lib` directories of your distant project. Then, transfer the files as follow:
+Now you need to copy some files from the symfony package into your project directory. First, create a `symfony` subdirectory in the `data` and `lib` directories of your distant project. Second, transfer the files as follows:
 
 -    | local          | -  | distant
 ---- | -------------- | -- | -----------------------
