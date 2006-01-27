@@ -7,6 +7,8 @@ Version 0.6.0
 WARNING: This release breaks backward compatibility.
 Please read the UPGRADE file before upgrading your projects.
 
+* [fabien] new filtering system
+* [fabien] added new components system (slots are now deprecated)
 * [fabien] updated propel/creole
 * [fabien] updated script.aculo.us to 1.5.1
 * [rovert] console controller
