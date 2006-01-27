@@ -176,18 +176,6 @@ abstract class sfWebController extends sfController
     flush();
     ob_end_flush();
   }
-
-  /**
-   * Set the content type for this request.
-   *
-   * @param string A content type.
-   *
-   * @return void
-   */
-  public function setContentType ($type)
-  {
-    $this->contentType = $type;
-  }
 }
 
 ?>

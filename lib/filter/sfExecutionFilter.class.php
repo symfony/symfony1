@@ -211,6 +211,13 @@ class sfExecutionFilter extends sfFilter
         {
           $actionEntry->setPresentation($viewData);
         }
+        else
+        {
+          $filterChain->executionFilterDone();
+
+          // execute next filter
+          $filterChain->execute();
+        }
       }
       else
       {
@@ -221,11 +228,6 @@ class sfExecutionFilter extends sfFilter
         throw new sfInitializationException($error);
       }
     }
-
-    $filterChain->executionFilterDone();
-
-    // execute next filter
-    $filterChain->execute();
   }
 
   private function doConditionalGet($timestamp)

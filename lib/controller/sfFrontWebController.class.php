@@ -46,20 +46,8 @@ class sfFrontWebController extends sfWebController
       $moduleName = $context->getRequest()->getParameter(sfConfig::get('sf_module_accessor'));
       $actionName = $context->getRequest()->getParameter(sfConfig::get('sf_action_accessor'));
 
-      // register sfWebDebug assets
-      if ($sf_web_debug = sfConfig::get('sf_web_debug'))
-      {
-        sfWebDebug::getInstance()->registerAssets();
-      }
-
       // make the first request
       $this->forward($moduleName, $actionName);
-
-      // send web debug information if needed
-      if ($sf_web_debug)
-      {
-        sfWebDebug::getInstance()->printResults();
-      }
     }
     catch (sfException $e)
     {

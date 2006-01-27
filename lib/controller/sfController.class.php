@@ -258,7 +258,15 @@ abstract class sfController
           $this->loadModuleFilters($filterChain);
         }
 
-        if ($sf_use_flash = sfConfig::get('sf_use_flash'))
+        if (sfConfig::get('sf_web_debug'))
+        {
+          // register web debug toolbar filter
+          $webDebugFilter = new sfWebDebugFilter();
+          $webDebugFilter->initialize($this->context);
+          $filterChain->register($webDebugFilter);
+        }
+
+        if (sfConfig::get('sf_use_flash'))
         {
           // register flash filter
           $flashFilter = new sfFlashFilter();

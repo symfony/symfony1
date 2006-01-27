@@ -9,7 +9,7 @@
  */
 
 /**
- * sfWebDebug prints debug information in the browser for easy debugging.
+ * sfWebDebug creates debug information for easy debugging in the browser.
  *
  * @package    symfony
  * @subpackage debug
@@ -60,9 +60,6 @@ class sfWebDebug
       $this->context = sfContext::getInstance();
     }
 
-    // load helpers
-    $this->loadHelpers();
-
     // register our css and js
     $this->context->getRequest()->setAttribute(
       'sf_web_debug',
@@ -112,12 +109,6 @@ class sfWebDebug
     $this->log[] = $logEntry;
   }
 
-  public function printResults()
-  {
-    $this->loadHelpers();
-    echo $this->getResults();
-  }
-
   private function loadHelpers()
   {
     // require needed helpers
@@ -162,6 +153,8 @@ class sfWebDebug
     {
       return '';
     }
+
+    $this->loadHelpers();
 
     $result = '';
 
