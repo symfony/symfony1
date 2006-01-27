@@ -6,7 +6,7 @@ Overview
 
 From time to time, you may wonder where is a particular ressource that is used by your project. This chapter locates the most useful files.
 
-There is too many files!
+There are too many files!
 ------------------------
 
 If you read all the introduction to the symfony framework, you might fear that your project end up in hundreds of files. Well, this is partly false, and the true part is for your own benefit. But let's try to see why.
