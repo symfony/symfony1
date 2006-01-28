@@ -9,7 +9,7 @@ Symfony offers a few helpers to quickly manipulate text.
 Text helpers
 ------------
 
-### truncate_text
+### `truncate_text()`
 
 For no-wrap width-limited blocks - for instance in `select` tags - you may need to allow a maximum number of characters and truncate the rest if needed. To that purpose, you should use the `truncate_text` helper:
 
@@ -23,7 +23,7 @@ For no-wrap width-limited blocks - for instance in `select` tags - you may need 
     // will be output as
     You can't stop me ! You can't ...
 
-### excerpt_text
+### `excerpt_text()`
     
 Websites that offer full-text search need to show where the text was found. This is another type of truncation, and the helper that does it is `excerpt_text`:
 
@@ -35,7 +35,7 @@ Websites that offer full-text search need to show where the text was found. This
     // will be output as
     ...ord in an ocean of text c...
 
-### highlight_text
+### `highlight_text()`
 
 Maybe you need to highlight a sentence in a text:
 
@@ -48,7 +48,7 @@ Maybe you need to highlight a sentence in a text:
     // will be output as
     The best PHP framework is <span class="highlight">symfony</span>
 
-### simple\_format\_text
+### `simple_format_text()`
 
 Or maybe you need to format an ASCII text to HTML:
 
@@ -57,7 +57,7 @@ Or maybe you need to format an ASCII text to HTML:
 
 `simple_format_text` surrounds paragraphs with `<p>...</p>` tags, and converts line breaks into `<br />`. Two consecutive newlines (\n\n) are considered as a paragraph, one newline (\n) is considered a line break, three or more consecutive newlines are turned into two newlines. It might be useful to display, for instance, data entered by the user in a textarea.
 
-### auto\_link\_text
+### `auto_link_text()`
 
 Another useful helper finds all the URLs in a text and turns them into hyperlinks
 

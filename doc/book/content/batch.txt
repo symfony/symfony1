@@ -4,14 +4,14 @@ How to write a batch process
 Overview
 --------
 
-Creating batch processes in symfony is a simple process and can be used to automate any function that might need to be repeated on a regular basis.  Some examples of useful batch functions might include a tool to load the development database with test data, or a production tool to periodically expire accounts, or send batched emails at a scheduled time.
+Creating batch processes in symfony is very simple. Batch processes can be used to automate any function that might need to be repeated on a regular basis. Some examples of useful batch functions might include a tool to load the development database with test data, or a production tool to periodically expire accounts, or send batched emails at a scheduled time.
 
-Introduction
-------------
+Batch skeleton
+--------------
 
-In symfony, a batch process is any process that would be run outside of the normal web front controller.  To create a batch process, you need to define the location, app and environment that the batch process is to use.
+In symfony, a batch process refers to any script that is run outside of the normal web front controller. To create a batch process, you need to define the location, application and environment that the batch process is to use.
 
-This is easily accomplished by creating a php file the myproject/batch directory and starting it with the following:
+This is easily accomplished by creating a PHP file in the `myproject/batch/` directory and starting it with the following:
 
     [php]
     <?php
@@ -27,36 +27,38 @@ This is easily accomplished by creating a php file the myproject/batch directory
     // batch process here
     ?>   
 
-This script does nothing, or close to nothing: it defines a path, an application and an environment to get to a configuration, and loads that configuration.  But that's already a lot because it means that all of the code written in your batch process will take advantage of the auto-loading of classes, automatic connection to Propel objects, and the symfony root classes.
+This script does nothing, or close to nothing: It defines a path, an application and an environment to get to a configuration, and loads that configuration.  But that's already a lot because it means that all of the code written in your batch process will take advantage of the auto-loading of classes, automatic connection to Propel objects, and the symfony root classes.
 
-> **Note:** If you examine symfony's front controllers (like `web/index.php`) you would find this code extremely familiar.  That's because every web request requires access to the same objects and configuration that a batch process does.
+> **Note:** If you examine symfony's front controllers (like `web/index.php`) you will find this code extremely familiar.  That's because every web request requires access to the same objects and configuration as a batch process.
 
-The value that you define for *SF_APP* could be the name of any of the applications that you have defined in your project.
+The value that you define for `SF_APP` could be the name of any of the applications that you have defined in your project.
 
-You have three choices for *SF_ENVIRONMENT*.  These choices are *prod*, *dev*, and *test*.
+The `SF_ENVIRONMENT` has to be initialized with the name of the environment you want to run the batch in. The default possible environments are `prod`, `dev`, and `test`.
 
-In the *prod* environment you would want the *SF_DEBUG* to be `false`, but it should be `true` in the other environments.
+The `SF_DEBUG` constant defines whether the configuration has to be parsed every time the batch is run (`true`), or if a cached version can be used to imrpove speed (`false`). In general, the debug mode is used only in development. You can read more about the debug mode in the [debug chapter](debug.txt).
 
-Creating batch processes
-------------------------
+Example batch processes
+-----------------------
 
 Below are some examples of batch process that you might create.
 
 ### Loading Test Data
 
-Loading test data in the development and/or test environments is something that would happen repeatedly.  The askeet tutorial provides an example of how to define data in a YAML file and then on demand load it into the database.
+Loading test data in the development and/or test environments is something that happens repeatedly. A PHP batch can automate this process. First, define the data to be loaded in a YAML file with the following format:
 
-The following script excerpt reads all YAML files in the `fixtures` directory and loads the data into the database defined in the `app/config/databases.yml` configuration file.
+    TableName:
+      recordlabel:
+        column:  value
+        column:  value
+        
+Save one or more data files with this format in a `myproject/data/fixtures/` directory. You can find more about how to create the data population files in the [data files chapter](populate.txt).
+
+The following script excerpt reads all YAML files in the `fixtures/` directory and loads the data into the database defined in the `app/config/databases.yml` configuration file.
 
     [php]
     // batch process here
     $data = new sfPropelData();
-    $data->loadData(SF_DATA_DIR.DIRECTORY_SEPARATOR.'fixtures');
-
-To use this script:
-
-*    Create the `fixtures` directory in your project
-*    Create one or more YAML data files.  You can find more about how to create the data population files in the [data files chapter](populate.txt).
+    $data->loadData(sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.'fixtures');
 
 ### Processing 
 

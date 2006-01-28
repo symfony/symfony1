@@ -16,7 +16,7 @@ Here is a typical template, typically named `indexSuccess.php`:
     [php]
     <h1>Welcome</h1>
     <p>Welcome back, <?php echo $name ?> !</p>
-    <ul>What would you like you do ?
+    <ul>What would you like to do ?
       <li><?php echo link_to('Read the last articles', 'article/read/') ?></li>
       <li><?php echo link_to('Start writing a new one', 'article/write/') ?></li>
     </ul>
@@ -157,7 +157,7 @@ The content of the `<head>` tag might be a little cryptic for now, but if will b
     
     <h1>Welcome</h1>
     <p>Welcome back, <?php echo $name ?> !</p>
-    <ul>What would you like you do ?
+    <ul>What would you like to do ?
       <li><?php echo link_to('Read the last articles', 'article/read/') ?></li>
       <li><?php echo link_to('Start writing a new one', 'article/write/') ?></li>
     </ul>

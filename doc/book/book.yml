@@ -37,6 +37,7 @@ parts:
     - generator
     - finder
     - plugin
+    - batch
     - shopping_cart
     - custom_helper
     - validate_form
