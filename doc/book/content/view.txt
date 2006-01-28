@@ -16,19 +16,19 @@ Here is a typical template, typically named `indexSuccess.php`:
     [php]
     <h1>Welcome</h1>
     <p>Welcome back, <?php echo $name ?> !</p>
-    <ul>What would you like yo do ?
+    <ul>What would you like you do ?
       <li><?php echo link_to('Read the last articles', 'article/read/') ?></li>
       <li><?php echo link_to('Start writing a new one', 'article/write/') ?></li>
     </ul>
 
 It contains some HTML code and some basic PHP code, usually calls to variables defined in the action and helpers. 
 
-The variables called in the templates must be either one of the usual shortcuts (see below) or attributes of the action object defined in the related action file. For instance, to define a value for the `$name` variable use here, the action must contain such a line:
+The variables called in the templates must be either one of the usual shortcuts (see below) or attributes of the action object defined in the related action file. For instance, to define a value for the `$name` variable used here, the action must contain such a line:
 
     [php]
     $this->name = 'myvalue';
 
-Developers like to keep as few PHP code as possible in templates, since these files are the ones used to design the GUI of the application, and are sometimes created and maintained by another team, specialized in presentation but not in applicative logic.
+Developers like to keep as little PHP code as possible in templates, since these files are the ones used to design the GUI of the application, and are sometimes created and maintained by another team, specialized in presentation but not in application logic.
 
 Shortcuts
 ---------
@@ -69,7 +69,7 @@ Helpers
 
 *   The standard compulsory helpers, that must be used instead of the corresponding HTML code because they allow internal symfony mechanisms (like routing, automated form management, internationalization, etc.) to work.
 
-    This includes all the HTML tags that handle URLs : they are replaced by symfony shortcuts to allow the routing.
+    This includes all the HTML tags that handle URLs: they are replaced by symfony shortcuts to allow the routing.
 
 *   The standard optional helpers, that use less code than classic HTML for the same purpose. 
 
@@ -157,7 +157,7 @@ The content of the `<head>` tag might be a little cryptic for now, but if will b
     
     <h1>Welcome</h1>
     <p>Welcome back, <?php echo $name ?> !</p>
-    <ul>What would you like yo do ?
+    <ul>What would you like you do ?
       <li><?php echo link_to('Read the last articles', 'article/read/') ?></li>
       <li><?php echo link_to('Start writing a new one', 'article/write/') ?></li>
     </ul>
@@ -202,7 +202,7 @@ The templates called at the end of the execution of each action will be located 
 
 Because this is the default behavior, if an action returns nothing, the framework considers that the success view has to be called as if the `return sfView::SUCCESS;` was implied.
 
-For any other return value (different from `sfView::NONE`), the template called will have a name finishing with this value. For instance, if the action returns `sfView::ERROR`, the template name must finish by `Error.php`.
+For any other return value (different from `sfView::NONE`), the template called will have a name ending with this value. For instance, if the action returns `sfView::ERROR`, the template name must end with `Error.php`.
 
 An action can also set an alternate template:
 
@@ -265,7 +265,7 @@ Code fragments
 You may often need to include some HTML or PHP code into several pages, to avoid repeating it, or to display the same piece of content throughout more that one page. The PHP `include()` statement will suffice most of the time for that purpose. But what if you need to access the symfony objects and helpers, or pass parameters to this code fragment? Symfony provides three helpers for that:
 
 * If the logic is lightweight, you will just want to include a template file having access to some data you pass to it. For that, you will use a **partial**.
-* If the logic is heavier (for instance if you need to access the data model and/or moify the content according to the session), you will prefer to separate the presentation from the logic. For that, you will use a **component**
+* If the logic is heavier (for instance if you need to access the data model and/or modify the content according to the session), you will prefer to separate the presentation from the logic. For that, you will use a **component**
 * If the nature of the fragment depends on the context (for instance if the fragment needs to be different for the actions of a given module), you will use a **component slot**.
 
 These three helpers are available from any symfony template.
@@ -286,7 +286,7 @@ The most common need is to include a piece of PHP code. If this code doesn't req
 
 ### Partial
 
-Partials are template fragments that can be called from different modules throughout an application. A partial has access to the usual symfony helpers and template shorcuts, but not to the variables defined in the action calling it, unless passed explicitely as an argument.
+Partials are template fragments that can be called from different modules throughout an application. A partial has access to the usual symfony helpers and template shorcuts, but not to the variables defined in the action calling it, unless passed explicitly as an argument.
 
 Let's imagine an application where the user has a selection of items in a shopping cart. In some pages of the application, a block displays the number of items in the cart and a link to it. The shopping cart object is provided by the action. First, let's see what the template partial would look like:
 

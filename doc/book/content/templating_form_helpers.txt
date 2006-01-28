@@ -29,7 +29,7 @@ To create a form, you have to use the symfony `form_tag` function since it trans
 
 This will route the form to the `save` action of the `test` module. You can learn more about the URL management in the [routing chapter](routing.txt).
 
-To change the default `method`, the default `enctype` or to specify other attributes, use  the second argument:
+To change the default `method`, the default [`enctype`][1] or to specify other attributes, use the second argument:
 
     [php]
     // options argument with the associative array syntax
@@ -158,7 +158,7 @@ Here are the standard form element helpers:
 Rich form elements
 ------------------
 
-Forms are often used to get **dates**. Date format is also culture dependent, and wrong dates is the main reason of unvalidated forms. The `input_date_tag` can assists the user with a javascript calendar:
+Forms are often used to get **dates**. Date format is also culture dependent, and wrong dates is the main reason for form validation failures. The `input_date_tag` can assists the user with a javascript calendar:
 
     [php]
     <?php echo input_date_tag('dateofbirth', '2005-05-03', 'rich=true') ?>
@@ -180,7 +180,7 @@ Now you can run the rich version of the textarea input tag:
     [php]
     <?php echo textarea_tag('name', 'default content', 'rich=true size=10x20')) ?>
     // will generate in HTML
-    // a rich text edition zone powered by TinyMCE
+    // a rich text edit zone powered by TinyMCE
 
 You will probably need to display a **country selection field**. The `select_country_tag` helper can do it for you; it uses the default culture to choose in which language the countries will be displayed.
 
@@ -277,3 +277,5 @@ Then the `update` action of the `author` module can simply use the `fromArray` m
   
       return $this->redirect('/author/show?id='.$author->getId());
     }
+
+[1]: http://www.w3.org/TR/REC-html40/interact/forms.html#form-content-type   "HTML Form enctype attribute"
