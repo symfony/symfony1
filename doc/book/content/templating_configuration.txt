@@ -22,7 +22,7 @@ Apart from the template itself, which integrates the variables calculated in the
 * **slots inclusions**: navigation bar, header, footer, breadcrumb, etc.
 * **layout**: some actions require a custom layout (popups, ads, ajax, etc.)
 
-Ideally, all these parameters should be defined in a configuration file, so that the action can deal only with applicative logic and leave presentation to the view. However, in many cases, these parameters have dynamic values (for instance, page titles often show the title of articles) and cannot be kept in static configuration files. That's why symfony provides two ways to modify them:
+Ideally, all these parameters should be defined in a configuration file, so that the action can deal only with application logic and leave presentation to the view. However, in many cases, these parameters have dynamic values (for instance, page titles often show the title of articles) and cannot be kept in static configuration files. That's why symfony provides two ways to modify them:
 
 * the `view.yml` file, in which these parameters can be set at the application, module and action levels
 * the **view helpers**, which are methods accessible from within the action.
@@ -262,7 +262,7 @@ The `<head>` of the resulting view would then show:
 Layout configuration
 --------------------
 
-According to the graphical charter of your website, you may have several layouts. Classical websites have at least two : the default layout, and the popup layout.
+According to the graphical charter of your website, you may have several layouts. Classical websites have at least two: the default layout, and the popup layout.
 
 You already saw that the default layout is `myproject/apps/myapp/templates/layout.php`.  You don't need to set it in the application-level view configuration. Additional layouts have to be added in the same directory.
 
@@ -341,8 +341,8 @@ You also have a module `advice` with contextual actions `forIndex` and `forList`
       slots:
         advices: [advice, forList]
 
-How about template configuration ?
-----------------------------------
+How about template configuration?
+---------------------------------
 
 Though you could expect to see a way to set a custom template with one of the two ways described here, there is none.
 

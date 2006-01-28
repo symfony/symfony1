@@ -33,7 +33,7 @@ This is a bad idea, because:
 
 If you ever built a website, you know that these problems occur all the time.
 
-The link helpers are there for you. They allow symfony to create URLs and hyperlinks to actions compliant to the routing policy, without any dependence to the environment.
+The link helpers are there for you. They allow symfony to create URLs and hyperlinks to actions compliant to the routing policy, without any dependence on the environment.
 
 Link helpers
 ------------
@@ -123,7 +123,7 @@ This `<a>` tag has an `href` attribute, so browsers without javascript support w
 
 It is a good habit to tag as POST the links that actually post data. Don't hesitate to use this possibility.
 
-### Additionnal options
+### Additional options
 
 In addition to the `post` option, the `link_to` helper accepts two other options : `confirm` and `popup`.
 
