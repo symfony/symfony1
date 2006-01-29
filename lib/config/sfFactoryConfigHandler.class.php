@@ -115,7 +115,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
       {
         case 'controller':
           // append instance creation
-          $instances[] = sprintf("  \$this->controller = sfController::newInstance('%s');", $class);
+          $instances[] = sprintf("  \$this->controller = sfController::newInstance(sfConfig::get('sf_factory_controller', '%s'));", $class);
 
           // append instance initialization
           $inits[] = "  \$this->controller->initialize(\$this);";
@@ -123,7 +123,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
 
         case 'request':
           // append instance creation
-          $instances[] = sprintf("  \$this->request = sfRequest::newInstance('%s');", $class);
+          $instances[] = sprintf("  \$this->request = sfRequest::newInstance(sfConfig::get('sf_factory_request', '%s'));", $class);
 
           // append instance initialization
           $inits[] = sprintf("  \$this->request->initialize(\$this, %s);", $parameters);
@@ -131,7 +131,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
 
         case 'response':
           // append instance creation
-          $instances[] = sprintf("  \$this->response = sfResponse::newInstance('%s');", $class);
+          $instances[] = sprintf("  \$this->response = sfResponse::newInstance(sfConfig::get('sf_factory_response', '%s'));", $class);
 
           // append instance initialization
           $inits[] = sprintf("  \$this->response->initialize(\$this);");
@@ -140,14 +140,14 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
         case 'security_filter':
           // append creation/initialization in one swipe
           $inits[] = sprintf("\n  if (sfConfig::get('sf_use_security'))\n  {\n" .
-                             "    \$this->securityFilter = sfSecurityFilter::newInstance('%s');\n".
+                             "    \$this->securityFilter = sfSecurityFilter::newInstance(sfConfig::get('sf_factory_security_filter', '%s'));\n".
                              "    \$this->securityFilter->initialize(\$this, %s);\n  }\n",
                              $class, $parameters);
           break;
 
         case 'storage':
           // append instance creation
-          $instances[] = sprintf("  \$this->storage = sfStorage::newInstance('%s');", $class);
+          $instances[] = sprintf("  \$this->storage = sfStorage::newInstance(sfConfig::get('sf_factory_storage', '%s'));", $class);
 
           // append instance initialization
           $inits[] = sprintf("  \$this->storage->initialize(\$this, %s);", $parameters);
@@ -155,7 +155,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
 
         case 'user':
           // append instance creation
-          $instances[] = sprintf("  \$this->user = sfUser::newInstance('%s');", $class);
+          $instances[] = sprintf("  \$this->user = sfUser::newInstance(sfConfig::get('sf_factory_user', '%s'));", $class);
 
           // append instance initialization
           $inits[] = sprintf("  \$this->user->initialize(\$this, %s);", $parameters);
@@ -163,18 +163,18 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
 
         case 'execution_filter':
           // append execution filter class name
-          $inits[] = sprintf("  \$this->controller->setExecutionFilterClassName('%s');", $class);
+          $inits[] = sprintf("  \$this->controller->setExecutionFilterClassName(sfConfig::get('sf_factory_execution_filter', '%s'));", $class);
           break;
 
         case 'rendering_filter':
           // append rendering filter class name
-          $inits[] = sprintf("  \$this->controller->setRenderingFilterClassName('%s');", $class);
+          $inits[] = sprintf("  \$this->controller->setRenderingFilterClassName(sfConfig::get('sf_factory_rendering_filter', '%s'));", $class);
           break;
 
         case 'view_cache':
           // append view cache class name
           $inits[] = sprintf("\n  if (sfConfig::get('sf_cache'))\n  {\n".
-                             "    \$this->viewCacheManager->setViewCacheClassName('%s');\n  }",
+                             "    \$this->viewCacheManager->setViewCacheClassName(sfConfig::get('sf_factory_view_cache_manager', '%s'));\n  }",
                              $class);
           break;
       }
