@@ -18,6 +18,10 @@ Main steps
   
         $ pear upgrade symfony/symfony
 
+    If you want to try symfony 0.6 alpha, use:
+
+        $ pear upgrade symfony/symfony-alpha
+
  1. Make a backup of your project (this is the most important step!)
 
  2. Move all your application directories under a new `apps/` directory 
