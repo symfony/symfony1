@@ -113,6 +113,7 @@ class sfTestBrowser
     self::$current_context->shutdown();
     self::$current_context = null;
     sfContext::removeInstance();
+    sfWebDebug::removeInstance();
   }
 
   public function shutdown()

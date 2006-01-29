@@ -53,6 +53,16 @@ class sfWebDebug
     return self::$instance;
   }
 
+  /**
+   * Removes current sfWebDebug instance
+   *
+   * This method only exists for testing purpose. Don't use it in your application code.
+   */
+  public static function removeInstance()
+  {
+    self::$instance = null;
+  }
+
   public function registerAssets()
   {
     if (!$this->context)
