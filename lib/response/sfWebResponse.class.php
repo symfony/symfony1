@@ -23,8 +23,9 @@ class sfWebResponse extends sfResponse
   private
     $cookies    = array(),
     $headers    = array(),
-    $status     = 'HTTP/1.0 200 OK',
-    $statusText = array();
+    $statusCode = 200,
+    $statusText = 'OK',
+    $statusTexts = array();
 
   /**
    * Initialize this sfResponse.
@@ -39,7 +40,7 @@ class sfWebResponse extends sfResponse
   {
     parent::initialize($context, $parameters);
 
-    $this->statusText = array(
+    $this->statusTexts = array(
       '100' => 'Continue',
       '101' => 'Switching Protocols',
       '200' => 'OK',
@@ -108,13 +109,19 @@ class sfWebResponse extends sfResponse
    * Set response status code.
    *
    * @param string HTTP status code
-   * @param string
+   * @param string HTTP status text
    *
    * @return void
    */
-  public function setStatus ($code, $name = null)
+  public function setStatusCode ($code, $name = null)
   {
-    $this->status = 'HTTP/1.0 '.$code.' '.($name ? $name : $this->statusText[$code]);
+    $this->statusCode = $code;
+    $this->statusText = $name ? $name : $this->statusTexts[$code];
+  }
+
+  public function getStatusCode ()
+  {
+    return $this->statusCode;
   }
 
   /**
@@ -125,7 +132,7 @@ class sfWebResponse extends sfResponse
    *
    * @return void
    */
-  public function setHeader ($name, $value, $replace = true)
+  public function setHttpHeader ($name, $value, $replace = true)
   {
     $name = $this->normalizeHeaderName($name);
     $exists = isset($this->headers[$name]);
@@ -169,7 +176,7 @@ class sfWebResponse extends sfResponse
    */
   public function setContentType ($value)
   {
-    $this->setHeader('Content-Type', $value, true);
+    $this->setHttpHeader('Content-Type', $value, true);
   }
 
   /**
@@ -199,20 +206,21 @@ class sfWebResponse extends sfResponse
    *
    * @return void
    */
-  public function sendHeaders ()
+  public function sendHttpHeaders ()
   {
     // status
-    header($this->status);
+    $status = 'HTTP/1.0 '.$this->statusCode.' '.$this->statusText;
+    header($status);
 
     if (sfConfig::get('sf_logging_active'))
     {
-      $this->getContext()->getLogger()->info('{sfResponse} send status "'.$this->status.'"');
+      $this->getContext()->getLogger()->info('{sfResponse} send status "'.$status.'"');
     }
 
     // set headers from HTTP meta
     foreach ($this->getContext()->getRequest()->getAttributeHolder()->getAll('helper/asset/auto/httpmeta') as $name => $value)
     {
-      $this->setHeader($name, $value, false);
+      $this->setHttpHeader($name, $value, false);
     }
 
     // headers
@@ -243,7 +251,36 @@ class sfWebResponse extends sfResponse
 
   private function normalizeHeaderName($name)
   {
+    if (strtolower($name) == 'etag')
+    {
+      return 'ETag';
+    }
+
     return preg_replace('/\-(.)/e', "'-'.strtoupper('\\1')", strtr(ucfirst(strtolower($name)), '_', '-'));
+  }
+
+  public function getDate($timestamp, $type = 'rfc1123')
+  {
+    $type = strtolower($type);
+
+    if ($type == 'rfc1123')
+    {
+      return substr(gmdate('r', $timestamp), 0, -5).'GMT';
+    }
+    else if ($type == 'rfc1036')
+    {
+      return gmdate('l, d-M-y H:i:s ', $timestamp).'GMT';
+    }
+    else if ($type == 'asctime')
+    {
+      return gmdate('D M j H:i:s', $timestamp);
+    }
+    else
+    {
+      $error = 'The second getDate() method parameter must be one of: rfc1123, rfc1036 or asctime';
+
+      throw new sfParameterException($error);
+    }
   }
 
   /**
