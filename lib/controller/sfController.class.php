@@ -266,6 +266,11 @@ abstract class sfController
           $filterChain->register($webDebugFilter);
         }
 
+        // register common HTTP filter
+        $commonFilter = new sfCommonFilter();
+        $commonFilter->initialize($this->context);
+        $filterChain->register($commonFilter);
+
         if (sfConfig::get('sf_cache'))
         {
           // register cache filter
@@ -294,8 +299,8 @@ abstract class sfController
 
         if ($moduleName == sfConfig::get('sf_error_404_module') && $actionName == sfConfig::get('sf_error_404_action'))
         {
-          $this->getContext()->getResponse()->setStatus(404);
-          $this->getContext()->getResponse()->setHeader('Status', '404 Not Found');
+          $this->getContext()->getResponse()->setStatusCode(404);
+          $this->getContext()->getResponse()->setHttpHeader('Status', '404 Not Found');
         }
 
         // change i18n message source directory to our module

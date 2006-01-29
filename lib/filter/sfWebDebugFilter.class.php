@@ -26,14 +26,9 @@ class sfWebDebugFilter extends sfFilter
    */
   public function execute ($filterChain)
   {
-    static $loaded;
-
     // execute this filter only once
-    if (!isset($loaded) && sfConfig::get('sf_web_debug'))
+    if ($this->isFirstCall() && sfConfig::get('sf_web_debug'))
     {
-      // load the filter
-      $loaded = true;
-
       // register sfWebDebug assets
       sfWebDebug::getInstance()->registerAssets();
     }
@@ -51,14 +46,9 @@ class sfWebDebugFilter extends sfFilter
    */
   public function executeBeforeRendering ($filterChain)
   {
-    static $loaded;
-
     // execute this filter only once
-    if (!isset($loaded) && sfConfig::get('sf_web_debug'))
+    if ($this->isFirstCallBeforeRendering() && sfConfig::get('sf_web_debug'))
     {
-      // load the filter
-      $loaded = true;
-
       $response = $this->getContext()->getResponse();
 
       // don't add debug toolbar on XHR requests

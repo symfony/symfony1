@@ -26,14 +26,9 @@ class sfFlashFilter extends sfFilter
    */
   public function execute ($filterChain)
   {
-    static $loaded;
-
     // execute this filter only once
-    if (!isset($loaded))
+    if ($this->isFirstCall())
     {
-      // load the filter
-      $loaded = true;
-
       // flag current flash to be removed after the execution filter
       $context = $this->getContext();
       $userAttributeHolder = $context->getUser()->getAttributeHolder();
@@ -64,14 +59,9 @@ class sfFlashFilter extends sfFilter
    */
   public function executeBeforeRendering ($filterChain)
   {
-    static $loaded;
-
     // execute this filter only once
-    if (!isset($loaded))
+    if ($this->isFirstCallBeforeRendering())
     {
-      // load the filter
-      $loaded = true;
-
       // remove flash that are tagged to be removed
       $context = $this->getContext();
       $userAttributeHolder = $context->getUser()->getAttributeHolder();

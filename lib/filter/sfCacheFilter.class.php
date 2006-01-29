@@ -1,5 +1,8 @@
 <?php
 
+//$response->setHttpHeader('Last-Modified', $response->getDate(time()));
+
+
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
@@ -19,6 +22,8 @@ class sfCacheFilter extends sfFilter
 {
   private
     $cacheManager = null,
+    $request      = null,
+    $response     = null,
     $toSave       = array();
 
   public function initialize($context, $parameters = array())
@@ -26,6 +31,8 @@ class sfCacheFilter extends sfFilter
     parent::initialize($context, $parameters);
 
     $this->cacheManager = $context->getViewCacheManager();
+    $this->request      = $context->getRequest();
+    $this->response     = $context->getResponse();
   }
 
   /**
@@ -66,7 +73,7 @@ class sfCacheFilter extends sfFilter
 
         if ($inCache)
         {
-          // don't run execution filter
+          // page is in cache, so no need to run execution filter
           $filterChain->executionFilterDone();
         }
       }
@@ -105,18 +112,22 @@ class sfCacheFilter extends sfFilter
         return;
       }
 
-      // save page in cache
-      list($uri, $suffix) = $this->cacheManager->getInternalUri('page');
-      if ($this->toSave[$uri.'_'.$suffix])
+      // cache only 200 HTTP status
+      if ($this->response->getStatusCode() == 200)
       {
-        $this->setPageCache($uri, $suffix);
-      }
+        // save page in cache
+        list($uri, $suffix) = $this->cacheManager->getInternalUri('page');
+        if ($this->toSave[$uri.'_'.$suffix])
+        {
+          $this->setPageCache($uri, $suffix);
+        }
 
-      // save slot in cache
-      list($uri, $suffix) = $this->cacheManager->getInternalUri('slot');
-      if (isset($this->toSave[$uri.'_'.$suffix]) && $this->toSave[$uri.'_'.$suffix])
-      {
-        $this->setActionCache($uri, $suffix);
+        // save slot in cache
+        list($uri, $suffix) = $this->cacheManager->getInternalUri('slot');
+        if (isset($this->toSave[$uri.'_'.$suffix]) && $this->toSave[$uri.'_'.$suffix])
+        {
+          $this->setActionCache($uri, $suffix);
+        }
       }
     }
 
@@ -133,12 +144,10 @@ class sfCacheFilter extends sfFilter
       return;
     }
 
-    $response = $context->getResponse();
-
     // save content in cache
-    $content = $this->cacheManager->set($response->getContent(), $uri, $suffix);
+    $content = $this->cacheManager->set($this->response->getContent(), $uri, $suffix);
 
-    $response->setContent($content);
+    $this->response->setContent($content);
 
     if (sfConfig::get('sf_logging_active'))
     {
@@ -151,7 +160,7 @@ class sfCacheFilter extends sfFilter
     $context = $this->getContext();
 
     // ignore cache?
-    if (sfConfig::get('sf_debug') && $context->getRequest()->getParameter('ignore_cache', false, 'symfony/request/sfWebRequest') == true)
+    if (sfConfig::get('sf_debug') && $this->request->getParameter('ignore_cache', false, 'symfony/request/sfWebRequest') == true)
     {
       if (sfConfig::get('sf_logging_active'))
       {
@@ -178,14 +187,11 @@ class sfCacheFilter extends sfFilter
       if ($controller->getRenderMode() == sfView::RENDER_VAR)
       {
         $controller->getActionStack()->getLastEntry()->setPresentation($retval);
-        $context->getResponse()->setContent('');
+        $this->response->setContent('');
       }
       else
       {
-        //if (!$this->doConditionalGet(time()))
-        //{
-        $context->getResponse()->setContent($retval);
-        //}
+        $this->response->setContent($retval);
       }
 
       return true;
@@ -196,7 +202,7 @@ class sfCacheFilter extends sfFilter
 
   private function setActionCache($uri, $suffix)
   {
-    $content = $this->getContext()->getResponse()->getParameter($uri.'_'.$suffix, null, 'symfony/cache');
+    $content = $this->response->getParameter($uri.'_'.$suffix, null, 'symfony/cache');
     $this->cacheManager->set($content, $uri, $suffix);
 
     if (sfConfig::get('sf_logging_active'))
@@ -208,7 +214,7 @@ class sfCacheFilter extends sfFilter
   private function getActionCache($uri, $suffix)
   {
     // ignore cache parameter? (only available in debug mode)
-    if (sfConfig::get('sf_debug') && $this->getContext()->getRequest()->getParameter('ignore_cache', false, 'symfony/request/sfWebRequest') == true)
+    if (sfConfig::get('sf_debug') && $this->request->getParameter('ignore_cache', false, 'symfony/request/sfWebRequest') == true)
     {
       if (sfConfig::get('sf_logging_active'))
       {
@@ -222,7 +228,7 @@ class sfCacheFilter extends sfFilter
 
       if ($retval)
       {
-        $this->getContext()->getResponse()->setParameter($uri.'_'.$suffix, $retval, 'symfony/cache');
+        $this->response->setParameter($uri.'_'.$suffix, $retval, 'symfony/cache');
       }
 
       if (sfConfig::get('sf_logging_active'))
@@ -231,81 +237,6 @@ class sfCacheFilter extends sfFilter
       }
 
       return ($retval ? true : false);
-    }
-
-    return false;
-  }
-
-  // conditionnal get support
-  // http://fishbowl.pastiche.org/archives/001132.html
-  // http://simon.incutio.com/archive/2003/04/23/conditionalGet
-  // http://lightpress.org/post/php-http11-dates-and-conditional-get/
-  // http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9
-  private function doConditionalGet ($timestamp)
-  {
-    // ETag is any quoted string
-    $etag = '"'.$timestamp.'"';
-
-    // RFC1123 date
-    $rfc1123 = substr(gmdate('r', $timestamp), 0, -5).'GMT';
-
-    // RFC1036 date
-    $rfc1036 = gmdate('l, d-M-y H:i:s ', $timestamp).'GMT';
-
-    // asctime
-    $ctime = gmdate('D M j H:i:s', $timestamp);
-
-    // Send the headers
-    header("Last-Modified: $rfc1123");
-    header("ETag: $etag");
-
-    // See if the client has provided the required headers
-    $if_modified_since = $if_none_match = false;
-
-    if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']))
-    {
-      $if_modified_since = stripslashes($_SERVER['HTTP_IF_MODIFIED_SINCE']);
-    }
-
-    if(isset($_SERVER['HTTP_IF_NONE_MATCH']))
-    {
-      $if_none_match = stripslashes($_SERVER['HTTP_IF_NONE_MATCH']);
-    }
-
-    if (!$if_modified_since && !$if_none_match)
-    {
-      // both are missing
-      return false;
-    }
-
-    // At least one of the headers is there - check them
-    // check etag if it's there and there's no if-modified-since
-    if ($if_none_match)
-    {
-      if ($if_none_match != $etag)
-      {
-        // etag is there but doesn't match
-        return false;
-      }
-      if (!$if_modified_since && ($if_none_match == $etag))
-      {
-        header('HTTP/1.0 304 Not Modified');
-        return true;
-      }
-    }
-
-    if ($if_modified_since)
-    {
-      // check if-modified-since
-      foreach (array($rfc1123, $rfc1036, $ctime) as $d)
-      {
-        if ($d == $if_modified_since)
-        {
-          // Nothing has changed since their last request - serve a 304
-          header('HTTP/1.0 304 Not Modified');
-          return true;
-        }
-      }
     }
 
     return false;

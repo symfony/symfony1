@@ -22,7 +22,8 @@
 abstract class sfFilter
 {
   private
-    $parameter_holder = null;
+    $parameter_holder = null,
+    $filterCalled     = array();
 
   protected
     $context          = null;
@@ -35,6 +36,31 @@ abstract class sfFilter
    * @return void
    */
   abstract function execute ($filterChain);
+
+  protected function isFirstCallBeforeExecution ()
+  {
+    return $this->isFirstCall('beforeExecution');
+  }
+
+  protected function isFirstCallBeforeRendering ()
+  {
+    return $this->isFirstCall('beforeRendering');
+  }
+
+  protected function isFirstCall ($type = 'beforeExecution')
+  {
+    $class = get_class($this);
+    if (!isset($filter_called[$class][$type]))
+    {
+      return true;
+    }
+    else
+    {
+      $filterCalled[$class][$type] = true;
+
+      return true;
+    }
+  }
 
   /**
    * Retrieve the current application context.
