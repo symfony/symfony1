@@ -310,6 +310,7 @@ class sfContext
     $this->getUser()->shutdown();
     $this->getStorage()->shutdown();
     $this->getRequest()->shutdown();
+    $this->getResponse()->shutdown();
 
     if (sfConfig::get('sf_use_database'))
     {
