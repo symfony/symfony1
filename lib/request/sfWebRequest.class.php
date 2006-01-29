@@ -596,7 +596,7 @@ class sfWebRequest extends sfRequest
 
   public function getHttpHeader ($name)
   {
-    return isset($_SERVER['HTTP_'.strtoupper($name)]) ? $_SERVER['HTTP_'.strtoupper($name)]: null;
+    return isset($_SERVER['HTTP_'.strtoupper($name)]) ? stripslashes($_SERVER['HTTP_'.strtoupper($name)]) : null;
   }
 
   /**
