@@ -488,6 +488,18 @@ class sfWebRequest extends sfRequest
   }
 
   /**
+   * Returns request method.
+   *
+   * @return  string
+   */
+  public function getRequestMethod()
+  {
+    $pathArray = $this->getPathInfoArray();
+
+    return isset($pathArray['REQUEST_METHOD']) ? $pathArray['REQUEST_METHOD'] : 'GET';
+  }
+
+  /**
    * Get a list of languages acceptable by the client browser
    *
    * @return array languages ordered in the user browser preferences.
@@ -579,7 +591,12 @@ class sfWebRequest extends sfRequest
    */
   public function isXmlHttpRequest ()
   {
-    return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest');
+    return ($this->getHttpHeader('X_REQUESTED_WITH') == 'XMLHttpRequest');
+  }
+
+  public function getHttpHeader ($name)
+  {
+    return isset($_SERVER['HTTP_'.strtoupper($name)]) ? $_SERVER['HTTP_'.strtoupper($name)]: null;
   }
 
   /**
