@@ -52,14 +52,16 @@ class sfCommonFilter extends sfFilter
       $request  = $context->getRequest();
       $response = $context->getResponse();
 
-      // remove PHP automatic Cache-Control and Expires headers if not overwritten by application
+      // remove PHP automatic Cache-Control and Expires headers if not overwritten by application or cache
       $response->setHttpHeader('Cache-Control', null, false);
       $response->setHttpHeader('Expires', null, false);
+      $response->setHttpHeader('Pragma', null, false);
 
       // Etag support
       if ($this->getParameter('etag', true))
       {
         $etag = md5($response->getContent());
+        $response->setHttpHeader('ETag', $etag);
 
         if ($request->getHttpHeader('IF_NONE_MATCH') == $etag)
         {
@@ -71,16 +73,14 @@ class sfCommonFilter extends sfFilter
             $this->getContext()->getLogger()->info('{sfCommonFilter} ETag matches If-None-Match (send 304)');
           }
         }
-        else
-        {
-          $response->setHttpHeader('ETag', $etag);
-        }
       }
 
       // conditional GET support
       if ($response->hasHeader('Last-Modified'))
       {
-        if ($request->getHttpHeader('IF_MODIFIED_SINCE') == $response->getHeader('Last-Modified'))
+        $last_modified = $response->getHttpHeader('Last-Modified');
+        $last_modified = $last_modified[0];
+        if ($request->getHttpHeader('IF_MODIFIED_SINCE') == $last_modified)
         {
           $response->setStatusCode(304);
           $response->setContent('');
