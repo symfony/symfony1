@@ -119,6 +119,18 @@ class sfCacheFilter extends sfFilter
         list($uri, $suffix) = $this->cacheManager->getInternalUri('page');
         if ($this->toSave[$uri.'_'.$suffix])
         {
+          // set some headers that deals with cache
+          $lifetime = $this->cacheManager->getClientLifeTime($uri, $suffix);
+          $this->response->setHttpHeader('Last-Modified', $this->response->getDate(time()), false);
+          $this->response->setHttpHeader('Expires', $this->response->getDate(time() + $lifetime), false);
+          $this->response->addCacheControlHttpHeader('max-age', $lifetime);
+
+          // set Vary headers
+          foreach ($this->cacheManager->getVary($uri, $suffix) as $vary)
+          {
+            $this->response->addVaryHttpHeader($vary);
+          }
+
           $this->setPageCache($uri, $suffix);
         }
 
@@ -145,9 +157,13 @@ class sfCacheFilter extends sfFilter
     }
 
     // save content in cache
-    $content = $this->cacheManager->set($this->response->getContent(), $uri, $suffix);
+    $this->cacheManager->set(serialize($this->response), $uri, $suffix);
 
-    $this->response->setContent($content);
+    if (sfConfig::get('sf_web_debug'))
+    {
+      $content = sfWebDebug::getInstance()->decorateContentWithDebug($uri, $suffix, $this->response->getContent(), '#f00', '#9ff');
+      $this->response->setContent($content);
+    }
 
     if (sfConfig::get('sf_logging_active'))
     {
@@ -183,15 +199,24 @@ class sfCacheFilter extends sfFilter
 
     if ($retval !== null)
     {
+      $cachedResponse = unserialize($retval);
+      $cachedResponse->initialize($context);
+
       $controller = $context->getController();
       if ($controller->getRenderMode() == sfView::RENDER_VAR)
       {
-        $controller->getActionStack()->getLastEntry()->setPresentation($retval);
+        $controller->getActionStack()->getLastEntry()->setPresentation($cachedResponse->getContent());
         $this->response->setContent('');
       }
       else
       {
-        $this->response->setContent($retval);
+        $context->setResponse($cachedResponse);
+
+        if (sfConfig::get('sf_web_debug'))
+        {
+          $content = sfWebDebug::getInstance()->decorateContentWithDebug($uri, $suffix, $cachedResponse->getContent(), '#f00', '#ff9');
+          $this->response->setContent($content);
+        }
       }
 
       return true;

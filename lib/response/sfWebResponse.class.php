@@ -28,7 +28,7 @@ class sfWebResponse extends sfResponse
     $statusTexts = array();
 
   /**
-   * Initialize this sfResponse.
+   * Initialize this sfWebResponse.
    *
    * @param sfContext A sfContext instance.
    *
@@ -155,7 +155,7 @@ class sfWebResponse extends sfResponse
    *
    * @return array
    */
-  public function getHeader ($name, $defaultValue = null)
+  public function getHttpHeader ($name, $defaultValue = null)
   {
     $retval = array($defaultValue);
 
@@ -186,7 +186,7 @@ class sfWebResponse extends sfResponse
    */
   public function getContentType ()
   {
-    $ct = $this->getHeader('Content-Type', 'text/html');
+    $ct = $this->getHttpHeader('Content-Type', 'text/html');
 
     return $ct[0];
   }
@@ -214,7 +214,7 @@ class sfWebResponse extends sfResponse
 
     if (sfConfig::get('sf_logging_active'))
     {
-      $this->getContext()->getLogger()->info('{sfResponse} send status "'.$status.'"');
+      $this->getContext()->getLogger()->info('{sfWebResponse} send status "'.$status.'"');
     }
 
     // set headers from HTTP meta
@@ -232,7 +232,7 @@ class sfWebResponse extends sfResponse
 
         if (sfConfig::get('sf_logging_active'))
         {
-          $this->getContext()->getLogger()->info('{sfResponse} send header "'.$name.'": "'.$value.'"');
+          $this->getContext()->getLogger()->info('{sfWebResponse} send header "'.$name.'": "'.$value.'"');
         }
       }
     }
@@ -244,7 +244,7 @@ class sfWebResponse extends sfResponse
 
       if (sfConfig::get('sf_logging_active'))
       {
-        $this->getContext()->getLogger()->info('{sfResponse} send cookie "'.$cookie['name'].'": "'.$cookie['value'].'"');
+        $this->getContext()->getLogger()->info('{sfWebResponse} send cookie "'.$cookie['name'].'": "'.$cookie['value'].'"');
       }
     }
   }
@@ -285,13 +285,35 @@ class sfWebResponse extends sfResponse
 
   public function addVaryHttpHeader($header)
   {
-    $currentHeaders = split('/\s*,\s*/', $this->getHttpHeader('Vary'));
+    $vary = $this->getHttpHeader('Vary');
+    $currentHeaders = array();
+    if ($vary[0])
+    {
+      $currentHeaders = split('/\s*,\s*/', $vary[0]);
+    }
     $header = $this->normalizeHeaderName($header);
 
     if (!in_array($header, $currentHeaders))
     {
       $currentHeaders[] = $header;
       $this->setHttpHeader('Vary', implode(', ', $currentHeaders));
+    }
+  }
+
+  public function addCacheControlHttpHeader($name, $value = null)
+  {
+    $cacheControl = $this->getHttpHeader('Cache-Control');
+    $currentHeaders = array();
+    if ($cacheControl[0])
+    {
+      $currentHeaders = split('/\s*,\s*/', $cacheControl[0]);
+    }
+    $name = strtr(strtolower($name), '_', '-');
+
+    if (!in_array($name, $currentHeaders))
+    {
+      $currentHeaders[] = $name.($value !== null ? '='.$value : '');
+      $this->setHttpHeader('Cache-Control', implode(', ', $currentHeaders));
     }
   }
 
