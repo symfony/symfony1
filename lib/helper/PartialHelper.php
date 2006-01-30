@@ -78,13 +78,16 @@ function include_component($moduleName, $componentName, $vars = array())
     if (sfConfig::get('sf_logging_active')) $context->getLogger()->info('{sfComponent} call "'.$moduleName.'->'.$componentToRun.'()'.'"');
 
     // run component
-    $componentInstance->$componentToRun();
+    $retval = $componentInstance->$componentToRun();
 
-    // get component vars
-    $componentVars = $componentInstance->getVarHolder()->getAll();
+    if ($retval != sfView::NONE)
+    {
+      // get component vars
+      $componentVars = $componentInstance->getVarHolder()->getAll();
 
-    // include partial
-    include_partial($moduleName.'/'.$componentName, array_merge($vars, $componentVars));
+      // include partial
+      include_partial($moduleName.'/'.$componentName, array_merge($vars, $componentVars));
+    }
   }
   else
   {
