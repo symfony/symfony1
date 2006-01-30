@@ -88,7 +88,7 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
     return $values;
   }
 
-  protected function getConfigValue($keyName, $category)
+  protected function getConfigValue($keyName, $category, $defaultValue = null)
   {
     if ($category && isset($this->yamlConfig[$category][$keyName]))
     {
@@ -102,6 +102,8 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
     {
       return $this->defaultConfig['default'][$keyName];
     }
+
+    return $defaultValue;
   }
 }
 
