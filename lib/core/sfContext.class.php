@@ -250,6 +250,18 @@ class sfContext
   }
 
   /**
+   * Set the response object.
+   *
+   * @param sfResponse A sfResponse instance.
+   *
+   * @return void.
+   */
+  public function setResponse ($response)
+  {
+    $this->response = $response;
+  }
+
+  /**
    * Retrieve the storage.
    *
    * @return sfStorage The current sfStorage implementation instance.
