@@ -151,7 +151,7 @@ class sfViewCacheManager
     $entry = $moduleName.'_'.$actionName.'_'.$suffix;
     $this->cacheConfig[$entry] = array(
       'lifeTime'       => $lifeTime,
-      'clientLifeTime' => $clientLifeTime ? $clientLifeTime : $lifeTime,
+      'clientLifeTime' => ($clientLifeTime !== null) ? $clientLifeTime : $lifeTime,
       'vary'           => $vary,
     );
   }
