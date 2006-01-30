@@ -95,9 +95,9 @@ function objects_for_select($options = array(), $value_method, $text_method = nu
     }
 
     $value = $option->$value_method();
-    $key = ($text_method != null) ? $option->$text_method() : $value;
+    $key   = ($text_method != null) ? $option->$text_method() : $value;
 
-    $select_options[$key] = $value;
+    $select_options[$value] = $key;
   }
 
   return options_for_select($select_options, $selected);
