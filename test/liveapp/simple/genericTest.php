@@ -1,6 +1,6 @@
 <?php
 
-class simpleTest extends sfLiveProjectUnitTestCase
+class genericTest extends sfLiveProjectUnitTestCase
 {
   public function test_simple()
   {
