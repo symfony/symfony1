@@ -48,7 +48,7 @@ For authenticated users, symfony provides an array of credentials in the `sfUser
     $user->hasCredential($credential)                  =>   false
     // remove all credentials
     $user->clearCredential();
-    $user->hasCredentials($credential1)                 =>   false
+    $user->hasCredentials($credential1)                =>   false
 
 Here is an example of credential definition:
 
@@ -75,9 +75,13 @@ Here is an example of credential definition:
       {
         $user = $this->getUser();
         if ($user->hasCrendential('admin', 'superuser'))
+        {
           $user->removeCredential('superuser');
+        }
         if ($user->hasCredential('admin'))
+        {
           $user->removeCredential('admin');
+        }
       }
       
       public function executeLogout()

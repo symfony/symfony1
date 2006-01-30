@@ -279,19 +279,5 @@ The methods described below can be transposed to build other RSS feeds. Simply c
     // RSS 2.01
     $feed = sfFeed::newInstance('rss201rev2');
 
-Web debug toolbar issue
------------------------
-
-The web debug toolbar code is added to all the pages of an application when the `web_debug` setting is set to `on` in a given environment. That's the case for the `dev` environment by default.
-
-The direct consequence of this is that a news feed generated in the development environment contains the HTML code of the web debug toolbar, and is not a valid Atom/RSS XML feed. To allow the RSS feed to work properly in all environments, the web debug toolbar must be deactivated.
-
-You can simply do that by setting a `disable_web_debug` request attribute to `true`. In the previous examples, it is done by adding in the action:
-
-    [php]
-    $this->getRequest()->setAttribute('disable_web_debug', true, 'debug/web');
-
-You can find more information about the web debug toolbar in the [debug chapter](debug.txt).
-
 [1]: http://en.wikipedia.org/wiki/Atom_%28standard%29  "Atom definition at Wikipedia"
 [2]: http://en.wikipedia.org/wiki/Factory_object       "Factory definition at Wikipedia"

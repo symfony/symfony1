@@ -144,7 +144,7 @@ Remember that each one of these settings is accessible from inside the PHP code 
 If you need to use data stored in a database in your application, you have to configure the access to your database(s) by entering data in the `database.yml` file.
 
     all:
-      default:
+      propel:
         class:          sfPropelDatabase
         param:
           datasource:   symfony
@@ -153,7 +153,7 @@ If you need to use data stored in a database in your application, you have to co
 This is a shorthand syntax for the setting of all the data access parameters:
 
     all:
-      default:
+      propel:
         class:          sfPropelDatabase
         param:
           datasource:   symfony

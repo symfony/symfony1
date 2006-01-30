@@ -79,11 +79,13 @@ An import batch is a PHP script that reads the data from YAML files and transfer
     define('SF_ENVIRONMENT', 'dev');
     define('SF_DEBUG',       true);
     
-    require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
+    require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
+    
+    sfContext::getInstance();
+    
+The definition of an application (`myapp`) and of an environment (`dev`) allows symfony to determine a configuration to be loaded. Once executed, this code allows the batch to access Propel objects, and to autoload any symfony class.
 
-The definition of an application (`myapp`) and an environments (`dev`) allow symfony to determine a configuration to be loaded. Once executed, this code allows the batch to access Propel objects, and to autoload any symfony class.
-
-### sfPropelData call
+### `sfPropelData` call
 
 The `sfPropelData` is an object who knows how to read a YAML data file and use it to add records to a Propel-enabled database. It is very easy to use: you just need to call its `->loadData()` method, passing as an argument a file or a directory that contains the data to be loaded into the database.
 

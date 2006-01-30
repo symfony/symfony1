@@ -19,7 +19,7 @@ Getting access to this object and its methods differs whether you are in an acti
 or if you are in a template:
 
     [php]
-    $user
+    $sf_user
 
 The `sfUser` class owns a few default attributes used by symfony to deal with classical user session interactions:
 

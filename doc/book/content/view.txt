@@ -1,5 +1,5 @@
-Symfony View: templates, layouts, slots and fragments
-=====================================================
+Symfony View: templates, layouts, partials and components
+=========================================================
 
 Overview
 --------

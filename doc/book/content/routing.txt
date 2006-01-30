@@ -326,9 +326,9 @@ The URIs returned by the `->getCurrentInternalUri()` method can be used in a cal
 
 In addition, you might want to get the first or the last action called in a template. The following variables are automatically updated at each request and are available to templates:
 
-    $first_action
-    $first_module
-    $last_action
-    $last_module
+    $sf_first_action
+    $sf_first_module
+    $sf_last_action
+    $sf_last_module
 
-You might ask: why can't I simply retrieve the current module/action ? Because the calls to actions is a stack, and several calls can be made for a unique request. For instance, if the end of an action contents a `forward` statement, or if the layout of the view contains a slot, several actions will be called.    
+You might ask: Why can't I simply retrieve the current module/action ? Because the calls to actions is a stack, and several calls can be made for a unique request. For instance, if the end of an action contents a `forward` statement, several actions will be called.    

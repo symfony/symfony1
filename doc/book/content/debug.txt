@@ -59,13 +59,13 @@ The only way to understand what went wrong during the execution of a request is 
 
 First of all, a little reminder: PHP has a parameter `error_reporting`, defined in the `php.ini`, that defines which events are logged. Symfony allows you to override this value for each application by setting a specific `error_reporting` in the `settings.yml` file:
 
-		prod:
-			.settings:
-				error_reporting:	257
-		
-		dev:
-			.settings:
-				error_reporting:	4095
+    prod:
+     .settings:
+        error_reporting:  257
+    
+    dev:
+      settings:
+        error_reporting:  4095
 
 The numbers are a short way of writing error levels (refer to the [PHP documentation on error reporting][2] for more details about it). Basically, 4095 is a shortcut for `E_ALL | E_STRICT`, and 257 stands for `E_ERROR | E_USER_ERROR` (the default value for every new environment).
 
@@ -79,15 +79,15 @@ In addition to the classic PHP logs, symfony can trace a lot of custom events. T
 
 If you have a symfony application running, take a look at its log files. The syntax is very simple: for every event, one line is added to the log file of the application, where the exact time of the event, the nature of the event, the object being processed and the details of the process are written. Here is an example:
 
-		Nov 15 16:30:25 symfony [info] {sfActions} call "barActions->executemessages()"
-		Nov 15 16:30:25 symfony [debug] SELECT bd_message.ID, bd_message.SENDER_ID, bd_message.RECIPIENT_ID, bd_message.SEND_DATE, bd_message.TITLE, bd_message.BODY, bd_message.IS_READ FROM bd_message WHERE bd_message.RECIPIENT_ID=? AND bd_message.IS_READ=? [LIMIT: 0, OFFSET: 0]
-		Nov 15 16:30:25 symfony [info] {sfCreole} executeQuery(): SELECT bd_message.ID, bd_message.SENDER_ID, bd_message.RECIPIENT_ID, bd_message.SEND_DATE, bd_message.TITLE, bd_message.BODY, bd_message.IS_READ FROM bd_message WHERE bd_message.RECIPIENT_ID=3 AND bd_message.IS_READ=0
-		Nov 15 16:30:25 symfony [info] {sfRenderView} set slot "leftbar" (bar/index)
-		Nov 15 16:30:25 symfony [info] {sfRenderView} set slot "messageblock" (bar/messages)
-		Nov 15 16:30:25 symfony [info] {sfRenderView} execute view for template "messagesSuccess.php"
-		Nov 15 16:30:25 symfony [info] {sfPHPView} render "/home/production/myproject/fo/modules/bar/templates/messagesSuccess.php"
-		Nov 15 16:30:25 symfony [info] {sfPHPView} render to client
-		Nov 15 16:30:25 symfony [error] {sfActionStopException} 
+    Nov 15 16:30:25 symfony [info] {sfActions} call "barActions->executemessages()"
+    Nov 15 16:30:25 symfony [debug] SELECT bd_message.ID, bd_message.SENDER_ID, bd_message.RECIPIENT_ID, bd_message.SEND_DATE, bd_message.TITLE, bd_message.BODY, bd_message.IS_READ FROM bd_message WHERE bd_message.RECIPIENT_ID=? AND bd_message.IS_READ=? [LIMIT: 0, OFFSET: 0]
+    Nov 15 16:30:25 symfony [info] {sfCreole} executeQuery(): SELECT bd_message.ID, bd_message.SENDER_ID, bd_message.RECIPIENT_ID, bd_message.SEND_DATE, bd_message.TITLE, bd_message.BODY, bd_message.IS_READ FROM bd_message WHERE bd_message.RECIPIENT_ID=3 AND bd_message.IS_READ=0
+    Nov 15 16:30:25 symfony [info] {sfRenderView} set slot "leftbar" (bar/index)
+    Nov 15 16:30:25 symfony [info] {sfRenderView} set slot "messageblock" (bar/messages)
+    Nov 15 16:30:25 symfony [info] {sfRenderView} execute view for template "messagesSuccess.php"
+    Nov 15 16:30:25 symfony [info] {sfPHPView} render "/home/production/myproject/fo/modules/bar/templates/messagesSuccess.php"
+    Nov 15 16:30:25 symfony [info] {sfPHPView} render to client
+    Nov 15 16:30:25 symfony [error] {sfActionStopException} 
 
 Lots of information can be found in these files, including the actual SQL queries sent to the database, the templates called, the chain of calls between objects, and so on. You can easily add your own logs, as explained [later in this chapter](#addlog).
 
@@ -131,7 +131,9 @@ Next time you display a page in an environment with web debug toolbar enabled, y
 
 To hide it, press the red cross button on the top right corner.
 
->**Note**: at this time, the web debug toolbar doesn't display on pages that result from a `->redirect()` statement.
+You can deactivate the web debug toolbar manually from within an action by simply changing this setting:
+
+    sfConfig::set('sf_web_debug', false);
 
 ### Log messages
 
@@ -211,5 +213,5 @@ For instance, for a template call:
 ![Toolbar with debug message](images/book/web_debug6.gif)
 
 [1]:  http://xdebug.org/                    "XDebug extention website"
-[2]:	http://fr.php.net/error_reporting			"Error reporting manual at PHP.net"
+[2]:  http://fr.php.net/error_reporting     "Error reporting manual at PHP.net"
 [3]:  http://pear.php.net/package/Log/      "PEAR Log package'
