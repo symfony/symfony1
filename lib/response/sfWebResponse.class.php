@@ -283,6 +283,18 @@ class sfWebResponse extends sfResponse
     }
   }
 
+  public function addVaryHttpHeader($header)
+  {
+    $currentHeaders = split('/\s*,\s*/', $this->getHttpHeader('Vary'));
+    $header = $this->normalizeHeaderName($header);
+
+    if (!in_array($header, $currentHeaders))
+    {
+      $currentHeaders[] = $header;
+      $this->setHttpHeader('Vary', implode(', ', $currentHeaders));
+    }
+  }
+
   /**
    * Execute the shutdown procedure.
    *
