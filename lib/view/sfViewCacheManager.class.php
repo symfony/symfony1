@@ -76,8 +76,23 @@ class sfViewCacheManager
 
     // prefix with vary headers
     $varyHeaders = $this->getVary($internalUri, $suffix);
-    sort($varyHeaders);
-    $vary = $varyHeaders ? implode('_', $varyHeaders) : 'all';
+    if ($varyHeaders)
+    {
+      sort($varyHeaders);
+      $request = $this->getContext()->getRequest();
+      $vary = '';
+
+      foreach ($varyHeaders as $header)
+      {
+        $vary .= $request->getHttpHeader($header).'|';
+      }
+
+      $vary = md5($vary);
+    }
+    else
+    {
+      $vary = 'all';
+    }
 
     // prefix with hostname
     $request = $this->context->getRequest();
