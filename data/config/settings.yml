@@ -24,8 +24,6 @@ default:
     module_accessor:        module
     action_accessor:        action
 
-    content_type:           html
-
     path_info_array:        SERVER
     path_info_key:          PATH_INFO
 
