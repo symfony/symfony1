@@ -49,7 +49,7 @@ default:
 
     web_debug:              off
 
-    cache:                  on
+    cache:                  off
     default_cache_lifetime: 86400
 
     routing:                on
