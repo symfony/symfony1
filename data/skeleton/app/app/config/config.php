@@ -74,14 +74,12 @@ if ($version != $sf_version)
 }
 
 // go
-$bootstrap = sfConfig::get('sf_config_cache_dir').'/config_bootstrap_compile.yml.php';
-if (is_readable($bootstrap))
+$core = sfConfig::get('sf_config_cache_dir').'/config_core_compile.yml.php';
+if (is_readable($core))
 {
-  require_once($bootstrap);
+  sfConfig::set('sf_in_bootstrap', true);
 }
-else
-{
-  require_once(sfConfig::get('sf_symfony_lib_dir').'/symfony.php');
-}
+
+require_once(sfConfig::get('sf_symfony_lib_dir').'/symfony.php');
 
 ?>

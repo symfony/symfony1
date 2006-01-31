@@ -1,11 +1,11 @@
 <?php
 
+$sf_symfony_lib_dir = sfConfig::get('sf_symfony_lib_dir');
 if (!sfConfig::get('sf_in_bootstrap'))
 {
-  $sf_symfony_lib_dir = sfConfig::get('sf_symfony_lib_dir');
-
   // YAML support
-  if (!function_exists('syck_load')) {
+  if (!function_exists('syck_load'))
+  {
     require_once($sf_symfony_lib_dir.'/util/Spyc.class.php');
   }
   require_once($sf_symfony_lib_dir.'/util/sfYaml.class.php');
@@ -30,6 +30,10 @@ if (!sfConfig::get('sf_in_bootstrap'))
 
   // utils
   require_once($sf_symfony_lib_dir.'/util/sfParameterHolder.class.php');
+}
+else
+{
+  require_once($sf_symfony_lib_dir.'/config/sfConfigCache.class.php');
 }
 
 /**

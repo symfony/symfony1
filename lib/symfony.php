@@ -18,10 +18,7 @@
  * @version    SVN: $Id$
  */
 
-if (!($sf_in_bootstrap = sfConfig::get('sf_in_bootstrap')))
-{
-  include_once(dirname(__FILE__).'/symfony_autoload.php');
-}
+include_once(dirname(__FILE__).'/symfony_autoload.php');
 
 try
 {
@@ -51,15 +48,10 @@ try
   include($configCache->checkConfig($sf_app_config_dir_name.'/settings.yml'));
   include($configCache->checkConfig($sf_app_config_dir_name.'/app.yml'));
 
-  // create bootstrap file for next time
-  $sf_debug = sfConfig::get('sf_debug');
-  if (!$sf_in_bootstrap && !$sf_debug && !sfConfig::get('sf_test'))
-  {
-    $configCache->checkConfig($sf_app_config_dir_name.'/bootstrap_compile.yml');
-  }
-
   // set exception format
   sfException::setFormat(isset($_SERVER['HTTP_HOST']) ? 'html' : 'plain');
+
+  $sf_debug = sfConfig::get('sf_debug');
 
   if ($sf_debug)
   {

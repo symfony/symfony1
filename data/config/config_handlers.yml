@@ -20,9 +20,6 @@ app.yml:
 factories.yml:
   class:    sfFactoryConfigHandler
 
-bootstrap_compile.yml:
-  class:    sfCompileConfigHandler
-
 core_compile.yml:
   class:    sfCompileConfigHandler
 
