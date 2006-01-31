@@ -70,9 +70,7 @@ function run_alltests($task, $args)
 
   pake_import('simpletest', false);
 
-  try {
-    pakeSimpletestTask::run_test($task, $args);
-  } catch(Exception $e) {}
+  pakeSimpletestTask::run_test($task, $args);
 
   // cleanup our test enviroment
   sfToolkit::clearDirectory($tmp_dir);
