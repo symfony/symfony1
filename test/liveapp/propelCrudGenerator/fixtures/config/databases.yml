@@ -1,7 +1,6 @@
 all:
-  default:
+  propel:
     class:          sfPropelDatabase
     param:
-      datasource:   symfony
       phptype:      sqlite
       database:     ##DB_PATH##

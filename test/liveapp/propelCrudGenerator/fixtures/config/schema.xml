@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
- <database name="symfony" defaultIdMethod="native">
+ <database name="propel" defaultIdMethod="native">
 
    <table name="post" phpName="Post">
      <column name="id" type="integer" required="true" primaryKey="true" autoincrement="true" />

@@ -39,7 +39,7 @@ class propelCrudGeneratorTest extends sfLiveProjectUnitTestCase
 
     // populate with some fixture data
     $data = new sfPropelData();
-    $data->loadData(sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.'fixtures.yml');
+    $data->loadData(sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.'fixtures.yml', 'propel');
 
     // initialize scaffolding
     $this->runSymfony('init-propelcrud app posti Post');

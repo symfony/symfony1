@@ -34,7 +34,7 @@ class sfPropelData
 
   // symfony load-data (file|dir)
   // todo: symfony dump-data
-  public function loadData($directory_or_file = null, $connectionName = 'default')
+  public function loadData($directory_or_file = null, $connectionName = 'propel')
   {
     $fixture_files = $this->getFiles($directory_or_file);
 
