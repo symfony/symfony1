@@ -354,7 +354,10 @@ class sfWebDebug
         try
         {
           $con = Propel::getConnection();
-          $result .= '<div><span class="float bold">['.$con->getNumQueriesExecuted().']</span>db requests</div>';
+          if (method_exists($con, 'getNumQueriesExecuted'))
+          {
+            $result .= '<div><span class="float bold">['.$con->getNumQueriesExecuted().']</span>db requests</div>';
+          }
         }
         catch (Exception $e)
         {
