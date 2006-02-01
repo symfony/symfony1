@@ -56,7 +56,7 @@ class sfFrontWebController extends sfWebController
     catch (Exception $e)
     {
       // unknown exception
-      $e = new sfException($e->getMessage());
+      $e = new sfException(get_class($e).': '.$e->getMessage());
 
       $e->printStackTrace();
     }
