@@ -70,3 +70,5 @@ default:
     activated_modules:      [default]
 
     strip_comments:         off
+
+    etag:                   on

@@ -58,7 +58,7 @@ class sfCommonFilter extends sfFilter
       $response->setHttpHeader('Pragma', null, false);
 
       // Etag support
-      if ($this->getParameter('etag', true))
+      if ($this->getParameter('etag'))
       {
         $etag = md5($response->getContent());
         $response->setHttpHeader('ETag', $etag);

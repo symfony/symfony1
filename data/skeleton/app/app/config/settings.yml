@@ -10,6 +10,7 @@ dev:
     cache:                  off
     stats:                  off
     no_script_name:         off
+    etag:                   off
 
 test:
   .settings:
@@ -19,6 +20,7 @@ test:
     stats:                  off
     web_debug:              off
     no_script_name:         off
+    etag:                   off
 
 all:
 #  .actions:
@@ -92,3 +94,5 @@ all:
 #    activated_modules:      [default]
 #
 #    strip_comments:         off
+#
+#    etag:                   on
