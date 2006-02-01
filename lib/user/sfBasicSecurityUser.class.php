@@ -99,6 +99,8 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
    *
    * @param  mixed credential
    * @return boolean
+   *
+   * @author David Zuelke <dz@bitxtender.com>
    */
   public function hasCredential($credential)
   {
