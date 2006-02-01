@@ -43,7 +43,7 @@ class sfException extends Exception
 
     parent::__construct($message, $code);
 
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_active') && $this->getName() != 'sfActionStopException')
     {
       sfLogger::getInstance()->err('{'.$this->getName().'} '.$message);
     }
@@ -86,6 +86,17 @@ class sfException extends Exception
    */
   public function printStackTrace ()
   {
+    // don't print message if it is an sfActionStopException exception
+    if ($this->getName() == 'sfActionStopException')
+    {
+      if (!sfConfig::get('sf_test'))
+      {
+        exit(1);
+      }
+
+      return;
+    }
+
     // exception related properties
     $class     = ($this->getFile() != null) ? sfToolkit::extractClassName($this->getFile()) : 'N/A';
     $class     = ($class != '') ? $class : 'N/A';
