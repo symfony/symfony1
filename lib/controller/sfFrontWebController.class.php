@@ -37,7 +37,7 @@ class sfFrontWebController extends sfWebController
       // get the application context
       $context = $this->getContext();
 
-      if ($sf_logging_active = sfConfig::get('sf_logging_active'))
+      if (sfConfig::get('sf_logging_active'))
       {
         $this->getContext()->getLogger()->info('{sfFrontWebController} dispatch request');
       }
