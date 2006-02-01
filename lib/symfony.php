@@ -49,10 +49,6 @@ if (!sfConfig::get('sf_in_bootstrap'))
   // utils
   require_once($sf_symfony_lib_dir.'/util/sfParameterHolder.class.php');
 }
-else
-{
-  require_once($sf_symfony_lib_dir.'/config/sfConfigCache.class.php');
-}
 
 /**
  * Handles autoloading of classes that have been specified in autoload.yml.
