@@ -594,11 +594,32 @@ class sfWebRequest extends sfRequest
     return ($this->getHttpHeader('X_REQUESTED_WITH') == 'XMLHttpRequest');
   }
 
-  public function getHttpHeader ($name)
+  public function getHttpHeader ($name, $prefix = 'http')
   {
-    $name = 'HTTP_'.strtoupper(strtr($name, '-', '_'));
+    $name = strtoupper($prefix).'_'.strtoupper(strtr($name, '-', '_'));
 
-    return isset($_SERVER[$name]) ? stripslashes($_SERVER[$name]) : null;
+    $pathArray = $this->getPathInfoArray();
+
+    return isset($pathArray[$name]) ? stripslashes($pathArray[$name]) : null;
+  }
+
+  public function __call ($name, $arguments)
+  {
+    if (0 === stripos($name, 'getHttp'))
+    {
+      $header = sfInflector::underscore(substr($name, 7));
+
+      return $this->getHttpHeader($header);
+    }
+    else if (0 === stripos($name, 'getSsl'))
+    {
+      $header = sfInflector::underscore(substr($name, 7));
+
+      return $this->getHttpHeader($header, 'ssl');
+    }
+
+    $error = sprintf('Call to undefined function: %s::%s().', get_class($this), $name);
+    trigger_error($error, E_USER_ERROR);
   }
 
   /**
