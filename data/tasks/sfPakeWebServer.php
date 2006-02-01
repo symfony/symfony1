@@ -29,6 +29,7 @@ function run_server($task, $args)
   );
 
   sfConfig::set('sf_factory_storage', 'sfSessionTestStorage');
+  sfConfig::set('sf_no_script_name',  true);
 
   require_once('symfony/vendor/nanoserv/nanoserv.php');
 

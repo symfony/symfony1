@@ -9,7 +9,7 @@ class sfWebServer extends NS_HTTP_Service_Handler
 
   public function __construct($config)
   {
-      $this->config = $config;
+    $this->config = $config;
   }
 
   public function on_Request($url)
@@ -21,11 +21,11 @@ class sfWebServer extends NS_HTTP_Service_Handler
       $cfn = realpath(sfConfig::get('sf_symfony_data_dir').DIRECTORY_SEPARATOR.'web'.DIRECTORY_SEPARATOR.$url);
     }
 
-    if ($pos = strpos($url, 'index.php'))
+    // simulate symfony rewritting rules
+    if (!preg_match('/\..+$/', $url) || (preg_match('/\.html$/', $url) && !is_readable($cfn)))
     {
-      return $this->config['browser']->get(substr($url, $pos + 9));
+      return $this->config['browser']->get($url);
     }
-//    else if ((strpos($cfn, $this->config['doc_root']) !== 0) || (!is_readable($cfn)))
     else if (!is_readable($cfn))
     {
       $this->Set_Response_Status(404);

@@ -24,8 +24,6 @@ class sfLog_var extends sfLog
      */
     private $_eol = "\n";
 
-    private $web_debug = null;
-
     public function sfLog_var($name, $ident = '', $conf = array(), $level = SF_PEAR_LOG_DEBUG)
     {
       $this->_id = $name.'_'.$ident;
@@ -40,8 +38,6 @@ class sfLog_var extends sfLog
       {
         $this->_eol = (strstr(PHP_OS, 'WIN')) ? "\r\n" : "\n";
       }
-
-      $this->web_debug = sfWebDebug::getInstance();
     }
 
     public function log($message, $priority = null)
@@ -102,7 +98,7 @@ class sfLog_var extends sfLog
       $logEntry->setDebugStack($debug_stack);
 
       /* Send the log object. */
-      $this->web_debug->log($logEntry);
+      sfWebDebug::getInstance()->log($logEntry);
 
       /* Notify observers about this log message. */
       $this->_announce(array('priority' => $priority, 'message' => $message));
