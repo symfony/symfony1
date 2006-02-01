@@ -28,8 +28,9 @@ function run_server($task, $args)
     'browser'  => $browser,
   );
 
-  sfConfig::set('sf_factory_storage', 'sfSessionTestStorage');
-  sfConfig::set('sf_no_script_name',  true);
+  sfConfig::set('sf_factory_storage',   'sfSessionTestStorage');
+  sfConfig::set('sf_no_script_name',    true);
+  sfConfig::set('sf_relative_url_root', '');
 
   require_once('symfony/vendor/nanoserv/nanoserv.php');
 
