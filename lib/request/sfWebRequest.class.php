@@ -618,7 +618,7 @@ class sfWebRequest extends sfRequest
     }
     else if (0 === stripos($name, 'getSsl'))
     {
-      $header = sfInflector::underscore(substr($name, 7));
+      $header = sfInflector::underscore(substr($name, 6));
 
       return $this->getHttpHeader($header, 'ssl');
     }
