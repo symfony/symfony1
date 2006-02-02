@@ -28,15 +28,6 @@ abstract class sfFilter
   protected
     $context          = null;
 
-  /**
-   * Execute this filter.
-   *
-   * @param FilterChain A FilterChain instance.
-   *
-   * @return void
-   */
-  abstract function execute ($filterChain);
-
   protected function isFirstCallBeforeExecution ()
   {
     return $this->isFirstCall('beforeExecution');
