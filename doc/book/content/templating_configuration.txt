@@ -64,7 +64,7 @@ The next sections will detail how the parameter definitions in this file can aff
 Default configuration
 ---------------------
 
-The default global template, created when you initialize an application, is called `layout.php` and looks like this:
+The default global template, created when you initialize an application, is called `layout.php`. It is located in `myproject/apps/myapp/templates/` and looks like this:
 
     [php]
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/2000/REC-xhtml1-200000126/DTD/xhtml1-transitional.dtd">

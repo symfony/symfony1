@@ -9,9 +9,15 @@ Symfony has an object/relational abstraction layer based on the [Propel][1] proj
 Why use an abstraction layer?
 -----------------------------
 
-Databases are relational. PHP5 and symfony are object oriented. In order to access the database in an object-oriented way, an interface translating the object logic to the relational logic is required. 
+Databases are relational. PHP5 and symfony are object oriented. In order to access the database in an object-oriented way, an interface translating the object logic to the relational logic is required. It is called an object-relational mapping, or ORM. 
 
-Using objects instead of records, and classes instead of tables, allows you to add new accessors to your tables. For instance, if you have a table called 'client' with two fields 'FirstName' and 'LastName', you might like to be able to require just a 'name'. In an object-oriented world, this is very easy: just add a new accessor method.
+This is the **Model** layer of the symfony MVC architecture. It is made up of objects that give access to data and keep business rules within themselves.
+
+One benefit of an object/relational abstraction layer is that it prevents you from using a syntax that is specific to a given database. It automatically translates calls to the model objects to SQL queries optimized for the current database.
+
+This means that switching to another database system in the middle of a project is easy. Imagine that you have to write a quick prototype for an application, but the client hasn't decided yet which database system would best suit his needs. You can start building your application with SQLite, for instance, and switch to MySQL, PostgreSQL or Oracle when the client is ready to. Just change one line in a configuration file, and it works.
+
+Using objects instead of records, and classes instead of tables, have another benefit: they allow you to add new accessors to your tables. For instance, if you have a table called 'Client' with two fields 'FirstName' and 'LastName', you might like to be able to require just a 'Name'. In an object-oriented world, it is as easy as adding a new accessor method to the `Client` class.
 
     [php]
     public function getName()
@@ -32,13 +38,7 @@ All the repeated data access functions and the business logic of the data itself
       return $total;
     }
 
-And that's it. Imagine how long it would have required to write a SQL request doing the same? Anyway, the question is irrelevant, since symfony and PHP5 get you used to object orientation and its benefits. Why apply new constraints when its comes to the data models?
-
-This is the **Model** layer of the symfony MVC architecture. It is made up of Objects that give access to data and keep business rules within themselves.
-
-There is one last benefit of an object/relational abstraction layer: you can change your database in the middle of a project. The abstraction layer prevents you from using a syntax that is specific to a given database. It translates the methods calls to requests specific to the configured database.
-
-Imagine that you have to write a quick prototype for an application, but the client hasn't decided yet which database system would best suit his needs. You can start building your application with SQLite, for instance, and switch to MySQL, PostgreSQL or Oracle when the client is ready to. Just change one line in a configuration file, and it works.
+And that's it. Imagine how long it would have required to write a SQL query doing the same? 
 
 [Propel][1] is currently one of the best object/relational abstraction layer for PHP5. Instead of rewriting it, symfony integrates it seamlessly into the framework.
 
@@ -47,20 +47,20 @@ XML Data model
 
 ### Purpose
 
-In order to create the data object model that PHP will be using, you need to translate whatever relational model your database has to an object data model. Propel does that with an XML format file called `schema.xml`.
+In order to create the data object model that PHP can use, you need to translate whatever relational model your database has to an object data model. Propel does that with an XML format file called `schema.xml`.
 
 The `schema.xml` file must be located in the `myproject/config/` directory. This implies that all applications of your project will share the same data object model.
 
-When you create an application with the `symfony init-app` command, a file called `schema.xml.sample`, containing the first lines of any `schema.xml`, is provided as a sample in the same directory (feel free to erase it as soon as your own schema is written):
+When you create an application with the `symfony init-app` command, a file called `schema.xml.sample`, containing the first lines of a `schema.xml`, is provided as a sample in the same directory (feel free to erase it as soon as your own schema is written):
 
     [xml]
     <?xml version="1.0" encoding="UTF-8"?>
      <database name="propel" defaultIdMethod="native" noxsd="true">
      </database>
 
-The `name` attribute of the `<database>` tag is the name of the database connection. It is not the actual name of your database, because this name depends on the application configuration - and the environment - that you will describe in the file `myproject/apps/myapp/config/databases.yml`.
+The `name` attribute of the `<database>` tag is the name of the database connection. It is not the actual name of your database, because this name depends on the application configuration - and the environment - that you will describe in the database connection configuration file (`myproject/apps/myapp/config/databases.yml`).
 
->**Note**: As a matter of fact, you can setup several database connections for one project, to be able to dispatch your data in several databases. To that extent, you can either write several `schema.xml` files (prefix them with a spacial name, but keep the `schema.xml` at the end so that they are recognized) or add other `<database>` tags to your `schema.xml` file.
+>**Note**: As a matter of fact, you can setup several database connections for one project, to be able to dispatch your data into several databases. To that extent, you can either write several `schema.xml` files (prefix them with a special name, but keep the `schema.xml` at the end so that they are recognized) or add other `<database>` tags to your `schema.xml` file.
 
 ### Example
 
@@ -94,74 +94,64 @@ The related `schema.xml` should look like:
             <reference local="article_id" foreign="id"/>
           </foreign-key>
           <column name="author" type="varchar" size="50" />
-          <column name="date" type="datetime" />
+          <column name="date" type="timestamp" />
           <column name="content" type="longvarchar" />
         </table>    
      </database>
 
+Notice that the name of the database itself (`blog`) doesn't appear in the `schema.xml`. It will be specified in the connection configuration (see the `database.yml` below).
+
 ### Format description
 
-In this file format, a `<database>` contains several `<table>`, each having a set of `<column>`, `<index>` and `<foreign-key>` in no particular order.
+In a `schema.xml`, a `<database>` contains several `<table>` tags, each having a set of `<column>`, `<index>` and `<foreign-key>` in no particular order.
 
 The `phpName` given to the table is the name of the object that will give you access to the data, as you will see in the next part. If you don't mention it, the value of the `name` attribute will be used in place, after removing underscores and capitalizing the first letter of inner words (in the example, the default `phpname` of the tables would be `blogArticle` and `blogComment`). Columns also have a `phpName`, which is the capitalized version of the `name` (`ID`, `TITLE`, `CONTENT`, etc.) and doesn't need overriding in most cases.
 
 Columns have a `type` attribute that can take the usual values: `boolean`, `integer`, `float`, `date`, `varchar`, `longvarchar`, etc. The `varchar`-type columns can have a `size` attributes that specifies the maximum number of characters of the column. For text content over 256 characters, you need to use the `longchar` type, which has no size but can not exceed 65Kb (mysql specific). Note that the `date` and `timestamp` types have the usual limitations of Unix dates and can not be set to a date prior to 1970-01-01. As you may need to set older dates (for instance for dates of birth), a format of dates 'before Unix' can be used with `bu_date` and `bu_timestamp`.
 
-The `primaryKey` attribute identifies primary key fields. Columns that are primary keys often have the same attributes (`type="integer" required="true" autoIncrement="true"`). If you need to create an index, simply add an `<index>` tab. If you need to create a foreign key, simply add a `<foreign-key>` tag identifying the corresponding column in a foreign table.
+The `primaryKey` attribute identifies primary key fields. Columns that are primary keys often have the same attributes (`type="integer" required="true" autoIncrement="true"`). If you need to create an index, simply add an `<index>` tab. If you need to create a foreign key, simply add a `<foreign-key>` tag identifying the corresponding column in a foreign table with the `<reference>` tag.
 
-To learn more about this file format and its specifications, refer to the [documentation][2] and the [getting started][3] section that can be found in the Propel project website. 
+To learn more about this file format and its specifications, refer to the [documentation][2] and the [getting started][3] sections of the Propel project website. 
+
+Don't create the model twice
+----------------------------
+
+### Building a SQL database structure based on an existing schema
+
+If you start your application by writing the `schema.xml`, you might not want to do it a second time in SQL to actually create the tables in the database. Symfony can generate a SQL query that creates the tables directly from the XML data model. To get it, go to your root project directory and type:
+
+    $ symfony build-sql
+
+A `schema.sql` will be created in `myproject/data/sql/`. Note that the generated SQL code will be optimized for the database system defined in the `propel.database` parameter of the `propel.ini` file (located in `myproject/config/`).
+
+You can use it directly to build the tables. For instance, in MySQL:
+
+    $ mysqladmin -u root -p create blog
+    $ mysql -u root -p < data/sql/schema.sql
+
+This command is also helpful to rebuild the database in another environment, or to change RDBMS. 
+
+>**Note**: If the connection settings are properly defined in your `propel.ini` (in the `propel.database.url` and `propel.database.createUrl` settings), you can even use the `symfony insert-sql` command to do this automatically.
 
 ### Generating an XML data model from an existing database
 
 Symfony can use the Creole database access layer to generate a `schema.xml` from an existing database, thanks to introspection. This can be particularly useful when you do reverse engineering, or if you prefer working on the database before working on the object model.
 
-In order to do this, you have to make sure that Propel knows how to access your database. This means that the `propel.ini` configuration file located in `myproject/config/` has to contain the following line:
+In order to do this, you have to make sure that Propel knows how to access your database. This means that the `propel.ini` configuration file has to contain the following line:
 
-    propel.database.url = mysql://username:password@localhost/databasename
+    propel.database.url = dbtype://username:password@localhost/databasename
 
-...where `username`, `password`, `localhost` and `databasename` are the actual connection settings of your database.
+...where `dbtype`, `username`, `password`, `localhost` and `databasename` are the actual connection settings of your database.
 
-If this is correct, you can call the `build-schema` command:
+For instance, if our `blog` database is hosted by a MySQL server in localhost, the line has to show:
+
+    propel.database.url = mysql://root:@localhost/localhost
+
+If the `propel.database.url` setting is correct, you can call the `build-schema` command:
 
     $ symfony build-schema
     
 And a brand new `schema.xml` built from your database structure is written in your `myproject/config/` directory.
-
-Database access configuration
------------------------------
-
-The data model is independent from the database used, but you will definitely use a database. The minimum information required by symfony to handle requests to the project database is the name, the access codes and the type of the database. This data should be entered in the `databases.yml` file located in the `myproject/apps/myapp/config/` directory:
-
-    prod:
-      propel:
-        param:
-          host:               mydataserver
-          username:           myusername
-          password:           xxxxxxxxxx  
-    
-    all:
-      propel:
-        class:                sfPropelDatabase
-        param:
-          phptype:            mysql
-          host:               localhost
-          database:           mydatabase
-          username:           root
-          password:           xxxxxxxxx
-          compat_assoc_lower: true
-          # datasource:       propel
-
-The `datasource` parameter refers to the database connection as defined in the the `name` attribute of the `<database>` tag in the `schema.xml`.
-
->**Note**: If you don't specify the `datasource` param, it takes the value of the label given to the connection settings.
-
-The permitted values of the `phptype` parameter are the ones of the RDBMS supported by Propel:
-
-* mysql
-* sqlserver
-* pgsql
-* sqlite
-* oracle
 
 Object data model files
 -----------------------
@@ -192,7 +182,11 @@ You only defined two tables and you end up with eight files. What's the deal her
 
 ### Base and current model 
 
-Why keep two versions of the data object model, one in `model/om` and another in `model`? Well, this model is likely to change during your project development. And you will probably need to add custom methods and attributes that need to be kept even if the model changes. So this architecture allows you to keep using the `symfony build-model` command even after you added custom code to your classes. Here is how it works: the `Base` classes kept in the `model/om` directory are the ones generated by Propel. You should **never** modify them since every new build of the model will completely erase these files. But if you need to add custom methods, use the regular object classes of the `model` directory that actually inherit from the previous ones.
+Why keep two versions of the data object model, one in `model/om/` and another in `model/`? 
+
+You will probably need to add custom methods and attributes to the model objects (think about the `->getName()` method that outputs the `FirstName` and `LastName` together). But as your project develops, you will also add tables or columns. Whenever you change the `schema.xml`, you have to make a new call to `symfony build-model` to generate the object model classes.
+
+The `Base` architecture allows you to keep using the `symfony build-model` command even after you added custom code to your classes. Here is how it works: the `Base` classes kept in the `model/om/` directory are the ones generated by Propel. You should **never** modify them since every new build of the model will completely erase these files. But if you need to add custom methods, use the regular object classes of the `model/` directory that actually inherit from the previous ones.
 
 For example, here is the content of the newly created `Article.php` file:
 
@@ -202,50 +196,115 @@ For example, here is the content of the newly created `Article.php` file:
     {
     }
 
-It inherits all the methods of the `BaseArticle` class, but a modification in the model will not affect it. You then have a structure that is both customizable and evolutionary.
+It inherits all the methods of the `BaseArticle` class, but a modification in the model will not affect it. This structure is both customizable and evolutionary.
+
+This mechanism allows you to start coding even without knowing the final relational model of your database.
 
 ### Peer classes
 
-The classes `Article` and `Comment` will allow you to access attributes of the records of the related tables. This means that you will be able to know the title of an article by calling a method of an `Article` object (you will see how in a minute).
+The classes `Article` and `Comment` will allow you to access attributes of a record of the related tables. This means that you will be able to know the title of an article by calling a method of an `Article` object:
 
-But there is more to databases than reading what's inside records: you also need to actually find records. That's the purpose of the `Peer` classes. They offer methods to find records, that return lists of objects.
+    [php]
+    $article = new Article();
+    ...
+    $title = $article->getTitle();
+
+ But there is more to databases than reading what's inside records: you also need to actually find records. That's the purpose of the `Peer` classes. They offer class methods to find records, that return an object or a lists of objects of the related 'no `Peer`' class.
+ 
+    [php]
+    $articles = ArticlePeer::doSelect(new Criteria());
+    // $articles is an array of objects of class Article
 
 From a data model point of view, note that there cannot be any `Peer` object. That's why the methods of the `Peer` classes will be called with a `::` (for class method call) instead of the usual `->` (for object method call).
 
+Database access configuration
+-----------------------------
+
+The data model is independent from the database used, but you will definitely use a database. The minimum information required by symfony to handle requests to the project database is the name, the access codes and the type of the database. This data should be entered in the `databases.yml` file located in the `myproject/apps/myapp/config/` directory:
+
+    prod:
+      propel:
+        param:
+          host:               mydataserver
+          username:           myusername
+          password:           xxxxxxxxxx  
+    
+    all:
+      propel:
+        class:                sfPropelDatabase
+        param:
+          phptype:            mysql
+          host:               localhost
+          database:           blog
+          username:           root
+          password:           
+          compat_assoc_lower: true
+          # datasource:       propel
+
+The database access is environment dependant. You can define different settings for the `prod`, `dev`, `test` environments, or any other environment you defined. The `all` header defines settings for all environments.
+
+For each environment, you can define many connections, each being linked to a `schema.xml`. Connections and schema are linked by the `datasource`  parameter. It refers to the `name` attribute of the `<database>` tag in the `schema.xml`. If you don't specify the `datasource` param, it takes the value of the label given to the connection settings.
+
+The permitted values of the `phptype` parameter are the ones of the database systems supported by Propel:
+
+* mysql
+* sqlserver
+* pgsql
+* sqlite
+* oracle
+
+The `host`, `database`, `username` and `password` settings define the parameters required to connect to the database.
+
+In the above example, the settings for `all` environments can also be written using the shorthand syntax:
+
+    all:
+      propel:
+        class:          sfPropelDatabase
+        param:
+          dsn:          mysql://root:@localhost/blog
+
+>**Note**: If you use a SQLite database, the `host` parameter has to be set to the path to the database file. For instance, if you keep your blog database in `myproject/data/blog.db`, the `database.yml` will look like:
+>
+>     all:
+>       propel:
+>         class:          sfPropelDatabase
+>         param:
+>           dsn:          sqlite://./../data/blog.db 
+> 
+ 
 Data access
 -----------
 
 ### Field access
 
-Propel provides one class for each the tables defined in the `schema.xml` file. These classes have default creators, accessors and mutators with the `new`, `get` and `set` methods to give access to the Columns:
+Propel provides one class for each the tables defined in the `schema.xml` file. These classes have default creators, accessors and mutators: The `new`, `get` and `set` methods to give access to the columns of the table.
 
     [php]
     $article = new Article();
     $article->setTitle('My first article');
     $article->setContent('This is my very first article.\n Hope you enjoy it!');
     
-    $title = $article->getTitle();
+    $title   = $article->getTitle();
     $content = $article->getContent();
 
 Note that the `phpName` attribute of the `table` is used for the class name; the accessors use a [CamelCase][6] variant of the column names in which the first letter of each word is capitalized and underscores are suppressed.
 
->**Note**: To set several fields at one time, you can use the `->fromArray()` methods of the Propel objects:
->
->     $article->fromArray(array(
->        'title'   =>   'My first article',
->        'content' =>   'This is my very first article.\n Hope you enjoy it!',
->     ));
->
+To set several fields at one time, you can use the `->fromArray()` methods of the Propel objects:
+
+    $article->fromArray(array(
+       'title'   =>   'My first article',
+       'content' =>   'This is my very first article.\n Hope you enjoy it!',
+    ));
 
 To create a record in a table related to another, simply pass the object as a foreign key:
 
     [php]
     $comment = new Comment();
-    $comment->setArticle($article);
     $comment->setAuthor('Steve');
     $comment->setContent('Gee, dude, you rock: best article ever !');
+    $comment->setArticle($article);
 
-Of course, you could have done it manually:
+The last line automatically sets the `ArticleId` attribute of the `Comment` object to the value of the `Id` attribute of the `Article` object. Of course, you could have done it manually:
 
     [php]
     $comment->setArticleId($article->getId());
@@ -255,14 +314,14 @@ Note that by calling the `new` constructor, you created a new object but not an 
     [php]
     $article->save();
 
-The cascading principle of Propel exempts you from also saving the `$comment` object: as the record is linked to the one you save, it will be saved automatically.
+The cascading principle of Propel exempts you from also saving the `$comment` object: As the record is linked to the one you save, it will be saved automatically.
 
 Let's check all the comments about your new article:
 
     [php]
     $comments = $article->getComments();
 
-Note the plural used here in the `get` method. Propel knows that your relational model specified that an article can have several comments, so you can simply use a standard accessor to get the array of related objects. Now your `$comments` variable contains an array of objects of class `Article`, and you can display the first one with:
+Note the plural used here in the `get` method. Propel knows that your relational model specified that an article can have several comments, so you can simply use a standard accessor to get the array of related objects. Now the `$comments` variable contains an array of objects of class `Comment`, and you can display the first one with:
 
     [php]
     print_r($comments[0]);
@@ -276,16 +335,14 @@ Find more about these methods and their syntax in the [Propel documentation][4].
 
 ### Records access
 
-If you know the primary key of a particular record, use the `retrieveByPk()` class method of the `Peer` class of the table to get the related object.
-
-For instance, to retrieve the article that has id #7, call:
+If you know the primary key of a particular record, use the `retrieveByPk()` class method of the `Peer` class of the table to get the related object. For instance:
 
     [php]
     $article = ArticlePeer::retrieveByPk(7); 
 
-As you used the primary key, you know that only one record will be returned. So the `$article` variable contains an object of the `Article` class.
+The `schema.xml` defines the `id` field as the primary key of the `Article` table, so this statement will actually return the article that has `id` number 7. As you used the primary key, you know that only one record will be returned. So the `$article` variable contains an object of the `Article` class.
 
-For more elaborate requests, Propel doesn't use SQL, to allow database abstraction, but offers a `Criteria` object in place. It has the same power and is very easy to use.
+For simple queries, Propel doesn't use SQL, to allow database abstraction. Instead, it offers a `Criteria` object, which has the same power and is very easy to use.
 
 For instance, to retrieve all articles, type:
 
@@ -301,7 +358,7 @@ The class method `doSelect()` applies the selection filter received as a paramet
       echo $article->getTitle();
     }
 
-But there is more to requests than getting all records or one record by its key. The power of the `Criteria` object is that you can add rules so it just like you would add '`WHERE`' or '`ORDER BY`' statements in an SQL query.
+But there is more to requests than getting all records or one record by its key. The power of the `Criteria` object is that you can add rules so it just like you would add '`WHERE`' or '`ORDER BY`' statements in a SQL query.
 
 To get all comments written by Steve, use:
 
@@ -319,9 +376,31 @@ Or, because you are upset about his tone, you want all the comments not written 
     $c->addAscendingOrderByColumn(CommentPeer::DATE);
     $comments = CommentPeer::doSelect($c);
 
-Note the class constants name used here: these are the upper case names of the columns in the object data model description.
+Note the class constants name used here: these are the phpNames of the columns in the object data model description. The `::doSelect()` method will generate the best SQL query according to your database type, execute it, and return a list of objects - which are much better than record sets. 
+
+>**Note**: Why use `CommentPeer::AUTHOR` instead of `comment.AUTHOR`, which is the way it will be output in the SQL query? Imagine that you have to change the name of the `author` field to `contributor` in the database. If you used `comment.AUTHOR`, you would have to change it in every call to the Propel objects in your code. By using `CommentPeer::AUTHOR`, you can simply change the column name in the `schema.xml`, and keep the phpName `AUTHOR` to prevent multiple modifications.
 
 Refer to the [Propel Documentation][5] for more details about the `Criteria` object and its methods.
+
+Refactoring to the Data layer
+-----------------------------
+
+When developing a symfony project, you often start by writing the domain logic code in the actions. As the projects is getting more complex, the actions contain a lot of PHP and SQL code, and become less readable.
+
+At that point, all the logic related to the data should be moved to the Model layer. Whenever you need to do the same request in more than one place in your actions, think about transferring the related code to the Model. It helps to keep the actions small and readable. 
+
+For example, imagine the code needed in a weblog to retrieve the 10 most popular articles for a given tag (passed as request parameter). This code should not be in an action, but in the Model. As a mattar of fact, if you need to display this list in a template, the action should simply look like:
+
+    [php]
+    public function executeShowPopularArticlesForTag()
+    {
+      $tag = TagPeer::retrieveByName($this->getRequestParameter('tag'));
+      $this->articles = $tag->getPopularArticles(10);
+    }
+
+The action creates an object of class `Tag` from the request parameter. Then, all the code needed to query the database is located in a `->getPopularArticles()` method of this class. Putting the code of this method in the action would make the code much less readable.
+
+Moving code to a more appropriate location is one of the techniques of refactoring. If you do it often, your code will be easy to maintain and to understand by other developers. A good rule of thumb about when to do refactoring to the data layer is that the code of an action should rarely count more than ten lines of PHP code.
 
 Propel in symfony
 -----------------
@@ -331,12 +410,9 @@ All the details given above are not specific to symfony. As a matter of fact, yo
 * All the object data model classes and the `Criteria` classes are auto-loading classes. As soon as you will use them, symfony will include the right files, but you don't need to manually include the file inclusion.
 * In symfony, Propel doesn't need to be launched nor initialized. When an object uses Propel, the library initiates by itself.
 * Results of a request can be easily paginated (see more in the [pager chapter](pager.txt)).
+* Propel objects allow rapid prototyping and generation of a backend for your application (see more in the [generator chapter](generator.txt)).
 
-And, as Propel is independent of the database used, so is symfony. As a matter of fact, you might need the SQL request that creates the actual database from the XML configuration file - for instance to rebuild the database in another environment or to change RDBMS. To get it, go to your root project directory and type:
-
-    $ symfony build-sql
-
-The SQL creating the tables according to the `schema.xml` description will be generated in the `myproject/data/sql/schema.sql` file.
+And, as Propel is independent of the database used, so is symfony.
 
 [1]: http://propel.phpdb.org/trac/                                              "Propel"
 [2]: http://propel.phpdb.org/docs/user_guide/                                   "Propel XML data model format"
