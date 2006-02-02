@@ -47,7 +47,7 @@ function run_alltests($task, $args)
   $tmp_dir = $root_dir.DIRECTORY_SEPARATOR.md5(uniqid(rand(), true));
   if (!is_dir($tmp_dir))
   {
-    mkdir($tmp_dir, 0777, true);
+    pake_mkdirs($tmp_dir, 0777);
   }
 
   require_once(dirname(__FILE__).'/lib/config/sfConfig.class.php');
@@ -61,9 +61,7 @@ function run_alltests($task, $args)
     'sf_test'             => false,
     'sf_version'          => 'test',
   ));
-  mkdir($tmp_dir.'/apps');
-  mkdir($tmp_dir.'/apps/test');
-  mkdir($tmp_dir.'/apps/test/modules');
+  pake_mkdirs($tmp_dir.'/apps/test/modules');
   require_once(dirname(__FILE__).'/data/config/constants.php');
   require_once(dirname(__FILE__).'/lib/symfony_autoload.php');
   require_once(dirname(__FILE__).'/lib/util/sfContext.class.php');

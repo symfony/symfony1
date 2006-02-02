@@ -55,24 +55,8 @@ class sfI18N
       // create cache dir if needed
       if (!is_dir($cache_dir))
       {
-        $dirs = explode(DIRECTORY_SEPARATOR, str_replace('/', DIRECTORY_SEPARATOR, $cache_dir));
-        $root = '';
         $current_umask = umask(0000);
-        foreach($dirs as $dir)
-        {
-          if ($root == '')
-          {
-            $root = $dir.DIRECTORY_SEPARATOR;
-          }
-          else
-          {
-            $root = $root.DIRECTORY_SEPARATOR.$dir;
-          }
-          if (!is_dir($root))
-          {
-            @mkdir($root, 0777);
-          }
-        }
+        @mkdir($cache_dir, 0777, true);
         umask($current_umask);
       }
 

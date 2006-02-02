@@ -93,7 +93,7 @@ class sfWebResponse extends sfResponse
    *
    * @return void
    */
-  public function setCookie ($name, $value, $expire = '', $path = '', $domain = '', $secure = 0)
+  public function setCookie ($name, $value, $expire = '', $path = '/', $domain = '', $secure = 0)
   {
     $this->cookies[] = array(
       'name'   => $name,

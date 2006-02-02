@@ -153,25 +153,8 @@ class sfFileCache extends sfCache
       // create cache dir if needed
       if (!is_dir($cacheDir))
       {
-        $dirs = explode(DIRECTORY_SEPARATOR, $cacheDir);
-        $root = '';
-        $current_umask = umask();
-        umask(0000);
-        foreach($dirs as $dir)
-        {
-          if ($root == '')
-          {
-            $root = $dir.DIRECTORY_SEPARATOR;
-          }
-          else
-          {
-            $root = $root.DIRECTORY_SEPARATOR.$dir;
-          }
-          if (!is_dir($root))
-          {
-            @mkdir($root, 0777);
-          }
-        }
+        $current_umask = umask(0000);
+        @mkdir($cacheDir, 0777, true);
         umask($current_umask);
       }
 
@@ -496,18 +479,8 @@ class sfFileCache extends sfCache
         if ($try == 1 && !is_dir($path))
         {
           // create directory structure if needed
-          $dirs = explode(DIRECTORY_SEPARATOR, substr($path, strlen($this->cacheDir)));
-          $root = $this->cacheDir.DIRECTORY_SEPARATOR;
-          $current_umask = umask();
-          umask(0000);
-          foreach($dirs as $dir)
-          {
-            $root = $root.DIRECTORY_SEPARATOR.$dir;
-            if (!is_dir($root))
-            {
-              @mkdir($root, 0777);
-            }
-          }
+          $current_umask = umask(0000);
+          @mkdir($path, 0777, true);
           umask($current_umask);
 
           $try = 2;

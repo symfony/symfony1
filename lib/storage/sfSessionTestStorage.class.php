@@ -110,7 +110,9 @@ class sfSessionTestStorage extends sfStorage
   {
     if ($this->sessionId)
     {
-      @mkdir(sfConfig::get('sf_cache_dir').'/session');
+      $current_umask = umask(0000);
+      @mkdir(sfConfig::get('sf_cache_dir').'/session', 0777, true);
+      umask($current_umask);
       file_put_contents(sfConfig::get('sf_cache_dir').'/session/'.$this->sessionId.'.session', serialize($this->sessionData));
       $this->sessionId   = '';
       $this->sessionData = array();
