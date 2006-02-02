@@ -52,7 +52,12 @@ class sfWebDebugFilter extends sfFilter
       $response = $this->getContext()->getResponse();
 
       // don't add debug toolbar on XHR requests
-      if ($this->getContext()->getRequest()->isXmlHttpRequest() || strpos($response->getContentType(), 'text/html') === false)
+      // don't add debug if 304
+      if (
+          $this->getContext()->getRequest()->isXmlHttpRequest() || 
+          strpos($response->getContentType(), 'text/html') === false ||
+          $response->getStatusCode() == 304
+      )
       {
         $filterChain->execute();
         return;
