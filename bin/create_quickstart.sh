@@ -91,8 +91,8 @@ sed -i '' -e "s#all:#all:\\
 
 echo ">>> default to sqlite"
 sed -i '' -e "s#\(propel.database *= *\)mysql#\1sqlite#" config/propel.ini
-sed -i '' -e "s#\(propel.database.createUrl *= *\).*#\1sqlite//./../../../../data/sandbox.db#" config/propel.ini
-sed -i '' -e "s#\(propel.database.url *= *\).*#\1sqlite//./../../../../data/sandbox.db#" config/propel.ini
+sed -i '' -e "s#\(propel.database.createUrl *= *\).*#\1sqlite://./../../../../data/sandbox.db#" config/propel.ini
+sed -i '' -e "s#\(propel.database.url *= *\).*#\1sqlite://./../../../../data/sandbox.db#" config/propel.ini
 
 sed -i '' -e "s#\( *dsn *: *\).*#\1sqlite://./../data/sandbox.db#" apps/${APP_NAME}/config/databases.yml
 
