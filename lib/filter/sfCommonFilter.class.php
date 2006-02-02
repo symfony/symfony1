@@ -26,12 +26,6 @@ class sfCommonFilter extends sfFilter
    */
   public function execute ($filterChain)
   {
-    // execute this filter only once
-    if ($this->isFirstCall())
-    {
-
-    }
-
     // execute next filter
     $filterChain->execute();
   }
@@ -53,12 +47,15 @@ class sfCommonFilter extends sfFilter
       $response = $context->getResponse();
 
       // remove PHP automatic Cache-Control and Expires headers if not overwritten by application or cache
-      $response->setHttpHeader('Cache-Control', null, false);
-      $response->setHttpHeader('Expires', null, false);
-      $response->setHttpHeader('Pragma', null, false);
+      if ($response->hasHeader('Last-Modified') || sfConfig::get('sf_etag'))
+      {
+        $response->setHttpHeader('Cache-Control', null, false);
+        $response->setHttpHeader('Expires', null, false);
+        $response->setHttpHeader('Pragma', null, false);
+      }
 
       // Etag support
-      if ($this->getParameter('etag'))
+      if (sfConfig::get('sf_etag'))
       {
         $etag = md5($response->getContent());
         $response->setHttpHeader('ETag', $etag);
