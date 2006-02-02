@@ -66,7 +66,7 @@ function run_alltests($task, $args)
   mkdir($tmp_dir.'/apps/test/modules');
   require_once(dirname(__FILE__).'/data/config/constants.php');
   require_once(dirname(__FILE__).'/lib/symfony_autoload.php');
-  require_once(dirname(__FILE__).'/lib/core/sfContext.class.php');
+  require_once(dirname(__FILE__).'/lib/util/sfContext.class.php');
 
   pake_import('simpletest', false);
 

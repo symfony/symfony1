@@ -3,7 +3,7 @@
 - %SF_SYMFONY_LIB_DIR%/action/sfActions.class.php
 - %SF_SYMFONY_LIB_DIR%/action/sfActionStack.class.php
 - %SF_SYMFONY_LIB_DIR%/action/sfActionStackEntry.class.php
-- %SF_SYMFONY_LIB_DIR%/core/sfContext.class.php
+- %SF_SYMFONY_LIB_DIR%/util/sfContext.class.php
 - %SF_SYMFONY_LIB_DIR%/controller/sfController.class.php
 - %SF_SYMFONY_LIB_DIR%/filter/sfFilter.class.php
 - %SF_SYMFONY_LIB_DIR%/filter/sfExecutionFilter.class.php
