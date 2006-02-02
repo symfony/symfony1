@@ -230,7 +230,7 @@ class sfWebResponse extends sfResponse
       {
         header($name.': '.$value);
 
-        if (sfConfig::get('sf_logging_active'))
+        if (sfConfig::get('sf_logging_active') && $value != '')
         {
           $this->getContext()->getLogger()->info('{sfWebResponse} send header "'.$name.'": "'.$value.'"');
         }
