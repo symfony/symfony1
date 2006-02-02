@@ -35,6 +35,8 @@ class sfWebRequest extends sfRequest
    */
   protected $charsets = null;
 
+  protected $pathInfoArray = null;
+
   /**
    * Retrieve an array of file information.
    *
@@ -246,19 +248,22 @@ class sfWebRequest extends sfRequest
    */
   private function getPathInfoArray()
   {
-    // parse PATH_INFO
-    switch (sfConfig::get('sf_path_info_array'))
+    if (!$this->pathInfoArray)
     {
-      case 'SERVER':
-        $pathArray =& $_SERVER;
-        break;
+      // parse PATH_INFO
+      switch (sfConfig::get('sf_path_info_array'))
+      {
+        case 'SERVER':
+          $this->pathInfoArray =& $_SERVER;
+          break;
 
-      case 'ENV':
-      default:
-        $pathArray =& $_ENV;
+        case 'ENV':
+        default:
+          $this->pathInfoArray =& $_ENV;
+      }
     }
 
-    return $pathArray;
+    return $this->pathInfoArray;
   }
 
   public function getUri()
@@ -637,6 +642,22 @@ class sfWebRequest extends sfRequest
     }
 
     return $retval;
+  }
+
+  /**
+   * Returns true if the current request is secure (HTTPS protocol).
+   *
+   * @return boolean
+   */
+  public function isSecure()
+  {
+    $pathArray = $this->getPathInfoArray();
+
+    return (
+      (isset($pathArray['HTTPS']) && strtolower($pathArray['HTTPS']) == 'on')
+      ||
+      (isset($pathArray['HTTP_X_FORWARDED_PROTO']) && strtolower($pathArray['HTTP_X_FORWARDED_PROTO']) == 'https')
+    );
   }
 
   /**
