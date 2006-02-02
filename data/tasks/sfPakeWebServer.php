@@ -14,7 +14,7 @@ function run_server($task, $args)
   $port = isset($args[1]) ? $args[1] : 8000;
 
   define('SF_ROOT_DIR',    sfConfig::get('sf_root_dir'));
-  define('SF_APP',         'fo');
+  define('SF_APP',         $app);
   define('SF_ENVIRONMENT', 'dev');
   define('SF_DEBUG',       true);
 
