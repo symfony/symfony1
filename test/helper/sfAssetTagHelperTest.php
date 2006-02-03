@@ -4,17 +4,25 @@ require_once 'helper/TagHelper.php';
 require_once 'helper/AssetHelper.php';
 require_once 'symfony/helper/UrlHelper.php';
 
+require_once 'symfony/request/sfRequest.class.php';
+require_once 'symfony/request/sfWebRequest.class.php';
+
 Mock::generate('sfContext');
+Mock::generate('sfWebRequest');
 
 class sfAssetTagHelperTest extends UnitTestCase
 {
   private
-    $context = null;
+    $context = null,
+    $request = null;
 
   public function SetUp()
   {
+    $this->request = new MockSfWebRequest($this);
+    $this->request->setReturnValue('getRelativeUrlRoot', '');
+
     $this->context = new MockSfContext($this);
-    sfConfig::set('sf_relative_url_root', '');
+    $this->context->setReturnValue('getRequest', $this->request);
   }
 
   public function test_image_tag()
@@ -131,8 +139,11 @@ class sfAssetTagHelperNonVhostTest extends UnitTestCase
 
   public function SetUp()
   {
+    $this->request = new MockSfRequest($this);
+    $this->request->setReturnValue('getRelativeUrlRoot', '/mypath');
+
     $this->context = new MockSfContext($this);
-    sfConfig::set('sf_relative_url_root', '/mypath');
+    $this->context->setReturnValue('getRequest', $this->request);
   }
 /*
   public function test_auto_discovery()

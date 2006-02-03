@@ -54,7 +54,6 @@ default:
 
     routing:                on
     no_script_name:         on
-    relative_url_root:
 
     stats:                  off
 

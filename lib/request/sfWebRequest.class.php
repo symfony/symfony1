@@ -37,6 +37,8 @@ class sfWebRequest extends sfRequest
 
   protected $pathInfoArray = null;
 
+  protected $relativeUrlRoot = null;
+
   /**
    * Retrieve an array of file information.
    *
@@ -295,7 +297,7 @@ class sfWebRequest extends sfRequest
     else
     {
       $pathInfo = $pathArray[$sf_path_info_key];
-      if ($sf_relative_url_root = sfConfig::get('sf_relative_url_root'))
+      if ($sf_relative_url_root = $this->getRelativeUrlRoot())
       {
         $pathInfo = preg_replace('/^'.str_replace('/', '\\/', $sf_relative_url_root).'\//', '', $pathInfo);
       }
@@ -658,6 +660,23 @@ class sfWebRequest extends sfRequest
       ||
       (isset($pathArray['HTTP_X_FORWARDED_PROTO']) && strtolower($pathArray['HTTP_X_FORWARDED_PROTO']) == 'https')
     );
+  }
+
+  public function getRelativeUrlRoot()
+  {
+    if ($this->relativeUrlRoot === null)
+    {
+      $pathArray = $this->getPathInfoArray();
+
+      $this->relativeUrlRoot = preg_replace('#/.+?\.php$#', '', $pathArray['SCRIPT_NAME']);
+    }
+
+    return $this->relativeUrlRoot;
+  }
+
+  public function setRelativeUrlRoot($value)
+  {
+    $this->relativeUrlRoot = $value;
   }
 
   /**

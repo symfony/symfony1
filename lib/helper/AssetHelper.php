@@ -158,7 +158,7 @@
       return $source;
     }
 
-    $sf_relative_url_root = sfConfig::get('sf_relative_url_root');
+    $sf_relative_url_root = sfContext::getInstance()->getRequest()->getRelativeUrlRoot();
     if (strpos($source, '/') !== 0)
     {
       $source = $sf_relative_url_root.'/'.$dir.'/'.$source;
