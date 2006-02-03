@@ -85,16 +85,33 @@ function _call_phing($task, $task_name, $check_schema = true)
     throw new Exception('You must create a schema.xml file.');
   }
 
-  // update propel root dir in propel.ini
-  $propelIni = file_get_contents(sfConfig::get('sf_config_dir').DIRECTORY_SEPARATOR.'propel.ini');
+  // create a tmp propel.ini configuration file
+  $propelIniFileName = tempnam(sfConfig::get('sf_config_dir'), 'propelini');
+  pake_copy(sfConfig::get('sf_config_dir').DIRECTORY_SEPARATOR.'propel.ini', $propelIniFileName, array('override' => true));
+
+  // update propel root dir
+  $propelIni = file_get_contents($propelIniFileName);
   $propelIni = preg_replace('/^\s*propel.output.dir\s*=\s*.+?$/m', 'propel.output.dir = '.sfConfig::get('sf_root_dir'), $propelIni);
-  file_put_contents(sfConfig::get('sf_config_dir').DIRECTORY_SEPARATOR.'propel.ini', $propelIni);
+  file_put_contents($propelIniFileName, $propelIni);
+
+  // update database information
+  
 
   $propel_generator_dir = sfConfig::get('sf_symfony_lib_dir').'/vendor/propel-generator';
 
+  $options = array(
+    'project' => $task->get_property('name', 'symfony'),
+    'lib_dir' => sfConfig::get('sf_symfony_lib_dir'),
+    'data_dir' => sfConfig::get('sf_symfony_data_dir'),
+    'propel_generator_dir' => $propel_generator_dir,
+    'propel_ini' => basename($propelIniFileName),
+  );
+
   // call phing targets
   pake_import('Phing', false);
-  pakePhingTask::call_phing($task, array($task_name), sfConfig::get('sf_symfony_data_dir').'/bin/build.xml', array('project' => $task->get_property('name', 'symfony'), 'lib_dir' => sfConfig::get('sf_symfony_lib_dir'), 'data_dir' => sfConfig::get('sf_symfony_data_dir'), 'propel_generator_dir' => $propel_generator_dir));
+  pakePhingTask::call_phing($task, array($task_name), sfConfig::get('sf_symfony_data_dir').'/bin/build.xml', $options);
+
+  pake_remove($propelIniFileName, '');
 
   chdir(sfConfig::get('sf_root_dir'));
 }
