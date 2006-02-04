@@ -60,8 +60,13 @@ class sfPeerBuilder extends PHP5ComplexPeerBuilder
    * @throws PropelException Any exceptions caught during processing will be
    *     rethrown wrapped into a PropelException.
    */
-  public static function doSelectWithI18n(Criteria \$c, \$culture, \$con = null)
+  public static function doSelectWithI18n(Criteria \$c, \$culture = null, \$con = null)
   {
+    if ($culture === null)
+    {
+      $culture = sfContext::getInstance()->getUser()->getCulture();
+    }
+
     // Set the correct dbName if it has not been overridden
     if (\$c->getDbName() == Propel::getDefaultDB())
     {
