@@ -45,6 +45,17 @@ class sfSessionStorage extends sfStorage
 
     session_name($sessionName);
 
+    $use_cookies = (boolean) ini_get('session.use_cookies');
+    if (!$use_cookies)
+    {
+      $sessionId = $context->getRequest()->getParameter($sessionName, '');
+
+      if ($sessionId != '')
+      {
+        session_id($sessionId);
+      }
+    }
+
     if ($this->getParameter('auto_start', true))
     {
       // start our session
