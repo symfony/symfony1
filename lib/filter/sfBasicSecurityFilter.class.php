@@ -40,6 +40,14 @@ class sfBasicSecurityFilter extends sfSecurityFilter
     $actionEntry    = $controller->getActionStack()->getLastEntry();
     $actionInstance = $actionEntry->getActionInstance();
 
+    // disable security on [sf_login_module] / [sf_login_action]
+    if ((sfConfig::get('sf_login_module') == $context->getModuleName()) && (sfConfig::get('sf_login_action') == $context->getActionName()))
+    {
+      $filterChain->execute();
+
+      return;
+    }
+
     // get the credential required for this action
     $credential = $actionInstance->getCredential();
 

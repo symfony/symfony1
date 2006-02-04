@@ -367,18 +367,12 @@ abstract class sfAction extends sfComponent
    */
   public function isSecure()
   {
-    // disable security on [sf_login_module] / [sf_login_action]
-    if ((sfConfig::get('sf_login_module') == $this->getModuleName()) && (sfConfig::get('sf_login_action') == $this->getActionName()))
-    {
-      return false;
-    }
-
-    // read security.yml configuration
     if (isset($this->security[$this->getActionName()]['is_secure']))
     {
       return $this->security[$this->getActionName()]['is_secure'];
     }
-    else if (isset($this->security['all']) && isset($this->security['all']['is_secure']))
+
+    if (isset($this->security['all']['is_secure']))
     {
       return $this->security['all']['is_secure'];
     }
@@ -398,7 +392,7 @@ abstract class sfAction extends sfComponent
     {
       $credentials = $this->security[$this->getActionName()]['credentials'];
     }
-    else if (isset($this->security['all']) && isset($this->security['all']['credentials']))
+    else if (isset($this->security['all']['credentials']))
     {
       $credentials = $this->security['all']['credentials'];
     }
