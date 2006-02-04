@@ -31,23 +31,12 @@ class sfSecurityConfigHandler extends sfYamlConfigHandler
    */
   public function execute($configFile, $param = array())
   {
-    // set our required categories list and initialize our handler
-    $categories = array('required_categories' => array());
-    $this->initialize($categories);
-
     // parse the yaml
     $this->yamlConfig = $this->parseYaml($configFile);
 
-    // get default configuration
-    $this->defaultConfig = array();
+    // get application configuration
     $defaultConfigFile = sfConfig::get('sf_app_config_dir').'/'.basename($configFile);
-    if (is_readable($defaultConfigFile))
-    {
-      $categories = array('required_categories' => array('default'));
-      $this->initialize($categories);
-
-      $this->defaultConfig = $this->parseYaml($defaultConfigFile);
-    }
+    $this->defaultConfig = is_readable($defaultConfigFile) ? $this->parseYaml($defaultConfigFile) : array();
 
     // iterate through all action names
     $mergedConfig = array();
