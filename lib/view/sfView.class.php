@@ -75,6 +75,7 @@ abstract class sfView
 
   protected
     $attribute_holder   = null,
+    $parameter_holder   = null,
     $moduleName         = '',
     $viewName           = '';
 
@@ -323,6 +324,9 @@ abstract class sfView
 
     $this->context = $context;
     $this->attribute_holder = new sfParameterHolder();
+    $this->parameter_holder = new sfParameterHolder();
+
+    $this->parameter_holder->add(sfConfig::get('mod_'.strtolower($moduleName).'_view_param', array()));
 
     // set the currently executing module's template directory as the default template directory
     $module = $context->getModuleName();
@@ -354,6 +358,26 @@ abstract class sfView
   public function setAttribute($name, $value, $ns = null)
   {
     return $this->attribute_holder->set($name, $value, $ns);
+  }
+
+  public function getParameterHolder()
+  {
+    return $this->parameter_holder;
+  }
+
+  public function getParameter($name, $default = null, $ns = null)
+  {
+    return $this->parameter_holder->get($name, $default, $ns);
+  }
+
+  public function hasParameter($name, $ns = null)
+  {
+    return $this->parameter_holder->has($name, $ns);
+  }
+
+  public function setParameter($name, $value, $ns = null)
+  {
+    return $this->parameter_holder->set($name, $value, $ns);
   }
 
   /**
