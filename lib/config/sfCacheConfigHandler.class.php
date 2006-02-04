@@ -19,7 +19,6 @@
 class sfCacheConfigHandler extends sfYamlConfigHandler
 {
   private
-    $moduleName  = '',
     $cacheConfig = array();
 
   /**
@@ -44,8 +43,6 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
 
     // init our data array
     $data = array();
-
-    $this->moduleName = $param['moduleName'];
 
     // get default configuration
     $this->defaultConfig = array();
@@ -119,7 +116,7 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
 
     // add cache information to cache manager
     $data[] = sprintf("  \$this->cacheManager->addCache('%s', '%s', '%s', %s, '%s', %s);\n\n",
-                      $this->moduleName, $actionName, $type, $lifeTime, $clientLifetime, var_export($vary, true));
+                      $param['moduleName'], $actionName, $type, $lifeTime, $clientLifetime, var_export($vary, true));
 
     return implode("\n", $data);
   }
