@@ -586,6 +586,11 @@
       $options['containment'] = _array_or_string_for_javascript($options['containment']);
     }
 
+    if (isset($options['hoverclass']))
+    {
+      $options['hoverclass'] = "'{$options['hoverclass']}'";
+    }
+
     if (isset($options['only']))
     {
       $options['only'] = _array_or_string_for_javascript($options['only']);
