@@ -48,7 +48,7 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
     }
 
     // merge with autoload configurations
-    $myConfig = sfToolkit::array_deep_merge($defaultConfig, $config);
+    $myConfig = sfToolkit::arrayDeepMerge($defaultConfig, $config);
 
     // init our data array
     $data = array();

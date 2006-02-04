@@ -66,6 +66,40 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
     return $config;
   }
 
+  public function mergeConfigurations($environment, $files)
+  {
+    $configs = array();
+
+    foreach ($files as $file)
+    {
+      if (is_readable($file[1]))
+      {
+        $config = $this->parseYaml($file[1]);
+
+        if (isset($config[$file[0]]))
+        {
+          $configs[] = $config[$file[0]];
+        }
+
+        if (isset($config[$environment]) && is_array($config[$environment]))
+        {
+          $configs[] = $config[$environment];
+        }
+      }
+    }
+
+    if ($configs)
+    {
+      $config = call_user_func_array(array('sfToolkit', 'arrayDeepMerge'), $configs);
+
+      return $config;
+    }
+    else
+    {
+      return array();
+    }
+  }
+
   protected function mergeConfigValue($keyName, $category)
   {
     $values = array();

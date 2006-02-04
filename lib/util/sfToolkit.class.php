@@ -189,7 +189,26 @@ class sfToolkit
     return $output;
   }
 
-  public static function array_deep_merge()
+  // code from php at moechofe dot com (array_merge comment on php.net)
+  /*
+   * array arrayDeepMerge ( array array1 [, array array2 [, array ...]] )
+   *
+   * Like array_merge
+   *
+   *  arrayDeepMerge() merges the elements of one or more arrays together so
+   * that the values of one are appended to the end of the previous one. It
+   * returns the resulting array.
+   *  If the input arrays have the same string keys, then the later value for
+   * that key will overwrite the previous one. If, however, the arrays contain
+   * numeric keys, the later value will not overwrite the original value, but
+   * will be appended.
+   *  If only one array is given and the array is numerically indexed, the keys
+   * get reindexed in a continuous way.
+   *
+   * Different from array_merge
+   *  If string keys have arrays for values, these arrays will merge recursively.
+   */
+  public static function arrayDeepMerge()
   {
     switch (func_num_args())
     {
@@ -208,7 +227,7 @@ class sfToolkit
             $isKey1 = array_key_exists($key, $args[1]);
             if (is_string($key) && $isKey0 && $isKey1 && is_array($args[0][$key]) && is_array($args[1][$key]))
             {
-              $args[2][$key] = self::array_deep_merge($args[0][$key], $args[1][$key]);
+              $args[2][$key] = self::arrayDeepMerge($args[0][$key], $args[1][$key]);
             }
             else if (is_string($key) && $isKey0 && $isKey1)
             {
@@ -244,8 +263,10 @@ class sfToolkit
         }
       default :
         $args = func_get_args();
-        $arr = self::array_deep_merge($args[0], $args[1]);
-        return $arr;
+        $args[1] = sfToolkit::arrayDeepMerge($args[0], $args[1]);
+        array_shift($args);
+        return call_user_func_array(array('sfToolkit', 'arrayDeepMerge'), $args);
+        break;
     }
   }
 

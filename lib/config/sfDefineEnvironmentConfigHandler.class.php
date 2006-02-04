@@ -29,9 +29,6 @@ class sfDefineEnvironmentConfigHandler extends sfYamlConfigHandler
    */
   public function execute($configFile, $param = array())
   {
-    // parse the yaml
-    $config = $this->parseYaml($configFile);
-
     // get our prefix
     $prefix = $this->getParameterHolder()->get('prefix', '');
 
@@ -41,35 +38,12 @@ class sfDefineEnvironmentConfigHandler extends sfYamlConfigHandler
       $prefix .= strtoupper($param['prefix']);
     }
 
-    // get default configuration
-    $defaultConfigFile = sfConfig::get('sf_symfony_data_dir').'/config/'.basename($configFile);
-    if (is_readable($defaultConfigFile))
-    {
-      $defaultConfig = $this->parseYaml($defaultConfigFile);
-      $defaultConfig = $defaultConfig['default'];
-    }
-    if (!isset($defaultConfig))
-    {
-      $defaultConfig = array();
-    }
+    $symfonyConfigFile = sfConfig::get('sf_symfony_data_dir').'/config/'.basename($configFile);
 
-    // get all configuration
-    if (isset($config['all']))
-    {
-      $allConfig = $config['all'];
-    }
-    if (!isset($allConfig))
-    {
-      $allConfig = array();
-    }
-
-    // merge with environment configuration if needed
-    $myConfig = sfToolkit::array_deep_merge($defaultConfig, $allConfig);
-    $sf_environment = sfConfig::get('sf_environment');
-    if (isset($config[$sf_environment]) && is_array($config[$sf_environment]))
-    {
-      $myConfig = sfToolkit::array_deep_merge($myConfig, $config[$sf_environment]);
-    }
+    $myConfig = $this->mergeConfigurations(sfConfig::get('sf_environment'), array(
+      array('default', $symfonyConfigFile),
+      array('all', $configFile),
+    ));
 
     $values = array();
     foreach ($myConfig as $category => $keys)

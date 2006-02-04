@@ -131,20 +131,26 @@ class sfConfigCache
 
     if (!sfToolkit::isPathAbsolute($filename))
     {
-      if (!is_readable(sfConfig::get('sf_app_dir').'/'.$filename))
+      // application configuration file
+      $filename = sfConfig::get('sf_app_dir').'/'.$filename;
+
+      if (!is_readable($filename))
       {
-        $filename = sfConfig::get('sf_symfony_data_dir').'/config/'.basename($filename);
-      }
-      else
-      {
-        $filename = sfConfig::get('sf_app_dir').'/'.$filename;
+        // project configuration file
+        $filename = sfConfig::get('sf_config_dir').'/'.basename($filename);
+
+        if (!is_readable($filename))
+        {
+          // symfony configuration file
+          $filename = sfConfig::get('sf_symfony_data_dir').'/config/'.basename($filename);
+        }
       }
     }
 
     if (!is_readable($filename))
     {
       // configuration file does not exist
-      $error = sprintf('Configuration file "%s" does not exist or is unreadable', $filename);
+      $error = sprintf('Configuration file "%s" does not exist or is unreadable', $configPath);
       throw new sfConfigurationException($error);
     }
 

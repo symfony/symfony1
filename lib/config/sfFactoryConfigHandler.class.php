@@ -33,38 +33,12 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
    */
   public function execute($configFile, $param = array())
   {
-    // parse the yaml
-    $config = $this->parseYaml($configFile);
+    $symfonyConfigFile = sfConfig::get('sf_symfony_data_dir').'/config/'.basename($configFile);
 
-    // get default configuration
-    $defaultConfigFile = sfConfig::get('sf_symfony_data_dir').'/config/'.basename($configFile);
-    if (is_readable($defaultConfigFile))
-    {
-      $defaultConfig = $this->parseYaml($defaultConfigFile);
-      $defaultConfig = $defaultConfig['default'];
-    }
-    if (!isset($defaultConfig))
-    {
-      $defaultConfig = array();
-    }
-
-    // get all configuration
-    if (isset($config['all']))
-    {
-      $allConfig = $config['all'];
-    }
-    if (!isset($allConfig))
-    {
-      $allConfig = array();
-    }
-
-    // merge with environment configuration if needed
-    $myConfig = sfToolkit::array_deep_merge($defaultConfig, $allConfig);
-    $sf_environment = sfConfig::get('sf_environment');
-    if (isset($config[$sf_environment]) && is_array($config[$sf_environment]))
-    {
-      $myConfig = sfToolkit::array_deep_merge($myConfig, $config[$sf_environment]);
-    }
+    $myConfig = $this->mergeConfigurations(sfConfig::get('sf_environment'), array(
+      array('default', $symfonyConfigFile),
+      array('all', $configFile),
+    ));
 
     // init our data and includes arrays
     $includes  = array();
@@ -98,8 +72,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
         if (!is_readable($file))
         {
             // factory file doesn't exist
-            $error = sprintf('Configuration file "%s" specifies class "%s" with nonexistent or unreadablefile "%s"',
-                             $configFile, $class, $file);
+            $error = sprintf('Configuration file "%s" specifies class "%s" with nonexistent or unreadablefile "%s"', $configFile, $class, $file);
             throw new sfParseException($error);
         }
 
