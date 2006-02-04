@@ -39,16 +39,12 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
     // parse the yaml
     $config = $this->parseYaml($configFile);
 
-    // get default configuration
-    $defaultConfigFile = sfConfig::get('sf_symfony_data_dir').'/config/'.basename($configFile);
-    $defaultConfig = array();
-    if (is_readable($defaultConfigFile))
-    {
-      $defaultConfig = $this->parseYaml($defaultConfigFile);
-    }
+    // get symfyon configuration
+    $symfonyConfigFile = sfConfig::get('sf_symfony_data_dir').'/config/'.basename($configFile);
+    $symfonyConfig = is_readable($symfonyConfigFile) ? $this->parseYaml($symfonyConfigFile) : array();
 
     // merge with autoload configurations
-    $myConfig = sfToolkit::arrayDeepMerge($defaultConfig, $config);
+    $myConfig = sfToolkit::arrayDeepMerge($symfonyConfig, $config);
 
     // init our data array
     $data = array();
