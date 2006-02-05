@@ -331,7 +331,6 @@ class sfWebDebug
       'debug'        => sfConfig::get('sf_debug')          ? 'on' : 'off',
       'xdebug'       => (function_exists('xdebug_get_function_stack')) ? 'on' : 'off',
       'logging'      => sfConfig::get('sf_logging_active') ? 'on' : 'off',
-      'routing'      => sfConfig::get('sf_routing')        ? 'on' : 'off',
       'cache'        => sfConfig::get('sf_cache')          ? 'on' : 'off',
       'eaccelerator' => (function_exists('eaccelerator') && ini_get('eaccelerator.enable')) ? 'on' : 'off',
       'compression'  => sfConfig::get('sf_compressed')     ? 'on' : 'off',

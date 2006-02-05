@@ -52,7 +52,6 @@ default:
     cache:                  off
     default_cache_lifetime: 86400
 
-    routing:                on
     no_script_name:         on
 
     stats:                  off

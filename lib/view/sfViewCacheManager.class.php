@@ -37,12 +37,6 @@ class sfViewCacheManager
   {
     $this->context = $context;
 
-    // cache only works with routing
-    if (!sfConfig::get('sf_routing'))
-    {
-      throw new sfConfigurationException('You must activate routing to use cache system');
-    }
-
     $this->controller = $context->getController();
 
     // empty configuration
