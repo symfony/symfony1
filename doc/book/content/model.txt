@@ -17,7 +17,9 @@ One benefit of an object/relational abstraction layer is that it prevents you fr
 
 This means that switching to another database system in the middle of a project is easy. Imagine that you have to write a quick prototype for an application, but the client hasn't decided yet which database system would best suit his needs. You can start building your application with SQLite, for instance, and switch to MySQL, PostgreSQL or Oracle when the client is ready to. Just change one line in a configuration file, and it works.
 
-Using objects instead of records, and classes instead of tables, have another benefit: they allow you to add new accessors to your tables. For instance, if you have a table called 'Client' with two fields 'FirstName' and 'LastName', you might like to be able to require just a 'Name'. In an object-oriented world, it is as easy as adding a new accessor method to the `Client` class.
+An abstraction layer encapsulates the data logic. The rest of the application doesn't need to kow about the SQL queries, and the SQL that accesses the database is easy to find. Developers who are specialized in database programming also know clearly where to go.
+
+Using objects instead of records, and classes instead of tables, have another benefit: They allow you to add new accessors to your tables. For instance, if you have a table called 'Client' with two fields 'FirstName' and 'LastName', you might like to be able to require just a 'Name'. In an object-oriented world, it is as easy as adding a new accessor method to the `Client` class.
 
     [php]
     public function getName()
@@ -113,46 +115,6 @@ The `primaryKey` attribute identifies primary key fields. Columns that are prima
 
 To learn more about this file format and its specifications, refer to the [documentation][2] and the [getting started][3] sections of the Propel project website. 
 
-Don't create the model twice
-----------------------------
-
-### Building a SQL database structure based on an existing schema
-
-If you start your application by writing the `schema.xml`, you might not want to do it a second time in SQL to actually create the tables in the database. Symfony can generate a SQL query that creates the tables directly from the XML data model. To get it, go to your root project directory and type:
-
-    $ symfony build-sql
-
-A `schema.sql` will be created in `myproject/data/sql/`. Note that the generated SQL code will be optimized for the database system defined in the `propel.database` parameter of the `propel.ini` file (located in `myproject/config/`).
-
-You can use it directly to build the tables. For instance, in MySQL:
-
-    $ mysqladmin -u root -p create blog
-    $ mysql -u root -p < data/sql/schema.sql
-
-This command is also helpful to rebuild the database in another environment, or to change RDBMS. 
-
->**Note**: If the connection settings are properly defined in your `propel.ini` (in the `propel.database.url` and `propel.database.createUrl` settings), you can even use the `symfony insert-sql` command to do this automatically.
-
-### Generating an XML data model from an existing database
-
-Symfony can use the Creole database access layer to generate a `schema.xml` from an existing database, thanks to introspection. This can be particularly useful when you do reverse engineering, or if you prefer working on the database before working on the object model.
-
-In order to do this, you have to make sure that Propel knows how to access your database. This means that the `propel.ini` configuration file has to contain the following line:
-
-    propel.database.url = dbtype://username:password@localhost/databasename
-
-...where `dbtype`, `username`, `password`, `localhost` and `databasename` are the actual connection settings of your database.
-
-For instance, if our `blog` database is hosted by a MySQL server in localhost, the line has to show:
-
-    propel.database.url = mysql://root:@localhost/localhost
-
-If the `propel.database.url` setting is correct, you can call the `build-schema` command:
-
-    $ symfony build-schema
-    
-And a brand new `schema.xml` built from your database structure is written in your `myproject/config/` directory.
-
 Object data model files
 -----------------------
 
@@ -160,9 +122,7 @@ Object data model files
 
 Now that the object data model is described, the PHP classes are ready to be generated. In your project directory, type the command:
 
-    $ symfony build-model
-
->**Note**: Some versions of Propel raise a "`Fatal error: Class 'XsltProcessor' not found`" at that point. This is because Propel tries to validate the schema using the 'xsd' PHP extension, and this extension is not installed by default. If this is the case, you can either install the xsd extension by hand or simply add a `noxsd="true"` attribute to the `<database>` tag in the `schema.xml` configuration.
+    $ symfony propel-build-model
 
 The base data access classes will be automatically created in the `myproject/lib/model/om/` directory:
 
@@ -184,9 +144,9 @@ You only defined two tables and you end up with eight files. What's the deal her
 
 Why keep two versions of the data object model, one in `model/om/` and another in `model/`? 
 
-You will probably need to add custom methods and attributes to the model objects (think about the `->getName()` method that outputs the `FirstName` and `LastName` together). But as your project develops, you will also add tables or columns. Whenever you change the `schema.xml`, you have to make a new call to `symfony build-model` to generate the object model classes.
+You will probably need to add custom methods and attributes to the model objects (think about the `->getName()` method that outputs the `FirstName` and `LastName` together). But as your project develops, you will also add tables or columns. Whenever you change the `schema.xml`, you have to make a new call to `symfony propel-build-model` to generate the object model classes.
 
-The `Base` architecture allows you to keep using the `symfony build-model` command even after you added custom code to your classes. Here is how it works: the `Base` classes kept in the `model/om/` directory are the ones generated by Propel. You should **never** modify them since every new build of the model will completely erase these files. But if you need to add custom methods, use the regular object classes of the `model/` directory that actually inherit from the previous ones.
+The `Base` architecture allows you to keep using the `symfony propel-build-model` command even after you added custom code to your classes. Here is how it works: the `Base` classes kept in the `model/om/` directory are the ones generated by Propel. You should **never** modify them since every new build of the model will completely erase these files. But if you need to add custom methods, use the regular object classes of the `model/` directory that actually inherit from the previous ones.
 
 For example, here is the content of the newly created `Article.php` file:
 
@@ -220,7 +180,7 @@ From a data model point of view, note that there cannot be any `Peer` object. Th
 Database access configuration
 -----------------------------
 
-The data model is independent from the database used, but you will definitely use a database. The minimum information required by symfony to handle requests to the project database is the name, the access codes and the type of the database. This data should be entered in the `databases.yml` file located in the `myproject/apps/myapp/config/` directory:
+The data model is independent from the database used, but you will definitely use a database. The minimum information required by symfony to handle requests to the project database is the name, the access codes and the type of the database. This data should be entered in the `databases.yml` file located in the `myproject/config/` directory:
 
     prod:
       propel:
@@ -241,7 +201,7 @@ The data model is independent from the database used, but you will definitely us
           compat_assoc_lower: true
           # datasource:       propel
 
-The database access is environment dependant. You can define different settings for the `prod`, `dev`, `test` environments, or any other environment you defined. The `all` header defines settings for all environments.
+The database access is environment dependant. You can define different settings for the `prod`, `dev`, `test` environments, or any other environment you defined. The `all` header defines settings for all environments. This configuration can also be overridden per application, by setting different values in an application-specific file, for instance in `myproject/apps/myapp/config/databases.yml`.
 
 For each environment, you can define many connections, each being linked to a `schema.xml`. Connections and schema are linked by the `datasource`  parameter. It refers to the `name` attribute of the `<database>` tag in the `schema.xml`. If you don't specify the `datasource` param, it takes the value of the label given to the connection settings.
 
@@ -271,7 +231,43 @@ In the above example, the settings for `all` environments can also be written us
 >         param:
 >           dsn:          sqlite://./../data/blog.db 
 > 
- 
+
+Don't create the model twice
+----------------------------
+
+### Building a SQL database structure based on an existing schema
+
+If you start your application by writing the `schema.xml`, you might not want to do it a second time in SQL to actually create the tables in the database. Symfony can generate a SQL query that creates the tables directly from the XML data model. To get it, go to your root project directory and type:
+
+    $ symfony propel-build-sql
+
+A `schema.sql` will be created in `myproject/data/sql/`. Note that the generated SQL code will be optimized for the database system defined in the `phptype` parameter of the `databases.yml` file. You can also precise the connection that you want to use. For instance, if you have a `databases.yml` in your `myapp` application defining settings for the `propel` connection in the `prod` environment:
+
+    $ symfony propel-build-sql myapp prod propel
+
+You can use the `schema.sql` directly to build the tables. For instance, in MySQL:
+
+    $ mysqladmin -u root -p create blog
+    $ mysql -u root -p blog < data/sql/schema.sql
+
+This command is also helpful to rebuild the database in another environment, or to change RDBMS. 
+
+>**Note**: If the connection settings are properly defined in your `databases.yml`, you can even use the `symfony propel-insert-sql` command to do this automatically.
+
+### Generating an XML data model from an existing database
+
+Symfony can use the Creole database access layer to generate a `schema.xml` from an existing database, thanks to introspection. This can be particularly useful when you do reverse engineering, or if you prefer working on the database before working on the object model.
+
+In order to do this, you have to make sure that the project `databases.yml` points to the correct database and contains all connection settings.
+
+You can call the `propel-build-schema` command:
+
+    $ symfony propel-build-schema
+    
+And a brand new `schema.xml` built from your database structure is written in your `myproject/config/` directory. Once again, you can determine the connection to use if there is an alternative:
+
+    $ symfony propel-build-schema myapp prod propel
+
 Data access
 -----------
 
