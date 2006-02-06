@@ -70,32 +70,21 @@ class sfMailView extends sfPHPView
       throw new sfActionException($error);
     }
 
-// FIXME: cache support (be careful: must implement cache for alternate templates!)
-//    $retval = $this->getCacheContent();
+    // render main template
+    $retval = $this->renderFile($template);
 
-    // render template if no cache
-//    if ($retval === null)
-//    {
-      // render main template
-      $retval = $this->renderFile($template);
-
-      // render main and alternate templates
-      $all_template_dir  = dirname($template);
-      $all_template_regex = preg_replace('/\\.php$/', '\..+\.php', basename($template));
-      $all_templates = sfFinder::type('file')->name('/^'.$all_template_regex.'$/')->in($all_template_dir);
-      $all_retvals = array();
-      foreach ($all_templates as $templateFile)
+    // render main and alternate templates
+    $all_template_dir  = dirname($template);
+    $all_template_regex = preg_replace('/\\.php$/', '\..+\.php', basename($template));
+    $all_templates = sfFinder::type('file')->name('/^'.$all_template_regex.'$/')->in($all_template_dir);
+    $all_retvals = array();
+    foreach ($all_templates as $templateFile)
+    {
+      if (preg_match('/\.(.+?)\.php$/', $templateFile, $matches))
       {
-        if (preg_match('/\.(.+?)\.php$/', $templateFile, $matches))
-        {
-          $all_retvals[$matches[1]] = $this->renderFile($templateFile);
-        }
+        $all_retvals[$matches[1]] = $this->renderFile($templateFile);
       }
-
-//      $retval = $this->setCacheContent($retval);
-//    }
-
-//    $this->setPageCacheContent($retval);
+    }
 
     // send email
     if ($sf_logging_active)
