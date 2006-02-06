@@ -41,8 +41,8 @@ function run_init_project($task, $args)
   // create symlink if needed
   if (sfConfig::get('sf_symfony_symlink'))
   {
-    pake_symlink(sfConfig::get('sf_symfony_lib_dir'),  $sf_root_dir.'/lib');
-    pake_symlink(sfConfig::get('sf_symfony_data_dir'), $sf_root_dir.'/data');
+    pake_symlink(sfConfig::get('sf_symfony_lib_dir'),  $sf_root_dir.'/lib/symfony');
+    pake_symlink(sfConfig::get('sf_symfony_data_dir'), $sf_root_dir.'/data/symfony');
   }
 
   run_fix_perms($task, $args);
