@@ -19,7 +19,7 @@ function run_generate_propelcrud($task, $args)
   throw new Exception('This task is deprecated. Please use "propel-generate-crud".');
 }
 
-function run_init_propelcrud($task, $args)
+function run_propel_init_crud($task, $args)
 {
   if (count($args) < 2)
   {
@@ -60,7 +60,7 @@ function run_init_propelcrud($task, $args)
   pake_replace_tokens($finder, $moduleDir, '##', '##', $constants);
 }
 
-function run_generate_propelcrud($task, $args)
+function run_propel_generate_crud($task, $args)
 {
   if (count($args) < 2)
   {

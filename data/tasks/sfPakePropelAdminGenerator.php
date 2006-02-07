@@ -9,7 +9,7 @@ function run_init_propeladmin($task, $args)
   throw new Exception('This task is deprecated. Please use "propel-init-admin".');
 }
 
-function run_init_propeladmin($task, $args)
+function run_propel_init_admin($task, $args)
 {
   if (count($args) < 2)
   {
