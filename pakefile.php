@@ -76,7 +76,15 @@ function __autoload($class)
 
   $classes = sfConfig::get('sf_class_autoload', array());
 
-  require_once($classes[$class]);
+  if (!isset($classes[$class]))
+  {
+    $error = sprintf('Autoloading of class "%s" failed.', $class);
+    throw new pakeException($error);
+  }
+  else
+  {
+    require_once($classes[$class]);
+  }
 }
 
 function run_alltests($task, $args)
