@@ -1,7 +1,7 @@
 <?php
   /** 
    * Spyc -- A Simple PHP YAML Class
-   * @version 0.2.2 -- 2006-01-29
+   * @version 0.2.3 -- 2006-02-04
    * @author Chris Wanstrath <chris@ozmm.org>
    * @link http://spyc.sourceforge.net/
    * @copyright Copyright 2005-2006 Chris Wanstrath
@@ -596,7 +596,7 @@
       // Check for strings      
       $regex = '/(?:(")|(?:\'))((?(1)[^"]+|[^\']+))(?(1)"|\')/';
       if (preg_match_all($regex,$inline,$strings)) {
-        $strings = $strings[2];
+        $saved_strings[] = $strings[0][0];
         $inline  = preg_replace($regex,'YAMLString',$inline); 
       }
       unset($regex);
@@ -616,11 +616,11 @@
       $explode = explode(', ',$inline);
       
       // Re-add the strings
-      if (!empty($strings)) {
+      if (!empty($saved_strings)) {
         $i = 0;
         foreach ($explode as $key => $value) {
-          if ($value == 'YAMLString') {
-            $explode[$key] = $strings[$i];
+          if (strpos($value,'YAMLString')) {
+            $explode[$key] = str_replace('YAMLString',$saved_strings[$i],$value);
             ++$i;
           }
         }
