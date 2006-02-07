@@ -69,7 +69,7 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
 
       if ($this->getConfigValue('activate', $actionName))
       {
-        $data[] = $this->addCache($actionName);
+        $data[] = $this->addCache($actionName, $param);
       }
 
       $data[] = "}\n";
@@ -81,7 +81,7 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
     if ($this->getConfigValue('activate', $actionName))
     {
       $data[] = ($first ? '' : "else\n{")."\n";
-      $data[] = $this->addCache('DEFAULT');
+      $data[] = $this->addCache('DEFAULT', $param);
       $data[] = ($first ? '' : "}")."\n";
     }
 
@@ -94,7 +94,7 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
     return $retval;
   }
 
-  private function addCache($actionName = '')
+  private function addCache($actionName = '', $param = array())
   {
     $data = array();
 
