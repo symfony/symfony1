@@ -45,27 +45,27 @@ function run_insert_sql($task, $args)
   throw new Exception('This task is deprecated. Please use "propel-insert-sql".');
 }
 
-function run_build_propelmodel($task, $args)
+function run_propel_build_model($task, $args)
 {
   _call_phing($task, 'build-om');
 }
 
-function run_build_propelsql($task, $args)
+function run_propel_build_sql($task, $args)
 {
   _call_phing($task, 'build-sql');
 }
 
-function run_build_propeldb($task, $args)
+function run_propel_build_db($task, $args)
 {
   _call_phing($task, 'build-db');
 }
 
-function run_insert_propelsql($task, $args)
+function run_propel_insert_sql($task, $args)
 {
   _call_phing($task, 'insert-sql');
 }
 
-function run_build_propelschema($task, $args)
+function run_propel_build_schema($task, $args)
 {
   _call_phing($task, 'build-model-schema', false);
 
@@ -95,7 +95,8 @@ function _call_phing($task, $task_name, $check_schema = true)
   file_put_contents($propelIniFileName, $propelIni);
 
   // update database information
-  
+  $projectConfigFile = sfConfig::get('sf_config_dir').DIRECTORY_SEPARATOR.'databases.yml';
+  $appConfigFile     = sfConfig::get('sf_apps_dir_name').DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.sfConfig::get('sf_app_config_dir_name').DIRECTORY_SEPARATOR.'databases.yml';
 
   $propel_generator_dir = sfConfig::get('sf_symfony_lib_dir').'/vendor/propel-generator';
 
