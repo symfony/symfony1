@@ -46,6 +46,12 @@ class sfFormTagHelperTest extends UnitTestCase
     $this->assertEqual($expected, $actual);
   }
 
+  public function test_options_for_select()
+  {
+    $this->assertEqual("<option value=\"0\" selected=\"selected\">item1</option>\n<option value=\"1\">item2</option>\n",
+                       options_for_select(array('item1', 'item2'), '0'));
+  }
+
   public function test_form_select_tag()
   {
     $actual = select_tag("people", "<option>david</option>");
@@ -82,48 +88,6 @@ class sfFormTagHelperTest extends UnitTestCase
     $actual = input_tag('title', 'Hello!', 'class=admin');
     $expected = '<input type="text" name="title" id="title" value="Hello!" class="admin" />';
     $this->assertEqual($expected, $actual);
-  }
-
-  public function test_object_for_select()
-  {
-    require_once('TestObject.php');
-
-    $obj1 = new TestObject();
-    $obj2 = new TestObject();
-    $obj2->setText('text2');
-    $obj2->setValue('value2');
-
-    $actual = objects_for_select(array($obj1, $obj2), 'getValue', 'getText');
-    $expected = "<option value=\"value\">text</option>\n<option value=\"value2\">text2</option>\n";
-    $this->assertEqual($expected, $actual);
-
-    $actual = objects_for_select(array($obj1, $obj2), 'getValue');
-    $expected = "<option value=\"value\">value</option>\n<option value=\"value2\">value2</option>\n";
-    $this->assertEqual($expected, $actual);
-
-    try
-    {
-      $actual = objects_for_select(array($obj1, $obj2), 'getNonExistantMethod');
-      $this->assertEqual($expected, $actual);
-
-      $this->assertTrue(0);
-    }
-    catch (sfViewException $e)
-    {
-      $this->assertTrue(1);
-    }
-
-    try
-    {
-      $actual = objects_for_select(array($obj1, $obj2), 'getValue', 'getNonExistantMethod');
-      $this->assertEqual($expected, $actual);
-
-      $this->assertTrue(0);
-    }
-    catch (sfViewException $e)
-    {
-      $this->assertTrue(1);
-    }
   }
 
 /*

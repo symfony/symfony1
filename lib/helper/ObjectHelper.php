@@ -5,7 +5,7 @@ require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/FormHelper.php');
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -59,6 +59,39 @@ function object_textarea_tag($object, $method, $options = array(), $default_valu
   return textarea_tag(_convert_method_to_name($method, $options), $value, $options);
 }
 
+/*
+      # Accepts a container of objects, the method name to use for the value, and the method name to use for the display. It returns
+      # a string of option tags.
+      # NOTE: Only the option tags are returned, you have to wrap this call in a regular HTML select tag.
+*/
+function objects_for_select($options = array(), $value_method, $text_method = null, $selected = null)
+{
+  $select_options = array();
+  foreach($options as $option)
+  {
+    // text method exists?
+    if ($text_method && !method_exists($option, $text_method))
+    {
+      $error = sprintf('Method "%s" doesn\'t exist for object of class "%s"', $text_method, get_class($option));
+      throw new sfViewException($error);
+    }
+
+    // value method exists?
+    if (!method_exists($option, $value_method))
+    {
+      $error = sprintf('Method "%s" doesn\'t exist for object of class "%s"', $value_method, get_class($option));
+      throw new sfViewException($error);
+    }
+
+    $value = $option->$value_method();
+    $key = ($text_method != null) ? $option->$text_method() : $value;
+
+    $select_options[$value] = $key;
+  }
+
+  return options_for_select($select_options, $selected);
+}
+
 /**
  * Returns a list html tag.
  *
@@ -90,7 +123,7 @@ function object_select_tag($object, $method, $options = array(), $default_value 
     $select_options[''] = '-- '._convert_method_to_name($method, $options).' --';
     unset($options['include_title']);
   }
-  else if (isset($options['include_custom'])) 
+  else if (isset($options['include_custom']))
   {
     $select_options[''] = $options['include_custom'];
     unset($options['include_custom']);
