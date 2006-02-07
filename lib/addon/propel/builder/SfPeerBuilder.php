@@ -94,7 +94,7 @@ class sfPeerBuilder extends PHP5ComplexPeerBuilder
               $script .= "
       \$omClass = ".$this->getPeerClassname()."::getOMClass();
 ";
-            } 
+            }
             $script .= "
       \$cls = Propel::import(\$omClass);
       \$obj1 = new \$cls();
@@ -104,7 +104,7 @@ class sfPeerBuilder extends PHP5ComplexPeerBuilder
               $script .= "
       \$omClass = ".$i18nTablePeerBuilder->getPeerClassname()."::getOMClass(\$rs, \$startcol);
 ";
-//            } else { 
+//            } else {
 //              $script .= "
 //      \$omClass = ".$i18nTablePeerBuilder->getPeerClassname()."::getOMClass();
 //";
@@ -123,6 +123,22 @@ class sfPeerBuilder extends PHP5ComplexPeerBuilder
     return \$results;
   }
 ";
+  }
+
+  public function addDoValidate(&$script) {
+	    $tmp = '';
+      parent::addDoValidate($tmp);
+
+      $script .= str_replace("return {$this->basePeerClassname}::doValidate(".$this->getPeerClassname()."::DATABASE_NAME, ".$this->getPeerClassname()."::TABLE_NAME, \$columns);\n",
+        "\$res =  {$this->basePeerClassname}::doValidate(".$this->getPeerClassname()."::DATABASE_NAME, ".$this->getPeerClassname()."::TABLE_NAME, \$columns);\n".
+        "    if (\$res !== true) {\n".
+        "        \$request = sfContext::getInstance()->getRequest();\n".
+        "        foreach (\$res as \$failed) {\n".
+        "            \$col = ".$this->getPeerClassname()."::translateFieldname(\$failed->getColumn(), BasePeer::TYPE_COLNAME, BasePeer::TYPE_PHPNAME);\n".
+        "            \$request->setError(\$col, \$failed->getMessage());\n".
+        "        }\n".
+        "    }\n\n".
+        "    return \$res;\n", $tmp);
   }
 }
 
