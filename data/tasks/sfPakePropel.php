@@ -1,48 +1,48 @@
 <?php
 
 pake_desc('create classes for current model');
-pake_task('build-propelmodel', 'project_exists');
+pake_task('propel-build-model', 'project_exists');
 pake_task('build-model');
 
 pake_desc('create sql for current model');
-pake_task('build-propelsql', 'project_exists');
+pake_task('propel-build-sql', 'project_exists');
 pake_task('build-sql');
 
 pake_desc('create schema.xml from existing database');
-pake_task('build-propelschema', 'project_exists');
+pake_task('propel-build-schema', 'project_exists');
 pake_task('build-schema');
 
 pake_desc('create database for current model');
-pake_task('build-propeldb', 'project_exists');
+pake_task('propel-build-db', 'project_exists');
 pake_task('build-db');
 
 pake_desc('insert sql for current model');
-pake_task('insert-propelsql', 'project_exists');
+pake_task('propel-insert-sql', 'project_exists');
 pake_task('insert-sql');
 
 function run_build_model($task, $args)
 {
-  throw new Exception('This task is deprecated. Please use "build-propelmodel".');
+  throw new Exception('This task is deprecated. Please use "propel-build-model".');
 }
 
 function run_build_sql($task, $args)
 {
-  throw new Exception('This task is deprecated. Please use "build-propelsql".');
+  throw new Exception('This task is deprecated. Please use "propel-build-sql".');
 }
 
 function run_build_schema($task, $args)
 {
-  throw new Exception('This task is deprecated. Please use "build-propelschema".');
+  throw new Exception('This task is deprecated. Please use "propel-build-schema".');
 }
 
 function run_build_db($task, $args)
 {
-  throw new Exception('This task is deprecated. Please use "build-propeldb".');
+  throw new Exception('This task is deprecated. Please use "propel-build-db".');
 }
 
 function run_insert_sql($task, $args)
 {
-  throw new Exception('This task is deprecated. Please use "insert-propelsql".');
+  throw new Exception('This task is deprecated. Please use "propel-insert-sql".');
 }
 
 function run_build_propelmodel($task, $args)
