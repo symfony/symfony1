@@ -77,7 +77,8 @@ abstract class sfView
     $attribute_holder   = null,
     $parameter_holder   = null,
     $moduleName         = '',
-    $viewName           = '';
+    $viewName           = '',
+    $extension          = '.php';
 
   /**
    * Loop through all template slots and fill them in with the results of presentation data.
@@ -145,7 +146,7 @@ abstract class sfView
    *
    * @return void
    */
-  abstract function configure ($extension = '.php');
+  abstract function configure ();
 
   /**
    * Retrieve the current application context.
@@ -477,7 +478,14 @@ abstract class sfView
       $this->decoratorTemplate  = basename($template);
     }
     else
+    {
       $this->decoratorTemplate = $template;
+    }
+
+    if (!strpos($this->decoratorTemplate, '.')) 
+    {
+      $this->decoratorTemplate .= $this->extension;
+    }
 
     // set decorator status
     $this->decorator = true;
@@ -585,7 +593,9 @@ abstract class sfView
       $this->template  = basename($template);
     }
     else
+    {
       $this->template = $template;
+    }
   }
 }
 
