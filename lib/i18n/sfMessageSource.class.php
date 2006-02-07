@@ -19,7 +19,7 @@
 
 /**
  * Abstract sfMessageSource class.
- * 
+ *
  * The base class for all sfMessageSources. Message sources must be instantiated
  * using the factory method. The default valid sources are
  *
@@ -35,23 +35,23 @@
  *   $classfile = '../sfMessageSource_MySource.php'; //custom message source
  *   $source = sfMessageSource::factory('MySource', $resource, $classfile);
  * </code>
- * 
- * If you are writting your own message sources, pay attention to the 
+ *
+ * If you are writting your own message sources, pay attention to the
  * loadCatalogue method. It details how the resources are loaded and cached.
  * See also the existing message source types as examples.
- * 
+ *
  * The following example instantiates a MySQL message source, set the culture,
- * set the cache handler, and use the source in a message formatter. 
+ * set the cache handler, and use the source in a message formatter.
  * The messages are store in a database named "messages". The source parameter
  * for the actory method is a PEAR DB style DSN.
  * <code>
  *   $dsn = 'mysql://username:password@localhost/messages';
  *   $source = sfMessageSource::factory('MySQL', $dsn);
- *   
+ *
  *   //set the culture and cache, store the cache in the /tmp directory.
  *   $source->setCulture('en_AU')l
  *   $source->setCache(new sfMessageCache('/tmp'));
- *   
+ *
  *   $formatter = new sfMessageFormat($source);
  * </code>
  *
@@ -60,31 +60,31 @@
  * @package System.I18N.core
  */
 abstract class sfMessageSource implements sfIMessageSource
-{ 
+{
   /**
    * The culture name for this message source.
-   * @var string 
+   * @var string
    */
   protected $culture;
-  
+
   /**
    * Array of translation messages.
-   * @var array 
+   * @var array
    */
   protected $messages = array();
 
   /**
    * The source of message translations.
-   * @var string 
+   * @var string
    */
   protected $source;
-  
+
   /**
    * The translation cache.
-   * @var sfMessageCache 
+   * @var sfMessageCache
    */
   protected $cache;
-  
+
   protected $untranslated = array();
 
   /**
@@ -92,30 +92,30 @@ abstract class sfMessageSource implements sfIMessageSource
    * the factory method.
    */
   private function __construct()
-  { 
+  {
     //throw new sfException('Please use the factory method to instantiate.');
   }
-  
+
   /**
    * Factory method to instantiate a new sfMessageSource depending on the
-   * source type. The allowed source types are 'XLIFF', 'SQLite', 
-   * 'MySQL', and 'gettext'. The source parameter is dependent on the 
+   * source type. The allowed source types are 'XLIFF', 'SQLite',
+   * 'MySQL', and 'gettext'. The source parameter is dependent on the
    * source type. For 'gettext' and 'XLIFF', it should point to the directory
-   * where the messages are stored. For database types, e.g. 'SQLite' and 
-   * 'MySQL', it should be a PEAR DB style DSN string. 
+   * where the messages are stored. For database types, e.g. 'SQLite' and
+   * 'MySQL', it should be a PEAR DB style DSN string.
    *
    * Custom message source are possible by supplying the a filename parameter
    * in the factory method.
-   * 
+   *
    * @param string the message source type.
    * @param string the location of the resource.
    * @param string the filename of the custom message source.
-   * @return sfMessageSource a new message source of the specified type. 
+   * @return sfMessageSource a new message source of the specified type.
    * @throw InvalidsfMessageSourceTypeException
    */
   static function &factory($type, $source='.', $filename='')
   {
-    $types = array('XLIFF', 'SQLite', 'MySQL', 'gettext');
+    $types = array('XLIFF', 'SQLite', 'MySQL', 'gettext', 'Creole');
 
     if (empty($filename) && in_array($type, $types) == false)
     {
@@ -140,13 +140,13 @@ abstract class sfMessageSource implements sfIMessageSource
 
     return $obj;
   }
-  
+
   /**
-   * Load a particular message catalogue. Use read() to 
+   * Load a particular message catalogue. Use read() to
    * to get the array of messages. The catalogue loading sequence
    * is as follows
    *
-   *  # [1] call getCatalogeList($catalogue) to get a list of 
+   *  # [1] call getCatalogeList($catalogue) to get a list of
    *    variants for for the specified $catalogue.
    *  # [2] for each of the variants, call getSource($variant)
    *    to get the resource, could be a file or catalogue ID.
@@ -155,30 +155,30 @@ abstract class sfMessageSource implements sfIMessageSource
    *  # [5] if a cache miss, call load($source) to load the message array
    *  # [6] store the messages to cache.
    *  # [7] continue with the foreach loop, e.g. goto [2].
-   * 
+   *
    * @param string a catalogue to load
-   * @return boolean true if loaded, false otherwise.  
+   * @return boolean true if loaded, false otherwise.
    * @see read()
    */
   function load($catalogue='messages')
   {
     $variants = $this->getCatalogueList($catalogue);
-    
+
     $this->messages = array();
-    
+
     foreach($variants as $variant)
     {
       $source = $this->getSource($variant);
-      
+
       if($this->isValidSource($source) == false) continue;
 
       $loadData = true;
-      
+
       if($this->cache)
       {
-        $data = $this->cache->get($variant, 
+        $data = $this->cache->get($variant,
           $this->culture, $this->getLastModified($source));
-        
+
         if(is_array($data))
         {
           $this->messages[$variant] = $data;
@@ -194,24 +194,24 @@ abstract class sfMessageSource implements sfIMessageSource
           $this->messages[$variant] = $data;
           if($this->cache)
             $this->cache->save($data, $variant, $this->culture);
-        } 
+        }
         unset($data);
       }
     }
-    
+
     return true;
-  } 
-  
+  }
+
   /**
    * Get the array of messages.
    * @param parameter
-   * @return array translation messages. 
+   * @return array translation messages.
    */
   public function read()
   {
     return $this->messages;
   }
-    
+
   /**
    * Get the cache handler for this source.
    * @return sfMessageCache cache handler
@@ -220,7 +220,7 @@ abstract class sfMessageSource implements sfIMessageSource
   {
     return $this->cache;
   }
-  
+
   /**
    * Set the cache handler for caching the messages.
    * @param sfMessageCache the cache handler.
@@ -229,18 +229,18 @@ abstract class sfMessageSource implements sfIMessageSource
   {
     $this->cache = $cache;
   }
-  
+
   /**
    * Add a untranslated message to the source. Need to call save()
    * to save the messages to source.
    * @param string message to add
-   */ 
+   */
   public function append($message)
   {
     if(!in_array($message, $this->untranslated))
       $this->untranslated[] = $message;
   }
-  
+
   /**
    * Set the culture for this message source.
    * @param string culture name
@@ -248,16 +248,16 @@ abstract class sfMessageSource implements sfIMessageSource
   public function setCulture($culture)
   {
     $this->culture = $culture;
-  } 
-  
+  }
+
   /**
    * Get the culture identifier for the source.
-   * @return string culture identifier. 
+   * @return string culture identifier.
    */
   public function getCulture()
   {
     return $this->culture;
-  } 
+  }
 
   /**
    * Get the last modified unix-time for this particular catalogue+variant.
@@ -268,44 +268,44 @@ abstract class sfMessageSource implements sfIMessageSource
   {
     return 0;
   }
-  
+
   /**
    * Load the message for a particular catalogue+variant.
    * This methods needs to implemented by subclasses.
    * @param string catalogue+variant.
-   * @return array of translation messages. 
+   * @return array of translation messages.
    */
   protected function &loadData($variant)
   {
     return array();
   }
-  
+
   /**
    * Get the source, this could be a filename or database ID.
    * @param string catalogue+variant
-   * @return string the resource key 
+   * @return string the resource key
    */
   protected function getSource($variant)
   {
     return $variant;
   }
-  
+
   /**
    * Determine if the source is valid.
    * @param string catalogue+variant
-   * @return boolean true if valid, false otherwise. 
+   * @return boolean true if valid, false otherwise.
    */
   protected function isValidSource($source)
   {
     return false;
   }
-  
+
   /**
    * Get all the variants of a particular catalogue.
    * This method must be implemented by subclasses.
    * @param string catalogue name
-   * @return array list of all variants for this catalogue. 
-   */ 
+   * @return array list of all variants for this catalogue.
+   */
   protected function getCatalogueList($catalogue)
   {
     return array();

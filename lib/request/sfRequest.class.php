@@ -4,7 +4,7 @@
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * (c) 2004-2006 Sean Kerr.
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -81,7 +81,7 @@ abstract class sfRequest
    *
    * @return string An error message, if the error exists, otherwise null.
    */
-  public function getError ($name)
+  public function getError ($name, $catalogue = 'messages')
   {
     $retval = null;
 
@@ -93,7 +93,7 @@ abstract class sfRequest
     // translate error message if needed
     if (sfConfig::get('sf_i18n'))
     {
-      $retval = $this->context->getI18N()->__($retval);
+      $retval = $this->context->getI18N()->__($retval, null, $catalogue);
     }
 
     return $retval;

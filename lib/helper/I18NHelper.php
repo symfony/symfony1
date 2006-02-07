@@ -17,19 +17,19 @@
  * @version    SVN: $Id$
  */
 
-function __($text, $args = array(), $culture = null)
+function __($text, $args = array(), $culture = null, $catalogue = 'messages')
 {
   if (!sfConfig::get('sf_i18n'))
   {
     throw new sfConfigurationException('you must set sf_i18n to on in settings.yml to be able to use these helpers.');
   }
 
-  return sfConfig::get('sf_i18n_instance')->__($text, $args);
+  return sfConfig::get('sf_i18n_instance')->__($text, $args, $catalogue);
 }
 
-function format_number_choice($text, $args = array(), $number, $culture = null)
+function format_number_choice($text, $args = array(), $number, $culture = null, $catalogue = 'messages')
 {
-  $translated = sfConfig::get('sf_i18n_instance')->__($text, $args);
+  $translated = sfConfig::get('sf_i18n_instance')->__($text, $args, $catalogue);
 
   $choice = new sfChoiceFormat();
 
@@ -37,8 +37,7 @@ function format_number_choice($text, $args = array(), $number, $culture = null)
 
   if ($retval === false)
   {
-    $error = 'Unable to parse your choice "%s"';
-    $error = sprintf($error, $translated);
+    $error = sprintf('Unable to parse your choice "%s"', $translated);
     throw new sfException($error);
   }
 
