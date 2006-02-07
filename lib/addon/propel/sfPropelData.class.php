@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -197,6 +197,98 @@ class sfPropelData
       require_once(sfConfig::get('sf_model_lib_dir').'/map/'.$class_map_builder.'.php');
       $this->maps[$class] = new $class_map_builder();
       $this->maps[$class]->doBuild();
+    }
+  }
+
+  /**
+   * Dumps data to fixture from 1 or more tables.
+   *
+   * @param string directory or file to dump to
+   * @param mixed name or names of tables to dump
+   * @param string connection name
+   */
+  public function dumpData($directory_or_file = null, $tables = 'all', $connectionName = 'propel')
+  {
+    $sameFile = true;
+    if (is_dir($directory_or_file) && 'all' === $tables ||  (is_array($tables) && 1 < count($tables)))
+    {
+      // multi files
+      $sameFile = false;
+    }
+    else
+    {
+      // same file
+      // delete file
+    }
+
+    $con = sfContext::getInstance()->getDatabaseConnection($connectionName);
+
+    // get tables
+    if ('all' === $tables)
+    {
+      $tables = sfFinder::type('file')->name('/(?<!Peer)\.php$/')->maxdepth(0)->in(sfConfig::get('sf_model_lib_dir'));
+      foreach ($tables as &$table)
+      {
+        $table = basename($table, '.php');
+      }
+    }
+    else if (!isset($tables) || !is_array($tables))
+    {
+      $tables = array($tables);
+    }
+
+    $dumpData = array();
+
+    // load map class
+    array_walk($tables, array($this, 'loadMapBuilder'));
+
+    foreach ($tables as $table)
+    {
+      $tableMap = $this->maps[$table]->getDatabaseMap()->getTable(constant($table.'Peer::TABLE_NAME'));
+
+      // get db info
+      $rs = $con->executeQuery('SELECT * FROM '.constant($table.'Peer::TABLE_NAME'));
+
+      $dumpData[$table] = array();
+
+      while ($rs->next()) {
+        $pk = '';
+        foreach ($tableMap->getColumns() as $column)
+        {
+          $col = strtolower($column->getColumnName());
+
+          if ($column->isPrimaryKey())
+          {
+            $pk .= '_' .$rs->get($col);
+            continue;
+          }
+          else if ($column->isForeignKey())
+          {
+            $relatedTable = $this->maps[$table]->getDatabaseMap()->getTable($column->getRelatedTableName());
+
+            $dumpData[$table][$table.$pk][$col] = $relatedTable->getPhpName().'_'.$rs->get($col);
+          }
+          else
+          {
+            $dumpData[$table][$table.$pk][$col] = $rs->get($col);
+          }
+        } // foreach
+      } // while
+    }
+
+    // save to file(s)
+    if (1 || $sameFile)
+    {
+      $yaml = Spyc::YAMLDump($dumpData);
+      file_put_contents($directory_or_file, $yaml);
+    }
+    else
+    {
+      foreach ($dumpData as $table => $data)
+      {
+        $yaml = Spyc::YAMLDump($data);
+        file_put_contents($directory_or_file."/$table.yml", $yaml);
+      }
     }
   }
 }
