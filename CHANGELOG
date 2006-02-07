@@ -7,6 +7,9 @@ Version 0.6.0
 WARNING: This release breaks backward compatibility.
 Please read the UPGRADE file before upgrading your projects.
 
+* [fabien] new symfony web server (alpha)
+* [fabien] support for etags, conditionnal get, vary headers...
+* [fabien] new sfResponse object
 * [fabien] new filtering system
 * [fabien] added new components system (slots are now deprecated)
 * [fabien] updated propel/creole
