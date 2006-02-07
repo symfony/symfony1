@@ -474,7 +474,7 @@ abstract class sfController
     }
 
     // view class (as configured in module.yml or defined in action)
-    $viewName = $this->getContext()->getRequest()->getAttribute($moduleName.'_'.$actionName.'_view_name', '', 'action/view') ? $this->getContext()->getRequest()->getAttribute($moduleName.'_'.$actionName.'_view_name', '', 'action/view') : sfConfig::get('mod_'.strtolower($moduleName).'_view_class');
+    $viewName = $this->getContext()->getRequest()->getAttribute($moduleName.'_'.$actionName.'_view_name', '', 'symfony/action/view') ? $this->getContext()->getRequest()->getAttribute($moduleName.'_'.$actionName.'_view_name', '', 'symfony/action/view') : sfConfig::get('mod_'.strtolower($moduleName).'_view_class');
     $file     = sfConfig::get('sf_symfony_lib_dir').'/view/'.$viewName.'View.class.php';
     if (is_readable($file))
     {
