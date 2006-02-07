@@ -343,7 +343,7 @@
 
     $javascript_function .= ";\n";
 
-    return ($options['binding'] ? $javascript_function.$options['binding'] : $javascript_function);
+    return (isset($options['binding']) ? $javascript_function.$options['binding'] : $javascript_function);
   }
 
   /**
