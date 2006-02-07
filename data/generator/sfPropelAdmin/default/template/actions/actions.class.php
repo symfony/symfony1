@@ -95,8 +95,15 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 <?php $name = $column->getName() ?>
 <?php if ($column->isPrimaryKey()) continue ?>
 <?php if ($type == CreoleTypes::DATE || $type == CreoleTypes::TIMESTAMP): ?>
-    list($d, $m, $y) = sfI18N::getDateForCulture($<?php echo $this->getSingularName() ?>['<?php echo $name ?>'], $this->getUser()->getCulture());
-    $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>("$y-$m-$d");
+    if ($<?php echo $this->getSingularName() ?>['<?php echo $name ?>'])
+    {
+      list($d, $m, $y) = sfI18N::getDateForCulture($<?php echo $this->getSingularName() ?>['<?php echo $name ?>'], $this->getUser()->getCulture());
+      $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>("$y-$m-$d");
+    }
+    else
+    {
+      $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>(null);
+    }
 <?php elseif ($type == CreoleTypes::BOOLEAN): ?>
     $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>(isset($<?php echo $this->getSingularName() ?>['<?php echo $name ?>']) ? $<?php echo $this->getSingularName() ?>['<?php echo $name ?>'] : 0);
 <?php else: ?>
