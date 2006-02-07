@@ -48,7 +48,16 @@ class sfYaml
     {
       $spyc = new Spyc();
 
-      return $spyc->load($input);
+      try
+      {
+        return $spyc->load($input);
+      }
+      catch (Exception $e)
+      {
+          $error = str_replace(': Line', ': File '.$input.' line', $e->getMessage());
+          $e = new sfConfigurationException($error);
+          $e->printStackTrace();
+      }
     }
   }
 
