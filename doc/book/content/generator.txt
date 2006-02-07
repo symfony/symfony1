@@ -32,7 +32,7 @@ Initiating a CRUD
 
 To initiate a Propel CRUD that will create an 'article' module to deal with the records of the 'Article' model class name, type:
 
-    $ symfony init-propelcrud myapp article Article
+    $ symfony propel-init-crud myapp article Article
 
 Access it with the default action:
 
@@ -77,7 +77,7 @@ showSuccess.php | detail of one record
 
 To generate the Propel CRUD for the 'Article' model class name, type:
 
-    $ symfony generate-propelcrud myapp article Article
+    $ symfony propel-generate-crud myapp article Article
 
 If you access it with the default action, you will see no difference with the initiated version:
 

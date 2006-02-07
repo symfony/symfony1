@@ -94,7 +94,7 @@ First, create tables in the schema.xml file:
 
 Notice the `isI18N` and `i18nTable` attributes of the `table` tag, and the special `culture` column. Also, the `_i18n` suffix of the second table is a convention that automates many data access mechanisms. All these are symfony specific Propel enhancements.
 
-Once the corresponding object model is built (don't forget to call `symfony build-model` and clear the cache with a `symfony cc` after each modification of the `schema.xml`), you can use your Product class with i18n support as if there was only one table:
+Once the corresponding object model is built (don't forget to call `symfony propel-build-model` and clear the cache with a `symfony cc` after each modification of the `schema.xml`), you can use your Product class with i18n support as if there was only one table:
 
     [php]
     $product = ProductPeer::retrieveByPk(1);
