@@ -224,7 +224,7 @@ class sfPropelData
     $con = sfContext::getInstance()->getDatabaseConnection($connectionName);
 
     // get tables
-    if ('all' === $tables)
+    if ('all' === $tables || null === $tables)
     {
       $tables = sfFinder::type('file')->name('/(?<!Peer)\.php$/')->maxdepth(0)->in(sfConfig::get('sf_model_lib_dir'));
       foreach ($tables as &$table)
@@ -232,14 +232,14 @@ class sfPropelData
         $table = basename($table, '.php');
       }
     }
-    else if (!isset($tables) || !is_array($tables))
+    else if (!is_array($tables))
     {
       $tables = array($tables);
     }
 
     $dumpData = array();
 
-    // load map class
+    // load map classes
     array_walk($tables, array($this, 'loadMapBuilder'));
 
     foreach ($tables as $table)
@@ -277,7 +277,7 @@ class sfPropelData
     }
 
     // save to file(s)
-    if (1 || $sameFile)
+    if ($sameFile)
     {
       $yaml = Spyc::YAMLDump($dumpData);
       file_put_contents($directory_or_file, $yaml);
