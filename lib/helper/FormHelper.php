@@ -133,9 +133,9 @@ function input_tag($name, $value = null, $options = array())
   {
     $value = null;
   }
-  else if ($value === null && _get_request_value($name))
+  else if ($reqvalue = _get_request_value($name))
   {
-    $value = _get_request_value($name);
+    $value = $reqvalue;
   }
 
   return tag('input', array_merge(array('type' => 'text', 'name' => $name, 'id' => $name, 'value' => $value), _convert_options($options)));
@@ -143,9 +143,9 @@ function input_tag($name, $value = null, $options = array())
 
 function input_hidden_tag($name, $value = null, $options = array())
 {
-  if ($value === null && _get_request_value($name))
+  if ($reqvalue = _get_request_value($name))
   {
-    $value = _get_request_value($name);
+    $value = $reqvalue;
   }
 
   $options = _parse_attributes($options);
@@ -179,9 +179,9 @@ function input_password_tag($name = 'password', $value = null, $options = array(
  */
 function textarea_tag($name, $content = null, $options = array())
 {
-  if ($content === null && _get_request_value($name))
+  if ($reqvalue = _get_request_value($name))
   {
-    $content = _get_request_value($name);
+    $content = $reqvalue;
   }
 
   $options = _parse_attributes($options);
@@ -271,9 +271,9 @@ tinyMCE.init({
 
 function checkbox_tag($name, $value = '1', $checked = false, $options = array())
 {
-  if ($value === null && _get_request_value($name))
+  if ($reqvalue = _get_request_value($name))
   {
-    $checked = _get_request_value($name);
+    $checked = $reqvalue;
   }
 
   $html_options = array_merge(array('type' => 'checkbox', 'name' => $name, 'id' => $name, 'value' => $value), _convert_options($options));
@@ -284,9 +284,9 @@ function checkbox_tag($name, $value = '1', $checked = false, $options = array())
 
 function radiobutton_tag($name, $value, $checked = false, $options = array())
 {
-  if ($value === null && _get_request_value($name))
+  if ($reqvalue = _get_request_value($name))
   {
-    $checked = _get_request_value($name);
+    $checked = $reqvalue;
   }
 
   $html_options = array_merge(array('type' => 'radio', 'name' => $name, 'value' => $value), _convert_options($options));
