@@ -62,9 +62,9 @@ class sfPeerBuilder extends PHP5ComplexPeerBuilder
    */
   public static function doSelectWithI18n(Criteria \$c, \$culture = null, \$con = null)
   {
-    if ($culture === null)
+    if (\$culture === null)
     {
-      $culture = sfContext::getInstance()->getUser()->getCulture();
+      \$culture = sfContext::getInstance()->getUser()->getCulture();
     }
 
     // Set the correct dbName if it has not been overridden
