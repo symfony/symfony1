@@ -35,13 +35,11 @@ class sfYaml
    */
   public static function load ($input)
   {
+    $input = self::getIncludeContents($input); 
+    
     // syck is prefered over spyc
-    if (function_exists('syck_load')) {
-      if (!empty($input) && is_readable($input))
-      {
-        $input = file_get_contents($input);
-      }
-
+    if (function_exists('syck_load')) 
+    {
       return syck_load($input);
     }
     else
@@ -75,6 +73,24 @@ class sfYaml
     $spyc = new Spyc();
 
     return $spyc->dump($array);
+  }
+
+  private static function getIncludeContents($input)
+  {
+    // if input is a file, process it
+    if (strpos($input, "\n") === false && is_file($input))
+    {
+      require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/TextHelper.php');
+
+      ob_start();
+      include($input);
+      $contents = ob_get_clean();
+
+      return $contents;
+    }
+
+    // else return original input
+    return $input;
   }
 }
 
