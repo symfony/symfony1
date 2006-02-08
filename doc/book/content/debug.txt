@@ -194,9 +194,9 @@ If you don't want to add a line to the debug log, but just trace an short messag
 
     [php]
     // in an action
-    <?php echo debug_message($message) ?> 
-    // in a template
     $this->debugMessage($message);
+    // in a template
+    <?php echo debug_message($message) ?> 
 
 For instance, for a template call:
 
@@ -204,7 +204,7 @@ For instance, for a template call:
     <?php use_helper('Debug') ?>
     ...
     <?php if ($problem): ?>
-      <?php echo log_message('been there') ?>
+      <?php echo debug_message('been there') ?>
       ...
     <?php endif ?>
 
