@@ -133,7 +133,7 @@ function input_tag($name, $value = null, $options = array())
   {
     $value = null;
   }
-  else if ($reqvalue = _get_request_value($name))
+  else if (($reqvalue = _get_request_value($name)) !== null)
   {
     $value = $reqvalue;
   }
@@ -143,11 +143,6 @@ function input_tag($name, $value = null, $options = array())
 
 function input_hidden_tag($name, $value = null, $options = array())
 {
-  if ($reqvalue = _get_request_value($name))
-  {
-    $value = $reqvalue;
-  }
-
   $options = _parse_attributes($options);
 
   $options['type'] = 'hidden';
@@ -179,7 +174,7 @@ function input_password_tag($name = 'password', $value = null, $options = array(
  */
 function textarea_tag($name, $content = null, $options = array())
 {
-  if ($reqvalue = _get_request_value($name))
+  if (($reqvalue = _get_request_value($name)) !== null)
   {
     $content = $reqvalue;
   }
@@ -324,7 +319,12 @@ tinyMCE.init({
 
 function checkbox_tag($name, $value = '1', $checked = false, $options = array())
 {
-  if ($reqvalue = _get_request_value($name))
+  $request = sfContext::getInstance()->getRequest();
+  if ($request->hasErrors())
+  {
+    $checked = $request->getParameter($name, null);
+  }
+  elseif (($reqvalue = _get_request_value($name)) !== null)
   {
     $checked = $reqvalue;
   }
@@ -337,7 +337,7 @@ function checkbox_tag($name, $value = '1', $checked = false, $options = array())
 
 function radiobutton_tag($name, $value, $checked = false, $options = array())
 {
-  if ($reqvalue = _get_request_value($name))
+  if (($reqvalue = _get_request_value($name)) !== null)
   {
     $checked = $reqvalue;
   }
