@@ -185,7 +185,7 @@ function textarea_tag($name, $content = null, $options = array())
   }
 
   $options = _parse_attributes($options);
-
+  
   if (array_key_exists('size', $options))
   {
     list($options['cols'], $options['rows']) = split('x', $options['size'], 2);
@@ -197,17 +197,20 @@ function textarea_tag($name, $content = null, $options = array())
   if (isset($options['rich']))
   {
     $rich = $options['rich'];
+    if ($rich === true)
+    {
+      $rich = 'tinymce';
+    }
     unset($options['rich']);
   }
 
-  if ($rich)
+  if ($rich == 'tinymce')
   {
-
     // tinymce installed?
     $js_path = sfConfig::get('sf_rich_text_js_dir') ? '/'.sfConfig::get('sf_rich_text_js_dir').'/tiny_mce.js' : '/sf/js/tinymce/tiny_mce.js';
     if (!is_readable(sfConfig::get('sf_web_dir').$js_path))
     {
-      throw new sfConfigurationException('You must install Tiny MCE to use this helper (see rich_text_js_dir settings).');
+      throw new sfConfigurationException('You must install TinyMCE to use this helper (see rich_text_js_dir settings).');
     }
 
     sfContext::getInstance()->getRequest()->setAttribute('tinymce', $js_path, 'helper/asset/auto/javascript');
@@ -262,6 +265,56 @@ tinyMCE.init({
     return
       content_tag('script', javascript_cdata_section($tinymce_js), array('type' => 'text/javascript')).
       content_tag('textarea', $content, array_merge(array('name' => $name, 'id' => $name), _convert_options($options)));
+  }
+  elseif ($rich === 'fck')
+  {
+    $php_file = sfConfig::get('sf_rich_text_fck_js_dir').DIRECTORY_SEPARATOR.'fckeditor.php';
+
+    if (!is_readable(sfConfig::get('sf_web_dir').DIRECTORY_SEPARATOR.$php_file))
+    {
+      throw new sfConfigurationException('You must install FCKEditor to use this helper (see rich_text_fck_js_dir settings).');
+    }
+
+    // FCKEditor.php class is written with backward compatibility of PHP4.
+    // This reportings are to turn off errors with public properties and already declared constructor
+    $error_reporting = ini_get('error_reporting');
+    error_reporting(E_ALL);
+
+    require_once(sfConfig::get('sf_web_dir').DIRECTORY_SEPARATOR.$php_file);
+
+    // turn error reporting back to your settings
+    error_reporting($error_reporting);
+
+    $fckeditor           = new FCKeditor($name);
+    $fckeditor->BasePath = DIRECTORY_SEPARATOR.sfConfig::get('sf_rich_text_fck_js_dir').DIRECTORY_SEPARATOR;
+    $fckeditor->Value    = $content;
+
+    if (isset($options['width']))
+    {
+      $fckeditor->Width = $options['width'];
+    }   
+    elseif (isset($options['cols']))
+    {
+      $fckeditor->Width = (string)((int) $options['cols'] * 10).'px';
+    }
+
+    if (isset($options['height']))
+    {
+      $fckeditor->Height = $options['height'];
+    }
+    elseif (isset($options['rows']))
+    {
+      $fckeditor->Height = (string)((int) $options['rows'] * 10).'px';
+    }
+
+    if (isset($options['tool']))
+    {
+      $fckeditor->ToolbarSet = $options['tool'];
+    }
+
+    $content = $fckeditor->CreateHtml();
+
+    return $content;
   }
   else
   {
