@@ -416,7 +416,7 @@ function input_date_tag($name, $value, $options = array())
 
 function submit_tag($value = 'Save changes', $options = array())
 {
-  return tag('input', array_merge(array('type' => 'submit', 'name' => 'submit', 'value' => $value), _convert_options($options)));
+  return tag('input', array_merge(array('type' => 'submit', 'name' => 'commit', 'value' => $value), _convert_options($options)));
 }
 
 function reset_tag($value = 'Reset', $options = array())
@@ -426,7 +426,7 @@ function reset_tag($value = 'Reset', $options = array())
 
 function submit_image_tag($source, $options = array())
 {
-  return tag('input', array_merge(array('type' => 'image', 'name' => 'submit', 'src' => image_path($source)), _convert_options($options)));
+  return tag('input', array_merge(array('type' => 'image', 'name' => 'commit', 'src' => image_path($source)), _convert_options($options)));
 }
 
 function _convert_options($options)
