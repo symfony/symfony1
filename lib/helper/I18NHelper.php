@@ -19,17 +19,28 @@
 
 function __($text, $args = array(), $culture = null, $catalogue = 'messages')
 {
-  if (!sfConfig::get('sf_i18n'))
+  if (sfConfig::get('sf_i18n'))
   {
-    throw new sfConfigurationException('you must set sf_i18n to on in settings.yml to be able to use these helpers.');
+    return sfConfig::get('sf_i18n_instance')->__($text, $args, $catalogue);
   }
+  else
+  {
+    // replace object with strings
+    foreach ($args as $key => $value)
+    {
+      if (is_object($value) && method_exists($value, '__toString'))
+      {
+        $args[$key] = $value->__toString();
+      }
+    }
 
-  return sfConfig::get('sf_i18n_instance')->__($text, $args, $catalogue);
+    return strtr($text, $args);
+  }
 }
 
 function format_number_choice($text, $args = array(), $number, $culture = null, $catalogue = 'messages')
 {
-  $translated = sfConfig::get('sf_i18n_instance')->__($text, $args, $catalogue);
+  $translated = __($text, $args, $culture, $catalogue);
 
   $choice = new sfChoiceFormat();
 
