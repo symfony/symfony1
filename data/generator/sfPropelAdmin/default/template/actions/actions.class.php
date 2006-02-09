@@ -132,6 +132,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
   protected function processFilters ()
   {
 <?php if ($this->getParameterValue('list.filters')): ?>
+    $this->getUser()->getAttributeHolder()->removeNamespace('sf_admin/<?php echo $this->getSingularName() ?>/filters');
     $this->getUser()->getAttributeHolder()->add($this->getRequestParameter('filters'), 'sf_admin/<?php echo $this->getSingularName() ?>/filters');
 <?php endif ?>
   }
