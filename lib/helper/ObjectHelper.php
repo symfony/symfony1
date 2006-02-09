@@ -59,12 +59,14 @@ function object_textarea_tag($object, $method, $options = array(), $default_valu
   return textarea_tag(_convert_method_to_name($method, $options), $value, $options);
 }
 
-/*
-      # Accepts a container of objects, the method name to use for the value, and the method name to use for the display. It returns
-      # a string of option tags.
-      # NOTE: Only the option tags are returned, you have to wrap this call in a regular HTML select tag.
-*/
-function objects_for_select($options = array(), $value_method, $text_method = null, $selected = null)
+/**
+ * Accepts a container of objects, the method name to use for the value,
+ * and the method name to use for the display.
+ * It returns a string of option tags.
+ *
+ * NOTE: Only the option tags are returned, you have to wrap this call in a regular HTML select tag.
+ */
+function objects_for_select($options = array(), $value_method, $text_method = null, $selected = null, $html_options = array())
 {
   $select_options = array();
   foreach($options as $option)
@@ -89,7 +91,7 @@ function objects_for_select($options = array(), $value_method, $text_method = nu
     $select_options[$value] = $key;
   }
 
-  return options_for_select($select_options, $selected);
+  return options_for_select($select_options, $selected, $html_options);
 }
 
 /**
@@ -113,26 +115,16 @@ function object_select_tag($object, $method, $options = array(), $default_value 
   }
   unset($options['related_class']);
 
-  if (isset($options['include_blank']))
-  {
-    $select_options[''] = '';
-    unset($options['include_blank']);
-  }
-  else if (isset($options['include_title']))
+  if (isset($options['include_title']))
   {
     $select_options[''] = '-- '._convert_method_to_name($method, $options).' --';
     unset($options['include_title']);
-  }
-  else if (isset($options['include_custom']))
-  {
-    $select_options[''] = $options['include_custom'];
-    unset($options['include_custom']);
   }
 
   $select_options = _get_values_for_objet_select_tag($object, $related_class);
 
   $value = _get_object_value($object, $method, $default_value);
-  $option_tags = options_for_select($select_options, $value);
+  $option_tags = options_for_select($select_options, $value, $options);
 
   return select_tag(_convert_method_to_name($method, $options), $option_tags, $options);
 }

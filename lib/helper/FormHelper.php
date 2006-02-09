@@ -43,8 +43,10 @@ require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/ValidationHelper.php')
       #
       # NOTE: Only the option tags are returned, you have to wrap this call in a regular HTML select tag.
 */
-function options_for_select($options = array(), $selected = '')
+function options_for_select($options = array(), $selected = '', $html_options = array())
 {
+  $html_options = _parse_attributes($html_options);
+
   if (is_array($selected))
   {
     $valid = array_values($selected);
@@ -52,9 +54,19 @@ function options_for_select($options = array(), $selected = '')
   }
 
   $html = '';
+
+  if (isset($html_options['include_blank']))
+  {
+    $html .= content_tag('option', '', array('value' => ''))."\n";
+  }
+  else if (isset($html_options['include_custom']))
+  {
+    $html .= content_tag('option', $html_options['include_custom'], array('value' => ''))."\n";
+  }
+
   foreach ($options as $key => $value)
   {
-    $html_options = array('value' => $key);
+    $option_options = array('value' => $key);
     if (
         isset($selected)
         &&
@@ -63,10 +75,10 @@ function options_for_select($options = array(), $selected = '')
         (strval($key) == strval($selected))
        )
     {
-      $html_options['selected'] = 'selected';
+      $option_options['selected'] = 'selected';
     }
 
-    $html .= content_tag('option', $value, $html_options)."\n";
+    $html .= content_tag('option', $value, $option_options)."\n";
   }
 
   return $html;
