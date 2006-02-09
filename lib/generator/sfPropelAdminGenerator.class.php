@@ -507,7 +507,7 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     else if ($type == CreoleTypes::BOOLEAN)
     {
       $params = $this->getObjectTagParams($params);
-      return "checkbox_tag($name, $default_value, $params)";
+      return "checkbox_tag($name, 1, $default_value, $params)";
     }
     else if ($type == CreoleTypes::CHAR || $type == CreoleTypes::VARCHAR)
     {
