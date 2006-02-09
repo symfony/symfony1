@@ -423,12 +423,15 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     preg_match_all('/%%([^%]+)%%/', $value, $matches, PREG_PATTERN_ORDER);
     foreach ($matches[1] as $name)
     {
+      list($name, $flag) = $this->splitFlag($name);
+
       foreach ($columns as $column)
       {
         $found = false;
         if ($column->getName() == $name)
         {
-          $vars[] = '\'%%'.$name.'%%\' => $'.$this->getSingularName().'->get'.$column->getPhpName().'()';
+          $method = $column->getPhpName();
+
           $found = true;
           break;
         }
@@ -436,9 +439,21 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
 
       if (!$found)
       {
-        $vars[] = '\'%%'.$name.'%%\' => $'.$this->getSingularName().'->get'.sfInflector::camelize($name).'()';
+        $method = sfInflector::camelize($name);
+      }
+
+      if ($flag === '=')
+      {
+        $vars[] = '\'%%'.$name.'%%\' => link_to($'.$this->getSingularName().'->get'.$method.'(), \''.$this->getModuleName().'/edit?'.$this->getPrimaryKeyUrlParams().')';
+      }
+      else
+      {
+        $vars[] = '\'%%'.$name.'%%\' => $'.$this->getSingularName().'->get'.$method.'()';
       }
     }
+
+    // strip all = signs
+    $value = preg_replace('/%%=([^%]+)%%/', '%%$1%%', $value);
 
     return '[?php echo __(\''.$value.'\', array('.implode(', ', $vars).')) ?]';
   }
