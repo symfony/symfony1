@@ -146,7 +146,7 @@ Symfony stores the user interface translations in XML configuration files in the
       </file>
     </xliff>
 
-If additional translations need to be done, simply add a new `messages.XX.xml` translation file. These files must be stored in the `app/i18n/global` directory.
+If additional translations need to be done, simply add a new `messages.XX.xml` translation file. These files must be stored in the `app/i18n` directory.
 
 The use of the XLIFF format allows you to use common translation tools to reference all text in your website and translate it, without the need of a specific tool to build for translators.
 
@@ -171,7 +171,7 @@ For this to work you need to:
         <?php echo __('Today's date is ') ?>            // (this matches the second trans-unit's source node)
         <?php echo format_date(date()) ?>
 
-3. Make a `messages.fr.xml` file in the `app/i18n/global` directory, according to the XLIFF format, containing one `trans-unit` node for eah call to the `__()` function:
+3. Make a `messages.fr.xml` file in the `app/i18n` directory, according to the XLIFF format, containing one `trans-unit` node for eah call to the `__()` function:
 
         [xml]
         <?xml version="1.0" ?>
