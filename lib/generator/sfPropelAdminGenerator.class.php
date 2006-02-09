@@ -247,7 +247,14 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     {
       $params = $this->getObjectTagParams($params, array('control_name' => $this->getSingularName().'['.$column->getName().']'));
 
-      return "object_$type(\${$this->getSingularName()}, 'get{$column->getPhpName()}', $params)";
+      if ($type == 'plain')
+      {
+        return "\${$this->getSingularName()}->get{$column->getPhpName()}()";
+      }
+      else
+      {
+        return "object_$type(\${$this->getSingularName()}, 'get{$column->getPhpName()}', $params)";
+      }
     }
 
     // guess the best tag to use with column type
