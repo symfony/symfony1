@@ -412,7 +412,7 @@ Multiple level configuration                               {#multiple}
 
 ### `view.yml`: View configuration                         {#view}
 
-The rules and parameters governing the View (interface components, layout, headers, etc.) are set in the `view.yml` configuration file. The file exists by default in the application configuration directory (`myproject/apps/myapp/config/`), and the settings can be overridden at the module level by adding a `view.yml` file to a `myproject/apps/myapp/modules/mymoduleconfig/` directory.
+The rules and parameters governing the View (interface components, layout, headers, etc.) are set in the `view.yml` configuration file. The file exists by default in the application configuration directory (`myproject/apps/myapp/config/`), and the settings can be overridden at the module level by adding a `view.yml` file to a `myproject/apps/myapp/modules/mymodule/config/` directory.
 
 Refer to the chapter describing the [view configuration](templating_configuration.txt) to learn more about this feature.
 
@@ -480,7 +480,7 @@ There is no `constants.php` file in a default configuration directory. This mean
 The file structure configuration can be changed at different levels, according to the directory where you put a `constants.php` file: 
 
 * `myproject/config/` for the whole project
-* `myproject/apps/myapp/config` for a specific application
+* `myproject/apps/myapp/config/` for a specific application
 
 In an application level `constants.php`, you can override some path definitions for the scope of the application only.
 

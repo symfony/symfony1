@@ -111,7 +111,6 @@ The last step is editing the file `settings.yml` located in the config directory
 
         all:
          .settings:
-           relative_url_root:      /myproject
            path_info_key:          HTTP_X_REWRITE_URL
 
 >**Important note**: if you don't use isapi/rewrite/, the `HTTP_X_REWRITE_URL` may be wrong. You'll have to make a specific test to know how to configure symfony. Open the file `myapp_dev.php` (or `whatever you named your application_dev.php`) in the web directory of your project, and add these following lines on line 2 :
@@ -150,7 +149,6 @@ Edit the file `settings.yml` of `myapp` application (`c:\myproject\apps\myapp\co
 
       all:
        .settings:
-         relative_url_root:      /myapp
          path_info_key:          HTTP_X_REWRITE_URL
 
 (see previous note concerning `HTTP_X_REWRITE_URL`)

@@ -105,7 +105,7 @@ In the development environment, the logging and debugging settings are all set t
 
 The case of the test environment is a little special. This environment is used when you execute some code from your project on the command line, and that would mostly happen for unit testing. Consequently, the test environment is close to the production configuration, but it doesn't communicate with a web browser. It simulates the use of cookies and other HTTP specific components.
 
-To add a new environment, you don't need to create a directory or to use the `symfony` command. Simply duplicate the production front controller (`myproject/myapp/web/index.php`) to a file called, say, `index_myenv.php`, and change the `SF_ENVIRONMENT` definition to `myenv` in this file. That's it, you have your new environment. As you will see, this environment inherits all the default configuration plus the settings that are common to all environments.
+To add a new environment, you don't need to create a directory or to use the `symfony` command. Simply duplicate the production front controller (`myproject/web/index.php`) to a file called, say, `index_myenv.php`, and change the `SF_ENVIRONMENT` definition to `myenv` in this file. That's it, you have your new environment. As you will see, this environment inherits all the default configuration plus the settings that are common to all environments.
 
 Configuration levels
 --------------------

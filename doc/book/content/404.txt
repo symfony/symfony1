@@ -32,7 +32,7 @@ Just initialize the new module with:
 
     $ symfony init-module myapp errors
 
-You need to create the action `error404` in the file `myproject/myapp/modules/errors/actions/action.class.php`, and the template `error404Success.php` in the directory `myproject/myapp/modules/errors/templates/`. You now have full control over the content of your 404 error page.
+You need to create the action `error404` in the file `myproject/apps/myapp/modules/errors/actions/action.class.php`, and the template `error404Success.php` in the directory `myproject/apps/myapp/modules/errors/templates/`. You now have full control over the content of your 404 error page.
 
 Solution 2 : override the default template
 ------------------------------------------

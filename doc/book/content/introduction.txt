@@ -90,7 +90,7 @@ Is symfony made for me?
 
 Whether you are a PHP5 expert or a beginner in web application programming doesn't matter. The main factor that should direct your decision is the size of your project. 
 
-If you want to develop a simple website with five to ten pages, having limited access to a database and no obligation for performance, availability or documentation, then you should stick with PHP alone. You wouldn't take much advantage of the features of a web application framework, and using object orientation or a MVC model would only slow down your development.
+If you want to develop a simple website with five to ten pages, having limited access to a database and no obligation for performance, availability or documentation, then you should stick with PHP alone. You wouldn't take much advantage of the features of a web application framework, and using object orientation or a MVC model would only slow down your development. Symfony is not optimized to run efficiently on a shared server with only CGI support.
 
 On the other hand, if you develop bigger web applications, with a heavy business logic, PHP alone is not enough. If you plan to maintain or extend your application in the future, you will need your code to be lightweight, readable and performant. If you want to use the latest advances in user interaction (like AJAX) in an intuitive way, you can't just write hundreds of lines of Javascript. If you want to have fun and develop fast, then PHP alone will probably be disappointing. For all these cases, symfony is made for you.
 

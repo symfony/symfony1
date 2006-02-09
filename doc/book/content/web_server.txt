@@ -107,12 +107,6 @@ to
 
     RewriteRule ^(.*)$ /webapp/index.php [QSA,L]
 
-In addition, in the `settings.yml` configuration file of your application (located in `myproject/apps/myapp/config/`, add the following line under the `.settings` of all environments:
-
-    all:
-      .settings:
-        relative_url_root:    /webapp
-
 Restart Apache, and try to access your webapp:
 
     http://www.example.com/myapp/
@@ -170,12 +164,6 @@ Then, execute the two last steps steps described above to setup the alias. Edit 
 to
 
     RewriteRule ^(.*)$ /admin/index.php [QSA,L]
-
-In the `settings.yml` configuration file of the application (located in `myproject/admin/config/`, add the following line under the `.settings` of all environments:
-
-    all:
-      .settings:
-        relative_url_root:    /admin
 
 Eventually, edit both front controllers (`myproject/web/admin/index.php` and `myproject/web/admin/admin_dev.php`) and change:
 

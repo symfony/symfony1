@@ -85,13 +85,13 @@ Then, in the action, the calls would be:
 The reason why symfony uses the custom `myUser` class instead of the prebuilt `sfUser` is that the `factories.yml` configuration file of the application specifies it. You could decide to write a completely new user class, with your own custom methods, and call it `myproject/apps/myapp/lib/myCustomUser.php`. But then, you would have to force symfony to use it instead of the `myUser` class by writing in the `factories.yml`:
 
     all:
-       user:
-         class: myCustomUser
+      user:
+        class: myCustomUser
 
 Session expiration
 ------------------
 
-Session expiration occurs automatically after `SF_TIMEOUT` seconds. This constant is of 30 minutes by default and can be modified for each environment in the `myproject/apps/myapp/config/settings.yml` configuration file:
+Session expiration occurs automatically after `sf_timeout` seconds. This constant is of 30 minutes by default and can be modified for each environment in the `myproject/apps/myapp/config/settings.yml` configuration file:
 
     default:
       .settings:

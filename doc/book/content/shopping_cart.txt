@@ -4,10 +4,25 @@ How to manage a shopping cart
 Overview
 --------
 
-Symfony offers helpers to manage shopping carts in ebusiness websites. Adding an item, changing quantities and displaying the content of a shopping cart is made easy and painless.
+Symfony offers a plugin to manage shopping carts in ebusiness websites. Adding an item, changing quantities and displaying the content of a shopping cart is made easy and painless.
 
-Introduction
+Installation
 ------------
+
+The shopping cart classes are packaged into a `sfShoppingCart` plugin. They are not shipped with the default symfony installation. Symfony plugins are installed via PEAR (find more about plugins in the [related page](plugin.txt)).
+
+To install the shopping cart classes globally for all your projects, type in the command line:
+
+    $ symfony plugin-install global symfony/sfShoppingCart
+    
+If you want to use it only within one project, prefer the `local` install:
+
+    $ symfony plugin-install local symfony/sfShoppingCart
+    
+Whether you opt for a local or a global install, the classes will autoload when needed.
+
+Constructor
+-----------
 
 The `sfShoppingCart` class is aimed to manage shopping carts. It can contain any kind of object.
 
