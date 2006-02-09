@@ -102,7 +102,7 @@ To launch the script, just type in a command line:
     $ cd myproject/batch
     $ php load_data.php
 
-This batch will put the two records labeled `bob_walter` and `peter_clive` in the database - provided that the database connection settings are properly entered in the `myproject/apps/myapp/config/database.yml` configuration file.
+This batch will put the two records labeled `bob_walter` and `peter_clive` in the database - provided that the database connection settings are properly entered in the `myproject/apps/myapp/config/databases.yml` configuration file.
 
 ### Add or replace
 

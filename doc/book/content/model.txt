@@ -101,7 +101,7 @@ The related `schema.xml` should look like:
         </table>    
      </database>
 
-Notice that the name of the database itself (`blog`) doesn't appear in the `schema.xml`. It will be specified in the connection configuration (see the `database.yml` below).
+Notice that the name of the database itself (`blog`) doesn't appear in the `schema.xml`. It will be specified in the connection configuration (see the `databases.yml` below).
 
 ### Format description
 
@@ -223,7 +223,7 @@ In the above example, the settings for `all` environments can also be written us
         param:
           dsn:          mysql://root:@localhost/blog
 
->**Note**: If you use a SQLite database, the `host` parameter has to be set to the path to the database file. For instance, if you keep your blog database in `myproject/data/blog.db`, the `database.yml` will look like:
+>**Note**: If you use a SQLite database, the `host` parameter has to be set to the path to the database file. For instance, if you keep your blog database in `myproject/data/blog.db`, the `databases.yml` will look like:
 >
 >     all:
 >       propel:

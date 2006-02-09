@@ -10,7 +10,7 @@ Table of contents                         | Quick access A-L            | Quick 
 ----------------------------------------- | --------------------------- | --------------------------- 
 [Introduction](#introduction)             | [autoload.yml](#autoload)   | [module.yml](#module)                                                        
 [Project configuration](#project)         | [constants.php](#constants) | [php.yml](#phpyml)                                                           
-[Application configuration](#application) | [database.yml](#database)   | [security.yml](#security)                                                    
+[Application configuration](#application) | [databases.yml](#database)  | [security.yml](#security)                                                    
 [Module configuration](#module)           | [factories.yml](#factories) | [settings.yml](#settings)   
 [Multiple level configuration](#multiple) | [generator.yml](#generator) | [validate.yml](#validate)   
 [Browsing your own YAML files](#yaml)     | [logging.yml](#logging)     | [view.yml](#view)        
@@ -58,7 +58,7 @@ The main part of the configuration is the application configuration. The files l
 
 * `app.yml*`: This file should contain the application-specific configuration, i.e. global variables that don't really need to be stored in a database. VAT rates, shipping fares, emails are often stored in this file. It is empty by default. See more in the [configuration chapter](configuration.txt).
 * `config.php`: This file bootstraps the application, which means that it does all the very basic initializations to allow the application to start. It normally includes the project configuration (`myproject/config/config.php`), defines the directories layout (by inclusion of the `constants.php` file), defines the include path used to look for libraries, loads the necessary symfony classes, and includes some of the parsed .yml files of the application configuration (the others are loaded on demand). It is in PHP rather than YAML because the YAML interpreter isn't loaded when `config.php` is processed. 
-* `database.yml*`: This is where you define the access and the connection settings to the database (host, login, password, database name). [_see more below_](#database)
+* `databases.yml*`: This is where you define the access and the connection settings to the database (host, login, password, database name). [_see more below_](#database)
 * `factories.yml*`: The framework uses some classes to do the job; this file can force the use of alternate classes to manage the session, the actions, the front web controller... You shouldn't need to change this one, as you will see a little further. [_see more below_](#factories)
 * `filters.yml`: Symfony allows the execution of filters before actions. For instance, the Security filter is configured by default to check credentials for restricted actions. If you need to add a custom filter, for instance to calculate the time to execute an action, that's the file that you need to modify.
 * `logging.yml*`: Defines which degree of log has to be recorded, to help you supervise and debug your application. See below for more details. [_see more below_](#logging)
@@ -139,9 +139,9 @@ A few clues about of some of the `.settings` parameters will also be useful:
 
 Remember that each one of these settings is accessible from inside the PHP code via the `sfConfig` class, as explained in the [configuration chapter](configuration.txt). The parameter name is the setting name prefixed with `sf_`. For instance, if you want the value of the `cache` parameter, you just need to call `sfConfig::get('sf_cache')`. 
 
-### `database.yml`: Database settings                      {#database}
+### `databases.yml`: Database settings                      {#database}
 
-If you need to use data stored in a database in your application, you have to configure the access to your database(s) by entering data in the `database.yml` file.
+If you need to use data stored in a database in your application, you have to configure the access to your database(s) by entering data in the `databases.yml` file.
 
     all:
       propel:
