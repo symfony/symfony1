@@ -320,7 +320,7 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
         // not a "real" column, so we simulate one
         if (!$found)
         {
-          $phpNames[] = new sfAdminColumn($phpName);
+          $phpNames[] = new sfAdminColumn($phpName, null, $flag);
         }
       }
     }
@@ -453,7 +453,7 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     }
     elseif ($type == CreoleTypes::BOOLEAN)
     {
-      return "\${$this->getSingularName()}->get{$column->getPhpName()}() ? image_tag('/sf/images/sf_admin/ok.png') : ''";
+      return "\${$this->getSingularName()}->get{$column->getPhpName()}() ? image_tag('/sf/images/sf_admin/ok.png') : '&nbsp;'";
     }
     else
     {
