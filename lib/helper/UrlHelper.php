@@ -53,6 +53,12 @@ function link_to($name = '', $options = '', $html_options = array())
   }
 
   $html_options['href'] = url_for($options, $absolute);
+
+  if (is_object($name))
+  {
+    $name = $name->__toString();
+  }
+
   if (!strlen($name))
   {
     $name = $html_options['href'];
