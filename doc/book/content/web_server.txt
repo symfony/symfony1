@@ -94,7 +94,7 @@ If you already have a website on a domain name, and if you wish that your symfon
 
 To do that, open the `httpd.conf` and add the following lines:
 
-    Alias /webapp/ /home/steve/myproject/web/
+    Alias /myapp/ /home/steve/myproject/web/
     <Directory "/home/steve/myproject/web">
        AllowOverride All
     </Directory>
@@ -105,7 +105,7 @@ You also need to edit the `.htaccess` file located in your `myproject/web/` dire
 
 to
 
-    RewriteRule ^(.*)$ /webapp/index.php [QSA,L]
+    RewriteRule ^(.*)$ /myapp/index.php [QSA,L]
 
 Restart Apache, and try to access your webapp:
 
