@@ -45,7 +45,7 @@ Symfony provides the templates with a few useful pre-defined variables, or **sho
 For instance, if the action call included a parameter `total`, the value of the parameter is available in the template with:
 
     [php]
-    <?php echo $params->get('total'); ?>
+    <?php echo $sf_params->get('total'); ?>
     // equivalent to the following action code:
     echo $this->getRequestParameter('total');
 
