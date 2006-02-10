@@ -66,8 +66,11 @@
 /*
  * WARNING: delete is a form, it must be outside the main form
  */
+ $editActions = $this->getParameterValue('edit.actions');
 ?>
-  <?php echo $this->getButtonToAction('_delete', array(), true) ?>
+  <?php if (!$editActions || isset($editActions['_delete'])): ?>
+    <?php echo $this->getButtonToAction('_delete', array(), true) ?>
+  <?php endif ?>
 </ul>
 
 </div>

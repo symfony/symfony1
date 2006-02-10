@@ -1,6 +1,7 @@
 <ul class="sf_admin_actions">
-<?php if ($this->getParameterValue('edit.actions')): ?>
-<?php foreach ($this->getParameterValue('edit.actions') as $actionName => $params): ?>
+<?php $editActions = $this->getParameterValue('edit.actions'); if ($editActions): ?>
+<?php foreach ($editActions as $actionName => $params): ?>
+  <?php if ($actionName == '_delete') continue ?>
   <?php echo $this->getButtonToAction($actionName, $params, true) ?>
 <?php endforeach ?>
 <?php else: ?>
