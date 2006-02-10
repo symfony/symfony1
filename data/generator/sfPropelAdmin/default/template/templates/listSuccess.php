@@ -2,6 +2,10 @@
 
 <h1><?php echo $this->getParameterValue('list.title', $this->getModuleName().' list') ?></h1>
 
+<div id="sf_admin_introduction">
+[?php include_partial('<?php echo $this->getModuleName() ?>/list_introduction') ?]
+</div>
+
 <div id="sf_admin_bar">
 
 <?php if ($this->getParameterValue('list.filters')): ?>

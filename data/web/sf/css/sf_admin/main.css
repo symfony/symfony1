@@ -21,6 +21,11 @@ body, td
   background-color: #fff;
 }
 
+p
+{
+  margin-bottom: 5px;
+}
+
 #sf_admin_bar
 {
   margin-top: 8px;

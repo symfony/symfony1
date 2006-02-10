@@ -2,6 +2,10 @@
 
 <h1><?php echo $this->getI18NString('edit.title', 'edit '.$this->getModuleName()) ?></h1>
 
+<div id="sf_admin_introduction">
+[?php include_partial('<?php echo $this->getModuleName() ?>/edit_introduction') ?]
+</div>
+
 <div id="sf_admin_content">
 
 [?php if ($sf_request->hasErrors()): ?]
