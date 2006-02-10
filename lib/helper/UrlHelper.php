@@ -54,6 +54,12 @@ function link_to($name = '', $options = '', $html_options = array())
 
   $html_options['href'] = url_for($options, $absolute);
 
+  if (isset($html_options['query_string']))
+  {
+    $html_options['href'] .= '?'.$html_options['query_string'];
+    unset($html_options['query_string']);
+  }
+
   if (is_object($name))
   {
     $name = $name->__toString();
