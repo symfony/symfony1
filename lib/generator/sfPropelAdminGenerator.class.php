@@ -108,6 +108,7 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
       'listSuccess', 'editSuccess', '_filters', 
       '_list_th_'.$this->getParameterValue('list.display.layout', 'tabular'), '_list_td_'.$this->getParameterValue('list.display.layout', 'tabular'),
       '_list_th_tabular',
+      '_list_introduction', '_edit_introduction',
       '_list_td_actions', '_list_actions', '_edit_actions',
     );
     $this->generatePhpFiles($this->generatedModuleName, $templateFiles);
@@ -506,8 +507,11 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     }
     else if ($type == CreoleTypes::BOOLEAN)
     {
-      $params = $this->getObjectTagParams($params);
-      return "checkbox_tag($name, 1, $default_value, $params)";
+      $params = $this->getObjectTagParams($params, array('include_custom' => 'yes or no'));
+
+      $options = "options_for_select(array(1 => 'yes', 0 => 'no'), $default_value, $params)";
+
+      return "select_tag($name, $options, $params)";
     }
     else if ($type == CreoleTypes::CHAR || $type == CreoleTypes::VARCHAR)
     {
