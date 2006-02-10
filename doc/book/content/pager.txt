@@ -4,14 +4,14 @@ How to paginate a list
 Overview
 --------
 
-Symfony provides a pager component: the `sfPager` object. It can separate a list of results from a criteria object (of `Criteria` class) into a set of pages for display, and offers access methods to pages and result objects.
+Symfony provides a pager component: the `sfPropelPager` object. It can separate a list of results from a criteria object (of `Criteria` class) into a set of pages for display, and offers access methods to pages and result objects.
 
-The `sfPager` object
---------------------
+The `sfPropelPager` object
+--------------------------
 
-The `sfPager` class uses the Propel abstraction layer, as described in the [Model](model.txt) chapter.
+The `sfPropelPager` class uses the Propel abstraction layer, as described in the [Model](model.txt) chapter.
 
-This chapter will illustrate the way to use the `sfPager` methods with a simple example : displaying a list of articles ten by ten. Assume that the `Article` object has `->getPublished()`, `->getTitle()`, `->getOverview()` and `->getContent()` accessor methods.
+This chapter will illustrate the way to use the `sfPropelPager` methods with a simple example : displaying a list of articles ten by ten. Assume that the `Article` object has `->getPublished()`, `->getTitle()`, `->getOverview()` and `->getContent()` accessor methods.
 
 If you wanted to have the non-paginated result of a criteria request showing only published articles, you would need:
 
@@ -31,7 +31,7 @@ If you wanted to have the non-paginated result of a criteria request showing onl
 
 The `$articles` variable, accessible from the template, would contain an array of all the `Article` objects matching the request.
 
-To get a paginated list, you need a slightly different approach; the results have to be put in a `sfPager` object instead of an array:
+To get a paginated list, you need a slightly different approach; the results have to be put in a `sfPropelPager` object instead of an array:
 
     [php]
     class articleActions extends sfActions
@@ -41,7 +41,7 @@ To get a paginated list, you need a slightly different approach; the results hav
         ...
         $c = new Criteria();
         $c->add(ArticlePeer::PUBLISHED, true);
-        $pager = new sfPager('Article', 10);
+        $pager = new sfPropelPager('Article', 10);
         $pager->setCriteria($c);
         $pager->setPage($this->getRequestParameter('page', 1));
         $pager->init();
@@ -58,7 +58,7 @@ The differences start after the criteria definition, since this action:
 *   initializes the pager (i.e. execute the request related to the criteria)
 *   passes the pager to the template via the `$pager` variable
 
-The template `listSuccess.php` can now access the `sfPager` object. This object knows the current page and the list of all the pages. It has methods to access pages and objects in pages. Let's see how to manipulate it.
+The template `listSuccess.php` can now access the `sfPropelPager` object. This object knows the current page and the list of all the pages. It has methods to access pages and objects in pages. Let's see how to manipulate it.
 
 To display the total number of results, use the `->getNbResults()` method:
 
@@ -104,7 +104,7 @@ Once the article displayed, to allow a direct navigation to the previous or the 
 Navigating across objects
 -------------------------
 
-Navigating page by page within the list is easy, but the users might not want to go back to the list to navigate object by object. The `cursor` attribute of the `sfPager` object can hold the offset of the current object. 
+Navigating page by page within the list is easy, but the users might not want to go back to the list to navigate object by object. The `cursor` attribute of the `sfPropelPager` object can hold the offset of the current object. 
 
 This will allow an article by article navigation in the `readSuccess.php` template. First, let's modify a bit of the code of the `listSuccess.php` template:
 
@@ -182,7 +182,7 @@ The `readSuccess.php` template could look like:
 Changing the sort order
 -----------------------
 
-As the `sfPager` object relies on a `Criteria` object, changing the order of the pager is simply done by adding a sort to the criteria, before assigning it to the pager object.
+As the `sfPropelPager` object relies on a `Criteria` object, changing the order of the pager is simply done by adding a sort to the criteria, before assigning it to the pager object.
 
 For instance, you can add the choice of the sort column to the list navigation interface:
 
@@ -203,7 +203,7 @@ For instance, you can add the choice of the sort column to the list navigation i
           // sorted by date by default
           $c->addAscendingOrderByColumn(ArticlePeer::UPDATED_AT);
         }
-        $pager = new sfPager('Article', 10);
+        $pager = new sfPropelPager('Article', 10);
         $pager->setCriteria($c);
         $pager->init();
         $this->pager = $pager;
@@ -229,7 +229,7 @@ The `->setMaxPerPage($max)` method changes the number of results displayed per p
         ...
         $c = new Criteria();
         $c->add(ArticlePeer::PUBLISHED, true);
-        $pager = new sfPager('Article', 10);
+        $pager = new sfPropelPager('Article', 10);
         $pager->setCriteria($c);
         if ($this->getRequestParameter('maxperpage'))
         {
@@ -249,7 +249,7 @@ So you can add the following to the `listSuccess.php` template:
 Storing additional information in the pager
 -----------------------------------------
 
-You may need sometimes to keep a certain context in a pager object. That's why the `sfPager` class can handle *parameters* in the usual way:
+You may need sometimes to keep a certain context in a pager object. That's why the `sfPropelPager` class can handle *parameters* in the usual way:
 
     [php]
     $pager->setParameter('foo', 'bar');

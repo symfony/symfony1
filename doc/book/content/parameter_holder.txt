@@ -183,7 +183,7 @@ Lots of other objects in the symfony framework also have one parameter holder. F
 
 * `sfShoppingCart`
 * `sfShoppingCartItem`
-* `sfPager`
+* `sfPropelPager`
 * `sfFilter`
 * ...
 
