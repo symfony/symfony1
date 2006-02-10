@@ -3,7 +3,7 @@
 <h1><?php echo $this->getI18NString('edit.title', 'edit '.$this->getModuleName()) ?></h1>
 
 <div id="sf_admin_introduction">
-[?php include_partial('<?php echo $this->getModuleName() ?>/edit_introduction') ?]
+[?php include_partial('<?php echo $this->getModuleName() ?>/edit_introduction', array('<?php echo $this->getSingularName() ?>' => $<?php echo $this->getSingularName() ?>)) ?]
 </div>
 
 <div id="sf_admin_content">
