@@ -95,7 +95,7 @@ Create a `load_data.php` script in the `myproject/batch/` directory starting wit
     $data = new sfPropelData();
     $data->loadData(sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.'fixtures');
 
-     %>
+     ?>
 
 To launch the script, just type in a command line:
 
