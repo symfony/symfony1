@@ -45,9 +45,6 @@ all:
 #  .settings:
 #    available:              on
 #
-#    module_accessor:        module
-#    action_accessor:        action
-#
 #    path_info_array:        SERVER
 #    path_info_key:          PATH_INFO
 #

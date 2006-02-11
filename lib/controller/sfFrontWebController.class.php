@@ -34,17 +34,15 @@ class sfFrontWebController extends sfWebController
   {
     try
     {
-      // get the application context
-      $context = $this->getContext();
-
       if (sfConfig::get('sf_logging_active'))
       {
         $this->getContext()->getLogger()->info('{sfFrontWebController} dispatch request');
       }
 
       // determine our module and action
-      $moduleName = $context->getRequest()->getParameter(sfConfig::get('sf_module_accessor'));
-      $actionName = $context->getRequest()->getParameter(sfConfig::get('sf_action_accessor'));
+      $request    = $this->getContext()->getRequest();
+      $moduleName = $request->getParameter('module');
+      $actionName = $request->getParameter('action');
 
       // make the first request
       $this->forward($moduleName, $actionName);
