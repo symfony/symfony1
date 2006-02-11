@@ -93,7 +93,7 @@ Create a `load_data.php` script in the `myproject/batch/` directory starting wit
 
     [php]
     $data = new sfPropelData();
-    $data->loadData(SF_DATA_DIR.'/fixtures');
+    $data->loadData(sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.'fixtures');
 
      %>
 
