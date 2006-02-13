@@ -83,7 +83,7 @@ Here are the standard form element helpers:
  * value selection field (select):
 
         [php]
-        <?php echo select_tag('name', options_for_select(Array('Steve' => '0', 'Bob' => '1', 'Albert' => '2', 'Ian' => '3', 'Buck' => '4'), 3)) ?>
+        <?php echo select_tag('name', options_for_select(Array('0' => 'Steve', '1' => 'Bob', '2' => 'Albert', '3' => 'Ian', '4' => 'Buck'), 3)) ?>
         // will generate in HTML
         <select name="name" id="name">
           <option value="0">Steve</option>
