@@ -294,7 +294,7 @@ Let's imagine an application where the user has a selection of items in a shoppi
     <div>
       <h1>Selected items</h1>
       <?php echo $cart->getCount() ?><br />
-      <?php echo link_to('Modify', 'cart/edit?cart_id='.cart->Id()) ?>
+      <?php echo link_to('Modify', 'cart/edit?cart_id='.$cart->getId()) ?>
     </div>
 
 This template partial is saved in a `cart` module, in a file called `templates/_sidebar.php`.
@@ -302,14 +302,14 @@ This template partial is saved in a `cart` module, in a file called `templates/_
 Now, let's go back to the templates using this partial. For each of them, the action defines a `$myShoppingCart` object containing the current selection of items. To pass this value to a partial, the templates will use the `include_partial()` helper:
 
     [php]
-    <?php echo include_partial('cart/sidebar', array($cart => $myShoppingCart )) ?>
+    <?php echo include_partial('cart/sidebar', array('cart' => $myShoppingCart )) ?>
 
 The first argument is the module/template name, the second is an array of variables that are needed by the partial. Notice the '_' difference between partial name in the `include_partial()` call and the actual file name in the `templates/` directory. This helps to keep your code clean and to show the fragments ahead of the other templates in a file explorer.
 
 If your need is not restricted to one module, save your fragment in the main template directory (in `myproject/apps/myapp/templates`). To call it from any module template, you now need:
 
     [php]
-    <?php echo include_partial('global/sidebar', array($cart => $myShoppingCart )) ?>
+    <?php echo include_partial('global/sidebar', array('cart' => $myShoppingCart )) ?>
 
 ### Components
 
