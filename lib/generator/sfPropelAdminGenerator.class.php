@@ -489,7 +489,7 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
       $relatedTable = $this->getMap()->getDatabaseMap()->getTable($column->getRelatedTableName());
       $params = $this->getObjectTagParams($params, array('include_blank' => true));
 
-      $options = "objects_for_select(".$relatedTable->getPhpName()."Peer::doSelect(new Criteria()), 'getId', '__toString', $default_value, $params)";
+      $options = "objects_for_select(".$relatedTable->getPhpName()."Peer::doSelect(new Criteria()), 'getPrimaryKey', '__toString', $default_value, $params)";
 
       return "select_tag($name, $options, $params)";
     }
