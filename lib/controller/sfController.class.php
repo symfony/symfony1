@@ -172,7 +172,7 @@ abstract class sfController
     $generatorConfig = $sf_app_module_dir.'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/generator.yml';
     if (is_readable($generatorConfig))
     {
-      sfConfigCache::getInstance()->import($generatorConfig, true, array('moduleName' => $moduleName));
+      sfConfigCache::getInstance()->import(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/generator.yml', true, array('moduleName' => $moduleName));
     }
 
     if (!$this->actionExists($moduleName, $actionName))
