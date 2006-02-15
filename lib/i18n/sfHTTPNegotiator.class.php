@@ -12,9 +12,10 @@
  * The latest version of PRADO can be obtained from:
  * {@link http://prado.sourceforge.net/}
  *
- * @author Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version $Revision$  $Date$
- * @package System.I18N.core
+ * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
+ * @version    $Id$
+ * @package    symfony
+ * @subpackage i18n
  */
 
 /**

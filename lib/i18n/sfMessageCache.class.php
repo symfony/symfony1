@@ -1,9 +1,10 @@
 <?php
 /**
  * Translation table cache.
- * @author $Author: weizhuo $
- * @version $Id$
- * @package System.I18N.core
+ * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
+ * @version    $Id$
+ * @package    symfony
+ * @subpackage i18n
  */
 
 /**
