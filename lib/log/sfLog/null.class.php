@@ -13,8 +13,6 @@
  * @author  Jon Parise <jon@php.net>
  * @since   sfLog 1.8.2
  * @package sfLog
- *
- * @example null.php    Using the null handler.
  */
 class sfLog_null extends sfLog
 {

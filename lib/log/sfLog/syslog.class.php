@@ -16,8 +16,6 @@
  * @since   Horde 1.3
  * @since   sfLog 1.0
  * @package sfLog
- *
- * @example syslog.php      Using the syslog handler.
  */
 class sfLog_syslog extends sfLog
 {

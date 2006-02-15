@@ -14,8 +14,6 @@
  * @author  Roman Neuhauser <neuhauser@bellavista.cz>
  * @since   sfLog 1.0
  * @package sfLog
- *
- * @example file.php    Using the file handler.
  */
 class sfLog_file extends sfLog
 {

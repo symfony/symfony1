@@ -37,8 +37,6 @@
  * @author  Jon Parise <jon@php.net>
  * @since   sfLog 1.8.3
  * @package sfLog
- *
- * @example sqlite.php      Using the Sqlite handler.
  */
 class sfLog_sqlite extends sfLog
 {

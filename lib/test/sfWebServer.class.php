@@ -1,8 +1,25 @@
-<?
+<?php
+
+/*
+ * This file is part of the symfony package.
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 require_once('symfony/vendor/nanoserv/nanoserv.php');
 require_once('symfony/vendor/nanoserv/handlers/NS_HTTP_Service_Handler.php');
 
+/**
+ * sfWebServer provides a specialized web server that can serve symfony actions
+ * and static content. It can be used during development.
+ *
+ * @package    symfony
+ * @subpackage test
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @version    SVN: $Id$
+ */
 class sfWebServer extends NS_HTTP_Service_Handler
 {
   private $config;

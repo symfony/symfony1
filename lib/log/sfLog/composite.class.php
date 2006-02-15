@@ -17,8 +17,6 @@
  * @since Horde 1.3
  * @since sfLog 1.0
  * @package sfLog
- *
- * @example composite.php   Using the composite handler.
  */
 class sfLog_composite extends sfLog
 {

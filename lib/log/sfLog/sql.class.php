@@ -30,8 +30,6 @@ require_once 'DB.php';
  * @since   Horde 1.3
  * @since   sfLog 1.0
  * @package sfLog 
- *
- * @example sql.php     Using the SQL handler.
  */
 class sfLog_sql extends sfLog {
 

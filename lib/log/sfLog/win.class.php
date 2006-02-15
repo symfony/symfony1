@@ -18,8 +18,6 @@
  * @author  Jon Parise <jon@php.net>
  * @since   sfLog 1.7.0
  * @package sfLog
- *
- * @example win.php     Using the window handler.
  */
 class sfLog_win extends sfLog
 {

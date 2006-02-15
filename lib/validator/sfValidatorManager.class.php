@@ -29,10 +29,7 @@ class sfValidatorManager
   /**
    * Clear this validator manager so it can be reused.
    *
-   * @retun void
-   *
-   * @author Sean Kerr (skerr@mojavi.org)
-   * @since  3.0.0
+   * @return void
    */
   public function clear ()
   {

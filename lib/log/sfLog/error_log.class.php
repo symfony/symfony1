@@ -13,8 +13,6 @@
  * @author  Jon Parise <jon@php.net>
  * @since   sfLog 1.7.0
  * @package sfLog
- * 
- * @example error_log.php   Using the error_log handler.
  */
 class sfLog_error_log extends sfLog
 {

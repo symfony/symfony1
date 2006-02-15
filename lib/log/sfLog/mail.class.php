@@ -22,8 +22,6 @@
  * @author  Jon Parise <jon@php.net>
  * @since   sfLog 1.3
  * @package sfLog
- *
- * @example mail.php    Using the mail handler.
  */
 class sfLog_mail extends sfLog
 {

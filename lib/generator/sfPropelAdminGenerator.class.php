@@ -522,6 +522,14 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
   }
 }
 
+/**
+ * Propel admin generator column.
+ *
+ * @package    symfony
+ * @subpackage generator
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @version    SVN: $Id$
+ */
 class sfAdminColumn
 {
   private

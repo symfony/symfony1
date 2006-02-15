@@ -13,8 +13,6 @@
  * @author  Jon Parise <jon@php.net>
  * @since   sfLog 1.1
  * @package sfLog
- *
- * @example console.php     Using the console handler.
  */
 class sfLog_console extends sfLog
 {

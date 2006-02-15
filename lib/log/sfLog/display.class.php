@@ -16,8 +16,6 @@
  * @author  Paul Yanchenko <pusher@inaco.ru>
  * @since   sfLog 1.8.0
  * @package sfLog
- *
- * @example display.php     Using the display handler.
  */
 class sfLog_display extends sfLog
 {

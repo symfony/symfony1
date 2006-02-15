@@ -510,6 +510,31 @@ class sfFinder
   }
 }
 
+/**
+ * Match globbing patterns against text.
+ *
+ *   if match_glob("foo.*", "foo.bar") echo "matched\n";
+ *
+ * // prints foo.bar and foo.baz
+ * $regex = glob_to_regex("foo.*");
+ * for (array('foo.bar', 'foo.baz', 'foo', 'bar') as $t)
+ * {
+ *   if (/$regex/) echo "matched: $car\n";
+ * }
+ *
+ * sfGlobToRegex implements glob(3) style matching that can be used to match
+ * against text, rather than fetching names from a filesystem.
+ *
+ * based on perl Text::Glob module.
+ *
+ * @package    symfony
+ * @subpackage util
+ * @author     Fabien Potencier <fabien.potencier@gmail.com> php port
+ * @author     Richard Clamp <richardc@unixbeard.net> perl version
+ * @copyright  2004-2005 Fabien Potencier <fabien.potencier@gmail.com>
+ * @copyright  2002 Richard Clamp <richardc@unixbeard.net>
+ * @version    SVN: $Id$
+ */
 class sfGlobToRegex
 {
   private static $strict_leading_dot = true;
@@ -607,6 +632,31 @@ class sfGlobToRegex
   }
 }
 
+/**
+ * Numeric comparisons.
+ *
+ * sfNumberCompare compiles a simple comparison to an anonymous
+ * subroutine, which you can call with a value to be tested again.
+
+ * Now this would be very pointless, if sfNumberCompare didn't understand
+ * magnitudes.
+
+ * The target value may use magnitudes of kilobytes (C<k>, C<ki>),
+ * megabytes (C<m>, C<mi>), or gigabytes (C<g>, C<gi>).  Those suffixed
+ * with an C<i> use the appropriate 2**n version in accordance with the
+ * IEC standard: http://physics.nist.gov/cuu/Units/binary.html
+ *
+ * based on perl Number::Compare module.
+ *
+ * @package    symfony
+ * @subpackage util
+ * @author     Fabien Potencier <fabien.potencier@gmail.com> php port
+ * @author     Richard Clamp <richardc@unixbeard.net> perl version
+ * @copyright  2004-2005 Fabien Potencier <fabien.potencier@gmail.com>
+ * @copyright  2002 Richard Clamp <richardc@unixbeard.net>
+ * @see        http://physics.nist.gov/cuu/Units/binary.html
+ * @version    SVN: $Id$
+ */
 class sfNumberCompare
 {
   private $test = '';
