@@ -30,7 +30,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
    * @throws sfConfigurationException If a requested configuration file does not exist or is not readable.
    * @throws sfParseException If a requested configuration file is improperly formatted.
    */
-  public function execute($configFile, $param = array())
+  public function execute($configFiles, $param = array())
   {
     // set our required categories list and initialize our handler
     $categories = array('required_categories' => array('methods', 'names'));
@@ -38,7 +38,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
     $this->initialize($categories);
 
     // parse the yaml
-    $config = $this->parseYaml($configFile);
+    $config = $this->parseYamls($configFiles);
 
     // init our data, includes, methods, names and validators arrays
     $data       = array();
