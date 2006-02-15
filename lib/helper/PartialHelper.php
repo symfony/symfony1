@@ -58,6 +58,8 @@ function include_component($moduleName, $componentName, $vars = array())
   // initialize the action
   if ($componentInstance->initialize($context))
   {
+    $componentInstance->getVarHolder()->add($vars);
+
     // dispatch component
     $componentToRun = 'execute'.ucfirst($componentName);
     if (!method_exists($componentInstance, $componentToRun))
@@ -86,7 +88,7 @@ function include_component($moduleName, $componentName, $vars = array())
       $componentVars = $componentInstance->getVarHolder()->getAll();
 
       // include partial
-      include_partial($moduleName.'/'.$componentName, array_merge($vars, $componentVars));
+      include_partial($moduleName.'/'.$componentName, $componentVars);
     }
   }
   else
