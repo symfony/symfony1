@@ -41,14 +41,12 @@ For authenticated users, symfony provides an array of credentials in the `sfUser
     $user->addCredentials($credential1, $credential2);
     // check if the user has a credential
     $user->hasCredential($credential)                  =>   true
-    // check if the user has one of the credentials
-    $user->hasCredentials($credential1, $credential3)  =>   true
     // remove a credential
     $user->removeCredential($credential);
     $user->hasCredential($credential)                  =>   false
     // remove all credentials
     $user->clearCredential();
-    $user->hasCredentials($credential1)                =>   false
+    $user->hasCredential($credential1)                 =>   false
 
 Here is an example of credential definition:
 
