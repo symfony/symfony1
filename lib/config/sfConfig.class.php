@@ -12,7 +12,7 @@
  * sfConfig stores all configuration information for a symfony application.
  *
  * @package    symfony
- * @subpackage core
+ * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */

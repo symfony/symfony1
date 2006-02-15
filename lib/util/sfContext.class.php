@@ -16,7 +16,7 @@
  * provided.
  *
  * @package    symfony
- * @subpackage core
+ * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <skerr@mojavi.org>
  * @version    SVN: $Id$
