@@ -193,12 +193,12 @@ It is getting quite long. Symfony allows you to cut the file in pieces, that wil
 The same `->loadData()` method call still works, since the parameter was a directory:
 
     [php]
-    $data->loadData(SF_DATA_DIR.'/fixtures');
+    $data->loadData(sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.'fixtures');
 
 You can, if you wish, use only one of these files for the batch:
 
     [php]
-    $data->loadData(SF_DATA_DIR.'/fixtures/100_user_import_data.yml');
+    $data->loadData(sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.'fixtures'.DIRECTORY_SEPARATOR.'100_user_import_data.yml');
 
 Alternate YAML syntax
 ---------------------
