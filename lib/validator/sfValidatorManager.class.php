@@ -217,12 +217,12 @@ class sfValidatorManager
       if ($data['is_file'])
       {
         // file
-        $value =& $this->request->getFile($name);
+        $value = $this->request->getFile($name);
       }
       else
       {
         // parameter
-        $value =& $this->request->getParameterHolder()->get($name);
+        $value = $this->request->getParameterHolder()->get($name);
       }
     }
     else
@@ -233,22 +233,26 @@ class sfValidatorManager
       if ($data['is_file'])
       {
         // file
-        $parent =& $this->request->getFile($parent);
+        $parent = $this->request->getFile($parent);
       }
       else
       {
         // parameter
-        $parent =& $this->request->getParameterHolder()->get($parent);
+        $parent = $this->request->getParameterHolder()->get($parent);
       }
 
       if ($parent != null && isset($parent[$name]))
       {
-        $value =& $parent[$name];
+        $value = $parent[$name];
       }
     }
 
     // now for the dirty work
-    if ($value == null || strlen($value) == 0)
+    if (
+      ($data['is_file'] && !$value['name'])
+      ||
+      (!$data['is_file'] && ($value == null || strlen($value) == 0))
+    )
     {
       if (!$data['required'] || !$force)
       {
