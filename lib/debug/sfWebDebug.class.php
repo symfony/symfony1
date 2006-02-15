@@ -176,6 +176,13 @@ class sfWebDebug
       $total_time = sprintf(($total_time <= 1) ? '%.2f' : '%.0f', $total_time);
     }
 
+    // memory used
+    $total_memory = 0;
+    if (sfConfig::get('sf_debug') && function_exists('memory_get_usage'))
+    {
+      $total_memory = sprintf('%.1f', (memory_get_usage() / 1024));
+    }
+
     // max priority
     $log_image = '';
     if ($sf_logging_active = sfConfig::get('sf_logging_active'))
@@ -206,6 +213,7 @@ class sfWebDebug
       '.$this->displayMenu($log_image).'
       <div id="sfStatsDetails">'.$this->displayCurrentConfig().'</div>
       <div id="sfStatsTime">processed in <strong>'.$total_time.'</strong> ms</div>
+      '.($total_memory ? '<div id="sfStatsMemory">memory: <strong>'.$total_memory.'</strong> KB</div>' : '').'
       '.$short_messages.'
       </div>
     ';
@@ -335,6 +343,8 @@ class sfWebDebug
       'eaccelerator' => (function_exists('eaccelerator') && ini_get('eaccelerator.enable')) ? 'on' : 'off',
       'compression'  => sfConfig::get('sf_compressed')     ? 'on' : 'off',
       'tidy'         => (function_exists('tidy_parse_string')) ? 'on' : 'off',
+      'syck'         => (function_exists('syck_load')) ? 'on' : 'off',
+      'memusage'     => (function_exists('memory_get_usage')) ? 'on' : 'off'
     );
 
     $result = '';

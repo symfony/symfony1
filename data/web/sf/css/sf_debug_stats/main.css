@@ -71,7 +71,7 @@
   padding: 2px;
 }
 
-#sfStatsTime
+#sfStatsTime, #sfStatsMemory
 {
   padding: 2px;
   background-color: #aaa;
