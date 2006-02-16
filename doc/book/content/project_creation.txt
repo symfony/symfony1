@@ -11,7 +11,7 @@ Introduction
 
 In symfony, a **project** is a set of services and operations available under a given domain name, sharing the same object model. 
 
-Inside a project, the operations are grouped logically into **applications**; an application can normally run independantly of the other applications of the same project.
+Inside a project, the operations are grouped logically into **applications**; an application can normally run independently of the other applications of the same project.
 
 In most cases, a project will contain two applications, one for the front-office, and one for the back-office, sharing the same database. But you can also have one project containing lots of mini-sites, each site being a different application. Note that hyperlinks between applications have to be in the absolute form.
 
@@ -158,7 +158,7 @@ Since you need to start getting to work right away, edit the file `myapp/modules
 
     Hello, world !
 
-Save it, refresh the page in the browser and voil√!
+Save it, refresh the page in the browser and voil‡!
 
 Source versioning
 ------------------
@@ -171,7 +171,7 @@ So lets **create** the new repository for the `myproject` project:
 
     $ svnadmin create $SVNREP_DIR/myproject
 
-Then the base structure (layout) of the repository is created with the `trunk`,`tags` and `branches` directories with this pretty long command:
+Then the base structure (layout) of the repository is created with the `trunk`, `tags` and `branches` directories with this pretty long command:
 
     $ svn mkdir -m "layout creation" file:///$SVNREP_DIR/myproject/trunk file:///$SVNREP_DIR/myproject/tags file:///$SVNREP_DIR/myproject/branches
 
@@ -202,7 +202,7 @@ There is one remaining thing to setup. If you commit your working directory to t
     $ chmod 777 cache
     $ chmod 777 log
 
-The default text editor configured for SVN should launch. If this doesn't happen, make subversion use your prefered editor by typing 
+The default text editor configured for SVN should launch. If this doesn't happen, make subversion use your preferred editor by typing 
 
     $ export SVN_EDITOR=<name of editor>
     $ svn propedit svn:ignore .
