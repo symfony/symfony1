@@ -94,7 +94,7 @@ The `templates` directory lists the global templates of the application, the one
 
 The directories `i18n`, `lib` and `modules` are empty for a new application.
 
-The directory name of an application is to be determined during its setup. This name is accessible in the `SF_APP_DIR` constant.
+The directory name of an application is to be determined during its setup. This name is accessible via the `sfConfig` object by referencing `sfConfig::get('sf_app_dir')`.
 
 The classes of an application are not able to access methods or attributes in other applications of the same project. Also note, hyperlinks between two applications of the same project must be in absolute form.
 
