@@ -71,7 +71,7 @@ class sfNumberValidator extends sfValidator
 
     $min = $this->getParameterHolder()->get('min');
 
-    if ($min != null && $value < $min)
+    if ($min !== null && $value < $min)
     {
       // too small
       $error = $this->getParameterHolder()->get('min_error');
@@ -81,7 +81,7 @@ class sfNumberValidator extends sfValidator
 
     $max = $this->getParameterHolder()->get('max');
 
-    if ($max != null && $value > $max)
+    if ($max !== null && $value > $max)
     {
       // too large
       $error = $this->getParameterHolder()->get('max_error');
