@@ -135,8 +135,8 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     if ($this->getRequest()->hasParameter('filter'))
     {
       $this->getUser()->getAttributeHolder()->removeNamespace('sf_admin/<?php echo $this->getSingularName() ?>/filters');
+      $this->getUser()->getAttributeHolder()->add($this->getRequestParameter('filters'), 'sf_admin/<?php echo $this->getSingularName() ?>/filters');
     }
-    $this->getUser()->getAttributeHolder()->add($this->getRequestParameter('filters'), 'sf_admin/<?php echo $this->getSingularName() ?>/filters');
 <?php endif ?>
   }
 
@@ -154,7 +154,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 <?php if ($this->getParameterValue('list.filters')): ?>
     $this->filters = $this->getUser()->getAttributeHolder()->getAll('sf_admin/<?php echo $this->getSingularName() ?>/filters');
 <?php foreach ($this->getColumns('list.filters') as $column): $type = $column->getCreoleType() ?>
-    if (isset($this->filters['<?php echo $column->getName() ?>']) && $this->filters['<?php echo $column->getName() ?>'] != '')
+    if (isset($this->filters['<?php echo $column->getName() ?>']) && $this->filters['<?php echo $column->getName() ?>'] !== '')
     {
 <?php if ($type == CreoleTypes::CHAR || $type == CreoleTypes::VARCHAR): ?>
       $c->add(<?php echo $this->getPeerClassName() ?>::<?php echo strtoupper($column->getName()) ?>, strtr($this->filters['<?php echo $column->getName() ?>'], '*', '%'), Criteria::LIKE);
