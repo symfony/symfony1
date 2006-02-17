@@ -146,7 +146,8 @@ abstract class sfController
     if ($this->getActionStack()->getSize() >= $this->maxForwards)
     {
       // let's kill this party before it turns into cpu cycle hell
-      $error = 'Too many forwards have been detected for this request';
+      $error = 'Too many forwards have been detected for this request (> %d)';
+      $error = sprintf($error, $this->maxForwards);
 
       throw new sfForwardException($error);
     }
@@ -168,12 +169,7 @@ abstract class sfController
     }
 
     // check for a module generator config file
-    $sf_app_module_dir = sfConfig::get('sf_app_module_dir');
-    $generatorConfig = $sf_app_module_dir.'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/generator.yml';
-    if (is_readable($generatorConfig))
-    {
-      sfConfigCache::getInstance()->import(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/generator.yml', true, array('moduleName' => $moduleName));
-    }
+    sfConfigCache::getInstance()->import(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/generator.yml', true, true);
 
     if (!$this->actionExists($moduleName, $actionName))
     {
@@ -205,7 +201,7 @@ abstract class sfController
     $this->getActionStack()->addEntry($moduleName, $actionName, $actionInstance, $isSlot);
 
     // include module configuration
-    sfConfigCache::getInstance()->import('modules/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/module.yml', true, array('prefix' => $moduleName.'_'));
+    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/module.yml'));
 
     // check if this module is internal
     if ($this->getActionStack()->getSize() == 1 && sfConfig::get('mod_'.strtolower($moduleName).'_is_internal'))
@@ -221,7 +217,7 @@ abstract class sfController
       // module is enabled
 
       // check for a module config.php
-      $moduleConfig = $sf_app_module_dir.'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/config.php';
+      $moduleConfig = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/config.php';
       if (is_readable($moduleConfig))
       {
         require_once($moduleConfig);
@@ -306,7 +302,7 @@ abstract class sfController
         // change i18n message source directory to our module
         if (sfConfig::get('sf_i18n'))
         {
-          $this->context->getI18N()->setMessageSourceDir($sf_app_module_dir.'/'.$moduleName.'/'.sfConfig::get('sf_app_module_i18n_dir_name'), $this->context->getUser()->getCulture());
+          $this->context->getI18N()->setMessageSourceDir(sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_i18n_dir_name'), $this->context->getUser()->getCulture());
         }
 
         // process the filter chain

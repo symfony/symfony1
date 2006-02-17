@@ -26,10 +26,10 @@ class sfRoutingConfigHandler extends sfYamlConfigHandler
    * @throws sfConfigurationException If a requested configuration file does not exist or is not readable.
    * @throws sfParseException If a requested configuration file is improperly formatted.
    */
-  public function execute($configFile, $param = array())
+  public function execute($configFiles)
   {
     // parse the yaml
-    $config = $this->parseYaml($configFile);
+    $config = $this->parseYamls($configFiles);
 
     // connect routes
     $routes = sfRouting::getInstance();

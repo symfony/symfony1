@@ -29,28 +29,26 @@ class sfViewConfigHandler extends sfYamlConfigHandler
    * @throws <b>sfParseException</b> If a requested configuration file is improperly formatted.
    * @throws <b>sfInitializationException</b> If a view.yml key check fails.
    */
-  public function execute($configFile, $param = array())
+  public function execute($configFiles)
   {
     // set our required categories list and initialize our handler
     $categories = array('required_categories' => array());
     $this->initialize($categories);
 
     // parse the yaml
-    $this->yamlConfig = $this->parseYaml($configFile);
+    $myConfig = $this->parseYamls($configFiles);
+
+    $myConfig['all'] = sfToolkit::arrayDeepMerge(
+      isset($myConfig['default']) && is_array($myConfig['default']) ? $myConfig['default'] : array(),
+      isset($myConfig['all']) && is_array($myConfig['all']) ? $myConfig['all'] : array()
+    );
+
+    unset($myConfig['default']);
+
+    $this->yamlConfig = $myConfig;
 
     // init our data array
     $data = array();
-
-    // get default configuration
-    $this->defaultConfig = array();
-    $defaultConfigFile = sfConfig::get('sf_app_config_dir').'/'.basename($configFile);
-    if (is_readable($defaultConfigFile))
-    {
-      $categories = array('required_categories' => array('default'));
-      $this->initialize($categories);
-
-      $this->defaultConfig = $this->parseYaml($defaultConfigFile);
-    }
 
     $data[] = "\$sf_safe_slot = sfConfig::get('sf_safe_slot');\n";
 

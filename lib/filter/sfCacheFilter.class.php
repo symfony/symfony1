@@ -57,7 +57,7 @@ class sfCacheFilter extends sfFilter
       if (is_readable(sfConfig::get('sf_app_module_dir').'/'.$cacheConfigFile))
       {
         $actionName = $context->getActionName();
-        require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$cacheConfigFile, array('moduleName' => $context->getModuleName())));
+        require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$cacheConfigFile));
       }
 
       // page cache

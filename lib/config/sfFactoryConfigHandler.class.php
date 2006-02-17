@@ -31,14 +31,16 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
    * @throws <b>sfConfigurationException</b> If a requested configuration file does not exist or is not readable.
    * @throws <b>sfParseException</b> If a requested configuration file is improperly formatted.
    */
-  public function execute($configFile, $param = array())
+  public function execute($configFiles)
   {
-    $symfonyConfigFile = sfConfig::get('sf_symfony_data_dir').'/config/'.basename($configFile);
+    // parse the yaml
+    $myConfig = $this->parseYamls($configFiles);
 
-    $myConfig = $this->mergeConfigurations(sfConfig::get('sf_environment'), array(
-      array('default', $symfonyConfigFile),
-      array('all', $configFile),
-    ));
+    $myConfig = sfToolkit::arrayDeepMerge(
+      isset($myConfig['default']) && is_array($myConfig['default']) ? $myConfig['default'] : array(),
+      isset($myConfig['all']) && is_array($myConfig['all']) ? $myConfig['all'] : array(),
+      isset($myConfig[sfConfig::get('sf_environment')]) && is_array($myConfig[sfConfig::get('sf_environment')]) ? $myConfig[sfConfig::get('sf_environment')] : array()
+    );
 
     // init our data and includes arrays
     $includes  = array();

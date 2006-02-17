@@ -51,7 +51,7 @@ abstract class sfConfigHandler
    * @throws <b>sfParseException</b> If a requested configuration file is
    *                               improperly formatted.
    */
-  abstract function execute($configPath, $param = array());
+  abstract function execute($configPath);
 
   /**
    * Initialize this ConfigHandler.

@@ -1,38 +1,46 @@
-autoload.yml:
+config/autoload.yml:
   class:    sfAutoloadConfigHandler
 
-php.yml:
+config/php.yml:
   class:    sfPhpConfigHandler
 
-databases.yml:
+config/databases.yml:
   class:    sfDatabaseConfigHandler
 
-settings.yml:
+config/settings.yml:
   class:    sfDefineEnvironmentConfigHandler
   param:
     prefix: sf_
 
-app.yml:
+config/app.yml:
   class:    sfDefineEnvironmentConfigHandler
   param:
     prefix: app_
 
-factories.yml:
+config/factories.yml:
   class:    sfFactoryConfigHandler
 
-bootstrap_compile.yml:
+config/bootstrap_compile.yml:
   class:    sfCompileConfigHandler
 
-core_compile.yml:
+config/core_compile.yml:
   class:    sfCompileConfigHandler
 
-filters.yml:
+config/filters.yml:
   class:    sfFilterConfigHandler
 
-logging.yml:
+config/logging.yml:
   class:    sfDefineEnvironmentConfigHandler
   param:
     prefix: sf_logging_
+
+config/routing.yml:
+  class:    sfRoutingConfigHandler
+
+config/i18n.yml:
+  class:    sfDefineEnvironmentConfigHandler
+  param:
+    prefix: sf_i18n_
 
 modules/*/config/generator.yml:
   class:    sfGeneratorConfigHandler
@@ -44,6 +52,7 @@ modules/*/config/mailer.yml:
   class:    sfDefineEnvironmentConfigHandler
   param:
     prefix: sf_mailer_
+    module: yes
 
 modules/*/config/security.yml:
   class:    sfSecurityConfigHandler
@@ -58,11 +67,4 @@ modules/*/config/module.yml:
   class:    sfDefineEnvironmentConfigHandler
   param:
     prefix: mod_
-
-routing.yml:
-  class:    sfRoutingConfigHandler
-
-i18n.yml:
-  class:    sfDefineEnvironmentConfigHandler
-  param:
-    prefix: sf_i18n_
+    module: yes

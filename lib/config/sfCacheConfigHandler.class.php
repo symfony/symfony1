@@ -32,28 +32,23 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
    * @throws <b>sfParseException</b> If a requested configuration file is improperly formatted.
    * @throws <b>sfInitializationException</b> If a cache.yml key check fails.
    */
-  public function execute($configFile, $param = array())
+  public function execute($configFiles)
   {
     // set our required categories list and initialize our handler
     $categories = array('required_categories' => array());
     $this->initialize($categories);
 
     // parse the yaml
-    $this->yamlConfig = $this->parseYaml($configFile);
+    $myConfig = $this->parseYamls($configFiles);
 
-    // init our data array
-    $data = array();
+    $myConfig['all'] = sfToolkit::arrayDeepMerge(
+      isset($myConfig['default']) && is_array($myConfig['default']) ? $myConfig['default'] : array(),
+      isset($myConfig['all']) && is_array($myConfig['all']) ? $myConfig['all'] : array()
+    );
 
-    // get default configuration
-    $this->defaultConfig = array();
-    $defaultConfigFile = sfConfig::get('sf_app_config_dir').'/'.basename($configFile);
-    if (is_readable($defaultConfigFile))
-    {
-      $categories = array('required_categories' => array('default'));
-      $this->initialize($categories);
+    unset($myConfig['default']);
 
-      $this->defaultConfig = $this->parseYaml($defaultConfigFile);
-    }
+    $this->yamlConfig = $myConfig;
 
     // iterate through all action names
     $first = true;
@@ -69,7 +64,7 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
 
       if ($this->getConfigValue('activate', $actionName))
       {
-        $data[] = $this->addCache($actionName, $param);
+        $data[] = $this->addCache($actionName);
       }
 
       $data[] = "}\n";
@@ -81,7 +76,7 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
     if ($this->getConfigValue('activate', $actionName))
     {
       $data[] = ($first ? '' : "else\n{")."\n";
-      $data[] = $this->addCache('DEFAULT', $param);
+      $data[] = $this->addCache('DEFAULT');
       $data[] = ($first ? '' : "}")."\n";
     }
 
@@ -94,7 +89,7 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
     return $retval;
   }
 
-  private function addCache($actionName = '', $param = array())
+  private function addCache($actionName = '')
   {
     $data = array();
 
@@ -115,8 +110,8 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
     }
 
     // add cache information to cache manager
-    $data[] = sprintf("  \$this->cacheManager->addCache('%s', '%s', '%s', %s, '%s', %s);\n\n",
-                      $param['moduleName'], $actionName, $type, $lifeTime, $clientLifetime, var_export($vary, true));
+    $data[] = sprintf("  \$this->cacheManager->addCache(\$context->getModuleName(), '%s', '%s', %s, '%s', %s);\n\n",
+                      $actionName, $type, $lifeTime, $clientLifetime, var_export($vary, true));
 
     return implode("\n", $data);
   }

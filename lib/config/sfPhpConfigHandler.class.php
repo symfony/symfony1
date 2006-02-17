@@ -29,12 +29,12 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
    * @throws <b>sfParseException</b> If a requested configuration file is improperly formatted.
    * @throws <b>sfInitializationException</b> If a php.yml key check fails.
    */
-  public function execute($configFile, $param = array())
+  public function execute($configFiles)
   {
     $this->initialize();
 
     // parse the yaml
-    $config = $this->parseYaml($configFile);
+    $myConfig = $this->parseYamls($configFiles);
 
     // init our data array
     $data = array();

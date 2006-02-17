@@ -131,12 +131,7 @@ try
   // get config instance
   $sf_app_config_dir_name = sfConfig::get('sf_app_config_dir_name');
 
-  // clear our config and module cache
   $sf_debug = sfConfig::get('sf_debug');
-  if ($sf_debug)
-  {
-    $configCache->clear();
-  }
 
   // load base settings
   include($configCache->checkConfig($sf_app_config_dir_name.'/logging.yml'));

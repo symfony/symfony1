@@ -29,15 +29,15 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler
    * @throws sfParseException If a requested configuration file is improperly formatted.
    * @throws sfInitializationException If a generator.yml key check fails.
    */
-  public function execute($configFile, $param = array())
+  public function execute($configFiles)
   {
     // set our required categories list and initialize our handler
     $categories = array('required_categories' => array('generator'));
 
     $this->initialize($categories);
 
-    // parse the ini
-    $config = $this->parseYaml($configFile);
+    // parse the yaml
+    $config = $this->parseYamls($configFiles);
 
     $config = $config['generator'];
 
@@ -55,8 +55,12 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler
     $generator_manager = new sfGeneratorManager();
     $generator_manager->initialize();
     $generator_param = (isset($config['param']) ? $config['param'] : array());
-    $param = array_merge($param, $generator_param);
-    $data  = $generator_manager->generate($class, $param);
+
+    // hack to find the module name
+    preg_match('#'.sfConfig::get('sf_app_module_dir_name').'/([^/]+)/#', $configFiles[0], $match);
+    $generator_param['moduleName'] = $match[1];
+
+    $data = $generator_manager->generate($class, $generator_param);
 
     // compile data
     $retval = "<?php\n".

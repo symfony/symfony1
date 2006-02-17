@@ -35,8 +35,9 @@ class sfMailView extends sfPHPView
     parent::configure();
 
     // require our configuration
+    $moduleName = $this->getContext()->getActionStack()->getLastEntry()->getActionInstance()->getModuleName();
     $viewConfigFile = $this->moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/mailer.yml';
-    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$viewConfigFile, array('prefix' => $this->moduleName.'_')));
+    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$viewConfigFile));
   }
 
   /**

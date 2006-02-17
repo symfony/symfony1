@@ -20,8 +20,18 @@
 abstract class sfYamlConfigHandler extends sfConfigHandler
 {
   protected
-    $yamlConfig    = null,
-    $defaultConfig = null;
+    $yamlConfig = null;
+
+  protected function parseYamls($configFiles)
+  {
+    $config = array();
+    foreach ($configFiles as $configFile)
+    {
+      $config = sfToolkit::arrayDeepMerge($config, $this->parseYaml($configFile));
+    }
+
+    return $config;
+  }
 
   /**
    * Parse a YAML (.yml) configuration file.
@@ -33,12 +43,13 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
    * @throws sfConfigurationException If a requested configuration file does not exist or is not readable.
    * @throws sfParseException If a requested configuration file is improperly formatted.
    */
-  protected function parseYaml($configFile, $param = array())
+  protected function parseYaml($configFile)
   {
     if (!is_readable($configFile))
     {
       // can't read the configuration
       $error = sprintf('Configuration file "%s" does not exist or is not readable', $configFile);
+
       throw new sfConfigurationException($error);
     }
 
@@ -66,52 +77,13 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
     return $config;
   }
 
-  public function mergeConfigurations($environment, $files)
-  {
-    $configs = array();
-
-    foreach ($files as $file)
-    {
-      if (is_readable($file[1]))
-      {
-        $config = $this->parseYaml($file[1]);
-
-        if (isset($config[$file[0]]))
-        {
-          $configs[] = $config[$file[0]];
-        }
-
-        if (isset($config[$environment]) && is_array($config[$environment]))
-        {
-          $configs[] = $config[$environment];
-        }
-      }
-    }
-
-    if ($configs)
-    {
-      $config = call_user_func_array(array('sfToolkit', 'arrayDeepMerge'), $configs);
-
-      return $config;
-    }
-    else
-    {
-      return array();
-    }
-  }
-
   protected function mergeConfigValue($keyName, $category)
   {
     $values = array();
 
-    if (isset($this->defaultConfig['default'][$keyName]) && is_array($this->defaultConfig['default'][$keyName]))
-    {
-      $values = $this->defaultConfig['default'][$keyName];
-    }
-
     if (isset($this->yamlConfig['all'][$keyName]) && is_array($this->yamlConfig['all'][$keyName]))
     {
-      $values = array_merge($values, $this->yamlConfig['all'][$keyName]);
+      $values = $this->yamlConfig['all'][$keyName];
     }
 
     if ($category && isset($this->yamlConfig[$category][$keyName]) && is_array($this->yamlConfig[$category][$keyName]))
@@ -131,10 +103,6 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
     else if (isset($this->yamlConfig['all'][$keyName]))
     {
       return $this->yamlConfig['all'][$keyName];
-    }
-    else if (isset($this->defaultConfig['default'][$keyName]))
-    {
-      return $this->defaultConfig['default'][$keyName];
     }
 
     return $defaultValue;
