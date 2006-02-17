@@ -216,12 +216,12 @@ class sfViewConfigHandler extends sfYamlConfigHandler
 
     foreach ($this->mergeConfigValue('http_metas', $viewName) as $httpequiv => $content)
     {
-      $data[] = sprintf("    \$action->addHttpMeta('%s', '%s', false);", $httpequiv, $content);
+      $data[] = sprintf("    \$action->getResponse()->addHttpMeta('%s', '%s', false);", $httpequiv, $content);
     }
 
     foreach ($this->mergeConfigValue('metas', $viewName) as $name => $content)
     {
-      $data[] = sprintf("    \$action->addMeta('%s', '%s', false);", $name, $content);
+      $data[] = sprintf("    \$action->getResponse()->addMeta('%s', '%s', false);", $name, $content);
     }
 
     return implode("\n", $data)."\n";
@@ -236,7 +236,16 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     {
       foreach ($stylesheets as $css)
       {
-        $data[] = sprintf("  \$action->addStylesheet('%s');", $css);
+        if (is_array($css))
+        {
+          $key = key($css);
+          $options = $css[$key];
+          $data[] = sprintf("  \$action->getResponse()->addStylesheet('%s', '', %s);", $key, var_export($options, true));
+        }
+        else
+        {
+          $data[] = sprintf("  \$action->getResponse()->addStylesheet('%s');", $css);
+        }
       }
     }
 
@@ -245,7 +254,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     {
       foreach ($javascripts as $js)
       {
-        $data[] = sprintf("  \$action->addJavascript('%s');", $js);
+        $data[] = sprintf("  \$action->getResponse()->addJavascript('%s');", $js);
       }
     }
 

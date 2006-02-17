@@ -220,7 +220,7 @@ function textarea_tag($name, $content = null, $options = array())
       throw new sfConfigurationException('You must install TinyMCE to use this helper (see rich_text_js_dir settings).');
     }
 
-    sfContext::getInstance()->getRequest()->setAttribute('tinymce', $js_path, 'helper/asset/auto/javascript');
+    sfContext::getInstance()->getResponse()->addJavascript($js_path);
 
     require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/JavascriptHelper.php');
 
@@ -235,7 +235,7 @@ function textarea_tag($name, $content = null, $options = array())
 
       $css_path = stylesheet_path($css_file);
 
-      sfContext::getInstance()->getRequest()->setAttribute('tinymce', $css_path, 'helper/asset/auto/stylesheet');
+      sfContext::getInstance()->getResponse()->addStylesheet($css_path);
 
       $css    = file_get_contents(sfConfig::get('sf_web_dir').DIRECTORY_SEPARATOR.$css_path);
       $styles = array();
@@ -420,8 +420,8 @@ function input_date_tag($name, $value, $options = array())
     '/sf/js/calendar/lang/calendar-en',
     '/sf/js/calendar/calendar-setup',
   );
-  $context->getRequest()->setAttribute('date', $js, 'helper/asset/auto/javascript');
-  $context->getRequest()->setAttribute('date', '/sf/js/calendar/skins/aqua/theme', 'helper/asset/auto/stylesheet');
+  $context->getResponse()->addJavascript($js);
+  $context->getResponse()->addStylesheet('/sf/js/calendar/skins/aqua/theme');
 
   // date format
   $dateFormatInfo = sfDateTimeFormatInfo::getInstance($culture);

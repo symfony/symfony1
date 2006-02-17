@@ -71,17 +71,8 @@ class sfWebDebug
     }
 
     // register our css and js
-    $this->context->getRequest()->setAttribute(
-      'sf_web_debug',
-      array('/sf/js/prototype/prototype'),
-      'helper/asset/auto/javascript'
-    );
-
-    $this->context->getRequest()->setAttribute(
-      'sf_web_debug',
-      array('/sf/css/sf_debug_stats/main'),
-      'helper/asset/auto/stylesheet/last'
-    );
+    $this->context->getResponse()->addJavascript('/sf/js/prototype/prototype');
+    $this->context->getResponse()->addStylesheet('/sf/css/sf_debug_stats/main');
   }
 
   public function logShortMessage($message)

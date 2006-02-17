@@ -1,6 +1,15 @@
 SVN
 ---
 
+Version 0.6.1
+-------------
+
+* [fabien] stylesheets, javascripts, ... are now part of the sfWebResponse object
+           DEPRECATED methods:
+             $action->addStylesheet(), $action->addJavascript(), $action->setTitle()
+             $action->addHttpMeta(), $action->addMeta()
+* [fabien] debug environment is much faster now
+
 Version 0.6.0
 -------------
 

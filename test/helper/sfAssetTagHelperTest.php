@@ -174,23 +174,6 @@ class sfAssetTagHelperNonVhostTest extends UnitTestCase
       '<script type="text/javascript" src="/mypath/elsewhere/cools.js"></script>'."\n");
   }
 
-/*
-  public function test_register_javascript_include_default()
-  {
-    // add ('slider') to default include
-    sfContext::getInstance()->getRequest()->add('slider', 'helper/asset/auto/javascript');
-
-    $this->assertEqual(include_javascripts(),
-      '<script type="text/javascript" src="/mypath/js/slider.js"></script>'."\n");
-
-    // add ('lib1', '/elsewhere/blub/lib2') to default include
-    $this->assertEqual(include_javascripts(),
-      '<script src="/mypath/js/slider.js" type="text/javascript"></script>'."\n".
-      '<script src="/mypath/js/lib1.js" type="text/javascript"></script>'."\n".
-      '<script src="/mypath/elsewhere/blub/lib2.js" type="text/javascript"></script>'."\n");
-  }
-*/
-
   public function test_style_path()
   {
     $this->assertEqual(stylesheet_path('style'),

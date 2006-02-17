@@ -13,7 +13,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 {
   public function preExecute ()
   {
-    $this->addStylesheet('/sf/css/sf_admin/main', 'last');
+    $this->getResponse()->addStylesheet('/sf/css/sf_admin/main', 'last');
   }
 
   public function executeIndex ()
@@ -50,8 +50,8 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
   public function executeEdit ()
   {
     // add javascript
-    $this->addJavascript('/sf/js/prototype/prototype');
-    $this->addJavascript('/sf/js/sf_admin/collapse');
+    $this->getResponse()->addJavascript('/sf/js/prototype/prototype');
+    $this->getResponse()->addJavascript('/sf/js/sf_admin/collapse');
 
     $this-><?php echo $this->getSingularName() ?> = $this->get<?php echo $this->getClassName() ?>OrCreate();
 

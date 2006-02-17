@@ -309,11 +309,7 @@
    */
   function update_element_function($element_id, $options = array())
   {
-    sfContext::getInstance()->getRequest()->setAttribute(
-      'javascript_update_element_function',
-      array('/sf/js/prototype/prototype'),
-      'helper/asset/auto/javascript'
-    );
+    sfContext::getInstance()->getResponse()->addJavascript('/sf/js/prototype/prototype');
 
     $content = escape_javascript(isset($options['content']) ? $options['content'] : '');
 
@@ -370,11 +366,7 @@
    */
   function remote_function($options)
   {
-    sfContext::getInstance()->getRequest()->setAttribute(
-      'javascript_remote_function',
-      array('/sf/js/prototype/prototype'),
-      'helper/asset/auto/javascript'
-    );
+    sfContext::getInstance()->getResponse()->addJavascript('/sf/js/prototype/prototype');
 
     $javascript_options = _options_for_ajax($options);
 
@@ -449,11 +441,7 @@
    */
   function observe_field($field_id, $options = array())
   {
-    sfContext::getInstance()->getRequest()->setAttribute(
-      'javascript_observe_field',
-      array('/sf/js/prototype/prototype'),
-      'helper/asset/auto/javascript'
-    );
+    sfContext::getInstance()->getResponse()->addJavascript('/sf/js/prototype/prototype');
 
     if (isset($options['frequency']) && $options['frequency'] > 0)
     {
@@ -473,11 +461,7 @@
    */
   function observe_form($form_id, $options = array())
   {
-    sfContext::getInstance()->getRequest()->setAttribute(
-      'javascript_observe_form',
-      array('/sf/js/prototype/prototype'),
-      'helper/asset/auto/javascript'
-    );
+    sfContext::getInstance()->getResponse()->addJavascript('/sf/js/prototype/prototype');
 
     if (isset($options['frequency']) && $options['frequency'] > 0)
     {
@@ -516,11 +500,10 @@
    */
   function visual_effect($name, $element_id = false, $js_options = array())
   {
-    sfContext::getInstance()->getRequest()->setAttribute(
-      'javascript_visual_effect',
-      array('/sf/js/prototype/prototype', '/sf/js/prototype/builder', '/sf/js/prototype/effects'),
-      'helper/asset/auto/javascript'
-    );
+    $response = sfContext::getInstance()->getResponse();
+    $response->addJavascript('/sf/js/prototype/prototype');
+    $response->addJavascript('/sf/js/prototype/builder');
+    $response->addJavascript('/sf/js/prototype/effects');
 
     $element = $element_id ? "'$element_id'" : 'element';
 
@@ -554,11 +537,11 @@
    */
   function sortable_element($element_id, $options = array())
   {
-    sfContext::getInstance()->getRequest()->setAttribute(
-      'javascript_sortable_element',
-      array('/sf/js/prototype/prototype', '/sf/js/prototype/builder', '/sf/js/prototype/effects', '/sf/js/prototype/dragdrop'),
-      'helper/asset/auto/javascript'
-    );
+    $response = sfContext::getInstance()->getResponse();
+    $response->addJavascript('/sf/js/prototype/prototype');
+    $response->addJavascript('/sf/js/prototype/builder');
+    $response->addJavascript('/sf/js/prototype/effects');
+    $response->addJavascript('/sf/js/prototype/dragdrop');
 
     if (!isset($options['with']))
     {
@@ -614,11 +597,11 @@
    */
   function draggable_element($element_id, $options = array())
   {
-    sfContext::getInstance()->getRequest()->setAttribute(
-      'javascript_draggable_element',
-      array('/sf/js/prototype/prototype', '/sf/js/prototype/builder', '/sf/js/prototype/effects', '/sf/js/prototype/dragdrop'),
-      'helper/asset/auto/javascript'
-    );
+    $response = sfContext::getInstance()->getResponse();
+    $response->addJavascript('/sf/js/prototype/prototype');
+    $response->addJavascript('/sf/js/prototype/builder');
+    $response->addJavascript('/sf/js/prototype/effects');
+    $response->addJavascript('/sf/js/prototype/dragdrop');
 
     return javascript_tag("new Draggable('$element_id', "._options_for_javascript($options).")");
   }
@@ -638,11 +621,11 @@
    */
   function drop_receiving_element($element_id, $options = array())
   {
-    sfContext::getInstance()->getRequest()->setAttribute(
-      'javascript_drop_receiving_element',
-      array('/sf/js/prototype/prototype', '/sf/js/prototype/builder', '/sf/js/prototype/effects', '/sf/js/prototype/dragdrop'),
-      'helper/asset/auto/javascript'
-    );
+    $response = sfContext::getInstance()->getResponse();
+    $response->addJavascript('/sf/js/prototype/prototype');
+    $response->addJavascript('/sf/js/prototype/builder');
+    $response->addJavascript('/sf/js/prototype/effects');
+    $response->addJavascript('/sf/js/prototype/dragdrop');
 
     if (!isset($options['with']))
     {
@@ -701,19 +684,15 @@
   {
     $context = sfContext::getInstance();
 
-    $context->getRequest()->setAttribute(
-      'input_auto_complete_tag',
-      array('/sf/js/prototype/prototype', '/sf/js/prototype/controls', '/sf/js/prototype/effects'),
-      'helper/asset/auto/javascript'
-    );
+    $response = $context->getResponse();
+    $response->addJavascript('/sf/js/prototype/prototype');
+    $response->addJavascript('/sf/js/prototype/controls');
+    $response->addJavascript('/sf/js/prototype/effects');
 
     $comp_options = _convert_options($completion_options);
     if (isset($comp_options['use_style']) && $comp_options['use_style'] == 'true')
     {
-      $context->getRequest()->setAttribute('input_auto_complete_tag',
-        array('/sf/css/sf_helpers/input_auto_complete_tag'),
-        'helper/asset/auto/stylesheet'
-      );
+      $response->addStylesheet('/sf/css/sf_helpers/input_auto_complete_tag');
     }
 
     $javascript  = input_tag($name, $value, $tag_options);
@@ -733,11 +712,10 @@
    */
   function input_in_place_editor_tag($name, $url, $editor_options = array())
   {
-    sfContext::getInstance()->getRequest()->setAttribute(
-      'input_in_place_editor_tag',
-      array('/sf/js/prototype/prototype', '/sf/js/prototype/controls', '/sf/js/prototype/effects'),
-      'helper/asset/auto/javascript'
-    );
+    $response = sfContext::getInstance()->getResponse();
+    $response->addJavascript('/sf/js/prototype/prototype');
+    $response->addJavascript('/sf/js/prototype/controls');
+    $response->addJavascript('/sf/js/prototype/effects');
 
     $editor_options = _convert_options($editor_options);
     $default_options = array('tag' => 'span', 'id' => '\''.$name.'_in_place_editor', 'class' => 'in_place_editor_field');

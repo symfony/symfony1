@@ -157,11 +157,11 @@ To set these parameters for a modules, use these keys in a `view.yml` file:
     metas:
       $key: $value
 
-To modify these settings from within an action, use these functions:
+To modify these settings from within an action, use these methods:
 
     [php]
-    $this->addHttpMeta($key, $value)
-    $this->addMeta($key, $value)
+    $this->getResponse()->addHttpMeta($key, $value)
+    $this->getResponse()->addMeta($key, $value)
 
 Adding an existing key will replace its current content.
 
@@ -177,9 +177,9 @@ Let's image that you display an article about finance in France that will not ch
 Or, alternatively, call in the action:
 
     [php]
-    $this->addHttpMeta('cache-control', 'public');
-    $this->addMeta('description','Finance in France');
-    $this->addMeta('keywords', 'finance, France');
+    $this->getResponse()->addHttpMeta('cache-control', 'public');
+    $this->getResponse()->addMeta('description','Finance in France');
+    $this->getResponse()->addMeta('keywords', 'finance, France');
 
 When the template is included in the layout, the `include_` helpers of the `<head>` part will give:
 
@@ -231,8 +231,8 @@ To include a specific stylesheet or a specific javascript file in the view confi
 To do it from an action, use:
 
     [php]
-    $this->addStylesheet($css);
-    $this->addJavascript($js);
+    $this->getResponse()->addStylesheet($css);
+    $this->getResponse()->addJavascript($js);
 
 In each case, the argument is a file name. If it has a logical extension (`.css` for a stylesheet and `.js` for a javascript), you can omit it. If it has a logical location (`/css/` for a stylesheet and `/js/` for a javascript), you can also omit it.
 
@@ -245,10 +245,10 @@ For instance, in an action called `subscribe` using a calendar widget, the view 
 Alternatively, you could require the files from the action with:
 
     [php]
-    $this->addStylesheet('calendar/skins/aqua/theme');
-    $this->addJavascript('calendar/calendar_stripped');
-    $this->addJavascript('calendar/calendar-en');
-    $this->addJavascript('calendar/calendar-setup_stripped');
+    $this->getResponse()->addStylesheet('calendar/skins/aqua/theme');
+    $this->getResponse()->addJavascript('calendar/calendar_stripped');
+    $this->getResponse()->addJavascript('calendar/calendar-en');
+    $this->getResponse()->addJavascript('calendar/calendar-setup_stripped');
 
 The `<head>` of the resulting view would then show:
 
@@ -258,6 +258,15 @@ The `<head>` of the resulting view would then show:
     
     <script language="javascript" type="text/javascript" src="/js/calendar/lang/calendar-en.js"></script>
     <script language="javascript" type="text/javascript" src="/js/calendar/calendar-setup_stripped.js"></script>
+
+You can also change default stylesheet tag options:
+
+    stylesheets: [main, main_for_print: { media: print }]
+
+or
+
+    [php]
+    $this->getResponse()->addStylesheet($css, array('media' => 'print'));
 
 Layout configuration
 --------------------

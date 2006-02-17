@@ -317,6 +317,80 @@ class sfWebResponse extends sfResponse
     }
   }
 
+  public function getHttpMetas()
+  {
+    return $this->parameter_holder->getAll('helper/asset/auto/httpmeta');
+  }
+
+  public function addHttpMeta($key, $value, $override = true)
+  {
+    if ($override || !$this->hasParameter($key, 'helper/asset/auto/httpmeta'))
+    {
+      $this->setParameter($key, $value, 'helper/asset/auto/httpmeta');
+    }
+  }
+
+  public function getMetas()
+  {
+    return $this->parameter_holder->getAll('helper/asset/auto/meta');
+  }
+
+  public function addMeta($key, $value, $override = true)
+  {
+    if ($override || !$this->hasParameter($key, 'helper/asset/auto/meta'))
+    {
+      $this->setParameter($key, $value, 'helper/asset/auto/meta');
+    }
+  }
+
+  public function getTitle()
+  {
+    $metas = $this->parameter_holder->getAll('helper/asset/auto/meta');
+
+    return $metas['title'];
+  }
+
+  public function setTitle($title)
+  {
+    $this->setParameter('title', $title, 'helper/asset/auto/media');
+  }
+
+  public function getStylesheets($position = '')
+  {
+    if ($position)
+    {
+      $position = '/'.$position;
+    }
+
+    return $this->parameter_holder->getAll('helper/asset/auto/stylesheet'.$position);
+  }
+
+  public function addStylesheet($css, $position = '', $options = array())
+  {
+    if ($position == 'first')
+    {
+      $this->setParameter($css, $options, 'helper/asset/auto/stylesheet/first');
+    }
+    else if ($position == 'last')
+    {
+      $this->setParameter($css, $options, 'helper/asset/auto/stylesheet/last');
+    }
+    else
+    {
+      $this->setParameter($css, $options, 'helper/asset/auto/stylesheet');
+    }
+  }
+
+  public function getJavascripts()
+  {
+    return $this->parameter_holder->getAll('helper/asset/auto/javascript');
+  }
+
+  public function addJavascript($js)
+  {
+    $this->setParameter($js, $js, 'helper/asset/auto/javascript');
+  }
+
   /**
    * Execute the shutdown procedure.
    *

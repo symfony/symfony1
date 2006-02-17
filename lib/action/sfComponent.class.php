@@ -22,6 +22,7 @@ abstract class sfComponent
     $context                  = null,
     $var_holder               = null,
     $request                  = null,
+    $response                 = null,
     $request_parameter_holder = null;
 
   /**
@@ -56,6 +57,7 @@ abstract class sfComponent
     $this->context                  = $context;
     $this->var_holder               = new sfParameterHolder();
     $this->request                  = $context->getRequest();
+    $this->response                 = $context->getResponse();
     $this->request_parameter_holder = $this->request->getParameterHolder();
 
     return true;
@@ -143,6 +145,11 @@ abstract class sfComponent
   public function getRequest()
   {
     return $this->request;
+  }
+
+  public function getResponse()
+  {
+    return $this->response;
   }
 
   public function getController()

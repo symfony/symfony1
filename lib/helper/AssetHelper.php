@@ -204,9 +204,10 @@ function _compute_public_path($source, $dir, $ext)
 function include_stylesheets()
 {
   $already_seen = array();
-  foreach (array('/first', '', '/last') as $position)
+
+  foreach (array('first', '', 'last') as $position)
   {
-    foreach (sfContext::getInstance()->getRequest()->getAttributeHolder()->getAll('helper/asset/auto/stylesheet'.$position) as $files)
+    foreach (sfContext::getInstance()->getResponse()->getStylesheets($position) as $files => $options)
     {
       if (!is_array($files))
       {
@@ -220,7 +221,7 @@ function include_stylesheets()
         if (isset($already_seen[$file])) continue;
 
         $already_seen[$file] = 1;
-        echo stylesheet_tag($file);
+        echo stylesheet_tag($file, $options);
       }
     }
   }
@@ -229,7 +230,7 @@ function include_stylesheets()
 function include_javascripts()
 {
   $already_seen = array();
-  foreach (sfContext::getInstance()->getRequest()->getAttributeHolder()->getAll('helper/asset/auto/javascript') as $files)
+  foreach (sfContext::getInstance()->getResponse()->getJavascripts() as $files)
   {
     if (!is_array($files))
     {
@@ -250,7 +251,7 @@ function include_javascripts()
 
 function include_metas()
 {
-  foreach (sfContext::getInstance()->getRequest()->getAttributeHolder()->getAll('helper/asset/auto/meta') as $name => $content)
+  foreach (sfContext::getInstance()->getResponse()->getMetas() as $name => $content)
   {
     echo tag('meta', array('name' => $name, 'content' => $content))."\n";
   }
@@ -258,7 +259,7 @@ function include_metas()
 
 function include_http_metas()
 {
-  foreach (sfContext::getInstance()->getRequest()->getAttributeHolder()->getAll('helper/asset/auto/httpmeta') as $httpequiv => $value)
+  foreach (sfContext::getInstance()->getResponse()->getHttpMetas() as $httpequiv => $value)
   {
     echo tag('meta', array('http-equiv' => $httpequiv, 'content' => $value))."\n";
   }
@@ -266,7 +267,7 @@ function include_http_metas()
 
 function include_title()
 {
-  $title = sfContext::getInstance()->getRequest()->getAttributeHolder()->get('title', '', 'helper/asset/auto/meta');
+  $title = sfContext::getInstance()->getResponse()->getTitle();
   if (sfConfig::get('sf_i18n'))
   {
     $title = sfConfig::get('sf_i18n_instance')->__($title);
