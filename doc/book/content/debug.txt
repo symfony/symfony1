@@ -11,7 +11,7 @@ Debug modes
 
 ### Symfony debug mode
 
-Symfony has a debug mode that facilitates the development and the debug. When it is on, the configuration is parsed at each request, so a change in the configuration has an immediate effect, without any need to clear the `config` cache folder. The possibility to ignore any existing HTML cache is given only in this mode, to avoid this debug function to be accessible in the production environment (you can learn more about the cache feature in the [related chapter](cache.txt)). Eventually, the symfony debug mode activates the Propel debug mode, so any error in a call to a propel object will display a detailed chain of calls.
+Symfony has a debug mode that facilitates the development and the debug. When it is on, the configuration is parsed at each request, so a change in the configuration has an immediate effect, without any need to clear the `config` cache folder. In order to prevent the production environment from being able to ignore any existing HTML cache this ability is only available in debug mode. (You can learn more about the cache feature in the [related chapter](cache.txt)). Eventually, the symfony debug mode activates the Propel debug mode, so any error in a call to a propel object will display a detailed chain of calls.
 
 As the debug mode has to be set very early in the process of answering a request, it is not defined in a YAML configuration file but in the front controller. For instance, if your main application is called `myapp`, you probably have in the `myproject/web` two PHP scripts with a different debug mode configuration:
 
@@ -27,7 +27,7 @@ With this configuration, not only will the production environment be faster, but
 
 ### XDebug mode
 
-The [XDebug extension][1] allows to extend the amount of information that is logged by the web server. Symfony integrates the XDebug messages in its own debug feedback, so it is a good idea to activate it when you debug the application. Unfortunately, the extension installation - and configuration - depends very much on your platform, so you need to activate/deactivate it manually in your `php.ini` file after installation.
+The [XDebug extension][1] allows you to extend the amount of information that is logged by the web server. Symfony integrates the XDebug messages in its own debug feedback, so it is a good idea to activate it when you debug the application. Unfortunately, the extension installation - and configuration - depends very much on your platform, so you need to activate/deactivate it manually in your `php.ini` file after installation.
 
 An example configuration for this extension could be (*nix platform):
 
@@ -53,7 +53,7 @@ Don't forget to deactivate the XDebug mode in your production platform.
 Log files
 ---------
 
-The only way to understand what went wrong during the execution of a request is to have information about the various steps of the execution. Hopefully, your web server and symfony have the good habit of logging lots of data that can be used for debugging into files.
+The only way to understand what went wrong during the execution of a request is to have information about the various steps of the execution. Fortunately, your web server and symfony have the good habit of logging lots of data that can be used for debugging into files.
 
 ### Web server log level configuration
 
@@ -69,9 +69,9 @@ First of all, a little reminder: PHP has a parameter `error_reporting`, defined 
 
 The numbers are a short way of writing error levels (refer to the [PHP documentation on error reporting][2] for more details about it). Basically, 4095 is a shortcut for `E_ALL | E_STRICT`, and 257 stands for `E_ERROR | E_USER_ERROR` (the default value for every new environment).
 
-So in the production environment, only the critical PHP errors are logged by the server, to avoid slow-downs of the execution; in the development environment, all the types of event are logged so that the developer can have all the necessary information to trace errors.
+In the production environment to avoid execution slow-downs, only the critical PHP errors are logged by the server; but in the development environment, all the types of event are logged so that the developer can have all the necessary information to trace errors.
 
-The location of the server log files depend on your installation, but they are often in a directory called `logs` in the web server tree structure.
+The location of the server log files depends on your installation, but they are often in a directory called `logs` in the web server tree structure.
 
 ### Symfony log files
 
@@ -91,7 +91,7 @@ If you have a symfony application running, take a look at its log files. The syn
 
 Lots of information can be found in these files, including the actual SQL queries sent to the database, the templates called, the chain of calls between objects, and so on. You can easily add your own logs, as explained [later in this chapter](#addlog).
 
-By the way, don't forget to periodically purge the `log/` directory of your applications, because theses files have the strange habit of growing of several megabytes in a few days - depending, of course, on your traffic.
+By the way, don't forget to periodically purge the `log/` directory of your applications, because theses files have the strange habit of growing by several megabytes in a few days - depending, of course, on your traffic.
 
 ### Symfony log level configuration
 
@@ -153,7 +153,7 @@ In XDebug mode, the log messages are much richer. Each line of the log messages 
 
 ![Messages in Xdebug mode](images/book/web_debug3.gif)
  
-All the PHP script files and the functions that are called are logged in XDebug mode, and symfony knows how to link this information with its internal log. If something goes wrong, the XDebug mode gives you the maximum detail to find why.
+All the PHP script files and the functions that are called are logged in XDebug mode, and symfony knows how to link this information with its internal log. If something goes wrong, the XDebug mode gives you the maximum detail to find out why.
 
 Manual debugging
 ----------------
@@ -170,7 +170,7 @@ You can manually add a message in the log file (and, consequently, to the log me
     // in a template
     <?php echo log_message($message, $level) ?>
 
-If you use the template version, don't forget to declare the use of the `Debug` helper. The `$level` can have the same values as in the log messages (`emerg`, `alert`, `crit`, `err`, `warning`, `notice`, `info` and `debug`). For instance, if your `indexSuccess.php` template of the `main` module looks like:
+If you use the template version, don't forget to declare the `Debug` helper with `use_helper('Debug')`. The `$level` can have the same values as in the log messages (`emerg`, `alert`, `crit`, `err`, `warning`, `notice`, `info` and `debug`). For instance, if your `indexSuccess.php` template of the `main` module looks like:
 
     [php]
     <?php use_helper('Debug') ?>

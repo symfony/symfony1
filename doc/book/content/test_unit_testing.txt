@@ -6,7 +6,7 @@ Overview
 
 [Unit tests][1] are one of the greatest advances in programming since object orientation. They allow for a safe development process, refactoring without fear, and can sometimes replace documentation since they illustrate quite clearly what an application is supposed to do. Unit testing can also be used to avoid regression. Refactoring a method can create new bugs that didn't use to appear before. That's why it is also a good practice to run all unit tests before deploying a new realease of an application in production - this is called [regression testing][12]. Symfony supports and recommends unit testing, and provides tools for that.
 
-There is no perfect solution for unit testing PHP applications built with symfony. This chapter decribes three solutions, each answering the need only partially. If you have an extensive approach of unit testing, you will probably need to use all the three.
+There is no perfect solution for unit testing PHP applications built with symfony. This chapter decribes three solutions, each answering the need only partially. If you have an extensive approach to unit testing, you will probably need to use all the three.
 
 Simple test
 -----------
@@ -101,9 +101,9 @@ Let's imagine that you need to create a `Util` class that normalizes a string by
     
     ?>
 
->**Note**: As a good practice, we recommend to name the test files out of the class they are supposed to test, and the test cases out of the methods they are supposed to test. Your `test/` directory will soon contain a lot of files, and finding a test might prove difficult in the long run if you don't.
+>**Note**: As a good practice, we recommend that you name the test files using the class they are supposed to test, and the test cases using the methods they are supposed to test. Your `test/` directory will soon contain a lot of files, and finding a test might prove difficult in the long run if you don't.
 
-Unit tests are supposed to test one case at a time, so we decompose the expected result of the text method into elementary cases. We want the `Util::normalize()` method to return a lower-case version of its argument, without any spaces - either before or after the argument - and without any special character. The five test cases defined in the `$test` array are enough to test that.
+Unit tests are supposed to test one case at a time, so we decompose the expected result of the text method into elementary cases. We want the `Util::normalize()` method to return a lower-case version of its argument, without any spaces - either before or after the argument - and without any special characters. The five test cases defined in the `$test` array are enough to test that.
 
 For each of the elementary test cases, we then compare the normalized version of the input with the expected result, with a call to the `->assertEqual()` method. This is the heart of a unit test. If it fails, the name of the test case will be output when the test suite is run. If it passes, it will simply add to the number of passed tests.
 
@@ -117,7 +117,7 @@ The symfony command line allows you to run all the tests at once with a single c
 
     $ symfony test myapp
 
-Calling this command executes all the tests of the `test/myapp/` directory, and for now it is only the ones of our new `UtilTest.php` set. These tests will not pass and the command line will show:
+Calling this command executes all the tests of the `test/myapp/` directory, and for now it is only those in our new `UtilTest.php` set. These tests will not pass and the command line will show:
 
     Warning: main(Util.class.php): failed to open stream: No such file or directory in WEB_DIR/sf_sandbox/test/frontend/UtilTest.php on line 3
 
@@ -167,7 +167,7 @@ We will examine three different ways to implement a simple web app test. The tes
 
 ### The `sfTestBrowser` object
 
-Symfony provides an object called `sfTestBrowser`, which allows to simulate browsing without a browser and, more important, without a web server. Being inside the framework allows this object to bypass completely the http transport layer. This means that the browsing simulated by the `sfTestBrowser` is fast, and independent of the server configuration, since it does not use it.
+Symfony provides an object called `sfTestBrowser`, which allows your test to simulate browsing without a browser and, more important, without a web server. Being inside the framework allows this object to bypass completely the http transport layer. This means that the browsing simulated by the `sfTestBrowser` is fast, and independent of the server configuration, since it does not use it.
 
 Let's see how to do a request for a page with this object:
 
@@ -188,7 +188,7 @@ You can pass parameters to your call as you would in the URL bar of your browser
     
 The reason why we use a specific front controller (`myapp_test.php`) will be explained in the next section.
 
-The `sfTestBrowser` simulates a cookie. This means that with a single `sfTestBrowser` object, you can require several pages one after the other, and they will be considered as part of a single session by the framework. In addition, the fact that `sfTestBrowser` uses routed URIs instead of internal URIs allows you to test the routing engine.
+The `sfTestBrowser` simulates a cookie. This means that with a single `sfTestBrowser` object, you can request several pages one after the other, and they will be considered as part of a single session by the framework. In addition, the fact that `sfTestBrowser` uses routed URIs instead of internal URIs allows you to test the routing engine.
 
 To implement our web test, the `test_Index()` method must be built as follows:
 
@@ -245,7 +245,7 @@ The tests built with `WebTestCase` are slower than the ones built with `sfTestBr
 `back()`                  | `clickImage($label, $x, $y)` | `getCookie($name)`               
 `forward()`               | `clickLink($label, $index)`  | `ageCookies($interval)`          
 
-We could easily do the same test case as previously with a `WebTestCase`. Beware that you now need to enter full URIs, since they will be requested to the web server:
+We could easily do the same test case as previously with a `WebTestCase`. Beware that you now need to enter full URIs, since they will be requested from the web server:
 
     [php]
     class mymoduleTest extends WebTestCase
@@ -272,7 +272,7 @@ The additional methods of this object could help us test how a submitted form is
         $this->assertWantedPattern('/test user logged in/');      
       }
 
-It is very handy to be able to set a value for fields and submit the form as you would do by hand. If you had to simulate that by doing a `POST` request (and this is possible by a call to `->post($uri, $parameters)`), you would have to write in the test function the target of the action and all the hidden fields, thus depending too much on the implementation. For more information about form test with Simple Test, read the [related chapter](http://www.lastcraft.com/form_testing_documentation.php) of the Simple Test documentation.
+It is very handy to be able to set a value for fields and submit the form as you would do by hand. If you had to simulate that by doing a `POST` request (and this is possible by a call to `->post($uri, $parameters)`), you would have to write in the test function the target of the action and all the hidden fields, thus depending too much on the implementation. For more information about form tests with Simple Test, read the [related chapter](http://www.lastcraft.com/form_testing_documentation.php) of the Simple Test documentation.
 
 ### Selenium
 
