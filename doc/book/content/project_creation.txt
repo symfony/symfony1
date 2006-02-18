@@ -158,7 +158,7 @@ Since you need to start getting to work right away, edit the file `myapp/modules
 
     Hello, world !
 
-Save it, refresh the page in the browser and voil‡!
+Save it, refresh the page in the browser and voil√†!
 
 Source versioning
 ------------------
