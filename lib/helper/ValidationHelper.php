@@ -39,7 +39,7 @@ function form_error($param, $options = array(), $catalogue = 'messages')
   {
     $style = 'display:none;';
   }
-  $options['style'] = isset($options['style']) ? $options['style'].';'.$style : $style;
+  $options['style'] = $style.(isset($options['style']) ? $options['style']:'');
   if (!isset($options['class'])) $options['class'] = 'form_error';
   if (!isset($options['id'])) $options['id'] = 'content:_TRequiredFielValidator';
 
