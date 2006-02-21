@@ -218,7 +218,7 @@ class sfWebResponse extends sfResponse
     }
 
     // set headers from HTTP meta
-    foreach ($this->getContext()->getRequest()->getAttributeHolder()->getAll('helper/asset/auto/httpmeta') as $name => $value)
+    foreach ($this->getHttpMetas() as $name => $value)
     {
       $this->setHttpHeader($name, $value, false);
     }
