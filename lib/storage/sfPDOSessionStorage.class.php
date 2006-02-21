@@ -10,7 +10,7 @@
  */
 
 /**
- * Provides support for session storage using a CreoleDb database abstraction layer.
+ * Provides support for session storage using a PDO database abstraction layer.
  *
  * <b>Required parameters:</b>
  *
@@ -27,7 +27,7 @@
  *                                       session data will be stored.
  * # <b>db_time_col</b>  - [sess_time] - The database column in which the
  *                                       session timestamp will be stored.
- * # <b>session_name</b> - [Agavi]    - The name of the session.
+ * # <b>session_name</b> - [symfony]    - The name of the session.
  *
  * @package    symfony
  * @subpackage storage
