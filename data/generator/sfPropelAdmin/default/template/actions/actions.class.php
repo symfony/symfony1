@@ -13,7 +13,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 {
   public function preExecute ()
   {
-    $this->getResponse()->addStylesheet('/sf/css/sf_admin/main', 'last');
+    $this->getResponse()->addStylesheet('/sf/css/sf_admin/main', 'first');
   }
 
   public function executeIndex ()
