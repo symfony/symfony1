@@ -421,7 +421,7 @@ abstract class sfAction extends sfComponent
    */
   public function addHttpMeta($key, $value, $override = true)
   {
-    $this->getContext()->getLogger()->err('This method is deprecated. Please use $this->getResponse()->addHttpMeta($key, $value, $override).');
+    if (sfConfig::get('sf_logging_active')) $this->getLogger()->err('This method is deprecated. Please use $this->getResponse()->addHttpMeta($key, $value, $override).');
     $this->getContext()->getResponse()->addHttpMeta($key, $value, $override);
   }
 
@@ -430,7 +430,7 @@ abstract class sfAction extends sfComponent
    */
   public function addMeta($key, $value, $override = true)
   {
-    $this->getContext()->getLogger()->err('This method is deprecated. Please use $this->getResponse()->addMeta($key, $value, $override).');
+    if (sfConfig::get('sf_logging_active')) $this->getLogger()->err('This method is deprecated. Please use $this->getResponse()->addMeta($key, $value, $override).');
     $this->getContext()->getResponse()->addMeta($key, $value, $override);
   }
 
@@ -439,7 +439,7 @@ abstract class sfAction extends sfComponent
    */
   public function setTitle($title)
   {
-    $this->getContext()->getLogger()->err('This method is deprecated. Please use $this->getResponse()->setTitle($title).');
+    if (sfConfig::get('sf_logging_active')) $this->getLogger()->err('This method is deprecated. Please use $this->getResponse()->setTitle($title).');
     $this->getContext()->getResponse()->setTitle($title);
   }
 
@@ -448,7 +448,7 @@ abstract class sfAction extends sfComponent
    */
   public function addStylesheet($css, $position = '', $options = array())
   {
-    $this->getContext()->getLogger()->err('This method is deprecated. Please use $this->getResponse()->addStylesheet($css, $position, $options).');
+    if (sfConfig::get('sf_logging_active')) $this->getLogger()->err('This method is deprecated. Please use $this->getResponse()->addStylesheet($css, $position, $options).');
     $this->getContext()->getResponse()->addStylesheet($css, $position, $options);
   }
 
@@ -457,7 +457,7 @@ abstract class sfAction extends sfComponent
    */
   public function addJavascript($js)
   {
-    $this->getContext()->getLogger()->err('This method is deprecated. Please use $this->getResponse()->addJavascript($js).');
+    if (sfConfig::get('sf_logging_active')) $this->getLogger()->err('This method is deprecated. Please use $this->getResponse()->addJavascript($js).');
     $this->getContext()->getResponse()->addJavascript($js);
   }
 }
