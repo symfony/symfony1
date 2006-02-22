@@ -188,6 +188,14 @@ The red color of the header shows that at least one message of `err` level was r
 
 ![Logged error message](images/book/web_debug5.gif)
 
+Alternatively, to write a message in the log from anywhere in your application, use the following syntax:
+
+    [php]
+    sfContext::getInstance()->getLogger()->info($message);
+    sfContext::getInstance()->getLogger()->err($message);
+    ...
+
+
 ### Debug short message
 
 If you don't want to add a line to the debug log, but just trace an short message or a value, you should use `debug_message` instead of `log_message`. The message will appear directly at the bottom of the web debug toolbar.
