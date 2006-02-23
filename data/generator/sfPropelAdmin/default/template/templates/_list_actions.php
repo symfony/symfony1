@@ -3,7 +3,7 @@
 <?php if ($listActions): ?>
   <?php if (is_array($listActions)): ?>
     <?php foreach ($listActions as $actionName => $params): ?>
-      <?php echo $this->getButtonToAction($actionName, $params, false) ?>
+      <?php echo $this->addCredentialCondition($this->getButtonToAction($actionName, $params, false), $params) ?>
     <?php endforeach ?>
   <?php endif ?>
 <?php else: ?>

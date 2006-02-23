@@ -256,6 +256,24 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     return array('NONE');
   }
 
+  public function addCredentialCondition($content, $params = array())
+  {
+    if (isset($params['credentials']))
+    {
+      $credentials = str_replace("\n", ' ', var_export($params['credentials'], true));
+
+      return <<<EOF
+[?php if (\$sf_user->hasCredential($credentials)): ?]
+$content
+[?php endif ?]
+EOF;
+    }
+    else
+    {
+      return $content;
+    }
+  }
+
   /**
    * returns an array of sfAdminColumn objects
    * from the $paramName list or the list of all columns (in table) if it does not exist
