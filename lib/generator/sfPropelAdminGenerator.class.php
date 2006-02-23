@@ -500,9 +500,13 @@ EOF;
     }
     else if ($type == CreoleTypes::BOOLEAN)
     {
-      $params = $this->getObjectTagParams($params, array('include_custom' => 'yes or no'));
+      $defaultIncludeCustom = '__("yes or no")';
+      $params = $this->getObjectTagParams($params, array('include_custom' => $defaultIncludeCustom));
 
-      $options = "options_for_select(array(1 => 'yes', 0 => 'no'), $default_value, $params)";
+      // little hack
+      $params = preg_replace("/'".preg_quote($defaultIncludeCustom)."'/", $defaultIncludeCustom, $params);
+
+      $options = "options_for_select(array(1 => __('yes'), 0 => __('no')), $default_value, $params)";
 
       return "select_tag($name, $options, $params)";
     }
