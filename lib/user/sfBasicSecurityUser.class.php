@@ -166,6 +166,9 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
       $this->authenticated = false;
       $this->clearCredentials();
     }
+
+    // regenerate a new session id
+    session_regenerate_id();
   }
 
   public function initialize($context, $parameters = null)
