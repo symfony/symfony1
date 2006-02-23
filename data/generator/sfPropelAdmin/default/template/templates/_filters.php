@@ -5,7 +5,7 @@
 [?php echo form_tag('<?php echo $this->getModuleName() ?>/list') ?]
 
   <fieldset>
-    <h2>filters</h2>
+    <h2>[?php echo __('filters') ?]</h2>
     <?php foreach ($this->getColumns('list.filters') as $column): $type = $column->getCreoleType() ?>
     <div class="form-row">
     <label for="<?php echo $column->getName() ?>">[?php echo __('<?php echo $this->getParameterValue('list.fields.'.$column->getName().'.name') ?>:') ?]<?php echo $this->getHelp($column, 'edit') ?></label>
