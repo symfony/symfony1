@@ -414,13 +414,16 @@ function input_date_tag($name, $value, $options = array())
   }
 
   // register our javascripts and stylesheets
-  $js = array(
+  $jss = array(
     '/sf/js/calendar/calendar',
 //  '/sf/js/calendar/lang/calendar-'.substr($culture, 0, 2),
     '/sf/js/calendar/lang/calendar-en',
     '/sf/js/calendar/calendar-setup',
   );
-  $context->getResponse()->addJavascript($js);
+  foreach ($jss as $js)
+  {
+    $context->getResponse()->addJavascript($js);
+  }
   $context->getResponse()->addStylesheet('/sf/js/calendar/skins/aqua/theme');
 
   // date format
