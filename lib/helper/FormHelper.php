@@ -204,7 +204,7 @@ function textarea_tag($name, $content = null, $options = array())
   if (isset($options['rich']))
   {
     $rich = $options['rich'];
-    if ($rich == true || $rich == 'true')
+    if ($rich === true || $rich == 'true')
     {
       $rich = 'tinymce';
     }
