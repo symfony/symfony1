@@ -16,6 +16,9 @@
 
 <div id="sf_admin_content">
 
+[?php if(!$pager->getNbResults()): ?]
+[?php echo __('no result') ?]
+[?php else: ?]
 <table cellspacing="0" class="sf_admin_list">
 <thead>
 <tr>
@@ -52,6 +55,7 @@
 </th></tr>
 </tfoot>
 </table>
+[?php endif ?]
 
 [?php echo include_partial('list_actions') ?]
 
