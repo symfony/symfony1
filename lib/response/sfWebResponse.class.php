@@ -352,7 +352,7 @@ class sfWebResponse extends sfResponse
 
   public function setTitle($title)
   {
-    $this->setParameter('title', $title, 'helper/asset/auto/media');
+    $this->setParameter('title', $title, 'helper/asset/auto/meta');
   }
 
   public function getStylesheets($position = '')
