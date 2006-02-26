@@ -56,7 +56,7 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
     // parse our config
     $config = sfYaml::load($configFile);
 
-    if ($config === false)
+    if ($config === false || $config === null)
     {
       // configuration couldn't be parsed
       $error = sprintf('Configuration file "%s" could not be parsed', $configFile);

@@ -61,6 +61,13 @@ class sfPropelData
   {
     // import new datas
     $main_datas = sfYaml::load($fixture_file);
+
+    if ($main_datas === null)
+    {
+      // no data
+      return;
+    }
+
     foreach ($main_datas as $class => $datas)
     {
       $class = trim($class);
@@ -150,6 +157,13 @@ class sfPropelData
       foreach ($fixture_files as $fixture_file)
       {
         $main_datas = sfYaml::load($fixture_file);
+
+        if ($main_datas === null)
+        {
+          // no data
+          continue;
+        }
+
         $classes = array_keys($main_datas);
         krsort($classes);
         foreach ($classes as $class)
