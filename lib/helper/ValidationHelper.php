@@ -43,14 +43,14 @@ function form_error($param, $options = array(), $catalogue = 'messages')
   if (!isset($options['class'])) $options['class'] = 'form_error';
   if (!isset($options['id'])) $options['id'] = 'content:_TRequiredFielValidator';
 
-  $prefix = '&darr;&nbsp;';
+  $prefix = sfConfig::get('sf_validation_error_prefix', '');
   if (isset($options['prefix']))
   {
     $prefix = $options['prefix'];
     unset($options['prefix']);
   }
 
-  $suffix = '&nbsp;&darr;';
+  $suffix = sfConfig::get('sf_validation_error_suffix', '');
   if (isset($options['suffix']))
   {
     $suffix = $options['suffix'];

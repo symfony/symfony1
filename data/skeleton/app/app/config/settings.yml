@@ -91,3 +91,6 @@ all:
 #    strip_comments:         off
 #
 #    etag:                   on
+#
+#    validation_error_prefix: &darr;&nbsp;
+#    validation_error_suffix: &nbsp;&darr;
