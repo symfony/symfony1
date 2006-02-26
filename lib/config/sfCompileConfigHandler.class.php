@@ -54,8 +54,7 @@ class sfCompileConfigHandler extends sfYamlConfigHandler
         if (!is_readable($file))
         {
           // file doesn't exist
-          $error = sprintf('Configuration file "%s" specifies nonexistent or unreadable file "%s"',
-                           $configFile, $file);
+          $error = sprintf('Configuration file "%s" specifies nonexistent or unreadable file "%s"', $configFiles[0], $file);
           throw new sfParseException($error);
         }
 

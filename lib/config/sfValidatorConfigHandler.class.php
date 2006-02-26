@@ -58,7 +58,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
         if ($method != 'GET' && $method != 'POST')
         {
           // unsupported request method
-          $error = sprintf('Configuration file "%s" specifies unsupported request method "%s"', $configFile, $method);
+          $error = sprintf('Configuration file "%s" specifies unsupported request method "%s"', $configFiles[0], $method);
 
           throw new sfParseException($method);
         }
@@ -74,11 +74,11 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
       }
 
       // load name list
-      $this->loadNames($configFile, $method, $methods, $names, $config, $list);
+      $this->loadNames($configFiles, $method, $methods, $names, $config, $list);
     }
 
     // load attribute list
-    $this->loadAttributes($configFile, $methods, $names, $validators, $config, $list);
+    $this->loadAttributes($configFiles, $methods, $names, $validators, $config, $list);
 
     // generate GET file/parameter data
     $data[] = "if (\$_SERVER['REQUEST_METHOD'] == 'GET')";
@@ -212,7 +212,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
    *
    * @return void
    */
-  private function loadAttributes(&$configFile, &$methods, &$names, &$validators, &$config, &$list)
+  private function loadAttributes(&$configFiles, &$methods, &$names, &$validators, &$config, &$list)
   {
     foreach ($config['names'] as $name => $attributes)
     {
@@ -226,8 +226,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
         if (!isset($names[$parent][$subname]))
         {
           // unknown parent or subname
-          $error = sprintf('Configuration file "%s" specifies unregistered parent "%s" or subname "%s"',
-                           $configFile, $parent, $subname);
+          $error = sprintf('Configuration file "%s" specifies unregistered parent "%s" or subname "%s"', $configFiles[0], $parent, $subname);
           throw new sfParseException($error);
         }
 
@@ -239,8 +238,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
         if (!isset($names[$name]))
         {
           // unknown name
-          $error = sprintf('Configuration file "%s" specifies unregistered name "%s"',
-                           $configFile, $name);
+          $error = sprintf('Configuration file "%s" specifies unregistered name "%s"', $configFiles[0], $name);
           throw new sfParseException($error);
         }
 
@@ -284,7 +282,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
    *
    * @return void
    */
-  private function loadNames(&$configFile, &$method, &$methods, &$names, &$config, &$list)
+  private function loadNames(&$configFiles, &$method, &$methods, &$names, &$config, &$list)
   {
     // explode the list of names
     $array = $list;
@@ -296,8 +294,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
       if (!isset($config['names'][$name]['required']))
       {
         // missing 'required' attribute
-        $error = sprintf('Configuration file "%s" specifies file or parameter "%s", but it is missing the "required" attribute',
-                         $configFile, $name);
+        $error = sprintf('Configuration file "%s" specifies file or parameter "%s", but it is missing the "required" attribute', $configFiles[0], $name);
         throw new sfParseException($error);
       }
 
@@ -333,8 +330,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
       {
         // name contains an invalid character
         // this is most likely a typo where the user forgot to add a brace
-        $error = sprintf('Configuration file "%s" specifies method "%s" with invalid file/parameter name "%s"',
-                         $configFile, $method, $name);
+        $error = sprintf('Configuration file "%s" specifies method "%s" with invalid file/parameter name "%s"', $configFiles[0], $method, $name);
         throw new sfParseException($error);
       }
       else
@@ -373,7 +369,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
    * @return void
    * @param array  A file/parameter name entry.
    */
-  private function loadValidators(&$configFile, &$validators, &$config, &$list, &$entry)
+  private function loadValidators(&$configFiles, &$validators, &$config, &$list, &$entry)
   {
     // create our empty entry validator array
     $entry['validators'] = array();
@@ -398,8 +394,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
       if (!isset($config[$validator]))
       {
         // validator hasn't been registered
-        $error = sprintf('Configuration file "%s" specifies unregistered validator "%s"',
-                         $configFile, $validator);
+        $error = sprintf('Configuration file "%s" specifies unregistered validator "%s"', $configFiles[0], $validator);
         throw new sfParseException($error);
       }
 
@@ -412,8 +407,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
       if (!isset($config[$validator]['class']))
       {
         // missing class key
-        $error = sprintf('Configuration file "%s" specifies category "%s" with missing class key',
-                         $configFile, $validator);
+        $error = sprintf('Configuration file "%s" specifies category "%s" with missing class key', $configFiles[0], $validator);
         throw new sfParseException($error);
       }
 
@@ -435,8 +429,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
         if (!is_readable($file))
         {
           // file doesn't exist
-          $error = sprintf('Configuration file "%s" specifies category "%s" with nonexistent or unreadable file "%s"',
-                           $configFile, $validator, $file);
+          $error = sprintf('Configuration file "%s" specifies category "%s" with nonexistent or unreadable file "%s"', $configFiles[0], $validator, $file);
           throw new sfParseException($error);
         }
 

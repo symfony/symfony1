@@ -46,7 +46,7 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
       {
         // missing class key
         $error = 'Configuration file "%s" specifies category "%s" with missing class key';
-        $error = sprintf($error, $configFile, $category);
+        $error = sprintf($error, $configFiles[0], $category);
 
         throw new sfParseException($error);
       }
@@ -62,8 +62,7 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
         if (!is_readable($file))
         {
           // filter file doesn't exist
-          $error = sprintf('Configuration file "%s" specifies class "%s" with nonexistent or unreadable file "%s"',
-                           $configFile, $class, $file);
+          $error = sprintf('Configuration file "%s" specifies class "%s" with nonexistent or unreadable file "%s"', $configFiles[0], $class, $file);
           throw new sfParseException($error);
         }
 

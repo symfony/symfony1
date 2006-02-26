@@ -52,16 +52,14 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
         // key exists?
         if (!array_key_exists($key, $configs))
         {
-          $error = sprintf('Configuration file "%s" specifies key "%s" which is not a php.ini directive',
-                           $configFile, $key);
+          $error = sprintf('Configuration file "%s" specifies key "%s" which is not a php.ini directive', $configFiles[0], $key);
           throw new sfParseException($error);
         }
 
         // key is overridable?
         if ($configs[$key]['access'] != 7)
         {
-          $error = sprintf('Configuration file "%s" specifies key "%s" which cannot be overrided',
-                           $configFile, $key);
+          $error = sprintf('Configuration file "%s" specifies key "%s" which cannot be overrided', $configFiles[0], $key);
           throw new sfParseException($error);
         }
 
@@ -81,15 +79,13 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
         // key exists?
         if (!array_key_exists($key, $configs))
         {
-          $error = sprintf('Configuration file "%s" specifies key "%s" which is not a php.ini directive [err0002]',
-                           $configFile, $key);
+          $error = sprintf('Configuration file "%s" specifies key "%s" which is not a php.ini directive [err0002]', $configFiles[0], $key);
           throw new sfParseException($error);
         }
 
         if (ini_get($key) != $value)
         {
-          $error = sprintf('Configuration file "%s" specifies that php.ini "%s" key must be set to "%s". The current value is "%s" (%s). [err0001]',
-                           $configFile, $key, $value, ini_get($key), $this->get_ini_path());
+          $error = sprintf('Configuration file "%s" specifies that php.ini "%s" key must be set to "%s". The current value is "%s" (%s). [err0001]', $configFiles[0], $key, $value, ini_get($key), $this->get_ini_path());
           throw new sfInitializationException($error);
         }
       }

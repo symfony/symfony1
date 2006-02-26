@@ -60,8 +60,7 @@ class sfRootConfigHandler extends sfYamlConfigHandler
       if (!isset($keys['class']))
       {
         // missing class key
-        $error = sprintf('Configuration file "%s" specifies category "%s" with missing class key',
-                         $configFile, $category);
+        $error = sprintf('Configuration file "%s" specifies category "%s" with missing class key', $configFiles[0], $category);
         throw new sfParseException($error);
       }
 
@@ -76,8 +75,7 @@ class sfRootConfigHandler extends sfYamlConfigHandler
         if (!is_readable($file))
         {
           // handler file doesn't exist
-          $error = sprintf('Configuration file "%s" specifies class "%s" with nonexistent or unreadable file "%s"',
-                           $configFile, $class, $file);
+          $error = sprintf('Configuration file "%s" specifies class "%s" with nonexistent or unreadable file "%s"', $configFiles[0], $class, $file);
           throw new sfParseException($error);
         }
 
