@@ -121,6 +121,18 @@ function select_country_tag($name, $value, $options = array())
 {
   $c = new sfCultureInfo(sfContext::getInstance()->getUser()->getCulture());
   $countries = $c->getCountries();
+
+  if (isset($options['countries']) && is_array($options['countries']))
+  {
+    $diff = array_diff_key($countries, array_flip($options['countries']));
+    foreach ($diff as $key => $v)
+    {
+      unset($countries[$key]);
+    }
+
+    unset($options['countries']);
+  }
+
   asort($countries);
 
   $option_tags = options_for_select($countries, $value);
@@ -132,6 +144,18 @@ function select_language_tag($name, $value, $options = array())
 {
   $c = new sfCultureInfo(sfContext::getInstance()->getUser()->getCulture());
   $languages = $c->getLanguages();
+
+  if (isset($options['languages']) && is_array($options['languages']))
+  {
+    $diff = array_diff_key($languages, array_flip($options['languages']));
+    foreach ($diff as $key => $v)
+    {
+      unset($languages[$key]);
+    }
+
+    unset($options['languages']);
+  }
+
   asort($languages);
 
   $option_tags = options_for_select($languages, $value);
