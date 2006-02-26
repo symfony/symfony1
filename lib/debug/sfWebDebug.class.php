@@ -130,7 +130,7 @@ class sfWebDebug
     }
 
     // escape HTML
-    $log_line = htmlspecialchars(strip_tags($log_line));
+    $log_line = htmlentities($log_line);
 
     // replace constants value with constant name
     $log_line = strtr($log_line, $constants);
