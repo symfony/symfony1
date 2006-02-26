@@ -117,6 +117,13 @@ What happens when a user tries to access a restricted action depends on his cred
 *   If the user is not identified, he/she will be redirected to the default `login` action  (default/login). You can configure this action in the `myproject/apps/myapp/config/settings.yml` file.
 *   If the user is identified but doesn't have the proper credentials, he/she will be redirected to the default `secure` action (default/secure). You can configure this action in the `myproject/myapp/config/settings.yml` file.
 
+The power of credentials with and / or
+--------------------------------------
+
+   credentials: [ admin, superuser ] -> (admin AND superuser)
+   credentials: [[ admin, superuser ]] -> (admin OR superuser)
+   credentials: [[ admin, superuser ], owner] -> ((admin OR superuser) AND owner)
+
 Session expiration
 ------------------
 
