@@ -81,7 +81,7 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     $this->setTheme($theme);
     $templateFiles = array(
       'listSuccess', 'editSuccess', '_filters', 
-      '_list_th_'.$this->getParameterValue('list.display.layout', 'tabular'), '_list_td_'.$this->getParameterValue('list.display.layout', 'tabular'),
+      '_list_th_'.$this->getParameterValue('list.layout', 'tabular'), '_list_td_'.$this->getParameterValue('list.layout', 'tabular'),
       '_list_th_tabular',
       '_list_header', '_edit_header', '_list_footer', '_edit_footer',
       '_list_td_actions', '_list_actions', '_edit_actions',

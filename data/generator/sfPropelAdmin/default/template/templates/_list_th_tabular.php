@@ -1,4 +1,4 @@
-<?php foreach ($this->getColumns('list.display.fields') as $column): ?>
+<?php foreach ($this->getColumns('list.display') as $column): ?>
   <th>
     <?php if ($column->isReal()): ?>
       [?php if ($sf_user->getAttribute('sort', null, 'sf_admin/<?php echo $this->getSingularName() ?>/sort') == '<?php echo $column->getName() ?>'): ?]
