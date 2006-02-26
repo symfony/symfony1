@@ -136,7 +136,7 @@ class sfPropelCrudGenerator extends sfGenerator
       $params[] = "\$this->getRequestParameter('".sfInflector::underscore($pk->getPhpName())."')";
     }
 
-    return implode(",\n".str_repeat(' ', 49 - strlen($this->singularName.$this->className)), $params);
+    return implode(",\n".str_repeat(' ', max(0, 49 - strlen($this->singularName.$this->className))), $params);
   }
 
   public function getMethodParamsForGetOrCreate()
@@ -172,7 +172,7 @@ class sfPropelCrudGenerator extends sfGenerator
       $retrieve_params[] = "\$this->getRequestParameter(\$$fieldName)";
     }
 
-    return implode(",\n".str_repeat(' ', 45 - strlen($this->singularName.$this->className)), $retrieve_params);
+    return implode(",\n".str_repeat(' ', max(0, 45 - strlen($this->singularName.$this->className))), $retrieve_params);
   }
 
   public function getRetrieveByPkParamsForDelete()
@@ -183,7 +183,7 @@ class sfPropelCrudGenerator extends sfGenerator
       $params[] = "\$this->getRequestParameter('".sfInflector::underscore($pk->getPhpName())."')";
     }
 
-    $sep = ",\n".str_repeat(' ', 43 - strlen($this->singularName.$this->className));
+    $sep = ",\n".str_repeat(' ', max(0, 43 - strlen($this->singularName.$this->className)));
 
     return implode($sep, $params);
   }
