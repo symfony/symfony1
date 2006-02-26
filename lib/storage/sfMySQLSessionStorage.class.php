@@ -142,7 +142,7 @@ class sfMySQLSessionStorage extends sfSessionStorage
 
     // delete the record associated with this id
     $sql = 'DELETE FROM ' . $db_table . ' ' .
-           'WHERE ' . $db_time_col . ' < ' . $lifetime;
+           'WHERE ' . $db_time_col . ' < ' . $life;
 
     if (@mysql_query($sql, $this->resource))
       return true;
