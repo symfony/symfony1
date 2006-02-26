@@ -47,6 +47,11 @@ To check whether an attribute has been defined for a user, use the `->hasAttribu
     [php]
     $hasNickname = $this->getUser()->hasAttribute('nickname');
 
+To remove an attribute from the session use:
+
+    [php]
+    $this->getUser()->getAttributeHolder()->remove('nickname');
+
 >**Note**: if you need to store information just for the duration of one request - for instance to pass information through a chain of action calls - you may prefer the `sfRequest` class, which also has `->getAttribute()` and `->setAttribute()` methods.
 
 Extending the session class
