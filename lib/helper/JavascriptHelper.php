@@ -948,7 +948,7 @@
       {
         $name = 'on'.ucfirst($callback);
         $code = $options[$callback];
-        $callbacks[$name] = 'function(request){'.$code.'}';
+        $callbacks[$name] = 'function(request, json){'.$code.'}';
       }
     }
 
