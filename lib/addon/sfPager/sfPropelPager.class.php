@@ -181,11 +181,11 @@ class sfPropelPager
 
   private function retrieveObject($offset)
   {
-    $c = $this->getCriteria();
-    $c->setOffset($offset - 1);
-    $c->setLimit(1);
+    $cForRetrieve = clone $this->getCriteria();
+    $cForRetrieve->setOffset($offset - 1);
+    $cForRetrieve->setLimit(1);
 
-    $results = call_user_func(array($this->getClassPeer(), $this->getPeerMethod()), $c);
+    $results = call_user_func(array($this->getClassPeer(), $this->getPeerMethod()), $cForRetrieve);
 
     return $results[0];
   }
@@ -193,6 +193,7 @@ class sfPropelPager
   public function getResults()
   {
     $c = $this->getCriteria();
+
     return call_user_func(array($this->getClassPeer(), $this->getPeerMethod()), $c);
   }
 
