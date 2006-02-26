@@ -93,15 +93,31 @@ class sfWebResponse extends sfResponse
    *
    * @return void
    */
-  public function setCookie ($name, $value, $expire = '', $path = '/', $domain = '', $secure = 0)
+  public function setCookie ($name, $value, $expire = null, $path = '/', $domain = '', $secure = false)
   {
+    if ($expire !== null)
+    {
+      if (is_numeric($expire))
+      {
+        $expire = (int) $expire;
+      }
+      else
+      {
+        $expire = strtotime($expire);
+        if ($expire === false || $expire == -1)
+        {
+          throw new sfException('Your expire parameter is not valid.');
+        }
+      }
+    }
+
     $this->cookies[] = array(
       'name'   => $name,
       'value'  => $value,
       'expire' => $expire,
       'path'   => $path,
       'domain' => $domain,
-      'secure' => $secure,
+      'secure' => $secure ? true : false,
     );
   }
 
