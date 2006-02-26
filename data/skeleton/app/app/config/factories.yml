@@ -1,6 +1,8 @@
 cli:
-  controller: myConsoleController
-  request:    myConsoleRequest
+  controller:
+    class: myConsoleController
+  request:
+    class: myConsoleRequest
 
 test:
   storage:
