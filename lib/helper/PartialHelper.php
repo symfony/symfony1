@@ -107,7 +107,7 @@ function include_partial($name, $vars = array())
   $sep = strpos($name, '/');
   if ($sep)
   {
-    $type = strtolower(substr($name, 0, $sep));
+    $type = substr($name, 0, $sep);
     $filename = '_'.substr($name, $sep + 1).'.php';
   }
   else
