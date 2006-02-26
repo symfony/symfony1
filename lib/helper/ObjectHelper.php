@@ -121,7 +121,7 @@ function object_select_tag($object, $method, $options = array(), $default_value 
     unset($options['include_title']);
   }
 
-  $select_options = _get_values_for_objet_select_tag($object, $related_class);
+  $select_options = _get_values_for_object_select_tag($object, $related_class);
 
   $value = _get_object_value($object, $method, $default_value);
   $option_tags = options_for_select($select_options, $value, $options);
@@ -129,7 +129,7 @@ function object_select_tag($object, $method, $options = array(), $default_value 
   return select_tag(_convert_method_to_name($method, $options), $option_tags, $options);
 }
 
-function _get_values_for_objet_select_tag($object, $class)
+function _get_values_for_object_select_tag($object, $class)
 {
   // FIXME: drop Propel dependency
 
