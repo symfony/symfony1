@@ -409,6 +409,10 @@
     if (isset($options['confirm']))
     {
       $function = "if (confirm('".escape_javascript($options['confirm'])."')) { $function; }";
+      if (isset($options['cancel']))
+      {
+        $function = $function.' else { '.$options['cancel'].' }';
+      }
     }
 
     return $function;
