@@ -291,6 +291,7 @@ tinyMCE.init({
   relative_urls: false,
   debug: false
   '.($tinymce_options ? ','.$tinymce_options : '').'
+  '.(isset($options['tinymce_options']) ? ','.$options['tinymce_options'] : '').'
 });';
 
     return
