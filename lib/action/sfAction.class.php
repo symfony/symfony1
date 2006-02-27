@@ -181,6 +181,8 @@ abstract class sfAction extends sfComponent
     {
       throw new sfException('There was an error when trying to send this email.');
     }
+
+    return $presentation;
   }
 
   public function getPresentationFor($module, $action, $viewName = null)
