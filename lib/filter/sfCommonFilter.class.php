@@ -47,7 +47,7 @@ class sfCommonFilter extends sfFilter
       $response = $context->getResponse();
 
       // remove PHP automatic Cache-Control and Expires headers if not overwritten by application or cache
-      if ($response->hasHeader('Last-Modified') || sfConfig::get('sf_etag'))
+      if ($response->hasHttpHeader('Last-Modified') || sfConfig::get('sf_etag'))
       {
         $response->setHttpHeader('Cache-Control', null, false);
         $response->setHttpHeader('Expires', null, false);
@@ -73,7 +73,7 @@ class sfCommonFilter extends sfFilter
       }
 
       // conditional GET support
-      if ($response->hasHeader('Last-Modified'))
+      if ($response->hasHttpHeader('Last-Modified'))
       {
         $last_modified = $response->getHttpHeader('Last-Modified');
         $last_modified = $last_modified[0];
