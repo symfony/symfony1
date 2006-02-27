@@ -235,8 +235,15 @@ class sfToolkit
             }
             else if (is_integer($key) && $isKey0 && $isKey1)
             {
-              $args[2][] = $args[0][$key];
-              $args[2][] = $args[1][$key];
+              if ($isKey0 == $isKey1)
+              {
+                $args[2][] = $args[1][$key];
+              }
+              else
+              {
+                $args[2][] = $args[0][$key];
+                $args[2][] = $args[1][$key];
+              }
             }
             else if (is_integer($key) && $isKey0)
             {
