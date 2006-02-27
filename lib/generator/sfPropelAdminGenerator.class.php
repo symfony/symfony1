@@ -454,11 +454,16 @@ EOF;
 
   public function getColumnListTag($column, $params = array())
   {
+    $user_params = $this->getParameterValue('list.fields.'.$column->getName().'.params');
+    $user_params = is_array($user_params) ? $user_params : sfToolkit::stringToArray($user_params);
+    $params      = $user_params ? array_merge($params, $user_params) : $params;
+
     $type = $column->getCreoleType();
 
     if ($type == CreoleTypes::DATE || $type == CreoleTypes::TIMESTAMP)
     {
-      return "format_date(\${$this->getSingularName()}->get{$column->getPhpName()}(), 'f')";
+      $format = isset($params['date_format']) ? $params['date_format'] : 'f';
+      return "format_date(\${$this->getSingularName()}->get{$column->getPhpName()}(), \"$format\")";
     }
     elseif ($type == CreoleTypes::BOOLEAN)
     {
@@ -472,6 +477,10 @@ EOF;
 
   public function getColumnFilterTag($column, $params = array())
   {
+    $user_params = $this->getParameterValue('list.fields.'.$column->getName().'.params');
+    $user_params = is_array($user_params) ? $user_params : sfToolkit::stringToArray($user_params);
+    $params      = $user_params ? array_merge($params, $user_params) : $params;
+
     $type = $column->getCreoleType();
 
     $default_value = "isset(\$filters['".$column->getName()."']) ? \$filters['".$column->getName()."'] : null";

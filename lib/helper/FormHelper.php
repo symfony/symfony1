@@ -55,13 +55,13 @@ function options_for_select($options = array(), $selected = '', $html_options = 
 
   $html = '';
 
-  if (isset($html_options['include_blank']))
-  {
-    $html .= content_tag('option', '', array('value' => ''))."\n";
-  }
-  else if (isset($html_options['include_custom']))
+  if (isset($html_options['include_custom']))
   {
     $html .= content_tag('option', $html_options['include_custom'], array('value' => ''))."\n";
+  }
+  else if (isset($html_options['include_blank']))
+  {
+    $html .= content_tag('option', '', array('value' => ''))."\n";
   }
 
   foreach ($options as $key => $value)
