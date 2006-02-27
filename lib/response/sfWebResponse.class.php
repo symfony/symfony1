@@ -212,7 +212,7 @@ class sfWebResponse extends sfResponse
    *
    * @return boolean
    */
-  public function hasHeader ($name)
+  public function hasHttpHeader ($name)
   {
     return isset($this->headers[$this->normalizeHeaderName($name)]);
   }
