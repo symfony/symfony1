@@ -48,7 +48,8 @@ class sfYaml
 
       try
       {
-        return $spyc->load($input);
+        $retval = syck_load($input); 
+        return (is_array($retval)) ? $retval : array();
       }
       catch (Exception $e)
       {
