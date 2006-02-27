@@ -235,6 +235,18 @@ function textarea_tag($name, $content = null, $options = array())
     unset($options['rich']);
   }
 
+  // we need to know the id for things the rich text editor
+  // in advance of building the tag
+  if (isset($options['id']))
+  {
+    $id = $options['id'];
+    unset($options['id']);
+  }
+  else
+  {
+    $id = $name;
+  }
+
   if ($rich == 'tinymce')
   {
     // tinymce installed?
@@ -278,7 +290,7 @@ function textarea_tag($name, $content = null, $options = array())
 tinyMCE.init({
   mode: "exact",
   language: "en",
-  elements: "'.$name.'",
+  elements: "'.$id.'",
   plugins: "table,advimage,advlink,flash",
   theme: "advanced",
   theme_advanced_toolbar_location: "top",
@@ -296,7 +308,7 @@ tinyMCE.init({
 
     return
       content_tag('script', javascript_cdata_section($tinymce_js), array('type' => 'text/javascript')).
-      content_tag('textarea', $content, array_merge(array('name' => $name, 'id' => $name), _convert_options($options)));
+      content_tag('textarea', $content, array_merge(array('name' => $name, 'id' => $id), _convert_options($options)));
   }
   elseif ($rich === 'fck')
   {
@@ -350,7 +362,7 @@ tinyMCE.init({
   }
   else
   {
-    return content_tag('textarea', htmlspecialchars((is_object($content)) ? $content->__toString() : $content), array_merge(array('name' => $name, 'id' => $name), _convert_options($options)));
+    return content_tag('textarea', htmlspecialchars((is_object($content)) ? $content->__toString() : $content), array_merge(array('name' => $name, 'id' => $id), _convert_options($options)));
   }
 }
 
