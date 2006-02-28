@@ -42,4 +42,5 @@ parts:
     - custom_helper
     - validate_form
     - email
+    - cookie
     - 404
