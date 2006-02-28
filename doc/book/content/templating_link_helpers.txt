@@ -182,19 +182,19 @@ mail_to helper
 
 The reason why symfony ships a `mail_to()` helper is that nowadays, email harvesting robots prowl about the web, and you can't display an email address on a website without becoming a spam victim within days.
 
-This helper takes two parameters : the actual email address, and a secure flag. If the flag is set to `false`, the email address is written non-crypted:
+This helper takes three parameters : the actual email address, the string that should be displayed and an array of options. If the third parameter is not set the email address is written non-crypted:
 
     [php]
-    <?php echo mail_to('myaddress@mydomain.com', false) ?>
+    <?php echo mail_to('myaddress@mydomain.com', 'contact address') ?>
     // will generate in HTML
-    <a href="mailto:myaddress@mydomain.com'>myaddress@mydomain.com</a>
+    <a href="mailto:myaddress@mydomain.com'>contact address</a>
 
-If the flag is set to `true`, and this is the default behavior, the displayed and pointed addresses are processed by a random decimal and hexadecimal entity encoder. This will probably not stop all address-harvesting spambots, but it will keep most of them away. Future versions of this helper will probably evolve as the harvesting techniques become more accurate.
+If the flag is set to array('encode' => true) the displayed and pointed addresses are processed by a random decimal and hexadecimal entity encoder. This will probably not stop all address-harvesting spambots, but it will keep most of them away. Future versions of this helper will probably evolve as the harvesting techniques become more accurate.
 
     [php]
-    <?php echo mail_to('myaddress@mydomain.com') ?>
+    <?php echo mail_to('myaddress@mydomain.com', 'contact address', array('encode' => true)) ?>
     // will generate in HTML something like
-    <a href="&#x6d;&#x61;&#x69;&#108;&#116;&#x6f;&#x3a;&#109;&#x79;&#x61;&#x64;&#x64;re&#x73;&#115;&#64;m&#121;&#100;&#111;&#109;&#x61;&#105;&#x6e;.&#99;&#111;&#x6d;">myaddress@mydomain.com</a>
+    <a href="&#109;&#x61;&#105;&#108;&#x74;&#x6f;&#58;&#x6d;&#121;&#x61;&#x64;&#x64;&#114;&#101;&#x73;&#115;&#64;&#x6d;&#x79;&#100;o&#x6d;&#97;&#105;&#110;&#46;&#x63;&#111;&#x6d;">&#x63;&#111;&#110;&#x74;&#x61;c&#x74;&#32;&#x61;d&#100;&#114;e&#115;&#x73;</a>
 
 Image helper
 ------------
