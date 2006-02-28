@@ -94,6 +94,11 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 <?php foreach ($this->getColumns('edit.display', $category) as $name => $column): $type = $column->getCreoleType(); ?>
 <?php $name = $column->getName() ?>
 <?php if ($column->isPrimaryKey()) continue ?>
+<?php $credentials = $this->getParameterValue('edit.fields.'.$column->getName().'.credentials') ?>
+<?php if ($credentials): $credentials = str_replace("\n", ' ', var_export($credentials, true)) ?>
+    if ($this->getUser()->hasCredential(<?php echo $credentials ?>))
+    {
+<?php endif ?>
 <?php if ($type == CreoleTypes::DATE || $type == CreoleTypes::TIMESTAMP): ?>
     if ($<?php echo $this->getSingularName() ?>['<?php echo $name ?>'])
     {
@@ -108,6 +113,9 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>(isset($<?php echo $this->getSingularName() ?>['<?php echo $name ?>']) ? $<?php echo $this->getSingularName() ?>['<?php echo $name ?>'] : 0);
 <?php else: ?>
     $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>($<?php echo $this->getSingularName() ?>['<?php echo $name ?>']);
+<?php endif ?>
+<?php if ($credentials): ?>
+    }
 <?php endif ?>
 <?php endforeach ?>
 <?php endforeach ?>

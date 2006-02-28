@@ -48,6 +48,10 @@
 <?php endif ?>
 <?php foreach ($this->getColumns('edit.display', $category) as $name => $column): ?>
 <?php if ($column->isPrimaryKey()) continue ?>
+<?php $credentials = $this->getParameterValue('edit.fields.'.$column->getName().'.credentials') ?>
+<?php if ($credentials): $credentials = str_replace("\n", ' ', var_export($credentials, true)) ?>
+    [?php if ($sf_user->hasCredential(<?php echo $credentials ?>)): ?]
+<?php endif ?>
 <div class="form-row">
   <label <?php if ($column->isNotNull()): ?>class="required" <?php endif ?>for="<?php echo $column->getName() ?>">[?php echo __('<?php echo $this->getParameterValue('edit.fields.'.$column->getName().'.name') ?>:') ?]<?php echo $this->getHelp($column, 'edit') ?></label>
   <div[?php if ($sf_request->hasError('<?php echo $this->getSingularName() ?>{<?php echo $column->getName() ?>}')): ?] class="form-error"[?php endif ?]>
@@ -56,6 +60,9 @@
   [?php echo <?php echo $this->getColumnEditTag($column) ?> ?]
   </div>
 </div>
+<?php if ($credentials): ?>
+    [?php endif ?]
+<?php endif ?>
 
 <?php endforeach ?>
 </fieldset>
