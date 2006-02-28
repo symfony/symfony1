@@ -33,7 +33,7 @@ Here is the `WikiHelper.php` file stored in the `myapp/lib/helper/` directory:
     [php]
     <?php
     
-    public function wiki_to_html($text)
+    function wiki_to_html($text)
     {
       require_once 'Wiki.class.php';
       $wiki = new Wiki();
@@ -98,7 +98,7 @@ Now, from any action of your project, you can use the `stripText` method of this
 Accessing context objects
 -------------------------
 
-In a custom helper, shortcuts like `$request` or `$user` don't work. In a custom class, the action-style calls (`$this->getRequest()`, `$this->getUser()`, etc.) don't work either. This is because these functions and classes are not in a request context. So, in order to access the context objects, you have to use the `sfContext` singleton (`sfContext::getInstance()`). For instance, to get the request parameters, write:
+In a custom helper, shortcuts like `$sf_request` or `$sf_user` don't work. In a custom class, the action-style calls (`$this->getRequest()`, `$this->getUser()`, etc.) don't work either. This is because these functions and classes are not in a request context. So, in order to access the context objects, you have to use the `sfContext` singleton (`sfContext::getInstance()`). For instance, to get the request parameters, write:
 
     [php]
     $id = sfContext::getInstance()->getRequest()->getParameter('id');
