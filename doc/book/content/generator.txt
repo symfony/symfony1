@@ -129,7 +129,7 @@ If you check the newly created `actions.class.php` in the `article` module, you 
 Administration
 --------------
 
-Symfony can create modules based on propel objects. But it also gives you a great control, since you are free to link the modules as you want, to set a specific decorator, or to include a module of your own. You can also override any piece of action or template.
+Symfony can create modules based on propel objects for your administration applications. Contrary to other generators, you keep the total control of the modules, since you benefit from the usual module mechanisms (decorator, validation, routing, custom configuration, autoloading, etc.). You are free to link the modules as you want, or to add a module of your own. You can also override any piece of action or template.
 
 ### Initiation
 
@@ -282,6 +282,17 @@ You can use it in the `comment/list` view by editing the related `generator.yml`
         
         ...
 
+But beware that the code located in the model must be independent from the presentation. The example presented here is not conceptually correct. As a matter of fact, you'd better put the code that outputs HTML for a custom column in a partial. Fortunately the admin generator allows you to do it if you declare a column with a name starting by `_` (and, in that case, you don't need to add custom methods to the model):
+
+        ...
+        list:
+          display:        [id, _article_link, date]
+
+For this to work, just add the following `_article_link.php` partial in the `modules/comment/templates/` directory:
+
+    [php]
+    <?php echo link_to($this->getArticle()->getTitle(), 'article/edit?id='.$this->getArticleId()) ?>
+
 ### Presentation
 
 In addition to a custom set of fields, the `list` and `edit` pages can have a custom presentation. The page title can be changed. In string values, the value of a field can be accessed via the name of the field surrounded by `%%`. The default list layout is the `tabular` layout, but you can also use the `stacked` layout. A field name preceded by `=` will contain a hyperlink to the detail of the related record. For instance, if you want to customize the `article` views:
@@ -338,7 +349,7 @@ In an `edit` view, the user can modify the value of each field. Symfony determin
           fields:
             id:           { type: plain }                                         ## Drop the input, just display plain text
             author:       { params: disabled=true }                               ## The input is not editable
-            content:      { type: textarea_tag, params: rich=true css=user.css }  ## The input is a textarea (object_textarea_tag)
+            content:      { type: textarea_tag, params: rich=true css=user.css tinymce_options=width:330}  ## The input is a textarea (object_textarea_tag)
             article_id:   { params: include_custom=Choose an article }            ## The input is a select (object_select_tag)
           
           ...
@@ -348,7 +359,7 @@ The `params` parameters are passed as options to the generated object_tag. For i
     [php]
     <?php echo object_select_tag($comment, 'getArticleId', 'related_class=Article', 'include_custom=Choose an article') ?>
 
-This means that all the options available in the [form helpers](http://www.symfony-project.com/content/book/page/templating_form_helpers.html) can be customized in an edit view.
+This means that all the options available in the [form helpers](templating_form_helpers.txt) can be customized in an edit view.
 
 ### Interactions
 
@@ -435,6 +446,39 @@ The query string presented above is an encoded version of the more legible:
      filters[article_id]='.$article->getId(); # filter the comments to display only the ones related to $article
 
 This can also be useful for custom interactions.
+
+### Credentials
+
+For a given admin module, the elements displayed and the actions available can vary according to the credentials of the logged user. 
+
+The generator can take a `credentials` parameter into account to hide an element to users who don't have the proper credential if you use it in the `fields` section:
+
+    ## The `id` column is displayed only for user with the `admin` credential
+        list:
+          title:          List of Articles
+          layout:         tabular
+          display:        [id, =title, content, nb_comments]
+          fields:
+            id:           { credentials: [admin] }
+    
+This works for the `list` view and the `edit` view.
+
+The generator can also hide interactions according to credentials:
+
+    ## The `addcomment` interaction is restricted to the users with the `admin` credential
+        list:
+          title:          List of Articles
+          object_actions:
+            _edit:        -
+            _delete:      -
+            addcomment:   { credentials: [admin], name: Add a comment, action: addComment, icon: backend/addcomment.png }       
+The `credentials` parameter accepts the usual credentials syntax, which allows you to combine credentials with `AND` and `OR`:
+
+   credentials: [ admin, superuser ]          ## admin AND superuser
+   credentials: [[ admin, superuser ]]        ## admin OR superuser
+   credentials: [[ admin, superuser ], owner] ## (admin OR superuser) AND owner
+
+If you want to learn more about credentials, please refer to the [security chapter](security.txt) of the symfony book.
 
 ### Customize the theme
 
