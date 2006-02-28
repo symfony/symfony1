@@ -218,6 +218,11 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     $user_params = is_array($user_params) ? $user_params : sfToolkit::stringToArray($user_params);
     $params      = $user_params ? array_merge($params, $user_params) : $params;
 
+    if ($column->isPartial())
+    {
+      return "include_partial('".$column->getName()."', array('{$this->getSingularName()}' => \${$this->getSingularName()}))";
+    }
+
     // user sets a specific tag to use
     if ($type = $this->getParameterValue('edit.fields.'.$column->getName().'.type'))
     {
@@ -333,7 +338,7 @@ EOF;
   public function splitFlag($text)
   {
     $flag = '';
-    if (in_array($text[0], array('=', '-', '+')))
+    if (in_array($text[0], array('=', '-', '+', '_')))
     {
       $flag = $text[0];
       $text = substr($text, 1);
@@ -460,7 +465,11 @@ EOF;
 
     $type = $column->getCreoleType();
 
-    if ($type == CreoleTypes::DATE || $type == CreoleTypes::TIMESTAMP)
+    if ($column->isPartial())
+    {
+      return "include_partial('".$column->getName()."', array('{$this->getSingularName()}' => \${$this->getSingularName()}))";
+    }
+    else if ($type == CreoleTypes::DATE || $type == CreoleTypes::TIMESTAMP)
     {
       $format = isset($params['date_format']) ? $params['date_format'] : 'f';
       return "format_date(\${$this->getSingularName()}->get{$column->getPhpName()}(), \"$format\")";
@@ -593,6 +602,11 @@ class sfAdminColumn
   public function getName ()
   {
     return sfInflector::underscore($this->phpName);
+  }
+
+  public function isPartial ()
+  {
+    return (($this->flag == '_') ? true : false);
   }
 
   public function isLink ()
