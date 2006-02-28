@@ -99,23 +99,26 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     if ($this->getUser()->hasCredential(<?php echo $credentials ?>))
     {
 <?php endif ?>
+    if (isset($<?php echo $this->getSingularName() ?>['<?php echo $name ?>']))
+    {
 <?php if ($type == CreoleTypes::DATE || $type == CreoleTypes::TIMESTAMP): ?>
-    if ($<?php echo $this->getSingularName() ?>['<?php echo $name ?>'])
-    {
-      list($d, $m, $y) = sfI18N::getDateForCulture($<?php echo $this->getSingularName() ?>['<?php echo $name ?>'], $this->getUser()->getCulture());
-      $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>("$y-$m-$d");
-    }
-    else
-    {
-      $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>(null);
-    }
+      if ($<?php echo $this->getSingularName() ?>['<?php echo $name ?>'])
+      {
+        list($d, $m, $y) = sfI18N::getDateForCulture($<?php echo $this->getSingularName() ?>['<?php echo $name ?>'], $this->getUser()->getCulture());
+        $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>("$y-$m-$d");
+      }
+      else
+      {
+        $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>(null);
+      }
 <?php elseif ($type == CreoleTypes::BOOLEAN): ?>
-    $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>(isset($<?php echo $this->getSingularName() ?>['<?php echo $name ?>']) ? $<?php echo $this->getSingularName() ?>['<?php echo $name ?>'] : 0);
+      $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>(isset($<?php echo $this->getSingularName() ?>['<?php echo $name ?>']) ? $<?php echo $this->getSingularName() ?>['<?php echo $name ?>'] : 0);
 <?php else: ?>
-    $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>($<?php echo $this->getSingularName() ?>['<?php echo $name ?>']);
+      $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>($<?php echo $this->getSingularName() ?>['<?php echo $name ?>']);
 <?php endif ?>
-<?php if ($credentials): ?>
     }
+<?php if ($credentials): ?>
+      }
 <?php endif ?>
 <?php endforeach ?>
 <?php endforeach ?>
