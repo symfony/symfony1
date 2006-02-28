@@ -239,6 +239,12 @@ ul.sf_admin_actions input
   border-right: 4px solid #66f !important;
 }
 
+.sf_admin_action_reset_filter
+{
+  background: url(/sf/images/sf_admin/cancel.png) no-repeat 3px 2px;
+  border-right: 4px solid #E75C58 !important;
+}
+
 .sf_admin_action_list
 {
   background: url(/sf/images/sf_admin/list.png) no-repeat 3px 2px;

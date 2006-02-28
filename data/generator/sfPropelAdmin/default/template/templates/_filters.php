@@ -16,6 +16,7 @@
   </fieldset>
 
   <ul class="sf_admin_actions">
+    <li>[?php echo button_to(__('reset'), '<?php echo $this->getModuleName() ?>/list?filter=filter', 'class=sf_admin_action_reset_filter') ?]</li>
     <li>[?php echo submit_tag(__('filter'), 'name=filter class=sf_admin_action_filter') ?]</li>
   </ul>
 
