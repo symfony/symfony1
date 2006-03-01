@@ -45,7 +45,7 @@ Symfony offers two ways to create CRUD interfaces: Either by inheritance or by c
         class articleActions extends autoarticleActions
         {
         }
-    
+        
         ?>
     
 * You can also **generate** the code of the actions and the templates so that it can be modified. The resulting module is independant from the classes of the framework, and cannot be altered using configuration files (see below). The command line tasks for this kind of generation start with:
@@ -393,17 +393,17 @@ The `_XXX` lines tell symfony to use the default icon and action for these inter
 
 You also have to define the `addForArticle` in `actions.class.php`:
 
-      [php]
-      public function executeAddComment()
-      {
-        $comment = new Comment();
-        
-        $comment->setArticleId($this->getRequestParameter('id'));
-        
-        $comment->save();
-        
-        $this->redirect('comment/edit?id='.$comment->getId());
-      }
+    [php]
+    public function executeAddComment()
+    {
+      $comment = new Comment();
+      
+      $comment->setArticleId($this->getRequestParameter('id'));
+      
+      $comment->save();
+      
+      $this->redirect('comment/edit?id='.$comment->getId());
+    }
 
 Notice that symfony is smart enough to pass the primary key of the object for which the action was called as a request parameter.
 
@@ -474,9 +474,9 @@ The generator can also hide interactions according to credentials:
             addcomment:   { credentials: [admin], name: Add a comment, action: addComment, icon: backend/addcomment.png }       
 The `credentials` parameter accepts the usual credentials syntax, which allows you to combine credentials with `AND` and `OR`:
 
-   credentials: [ admin, superuser ]          ## admin AND superuser
-   credentials: [[ admin, superuser ]]        ## admin OR superuser
-   credentials: [[ admin, superuser ], owner] ## (admin OR superuser) AND owner
+    credentials: [ admin, superuser ]          ## admin AND superuser
+    credentials: [[ admin, superuser ]]        ## admin OR superuser
+    credentials: [[ admin, superuser ], owner] ## (admin OR superuser) AND owner
 
 If you want to learn more about credentials, please refer to the [security chapter](security.txt) of the symfony book.
 
