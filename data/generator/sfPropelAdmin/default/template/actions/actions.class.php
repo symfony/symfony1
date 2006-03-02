@@ -74,6 +74,20 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 
     $this-><?php echo $this->getSingularName() ?>->delete();
 
+<?php foreach ($this->getColumnCategories('edit.display') as $category): ?>
+<?php foreach ($this->getColumns('edit.display', $category) as $name => $column): ?>
+<?php $input_type = $this->getParameterValue('edit.fields.'.$column->getName().'.type') ?>
+<?php if ($input_type == 'input_upload_tag'): ?>
+<?php $upload_dir = $this->getParameterValue('edit.fields.'.$column->getName().'.upload_dir') ?>
+      $currentFile = sfConfig::get('sf_upload_dir').'/<?php echo $upload_dir ?>/'.$this-><?php echo $this->getSingularName() ?>->get<?php echo $column->getPhpName() ?>();
+      if (is_file($currentFile))
+      {
+        unlink($currentFile);
+      }
+
+<?php endif ?>
+<?php endforeach ?>
+<?php endforeach ?>
     return $this->redirect('<?php echo $this->getModuleName() ?>/list');
   }
 
@@ -95,13 +109,30 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 <?php $name = $column->getName() ?>
 <?php if ($column->isPrimaryKey()) continue ?>
 <?php $credentials = $this->getParameterValue('edit.fields.'.$column->getName().'.credentials') ?>
+<?php $input_type = $this->getParameterValue('edit.fields.'.$column->getName().'.type') ?>
 <?php if ($credentials): $credentials = str_replace("\n", ' ', var_export($credentials, true)) ?>
     if ($this->getUser()->hasCredential(<?php echo $credentials ?>))
     {
 <?php endif ?>
+<?php if ($input_type == 'input_upload_tag'): ?>
+    if ($this->getRequest()->hasFile('<?php echo $this->getSingularName() ?>[<?php echo $name ?>]'))
+    {
+<?php else: ?>
     if (isset($<?php echo $this->getSingularName() ?>['<?php echo $name ?>']))
     {
-<?php if ($type == CreoleTypes::DATE || $type == CreoleTypes::TIMESTAMP): ?>
+<?php endif ?>
+<?php if ($input_type == 'input_upload_tag'): ?>
+      $fileName = md5($this->getRequest()->getFileName('<?php echo $this->getSingularName() ?>[<?php echo $name ?>]').time());
+      $ext = $this->getRequest()->getFileExtension('<?php echo $this->getSingularName() ?>[<?php echo $name ?>]');
+<?php $upload_dir = $this->getParameterValue('edit.fields.'.$column->getName().'.upload_dir') ?>
+      $currentFile = sfConfig::get('sf_upload_dir').'/<?php echo $upload_dir ?>/'.$this-><?php echo $this->getSingularName() ?>->get<?php echo $column->getPhpName() ?>();
+      if (is_file($currentFile))
+      {
+        unlink($currentFile);
+      }
+      $this->getRequest()->moveFile('<?php echo $this->getSingularName() ?>[<?php echo $name ?>]', sfConfig::get('sf_upload_dir').'/<?php echo $upload_dir ?>/'.$fileName.$ext);
+      $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>($fileName.$ext);
+<?php elseif ($type == CreoleTypes::DATE || $type == CreoleTypes::TIMESTAMP): ?>
       if ($<?php echo $this->getSingularName() ?>['<?php echo $name ?>'])
       {
         list($d, $m, $y) = sfI18N::getDateForCulture($<?php echo $this->getSingularName() ?>['<?php echo $name ?>'], $this->getUser()->getCulture());
