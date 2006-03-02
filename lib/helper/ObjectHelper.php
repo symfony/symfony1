@@ -235,6 +235,24 @@ function object_input_tag($object, $method, $options = array(), $default_value =
 }
 
 /**
+ * Returns a input html tag for file upload.
+ *
+ * @param object An object.
+ * @param string An object column.
+ * @param array Input options.
+ * @param bool Input default value.
+ *
+ * @return string An html string which represents an input tag.
+ *
+ */
+function object_input_upload_tag($object, $method, $options = array())
+{
+  $options = _parse_attributes($options);
+
+  return input_upload_tag(_convert_method_to_name($method, $options), $options);
+}
+
+/**
  * Returns a checkbox html tag.
  *
  * @param object An object.
