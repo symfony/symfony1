@@ -480,6 +480,17 @@ The `credentials` parameter accepts the usual credentials syntax, which allows y
 
 If you want to learn more about credentials, please refer to the [security chapter](security.txt) of the symfony book.
 
+### Tooltips
+
+In the `list` and `edit` views, you can add tooltips to help describe the fields that are displayed. For instance, to add a tooltip to the `article_id` field of the `edit` view of the `comment` module, add:
+
+        edit:
+          fields:
+            ...
+            article_id:   { help: The current comment relates to this article } 
+
+In the `list` view, the tooltip will be displayed in the column header, and in the `edit` view, the tooltip will be displayed close to each field.
+
 ### Customize the theme
 
 The header and footer are not the only parts that can be customized. The generator templates are cut into small parts that can be overridden independently, and the actions can also be changed one by one. Here is the list of the elements that can be customized in a module admin:
