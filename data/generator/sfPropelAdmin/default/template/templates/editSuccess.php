@@ -23,7 +23,7 @@
 </div>
 [?php endif ?]
 
-[?php echo form_tag('<?php echo $this->getModuleName() ?>/edit', 'id=sf_admin_edit_form') ?]
+[?php echo form_tag('<?php echo $this->getModuleName() ?>/edit', 'id=sf_admin_edit_form multipart=true') ?]
 
 <?php foreach ($this->getPrimaryKey() as $pk): ?>
 [?php echo object_input_hidden_tag($<?php echo $this->getSingularName() ?>, 'get<?php echo $pk->getPhpName() ?>') ?]
@@ -53,7 +53,7 @@
     [?php if ($sf_user->hasCredential(<?php echo $credentials ?>)): ?]
 <?php endif ?>
 <div class="form-row">
-  <label <?php if ($column->isNotNull()): ?>class="required" <?php endif ?>for="<?php echo $column->getName() ?>">[?php echo __('<?php echo $this->getParameterValue('edit.fields.'.$column->getName().'.name') ?>:') ?]<?php echo $this->getHelp($column, 'edit') ?></label>
+  <label <?php if ($column->isNotNull()): ?>class="required" <?php endif ?>for="<?php echo $this->getSingularName() ?>[<?php echo $column->getName() ?>]">[?php echo __('<?php echo $this->getParameterValue('edit.fields.'.$column->getName().'.name') ?>:') ?]<?php echo $this->getHelp($column, 'edit') ?></label>
   <div[?php if ($sf_request->hasError('<?php echo $this->getSingularName() ?>{<?php echo $column->getName() ?>}')): ?] class="form-error"[?php endif ?]>
   [?php if ($sf_request->hasError('<?php echo $this->getSingularName() ?>{<?php echo $column->getName() ?>}')): ?]<div class="form-error-msg">&darr;&nbsp;[?php echo $sf_request->getError('<?php echo $this->getSingularName() ?>{<?php echo $column->getName() ?>}') ?]&nbsp;&darr;</div>[?php endif ?]
 
