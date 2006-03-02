@@ -114,6 +114,7 @@ abstract class sfWebController extends sfController
   public function convertUrlStringToParameters($url)
   {
     $params       = array();
+    $query_string = '';
     $route_name   = '';
 
     // empty url?
@@ -125,7 +126,7 @@ abstract class sfWebController extends sfController
     // we get the query string out of the url
     if ($pos = strpos($url, '?'))
     {
-      parse_str(substr($url, $pos + 1), $params);
+      $query_string = substr($url, $pos + 1);
       $url = substr($url, 0, $pos);
     }
 
@@ -151,6 +152,24 @@ abstract class sfWebController extends sfController
 
       $params['module'] = $tmp[0];
       $params['action'] = isset($tmp[1]) ? $tmp[1] : sfConfig::get('sf_default_action');
+    }
+
+    $url_params = explode('&', $query_string);
+    $ind_max = count($url_params) - 1;
+    for ($i = 0; $i <= $ind_max; $i++)
+    {
+      if (!$url_params[$i]) continue;
+
+      $pos = strpos($url_params[$i], '=');
+      if ($pos === false)
+      {
+        $error = 'Unable to parse url ("%s").';
+        $error = sprintf($error, $url);
+
+        throw new sfParseException($error);
+      }
+
+      $params[substr($url_params[$i], 0, $pos)] = substr($url_params[$i], $pos + 1);
     }
 
     return array($route_name, $params);

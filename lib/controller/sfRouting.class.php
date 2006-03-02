@@ -351,6 +351,7 @@ class sfRouting
     if (strpos($real_url, '*'))
     {
       $tmp = '';
+
       foreach ($params as $key => $value)
       {
         if (isset($names_hash[$key]) || isset($defaults[$key])) continue;
@@ -458,26 +459,20 @@ class sfRouting
           else
           {
             $pass = explode('/', $found);
+            $found = '';
             for ($i = 0, $max = count($pass); $i < $max; $i += 2)
             {
               if (!isset($pass[$i + 1])) continue;
 
-              $key = $pass[$i];
-              $value = $pass[$i + 1];
-
+              $found .= $pass[$i].'='.$pass[$i + 1].'&';
+            }
+            parse_str($found, $pass);
+            foreach ($pass as $key => $value)
+            {
               // we add this parameters if not in conflict with named url element (i.e. ':action')
               if (!isset($names_hash[$key]))
               {
-                // array parameters?
-                if (substr($key, -2) == '[]')
-                {
-                  if (!isset($out[$key])) $out[$key] = array();
-                  $out[$key][] = urldecode($value);
-                }
-                else
-                {
-                  $out[$key] = urldecode($value);
-                }
+                $out[$key] = $value;
               }
             }
           }
@@ -487,7 +482,8 @@ class sfRouting
         // we must have found all :var stuffs in url? except if default values exists
         foreach ($names as $name)
         {
-          if ($out[$name] == null) {
+          if ($out[$name] == null)
+          {
             $break = false;
           }
         }
