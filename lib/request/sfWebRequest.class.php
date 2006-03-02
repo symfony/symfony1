@@ -48,7 +48,7 @@ class sfWebRequest extends sfRequest
    */
   public function getFile ($name)
   {
-    return (isset($_FILES[$name]) ? $_FILES[$name] : null);
+    return ($this->hasFile($name) ? $this->getFileValues($name) : null);
   }
 
   /**
@@ -71,7 +71,7 @@ class sfWebRequest extends sfRequest
    */
   public function getFileError ($name)
   {
-    return (isset($_FILES[$name]) ? $_FILES[$name]['error'] : UPLOAD_ERR_NO_FILE);
+    return ($this->hasFile($name) ? $this->getFileValue($name, 'error') : UPLOAD_ERR_NO_FILE);
   }
 
   /**
@@ -83,7 +83,7 @@ class sfWebRequest extends sfRequest
    */
   public function getFileName ($name)
   {
-    return (isset($_FILES[$name]) ? $_FILES[$name]['name'] : null);
+    return ($this->hasFile($name) ? $this->getFileValue($name, 'name') : null);
   }
 
   /**
@@ -115,7 +115,7 @@ class sfWebRequest extends sfRequest
    */
   public function getFilePath ($name)
   {
-    return (isset($_FILES[$name]) ? $_FILES[$name]['tmp_name'] : null);
+    return ($this->hasFile($name) ? $this->getFileValue($name, 'tmp_name') : null);
   }
 
   /**
@@ -127,7 +127,7 @@ class sfWebRequest extends sfRequest
    */
   public function getFileSize ($name)
   {
-    return (isset($_FILES[$name]) ? $_FILES[$name]['size'] : null);
+    return ($this->hasFile($name) ? $this->getFileValue($name, 'size') : null);
   }
 
   /**
@@ -142,7 +142,7 @@ class sfWebRequest extends sfRequest
    */
   public function getFileType ($name)
   {
-    return (isset($_FILES[$name]) ? $_FILES[$name]['type'] : null);
+    return ($this->hasFile($name) ? $this->getFileValue($name, 'type') : null);
   }
 
   /**
@@ -154,7 +154,14 @@ class sfWebRequest extends sfRequest
    */
   public function hasFile ($name)
   {
-    return isset($_FILES[$name]);
+    if ($name = preg_match('/^(.+?)\[(.+?)\]$/', $name, $match))
+    {
+      return isset($_FILES[$match[1]]['name'][$match[2]]);
+    }
+    else
+    {
+      return isset($_FILES[$name]);
+    }
   }
 
   /**
@@ -166,7 +173,7 @@ class sfWebRequest extends sfRequest
    */
   public function hasFileError ($name)
   {
-    return (isset($_FILES[$name]) ? ($_FILES[$name]['error'] != UPLOAD_ERR_OK) : false);
+    return ($this->hasFile($name) ? ($this->getFileValue($name, 'error') != UPLOAD_ERR_OK) : false);
   }
 
   /**
@@ -176,10 +183,12 @@ class sfWebRequest extends sfRequest
    */
   public function hasFileErrors ()
   {
-    foreach ($_FILES as &$file)
+    foreach ($this->getFilesValues() as $file)
     {
       if ($file['error'] != UPLOAD_ERR_OK)
+      {
         return true;
+      }
     }
 
     return false;
@@ -193,6 +202,50 @@ class sfWebRequest extends sfRequest
   public function hasFiles ()
   {
     return (count($_FILES) > 0);
+  }
+
+  public function getFileValue ($name, $key)
+  {
+    if ($name = preg_match('/^(.+?)\[(.+?)\]$/', $name, $match))
+    {
+      return $_FILES[$match[1]][$key][$match[2]];
+    }
+    else
+    {
+      return $_FILES[$name][$key];
+    }
+  }
+
+  public function getFileValues ($name)
+  {
+    if ($name = preg_match('/^(.+?)\[(.+?)\]$/', $name, $match))
+    {
+      return array(
+        'name'     => $_FILES[$match[1]]['name'][$match[2]],
+        'type'     => $_FILES[$match[1]]['type'][$match[2]],
+        'tmp_name' => $_FILES[$match[1]]['tmp_name'][$match[2]],
+        'error'    => $_FILES[$match[1]]['error'][$match[2]],
+        'size'     => $_FILES[$match[1]]['size'][$match[2]],
+      );
+    }
+    else
+    {
+      return $_FILES[$name];
+    }
+  }
+
+  public function getFileExtension ($name)
+  {
+    $fileType = $this->getFileType($name);
+
+    if (!$fileType)
+    {
+      return '.bin';
+    }
+
+    $mimeTypes = unserialize(file_get_contents(sfConfig::get('sf_symfony_data_dir').'/data/mime_types.dat'));
+
+    return isset($mimeTypes[$fileType]) ? '.'.$mimeTypes[$fileType] : '.bin';
   }
 
   /**
@@ -407,7 +460,7 @@ class sfWebRequest extends sfRequest
    */
   public function moveFile ($name, $file, $fileMode = 0666, $create = true, $dirMode = 0777)
   {
-    if (isset($_FILES[$name]) && $_FILES[$name]['error'] == UPLOAD_ERR_OK && $_FILES[$name]['size'] > 0)
+    if ($this->hasFile($name) && $this->getFileValue($name, 'error') == UPLOAD_ERR_OK && $this->getFileValue($name, 'size') > 0)
     {
       // get our directory path from the destination filename
       $directory = dirname($file);
@@ -446,7 +499,7 @@ class sfWebRequest extends sfRequest
         throw new sfFileException($error);
       }
 
-      if (@move_uploaded_file($_FILES[$name]['tmp_name'], $file))
+      if (@move_uploaded_file($this->getFileValue($name, 'tmp_name'), $file))
       {
         // chmod our file
         @chmod($file, $fileMode);
