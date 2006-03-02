@@ -248,7 +248,7 @@ Custom validator
 Each `Validator` is a particular class that can have certain parameters. If the validation classes shipped with Symfony are not enough for your needs, you can easily create new ones. Here is the example of a validation class for email addresses, the actually existing `sfEmailValidator`:
 
     [php]
-    class sfEmailValidator extends Validator
+    class sfEmailValidator extends sfValidator
     {
       public function execute (&$value, &$error)
       {
