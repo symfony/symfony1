@@ -19,6 +19,36 @@ require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/FormHelper.php');
  * @version    SVN: $Id$
  */
 
+function object_admin_input_upload_tag($object, $method, $options = array())
+{
+  $options = _parse_attributes($options);
+  $name    = _convert_method_to_name($method, $options);
+
+  $html = '';
+
+  if ($object->$method())
+  {
+    if (isset($options['include_link']) && $options['include_link'])
+    {
+      $image_path = image_path('/'.sfConfig::get('sf_upload_dir_name').'/'.$options['include_link'].'/'.$object->$method());
+      $image_text = isset($options['include_text']) ? $options['include_text'] : '[show file]';
+
+      $html .= sprintf('<a onclick="window.open(this.href);return false;" href="%s">%s</a>', $image_path, $image_text)."\n";
+    }
+
+    if (isset($options['include_remove']) && $options['include_remove'])
+    {
+      $html .= checkbox_tag(strpos($name, ']') !== false ? substr($name, 0, -1).'_remove]' : $name).' '.($options['include_remove'] != 'true' ? $options['include_remove'] : 'remove file')."\n";
+    }
+  }
+
+  unset($options['include_link']);
+  unset($options['include_text']);
+  unset($options['include_remove']);
+
+  return input_upload_tag($name, $options)."\n<br />".$html;
+}
+
 function object_edit_collection($object, $method, $options = array())
 {
   $objects = $object->$method();

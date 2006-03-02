@@ -94,12 +94,23 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     return $data;
   }
 
-  public function getHelp($column, $type = '')
+  public function getHelpAsIcon($column, $type = '')
   {
     $help = $this->getParameterValue($type.'.fields.'.$column->getName().'.help');
     if ($help)
     {
       return "[?php echo image_tag('/sf/images/sf_admin/help.png', array('align' => 'absmiddle', 'alt' => __('".$this->escapeString($help)."'), 'title' => __('".$this->escapeString($help)."'))) ?]";
+    }
+
+    return '';
+  }
+
+  public function getHelp($column, $type = '')
+  {
+    $help = $this->getParameterValue($type.'.fields.'.$column->getName().'.help');
+    if ($help)
+    {
+      return "<div class=\"sf_admin_edit_help\">[?php echo __('".$this->escapeString($help)."') ?]</div>";
     }
 
     return '';
