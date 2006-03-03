@@ -136,7 +136,7 @@ The `->signIn()` method of the `myUser` class has to be modified to set the reme
                 
         // save the key to the cookie
         $value = base64_encode(serialize(array($user->getRememberKey(), $user->getLogin())));
-        sfContext::getInstance()->getResponse()->setCookie("MyWebSite", $value, time()+60*60*24*15, '/');
+        sfContext::getInstance()->getResponse()->setCookie('MyWebSite', $value, time()+60*60*24*15, '/');
       }
     }
 
@@ -145,9 +145,9 @@ The `generate_random_key()` method is left to your sagacity. Now, you just need 
     [php]
     public function executeIndex()
     {
-      if ($this->getRequest()->getCookie("MyWebSite"))
+      if ($this->getRequest()->getCookie('MyWebSite'))
       {
-        $value = unserialize(base64_decode($this->getRequest()->getCookie("MyWebSite")));
+        $value = unserialize(base64_decode($this->getRequest()->getCookie('MyWebSite')));
         $c = new Criteria();
         $c->add(UserPeer::REMEMBER_KEY, $value[0]);
         $c->add(UserPeer::LOGIN, $value[1]);
@@ -177,7 +177,7 @@ This is where the cookie is read. And that's it.
            $request = $this->getContext()->getRequest();
            if ($request->getCookie('MyWebSite'))
            {
-             $value = explode('-', $request->getCookie('MyWebSite'));
+             $value = unserialize(base64_decode($this->getRequest()->getCookie('MyWebSite')));
              $c = new Criteria();
              $c->add(UserPeer::REMEMBER_KEY, $value[0]);
              $c->add(UserPeer::LOGIN, $value[1]);
@@ -194,7 +194,7 @@ This is where the cookie is read. And that's it.
        }
      }
 >
->Of course, you will have to decalre this filter in your application `filters.yml` configuration file:
+>Of course, you will have to declare this filter in your application `filters.yml` configuration file:
 >
 >      rememberFilter:
 >        class: rememberFilter
@@ -206,5 +206,5 @@ One last thing: If the user logs out, don't forget to remove the cookie!
     public function signOut()
     {
       $this->setAuthenticated(false);
-      sfContext::getInstance()->getResponse()->setCookie("MyWebSite", '', time() - 3600, '/');
+      sfContext::getInstance()->getResponse()->setCookie('MyWebSite', '', time() - 3600, '/');
     }
