@@ -242,7 +242,9 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
 
       if ($type == 'plain')
       {
-        return "\${$this->getSingularName()}->get{$column->getPhpName()}()";
+        $params = $this->getParameterValue('edit.fields.'.$column->getName().'.params');
+        $params = is_array($params) ? $params : sfToolkit::stringToArray($params);
+        return $this->getColumnListTag($column, $params);
       }
       else
       {

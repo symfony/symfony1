@@ -1,4 +1,4 @@
-[?php use_helpers('Object', 'Validation', 'ObjectAdmin', 'I18N') ?]
+[?php use_helpers('Object', 'Validation', 'ObjectAdmin', 'I18N', 'Date') ?]
 
 <h1><?php echo $this->getI18NString('edit.title', 'edit '.$this->getModuleName()) ?></h1>
 
