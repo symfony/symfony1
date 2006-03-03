@@ -315,7 +315,18 @@ And the `comment/list` view:
             
 Notice that a `tabular` layout expects a `display`, but a `stacked` layout uses the `params` key for the HTML code generated for each record. However, the `display` param is used to determine the sort columns in a `stacked` layout.
 
-Of course, the `theme` defined at the beginning of the `generator.yml` can also be changed to use an alternative set of templates and stylesheets. You can also add your own CSS per module (in the module `view.yml`), and since the generated HTML is only structured content, you can do pretty much anything you like with the presentation.
+Of course, the `theme` defined at the beginning of the `generator.yml` can also be changed to use an alternative set of templates and stylesheets. With the `default` theme, symfony uses the files defined in `symfony/data/generator/sfPropelAdmin/default`, and you can create a new theme in the framework to override any of the actions or templates.
+
+You can also define an alternative CSS to be used for an admin module instead of a default one:
+
+    generator:
+      class:              sfPropelAdminGenerator
+      param:
+        model_class:      Comment
+        theme:            default
+        css:              admin/mystylesheet
+
+... or override the styles per view, using the usual mechanisms provided by the module `view.yml` configuration. Since the generated HTML is structured content, you can do pretty much anything you like with the presentation.
 
 ### Filters
 
