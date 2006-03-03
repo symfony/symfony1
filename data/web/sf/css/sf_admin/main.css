@@ -226,6 +226,12 @@ ul.sf_admin_actions input
   border-right: 4px solid #73B65A !important;
 }
 
+.sf_admin_action_save_and_add
+{
+  background: url(/sf/images/sf_admin/save.png) no-repeat 3px 2px;
+  border-right: 4px solid #73B65A !important;
+}
+
 .sf_admin_action_delete
 {
   background: url(/sf/images/sf_admin/delete.png) no-repeat 3px 2px;
