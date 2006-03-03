@@ -124,10 +124,10 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     $only_if_id = false;
 
     // default values
-    $default_name   = str_replace('_', ' ', $actionName);
     if ($actionName[0] == '_')
     {
       $actionName     = substr($actionName, 1);
+      $default_name   = strtr($actionName, '_', ' ');
       $default_icon   = '/sf/images/sf_admin/'.$actionName.'_icon.png';
       $default_action = $actionName;
       $default_class  = 'sf_admin_action_'.$actionName;
@@ -153,6 +153,7 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     }
     else
     {
+      $default_name   = strtr($actionName, '_', ' ');
       $default_icon   = '/sf/images/sf_admin/default_icon.png';
       $default_action = 'List'.sfInflector::camelize($actionName);
       $default_class  = '';
