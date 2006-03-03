@@ -429,44 +429,30 @@ EOF;
     $value = $this->escapeString($this->getParameterValue($key, $default));
 
     // find %%xx%% strings
-    $vars = array();
-    $columns = $this->getColumns('');
     preg_match_all('/%%([^%]+)%%/', $value, $matches, PREG_PATTERN_ORDER);
+    $this->params['tmp']['display'] = array();
     foreach ($matches[1] as $name)
     {
-      list($name, $flag) = $this->splitFlag($name);
+      $this->params['tmp']['display'][] = $name;
+    }
 
-      foreach ($columns as $column)
+    $vars = array();
+    foreach ($this->getColumns('tmp.display') as $column)
+    {
+      if ($column->isLink())
       {
-        $found = false;
-        if ($column->getName() == $name)
-        {
-          $method = $column->getPhpName();
-
-          $found = true;
-          break;
-        }
-      }
-
-      if (!$found)
-      {
-        $method = sfInflector::camelize($name);
-      }
-
-      if ($flag === '=')
-      {
-        $vars[] = '\'%%'.$name.'%%\' => link_to($'.$this->getSingularName().'->get'.$method.'(), \''.$this->getModuleName().'/edit?'.$this->getPrimaryKeyUrlParams().')';
+        $vars[] = '\'%%'.$column->getName().'%%\' => link_to('.$this->getColumnListTag($column).', \''.$this->getModuleName().'/edit?'.$this->getPrimaryKeyUrlParams().')';
       }
       else
       {
-        $vars[] = '\'%%'.$name.'%%\' => $'.$this->getSingularName().'->get'.$method.'()';
+        $vars[] = '\'%%'.$column->getName().'%%\' => '.$this->getColumnListTag($column);
       }
     }
 
     // strip all = signs
     $value = preg_replace('/%%=([^%]+)%%/', '%%$1%%', $value);
 
-    return '[?php echo __(\''.$value.'\', array('.implode(', ', $vars).')) ?]';
+    return '[?php echo __(\''.$value.'\', '."\n".'array('.implode(",\n", $vars).')) ?]';
   }
 
   public function getColumnListTag($column, $params = array())
