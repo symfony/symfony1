@@ -337,6 +337,25 @@ In a `list` view, you can add a filter interaction, to help the user find a give
 
 The resulting filter will allow text-based search on an author name (where the `*` character can be used as a joker), and the selection of the comments related to a given article by a choice in a selection list. As for regular `object_select_tag()`, the options displayed in a select are the ones returned by the `->toString()` method of the related class (or the primary key if such a method doesn't exist).
 
+### Sort
+
+In a `list` view, the column names are hyperlinks that can be used to reorder the list. These names are displayed both in the `tabular` and `stacked` layouts. Only the fields that correspond to an actual column are clickable - not the ones for custom or partial columns.
+
+Clicking on these links reloads the page with a `sort` parameter. You can reuse the syntax to point to a list directly sorted according to a column:
+
+    [php]
+    <?php echo link_to('Comment list by date', 'comment/list?sort=date&type=desc' ) ?>
+
+### Pagination
+
+The generated administration deals with large tables like a charm. The `list` view uses pagination by default, and you can customize the number of records to be displayed in each page with the `max_per_page` parameter:
+
+        list:
+          max_per_page:   5
+          title:          List of Comments
+          layout:         stacked
+          params:         %%=content%% (sent by %%author%% on %%date%% about %%article_link%%)
+
 ### Input type
 
 In an `edit` view, the user can modify the value of each field. Symfony determines the type of input to be used according to the data type of the column. For instance, fields finishing wirh `_id` will be displayed as select inputs. However, you may want to force a certain type of input for a given field, or the options of the object_tag generated. This kind of parameter goes into the `fields` definition:
