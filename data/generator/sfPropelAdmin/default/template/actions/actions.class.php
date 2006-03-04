@@ -124,7 +124,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 <?php if ($input_type == 'admin_input_upload_tag'): ?>
 <?php $upload_dir = $this->getParameterValue('edit.fields.'.$column->getName().'.upload_dir') ?>
     $currentFile = sfConfig::get('sf_upload_dir').'/<?php echo $upload_dir ?>/'.$this-><?php echo $this->getSingularName() ?>->get<?php echo $column->getPhpName() ?>();
-    if (isset($<?php echo $this->getSingularName() ?>['<?php echo $name ?>_remove']))
+    if (!$this->getRequest()->hasErrors() && isset($<?php echo $this->getSingularName() ?>['<?php echo $name ?>_remove']))
     {
       $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>('');
       if (is_file($currentFile))
@@ -132,7 +132,8 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
         unlink($currentFile);
       }
     }
-    if ($this->getRequest()->getFileSize('<?php echo $this->getSingularName() ?>[<?php echo $name ?>]'))
+
+    if (!$this->getRequest()->hasErrors() && $this->getRequest()->getFileSize('<?php echo $this->getSingularName() ?>[<?php echo $name ?>]'))
     {
 <?php else: ?>
     if (isset($<?php echo $this->getSingularName() ?>['<?php echo $name ?>']))
