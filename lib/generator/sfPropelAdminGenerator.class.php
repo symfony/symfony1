@@ -235,26 +235,36 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
       return "include_partial('".$column->getName()."', array('{$this->getSingularName()}' => \${$this->getSingularName()}))";
     }
 
-    // user sets a specific tag to use
-    if ($type = $this->getParameterValue('edit.fields.'.$column->getName().'.type'))
-    {
-      $params = $this->getObjectTagParams($params, array('control_name' => $this->getSingularName().'['.$column->getName().']'));
+    // default control name
+    $params = array_merge(array('control_name' => $this->getSingularName().'['.$column->getName().']'), $params);
 
-      if ($type == 'plain')
+    // default parameter values
+    $type = $column->getCreoleType();
+    if ($type == CreoleTypes::DATE)
+    {
+      $params = array_merge(array('rich' => true, 'calendar_button_img' => '/sf/images/sf_admin/date.png'), $params);
+    }
+    else if ($type == CreoleTypes::TIMESTAMP)
+    {
+      $params = array_merge(array('rich' => true, 'withtime' => true, 'calendar_button_img' => '/sf/images/sf_admin/date.png'), $params);
+    }
+
+    // user sets a specific tag to use
+    if ($inputType = $this->getParameterValue('edit.fields.'.$column->getName().'.type'))
+    {
+      if ($inputType == 'plain')
       {
-        $params = $this->getParameterValue('edit.fields.'.$column->getName().'.params');
-        $params = is_array($params) ? $params : sfToolkit::stringToArray($params);
         return $this->getColumnListTag($column, $params);
       }
       else
       {
-        return "object_$type(\${$this->getSingularName()}, 'get{$column->getPhpName()}', $params)";
+        $params = $this->getObjectTagParams($params);
+
+        return "object_$inputType(\${$this->getSingularName()}, 'get{$column->getPhpName()}', $params)";
       }
     }
 
     // guess the best tag to use with column type
-    $params = array_merge($params, array('control_name' => $this->getSingularName().'['.$column->getName().']'));
-
     return parent::getColumnEditTag($column, $params);
   }
 
@@ -310,6 +320,11 @@ EOF;
       {
         // simulate a default one
         $fields = array('NONE' => $fields);
+      }
+
+      if (!$fields)
+      {
+        return array();
       }
 
       foreach ($fields[$category] as $field)
