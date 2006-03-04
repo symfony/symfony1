@@ -194,10 +194,6 @@ abstract class sfWebController extends sfController
 
     $response->sendHttpHeaders();
     $response->sendContent();
-
-    // empty any buffers
-    flush();
-    ob_end_flush();
   }
 }
 
