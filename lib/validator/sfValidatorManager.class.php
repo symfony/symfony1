@@ -230,17 +230,22 @@ class sfValidatorManager
       if ($data['is_file'])
       {
         // file
-        $parent = $this->request->getFile($parent);
+        $parent = $this->request->getFile($parent.'['.$name.']');
+
+        if ($parent != null)
+        {
+          $value = $parent;
+        }
       }
       else
       {
         // parameter
         $parent = $this->request->getParameterHolder()->get($parent);
-      }
 
-      if ($parent != null && isset($parent[$name]))
-      {
-        $value = $parent[$name];
+        if ($parent != null && isset($parent[$name]))
+        {
+          $value = $parent[$name];
+        }
       }
     }
 
