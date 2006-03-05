@@ -412,6 +412,7 @@ Then, create the following `modules/bar/templates/_user.php`:
 Component slots can be used for breadcrumbs, contextual navigations, and dynamic insertions of all kinds. As components, they can be used in the global layout and in regular templates, or even in other components. The configuration setting the component of a slot is always the one of the last action called.
 
 >**Note**: If you need to suspend the use of a component slot for a given module, just declare an empty module/component for it:
+>
 >     all:
 >       components:
 >         sidebar:  []
