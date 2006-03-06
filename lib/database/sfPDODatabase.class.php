@@ -24,7 +24,7 @@ class sfPDODatabase extends sfDatabase
   /**
    * Connect to the database.
    *
-   * @throws <b>DatabaseException</b> If a connection could not be created.
+   * @throws <b>sfDatabaseException</b> If a connection could not be created.
    */
   public function connect ()
   {
@@ -42,7 +42,7 @@ class sfPDODatabase extends sfDatabase
           // missing required dsn parameter
           $error = 'Database configuration specifies method "dsn", but is missing dsn parameter';
 
-          throw new DatabaseException($error);
+          throw new sfDatabaseException($error);
         }
 
         break;
@@ -56,7 +56,7 @@ class sfPDODatabase extends sfDatabase
     }
     catch (PDOException $e)
     {
-      throw new DatabaseException($e->getMessage());
+      throw new sfDatabaseException($e->getMessage());
     }
 
     // lets generate exceptions instead of silent failures
@@ -75,7 +75,7 @@ class sfPDODatabase extends sfDatabase
    *
    * @return void
    *
-   * @throws <b>DatabaseException</b> If an error occurs while shutting down this database.
+   * @throws <b>sfDatabaseException</b> If an error occurs while shutting down this database.
    */
   public function shutdown ()
   {
