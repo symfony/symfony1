@@ -90,6 +90,8 @@ sed -i '' -e "s#\(propel.database.url *= *\).*#\1sqlite://./../../../../data/san
 
 sed -i '' -e "s#\( *dsn *: *\).*#\1sqlite://./../data/sandbox.db#" config/databases.yml
 
+sed -i '' -e "s/^#//g" config/databases.yml
+
 # create archive
 
 cd ..
