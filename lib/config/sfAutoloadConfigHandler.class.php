@@ -22,7 +22,7 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
   /**
    * Execute this configuration handler.
    *
-   * @param  string An absolute filesystem path to a configuration file.
+   * @param array An array of absolute filesystem path to a configuration file.
    *
    * @return string Data to be written to a cache file.
    *

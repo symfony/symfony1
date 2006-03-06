@@ -42,7 +42,7 @@ abstract class sfConfigHandler
   /**
    * Execute this configuration handler.
    *
-   * @param string An absolute filesystem path to a configuration file.
+   * @param array An array of filesystem path to a configuration file.
    *
    * @return string Data to be written to a cache file.
    *
@@ -51,7 +51,7 @@ abstract class sfConfigHandler
    * @throws <b>sfParseException</b> If a requested configuration file is
    *                               improperly formatted.
    */
-  abstract function execute($configPath);
+  abstract public function execute($configFiles);
 
   /**
    * Initialize this ConfigHandler.
