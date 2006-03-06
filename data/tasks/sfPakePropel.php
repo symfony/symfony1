@@ -80,7 +80,7 @@ function run_propel_build_schema($task, $args)
   if (file_exists('config/schema.xml'))
   {
     $schema = file_get_contents('config/schema.xml');
-    $schema = preg_replace('/<database\s+name="[^"]+"/s', '<database name="symfony"', $schema);
+    $schema = preg_replace('/<database\s+name="[^"]+"/s', '<database name="propel"', $schema);
     file_put_contents('config/schema.xml', $schema);
   }
 }
