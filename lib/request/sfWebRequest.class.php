@@ -154,7 +154,7 @@ class sfWebRequest extends sfRequest
    */
   public function hasFile ($name)
   {
-    if ($name = preg_match('/^(.+?)\[(.+?)\]$/', $name, $match))
+    if (preg_match('/^(.+?)\[(.+?)\]$/', $name, $match))
     {
       return isset($_FILES[$match[1]]['name'][$match[2]]);
     }
@@ -206,7 +206,7 @@ class sfWebRequest extends sfRequest
 
   public function getFileValue ($name, $key)
   {
-    if ($name = preg_match('/^(.+?)\[(.+?)\]$/', $name, $match))
+    if (preg_match('/^(.+?)\[(.+?)\]$/', $name, $match))
     {
       return $_FILES[$match[1]][$key][$match[2]];
     }
@@ -218,7 +218,7 @@ class sfWebRequest extends sfRequest
 
   public function getFileValues ($name)
   {
-    if ($name = preg_match('/^(.+?)\[(.+?)\]$/', $name, $match))
+    if (preg_match('/^(.+?)\[(.+?)\]$/', $name, $match))
     {
       return array(
         'name'     => $_FILES[$match[1]]['name'][$match[2]],
