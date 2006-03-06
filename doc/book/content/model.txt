@@ -385,7 +385,7 @@ When developing a symfony project, you often start by writing the domain logic c
 
 At that point, all the logic related to the data should be moved to the Model layer. Whenever you need to do the same request in more than one place in your actions, think about transferring the related code to the Model. It helps to keep the actions small and readable. 
 
-For example, imagine the code needed in a weblog to retrieve the 10 most popular articles for a given tag (passed as request parameter). This code should not be in an action, but in the Model. As a mattar of fact, if you need to display this list in a template, the action should simply look like:
+For example, imagine the code needed in a weblog to retrieve the 10 most popular articles for a given tag (passed as request parameter). This code should not be in an action, but in the Model. As a matter of fact, if you need to display this list in a template, the action should simply look like:
 
     [php]
     public function executeShowPopularArticlesForTag()
