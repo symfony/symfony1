@@ -144,11 +144,11 @@ Since the *forward* method kept the original request, the template has access to
 You can detect whether the form has errors by calling the `->hasErrors()` method of the `sfRequest` object. To get the list of the error messages, you need the method `->getErrors()`. So you should add the following lines at the top of the template:
 
     [php]
-    <?php if ($request->hasErrors()): ?>
+    <?php if ($sf_request->hasErrors()): ?>
       <p>The data you entered seems to be incorrect.
       Please correct the following errors and resubmit:</p>
       <ul>
-      <?php foreach($request->getErrors() as $error): ?>
+      <?php foreach($sf_request->getErrors() as $error): ?>
         <li><?php echo $error ?></li>
       <?php endforeach ?>
       </ul>
@@ -157,7 +157,7 @@ You can detect whether the form has errors by calling the `->hasErrors()` method
 Now you may suggest that the field with incorrect data should be highlighted, for instance with a repetition of the error message clearly attached to the label with a ↓. To that extent, simply add the following line before every field:
 
     [php]
-    <?php if ($request->hasError('name')): ?>↓ <?php echo $request->getError('name') ?> ↓<?php endif ?><br />
+    <?php if ($sf_request->hasError('name')): ?>↓ <?php echo $request->getError('name') ?> ↓<?php endif ?><br />
 
 Complete configuration file
 ---------------------------

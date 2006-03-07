@@ -166,33 +166,33 @@ This is where the cookie is read. And that's it.
 
 >**Note**: If some pages of your website are accessible without authentication, then the `security/index` action is not the first action to be executed at all times. In order to automatically log users in that case, you will probably prefer to add a new `rememberFilter` in your application `lib/` directory instead of doing the cookie check in one action only:
 >
-     [php]
-     class rememberFilter extends sfFilter
-     {
-       public function execute ($filterChain)
-       {
-         // execute this filter only once
-         if ($this->isFirstCall())
-         {
-           $request = $this->getContext()->getRequest();
-           if ($request->getCookie('MyWebSite'))
-           {
-             $value = unserialize(base64_decode($this->getRequest()->getCookie('MyWebSite')));
-             $c = new Criteria();
-             $c->add(UserPeer::REMEMBER_KEY, $value[0]);
-             $c->add(UserPeer::LOGIN, $value[1]);
-             $user = UserPeer::doSelectOne($c);
-             if ($user)
-             {
-               // sign in
-               $this->getContext()->getUser()->signIn($user);
-             }
-           }
-         } 
-         // execute next filter
-         $filterChain->execute();
-       }
-     }
+>     [php]
+>     class rememberFilter extends sfFilter
+>     {
+>       public function execute ($filterChain)
+>       {
+>         // execute this filter only once
+>         if ($this->isFirstCall())
+>         {
+>           $request = $this->getContext()->getRequest();
+>           if ($request->getCookie('MyWebSite'))
+>           {
+>             $value = unserialize(base64_decode($this->getRequest()->getCookie('MyWebSite')));
+>             $c = new Criteria();
+>             $c->add(UserPeer::REMEMBER_KEY, $value[0]);
+>             $c->add(UserPeer::LOGIN, $value[1]);
+>             $user = UserPeer::doSelectOne($c);
+>             if ($user)
+>             {
+>               // sign in
+>               $this->getContext()->getUser()->signIn($user);
+>             }
+>           }
+>         } 
+>         // execute next filter
+>         $filterChain->execute();
+>       }
+>     }
 >
 >Of course, you will have to declare this filter in your application `filters.yml` configuration file:
 >

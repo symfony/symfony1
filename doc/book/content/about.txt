@@ -17,11 +17,11 @@ If you have been looking for a [Rails][1]/[Django][2]-like framework for PHP pro
 
 ...where all elements work seamlessly together, then symfony is made for you.
 
-Its very small number of prerequisites make it easy to install on any configuration; you just need Unix or Windows with a web server and PHP 5 installed. It is compatible with almost every database system. In addition, it has a very small overhead, so the benefits of the framework don't come at the cost of an increase of hosting costs.
+Its very small number of prerequisites make it easy to install on any configuration; you just need Unix or Windows with a web server and PHP 5 installed. It is compatible with almost every database system. In addition, it has a very small overhead, so the benefits of the framework don't come at the cost of an increase in hosting costs.
 
-Using symfony is so natural and easy for people used to PHP and the design patterns of Internet applications that the learning curve is reduced to less than a day. The clean design and code readability will keep your delays short. Developers can apply agile development principles (such as [DRY][3], [KISS][4] or the [XP][5] philosophy) and focus on applicative logic without losing time to write endless XML configuration files.
+Using symfony is so natural and easy for people used to PHP and the design patterns of Internet applications that the learning curve is reduced to less than a day. The clean design and code readability will keep your delays short. Developers can apply agile development principles (such as [DRY][3], [KISS][4] or the [XP][5] philosophy), focus on the application logic and avoid wasting time writing endless XML configuration files.
 
-Symfony is aimed at building robust applications in an enterprise context. This means that you have full control over the configuration: from the directory structure to the foreign libraries, almost everything can be customized. To match your enterprise's development guidelines, symfony is bundled with additional tools helping you to test, debug and document your project. 
+Symfony is aimed at building robust applications in an enterprise context. This means that you have full control over the configuration: from the directory structure to the foreign libraries, almost everything can be customized. To match your enterprise's development guidelines, symfony is bundled with additional tools to help you to test, debug and document your project. 
 
 Last but not least, by choosing symfony you get the benefits of an active open-source community. It is entirely free and published under the MIT license.
 
