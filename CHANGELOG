@@ -4,6 +4,10 @@ SVN
 Version 0.6.1
 -------------
 
+* [fabien] lot of bugs fixes
+* [faiben] updated scriptaculous to 1.5.3
+* [fabien] added a new sfFileValidator validator
+* [fabien] lots of bug fixes and new features in the admin generator (file upload, credentials, ...)
 * [fabien] stylesheets, javascripts, ... are now part of the sfWebResponse object
            DEPRECATED methods:
              $action->addStylesheet(), $action->addJavascript(), $action->setTitle()
