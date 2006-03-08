@@ -40,7 +40,7 @@ The `SF_DEBUG` constant defines whether the configuration has to be parsed every
 Example batch processes
 -----------------------
 
-Below are some examples of batch process that you might create.
+Below are some examples of batch processes that you might create.
 
 ### Loading Test Data
 

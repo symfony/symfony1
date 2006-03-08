@@ -205,7 +205,7 @@ You can add the other rules to the `send.yml` configuration file to force the va
       class:          sfRegexValidator
       param:
         match:        Yes
-        match_error:  You didn't enter a valid email address (for example: name@domain.com). Please try again.
+        match_error:  "You didn't enter a valid email address (for example: name@domain.com). Please try again."
         pattern:      /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/i
 
 Available validators
