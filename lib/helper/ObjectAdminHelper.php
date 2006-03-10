@@ -31,14 +31,14 @@ function object_admin_input_upload_tag($object, $method, $options = array())
     if (isset($options['include_link']) && $options['include_link'])
     {
       $image_path = image_path('/'.sfConfig::get('sf_upload_dir_name').'/'.$options['include_link'].'/'.$object->$method());
-      $image_text = isset($options['include_text']) ? $options['include_text'] : '[show file]';
+      $image_text = isset($options['include_text']) ? __($options['include_text']) : __('[show file]');
 
       $html .= sprintf('<a onclick="window.open(this.href);return false;" href="%s">%s</a>', $image_path, $image_text)."\n";
     }
 
     if (isset($options['include_remove']) && $options['include_remove'])
     {
-      $html .= checkbox_tag(strpos($name, ']') !== false ? substr($name, 0, -1).'_remove]' : $name).' '.($options['include_remove'] != 'true' ? $options['include_remove'] : 'remove file')."\n";
+      $html .= checkbox_tag(strpos($name, ']') !== false ? substr($name, 0, -1).'_remove]' : $name).' '.($options['include_remove'] != 'true' ? __($options['include_remove']) : __('remove file'))."\n";
     }
   }
 
