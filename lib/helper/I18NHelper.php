@@ -55,17 +55,17 @@ function format_number_choice($text, $args = array(), $number, $culture = null, 
   return $retval;
 }
 
-function format_country($country_iso)
+function format_country($country_iso, $culture = null)
 {
-  $c = new sfCultureInfo(sfContext::getInstance()->getUser()->getCulture());
+  $c = new sfCultureInfo($culture === null ? sfContext::getInstance()->getUser()->getCulture() : $culture);
   $countries = $c->getCountries();
 
   return isset($countries[$country_iso]) ? $countries[$country_iso] : '';
 }
 
-function format_language($language_iso)
+function format_language($language_iso, $culture = null)
 {
-  $c = new sfCultureInfo(sfContext::getInstance()->getUser()->getCulture());
+  $c = new sfCultureInfo($culture === null ? sfContext::getInstance()->getUser()->getCulture() : $culture);
   $languages = $c->getLanguages();
 
   return isset($languages[$language_iso]) ? $languages[$language_iso] : '';
