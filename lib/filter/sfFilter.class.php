@@ -41,13 +41,13 @@ abstract class sfFilter
   protected function isFirstCall ($type = 'beforeExecution')
   {
     $class = get_class($this);
-    if (!isset($filter_called[$class][$type]))
+    if (isset($this->filterCalled[$class][$type]))
     {
-      return true;
+      return false;
     }
     else
     {
-      $filterCalled[$class][$type] = true;
+      $this->filterCalled[$class][$type] = true;
 
       return true;
     }
