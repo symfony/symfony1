@@ -105,8 +105,10 @@ class sfPropelPager
   public function getLinks($nb_links = 5)
   {
     $links = array();
-    $tmp = $this->page - floor($nb_links / 2);
-    $begin = ($tmp > 0) ? (($tmp > $this->lastPage - $nb_links + 1) ? $this->lastPage - $nb_links + 1 : $tmp) : 1;
+    $tmp   = $this->page - floor($nb_links / 2);
+    $check = $this->lastPage - $nb_links + 1;
+    $limit = ($check > 0) ? $check : 1;
+    $begin = ($tmp > 0) ? (($tmp > $limit) ? $limit : $tmp) : 1;
 
     $i = $begin;
     while (($i < $begin + $nb_links) && ($i <= $this->lastPage))
