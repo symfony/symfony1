@@ -84,6 +84,8 @@
    */
   function link_to_function($name, $function, $html_options = array())
   {
+    $html_options = _parse_attributes($html_options);
+
     $html_options['href'] = '#';
     $html_options['onclick'] = $function.'; return false;';
 
