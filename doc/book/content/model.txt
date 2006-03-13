@@ -124,6 +124,10 @@ Now that the object data model is described, the PHP classes are ready to be gen
 
     $ symfony propel-build-model
 
+>**Note**: Propel uses [Phing](http://phing.info/trac/) at this point, so you will need to install it if it wasn't done already by calling:
+>
+>     $ pear install http://phing.info/pear/phing-current.tgz
+
 The base data access classes will be automatically created in the `myproject/lib/model/om/` directory:
 
     BaseArticle.php 

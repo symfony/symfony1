@@ -52,7 +52,33 @@ To remove an attribute from the session use:
     [php]
     $this->getUser()->getAttributeHolder()->remove('nickname');
 
->**Note**: if you need to store information just for the duration of one request - for instance to pass information through a chain of action calls - you may prefer the `sfRequest` class, which also has `->getAttribute()` and `->setAttribute()` methods.
+>**Note**: If you need to store information just for the duration of one request - for instance to pass information through a chain of action calls - you may prefer the `sfRequest` class, which also has `->getAttribute()` and `->setAttribute()` methods.
+
+Flash parameters
+----------------
+
+A recurrent problem with user attributes is the cleaning of the user session once the attribute is not needed anymore. Did you ever dream of an ephemeral attribute, one that you could define and forget, knowing that it will disappear after the next request and leave your user session clean for the future? Symfony provides a simple mechanism to keep the user session clean in this case: the **flash parameter**.
+
+In your action, define the flash attribute like this:
+
+    [php]
+    $this->setFlash('attrib', $value);
+
+The template will be built and decorated, the page will be delivered to the user, who will then make a new request to another action. In this second action, just get the value of the flash attribute by:
+
+    [php]
+    $value = $this->getFlash('attrib');
+
+Then, forget about it. After delivering this second page, the `attrib` flash attribute will be cleared, erased, removed, in a word: flashed. And even if you don't require it during this second action, the flash will disappear from the session anyway.
+
+If you need to access a flash attribute from a template, use the `$sf_flash` object:
+
+    [php]
+    <?php if($sf_flash->has('attrib')): ?>
+      <?php $attrib = $sf_flash->get('attrib') ?>
+    <?php endif ?>
+
+Flash parameters are a clean way of passing information to the next action, and once you start using them, you'll probably consider session attributes as an unforgivable archaism.
 
 Extending the session class
 ---------------------------
