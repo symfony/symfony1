@@ -545,5 +545,9 @@ The header and footer are not the only parts that can be customized. The generat
     processSort()       
     addSortCriteria()
 
+### Translation
+
+All the texts that are in the generated templates are already internationalized (i.e. enclosed in a call to the `__('')` function). This means that you can easily translate a generated admin by adding the translations of the texts in a XLIFF file, in your `apps/myapp/i18n/` directory, as explained in the [i18n chapter](i18n.txt).
+
 [1]: http://en.wikipedia.org/wiki/CRUD_(acronym)  "CRUD definition at Wikipedia"
 [2]: http://propel.phpdb.org/trac/ "Propel project site"
