@@ -359,7 +359,7 @@ class sfViewCacheManager
 
     // save content to cache
     $internalUri = sfRouting::getInstance()->getCurrentInternalUri();
-    $data        = $this->set($data, $internalUri, $suffix);
+    $this->set($data, $internalUri, $suffix);
 
     return $data;
   }
