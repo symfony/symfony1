@@ -92,6 +92,14 @@ sed -i '' -e "s#\( *dsn *: *\).*#\1sqlite://./../data/sandbox.db#" config/databa
 
 sed -i '' -e "s/^#//g" config/databases.yml
 
+# add some empty files in empty directories
+touch apps/${APP_NAME}/modules/.sf apps/${APP_NAME}/i18n/.sf test/${APP_NAME}/.sf doc/.sf web/images/.sf
+touch log/.sf cache/.sf batch/.sf data/sql/.sf data/model/.sf data/plugins/.sf
+touch data/symfony/generator/sfPropelAdmin/default/skeleton/templates/.sf
+touch data/symfony/generator/sfPropelAdmin/default/skeleton/validate/.sf
+touch data/symfony/modules/default/config/.sf data/symfony/skeleton/project/build/.sf
+touch lib/model/.sf lib/plugins/.sf web/js/.sf
+
 # create archive
 
 cd ..
