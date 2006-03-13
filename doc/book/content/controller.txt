@@ -31,10 +31,10 @@ The front controller requires the code of the `config.php` file, and this file i
 
 The call to the `->dispatch()` method of the Controller object does several things:
 
-*   choice of the action to execute
-*   if the action does not exist, redirection to the 404 action as defined by default
-*   inscription of filters for the request (for instance if the request needs authentication)
-*   execution of the selected action
+*   it determines the action to execute
+*   if the action does not exist, it redirects to the 404 error action as defined by default
+*   it activates any filters for the request (for instance if the request needs authentication)
+*   it then executes the selected action
 
 >**Note**: for your information, the [singleton][2] `sfContext::getInstance()` stores the main elements of the request: 
 >
@@ -47,18 +47,18 @@ You will see a little further how configuration files and routing allow the Fron
 
     http://myapp.example.com/index.php/mymodule/myaction
 
-And transform this into a call to the `myaction` action of the `mymodule` module. And the action will deal with the request.
+And it transforms this into a call to the `myaction` action of the `mymodule` module. And the action will handle the request.
 
 Actions
 -------
 
-The **actions** are the heart of the application, because they contain all the applicative logic, they use the Model and define variables for the View. When you do a web request in a symfony application, the URL points to an action.
+The **actions** are the heart of an application, because they contain all the application's logic, they use the Model and define variables for the View. When you make a web request in a symfony application, the URL points to an action.
 
-Actions are located inside **module** directories. And if, to create applications and modules, you just needed to use the `symfony` command, now it is time to start doing some PHP coding.
+Actions are located inside **module** directories. And if, to create applications and modules, you just needed to use the `symfony` command, to create actions you have to code them in PHP yourself.
 
-Actions are located in files called `actions.class.php` found in the `actions` subdirectory of each module directory.
+Actions are defined in files called `actions.class.php` found in the `actions` subdirectory of each module directory.
 
-So let's imagine that you created a module called `mymodule` in your `myapp` application using the `symfony` command. The default file `actions.class.php` located in the `apps/myapp/modules/mymodule/actions/` directory defines a single action called `index`, and it looks like that:
+For example, let's say that you created a module called `mymodule` in your `myapp` application using the appropriate `symfony` commands. The default file `actions.class.php` located in the `apps/myapp/modules/mymodule/actions/` directory defines a single action called `index`, and it looks like that:
 
     [php]
     class mymoduleActions extends sfActions
@@ -69,13 +69,13 @@ So let's imagine that you created a module called `mymodule` in your `myapp` app
       }
     }
 
->**Note**: If you happen to look at an actual `actions.class.php` file, you will find more than these few lines, including a lot of comments. This is because symfony recommends to use PHP comments to document your project and prepares each class file to be compatible with the [phpdoc][3] tool. You will learn more about documentation in the [related chapter](documentation.txt)
+>**Note**: If you look at an actual `actions.class.php` file, you will find more than these few lines, including a lot of comments. This is because symfony recommends to use PHP comments to document your project and prepares each class file to be compatible with the [phpdoc][3] tool. You will learn more about documentation in the [related chapter](documentation.txt).
 
-In order to call an action you need pass the parameter 'module/action' to the front controller: 
+In order to call an action you need to pass the parameter 'module/action' to the front controller: 
 
     http://myapp.example.com/index.php/module_name/action_name
 
->**Note**: symfony contains a **routing** mechanism that allow you to have a complete separation between the actual parameters of an action call and the shape of the URL. For instance, the call to the action `index` of a module called `article`, with the parameter `id`, usually written:
+>**Note**: Symfony contains a **routing** mechanism that allows you to have a complete separation between the actual parameters of an action call and the form of the URL. For instance, the call to the action `index` of a module called `article`, with the parameter `id`, which is usually written:
 >
 >     http://myapp.example.com/index.php/article/index/id/132
 >
@@ -157,7 +157,7 @@ Because calling the default view is the default behavior, if an action returns n
 Naming conventions
 ------------------
 
-The actions are grouped in a logical way inside modules, in a directory structure such as `myproject/apps/MYAPP/modules/MODULE_NAME/actions/`, in files named `actions.class.php`. The function implementing an action in the `actions.class.php` file of the module is named with the name of the action prefixed with `execute`.
+The actions are grouped in a logical way inside modules, in a directory structure such as `myproject/apps/MYAPP/modules/MODULE_NAME/actions/`, in files named `actions.class.php`. The function implementing an action in the `actions.class.php` file of the module is named by combining the word `execute` with the name of the action it refers to.
 
 For instance, if you have two actions `index` and `list` in a module called `product`, the file `actions.class.php` located in `myapp/modules/product/actions/` will have the following structure:
 

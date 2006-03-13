@@ -1,15 +1,15 @@
-How to make persistent sessions with cookies?
-=============================================
+How to achieve persistent sessions with cookies?
+================================================
 
 Overview
 --------
 
-Symfony offers access to cookies via the `sfWebRequest` and `sfWebResponse` objects. It makes the use of cookies very easy, and persistent login becomes a piece of cake.
+Symfony offers access to cookies via the `sfWebRequest` and `sfWebResponse` objects. It makes the use of cookies very easy, and persistent sessions are easily achieved.
 
 Cookie getter and setter
 ------------------------
 
-A cookie is a string stored in the client's computer, written by a web application and readable only by the same application - or domain.
+A cookie is a string stored on the client's computer, written by a web application and readable only by the same application - or domain.
 
 In symfony, the setter and getter for cookies are methods of different objects, but that makes sense. To get a cookie, you inspect the request that was sent to the server, thus using the `sfWebRequest` object. On the other hand, to set a cookie, you modify the response that will be sent to the user, thus using the `sfWebResponse` object. To manipulate cookies from within an action, use the following shorcuts:
 
@@ -31,21 +31,21 @@ The syntax of the `->setCookie()` method is the same as the one of the basic PHP
 >     $response = sfContext::getInstance()->getResponse();
 >
 
-Persistent login
-----------------
+Persistent sessions
+-------------------
 
-A good application of cookies (apart from basin session handling, which is completely transparent in symfony) is the persistent login functionality. Most of the login forms offer a "remember me" check-box which, when clicked, allows the user to bypass the login process for further sessions.
+A good use for cookies (apart from basic session handling, which is completely transparent in symfony) is the persistent sessions functionality. Most of the login forms offer a "remember me" check-box which, when clicked, allows the user to bypass the login process for future sessions.
 
 ### Basic login
 
-Let's imagine an application where all the modules are secure except the `security` module. The `settings.yml` is configured to handle the request of unlogged users to the `security/index` action:
+Let's imagine an application where all the modules are secure except the `security` module. The `settings.yml` is configured to handle the request of unauthenticated users to the `security/index` action:
 
     all:
       .settings:
         login_module:           security
         login_action:           index
 
-The model has a `User` class with at least a `login` and a `password` column. The `indexSuccess.php` template shows a login form (without "remember me" checkbox for now), and handles the submission to the `security/login` action:
+The model has a `User` class with at the very least a `login` and a `password` field. The `indexSuccess.php` template shows a login form (without the "remember me" checkbox for now), and handles the submission to the `security/login` action:
 
     [php]
     public function executeIndex()
@@ -82,7 +82,7 @@ The model has a `User` class with at least a `login` and a `password` column. Th
       return $this->forward('security', 'index');
     }
 
->**Note**: The verification of the login and password could also take place in a custom validator for a better model logic, as explained in the [askeet tutorial](http://www.symfony-project.com/askeet/6).
+>**Note**: The verification of the login and password could also be handled in a custom validator for a better domain model logic, as explained in the [askeet tutorial](http://www.symfony-project.com/askeet/6).
 
 Now, let's have a look at this `->signIn()` method in the `myUser` class:
 
@@ -100,13 +100,13 @@ Now, let's have a look at this `->signIn()` method in the `myUser` class:
       }
     }
 
-That's all very basic. But it works fine, as long as you ask the user to login at every session.
+So far this is very basic. But it works fine, as long as you ask the user to login for every session.
 
-### Persistent login
+### Persistent sessions
 
-To allow a persistent login, the server has to store some information in the client's computer (here comes the cookie) proving who the user is and that he/she successfully logged in in the past. Of course, for security reasons, the password cannot be the data to store (and, by the way, that would be incompatible with the [sha1 hash](http://en.wikipedia.org/wiki/SHA_hash_functions) password storage method described in the [askeet tutorial](http://www.symfony-project.com/askeet/6)). So what to store then? Whatever the cookie stores, it has to be the same piece of data as in the database, so that the comparison of the two proves the authentication. So, to avoid risks, a random string will be stored and regenerated every 15 days (the lifetime that will be given to the cookie).
+To allow for persistent sessions, the server has to store some information in the client's computer (that is were the cookie comes in) remembering who the user is and that he/she successfully logged in before. Of course, for security reasons, the password cannot be stored in the cookie (and, by the way, that would be incompatible with the [sha1 hash](http://en.wikipedia.org/wiki/SHA_hash_functions) password storage method described in the [askeet tutorial](http://www.symfony-project.com/askeet/6)). So what should be stored in the cookie then? Whatever the cookie stores, it has to be the some data that can be matched to what is in the database, so that the comparison of the two elements achieves the authentication. So, to minimize the risk, a random string will be stored and regenerated every 15 days (the lifetime that will be given to the cookie).
 
-Add a new `remember_key` column to the `User` table (and rebuild the model). This is where a random key, stored both in the clients computer and in the database, will be stored. The remember key has to be set when a user asks to be remembered, so change the sign-in line in the `login` action by:
+By adding a new `remember_key` column to the `User` table (and rebuilding the model). This new field will store the random key, the key will thus be stored both in the cookie on the client's computer and in the database as part of the user's record. The remember key will be set when a user requests to be remembered, so change the sign-in line in the `login` action by:
 
     [php]
     // sign in
@@ -140,7 +140,7 @@ The `->signIn()` method of the `myUser` class has to be modified to set the reme
       }
     }
 
-The `generate_random_key()` method is left to your sagacity. Now, you just need to change the `security/index` action a little bit:
+The `generate_random_key()` method can be anything that you choose which meets with your security requirements. Now, you just need to change the `security/index` action a little bit:
 
     [php]
     public function executeIndex()
@@ -162,9 +162,9 @@ The `generate_random_key()` method is left to your sagacity. Now, you just need 
       }
     }
 
-This is where the cookie is read. And that's it.
+This new process reads the cookie and you are done.
 
->**Note**: If some pages of your website are accessible without authentication, then the `security/index` action is not the first action to be executed at all times. In order to automatically log users in that case, you will probably prefer to add a new `rememberFilter` in your application `lib/` directory instead of doing the cookie check in one action only:
+>**Note**: If some pages of your website are accessible without authentication, then the `security/index` action is no longer the first action to be executed every time. In order to automatically log users in such cases, you will probably prefer to add a new `rememberFilter` in your application `lib/` directory instead of doing the cookie check in a single action:
 >
 >     [php]
 >     class rememberFilter extends sfFilter

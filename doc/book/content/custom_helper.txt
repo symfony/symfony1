@@ -4,14 +4,14 @@ How to add a custom extension
 Overview
 --------
 
-Symfony offers various helpers to accelerate template development (see more in the [View chapter](view.txt)). But the need for custom helpers can arise for every project, application, or module. Symfony uses naming conventions to allow the easy inclusion of custom helpers so that they can be used as the standard ones, via a simple function call in the templates. Custom classes are also easy to add thanks to the class auto-loading feature.
+Symfony offers various helpers to accelerate template development (see more in the [View chapter](view.txt)). But the need for custom helpers can arise for every project, application, or module. Symfony uses naming conventions to allow the easy inclusion of custom helpers so that they can be used the same way as the standard ones, via a simple function call in the templates. Custom classes are also easy to add thanks to the class auto-loading feature.
 
 Custom helper
 -------------
 
 ### Naming conventions
 
-To add custom helpers available to your templates, simply create a PHP file ending with `Helper.php` and place it in a subdirectory of the PHP `include_path` named `helper`. The directory where the helper is placed will determine its availability. For instance:
+To make custom helpers available to your templates, simply create a PHP file ending with `Helper.php` and place it in a subdirectory of the PHP `include_path` named `helper`. The directory where the helper is placed will determine its availability. For instance:
 
 | Helper placed in                     | Is available for
 | ------------------------------------ | ----------------
@@ -19,14 +19,14 @@ To add custom helpers available to your templates, simply create a PHP file endi
 | `myapp/lib/helper/`                  | all the modules of the 'myapp' application
 | `mymodule/lib/helper/`               | all the templates of the 'mymodule' module
 
-To use a custom helper in a template, you must first declare it on top of the template, as for other helpers:
+To use a custom helper in a template, you must first declare it on top of the template, the same way you do for other helpers:
 
     [php]
     <?php use_helper('Name') ?>
 
 ### Example
 
-Let's imagine that your application uses the wiki syntax to format the data entered by users. The wiki to HTML conversion may occur quite often, so you will factorize the code in a 'wiki_to_html()' helper function:
+Let's say that your application uses the wiki syntax to format the data entered by the user. The wiki to HTML conversion may occur quite often, so you will refactor the code in a 'wiki_to_html()' helper function:
 
 Here is the `WikiHelper.php` file stored in the `myapp/lib/helper/` directory:
 
@@ -54,7 +54,7 @@ Custom classes
 
 ### Naming conventions
 
-If you need to extend your actions by a custom class, you can take advantage of the class auto-loading feature. If the class file has the same name as the class itself, symfony will auto-load it when needed, provided it is located in one of the two directories below:
+If you need to extend your actions with a custom class, you can take advantage of the class auto-loading feature. If the class file has the same name as the class itself, symfony will auto-load it when needed, provided it is located in one of the three directories below:
 
 | Class placed in               | Is available for
 | ----------------------------- | ------------------------------------------
@@ -98,7 +98,7 @@ Now, from any action of your project, you can use the `stripText` method of this
 Accessing context objects
 -------------------------
 
-In a custom helper, shortcuts like `$sf_request` or `$sf_user` don't work. In a custom class, the action-style calls (`$this->getRequest()`, `$this->getUser()`, etc.) don't work either. This is because these functions and classes are not in a request context. So, in order to access the context objects, you have to use the `sfContext` singleton (`sfContext::getInstance()`). For instance, to get the request parameters, write:
+In a custom helper, shortcuts like `$sf_request` or `$sf_user` won't work. In a custom class, the action-style calls (`$this->getRequest()`, `$this->getUser()`, etc.) won't work either. This is because these functions and classes are not in a request context. So, in order to access the context objects, you have to use the `sfContext` singleton (`sfContext::getInstance()`). For instance, to get the request parameters, write:
 
     [php]
     $id = sfContext::getInstance()->getRequest()->getParameter('id');
