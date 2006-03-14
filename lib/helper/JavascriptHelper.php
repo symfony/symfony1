@@ -93,6 +93,24 @@
   }
 
   /**
+   * Returns a button that'll trigger a javascript function using the
+   * onclick handler and return false after the fact.
+   *
+   * Examples:
+   *   <?php echo button_to_function('Greeting', "alert('Hello world!')") ?>
+   */
+  function button_to_function($name, $function, $html_options = array())
+  {
+    $html_options = _parse_attributes($html_options);
+
+    $html_options['onclick'] = $function.'; return false;';
+    $html_options['type']    = 'button';
+    $html_options['value']   = $name;
+
+    return content_tag('input', '', $html_options);
+  }
+
+  /**
    * Returns a link to a remote action defined by 'url'
    * (using the 'url_for()' format) that's called in the background using
    * XMLHttpRequest. The result of that request can then be inserted into a
