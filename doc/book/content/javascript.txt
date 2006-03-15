@@ -346,12 +346,19 @@ The `visual_effects()` helper can also be used in the AJAX callbacks:
 
 Notice how you can combine visual effects by concatenating them in a callback.
 
+JSON
+----
+
+AJAX helpers allow to update more than one element at a time, using the [JSON](http://www.json.org/) syntax. For more information about it, check out the [user submitted documentation](http://www.symfony-project.com/trac/wiki/AjaxAndJSON) in the symfony wiki.
+
 Complex interactions
 --------------------
 
-TODO:
+JavaScript also provides tools to build up complex interactions. But the complexity of the implementation makes it quite rare over the Internet, although examples like [google suggest](http://www.google.com/webhp?complete=1&hl=en) (for autocomplete input) or [netvibes](http://www.netvibes.com/) (for sortible lists) show that desktop-like interactions are now possible in web applications.
 
-* `input_auto_complete_tag()`
-* `input_inplace_editor_tag()`
-* `sortable_element()`
-* `draggable_element()`
+The [script.aculo.us library](http://script.aculo.us/) provides high-level JavaScript functions that symfony integrates as helpers. They allow the following kind of interaction:
+
+* **Autocomplete input**: A text input that shows a list of words matching the user's entry while he/she types in. Examples of the use of the `input_auto_complete_tag()` helper in symfony can be found in the [askeet tutorial](http://www.symfony-project.com/askeet/en/14).
+* **Drag and Drop**: The ability to grab an element, move it and release it somewhere else, for a real "put it there" feeling. Refer to the [shopping cart tutorial](http://www.symfony-project.com/tutorial/symfony_ajax.html) for a step-by-step documentation on how to use `draggable_element()` and `drop_receiving_element()` - and a self explaining screencast.
+* **Sortable lists**: Another possibility offerred by draggable elements is the ability to sort a list by moving its items. The `sortable_element()` helper adds the 'sortable' behaviour to an item.
+* **Edit in place**: More and more web applications allow users to edit the content of pages directly in the page, without the need to redisplay the content in a form (see a demo [here](http://tool-man.org/examples/edit-in-place.html). the symfony helper that does it is the `input_inplace_editor_tag()`.
