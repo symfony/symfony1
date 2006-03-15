@@ -236,7 +236,7 @@ class sfMail
 
   public function clearAddresses()
   {
-    $this->mailer->ClearAdresses();
+    $this->mailer->ClearAddresses();
   }
 
   public function clearCcs()
