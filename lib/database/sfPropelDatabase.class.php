@@ -93,6 +93,7 @@ class sfPropelDatabase extends sfCreoleDatabase
   public function setConnectionParameter ($key, $value)
   {
     self::$config['propel']['datasources'][$this->getParameter('datasource')]['connection'][$key] = $value;
+    $this->setParameter($key, $value);
   }
 }
 
