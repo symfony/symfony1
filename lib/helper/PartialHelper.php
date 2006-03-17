@@ -145,8 +145,6 @@ function include_partial($name, $vars = array())
     $vars = array_merge($vars, $action->getVars());
   }
 
-  extract($vars);
-
   // render to client
   if ($sep && $type == 'global')
   {
@@ -192,6 +190,7 @@ function include_partial($name, $vars = array())
     }
   }
 
+  extract($vars);
   require $partial;
 }
 
