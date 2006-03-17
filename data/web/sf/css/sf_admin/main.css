@@ -314,3 +314,8 @@ ul.sf_admin_actions input
 {
   color: #aaa;
 }
+
+.mceEditor td
+{
+  padding: 0px;
+}
