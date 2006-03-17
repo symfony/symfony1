@@ -533,7 +533,7 @@
 
     if (in_array($name, array('toggle_appear', 'toggle_blind', 'toggle_slide')))
     {
-      return "new Effect.toggle($element, ". substr($name, 7)  .", "._options_for_javascript($js_options).");";
+      return "new Effect.toggle($element, '".substr($name, 7)."', "._options_for_javascript($js_options).");";
     }
     else
     {
