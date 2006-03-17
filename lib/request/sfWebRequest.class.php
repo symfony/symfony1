@@ -183,9 +183,9 @@ class sfWebRequest extends sfRequest
    */
   public function hasFileErrors ()
   {
-    foreach ($this->getFilesValues() as $file)
+    foreach ($this->getFileNames() as $name)
     {
-      if ($file['error'] != UPLOAD_ERR_OK)
+      if ($this->hasFileError($name) === true)
       {
         return true;
       }
