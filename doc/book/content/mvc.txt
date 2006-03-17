@@ -15,7 +15,7 @@ The base of symfony is a classic web design pattern, the [MVC architecture][1], 
 * the **View** renders the model into a web page suitable for interaction with the user
 * the **Controller** responds to user actions, and invokes changes on the model or view as appropriate
 
-In symfony, the Controller is separated in different parts, namely a front controller and a set of actions. Each action knows how to handle a specific kind of request. The View is separated in layouts, templates and slots - all those are PHP files that have access to the content defined in the Action. The Model offers an abstraction layer to databases and useful information about the session and the requests. 
+In symfony, the Controller is separated in different parts, namely a front controller and a set of actions. Each action knows how to handle a specific kind of request. The View is separated in layouts, templates and partials - all those are PHP files that have access to the content defined in the Action. The Model offers an abstraction layer to databases and useful information about the session and the requests. 
 
 This model helps to work separately on the business logic (Model) and on the presentation (View). For instance, if you need an application to run both on standard web browsers and on handheld devices, you just need a new View but you can keep the original Controller and Model. The Controller helps to hide the detail of the protocol used for the request (HTTP, console mode, mail, etc.) from the Model and the View. And the Model abstracts the logic of the data, which makes the View and the Action independent of, for instance, the type of database used by the application.
 
@@ -32,7 +32,7 @@ To make things clear, let's see how the symfony implementation of the MVC archit
 
 3. The 'shopping cart' Action accesses the Model, to update the 'cart' object of the user session.
 
-4. As the modification of the stored data is successful, the action prepares the content that will be included in the answer - confirmation of the addition and complete list of products currently in the shopping cart. The 'shopping cart' action logic specifies that for a product addition, the content has to be included into a 'shopping cart' template.
+4. As the modification of the stored data is successful, the action prepares the content that will be included in the response - confirmation of the addition and complete list of products currently in the shopping cart. The 'shopping cart' action logic specifies that for a product addition, the content has to be included into a 'shopping cart' template.
 
 5. The View then assembles the answer from the action and the skinning from the template to produce the HTML code of the shopping cart page.
 

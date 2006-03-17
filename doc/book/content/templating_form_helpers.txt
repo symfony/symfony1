@@ -241,8 +241,8 @@ A few other options can define the content of an object select tag. `include_tit
 
     [php]
     object_select_tag($article, 'getAuthorId', 'related_class=Author')
-    object_select_tag($article, 'getAuthorId', 'related_class=Author include_blank')
-    object_select_tag($article, 'getAuthorId', 'related_class=Author include_title')
+    object_select_tag($article, 'getAuthorId', 'related_class=Author include_blank=true')
+    object_select_tag($article, 'getAuthorId', 'related_class=Author include_title=true')
     //will display three selects with lists of values looking like:
     -------      -------      -------
     |Steve |     |      |     |Author|

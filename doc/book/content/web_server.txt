@@ -197,4 +197,4 @@ And this is enough to be able to access the `admin` application by:
 IIS
 ---
 
-Symfony is compatible with IIS. To learn all about the installation and configuration of a symfony project in a IIS environment, read the [related tutorial](http://www.symfony-project.com/tutorial/symfony_on_iis.html).
+Symfony is compatible with IIS. To learn all about the installation and configuration of a symfony project in a IIS environment, read the [related tutorial](http://www.symfony-project.com/content/book/page/web_server_iis.html).

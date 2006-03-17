@@ -69,7 +69,7 @@ For example, let's say that you created a module called `mymodule` in your `myap
       }
     }
 
->**Note**: If you look at an actual `actions.class.php` file, you will find more than these few lines, including a lot of comments. This is because symfony recommends to use PHP comments to document your project and prepares each class file to be compatible with the [phpdoc][3] tool. You will learn more about documentation in the [related chapter](documentation.txt).
+>**Note**: If you look at an actual `actions.class.php` file, you will find more than these few lines, including a lot of comments. This is because symfony recommends to use PHP comments to document your project and prepares each class file to be compatible with the [phpdoc][3] tool.
 
 In order to call an action you need to pass the parameter 'module/action' to the front controller: 
 
