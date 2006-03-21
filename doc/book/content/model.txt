@@ -275,9 +275,11 @@ And a brand new `schema.xml` built from your database structure is written in yo
 Data access
 -----------
 
+In Propel, your data is accessed through objects. If you are used to the relational model, and to SQL to retrieve and alter your data, the Propel methods will probably look complicated. But once you've tasted the power of object orientation for data access (have a look at the [examples](http://propel.phpdb.org/trac/wiki/Users/Documentation/BasicCRUD) given in the Propel documentation), you will probably like it a lot. 
+
 ### Field access
 
-Propel provides one class for each the tables defined in the `schema.xml` file. These classes have default creators, accessors and mutators: The `new`, `get` and `set` methods to give access to the columns of the table.
+Propel provides one class for each the tables defined in the `schema.xml` file. These classes have default creators, accessors and mutators: The `new`, `get` and `set` methods give access to the columns of the table.
 
     [php]
     $article = new Article();
@@ -326,10 +328,13 @@ Note the plural used here in the `get` method. Propel knows that your relational
     [php]
     print_r($comments[0]);
 
-If you read comments to your articles, you might change your mind about the interest of publishing on the Internet. And if you don't appreciate the irony of article reviewers, you can easily delete your article with the `delete()` method:
+If you read comments to your articles, you might change your mind about the interest of publishing on the Internet. And if you don't appreciate the irony of article reviewers, you can easily delete the comments with the `delete()` method:
 
     [php]
-    $article->delete();
+    foreach($comments as $comment)
+    {
+      $comment->delete();
+    }
 
 Find more about these methods and their syntax in the [Propel documentation][4].
 
@@ -358,7 +363,7 @@ The class method `doSelect()` applies the selection filter received as a paramet
       echo $article->getTitle();
     }
 
-But there is more to requests than getting all records or one record by its key. The power of the `Criteria` object is that you can add rules so it just like you would add '`WHERE`' or '`ORDER BY`' statements in a SQL query.
+But there is more to requests than getting all records or one record by its key. The power of the `Criteria` object is that you can add rules to it, just like you would add '`WHERE`' or '`ORDER BY`' statements in a SQL query.
 
 To get all comments written by Steve, use:
 
