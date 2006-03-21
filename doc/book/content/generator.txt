@@ -291,7 +291,9 @@ But beware that the code located in the model must be independent from the prese
 For this to work, just add the following `_article_link.php` partial in the `modules/comment/templates/` directory:
 
     [php]
-    <?php echo link_to($this->getArticle()->getTitle(), 'article/edit?id='.$this->getArticleId()) ?>
+    <?php echo link_to($comment->getArticle()->getTitle(), 'article/edit?id='.$comment->getArticleId()) ?>
+    
+Notice that a partial column has access to the current object through a variable named by the module (`$comment` in this example).
 
 ### Presentation
 
