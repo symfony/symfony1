@@ -18,6 +18,7 @@ require_once 'pake/pakeGetopt.class.php';
 $OPTIONS = array(
   array('--version', '-V', pakeGetopt::NO_ARGUMENT, ''),
   array('--pakefile', '-f', pakeGetopt::OPTIONAL_ARGUMENT, ''),
+  array('--tasks', '-T', pakeGetopt::OPTIONAL_ARGUMENT, ''),
 );
 $opt = new pakeGetopt($OPTIONS);
 try
