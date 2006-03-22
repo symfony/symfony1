@@ -337,7 +337,7 @@
     switch ($value)
     {
       case 'update':
-        if ($options['position'])
+        if (isset($options['position']) && $options['position'])
         {
           $javascript_function = "new Insertion.".sfInflector::camelize($options['position'])."('$element_id','$content')";
         }
