@@ -174,10 +174,9 @@ This new process reads the cookie and you are done.
 >         // execute this filter only once
 >         if ($this->isFirstCall())
 >         {
->           $request = $this->getContext()->getRequest();
->           if ($request->getCookie('MyWebSite'))
+>           if ($cookie = $this->getContext()->getRequest()->getCookie('MyWebSite'))
 >           {
->             $value = unserialize(base64_decode($this->getRequest()->getCookie('MyWebSite')));
+>             $value = unserialize(base64_decode($cookie));
 >             $c = new Criteria();
 >             $c->add(UserPeer::REMEMBER_KEY, $value[0]);
 >             $c->add(UserPeer::LOGIN, $value[1]);
