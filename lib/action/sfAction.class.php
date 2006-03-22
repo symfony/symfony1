@@ -343,7 +343,7 @@ abstract class sfAction extends sfComponent
   /**
    * Manually register validators for this action.
    *
-   * @param ValidatorManager A ValidatorManager instance.
+   * @param sfValidatorManager A sfValidatorManager instance.
    *
    * @return void
    */
