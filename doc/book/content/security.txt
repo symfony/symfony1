@@ -69,10 +69,10 @@ Here is an example of credential definition:
         }
       }
     
-      public function executeRemoveSomeCrendential()
+      public function executeRemoveSomeCredential()
       {
         $user = $this->getUser();
-        if ($user->hasCrendential('admin', 'superuser'))
+        if ($user->hasCredential('admin', 'superuser'))
         {
           $user->removeCredential('superuser');
         }
