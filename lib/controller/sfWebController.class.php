@@ -52,9 +52,17 @@ abstract class sfWebController extends sfController
     }
 
     $route_name = '';
+    $fragment = '';
 
     if (!is_array($parameters))
     {
+      // strip fragment
+      if (false !== ($pos = strpos($parameters, '#')))
+      {
+        $fragment = substr($parameters, $pos + 1);
+        $parameters = substr($parameters, 0, $pos);
+      }
+
       list($route_name, $parameters) = $this->convertUrlStringToParameters($parameters);
     }
 
@@ -106,6 +114,11 @@ abstract class sfWebController extends sfController
     if ($absolute)
     {
       $url = 'http://'.$this->getContext()->getRequest()->getHost().$url;
+    }
+
+    if ($fragment)
+    {
+      $url .= '#'.$fragment;
     }
 
     return $url;
