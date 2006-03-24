@@ -105,7 +105,7 @@ class sfPHPView extends sfView
     }
   }
 
-  protected function renderFile($file)
+  protected function renderFile($_sfFile)
   {
     $this->attribute_holder->add($this->getGlobalVars());
     $this->attribute_holder->add($this->getModuleVars());
@@ -117,7 +117,7 @@ class sfPHPView extends sfView
     // render to variable
     ob_start();
     ob_implicit_flush(0);
-    require($file);
+    require($_sfFile);
     $retval = ob_get_clean();
 
     return $retval;
