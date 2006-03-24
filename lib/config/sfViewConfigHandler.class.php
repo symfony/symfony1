@@ -133,11 +133,13 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     $components = $this->mergeConfigValue('components', $viewName);
     foreach ($components as $name => $component)
     {
-      if (count($component) > 1)
+      if (!is_array($component) || count($component) < 1)
       {
-        $data .= "    \$this->setComponentSlot('$name', '{$component[0]}', '{$component[1]}');\n";
-        $data .= "    if (sfConfig::get('sf_logging_active')) \$context->getLogger()->info('{sfViewConfig} set component \"$name\" ({$component[0]}/{$component[1]})');\n";
+        $component = array(null, null);
       }
+
+      $data .= "    \$this->setComponentSlot('$name', '{$component[0]}', '{$component[1]}');\n";
+      $data .= "    if (sfConfig::get('sf_logging_active')) \$context->getLogger()->info('{sfViewConfig} set component \"$name\" ({$component[0]}/{$component[1]})');\n";
     }
 
     return $data;
