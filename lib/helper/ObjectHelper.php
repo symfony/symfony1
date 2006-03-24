@@ -72,14 +72,14 @@ function objects_for_select($options = array(), $value_method, $text_method = nu
   foreach($options as $option)
   {
     // text method exists?
-    if ($text_method && !method_exists($option, $text_method))
+    if ($text_method && !is_callable(array($option, $text_method)))
     {
       $error = sprintf('Method "%s" doesn\'t exist for object of class "%s"', $text_method, get_class($option));
       throw new sfViewException($error);
     }
 
     // value method exists?
-    if (!method_exists($option, $value_method))
+    if (!is_callable(array($option, $value_method)))
     {
       $error = sprintf('Method "%s" doesn\'t exist for object of class "%s"', $value_method, get_class($option));
       throw new sfViewException($error);
@@ -119,20 +119,19 @@ function object_select_tag($object, $method, $options = array(), $default_value 
 
   if (isset($options['include_custom']))
   {
-    array_unshift($select_options, $options['include_custom']);
-    unset($options['include_custom']);
+    $select_options = array($options['include_custom']) + $select_options;
   }
   else if (isset($options['include_title']))
   {
-    array_unshift($select_options, '-- '._convert_method_to_name($method, $options).' --');
+    $select_options = array('-- '._convert_method_to_name($method, $options).' --') + $select_options;
     unset($options['include_title']);
   }
   else if (isset($options['include_blank']))
   {
-    array_unshift($select_options, '');
+    $select_options = array('') + $select_options;
     unset($options['include_blank']);
   }
-
+  
   $value = _get_object_value($object, $method, $default_value);
   $option_tags = options_for_select($select_options, $value, $options);
 
@@ -156,7 +155,7 @@ function _get_values_for_object_select_tag($object, $class)
     $methodToCall = '';
     foreach (array('toString', '__toString', 'getPrimaryKey') as $method)
     {
-      if (method_exists($objects[0], $method))
+      if (is_callable(array($objects[0], $method)))
       {
         $methodToCall = $method;
         break;
@@ -272,7 +271,7 @@ function _convert_method_to_name ($method, &$options)
 function _get_object_value ($object, $method, $default_value = null)
 {
   // method exists?
-  if (!method_exists($object, $method))
+  if (!is_callable(array($object, $method)))
   {
     $error = 'Method "%s" doesn\'t exist for object of class "%s"';
     $error = sprintf($error, $method, get_class($object));
