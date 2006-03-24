@@ -163,20 +163,30 @@ $script .= '
       {
         // add automatic UpdatedAt updating
         $updated = true;
-        $date_script .= "        \$this->setUpdatedAt(time());\n";
+        $date_script .= "
+    if (\$this->isModified() && !\$this->isColumnModified('updated_at'))
+    {
+      \$this->setUpdatedAt(time());
+    }
+";
       }
       else if (!$updated && $clo == 'updated_on')
       {
         // add automatic UpdatedOn updating
         $updated = true;
-        $date_script .= "        \$this->setUpdatedOn(time());\n";
+        $date_script .= "
+    if (\$this->isModified() && !\$this->isColumnModified('updated_on'))
+    {
+      \$this->setUpdatedOn(time());
+    }
+";
       }
       else if (!$created && $clo == 'created_at')
       {
         // add automatic CreatedAt updating
         $created = true;
         $date_script .= "
-    if (\$this->isNew() && !\$this->getCreatedAt())
+    if (\$this->isNew() && !\$this->isColumnModified('created_at'))
     {
       \$this->setCreatedAt(time());
     }
@@ -187,7 +197,7 @@ $script .= '
         // add automatic CreatedOn updating
         $created = true;
         $date_script .= "
-    if (\$this->isNew() && !\$this->getCreatedOn())
+    if (\$this->isNew() && !\$this->isColumnModified('created_on'))
     {
       \$this->setCreatedOn(time());
     }
