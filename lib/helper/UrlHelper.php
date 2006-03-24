@@ -26,7 +26,7 @@ function url_for($url, $absolute = false)
     $controller = sfContext::getInstance()->getController();
   }
 
-  return $controller->genUrl(null, $url, $absolute);
+  return $controller->genUrl($url, $absolute);
 }
 
 /*

@@ -66,7 +66,7 @@ class sfViewCacheManager
   public function generateNamespace($internalUri, $suffix)
   {
     // generate uri
-    $uri = $this->controller->genUrl(null, $internalUri);
+    $uri = $this->controller->genUrl($internalUri);
 
     // prefix with vary headers
     $varyHeaders = $this->getVary($internalUri, $suffix);
