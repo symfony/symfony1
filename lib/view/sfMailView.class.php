@@ -105,7 +105,7 @@ class sfMailView extends sfPHPView
     {
       $setter = 'set'.sfInflector::camelize($var);
       $getter = 'get'.sfInflector::camelize($var);
-      $value  = $mail->$getter() ? $mail->$getter() : sfConfig::get($config_prefix.strtolower($var));
+      $value  = sfConfig::get($config_prefix.strtolower($var), $mail->$getter());
       $mail->$setter($value);
     }
 
