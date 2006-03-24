@@ -96,10 +96,8 @@ abstract class sfAction extends sfComponent
     }
 
     $cache = $this->getContext()->getViewCacheManager();
-    $moduleName = $this->getModuleName();
-    $actionName = $this->getActionName();
 
-    return (!$cache->has($moduleName, $actionName, $suffix));
+    return (!$cache->has(sfRouting::getInstance()->getCurrentInternalUri(), $suffix));
   }
 
   /**
