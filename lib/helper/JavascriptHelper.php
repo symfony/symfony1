@@ -714,7 +714,7 @@
     $response->addJavascript('/sf/js/prototype/effects');
 
     $comp_options = _convert_options($completion_options);
-    if (isset($comp_options['use_style']) && $comp_options['use_style'] == 'true')
+    if (isset($comp_options['use_style']) && $comp_options['use_style'] == true)
     {
       $response->addStylesheet('/sf/css/sf_helpers/input_auto_complete_tag');
     }
@@ -920,7 +920,7 @@
     $js_options['asynchronous'] = (isset($options['type'])) ? ($options['type'] != 'synchronous') : 'true';
     if (isset($options['method'])) $js_options['method'] = _method_option_to_s($options['method']);
     if (isset($options['position'])) $js_options['insertion'] = "Insertion.".sfInflector::camelize($options['position']);
-    $js_options['evalScripts'] = (!isset($options['script']) || $options['script'] == '0' || $options['script'] == 'false') ? 'false' : 'true';
+    $js_options['evalScripts'] = (!isset($options['script']) || $options['script'] == '0' || $options['script'] == false) ? 'false' : 'true';
 
     if (isset($options['form']))
     {

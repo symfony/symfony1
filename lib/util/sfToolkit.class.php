@@ -293,21 +293,58 @@ class sfToolkit
     $attributes = array();
     foreach ($matches as $val)
     {
-      $attributes[$val[1]] = $val[3];
+      $attributes[$val[1]] = self::toType($val[3]);
     }
 
     return $attributes;
   }
 
-    /**
-     * Returns subject replaced with regular expression matchs
-     *
-     * @param mixed subject to search
-     * @param array array of search => replace pairs
-     */
-    public static function pregtr($search, $replacePairs) {
-        return preg_replace(array_keys($replacePairs), array_values($replacePairs), $search);
+  /**
+   * Finds the type of the passed value, returns the value as the new type.
+   *
+   * @param  string
+   * @return mixed
+   */
+  protected static function toType($value)
+  {
+    // lowercase our value for comparison
+    $value  = trim($value);
+    $lvalue = strtolower($value);
+
+    if (in_array($lvalue, array('null', '~', '')))
+    {
+      $value = null;
     }
+    else if (in_array($lvalue, array('true', 'on', '+', 'yes')))
+    {
+      $value = true;
+    }
+    else if (in_array($lvalue, array('false', 'off', '-', 'no')))
+    {
+      $value = false;
+    }
+    else if (ctype_digit($value))
+    {
+      $value = (int) $value;
+    }
+    else if (is_numeric($value))
+    {
+      $value = (float) $value;
+    }
+
+    return $value;
+  }
+
+  /**
+   * Returns subject replaced with regular expression matchs
+   *
+   * @param mixed subject to search
+   * @param array array of search => replace pairs
+   */
+  public static function pregtr($search, $replacePairs)
+  {
+    return preg_replace(array_keys($replacePairs), array_values($replacePairs), $search);
+  }
 }
 
 ?>
