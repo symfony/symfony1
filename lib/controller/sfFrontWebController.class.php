@@ -53,10 +53,9 @@ class sfFrontWebController extends sfWebController
     }
     catch (Exception $e)
     {
-      // unknown exception
-      $e = new sfException(get_class($e).': '.$e->getMessage());
-
-      $e->printStackTrace();
+      // wrap non symfony exceptions
+      $sfException = new sfException();
+      $sfException->printStackTrace($e);
     }
   }
 }

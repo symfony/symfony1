@@ -178,10 +178,9 @@ catch (sfException $e)
 }
 catch (Exception $e)
 {
-  // unknown exception
-  $e = new sfException($e->getMessage());
-
-  $e->printStackTrace();
+  // wrap non symfony exceptions
+  $sfException = new sfException();
+  $sfException->printStackTrace($e);
 }
 
 ?>

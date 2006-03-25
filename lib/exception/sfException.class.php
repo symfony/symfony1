@@ -84,10 +84,15 @@ class sfException extends Exception
   /**
    * Print the stack trace for this exception.
    */
-  public function printStackTrace ()
+  public function printStackTrace ($exception = null)
   {
+    if (!$exception)
+    {
+      $exception = $this;
+    }
+
     // don't print message if it is an sfActionStopException exception
-    if ($this->getName() == 'sfActionStopException')
+    if (method_exists($exception, 'getName') && $exception->getName() == 'sfActionStopException')
     {
       if (!sfConfig::get('sf_test'))
       {
@@ -97,55 +102,69 @@ class sfException extends Exception
       return;
     }
 
-    // exception related properties
-    $class     = ($this->getFile() != null) ? sfToolkit::extractClassName($this->getFile()) : 'N/A';
-    $class     = ($class != '') ? $class : 'N/A';
-    $code      = ($this->getCode() > 0) ? $this->getCode() : 'N/A';
-    $file      = ($this->getFile() != null) ? $this->getFile() : 'N/A';
-    $line      = ($this->getLine() != null) ? $this->getLine() : 'N/A';
-    $message   = ($this->getMessage() != null) ? $this->getMessage() : 'N/A';
-    $name      = $this->getName();
-    $traceData = $this->getTrace();
-    $trace     = array();
+    // send an error 500 if not in debug mode
+    if (!sfConfig::get('sf_debug'))
+    {
+      header('HTTP/1.0 500 Internal Server Error');
+      $file = sfConfig::get('sf_web_dir').'/error500.html';
+      if (is_readable($file))
+      {
+        include($file);
+      }
+      else
+      {
+        echo 'internal server error';
+      }
+
+      if (!sfConfig::get('sf_test'))
+      {
+        exit(1);
+      }
+
+      return;
+    }
 
     // lower-case the format to avoid sensitivity issues
     $format = strtolower(self::$format);
 
-    if ($trace !== null && count($traceData) > 0)
+    $message = ($exception->getMessage() != null) ? $exception->getMessage() : 'n/a';
+    $name    = get_class($exception);
+
+    $traceData = $exception->getTrace();
+    array_unshift($traceData, array(
+      'function' => '',
+      'file'     => ($exception->getFile() != null) ? $exception->getFile() : 'n/a',
+      'line'     => ($exception->getLine() != null) ? $exception->getLine() : 'n/a',
+      'args'     => array(),
+    ));
+
+    $traces = array();
+    if ($format == 'html')
     {
-      // format the stack trace
-      for ($i = 0, $z = count($traceData); $i < $z; $i++)
-      {
-        // no file key exists, skip this index
-        if (!isset($traceData[$i]['file'])) continue;
-
-        // grab the class name from the file
-        // (this only works with properly named classes)
-        $tClass = sfToolkit::extractClassName($traceData[$i]['file']);
-
-        $tFile      = $traceData[$i]['file'];
-        $tFunction  = $traceData[$i]['function'];
-        $tLine      = $traceData[$i]['line'];
-
-        if ($tClass != null)
-        {
-          $tFunction = $tClass.'::'.$tFunction.'()';
-        }
-        else
-        {
-          $tFunction = $tFunction.'()';
-        }
-
-        if ($format == 'html')
-        {
-          $tFunction = '<strong>'.$tFunction.'</strong>';
-        }
-
-        $data = 'at %s in [%s:%s]';
-        $data = sprintf($data, $tFunction, $tFile, $tLine);
-
-        $trace[] = $data;
-      }
+      $lineFormat = 'at <strong>%s%s%s</strong>(%s)<br />in <em>%s</em> line %s <a href="#" onclick="toggle(\'%s\'); return false;">...</a><br /><ul id="%s" style="display: %s">%s</ul>';
+    }
+    else
+    {
+      $lineFormat = 'at %s%s%s(%s) in %s line %s';
+    }
+    for ($i = 0, $count = count($traceData); $i < $count; $i++)
+    {
+      $line = isset($traceData[$i]['line']) ? $traceData[$i]['line'] : 'n/a';
+      $file = isset($traceData[$i]['file']) ? $traceData[$i]['file'] : 'n/a';
+      $shortFile = preg_replace(array('#^'.sfConfig::get('sf_root_dir').'#', '#^'.realpath(sfConfig::get('sf_symfony_lib_dir')).'#'), array('SF_ROOT_DIR', 'SF_SYMFONY_LIB_DIR'), $file);
+      $args = isset($traceData[$i]['args']) ? $traceData[$i]['args'] : array();
+      $traces[] = sprintf($lineFormat,
+        (isset($traceData[$i]['class']) ? $traceData[$i]['class'] : ''),
+        (isset($traceData[$i]['type']) ? $traceData[$i]['type'] : ''),
+        $traceData[$i]['function'],
+        $this->formatArgs($args, false, $format),
+        $shortFile,
+        $line,
+        'trace_'.$i,
+        'trace_'.$i,
+        $i == 0 ? 'block' : 'none',
+        $this->fileExcerpt($file, $line)
+      );
     }
 
     // extract error reference from message
@@ -155,47 +174,62 @@ class sfException extends Exception
       $error_reference = $matches[1];
     }
 
-    $error_file = 'error';
-    $error_ext = 'txt';
-    switch ($format)
-    {
-      case 'html':
-        $error_ext = 'php';
-        break;
-
-      case 'plain':
-      default:
-        break;
-    }
-
-    if (file_exists(sfConfig::get('sf_app_template_dir').DIRECTORY_SEPARATOR.$error_file.'_'.sfConfig::get('sf_environment').'.'.$error_ext))
-    {
-      $error_file = 'error_'.sfConfig::get('sf_environment');
-    }
-
-    $error_file = sfConfig::get('sf_app_template_dir').DIRECTORY_SEPARATOR.$error_file.'.'.$error_ext;
-    if (is_readable($error_file))
-    {
-      include($error_file);
-    }
-    else
-    {
-      $error_message = 'Exception: %s from "%s" line "%s"'."\n\n";
-      $error_message = sprintf($error_message, $message, $file, $line);
-
-      foreach ($trace as $line)
-      {
-        $error_message .= $line."\n";
-      }
-
-      echo $error_message;
-    }
+    include(sfConfig::get('sf_symfony_data_dir').'/data/exception.'.($format == 'html' ? 'php' : 'txt'));
 
     // if test, do not exit
     if (!sfConfig::get('sf_test'))
     {
       exit(1);
     }
+  }
+
+  private function fileExcerpt($file, $line)
+  {
+    if (is_readable($file))
+    {
+      $content = preg_split("/\n/", file_get_contents($file));
+
+      $lines = array();
+      for ($i = max($line - 3, 0), $max = min($line + 3, count($content)); $i <= $max; $i++)
+      {
+        $lines[] = '<li'.($i == $line ? ' class="selected"' : '').'>'.$content[$i - 1].'</li>';
+      }
+
+      return '<ol start="'.($line - 3).'">'.implode("\n", $lines).'</ol>';
+    }
+  }
+
+  private function formatArgs($args, $single = false, $format = 'html')
+  {
+    $result = array();
+
+    $single and $args = array($args);
+
+    foreach ($args as $key => $value)
+    {
+      if (is_object($value))
+      {
+        $result[] = ($format == 'html' ? '<em>object</em>' : 'object').'(\''.get_class($value).'\')';
+      }
+      else if (is_array($value))
+      {
+        $result[] = ($format == 'html' ? '<em>array</em>' : 'array').'('.self::format_args($value).')';
+      }
+      else if ($value === null)
+      {
+        $result[] = '<em>null</em>';
+      }
+      else if (!is_int($key))
+      {
+        $result[] = "'$key' =&gt; '$value'";
+      }
+      else
+      {
+        $result[] = "'".$value."'";
+      }
+    }
+
+    return implode(', ', $result);
   }
 
   /**
