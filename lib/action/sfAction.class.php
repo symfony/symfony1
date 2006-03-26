@@ -70,7 +70,7 @@ abstract class sfAction extends sfComponent
   }
 
   /**
-   * Returns true if current action template will be executed by the view.
+   * DEPRECATED: Returns true if current action template will be executed by the view.
    *
    * This is the case if:
    * - cache is off;
@@ -81,9 +81,10 @@ abstract class sfAction extends sfComponent
    *
    * @return boolean
    */
-  // FIXME: does not work for fragment because config is created in template, too late...
   public function mustExecute($suffix = 'slot')
   {
+    if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->err('This method is deprecated.');
+
     if (!sfConfig::get('sf_cache'))
     {
       return 1;

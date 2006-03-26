@@ -63,6 +63,11 @@ abstract class sfView
    */
   const RENDER_VAR = 4;
 
+  /**
+   * Render the presentation from cache.
+   */
+  const RENDER_CACHE = 8;
+
   private
     $context            = null,
     $decorator          = false,
