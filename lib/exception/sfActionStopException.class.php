@@ -30,7 +30,7 @@ class sfActionStopException extends sfException
     parent::__construct($message, $code);
   }
 
-  public function printStackTrace ()
+  public function printStackTrace ($exception = null)
   {
   }
 }
