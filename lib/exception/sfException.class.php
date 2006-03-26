@@ -213,7 +213,7 @@ class sfException extends Exception
       }
       else if (is_array($value))
       {
-        $result[] = ($format == 'html' ? '<em>array</em>' : 'array').'('.self::format_args($value).')';
+        $result[] = ($format == 'html' ? '<em>array</em>' : 'array').'('.self::formatArgs($value).')';
       }
       else if ($value === null)
       {
