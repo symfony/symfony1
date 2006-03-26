@@ -51,6 +51,7 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
     $this->yamlConfig = $myConfig;
 
     // iterate through all action names
+    $data  = array();
     $first = true;
     foreach ($this->yamlConfig as $actionName => $values)
     {
