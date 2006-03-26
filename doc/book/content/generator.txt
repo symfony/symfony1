@@ -131,6 +131,8 @@ Administration
 
 Symfony can create modules based on propel objects for your administration applications. Contrary to other generators, you keep the total control of the modules, since you benefit from the usual module mechanisms (decorator, validation, routing, custom configuration, autoloading, etc.). You are free to link the modules as you want, or to add a module of your own. You can also override any piece of action or template.
 
+>**Note**: A [screencast](http://downloads.symfony-project.com/demo/admin/admin_generator_commented.mov) showing an administration being built is available for download (21min, QT7, 17 Mb).
+
 ### Initiation
 
 Setting up an administration is as easy as initiating a scaffolding:
@@ -294,6 +296,12 @@ For this to work, just add the following `_article_link.php` partial in the `mod
     <?php echo link_to($comment->getArticle()->getTitle(), 'article/edit?id='.$comment->getArticleId()) ?>
     
 Notice that a partial column has access to the current object through a variable named by the module (`$comment` in this example).
+
+>**Note**: If you need to customize the parameters of a partial column (`_article_link` in this example), do just like you would with a normal field, under the `field:` key. Just don't include the first underscore (`_`):
+>
+>         fields:
+>           article_link:   { name: Article }
+>
 
 ### Presentation
 
