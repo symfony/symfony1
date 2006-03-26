@@ -275,7 +275,7 @@ Then the `update` action of the `author` module can simply use the `fromArray` m
     {
       $author = AuthorPeer::retrieveByPk($this->getRequestParameter('id'));
   
-      $this->forward404_unless($author instanceof Author);
+      $this->forward404Unless($author instanceof Author);
 
       $author->fromArray($this->getRequest()->getParameterHolder()->getAll(), Author::TYPE_FIELDNAME);
       $author->save();
