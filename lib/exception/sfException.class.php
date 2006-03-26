@@ -113,6 +113,7 @@ class sfException extends Exception
       }
       else
       {
+        error_log($exception->getMessage());
         echo 'internal server error';
       }
 
