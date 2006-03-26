@@ -338,6 +338,7 @@ class sfWebDebug
       'logging'      => sfConfig::get('sf_logging_active')    ? 'on' : 'off',
       'cache'        => sfConfig::get('sf_cache')             ? 'on' : 'off',
       'eaccelerator' => (extension_loaded('eaccelerator') && ini_get('eaccelerator.enable')) ? 'on' : 'off',
+      'apc'          => (extension_loaded('apc') && ini_get('apc.enabled')) ? 'on' : 'off',
       'compression'  => sfConfig::get('sf_compressed')        ? 'on' : 'off',
       'tidy'         => (extension_loaded('tidy'))            ? 'on' : 'off',
       'syck'         => (extension_loaded('syck'))            ? 'on' : 'off',
