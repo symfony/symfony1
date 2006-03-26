@@ -107,6 +107,11 @@ class sfPHPView extends sfView
 
   protected function renderFile($_sfFile)
   {
+    if ($sf_logging_active = sfConfig::get('sf_logging_active'))
+    {
+      $this->getContext()->getLogger()->info('{sfPHPView} render "'.$_sfFile.'"');
+    }
+
     $this->attribute_holder->add($this->getGlobalVars());
     $this->attribute_holder->add($this->getModuleVars());
 
@@ -250,11 +255,6 @@ class sfPHPView extends sfView
 
     if ($mode != sfView::RENDER_NONE)
     {
-      if ($sf_logging_active = sfConfig::get('sf_logging_active'))
-      {
-        $this->getContext()->getLogger()->info('{sfPHPView} render "'.$template.'"');
-      }
-
       $retval = null;
       if (sfConfig::get('sf_cache'))
       {

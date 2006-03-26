@@ -73,7 +73,8 @@ class sfCommonFilter extends sfFilter
       }
 
       // conditional GET support
-      if ($response->hasHttpHeader('Last-Modified'))
+      // never in debug mode
+      if ($response->hasHttpHeader('Last-Modified') && !sfConfig::get('sf_debug'))
       {
         $last_modified = $response->getHttpHeader('Last-Modified');
         $last_modified = $last_modified[0];

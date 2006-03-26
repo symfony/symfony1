@@ -191,7 +191,7 @@ class sfCacheFilter extends sfFilter
 
     if (sfConfig::get('sf_logging_active'))
     {
-      $context->getLogger()->info('{sfCacheFilter} page cache "'.$uri.' - '.$suffix.'" '.($retval ? 'exists' : 'does not exist'));
+      $context->getLogger()->info('{sfCacheFilter} page cache "'.$uri.' - '.$suffix.'" '.($retval !== null ? 'exists' : 'does not exist'));
     }
 
     if ($retval !== null)

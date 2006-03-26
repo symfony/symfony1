@@ -195,14 +195,7 @@ class sfFileCache extends sfCache
       }
     }
 
-    if ($data)
-    {
-      return $data;
-    }
-    else
-    {
-      return null;
-    }
+    return $data ? $data : null;
   }
 
   public function has($id, $namespace = self::DEFAULT_NAMESPACE, $doNotTestCacheValidity = false)
