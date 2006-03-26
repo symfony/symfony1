@@ -4,7 +4,7 @@ How to build a syndication feed
 Overview
 --------
 
-Whether your application lists posts, images, news, questions or anything else, if the update rate is higher than once a month, you must provide a syndication feed (RSS, Atom, etc.) to your users so that they can keep up-to-date about your website from within a feed aggregator. The good news is, if your object model is built in the right way, this won't take you more than a couple lines to develop, since symfony provides a feed builder tool that does it all for you.
+Whether your application lists posts, images, news, questions or anything else, if the update rate is higher than once a month, you must provide a syndication feed (RSS, Atom, etc.) to your users so that they can keep up-to-date about your website from within a feed aggregator. The good news is, if your object model is built in the right way, this won't take you more than a couple lines to develop, since symfony provides a feed builder plugin that does it all for you.
 
 Introduction
 ------------
@@ -104,6 +104,17 @@ The feed action has to output an [Atom][1] feed. As a reminder of all the inform
 
     </feed>
 
+Install the plug-in
+-------------------
+
+Symfony provides a `sfFeed` plug-in that automates most of the feed generation. To install it, use the symfony command line:
+
+    $ symfony plugin-install local symfony/sfShoppingCart
+    
+This installs the classes of the plug-in in the `myapp/lib/symfony/plugins/` directory, because the `local` option tells symfony to install the plug-in for the current application only. You could have installed it for all your projects by replacing `local` by `global`.
+
+If you want to learn more about plug-ins, how they extend the framework and how you can package the features that you use across several projects into a plug-in, read the [plug-in chapter](http://www.symfony-project.com/content/book/page/plugin.html) of the symfony book.
+
 Build the feed by hand
 ----------------------
 
@@ -127,13 +138,13 @@ In the `feed` module, create a `lastPosts` action:
       foreach ($posts as $post)
       {
         $item = new sfFeedItem();
-        $item->setItemTitle($post->getTitle());
-        $item->setItemLink('@permalink?stripped_title='.$post->getStrippedTitle());
-        $item->setItemAuthorName($post->getAuthor()->getName());
-        $item->setItemAuthorEmail($post->getAuthor()->getEmail());
-        $item->setItemPubdate($post->getCreatedAt());
-        $item->setItemUniqueId($post->getStrippedTitle());
-        $item->setItemDescription($post->getDescription());
+        $item->setFeedTitle($post->getTitle());
+        $item->setFeedLink('@permalink?stripped_title='.$post->getStrippedTitle());
+        $item->setFeedAuthorName($post->getAuthor()->getName());
+        $item->setFeedAuthorEmail($post->getAuthor()->getEmail());
+        $item->setFeedPubdate($post->getCreatedAt('U'));
+        $item->setFeedUniqueId($post->getStrippedTitle());
+        $item->setFeedDescription($post->getDescription());
 
         $feed->addItem($item);
       }
