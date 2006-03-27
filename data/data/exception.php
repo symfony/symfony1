@@ -13,7 +13,7 @@
   ul li { padding-bottom: 5px; margin: 0 }
   ol { font-family: monospace; white-space: pre; list-style-position: inside; margin: 0; padding: 10px 0 }
   ol li { margin: -5px; padding: 0 }
-  ol .selected { font-weight: bold; background-color: #ccc; padding: 2px 0 }
+  ol .selected { font-weight: bold; background-color: #ddd; padding: 2px 0 }
   table.vars { padding: 0; margin: 0; border: 1px solid #999; background-color: #fff; }
   table.vars th { padding: 2px; background-color: #ddd; font-weight: bold }
   table.vars td  { padding: 2px; font-family: monospace; white-space: pre }

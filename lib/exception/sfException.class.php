@@ -188,7 +188,7 @@ class sfException extends Exception
   {
     if (is_readable($file))
     {
-      $content = preg_split("/\n/", file_get_contents($file));
+      $content = preg_split('#<br />#', highlight_file($file, true));
 
       $lines = array();
       for ($i = max($line - 3, 0), $max = min($line + 3, count($content)); $i <= $max; $i++)
