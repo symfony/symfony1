@@ -1,0 +1,162 @@
+Command Line Interface
+======================
+
+Overview
+--------
+
+Many of the tasks that a developer executes during the building and maintenance of a web application can be handled by symfony's Command Line Interface (CLI).
+
+Pake
+----
+
+Symfony uses a dedicated tool called [Pake][1] to manage common tasks. Pake is a php tool similar to the [Rake][2] command, a Ruby translation of the `make` command. It automates some administration tasks according to a specific configuration file called `pakefile.php`. But since you use the `pake` tool just by typing `symfony` in a command line, everything becomes much simpler than it sounds.
+
+>**Note**: The symfony CLI works only from the root of a symfony project
+
+CLI core
+--------
+
+To get the installed version of the symfony package, type:
+
+    $ symfony -V
+
+To get the full list of the available administration operations, use:
+
+    $ symfony -T
+    
+The symfony command expects tasks, and some tasks require additional parameters. The general syntax is:
+
+    $ symfony <TASK> [parameters]
+
+A few tasks have a shortcut, faster to write, that has the same effect.
+
+    $ symfony cc
+    // does the same thing as
+    $ symfony clear-cache
+
+CLI tasks
+---------
+
+### Structure generation
+
+`init-project`: Initialize a new symfony project (shortcut: `new`)
+
+    $ symfony init-project <PROJECT_NAME>
+
+`init-app`: Initialize a new symfony application (shortcut: `app`)
+          
+    $ symfony init-app <APPLICATION_NAME>
+
+`init-module`: Initialize a new symfony module (shortcut: `module`)
+
+    $ symfony init-module <APPLICATION_NAME> <MODULE_NAME>
+
+Find more about these commands in the [project creation chapter](project_creation.txt).
+
+### Model generation
+
+`propel-build-model`: Create Propel classes for the current model, based on the `schema.xml` file. If you have several files ending with `schema.xml` in your `config/` directory, they are all taken into account.
+
+    $ symfony propel-build-model
+
+The connection settings used by the following commands are taken from the `config/propel.ini` configuration.
+    
+`propel-build-schema`: Create `schema.xml` from an existing database
+
+    $ symfony propel-build-schema
+    
+`propel-build-sql`: Create the SQL code to create the tables described in the `schema.xml`, in a `data/schema.sql` file.
+
+    $ symfony propel-build-sql
+    
+`propel-build-db`: Create an empty database
+
+    $ symfony propel-build-db
+
+`propel-insert-sql`: Insert the SQL code from `data/schema.xml` into the database
+
+    $ symfony propel-insert-sql
+    
+If you want to learn more about the model and the effect of these commands, refer to the [model chapter](model.txt).
+
+### Development tools
+
+`clear-cache`: Clear the cached information (shortcut: `cc`) (find more in the [cache chapter](cache.txt))
+
+    $ symfony clear-cache <APPLICATION_NAME> [template|config]
+
+`fix-perms`: Fix directories permissions, to change to `777` the directories that need to be writable. The permission can be broken if you use a checkout from a SVN repository.
+
+    $ symfony fix-perms
+    
+`test`: Launch the test suite for an application (find more in the [unit test chapter](test_unit_testing.txt))
+
+    $ symfony test <APPLICATION_NAME>
+    
+`sync`: Synchronise the current project with another machine (find more in the [deployment chapter](deployment.txt))
+
+    $ symfony sync <ENVIRONMENT_NAME> [go]
+
+### Scaffolding and admin generation
+
+`propel-generate-crud`: Generate a new Propel CRUD module based on a class from the model
+
+    $ symfony propel-generate-crud <APPLICATION_NAME> <MODULE_NAME> <CLASS_NAME>
+    
+`propel-init-crud`: Same as `propel-generate-crud`, except that the generated code is visible only in the `cache/` folder (the generated actions and templates inherit from the framework)
+
+`propel-init-admin`: Initialize a new Propel admin module based on a class from the model
+
+    $ symfony propel-init-admin <APPLICATION_NAME> <MODULE_NAME> <CLASS_NAME>
+
+You will find a lot of details about scaffolding and generated administrations in the [generator chapter](generator.txt).
+
+### Plugin management
+
+`plugin-install`: Install a new plugin
+
+    $ symfony plugin-install [local|global] <CHANNEL_NAME>/<PLUGIN_NAME>
+    
+`plugin-upgrade`: Upgrade a plugin
+
+    $ symfony plugin-upgrade [local|global] <CHANNEL_NAME>/<PLUGIN_NAME>
+
+`plugin-upgrade-all`: Upgrade all the plugins previously installed in local
+
+    $ symfony plugin-upgrade-all
+
+`plugin-uninstall`: Uninstall a plugin
+
+    $ symfony plugin-uninstall [local|global] <CHANNEL_NAME>/<PLUGIN_NAME>
+
+The way to build, install and manage plugins is described in the [plugin chapter](plugin.txt).
+
+### Fast Web server for test
+
+The `server` command launches a fast web server written in PHP to serve a symfony application in the `dev` environment. The default port is 8000.
+
+    $ symfony server <APPLICATION_NAME> [<PORT>]
+
+For instance, if you want to test a symfony application called `myapp` without changing your server configuration, type:
+
+    $ symfony server myapp
+    
+You can now browse your app in the `dev` environment by requesting
+
+    http://localhost:8000/
+    
+Symfony uses [nanoserv][3] for this purpose, in order to bypass completely the web server. This results in a very fast access to the development environment - without any control over the server configuration nor access to its log files. This tool is to be used for debug, not in a production environment.
+
+>**Note**: This feature is still at an early stage
+
+Automatic completion
+---------------------
+
+The symfony wiki contains user-contributed configuration files to allow automatic completion of symfony commands. Check out the one that fits your CLI:
+
+* [Bash completion](http://www.symfony-project.com/trac/wiki/BashCompletion)
+* [Zsh completion](http://www.symfony-project.com/trac/wiki/ZshCompletion) 
+
+[1]: http://www.pake-project.org/    "Pake"
+[2]: http://rake.rubyforge.org/      "Rake"
+[3]: http://nanoserv.si.kz/          "Nanoserv"

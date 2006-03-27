@@ -39,6 +39,7 @@ parts:
     - finder
     - plugin
     - batch
+    - cli
     - shopping_cart
     - sortable
     - custom_helper
