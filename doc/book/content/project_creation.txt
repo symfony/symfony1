@@ -36,7 +36,7 @@ To get the full list of the available administration operations, simply type fro
 
     $ symfony -T
 
-The description of the most common administration operations follows.
+The description of the CLI tasks used during the early stage of a project follows. A full reference of the CLI tasks is available in the [CLI chapter](cli.txt).
 
 Project setup
 -------------
