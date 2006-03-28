@@ -282,7 +282,7 @@ The most common need is to include a piece of PHP code. If this code doesn't req
 
     [php]
     // include some PHP code into the current template
-    <?php echo include(sfConfig::get('sf_app_template_dir').'/time.php') ?>
+    <?php include(sfConfig::get('sf_app_template_dir').'/time.php') ?>
 
 ### Partial
 
