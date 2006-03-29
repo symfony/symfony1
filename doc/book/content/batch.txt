@@ -17,9 +17,9 @@ This is easily accomplished by creating a PHP file in the `myproject/batch/` dir
     <?php
 
     define('SF_ROOT_DIR',      realpath(dirname(__file__).'/..'));
-    define('SF_APP',           'myapp'));
-    define('SF_ENVIRONMENT',   'prod'));
-    define('SF_DEBUG,          false));
+    define('SF_APP',           'myapp');
+    define('SF_ENVIRONMENT',   'prod');
+    define('SF_DEBUG',          false);
 
     require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
     sfContext::getInstance();  // Required for batch processes that access the database in symfony >0.6x
