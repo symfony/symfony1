@@ -109,7 +109,7 @@ The default settings of the view, set in the application view configuration file
       has_layout:     on
       layout:         layout
 
-      slots:          {}
+      components:     {}
 
 When applied to the layout, these settings produce the following `<head>` section:
 
@@ -359,36 +359,31 @@ Or, in the action:
     [php]
     $this->hasLayout(false);
 
-Slots configuration
--------------------
+Component slots configuration
+-----------------------------
 
-Common interface components with dynamic content (breadcrumbs, navigation bars, etc.) that require the execution of an action are published in slots in symfony. As a slot is a variable name in which is stored the result of an action, the definition in the `view.yml` looks like:
+Common interface components with dynamic content (breadcrumbs, navigation bars, etc.) that require the execution of a component (the "light" version of an action) are published in *component slots* in symfony. The definition in the `view.yml` looks like:
 
-    slots:
-      $slotname: [$module, $action]
-
-Alternatively, in an action:
-
-    [php]
-    $slotname = $this->setSlot($module, $action);
+    components:
+      $componentname: [$module, $action]
     
 Imagine that you have a layout with a zone for contextual advices:
 
     [php]
     ...
     <div id="adviceBlock">
-      <?php echo $advices ?>
+      <?php echo include_component_slot('advices') ?>
     </div>
     ...
 
-You also have a module `advice` with contextual actions `forIndex` and `forList`. Now, if you want to associate a contextual action with the views of a module `article` with actions `view` and `list`, you could write the following `myproject/apps/myapp/modules/article/config/view.yml`:
+You also have a module `advice` with contextual components `forIndex` and `forList`. Now, if you want to associate a contextual component with the views of a module `article` with actions `index` and `list`, you could write the following `myproject/apps/myapp/modules/article/config/view.yml`:
 
     indexSuccess:
-      slots:
+      components:
         advices: [advice, forIndex]
 
     listSuccess:
-      slots:
+      components:
         advices: [advice, forList]
 
 How about template configuration?
