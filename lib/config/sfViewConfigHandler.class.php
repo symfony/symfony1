@@ -43,6 +43,10 @@ class sfViewConfigHandler extends sfYamlConfigHandler
       isset($myConfig['all']) && is_array($myConfig['all']) ? $myConfig['all'] : array()
     );
 
+    // merge javascripts and stylesheets
+    $myConfig['all']['stylesheets'] = array_merge($myConfig['default']['stylesheets'], $myConfig['all']['stylesheets']);
+    $myConfig['all']['javascripts'] = array_merge($myConfig['default']['javascripts'], $myConfig['all']['javascripts']);
+
     unset($myConfig['default']);
 
     $this->yamlConfig = $myConfig;
@@ -236,6 +240,19 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     $stylesheets = $this->mergeConfigValue('stylesheets', $viewName);
     if (is_array($stylesheets))
     {
+      // remove javascripts marked with a beginning '-'
+      $delete = array();
+      foreach ($stylesheets as $stylesheet)
+      {
+        $key = is_array($stylesheet) ? key($stylesheet) : $stylesheet;
+        if (substr($key, 0, 1) == '-')
+        {
+          $delete[] = $key;
+          $delete[] = substr($key, 1);
+        }
+      }
+      $stylesheets = array_diff($stylesheets, $delete);
+
       foreach ($stylesheets as $css)
       {
         if (is_array($css))
@@ -254,6 +271,18 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     $javascripts = $this->mergeConfigValue('javascripts', $viewName);
     if (is_array($javascripts))
     {
+      // remove javascripts marked with a beginning '-'
+      $delete = array();
+      foreach ($javascripts as $javascript)
+      {
+        if (substr($javascript, 0, 1) == '-')
+        {
+          $delete[] = $javascript;
+          $delete[] = substr($javascript, 1);
+        }
+      }
+      $javascripts = array_diff($javascripts, $delete);
+
       foreach ($javascripts as $js)
       {
         $data[] = sprintf("  \$action->getResponse()->addJavascript('%s');", $js);
