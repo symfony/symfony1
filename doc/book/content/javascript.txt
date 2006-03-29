@@ -149,14 +149,14 @@ The second popular way of interacting with web page is forms. Forms normally cal
 
 A `form_remote_tag()` opens a `<form>`, just like the `form_tag()` helper does. You are invited to use the symfony [form helpers](templating_form_helpers.txt) in AJAX forms as well as in regular forms.
 
-If you want to allow a form to work both in page mode and in AJAX mode, the best solution is to define it like a regular form, but to provide, in addition to the normal submit button, a second button to submit the form in AJAX - symfony calls it a `submit_to_remote()`. This will help you build AJAX interactions that degrade gracefully.
+If you want to allow a form to work both in page mode and in AJAX mode, the best solution is to define it like a regular form, but to provide, in addition to the normal submit button, a second button (`<input type="button" />`) to submit the form in AJAX - symfony calls it a `submit_to_remote()`. This will help you build AJAX interactions that degrade gracefully.
 
     [php]
     <?php echo form_tag('@item_add_regular') ?>
       <label for="item">Item:</label>
       <?php echo input_tag('item') ?>
       <?php echo submit_tag('Add') ?>
-      <?php echo submit_to_remote('Add in AJAX', array(
+      <?php echo submit_to_remote('ajax_submit', 'Add in AJAX', array(
           'update'   => 'item_list',
           'url'      => '@item_add',
       )) ?>
