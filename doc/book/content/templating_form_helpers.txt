@@ -25,7 +25,7 @@ To create a form, you have to use the symfony `form_tag` function since it trans
     [php]
     <?php echo form_tag('test/save') ?>
     // will generate in HTML
-    <form method="post" enctype="multipart/form-data" action="http://www.mysite.com/index.php/test/save">
+    <form method="post" action="http://www.mysite.com/index.php/test/save">
 
 This will route the form to the `save` action of the `test` module. You can learn more about the URL management in the [routing chapter](routing.txt).
 
@@ -33,9 +33,14 @@ To change the default `method`, the default [`enctype`][1] or to specify other a
 
     [php]
     // options argument with the associative array syntax
-    <?php echo form_tag('test/save', Array('method' => 'get', 'id' => 'myForm', 'class' => 'simpleForm')) ?>
+    <?php echo form_tag('test/save', Array('multipart' => true, 'id' => 'myForm')) ?>
+    // will generate in HTML
+    <form method="post" enctype="multipart/form-data" id="myForm" action="http://www.mysite.com/index.php/test/save">
+    
     // options argument with the string syntax
-    <?php echo form_tag('test/save', 'method=get id=myForm class=simpleForm') ?>
+    <?php echo form_tag('test/save', 'method=get class=simpleForm') ?>
+    // will generate in HTML
+    <form method="get" class="simpleForm" action="http://www.mysite.com/index.php/test/save">
 
 As there is no need for a closing form helper, you should use the HTML `</form>` tag, even if it doesn't look good in your source code.
 
@@ -93,7 +98,9 @@ Here are the standard form element helpers:
           <option value="4">Buck</option>
         </select>
         
-        // When the value is the same as the text to display, use an array instead of an associative array
+    When the value is the same as the text to display, use an array instead of an associative array
+    
+        [php]
         <?php echo select_tag('payment', options_for_select(Array('Visa', 'Eurocard', 'Mastercard'), 'Visa')) ?>
         // will generate in HTML
         <select name="payment" id="payment">
@@ -102,8 +109,10 @@ Here are the standard form element helpers:
           <option>Mastercard</option>
         </select>
         
-        //Multiple selection field uses the same syntax, and the selected values can then be an array
-         <?php echo select_tag('payment', options_for_select(Array('Visa', 'Eurocard', 'Mastercard'), Array('Visa', 'Mastecard'), 'multiple=multiple') ?>
+    Multiple selection field uses the same syntax, and the selected values can then be an array
+    
+        [php]
+        <?php echo select_tag('payment', options_for_select(Array('Visa', 'Eurocard', 'Mastercard'), Array('Visa', 'Mastecard'), 'multiple=multiple') ?>
         // will generate in HTML
         <select name="payment" id="payment" multiple="multiple">
           <option selected="selected">Visa</option>
@@ -111,12 +120,12 @@ Here are the standard form element helpers:
           <option selected="selected">Mastercard</option>
         </select>
         
-        // When the data needed to set the value and the text to display can be obtained via methods of an object, you can
-        // simply pass an array of the objects, and the names of the methods to use to retrieve the value and display text.
+    When the data needed to set the value and the text to display can be obtained via methods of an object, you can simply pass an array of the objects, and the names of the methods to use to retrieve the value and display text.
+    
+        [php]
         <?php echo select_tag('articles', objects_for_select($articles, 'getId', 'getTitle', 1) ) ?> 
-        // This will iterate through the $articles array, using the current object by calling the getId() for the value, and getTitle() 
-        // for the display text. 
-               
+
+    This will iterate through the `$articles` array, using the current object by calling the `getId()` method for the value, and `getTitle()` for the display text. 
 
  * field to upload a file:
 
