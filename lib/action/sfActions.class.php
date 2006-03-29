@@ -50,9 +50,7 @@ abstract class sfActions extends sfAction
     }
     else if (method_exists($this, 'execute'.$action))
     {
-      // DEPRECATED
       $actionToRun = 'execute'.$action;
-      if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->err(sprintf('The usage of \'execute\' as a prefix for actions is deprecated ("%s"). Please prefix your actions with the request method ("%s")', $actionToRun, $method.$action));
     }
     else
     {
