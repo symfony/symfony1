@@ -119,19 +119,20 @@ function object_select_tag($object, $method, $options = array(), $default_value 
 
   if (isset($options['include_custom']))
   {
-    $select_options = array($options['include_custom']) + $select_options;
+    $select_options = array('' => $options['include_custom']) + $select_options;
+    unset($options['include_custom']);
   }
   else if (isset($options['include_title']))
   {
-    $select_options = array('-- '._convert_method_to_name($method, $options).' --') + $select_options;
+    $select_options = array('' => '-- '._convert_method_to_name($method, $options).' --') + $select_options;
     unset($options['include_title']);
   }
   else if (isset($options['include_blank']))
   {
-    $select_options = array('') + $select_options;
+    $select_options = array('' => '') + $select_options;
     unset($options['include_blank']);
   }
-  
+
   $value = _get_object_value($object, $method, $default_value);
   $option_tags = options_for_select($select_options, $value, $options);
 
