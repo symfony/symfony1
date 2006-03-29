@@ -116,7 +116,7 @@ class sfPropelData
             {
               $obj->setByPosition($pos, $value);
             }
-            else if (method_exists($obj, $method))
+            else if (is_callable($obj, $method))
             {
               $obj->$method($value);
             }
