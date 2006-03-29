@@ -14,7 +14,7 @@ class ##MODULE_NAME##Actions extends sfActions
    * Executes index action
    *
    */
-  public function executeIndex()
+  public function getIndex()
   {
   }
 }

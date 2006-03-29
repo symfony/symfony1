@@ -128,7 +128,7 @@ class sfPropelCrudGenerator extends sfGenerator
     $this->tableMap = $this->map->getDatabaseMap()->getTable(constant($this->className.'Peer::TABLE_NAME'));
   }
 
-  public function getRetrieveByPkParamsForShow()
+  public function getRetrieveByPkParamsForAction($indent)
   {
     $params = array();
     foreach ($this->getPrimaryKey() as $pk)
@@ -136,7 +136,7 @@ class sfPropelCrudGenerator extends sfGenerator
       $params[] = "\$this->getRequestParameter('".sfInflector::underscore($pk->getPhpName())."')";
     }
 
-    return implode(",\n".str_repeat(' ', max(0, 49 - strlen($this->singularName.$this->className))), $params);
+    return implode(",\n".str_repeat(' ', max(0, $indent - strlen($this->singularName.$this->className))), $params);
   }
 
   public function getMethodParamsForGetOrCreate()
@@ -173,19 +173,6 @@ class sfPropelCrudGenerator extends sfGenerator
     }
 
     return implode(",\n".str_repeat(' ', max(0, 45 - strlen($this->singularName.$this->className))), $retrieve_params);
-  }
-
-  public function getRetrieveByPkParamsForDelete()
-  {
-    $params = array();
-    foreach ($this->getPrimaryKey() as $pk)
-    {
-      $params[] = "\$this->getRequestParameter('".sfInflector::underscore($pk->getPhpName())."')";
-    }
-
-    $sep = ",\n".str_repeat(' ', max(0, 43 - strlen($this->singularName.$this->className)));
-
-    return implode($sep, $params);
   }
 
   public function getTableMap()

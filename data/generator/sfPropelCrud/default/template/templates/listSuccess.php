@@ -23,4 +23,4 @@
 </tbody>
 </table>
 
-[?php echo link_to ('create', '<?php echo $this->getModuleName() ?>/edit') ?]
+[?php echo link_to ('create', '<?php echo $this->getModuleName() ?>/create') ?]

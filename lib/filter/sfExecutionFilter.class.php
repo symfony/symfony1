@@ -104,8 +104,8 @@ class sfExecutionFilter extends sfFilter
         {
           // execute the action
           $actionInstance->preExecute();
-          $viewName = $actionInstance->execute();
-
+          $methodToExecute = strtolower($context->getRequest()->getRequestMethod());
+          $viewName = method_exists($actionInstance, $methodToExecute) ? $actionInstance->$methodToExecute() : $actionInstance->execute();
           if ($viewName == '')
           {
             $viewName = sfView::SUCCESS;

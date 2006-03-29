@@ -79,6 +79,7 @@ abstract class sfController
       sfConfig::get('sf_symfony_data_dir').'/modules/'.$moduleName.'/actions' => true,
     );
 
+    $method = $this->getContext()->getRequest()->getRequestMethod();
     foreach ($dirs as $dir => $checkActivated)
     {
       // plugin module activated?
@@ -110,7 +111,8 @@ abstract class sfController
         require_once($module_file);
 
         // action is defined in this class?
-        $defined = in_array(strtolower('execute'.$controllerName), array_map('strtolower', get_class_methods($moduleName.$classSuffix.'s')));
+        $classMethods = array_map('strtolower', get_class_methods($moduleName.$classSuffix.'s'));
+        $defined = in_array(strtolower($method.$controllerName), $classMethods) || in_array(strtolower('execute'.$controllerName), $classMethods);
         if ($defined)
         {
           $this->controllerClasses[$moduleName.'_'.$controllerName.'_'.$classSuffix] = $moduleName.$classSuffix.'s';
