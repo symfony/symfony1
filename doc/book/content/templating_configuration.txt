@@ -223,6 +223,8 @@ On the other hand, if an action can give pages with various titles, you should u
 File inclusion configuration
 ----------------------------
 
+### Basic syntax
+
 To include a specific stylesheet or a specific javascript file in the view configuration file, use:
 
     stylesheets: [$css]
@@ -259,14 +261,53 @@ The `<head>` of the resulting view would then show:
     <script language="javascript" type="text/javascript" src="/js/calendar/lang/calendar-en.js"></script>
     <script language="javascript" type="text/javascript" src="/js/calendar/calendar-setup_stripped.js"></script>
 
-You can also change default stylesheet tag options:
+### Addition, removal, ordering
+
+When you mention a stylesheet or a JavaScript in a `view.yml`, it appears in the response `<head>` *in addition to the ones already defined* and after them. The addition of these files follows the usual cascade definition, and the order of inclusion is from the most general to the most particular.
+
+For instance, if your application `view.yml` stipulates:
+
+    default:
+      stylesheets: [main]
+      
+And if you have, in your module `config/view.yml`:
+
+    indexSuccess:
+      stylesheets: [special]
+    
+    all:
+      stylesheets: [additional]
+
+Then the `<head>` of the resulting `indexSuccess` view will show:
+
+    [php]
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/additional.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/special.css" />
+    
+The same applies for the JavaScript inclusions. This allows you to override global settings at the module and view level.
+
+To give you more control over this cascade, you can remove an already included stylesheet or JavaScript by prefixing its name with a minus sign ('-') in the `view.yml`
+
+    # adds a new stylesheet and removes the default one (as defined in the global view.yml)
+    indexSuccess:
+      stylesheets: [special, -main]
+
+You can be more accurate from within an action and define an additional parameter to force the position where to include the file (`first` or `last` position):
+
+    [php]
+    $this->getResponse()->addStylesheet('special', 'first');
+
+### Media specific stylesheet
+
+To specify a media for a stylesheet inclusion, you can change the default stylesheet tag options:
 
     stylesheets: [main, main_for_print: { media: print }]
 
 or
 
     [php]
-    $this->getResponse()->addStylesheet($css, array('media' => 'print'));
+    $this->getResponse()->addStylesheet('main_for_print', array('media' => 'print'));
 
 Layout configuration
 --------------------
