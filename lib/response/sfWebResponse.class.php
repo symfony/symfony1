@@ -383,28 +383,32 @@ class sfWebResponse extends sfResponse
 
   public function addStylesheet($css, $position = '', $options = array())
   {
-    if ($position == 'first')
+    if ($position)
     {
-      $this->setParameter($css, $options, 'helper/asset/auto/stylesheet/first');
+      $position = '/'.$position;
     }
-    else if ($position == 'last')
-    {
-      $this->setParameter($css, $options, 'helper/asset/auto/stylesheet/last');
-    }
-    else
-    {
-      $this->setParameter($css, $options, 'helper/asset/auto/stylesheet');
-    }
+
+    $this->setParameter($css, $options, 'helper/asset/auto/stylesheet'.$position);
   }
 
-  public function getJavascripts()
+  public function getJavascripts($position = '')
   {
-    return $this->parameter_holder->getAll('helper/asset/auto/javascript');
+    if ($position)
+    {
+      $position = '/'.$position;
+    }
+
+    return $this->parameter_holder->getAll('helper/asset/auto/javascript'.$position);
   }
 
-  public function addJavascript($js)
+  public function addJavascript($js, $position = '')
   {
-    $this->setParameter($js, $js, 'helper/asset/auto/javascript');
+    if ($position)
+    {
+      $position = '/'.$position;
+    }
+
+    $this->setParameter($js, $js, 'helper/asset/auto/javascript'.$position);
   }
 
   /**
