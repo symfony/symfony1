@@ -288,12 +288,12 @@ abstract class sfController
         // register the execution filter
         $execFilter = new $this->executionFilterClassName();
         $execFilter->initialize($this->context);
-        $filterChain->register($execFilter);
+        $filterChain->registerExecution($execFilter);
 
         // register the rendering filter
         $renderFilter = new $this->renderingFilterClassName();
         $renderFilter->initialize($this->context);
-        $filterChain->register($renderFilter);
+        $filterChain->registerRendering($renderFilter);
 
         if ($moduleName == sfConfig::get('sf_error_404_module') && $actionName == sfConfig::get('sf_error_404_action'))
         {

@@ -21,131 +21,64 @@
 class sfFilterChain
 {
   private
-    $chain      = array(),
-    $index      = -1,
-    $execution  = false;
+    $chain           = array(),
+    $index           = -1,
+    $execution       = false,
+    $executionFilter = null,
+    $renderingFilter = null;
 
   /**
    * Execute the next filter in this chain.
    *
    * @return void
-   *
-   * @author Sean Kerr (skerr@mojavi.org)
-   * @since  3.0.0
    */
   public function execute ()
   {
-/*
-> 0: Filter0->executeBeforeExecution()
-> 1: Filter1->executeBeforeExecution()
-> 2: Filter2->executeBeforeExecution()
+    ++$this->index;
 
-> 3: ExecutionFilter->execute()
-
-> 2: Filter2->executeBeforeRendering()
-> 1: Filter1->executeBeforeRendering()
-> 0: Filter0->executeBeforeRendering()
-
-> 4: RenderingFilter->execute()
-*/
-    $execIndex   = count($this->chain) - 2;
-    $renderIndex = $execIndex + 1;
-
-    $sf_logging_active = sfConfig::get('sf_logging_active');
-
-    if ($this->index == 0 && $this->execution)
+    $max = count($this->chain);
+    if ($this->index < $max)
     {
-      // rendering filter
-      --$this->index;
+      $filter = $this->chain[$this->execution ? ($max - $this->index - 1) : $this->index];
 
-      if ($sf_logging_active)
-      {
-        sfContext::getInstance()->getLogger()->info('{sfFilterChain} executing filter "'.get_class($this->chain[$renderIndex]).'" ['.$renderIndex.']');
-      }
-
-      $this->chain[$renderIndex]->execute($this);
-    }
-    else if ($this->index + 1 == $execIndex && !$this->execution)
-    {
-      // execution filter
-      ++$this->index;
-
-      if ($sf_logging_active)
-      {
-        sfContext::getInstance()->getLogger()->info('{sfFilterChain} executing filter "'.get_class($this->chain[$execIndex]).'" ['.$execIndex.']');
-      }
-
-      $this->chain[$execIndex]->execute($this);
-    }
-    else
-    {
-      // other filters
-
-      // skip to the next filter
+      // method to execute?
+      $method = '';
       if ($this->execution)
       {
-        --$this->index;
+        $method = method_exists($filter, 'executeBeforeRendering') ? 'executeBeforeRendering' : '';
       }
       else
       {
-        ++$this->index;
+        $method = method_exists($filter, 'executeBeforeExecution') ? 'executeBeforeExecution' : (method_exists($filter, 'execute') ? 'execute' : '');
       }
+    }
+    else if ($this->index == $max)
+    {
+      $filter = $this->execution ? $this->renderingFilter : $this->executionFilter;
+      $method = 'execute';
+    }
 
-      if ($this->index < count($this->chain) && $this->index > -1)
-      {
-        // execute the next filter
-        $filter = $this->chain[$this->index];
+    if (sfConfig::get('sf_logging_active'))
+    {
+      sfContext::getInstance()->getLogger()->info(sprintf('{sfFilterChain} executing filter "%s"', get_class($filter)));
+    }
 
-        if (!$this->execution)
-        {
-          if (method_exists($filter, 'executeBeforeExecution'))
-          {
-            if ($sf_logging_active)
-            {
-              sfContext::getInstance()->getLogger()->info('{sfFilterChain} executing filter (before execution) "'.get_class($filter).'" ['.$this->index.']');
-            }
-
-            $filter->executeBeforeExecution($this);
-          }
-          else if (method_exists($filter, 'execute'))
-          {
-            if ($sf_logging_active)
-            {
-              sfContext::getInstance()->getLogger()->info('{sfFilterChain} executing filter "'.get_class($filter).'" ['.$this->index.'] (before execution)');
-            }
-
-            $filter->execute($this);
-          }
-          else
-          {
-            // execute next filter
-            $this->execute();
-          }
-        }
-        else
-        {
-          if (method_exists($filter, 'executeBeforeRendering'))
-          {
-            if ($sf_logging_active)
-            {
-              sfContext::getInstance()->getLogger()->info('{sfFilterChain} executing filter "'.get_class($filter).'" ['.$this->index.'] (before rendering)');
-            }
-
-            $filter->executeBeforeRendering($this);
-          }
-          else
-          {
-            // execute next filter
-            $this->execute();
-          }
-        }
-      }
+    if (!$method)
+    {
+      // execute next filter
+      $this->execute();
+    }
+    else
+    {
+      // execute filter
+      $filter->$method($this);
     }
   }
 
   public function executionFilterDone ()
   {
     $this->execution = true;
+    $this->index     = -1;
   }
 
   /**
@@ -154,13 +87,20 @@ class sfFilterChain
    * @param Filter A Filter implementation instance.
    *
    * @return void
-   *
-   * @author Sean Kerr (skerr@mojavi.org)
-   * @since  3.0.0
    */
   public function register ($filter)
   {
     $this->chain[] = $filter;
+  }
+
+  public function registerExecution ($filter)
+  {
+    $this->executionFilter = $filter;
+  }
+
+  public function registerRendering ($filter)
+  {
+    $this->renderingFilter = $filter;
   }
 }
 
