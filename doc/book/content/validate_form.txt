@@ -302,6 +302,36 @@ The trouble is that using the input `id` as is (with brackets) in a validation f
 
 Symfony will do the translation automatically, and the validation will run as expected.
 
+Repopulation
+------------
+
+Note: This feature is only  available with a symfony release higher than 1096 and is still considered Alpha, since the interface can change. Feel free to give your feedback about it.
+
+One common concern about forms is the value that the form fields will have when the form is displayed again after a failed validation. If you defined default values, or if you use object helpers, it can be quite tricky to determine how to handle the values from the request. In addition, some controls (namely the checkbox and the select tags) have special ways to pass their value in the request parameters.
+
+Fortunately, symfony takes care of the form repopulation for you. If you want your form to be filled in with the values previously entered by the user, simply add these lines to your validation file:
+
+    fillin:
+      activate: on   # activate the form repopulation
+      param:
+        name: test   # name of the form
+
+This forces you to give a `name` attribute to your form, but it opens the possibility to repopulate a form in a page that contains more than one.
+
+The repopulation works for text and hidden inputs, textareas, radiobuttons, checkboxes and selects (simple and multiple).
+
+You might want to transform the values entered by the user before putting them in a form input. Escaping, url rewriting, transformation of special characters into entities, etc., all the transformations that can be called through a function (existing or defined by you) can be applied to the fields of your form if you define the transformation under the `converters:` key:
+
+     fillin:
+      activate: on
+      param:
+        name: test
+        converters:         # converters to apply
+          htmlentities:     [first_name, comments]
+          htmlspecialchars: [comments]
+
+The repopulation feature is based on a filter called `sfFillInFormFilter`, and it means that you can take advantage of form repopulation even if you don't use the symfony validation files. To activate the filter, just add it to your `filters.yml` as you would do with a normal filter (see more in the [filter chapter](filters.txt)).
+
 Client side validation
 ----------------------
 
