@@ -171,15 +171,6 @@ function select_language_tag($name, $value, $options = array())
 
 function input_tag($name, $value = null, $options = array())
 {
-  if ($value === null && isset($options['type']) && $options['type'] == 'password')
-  {
-    $value = null;
-  }
-  else if (($reqvalue = _get_request_value($name)) !== null)
-  {
-    $value = $reqvalue;
-  }
-
   return tag('input', array_merge(array('type' => 'text', 'name' => $name, 'id' => $name, 'value' => $value), _convert_options($options)));
 }
 
@@ -216,11 +207,6 @@ function input_password_tag($name = 'password', $value = null, $options = array(
  */
 function textarea_tag($name, $content = null, $options = array())
 {
-  if (($reqvalue = _get_request_value($name)) !== null)
-  {
-    $content = $reqvalue;
-  }
-
   $options = _parse_attributes($options);
   
   if (array_key_exists('size', $options))
@@ -374,16 +360,6 @@ tinyMCE.init({
 
 function checkbox_tag($name, $value = '1', $checked = false, $options = array())
 {
-  $request = sfContext::getInstance()->getRequest();
-  if ($request->hasErrors())
-  {
-    $checked = $request->getParameter($name, null);
-  }
-  elseif (($reqvalue = _get_request_value($name)) !== null)
-  {
-    $checked = $reqvalue;
-  }
-
   $html_options = array_merge(array('type' => 'checkbox', 'name' => $name, 'id' => $name, 'value' => $value), _convert_options($options));
   if ($checked) $html_options['checked'] = 'checked';
 
@@ -392,11 +368,6 @@ function checkbox_tag($name, $value = '1', $checked = false, $options = array())
 
 function radiobutton_tag($name, $value, $checked = false, $options = array())
 {
-  if (($reqvalue = _get_request_value($name)) !== null)
-  {
-    $checked = $reqvalue;
-  }
-
   $html_options = array_merge(array('type' => 'radio', 'name' => $name, 'value' => $value), _convert_options($options));
   if ($checked) $html_options['checked'] = 'checked';
 
@@ -1022,11 +993,6 @@ function _boolean_attribute($options, $attribute)
   }
 
   return $options;
-}
-
-function _get_request_value($name)
-{
-  return sfContext::getInstance()->getRequest()->getParameter($name);
 }
 
 ?>

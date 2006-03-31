@@ -23,7 +23,7 @@
 </div>
 [?php endif ?]
 
-[?php echo form_tag('<?php echo $this->getModuleName() ?>/edit', 'id=sf_admin_edit_form multipart=true') ?]
+[?php echo form_tag('<?php echo $this->getModuleName() ?>/edit', 'id=sf_admin_edit_form name=sf_admin_edit_form multipart=true') ?]
 
 <?php foreach ($this->getPrimaryKey() as $pk): ?>
 [?php echo object_input_hidden_tag($<?php echo $this->getSingularName() ?>, 'get<?php echo $pk->getPhpName() ?>') ?]

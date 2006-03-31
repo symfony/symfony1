@@ -83,6 +83,8 @@ class sfExecutionFilter extends sfFilter
 
         if ($validated)
         {
+          $fillInParameters = array();
+
           // get the current action validation configuration
           $validationConfig = $moduleName.'/'.sfConfig::get('sf_app_module_validate_dir_name').'/'.$actionName.'.yml';
           if (is_readable(sfConfig::get('sf_app_module_dir').'/'.$validationConfig))
@@ -114,6 +116,14 @@ class sfExecutionFilter extends sfFilter
         }
         else
         {
+          if (isset($fillInParameters['activate']) && $fillInParameters['activate'])
+          {
+            // register the fill in form filter
+            $fillInFormFilter = new sfFillInFormFilter();
+            $fillInFormFilter->initialize($this->context, $fillInParameters['param']);
+            $filterChain->register($fillInFormFilter);
+          }
+
           if ($sf_logging_active)
           {
             $this->context->getLogger()->info('{sfExecutionFilter} action validation failed');
