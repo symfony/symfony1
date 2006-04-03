@@ -161,20 +161,20 @@ The `sfUser` object also has two parameter holders:
 
 * the **ParameterHolder** is not persistent; it is erased at every new request
 
-    [php]
-    $myPH = $this->getUser()->getParameterHolder();
+        [php]
+        $myPH = $this->getUser()->getParameterHolder();
 
 * the **AttributeHolder** keeps data throughout requests; you should use it as soon as you need persistent session data
 
-    [php]
-    $myPH = $this->getUser()->getAttributeHolder();
+        [php]
+        $myPH = $this->getUser()->getAttributeHolder();
 
 As for the `sfRequest` object, the `sfUser` objects has shortcut methods to access its parameter holders:
 
-    [php]
-    $this->getUser()->setAttribute('attrib', $value);
-    //is equivalent to
-    $this->getUser()->getAttributeHolder()->set('attrib', $value);  
+        [php]
+        $this->getUser()->setAttribute('attrib', $value);
+        //is equivalent to
+        $this->getUser()->getAttributeHolder()->set('attrib', $value);  
     
 Other objects
 -------------

@@ -47,7 +47,7 @@ To fulfill these requirements, symfony was written entirely in [PHP5](http://www
 *   PostgreSQL
 *   Oracle
 *   MSSQL
-*   and any other database if a [Creole](http://creole.phpdb.org/wiki/) driver exists for it
+*   and any other database if a [Creole](http://creole.phpdb.org/trac/) driver exists for it
 
 The symfony object model relies on three distinct layers:
 
@@ -81,7 +81,7 @@ In addition, to fulfill the requirements of enterprises having their own coding 
 
 Symfony uses some code fragments of other open source projects:
 
-*   [Creole](http://creole.phpdb.org/wiki/), for the database abstraction layer 
+*   [Creole](http://creole.phpdb.org/trac/), for the database abstraction layer 
 *   [Propel](http://propel.phpdb.org/trac/), for the object-relational mapping layer
 *   [Mojavi](http://www.mojavi.org/), for the Model-View-Controller model layer
 

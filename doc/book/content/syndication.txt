@@ -109,7 +109,7 @@ Install the plug-in
 
 Symfony provides a `sfFeed` plug-in that automates most of the feed generation. To install it, use the symfony command line:
 
-    $ symfony plugin-install local symfony/sfShoppingCart
+    $ symfony plugin-install local symfony/sfFeed
     
 This installs the classes of the plug-in in the `myapp/lib/symfony/plugins/` directory, because the `local` option tells symfony to install the plug-in for the current application only. You could have installed it for all your projects by replacing `local` by `global`.
 
