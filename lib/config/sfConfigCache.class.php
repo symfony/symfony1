@@ -113,7 +113,7 @@ class sfConfigCache
   {
     $configs = array();
 
-    $globalConfigPath = substr($configPath, strrpos(dirname($configPath), DIRECTORY_SEPARATOR));
+    $globalConfigPath = basename(dirname($configPath)).'/'.basename($configPath);
     $files = array(
       sfConfig::get('sf_symfony_data_dir').'/'.$globalConfigPath, // default symfony configuration
       sfConfig::get('sf_app_dir').'/'.$globalConfigPath,          // default project configuration

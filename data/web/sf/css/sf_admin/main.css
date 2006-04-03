@@ -2,14 +2,22 @@ ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,body,html,p,blockquote,fieldset,input
 { margin: 0; padding: 0; }
 a img,:link img,:visited img { border: none; }
 
-a:link, a:visited
+a:link
 {
   text-decoration: none;
+  color: #3F9CDD;
+}
+
+a:visited
+{
+  text-decoration: none;
+  color: #004270;
 }
 
 a:hover
 {
   text-decoration: underline;
+  color: #0D6AAB;
 }
 
 body, td
@@ -19,6 +27,7 @@ body, td
   font-family: Arial, sans-serif;
   font-size: 11px;
   background-color: #fff;
+  color: #333;
 }
 
 p
@@ -39,24 +48,22 @@ p
   margin-right: 270px;
 }
 
+h1, h2
+{
+  font-family: Trebuchet MS, serif;
+}
+
 h1
 {
-  margin: 8px 0;
-  padding: 3px;
-  padding-left: 5px;
-  color: #555;
-  font-size: 16px;
-  border: 1px solid #ddd;
-  border-left: 4px solid #66f;
-  background-color: #ffc;
+  font-size: 30px;
+  font-weight: normal;
 }
 
 fieldset h2
 {
-  padding: 3px;
-  color: #333;
-  background-color: #ccf;
-  font-size: 11px;
+  color: #fff;
+  height: 24px;
+  font-size: 13px;
 }
 
 input, textarea, select
@@ -70,9 +77,7 @@ input, textarea, select
 
 label
 {
-  display: block;
   padding: 0 1em 3px 0;
-  float: left;
   text-align: left;
   width: 8em;
   color: #666;
@@ -115,7 +120,7 @@ label.required
 {
   margin-bottom: 10px;
   border: 1px solid #f33;
-  background-color: #ffc;
+  background: #ffc;
 }
 
 .form-errors h2
@@ -123,7 +128,7 @@ label.required
   padding: 5px 20px 5px 25px;
   font-size: 11px;
   color: #fff;
-  background: #f33 url(/sf/images/sf_admin/error.png) no-repeat 5px 2px;
+  background: url(/sf/images/sf_admin/form_errors_bg.gif);
 }
 
 .form-errors ul
@@ -150,8 +155,7 @@ label.required
 
 fieldset
 {
-  margin-bottom: 3px;
-  border: 1px solid #ddd;
+  border: 1px solid #acdafe;
   border-bottom: 0px;
   background-color: #fff;
 }
@@ -185,14 +189,9 @@ ul.sf_admin_td_actions li
 
 ul.sf_admin_actions
 {
-  margin: 10px 0;
+  border: 1px solid #acdafe;
   list-style-type: none;
   text-align: right;
-}
-
-ul.sf_admin_actions a
-{
-  color: #333;
 }
 
 ul.sf_admin_actions li
@@ -203,13 +202,12 @@ ul.sf_admin_actions li
 
 ul.sf_admin_actions input
 {
+  border: 0px;
   padding: 3px 3px 3px 20px;
   color: #333;
-  font-size: 11px;
-  font-family: Arial, sans-serif;
-  border: 0px;
-  border-right: 4px solid #999;
-  background-color: #ffc;
+  font-family: Trebuchet MS, serif;
+  font-size: 12px;
+  font-weight: bold;
   cursor: hand;
   cursor: pointer;
 }
@@ -217,82 +215,102 @@ ul.sf_admin_actions input
 .sf_admin_action_create
 {
   background: url(/sf/images/sf_admin/add.png) no-repeat 3px 2px;
-  border-right: 4px solid #73B65A !important;
 }
 
 .sf_admin_action_save
 {
   background: url(/sf/images/sf_admin/save.png) no-repeat 3px 2px;
-  border-right: 4px solid #73B65A !important;
 }
 
 .sf_admin_action_save_and_add
 {
   background: url(/sf/images/sf_admin/save.png) no-repeat 3px 2px;
-  border-right: 4px solid #73B65A !important;
 }
 
 .sf_admin_action_delete
 {
   background: url(/sf/images/sf_admin/delete.png) no-repeat 3px 2px;
-  border-right: 4px solid #E75C58 !important;
 }
 
 .sf_admin_action_cancel
 {
   background: url(/sf/images/sf_admin/cancel.png) no-repeat 3px 2px;
-  border-right: 4px solid #E75C58 !important;
 }
 
 .sf_admin_action_filter
 {
   background: url(/sf/images/sf_admin/filter.png) no-repeat 3px 2px;
-  border-right: 4px solid #66f !important;
 }
 
 .sf_admin_action_reset_filter
 {
-  background: url(/sf/images/sf_admin/cancel.png) no-repeat 3px 2px;
-  border-right: 4px solid #E75C58 !important;
+  background: url(/sf/images/sf_admin/reset.png) no-repeat 3px 2px;
 }
 
 .sf_admin_action_list
 {
   background: url(/sf/images/sf_admin/list.png) no-repeat 3px 2px;
-  border-right: 4px solid #66f !important;
 }
 
 .sf_admin_default_action
 {
-  background-color: #fc6 !important;
   font-weight: bold !important;
 }
 
 .sf_admin_list
 {
   width: 100%;
-  border: 1px solid #ddd;
+#  border: 1px solid #acdafe;
   border-bottom: 0px;
   border-right: 0px;
 }
 
 .sf_admin_list th
 {
-  padding: 2px;
-  background-color: #ccf;
+  height: 24px;
+  color: #fff;
+  background: url(/sf/images/sf_admin/list_header_bg.gif);
   text-align: left;
+  font-family: Trebuchet MS, serif;
+  font-size: 13px;
 }
 
 .sf_admin_list th a
 {
-  color: #333;
+  color: #fff;
 }
 
 .sf_admin_list td
 {
   padding: 3px;
-  border-bottom: 1px solid #ddd;
-  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #fff;
+  border-right: 1px solid #fff;
+}
+
+.sf_admin_filters fieldset h2
+{
+  background: url(/sf/images/sf_admin/filter_header_bg.gif);
+}
+
+.sf_admin_filters label
+{
+  background-color: #f7f1df;
+}
+
+.sf_admin_filters fieldset
+{
+  border: 1px solid #dfd396;
+}
+
+.sf_admin_filters ul.sf_admin_actions
+{
+  border: 1px solid #dfd396;
+  border-top: 0px;
+}
+
+.sf_admin_filters ul.sf_admin_actions input
+{
+  color: #C49812;
 }
 
 .sf_admin_filters li
@@ -301,13 +319,12 @@ ul.sf_admin_actions input
 }
 
 .sf_admin_row_0 td
-{
-  
+{  
 }
 
 .sf_admin_row_1 td
 {
-  background-color: #eef;
+  background-color: #ecf6fc;
 }
 
 .sf_admin_edit_help
