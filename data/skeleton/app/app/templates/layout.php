@@ -7,9 +7,6 @@
 
 <?php echo include_title() ?>
 
-<?php echo include_stylesheets() ?>
-<?php echo include_javascripts() ?>
-
 <link rel="shortcut icon" href="/favicon.ico" />
 
 </head>
