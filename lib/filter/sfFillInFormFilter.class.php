@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -51,94 +51,61 @@ class sfFillInFormFilter extends sfFilter
     // find our form
     if ($form = $xpath->query('//form[@name="'.$this->getParameter('name').'"]')->item(0))
     {
-      // input
-      foreach ($xpath->query('//descendant::input[@name and @type="text"]', $form) as $element)
+      foreach($xpath->query('descendant::input[@name and (not(@type) or @type="text" or @type="checkbox" or @type="radio")] | descendant::textarea[@name] | descendant::select[@name]', $form) as $element)
       {
-        $name = $element->getAttribute('name');
-        if (null === $request->getParameter($name))
+        if ($element->nodeName == 'input')
         {
-          continue;
-        }
-        $element->setAttribute('value', $this->espaceRequestParameter($request, $name));
-      }
-
-      // checkbox
-      foreach ($xpath->query('//descendant::input[@name and @type="checkbox"]', $form) as $element)
-      {
-        $name = $element->getAttribute('name');
-        $selected = $element->hasAttribute('value') ? ($request->getParameter($name) == $element->getAttribute('value')) : $request->getParameter($name);
-        if ($selected)
-        {
-          $element->setAttribute('checked', 'checked');
-        }
-        else
-        {
-          $element->removeAttribute('checked');
-        }
-      }
-
-      // radio
-      foreach ($xpath->query('//descendant::input[@name and @type="radio"]', $form) as $element)
-      {
-        $name = $element->getAttribute('name');
-        if ($request->getParameter($name) == $element->getAttribute('value'))
-        {
-          $element->setAttribute('checked', 'checked');
-        }
-        else
-        {
-          $element->removeAttribute('checked');
-        }
-      }
-
-      // textarea
-      foreach ($xpath->query('//descendant::textarea[@name]', $form) as $element)
-      {
-        $name = $element->getAttribute('name');
-        if ($request->getParameter($name) === null)
-        {
-          continue;
-        }
-
-        foreach ($element->childNodes as $child_node)
-        {
-          $element->removeChild($child_node);
-        }
-
-        $element->appendChild($doc->createTextNode($this->espaceRequestParameter($request, $name)));
-      }
-
-      // select
-      foreach ($xpath->query('//descendant::select[@name]', $form) as $element)
-      {
-        $name = $element->getAttribute('name');
-        $mutiple = false;
-        if (substr($name, -2) == '[]')
-        {
-          // multiple select
-          $element->setAttribute('multiple', 'multiple');
-          $mutiple = true;
-          $name = substr($name, 0, -2);
-        }
-        foreach ($xpath->query('descendant::option', $element) as $option)
-        {
-          $option->removeAttribute('selected');
-          if ($mutiple && is_array($request->getParameter($name)))
+          if (!$element->hasAttribute('type') || $element->getAttribute('type') == 'text')
           {
-            if (in_array($option->getAttribute('value'), $request->getParameter($name)))
+            // text input
+            $element->removeAttribute('value');
+            if ($request->hasParameter($element->getAttribute('name')))
             {
-              $option->setAttribute('selected', 'selected');
+              $element->setAttribute('value', $this->espaceRequestParameter($request, $element->getAttribute('name')));
             }
           }
-          else
+          else if ($element->getAttribute('type') == 'checkbox' || $element->getAttribute('type') == 'radio')
           {
-            if ($request->getParameter($name) == $option->getAttribute('value'))
+            // checkbox and radio
+            $name = $element->getAttribute('name');
+            $element->removeAttribute('checked');
+            if ($request->hasParameter($name) && ($request->getParameter($name) == $element->getAttribute('value') || !$element->hasAttribute('value')))
+            {
+              $element->setAttribute('checked', 'checked');
+            }
+          }
+        }
+        else if ($element->nodeName == 'textarea')
+        {
+          foreach ($element->childNodes as $child_node)
+          {
+            $element->removeChild($child_node);
+          }
+          $element->appendChild($doc->createTextNode($this->espaceRequestParameter($request, $element->getAttribute('name'))));
+        }
+        else if ($element->nodeName == 'select')
+        {
+          // select
+          $name     = $element->getAttribute('name');
+          $value    = $request->getParameter($name);
+          $multiple = $element->hasAttribute('multiple');
+          foreach ($xpath->query('descendant::option', $element) as $option)
+          {
+            $option->removeAttribute('selected');
+            if ($multiple && is_array($value))
+            {
+              if (in_array($option->getAttribute('value'), $value))
+              {
+                $option->setAttribute('selected', 'selected');
+              }
+            }
+            else if ($value == $option->getAttribute('value'))
             {
               $option->setAttribute('selected', 'selected');
             }
           }
         }
-      }
+      } // foreach
     }
 
     $response->setContent($doc->saveHTML());
