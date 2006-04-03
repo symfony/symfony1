@@ -76,9 +76,6 @@ The default global template, created when you initialize an application, is call
     
     <?php echo include_title() ?>
     
-    <?php echo include_stylesheets() ?>
-    <?php echo include_javascripts() ?>
-    
     <link rel="shortcut icon" href="/favicon.ico">
     
     </head>
@@ -88,7 +85,6 @@ The default global template, created when you initialize an application, is call
     
     </body>
     </html>
-
 
 The default settings of the view, set in the application view configuration file `myproject/apps/myapp/config/view.yml`, are:
 
@@ -260,6 +256,8 @@ The `<head>` of the resulting view would then show:
     
     <script language="javascript" type="text/javascript" src="/js/calendar/lang/calendar-en.js"></script>
     <script language="javascript" type="text/javascript" src="/js/calendar/calendar-setup_stripped.js"></script>
+
+>**Note**: In previous versions of symfony, this type of inclusion was only possible if you included calls to the `include_stylesheets()` and `include_javascripts()` helpers in the `<head>` section of the layout. This is not necessary anymore, and the use of these helpers is deprecated.
 
 ### Addition, removal, ordering
 
