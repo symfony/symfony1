@@ -26,6 +26,20 @@ class sfParameterHolderTest extends UnitTestCase
     $ph->set('myfoo', 'bar', 'symfony/mynamespace');
     $this->assertEqual('bar', $ph->get('myfoo', null, 'symfony/mynamespace'));
     $this->assertEqual(null, $ph->get('myfoo'));
+
+    // test multi-delemsional get
+    $ph = new sfParameterHolder();
+    $ph->add(array('foo' => array(
+      'bar' => array(
+        'baz' => 'foo bar',
+      ),
+      'bars' => array('foo', 'bar'),
+    )));
+    $this->assertEqual('foo bar', $ph->get('foo[bar][baz]'));
+    $this->assertEqual('bar', $ph->get('foo[bars][1]'));
+    $this->assertEqual(null, $ph->get('foo[bars][2]'));
+    $this->assertEqual(array('foo', 'bar'), $ph->get('foo[bars][]'));
+    $this->assertEqual($ph->get('foo[bars][]'), $ph->get('foo[bars]')); // these should be equal
   }
 
   public function test_getNames()
@@ -70,6 +84,20 @@ class sfParameterHolderTest extends UnitTestCase
     $this->assertFalse($ph->has('bar'));
     $this->assertFalse($ph->has('myfoo'));
     $this->assertTrue($ph->has('myfoo', 'symfony/mynamespace'));
+
+    // test multi-delemsional has
+    $ph = new sfParameterHolder();
+    $ph->add(array('foo' => array(
+      'bar' => array(
+        'baz' => 'foo bar',
+      ),
+      'bars' => array('foo', 'bar'),
+    )));
+    $this->assertEqual(true, $ph->has('foo[bar][baz]'));
+    $this->assertEqual(true, $ph->get('foo[bars][1]'));
+    $this->assertEqual(false, $ph->get('foo[bars][2]'));
+    $this->assertEqual(true, $ph->has('foo[bars][]'));
+    $this->assertEqual($ph->get('foo[bars][]'), $ph->has('foo[bars]')); // these should be equal
   }
 
   public function test_hasNamespace()
