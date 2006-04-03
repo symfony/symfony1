@@ -152,7 +152,7 @@ class sfException extends Exception
     {
       $line = isset($traceData[$i]['line']) ? $traceData[$i]['line'] : 'n/a';
       $file = isset($traceData[$i]['file']) ? $traceData[$i]['file'] : 'n/a';
-      $shortFile = preg_replace(array('#^'.sfConfig::get('sf_root_dir').'#', '#^'.realpath(sfConfig::get('sf_symfony_lib_dir')).'#'), array('SF_ROOT_DIR', 'SF_SYMFONY_LIB_DIR'), $file);
+      $shortFile = preg_replace(array('#^'.preg_quote(sfConfig::get('sf_root_dir')).'#', '#^'.preg_quote(realpath(sfConfig::get('sf_symfony_lib_dir'))).'#'), array('SF_ROOT_DIR', 'SF_SYMFONY_LIB_DIR'), $file);
       $args = isset($traceData[$i]['args']) ? $traceData[$i]['args'] : array();
       $traces[] = sprintf($lineFormat,
         (isset($traceData[$i]['class']) ? $traceData[$i]['class'] : ''),
