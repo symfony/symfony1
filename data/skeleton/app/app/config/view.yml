@@ -11,7 +11,7 @@ default:
 
   stylesheets:    [main]
 
-  javascripts:    []
+  javascripts:    [ ]
 
   has_layout:     on
   layout:         layout

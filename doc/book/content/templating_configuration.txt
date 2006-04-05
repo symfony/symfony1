@@ -100,7 +100,7 @@ The default settings of the view, set in the application view configuration file
         
       stylesheets:    [main]
       
-      javascripts:    []
+      javascripts:    [ ]
 
       has_layout:     on
       layout:         layout

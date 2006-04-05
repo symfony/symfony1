@@ -412,7 +412,7 @@ Component slots can be used for breadcrumbs, contextual navigations, and dynamic
 >
 >     all:
 >       components:
->         sidebar:  []
+>         sidebar:  [ ]
 
 
 [1]: http://en.wikipedia.org/wiki/Model-view-controller "Model-View-Controller definition at Wikipedia"
