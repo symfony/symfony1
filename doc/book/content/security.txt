@@ -45,7 +45,7 @@ For authenticated users, symfony provides an array of credentials in the `sfUser
     $user->removeCredential($credential);
     $user->hasCredential($credential)                  =>   false
     // remove all credentials
-    $user->clearCredential();
+    $user->clearCredentials();
     $user->hasCredential($credential1)                 =>   false
 
 Here is an example of credential definition:
@@ -122,9 +122,9 @@ The power of credentials with AND and OR
 
 The YAML syntax used in the `security.yml` allows you to restrict access to users having a combination of credentials, using either AND-type or OR-type associations: 
 
-   credentials: [ admin, superuser ]          ## admin AND superuser
-   credentials: [[ admin, superuser ]]        ## admin OR superuser
-   credentials: [[ admin, superuser ], owner] ## (admin OR superuser) AND owner
+    credentials: [ admin, superuser ]          ## admin AND superuser
+    credentials: [[ admin, superuser ]]        ## admin OR superuser
+    credentials: [[ admin, superuser ], owner] ## (admin OR superuser) AND owner
 
 Session expiration
 ------------------
