@@ -18,27 +18,27 @@
  */
 class defaultActions extends sfActions
 {
-  public function getUnavailable()
+  public function executeUnavailable()
   {
   }
 
-  public function getIndex()
+  public function executeIndex()
   {
   }
 
-  public function getError404()
+  public function executeError404()
   {
   }
 
-  public function getLogin()
+  public function executeLogin()
   {
   }
 
-  public function getDisabled()
+  public function executeDisabled()
   {
   }
 
-  public function getSecure()
+  public function executeSecure()
   {
   }
 }
