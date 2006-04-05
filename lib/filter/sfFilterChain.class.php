@@ -81,6 +81,19 @@ class sfFilterChain
     $this->index     = -1;
   }
 
+  public function hasFilter($class)
+  {
+    foreach ($this->chain as $filter)
+    {
+      if ($filter instanceof $class)
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   /**
    * Register a filter with this chain.
    *
