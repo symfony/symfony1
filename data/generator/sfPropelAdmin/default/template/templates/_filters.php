@@ -2,7 +2,7 @@
 
 <?php if ($this->getParameterValue('list.filters')): ?>
 <div class="sf_admin_filters">
-[?php echo form_tag('<?php echo $this->getModuleName() ?>/list') ?]
+[?php echo form_tag('<?php echo $this->getModuleName() ?>/list', array('method' => 'get')) ?]
 
   <fieldset>
     <h2>[?php echo __('filters') ?]</h2>
