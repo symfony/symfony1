@@ -200,6 +200,8 @@ Last but not least, the `periodically_call_remote()` helper is an AJAX interacti
 
 If you don't specify the number of seconds (`frequency`) to wait between two calls to the remote function, the default value of 10 is taken.
 
+>**Note**: The AJAX helpers won't work if the URL of the remote action doesn't belong to the same domain as the current page. This restriction exists for security reasons, and relies on browsers limitations that cannot be bypassed.
+
 Prototype
 ---------
 
@@ -278,6 +280,24 @@ The remote call can also be conditioned by a test performed on the browser side 
         'url'       => 'post/delete?id='.$post->getId(),
         'condition' => "$('elementID') == true",
     )) ?>
+
+### Script execution
+
+If the response code of the AJAX call (the code sent by the server, inserted in the `update` element) contains JavaScripts, you might be surprised to see that these scripts are not executed by default. This is to prevent remote attack risks, except if the developper knows for sure what code is in the response.
+
+That's why you have to declare the ability to execute scripts in remote responses explicitly with the `script` option:
+
+    [php]
+    // If the response of the post/delete action contains JavaScript, allow them to be executed by the browser 
+    <?php echo link_to_remote('Delete this post', array(
+        'update' => 'indicator',
+        'url'    => 'post/delete?id='.$post->getId(),
+        'script' => true,
+    )) ?>
+    
+If the remote response contains AJAX helpers (like, for instance, `remote_function()`), be aware that these PHP functions generate JavaScript code, and won't execute unless you add the `'script' => true` option.
+    
+>**Note**: Even if you enable script execution for the remote response, you won't actually see the scripts in the remote code - that is, if you use a tool to check the generated code. The scripts will execute but will not appear in the code. Although peculiar, this behaviour is perfectly normal.
 
 ### Callbacks
 
