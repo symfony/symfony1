@@ -67,7 +67,7 @@ function include_component($moduleName, $componentName, $vars = array())
     {
       if (method_exists($componentInstance, 'execute'))
       {
-        $componentToTun = 'execute';
+        $componentToRun = 'execute';
       }
       else
       {
