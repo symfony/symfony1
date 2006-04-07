@@ -222,52 +222,6 @@ If you need to repeat several statements in each action before starting, or if y
 
 Guess how to repeat statements *after* every action is executed ? Wrap them in a `postExecute()` method.
 
-Differentiating GET and POST actions
-------------------------------------
-
-Symfony provides an easy way to differentiate actions being called in GET mode and actions being called in POST mode by replacing the `execute` prefix in the method name by the HTTP verb of the request:
-
-    [php]
-    public function executeList()
-    {
-      if ($this->getRequest()->getMethod() != sfRequest::POST)
-      {
-          // GET request : do this
-      } else {
-          // POST request : do that      
-      }
-    }
-    
-    // can be replaced by
-    public function getList()
-    {
-        // GET request : do this    
-    }
-
-    public function postList()
-    {
-        // POST request : do this    
-    }
-
-This becomes very handy for handling forms. By using HTTP verbs, you can give the same name to the action that displays a form and to the one that handles it - symfony will make the difference by calling the appropriate action according to the HTTP mode of the request:
-
-    [php]
-    class productActions extends sfActions
-    {
-      public function getEdit()
-      {
-        // display the form 
-        ...
-      }
-      public function postEdit()
-      {
-        // handle the form submission
-        ...
-      }
-    }
-
-The use of HTTP verbs instead of execute is optional and recommended - not only are they shorter to write than `execute`, they also force the developer to think about the request mode and to use POST for requests that modify the model. However, as it may add some complexity to the application, the HTTP verbs are to be used with care.
-
 Redirect or Forward
 -------------------
 
