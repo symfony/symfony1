@@ -92,5 +92,7 @@ all:
 #
 #    etag:                   on
 #
-#    validation_error_prefix: &darr;&nbsp;
-#    validation_error_suffix: &nbsp;&darr;
+#    validation_error_prefix:    ' &darr;&nbsp;'
+#    validation_error_suffix:    ' &nbsp;&darr;'
+#    validation_error_class:     form_error
+#    validation_error_id_prefix: error_for_

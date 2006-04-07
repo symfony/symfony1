@@ -33,11 +33,11 @@ function form_error($param, $options = array(), $catalogue = 'messages')
 
   if (!isset($options['class']))
   {
-    $options['class'] = 'form_error';
+    $options['class'] = sfConfig::get('sf_validation_error_class', 'form_error');
   }
   if (!isset($options['id']))
   {
-    $options['id'] = 'error_for_'.$param;
+    $options['id'] = sfConfig::get('sf_validation_error_id_prefix', 'error_for_').$param;
   }
 
   $prefix = sfConfig::get('sf_validation_error_prefix', '');
