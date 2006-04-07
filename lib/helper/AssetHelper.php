@@ -220,10 +220,6 @@ function include_http_metas()
 function include_title()
 {
   $title = sfContext::getInstance()->getResponse()->getTitle();
-  if (sfConfig::get('sf_i18n'))
-  {
-    $title = sfConfig::get('sf_i18n_instance')->__($title);
-  }
 
   echo content_tag('title', $title)."\n";
 }
