@@ -16,12 +16,12 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     $this->getResponse()->addStylesheet('<?php echo $this->getParameterValue('css', '/sf/css/sf_admin/main') ?>', 'first');
   }
 
-  public function getIndex ()
+  public function executeIndex ()
   {
     return $this->forward('<?php echo $this->getModuleName() ?>', 'list');
   }
 
-  public function getList ()
+  public function executeList ()
   {
     $this->processSort();
 
@@ -37,46 +37,48 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     $this->pager->init();
   }
 
-  public function getCreate ()
+  public function executeCreate ()
   {
     return $this->forward('<?php echo $this->getModuleName() ?>', 'edit');
   }
 
-  public function getSave ()
+  public function executeSave ()
   {
     return $this->forward('<?php echo $this->getModuleName() ?>', 'edit');
   }
 
-  public function getEdit ()
-  {
-    // add javascript
-    $this->getResponse()->addJavascript('/sf/js/prototype/prototype');
-    $this->getResponse()->addJavascript('/sf/js/sf_admin/collapse');
-
-    $this-><?php echo $this->getSingularName() ?> = $this->get<?php echo $this->getClassName() ?>OrCreate();
-  }
-
-  public function postEdit ()
+  public function executeEdit ()
   {
     $this-><?php echo $this->getSingularName() ?> = $this->get<?php echo $this->getClassName() ?>OrCreate();
 
-    $this->update<?php echo $this->getClassName() ?>FromRequest();
-    $this-><?php echo $this->getSingularName() ?>->save();
-
-    $this->setFlash('notice', 'Your modifications have been saved');
-
-    if ($this->getRequestParameter('save_and_add'))
+    if ($this->getRequest()->getMethod() == sfRequest::POST)
     {
-      return $this->redirect('<?php echo $this->getModuleName() ?>/create');
+      $this-><?php echo $this->getSingularName() ?> = $this->get<?php echo $this->getClassName() ?>OrCreate();
+
+      $this->update<?php echo $this->getClassName() ?>FromRequest();
+      $this-><?php echo $this->getSingularName() ?>->save();
+
+      $this->setFlash('notice', 'Your modifications have been saved');
+
+      if ($this->getRequestParameter('save_and_add'))
+      {
+        return $this->redirect('<?php echo $this->getModuleName() ?>/create');
+      }
+      else
+      {
+        return $this->redirect('<?php echo $this->getModuleName() ?>/edit?<?php echo $this->getPrimaryKeyUrlParams('this->') ?>);
+<?php //' ?>
+      }
     }
     else
     {
-      return $this->redirect('<?php echo $this->getModuleName() ?>/edit?<?php echo $this->getPrimaryKeyUrlParams('this->') ?>);
-<?php //' ?>
+      // add javascripts
+      $this->getResponse()->addJavascript('/sf/js/prototype/prototype');
+      $this->getResponse()->addJavascript('/sf/js/sf_admin/collapse');
     }
   }
 
-  public function postDelete ()
+  public function executeDelete ()
   {
     $this-><?php echo $this->getSingularName() ?> = <?php echo $this->getClassName() ?>Peer::retrieveByPk(<?php echo $this->getRetrieveByPkParamsForAction(40) ?>);
     $this->forward404Unless($this-><?php echo $this->getSingularName() ?>);
