@@ -103,14 +103,16 @@ function excerpt_text($text, $phrase, $radius = 100, $excerpt_string = '...')
     # Two consecutive newlines(<tt>\n\n</tt>) are considered as a paragraph, one newline (<tt>\n</tt>) is
     # considered a linebreak, three or more consecutive newlines are turned into two newlines
 */
-function simple_format_text($text)
+function simple_format_text($text, $options = array())
 {
+  $css = (isset($options['class'])) ? ' class="'.$options['class'].'"' : '';
+
   $text = sfToolkit::pregtr($text, array("/(\r\n|\r)/"        => "\n",               // lets make them newlines crossplatform
                                          "/\n{3,}/"           => "\n\n",             // zap dupes
-                                         "/\n\n/"             => "</p>\\0<p>",       // turn two newlines into paragraph
+                                         "/\n\n/"             => "</p>\\0<p$css>",   // turn two newlines into paragraph
                                          "/([^\n])\n([^\n])/" => "\\1\n<br />\\2")); // turn single newline into <br/>
 
-  return '<p>'.$text.'</p>'; // wrap the first and last line in paragraphs before we're done
+  return '<p'.$css.'>'.$text.'</p>'; // wrap the first and last line in paragraphs before we're done
 }
 
 /*
