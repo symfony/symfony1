@@ -881,7 +881,7 @@
     }
     if (isset($options['min_chars']))
     {
-      $js_options['min_chars'] = $options['min_chars'];
+      $js_options['minChars'] = $options['min_chars'];
     }
 
     $javascript .= ', '._options_for_javascript($js_options).');';
