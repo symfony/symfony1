@@ -357,7 +357,7 @@ class sfWebResponse extends sfResponse
     {
       if (!$doNotEscape)
       {
-        $value = htmlentities($value, ENT_QUOTES);
+        $value = htmlentities($value, ENT_QUOTES, 'UTF-8');
       }
 
       $this->setParameter($key, $value, 'helper/asset/auto/meta');
@@ -375,7 +375,7 @@ class sfWebResponse extends sfResponse
   {
     if (!$doNotEscape)
     {
-      $title = htmlentities($title, ENT_QUOTES);
+      $title = htmlentities($title, ENT_QUOTES, 'UTF-8');
     }
 
     $this->setParameter('title', $title, 'helper/asset/auto/meta');
