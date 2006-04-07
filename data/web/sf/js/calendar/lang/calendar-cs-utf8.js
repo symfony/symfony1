@@ -12,6 +12,10 @@ Calendar._SDN = new Array('Ne','Po','Út','St','Čt','Pá','So','Ne');
 Calendar._MN  = new Array('Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec');
 Calendar._SMN = new Array('Led','Úno','Bře','Dub','Kvě','Črv','Čvc','Srp','Zář','Říj','Lis','Pro');
 
+// First day of the week. "0" means display Sunday first, "1" means display
+// Monday first, etc.
+Calendar._FD = 0;
+
 // tooltips
 Calendar._TT = {};
 Calendar._TT["INFO"] = "O komponentě kalendář";
@@ -28,13 +32,13 @@ Calendar._TT["MON_FIRST"] = "Ukaž jako první Pondělí";
 //Calendar._TT["SUN_FIRST"] = "Ukaž jako první Neděli";
 
 Calendar._TT["ABOUT"] =
-"DHTML Date/Time Selector\n" +
-"(c) dynarch.com 2002-2005 / Author: Mihai Bazon\n" + // don't translate this this ;-)
-"For latest version visit: http://www.dynarch.com/projects/calendar/\n" +
-"Distributed under GNU LGPL.  See http://gnu.org/licenses/lgpl.html for details." +
+"DHTML Kalendář\n" +
+"(c) dynarch.com 2002-2005 / Autor: Mihai Bazon\n" + // don't translate this this ;-)
+"Aktuální verzi najdete na: http://www.dynarch.com/projects/calendar/\n" +
+"Distribuováno pod licencí GNU LGPL.  Viz. http://gnu.org/licenses/lgpl.html" +
 "\n\n" +
 "Výběr datumu:\n" +
-"- Use the \xab, \xbb buttons to select year\n" +
+"- Použijte \xab, \xbb tlačítka k výběru roku\n" +
 "- Použijte tlačítka " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " k výběru měsíce\n" +
 "- Podržte tlačítko myši na jakémkoliv z těch tlačítek pro rychlejší výběr.";
 
@@ -63,3 +67,4 @@ Calendar._TT["TT_DATE_FORMAT"] = "%a, %b %e";
 
 Calendar._TT["WK"] = "wk";
 Calendar._TT["TIME"] = "Čas:";
+
