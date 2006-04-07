@@ -116,7 +116,7 @@ function run_alltests($task, $args)
     'sf_test'             => false,
     'sf_version'          => 'test',
   ));
-  pake_mkdirs($tmp_dir.'/apps/test/modules');
+  pake_mkdirs($tmp_dir.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.'test'.DIRECTORY_SEPARATOR.'modules');
   require_once(dirname(__FILE__).'/data/config/constants.php');
   require_once(dirname(__FILE__).'/lib/util/sfContext.class.php');
 
