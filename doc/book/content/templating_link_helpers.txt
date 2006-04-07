@@ -248,24 +248,24 @@ To keep the code readable and let you write templates fast, the options argument
     // will generate in HTML
     <img href="/my_images/test.gif" alt="My new car" width="100" height="20" class="shortImage" onclick="showNextImage();" />
 
-Javascript helper
+JavaScript helper
 -----------------
 
-To link to javascript files, you can omit the path and the suffix: 
+To link to JavaScript files, you can omit the path and the suffix: 
 
     [php]
-    <?php echo javascript_tag('myscript') ?>
+    <?php echo javascript_include_tag('myscript') ?>
     // will generate in HTML
     <script language="javascript" type="text/javascript" src="/js/myscript.js">
 
 Once again, the default location can be overridden in a function call for quick needs, or redefined for the whole site in the configuration files for major changes.
 
-If you read the whole documentation, you will see that symfony gives you three different ways to require an additional javascript file. You should use them with this order of preference:
+If you read the whole documentation, you will see that symfony gives you three different ways to require an additional JavaScript file. You should use them with this order of preference:
 
-* parameter definition in the `view.yml` file: most of the time, the best solution
-* `addJavascript()` function call from the action: when the name of the files to include depend on calculations made in the action
-* `javascript_tag` helpers in the template: to include a javascript file at a given position inside a template and not in the head.
+* parameter definition in the `view.yml` file: Most of the time, the best solution
+* `$this->getResponse()->addJavascript()` method call from the action: When the name of the files to include depend on calculations made in the action
+* `javascript_include_tag()` helpers in the template: To include a JavaScript file at a given position inside a template and not in the head.
 
-The last solution is rarely good; if you need it, check whether your code needs some refactoring (for instance write a javascript function call in the code and require the script inclusion in the head). However, you sometimes don't have the choice, for instance if you have to include traffic measure scripts at the end of your pages.
+The last solution is rarely good; if you need it, check whether your code needs some refactoring (for instance write a JavaScript function call in the code and require the script inclusion in the head). However, you sometimes don't have the choice, for instance if you have to include traffic measure scripts at the end of your pages.
 
->**Note**: you may be looking for a `stylesheet_tag()` helper, but there is none. If you need to include a custom stylesheet, you should not do it in the template but rather in the view or in the action, as described in the [view configuration chapter](templating_configuration.txt).
+>**Note**: You may be looking for a `stylesheet_tag()` helper, but there is none. If you need to include a custom stylesheet, you should not do it in the template but rather in the view or in the action, as described in the [view configuration chapter](templating_configuration.txt). This way, the declaration appears in the `<head>` instead of in the `<body>`.
