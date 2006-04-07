@@ -40,6 +40,14 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
   }
 
   /**
+   * returns an array containing the credentials
+   */
+  public function listCredentials()
+  {
+    return $this->credentials;
+  }
+
+  /**
    * Removes a credential.
    *
    * @param  mixed credential
