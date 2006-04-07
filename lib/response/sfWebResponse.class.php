@@ -351,10 +351,15 @@ class sfWebResponse extends sfResponse
     return $this->parameter_holder->getAll('helper/asset/auto/meta');
   }
 
-  public function addMeta($key, $value, $override = true)
+  public function addMeta($key, $value, $override = true, $doNotEscape = false)
   {
     if ($override || !$this->hasParameter($key, 'helper/asset/auto/meta'))
     {
+      if (!$doNotEscape)
+      {
+        $value = htmlentities($value, ENT_QUOTES);
+      }
+
       $this->setParameter($key, $value, 'helper/asset/auto/meta');
     }
   }
@@ -366,8 +371,13 @@ class sfWebResponse extends sfResponse
     return $metas['title'];
   }
 
-  public function setTitle($title)
+  public function setTitle($title, $doNotEscape = false)
   {
+    if (!$doNotEscape)
+    {
+      $title = htmlentities($title, ENT_QUOTES);
+    }
+
     $this->setParameter('title', $title, 'helper/asset/auto/meta');
   }
 
