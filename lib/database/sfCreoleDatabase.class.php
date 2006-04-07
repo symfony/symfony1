@@ -19,7 +19,7 @@
  *                                      Creole class file.
  * # <b>database</b>       - [none]   - The database name.
  * # <b>dsn</b>            - [none]   - The DSN formatted connection string.
- * # <b>hostspec</b>       - [none]   - The database host specifications.
+ * # <b>host</b>           - [none]   - The database host specifications.
  * # <b>method</b>         - [normal] - How to read connection parameters.
  *                                      Possible values are dsn, normal,
  *                                      server, and env. The dsn method reads
@@ -65,7 +65,7 @@ class sfCreoleDatabase extends sfDatabase
         case 'normal':
           // get parameters normally, and all are required
           $database = $this->getParameter('database', null);
-          $hostspec = $this->getParameter('hostspec', null);
+          $hostspec = $this->getParameter('hostspec') ? $this->getParameter('hostspec') : ($this->getParameter('host') ? $this->getParameter('hostspec') : null);
           $password = $this->getParameter('password', null);
           $phptype  = $this->getParameter('phptype',  null);
           $username = $this->getParameter('username', null);
