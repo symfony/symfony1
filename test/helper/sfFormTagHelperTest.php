@@ -119,7 +119,7 @@ class sfFormTagHelperTest extends UnitTestCase
     $this->assertEqual($actual, $expected);
 
     $actual = select_tag('people', "<option>david</option>", array('multiple' => true));
-    $expected = '<select name="people" id="people" multiple="multiple"><option>david</option></select>';
+    $expected = '<select name="people[]" id="people" multiple="multiple"><option>david</option></select>';
     $this->assertEqual($actual, $expected);
 
     $actual = select_tag('people', "<option>david</option>", array('multiple' => null));

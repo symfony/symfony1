@@ -115,12 +115,13 @@ function form_tag($url_for_options = '', $options = array())
 function select_tag($name, $option_tags = null, $options = array())
 {
   $options = _convert_options($options);
+  $id = $name;
   if (isset($options['multiple']) && $options['multiple'] && substr($name, -2) !== '[]')
   {
     $name .= '[]';
   }
 
-  return content_tag('select', $option_tags, array_merge(array('name' => $name, 'id' => $name), $options));
+  return content_tag('select', $option_tags, array_merge(array('name' => $name, 'id' => $id), $options));
 }
 
 function select_country_tag($name, $value, $options = array())
