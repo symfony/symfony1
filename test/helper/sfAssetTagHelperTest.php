@@ -2,10 +2,10 @@
 
 require_once 'helper/TagHelper.php';
 require_once 'helper/AssetHelper.php';
-require_once 'symfony/helper/UrlHelper.php';
+require_once 'helper/UrlHelper.php';
 
-require_once 'symfony/request/sfRequest.class.php';
-require_once 'symfony/request/sfWebRequest.class.php';
+require_once 'request/sfRequest.class.php';
+require_once 'request/sfWebRequest.class.php';
 
 Mock::generate('sfContext');
 Mock::generate('sfWebRequest');
