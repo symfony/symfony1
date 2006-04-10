@@ -104,6 +104,12 @@ To launch the script, just type in a command line:
 
 This batch will put the two records labeled `bob_walter` and `peter_clive` in the database - provided that the database connection settings are properly entered in the `myproject/apps/myapp/config/databases.yml` configuration file.
 
+>**Note**: If you added a database connection or changed the default connection name (`'propel'`) in your `databases.yml`, you will need to specify this connection name when you call the `->loadData()` method. Use the second argument for that. For instance, if you want to populate a database using a connection named `symfony`, write:
+>
+>         [php]
+>         $data->loadData(sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.'fixtures', 'symfony');
+>
+
 ### Add or replace
 
 By default, the `->loadData()` method will not only add the records from the YAML files given as parameters, it will also erase the existing records in the tables that are modified. To change this behavior, you need to set the `deleteCurrentData` property to false before calling the `->loadData()` method:
