@@ -130,7 +130,7 @@ class sfNumberFormat
     $result = (strlen($decimal) > 0) ? $integer.$decimal : $integer;
 
     // get the suffix
-    if ($number > 0)
+    if ($number >= 0)
     {
       $suffix = $this->formatInfo->PositivePattern;
     }
