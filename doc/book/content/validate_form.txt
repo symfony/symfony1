@@ -134,12 +134,14 @@ Since the *forward* method kept the original request, the template has access to
 
     [php]
     <?php echo form_tag('contact/send') ?>
-      <label for="name">Name</label> : <?php echo input_tag('name', $request->getParameter('name')) ?><br />
-      <label for="email">Email</label> : <?php echo input_tag('email', $request->getParameter('email')) ?><br />
-      <label for="age">Age</label> : <?php echo input_tag('age', $request->getParameter('age')) ?><br />
-      <label for="message">Message</label> : <?php echo textarea_tag('message', $request->getParameter('message')) ?><br />
+      <label for="name">Name</label> : <?php echo input_tag('name', $sf_params->get('name')) ?><br />
+      <label for="email">Email</label> : <?php echo input_tag('email', $sf_params->get('email')) ?><br />
+      <label for="age">Age</label> : <?php echo input_tag('age', $sf_params->get('age')) ?><br />
+      <label for="message">Message</label> : <?php echo textarea_tag('message', $sf_params->get('message')) ?><br />
       <?php echo submit_tag() ?>
     </form>
+    
+>**Note**: You can avoid setting manually the value of the fields from the request by using a special filter. See the **Repopulation** section below.
 
 You can detect whether the form has errors by calling the `->hasErrors()` method of the `sfRequest` object. To get the list of the error messages, you need the method `->getErrors()`. So you should add the following lines at the top of the template:
 
