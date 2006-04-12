@@ -1,6 +1,5 @@
 #sfStatsBase
 {
-  z-index: 999;
   padding: 0;
   margin: 0;
   font-family: Arial;
@@ -12,6 +11,7 @@
 
 .sfStats
 {
+  z-index: 999;
   width: 110px;
   position: absolute;
   right: 2px;
