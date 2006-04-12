@@ -55,6 +55,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     $data = array();
 
     $data[] = "\$sf_safe_slot = sfConfig::get('sf_safe_slot');\n";
+    $data[] = "\$response = \$action->getResponse();\n";
 
     // iterate through all view names
     $first = true;
@@ -222,12 +223,12 @@ class sfViewConfigHandler extends sfYamlConfigHandler
 
     foreach ($this->mergeConfigValue('http_metas', $viewName) as $httpequiv => $content)
     {
-      $data[] = sprintf("    \$action->getResponse()->addHttpMeta('%s', '%s', false);", $httpequiv, $content);
+      $data[] = sprintf("    \$response->addHttpMeta('%s', '%s', false);", $httpequiv, $content);
     }
 
     foreach ($this->mergeConfigValue('metas', $viewName) as $name => $content)
     {
-      $data[] = sprintf("    \$action->getResponse()->addMeta('%s', '%s', false);", $name, $content);
+      $data[] = sprintf("    \$response->addMeta('%s', '%s', false);", $name, $content);
     }
 
     return implode("\n", $data)."\n";
@@ -259,11 +260,16 @@ class sfViewConfigHandler extends sfYamlConfigHandler
         {
           $key = key($css);
           $options = $css[$key];
-          $data[] = sprintf("  \$action->getResponse()->addStylesheet('%s', '', %s);", $key, var_export($options, true));
         }
         else
         {
-          $data[] = sprintf("  \$action->getResponse()->addStylesheet('%s');", $css);
+          $key = $css;
+          $options = array();
+        }
+
+        if ($key)
+        {
+          $data[] = sprintf("  \$response->addStylesheet('%s', '', %s);", $key, var_export($options, true));
         }
       }
     }
@@ -285,7 +291,10 @@ class sfViewConfigHandler extends sfYamlConfigHandler
 
       foreach ($javascripts as $js)
       {
-        $data[] = sprintf("  \$action->getResponse()->addJavascript('%s');", $js);
+        if ($js)
+        {
+          $data[] = sprintf("  \$response->addJavascript('%s');", $js);
+        }
       }
     }
 
