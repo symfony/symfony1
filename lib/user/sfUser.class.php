@@ -80,9 +80,9 @@ class sfUser
     }
 
     $culture = $this->getContext()->getStorage()->read(self::CULTURE_NAMESPACE);
-    if ($culture == null)
+    if ($culture === null)
     {
-      $culture = sfConfig::get('sf_i18n_default_culture');
+      $culture = sfConfig::get('sf_i18n_default_culture') ? sfConfig::get('sf_i18n_default_culture') : 'en';
     }
 
     $this->setCulture($culture);

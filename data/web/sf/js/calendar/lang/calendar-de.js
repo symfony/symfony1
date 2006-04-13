@@ -1,7 +1,7 @@
 // ** I18N
 
-// Calendar DE language
-// Author: Jack (tR), <jack@jtr.de>
+// Calendar EN language
+// Author: Mihai Bazon, <mihai_bazon@yahoo.com>
 // Encoding: any
 // Distributed under the same terms as the calendar itself.
 
@@ -43,6 +43,10 @@ Calendar._SDN = new Array
  "Sa",
  "So");
 
+// First day of the week. "0" means display Sunday first, "1" means display
+// Monday first, etc.
+Calendar._FD = 1;
+
 // full month names
 Calendar._MN = new Array
 ("Januar",
@@ -64,7 +68,7 @@ Calendar._SMN = new Array
  "Feb",
  "M\u00e4r",
  "Apr",
- "May",
+ "Mai",
  "Jun",
  "Jul",
  "Aug",
@@ -93,12 +97,11 @@ Calendar._TT["ABOUT_TIME"] = "\n\n" +
 "- oder klicken Sie mit festgehaltener Shift-Taste um diese zu verringern\n" +
 "- oder klicken und festhalten f\u00fcr Schnellauswahl.";
 
-Calendar._TT["TOGGLE"] = "Ersten Tag der Woche w\u00e4hlen";
-Calendar._TT["PREV_YEAR"] = "Voriges Jahr (Festhalten f\u00fcr Schnellauswahl)";
-Calendar._TT["PREV_MONTH"] = "Voriger Monat (Festhalten f\u00fcr Schnellauswahl)";
+Calendar._TT["PREV_YEAR"] = "Voriges Jahr (Schnellauswahl: festhalten)";
+Calendar._TT["PREV_MONTH"] = "Voriger Monat (Schnellauswahl: festhalten)";
 Calendar._TT["GO_TODAY"] = "Heute ausw\u00e4hlen";
-Calendar._TT["NEXT_MONTH"] = "N\u00e4chst. Monat (Festhalten f\u00fcr Schnellauswahl)";
-Calendar._TT["NEXT_YEAR"] = "N\u00e4chst. Jahr (Festhalten f\u00fcr Schnellauswahl)";
+Calendar._TT["NEXT_MONTH"] = "N\u00e4chst. Monat (Schnellauswahl: festhalten)";
+Calendar._TT["NEXT_YEAR"] = "N\u00e4chst. Jahr (Schnellauswahl: festhalten)";
 Calendar._TT["SEL_DATE"] = "Datum ausw\u00e4hlen";
 Calendar._TT["DRAG_TO_MOVE"] = "Zum Bewegen festhalten";
 Calendar._TT["PART_TODAY"] = " (Heute)";

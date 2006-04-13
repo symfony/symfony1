@@ -429,10 +429,10 @@ function input_date_tag($name, $value, $options = array())
   }
 
   // register our javascripts and stylesheets
+  $langFile = '/sf/js/calendar/lang/calendar-'.strtolower(substr($culture, 0, 2));
   $jss = array(
     '/sf/js/calendar/calendar',
-//  '/sf/js/calendar/lang/calendar-'.substr($culture, 0, 2),
-    '/sf/js/calendar/lang/calendar-en',
+    is_readable(sfConfig::get('sf_symfony_data_dir').'/web/'.$langFile.'.js') ? $langFile : '/sf/js/calendar/lang/calendar-en',
     '/sf/js/calendar/calendar-setup',
   );
   foreach ($jss as $js)
