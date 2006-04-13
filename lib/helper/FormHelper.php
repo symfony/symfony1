@@ -355,7 +355,7 @@ tinyMCE.init({
   }
   else
   {
-    return content_tag('textarea', htmlspecialchars((is_object($content)) ? $content->__toString() : $content), array_merge(array('name' => $name, 'id' => $id), _convert_options($options)));
+    return content_tag('textarea', (is_object($content)) ? $content->__toString() : $content, array_merge(array('name' => $name, 'id' => $id), _convert_options($options)));
   }
 }
 

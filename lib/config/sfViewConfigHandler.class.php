@@ -87,6 +87,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
       $data[] = $this->addSlots($viewName);
       $data[] = $this->addComponentSlots($viewName);
       $data[] = $this->addHtmlHead($viewName);
+      $data[] = $this->addEscaping($viewName);
 
       $data[] = "  }\n";
 
@@ -116,6 +117,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     $data[] = $this->addSlots();
     $data[] = $this->addComponentSlots();
     $data[] = $this->addHtmlHead();
+    $data[] = $this->addEscaping();
 
     $data[] = "  }\n";
 
@@ -296,6 +298,25 @@ class sfViewConfigHandler extends sfYamlConfigHandler
           $data[] = sprintf("  \$response->addJavascript('%s');", $js);
         }
       }
+    }
+
+    return implode("\n", $data)."\n";
+  }
+
+  private function addEscaping($viewName = '')
+  {
+    $data = array();
+
+    $escaping = $this->getConfigValue('escaping', $viewName);
+
+    if(isset($escaping['strategy']))
+    {
+      $data[] = sprintf("  \$this->setEscaping(%s);", var_export($escaping['strategy'], true));
+    }
+
+    if(isset($escaping['method']))
+    {
+      $data[] = sprintf("  \$this->setEscapingMethod(%s);", var_export($escaping['method'], true));
     }
 
     return implode("\n", $data)."\n";
