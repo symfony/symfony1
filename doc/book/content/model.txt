@@ -415,7 +415,7 @@ All the details given above are not specific to symfony. As a matter of fact, yo
 * All the object data model classes and the `Criteria` classes are auto-loading classes. As soon as you will use them, symfony will include the right files, but you don't need to manually include the file inclusion.
 * In symfony, Propel doesn't need to be launched nor initialized. When an object uses Propel, the library initiates by itself.
 * Results of a request can be easily paginated (see more in the [pager chapter](pager.txt)).
-* Propel objects allow rapid prototyping and generation of a backend for your application (see more in the [generator chapter](generator.txt)).
+* Propel objects allow rapid prototyping and generation of a backend for your application (see more in the [scaffolding chapter](scaffolding.txt)).
 
 And, as Propel is independent of the database used, so is symfony.
 

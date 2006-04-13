@@ -35,6 +35,7 @@ parts:
     - i18n
     - syndication
     - pager
+    - scaffolding
     - generator
     - finder
     - plugin

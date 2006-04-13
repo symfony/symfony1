@@ -1,157 +1,19 @@
-How to generate a Propel scaffolding or administration
-======================================================
+The admin generator
+===================
 
 Overview
 --------
 
-Many applications are based on data stored in a database, and offer an interface to access it. Symfony automates the repetitive task of creating an initial CRUD or a full featured backend administration based on a Propel object with a few handy generators.
-
-Data manipulation: The needs
-----------------------------
-
-In a web application, the data access actions can be categorized as one of the following:
-
-* Create a record
-* Retrieve records (requesting the database of one or more records) 
-* Update a record (and modify its fields)
-* Delete a record
-
-These operations are so common that they have a dedicated acronym: [C.R.U.D.][1]
-
-Many pages can be reduced to one of these actions. For instance, in a forum application, the list of latest posts is a Retrieve action, and the reply to a post is a Create action. During the process of application creation, developers often need to redevelop the basic actions and template that implement the CRUD operations for a given table. And even if there are many ways to code it, the Propel layer offers consistant setters and getters, so it can be automated for the most part.
-
-This brings up two interesting automated mechanisms based on a table: The generation of a scaffolding and the generation of an administration. They are not used for the same purpose, and symfony provides different utilities for these two, so it is best if you understand clearly their differences:
-
-- A **scaffolding** is the basic structure (actions and templates) required to operate CRUD on a given table. The code is often minimal, and the formatting is neglected, since the purpose of a scaffolding is to serve as a guideline for a much more ambitious construction. For instance, when you start building an application that will handle posts (like a forum), you should start by generating a scaffolding based on the `Post` table. The scaffolding will give you the CRUD actions and the related templates, all that working together, and ready to be modified, combined, or erased, according to your needs. Beware though that scaffolding doesn't provide pagination, validation or fine configuration possibilities. It is a quick tool to give you a starting base.
-
-- An **administration** is a sophisticated interface for data manipulation, dedicated to backend administration. Administrations differ from scaffoldings because their code is not meant to be modified manually. They can be customized, extended or assembled. Their presentation is important, and they take advantage of additional features such as sorting, pagination and filtering.
-
-The symfony command line uses the word `crud` to designate a scaffolding, and `admin` for an administration.
-
-Initiating or generating
-------------------------
-
-Symfony offers two ways to create CRUD interfaces: Either by inheritance or by code generation. 
-
-* You can create empty classes that **inherit** from the framework. This masks the php code of the actions and the templates to avoid them being modified. This is useful if your data structure is not final, or if you want to completely rewrite some of the actions and keep the others. It also allows you to take advantage of future upgrades in the generators, because the code executed at runtime is not located in your application, but in the framework. The command line tasks for this kind of generation start with:
-
-        $ symfony propel-init-
- 
-    It will create empty actions like the following:
-    
-        [php]
-        <?php
-        
-        class articleActions extends autoarticleActions
-        {
-        }
-        
-        ?>
-    
-* You can also **generate** the code of the actions and the templates so that it can be modified. The resulting module is independant from the classes of the framework, and cannot be altered using configuration files (see below). The command line tasks for this kind of generation start with:
-
-        $ symfony propel-generate-
-
-As the scaffoldings are built to serve as a base for further developments, it is often best to generate a scaffolding. On the other hand, an administration should be easy to update through a change in the configuration, and it should keep usable even if the data model changes. That's why administrations are often initiated only.
-
-Scaffolding
------------
-
-### Generating a scaffolding
-
-When you need a basic set of usable actions and templates that can access and modify the data of a given table, generate a scaffolding. For instance, to generate the scaffolding for an `article` module based on the `Article` model class, type:
-
-    $ symfony propel-generate-crud myapp article Article
-    
-This will create a new `modules/article/` directory in your `myapp` application, with the following code:
-
- Action    | Purpose
- --------- | -------
- `index`   | forwards to the list action below
- `list`    | displays the list of all the records of the table
- `show`    | displays the detailed view (line by line) of one record
- `edit`    | displays a form to modify the fields of a record
- `update`  | action called by the form of the edit action above
- `delete`  | deletes a record
- `create`  | creates a new record
-
- Template          | Purpose
- ----------------- | -------
- `editSuccess.php` | record edition form
- `listSuccess.php` | list of all records
- `showSuccess.php` | detail of one record
-
-The module can be used as soon as it is generated:
-
-    http://myapp.example.com/index.php/article
-    
-Using this module, you can create new articles, modify or delete existing ones. The generated code is ready to be modified for your own needs. As an example, here is the beginning of the `actions.class.php` file:
-
-    [php]
-    class articleActions extends sfActions
-    {
-      public function executeIndex()
-      {
-        return $this->forward('article', 'list');
-      }
-    
-      public function executeList()
-      {
-        $this->articles = ArticlePeer::doSelect(new Criteria());
-      }
-    
-      public function executeShow()
-      {
-        $this->article = ArticlePeer::retrieveByPk($this->getRequestParameter('id'));
-    
-        $this->forward404Unless($this->article instanceof Article);
-      }
-      ...
-
-Repeat the CRUD generation for all the tables that you want to interact with, and you have a working scaffolding for a whole web application.
-
-### Initiating a scaffolding
-
-Initiating a scaffolding is mostly useful when you need to check that you can access the data in the database. It is fast to build, and also fast to delete once you're sure that everything works fine.
-
-To initiate a Propel scaffolding that will create an `article` module to deal with the records of the `Article` model class name, type:
-
-    $ symfony propel-init-crud myapp article Article
-
-Access it with the default action:
-
-    http://myapp.example.com/index.php/article
-
-And start using your simple application just the way you would with a generated one.
-
-If you check the newly created `actions.class.php` in the `article` module, you will see that it is empty: Everything is inherited from a Propel CRUD generator class. The same goes for the templates: There is no template file in the `templates/` directory. The code behind the initiated actions and templates is the same as for a generated scaffolding, but lies only in the framework. It can be found in the application cache (`myproject\cache\myapp\prod\module\autoArticle\`).
-
-Administration
---------------
-
-Symfony can create modules based on propel objects for your administration applications. Contrary to other generators, you keep the total control of the modules, since you benefit from the usual module mechanisms (decorator, validation, routing, custom configuration, autoloading, etc.). You are free to link the modules as you want, or to add a module of your own. You can also override any piece of action or template.
+Backend administrations are often built according to the structure of the data used in the frontend application. Such backends can be entirely generated by symfony, provided your object model is well defined. The mechanism that does that is called the **admin generator**. It automates many repetitive tasks using a system of custom configuration. It also gives you total control, allowing you to customize or extend all the generated components and the look and feel of the application. And when the admin generator can't fulfill your requirements, it provides the tools to plug your own code into the generated administration.
 
 >**Note**: A [screencast](http://downloads.symfony-project.com/demo/admin/admin_generator_commented.mov) showing an administration being built is available for download (21min, QT7, 17 Mb).
 
-### Initiation
+>**Note**: If you need a basic CRUD interface to initiate the templates and actions of a module for your frontend application, you will probably prefer making a [scaffolding](scaffolding.txt) than a generated admin.
 
-Setting up an administration is as easy as initiating a scaffolding:
+Introduction
+------------
 
-    $ symfony propel-init-admin myapp article Article
-
-Just like scaffoldings, admin modules are related to a Propel object (`Article` in the example above). The actions created are the almost the same (except there is no `show` action), and can be accessed the same way:
-
-    http://myapp.example.com/index.php/article
-
-The main difference is that an admin relies on a configuration file called `generator.yml`. To see the default configuration of an administration module just created, open the `myapp/modules/article/config/generator.yml` file:
-
-    generator:
-      class:              sfPropelAdminGenerator
-      param:
-        model_class:      Article
-        theme:            default
-
-To customize the generator, you don't need to modify the `article` actions, but rather change this configuration. For this chapter, the example used will be the blog application with the two `Article` and `Comment` classes, based the following table structure:
+For this chapter, the example used will be a blog application with two `Article` and `Comment` classes, based the following table structure:
 
   | blog_article | blog_comment |
   | ------------ | ------------ |
@@ -161,13 +23,120 @@ To customize the generator, you don't need to modify the `article` actions, but 
   |              | date         |
   |              | content      |
 
-And to start with a working base, initiate the admin of the `Comment` class:
+The application in which the administration will be built is called `backend`.
+
+Initiating an admin module
+--------------------------
+
+With symfony, you build an administration module by module. A module is generated based on a Propel object, using the command line interface with the `propel-init-admin` task, with `<APPLICATION_NAME>`, `<MODULE_NAME>` and `<CLASS_NAME>` as parameters:
+
+    $ symfony propel-init-admin backend article Article
+
+This single command is enough to create an `article` module with `list`, `edit`, `create` and `delete` actions, based on the `Article` Propel class, and accessible by:
+
+    http://www.example.com/backend.php/article
+
+The look and feel of a generated module is sophisticated enough to make it usable out of the box for a commercial application. 
+
+Modules generated by the admin generator benefit from the usual module mechanisms (decorator, validation, routing, custom configuration, autoloading, etc.). You are free to link the modules as you want, or to add a module of your own. 
+
+The generated code
+------------------
+
+If you look at the generated code in the `apps/backend/modules/article/` directory, you will find an empty action class and no templates. This is because the module inherits from classes and files located in the framework file structure. You can find the code which is actually used in the `cache/backend/ENV/modules/article` folder, once you've used it:
+
+    actions/actions.class.php
+      create -> edit
+      delete
+      edit
+      index -> list
+      list
+      save -> edit
+    
+    templates/
+      _edit_actions.php
+      _edit_footer.php
+      _edit_header.php
+      _filters.php
+      _list_actions.php
+      _list_footer.php
+      _list_header.php
+      _list_td_actions.php
+      _list_td_stacked.php
+      _list_td_tabular.php
+      _list_th_stacked.php
+      _list_th_tabular.php
+      editSuccess.php
+      listSuccess.php
+
+This shows that a generated admin module is composed mainly of two views, `edit` and `list`. If you have a look at the code, you will find it to be very modular, readable and extensible.
+
+Inheriting actions and templates allows you to override them completely. For instance, you can use your filters by adding your own `_filters.php` in the `modules/articles/templates/` directory.
+
+The `generator.yml` configuration file
+--------------------------------------
+
+Most of the customization of a generated administration is done through a YAML configuration file called `generator.yml`. To see the default configuration of an administration module just created, open the `backend/modules/article/config/generator.yml` file:
+
+    generator:
+      class:              sfPropelAdminGenerator
+      param:
+        model_class:      Article
+        theme:            default
+
+This configuration is enough to generate the basic administration. The customization is added under the `param:` key (which means that all lines added in the `generator.yml` mus at least start with `four` blank spaces). Here is a typical customized `generator.yml` for a `post` module (extracted from the screencast source):
+
+    generator:
+      class:              sfPropelAdminGenerator
+      param:
+        model_class:      Post
+        theme:            default
+    
+        fields:
+          author_id:      { name: Post author }
+        
+        list:
+          title:          symfony blog posts
+          display:        [title, author_id, category_id]
+          fields:
+            published_on: { params: date_format='dd/MM/yy' }
+          layout:         stacked
+          params:         %%is_published%%<strong>%%=title%%</strong><br /><em>by %%author%% in %%category%% (%%published_on%%)</em><p>%%content_summary%%</p>
+          filters:        [title, category_id, author_id, is_published]
+          max_per_page:   2
+          
+        edit:
+          title:          Editing post "%%title%%"
+          display:
+            "Post":       [title, category_id, content]
+            "Workflow":   [author_id, is_published, created_on]
+          fields:
+            category_id:  { params: disabled=true }
+            is_published: { type: plain}
+            created_on:   { type: plain, params: date_format='dd/MM/yy' }
+            author_id:    { params: size=5 include_custom=>> Choose a blog author << }
+            published_on: { credentials: [[admin, superdamin]] }
+            content:      { params: rich=true tinymce_options=height:150 }
+
+The following sections explain in detail the parameters that can be used in this configuration file.
+
+Table relations
+---------------
+
+The 1-n table relations are taken care of by the admin generator. In the example mentionned above, the `weblog_comment` table is related to the `weblog_article` table via the `article_id` field. If you initiate the module of the `Comment` class with the admin generator:
 
     $ symfony propel-init-admin myapp comment Comment
 
+The `comment/edit` action will automatically display the `article_id` as a select list showing the ids of the available records of the `weblog_article` table. In addition, if you define a `__toString()` method in the `Article` object, the string returned by this method is used instead of the ids in the select list.
+
+If you need to display the list of comments related to an article in the `article` module (n-1 relation), or if you need to handle related records through a hash table (n-m relation), you will need to customize the module a little by the way of *custom field* or a *partial field*, both described later in this chapter.
+
+Fields
+------
+
 ### Fields settings
 
-The configuration file can define how columns appear in the pages. For instance, to define a custom header for the `title` and `content` columns in the `article` module, edit the `generator.yml`:
+The configuration file can define how columns appear in the pages. For instance, to define a custom label for the `title` and `content` columns in the `article` module, edit the `generator.yml`:
 
     generator:
       class:              sfPropelAdminGenerator
@@ -179,7 +148,7 @@ The configuration file can define how columns appear in the pages. For instance,
           title:          { name: Article Title }
           content:        { name: Body }
 
-In addition to this default definition for all the actions, you can override the `fields` settings for a given action. The administrations have two actions directly linked to a presentation for which you can customize the view: `list` and `edit`.
+In addition to this default definition for all the views, you can override the `fields` settings for a given view (`list` and `edit`):
 
     generator:
       class:              sfPropelAdminGenerator
@@ -203,7 +172,7 @@ This is a general principle: The settings that are set for the whole module unde
 
 ### Adding fields to the display
 
-The fields that you define in the `fields` section can be displayed, hidden, ordered and grouped in each view. The `display` key is used for that purpose. For instance, to arrange the fields of the `comment` module, edit the `modules/comment/config/generator.yml`:
+The fields that you define in the `fields` section can be displayed, hidden, ordered and grouped in various ways for each view. The `display:` key is used for that purpose. For instance, to arrange the fields of the `comment` module, edit the `modules/comment/config/generator.yml`:
 
     generator:
       class:              sfPropelAdminGenerator
@@ -230,7 +199,7 @@ If you don't supply any group name (like in the `list` view above), put the fiel
 
 ### Custom fields
 
-As a matter of fact, the `fields` parameters don't need to be actual columns in the tables. If you define a custom getter and setter, it can be used as a field as well. For instance, if you extend the `Article.class.php` model by a `->getNbComments()` method:
+As a matter of fact, the `fields` parameters don't need to be actual columns in the tables. If you define a **custom getter and setter**, it can be used as a field as well. For instance, if you extend the `Article.class.php` model by a `->getNbComments()` method:
 
     [php]
     public function getNbComments()
@@ -281,10 +250,11 @@ You can use it in the `comment/list` view by editing the related `generator.yml`
         
         list:
           display:        [id, article_link, date]
-        
-        ...
+          ...
 
-But beware that the code located in the model must be independent from the presentation. The example presented here is not conceptually correct. As a matter of fact, you'd better put the code that outputs HTML for a custom column in a partial. Fortunately the admin generator allows you to do it if you declare a column with a name starting by `_` (and, in that case, you don't need to add custom methods to the model):
+### Partial fields
+
+Beware that the code located in the model must be independent from the presentation. The example of the `getArticleLink()` method presented above doesn't respect this principle of layer separation. To achieve the same goal in a conceptually correct way, you'd better put the code that outputs HTML for a custom field in a [partial](view.txt). Fortunately the admin generator allows you to do it if you declare a field with a name starting by `_` (and, in that case, you don't need to add custom methods to the model):
 
         ...
         list:
@@ -295,26 +265,63 @@ For this to work, just add the following `_article_link.php` partial in the `mod
     [php]
     <?php echo link_to($comment->getArticle()->getTitle(), 'article/edit?id='.$comment->getArticleId()) ?>
     
-Notice that a partial column has access to the current object through a variable named by the module (`$comment` in this example).
+Notice that the partial template of a partial field has access to the current object through a variable named by the module (`$comment` in this example).
 
->**Note**: If you need to customize the parameters of a partial column (`_article_link` in this example), do just like you would with a normal field, under the `field:` key. Just don't include the first underscore (`_`):
+>**Note**: If you need to customize the parameters of a partial field (`_article_link` in this example), do just like you would with a normal field, under the `field:` key. Just don't include the first underscore (`_`):
 >
 >         fields:
 >           article_link:   { name: Article }
 >
 
-### Presentation
+Custom and partial fields can be used in the list view and in the edit view.
 
-In addition to a custom set of fields, the `list` and `edit` pages can have a custom presentation. The page title can be changed. In string values, the value of a field can be accessed via the name of the field surrounded by `%%`. The default list layout is the `tabular` layout, but you can also use the `stacked` layout. A field name preceded by `=` will contain a hyperlink to the detail of the related record. For instance, if you want to customize the `article` views:
+Customizing the views
+---------------------
+
+### Title
+
+In addition to a custom set of fields, the `list` and `edit` pages can have a custom page title. In the string values of the `generator.yml`, the value of a field can be accessed via the name of the field surrounded by `%%`. For instance, if you want to customize the `article` views:
+
+        list:
+          title:          List of Articles
+          display:        [title, content, nb_comments]
+
+        edit:
+          title:          Body of article %%title%%
+          display:        [content]
+
+### Tooltips
+
+In the `list` and `edit` views, you can add tooltips to help describe the fields that are displayed. For instance, to add a tooltip to the `article_id` field of the `edit` view of the `comment` module, add:
+
+        edit:
+          fields:
+            ...
+            article_id:   { help: The current comment relates to this article } 
+
+In the `list` view, the tooltip will be displayed in the column header, and in the `edit` view, the tooltip will be displayed close to each field.
+
+### Date format
+
+Dates can be displayed using a custom format as soon as you use the `date_format` param:
+
+        list:
+          fileds:
+            date:         { name: Published, params: date_format='dd/MM' }
+
+It takes the same format parameter as the `format_date()` helper described in the [internationalization helpers chapter](templating_i18n_helpers.txt).
+
+`list` view specific customization
+----------------------------------
+
+### Layout
+
+The default list layout is the `tabular` layout, but you can also use the `stacked` layout. A field name preceded by `=` will contain a hyperlink to the detail of the related record. For instance, if you want to customize the `article/list` views:
 
         list:
           title:          List of Articles
           layout:         tabular
           display:        [=title, content, nb_comments]
-
-        edit:
-          title:          Body of article %%title%%
-          display:        [content]
 
 And the `comment/list` view:
 
@@ -322,21 +329,9 @@ And the `comment/list` view:
           title:          List of Comments
           layout:         stacked
           params:         %%=content%% (sent by %%author%% on %%date%% about %%article_link%%)
+          display:        [date, author, content]
             
-Notice that a `tabular` layout expects a `display`, but a `stacked` layout uses the `params` key for the HTML code generated for each record. However, the `display` param is used to determine the sort columns in a `stacked` layout.
-
-Of course, the `theme` defined at the beginning of the `generator.yml` can also be changed to use an alternative set of templates and stylesheets. With the `default` theme, symfony uses the files defined in `symfony/data/generator/sfPropelAdmin/default`, and you can create a new theme in the framework to override any of the actions or templates.
-
-You can also define an alternative CSS to be used for an admin module instead of a default one:
-
-    generator:
-      class:              sfPropelAdminGenerator
-      param:
-        model_class:      Comment
-        theme:            default
-        css:              admin/mystylesheet
-
-... or override the styles per view, using the usual mechanisms provided by the module `view.yml` configuration. Since the generated HTML is structured content, you can do pretty much anything you like with the presentation.
+Notice that a `tabular` layout expects a `display`, but a `stacked` layout uses the `params` key for the HTML code generated for each record. However, the `display` param is stille used in a `stacked` layout which columns are available for the interactive sorting.
 
 ### Filters
 
@@ -366,6 +361,9 @@ The generated administration deals with large tables like a charm. The `list` vi
           layout:         stacked
           params:         %%=content%% (sent by %%author%% on %%date%% about %%article_link%%)
 
+`edit` view specific customization
+----------------------------------
+
 ### Input type
 
 In an `edit` view, the user can modify the value of each field. Symfony determines the type of input to be used according to the data type of the column. For instance, fields finishing wirh `_id` will be displayed as select inputs. However, you may want to force a certain type of input for a given field, or the options of the object_tag generated. This kind of parameter goes into the `fields` definition:
@@ -387,10 +385,10 @@ In an `edit` view, the user can modify the value of each field. Symfony determin
 
         edit:
           fields:
-            id:           { type: plain }                                         ## Drop the input, just display plain text
-            author:       { params: disabled=true }                               ## The input is not editable
-            content:      { type: textarea_tag, params: rich=true css=user.css tinymce_options=width:330}  ## The input is a textarea (object_textarea_tag)
-            article_id:   { params: include_custom=Choose an article }            ## The input is a select (object_select_tag)
+            id:           { type: plain }                              ## Drop the input, just display plain text
+            author:       { params: disabled=true }                    ## The input is not editable
+            content:      { type: textarea_tag, params: rich=true css=user.css tinymce_options=width:330 }  ## The input is a textarea (object_textarea_tag)
+            article_id:   { params: include_custom=Choose an article } ## The input is a select (object_select_tag)
           
           ...
 
@@ -401,7 +399,48 @@ The `params` parameters are passed as options to the generated object_tag. For i
 
 This means that all the options available in the [form helpers](templating_form_helpers.txt) can be customized in an edit view.
 
-### Interactions
+### Partial fields handling
+
+Partial fields can be used in `edit` views just like in `list` views. The difference is that you have to plug the control(s) of the partial with the fields of the objects, by hand, in the action. For instance, an administration module for a `User` model object where the available fields are `id`, `nickname` and `password`, will probably not display the `password` field in clear, for security reasons. Instead, such modules often offer an empty `password` input that the user has to fill to change the value:
+
+        edit:
+          display:        [id, nickname, _newpassword]
+          fields:
+            newpassword:  { name: Password, help: Enter a password to change it, leave the field blank to keep the current one }
+          
+The `templates/newpassword.php` partial contain something like:
+
+    [php]
+    <?php echo input_tag('newpassword', '') ?>
+
+Notice that this partial uses a simple form helper, not an object form helper, since it is not intended to get the value from the current object.
+
+Now, in order to use the value from this control to update the object in the action, you need to override the `updateUserFromRequest()` method. To do that, copy the code of the corresponding action in the cache into the module `actions.class.php` and add the custom behaviour for the partial field:
+
+    [php]
+    class autoUserActions extends sfActions
+    {
+      protected function updateUserFromRequest()
+      {
+        $user = $this->getRequestParameter('user');
+
+        if (isset($user['nickname']))
+        {
+          $this->user->setNickname($user['nickname']);
+        }
+        
+        // Custom code
+        if ($this->getRequestParameter('newpassword') != '')
+        {
+          $this->user->setPassword($user['newpassword']);
+        }
+      }
+    }
+
+>**Note**: In the real world, a `user/edit` view usually contains two `password` fields, the second having to match the first one to avoid typing mistakes. In practice, this is done via a [validator](validate_form.txt). The admin generated modules benefit from this mechanism just like regular modules.
+
+Interactions
+------------
 
 Admin modules are made to interact with the data. The basic interactions that can be performed are the usual CRUD, but you can also add your own interactions or restrict the possible interactions for a view. For instance, the following interaction definition for the `article` module gives access to all the CRUD actions:
 
@@ -453,6 +492,22 @@ One last word about actions: If you want to suppress completely the actions for 
           title:          List of Articles
           actions:        {}
 
+Presentation
+------------
+
+### Custom stylesheet
+
+You can also define an alternative CSS to be used for an admin module instead of a default one:
+
+    generator:
+      class:              sfPropelAdminGenerator
+      param:
+        model_class:      Comment
+        theme:            default
+        css:              admin/mystylesheet
+
+... or override the styles per view, using the usual mechanisms provided by the module `view.yml` configuration. Since the generated HTML is structured content, you can do pretty much anything you like with the presentation.
+
 ### Custom header and footer
 
 The `list` and `edit` views can include a custom `header` and `footer` partial. There is no such partial by default in the `templates/` directory of an admin module, but you just need to add one with one of the following names to have it included automatically:
@@ -471,7 +526,23 @@ For instance, if you want to add a custom header to the `article/edit` view, cre
     
 Notice that an `_edit` partial always has access to the current object through a variable having the same name as the module, and that a `_list` partial always has access to the current list of objects through the plural form variable (`$articles` for this module).
 
-### Calling the admin actions with custom parameters
+### Custom template parts
+
+There are other partials inherited from the framework that can be overridden in the module `templates/` folder to match your custom requirements:
+
+    _edit_actions.php
+    _filters.php
+    _list_actions.php
+    _list_td_actions.php
+    _list_td_stacked.php
+    _list_td_tabular.php
+    _list_th_stacked.php
+    _list_th_tabular.php
+
+Get the default version from the `symfony/data/generator/sfPropelAdmin/default/template/templates/` directory.
+
+Calling the admin actions with custom parameters
+------------------------------------------------
 
 The actions created for an administration can receive custom parameters using the `query_string` argument in a `link_to()` helper. For example, to extend the previous `_edit_header` with a link to the comments for the article, write:
 
@@ -485,9 +556,12 @@ The query string presented above is an encoded version of the more legible:
     'filter=filter                            # filters are to be reseted with the following params
      filters[article_id]='.$article->getId(); # filter the comments to display only the ones related to $article
 
+Using the `query_string` argument, you can specify a sorting order and/or a filter to display a custom `list` view.
+
 This can also be useful for custom interactions.
 
-### Credentials
+Credentials
+-----------
 
 For a given admin module, the elements displayed and the actions available can vary according to the credentials of the logged user. 
 
@@ -520,20 +594,14 @@ The `credentials` parameter accepts the usual credentials syntax, which allows y
 
 If you want to learn more about credentials, please refer to the [security chapter](security.txt) of the symfony book.
 
-### Tooltips
+Customize the theme
+-------------------
 
-In the `list` and `edit` views, you can add tooltips to help describe the fields that are displayed. For instance, to add a tooltip to the `article_id` field of the `edit` view of the `comment` module, add:
+If you customize several modules in the same way, you should probably create a **theme** that could be reused across modules. The `theme` defined at the beginning of the `generator.yml` can be changed to use an alternative set of templates and stylesheets. With the `default` theme, symfony uses the files defined in `symfony/data/generator/sfPropelAdmin/default`, and you can create a new theme in the framework to override any of the actions or templates.
 
-        edit:
-          fields:
-            ...
-            article_id:   { help: The current comment relates to this article } 
+The generator templates are cut into small parts that can be overridden independently, and the actions can also be changed one by one.
 
-In the `list` view, the tooltip will be displayed in the column header, and in the `edit` view, the tooltip will be displayed close to each field.
-
-### Customize the theme
-
-The header and footer are not the only parts that can be customized. The generator templates are cut into small parts that can be overridden independently, and the actions can also be changed one by one. Here is the list of the elements that can be customized in a module admin:
+To create your own theme, add a new directory in the `symfony/data/generator/sfPropelAdmin/` folder and fill it with your custom version of the following elements, using the same structure as the `default/` theme:
 
     fragments:
     _edit_actions.php
@@ -555,7 +623,8 @@ The header and footer are not the only parts that can be customized. The generat
     processSort()       
     addSortCriteria()
 
-### Translation
+Translation
+-----------
 
 All the texts that are in the generated templates are already internationalized (i.e. enclosed in a call to the `__('')` function). This means that you can easily translate a generated admin by adding the translations of the texts in a XLIFF file, in your `apps/myapp/i18n/` directory, as explained in the [i18n chapter](i18n.txt).
 

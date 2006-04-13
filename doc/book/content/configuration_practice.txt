@@ -367,7 +367,7 @@ To learn more about security and the way to set credentials, review the [securit
 
 ### `generator.yml`: generated module configuration        {#generator}
 
-One commonly used module configuration file is the `generator.yml` file. When you setup a 'Create Read Update Delete' (CRUD) basic layout for a data object, the module created will have a `generator.yml` file that you can modify. Read more about CRUDs and scaffolding in the [generator chapter](generator.txt).
+One commonly used module configuration file is the `generator.yml` file. When you setup a 'Create Read Update Delete' (CRUD) basic layout for a data object, the module created will have a `generator.yml` file that you can modify. Read more about CRUDs, scaffolding and generated administrations in the [scaffolding chapter](scaffolding.txt).
 
 ### `validate.yml`: Form validation                        {#validate}
 

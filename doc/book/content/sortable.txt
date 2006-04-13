@@ -130,7 +130,7 @@ Make sure your web server configuration is OK by testing the access to this new 
 
     http://localhost/sf_sandbox/web/frontend_dev.php/item
 
-Finally, if you want to test the ordering of items, you will need... items. Create a bunch of test items, either via a [CRUD interface](generator.txt) or a [population file](populate.txt).
+Finally, if you want to test the ordering of items, you will need... items. Create a bunch of test items, either via a [CRUD interface](scaffolding.txt) or a [population file](populate.txt).
 
 Now that everything is ready, let's get started.
 

@@ -1,0 +1,153 @@
+How to generate a Propel scaffolding or administration
+======================================================
+
+Overview
+--------
+
+Many applications are based on data stored in a database, and offer an interface to access it. Symfony automates the repetitive task of creating an initial CRUD or a full featured backend administration based on a Propel object with a few handy generators.
+
+Data manipulation: The needs
+----------------------------
+
+In a web application, the data access actions can be categorized as one of the following:
+
+* Create a record
+* Retrieve records (requesting the database of one or more records) 
+* Update a record (and modify its fields)
+* Delete a record
+
+These operations are so common that they have a dedicated acronym: [C.R.U.D.][1]
+
+Many pages can be reduced to one of these actions. For instance, in a forum application, the list of latest posts is a Retrieve action, and the reply to a post is a Create action. During the process of application creation, developers often need to redevelop the basic actions and template that implement the CRUD operations for a given table. And even if there are many ways to code it, the Propel layer offers consistant setters and getters, so it can be automated for the most part.
+
+This brings up two interesting automated mechanisms based on a table: The generation of a scaffolding and the generation of an administration. They are not used for the same purpose, and symfony provides different utilities for these two, so it is best if you understand clearly their differences:
+
+- A **scaffolding** is the basic structure (actions and templates) required to operate CRUD on a given table. The code is often minimal, and the formatting is neglected, since the purpose of a scaffolding is to serve as a guideline for a much more ambitious construction. For instance, when you start building an application that will handle posts (like a forum), you should start by generating a scaffolding based on the `Post` table. The scaffolding will give you the CRUD actions and the related templates, all that working together, and ready to be modified, combined, or erased, according to your needs. Beware though that scaffolding doesn't provide pagination, validation or fine configuration possibilities. It is a quick tool to give you a starting base.
+
+- An **administration** is a sophisticated interface for data manipulation, dedicated to backend administration. Administrations differ from scaffoldings because their code is not meant to be modified manually. They can be customized, extended or assembled. Their presentation is important, and they take advantage of additional features such as sorting, pagination and filtering.
+
+The symfony command line uses the word `crud` to designate a scaffolding, and `admin` for an administration.
+
+Initiating or generating
+------------------------
+
+Symfony offers two ways to create CRUD interfaces: Either by inheritance or by code generation. 
+
+* You can create empty classes that **inherit** from the framework. This masks the php code of the actions and the templates to avoid them being modified. This is useful if your data structure is not final, or if you want to completely rewrite some of the actions and keep the others. It also allows you to take advantage of future upgrades in the generators, because the code executed at runtime is not located in your application, but in the framework. The command line tasks for this kind of generation start with:
+
+        $ symfony propel-init-
+ 
+    It will create empty actions like the following:
+    
+        [php]
+        <?php
+        
+        class articleActions extends autoarticleActions
+        {
+        }
+        
+        ?>
+    
+* You can also **generate** the code of the actions and the templates so that it can be modified. The resulting module is independant from the classes of the framework, and cannot be altered using configuration files (see below). The command line tasks for this kind of generation start with:
+
+        $ symfony propel-generate-
+
+As the scaffoldings are built to serve as a base for further developments, it is often best to generate a scaffolding. On the other hand, an administration should be easy to update through a change in the configuration, and it should keep usable even if the data model changes. That's why administrations are often initiated only.
+
+Scaffolding
+-----------
+
+### Generating a scaffolding
+
+When you need a basic set of usable actions and templates that can access and modify the data of a given table, generate a scaffolding. For instance, to generate the scaffolding for an `article` module based on the `Article` model class, type:
+
+    $ symfony propel-generate-crud myapp article Article
+    
+This will create a new `modules/article/` directory in your `myapp` application, with the following code:
+
+ Action    | Purpose
+ --------- | -------
+ `index`   | forwards to the list action below
+ `list`    | displays the list of all the records of the table
+ `show`    | displays the detailed view (line by line) of one record
+ `edit`    | displays a form to modify the fields of a record
+ `update`  | action called by the form of the edit action above
+ `delete`  | deletes a record
+ `create`  | creates a new record
+
+ Template          | Purpose
+ ----------------- | -------
+ `editSuccess.php` | record edition form
+ `listSuccess.php` | list of all records
+ `showSuccess.php` | detail of one record
+
+The module can be used as soon as it is generated:
+
+    http://myapp.example.com/index.php/article
+    
+Using this module, you can create new articles, modify or delete existing ones. The generated code is ready to be modified for your own needs. As an example, here is the beginning of the `actions.class.php` file:
+
+    [php]
+    class articleActions extends sfActions
+    {
+      public function executeIndex()
+      {
+        return $this->forward('article', 'list');
+      }
+    
+      public function executeList()
+      {
+        $this->articles = ArticlePeer::doSelect(new Criteria());
+      }
+    
+      public function executeShow()
+      {
+        $this->article = ArticlePeer::retrieveByPk($this->getRequestParameter('id'));
+    
+        $this->forward404Unless($this->article instanceof Article);
+      }
+      ...
+
+Repeat the CRUD generation for all the tables that you want to interact with, and you have a working scaffolding for a whole web application.
+
+### Initiating a scaffolding
+
+Initiating a scaffolding is mostly useful when you need to check that you can access the data in the database. It is fast to build, and also fast to delete once you're sure that everything works fine.
+
+To initiate a Propel scaffolding that will create an `article` module to deal with the records of the `Article` model class name, type:
+
+    $ symfony propel-init-crud myapp article Article
+
+Access it with the default action:
+
+    http://myapp.example.com/index.php/article
+
+And start using your simple application just the way you would with a generated one.
+
+If you check the newly created `actions.class.php` in the `article` module, you will see that it is empty: Everything is inherited from a Propel CRUD generator class. The same goes for the templates: There is no template file in the `templates/` directory. The code behind the initiated actions and templates is the same as for a generated scaffolding, but lies only in the framework. It can be found in the application cache (`myproject\cache\myapp\prod\module\autoArticle\`).
+
+Administration
+--------------
+
+Symfony can create modules based on propel objects for the backend of your applications. Contrary to other generators, you keep the total control of the modules, since you benefit from the usual module mechanisms (decorator, validation, routing, custom configuration, autoloading, etc.). You are free to link the modules as you want, or to add a module of your own. You can also override any piece of action or template.
+
+Setting up an administration is as easy as initiating a scaffolding:
+
+    $ symfony propel-init-admin myapp article Article
+
+Just like scaffoldings, admin modules are related to a Propel object (`Article` in the example above). The actions created are the almost the same (except there is no `show` action), and can be accessed the same way:
+
+    http://myapp.example.com/index.php/article
+
+The main difference is that an admin relies on a configuration file called `generator.yml`. To see the default configuration of an administration module just created, open the `myapp/modules/article/config/generator.yml` file:
+
+    generator:
+      class:              sfPropelAdminGenerator
+      param:
+        model_class:      Article
+        theme:            default
+
+To customize the generator, you don't need to modify the `article` actions, but rather change this configuration. You will learn more about the way to customize a generated administration module in the [admin generator chapter](generator.txt).
+
+[1]: http://en.wikipedia.org/wiki/CRUD_(acronym)  "CRUD definition at Wikipedia"
+[2]: http://propel.phpdb.org/trac/ "Propel project site"

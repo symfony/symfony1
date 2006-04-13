@@ -109,7 +109,7 @@ If you want to learn more about the model and the effect of these commands, refe
 
     $ symfony propel-init-admin <APPLICATION_NAME> <MODULE_NAME> <CLASS_NAME>
 
-You will find a lot of details about scaffolding and generated administrations in the [generator chapter](generator.txt).
+You will find a lot of details about scaffolding and generated administrations in the [scaffolding](scaffolding.txt) and [generator chapter](generator.txt).
 
 ### Plugin management
 
