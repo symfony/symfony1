@@ -44,8 +44,8 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     );
 
     // merge javascripts and stylesheets
-    $myConfig['all']['stylesheets'] = array_merge(isset($myConfig['default']['stylesheets']) ? $myConfig['default']['stylesheets'] : array(), isset($myConfig['all']['stylesheets']) ? $myConfig['all']['stylesheets'] : array());
-    $myConfig['all']['javascripts'] = array_merge(isset($myConfig['default']['javascripts']) ? $myConfig['default']['javascripts'] : array(), isset($myConfig['all']['javascripts']) ? $myConfig['all']['javascripts'] : array());
+    $myConfig['all']['stylesheets'] = array_merge(isset($myConfig['default']['stylesheets']) && is_array($myConfig['default']['stylesheets']) ? $myConfig['default']['stylesheets'] : array(), isset($myConfig['all']['stylesheets']) && is_array($myConfig['all']['stylesheets']) ? $myConfig['all']['stylesheets'] : array());
+    $myConfig['all']['javascripts'] = array_merge(isset($myConfig['default']['javascripts']) && is_array($myConfig['default']['javascripts']) ? $myConfig['default']['javascripts'] : array(), isset($myConfig['all']['javascripts']) && is_array($myConfig['all']['javascripts']) ? $myConfig['all']['javascripts'] : array());
 
     unset($myConfig['default']);
 
