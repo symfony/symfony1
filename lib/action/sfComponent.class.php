@@ -92,7 +92,10 @@ abstract class sfComponent
    */
   public function logMessage ($message, $priority = 'info')
   {
-    return $this->context->getLogger()->log($message, constant('SF_PEAR_LOG_'.strtoupper($priority)));
+    if (sfConfig::get('sf_logging_active'))
+    {
+      return $this->context->getLogger()->log($message, constant('SF_PEAR_LOG_'.strtoupper($priority)));
+    }
   }
 
   public function debugMessage ($message)
