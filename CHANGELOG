@@ -1,6 +1,17 @@
 SVN
 ---
 
+Version 0.6.2
+-------------
+
+* lot of bugs fixes
+* new output escaping system (to automatically prevent XSS)
+* better form repopulation system
+* fixed sfMailView
+* cache system tweaks
+* better exception page in debug mode and internal server error page in production mode
+* added some more information in the debug toolbar
+
 Version 0.6.1
 -------------
 
