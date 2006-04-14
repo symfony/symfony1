@@ -257,10 +257,10 @@ You may need sometimes to keep a certain context in a pager object. That's why t
     if ($pager->hasParameter('foo'))
     {
       $pager->getParameter('foo');
-      $pager->removeParameter('foo');
+      $pager->getParameterHolder()->removeParameter('foo');
     }
     
-    $pager->clearParameters();
+    $pager->getParameterHolder()->clearParameters();
 
 These parameters are never used directly by the pager.
 
