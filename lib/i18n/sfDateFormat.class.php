@@ -372,8 +372,7 @@ class sfDateFormat
         return $this->formatInfo->DayNames[$day];
         break;
       default:
-        throw new sfException('The pattern for day of the week '.
-            'is "E", "EE", "EEE", or "EEEE".');
+        throw new sfException('The pattern for day of the week is "E", "EE", "EEE", or "EEEE".');
     }
   }
 
@@ -394,9 +393,10 @@ class sfDateFormat
         return $day;
       case 'dd':
         return str_pad($day, 2,'0',STR_PAD_LEFT);
+      case 'dddd':
+        return $this->getDayInWeek($date);
       default:
-        throw new sfException('The pattern for day of '.
-            'the month is "d" or "dd".');
+        throw new sfException('The pattern for day of the month is "d", "dd" or "dddd".');
     }
   }
 
