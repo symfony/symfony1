@@ -7,8 +7,8 @@
   [?php echo link_to($this->getColumnListTag($column), '<?php echo $this->getModuleName() ?>/edit?<?php echo $this->getPrimaryKeyUrlParams() ?>) ?]
   <?php else: ?>
   [?php echo <?php echo $this->getColumnListTag($column) ?> ?]
-  <?php endif ?>
+  <?php endif; ?>
    - 
-<?php endforeach ?>
-<?php endif ?>
+<?php endforeach; ?>
+<?php endif; ?>
 </td>

@@ -4,9 +4,9 @@
   <?php if (is_array($listActions)): ?>
     <?php foreach ($listActions as $actionName => $params): ?>
       <?php echo $this->addCredentialCondition($this->getButtonToAction($actionName, $params, false), $params) ?>
-    <?php endforeach ?>
-  <?php endif ?>
+    <?php endforeach; ?>
+  <?php endif; ?>
 <?php else: ?>
   <?php echo $this->getButtonToAction('_create', array(), false) ?>
-<?php endif ?>
+<?php endif; ?>
 </ul>
