@@ -1,0 +1,138 @@
+How to upload a file
+====================
+
+Overview
+--------
+
+Backends and collaborative applications often require users to upload media or data files. With a few lines of code, symfony handles all that needs to be taken care of - file renaming, move to upload directory, etc. And the users of the admin generator also have access to a new helper that reduces the implementation to a simple configuration.
+
+Regular file upload
+-------------------
+
+Uploading a file requires a form in a template, and an action to handle it. For the template, use the `file_upload_tag()` helper in a form declared as `multipart`:
+
+    [php]
+    <?php echo form_tag('media/upload', 'multipart=true') ?>
+      <?php echo input_file_tag('file') ?>
+      <?php echo submit_tag('Send') ?>
+    </form>
+    
+It generates the following HTML code:
+
+    [php]
+    <form method="post" enctype="multipart/form-data" action="media/upload">
+      <input type="file" name="file" id="file" value="" />
+      <input type="submit" name="commit" value="Send" />
+    </form>
+    
+The action (`media/upload` in this example) moves the file from the request to the upload directory:
+
+    [php]
+    public function executeUpload()
+    {
+      $fileName = $this->getRequest()->getFileName('file');
+      
+      $this->getRequest()->moveFile('file', sfConfig::get('sf_upload_dir').'/'.$fileName);
+  
+      $this->redirect('media/show?filename='.$fileName);    
+    }
+
+The `sf_upload_dir` parameter holds the absolute path, in your server, where the file is to be uploaded. For a project called `myproject`, it is usually `/home/production/myproject/web/upload/`. You can modify it easily in the `config/config.php`:
+
+    [php]
+    sfConfig::add(array(
+      'sf_upload_dir_name'  => $sf_upload_dir_name = 'uploads',
+      'sf_upload_dir'       => sfConfig::get('sf_root_dir').DIRECTORY_SEPARATOR.sfConfig::get('sf_web_dir_name').DIRECTORY_SEPARATOR.$sf_upload_dir_name,      
+    ));    
+
+>**Note**: Before moving the file from the request to the upload directory, you should sanitize the filename to replace special characters and avoid file system problems. In addition, you should escape the `$fileName` before passing it as a request parameter.
+
+To display the uploaded file, use the `sf_upload_dir_name` parameter. For example, if the uploaded media is an image, the `media/show` template will display it with:
+
+    [php]
+    ...
+    <?php echo image_tag('/'.sfConfig::get('sf_upload_dir_name').'/'.$sf_params->get('filename')) ?>
+
+Validation
+----------
+
+Like regular form inputs, file upload tags can be validated by a [symfony validator](`validate_form.txt`), the `sfFileValidator`. Just remember to put a custom `file: true` parameter in the validator declaration under the `names` key. For instance, the `validate/upload.yml` for the previous form should be written as follows:
+
+    methods:
+      post:               [file]
+      
+    names:
+      file:
+        required:         Yes
+        required_msg:     Please upload a file
+        validators:       myFileValidator
+        file:             true
+        
+    myFileValidator:
+      class:              sfFileValidator
+      param:
+        mime-types:       
+          - 'image/jpeg'
+          - 'image/png'
+          - 'image/x-png'
+          - 'image/pjpeg'        
+        mime-types-error: Only PNG and JPEG images are allowed
+        max_size:         2000
+        max_size_error:   Max size is 2Mo
+
+>**Note**: Due to inconsistencies between Internet Explorer and other browsers, you have to use the IE-specific mime types as well as the regular ones.
+
+The `sfFileValidator` can validate the type of the uploaded file (you can sêcify an array of mime types) its size (you can specify a minimum and a maximum size).
+
+Thumbnails
+----------
+
+If you upload images, you might need to create thumbnails of each uploaded file. In this case, the `sfThumbnail` plugin might prove useful.
+
+First, install the plugin using the symfony command line:
+
+    $ symfony plugin-install local symfony/sfThumbnail
+    
+>**Note**: If the GD library is not activated, you might have to uncomment the related line in your `php.ini` and restart your web server to enable PHP image handling functions.
+
+Once the plugin is installed, you can use it through the `sfThumbnail` object. For instance, to save a thumbnail of maximum size 150x150px at the same time as the uploaded image in the above example, replace the `media/upload` action by:
+
+    [php]
+    public function executeUpload()
+    {
+      $fileName = $this->getRequest()->getFileName('file');
+      
+      $thumbnail = new sfThumbnail(150, 150);
+      $thumbnail->loadFile($this->getRequest()->getFilePath('file'));
+      $thumbnail->save(sfConfig::get('sf_upload_dir').'/thumbnail/'.$fileName, 'image/png');
+      
+      $this->getRequest()->moveFile('file', sfConfig::get('sf_upload_dir').'/'.$fileName);
+  
+      $this->redirect('media/show?filename='.$fileName);    
+    }
+
+Don't forget to create the `uploads/thumbnail/` directory before calling the action.
+
+File upload with the admin generator
+------------------------------------
+
+If your data model contains a field for a media, and if your administration is built using the [admin generator](generator.yml), you can use the long named `object_admin_input_upload_tag()` helper. It does everything for you with just a simple configuration.
+
+For instance, if you have a `User` table with a `photo` column, the `generator.yml` for the `edit` view can be configured as follows:
+
+    edit:
+      title:          User profile
+      fields:
+        photo:
+          name:       User photo
+          help:       max width 200px
+          type:       admin_input_upload_tag
+          upload_dir: pictures/users
+          params:     include_link=pictures/users include_remove=true
+      display:        [name, email, photo]
+
+The `upload_dir` key sets the upload directory (under the `uploads/` directory).
+
+If you include an `include_link` param, a link will be added to the uploaded media (that is, if a media is uploaded). The text of the link is '[show file]' by default - unless you specify an `include_text` param.
+
+If you include an `include_remove` param, the helper will display a link to allow easy removal of the media when clicked.

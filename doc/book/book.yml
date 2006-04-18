@@ -41,10 +41,12 @@ parts:
     - plugin
     - batch
     - cli
+    - upload
     - shopping_cart
     - sortable
     - custom_helper
     - validate_form
+    - fillin
     - email
     - cookie
     - 404
