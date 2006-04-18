@@ -35,7 +35,7 @@ class sfFillInFormFilter extends sfFilter
     }
 
     // load converters
-    foreach ($this->getParameter('converters') as $functionName => $parameters)
+    foreach ($this->getParameter('converters', array()) as $functionName => $parameters)
     {
       if (!is_array($parameters))
       {
