@@ -200,7 +200,7 @@ class sfExecutionFilter extends sfFilter
     {
       // register the fill in form filter
       $fillInFormFilter = new sfFillInFormFilter();
-      $fillInFormFilter->initialize($this->context, $parameters['param']);
+      $fillInFormFilter->initialize($this->context, isset($parameters['param']) ? $parameters['param'] : array());
       $filterChain->register($fillInFormFilter);
     }
   }

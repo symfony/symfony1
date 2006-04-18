@@ -29,11 +29,6 @@ class sfFillInFormFilter extends sfFilter
     @$doc->loadHTML($response->getContent());
     $xpath = new DomXPath($doc);
 
-    if (!$this->getParameter('name'))
-    {
-      throw new sfInitializationException('You must give the name of the form to populate.');
-    }
-
     // load converters
     foreach ($this->getParameter('converters', array()) as $functionName => $parameters)
     {
@@ -49,7 +44,8 @@ class sfFillInFormFilter extends sfFilter
     }
 
     // find our form
-    if ($form = $xpath->query('//form[@name="'.$this->getParameter('name').'"]')->item(0))
+    $xpath_query = $this->getParameter('name') ? '//form[@name="'.$this->getParameter('name').'"]' : '//form';
+    if ($form = $xpath->query($xpath_query)->item(0))
     {
       foreach($xpath->query('descendant::input[@name and (not(@type) or @type="text" or @type="checkbox" or @type="radio")] | descendant::textarea[@name] | descendant::select[@name]', $form) as $element)
       {
