@@ -83,8 +83,6 @@ class sfExecutionFilter extends sfFilter
 
         if ($validated)
         {
-          $fillInParameters = array();
-
           // get the current action validation configuration
           $validationConfig = $moduleName.'/'.sfConfig::get('sf_app_module_validate_dir_name').'/'.$actionName.'.yml';
           if (is_readable(sfConfig::get('sf_app_module_dir').'/'.$validationConfig))
@@ -115,18 +113,6 @@ class sfExecutionFilter extends sfFilter
         }
         else
         {
-          if (isset($fillInParameters['activate']) && $fillInParameters['activate'])
-          {
-            // automatically register the fill in filter if it is not already loaded in the chain
-            if (!$filterChain->hasFilter('sfFillInFormFilter'))
-            {
-              // register the fill in form filter
-              $fillInFormFilter = new sfFillInFormFilter();
-              $fillInFormFilter->initialize($this->context, $fillInParameters['param']);
-              $filterChain->register($fillInFormFilter);
-            }
-          }
-
           if ($sf_logging_active)
           {
             $this->context->getLogger()->info('{sfExecutionFilter} action validation failed');
@@ -135,6 +121,12 @@ class sfExecutionFilter extends sfFilter
           // validation failed
           $handleErrorToRun = 'handleError'.ucfirst($actionName);
           $viewName = method_exists($actionInstance, $handleErrorToRun) ? $actionInstance->$handleErrorToRun() : $actionInstance->handleError();
+        }
+
+        // register fill-in filter
+        if (null !== ($parameters = $context->getRequest()->getAttribute('fillin', null, 'symfony/filter')))
+        {
+          $this->registerFillInFilter($filterChain, $parameters);
         }
       }
     }
@@ -198,6 +190,18 @@ class sfExecutionFilter extends sfFilter
 
         throw new sfInitializationException($error);
       }
+    }
+  }
+
+  private function registerFillInFilter($filterChain, $parameters)
+  {
+    // automatically register the fill in filter if it is not already loaded in the chain
+    if (isset($parameters['activate']) && $parameters['activate'] && !$filterChain->hasFilter('sfFillInFormFilter'))
+    {
+      // register the fill in form filter
+      $fillInFormFilter = new sfFillInFormFilter();
+      $fillInFormFilter->initialize($this->context, $parameters['param']);
+      $filterChain->register($fillInFormFilter);
     }
   }
 }
