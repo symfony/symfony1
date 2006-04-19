@@ -233,12 +233,6 @@ class sfWebResponse extends sfResponse
       $this->getContext()->getLogger()->info('{sfWebResponse} send status "'.$status.'"');
     }
 
-    // set headers from HTTP meta
-    foreach ($this->getHttpMetas() as $name => $value)
-    {
-      $this->setHttpHeader($name, $value, false);
-    }
-
     // headers
     foreach ($this->headers as $name => $values)
     {
@@ -343,6 +337,9 @@ class sfWebResponse extends sfResponse
     if ($override || !$this->hasParameter($key, 'helper/asset/auto/httpmeta'))
     {
       $this->setParameter($key, $value, 'helper/asset/auto/httpmeta');
+
+      // set HTTP header
+      $this->setHttpHeader($key, $value, false);
     }
   }
 
