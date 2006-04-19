@@ -83,7 +83,7 @@ You may want to modify the data entered by the user before inserting and display
 As you can see, you can use existing PHP functions as converters or a function that you defined youself:
 
     [php]
-    public function enpty_string()
+    public function empty_string()
     {
       return '';
     }
