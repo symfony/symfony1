@@ -151,6 +151,25 @@ The options can be combined:
     // will generate in HTML
     <a onclick="if (confirm('Are you sure?')) { window.open(this.href); };return false;" href="/fo_dev.php/shoppingCart/add/id/100.html">add to cart</a>
 
+### Forcing GET variables
+
+According to your routing rules, variables passed as parameters to a `link_to()` are transformed into patterns. The default rule transforms `?key=value` into `/key/value`:
+
+    [php]
+    <?php echo link_to('interesting article', 'article/read?title=Finance_in_France') ?>
+    // will generate in the URL
+    http://myapp.example.com/index.php/article/read/title/Finance_in_France
+
+But what if you actually need to keep the GET syntax, i.e. to output an url like:
+
+    [php]
+    http://myapp.example.com/index.php/article/read?title=Finance_in_France
+
+You should then put the variables that have to be forced outside of the `url` parameter, in the `query_string` option:
+
+    [php]
+    <?php echo link_to('interesting article', 'article/read', array('query_string' => 'title=Finance_in_France')) ?>
+
 button_to helper
 ----------------
 
