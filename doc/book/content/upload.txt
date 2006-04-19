@@ -82,7 +82,7 @@ Like regular form inputs, file upload tags can be validated by a [symfony valida
 
 >**Note**: Due to inconsistencies between Internet Explorer and other browsers, you have to use the IE-specific mime types as well as the regular ones.
 
-The `sfFileValidator` can validate the type of the uploaded file (you can sêcify an array of mime types) its size (you can specify a minimum and a maximum size).
+The `sfFileValidator` can validate the type of the uploaded file (you can specify an array of mime types) its size (you can specify a minimum and a maximum size).
 
 Thumbnails
 ----------

@@ -287,7 +287,7 @@ To sum up, just remember the syntax of YAML configuration files:
 
        # comment
 
-But now, enough of these general considerations, let's dig into the real configuration files and all their marvelous possibilities.
+But now, enough of these general considerations, let's dig into the [real configuration files](configuration_practice.txt) and all their marvelous possibilities.
 
 [1]: http://www.yaml.org/                   "YAML"
 [2]: http://www.yaml.org/start.html         "Get started with YAML"
