@@ -305,7 +305,9 @@ class sfPropelPager
 
   public function setPage($page)
   {
-    $this->page = ($page < 0) ? 1 : $page;
+    $page = intval($page);
+
+    $this->page = ($page <= 0) ? 1 : $page;
   }
 
   public function getMaxPerPage()

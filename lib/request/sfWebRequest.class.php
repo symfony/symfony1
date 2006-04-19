@@ -355,11 +355,11 @@ class sfWebRequest extends sfRequest
         $pathInfo = preg_replace('/^'.str_replace('/', '\\/', $sf_relative_url_root).'\//', '', $pathInfo);
       }
     }
+
     // for IIS
     if ($pos = stripos($pathInfo, '.php'))
     {
-      $pathInfo = substr($pathInfo, $pos+ 4);
-      $pathInfo = $pathInfo? $pathInfo: '/';
+      $pathInfo = substr($pathInfo, $pos + 4);
     }
 
     if (!$pathInfo)
