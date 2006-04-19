@@ -70,7 +70,7 @@ class sfWebDebugFilter extends sfFilter
       $newContent = str_ireplace('</body>', $webDebug.'</body>', $content);
       if ($content == $newContent)
       {
-        $newContent .= $content.$webDebug;
+        $newContent .= $webDebug;
       }
 
       $response->setContent($newContent);
