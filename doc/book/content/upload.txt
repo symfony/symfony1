@@ -9,7 +9,7 @@ Backends and collaborative applications often require users to upload media or d
 Regular file upload
 -------------------
 
-Uploading a file requires a form in a template, and an action to handle it. For the template, use the `file_upload_tag()` helper in a form declared as `multipart`:
+Uploading a file requires a form in a template, and an action to handle it. For the template, use the `input_file_tag()` helper in a form declared as `multipart`:
 
     [php]
     <?php echo form_tag('media/upload', 'multipart=true') ?>

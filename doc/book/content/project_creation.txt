@@ -63,7 +63,9 @@ Here is an overview of the file structure created:
     test/
     web/
 
-The `symfony` command should always be called from this directory to apply to the current project.
+>**Note**: If you have specific requirements for your project, symfony can adapt to any custom file structure. All the paths in the symfony scripts use a set of special parameters defined in a file called `constants.php`, which can be customized as described in the [file structure chapter](file_structure.txt).
+
+The `symfony` command must always be called from a project root directory (`myproject/` in the example above), because all the tasks perfomed by this command are project specific. If called from one of the project subdirectories, the command will raise an error.
 
 Application Setup
 -----------------
@@ -90,7 +92,7 @@ Some php files corresponding to the front controllers of each default environmen
 
 `index.php` is the *production* front controller of the new application. Because you created the first application of the project, Symfony created a file called `index.php` instead of `myapp.php` (if you now add a new application called `mynewapp`, the new production front controller will be named `mynewapp.php`). To run your application in the *development* environment, call the front controller `myapp_dev.php`. 
 
->**Note**: if you carefully read the introduction, you may wonder where the `myapp_test.php` file is located. As a matter of fact, the *test* environment is used to do unit testing of your applications components and doesn't require a front controller. Refer to the [unit testing chapter](test_unit_testing.txt) to learn more about it.
+>**Note**: If you carefully read the introduction, you may wonder where the `myapp_test.php` file is located. As a matter of fact, the *test* environment is used to do unit testing of your applications components and doesn't require a front controller. Refer to the [unit testing chapter](test_unit_testing.txt) to learn more about it.
 
 From now on, the `/home/steve/myproject/` directory will be considered as the root of your project. The root path is stored in a constant called `SF_ROOT_DIR`, defined in the file `index.php`, and we will use this name instead of the real path to avoid confusing the readers who aren't named Steve.
 
@@ -100,8 +102,8 @@ Web server setup
 To be able to access and test the new application, the web server has to be configured. Here is an example for Apache, where a new VirtualHost is added in the `httpd.conf` file:
 
     <Directory "/$data_dir/symfony/web/sf">
-     AllowOverride All
-     Allow from All
+      AllowOverride All
+      Allow from All
     </Directory>
     <VirtualHost *:80>
       ServerName myapp.example.com
@@ -110,8 +112,8 @@ To be able to access and test the new application, the web server has to be conf
       Alias /sf /$data_dir/symfony/web/sf
 
       <Directory "/home/steve/myproject/web">
-       AllowOverride All
-       Allow from All
+        AllowOverride All
+        Allow from All
       </Directory>
     </VirtualHost>
 
@@ -172,7 +174,7 @@ Once the setup of the application is done, it is recommended to start a source v
 
 The example below assumes that $SVNREP_DIR is defined as an environment variable.  If you don't have it defined, you will need to substitute the actual location of the repository in place of $SVNREP_DIR.
 
-So lets **create** the new repository for the `myproject` project:
+So let's **create** the new repository for the `myproject` project:
 
     $ svnadmin create $SVNREP_DIR/myproject
 
