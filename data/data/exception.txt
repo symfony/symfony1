@@ -5,7 +5,7 @@
 <?php foreach ($traces as $line): ?>
   <?php echo $line ?>
 
-<?php endforeach ?>
-<?php endif ?>
+<?php endforeach; ?>
+<?php endif; ?>
 [symfony]     v. <?php echo sfConfig::get('sf_version') ?> (symfony-project.com)
 [PHP]         v. <?php echo PHP_VERSION ?> 

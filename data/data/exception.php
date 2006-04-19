@@ -34,7 +34,7 @@
   <h2 id="message"><?php echo $message ?></h2>
   <?php if ($error_reference): ?>
     <p><a href='http://www.symfony-project.com/errors/<?php echo $error_reference ?>'>learn more about this issue</a></p>
-  <?php endif ?>
+  <?php endif; ?>
   <h2>stack trace</h2>
   <ul><li><?php echo implode('</li><li>', $traces) ?></li></ul>
   <p id="footer">

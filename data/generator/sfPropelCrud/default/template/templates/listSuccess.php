@@ -5,7 +5,7 @@
 <tr>
 <?php foreach ($this->getTableMap()->getColumns() as $column): ?>
   <th><?php echo sfInflector::humanize(sfInflector::underscore($column->getPhpName())) ?></th>
-<?php endforeach ?>
+<?php endforeach; ?>
 </tr>
 </thead>
 <tbody>
@@ -16,10 +16,10 @@
   <td>[?php echo link_to($<?php echo $this->getSingularName() ?>->get<?php echo $column->getPhpName() ?>(), '<?php echo $this->getModuleName() ?>/show?<?php echo $this->getPrimaryKeyUrlParams() ?>) ?]</td>
   <?php else: ?>
   <td>[?php echo $<?php echo $this->getSingularName() ?>->get<?php echo $column->getPhpName() ?>() ?]</td>
-  <?php endif ?>
-<?php endforeach ?>
+  <?php endif; ?>
+<?php endforeach; ?>
 </tr>
-[?php endforeach ?]
+[?php endforeach; ?]
 </tbody>
 </table>
 

@@ -65,8 +65,8 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     $<?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>($this->getRequestParameter('<?php echo $name ?>', 0));
 <?php else: ?>
     $<?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>($this->getRequestParameter('<?php echo $name ?>'));
-<?php endif ?>
-<?php endforeach ?>
+<?php endif; ?>
+<?php endforeach; ?>
 
     $<?php echo $this->getSingularName() ?>->save();
 

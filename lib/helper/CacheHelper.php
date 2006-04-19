@@ -24,7 +24,7 @@
 ... HTML ...
 
   <?php cache_save() ?>
-<?php endif ?>
+<?php endif; ?>
 
 */
 function cache($suffix, $lifeTime = null)

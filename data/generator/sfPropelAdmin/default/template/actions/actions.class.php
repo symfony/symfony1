@@ -96,9 +96,9 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
         unlink($currentFile);
       }
 
-<?php endif ?>
-<?php endforeach ?>
-<?php endforeach ?>
+<?php endif; ?>
+<?php endforeach; ?>
+<?php endforeach; ?>
     return $this->redirect('<?php echo $this->getModuleName() ?>/list');
   }
 
@@ -124,7 +124,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 <?php if ($credentials): $credentials = str_replace("\n", ' ', var_export($credentials, true)) ?>
     if ($this->getUser()->hasCredential(<?php echo $credentials ?>))
     {
-<?php endif ?>
+<?php endif; ?>
 <?php if ($input_type == 'admin_input_upload_tag'): ?>
 <?php $upload_dir = $this->getParameterValue('edit.fields.'.$column->getName().'.upload_dir') ?>
     $currentFile = sfConfig::get('sf_upload_dir').'/<?php echo $upload_dir ?>/'.$this-><?php echo $this->getSingularName() ?>->get<?php echo $column->getPhpName() ?>();
@@ -142,7 +142,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 <?php else: ?>
     if (isset($<?php echo $this->getSingularName() ?>['<?php echo $name ?>']))
     {
-<?php endif ?>
+<?php endif; ?>
 <?php if ($input_type == 'admin_input_upload_tag'): ?>
       $fileName = md5($this->getRequest()->getFileName('<?php echo $this->getSingularName() ?>[<?php echo $name ?>]').time());
       $ext = $this->getRequest()->getFileExtension('<?php echo $this->getSingularName() ?>[<?php echo $name ?>]');
@@ -166,13 +166,13 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
       $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>(isset($<?php echo $this->getSingularName() ?>['<?php echo $name ?>']) ? $<?php echo $this->getSingularName() ?>['<?php echo $name ?>'] : 0);
 <?php else: ?>
       $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>($<?php echo $this->getSingularName() ?>['<?php echo $name ?>']);
-<?php endif ?>
+<?php endif; ?>
     }
 <?php if ($credentials): ?>
       }
-<?php endif ?>
-<?php endforeach ?>
-<?php endforeach ?>
+<?php endif; ?>
+<?php endforeach; ?>
+<?php endforeach; ?>
   }
 
   protected function get<?php echo $this->getClassName() ?>OrCreate (<?php echo $this->getMethodParamsForGetOrCreate() ?>)
@@ -199,7 +199,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
       $this->getUser()->getAttributeHolder()->removeNamespace('sf_admin/<?php echo $this->getSingularName() ?>/filters');
       $this->getUser()->getAttributeHolder()->add($this->getRequestParameter('filters'), 'sf_admin/<?php echo $this->getSingularName() ?>/filters');
     }
-<?php endif ?>
+<?php endif; ?>
   }
 
   protected function processSort ()
@@ -222,10 +222,10 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
       $c->add(<?php echo $this->getPeerClassName() ?>::<?php echo strtoupper($column->getName()) ?>, strtr($this->filters['<?php echo $column->getName() ?>'], '*', '%'), Criteria::LIKE);
 <?php else: ?>
       $c->add(<?php echo $this->getPeerClassName() ?>::<?php echo strtoupper($column->getName()) ?>, $this->filters['<?php echo $column->getName() ?>']);
-<?php endif ?>
+<?php endif; ?>
     }
-<?php endforeach ?>
-<?php endif ?>
+<?php endforeach; ?>
+<?php endif; ?>
   }
 
   protected function addSortCriteria (&$c)

@@ -4,7 +4,7 @@
 
 <?php foreach ($this->getPrimaryKey() as $pk): ?>
 [?php echo object_input_hidden_tag($<?php echo $this->getSingularName() ?>, 'get<?php echo $pk->getPhpName() ?>') ?]
-<?php endforeach ?>
+<?php endforeach; ?>
 
 <table>
 <tbody>
@@ -12,10 +12,10 @@
 <?php if ($column->isPrimaryKey()) continue ?>
 <?php if ($name == 'CREATED_AT' || $name == 'UPDATED_AT') continue ?>
 <tr>
-  <th><?php echo sfInflector::humanize(sfInflector::underscore($column->getPhpName())) ?><?php if ($column->isNotNull()): ?>*<?php endif ?>:</th>
+  <th><?php echo sfInflector::humanize(sfInflector::underscore($column->getPhpName())) ?><?php if ($column->isNotNull()): ?>*<?php endif; ?>:</th>
   <td>[?php echo <?php echo $this->getColumnEditTag($column) ?> ?]</td>
 </tr>
-<?php endforeach ?>
+<?php endforeach; ?>
 </tbody>
 </table>
 <hr />
@@ -25,5 +25,5 @@
   &nbsp;[?php echo link_to('cancel', '<?php echo $this->getModuleName() ?>/show?<?php echo $this->getPrimaryKeyUrlParams() ?>) ?]
 [?php else: ?]
   &nbsp;[?php echo link_to('cancel', '<?php echo $this->getModuleName() ?>/list') ?]
-[?php endif ?]
+[?php endif; ?]
 </form>

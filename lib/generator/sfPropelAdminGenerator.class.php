@@ -193,7 +193,7 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
 
     if ($only_if_id)
     {
-      $html .= '[?php endif ?]'."\n";
+      $html .= '[?php endif; ?]'."\n";
     }
 
     $html .= '</li>';
@@ -294,7 +294,7 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
       return <<<EOF
 [?php if (\$sf_user->hasCredential($credentials)): ?]
 $content
-[?php endif ?]
+[?php endif; ?]
 EOF;
     }
     else
