@@ -323,7 +323,7 @@ tinyMCE.init({
     error_reporting($error_reporting);
 
     $fckeditor           = new FCKeditor($name);
-    $fckeditor->BasePath = DIRECTORY_SEPARATOR.sfConfig::get('sf_rich_text_fck_js_dir').DIRECTORY_SEPARATOR;
+    $fckeditor->BasePath = '/'.sfConfig::get('sf_rich_text_fck_js_dir').'/';
     $fckeditor->Value    = $content;
 
     if (isset($options['width']))
