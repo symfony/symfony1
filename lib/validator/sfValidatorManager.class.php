@@ -89,7 +89,7 @@ class sfValidatorManager
         break;
 
       // increase our pass indicator
-      $pass++;
+      ++$pass;
     }
 
     return $retval;
@@ -201,7 +201,7 @@ class sfValidatorManager
     // get defaults
     $error     = null;
     $errorName = null;
-    $force     = ($data['group'] != null) ? $data['group']['_force'] : true;
+    $force     = ($data['group'] != null) ? $data['group']['_force'] : false;
     $retval    = true;
     $value     = null;
 
@@ -256,16 +256,16 @@ class sfValidatorManager
       (!$data['is_file'] && ($value == null || strlen($value) == 0))
     )
     {
-      if (!$data['required'] || !$force)
-      {
-        // we don't have to validate it
-        $retval = true;
-      }
-      else
+      if ($data['required'] || $force)
       {
         // it's empty!
         $error  = $data['required_msg'];
         $retval = false;
+      }
+      else
+      {
+        // we don't have to validate it
+        $retval = true;
       }
     }
     else
@@ -276,10 +276,8 @@ class sfValidatorManager
       // get group force status
       if ($data['group'] != null)
       {
-        // we set this because we do have a value for a parameter in
-        // this group
+        // we set this because we do have a value for a parameter in this group
         $data['group']['_force'] = true;
-        $force                   = true;
       }
 
       if (count($data['validators']) > 0)
