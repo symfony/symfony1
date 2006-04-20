@@ -216,6 +216,19 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 <?php if ($this->getParameterValue('list.filters')): ?>
     $this->filters = $this->getUser()->getAttributeHolder()->getAll('sf_admin/<?php echo $this->getSingularName() ?>/filters');
 <?php foreach ($this->getColumns('list.filters') as $column): $type = $column->getCreoleType() ?>
+<?php if ($type == CreoleTypes::DATE || $type == CreoleTypes::TIMESTAMP): ?>
+    if (isset($this->filters['<?php echo $column->getName() ?>']))
+    {
+      if ($this->filters['<?php echo $column->getName() ?>']['from'] !== '')
+      {
+        $c->add(<?php echo $this->getPeerClassName() ?>::<?php echo strtoupper($column->getName()) ?>, $this->filters['<?php echo $column->getName() ?>']['from'], Criteria::GREATER_EQUAL);
+      }
+      if ($this->filters['<?php echo $column->getName() ?>']['to'] !== '')
+      {
+        $c->add(<?php echo $this->getPeerClassName() ?>::<?php echo strtoupper($column->getName()) ?>, $this->filters['<?php echo $column->getName() ?>']['to'], Criteria::LESS_EQUAL);
+      }
+    }
+<?php else: ?>
     if (isset($this->filters['<?php echo $column->getName() ?>']) && $this->filters['<?php echo $column->getName() ?>'] !== '')
     {
 <?php if ($type == CreoleTypes::CHAR || $type == CreoleTypes::VARCHAR): ?>
@@ -224,6 +237,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
       $c->add(<?php echo $this->getPeerClassName() ?>::<?php echo strtoupper($column->getName()) ?>, $this->filters['<?php echo $column->getName() ?>']);
 <?php endif; ?>
     }
+<?php endif; ?>
 <?php endforeach; ?>
 <?php endif; ?>
   }

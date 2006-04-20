@@ -523,13 +523,13 @@ EOF;
     {
       // rich=false not yet implemented
       $params = $this->getObjectTagParams($params, array('rich' => true, 'calendar_button_img' => '/sf/images/sf_admin/date.png'));
-      return "input_date_tag($name, $default_value, $params)";
+      return "input_date_range_tag($name, $default_value, $params)";
     }
     else if ($type == CreoleTypes::TIMESTAMP)
     {
       // rich=false not yet implemented
       $params = $this->getObjectTagParams($params, array('rich' => true, 'withtime' => true, 'calendar_button_img' => '/sf/images/sf_admin/date.png'));
-      return "input_date_tag($name, $default_value, $params)";
+      return "input_date_range_tag($name, $default_value, $params)";
     }
     else if ($type == CreoleTypes::BOOLEAN)
     {

@@ -13,7 +13,9 @@
 <?php endif; ?>
     <div class="form-row">
     <label for="<?php echo $column->getName() ?>">[?php echo __('<?php echo $this->getParameterValue('list.fields.'.$column->getName().'.name') ?>:') ?]<?php echo $this->getHelp($column, 'edit') ?></label>
+    <div class="content">
     [?php echo <?php echo $this->getColumnFilterTag($column) ?> ?]
+    </div>
     </div>
 <?php if ($credentials): ?>
     [?php endif; ?]

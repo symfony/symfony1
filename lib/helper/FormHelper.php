@@ -389,6 +389,36 @@ function input_upload_tag($name, $options = array())
   return input_tag($name, '', $options);
 }
 
+function input_date_range_tag($name, $value, $options = array())
+{
+  $before = '';
+  if (isset($options['before']))
+  {
+    $before = $options['before'];
+    unset($options['before']);
+  }
+
+  $middle = '';
+  if (isset($options['middle']))
+  {
+    $middle = $options['middle'];
+    unset($options['middle']);
+  }
+
+  $after = '';
+  if (isset($options['after']))
+  {
+    $after = $options['after'];
+    unset($options['after']);
+  }
+
+  return $before.
+         input_date_tag($name.'[from]', $value['from'], $options).
+         $middle.
+         input_date_tag($name.'[to]', $value['to'], $options).
+         $after;
+}
+
 function input_date_tag($name, $value, $options = array())
 {
   $options = _parse_attributes($options);
@@ -423,8 +453,7 @@ function input_date_tag($name, $value, $options = array())
     $value = strtotime($value);
     if ($value === -1)
     {
-      $value = 0;
-//      throw new Exception("Unable to parse value of date as date/time value");
+      $value = null;
     }
     else
     {
@@ -465,7 +494,11 @@ function input_date_tag($name, $value, $options = array())
   ';
 
   // construct html
-  $html = input_tag($name, $value);
+  if (!isset($options['size']))
+  {
+    $options['size'] = 9;
+  }
+  $html = input_tag($name, $value, $options);
 
   // calendar button
   $calendar_button = '...';
