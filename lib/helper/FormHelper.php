@@ -349,6 +349,11 @@ tinyMCE.init({
       $fckeditor->ToolbarSet = $options['tool'];
     }
 
+    if (isset($options['config']))
+    {
+      $fckeditor->Config['CustomConfigurationsPath'] = javascript_path($options['config']);
+    }
+
     $content = $fckeditor->CreateHtml();
 
     return $content;
