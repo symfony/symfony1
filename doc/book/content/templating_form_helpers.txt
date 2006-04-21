@@ -112,7 +112,7 @@ Here are the standard form element helpers:
     Multiple selection field uses the same syntax, and the selected values can then be an array
     
         [php]
-        <?php echo select_tag('payment', options_for_select(Array('Visa', 'Eurocard', 'Mastercard'), Array('Visa', 'Mastecard'), 'multiple=multiple') ?>
+        <?php echo select_tag('payment', options_for_select(Array('Visa', 'Eurocard', 'Mastercard'), Array('Visa', 'Mastecard')), 'multiple=multiple') ?>
         // will generate in HTML
         <select name="payment" id="payment" multiple="multiple">
           <option selected="selected">Visa</option>

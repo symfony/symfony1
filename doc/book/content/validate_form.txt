@@ -159,7 +159,7 @@ You can detect whether the form has errors by calling the `->hasErrors()` method
 Now you may suggest that the field with incorrect data should be highlighted, for instance with a repetition of the error message clearly attached to the label with a ↓. To that extent, simply add the following line before every field:
 
     [php]
-    <?php if ($sf_request->hasError('name')): ?>↓ <?php echo $request->getError('name') ?> ↓<?php endif ?><br />
+    <?php if ($sf_request->hasError('name')): ?>↓ <?php echo $sf_request->getError('name') ?> ↓<?php endif ?><br />
 
 Complete configuration file
 ---------------------------
