@@ -175,6 +175,17 @@ class sfException extends Exception
       $error_reference = $matches[1];
     }
 
+    // dump main objects values
+    $sf_settings = '';
+    if (sfContext::hasInstance())
+    {
+      $context = sfContext::getInstance();
+      $settingsTable = $this->settingsAsHtml($context);
+      $requestTable  = $this->requestAsHtml($context);
+      $responseTable = $this->responseAsHtml($context);
+      $globalsTable = $this->globalsAsHtml($context);
+    }
+
     include(sfConfig::get('sf_symfony_data_dir').'/data/exception.'.($format == 'html' ? 'php' : 'txt'));
 
     // if test, do not exit
@@ -182,6 +193,94 @@ class sfException extends Exception
     {
       exit(1);
     }
+  }
+
+  private function globalsAsHtml($context)
+  {
+    $values = array();
+    foreach (array('cookie', 'server', 'get', 'post', 'files', 'env', 'session') as $name)
+    {
+      foreach ($GLOBALS['_'.strtoupper($name)] as $key => $value)
+      {
+        $values[$name.'/'.$key] = $value;
+      }
+    }
+
+    ksort($values);
+
+    return $this->formatArrayAsTable($values);
+  }
+
+  private function requestAsHtml($context)
+  {
+    $parameters = $this->flattenParameterHolder($context->getRequest()->getParameterHolder());
+    $attributes = $this->flattenParameterHolder($context->getRequest()->getAttributeHolder(), 'attribute');
+
+    $values = array_merge($parameters, $attributes);
+
+    ksort($values);
+
+    return $this->formatArrayAsTable($values);
+  }
+
+  private function responseAsHtml($context)
+  {
+    $parameters = $this->flattenParameterHolder($context->getResponse()->getParameterHolder());
+
+    $headers = array();
+    foreach ($context->getResponse()->getHttpHeaders() as $key => $value)
+    {
+      $headers['http_header/'.$key] = $value;
+    }
+
+    $cookies = array();
+    foreach ($context->getResponse()->getCookies() as $key => $value)
+    {
+      $cookies['cookie/'.$key] = $value;
+    }
+
+    $values = array_merge($parameters, $headers, $cookies);
+
+    ksort($values);
+
+    return $this->formatArrayAsTable($values);
+  }
+
+  private function settingsAsHtml($context)
+  {
+    $config = sfConfig::getAll();
+
+    ksort($config);
+
+    return $this->formatArrayAsTable($config);
+  }
+
+  private function formatArrayAsTable($values)
+  {
+    $table = '<table cellspacing="0" class="vars"><tr><th>variable</th><th>value</th></tr>';
+    foreach ($values as $key => $value)
+    {
+      $table .= '<tr><td>'.$key.'</td><td>'.$this->formatArgs($value, true).'</td></tr>';
+    }
+    $table .= '</table>';
+
+    return $table;
+  }
+
+  public function flattenParameterHolder($parameterHolder, $prefix = 'parameter')
+  {
+    $values = array();
+    foreach ($parameterHolder->getNamespaces() as $ns)
+    {
+      foreach ($parameterHolder->getAll($ns) as $key => $value)
+      {
+        $values[$prefix.'/'.$ns.'/'.$key] = $value;
+      }
+    }
+
+    ksort($values);
+
+    return $values;
   }
 
   private function fileExcerpt($file, $line)

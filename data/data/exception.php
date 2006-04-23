@@ -37,6 +37,19 @@
   <?php endif; ?>
   <h2>stack trace</h2>
   <ul><li><?php echo implode('</li><li>', $traces) ?></li></ul>
+
+  <h2>symfony settings <a href="#" onclick="toggle('sf_settings'); return false;">...</a></h2>
+  <div id="sf_settings" style="display: none"><?php echo $settingsTable ?></div>
+
+  <h2>request <a href="#" onclick="toggle('sf_request'); return false;">...</a></h2>
+  <div id="sf_request" style="display: none"><?php echo $requestTable ?></div>
+
+  <h2>response <a href="#" onclick="toggle('sf_response'); return false;">...</a></h2>
+  <div id="sf_response" style="display: none"><?php echo $responseTable ?></div>
+
+  <h2>global vars <a href="#" onclick="toggle('sf_globals'); return false;">...</a></h2>
+  <div id="sf_globals" style="display: none"><?php echo $globalsTable ?></div>
+
   <p id="footer">
     symfony v.<?php echo sfConfig::get('sf_version') ?> - php <?php echo PHP_VERSION ?><br />
     for help resolving this issue, please visit <a href="http://www.symfony-project.com/">http://www.symfony-project.com/</a>.

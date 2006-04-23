@@ -428,6 +428,22 @@ class sfWebResponse extends sfResponse
     $this->setParameter($js, $js, 'helper/asset/auto/javascript'.$position);
   }
 
+  public function getCookies()
+  {
+    $cookies = array();
+    foreach ($this->cookies as $cookie)
+    {
+      $cookies[$cookie['name']] = $cookie;
+    }
+
+    return $cookies;
+  }
+
+  public function getHttpHeaders()
+  {
+    return $this->headers;
+  }
+
   /**
    * Execute the shutdown procedure.
    *
