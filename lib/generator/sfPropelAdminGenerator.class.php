@@ -218,6 +218,15 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
       $name       = $actionName;
       $icon       = '/sf/images/sf_admin/'.$actionName.'_icon.png';
       $action     = $actionName;
+
+      if ($actionName == 'delete')
+      {
+        $params['post'] = true;
+        if (!isset($params['confirm']))
+        {
+          $params['confirm'] = 'Are you sure?';
+        }
+      }
     }
     else
     {
@@ -228,7 +237,7 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
 
     $url_params = $pk_link ? '?'.$this->getPrimaryKeyUrlParams() : '\'';
 
-    return '<li>[?php echo link_to(image_tag(\''.$icon.'\', array(\'alt\' => __(\''.$name.'\'), \'title\' => __(\''.$name.'\'))), \''.$this->getModuleName().'/'.$action.$url_params.') ?]</li>';
+    return '<li>[?php echo link_to(image_tag(\''.$icon.'\', array(\'alt\' => __(\''.$name.'\'), \'title\' => __(\''.$name.'\'))), \''.$this->getModuleName().'/'.$action.$url_params.($params ? ', '.var_export($params, true) : '').') ?]</li>'."\n";
   }
 
   public function getColumnEditTag($column, $params = array())
