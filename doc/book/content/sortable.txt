@@ -392,7 +392,7 @@ For all AJAX actions, it is good to have a **visual feedback** of background act
 
     [php]
     <div id="feedback"></div>
-    <div id="indicator"><img src="/images/activity_indicator.gif" style="display:none;"/></div>
+    <div id="indicator" style="display:none;"><img src="/images/activity_indicator.gif" style="display:none;"/></div>
     <?php echo sortable_element('order', array(
       'url'      => 'item/sort',
       'update'   => 'feedback',
