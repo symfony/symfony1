@@ -22,10 +22,13 @@ This is easily accomplished by creating a PHP file in the `myproject/batch/` dir
     define('SF_DEBUG',          false);
 
     require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
-    sfContext::getInstance();  // Required for batch processes that access the database in symfony >0.6x
- 
+
+    // initialize database manager
+    $databaseManager = new sfDatabaseManager();
+    $databaseManager->initialize();
+
     // batch process here
-    ?>   
+    ?>
 
 This script does nothing, or close to nothing: It defines a path, an application and an environment to get to a configuration, and loads that configuration.  But that's already a lot because it means that all of the code written in your batch process will take advantage of the auto-loading of classes, automatic connection to Propel objects, and the symfony root classes.
 
