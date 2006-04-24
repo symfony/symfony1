@@ -118,11 +118,10 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
 
   public function getButtonToAction($actionName, $params, $pk_link = false)
   {
-    $options    = isset($params['params']) ? sfToolkit::stringToArray($params['params']) : array();
-    $method     = 'button_to';
-    $li_class   = '';
-    $only_on_edit   = isset($params['only_on_edit']) ? $params['only_on_edit'] : false;
-    $only_on_create = isset($params['only_on_create']) ? $params['only_on_create'] : false;
+    $options  = isset($params['params']) ? sfToolkit::stringToArray($params['params']) : array();
+    $method   = 'button_to';
+    $li_class = '';
+    $only_for = isset($params['only_for']) ? $params['only_for'] : null;
 
     // default values
     if ($actionName[0] == '_')
@@ -149,7 +148,7 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
 
         $li_class = 'float-left';
 
-        $only_on_edit = true;
+        $only_for = 'edit';
       }
     }
     else
@@ -178,14 +177,17 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
 
     $html = '<li'.$li_class.'>';
 
-    if ($only_on_edit)
+    if ($only_for == 'edit')
     {
       $html .= '[?php if ('.$this->getPrimaryKeyIsSet().'): ?]'."\n";
     }
-
-    if ($only_on_create)
+    else if ($only_for == 'create')
     {
       $html .= '[?php if (!'.$this->getPrimaryKeyIsSet().'): ?]'."\n";
+    }
+    else if ($only_for !== null)
+    {
+      throw new sfConfigurationException(sprintf('The "only_for" parameter can only takes "create" or "edit" as argument ("%s")', $only_for));
     }
 
     if ($method == 'submit_tag')
@@ -197,12 +199,7 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
       $html .= '[?php echo button_to(__(\''.$name.'\'), \''.$this->getModuleName().'/'.$action.$url_params.', '.var_export($options, true).') ?]';
     }
 
-    if ($only_on_create)
-    {
-      $html .= '[?php endif; ?]'."\n";
-    }
-
-    if ($only_on_edit)
+    if ($only_for !== null)
     {
       $html .= '[?php endif; ?]'."\n";
     }
