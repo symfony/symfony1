@@ -291,7 +291,7 @@ Here is an extract of the default `autoload.yml` (found in `$pear_data_dir/symfo
 
 Each autoloading rule has a label, both for visual organization and ability to override it. 
 
-If you want to autoload classes stored somewhere else in your file structure, you need to create a new `autoload.yml` in your `myproject/apps/myapp/config/` folder and edit it. You can either override existing rules or add new ones.
+If you want to autoload classes stored somewhere else in your file structure, you need to create a new `autoload.yml` in your `myproject/apps/myapp/config/` folder and edit it. You can either override existing rules or add new ones. The [custom extension chapter](custom_helper.txt) will tell you more about it.
 
 ### `php.yml`: PHP configuration                           {#phpyml}
 

@@ -102,3 +102,101 @@ In a custom helper, shortcuts like `$sf_request` or `$sf_user` won't work. In a 
 
     [php]
     $id = sfContext::getInstance()->getRequest()->getParameter('id');
+
+Class autoloading
+-----------------
+
+The autoloading feature allows you to create an new object without requiring the file that contains its class definition by hand:
+
+    [php]
+    $obj = new MyClass();
+    // If MyClass is autoloaded, this will work without a require
+    
+The autoloading is configured to work with the `lib/` directories described above, according to the default `autoload.yml` configuration file (found in `$pear_data_dir/symfony/config/autoload.yml`):
+
+    autoload:
+    
+      symfony_core:
+        name:           symfony core classes
+        ext:            .class.php
+        path:           %SF_SYMFONY_LIB_DIR%
+        recursive:      on
+        exclude:        [vendor]
+    
+      symfony_orm:
+        name:           symfony orm classes
+        files:
+          Propel:       %SF_SYMFONY_LIB_DIR%/addon/propel/sfPropelAutoload.php
+          Criteria:     %SF_SYMFONY_LIB_DIR%/vendor/propel/util/Criteria.php
+          SQLException: %SF_SYMFONY_LIB_DIR%/vendor/creole/SQLException.php
+          DatabaseMap:  %SF_SYMFONY_LIB_DIR%/vendor/propel/map/DatabaseMap.php
+    
+      symfony_plugins:
+        name:           symfony plugins
+        ext:            .class.php
+        path:           %SF_PLUGIN_DIR%
+        recursive:      on
+    
+      project:
+        name:           project classes
+        ext:            .class.php
+        path:           %SF_LIB_DIR%
+        recursive:      on
+        exclude:        [model, plugins, symfony]
+    
+      model:
+        name:           project model classes
+        ext:            .php
+        path:           %SF_MODEL_LIB_DIR%
+    
+      application:
+        name:           application classes
+        ext:            .class.php
+        path:           %SF_APP_LIB_DIR%
+
+If you want to add other places for symfony to look into, create your own `autoload.yml` file in an application `config/` directory and add in new rules. Each autoloading rule has a label, both for visual organization and ability to override it.
+
+For instance, if you added your own `MyClass` class in `/usr/local/mycustomclasses/`, you could add:
+
+      mycustomclasses:
+        name:           classes that I developed myself
+        ext:            .php
+        path:           /usr/local/mycustomclasses/
+        recursive:      on
+
+Third-party libraries
+---------------------
+
+If you need a functionality provided by a third-party class, and if you don't want to copy this class in one of the symfony `lib/` dirs, you will probably install it outside of the usual places where symfony looks for files. In that case, using this class will imply a manual `require` in your code, unless you use the symfony **bridge** to take advantage of the autoloading.
+
+Symfony doesn't (yet) provide tools for everything. If you need a PDF generator, an API to Google Maps or a PHP implementation of the Lucene search engine, you will probably need a few libraries from the [Zend Framework](http://framework.zend.com/). If you want to manipulate images directly in PHP, connect to a POP3 account to read emails, or design a console interface for Linux, you will choose the libraries from [eZcomponents](http://ez.no/products/ez_components).
+
+Fortunately, if you define the right settings, the components from both these libraries will work out of the box in symfony.
+
+The first think that you need to declare (unless you installed the third party libraries via PEAR) is the path to the root directory of the libraries. This is to be done in the application `settings.yml`:
+
+    .settings:
+      zend_lib_dir:   /usr/local/zend/library/
+      ez_lib_dir:     /usr/local/ezcomponents/
+      
+Then, extend the autoload routine by telling which library to look at when the autoloading fails with symfony:
+
+    .settings:
+      autoloading_functions: [[sfZendFrameworkBridge, autoload], [sfEzComponentsBridge, autoload]]
+      
+What will happen when you create a new object of an unloaded class is:
+
+1. The symfony autoloading function (`Symfony::autoload()`) first looks for a class in the paths declared in the `autoload.yml`
+2. If none is found, then the callback functions declared in the `sf_autoloading_functions` setting will be called one after the other, until one of them returns `true`:
+    1. `sfZendFrameworkBridge::autoload()`
+    2. `sfEzComponentsBridge::autoload()`
+3. If these also return `false`, then symfony will throw an exception saying that the class doesn't exist.
+
+Note that this setting is distinct from the rules defined in the `autoload.yml`. The `autoloading_functions` setting specifies bridge classes, and the `autoload.yml` specifies paths and rules for searching.
+
+The available bridges are stored in the `$pear_php_dir/symfony/addon/bridge/` directory.
+
+Plug-ins
+--------
+
+Symfony can also be extended through plug-ins. To see how to install, use or create your own plu-in, refer to the [related chapter](plugin.txt).
