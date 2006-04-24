@@ -203,11 +203,11 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
       $filters = $this->getRequestParameter('filters');
 <?php foreach ($this->getColumns('list.filters') as $column): $type = $column->getCreoleType() ?>
 <?php if ($type == CreoleTypes::DATE || $type == CreoleTypes::TIMESTAMP): ?>
-      if ($filters['<?php echo $column->getName() ?>']['from'] !== '')
+      if (isset($filters['<?php echo $column->getName() ?>']['from']) && $filters['<?php echo $column->getName() ?>']['from'] !== '')
       {
         $filters['<?php echo $column->getName() ?>']['from'] = sfI18N::getTimestampForCulture($filters['<?php echo $column->getName() ?>']['from'], $this->getUser()->getCulture());
       }
-      if ($filters['<?php echo $column->getName() ?>']['to'] !== '')
+      if (isset($filters['<?php echo $column->getName() ?>']['to']) && $filters['<?php echo $column->getName() ?>']['to'] !== '')
       {
         $filters['<?php echo $column->getName() ?>']['to'] = sfI18N::getTimestampForCulture($filters['<?php echo $column->getName() ?>']['to'], $this->getUser()->getCulture());
       }
@@ -236,7 +236,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 <?php if ($type == CreoleTypes::DATE || $type == CreoleTypes::TIMESTAMP): ?>
     if (isset($this->filters['<?php echo $column->getName() ?>']))
     {
-      if ($this->filters['<?php echo $column->getName() ?>']['from'] !== '')
+      if (isset($this->filters['<?php echo $column->getName() ?>']['from']) && $this->filters['<?php echo $column->getName() ?>']['from'] !== '')
       {
 <?php if ($type == CreoleTypes::DATE): ?>
         $criterion = $c->getNewCriterion(<?php echo $this->getPeerClassName() ?>::<?php echo strtoupper($column->getName()) ?>, date('Y-m-d', $this->filters['<?php echo $column->getName() ?>']['from']), Criteria::GREATER_EQUAL);
@@ -244,7 +244,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
         $criterion = $c->getNewCriterion(<?php echo $this->getPeerClassName() ?>::<?php echo strtoupper($column->getName()) ?>, $this->filters['<?php echo $column->getName() ?>']['from'], Criteria::GREATER_EQUAL);
 <?php endif; ?>
       }
-      if ($this->filters['<?php echo $column->getName() ?>']['to'] !== '')
+      if (isset($this->filters['<?php echo $column->getName() ?>']['to']) && $this->filters['<?php echo $column->getName() ?>']['to'] !== '')
       {
         if (isset($criterion))
         {
