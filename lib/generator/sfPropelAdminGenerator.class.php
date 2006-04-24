@@ -216,7 +216,7 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
 
   public function getLinkToAction($actionName, $params, $pk_link = false)
   {
-    $options  = isset($params['params']) ? sfToolkit::stringToArray($params['params']) : array();
+    $options = isset($params['params']) ? sfToolkit::stringToArray($params['params']) : array();
 
     // default values
     if ($actionName[0] == '_')
@@ -228,10 +228,10 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
 
       if ($actionName == 'delete')
       {
-        $params['post'] = true;
-        if (!isset($params['confirm']))
+        $options['post'] = true;
+        if (!isset($options['confirm']))
         {
-          $params['confirm'] = 'Are you sure?';
+          $options['confirm'] = 'Are you sure?';
         }
       }
     }
