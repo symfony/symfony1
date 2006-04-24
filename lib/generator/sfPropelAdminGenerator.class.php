@@ -498,7 +498,7 @@ EOF;
     else if ($type == CreoleTypes::DATE || $type == CreoleTypes::TIMESTAMP)
     {
       $format = isset($params['date_format']) ? $params['date_format'] : 'f';
-      return "format_date(\${$this->getSingularName()}->get{$column->getPhpName()}(), \"$format\")";
+      return "(\${$this->getSingularName()}->get{$column->getPhpName()}() !== null && \${$this->getSingularName()}->get{$column->getPhpName()}() !== '') ? format_date(\${$this->getSingularName()}->get{$column->getPhpName()}(), \"$format\") : ''";
     }
     elseif ($type == CreoleTypes::BOOLEAN)
     {
