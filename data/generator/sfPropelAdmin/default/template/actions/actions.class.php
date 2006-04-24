@@ -27,6 +27,10 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 
     $this->processFilters();
 
+<?php if ($this->getParameterValue('list.filters')): ?>
+    $this->filters = $this->getUser()->getAttributeHolder()->getAll('sf_admin/<?php echo $this->getSingularName() ?>/filters');
+<?php endif ?>
+
     // pager
     $this->pager = new sfPropelPager('<?php echo $this->getClassName() ?>', <?php echo $this->getParameterValue('list.max_per_page', 20) ?>);
     $c = new Criteria();
@@ -196,8 +200,22 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 <?php if ($this->getParameterValue('list.filters')): ?>
     if ($this->getRequest()->hasParameter('filter'))
     {
+      $filters = $this->getRequestParameter('filters');
+<?php foreach ($this->getColumns('list.filters') as $column): $type = $column->getCreoleType() ?>
+<?php if ($type == CreoleTypes::DATE || $type == CreoleTypes::TIMESTAMP): ?>
+      if ($filters['<?php echo $column->getName() ?>']['from'] !== '')
+      {
+        $filters['<?php echo $column->getName() ?>']['from'] = sfI18N::getTimestampForCulture($filters['<?php echo $column->getName() ?>']['from'], $this->getUser()->getCulture());
+      }
+      if ($filters['<?php echo $column->getName() ?>']['to'] !== '')
+      {
+        $filters['<?php echo $column->getName() ?>']['to'] = sfI18N::getTimestampForCulture($filters['<?php echo $column->getName() ?>']['to'], $this->getUser()->getCulture());
+      }
+<?php endif; ?>
+<?php endforeach; ?>
+
       $this->getUser()->getAttributeHolder()->removeNamespace('sf_admin/<?php echo $this->getSingularName() ?>/filters');
-      $this->getUser()->getAttributeHolder()->add($this->getRequestParameter('filters'), 'sf_admin/<?php echo $this->getSingularName() ?>/filters');
+      $this->getUser()->getAttributeHolder()->add($filters, 'sf_admin/<?php echo $this->getSingularName() ?>/filters');
     }
 <?php endif; ?>
   }
@@ -214,18 +232,41 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
   protected function addFiltersCriteria (&$c)
   {
 <?php if ($this->getParameterValue('list.filters')): ?>
-    $this->filters = $this->getUser()->getAttributeHolder()->getAll('sf_admin/<?php echo $this->getSingularName() ?>/filters');
 <?php foreach ($this->getColumns('list.filters') as $column): $type = $column->getCreoleType() ?>
 <?php if ($type == CreoleTypes::DATE || $type == CreoleTypes::TIMESTAMP): ?>
     if (isset($this->filters['<?php echo $column->getName() ?>']))
     {
       if ($this->filters['<?php echo $column->getName() ?>']['from'] !== '')
       {
-        $c->add(<?php echo $this->getPeerClassName() ?>::<?php echo strtoupper($column->getName()) ?>, $this->filters['<?php echo $column->getName() ?>']['from'], Criteria::GREATER_EQUAL);
+<?php if ($type == CreoleTypes::DATE): ?>
+        $criterion = $c->getNewCriterion(<?php echo $this->getPeerClassName() ?>::<?php echo strtoupper($column->getName()) ?>, date('Y-m-d', $this->filters['<?php echo $column->getName() ?>']['from']), Criteria::GREATER_EQUAL);
+<?php else: ?>
+        $criterion = $c->getNewCriterion(<?php echo $this->getPeerClassName() ?>::<?php echo strtoupper($column->getName()) ?>, $this->filters['<?php echo $column->getName() ?>']['from'], Criteria::GREATER_EQUAL);
+<?php endif; ?>
       }
       if ($this->filters['<?php echo $column->getName() ?>']['to'] !== '')
       {
-        $c->add(<?php echo $this->getPeerClassName() ?>::<?php echo strtoupper($column->getName()) ?>, $this->filters['<?php echo $column->getName() ?>']['to'], Criteria::LESS_EQUAL);
+        if (isset($criterion))
+        {
+<?php if ($type == CreoleTypes::DATE): ?>
+          $criterion->addAnd($c->getNewCriterion(<?php echo $this->getPeerClassName() ?>::<?php echo strtoupper($column->getName()) ?>, date('Y-m-d', $this->filters['<?php echo $column->getName() ?>']['to']), Criteria::LESS_EQUAL));
+<?php else: ?>
+          $criterion->addAnd($c->getNewCriterion(<?php echo $this->getPeerClassName() ?>::<?php echo strtoupper($column->getName()) ?>, $this->filters['<?php echo $column->getName() ?>']['to'], Criteria::LESS_EQUAL));
+<?php endif; ?>
+        }
+        else
+        {
+<?php if ($type == CreoleTypes::DATE): ?>
+          $criterion = $c->getNewCriterion(<?php echo $this->getPeerClassName() ?>::<?php echo strtoupper($column->getName()) ?>, date('Y-m-d', $this->filters['<?php echo $column->getName() ?>']['to']), Criteria::LESS_EQUAL);
+<?php else: ?>
+          $criterion = $c->getNewCriterion(<?php echo $this->getPeerClassName() ?>::<?php echo strtoupper($column->getName()) ?>, $this->filters['<?php echo $column->getName() ?>']['to'], Criteria::LESS_EQUAL);
+<?php endif; ?>
+        }
+      }
+
+      if (isset($criterion))
+      {
+        $c->add($criterion);
       }
     }
 <?php else: ?>

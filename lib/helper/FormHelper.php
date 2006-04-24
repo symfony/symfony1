@@ -448,18 +448,14 @@ function input_date_tag($name, $value, $options = array())
   }
 
   // parse date
-  if (($value !== null) && ($value != '') && (!is_int($value)))
+  if (($value === null) || ($value === ''))
   {
-    $value = strtotime($value);
-    if ($value === -1)
-    {
-      $value = null;
-    }
-    else
-    {
-      $dateFormat = new sfDateFormat($culture);
-      $value = $dateFormat->format($value, 'd');
-    }
+    $value = '';
+  }
+  else
+  {
+    $dateFormat = new sfDateFormat($culture);
+    $value = $dateFormat->format($value, 'd');
   }
 
   // register our javascripts and stylesheets
