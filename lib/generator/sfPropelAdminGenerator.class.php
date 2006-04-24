@@ -121,7 +121,8 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     $options    = isset($params['params']) ? sfToolkit::stringToArray($params['params']) : array();
     $method     = 'button_to';
     $li_class   = '';
-    $only_if_id = false;
+    $only_on_edit   = isset($params['only_on_edit']) ? $params['only_on_edit'] : false;
+    $only_on_create = isset($params['only_on_create']) ? $params['only_on_create'] : false;
 
     // default values
     if ($actionName[0] == '_')
@@ -148,7 +149,7 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
 
         $li_class = 'float-left';
 
-        $only_if_id = true;
+        $only_on_edit = true;
       }
     }
     else
@@ -173,13 +174,18 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
       $options['style'] = 'background: #ffc url('.$icon.') no-repeat 3px 2px';
     }
 
-    $li_class = $li_class ? ' class='.$li_class : '';
+    $li_class = $li_class ? ' class="'.$li_class.'"' : '';
 
     $html = '<li'.$li_class.'>';
 
-    if ($only_if_id)
+    if ($only_on_edit)
     {
       $html .= '[?php if ('.$this->getPrimaryKeyIsSet().'): ?]'."\n";
+    }
+
+    if ($only_on_create)
+    {
+      $html .= '[?php if (!'.$this->getPrimaryKeyIsSet().'): ?]'."\n";
     }
 
     if ($method == 'submit_tag')
@@ -191,7 +197,12 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
       $html .= '[?php echo button_to(__(\''.$name.'\'), \''.$this->getModuleName().'/'.$action.$url_params.', '.var_export($options, true).') ?]';
     }
 
-    if ($only_if_id)
+    if ($only_on_create)
+    {
+      $html .= '[?php endif; ?]'."\n";
+    }
+
+    if ($only_on_edit)
     {
       $html .= '[?php endif; ?]'."\n";
     }
