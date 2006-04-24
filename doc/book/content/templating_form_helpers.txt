@@ -167,6 +167,8 @@ Here are the standard form element helpers:
 Rich form elements
 ------------------
 
+### Dates
+
 Forms are often used to get **dates**. Date format is also culture dependent, and wrong dates is the main reason for form validation failures. The `input_date_tag` can assists the user with a javascript calendar:
 
     [php]
@@ -175,6 +177,30 @@ Forms are often used to get **dates**. Date format is also culture dependent, an
     // a text input tag together with a calendar widget
 
 The last argument specifies that the rich form has to be used. If it was set to `false` (which is the default value), the normal date entry widget (three text inputs for day, month and year) would be used in place.
+
+The accepted date values are the ones recognized by the `strtotime()` [php function](http://www.php.net/manual/en/function.strtotime.php). Beware that, in some limit cases, the results can be surprising:
+
+    // Can be used
+    
+    // work fine
+    <?php echo input_date_tag('test', '2006-04-01', 'rich=true') ?>
+    <?php echo input_date_tag('test', 1143884373, 'rich=true') ?>
+    <?php echo input_date_tag('test', 'now', 'rich=true') ?>
+    <?php echo input_date_tag('test', '23 October 2005', 'rich=true') ?>
+    <?php echo input_date_tag('test', 'next tuesday', 'rich=true') ?>
+    <?php echo input_date_tag('test', '1 week 2 days 4 hours 2 seconds', 'rich=true') ?>
+    // returns NULL
+    <?php echo input_date_tag('test', null, 'rich=true') ?>
+    <?php echo input_date_tag('test', '', 'rich=true') ?>
+    
+    // Not to be used
+    
+    // date zero = 01/01/1970
+    <?php echo input_date_tag('test', 0, 'rich=true') ?>
+    // non-English date formats don't work
+    <?php echo input_date_tag('test', '01/04/2006', 'rich=true') ?>
+
+### Rich text
 
 **Rich text editing** in a textarea is also possible, since symfony provides an interface with the [TinyMCE](http://tinymce.moxiecode.com/) widget that inputs html code.
 
@@ -195,6 +221,8 @@ If you want to specify custom options for TinyMCE, use the `tinymce_options` opt
 
     [php]
     <?php echo textarea_tag('name', 'default content', 'rich=true size=10x20 tinymce_options=language:"fr",theme_advanced_buttons2:"separator"')) ?>
+
+### Country
 
 You will probably need to display a **country selection field**. The `select_country_tag` helper can do it for you; it uses the default culture to choose in which language the countries will be displayed.
 
