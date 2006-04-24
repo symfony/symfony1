@@ -196,7 +196,12 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     }
     else
     {
-      $html .= '[?php echo button_to(__(\''.$name.'\'), \''.$this->getModuleName().'/'.$action.$url_params.', '.var_export($options, true).') ?]';
+      $phpOptions = var_export($options, true);
+
+      // little hack
+      $phpOptions = preg_replace("/'confirm' => '(.+?)(?<!\\\)'/", '\'confirm\' => __(\'$1\')', $phpOptions);
+
+      $html .= '[?php echo button_to(__(\''.$name.'\'), \''.$this->getModuleName().'/'.$action.$url_params.', '.$phpOptions.') ?]';
     }
 
     if ($only_for !== null)
@@ -204,13 +209,15 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
       $html .= '[?php endif; ?]'."\n";
     }
 
-    $html .= '</li>';
+    $html .= '</li>'."\n";
 
     return $html;
   }
 
   public function getLinkToAction($actionName, $params, $pk_link = false)
   {
+    $options  = isset($params['params']) ? sfToolkit::stringToArray($params['params']) : array();
+
     // default values
     if ($actionName[0] == '_')
     {
@@ -237,7 +244,12 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
 
     $url_params = $pk_link ? '?'.$this->getPrimaryKeyUrlParams() : '\'';
 
-    return '<li>[?php echo link_to(image_tag(\''.$icon.'\', array(\'alt\' => __(\''.$name.'\'), \'title\' => __(\''.$name.'\'))), \''.$this->getModuleName().'/'.$action.$url_params.($params ? ', '.var_export($params, true) : '').') ?]</li>'."\n";
+    $phpOptions = var_export($options, true);
+
+    // little hack
+    $phpOptions = preg_replace("/'confirm' => '(.+?)(?<!\\\)'/", '\'confirm\' => __(\'$1\')', $phpOptions);
+
+    return '<li>[?php echo link_to(image_tag(\''.$icon.'\', array(\'alt\' => __(\''.$name.'\'), \'title\' => __(\''.$name.'\'))), \''.$this->getModuleName().'/'.$action.$url_params.($options ? ', '.$phpOptions : '').') ?]</li>'."\n";
   }
 
   public function getColumnEditTag($column, $params = array())
