@@ -60,7 +60,8 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
       $this-><?php echo $this->getSingularName() ?> = $this->get<?php echo $this->getClassName() ?>OrCreate();
 
       $this->update<?php echo $this->getClassName() ?>FromRequest();
-      $this-><?php echo $this->getSingularName() ?>->save();
+
+      $this->save<?php echo $this->getClassName() ?>($this-><?php echo $this->getSingularName() ?>);
 
       $this->setFlash('notice', 'Your modifications have been saved');
 
@@ -87,7 +88,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     $this-><?php echo $this->getSingularName() ?> = <?php echo $this->getClassName() ?>Peer::retrieveByPk(<?php echo $this->getRetrieveByPkParamsForAction(40) ?>);
     $this->forward404Unless($this-><?php echo $this->getSingularName() ?>);
 
-    $this-><?php echo $this->getSingularName() ?>->delete();
+    $this->delete<?php echo $this->getClassName() ?>($this-><?php echo $this->getSingularName() ?>);
 
 <?php foreach ($this->getColumnCategories('edit.display') as $category): ?>
 <?php foreach ($this->getColumns('edit.display', $category) as $name => $column): ?>
@@ -113,6 +114,16 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     $this->update<?php echo $this->getClassName() ?>FromRequest();
 
     return sfView::SUCCESS;
+  }
+
+  protected function save<?php echo $this->getClassName() ?>($<?php echo $this->getSingularName() ?>)
+  {
+    $<?php echo $this->getSingularName() ?>->save();
+  }
+
+  protected function delete<?php echo $this->getClassName() ?>($<?php echo $this->getSingularName() ?>)
+  {
+    $<?php echo $this->getSingularName() ?>->delete();
   }
 
   protected function update<?php echo $this->getClassName() ?>FromRequest()
