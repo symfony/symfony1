@@ -244,8 +244,14 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
   {
 <?php if ($this->getParameterValue('list.filters')): ?>
 <?php foreach ($this->getColumns('list.filters') as $column): $type = $column->getCreoleType() ?>
+    if (isset($this->filters['<?php echo $column->getName() ?>_is_empty']))
+    {
+      $criterion = $c->getNewCriterion(<?php echo $this->getPeerClassName() ?>::<?php echo strtoupper($column->getName()) ?>, '');
+      $criterion->addOr($c->getNewCriterion(<?php echo $this->getPeerClassName() ?>::<?php echo strtoupper($column->getName()) ?>, null, Criteria::ISNULL));
+      $c->add($criterion);
+    }
 <?php if ($type == CreoleTypes::DATE || $type == CreoleTypes::TIMESTAMP): ?>
-    if (isset($this->filters['<?php echo $column->getName() ?>']))
+    else if (isset($this->filters['<?php echo $column->getName() ?>']))
     {
       if (isset($this->filters['<?php echo $column->getName() ?>']['from']) && $this->filters['<?php echo $column->getName() ?>']['from'] !== '')
       {
@@ -281,7 +287,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
       }
     }
 <?php else: ?>
-    if (isset($this->filters['<?php echo $column->getName() ?>']) && $this->filters['<?php echo $column->getName() ?>'] !== '')
+    else if (isset($this->filters['<?php echo $column->getName() ?>']) && $this->filters['<?php echo $column->getName() ?>'] !== '')
     {
 <?php if ($type == CreoleTypes::CHAR || $type == CreoleTypes::VARCHAR): ?>
       $c->add(<?php echo $this->getPeerClassName() ?>::<?php echo strtoupper($column->getName()) ?>, strtr($this->filters['<?php echo $column->getName() ?>'], '*', '%'), Criteria::LIKE);

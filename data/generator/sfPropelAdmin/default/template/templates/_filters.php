@@ -15,6 +15,9 @@
     <label for="<?php echo $column->getName() ?>">[?php echo __('<?php echo $this->getParameterValue('list.fields.'.$column->getName().'.name') ?>:') ?]<?php echo $this->getHelp($column, 'edit') ?></label>
     <div class="content">
     [?php echo <?php echo $this->getColumnFilterTag($column) ?> ?]
+<?php if ($this->getParameterValue('list.fields.'.$column->getName().'.filter_is_empty')): ?>
+    <div>[?php echo checkbox_tag('filters[<?php echo $column->getName() ?>_is_empty]', 1, isset($filters['<?php echo $column->getName() ?>_is_empty']) ? $filters['<?php echo $column->getName() ?>_is_empty'] : null) ?]&nbsp;[?php echo __('is empty') ?]</div>
+<?php endif; ?>
     </div>
     </div>
 <?php if ($credentials): ?>
