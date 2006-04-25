@@ -2,32 +2,32 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>SymFony reference card</title>
+<title>symfony reference card</title>
 <link rel="stylesheet" type="text/css" href="refcard.css" />
 </head>
 <body>
 
-<h1>&raquo;&nbsp;SymFony Reference Card 1.0&nbsp;&laquo;</h1>
+<h1>&raquo;&nbsp;symfony reference card 1.0&nbsp;&laquo;</h1>
 
-<!-- DEBUT DE COLONNE -->
+<!-- column start -->
 <div class="col">
 
 <div class="subcol">
 <h2>sfAction &lt; Action</h2>
 <div class="content">
 
-<h3>Retours</h3>
+<h3>Returns</h3>
 -&gt;<span class="method">forward</span>($module, $action), 
 -&gt;<span class="method">render_text</span>($text), 
 <span class="method">sfView::SUCCESS</span>
 
-<h3>Raccourcis</h3>
+<h3>Shortcuts</h3>
 -&gt;<span class="method">getController</span>(), 
 -&gt;<span class="method">getUser</span>(), 
 -&gt;<span class="method">getRequest</span>(), 
 -&gt;<span class="method">getRequestParameter</span>($name)()
 
-<h3>Variables templates</h3>
+<h3>Template variables</h3>
 -&gt;<span class="method">setVar</span>(), 
 -&gt;<span class="method">setVars</span>(), 
 -&gt;<span class="method">removeVar</span>(), 
@@ -35,11 +35,11 @@
 -&gt;<span class="method">getVars</span>(), 
 -&gt;<span class="method">clearVars</span>()
 
-<h3>Modèles et Aides</h3>
+<h3>Models an helpers</h3>
 -&gt;<span class="method">useModel(s)</span>(), 
 -&gt;<span class="method">useHelper(s)</span>()
 
-<h3>Authentification</h3>
+<h3>Authentication</h3>
 -&gt;<span class="method">setSecure</span>(S|L|A), 
 -&gt;<span class="method">checkCredential</span>($crendentials, S|L|A)
 
@@ -66,7 +66,7 @@
 <h2>sfUser &lt; SecurityUser &lt; User &lt; ParameterHolder</h2>
 <div class="content">
 
-<h3>Authentification</h3>
+<h3>Authentication</h3>
 -&gt;<span class="method">isAuthenticated</span>(), 
 -&gt;<span class="method">setAuthenticated</span>(B)
 
@@ -76,7 +76,7 @@
 -&gt;<span class="method">clearCredentials</span>(), 
 -&gt;<span class="method">removeCredential</span>(S)
 
-<h3>Langue</h3>
+<h3>Language</h3>
 -&gt;<span class="method">setCulture</span>(code ISO), 
 -&gt;<span class="method">getCulture</span>()
 
@@ -86,9 +86,9 @@
 <div class="subcol">
 <h2>WebRequest &lt; Request &lt; ParameterHolder</h2>
 <div class="content">
-Pour l'accès aux paramètres, cf. classe ParameterHolder.
+For access to parameters, cf. ParameterHolder class.
 
-<h3>Erreurs formulaires</h3>
+<h3>Form validation</h3>
 -&gt;<span class="method">getError</span>($name), 
 -&gt;<span class="method">getErrors</span>(), 
 -&gt;<span class="method">hasError</span>($name), 
@@ -96,7 +96,7 @@ Pour l'accès aux paramètres, cf. classe ParameterHolder.
 -&gt;<span class="method">setError</span>($name, $message), 
 -&gt;<span class="method">getErrorNames</span>(), -&gt;<span class="method">removeError</span>($name)
 
-<h3>Fichiers</h3>
+<h3>Files</h3>
 -&gt;<span class="method">moveFile</span>($name, $file, [$fileMode = 0666], [$create = true], [$dirMode = 0777]), 
 -&gt;<span class="method">hasFileError</span>($name), 
 -&gt;<span class="method">hasFileErrors</span>(), 
@@ -106,7 +106,7 @@ Pour l'accès aux paramètres, cf. classe ParameterHolder.
 -&gt;<span class="method">hasFiles</span>(), 
 -&gt;<span class="method">getFile</span>($name), -&gt;<span class="method">getFileType</span>($name), -&gt;<span class="method">getFileError</span>($name), -&gt;<span class="method">getFileNames</span>(), -&gt;<span class="method">getFilePath</span>($name), -&gt;<span class="method">getFileSize</span>($name)
 
-<h3>Attributs</h3>
+<h3>Attributes</h3>
 -&gt;<span class="method">getAttribute</span>($name), 
 -&gt;<span class="method">getAttributeNames</span>(), 
 -&gt;<span class="method">hasAttribute</span>($name), 
@@ -134,14 +134,14 @@ Pour l'accès aux paramètres, cf. classe ParameterHolder.
 </div>
 </div>
 
-<!-- FIN DE COLONNE -->
+<!-- column end -->
 </div>
 
-<!-- DEBUT DE COLONNE -->
+<!-- column start -->
 <div class="col">
 
 <div class="subcol">
-<h2>Valideurs</h2>
+<h2>Validators</h2>
 <div class="content">
 <ul>
 <li><span class="method">NumberValidator</span> [max], [max_error], [min], [min_error], [nan_error], [type], [type_error]</li>
@@ -177,7 +177,7 @@ Pour l'accès aux paramètres, cf. classe ParameterHolder.
 </div>
 
 <div class="subcol">
-<h2>Classes objets générées</h2>
+<h2>Generated object classes</h2>
 <div class="content">
 
 <h3>Object.class.php</h3>
@@ -208,20 +208,20 @@ $c : Criteria
 </div>
 
 <div class="subcol">
-<h2>Exemple d'action</h2>
+<h2>Exemple Action</h2>
 <div class="content">
 
 <pre>
-class Actions extends sfAction
+class mainActions extends sfActions
 {
-  public function initAction()
+  public function preExecute()
   {
     $this->setCache(2 * 86400, 'Index', 'Show');
     $this->useModels('person', 'company');
     $this->useHelpers('Wiki', 'List');
   }
 
-  public function runIndex()
+  public function executeIndex()
   {
     $this->setVar('persons', PersonPeer::doSelect());
     return sfView::SUCCESS;
@@ -233,60 +233,63 @@ class Actions extends sfAction
 </div>
 
 <div class="subcol">
-<h2>sf-gen, sf-admin</h2>
+<h2>Command line</h2>
 <div class="content">
 
-<h3>sf-admin</h3>
+<h3>Administration</h3>
 <ul>
-<li><span class="method">clear-cache</span> suppression du cache</li>
+<li><span class="method">clear-cache</span> cache erase all</li>
 <li><span class="method">sync-prod[-dry]</span> synchronisation (-dry test)</li>
 </ul>
 
-<h3>sf-gen</h3>
+<h3>Generation</h3>
 <ul>
-<li><span class="method">init-project</span> création projet</li>
-<li><span class="method">build-model</span> génération du modèle objet</li>
-<li><span class="method">build-mvc</span> génération du back-office</li>
+<li><span class="method">init-project</span> projet creation</li>
+<li><span class="method">propel-build-model</span> object model generation</li>
+<li><span class="method">propel-generate-crud</span> back-office generation</li>
 </ul>
 
 </div>
 </div>
 
-<!-- FIN DE COLONNE -->
+<!-- column end -->
 </div>
 
-<!-- DEBUT DE COLONNE -->
+<!-- column start -->
 <div class="col">
 
 <div class="subcol">
-<h2>Aides templates</h2>
+<h2>Template helpers</h2>
 <div class="content">
-$options : toujours un hash
+$options : additional html attributes, in hash or string syntax<br />
+<span class="method">Array('class' => 'myclass', 'id' => 12, 'style' => 'width:100px' )</span><br />
+<span class="method">'class=myclass id=12 style=width:100px'</span>
 
 <h3>URL</h3>
 <ul>
-<li><span class="method">url_for</span>($url) module/Nom/action/Nom/param/value</li>
-<li><span class="method">link_to</span>([$name], [$options], [$html_options])</li>
+<li><span class="method">url_for</span>($url, [absolute=true])</li>
+<li><span class="method">link_to</span>($name, $url, [$options])</li>
 </ul>
+$url: module/action?param=value or @rule?param=value
 
-<h3>Formulaire</h3>
+<h3>Form</h3>
 <ul>
-<li><span class="method">options_for_select</span>($options, [$selected])</li>
-<li><span class="method">form_tag</span>([$url], [$options])</li>
+<li><span class="method">form_tag</span>($url, [$options])</li>
+<li><span class="method">input_tag</span>($name, [$value], [$options])</li>
+<li>same for <span class="method">input_hidden_tag</span>, <span class="method">input_password_tag</span>, <span class="method">textarea_tag</span></li>
 <li><span class="method">select_tag</span>($name, [$option_tags], [$options])</li>
-<li><span class="method">file_field_tag</span>($name, [$options])</li>
-<li><span class="method">check_box_tag</span>($name, [$value = 1], [$checked = false], [$options])</li>
-<li><span class="method">radio_button_tag</span>($name, $value, [$checked = false], [$options])</li>
+<li><span class="method">options_for_select</span>($options, [$selected])</li>
+<li><span class="method">input_file_tag</span>($name, [$options])</li>
+<li><span class="method">checkbox_tag</span>($name, [$value = 1], [$checked = false], [$options])</li>
+<li><span class="method">radiobutton_tag</span>($name, $value, [$checked = false], [$options])</li>
 <li><span class="method">submit_tag</span>($value, [$options])</li>
-<li>tags textes à signature unique : ($name, [$value], [$options]) <span class="method">text_field_tag</span>, <span class="method">hidden_field_tag</span>, <span class="method">password_field_tag</span>, <span class="method">text_area_tag</span></li>
 </ul>
 
-<h3>Média</h3>
+<h3>Assets</h3>
 <ul>
 <li><span class="method">auto_discovery_link_tag</span>([$type], [$options])</li>
-<li><span class="method">javascript_include_tag</span>(S|L|A) par défaut dans js/ et .js</li>
-<li><span class="method">stylesheet_link_tag</span>(S|L|A) par défaut css/ et .css</li>
-<li><span class="method">image_path</span>($source) par défaut images/ et .png</li>
+<li><span class="method">javascript_tag</span>(S|L|A) by default in js/ and .js</li>
+<li><span class="method">image_path</span>($source) by default in images/ and .png</li>
 <li><span class="method">image_tag</span>($source, [$options])</li>
 </ul>
 
@@ -297,27 +300,27 @@ $options : toujours un hash
 
 <h3>Templates</h3>
 <ul>
-<li><span class="method">render_partial</span>($name, [$vars]) inclusion template 'name', 'module/name' ou 'global/name'</li>
+<li><span class="method">include_partial</span>($name, [$vars]) inclusion template 'name', 'module/name' ou 'global/name'</li>
 </ul>
 
-<h3>Texte</h3>
+<h3>Text</h3>
 <ul>
-<li><span class="method">truncate</span>($text, $length = 30, $truncate_string = '...')</li>
-<li><span class="method">highlight</span>($text, $phrase, [$highlighter]) classe 'highlight' par défaut</li>
-<li><span class="method">excerpt</span>($text, $phrase, $radius = 100, $excerpt_string = '...')</li>
-<li><span class="method">simple_format</span>($text)</li>
-<li><span class="method">auto_link</span>($text, $link = 'all')</li>
-<li><span class="method">strip_links</span>($text)</li>
+<li><span class="method">truncate_text</span>($text, $length = 30, $truncate_string = '...')</li>
+<li><span class="method">highlight_text</span>($text, $phrase, [$highlighter]) classe 'highlight' par défaut</li>
+<li><span class="method">excerpt_text</span>($text, $phrase, $radius = 100, $excerpt_string = '...')</li>
+<li><span class="method">simple_format_text</span>($text)</li>
+<li><span class="method">auto_link_text</span>($text, $link = 'all')</li>
+<li><span class="method">strip_links_text</span>($text)</li>
 </ul>
 
 <h3>Date</h3>
 <ul>
-<li><span class="method">date_format</span>($timestamp, [$culture])</li>
+<li><span class="method">format_date</span>($timestamp, [$culture])</li>
 <li><span class="method">distance_of_time_in_words</span>($from_timestamp, $to_timestamp, [$include_seconds])</li>
 <li><span class="method">time_ago_in_words</span>($from_timestamp, [$include_seconds])</li>
 </ul>
 
-<h3>Cache partiel</h3>
+<h3>Partial cache</h3>
 <ul>
 <li><span class="method">cache</span>($cache_time = 3600)</li>
 <li><span class="method">cache_save</span>
@@ -336,66 +339,77 @@ $options : toujours un hash
 <li><span class="method">escape_javascript</span>($javascript])</li>
 </ul>
 
-<h3>Objet</h3>
-$object représente l'objet (Propel)
-<br />$column représente le nom de la colonne ($object->get$column())
-<br />signature unique : ($object, $column, [$options], [$value])
+<h3>Object</h3>
+$object represents the object (Propel)
+<br />$column represents the column name ($object->get$column())
+<br />unique signature: ($object, $column, [$options], [$value])
 <span class="method">object_plain</span>, 
-<span class="method">object_htmltext</span>, 
-<span class="method">object_image</span>, 
-<span class="method">object_date</span>, 
-<span class="method">object_text</span>, 
-<span class="method">object_select</span>, 
-<span class="method">object_hidden_field</span>, 
-<span class="method">object_input</span>, 
-<span class="method">object_checkbox</span>
+<span class="method">object_textarea_tag</span>, 
+<span class="method">object_image_tag</span>, 
+<span class="method">object_date_tag</span>, 
+<span class="method">object_input_password_tag</span>, 
+<span class="method">object_select_tag</span>, 
+<span class="method">object_input_hidden_tag</span>, 
+<span class="method">object_input_tag</span>, 
+<span class="method">object_checkbox_tag</span>
 
 </div>
 </div>
 
-<!-- FIN DE COLONNE -->
+<!-- column end -->
 </div>
 
-<!-- DEBUT DE COLONNE -->
+<!-- column start -->
 <div class="col">
 
 <div class="minisubcol">
-<h2>Arborescence</h2>
+<h2>Tree structure</h2>
 <div class="content">
 
 <ul>
 <li><div style="float: right">[SF_ROOT_DIR]</div>/</li>
-<li><div style="float: right">[MO_CACHE_DIR]</div>cache/</li>
-<li><div style="float: right">[SF_CLASSES_DIR]</div>classes/</li>
-<li>&nbsp;&gt;&nbsp;[PROJECT]/</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;om/</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;Base[OBJECT].php</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;Base[OBJECT]Peer.php</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;[OBJECT].php</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;[OBJECT]Peer.php</li>
-<li>data/</li>
-<li>&nbsp;&gt;&nbsp;conf/</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;build.properties</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;rsync_exclude.txt</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;schema.xml</li>
-<li>&nbsp;&gt;&nbsp;sql/</li>
-<li>doc/</li>
-<li><div style="float: right">x n applications</div>[APP]/</li>
-<li><div style="float: right">[SF_MESSAGES_DIR]</div>&nbsp;&gt;&nbsp;i18n/</li>
-<li>&nbsp;&nbsp;&nbsp;&gt;&nbsp;messages_fr.xml</li>
-<li>&nbsp;&gt;&nbsp;lib/</li>
-<li><div style="float: right">[MO_WEBAPP_DIR]</div>&nbsp;&gt;&nbsp;webapp/</li>
+<li><div style="float: right">[SF_APP_DIR]</div>apps/</li>
+<li><div style="float: right">x n applications</div>&nbsp;&nbsp;[APP]/</li>
+<li><div style="float: right">[SF_MESSAGES_DIR]</div>&nbsp;&nbsp;&nbsp;&gt;&nbsp;i18n/</li>
+
+<li>&nbsp;&nbsp;&nbsp;&gt;&nbsp;lib/</li>
 <li>&nbsp;&nbsp;&nbsp;&gt;&nbsp;config/</li>
+<li>&nbsp;&nbsp;&nbsp;&gt;&nbsp;i18n/</li>
 <li>&nbsp;&nbsp;&nbsp;&gt;&nbsp;lib/</li>
 <li>&nbsp;&nbsp;&nbsp;&gt;&nbsp;modules/</li>
 <li><div style="float: right">x n modules</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;[MODULE]/</li>
 <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;actions/</li>
 <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;Actions.class.php</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;config/</li>
 <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;lib/</li>
 <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;templates/</li>
 <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;IndexSuccess.php</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;validate/</li>
 <li>&nbsp;&nbsp;&nbsp;&gt;&nbsp;templates/</li>
-<li>vendor/</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;layout.php</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;error.php</li>
+<li><div style="float: right"></div>batch/</li>
+<li><div style="float: right">[MO_CACHE_DIR]</div>cache/</li>
+<li>&nbsp;&gt;&nbsp;[APP]/</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;[ENV]/</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;config/</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;template/</li>
+<li>config/</li>
+<li>&nbsp;&nbsp;&gt;&nbsp;build.properties</li>
+<li>&nbsp;&nbsp;&gt;&nbsp;rsync_exclude.txt</li>
+<li>&nbsp;&nbsp;&gt;&nbsp;schema.xml</li>
+<li>data/</li>
+<li>&nbsp;&gt;&nbsp;sql/</li>
+<li>doc/</li>
+<li><div style="float: right">[SF_CLASSES_DIR]</div>lib/</li>
+<li>&nbsp;&gt;&nbsp;model/</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;om/</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;Base[OBJECT].php</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;Base[OBJECT]Peer.php</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;[OBJECT].php</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&gt;&nbsp;[OBJECT]Peer.php</li>
+<li>log/</li>
+<li>test/</li>
 <li>&nbsp;&gt;&nbsp;sf/</li>
 <li><div style="float: right">[SF_WEB_DIR]</div>web/</li>
 <li>&nbsp;&gt;&nbsp;css/</li>
@@ -409,10 +423,10 @@ $object représente l'objet (Propel)
 </div>
 
 <div class="minisubcol">
-<h2>Constantes</h2>
+<h2>Constants</h2>
 <div class="content">
 
-<h3>SymFony</h3>
+<h3>Symfony</h3>
 <ul>
 <li><span class="method">SF_PROJECT</span></li>
 <li><span class="method">SF_DEBUG</span></li>
@@ -432,7 +446,7 @@ $object représente l'objet (Propel)
 </div>
 </div>
 
-<!-- FIN DE COLONNE -->
+<!-- end column -->
 </div>
 
 <!--
@@ -444,7 +458,7 @@ TODO
 
 <div style="clear: both">
 
-<div class="footnote">&copy; 2005 SENSIO - $Id$</div>
+<div class="footnote"></div>
 
 </body>
 </html>
