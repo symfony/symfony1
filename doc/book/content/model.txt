@@ -207,6 +207,8 @@ The data model is independent from the database used, but you will definitely us
 
 The database access is environment dependant. You can define different settings for the `prod`, `dev`, `test` environments, or any other environment you defined. The `all` header defines settings for all environments. This configuration can also be overridden per application, by setting different values in an application-specific file, for instance in `myproject/apps/myapp/config/databases.yml`.
 
+>**Note:** The `host` parameter can also be defined as `hostspec`.
+
 For each environment, you can define many connections, each being linked to a `schema.xml`. Connections and schema are linked by the `datasource`  parameter. It refers to the `name` attribute of the `<database>` tag in the `schema.xml`. If you don't specify the `datasource` param, it takes the value of the label given to the connection settings.
 
 The permitted values of the `phptype` parameter are the ones of the database systems supported by Propel:
