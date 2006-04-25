@@ -24,7 +24,7 @@ Symfony uses configuration files only for what they are best at doing. As a matt
 * **customizable**: the default configuration language is YAML, but it can be INI or XML or whatever the preference of the developer is
 * **fast**: the configuration files are never processed by the application but by the configuration system, which compiles them into a fast-processing chunk of code for the PHP server
 
-This is not just wishfull thinking, since the PHP implementation of the configuration system actually allows it.
+This is not just wishful thinking, since the PHP implementation of the configuration system actually allows it.
 
 Why YAML ?
 ----------
@@ -39,7 +39,7 @@ Symfony uses by default the [YAML][1] format instead of more traditional INI or 
 * YAML is expressive and extensible.
 * YAML is easy to implement.
 
-Contrary to INI, it supports hierarchy. Contrary to XML, it doesn't use a complicated syntax with lots of <, > and closing tags. The only disadvantage of YAML is that its is not widely known by developers, for now, as compared to the other formats. However, it is so simple to learn that it would be a pity to miss out on its features just for a lack of fame. As of now, if you are not familiar with the YAML syntax, you should [get started][2] right away.
+Contrary to INI, it supports hierarchy. Contrary to XML, it doesn't use a complicated syntax with lots of <, > and closing tags. The only disadvantage of YAML is that it is not widely known by developers, for now, as compared to the other formats. However, it is so simple to learn that it would be a pity to miss out on its features just for a lack of fame. As of now, if you are not familiar with the YAML syntax, you should [get started][2] right away.
 
 For those who are attached to other configuration file formats, be reassured: symfony supports any type of configuration file, since they are processed by special handler that can be easily adapted (see the _Configuration handlers_ section at the end of this chapter).
 
@@ -60,19 +60,19 @@ There are a few conventions that need to be kept in mind when writing YAML files
         ¬¬mail:
         ¬¬¬¬webmaster: webmaster@mysite.com
 
-* To define an array as a value, enclose the elements in square brackets or use the developed syntax with dashes:
+* To define an array as a value, enclose the elements in square brackets or use the expanded syntax with dashes:
 
         # shorthand syntax for arrays
         all:
           params: [value1, value2]
           
-        # developed syntax for arrays
+        # expanded syntax for arrays
         all:
           params: 
             - value1
             - value2
 
-* If your parameters are strings starting or ending with spaces, enclose the value in single quotes. If a string parameter contains special characters, also enclose the value in quotes:
+* If your parameters are strings starting or ending with spaces, enclose the value in single quotes. If a string parameter contains special characters, also enclose the value in single quotes:
 
         # strings starting or finishing with spaces are to be enclosed in single quotes
         all:
@@ -193,14 +193,13 @@ The `.general`, `pager` and `mail` lines are category headers. Headers starting 
 Access configuration from code
 ------------------------------
 
-All the configuration files are eventually transformed into PHP, but some of the parameters need to be accessible from your code. In this case, they are available through a special `sfConfig` class. It is a registry for configuration parameters, with simple getter and setter class methods, accessible from every part of thes code:
+All the configuration files are eventually transformed into PHP, but some of the parameters need to be accessible from your code. In this case, they are available through a special `sfConfig` class. It is a registry for configuration parameters, with simple getter and setter class methods, accessible from every part of the code:
 
      [php]
      sfConfig::set('param_name', $value);         // to define a config 
-parameter
-     sfConfig::get('param_name', $default_value); // to retrieve a config parameter
+     parameter = sfConfig::get('param_name', $default_value); // to retrieve a config parameter
 
-So symfony configuration parameters have all the advantages of PHP constants, but without the inconvenients, since the value can be changed.
+So symfony configuration parameters have all the advantages of PHP constants, but without the disadvantages, since the value can be changed.
 
 For instance, if you need to access the values defined in the previous example from your PHP code, write:
 
@@ -267,7 +266,7 @@ Then the file `config_app.yml.php`, located in the `cache` folder of your projec
      );
      ?>
 
-This is a major advantage over many PHP frameworks, where configuration files are compiled at every request even in production. Unlike Java, PHP doesn't share an execution context between requests. For other PHP frameworks, keeping the flexibility of XML configuration files requires a major performance hit to process all the configuration at every request. This is not the case in symfony: thanks to the cache system, the overhead caused by configuration is very low.
+This is a major advantage over many PHP frameworks, where configuration files are compiled at every request even in production. Unlike Java, PHP doesn't share an execution context between requests. For other PHP frameworks, keeping the flexibility of XML configuration files requires a major performance hit to process all the configuration at every request. This is not the case in symfony. Thanks to the cache system, the overhead caused by configuration is very low.
 
 The other main advantage of using configuration handlers is that it allows you to use formats other than YAML. The configuration handlers just transform configuration files into optimized PHP code. If you have a parser for another language - and PHP has native support of XML and INI files - it is very easy to write a custom handler that will read your own configuration file format.
 
