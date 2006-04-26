@@ -17,7 +17,7 @@
   table.vars { padding: 0; margin: 0; border: 1px solid #999; background-color: #fff; }
   table.vars th { padding: 2px; background-color: #ddd; font-weight: bold }
   table.vars td  { padding: 2px; font-family: monospace; white-space: pre }
-  p.error { padding: 10px; background-color: #f00; font-weight: bold; text-align: center }
+  p.error { padding: 10px; background-color: #f00; font-weight: bold; text-align: center; -moz-border-radius: 10px; }
   p.error a { color: #fff }
   #main { padding: 20px; padding-left: 70px; border: 1px solid #ddd; background-color: #fff; text-align:left; -moz-border-radius: 10px; min-width: 13em; max-width: 52em }
   #message { padding: 10px; margin-bottom: 10px; background-color: #eee; -moz-border-radius: 10px }
