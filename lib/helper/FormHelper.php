@@ -986,7 +986,7 @@ function _parse_value_for_date($value, $key, $format_char)
   {
     return date($format_char, $value);
   }
-  else if ($value == '' || ($name == 'ampm' && ($value == 'AM' || $value == 'PM')))
+  else if ($value == '' || ($key == 'ampm' && ($value == 'AM' || $value == 'PM')))
   {
     return $value;
   }
