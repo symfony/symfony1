@@ -518,7 +518,7 @@ function input_date_tag($name, $value, $options = array())
   }
   else
   {
-    $html .= content_tag('button', $calendar_button, array('disabled' => 'disabled', 'onclick' => 'return false', 'id' => 'trigger_'.$name));
+    $html .= content_tag('button', $calendar_button, array('type' => 'button', 'disabled' => 'disabled', 'onclick' => 'return false', 'id' => 'trigger_'.$name));
   }
 
   if (isset($options['with_format']))
