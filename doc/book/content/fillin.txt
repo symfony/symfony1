@@ -34,7 +34,7 @@ When displaying the form, symfony will check if the request contains parameters 
 Repopulation of a form with validation
 --------------------------------------
 
-If you defined a validation file for a form (see how in the [form validation chapter](validate.txt)), you probably want the form to be displayed again with error messages and the value entered by the user when the validation fails. Instead of adding a `filter.yml` like above, you can directly declare the use of the `sfFillInFormFilter` in the validation file.
+If you defined a validation file for a form (see how in the [form validation chapter](validate_form.txt)), you probably want the form to be displayed again with error messages and the value entered by the user when the validation fails. Instead of adding a `filter.yml` like above, you can directly declare the use of the `sfFillInFormFilter` in the validation file.
 
 For instance, if a `product` form calls an `add` action, its validation uses a `validate/add.yml` file. To enable repopulation in the form on failed validation, add the following lines to the `add.yml` file:
 
