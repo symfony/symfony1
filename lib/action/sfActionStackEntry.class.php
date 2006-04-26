@@ -35,7 +35,7 @@ class sfActionStackEntry
    *
    * @param string A module name.
    * @param string An action name.
-   * @param Action An action implementation instance.
+   * @param sfAction An action implementation instance.
    *
    * @return void
    */
@@ -60,7 +60,7 @@ class sfActionStackEntry
   /**
    * Retrieve this entry's action instance.
    *
-   * @return Action An action implementation instance.
+   * @return sfAction An action implementation instance.
    */
   public function getActionInstance ()
   {

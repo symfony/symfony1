@@ -98,6 +98,11 @@ abstract class sfComponent
     }
   }
 
+  /**
+   * Display $message as a short message in the sfWebDebug toolbar
+   *
+   * @param string The message text.
+   */
   public function debugMessage ($message)
   {
     if (sfConfig::get('sf_web_debug'))
@@ -137,44 +142,89 @@ abstract class sfComponent
   }
 
   /**
-   * Returns the current request object.
+   * Retrieve the request.
    *
    * This is a proxy method equivalent to:
    *
    * <code>$this->getContext()->getRequest()</code>
    *
-   * @return object current request object
+   * @return sfRequest The current sfRequest implementation instance.
    */
   public function getRequest()
   {
     return $this->request;
   }
 
+  /**
+   * Retrieve the response.
+   *
+   * This is a proxy method equivalent to:
+   *
+   * <code>$this->getContext()->getResponse()</code>
+   *
+   * @return sfResponse The current sfResponse implementation instance.
+   */
   public function getResponse()
   {
     return $this->response;
   }
 
+  /**
+   * Retrieve the Controller.
+   *
+   * This is a proxy method equivalent to:
+   *
+   * <code>$this->getContext()->getController()</code>
+   *
+   * @return sfController The current sfController implementation instance.
+   */
   public function getController()
   {
     return $this->getContext()->getController();
   }
 
+  /**
+   * Retrieve the user.
+   *
+   * This is a proxy method equivalent to:
+   *
+   * <code>$this->getContext()->getController()</code>
+   *
+   * @return sfUser The current sfUser implementation instance.
+   */
   public function getUser()
   {
     return $this->getContext()->getUser();
   }
 
+  /**
+   * Sets a variable for the template.
+   *
+   * @param  string The variable name
+   * @param  mixed  The variable's value
+   * @return void
+   */
   public function setVar($name, $value)
   {
     $this->var_holder->set($name, $value);
   }
 
+  /**
+   * Gets a variable for the template.
+   *
+   * @param  string The variable name.
+   * @return mixed
+   */
   public function getVar($name)
   {
     return $this->var_holder->get($name);
   }
 
+  /**
+   * Gets the sfParameterHolder object.
+   * 
+   * @return sfParameterHolder The variable holder.
+   */
   public function getVarHolder()
   {
     return $this->var_holder;
@@ -209,6 +259,12 @@ abstract class sfComponent
     return $this->var_holder->get($key);
   }
 
+  /**
+   * Sets a flash variable that will be passed to the next
+   * action.
+   * 
+   * @return void
+   */
   public function setFlash($name, $value, $persist = true)
   {
     $this->getUser()->setAttribute($name, $value, 'symfony/flash');
@@ -219,11 +275,23 @@ abstract class sfComponent
     }
   }
 
+  /**
+   * Gets a flash variable.
+   * 
+   * @param  string The name of the flash variable.
+   * @return mixed
+   */
   public function getFlash($name)
   {
     return $this->getUser()->getAttribute($name, null, 'symfony/flash');
   }
 
+  /**
+   * Returns true if a flash variable of the specified name exists.
+   * 
+   * @param  string The name of the flash variable.
+   * @return bool   True if the variable exists, false otherwise.
+   */
   public function hasFlash($name)
   {
     return $this->getUser()->hasAttribute($name, 'symfony/flash');
