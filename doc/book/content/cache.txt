@@ -9,7 +9,7 @@ The powerful and flexible symfony cache system can speed up a website by saving 
 Introduction
 ------------
 
-The principle of HTML caching is simple: part or all of the HTML code that is sent to a user upon a request can be reused for a similar request, so this HTML code is stored in a special place (the `cache` folder in symfony), where the front controller will look for it before executing an action. If a cached version is found, it is sent without executing the action, thus greatly speeding up the process. If there is no cache version found, the action is executed, and its result (the view) is stored in the cache folder for future requests.
+The principle of HTML caching is simple: part or all of the HTML code that is sent to a user upon a request can be reused for a similar request, so this HTML code is stored in a special place (the `cache` folder in symfony), where the front controller will look for it before executing an action. If a cached version is found, it is sent without executing the action, thus greatly speeding up the process. If there is no cached version found, the action is executed, and its result (the view) is stored in the cache folder for future requests.
 
 As all the pages may contain dynamic information, the HTML cache is disabled by default. It is up to the site administrator to activate it in order to improve performance.
 
@@ -262,7 +262,7 @@ If you deal with several applications and do caching in at least one of them, yo
 
 Just picture a back-office application that modifies the details of a user: all the cached pages that display the information about this user in the front-office have to be cleared, but they are in another application.
 
-What you should do is to setup an action in the front-office application that will behave like a web service. The back-office will call this action trough HTTP, passing it the detail of the modification in the model. The web service will determine which pages need to be cleared according to the part of the model that was modified.
+What you should do is to setup an action in the front-office application that will behave like a web service. The back-office will call this action through HTTP, passing it the detail of the modification in the model. The web service will determine which pages need to be cleared according to the part of the model that was modified.
 
 A tutorial will soon be published to describe this procedure.
 
