@@ -34,7 +34,7 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
     $this->initialize();
 
     // parse the yaml
-    $myConfig = $this->parseYamls($configFiles);
+    $config = $this->parseYamls($configFiles);
 
     // init our data array
     $data = array();
