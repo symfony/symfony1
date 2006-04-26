@@ -160,6 +160,9 @@ try
 
   $sf_debug = sfConfig::get('sf_debug');
 
+  // set exception format
+  sfException::setFormat(isset($_SERVER['HTTP_HOST']) ? 'html' : 'plain');
+
   // load base settings
   include($configCache->checkConfig($sf_app_config_dir_name.'/logging.yml'));
   $configCache->import($sf_app_config_dir_name.'/php.yml');
@@ -171,9 +174,6 @@ try
   {
     $configCache->checkConfig($sf_app_config_dir_name.'/bootstrap_compile.yml');
   }
-
-  // set exception format
-  sfException::setFormat(isset($_SERVER['HTTP_HOST']) ? 'html' : 'plain');
 
   // error settings
   ini_set('display_errors', $sf_debug ? 'on' : 'off');
