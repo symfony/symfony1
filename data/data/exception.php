@@ -17,6 +17,8 @@
   table.vars { padding: 0; margin: 0; border: 1px solid #999; background-color: #fff; }
   table.vars th { padding: 2px; background-color: #ddd; font-weight: bold }
   table.vars td  { padding: 2px; font-family: monospace; white-space: pre }
+  p.error { padding: 10px; background-color: #f00; font-weight: bold; text-align: center }
+  p.error a { color: #fff }
   #main { padding: 20px; padding-left: 70px; border: 1px solid #ddd; background-color: #fff; text-align:left; -moz-border-radius: 10px; min-width: 13em; max-width: 52em }
   #message { padding: 10px; margin-bottom: 10px; background-color: #eee; -moz-border-radius: 10px }
   </style>
@@ -33,7 +35,7 @@
   <h1>[<?php echo $name ?>]</h1>
   <h2 id="message"><?php echo $message ?></h2>
   <?php if ($error_reference): ?>
-    <p><a href='http://www.symfony-project.com/errors/<?php echo $error_reference ?>'>learn more about this issue</a></p>
+    <p class="error"><a href='http://www.symfony-project.com/errors/<?php echo $error_reference ?>'>learn more about this issue</a></p>
   <?php endif; ?>
   <h2>stack trace</h2>
   <ul><li><?php echo implode('</li><li>', $traces) ?></li></ul>
