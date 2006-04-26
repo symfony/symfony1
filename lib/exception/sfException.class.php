@@ -200,10 +200,12 @@ class sfException extends Exception
     $values = array();
     foreach (array('cookie', 'server', 'get', 'post', 'files', 'env', 'session') as $name)
     {
+      $values[$name] = array();
       foreach ($GLOBALS['_'.strtoupper($name)] as $key => $value)
       {
-        $values[$name.'/'.$key] = $value;
+        $values[$name][$key] = $value;
       }
+      ksort($values[$name]);
     }
 
     ksort($values);
@@ -213,35 +215,31 @@ class sfException extends Exception
 
   private function requestAsHtml($context)
   {
-    $parameters = $this->flattenParameterHolder($context->getRequest()->getParameterHolder());
-    $attributes = $this->flattenParameterHolder($context->getRequest()->getAttributeHolder(), 'attribute');
-
-    $values = array_merge($parameters, $attributes);
-
-    ksort($values);
+    $values = array(
+      'parameter_holder' => $this->flattenParameterHolder($context->getRequest()->getParameterHolder()),
+      'attribute_holder' => $this->flattenParameterHolder($context->getRequest()->getAttributeHolder()),
+    );
 
     return $this->formatArrayAsTable($values);
   }
 
   private function responseAsHtml($context)
   {
-    $parameters = $this->flattenParameterHolder($context->getResponse()->getParameterHolder());
-
-    $headers = array();
+    $values = array(
+      'cookies'          => array(),
+      'http_headers'     => array(),
+      'parameter_holder' => $this->flattenParameterHolder($context->getResponse()->getParameterHolder()),
+    );
     foreach ($context->getResponse()->getHttpHeaders() as $key => $value)
     {
-      $headers['http_header/'.$key] = $value;
+      $values['http_headers'][$key] = $value;
     }
 
     $cookies = array();
     foreach ($context->getResponse()->getCookies() as $key => $value)
     {
-      $cookies['cookie/'.$key] = $value;
+      $values['cookies'][$key] = $value;
     }
-
-    $values = array_merge($parameters, $headers, $cookies);
-
-    ksort($values);
 
     return $this->formatArrayAsTable($values);
   }
@@ -255,32 +253,27 @@ class sfException extends Exception
     return $this->formatArrayAsTable($config);
   }
 
-  private function formatArrayAsTable($values)
-  {
-    $table = '<table cellspacing="0" class="vars"><tr><th>variable</th><th>value</th></tr>';
-    foreach ($values as $key => $value)
-    {
-      $table .= '<tr><td>'.$key.'</td><td>'.$this->formatArgs($value, true).'</td></tr>';
-    }
-    $table .= '</table>';
-
-    return $table;
-  }
-
-  public function flattenParameterHolder($parameterHolder, $prefix = 'parameter')
+  public function flattenParameterHolder($parameterHolder)
   {
     $values = array();
     foreach ($parameterHolder->getNamespaces() as $ns)
     {
+      $values[$ns] = array();
       foreach ($parameterHolder->getAll($ns) as $key => $value)
       {
-        $values[$prefix.'/'.$ns.'/'.$key] = $value;
+        $values[$ns][$key] = $value;
       }
+      ksort($values[$ns]);
     }
 
     ksort($values);
 
     return $values;
+  }
+
+  private function formatArrayAsTable($values)
+  {
+    return '<pre>'.sfYaml::Dump($values).'</pre>';
   }
 
   private function fileExcerpt($file, $line)
