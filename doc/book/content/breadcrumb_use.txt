@@ -17,18 +17,18 @@ If the breadcrumb *slot* is in the template of an action, then the name of the p
  2. If it is found
    1. The name of the node containing the action is given to the final leaf of the breadcrumb. This is generally the name of the current page, or page group.
    2. If it is found in a `branch` type node
-     1. The tree structure of this particular node is browsed through, up until the last father node, to build the other parts of the breadcrumb
+     1. The tree structure of this particular node is browsed through, up until the last parent node, to build the other parts of the breadcrumb
      2. The `root` node is added at the beginning of the breadcrumb
    3. If it is found in a `slip` type node
      1. If this node is already present in the previous breadcrumb
        1. The previous breadcrumb is truncated to the node corresponding to the action
      2. If this node is not present in the previous breadcrumb
-       1. The new breadcrum is the addition of the previous breadcrumb and the the newly created leaf
+       1. The new breadcrumb is the addition of the previous breadcrumb and the newly created leaf
    4. The breadcrumb template is called for the display and the HTML translation of the elements
  3. If it is not found
-   1. The breadcrumb is reseted. It is not displayed in the page
+   1. The breadcrumb is reset. It is not displayed in the page
 
-**TODO**: case of a *slip* node with a son node
+**TODO**: case of a *slip* node with a child node
 
 ### Syntax
 

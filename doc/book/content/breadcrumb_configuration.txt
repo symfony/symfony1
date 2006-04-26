@@ -10,7 +10,7 @@ Concepts
 --------
 
 ### Node
-In a breadcrumb are shown the names of the previous pages seen by the user, together with hyperlinks leading to these pages.
+A breadcrumb shows the names of the previous pages seen by the user, together with hyperlinks leading to these pages.
 
 When the pages are static, the hyperlink can simply be the name of the file to request. However, when the page was dynamically created according to parameters and session data, the link points to an action and its parameters.
 
@@ -28,7 +28,7 @@ In transactionnal and e-business websites, the breadcrumb is more like a history
 
 This shows that two different types of nodes coexist in websites:
 
-*   *branch*-type nodes: they rely on a father branch and can have children branches; their position in a breadcrumb is fixed, and the knowledge of a *branch* node normally brings the knowledge of all its ancestors
+*   *branch*-type nodes: they rely on a parent branch and can have child branches; their position in a breadcrumb is fixed, and the knowledge of a *branch* node normally brings the knowledge of all its ancestors
 *   *slip*-type nodes: they can stick to any existing action, and generally appear as an addition to the previous breadcrumb - if they were not already in the breadcrumb; and possibly give birth to child actions.
 
 A third type of node, *root*, is used to describe the root of the website, and it is most of the time the home page. It is the first element of the breadcrumb.
@@ -53,11 +53,11 @@ The `treestructure.xml` DTD is:
     ELEMENT name (#PCDATA)
     ELEMENT action (#PCDATA)
 
-It reads the following way :
+It reads the following way:
 
 *   the XML document contains `node` tags
 *   a `node` tag must have a `name` tag, can have one or more `action` tags and possibly one or more children `node` tags
-*   a `node` tag can have an optionnal `type` attribute, and its possible values are `root`, `branch` and `slip`
+*   a `node` tag can have an optional `type` attribute, and its possible values are `root`, `branch` and `slip`
 *   `name` and `action` tags can contain text data
 
 Example
@@ -131,27 +131,27 @@ With this file, the call to actions will bring the following breadcrumb:
 
 
 *   Product/ResultList: `Home > Product search > Result list`
-*   Content/Security : `Home > Help > Security policy`
-*   ShoppingCart/Index : `[breadcrumb of the previous page] > Shopping cart`
+*   Content/Security: `Home > Help > Security policy`
+*   ShoppingCart/Index: `[breadcrumb of the previous page] > Shopping cart`
 
-You can see more about the way to inclue a breadcrumb in your templates in the [related page](UseBreadCrumb.txt).
+You can see more about the way to include a breadcrumb in your templates in the [related page](UseBreadCrumb.txt).
 
 How to write a site strucure 
 ----------------------------
 
-### Which actions have to be included ? ###
+### Which actions have to be included? ###
 
-Most of a the actions of a website are often included in the site structure configuration file. However, some of the actions of your application don't need to appear in the file, like the following ones:
+Most of the actions of a website are often included in the site structure configuration file. However, some of the actions of your application don't need to appear in the file, like the following ones:
 
 *   actions that redirect to another action (server-side)
 *   actions associated to popups
 *   actions associated to a template without breadcrumb
 
-### How to determine the type of a node ? ###
+### How to determine the type of a node? ###
 
 Apart from the home page, consider that all actions correspond to *branch*-type nodes by default. You will detect the *slip*-type nodes easily because they can appear in a breadcrumb at different positions.
 
-For instance, consider the following beadcrumbs:
+For instance, consider the following breadcrumbs:
 
     Home > Search > Result list > Detail 
     Home > Search > Detail
