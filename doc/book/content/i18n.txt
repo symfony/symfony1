@@ -38,7 +38,7 @@ The country is coded in two upper-case characters, according to the [ISO 3166-1 
 
 By default, any new user will take the culture set in the `default_culture` configuration parameter. You can change it in the `i18n.yml` configuration file:
 
-    default:
+    all:
       default_culture:     fr
 
 All the culture-dependent contents are displayed transparently according to the user culture.
