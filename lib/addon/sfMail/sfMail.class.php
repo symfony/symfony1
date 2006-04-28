@@ -171,7 +171,7 @@ class sfMail
     {
       foreach ($addresses as $address)
       {
-        list($address, $name) = $this->splitAddress($recipient);
+        list($address, $name) = $this->splitAddress($address);
         $this->mailer->AddAddress($address, $name);
       }
     }
