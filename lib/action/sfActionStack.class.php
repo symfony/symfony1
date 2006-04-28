@@ -70,17 +70,14 @@ class sfActionStack
    *
    * @return sfActionStackEntry An action stack entry implementation.
    */
-  public function removeEntry ($index)
+  public function popEntry ()
   {
-    $retval = $this->getEntry($index);
+    $retval = $this->getLastEntry();
 
     if ($retval)
     {
-      unset($this->stack[$index]);
+      unset($this->stack[count($this->stack) - 1]);
     }
-
-    // rearranged keys
-    sort($this->stack);
 
     return $retval;
   }

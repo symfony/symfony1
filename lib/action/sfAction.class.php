@@ -225,15 +225,7 @@ abstract class sfAction extends sfComponent
 
   public function sendEmail($module, $action)
   {
-    $presentation = $this->getPresentationFor($module, $action, 'sfMail');
-
-    // error? (like a security forwarding)
-    if (!$presentation)
-    {
-      throw new sfException('There was an error when trying to send this email.');
-    }
-
-    return $presentation;
+    return $this->getPresentationFor($module, $action, 'sfMail');
   }
 
   public function getPresentationFor($module, $action, $viewName = null)
@@ -273,15 +265,29 @@ abstract class sfAction extends sfComponent
     $controller->setRenderMode($renderMode);
 
     // remove the action entry
-    for ($i = $index; $i < $actionStack->getSize(); $i++)
+    $nb = $actionStack->getSize() - $index;
+    while ($nb-- > 0)
     {
-      $actionEntry = $actionStack->removeEntry($i);
+      $actionEntry = $actionStack->popEntry();
+
+      if ($actionEntry->getModuleName() == sfConfig::get('sf_login_module') && $actionEntry->getActionName() == sfConfig::get('sf_login_action'))
+      {
+        $error = 'Your mail action is secured but the user is not authenticated.';
+
+        throw new sfException($error);
+      }
+      else if ($actionEntry->getModuleName() == sfConfig::get('sf_secure_module') && $actionEntry->getActionName() == sfConfig::get('sf_secure_action'))
+      {
+        $error = 'Your mail action is secured but the user does not have access.';
+
+        throw new sfException($error);
+      }
     }
 
     // remove viewName
     if ($viewName)
     {
-      $this->getRequest()->setAttribute($module.'_'.$action.'_view_name', '', 'symfony/action/view');
+      $this->getRequest()->getAttributeHolder()->remove($module.'_'.$action.'_view_name', 'symfony/action/view');
     }
 
     return $presentation;
