@@ -42,7 +42,7 @@ function esc_entities($value)
   return htmlentities($value, ENT_QUOTES);
 }
 
-define('ESC_ENTITIES', 'esc_entities');
+define('ESC_ENTITIES', 'esc_entities', 'UTF-8');
 
 /**
  * An identity function that merely returns that which it is given, the purpose
