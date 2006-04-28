@@ -49,6 +49,11 @@ abstract class sfView
   const SUCCESS = 'Success';
 
   /**
+    * Skip view rendering but output http headers
+    */
+  const HEADER_ONLY = 'Headers';
+
+  /**
    * Render the presentation to the client.
    */
   const RENDER_CLIENT = 2;

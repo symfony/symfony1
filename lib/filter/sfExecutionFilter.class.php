@@ -131,7 +131,14 @@ class sfExecutionFilter extends sfFilter
       }
     }
 
-    if ($viewName != sfView::NONE)
+    if ($viewName == sfView::HEADER_ONLY)
+    {
+      $filterChain->executionFilterDone();
+
+      // execute next filter
+      $filterChain->execute();
+    }
+    else if ($viewName != sfView::NONE)
     {
       if (is_array($viewName))
       {
