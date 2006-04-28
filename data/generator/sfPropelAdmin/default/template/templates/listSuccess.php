@@ -1,6 +1,6 @@
 [?php use_helpers('I18N', 'Date') ?]
 
-<h1><?php echo $this->getParameterValue('list.title', $this->getModuleName().' list') ?></h1>
+<h1><?php echo $this->getI18NString('list.title', $this->getModuleName().' list') ?></h1>
 
 <div id="sf_admin_header">
 [?php include_partial('<?php echo $this->getModuleName() ?>/list_header') ?]
