@@ -721,7 +721,7 @@ class sfWebRequest extends sfRequest
     {
       $pathArray = $this->getPathInfoArray();
 
-      $this->relativeUrlRoot = preg_replace('#/[^/]+\.php$#', '', $pathArray['SCRIPT_NAME']);
+      $this->relativeUrlRoot = preg_replace('#/[^/]+\.php5?$#', '', $pathArray['SCRIPT_NAME']);
     }
 
     return $this->relativeUrlRoot;
