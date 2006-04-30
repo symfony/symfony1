@@ -478,6 +478,10 @@ abstract class sfController
 
       return new $class();
     }
+
+    $class = 'sfPHPView';
+
+    return new $class();
   }
 
   /**
