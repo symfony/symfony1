@@ -200,6 +200,11 @@ class sfException extends Exception
     $values = array();
     foreach (array('cookie', 'server', 'get', 'post', 'files', 'env', 'session') as $name)
     {
+      if (!isset($GLOBALS['_'.strtoupper($name)]))
+      {
+        continue;
+      }
+
       $values[$name] = array();
       foreach ($GLOBALS['_'.strtoupper($name)] as $key => $value)
       {
