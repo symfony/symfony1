@@ -260,7 +260,7 @@ The getter functions of the `Post` object are so clear that even symfony can und
 
     In the example, the `Post` object has a `getCreatedAt`
 
-The same goes for the other possible fields of an Atom feed (including the categories, the summary, the unique id, etc.), and you are advised to [browse the source of the `sfFeed` class](http://www.symfony-project.com/trac/browser/trunk/lib/symfony/addon/sfFeed) to discover all the deduction mechanisms.
+The same goes for the other possible fields of an Atom feed (including the categories, the summary, the unique id, etc.), and you are advised to [browse the source of the `sfFeed` class](http://www.symfony-project.com/trac/browser/plugins/sfFeed/lib) to discover all the deduction mechanisms.
 
 All in all, the way the accessors of the `Post` and `Author` objects are built allow the built-in shortcuts of the `sfFeed` to work, and the creation of the feed to be so simple.
 
