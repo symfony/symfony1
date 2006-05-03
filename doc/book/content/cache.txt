@@ -13,13 +13,14 @@ The principle of HTML caching is simple: part or all of the HTML code that is se
 
 As all the pages may contain dynamic information, the HTML cache is disabled by default. It is up to the site administrator to activate it in order to improve performance.
 
-Symfony handles three different types of HTML cache:
+Symfony handles four different types of HTML cache:
 
-* cache of the result of an action
+* cache of an action
+* cache of a partial, a component, or of a component slot
 * cache of an entire page
 * cache of a fragment of a template
 
-The two first types are handled with YAML configuration files, the last one is managed by calls to helper functions in the template.
+The three first types are handled with YAML configuration files, the last one is managed by calls to helper functions in the template.
 
 The symfony cache system uses files stored on the web server hard disk. This keeps the cache simple and efficient, without any other prerequisites than the framework itself. It is not yet possible to cache in memory or in a database.
 
@@ -42,10 +43,10 @@ This means that if you decide to add caching to one of your apps, you will not b
 
 One other cache parameter can be changed in the `settings.yml` file: The default cache lifetime, i.e. the number of seconds after which a cached file is overwritten and the page processed again. The default `default_cache_lifetime` is set to one day, or 86400 seconds.
 
-Caching the result of an action
--------------------------------
+Caching an action
+-----------------
 
-Actions that display static information (i.e. without any call to a database) or actions that read the information in a database but without modifying it are often good clients for caching.
+Actions that display static information (i.e. without any call to a database) or actions that read the information in a database but without modifying it (typically GET requests) are often good clients for caching.
 
 For instance, imagine an action that returns the list of all the users of your website (`user/list`). Unless a user is modified, added or removed (and this matter will be discussed later), this list always displays the same information, so it is a good candidate for caching.
 
@@ -60,7 +61,7 @@ To activate the cache on such actions, simply add a `cache.yml` file in the `myp
     all:
       lifeTime:   86400
   
-This configuration stipulates that the cache is `on` for the `list` action, and that it is of the `slot` type (i.e. caching the result of an action, as opposed to caching the whole page, which will be described later). The `lifeTime` is the time (in seconds) after which the page will be processed again and the cached version replaced. 
+This configuration stipulates that the cache is `on` for the `list` action, and that it is of the `slot` type (i.e. caching an action, as opposed to caching the whole page, which will be described later). The `lifeTime` is the time (in seconds) after which the page will be processed again and the cached version replaced. 
 
 Now, if you try to call this action from your browser (probably by requesting an URL like `http://myapp.example.com/user/list`), you will notice no difference the first time, but refreshing the page will probably show a notable boost in response time. 
 
@@ -71,6 +72,43 @@ The caching system also works for pages with arguments. The `user` module may ha
       type:       slot
 
 Now, requests like `http://myapp.example.com/user/show/id/12` will create new records in the cache folder and if you repeat this request, it will be much faster the second time. 
+
+Caching a partial, a component, or a component slot
+---------------------------------------------------
+
+The [view chapter](view.txt) explains how to reuse code fragments across several templates, using the `include_partial()` helper.
+
+    [php]
+    <?php include_partial('mymodule/mypartial') ?>
+
+A partial is as easy to cache as an action. To activate it, create a `cache.yml` in the partial module `config/` directory (in the example above, in `modules/mymodule/config/`) and activate the cache for the partials by declaring their names with a trailing underscore:
+
+    _mypartial:
+      activate: on
+    
+    all:
+      activate: off
+
+Now all the templates using this partial won't actually execute the PHP code of the partial, but use the cached version instead. 
+
+>**Note**: The `slot` type cache is more powerful than the partial cache, since when an action is cached, the template is not even executed - and if the template contains calls to partials, theses calls are not performed. Therefore, the partial caching is useful only if you don't use action caching in the caling action.
+
+Just like for actions, partial caching is also relevant when the result of the partial depends on parameters:
+
+    [php]
+    <?php include_partial('mymodule/my_other_partial', array('foo' => 'bar)) ?>
+
+A component is a lightweight action put on top of a partial. A component slot is a component for which the action varies according to the calling actions. These two inclusion types are very similar to partials, and support caching the same way. For instance, if your global layout shows a:
+
+    [php]
+    <?php include_component('global/day') ?>
+    
+...in order to show the current date, then you can cache this component with such a `cache.yml`:
+
+    _day:
+      activate: on
+
+>**Note**: Global components (the ones located in the application `templates/` directory) can be cached, provided you declare the activation in the application `cache.yml` file.
 
 Caching an entire page
 ----------------------
@@ -97,7 +135,7 @@ If you request again the aforementioned pages:
     
 ...the full pages will be completely cached, and the second time you request them, the response will be even faster than with the action result cached.
 
-Unfortunately, the layout often contains some dynamic elements, including [slots](view.txt). So the cases where the whole page can be cached are not very common. As a matter of fact, this type is often most used for RSS feeds, pop-ups, or pages with a layout that doesn't depend on cookies.
+Unfortunately, the layout often contains some dynamic elements, including [component slots](view.txt). So the cases where the whole page can be cached are not very common. As a matter of fact, this type is often most used for RSS feeds, pop-ups, or pages with a layout that doesn't depend on cookies.
 
 Caching a template fragment
 ---------------------------
@@ -173,13 +211,13 @@ That's as simple as it can be. The domain name is part of this path because you 
 
 The files stored in these folders depend on the type of caching used:
 
-cache type | file name
----------- | ---------
-slot       | slot.cache
-page       | page.cache
-fragment   | fragment_users.cache
-           | fragment_other_unique_name.cache
-           | ...
+cache type                 | file name
+-------------------------- | ---------
+slot, partial, components  | slot.cache
+page                       | page.cache
+fragment                   | fragment_users.cache
+                           | fragment_other_unique_name.cache
+                           | ...
       
 The name given to a fragment in the `cache()` helper is concatenated after `fragment_`. Here, the second fragment was generated by:
 
@@ -187,7 +225,7 @@ The name given to a fragment in the `cache()` helper is concatenated after `frag
     <?php if (!cache('other_unique_name', SF_DEFAULT_CACHE_LIFETIME)): ?>
     ...
 
-If you use slots in the layout, remember that their cache files are found in a tree structure relative to the module/action of the slot, not the module/action initially called.
+If you use component or component slots in the layout, remember that their cache files are found in a tree structure relative to the module/action of the slot, not the module/action initially called.
       
 Feel free to browse the cache folder to look at the chunks of code that are saved; you might feel more comfortable with the cache if you see that it only saves what it is supposed to save.
 

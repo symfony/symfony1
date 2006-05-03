@@ -350,7 +350,7 @@ In the same `news` module, create a `_headlines.php` partial in the `templates/`
 Now, every time you need the component in a template, just call it by:
 
     [php]
-    <?php echo include_component('news', 'headlines') ?>
+    <?php include_component('news', 'headlines') ?>
     
 Just like the partials, components accept additional parameters in the shape of an associative array.
 
@@ -367,7 +367,7 @@ For instance, let's imagine that the `layout.php` of the application contains:
     [php]
     ...
     <div id="#sidebar">
-      <?php echo include_component_slot('sidebar') ?>
+      <?php include_component_slot('sidebar') ?>
     </div> 
 
 In the main `view.yml` configuration file (located in the `myapp/config/` directory), you define the default value for this slot:

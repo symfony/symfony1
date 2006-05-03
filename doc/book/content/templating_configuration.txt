@@ -370,7 +370,7 @@ Imagine that you have a layout with a zone for contextual advices:
     [php]
     ...
     <div id="adviceBlock">
-      <?php echo include_component_slot('advices') ?>
+      <?php include_component_slot('advices') ?>
     </div>
     ...
 
