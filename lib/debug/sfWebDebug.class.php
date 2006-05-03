@@ -375,12 +375,15 @@ class sfWebDebug
     return $result;
   }
 
-  public function decorateContentWithDebug($internalUri, $suffix, $retval, $border_color, $bg_color)
+  public function decorateContentWithDebug($internalUri, $suffix, $retval, $new = false)
   {
     if (!sfConfig::get('sf_web_debug'))
     {
       return $retval;
     }
+
+    $border_color = $new ? '#f00' : '#f00';
+    $bg_color     = $new ? '#9ff' : '#ff9';
 
     $cache = $this->context->getViewCacheManager();
     $this->loadHelpers();

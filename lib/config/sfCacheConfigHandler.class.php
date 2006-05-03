@@ -63,10 +63,7 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
       $data[] = ($first ? '' : 'else ')."if (\$actionName == '$actionName')\n".
                 "{\n";
 
-      if ($this->getConfigValue('activate', $actionName))
-      {
-        $data[] = $this->addCache($actionName);
-      }
+      $data[] = $this->addCache($actionName);
 
       $data[] = "}\n";
 
@@ -74,12 +71,9 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
     }
 
     // general cache configuration
-    if ($this->getConfigValue('activate', $actionName))
-    {
-      $data[] = ($first ? '' : "else\n{")."\n";
-      $data[] = $this->addCache('DEFAULT');
-      $data[] = ($first ? '' : "}")."\n";
-    }
+    $data[] = ($first ? '' : "else\n{")."\n";
+    $data[] = $this->addCache('DEFAULT');
+    $data[] = ($first ? '' : "}")."\n";
 
     // compile data
     $retval = sprintf("<?php\n".
@@ -94,14 +88,17 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
   {
     $data = array();
 
+    // activated?
+    $activate = $this->getConfigValue('activate', $actionName);
+
     // cache type for this action (slot or page)
     $type = $this->getConfigValue('type', $actionName);
 
     // lifetime
-    $lifeTime = $this->getConfigValue('lifetime', $actionName);
+    $lifeTime = (!$activate) ? 0 : $this->getConfigValue('lifetime', $actionName);
 
     // client_lifetime
-    $clientLifetime = $this->getConfigValue('client_lifetime', $actionName, $lifeTime);
+    $clientLifetime = (!$activate) ? 0 : $this->getConfigValue('client_lifetime', $actionName, $lifeTime);
 
     // vary
     $vary = $this->getConfigValue('vary', $actionName, array());
@@ -111,7 +108,7 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
     }
 
     // add cache information to cache manager
-    $data[] = sprintf("  \$this->cacheManager->addCache(\$context->getModuleName(), '%s', '%s', %s, '%s', %s);\n\n",
+    $data[] = sprintf("  \$cacheManager->addCache(\$context->getModuleName(), '%s', '%s', %s, '%s', %s);\n\n",
                       $actionName, $type, $lifeTime, $clientLifetime, var_export($vary, true));
 
     return implode("\n", $data);

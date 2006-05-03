@@ -9,9 +9,9 @@
  */
 
 /**
- * Cache class to cache the HTML results for Actions and Templates.
+ * Cache class to cache the HTML results for actions and templates.
  *
- * This class is based on the PEAR_Cache_Liste class.
+ * This class users viewCacheClassName to serialize cache.
  * All cache files are stored in files in the [sf_root_dir].'/cache/'.[sf_app].'/html' directory.
  * To disable all caching, you can set to false [sf_cache] constant.
  *
@@ -125,10 +125,7 @@ class sfViewCacheManager
 
       // we add cache information based on slot configuration for this module/action
       $lifeTime = $this->getLifeTime($internalUri, 'slot');
-      if ($lifeTime)
-      {
-        $this->addCache($moduleName, $actionName, $suffix, $lifeTime, $this->getClientLifeTime($internalUri, 'slot'), $this->getVary($internalUri, 'slot'));
-      }
+      $this->addCache($moduleName, $actionName, $suffix, $lifeTime, $this->getClientLifeTime($internalUri, 'slot'), $this->getVary($internalUri, 'slot'));
     }
 
     return array($internalUri, $suffix);
@@ -184,12 +181,16 @@ class sfViewCacheManager
     return $value;
   }
 
-  public function hasCacheConfig($internalUri, $suffix)
+  public function isCacheable($internalUri, $suffix)
   {
     list($route_name, $params) = $this->controller->convertUrlStringToParameters($internalUri);
     $entry = $params['module'].'_'.$params['action'].'_'.$suffix;
 
-    if (isset($this->cacheConfig[$entry]) || isset($this->cacheConfig[$params['module'].'_DEFAULT_'.$suffix]))
+    if (
+      (isset($this->cacheConfig[$entry]) && $this->cacheConfig[$entry]['lifeTime'] > 0)
+      ||
+      (isset($this->cacheConfig[$params['module'].'_DEFAULT_'.$suffix]) && $this->cacheConfig[$params['module'].'_DEFAULT_'.$suffix]['lifeTime'] > 0)
+    )
     {
       return true;
     }
@@ -200,7 +201,7 @@ class sfViewCacheManager
   public function get($internalUri, $suffix = 'slot')
   {
     // no cache or no cache set for this action
-    if (!sfConfig::get('sf_cache') || !$this->hasCacheConfig($internalUri, $suffix))
+    if (!sfConfig::get('sf_cache') || !$this->isCacheable($internalUri, $suffix) || $this->ignore())
     {
       return null;
     }
@@ -215,7 +216,7 @@ class sfViewCacheManager
 
   public function has($internalUri, $suffix = 'slot')
   {
-    if (!sfConfig::get('sf_cache') || !$this->hasCacheConfig($internalUri, $suffix))
+    if (!sfConfig::get('sf_cache') || !$this->isCacheable($internalUri, $suffix) || $this->ignore())
     {
       return null;
     }
@@ -228,9 +229,25 @@ class sfViewCacheManager
     return $this->cache->has($id, $namespace);
   }
 
+  protected function ignore()
+  {
+    // ignore cache parameter? (only available in debug mode)
+    if (sfConfig::get('sf_debug') && $this->getContext()->getRequest()->getParameter('sf_ignore_cache', false, 'symfony/request/sfWebRequest') == true)
+    {
+      if (sfConfig::get('sf_logging_active'))
+      {
+        $this->getContext()->getLogger()->info('{sfViewCacheManager} discard cache');
+      }
+
+      return true;
+    }
+
+    return false;
+  }
+
   public function set($data, $internalUri, $suffix = 'slot')
   {
-    if (!sfConfig::get('sf_cache') || !$this->hasCacheConfig($internalUri, $suffix))
+    if (!sfConfig::get('sf_cache') || !$this->isCacheable($internalUri, $suffix))
     {
       return false;
     }
@@ -301,7 +318,7 @@ class sfViewCacheManager
 
   public function lastModified($internalUri, $suffix = 'slot')
   {
-    if (!sfConfig::get('sf_cache') || !$this->hasCacheConfig($internalUri, $suffix))
+    if (!sfConfig::get('sf_cache') || !$this->isCacheable($internalUri, $suffix))
     {
       return null;
     }

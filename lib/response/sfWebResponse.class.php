@@ -444,6 +444,30 @@ class sfWebResponse extends sfResponse
     return $this->headers;
   }
 
+  public function mergeProperties($response)
+  {
+    // add stylesheets
+    foreach (array('first', '', 'last') as $position)
+    {
+      $this->getParameterHolder()->add($response->getStylesheets($position), 'helper/asset/auto/stylesheet'.$position);
+    }
+
+    // add javascripts
+    foreach (array('first', '', 'last') as $position)
+    {
+      $this->getParameterHolder()->add($response->getJavascripts($position), 'helper/asset/auto/javascript'.$position);
+    }
+
+    // add headers
+    foreach ($response->getHttpHeaders() as $name => $values)
+    {
+      foreach ($values as $value)
+      {
+        $this->setHttpHeader($name, $value);
+      }
+    }
+  }
+
   /**
    * Execute the shutdown procedure.
    *

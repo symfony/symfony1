@@ -19,15 +19,12 @@
  */
 class sfPHPView extends sfView
 {
-  protected static
-    $coreHelpersLoaded = 0;
-
   public function execute()
   {
   }
 
   /**
-   * Assigns some common variables to the template.
+   * Returns an array with some variables that will be accessible to the template.
    */
   protected function getGlobalVars()
   {
@@ -60,12 +57,14 @@ class sfPHPView extends sfView
 
   protected function loadCoreAndStandardHelpers()
   {
-    if (self::$coreHelpersLoaded)
+    static $coreHelpersLoaded = 0;
+
+    if ($coreHelpersLoaded)
     {
       return;
     }
 
-    self::$coreHelpersLoaded = 1;
+    $coreHelpersLoaded = 1;
 
     $core_helpers = array('Helper', 'Url', 'Asset', 'Tag', 'Escaping');
     $standard_helpers = sfConfig::get('sf_standard_helpers');
@@ -153,17 +152,44 @@ class sfPHPView extends sfView
     $action           = $actionStackEntry->getActionInstance();
 
     // store our current view
-    $actionStackEntry->setViewInstance($this);
+    if (!$actionStackEntry->getViewInstance())
+    {
+      $actionStackEntry->setViewInstance($this);
+    }
+
+    // all directories to look for templates
+    $dirs = array(
+      // application
+      $this->getDirectory(),
+
+      // local plugin
+      sfConfig::get('sf_plugin_data_dir').'/modules/'.$this->moduleName.'/templates',
+
+      // core modules or global plugins
+      sfConfig::get('sf_symfony_data_dir').'/modules/'.$this->moduleName.'/templates',
+
+      // generated templates in cache
+      sfConfig::get('sf_module_cache_dir').'/auto'.ucfirst($this->moduleName).'/templates',
+    );
 
     // require our configuration
     $viewConfigFile = $this->moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/view.yml';
     require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$viewConfigFile));
 
-    $viewType = sfView::SUCCESS;
-    if (preg_match('/^'.$action->getActionName().'(.+)$/i', $this->viewName, $match))
+    if (preg_match('/^(.+?)'.sfView::GLOBAL_PARTIAL.'$/i', $this->viewName, $match))
     {
-      $viewType = $match[1];
-      $templateFile = $templateName.$viewType.$this->extension;
+      // global partial
+      $templateFile = '_'.$match[1].$this->extension;
+      $dirs = array(sfConfig::get('sf_app_template_dir'));
+    }
+    else if (preg_match('/^(.+?)'.sfView::PARTIAL.'$/i', $this->viewName, $match))
+    {
+      // partial
+      $templateFile = '_'.$match[1].$this->extension;
+    }
+    else if (preg_match('/^'.$action->getActionName().'(.+)$/i', $this->viewName, $match))
+    {
+      $templateFile = $templateName.$match[1].$this->extension;
     }
     else
     {
@@ -174,23 +200,6 @@ class sfPHPView extends sfView
     $this->setTemplate($templateFile);
 
     // set template directory
-
-    // all directories to look for templates
-    $moduleName = $context->getModuleName();
-    $dirs = array(
-      // application
-      $this->getDirectory(),
-
-      // local plugin
-      sfConfig::get('sf_plugin_data_dir').'/modules/'.$moduleName.'/templates',
-
-      // core modules or global plugins
-      sfConfig::get('sf_symfony_data_dir').'/modules/'.$moduleName.'/templates',
-
-      // generated templates in cache
-      sfConfig::get('sf_module_cache_dir').'/auto'.ucfirst($moduleName).'/templates',
-    );
-
     foreach ($dirs as $dir)
     {
       if (is_readable($dir.'/'.$templateFile))
@@ -203,7 +212,7 @@ class sfPHPView extends sfView
 
     if (sfConfig::get('sf_logging_active'))
     {
-      $context->getLogger()->info('{sfPHPView} execute view for template "'.$templateName.$viewType.$this->extension.'"');
+      $context->getLogger()->info(sprintf('{sfPHPView} execute view for template "%s"', $templateFile));
     }
   }
 
@@ -242,38 +251,43 @@ class sfPHPView extends sfView
    * @return string A string representing the rendered presentation, if
    *                the controller render mode is sfView::RENDER_VAR, otherwise null.
    */
-  public function &render()
+  public function &render($templateVars = null)
   {
-    $template         = $this->getDirectory().'/'.$this->getTemplate();
-    $actionStackEntry = $this->getContext()->getActionStack()->getLastEntry();
-    $actionInstance   = $actionStackEntry->getActionInstance();
-
-    $moduleName = $actionInstance->getModuleName();
-    $actionName = $actionInstance->getActionName();
-
     $retval = null;
 
+    $context = $this->getContext();
+
     // get the render mode
-    $mode = $this->getContext()->getController()->getRenderMode();
+    $mode = $context->getController()->getRenderMode();
 
     if ($mode != sfView::RENDER_NONE)
     {
       $retval = null;
       if (sfConfig::get('sf_cache'))
       {
-        list($uri, $suffix) = $this->getContext()->getViewCacheManager()->getInternalUri('slot');
-        $cache = $this->getContext()->getResponse()->getParameter($uri.'_'.$suffix, null, 'symfony/cache');
+        $response = $context->getResponse();
+        $key   = $response->getParameterHolder()->remove('current_key', 'symfony/cache/current');
+        $cache = $response->getParameter($key, null, 'symfony/cache');
         if ($cache !== null)
         {
           $cache  = unserialize($cache);
           $retval = $cache['content'];
           $vars   = $cache['vars'];
+          $response->mergeProperties($cache['response']);
         }
+      }
+
+      // template variables
+      if ($templateVars === null)
+      {
+        $actionStackEntry = $context->getActionStack()->getLastEntry();
+        $actionInstance   = $actionStackEntry->getActionInstance();
+        $templateVars     = $actionInstance->getVarHolder()->getAll();
       }
 
       // assigns some variables to the template
       $this->attribute_holder->add($this->getGlobalVars());
-      $this->attribute_holder->add($retval !== null ? $vars : $actionInstance->getVarHolder()->getAll());
+      $this->attribute_holder->add($retval !== null ? $vars : $templateVars);
 
       // render template if no cache
       if ($retval === null)
@@ -282,6 +296,7 @@ class sfPHPView extends sfView
         $this->preRenderCheck();
 
         // render template file
+        $template = $this->getDirectory().'/'.$this->getTemplate();
         $retval = $this->renderFile($template);
 
         // tidy our cache content
@@ -290,14 +305,20 @@ class sfPHPView extends sfView
           $retval = sfTidy::tidy($retval, $template);
         }
 
-        if (sfConfig::get('sf_cache'))
+        if (sfConfig::get('sf_cache') && $key !== null)
         {
           $cache = array(
             'content'   => $retval,
-            'vars'      => $actionInstance->getVarHolder()->getAll(),
+            'vars'      => $templateVars,
             'view_name' => $this->viewName,
+            'response'  => $context->getResponse(),
           );
-          $this->getContext()->getResponse()->setParameter($uri.'_'.$suffix, serialize($cache), 'symfony/cache');
+          $response->setParameter($key, serialize($cache), 'symfony/cache');
+
+          if (sfConfig::get('sf_web_debug'))
+          {
+            $retval = sfWebDebug::getInstance()->decorateContentWithDebug($key, '', $retval, true);
+          }
         }
       }
 
@@ -310,7 +331,7 @@ class sfPHPView extends sfView
       // render to client
       if ($mode == sfView::RENDER_CLIENT)
       {
-        $this->getContext()->getResponse()->setContent($retval);
+        $context->getResponse()->setContent($retval);
       }
     }
 

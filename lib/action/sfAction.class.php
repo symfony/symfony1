@@ -100,12 +100,6 @@ abstract class sfAction extends sfComponent
       return 1;
     }
 
-    // ignore cache? (only in debug mode)
-    if (sfConfig::get('sf_debug') && $this->request->getParameter('ignore_cache', false, 'symfony/request/sfWebRequest') == true)
-    {
-      return 1;
-    }
-
     $cache = $this->getContext()->getViewCacheManager();
 
     return (!$cache->has(sfRouting::getInstance()->getCurrentInternalUri(), $suffix));

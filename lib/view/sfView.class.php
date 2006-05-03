@@ -54,6 +54,16 @@ abstract class sfView
   const HEADER_ONLY = 'Headers';
 
   /**
+   * Render a partial template.
+   */
+  const PARTIAL = 'Partial';
+
+  /**
+   * Render a global partial template.
+   */
+  const GLOBAL_PARTIAL = 'GlobalPartial';
+
+  /**
    * Render the presentation to the client.
    */
   const RENDER_CLIENT = 2;
@@ -351,7 +361,9 @@ abstract class sfView
         if ($errors)
         {
           if ($request->hasError($name))
+          {
             $this->setAttribute($name.'_error', $request->getError($name));
+          }
           else
           {
             // set empty error
@@ -382,9 +394,7 @@ abstract class sfView
     $this->parameter_holder->add(sfConfig::get('mod_'.strtolower($moduleName).'_view_param', array()));
 
     // set the currently executing module's template directory as the default template directory
-    $module = $context->getModuleName();
-
-    $this->decoratorDirectory = sfConfig::get('sf_app_module_dir').'/'.$module.'/'.sfConfig::get('sf_app_module_template_dir_name');
+    $this->decoratorDirectory = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_template_dir_name');
     $this->directory          = $this->decoratorDirectory;
 
     // include view configuration
@@ -443,6 +453,11 @@ abstract class sfView
     return $this->decorator;
   }
 
+  public function setDecorator ($boolean)
+  {
+    $this->decorator = (boolean) $boolean;
+  }
+
   /**
    * Execute a basic pre-render check to verify all required variables exist
    * and that the template is readable.
@@ -494,11 +509,12 @@ abstract class sfView
    * When the controller render mode is sfView::RENDER_CLIENT, this method will
    * render the presentation directly to the client and null will be returned.
    *
+   * @param  array  An array with variables that will be extracted for the template
+   *                If empty, the current actions var holder will be extracted.
    * @return string A string representing the rendered presentation, if
-   *                the controller render mode is sfView::RENDER_VAR, otherwise
-   *                null.
+   *                the controller render mode is sfView::RENDER_VAR, otherwise null.
    */
-  abstract function & render ();
+  abstract function & render ($templateVars = null);
 
   /**
    * Set the decorator template directory for this view.
