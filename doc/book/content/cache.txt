@@ -81,7 +81,7 @@ The [view chapter](view.txt) explains how to reuse code fragments across several
     [php]
     <?php include_partial('mymodule/mypartial') ?>
 
-A partial is as easy to cache as an action. To activate it, create a `cache.yml` in the partial module `config/` directory (in the example above, in `modules/mymodule/config/`) and activate the cache for the partials by declaring their names with a trailing underscore:
+A partial is as easy to cache as an action. To activate it, create a `cache.yml` in the partial module `config/` directory (in the example above, in `modules/mymodule/config/`) and activate the cache for the partials by declaring their names with a leading underscore:
 
     _mypartial:
       activate: on
