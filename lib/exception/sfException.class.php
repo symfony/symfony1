@@ -177,13 +177,14 @@ class sfException extends Exception
 
     // dump main objects values
     $sf_settings = '';
-    if (sfContext::hasInstance())
+    $settingsTable = $requestTable = $responseTable = $globalsTable = '';
+    if (class_exists('sfContext', false) && sfContext::hasInstance())
     {
       $context = sfContext::getInstance();
       $settingsTable = $this->settingsAsHtml($context);
       $requestTable  = $this->requestAsHtml($context);
       $responseTable = $this->responseAsHtml($context);
-      $globalsTable = $this->globalsAsHtml($context);
+      $globalsTable  = $this->globalsAsHtml($context);
     }
 
     include(sfConfig::get('sf_symfony_data_dir').'/data/exception.'.($format == 'html' ? 'php' : 'txt'));
