@@ -176,6 +176,16 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     }
   }
 
+  /**
+   * Returns the timestamp of the last user request.
+   *
+   * @param  integer
+   */
+  public function getLastRequestTime()
+  {
+    return $this->lastRequest;
+  }
+
   public function initialize($context, $parameters = null)
   {
     // initialize parent
