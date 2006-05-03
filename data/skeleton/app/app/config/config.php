@@ -39,6 +39,9 @@ if (sfConfig::get('sf_debug'))
 // directory layout
 include($sf_symfony_data_dir.'/config/constants.php');
 
+// require project configuration
+require_once(sfConfig::get('sf_config_dir').'/config.php');
+
 // include path
 set_include_path(
   sfConfig::get('sf_lib_dir').PATH_SEPARATOR.
@@ -55,9 +58,6 @@ if (sfToolkit::hasLockFile(SF_ROOT_DIR.DIRECTORY_SEPARATOR.SF_APP.'_'.SF_ENVIRON
   include(SF_WEB_DIR.'/unavailable.html');
   die(1);
 }
-
-// require project configuration
-require_once(sfConfig::get('sf_config_dir').'/config.php');
 
 // recent symfony update?
 $version = @file_get_contents(sfConfig::get('sf_config_cache_dir').'/VERSION');
