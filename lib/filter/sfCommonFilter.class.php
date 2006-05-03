@@ -91,6 +91,7 @@ class sfCommonFilter extends sfFilter
       }
 
       // include javascripts and stylesheets
+      require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/TagHelper.php');
       require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/AssetHelper.php');
       $html  = $this->include_javascripts($response);
       $html .= $this->include_stylesheets($response);
