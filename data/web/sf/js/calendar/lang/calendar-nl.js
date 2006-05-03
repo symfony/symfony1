@@ -71,3 +71,6 @@ Calendar._TT["TT_DATE_FORMAT"] = "%a, %e %b %Y";
 
 Calendar._TT["WK"] = "wk";
 Calendar._TT["TIME"] = "Tijd:";
+
+Calendar._SMN_len = 3;
+Calendar._FD = 0;
