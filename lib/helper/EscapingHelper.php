@@ -39,10 +39,10 @@
  */
 function esc_entities($value)
 {
-  return htmlentities($value, ENT_QUOTES);
+  return htmlentities($value, ENT_QUOTES, 'UTF-8');
 }
 
-define('ESC_ENTITIES', 'esc_entities', 'UTF-8');
+define('ESC_ENTITIES', 'esc_entities');
 
 /**
  * An identity function that merely returns that which it is given, the purpose
