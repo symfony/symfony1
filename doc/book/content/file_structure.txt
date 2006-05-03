@@ -143,7 +143,9 @@ Tree structure customization
 
 Even if it is highly recommended to keep the default tree structure, it is possible to modify it for specific needs, for instance in order to match the requirements of a client who already has its own tree structure and coding conventions.
 
-To customize the tree structure of an application, you simply need to modify the configuration file `config/constants.php` of the application directory since every path to a key directory is determined by a parameter ending with `_dir`. This file is not present in the default tree structure; you will have to copy it from the symfony directory if you need to modify it - a detailed explanation is available in the [configuration chapter](configuration_practice.txt). Here is an extract of the standard configuration file:
+Every path to a key directory is determined by a parameter ending with `_dir`. These parameters are defined in the framework, in a file called `$pear_data_dir/symfony/config/constants.php`, used by every symfony project. To customize the tree structure of an application, you simply need to override these settings. For that, use the `config.php` file of the `apps/myapp/config/` directory - this file is parsed for each request just after loading the default configuration.
+
+You will probably have to copy the default configuration from the symfony directory if you need to modify it. Here is an extract of the default configuration:
 
     [php]
     // root directory structure
@@ -170,7 +172,7 @@ To customize the tree structure of an application, you simply need to modify the
 
 Names and paths are both defined here. While this file is not that easy to read, it is easy to modify. 
 
-> **Important**: it is strongly recommended to use these parameters (via the `sfConfig` object) instead of their values when building and coding a project. That way, the applications created can be independent of the tree structure, more particularly for the first level directories.
+> **Important**: It is strongly recommended to use these parameters (via the `sfConfig` object) instead of their values when building and coding a project. That way, the applications created can be independent of the tree structure, more particularly for the first level directories.
 >
 >      [php]
 >      // always prefer
@@ -201,7 +203,7 @@ For instance, if you want your file structure to look like this (it is a standar
       js/
       uploads/
 
-Then add the following lines to your `config/constants.php`:
+Then add the following lines to your `config/config.php`:
 
     [php]
     sfConfig::add(array(

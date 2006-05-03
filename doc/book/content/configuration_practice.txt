@@ -9,7 +9,7 @@ The configuration can be defined at several levels : project, application, modul
 Table of contents                         | Quick access A-L            | Quick access M-Z            
 ----------------------------------------- | --------------------------- | --------------------------- 
 [Introduction](#introduction)             | [autoload.yml](#autoload)   | [module.yml](#module)                                                        
-[Project configuration](#project)         | [constants.php](#constants) | [php.yml](#phpyml)                                                           
+[Project configuration](#project)         | [constants.php](#config)    | [php.yml](#phpyml)                                                           
 [Application configuration](#application) | [databases.yml](#database)  | [security.yml](#security)                                                    
 [Module configuration](#module)           | [factories.yml](#factories) | [settings.yml](#settings)   
 [Multiple level configuration](#multiple) | [generator.yml](#generator) | [validate.yml](#validate)   
@@ -32,8 +32,7 @@ Project configuration                                      {#project}
 There are a few project configuration files by default. Here are the files that can be found in the `myproject/config/` directory:
 
 * `apache.conf`: This file is not really a configuration file, since it is not used by the project. It is given as an example of an Apache configuration for a typical symfony project.
-* `config.php`: Can hold general project configuration. If you add some `define` statements in this file, the constants will be accessible from every application of the project. This file is empty by default.
-* `constants.php`: Overrides the default project file structure. This file doesn't exist by default. [_see more below_](#constants)
+* `config.php`: Can hold general project configuration. If you add some `define` statements in this file, the constants will be accessible from every application of the project. This file is empty by default. Can also be used to override the default project file structure. This file is empty by default. [_see more below_](#config)
 * `properties.ini`: Holds a few parameters used by the pakefile (including the project name)
 * `rsync_exclude.txt`: this file specifies which directories have to be excluded from the [synchronization between environments](deployment.txt). The default content should illustrate its use very well:
 
@@ -57,7 +56,7 @@ The principal part of the configuration is the application configuration. The fi
 ### Overview
 
 * `app.yml*`: This file should contain the application-specific configuration, i.e. global variables that don't really need to be stored in a database. VAT rates, shipping fares, email addresses are often stored in this file. It is empty by default. See more in the [configuration chapter](configuration.txt).
-* `config.php`: This file bootstraps the application, which means that it does all the very basic initializations to allow the application to start. It normally includes the project configuration (`myproject/config/config.php`), defines the directory layout (by including the `constants.php` file), it defines the include path to the framework libraries, it loads the necessary symfony classes, and includes some of the parsed .yml files of the application configuration (the others are loaded on demand). This configuration file is written in PHP rather than YAML because the YAML interpreter isn't loaded when `config.php` is processed. 
+* `config.php`: This file bootstraps the application, which means that it does all the very basic initializations to allow the application to start. It normally defines the include path to the framework libraries, defines the directory layout (by including the `constants.php` file), includes the project configuration (`myproject/config/config.php`), loads the necessary symfony classes, and includes some of the parsed `.yml` files of the application configuration (the others are loaded on demand). This configuration file is written in PHP rather than YAML because the YAML interpreter isn't loaded when `config.php` is processed. 
 * `databases.yml*`: This is where you define the access and the connection settings to the database (host, login, password, database name). [_see more below_](#database)
 * `factories.yml*`: By default, the symfony framework uses some specific classes for its operation; this file allows you to override this behavior by pointing to alternate classes to manage sessions, actions, front web controller, etc... You normally wouldn't change the content of this file, as will be explained a little further. [_see more below_](#factories)
 * `filters.yml`: Symfony allows the execution of filters before actions. For instance, the Security filter is configured by default to check credentials for restricted actions. If you need to add a custom filter, for instance to calculate the time to execute an action, this is the file that you need to modify.
@@ -439,11 +438,11 @@ Here is an example module view configuration file:
 
 The default layout for all the actions of this example module is set to `mylayout.php` (as opposed to the default layout for the whole application, called `layout.php` by convention). The `navigation` and `breadcrumb` components slots are defined for all the actions of the module, except for the action `list` where the `breadcrumb` component slot is suppressed. For this action, the template to be used will not be `listSucess.php` but `listtemplate.php`. If the result of the `index` action is `sfView::ERROR`, the template `indexError.php` will be integrated into the `error.php` layout, including a special `error.css` stylesheet and a custom page title. In addition, the `index` action requires a special javascript called `myinteraction.js` to be included in the page header so that the template can work correctly.
 
-### File structure settings                                {#constants}
+### File structure settings                                {#config}
 
-The `constants.php` file defines the directory layout, the directory separator, and everything that the framework needs to find your actions (normally in `actions`), your modules (normally in `modules`), your libraries (normally in `lib`), etc. 
+The `config.php` file is often used to customize the directory layout, the directory separator, and everything that the framework needs to find your actions (normally in `actions`), your modules (normally in `modules`), your libraries (normally in `lib`), etc. 
 
-Every path to a key directory is determined by a parameter ending with `_dir`. Here is an extract of the standard `constants.php` configuration file:
+Every path to a key directory is determined by a parameter ending with `_dir`. Here is an extract of the standard file structure configuration (located in `$pear_data_dir/symfony/config/constants.php`):
 
     [php]
     ...
@@ -475,14 +474,9 @@ To learn more about the default tree structure, refer to the [file structure cha
 
 You will probably need to modify this file if you develop an application for a client who already has a defined directory structure and who is not willing to change it to comply with the symfony logic (how could that be possible ?).
 
-There is no `constants.php` file in a default configuration directory. This means that if you need to change the file structure of your project or application, you have to copy the default `constants.php` file from the symfony installation directory (`$pear_data_dir/symfony/config/`) and modify the values.
+Projects inherit their file structure from the framework `constants.php`. This means that if you need to change the file structure of your project or application, you have to override the settings of the `constants.php`. This can be done in your project `config.php` file, to change the tree structure of all the applications of the project, or in the application `config.php`, to change the file structure of a single application.
 
-The file structure configuration can be changed at different levels, according to the directory where you put a `constants.php` file: 
-
-* `myproject/config/` for the whole project
-* `myproject/apps/myapp/config/` for a specific application
-
-In an application level `constants.php`, you can override some path definitions for the scope of the application only.
+Beware that the application `config.php` is not empty, so if you need to include file structure definitions there, do it just after the inclusion of the project configuration.
 
 Browsing your own YAML file                                {#yaml}
 ---------------------------
