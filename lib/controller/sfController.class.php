@@ -549,7 +549,7 @@ abstract class sfController
     $config     = sfConfig::get('sf_app_config_dir').'/filters.yml';
     $moduleName = 'global';
 
-    if (!isset($list[$moduleName]) && is_readable($config))
+    if (!isset($list[$moduleName]))
     {
       // load global filters
       require_once(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/filters.yml'));
