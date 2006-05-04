@@ -594,6 +594,10 @@ class PHPMailer
      * @return bool
      */
     function SetLanguage($lang_type, $lang_path = "language/") {
+        if($lang_path == "language/") {
+            $lang_path = dirname(__FILE__).DIRECTORY_SEPARATOR.$lang_path;
+        }
+
         if(file_exists($lang_path.'phpmailer.lang-'.$lang_type.'.php'))
             include($lang_path.'phpmailer.lang-'.$lang_type.'.php');
         else if(file_exists($lang_path.'phpmailer.lang-en.php'))
