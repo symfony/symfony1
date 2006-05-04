@@ -111,6 +111,20 @@ We could add a last test with the word `' FOo-bar '`, but it mixes elementary ca
  
 >**Note**: The extensive list of the `assert` methods can be found in the [Simple Test documentation][3].
 
+### Unit tests accessing the database
+
+If you want to include unit tests which need a connection to the database, initialize it in the `setUp()` method as follows:
+
+    [php]
+    public function setUp ()
+    {
+      // initialize the database manager
+      $databaseManager = new sfDatabaseManager();
+      $databaseManager->initialize();
+    }
+
+You can then use the database connections and Propel objects just like in actions.
+    
 ### Running unit tests
 
 The symfony command line allows you to run all the tests at once with a single command (remember to call it from your project root directory):
