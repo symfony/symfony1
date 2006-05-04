@@ -85,7 +85,7 @@ class sfMailView extends sfPHPView
     $all_retvals = array();
     foreach ($all_templates as $templateFile)
     {
-      if (preg_match('/\.(.+?)\.php$/', $templateFile, $matches))
+      if (preg_match('/\.([^.]+?)\.php$/', $templateFile, $matches))
       {
         $all_retvals[$matches[1]] = $this->renderFile($templateFile);
       }
