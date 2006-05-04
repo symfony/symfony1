@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: PropelDataDumpTask.php 137 2005-07-14 00:46:58Z hans $
+ *  $Id: PropelDataDumpTask.php 352 2006-03-16 12:46:14Z gamr $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -37,7 +37,7 @@ include_once 'creole/Creole.php';
  * @author Fedor Karpelevitch <fedor.karpelevitch@home.com> (Torque)
  * @author Jason van Zyl <jvanzyl@zenplex.com> (Torque)
  * @author Daniel Rall <dlr@finemaltcoding.com> (Torque)
- * @version $Revision: 137 $
+ * @version $Revision: 352 $
  * @package propel.phing
  */
 class PropelDataDumpTask extends AbstractPropelDataModelTask {
@@ -319,7 +319,7 @@ class PropelDataDumpTask extends AbstractPropelDataModelTask {
                             Creole::registerDriver($dsn['phptype'], $this->databaseDriver);
                         }
 
-                        $this->conn = Creole::getConnection($dsn, Creole::NO_ASSOC_LOWER);
+                        $this->conn = Creole::getConnection($dsn);
 
                         $doc = $this->createXMLDoc($database);
                         $doc->save($outFile->getAbsolutePath());
@@ -341,7 +341,7 @@ class PropelDataDumpTask extends AbstractPropelDataModelTask {
     private function getTableDataRS($tableName) {
         // Set Statement object in associated PropelDataDump
         // instance.
-        return $this->conn->createStatement()->executeQuery("SELECT * FROM " . $tableName);
+        return $this->conn->createStatement()->executeQuery("SELECT * FROM " . $this->getPlatformForTargetDatabase()->quoteIdentifier ( $tableName ) );
     }
 
     /**

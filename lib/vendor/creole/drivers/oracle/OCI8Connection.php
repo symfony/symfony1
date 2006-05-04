@@ -69,6 +69,7 @@ class OCI8Connection extends ConnectionCommon implements Connection
         $user					= $dsninfo[ 'username' ];
         $pw						= $dsninfo[ 'password' ];
         $hostspec				= $dsninfo[ 'hostspec' ];
+        $db					= $dsninfo[ 'database' ];
 
         $connect_function		= ( $persistent )
 									? 'oci_pconnect'
@@ -76,7 +77,11 @@ class OCI8Connection extends ConnectionCommon implements Connection
 
 		@ini_set( 'track_errors', true );
 
-        if ( $hostspec && $user && $pw )
+        if ( $db && $hostspec && $user && $pw )
+	{
+			$conn				= @$connect_function( $user, $pw, "//$hostspec/$db" );
+	}
+        elseif ( $hostspec && $user && $pw )
 		{
 			$conn				= @$connect_function( $user, $pw, $hostspec );
         }

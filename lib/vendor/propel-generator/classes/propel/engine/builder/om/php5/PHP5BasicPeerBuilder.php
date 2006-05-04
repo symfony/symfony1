@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: PHP5BasicPeerBuilder.php 306 2005-12-19 20:57:11Z hans $
+ *  $Id: PHP5BasicPeerBuilder.php 358 2006-04-18 17:40:40Z oliver $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -403,6 +403,9 @@ if (Propel::isInit()) {
 					$script .= "
 	/** A key representing a particular subclass */
 	const CLASSKEY_".strtoupper($child->getKey())." = '" . $child->getKey() . "';
+
+        /** A key representing a particular subclass */
+        const CLASSKEY_".strtoupper($child->getClassName())." = '" . $child->getKey() . "';
 
 	/** A class that can be returned by this peer. */
 	const CLASSNAME_".strtoupper($child->getKey())." = '". $childBuilder->getClasspath() . "';
@@ -1336,7 +1339,8 @@ if (Propel::isInit()) {
 		$script .= "
 
 		\$v = ".$this->getPeerClassname()."::doSelect(\$criteria, \$con);
-        return !empty(\$v) > 0 ? \$v[0] : null;
+
+		return !empty(\$v) > 0 ? \$v[0] : null;
 	}
 ";
 	}
@@ -1439,7 +1443,8 @@ if (Propel::isInit()) {
 		}
 		$script .= "
 		\$v = ".$this->getPeerClassname()."::doSelect(\$criteria, \$con);
-        return !empty(\$v) ? \$v[0] : null;
+
+		return !empty(\$v) ? \$v[0] : null;
 	}";
 	}
 

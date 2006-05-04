@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Criteria.php 299 2005-12-09 14:51:19Z hans $
+ *  $Id: Criteria.php 338 2006-02-15 14:46:02Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -32,7 +32,7 @@
  * @author Eric Dobbs <eric@dobbse.net> (Torque)
  * @author Henning P. Schmiedehausen <hps@intermeta.de> (Torque)
  * @author Sam Joseph <sam@neurogrid.com> (Torque)
- * @version $Revision: 299 $
+ * @version $Revision: 338 $
  * @package propel.util
  */
 class Criteria implements IteratorAggregate {
@@ -1039,6 +1039,11 @@ class Criteria implements IteratorAggregate {
             } else {
                 $oc->addAnd($c);
             }
+        } elseif ($p2 === null && $p3 === null) {
+            // client has not specified $p3 (comparison)
+            // which means Criteria::EQUAL but has also specified $p2 == null 
+            // which is a valid combination we should handle by creating "IS NULL"
+            $this->addAnd($p1, $p2, self::EQUAL);
         }                                    
         return $this;
     }
@@ -1091,6 +1096,11 @@ class Criteria implements IteratorAggregate {
             } else {
                 $oc->addOr($c);
             }
+        } elseif ($p2 === null && $p3 === null) {
+            // client has not specified $p3 (comparison)
+            // which means Criteria::EQUAL but has also specified $p2 == null 
+            // which is a valid combination we should handle by creating "IS NULL"
+            $this->addOr($p1, $p2, self::EQUAL);
         }
                                     
         return $this;
@@ -1421,8 +1431,8 @@ class Criterion  {
 				$valuesLength = count($values);
 				if ($valuesLength == 0) {
 				    // a SQL error will result if we have COLUMN IN (), so replace it with an expression
-					// that will always evaluate to FALSE
-					$sb .= "1<>1";
+				    // that will always evaluate to FALSE for Criteria::IN and TRUE for Criteria::NOT_IN
+					$sb .= ($this->comparison === Criteria::IN) ? "1<>1" : "1=1";
 				} else {
 					$sb .= $field . $this->comparison;
 	                for ($i=0; $i < $valuesLength; $i++) {

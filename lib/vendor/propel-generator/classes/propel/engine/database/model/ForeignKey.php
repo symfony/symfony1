@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: ForeignKey.php 315 2005-12-24 20:48:31Z hans $
+ *  $Id: ForeignKey.php 351 2006-03-15 18:42:34Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -27,7 +27,7 @@ require_once 'propel/engine/database/model/XMLElement.php';
  * @author Hans Lellelid <hans@xmpl.org>
  * @author Fedor <fedor.karpelevitch@home.com>
  * @author Daniel Rall <dlr@finemaltcoding.com>
- * @version $Revision: 315 $
+ * @version $Revision: 351 $
  * @package propel.engine.database.model
  */
 class ForeignKey extends XMLElement {
@@ -194,6 +194,7 @@ class ForeignKey extends XMLElement {
 
     /**
      * Return a comma delimited string of local column names
+     * @deprecated because Column::makeList() is deprecated; use the array-returning getLocalColumns() and DDLBuilder->getColumnList() instead instead.
      */
     public function getLocalColumnNames()
     {
@@ -202,6 +203,7 @@ class ForeignKey extends XMLElement {
 
     /**
      * Return a comma delimited string of foreign column names
+     * @deprecated because Column::makeList() is deprecated; use the array-returning getForeignColumns() and DDLBuilder->getColumnList() instead instead.
      */
     public function getForeignColumnNames()
     {
@@ -209,7 +211,8 @@ class ForeignKey extends XMLElement {
     }
 
     /**
-     * Return the list of local columns. You should not edit this List.
+     * Return an array of local column names.
+     * @return array string[]
      */
     public function getLocalColumns()
     {
@@ -230,7 +233,8 @@ class ForeignKey extends XMLElement {
     }
 
     /**
-     * Return the list of local columns. You should not edit this List.
+     * Return an array of foreign column names.
+     * @return array string[]
      */
     public function getForeignColumns()
     {

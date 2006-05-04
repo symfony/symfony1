@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: Index.php 315 2005-12-24 20:48:31Z hans $
+ *  $Id: Index.php 351 2006-03-15 18:42:34Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,7 +28,7 @@ include_once 'propel/engine/EngineException.php';
  *
  * @author Jason van Zyl <vanzyl@apache.org>
  * @author Daniel Rall <dlr@finemaltcoding.com>
- * @version $Revision: 315 $
+ * @version $Revision: 351 $
  * @package propel.engine.database.model
  */
 class Index extends XMLElement {
@@ -41,7 +41,7 @@ class Index extends XMLElement {
 
     /** @var array string[] */
     private $indexColumns;
-	
+
 	/** @var array  */
 	private $indexColumnSizes = array();
 
@@ -193,7 +193,7 @@ class Index extends XMLElement {
 			$this->indexColumnSizes[$name] = $attrib["size"];
 		}
     }
-	
+
 	/**
 	 * Whether there is a size for the specified column.
 	 * @param string $name
@@ -203,7 +203,7 @@ class Index extends XMLElement {
 	{
 		return isset($this->indexColumnSizes[$name]);
 	}
-	
+
 	/**
 	 * Returns the size for the specified column, if given.
 	 * @param string $name
@@ -219,7 +219,7 @@ class Index extends XMLElement {
 
     /**
      * @see #getColumnList()
-     * @deprecated Use getColumnList() instead.
+     * @deprecated Use getColumnList() instead (which is not deprecated too!)
      */
     public function getIndexColumnList()
     {
@@ -228,6 +228,7 @@ class Index extends XMLElement {
 
     /**
      * Return a comma delimited string of the columns which compose this index.
+     * @deprecated because Column::makeList() is deprecated; use the array-returning getColumns() and DDLBuilder->getColumnList() instead instead.
      */
     public function getColumnList()
     {

@@ -1,7 +1,7 @@
 <project name="sf" default="main" basedir=".">
 
 <property name="project.dir" value="${application.startdir}/config" />
-<property name="propel.buildProperties" value="${propel_ini}" />
+<property name="build.properties" value="${propel_ini}"/>
 
 <target name="build-om">
   <phing dir="${propel_generator_dir}" target="om">
