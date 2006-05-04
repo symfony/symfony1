@@ -46,6 +46,8 @@ One other cache parameter can be changed in the `settings.yml` file: The default
 Caching an action
 -----------------
 
+<img src="http://www.symfony-project.com/uploads/assets/slot_cache.gif" align="right" >
+
 Actions that display static information (i.e. without any call to a database) or actions that read the information in a database but without modifying it (typically GET requests) are often good clients for caching.
 
 For instance, imagine an action that returns the list of all the users of your website (`user/list`). Unless a user is modified, added or removed (and this matter will be discussed later), this list always displays the same information, so it is a good candidate for caching.
@@ -75,6 +77,8 @@ Now, requests like `http://myapp.example.com/user/show/id/12` will create new re
 
 Caching a partial, a component, or a component slot
 ---------------------------------------------------
+
+<img src="http://www.symfony-project.com/uploads/assets/component_cache.gif" align="right" >
 
 The [view chapter](view.txt) explains how to reuse code fragments across several templates, using the `include_partial()` helper.
 
@@ -113,6 +117,8 @@ A component is a lightweight action put on top of a partial. A component slot is
 Caching an entire page
 ----------------------
 
+<img src="http://www.symfony-project.com/uploads/assets/page_cache.gif" align="right" >
+
 The final page is the combination of the template and the layout, according to the [decorator design pattern][1]. Until now, all that was written in the cache was the template, so every request ended up in a decoration process (putting the cached template into a processed layout). But if the layout has no dynamic element, you can cache the whole page instead of just the template.
 
 Let's say this is the case for the test application described above: the layout simply contains navigation links, nothing dynamic, and can easily be cached. The cache can then be set to `page` type instead of `slot`. Modify the `cache.yml` as follows:
@@ -139,6 +145,8 @@ Unfortunately, the layout often contains some dynamic elements, including [compo
 
 Caching a template fragment
 ---------------------------
+
+<img src="http://www.symfony-project.com/uploads/assets/fragment_cache.gif" align="right" >
 
 Many times the `slot` and `page` types will be too large for the templates of an application. For instance, the list of users can show a link of the last accessed user, and this information is dynamic. Would that mean that nothing can be cached?
 
