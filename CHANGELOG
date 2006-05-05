@@ -1,6 +1,17 @@
 SVN
 ---
 
+WARNING: If you use i18n Propel support in your schema.xml or if you have problems
+         building you Propel model/sql (XML schema file (PATH/config/schema.xml) does not validate)
+         you can add a propel.schema.validate = false at the end of your config/propel.ini file.
+
+* added component and partial cache
+* updated creole and propel
+* zend framework and ez components bridges
+* new hooks in admin generator generated classes
+* better date support in admin generator
+* lot of bugs fixes and small enhancements
+
 Version 0.6.2
 -------------
 
