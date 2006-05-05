@@ -352,7 +352,17 @@ Now, every time you need the component in a template, just call it by:
     [php]
     <?php include_component('news', 'headlines') ?>
     
-Just like the partials, components accept additional parameters in the shape of an associative array.
+Just like the partials, components accept additional parameters in the shape of an associative array. The parameters are available to the partial under their name, and in the component via the `$this` object:
+
+    [php]
+    // call to the component
+    <?php include_component('news', 'headlines', array('foo' => 'bar')) ?>
+    
+    // in the component itself,
+    echo $this->foo;          => 'bar'
+    
+    // in the _headlines.php partial,
+    echo $foo;                => 'bar'
 
 You can include components in components, or in the global layout, as in any regular template. Like actions, components `execute` methods can pass variables to the related partial and have access to the same shortcuts. But the similarities stop there: A partial doesn't handle security, doesn't have various `return` possibilities, and is much faster than an action to execute.
 
