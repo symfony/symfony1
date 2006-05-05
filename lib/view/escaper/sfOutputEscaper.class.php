@@ -92,7 +92,16 @@ abstract class sfOutputEscaper
 
     if (is_object($value))
     {
-      if ($value instanceof Traversable)
+      if ($value instanceof sfOutputEscaper)
+      {
+        // avoid double decoration when passing values from action template to component/partial
+        $copy = clone $value;
+
+        $copy->escapingMethod = $escapingMethod;
+
+        return $copy;
+      }
+      elseif ($value instanceof Traversable)
       {
         return new sfOutputEscaperIteratorDecorator($escapingMethod, $value);
       }
