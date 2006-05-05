@@ -1,39 +1,39 @@
 <project name="sf" default="main" basedir=".">
 
-<property name="project.dir" value="${application.startdir}/config" />
+<property name="project.dir" value="config" />
 <property name="build.properties" value="${propel_ini}"/>
 
 <target name="build-om">
   <phing dir="${propel_generator_dir}" target="om">
-    <property name="project.dir" value="${application.startdir}/config" />
+    <property name="project.dir" value="config" />
     <property name="project" value="${project}" />
   </phing>
 </target>
 
 <target name="build-sql">
   <phing dir="${propel_generator_dir}" target="sql">
-    <property name="project.dir" value="${application.startdir}/config" />
+    <property name="project.dir" value="config" />
     <property name="project" value="${project}" />
   </phing>
 </target>
 
 <target name="build-db">
   <phing dir="${propel_generator_dir}" target="create-db">
-    <property name="project.dir" value="${application.startdir}/config" />
+    <property name="project.dir" value="config" />
     <property name="project" value="${project}" />
   </phing>
 </target>
 
 <target name="insert-sql">
   <phing dir="${propel_generator_dir}" target="insert-sql">
-    <property name="project.dir" value="${application.startdir}/config" />
+    <property name="project.dir" value="config" />
     <property name="project" value="${project}" />
   </phing>
 </target>
 
 <target name="build-model-schema">
   <phing dir="${propel_generator_dir}" target="creole">
-    <property name="project.dir" value="${application.startdir}/config" />
+    <property name="project.dir" value="config" />
     <property name="project" value="${project}" />
   </phing>
 </target>
