@@ -116,7 +116,7 @@ Don't forget to create the `uploads/thumbnail/` directory before calling the act
 File upload with the admin generator
 ------------------------------------
 
-If your data model contains a field for a media, and if your administration is built using the [admin generator](generator.yml), you can use the long named `object_admin_input_upload_tag()` helper. It does everything for you with just a simple configuration.
+If your data model contains a field for a media, and if your administration is built using the [admin generator](generator.txt), you can use the long named `object_admin_input_upload_tag()` helper. It does everything for you with just a simple configuration.
 
 For instance, if you have a `User` table with a `photo` column, the `generator.yml` for the `edit` view can be configured as follows:
 
