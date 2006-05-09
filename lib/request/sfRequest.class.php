@@ -63,7 +63,7 @@ abstract class sfRequest
   {
     $array = array();
 
-    foreach ($this->parameters as $key => &$value)
+    foreach ($this->parameter_holder->getAll() as $key => &$value)
     {
       if (in_array($key, $names))
       {
