@@ -50,9 +50,9 @@ function auto_discovery_link_tag($type = 'rss', $url_options = array(), $tag_opt
  *   javascript_path('ajax') =>
  *     /js/ajax.js
 */
-function javascript_path($source)
+function javascript_path($source, $absolute = false)
 {
-  return _compute_public_path($source, 'js', 'js');
+  return _compute_public_path($source, 'js', 'js', $absolute);
 }
 
 /**
@@ -86,9 +86,9 @@ function javascript_include_tag()
  *
  *   stylesheet_path('style') => /css/style.css
  */
-function stylesheet_path($source)
+function stylesheet_path($source, $absolute = false)
 {
-  return _compute_public_path($source, 'css', 'css');
+  return _compute_public_path($source, 'css', 'css', $absolute);
 }
 
 /**
@@ -132,9 +132,9 @@ function stylesheet_tag()
  * * file name, like "rss.gif", that gets expanded to "/images/rss.gif"
  * * file name without extension, like "logo", that gets expanded to "/images/logo.png"
  */
-function image_path($source)
+function image_path($source, $absolute = false)
 {
-  return _compute_public_path($source, 'images', 'png');
+  return _compute_public_path($source, 'images', 'png', $absolute);
 }
 
 /**
@@ -157,7 +157,14 @@ function image_tag($source, $options = array())
 
   $options = _parse_attributes($options);
 
-  $options['src'] = image_path($source);
+  $absolute = false;
+  if (isset($options['absolute']))
+  {
+    unset($options['absolute']);
+    $absolute = true;
+  }
+
+  $options['src'] = image_path($source, $absolute);
 
   if (!isset($options['alt']))
   {
@@ -177,14 +184,15 @@ function image_tag($source, $options = array())
   return tag('img', $options);
 }
 
-function _compute_public_path($source, $dir, $ext)
+function _compute_public_path($source, $dir, $ext, $absolute = false)
 {
   if (strpos($source, '://'))
   {
     return $source;
   }
 
-  $sf_relative_url_root = sfContext::getInstance()->getRequest()->getRelativeUrlRoot();
+  $request = sfContext::getInstance()->getRequest();
+  $sf_relative_url_root = $request->getRelativeUrlRoot();
   if (strpos($source, '/') !== 0)
   {
     $source = $sf_relative_url_root.'/'.$dir.'/'.$source;
@@ -196,6 +204,11 @@ function _compute_public_path($source, $dir, $ext)
   if ($sf_relative_url_root && strpos($source, $sf_relative_url_root) !== 0)
   {
     $source = $sf_relative_url_root.$source;
+  }
+
+  if ($absolute)
+  {
+    $source = 'http'.($request->isSecure() ? 's' : '').'://'.$request->getHost().$source;
   }
 
   return $source;

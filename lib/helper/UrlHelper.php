@@ -46,9 +46,10 @@ function link_to($name = '', $options = '', $html_options = array())
   $html_options = _convert_options_to_javascript($html_options);
 
   $absolute = false;
-  if (isset($html_options['absolute_url']))
+  if (isset($html_options['absolute_url']) || isset($html_options['absolute']))
   {
     unset($html_options['absolute_url']);
+    unset($html_options['absolute']);
     $absolute = true;
   }
 
