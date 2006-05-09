@@ -503,13 +503,13 @@ function input_date_tag($name, $value, $options = array())
   {
     $calendar_button = $options['calendar_button_img'];
     $calendar_button_type = 'img';
-    unset($options['calendar_button']);
+    unset($options['calendar_button_img']);
   }
   else if (isset($options['calendar_button_txt']))
   {
     $calendar_button = $options['calendar_button_txt'];
     $calendar_button_type = 'txt';
-    unset($options['calendar_button']);
+    unset($options['calendar_button_txt']);
   }
 
   if ($calendar_button_type == 'img')
