@@ -174,10 +174,15 @@ class sfI18N
     $datePositions = array_flip($c);
 
     // We find all elements
-    preg_match("~$dateRegexp~", $date, $matches);
-
-    // We get matching timestamp
-    return array($matches[$datePositions['d']], $matches[$datePositions['m']], $matches[$datePositions['y']]);
+    if (preg_match("~$dateRegexp~", $date, $matches))
+    {
+      // We get matching timestamp
+      return array($matches[$datePositions['d']], $matches[$datePositions['m']], $matches[$datePositions['y']]);
+    }
+    else
+    {
+      return null;
+    }
   }
 }
 
