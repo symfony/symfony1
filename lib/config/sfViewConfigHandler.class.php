@@ -258,10 +258,16 @@ class sfViewConfigHandler extends sfYamlConfigHandler
 
       foreach ($stylesheets as $css)
       {
+        $position = '';
         if (is_array($css))
         {
           $key = key($css);
           $options = $css[$key];
+          if (isset($options['position']))
+          {
+            $position = $options['position'];
+            unset($options['position']);
+          }
         }
         else
         {
@@ -271,7 +277,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
 
         if ($key)
         {
-          $data[] = sprintf("  \$response->addStylesheet('%s', '', %s);", $key, var_export($options, true));
+          $data[] = sprintf("  \$response->addStylesheet('%s', '%s', %s);", $key, $position, var_export($options, true));
         }
       }
     }
