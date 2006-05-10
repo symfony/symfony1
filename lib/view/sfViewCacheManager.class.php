@@ -343,7 +343,7 @@ class sfViewCacheManager
 
     if (!$clientLifeTime)
     {
-      $clientLifeTime = $lifetime;
+      $clientLifeTime = $lifeTime;
     }
 
     // add cache config to cache manager
