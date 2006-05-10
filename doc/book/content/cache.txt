@@ -363,12 +363,90 @@ In pages that contain cached parts (slots, page or fragments), the web_debug mod
 
 This will help you identify problems when dealing with out-of-context fragments, to see when the fragment was created and which parts of a template you can actually cache.
 
-Client-side caching
--------------------
+HTTP 1.1 and client-side caching
+--------------------------------
 
-An HTTP response can define, in the header, whether the content can be cached in the client browser for a specific period of time.
+The HTTP 1.1 protocol defines a bunch of headers that can be of great use to speed further up an application by piloting the browser's cache system.
 
-TO DO: ability to define client-side page caching from the cache.yml, VARY, etc.
+The [HTTP 1.1 specifications](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html) of the W3C describe in detail these new headers. If a page is using the 'page' type cache in symfony, it can use one or more of the following mechanisms.
+
+### ETags
+
+When `ETag` is activated, the web server adds to the response a special header containing a md5 hash of the response itself. 
+
+    ETag: "1A2Z3E4R5T6Y7U"
+
+The user's browser will store this hash, and send it again together with the request the next time it needs the same page. If the new hash shows that the page didn't change since the first request, the browser doesn't sent the response back. Instead, it just sends a '304: not modified' header. It saves cpu time (gzipping) and bandwidth (page transfer) for the server, and cpu time (page rendering) for the client. Overall, pages in cache with an etag are even faster to load than pages in cache without etag.
+
+In symfony, you activate the etags feature for the whole application in the `settings.yml`. Here is the default setting:
+
+    all:
+      .settings:
+        etag: on
+        
+When the server receives a request for a page containing an etag, it processes this page as it would usually. For a page of 'page' type cace, the response it directly taken from the cache. The server will compute a new md5 hash of the cached response and see that it's the same as the one sent by the browser. Instead of sending the response again, the server will send a 304 header only, and the browser will redisplay the page it keeps in its local cache.
+
+### Conditional GET
+
+When the server sends the response to the browser, it can add a special header to specify when the data contained in the page was last changed:
+
+    Last-Modified: Sat, 23 Nov 2005 13:27:31 GMT
+    
+When the browser needs the page again, it adds to the request 
+
+    If-Modified-Since: Sat, 23 Nov 2005 13:27:31 GMT
+    
+The server can then compare the value kept by the client and the one returned by its application. If they match, the server returns a '304: not modified' header, saving bandwidth and cpu time just like above.
+
+In symfony, you can set the `last_modified` response header just like you would for another header. For instance, in an action:
+
+    [php]
+    $this->getResponse()->setHttpHeader('Last-Modified', $date);
+    
+This date can be the actual date of last update of the data used in the page, given from your database or your file system. If you use a 'page' type cache, you just need to set the `last_modified` header to the current `time()`.
+
+### Vary
+
+Another HTTP 1.1 header is `Vary`. It defines which parameters a page depends on, and is used by browsers to build cache keys. For example, if the content of a page depends on cookies, you can set its `Vary` header as follows:
+
+    Vary: Cookie
+    
+Most often, it is difficult to set the cache type to 'page' in symfony because the page may vary according to the cookie, the user language, or something else. If you don't mind expanding the size of your cache, you can use the 'page' type in these cases, providing you set the `Vary` header properly. This can be done for the whole application (for instance in a filter) or in a per action basis, using the `Response` related method. For instance, from an action:
+
+    [php]
+    $this->getResponse()->addVaryHttpHeader('Cookie');
+    $this->getResponse()->addVaryHttpHeader('User-Agent');
+    $this->getResponse()->addVaryHttpHeader('Accept-Language');
+    
+Symfony will store a different version of the page in the cache for each value of these parameters. This will increse the size of the cache, but whenever a request matching these headers is received by the server, it is taken from the cache instead of being processed. This is a great performance tool for pages that vary only according to request headers.
+
+### Cache-Control
+
+Up to now, even by adding headers, the browser kept sending requests to the server even if it held a cached version of the page. There is a way to avoid that by adding `Cache-Control` and `Expires` headers to the response. These headers are deactivated by default in PHP, but symfony can override this behaviour to avoid unecessary requests to your server.
+
+Beware that the major consequence of turning this mechanism on is that your server logs won't show all the requests issued by the users, but only the ones received. If the performance gets better, the apparent popularity of the site may decrease in the statistics.
+
+As usual, it's by calling a methods of the `Response` object that you can trigger this behaviour. In an action, define the maximum time a page should be cached (in seconds) as follows:
+
+    [php]
+    $this->getResponse()->addCacheControlHttpHeader('max_age=60');
+    
+It also allows you to specify under which conditions a page may be cached, to avoid that providers cache keep a copy of private data (like bank account numbers):
+
+    [php]
+    $this->getResponse()->addCacheControlHttpHeader('private=True');
+    
+Using `Cache-Control` HTTP directives, you get the ability to fine tune the various cache maechanisms between your server and the client's browser. For a detailed review of the `Cache-Control` directives, see the [Cache-Control specifications at W3C](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9).
+    
+One last header is ignored by PHP but can be set through symfony: the `Expires` header:
+
+    $this->getResponse()->setHttpHeader('Expires', $date);
+
+### When to use HTTP 1.1 cache?
+
+If there is a slight chance that some of the browsers of your website's users may not support HTTP 1.1, there is no risk when activating the HTTP 1.1 cache features. A browser receiving headers that it doesn't understand simply ignores it, so you are advised to setup the HTTP 1.1 cache mechanisms whenever your web server supports them. 
+
+In addition, HTTP 1.1 headers are also understood by proxies and caching servers. Even if a user's browser doesn't understand it, there will probably be a device in the route of the request to take advantage of it.
 
 Postscript
 ----------
