@@ -832,7 +832,7 @@ class BasePeer
 		$sql =  "SELECT "
 				.($selectModifiers ? implode(" ", $selectModifiers) . " " : "")
 				.implode(", ", $selectClause)
-				." FROM ".implode(", ", $fromClause)
+				." FROM ".(count($fromClause) > 1 ? "(".implode(", ", $fromClause).")" : $fromClause[0])
 								.($joinClause ? ' ' . implode(' ', $joinClause) : '')
 				.($whereClause ? " WHERE ".implode(" AND ", $whereClause) : "")
 				.($groupByClause ? " GROUP BY ".implode(",", $groupByClause) : "")
