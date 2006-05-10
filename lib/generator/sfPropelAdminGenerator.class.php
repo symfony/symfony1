@@ -534,6 +534,11 @@ EOF;
     $user_params = is_array($user_params) ? $user_params : sfToolkit::stringToArray($user_params);
     $params      = $user_params ? array_merge($params, $user_params) : $params;
 
+    if ($column->isPartial())
+    {
+      return "include_partial('".$column->getName()."', array('filters' => \$filters))";
+    }
+
     $type = $column->getCreoleType();
 
     $default_value = "isset(\$filters['".$column->getName()."']) ? \$filters['".$column->getName()."'] : null";
