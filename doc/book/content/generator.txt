@@ -342,6 +342,22 @@ In a `list` view, you can add a filter interaction, to help the user find a give
 
 The resulting filter will allow text-based search on an author name (where the `*` character can be used as a joker), and the selection of the comments related to a given article by a choice in a selection list. As for regular `object_select_tag()`, the options displayed in a select are the ones returned by the `->toString()` method of the related class (or the primary key if such a method doesn't exist).
 
+Just like you use partial fields in lists, you can also use partial filters to create a filter that symfony doesn't handle on its own. For instance, imagine a `state` field that may only contain 2 values (`open` and `closed`), but for some reason you store those values directly in the field instead of using a table relation. A simple filter on this field (of string type) would be a text-based search, but what you want is probably a select with a list of values. That's quite easy to achieve with a partial filter:
+
+        list:
+          filters:        [date, _state]
+
+Then, in `templates/_state.php`:
+
+    [php]
+    <?php echo select_tag('filters[state]', options_for_select(array(
+      '' => '',
+      'open' => 'open',
+      'closed' => 'closed',
+    ), isset($filters['state']) ? $filters['state'] : '')) ?>
+    
+Notice that the partial has access to a `$filters` variable, whiwh is very useful to get the current value of the filter.
+
 ### Sort
 
 In a `list` view, the column names are hyperlinks that can be used to reorder the list. These names are displayed both in the `tabular` and `stacked` layouts. Only the fields that correspond to an actual column are clickable - not the ones for custom or partial columns.
@@ -350,6 +366,16 @@ Clicking on these links reloads the page with a `sort` parameter. You can reuse 
 
     [php]
     <?php echo link_to('Comment list by date', 'comment/list?sort=date&type=desc' ) ?>
+
+You can also define a default sort field for the `list` view directly in the `generator.yml`:
+
+        list:
+          sort:   date
+
+Or, if you want to specify the sort order:
+
+        list:
+          sort:   [date, desc]
 
 ### Pagination
 
