@@ -288,3 +288,14 @@ If you read the whole documentation, you will see that symfony gives you three d
 The last solution is rarely good; if you need it, check whether your code needs some refactoring (for instance write a JavaScript function call in the code and require the script inclusion in the head). However, you sometimes don't have the choice, for instance if you have to include traffic measure scripts at the end of your pages.
 
 >**Note**: You may be looking for a `stylesheet_tag()` helper, but there is none. If you need to include a custom stylesheet, you should not do it in the template but rather in the view or in the action, as described in the [view configuration chapter](templating_configuration.txt). This way, the declaration appears in the `<head>` instead of in the `<body>`.
+
+Absolute paths
+--------------
+
+The url and asset helpers generate relative paths by default. You can easily add an `absolute=true` parameter to force the output to absolute paths, for instance for inclusions of links in an email, a RSS feed, or an API response.
+
+    [php]
+    <?php echo url_for('module/action', true) ?>
+    <?php echo link_to('my link', 'module/action', 'absolute=true') ?>
+    <?php echo image_tag('test', 'absolute=true') ?>
+    <?php echo javascript_include_tag('myscript', 'absolute=true') ?>
