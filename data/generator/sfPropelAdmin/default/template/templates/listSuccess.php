@@ -24,7 +24,7 @@
 <tr>
 [?php echo include_partial('list_th_<?php echo $this->getParameterValue('list.layout', 'tabular') ?>') ?]
 <?php if ($this->getParameterValue('list.object_actions')): ?>
-  <th>[?php echo __('Actions') ?]</th>
+  <th id="sf_admin_list_th_sf_actions">[?php echo __('Actions') ?]</th>
 <?php endif; ?>
 </tr>
 </thead>
