@@ -20,7 +20,7 @@ The implementation of both solution will be illustrated through the same example
 Direct use of `sfMail`
 ----------------------
 
-The `sfMail` class will look familiar to those who know the `PHPMailer` class. It is simply a proxy class to `PHPMailer`, taking advantage of the symfony syntax. The `PHPMailer` class is included in the symfony package, so no additional installation is required.
+The `sfMail` class will look familiar to those who know the `PHPMailer` class. It is simply a proxy class to `PHPMailer`, taking advantage of the symfony syntax. The `PHPMailer` class is included in the symfony package, so no additional installation (nor require) is required.
 
 To send an email containing a password to a customer, an action has to do like the following:
 
@@ -29,8 +29,6 @@ To send an email containing a password to a customer, an action has to do like t
     {
       // determine customer from the request 'id' parameter
       $customer = CustomerPeer::retrieveByPk($this->getRequestParameter('id'));
-      
-      require_once 'sf/sfMail.class.php';
       
       // class initialization
       $mail = new sfMail();
@@ -76,7 +74,7 @@ In many cases, as the email sending process is just a detour in the logic of an 
 
 The email sending is delegated to a `sendPassword` action of a `mail` module. The `->sendEmail()` method of the `sfAction` class is a special kind of `->forward()` that executes another action but comes back afterward (it doesn't stop the execution of the current action). In addition, it returns a raw email that can be written into a log file (you will find more information about the way to log information in the [debug chapter](debug.txt)).
 
-The `mail/sendPassword` deals with the `sfMail` object, but it doesn't need to require the class (it is autoloaded) nor to define the mailer (it is taken from a configuration file):
+The `mail/sendPassword` deals with the `sfMail` object, but it doesn't need to define the mailer (it is taken from a configuration file) nor to initialize it:
 
     [php]
     public function executeSendPassword()
