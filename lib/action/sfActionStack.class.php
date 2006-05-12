@@ -72,14 +72,7 @@ class sfActionStack
    */
   public function popEntry ()
   {
-    $retval = $this->getLastEntry();
-
-    if ($retval)
-    {
-      unset($this->stack[count($this->stack) - 1]);
-    }
-
-    return $retval;
+    return array_pop($this->stack);
   }
 
   /**
