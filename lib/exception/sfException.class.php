@@ -181,10 +181,10 @@ class sfException extends Exception
     if (class_exists('sfContext', false) && sfContext::hasInstance())
     {
       $context = sfContext::getInstance();
-      $settingsTable = $this->settingsAsHtml($context);
-      $requestTable  = $this->requestAsHtml($context);
-      $responseTable = $this->responseAsHtml($context);
-      $globalsTable  = $this->globalsAsHtml($context);
+      $settingsTable = $this->formatArrayAsTable(sfDebug::settingsAsArray());
+      $requestTable  = $this->formatArrayAsTable(sfDebug::requestAsArray($context->getRequest()));
+      $responseTable = $this->formatArrayAsTable(sfDebug::responseAsArray($context->getResponse()));
+      $globalsTable  = $this->formatArrayAsTable(sfDebug::globalsAsArray());
     }
 
     include(sfConfig::get('sf_symfony_data_dir').'/data/exception.'.($format == 'html' ? 'php' : 'txt'));
@@ -194,87 +194,6 @@ class sfException extends Exception
     {
       exit(1);
     }
-  }
-
-  private function globalsAsHtml($context)
-  {
-    $values = array();
-    foreach (array('cookie', 'server', 'get', 'post', 'files', 'env', 'session') as $name)
-    {
-      if (!isset($GLOBALS['_'.strtoupper($name)]))
-      {
-        continue;
-      }
-
-      $values[$name] = array();
-      foreach ($GLOBALS['_'.strtoupper($name)] as $key => $value)
-      {
-        $values[$name][$key] = $value;
-      }
-      ksort($values[$name]);
-    }
-
-    ksort($values);
-
-    return $this->formatArrayAsTable($values);
-  }
-
-  private function requestAsHtml($context)
-  {
-    $values = array(
-      'parameter_holder' => $this->flattenParameterHolder($context->getRequest()->getParameterHolder()),
-      'attribute_holder' => $this->flattenParameterHolder($context->getRequest()->getAttributeHolder()),
-    );
-
-    return $this->formatArrayAsTable($values);
-  }
-
-  private function responseAsHtml($context)
-  {
-    $values = array(
-      'cookies'          => array(),
-      'http_headers'     => array(),
-      'parameter_holder' => $this->flattenParameterHolder($context->getResponse()->getParameterHolder()),
-    );
-    foreach ($context->getResponse()->getHttpHeaders() as $key => $value)
-    {
-      $values['http_headers'][$key] = $value;
-    }
-
-    $cookies = array();
-    foreach ($context->getResponse()->getCookies() as $key => $value)
-    {
-      $values['cookies'][$key] = $value;
-    }
-
-    return $this->formatArrayAsTable($values);
-  }
-
-  private function settingsAsHtml($context)
-  {
-    $config = sfConfig::getAll();
-
-    ksort($config);
-
-    return $this->formatArrayAsTable($config);
-  }
-
-  public function flattenParameterHolder($parameterHolder)
-  {
-    $values = array();
-    foreach ($parameterHolder->getNamespaces() as $ns)
-    {
-      $values[$ns] = array();
-      foreach ($parameterHolder->getAll($ns) as $key => $value)
-      {
-        $values[$ns][$key] = $value;
-      }
-      ksort($values[$ns]);
-    }
-
-    ksort($values);
-
-    return $values;
   }
 
   private function formatArrayAsTable($values)
