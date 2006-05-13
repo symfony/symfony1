@@ -181,10 +181,10 @@ class sfException extends Exception
     if (class_exists('sfContext', false) && sfContext::hasInstance())
     {
       $context = sfContext::getInstance();
-      $settingsTable = $this->formatArrayAsTable(sfDebug::settingsAsArray());
-      $requestTable  = $this->formatArrayAsTable(sfDebug::requestAsArray($context->getRequest()));
-      $responseTable = $this->formatArrayAsTable(sfDebug::responseAsArray($context->getResponse()));
-      $globalsTable  = $this->formatArrayAsTable(sfDebug::globalsAsArray());
+      $settingsTable = $this->formatArrayAsHtml(sfDebug::settingsAsArray());
+      $requestTable  = $this->formatArrayAsHtml(sfDebug::requestAsArray($context->getRequest()));
+      $responseTable = $this->formatArrayAsHtml(sfDebug::responseAsArray($context->getResponse()));
+      $globalsTable  = $this->formatArrayAsHtml(sfDebug::globalsAsArray());
     }
 
     include(sfConfig::get('sf_symfony_data_dir').'/data/exception.'.($format == 'html' ? 'php' : 'txt'));
@@ -196,7 +196,7 @@ class sfException extends Exception
     }
   }
 
-  private function formatArrayAsTable($values)
+  private function formatArrayAsHtml($values)
   {
     return '<pre>'.sfYaml::Dump($values).'</pre>';
   }

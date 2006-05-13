@@ -18,6 +18,17 @@
  */
 class sfDebug
 {
+  public static function phpInfoAsArray()
+  {
+    $values = array(
+      'php' => phpversion(),
+      'os' => php_uname(),
+      'extensions' => get_loaded_extensions(),
+    );
+
+    return $values;
+  }
+
   public static function globalsAsArray()
   {
     $values = array();
