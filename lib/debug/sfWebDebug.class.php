@@ -135,14 +135,14 @@ class sfWebDebug
     // replace constants value with constant name
     $log_line = strtr($log_line, $constants);
 
-    $log_line = sfToolkit::pregtr($log_line, array('/&quot;(.+?)&quot;/s' => '"<span class="sfStatsFileInfo">\\1</span>"',
-                                                   '/^(.+?)\(\)\:/S'      => '<span class="sfStatsFileInfo">\\1()</span>:',
-                                                   '/line (\d+)$/'        => 'line <span class="sfStatsFileInfo">\\1</span>'));
+    $log_line = sfToolkit::pregtr($log_line, array('/&quot;(.+?)&quot;/s' => '"<span class="sfWebDebugLogInfo">\\1</span>"',
+                                                   '/^(.+?)\(\)\:/S'      => '<span class="sfWebDebugLogInfo">\\1()</span>:',
+                                                   '/line (\d+)$/'        => 'line <span class="sfWebDebugLogInfo">\\1</span>'));
 
     // special formatting for creole/SQL lines
     if (strtolower($type) == 'creole')
     {
-      $log_line = preg_replace('/\b(SELECT|FROM|AS|LIMIT|ASC|COUNT|DESC|WHERE|LEFT JOIN|INNER JOIN|RIGHT JOIN|ORDER BY|GROUP BY|IN|LIKE|DISTINCT)\b/', '<span class="sfStatsFileInfo">\\1</span>', $log_line);
+      $log_line = preg_replace('/\b(SELECT|FROM|AS|LIMIT|ASC|COUNT|DESC|WHERE|LEFT JOIN|INNER JOIN|RIGHT JOIN|ORDER BY|GROUP BY|IN|LIKE|DISTINCT)\b/', '<span class="sfWebDebugLogInfo">\\1</span>', $log_line);
 
       // remove username/password from DSN
       if (strpos($log_line, 'DSN') !== false)
@@ -185,7 +185,7 @@ class sfWebDebug
 
     if ($sf_logging_active)
     {
-      $logs  = '<table id="sfStatsLogs">';
+      $logs  = '<table id="sfWebDebugLogs">';
       $logs .= "<tr>
         <th>#</th>
         <th>&nbsp;</th>
@@ -219,7 +219,7 @@ class sfWebDebug
         $debug_info = '';
         if ($logEntry->getDebugStack())
         {
-          $debug_info .= '&nbsp;<a href="#" onclick="sfWebDebugToggle(\'debug_'.$line_nb.'\'); return false;">'.image_tag($this->base_image_path.'/toggle.gif').'</a><div class="sfStatsDebugInfo" id="debug_'.$line_nb.'" style="display:none">';
+          $debug_info .= '&nbsp;<a href="#" onclick="sfWebDebugToggle(\'debug_'.$line_nb.'\'); return false;">'.image_tag($this->base_image_path.'/toggle.gif').'</a><div class="sfWebDebugDebugInfo" id="debug_'.$line_nb.'" style="display:none">';
           foreach ($logEntry->getDebugStack() as $i => $log_line)
           {
             $debug_info .= '#'.$i.' &raquo; '.$this->formatLogLine($type, $log_line).'<br/>';
@@ -231,7 +231,7 @@ class sfWebDebug
         $log = $this->formatLogLine($type, $log);
 
         ++$line_nb;
-        $logs .= sprintf("<tr class='sfWebDebugLogLine sfWebDebug%s %s'><td>%s</td><td>%s</td><td>+%s&nbsp;</td><td><span class=\"sfStatsLogType\">%s</span></td><td>%s%s</td></tr>\n", ucfirst($priority), $logEntry->getType(), $line_nb, image_tag($this->base_image_path.'/'.$priority.'.png'), $logEntry->getElapsedTime(), $type, $log, $debug_info);
+        $logs .= sprintf("<tr class='sfWebDebugLogLine sfWebDebug%s %s'><td>%s</td><td>%s</td><td>+%s&nbsp;</td><td><span class=\"sfWebDebugLogType\">%s</span></td><td>%s%s</td></tr>\n", ucfirst($priority), $logEntry->getType(), $line_nb, image_tag($this->base_image_path.'/'.$priority.'.png'), $logEntry->getElapsedTime(), $type, $log, $debug_info);
       }
       $logs .= '</table>';
 
