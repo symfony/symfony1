@@ -55,7 +55,6 @@ class sfDebug
   public static function settingsAsArray()
   {
     $config = sfConfig::getAll();
-    unset($config['sf_i18n_instance']);
 
     ksort($config);
 

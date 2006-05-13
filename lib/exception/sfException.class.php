@@ -198,7 +198,7 @@ class sfException extends Exception
 
   private function formatArrayAsHtml($values)
   {
-    return '<pre>'.sfYaml::Dump($values).'</pre>';
+    return '<pre>'.@sfYaml::Dump($values).'</pre>';
   }
 
   private function fileExcerpt($file, $line)

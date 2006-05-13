@@ -372,7 +372,7 @@ class sfWebDebug
     $id = ucfirst(strtolower($id));
     $content = '
     <h2>'.$id.' <a href="#" onclick="sfWebDebugToggle(\'sfWebDebug'.$id.'\')"><img src="'.$this->base_image_path.'/toggle.gif" /></a></h2>
-    <div id="sfWebDebug'.$id.'" style="display: none"><pre>'.sfYaml::Dump($values).'</pre></div>
+    <div id="sfWebDebug'.$id.'" style="display: none"><pre>'.@sfYaml::Dump($values).'</pre></div>
     ';
 
     return $content;
