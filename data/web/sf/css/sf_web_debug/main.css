@@ -24,7 +24,7 @@
 
 #sfWebDebugBar
 {
-  position: fixed;
+  position: absolute;
   margin: 0;
   padding: 1px 0;
   right: 0px;
@@ -33,6 +33,11 @@
   filter: alpha(opacity:80);
   z-index: 10000;
   background-color: #ddd;
+}
+
+#sfWebDebugBar[id]
+{
+  position: fixed;
 }
 
 #sfWebDebugBar a
