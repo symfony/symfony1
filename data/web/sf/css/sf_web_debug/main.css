@@ -13,7 +13,7 @@
 {
   text-decoration: none;
   border: none;
-  background-color: #eee;
+  background-color: transparent;
   color: #000;
 }
 
@@ -32,17 +32,11 @@
   opacity: 0.80;
   filter: alpha(opacity:80);
   z-index: 10000;
-  background-color: #ddd;
 }
 
 #sfWebDebugBar[id]
 {
   position: fixed;
-}
-
-#sfWebDebugBar a
-{
-  background-color: #ddd;
 }
 
 #sfWebDebugBar img
@@ -168,17 +162,17 @@
   border: 0;
 }
 
-#sfWebDebug .info
+.sfWebDebugInfo, .sfWebDebugInfo td
 {
-  background-color: #9f9;
+  background-color: #ddd;
 }
 
-#sfWebDebug .warning
+.sfWebDebugWarning, .sfWebDebugWarning td
 {
   background-color: orange;
 }
 
-#sfWebDebug .error
+.sfWebDebugError, .sfWebDebugError td
 {
   background-color: #f99;
 }
@@ -212,6 +206,8 @@
   margin: 0;
   border: 0;
   width: 100%;
+  font-family: Arial;
+  font-size: 11px;
 }
 
 #sfWebDebugLogs tr
@@ -226,10 +222,7 @@
   margin: 0;
   border: 0;
   padding: 1px 3px;
-  font-family: Arial;
-  font-size: 11px;
   vertical-align: top;
-  background-color: #ddd;
 }
 
 #sfWebDebugLogs th
@@ -237,10 +230,8 @@
   margin: 0;
   border: 0;
   padding: 1px 3px;
-  font-family: Arial;
-  font-size: 11px;
   vertical-align: top;
-  background-color: #666;
+  background-color: #999;
   color: #eee;
 }
 

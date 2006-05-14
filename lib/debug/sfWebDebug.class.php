@@ -166,21 +166,10 @@ class sfWebDebug
     $result = '';
 
     // max priority
-    $log_image = '';
+    $max_priority = '';
     if ($sf_logging_active = sfConfig::get('sf_logging_active'))
     {
-      if ($this->max_priority >= 6)
-      {
-        $log_image = 'info';
-      }
-      else if ($this->max_priority >= 4)
-      {
-        $log_image = 'warning';
-      }
-      else
-      {
-        $log_image = 'error';
-      }
+      $max_priority = $this->getPriority($this->max_priority);
     }
 
     if ($sf_logging_active)
@@ -198,21 +187,11 @@ class sfWebDebug
       {
         $log = $logEntry->getMessage();
 
-        if ($logEntry->getPriority() >= 6)
-        {
-          $priority = 'info';
-        }
-        else if ($logEntry->getPriority() >= 4)
-        {
-          $priority = 'warning';
-        }
-        else
-        {
-          $priority = 'error';
-        }
+        $priority = $this->getPriority($logEntry->getPriority());
 
-        if (strpos($type = $logEntry->getType(), 'sf') === 0) {
-            $type = substr($type, 2);
+        if (strpos($type = $logEntry->getType(), 'sf') === 0)
+        {
+          $type = substr($type, 2);
         }
 
         // xdebug information
@@ -308,7 +287,7 @@ class sfWebDebug
 
     $result .= '
     <div id="sfWebDebug">
-      <div id="sfWebDebugBar">
+      <div id="sfWebDebugBar" class="sfWebDebug'.ucfirst($max_priority).'">
         <a href="#" onclick="sfWebDebugToggleMenu()"><img src="'.$this->base_image_path.'/sf.png" /></a>
         <ul id="sfWebDebugDetails" class="menu">
           <li><a href="#" onclick="document.getElementById(\'sfWebDebugLog\').style.display=\'none\';sfWebDebugToggle(\'sfWebDebugConfig\')"><img src="'.$this->base_image_path.'/config.png" /> vars &amp; config</a></li>
@@ -435,6 +414,22 @@ class sfWebDebug
     ';
 
     return $retval;
+  }
+
+  private function getPriority($value)
+  {
+    if ($value >= 6)
+    {
+      return 'info';
+    }
+    else if ($value >= 4)
+    {
+      return 'warning';
+    }
+    else
+    {
+      return 'error';
+    }
   }
 }
 
