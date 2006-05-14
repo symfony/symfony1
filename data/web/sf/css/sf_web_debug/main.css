@@ -60,12 +60,14 @@
 {
   display: inline;
   list-style: none;
+  margin: 0;
   padding: 0 5px;
   border-right: 1px solid #aaa;
 }
 
 #sfWebDebugBar .menu li.last
 {
+  margin: 0;
   padding: 0;
   border: 0;
 }
@@ -136,6 +138,7 @@
 {
   display: inline;
   list-style: none;
+  margin: 0;
   padding: 0 5px;
   border-right: 1px solid #aaa;
 }
@@ -153,12 +156,14 @@
 {
   list-style: none;
   display: inline;
+  margin: 0;
   padding: 0 5px;
   border-right: 1px solid #aaa;
 }
 
 #sfWebDebugConfigSummary li.last
 {
+  margin: 0;
   padding: 0;
   border: 0;
 }
