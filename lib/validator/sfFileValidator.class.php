@@ -83,6 +83,29 @@ class sfFileValidator extends sfValidator
 
     $this->getParameterHolder()->add($parameters);
 
+    // pre-defined categories
+    $categories = array(
+      '@web_images' => array(
+        'image/jpeg',
+        'image/pjpeg',
+        'image/png',
+        'image/x-png',
+        'image/gif',
+      ),
+    );
+
+    if (!is_array($this->getParameter('mime_types')))
+    {
+      if (isset($categories[$this->getParameter('mime_types')]))
+      {
+        $this->setParameter('mime_types', $categories[$this->getParameter('mime_types')]);
+      }
+      else
+      {
+        $this->setParameter('mime_types', array($this->getParameter('mime_types')));
+      }
+    }
+
     return true;
   }
 }
