@@ -214,7 +214,7 @@ class sfWebDebug
         // sql queries log
         if (preg_match('/executeQuery.+?\:\s+(.+)$/', $log, $match))
         {
-          $sql_logs[] .= $match[1];
+          $sql_logs[] .= $match[1]."\n";
         }
 
         ++$line_nb;
@@ -254,7 +254,7 @@ class sfWebDebug
 
       $dbInfoDetails = '
         <div id="sfWebDebugDatabaseDetails">
-        <ol><li>'.implode('</><li>', $sql_logs).'</li></ol>
+        <ol><li>'.implode('</li><li>', $sql_logs).'</li></ol>
         </div>
       ';
     }
