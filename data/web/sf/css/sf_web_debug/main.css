@@ -66,6 +66,13 @@
   border: 0;
 }
 
+#sfWebDebugDatabaseDetails li
+{
+  margin: 0;
+  margin-left: 30px;
+  padding: 0 5px;
+}
+
 #sfWebDebugShortMessages li
 {
   margin-bottom: 10px;

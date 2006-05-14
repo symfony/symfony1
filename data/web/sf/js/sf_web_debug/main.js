@@ -38,6 +38,7 @@ function sfWebDebugToggleMenu()
   {
     document.getElementById('sfWebDebugLog').style.display = 'none';
     document.getElementById('sfWebDebugConfig').style.display = 'none';
+    document.getElementById('sfWebDebugDatabaseDetails').style.display = 'none';
   }
 
   sfWebDebugToggle('sfWebDebugDetails');

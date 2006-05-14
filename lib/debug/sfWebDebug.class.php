@@ -172,16 +172,18 @@ class sfWebDebug
       $max_priority = $this->getPriority($this->max_priority);
     }
 
+    $logs = '';
+    $sql_logs = array();
     if ($sf_logging_active)
     {
-      $logs  = '<table id="sfWebDebugLogs">';
-      $logs .= "<tr>
-        <th>#</th>
-        <th>&nbsp;</th>
-        <th>ms</th>
-        <th>type</th>
-        <th>message</th>
-      </tr>\n";
+      $logs = '<table id="sfWebDebugLogs">
+        <tr>
+          <th>#</th>
+          <th>&nbsp;</th>
+          <th>ms</th>
+          <th>type</th>
+          <th>message</th>
+        </tr>'."\n";
       $line_nb = 0;
       foreach($this->log as $logEntry)
       {
@@ -209,6 +211,12 @@ class sfWebDebug
         // format log
         $log = $this->formatLogLine($type, $log);
 
+        // sql queries log
+        if (preg_match('/executeQuery.+?\:\s+(.+)$/', $log, $match))
+        {
+          $sql_logs[] .= $match[1];
+        }
+
         ++$line_nb;
         $logs .= sprintf("<tr class='sfWebDebugLogLine sfWebDebug%s %s'><td>%s</td><td>%s</td><td>+%s&nbsp;</td><td><span class=\"sfWebDebugLogType\">%s</span></td><td>%s%s</td></tr>\n", ucfirst($priority), $logEntry->getType(), $line_nb, image_tag($this->base_image_path.'/'.$priority.'.png'), $logEntry->getElapsedTime(), $type, $log, $debug_info);
       }
@@ -234,14 +242,21 @@ class sfWebDebug
     $logLink = '';
     if (sfConfig::get('sf_logging_active'))
     {
-      $logLink = '<li><a href="#" onclick="document.getElementById(\'sfWebDebugConfig\').style.display=\'none\';sfWebDebugToggle(\'sfWebDebugLog\')"><img src="'.$this->base_image_path.'/comment.png" /> logs &amp; msgs</a></li>';
+      $logLink = '<li><a href="#" onclick="document.getElementById(\'sfWebDebugConfig\').style.display=\'none\';document.getElementById(\'sfWebDebugDatabaseDetails\').style.display=\'none\';sfWebDebugToggle(\'sfWebDebugLog\')"><img src="'.$this->base_image_path.'/comment.png" /> logs &amp; msgs</a></li>';
     }
 
     // database information
     $dbInfo = '';
+    $dbInfoDetails = '';
     if (null !== ($nb = $this->getDatabaseRequestNumber()))
     {
-      $dbInfo = '<li><img src="'.$this->base_image_path.'/database.png" /> '.$nb.'</li>';
+      $dbInfo = '<li><a href="#" onclick="document.getElementById(\'sfWebDebugConfig\').style.display=\'none\';document.getElementById(\'sfWebDebugLog\').style.display=\'none\';sfWebDebugToggle(\'sfWebDebugDatabaseDetails\')"><img src="'.$this->base_image_path.'/database.png" /> '.$nb.'</a></li>';
+
+      $dbInfoDetails = '
+        <div id="sfWebDebugDatabaseDetails">
+        <ol><li>'.implode('</><li>', $sql_logs).'</li></ol>
+        </div>
+      ';
     }
 
     // memory used
@@ -290,7 +305,7 @@ class sfWebDebug
       <div id="sfWebDebugBar" class="sfWebDebug'.ucfirst($max_priority).'">
         <a href="#" onclick="sfWebDebugToggleMenu()"><img src="'.$this->base_image_path.'/sf.png" /></a>
         <ul id="sfWebDebugDetails" class="menu">
-          <li><a href="#" onclick="document.getElementById(\'sfWebDebugLog\').style.display=\'none\';sfWebDebugToggle(\'sfWebDebugConfig\')"><img src="'.$this->base_image_path.'/config.png" /> vars &amp; config</a></li>
+          <li><a href="#" onclick="document.getElementById(\'sfWebDebugLog\').style.display=\'none\';document.getElementById(\'sfWebDebugDatabaseDetails\').style.display=\'none\';sfWebDebugToggle(\'sfWebDebugConfig\')"><img src="'.$this->base_image_path.'/config.png" /> vars &amp; config</a></li>
           '.$cacheLink.'
           '.$logLink.'
           '.$dbInfo.'
@@ -308,6 +323,12 @@ class sfWebDebug
       <div id="sfWebDebugConfig" class="top" style="display: none">
       <h1>Configuration and request variables</h1>
       '.$this->getCurrentConfigAsHtml().'
+      </div>
+
+      <div id="sfWebDebugDatabaseDetails" class="top" style="display: none">
+      <h1>SQL queries</h1>
+      '.$dbInfoDetails
+      .'
       </div>
     </div>
     ';
