@@ -95,7 +95,7 @@ A partial is as easy to cache as an action. To activate it, create a `cache.yml`
 
 Now all the templates using this partial won't actually execute the PHP code of the partial, but use the cached version instead. 
 
->**Note**: The `slot` type cache is more powerful than the partial cache, since when an action is cached, the template is not even executed - and if the template contains calls to partials, theses calls are not performed. Therefore, the partial caching is useful only if you don't use action caching in the caling action.
+>**Note**: The `slot` type cache is more powerful than the partial cache, since when an action is cached, the template is not even executed - and if the template contains calls to partials, theses calls are not performed. Therefore, the partial caching is useful only if you don't use action caching in the calling action.
 
 Just like for actions, partial caching is also relevant when the result of the partial depends on parameters:
 
