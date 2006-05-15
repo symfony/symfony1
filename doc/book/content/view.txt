@@ -376,7 +376,7 @@ For instance, let's imagine that the `layout.php` of the application contains:
 
     [php]
     ...
-    <div id="#sidebar">
+    <div id="sidebar">
       <?php include_component_slot('sidebar') ?>
     </div> 
 
