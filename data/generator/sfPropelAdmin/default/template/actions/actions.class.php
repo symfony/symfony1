@@ -154,7 +154,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 
     if (!$this->getRequest()->hasErrors() && $this->getRequest()->getFileSize('<?php echo $this->getSingularName() ?>[<?php echo $name ?>]'))
     {
-<?php else: ?>
+<?php elseif ($type != CreoleTypes::BOOLEAN): ?>
     if (isset($<?php echo $this->getSingularName() ?>['<?php echo $name ?>']))
     {
 <?php endif; ?>
@@ -178,11 +178,13 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
         $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>(null);
       }
 <?php elseif ($type == CreoleTypes::BOOLEAN): ?>
-      $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>(isset($<?php echo $this->getSingularName() ?>['<?php echo $name ?>']) ? $<?php echo $this->getSingularName() ?>['<?php echo $name ?>'] : 0);
+    $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>(isset($<?php echo $this->getSingularName() ?>['<?php echo $name ?>']) ? $<?php echo $this->getSingularName() ?>['<?php echo $name ?>'] : 0);
 <?php else: ?>
       $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>($<?php echo $this->getSingularName() ?>['<?php echo $name ?>']);
 <?php endif; ?>
+<?php if ($type != CreoleTypes::BOOLEAN): ?>
     }
+<?php endif; ?>
 <?php if ($credentials): ?>
       }
 <?php endif; ?>
