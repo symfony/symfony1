@@ -536,7 +536,7 @@ EOF;
 
     if ($column->isPartial())
     {
-      return "include_partial('type' => 'filter', '".$column->getName()."', array('filters' => \$filters))";
+      return "include_partial('".$column->getName()."', array('type' => 'filter', 'filters' => \$filters))";
     }
 
     $type = $column->getCreoleType();
