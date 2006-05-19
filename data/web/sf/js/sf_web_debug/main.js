@@ -53,8 +53,6 @@ function sfWebDebugToggle(element)
 
   if (element)
     element.style.display = element.style.display == 'none' ? '' : 'none';
-
-  return false;
 }
 
 function sfWebDebugToggleMessages(klass)
@@ -66,8 +64,6 @@ function sfWebDebugToggleMessages(klass)
   {
     sfWebDebugToggle(elements[i]);
   }
-
-  return false;
 }
 
 function sfWebDebugToggleAllLogLines(show, klass)
@@ -78,8 +74,6 @@ function sfWebDebugToggleAllLogLines(show, klass)
   {
     elements[i].style.display = show ? '' : 'none';
   }
-
-  return false;
 }
 
 function sfWebDebugShowOnlyLogLines(type)
@@ -97,6 +91,4 @@ function sfWebDebugShowOnlyLogLines(type)
       elements[i].style.display = (type == types[klass]) ? '' : 'none';
     }
   }
-
-  return false;
 }
