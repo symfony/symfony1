@@ -61,8 +61,7 @@ The `sendSuccess.php` template just contains:
 
 You can test the whole process of submitting the form and getting the confirmation, it already works fine. Except that if you try to enter invalid data in the fields, the action may very well crash. The fields do require validation.
 
-Rules
------
+### Rules
 
 Let's write the validation rules in plain text:
 
@@ -73,8 +72,7 @@ Let's write the validation rules in plain text:
 
 Symfony can apply these rules almost automatically, provided that you add a new configuration file to the module and change a few details in the template.
 
-Configuration file
-------------------
+### Configuration file
 
 By convention, if you want to validate the form data on the call to the `send` action, a configuration file called `send.yml` must be created in the `validate` directory of the module. To validate only the `name` field, you need the following configuration:
 
@@ -104,12 +102,11 @@ Then, under the `names` header, the list of the the fields to be checked, along 
 
 Eventually, as the 'name' field is declared to have a specific set of validation rules, they are detailed under the corresponding header.
 
-Action modification
--------------------
+### Action modification
 
-The default behavior makes symfony call a predefined `handleError` method whenever an error is detected in the validation process. This method will simply display the `sendError` template.
+The default behavior makes symfony call a predefined `handleError()` method whenever an error is detected in the validation process. This method will simply display the `sendError()` template.
 
-But if you rather need the form to be displayed again with an error message, you need to override the default `handleError` method and end it with a redirection to the `index` action of the `contact` module. Add the following code to your contact actions:
+But if you prefer to display the form again with an error message in it, you need to override the default `handleError()` method for the form handling action and end it with a redirection to the `index` action of the `contact` module. Do this by adding the following code to your `contact` actions:
 
     [php]
     class ContactActions extends sfActions
@@ -117,7 +114,7 @@ But if you rather need the form to be displayed again with an error message, you
     
       ...
     
-      public function handleError()
+      public function handleErrorSend()
       {
         $this->forward('contact', 'index');
       }
@@ -125,8 +122,7 @@ But if you rather need the form to be displayed again with an error message, you
 
 If you try to fill in the form with this new configuration, and type a wrong name, the form is displayed again, but the data you entered is lost and no error message explains the reason of the failure.
 
-Template modification
----------------------
+### Template modification
 
 To address these two issues, you just need to modify the `indexSuccess.php` template.
 
@@ -161,10 +157,9 @@ Now you may suggest that the field with incorrect data should be highlighted, fo
     [php]
     <?php if ($sf_request->hasError('name')): ?>↓ <?php echo $sf_request->getError('name') ?> ↓<?php endif ?><br />
 
-Complete configuration file
----------------------------
+### Complete configuration file
 
-You can add the other rules to the `send.yml` configuration file to force the validation of all fields:
+You can add the other rules to the `send.yml` configuration file to force the validation of all fields. This is what a complete YAML validation file looks like:
 
     methods:
       get:      [name, email, age, message]
@@ -215,37 +210,139 @@ Available validators
 
 The available validators can be found in the symfony lib `validator` directory. For the moment, they are:
 
-- `sfStringValidator`: allows you to apply string-related constraints to a parameter
-- `sfNumberValidator`: verifies if a parameter is a number and allows you to apply size constraints
-- `sfRegexValidator`: allows you to match a value against a regular expression pattern	
-- `sfEmailValidator`: verifies if a parameter contains a value that qualifies as an email address 	
-- `sfCompareValidator`: checks the equality of two different request parameters; very useful for password check
+* `sfStringValidator`: allows you to apply string-related constraints to a parameter
 
-Let's illustrate this last validator. Imagine that you have a form with two password fields named `password1` and `password2`. The second field is there to check that the user enters the same password twice. The YAML validation file should then look like:
+        nameValidator:
+          class:          sfStringValidator
+          param:
+            min:          2
+            min_error:    Please enter a name of at least 2 characters
+            max:          100
+            max_error:    Please enter a name of at most 100 characters
 
-    methods:
-      get:      [password1, password2]
-      post:     [password1, password2]
+* `sfNumberValidator`: verifies if a parameter is a number and allows you to apply size constraints
 
-    names:
-      password1:
-        required:       Yes
-        required_msg:   Please enter a password
-      password2:
-        required:       Yes
-        required_msg:   Please retype the password
-        validators:     passwordValidator
+        ageValidator:
+          class:          sfNumberValidator
+          param:
+            nan_error:    Please enter an integer
+            min:          0
+            min_error:    You're not even born. How do you want to send a message ?
+            max:          120
+            max_error:    "Hey, grandma, aren't you too old to surf on the Internet ?"
         
-    passwordValidator:
-       class:            sfCompareValidator
-       param:
-         check:          password1
-         compare_error:  The passwords you entered do not match. Please try again.
+* `sfRegexValidator`: allows you to match a value against a regular expression pattern	
 
-For a detailed description of the parameters of each of these validators, refer to the source code.
+        spamValidator:
+          class:          sfRegexValidator
+          param:
+            match:        Yes
+            match_error:  Posts containing more than one http address are considered as spam
+            pattern:      /http.*http/i
 
-Custom validator
-----------------
+    The `match` param determines if the request parameter must match the pattern to be valid (value `Yes`) or match the pattern to be invalid (value `No`)
+        
+* `sfEmailValidator`: verifies if a parameter contains a value that qualifies as an email address
+
+        emailValidator:
+          class:          sfEmailValidator
+          param:
+            email_error:  This email address is invalid
+
+* `sfCompareValidator`: checks the equality of two different request parameters; very useful for password check
+
+        methods:
+          get:            [password1, password2]
+          post:           [password1, password2]
+        
+        names:
+          password1:
+            required:     Yes
+            required_msg: Please enter a password
+          password2:
+            required:     Yes
+            required_msg: Please retype the password
+            validators:   passwordValidator
+            
+        passwordValidator:
+           class:         sfCompareValidator
+           param:
+             check:       password1
+             compare_error: The passwords you entered do not match. Please try again.
+
+  The `check` param contains the name of the field that the current field must match to be valid.
+  
+* `sfPropelUniqueValidator`: validates that the value of a request parameter doesn't already exist in your database. Very useful for primary keys.
+ 
+        loginValidator:
+          class:          sfPropelUniqueValidator
+          param:
+            class:        User
+            column:       login
+            unique_error: This login already exists. Please choose another one.
+
+  In the example above, the validator will look in the database for a record of class `User` where the column `login` has the same value as the parameter to validate. Note that this validator relies on Propel.
+
+* `sfFileValidator`: applies format (an array of mime types) and size constraints to file upload fields
+
+        methods:
+          post:               [image]
+          
+        names:
+          image:
+            required:         Yes
+            required_msg:     Please upload an image file
+            validators:       imageValidator
+            file:             true
+            
+        imageValidator:
+          class:              sfFileValidator
+          param:
+            mime_types:       
+              - 'image/jpeg'
+              - 'image/png'
+              - 'image/x-png'
+              - 'image/pjpeg'        
+            mime_types_error: Only PNG and JPEG images are allowed
+            max_size:         512000
+            max_size_error:   Max size is 512Kb
+
+  Beware that the attribute `file` has to be set to `true` for the field in the `names` section - and that the template must declare the form as `multipart`. Find more information in the [file upload chapter](upload.txt).
+
+Repopulation
+------------
+
+Note: This feature is only  available with a symfony release higher than 1096 and is still considered Alpha, since the interface can change. Feel free to give your feedback about it.
+
+One common concern about forms is the value that the form fields will have when the form is displayed again after a failed validation. If you defined default values, or if you use object helpers, it can be quite tricky to determine how to handle the values from the request. In addition, some controls (namely the checkbox and the select tags) have special ways to pass their value in the request parameters.
+
+Fortunately, symfony takes care of the form repopulation for you. If you want your form to be filled in with the values previously entered by the user, simply add these lines to your validation file:
+
+    fillin:
+      activate: on   # activate the form repopulation
+      param:
+        name: test   # name of the form
+
+This forces you to give a `name` attribute to your form, but it opens the possibility to repopulate a form in a page that contains more than one.
+
+The repopulation works for text and hidden inputs, textareas, radiobuttons, checkboxes and selects (simple and multiple).
+
+You might want to transform the values entered by the user before putting them in a form input. Escaping, url rewriting, transformation of special characters into entities, etc., all the transformations that can be called through a function (existing or defined by you) can be applied to the fields of your form if you define the transformation under the `converters:` key:
+
+     fillin:
+      activate: on
+      param:
+        name: test
+        converters:         # converters to apply
+          htmlentities:     [first_name, comments]
+          htmlspecialchars: [comments]
+
+The repopulation feature is based on a filter called `sfFillInFormFilter`, and it means that you can take advantage of form repopulation even if you don't use the symfony validation files. To activate the filter, just add it to your `filters.yml` as you would do with a normal filter (see more in the [filter chapter](filters.txt)).
+
+Complex validation needs
+------------------------
+
+### Custom validator
 
 Each `Validator` is a particular class that can have certain parameters. If the validation classes shipped with Symfony are not enough for your needs, you can easily create new ones. Here is the example of a validation class for email addresses, the actually existing `sfEmailValidator`:
 
@@ -281,8 +378,46 @@ Now the last part of the `send.yml` file can be replaced with:
 
 If you need to create a new validation class and if it is a generic one, you should ask to have it included in the framework.
 
-Forms with array syntax
------------------------
+### Validate method
+
+Sometimes the power of validators is not enough. This happens mostly when you need to perform a complex validation that relies on context dependent variables. In that case, you can add a new method to your `Action` class named `validateXXX()` where `XXX` is the name of the action called by the form. If this method returns `true`, the `executeXXX()` method will be evaluated as usual. Otherwise, it's the `handleErrorXXX()` (if it exists), or the general `handleError()` method that is evaluated.
+
+    [php]
+    class ContactActions extends sfActions
+    {
+    
+      ...
+      public function executeIndex()
+      {
+        // display the form
+        ...
+      }
+      
+      public function validateSend()
+      {
+        // validate request parameters
+        $spammer = SpammersPeer::retrieveByName($this->getRequestParameter('name'));
+        if($spammer && $spammer->isBanned())
+        {
+          $this->getRequest()->setError('time', 'You are not allowed to post here anymore');
+          return false;
+        }
+        return true;
+      }
+
+      public function executeSend()
+      {
+        // handle the form submission
+        ...
+      }
+      
+      public function handleErrorSend()
+      {
+        $this->forward('contact', 'index');
+      }
+    }
+
+### Forms with array syntax
 
 PHP allows you to use an array syntax for the form fields. When writing forms by yourslef, or when using the ones generated by the [Propel admin](generator.txt), you end up with HTML code looking like:
 
@@ -304,35 +439,73 @@ The trouble is that using the input `id` as is (with brackets) in a validation f
 
 Symfony will do the translation automatically, and the validation will run as expected.
 
-Repopulation
-------------
+### Execute validator on an empty field
 
-Note: This feature is only  available with a symfony release higher than 1096 and is still considered Alpha, since the interface can change. Feel free to give your feedback about it.
+You sometimes need to execute a validator on a field which is not required, on an empty value. This happens, for instance, with a form where the user can (but may not) want to change his password, and in this case a confirmation password must be entered:
 
-One common concern about forms is the value that the form fields will have when the form is displayed again after a failed validation. If you defined default values, or if you use object helpers, it can be quite tricky to determine how to handle the values from the request. In addition, some controls (namely the checkbox and the select tags) have special ways to pass their value in the request parameters.
+    names:
+      password1:
+        required:     false
+      password2:
+        required:     false
+        validators:   passwordValidator
+        
+    passwordValidator:
+       class:         sfCompareValidator
+       param:
+         check:       password1
+         compare_error: The passwords you entered do not match. Please try again.
 
-Fortunately, symfony takes care of the form repopulation for you. If you want your form to be filled in with the values previously entered by the user, simply add these lines to your validation file:
+* If `password1 == null` and `password2 == null`
+  * The `required` test passes
+  * Validators are not run
+  * The form is valid
 
-    fillin:
-      activate: on   # activate the form repopulation
-      param:
-        name: test   # name of the form
+* If `password2 == null` while `password1` is not null
+  * The `required` test passes
+  * Validators are not run
+  * The form is valid
 
-This forces you to give a `name` attribute to your form, but it opens the possibility to repopulate a form in a page that contains more than one.
+You may want to execute your `password2` validator IF `password1` is not null. Fortunately, the symfony validators handle this case, thanks to the `group` parameter. When a field is in a group, its validator will execute if it is not empty and if one of the fields of the same group is not empty.
 
-The repopulation works for text and hidden inputs, textareas, radiobuttons, checkboxes and selects (simple and multiple).
+So, if you change the configuration to:
 
-You might want to transform the values entered by the user before putting them in a form input. Escaping, url rewriting, transformation of special characters into entities, etc., all the transformations that can be called through a function (existing or defined by you) can be applied to the fields of your form if you define the transformation under the `converters:` key:
+    names:
+      password1:
+        required:     false
+        group:        password_group
+      password2:
+        required:     false
+        group:        password_group
+        validators:   passwordValidator
+    
+    passwordValidator:
+       class:         sfCompareValidator
+       param:
+         check:       password1
+         compare_error: The passwords you entered do not match. Please try again.
 
-     fillin:
-      activate: on
-      param:
-        name: test
-        converters:         # converters to apply
-          htmlentities:     [first_name, comments]
-          htmlspecialchars: [comments]
+Now, the validation occurs as follows:
 
-The repopulation feature is based on a filter called `sfFillInFormFilter`, and it means that you can take advantage of form repopulation even if you don't use the symfony validation files. To activate the filter, just add it to your `filters.yml` as you would do with a normal filter (see more in the [filter chapter](filters.txt)).
+* If `password1 == null` and `password2 == null`
+  * The `required` test passes
+  * Validators are not run
+  * The form is valid 
+
+* If `password1 == null and password2 == 'foo'`
+  * The `required` test passes
+  * `password2` is not null, so its validator is executed - and it fails
+  * An error message is thrown for `password2`
+
+* If `password1 == 'foo' and password2 == null`
+  * The `required` test passes
+  * `password1` is not null, so the validator for `password2`, which is in the same group, is executed - and it fails
+  * An error message is thrown for `password2`
+  
+* If `password1 == 'foo' and password2 == 'foo'`
+  * The `required` test passes
+  * `password2` is not null, so its validator is executed - and it passes
+  * The form is valid 
 
 Client side validation
 ----------------------

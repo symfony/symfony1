@@ -132,6 +132,13 @@ Various behaviors are possible at the end of the execution of an action:
         [php]
         return sfView::NONE; 
 
+*   for escaping view rendering but send the header content (specially 
+[X-JSON header](http://www.symfony-project.com/trac/wiki/AjaxAndJSON)),
+you can use:
+      
+        [php]
+        return sfView::HEADER_ONLY;
+
 *   if there is no view to call, but a value to return:
  
         [php]
