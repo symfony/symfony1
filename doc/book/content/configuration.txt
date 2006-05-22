@@ -195,19 +195,19 @@ Access configuration from code
 
 All the configuration files are eventually transformed into PHP, but some of the parameters need to be accessible from your code. In this case, they are available through a special `sfConfig` class. It is a registry for configuration parameters, with simple getter and setter class methods, accessible from every part of the code:
 
-     [php]
-     sfConfig::set('param_name', $value);         // to define a config 
-     parameter = sfConfig::get('param_name', $default_value); // to retrieve a config parameter
+    [php]
+    sfConfig::set('param_name', $value);         // to define a config 
+    parameter = sfConfig::get('param_name', $default_value); // to retrieve a config parameter
 
 So symfony configuration parameters have all the advantages of PHP constants, but without the disadvantages, since the value can be changed.
 
 For instance, if you need to access the values defined in the previous example from your PHP code, write:
 
-     [php]
-     sfConfig::get('app_tax');
-     sfConfig::get('app_pager_max_per_page');
-     sfConfig::get('app_mail_webmaster');
-     sfConfig::get('app_mail_commercial');
+    [php]
+    sfConfig::get('app_tax');
+    sfConfig::get('app_pager_max_per_page');
+    sfConfig::get('app_mail_webmaster');
+    sfConfig::get('app_mail_commercial');
 
 The name is the concatenation of:
 
@@ -242,7 +242,8 @@ For instance, if you need to add the credit card operators accepted in you site,
 
 To know if the `fake` credit cards are accepted in the current environment, get the value of:
 
-     sfConfig::get('app_creditcards_fake');
+    [php]
+    sfConfig::get('app_creditcards_fake');
 
 But maybe you need to add an array, an associative array or a lot of new parameters. In this case it is better to create a new configuration file, together with the corresponding configuration handler.
 
@@ -259,13 +260,13 @@ For instance, if your `app.yml` contains:
 
 Then the file `config_app.yml.php`, located in the `cache` folder of your project, will contain:
 
-     [php]
-     <?php
-     sfConfig::add(array(
-       'app_mail_webmaster', 'webmaster@mysite.com'),
-     );
-     ?>
-
+    [php]
+    <?php
+    sfConfig::add(array(
+      'app_mail_webmaster' => 'webmaster@mysite.com',
+    ));
+    ?>
+    
 This is a major advantage over many PHP frameworks, where configuration files are compiled at every request even in production. Unlike Java, PHP doesn't share an execution context between requests. For other PHP frameworks, keeping the flexibility of XML configuration files requires a major performance hit to process all the configuration at every request. This is not the case in symfony. Thanks to the cache system, the overhead caused by configuration is very low.
 
 The other main advantage of using configuration handlers is that it allows you to use formats other than YAML. The configuration handlers just transform configuration files into optimized PHP code. If you have a parser for another language - and PHP has native support of XML and INI files - it is very easy to write a custom handler that will read your own configuration file format.
