@@ -91,6 +91,7 @@ label.required
 
 .save-ok h2
 {
+  margin: 0 !important;
   padding: 5px 20px 5px 25px;
   font-size: 11px;
   color: #fff;
