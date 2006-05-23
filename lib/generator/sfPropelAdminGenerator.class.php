@@ -501,6 +501,24 @@ EOF;
     return '[?php echo __(\''.$value.'\', '."\n".'array('.implode(",\n", $vars).')) ?]';
   }
 
+  public function replaceConstants($value)
+  {
+    // find %%xx%% strings
+    preg_match_all('/%%([^%]+)%%/', $value, $matches, PREG_PATTERN_ORDER);
+    $this->params['tmp']['display'] = array();
+    foreach ($matches[1] as $name)
+    {
+      $this->params['tmp']['display'][] = $name;
+    }
+
+    foreach ($this->getColumns('tmp.display') as $column)
+    {
+      $value = str_replace('%%'.$column->getName().'%%', '{$this->'.$this->getSingularName().'->get'.$column->getPhpName().'()}', $value);
+    }
+
+    return $value;
+  }
+
   public function getColumnListTag($column, $params = array())
   {
     $user_params = $this->getParameterValue('list.fields.'.$column->getName().'.params');
