@@ -246,6 +246,19 @@ So you can add the following to the `listSuccess.php` template:
     [php]
     Display : <?php echo link_to('10', 'article/list?maxperpage=10' ?> - <?php echo link_to('20', 'article/list?maxperpage=20' ?> results per page
 
+Changing the select method
+--------------------------
+
+If you need to optimize the performance of an action relying on a `sfPropelPager`, you might want to force the pager to use a `doSelectJoinXXX()` instead of a simple `doSelect()`. This is easily achieved by the `->setPeerMethod()` method of the `sfPropelPager` object:
+
+    [php]
+    $pager->setPeerMethod('doSelectJoinUser');
+
+Note that the pager actually processes the `doSelect()` query when displaying a page. The first query (triggered by `$pager->init()`) does only a `doCount`, and you can also customize this method by calling:
+
+    [php]
+    $pager->setPeerCountMethod('doCountJoinUser');
+
 Storing additional information in the pager
 -----------------------------------------
 
