@@ -61,9 +61,9 @@ To activate the cache on such actions, simply add a `cache.yml` file in the `myp
       type:       slot
     
     all:
-      lifeTime:   86400
+      lifetime:   86400
   
-This configuration stipulates that the cache is `on` for the `list` action, and that it is of the `slot` type (i.e. caching an action, as opposed to caching the whole page, which will be described later). The `lifeTime` is the time (in seconds) after which the page will be processed again and the cached version replaced. 
+This configuration stipulates that the cache is `on` for the `list` action, and that it is of the `slot` type (i.e. caching an action, as opposed to caching the whole page, which will be described later). The `lifetime` is the time (in seconds) after which the page will be processed again and the cached version replaced. 
 
 Now, if you try to call this action from your browser (probably by requesting an URL like `http://myapp.example.com/user/list`), you will notice no difference the first time, but refreshing the page will probably show a notable boost in response time. 
 
@@ -132,7 +132,7 @@ Let's say this is the case for the test application described above: the layout 
       type:       page
     
     all:
-      lifeTime:   86400
+      lifetime:   86400
 
 If you request again the aforementioned pages:
 
