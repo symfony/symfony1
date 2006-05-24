@@ -265,10 +265,10 @@ The available validators can be found in the symfony lib `validator` directory. 
             validators:   passwordValidator
             
         passwordValidator:
-           class:         sfCompareValidator
-           param:
-             check:       password1
-             compare_error: The passwords you entered do not match. Please try again.
+          class:          sfCompareValidator
+          param:
+            check:        password1
+            compare_error: The passwords you entered do not match. Please try again.
 
   The `check` param contains the name of the field that the current field must match to be valid.
   
