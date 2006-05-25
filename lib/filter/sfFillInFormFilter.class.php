@@ -43,24 +43,33 @@ class sfFillInFormFilter extends sfFilter
       }
     }
 
+    $skip_fields = $this->getParameter('skip_fields', array());
+
+    $exclude_types = $this->getParameter('exclude_types', array('hidden', 'password'));
+    $check_types   = $this->getParameter('check_types',   array('text', 'checkbox', 'radio', 'password', 'hidden'));
+    $types = array_diff($check_types, $exclude_types);
+    $query = 'descendant::input[@name and (not(@type)';
+    foreach ($types as $type)
+    {
+      $query .= ' or @type="'.$type.'"';
+    }
+    $query .= ')] | descendant::textarea[@name] | descendant::select[@name]';
+
     // find our form
     $xpath_query = $this->getParameter('name') ? '//form[@name="'.$this->getParameter('name').'"]' : '//form';
     if ($form = $xpath->query($xpath_query)->item(0))
     {
-      foreach($xpath->query('descendant::input[@name and (not(@type) or @type="text" or @type="checkbox" or @type="radio")] | descendant::textarea[@name] | descendant::select[@name]', $form) as $element)
+      foreach($xpath->query($query, $form) as $element)
       {
+        // skip fields specified in the 'skip_fields' attribute
+        if ($request->hasParameter($element->getAttribute('name')) && in_array($element->getAttribute('name'), $skip_fields))
+        {
+          continue;
+        }
+
         if ($element->nodeName == 'input')
         {
-          if (!$element->hasAttribute('type') || $element->getAttribute('type') == 'text')
-          {
-            // text input
-            $element->removeAttribute('value');
-            if ($request->hasParameter($element->getAttribute('name')))
-            {
-              $element->setAttribute('value', $this->espaceRequestParameter($request, $element->getAttribute('name')));
-            }
-          }
-          else if ($element->getAttribute('type') == 'checkbox' || $element->getAttribute('type') == 'radio')
+          if ($element->getAttribute('type') == 'checkbox' || $element->getAttribute('type') == 'radio')
           {
             // checkbox and radio
             $name = $element->getAttribute('name');
@@ -68,6 +77,15 @@ class sfFillInFormFilter extends sfFilter
             if ($request->hasParameter($name) && ($request->getParameter($name) == $element->getAttribute('value') || !$element->hasAttribute('value')))
             {
               $element->setAttribute('checked', 'checked');
+            }
+          }
+          else
+          {
+            // text input
+            $element->removeAttribute('value');
+            if ($request->hasParameter($element->getAttribute('name')))
+            {
+              $element->setAttribute('value', $this->espaceRequestParameter($request, $element->getAttribute('name')));
             }
           }
         }
