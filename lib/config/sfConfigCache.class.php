@@ -117,9 +117,10 @@ class sfConfigCache
     $files = array(
       sfConfig::get('sf_symfony_data_dir').'/'.$globalConfigPath, // default symfony configuration
       sfConfig::get('sf_app_dir').'/'.$globalConfigPath,          // default project configuration
-      sfConfig::get('sf_plugin_data_dir').'/'.$configPath,    // used for plugin modules
-      sfConfig::get('sf_root_dir').'/'.$globalConfigPath,           // used for main configuration
-      sfConfig::get('sf_cache_dir').'/'.$configPath,          // used for generated modules
+      sfConfig::get('sf_plugin_data_dir').'/'.$configPath,        // used for plugin modules
+      sfConfig::get('sf_symfony_data_dir').'/'.$configPath,       // core modules or global plugins
+      sfConfig::get('sf_root_dir').'/'.$globalConfigPath,         // used for main configuration
+      sfConfig::get('sf_cache_dir').'/'.$configPath,              // used for generated modules
       sfConfig::get('sf_app_dir').'/'.$configPath,
     );
 
