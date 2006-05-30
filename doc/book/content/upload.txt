@@ -56,7 +56,7 @@ To display the uploaded file, use the `sf_upload_dir_name` parameter. For exampl
 Validation
 ----------
 
-Like regular form inputs, file upload tags can be validated by a [symfony validator](`validate_form.txt`), the `sfFileValidator`. Just remember to put a custom `file: true` parameter in the validator declaration under the `names` key. For instance, the `validate/upload.yml` for the previous form should be written as follows:
+Like regular form inputs, file upload tags can be validated by a [symfony validator](validate_form.txt), the `sfFileValidator`. Just remember to put a custom `file: true` parameter in the validator declaration under the `names` key. For instance, the `validate/upload.yml` for the previous form should be written as follows:
 
     methods:
       post:               [file]
