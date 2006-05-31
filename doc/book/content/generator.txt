@@ -8,6 +8,8 @@ Backend administrations are often built according to the structure of the data u
 
 >**Note**: A [screencast](http://downloads.symfony-project.com/demo/admin/admin_generator_commented.mov) showing an administration being built is available for download (21min, QT7, 17 Mb).
 
+>**Note**: A [cheat sheet](http://www.symfony-project.com/uploads/assets/sfAdminGeneratorRefCard.pdf) with the admin generator parameters explained briefly in a single page is available for download (pdf, 28 Kb).
+
 >**Note**: If you need a basic CRUD interface to initiate the templates and actions of a module for your frontend application, you will probably prefer making a [scaffolding](scaffolding.txt) than a generated admin.
 
 Introduction
