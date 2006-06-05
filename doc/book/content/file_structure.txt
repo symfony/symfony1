@@ -143,7 +143,7 @@ Tree structure customization
 
 Even if it is highly recommended to keep the default tree structure, it is possible to modify it for specific needs, for instance in order to match the requirements of a client who already has its own tree structure and coding conventions.
 
-Every path to a key directory is determined by a parameter ending with `_dir`. These parameters are defined in the framework, in a file called `$pear_data_dir/symfony/config/constants.php`, used by every symfony project. To customize the tree structure of an application, you simply need to override these settings. For that, use the `config.php` file of the `apps/myapp/config/` directory - this file is parsed for each request just after loading the default configuration.
+Every path to a key directory is determined by a parameter ending with `_dir`. These parameters are defined in the framework, in a file called `$pear_data_dir/symfony/config/constants.php`, used by every symfony project. To customize the tree structure of an application, you simply need to override these settings. For that, use the `config.php` file located in the `apps/myapp/config/` directory (for an application-wide directory structure), or the `config/config.php` (for a project-wide structure).
 
 You will probably have to copy the default configuration from the symfony directory if you need to modify it. Here is an extract of the default configuration:
 
@@ -202,81 +202,26 @@ For instance, if you want your file structure to look like this (it is a standar
       images/
       js/
       uploads/
+      index.php
+
+Change the `SF_ROOT_DIR` constant defined in the `index.php` (and the other front controllers) from:
+
+    [php]
+    define('SF_ROOT_DIR', realpath(dirname(__FILE__).'/..'));
+
+to
+
+    [php]
+    define('SF_ROOT_DIR', realpath(dirname(__FILE__).'/../../cgi-bin'));
 
 Then add the following lines to your `config/config.php`:
 
     [php]
+    $sf_root_dir = sfConfig::get('sf_root_dir');   
     sfConfig::add(array(
-      // root directory names
-      'sf_exec_dir_name'    => $sf_exec_dir_name   = 'cgi-bin',
-      'sf_apps_dir_name'    => $sf_apps_dir_name   = 'apps',
-      'sf_bin_dir_name'     => $sf_bin_dir_name    = 'batch',
-      'sf_cache_dir_name'   => $sf_cache_dir_name  = 'cache',
-      'sf_config_dir_name'  => $sf_config_dir_name = 'config',
-      'sf_data_dir_name'    => $sf_data_dir_name   = 'data',
-      'sf_doc_dir_name'     => $sf_doc_dir_name    = 'doc',
-      'sf_lib_dir_name'     => $sf_lib_dir_name    = 'lib',
-      'sf_log_dir_name'     => $sf_log_dir_name    = 'log',
-      'sf_test_dir_name'    => $sf_test_dir_name   = 'test',
-      'sf_web_dir_name'     => $sf_web_dir_name    = 'public_html',
-      'sf_upload_dir_name'  => $sf_upload_dir_name = 'uploads',
-    
-      // global directory structure
-      'sf_app_dir'        => $sf_app_dir = $sf_root_dir.DIRECTORY_SEPARATOR.$sf_exec_dir_name.DIRECTORY_SEPARATOR.$sf_apps_dir_name.DIRECTORY_SEPARATOR.$sf_app,
-      'sf_bin_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_exec_dir_name.DIRECTORY_SEPARATOR.$sf_bin_dir_name,
-      'sf_base_cache_dir' => $sf_base_cache_dir = $sf_root_dir.DIRECTORY_SEPARATOR.$sf_exec_dir_name.DIRECTORY_SEPARATOR.$sf_cache_dir_name.DIRECTORY_SEPARATOR.$sf_app,
-      'sf_cache_dir'      => $sf_cache_dir      = $sf_base_cache_dir.DIRECTORY_SEPARATOR.$sf_exec_dir_name.DIRECTORY_SEPARATOR.$sf_environment,
-      'sf_config_dir'     => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_exec_dir_name.DIRECTORY_SEPARATOR.$sf_config_dir_name,
-      'sf_data_dir'       => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_exec_dir_name.DIRECTORY_SEPARATOR.$sf_data_dir_name,
-      'sf_lib_dir'        => $sf_lib_dir = $sf_root_dir.DIRECTORY_SEPARATOR.$sf_exec_dir_name.DIRECTORY_SEPARATOR.$sf_lib_dir_name,
-      'sf_log_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_exec_dir_name.DIRECTORY_SEPARATOR.$sf_log_dir_name,
-      'sf_test_dir'       => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_exec_dir_name.DIRECTORY_SEPARATOR.$sf_test_dir_name,
-      'sf_web_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_web_dir_name,
-      'sf_upload_dir'     => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_web_dir_name.DIRECTORY_SEPARATOR.$sf_upload_dir_name,
-    
-      // lib directory names
-      'sf_model_dir_name'      => $sf_model_dir_name      = 'model',
-      'sf_plugin_lib_dir_name' => $sf_plugin_lib_dir_name = 'plugins',
-    
-      // lib directory structure
-      'sf_model_lib_dir'  => $sf_lib_dir.DIRECTORY_SEPARATOR.$sf_model_dir_name,
-      'sf_plugin_lib_dir' => $sf_lib_dir.DIRECTORY_SEPARATOR.$sf_plugin_lib_dir_name,
-    
-      // data directory names
-      'sf_plugin_data_dir'  => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_exec_dir_name.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'plugins',
-    
-      // data directory structure
-      'sf_plugin_dir' => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_exec_dir_name.DIRECTORY_SEPARATOR.'lib'.DIRECTORY_SEPARATOR.'plugins',
-    
-      // SF_CACHE_DIR directory structure
-      'sf_template_cache_dir' => $sf_cache_dir.DIRECTORY_SEPARATOR.'template',
-      'sf_i18n_cache_dir'     => $sf_cache_dir.DIRECTORY_SEPARATOR.'i18n',
-      'sf_config_cache_dir'   => $sf_cache_dir.DIRECTORY_SEPARATOR.$sf_config_dir_name,
-      'sf_test_cache_dir'     => $sf_cache_dir.DIRECTORY_SEPARATOR.'test',
-      'sf_module_cache_dir'   => $sf_cache_dir.DIRECTORY_SEPARATOR.'modules',
-    
-      // SF_APP_DIR sub-directories names
-      'sf_app_i18n_dir_name'     => $sf_app_i18n_dir_name     = 'i18n',
-      'sf_app_config_dir_name'   => $sf_app_config_dir_name   = 'config',
-      'sf_app_lib_dir_name'      => $sf_app_lib_dir_name      = 'lib',
-      'sf_app_module_dir_name'   => $sf_app_module_dir_name   = 'modules',
-      'sf_app_template_dir_name' => $sf_app_template_dir_name = 'templates',
-    
-      // SF_APP_DIR directory structure
-      'sf_app_config_dir'   => $sf_app_dir.DIRECTORY_SEPARATOR.$sf_app_config_dir_name,
-      'sf_app_lib_dir'      => $sf_app_dir.DIRECTORY_SEPARATOR.$sf_app_lib_dir_name,
-      'sf_app_module_dir'   => $sf_app_dir.DIRECTORY_SEPARATOR.$sf_app_module_dir_name,
-      'sf_app_template_dir' => $sf_app_dir.DIRECTORY_SEPARATOR.$sf_app_template_dir_name,
-      'sf_app_i18n_dir'     => $sf_app_dir.DIRECTORY_SEPARATOR.$sf_app_i18n_dir_name,
-    
-      // SF_APP_MODULE_DIR sub-directories names
-      'sf_app_module_action_dir_name'   => 'actions',
-      'sf_app_module_template_dir_name' => 'templates',
-      'sf_app_module_lib_dir_name'      => 'lib',
-      'sf_app_module_view_dir_name'     => 'views',
-      'sf_app_module_validate_dir_name' => 'validate',
-      'sf_app_module_config_dir_name'   => 'config',
-      'sf_app_module_i18n_dir_name'     => 'i18n',
+      'sf_web_dir_name' => $sf_web_dir_name    = 'public_html',
+      'sf_web_dir'      => $sf_root_dir.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.$sf_web_dir_name,
+      'sf_upload_dir'   => $sf_root_dir.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.$sf_web_dir_name.DIRECTORY_SEPARATOR.$sf_upload_dir_name,       
     ));
 
 [1]: http://www.sqlite.org/                   "SQLite database"
