@@ -133,7 +133,7 @@ For instance, imagine a link that would call a remote function. Symfony writes i
 
 Notice that the `url` parameter can contain either an internal URI (`module/action?parameters`) or a [routing rule](routing.txt), just like in a regular `link_to()`. The [askeet tutorial](http://www.symfony-project.com/askeet/8) has other examples of `link_to_remote()` uses.
 
->**Note**: Actions called as remote functions know that they are in an AJAX transaction, and therefore automatically skip the [decoration](view.txt) (i.e. their template is not included in a layout). This exempts you from specifying manually `has_layout: False` in the module `view.yml` for the AJAX views.
+>**Note**: Actions called as remote functions know that they are in an AJAX transaction, and therefore automatically don't include the [web debug toolbar](debug.txt) in development. On the other hand, they do not skip the [decoration](view.txt) (i.e. their template is included in a layout by default). This means that you need to specify `has_layout: false` in the module `view.yml` for the AJAX views if you don't want the content to be decorated.
 
 The second popular way of interacting with web page is forms. Forms normally call a remote function, but this causes the refreshing of the whole page. The correspondence of the `link_to_function()` for a form would be that the form submission only updates an element in the page with the response of the server. This is what the `form_remote_tag()` helper does.
 
