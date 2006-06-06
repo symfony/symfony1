@@ -57,8 +57,8 @@ There are a few conventions that need to be kept in mind when writing YAML files
         
         # Use blanks instead
         all:
-        ¬¬mail:
-        ¬¬¬¬webmaster: webmaster@mysite.com
+          mail:
+            webmaster: webmaster@mysite.com
 
 * To define an array as a value, enclose the elements in square brackets or use the expanded syntax with dashes:
 
@@ -246,6 +246,22 @@ To know if the `fake` credit cards are accepted in the current environment, get 
     sfConfig::get('app_creditcards_fake');
 
 But maybe you need to add an array, an associative array or a lot of new parameters. In this case it is better to create a new configuration file, together with the corresponding configuration handler.
+
+Scriptable configuration
+------------------------
+
+It may happen that your configuration relies on external parameters (such as a database, or another configuration file). For these particular cases, the symfony configuration files are parsed as a PHP file before being passed to the YAML parser. It means that you can write:
+
+    [php]
+    all:
+      translation:
+        format:  <?php echo sfConfig::get('sf_i18n') == true ? 'xliff' : 'none' ?>
+
+That's right: *you can put PHP code in YAML files*!
+
+Beware though that the configuration is parsed very early in the life of a request, so you will have no symfony built-in methods or functions to help you. If you want one configuration file to rely on another, you have to make sure that the file you rely on is parsed before (look in the [symfony source](http://www.symfony-project.com/trac/browser/trunk/lib/symfony.php) to find in which order the configuration files are parsed). The `app.yml` is one of the last files parsed, so you may rely on others in it. 
+
+Be also aware that in the production environment, the configuration is cached, so the configuration files are parsed (and executed) only once after the cache is cleared.
 
 Configuration handlers
 ----------------------
