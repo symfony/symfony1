@@ -67,7 +67,7 @@ class sfMailView extends sfPHPView
     $mail = $actionInstance->getVarHolder()->get('mail');
     if (!$mail)
     {
-      $error = 'You must define a sfMail object named $action in your action to be able to use a sfMailView.';
+      $error = 'You must define a sfMail object named $mail ($this->mail) in your action to be able to use a sfMailView.';
       throw new sfActionException($error);
     }
 
