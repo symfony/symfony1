@@ -391,6 +391,8 @@ function input_upload_tag($name, $options = array())
 
 function input_date_range_tag($name, $value, $options = array())
 {
+  $options = _parse_attributes($options);
+
   $before = '';
   if (isset($options['before']))
   {
