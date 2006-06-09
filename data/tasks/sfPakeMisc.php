@@ -16,7 +16,7 @@ function run_fix_perms($task, $args)
 
   $dirs = array('cache', 'upload', 'log');
   $dir_finder = pakeFinder::type('dir')->prune('.svn')->discard('.svn');
-  $file_finder = pakeFinder::type('dir')->prune('.svn')->discard('.svn');
+  $file_finder = pakeFinder::type('file')->prune('.svn')->discard('.svn');
   foreach ($dirs as $dir)
   {
     pake_chmod($dir_finder, sfConfig::get('sf_'.$dir.'_dir'), 0777);
