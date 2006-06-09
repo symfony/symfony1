@@ -75,7 +75,7 @@ class PgSQLIdGenerator implements IdGenerator {
         if ($name === null) {
             throw new SQLException("You must specify the sequence name when calling getId() method.");
         }
-        $rs = $this->conn->executeQuery("select nextval('" . $name . "')", ResultSet::FETCHMODE_NUM);
+        $rs = $this->conn->executeQuery("SELECT nextval('" . pg_escape_string ( $name ) . "')", ResultSet::FETCHMODE_NUM);
         $rs->next();
         return $rs->getInt(1);
     }

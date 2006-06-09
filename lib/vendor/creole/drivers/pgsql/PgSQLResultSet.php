@@ -36,11 +36,13 @@ class PgSQLResultSet extends ResultSetCommon implements ResultSet {
 	 * Gets optimized PgSQLResultSetIterator.
 	 * @return PgSQLResultSetIterator
 	 */
+	/*
 	public function getIterator()
 	{   
 		require_once 'creole/drivers/pgsql/PgSQLResultSetIterator.php';
 		return new PgSQLResultSetIterator($this);
 	}
+	*/
 
 	/**
 	 * Postgres doesn't actually move the db pointer.  The specific row
@@ -199,5 +201,5 @@ class PgSQLResultSet extends ResultSetCommon implements ResultSet {
 		if ($this->fields[$column] === null) { return null; }
 		return ($this->fields[$column] === 't');
 	}
-			
+
 }

@@ -317,11 +317,11 @@ abstract class PreparedStatementCommon {
 			else $fetchmode = $p1;
 		}
 	    
-		if ($params) {
-			for($i=0,$cnt=count($params); $i < $cnt; $i++) {
-				$this->set($i+1, $params[$i]);
-			}
-	    }
+	    	foreach ( (array) $params as $i=>$param ) {
+			$this->set ( $i + 1, $param );
+			unset ( $i, $param );
+		}
+		unset ( $params );
         
         $this->updateCount = null; // reset
         $sql = $this->replaceParams();        
@@ -343,11 +343,11 @@ abstract class PreparedStatementCommon {
      */
     public function executeUpdate($params = null) 
     {
-        if ($params) {
-            for($i=0,$cnt=count($params); $i < $cnt; $i++) {
-                $this->set($i+1, $params[$i]);
-            }
-        }
+		foreach ( (array) $params as $i=>$param ) {
+			$this->set ( $i + 1, $param );
+			unset ( $i, $param );
+		}
+		unset ( $params );
 
         if($this->resultSet) $this->resultSet->close();
         $this->resultSet = null; // reset                
@@ -399,13 +399,14 @@ abstract class PreparedStatementCommon {
 		case 'double':
 			$type = 'float';
 			break;
-		// nice at a later date for large int handling?
-		//case 'gmp':
 	    }
-            $setter = 'set' . ucfirst($type); // PHP types are case-insensitive, but we'll do this in case that changes
-	    $this->sql_cache_valid = false;
-            $this->$setter($paramIndex, $value);
-        }        
+		$setter = 'set' . ucfirst($type); // PHP types are case-insensitive, but we'll do this in case that change
+		if ( method_exists ( $this, $setter ) ) {
+			$this->$setter($paramIndex, $value);
+		} else {
+			throw new SQLException ( "Unsupported datatype passed to set(): " . $type );
+		}
+        }
     }
     
     /**

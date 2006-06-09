@@ -28,12 +28,11 @@
  * @version   $Revision: 1.1 $
  * @package   creole.drivers.pgsql
  */
-class PgSQLResultSetIterator implements SeekableIterator {
+class PgSQLResultSetIterator implements SeekableIterator, Countable {
 
     private $result;
     private $pos = 0;
     private $fetchmode;
-    private $row;
     private $row_count;
     
     /**
@@ -93,9 +92,16 @@ class PgSQLResultSetIterator implements SeekableIterator {
      */
     function seek ( $index )
     {
+    	if ( ! is_int ( $index ) ) {
+		throw new InvalidArgumentException ( 'Invalid arguement to seek' );
+	}
 	if ( $index < 0 || $index > $this->row_count ) {
-		throw new Exception('Seeking to an unavailable index.');
+		throw new OutOfBoundsException ( 'Invalid seek position' );
 	}
 	$this->pos = $index;
+    }
+
+    function count ( ) {
+	return $this->row_count;
     }
 }

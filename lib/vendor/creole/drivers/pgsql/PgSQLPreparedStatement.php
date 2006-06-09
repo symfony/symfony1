@@ -54,7 +54,7 @@ class PgSQLPreparedStatement extends PreparedStatementCommon implements Prepared
                 $parts[] = $this->arrayToStr($el);
             } else {
                 if (is_string($el)) {
-                    $parts[] = '"' . pg_escape_string($el) . '"';
+                    $parts[] = '"' . $this->escape($el) . '"';
                 } else {
                     $parts[] = $el;
                 }                

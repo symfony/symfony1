@@ -31,7 +31,6 @@ class SQLiteResultSetIterator implements Iterator {
     private $result;
     private $pos = 0;
     private $fetchmode;
-    private $row;
     private $row_count;
     
     /**

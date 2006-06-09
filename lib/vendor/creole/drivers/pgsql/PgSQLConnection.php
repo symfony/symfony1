@@ -141,7 +141,7 @@ class PgSQLConnection extends ConnectionCommon implements Connection {
         if (!$result) {
             throw new SQLException('Could not execute query', pg_last_error($this->dblink), $sql);
         }
-	$this->result_affected_rows = @pg_affected_rows($result);
+	$this->result_affected_rows = (int) @pg_affected_rows($result);
 
         return new PgSQLResultSet($this, $result, $fetchmode);
     }        
@@ -167,7 +167,7 @@ class PgSQLConnection extends ConnectionCommon implements Connection {
      */
     protected function beginTrans()
     {
-        $result = @pg_query($this->dblink, "begin");
+        $result = @pg_query($this->dblink, "BEGIN");
         if (!$result) {
             throw new SQLException('Could not begin transaction', pg_last_error($this->dblink));
         }
@@ -180,7 +180,7 @@ class PgSQLConnection extends ConnectionCommon implements Connection {
      */
     protected function commitTrans()
     {
-        $result = @pg_query($this->dblink, "end");
+        $result = @pg_query($this->dblink, "COMMIT");
         if (!$result) {
             throw new SQLException('Could not commit transaction', pg_last_error($this->dblink));
         }
@@ -193,7 +193,7 @@ class PgSQLConnection extends ConnectionCommon implements Connection {
      */
     protected function rollbackTrans()
     {
-        $result = @pg_query($this->dblink, "abort");
+        $result = @pg_query($this->dblink, "ROLLBACK");
         if (!$result) {
             throw new SQLException('Could not rollback transaction', pg_last_error($this->dblink));
         }

@@ -39,7 +39,8 @@ class PgSQLDatabaseInfo extends DatabaseInfo {
         include_once 'creole/drivers/pgsql/metadata/PgSQLTableInfo.php';
         
         // Get Database Version
-        $result = pg_exec ($this->conn->getResource(), "SELECT version() as ver");
+	// TODO: www.php.net/pg_version
+        $result = pg_query ($this->conn->getResource(), "SELECT version() as ver");
         
         if (!$result)
         {
@@ -54,7 +55,7 @@ class PgSQLDatabaseInfo extends DatabaseInfo {
         pg_free_result ($result);
         $result = null;
 
-        $result = pg_exec($this->conn->getResource(), "SELECT oid, relname FROM pg_class
+        $result = pg_query($this->conn->getResource(), "SELECT oid, relname FROM pg_class
 										WHERE relkind = 'r' AND relnamespace = (SELECT oid
 										FROM pg_namespace
 										WHERE
@@ -86,7 +87,7 @@ class PgSQLDatabaseInfo extends DatabaseInfo {
      
 	 	$this->sequences = array();
 		   
-        $result = pg_exec($this->conn->getResource(), "SELECT oid, relname FROM pg_class
+        $result = pg_query($this->conn->getResource(), "SELECT oid, relname FROM pg_class
 										WHERE relkind = 'S' AND relnamespace = (SELECT oid
 										FROM pg_namespace
 										WHERE

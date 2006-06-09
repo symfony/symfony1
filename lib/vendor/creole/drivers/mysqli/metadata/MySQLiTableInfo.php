@@ -123,7 +123,7 @@ class MySQLiTableInfo extends TableInfo {
         }
 
         // Indexes
-        $res = mysqli_query($this->conn->getResource() . "SHOW INDEX FROM " . $this->name);
+        $res = mysqli_query($this->conn->getResource(), "SHOW INDEX FROM " . $this->name);
 
         // Loop through the returned results, grouping the same key_name together
         // adding each column for that key.
