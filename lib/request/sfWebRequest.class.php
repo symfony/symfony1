@@ -670,8 +670,11 @@ class sfWebRequest extends sfRequest
       return $this->getHttpHeader($header, 'ssl');
     }
 
-    $error = sprintf('Call to undefined function: %s::%s().', get_class($this), $name);
-    trigger_error($error, E_USER_ERROR);
+    if (substr($name, 0, 2) != '__')
+    {
+      $error = sprintf('Call to undefined function: %s::%s().', get_class($this), $name);
+      trigger_error($error, E_USER_ERROR);
+    }
   }
 
   /**
