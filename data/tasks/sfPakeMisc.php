@@ -11,15 +11,17 @@ function run_fix_perms($task, $args)
 {
   $sf_root_dir = sfConfig::get('sf_root_dir');
 
-  $finder = pakeFinder::type('dir')->prune('.svn')->discard('.svn');
-  pake_chmod($finder, sfConfig::get('sf_upload_dir'), 0777);
+  pake_chmod(sfConfig::get('sf_cache_dir_name'), $sf_root_dir, 0777);
+  pake_chmod(sfConfig::get('sf_log_dir_name'), $sf_root_dir, 0777);
 
-  pake_chmod(sfConfig::get('sf_apps_dir_name'), $sf_root_dir, 0777);
-  pake_chmod('cache', $sf_root_dir, 0777);
-
-  $finder = pakeFinder::type('file')->prune('.svn')->discard('.svn');
-  pake_chmod($finder, sfConfig::get('sf_upload_dir'), 0666);
-  pake_chmod($finder, sfConfig::get('sf_log_dir'), 0666);
+  $dirs = array('cache', 'upload', 'log');
+  $dir_finder = pakeFinder::type('dir')->prune('.svn')->discard('.svn');
+  $file_finder = pakeFinder::type('dir')->prune('.svn')->discard('.svn');
+  foreach ($dirs as $dir)
+  {
+    pake_chmod($dir_finder, sfConfig::get('sf_'.$dir.'_dir'), 0777);
+    pake_chmod($file_finder, sfConfig::get('sf_'.$dir.'_dir'), 0666);
+  }
 }
 
 function run_clear_cache($task, $args)
