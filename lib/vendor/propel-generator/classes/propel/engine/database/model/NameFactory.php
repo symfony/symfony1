@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: NameFactory.php 289 2005-11-27 19:13:01Z hans $
+ *  $Id: NameFactory.php 366 2006-05-23 13:00:30Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -28,7 +28,7 @@ include_once 'propel/engine/database/model/NameGenerator.php';
  *
  * @author Hans Lellelid <hans@xmpl.org> (Propel)
  * @author Daniel Rall <dlr@finemaltcoding.com> (Torque)
- * @version $Revision: 289 $
+ * @version $Revision: 366 $
  * @package propel.engine.database.model
  */
 class NameFactory {
@@ -62,7 +62,7 @@ class NameFactory {
         $this->algorithms = array();
     }
 
-    private function instance()
+    private static function instance()
     {
         if (self::$instance === null) {
             self::$instance = new NameFactory();            
@@ -78,8 +78,7 @@ class NameFactory {
      */
     protected function getAlgorithm($name)
     {
-        // synchronized (algorithms)
-        $algorithm = @$this->algorithms[$name];
+        $algorithm = isset($this->algorithms[$name]) ? $this->algorithms[$name] : null;
         if ($algorithm === null) {
             try {
                 include_once 'propel/engine/database/model/' . $name . '.php';
@@ -109,7 +108,7 @@ class NameFactory {
      * @return The generated name.
      * @throws EngineException
      */
-    public function generateName($algorithmName, $inputs)
+    public static function generateName($algorithmName, $inputs)
     {
         $algorithm = self::instance()->getAlgorithm($algorithmName);
         return $algorithm->generateName($inputs);
