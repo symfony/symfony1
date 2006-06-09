@@ -97,6 +97,14 @@ function excerpt_text($text, $phrase, $radius = 100, $excerpt_string = '...')
   }
 }
 
+/**
+ * Word wrap long lines to line_width.
+ */
+function wrap_text($text, $line_width = 80)
+{
+  return preg_replace('/(.{1,'.$line_width.'})(\s+|$)/s', "\\1\n", preg_replace("/\n/", "\n\n", $text));
+}
+
 /*
     # Returns +text+ transformed into html using very simple formatting rules
     # Surrounds paragraphs with <tt>&lt;p&gt;</tt> tags, and converts line breaks into <tt>&lt;br /&gt;</tt>
