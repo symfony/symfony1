@@ -51,7 +51,7 @@ class sfLog_file extends sfLog
      * @var string
      * @access private
      */
-    private $_lineFormat = '%1$s %2$s [%3$s] %4$s';
+    private $_lineFormat = '%1$s %2$s [%3$ -5s] %4$s';
 
     /**
      * String containing the timestamp format.  It will be passed directly to
@@ -70,7 +70,7 @@ class sfLog_file extends sfLog
      */
     private $_formatMap = array('%{timestamp}'  => '%1$s',
                             '%{ident}'      => '%2$s',
-                            '%{priority}'   => '%3$s',
+                            '%{priority}'   => '%3$ -5s',
                             '%{message}'    => '%4$s',
                             '%\{'           => '%%{');
 
