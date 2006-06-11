@@ -615,5 +615,3 @@ class sfCultureInfo
     return $this->simplify($this->findInfo('zoneStrings',true));
   }
 }
-
-?>

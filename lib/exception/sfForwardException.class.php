@@ -33,5 +33,3 @@ class sfForwardException extends sfException
     parent::__construct($message, $code);
   }
 }
-
-?>

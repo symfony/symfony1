@@ -60,5 +60,3 @@ class sfCompareValidator extends sfValidator
     return true;
   }
 }
-
-?>

@@ -121,5 +121,3 @@ class sfDefineEnvironmentConfigHandler extends sfYamlConfigHandler
     return $category;
   }
 }
-
-?>

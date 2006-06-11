@@ -284,4 +284,3 @@ class TGettext
         return $PO;
     }
 }
-?>

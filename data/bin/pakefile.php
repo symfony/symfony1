@@ -99,5 +99,3 @@ foreach ($tasks as $task)
 {
   include_once($task);
 }
-
-?>

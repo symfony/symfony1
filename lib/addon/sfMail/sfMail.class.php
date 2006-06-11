@@ -398,5 +398,3 @@ class sfMail
     return $this->mailer->AltBody;
   }
 }
-
-?>

@@ -330,5 +330,3 @@ abstract class sfRequest
    */
   abstract function shutdown ();
 }
-
-?>

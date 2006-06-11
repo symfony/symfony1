@@ -284,5 +284,3 @@ function _get_object_value ($object, $method, $default_value = null)
 
   return ($default_value !== null && $object_value === null) ? $default_value : $object_value;
 }
-
-?>

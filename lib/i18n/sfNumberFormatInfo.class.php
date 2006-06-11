@@ -625,5 +625,3 @@ class sfNumberFormatInfo
       $this->data['NumberElements'][8] = $value;
     }           
 }
-
-?>

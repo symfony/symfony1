@@ -295,5 +295,3 @@ class sfPDOSessionStorage extends sfSessionStorage
   }
 
 }
-
-?>

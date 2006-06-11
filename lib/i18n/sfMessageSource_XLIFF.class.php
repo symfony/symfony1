@@ -458,5 +458,3 @@ class sfMessageSource_XLIFF extends sfMessageSource
     return false;
   }
 }
-
-?>

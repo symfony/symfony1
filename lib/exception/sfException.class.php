@@ -260,5 +260,3 @@ class sfException extends Exception
     $this->name = $name;
   }
 }
-
-?>

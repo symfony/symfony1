@@ -307,5 +307,3 @@ class sfNumberFormat
     }
   }
 }
-
-?>

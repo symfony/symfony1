@@ -7,5 +7,3 @@ class configSettingsMaxForwardsActions extends sfActions
     $this->forward('configSettingsMaxForwards', 'selfForward');
   }
 }
-
-?>

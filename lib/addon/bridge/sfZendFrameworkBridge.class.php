@@ -42,5 +42,3 @@ class sfZendFrameworkBridge
     return true;
   }
 }
-
-?>

@@ -42,5 +42,3 @@ function run_propel_init_admin($task, $args)
   $finder = pakeFinder::type('file')->name('*.php', '*.yml');
   pake_replace_tokens($finder, $moduleDir, '##', '##', $constants);
 }
-
-?>

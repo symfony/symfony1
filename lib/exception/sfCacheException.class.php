@@ -32,5 +32,3 @@ class sfCacheException extends sfException
     parent::__construct($message, $code);
   }
 }
-
-?>

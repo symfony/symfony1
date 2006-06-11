@@ -38,5 +38,3 @@ function _current_language($culture)
 
   return $culture;
 }
-
-?>

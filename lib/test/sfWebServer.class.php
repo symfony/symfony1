@@ -246,5 +246,3 @@ class sfWebServer extends NS_HTTP_Service_Handler
      return isset($mime[$ext]) ? $mime[$ext] : '';
   }
 }
-
-?>

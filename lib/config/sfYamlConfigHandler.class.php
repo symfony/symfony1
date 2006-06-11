@@ -108,5 +108,3 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
     return $defaultValue;
   }
 }
-
-?>

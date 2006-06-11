@@ -93,5 +93,3 @@ function time_ago_in_words($from_time, $include_seconds = false)
 {
   return distance_of_time_in_words($from_time, time(), $include_seconds);
 }
-
-?>

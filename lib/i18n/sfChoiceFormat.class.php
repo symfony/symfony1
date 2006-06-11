@@ -211,5 +211,3 @@ class sfChoiceFormat
     return false;
   }
 }
-
-?>

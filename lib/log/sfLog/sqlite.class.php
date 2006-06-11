@@ -232,5 +232,3 @@ class sfLog_sqlite extends sfLog
         return true;
     }
 }
-
-?>

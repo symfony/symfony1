@@ -110,5 +110,3 @@ class sfCompileConfigHandler extends sfYamlConfigHandler
     return $config;
   }
 }
-
-?>

@@ -33,5 +33,3 @@ class sfConfigurationException extends sfException
     parent::__construct($message, $code);
   }
 }
-
-?>

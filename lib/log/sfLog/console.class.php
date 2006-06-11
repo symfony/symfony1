@@ -184,5 +184,3 @@ class sfLog_console extends sfLog
         return true;
     }
 }
-
-?>

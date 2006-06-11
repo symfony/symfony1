@@ -32,5 +32,3 @@ class sfSecurityException extends sfException
     parent::__construct($message, $code);
   }
 }
-
-?>

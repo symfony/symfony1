@@ -55,5 +55,3 @@ function run_sync($task, $args)
 
   echo pake_sh($cmd);
 }
-
-?>

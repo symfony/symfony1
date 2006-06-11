@@ -513,5 +513,3 @@ class sfFileCache extends sfCache
     return sprintf('% 32d', crc32($data));
   }
 }
-
-?>

@@ -49,5 +49,3 @@ class sfHtmlValidator extends sfValidator
       return true;
     }
 }
-
-?>

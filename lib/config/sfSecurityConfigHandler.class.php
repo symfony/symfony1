@@ -50,5 +50,3 @@ class sfSecurityConfigHandler extends sfYamlConfigHandler
     return $retval;
   }
 }
-
-?>

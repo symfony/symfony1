@@ -147,5 +147,3 @@ class sfPostgreSQLDatabase extends sfDatabase
     }
   }
 }
-
-?>

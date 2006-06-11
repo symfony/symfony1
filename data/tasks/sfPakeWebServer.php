@@ -40,5 +40,3 @@ function run_server($task, $args)
 
   Nanoserv::Run();
 }
-
-?>

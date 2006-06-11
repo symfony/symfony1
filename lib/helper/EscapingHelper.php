@@ -90,5 +90,3 @@ function esc_js_no_entities($value)
 }
 
 define('ESC_JS_NO_ENTITIES', 'esc_js_no_entities');
-
-?>

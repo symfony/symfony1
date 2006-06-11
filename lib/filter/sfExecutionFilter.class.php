@@ -212,5 +212,3 @@ class sfExecutionFilter extends sfFilter
     }
   }
 }
-
-?>

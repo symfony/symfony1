@@ -41,5 +41,3 @@ class sfGeneratorManager
     return $data;
   }
 }
-
-?>

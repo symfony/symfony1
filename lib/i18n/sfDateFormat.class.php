@@ -636,5 +636,3 @@ class sfDateFormat
   }
 
 }
-
-?>

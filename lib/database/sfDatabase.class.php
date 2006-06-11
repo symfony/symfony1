@@ -114,5 +114,3 @@ abstract class sfDatabase
    */
   abstract function shutdown ();
 }
-
-?>

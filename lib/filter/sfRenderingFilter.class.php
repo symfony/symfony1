@@ -46,5 +46,3 @@ class sfRenderingFilter extends sfFilter
     $response->sendContent();
   }
 }
-
-?>

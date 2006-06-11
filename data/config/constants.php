@@ -84,4 +84,3 @@ sfConfig::add(array(
 foreach (array_diff(array_keys(get_defined_vars()), $usedVars) as $var) {
     unset($$var);
 }
-?>

@@ -32,5 +32,3 @@ class sfActionException extends sfException
     parent::__construct($message, $code);
   }
 }
-
-?>

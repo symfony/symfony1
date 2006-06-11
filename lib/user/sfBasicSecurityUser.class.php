@@ -229,5 +229,3 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     parent::shutdown();
   }
 }
-
-?>

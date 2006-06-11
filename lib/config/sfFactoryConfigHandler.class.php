@@ -165,5 +165,3 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
     return $retval;
   }
 }
-
-?>

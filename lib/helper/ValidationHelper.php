@@ -58,5 +58,3 @@ function form_error($param, $options = array(), $catalogue = 'messages')
 
   return content_tag('div', $prefix.$error.$suffix, $options)."\n";
 }
-
-?>

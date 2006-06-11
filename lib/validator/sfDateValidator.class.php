@@ -32,5 +32,3 @@ class sfDateValidator extends sfValidator
   {
   }
 }
-
-?>

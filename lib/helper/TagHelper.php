@@ -95,5 +95,3 @@ function _get_option(&$options, $name, $default = null)
 
   return $value;
 }
-
-?>

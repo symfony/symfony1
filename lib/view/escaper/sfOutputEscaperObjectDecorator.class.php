@@ -87,5 +87,3 @@ class sfOutputEscaperObjectDecorator extends sfOutputEscaperGetterDecorator
   }
 
 }
-
-?>

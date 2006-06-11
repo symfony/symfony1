@@ -85,5 +85,3 @@ class sfPDODatabase extends sfDatabase
     }
   }
 }
-
-?>

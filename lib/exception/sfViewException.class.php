@@ -32,5 +32,3 @@ class sfViewException extends sfException
     parent::__construct($message, $code);
   }
 }
-
-?>

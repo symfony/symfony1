@@ -103,5 +103,3 @@ abstract class sfFilter
     return $this->parameter_holder->set($name, $value, $ns);
   }
 }
-
-?>

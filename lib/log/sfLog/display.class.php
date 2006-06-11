@@ -102,5 +102,3 @@ class sfLog_display extends sfLog
         return true;
     }
 }
-
-?>

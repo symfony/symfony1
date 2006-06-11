@@ -103,5 +103,3 @@ class sfLogger extends sfLog
     die();
   }
 }
-
-?>

@@ -97,5 +97,3 @@ class sfLogEntry
     $this->debug_stack = $debug_stack;
   }
 }
-
-?>

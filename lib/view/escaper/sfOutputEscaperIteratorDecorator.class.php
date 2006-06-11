@@ -99,5 +99,3 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator im
     return $this->iterator->valid();
   }
 }
-
-?>

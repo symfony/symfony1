@@ -70,5 +70,3 @@ class sfFileCacheTest extends UnitTestCase
     $this->assertTrue($this->cache->has('test'));
   }
 }
-
-?>

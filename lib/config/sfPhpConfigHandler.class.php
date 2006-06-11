@@ -115,5 +115,3 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
     return $ini_path;
   }
 }
-
-?>

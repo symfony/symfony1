@@ -271,5 +271,3 @@ function _encodeText($text)
 
   return $encoded_text;
 }
-
-?>

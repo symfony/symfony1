@@ -737,5 +737,3 @@ class sfWebRequest extends sfRequest
   {
   }
 }
-
-?>

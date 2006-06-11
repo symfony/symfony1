@@ -280,5 +280,3 @@ class sfLog_file extends sfLog
         return $success;
     }
 }
-
-?>

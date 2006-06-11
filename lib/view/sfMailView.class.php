@@ -146,5 +146,3 @@ class sfMailView extends sfPHPView
     return $retval;
   }
 }
-
-?>

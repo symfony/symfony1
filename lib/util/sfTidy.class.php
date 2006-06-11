@@ -89,5 +89,3 @@ class sfTidy
     return (string) $tidy;
   }
 }
-
-?>

@@ -399,5 +399,3 @@ function _upgrade_0_6_config($dirs)
     file_put_contents($php_file, $content);
   }
 }
-
-?>

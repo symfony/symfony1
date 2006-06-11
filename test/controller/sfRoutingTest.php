@@ -293,5 +293,3 @@ class sfRoutingTest extends UnitTestCase
     $this->assertEqual($url, $r->generate('test', $named_params, '/', '/'));
   }
 }
-
-?>

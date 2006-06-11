@@ -79,5 +79,3 @@ class propelCrudGeneratorTest extends sfLiveProjectUnitTestCase
     return dirname(__FILE__).DIRECTORY_SEPARATOR.'fixtures';
   }
 }
-
-?>

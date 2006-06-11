@@ -250,5 +250,3 @@ END_OF_SCRIPT;
         return true;
     }
 }
-
-?>

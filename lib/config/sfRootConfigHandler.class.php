@@ -105,5 +105,3 @@ class sfRootConfigHandler extends sfYamlConfigHandler
     return $retval;
   }
 }
-
-?>

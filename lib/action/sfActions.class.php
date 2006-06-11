@@ -59,5 +59,3 @@ abstract class sfActions extends sfAction
     return $ret;
   }
 }
-
-?>

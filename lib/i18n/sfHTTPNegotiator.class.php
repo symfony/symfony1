@@ -117,5 +117,3 @@ class sfHTTPNegotiator
     return $this->charsets;
   }
 }
-
-?>

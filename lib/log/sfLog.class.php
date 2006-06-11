@@ -635,5 +635,3 @@ class sfLog
         return $this->_ident;
     }
 }
-
-?>

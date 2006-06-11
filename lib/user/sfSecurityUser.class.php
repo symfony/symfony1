@@ -70,5 +70,3 @@ interface sfSecurityUser
    */
   public function setAuthenticated ($authenticated);
 }
-
-?>

@@ -28,5 +28,3 @@ class sfUserTest extends UnitTestCase
 */
   }
 }
-
-?>

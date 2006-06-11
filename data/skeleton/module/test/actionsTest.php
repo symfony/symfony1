@@ -24,5 +24,3 @@ class ##MODULE_NAME##ActionsWebBrowserTest extends UnitTestCase
     $this->assertWantedPattern('/##MODULE_NAME##/', $html);
   }
 }
-
-?>

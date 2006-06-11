@@ -109,5 +109,3 @@ class sfFileValidator extends sfValidator
     return true;
   }
 }
-
-?>

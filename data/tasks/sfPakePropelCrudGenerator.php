@@ -123,5 +123,3 @@ function run_propel_generate_crud($task, $args)
   $finder = pakeFinder::type('any');
   pake_remove($finder, $tmp_dir);
 }
-
-?>

@@ -520,5 +520,3 @@ class sfRouting
     return $out;
   }
 }
-
-?>

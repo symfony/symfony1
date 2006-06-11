@@ -33,5 +33,3 @@ class sfFactoryException extends sfException
     parent::__construct($message, $code);
   }
 }
-
-?>

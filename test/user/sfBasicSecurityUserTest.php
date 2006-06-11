@@ -65,5 +65,3 @@ class sfBasicSecurityUserTest extends UnitTestCase
     $this->assertEqual(false, $this->user->hasCredential('superadmin'));
   }
 }
-
-?>

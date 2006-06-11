@@ -412,5 +412,3 @@ class sfMessageSource_gettext extends sfMessageSource
     return $catalogue;
   }   
 }
-
-?>

@@ -295,5 +295,3 @@ class sfCreoleSessionStorage extends sfSessionStorage
   }
 
 }
-
-?>

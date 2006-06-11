@@ -58,5 +58,3 @@ class sfRegistry
     return $this->parameter_holder->set($name, $value, $ns);
   }
 }
-
-?>

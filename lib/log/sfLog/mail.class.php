@@ -216,5 +216,3 @@ class sfLog_mail extends sfLog
         return true;
     }
 }
-
-?>

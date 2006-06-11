@@ -334,5 +334,3 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     }
   }
 }
-
-?]

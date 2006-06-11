@@ -134,5 +134,3 @@ class sfActionStackEntry
     $this->presentation =& $presentation;
   }
 }
-
-?>

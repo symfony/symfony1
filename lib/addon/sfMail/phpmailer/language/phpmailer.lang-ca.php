@@ -19,4 +19,3 @@ $PHPMAILER_LANG["connect_host"] = 'Error SMTP: No es pot connectar al servidor S
 $PHPMAILER_LANG["file_access"] = 'No es pot accedir a l\'arxiu: ';
 $PHPMAILER_LANG["file_open"] = 'Error d\'Arxiu: No es pot obrir l\'arxiu: ';
 $PHPMAILER_LANG["encoding"] = 'Codificació desconeguda: ';
-?>

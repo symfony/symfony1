@@ -155,4 +155,3 @@ class sfLog_syslog extends sfLog
         return $priorities[$priority];
     }
 }
-?>

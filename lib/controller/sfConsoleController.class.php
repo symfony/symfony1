@@ -50,5 +50,3 @@ class sfConsoleController extends sfController
     }
   }
 }
-
-?>

@@ -70,5 +70,3 @@ function format_language($language_iso, $culture = null)
 
   return isset($languages[$language_iso]) ? $languages[$language_iso] : '';
 }
-
-?>

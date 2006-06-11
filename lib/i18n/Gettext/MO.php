@@ -352,4 +352,3 @@ class TGettext_MO extends TGettext
         return true;
     }
 }
-?>

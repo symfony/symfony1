@@ -267,5 +267,3 @@ class sfDebugConnection implements Connection
     }
   }
 }
-
-?>

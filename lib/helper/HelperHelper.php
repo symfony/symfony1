@@ -51,5 +51,3 @@ function use_helper($helperName)
 
   $loaded[$helperName] = true;
 }
-
-?>

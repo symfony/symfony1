@@ -460,5 +460,3 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
     }
   }
 }
-
-?>

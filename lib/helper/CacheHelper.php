@@ -91,5 +91,3 @@ function cache_save()
 
   echo $data;
 }
-
-?>

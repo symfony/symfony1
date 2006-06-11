@@ -231,5 +231,3 @@ function _pear_init($method = 'local')
 
   return $config;
 }
-
-?>

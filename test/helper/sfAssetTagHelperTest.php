@@ -218,4 +218,3 @@ class sfAssetTagHelperNonVhostTest extends UnitTestCase
   }
 
 }
-?>

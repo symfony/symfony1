@@ -213,5 +213,3 @@ class sfParameterHolderTest extends UnitTestCase
     $this->assertEqual($parameters, $ph->getAll());
   }
 }
-
-?>

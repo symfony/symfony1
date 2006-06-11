@@ -3,5 +3,3 @@
 class myFrontWebController extends sfFrontWebController
 {
 }
-
-?>

@@ -59,5 +59,3 @@ class sfFrontWebController extends sfWebController
     }
   }
 }
-
-?>

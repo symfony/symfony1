@@ -118,5 +118,3 @@ class sfStringValidator extends sfValidator
     return true;
   }
 }
-
-?>

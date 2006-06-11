@@ -20,4 +20,3 @@ $PHPMAILER_LANG["connect_host"] = 'SMTP Hiba: Nem tudtam csatlakozni az SMTP hos
 $PHPMAILER_LANG["file_access"] = 'Nem sikerült elérni a következõ fájlt: ';
 $PHPMAILER_LANG["file_open"] = 'Fájl Hiba: Nem sikerült megnyitni a következõ fájlt: ';
 $PHPMAILER_LANG["encoding"] = 'Ismeretlen kódolás: ';
-?>

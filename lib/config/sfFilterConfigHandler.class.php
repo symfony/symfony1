@@ -90,5 +90,3 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
     return $retval;
   }
 }
-
-?>

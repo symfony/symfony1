@@ -120,5 +120,3 @@ class sfActionStack
     return count($this->stack);
   }
 }
-
-?>

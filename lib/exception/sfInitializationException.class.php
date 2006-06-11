@@ -32,5 +32,3 @@ class sfInitializationException extends sfException
     parent::__construct($message, $code);
   }
 }
-
-?>

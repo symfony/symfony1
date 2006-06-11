@@ -453,5 +453,3 @@ class sfWebDebug
     }
   }
 }
-
-?>

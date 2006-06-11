@@ -35,5 +35,3 @@ class sfError404Exception extends sfException
     sfContext::getInstance()->getController()->forward(sfConfig::get('sf_error_404_module'), sfConfig::get('sf_error_404_action'));
   }
 }
-
-?>

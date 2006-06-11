@@ -33,5 +33,3 @@ class sfStorageException extends sfException
     parent::__construct($message, $code);
   }
 }
-
-?>

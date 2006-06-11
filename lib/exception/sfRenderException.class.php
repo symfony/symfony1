@@ -32,5 +32,3 @@ class sfRenderException extends sfException
     parent::__construct($message, $code);
   }
 }
-
-?>

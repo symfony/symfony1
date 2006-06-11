@@ -190,5 +190,3 @@ class sfLog_composite extends sfLog
         return true;
     }
 }
-
-?>

@@ -123,5 +123,3 @@ function _call_phing($task, $task_name, $check_schema = true)
 
   chdir(sfConfig::get('sf_root_dir'));
 }
-
-?>

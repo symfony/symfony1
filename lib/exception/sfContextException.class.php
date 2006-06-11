@@ -31,5 +31,3 @@ class sfContextException extends sfException
     $this->setName('sfContextException');
   }
 }
-
-?>

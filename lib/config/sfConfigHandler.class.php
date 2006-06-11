@@ -175,5 +175,3 @@ abstract class sfConfigHandler
     return $this->parameter_holder;
   }
 }
-
-?>

@@ -32,5 +32,3 @@ class sfDatabaseException extends sfException
     parent::__construct($message, $code);
   }
 }
-
-?>

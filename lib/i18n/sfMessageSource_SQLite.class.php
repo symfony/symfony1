@@ -346,5 +346,3 @@ class sfMessageSource_SQLite extends sfMessageSource
     return $result;
   } 
 }
-
-?>

@@ -62,5 +62,3 @@ function object_edit_collection($object, $method, $options = array())
 
   return var_export($objects);
 }
-
-?>

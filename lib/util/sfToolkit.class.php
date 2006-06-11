@@ -346,5 +346,3 @@ class sfToolkit
     return preg_replace(array_keys($replacePairs), array_values($replacePairs), $search);
   }
 }
-
-?>

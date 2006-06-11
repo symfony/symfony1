@@ -52,5 +52,3 @@ class sfRoutingConfigHandler extends sfYamlConfigHandler
     return $retval;
   }
 }
-
-?>

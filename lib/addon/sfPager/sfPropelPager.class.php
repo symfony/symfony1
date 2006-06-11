@@ -360,5 +360,3 @@ class sfPropelPager
     return $this->parameter_holder->set($name, $value, $ns);
   }
 }
-
-?>

@@ -26,5 +26,3 @@ class sfNoLogger
   public function info() {}
   public function debug() {}
 }
-
-?>

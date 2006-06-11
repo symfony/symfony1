@@ -71,5 +71,3 @@ class sfWebControllerTest extends UnitTestCase
     }
   }
 }
-
-?>

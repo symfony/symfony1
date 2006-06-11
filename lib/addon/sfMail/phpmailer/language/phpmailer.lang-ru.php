@@ -20,4 +20,3 @@ $PHPMAILER_LANG["connect_host"] = 'SMTP îøèáêà: SMTP-Host íåäîñòóï
 $PHPMAILER_LANG["file_access"] = 'Â äîñòóïå ê ñëåäóþùåìó ôàéëó áûëî îòêàçàíî: ';
 $PHPMAILER_LANG["file_open"] = 'Íå ìîãó îòêðûòü ôàéë: ';
 $PHPMAILER_LANG["encoding"] = 'Íåèçâåñòíûé ôîðìàò êîäèðîâêè: ';
-?>

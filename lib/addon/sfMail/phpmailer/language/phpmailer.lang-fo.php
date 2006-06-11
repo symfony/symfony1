@@ -22,4 +22,3 @@ $PHPMAILER_LANG["connect_host"] = 'SMTP feilur: Kundi ikki knýta samband við S
 $PHPMAILER_LANG["file_access"] = 'Kundi ikki tilganga fílu: ';
 $PHPMAILER_LANG["file_open"] = 'Fílu feilur: Kundi ikki opna fílu: ';
 $PHPMAILER_LANG["encoding"] = 'Ókend encoding: ';
-?>

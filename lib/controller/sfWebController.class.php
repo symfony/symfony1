@@ -210,5 +210,3 @@ abstract class sfWebController extends sfController
     $response->sendContent();
   }
 }
-
-?>

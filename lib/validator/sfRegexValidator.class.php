@@ -90,5 +90,3 @@ class sfRegexValidator extends sfValidator
     return true;
   }
 }
-
-?>

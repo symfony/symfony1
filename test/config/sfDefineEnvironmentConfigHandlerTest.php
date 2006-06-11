@@ -29,5 +29,3 @@ class sfDefineEnvironmentConfigHandlerTest extends UnitTestCase
     sfConfig::set('sf_environment', $current_env);
   }
 }
-
-?>

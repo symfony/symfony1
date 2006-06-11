@@ -94,5 +94,3 @@ class sfInflectorTest extends UnitTestCase
       $this->assertEqual($human, sfInflector::humanize($underscore));
   }
 }
-
-?>

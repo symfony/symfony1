@@ -3,5 +3,3 @@
 class myView extends sfView
 {
 }
-
-?>

@@ -128,5 +128,3 @@ abstract class sfOutputEscaper
     return $this->value;
   }
 }
-
-?>

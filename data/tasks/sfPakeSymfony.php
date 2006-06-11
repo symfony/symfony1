@@ -43,5 +43,3 @@ function run_unfreeze($task, $args)
 {
   // remove lib/symfony and data/symfony directories
 }
-
-?>

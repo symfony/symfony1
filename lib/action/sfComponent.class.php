@@ -297,5 +297,3 @@ abstract class sfComponent
     return $this->getUser()->hasAttribute($name, 'symfony/flash');
   }
 }
-
-?>

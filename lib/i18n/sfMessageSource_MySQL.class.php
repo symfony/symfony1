@@ -410,5 +410,3 @@ class sfMessageSource_MySQL extends sfMessageSource
   }
   
 }
-
-?>

@@ -51,5 +51,3 @@ abstract class sfOutputEscaperGetterDecorator extends sfOutputEscaper
   }
 
 }
-
-?>

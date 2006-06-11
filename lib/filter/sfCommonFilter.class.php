@@ -166,5 +166,3 @@ class sfCommonFilter extends sfFilter
     return $html;
   }
 }
-
-?>

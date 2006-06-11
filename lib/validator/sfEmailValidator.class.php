@@ -83,5 +83,3 @@ class sfEmailValidator extends sfValidator
     return true;
   }
 }
-
-?>

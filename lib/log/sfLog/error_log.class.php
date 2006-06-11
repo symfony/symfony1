@@ -98,5 +98,3 @@ class sfLog_error_log extends sfLog
         return $success;
     }
 }
-
-?>

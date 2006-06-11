@@ -209,5 +209,3 @@ catch (Exception $e)
   $sfException = new sfException();
   $sfException->printStackTrace($e);
 }
-
-?>

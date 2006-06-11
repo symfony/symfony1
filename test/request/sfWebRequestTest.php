@@ -89,5 +89,3 @@ class sfWebRequestTest extends UnitTestCase
     }
   }
 }
-
-?>

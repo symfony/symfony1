@@ -34,5 +34,3 @@ class sfActionStopException extends sfException
   {
   }
 }
-
-?>

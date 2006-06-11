@@ -143,5 +143,3 @@ abstract class sfResponse
    */
   abstract function shutdown ();
 }
-
-?>

@@ -150,5 +150,3 @@ abstract class sfStorage
     return $this->parameter_holder->set($name, $value, $ns);
   }
 }
-
-?>

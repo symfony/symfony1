@@ -338,5 +338,3 @@ class sfPHPView extends sfView
     return $retval;
   }
 }
-
-?>

@@ -104,5 +104,3 @@ class sfTextHelperTest extends UnitTestCase
     $this->assertEqual('<p>'.$link2_result.' Link</p>', auto_link_text('<p>'.$link2_raw.' Link</p>'));
   }
 }
-
-?>

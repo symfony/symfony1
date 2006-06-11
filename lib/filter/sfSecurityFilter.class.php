@@ -51,5 +51,3 @@ abstract class sfSecurityFilter extends sfFilter
     return $object;
   }
 }
-
-?>

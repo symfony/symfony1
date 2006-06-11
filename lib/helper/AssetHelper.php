@@ -246,5 +246,3 @@ function include_stylesheets()
 {
   if (sfConfig::get('sf_logging_active')) sfContext::getInstance()->getLogger()->err('The function "include_stylesheets()" is deprecated and not needed anymore.');
 }
-
-?>

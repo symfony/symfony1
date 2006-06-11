@@ -43,5 +43,3 @@ class sfConsoleRequest extends sfRequest
   {
   }
 }
-
-?>

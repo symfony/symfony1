@@ -219,5 +219,3 @@ class sfLog_sql extends sfLog {
         return true;
     }
 }
-
-?>

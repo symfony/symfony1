@@ -207,5 +207,3 @@ class sfUser
     session_write_close();
   }
 }
-
-?>

@@ -116,5 +116,3 @@ class sfFilterChain
     $this->renderingFilter = $filter;
   }
 }
-
-?>

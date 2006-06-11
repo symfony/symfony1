@@ -554,5 +554,3 @@ abstract class sfAction extends sfComponent
     $this->getContext()->getResponse()->addJavascript($js);
   }
 }
-
-?>

@@ -141,5 +141,3 @@ class sfPeerBuilder extends PHP5ComplexPeerBuilder
         "    return \$res;\n", $tmp);
   }
 }
-
-?>

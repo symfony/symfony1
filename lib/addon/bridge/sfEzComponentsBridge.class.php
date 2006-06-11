@@ -25,5 +25,3 @@ class sfEzComponentsBridge
     return ezcBase::autoload($class);
   }
 }
-
-?>

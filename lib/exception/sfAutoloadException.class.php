@@ -32,5 +32,3 @@ class sfAutoloadException extends sfException
     parent::__construct($message, $code);
   }
 }
-
-?>

@@ -23,5 +23,3 @@ abstract class sfComponents extends sfComponent
     throw new sfInitializationException('sfComponents initialization failed');
   }
 }
-
-?>

@@ -167,5 +167,3 @@ class sfLog_mcal extends sfLog {
         return true;
     }
 }
-
-?>

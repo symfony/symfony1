@@ -135,5 +135,3 @@ class sfSessionTestStorage extends sfStorage
     $this->sessionData[$key] =& $data;
   }
 }
-
-?>

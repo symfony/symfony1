@@ -35,5 +35,3 @@ function run_test($task, $args)
   pake_import('simpletest', false);
   pakeSimpletestTask::call_simpletest($task, 'text', $dirs_to_test);
 }
-
-?>

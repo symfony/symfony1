@@ -30,5 +30,3 @@ if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_active'))
 // propel initialization
 Propel::setConfiguration(sfPropelDatabase::getConfiguration());
 Propel::initialize();
-
-?>

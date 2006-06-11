@@ -132,5 +132,3 @@ class sfSessionStorage extends sfStorage
     $_SESSION[$key] =& $data;
   }
 }
-
-?>

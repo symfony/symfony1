@@ -95,5 +95,3 @@ class sfYaml
     return $input;
   }
 }
-
-?>

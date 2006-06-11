@@ -110,5 +110,3 @@ class sfDebug
     return $values;
   }
 }
-
-?>

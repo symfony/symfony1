@@ -120,5 +120,3 @@ interface sfIMessageSource
   function getCulture();  
     
 }
-
-?>

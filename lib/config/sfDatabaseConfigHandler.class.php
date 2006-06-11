@@ -107,5 +107,3 @@ class sfDatabaseConfigHandler extends sfYamlConfigHandler
     return $retval;
   }
 }
-
-?>

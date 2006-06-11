@@ -62,5 +62,3 @@ class sfLog_null extends sfLog
         return true;
     }
 }
-
-?>

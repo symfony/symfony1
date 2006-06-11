@@ -71,5 +71,3 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler
     return $retval;
   }
 }
-
-?>

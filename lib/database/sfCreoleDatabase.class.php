@@ -205,5 +205,3 @@ class sfCreoleDatabase extends sfDatabase
     }
   }
 }
-
-?>

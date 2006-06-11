@@ -1025,5 +1025,3 @@ function _boolean_attribute($options, $attribute)
 
   return $options;
 }
-
-?>

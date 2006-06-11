@@ -10,5 +10,3 @@ class configFiltersSimpleFilterFilter extends sfFilter
     $filterChain->execute();
   }
 }
-
-?>

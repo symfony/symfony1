@@ -390,5 +390,3 @@ class sfViewCacheManager
   {
   }
 }
-
-?>

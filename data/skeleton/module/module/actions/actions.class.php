@@ -18,5 +18,3 @@ class ##MODULE_NAME##Actions extends sfActions
   {
   }
 }
-
-?>

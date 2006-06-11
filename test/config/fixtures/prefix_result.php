@@ -12,4 +12,3 @@ sfConfig::add(array(
   2 => 'user',
 ),
 ));
-?>

@@ -229,5 +229,3 @@ class sfLiveProjectUnitTestCase extends UnitTestCase
     rmdir($this->getWorkDir());
   }
 }
-
-?>

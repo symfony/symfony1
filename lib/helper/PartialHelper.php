@@ -250,5 +250,3 @@ function get_partial($templateName, $vars = array())
 
   return $retval;
 }
-
-?>

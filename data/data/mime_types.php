@@ -418,5 +418,3 @@ x-world/x-svr svr
 x-world/x-vream vrw
 x-world/x-vrml wrl
 */
-
-?>

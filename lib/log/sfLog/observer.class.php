@@ -120,5 +120,3 @@ class sfLog_observer
         print_r($event);
     }
 }
-
-?>

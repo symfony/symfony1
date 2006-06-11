@@ -707,5 +707,3 @@ class sfNumberCompare
     return false;
   }
 }
-
-?>

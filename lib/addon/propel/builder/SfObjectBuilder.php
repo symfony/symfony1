@@ -209,5 +209,3 @@ $script .= '
     $script .= $tmp;
   }
 }
-
-?>

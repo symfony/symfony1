@@ -226,5 +226,3 @@ function run_release($task, $args)
   // copy .tgz as symfony-latest.tgz
   pake_copy(getcwd().'/symfony-'.$version.'.tgz', getcwd().'/symfony-latest.tgz');
 }
-
-?>

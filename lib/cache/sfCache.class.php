@@ -97,5 +97,3 @@ abstract class sfCache
   */
   abstract public function lastModified($id, $namespace = self::DEFAULT_NAMESPACE);
 }
-
-?>

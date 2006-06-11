@@ -280,5 +280,3 @@ class sfMySQLSessionStorage extends sfSessionStorage
   {
   }
 }
-
-?>

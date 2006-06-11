@@ -3,5 +3,3 @@
 class myUser extends sfBasicSecurityUser
 {
 }
-
-?>

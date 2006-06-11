@@ -250,5 +250,3 @@ class sfCacheFilter extends sfFilter
     return ($retval ? true : false);
   }
 }
-
-?>

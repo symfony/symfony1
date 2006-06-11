@@ -98,5 +98,3 @@ class sfPropelUniqueValidator extends sfValidator
     return true;
   }
 }
-
-?>

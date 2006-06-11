@@ -79,5 +79,3 @@ class sfBasicSecurityFilter extends sfSecurityFilter
     }
   }
 }
-
-?>

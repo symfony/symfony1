@@ -85,5 +85,3 @@ class sfConfig
     self::$config = array();
   }
 }
-
-?>

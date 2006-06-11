@@ -681,5 +681,3 @@ class sfAdminColumn
     return (($this->flag == '=' || $this->isPrimaryKey()) ? true : false);
   }
 }
-
-?>

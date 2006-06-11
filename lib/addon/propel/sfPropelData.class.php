@@ -309,5 +309,3 @@ class sfPropelData
     }
   }
 }
-
-?>

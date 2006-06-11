@@ -114,5 +114,3 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
     return implode("\n", $data);
   }
 }
-
-?>

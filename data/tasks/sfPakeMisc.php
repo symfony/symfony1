@@ -129,5 +129,3 @@ function _safe_cache_remove($finder, $sub_dir, $lock_name)
   // release lock
   pake_remove($sf_root_dir.'/'.$lock_name.'.lck', '');
 }
-
-?>

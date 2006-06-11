@@ -43,5 +43,3 @@ class sfTagHelperTest extends UnitTestCase
     $this->assertEqual(escape_javascript("alert('foo');\nalert(\"bar\");"), 'alert(\\\'foo\\\');\\nalert(\\"bar\\");');
   }
 }
-
-?>

@@ -111,5 +111,3 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
     return $retval;
   }
 }
-
-?>

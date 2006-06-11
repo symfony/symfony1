@@ -82,5 +82,3 @@ abstract class sfValidator
     return $this->parameter_holder->set($name, $value, $ns);
   }
 }
-
-?>

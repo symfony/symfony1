@@ -477,5 +477,3 @@ class sfWebResponse extends sfResponse
   {
   }
 }
-
-?>

@@ -84,5 +84,3 @@ class sfFlashFilter extends sfFilter
     $filterChain->execute();
   }
 }
-
-?>

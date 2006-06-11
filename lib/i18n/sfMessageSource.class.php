@@ -312,5 +312,3 @@ abstract class sfMessageSource implements sfIMessageSource
     return array();
   }
 }
-
-?>

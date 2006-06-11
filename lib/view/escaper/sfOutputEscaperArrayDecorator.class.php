@@ -168,5 +168,3 @@ class sfOutputEscaperArrayDecorator extends sfOutputEscaperGetterDecorator imple
     return $this->value[$key];
   }
 }
-
-?>

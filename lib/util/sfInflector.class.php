@@ -116,5 +116,3 @@ class sfInflector
     return ucfirst(str_replace('_', ' ', $lower_case_and_underscored_word));
   }
 }
-
-?>

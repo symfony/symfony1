@@ -86,5 +86,3 @@ class sfFunctionCache extends sfFileCache
     return $result;
   }
 }
-
-?>

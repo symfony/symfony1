@@ -60,5 +60,3 @@ catch (Exception $e)
 {
   echo "ERROR: symfony - ".$e->getMessage()."\n";
 }
-
-?>

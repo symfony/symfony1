@@ -144,5 +144,3 @@ class sfFillInFormFilter extends sfFilter
     return $value;
   }
 }
-
-?>

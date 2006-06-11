@@ -33,5 +33,3 @@ class sfFilterException extends sfException
     parent::__construct($message, $code);
   }
 }
-
-?>

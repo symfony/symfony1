@@ -80,5 +80,3 @@ class sfWebDebugFilter extends sfFilter
     $filterChain->execute();
   }
 }
-
-?>

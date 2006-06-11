@@ -131,5 +131,3 @@ class sfNumberValidator extends sfValidator
     return true;
   }
 }
-
-?>
