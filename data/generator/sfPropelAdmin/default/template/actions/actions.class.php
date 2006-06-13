@@ -160,7 +160,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 <?php endif; ?>
 <?php if ($input_type == 'admin_input_upload_tag'): ?>
 <?php if ($this->getParameterValue('edit.fields.'.$column->getName().'.filename')): ?>
-      $fileName = '<?php echo str_replace("'", "\\'", $this->getParameterValue('edit.fields.'.$column->getName().'.filename')) ?>';
+      $fileName = "<?php echo str_replace('"', '\\"', $this->replaceConstants($this->getParameterValue('edit.fields.'.$column->getName().'.filename'))) ?>";
 <?php else: ?>
       $fileName = md5($this->getRequest()->getFileName('<?php echo $this->getSingularName() ?>[<?php echo $name ?>]').time());
 <?php endif ?>
