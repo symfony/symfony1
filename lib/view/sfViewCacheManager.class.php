@@ -337,8 +337,6 @@ class sfViewCacheManager
   */
   public function start($suffix, $lifeTime, $clientLifeTime = null, $vary = array())
   {
-    $suffix = 'fragment_'.$suffix;
-
     $internalUri = sfRouting::getInstance()->getCurrentInternalUri();
 
     if (!$clientLifeTime)
@@ -370,8 +368,6 @@ class sfViewCacheManager
   */
   public function stop($suffix)
   {
-    $suffix = 'fragment_'.$suffix;
-
     $data = ob_get_clean();
 
     // save content to cache
