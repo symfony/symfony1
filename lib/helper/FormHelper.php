@@ -66,17 +66,17 @@ function options_for_select($options = array(), $selected = '', $html_options = 
 
   foreach ($options as $key => $value)
   {
-  	if (is_array($value))
-  	{
-  	  $optgroup_html_options = $html_options;
-  	  unset($optgroup_html_options['include_custom']);
-  	  unset($optgroup_html_options['include_blank']);
-  	  $html .= content_tag('optgroup', options_for_select($value, $selected, $optgroup_html_options), array('label' => $key));
-  	}
-  	else 
-  	{
+    if (is_array($value))
+    {
+      $optgroup_html_options = $html_options;
+      unset($optgroup_html_options['include_custom']);
+      unset($optgroup_html_options['include_blank']);
+      $html .= content_tag('optgroup', options_for_select($value, $selected, $optgroup_html_options), array('label' => $key));
+    }
+    else 
+    {
       $option_options = array('value' => $key);
-    	
+      
       if (
           isset($selected)
           &&
@@ -89,7 +89,7 @@ function options_for_select($options = array(), $selected = '', $html_options = 
       }
 
       $html .= content_tag('option', $value, $option_options)."\n";
-  	}
+    }
   }
 
   return $html;
@@ -132,7 +132,7 @@ function select_tag($name, $option_tags = null, $options = array())
     $name .= '[]';
   }
 
-  return content_tag('select', $option_tags, array_merge(array('name' => $name, 'id' => $id), $options));
+  return content_tag('select', $option_tags, array_merge(array('name' => $name, 'id' => get_name_from_id($id)), $options));
 }
 
 function select_country_tag($name, $value, $options = array())
@@ -183,7 +183,7 @@ function select_language_tag($name, $value, $options = array())
 
 function input_tag($name, $value = null, $options = array())
 {
-  return tag('input', array_merge(array('type' => 'text', 'name' => $name, 'id' => $name, 'value' => $value), _convert_options($options)));
+  return tag('input', array_merge(array('type' => 'text', 'name' => $name, 'id' => get_name_from_id($name, $value), 'value' => $value), _convert_options($options)));
 }
 
 function input_hidden_tag($name, $value = null, $options = array())
@@ -312,7 +312,7 @@ tinyMCE.init({
 
     return
       content_tag('script', javascript_cdata_section($tinymce_js), array('type' => 'text/javascript')).
-      content_tag('textarea', $content, array_merge(array('name' => $name, 'id' => $id), _convert_options($options)));
+      content_tag('textarea', $content, array_merge(array('name' => $name, 'id' => get_name_from_id($id, $value)), _convert_options($options)));
   }
   elseif ($rich === 'fck')
   {
@@ -371,13 +371,13 @@ tinyMCE.init({
   }
   else
   {
-    return content_tag('textarea', (is_object($content)) ? $content->__toString() : $content, array_merge(array('name' => $name, 'id' => $id), _convert_options($options)));
+    return content_tag('textarea', (is_object($content)) ? $content->__toString() : $content, array_merge(array('name' => $name, 'id' => get_name_from_id($id, null)), _convert_options($options)));
   }
 }
 
 function checkbox_tag($name, $value = '1', $checked = false, $options = array())
 {
-  $html_options = array_merge(array('type' => 'checkbox', 'name' => $name, 'id' => $name, 'value' => $value), _convert_options($options));
+  $html_options = array_merge(array('type' => 'checkbox', 'name' => $name, 'id' => get_name_from_id($name, $value), 'value' => $value), _convert_options($options));
   if ($checked) $html_options['checked'] = 'checked';
 
   return tag('input', $html_options);
@@ -385,7 +385,7 @@ function checkbox_tag($name, $value = '1', $checked = false, $options = array())
 
 function radiobutton_tag($name, $value, $checked = false, $options = array())
 {
-  $html_options = array_merge(array('type' => 'radio', 'name' => $name, 'value' => $value), _convert_options($options));
+  $html_options = array_merge(array('type' => 'radio', 'name' => $name, 'id' => get_name_from_id($name, $value), 'value' => $value), _convert_options($options));
   if ($checked) $html_options['checked'] = 'checked';
 
   return tag('input', $html_options);
@@ -932,6 +932,28 @@ function select_datetime_tag($name, $value, $options = array(), $html_options = 
   $time = select_time_tag($name, $value, $options, $html_options);
 
   return $date.$datetime_seperator.$time;
+}
+
+function label_for($id, $label, $options = array())
+{
+  $options = _parse_attributes($options);
+
+  return content_tag('label', $label, array_merge(array('for' => get_name_from_id($id, null)), $options));
+}
+
+function get_name_from_id($name, $value = null)
+{
+  // check to see if we have an array variable for a field name
+  if (strstr($name, '['))
+  {
+    $name = str_replace(
+        array('[]', '][', '[', ']'),
+        array((($value != null) ? '_'.$value : ''), '_', '_', ''),
+        $name
+    );
+  }
+
+  return $name;
 }
 
 function _add_zeros($string, $strlen)
