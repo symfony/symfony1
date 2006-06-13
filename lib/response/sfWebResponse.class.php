@@ -369,8 +369,8 @@ class sfWebResponse extends sfResponse
   public function getTitle()
   {
     $metas = $this->parameter_holder->getAll('helper/asset/auto/meta');
-
-    return $metas['title'];
+	
+    return (array_key_exists('title', $metas)) ? $metas['title'] : false;
   }
 
   public function setTitle($title, $doNotEscape = false)
