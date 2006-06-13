@@ -55,18 +55,41 @@ class sfNumberValidator extends sfValidator
 
     $type = strtolower($this->getParameterHolder()->get('type'));
 
-    if ($type == 'float')
+    switch ($type)
     {
-      if (substr_count($value, '.') != 1)
+      case "decimal":
+      case "float":
       {
-        // value isn't a float, shazbot!
-        $error = $this->getParameterHolder()->get('type_error');
+        if (substr_count($value, '.') != 1)
+        {
+          // value isn't a float, shazbot!
+          $error = $this->getParameterHolder()->get('type_error');
+          return false;
+        }
 
-        return false;
+        // cast our value to a float
+        $value = (float) $value;
+
+        break;
       }
 
-      // cast our value to a float
-      $value = (float) $value;
+      case "int":
+      case "integer":
+      {
+        // Note: (Both 3 AND 3.0 are BOTH considered integers and 3.1 is not)
+        if ((float) $value != (int) $value)
+        {
+          // is not an integer.
+          $error = $this->getParameterHolder()->get('type_error');
+          return false;
+        }
+
+        // cast our value to an integer
+        $value = (int) $value;
+
+        break;
+      }
+
     }
 
     $min = $this->getParameterHolder()->get('min');
@@ -119,7 +142,10 @@ class sfNumberValidator extends sfValidator
     // check user-specified parameters
     $type = strtolower($this->getParameterHolder()->get('type'));
 
-    if ($type != 'any' && $type != 'float')
+    // array of allowed types
+    $allowed_types = array('any', 'decimal', 'float', 'int', 'integer');
+
+    if (!array_search($type, $allowed_types))
     {
       // unknown type
       $error = 'Unknown number type "%s" in NumberValidator';
