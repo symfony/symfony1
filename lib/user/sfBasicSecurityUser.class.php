@@ -51,23 +51,23 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
    * Removes a credential.
    *
    * @param  mixed credential
-   */
+   */  
   public function removeCredential($credential)
   {
     if ($this->hasCredential($credential))
     {
-      for ($i = 0, $z = count($this->credentials); $i < $z; $i++)
+      foreach ($this->credentials as $key => $value)
       {
-        if ($credential == $this->credentials[$i])
+        if ($credential == $value)
         {
           if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfUser} remove credential "'.$credential.'"');
 
-          unset($this->credentials[$i]);
+          unset($this->credentials[$key]);
           return;
         }
       }
     }
-  }
+  }  
 
   /**
    * Adds a credential.
