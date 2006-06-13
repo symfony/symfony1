@@ -66,19 +66,30 @@ function options_for_select($options = array(), $selected = '', $html_options = 
 
   foreach ($options as $key => $value)
   {
-    $option_options = array('value' => $key);
-    if (
-        isset($selected)
-        &&
-        (is_array($selected) && in_array(strval($key), $valid, true))
-        ||
-        (strval($key) == strval($selected))
-       )
-    {
-      $option_options['selected'] = 'selected';
-    }
+  	if (is_array($value))
+  	{
+  	  $optgroup_html_options = $html_options;
+  	  unset($optgroup_html_options['include_custom']);
+  	  unset($optgroup_html_options['include_blank']);
+  	  $html .= content_tag('optgroup', options_for_select($value, $selected, $optgroup_html_options), array('label' => $key));
+  	}
+  	else 
+  	{
+      $option_options = array('value' => $key);
+    	
+      if (
+          isset($selected)
+          &&
+          (is_array($selected) && in_array(strval($key), $valid, true))
+          ||
+          (strval($key) == strval($selected))
+         )
+      {
+        $option_options['selected'] = 'selected';
+      }
 
-    $html .= content_tag('option', $value, $option_options)."\n";
+      $html .= content_tag('option', $value, $option_options)."\n";
+  	}
   }
 
   return $html;
