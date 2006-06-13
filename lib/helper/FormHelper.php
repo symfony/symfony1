@@ -561,8 +561,13 @@ function submit_image_tag($source, $options = array())
   return tag('input', array_merge(array('type' => 'image', 'name' => 'commit', 'src' => image_path($source)), _convert_options($options)));
 }
 
-function select_day_tag($name, $value, $options = array(), $html_options = array())
+function select_day_tag($name, $value = null, $options = array(), $html_options = array())
 {
+  if ($value === null)
+  {
+    $value = date('j');
+  }
+    
   $options = _parse_attributes($options);
 
   $select_options = array();
@@ -577,14 +582,19 @@ function select_day_tag($name, $value, $options = array(), $html_options = array
 
   for ($x = 1; $x < 32; $x++)
   {
-    $select_options[$x] = _add_zeros($x, 2);
+    $select_options[$x] = _prepend_zeros($x, 2);
   }
 
   return select_tag($name, options_for_select($select_options, $value), $html_options);
 }
 
-function select_month_tag($name, $value, $options = array(), $html_options = array())
+function select_month_tag($name, $value = null, $options = array(), $html_options = array())
 {
+  if ($value === null)
+  {
+    $value = date('n');
+  }
+    
   $options = _parse_attributes($options);
 
   $culture = _get_option($options, 'culture', sfContext::getInstance()->getUser()->getCulture());
@@ -604,7 +614,7 @@ function select_month_tag($name, $value, $options = array(), $html_options = arr
   {
     for ($k = 1; $k < 13; $k++) 
     {
-      $select_options[$k] = _add_zeros($k, 2);
+      $select_options[$k] = _prepend_zeros($k, 2);
     }
   }
   else
@@ -628,8 +638,13 @@ function select_month_tag($name, $value, $options = array(), $html_options = arr
   return select_tag($name, options_for_select($select_options, $value), $html_options);
 }
 
-function select_year_tag($name, $value, $options = array(), $html_options = array())
+function select_year_tag($name, $value = null, $options = array(), $html_options = array())
 {
+  if ($value === null)
+  {
+    $value = date('Y');
+  }
+    
   $options = _parse_attributes($options);
 
   $select_options = array();
@@ -674,7 +689,7 @@ function select_year_tag($name, $value, $options = array(), $html_options = arra
  * @param array $html_options
  * @return string
  */
-function select_date_tag($name, $value, $options = array(), $html_options = array())
+function select_date_tag($name, $value = null, $options = array(), $html_options = array())
 {
   $options = _parse_attributes($options);
 
@@ -732,14 +747,15 @@ function select_date_tag($name, $value, $options = array(), $html_options = arra
     $include_custom_year = array();
   }
 
-  $html_options['id'] = $name . '_month';
-  $m = (!$discard_month) ? select_month_tag($name . '[month]', _parse_value_for_date($value, 'month', 'm'), $options + $include_custom_month, $html_options) : '';
+  $month_name = $name . '[month]';
+  $m = (!$discard_month) ? select_month_tag($month_name, _parse_value_for_date($value, 'month', 'm'), $options + $include_custom_month, $html_options) : '';
 
-  $html_options['id'] = $name . '_day';
-  $d = (!$discard_day) ? select_day_tag($name . '[day]', _parse_value_for_date($value, 'day', 'd'), $options + $include_custom_day, $html_options) : '';
 
-  $html_options['id'] = $name . '_year';
-  $y = (!$discard_year) ? select_year_tag($name . '[year]', _parse_value_for_date($value, 'year', 'Y'), $options + $include_custom_year, $html_options) : '';
+  $day_name = $name . '[day]';
+  $d = (!$discard_day) ? select_day_tag($day_name, _parse_value_for_date($value, 'day', 'd'), $options + $include_custom_day, $html_options) : '';
+
+  $year_name = $name . '[year]';
+  $y = (!$discard_year) ? select_year_tag($year_name, _parse_value_for_date($value, 'year', 'Y'), $options + $include_custom_year, $html_options) : '';
 
   // we have $tags = array ('m','d','y')
   foreach ($tags as $k => $v)
@@ -751,8 +767,13 @@ function select_date_tag($name, $value, $options = array(), $html_options = arra
   return implode($date_seperator, $tags);
 }
 
-function select_second_tag($name, $value, $options = array(), $html_options = array())
+function select_second_tag($name, $value = null, $options = array(), $html_options = array())
 {
+  if ($value === null)
+  {
+    $value = date('s');
+  }
+  
   $options = _parse_attributes($options);
   $select_options = array();
 
@@ -768,14 +789,19 @@ function select_second_tag($name, $value, $options = array(), $html_options = ar
   $second_step = _get_option($options, 'second_step', 1);
   for ($x = 0; $x < 60; $x += $second_step)
   {
-    $select_options[$x] = _add_zeros($x, 2);
+    $select_options[$x] = _prepend_zeros($x, 2);
   }
 
   return select_tag($name, options_for_select($select_options, $value), $html_options);
 }
 
-function select_minute_tag($name, $value, $options = array(), $html_options = array())
+function select_minute_tag($name, $value = null, $options = array(), $html_options = array())
 {
+  if ($value === null)
+  {
+    $value = date('i');
+  }
+    
   $options = _parse_attributes($options);
   $select_options = array();
 
@@ -791,14 +817,19 @@ function select_minute_tag($name, $value, $options = array(), $html_options = ar
   $minute_step = _get_option($options, 'minute_step', 1);
   for ($x = 0; $x < 60; $x += $minute_step)
   {
-    $select_options[$x] = _add_zeros($x, 2);
+    $select_options[$x] = _prepend_zeros($x, 2);
   }
 
   return select_tag($name, options_for_select($select_options, $value), $html_options);
 }
 
-function select_hour_tag($name, $value, $options = array(), $html_options = array())
+function select_hour_tag($name, $value = null, $options = array(), $html_options = array())
 {
+  if ($value === null)
+  {
+    $value = date('h');
+  }
+    
   $options = _parse_attributes($options);
   $select_options = array();
 
@@ -818,14 +849,19 @@ function select_hour_tag($name, $value, $options = array(), $html_options = arra
 
   for ($x = $start_hour; $x <= $end_hour; $x++)
   {
-    $select_options[$x] = _add_zeros($x, 2);
+    $select_options[$x] = _prepend_zeros($x, 2);
   }
 
   return select_tag($name, options_for_select($select_options, $value), $html_options);
 }
 
-function select_ampm_tag($name, $value, $options = array(), $html_options = array())
+function select_ampm_tag($name, $value = null, $options = array(), $html_options = array())
 {
+  if ($value === null)
+  {
+    $value = date('A');
+  }
+    
   $options = _parse_attributes($options);
   $select_options = array();
 
@@ -853,7 +889,7 @@ function select_ampm_tag($name, $value, $options = array(), $html_options = arra
  * @param array $html_options
  * @return string
  */
-function select_time_tag($name, $value, $options = array(), $html_options = array())
+function select_time_tag($name, $value = null, $options = array(), $html_options = array())
 {
   $options = _parse_attributes($options);
 
@@ -892,24 +928,24 @@ function select_time_tag($name, $value, $options = array(), $html_options = arra
 
   $tags = array();
 
-  $html_options['id'] = $name . '_hour';
-  $tags[] = select_hour_tag($name . '[hour]', _parse_value_for_date($value, 'hour', ($_12hour_time) ? 'h' : 'H'), $options + $include_custom_hour, $html_options);
+  $hour_name = $name . '[hour]';
+  $tags[] = select_hour_tag($hour_name, _parse_value_for_date($value, 'hour', ($_12hour_time) ? 'h' : 'H'), $options + $include_custom_hour, $html_options);
 
-  $html_options['id'] = $name . '_minute';
-  $tags[] = select_minute_tag($name . '[minute]', _parse_value_for_date($value, 'minute', 'i'), $options + $include_custom_minute, $html_options);
+  $minute_name = $name . '[minute]';
+  $tags[] = select_minute_tag($minute_name, _parse_value_for_date($value, 'minute', 'i'), $options + $include_custom_minute, $html_options);
 
   if ($include_second)
   {
-    $html_options['id'] = $name . '_second';
-    $tags[] = select_second_tag($name . "[second]" , _parse_value_for_date($value, 'second', 's'), $options + $include_custom_second, $html_options);
+    $second_name = $name . '[second]';
+    $tags[] = select_second_tag($second_name, _parse_value_for_date($value, 'second', 's'), $options + $include_custom_second, $html_options);
   }
 
   $time = implode($time_seperator, $tags);
 
   if ($_12hour_time)
   {
-    $html_options['id'] = $name . '_ampm';
-    $time .=  $ampm_seperator . select_ampm_tag($name . "[ampm]" , _parse_value_for_date($value, 'ampm', 'A'), $options + $include_custom_ampm, $html_options);
+    $ampm_name = $name . "[ampm]";
+    $time .=  $ampm_seperator . select_ampm_tag($ampm_name, _parse_value_for_date($value, 'ampm', 'A'), $options + $include_custom_ampm, $html_options);
   }
 
   return $time;
@@ -923,7 +959,7 @@ function select_time_tag($name, $value, $options = array(), $html_options = arra
  * @param array $options
  * @return string
  */
-function select_datetime_tag($name, $value, $options = array(), $html_options = array())
+function select_datetime_tag($name, $value = null, $options = array(), $html_options = array())
 {
   $options = _parse_attributes($options);
   $datetime_seperator = _get_option($options, 'datetime_seperator', '');
@@ -956,7 +992,7 @@ function get_name_from_id($name, $value = null)
   return $name;
 }
 
-function _add_zeros($string, $strlen)
+function _prepend_zeros($string, $strlen)
 {
   if ($strlen > strlen($string))
   {
@@ -1024,6 +1060,10 @@ function _parse_value_for_date($value, $key, $format_char)
   else if ($value == '' || ($key == 'ampm' && ($value == 'AM' || $value == 'PM')))
   {
     return $value;
+  }
+  else if (empty($value))
+  {
+    $value = date('Y-m-d H:i:s');
   }
 
   // english text presentation
