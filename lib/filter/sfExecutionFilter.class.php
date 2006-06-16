@@ -77,27 +77,27 @@ class sfExecutionFilter extends sfFilter
         // set default validated status
         $validated = true;
 
+        // get the current action validation configuration
+        $validationConfig = $moduleName.'/'.sfConfig::get('sf_app_module_validate_dir_name').'/'.$actionName.'.yml';
+        if (is_readable(sfConfig::get('sf_app_module_dir').'/'.$validationConfig))
+        {
+          // load validation configuration
+          // do NOT use require_once
+          require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$validationConfig));
+        }
+
+        // manually load validators
+        $actionInstance->registerValidators($validatorManager);
+
+        // process validators
+        $validated = $validatorManager->execute();
+
         // process manual validation
         $validateToRun = 'validate'.ucfirst($actionName);
-        $validated = method_exists($actionInstance, $validateToRun) ? $actionInstance->$validateToRun() : $actionInstance->validate();
+        $manualValidated = method_exists($actionInstance, $validateToRun) ? $actionInstance->$validateToRun() : $actionInstance->validate();
 
-        if ($validated)
-        {
-          // get the current action validation configuration
-          $validationConfig = $moduleName.'/'.sfConfig::get('sf_app_module_validate_dir_name').'/'.$actionName.'.yml';
-          if (is_readable(sfConfig::get('sf_app_module_dir').'/'.$validationConfig))
-          {
-            // load validation configuration
-            // do NOT use require_once
-            require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$validationConfig));
-          }
-
-          // manually load validators
-          $actionInstance->registerValidators($validatorManager);
-
-          // process validators
-          $validated = $validatorManager->execute();
-        }
+        // action is validated only if both validators returned true
+        $validated = $manualValidated && $validated;
 
         $sf_logging_active = sfConfig::get('sf_logging_active');
         if ($validated)
