@@ -21,27 +21,39 @@ require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/ValidationHelper.php')
  * @version    SVN: $Id$
  */
 
-/*
-      # Accepts a container (hash, array, enumerable, your type) and returns a string of option tags. Given a container
-      # where the elements respond to first and last (such as a two-element array), the "lasts" serve as option values and
-      # the "firsts" as option text. Hashes are turned into this form automatically, so the keys become "firsts" and values
-      # become lasts. If +selected+ is specified, the matching "last" or element will get the selected option-tag.  +Selected+
-      # may also be an array of values to be selected when using a multiple select.
-      #
-      # Examples (call, result):
-      #   options_for_select([["Dollar", "$"], ["Kroner", "DKK"]])
-      #     <option value="$">Dollar</option>\n<option value="DKK">Kroner</option>
-      #
-      #   options_for_select([ "VISA", "MasterCard" ], "MasterCard")
-      #     <option>VISA</option>\n<option selected="selected">MasterCard</option>
-      #
-      #   options_for_select({ "Basic" => "$20", "Plus" => "$40" }, "$40")
-      #     <option value="$20">Basic</option>\n<option value="$40" selected="selected">Plus</option>
-      #
-      #   options_for_select([ "VISA", "MasterCard", "Discover" ], ["VISA", "Discover"])
-      #     <option selected="selected">VISA</option>\n<option>MasterCard</option>\n<option selected="selected">Discover</option>
-      #
-      # NOTE: Only the option tags are returned, you have to wrap this call in a regular HTML select tag.
+/**
+* Returns a formatted set of <option> tags based on optional <i>$options</i> array variable.
+*
+* The options_for_select helper is usually called in conjunction with the select_tag helper, as it is relatively
+* useless on its own. By passing an array of <i>$options</i>, the helper will automatically generate <option> tags
+* using the array key as the value and the array value as the display title. Additionally the options_for_select tag is
+* smart enough to detect nested arrays as <optgroup> tags.  If the helper detects that the array value is an array itself,
+* it creates an <optgroup> tag with the name of the group being the key and the contents of the <optgroup> being the array.
+*
+* <b>Options:</b>
+* - include_blank - Includes a blank <option> tag at the beginning of the string with an empty value
+* - include_custom - Includes an <option> tag with a custom display title at the beginning of the string with an empty value
+*
+* <b>Examples:</b>
+* <code>
+*  echo select_tag('person', options_for_select(array(1 => 'Larry', 2 => 'Moe', 3 => 'Curly')));
+* </code>
+*
+* <code>
+*  $card_list = array('VISA' => 'Visa', 'MAST' => 'MasterCard', 'AMEX' => 'American Express', 'DISC' => 'Discover');
+*  echo select_tag('cc_type', options_for_select($card_list), 'AMEX', array('include_custom' => '-- Select Credit Card Type --'));
+* </code>
+*
+* <code>
+*  $optgroup_array = array(1 => 'Joe', 2 => 'Sue', 'Group A' => array(3 => 'Mary', 4 => 'Tom'), 'Group B' => array(5 => 'Bill', 6 =>'Andy'));
+*  echo select_tag('employee', options_for_select($optgroup_array, null, array('include_blank' => true)), array('class' => 'mystyle'));
+* </code>
+*
+* @param  array dataset to create <option> tags and <optgroup> tags from
+* @param  string selected option value
+* @param  array  additional HTML compliant <option> tag parameters
+* @return string populated with <option> tags derived from the <i>$options</i> array variable
+* @see select_tag
 */
 function options_for_select($options = array(), $selected = '', $html_options = array())
 {
@@ -95,12 +107,23 @@ function options_for_select($options = array(), $selected = '', $html_options = 
   return $html;
 }
 
-/*
-    # Starts a form tag that points the action to an url configured with <tt>url_for_options</tt> just like
-    # ActionController::Base#url_for. The method for the form defaults to POST.
-    #
-    # Options:
-    # * <tt>:multipart</tt> - If set to true, the enctype is set to "multipart/form-data".
+/**
+* Returns an HTML <form> tag that points to a valid action, route or URL as defined by <i>$url_for_options</i>.
+*
+* By default, the form tag is generated in POST format, but can easily be configured along with any additional
+* HTML parameters via the optional <i>$options</i> variable. If you are using file uploads, be sure to set the 
+* <i>multipart</i> option to true.
+*
+* <b>Options:</b>
+* - multipart - When set to true, enctype is set to "multipart/form-data".
+*
+* <b>Examples:</b>
+*   <code><?php echo form_tag('@myroute'); ?></code>
+*   <code><?php echo form_tag('/module/action', array('name' => 'myformname', 'multipart' => true)); ?></code>
+*
+* @param  string valid action, route or URL
+* @param  array optional HTML parameters for the <form> tag
+* @return string opening HTML <form> tag with options
 */
 function form_tag($url_for_options = '', $options = array())
 {
@@ -123,6 +146,38 @@ function form_tag($url_for_options = '', $options = array())
   return tag('form', $html_options, true);
 }
 
+/**
+* Returns a <select> tag, optionally comprised of <option> tags.
+*
+* The select tag does not generate <option> tags by default.  
+* To do so, you must populate the <i>$option_tags</i> variable with a string of valid HTML compliant <option> tags.
+* Fortunately, Symfony provides a handy helper function to convert an array of data into option tags (see options_for_select). 
+* If you need to create a "multiple" select tag (ability to select multiple options), set the <i>multiple</i> option to true.  
+* Doing so will automatically convert the name field to an array type variable (i.e. name="name" becomes name="name[]").
+* 
+* <b>Options:</b>
+* - multiple - If set to true, the select tag will allow multiple options to be selected at once.
+*
+* <b>Examples:</b>
+* <code>
+*  $person_list = array(1 => 'Larry', 2 => 'Moe', 3 => 'Curly');
+*  echo select_tag('person', options_for_select($person_list, $sf_params->get('person')), array('class' => 'full'));
+* </code>
+*
+* <code>
+*  echo select_tag('department', options_for_select($department_list), array('multiple' => true));
+* </code>
+*
+* <code>
+*  echo select_tag('url', options_for_select($url_list), array('onChange' => 'Javascript:this.form.submit();'));
+* </code>
+*
+* @param  string field name 
+* @param  string contains a string of valid <option></option> tags
+* @param  array  additional HTML compliant <select> tag parameters
+* @return string <select> tag optionally comprised of <option> tags.
+* @see options_for_select, content_tag
+*/
 function select_tag($name, $option_tags = null, $options = array())
 {
   $options = _convert_options($options);
@@ -135,6 +190,30 @@ function select_tag($name, $option_tags = null, $options = array())
   return content_tag('select', $option_tags, array_merge(array('name' => $name, 'id' => get_name_from_id($id)), $options));
 }
 
+/**
+* Returns a <select> tag populated with all the countries in the world.
+*
+* The select_country_tag builds off the traditional select_tag function, and is conveniently populated with 
+* all the countries in the world (sorted alphabetically). Each option in the list has a two-character country 
+* code for its value and the country's name as its display title.  The country data is retrieved via the sfCultureInfo
+* class, which stores a wide variety of i18n and i10n settings for various countries and cultures throughout the world.
+* Here's an example of an <option> tag generated by the select_country_tag:
+*
+* <samp>
+*  <option value="US">United States</option>
+* </samp>
+*
+* <b>Examples:</b>
+* <code>
+*  echo select_country_tag('country', 'FR');
+* </code>
+*
+* @param  string field name 
+* @param  string selected field value (two-character country code)
+* @param  array  additional HTML compliant <select> tag parameters
+* @return string <select> tag populated with all the countries in the world.
+* @see select_tag, options_for_select, sfCultureInfo
+*/
 function select_country_tag($name, $value, $options = array())
 {
   $c = new sfCultureInfo(sfContext::getInstance()->getUser()->getCulture());
@@ -158,6 +237,30 @@ function select_country_tag($name, $value, $options = array())
   return select_tag($name, $option_tags, $options);
 }
 
+/**
+* Returns a <select> tag populated with all the languages in the world (or almost).
+*
+* The select_language_tag builds off the traditional select_tag function, and is conveniently populated with 
+* all the languages in the world (sorted alphabetically). Each option in the list has a two or three character 
+* language/culture code for its value and the language's name as its display title.  The country data is 
+* retrieved via the sfCultureInfo class, which stores a wide variety of i18n and i10n settings for various 
+* countries and cultures throughout the world. Here's an example of an <option> tag generated by the select_country_tag:
+*
+* <samp>
+*  <option value="en">English</option>
+* </samp>
+*
+* <b>Examples:</b>
+* <code>
+*  echo select_language_tag('language', 'de');
+* </code>
+*
+* @param  string field name 
+* @param  string selected field value (two or threecharacter language/culture code)
+* @param  array  additional HTML compliant <select> tag parameters
+* @return string <select> tag populated with all the languages in the world.
+* @see select_tag, options_for_select, sfCultureInfo
+*/
 function select_language_tag($name, $value, $options = array())
 {
   $c = new sfCultureInfo(sfContext::getInstance()->getUser()->getCulture());
@@ -181,11 +284,48 @@ function select_language_tag($name, $value, $options = array())
   return select_tag($name, $option_tags, $options);
 }
 
+/**
+* Returns an XHTML compliant <input> tag with type="text".
+*
+* The input_tag helper generates your basic XHTML <input> tag and can utilize any standard <input> tag parameters 
+* passed in the optional <i>$options</i> variable.
+*
+* <b>Examples:</b>
+* <code>
+*  echo input_tag('name');
+* </code>
+*
+* <code>
+*  echo input_tag('amount', $sf_params->get('amount'), array('size' => 8, 'maxlength' => 8));
+* </code>
+*
+* @param  string field name 
+* @param  string selected field value
+* @param  array  additional HTML compliant <input> tag parameters
+* @return string XHTML compliant <input> tag with type="text"
+*/
 function input_tag($name, $value = null, $options = array())
 {
   return tag('input', array_merge(array('type' => 'text', 'name' => $name, 'id' => get_name_from_id($name, $value), 'value' => $value), _convert_options($options)));
 }
 
+/**
+* Returns an XHTML compliant <input> tag with type="hidden".
+*
+* Similar to the input_tag helper, the input_hidden_tag helper generates an XHTML <input> tag and can utilize 
+* any standard <input> tag parameters passed in the optional <i>$options</i> variable.  The only difference is 
+* that it creates the tag with type="hidden", meaning that is not visible on the page.
+*
+* <b>Examples:</b>
+* <code>
+*  echo input_hidden_tag('id', $id);
+* </code>
+*
+* @param  string field name 
+* @param  string populated field value
+* @param  array  additional HTML compliant <input> tag parameters
+* @return string XHTML compliant <input> tag with type="hidden"
+*/
 function input_hidden_tag($name, $value = null, $options = array())
 {
   $options = _parse_attributes($options);
@@ -194,6 +334,26 @@ function input_hidden_tag($name, $value = null, $options = array())
   return input_tag($name, $value, $options);
 }
 
+/**
+* Returns an XHTML compliant <input> tag with type="file".
+*
+* Similar to the input_tag helper, the input_hidden_tag helper generates your basic XHTML <input> tag and can utilize
+* any standard <input> tag parameters passed in the optional <i>$options</i> variable.  The only difference is that it 
+* creates the tag with type="file", meaning that next to the field will be a "browse" (or similar) button. 
+* This gives the user the ability to choose a file from there computer to upload to the web server.  Remember, if you 
+* plan to upload files to your website, be sure to set the <i>multipart</i> option form_tag helper function to true 
+* or your files will not be properly uploaded to the web server.
+*
+* <b>Examples:</b>
+* <code>
+*  echo input_file_tag('filename', array('size' => 30));
+* </code>
+*
+* @param  string field name 
+* @param  array  additional HTML compliant <input> tag parameters
+* @return string XHTML compliant <input> tag with type="file"
+* @see input_tag, form_tag
+*/
 function input_file_tag($name, $options = array())
 {
   $options = _parse_attributes($options);
@@ -202,6 +362,28 @@ function input_file_tag($name, $options = array())
   return input_tag($name, null, $options);
 }
 
+/**
+* Returns an XHTML compliant <input> tag with type="password".
+*
+* Similar to the input_tag helper, the input_hidden_tag helper generates your basic XHTML <input> tag and can utilize
+* any standard <input> tag parameters passed in the optional <i>$options</i> variable.  The only difference is that it 
+* creates the tag with type="password", meaning that the text entered into this field will not be visible to the end user.
+* In most cases it is replaced by ********.  Even though this text is not readable, it is recommended that you do not 
+* populate the optional <i>$value</i> option with a plain-text password or any other sensitive information, as this is a 
+* potential security risk.
+*
+* <b>Examples:</b>
+* <code>
+*  echo input_password_tag('password');
+*  echo input_password_tag('password_confirm');
+* </code>
+*
+* @param  string field name
+* @param  string populated field value
+* @param  array  additional HTML compliant <input> tag parameters
+* @return string XHTML compliant <input> tag with type="password"
+* @see input_tag
+*/
 function input_password_tag($name = 'password', $value = null, $options = array())
 {
   $options = _parse_attributes($options);
