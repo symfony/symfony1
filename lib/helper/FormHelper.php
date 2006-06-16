@@ -310,6 +310,11 @@ tinyMCE.init({
   '.(isset($options['tinymce_options']) ? ','.$options['tinymce_options'] : '').'
 });';
 
+    if (isset($options['tinymce_options']))
+    {
+      unset($options['tinymce_options']);
+    }
+
     return
       content_tag('script', javascript_cdata_section($tinymce_js), array('type' => 'text/javascript')).
       content_tag('textarea', $content, array_merge(array('name' => $name, 'id' => get_name_from_id($id, $value)), _convert_options($options)));
