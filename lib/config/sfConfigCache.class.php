@@ -124,7 +124,7 @@ class sfConfigCache
       sfConfig::get('sf_app_dir').'/'.$configPath,
     );
 
-    foreach ($files as $file)
+    foreach (array_unique($files) as $file)
     {
       if (is_readable($file))
       {
