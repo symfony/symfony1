@@ -714,7 +714,7 @@ function input_date_tag($name, $value, $options = array())
 
   if ($calendar_button_type == 'img')
   {
-    $html .= image_tag($calendar_button, array('id' => 'trigger_'.$name, 'style' => 'cursor: pointer', 'align' => 'absmiddle'));
+    $html .= image_tag($calendar_button, array('id' => 'trigger_'.$name, 'style' => 'cursor: pointer; vertical-align: middle'));
   }
   else
   {
