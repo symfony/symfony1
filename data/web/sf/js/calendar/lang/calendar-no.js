@@ -43,6 +43,10 @@ Calendar._SDN = new Array
  "Lør",
  "Søn");
 
+// First day of the week. "0" means display Sunday first, "1" means display
+// Monday first, etc.
+Calendar._FD = 0;
+
 // full month names
 Calendar._MN = new Array
 ("Januar",
@@ -103,6 +107,16 @@ Calendar._TT["DRAG_TO_MOVE"] = "Dra for å flytte";
 Calendar._TT["PART_TODAY"] = " (idag)";
 Calendar._TT["MON_FIRST"] = "Vis mandag først";
 Calendar._TT["SUN_FIRST"] = "Vis søndag først";
+
+// the following is to inform that "%s" is to be the first day of week
+// %s will be replaced with the day name.
+Calendar._TT["DAY_FIRST"] = "Vis %s først";
+
+// This may be locale-dependent.  It specifies the week-end days, as an array
+// of comma-separated numbers.  The numbers are from 0 to 6: 0 means Sunday, 1
+// means Monday, etc.
+Calendar._TT["WEEKEND"] = "0";
+
 Calendar._TT["CLOSE"] = "Lukk";
 Calendar._TT["TODAY"] = "Idag";
 Calendar._TT["TIME_PART"] = "(Shift-)Klikk eller dra for å endre verdi";
@@ -112,3 +126,4 @@ Calendar._TT["DEF_DATE_FORMAT"] = "%d.%m.%Y";
 Calendar._TT["TT_DATE_FORMAT"] = "%a, %b %e";
 
 Calendar._TT["WK"] = "uke";
+Calendar._TT["TIME"] = "Tid:";
