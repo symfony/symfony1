@@ -97,7 +97,7 @@ class sfExecutionFilter extends sfFilter
         $manualValidated = method_exists($actionInstance, $validateToRun) ? $actionInstance->$validateToRun() : $actionInstance->validate();
 
         // action is validated only if both validators returned true
-        $validated = $manualValidated && $validated;
+        $validated = !$context->getRequest()->hasErrors();
 
         $sf_logging_active = sfConfig::get('sf_logging_active');
         if ($validated)
