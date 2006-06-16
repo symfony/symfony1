@@ -260,10 +260,10 @@ So simply add the `object_` prefix in front of the name of the form helpers to g
     ...
 
 >**Note**: Contrary to the regular for helpers, the object form helpers are only available if you declare explicitly the use of the `Object` helper in your template:
-        
-        [php]
-        <?php echo use_helper('Object') ?>
-        
+
+    [php]
+    <?php echo use_helper('Object') ?>
+    
 The most useful helper of this type is the `object_select_tag`, since it can get the list of values from another table. For instance, imagine that you have an `Article` and an `Author` table, where one or more articles are written by one author. This means that the `Article` table has a `author_id` column:
 
 | Article   | Author |
