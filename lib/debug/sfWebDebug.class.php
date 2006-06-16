@@ -235,14 +235,14 @@ class sfWebDebug
     if (sfConfig::get('sf_debug') && sfConfig::get('sf_cache'))
     {
       $self_url = $_SERVER['PHP_SELF'].((strpos($_SERVER['PHP_SELF'], 'sf_ignore_cache') === false) ? '?sf_ignore_cache=1' : '');
-      $cacheLink = '<a href="'.$self_url.'" title="reload and ignore cache"><img src="'.$this->base_image_path.'/reload.png" /></a>';
+      $cacheLink = '<a href="'.$self_url.'" title="reload and ignore cache"><img src="'.$this->base_image_path.'/reload.png" alt=""/></a>';
     }
 
     // logging information
     $logLink = '';
     if (sfConfig::get('sf_logging_active'))
     {
-      $logLink = '<li><a href="#" onclick="document.getElementById(\'sfWebDebugConfig\').style.display=\'none\';document.getElementById(\'sfWebDebugDatabaseDetails\').style.display=\'none\';sfWebDebugToggle(\'sfWebDebugLog\'); return false;"><img src="'.$this->base_image_path.'/comment.png" /> logs &amp; msgs</a></li>';
+      $logLink = '<li><a href="#" onclick="document.getElementById(\'sfWebDebugConfig\').style.display=\'none\';document.getElementById(\'sfWebDebugDatabaseDetails\').style.display=\'none\';sfWebDebugToggle(\'sfWebDebugLog\'); return false;"><img src="'.$this->base_image_path.'/comment.png" alt=""/> logs &amp; msgs</a></li>';
     }
 
     // database information
@@ -250,7 +250,7 @@ class sfWebDebug
     $dbInfoDetails = '';
     if (null !== ($nb = $this->getDatabaseRequestNumber()))
     {
-      $dbInfo = '<li><a href="#" onclick="document.getElementById(\'sfWebDebugConfig\').style.display=\'none\';document.getElementById(\'sfWebDebugLog\').style.display=\'none\';sfWebDebugToggle(\'sfWebDebugDatabaseDetails\'); return false;"><img src="'.$this->base_image_path.'/database.png" /> '.$nb.'</a></li>';
+      $dbInfo = '<li><a href="#" onclick="document.getElementById(\'sfWebDebugConfig\').style.display=\'none\';document.getElementById(\'sfWebDebugLog\').style.display=\'none\';sfWebDebugToggle(\'sfWebDebugDatabaseDetails\'); return false;"><img src="'.$this->base_image_path.'/database.png" alt=""/> '.$nb.'</a></li>';
 
       $dbInfoDetails = '
         <div id="sfWebDebugDatabaseDetails">
@@ -264,7 +264,7 @@ class sfWebDebug
     if (sfConfig::get('sf_debug') && function_exists('memory_get_usage'))
     {
       $total_memory = sprintf('%.1f', (memory_get_usage() / 1024));
-      $memoryInfo = '<li><img src="'.$this->base_image_path.'/memory.png" /> '.$total_memory.' KB</li>';
+      $memoryInfo = '<li><img src="'.$this->base_image_path.'/memory.png" alt=""/> '.$total_memory.' KB</li>';
     }
 
     // total time elapsed
@@ -273,7 +273,7 @@ class sfWebDebug
     {
       $total_time = (microtime(true) - sfConfig::get('sf_timer_start')) * 1000;
       $total_time = sprintf(($total_time <= 1) ? '%.2f' : '%.0f', $total_time);
-      $timeInfo = '<li class="last"><img src="'.$this->base_image_path.'/time.png" /> '.$total_time.' ms</li>';
+      $timeInfo = '<li class="last"><img src="'.$this->base_image_path.'/time.png" alt="" /> '.$total_time.' ms</li>';
     }
 
     // short log messages
@@ -291,9 +291,9 @@ class sfWebDebug
         <ul id="sfWebDebugLogMenu">
           <li><a href="#" onclick="sfWebDebugToggleAllLogLines(true, \'sfWebDebugLogLine\'); return false;">[all]</a></li>
           <li><a href="#" onclick="sfWebDebugToggleAllLogLines(false, \'sfWebDebugLogLine\'); return false;">[none]</a></li>
-          <li><a href="#" onclick="sfWebDebugShowOnlyLogLines(\'info\'); return false;"><img src="'.$this->base_image_path.'/info.png" /></a></li>
-          <li><a href="#" onclick="sfWebDebugShowOnlyLogLines(\'warning\'); return false;"><img src="'.$this->base_image_path.'/warning.png" /></a></li>
-          <li><a href="#" onclick="sfWebDebugShowOnlyLogLines(\'error\'); return false;"><img src="'.$this->base_image_path.'/error.png" /></a></li>
+          <li><a href="#" onclick="sfWebDebugShowOnlyLogLines(\'info\'); return false;"><img src="'.$this->base_image_path.'/info.png" alt="" /></a></li>
+          <li><a href="#" onclick="sfWebDebugShowOnlyLogLines(\'warning\'); return false;"><img src="'.$this->base_image_path.'/warning.png" alt="" /></a></li>
+          <li><a href="#" onclick="sfWebDebugShowOnlyLogLines(\'error\'); return false;"><img src="'.$this->base_image_path.'/error.png" alt="" /></a></li>
           <li>'.implode("</li>\n<li>", $types).'</li>
         </ul>
         <div id="sfWebDebugLog">'.$logs.'</div>
@@ -303,16 +303,16 @@ class sfWebDebug
     $result .= '
     <div id="sfWebDebug">
       <div id="sfWebDebugBar" class="sfWebDebug'.ucfirst($max_priority).'">
-        <a href="#" onclick="sfWebDebugToggleMenu(); return false;"><img src="'.$this->base_image_path.'/sf.png" /></a>
+        <a href="#" onclick="sfWebDebugToggleMenu(); return false;"><img src="'.$this->base_image_path.'/sf.png" alt="" /></a>
         <ul id="sfWebDebugDetails" class="menu">
-          <li><a href="#" onclick="document.getElementById(\'sfWebDebugLog\').style.display=\'none\';document.getElementById(\'sfWebDebugDatabaseDetails\').style.display=\'none\';sfWebDebugToggle(\'sfWebDebugConfig\'); return false;"><img src="'.$this->base_image_path.'/config.png" /> vars &amp; config</a></li>
+          <li><a href="#" onclick="document.getElementById(\'sfWebDebugLog\').style.display=\'none\';document.getElementById(\'sfWebDebugDatabaseDetails\').style.display=\'none\';sfWebDebugToggle(\'sfWebDebugConfig\'); return false;"><img src="'.$this->base_image_path.'/config.png" alt="" /> vars &amp; config</a></li>
           '.$cacheLink.'
           '.$logLink.'
           '.$dbInfo.'
           '.$memoryInfo.'
           '.$timeInfo.'
         </ul>
-        <a href="#" onclick="document.getElementById(\'sfWebDebug\').style.display=\'none\'; return false;"><img src="'.$this->base_image_path.'/close.png" /></a>
+        <a href="#" onclick="document.getElementById(\'sfWebDebug\').style.display=\'none\'; return false;"><img src="'.$this->base_image_path.'/close.png" alt="" /></a>
       </div>
 
       <div id="sfWebDebugLog" class="top" style="display: none">
@@ -371,8 +371,8 @@ class sfWebDebug
   {
     $id = ucfirst(strtolower($id));
     $content = '
-    <h2>'.$id.' <a href="#" onclick="sfWebDebugToggle(\'sfWebDebug'.$id.'\'); return false;"><img src="'.$this->base_image_path.'/toggle.gif" /></a></h2>
-    <div id="sfWebDebug'.$id.'" style="display: none"><pre>'.@sfYaml::Dump($values).'</pre></div>
+    <h2>'.$id.' <a href="#" onclick="sfWebDebugToggle(\'sfWebDebug'.$id.'\'); return false;"><img src="'.$this->base_image_path.'/toggle.gif" alt="" /></a></h2>
+    <div id="sfWebDebug'.$id.'" style="display: none"><pre>'.htmlentities(@sfYaml::Dump($values)).'</pre></div>
     ';
 
     return $content;
