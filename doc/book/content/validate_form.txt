@@ -361,10 +361,15 @@ Each `Validator` is a particular class that can have certain parameters. If the 
     
       public function initialize ($context, $parameters = null)
       {
-        // set defaults
-        $this->setParameter('email_error', 'Invalid input');    
         // initialize parent
         parent::initialize($context, $parameters);
+
+        // set defaults
+        if (!$this->hasParameter('email_error')
+        {
+          $this->setParameter('email_error', 'Invalid input');
+        }
+
         return true;
       }
     }
