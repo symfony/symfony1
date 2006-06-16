@@ -55,7 +55,7 @@ class sfWebDebugFilter extends sfFilter
       // don't add debug if 304
       if (
           $this->getContext()->getRequest()->isXmlHttpRequest() || 
-          strpos($response->getContentType(), 'text/html') === false ||
+          strpos($response->getContentType(), 'html') === false ||
           $response->getStatusCode() == 304
       )
       {
