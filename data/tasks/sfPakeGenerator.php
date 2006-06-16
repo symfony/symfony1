@@ -105,12 +105,21 @@ function run_init_module($task, $args)
 
   $sf_root_dir = sfConfig::get('sf_root_dir');
 
+  if (is_readable(sfConfig::get('sf_data_dir').'/skeleton/module'))
+  {
+    $sf_skeleton_dir = sfConfig::get('sf_data_dir').'/skeleton/module';
+  }
+  else
+  {
+    $sf_skeleton_dir = sfConfig::get('sf_symfony_data_dir').'/skeleton/module';
+  }
+
   // create basic application structure
   $finder = pakeFinder::type('any')->prune('.svn')->discard('.svn', '.sf');
-  pake_mirror($finder, sfConfig::get('sf_symfony_data_dir').'/skeleton/module/module/', $sf_root_dir.'/'.sfConfig::get('sf_apps_dir_name').'/'.$app.'/'.sfConfig::get('sf_app_module_dir_name').'/'.$module);
+  pake_mirror($finder, $sf_skeleton_dir.'/module/', $sf_root_dir.'/'.sfConfig::get('sf_apps_dir_name').'/'.$app.'/'.sfConfig::get('sf_app_module_dir_name').'/'.$module);
 
   // create basic test
-  pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/module/test/actionsTest.php', $sf_root_dir.'/test/'.$app.'/'.$module.'ActionsTest.php');
+  pake_copy($sf_skeleton_dir.'/test/actionsTest.php', $sf_root_dir.'/test/'.$app.'/'.$module.'ActionsTest.php');
 
   // customize test file
   pake_replace_tokens($module.'ActionsTest.php', $sf_root_dir.'/test/'.$app, '##', '##', $constants);
