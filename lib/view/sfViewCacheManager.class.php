@@ -308,7 +308,10 @@ class sfViewCacheManager
 
     if (sfConfig::get('sf_logging_active')) $this->context->getLogger()->info('{sfViewCacheManager} remove cache for "'.$internalUri.'" / "'.$suffix.'"');
 
-    $this->cache->remove($id, $namespace);
+    if ($this->cache->has($id, $namespace))
+    {
+      $this->cache->remove($id, $namespace);
+    }
   }
 
   public function clean($namespace = null, $mode = 'all')
