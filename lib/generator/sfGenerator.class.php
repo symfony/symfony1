@@ -55,10 +55,10 @@ abstract class sfGenerator
     foreach ($templateFiles as $template)
     {
       // eval template file
-      $template_template = $template_dir.'/templates/'.$template.'.php';
+      $template_template = $template_dir.'/templates/'.$template;
       if (!is_readable($template_template))
       {
-        $template_template = $default_template_dir.'/templates/'.$template.'.php';
+        $template_template = $default_template_dir.'/templates/'.$template;
         if (!is_readable($template_template))
         {
           // this template does not exist for this generator
@@ -68,7 +68,7 @@ abstract class sfGenerator
       $retval = $this->evalTemplate($template_template);
 
       // save actions class
-      $this->getGeneratorManager()->getCache()->set($template.'.php', $generatedModuleName.DIRECTORY_SEPARATOR.'templates', $retval);
+      $this->getGeneratorManager()->getCache()->set($template, $generatedModuleName.DIRECTORY_SEPARATOR.'templates', $retval);
     }
   }
 

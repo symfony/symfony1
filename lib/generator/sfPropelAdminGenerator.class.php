@@ -71,7 +71,8 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
 
     // theme exists?
     $theme = isset($this->params['theme']) ? $this->params['theme'] : 'default';
-    if (!is_dir(sfConfig::get('sf_symfony_data_dir').'/generator/sfPropelAdmin/'.$theme.'/template'))
+    $themeDir = sfConfig::get('sf_symfony_data_dir').'/generator/sfPropelAdmin/'.$theme.'/template';
+    if (!is_dir($themeDir))
     {
       $error = 'The theme "%s" does not exist.';
       $error = sprintf($error, $theme);
@@ -79,13 +80,8 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     }
 
     $this->setTheme($theme);
-    $templateFiles = array(
-      'listSuccess', 'editSuccess', '_filters', 
-      '_list_th_'.$this->getParameterValue('list.layout', 'tabular'), '_list_td_'.$this->getParameterValue('list.layout', 'tabular'),
-      '_list_th_tabular',
-      '_list_header', '_edit_header', '_list_footer', '_edit_footer',
-      '_list_td_actions', '_list_actions', '_edit_actions',
-    );
+
+    $templateFiles = sfFinder::type('file')->name('*.php')->relative()->in($themeDir.'/templates');
     $this->generatePhpFiles($this->generatedModuleName, $templateFiles);
 
     // require generated action class
