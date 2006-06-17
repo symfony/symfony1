@@ -26,7 +26,7 @@ Note that the symfony framework evolves quickly, and that a new stable version c
 Prerequisites
 -------------
 
-In order to use symfony, you need to have PHP5 and a web server installed. If you want to use the PEAR install, you will also need [PEAR][1]. If you plan on using persistent data, a database will be needed. Symfony is compatible with MySQL, PostgreSQL, Oracle, MSSQL, and any other database having a [Creole](http://creole.phpdb.org/wiki/) driver.
+In order to use symfony, you need to have PHP5 and a web server installed. If you want to use the PEAR install, you will also need [PEAR][1]. If you plan on using persistent data, a database will be needed. Symfony is compatible with MySQL, PostgreSQL, Oracle, MSSQL, and any other database having a [Creole](http://creole.phpdb.org/trac/) driver.
 
 >**Note**: You can find many [LAMP](http://en.wikipedia.org/wiki/LAMP_%28software_bundle%29) packages offered for download, which contain the Apache server, the MySQL database and PHP all bundled together and configured for a given platform ([XAMPP](http://www.apachefriends.org/en/xampp.html) for many platforms, [MAMP](http://www.mamp.info/en/home/) for Macintosh, [WAMP](http://en.wikipedia.org/wiki/WAMP) for Windows, etc.). If you don't have PHP5 installed, they are probably the best option for you to start.
 
