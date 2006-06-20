@@ -246,6 +246,11 @@ Groups with label <span class="method">"NONE"</span> have no label
 <pre>
   max_per_page: 10  ## maximum number of records per page
 </pre>
+<h3>Sorting</h3>
+<pre>
+  sort: created_at  ## sort column (ascending order by default)
+  sort: [created_at, desc]  ## desc sort order
+</pre>
 </div>
 </div>
 
@@ -329,7 +334,6 @@ fields:
                      ## And for booleans
       checkbox_tag
       radiobutton_tag
-      file_upload_tag
       admin_input_upload_tag
 </pre>
 
@@ -383,7 +387,7 @@ list:
     post_link:    { name: Related Post }
 </pre>
 <br />
-<div style="float:right;">modules/comment/templates/_article_link.php</div>
+<div style="float:right;">modules/comment/templates/_post_link.php</div>
 <pre>
 &lt;php echo link_to(
   $comment->getPost()->getTitle(),
