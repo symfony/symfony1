@@ -132,7 +132,7 @@ The `read` action will need to know how to handle a `cursor` parameter:
         }
 
         // Error
-        $this->forward404_unless($article);
+        $this->forward404Unless($article);
       }
     }
 
@@ -161,7 +161,7 @@ This means that the `read` action can pass to the template the necessary informa
         }
 
         // Error
-        $this->forward404_unless($article);
+        $this->forward404Unless($article);
       }
     }
 
