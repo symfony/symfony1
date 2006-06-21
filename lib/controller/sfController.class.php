@@ -110,7 +110,7 @@ abstract class sfController
         require_once($module_file);
 
         // action is defined in this class?
-        $defined = in_array(strtolower('execute'.$controllerName), array_map('strtolower', get_class_methods($moduleName.$classSuffix.'s')));
+        $defined = in_array('execute'.ucfirst($controllerName), get_class_methods($moduleName.$classSuffix.'s'));
         if ($defined)
         {
           $this->controllerClasses[$moduleName.'_'.$controllerName.'_'.$classSuffix] = $moduleName.$classSuffix.'s';

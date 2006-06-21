@@ -5,6 +5,9 @@ WARNING: If you use i18n Propel support in your schema.xml or if you have proble
          building you Propel model/sql (XML schema file (PATH/config/schema.xml) does not validate)
          you can add a propel.schema.validate = false at the end of your config/propel.ini file.
 
+WARNING: Actions in the routing are now case sensitive. If you have a page with an 'index' action name,
+         your action must be named 'executeIndex' ('fooBar' => 'executeFooBar').
+
 * added component and partial cache
 * updated creole and propel
 * zend framework and ez components bridges
