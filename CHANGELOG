@@ -1,6 +1,9 @@
 SVN
 ---
 
+Version 0.6.3
+-------------
+
 WARNING: If you use i18n Propel support in your schema.xml or if you have problems
          building you Propel model/sql (XML schema file (PATH/config/schema.xml) does not validate)
          you can add a propel.schema.validate = false at the end of your config/propel.ini file.
@@ -8,12 +11,33 @@ WARNING: If you use i18n Propel support in your schema.xml or if you have proble
 WARNING: Actions in the routing are now case sensitive. If you have a page with an 'index' action name,
          your action must be named 'executeIndex' ('fooBar' => 'executeFooBar').
 
+* updated calendar language files (pl, zh, nl, no, it)
+* new options for the sfFillInFilter filter
+* major sfWebDebug refactoring (no more dependency on prototype)
+* position option to stylesheets in view.yml 
+* native support for JSON/AJAX actions
+* better exception layout
+* new sfPropelUniqueValidator validator
 * added component and partial cache
 * updated creole and propel
 * zend framework and ez components bridges
 * new hooks in admin generator generated classes
 * better date support in admin generator
+* lot of small tweaks and enhancements in admin generator
 * lot of bugs fixes and small enhancements
+
+For more detailed changelog, look at:
+http://www.symfony-project.com/trac/wiki/SymfonyWeek18
+http://www.symfony-project.com/trac/wiki/SymfonyWeek19
+http://www.symfony-project.com/trac/wiki/SymfonyWeek20
+http://www.symfony-project.com/trac/wiki/SymfonyWeek21
+http://www.symfony-project.com/trac/wiki/SymfonyWeek22
+http://www.symfony-project.com/trac/wiki/SymfonyWeek23
+http://www.symfony-project.com/trac/wiki/SymfonyWeek24
+http://www.symfony-project.com/trac/wiki/SymfonyWeek25
+
+or the trac ticket list for 0.6.3:
+http://www.symfony-project.com/trac/report/9
 
 Version 0.6.2
 -------------
