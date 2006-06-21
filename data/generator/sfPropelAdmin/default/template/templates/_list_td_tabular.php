@@ -4,7 +4,7 @@
     [?php if ($sf_user->hasCredential(<?php echo $credentials ?>)): ?]
 <?php endif; ?>
   <?php if ($column->isLink()): ?>
-  <td>[?php echo link_to(<?php echo $this->getColumnListTag($column) ?>, '<?php echo $this->getModuleName() ?>/edit?<?php echo $this->getPrimaryKeyUrlParams() ?>) ?]</td>
+  <td>[?php echo link_to(<?php echo $this->getColumnListTag($column) ?> ? <?php echo $this->getColumnListTag($column) ?> : __('-'), '<?php echo $this->getModuleName() ?>/edit?<?php echo $this->getPrimaryKeyUrlParams() ?>) ?]</td>
 <?php else: ?>
   <td>[?php echo <?php echo $this->getColumnListTag($column) ?> ?]</td>
   <?php endif; ?>
