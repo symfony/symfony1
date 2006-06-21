@@ -326,6 +326,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
   {
     if ($sort_column = $this->getUser()->getAttribute('sort', null, 'sf_admin/<?php echo $this->getSingularName() ?>/sort'))
     {
+      $sort_column = Propel::getDB($c->getDbName())->quoteIdentifier($sort_column);
       if ($this->getUser()->getAttribute('type', null, 'sf_admin/<?php echo $this->getSingularName() ?>/sort') == 'asc')
       {
         $c->addAscendingOrderByColumn($sort_column);
