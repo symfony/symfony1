@@ -61,7 +61,7 @@ Here are the standard form element helpers:
  * long text field (textarea):
 
         [php]
-        <?php echo textarea_tag('name', 'default content', 'size=10x20')) ?>
+        <?php echo textarea_tag('name', 'default content', 'size=10x20') ?>
         // will generate in HTML
         <textarea name="name" id="name" rows="20" cols="10">default content</textarea>
 
