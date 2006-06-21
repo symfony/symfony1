@@ -326,7 +326,7 @@ class sfWebRequest extends sfRequest
     $pathArray = $this->getPathInfoArray();
     $protocol  = $this->isSecure() ? 'https' : 'http';
 
-    return $protocol.'://'.$pathArray['HTTP_HOST'].$pathArray['REQUEST_URI'];
+    return $protocol.'://'.$this->getHost().$pathArray['REQUEST_URI'];
   }
 
   public function getPathInfo ()
@@ -525,7 +525,7 @@ class sfWebRequest extends sfRequest
   {
     $pathArray = $this->getPathInfoArray();
 
-    return isset($pathArray['HTTP_HOST']) ? $pathArray['HTTP_HOST'] : '';
+    return isset($pathArray['HTTP_X_FORWARDED_HOST']) ? $pathArray['HTTP_X_FORWARDED_HOST'] : (isset($pathArray['HTTP_HOST']) ? $pathArray['HTTP_HOST'] : '');
   }
 
   /**
