@@ -389,6 +389,15 @@ The generated administration deals with large tables like a charm. The `list` vi
           layout:         stacked
           params:         %%=content%% (sent by %%author%% on %%date%% about %%article_link%%)
 
+### Join
+
+The default method used by the admin generator to get the list is a `doSelect()`. But, if you use related objects in the list, the number database queries executed will rapidly increase. For instance, if you want to display the name of the author in a list of posts, an additional query will be made to the database for each line in the list to retrieve the related `Author` object. 
+
+You may want to force the pager to use a `doSelectJoinXXX()` method to optimize the number of queries. This can be specified with the `peer_method` parameter:
+
+        list:
+          peer_method:   doSelectJoinAuthor
+
 `edit` view specific customization
 ----------------------------------
 
