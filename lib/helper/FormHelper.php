@@ -841,7 +841,7 @@ function input_date_tag($name, $value, $options = array())
   $js = '
     document.getElementById("trigger_'.$name.'").disabled = false;
     Calendar.setup({
-      inputField : "'.$name.'",
+      inputField : "'.get_id_from_name($name).'",
       ifFormat : "'.$calendar_date_format.'",
       button : "trigger_'.$name.'"
     });
