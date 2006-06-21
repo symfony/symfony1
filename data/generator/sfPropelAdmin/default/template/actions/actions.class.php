@@ -38,6 +38,9 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     $this->addFiltersCriteria($c);
     $this->pager->setCriteria($c);
     $this->pager->setPage($this->getRequestParameter('page', 1));
+<?php if ($this->getParameterValue('list.peer_method')): ?>
+    $this->pager->setPeerMethod('<?php echo $this->getParameterValue('list.peer_method') ?>');
+<?php endif ?>
     $this->pager->init();
   }
 
