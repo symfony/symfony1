@@ -1883,6 +1883,9 @@ function _convert_options($options)
   {
     $options = _boolean_attribute($options, $attribute);
   }
+  
+  // Parse any javascript options
+  $options = _convert_options_to_javascript($options);
 
   return $options;
 }
