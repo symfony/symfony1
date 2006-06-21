@@ -641,9 +641,9 @@ class sfGlobToRegex
  * Now this would be very pointless, if sfNumberCompare didn't understand
  * magnitudes.
 
- * The target value may use magnitudes of kilobytes (C<k>, C<ki>),
- * megabytes (C<m>, C<mi>), or gigabytes (C<g>, C<gi>).  Those suffixed
- * with an C<i> use the appropriate 2**n version in accordance with the
+ * The target value may use magnitudes of kilobytes (k, ki),
+ * megabytes (m, mi), or gigabytes (g, gi).  Those suffixed
+ * with an i use the appropriate 2**n version in accordance with the
  * IEC standard: http://physics.nist.gov/cuu/Units/binary.html
  *
  * based on perl Number::Compare module.
