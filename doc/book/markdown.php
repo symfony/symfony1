@@ -18,7 +18,7 @@ global	$MarkdownPHPVersion, $MarkdownSyntaxVersion,
 		$md_escape_table, $md_backslash_escape_table, 
 		$md_list_level;
 
-$MarkdownPHPVersion    = 'Extra 1.0'; # Mon 5 Sep 2005
+$MarkdownPHPVersion    = 'Extra 1.0.1'; # Fri 9 Dec 2005
 $MarkdownSyntaxVersion = '1.0.1';  # Sun 12 Dec 2004
 
 
@@ -40,7 +40,7 @@ $md_wp_comments = true;  # Set to false to remove Markdown from comments.
 Plugin Name: PHP Markdown Extra
 Plugin URI: http://www.michelf.com/projects/php-markdown/
 Description: <a href="http://daringfireball.net/projects/markdown/syntax">Markdown syntax</a> allows you to write using an easy-to-read, easy-to-write plain text format. Based on the original Perl version by <a href="http://daringfireball.net/">John Gruber</a>. <a href="http://www.michelf.com/projects/php-markdown/">More...</a>
-Version: Extra 1.0
+Version: Extra 1.0.1
 Author: Michel Fortin
 Author URI: http://www.michelf.com/
 */
@@ -1460,16 +1460,16 @@ function _DoCodeBlocks($text) {
 #	Process Markdown `<pre><code>` blocks.
 #
 	global $md_tab_width;
-	$text = preg_replace_callback("{
-			(?:\\n\\n|\\A)
+	$text = preg_replace_callback('{
+			(?:\n\n|\A)
 			(	            # $1 = the code block -- one or more lines, starting with a space/tab
 			  (?:
-				(?:[ ]\{$md_tab_width} | \\t)  # Lines must start with a tab or a tab-width of spaces
-				.*\\n+
+				(?:[ ]{'.$md_tab_width.'} | \t)  # Lines must start with a tab or a tab-width of spaces
+				.*\n+
 			  )+
 			)
-			((?=^[ ]{0,$md_tab_width}\\S)|\\Z)	# Lookahead for non-space at line-start, or end of doc
-		}xm",
+			((?=^[ ]{0,'.$md_tab_width.'}\S)|\Z)	# Lookahead for non-space at line-start, or end of doc
+		}xm',
 		'_DoCodeBlocks_callback', $text);
 
 	return $text;
@@ -1924,6 +1924,8 @@ Version History
 --------------- 
 
 See Readme file for details.
+
+Extra 1.0.1 - 9 December 2005
 
 Extra 1.0 - 5 September 2005
 
