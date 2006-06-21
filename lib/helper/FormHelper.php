@@ -1719,6 +1719,67 @@ function select_datetime_tag($name, $value = null, $options = array(), $html_opt
 }
 
 /**
+ * Returns a <select> tag, populated with a range of numbers
+ *
+ * By default, the select_number_tag generates a list of numbers from 1 - 10, with an incremental value of 1.  These values
+ * can be easily changed by passing one or several <i>$options</i>.  Numbers can be either positive or negative, integers or decimals,
+ * and can be incremented by any number, decimal or integer.  If you require the range of numbers to be listed in descending order, pass
+ * the 'reverse' option to easily display the list of numbers in the opposite direction.
+ * 
+ * <b>Options:</b>
+ * - include_blank  - Includes a blank <option> tag at the beginning of the string with an empty value.
+ * - include_custom - Includes an <option> tag with a custom display title at the beginning of the string with an empty value.
+ * - multiple       - If set to true, the select tag will allow multiple numbers to be selected at once.
+ * - start          - The first number in the list. If not specified, the default value is 1.
+ * - end            - The last number in the list. If not specified, the default value is 10.
+ * - increment      - The number by which to increase each number in the list by until the number is greater than or equal to the 'end' option. 
+ *                    If not specified, the default value is 1.
+ * - reverse        - Reverses the order of numbers so they are display in descending order
+ *
+ * <b>Examples:</b>
+ * <code>
+ *  echo select_number_tag('rating', '', array('reverse' => true));
+ * </code>
+ *
+ * <code>
+ *  echo echo select_number_tag('tax_rate', '0.07', array('start' => '0.05', 'end' => '0.09', 'increment' => '0.01'));
+ * </code>
+ *
+ * <code>
+ *  echo select_number_tag('limit', 5, array('start' => 5, 'end' => 120, 'increment' => 15));
+ * </code>
+ *
+ * @param  string field name 
+ * @param  string the selected option
+ * @param  array  <i>$options</i> to manipulate the output of the tag.
+ * @param  array  additional HTML compliant <select> tag parameters
+ * @return string <select> tag populated with a range of numbers.
+ * @see options_for_select, content_tag
+ */
+function select_number_tag($name, $value, $options = array(), $html_options = array())
+{
+  if (!isset($options['start'])) $options['start'] = 1;
+  if (empty($options['end'])) $options['end'] = 10;
+  if (empty($options['increment'])) $options['increment'] = 1;
+
+  $range = array();
+
+  for ($x = $options['start']; $x < ($options['end'] + $options['increment']); $x += $options['increment'])
+  {
+    $range[(string) $x] = $x;
+  }
+
+  if (isset($options['reverse'])) $range = array_reverse($range);
+
+  unset($options['start']);
+  unset($options['end']);
+  unset($options['increment']);
+  unset($options['reverse']);
+
+  return select_tag($name, options_for_select($range, $value, $options), $html_options);
+}
+
+/**
  * Returns a <label> tag with <i>$label</i> for the specified <i>$id</i> parameter.
  *
  * @param  string id
