@@ -37,6 +37,8 @@ class sfFilterChain
     ++$this->index;
 
     $max = count($this->chain);
+    $filter = null;
+    $method = null;
     if ($this->index < $max)
     {
       $filter = $this->chain[$this->execution ? ($max - $this->index - 1) : $this->index];
