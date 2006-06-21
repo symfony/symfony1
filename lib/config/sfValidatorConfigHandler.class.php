@@ -343,7 +343,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
           $names[$parent][$subname] = $entry;
         }
       }
-      else if (strpos($name, '{') != false || strpos($name, '}') != false)
+      else if (strpos($name, '{') !== false || strpos($name, '}') !== false)
       {
         // name contains an invalid character
         // this is most likely a typo where the user forgot to add a brace

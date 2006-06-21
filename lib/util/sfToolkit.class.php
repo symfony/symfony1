@@ -345,4 +345,16 @@ class sfToolkit
   {
     return preg_replace(array_keys($replacePairs), array_values($replacePairs), $search);
   }
+
+  public static function isArrayValuesEmpty($array)
+  {
+    static $isEmpty = true;
+    foreach($array as $value)
+    {
+      $isEmpty = (is_array($value)) ? self::isArrayValuesEmpty($value) : (strlen($value) == 0);
+      if (!$isEmpty) break;
+    }
+  
+    return $isEmpty;
+  }
 }
