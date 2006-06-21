@@ -53,7 +53,7 @@ class sfStringValidator extends sfValidator
   {
     $min = $this->getParameterHolder()->get('min');
 
-    if ($min != null && strlen($value) < $min)
+    if ($min != null && strlen(trim($value)) < $min)
     {
       // too short
       $error = $this->getParameterHolder()->get('min_error');
@@ -63,7 +63,7 @@ class sfStringValidator extends sfValidator
 
     $max = $this->getParameterHolder()->get('max');
 
-    if ($max != null && strlen($value) > $max)
+    if ($max != null && strlen(trim($value)) > $max)
     {
       // too long
       $error = $this->getParameterHolder()->get('max_error');
