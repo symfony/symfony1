@@ -27,7 +27,7 @@ The symfony cache system uses files stored on the web server hard disk. This kee
 Global cache settings
 ---------------------
 
-For each application of a project, the cache mechanism can be activated or deactivated completely per environment. In the `settings.yml` configuration file, notice the `cache` parameter:
+For each application of a project, the HTML cache mechanism can be activated or deactivated completely per environment. In the `settings.yml` configuration file, notice the `cache` parameter:
 
     prod:
     
@@ -37,11 +37,13 @@ For each application of a project, the cache mechanism can be activated or deact
         cache:                  off
         ...
 
-The default value of this parameter is set to `on`, so you have to specifically set it to `off` to disable it. It is set to `off` in the development environment to allow live modifications of the configuration.
+The default value of this parameter is set to `off`, so you have to specifically set it to `on` to enable it. 
 
-This means that if you decide to add caching to one of your apps, you will not be able to see the effect of it in the development environment with the default configuration. The boost given by HTML caching is only perceptible in the production environment - or in any other environment where `cache:   on`.
+It is set to `off` by default in the development environment. This means that if you decide to add caching to one of your apps, you will not be able to see the effect of it in the development environment with the default configuration. 
 
-One other cache parameter can be changed in the `settings.yml` file: The default cache lifetime, i.e. the number of seconds after which a cached file is overwritten and the page processed again. The default `default_cache_lifetime` is set to one day, or 86400 seconds.
+Consequently, the boost given by HTML caching is only perceptible in the production environment - or in any other environment where `cache:   on`.
+
+One other cache parameter can be changed in the `settings.yml` file: The default cache lifetime i.e., the number of seconds after which a cached file is overwritten and the page processed again. The default `default_cache_lifetime` is set to one day, or 86400 seconds.
 
 Caching an action
 -----------------
