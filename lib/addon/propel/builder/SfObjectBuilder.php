@@ -11,10 +11,11 @@ class sfObjectBuilder extends PHP5ComplexObjectBuilder
     // include the i18n classes if needed
     if ($this->getTable()->getAttribute('isI18N'))
     {
-      $relatedTable = $this->getDatabase()->getTable($this->getTable()->getAttribute('i18nTable'));
+      $relatedTable   = $this->getDatabase()->getTable($this->getTable()->getAttribute('i18nTable'));
+
       $script .= '
-require_once \''.$this->getFilePath($this->getStubObjectBuilder()->getPackage().'.'.$relatedTable->getAttribute('phpName').'Peer').'\';
-require_once \''.$this->getFilePath($this->getStubObjectBuilder()->getPackage().'.'.$relatedTable->getAttribute('phpName')).'\';
+require_once \''.$this->getFilePath($this->getStubObjectBuilder()->getPackage().'.'.$relatedTable->getPhpName().'Peer').'\';
+require_once \''.$this->getFilePath($this->getStubObjectBuilder()->getPackage().'.'.$relatedTable->getPhpName()).'\';
 ';
     }
   }
