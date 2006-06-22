@@ -42,7 +42,7 @@
     $collapse = false;
   }
 ?>
-<fieldset class="<?php if ($collapse): ?> collapse<?php endif; ?>">
+<fieldset id="sf_fieldset_<?php echo preg_replace('/[^a-z0-9_]/', '_', strtolower($category_name)) ?>" class="<?php if ($collapse): ?> collapse<?php endif; ?>">
 <?php if ($category != 'NONE'): ?><h2>[?php echo __('<?php echo $category_name ?>') ?]</h2>
 
 <?php endif; ?>
