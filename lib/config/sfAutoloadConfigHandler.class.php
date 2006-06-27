@@ -77,7 +77,7 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
 
         // we automatically add our php classes
         require_once(sfConfig::get('sf_symfony_lib_dir').'/util/sfFinder.class.php');
-        $finder = sfFinder::type('file')->name('*'.$ext);
+        $finder = sfFinder::type('file')->name('*'.$ext)->relative();
 
         // recursive mapping?
         $recursive = ((isset($entry['recursive'])) ? $entry['recursive'] : false);
@@ -97,7 +97,7 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
         $files = $finder->in($path);
         foreach ($files as $file)
         {
-          $data[] = sprintf("'%s' => '%s',", basename($file, $ext), $file);
+          $data[] = sprintf("'%s' => '%s',", basename($file, $ext), $path.DIRECTORY_SEPARATOR.$file);
         }
       }
     }
