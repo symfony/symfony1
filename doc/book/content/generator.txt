@@ -267,9 +267,9 @@ For this to work, just add the following `_article_link.php` partial in the `mod
     [php]
     <?php echo link_to($comment->getArticle()->getTitle(), 'article/edit?id='.$comment->getArticleId()) ?>
     
-Notice that the partial template of a partial field has access to the current object through a variable named by the module (`$comment` in this example).
+Notice that the partial template of a partial field has access to the current object through a variable named by the class (`$comment` in this example). For instance, for a module built for a class called `UserGroup`, the partial will have access to the current object through the `$user_group` variable.
 
->**Note**: If you need to customize the parameters of a partial field (`_article_link` in this example), do just like you would with a normal field, under the `field:` key. Just don't include the first underscore (`_`):
+>**Note**: If you need to customize the parameters of a partial field (`_article_link` in this example), do the same as for a normal field, under the `field:` key. Just don't include the first underscore (`_`):
 >
 >         fields:
 >           article_link:   { name: Article }
