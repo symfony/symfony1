@@ -29,6 +29,7 @@ parts:
     - debug
     - populate
     - test_unit_testing
+    - control_panel
     - deployment
     - user_session
     - security
