@@ -281,6 +281,17 @@ The remote call can also be conditioned by a test performed on the browser side 
         'condition' => "$('elementID') == true",
     )) ?>
 
+### Method
+
+By default, AJAX requests are made in `post` mode. If you want to make an AJAX call that doesn't modify data, or if you want to display a form that has built-in validation as the result of an AJAX call, you might need to change the AJAX request method to `get`. This is simpy done through the `method` option:
+
+    [php]
+    <?php echo link_to_remote('Delete this post', array(
+        'update'    => 'indicator',
+        'url'       => 'post/delete?id='.$post->getId(),
+        'method'    => 'get',
+    )) ?>
+
 ### Script execution
 
 If the response code of the AJAX call (the code sent by the server, inserted in the `update` element) contains JavaScripts, you might be surprised to see that these scripts are not executed by default. This is to prevent remote attack risks, except if the developper knows for sure what code is in the response.
