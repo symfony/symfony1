@@ -231,6 +231,20 @@ class sfFinder
   }
 
   /**
+   * Ignores version control directories.
+   *
+   * Currently supports subversion, CVS, DARCS, Gnu Arch, Monotone, Bazaar-NG
+   *
+   * @return object current pakeFinder object
+   */
+  public function ignore_version_control()
+  {
+    $ignores = array('.svn', 'CVS', '_darcs', '.arch-params', '.monotone', '.bzr');
+
+    return $this->discard($ignores)->prune($ignores);
+  }
+
+  /**
    * Executes function or method for each element.
    *
    * Element match if functino or method returns true.
