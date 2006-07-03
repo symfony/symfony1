@@ -59,7 +59,7 @@
     [?php echo form_error('<?php echo $this->getSingularName() ?>{<?php echo $column->getName() ?>}', array('class' => 'form-error-msg')) ?]
   [?php endif; ?]
 
-  [?php echo <?php echo $this->getColumnEditTag($column) ?> ?]
+  [?php $value = <?php echo $this->getColumnEditTag($column); ?>; echo $value ? $value : '&nbsp;' ?]
   <?php echo $this->getHelp($column, 'edit') ?>
   </div>
 </div>
