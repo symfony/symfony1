@@ -142,7 +142,7 @@ class sfWebDebug
     // special formatting for creole/SQL lines
     if (strtolower($type) == 'creole')
     {
-      $log_line = preg_replace('/\b(SELECT|FROM|AS|LIMIT|ASC|COUNT|DESC|WHERE|LEFT JOIN|INNER JOIN|RIGHT JOIN|ORDER BY|GROUP BY|IN|LIKE|DISTINCT)\b/', '<span class="sfWebDebugLogInfo">\\1</span>', $log_line);
+      $log_line = preg_replace('/\b(SELECT|FROM|AS|LIMIT|ASC|COUNT|DESC|WHERE|LEFT JOIN|INNER JOIN|RIGHT JOIN|ORDER BY|GROUP BY|IN|LIKE|DISTINCT|DELETE|INSERT|INTO|VALUES)\b/', '<span class="sfWebDebugLogInfo">\\1</span>', $log_line);
 
       // remove username/password from DSN
       if (strpos($log_line, 'DSN') !== false)
@@ -212,7 +212,7 @@ class sfWebDebug
         $log = $this->formatLogLine($type, $log);
 
         // sql queries log
-        if (preg_match('/executeQuery.+?\:\s+(.+)$/', $log, $match))
+        if (preg_match('/execute(?:Query|Update).+?\:\s+(.+)$/', $log, $match))
         {
           $sql_logs[] .= $match[1]."\n";
         }
