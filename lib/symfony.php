@@ -129,10 +129,16 @@ if (!function_exists('__autoload'))
     }
 
     // unspecified class
-    $error = sprintf('Autoloading of class "%s" failed. Try to clear the symfony cache and refresh. [err0003]', $class);
-    $e = new sfAutoloadException($error);
 
-    $e->printStackTrace();
+    // do not print an error if the autoload came from class_exists
+    $trace = debug_backtrace();
+    if ($trace[1]['function'] != 'class_exists' && $trace[1]['function'] != 'is_a')
+    {
+      $error = sprintf('Autoloading of class "%s" failed. Try to clear the symfony cache and refresh. [err0003]', $class);
+      $e = new sfAutoloadException($error);
+
+      $e->printStackTrace();
+    }
   }
 }
 
