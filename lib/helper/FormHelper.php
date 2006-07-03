@@ -843,7 +843,16 @@ function input_date_tag($name, $value, $options = array())
     Calendar.setup({
       inputField : "'.get_id_from_name($name).'",
       ifFormat : "'.$calendar_date_format.'",
-      button : "trigger_'.$name.'"
+      button : "trigger_'.$name.'"';
+
+  // calendar options
+  if (isset($options['calendar_options']))
+  {
+    $js .= ",\n".$options['calendar_options'];
+    unset($options['calendar_options']);
+  }
+
+  $js .= '
     });
   ';
 
