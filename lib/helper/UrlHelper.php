@@ -104,8 +104,8 @@ function link_to_unless($condition, $name = '', $options = '', $html_options = a
 function button_to($name, $target, $options = array())
 {
   $html_options = _convert_options($options);
-  $html_options['value']   = $name;
- 
+  $html_options['value'] = $name;
+
   if (isset($html_options['post']) && $html_options['post'])
   {
     if (isset($html_options['popup']))
@@ -115,14 +115,14 @@ function button_to($name, $target, $options = array())
     $html_options['type'] = 'submit';
     unset($html_options['post']);
     $html_options = _convert_options_to_javascript($html_options);
- 
+
     return form_tag($target, array('method' => 'post', 'class' => 'button_to')).tag('input', $html_options).'</form>';
   }
   else if (isset($html_options['popup']))
   {
-    $html_options['type']    = 'button';
+    $html_options['type'] = 'button';
     $html_options = _convert_options_to_javascript($html_options, $target);
- 
+
     return tag('input', $html_options);
   }
   else
@@ -130,7 +130,7 @@ function button_to($name, $target, $options = array())
     $html_options['type']    = 'button';
     $html_options['onclick'] = "document.location.href='".url_for($target)."';";
     $html_options = _convert_options_to_javascript($html_options);
- 
+
     return tag('input', $html_options);
   }
 }
