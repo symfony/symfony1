@@ -14,6 +14,7 @@
  *
  * @package    symfony
  * @subpackage validator
+ * @author     Nick Lane <nick.lane@internode.on.net>
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <skerr@mojavi.org>
  * @version    SVN: $Id$
@@ -30,5 +31,102 @@ class sfDateValidator extends sfValidator
    */
   public function execute (&$value, &$error)
   {
+    $culture = $this->getContext()->getUser()->getCulture();
+
+    // Validate the given date
+    $value1 = $this->getValidDate($value, $culture);
+    if (!$value1)
+    {
+      $error = $this->getParameter('date_error');
+
+      return false;
+    }
+
+    // Is there a compare to do?
+    $compareDateParam = $this->getParameter('compare');
+    $compareDate = $this->getContext()->getRequest()->getParameter($compareDateParam);
+
+    // If the compare date is given
+    if ($compareDate)
+    {
+      $operator = trim($this->getParameter('operator', '=='), '\'" ');
+      $value2 = $this->getValidDate($compareDate, $culture);
+
+      // If the check date is valid, compare it. Otherwise ignore the comparison
+      if ($value2)
+      {
+        $valid = false;
+        switch ($operator)
+        {
+          case '>':
+            $valid = $value1 >  $value2;
+            break;
+          case '>=':
+            $valid = $value1 >= $value2;
+            break;
+          case '==':
+            $valid = $value1 == $value2;
+            break;          
+          case '<=':
+            $valid = $value1 <= $value2;
+            break;
+          case '<':
+            $valid = $value1 <  $value2;
+            break;
+
+          default:
+            throw new sfValidatorException(sprintf('Invalid date comparison operator "%s"', $operator));
+        }
+
+        if (!$valid)
+        {
+          $error = $this->getParameter('compare_error');
+
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Converts the given date into a Unix timestamp.
+   * 
+   * Returns null if the date is invalid.
+   * 
+   * @param $value    Date to convert.
+   * @param $culture  Language culture to use.
+   */
+  private function getValidDate($value, $culture)
+  {
+    // Use the language culture date format
+    $result = sfI18N::getDateForCulture($value, $culture);
+    list($d, $m, $y) = $result;
+
+    // Make sure the date is a valid gregorian calendar date also
+    if ($result === null || !checkdate($m, $d, $y))
+    {
+      return null;
+    }
+
+    return strtotime("$y-$m-$d 00:00");
+  }
+
+  /**
+   * Initializes the validator.
+   */
+  public function initialize($context, $parameters = null)
+  {
+    // Initialize parent
+    parent::initialize($context, $parameters);
+
+    // Set defaults
+    $this->getParameterHolder()->set('date_error', 'Invalid date');
+    $this->getParameterHolder()->set('compare_error', 'Compare failed');
+
+    $this->getParameterHolder()->add($parameters);
+
+    return true;
   }
 }
