@@ -1,5 +1,7 @@
 [?php use_helpers('Object', 'Validation', 'ObjectAdmin', 'I18N', 'Date') ?]
 
+<div id="sf_admin_container">
+
 <h1><?php echo $this->getI18NString('edit.title', 'edit '.$this->getModuleName()) ?></h1>
 
 <div id="sf_admin_header">
@@ -91,4 +93,6 @@
 
 <div id="sf_admin_footer">
 [?php include_partial('<?php echo $this->getModuleName() ?>/edit_footer', array('<?php echo $this->getSingularName() ?>' => $<?php echo $this->getSingularName() ?>)) ?]
+</div>
+
 </div>

@@ -1,5 +1,7 @@
 [?php use_helpers('I18N', 'Date') ?]
 
+<div id="sf_admin_container">
+
 <h1><?php echo $this->getI18NString('list.title', $this->getModuleName().' list') ?></h1>
 
 <div id="sf_admin_header">
@@ -63,4 +65,6 @@
 
 <div id="sf_admin_footer">
 [?php include_partial('<?php echo $this->getModuleName() ?>/list_footer') ?]
+</div>
+
 </div>
