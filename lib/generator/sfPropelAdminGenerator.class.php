@@ -485,6 +485,10 @@ EOF;
       {
         $vars[] = '\'%%'.$column->getName().'%%\' => link_to('.$this->getColumnListTag($column).', \''.$this->getModuleName().'/edit?'.$this->getPrimaryKeyUrlParams().')';
       }
+      elseif ($column->isPartial())
+      {
+        $vars[] = '\'%%_'.$column->getName().'%%\' => '.$this->getColumnListTag($column);
+      }
       else
       {
         $vars[] = '\'%%'.$column->getName().'%%\' => '.$this->getColumnListTag($column);
@@ -525,7 +529,7 @@ EOF;
 
     if ($column->isPartial())
     {
-      return "include_partial('".$column->getName()."', array('type' => 'list', '{$this->getSingularName()}' => \${$this->getSingularName()}))";
+      return "get_partial('".$column->getName()."', array('type' => 'list', '{$this->getSingularName()}' => \${$this->getSingularName()}))";
     }
     else if ($type == CreoleTypes::DATE || $type == CreoleTypes::TIMESTAMP)
     {
