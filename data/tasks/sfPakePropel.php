@@ -101,7 +101,7 @@ function run_propel_build_sql($task, $args)
   _propel_convert_yml_schema(false, 'generated-');
   _call_phing($task, 'build-sql');
   $finder = pakeFinder::type('file')->name('generated-*schema.xml');
-//  pake_remove($finder, 'config');
+  pake_remove($finder, 'config');
 }
 
 function run_propel_build_db($task, $args)
