@@ -1,1 +1,1 @@
-[?php echo include_partial('list_th_tabular') ?]
+[?php include_partial('list_th_tabular') ?]

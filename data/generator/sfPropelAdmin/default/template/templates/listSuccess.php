@@ -9,7 +9,7 @@
 <div id="sf_admin_bar">
 
 <?php if ($this->getParameterValue('list.filters')): ?>
-[?php echo include_partial('filters', array('filters' => $filters)) ?]
+[?php include_partial('filters', array('filters' => $filters)) ?]
 <?php endif; ?>
 
 </div>
@@ -22,7 +22,7 @@
 <table cellspacing="0" class="sf_admin_list">
 <thead>
 <tr>
-[?php echo include_partial('list_th_<?php echo $this->getParameterValue('list.layout', 'tabular') ?>') ?]
+[?php include_partial('list_th_<?php echo $this->getParameterValue('list.layout', 'tabular') ?>') ?]
 <?php if ($this->getParameterValue('list.object_actions')): ?>
   <th id="sf_admin_list_th_sf_actions">[?php echo __('Actions') ?]</th>
 <?php endif; ?>
@@ -31,8 +31,8 @@
 <tbody>
 [?php $i = 1; foreach ($pager->getResults() as $<?php echo $this->getSingularName() ?>): $odd = fmod(++$i, 2) ?]
 <tr class="sf_admin_row_[?php echo $odd ?]">
-[?php echo include_partial('list_td_<?php echo $this->getParameterValue('list.layout', 'tabular') ?>', array('<?php echo $this->getSingularName() ?>' => $<?php echo $this->getSingularName() ?>)) ?]
-[?php echo include_partial('list_td_actions', array('<?php echo $this->getSingularName() ?>' => $<?php echo $this->getSingularName() ?>)) ?]
+[?php include_partial('list_td_<?php echo $this->getParameterValue('list.layout', 'tabular') ?>', array('<?php echo $this->getSingularName() ?>' => $<?php echo $this->getSingularName() ?>)) ?]
+[?php include_partial('list_td_actions', array('<?php echo $this->getSingularName() ?>' => $<?php echo $this->getSingularName() ?>)) ?]
 </tr>
 [?php endforeach; ?]
 </tbody>
@@ -57,7 +57,7 @@
 </table>
 [?php endif; ?]
 
-[?php echo include_partial('list_actions') ?]
+[?php include_partial('list_actions') ?]
 
 </div>
 
