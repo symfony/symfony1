@@ -838,10 +838,11 @@ function input_date_tag($name, $value, $options = array())
   $calendar_date_format = strtr($calendar_date_format, array('M' => 'm', 'y' => 'Y'));
   $calendar_date_format = preg_replace('/([mdy])+/i', '%\\1', $calendar_date_format);
 
+  $id_inputField = (isset($options['id']))? $options['id'] : get_id_from_name($name);
   $js = '
     document.getElementById("trigger_'.$name.'").disabled = false;
     Calendar.setup({
-      inputField : "'.get_id_from_name($name).'",
+      inputField : "'.$id_inputField.'",
       ifFormat : "'.$calendar_date_format.'",
       button : "trigger_'.$name.'"';
 
