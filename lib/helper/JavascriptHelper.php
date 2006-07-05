@@ -720,7 +720,7 @@
     }
 
     $javascript  = input_tag($name, $value, $tag_options);
-    $javascript .= content_tag('div', '' , array('id' => "{$name}_auto_complete", 'class' => 'auto_complete'));
+    $javascript .= content_tag('div', '' , array('id' => (isset($tag_options['id']) ? $tag_options['id'] : $name).'_auto_complete', 'class' => 'auto_complete'));
     $javascript .= _auto_complete_field($name, $url, $comp_options);
 
     return $javascript;
