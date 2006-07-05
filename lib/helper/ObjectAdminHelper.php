@@ -21,6 +21,16 @@ require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/FormHelper.php');
 
 function object_admin_input_upload_tag($object, $method, $options = array())
 {
+  if (sfConfig::get('sf_logging_active'))
+  {
+    sfContext::getInstance()->getLogger()->err('This function is deprecated. Please use object_admin_input_file_tag.');
+  }
+
+  return object_admin_input_file_tag($object, $method, $options);
+}
+
+function object_admin_input_file_tag($object, $method, $options = array())
+{
   $options = _parse_attributes($options);
   $name    = _convert_method_to_name($method, $options);
 
@@ -46,7 +56,7 @@ function object_admin_input_upload_tag($object, $method, $options = array())
   unset($options['include_text']);
   unset($options['include_remove']);
 
-  return input_upload_tag($name, $options)."\n<br />".$html;
+  return input_file_tag($name, $options)."\n<br />".$html;
 }
 
 function object_edit_collection($object, $method, $options = array())
