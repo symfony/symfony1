@@ -1468,11 +1468,6 @@ function select_minute_tag($name, $value = null, $options = array(), $html_optio
  */
 function select_hour_tag($name, $value = null, $options = array(), $html_options = array())
 {
-  if ($value === null)
-  {
-    $value = date('h');
-  }
-    
   $options = _parse_attributes($options);
   $select_options = array();
 
@@ -1487,8 +1482,13 @@ function select_hour_tag($name, $value = null, $options = array(), $html_options
 
   $_12hour_time = _get_option($options, '12hour_time');
 
-  $start_hour = ($_12hour_time) ? 1 : 0;
-  $end_hour = ($_12hour_time) ? 12 : 23;
+  if ($value === null)
+  {
+    $value = date($_12hour_time ? 'h' : 'H');
+  }
+
+  $start_hour = $_12hour_time ? 1  : 0;
+  $end_hour   = $_12hour_time ? 12 : 23;
 
   for ($x = $start_hour; $x <= $end_hour; $x++)
   {
