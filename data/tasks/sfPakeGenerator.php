@@ -12,6 +12,10 @@ pake_desc('initialize a new symfony module');
 pake_task('init-module', 'app_exists');
 pake_alias('module', 'init-module');
 
+pake_desc('initialize a new symfony batch script');
+pake_task('init-batch', 'app_exists');
+pake_alias('batch', 'init-batch');
+
 function run_init_project($task, $args)
 {
   if (file_exists('SYMFONY'))
@@ -127,4 +131,33 @@ function run_init_module($task, $args)
   // customize php and yml files
   $finder = pakeFinder::type('file')->name('*.php', '*.yml');
   pake_replace_tokens($finder, $sf_root_dir.'/'.sfConfig::get('sf_apps_dir_name').'/'.$app.'/'.sfConfig::get('sf_app_module_dir_name').'/'.$module, '##', '##', $constants);
+}
+
+function run_init_batch($task, $args)
+{
+  // handling two required arguments (application and batch name)
+  if (count($args) < 2)
+  {
+    throw new Exception('You must provide your batch script name.');
+  }
+
+  $app   = $args[0];
+  $batch = $args[1];
+
+  // handling two optional arguments (environment and debug)
+  $env   = isset($args[2]) && in_array($args[2], array('prod', 'dev')) ? $args[2] : 'dev';
+  $debug = isset($args[3]) && in_array($args[3], array(true, false)) ? $args[3] : true;
+
+  $constants = array(
+    'PROJECT_NAME' => $task->get_property('name', 'symfony'),
+    'APP_NAME'     => $app,
+    'BATCH_NAME'   => $batch,
+    'ENV_NAME'     => $env,
+    'DEBUG'        => $debug,
+  );
+
+  $sf_bin_dir = sfConfig::get('sf_bin_dir');
+
+  pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/batch/batch.php', $sf_bin_dir.'/'.$batch.'.php');
+  pake_replace_tokens($batch.'.php', $sf_bin_dir, '##', '##', $constants);
 }
