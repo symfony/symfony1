@@ -103,7 +103,7 @@ Notice the `isI18N` and `i18nTable` attributes of the first table key, and the s
 >
 >You can find more about the schema syntax and automatisms in the [model chapter](model.txt).
 
-Once the corresponding object model is built (don't forget to call `symfony propel-build-model` and clear the cache with a `symfony cc` after each modification of the `schema.xml`), you can use your Product class with i18n support as if there was only one table:
+Once the corresponding object model is built (don't forget to call `symfony propel-build-model` and clear the cache with a `symfony cc` after each modification of the `schema.yml`), you can use your Product class with i18n support as if there was only one table:
 
     [php]
     $product = ProductPeer::retrieveByPk(1);
