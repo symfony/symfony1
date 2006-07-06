@@ -13,17 +13,14 @@ What you need
 
 ### Data structure
 
-For this article, the example used will be an undefined `Item` table - name it according to your needs. In order to be sortable, records need at least a `rank` field - no need for a [heap](http://en.wikipedia.org/wiki/Heap_%28data_structure%29) here since the sorting will be done by the user, not by the computer. So the data structure (to be written in the [`schema.xml`](model.txt)) is simply:
+For this article, the example used will be an undefined `Item` table - name it according to your needs. In order to be sortable, records need at least a `rank` field - no need for a [heap](http://en.wikipedia.org/wiki/Heap_%28data_structure%29) here since the sorting will be done by the user, not by the computer. So the data structure (to be written in the [`schema.yml`](model.txt)) is simply:
 
-    [xml]
-    <?xml version="1.0" encoding="UTF-8"?>
-    <database name="propel" defaultIdMethod="native" noxsd="true">
-      <table name="test_item" phpName="Item">
-        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
-        <column name="name" type="varchar" size="255" />
-        <column name="rank" type="integer" required="true" />
-      </table>
-    </database>
+    propel:
+      test_item:
+        _attributes: { phpName: Item }
+        id:
+        name:        varchar(255)
+        rank:        { type: integer, required: true }
 
 Make sure you build your model once the data structure is defined by typing in a command line interface:
 

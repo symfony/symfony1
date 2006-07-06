@@ -75,24 +75,33 @@ Text information in the database
 
 For each table that contains some i18n data, it is recommended to split the table in two parts: one table with no i18n column, and the other one with only the i18n columns. This setup lets you add more languages when needed without a change to your model. Let's take an example with a Product table.
 
-First, create tables in the schema.xml file:
+First, create tables in the `schema.yml` file:
 
-    [xml]
-    <table name="my_product" phpName="Product" isI18N="true" i18nTable="my_product_i18n">
-      <column name="id" type="integer" required="true" primaryKey="true" autoincrement="true" />
-      <column name="price" type="float" />
-    </table>
+    my_connection:
+      my_product:
+        _attributes: { phpName: Product, isI18N: true, i18nTable: my_product_i18n }
+        id:          { type: integer, required: true, primaryKey: true, autoincrement: true }
+        price:       { type: float }
+      my_product_i18n:
+        _attributes: { phpName: ProductI18n }
+        id:          { type: integer, required: true, primaryKey: true, foreignTable: my_product, foreignReference: id }
+        culture:     { isCulture: true, type: varchar, size: 7, required: true, primaryKey: true }
+        name:        { type: varchar, size: 50 }
     
-    <table name="my_product_i18n" phpName="ProductI18n">
-      <column name="id" type="integer" required="true" primaryKey="true" />
-        <foreign-key foreignTable="my_product">
-         <reference local="id" foreign="id"/>
-        </foreign-key>
-      <column name="culture" isCulture="true" type="varchar" size="7" required="true" primaryKey="true" />
-      <column name="name" type="varchar" size="50" />
-    </table>
+Notice the `isI18N` and `i18nTable` attributes of the first table key, and the special `culture` column. Also, the `_i18n` suffix of the second table is a convention that automates many data access mechanisms. All these are symfony specific Propel enhancements.
 
-Notice the `isI18N` and `i18nTable` attributes of the `table` tag, and the special `culture` column. Also, the `_i18n` suffix of the second table is a convention that automates many data access mechanisms. All these are symfony specific Propel enhancements.
+>**Note**: The symfony automatisms can make this much faster to write. If the table containing internationalized data has the same name as the main table with `_i18n` as a suffix, and that they are related with a cilumn named `id` in both tables, you can write the same as above with only:
+>
+>     my_connection:
+>       my_product:
+>         _attributes: { phpName: Product}
+>         id:          
+>         price:       float
+>       my_product_i18n:
+>         _attributes: { phpName: ProductI18n }
+>         name:        varchar(50)
+>
+>You can find more about the schema syntax and automatisms in the [model chapter](model.txt).
 
 Once the corresponding object model is built (don't forget to call `symfony propel-build-model` and clear the cache with a `symfony cc` after each modification of the `schema.xml`), you can use your Product class with i18n support as if there was only one table:
 

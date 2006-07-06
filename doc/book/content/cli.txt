@@ -55,7 +55,7 @@ Find more about these commands in the [project creation chapter](project_creatio
 
 ### Model generation
 
-`propel-build-model`: Create Propel classes for the current model, based on the `schema.xml` file. If you have several files ending with `schema.xml` in your `config/` directory, they are all taken into account.
+`propel-build-model`: Create Propel classes for the current model, based on the `schema.yml` file. If you have several files ending with `schema.yml` in your `config/` directory, they are all taken into account.
 
     $ symfony propel-build-model
 
@@ -65,7 +65,7 @@ The connection settings used by the following commands are taken from the `confi
 
     $ symfony propel-build-schema
     
-`propel-build-sql`: Create the SQL code to create the tables described in the `schema.xml`, in a `data/schema.sql` file.
+`propel-build-sql`: Create the SQL code to create the tables described in the `schema.yml`, in a `data/schema.sql` file.
 
     $ symfony propel-build-sql
     
@@ -73,7 +73,7 @@ The connection settings used by the following commands are taken from the `confi
 
     $ symfony propel-build-db
 
-`propel-insert-sql`: Insert the SQL code from `data/schema.xml` into the database
+`propel-insert-sql`: Insert the SQL code from `data/schema.sql` into the database
 
     $ symfony propel-insert-sql
     

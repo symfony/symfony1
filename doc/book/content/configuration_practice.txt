@@ -44,9 +44,7 @@ There are a few project configuration files by default. Here are the files that 
         web/index.php
         config
 
-* `schema.xml` and `propel.ini` are data access configuration files used by Propel (symfony's [ORM layer](model.txt)). They are used to plug the Propel libraries with the symfony classes and the data of your project. The `schema.xml` contains an XML representation of the project's relational data model. The `propel.ini` is automatically generated, so you probably do not need to modify it. If you don't use Propel, these files are not needed.
-
-As yet, you probably do not realize the great benefit of the YAML format in symfony since none of the project configuration files use it. But there is a good reason for that: these files are used by external components or need to be processed even before any YAML parsing program can be loaded by the framework. The real benefits actually start accruing with the application configuration.
+* `schema.yml` and `propel.ini` are data access configuration files used by Propel (symfony's [ORM layer](model.txt)). They are used to plug the Propel libraries with the symfony classes and the data of your project. The `schema.yml` contains a representation of the project's relational data model. The `propel.ini` is automatically generated, so you probably do not need to modify it. If you don't use Propel, these files are not needed.
 
 Application configuration                                  {#application}
 -------------------------
