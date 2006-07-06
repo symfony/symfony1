@@ -223,7 +223,7 @@ Let's check all the comments about your new article:
     [php]
     $comments = $article->getComments();
 
-Propel knows that your relational model specified that an article can have several comments, so you can simply use a standard accessor to get the array of related objects. Note the plural used here in the `get` method. Now the `$comments` variable contains an array of objects of class `Comment`, and you can display the first one with:
+Propel sees the `article_id` column in the `Comment` table, and understands that an article can have many comments (one-to-many relationship). During the code generation, a `getComments()` method was created in the `Article` object to get the array of related Comments. Note the plural used here in the `get` method. So the `$comments` variable contains an array of objects of class `Comment`, and you can display the first one with:
 
     [php]
     print_r($comments[0]);
@@ -235,6 +235,13 @@ If you read comments to your articles, you might change your mind about the inte
     {
       $comment->delete();
     }
+
+For many-to-one relationships, it's even simpler:
+
+    [php]
+    echo $comment->getArticle()->getTitle();
+    
+The `getArticle()` method returns an object of class `Article`, which benefits from the `getTitle()` accessor. This is much better than doing the join yourself, which may take a few lines of code (starting from the `$comment->getArticleId()` call).
 
 Find more about these methods and their syntax in the [Propel documentation][4].
 
@@ -512,11 +519,9 @@ The `schema.xml` files contain exactly the same information as their YAML equiva
      <database name="propel" defaultIdMethod="native" noxsd="true">
         <table name="blog_article" phpName="Article">
           <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
-          <column name="title" type="varchar" size="100" />
-          <index name="title_index">
-            <index-column name="title"/>
-          </index>
+          <column name="title" type="varchar" size="255" />
           <column name="content" type="longvarchar" />
+          <column name="created_at" type="timestamp" />
         </table>
         <table name="blog_comment" phpName="Comment">
           <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
@@ -524,9 +529,9 @@ The `schema.xml` files contain exactly the same information as their YAML equiva
           <foreign-key foreignTable="blog_article">
             <reference local="article_id" foreign="id"/>
           </foreign-key>
-          <column name="author" type="varchar" size="50" />
-          <column name="date" type="timestamp" />
+          <column name="author" type="varchar" size="255" />
           <column name="content" type="longvarchar" />
+          <column name="created_at" type="timestamp" />
         </table>    
      </database>
      
@@ -570,6 +575,25 @@ And a brand new `schema.xml` built from your database structure is written in yo
 
     $ symfony propel-build-schema myapp prod propel
 
+Multiple databases
+------------------
+
+As a matter of fact, you can setup several database connections for one project, to be able to dispatch your data into several databases. To that extent, you can write several `schema.yml` files (prefix them with a special name, but keep the `schema.yml` at the end so that they are recognized).
+
+For instance, if you want to separate the connections for the `blog` and `image repository` parts of your website, create two files in your project `config/` directory:
+
+    // in blog_schema.yml
+    blog:
+      table1:
+        column1: ...
+        column2: ...
+
+    //in image_schema.yml
+    imagerep:
+      table1:
+        column1: ...
+        column2: ...
+
 Refactoring to the Data layer
 -----------------------------
 
@@ -589,11 +613,6 @@ For example, imagine the code needed in a weblog to retrieve the 10 most popular
 The action creates an object of class `Tag` from the request parameter. Then, all the code needed to query the database is located in a `->getPopularArticles()` method of this class. Putting the code of this method in the action would make the code much less readable.
 
 Moving code to a more appropriate location is one of the techniques of refactoring. If you do it often, your code will be easy to maintain and to understand by other developers. A good rule of thumb about when to do refactoring to the data layer is that the code of an action should rarely count more than ten lines of PHP code.
-
-Multiple databases
-------------------
-
-As a matter of fact, you can setup several database connections for one project, to be able to dispatch your data into several databases. To that extent, you can either write several `schema.yml` files (prefix them with a special name, but keep the `schema.yml` at the end so that they are recognized).
 
 Propel in symfony
 -----------------
