@@ -107,7 +107,7 @@
     $html_options['type']    = 'button';
     $html_options['value']   = $name;
 
-    return content_tag('input', '', $html_options);
+    return tag('input', $html_options);
   }
 
   /**
