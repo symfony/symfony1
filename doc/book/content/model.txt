@@ -417,7 +417,7 @@ But you can define much more for a column, and in this case you will need to def
         
 The column parameters are:
 
-* `type`: Propel culomn type. See [Propel list of types](http://propel.phpdb.org/docs/user_guide/) for more details. 
+* `type`: Propel culomn type. See [Propel list of types](http://propel.phpdb.org/docs/user_guide/chapters/ColumnTypes.html) for more details. 
 * `size`: for `VARCHAR` type columns, the size of the string. Note that a column defined as `varchar(50)` in basic syntax is defined as `{ type: varchar , size: 50 }` in extended syntax.
 * `required`: `false` by default, set it to `true` if you want the column to be required
 * `defaultValue`
