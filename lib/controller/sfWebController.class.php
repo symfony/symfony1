@@ -20,6 +20,9 @@
  */
 abstract class sfWebController extends sfController
 {
+  private
+    $redirectedUri = null;
+
   /**
    * Generate a formatted symfony URL.
    *
@@ -200,6 +203,8 @@ abstract class sfWebController extends sfController
    */
   public function redirect ($url, $delay = 0)
   {
+    $this->redirectedUri = $url;
+
     $response = $this->getContext()->getResponse();
 
     // redirect
@@ -208,5 +213,15 @@ abstract class sfWebController extends sfController
 
     $response->sendHttpHeaders();
     $response->sendContent();
+  }
+
+  /**
+   * get the URL of a redirection if any.
+   *
+   * @return redirectedURL null if empty
+   */
+  public function getRedirectedURI()
+  {
+    return $this->redirectedUri;
   }
 }
