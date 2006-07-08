@@ -155,7 +155,7 @@ Symfony stores the user interface translations in XML configuration files in the
       </file>
     </xliff>
 
-If additional translations need to be done, simply add a new `messages.XX.xml` translation file. These files must be stored in the `app/i18n` directory.
+If additional translations need to be done, simply add a new `messages.XX.xml` translation file. These files must be stored in the `apps/myapp/i18n` directory.
 
 The use of the XLIFF format allows you to use common translation tools to reference all text in your website and translate it, without the need of a specific tool to build for translators.
 
@@ -163,11 +163,17 @@ Lets say you want to have a website in English and French, with English being th
 
 For this to work you need to:
 
-1. Activate the I18N helper by adding `,I18N` to `standard_helpers:` in the `settings.yml` file. Alternatively, you can put `<?php use_helper('I18N') ?>` at the top of the template where you want to use internationalisation.
+1. Activate the i18N interface translation in the application `settings.yml`
+
+        all:
+          .settings:
+            i18n: on
+        
+2. Activate the I18N helper by adding `,I18N` to `standard_helpers:` in the `settings.yml` file. Alternatively, you can put `<?php use_helper('I18N') ?>` at the top of the template where you want to use internationalisation.
 
   The same goes for the 'Date' helper to make sure the date is being formatted right.
 
-2. In the template, enclose all the texts in calls to the `__()` function. So, to have an internationalized template displaying:
+3. In the template, enclose all the texts in calls to the `__()` function. So, to have an internationalized template displaying:
 
         [php]
         Welcome to our website. Today's date is
@@ -180,7 +186,7 @@ For this to work you need to:
         <?php echo __('Today's date is ') ?>            // (this matches the second trans-unit's source node)
         <?php echo format_date(date()) ?>
 
-3. Make a `messages.fr.xml` file in the `app/i18n` directory, according to the XLIFF format, containing one `trans-unit` node for eah call to the `__()` function:
+4. Make a `messages.fr.xml` file in the `app/i18n` directory, according to the XLIFF format, containing one `trans-unit` node for eah call to the `__()` function:
 
         [xml]
         <?xml version="1.0" ?>

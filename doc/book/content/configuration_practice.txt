@@ -127,7 +127,7 @@ Here is a list of some of the useful `.settings` parameters:
 * `use_security`: If your application has restricted areas, authentication and credentials, set this parameter to `on` (see the [security chapter](security.txt) for more details)
 * `compressed`: Activates the HTML compression to reduce bandwidth requirements and improve performance
 * `tidy`: Activates the use of [HTML Tidy][1]
-* `is_i18n`: Must be set to `on` for sites/applications available in multiple languages
+* `i18n`: Must be set to `on` for sites/applications available in multiple languages
 * `default_culture`: Specifies the default parameter used to format dates, numbers, currencies (`en` in the default configuration)
 * `web_debug`: Activation of the web debug frame, a tool that gives access to debug info on every page. The quantity of logged information is relative to the entries set in the `logging.yml` file, and it requires that the `SF_DEBUG` constant be set to `true` in the front controller. See more in the [debug chapter](debug.txt).
 * `cache`: Activates the caching feature to speed up page generation by recording chunks of compiled code
