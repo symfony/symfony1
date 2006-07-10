@@ -201,20 +201,21 @@ To have a custom title for every page, take advantage of the  `<?php echo includ
 If your title only depends on the view, you should specify `title` in the `view.yml`:
 
     indexSuccess:
-      title: 'Description'
+      metas:
+        title: Description
       
     indexError:
-      title: 'Problem while displaying the description'
+      metas:
+        title: Problem while displaying the description
     
     listSuccess:
-      title:  'Result list'
+      metas:
+        title: Result list
 
-On the other hand, if an action can give pages with various titles, you should use the  `setTitle($title)` function:
+On the other hand, if an action can result in a page with various titles, you should use the  `setTitle($title)` function:
 
     [php]
-    $this->setTitle($title);
-
->**Note**: the `<meta name="title"...` is not modified by the `setTitle` function. Modify the `head.yml` or use the `addMeta` function if you want to change it.
+    $this->getResponse()->setTitle($title);
 
 File inclusion configuration
 ----------------------------
@@ -290,6 +291,13 @@ To give you more control over this cascade, you can remove an already included s
     # adds a new stylesheet and removes the default one (as defined in the global view.yml)
     indexSuccess:
       stylesheets: [special, -main]
+
+To remove all stylesheets or JavaScripts, use the following syntax:
+
+    # remove all stylesheets and JavaScripts
+    indexSuccess:
+      stylesheets: [-*]
+      javascripts: [-*]
 
 You can be more accurate from within an action and define an additional parameter to force the position where to include the file (`first` or `last` position):
 
