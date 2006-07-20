@@ -17,7 +17,7 @@ All web projects generally share the same architectural needs:
 *   PHP classes and libraries
 *   foreign libraries
 *   batch files
-*   logs files
+*   log files
 *   configuration files
 *   etc.
 
@@ -26,7 +26,7 @@ To allow developers to adapt to any existing symfony project, it is recommended 
 Root tree structure
 -------------------
 
-These are the directories found at the root of a Symfony project:
+These are the directories found at the root of a ymfony project:
 
     apps/
       fo/
@@ -62,7 +62,7 @@ The `lib` directory is dedicated to foreign classes or libraries. Here you can a
 
 The `log` directory stores the applicable log files generated directly by symfony. It can also contain web server log files, database log files or log files from any part of the project. There is normally one file per application and per environment (ex: `myapp_prod.log`)
 
-The `test` directory contains unit tests written in PHP and compatible with [Simple Test][3] testing framework. During project setup, Symfony automatically adds some stubs with a few basic tests.
+The `test` directory contains unit tests written in PHP and compatible with the [SimpleTest][3] testing framework. During the project setup, symfony automatically adds some stubs with a few basic tests.
 
 The `web` directory is the root for the web server. The only files accessible from the Internet are the ones located in this directory. It will be described in detail in a few moments.
 
@@ -96,7 +96,7 @@ The directories `i18n`, `lib` and `modules` are empty for a new application.
 
 The directory name of an application is to be determined during its setup. This name is accessible via the `sfConfig` object by referencing `sfConfig::get('sf_app_dir')`.
 
-The classes of an application are not able to access methods or attributes in other applications of the same project. Also note, hyperlinks between two applications of the same project must be in absolute form.
+The classes of an application are not able to access methods or attributes in other applications of the same project. Also note that hyperlinks between two applications of the same project must be in absolute form.
 
 Module tree structure
 --------------------
@@ -123,7 +123,7 @@ The `templates` directory contains the templates corresponding to the actions of
 
 And the `validate` directory is dedicated to configuration files used for form validation.
 
-The directories `config`, `lib` and `validate` are empty for a new application.
+The directories `config`, `lib` and `validate` are empty for a new module.
 
 Web tree structure
 ------------------

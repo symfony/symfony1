@@ -19,7 +19,7 @@ All these different needs have different answers, that's why you have several al
 
 - The **sandbox** is an empty symfony project where all the required libraries are already included, and where the basic configuration is already done. It is made mostly for symfony beginners, who want to play with the framework or try the tutorials without installing anything.
 - The **PEAR installation** is recommended to those who want to run several symfony-based projects, with an easy way to upgrade. It requires PEAR version 1.4.0 or higher, which is bundled in most PHP distributions.
-- The **manual installation** is meant to be used only by advanced PHP developers, who what to take advantage of the latest patches or add features of their own.
+- The **manual installation** is meant to be used only by advanced PHP developers, who want to take advantage of the latest patches or add features of their own.
 
 Note that the symfony framework evolves quickly, and that a new stable version can come out only a few days after your first installation. You have to think of the framework upgrade as a major concern, and that's why the first solution is not recommended if you develop a website for real. In fact, an application developed with the sandbox can not be upgraded easily.
 
