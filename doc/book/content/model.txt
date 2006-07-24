@@ -512,7 +512,7 @@ Symfony will automatically add the columns and table attributes to make the loca
 
 As a matter of fact, the `schema.yml` format is internal to symfony. When you call a `propel-` command, symfony actually translates this file into a `generated-schema.xml` file, which is the type of file expected by Propel to actually perform tasks on the model. 
 
-The `schema.xml` files contain exactly the same information as their YAML equivalent. This is what the Article/Comment schema defined previously looks like in XML format:
+The `schema.xml` files contain the same information as their YAML equivalent. This is what the Article/Comment schema defined previously looks like in XML format:
 
     [xml]
     <?xml version="1.0" encoding="UTF-8"?>
@@ -535,9 +535,11 @@ The `schema.xml` files contain exactly the same information as their YAML equiva
         </table>    
      </database>
      
-The description of the `schema.xml` format can be found in the [documentation][2] and the [getting started][3] sections of the Propel project website.
+The description of the `schema.xml` format can be found in the [documentation][2] and the [getting started][3] sections of the Propel project website. 
 
-Symfony actually understands schemas written in XML format. So if you already know Propel and if you don't want to rewrite your schema in YAML, place your `schema.xml` in the project `config/` directory, build the model, and there you go.
+The YAML format was designed to keep the schemas simple to read and write, but the trade-off is that the more complex schemas can't be described with a `schema.yml`. On the other hand, the XML format allows for full schema description, whatever its complexity, and includes database vendor specific settings, table inheritance, etc. 
+
+Symfony actually understands schemas written in XML format. So if your schema is too complex for the YAML syntax, if you have an existing XML schema, or if you are already familiar with the Propel `schema.xml` syntax, you don't have to switch to the YAML syntax. Place your `schema.xml` in the project `config/` directory, build the model, and there you go.
 
 Don't create the model twice
 ----------------------------
@@ -548,9 +550,7 @@ If you start your application by writing the `schema.yml`, you might not want to
 
     $ symfony propel-build-sql
 
-A `schema.sql` will be created in `myproject/data/sql/`. Note that the generated SQL code will be optimized for the database system defined in the `phptype` parameter of the `databases.yml` file. You can also precise the connection that you want to use. For instance, if you have a `databases.yml` in your `myapp` application defining settings for the `propel` connection in the `prod` environment:
-
-    $ symfony propel-build-sql myapp prod propel
+A `schema.sql` will be created in `myproject/data/sql/`. Note that the generated SQL code will be optimized for the database system defined in the `phptype` parameter of the `databases.yml` file. You can also precise the connection that you want to use in the `propel.ini`.
 
 You can use the `schema.sql` directly to build the tables. For instance, in MySQL:
 
@@ -559,21 +559,25 @@ You can use the `schema.sql` directly to build the tables. For instance, in MySQ
 
 This command is also helpful to rebuild the database in another environment, or to change RDBMS. 
 
->**Note**: If the connection settings are properly defined in your `databases.yml`, you can even use the `symfony propel-insert-sql` command to do this automatically.
+>**Note**: If the connection settings are properly defined in your `propel.ini`, you can even use the `symfony propel-insert-sql` command to do this automatically.
 
-### Generating an XML data model from an existing database
+### Generating an YAML data model from an existing database
 
-Symfony can use the Creole database access layer to generate a `schema.xml` from an existing database, thanks to introspection. This can be particularly useful when you do reverse engineering, or if you prefer working on the database before working on the object model.
+Symfony can use the Creole database access layer to generate a `schema.yml` from an existing database, thanks to introspection. This can be particularly useful when you do reverse engineering, or if you prefer working on the database before working on the object model.
 
-In order to do this, you have to make sure that the project `databases.yml` points to the correct database and contains all connection settings.
+In order to do this, you have to make sure that the project `propel.ini` points to the correct database and contains all connection settings.
 
 You can call the `propel-build-schema` command:
 
     $ symfony propel-build-schema
     
-And a brand new `schema.xml` built from your database structure is written in your `myproject/config/` directory. Once again, you can determine the connection to use if there is an alternative:
+And a brand new `schema.yml` built from your database structure is written in your `myproject/config/` directory. You can build your model based on this structure.
 
-    $ symfony propel-build-schema myapp prod propel
+The schema generation command is quite powerfull and can add to your schema a lot of database dependent information. As the YAML format doesn't handle this kind of vendor information, you need to generate a XML schema to take advantage of it. It is simply done by adding an argument to the `build-schema` task:
+
+    $ symfony propel-build-schema xml
+
+Instead of generating a `schema.yml` file, this will create a `schema.xml` fully compatible with Propel, containing all the vendor infomation. Beware that generated XML schemas tend to be quite verbose and difficult to read.    
 
 Multiple databases
 ------------------
