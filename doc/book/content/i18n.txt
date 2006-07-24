@@ -235,3 +235,31 @@ But with this template, your translation file would be totally incomprehensible 
     <?php echo __('There are %1% persons logged', array('%1%' => count_logged())) ?>
 
 The syntax of the last lines illustrates the ability to do a simple substitution within the `__()` function, to avoid unnecessary chunking of text.
+
+One of the common problems with tranlsation is the use of the plural form. According to the number of results, the text changes, such as in:
+
+    [php]
+    <?php echo __('There are %1% persons logged', array('%1%' => count_logged())) ?>
+
+What if there is only one person logged? The message would be:
+
+    [php]
+    <?php echo __('There is %1% persons logged', array('%1%' => count_logged())) ?>
+    
+To avoid multiple tests, symfony provides a special translation helper called `format_number_choice()`. Use it like this:
+
+    [php]
+    <?php echo format_number_choice(
+      '[0]Nobody is logged|[1]There is 1 person logged|(1,+Inf] There are %1% persons logged', 
+      array('%1%' => count_logged())
+    ) ?>
+    
+The message/string choices are separated by the pipe "|" followed by a set notation of the form
+
+* `[1,2]`: accepts values between 1 and 2, inclusive.
+*  `(1,2)`: accepts values between 1 and 2, excluding 1 and 2.
+*  `{1,2,3,4}`: only values defined in the set are accepted.
+*  `[-Inf,0)`: accepts value greater or equal to negative infinity and strictly less than 0
+
+Any non-empty combinations of the delimiters of square and round brackets are acceptable.
+
