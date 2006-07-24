@@ -251,9 +251,12 @@ To avoid multiple tests, symfony provides a special translation helper called `f
     [php]
     <?php echo format_number_choice(
       '[0]Nobody is logged|[1]There is 1 person logged|(1,+Inf] There are %1% persons logged', 
-      array('%1%' => count_logged())
+      array('%1%' => count_logged()),
+      count_logged()
     ) ?>
     
+The first argument is the multiple possibilities of text. The second argument is the replacement pattern (as for the `__()` helper) and is optional. The third argument is the number on which the test is made to determine which text is taken.
+
 The message/string choices are separated by the pipe "|" followed by a set notation of the form
 
 * `[1,2]`: accepts values between 1 and 2, inclusive.
