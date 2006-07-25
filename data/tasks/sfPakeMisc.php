@@ -7,6 +7,14 @@ pake_alias('cc', 'clear-cache');
 pake_desc('fix directories permissions');
 pake_task('fix-perms', 'project_exists');
 
+/**
+ * fixes permissions in a symfony project
+ *
+ * @example symfony fix-perms
+ *
+ * @param object $task
+ * @param array $args
+ */
 function run_fix_perms($task, $args)
 {
   $sf_root_dir = sfConfig::get('sf_root_dir');
@@ -24,6 +32,15 @@ function run_fix_perms($task, $args)
   }
 }
 
+/**
+ * clears symfony project cache
+ *
+ * @example symfony clear-cache
+ * @example symfony cc
+ *
+ * @param object $task
+ * @param array $args
+ */
 function run_clear_cache($task, $args)
 {
   if (!file_exists('cache'))
@@ -113,6 +130,14 @@ function run_clear_cache($task, $args)
   }
 }
 
+
+/**
+ * safely removes directory via pake
+ *
+ * @param object $finder
+ * @param string $sub_dir
+ * @param string $lock_name
+ */
 function _safe_cache_remove($finder, $sub_dir, $lock_name)
 {
   $sf_root_dir = sfConfig::get('sf_root_dir');
