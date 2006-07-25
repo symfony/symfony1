@@ -747,6 +747,26 @@
     return _in_place_editor($name, $url, array_merge($default_options, $editor_options));
   }
 
+  /**
+   * Mark the start of a block that should only be shown in the browser if JavaScript
+   * is switched on.
+   */
+  function if_javascript()
+  {
+    ob_start();
+  }
+
+  /**
+   * Mark the end of a block that should only be shown in the browser if JavaScript
+   * is switched on.
+   */
+  function end_if_javascript()
+  {
+    $content = ob_get_clean();
+
+    echo javascript_tag("document.write('" . esc_js_no_entities($content) . "');");
+  }
+
   /*
    * Makes an HTML element specified by the DOM ID '$field_id' become an in-place
    * editor of a property.
