@@ -345,6 +345,7 @@ class sfWebDebug
       'cache'        => sfConfig::get('sf_cache')             ? 'on' : 'off',
       'eaccelerator' => (extension_loaded('eaccelerator') && ini_get('eaccelerator.enable')) ? 'on' : 'off',
       'apc'          => (extension_loaded('apc') && ini_get('apc.enabled')) ? 'on' : 'off',
+      'xcache'       => (extension_loaded('xcache') && ini_get('xcache.cacher')) ? 'on' : 'off',
       'compression'  => sfConfig::get('sf_compressed')        ? 'on' : 'off',
       'tidy'         => (extension_loaded('tidy'))            ? 'on' : 'off',
       'syck'         => (extension_loaded('syck'))            ? 'on' : 'off',
