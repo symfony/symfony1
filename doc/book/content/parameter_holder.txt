@@ -143,14 +143,14 @@ Now let's imagine that you need to display a list in two columns. The switch to 
 
     [php]
     <table><tr><td><ul>
-    <?php $request->setAttribute('itemsdisplayed', 0) ?>
+    <?php $sf_request->setAttribute('itemsdisplayed', 0) ?>
     <?php foreach ($items as $item): ?>
       <li>Item <?php echo $item->to_s() ?></li>
-      <?php $request->setAttribute('itemsdisplayed', $request->getAttribute('itemsdisplayed')+1) ?>
-      <?php if ($request->getAttribute('itemsdisplayed')>5): ?>
+      <?php $sf_request->setAttribute('itemsdisplayed', $sf_request->getAttribute('itemsdisplayed')+1) ?>
+      <?php if ($sf_request->getAttribute('itemsdisplayed')>5): ?>
          </ul></td><td><ul>
-         <?php $request->setAttribute('itemsdisplayed', -50) ?>
-      <?php endif ?> 
+         <?php $sf_request->setAttribute('itemsdisplayed', -50) ?>
+      <?php endif ?>
     <?php endforeach ?>
     </ul></td></tr></table>
 
