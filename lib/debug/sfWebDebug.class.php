@@ -380,7 +380,7 @@ class sfWebDebug
 
   public function getDatabaseRequestNumber()
   {
-    if (sfConfig::get('sf_debug'))
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_use_database'))
     {
       // get Propel statistics if available (user created a model and a db)
       // we require Propel here to avoid autoloading and automatic connection
