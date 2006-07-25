@@ -138,7 +138,7 @@ function lcfirst($name)
 
 function link_to_file($filename, $path, $name = null)
 {
-  return "<a href='".$_SERVER["SCRIPT_NAME"]."?task=show&filename=".rawurlencode(str_replace('\\', '/', str_replace(SF_ROOT_DIR.DIRECTORY_SEPARATOR, '', realpath(SF_ROOT_DIR.'/'.$path.'/'.$filename))))."'>".($name === null ? $filename : $name)."</a><br />";
+  return "<a href='".$_SERVER["SCRIPT_NAME"]."?task=show&amp;filename=".rawurlencode(str_replace('\\', '/', str_replace(SF_ROOT_DIR.DIRECTORY_SEPARATOR, '', realpath(SF_ROOT_DIR.'/'.$path.'/'.$filename))))."'>".($name === null ? $filename : $name)."</a><br />";
 }
 
 // initialize variables needed at several places
@@ -152,11 +152,12 @@ $batches = pakeFinder::type('file')->relative()->prune('.svn')->discard('.svn')-
 $controllers = pakeFinder::type('file')->relative()->prune('.svn')->discard('.svn')->maxdepth(1)->name('*.php')->in('web');
 
 ?>
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
   <head>
     <title>"<?php echo $project_name ?>" project - symfony control panel</title>
-    <style>
+    <style type="text/css">
       body, td
       {
        font-family: verdana, sans-serif;
@@ -258,7 +259,7 @@ $controllers = pakeFinder::type('file')->relative()->prune('.svn')->discard('.sv
         z-index: 1000;
       }
     </style>
-    <script language="Javascript">
+    <script type="text/javascript">
       function $()
       {
         var results = [], element;
@@ -288,10 +289,10 @@ $controllers = pakeFinder::type('file')->relative()->prune('.svn')->discard('.sv
       <h2>Application "<?php echo $app ?>"</h2>
 
       <blockquote>
-        <a class="task" href="<?php echo $_SERVER["SCRIPT_NAME"] ?>?task=clear-cache&arg[0]=<?php echo $app ?>">Clear app cache</a><br />
-        <a class="task" href="<?php echo $_SERVER["SCRIPT_NAME"] ?>?task=clear-cache&arg[0]=<?php echo $app ?>&arg[1]=config">Clear config app cache</a><br />
-        <a class="task" href="<?php echo $_SERVER["SCRIPT_NAME"] ?>?task=clear-cache&arg[0]=<?php echo $app ?>&arg[1]=templates">Clear templates app cache</a><br />
-        <a class="task" href="<?php echo $_SERVER["SCRIPT_NAME"] ?>?task=test&arg[0]=<?php echo $app ?>">Launch test suite</a><br />
+        <a class="task" href="<?php echo $_SERVER["SCRIPT_NAME"] ?>?task=clear-cache&amp;arg[0]=<?php echo $app ?>">Clear app cache</a><br />
+        <a class="task" href="<?php echo $_SERVER["SCRIPT_NAME"] ?>?task=clear-cache&amp;arg[0]=<?php echo $app ?>&amp;arg[1]=config">Clear config app cache</a><br />
+        <a class="task" href="<?php echo $_SERVER["SCRIPT_NAME"] ?>?task=clear-cache&amp;arg[0]=<?php echo $app ?>&amp;arg[1]=templates">Clear templates app cache</a><br />
+        <a class="task" href="<?php echo $_SERVER["SCRIPT_NAME"] ?>?task=test&amp;arg[0]=<?php echo $app ?>">Launch test suite</a><br />
       </blockquote>
 
       <h3>Environments</h3>
@@ -370,7 +371,7 @@ $controllers = pakeFinder::type('file')->relative()->prune('.svn')->discard('.sv
         <br />
 
         <form method="get" action="<?php echo $_SERVER["SCRIPT_NAME"] ?>" name="propel-task" id="propel-task">
-          <input type="hidden" name="arg[0]" value="<?php echo $app ?>">
+          <input type="hidden" name="arg[0]" value="<?php echo $app ?>" />
 
           <label for="task">type</label>
           <select name="task" onChange=";if (String(this.value).indexOf('propel') == 0) divdisplay ='block'; else divdisplay ='none'; $('propel_module_models').style.display = divdisplay;">
@@ -383,7 +384,7 @@ $controllers = pakeFinder::type('file')->relative()->prune('.svn')->discard('.sv
           </select><br />
 
           <label for="arg[1]">name</label>
-          <input type="text" name="arg[1]"><br />
+          <input type="text" name="arg[1]" /><br />
 
           <?php if ($model_files): ?>
             <div id="propel_module_models" style="display:none">
@@ -399,7 +400,7 @@ $controllers = pakeFinder::type('file')->relative()->prune('.svn')->discard('.sv
           <?php endif; ?>
 
           <label>&nbsp;</label>
-          <input type="submit" value="Create a module"><br />
+          <input type="submit" value="Create a module" /><br />
         </form>
 
         </blockquote>
@@ -425,9 +426,6 @@ $controllers = pakeFinder::type('file')->relative()->prune('.svn')->discard('.sv
         </blockquote>
       <?php endif; ?>
       <?php } catch (Exception $e) { } ?>
-
-
-    </blockquote>
 
   </div>
   <?php endforeach; ?>
