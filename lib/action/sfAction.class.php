@@ -109,9 +109,9 @@ abstract class sfAction extends sfComponent
    * Forwards current action to the default 404 error action
    *
    */
-  public function forward404 ()
+  public function forward404 ($message = '')
   {
-    throw new sfError404Exception();
+    throw new sfError404Exception($message);
   }
 
   /**
@@ -120,11 +120,11 @@ abstract class sfAction extends sfComponent
    *
    * @param bool A condition that evaluates to true or false.
    */
-  public function forward404Unless ($condition)
+  public function forward404Unless ($condition, $message = '')
   {
     if (!$condition)
     {
-      throw new sfError404Exception();
+      throw new sfError404Exception($message);
     }
   }
 
@@ -134,11 +134,11 @@ abstract class sfAction extends sfComponent
    *
    * @param bool A condition that evaluates to true or false.
    */
-  public function forward404If ($condition)
+  public function forward404If ($condition, $message = '')
   {
     if ($condition)
     {
-      throw new sfError404Exception();
+      throw new sfError404Exception($message);
     }
   }
 
