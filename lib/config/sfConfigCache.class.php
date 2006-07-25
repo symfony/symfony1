@@ -103,7 +103,7 @@ class sfConfigCache
     else
     {
       // we do not have a registered handler for this file
-      $error = sprintf('Configuration file "%s" does not have a registered handler', $config);
+      $error = sprintf('Configuration file "%s" does not have a registered handler', implode(', ', $configs));
 
       throw new sfConfigurationException($error);
     }
