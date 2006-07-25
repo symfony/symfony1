@@ -130,7 +130,7 @@ class sfWebDebug
     }
 
     // escape HTML
-    $log_line = htmlentities($log_line);
+    $log_line = htmlentities($log_line, ENT_QUOTES, 'UTF-8');
 
     // replace constants value with constant name
     $log_line = strtr($log_line, $constants);
@@ -372,7 +372,7 @@ class sfWebDebug
     $id = ucfirst(strtolower($id));
     $content = '
     <h2>'.$id.' <a href="#" onclick="sfWebDebugToggle(\'sfWebDebug'.$id.'\'); return false;"><img src="'.$this->base_image_path.'/toggle.gif" alt="" /></a></h2>
-    <div id="sfWebDebug'.$id.'" style="display: none"><pre>'.htmlentities(@sfYaml::Dump($values)).'</pre></div>
+    <div id="sfWebDebug'.$id.'" style="display: none"><pre>'.htmlentities(@sfYaml::Dump($values), ENT_QUOTES, 'UTF-8').'</pre></div>
     ';
 
     return $content;
