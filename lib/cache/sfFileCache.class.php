@@ -150,6 +150,12 @@ class sfFileCache extends sfCache
     */
     public function setCacheDir($cacheDir)
     {
+      // remove last DIRECTORY_SEPARATOR
+      if (DIRECTORY_SEPARATOR == substr($cacheDir, -1))
+      {
+        $cacheDir = substr($cacheDir, 0, -1);
+      }
+
       // create cache dir if needed
       if (!is_dir($cacheDir))
       {
