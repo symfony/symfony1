@@ -86,7 +86,7 @@
   {
     $html_options = _parse_attributes($html_options);
 
-    $html_options['href'] = '#';
+    $html_options['href'] = isset($html_options['href']) ? $html_options['href'] : '#';
     $html_options['onclick'] = $function.'; return false;';
 
     return content_tag('a', $name, $html_options);
