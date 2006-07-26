@@ -337,7 +337,7 @@ As mentioned in the [configuration chapter](configuration.txt), the parameter is
     [php]
     $max_votes_parameter = sfConfig::get('mod_max_votes');
 
-But maybe you need a totally specific configuration file. In such cases, as in the case of custom app configuration, create a `myconfig.yml` file together with a `config_handlers.yml` file to handle its data (read the [configuration handler chapter](sfConfigHandler.txt) for more information).
+But maybe you need a totally specific configuration file. In such cases, as in the case of custom app configuration, create a `myconfig.yml` file together with a `config_handlers.yml` file to handle its data (read the [configuration chapter](configuration.txt) for more information).
 
 ### `security.yml`: Access restriction configuration       {#security}
 
