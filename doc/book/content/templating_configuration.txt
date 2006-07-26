@@ -313,7 +313,7 @@ To specify a media for a stylesheet inclusion, you can change the default styles
 or
 
     [php]
-    $this->getResponse()->addStylesheet('main_for_print', array('media' => 'print'));
+    $this->getResponse()->addStylesheet('main_for_print', '', array('media' => 'print'));
 
 Layout configuration
 --------------------
