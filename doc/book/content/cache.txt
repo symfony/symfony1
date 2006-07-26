@@ -143,11 +143,11 @@ If you request again the aforementioned pages:
     
 ...the full pages will be completely cached, and the second time you request them, the response will be even faster than with the action result cached. 
 
-But even a cached page involves some PHP code execution. For such a page, symfony still loads the configuration, builds the response, etc. If you are really sure that a page is not going to change for a while, you can bypass symfony completely by putting the resulting HTML code directly into the `web/` folder. This works thanks to the Apache `mod_rewrite` settings, provided that your [routing rule](routing.txt) specifies a pattern ending with `.html`.
+But even a cached page involves some PHP code execution. For such a page, symfony still loads the configuration, builds the response, etc. If you are really sure that a page is not going to change for a while, you can bypass symfony completely by putting the resulting HTML code directly into the `web/` folder. This works thanks to the Apache `mod_rewrite` settings, provided that your [routing rule](routing.txt) specifies a pattern ending with no suffix or with `.html`.
 
 For instance, for a page accessible at:
 
-     http://myapp.example.com/user/list.html
+     http://myapp.example.com/user/list
 
 Create a `user/` directory in your project `web/` directory. Add in a `list.html` file containing the generated HTML code of the page, that you can get, for instance, by calling [curl](http://curl.haxx.se/.
 
@@ -156,7 +156,7 @@ Create a `user/` directory in your project `web/` directory. Add in a `list.html
     $ cd user
     $ curl http://myapp.example.com/user/list.html > list.html
 
-Now, everytime that the `list.html` page is requested, Apache finds it in the `web/` folder and bypasses symfony completely. The trade-off is that you can't pilot the page cache with symfony anymore (lifetime, automatic deletion), but the speed gain is very important.
+Now, everytime that the `user/list` action is requested, Apache finds the corresponding `web/user/list.html` page and bypasses symfony completely. The trade-off is that you can't pilot the page cache with symfony anymore (lifetime, automatic deletion), but the speed gain is very important.
 
 Unfortunately, the layout often contains some dynamic elements, including [component slots](view.txt). So the cases where the whole page can be cached are not very common. As a matter of fact, this type is often most used for RSS feeds, pop-ups, or pages with a layout that don't depend on cookies.
 
