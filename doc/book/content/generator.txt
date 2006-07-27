@@ -525,6 +525,45 @@ One last word about actions: If you want to suppress completely the actions for 
           title:          List of Articles
           actions:        {}
 
+Form validation
+---------------
+
+If you take a look at the generated `editSuccess.php` template in your project `cache/` directory, you will see that the form fields use a special naming convention. In a generated `edit` view, the input names are made with the name of the module concatenated to the name of the field between angle brackets.
+
+For instance, if the `edit` view for the `article` module has a `title` field, the template will look like:
+
+    [php]
+    <?php echo object_input_tag($article, 'getTitle', array('control_name' => 'post[title]')) ?>
+    // will generate in html
+    <input type="text" name="article[title]" id="article[title]" value="My Title" /> 
+
+This has plenty of advantages during the form handling process. However, it makes the [form validation](validate_form.txt) configuration a bit trickier, since this format messes up with the YAML syntax. For instance, you can't write in a validation file for an admin `edit` view:
+
+    methods:
+      names: [article[title], article[body]]
+
+You will have to enclose the field names between double quotes `" "` and change square brackets `[ ]` by curly brackets `{ }`. Additionally, to avoid YAML interpretation problems, you should use the explicit YAML syntax for arrays. It makes the validation file look like:
+
+    methods:
+      post: 
+        - "article{title}"
+        - "article{body}"
+
+When declaring the validators for a field, you don't need the double quotes but you must keep the curly brackets:
+
+    names:
+      article{title}:
+        required:     Yes
+        required_msg: You must provide a title
+
+Lastly, when using a field name as a parameter for a validator, you should use the name as it appears in the generated HTML code, i.e. with the square brackets, but between quotes:
+
+    passwordValidator:
+      class:          sfCompareValidator
+      param:
+        check:        "user[newpassword]"
+        compare_error: The password confirmation does not match the password. Please try again.
+
 Presentation
 ------------
 
