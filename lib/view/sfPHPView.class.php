@@ -325,7 +325,7 @@ class sfPHPView extends sfView
       // now render decorator template, if one exists
       if ($this->isDecorator())
       {
-        $retval =& $this->decorate($retval);
+        $retval = $this->decorate($retval);
       }
 
       // render to client
