@@ -15,7 +15,3 @@ default:
 
   has_layout:     on
   layout:         layout
-
-  slots:          {}
-
-  use_default_slots: on

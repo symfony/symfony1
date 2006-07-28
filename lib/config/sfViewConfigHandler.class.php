@@ -84,7 +84,6 @@ class sfViewConfigHandler extends sfYamlConfigHandler
       $data[] = "  {\n";
 
       $data[] = $this->addLayout($viewName);
-      $data[] = $this->addSlots($viewName);
       $data[] = $this->addComponentSlots($viewName);
       $data[] = $this->addHtmlHead($viewName);
       $data[] = $this->addEscaping($viewName);
@@ -114,7 +113,6 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     $data[] = "  {\n";
 
     $data[] = $this->addLayout();
-    $data[] = $this->addSlots();
     $data[] = $this->addComponentSlots();
     $data[] = $this->addHtmlHead();
     $data[] = $this->addEscaping();
@@ -147,58 +145,6 @@ class sfViewConfigHandler extends sfYamlConfigHandler
 
       $data .= "    \$this->setComponentSlot('$name', '{$component[0]}', '{$component[1]}');\n";
       $data .= "    if (sfConfig::get('sf_logging_active')) \$context->getLogger()->info('{sfViewConfig} set component \"$name\" ({$component[0]}/{$component[1]})');\n";
-    }
-
-    return $data;
-  }
-
-  private function addSlots($viewName = '')
-  {
-    $data = '';
-
-    $slots = null;
-
-    $use_default_slots = $this->getConfigValue('use_default_slots', $viewName);
-
-    if ($use_default_slots)
-    {
-      $slots = $this->mergeConfigValue('slots', $viewName);
-    }
-    else
-    {
-      if ($viewName == '')
-      {
-        // is category all: turning off default_slots or was it just not set?
-        if (isset($this->yamlConfig['all']['use_default_slots']))
-        {
-          // only use slots defined within all
-          if (isset($this->yamlConfig['all']['slots']))
-          {
-            $slots = $this->yamlConfig['all']['slots'];
-          }
-        }
-        else
-        {
-          // all: didn't define anything, default slots are on by default
-          $slots = $this->getConfigValue('slots', $viewName);
-        }
-      }
-      else
-      {
-        $slots = isset($this->yamlConfig[$viewName]['slots']) ? $this->yamlConfig[$viewName]['slots'] : null;
-      }
-    }
-
-    if (is_array($slots))
-    {
-      foreach ($slots as $name => $slot)
-      {
-        if (count($slot) > 1)
-        {
-          $data .= "    \$this->setSlot('$name', '{$slot[0]}', '{$slot[1]}');\n";
-          $data .= "    if (sfConfig::get('sf_logging_active')) \$context->getLogger()->info('{sfViewConfig} set slot \"$name\" ({$slot[0]}/{$slot[1]})');\n";
-        }
-      }
     }
 
     return $data;

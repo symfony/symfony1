@@ -224,7 +224,7 @@ class sfPHPView extends sfView
    *
    * @return string A decorated template.
    */
-  protected function &decorate(&$content)
+  protected function decorate(&$content)
   {
     $template = $this->getDecoratorDirectory().'/'.$this->getDecoratorTemplate();
 

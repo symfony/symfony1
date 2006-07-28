@@ -89,7 +89,6 @@ abstract class sfView
     $decoratorDirectory = null,
     $decoratorTemplate  = null,
     $directory          = null,
-    $slots              = array(),
     $componentSlots     = array(),
     $template           = null,
     $escaping           = null,
@@ -109,54 +108,15 @@ abstract class sfView
    *
    * @return string A decorated template.
    */
-  protected function & decorate (&$content)
+  protected function decorate (&$content)
   {
-    // alias controller
-    $controller = $this->getContext()->getController();
-
-    // get original render mode
-    $renderMode = $controller->getRenderMode();
-
-    // set render mode to var
-    $controller->setRenderMode(self::RENDER_VAR);
-
-    // grab the action stack
-    $actionStack = $controller->getActionStack();
-
-    // loop through our slots, and replace them one-by-one in the
-    // decorator template
-    $slots =& $this->getSlots();
-
-    foreach ($slots as $name => &$slot)
-    {
-      // grab this next forward's action stack index
-      $index = $actionStack->getSize();
-
-      // forward to the first slot action
-      $controller->forward($slot['module_name'], $slot['action_name'], true);
-
-      // grab the action entry from this forward
-      $actionEntry = $actionStack->getEntry($index);
-
-      // set the presentation data as a template attribute
-      $presentation =& $actionEntry->getPresentation();
-
-      $this->attribute_holder->setByRef($name, $presentation);
-    }
-
-    // put render mode back
-    $controller->setRenderMode($renderMode);
-
     // set the decorator content as an attribute
     $this->attribute_holder->setByRef('sf_content', $content);
 
     // for backwards compatibility with old layouts; remove at 0.8.0?
     $this->attribute_holder->setByRef('content', $content);
 
-    // return a null value to satisfy the requirement
-    $retval = null;
-
-    return $retval;
+    return null;
   }
 
   /**
@@ -221,16 +181,6 @@ abstract class sfView
    * @return mixed A template engine instance.
    */
   abstract function & getEngine ();
-
-  /**
-   * Retrieve an array of specified slots for the decorator template.
-   *
-   * @return array An associative array of decorator slots.
-   */
-  protected function & getSlots ()
-  {
-    return $this->slots;
-  }
 
   /**
    * Retrieve this views template.
@@ -579,34 +529,6 @@ abstract class sfView
   public function setDirectory ($directory)
   {
     $this->directory = $directory;
-  }
-
-  /**
-   * Set the module and action to be executed in place of a particular
-   * template attribute.
-   *
-   * @param string A template attribute name.
-   * @param string A module name.
-   * @param string An action name.
-   *
-   * @return void
-   */
-  public function setSlot ($attributeName, $moduleName, $actionName)
-  {
-    $this->slots[$attributeName]                = array();
-    $this->slots[$attributeName]['module_name'] = $moduleName;
-    $this->slots[$attributeName]['action_name'] = $actionName;
-  }
-
-  /**
-   * Indicates whether or not a slot exists.
-   *
-   * @param  string slot name
-   * @return bool true, if the slot exists, otherwise false.
-   */
-  public function hasSlot($name)
-  {
-    return isset($this->slots[$name]);
   }
 
   /**
