@@ -42,27 +42,23 @@ class sfCompileConfigHandler extends sfYamlConfigHandler
     // let's do our fancy work
     foreach ($config as $file)
     {
-      $file = trim($file);
-      if (strlen($file) > 0 && substr($file, 0, 1) != '#')
+      // we'll assume this is a file since the line does not start
+      // with a octothorpe (used for commenting)
+
+      $file = $this->replaceConstants($file);
+      $file = $this->replacePath($file);
+
+      if (!is_readable($file))
       {
-        // we'll assume this is a file since the line does not start
-        // with a octothorpe (used for commenting)
-
-        $file = $this->replaceConstants($file);
-        $file = $this->replacePath($file);
-
-        if (!is_readable($file))
-        {
-          // file doesn't exist
-          $error = sprintf('Configuration file "%s" specifies nonexistent or unreadable file "%s"', $configFiles[0], $file);
-          throw new sfParseException($error);
-        }
-
-        $contents = file_get_contents($file);
-
-        // append file data
-        $data .= "\n".$contents;
+        // file doesn't exist
+        $error = sprintf('Configuration file "%s" specifies nonexistent or unreadable file "%s"', $configFiles[0], $file);
+        throw new sfParseException($error);
       }
+
+      $contents = file_get_contents($file);
+
+      // append file data
+      $data .= "\n".$contents;
     }
 
     // insert configuration files
