@@ -299,12 +299,6 @@ class sfPHPView extends sfView
         $template = $this->getDirectory().'/'.$this->getTemplate();
         $retval = $this->renderFile($template);
 
-        // tidy our cache content
-        if (sfConfig::get('sf_tidy'))
-        {
-          $retval = sfTidy::tidy($retval, $template);
-        }
-
         if (sfConfig::get('sf_cache') && $key !== null)
         {
           $cache = array(

@@ -32,8 +32,6 @@ default:
 
     compressed:             off
 
-    tidy:                   off
-
     i18n:                   off
 
     timeout:                1800

@@ -54,8 +54,6 @@ all:
 #
 #    compressed:             on
 #
-#    tidy:                   on
-#
 #    i18n:                   off
 #
 #    timeout:                1800
