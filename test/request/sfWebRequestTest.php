@@ -12,7 +12,6 @@ class sfWebRequestTest extends UnitTestCase
   {
     sfRouting::getInstance()->clearRoutes();
 
-    sfConfig::set('sf_stats', false);
     sfConfig::set('sf_path_info_array', 'SERVER');
     sfConfig::set('sf_path_info_key', true);
     sfConfig::set('sf_logging_active', false);

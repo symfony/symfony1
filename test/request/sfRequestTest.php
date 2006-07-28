@@ -15,7 +15,6 @@ class sfRequestTest extends UnitTestCase
     // can't initialize directly the sfRequest class (abstract)
     // using sfWebRequest class to test sfRequest
 
-    sfConfig::set('sf_stats', false);
     sfConfig::set('sf_path_info_array', 'SERVER');
     sfConfig::set('sf_path_info_key', true);
     sfConfig::set('sf_logging_active', false);

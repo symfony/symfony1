@@ -51,8 +51,6 @@ default:
 
     no_script_name:         on
 
-    stats:                  off
-
     # E_COMPILE_ERROR | E_ERROR | E_CORE_ERROR | E_USER_ERROR = 337
     error_reporting:        337
 

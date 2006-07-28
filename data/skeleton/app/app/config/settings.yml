@@ -8,7 +8,6 @@ dev:
     error_reporting:        4095
     web_debug:              on
     cache:                  off
-    stats:                  off
     no_script_name:         off
     etag:                   off
 
@@ -17,7 +16,6 @@ test:
     # E_ALL | E_STRICT & ~E_NOTICE = 2047
     error_reporting:        2047
     cache:                  off
-    stats:                  off
     web_debug:              off
     no_script_name:         off
     etag:                   off
@@ -74,8 +72,6 @@ all:
 #    default_cache_lifetime: 86400
 #
 #    no_script_name:         on
-#
-#    stats:                  off
 #
 #    # E_COMPILE_ERROR | E_ERROR | E_CORE_ERROR | E_USER_ERROR = 337
 #    error_reporting:        337

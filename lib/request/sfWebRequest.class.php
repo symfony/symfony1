@@ -286,12 +286,6 @@ class sfWebRequest extends sfRequest
 
     // load parameters from GET/PATH_INFO/POST
     $this->loadParameters();
-
-    // sfStats call
-    if (sfConfig::get('sf_stats'))
-    {
-      sfStats::record($this->context);
-    }
   }
 
   /**
