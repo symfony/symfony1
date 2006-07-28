@@ -154,18 +154,6 @@ class sfExecutionFilter extends sfFilter
         $viewName = $actionName.$viewName;
       }
 
-      // display this view
-      if (!$controller->viewExists($moduleName, $actionName, $viewName))
-      {
-        // the requested view doesn't exist
-        $file = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_view_dir_name').'/'.$viewName.'View.class.php';
-
-        $error = 'Module "%s" does not contain the view "%sView" or the file "%s" is unreadable';
-        $error = sprintf($error, $moduleName, $viewName, $file);
-
-        throw new sfViewException($error);
-      }
-
       // get the view instance
       $viewInstance = $controller->getView($moduleName, $actionName, $viewName);
 

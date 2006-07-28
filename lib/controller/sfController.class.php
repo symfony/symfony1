@@ -478,21 +478,6 @@ abstract class sfController
   }
 
   /**
-   * Indicates whether or not a module has a specific view.
-   *
-   * @param string A module name.
-   * @param string An action name.
-   * @param string A view name.
-   *
-   * @return bool true, if the view exists, otherwise false.
-   */
-  public function viewExists ($moduleName, $actionName, $viewName)
-  {
-    // view always exists in symfony
-    return 1;
-  }
-
-  /**
    * Set the name of the ExecutionFilter class that is used in forward()
    *
    * @param string The class name of the ExecutionFilter to use
