@@ -233,8 +233,11 @@ class sfPHPView extends sfView
       $this->getContext()->getLogger()->info('{sfPHPView} decorate content with "'.$template.'"');
     }
 
-    // call our parent decorate() method
-    parent::decorate($content);
+    // set the decorator content as an attribute
+    $this->attribute_holder->setByRef('sf_content', $content);
+
+    // for backwards compatibility with old layouts; remove at 0.8.0?
+    $this->attribute_holder->setByRef('content', $content);
 
     // render the decorator template and return the result
     $retval = $this->renderFile($template);

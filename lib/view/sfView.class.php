@@ -102,24 +102,6 @@ abstract class sfView
     $extension          = '.php';
 
   /**
-   * Loop through all template slots and fill them in with the results of presentation data.
-   *
-   * @param string A chunk of decorator content.
-   *
-   * @return string A decorated template.
-   */
-  protected function decorate (&$content)
-  {
-    // set the decorator content as an attribute
-    $this->attribute_holder->setByRef('sf_content', $content);
-
-    // for backwards compatibility with old layouts; remove at 0.8.0?
-    $this->attribute_holder->setByRef('content', $content);
-
-    return null;
-  }
-
-  /**
    * Execute any presentation logic and set template attributes.
    *
    * @return void
