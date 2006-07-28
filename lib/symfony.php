@@ -171,7 +171,7 @@ try
 
   // load base settings
   include($configCache->checkConfig($sf_app_config_dir_name.'/logging.yml'));
-  $configCache->import($sf_app_config_dir_name.'/php.yml');
+  $configCache->import($sf_app_config_dir_name.'/php.yml', false);
   include($configCache->checkConfig($sf_app_config_dir_name.'/settings.yml'));
   include($configCache->checkConfig($sf_app_config_dir_name.'/app.yml'));
 
@@ -200,10 +200,10 @@ try
   if (!$sf_debug && !sfConfig::get('sf_test'))
   {
     $core_classes = $sf_app_config_dir_name.'/core_compile.yml';
-    $configCache->import($core_classes);
+    $configCache->import($core_classes, false);
   }
 
-  $configCache->import($sf_app_config_dir_name.'/routing.yml');
+  $configCache->import($sf_app_config_dir_name.'/routing.yml', false);
 }
 catch (sfException $e)
 {

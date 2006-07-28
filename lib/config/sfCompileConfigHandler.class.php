@@ -67,7 +67,7 @@ class sfCompileConfigHandler extends sfYamlConfigHandler
 
     // insert configuration files
     $data = preg_replace_callback(array('#(require|include)(_once)?\((sfConfigCache::getInstance\(\)|\$configCache)->checkConfig\([^_]+sf_app_config_dir_name[^\.]*\.\'/([^\']+)\'\)\);#m',
-                                        '#()()(sfConfigCache::getInstance\(\)|\$configCache)->import\(.sf_app_config_dir_name\.\'/([^\']+)\'\);#m'),
+                                        '#()()(sfConfigCache::getInstance\(\)|\$configCache)->import\(.sf_app_config_dir_name\.\'/([^\']+)\'(, false)?\);#m'),
                                   array($this, 'insertConfig'), $data);
 
     // strip comments (not in debug mode)
