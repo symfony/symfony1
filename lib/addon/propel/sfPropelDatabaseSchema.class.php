@@ -77,9 +77,22 @@ class sfPropelDatabaseSchema
       // foreign-keys
       if (isset($table['_foreign_keys']))
       {
-        foreach ($table['_foreign_keys'] as $fkey_table => $fkey)
+        foreach ($table['_foreign_keys'] as $fkey_name => $fkey)
         {
-          $xml .= "    <foreign-key foreignTable=\"$fkey_table\"".$this->getAttributesFor($fkey).">\n";
+          $xml .= "    <foreign-key foreignTable=\"$fkey[foreign_table]\"";
+          // foreign key name
+          if(!is_numeric($fkey_name))
+          {
+            $xml .= " name=\"$fkey_name\"";
+          }
+          // onDelete
+          if(isset($fkey['on_delete']))
+          {
+            $xml .= " onDelete=\"$fkey[on_delete]\"";            
+          }
+          $xml .= ">\n";
+          
+          // references
           if (isset($fkey['references']))
           {
             foreach ($fkey['references'] as $reference)
@@ -388,21 +401,24 @@ class sfPropelDatabaseSchema
       $database[$table_name]['_foreign_keys'] = array();
       foreach($table->xpath('foreign-key') as $foreign_key)
       {
-        list($fk_name, $fk_attributes) = $this->getNameAndAttributes($foreign_key->attributes(), 'foreignTable');
-        if($fk_name)
+        $foreign_key_table = array();
+
+        // foreign key attributes
+        if(isset($foreign_key['foreignTable']))
         {
-          $database[$table_name]['_foreign_keys'][$fk_name] = array(); 
+          $foreign_key_table['foreign_table'] = (string) $foreign_key['foreignTable']; 
         }
         else
         {
-          throw new sfException('A foreign key tag misses the name attribute');
-        }
-        if($fk_attributes)
+          throw new sfException('A foreign key misses the foreignTable attribute');
+        } 
+        if(isset($foreign_key['onDelete']))
         {
-          $database[$table_name]['_foreign_keys'][$fk_name]['_attributes'] = $fk_attributes;
-        }
+          $foreign_key_table['on_delete'] = (string) $foreign_key['onDelete']; 
+        }       
+
         // foreign key references
-        $database[$table_name]['_foreign_keys'][$fk_name]['references'] = array();
+        $foreign_key_table['references'] = array();
         foreach($foreign_key->xpath('reference') as $reference)
         {
           $reference_attributes = array();
@@ -410,8 +426,18 @@ class sfPropelDatabaseSchema
           {
             $reference_attributes[$reference_attribute_name] = strval($reference_attribute_value);  
           }
-          $database[$table_name]['_foreign_keys'][$fk_name]['references'][] = $reference_attributes;
+          $foreign_key_table['references'][] = $reference_attributes;
         }
+        
+        if(isset($foreign_key['name']))
+        {
+          $database[$table_name]['_foreign_keys'][(string)$foreign_key['name']] = $foreign_key_table; 
+        }
+        else
+        {
+          $database[$table_name]['_foreign_keys'][] = $foreign_key_table; 
+        }
+        
       }
       $this->removeEmptyKey(&$database[$table_name], '_foreign_keys');
       

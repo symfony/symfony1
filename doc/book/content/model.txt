@@ -439,18 +439,20 @@ As an alternative to the `foreignTable` and `foreignReference` column attributes
         title:   varchar(50) 
         user_id: { type: integer }
         _foreign_keys:
-          blog_user:
-            _attributes: { onDelete: cascade }
+          -
+            foreign_table: blog_user
+            on_delete:     cascade
             references:
               - { local: user_id, foreign: id }
 
 This will create a foreign key on the `user_id` column, matching the `id` column in the `blog_user` table.
 
-As compared to the column attributes, it only has an interest for multiple-references foreign keys:
+As compared to the column attributes, it is interesting for multiple-references foreign keys and to give foreign keys a name:
 
         _foreign_keys:
-          db_user:
-            _attributes: { onDelete: cascade }
+          my_foreign_key:
+            foreign_table: db_user
+            onDelete:      cascade
             references:
               - { local: user_id, foreign: id }
               - { local: post_id, foreign: id }
