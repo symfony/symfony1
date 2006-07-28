@@ -188,13 +188,6 @@ try
   // compress output
   ob_start(sfConfig::get('sf_compressed') ? 'ob_gzhandler' : '');
 
-/*
-  if (sfConfig::get('sf_logging_active'))
-  {
-    set_error_handler(array('sfLogger', 'errorHandler'));
-  }
-*/
-
   // required core classes for the framework
   // create a temp var to avoid substitution during compilation
   if (!$sf_debug && !sfConfig::get('sf_test'))

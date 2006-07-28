@@ -76,30 +76,4 @@ class sfLogger extends sfLog
 
     return sfLogger::$logger;
   }
-
-  public static function errorHandler($code, $message, $file, $line)
-  {
-    /* Map the PHP error to a sfLog priority. */
-    switch ($code)
-    {
-      case E_WARNING:
-      case E_USER_WARNING:
-        $priority = SF_PEAR_LOG_WARNING;
-        break;
-      case E_NOTICE:
-      case E_USER_NOTICE:
-        $priority = SF_PEAR_LOG_NOTICE;
-        break;
-      case E_ERROR:
-      case E_USER_ERROR:
-        $priority = SF_PEAR_LOG_ERR;
-        break;
-      default:
-        $priority = SF_PEAR_LOG_INFO;
-    }
-
-    sfLogger::$logger->log($message.' in '.$file.' at line '.$line, $priority);
-
-    die();
-  }
 }
