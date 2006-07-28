@@ -24,7 +24,7 @@ class sfMailView extends sfPHPView
    *
    * @return null
    */
-  public function &getEngine()
+  public function getEngine()
   {
     return 'sfMail';
   }

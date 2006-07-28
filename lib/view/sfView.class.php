@@ -180,7 +180,7 @@ abstract class sfView
    *
    * @return mixed A template engine instance.
    */
-  abstract function & getEngine ();
+  abstract function getEngine ();
 
   /**
    * Retrieve this views template.

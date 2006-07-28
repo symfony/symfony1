@@ -140,7 +140,7 @@ class sfPHPView extends sfView
    *
    * @return null
    */
-  public function &getEngine()
+  public function getEngine()
   {
     return null;
   }
