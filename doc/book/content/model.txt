@@ -423,7 +423,7 @@ The column parameters are:
 * `defaultValue`
 * `primaryKey`: boolean, to be set to `true` for primary keys
 * `autoincrement`: boolean, to be set to `true` for columns of type `integer` that need to be auto-increment 
-* `index`: boolean, to be set to `true` if you want an index to be created on the column
+* `index`: boolean, to be set to `true` if you want a simple index or to `unique` if you want a unique index to be created on the column
 * `foreignTable`: to create a foreign key to another table. 
 * `foreignReference`: the name of the related column if a foreign key is defined via `foreignTable`
 * `onDelete`: if set to `cascade` for a foreign key, records in this table are deleted when a related record in the foreign table is deleted.
@@ -459,7 +459,7 @@ As compared to the column attributes, it is interesting for multiple-references 
 
 ### Index
 
-As an alternative to the `index` column attribute, you can add manually one or many indexes under the `_indexes` key in a table:
+As an alternative to the `index` column attribute, you can add manually one or many indexes under the `_indexes` key in a table. If you want to define unique indexes, you have to use the `_uniques` header instead:
 
     propel:
       blog_article:
@@ -468,6 +468,7 @@ As an alternative to the `index` column attribute, you can add manually one or m
         created_at:
         _indexes:
           my_index:       [title, user_id]
+        _uniques:
           my_other_index: [created_at]
 
 As for the foreign-key explicit syntax, it is only useful for indexes built on more than one column.

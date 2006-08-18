@@ -73,7 +73,21 @@ class sfPropelDatabaseSchema
           $xml .= "    </index>\n";
         }
       }
-
+      
+      // uniques
+      if (isset($table['_uniques']))
+      {
+        foreach ($table['_uniques'] as $unique_name => $index)
+        {
+          $xml .= "    <unique name=\"$unique_name\">\n";
+          foreach ($index as $unique_column)
+          {
+            $xml .= "      <unique-column name=\"$unique_column\" />\n";
+          }
+          $xml .= "    </unique>\n";
+        }
+      }
+      
       // foreign-keys
       if (isset($table['_foreign_keys']))
       {
@@ -264,7 +278,7 @@ class sfPropelDatabaseSchema
     {
       foreach ($column as $key => $value)
       {
-        if (!in_array($key, array('foreignTable', 'foreignReference', 'onDelete', 'index')))
+        if (!in_array($key, array('foreignTable', 'foreignReference', 'onDelete', 'index', 'unique')))
         {
           $attributes_string .= " $key=\"".$this->getCorrectValueFor($key, $value)."\"";
         }
@@ -290,9 +304,18 @@ class sfPropelDatabaseSchema
 
     if (is_array($column) && isset($column['index']))
     {
-      $attributes_string .= "    <index name=\"${col_name}_index\">\n";
-      $attributes_string .= "      <index-column name=\"$col_name\" />\n";
-      $attributes_string .= "    </index>\n"; 
+      if($column['index'] === 'unique')
+      {
+        $attributes_string .= "    <unique name=\"${col_name}_unique\">\n";
+        $attributes_string .= "      <unique-column name=\"$col_name\" />\n";
+        $attributes_string .= "    </unique>\n";
+      }
+      else
+      {
+        $attributes_string .= "    <index name=\"${col_name}_index\">\n";
+        $attributes_string .= "      <index-column name=\"$col_name\" />\n";
+        $attributes_string .= "    </index>\n";
+      }
     }
 
     return $attributes_string;
@@ -453,7 +476,19 @@ class sfPropelDatabaseSchema
         $database[$table_name]['_indexes'][strval($index['name'])] = $index_keys;
       }
       $this->removeEmptyKey(&$database[$table_name], '_indexes');
-      
+
+      // unique indexes
+      $database[$table_name]['_uniques'] = array();
+      foreach($table->xpath('unique') as $index)
+      {
+        $unique_keys = array();
+        foreach($index->xpath('unique-column') as $unique_key)
+        {
+          $unique_keys[] = strval($unique_key['name']);
+        }
+        $database[$table_name]['_uniques'][strval($index['name'])] = $unique_keys;
+      }
+      $this->removeEmptyKey(&$database[$table_name], '_uniques');      
     }
     $this->database = $database;
     
@@ -523,6 +558,26 @@ class sfPropelDatabaseSchema
           $this->removeEmptyKey(&$this->database[$table], '_indexes');
         }
       }
+      if(isset($this->database[$table]['_uniques']))
+      {
+        $uniques = $this->database[$table]['_uniques'];
+        foreach($uniques as $index => $references)
+        {
+          // Only single unique indexes can be simplified
+          if (count($references) == 1 && array_key_exists(substr($index,0,strlen($index)-7), $columns))
+          {
+            $reference = $references[0];
+            
+            // set simple index
+            $this->database[$table][$reference]['index'] = 'unique';
+            
+            // remove complex unique index
+            unset($this->database[$table]['_uniques'][$index]);
+          }
+          
+          $this->removeEmptyKey(&$this->database[$table], '_uniques');
+        }
+      }      
     }
   }
 
