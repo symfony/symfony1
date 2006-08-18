@@ -236,7 +236,7 @@ But with this template, your translation file would be totally incomprehensible 
 
 The syntax of the last lines illustrates the ability to do a simple substitution within the `__()` function, to avoid unnecessary chunking of text.
 
-One of the common problems with tranlsation is the use of the plural form. According to the number of results, the text changes, such as in:
+One of the common problems with translation is the use of the plural form. According to the number of results, the text changes, such as in:
 
     [php]
     <?php echo __('There are %1% persons logged', array('%1%' => count_logged())) ?>
