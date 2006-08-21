@@ -9,7 +9,7 @@ default:
     class: sfWebResponse
 
   user:
-    class: sfUser
+    class: sfBasicSecurityUser
 
   storage:
     class: sfSessionStorage
