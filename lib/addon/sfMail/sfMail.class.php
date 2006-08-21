@@ -316,11 +316,13 @@ class sfMail
     {
       throw new sfException($this->mailer->ErrorInfo);
     }
-    
-    // If the SMTPKeepAlive option is true, we need an explicit call to SmtpClose
-    if ($this->mailer->SMTPKeepAlive === true) $this->mailer->SmtpClose();
   }
 
+  public function smtpClose()
+  {
+    $this->mailer->SmtpClose();
+  }
+  
   public function getRawHeader()
   {
     return $this->mailer->CreateHeader();
