@@ -44,7 +44,8 @@ class OCI8Types extends CreoleTypes {
                                 'double' => CreoleTypes::DOUBLE,
                                 'raw' => CreoleTypes::VARBINARY,
                                 'longraw' => CreoleTypes::LONGVARBINARY,
-                                'date' => CreoleTypes::TIMESTAMP,
+                                'date' => CreoleTypes::DATE,
+                                'timestamp' => CreoleTypes::TIMESTAMP,
                                 'blob' => CreoleTypes::BLOB,
                                 'clob' => CreoleTypes::CLOB,
                                 'varray' => CreoleTypes::ARR,
@@ -61,7 +62,8 @@ class OCI8Types extends CreoleTypes {
      */
     public static function getType($nativeType)
     {
-        $t = strtolower($nativeType);
+        $t = str_replace(' ', '', strtolower($nativeType));
+        if ( substr($t, 0, 9) == 'timestamp' ) return CreoleTypes::TIMESTAMP;
         if (isset(self::$typeMap[$t])) {
             return self::$typeMap[$t];
         } else {

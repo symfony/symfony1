@@ -69,6 +69,7 @@ class OCI8Connection extends ConnectionCommon implements Connection
         $user					= $dsninfo[ 'username' ];
         $pw						= $dsninfo[ 'password' ];
         $hostspec				= $dsninfo[ 'hostspec' ];
+        $port       = $dsninfo[ 'port' ];
         $db					= $dsninfo[ 'database' ];
 
         $connect_function		= ( $persistent )
@@ -76,6 +77,11 @@ class OCI8Connection extends ConnectionCommon implements Connection
 									: 'oci_connect';
 
 		@ini_set( 'track_errors', true );
+		
+		if ( $hostspec && $port )
+		{
+		  $hostspec .= ':' . $port;
+		}
 
         if ( $db && $hostspec && $user && $pw )
 	{
