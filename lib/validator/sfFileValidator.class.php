@@ -100,10 +100,10 @@ class sfFileValidator extends sfValidator
       {
         $this->setParameter('mime_types', $categories[$this->getParameter('mime_types')]);
       }
-      else
-      {
-        $this->setParameter('mime_types', array($this->getParameter('mime_types')));
-      }
+    }
+    elseif ($this->getParameter('mime_types', null))
+    {
+      $this->setParameter('mime_types', array($this->getParameter('mime_types')));
     }
 
     return true;
