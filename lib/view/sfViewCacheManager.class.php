@@ -316,7 +316,11 @@ class sfViewCacheManager
 
   public function clean($namespace = null, $mode = 'all')
   {
-    $this->cache->clean($namespace, $mode);
+    try
+    {
+      $this->cache->clean($namespace, $mode);
+    }
+    catch (sfCacheException $e) {}
   }
 
   public function lastModified($internalUri, $suffix = 'slot')
