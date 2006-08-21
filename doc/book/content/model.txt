@@ -508,7 +508,7 @@ Symfony will automatically add the columns and table attributes to make the loca
         created_at:  -
     
       db_group_i18n: 
-        id:          { type: integer, required: true, primaryKey: true, foreignTable: db_group, foreignReference: id }
+        id:          { type: integer, required: true, primaryKey: true, foreignTable: db_group, foreignReference: id, onDelete: cascade }
         culture:     { isCulture: true, type: varchar, size: 7, required: true, primaryKey: true }
         name:        varchar(50)
 
