@@ -167,7 +167,10 @@ function run_propel_build_db($task, $args)
 
 function run_propel_insert_sql($task, $args)
 {
+  _propel_convert_yml_schema(false, 'generated-');
   _call_phing($task, 'insert-sql');
+  $finder = pakeFinder::type('file')->name('generated-*schema.xml');
+  pake_remove($finder, 'config');
 }
 
 function run_propel_build_schema($task, $args)
