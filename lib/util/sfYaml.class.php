@@ -37,6 +37,12 @@ class sfYaml
   {
     $input = self::getIncludeContents($input);
 
+    // if an array is returned by the config file assume it's in plain php form else in yaml
+    if (is_array($input))
+    {
+      return $input;
+    }
+
     // syck is prefered over spyc
     if (function_exists('syck_load'))
     {
@@ -85,10 +91,11 @@ class sfYaml
       require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/TextHelper.php');
 
       ob_start();
-      include($input);
+      $retval = include($input);
       $contents = ob_get_clean();
 
-      return $contents;
+      // if an array is returned by the config file assume it's in plain php form else in yaml
+      return is_array($retval) ? $retval : $contents;
     }
 
     // else return original input
