@@ -227,6 +227,15 @@ class sfWebResponse extends sfResponse
   {
     // status
     $status = 'HTTP/1.0 '.$this->statusCode.' '.$this->statusText;
+    if (substr(php_sapi_name(), 0, 3) == 'cgi')
+    {
+      $status = 'Status: '.$this->statusCode.' '.$this->statusText;
+    }
+    else
+    {
+      $status = 'HTTP/1.0 '.$this->statusCode.' '.$this->statusText;
+    }
+
     header($status);
 
     if (sfConfig::get('sf_logging_active'))
