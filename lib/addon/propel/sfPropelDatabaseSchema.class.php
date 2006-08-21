@@ -290,6 +290,7 @@ class sfPropelDatabaseSchema
       throw new sfException('Incorrect settings for column '.$col_name);
     }
 
+    // conventions for foreign key attributes
     if (is_array($column) && isset($column['foreignTable']))
     {
       $attributes_string .= "    <foreign-key foreignTable=\"$column[foreignTable]\"";
@@ -302,6 +303,7 @@ class sfPropelDatabaseSchema
       $attributes_string .= "    </foreign-key>\n";  
     }
 
+    // conventions for index and unique index attributes
     if (is_array($column) && isset($column['index']))
     {
       if($column['index'] === 'unique')
@@ -316,6 +318,13 @@ class sfPropelDatabaseSchema
         $attributes_string .= "      <index-column name=\"$col_name\" />\n";
         $attributes_string .= "    </index>\n";
       }
+    }
+
+    // conventions for sequence name attributes
+    // required for databases using sequences for auto-increment columns (e.g. PostgreSQL or Oracle)
+    if (is_array($column) && isset($column['sequence'])) 
+    {
+      $attributes_string .= "    <id-method-parameter value=\"$column[sequence]\" />\n"; 
     }
 
     return $attributes_string;

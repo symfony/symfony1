@@ -423,6 +423,7 @@ The column parameters are:
 * `defaultValue`
 * `primaryKey`: boolean, to be set to `true` for primary keys
 * `autoincrement`: boolean, to be set to `true` for columns of type `integer` that need to be auto-increment 
+* `sequence`: sequence name for databases using sequences for auto-increment columns (e.g. PostgreSQL or Oracle)
 * `index`: boolean, to be set to `true` if you want a simple index or to `unique` if you want a unique index to be created on the column
 * `foreignTable`: to create a foreign key to another table. 
 * `foreignReference`: the name of the related column if a foreign key is defined via `foreignTable`
