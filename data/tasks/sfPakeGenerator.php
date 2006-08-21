@@ -148,6 +148,11 @@ function run_init_batch($task, $args)
   // TODO: ADD FINDER HERE TO LOCATE BATCH SKELTON LOCALLY OR IN SYMFONY DIRS, AND SEND PATH TO SKELETONS FUNCTION
   $batch = '_batch_'.$args[0];
   $batch($task, $args);
+
+  if (!file_exists(sfConfig::get('sf_symfony_data_dir').'/skeleton/batch/'.$args[0].'.php'))
+  {
+    throw new Exception('The skeleton you specified could not be found.');
+  }
 }
 
 function _batch_default($task, $args)
@@ -180,6 +185,38 @@ function _batch_default($task, $args)
 
   pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/batch/default.php', $sf_bin_dir.'/'.$batch.'.php');
   pake_replace_tokens($batch.'.php', $sf_bin_dir, '##', '##', $constants);
+}
+
+function _batch_rotate_log($task, $args)
+{
+  if (count($args) < 2)
+  {
+    throw new Exception('You must provide the application');
+  }
+  if (count($args) < 3)
+  {
+    throw new Exception('You must provide the environment');
+  }
+	
+  $app = $args[1];
+	$env = $args[2];
+	$batch = 'rotate_log_'.$app.'_'.$env;
+	
+  // handling two optional arguments (environment and debug)
+  $debug = isset($args[4]) && in_array($args[4], array(true, false)) ? $args[4] : true;
+
+  $constants = array(
+    'PROJECT_NAME' => $task->get_property('name', 'symfony'),
+    'APP_NAME'     => $app,
+    'BATCH_NAME'   => $batch,
+    'ENV_NAME'     => $env,
+    'DEBUG'        => $debug,
+  );
+
+  $sf_bin_dir = sfConfig::get('sf_bin_dir');
+
+  pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/batch/rotate_log.php', $sf_bin_dir.'/'.$batch.'.php');
+  pake_replace_tokens($batch.'.php', $sf_bin_dir, '##', '##', $constants);		
 }
 
 function run_init_controller($task, $args)

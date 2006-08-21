@@ -10,6 +10,12 @@ pake_task('clear-controllers', 'project_exists');
 pake_desc('fix directories permissions');
 pake_task('fix-perms', 'project_exists');
 
+pake_desc('rotates an applications log files');
+pake_task('rotate-log', 'app_exists');
+
+pake_desc('purges an applications log files');
+pake_task('purge-logs', 'project_exists');
+
 /**
  * fixes permissions in a symfony project
  *
@@ -187,4 +193,81 @@ function _safe_cache_remove($finder, $sub_dir, $lock_name)
 
   // release lock
   pake_remove($sf_root_dir.'/'.$lock_name.'.lck', '');
+}
+
+/**
+ * forces rotation of the given log file
+ *
+ * @example symfony log-rotate
+ *
+ * @param object $task
+ * @param array $args
+ */
+function run_rotate_log($task, $args)
+{
+  // handling two required arguments (application and environment)
+  if (count($args) < 2)
+  {
+    throw new Exception('You must provide the environment of the log to rotate');
+  }
+  $app = $args[0];
+  $env = $args[1];
+
+  // define constants
+  define('SF_ROOT_DIR',    sfConfig::get('sf_root_dir'));
+  define('SF_APP',         $app);
+  define('SF_ENVIRONMENT', $env);
+  define('SF_DEBUG',       true);
+
+  // get configuration
+  require_once SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php';
+
+  sfLogManager::rotate($app, $env, sfConfig::get('sf_logging_period'), sfConfig::get('sf_logging_history'), true);
+}
+
+/**
+ * purges the application log directory as per settings in logging.yml
+ *
+ * @example symfony log-rotate
+ *
+ * @param object $task
+ * @param array $args
+ */
+function run_purge_logs($task, $args)
+{
+  $sf_symfony_data_dir = sfConfig::get('sf_symfony_data_dir');
+  $sf_symfony_lib_dir = sfConfig::get('sf_symfony_lib_dir');
+  require_once($sf_symfony_lib_dir.'/util/Spyc.class.php');
+  require_once($sf_symfony_lib_dir.'/util/sfYaml.class.php');
+  require_once($sf_symfony_lib_dir.'/util/sfToolkit.class.php');
+
+  $default_logging = sfYaml::load($sf_symfony_data_dir.'/config/logging.yml');
+  $app_dir = sfConfig::get('sf_app_dir');
+  $apps = pakeFinder::type('dir')->maxdepth(0)->relative()->prune('.svn')->discard('.svn')->in('apps');
+  $ignore = array('all', 'default');
+
+  foreach($apps as $app)
+  {
+    $logging = sfYaml::load($app_dir.'/'.$app.'/config/logging.yml');
+    $logging = array_merge($default_logging, $logging);
+
+    foreach($logging as $env => $config)
+    {
+      if (in_array($env, $ignore))
+      {
+        continue;
+      }
+      $props = array_merge($default_logging['default'], is_array($config) ? $config : array());
+      $active = isset($props['active']) ? $props['active'] : true;
+      $purge  = isset($props['purge']) ? $props['purge'] : true;
+      if ($active && $purge)
+      {
+        $filename = sfConfig::get('sf_log_dir').'/'.$app.'_'.$env.'.log';
+        if (file_exists($filename))
+        {
+          pake_remove($filename);
+        }
+      }
+    }
+  }
 }
