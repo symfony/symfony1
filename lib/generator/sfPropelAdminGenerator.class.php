@@ -85,7 +85,7 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     $this->generatePhpFiles($this->generatedModuleName, $templateFiles);
 
     // require generated action class
-    $data = "require_once(sfConfig::get('sf_module_cache_dir').'/".$this->generatedModuleName."/actions/actions.class.php')\n";
+    $data = "require_once(sfConfig::get('sf_module_cache_dir').'/".$this->generatedModuleName."/actions/actions.class.php');\n";
 
     return $data;
   }
