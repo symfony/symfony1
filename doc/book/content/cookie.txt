@@ -207,3 +207,5 @@ One last thing: If the user logs out, don't forget to remove the cookie!
       $this->setAuthenticated(false);
       sfContext::getInstance()->getResponse()->setCookie('MyWebSite', '', time() - 3600, '/');
     }
+
+>**Note**: This solution works only for non-secure pages, since the security check for secure pages occurs _before_ the custom `remember` filter. Consequently, if a user with a proper cookie tries to access a secure page without having logged to the site in a non-secure page before, he/she will be redirected to the login page as anybody else. If you want the remember me feature to work for secure pages as well, the implementation has to be slightly different. You must create a `myBasicSecurityFilter` class, specializing the `sfBasicSecurityFilter` class, and put the cookie control in it. Then, in the `factories.yml`, change the name of the `security_filter` class to this `myBasicSecurityFilter`. The details of the implementation are left to your sagacity.
