@@ -145,9 +145,9 @@ function run_init_batch($task, $args)
     throw new Exception('You must provide the batch skeleton name');
   }
 
-	// TODO: ADD FINDER HERE TO LOCATE BATCH SKELTON LOCALLY OR IN SYMFONY DIRS, AND SEND PATH TO SKELETONS FUNCTION
-	$batch = '_batch_'.$args[0];
-	$batch($task, $args);
+  // TODO: ADD FINDER HERE TO LOCATE BATCH SKELTON LOCALLY OR IN SYMFONY DIRS, AND SEND PATH TO SKELETONS FUNCTION
+  $batch = '_batch_'.$args[0];
+  $batch($task, $args);
 }
 
 function _batch_default($task, $args)
@@ -160,10 +160,10 @@ function _batch_default($task, $args)
   {
     throw new Exception('You must provide the application name');
   }
-	
+
   $batch = $args[1];
-	$app   = $args[2];
-	
+  $app   = $args[2];
+
   // handling two optional arguments (environment and debug)
   $env   = isset($args[3]) && in_array($args[3], array('prod', 'dev')) ? $args[3] : 'dev';
   $debug = isset($args[4]) && in_array($args[4], array(true, false)) ? $args[4] : true;
@@ -179,7 +179,7 @@ function _batch_default($task, $args)
   $sf_bin_dir = sfConfig::get('sf_bin_dir');
 
   pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/batch/default.php', $sf_bin_dir.'/'.$batch.'.php');
-  pake_replace_tokens($batch.'.php', $sf_bin_dir, '##', '##', $constants);	
+  pake_replace_tokens($batch.'.php', $sf_bin_dir, '##', '##', $constants);
 }
 
 function run_init_controller($task, $args)
@@ -195,14 +195,14 @@ function run_init_controller($task, $args)
 
   // handling two optional arguments (environment and debug)
   $controller   = isset($args[2]) ? $args[2] : $app.'_'.$env;
-  $debug 				= isset($args[3]) && in_array($args[3], array(true, false)) ? $args[3] : true;
+  $debug        = isset($args[3]) && in_array($args[3], array(true, false)) ? $args[3] : true;
 
   $constants = array(
-    'PROJECT_NAME' 		=> $task->get_property('name', 'symfony'),
-    'APP_NAME'     		=> $app,
+    'PROJECT_NAME'    => $task->get_property('name', 'symfony'),
+    'APP_NAME'        => $app,
     'CONTROLLER_NAME' => $controller,
-    'ENV_NAME'     		=> $env,
-    'DEBUG'        		=> $debug,
+    'ENV_NAME'        => $env,
+    'DEBUG'           => $debug,
   );
 
   $sf_web_dir = sfConfig::get('sf_web_dir');

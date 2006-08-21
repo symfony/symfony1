@@ -128,20 +128,20 @@ function _propel_convert_xml_schema($check_schema = true, $prefix = '')
 
 function run_build_all($task, $args)
 {
-	throw new Exception('This task is deprecated. Please use "propel-build-all".');
+  throw new Exception('This task is deprecated. Please use "propel-build-all".');
 }
 
 function run_propel_build_all($task, $args)
 {
-	run_propel_build_model($task, $args);
-	run_propel_build_sql($task, $args);
-	run_propel_insert_sql($task, $args);
+  run_propel_build_model($task, $args);
+  run_propel_build_sql($task, $args);
+  run_propel_insert_sql($task, $args);
 }
 
 function run_propel_build_all_load($task, $args)
 {
-	run_propel_build_all($task, $args);
-	run_propel_load_data($task, $args);
+  run_propel_build_all($task, $args);
+  run_propel_load_data($task, $args);
 }
 
 function run_propel_build_model($task, $args)
