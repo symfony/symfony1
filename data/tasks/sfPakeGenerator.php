@@ -16,6 +16,10 @@ pake_desc('initialize a new symfony batch script');
 pake_task('init-batch', 'app_exists');
 pake_alias('batch', 'init-batch');
 
+pake_desc('initialize a new symfony controller script');
+pake_task('init-controller', 'app_exists');
+pake_alias('controller', 'init-controller');
+
 function run_init_project($task, $args)
 {
   if (file_exists('SYMFONY'))
@@ -160,4 +164,33 @@ function run_init_batch($task, $args)
 
   pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/batch/batch.php', $sf_bin_dir.'/'.$batch.'.php');
   pake_replace_tokens($batch.'.php', $sf_bin_dir, '##', '##', $constants);
+}
+
+function run_init_controller($task, $args)
+{
+  // handling two required arguments (application and batch name)
+  if (count($args) < 2)
+  {
+    throw new Exception('You must provide the environment name');
+  }
+
+  $app = $args[0];
+  $env = $args[1];
+
+  // handling two optional arguments (environment and debug)
+  $controller   = isset($args[2]) ? $args[2] : $app.'_'.$env;
+  $debug 				= isset($args[3]) && in_array($args[3], array(true, false)) ? $args[3] : true;
+
+  $constants = array(
+    'PROJECT_NAME' 		=> $task->get_property('name', 'symfony'),
+    'APP_NAME'     		=> $app,
+    'CONTROLLER_NAME' => $controller,
+    'ENV_NAME'     		=> $env,
+    'DEBUG'        		=> $debug,
+  );
+
+  $sf_web_dir = sfConfig::get('sf_web_dir');
+
+  pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/controller/controller.php', $sf_web_dir.'/'.$controller.'.php');
+  pake_replace_tokens($controller.'.php', $sf_web_dir, '##', '##', $constants);
 }

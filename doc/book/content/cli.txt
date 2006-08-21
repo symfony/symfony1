@@ -55,6 +55,10 @@ CLI tasks
 
     $ symfony init-batch <APPLICATION_NAME> <SCRIPT_NAME> [dev|prod] [true|false]
 
+`init-controller`: Initialize a new controller (shortcut: `controller`). The default script name follows the symfony convention.
+
+    $ symfony init-controller <APPLICATION_NAME> <ENVIRONMENT_NAME> [<SCRIPT_NAME>] [true|false]
+
 Find more about these commands in the [project creation chapter](project_creation.txt).
 
 ### Model generation
