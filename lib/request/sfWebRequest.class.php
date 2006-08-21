@@ -318,9 +318,49 @@ class sfWebRequest extends sfRequest
   public function getUri()
   {
     $pathArray = $this->getPathInfoArray();
-    $protocol  = $this->isSecure() ? 'https' : 'http';
 
-    return $protocol.'://'.$this->getHost().$pathArray['REQUEST_URI'];
+    if ($this->isAbsUri())
+    {
+      return $pathArray['REQUEST_URI'];
+    }
+
+    return $this->getUriPrefix().$pathArray['REQUEST_URI'];
+  }
+
+  /**
+   * See if the client is using absolute uri
+   *
+   * @return boolean
+   */
+  public function isAbsUri()
+  {
+    $pathArray = $this->getPathInfoArray();
+
+    return preg_match('/^http/', $pathArray['REQUEST_URI']);
+  }
+
+  /**
+   * Uri prefix,including protocol,hostname and server port
+   *
+   * @return string
+   */
+  public function getUriPrefix()
+  {
+    $pathArray = $this->getPathInfoArray();
+    if ($this->isSecure())
+    {
+      $standardPort = '443';
+      $proto = 'https';
+    }
+    else
+    {
+      $standardPort = '80';
+      $proto = 'http';
+    }
+
+    $port = ($pathArray['SERVER_PORT'] == $standardPort) ? "" : ":".$pathArray['SERVER_PORT'];
+
+    return $proto.'://'.$pathArray['HTTP_HOST'].$port;
   }
 
   public function getPathInfo ()
@@ -336,9 +376,14 @@ class sfWebRequest extends sfRequest
       if (isset($pathArray['REQUEST_URI']))
       {
         $script_name = $pathArray['SCRIPT_NAME'];
-        $pathInfo = preg_replace('/^'.preg_quote($script_name, '/').'/', '', $pathArray['REQUEST_URI']);
+        if($this->isAbsUri())
+        {
+          $uri_prefix = $this->getUriPrefix();
+        }
+        $pathInfo = preg_replace('/^'.preg_quote($uri_prefix,'/').'/','',$pathArray['REQUEST_URI']);        
+        $pathInfo = preg_replace('/^'.preg_quote($script_name, '/').'/', '', $pathInfo);
         $prefix_name = preg_replace('#/[^/]+$#', '', $script_name);
-        $pathInfo = preg_replace('/^'.preg_quote($prefix_name, '/').'/', '', $pathArray['REQUEST_URI']);
+        $pathInfo = preg_replace('/^'.preg_quote($prefix_name, '/').'/', '', $pathInfo);
         $pathInfo = preg_replace('/'.preg_quote($pathArray['QUERY_STRING'], '/').'$/', '', $pathInfo);
       }
     }
