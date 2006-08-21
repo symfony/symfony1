@@ -74,14 +74,14 @@ abstract class sfWebController extends sfController
       // use PATH format
       $divider = '/';
       $equals  = '/';
-      $url    .= '/';
+      $querydiv = '/';
     }
     else
     {
       // use GET format
       $divider = ini_get('arg_separator.output');
       $equals  = '=';
-      $url    .= '?';
+      $querydiv = '?';
     }
 
     // default module
@@ -97,7 +97,7 @@ abstract class sfWebController extends sfController
     }
 
     $r = sfRouting::getInstance();
-    if ($r->hasRoutes() && $generated_url = $r->generate($route_name, $parameters, $divider, $equals))
+    if ($r->hasRoutes() && $generated_url = $r->generate($route_name, $parameters, $querydiv, $divider, $equals))
     {
       // strip off first divider character
       $url .= ltrim($generated_url, $divider);
