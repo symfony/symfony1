@@ -11,8 +11,10 @@
 /**
  * Log manager
  *
- * @package default
- * @author Joe Simms
+ * @package    symfony
+ * @subpackage log
+ * @author     Joe Simms
+ * @version    SVN: $Id$
  **/
 class sfLogManager
 {
