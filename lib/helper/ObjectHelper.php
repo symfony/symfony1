@@ -143,10 +143,16 @@ function _get_values_for_object_select_tag($object, $class)
 {
   // FIXME: drop Propel dependency
 
-  $select_options = array();
-
   require_once(sfConfig::get('sf_model_lib_dir').'/'.$class.'Peer.php');
   $objects = call_user_func(array($class.'Peer', 'doSelect'), new Criteria());
+
+  return _get_options_from_objects($objects);
+}
+
+function _get_options_from_objects($objects)
+{
+  $select_options = array();
+
   if ($objects)
   {
     // multi primary keys handling
