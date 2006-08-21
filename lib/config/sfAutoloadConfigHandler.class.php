@@ -51,7 +51,7 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
       }
 
       // file mapping or directory mapping?
-      if (!isset($entry['ext']))
+      if (isset($entry['files']))
       {
         // file mapping
         foreach ($entry['files'] as $class => $path)
@@ -95,9 +95,14 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
         $finder->prune($exclude)->discard($exclude);
 
         $files = $finder->in($path);
+        $regex = '~^\s*(?:abstract\s+|final\s+)?(?:class|interface)\s+(\w+)~mi';
         foreach ($files as $file)
         {
-          $data[] = sprintf("'%s' => '%s',", basename($file, $ext), $path.DIRECTORY_SEPARATOR.$file);
+          preg_match_all($regex, file_get_contents($path.DIRECTORY_SEPARATOR.$file), $classes);
+          foreach ($classes[1] as $class)
+          {
+            $data[] = sprintf("'%s' => '%s',", $class, $path.DIRECTORY_SEPARATOR.$file);
+          }
         }
       }
     }
