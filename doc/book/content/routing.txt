@@ -274,29 +274,6 @@ It is sometimes necessary to specify a suffix for a unique routing rule. In that
     update_directory:
       url:          /updates/
       param:        { module: update, action: list }
-
-Routing activation
-------------------
-
-The routing can be activated and deactivated on demand without any modification of the application code, provided that all the URLs generated in the templates use the `link_to()` helper.
-
-By default, the routing is activated. To deactivate it, change the value of the `routing` parameter in the `settings.yml` file:
-
-    all:
-      .settings:
-        routing:        off
-
-You can have a different value for each environment.
-
-With routing deactivated, a call to 
-
-    [php]
-    <?php echo link_to($article->getTitle(), '/article/read?id='.$article->getId()) ?>
-
-will generate in HTML
-
-    [php]
-    <a href="/index.php?module=article&action=read&id=100">my_article_title</a>
     
 Retrieve information about the current route
 --------------------------------------------
