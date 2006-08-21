@@ -29,6 +29,8 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
   private $credentials = null;
   private $authenticated = null;
 
+  private $timedout = false;
+
   /**
    * Clears all credentials.
    *
@@ -163,7 +165,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
    */
   public function setAuthenticated($authenticated)
   {
-    if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfUser} user is '.($authenticated === true ? '' : 'not').' authenticated');
+    if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfUser} user is '.($authenticated === true ? '' : 'not ').'authenticated');
 
     if ($authenticated === true)
     {
@@ -174,6 +176,16 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
       $this->authenticated = false;
       $this->clearCredentials();
     }
+  }
+
+  public function setTimedOut()
+  {
+    $this->timedout = true;
+  }
+
+  public function getTimedOut()
+  {
+    return $this->timedout;
   }
 
   /**
@@ -208,6 +220,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     if ((time() - $this->lastRequest) > sfConfig::get('sf_timeout'))
     {
       if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfUser} automatic user logout');
+      $this->setTimedOut();
       $this->clearCredentials();
       $this->setAuthenticated(false);
     }
