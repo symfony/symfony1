@@ -13,7 +13,7 @@ pake_task('init-module', 'app_exists');
 pake_alias('module', 'init-module');
 
 pake_desc('initialize a new symfony batch script');
-pake_task('init-batch', 'app_exists');
+pake_task('init-batch', 'project_exists');
 pake_alias('batch', 'init-batch');
 
 pake_desc('initialize a new symfony controller script');
@@ -140,17 +140,33 @@ function run_init_module($task, $args)
 function run_init_batch($task, $args)
 {
   // handling two required arguments (application and batch name)
-  if (count($args) < 2)
+  if (count($args) < 1)
   {
-    throw new Exception('You must provide your batch script name.');
+    throw new Exception('You must provide the batch skeleton name');
   }
 
-  $app   = $args[0];
-  $batch = $args[1];
+	// TODO: ADD FINDER HERE TO LOCATE BATCH SKELTON LOCALLY OR IN SYMFONY DIRS, AND SEND PATH TO SKELETONS FUNCTION
+	$batch = '_batch_'.$args[0];
+	$batch($task, $args);
+}
 
+function _batch_default($task, $args)
+{
+  if (count($args) < 2)
+  {
+    throw new Exception('You must provide the destination script name');
+  }
+  if (count($args) < 3)
+  {
+    throw new Exception('You must provide the application name');
+  }
+	
+  $batch = $args[1];
+	$app   = $args[2];
+	
   // handling two optional arguments (environment and debug)
-  $env   = isset($args[2]) && in_array($args[2], array('prod', 'dev')) ? $args[2] : 'dev';
-  $debug = isset($args[3]) && in_array($args[3], array(true, false)) ? $args[3] : true;
+  $env   = isset($args[3]) && in_array($args[3], array('prod', 'dev')) ? $args[3] : 'dev';
+  $debug = isset($args[4]) && in_array($args[4], array(true, false)) ? $args[4] : true;
 
   $constants = array(
     'PROJECT_NAME' => $task->get_property('name', 'symfony'),
@@ -162,8 +178,8 @@ function run_init_batch($task, $args)
 
   $sf_bin_dir = sfConfig::get('sf_bin_dir');
 
-  pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/batch/batch.php', $sf_bin_dir.'/'.$batch.'.php');
-  pake_replace_tokens($batch.'.php', $sf_bin_dir, '##', '##', $constants);
+  pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/batch/default.php', $sf_bin_dir.'/'.$batch.'.php');
+  pake_replace_tokens($batch.'.php', $sf_bin_dir, '##', '##', $constants);	
 }
 
 function run_init_controller($task, $args)
