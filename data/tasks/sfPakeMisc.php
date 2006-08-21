@@ -4,6 +4,9 @@ pake_desc('clear cached information');
 pake_task('clear-cache', 'project_exists');
 pake_alias('cc', 'clear-cache');
 
+pake_desc('clear controllers');
+pake_task('clear-controllers', 'project_exists');
+
 pake_desc('fix directories permissions');
 pake_task('fix-perms', 'project_exists');
 
@@ -130,6 +133,37 @@ function run_clear_cache($task, $args)
   }
 }
 
+/**
+ * clears all controllers in your web directory other than one running in a produciton environment
+ *
+ * @example symfony clear-controllers
+ *
+ * @param object $task
+ * @param array $args
+ */
+function run_clear_controllers($task, $args)
+{
+  $web_dir = sfConfig::get('sf_web_dir');
+  $app_dir = sfConfig::get('sf_app_dir');
+
+  $apps = count($args) > 1 ? $args : null;
+
+  // get controller
+  $controllers = pakeFinder::type('file')->prune('.svn')->discard('.svn')->maxdepth(1)->name('*.php')->in($web_dir);
+
+  foreach ($controllers as $controller)
+  {
+    $contents = file_get_contents($controller);
+    preg_match('/\'SF_APP\',[\s]*\'(.*)\'\)/', $contents, $found_app);
+    preg_match('/\'SF_ENVIRONMENT\',[\s]*\'(.*)\'\)/', $contents, $env);
+
+    // remove file if it has found an application and the environment is not production
+    if (isset($found_app[1]) && isset($env[1]) && $env[1] != 'prod')
+    {
+      pake_remove($controller, '');
+    }
+  }
+}
 
 /**
  * safely removes directory via pake
