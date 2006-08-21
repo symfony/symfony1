@@ -109,6 +109,9 @@ function get_component($moduleName, $componentName, $vars = array())
     throw new sfInitializationException($error);
   }
 
+  // load component's module config file
+  require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/module.yml');
+
   $componentInstance->getVarHolder()->add($vars);
 
   // dispatch component
