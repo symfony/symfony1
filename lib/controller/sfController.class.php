@@ -229,6 +229,14 @@ abstract class sfController
         // create a new filter chain
         $filterChain = new sfFilterChain();
 
+        if (sfConfig::get('sf_web_debug'))
+        {
+          // register web debug toolbar filter
+          $webDebugFilter = new sfWebDebugFilter();
+          $webDebugFilter->initialize($this->context);
+          $filterChain->register($webDebugFilter);
+        }
+
         if (sfConfig::get('sf_available'))
         {
           // the application is available so we'll register
@@ -252,14 +260,6 @@ abstract class sfController
           // load filters
           $this->loadGlobalFilters($filterChain);
           $this->loadModuleFilters($filterChain);
-        }
-
-        if (sfConfig::get('sf_web_debug'))
-        {
-          // register web debug toolbar filter
-          $webDebugFilter = new sfWebDebugFilter();
-          $webDebugFilter->initialize($this->context);
-          $filterChain->register($webDebugFilter);
         }
 
         // register common HTTP filter
