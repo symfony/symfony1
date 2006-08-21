@@ -30,7 +30,10 @@ pake_task('propel-insert-sql', 'project_exists');
 pake_task('insert-sql');
 
 pake_desc('generate propel model and sql and initialize database');
-pake_task('propel-build-all', 'project_exists', 'propel-build-model', 'propel-build-sql', 'propel-insert-sql');
+pake_task('propel-build-all', 'project_exists');
+
+pake_desc('generate propel model and sql and initialize database, and load data');
+pake_task('propel-build-all-load', 'propel-build-all');
 
 function run_build_model($task, $args)
 {
@@ -125,6 +128,20 @@ function _propel_convert_xml_schema($check_schema = true, $prefix = '')
 
 function run_build_all($task, $args)
 {
+	throw new Exception('This task is deprecated. Please use "propel-build-all".');
+}
+
+function run_propel_build_all($task, $args)
+{
+	run_propel_build_model($task, $args);
+	run_propel_build_sql($task, $args);
+	run_propel_insert_sql($task, $args);
+}
+
+function run_propel_build_all_load($task, $args)
+{
+	run_propel_build_all($task, $args);
+	run_propel_load_data($task, $args);
 }
 
 function run_propel_build_model($task, $args)

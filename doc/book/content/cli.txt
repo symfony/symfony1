@@ -77,6 +77,18 @@ The connection settings used by the following commands are taken from the `confi
 
     $ symfony propel-insert-sql
     
+`propel-build-all`: Executes `propel-build-schema`, `propel-build-sql` and then `propel-insert-sql` all in one command.
+
+    $ symfony propel-build-all
+
+`propel-load-data`: Loads all data from default directory `data/fixtures` unless otherwise specified. Environment is default to `dev`. The fixtures directory must be specified relative to the project's data dir, for example `fixtures` (default), `testdata` or specify a single file `fixtures/file.yml`.
+
+    $ symfony propel-load-data  <APPLICATION_NAME> [<ENVIRONMENT_NAME>] [<FIXTURES_DIR_OR_FILE>]
+
+`propel-build-all-load`: Executes `propel-build-all` then `propel-load-data`. Accepts same arguments as `propel-load-data`.
+
+    $ symfony propel-build-all-load  <APPLICATION_NAME> [<ENVIRONMENT_NAME>] [<FIXTURES_DIR_OR_FILE>]
+
 If you want to learn more about the model and the effect of these commands, refer to the [model chapter](model.txt).
 
 ### Development tools
