@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: BasePeer.php 282 2005-11-25 14:20:51Z hans $
+ *  $Id: BasePeer.php 431 2006-08-21 14:06:10Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -42,7 +42,7 @@ include_once 'propel/validator/ValidationFailed.php';
  * @author John D. McNally <jmcnally@collab.net> (Torque)
  * @author Brett McLaughlin <bmclaugh@algx.net> (Torque)
  * @author Stephen Haberman <stephenh@chase3000.com> (Torque)
- * @version $Revision: 282 $
+ * @version $Revision: 431 $
  * @package propel.util
  */
 class BasePeer
@@ -832,7 +832,7 @@ class BasePeer
 		$sql =  "SELECT "
 				.($selectModifiers ? implode(" ", $selectModifiers) . " " : "")
 				.implode(", ", $selectClause)
-				." FROM ".((substr(get_class($db), 0, 7) == 'DBMySQL') ? (count($fromClause) > 1 ? "(".implode(", ", $fromClause).")" : implode(", ", $fromClause)) : implode(", ", $fromClause))
+				." FROM ". ( (!empty($joinClause) && count($fromClause) > 1 && (substr(get_class($db), 0, 7) == 'DBMySQL')) ? "(" . implode(", ", $fromClause) . ")" : implode(", ", $fromClause) ) 
 								.($joinClause ? ' ' . implode(' ', $joinClause) : '')
 				.($whereClause ? " WHERE ".implode(" AND ", $whereClause) : "")
 				.($groupByClause ? " GROUP BY ".implode(",", $groupByClause) : "")
