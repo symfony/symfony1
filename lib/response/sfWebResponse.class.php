@@ -93,7 +93,7 @@ class sfWebResponse extends sfResponse
    *
    * @return void
    */
-  public function setCookie ($name, $value, $expire = null, $path = '/', $domain = '', $secure = false)
+  public function setCookie ($name, $value, $expire = null, $path = '/', $domain = '', $secure = false, $httpOnly = false)
   {
     if ($expire !== null)
     {
@@ -112,12 +112,13 @@ class sfWebResponse extends sfResponse
     }
 
     $this->cookies[] = array(
-      'name'   => $name,
-      'value'  => $value,
-      'expire' => $expire,
-      'path'   => $path,
-      'domain' => $domain,
-      'secure' => $secure ? true : false,
+      'name'     => $name,
+      'value'    => $value,
+      'expire'   => $expire,
+      'path'     => $path,
+      'domain'   => $domain,
+      'secure'   => $secure ? true : false,
+      'httpOnly' => $httpOnly,
     );
   }
 
@@ -250,7 +251,14 @@ class sfWebResponse extends sfResponse
     // cookies
     foreach ($this->cookies as $cookie)
     {
-      setrawcookie($cookie['name'], $cookie['value'], $cookie['expire'], $cookie['path'], $cookie['domain'], $cookie['secure']);
+      if (version_compare(phpversion(), '5.2', '>='))
+      {
+        setrawcookie($cookie['name'], $cookie['value'], $cookie['expire'], $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httpOnly']);
+      }
+      else
+      {
+        setrawcookie($cookie['name'], $cookie['value'], $cookie['expire'], $cookie['path'], $cookie['domain'], $cookie['secure']);
+      }
 
       if (sfConfig::get('sf_logging_active'))
       {

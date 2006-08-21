@@ -56,6 +56,14 @@ class sfSessionStorage extends sfStorage
       }
     }
 
+    $cookieDefaults = session_get_cookie_params();
+    $lifetime = $this->getParameter('session_cookie_lifetime', $cookieDefaults['lifetime']);
+    $path     = $this->getParameter('session_cookie_path',     $cookieDefaults['path']);
+    $domain   = $this->getParameter('session_cookie_domain',   $cookieDefaults['domain']);
+    $secure   = $this->getParameter('session_cookie_secure',   $cookieDefaults['secure']);
+    $httpOnly = $this->getParameter('session_cookie_httponly', isset($cookieDefaults['httponly'])? $cookieDefaults['httponly']: false);
+	session_set_cookie_params($lifetime, $path, $domain, $secure, $httpOnly);
+
     if ($this->getParameter('auto_start', true))
     {
       // start our session
