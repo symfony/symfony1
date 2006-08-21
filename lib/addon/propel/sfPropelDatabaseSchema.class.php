@@ -168,7 +168,8 @@ class sfPropelDatabaseSchema
             'required'         => true, 
             'primaryKey'       => true,
             'foreignTable'     => $main_table,
-            'foreignReference' => 'id'
+            'foreignReference' => 'id',
+            'onDelete'         => 'cascade'
           ));
           $this->setIfNotSet($this->database[$i18n_table], 'culture', array(
             'isCulture'  => 'true',
