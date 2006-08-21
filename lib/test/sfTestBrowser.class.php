@@ -55,7 +55,7 @@ class sfTestBrowser
 
     return $html;
   }
-  
+
   public function post($action_uri, $params = array(), $with_layout = true, $followRedirects = false)
   {
     $this->populatePostVariables($action_uri, $params, $with_layout);
@@ -144,10 +144,13 @@ class sfTestBrowser
     return $this->checkRedirect($redirectUrl);
   }
 
-  protected function populateGetVariables($request_uri, $with_layout)
+  protected function populateGetVariables($request_uri, $with_layout, $request_method = 'GET')
   {
+    $_GET  = array();
+    $_POST = array();
+
     $_SERVER['GATEWAY_INTERFACE'] = 'CGI/1.1';
-    $_SERVER['REQUEST_METHOD'] = 'GET';
+    $_SERVER['REQUEST_METHOD'] = $request_method;
     $_SERVER['REQUEST_URI'] = $request_uri;
     $_SERVER['SCRIPT_NAME'] = '/index.php';
 
@@ -174,6 +177,7 @@ class sfTestBrowser
 
     // parse query string
     $params = explode('&', $_SERVER['QUERY_STRING']);
+
     foreach ($params as $param)
     {
       if (!$param)
@@ -182,6 +186,7 @@ class sfTestBrowser
       }
 
       list ($key, $value) = explode('=', $param);
+
       $_GET[$key] = urldecode($value);
     }
 
@@ -190,22 +195,19 @@ class sfTestBrowser
 
   protected function populatePostVariables($request_uri, $params, $with_layout)
   {
-    $_SERVER['GATEWAY_INTERFACE'] = 'CGI/1.1';
-    $_SERVER['REQUEST_METHOD'] = 'POST';
-    $_SERVER['REQUEST_URI'] = $request_uri;
-    $_SERVER['SCRIPT_NAME'] = '/index.php';
-    // query string
-    $_SERVER['QUERY_STRING'] = '';
+    array_walk_recursive($params, array('sfTestBrowser', 'recursiveUrlDecodeCallback'));
 
-    $request_uri = $this->checkRequestUri($request_uri);
+    $this->populateGetVariables($request_uri, $with_layout, 'POST');
 
     foreach ($params as $key => $value)
     {
-      $_POST[$key] = urldecode($value);
+      $_POST[$key] = $value;
     }
+  }
 
-    $this->changeLayout($with_layout);
-
+  private static function recursiveUrlDecodeCallback(&$value)
+  {
+    $value = urldecode($value);
   }
 
   private function checkRequestUri($request_uri)
