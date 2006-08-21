@@ -108,7 +108,7 @@ abstract class sfWebController extends sfController
 
       if (sfConfig::get('sf_url_format') == 'PATH')
       {
-        $query = strtr($query, ini_get(arg_separator.output).'=', '/');
+        $query = strtr($query, ini_get('arg_separator.output').'=', '/');
       }
 
       $url .= $query;
