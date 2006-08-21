@@ -14,6 +14,7 @@ div.calendar { position: relative; }
   cursor: default;
   background: url("normal-bg.gif");
   font-family: "trebuchet ms",verdana,tahoma,sans-serif;
+  border-collapse: separate;
 }
 
 .calendar td
