@@ -23,7 +23,7 @@ function double_list_submit()
     element = form.elements[i];
     if (element.type == 'select-multiple')
     {
-      if (element.className == 'multiple-selected')
+      if (element.className == 'sf_admin_multiple-selected')
       {
         for (var j = 0; j < element.options.length; j++)
         {

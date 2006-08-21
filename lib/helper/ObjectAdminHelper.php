@@ -65,10 +65,7 @@ function object_admin_double_list($object, $method, $options = array())
   $options = _parse_attributes($options);
 
   $options['multiple'] = true;
-  if (!isset($options['class']))
-  {
-    $options['class'] = 'multiple';
-  }
+  $options['class'] = 'sf_admin_multiple';
   if (!isset($options['size']))
   {
     $options['size'] = 10;
@@ -99,7 +96,7 @@ function object_admin_double_list($object, $method, $options = array())
   $name1 = 'unassociated_'.$name;
   $name2 = 'associated_'.$name;
   $select1 = select_tag($name1, options_for_select(_get_options_from_objects($objects_unassociated), '', $options), $options);
-  $options['class'] = 'multiple-selected';
+  $options['class'] = 'sf_admin_multiple-selected';
   $select2 = select_tag($name2, options_for_select(_get_options_from_objects($objects_associated), '', $options), $options);
 
   $html =
@@ -135,7 +132,7 @@ function object_admin_select_list($object, $method, $options = array())
   $options = _parse_attributes($options);
 
   $options['multiple'] = true;
-  if (!isset($options['class'])) $options['class'] = 'multiple';
+  $options['class'] = 'sf_admin_multiple';
   if (!isset($options['size']))  $options['size'] = 10;
 
   // get the lists of objects
@@ -185,7 +182,7 @@ function object_admin_check_list($object, $method, $options = array())
       }
     }
 
-    $html .= "<ul class=\"checklist\">\n";
+    $html .= "<ul class=\"sf_admin_checklist\">\n";
     foreach ($objects as $related_object)
     {
       $html .= '<li>'.checkbox_tag($name, $related_object->getPrimaryKey(), in_array($related_object->getPrimaryKey(), $assoc_ids)).' '.$related_object->$methodToCall()."</li>\n";
