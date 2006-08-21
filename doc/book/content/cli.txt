@@ -51,6 +51,10 @@ CLI tasks
 
     $ symfony init-module <APPLICATION_NAME> <MODULE_NAME>
 
+`init-batch`: Initialize a new batch file (shortcut: `batch`). The default environment is dev, and the last argument is used to define the SF_DEBUG constant.
+
+    $ symfony init-batch <APPLICATION_NAME> <SCRIPT_NAME> [dev|prod] [true|false]
+
 Find more about these commands in the [project creation chapter](project_creation.txt).
 
 ### Model generation
