@@ -260,6 +260,34 @@ abstract class sfComponent
   }
 
   /**
+   * Returns true if a variable for the template is set.
+   *
+   * This is just really a shortcut for:
+   * <code>$this->getVarHolder()->has('name')</code>
+   *
+   * @param  string key
+   * @return boolean
+   */
+  public function __isset($name)
+  {
+    return $this->var_holder->has($name);
+  }
+
+  /**
+   * Removes a variable for the template.
+   *
+   * This is just really a shortcut for:
+   * <code>$this->getVarHolder()->remove('name')</code>
+   *
+   * @param  string key
+   * @return void
+   */
+  public function __unset($name)
+  {
+    $this->var_holder->remove($name);
+  }
+
+  /**
    * Sets a flash variable that will be passed to the next
    * action.
    * 
