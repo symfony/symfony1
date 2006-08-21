@@ -1,15 +1,15 @@
 default:
   controller:
-    class: myFrontWebController
+    class: sfFrontWebController
 
   request:
-    class: myWebRequest
+    class: sfWebRequest
 
   response:
     class: sfWebResponse
 
   user:
-    class: myUser
+    class: sfUser
 
   storage:
     class: sfSessionStorage
