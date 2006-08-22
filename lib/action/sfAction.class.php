@@ -441,7 +441,6 @@ abstract class sfAction extends sfComponent
   /**
    * Indicates that this action requires security.
    *
-   * @param  string action name (defaults to the current action)
    * @return bool true, if this action requires security, otherwise false.
    */
   public function isSecure()
@@ -462,7 +461,6 @@ abstract class sfAction extends sfComponent
   /**
    * Gets credentials the user must have to access this action.
    *
-   * @param  string action name (defaults to the current action)
    * @return mixed
    */
   public function getCredential()
