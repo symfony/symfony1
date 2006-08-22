@@ -412,7 +412,7 @@ But you can define much more for a column, and in this case you will need to def
     propel:
       blog_article:
         id:       { type: integer, required: true, primaryKey: true, autoincrement: true }
-        name:     { type: varchar , size: 50, defaultValue: foobar, index: true }
+        name:     { type: varchar , size: 50, default: foobar, index: true }
         group_id: { type: integer, foreignTable: db_group, foreignReference: id, onDelete: cascade }
         
 The column parameters are:
@@ -420,7 +420,7 @@ The column parameters are:
 * `type`: Propel culomn type. See [Propel list of types](http://propel.phpdb.org/docs/user_guide/chapters/ColumnTypes.html) for more details. 
 * `size`: for `VARCHAR` type columns, the size of the string. Note that a column defined as `varchar(50)` in basic syntax is defined as `{ type: varchar , size: 50 }` in extended syntax.
 * `required`: `false` by default, set it to `true` if you want the column to be required
-* `defaultValue`
+* `default`: default value
 * `primaryKey`: boolean, to be set to `true` for primary keys
 * `autoincrement`: boolean, to be set to `true` for columns of type `integer` that need to be auto-increment 
 * `sequence`: sequence name for databases using sequences for auto-increment columns (e.g. PostgreSQL or Oracle)
