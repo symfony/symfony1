@@ -111,7 +111,7 @@ class sfDefineEnvironmentConfigHandler extends sfYamlConfigHandler
     // categories starting without a period will be prepended to the key
     if ($category[0] != '.')
     {
-      $category = $prefix.preg_replace('/^[^_]+_/', '', $category).'_';
+      $category = $prefix.$category.'_';
     }
     else
     {
