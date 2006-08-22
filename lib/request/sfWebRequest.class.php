@@ -376,11 +376,8 @@ class sfWebRequest extends sfRequest
       if (isset($pathArray['REQUEST_URI']))
       {
         $script_name = $pathArray['SCRIPT_NAME'];
-        if($this->isAbsUri())
-        {
-          $uri_prefix = $this->getUriPrefix();
-        }
-        $pathInfo = preg_replace('/^'.preg_quote($uri_prefix,'/').'/','',$pathArray['REQUEST_URI']);        
+        $uri_prefix = $this->isAbsUri() ? $this->getUriPrefix() : '';
+        $pathInfo = preg_replace('/^'.preg_quote($uri_prefix, '/').'/','',$pathArray['REQUEST_URI']);
         $pathInfo = preg_replace('/^'.preg_quote($script_name, '/').'/', '', $pathInfo);
         $prefix_name = preg_replace('#/[^/]+$#', '', $script_name);
         $pathInfo = preg_replace('/^'.preg_quote($prefix_name, '/').'/', '', $pathInfo);

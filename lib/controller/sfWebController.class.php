@@ -99,8 +99,7 @@ abstract class sfWebController extends sfController
     $r = sfRouting::getInstance();
     if ($r->hasRoutes() && $generated_url = $r->generate($route_name, $parameters, $querydiv, $divider, $equals))
     {
-      // strip off first divider character
-      $url .= ltrim($generated_url, $divider);
+      $url .= $generated_url;
     }
     else
     {
