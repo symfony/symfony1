@@ -12,8 +12,8 @@
  * Abstract output escaping decorator class for "getter" objects.
  *
  * @see        sfOutputEscaper
- * @package    symfony.view
- * @subpackage escaper
+ * @package    symfony
+ * @subpackage view
  * @author     Mike Squire <mike@somosis.co.uk>
  * @version    SVN: $Id$
  */

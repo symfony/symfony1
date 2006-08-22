@@ -21,8 +21,8 @@ if (!interface_exists('Countable', false))
  * Output escaping decorator class for arrays.
  *
  * @see        sfOutputEscaper
- * @package    symfony.view
- * @subpackage escaper
+ * @package    symfony
+ * @subpackage view
  * @author     Mike Squire <mike@somosis.co.uk>
  * @version    SVN: $Id$
  */

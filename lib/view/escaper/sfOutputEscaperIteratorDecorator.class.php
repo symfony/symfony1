@@ -21,8 +21,8 @@
  * exception.
  *
  * @see        sfOutputEscaper
- * @package    symfony.view
- * @subpackage escaper
+ * @package    symfony
+ * @subpackage view
  * @author     Mike Squire <mike@somosis.co.uk>
  * @version    SVN: $Id$
  */
