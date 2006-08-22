@@ -470,8 +470,22 @@ function textarea_tag($name, $content = null, $options = array())
 
   if ($rich == 'tinymce')
   {
+    if (isset($options['tinymce_gzip']))
+    {
+      // use tinymce's gzipped js?
+      if ($options['tinymce_gzip'] === true)
+      {
+        $tinymce_file = '/tiny_mce_gzip.php';
+      }
+      unset($options['tinymce_gzip']);
+    }
+    // use standard tinymce js
+    else
+    {
+      $tinymce_file = '/tiny_mce.js';
+    }
     // tinymce installed?
-    $js_path = sfConfig::get('sf_rich_text_js_dir') ? '/'.sfConfig::get('sf_rich_text_js_dir').'/tiny_mce.js' : '/sf/js/tinymce/tiny_mce.js';
+    $js_path = sfConfig::get('sf_rich_text_js_dir') ? '/'.sfConfig::get('sf_rich_text_js_dir'). $tinymce_file : '/sf/js/tinymce' . $tinymce_file;
     if (!is_readable(sfConfig::get('sf_web_dir').$js_path))
     {
       throw new sfConfigurationException('You must install TinyMCE to use this helper (see rich_text_js_dir settings).');
