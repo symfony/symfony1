@@ -349,7 +349,7 @@ class sfPropelDatabaseSchema
 
   private function getCorrectValueFor($key, $value)
   {
-    $booleans = array('required', 'primaryKey', 'autoincrement', 'noXsd', 'isI18N');
+    $booleans = array('required', 'primaryKey', 'autoincrement', 'autoIncrement', 'noXsd', 'isI18N', 'isCulture');
     if (in_array($key, $booleans))
     {
       return ($value == 1) ? 'true' : 'false';
