@@ -46,6 +46,9 @@ function run_freeze($task, $args)
   $finder = pakeFinder::type('any')->ignore_version_control();
   pake_mirror($finder, $symfony_lib_dir, 'lib/symfony');
   pake_mirror($finder, $symfony_data_dir, 'data/symfony');
+
+  // install the command line
+  pake_copy('data/symfony/bin/symfony.php', 'symfony.php');
 }
 
 function run_unfreeze($task, $args)
@@ -61,6 +64,10 @@ function run_unfreeze($task, $args)
     throw new Exception('Your lib/symfony directory does not seem to be accessible.');
   }
 
-//  $finder = pakeFinder::type('file')->prune('.svn')->discard('.svn', '.sf');
-//  pake_remove($finder, );
+  $finder = pakeFinder::type('any');
+  pake_remove($finder, 'lib/symfony');
+  pake_remove('lib/symfony', '');
+  pake_remove($finder, 'data/symfony');
+  pake_remove('data/symfony', '');
+  pake_remove('symfony.php', '');
 }
