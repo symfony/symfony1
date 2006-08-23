@@ -103,7 +103,7 @@
      * @param int $indent Pass in false to use the default, which is 2 
      * @param int $wordwrap Pass in 0 for no wordwrap, false for default (40)
      */
-     public function YAMLDump($array,$indent = false,$wordwrap = false) {
+     public static function YAMLDump($array,$indent = false,$wordwrap = false) {
       $spyc = new Spyc;
       return $spyc->dump($array,$indent,$wordwrap);
     }
