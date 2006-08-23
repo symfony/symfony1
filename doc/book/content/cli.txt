@@ -51,9 +51,9 @@ CLI tasks
 
     $ symfony init-module <APPLICATION_NAME> <MODULE_NAME>
 
-`init-batch`: Initialize a new batch file (shortcut: `batch`). The default environment is dev, and the last argument is used to define the SF_DEBUG constant.
+`init-batch`: Initialize a new batch file (shortcut: `batch`). You must select a batch skeleton to init, and then follow the prompts
 
-    $ symfony init-batch <APPLICATION_NAME> <SCRIPT_NAME> [dev|prod] [true|false]
+    $ symfony init-batch <SKELETON_NAME> [...]
 
 `init-controller`: Initialize a new controller (shortcut: `controller`). The default script name follows the symfony convention.
 
@@ -89,7 +89,7 @@ The connection settings used by the following commands are taken from the `confi
 
     $ symfony propel-build-all
 
-`propel-load-data`: Loads all data from default directory `data/fixtures` unless otherwise specified. Environment is default to `dev`. The fixtures directory must be specified relative to the project's data dir, for example `fixtures` (default), `testdata` or specify a single file `fixtures/file.yml`.
+`propel-load-data`: Loads all data from default directory `data/fixtures` unless otherwise specified. Environment is default to `dev`. The fixtures directory must be specified relative to the project's data dir, for example `fixtures` (default) or `testdata` or specify a single file `fixtures/file.yml`.
 
     $ symfony propel-load-data  <APPLICATION_NAME> [<ENVIRONMENT_NAME>] [<FIXTURES_DIR_OR_FILE>]
 
@@ -105,6 +105,10 @@ If you want to learn more about the model and the effect of these commands, refe
 
     $ symfony clear-cache <APPLICATION_NAME> [template|config]
 
+`clear-controllers`: Clear the web directory of all controllers other than ones running in a production environment.
+
+    $ symfony clear-controllers
+    
 `fix-perms`: Fix directories permissions, to change to `777` the directories that need to be writable. The permission can be broken if you use a checkout from a SVN repository.
 
     $ symfony fix-perms
@@ -116,6 +120,16 @@ If you want to learn more about the model and the effect of these commands, refe
 `sync`: Synchronise the current project with another machine (find more in the [deployment chapter](deployment.txt))
 
     $ symfony sync <ENVIRONMENT_NAME> [go]
+
+### Project administration
+
+`purge-logs: This clears the logs files in the log directory depending on your settings in logging.yml (find more in the [logging chapter](logging.txt))
+
+    $ symfony purge-logs
+
+`rotate-log`: Forces a rotation of a log file if rotate is enabled for the log file in logging.yml. (find more in the [logging chapter](logging.txt))
+
+    $ symfony rotate-log <APPLICATION_NAME> <ENVIRONMENT_NAME>
 
 ### Scaffolding and admin generation
 
