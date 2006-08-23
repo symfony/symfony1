@@ -422,13 +422,13 @@ EOF;
   private function getFieldParameterValue($key, $type = '', $default = null)
   {
     $retval = $this->getValueFromKey($type.'.fields.'.$key, $default);
-    if ($retval)
+    if ($retval !== null)
     {
       return $retval;
     }
 
     $retval = $this->getValueFromKey('fields.'.$key, $default);
-    if ($retval)
+    if ($retval !== null)
     {
       return $retval;
     }
