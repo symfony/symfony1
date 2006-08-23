@@ -48,7 +48,7 @@ function run_freeze($task, $args)
   pake_mirror($finder, $symfony_data_dir, 'data/symfony');
 
   // install the command line
-  pake_copy('data/symfony/bin/symfony.php', 'symfony.php');
+  pake_copy($symfony_data_dir.'/bin/symfony.php', 'symfony.php');
 }
 
 function run_unfreeze($task, $args)

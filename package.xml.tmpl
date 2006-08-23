@@ -40,7 +40,7 @@
     <tasks:replace type="pear-config" from="@DATA-DIR@" to="data_dir" />
    </file>
 
-   <file role="php" baseinstalldir="/" install-as="data/bin/symfony.php" name="data/bin/symfony.php">
+   <file role="data" baseinstalldir="symfony" install-as="bin/symfony.php" name="data/bin/symfony.php">
     <tasks:replace type="pear-config" from="@DATA-DIR@" to="data_dir" />
     <tasks:replace type="pear-config" from="@PEAR-DIR@" to="php_dir" />
     <tasks:replace type="package-info" from="@SYMFONY-VERSION@" to="version" />

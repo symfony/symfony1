@@ -25,4 +25,4 @@ if (test -z "$PHP_CLASSPATH") ; then
   export PHP_CLASSPATH
 fi
 
-$PHP_COMMAND -d html_errors=off -qC $SYMFONY_HOME/bin/symfony.php $*
+$PHP_COMMAND -d html_errors=off -qC $SYMFONY_HOME/symfony/bin/symfony.php $*
