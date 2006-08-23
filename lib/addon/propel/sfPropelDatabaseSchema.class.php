@@ -172,7 +172,7 @@ class sfPropelDatabaseSchema
             'onDelete'         => 'cascade'
           ));
           $this->setIfNotSet($this->database[$i18n_table], 'culture', array(
-            'isCulture'  => 'true',
+            'isCulture'  => true,
             'type'       => 'varchar',
             'size'       => '7',
             'required'   => true,
