@@ -1,45 +1,66 @@
 <?php
 
-pake_desc('freeze symfony libraries to a PEAR release');
-pake_task('freeze');
+pake_desc('freeze symfony libraries');
+pake_task('freeze', 'project_exists');
 
 pake_desc('unfreeze symfony libraries');
-pake_task('unfreeze');
+pake_task('unfreeze', 'project_exists');
 
 function run_freeze($task, $args)
 {
-  if (!count($args))
+  // check that the symfony librairies are not already freeze for this project
+  if (is_readable('lib/symfony') && !is_link('lib/symfony'))
   {
-    throw new Exception('You must provide the release version you want to freeze (stable or beta or rXXX).');
+    throw new Exception('You can only freeze when lib/symfony is empty (symfony as PEAR) or if lib/symfony is a symlink to a symfony installation.');
   }
 
-  $version = strtolower($args[0]);
-
-  // remove current version if present
-
-  $url = 'http://www.symfony-project.com/get/symfony-stable.tgz';
-  $svn = 'http://svn.symfony-project.com/';
-
-  // PEAR release or subversion revision?
-  if ($version == 'stable')
+  if (is_readable('data/symfony') && !is_link('data/symfony'))
   {
-    
+    throw new Exception('You can only freeze when data/symfony is empty (symfony as PEAR) or if data/symfony is a symlink to a symfony installation.');
   }
-  else if ($version == 'beta')
+
+  if (is_link('lib/symfony'))
   {
-    
-  }
-  else if ($version)
-  {
-    
+    $symfony_lib_dir = realpath(getcwd().'/lib/symfony');
+    pake_remove('lib/symfony', '');
   }
   else
   {
-    throw new Exception('You must provide a release version that I understand! (stable or beta or rXXX).');
+    $symfony_lib_dir = PAKEFILE_LIB_DIR;
   }
+
+  if (is_link('data/symfony'))
+  {
+    $symfony_data_dir = realpath(getcwd().'/data/symfony');
+    pake_remove('data/symfony', '');
+  }
+  else
+  {
+    $symfony_data_dir = PAKEFILE_DATA_DIR;
+  }
+
+  $verbose = pakeApp::get_instance()->get_verbose();
+  if ($verbose) echo '>> freeze    '.pakeApp::excerpt('freezing lib found in "'.$symfony_lib_dir.'"')."\n";
+  if ($verbose) echo '>> freeze    '.pakeApp::excerpt('freezing data found in "'.$symfony_data_dir.'"')."\n";
+
+  $finder = pakeFinder::type('any')->ignore_version_control();
+  pake_mirror($finder, $symfony_lib_dir, 'lib/symfony');
+  pake_mirror($finder, $symfony_data_dir, 'data/symfony');
 }
 
 function run_unfreeze($task, $args)
 {
   // remove lib/symfony and data/symfony directories
+  if (is_link('lib/symfony'))
+  {
+    throw new Exception('You can unfreeze only if you froze the symfony libraries before.');
+  }
+
+  if (!is_dir('lib/symfony') || !is_readable('lib/symfony'))
+  {
+    throw new Exception('Your lib/symfony directory does not seem to be accessible.');
+  }
+
+//  $finder = pakeFinder::type('file')->prune('.svn')->discard('.svn', '.sf');
+//  pake_remove($finder, );
 }

@@ -24,18 +24,18 @@
  <notes>-</notes>
  <contents>
   <dir name="/">
-   <file role="script" baseinstalldir="/" name="bin/symfony.sh">
+   <file role="script" baseinstalldir="/" name="data/bin/symfony.sh">
     <tasks:replace type="pear-config" from="@PHP-BIN@" to="php_bin"/>
     <tasks:replace type="pear-config" from="@BIN-DIR@" to="bin_dir"/>
     <tasks:replace type="pear-config" from="@PEAR-DIR@" to="php_dir"/>
    </file>
-   <file role="script" baseinstalldir="/" name="bin/symfony.bat">
+   <file role="script" baseinstalldir="/" name="data/bin/symfony.bat">
     <tasks:replace type="pear-config" from="@PHP-BIN@" to="php_bin"/>
     <tasks:replace type="pear-config" from="@BIN-DIR@" to="bin_dir"/>
     <tasks:replace type="pear-config" from="@PEAR-DIR@" to="php_dir"/>
    </file>
 
-   <file role="php" baseinstalldir="/" install-as="symfony.php" name="bin/symfony.php">
+   <file role="php" baseinstalldir="/" install-as="symfony.php" name="data/bin/symfony.php">
     <tasks:replace type="pear-config" from="@DATA-DIR@" to="data_dir" />
     <tasks:replace type="pear-config" from="@PEAR-DIR@" to="php_dir" />
     <tasks:replace type="package-info" from="@SYMFONY-VERSION@" to="version" />

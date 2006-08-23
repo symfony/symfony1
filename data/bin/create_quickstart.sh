@@ -25,12 +25,9 @@ mv data/symfony/web/sf web/sf
 # symfony command line
 
 echo ">>> add symfony command line"
-mkdir tmp
-svn export http://svn.symfony-project.com/${SVN_PATH}/bin/ tmp/bin/
-mv tmp/bin/symfony.sh symfony.sh
-mv tmp/bin/symfony.bat symfony.bat
-mv tmp/bin/symfony.php bin/symfony.php
-rm -rf tmp
+cp data/symfony/bin/symfony.sh symfony.sh
+cp data/symfony/bin/symfony.bat symfony.bat
+cp data/symfony/bin/symfony.php bin/symfony.php
 sed -i '' -e "s#@PEAR-DIR@#bin#g" symfony.sh
 sed -i '' -e "s#@PEAR-DIR@#bin#g" symfony.bat
 sed -i '' -e "s#'@PEAR-DIR@'#dirname(__FILE__).'/../lib'#g" -e "s#'@DATA-DIR@'#dirname(__FILE__).'/../data'#g" -e "s#@SYMFONY-VERSION@#0.6.0#g" -e "s#require_once 'pake.php'#require_once dirname(__FILE__).'/pake.php'#g" bin/symfony.php

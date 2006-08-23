@@ -12,7 +12,7 @@
 #   - if not found set it using SYMFONY_HOME/lib
 
 if [ -z "$SYMFONY_HOME" ] ; then
-  SYMFONY_HOME="@PEAR-DIR@"
+  SYMFONY_HOME="@DATA-DIR@"
 fi
 
 if (test -z "$PHP_COMMAND") ; then
@@ -25,4 +25,4 @@ if (test -z "$PHP_CLASSPATH") ; then
   export PHP_CLASSPATH
 fi
 
-$PHP_COMMAND -d html_errors=off -qC $SYMFONY_HOME/symfony.php $*
+$PHP_COMMAND -d html_errors=off -qC $SYMFONY_HOME/bin/symfony.php $*
