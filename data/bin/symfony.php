@@ -16,10 +16,15 @@ if (is_readable('lib/symfony'))
   define('PAKEFILE_LIB_DIR',  'lib/symfony');
   define('PAKEFILE_DATA_DIR', 'data/symfony');
 }
-else
+elseif (is_readable($pear_lib_dir))
 {
   define('PAKEFILE_LIB_DIR',  '@PEAR-DIR@/symfony');
   define('PAKEFILE_DATA_DIR', '@DATA-DIR@/symfony');
+}
+else
+{
+  define('PAKEFILE_LIB_DIR',  realpath(dirname(__FILE__).'/../../lib'));
+  define('PAKEFILE_DATA_DIR', realpath(dirname(__FILE__).'/..'));
 }
 
 set_include_path(PAKEFILE_LIB_DIR.'/vendor'.PATH_SEPARATOR.get_include_path());
@@ -50,15 +55,7 @@ try
 }
 catch (pakeException $e)
 {
-  print $e->getMessage();
 }
 
 $pake = pakeApp::get_instance();
-try
-{
-  $pake->run($pakefile);
-}
-catch (Exception $e)
-{
-  echo "ERROR: symfony - ".$e->getMessage()."\n";
-}
+$pake->run($pakefile);
