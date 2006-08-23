@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -255,9 +255,13 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     $user_params = is_array($user_params) ? $user_params : sfToolkit::stringToArray($user_params);
     $params      = $user_params ? array_merge($params, $user_params) : $params;
 
-    if ($column->isPartial())
+    if ($column->isComponent())
     {
-      return "include_partial('".$column->getName()."', array('type' => 'edit', '{$this->getSingularName()}' => \${$this->getSingularName()}))";
+      return "get_component('".$this->getSingularName()."', '".$column->getName()."', array('type' => 'edit', '{$this->getSingularName()}' => \${$this->getSingularName()}))";
+    }
+    else if ($column->isPartial())
+    {
+      return "get_partial('".$column->getName()."', array('type' => 'edit', '{$this->getSingularName()}' => \${$this->getSingularName()}))";
     }
 
     // default control name
@@ -392,7 +396,7 @@ EOF;
   public function splitFlag($text)
   {
     $flag = '';
-    if (in_array($text[0], array('=', '-', '+', '_')))
+    if (in_array($text[0], array('=', '-', '+', '_', '~')))
     {
       $flag = $text[0];
       $text = substr($text, 1);
@@ -489,6 +493,10 @@ EOF;
       {
         $vars[] = '\'%%_'.$column->getName().'%%\' => '.$this->getColumnListTag($column);
       }
+      else if ($column->isComponent())
+      {
+        $vars[] = '\'%%_'.$column->getName().'%%\' => '.$this->getColumnListTag($column);
+      }
       else
       {
         $vars[] = '\'%%'.$column->getName().'%%\' => '.$this->getColumnListTag($column);
@@ -527,7 +535,11 @@ EOF;
 
     $type = $column->getCreoleType();
 
-    if ($column->isPartial())
+    if ($column->isComponent())
+    {
+      return "get_component('".$column->getName()."', array('type' => 'list', '{$this->getSingularName()}' => \${$this->getSingularName()}))";
+    }
+    else if ($column->isPartial())
     {
       return "get_partial('".$column->getName()."', array('type' => 'list', '{$this->getSingularName()}' => \${$this->getSingularName()}))";
     }
@@ -552,9 +564,13 @@ EOF;
     $user_params = is_array($user_params) ? $user_params : sfToolkit::stringToArray($user_params);
     $params      = $user_params ? array_merge($params, $user_params) : $params;
 
-    if ($column->isPartial())
+    if ($column->isComponent())
     {
-      return "include_partial('".$column->getName()."', array('type' => 'filter', 'filters' => \$filters))";
+      return "get_component('".$this->getModuleName()."', '".$column->getName()."', array('type' => 'list'))";
+    }
+    else if ($column->isPartial())
+    {
+      return "get_partial('".$column->getName()."', array('type' => 'filter', 'filters' => \$filters))";
     }
 
     $type = $column->getCreoleType();
@@ -674,6 +690,11 @@ class sfAdminColumn
   public function isPartial ()
   {
     return (($this->flag == '_') ? true : false);
+  }
+
+  public function isComponent ()
+  {
+    return (($this->flag == '~') ? true : false);
   }
 
   public function isLink ()
