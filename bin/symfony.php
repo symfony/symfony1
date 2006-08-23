@@ -18,8 +18,8 @@ if (is_readable('lib/symfony'))
 }
 else
 {
-  define('PAKEFILE_LIB_DIR',  '@PEAR-DIR@/symfony/lib');
-  define('PAKEFILE_DATA_DIR', '@DATA-DIR@/symfony/data');
+  define('PAKEFILE_LIB_DIR',  '@PEAR-DIR@/symfony');
+  define('PAKEFILE_DATA_DIR', '@DATA-DIR@/symfony');
 }
 
 set_include_path(PAKEFILE_LIB_DIR.'/vendor'.PATH_SEPARATOR.get_include_path());
