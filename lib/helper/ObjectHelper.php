@@ -149,10 +149,10 @@ function _get_values_for_object_select_tag($object, $class, $text_method = null)
   require_once(sfConfig::get('sf_model_lib_dir').'/'.$class.'Peer.php');
   $objects = call_user_func(array($class.'Peer', 'doSelect'), new Criteria());
 
-  return _get_options_from_objects($objects);
+  return _get_options_from_objects($objects, $text_method);
 }
 
-function _get_options_from_objects($objects)
+function _get_options_from_objects($objects, $text_method = null)
 {
   $select_options = array();
 
