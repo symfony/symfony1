@@ -57,6 +57,7 @@ class sfPropelPager
     $cForCount = clone $this->getCriteria();
     $cForCount->setOffset(0);
     $cForCount->setLimit(0);
+    $cForCount->clearGroupByColumns();
 
     // require the model class (because autoloading can crash under some conditions)
     require_once(sfConfig::get('sf_model_lib_dir').'/'.$this->getClassPeer().'.php');
