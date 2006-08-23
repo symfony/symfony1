@@ -43,11 +43,6 @@ echo ">>> create a new project and a new app"
 ./symfony.sh init-project ${SANDBOX_NAME}
 ./symfony.sh init-app ${APP_NAME}
 
-# schema.xml
-
-echo ">>> rename schema.xml"
-mv config/schema.xml.sample config/schema.xml
-
 # license
 
 echo ">>> add LICENSE"
