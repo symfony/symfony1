@@ -13,18 +13,6 @@ mkdir ${SANDBOX_NAME}
 cd ${SANDBOX_NAME}
 mkdir lib bin data web
 
-# pake
-
-echo ">>> add pake package"
-mkdir tmp
-cd tmp
-curl http://www.pake-project.org/downloads/pake-current.tgz > pake.tgz
-tar zxpf pake.tgz
-mv pake-`awk '/<release>/ {print $1}' package.xml | sed 's#<release>##' | sed 's#</release>##' | head -n 1`/lib/pake ../lib/pake
-mv pake-`awk '/<release>/ {print $1}' package.xml | sed 's#<release>##' | sed 's#</release>##' | head -n 1`/bin/pake.php ../bin/
-cd ..
-rm -rf tmp
-
 # symfony libraries
 
 echo ">>> freeze symfony libraries"
@@ -54,17 +42,6 @@ chmod 755 symfony.sh
 echo ">>> create a new project and a new app"
 ./symfony.sh init-project ${SANDBOX_NAME}
 ./symfony.sh init-app ${APP_NAME}
-
-# phing
-
-echo ">>> add phing package"
-mkdir tmp
-cd tmp
-curl http://phing.info/pear/phing-current.tgz > phing.tgz
-tar zxpf phing.tgz
-mv phing-`awk '/<version>/ {print $1}' package.xml | sed 's#<version>##' | sed 's#</version>##' | head -n 1` ../lib/phing
-cd ..
-rm -rf tmp
 
 # schema.xml
 

@@ -6,12 +6,26 @@ if (ini_get('zend.ze1_compatibility_mode'))
 }
 
 // define some PEAR directory constants
-define('PAKEFILE_LIB_DIR',  '@PEAR-DIR@');
-define('PAKEFILE_DATA_DIR', '@DATA-DIR@');
+$pear_lib_dir = '@PEAR-DIR@';
+$pear_data_dir = '@DATA-DIR@';
 define('PAKEFILE_SYMLINK',  false);
 define('SYMFONY_VERSION',   '@SYMFONY-VERSION@');
 
-require_once 'pake.php';
+if (is_readable('lib/symfony'))
+{
+  define('PAKEFILE_LIB_DIR',  'lib/symfony');
+  define('PAKEFILE_DATA_DIR', 'data/symfony');
+}
+else
+{
+  define('PAKEFILE_LIB_DIR',  '@PEAR-DIR@/symfony/lib');
+  define('PAKEFILE_DATA_DIR', '@DATA-DIR@/symfony/data');
+}
+
+set_include_path(PAKEFILE_LIB_DIR.'/vendor'.PATH_SEPARATOR.get_include_path());
+$pakefile = PAKEFILE_DATA_DIR.'/bin/pakefile.php';
+
+include_once('pake/pakeFunction.php');
 
 // we trap -V before pake
 require_once 'pake/pakeGetopt.class.php';
@@ -37,18 +51,6 @@ try
 catch (pakeException $e)
 {
   print $e->getMessage();
-}
-
-// find pakefile (local or PEAR)
-if (is_readable('lib/symfony'))
-{
-  // local
-  $pakefile = 'data/symfony/bin/pakefile.php';
-}
-else
-{
-  // PEAR
-  $pakefile = PAKEFILE_DATA_DIR.'/symfony/bin/pakefile.php';
 }
 
 $pake = pakeApp::get_instance();
