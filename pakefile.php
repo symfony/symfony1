@@ -195,8 +195,7 @@ function run_release($task, $args)
     $version_prefix = $args[0];
 
     $result = pake_sh('svn status -u '.getcwd());
-
-    if (preg_match('/(\d+)\s*$/is', $result, $match))
+    if (preg_match('/Status against revision\:\s+(\d+)\s*$/im', $result, $match))
     {
       $version = $match[1];
     }
