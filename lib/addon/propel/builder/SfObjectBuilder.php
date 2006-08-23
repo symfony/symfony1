@@ -167,7 +167,6 @@ $script .= '
     $column = null;
     foreach ($table->getForeignKeys() as $fk)
     {
-      print "-".$this->getFKVarName($fk)."-";
       if ($matches[2] == $this->getFKVarName($fk))
       {
         $column = $fk;
