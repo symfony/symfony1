@@ -243,6 +243,8 @@ class sfWebResponse extends sfResponse
       $this->getContext()->getLogger()->info('{sfWebResponse} send status "'.$status.'"');
     }
 
+    $this->fixHeaders();
+
     // headers
     foreach ($this->headers as $name => $values)
     {
@@ -273,6 +275,15 @@ class sfWebResponse extends sfResponse
       {
         $this->getContext()->getLogger()->info('{sfWebResponse} send cookie "'.$cookie['name'].'": "'.$cookie['value'].'"');
       }
+    }
+  }
+
+  private function fixHeaders()
+  {
+    // add charset to the content-type header if needed
+    if (false === stripos($this->getContentType(), 'charset'))
+    {
+      $this->setContentType($this->getContentType().'; charset='.sfConfig::get('sf_charset'));
     }
   }
 
@@ -376,7 +387,7 @@ class sfWebResponse extends sfResponse
 
       if (!$doNotEscape)
       {
-        $value = htmlentities($value, ENT_QUOTES, 'UTF-8');
+        $value = htmlentities($value, ENT_QUOTES, sfConfig::get('sf_charset'));
       }
 
       $this->setParameter($key, $value, 'helper/asset/auto/meta');
@@ -399,7 +410,7 @@ class sfWebResponse extends sfResponse
         $title = sfConfig::get('sf_i18n_instance')->__($title);
       }
 
-      $title = htmlentities($title, ENT_QUOTES, 'UTF-8');
+      $title = htmlentities($title, ENT_QUOTES, sfConfig::get('sf_charset'));
     }
 
     $this->setParameter('title', $title, 'helper/asset/auto/meta');

@@ -41,7 +41,7 @@ function esc_entities($value)
 {
   // Numbers and boolean values get turned into strings which can cause problems
   // with type comparisons (e.g. === or is_int() etc).
-  return is_string($value) ? htmlentities($value, ENT_QUOTES, 'UTF-8') : $value;
+  return is_string($value) ? htmlentities($value, ENT_QUOTES, sfConfig::get('sf_charset')) : $value;
 }
 
 define('ESC_ENTITIES', 'esc_entities');

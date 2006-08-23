@@ -70,3 +70,5 @@ default:
     validation_error_id_prefix: error_for_
 
     autoloading_functions: ~
+
+    charset: utf-8
