@@ -145,11 +145,11 @@ function link_to_file($filename, $path, $name = null)
 $tmp1 = str_replace('\\', '/', SF_ROOT_DIR);
 $tmp2 = explode('/', $tmp1);
 $project_name = end($tmp2);
-$model_files = pakeFinder::type('file')->maxdepth(0)->relative()->name("*Peer.php")->prune('.svn')->discard('.svn')->in('lib/model');
-$apps = pakeFinder::type('dir')->maxdepth(0)->relative()->prune('.svn')->discard('.svn')->in('apps');
+$model_files = pakeFinder::type('file')->maxdepth(0)->relative()->name("*Peer.php")->ignore_version_control()->in('lib/model');
+$apps = pakeFinder::type('dir')->maxdepth(0)->relative()->ignore_version_control()->in('apps');
 
-$batches = pakeFinder::type('file')->relative()->prune('.svn')->discard('.svn')->maxdepth(3)->name("*.php")->in('batch');
-$controllers = pakeFinder::type('file')->relative()->prune('.svn')->discard('.svn')->maxdepth(1)->name('*.php')->in('web');
+$batches = pakeFinder::type('file')->relative()->ignore_version_control()->maxdepth(3)->name("*.php")->in('batch');
+$controllers = pakeFinder::type('file')->relative()->ignore_version_control()->maxdepth(1)->name('*.php')->in('web');
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -308,14 +308,14 @@ $controllers = pakeFinder::type('file')->relative()->prune('.svn')->discard('.sv
       </blockquote>
 
       <h3>Modules</h3>
-      <?php $modules = pakeFinder::type('dir')->maxdepth(0)->relative()->prune('.svn')->discard('.svn')->in('apps/'.$app.'/modules') ?>
+      <?php $modules = pakeFinder::type('dir')->maxdepth(0)->relative()->ignore_version_control()->in('apps/'.$app.'/modules') ?>
       <blockquote>
       <?php foreach ($modules as $module): ?>
           <a href="javascript:;" onclick="switchElement('<?php echo $app ?>_module_<?php echo $module ?>');return false"><?php echo $module ?></a><br />
           <blockquote id="<?php echo $app ?>_module_<?php echo $module ?>" style="display:none;">
 
           <?php try { ?>
-          <?php $action_files = pakeFinder::type('file')->name('*action*.class.php')->maxdepth(0)->prune('.svn')->discard('.svn')->relative()->in('apps/'.$app.'/modules/'.$module.'/actions') ?>
+          <?php $action_files = pakeFinder::type('file')->name('*action*.class.php')->maxdepth(0)->ignore_version_control()->relative()->in('apps/'.$app.'/modules/'.$module.'/actions') ?>
           <?php if ($action_files): ?>
             <h4>Actions</h4>
             <blockquote>
@@ -330,7 +330,7 @@ $controllers = pakeFinder::type('file')->relative()->prune('.svn')->discard('.sv
           <?php } catch (Exception $e) { } ?>
 
           <?php try { ?>
-          <?php $templates = pakeFinder::type('file')->name('*.php')->maxdepth(0)->relative()->prune('.svn')->discard('.svn')->in('apps/'.$app.'/modules/'.$module.'/templates') ?>
+          <?php $templates = pakeFinder::type('file')->name('*.php')->maxdepth(0)->relative()->ignore_version_control()->in('apps/'.$app.'/modules/'.$module.'/templates') ?>
           <?php if ($templates): ?>
             <h4>Templates</h4>
             <blockquote>
@@ -342,7 +342,7 @@ $controllers = pakeFinder::type('file')->relative()->prune('.svn')->discard('.sv
           <?php } catch (Exception $e) { } ?>
 
           <?php try { ?>
-          <?php $configurations = pakeFinder::type('file')->name('*.yml')->maxdepth(0)->relative()->prune('.svn')->discard('.svn')->in('apps/'.$app.'/modules/'.$module.'/config') ?>
+          <?php $configurations = pakeFinder::type('file')->name('*.yml')->maxdepth(0)->relative()->ignore_version_control()->in('apps/'.$app.'/modules/'.$module.'/config') ?>
           <?php if ($configurations): ?>
             <h4>Configuration</h4>
             <blockquote>
@@ -354,7 +354,7 @@ $controllers = pakeFinder::type('file')->relative()->prune('.svn')->discard('.sv
           <?php } catch (Exception $e) { } ?>
 
           <?php try { ?>
-          <?php $libraries = pakeFinder::type('file')->name('*.php')->relative()->prune('.svn')->discard('.svn')->in('apps/'.$app.'/modules/'.$module.'/lib') ?>
+          <?php $libraries = pakeFinder::type('file')->name('*.php')->relative()->ignore_version_control()->in('apps/'.$app.'/modules/'.$module.'/lib') ?>
           <?php if ($libraries): ?>
             <h4>Libraries</h4>
             <blockquote>
@@ -407,7 +407,7 @@ $controllers = pakeFinder::type('file')->relative()->prune('.svn')->discard('.sv
 
       <?php try { ?>
       <h3>Configuration</h3>
-      <?php $config_files = pakeFinder::type('file')->relative()->prune('.svn')->discard('.svn')->in('apps/'.$app.'/config') ?>
+      <?php $config_files = pakeFinder::type('file')->relative()->ignore_version_control()->in('apps/'.$app.'/config') ?>
       <blockquote>
       <?php foreach ($config_files as $config_file): ?>
           <?php echo link_to_file($config_file, '/apps/'.$app.'/config') ?>
@@ -416,7 +416,7 @@ $controllers = pakeFinder::type('file')->relative()->prune('.svn')->discard('.sv
       <?php } catch (Exception $e) { } ?>
 
       <?php try { ?>
-      <?php $libraries = pakeFinder::type('file')->name('*.php')->relative()->prune('.svn')->discard('.svn')->in('apps/'.$app.'/lib') ?>
+      <?php $libraries = pakeFinder::type('file')->name('*.php')->relative()->ignore_version_control()->in('apps/'.$app.'/lib') ?>
       <?php if ($libraries): ?>
         <h3>Libraries</h3>
         <blockquote>
@@ -440,7 +440,7 @@ $controllers = pakeFinder::type('file')->relative()->prune('.svn')->discard('.sv
     </blockquote>
 
     <?php try { ?>
-    <?php $schema_files = pakeFinder::type('file')->maxdepth(3)->relative()->name("*schema.xml")->prune('web')->prune('lib')->prune('data')->prune('.svn')->discard('.svn')->in('./') ?>
+    <?php $schema_files = pakeFinder::type('file')->maxdepth(3)->relative()->name("*schema.xml")->prune('web')->prune('lib')->prune('data')->ignore_version_control()->in('./') ?>
     <?php if ($schema_files): ?>
       <h3>Schema</h3>
       <blockquote>
@@ -452,7 +452,7 @@ $controllers = pakeFinder::type('file')->relative()->prune('.svn')->discard('.sv
     <?php } catch (Exception $e) { } ?>
 
     <?php try { ?>
-    <?php $connection_files = pakeFinder::type('file')->maxdepth(3)->relative()->name('databases.yml')->prune('lib')->prune('lib')->prune('data')->prune('.svn')->discard('.svn')->in('./') ?>
+    <?php $connection_files = pakeFinder::type('file')->maxdepth(3)->relative()->name('databases.yml')->prune('lib')->prune('lib')->prune('data')->ignore_version_control()->in('./') ?>
     <?php if ($connection_files): ?>
       <h3>Connection settings</h3>
       <blockquote>
@@ -491,7 +491,7 @@ $controllers = pakeFinder::type('file')->relative()->prune('.svn')->discard('.sv
     <?php endif; ?>
     <?php } catch (Exception $e) { } ?>
 
-    <?php $libraries = pakeFinder::type('file')->name('*.php')->prune('symfony')->prune('phing')->prune('pake')->prune('model')->relative()->prune('.svn')->discard('.svn')->in('lib') ?>
+    <?php $libraries = pakeFinder::type('file')->name('*.php')->prune('symfony')->prune('phing')->prune('pake')->prune('model')->relative()->ignore_version_control()->in('lib') ?>
     <?php if ($libraries): ?>
       <h2>Libraries</h2>
       <blockquote>

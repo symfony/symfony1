@@ -153,7 +153,7 @@ function run_create_pear_package($task, $args)
   pake_copy(getcwd().'/package.xml.tmpl', getcwd().'/package.xml');
 
   // add class files
-  $finder = pakeFinder::type('file')->prune('.svn')->discard('.svn')->relative();
+  $finder = pakeFinder::type('file')->ignore_version_control()->relative();
   $xml_classes = '';
   $dirs = array('lib' => 'php', 'data' => 'data');
   foreach ($dirs as $dir => $role)

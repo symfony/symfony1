@@ -32,8 +32,8 @@ function run_fix_perms($task, $args)
   pake_chmod(sfConfig::get('sf_log_dir_name'), $sf_root_dir, 0777);
 
   $dirs = array('cache', 'upload', 'log');
-  $dir_finder = pakeFinder::type('dir')->prune('.svn')->discard('.svn');
-  $file_finder = pakeFinder::type('file')->prune('.svn')->discard('.svn');
+  $dir_finder = pakeFinder::type('dir')->ignore_version_control();
+  $file_finder = pakeFinder::type('file')->ignore_version_control();
   foreach ($dirs as $dir)
   {
     pake_chmod($dir_finder, sfConfig::get('sf_'.$dir.'_dir'), 0777);
@@ -77,10 +77,10 @@ function run_clear_cache($task, $args)
   $safe_types = array(sfConfig::get('sf_app_config_dir_name'), sfConfig::get('sf_app_i18n_dir_name'));
 
   // finder to remove all files in a cache directory
-  $finder = pakeFinder::type('file')->prune('.svn')->discard('.svn', '.sf');
+  $finder = pakeFinder::type('file')->ignore_version_control()->discard('.sf');
 
   // finder to find directories (1 level) in a directory
-  $dir_finder = pakeFinder::type('dir')->prune('.svn')->discard('.svn', '.sf')->maxdepth(0)->relative();
+  $dir_finder = pakeFinder::type('dir')->ignore_version_control()->discard('.sf')->maxdepth(0)->relative();
 
   // iterate through applications
   $apps = array();
@@ -155,7 +155,7 @@ function run_clear_controllers($task, $args)
   $apps = count($args) > 1 ? $args : null;
 
   // get controller
-  $controllers = pakeFinder::type('file')->prune('.svn')->discard('.svn')->maxdepth(1)->name('*.php')->in($web_dir);
+  $controllers = pakeFinder::type('file')->ignore_version_control()->maxdepth(1)->name('*.php')->in($web_dir);
 
   foreach ($controllers as $controller)
   {
@@ -243,7 +243,7 @@ function run_purge_logs($task, $args)
 
   $default_logging = sfYaml::load($sf_symfony_data_dir.'/config/logging.yml');
   $app_dir = sfConfig::get('sf_app_dir');
-  $apps = pakeFinder::type('dir')->maxdepth(0)->relative()->prune('.svn')->discard('.svn')->in('apps');
+  $apps = pakeFinder::type('dir')->maxdepth(0)->relative()->ignore_version_control()->in('apps');
   $ignore = array('all', 'default');
 
   foreach($apps as $app)

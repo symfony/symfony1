@@ -193,7 +193,7 @@ class sfLiveProjectUnitTestCase extends UnitTestCase
   {
     $this->runSymfony('init-module '.$this->getAppName().' '.$name, array('quiet' => false));
 
-    $finder = pakeFinder::type('any')->prune('.svn')->discard('.svn');
+    $finder = pakeFinder::type('any')->ignore_version_control();
     pake_mirror($finder, $this->getFixturesDir().'/modules/'.$name, sfConfig::get('sf_root_dir').'/apps/app/modules/'.$name, array('override' => true));
   }
 
