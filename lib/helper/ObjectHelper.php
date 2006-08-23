@@ -115,7 +115,10 @@ function object_select_tag($object, $method, $options = array(), $default_value 
   }
   unset($options['related_class']);
 
-  $select_options = _get_values_for_object_select_tag($object, $related_class);
+  $text_method = isset($options['text_method']) ? $options['text_method'] : null;
+  unset($options['text_method']);
+
+  $select_options = _get_values_for_object_select_tag($object, $related_class, $text_method);
 
   if (isset($options['include_custom']))
   {
@@ -139,7 +142,7 @@ function object_select_tag($object, $method, $options = array(), $default_value 
   return select_tag(_convert_method_to_name($method, $options), $option_tags, $options);
 }
 
-function _get_values_for_object_select_tag($object, $class)
+function _get_values_for_object_select_tag($object, $class, $text_method = null)
 {
   // FIXME: drop Propel dependency
 
@@ -160,7 +163,7 @@ function _get_options_from_objects($objects)
 
     // which method to call?
     $methodToCall = '';
-    foreach (array('toString', '__toString', 'getPrimaryKey') as $method)
+    foreach (array($text_method, 'toString', '__toString', 'getPrimaryKey') as $method)
     {
       if (is_callable(array($objects[0], $method)))
       {
