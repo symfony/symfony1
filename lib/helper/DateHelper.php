@@ -37,20 +37,24 @@ function format_daterange($start_date, $end_date, $format = 'd', $full_text, $st
   }
 }
 
-function format_date($date, $format = 'd', $culture = null)
+function format_date($date, $format = 'd', $culture = null, $charset = null)
 {
   if (!$culture) $culture = sfContext::getInstance()->getUser()->getCulture();
+  if (!$charset) $charset = sfConfig::get('sf_charset');
 
   $dateFormat = new sfDateFormat($culture);
-  return $dateFormat->format($date, $format);
+
+  return $dateFormat->format($date, $format, $charset);
 }
 
-function format_datetime($date, $format = 'F', $culture = null)
+function format_datetime($date, $format = 'F', $culture = null, $charset = null)
 {
   if (!$culture) $culture = sfContext::getInstance()->getUser()->getCulture();
+  if (!$charset) $charset = sfConfig::get('sf_charset');
 
   $dateFormat = new sfDateFormat($culture);
-  return $dateFormat->format($date, $format);
+
+  return $dateFormat->format($date, $format, $charset);
 }
 
 function distance_of_time_in_words($from_time, $to_time = null, $include_seconds = false)
