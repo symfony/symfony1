@@ -16,7 +16,7 @@ rem   - if not found set it using SYMFONY_HOME/lib
 if "%OS%"=="Windows_NT" @setlocal
 
 rem %~dp0 is expanded pathname of the current script under NT
-set DEFAULT_SYMFONY_HOME=%~dp0..
+set DEFAULT_SYMFONY_HOME=%~dp0
 
 goto init
 goto cleanup
