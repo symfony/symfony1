@@ -152,6 +152,14 @@ class sfWebResponse extends sfResponse
   public function setHttpHeader ($name, $value, $replace = true)
   {
     $name = $this->normalizeHeaderName($name);
+
+    if ('Content-Type' == $name)
+    {
+      $this->setContentType($value);
+
+      return;
+    }
+
     $exists = isset($this->headers[$name]);
 
     if ($exists && !$replace)
@@ -193,7 +201,18 @@ class sfWebResponse extends sfResponse
    */
   public function setContentType ($value)
   {
-    $this->setHttpHeader('Content-Type', $value, true);
+    // add charset if needed
+    if (false === stripos($value, 'charset'))
+    {
+      $value .= '; charset='.sfConfig::get('sf_charset');
+    }
+
+    if (isset($this->headers['Content-Type']))
+    {
+      $this->headers['Content-Type'] = array();
+    }
+
+    $this->headers['Content-Type'][] = $value;
   }
 
   /**
@@ -243,8 +262,6 @@ class sfWebResponse extends sfResponse
       $this->getContext()->getLogger()->info('{sfWebResponse} send status "'.$status.'"');
     }
 
-    $this->fixHeaders();
-
     // headers
     foreach ($this->headers as $name => $values)
     {
@@ -275,15 +292,6 @@ class sfWebResponse extends sfResponse
       {
         $this->getContext()->getLogger()->info('{sfWebResponse} send cookie "'.$cookie['name'].'": "'.$cookie['value'].'"');
       }
-    }
-  }
-
-  private function fixHeaders()
-  {
-    // add charset to the content-type header if needed
-    if (false === stripos($this->getContentType(), 'charset'))
-    {
-      $this->setContentType($this->getContentType().'; charset='.sfConfig::get('sf_charset'));
     }
   }
 
@@ -364,10 +372,15 @@ class sfWebResponse extends sfResponse
   {
     if ($override || !$this->hasParameter($key, 'helper/asset/auto/httpmeta'))
     {
-      $this->setParameter($key, $value, 'helper/asset/auto/httpmeta');
-
       // set HTTP header
       $this->setHttpHeader($key, $value, false);
+
+      if ('Content-Type' == $this->normalizeHeaderName($key))
+      {
+        $value = $this->getContentType();
+      }
+
+      $this->setParameter($key, $value, 'helper/asset/auto/httpmeta');
     }
   }
 
