@@ -148,8 +148,8 @@ class sfViewConfigHandler extends sfYamlConfigHandler
   {
     $data = '';
 
-    $hasLayout = $this->getConfigValue('has_layout', $viewName) ? 1 : 0;
     $layout = $this->getConfigValue('layout', $viewName);
+    $hasLayout = $this->getConfigValue('has_layout', $viewName) && $layout != false ? 1 : 0;
     $data .= <<<EOF
     if (false !== \$action->getLayout() && (null !== \$action->getLayout() || $hasLayout))
     {
