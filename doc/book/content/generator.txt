@@ -122,17 +122,6 @@ This configuration is enough to generate the basic administration. The customiza
 
 The following sections explain in detail the parameters that can be used in this configuration file.
 
-Table relations
----------------
-
-The 1-n table relations are taken care of by the admin generator. In the example mentionned above, the `weblog_comment` table is related to the `weblog_article` table via the `article_id` field. If you initiate the module of the `Comment` class with the admin generator:
-
-    $ symfony propel-init-admin myapp comment Comment
-
-The `comment/edit` action will automatically display the `article_id` as a select list showing the ids of the available records of the `weblog_article` table. In addition, if you define a `__toString()` method in the `Article` object, the string returned by this method is used instead of the ids in the select list.
-
-If you need to display the list of comments related to an article in the `article` module (n-1 relation), or if you need to handle related records through a hash table (n-m relation), you will need to customize the module a little by the way of *custom field* or a *partial field*, both described later in this chapter.
-
 Fields
 ------
 
@@ -479,6 +468,39 @@ Now, in order to use the value from this control to update the object in the act
     }
 
 >**Note**: In the real world, a `user/edit` view usually contains two `password` fields, the second having to match the first one to avoid typing mistakes. In practice, this is done via a [validator](validate_form.txt). The admin generated modules benefit from this mechanism just like regular modules.
+
+Table relationships
+-------------------
+
+### One to many
+
+The 1-n table relationships are taken care of by the admin generator. In the example mentionned above, the `weblog_comment` table is related to the `weblog_article` table via the `article_id` field. If you initiate the module of the `Comment` class with the admin generator:
+
+    $ symfony propel-init-admin myapp comment Comment
+
+The `comment/edit` action will automatically display the `article_id` as a select list showing the ids of the available records of the `weblog_article` table. In addition, if you define a `__toString()` method in the `Article` object, the string returned by this method is used instead of the ids in the select list.
+
+If you need to display the list of comments related to an article in the `article` module (n-1 relationship), you will need to customize the module a little by the way of a partial field.
+
+### Many to many
+
+The n-n table relationships are also taken care of. The implementation of such relationships is made through an intermediate table. For instance, if there is a n-n relation between a `blog_article` and a `blog_author` table (an article can be written by more than one author and, obviously, an author can write more than one article), then your database will always end up with a table called `blog_article_author` or similar. 
+
+  | blog_article | blog_article_author | blog_author |
+  | ------------ | ------------------- | ----------- |
+  | id           | article_id          | id          |
+  | title        | author_id           | name        |
+  | ...          |                     | ...         |
+
+The model will then have a class called `ArticleAuthor` and this is the only thing that the admin generator needs - but you have to pass it as a parameter of the field, called `trough_class`.
+
+For instance, in a generated module based on the `Article` class, you can add a field to create new n-n associations with the `Author` class. 
+
+        edit:
+          fields:
+            article_author: { type: admin_double_list, params: through_class=ArticleAuthor }
+            
+Such a field handles links between existing objects, so a regular select list is not enough. You must use a special type of input for that. Symfony offers three widgets to help relate members of two lists. You have the choice between an `admin_double_list`, an `admin_select_list` and an `admin_check_list`.
 
 Interactions
 ------------
