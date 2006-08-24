@@ -46,6 +46,8 @@ function run_freeze($task, $args)
   pake_mirror($finder, $symfony_lib_dir, 'lib/symfony');
   pake_mirror($finder, $symfony_data_dir, 'data/symfony');
 
+  pake_rename('data/symfony/web/sf', 'web/sf');
+
   // install the command line
   pake_copy($symfony_data_dir.'/bin/symfony.php', 'symfony.php');
 }
@@ -69,4 +71,6 @@ function run_unfreeze($task, $args)
   pake_remove($finder, 'data/symfony');
   pake_remove('data/symfony', '');
   pake_remove('symfony.php', '');
+  pake_remove($finder, 'web/sf');
+  pake_remove('web/sf', '');
 }
