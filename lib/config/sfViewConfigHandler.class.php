@@ -148,15 +148,21 @@ class sfViewConfigHandler extends sfYamlConfigHandler
   {
     $data = '';
 
-    $layout = $this->getConfigValue('layout', $viewName);
-    $hasLayout = $this->getConfigValue('has_layout', $viewName) && $layout != false ? 1 : 0;
+    $layoutNameFromView = $this->getConfigValue('layout', $viewName);
+    $hasLayout = $this->getConfigValue('has_layout', $viewName) && $layoutNameFromView != false ? 1 : 0;
+    $localHasLayout = isset($this->yamlConfig[$viewName]['layout']) && $this->yamlConfig[$viewName]['layout'] ? 1 : 0;
+    // if a layout specified for this view, no need to check if a layout name is specified by the action
+    $cond1 = $hasLayout ? '' : "&& null !== \$layoutNameFromAction";
+    // if a layout is specified especially for this view, no need to test if the request is AJAX
+    $cond2 = $localHasLayout ? '' : "&& (!\$action->getRequest()->isXmlHttpRequest() || null !== \$layoutNameFromAction)";
     $data .= <<<EOF
-    if (false !== \$action->getLayout() && (null !== \$action->getLayout() || $hasLayout))
-    {
-      \$layout = \$action->getLayout() ? \$action->getLayout() : '$layout';
-      \$this->setDecoratorDirectory(sfConfig::get('sf_app_template_dir'));
-      \$this->setDecoratorTemplate(\$layout.'.php');
-    }
+     \$layoutNameFromAction = \$action->getLayout();
+     if (false !== \$layoutNameFromAction $cond1 $cond2)
+     {
+       \$layoutName = \$layoutNameFromAction ? \$layoutNameFromAction : '$layoutNameFromView';
+       \$this->setDecoratorDirectory(sfConfig::get('sf_app_template_dir'));
+       \$this->setDecoratorTemplate(\$layoutName.'.php');
+     }
 
 EOF;
 
