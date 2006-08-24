@@ -394,7 +394,7 @@ class sfWebRequest extends sfRequest
     }
 
     // for IIS
-    if ($pos = stripos($pathInfo, '.php'))
+    if (false !== stripos($_SERVER['SERVER_SOFTWARE'], 'iis') && $pos = stripos($pathInfo, '.php'))
     {
       $pathInfo = substr($pathInfo, $pos + 4);
     }
