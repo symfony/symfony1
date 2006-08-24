@@ -115,10 +115,13 @@ function object_select_tag($object, $method, $options = array(), $default_value 
   }
   unset($options['related_class']);
 
+  $peer_method = isset($options['peer_method']) ? $options['peer_method'] : null;
+  unset($options['peer_method']);
+
   $text_method = isset($options['text_method']) ? $options['text_method'] : null;
   unset($options['text_method']);
 
-  $select_options = _get_values_for_object_select_tag($object, $related_class, $text_method);
+  $select_options = _get_values_for_object_select_tag($object, $related_class, $text_method, $peer_method);
 
   if (isset($options['include_custom']))
   {
@@ -142,12 +145,12 @@ function object_select_tag($object, $method, $options = array(), $default_value 
   return select_tag(_convert_method_to_name($method, $options), $option_tags, $options);
 }
 
-function _get_values_for_object_select_tag($object, $class, $text_method = null)
+function _get_values_for_object_select_tag($object, $class, $text_method = null, $peer_method = null)
 {
   // FIXME: drop Propel dependency
-
   require_once(sfConfig::get('sf_model_lib_dir').'/'.$class.'Peer.php');
-  $objects = call_user_func(array($class.'Peer', 'doSelect'), new Criteria());
+  $method = $peer_method ? $peer_method : 'doSelect';
+  $objects = call_user_func(array($class.'Peer', $method), new Criteria());
 
   return _get_options_from_objects($objects, $text_method);
 }
