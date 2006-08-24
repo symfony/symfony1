@@ -152,7 +152,11 @@ abstract class sfController
       throw new sfForwardException($error);
     }
 
-    if (!sfConfig::get('sf_available'))
+    $rootDir = sfConfig::get('sf_root_dir');
+    $app     = sfConfig::get('sf_app');
+    $env     = sfConfig::get('sf_environment');
+
+    if (!sfConfig::get('sf_available') || sfToolkit::hasLockFile($rootDir.'/'.$app.'_'.$env.'.clilock'))
     {
       // application is unavailable
       $moduleName = sfConfig::get('sf_unavailable_module');

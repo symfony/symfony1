@@ -120,7 +120,7 @@ class sfToolkit
    *
    * @return bool true, if the lock file is present, otherwise false.
    */
-  public static function hasLockFile($lockFile, $maxLockFileLifeTime)
+  public static function hasLockFile($lockFile, $maxLockFileLifeTime = 0)
   {
     $isLocked = false;
     if (is_readable($lockFile) && ($last_access = fileatime($lockFile)))
@@ -128,7 +128,7 @@ class sfToolkit
       $now = time();
       $timeDiff = $now - $last_access;
 
-      if ($timeDiff < $maxLockFileLifeTime)
+      if (!$maxLockFileLifeTime || $timeDiff < $maxLockFileLifeTime)
       {
         $isLocked = true;
       }
