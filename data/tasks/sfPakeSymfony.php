@@ -39,9 +39,8 @@ function run_freeze($task, $args)
     $symfony_data_dir = PAKEFILE_DATA_DIR;
   }
 
-  $verbose = pakeApp::get_instance()->get_verbose();
-  if ($verbose) echo '>> freeze    '.pakeApp::excerpt('freezing lib found in "'.$symfony_lib_dir.'"')."\n";
-  if ($verbose) echo '>> freeze    '.pakeApp::excerpt('freezing data found in "'.$symfony_data_dir.'"')."\n";
+  pake_echo_action('freeze', 'freezing lib found in "'.$symfony_lib_dir.'"');
+  pake_echo_action('freeze', 'freezing data found in "'.$symfony_data_dir.'"');
 
   $finder = pakeFinder::type('any')->ignore_version_control();
   pake_mirror($finder, $symfony_lib_dir, 'lib/symfony');

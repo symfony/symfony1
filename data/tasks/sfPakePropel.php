@@ -86,13 +86,12 @@ function _propel_convert_yml_schema($check_schema = true, $prefix = '')
   require_once($sf_symfony_lib_dir.'/exception/sfException.class.php');
   require_once($sf_symfony_lib_dir.'/addon/propel/sfPropelDatabaseSchema.class.php');
 
-  $verbose = pakeApp::get_instance()->get_verbose();
   $db_schema = new sfPropelDatabaseSchema();
   foreach ($schemas as $schema)
   {
     $db_schema->loadYAML('config/'.$schema);
 
-    if ($verbose) echo '>> schema    '.pakeApp::excerpt('converting "'.$schema.'"'.' to XML')."\n";
+    pake_echo_action('schema', 'converting "'.$schema.'"'.' to XML');
 
     file_put_contents('config/'.$prefix.str_replace('.yml', '.xml', $schema), $db_schema->asXML());
   }
@@ -114,13 +113,12 @@ function _propel_convert_xml_schema($check_schema = true, $prefix = '')
   require_once($sf_symfony_lib_dir.'/exception/sfException.class.php');
   require_once($sf_symfony_lib_dir.'/addon/propel/sfPropelDatabaseSchema.class.php');
 
-  $verbose = pakeApp::get_instance()->get_verbose();
   $db_schema = new sfPropelDatabaseSchema();
   foreach ($schemas as $schema)
   {
     $db_schema->loadXML('config/'.$schema);
 
-    if ($verbose) echo '>> schema    '.pakeApp::excerpt('converting "'.$schema.'"'.' to YAML')."\n";
+    pake_echo_action('schema', 'converting "'.$schema.'"'.' to YAML');
 
     file_put_contents('config/'.$prefix.str_replace('.xml', '.yml', $schema), $db_schema->asYAML());
   }

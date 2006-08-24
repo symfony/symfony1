@@ -32,8 +32,6 @@ function _pear_get_method($args)
 // symfony plugin-install [local|global] pluginName
 function run_plugin_install($task, $args)
 {
-  $verbose = pakeApp::get_instance()->get_verbose();
-
   $method = _pear_get_method($args);
 
   if (!isset($args[1]))
@@ -45,7 +43,7 @@ function run_plugin_install($task, $args)
 
   // install plugin
   $packages = array($args[1]);
-  if ($verbose) echo '>> plugin    '.pakeApp::excerpt('installing plugin "'.$args[1].'"')."\n";
+  pake_echo_action('plugin', 'installing plugin "'.$args[1].'"');
   $ret = _pear_run_command($config, 'install', array(), $packages);
   if ($ret && !strpos($ret, 'not installed'))
   {
@@ -55,8 +53,6 @@ function run_plugin_install($task, $args)
 
 function run_plugin_upgrade($task, $args)
 {
-  $verbose = pakeApp::get_instance()->get_verbose();
-
   $method = _pear_get_method($args);
 
   if (!isset($args[1]))
@@ -68,7 +64,7 @@ function run_plugin_upgrade($task, $args)
 
   // upgrade plugin
   $packages = array($args[1]);
-  if ($verbose) echo '>> plugin    '.pakeApp::excerpt('upgrading plugin "'.$args[1].'"')."\n";
+  pake_echo_action('plugin', 'upgrading plugin "'.$args[1].'"');
   $ret = _pear_run_command($config, 'upgrade', array('offline' => true), $packages);
   if ($ret && !strpos($ret, 'not installed'))
   {
@@ -78,8 +74,6 @@ function run_plugin_upgrade($task, $args)
 
 function run_plugin_uninstall($task, $args)
 {
-  $verbose = pakeApp::get_instance()->get_verbose();
-
   $method = _pear_get_method($args);
 
   if (!isset($args[1]))
@@ -91,7 +85,7 @@ function run_plugin_uninstall($task, $args)
 
   // install plugin
   $packages = array($args[1]);
-  if ($verbose) echo '>> plugin    '.pakeApp::excerpt('uninstalling plugin "'.$args[1].'"')."\n";
+  pake_echo_action('plugin', 'uninstalling plugin "'.$args[1].'"');
   $ret = _pear_run_command($config, 'uninstall', array(), $packages);
   if ($ret)
   {
@@ -101,14 +95,12 @@ function run_plugin_uninstall($task, $args)
 
 function run_plugin_upgrade_all($task, $args)
 {
-  $verbose = pakeApp::get_instance()->get_verbose();
-
   $method = 'local';
 
   $config = _pear_init($method);
 
   // upgrade all plugins
-  if ($verbose) echo '>> plugin    '.pakeApp::excerpt('upgrading all plugins')."\n";
+  pake_echo_action('plugin', 'upgrading all plugins');
   _pear_run_upgrade($config, sfConfig::get('sf_lib_dir').DIRECTORY_SEPARATOR.'plugins');
 }
 
