@@ -224,7 +224,7 @@ class sfPHPView extends sfView
    *
    * @return string A decorated template.
    */
-  protected function decorate(&$content)
+  protected function decorate($content, $slots = array())
   {
     $template = $this->getDecoratorDirectory().'/'.$this->getDecoratorTemplate();
 
@@ -233,11 +233,14 @@ class sfPHPView extends sfView
       $this->getContext()->getLogger()->info('{sfPHPView} decorate content with "'.$template.'"');
     }
 
+    // add slots
+    $this->attribute_holder->add($slots);
+
     // set the decorator content as an attribute
-    $this->attribute_holder->setByRef('sf_content', $content);
+    $this->attribute_holder->set('sf_content', $content);
 
     // for backwards compatibility with old layouts; remove at 0.8.0?
-    $this->attribute_holder->setByRef('content', $content);
+    $this->attribute_holder->set('content', $content);
 
     // render the decorator template and return the result
     $retval = $this->renderFile($template);
@@ -322,7 +325,8 @@ class sfPHPView extends sfView
       // now render decorator template, if one exists
       if ($this->isDecorator())
       {
-        $retval = $this->decorate($retval);
+        $slots = $context->getResponse()->getParameter('slots', array(), 'symfony/view/sfView/slot');
+        $retval = $this->decorate($retval, $slots);
       }
 
       // render to client

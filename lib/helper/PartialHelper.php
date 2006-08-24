@@ -347,3 +347,43 @@ function get_partial($templateName, $vars = array())
 
   return $retval;
 }
+
+function slot($name)
+{
+  $response = sfContext::getInstance()->getResponse();
+
+  $slots = $response->getParameter('slots', array(), 'symfony/view/sfView/slot');
+  $slot_names = $response->getParameter('slot_names', array(), 'symfony/view/sfView/slot');
+  if (in_array($name, $slot_names))
+  {
+    throw new sfCacheException(sprintf('A slot named "%s" is already started.', $name));
+  }
+
+  $slot_names[] = $name;
+  $slots[$name] = '';
+
+  $response->setParameter('slots', $slots, 'symfony/view/sfView/slot');
+  $response->setParameter('slot_names', $slot_names, 'symfony/view/sfView/slot');
+
+  ob_start();
+  ob_implicit_flush(0);
+}
+
+function end_slot()
+{
+  $content = ob_get_clean();
+
+  $response = sfContext::getInstance()->getResponse();
+  $slots = $response->getParameter('slots', array(), 'symfony/view/sfView/slot');
+  $slot_names = $response->getParameter('slot_names', array(), 'symfony/view/sfView/slot');
+  if (!$slot_names)
+  {
+    throw new sfCacheException('No slot started.');
+  }
+
+  $name = array_pop($slot_names);
+  $slots[$name] = $content;
+
+  $response->setParameter('slots', $slots, 'symfony/view/sfView/slot');
+  $response->setParameter('slot_names', $slot_names, 'symfony/view/sfView/slot');
+}
