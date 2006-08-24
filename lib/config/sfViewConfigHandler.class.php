@@ -148,10 +148,10 @@ class sfViewConfigHandler extends sfYamlConfigHandler
   {
     $data = '';
 
-    $hasLayout = (boolean) $this->getConfigValue('has_layout', $viewName);
+    $hasLayout = $this->getConfigValue('has_layout', $viewName) ? 1 : 0;
     $layout = $this->getConfigValue('layout', $viewName);
     $data .= <<<EOF
-    if (false !== \$action->getLayout() && (false !== \$action->getLayout() || $hasLayout))
+    if (false !== \$action->getLayout() && (null !== \$action->getLayout() || $hasLayout))
     {
       \$layout = \$action->getLayout() ? \$action->getLayout() : '$layout';
       \$this->setDecoratorDirectory(sfConfig::get('sf_app_template_dir'));
