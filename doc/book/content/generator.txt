@@ -275,6 +275,14 @@ Notice that the partial template of a partial field has access to the current ob
 >           article_link:   { name: Article }
 >
 
+If your partial gets crowded with more and more logic, you'll probably want to replace it by a component. Change the `_` prefix by a `~` and you can define a component column:
+
+        ...
+        list:
+          display:        [id, ~article_link, date]
+          
+In the generated template, this will result by a call to the `articleLink` component of the current module.
+
 Custom and partial fields can be used in the list view and in the edit view.
 
 Customizing the views
