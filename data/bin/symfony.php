@@ -58,5 +58,10 @@ catch (pakeException $e)
 {
 }
 
+if ($argv)
+{
+  $argv[] = '-T';
+}
+
 $pake = pakeApp::get_instance();
 $pake->run($pakefile);
