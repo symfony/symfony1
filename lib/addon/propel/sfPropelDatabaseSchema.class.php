@@ -25,7 +25,7 @@ class sfPropelDatabaseSchema
   {
     return array($this->connection_name => $this->database);
   }
-  
+
   public function loadYAML($file)
   {
     $schema = sfYaml::load($file);
@@ -37,7 +37,7 @@ class sfPropelDatabaseSchema
 
     $this->connection_name = array_shift(array_keys($schema));
     $this->database = $schema[$this->connection_name];
-        
+
     $this->fixYAMLDatabase();
     $this->fixYAMLI18n();
     $this->fixYAMLColumns();

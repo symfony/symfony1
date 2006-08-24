@@ -322,7 +322,7 @@ function include_metas()
  * @return string XHTML compliant <meta> tag(s)
  * @see    include_metas 
  */
- function include_http_metas()
+function include_http_metas()
 {
   foreach (sfContext::getInstance()->getResponse()->getHttpMetas() as $httpequiv => $value)
   {
@@ -343,24 +343,4 @@ function include_title()
   $title = sfContext::getInstance()->getResponse()->getTitle();
 
   echo content_tag('title', $title)."\n";
-}
-
-/**
- * Returns a list of <script> include tags according to the response attributes.
- *
- * <b>DEPRECATED:</b> JavaScripts are included automatically
- */
-function include_javascripts()
-{
-  if (sfConfig::get('sf_logging_active')) sfContext::getInstance()->getLogger()->err('The function "include_javascripts()" is deprecated and not needed anymore.');
-}
-
-/**
- * Returns a list of css <link> tags according to the response attributes.
- *
- * <b>DEPRECATED:</b> stylesheets are included automatically
- */
-function include_stylesheets()
-{
-  if (sfConfig::get('sf_logging_active')) sfContext::getInstance()->getLogger()->err('The function "include_stylesheets()" is deprecated and not needed anymore.');
 }

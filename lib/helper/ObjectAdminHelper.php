@@ -20,16 +20,6 @@ require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/JavascriptHelper.php')
  * @version    SVN: $Id$
  */
 
-function object_admin_input_upload_tag($object, $method, $options = array())
-{
-  if (sfConfig::get('sf_logging_active'))
-  {
-    sfContext::getInstance()->getLogger()->err('This function is deprecated. Please use object_admin_input_file_tag.');
-  }
-
-  return object_admin_input_file_tag($object, $method, $options);
-}
-
 function object_admin_input_file_tag($object, $method, $options = array())
 {
   $options = _parse_attributes($options);

@@ -6,19 +6,6 @@ pake_task('propel-init-crud', 'app_exists');
 pake_desc('generate a new propel CRUD module');
 pake_task('propel-generate-crud', 'app_exists');
 
-pake_task('init-propelcrud');
-pake_task('generate-propelcrud');
-
-function run_init_propelcrud($task, $args)
-{
-  throw new Exception('This task is deprecated. Please use "propel-init-crud".');
-}
-
-function run_generate_propelcrud($task, $args)
-{
-  throw new Exception('This task is deprecated. Please use "propel-generate-crud".');
-}
-
 function run_propel_init_crud($task, $args)
 {
   if (count($args) < 2)

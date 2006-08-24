@@ -683,24 +683,6 @@ function radiobutton_tag($name, $value, $checked = false, $options = array())
 }
 
 /**
- * Returns an XHTML compliant <input> tag with type="file".
- *
- * Alias for input_file_tag
- *
- * <b>DEPRECIATED:</b> Use input_file_tag
- * @see input_file_tag
- */
-function input_upload_tag($name, $options = array())
-{
-  if (sfConfig::get('sf_logging_active'))
-  {
-    sfContext::getInstance()->getLogger()->err('This function is deprecated. Please use input_file_tag.');
-  }
-  
-  return input_file_tag($name, $options);
-}
-
-/**
  * Returns two XHTML compliant <input> tags to be used as a free-text date fields for a date range.
  * 
  * Built on the input_date_tag, the input_date_range_tag combines two input tags that allow the user

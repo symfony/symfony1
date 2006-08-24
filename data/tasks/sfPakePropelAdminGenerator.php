@@ -2,12 +2,6 @@
 
 pake_desc('initialize a new propel admin module');
 pake_task('propel-init-admin', 'app_exists');
-pake_task('init-propeladmin');
-
-function run_init_propeladmin($task, $args)
-{
-  throw new Exception('This task is deprecated. Please use "propel-init-admin".');
-}
 
 function run_propel_init_admin($task, $args)
 {

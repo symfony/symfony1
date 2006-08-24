@@ -404,29 +404,6 @@ abstract class sfController
   }
 
   /**
-   * Retrieve the singleton instance of this class.
-   *
-   * @return sfController A sfController implementation instance.
-   *
-   * @throws sfControllerException If a controller implementation instance has not been created.
-   */
-  public static function getInstance ()
-  {
-    $error = 'sfController::getInstance deprecated, use newInstance method instead.';
-    throw new sfControllerException($error);
-
-    if (isset(self::$instance))
-    {
-      return self::$instance;
-    }
-
-    // an instance of the controller has not been created
-    $error = 'A sfController implementation instance has not been created';
-
-    throw new sfControllerException($error);
-  }
-
-  /**
    * Retrieve the presentation rendering mode.
    *
    * @return int One of the following:
