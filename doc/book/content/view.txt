@@ -265,7 +265,9 @@ You may often need to include some HTML or PHP code into several pages, to avoid
 * If the logic is heavier (for instance if you need to access the data model and/or modify the content according to the session), you will prefer to separate the presentation from the logic. For that, you will use a **component**
 * If the nature of the fragment depends on the context (for instance if the fragment needs to be different for the actions of a given module), you will use a **component slot**.
 
-These three helpers are available from any symfony template.
+In addition, symfony provides a technique to define a zone in the layout that can be overridden by a template, and it's called a **slot**. It is an alternative to component slots for when you have no heavy logic.
+
+These helpers are available from any symfony template.
 
 ### Include
 
@@ -424,6 +426,41 @@ Component slots can be used for breadcrumbs, contextual navigations, and dynamic
 >       components:
 >         sidebar:  [ ]
 
+### Slots
+
+Managing a component slot obliges you to create a component, a partial, and a configuration file. It is really useful when you want reusability. If your need is to define a zone in the layout that can be overriden action by action, then there is a faster solution: the slots.
+
+A slot is a code chunk stored in a simple variable. The layout defines a default value for it, and each template can override it with the `slot()` and `end_slot()` helpers.
+
+For instance, define a 'sidebar' slot in the `layout.php` as follows:
+
+    [php]
+    ...
+    <div id="sidebar">
+    <?php if(isset($sidebar)): ?>
+      <?echo $sidebar ?>
+    <?php else: ?>
+      <!-- default sidebar code -->
+      <h1>Contextual zone</h1>
+      <p>This zone contains links and information relative to the main content of the page.</p>
+    <?php endif; ?>
+    </div>
+    
+Now, each template can override the 'sidebar' slot as follows:
+
+    [php]
+    ...
+    <?php slot('sidebar') ?>
+      <h1>User <?php echo $user ?>'s details</h1>
+      <p>email: <?php echo $user->getEmail() ?></p>
+      <p><?php echo link_to('do things', 'user/dothings?id='.$user->getId()) ?>
+    <?php end_slot() ?>
+
+The code between the `slot()` and `end_slot()` helpers is not output in the main zone of the layout (`sf_content`), but in the `$sidebar` variable. That's why this helper is not called with a `echo`.
+
+Slots are much faster than component slots, so feel free to use them extensively.
+
+>**Note**: Slots were present in earlier versions of symfony, but with a slightly different meaning. 
 
 [1]: http://en.wikipedia.org/wiki/Model-view-controller "Model-View-Controller definition at Wikipedia"
 [2]: http://en.wikipedia.org/wiki/Decorator_pattern     "Decorator pattern definition at Wikipedia"
