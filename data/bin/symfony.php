@@ -57,8 +57,7 @@ try
 catch (pakeException $e)
 {
 }
-
-if ($argv)
+if (count($argv) <= 1)
 {
   $argv[] = '-T';
 }
