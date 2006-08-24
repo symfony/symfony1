@@ -22,7 +22,7 @@ abstract class sfAction extends sfComponent
 {
   private
     $security = array(),
-    $template = '';
+    $template = null;
 
   /**
    * Gets current module name
@@ -497,6 +497,9 @@ abstract class sfAction extends sfComponent
 
   /**
    * Gets the name of the alternate template for this Action.
+   *
+   * WARNING: It only returns the template you set with the setTemplate() method,
+   *          and does not return the template that you configured in your view.yml.
    *
    * See 'Naming Conventions' in the 'Symfony View' documentation.
    *

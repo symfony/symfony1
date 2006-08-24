@@ -23,7 +23,8 @@ abstract class sfComponent
     $var_holder               = null,
     $request                  = null,
     $response                 = null,
-    $request_parameter_holder = null;
+    $request_parameter_holder = null,
+    $layout                   = null;
 
   /**
    * Execute any application/business logic for this action.
@@ -323,5 +324,34 @@ abstract class sfComponent
   public function hasFlash($name)
   {
     return $this->getUser()->hasAttribute($name, 'symfony/flash');
+  }
+
+  /**
+   * Sets an alternate layout for this Component.
+   *
+   * To de-activate the layout, set the template name to false.
+   *
+   * To revert the layout to the one configured in the view.yml, set the template name to null.
+   *
+   * @param string layout name
+   */
+  public function setLayout($name)
+  {
+    if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfAction} change layout to "'.$name.'"');
+
+    $this->layout = $name;
+  }
+
+  /**
+   * Gets the name of the alternate layout for this Component.
+   *
+   * WARNING: It only returns the layout you set with the setLayout() method,
+   *          and does not return the layout that you configured in your view.yml.
+   *
+   * @return string
+   */
+  public function getLayout()
+  {
+    return $this->layout;
   }
 }

@@ -68,16 +68,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
       $data[] = ($first ? '' : 'else ')."if (\$this->viewName == '$viewName')\n".
                 "{\n";
 
-      // template name
-      $templateName = $this->getConfigValue('template', $viewName);
-      if ($templateName)
-      {
-        $data[] = "  \$templateName = \$action->getTemplate() ? \$action->getTemplate() : '$templateName';\n";
-      }
-      else
-      {
-        $data[] = "  \$templateName = \$action->getTemplate() ? \$action->getTemplate() : \$this->getContext()->getActionName();\n";
-      }
+      $data[] = $this->addTemplate($viewName);
 
       $data[] = "  if (!\$actionStackEntry->isSlot())\n";
       $data[] = "  {\n";
@@ -98,15 +89,8 @@ class sfViewConfigHandler extends sfYamlConfigHandler
 
     // general view configuration
     $data[] = ($first ? '' : "else\n{")."\n";
-    $templateName = $this->getConfigValue('template', 'all');
-    if ($templateName)
-    {
-      $data[] = "  \$templateName = \$action->getTemplate() ? \$action->getTemplate() : '$templateName';\n";
-    }
-    else
-    {
-      $data[] = "  \$templateName = \$action->getTemplate() ? \$action->getTemplate() : \$this->getContext()->getActionName();\n";
-    }
+
+    $data[] = $this->addTemplate();
 
     $data[] = "  if (!\$actionStackEntry->isSlot())\n";
     $data[] = "  {\n";
@@ -149,17 +133,32 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     return $data;
   }
 
+  private function addTemplate($viewName = 'all')
+  {
+    $data = '';
+
+    $templateName = $this->getConfigValue('template', $viewName);
+    $defaultTemplateName = $templateName ? "'$templateName'" : '$this->getContext()->getActionName()';
+    $data .= "  \$templateName = null !== \$action->getTemplate() ? \$action->getTemplate() : $defaultTemplateName;\n";
+
+    return $data;
+  }
+
   private function addLayout($viewName = '')
   {
     $data = '';
 
-    $has_layout = $this->getConfigValue('has_layout', $viewName);
-    if ($has_layout)
+    $hasLayout = (boolean) $this->getConfigValue('has_layout', $viewName);
+    $layout = $this->getConfigValue('layout', $viewName);
+    $data .= <<<EOF
+    if (false !== \$action->getLayout() && (false !== \$action->getLayout() || $hasLayout))
     {
-      $layout = $this->getconfigValue('layout', $viewName);
-      $data .= "    \$this->setDecoratorDirectory(sfConfig::get('sf_app_template_dir'));\n".
-               "    \$this->setDecoratorTemplate('$layout.php');\n";
+      \$layout = \$action->getLayout() ? \$action->getLayout() : '$layout';
+      \$this->setDecoratorDirectory(sfConfig::get('sf_app_template_dir'));
+      \$this->setDecoratorTemplate(\$layout.'.php');
     }
+
+EOF;
 
     return $data;
   }
