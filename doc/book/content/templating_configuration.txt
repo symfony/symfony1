@@ -358,12 +358,12 @@ The same is possible in the `Actions.class.php` file:
 
 Some views don't need any layout at all (for instance plain text pages). In that case, use:
 
-    has_layout: false
+    layout: false
 
 Or, in the action:
 
     [php]
-    $this->hasLayout(false);
+    $this->setLayout(false);
 
 Component slots configuration
 -----------------------------
