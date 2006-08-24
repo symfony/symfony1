@@ -8,8 +8,8 @@ if (ini_get('zend.ze1_compatibility_mode'))
 // define some PEAR directory constants
 $pear_lib_dir = '@PEAR-DIR@';
 $pear_data_dir = '@DATA-DIR@';
-define('PAKEFILE_SYMLINK',  false);
-define('SYMFONY_VERSION',   '@SYMFONY-VERSION@');
+define('PAKEFILE_SYMLINK', false);
+define('SYMFONY_VERSION',  '@SYMFONY-VERSION@');
 
 if (is_readable('lib/symfony'))
 {
@@ -35,9 +35,9 @@ include_once('pake/pakeFunction.php');
 // we trap -V before pake
 require_once 'pake/pakeGetopt.class.php';
 $OPTIONS = array(
-  array('--version', '-V', pakeGetopt::NO_ARGUMENT, ''),
+  array('--version',  '-V', pakeGetopt::NO_ARGUMENT, ''),
   array('--pakefile', '-f', pakeGetopt::OPTIONAL_ARGUMENT, ''),
-  array('--tasks', '-T', pakeGetopt::OPTIONAL_ARGUMENT, ''),
+  array('--tasks',    '-T', pakeGetopt::OPTIONAL_ARGUMENT, ''),
 );
 $opt = new pakeGetopt($OPTIONS);
 try
@@ -48,7 +48,8 @@ try
   {
     if ($opt == 'version')
     {
-      echo 'symfony version '.SYMFONY_VERSION."\n";
+      $version = SYMFONY_VERSION == '@'.'SYMFONY-VERSION'.'@' ? 'DEV' : SYMFONY_VERSION;
+      echo sprintf('symfony version %s', pakeColor::colorize($version, 'INFO'))."\n";
       exit(0);
     }
   }
