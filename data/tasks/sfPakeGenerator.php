@@ -118,10 +118,20 @@ function run_init_module($task, $args)
     throw new Exception(sprintf('The directory "%s" already exists.', $module_dir));
   }
 
+  try
+  {
+    $author_name = $task->get_property('author', 'symfony');
+  }
+  catch (pakeException $e)
+  {
+    $author_name = 'Your name here';
+  }
+
   $constants = array(
     'PROJECT_NAME' => $task->get_property('name', 'symfony'),
     'APP_NAME'     => $app,
     'MODULE_NAME'  => $module,
+    'AUTHOR_NAME'  => $author_name,
   );
 
   if (is_readable(sfConfig::get('sf_data_dir').'/skeleton/module'))
