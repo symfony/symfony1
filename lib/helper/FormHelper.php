@@ -856,7 +856,7 @@ function input_date_tag($name, $value, $options = array())
   // construct html
   if (!isset($options['size']))
   {
-    $options['size'] = 9;
+    $options['size'] = 11;
   }
   $html = input_tag($name, $value, $options);
 
