@@ -458,6 +458,8 @@ Now, each template can override the 'sidebar' slot as follows:
 
 The code between the `slot()` and `end_slot()` helpers is not output in the main zone of the layout (`sf_content`), but in the `$sidebar` variable. That's why this helper is not called with a `echo`.
 
+One common usage of slots is the addition of special tags in the `<head>` section on a per template basis. For instance, if you want to include RSS links in the header, place a 'feeds' slot in the header and specialize it template by template. 
+
 Slots are much faster than component slots, so feel free to use them extensively.
 
 >**Note**: Slots were present in earlier versions of symfony, but with a slightly different meaning. 
