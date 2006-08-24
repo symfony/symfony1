@@ -303,7 +303,7 @@ abstract class sfAction extends sfComponent
    */
   public function redirect($url)
   {
-    $url = $this->getController()->genUrl($url);
+    $url = $this->getController()->genUrl($url, true);
 
     if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfAction} redirect to "'.$url.'"');
 
