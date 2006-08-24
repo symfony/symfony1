@@ -20,22 +20,8 @@ function run_sync($task, $args)
   }
 
   $host = $task->get_property('host', $env);
-  if (!$host)
-  {
-    throw new Exception('You must set "host" variable in your properties.ini file.');
-  }
-
   $user = $task->get_property('user', $env);
-  if (!$user)
-  {
-    throw new Exception('You must set "user" variable in your properties.ini file.');
-  }
-
   $dir = $task->get_property('dir', $env);
-  if (!$dir)
-  {
-    throw new Exception('You must set "dir" variable in your properties.ini file.');
-  }
 
   if (substr($dir, -1) != '/')
   {
@@ -44,14 +30,24 @@ function run_sync($task, $args)
 
   $ssh = 'ssh';
 
-  $port = $task->get_property('port', $env);
-  if ($port)
+  try
   {
+    $port = $task->get_property('port', $env);
     $ssh = '"ssh -p'.$port.'"';
+  }
+  catch (pakeException $e) {}
+
+  try
+  {
+    $parameters = $task->get_property('parameters', $env);
+  }
+  catch (pakeException $e)
+  {
+    $parameters = '-azC --exclude-from=config/rsync_exclude.txt --force --delete';
   }
 
   $dry_run = ($dryrun == 'go' || $dryrun == 'ok') ? '' : '--dry-run';
-  $cmd = "rsync --progress $dry_run -azC --exclude-from=config/rsync_exclude.txt --force --delete -e $ssh ./ $user@$host:$dir";
+  $cmd = "rsync --progress $dry_run $parameters -e $ssh ./ $user@$host:$dir";
 
   echo pake_sh($cmd);
 }
