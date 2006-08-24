@@ -257,7 +257,7 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
 
     if ($column->isComponent())
     {
-      return "get_component('".$this->getSingularName()."', '".$column->getName()."', array('type' => 'edit', '{$this->getSingularName()}' => \${$this->getSingularName()}))";
+      return "get_component('".$this->getModuleName()."', '".$column->getName()."', array('type' => 'edit', '{$this->getSingularName()}' => \${$this->getSingularName()}))";
     }
     else if ($column->isPartial())
     {
@@ -537,7 +537,7 @@ EOF;
 
     if ($column->isComponent())
     {
-      return "get_component('".$column->getName()."', array('type' => 'list', '{$this->getSingularName()}' => \${$this->getSingularName()}))";
+      return "get_component('".$this->getModuleName()."', '".$column->getName()."', array('type' => 'list', '{$this->getSingularName()}' => \${$this->getSingularName()}))";
     }
     else if ($column->isPartial())
     {
