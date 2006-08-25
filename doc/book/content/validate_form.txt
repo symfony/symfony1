@@ -309,6 +309,22 @@ The available validators can be found in the symfony lib `validator` directory. 
 
   Beware that the attribute `file` has to be set to `true` for the field in the `names` section - and that the template must declare the form as `multipart`. Find more information in the [file upload chapter](upload.txt).
 
+* `sfCallbackValidator`: Passes the hand to a third party method or function to do the validation (and return true or false).
+ 
+        ageValidator:
+          class:          sfCallbackValidator
+          param:
+            callback:      is_integer
+            invalid_error: Please enter a number.
+        
+        creditCardValidator:
+          class:          sfCallbackValidator
+          param:
+            callback:      [myTools, validateCreditCard]
+            invalid_error: Please enter a valid credit card number.
+        
+  The callback method or function receives the value to be validated as a first parameter. This is very useful when you don't want to create a full validator class but reuse existing methods of functions.
+
 Repopulation
 ------------
 
