@@ -160,7 +160,7 @@ abstract class sfAction extends sfComponent
    *
    * @param  string module name
    * @param  string action name
-   * @return sfView::NONE
+   * @throws sfActionStopException always
    */
   public function forward ($module, $action)
   {
@@ -184,7 +184,7 @@ abstract class sfAction extends sfComponent
    * @param  bool   A condition that evaluates to true or false.
    * @param  string module name
    * @param  string action name
-   * @return sfView::NONE
+   * @throws sfActionStopException always
    */
   public function forwardIf ($condition, $module, $action)
   {
@@ -207,7 +207,7 @@ abstract class sfAction extends sfComponent
    * @param  bool   A condition that evaluates to true or false.
    * @param  string module name
    * @param  string action name
-   * @return sfView::NONE
+   * @throws sfActionStopException always
    */
   public function forwardUnless ($condition, $module, $action)
   {
@@ -299,7 +299,7 @@ abstract class sfAction extends sfComponent
    * <code>return $this->redirect('/ModuleName/ActionName')</code>
    *
    * @param  string url
-   * @return sfView::NONE
+   * @throws sfActionStopException always
    */
   public function redirect($url)
   {
@@ -323,7 +323,7 @@ abstract class sfAction extends sfComponent
    *
    * @param  bool   A condition that evaluates to true or false.
    * @param  string url
-   * @return sfView::NONE
+   * @throws sfActionStopException always
    */
   public function redirectIf ($condition, $url)
   {
@@ -344,7 +344,7 @@ abstract class sfAction extends sfComponent
    *
    * @param  bool   A condition that evaluates to true or false.
    * @param  string url
-   * @return sfView::NONE
+   * @throws sfActionStopException always
    */
   public function redirectUnless ($condition, $url)
   {
