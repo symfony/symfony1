@@ -348,9 +348,17 @@ function get_partial($templateName, $vars = array())
   return $retval;
 }
 
+/**
+ * Begins the capturing of the slot.
+ *
+ * @param  string slot name
+ * @return void
+ * @see    end_slot
+ */
 function slot($name)
 {
-  $response = sfContext::getInstance()->getResponse();
+  $context = sfContext::getInstance();
+  $response = $context->getResponse();
 
   $slots = $response->getParameter('slots', array(), 'symfony/view/sfView/slot');
   $slot_names = $response->getParameter('slot_names', array(), 'symfony/view/sfView/slot');
@@ -365,10 +373,21 @@ function slot($name)
   $response->setParameter('slots', $slots, 'symfony/view/sfView/slot');
   $response->setParameter('slot_names', $slot_names, 'symfony/view/sfView/slot');
 
+  if (sfConfig::get('sf_logging_active'))
+  {
+    $context->getLogger()->info(sprintf('{PartialHelper} set slot "%s"', $name));
+  }
+
   ob_start();
   ob_implicit_flush(0);
 }
 
+/**
+ * Stops the content capture and save the content in the slot.
+ *
+ * @return void
+ * @see    slot
+ */
 function end_slot()
 {
   $content = ob_get_clean();
@@ -386,4 +405,61 @@ function end_slot()
 
   $response->setParameter('slots', $slots, 'symfony/view/sfView/slot');
   $response->setParameter('slot_names', $slot_names, 'symfony/view/sfView/slot');
+}
+
+/**
+ * Returns true if the slot exists.
+ *
+ * @param  string slot name
+ * @return boolean true, if the slot exists
+ * @see    get_slot, include_slot
+ */
+function has_slot($name)
+{
+  $response = sfContext::getInstance()->getResponse();
+  $slots = $response->getParameter('slots', array(), 'symfony/view/sfView/slot');
+
+  return array_key_exists($name, $slots);
+}
+
+/**
+ * Evaluates and echoes a slot.
+ *
+ * <b>Example:</b>
+ * <code>
+ *  include_slot('navigation');
+ * </code>
+ *
+ * @param  string slot name
+ * @return void
+ * @see    has_slot, get_slot
+ */
+function include_slot($name)
+{
+  echo get_slot($name);
+}
+
+/**
+ * Evaluates and returns a slot.
+ *
+ * <b>Example:</b>
+ * <code>
+ *  echo get_slot('navigation');
+ * </code>
+ *
+ * @param  string slot name
+ * @return string content of the slot
+ * @see    has_slot, include_slot
+ */
+function get_slot($name)
+{
+  $context = sfContext::getInstance();
+  $slots = $context->getResponse()->getParameter('slots', array(), 'symfony/view/sfView/slot');
+
+  if (sfConfig::get('sf_logging_active'))
+  {
+    $context->getLogger()->info(sprintf('{PartialHelper} get slot "%s"', $name));
+  }
+
+  return isset($slots[$name]) ? $slots[$name] : '';
 }
