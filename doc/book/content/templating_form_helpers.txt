@@ -279,6 +279,11 @@ Now, picture a form built to edit the data of an article. There is an easy way t
 
 Symfony will use the `->toString()` method of the `Author` class to display the names of the authors in a list. If the method is undefined, the primary key (in the example, the `id` column) of the `Author` table is used instead.
 
+By default, the list of authors will be the complete list ordered by creation date, but you can specify another `AuthorPeer` method to display a custom array of authors, in the order you want, with the `peer_method` parameter:
+
+    [php]
+    object_select_tag($article, 'getAuthorId', 'related_class=Author, peer_method=getFamousAuthorsOrderedByBirthDate')
+
 A few other options can define the content of an object select tag. `include_title` and `include_blank` allow to add a title or a first empty line to the list:
 
     [php]
