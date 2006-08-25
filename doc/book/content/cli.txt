@@ -20,9 +20,9 @@ To get the installed version of the symfony package, type:
 
     $ symfony -V
 
-To get the full list of the available administration operations, use:
+To get the full list of the available administration operations, use the `-t` option or symply type the `symfony` command with no argument:
 
-    $ symfony -T
+    $ symfony
     
 The symfony command expects tasks, and some tasks require additional parameters. The general syntax is:
 
@@ -33,6 +33,8 @@ A few tasks have a shortcut, faster to write, that has the same effect.
     $ symfony cc
     // does the same thing as
     $ symfony clear-cache
+    
+When an exception occurs, you might want to get the stack trace and detailed explanation. Add the `-t` option before the task name to get the trace.
 
 CLI tasks
 ---------
@@ -63,7 +65,7 @@ Find more about these commands in the [project creation chapter](project_creatio
 
 ### Model generation
 
-`propel-build-model`: Create Propel classes for the current model, based on the `schema.yml` file. If you have several files ending with `schema.yml` in your `config/` directory, they are all taken into account.
+`propel-build-model`: Create Propel classes for the current model, based on the schema files (YAML or XML) of your `config/` directory.
 
     $ symfony propel-build-model
 
@@ -77,7 +79,7 @@ The connection settings used by the following commands are taken from the `confi
 
     $ symfony propel-build-sql
     
-`propel-build-db`: Create an empty database
+`propel-build-db`: Create an empty database based on the connection settings
 
     $ symfony propel-build-db
 
@@ -105,7 +107,7 @@ If you want to learn more about the model and the effect of these commands, refe
 
     $ symfony clear-cache <APPLICATION_NAME> [template|config]
 
-`clear-controllers`: Clear the web directory of all controllers other than ones running in a production environment.
+`clear-controllers`: Clear the web directory of all controllers other than ones running in a production environment. Very useful before deployment to the production server.
 
     $ symfony clear-controllers
     
@@ -117,11 +119,24 @@ If you want to learn more about the model and the effect of these commands, refe
 
     $ symfony test <APPLICATION_NAME>
     
+`freeze`: Copies all the necessary symfony libraries into the `data/`, `lib/` and `web/sf/` directories of your project. Your project then becomes a kind of sandbox, i.e. a standalone application with no dependence and ready to be transferred to production via FTP. Works fine with PEAR installations as well as symbolic links. Unfreeze your project with the `unfreeze` task.
+
+    $ symfony freeze
+    $ symfony unfreeze
+
 `sync`: Synchronise the current project with another machine (find more in the [deployment chapter](deployment.txt))
 
     $ symfony sync <ENVIRONMENT_NAME> [go]
 
 ### Project administration
+
+`disable`: Forwards the user to the unavailable module and action in your `settings.yml` file and acts in the same way as if you had set the unavaiable setting in your `settings.yml` file. The advantage over the setting is that you can disable a single application for a single environment, and not only the whole project.
+
+    $ symfony disable <APPLICATION_NAME> <ENVIRONMENT_NAME>
+
+`enable`: Enables the application and clears the cache
+
+    $ symfony enable <APPLICATION_NAME> <ENVIRONMENT_NAME>
 
 `purge-logs: This clears the logs files in the log directory depending on your settings in logging.yml (find more in the [logging chapter](logging.txt))
 
