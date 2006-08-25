@@ -54,18 +54,18 @@ else
   require_once($sf_symfony_lib_dir.'/config/sfConfigCache.class.php');
 }
 
-class Symfony
+final class Symfony
 {
-  public static function autoload($class)
-  {
-    static $loaded;
+  protected static $loaded = false;
 
-    if (!$loaded)
+  public static function __autoload($class)
+  {
+    if (false === self::$loaded)
     {
       // load the list of autoload classes
       include_once(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/autoload.yml'));
 
-      $loaded = true;
+      self::$loaded = true;
     }
 
     $classes = sfConfig::get('sf_class_autoload', array());
@@ -107,17 +107,34 @@ class Symfony
  *
  * @return void
  */
-if (!function_exists('__autoload'))
+if (function_exists('spl_autoload_register'))
 {
+  ini_set('unserialize_callback_func', 'spl_autoload_call');
+
+  // load functions and methods that can autoload classes
+  $functions = (array) sfConfig::get('sf_autoloading_functions', array());
+  array_unshift($functions, array('Symfony', '__autoload'));
+
+  foreach ($functions as $function)
+  {
+    spl_autoload_register($function);
+  }
+  unset($functions);
+
+}
+elseif (!function_exists('__autoload'))
+{
+  ini_set('unserialize_callback_func', '__autoload');
+
   function __autoload($class)
   {
-    static $functions;
+    static $functions = null;
 
-    if (!$functions)
+    if (null === $functions)
     {
       // load functions and methods that can autoload classes
-      $functions = is_array(sfConfig::get('sf_autoloading_functions')) ? sfConfig::get('sf_autoloading_functions') : array();
-      array_unshift($functions, array('Symfony', 'autoload'));
+      $functions = (array) sfConfig::get('sf_autoloading_functions', array());
+      array_unshift($functions, array('Symfony', '__autoload'));
     }
 
     foreach ($functions as $function)
@@ -145,8 +162,6 @@ if (!function_exists('__autoload'))
 try
 {
   $configCache = sfConfigCache::getInstance();
-
-  ini_set('unserialize_callback_func', '__autoload');
 
   // force setting default timezone if not set
   if (function_exists('date_default_timezone_get'))
