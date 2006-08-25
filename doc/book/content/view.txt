@@ -428,25 +428,11 @@ Component slots can be used for breadcrumbs, contextual navigations, and dynamic
 
 ### Slots
 
-Managing a component slot obliges you to create a component, a partial, and a configuration file. It is really useful when you want reusability. If your need is to define a zone in the layout that can be overriden action by action, then there is a faster solution: the slots.
+Managing a component slot obliges you to create a component, a partial, and a configuration file. It is really useful when you want reusability. If your need is to define an additional zone in the layout that can be overriden action by action, then there is a faster solution: the slots.
 
-A slot is a code chunk stored in a simple variable. The layout defines a default value for it, and each template can override it with the `slot()` and `end_slot()` helpers.
+A slot is a code chunk stored globally in the response. It can be defined anywhere (in the layout, in a template, in a partial) and can be included anywhere as well. Just remember that the layout is executed after the template, and that the partials are executed when they are called in a template, to be sure to define a slot before including it. 
 
-For instance, define a 'sidebar' slot in the `layout.php` as follows:
-
-    [php]
-    ...
-    <div id="sidebar">
-    <?php if(isset($sidebar)): ?>
-      <?echo $sidebar ?>
-    <?php else: ?>
-      <!-- default sidebar code -->
-      <h1>Contextual zone</h1>
-      <p>This zone contains links and information relative to the main content of the page.</p>
-    <?php endif; ?>
-    </div>
-    
-Now, each template can override the 'sidebar' slot as follows:
+To define a slot, use the `slot()` and `end_slot()` helpers. For instance, a template will define the content of a 'sidebar' slot as follows:
 
     [php]
     ...
@@ -456,11 +442,23 @@ Now, each template can override the 'sidebar' slot as follows:
       <p><?php echo link_to('do things', 'user/dothings?id='.$user->getId()) ?>
     <?php end_slot() ?>
 
-The code between the `slot()` and `end_slot()` helpers is not output in the main zone of the layout (`sf_content`), but in the `$sidebar` variable. That's why this helper is not called with a `echo`.
+The code between the `slot()` and `end_slot()` helpers is not output in the template, but in a placeholder in the response, waiting to be included somewhere else.
 
-One common usage of slots is the addition of special tags in the `<head>` section on a per template basis. For instance, if you want to include RSS links in the header, place a 'feeds' slot in the header and specialize it template by template. 
+To include a slot, use the `include_slot()` helper. Using the `has_slot()` helper, you can even manage default slot values. For instance, the layout can display the 'sidebar' slot in a `<div>`. If the slot has been defined earlier (by a template, as in the previous example), then it is displayed. If not, the default content takes its place. Note that since `include_slot()` returns nothing if the slot is not defined, the use of `has_slot()` is not compulsory.
 
-Slots are much faster than component slots, so feel free to use them extensively.
+    [php]
+    ...
+    <div id="sidebar">
+      <?php if(has_slot('sidebar'): ?>
+        <?php include_slot('sidebar') ?>
+      <?php else: ?>
+        <!-- default sidebar code -->
+        <h1>Contextual zone</h1>
+        <p>This zone contains links and information relative to the main content of the page.</p>
+      <?php endif; ?>
+    </div>
+    
+One common usage of slots is the addition of special tags in the `<head>` section, for instance when you want to include RSS links in the header for some specific actions. A layout with more than one dynamic zone, for instance the main content plus the secondary navigation, is another commun use. As they can be included anywhere, with fallback mechanisms, slots are very powerful and allow for a very modular conception of layouts and templates. Eventually, slots are much faster than component slots, so feel free to use them extensively.
 
 >**Note**: Slots were present in earlier versions of symfony, but with a slightly different meaning. 
 
