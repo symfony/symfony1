@@ -20,7 +20,7 @@ To get the installed version of the symfony package, type:
 
     $ symfony -V
 
-To get the full list of the available administration operations, use the `-t` option or symply type the `symfony` command with no argument:
+To get the full list of the available administration operations, use the `-T` option or symply type the `symfony` command with no argument:
 
     $ symfony
     
