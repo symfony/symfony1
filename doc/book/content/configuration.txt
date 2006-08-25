@@ -265,6 +265,23 @@ Beware though that the configuration is parsed very early in the life of a reque
 
 Be also aware that in the production environment, the configuration is cached, so the configuration files are parsed (and executed) only once after the cache is cleared.
 
+And if you are allergic to YAML, or if you prefer to avoid writing both a configuration file and a configuration handler to finally get an associative array in PHP, you can bypass YAML parsing completely and return a PHP array in any YAML file. It means that you can write the `logging.yml` as follows:
+
+    [php]
+    <?php
+    return array(
+      'default' => array(
+        'active' => true,
+        'level'  => 'debug'
+      )
+    );
+
+...instead of the classic
+
+    default:
+      active: on
+      level:  debug
+      
 Configuration handlers
 ----------------------
 
