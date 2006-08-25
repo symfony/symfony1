@@ -192,23 +192,21 @@ The `logging.yml` file defines the level of log messages recorded. By default, a
 
 ### `factories.yml`: Factories settings                    {#factories}
 
-Symfony uses classes such as `sfFrontWebController`, `sfUser`, `sfRequest` that are part of the framework. In the `myproject/apps/myapp/lib/` directory, you will find some files defining classes called `myFrontWebController`, `myUser`, `myRequest`, etc. They all simply inherit of the 'sf-' classes, and this allows you to customize their behavior. The framework knows to use the 'my-' classes instead of the 'sf-' ones by the configuration setting found in the `factories.yml` file:
+Symfony uses classes such as `sfFrontWebController`, `sfRequest`, `sfUser`, that are part of the framework. In the `myproject/apps/myapp/lib/` directory, you can override them with your own `myFrontWebController`, `myRequest` classes (`myUser` already exists). They simply need inherit of the 'sf-' classes, and this allows you to customize their behavior. Teel the framework to use the 'my-' classes instead of the 'sf-' ones by changing the settings found in the `factories.yml` file:
 
     ...
     all:
     #  controller:
-    #    class: myFrontWebController
+    #    class: sfFrontWebController
     #
     #  request:
-    #    class: myWebRequest
+    #    class: sfWebRequest
     #
     #  user:
     #    class: myUser
     ...
 
-This means that you have a prebuilt mechanism to change the **factories** of symfony, the big classes that run behind the curtain, by adding or inheriting methods in the 'my-' classes.
-
-But if you want to use completely different factories, well, you can. Just modify the `factories.yml` entries to point to your custom files. 
+Have a look at the existing `myUser` class to see how the inheritance allows for extension and overriding of **factories** classes. 
 
 ### Front controller configuration
 
