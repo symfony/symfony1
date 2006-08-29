@@ -299,15 +299,14 @@ function get_partial($templateName, $vars = array())
   $controller->setRenderMode(sfView::RENDER_VAR);
 
   // get the view instance
-  $viewName     = $templateName.$viewType;
-  $viewInstance = $controller->getView($moduleName, $actionName, $viewName);
+  $viewInstance = $controller->getView($moduleName, $actionName, $viewType);
 
   // initialize the view
-  if (!$viewInstance->initialize($context, $moduleName, $viewName))
+  if (!$viewInstance->initialize($context, $moduleName, $actionName, $viewType))
   {
     // view failed to initialize
     $error = 'View initialization failed for module "%s", view "%sView"';
-    $error = sprintf($error, $moduleName, $viewName);
+    $error = sprintf($error, $moduleName, $viewType);
 
     throw new sfInitializationException($error);
   }

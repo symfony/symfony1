@@ -142,30 +142,18 @@ class sfExecutionFilter extends sfFilter
     }
     else if ($viewName != sfView::NONE)
     {
-      if (is_array($viewName))
-      {
-        // we're going to use an entirely different action for this view
-        $moduleName = $viewName[0];
-        $viewName   = $viewName[1];
-      }
-      else
-      {
-        // use a view related to this action
-        $viewName = $actionName.$viewName;
-      }
-
       // get the view instance
       $viewInstance = $controller->getView($moduleName, $actionName, $viewName);
 
       // initialize the view
-      if ($viewInstance->initialize($context, $moduleName, $viewName))
+      if ($viewInstance->initialize($context, $moduleName, $actionName, $viewName))
       {
         // view initialization completed successfully
         $viewInstance->execute();
 
         // render the view and if data is returned, stick it in the
         // action entry which was retrieved from the execution chain
-        $viewData =& $viewInstance->render();
+        $viewData = $viewInstance->render();
 
         if ($controller->getRenderMode() == sfView::RENDER_VAR)
         {

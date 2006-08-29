@@ -65,7 +65,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
         continue;
       }
 
-      $data[] = ($first ? '' : 'else ')."if (\$this->viewName == '$viewName')\n".
+      $data[] = ($first ? '' : 'else ')."if (\$this->actionName.\$this->viewName == '$viewName')\n".
                 "{\n";
 
       $data[] = $this->addTemplate($viewName);

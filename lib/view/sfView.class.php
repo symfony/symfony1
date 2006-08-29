@@ -98,6 +98,7 @@ abstract class sfView
     $attribute_holder   = null,
     $parameter_holder   = null,
     $moduleName         = '',
+    $actionName         = '',
     $viewName           = '',
     $extension          = '.php';
 
@@ -310,13 +311,15 @@ abstract class sfView
    *
    * @param Context The current application context.
    * @param string The module name for this view.
+   * @param string The action name for this view.
    * @param string The view name.
    *
    * @return bool true, if initialization completes successfully, otherwise false.
    */
-  public function initialize ($context, $moduleName, $viewName)
+  public function initialize ($context, $moduleName, $actionName, $viewName)
   {
     $this->moduleName = $moduleName;
+    $this->actionName = $actionName;
     $this->viewName   = $viewName;
 
     $this->context = $context;
@@ -446,7 +449,7 @@ abstract class sfView
    * @return string A string representing the rendered presentation, if
    *                the controller render mode is sfView::RENDER_VAR, otherwise null.
    */
-  abstract function & render ($templateVars = null);
+  abstract function render ($templateVars = null);
 
   /**
    * Set the decorator template directory for this view.
