@@ -395,7 +395,7 @@ $column = sfPropelManyToMany::getColumn($class, $through_class);
   {
     if ($sort_column = $this->getUser()->getAttribute('sort', null, 'sf_admin/<?php echo $this->getSingularName() ?>/sort'))
     {
-      $sort_column = Propel::getDB($c->getDbName())->quoteIdentifier($sort_column);
+      $sort_column = <?php echo $this->getClassName() ?>Peer::translateFieldName($sort_column, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_COLNAME);
       if ($this->getUser()->getAttribute('type', null, 'sf_admin/<?php echo $this->getSingularName() ?>/sort') == 'asc')
       {
         $c->addAscendingOrderByColumn($sort_column);
