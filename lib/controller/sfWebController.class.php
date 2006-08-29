@@ -47,7 +47,7 @@ abstract class sfWebController extends sfController
     $url = '';
     if (!($sf_no_script_name = sfConfig::get('sf_no_script_name')))
     {
-      $url = $_SERVER['SCRIPT_NAME'];
+      $url = $this->getContext()->getRequest()->getScriptName();
     }
     else if (($sf_relative_url_root = $this->getContext()->getRequest()->getRelativeUrlRoot()) && $sf_no_script_name)
     {

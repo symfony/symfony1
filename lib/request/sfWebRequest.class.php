@@ -375,7 +375,7 @@ class sfWebRequest extends sfRequest
     {
       if (isset($pathArray['REQUEST_URI']))
       {
-        $script_name = $pathArray['SCRIPT_NAME'];
+        $script_name = $this->getScriptName();
         $uri_prefix = $this->isAbsUri() ? $this->getUriPrefix() : '';
         $pathInfo = preg_replace('/^'.preg_quote($uri_prefix, '/').'/','',$pathArray['REQUEST_URI']);
         $pathInfo = preg_replace('/^'.preg_quote($script_name, '/').'/', '', $pathInfo);
@@ -573,7 +573,7 @@ class sfWebRequest extends sfRequest
   {
     $pathArray = $this->getPathInfoArray();
 
-    return isset($pathArray['SCRIPT_NAME']) ? $pathArray['SCRIPT_NAME'] : '';
+    return isset($pathArray['SCRIPT_NAME']) ? $pathArray['SCRIPT_NAME'] : (isset($pathArray['ORIG_SCRIPT_NAME']) ? $pathArray['ORIG_SCRIPT_NAME'] : '');
   }
 
   /**
@@ -753,7 +753,7 @@ class sfWebRequest extends sfRequest
     {
       $pathArray = $this->getPathInfoArray();
 
-      $this->relativeUrlRoot = preg_replace('#/[^/]+\.php5?$#', '', $pathArray['SCRIPT_NAME']);
+      $this->relativeUrlRoot = preg_replace('#/[^/]+\.php5?$#', '', $this->getScriptName());
     }
 
     return $this->relativeUrlRoot;
