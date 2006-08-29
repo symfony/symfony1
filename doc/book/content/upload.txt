@@ -126,7 +126,7 @@ For instance, if you have a `User` table with a `photo` column, the `generator.y
         photo:
           name:       User photo
           help:       max width 200px
-          type:       admin_input_upload_tag
+          type:       admin_input_file_tag
           upload_dir: pictures/users
           params:     include_link=pictures/users include_remove=true
       display:        [name, email, photo]
