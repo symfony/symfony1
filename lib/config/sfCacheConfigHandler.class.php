@@ -108,7 +108,7 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
     }
 
     // add cache information to cache manager
-    $data[] = sprintf("  \$cacheManager->addCache(\$context->getModuleName(), '%s', '%s', %s, '%s', %s);\n\n",
+    $data[] = sprintf("  \$cacheManager->addCache(\$moduleName, '%s', '%s', %s, '%s', %s);\n\n",
                       $actionName, $type, $lifeTime, $clientLifetime, var_export($vary, true));
 
     return implode("\n", $data);

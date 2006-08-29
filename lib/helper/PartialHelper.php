@@ -123,10 +123,7 @@ function get_component($moduleName, $componentName, $vars = array())
 
     // register our cache configuration
     $cacheConfigFile = $moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/cache.yml';
-    if (is_readable(sfConfig::get('sf_app_module_dir').'/'.$cacheConfigFile))
-    {
-      require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$cacheConfigFile));
-    }
+    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$cacheConfigFile));
 
     $retval = $cacheManager->get($uri, 'slot');
 

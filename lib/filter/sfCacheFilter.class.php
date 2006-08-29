@@ -53,13 +53,11 @@ class sfCacheFilter extends sfFilter
       $context = $this->getContext();
 
       // register our cache configuration
-      $cacheConfigFile = $context->getModuleName().'/'.sfConfig::get('sf_app_module_config_dir_name').'/cache.yml';
-      if (is_readable(sfConfig::get('sf_app_module_dir').'/'.$cacheConfigFile))
-      {
-        $actionName   = $context->getActionName();
-        $cacheManager = $this->cacheManager;
-        require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$cacheConfigFile));
-      }
+      $moduleName = $context->getModuleName(); // is used in the cache.yml file
+      $cacheConfigFile = $moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/cache.yml';
+      $actionName   = $context->getActionName();
+      $cacheManager = $this->cacheManager;
+      require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$cacheConfigFile));
 
       // page cache
       list($uri, $suffix) = $this->cacheManager->getInternalUri('page');
