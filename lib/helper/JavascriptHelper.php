@@ -109,6 +109,18 @@
 
     return tag('input', $html_options);
   }
+  
+  /**
+   * Returns an html button to a remote action defined by 'url' (using the
+   * 'url_for()' format) that's called in the background using XMLHttpRequest.
+   *
+   * See link_to_remote() for details.
+   *
+   */
+  function button_to_remote($name, $options = array(), $html_options = array())
+  {
+    return button_to_function($name, remote_function($options), $html_options);
+  }
 
   /**
    * Returns a link to a remote action defined by 'url'
