@@ -240,6 +240,10 @@ function _call_phing($task, $task_name, $check_schema = true)
 
   // call phing targets
   pake_import('Phing', false);
+  if (false === strpos('propel-generator', get_include_path()))
+  {
+    set_include_path(sfConfig::get('sf_symfony_lib_dir').'/vendor/propel-generator/classes'.PATH_SEPARATOR.get_include_path());
+  }
   pakePhingTask::call_phing($task, array($task_name), sfConfig::get('sf_symfony_data_dir').'/bin/build.xml', $options);
 
   pake_remove($propelIniFileName, '');
