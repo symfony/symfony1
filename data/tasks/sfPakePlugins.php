@@ -39,12 +39,15 @@ function run_plugin_install($task, $args)
     throw new Exception('You must provide the plugin name.');
   }
 
-  $config = _pear_init($method);
+  list($old_config, $config) = _pear_init($method);
 
   // install plugin
   $packages = array($args[1]);
   pake_echo_action('plugin', 'installing plugin "'.$args[1].'"');
   $ret = _pear_run_command($config, 'install', array(), $packages);
+
+  _pear_restore_config($old_config);
+
   if ($ret && !strpos($ret, 'not installed'))
   {
     throw new Exception($ret);
@@ -60,12 +63,15 @@ function run_plugin_upgrade($task, $args)
     throw new Exception('You must provide the plugin name.');
   }
 
-  $config = _pear_init($method);
+  list($old_config, $config) = _pear_init($method);
 
   // upgrade plugin
   $packages = array($args[1]);
   pake_echo_action('plugin', 'upgrading plugin "'.$args[1].'"');
   $ret = _pear_run_command($config, 'upgrade', array('offline' => true), $packages);
+
+  _pear_restore_config($old_config);
+
   if ($ret && !strpos($ret, 'not installed'))
   {
     throw new Exception($ret);
@@ -81,12 +87,15 @@ function run_plugin_uninstall($task, $args)
     throw new Exception('You must provide the plugin name.');
   }
 
-  $config = _pear_init($method);
+  list($old_config, $config) = _pear_init($method);
 
   // install plugin
   $packages = array($args[1]);
   pake_echo_action('plugin', 'uninstalling plugin "'.$args[1].'"');
   $ret = _pear_run_command($config, 'uninstall', array(), $packages);
+
+  _pear_restore_config($old_config);
+
   if ($ret)
   {
     throw new Exception($ret);
@@ -97,11 +106,13 @@ function run_plugin_upgrade_all($task, $args)
 {
   $method = 'local';
 
-  $config = _pear_init($method);
+  list($old_config, $config) = _pear_init($method);
 
   // upgrade all plugins
   pake_echo_action('plugin', 'upgrading all plugins');
   _pear_run_upgrade($config, sfConfig::get('sf_lib_dir').DIRECTORY_SEPARATOR.'plugins');
+
+  _pear_restore_config($old_config);
 }
 
 function _pear_run_command($config, $command, $opts, $params)
@@ -186,8 +197,19 @@ function _pear_init($method = 'local')
   PEAR_Command::setFrontendType('CLI');
   $ui = &PEAR_Command::getFrontendObject();
   $config = &PEAR_Config::singleton();
+  $old_config = array();
   if ($method == 'local')
   {
+    // save PEAR configuration
+    $old_config = array(
+      'php_dir' => $config->get('php_dir'),
+      'data_dir' => $config->get('data_dir'),
+      'bin_dir' => $config->get('bin_dir'),
+      'test_dir' => $config->get('test_dir'),
+      'doc_dir' => $config->get('doc_dir'),
+    );
+
+    // change PEAR configuration
     $config->set('php_dir',  $install_lib_dir);
     $config->set('data_dir', $install_data_dir);
     $config->set('bin_dir',  sfConfig::get('sf_bin_dir'));
@@ -221,5 +243,26 @@ function _pear_init($method = 'local')
     file_put_contents($install_lib_dir.DIRECTORY_SEPARATOR.'.registry'.DIRECTORY_SEPARATOR.'.channel.pear.symfony-project.com'.DIRECTORY_SEPARATOR.'symfony.reg', serialize($symfony));
   }
 
-  return $config;
+  return array($old_config, $config);
+}
+
+function _pear_restore_config($old_config)
+{
+  if (!count($old_config))
+  {
+    return;
+  }
+
+  PEAR_Command::setFrontendType('CLI');
+  $ui = &PEAR_Command::getFrontendObject();
+  $config = &PEAR_Config::singleton();
+
+  // restore PEAR configuration
+  $config->set('php_dir',  $old_config['php_dir']);
+  $config->set('data_dir', $old_config['data_dir']);
+  $config->set('bin_dir',  $old_config['bin_dir']);
+  $config->set('test_dir', $old_config['test_dir']);
+  $config->set('doc_dir',  $old_config['doc_dir']);
+
+  $ui->setConfig($config);
 }
