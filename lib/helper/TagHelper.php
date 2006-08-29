@@ -53,8 +53,8 @@ function cdata_section($content)
 }
 
 /**
-  # Escape carrier returns and single and double quotes for Javascript segments.
-*/
+ * Escape carrier returns and single and double quotes for Javascript segments.
+ */
 function escape_javascript($javascript = '')
 {
   $javascript = preg_replace('/\r\n|\n|\r/', "\\n", $javascript);

@@ -202,11 +202,11 @@ function _pear_init($method = 'local')
   {
     // save PEAR configuration
     $old_config = array(
-      'php_dir' => $config->get('php_dir'),
+      'php_dir'  => $config->get('php_dir'),
       'data_dir' => $config->get('data_dir'),
-      'bin_dir' => $config->get('bin_dir'),
+      'bin_dir'  => $config->get('bin_dir'),
       'test_dir' => $config->get('test_dir'),
-      'doc_dir' => $config->get('doc_dir'),
+      'doc_dir'  => $config->get('doc_dir'),
     );
 
     // change PEAR configuration
