@@ -103,7 +103,7 @@ class sfFileValidator extends sfValidator
     }
     elseif ($this->getParameter('mime_types', null))
     {
-      $this->setParameter('mime_types', array($this->getParameter('mime_types')));
+      $this->setParameter('mime_types', $this->getParameter('mime_types'));
     }
 
     return true;
