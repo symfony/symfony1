@@ -94,8 +94,18 @@ function run_module_exists($task, $args)
 }
 
 /* include all tasks definitions */
-$tasks = pakeFinder::type('file')->name('sfPake*.php')->in(realpath(dirname(__FILE__).'/..').DIRECTORY_SEPARATOR.'tasks');
-foreach ($tasks as $task)
+$dir = sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.'tasks';
+if (is_readable($dir))
+{
+  $projectTasks = pakeFinder::type('file')->name('myPake*.php')->in($dir);
+  foreach ($projectTasks as $task)
+  {
+    include_once($task);
+  }
+}
+
+$symfonyTasks = pakeFinder::type('file')->name('sfPake*.php')->in($sf_symfony_data_dir.DIRECTORY_SEPARATOR.'tasks');
+foreach ($symfonyTasks as $task)
 {
   include_once($task);
 }
