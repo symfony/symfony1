@@ -34,7 +34,7 @@ function object_input_date_tag($object, $method, $options = array(), $default_va
 {
   $options = _parse_attributes($options);
 
-  $value = _get_object_value($object, $method, $default_value);
+  $value = _get_object_value($object, $method, $default_value, $param = 'm/d/y');
 
   return input_date_tag(_convert_method_to_name($method, $options), $value, $options);
 }
@@ -281,7 +281,7 @@ function _convert_method_to_name ($method, &$options)
 }
 
 // returns default_value if object value is null
-function _get_object_value ($object, $method, $default_value = null)
+function _get_object_value ($object, $method, $default_value = null, $param = null)
 {
   // method exists?
   if (!is_callable(array($object, $method)))
@@ -292,7 +292,14 @@ function _get_object_value ($object, $method, $default_value = null)
     throw new sfViewException($error);
   }
 
-  $object_value = $object->$method();
+  if (null !== $param)
+  {
+    $object_value = $object->$method($param);
+  }
+  else
+  {
+    $object_value = $object->$method();
+  }
 
   return ($default_value !== null && $object_value === null) ? $default_value : $object_value;
 }
