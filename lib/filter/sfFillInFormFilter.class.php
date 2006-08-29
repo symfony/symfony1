@@ -59,13 +59,17 @@ class sfFillInFormFilter extends sfFilter
     $xpath_query = $this->getParameter('name') ? '//form[@name="'.$this->getParameter('name').'"]' : '//form';
     if ($form = $xpath->query($xpath_query)->item(0))
     {
-      foreach($xpath->query($query, $form) as $element)
+      $filledFields = array();
+
+      foreach ($xpath->query($query, $form) as $element)
       {
         // skip fields specified in the 'skip_fields' attribute
         if ($request->hasParameter($element->getAttribute('name')) && in_array($element->getAttribute('name'), $skip_fields))
         {
           continue;
         }
+
+        $filledFields[] = $element->getAttribute('name');
 
         if ($element->nodeName == 'input')
         {
@@ -120,6 +124,11 @@ class sfFillInFormFilter extends sfFilter
           }
         }
       } // foreach
+
+      if (sfConfig::get('sf_logging_active'))
+      {
+        $context->getLogger()->info(sprintf('{sfFillInFilter} Filled the following fields: %s', implode(', ', $filledFields)));
+      }
     }
 
     $response->setContent($doc->saveHTML());
