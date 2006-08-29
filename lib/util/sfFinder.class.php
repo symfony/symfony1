@@ -367,7 +367,7 @@ class sfFinder
     if (is_dir($dir))
     {
       $current_dir = opendir($dir);
-      while ($entryname = readdir($current_dir))
+      while (false !== $entryname = readdir($current_dir))
       {
         if ($entryname == '.' || $entryname == '..') continue;
 
