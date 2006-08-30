@@ -68,7 +68,7 @@ function run_plugin_upgrade($task, $args)
   // upgrade plugin
   $packages = array($args[1]);
   pake_echo_action('plugin', 'upgrading plugin "'.$args[1].'"');
-  list($ret, $error) = _pear_run_command($config, 'upgrade', array('loose' => true), $packages);
+  list($ret, $error) = _pear_run_command($config, 'upgrade', array('loose' => true, 'nodeps' => true), $packages);
 
   _pear_restore_config($old_config);
 
@@ -110,7 +110,7 @@ function run_plugin_upgrade_all($task, $args)
 
   // upgrade all plugins
   pake_echo_action('plugin', 'upgrading all plugins');
-  _pear_run_upgrade($config, sfConfig::get('sf_lib_dir').DIRECTORY_SEPARATOR.'plugins');
+  _pear_run_upgrade_all($config, sfConfig::get('sf_lib_dir').DIRECTORY_SEPARATOR.'plugins');
 
   _pear_restore_config($old_config);
 }
@@ -148,7 +148,7 @@ function _pear_echo_message($message)
   return $t;
 }
 
-function _pear_run_upgrade($config, $install_dir)
+function _pear_run_upgrade_all($config, $install_dir)
 {
   $registry = new PEAR_Registry($install_dir);
   $remote = new PEAR_Remote($config);
