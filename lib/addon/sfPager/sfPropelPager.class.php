@@ -87,7 +87,7 @@ class sfPropelPager
       if ($hasMaxRecordLimit)
       {
         $maxRecordLimit = $maxRecordLimit - $offset;
-        if ($maxRecordLimit > $this->getMaxPerPage()
+        if ($maxRecordLimit > $this->getMaxPerPage())
         {
           $c->setLimit($this->getMaxPerPage());
         }
