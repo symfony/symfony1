@@ -37,7 +37,7 @@ function use_helper()
   $dirs = array(
     sfConfig::get('sf_app_module_dir').'/'.sfContext::getInstance()->getModuleName().'/'.sfConfig::get('sf_app_module_lib_dir_name').'/helper', // module dir
     sfConfig::get('sf_app_lib_dir').'/helper',                                                                                                  // application dir
-    sfConfig::get('sf_plugin_lib_dir').'/symfony/plugins/helper',                                                                               // plugin dir
+    sfConfig::get('sf_plugin_lib_dir').'/symfony/helper',                                                                                       // plugin dir
     sfConfig::get('sf_symfony_lib_dir').'/helper',                                                                                              // global dir
   );
 

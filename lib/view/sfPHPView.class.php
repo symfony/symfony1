@@ -81,9 +81,9 @@ class sfPHPView extends sfView
   protected function loadHelpers($helpers)
   {
     $dirs = array(
-      sfConfig::get('sf_app_lib_dir').'/helper',                    // application dir
-      sfConfig::get('sf_plugin_lib_dir').'/symfony/plugins/helper', // plugin dir
-      sfConfig::get('sf_symfony_lib_dir').'/helper',                // global dir
+      sfConfig::get('sf_app_lib_dir').'/helper',            // application dir
+      sfConfig::get('sf_plugin_lib_dir').'/symfony/helper', // plugin dir
+      sfConfig::get('sf_symfony_lib_dir').'/helper',        // global dir
     );
 
     foreach ($helpers as $helperName)
