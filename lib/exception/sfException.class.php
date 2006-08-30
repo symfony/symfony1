@@ -208,12 +208,12 @@ class sfException extends Exception
       $content = preg_split('#<br />#', highlight_file($file, true));
 
       $lines = array();
-      for ($i = max($line - 3, 0), $max = min($line + 3, count($content)); $i <= $max; $i++)
+      for ($i = max($line - 3, 1), $max = min($line + 3, count($content)); $i <= $max; $i++)
       {
         $lines[] = '<li'.($i == $line ? ' class="selected"' : '').'>'.$content[$i - 1].'</li>';
       }
 
-      return '<ol start="'.($line - 3).'">'.implode("\n", $lines).'</ol>';
+      return '<ol start="'.max($line - 3, 1).'">'.implode("\n", $lines).'</ol>';
     }
   }
 
