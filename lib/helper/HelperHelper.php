@@ -65,7 +65,7 @@ function use_helper()
       // search in the include path
       if ((@include_once('helper/'.$fileName)) != 1)
       {
-        throw new sfViewException(sprintf('Unable to load "%s" helper. I have looked in: %s', $helperName, implode(', ', array_merge($dirs, explode(PATH_SEPARATOR, get_include_path())))));
+        throw new sfViewException(sprintf('Unable to load "%s" helper in: %s', $helperName, implode(', ', array_merge($dirs, explode(PATH_SEPARATOR, get_include_path())))));
       }
     }
 
