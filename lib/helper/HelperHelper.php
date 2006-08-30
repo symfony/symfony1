@@ -34,27 +34,39 @@ function use_helper()
 {
   static $loaded = array();
 
+  $dirs = array(
+    sfConfig::get('sf_app_module_dir').'/'.sfContext::getInstance()->getModuleName().'/'.sfConfig::get('sf_app_module_lib_dir_name').'/helper', // module dir
+    sfConfig::get('sf_app_lib_dir').'/helper',                                                                                                  // application dir
+    sfConfig::get('sf_plugin_data_dir').'/helper',                                                                                              // plugin dir
+    sfConfig::get('sf_symfony_lib_dir').'/helper',                                                                                              // global dir
+  );
+
   foreach (func_get_args() as $helperName)
   {
     if (isset($loaded[$helperName]))
     {
-      return;
+      continue;
     }
 
-    if (is_readable(sfConfig::get('sf_symfony_lib_dir').'/helper/'.$helperName.'Helper.php'))
+    $fileName = $helperName.'Helper.php';
+    foreach ($dirs as $dir)
     {
-      // global helper
-      include_once(sfConfig::get('sf_symfony_lib_dir').'/helper/'.$helperName.'Helper.php');
+      $included = false;
+      if (is_readable($dir.'/'.$fileName))
+      {
+        include_once($dir.'/'.$fileName);
+        $included = true;
+        break;
+      }
     }
-    else if (is_readable(sfConfig::get('sf_app_module_dir').'/'.sfContext::getInstance()->getModuleName().'/'.sfConfig::get('sf_app_module_lib_dir_name').'/helper/'.$helperName.'Helper.php'))
+
+    if (!$included)
     {
-      // current module helper
-      include_once(sfConfig::get('sf_app_module_dir').'/'.sfContext::getInstance()->getModuleName().'/'.sfConfig::get('sf_app_module_lib_dir_name').'/helper/'.$helperName.'Helper.php');
-    }
-    else
-    {
-      // helper in include_path
-      include_once('helper/'.$helperName.'Helper.php');
+      // search in the include path
+      if ((@include_once('helper/'.$fileName)) != 1)
+      {
+        throw new sfViewException(sprintf('Unable to load "%s" helper.', $helperName));
+      }
     }
 
     $loaded[$helperName] = true;

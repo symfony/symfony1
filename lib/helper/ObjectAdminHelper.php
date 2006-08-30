@@ -1,7 +1,6 @@
 <?php
 
-require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/FormHelper.php');
-require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/JavascriptHelper.php');
+use_helper('Form', 'Javascript');
 
 /*
  * This file is part of the symfony package.

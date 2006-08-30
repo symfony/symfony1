@@ -1,6 +1,6 @@
 <?php
 
-require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/FormHelper.php');
+use_helper('Form');
 
 /*
  * This file is part of the symfony package.

@@ -1,6 +1,6 @@
 <?php
 
-require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/ValidationHelper.php');
+use_helper('Validation');
 
 /*
  * This file is part of the symfony package.

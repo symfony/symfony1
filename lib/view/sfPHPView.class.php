@@ -80,16 +80,33 @@ class sfPHPView extends sfView
    */
   protected function loadHelpers($helpers)
   {
-    $helper_base_dir = sfConfig::get('sf_symfony_lib_dir').'/helper/';
+    $dirs = array(
+      sfConfig::get('sf_app_lib_dir').'/helper',     // application dir
+      sfConfig::get('sf_plugin_data_dir').'/helper', // plugin dir
+      sfConfig::get('sf_symfony_lib_dir').'/helper', // global dir
+    );
+
     foreach ($helpers as $helperName)
     {
-      if (is_readable($helper_base_dir.$helperName.'Helper.php'))
+      $fileName = $helperName.'Helper.php';
+      foreach ($dirs as $dir)
       {
-        include_once($helper_base_dir.$helperName.'Helper.php');
+        $included = false;
+        if (is_readable($dir.'/'.$fileName))
+        {
+          include_once($dir.'/'.$fileName);
+          $included = true;
+          break;
+        }
       }
-      else
+
+      if (!$included)
       {
-        include_once('helper/'.$helperName.'Helper.php');
+        // search in the include path
+        if ((@include_once('helper/'.$fileName)) != 1)
+        {
+          throw new sfViewException(sprintf('Unable to load "%s" helper.', $helperName));
+        }
       }
     }
   }
