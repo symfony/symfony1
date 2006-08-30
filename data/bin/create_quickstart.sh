@@ -27,11 +27,7 @@ mv data/symfony/web/sf web/sf
 echo ">>> add symfony command line"
 cp data/symfony/bin/symfony.sh symfony.sh
 cp data/symfony/bin/symfony.bat symfony.bat
-cp data/symfony/bin/symfony.php bin/symfony.php
-sed -i '' -e "s#@DATA-DIR@#data#g" symfony.sh
-sed -i '' -e "s#@DATA-DIR@#data#g" symfony.bat
-sed -i '' -e "s#'@PEAR-DIR@'#dirname(__FILE__).'/../lib'#g" -e "s#'@DATA-DIR@'#dirname(__FILE__).'/../data'#g" -e "s#@SYMFONY-VERSION@#0.6.0#g" -e "s#require_once 'pake.php'#require_once dirname(__FILE__).'/pake.php'#g" bin/symfony.php
-sed -i '' -e "s#'@PEAR-DIR@/symfony'#dirname(__FILE__)#g" -e "s#'@DATA-DIR@#dirname(__FILE__).'/../../data#g" -e "s#@SYMFONY-VERSION@#0.6.0#g" lib/symfony/pear.php
+cp data/symfony/bin/symfony.php symfony.php
 chmod 755 symfony.sh
 
 # default project / app
