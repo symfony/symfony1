@@ -9,7 +9,6 @@ if (ini_get('zend.ze1_compatibility_mode'))
 $pear_lib_dir = '@PEAR-DIR@';
 $pear_data_dir = '@DATA-DIR@';
 define('PAKEFILE_SYMLINK', false);
-define('SYMFONY_VERSION',  '@SYMFONY-VERSION@');
 
 if (is_readable('lib/symfony'))
 {
@@ -26,6 +25,8 @@ else
   define('PAKEFILE_LIB_DIR',  realpath(dirname(__FILE__).'/../../lib'));
   define('PAKEFILE_DATA_DIR', realpath(dirname(__FILE__).'/..'));
 }
+
+define('SYMFONY_VERSION', '@SYMFONY-VERSION@' == '@'.'SYMFONY-VERSION'.'@' ? trim(file_get_contents(PAKEFILE_LIB_DIR.'/BRANCH')) : '@SYMFONY-VERSION@');
 
 set_include_path(PAKEFILE_LIB_DIR.'/vendor'.PATH_SEPARATOR.get_include_path());
 $pakefile = PAKEFILE_DATA_DIR.'/bin/pakefile.php';
