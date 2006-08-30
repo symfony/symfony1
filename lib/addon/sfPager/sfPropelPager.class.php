@@ -40,7 +40,8 @@ class sfPropelPager
     $currentMaxLink         = 1,
     $parameter_holder       = null,
     $peer_method_name       = 'doSelect',
-    $peer_count_method_name = 'doCount';
+    $peer_count_method_name = 'doCount',
+    $maxRecordLimit         = false;
 
   public function __construct($class, $defaultMaxPerPage = 10)
   {
@@ -54,6 +55,9 @@ class sfPropelPager
 
   public function init()
   {
+    $hasMaxRecordLimit = ($this->getMaxRecordLimit() !== false);
+    $maxRecordLimit = $this->getMaxRecordLimit();
+
     $cForCount = clone $this->getCriteria();
     $cForCount->setOffset(0);
     $cForCount->setLimit(0);
@@ -61,7 +65,9 @@ class sfPropelPager
 
     // require the model class (because autoloading can crash under some conditions)
     require_once(sfConfig::get('sf_model_lib_dir').'/'.$this->getClassPeer().'.php');
-    $this->setNbResults(call_user_func(array($this->getClassPeer(), $this->getPeerCountMethod()), $cForCount));
+    $count = call_user_func(array($this->getClassPeer(), $this->getPeerCountMethod()), $cForCount);
+
+    $this->setNbResults($hasMaxRecordLimit ? min($count, $maxRecordLimit) : $count);
 
     $c = $this->getCriteria();
     $c->setOffset(0);
@@ -74,8 +80,26 @@ class sfPropelPager
     else
     {
       $this->setLastPage(ceil($this->getNbResults() / $this->getMaxPerPage()));
-      $c->setOffset(($this->getPage() - 1) * $this->getMaxPerPage());
-      $c->setLimit($this->getMaxPerPage());
+
+      $offset = ($this->getPage() - 1) * $this->getMaxPerPage();
+      $c->setOffset($offset);
+
+      if ($hasMaxRecordLimit)
+      {
+        $maxRecordLimit = $maxRecordLimit - $offset;
+        if ($maxRecordLimit > $this->getMaxPerPage()
+        {
+          $c->setLimit($this->getMaxPerPage());
+        }
+        else
+        {
+          $c->setLimit($maxRecordLimit);
+        }
+      }
+      else
+      {
+        $c->setLimit($this->getMaxPerPage());
+      }
     }
   }
 
@@ -102,6 +126,16 @@ class sfPropelPager
   public function getCurrentMaxLink()
   {
     return $this->currentMaxLink;
+  }
+
+  public function getMaxRecordLimit()
+  {
+    return $this->maxRecordLimit;
+  }
+
+  public function setMaxRecordLimit($limit)
+  {
+    $this->maxRecordLimit = $limit;
   }
 
   public function getLinks($nb_links = 5)
