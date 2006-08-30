@@ -68,7 +68,7 @@ function run_plugin_upgrade($task, $args)
   // upgrade plugin
   $packages = array($args[1]);
   pake_echo_action('plugin', 'upgrading plugin "'.$args[1].'"');
-  $ret = _pear_run_command($config, 'upgrade', array('offline' => true), $packages);
+  $ret = _pear_run_command($config, 'upgrade', array(), $packages);
 
   _pear_restore_config($old_config);
 
