@@ -44,13 +44,13 @@ function run_plugin_install($task, $args)
   // install plugin
   $packages = array($args[1]);
   pake_echo_action('plugin', 'installing plugin "'.$args[1].'"');
-  $ret = _pear_run_command($config, 'install', array(), $packages);
+  list($ret, $error) = _pear_run_command($config, 'install', array(), $packages);
 
   _pear_restore_config($old_config);
 
-  if ($ret && !strpos($ret, 'not installed'))
+  if ($error)// && !strpos($ret, 'not installed'))
   {
-    throw new Exception($ret);
+    throw new Exception($error);
   }
 }
 
@@ -68,13 +68,13 @@ function run_plugin_upgrade($task, $args)
   // upgrade plugin
   $packages = array($args[1]);
   pake_echo_action('plugin', 'upgrading plugin "'.$args[1].'"');
-  $ret = _pear_run_command($config, 'upgrade', array(), $packages);
+  list($ret, $error) = _pear_run_command($config, 'upgrade', array('loose' => true), $packages);
 
   _pear_restore_config($old_config);
 
-  if ($ret && !strpos($ret, 'not installed'))
+  if ($error)
   {
-    throw new Exception($ret);
+    throw new Exception($error);
   }
 }
 
@@ -89,16 +89,16 @@ function run_plugin_uninstall($task, $args)
 
   list($old_config, $config) = _pear_init($method);
 
-  // install plugin
+  // uninstall plugin
   $packages = array($args[1]);
   pake_echo_action('plugin', 'uninstalling plugin "'.$args[1].'"');
-  $ret = _pear_run_command($config, 'uninstall', array(), $packages);
+  list($ret, $error) = _pear_run_command($config, 'uninstall', array(), $packages);
 
   _pear_restore_config($old_config);
 
-  if ($ret)
+  if ($error)
   {
-    throw new Exception($ret);
+    throw new Exception($error);
   }
 }
 
@@ -117,7 +117,7 @@ function run_plugin_upgrade_all($task, $args)
 
 function _pear_run_command($config, $command, $opts, $params)
 {
-  ob_start();
+  ob_start('_pear_echo_message', 2);
   $cmd = PEAR_Command::factory($command, $config);
   $ret = ob_get_clean();
   if (PEAR::isError($cmd))
@@ -125,11 +125,27 @@ function _pear_run_command($config, $command, $opts, $params)
     throw new Exception($cmd->getMessage());
   }
 
-  ob_start();
+  ob_start('_pear_echo_message', 2);
   $ok   = $cmd->run($command, $opts, $params);
   $ret .= ob_get_clean();
 
-  return (PEAR::isError($ok) ? $ret.$ok->getMessage() : null);
+  $ret = trim($ret);
+
+  return PEAR::isError($ok) ? array($ret, $ok->getMessage()) : array($ret, null);
+}
+
+function _pear_echo_message($message)
+{
+  $t = '';
+  foreach (explode("\n", $message) as $line)
+  {
+    if ($line = trim($line))
+    {
+      $t .= pake_format_action('pear', $line);
+    }
+  }
+
+  return $t;
 }
 
 function _pear_run_upgrade($config, $install_dir)
@@ -223,10 +239,10 @@ function _pear_init($method = 'local')
   if ($method == 'local')
   {
     // register our channel
-    $ret = _pear_run_command($config, 'channel-discover', array(), array('pear.symfony-project.com'));
-    if ($ret && !strpos($ret, 'already initialized'))
+    list($ret, $error) = _pear_run_command($config, 'channel-discover', array(), array('pear.symfony-project.com'));
+    if ($error && !strpos($error, 'already initialized'))
     {
-      throw new Exception($ret);
+      throw new Exception($error);
     }
 
     // fake symfony registration for dependencies to work locally
