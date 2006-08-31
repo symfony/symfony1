@@ -149,7 +149,7 @@ $through_class = isset($user_params['through_class']) ? $user_params['through_cl
 <?php if ($through_class): ?>
 <?php
 
-$class = $this->getSingularName();
+$class = $this->getClassName();
 $related_class = sfPropelManyToMany::getRelatedClass($class, $through_class);
 $related_table = constant($related_class.'Peer::TABLE_NAME');
 $middle_table = constant($through_class.'Peer::TABLE_NAME');
