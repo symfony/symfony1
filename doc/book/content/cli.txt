@@ -16,13 +16,13 @@ Symfony uses a dedicated tool called [Pake][1] to manage common tasks. Pake is a
 CLI core
 --------
 
-To get the installed version of the symfony package, type:
-
     $ symfony -V
 
-To get the full list of the available administration operations, use the `-T` option or symply type the `symfony` command with no argument:
+Returns the installed version of the symfony package.
 
     $ symfony
+
+Returns the full list of the available administration operations.
     
 The symfony command expects tasks, and some tasks require additional parameters. The general syntax is:
 
@@ -41,150 +41,149 @@ CLI tasks
 
 ### Structure generation
 
-`init-project`: Initialize a new symfony project (shortcut: `new`)
-
     $ symfony init-project <PROJECT_NAME>
-
-`init-app`: Initialize a new symfony application (shortcut: `app`)
+    
+Initializes a new symfony project (shortcut: `new`).
           
     $ symfony init-app <APPLICATION_NAME>
-
-`init-module`: Initialize a new symfony module (shortcut: `module`)
+    
+Initializes a new symfony application (shortcut: `app`).    
 
     $ symfony init-module <APPLICATION_NAME> <MODULE_NAME>
-
-`init-batch`: Initialize a new batch file (shortcut: `batch`). You must select a batch skeleton to init, and then follow the prompts
+    
+Initializes a new symfony module (shortcut: `module`).
 
     $ symfony init-batch <SKELETON_NAME> [...]
 
-`init-controller`: Initialize a new controller (shortcut: `controller`). The default script name follows the symfony convention.
+Initializes a new batch file (shortcut: `batch`). You must select a batch skeleton to init, and then follow the prompts.
 
     $ symfony init-controller <APPLICATION_NAME> <ENVIRONMENT_NAME> [<SCRIPT_NAME>] [true|false]
+
+Initializes a new controller (shortcut: `controller`). The default script name follows the symfony convention.
 
 Find more about these commands in the [project creation chapter](project_creation.txt).
 
 ### Model generation
 
-`propel-build-model`: Create Propel classes for the current model, based on the schema files (YAML or XML) of your `config/` directory.
-
     $ symfony propel-build-model
 
-The connection settings used by the following commands are taken from the `config/propel.ini` configuration.
-    
-`propel-build-schema`: Create `schema.xml` from an existing database
+Generates the Propel classes for the current model, based on the schema files (YAML or XML) of your `config/` directory.
 
-    $ symfony propel-build-schema
+The connection settings used by the following commands are taken from the `config/propel.ini` configuration.  
     
-`propel-build-sql`: Create the SQL code to create the tables described in the `schema.yml`, in a `data/schema.sql` file.
-
     $ symfony propel-build-sql
     
-`propel-build-db`: Create an empty database based on the connection settings
+Generates the SQL code to create the tables described in the `schema.yml`, in a `data/schema.sql` file.
 
     $ symfony propel-build-db
-
-`propel-insert-sql`: Insert the SQL code from `data/schema.sql` into the database
+    
+Creates an empty database based on the connection settings.    
 
     $ symfony propel-insert-sql
     
-`propel-build-all`: Executes `propel-build-schema`, `propel-build-sql` and then `propel-insert-sql` all in one command.
-
+Inserts the SQL code from `data/schema.sql` into the database.    
+    
     $ symfony propel-build-all
 
-`propel-load-data`: Loads all data from default directory `data/fixtures` unless otherwise specified. Environment is default to `dev`. The fixtures directory must be specified relative to the project's data dir, for example `fixtures` (default) or `testdata` or specify a single file `fixtures/file.yml`.
+Executes `propel-build-schema`, `propel-build-sql` and then `propel-insert-sql` all in one command.
 
     $ symfony propel-load-data  <APPLICATION_NAME> [<ENVIRONMENT_NAME>] [<FIXTURES_DIR_OR_FILE>]
-
-`propel-build-all-load`: Executes `propel-build-all` then `propel-load-data`. Accepts same arguments as `propel-load-data`.
+    
+Loads all data from default `data/fixtures/` directory unless otherwise specified. Environment is default to `dev`. The fixtures directory must be specified relative to the project's data dir, for example `fixtures` (default) or `testdata` or specify a single file `fixtures/file.yml`.    
 
     $ symfony propel-build-all-load  <APPLICATION_NAME> [<ENVIRONMENT_NAME>] [<FIXTURES_DIR_OR_FILE>]
 
-If you want to learn more about the model and the effect of these commands, refer to the [model chapter](model.txt).
+Executes `propel-build-all` then `propel-load-data`. Accepts same arguments as `propel-load-data`.
+
+    $ symfony propel-build-schema
+    
+Creates a `schema.yml` from an existing database.  
+
+Find more about these commands in the [model chapter](model.txt).
 
 ### Development tools
 
-`clear-cache`: Clear the cached information (shortcut: `cc`) (find more in the [cache chapter](cache.txt))
+    $ symfony clear-cache [<APPLICATION_NAME>] [template|config]
 
-    $ symfony clear-cache <APPLICATION_NAME> [template|config]
-
-`clear-controllers`: Clear the web directory of all controllers other than ones running in a production environment. Very useful before deployment to the production server.
+Clears the cached information (shortcut: `cc`) (find more in the [cache chapter](cache.txt)).
 
     $ symfony clear-controllers
     
-`fix-perms`: Fix directories permissions, to change to `777` the directories that need to be writable. The permission can be broken if you use a checkout from a SVN repository.
+Clears the web directory of all controllers other than ones running in a production environment. Very useful before deployment to the production server.
 
     $ symfony fix-perms
     
-`test`: Launch the test suite for an application (find more in the [unit test chapter](test_unit_testing.txt))
+Fixes directories permissions, to change to `777` the directories that need to be writable. The permission can be broken if you use a checkout from a SVN repository.
 
     $ symfony test <APPLICATION_NAME>
-    
-`freeze`: Copies all the necessary symfony libraries into the `data/`, `lib/` and `web/sf/` directories of your project. Your project then becomes a kind of sandbox, i.e. a standalone application with no dependence and ready to be transferred to production via FTP. Works fine with PEAR installations as well as symbolic links. Unfreeze your project with the `unfreeze` task.
+
+Launches the test suite for an application (find more in the [unit test chapter](test_unit_testing.txt)).   
 
     $ symfony freeze
     $ symfony unfreeze
 
-`sync`: Synchronise the current project with another machine (find more in the [deployment chapter](deployment.txt))
+Copies all the necessary symfony libraries into the `data/`, `lib/` and `web/sf/` directories of your project. Your project then becomes a kind of sandbox, i.e. a standalone application with no dependence and ready to be transferred to production via FTP. Works fine with PEAR installations as well as symbolic links. Unfreeze your project with the `unfreeze` task.
 
     $ symfony sync <ENVIRONMENT_NAME> [go]
+    
+Synchronises the current project with another machine (find more in the [deployment chapter](deployment.txt)).   
 
 ### Project administration
 
-`disable`: Forwards the user to the unavailable module and action in your `settings.yml` file and acts in the same way as if you had set the unavaiable setting in your `settings.yml` file. The advantage over the setting is that you can disable a single application for a single environment, and not only the whole project.
-
     $ symfony disable <APPLICATION_NAME> <ENVIRONMENT_NAME>
 
-`enable`: Enables the application and clears the cache
+Forwards the user to the unavailable module and action in your `settings.yml` file and acts in the same way as if you had set the unavaiable setting in your `settings.yml` file. The advantage over the setting is that you can disable a single application for a single environment, and not only the whole project.
 
     $ symfony enable <APPLICATION_NAME> <ENVIRONMENT_NAME>
 
-`purge-logs`: This clears the logs files in the log directory depending on your settings in logging.yml (find more in the [logging chapter](logging.txt))
+Enables the application and clears the cache. 
 
     $ symfony purge-logs
 
-`rotate-log`: Forces a rotation of a log file if rotate is enabled for the log file in logging.yml. (find more in the [logging chapter](logging.txt))
+Clears the logs files in the log directory depending on your settings in logging.yml (find more in the [logging chapter](logging.txt)).
 
     $ symfony rotate-log <APPLICATION_NAME> <ENVIRONMENT_NAME>
+    
+Forces a rotation of a log file if rotate is enabled for the log file in logging.yml. (find more in the [logging chapter](logging.txt)).   
 
 ### Scaffolding and admin generation
 
-`propel-generate-crud`: Generate a new Propel CRUD module based on a class from the model
-
     $ symfony propel-generate-crud <APPLICATION_NAME> <MODULE_NAME> <CLASS_NAME>
+    $ symfony propel-init-crud <APPLICATION_NAME> <MODULE_NAME> <CLASS_NAME>
     
-`propel-init-crud`: Same as `propel-generate-crud`, except that the generated code is visible only in the `cache/` folder (the generated actions and templates inherit from the framework)
-
-`propel-init-admin`: Initialize a new Propel admin module based on a class from the model
+Generates a new Propel CRUD module based on a class from the model. The `generate` version copies the code from the framework to a new module, the `init` verson creates an empty module that inherits from the one in the framework. In this case, the generated code is visible only in the `cache/` folder (the generated actions and templates inherit from the framework).
 
     $ symfony propel-init-admin <APPLICATION_NAME> <MODULE_NAME> <CLASS_NAME>
+    
+Initializes a new Propel admin module based on a class from the model
 
-You will find a lot of details about scaffolding and generated administrations in the [scaffolding](scaffolding.txt) and [generator chapter](generator.txt).
+Find more about these commands in the [scaffolding](scaffolding.txt) and [generator chapter](generator.txt).
 
 ### Plugin management
 
-`plugin-install`: Install a new plugin
-
     $ symfony plugin-install [local|global] <CHANNEL_NAME>/<PLUGIN_NAME>
     
-`plugin-upgrade`: Upgrade a plugin
-
+Installs a new plugin.
+    
     $ symfony plugin-upgrade [local|global] <CHANNEL_NAME>/<PLUGIN_NAME>
 
-`plugin-upgrade-all`: Upgrade all the plugins previously installed in local
+Upgrades a plugin.
 
     $ symfony plugin-upgrade-all
 
-`plugin-uninstall`: Uninstall a plugin
+Upgrades all the plugins previously installed in local
 
     $ symfony plugin-uninstall [local|global] <CHANNEL_NAME>/<PLUGIN_NAME>
+    
+Uninstalls a plugin.    
 
 The way to build, install and manage plugins is described in the [plugin chapter](plugin.txt).
 
 ### Fast Web server for test
 
-The `server` command launches a fast web server written in PHP to serve a symfony application in the `dev` environment. The default port is 8000.
-
     $ symfony server <APPLICATION_NAME> [<PORT>]
+
+Launches a fast web server written in PHP to serve a symfony application in the `dev` environment. The default port is 8000.
 
 For instance, if you want to test a symfony application called `myapp` without changing your server configuration, type:
 
