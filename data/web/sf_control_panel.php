@@ -36,14 +36,8 @@ else
 chdir(dirname(__FILE__).DIRECTORY_SEPARATOR.'..');
 
 // init pake
-if (is_readable(SF_ROOT_DIR.'/bin/pake.php'))
-{
-  include_once(SF_ROOT_DIR.'/bin/pake.php');
-}
-else
-{
-  include_once('pake.php');
-}
+require_once($sf_symfony_lib_dir.'/vendor/pake/pakeFunction.php');
+
 $pake = pakeApp::get_instance();
 $pakefile = $sf_symfony_data_dir.'/bin/pakefile.php';
 
@@ -57,6 +51,8 @@ $tasks = array(
   'propel-build-model',
   'propel-build-sql',
   'propel-insert-sql',
+  'propel-build-all',
+  'propel-load-data',
   'init-module',
   'propel-init-crud',
   'propel-generate-crud',
@@ -136,9 +132,9 @@ function lcfirst($name)
   return $first_letter.substr($name, 1, strlen($name)-1);
 }
 
-function link_to_file($filename, $path, $name = null)
+function link_to_file($filename, $path, $name = null, $br = true)
 {
-  return "<a href='".$_SERVER["SCRIPT_NAME"]."?task=show&amp;filename=".rawurlencode(str_replace('\\', '/', str_replace(SF_ROOT_DIR.DIRECTORY_SEPARATOR, '', realpath(SF_ROOT_DIR.'/'.$path.'/'.$filename))))."'>".($name === null ? $filename : $name)."</a><br />";
+  return "<a href='".$_SERVER["SCRIPT_NAME"]."?task=show&amp;filename=".rawurlencode(str_replace('\\', '/', str_replace(SF_ROOT_DIR.DIRECTORY_SEPARATOR, '', realpath(SF_ROOT_DIR.'/'.$path.'/'.$filename))))."'>".($name === null ? $filename : $name)."</a>".($br ? "<br />":"");
 }
 
 // initialize variables needed at several places
@@ -161,8 +157,11 @@ $controllers = pakeFinder::type('file')->relative()->ignore_version_control()->m
       body, td
       {
        font-family: verdana, sans-serif;
-       font-size: 0.8em;
       }
+      body
+      {
+       font-size: 0.8em;
+      }      
       h1
       {
         font-size: 1.5em;
@@ -368,9 +367,13 @@ $controllers = pakeFinder::type('file')->relative()->ignore_version_control()->m
           </blockquote>
 
         <?php endforeach; ?>
-        <br />
-
-        <form method="get" action="<?php echo $_SERVER["SCRIPT_NAME"] ?>" name="propel-task" id="propel-task">
+        
+        </blockquote>
+      
+        <blockquote>
+          <a class="task" href="#" onclick="switchElement('propel-task');return false">Create new module...</a><br />
+        
+        <form method="get" action="<?php echo $_SERVER["SCRIPT_NAME"] ?>" name="propel-task" id="propel-task" style="display: none;margin-top:10px">
           <input type="hidden" name="arg[0]" value="<?php echo $app ?>" />
 
           <label for="task">type</label>
@@ -433,14 +436,8 @@ $controllers = pakeFinder::type('file')->relative()->ignore_version_control()->m
   <div class="column">
     <h2>Model</h2>
 
-    <blockquote>
-      <a class="task" href="<?php echo $_SERVER["SCRIPT_NAME"] ?>?task=propel-build-model">Rebuild Model</a><br />
-      <a class="task" href="<?php echo $_SERVER["SCRIPT_NAME"] ?>?task=propel-build-sql">Build SQL</a><br />
-      <a class="task" href="<?php echo $_SERVER["SCRIPT_NAME"] ?>?task=propel-insert-sql">Insert SQL</a>
-    </blockquote>
-
     <?php try { ?>
-    <?php $schema_files = pakeFinder::type('file')->maxdepth(3)->relative()->name("*schema.xml")->prune('web')->prune('lib')->prune('data')->ignore_version_control()->in('./') ?>
+    <?php $schema_files = pakeFinder::type('file')->maxdepth(3)->relative()->name("*schema.*ml")->prune('web')->prune('lib')->prune('data')->ignore_version_control()->in('./') ?>
     <?php if ($schema_files): ?>
       <h3>Schema</h3>
       <blockquote>
@@ -448,6 +445,16 @@ $controllers = pakeFinder::type('file')->relative()->ignore_version_control()->m
         <?php echo link_to_file($schema_file, '') ?>
       <?php endforeach; ?>
     </blockquote>
+    <blockquote style="float:left">
+      <a class="task" href="<?php echo $_SERVER["SCRIPT_NAME"] ?>?task=propel-build-model">Rebuild Model</a><br />
+      <a class="task" href="<?php echo $_SERVER["SCRIPT_NAME"] ?>?task=propel-build-sql">Build SQL</a><br />
+      <a class="task" href="<?php echo $_SERVER["SCRIPT_NAME"] ?>?task=propel-insert-sql">Insert SQL</a>
+    </blockquote>
+    <blockquote style="float:left">
+      <br />
+      <a class="task" href="<?php echo $_SERVER["SCRIPT_NAME"] ?>?task=propel-build-all">Rebuild Model and db</a>
+    </blockquote>
+    <br style="clear:left" />
     <?php endif; ?>
     <?php } catch (Exception $e) { } ?>
 
@@ -462,17 +469,33 @@ $controllers = pakeFinder::type('file')->relative()->ignore_version_control()->m
     </blockquote>
     <?php endif; ?>
     <?php } catch (Exception $e) { } ?>
+    
+    <?php try { ?>
+    <?php $fixtures_files = pakeFinder::type('file')->maxdepth(3)->relative()->name("*.yml")->ignore_version_control()->in('./data/fixtures') ?>
+    <?php if ($fixtures_files ): ?>
+      <h3>Test data</h3>
+      <blockquote>
+      <?php foreach ($fixtures_files as $fixtures_file): ?>
+        <?php echo link_to_file($fixtures_file, '/data/fixtures') ?>
+      <?php endforeach; ?>
+    </blockquote>
+    <blockquote>
+      <a class="task" href="<?php echo $_SERVER["SCRIPT_NAME"] ?>?task=propel-load-data">Insert into db</a>
+    </blockquote>
 
     <?php if ($model_files): ?>
       <h3>Classes</h3>
       <blockquote>
       <?php foreach ($model_files as $model): ?>
         <?php $model = substr($model, 0, strlen($model)-8) ?>
-        <?php echo link_to_file($model.'.php', '/lib/model') ?>
-        <?php echo link_to_file($model.'Peer.php', '/lib/model') ?>
+        <?php echo link_to_file($model.'.php', '/lib/model', null, false) ?> (<?php echo link_to_file('Base'.$model.'.php', '/lib/model/om', 'base', false) ?>)<br />
+        <?php echo link_to_file($model.'Peer.php', '/lib/model', null, false) ?> (<?php echo link_to_file('Base'.$model.'Peer.php', '/lib/model/om', 'base', false) ?>)<br />
       <?php endforeach; ?>
       </blockquote>
     <?php endif; ?>
+
+    <?php endif; ?>
+    <?php } catch (Exception $e) { } ?>
 
   </div>
   <div class="column">
