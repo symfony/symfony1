@@ -148,6 +148,7 @@
    */
   function I18N_toUTF8($string, $from)
   {
+    $from = strtoupper($from);
     if($from != 'UTF-8')
     {
       $s = iconv($from,'UTF-8',$string); //to UTF-8
@@ -164,6 +165,7 @@
    */
   function I18N_toEncoding($string, $to)
   {
+    $to = strtoupper($to);
     if($to != 'UTF-8')
     {
       $s = iconv('UTF-8', $to, $string);
