@@ -1,4 +1,4 @@
-[?php use_helpers('I18N', 'Date') ?]
+[?php use_helper('I18N', 'Date') ?]
 
 <div id="sf_admin_container">
 
