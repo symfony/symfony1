@@ -192,19 +192,44 @@ function run_propel_load_data($task, $args)
   // get configuration
   require_once SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php';
 
-  $fixtures_dir = empty($args[2]) ? 'fixtures' : $args[2];
-  $fixtures_dir = sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.$fixtures_dir;
-  if (!is_readable($fixtures_dir))
+  if (count($args) > 1 && $args[count($args) - 1] == 'append')
   {
-    throw new Exception(sprintf('Fixture directory "%s" does not exist.', $fixtures_dir));
+    array_pop($args);
+    $delete = false;
+  }
+  else
+  {
+    $delete = true;
+  }
+
+  if (count($args) == 1)
+  {
+    $fixtures_dirs = sfFinder::type('dir')->name('fixtures')->relative()->in(sfConfig::get('sf_data_dir'));
+  }
+  else
+  {
+    $fixtures_dirs = array_slice($args, 1);
+  }
+
+  foreach ($fixtures_dirs as &$fixtures_dir)
+  {
+    $fixtures_dir = sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.$fixtures_dir;
+    if (!is_readable($fixtures_dir))
+    {
+      throw new Exception(sprintf('Fixture directory "%s" does not exist.', $fixtures_dir));
+    }
   }
 
   $databaseManager = new sfDatabaseManager();
   $databaseManager->initialize();
 
   $data = new sfPropelData();
-  $data->setDeleteCurrentData(!empty($args[3]) && $args[3] == 'append' ? false : true);
-  $data->loadData($fixtures_dir);
+  $data->setDeleteCurrentData($delete);
+
+  foreach ($fixtures_dirs as $fixtures_dir)
+  {
+    $data->loadData($fixtures_dir);
+  }
 }
 
 function _call_phing($task, $task_name, $check_schema = true)
