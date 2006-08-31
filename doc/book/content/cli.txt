@@ -138,7 +138,7 @@ If you want to learn more about the model and the effect of these commands, refe
 
     $ symfony enable <APPLICATION_NAME> <ENVIRONMENT_NAME>
 
-`purge-logs: This clears the logs files in the log directory depending on your settings in logging.yml (find more in the [logging chapter](logging.txt))
+`purge-logs`: This clears the logs files in the log directory depending on your settings in logging.yml (find more in the [logging chapter](logging.txt))
 
     $ symfony purge-logs
 
