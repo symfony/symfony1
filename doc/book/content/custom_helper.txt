@@ -23,6 +23,8 @@ To use a custom helper in a template, you must first declare it on top of the te
 
     [php]
     <?php use_helper('Name') ?>
+    
+>**Note**: If you create a helper file with the same name as one of the existing helper packages of symfony, it will override the one in the framework. It means that you can redefine all the symfony helpers at the application or project level. Beware that your custom file is read _instead_ of the one in the framework, so it is not actually inheritance, and helpers not included in your version will not be available in the code.
 
 ### Example
 
