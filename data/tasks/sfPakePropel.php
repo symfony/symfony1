@@ -211,15 +211,6 @@ function run_propel_load_data($task, $args)
     $fixtures_dirs = array_slice($args, 1);
   }
 
-  foreach ($fixtures_dirs as &$fixtures_dir)
-  {
-    $fixtures_dir = sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.$fixtures_dir;
-    if (!is_readable($fixtures_dir))
-    {
-      throw new Exception(sprintf('Fixture directory "%s" does not exist.', $fixtures_dir));
-    }
-  }
-
   $databaseManager = new sfDatabaseManager();
   $databaseManager->initialize();
 
@@ -228,6 +219,12 @@ function run_propel_load_data($task, $args)
 
   foreach ($fixtures_dirs as $fixtures_dir)
   {
+    $fixtures_dir = sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.$fixtures_dir;
+    if (!is_readable($fixtures_dir))
+    {
+      throw new Exception(sprintf('Fixture directory "%s" does not exist.', $fixtures_dir));
+    }
+
     $data->loadData($fixtures_dir);
   }
 }
