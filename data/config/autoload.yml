@@ -20,7 +20,7 @@ autoload:
 
   symfony_plugins:
     name:           symfony plugins
-    ext:            .class.php
+    ext:            .php
     path:           %SF_PLUGIN_DIR%
     recursive:      on
 
