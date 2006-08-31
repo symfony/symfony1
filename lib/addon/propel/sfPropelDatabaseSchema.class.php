@@ -36,11 +36,14 @@ class sfPropelDatabaseSchema
     }
 
     $this->connection_name = array_shift(array_keys($schema));
-    $this->database = $schema[$this->connection_name];
+    if ($this->connection_name)
+    {
+      $this->database = $schema[$this->connection_name];
 
-    $this->fixYAMLDatabase();
-    $this->fixYAMLI18n();
-    $this->fixYAMLColumns();
+      $this->fixYAMLDatabase();
+      $this->fixYAMLI18n();
+      $this->fixYAMLColumns();
+    }
   }
 
   public function asXML()
