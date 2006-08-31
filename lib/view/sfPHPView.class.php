@@ -206,7 +206,7 @@ class sfPHPView extends sfView
     }
     else
     {
-      $templateFile = $this->actionName.$this->viewName.$this->extension;
+      $templateFile = $templateName.$this->viewName.$this->extension;
     }
 
     // set template name

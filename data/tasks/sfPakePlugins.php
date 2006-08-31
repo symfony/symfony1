@@ -48,7 +48,7 @@ function run_plugin_install($task, $args)
 
   _pear_restore_config($old_config);
 
-  if ($error)// && !strpos($ret, 'not installed'))
+  if ($error)
   {
     throw new Exception($error);
   }
