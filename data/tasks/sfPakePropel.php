@@ -42,7 +42,8 @@ function run_propel_convert_xml_schema($task, $args)
 
 function _propel_convert_yml_schema($check_schema = true, $prefix = '')
 {
-  $schemas = pakeFinder::type('file')->name('*schema.yml')->relative()->in('config');
+  $finder = pakeFinder::type('file')->name('*schema.yml');
+  $schemas = array_merge($finder->in('config'), $finder->in('data/plugins'));
   if ($check_schema && !count($schemas))
   {
     throw new Exception('You must create a schema.yml file.');
@@ -59,17 +60,18 @@ function _propel_convert_yml_schema($check_schema = true, $prefix = '')
   $db_schema = new sfPropelDatabaseSchema();
   foreach ($schemas as $schema)
   {
-    $db_schema->loadYAML('config/'.$schema);
+    $db_schema->loadYAML($schema);
 
     pake_echo_action('schema', 'converting "'.$schema.'"'.' to XML');
 
-    file_put_contents('config/'.$prefix.str_replace('.yml', '.xml', $schema), $db_schema->asXML());
+    file_put_contents('config'.DIRECTORY_SEPARATOR.$prefix.str_replace('.yml', '.xml', basename($schema)), $db_schema->asXML());
   }
 }
 
 function _propel_convert_xml_schema($check_schema = true, $prefix = '')
 {
-  $schemas = pakeFinder::type('file')->name('*schema.xml')->relative()->in('config');
+  $finder = pakeFinder::type('file')->name('*schema.xml');
+  $schemas = array_merge($finder->in('config'), $finder->in('data/plugins'));
   if ($check_schema && !count($schemas))
   {
     throw new Exception('You must create a schema.xml file.');
@@ -86,11 +88,22 @@ function _propel_convert_xml_schema($check_schema = true, $prefix = '')
   $db_schema = new sfPropelDatabaseSchema();
   foreach ($schemas as $schema)
   {
-    $db_schema->loadXML('config/'.$schema);
+    $db_schema->loadXML($schema);
 
     pake_echo_action('schema', 'converting "'.$schema.'"'.' to YAML');
 
-    file_put_contents('config/'.$prefix.str_replace('.xml', '.yml', $schema), $db_schema->asYAML());
+    file_put_contents('config'.DIRECTORY_SEPARATOR.$prefix.str_replace('.xml', '.yml', basename($schema)), $db_schema->asYAML());
+  }
+}
+
+function _propel_copy_xml_schema_from_plugins($prefix = '')
+{
+  $finder = pakeFinder::type('file')->name('*schema.xml');
+  $schemas = $finder->in('data/plugins');
+
+  foreach ($schemas as $schema)
+  {
+    pake_copy($schema, 'config'.DIRECTORY_SEPARATOR.$prefix.basename($schema));
   }
 }
 
@@ -110,6 +123,7 @@ function run_propel_build_all_load($task, $args)
 function run_propel_build_model($task, $args)
 {
   _propel_convert_yml_schema(false, 'generated-');
+  _propel_copy_xml_schema_from_plugins('generated-');
   _call_phing($task, 'build-om');
   $finder = pakeFinder::type('file')->name('generated-*schema.xml');
   pake_remove($finder, 'config');
@@ -118,6 +132,7 @@ function run_propel_build_model($task, $args)
 function run_propel_build_sql($task, $args)
 {
   _propel_convert_yml_schema(false, 'generated-');
+  _propel_copy_xml_schema_from_plugins('generated-');
   _call_phing($task, 'build-sql');
   $finder = pakeFinder::type('file')->name('generated-*schema.xml');
   pake_remove($finder, 'config');
@@ -131,6 +146,7 @@ function run_propel_build_db($task, $args)
 function run_propel_insert_sql($task, $args)
 {
   _propel_convert_yml_schema(false, 'generated-');
+  _propel_copy_xml_schema_from_plugins('generated-');
   _call_phing($task, 'insert-sql');
   $finder = pakeFinder::type('file')->name('generated-*schema.xml');
   pake_remove($finder, 'config');
@@ -234,7 +250,7 @@ function _call_phing($task, $task_name, $check_schema = true)
   $schemas = pakeFinder::type('file')->name('*schema.xml')->relative()->in('config');
   if ($check_schema && !$schemas)
   {
-    throw new Exception('You must create a schema.xml file.');
+    throw new Exception('You must create a schema.yml or schema.xml file.');
   }
 
   // create a tmp propel.ini configuration file
