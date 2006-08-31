@@ -55,7 +55,7 @@ class sfPropelManyToMany
     foreach ($classes as $class)
     {
       $class_map_builder = basename($class, '.php');
-      require_once(sfConfig::get('sf_model_lib_dir').'/map/'.$class_map_builder.'.php');
+      require_once(Symfony::getClassPath($class_map_builder));
       $map = new $class_map_builder();
       $map->doBuild();
     }

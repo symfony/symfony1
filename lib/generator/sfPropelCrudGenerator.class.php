@@ -104,11 +104,11 @@ class sfPropelCrudGenerator extends sfGenerator
   protected function loadMapBuilderClasses()
   {
     // we must load all map builder classes to be able to deal with foreign keys (cf. editSuccess.php template)
-    $classes = sfFinder::type('file')->name('*MapBuilder.php')->relative()->in(sfConfig::get('sf_lib_dir') ? sfConfig::get('sf_lib_dir').'/model' : 'lib/model');
+    $classes = sfFinder::type('file')->name('*MapBuilder.php')->in(sfConfig::get('sf_lib_dir') ? sfConfig::get('sf_lib_dir') : 'lib');
     foreach ($classes as $class)
     {
       $class_map_builder = basename($class, '.php');
-      require_once(sfConfig::get('sf_model_lib_dir').'/map/'.$class_map_builder.'.php');
+      require_once($class);
       $maps[$class_map_builder] = new $class_map_builder();
       if (!$maps[$class_map_builder]->isBuilt())
       {

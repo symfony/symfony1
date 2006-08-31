@@ -173,7 +173,7 @@ class sfPropelData
         {
           $peer_class = trim($class.'Peer');
 
-          require_once(sfConfig::get('sf_model_lib_dir').'/'.$peer_class.'.php');
+          require_once(Symfony::getClassPath($peer_class));
 
           call_user_func(array($peer_class, 'doDeleteAll'));
         }
@@ -211,7 +211,7 @@ class sfPropelData
     $class_map_builder = $class.'MapBuilder';
     if (!isset($this->maps[$class]))
     {
-      require_once(sfConfig::get('sf_model_lib_dir').'/map/'.$class_map_builder.'.php');
+      require_once(Symfony::getClassPath($class_map_builder));
       $this->maps[$class] = new $class_map_builder();
       $this->maps[$class]->doBuild();
     }

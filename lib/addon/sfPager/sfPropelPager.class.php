@@ -64,7 +64,7 @@ class sfPropelPager
     $cForCount->clearGroupByColumns();
 
     // require the model class (because autoloading can crash under some conditions)
-    require_once(sfConfig::get('sf_model_lib_dir').'/'.$this->getClassPeer().'.php');
+    require_once(Symfony::getClassPath($this->getClassPeer()));
     $count = call_user_func(array($this->getClassPeer(), $this->getPeerCountMethod()), $cForCount);
 
     $this->setNbResults($hasMaxRecordLimit ? min($count, $maxRecordLimit) : $count);

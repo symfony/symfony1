@@ -148,7 +148,7 @@ function object_select_tag($object, $method, $options = array(), $default_value 
 function _get_values_for_object_select_tag($object, $class, $text_method = null, $peer_method = null)
 {
   // FIXME: drop Propel dependency
-  require_once(sfConfig::get('sf_model_lib_dir').'/'.$class.'Peer.php');
+  require_once(Symfony::getClassPath($class.'Peer'));
   $method = $peer_method ? $peer_method : 'doSelect';
   $objects = call_user_func(array($class.'Peer', $method), new Criteria());
 

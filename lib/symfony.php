@@ -58,6 +58,13 @@ final class Symfony
 {
   protected static $loaded = false;
 
+  public static function getClassPath($class)
+  {
+    $classes = sfConfig::get('sf_class_autoload', array());
+
+    return isset($classes[$class]) ? $classes[$class] : null;
+  }
+
   public static function __autoload($class)
   {
     if (false === self::$loaded)
