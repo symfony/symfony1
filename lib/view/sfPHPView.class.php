@@ -70,7 +70,45 @@ class sfPHPView extends sfView
     $standard_helpers = sfConfig::get('sf_standard_helpers');
 
     $helpers = array_unique(array_merge($core_helpers, $standard_helpers));
-    sfLoader::loadHelpers($helpers);
+    $this->loadHelpers($helpers);
+  }
+
+  /**
+   * Loads all template helpers.
+   *
+   * helpers defined in templates (set with use_helper())
+   */
+  protected function loadHelpers($helpers)
+  {
+    $dirs = array(
+      sfConfig::get('sf_app_lib_dir').'/helper',            // application dir
+      sfConfig::get('sf_plugin_lib_dir').'/symfony/helper', // plugin dir
+      sfConfig::get('sf_symfony_lib_dir').'/helper',        // global dir
+    );
+
+    foreach ($helpers as $helperName)
+    {
+      $fileName = $helperName.'Helper.php';
+      foreach ($dirs as $dir)
+      {
+        $included = false;
+        if (is_readable($dir.'/'.$fileName))
+        {
+          include_once($dir.'/'.$fileName);
+          $included = true;
+          break;
+        }
+      }
+
+      if (!$included)
+      {
+        // search in the include path
+        if ((@include_once('helper/'.$fileName)) != 1)
+        {
+          throw new sfViewException(sprintf('Unable to load "%s" helper in: %s', $helperName, implode(', ', array_merge($dirs, explode(PATH_SEPARATOR, get_include_path())))));
+        }
+      }
+    }
   }
 
   protected function renderFile($_sfFile)
@@ -136,7 +174,19 @@ class sfPHPView extends sfView
     }
 
     // all directories to look for templates
-    $dirs = sfLoader::getTemplateDirs($this->getDirectory(), $this->moduleName);
+    $dirs = array(
+      // application
+      $this->getDirectory(),
+
+      // local plugin
+      sfConfig::get('sf_plugin_data_dir').'/modules/'.$this->moduleName.'/templates',
+
+      // core modules or global plugins
+      sfConfig::get('sf_symfony_data_dir').'/modules/'.$this->moduleName.'/templates',
+
+      // generated templates in cache
+      sfConfig::get('sf_module_cache_dir').'/auto'.ucfirst($this->moduleName).'/templates',
+    );
 
     // require our configuration
     $action = $actionStackEntry->getActionInstance();

@@ -67,7 +67,18 @@ abstract class sfController
 
   private function controllerExists ($moduleName, $controllerName, $extension)
   {
-    $dirs = sfLoader::getControllerDirs($moduleName);
+    // all directories to look for modules
+    $dirs = array(
+      // application
+      sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_action_dir_name') => false,
+
+      // local plugin
+      sfConfig::get('sf_plugin_data_dir').'/modules/'.$moduleName.'/actions' => true,
+
+      // core modules or global plugins
+      sfConfig::get('sf_symfony_data_dir').'/modules/'.$moduleName.'/actions' => true,
+    );
+
     foreach ($dirs as $dir => $checkActivated)
     {
       // plugin module activated?
