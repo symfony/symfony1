@@ -72,6 +72,11 @@ final class Symfony
       self::$classes = include($file);
     }
 
+    if (class_exists($class, false))
+    {
+      return true;
+    }
+
     if (!isset(self::$classes[$class]))
     {
       if (sfContext::hasInstance())
@@ -84,7 +89,7 @@ final class Symfony
           $module_lib = sfConfig::get('sf_app_module_dir').'/'.$current_module.'/'.sfConfig::get('sf_app_module_lib_dir_name').'/'.$class.'.class.php';
           if (is_readable($module_lib))
           {
-            require_once($module_lib);
+            require($module_lib);
 
             return true;
           }
@@ -96,7 +101,7 @@ final class Symfony
     else
     {
       // class exists, let's include it
-      require_once(self::$classes[$class]);
+      require(self::$classes[$class]);
 
       return true;
     }
