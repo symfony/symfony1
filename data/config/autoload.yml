@@ -7,10 +7,16 @@ autoload:
     recursive:      on
     exclude:        [vendor, modules]
 
-  symfony_orm:
+  propel:
     name:           symfony orm classes
     ext:            .php
     path:           %SF_SYMFONY_LIB_DIR%/vendor/propel
+    recursive:      on
+
+  creole:
+    name:           symfony orm classes
+    ext:            .php
+    path:           %SF_SYMFONY_LIB_DIR%/vendor/creole
     recursive:      on
 
   symfony_orm_files:

@@ -2,8 +2,32 @@
 
 require_once 'propel/engine/builder/om/php5/PHP5ComplexPeerBuilder.php';
 
-class sfPeerBuilder extends PHP5ComplexPeerBuilder
+/*
+ * This file is part of the symfony package.
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+/**
+ * @package    symfony
+ * @subpackage addon
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @version    SVN: $Id$
+ */
+class SfPeerBuilder extends PHP5ComplexPeerBuilder
 {
+  protected function addIncludes(&$script)
+  {
+    if (!DataModelBuilder::getBuildProperty('builderAddIncludes'))
+    {
+      return;
+    }
+
+    parent::addIncludes($script);
+  }
+
   protected function addSelectMethods(&$script)
   {
     parent::addSelectMethods($script);
