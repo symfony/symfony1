@@ -18,6 +18,14 @@ require_once 'propel/engine/builder/om/php5/PHP5ComplexObjectBuilder.php';
  */
 class SfObjectBuilder extends PHP5ComplexObjectBuilder
 {
+  public function build()
+  {
+    if (!DataModelBuilder::getBuildProperty('builderAddComments'))
+    {
+      return sfToolkit::stripComments(parent::build());
+    }
+  }
+
   protected function addIncludes(&$script)
   {
     if (!DataModelBuilder::getBuildProperty('builderAddIncludes'))

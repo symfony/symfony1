@@ -143,7 +143,7 @@ class sfToolkit
 
   public static function stripComments ($source)
   {
-    if (!sfConfig::get('sf_strip_comments'))
+    if (!sfConfig::get('sf_strip_comments', true))
     {
       return $source;
     }

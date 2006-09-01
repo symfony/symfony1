@@ -18,6 +18,14 @@ require_once 'propel/engine/builder/om/php5/PHP5MapBuilderBuilder.php';
  */
 class SfMapBuilderBuilder extends PHP5MapBuilderBuilder
 {
+  public function build()
+  {
+    if (!DataModelBuilder::getBuildProperty('builderAddComments'))
+    {
+      return sfToolkit::stripComments(parent::build());
+    }
+  }
+
   protected function addIncludes(&$script)
   {
     if (!DataModelBuilder::getBuildProperty('builderAddIncludes'))

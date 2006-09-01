@@ -18,6 +18,14 @@ require_once 'propel/engine/builder/om/php5/PHP5ComplexPeerBuilder.php';
  */
 class SfPeerBuilder extends PHP5ComplexPeerBuilder
 {
+  public function build()
+  {
+    if (!DataModelBuilder::getBuildProperty('builderAddComments'))
+    {
+      return sfToolkit::stripComments(parent::build());
+    }
+  }
+
   protected function addIncludes(&$script)
   {
     if (!DataModelBuilder::getBuildProperty('builderAddIncludes'))
@@ -150,7 +158,7 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
   }
 
   public function addDoValidate(&$script) {
-	    $tmp = '';
+      $tmp = '';
       parent::addDoValidate($tmp);
 
       $script .= str_replace("return {$this->basePeerClassname}::doValidate(".$this->getPeerClassname()."::DATABASE_NAME, ".$this->getPeerClassname()."::TABLE_NAME, \$columns);\n",
