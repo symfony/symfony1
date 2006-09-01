@@ -65,46 +65,45 @@ final class Symfony
 
   public static function __autoload($class)
   {
+    // load the list of autoload classes
     if (!self::$classes)
     {
-      // load the list of autoload classes
       $file = sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/autoload.yml');
       self::$classes = include($file);
     }
 
+    // class already exists
     if (class_exists($class, false))
     {
       return true;
     }
 
-    if (!isset(self::$classes[$class]))
+    // we have a class path, let's include it
+    if (isset(self::$classes[$class]))
     {
-      if (sfContext::hasInstance())
-      {
-        // see if the file exists in the current module lib directory
-        // must be in a module context
-        $current_module = sfContext::getInstance()->getModuleName();
-        if ($current_module)
-        {
-          $module_lib = sfConfig::get('sf_app_module_dir').'/'.$current_module.'/'.sfConfig::get('sf_app_module_lib_dir_name').'/'.$class.'.class.php';
-          if (is_readable($module_lib))
-          {
-            require($module_lib);
-
-            return true;
-          }
-        }
-      }
-
-      return false;
-    }
-    else
-    {
-      // class exists, let's include it
       require(self::$classes[$class]);
 
       return true;
     }
+
+    // see if the file exists in the current module lib directory
+    // must be in a module context
+    if (sfContext::hasInstance())
+    {
+      $current_module = sfContext::getInstance()->getModuleName();
+      if ($current_module)
+      {
+        $module_lib = sfConfig::get('sf_app_module_dir').'/'.$current_module.'/'.sfConfig::get('sf_app_module_lib_dir_name').'/'.$class.'.class.php';
+        if (is_readable($module_lib))
+        {
+          require($module_lib);
+
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 }
 
