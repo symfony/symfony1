@@ -56,27 +56,23 @@ else
 
 final class Symfony
 {
-  protected static $loaded = false;
+  protected static $classes = array();
 
   public static function getClassPath($class)
   {
-    $classes = sfConfig::get('sf_class_autoload', array());
-
-    return isset($classes[$class]) ? $classes[$class] : null;
+    return isset(self::$classes[$class]) ? self::$classes[$class] : null;
   }
 
   public static function __autoload($class)
   {
-    if (false === self::$loaded)
+    if (!self::$classes)
     {
       // load the list of autoload classes
-      include_once(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/autoload.yml'));
-
-      self::$loaded = true;
+      $file = sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/autoload.yml');
+      self::$classes = include($file);
     }
 
-    $classes = sfConfig::get('sf_class_autoload', array());
-    if (!isset($classes[$class]))
+    if (!isset(self::$classes[$class]))
     {
       if (sfContext::hasInstance())
       {
@@ -100,7 +96,7 @@ final class Symfony
     else
     {
       // class exists, let's include it
-      require_once($classes[$class]);
+      require_once(self::$classes[$class]);
 
       return true;
     }
