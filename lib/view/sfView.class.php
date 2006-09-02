@@ -416,10 +416,7 @@ abstract class sfView
     if (!is_readable($template))
     {
       // the template isn't readable
-      $error = 'The template "%s" does not exist or is unreadable';
-      $error = sprintf($error, $template);
-
-      throw new sfRenderException($error);
+      throw new sfRenderException(sprintf('The template "%s" does not exist in: %s', $template, $this->directory));
     }
 
     // check to see if this is a decorator template
