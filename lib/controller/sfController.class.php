@@ -109,6 +109,12 @@ abstract class sfController
       }
     }
 
+    // send an exception if debug
+    if (sfConfig::get('sf_debug'))
+    {
+      throw new sfControllerException(sprintf('{sfController} action does not exist in: '.implode(', ', array_keys($dirs))));
+    }
+
     return false;
   }
 
