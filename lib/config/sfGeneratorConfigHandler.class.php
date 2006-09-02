@@ -31,19 +31,25 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler
    */
   public function execute($configFiles)
   {
-    // set our required categories list and initialize our handler
-    $categories = array('required_categories' => array('generator'));
-
-    $this->initialize($categories);
-
     // parse the yaml
     $config = $this->parseYamls($configFiles);
+    if (!$config)
+    {
+      return '';
+    }
+
+    if (!isset($config['generator']))
+    {
+      $error = sprintf('Configuration file "%s" must specify a generator directive', $configFiles[1] ? $configFiles[1] : $configFiles[0]);
+
+      throw new sfParseException($error);
+    }
 
     $config = $config['generator'];
 
     if (!isset($config['class']))
     {
-      $error = sprintf('Configuration file "%s" must specify a generator class directive', $configFile);
+      $error = sprintf('Configuration file "%s" must specify a generator class directive', $configFiles[1] ? $configFiles[1] : $configFiles[0]);
 
       throw new sfParseException($error);
     }
@@ -57,7 +63,7 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler
     $generator_param = (isset($config['param']) ? $config['param'] : array());
 
     // hack to find the module name
-    preg_match('#'.sfConfig::get('sf_app_module_dir_name').'/([^/]+)/#', $configFiles[0], $match);
+    preg_match('#'.sfConfig::get('sf_app_module_dir_name').'/([^/]+)/#', $configFiles[1], $match);
     $generator_param['moduleName'] = $match[1];
 
     $data = $generator_manager->generate($class, $generator_param);
