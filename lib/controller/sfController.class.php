@@ -67,6 +67,8 @@ abstract class sfController
 
   private function controllerExists ($moduleName, $controllerName, $extension)
   {
+    $found = false;
+
     $dirs = sfLoader::getControllerDirs($moduleName);
     foreach ($dirs as $dir => $checkActivated)
     {
@@ -91,7 +93,8 @@ abstract class sfController
 
         $this->controllerClasses[$moduleName.'_'.$controllerName.'_'.$classSuffix] = $controllerName.$classSuffix;
 
-        return true;
+        $found = true;
+        break;
       }
       else if (is_readable($module_file))
       {
@@ -99,23 +102,22 @@ abstract class sfController
         require_once($module_file);
 
         // action is defined in this class?
-        $defined = in_array('execute'.ucfirst($controllerName), get_class_methods($moduleName.$classSuffix.'s'));
-        if ($defined)
+        $found = in_array('execute'.ucfirst($controllerName), get_class_methods($moduleName.$classSuffix.'s'));
+        if ($found)
         {
           $this->controllerClasses[$moduleName.'_'.$controllerName.'_'.$classSuffix] = $moduleName.$classSuffix.'s';
+          break;
         }
-
-        return $defined;
       }
     }
 
     // send an exception if debug
-    if (sfConfig::get('sf_debug'))
+    if (!$found && sfConfig::get('sf_debug'))
     {
-      throw new sfControllerException(sprintf('{sfController} action does not exist in: '.implode(', ', array_keys($dirs))));
+      throw new sfControllerException(sprintf('{sfController} controller "%s/%s" does not exist in: %s', $moduleName, $controllerName, implode(', ', array_keys($dirs))));
     }
 
-    return false;
+    return $found;
   }
 
   /**
