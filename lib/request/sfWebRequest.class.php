@@ -455,10 +455,10 @@ class sfWebRequest extends sfRequest
     // merge POST parameters
     $this->getParameterHolder()->addByRef($_POST);
 
-    // move symfony parameters in a protected namespace (parameters prefixed with sf_)
+    // move symfony parameters in a protected namespace (parameters prefixed with _sf_)
     foreach ($this->getParameterHolder()->getAll() as $key => $value)
     {
-      if (stripos($key, 'sf_') !== false)
+      if (stripos($key, '_sf_') !== false)
       {
         $this->getParameterHolder()->remove($key);
         $this->setParameter($key, $value, 'symfony/request/sfWebRequest');

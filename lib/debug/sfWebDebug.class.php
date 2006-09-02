@@ -234,7 +234,7 @@ class sfWebDebug
     $cacheLink = '';
     if (sfConfig::get('sf_debug') && sfConfig::get('sf_cache'))
     {
-      $self_url = $_SERVER['PHP_SELF'].((strpos($_SERVER['PHP_SELF'], 'sf_ignore_cache') === false) ? '?sf_ignore_cache=1' : '');
+      $self_url = $_SERVER['PHP_SELF'].((strpos($_SERVER['PHP_SELF'], '_sf_ignore_cache') === false) ? '?_sf_ignore_cache=1' : '');
       $cacheLink = '<a href="'.$self_url.'" title="reload and ignore cache"><img src="'.$this->base_image_path.'/reload.png" alt=""/></a>';
     }
 
