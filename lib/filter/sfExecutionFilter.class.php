@@ -79,11 +79,12 @@ class sfExecutionFilter extends sfFilter
 
         // get the current action validation configuration
         $validationConfig = $moduleName.'/'.sfConfig::get('sf_app_module_validate_dir_name').'/'.$actionName.'.yml';
-        if (is_readable(sfConfig::get('sf_app_module_dir').'/'.$validationConfig))
+
+        // load validation configuration
+        // do NOT use require_once
+        if (null !== $validateFile = sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$validationConfig, true))
         {
-          // load validation configuration
-          // do NOT use require_once
-          require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$validationConfig));
+          require($validateFile);
         }
 
         // manually load validators
