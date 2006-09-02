@@ -267,7 +267,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
         if ($attribute == 'validators')
         {
           // load validators for this file/parameter name
-          $this->loadValidators($configFile, $validators, $config, $value, $entry);
+          $this->loadValidators($configFiles, $validators, $config, $value, $entry);
         }
         else if ($attribute == 'type')
         {
