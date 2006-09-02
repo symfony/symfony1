@@ -43,7 +43,7 @@ function run_propel_convert_xml_schema($task, $args)
 function _propel_convert_yml_schema($check_schema = true, $prefix = '')
 {
   $finder = pakeFinder::type('file')->name('*schema.yml');
-  $schemas = array_merge($finder->in('config'), $finder->in('data/plugins'));
+  $schemas = $finder->in(array_merge(array('config'), glob(sfConfig::get('sf_root_dir').'/plugins/*/config')));
   if ($check_schema && !count($schemas))
   {
     throw new Exception('You must create a schema.yml file.');
@@ -64,7 +64,17 @@ function _propel_convert_yml_schema($check_schema = true, $prefix = '')
 
     pake_echo_action('schema', 'converting "'.$schema.'"'.' to XML');
 
-    file_put_contents('config'.DIRECTORY_SEPARATOR.$prefix.str_replace('.yml', '.xml', basename($schema)), $db_schema->asXML());
+    // change prefix for plugins
+    if (preg_match('#plugins[/\\\\]([^/\\\\]+)[/\\\\]#', $schema, $match))
+    {
+      $localprefix = $prefix.$match[1].'-';
+    }
+    else
+    {
+      $localprefix = $prefix;
+    }
+
+    file_put_contents('config'.DIRECTORY_SEPARATOR.$localprefix.str_replace('.yml', '.xml', basename($schema)), $db_schema->asXML());
   }
 }
 
@@ -98,12 +108,17 @@ function _propel_convert_xml_schema($check_schema = true, $prefix = '')
 
 function _propel_copy_xml_schema_from_plugins($prefix = '')
 {
-  $finder = pakeFinder::type('file')->name('*schema.xml');
-  $schemas = $finder->in('data/plugins');
+  $schemas = pakeFinder::type('file')->name('*schema.xml')->in(glob(sfConfig::get('sf_root_dir').'/plugins/*/config'));
 
   foreach ($schemas as $schema)
   {
-    pake_copy($schema, 'config'.DIRECTORY_SEPARATOR.$prefix.basename($schema));
+    // change prefix for plugins
+    if (preg_match('#plugins[/\\\\]([^/\\\\]+)[/\\\\]#', $schema, $match))
+    {
+      $localprefix = $prefix.$match[1].'-';
+    }
+
+    pake_copy($schema, 'config'.DIRECTORY_SEPARATOR.$localprefix.basename($schema));
   }
 }
 
@@ -220,7 +235,7 @@ function run_propel_load_data($task, $args)
 
   if (count($args) == 1)
   {
-    $fixtures_dirs = sfFinder::type('dir')->name('fixtures')->relative()->in(sfConfig::get('sf_data_dir'));
+    $fixtures_dirs = sfFinder::type('dir')->name('fixtures')->in(array_merge(glob(sfConfig::get('sf_root_dir').'/plugins/*/data'), array(sfConfig::get('sf_data_dir'))));
   }
   else
   {
@@ -235,12 +250,12 @@ function run_propel_load_data($task, $args)
 
   foreach ($fixtures_dirs as $fixtures_dir)
   {
-    $fixtures_dir = sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.$fixtures_dir;
     if (!is_readable($fixtures_dir))
     {
-      throw new Exception(sprintf('Fixture directory "%s" does not exist.', $fixtures_dir));
+      continue;
     }
 
+    pake_echo_action('propel', sprintf('load data from "%s"', $fixtures_dir));
     $data->loadData($fixtures_dir);
   }
 }

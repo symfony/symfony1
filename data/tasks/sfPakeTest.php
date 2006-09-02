@@ -3,6 +3,9 @@
 pake_desc('launch project test suite');
 pake_task('test');
 
+pake_desc('launch test suite for a plugin');
+pake_task('plugin-test');
+
 function run_test($task, $args)
 {
   if (!count($args))
@@ -14,7 +17,7 @@ function run_test($task, $args)
 
   if (!is_dir(sfConfig::get('sf_app_dir').DIRECTORY_SEPARATOR.$app))
   {
-    throw new Exception('The app "'.$app.'" does not exist.');
+    throw new Exception(sprintf('The app "%s" does not exist.', $app));
   }
 
   // define constants
@@ -34,4 +37,23 @@ function run_test($task, $args)
 
   pake_import('simpletest', false);
   pakeSimpletestTask::call_simpletest($task, 'text', $dirs_to_test);
+}
+
+function run_plugin_test($task, $args)
+{
+  if (!count($args))
+  {
+    throw new Exception('You must provide the plugin to test.');
+  }
+
+  $plugin = $args[0];
+
+  $dir = sfConfig::get('sf_root_dir').DIRECTORY_SEPARATOR.'plugins'.DIRECTORY_SEPARATOR.$plugin;
+  if (!is_dir($dir))
+  {
+    throw new Exception(sprintf('The plugin "%s" does not exist.', $plugin));
+  }
+
+  pake_import('simpletest', false);
+  pakeSimpletestTask::call_simpletest($task, 'text', array($dir));
 }

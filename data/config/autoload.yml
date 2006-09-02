@@ -1,48 +1,66 @@
 autoload:
 
-  symfony_core:
-    name:           symfony core classes
+  # symfony core
+  symfony:
+    name:           symfony
     ext:            .class.php
     path:           %SF_SYMFONY_LIB_DIR%
     recursive:      on
-    exclude:        [vendor, modules]
+    exclude:        [vendor]
 
   propel:
-    name:           symfony orm classes
+    name:           propel
     ext:            .php
     path:           %SF_SYMFONY_LIB_DIR%/vendor/propel
     recursive:      on
 
   creole:
-    name:           symfony orm classes
+    name:           creole
     ext:            .php
     path:           %SF_SYMFONY_LIB_DIR%/vendor/creole
     recursive:      on
 
-  symfony_orm_files:
-    name:           symfony orm classes
+  propel_addon:
+    name:           propel addon
     files:
       Propel:       %SF_SYMFONY_LIB_DIR%/addon/propel/sfPropelAutoload.php
 
-  symfony_plugins:
-    name:           symfony plugins
-    ext:            .php
-    path:           %SF_PLUGIN_DIR%
-    recursive:      on
-
+  # project
   project:
-    name:           project classes
+    name:           project
     ext:            .class.php
     path:           %SF_LIB_DIR%
     recursive:      on
-    exclude:        [model, plugins, symfony]
+    exclude:        [model, symfony]
 
-  model:
-    name:           project model classes
+  project_model:
+    name:           project model
     ext:            .php
     path:           %SF_MODEL_LIB_DIR%
+    recursive:      on
 
+  # application
   application:
-    name:           application classes
+    name:           application
     ext:            .class.php
     path:           %SF_APP_LIB_DIR%
+    recursive:      on
+
+  modules:
+    name:           module
+    ext:            .php
+    path:           %SF_APP_DIR%/modules/*/lib
+    recursive:      on
+
+  # plugins
+  plugins_lib:
+    name:           plugins lib
+    ext:            .php
+    path:           %SF_PLUGINS_DIR%/*/lib
+    recursive:      on
+
+  plugins_module_lib:
+    name:           plugins module lib
+    ext:            .php
+    path:           %SF_PLUGINS_DIR%/*/modules/*/lib
+    recursive:      on

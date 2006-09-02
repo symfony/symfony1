@@ -51,11 +51,10 @@ class sfPropelManyToMany
     $column = self::getRelatedColumn($class, $middleClass);
 
     // we must load all map builder classes
-    $classes = sfFinder::type('file')->name('*MapBuilder.php')->relative()->in(sfConfig::get('sf_lib_dir') ? sfConfig::get('sf_lib_dir') : 'lib');
+    $classes = sfFinder::type('file')->name('*MapBuilder.php')->in(sfLoader::getModelDirs());
     foreach ($classes as $class)
     {
       $class_map_builder = basename($class, '.php');
-      require_once($class);
       $map = new $class_map_builder();
       $map->doBuild();
     }

@@ -93,19 +93,17 @@ function run_module_exists($task, $args)
   }
 }
 
-/* include all tasks definitions */
-$dir = sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.'tasks';
-if (is_readable($dir))
+// include tasks definitions
+$dirs = array(
+  sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.'tasks' => 'myPake*.php', // project tasks
+  $sf_symfony_data_dir.DIRECTORY_SEPARATOR.'tasks'         => 'sfPake*.php', // symfony tasks
+  sfConfig::get('sf_root_dir').'/plugins/*/data/tasks'     => '*.php',       // plugin tasks
+);
+foreach ($dirs as $globDir => $name)
 {
-  $projectTasks = pakeFinder::type('file')->name('myPake*.php')->in($dir);
-  foreach ($projectTasks as $task)
+  $tasks = pakeFinder::type('file')->name($name)->in(glob($globDir));
+  foreach ($tasks as $task)
   {
     include_once($task);
   }
-}
-
-$symfonyTasks = pakeFinder::type('file')->name('sfPake*.php')->in($sf_symfony_data_dir.DIRECTORY_SEPARATOR.'tasks');
-foreach ($symfonyTasks as $task)
-{
-  include_once($task);
 }

@@ -49,7 +49,7 @@ require_once(sfConfig::get('sf_config_dir').'/config.php');
 
 // include path
 set_include_path(
-  sfConfig::get('sf_lib_dir').PATH_SEPARATOR.
+  sfConfig::get('sf_root_dir').PATH_SEPARATOR.
   sfConfig::get('sf_app_lib_dir').PATH_SEPARATOR.
   sfConfig::get('sf_symfony_lib_dir').DIRECTORY_SEPARATOR.'vendor'.PATH_SEPARATOR.
   get_include_path()

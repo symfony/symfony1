@@ -70,14 +70,9 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
         $path = $this->replaceConstants($path);
         $path = $this->replacePath($path);
 
-        if (!is_dir($path))
-        {
-          continue;
-        }
-
         // we automatically add our php classes
         require_once(sfConfig::get('sf_symfony_lib_dir').'/util/sfFinder.class.php');
-        $finder = sfFinder::type('file')->name('*'.$ext)->relative();
+        $finder = sfFinder::type('file')->ignore_version_control()->name('*'.$ext);
 
         // recursive mapping?
         $recursive = ((isset($entry['recursive'])) ? $entry['recursive'] : false);
@@ -87,21 +82,19 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
         }
 
         // exclude files or directories?
-        $exclude = array('.svn', 'CVS');
         if (isset($entry['exclude']) && is_array($entry['exclude']))
         {
-          $exclude = array_merge($exclude, $entry['exclude']);
+          $finder->prune($entry['exclude'])->discard($entry['exclude']);
         }
-        $finder->prune($exclude)->discard($exclude);
 
-        $files = $finder->in($path);
+        $files = $finder->in(glob($path));
         $regex = '~^\s*(?:abstract\s+|final\s+)?(?:class|interface)\s+(\w+)~mi';
         foreach ($files as $file)
         {
-          preg_match_all($regex, file_get_contents($path.DIRECTORY_SEPARATOR.$file), $classes);
+          preg_match_all($regex, file_get_contents($file), $classes);
           foreach ($classes[1] as $class)
           {
-            $data[] = sprintf("'%s' => '%s',", $class, $path.DIRECTORY_SEPARATOR.$file);
+            $data[] = sprintf("'%s' => '%s',", $class, $file);
           }
         }
       }
