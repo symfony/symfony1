@@ -38,6 +38,7 @@ if (!sfConfig::get('sf_in_bootstrap'))
   require_once($sf_symfony_lib_dir.'/config/sfYamlConfigHandler.class.php');
   require_once($sf_symfony_lib_dir.'/config/sfAutoloadConfigHandler.class.php');
   require_once($sf_symfony_lib_dir.'/config/sfRootConfigHandler.class.php');
+  require_once($sf_symfony_lib_dir.'/config/sfLoader.class.php');
 
   // basic exception classes
   require_once($sf_symfony_lib_dir.'/exception/sfException.class.php');

@@ -42,9 +42,6 @@ class sfCompileConfigHandler extends sfYamlConfigHandler
     // let's do our fancy work
     foreach ($config as $file)
     {
-      // we'll assume this is a file since the line does not start
-      // with a octothorpe (used for commenting)
-
       $file = $this->replaceConstants($file);
       $file = $this->replacePath($file);
 
