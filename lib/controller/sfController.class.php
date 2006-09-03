@@ -101,13 +101,20 @@ abstract class sfController
         // module class exists
         require_once($module_file);
 
-        // action is defined in this class?
-        $found = in_array('execute'.ucfirst($controllerName), get_class_methods($moduleName.$classSuffix.'s'));
-        if ($found)
+        if (!class_exists($moduleName.$classSuffix.'s', false))
         {
-          $this->controllerClasses[$moduleName.'_'.$controllerName.'_'.$classSuffix] = $moduleName.$classSuffix.'s';
-          break;
+          throw new sfControllerException(sprintf('There is no "%s" class in your action file "%s".', $moduleName.$classSuffix.'s', $module_file));
         }
+
+        // action is defined in this class?
+        if (!in_array('execute'.ucfirst($controllerName), get_class_methods($moduleName.$classSuffix.'s')))
+        {
+          throw new sfControllerException(sprintf('There is no "%s" method in your action class "%s"', 'execute'.ucfirst($controllerName), $moduleName.$classSuffix.'s'));
+        }
+
+        $found = true;
+        $this->controllerClasses[$moduleName.'_'.$controllerName.'_'.$classSuffix] = $moduleName.$classSuffix.'s';
+        break;
       }
     }
 
