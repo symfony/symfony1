@@ -184,8 +184,15 @@
   background-color: #f99;
 }
 
+.sfWebDebugLogNumber
+{
+  width: 1%;
+}
+
 .sfWebDebugLogType
 {
+  width: 1%;
+  white-space: nowrap;
   color: darkgreen;
 }
 
@@ -207,24 +214,23 @@
   text-decoration: line-through;
 }
 
-#sfWebDebugLogs
+.sfWebDebugLogs
 {
   padding: 0;
   margin: 0;
-  border: 0;
-  width: 100%;
+  border: 1px solid #999;
   font-family: Arial;
   font-size: 11px;
 }
 
-#sfWebDebugLogs tr
+.sfWebDebugLogs tr
 {
   padding: 0;
   margin: 0;
   border: 0;
 }
 
-#sfWebDebugLogs td
+.sfWebDebugLogs td
 {
   margin: 0;
   border: 0;
@@ -232,14 +238,15 @@
   vertical-align: top;
 }
 
-#sfWebDebugLogs th
+.sfWebDebugLogs th
 {
   margin: 0;
   border: 0;
-  padding: 1px 3px;
+  padding: 3px 5px;
   vertical-align: top;
   background-color: #999;
   color: #eee;
+  white-space: nowrap;
 }
 
 .sfWebDebugDebugInfo

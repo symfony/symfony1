@@ -49,6 +49,8 @@ if (!sfConfig::get('sf_in_bootstrap'))
 
   // utils
   require_once($sf_symfony_lib_dir.'/util/sfParameterHolder.class.php');
+  require_once($sf_symfony_lib_dir.'/util/sfTimerManager.class.php');
+  require_once($sf_symfony_lib_dir.'/util/sfTimer.class.php');
 }
 else
 {

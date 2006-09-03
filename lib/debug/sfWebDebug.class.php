@@ -88,7 +88,6 @@ class sfWebDebug
       $this->last_time_log = sfConfig::get('sf_timer_start');
     }
 
-    $logEntry->setElapsedTime(sprintf('%.0f', (microtime(true) - $this->last_time_log) * 1000));
     $this->last_time_log = microtime(true);
 
     // update max priority
@@ -176,11 +175,9 @@ class sfWebDebug
     $sql_logs = array();
     if ($sf_logging_active)
     {
-      $logs = '<table id="sfWebDebugLogs">
+      $logs = '<table class="sfWebDebugLogs">
         <tr>
           <th>#</th>
-          <th>&nbsp;</th>
-          <th>ms</th>
           <th>type</th>
           <th>message</th>
         </tr>'."\n";
@@ -218,7 +215,15 @@ class sfWebDebug
         }
 
         ++$line_nb;
-        $logs .= sprintf("<tr class='sfWebDebugLogLine sfWebDebug%s %s'><td>%s</td><td>%s</td><td>+%s&nbsp;</td><td><span class=\"sfWebDebugLogType\">%s</span></td><td>%s%s</td></tr>\n", ucfirst($priority), $logEntry->getType(), $line_nb, image_tag($this->base_image_path.'/'.$priority.'.png'), $logEntry->getElapsedTime(), $type, $log, $debug_info);
+        $logs .= sprintf("<tr class='sfWebDebugLogLine sfWebDebug%s %s'><td class=\"sfWebDebugLogNumber\">%s</td><td class=\"sfWebDebugLogType\">%s&nbsp;%s</td><td>%s%s</td></tr>\n", 
+          ucfirst($priority),
+          $logEntry->getType(),
+          $line_nb,
+          image_tag($this->base_image_path.'/'.$priority.'.png'),
+          $type,
+          $log,
+          $debug_info
+        );
       }
       $logs .= '</table>';
 
@@ -242,7 +247,7 @@ class sfWebDebug
     $logLink = '';
     if (sfConfig::get('sf_logging_active'))
     {
-      $logLink = '<li><a href="#" onclick="document.getElementById(\'sfWebDebugConfig\').style.display=\'none\';document.getElementById(\'sfWebDebugDatabaseDetails\').style.display=\'none\';sfWebDebugToggle(\'sfWebDebugLog\'); return false;"><img src="'.$this->base_image_path.'/comment.png" alt=""/> logs &amp; msgs</a></li>';
+      $logLink = '<li><a href="#" onclick="sfWebDebugShowDetailsFor(\'sfWebDebugLog\'); return false;"><img src="'.$this->base_image_path.'/comment.png" alt=""/> logs &amp; msgs</a></li>';
     }
 
     // database information
@@ -250,7 +255,7 @@ class sfWebDebug
     $dbInfoDetails = '';
     if (null !== ($nb = $this->getDatabaseRequestNumber()))
     {
-      $dbInfo = '<li><a href="#" onclick="document.getElementById(\'sfWebDebugConfig\').style.display=\'none\';document.getElementById(\'sfWebDebugLog\').style.display=\'none\';sfWebDebugToggle(\'sfWebDebugDatabaseDetails\'); return false;"><img src="'.$this->base_image_path.'/database.png" alt=""/> '.$nb.'</a></li>';
+      $dbInfo = '<li><a href="#" onclick="sfWebDebugShowDetailsFor(\'sfWebDatabaseDetails\'); return false;"><img src="'.$this->base_image_path.'/database.png" alt=""/> '.$nb.'</a></li>';
 
       $dbInfoDetails = '
         <div id="sfWebDebugDatabaseDetails">
@@ -273,8 +278,16 @@ class sfWebDebug
     {
       $total_time = (microtime(true) - sfConfig::get('sf_timer_start')) * 1000;
       $total_time = sprintf(($total_time <= 1) ? '%.2f' : '%.0f', $total_time);
-      $timeInfo = '<li class="last"><img src="'.$this->base_image_path.'/time.png" alt="" /> '.$total_time.' ms</li>';
+      $timeInfo = '<li class="last"><a href="#" onclick="sfWebDebugShowDetailsFor(\'sfWebDebugTimeDetails\'); return false;"><img src="'.$this->base_image_path.'/time.png" alt="" /> '.$total_time.' ms</a></li>';
     }
+
+    // timers
+    $timeInfoDetails = '<table class="sfWebDebugLogs" style="width: 300px"><tr><th>type</th><th>calls</th><th>time (ms)</th></tr>';
+    foreach (sfTimerManager::getTimers() as $name => $timer)
+    {
+      $timeInfoDetails .= sprintf('<tr><td class="sfWebDebugLogType">%s</td><td class="sfWebDebugLogNumber" style="text-align: right">%d</td><td style="text-align: right">%.2f</td></tr>', $name, $timer->getCalls(), $timer->getElapsedTime() * 1000);
+    }
+    $timeInfoDetails .= '</table>';
 
     // short log messages
     $short_messages = '';
@@ -287,7 +300,7 @@ class sfWebDebug
     $logInfo = '';
     if ($sf_logging_active)
     {
-      $logInfo = $short_messages.'
+      $logInfo .= $short_messages.'
         <ul id="sfWebDebugLogMenu">
           <li><a href="#" onclick="sfWebDebugToggleAllLogLines(true, \'sfWebDebugLogLine\'); return false;">[all]</a></li>
           <li><a href="#" onclick="sfWebDebugToggleAllLogLines(false, \'sfWebDebugLogLine\'); return false;">[none]</a></li>
@@ -305,7 +318,7 @@ class sfWebDebug
       <div id="sfWebDebugBar" class="sfWebDebug'.ucfirst($max_priority).'">
         <a href="#" onclick="sfWebDebugToggleMenu(); return false;"><img src="'.$this->base_image_path.'/sf.png" alt="" /></a>
         <ul id="sfWebDebugDetails" class="menu">
-          <li><a href="#" onclick="document.getElementById(\'sfWebDebugLog\').style.display=\'none\';document.getElementById(\'sfWebDebugDatabaseDetails\').style.display=\'none\';sfWebDebugToggle(\'sfWebDebugConfig\'); return false;"><img src="'.$this->base_image_path.'/config.png" alt="" /> vars &amp; config</a></li>
+          <li><a href="#" onclick="sfWebDebugShowDetailsFor(\'sfWebDebugConfig\'); return false;"><img src="'.$this->base_image_path.'/config.png" alt="" /> vars &amp; config</a></li>
           '.$cacheLink.'
           '.$logLink.'
           '.$dbInfo.'
@@ -315,22 +328,12 @@ class sfWebDebug
         <a href="#" onclick="document.getElementById(\'sfWebDebug\').style.display=\'none\'; return false;"><img src="'.$this->base_image_path.'/close.png" alt="" /></a>
       </div>
 
-      <div id="sfWebDebugLog" class="top" style="display: none">
-      <h1>Log and debug messages</h1>
-      '.$logInfo.'
-      </div>
+      <div id="sfWebDebugLog" class="top" style="display: none"><h1>Log and debug messages</h1>'.$logInfo.'</div>
+      <div id="sfWebDebugConfig" class="top" style="display: none"><h1>Configuration and request variables</h1>'.$this->getCurrentConfigAsHtml().'</div>
+      <div id="sfWebDebugDatabaseDetails" class="top" style="display: none"><h1>SQL queries</h1>'.$dbInfoDetails.'</div>
+      <div id="sfWebDebugTimeDetails" class="top" style="display: none"><h1>Timers</h1>'.$timeInfoDetails.'</div>
 
-      <div id="sfWebDebugConfig" class="top" style="display: none">
-      <h1>Configuration and request variables</h1>
-      '.$this->getCurrentConfigAsHtml().'
       </div>
-
-      <div id="sfWebDebugDatabaseDetails" class="top" style="display: none">
-      <h1>SQL queries</h1>
-      '.$dbInfoDetails
-      .'
-      </div>
-    </div>
     ';
 
     return $result;

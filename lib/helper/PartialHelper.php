@@ -242,6 +242,11 @@ function include_partial($templateName, $vars = array())
  */
 function get_partial($templateName, $vars = array())
 {
+  if (sfConfig::get('sf_logging_active'))
+  {
+    $timer = sfTimerManager::getTimer(sprintf('Partial "%s"', $templateName));
+  }
+
   $context      = sfContext::getInstance();
   $cacheManager = $context->getViewCacheManager();
 
@@ -282,6 +287,11 @@ function get_partial($templateName, $vars = array())
       if (sfConfig::get('sf_web_debug'))
       {
         $retval = sfWebDebug::getInstance()->decorateContentWithDebug($uri, 'slot', $retval, false);
+      }
+
+      if (sfConfig::get('sf_logging_active'))
+      {
+        $timer->addTime();
       }
 
       return $retval;
@@ -339,6 +349,11 @@ function get_partial($templateName, $vars = array())
     {
       $context->getLogger()->info(sprintf('{PartialHelper} save slot "%s - %s" in cache', $uri, $cacheKey));
     }
+  }
+
+  if (sfConfig::get('sf_logging_active'))
+  {
+    $timer->addTime();
   }
 
   return $retval;

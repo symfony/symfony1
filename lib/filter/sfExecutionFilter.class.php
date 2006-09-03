@@ -105,6 +105,11 @@ class sfExecutionFilter extends sfFilter
         $sf_logging_active = sfConfig::get('sf_logging_active');
         if ($validated)
         {
+          if ($sf_logging_active)
+          {
+            $timer = sfTimerManager::getTimer(sprintf('Action "%s/%s"', $moduleName, $actionName));
+          }
+
           // execute the action
           $actionInstance->preExecute();
           $viewName = $actionInstance->execute();
@@ -113,6 +118,11 @@ class sfExecutionFilter extends sfFilter
             $viewName = sfView::SUCCESS;
           }
           $actionInstance->postExecute();
+
+          if ($sf_logging_active)
+          {
+            $timer->addTime();
+          }
         }
         else
         {
@@ -143,6 +153,11 @@ class sfExecutionFilter extends sfFilter
     }
     else if ($viewName != sfView::NONE)
     {
+      if (sfConfig::get('sf_logging_active'))
+      {
+        $timer = sfTimerManager::getTimer(sprintf('View "%s" for "%s/%s"', $viewName, $moduleName, $actionName));
+      }
+
       // get the view instance
       $viewInstance = $controller->getView($moduleName, $actionName, $viewName);
 
@@ -155,6 +170,11 @@ class sfExecutionFilter extends sfFilter
         // render the view and if data is returned, stick it in the
         // action entry which was retrieved from the execution chain
         $viewData = $viewInstance->render();
+
+        if (sfConfig::get('sf_logging_active'))
+        {
+          $timer->addTime();
+        }
 
         if ($controller->getRenderMode() == sfView::RENDER_VAR)
         {

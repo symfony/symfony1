@@ -39,11 +39,22 @@ function sfWebDebugToggleMenu()
     document.getElementById('sfWebDebugLog').style.display = 'none';
     document.getElementById('sfWebDebugConfig').style.display = 'none';
     document.getElementById('sfWebDebugDatabaseDetails').style.display = 'none';
+    document.getElementById('sfWebDebugTimeDetails').style.display = 'none';
   }
 
   sfWebDebugToggle('sfWebDebugDetails');
   sfWebDebugToggle('sfWebDebugShowMenu');
   sfWebDebugToggle('sfWebDebugHideMenu');
+}
+
+function sfWebDebugShowDetailsFor(element)
+{
+  if (element != 'sfWebDebugLog') document.getElementById('sfWebDebugLog').style.display='none';
+  if (element != 'sfWebDebugConfig') document.getElementById('sfWebDebugConfig').style.display='none';
+  if (element != 'sfWebDebugDatabaseDetails') document.getElementById('sfWebDebugDatabaseDetails').style.display='none';
+  if (element != 'sfWebDebugTimeDetails') document.getElementById('sfWebDebugTimeDetails').style.display='none';
+
+  sfWebDebugToggle(element);
 }
 
 function sfWebDebugToggle(element)

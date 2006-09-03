@@ -140,11 +140,21 @@ class sfConfigCache
    */
   public function checkConfig($configPath, $optional = false)
   {
+    if (sfConfig::get('sf_logging_active'))
+    {
+      $timer = sfTimerManager::getTimer('Configuration');
+    }
+
     // the cache filename we'll be using
     $cache = $this->getCacheName($configPath);
 
     if (sfConfig::get('sf_in_bootstrap') && is_readable($cache))
     {
+      if (sfConfig::get('sf_logging_active'))
+      {
+        $timer->addTime();
+      }
+
       return $cache;
     }
 
@@ -184,6 +194,11 @@ class sfConfigCache
     {
       // configuration has changed so we need to reparse it
       $this->callHandler($configPath, $files, $cache);
+    }
+
+    if (sfConfig::get('sf_logging_active'))
+    {
+      $timer->addTime();
     }
 
     return $cache;
