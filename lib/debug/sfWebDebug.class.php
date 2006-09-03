@@ -255,7 +255,7 @@ class sfWebDebug
     $dbInfoDetails = '';
     if (null !== ($nb = $this->getDatabaseRequestNumber()))
     {
-      $dbInfo = '<li><a href="#" onclick="sfWebDebugShowDetailsFor(\'sfWebDatabaseDetails\'); return false;"><img src="'.$this->base_image_path.'/database.png" alt=""/> '.$nb.'</a></li>';
+      $dbInfo = '<li><a href="#" onclick="sfWebDebugShowDetailsFor(\'sfWebDebugDatabaseDetails\'); return false;"><img src="'.$this->base_image_path.'/database.png" alt=""/> '.$nb.'</a></li>';
 
       $dbInfoDetails = '
         <div id="sfWebDebugDatabaseDetails">
