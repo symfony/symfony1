@@ -187,6 +187,8 @@ function _pear_init()
   $config->set('verbose', 1);
   $ui->setConfig($config);
 
+  date_default_timezone_set('UTC');
+
   // register our channel
   $symfony_channel = array(
     'attribs' => array(
@@ -217,7 +219,7 @@ function _pear_init()
     ),
     '_lastmodified' => array(
       'ETag' => "113845-297-dc93f000", 
-      'Last-Modified' => 'Thu, 30 Mar 2006 06:59:12 GMT',
+      'Last-Modified' => date('r'),
     ),
   );
   pake_mkdirs(sfConfig::get('sf_plugins_dir').'/.channels/.alias');
@@ -228,8 +230,8 @@ function _pear_init()
   $symfony = array(
     'name'          => 'symfony',
     'channel'       => 'pear.symfony-project.com',
-    'date'          => '2005-12-10',
-    'time'          => '23:34:49',
+    'date'          => date('Y-m-d'),
+    'time'          => date('H:i:s'),
     'version'       => $sf_version,
     'stability'     => array('release' => 'stable', 'api' => 'stable'),
     'xsdversion'    => '2.0',
