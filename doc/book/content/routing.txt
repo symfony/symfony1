@@ -4,7 +4,7 @@ How to setup a routing policy
 Overview
 --------
 
-One of the main problems faced by frameworks is the aspect of the generated URLs : they are generally long, complex and not search engine friendly. SymFony introduces a new *routing* system that brings you total control on the urls of your applications.
+One of the main problems faced by frameworks is the aspect of the generated URLs : they are generally long, complex and not search engine friendly. Symfony introduces a new *routing* system that brings you total control on the urls of your applications.
 
 Introduction
 ------------
@@ -199,7 +199,7 @@ If you have the `mod_rewrite` module activated, use the following configuration 
     RewriteRule ^(.*)$ index.php [QSA,L]
     
     # big crash from our front web controller
-    ErrorDocument 500 "<h2>Application error</h2>SymFony application failed to start properly"
+    ErrorDocument 500 "<h2>Application error</h2>Symfony application failed to start properly"
 
 Now a call to 
 
@@ -226,7 +226,7 @@ To read more about this helper, check the chapter about [link helpers](templatin
     [php]
     <a href="/index.php/article/read/id/100">my_article_title</a>
 
-But since you wrote routing rules, symfony will automatially interpret them in the other way and generate:
+But since you wrote routing rules, symfony will automatically interpret them in the other way and generate:
 
     [php]
     <a href="/index.php/article/100">my_article_title</a>

@@ -26,7 +26,7 @@ Imagine that you want to add a hyperlink to this page in a template. In PHP, you
 This is a bad idea, because: 
 
 * by writing `index.php`, you point to a particular environment (in this case, the production environment). All links must be environment-independent if you don't want to accidentally change environment while navigating
-* if you later decide to change the **routing** policy (you can learn more about this feature in the [routing chapter](routing.txt) chapter), and to display another format of URL, you would have to parse all of your template files and replace by hand the URLs already entered to URLs like:
+* if you later decide to change the **routing** policy (you can learn more about this feature in the [routing chapter](routing.txt)), and to display another format of URL, you would have to parse all of your template files and replace by hand the URLs already entered to URLs like:
 
           [php]
           <a href="/index.php/articles/europe/france/finance.html">Finance in France</a>
