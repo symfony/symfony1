@@ -25,6 +25,19 @@ autoload:
     files:
       Propel:       %SF_SYMFONY_LIB_DIR%/addon/propel/sfPropelAutoload.php
 
+  # plugins
+  plugins_lib:
+    name:           plugins lib
+    ext:            .php
+    path:           %SF_PLUGINS_DIR%/*/lib
+    recursive:      on
+
+  plugins_module_lib:
+    name:           plugins module lib
+    ext:            .php
+    path:           %SF_PLUGINS_DIR%/*/modules/*/lib
+    recursive:      on
+
   # project
   project:
     name:           project
@@ -50,17 +63,4 @@ autoload:
     name:           module
     ext:            .php
     path:           %SF_APP_DIR%/modules/*/lib
-    recursive:      on
-
-  # plugins
-  plugins_lib:
-    name:           plugins lib
-    ext:            .php
-    path:           %SF_PLUGINS_DIR%/*/lib
-    recursive:      on
-
-  plugins_module_lib:
-    name:           plugins module lib
-    ext:            .php
-    path:           %SF_PLUGINS_DIR%/*/modules/*/lib
     recursive:      on
