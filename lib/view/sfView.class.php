@@ -353,12 +353,8 @@ abstract class sfView
       $this->configure();
     }
 
-    // set template name
-    $templateFile = $actionName.$this->viewName.$this->getExtension();
-    $this->setTemplate($templateFile);
-
     // set template directory
-    $this->setDirectory(sfLoader::getTemplateDir($this->directory, $moduleName, $templateFile));
+    $this->setDirectory(sfLoader::getTemplateDir($this->directory, $moduleName, $this->getTemplate()));
 
     return true;
   }

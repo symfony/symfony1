@@ -140,6 +140,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     $templateName = $this->getConfigValue('template', $viewName);
     $defaultTemplateName = $templateName ? "'$templateName'" : '$this->getContext()->getActionName()';
     $data .= "  \$templateName = null !== \$action->getTemplate() ? \$action->getTemplate() : $defaultTemplateName;\n";
+    $data .= "  \$this->setTemplate(\$templateName.\$this->viewName.\$this->getExtension());\n";
 
     return $data;
   }
