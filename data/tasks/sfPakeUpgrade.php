@@ -27,7 +27,11 @@ function run_upgrade($task, $args)
 
 function run_upgrade_0_8($task, $args)
 {
+  // upgrade propel.ini
   _upgrade_0_8_propel_ini();
+
+  // upgrade model classes
+  _upgrade_0_8_propel_model();
 
   // find all applications for this project
   $apps = pakeFinder::type('directory')->name(sfConfig::get('sf_app_module_dir_name'))->mindepth(1)->maxdepth(1)->relative()->in(sfConfig::get('sf_apps_dir_name'));
@@ -39,6 +43,9 @@ function run_upgrade_0_8($task, $args)
     pake_echo_action('upgrade 0.8', sprintf('[upgrading application "%s"]', $app));
 
     $app_dir = sfConfig::get('sf_apps_dir_name').'/'.$app;
+
+    // upgrade config.php
+    _upgrade_0_8_config_php($app_dir);
 
     // upgrade all modules
     $dir = $app_dir.'/'.sfConfig::get('sf_app_module_dir_name');
@@ -139,21 +146,54 @@ function _upgrade_0_8_deprecated_for_templates($template_dirs)
   }
 }
 
+function _upgrade_0_8_config_php($app_dir)
+{
+  pake_echo_action('upgrade 0.8', 'upgrading config.php');
+
+  $config_file = $app_dir.DIRECTORY_SEPARATOR.sfConfig::get('sf_config_dir_name').DIRECTORY_SEPARATOR.'config.php';
+
+  $config_php = file_get_contents($config_file);
+
+  $config_php = str_replace('sfConfig::get(\'sf_lib_dir\').PATH_SEPARATOR', 'sfConfig::get(\'sf_root_dir\').PATH_SEPARATOR', $config_php);
+
+  file_put_contents($config_file, $config_php);
+}
+
+function _upgrade_0_8_propel_model()
+{
+  pake_echo_action('upgrade 0.8', 'upgrading require in models');
+
+  $seen = false;
+  $php_files = pakeFinder::type('file')->name('*.php')->in(sfConfig::get('sf_lib_dir').'/model');
+  foreach ($php_files as $php_file)
+  {
+    $content = file_get_contents($php_file);
+
+    $content = str_replace('require_once \'model', 'require_once \'lib/model', $content, $count1);
+    $content = str_replace('include_once \'model', 'include_once \'lib/model', $content, $count2);
+    if (($count1 || $count2) && !$seen)
+    {
+      $seen = true;
+      pake_echo_comment('model require must be lib/model/...');
+      pake_echo_comment('  instead of model/...');
+    }
+
+    file_put_contents($php_file, $content);
+  }
+}
+
 function _upgrade_0_8_propel_ini()
 {
+  pake_echo_action('upgrade 0.8', 'upgrading propel.ini configuration file');
+
   $propel_file = sfConfig::get('sf_config_dir').DIRECTORY_SEPARATOR.'propel.ini';
 
   if (is_readable($propel_file))
   {
-    pake_echo_action('upgrade 0.8', 'upgrading propel.ini configuration file');
-    pake_echo_comment('there are 2 new propel.ini options:');
-    pake_echo_comment(' - propel.builder.addIncludes');
-    pake_echo_comment(' - propel.builder.addComments');
-
     $propel_ini = file_get_contents($propel_file);
 
     // new target package (needed for new plugin system)
-    $propel_ini = preg_replace('#propel\.targetPackage(\s*)=(\s*)lib\.model#', 'propel.targetPackage$1=$2lib.model', $propel_ini);
+    $propel_ini = preg_replace('#propel\.targetPackage(\s*)=(\s*)model#', 'propel.targetPackage$1=$2lib.model', $propel_ini);
     $propel_ini = preg_replace('#propel.php.dir(\s*)=(\s*)\${propel.output.dir}/lib#', 'propel.php.dir$1=$2\${propel.output.dir}', $propel_ini);
 
     // new propel builder class to be able to remove require_* and strip comments
@@ -162,12 +202,20 @@ function _upgrade_0_8_propel_ini()
     $propel_ini = str_replace('propel.engine.builder.om.php5.PHP5MultiExtendObjectBuilder', 'symfony.addon.propel.builder.SfMultiExtendObjectBuilder', $propel_ini);
     $propel_ini = str_replace('propel.engine.builder.om.php5.PHP5MapBuilderBuilder', 'symfony.addon.propel.builder.SfMapBuilderBuilder', $propel_ini);
 
-    $propel_ini .= <<<EOF
+    if (false === strpos($propel_ini, 'addIncludes'))
+    {
+      $propel_ini .= <<<EOF
 
 propel.builder.addIncludes = false
 propel.builder.addComments = false
 
 EOF;
+
+      pake_echo_comment('there are 2 new propel.ini options:');
+      pake_echo_comment(' - propel.builder.addIncludes');
+      pake_echo_comment(' - propel.builder.addComments');
+
+    }
 
     file_put_contents($propel_file, $propel_ini);
   }
