@@ -1,85 +1,219 @@
-How to use plug-ins
+How to use plugins
 ===================
 
 Overview
 --------
 
-If you want to extend symfony, the plug-in system ensures you a great flexibility for distribution, upgrade and clean separation with the rest of the framework. Based on the PEAR extension, the symfony plug-in system allows to distribute custom libraries or modules.
+If you want to extend symfony, the plugin system ensures you a great flexibility for distribution, upgrade and clean separation with the rest of the framework. Based on the PEAR extension, the symfony plugin system allows to distribute custom libraries or modules.
 
-What is a plug-in?
+What is a plugin?
 ------------------
 
-A plug-in is a PEAR package. This has several benefits:
+A plugin is a packaged extension for a symfony project. 
 
-- Install, upgrades and uninstall are built-in features
-- Dependencies are also managed by PEAR
-- It natively supports various ways to broadcast a plug-in (from a local archive, from a URL, or from a PEAR channel)
-- The discovery of new plug-ins is automatic
+Plugins can contain classes, helpers, configuration, tasks, modules, schemas and model extensions of their own. The symfony autoloading mechanism takes plugins into account, and the features offered by a plugin are available in the project as if part of the framework. 
 
-You will find more about the PEAR distribution system in the [PEAR website][1].
+Plugins are easy to install, upgrade and uninstall. They can be distributed as a `.tgz` archive, a PEAR package or a simple checkout of a code repository. The PEAR packaged plugins have the advantage of managing dependencies, being easier to upgrade and automatically discovered. 
 
-The symfony plug-in system takes advantage of all the features of PEAR, and adds on top of that a custom set of roles, or locations, which allow a plug-in to be installed globally (it will then be available for all your PHP scripts) or locally (it is then copied in a specific project tree structure, and is only available there).
+All the plugins installed in a given project appear as sub-directories of the `plugins/` directory.
 
-Installing a plug-in
+Installing a plugin
 --------------------
 
-The symfony command line makes it easy to install a plug-in. For instance, to install the `sfShoppingCart` plug-in of the `symfony` channel for the current project, type:
+According to the way a plugin is packaged and to its method of broadcasting, the installation may differ. Always refer to the included README file and/or installation instructions on the plugin download page. Also, always clear the symfony cache after installing a plugin. 
 
-    $ symfony plugin-install local symfony/sfShoppingCart
-    
-This will install the shopping cart classes in the project `lib/` directory, and they will be available to the whole project without the need to require them manually (classes located in the the `lib/` directory are [autoloaded](configuration_practice.html#autoload).
+All the methods described below result in putting all the files of a plugin into a `plugins/pluginName/` directory.
 
->**Note**: As the symfony plug-in system relies on PEAR, the `plugin-install` will only work if you have PEAR 1.4.0 or higher installed.
+### Archive plugins
 
-If you know that you will need the plug-in for various projects, it is better to install it globally:
+If you download a plugin as an archive, then just unpack this archive into your project's `plugin/` directory, clear the cache, and you're done.
 
-    $ symfony plugin-install global symfony/sfShoppingCart
+### PEAR plugins
 
-In this case, the library will be installed in the `PEAR_LIB` directory. The command is equivalent to:
+Some plugins are hosted on PEAR channels. For instance, the `symfony` channel contains a few plugins. Install them with the `plugin-install` task, and don't forget to mention the channel name.
 
-    $ pear install symfony/sfShoppingCart
-    
->**Note**: The `global` installation of a plug-in can only work if you installed symfony itself via PEAR (not if you installed symfony from a SVN export or a downloaded archive). This is because the plug-ins specify a minimum version for the symfony framework, and this version is given by PEAR.
+    $ cd myproject
+    $ symfony plugin-install channelName/pluginName
+    $ symfony cc
 
-The plug-in location is not limited to a PEAR channel. You can also use a local .tgz archive or point directly to a web URL:
+You will find quite a number of plugins in the [symfony wiki](http://www.symfony-project.com/trac/wiki/SymfonyPlugins). Each plugin has its own page, and is bundled as an attachment to the page. To install such a plugin, use the `plugin-install` task with a full URL:
 
-    $ symfony plugin-install global /home/production/downloads/sfShoppingCart.tgz
-    $ symfony plugin-install global http://pear.symfony-project.com/get/sfShoppingCart-1.0.0.tgz
-    
-The symfony command line also provides other commands:
+    $ cd myproject
+    $ symfony plugin-install http://plugins.symfony-project.com/pluginName
+    $ symfony cc
 
-  Command name          | Effect
-  ----------------------|----------------------
-  `plugin-uninstall`    | uninstall a plug-in
-  `plugin-upgrade`      | upgrade a plug-in
-  `plugin-upgrade-all`  | upgrade all plug-ins
+Alternately, if you downloaded a PEAR package, replace the channel name by the absolute path to the package archive.
 
-Some plug-ins contain a whole module. Once again, a module plug-in can be installed either locally or globally. The only difference between module plug-ins and classic modules is that module plug-ins don't appear in the `myproject/apps/myapp/modules/` directory (to keep them easily upgradeable) and need to be activated in the `settings.yml` file:
+    $ cd myproject
+    $ symfony plugin-install /home/john/downloads/pluginName.tgz
+    $ symfony cc
+
+### Plugins from a version control repository
+
+Plugins sometimes have their own source code repository for version control. You can install them by doing a simple checkout in the `plugins/` directory, but this can be problematic if your project itself is under version control. 
+
+Alternatively, you can declare the plugin as an external dependance so that every update of your project source code also updates the plugin source code. For instance, Subversion stores external dependencies in the `svn:externals` property. To add a plugin, just edit the property and update your source code.
+
+    $ cd myproject
+    $ svn propedit svn:externals plugins
+      pluginName   http://svn.example.com/pluginName/trunk
+    $ svn up
+    $ symfony cc
+
+### Module activation
+
+Some plugins contain a whole module. The only difference between module plugins and classical modules is that module plugins don't appear in the `myproject/apps/myapp/modules/` directory (to keep them easily upgradeable) and need to be activated in the `settings.yml` file:
 
     all:
       .settings:
         activated_modules:  [default, sfMyPluginModule]
 
-This is to avoid that a plug-in module becomes available by mistake for a project that doesn't require it, which could open a security breach in symfony applications.
+This is to avoid that a plugin module becomes available by mistake for an application that doesn't require it, which could open a security breach.
 
-Anatomy of a plug-in
---------------------
+### Upgrading and uninstalling
 
-A plug-in comes under the shape of a .tgz package, containing at least a `package.xml` file and a folder with the files of the plug-in.
+To uninstall a plugin, just remove its directory from `plugins/` and clear the cache.
 
-For instance, let's have a look at the `sfShoppingCart` plug-in. You can download the archive at:
+To upgrade a plugin, either use the `plugin-upgrade` task (for a PEAR plugin) or do a `svn update` (if you grabbed the plugin from a version control repository).
 
-    http://pear.symfony-project.com/get/sfShoppingCart-1.0.0.tgz
+Additionally, call the `plugin-upgrade-all` task to upgrade all the plugins installed with the command line.
 
-The `package.xml` follows the PEAR syntax:
+What you can put in a plugin
+----------------------------
+
+### Plugin file structure
+
+A plugin directory is organized more or less like a project directory. The files that you put in the plugin directories are loaded by symfony when needed, provided that you put them in the right place.
+
+    myPlugin/
+      config/
+        *schema.yml        // data schema
+        *schema.xml
+        config.php         // specific plugin configuration
+      data/
+        fixtures/
+          *.yml            // fixtures files
+        tasks/
+          *.php            // pake tasks
+      lib/
+        *.php              // classes
+        helper/
+          *.php            // helpers
+        model/
+          *.php            // model classes
+      modules/
+        */                 // modules
+          actions/
+            actions.class.php
+          config/
+            module.yml
+            view.yml
+            security.yml
+          templates/
+            *.php
+          validate/
+            *.yml
+      web/
+        *                  // assets
+
+### Plugin abilities
+
+A few remarks concerning what you can put in these directories:
+
+* **Schemas** are detected by the propel tasks. When you call `propel-build-model` in your project, you rebuild the project model and all the plugins model. Beware that all classes defined in a plugin schema must provide a `package` attribute under the shape `plugins.pluginName.lib.model`.
+
+        propel:
+          my_plugin_foobar:
+            _attributes:    { phpName: myPluginFoobar, package: plugins.myPlugin.lib.model }
+            id:
+            name:           { type: varchar, size: 255, index: unique }
+            ...
+
+* **PHP Configuration** is included in the application bootstrap script (`config.php`). In a plugin `config.php`, you have access to the file path constants, the `sfConfig` class (but the configuration is empty) but not to the autoloading. Use this file to add directories to the PHP include path for instance.
+
+* **Fixtures** files are taken into account by the `propel-load-data` command
+
+* **Tasks** are immediately available to the symfony command line as soon as the plugin is installed. Type `symfony` to see the list of available tasks, including the ones added bu plugins.
+
+* **Custom classes** are autoloaded just like the ones you put in your project `lib/` folders.
+
+* **Helpers** are automatically found when you call a `use_helper()` inclusion in the templates of the project
+
+* **Model classes** in `myplugin/lib/model/` specialize the model classes generated by the Propel builder (in `myplugin/lib/model/om/` and `myplugin/lib/model/map/`). They are, of course, autoloaded. Beware that you cannot override the generated model classes of a plugin in your own project directories.
+
+* **Modules** provide new actions accessible from the outside, provided that you declare them in the `activated_module` setting in your application. Think about a plugin that provides frontend and backend modules. You will need to enable the frontend modules only in your `frontend` application, and the backend ones only in the `backend` application. This is why plugin modules are not activated by default.
+
+* **Web** assets are made available to the server, by creating a symlink to the project `web/` directory, if the system allows it, or by copying the content of the module `web/` directory into the project one. Beware that the module assets are automatically supported only when you install a plugin via the command line. If the plugin is installed from an archive or a version control repository, the copy to the project `web/` directory has to be done by hand, and the README bundled with the plugin should mention it.
+
+### Manual plugin setup
+
+There are some elements that you can't include automatically in a plugin that have to be done manually at installation:
+
+* **custom application configuration** can be used in the plugin code (for instance, by using `sfConfig::get('app_myplugin_foo')`) but you can't put the default values in an `app.yml` located in the plugin `config/` directory. To handle default values, use the second argument of the `sfConfig::get()` method. The settings can still be overridden at the application level.
+
+* **routing rules** have to be added manually to the application `routing.yml`. Plugins with specific routing rules should put them in the embedded README file.
+
+### Customizing a plugin for an application
+   
+Whenever you want to customize a  plugin, **never alter the code of the `plugins/`** directory. IF you do so, you will lose all your modifications when you upgrade the plugin. For customization needs, plugins provide custom settings, and they support overriding.
+
+Well designed plugins use **settings** that can be changed in the application `app.yml`.
+
+    // example plugin code
+    $foo = sfConfig::get('app_my_plugin_foo', 'bar');
+    
+    // Change the 'foo' default value ('bar') in the application app.yml
+    all:
+      my_plugin:
+        foo:       barbar
+
+The module settings and their default value are often described in the README file.
+
+You can replace the default contents of a plugin **module** by creating a module of the same name in your own application. It is not really overriding, since the elements in your application are used instead of the ones of the plugin. It works fine if you create **templates** and **configuration** files of the same name as the ones of the plugins.
+
+On the other hand, if a plugin wants to offer a module with the ability to override its **actions**, the `actions.class.php` in the plugin module must be empty and inherit from an autoloading class, so that the method of this class can be inherited as well by the `actions.class.php` of the application module.
+
+    [php]
+    // in myPlugin/modules/mymodule/lib/myPluginmymoduleActions.class.php
+    class myPluginmymoduleActions extends sfActions
+    {
+      public function executeIndex()
+      {
+        // Some code there
+      }
+    }
+    
+    // in myPlugin/modules/mymodule/actions/actions.class.php
+    class mymoduleActions extends myPluginmymoduleActions
+    {
+      // Nothing
+    }
+    
+    // in myapp/modules/mymodule/actions/actions.class.php
+    class mymoduleActions extends myPluginmymoduleActions
+    {
+      public function executeIndex()
+      {
+        // Override the plugin code there
+      }
+    }
+
+How to package a plugin for PEAR
+--------------------------------
+
+Plugins provided as PEAR packages are easier to upgrade, can declare dependencies and automatically deploy assets in the `web/` directory. All you need to do to package a plugin as a PEAR package is to add a `package.xml` at the root of the plugin and call the `pear package` command.
+
+### `package.xml` 
+
+The `package.xml` follows the PEAR syntax. For instance, here is a typical symfony plugin `package.xml`:
 
     [xml]
     <?xml version="1.0" encoding="UTF-8"?>
     <package packagerversion="1.4.6" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
-     <name>sfShoppingCart</name>
+     <name>sfSamplePlugin</name>
      <channel>pear.symfony-project.com</channel>
-     <summary>symfony shopping cart.</summary>
-     <description>symfony shopping cart.</description>
+     <summary>symfony sample plugin</summary>
+     <description>Just a sample plugin to illustrate the use of PEAR packaging</description>
      <lead>
       <name>Fabien POTENCIER</name>
       <user>fabpot</user>
@@ -100,8 +234,45 @@ The `package.xml` follows the PEAR syntax:
      <notes>-</notes>
      <contents>
       <dir name="/">
-       <file baseinstalldir="symfony/plugins/sfShoppingCart" install-as="sfShoppingCart.class.php" md5sum="96e619923c27d2cfbd3da2f860632fa4" name="lib/sfShoppingCart.class.php" role="php" />
-       <file baseinstalldir="symfony/plugins/sfShoppingCart" install-as="sfShoppingCartItem.class.php" md5sum="7edf5b42b0e11b491b5cba0559dc2f36" name="lib/sfShoppingCartItem.class.php" role="php" />
+       <file role="data" name="README" />
+       <file role="data" name="LICENSE" />
+      
+       <dir name="config">
+        <!-- model -->
+        <file role="data" name="schema.yml" />
+       </dir>
+  
+       <dir name="data">
+        <dir name="fixtures">
+         <!-- fixtures -->
+         <file role="data" name="fixtures.yml" />
+        </dir>
+        <dir name="tasks">
+         <!-- tasks -->
+         <file role="data" name="sfSampleTask.php" />
+        </dir>
+       </dir>
+  
+       <dir name="lib">
+        <dir name="model">
+         <!-- model classes -->
+         <file role="data" name="sfSampleFooBar.php" />
+         <file role="data" name="sfSampleFooBarPeer.php" />
+        </dir>
+        <dir name="validator">
+         <!-- validators ->>
+         <file role="data" name="sfSampleValidator.class.php" />
+        </dir>
+       </dir>
+  
+       <dir name="modules">
+        <dir name="sfSampleModule">
+         <file role="data" name="actions/actions.class.php" />
+         <file role="data" name="config/security.yml" />
+         <file role="data" name="lib/BasesfSampleModuleActions.class.php" />
+         <file role="data" name="templates/indexSuccess.php" />
+        </dir>
+       </dir>
       </dir>
      </contents>
      <dependencies>
@@ -115,8 +286,8 @@ The `package.xml` follows the PEAR syntax:
        <package>
         <name>symfony</name>
         <channel>pear.symfony-project.com</channel>
-        <min>0.6.0</min>
-        <max>0.8.0</max>
+        <min>0.8.0</min>
+        <max>0.9.999</max>
        </package>
       </required>
      </dependencies>
@@ -128,124 +299,45 @@ The interesting parts here are the `<contents>` and the `<dependencies>` tags. F
 
 ### Contents
 
-A plug-in is a set of files that can contain several types of data. According to the type of data - or _role_ - defined in the related `<content>` tag, the file will be copied in a different location on the disk.
+The `package.xml` describes the plugin file structure with `<dir>` and `<file>` tags. You don't have to use `<dir>` tags, since you can use relative paths in the file names. All files must have a `role="data"` attribute.
 
-  Role      | Location for local     | Location for global
-  ----------|------------------------|---------------------
-  `php`     | `myproject/lib/`       | `PEAR_PHP_DIR/`
-  `data`    | `myproject/data/`      | `PEAR_DATA_DIR/`
-  `bin`     | `myproject/batch/`     | `PEAR_BIN_DIR/`
-  `test`    | `myproject/test/`      | `PEAR_TEST_DIR/`
-  `doc`     | `myproject/doc/`       | `PEAR_DOC_DIR/`
-
->**Note**: To get the value of the PEAR directories in your installation, type in the command line:
-
-        $ pear config-show
-
-The `baseinstalldir` attribute tells to PEAR where to copy the content referenced in the `<content>` tag. 
-
-For instance, the 2 files of the `sfShoppingCart` plug-in are installed as follow:
-
-  File                           |  Local install                                               |  Global install
-  -------------------------------|--------------------------------------------------------------|-------------------
-  `sfShoppingCart.class.php`     | `myproject/lib/symfony/plugins/sfShoppingCart.class.php`     | `PEAR_PHP_DIR/symfony/plugins/sfShoppingCart.class.php`
-  `sfShoppingCartItem.class.php` | `myproject/lib/symfony/plugins/sfShoppingCartItem.class.php` | `PEAR_PHP_DIR/symfony/plugins/sfShoppingCartItem.class.php`
-
-The contents defined with a `php` role have the great advantage of being autoloaded whether being installed locally or globally.
-
-In addition, the choice to specify a basic tree structure pattern like `symfony/plugins/pluginName` for plug-ins ensures that they won't be lost in the PEAR of lib/ directories.
+Describe in the `<contents>` tag the file structure of your plugin.
 
 ### Dependencies
 
-Plug-ins are designed to work with a given set of versions of PHP, PEAR, symfony and sometimes other foreign libraries (like Propel) or plug-ins. Declaring these dependencies in the `<dependencies>` tag tells PEAR to check that the required packages are already installed, and to raise an exception if not.
+Plugins are designed to work with a given set of versions of PHP, PEAR, symfony, PEAR packages or other plugins. Declaring these dependencies in the `<dependencies>` tag tells PEAR to check that the required packages are already installed, and to raise an exception if not.
 
-When installing a local plug-in, the dependencies are not installed if not found. When installing a global plug-in, the PEAR configuration is used to see if the dependencies have to be installed when necessary, so beware that installing a plug-in requiring a newer version of symfony could launch the upgrade of the framework.
+You should always declare dependencies on PHP, PEAR and symfony, at least the ones corresponding to your own install, as a minimum requirement. If you don't know what to put, add a requirement for PHP 5.0, PEAR 1.4 and symfony 0.6 (the plugin system changed in an incompatible way between 0.6 and 0.8).
 
-Building your own plug-in
--------------------------
-
-If you decide to write a plug-in of your own, there are a few guidelines and rules to follow.
+We also recommend that you add a maximum version of symfony for your plugin. This will cause an error message when trying to use your plugin with a more advanced version of the framework, and this will oblige you to make sure that your plugin works correctly with this version before releasing it again. It's better to have an alert and to download an upgrade rather than having a plugin fail silently.
 
 ### Naming conventions
 
-To keep the PEAR and `lib/` directories clean, we recommend that all the plug-in names are in [camelCase][3] and start with 'sf' (ex: 'sfShoppingCart', 'sfFeed', etc.). Before naming your plug-in, check that there is no existing PEAR package or symfony plug-in with the same name.
+To keep the `plugin/` directory clean, we recommend that all the plugin names are in [camelCase][3], start with 'sf' (ex: 'sfShoppingCart', 'sfFeed', etc.) and end with 'Plugin'. Before naming your plugin, check that there is no existing plugin with the same name.
 
->**Note**: Plug-ins relying on Propel should contain 'Propel' in the name. For instance, an authentication plug-in using the Propel data access objects should be called 'sfPropelAuth'.
+>**Note**: plugins relying on Propel should contain 'Propel' in the name. For instance, an authentication plugin using the Propel data access objects should be called 'sfPropelAuth'.
 
-For a library, the files of role `php` should have a base install directory starting with `symfony/plugins/pluginName/`. For a module, the files should be of role `data` and have a base install directory starting with `symfony/modules/pluginName`.
+Plugins should include a `LICENSE` file describing the conditions of use and the chosen license. You are also advised to add a `README` file to explain the version changes, interest of the plugin, effect, installation and configuration instructions, etc.
 
-### Included files
-
-Plug-ins should include a `LICENSE` file describing the conditions of use and the chosen license. You are also advised to add a `README` file to explain the version changes, interest of the plug-in, effect, installation and configuration instructions, etc.
-
-The files to install should be placed in directories according to their role. The `php` files should be in a `lib/` folder, the `data` files in a `data/` folder, etc.
-
-And, of course, you have to write the `package.xml` file. Don't bother to add the `md5sum` to the `<content>` tags though, the PEAR package builder will do it for you (see below). To have an idea about how a typical pre-build `package.xml` looks like, check the ones in the [SVN repository](http://www.symfony-project.com/trac/browser/plugins).
-
-All in all, your plug-in directory should include the following files:
-
-    LICENSE
-    README
-    package.xml
-    lib/
-      file1.php
-      ...
-    data/
-      ...
-
-Most of the time, plug-ins should be able to work even if the archive is simply extracted in a `lib/` directory. Keep that in mind when designing the file structure of your own plug-in.
-
-### Post install script
-
-A PEAR package can include a post install script, which will manage installation operations that cannot be done with the standard PEAR mechanisms. The symfony plug-ins have access to the same feature. This allows you to setup a configuration when installing a module, add some data to a database, copy files out of the usual directories, etc.
-
-If you want to learn more about the PEAR post-install scripts, refer to the [PEAR manual][4].
-
-### Modules and embedded files
-
-If your plug-in is a module, it has to embed all the necessary configuration files with it. Use the classical file structure of a module to include a `module.yml` file for instance, and all i18n materials should definitely go into a `i18n/` directory.
-
-If your module has a specific data model, written in a `schema.yml`, you will need a post install script to copy it to the project `config/` directory for local installation. For global installations, your README file will have to specify that the `schema.yml` is to be copied manually in the `config/` directory of each project using the plug-in. In both cases, you must not override any existing `schema.yml` in the projects of the user, so it is best to call your schema `pluginName_schema.yml` (as soon as the name ends with `schema.yml`, the `propel-build-model` command will take it into account).
-
-If your plug-in includes media files (images, css, javascripts, etc.), you should declare them with a `data` role and specify a base install directory like `symfony/web/sf/MEDIA_TYPE/pluginName/`. For instance, to store a `myimage.jpg` images for the `sfMyPlugin` plug-in, write the `<content>` tag as follows:
-
-    [xml]
-    <file baseinstalldir="symfony/web/sf/img/sfMyPlugin" install-as="myimage.jpg" name="img/myimage.jpg" role="data" />
-    
-Once you do a global install of the plug-in, as you already have a `sf/` symbolic link to `symfony/web/sf/` in your server configuration, the image can be addressed to as:
-
-    [php]
-    <?php echo image_tag('/sf/img/sfMyPlugin/myimage.jpg') ?>
-    
-The trouble is for local install. The image will be installed in `myproject/data/symfony/web/sf/img/sfMyPlugin/myimage.jpg`, and this path is not accessible to the web server. The other problem is that you cannot copy the files to a local `web/sf/` directory, since the server already has an alias for that.
-
-The solution is to add a post install script to your PEAR package that will copy manually the media files to a `web/img/sfMyPlugin/` directory and remove the reference to the `sf/` directory in the case of a local install.
-
-### Dependencies
-
-You should always declare dependencies on PHP, PEAR and symfony, at least the ones corresponding to your own install, as a minimum requirement. If you don't know what to put, add a requirement for PHP 5.0, PEAR 1.4 and symfony 0.6 (plug-ins are not supported before 0.6).
-
-We also recommend that you add a maximum version of symfony for your plug-in. This will cause an error message when trying to use your plug-in with a more advanced version of the framework, and this will oblige you to make sure that your plug-in works correctly with this version before releasing it again. It's better to have an alert and to download an upgrade rather than having a plug-in fail silently.
-
-### Building the plug-in
+### Building the plugin
 
 The PEAR component has a command that creates the .tgz archive of the package, provided you call the following command from a directory containing a `package.xml`:
 
     $ pear package
-    
-Couldn't be easier.
 
-Once you built your plug-in, check that it works by installing it yourself.
+Once your plugin is built, check that it works by installing it yourself.
 
-### Hosting your plug-in at symfony-project.com
+Hosting your plugin at symfony-project.com
+-------------------------------------------
 
-The symfony team will be pleased to host your plug-in, provided that you respect the aforementioned rules and two additional ones:
-  - the license of the plug-in must be a MIT one
-  - the author of the plug-in must sign a symfony contributors license agreement
-
-The main advantages of being hosted by symfony are that your plug-in will be visible in the symfony channel, you will have a SVN access to a subdirectory of the `plugin/` repository, and we will automatically build a beta package based on the latest SVN version of your plug-in every night.
+  * Create your plugin on your machine (don't forget to add some documentation, a license file, a `package.xml` file, ...)
+  * Create a PEAR package for your plugin
+  * Create a new page on the wiki named `NamePlugin` where `name` is your plugin name and `Plugin` is a mandatory suffix. So, if you create a plugin named `Mojo`, create a wiki page named `MojoPlugin` and your PEAR package must be named `MojoPlugin-1.0.0.tgz` (1.0.0 is the PEAR version).
+  * Describe the plugin usage, the license, the dependancies, in the wiki page. Check the existing plugins wiki pages and use them as an example.
+  * Add you PEAR package as an attachment to your wiki page (`MojoPlugin-1.0.0.tgz`)
+  * Add your plugin to the plugin list on the wiki
 
 [1]: http://pear.php.net/                                                           "PEAR website"
 [2]: http://pear.php.net/manual/en/                                                 "PEAR manual"
 [3]: http://en.wikipedia.org/wiki/CamelCase                                         "camelCase definition at Wikipedia"
-[4]: http://pear.php.net/manual/fr/html/guide.migrating.postinstall.structure.html  "post install for PEAR documentation" 
+[4]: http://pear.php.net/manual/fr/html/guide.migrating.postinstall.structure.html  "post install for PEAR documentation"
