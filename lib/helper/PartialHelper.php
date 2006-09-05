@@ -190,7 +190,18 @@ function get_component($moduleName, $componentName, $vars = array())
   if (sfConfig::get('sf_logging_active')) $context->getLogger()->info('{PartialHelper} call "'.$moduleName.'->'.$componentToRun.'()'.'"');
 
   // run component
+  $sf_logging_active = sfConfig::get('sf_logging_active');
+  if ($sf_logging_active)
+  {
+    $timer = sfTimerManager::getTimer(sprintf('Component "%s/%s"', $moduleName, $componentName));
+  }
+
   $retval = $componentInstance->$componentToRun();
+
+  if ($sf_logging_active)
+  {
+    $timer->addTime();
+  }
 
   if ($retval != sfView::NONE)
   {
