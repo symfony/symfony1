@@ -563,7 +563,7 @@ class sfPropelDatabaseSchema
             $reference = $foreign_key_attributes['references'][0];
             
             // set simple foreign key
-            $this->database[$table][$reference['local']]['foreignTable'] = $foreign_key_name;
+            $this->database[$table][$reference['local']]['foreignTable'] = $foreign_key_attributes['foreign_table'];
             $this->database[$table][$reference['local']]['foreignReference'] = $reference['foreign'];
             if(isset($foreign_key_attributes['_attributes']['onDelete']))
             {
