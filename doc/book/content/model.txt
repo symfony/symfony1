@@ -417,7 +417,7 @@ But you can define much more for a column, and in this case you will need to def
         
 The column parameters are:
 
-* `type`: Propel column type. See [Propel list of types](http://propel.phpdb.org/docs/user_guide/chapters/ColumnTypes.html) for more details. 
+* `type`: Propel column type. See [Propel list of types](http://propel.phpdb.org/docs/user_guide/chapters/ColumnTypes.html) for more details. The compact syntax (`varchar(50)`) is also supported as a `type` value.
 * `size`: for `VARCHAR` type columns, the size of the string. Note that a column defined as `varchar(50)` in basic syntax is defined as `{ type: varchar , size: 50 }` in extended syntax.
 * `required`: `false` by default, set it to `true` if you want the column to be required
 * `default`: default value
@@ -476,14 +476,16 @@ As for the foreign-key explicit syntax, it is only useful for indexes built on m
 
 ### Column automatisms
 
-When meeting a column with no value, symfony will do some magic and add a value of its own:
+When meeting a column with names it recognizes, symfony will do some magic and add a value of its own if they are not already set:
 
     id:         { type: integer, required: true, primaryKey: true, autoincrement: true }
     foobar_id:  { type: integer, foreignTable: db_foobar, foreignReference: id }
     created_at: { type: timestamp }
     updated_at: { type: timestamp }
 
-For the foreign key automatism, symfony will look for a table having the same `phpName` as the beginning of the column name, and if one is found, it will take this table name as the `foreignTable`.
+For the foreign key automatism (which works for all columns ending with `_id`), symfony will look for a table having the same `phpName` as the beginning of the column name, and if one is found, it will take this table name as the `foreignTable`.
+
+Additionally, if a table doesn't define any primary key, symfony will automatically add an `id` column as an autoincremental integer.
 
 ### Table automatisms (I18n)
 
