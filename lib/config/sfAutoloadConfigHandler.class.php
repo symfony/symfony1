@@ -64,7 +64,7 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
       else
       {
         // directory mapping
-        $ext  = $entry['ext'];
+        $ext  = isset($entry['ext']) ? $entry['ext'] : '.php';
         $path = $entry['path'];
 
         $path = $this->replaceConstants($path);
