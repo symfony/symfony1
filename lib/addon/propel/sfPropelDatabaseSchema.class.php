@@ -238,9 +238,25 @@ class sfPropelDatabaseSchema
             }
           }
         }
-        elseif (isset($attributes['primaryKey']))
+        else
         {
-          $has_primary_key = true;
+          if(!is_array($attributes))
+          {
+            // compact type given as single attribute
+            $this->database[$table][$column] = $this->getAttributesFromCompactType($attributes);
+          }
+          else
+          {
+            if (isset($attributes['type']))
+            {
+              // compact type given as value of the type attribute
+              $this->database[$table][$column] = array_merge($this->database[$table][$column], $this->getAttributesFromCompactType($attributes['type']));
+            }
+            if (isset($attributes['primaryKey']))
+            {
+              $has_primary_key = true;
+            }
+          }
         }
       }
       
@@ -254,6 +270,19 @@ class sfPropelDatabaseSchema
           'autoincrement' => true
         );
       }
+    }
+  }
+  
+  private function getAttributesFromCompactType($type)
+  {
+    preg_match('/varchar\(([\d]+)\)/', $type, $matches);
+    if (isset($matches[1]))
+    {
+      return array('type' => 'varchar', 'size' => $matches[1]);
+    }
+    else
+    {
+      return array('type' => $type);
     }
   }
 
@@ -282,20 +311,7 @@ class sfPropelDatabaseSchema
   private function getAttributesForColumn($col_name, $column)
   {
     $attributes_string = '';
-    if (!is_array($column) && $column != null)
-    {
-      // simple type definition
-      preg_match('/varchar\(([\d]+)\)/', $column, $matches);
-      if (isset($matches[1]))
-      {
-        $attributes_string .= " type=\"varchar\" size=\"$matches[1]\" />\n";
-      }
-      else
-      {
-        $attributes_string .= " type=\"$column\" />\n";
-      }
-    }
-    elseif (is_array($column))
+    if (is_array($column))
     {
       foreach ($column as $key => $value)
       {
