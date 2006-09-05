@@ -18,14 +18,10 @@
  * @package    symfony
  * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @copyright  2004-2005 Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
 class sfViewCacheManager
 {
-  const
-    CURRENT_URI         = 1;
-
   private
     $cache              = null,
     $cacheConfig        = array(),
