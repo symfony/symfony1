@@ -194,6 +194,8 @@ class sfPropelDatabaseSchema
   {
     foreach ($this->getTables() as $table => $columns)
     {
+      $has_primary_key = false;
+      
       foreach ($columns as $column => $attributes)
       {
         if ($attributes == null)
@@ -214,6 +216,7 @@ class sfPropelDatabaseSchema
               'primaryKey'    => true,
               'autoincrement' => true
             );
+            $has_primary_key = true;
           }
 
           $pos = strpos($column, '_id');
@@ -234,8 +237,22 @@ class sfPropelDatabaseSchema
               throw new sfException(sprintf('Unable to resolve foreign table for column "%s"', $column));
             }
           }
-          
         }
+        elseif (isset($attributes['primaryKey']))
+        {
+          $has_primary_key = true;
+        }
+      }
+      
+      if(!$has_primary_key)
+      {
+        // convention for tables without primary key
+        $this->database[$table]['id'] = array (
+          'type'          => 'integer',
+          'required'      => true,
+          'primaryKey'    => true,
+          'autoincrement' => true
+        );
       }
     }
   }
