@@ -54,6 +54,20 @@ class sfLoader
     return $dirs;
   }
 
+  static public function getTemplateDir($appDir, $moduleName, $templateFile)
+  {
+    $dirs = self::getTemplateDirs($appDir, $moduleName);
+    foreach ($dirs as $dir)
+    {
+      if (is_readable($dir.'/'.$templateFile))
+      {
+        return $dir;
+      }
+    }
+
+    return null;
+  }
+
   static public function getConfigDirs($configPath)
   {
     $globalConfigPath = basename(dirname($configPath)).'/'.basename($configPath);

@@ -242,7 +242,8 @@ function include_partial($templateName, $vars = array())
  */
 function get_partial($templateName, $vars = array())
 {
-  if (sfConfig::get('sf_logging_active'))
+  $sf_logging_active = sfConfig::get('sf_logging_active');
+  if ($sf_logging_active)
   {
     $timer = sfTimerManager::getTimer(sprintf('Partial "%s"', $templateName));
   }
@@ -277,7 +278,7 @@ function get_partial($templateName, $vars = array())
 
     $retval = $cacheManager->get($uri, 'slot');
 
-    if (sfConfig::get('sf_logging_active') && $cacheManager->isCacheable($uri, 'slot'))
+    if ($sf_logging_active && $cacheManager->isCacheable($uri, 'slot'))
     {
       $context->getLogger()->info(sprintf('{PartialHelper} cache for "%s" %s', $uri, ($retval !== null ? 'exists' : 'does not exist')));
     }
@@ -289,7 +290,7 @@ function get_partial($templateName, $vars = array())
         $retval = sfWebDebug::getInstance()->decorateContentWithDebug($uri, 'slot', $retval, false);
       }
 
-      if (sfConfig::get('sf_logging_active'))
+      if ($sf_logging_active)
       {
         $timer->addTime();
       }
@@ -297,8 +298,6 @@ function get_partial($templateName, $vars = array())
       return $retval;
     }
   }
-
-  $viewType = ($moduleName == 'global') ? sfView::GLOBAL_PARTIAL : sfView::PARTIAL;
 
   $controller = $context->getController();
 
@@ -309,23 +308,32 @@ function get_partial($templateName, $vars = array())
   $controller->setRenderMode(sfView::RENDER_VAR);
 
   // get the view instance
-  $viewInstance = $controller->getView($moduleName, $actionName, $viewType);
+  $viewInstance = $controller->getView($moduleName, $actionName, '');
+
+  // not configurable
+  $viewInstance->setConfigurable(false);
 
   // initialize the view
-  if (!$viewInstance->initialize($context, $moduleName, $actionName, $viewType))
+  if (!$viewInstance->initialize($context, $moduleName, $actionName, ''))
   {
     // view failed to initialize
-    $error = 'View initialization failed for module "%s", view "%sView"';
-    $error = sprintf($error, $moduleName, $viewType);
+    $error = 'View initialization failed for module "%s"';
+    $error = sprintf($error, $moduleName);
 
     throw new sfInitializationException($error);
   }
 
-  // view initialization completed successfully
-  $viewInstance->execute();
+  $viewInstance->setTemplate($actionName.$viewInstance->getExtension());
+  if ('global' == $moduleName)
+  {
+    $viewInstance->setDirectory(sfConfig::get('sf_app_template_dir'));
+  }
 
   // no decorator
   $viewInstance->setDecorator(false);
+
+  // view initialization completed successfully
+  $viewInstance->execute();
 
   // render the partial template
   $retval = $viewInstance->render($vars);
@@ -345,13 +353,13 @@ function get_partial($templateName, $vars = array())
       }
     }
 
-    if (sfConfig::get('sf_logging_active') && $saved)
+    if ($sf_logging_active && $saved)
     {
       $context->getLogger()->info(sprintf('{PartialHelper} save slot "%s - %s" in cache', $uri, $cacheKey));
     }
   }
 
-  if (sfConfig::get('sf_logging_active'))
+  if ($sf_logging_active)
   {
     $timer->addTime();
   }

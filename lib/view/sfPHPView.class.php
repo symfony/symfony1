@@ -126,57 +126,12 @@ class sfPHPView extends sfView
 
   public function configure()
   {
-    $context          = $this->getContext();
-    $actionStackEntry = $context->getController()->getActionStack()->getLastEntry();
-
-    // store our current view
-    if (!$actionStackEntry->getViewInstance())
-    {
-      $actionStackEntry->setViewInstance($this);
-    }
-
-    // all directories to look for templates
-    $dirs = sfLoader::getTemplateDirs($this->getDirectory(), $this->moduleName);
-
     // require our configuration
+    $context = $this->getContext();
+    $actionStackEntry = $context->getController()->getActionStack()->getLastEntry();
     $action = $actionStackEntry->getActionInstance();
     $viewConfigFile = $this->moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/view.yml';
     require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$viewConfigFile));
-
-    if (sfView::GLOBAL_PARTIAL == $this->viewName)
-    {
-      // global partial
-      $templateFile = $this->actionName.$this->extension;
-      $dirs = array(sfConfig::get('sf_app_template_dir'));
-    }
-    else if (sfView::PARTIAL == $this->viewName)
-    {
-      // partial
-      $templateFile = $this->actionName.$this->extension;
-    }
-    else
-    {
-      $templateFile = $templateName.$this->viewName.$this->extension;
-    }
-
-    // set template name
-    $this->setTemplate($templateFile);
-
-    // set template directory
-    foreach ($dirs as $dir)
-    {
-      if (is_readable($dir.'/'.$templateFile))
-      {
-        $this->setDirectory($dir);
-
-        break;
-      }
-    }
-
-    if (sfConfig::get('sf_logging_active'))
-    {
-      $context->getLogger()->info(sprintf('{sfPHPView} execute view for template "%s"', $templateFile));
-    }
   }
 
   /**

@@ -72,3 +72,6 @@ default:
     autoloading_functions: ~
 
     charset: utf-8
+
+    escaping_strategy: bc
+    escaping_method:   ESC_ENTITIES

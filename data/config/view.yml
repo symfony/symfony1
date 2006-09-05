@@ -1,4 +1,1 @@
 default:
-  escaping:
-    strategy: bc
-    method:   ESC_ENTITIES
