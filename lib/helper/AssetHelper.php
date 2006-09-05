@@ -170,6 +170,26 @@ function stylesheet_tag()
 }
 
 /**
+ * Adds a stylesheet to the response object.
+ *
+ * @see sfResponse->addStylesheet()
+ */
+function use_stylesheet($css, $position = '', $options = array())
+{
+  sfContext::getInstance()->getResponse()->addStylesheet($css, $position, $options);
+}
+
+/**
+ * Adds a javascript to the response object.
+ *
+ * @see sfResponse->addJavascript()
+ */
+function use_javascript($js, $position = '')
+{
+  sfContext::getInstance()->getResponse()->addJavascript($js, $position);
+}
+
+/**
  * Returns the path to an image asset.
  *
  * <b>Example:</b>
