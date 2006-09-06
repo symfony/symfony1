@@ -54,16 +54,6 @@ abstract class sfView
   const HEADER_ONLY = 'Headers';
 
   /**
-   * Render a partial template.
-   */
-  const PARTIAL = 'Partial';
-
-  /**
-   * Render a global partial template.
-   */
-  const GLOBAL_PARTIAL = 'GlobalPartial';
-
-  /**
    * Render the presentation to the client.
    */
   const RENDER_CLIENT = 2;
@@ -77,11 +67,6 @@ abstract class sfView
    * Render the presentation to a variable.
    */
   const RENDER_VAR = 4;
-
-  /**
-   * Render the presentation from cache.
-   */
-  const RENDER_CACHE = 8;
 
   private
     $context            = null,

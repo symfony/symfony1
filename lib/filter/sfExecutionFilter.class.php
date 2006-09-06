@@ -56,7 +56,7 @@ class sfExecutionFilter extends sfFilter
       if ($context->getResponse()->getParameter($uri.'_'.$suffix, null, 'symfony/cache') !== null)
       {
         // action in cache, so go to the view
-        $viewName = sfView::RENDER_CACHE;
+        $viewName = sfView::RENDER_CLIENT;
       }
     }
 
