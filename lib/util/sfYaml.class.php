@@ -88,7 +88,8 @@ class sfYaml
     // if input is a file, process it
     if (strpos($input, "\n") === false && is_file($input))
     {
-      require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/TextHelper.php');
+      require_once(sfConfig::get('sf_symfony_lib_dir').'/config/sfLoader.class.php');
+      sfLoader::loadHelpers(array('Text'));
 
       ob_start();
       $retval = include($input);
