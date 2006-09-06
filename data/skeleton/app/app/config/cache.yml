@@ -1,4 +1,4 @@
 default:
-  activate:  off
-  type:      slot
-  lifetime:  86400
+  activate:   off
+  withLayout: false
+  lifetime:   86400

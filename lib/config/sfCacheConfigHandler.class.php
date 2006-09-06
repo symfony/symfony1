@@ -84,25 +84,25 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
     // activated?
     $activate = $this->getConfigValue('activate', $actionName);
 
-    // cache type for this action (slot or page)
-    $type = $this->getConfigValue('type', $actionName);
+    // cache with or without loayout
+    $withLayout = $this->getConfigValue('withLayout', $actionName) ? 'true' : 'false';
 
     // lifetime
-    $lifeTime = (!$activate) ? 0 : $this->getConfigValue('lifetime', $actionName);
+    $lifeTime = !$activate ? 0 : $this->getConfigValue('lifetime', $actionName);
 
     // client_lifetime
-    $clientLifetime = (!$activate) ? 0 : $this->getConfigValue('client_lifetime', $actionName, $lifeTime);
+    $clientLifetime = !$activate ? 0 : $this->getConfigValue('client_lifetime', $actionName, $lifeTime);
 
     // vary
     $vary = $this->getConfigValue('vary', $actionName, array());
-    if (is_string($vary))
+    if (!is_array($vary))
     {
       $vary = array($vary);
     }
 
     // add cache information to cache manager
-    $data[] = sprintf("\$this->addCache(\$moduleName, '%s', '%s', %s, '%s', %s);\n",
-                      $actionName, $type, $lifeTime, $clientLifetime, str_replace("\n", '', var_export($vary, true)));
+    $data[] = sprintf("\$this->addCache(\$moduleName, '%s', array('withLayout' => %s, 'lifeTime' => %s, 'clientLifeTime' => %s, 'vary' => %s));\n",
+                      $actionName, $withLayout, $lifeTime, $clientLifetime, str_replace("\n", '', var_export($vary, true)));
 
     return implode("\n", $data);
   }

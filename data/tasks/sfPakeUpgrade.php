@@ -59,6 +59,8 @@ function run_upgrade_0_8($task, $args)
 
       _upgrade_0_8_deprecated_for_generator($app_dir);
 
+      _upgrade_0_8_cache_yml($app_dir);
+
       // actions dirs
       $action_dirs = pakeFinder::type('directory')->name('actions')->mindepth(1)->maxdepth(1)->in($dir);
 
@@ -79,21 +81,50 @@ function run_upgrade_0_8($task, $args)
   pake_echo_comment(' - clear cache: symfony cc');
 }
 
+function _upgrade_0_8_cache_yml($app_dir)
+{
+  pake_echo_action('upgrade 0.8', 'upgrading cache configuration');
+
+  $yml_files = pakeFinder::type('files')->name('cache.yml')->in($app_dir);
+
+  $seen = false;
+  foreach ($yml_files as $yml_file)
+  {
+    $content = file_get_contents($yml_file);
+
+    $count = 0;
+    $content = preg_replace_callback('/type\:(\s*)(.+)$/m', '_upgrade_0_8_cache_yml_callback', $content, -1, $count);
+    if ($count && !$seen)
+    {
+      $seen = true;
+      pake_echo_comment('"type" has been removed in cache.yml');
+      pake_echo_comment(' read the doc about "withLayout"');
+    }
+
+    file_put_contents($yml_file, $content);
+  }
+}
+
+function _upgrade_0_8_cache_yml_callback($match)
+{
+  return 'withLayout:'.str_repeat(' ', max(1, strlen($match[1]) - 6)).(0 === strpos($match[2], 'page') ? 'true' : 'false');
+}
+
 function _upgrade_0_8_deprecated_for_generator($app_dir)
 {
   pake_echo_action('upgrade 0.8', 'upgrading deprecated helpers in generator.yml');
 
-  $php_files = pakeFinder::type('files')->name('generator.yml')->in($app_dir);
+  $yml_files = pakeFinder::type('files')->name('generator.yml')->in($app_dir);
 
   $seen = array();
   $deprecated_str = array(
     'admin_input_upload_tag' => 'admin_input_file_tag',
   );
-  foreach ($php_files as $php_file)
+  foreach ($yml_files as $yml_file)
   {
     foreach ($deprecated_str as $old => $new)
     {
-      $content = file_get_contents($php_file);
+      $content = file_get_contents($yml_file);
 
       $count = 0;
       $content = str_replace($old, $new, $content, $count);
@@ -105,7 +136,7 @@ function _upgrade_0_8_deprecated_for_generator($app_dir)
       }
     }
 
-    file_put_contents($php_file, $content);
+    file_put_contents($yml_file, $content);
   }
 }
 

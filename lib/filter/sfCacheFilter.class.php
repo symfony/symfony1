@@ -20,7 +20,7 @@ class sfCacheFilter extends sfFilter
     $cacheManager = null,
     $request      = null,
     $response     = null,
-    $toSave       = array();
+    $cache       = array();
 
   public function initialize($context, $parameters = array())
   {
@@ -54,23 +54,26 @@ class sfCacheFilter extends sfFilter
     $uri = sfRouting::getInstance()->getCurrentInternalUri();
 
     // page cache
-    $this->toSave[$uri.'_page'] = false;
-    $this->toSave[$uri.'_slot'] = false;
-    if ($this->cacheManager->isCacheable($uri, 'page'))
+    $this->cache[$uri] = array('page' => false, 'action' => false);
+    $cacheable = $this->cacheManager->isCacheable($uri);
+    if ($cacheable)
     {
-      $inCache = $this->getPageCache($uri);
-      $this->toSave[$uri.'_page'] = !$inCache;
-
-      if ($inCache)
+      if ($this->cacheManager->withLayout($uri))
       {
-        // page is in cache, so no need to run execution filter
-        $filterChain->executionFilterDone();
+        $inCache = $this->getPageCache($uri);
+        $this->cache[$uri]['page'] = !$inCache;
+
+        if ($inCache)
+        {
+          // page is in cache, so no need to run execution filter
+          $filterChain->executionFilterDone();
+        }
       }
-    }
-    else if ($this->cacheManager->isCacheable($uri, 'slot'))
-    {
-      $inCache = $this->getActionCache($uri);
-      $this->toSave[$uri.'_slot'] = !$inCache;
+      else
+      {
+        $inCache = $this->getActionCache($uri);
+        $this->cache[$uri]['action'] = !$inCache;
+      }
     }
 
     $filterChain->execute();
@@ -101,7 +104,7 @@ class sfCacheFilter extends sfFilter
         $uri = sfRouting::getInstance()->getCurrentInternalUri();
 
         // save page in cache
-        if ($this->toSave[$uri.'_page'])
+        if ($this->cache[$uri]['page'])
         {
           // set some headers that deals with cache
           $lifetime = $this->cacheManager->getClientLifeTime($uri, 'page');
@@ -117,10 +120,9 @@ class sfCacheFilter extends sfFilter
 
           $this->setPageCache($uri);
         }
-
-        // save slot in cache
-        if ($this->toSave[$uri.'_slot'])
+        else if ($this->cache[$uri]['action'])
         {
+          // save action in cache
           $this->setActionCache($uri);
         }
       }
@@ -138,7 +140,7 @@ class sfCacheFilter extends sfFilter
     }
 
     // save content in cache
-    $this->cacheManager->set(serialize($this->response), $uri, 'page');
+    $this->cacheManager->set(serialize($this->response), $uri);
 
     if (sfConfig::get('sf_web_debug'))
     {
@@ -155,7 +157,7 @@ class sfCacheFilter extends sfFilter
     $moduleName = $context->getModuleName();
     $actionName = $context->getActionName();
 
-    $retval = $this->cacheManager->get($uri, 'page');
+    $retval = $this->cacheManager->get($uri);
 
     if ($retval === null)
     {
@@ -187,28 +189,28 @@ class sfCacheFilter extends sfFilter
 
   private function setActionCache($uri)
   {
-    $content = $this->response->getParameter($uri.'_slot', null, 'symfony/cache');
+    $content = $this->response->getParameter($uri.'_action', null, 'symfony/cache');
 
     if ($content !== null)
     {
-      $cached = $this->cacheManager->set($content, $uri, 'slot');
+      $cached = $this->cacheManager->set($content, $uri);
     }
   }
 
   private function getActionCache($uri)
   {
     // retrieve content from cache
-    $retval = $this->cacheManager->get($uri, 'slot');
+    $retval = $this->cacheManager->get($uri);
 
     if ($retval && sfConfig::get('sf_web_debug'))
     {
       $tmp = unserialize($retval);
-      $tmp['content'] = sfWebDebug::getInstance()->decorateContentWithDebug($uri, 'slot', $tmp['content'], false);
+      $tmp['content'] = sfWebDebug::getInstance()->decorateContentWithDebug($uri, 'action', $tmp['content'], false);
       $retval = serialize($tmp);
     }
 
-    $this->response->setParameter('current_key', $uri.'_slot', 'symfony/cache/current');
-    $this->response->setParameter($uri.'_slot', $retval, 'symfony/cache');
+    $this->response->setParameter('current_key', $uri.'_action', 'symfony/cache/current');
+    $this->response->setParameter($uri.'_action', $retval, 'symfony/cache');
 
     return ($retval ? true : false);
   }
