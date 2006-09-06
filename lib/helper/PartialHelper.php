@@ -117,7 +117,8 @@ function get_component($moduleName, $componentName, $vars = array())
 
   // check cache
   $cacheKey = md5(serialize($vars));
-  if (null !== $retval = _get_cache($context, $moduleName, $actionName, $cacheKey))
+  $uri = $moduleName.'/'.$actionName.'?key='.$cacheKey;
+  if (null !== $retval = _get_cache($context, $moduleName, $actionName, $uri, $cacheKey))
   {
     return $retval;
   }
@@ -254,7 +255,8 @@ function get_partial($templateName, $vars = array())
   $actionName = '_'.$templateName;
 
   $cacheKey = md5(serialize($vars));
-  if (null !== $retval = _get_cache($context, $moduleName, $actionName, $cacheKey))
+  $uri = $moduleName.'/'.$actionName.'?key='.$cacheKey;
+  if (null !== $retval = _get_cache($context, $moduleName, $actionName, $uri, $cacheKey))
   {
     if ($sf_logging_active)
     {
@@ -334,7 +336,7 @@ function get_partial($templateName, $vars = array())
   return $retval;
 }
 
-function _get_cache($context, $moduleName, $actionName, $cacheKey)
+function _get_cache($context, $moduleName, $actionName, $uri, $cacheKey)
 {
   if (!sfConfig::get('sf_cache'))
   {
@@ -342,8 +344,6 @@ function _get_cache($context, $moduleName, $actionName, $cacheKey)
   }
 
   $cacheManager = $context->getViewCacheManager();
-
-  $uri = $moduleName.'/'.$actionName.'?key='.$cacheKey;
 
   // register our cache configuration
   $cacheConfigFile = $moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/cache.yml';
