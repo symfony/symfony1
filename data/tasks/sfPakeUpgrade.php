@@ -67,6 +67,13 @@ function run_upgrade_0_8($task, $args)
   }
 
   pake_echo_action('upgrade 0.8', 'done');
+
+  pake_mkdirs(sfConfig::get('sf_root_dir').'/plugins');
+  if (is_dir(sfConfig::get('sf_lib_dir').'/plugins'))
+  {
+    pake_echo_comment('WARNING: you must re-install all your plugins');
+  }
+
   pake_echo_comment('you can now:');
   pake_echo_comment(' - rebuild model: symfony propel-build-model');
   pake_echo_comment(' - clear cache: symfony cc');
