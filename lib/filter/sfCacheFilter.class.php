@@ -40,46 +40,39 @@ class sfCacheFilter extends sfFilter
    */
   public function execute ($filterChain)
   {
-    if (sfConfig::get('sf_cache'))
+    // no cache if GET or POST parameters
+    if (!sfConfig::get('sf_cache') || count($_GET) || count($_POST))
     {
-      // no cache if GET or POST parameters
-      if (count($_GET) || count($_POST))
-      {
-        $filterChain->execute();
+      $filterChain->execute();
 
-        return;
-      }
-
-      // register our cache configuration
-      $this->cacheManager->registerConfiguration($this->getContext()->getModuleName());
-
-      // page cache
-      list($uri, $suffix) = $this->cacheManager->getInternalUri('page');
-      $this->toSave[$uri.'_'.$suffix] = false;
-      if ($this->cacheManager->isCacheable($uri, $suffix))
-      {
-        $inCache = $this->getPageCache($uri, $suffix);
-        $this->toSave[$uri.'_'.$suffix] = !$inCache;
-
-        if ($inCache)
-        {
-          // page is in cache, so no need to run execution filter
-          $filterChain->executionFilterDone();
-        }
-      }
-      else
-      {
-        list($uri, $suffix) = $this->cacheManager->getInternalUri('slot');
-        $this->toSave[$uri.'_'.$suffix] = false;
-        if ($this->cacheManager->isCacheable($uri, $suffix))
-        {
-          $inCache = $this->getActionCache($uri, $suffix);
-          $this->toSave[$uri.'_'.$suffix] = !$inCache;
-        }
-      }
+      return;
     }
 
-    // execute next filter
+    // register our cache configuration
+    $this->cacheManager->registerConfiguration($this->getContext()->getModuleName());
+
+    $uri = sfRouting::getInstance()->getCurrentInternalUri();
+
+    // page cache
+    $this->toSave[$uri.'_page'] = false;
+    $this->toSave[$uri.'_slot'] = false;
+    if ($this->cacheManager->isCacheable($uri, 'page'))
+    {
+      $inCache = $this->getPageCache($uri);
+      $this->toSave[$uri.'_page'] = !$inCache;
+
+      if ($inCache)
+      {
+        // page is in cache, so no need to run execution filter
+        $filterChain->executionFilterDone();
+      }
+    }
+    else if ($this->cacheManager->isCacheable($uri, 'slot'))
+    {
+      $inCache = $this->getActionCache($uri);
+      $this->toSave[$uri.'_slot'] = !$inCache;
+    }
+
     $filterChain->execute();
   }
 
@@ -105,36 +98,30 @@ class sfCacheFilter extends sfFilter
       // cache only 200 HTTP status
       if ($this->response->getStatusCode() == 200)
       {
+        $uri = sfRouting::getInstance()->getCurrentInternalUri();
+
         // save page in cache
-        list($uri, $suffix) = $this->cacheManager->getInternalUri('page');
-        if ($this->toSave[$uri.'_'.$suffix])
+        if ($this->toSave[$uri.'_page'])
         {
           // set some headers that deals with cache
-          $lifetime = $this->cacheManager->getClientLifeTime($uri, $suffix);
+          $lifetime = $this->cacheManager->getClientLifeTime($uri, 'page');
           $this->response->setHttpHeader('Last-Modified', $this->response->getDate(time()), false);
           $this->response->setHttpHeader('Expires', $this->response->getDate(time() + $lifetime), false);
           $this->response->addCacheControlHttpHeader('max-age', $lifetime);
 
           // set Vary headers
-          foreach ($this->cacheManager->getVary($uri, $suffix) as $vary)
+          foreach ($this->cacheManager->getVary($uri, 'page') as $vary)
           {
             $this->response->addVaryHttpHeader($vary);
           }
 
-          $this->setPageCache($uri, $suffix);
-
-          if (sfConfig::get('sf_web_debug'))
-          {
-            $content = sfWebDebug::getInstance()->decorateContentWithDebug($uri, $suffix, $this->response->getContent(), true);
-            $this->response->setContent($content);
-          }
+          $this->setPageCache($uri);
         }
 
         // save slot in cache
-        list($uri, $suffix) = $this->cacheManager->getInternalUri('slot');
-        if (isset($this->toSave[$uri.'_'.$suffix]) && $this->toSave[$uri.'_'.$suffix])
+        if ($this->toSave[$uri.'_slot'])
         {
-          $this->setActionCache($uri, $suffix);
+          $this->setActionCache($uri);
         }
       }
     }
@@ -143,7 +130,7 @@ class sfCacheFilter extends sfFilter
     $filterChain->execute();
   }
 
-  private function setPageCache($uri, $suffix)
+  private function setPageCache($uri)
   {
     if ($this->getContext()->getController()->getRenderMode() != sfView::RENDER_CLIENT)
     {
@@ -151,10 +138,16 @@ class sfCacheFilter extends sfFilter
     }
 
     // save content in cache
-    $this->cacheManager->set(serialize($this->response), $uri, $suffix);
+    $this->cacheManager->set(serialize($this->response), $uri, 'page');
+
+    if (sfConfig::get('sf_web_debug'))
+    {
+      $content = sfWebDebug::getInstance()->decorateContentWithDebug($uri, 'page', $this->response->getContent(), true);
+      $this->response->setContent($content);
+    }
   }
 
-  private function getPageCache($uri, $suffix)
+  private function getPageCache($uri)
   {
     $context = $this->getContext();
 
@@ -162,7 +155,7 @@ class sfCacheFilter extends sfFilter
     $moduleName = $context->getModuleName();
     $actionName = $context->getActionName();
 
-    $retval = $this->cacheManager->get($uri, $suffix);
+    $retval = $this->cacheManager->get($uri, 'page');
 
     if ($retval === null)
     {
@@ -184,7 +177,7 @@ class sfCacheFilter extends sfFilter
 
       if (sfConfig::get('sf_web_debug'))
       {
-        $content = sfWebDebug::getInstance()->decorateContentWithDebug($uri, $suffix, $cachedResponse->getContent(), false);
+        $content = sfWebDebug::getInstance()->decorateContentWithDebug($uri, 'page', $cachedResponse->getContent(), false);
         $context->getResponse()->setContent($content);
       }
     }
@@ -192,30 +185,30 @@ class sfCacheFilter extends sfFilter
     return true;
   }
 
-  private function setActionCache($uri, $suffix)
+  private function setActionCache($uri)
   {
-    $content = $this->response->getParameter($uri.'_'.$suffix, null, 'symfony/cache');
+    $content = $this->response->getParameter($uri.'_slot', null, 'symfony/cache');
 
     if ($content !== null)
     {
-      $cached = $this->cacheManager->set($content, $uri, $suffix);
+      $cached = $this->cacheManager->set($content, $uri, 'slot');
     }
   }
 
-  private function getActionCache($uri, $suffix)
+  private function getActionCache($uri)
   {
     // retrieve content from cache
-    $retval = $this->cacheManager->get($uri, $suffix);
+    $retval = $this->cacheManager->get($uri, 'slot');
 
     if ($retval && sfConfig::get('sf_web_debug'))
     {
       $tmp = unserialize($retval);
-      $tmp['content'] = sfWebDebug::getInstance()->decorateContentWithDebug($uri, $suffix, $tmp['content'], false);
+      $tmp['content'] = sfWebDebug::getInstance()->decorateContentWithDebug($uri, 'slot', $tmp['content'], false);
       $retval = serialize($tmp);
     }
 
-    $this->response->setParameter('current_key', $uri.'_'.$suffix, 'symfony/cache/current');
-    $this->response->setParameter($uri.'_'.$suffix, $retval, 'symfony/cache');
+    $this->response->setParameter('current_key', $uri.'_slot', 'symfony/cache/current');
+    $this->response->setParameter($uri.'_slot', $retval, 'symfony/cache');
 
     return ($retval ? true : false);
   }
