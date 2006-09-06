@@ -57,6 +57,8 @@ function run_upgrade_0_8($task, $args)
 
       _upgrade_0_8_deprecated_for_templates($template_dirs);
 
+      _upgrade_0_8_deprecated_for_generator($app_dir);
+
       // actions dirs
       $action_dirs = pakeFinder::type('directory')->name('actions')->mindepth(1)->maxdepth(1)->in($dir);
 
@@ -68,6 +70,34 @@ function run_upgrade_0_8($task, $args)
   pake_echo_comment('you can now:');
   pake_echo_comment(' - rebuild model: symfony propel-build-model');
   pake_echo_comment(' - clear cache: symfony cc');
+}
+
+function _upgrade_0_8_deprecated_for_generator($app_dir)
+{
+  $php_files = pakeFinder::type('files')->name('generator.yml')->in($app_dir);
+
+  $seen = array();
+  $deprecated_str = array(
+    'admin_input_upload_tag' => 'admin_input_file_tag',
+  );
+  foreach ($php_files as $php_file)
+  {
+    foreach ($deprecated_str as $old => $new)
+    {
+      $content = file_get_contents($php_file);
+
+      $count = 0;
+      $content = str_replace($old, $new, $content, $count);
+      if ($count && !isset($seen[$old]))
+      {
+        $seen[$old] = true;
+        pake_echo_comment(sprintf('%s() has been removed', $old));
+        pake_echo_comment(sprintf(' use %s()', $new));
+      }
+    }
+
+    file_put_contents($php_file, $content);
+  }
 }
 
 function _upgrade_0_8_deprecated_for_actions($action_dirs)
@@ -89,6 +119,7 @@ function _upgrade_0_8_deprecated_for_actions($action_dirs)
     $seen = array();
     foreach ($deprecated as $old => $new)
     {
+      $count = 0;
       $content = str_replace($old, $new, $content, $count);
       if ($count && !isset($seen[$old]))
       {
@@ -117,6 +148,7 @@ function _upgrade_0_8_deprecated_for_templates($template_dirs)
   {
     $content = file_get_contents($php_file);
 
+    $count = 0;
     $content = preg_replace('#<\?php\s+include_javascripts\(\);?\s*\?>#', '', $content, -1, $count);
     if ($count && !isset($seen['include_javascripts']))
     {
@@ -169,6 +201,8 @@ function _upgrade_0_8_propel_model()
   {
     $content = file_get_contents($php_file);
 
+    $count1 = 0;
+    $count2 = 0;
     $content = str_replace('require_once \'model', 'require_once \'lib/model', $content, $count1);
     $content = str_replace('include_once \'model', 'include_once \'lib/model', $content, $count2);
     if (($count1 || $count2) && !$seen)
