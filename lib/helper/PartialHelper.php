@@ -116,12 +116,14 @@ function get_component($moduleName, $componentName, $vars = array())
   $actionName = '_'.$componentName;
 
   // check cache
-  $cacheManager = $context->getViewCacheManager();
-  $cacheManager->registerConfiguration($moduleName);
-  $uri = $moduleName.'/'.$actionName.'?key='.md5(serialize($vars));
-  if ($retval = _get_cache($cacheManager, $uri))
+  if ($cacheManager = $context->getViewCacheManager())
   {
-    return $retval;
+    $cacheManager->registerConfiguration($moduleName);
+    $uri = $moduleName.'/'.$actionName.'?key='.md5(serialize($vars));
+    if ($retval = _get_cache($cacheManager, $uri))
+    {
+      return $retval;
+    }
   }
 
   $controller = $context->getController();
@@ -194,7 +196,10 @@ function get_component($moduleName, $componentName, $vars = array())
     $view->initialize($context, $moduleName, $actionName, '');
     $retval = $view->render($componentInstance->getVarHolder()->getAll());
 
-    $retval = _set_cache($cacheManager, $uri, $retval);
+    if ($cacheManager)
+    {
+      $retval = _set_cache($cacheManager, $uri, $retval);
+    }
 
     return $retval;
   }
@@ -254,19 +259,24 @@ function get_partial($templateName, $vars = array())
   }
   $actionName = '_'.$templateName;
 
-  $cacheManager = $context->getViewCacheManager();
-  $cacheManager->registerConfiguration($moduleName);
-  $uri = $moduleName.'/'.$actionName.'?key='.md5(serialize($vars));
-  if ($retval = _get_cache($cacheManager, $uri))
+  if ($cacheManager = $context->getViewCacheManager())
   {
-    return $retval;
+    $cacheManager->registerConfiguration($moduleName);
+    $uri = $moduleName.'/'.$actionName.'?key='.md5(serialize($vars));
+    if ($retval = _get_cache($cacheManager, $uri))
+    {
+      return $retval;
+    }
   }
 
   $view = new sfPartialView();
   $view->initialize($context, $moduleName, $actionName, '');
   $retval = $view->render($vars);
 
-  $retval = _set_cache($cacheManager, $uri, $retval);
+  if ($cacheManager)
+  {
+    $retval = _set_cache($cacheManager, $uri, $retval);
+  }
 
   return $retval;
 }
