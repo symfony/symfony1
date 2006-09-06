@@ -74,6 +74,8 @@ function run_upgrade_0_8($task, $args)
 
 function _upgrade_0_8_deprecated_for_generator($app_dir)
 {
+  pake_echo_action('upgrade 0.8', 'upgrading deprecated helpers in generator.yml');
+
   $php_files = pakeFinder::type('files')->name('generator.yml')->in($app_dir);
 
   $seen = array();
