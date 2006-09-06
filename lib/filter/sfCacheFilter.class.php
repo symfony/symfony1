@@ -53,11 +53,7 @@ class sfCacheFilter extends sfFilter
       $context = $this->getContext();
 
       // register our cache configuration
-      $moduleName = $context->getModuleName(); // is used in the cache.yml file
-      $cacheConfigFile = $moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/cache.yml';
-      $actionName   = $context->getActionName();
-      $cacheManager = $this->cacheManager;
-      require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$cacheConfigFile));
+      $this->cacheManager->registerConfiguration($context->getModuleName());
 
       // page cache
       list($uri, $suffix) = $this->cacheManager->getInternalUri('page');
@@ -151,20 +147,13 @@ class sfCacheFilter extends sfFilter
 
   private function setPageCache($uri, $suffix)
   {
-    $context = $this->getContext();
-
-    if ($context->getController()->getRenderMode() != sfView::RENDER_CLIENT)
+    if ($this->getContext()->getController()->getRenderMode() != sfView::RENDER_CLIENT)
     {
       return;
     }
 
     // save content in cache
     $this->cacheManager->set(serialize($this->response), $uri, $suffix);
-
-    if (sfConfig::get('sf_logging_active'))
-    {
-      $context->getLogger()->info('{sfCacheFilter} save page "'.$uri.' - '.$suffix.'" in cache');
-    }
   }
 
   private function getPageCache($uri, $suffix)
@@ -176,11 +165,6 @@ class sfCacheFilter extends sfFilter
     $actionName = $context->getActionName();
 
     $retval = $this->cacheManager->get($uri, $suffix);
-
-    if (sfConfig::get('sf_logging_active'))
-    {
-      $context->getLogger()->info('{sfCacheFilter} page cache "'.$uri.' - '.$suffix.'" '.($retval !== null ? 'exists' : 'does not exist'));
-    }
 
     if ($retval === null)
     {
@@ -218,11 +202,6 @@ class sfCacheFilter extends sfFilter
     {
       $cached = $this->cacheManager->set($content, $uri, $suffix);
     }
-
-    if (sfConfig::get('sf_logging_active') && $cached)
-    {
-      $this->getContext()->getLogger()->info('{sfCacheFilter} save slot "'.$uri.' - '.$suffix.'" in cache');
-    }
   }
 
   private function getActionCache($uri, $suffix)
@@ -230,7 +209,7 @@ class sfCacheFilter extends sfFilter
     // retrieve content from cache
     $retval = $this->cacheManager->get($uri, $suffix);
 
-    if (sfConfig::get('sf_web_debug') && $retval)
+    if ($retval && sfConfig::get('sf_web_debug'))
     {
       $tmp = unserialize($retval);
       $tmp['content'] = sfWebDebug::getInstance()->decorateContentWithDebug($uri, $suffix, $tmp['content'], false);
@@ -239,11 +218,6 @@ class sfCacheFilter extends sfFilter
 
     $this->response->setParameter('current_key', $uri.'_'.$suffix, 'symfony/cache/current');
     $this->response->setParameter($uri.'_'.$suffix, $retval, 'symfony/cache');
-
-    if (sfConfig::get('sf_logging_active'))
-    {
-      $this->getContext()->getLogger()->info('{sfCacheFilter} cache for "'.$uri.' - '.$suffix.'" '.($retval !== null ? 'exists' : 'does not exist'));
-    }
 
     return ($retval ? true : false);
   }

@@ -86,7 +86,6 @@ abstract class sfView
   private
     $context            = null,
     $decorator          = false,
-    $configurable       = true,
     $decoratorDirectory = null,
     $decoratorTemplate  = null,
     $directory          = null,
@@ -323,7 +322,7 @@ abstract class sfView
   {
     if (sfConfig::get('sf_logging_active'))
     {
-      $context->getLogger()->info(sprintf('{sfPHPView} initialize view for "%s/%s"', $moduleName, $actionName));
+      $context->getLogger()->info(sprintf('{sfView} initialize view for "%s/%s"', $moduleName, $actionName));
     }
 
     $this->moduleName = $moduleName;
@@ -337,8 +336,8 @@ abstract class sfView
     $this->parameter_holder->add(sfConfig::get('mod_'.strtolower($moduleName).'_view_param', array()));
 
     // set the currently executing module's template directory as the default template directory
-    $this->decoratorDirectory = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_template_dir_name');
-    $this->directory          = $this->decoratorDirectory;
+    $this->directory = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_template_dir_name');
+    $this->decoratorDirectory = sfConfig::get('sf_app_template_dir');
 
     // store our current view
     $actionStackEntry = $context->getController()->getActionStack()->getLastEntry();
@@ -348,10 +347,7 @@ abstract class sfView
     }
 
     // include view configuration
-    if ($this->isConfigurable())
-    {
-      $this->configure();
-    }
+    $this->configure();
 
     // set template directory
     $this->setDirectory(sfLoader::getTemplateDir($this->directory, $moduleName, $this->getTemplate()));
@@ -599,21 +595,6 @@ abstract class sfView
     {
       $this->template = $template;
     }
-  }
-
-  /**
-   * Indicates that this view is configurable.
-   *
-   * @return bool true, if this view is configurable, otherwise false.
-   */
-  public function isConfigurable ()
-  {
-    return $this->configurable;
-  }
-
-  public function setConfigurable ($boolean)
-  {
-    $this->configurable = (boolean) $boolean;
   }
 
   public function getExtension ()

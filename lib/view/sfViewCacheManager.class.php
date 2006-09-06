@@ -143,6 +143,11 @@ class sfViewCacheManager
     );
   }
 
+  public function registerConfiguration($moduleName)
+  {
+    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/cache.yml'));
+  }
+
   public function getLifeTime($internalUri, $suffix = 'slot')
   {
     return $this->getCacheConfig($internalUri, $suffix, 'lifeTime', 0);
@@ -207,7 +212,14 @@ class sfViewCacheManager
 
     $this->cache->setLifeTime($this->getLifeTime($internalUri, $suffix));
 
-    return $this->cache->get($id, $namespace);
+    $retval = $this->cache->get($id, $namespace);
+
+    if (sfConfig::get('sf_logging_active'))
+    {
+      $this->getContext()->getLogger()->info(sprintf('{sfViewCacheManager} cache for "%s" %s', $internalUri, ($retval !== null ? 'exists' : 'does not exist')));
+    }
+
+    return $retval;
   }
 
   public function has($internalUri, $suffix = 'slot')
@@ -261,17 +273,26 @@ class sfViewCacheManager
     {
       if (!$ret)
       {
-        if (sfConfig::get('sf_logging_active')) $this->context->getLogger()->err('{sfViewCacheManager} error writing cache for "'.$namespace.'" and id "'.$id.'"');
+        if (sfConfig::get('sf_logging_active'))
+        {
+          $this->context->getLogger()->err(sprintf('{sfViewCacheManager} error saving cache for "%s"', $internalUri));
+        }
       }
       else
       {
         if (strlen($data) - $length)
         {
-          if (sfConfig::get('sf_logging_active')) $this->context->getLogger()->info('{sfViewCacheManager} save optimized content ('.sprintf('%d', strlen($data) - $length).' &raquo; '.sprintf('%.0f', ((strlen($data) - $length) / $length) * 100).'%)');
+          if (sfConfig::get('sf_logging_active'))
+          {
+            $this->context->getLogger()->info(sprintf('{sfViewCacheManager} save optimized cache for "%s" (%d% &raquo; %.0f%%)', $internalUri, strlen($data) - $length), (strlen($data) - $length) * 100 / $length);
+          }
         }
         else
         {
-          if (sfConfig::get('sf_logging_active')) $this->context->getLogger()->info('{sfViewCacheManager} save content');
+          if (sfConfig::get('sf_logging_active'))
+          {
+            $this->context->getLogger()->info(sprintf('{sfViewCacheManager} save cache for "%s"', $internalUri));
+          }
         }
       }
     }

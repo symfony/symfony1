@@ -161,40 +161,29 @@ class sfExecutionFilter extends sfFilter
       // get the view instance
       $viewInstance = $controller->getView($moduleName, $actionName, $viewName);
 
-      // initialize the view
-      if ($viewInstance->initialize($context, $moduleName, $actionName, $viewName))
+      $viewInstance->initialize($context, $moduleName, $actionName, $viewName);
+
+      $viewInstance->execute();
+
+      // render the view and if data is returned, stick it in the
+      // action entry which was retrieved from the execution chain
+      $viewData = $viewInstance->render();
+
+      if (sfConfig::get('sf_logging_active'))
       {
-        // view initialization completed successfully
-        $viewInstance->execute();
+        $timer->addTime();
+      }
 
-        // render the view and if data is returned, stick it in the
-        // action entry which was retrieved from the execution chain
-        $viewData = $viewInstance->render();
-
-        if (sfConfig::get('sf_logging_active'))
-        {
-          $timer->addTime();
-        }
-
-        if ($controller->getRenderMode() == sfView::RENDER_VAR)
-        {
-          $actionEntry->setPresentation($viewData);
-        }
-        else
-        {
-          $filterChain->executionFilterDone();
-
-          // execute next filter
-          $filterChain->execute();
-        }
+      if ($controller->getRenderMode() == sfView::RENDER_VAR)
+      {
+        $actionEntry->setPresentation($viewData);
       }
       else
       {
-        // view failed to initialize
-        $error = 'View initialization failed for module "%s", view "%sView"';
-        $error = sprintf($error, $moduleName, $viewName);
+        $filterChain->executionFilterDone();
 
-        throw new sfInitializationException($error);
+        // execute next filter
+        $filterChain->execute();
       }
     }
   }

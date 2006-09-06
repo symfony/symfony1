@@ -161,7 +161,6 @@ class sfViewConfigHandler extends sfYamlConfigHandler
      if (false !== \$layoutNameFromAction $cond1 $cond2)
      {
        \$layoutName = \$layoutNameFromAction ? \$layoutNameFromAction : '$layoutNameFromView';
-       \$this->setDecoratorDirectory(sfConfig::get('sf_app_template_dir'));
        \$this->setDecoratorTemplate(\$layoutName.'.php');
      }
 

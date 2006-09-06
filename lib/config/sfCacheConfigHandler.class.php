@@ -60,20 +60,13 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
         continue;
       }
 
-      $data[] = ($first ? '' : 'else ')."if (\$actionName == '$actionName')\n".
-                "{\n";
-
       $data[] = $this->addCache($actionName);
-
-      $data[] = "}\n";
 
       $first = false;
     }
 
     // general cache configuration
-    $data[] = ($first ? '' : "else\n{")."\n";
     $data[] = $this->addCache('DEFAULT');
-    $data[] = ($first ? '' : "}")."\n";
 
     // compile data
     $retval = sprintf("<?php\n".
@@ -108,8 +101,8 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
     }
 
     // add cache information to cache manager
-    $data[] = sprintf("  \$cacheManager->addCache(\$moduleName, '%s', '%s', %s, '%s', %s);\n\n",
-                      $actionName, $type, $lifeTime, $clientLifetime, var_export($vary, true));
+    $data[] = sprintf("\$this->addCache(\$moduleName, '%s', '%s', %s, '%s', %s);\n",
+                      $actionName, $type, $lifeTime, $clientLifetime, str_replace("\n", '', var_export($vary, true)));
 
     return implode("\n", $data);
   }
