@@ -188,8 +188,10 @@ function get_component($moduleName, $componentName, $vars = array())
     // get component vars
     $componentVars = $componentInstance->getVarHolder()->getAll();
 
-    // include partial
-    return get_partial($moduleName.'/'.$componentName, $componentVars);
+    // render partial
+    $retval = _render_partial($context, $moduleName, $actionName, $componentVars);
+
+    return _set_cache($context, $uri, $cacheKey, $retval);
   }
 }
 
@@ -233,12 +235,6 @@ function include_partial($templateName, $vars = array())
  */
 function get_partial($templateName, $vars = array())
 {
-  $sf_logging_active = sfConfig::get('sf_logging_active');
-  if ($sf_logging_active)
-  {
-    $timer = sfTimerManager::getTimer(sprintf('Partial "%s"', $templateName));
-  }
-
   $context = sfContext::getInstance();
 
   // partial is in another module?
@@ -264,6 +260,21 @@ function get_partial($templateName, $vars = array())
     }
 
     return $retval;
+  }
+
+  $retval = _render_partial($context, $moduleName, $actionName, $vars);
+
+  $retval = _set_cache($context, $uri, $cacheKey, $retval);
+
+  return $retval;
+}
+
+function _render_partial($context, $moduleName, $actionName, $vars = array())
+{
+  $sf_logging_active = sfConfig::get('sf_logging_active');
+  if ($sf_logging_active)
+  {
+    $timer = sfTimerManager::getTimer(sprintf('Partial "%s/%s"', $moduleName, $actionName));
   }
 
   $controller = $context->getController();
@@ -308,29 +319,36 @@ function get_partial($templateName, $vars = array())
   // put render mode back
   $controller->setRenderMode($renderMode);
 
-  if (sfConfig::get('sf_cache'))
-  {
-    if ($retval !== null)
-    {
-      $cacheManager = $context->getViewCacheManager();
-
-      $saved = $cacheManager->set($retval, $uri, 'slot');
-
-      if (sfConfig::get('sf_web_debug') && $saved)
-      {
-        $retval = sfWebDebug::getInstance()->decorateContentWithDebug($uri, 'slot', $retval, true);
-      }
-    }
-
-    if ($sf_logging_active && $saved)
-    {
-      $context->getLogger()->info(sprintf('{PartialHelper} save slot "%s - %s" in cache', $uri, $cacheKey));
-    }
-  }
-
   if ($sf_logging_active)
   {
     $timer->addTime();
+  }
+
+  return $retval;
+}
+
+function _set_cache($context, $uri, $cacheKey, $retval)
+{
+  if (!sfConfig::get('sf_cache'))
+  {
+    return null;
+  }
+
+  if ($retval !== null)
+  {
+    $cacheManager = $context->getViewCacheManager();
+
+    $saved = $cacheManager->set($retval, $uri, 'slot');
+
+    if (sfConfig::get('sf_web_debug') && $saved)
+    {
+      $retval = sfWebDebug::getInstance()->decorateContentWithDebug($uri, 'slot', $retval, true);
+    }
+  }
+
+  if (sfConfig::get('sf_logging_active') && $saved)
+  {
+    $context->getLogger()->info(sprintf('{PartialHelper} save slot "%s - %s" in cache', $uri, $cacheKey));
   }
 
   return $retval;
