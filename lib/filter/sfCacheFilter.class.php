@@ -50,10 +50,8 @@ class sfCacheFilter extends sfFilter
         return;
       }
 
-      $context = $this->getContext();
-
       // register our cache configuration
-      $this->cacheManager->registerConfiguration($context->getModuleName());
+      $this->cacheManager->registerConfiguration($this->getContext()->getModuleName());
 
       // page cache
       list($uri, $suffix) = $this->cacheManager->getInternalUri('page');

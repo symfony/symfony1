@@ -145,7 +145,13 @@ class sfViewCacheManager
 
   public function registerConfiguration($moduleName)
   {
-    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/cache.yml'));
+    static $loaded = array();
+
+    if (!isset($loaded[$moduleName]))
+    {
+      require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/cache.yml'));
+      $loaded[$moduleName] = true;
+    }
   }
 
   public function getLifeTime($internalUri, $suffix = 'slot')
