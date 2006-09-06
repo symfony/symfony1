@@ -69,13 +69,14 @@ class sfCreoleDatabase extends sfDatabase
           $password = $this->getParameter('password', null);
           $phptype  = $this->getParameter('phptype',  null);
           $username = $this->getParameter('username', null);
+          $port     = $this->getParameter('port',     null);
 
           $dsn = array('database' => $database,
                        'hostspec' => $hostspec,
                        'password' => $password,
                        'phptype'  => $phptype,
-                       'username' => $username);
-
+                       'username' => $username,
+                       'port'     => $port);
           break;
 
         case 'dsn':
