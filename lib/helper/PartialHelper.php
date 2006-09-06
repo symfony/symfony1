@@ -112,35 +112,14 @@ function include_component($moduleName, $componentName, $vars = array())
  */
 function get_component($moduleName, $componentName, $vars = array())
 {
-  $context      = sfContext::getInstance();
-  $cacheManager = $context->getViewCacheManager();
+  $context = sfContext::getInstance();
+  $actionName = '_'.$componentName;
 
-  if (sfConfig::get('sf_cache'))
+  // check cache
+  $cacheKey = md5(serialize($vars));
+  if (null !== $retval = _get_cache($context, $moduleName, $actionName, $cacheKey))
   {
-    $actionName = '_'.$componentName;
-    $cacheKey = md5(serialize($vars));
-    $uri = $moduleName.'/'.$actionName.'?key='.$cacheKey;
-
-    // register our cache configuration
-    $cacheConfigFile = $moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/cache.yml';
-    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$cacheConfigFile));
-
-    $retval = $cacheManager->get($uri, 'slot');
-
-    if (sfConfig::get('sf_logging_active') && $cacheManager->isCacheable($uri, 'slot'))
-    {
-      $context->getLogger()->info(sprintf('{PartialHelper} cache for "%s" %s', $uri, ($retval !== null ? 'exists' : 'does not exist')));
-    }
-
-    if ($retval !== null)
-    {
-      if (sfConfig::get('sf_web_debug'))
-      {
-        $retval = sfWebDebug::getInstance()->decorateContentWithDebug($uri, 'slot', $retval, false);
-      }
-
-      return $retval;
-    }
+    return $retval;
   }
 
   $controller = $context->getController();
@@ -259,8 +238,7 @@ function get_partial($templateName, $vars = array())
     $timer = sfTimerManager::getTimer(sprintf('Partial "%s"', $templateName));
   }
 
-  $context      = sfContext::getInstance();
-  $cacheManager = $context->getViewCacheManager();
+  $context = sfContext::getInstance();
 
   // partial is in another module?
   $sep = strpos($templateName, '/');
@@ -275,39 +253,15 @@ function get_partial($templateName, $vars = array())
   }
   $actionName = '_'.$templateName;
 
-  if (sfConfig::get('sf_cache'))
+  $cacheKey = md5(serialize($vars));
+  if (null !== $retval = _get_cache($context, $moduleName, $actionName, $cacheKey))
   {
-    $cacheKey = md5(serialize($vars));
-    $uri = $moduleName.'/'.$actionName.'?key='.$cacheKey;
-
-    // register our cache configuration
-    $cacheConfigFile = $moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/cache.yml';
-    if (is_readable(sfConfig::get('sf_app_module_dir').'/'.$cacheConfigFile))
+    if ($sf_logging_active)
     {
-      require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$cacheConfigFile));
+      $timer->addTime();
     }
 
-    $retval = $cacheManager->get($uri, 'slot');
-
-    if ($sf_logging_active && $cacheManager->isCacheable($uri, 'slot'))
-    {
-      $context->getLogger()->info(sprintf('{PartialHelper} cache for "%s" %s', $uri, ($retval !== null ? 'exists' : 'does not exist')));
-    }
-
-    if ($retval !== null)
-    {
-      if (sfConfig::get('sf_web_debug'))
-      {
-        $retval = sfWebDebug::getInstance()->decorateContentWithDebug($uri, 'slot', $retval, false);
-      }
-
-      if ($sf_logging_active)
-      {
-        $timer->addTime();
-      }
-
-      return $retval;
-    }
+    return $retval;
   }
 
   $controller = $context->getController();
@@ -356,6 +310,8 @@ function get_partial($templateName, $vars = array())
   {
     if ($retval !== null)
     {
+      $cacheManager = $context->getViewCacheManager();
+
       $saved = $cacheManager->set($retval, $uri, 'slot');
 
       if (sfConfig::get('sf_web_debug') && $saved)
@@ -376,6 +332,42 @@ function get_partial($templateName, $vars = array())
   }
 
   return $retval;
+}
+
+function _get_cache($context, $moduleName, $actionName, $cacheKey)
+{
+  if (!sfConfig::get('sf_cache'))
+  {
+    return null;
+  }
+
+  $cacheManager = $context->getViewCacheManager();
+
+  $uri = $moduleName.'/'.$actionName.'?key='.$cacheKey;
+
+  // register our cache configuration
+  $cacheConfigFile = $moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/cache.yml';
+  if (is_readable(sfConfig::get('sf_app_module_dir').'/'.$cacheConfigFile))
+  {
+    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$cacheConfigFile));
+  }
+
+  $retval = $cacheManager->get($uri, 'slot');
+
+  if (sfConfig::get('sf_logging_active') && $cacheManager->isCacheable($uri, 'slot'))
+  {
+    $context->getLogger()->info(sprintf('{PartialHelper} cache for "%s" %s', $uri, ($retval !== null ? 'exists' : 'does not exist')));
+  }
+
+  if ($retval !== null)
+  {
+    if (sfConfig::get('sf_web_debug'))
+    {
+      $retval = sfWebDebug::getInstance()->decorateContentWithDebug($uri, 'slot', $retval, false);
+    }
+
+    return $retval;
+  }
 }
 
 /**
