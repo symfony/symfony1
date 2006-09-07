@@ -98,7 +98,7 @@ function _upgrade_0_8_cache_yml($app_dir)
     {
       $seen = true;
       pake_echo_comment('"type" has been removed in cache.yml');
-      pake_echo_comment(' read the doc about "withLayout"');
+      pake_echo_comment(' read the doc about "with_layout"');
     }
 
     file_put_contents($yml_file, $content);
@@ -107,7 +107,7 @@ function _upgrade_0_8_cache_yml($app_dir)
 
 function _upgrade_0_8_cache_yml_callback($match)
 {
-  return 'withLayout:'.str_repeat(' ', max(1, strlen($match[1]) - 6)).(0 === strpos($match[2], 'page') ? 'true' : 'false');
+  return 'with_layout:'.str_repeat(' ', max(1, strlen($match[1]) - 6)).(0 === strpos($match[2], 'page') ? 'true' : 'false');
 }
 
 function _upgrade_0_8_deprecated_for_generator($app_dir)

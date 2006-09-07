@@ -85,13 +85,13 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
     $activate = $this->getConfigValue('activate', $actionName);
 
     // cache with or without loayout
-    $withLayout = $this->getConfigValue('withLayout', $actionName) ? 'true' : 'false';
+    $withLayout = $this->getConfigValue('with_layout', $actionName) ? 'true' : 'false';
 
     // lifetime
-    $lifeTime = !$activate ? '0' : $this->getConfigValue('lifeTime', $actionName, '0');
+    $lifeTime = !$activate ? '0' : $this->getConfigValue('lifetime', $actionName, '0');
 
     // client_lifetime
-    $clientLifetime = !$activate ? '0' : $this->getConfigValue('clientLifeTime', $actionName, $lifeTime, '0');
+    $clientLifetime = !$activate ? '0' : $this->getConfigValue('client_lifetime', $actionName, $lifeTime, '0');
 
     // vary
     $vary = $this->getConfigValue('vary', $actionName, array());

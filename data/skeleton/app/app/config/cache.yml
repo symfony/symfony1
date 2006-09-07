@@ -1,4 +1,4 @@
 default:
-  activate:   off
-  withLayout: false
-  lifetime:   86400
+  activate:    off
+  with_layout: false
+  lifetime:    86400
