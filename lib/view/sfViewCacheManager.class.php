@@ -253,7 +253,7 @@ class sfViewCacheManager
       return false;
     }
 
-    if ($sf_logging_active)
+    if (sfConfig::get('sf_logging_active'))
     {
       $this->context->getLogger()->info(sprintf('{sfViewCacheManager} save cache for "%s"', $internalUri));
     }
