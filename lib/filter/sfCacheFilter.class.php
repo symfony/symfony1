@@ -140,7 +140,7 @@ class sfCacheFilter extends sfFilter
     }
 
     // save content in cache
-    $this->cacheManager->set(serialize($this->response), $uri);
+    $this->cacheManager->set(serialize($this->response), $uri, '.page');
 
     if (sfConfig::get('sf_web_debug'))
     {
@@ -157,7 +157,7 @@ class sfCacheFilter extends sfFilter
     $moduleName = $context->getModuleName();
     $actionName = $context->getActionName();
 
-    $retval = $this->cacheManager->get($uri);
+    $retval = $this->cacheManager->get($uri, '.page');
 
     if ($retval === null)
     {

@@ -59,7 +59,7 @@ class sfViewCacheManager
     $this->viewCacheClassName = $className;
   }
 
-  public function generateNamespace($internalUri)
+  public function generateNamespace($internalUri, $suffix = '')
   {
     // generate uri
     $uri = $this->controller->genUrl($internalUri);
@@ -95,13 +95,7 @@ class sfViewCacheManager
     // replace multiple /
     $uri = preg_replace('#/+#', '/', $uri);
 
-    // index
-    if ('/' == $uri[strlen($uri) - 1])
-    {
-      $uri .= 'index';
-    }
-
-    return array(dirname($uri), basename($uri));
+    return array(dirname($uri), basename($uri).$suffix);
   }
 
   public function addCache($moduleName, $actionName, $options = array())
@@ -189,7 +183,7 @@ class sfViewCacheManager
     return false;
   }
 
-  public function get($internalUri)
+  public function get($internalUri, $suffix = '')
   {
     // no cache or no cache set for this action
     if (!$this->isCacheable($internalUri) || $this->ignore())
@@ -197,7 +191,7 @@ class sfViewCacheManager
       return null;
     }
 
-    list($namespace, $id) = $this->generateNamespace($internalUri);
+    list($namespace, $id) = $this->generateNamespace($internalUri, $suffix);
 
     $this->cache->setLifeTime($this->getLifeTime($internalUri));
 
@@ -211,14 +205,14 @@ class sfViewCacheManager
     return $retval;
   }
 
-  public function has($internalUri)
+  public function has($internalUri, $suffix = '')
   {
     if (!$this->isCacheable($internalUri) || $this->ignore())
     {
       return null;
     }
 
-    list($namespace, $id) = $this->generateNamespace($internalUri);
+    list($namespace, $id) = $this->generateNamespace($internalUri, $suffix);
 
     $this->cache->setLifeTime($this->getLifeTime($internalUri));
 
@@ -241,14 +235,14 @@ class sfViewCacheManager
     return false;
   }
 
-  public function set($data, $internalUri)
+  public function set($data, $internalUri, $suffix = '')
   {
     if (!$this->isCacheable($internalUri))
     {
       return false;
     }
 
-    list($namespace, $id) = $this->generateNamespace($internalUri);
+    list($namespace, $id) = $this->generateNamespace($internalUri, $suffix);
 
     if ($sf_logging_active = sfConfig::get('sf_logging_active'))
     {
@@ -294,9 +288,9 @@ class sfViewCacheManager
     return true;
   }
 
-  public function remove($internalUri)
+  public function remove($internalUri, $suffix = '')
   {
-    list($namespace, $id) = $this->generateNamespace($internalUri);
+    list($namespace, $id) = $this->generateNamespace($internalUri, $suffix);
 
     if (sfConfig::get('sf_logging_active'))
     {
@@ -318,14 +312,14 @@ class sfViewCacheManager
     catch (sfCacheException $e) {}
   }
 
-  public function lastModified($internalUri)
+  public function lastModified($internalUri, $suffix = '')
   {
     if (!$this->isCacheable($internalUri))
     {
       return null;
     }
 
-    list($namespace, $id) = $this->generateNamespace($internalUri);
+    list($namespace, $id) = $this->generateNamespace($internalUri, $suffix);
 
     return $this->cache->lastModified($id, $namespace);
   }

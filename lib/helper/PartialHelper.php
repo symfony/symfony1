@@ -283,7 +283,7 @@ function get_partial($templateName, $vars = array())
 
 function _get_cache($cacheManager, $uri)
 {
-  $retval = $cacheManager->get($uri, 'slot');
+  $retval = $cacheManager->get($uri);
 
   if ($retval !== null && sfConfig::get('sf_web_debug'))
   {
@@ -295,7 +295,7 @@ function _get_cache($cacheManager, $uri)
 
 function _set_cache($cacheManager, $uri, $retval)
 {
-  $saved = $cacheManager->set($retval, $uri, 'slot');
+  $saved = $cacheManager->set($retval, $uri);
 
   if ($saved && sfConfig::get('sf_web_debug'))
   {
