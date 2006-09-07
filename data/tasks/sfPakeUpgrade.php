@@ -226,7 +226,11 @@ function _upgrade_0_8_config_php($app_dir)
 
   $config_php = file_get_contents($config_file);
 
-  $config_php = str_replace('sfConfig::get(\'sf_lib_dir\').PATH_SEPARATOR', 'sfConfig::get(\'sf_root_dir\').PATH_SEPARATOR', $config_php);
+  $replace_string = "sfConfig::get('sf_lib_dir').PATH_SEPARATOR.\n  sfConfig::get('sf_root_dir').PATH_SEPARATOR";
+  if (!preg_match('/'.preg_quote($replace_string, '/').'/', $config_php))
+  {
+    $config_php = str_replace('sfConfig::get(\'sf_lib_dir\').PATH_SEPARATOR', $replace_string, $config_php);
+  }
 
   file_put_contents($config_file, $config_php);
 }
