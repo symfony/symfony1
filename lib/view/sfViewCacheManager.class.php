@@ -255,7 +255,14 @@ class sfViewCacheManager
       $length = strlen($data);
     }
 
-    $ret = $this->cache->set($id, $namespace, $data);
+    try
+    {
+      $ret = $this->cache->set($id, $namespace, $data);
+    }
+    catch (Exception $e)
+    {
+    }
+
     if ($sf_logging_active)
     {
       if (!$ret)
