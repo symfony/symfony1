@@ -292,6 +292,11 @@ abstract class sfController
           $this->loadModuleFilters($filterChain);
         }
 
+        // register common HTTP filter
+        $commonFilter = new sfCommonFilter();
+        $commonFilter->initialize($this->context);
+        $filterChain->register($commonFilter);
+
         if (sfConfig::get('sf_cache'))
         {
           // register cache filter
@@ -299,11 +304,6 @@ abstract class sfController
           $cacheFilter->initialize($this->context);
           $filterChain->register($cacheFilter);
         }
-
-        // register common HTTP filter
-        $commonFilter = new sfCommonFilter();
-        $commonFilter->initialize($this->context);
-        $filterChain->register($commonFilter);
 
         if (sfConfig::get('sf_use_flash'))
         {
