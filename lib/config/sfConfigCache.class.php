@@ -344,12 +344,6 @@ class sfConfigCache
   {
     $fileCache = new sfFileCache(dirname($cache));
     $fileCache->setSuffix('');
-    if (!$fileCache->set(basename($cache), '', $data))
-    {
-      // cannot write cache file
-      $error = sprintf('Failed to write cache file "%s" generated from configuration file "%s"', $cache, $config);
-
-      throw new sfCacheException($error);
-    }
+    $fileCache->set(basename($cache), '', $data);
   }
 }

@@ -244,45 +244,18 @@ class sfViewCacheManager
 
     list($namespace, $id) = $this->generateNamespace($internalUri, $suffix);
 
-    if ($sf_logging_active = sfConfig::get('sf_logging_active'))
-    {
-      $length = strlen($data);
-    }
-
     try
     {
       $ret = $this->cache->set($id, $namespace, $data);
     }
     catch (Exception $e)
     {
+      return false;
     }
 
     if ($sf_logging_active)
     {
-      if (!$ret)
-      {
-        if (sfConfig::get('sf_logging_active'))
-        {
-          $this->context->getLogger()->err(sprintf('{sfViewCacheManager} error saving cache for "%s"', $internalUri));
-        }
-      }
-      else
-      {
-        if (strlen($data) - $length)
-        {
-          if (sfConfig::get('sf_logging_active'))
-          {
-            $this->context->getLogger()->info(sprintf('{sfViewCacheManager} save optimized cache for "%s" (%d% &raquo; %.0f%%)', $internalUri, strlen($data) - $length), (strlen($data) - $length) * 100 / $length);
-          }
-        }
-        else
-        {
-          if (sfConfig::get('sf_logging_active'))
-          {
-            $this->context->getLogger()->info(sprintf('{sfViewCacheManager} save cache for "%s"', $internalUri));
-          }
-        }
-      }
+      $this->context->getLogger()->info(sprintf('{sfViewCacheManager} save cache for "%s"', $internalUri));
     }
 
     return true;
@@ -367,7 +340,13 @@ class sfViewCacheManager
 
     // save content to cache
     $internalUri = sfRouting::getInstance()->getCurrentInternalUri();
-    $this->set($data, $internalUri, $name);
+    try
+    {
+      $this->set($data, $internalUri, $name);
+    }
+    catch (Exception $e)
+    {
+    }
 
     return $data;
   }
