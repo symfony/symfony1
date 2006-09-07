@@ -317,7 +317,7 @@ class sfViewCacheManager
     $this->addCache($params['module'], $params['action'], array('withLayout' => false, 'lifeTime' => $lifeTime, 'clientLifeTime' => $clientLifeTime, 'vary' => $vary));
 
     // get data from cache if available
-    $data = $this->get($internalUri, $name);
+    $data = $this->get($internalUri.(strpos($internalUri, '?') ? '&' : '?').'_key='.$name);
     if ($data !== null)
     {
       return $data;
@@ -342,7 +342,7 @@ class sfViewCacheManager
     $internalUri = sfRouting::getInstance()->getCurrentInternalUri();
     try
     {
-      $this->set($data, $internalUri, $name);
+      $this->set($data, $internalUri.(strpos($internalUri, '?') ? '&' : '?').'_key='.$name);
     }
     catch (Exception $e)
     {
