@@ -49,14 +49,14 @@ The `url_for()` helper returns an URL, the `link_to()` helper returns a hyperlin
     
     <?php echo link_to('interesting article', 'article/read?title=Finance_in_France') ?>
     // will generate in HTML
-    <a href="http://myapp.example.com/index.php/article/read/title/Finance_in_France" title="interesting article">interesting article</a>
+    <a href="http://myapp.example.com/index.php/article/read/title/Finance_in_France">interesting article</a>
     
-Notice that the default routing rules transform all the `?`, `=` and `&` characters into `/`. Also note that the `link_to()` helper gives a bonus `title` attribute for the `<a>` tag, based on the content of the tag that is provided.
+Notice that the default routing rules transform all the `?`, `=` and `&` characters into `/`. 
 
 Enter in the link helper exactly the same URL as you would have written in a `<a href="...` tag, and it will transform it for you into a "smart" link according to the current routing policy. And when the customer decides to change some of the rules, just modify the `routing.yml` configuration file and the generated URL can now look like:
 
     [php]
-    <a href="http://myapp.example.com/articles/europe/france/finance.html" title="interesting article">interesting article</a>
+    <a href="http://myapp.example.com/articles/europe/france/finance.html">interesting article</a>
 
 Link helpers are the key to a double way routing. Interpreting URLs is not a big deal, but generating them requires that all hyperlink tags pass by the same filter. That's why these helpers are compulsory as soon as you may use the routing feature. Make sure you take a look at the [routing chapter](routing.txt) to see how to change the shape of URLs, get rid of the controller name or add a '.html' to the generated URLs for more efficient caching and indexing.
 
