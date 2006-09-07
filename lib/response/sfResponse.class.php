@@ -20,9 +20,7 @@
 abstract class sfResponse
 {
   protected
-    $parameter_holder = null;
-
-  private
+    $parameter_holder = null,
     $context = null,
     $content = '';
 

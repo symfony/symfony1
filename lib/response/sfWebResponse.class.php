@@ -509,6 +509,11 @@ class sfWebResponse extends sfResponse
     }
   }
 
+  public function __sleep()
+  {
+    return array('content', 'headers', 'statusCode', 'statusText', 'parameter_holder');
+  }
+
   /**
    * Execute the shutdown procedure.
    *
