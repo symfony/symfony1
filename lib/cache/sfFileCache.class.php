@@ -95,7 +95,7 @@ class sfFileCache extends sfCache
   protected $hashedDirectoryLevel = 0;
 
   private
-    $suffix = '';
+    $suffix = '.cache';
 
   /**
   * Constructor
