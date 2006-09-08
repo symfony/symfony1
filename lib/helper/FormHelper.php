@@ -521,10 +521,12 @@ function textarea_tag($name, $content = null, $options = array())
       $style_selector   = 'styleselect,separator,';
     }
 
+    $culture = sfContext::getInstance()->getUser()->getCulture();
+
     $tinymce_js = '
 tinyMCE.init({
   mode: "exact",
-  language: "en",
+  language: "'.strtolower(substr($culture, 0, 2)).'",
   elements: "'.$id.'",
   plugins: "table,advimage,advlink,flash",
   theme: "advanced",
