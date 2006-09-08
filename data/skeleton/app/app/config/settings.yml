@@ -97,3 +97,7 @@ all:
 # 
 #    escaping_strategy: bc
 #    escaping_method:   ESC_ENTITIES
+#
+#    prototype_web_dir: /sf/prototype
+#    admin_web_dir:     /sf/sf_admin
+#    web_debug_web_dir: /sf/sf_web_debug

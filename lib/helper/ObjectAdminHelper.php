@@ -109,8 +109,8 @@ function object_admin_double_list($object, $method, $options = array())
   return sprintf($html,
     $label_all,
     $select1,
-    submit_image_tag('/sf/sf_admin/images/next.png', "style=\"border: 0\" onclick=\"double_list_move(\$('{$name1}'), \$('{$name2}')); return false;\""),
-    submit_image_tag('/sf/sf_admin/images/previous.png', "style=\"border: 0\" onclick=\"double_list_move(\$('{$name2}'), \$('{$name1}')); return false;\""),
+    submit_image_tag(sfConfig::get('sf_admin_web_dir').'/images/next.png', "style=\"border: 0\" onclick=\"double_list_move(\$('{$name1}'), \$('{$name2}')); return false;\""),
+    submit_image_tag(sfConfig::get('sf_admin_web_dir').'/images/previous.png', "style=\"border: 0\" onclick=\"double_list_move(\$('{$name2}'), \$('{$name1}')); return false;\""),
     $label_assoc,
     $select2
   );
