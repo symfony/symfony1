@@ -24,6 +24,8 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
     {
       return sfToolkit::stripComments(parent::build());
     }
+    
+    return parent::build();
   }
 
   protected function addIncludes(&$script)

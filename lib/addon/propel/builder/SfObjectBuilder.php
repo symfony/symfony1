@@ -24,6 +24,8 @@ class SfObjectBuilder extends PHP5ComplexObjectBuilder
     {
       return sfToolkit::stripComments(parent::build());
     }
+    
+    return parent::build();
   }
 
   protected function addIncludes(&$script)

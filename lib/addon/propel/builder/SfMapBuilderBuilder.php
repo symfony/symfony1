@@ -24,6 +24,8 @@ class SfMapBuilderBuilder extends PHP5MapBuilderBuilder
     {
       return sfToolkit::stripComments(parent::build());
     }
+    
+    return parent::build();
   }
 
   protected function addIncludes(&$script)
