@@ -112,6 +112,17 @@ class sfFileCache extends sfCache
     $this->setCacheDir($cacheDir);
   }
 
+  public function initialize($options = array())
+  {
+    foreach (array('fileLocking', 'writeControl', 'readControl', 'fileNameProtection', 'automaticCleaningFactor', 'hashedDirectoryLevel') as $option)
+    {
+      if (array_key_exists($option, $options))
+      {
+        $this->$option = $options[$option];
+      }
+    }
+  }
+
   public function setSuffix($suffix)
   {
     $this->suffix = $suffix;

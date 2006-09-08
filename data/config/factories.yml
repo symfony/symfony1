@@ -27,3 +27,5 @@ default:
 
   view_cache:
     class: sfFileCache
+    param:
+      automaticCleaningFactor: 0

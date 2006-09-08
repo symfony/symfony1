@@ -26,6 +26,7 @@ class sfViewCacheManager
     $cache              = null,
     $cacheConfig        = array(),
     $viewCacheClassName = '',
+    $viewCacheOptions   = array(),
     $context            = null,
     $controller         = null;
 
@@ -40,6 +41,7 @@ class sfViewCacheManager
 
     // create cache instance
     $this->cache = new $this->viewCacheClassName(sfConfig::get('sf_template_cache_dir'));
+    $this->cache->initialize($this->viewCacheOptions);
   }
 
   public function getContext()
@@ -57,6 +59,18 @@ class sfViewCacheManager
   public function setViewCacheClassName($className)
   {
     $this->viewCacheClassName = $className;
+  }
+
+  /**
+   * Set the options to pass to the sfCache class to use
+   *
+   * @param array An array of sfCache class options
+   *
+   * @return void
+   */
+  public function setViewCacheOptions($options)
+  {
+    $this->viewCacheOptions = $options;
   }
 
   public function generateNamespace($internalUri)
