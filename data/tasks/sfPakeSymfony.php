@@ -19,6 +19,16 @@ function run_freeze($task, $args)
     throw new Exception('You can only freeze when data/symfony is empty (symfony as PEAR) or if data/symfony is a symlink to a symfony installation.');
   }
 
+  if (is_readable('web/sf') && !is_link('web/sf'))
+  {
+    throw new Exception('You can only freeze when web/sf is empty or if web/sf is a symlink to a symfony installation.');
+  }
+
+  if (is_link('web/sf'))
+  {
+    pake_remove('web/sf', '');
+  }
+
   if (is_link('lib/symfony'))
   {
     $symfony_lib_dir = realpath(getcwd().'/lib/symfony');
