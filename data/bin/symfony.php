@@ -12,8 +12,8 @@ define('PAKEFILE_SYMLINK', false);
 
 if (is_readable('lib/symfony'))
 {
-  define('PAKEFILE_LIB_DIR',  'lib/symfony');
-  define('PAKEFILE_DATA_DIR', 'data/symfony');
+  define('PAKEFILE_LIB_DIR',  getcwd().'lib/symfony');
+  define('PAKEFILE_DATA_DIR', getcwd().'data/symfony');
 }
 elseif (is_readable($pear_lib_dir))
 {
