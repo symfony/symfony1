@@ -247,7 +247,7 @@ To know if the `fake` credit cards are accepted in the current environment, get 
 
 But maybe you need to add an array, an associative array or a lot of new parameters. In this case it is better to create a new configuration file, together with the corresponding configuration handler.
 
->**Note**: For project-wide custom settings, you can still take advantage of the `config/config.php` file to call directly the `sfConfig::set()` method or load your own YAML file with `sfYaml::load($file)`.
+>**Note**: For project-wide custom settings, you can still take advantage of the `config/config.php` file to call directly the `sfConfig::set()` method or load your own YAML file with `sfYaml::load($file)`. Beware that autoloading is not active when the `config.php` is executed, so you need to manually include the class files that you want to use.
 
 Scriptable configuration
 ------------------------
