@@ -815,17 +815,17 @@ function input_date_tag($name, $value, $options = array())
   }
 
   // register our javascripts and stylesheets
-  $langFile = '/sf/calendar/js/lang/calendar-'.strtolower(substr($culture, 0, 2));
+  $langFile = '/sf/calendar/lang/calendar-'.strtolower(substr($culture, 0, 2));
   $jss = array(
-    '/sf/calendar/js/calendar',
-    is_readable(sfConfig::get('sf_symfony_data_dir').'/web/'.$langFile.'.js') ? $langFile : '/sf/calendar/js/lang/calendar-en',
-    '/sf/calendar/js/calendar-setup',
+    '/sf/calendar/calendar',
+    is_readable(sfConfig::get('sf_symfony_data_dir').'/web/'.$langFile.'.js') ? $langFile : '/sf/calendar/lang/calendar-en',
+    '/sf/calendar/calendar-setup',
   );
   foreach ($jss as $js)
   {
     $context->getResponse()->addJavascript($js);
   }
-  $context->getResponse()->addStylesheet('/sf/calendar/js/skins/aqua/theme');
+  $context->getResponse()->addStylesheet('/sf/calendar/skins/aqua/theme');
 
   // date format
   $dateFormatInfo = sfDateTimeFormatInfo::getInstance($culture);
