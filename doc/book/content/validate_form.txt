@@ -236,9 +236,9 @@ The available validators can be found in the symfony lib `validator` directory. 
         spamValidator:
           class:          sfRegexValidator
           param:
-            match:        Yes
+            match:        No
             match_error:  Posts containing more than one http address are considered as spam
-            pattern:      /http.*http/i
+            pattern:      /http.*http/si
 
     The `match` param determines if the request parameter must match the pattern to be valid (value `Yes`) or match the pattern to be invalid (value `No`)
         
