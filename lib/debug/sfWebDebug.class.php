@@ -24,7 +24,7 @@ class sfWebDebug
     $max_priority    = 1000,
     $types           = array(),
     $last_time_log   = -1,
-    $base_image_path = '/sf/images/sf_web_debug';
+    $base_image_path = '/sf/sf_web_debug/images';
 
   private static
     $instance        = null;
@@ -71,8 +71,8 @@ class sfWebDebug
     }
 
     // register our css and js
-    $this->context->getResponse()->addJavascript('/sf/js/sf_web_debug/main');
-    $this->context->getResponse()->addStylesheet('/sf/css/sf_web_debug/main');
+    $this->context->getResponse()->addJavascript('/sf/sf_web_debug/js/main');
+    $this->context->getResponse()->addStylesheet('/sf/sf_web_debug/css/main');
   }
 
   public function logShortMessage($message)

@@ -13,7 +13,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 {
   public function preExecute ()
   {
-    $this->getResponse()->addStylesheet('<?php echo $this->getParameterValue('css', '/sf/css/sf_admin/main') ?>');
+    $this->getResponse()->addStylesheet('<?php echo $this->getParameterValue('css', '/sf/sf_admin/css/main') ?>');
   }
 
   public function executeIndex ()
@@ -81,9 +81,9 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     else
     {
       // add javascripts
-      $this->getResponse()->addJavascript('/sf/js/prototype/prototype');
-      $this->getResponse()->addJavascript('/sf/js/sf_admin/collapse');
-      $this->getResponse()->addJavascript('/sf/js/sf_admin/double_list');
+      $this->getResponse()->addJavascript('/sf/prototype/js/prototype');
+      $this->getResponse()->addJavascript('/sf/sf_admin/js/collapse');
+      $this->getResponse()->addJavascript('/sf/sf_admin/js/double_list');
     }
   }
 

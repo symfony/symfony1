@@ -95,7 +95,7 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     $help = $this->getParameterValue($type.'.fields.'.$column->getName().'.help');
     if ($help)
     {
-      return "[?php echo image_tag('/sf/images/sf_admin/help.png', array('align' => 'absmiddle', 'alt' => __('".$this->escapeString($help)."'), 'title' => __('".$this->escapeString($help)."'))) ?]";
+      return "[?php echo image_tag('/sf/sf_admin/images/help.png', array('align' => 'absmiddle', 'alt' => __('".$this->escapeString($help)."'), 'title' => __('".$this->escapeString($help)."'))) ?]";
     }
 
     return '';
@@ -124,7 +124,7 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     {
       $actionName     = substr($actionName, 1);
       $default_name   = strtr($actionName, '_', ' ');
-      $default_icon   = '/sf/images/sf_admin/'.$actionName.'_icon.png';
+      $default_icon   = '/sf/sf_admin/images/'.$actionName.'_icon.png';
       $default_action = $actionName;
       $default_class  = 'sf_admin_action_'.$actionName;
 
@@ -150,7 +150,7 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     else
     {
       $default_name   = strtr($actionName, '_', ' ');
-      $default_icon   = '/sf/images/sf_admin/default_icon.png';
+      $default_icon   = '/sf/sf_admin/images/default_icon.png';
       $default_action = 'List'.sfInflector::camelize($actionName);
       $default_class  = '';
     }
@@ -219,7 +219,7 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     {
       $actionName = substr($actionName, 1);
       $name       = $actionName;
-      $icon       = '/sf/images/sf_admin/'.$actionName.'_icon.png';
+      $icon       = '/sf/sf_admin/images/'.$actionName.'_icon.png';
       $action     = $actionName;
 
       if ($actionName == 'delete')
@@ -234,7 +234,7 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     else
     {
       $name   = isset($params['name']) ? $params['name'] : $actionName;
-      $icon   = isset($params['icon']) ? $params['icon'] : '/sf/images/sf_admin/default_icon.png';
+      $icon   = isset($params['icon']) ? $params['icon'] : '/sf/sf_admin/images/default_icon.png';
       $action = isset($params['action']) ? $params['action'] : 'List'.sfInflector::camelize($actionName);
     }
 
@@ -271,11 +271,11 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     $type = $column->getCreoleType();
     if ($type == CreoleTypes::DATE)
     {
-      $params = array_merge(array('rich' => true, 'calendar_button_img' => '/sf/images/sf_admin/date.png'), $params);
+      $params = array_merge(array('rich' => true, 'calendar_button_img' => '/sf/sf_admin/images/date.png'), $params);
     }
     else if ($type == CreoleTypes::TIMESTAMP)
     {
-      $params = array_merge(array('rich' => true, 'withtime' => true, 'calendar_button_img' => '/sf/images/sf_admin/date.png'), $params);
+      $params = array_merge(array('rich' => true, 'withtime' => true, 'calendar_button_img' => '/sf/sf_admin/images/date.png'), $params);
     }
 
     // user sets a specific tag to use
@@ -550,7 +550,7 @@ EOF;
     }
     elseif ($type == CreoleTypes::BOOLEAN)
     {
-      return "\${$this->getSingularName()}->get{$column->getPhpName()}() ? image_tag('/sf/images/sf_admin/tick.png') : '&nbsp;'";
+      return "\${$this->getSingularName()}->get{$column->getPhpName()}() ? image_tag('/sf/sf_admin/images/tick.png') : '&nbsp;'";
     }
     else
     {
@@ -590,13 +590,13 @@ EOF;
     else if ($type == CreoleTypes::DATE)
     {
       // rich=false not yet implemented
-      $params = $this->getObjectTagParams($params, array('rich' => true, 'calendar_button_img' => '/sf/images/sf_admin/date.png'));
+      $params = $this->getObjectTagParams($params, array('rich' => true, 'calendar_button_img' => '/sf/sf_admin/images/date.png'));
       return "input_date_range_tag($name, $default_value, $params)";
     }
     else if ($type == CreoleTypes::TIMESTAMP)
     {
       // rich=false not yet implemented
-      $params = $this->getObjectTagParams($params, array('rich' => true, 'withtime' => true, 'calendar_button_img' => '/sf/images/sf_admin/date.png'));
+      $params = $this->getObjectTagParams($params, array('rich' => true, 'withtime' => true, 'calendar_button_img' => '/sf/sf_admin/images/date.png'));
       return "input_date_range_tag($name, $default_value, $params)";
     }
     else if ($type == CreoleTypes::BOOLEAN)
