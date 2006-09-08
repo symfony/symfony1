@@ -151,4 +151,12 @@ class sfLoader
       $loaded[$helperName] = true;
     }
   }
+
+  static public function loadPluginConfig()
+  {
+    foreach (glob(sfConfig::get('sf_plugins_dir').'/*/config/config.php') as $config)
+    {
+      include($config);
+    }
+  }
 }

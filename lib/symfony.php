@@ -222,6 +222,9 @@ try
   }
 
   $configCache->import($sf_app_config_dir_name.'/routing.yml', false);
+
+  // include all config.php from plugins
+  sfLoader::loadPluginConfig();
 }
 catch (sfException $e)
 {
