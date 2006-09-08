@@ -40,8 +40,8 @@ class sfCacheFilter extends sfFilter
    */
   public function execute ($filterChain)
   {
-    // no cache if GET or POST parameters
-    if (!sfConfig::get('sf_cache') || count($_GET) || count($_POST))
+    // execute this filter only once, if cache is set and no GET or POST parameters
+    if (!$this->isFirstCall() || !sfConfig::get('sf_cache') || count($_GET) || count($_POST))
     {
       $filterChain->execute();
 
@@ -88,42 +88,83 @@ class sfCacheFilter extends sfFilter
    */
   public function executeBeforeRendering ($filterChain)
   {
-    if (sfConfig::get('sf_cache'))
+    // execute this filter only once, if cache is set and no GET or POST parameters
+    if (!$this->isFirstCallBeforeRendering() || !sfConfig::get('sf_cache') || count($_GET) || count($_POST))
     {
-      // no cache if GET or POST parameters
-      if (count($_GET) || count($_POST))
+      $filterChain->execute();
+
+      return;
+    }
+
+    // cache only 200 HTTP status
+    if ($this->response->getStatusCode() == 200)
+    {
+      $uri = sfRouting::getInstance()->getCurrentInternalUri();
+
+      // save page in cache
+      if ($this->cache[$uri]['page'])
       {
-        $filterChain->execute();
+        // set some headers that deals with cache
+        $lifetime = $this->cacheManager->getClientLifeTime($uri, 'page');
+        $this->response->setHttpHeader('Last-Modified', $this->response->getDate(time()), false);
+        $this->response->setHttpHeader('Expires', $this->response->getDate(time() + $lifetime), false);
+        $this->response->addCacheControlHttpHeader('max-age', $lifetime);
 
-        return;
-      }
-
-      // cache only 200 HTTP status
-      if ($this->response->getStatusCode() == 200)
-      {
-        $uri = sfRouting::getInstance()->getCurrentInternalUri();
-
-        // save page in cache
-        if ($this->cache[$uri]['page'])
+        // set Vary headers
+        foreach ($this->cacheManager->getVary($uri, 'page') as $vary)
         {
-          // set some headers that deals with cache
-          $lifetime = $this->cacheManager->getClientLifeTime($uri, 'page');
-          $this->response->setHttpHeader('Last-Modified', $this->response->getDate(time()), false);
-          $this->response->setHttpHeader('Expires', $this->response->getDate(time() + $lifetime), false);
-          $this->response->addCacheControlHttpHeader('max-age', $lifetime);
-
-          // set Vary headers
-          foreach ($this->cacheManager->getVary($uri, 'page') as $vary)
-          {
-            $this->response->addVaryHttpHeader($vary);
-          }
-
-          $this->setPageCache($uri);
+          $this->response->addVaryHttpHeader($vary);
         }
-        else if ($this->cache[$uri]['action'])
+
+        $this->setPageCache($uri);
+      }
+      else if ($this->cache[$uri]['action'])
+      {
+        // save action in cache
+        $this->setActionCache($uri);
+      }
+    }
+
+    // remove PHP automatic Cache-Control and Expires headers if not overwritten by application or cache
+    if ($this->response->hasHttpHeader('Last-Modified') || sfConfig::get('sf_etag'))
+    {
+      $this->response->setHttpHeader('Cache-Control', null, false);
+      $this->response->setHttpHeader('Expires', null, false);
+      $this->response->setHttpHeader('Pragma', null, false);
+    }
+
+    // Etag support
+    if (sfConfig::get('sf_etag'))
+    {
+      $etag = md5($this->response->getContent());
+      $this->response->setHttpHeader('ETag', $etag);
+
+      if ($this->request->getHttpHeader('IF_NONE_MATCH') == $etag)
+      {
+        $this->response->setStatusCode(304);
+        $this->response->setContent('');
+
+        if (sfConfig::get('sf_logging_active'))
         {
-          // save action in cache
-          $this->setActionCache($uri);
+          $this->getContext()->getLogger()->info('{sfCacheFilter} ETag matches If-None-Match (send 304)');
+        }
+      }
+    }
+
+    // conditional GET support
+    // never in debug mode
+    if ($this->response->hasHttpHeader('Last-Modified') && !sfConfig::get('sf_debug'))
+    {
+      $last_modified = $this->response->getHttpHeader('Last-Modified');
+      $last_modified = $last_modified[0];
+      if ($this->request->getHttpHeader('IF_MODIFIED_SINCE') == $last_modified)
+      {
+        $this->response->setStatusCode(304);
+        $this->response->setContent('');
+
+        if (sfConfig::get('sf_logging_active'))
+        {
+          $this->getContext()->getLogger()->info('{sfCacheFilter} Last-Modified matches If-Modified-Since (send 304)');
         }
       }
     }
@@ -176,11 +217,12 @@ class sfCacheFilter extends sfFilter
     else
     {
       $context->setResponse($cachedResponse);
+      $this->response = $this->getContext()->getResponse();
 
       if (sfConfig::get('sf_web_debug'))
       {
-        $content = sfWebDebug::getInstance()->decorateContentWithDebug($uri, 'page', $cachedResponse->getContent(), false);
-        $context->getResponse()->setContent($content);
+        $content = sfWebDebug::getInstance()->decorateContentWithDebug($uri, 'page', $this->response->getContent(), false);
+        $this->response->setContent($content);
       }
     }
 
@@ -193,7 +235,7 @@ class sfCacheFilter extends sfFilter
 
     if ($content !== null)
     {
-      $cached = $this->cacheManager->set($content, $uri);
+      $this->cacheManager->set($content, $uri);
     }
   }
 
