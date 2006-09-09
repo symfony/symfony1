@@ -408,7 +408,8 @@ class sfWebDebug
 
   public function decorateContentWithDebug($internalUri, $suffix, $retval, $new = false)
   {
-    if (!sfConfig::get('sf_web_debug'))
+    // don't decorate if not html
+    if (!sfConfig::get('sf_web_debug') || false === strpos($this->context->getResponse()->getContentType(), 'html'))
     {
       return $retval;
     }
