@@ -494,7 +494,7 @@ abstract class sfView
       $this->decoratorTemplate = $template;
     }
 
-    if (!strpos($this->decoratorTemplate, '.')) 
+    if (!strpos($this->decoratorTemplate, '.'))
     {
       $this->decoratorTemplate .= $this->getExtension();
     }

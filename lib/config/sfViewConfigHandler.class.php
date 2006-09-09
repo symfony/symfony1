@@ -69,7 +69,6 @@ class sfViewConfigHandler extends sfYamlConfigHandler
                 "{\n";
 
       $data[] = $this->addTemplate($viewName);
-
       $data[] = $this->addLayout($viewName);
       $data[] = $this->addComponentSlots($viewName);
       $data[] = $this->addHtmlHead($viewName);
@@ -86,7 +85,6 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     $data[] = ($first ? '' : "else\n{")."\n";
 
     $data[] = $this->addTemplate();
-
     $data[] = $this->addLayout();
     $data[] = $this->addComponentSlots();
     $data[] = $this->addHtmlHead();
@@ -116,20 +114,21 @@ class sfViewConfigHandler extends sfYamlConfigHandler
         $component = array(null, null);
       }
 
-      $data .= "    \$this->setComponentSlot('$name', '{$component[0]}', '{$component[1]}');\n";
-      $data .= "    if (sfConfig::get('sf_logging_active')) \$context->getLogger()->info('{sfViewConfig} set component \"$name\" ({$component[0]}/{$component[1]})');\n";
+      $data .= "  \$this->setComponentSlot('$name', '{$component[0]}', '{$component[1]}');\n";
+      $data .= "  if (sfConfig::get('sf_logging_active')) \$context->getLogger()->info('{sfViewConfig} set component \"$name\" ({$component[0]}/{$component[1]})');\n";
     }
 
     return $data;
   }
 
-  private function addTemplate($viewName = 'all')
+  private function addTemplate($viewName = '')
   {
     $data = '';
 
     $templateName = $this->getConfigValue('template', $viewName);
-    $defaultTemplateName = $templateName ? "'$templateName'" : '$this->getContext()->getActionName()';
-    $data .= "  \$templateName = null !== \$action->getTemplate() ? \$action->getTemplate() : $defaultTemplateName;\n";
+    $defaultTemplateName = $templateName ? "'$templateName'" : '$this->actionName';
+
+    $data .= "  \$templateName = \$response->getParameter(\$this->moduleName.'_'.\$this->actionName.'_template', $defaultTemplateName, 'symfony/action/view');\n";
     $data .= "  \$this->setTemplate(\$templateName.\$this->viewName.\$this->getExtension());\n";
 
     return $data;
@@ -139,22 +138,18 @@ class sfViewConfigHandler extends sfYamlConfigHandler
   {
     $data = '';
 
-    $layoutNameFromView = $this->getConfigValue('layout', $viewName);
-    $hasLayout = $this->getConfigValue('has_layout', $viewName) && $layoutNameFromView != false ? 1 : 0;
-    $localHasLayout = isset($this->yamlConfig[$viewName]['layout']) && $this->yamlConfig[$viewName]['layout'] ? 1 : 0;
-    // if a layout specified for this view, no need to check if a layout name is specified by the action
-    $cond1 = $hasLayout ? '' : "&& null !== \$layoutNameFromAction";
-    // if a layout is specified especially for this view, no need to test if the request is AJAX
-    $cond2 = $localHasLayout ? '' : "&& (!\$context->getRequest()->isXmlHttpRequest() || null !== \$layoutNameFromAction)";
-    $data .= <<<EOF
-  \$layoutNameFromAction = \$action->getLayout();
-  if (false !== \$layoutNameFromAction $cond1 $cond2)
-  {
-    \$layoutName = \$layoutNameFromAction ? \$layoutNameFromAction : '$layoutNameFromView';
-    \$this->setDecoratorTemplate(\$layoutName.'.php');
-  }
+    if ($this->getConfigValue('has_layout', $viewName) && false !== $layout = $this->getConfigValue('layout', $viewName))
+    {
+      $data = "  \$this->setDecoratorTemplate('$layout'.\$this->getExtension());\n";
+    }
 
-EOF;
+    // For XMLHttpRequest, we want no layout by default
+    // So, we check if the user requested has_layout: true or if he gave a layout: name for this particular action
+    $localLayout = isset($this->yamlConfig[$viewName]['layout']) || isset($this->yamlConfig[$viewName]['has_layout']);
+    if (!$localLayout && $data)
+    {
+      $data = "  if (!\$context->getRequest()->isXmlHttpRequest())\n  {\n  $data  }\n";
+    }
 
     return $data;
   }
@@ -271,7 +266,7 @@ EOF;
 
         if ($key)
         {
-          $data[] = sprintf("  \$response->addStylesheet('%s', '%s', %s);", $key, $position, var_export($options, true));
+          $data[] = sprintf("  \$response->addStylesheet('%s', '%s', %s);", $key, $position, str_replace("\n", '', var_export($options, true)));
         }
       }
     }

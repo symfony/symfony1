@@ -21,9 +21,7 @@
 abstract class sfAction extends sfComponent
 {
   private
-    $security = array(),
-    $template = null,
-    $layout   = null;
+    $security = array();
 
   /**
    * Gets current module name
@@ -494,9 +492,12 @@ abstract class sfAction extends sfComponent
    */
   public function setTemplate($name)
   {
-    if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfAction} change template to "'.$name.'"');
+    if (sfConfig::get('sf_logging_active'))
+    {
+      $this->getContext()->getLogger()->info('{sfAction} change template to "'.$name.'"');
+    }
 
-    $this->template = $name;
+    $this->getResponse()->setParameter($this->getModuleName().'_'.$this->getActionName().'_template', $name, 'symfony/action/view');
   }
 
   /**
@@ -511,13 +512,13 @@ abstract class sfAction extends sfComponent
    */
   public function getTemplate()
   {
-    return $this->template;
+    return $this->getResponse()->getParameter($this->getModuleName().'_'.$this->getActionName().'_template', null, 'symfony/action/view');
   }
 
   /**
    * Sets an alternate layout for this Component.
    *
-   * To de-activate the layout, set the template name to false.
+   * To de-activate the layout, set the layout name to false.
    *
    * To revert the layout to the one configured in the view.yml, set the template name to null.
    *
@@ -525,9 +526,12 @@ abstract class sfAction extends sfComponent
    */
   public function setLayout($name)
   {
-    if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfAction} change layout to "'.$name.'"');
+    if (sfConfig::get('sf_logging_active'))
+    {
+      $this->getContext()->getLogger()->info('{sfAction} change layout to "'.$name.'"');
+    }
 
-    $this->layout = $name;
+    $this->getResponse()->setParameter($this->getModuleName().'_'.$this->getActionName().'_layout', $name, 'symfony/action/view');
   }
 
   /**
@@ -540,6 +544,6 @@ abstract class sfAction extends sfComponent
    */
   public function getLayout()
   {
-    return $this->layout;
+    return $this->getResponse()->getParameter($this->getModuleName().'_'.$this->getActionName().'_layout', null, 'symfony/action/view');
   }
 }

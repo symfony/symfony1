@@ -487,6 +487,9 @@ class sfWebResponse extends sfResponse
 
   public function mergeProperties($response)
   {
+    // view configuration
+    $this->getParameterHolder()->add($response->getParameterHolder()->getAll('symfony/action/view'), 'symfony/action/view');
+
     // add stylesheets
     foreach (array('first', '', 'last') as $position)
     {

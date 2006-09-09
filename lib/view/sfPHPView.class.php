@@ -128,8 +128,6 @@ class sfPHPView extends sfView
   {
     // require our configuration
     $context = $this->getContext();
-    $actionStackEntry = $context->getController()->getActionStack()->getLastEntry();
-    $action = $actionStackEntry->getActionInstance();
     $viewConfigFile = $this->moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/view.yml';
     require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$viewConfigFile));
   }
@@ -199,11 +197,21 @@ class sfPHPView extends sfView
       }
     }
 
+    // decorator
+    $layout = $response->getParameter($this->moduleName.'_'.$this->actionName.'_layout', null, 'symfony/action/view');
+    if (false === $layout)
+    {
+      $this->setDecorator(false);
+    }
+    else if (null !== $layout)
+    {
+      $this->setDecoratorTemplate($layout.$this->getExtension());
+    }
+
     // template variables
     if ($templateVars === null)
     {
-      $actionStackEntry = $context->getActionStack()->getLastEntry();
-      $actionInstance   = $actionStackEntry->getActionInstance();
+      $actionInstance   = $context->getActionStack()->getLastEntry()->getActionInstance();
       $templateVars     = $actionInstance->getVarHolder()->getAll();
     }
 
