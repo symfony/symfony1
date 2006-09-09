@@ -54,7 +54,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     // init our data array
     $data = array();
 
-    $data[] = "\$response = \$action->getResponse();\n";
+    $data[] = "\$response = \$context->getResponse();\n";
 
     // iterate through all view names
     $first = true;
@@ -70,15 +70,10 @@ class sfViewConfigHandler extends sfYamlConfigHandler
 
       $data[] = $this->addTemplate($viewName);
 
-      $data[] = "  if (!\$actionStackEntry->isSlot())\n";
-      $data[] = "  {\n";
-
       $data[] = $this->addLayout($viewName);
       $data[] = $this->addComponentSlots($viewName);
       $data[] = $this->addHtmlHead($viewName);
       $data[] = $this->addEscaping($viewName);
-
-      $data[] = "  }\n";
 
       $data[] = $this->addHtmlAsset($viewName);
 
@@ -92,15 +87,10 @@ class sfViewConfigHandler extends sfYamlConfigHandler
 
     $data[] = $this->addTemplate();
 
-    $data[] = "  if (!\$actionStackEntry->isSlot())\n";
-    $data[] = "  {\n";
-
     $data[] = $this->addLayout();
     $data[] = $this->addComponentSlots();
     $data[] = $this->addHtmlHead();
     $data[] = $this->addEscaping();
-
-    $data[] = "  }\n";
 
     $data[] = $this->addHtmlAsset();
     $data[] = ($first ? '' : "}")."\n";
@@ -155,14 +145,14 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     // if a layout specified for this view, no need to check if a layout name is specified by the action
     $cond1 = $hasLayout ? '' : "&& null !== \$layoutNameFromAction";
     // if a layout is specified especially for this view, no need to test if the request is AJAX
-    $cond2 = $localHasLayout ? '' : "&& (!\$action->getRequest()->isXmlHttpRequest() || null !== \$layoutNameFromAction)";
+    $cond2 = $localHasLayout ? '' : "&& (!\$context->getRequest()->isXmlHttpRequest() || null !== \$layoutNameFromAction)";
     $data .= <<<EOF
-     \$layoutNameFromAction = \$action->getLayout();
-     if (false !== \$layoutNameFromAction $cond1 $cond2)
-     {
-       \$layoutName = \$layoutNameFromAction ? \$layoutNameFromAction : '$layoutNameFromView';
-       \$this->setDecoratorTemplate(\$layoutName.'.php');
-     }
+  \$layoutNameFromAction = \$action->getLayout();
+  if (false !== \$layoutNameFromAction $cond1 $cond2)
+  {
+    \$layoutName = \$layoutNameFromAction ? \$layoutNameFromAction : '$layoutNameFromView';
+    \$this->setDecoratorTemplate(\$layoutName.'.php');
+  }
 
 EOF;
 
@@ -175,12 +165,12 @@ EOF;
 
     foreach ($this->mergeConfigValue('http_metas', $viewName) as $httpequiv => $content)
     {
-      $data[] = sprintf("    \$response->addHttpMeta('%s', '%s', false);", $httpequiv, str_replace('\'', '\\\'', $content));
+      $data[] = sprintf("  \$response->addHttpMeta('%s', '%s', false);", $httpequiv, str_replace('\'', '\\\'', $content));
     }
 
     foreach ($this->mergeConfigValue('metas', $viewName) as $name => $content)
     {
-      $data[] = sprintf("    \$response->addMeta('%s', '%s', false, true);", $name, str_replace('\'', '\\\'', preg_replace('/&amp;(?=\w+;)/', '&', htmlentities($content, ENT_QUOTES, sfConfig::get('sf_charset')))));
+      $data[] = sprintf("  \$response->addMeta('%s', '%s', false, true);", $name, str_replace('\'', '\\\'', preg_replace('/&amp;(?=\w+;)/', '&', htmlentities($content, ENT_QUOTES, sfConfig::get('sf_charset')))));
     }
 
     return implode("\n", $data)."\n";

@@ -92,9 +92,12 @@ abstract class sfAction extends sfComponent
    *
    * @return boolean
    */
-  public function mustExecute($suffix = 'slot')
+  public function mustExecute()
   {
-    if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->err('This method is deprecated.');
+    if (sfConfig::get('sf_logging_active'))
+    {
+      $this->getContext()->getLogger()->err('This method is deprecated.');
+    }
 
     if (!sfConfig::get('sf_cache'))
     {
@@ -103,7 +106,7 @@ abstract class sfAction extends sfComponent
 
     $cache = $this->getContext()->getViewCacheManager();
 
-    return (!$cache->has(sfRouting::getInstance()->getCurrentInternalUri(), $suffix));
+    return (!$cache->has(sfRouting::getInstance()->getCurrentInternalUri()));
   }
 
   /**

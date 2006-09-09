@@ -27,8 +27,7 @@ class sfActionStackEntry
     $actionName     = null,
     $moduleName     = null,
     $presentation   = null,
-    $viewInstance   = null,
-    $isSlot         = false;
+    $viewInstance   = null;
 
   /**
    * Class constructor.
@@ -39,12 +38,11 @@ class sfActionStackEntry
    *
    * @return void
    */
-  public function __construct ($moduleName, $actionName, $actionInstance, $isSlot = false)
+  public function __construct ($moduleName, $actionName, $actionInstance)
   {
     $this->actionName     = $actionName;
     $this->actionInstance = $actionInstance;
     $this->moduleName     = $moduleName;
-    $this->isSlot         = $isSlot;
   }
 
   /**
@@ -87,16 +85,6 @@ class sfActionStackEntry
   public function setViewInstance ($viewInstance)
   {
     $this->viewInstance = $viewInstance;
-  }
-
-  /**
-   * Is this action used in a slot context?
-   *
-   * @return string An action name.
-   */
-  public function isSlot ()
-  {
-    return $this->isSlot;
   }
 
   /**
