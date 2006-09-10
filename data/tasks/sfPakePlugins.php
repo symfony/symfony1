@@ -9,6 +9,9 @@ pake_task('plugin-upgrade', 'project_exists');
 pake_desc('uninstall a plugin');
 pake_task('plugin-uninstall', 'project_exists');
 
+pake_desc('list installed plugins');
+pake_task('plugin-list', 'project_exists');
+
 // symfony plugin-install pluginName
 function run_plugin_install($task, $args)
 {
@@ -75,6 +78,23 @@ function run_plugin_uninstall($task, $args)
   if ($error)
   {
     throw new Exception($error);
+  }
+}
+
+function run_plugin_list($task, $args)
+{
+  pake_echo('Installed plugins:');
+
+  $config = _pear_init();
+  $registry = $config->getRegistry();
+  $installed = $registry->packageInfo(null, null, null);
+  foreach ($installed as $channel => $packages)
+  {
+    foreach ($packages as $package)
+    {
+      $pobj = $registry->getPackage(isset($package['package']) ? $package['package'] : $package['name'], $channel);
+      pake_echo(sprintf(" %-40s %10s-%-6s %s", pakeColor::colorize($pobj->getPackage(), 'INFO'), $pobj->getVersion(), $pobj->getState() ? $pobj->getState() : null, pakeColor::colorize('# '.$channel, 'COMMENT')));
+    }
   }
 }
 
@@ -203,10 +223,11 @@ function _pear_init()
     'channel'       => 'pear.symfony-project.com',
     'date'          => date('Y-m-d'),
     'time'          => date('H:i:s'),
-    'version'       => $sf_version,
+    'version'       => array('release' => $sf_version, 'api' => '1.0.0'),
     'stability'     => array('release' => 'stable', 'api' => 'stable'),
     'xsdversion'    => '2.0',
     '_lastmodified' => time(),
+    'old'           => array('version' => $sf_version),
   );
   $dir = sfConfig::get('sf_plugins_dir').DIRECTORY_SEPARATOR.'.registry'.DIRECTORY_SEPARATOR.'.channel.pear.symfony-project.com';
   pake_mkdirs($dir);
