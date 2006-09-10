@@ -191,9 +191,6 @@ try
 
   $sf_debug = sfConfig::get('sf_debug');
 
-  // set exception format
-  sfException::setFormat(isset($_SERVER['HTTP_HOST']) ? 'html' : 'plain');
-
   // load base settings
   include($configCache->checkConfig($sf_app_config_dir_name.'/logging.yml'));
   $configCache->import($sf_app_config_dir_name.'/php.yml', false);

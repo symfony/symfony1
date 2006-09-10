@@ -25,9 +25,6 @@ class sfException extends Exception
   private
     $name = null;
 
-  private static
-    $format = 'plain';
-
   /**
    * Class constructor.
    *
@@ -47,28 +44,6 @@ class sfException extends Exception
     {
       sfLogger::getInstance()->err('{'.$this->getName().'} '.$message);
     }
-  }
-
-  /**
-   * Gets the stack trace format.
-   *
-   * @return string The format to use for printing.
-   */
-  public static function getFormat()
-  {
-    return self::$format;
-  }
-
-  /**
-   * Sets the stack trace format.
-   *
-   * @param string The format you wish to use for printing. Options include:
-   *               - html
-   *               - plain
-   */
-  public static function setFormat($format)
-  {
-    self::$format = $format;
   }
 
   /**
@@ -126,9 +101,6 @@ class sfException extends Exception
       return;
     }
 
-    // lower-case the format to avoid sensitivity issues
-    $format = strtolower(self::$format);
-
     $message = ($exception->getMessage() != null) ? $exception->getMessage() : 'n/a';
     $name    = get_class($exception);
 
@@ -141,6 +113,7 @@ class sfException extends Exception
     ));
 
     $traces = array();
+    $format = 'cli' == php_sapi_name() ? 'plain' : 'html';
     if ($format == 'html')
     {
       $lineFormat = 'at <strong>%s%s%s</strong>(%s)<br />in <em>%s</em> line %s <a href="#" onclick="toggle(\'%s\'); return false;">...</a><br /><ul id="%s" style="display: %s">%s</ul>';
