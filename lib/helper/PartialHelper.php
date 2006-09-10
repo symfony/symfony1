@@ -287,7 +287,7 @@ function _get_cache($cacheManager, $uri)
 
   if ($retval !== null && sfConfig::get('sf_web_debug'))
   {
-    $retval = sfWebDebug::getInstance()->decorateContentWithDebug($uri, 'slot', $retval, false);
+    $retval = sfWebDebug::getInstance()->decorateContentWithDebug($uri, $retval, false);
   }
 
   return $retval;
@@ -299,7 +299,7 @@ function _set_cache($cacheManager, $uri, $retval)
 
   if ($saved && sfConfig::get('sf_web_debug'))
   {
-    $retval = sfWebDebug::getInstance()->decorateContentWithDebug($uri, 'slot', $retval, true);
+    $retval = sfWebDebug::getInstance()->decorateContentWithDebug($uri, $retval, true);
   }
 
   return $retval;

@@ -241,7 +241,7 @@ class sfPHPView extends sfView
 
         if (sfConfig::get('sf_web_debug'))
         {
-          $retval = sfWebDebug::getInstance()->decorateContentWithDebug($key, '', $retval, true);
+          $retval = sfWebDebug::getInstance()->decorateContentWithDebug($key, $retval, true);
         }
       }
     }

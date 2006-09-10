@@ -185,7 +185,7 @@ class sfCacheFilter extends sfFilter
 
     if (sfConfig::get('sf_web_debug'))
     {
-      $content = sfWebDebug::getInstance()->decorateContentWithDebug($uri, 'page', $this->response->getContent(), true);
+      $content = sfWebDebug::getInstance()->decorateContentWithDebug($uri, $this->response->getContent(), true);
       $this->response->setContent($content);
     }
   }
@@ -221,7 +221,7 @@ class sfCacheFilter extends sfFilter
 
       if (sfConfig::get('sf_web_debug'))
       {
-        $content = sfWebDebug::getInstance()->decorateContentWithDebug($uri, 'page', $this->response->getContent(), false);
+        $content = sfWebDebug::getInstance()->decorateContentWithDebug($uri, $this->response->getContent(), false);
         $this->response->setContent($content);
       }
     }
@@ -247,7 +247,7 @@ class sfCacheFilter extends sfFilter
     if ($retval && sfConfig::get('sf_web_debug'))
     {
       $tmp = unserialize($retval);
-      $tmp['content'] = sfWebDebug::getInstance()->decorateContentWithDebug($uri, 'action', $tmp['content'], false);
+      $tmp['content'] = sfWebDebug::getInstance()->decorateContentWithDebug($uri, $tmp['content'], false);
       $retval = serialize($tmp);
     }
 
