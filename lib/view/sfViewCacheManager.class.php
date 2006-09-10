@@ -75,6 +75,16 @@ class sfViewCacheManager
 
   public function generateNamespace($internalUri)
   {
+    if ($callable = sfConfig::get('sf_cache_namespace_callable'))
+    {
+      if (!is_callable($callable))
+      {
+        throw new sfException(sprintf('"%s" cannot be called as a function.', var_export($callable, true)));
+      }
+
+      return call_user_func($callable, $internalUri);
+    }
+
     // generate uri
     $uri = $this->controller->genUrl($internalUri);
 
@@ -91,7 +101,7 @@ class sfViewCacheManager
         $vary .= $request->getHttpHeader($header).'|';
       }
 
-      $vary = md5($vary);
+      $vary = $vary;
     }
     else
     {
