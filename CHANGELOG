@@ -3,6 +3,18 @@ SVN
 
 WARNING: All deprecated function, methods and tasks has been removed (see r1631, r1638 and r1799).
 
+If you try to use this release with 0.6.X projects, you must upgrade them with: symfony upgrade 0.8
+
+* major partial and component refactoring (big speed improvement)
+* output escaping is now a global setting
+* new helpers: use_stylesheet() and use_javascript()
+* new time information in the symfony log and debug toolbar
+* major performance improvements
+* new sfLoader class
+* symfony command line now works out the box (for PEAR, SVN or .tgz)
+* new plugin system
+* propel-build-all now works as expected
+* major cache refactoring
 * autoloading is now more flexible
 * AJAX actions have now layout to off by default
 * new slot support
@@ -21,9 +33,10 @@ WARNING: All deprecated function, methods and tasks has been removed (see r1631,
 * strip comments in production environment by default
 * better sfTextBrowser with POST support and redirects
 * support for database schema in YAML format
-* updated calendat language files (js)
+* updated calendar language files (js, ca)
 * new tasks: init-batch, propel-convert-yaml-schema, propel-load-data, propel-build-all, propel-build-all-load
-             init-controller, clear-controllers, rotate-log, purge-logs, freeze, unfreeze, enable, disable
+             init-controller, clear-controllers, rotate-log, purge-logs, freeze, unfreeze, enable, disable,
+             plugin-list
 * new validators: sfDateValidator, sfUrlValidator, sfCallbackValidator
 * and more than 160 bug fixes and small enhancements
 
