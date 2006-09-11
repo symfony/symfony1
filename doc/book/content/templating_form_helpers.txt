@@ -77,13 +77,11 @@ Here are the standard form element helpers:
  * radio button:
 
         [php]
-        <?php echo radiobutton_tag('status', 'value1', true) ?>
-        <?php echo radiobutton_tag('status', 'value2', false) ?>
+        <?php echo radiobutton_tag('status[]', 'value1', true) ?>
+        <?php echo radiobutton_tag('status[]', 'value2', false) ?>
         // will generate in HTML
-        <input type="radio" name="status" value="value1" checked="checked" />
-        <input type="radio" name="status" value="value2" />
-
-> Note that the `id` attribute is not defined by default with the value of the `name` attribute for the radio button helper. That's because you need to have several radio button tags with the same name to obtain the automated 'deselecting the previous one when selecting another' feature, and that would imply having several HTML tags with the same `id` attribute in your page - which is strictly forbidden.
+        <input type="radio" name="status[]" id="status_value1" value="value1" checked="checked" />
+        <input type="radio" name="status[]" id="status_value2" value="value2" />
 
  * value selection field (select):
 
