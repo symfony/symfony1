@@ -262,7 +262,7 @@ function run_propel_load_data($task, $args)
 
 function _call_phing($task, $task_name, $check_schema = true)
 {
-  $schemas = pakeFinder::type('file')->name('*schema.xml')->relative()->in('config');
+  $schemas = pakeFinder::type('file')->name('*schema.xml')->relative()->follow_link()->in('config');
   if ($check_schema && !$schemas)
   {
     throw new Exception('You must create a schema.yml or schema.xml file.');
