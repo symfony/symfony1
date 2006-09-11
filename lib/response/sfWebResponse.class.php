@@ -245,9 +245,9 @@ class sfWebResponse extends sfResponse
   public function sendHttpHeaders ()
   {
     // status
-    $status = 'HTTP/1.0 '.$this->statusCode.' '.$this->statusText;
-    if (substr(php_sapi_name(), 0, 3) == 'cgi')
+    if (substr(php_sapi_name(), 0, 3) == 'cgi' && isset($_SERVER['SERVER_SOFTWARE']) && false !== stripos($_SERVER['SERVER_SOFTWARE'], 'apache/2'))
     {
+      // fix bug http://www.symfony-project.com/trac/ticket/669 for apache2/mod_fastcgi
       $status = 'Status: '.$this->statusCode.' '.$this->statusText;
     }
     else
