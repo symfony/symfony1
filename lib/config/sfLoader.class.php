@@ -41,10 +41,10 @@ class sfLoader
     return $dirs;
   }
 
-  static public function getTemplateDirs($appDir, $moduleName)
+  static public function getTemplateDirs($moduleName)
   {
     $templateDir = sfConfig::get('sf_app_module_template_dir_name');
-    $dirs = array($appDir);                                                                                                    // application
+    $dirs = array(sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.$templateDir);                                        // application
 
     $dirs = array_merge($dirs, glob(sfConfig::get('sf_plugins_dir').'/*/modules/'.$moduleName.'/'.$templateDir));              // plugins
 
@@ -54,9 +54,9 @@ class sfLoader
     return $dirs;
   }
 
-  static public function getTemplateDir($appDir, $moduleName, $templateFile)
+  static public function getTemplateDir($moduleName, $templateFile)
   {
-    $dirs = self::getTemplateDirs($appDir, $moduleName);
+    $dirs = self::getTemplateDirs($moduleName);
     foreach ($dirs as $dir)
     {
       if (is_readable($dir.'/'.$templateFile))
