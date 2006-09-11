@@ -65,7 +65,7 @@ class sfPropelDatabase extends sfCreoleDatabase
       $params = Creole::parseDSN($dsn);
 
       $this->setParameter('phptype',  $params['phptype']);
-      $this->setParameter('hostspec', $params['hostspec']);
+      $this->setParameter('hostspec', $params['hostspec'] ? $params['hostspec'] : ($params['host'] ? $params['host'] : null));
       $this->setParameter('database', $params['database']);
       $this->setParameter('username', $params['username']);
       $this->setParameter('password', $params['password']);
@@ -78,7 +78,7 @@ class sfPropelDatabase extends sfCreoleDatabase
         'connection' =>
         array(
           'phptype'  => $this->getParameter('phptype'),
-          'hostspec' => $this->getParameter('hostspec') ? $this->getParameter('hostspec') : ($this->getParameter('host') ? $this->getParameter('hostspec') : null),
+          'hostspec' => $this->getParameter('hostspec') ? $this->getParameter('hostspec') : ($this->getParameter('host') ? $this->getParameter('host') : null),
           'database' => $this->getParameter('database'),
           'username' => $this->getParameter('username'),
           'password' => $this->getParameter('password'),
