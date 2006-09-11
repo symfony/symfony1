@@ -125,7 +125,7 @@ abstract class sfController
         }
 
         // action is defined in this class?
-        if (!in_array('execute'.ucfirst($controllerName), get_class_methods($moduleName.$classSuffix.'s')))
+        if (!method_exists($moduleName.'Actions', '__call') && !in_array('execute'.ucfirst($controllerName), get_class_methods($moduleName.$classSuffix.'s')))
         {
           if ($throwExceptions)
           {
