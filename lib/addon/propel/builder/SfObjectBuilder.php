@@ -205,7 +205,8 @@ $script .= '
     $foreign_table = $this->getDatabase()->getTable($fk->getForeignTableName());
     if ($foreign_table->getAttribute('isI18N'))
     {
-      $value .= ' || $this->'.$matches[2].'->getCurrent'.substr($matches[2], 1).'I18n()->isModified()';
+      $foreign_tables_i18n_table = $this->getDatabase()->getTable($foreign_table->getAttribute('i18nTable'));
+      $value .= ' || $this->'.$matches[2].'->getCurrent'.$foreign_tables_i18n_table->getPhpName().'()->isModified()';
     }
 
     return $value;
