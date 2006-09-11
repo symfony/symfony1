@@ -244,7 +244,7 @@ class sfCacheFilter extends sfFilter
     // retrieve content from cache
     $retval = $this->cacheManager->get($uri);
 
-    if ($retval && sfConfig::get('sf_web_debug'))
+    if (sfConfig::get('sf_web_debug'))
     {
       $tmp = unserialize($retval);
       $tmp['content'] = sfWebDebug::getInstance()->decorateContentWithDebug($uri, $tmp['content'], false);

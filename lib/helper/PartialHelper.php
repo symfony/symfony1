@@ -285,7 +285,7 @@ function _get_cache($cacheManager, $uri)
 {
   $retval = $cacheManager->get($uri);
 
-  if ($retval !== null && sfConfig::get('sf_web_debug'))
+  if (sfConfig::get('sf_web_debug'))
   {
     $retval = sfWebDebug::getInstance()->decorateContentWithDebug($uri, $retval, false);
   }

@@ -406,12 +406,12 @@ class sfWebDebug
     return null;
   }
 
-  public function decorateContentWithDebug($internalUri, $retval, $new = false)
+  public function decorateContentWithDebug($internalUri, $content, $new = false)
   {
-    // don't decorate if not html
-    if (!sfConfig::get('sf_web_debug') || false === strpos($this->context->getResponse()->getContentType(), 'html'))
+    // don't decorate if not html or if content is null
+    if (!sfConfig::get('sf_web_debug') || !$content || false === strpos($this->context->getResponse()->getContentType(), 'html'))
     {
-      return $retval;
+      return $content;
     }
 
     $border_color = $new ? '#f00' : '#f00';
@@ -422,7 +422,7 @@ class sfWebDebug
 
     $last_modified = $cache->lastModified($internalUri);
     $id            = md5($internalUri);
-    $retval = '
+    $content = '
       <div id="main_'.$id.'" class="sfWebDebugActionCache" style="border: 1px solid '.$border_color.'">
       <div id="sub_main_'.$id.'" class="sfWebDebugCache" style="background-color: '.$bg_color.'; border-right: 1px solid '.$border_color.'; border-bottom: 1px solid '.$border_color.';">
       <div style="height: 16px; padding: 2px"><a href="#" onclick="sfWebDebugToggle(\''.$id.'\'); return false;"><strong>cache information</strong></a>&nbsp;<a href="#" onclick="sfWebDebugToggle(\'sub_main_'.$id.'\'); document.getElementById(\'main_'.$id.'\').style.border = \'none\'; return false;">'.image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/close.png').'</a>&nbsp;</div>
@@ -433,11 +433,11 @@ class sfWebDebug
         &nbsp;<br />&nbsp;
         </div>
       </div><div>
-      '.$retval.'
+      '.$content.'
       </div></div>
     ';
 
-    return $retval;
+    return $content;
   }
 
   private function getPriority($value)
