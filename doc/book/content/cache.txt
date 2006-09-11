@@ -102,7 +102,7 @@ Now all the templates using this partial won't actually execute the PHP code of 
 Just like for actions, partial caching is also relevant when the result of the partial depends on parameters:
 
     [php]
-    <?php include_partial('mymodule/my_other_partial', array('foo' => 'bar)) ?>
+    <?php include_partial('mymodule/my_other_partial', array('foo' => 'bar')) ?>
 
 A component is a lightweight action put on top of a partial. A component slot is a component for which the action varies according to the calling actions. These two inclusion types are very similar to partials, and support caching the same way. For instance, if your global layout shows a:
 
