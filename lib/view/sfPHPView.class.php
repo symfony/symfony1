@@ -183,9 +183,9 @@ class sfPHPView extends sfView
     }
 
     $retval = null;
+    $response = $context->getResponse();
     if (sfConfig::get('sf_cache'))
     {
-      $response = $context->getResponse();
       $key   = $response->getParameterHolder()->remove('current_key', 'symfony/cache/current');
       $cache = $response->getParameter($key, null, 'symfony/cache');
       if ($cache !== null)
