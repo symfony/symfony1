@@ -105,7 +105,7 @@ class sfExecutionFilter extends sfFilter
         $sf_logging_active = sfConfig::get('sf_logging_active');
         if ($validated)
         {
-          if ($sf_logging_active)
+          if (sfConfig::get('sf_web_debug') && $sf_logging_active)
           {
             $timer = sfTimerManager::getTimer(sprintf('Action "%s/%s"', $moduleName, $actionName));
           }
@@ -119,7 +119,7 @@ class sfExecutionFilter extends sfFilter
           }
           $actionInstance->postExecute();
 
-          if ($sf_logging_active)
+          if (sfConfig::get('sf_web_debug') && $sf_logging_active)
           {
             $timer->addTime();
           }
@@ -153,7 +153,7 @@ class sfExecutionFilter extends sfFilter
     }
     else if ($viewName != sfView::NONE)
     {
-      if (sfConfig::get('sf_logging_active'))
+      if (sfConfig::get('sf_web_debug') && sfConfig::get('sf_logging_active'))
       {
         $timer = sfTimerManager::getTimer(sprintf('View "%s" for "%s/%s"', $viewName, $moduleName, $actionName));
       }
@@ -169,7 +169,7 @@ class sfExecutionFilter extends sfFilter
       // action entry which was retrieved from the execution chain
       $viewData = $viewInstance->render();
 
-      if (sfConfig::get('sf_logging_active'))
+      if (sfConfig::get('sf_web_debug') && sfConfig::get('sf_logging_active'))
       {
         $timer->addTime();
       }
