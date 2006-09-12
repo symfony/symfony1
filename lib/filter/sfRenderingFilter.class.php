@@ -46,7 +46,7 @@ class sfRenderingFilter extends sfFilter
     $response->sendContent();
 
     // log timers information
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_active'))
     {
       $logger = $this->getContext()->getLogger();
       foreach (sfTimerManager::getTimers() as $name => $timer)

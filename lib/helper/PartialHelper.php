@@ -177,14 +177,14 @@ function get_component($moduleName, $componentName, $vars = array())
 
   // run component
   $sf_logging_active = sfConfig::get('sf_logging_active');
-  if (sfConfig::get('sf_web_debug') && $sf_logging_active)
+  if (sfConfig::get('sf_debug') && $sf_logging_active)
   {
     $timer = sfTimerManager::getTimer(sprintf('Component "%s/%s"', $moduleName, $componentName));
   }
 
   $retval = $componentInstance->$componentToRun();
 
-  if (sfConfig::get('sf_web_debug') && $sf_logging_active)
+  if (sfConfig::get('sf_debug') && $sf_logging_active)
   {
     $timer->addTime();
   }
