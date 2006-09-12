@@ -1,1 +1,1 @@
-<p>You must enter you credential to access this page.</p>
+<p>You must enter you credentials to access this page.</p>
