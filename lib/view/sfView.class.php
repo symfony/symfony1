@@ -329,11 +329,11 @@ abstract class sfView
       $actionStackEntry->setViewInstance($this);
     }
 
-    // include view configuration
-    $this->configure();
-
     // set template directory
     $this->setDirectory(sfLoader::getTemplateDir($moduleName, $this->getTemplate()));
+
+    // include view configuration
+    $this->configure();
 
     return true;
   }
