@@ -101,11 +101,11 @@ You may ask: What's the interest of a helper if it is longer to write than the n
       'position' => 'before',      
     ))
 
-The helper makes your templates easier to understand than any JavaScript code, and you have one single syntax for similar behaviours. That's also why the helper name is so long: It makes the code self-sufficient, without the need of extra commentaries.
+The helper makes your templates easier to understand than any JavaScript code, and you have one single syntax for similar behaviors. That's also why the helper name is so long: It makes the code self-sufficient, without the need of extra commentaries.
 
 ### Graceful degradation
 
-You already know how to qualify some HTML code to make it executed only by browsers with no JavaScript support, uting the  `<noscript>` tags. What if you could do it the other way around, i.e. qualify some code so that it is executed only by browsers actually supporting JavaScript? Symfony provides two helpers just for that, and it facilitates the creation of applications that degrade gracefully.
+You already know how to qualify some HTML code to make it executed only by browsers with no JavaScript support, using the  `<noscript>` tags. What if you could do it the other way around, i.e. qualify some code so that it is executed only by browsers actually supporting JavaScript? Symfony provides two helpers just for that, and it facilitates the creation of applications that degrade gracefully.
 
     [php]
     <?php if_javascript(); ?>
@@ -154,9 +154,9 @@ For instance, imagine a link that would call a remote function. Symfony writes i
 
 Notice that the `url` parameter can contain either an internal URI (`module/action?parameters`) or a [routing rule](routing.txt), just like in a regular `link_to()`. The [askeet tutorial](http://www.symfony-project.com/askeet/8) has other examples of `link_to_remote()` uses.
 
->**Note**: Actions called as remote functions know that they are in an AJAX transaction, and therefore automatically don't include the [web debug toolbar](debug.txt) in development and skip the [decoration](view.txt) process (i.e. their template is **not** included in a layout by default). This means that if you want an AJAX view to be decorated, you need to specify explicitely `layout: foobar` for this view in the module `view.yml`.
+>**Note**: Actions called as remote functions know that they are in an AJAX transaction, and therefore automatically don't include the [web debug toolbar](debug.txt) in development and skip the [decoration](view.txt) process (i.e. their template is **not** included in a layout by default). This means that if you want an AJAX view to be decorated, you need to specify explicitly `layout: foobar` for this view in the module `view.yml`.
 
-The second popular way of interacting with web page is forms. Forms normally call a remote function, but this causes the refreshing of the whole page. The correspondence of the `link_to_function()` for a form would be that the form submission only updates an element in the page with the response of the server. This is what the `form_remote_tag()` helper does.
+The second popular way of interacting with web pages is forms. Forms normally call a remote function, but this causes the refreshing of the whole page. The correspondence of the `link_to_function()` for a form would be that the form submission only updates an element in the page with the response of the server. This is what the `form_remote_tag()` helper does.
 
     [php]
     <?php echo form_remote_tag(array(
@@ -205,11 +205,11 @@ The `module/action` written in the `@item_being_typed` rule will be called each 
           'with'     => "'param=' + value",
       )) ?>
 
-Note that this helper doesn't output an HTML element, but a behaviour for the element passed as parameter. You will see below more examples of JavaScript helpers assigning behaviours.
+Note that this helper doesn't output an HTML element, but a behavior for the element passed as parameter. You will see below more examples of JavaScript helpers assigning behaviors.
 
 If you want to observe all the fields of a form, you'd better use the `observe_form()` helper, which calls a remote function each time one of the form fields is modified.
 
-Last but not least, the `periodically_call_remote()` helper is an AJAX interaction triggered every x seconds. It is not attached to a HTML control, but runs transparently in the background, as a behaviour of the whole page. This can be of great use to track the position of the mouse, autosave the content of a large textarea, etc.
+Last but not least, the `periodically_call_remote()` helper is an AJAX interaction triggered every x seconds. It is not attached to a HTML control, but runs transparently in the background, as a behavior of the whole page. This can be of great use to track the position of the mouse, autosave the content of a large textarea, etc.
 
     [php]
     <?php echo periodically_call_remote(array(
@@ -315,7 +315,7 @@ By default, AJAX requests are made in `post` mode. If you want to make an AJAX c
 
 ### Script execution
 
-If the response code of the AJAX call (the code sent by the server, inserted in the `update` element) contains JavaScripts, you might be surprised to see that these scripts are not executed by default. This is to prevent remote attack risks, except if the developper knows for sure what code is in the response.
+If the response code of the AJAX call (the code sent by the server, inserted in the `update` element) contains JavaScripts, you might be surprised to see that these scripts are not executed by default. This is to prevent remote attack risks, except if the developer knows for sure what code is in the response.
 
 That's why you have to declare the ability to execute scripts in remote responses explicitly with the `script` option:
 
@@ -329,7 +329,7 @@ That's why you have to declare the ability to execute scripts in remote response
     
 If the remote response contains AJAX helpers (like, for instance, `remote_function()`), be aware that these PHP functions generate JavaScript code, and won't execute unless you add the `'script' => true` option.
     
->**Note**: Even if you enable script execution for the remote response, you won't actually see the scripts in the remote code - that is, if you use a tool to check the generated code. The scripts will execute but will not appear in the code. Although peculiar, this behaviour is perfectly normal.
+>**Note**: Even if you enable script execution for the remote response, you won't actually see the scripts in the remote code - that is, if you use a tool to check the generated code. The scripts will execute but will not appear in the code. Although peculiar, this behavior is perfectly normal.
 
 ### Callbacks
 
@@ -412,5 +412,5 @@ The [script.aculo.us library](http://script.aculo.us/) provides high-level JavaS
 
 * **Autocomplete input**: A text input that shows a list of words matching the user's entry while he/she types in. Examples of the use of the `input_auto_complete_tag()` helper in symfony can be found in the [askeet tutorial](http://www.symfony-project.com/askeet/en/14).
 * **Drag and Drop**: The ability to grab an element, move it and release it somewhere else, for a real "put it there" feeling. Refer to the [shopping cart tutorial](http://www.symfony-project.com/tutorial/symfony_ajax.html) for a step-by-step documentation on how to use `draggable_element()` and `drop_receiving_element()` - and a self explaining screencast.
-* **Sortable lists**: Another possibility offered by draggable elements is the ability to sort a list by moving its items. The `sortable_element()` helper adds the 'sortable' behaviour to an item, and the symfony book has a dedicated [sortable chapter](sortable.txt) dealing with this feature.
+* **Sortable lists**: Another possibility offered by draggable elements is the ability to sort a list by moving its items. The `sortable_element()` helper adds the 'sortable' behavior to an item, and the symfony book has a dedicated [sortable chapter](sortable.txt) dealing with this feature.
 * **Edit in place**: More and more web applications allow users to edit the content of pages directly in the page, without the need to redisplay the content in a form (see a demo [here](http://tool-man.org/examples/edit-in-place.html). the symfony helper that does it is the `input_in_place_editor_tag()`.
