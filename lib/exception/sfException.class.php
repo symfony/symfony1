@@ -77,7 +77,10 @@ class sfException extends Exception
       return;
     }
 
-    header('HTTP/1.0 500 Internal Server Error');
+    if (!sfConfig::get('sf_test'))
+    {
+      header('HTTP/1.0 500 Internal Server Error');
+    }
 
     // send an error 500 if not in debug mode
     if (!sfConfig::get('sf_debug'))
