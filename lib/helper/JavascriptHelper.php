@@ -721,8 +721,8 @@
 
     $response = $context->getResponse();
     $response->addJavascript(sfConfig::get('sf_prototype_web_dir').'/js/prototype');
-    $response->addJavascript(sfConfig::get('sf_prototype_web_dir').'/js/controls');
     $response->addJavascript(sfConfig::get('sf_prototype_web_dir').'/js/effects');
+    $response->addJavascript(sfConfig::get('sf_prototype_web_dir').'/js/controls');
 
     $comp_options = _convert_options($completion_options);
     if (isset($comp_options['use_style']) && $comp_options['use_style'] == true)
@@ -749,8 +749,8 @@
   {
     $response = sfContext::getInstance()->getResponse();
     $response->addJavascript(sfConfig::get('sf_prototype_web_dir').'/js/prototype');
-    $response->addJavascript(sfConfig::get('sf_prototype_web_dir').'/js/controls');
     $response->addJavascript(sfConfig::get('sf_prototype_web_dir').'/js/effects');
+    $response->addJavascript(sfConfig::get('sf_prototype_web_dir').'/js/controls');
 
     $editor_options = _convert_options($editor_options);
     $default_options = array('tag' => 'span', 'id' => '\''.$name.'_in_place_editor', 'class' => 'in_place_editor_field');
