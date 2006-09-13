@@ -25,109 +25,28 @@
 pake_import('pear');
 
 pake_desc('launch symfony test suite');
-pake_task('alltests');
+pake_task('test');
 
 pake_desc('release a new symfony version');
-//pake_task('release', 'alltests');
+pake_task('release', 'test');
 
 pake_task('release');
 
-$sf_symfony_lib_dir = dirname(__FILE__).'/lib';
-
-// YAML support
-if (!function_exists('syck_load'))
+function run_test($task, $args)
 {
-  require_once($sf_symfony_lib_dir.'/util/Spyc.class.php');
-}
-require_once($sf_symfony_lib_dir.'/util/sfYaml.class.php');
+  require_once(dirname(__FILE__).'/lib/vendor/lime/lime.php');
 
-// cache support
-require_once($sf_symfony_lib_dir.'/cache/sfCache.class.php');
-require_once($sf_symfony_lib_dir.'/cache/sfFileCache.class.php');
+  $h = new lime_harness(new lime_output_color());
 
-// config support
-require_once($sf_symfony_lib_dir.'/config/sfConfigCache.class.php');
-require_once($sf_symfony_lib_dir.'/config/sfConfigHandler.class.php');
-require_once($sf_symfony_lib_dir.'/config/sfYamlConfigHandler.class.php');
-require_once($sf_symfony_lib_dir.'/config/sfAutoloadConfigHandler.class.php');
-require_once($sf_symfony_lib_dir.'/config/sfRootConfigHandler.class.php');
+  $h->base_dir = realpath(dirname(__FILE__).'/test');
 
-// basic exception classes
-require_once($sf_symfony_lib_dir.'/exception/sfException.class.php');
-require_once($sf_symfony_lib_dir.'/exception/sfAutoloadException.class.php');
-require_once($sf_symfony_lib_dir.'/exception/sfCacheException.class.php');
-require_once($sf_symfony_lib_dir.'/exception/sfConfigurationException.class.php');
-require_once($sf_symfony_lib_dir.'/exception/sfParseException.class.php');
+  // unit tests
+  $h->register_glob($h->base_dir.'/unit/*/*Test.php');
 
-// utils
-require_once($sf_symfony_lib_dir.'/util/sfParameterHolder.class.php');
+  // functionnal tests
+  $h->register_glob($h->base_dir.'/functionnal/*Test.php');
 
-function __autoload($class)
-{
-  static $loaded;
-
-  if (!$loaded)
-  {
-    // load the list of autoload classes
-    include_once(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/autoload.yml'));
-
-    $loaded = true;
-  }
-
-  $classes = sfConfig::get('sf_class_autoload', array());
-
-  if (!isset($classes[$class]))
-  {
-    $error = sprintf('Autoloading of class "%s" failed.', $class);
-    throw new pakeException($error);
-  }
-  else
-  {
-    require_once($classes[$class]);
-  }
-}
-
-function run_alltests($task, $args)
-{
-  set_include_path(
-    dirname(__FILE__).'/lib'.PATH_SEPARATOR.
-    get_include_path()
-  );
-
-  // initialize our test environment
-  require_once(dirname(__FILE__).'/lib/util/sfToolkit.class.php');
-  sfToolkit::clearDirectory('/tmp/symfonytest');
-  $root_dir = tempnam('/tmp/symfonytest', 'tmp');
-  unlink($root_dir);
-  $tmp_dir = $root_dir.DIRECTORY_SEPARATOR.md5(uniqid(rand(), true));
-  if (!is_dir($tmp_dir))
-  {
-    pake_mkdirs($tmp_dir, 0777);
-  }
-
-  require_once(dirname(__FILE__).'/lib/config/sfConfig.class.php');
-  sfConfig::add(array(
-    'sf_root_dir'         => $tmp_dir,
-    'sf_app'              => 'test',
-    'sf_environment'      => 'test',
-    'sf_debug'            => true,
-    'sf_symfony_lib_dir'  => dirname(__FILE__).'/lib',
-    'sf_symfony_data_dir' => dirname(__FILE__).'/data',
-    'sf_test'             => false,
-    'sf_version'          => 'test',
-  ));
-  pake_mkdirs($tmp_dir.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.'test'.DIRECTORY_SEPARATOR.'modules');
-  require_once(dirname(__FILE__).'/data/config/constants.php');
-  require_once(dirname(__FILE__).'/lib/util/sfContext.class.php');
-
-  pake_import('simpletest', false);
-
-  pakeSimpletestTask::run_test($task, $args);
-
-  // cleanup our test enviroment
-  sfToolkit::clearDirectory($tmp_dir);
-  rmdir($tmp_dir);
-  rmdir($root_dir);
+  $h->run();
 }
 
 function run_create_pear_package($task, $args)
