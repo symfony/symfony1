@@ -381,7 +381,7 @@ function _popup_javascript_function($popup, $internal_uri = '')
   {
     if (isset($popup[1]))
     {
-      return "var w=window.open(".$url.",'".$popup[0]."','".$popup[1]."');focus()";
+      return "var w=window.open(".$url.",'".$popup[0]."','".$popup[1]."');w.focus()";
     }
     else
     {
