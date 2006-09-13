@@ -179,24 +179,6 @@ Uninstalls a plugin.
 
 The way to build, install and manage plugins is described in the [plugin chapter](plugin.txt).
 
-### Fast Web server for test
-
-    $ symfony server <APPLICATION_NAME> [<PORT>]
-
-Launches a fast web server written in PHP to serve a symfony application in the `dev` environment. The default port is 8000.
-
-For instance, if you want to test a symfony application called `myapp` without changing your server configuration, type:
-
-    $ symfony server myapp
-    
-You can now browse your app in the `dev` environment by requesting
-
-    http://localhost:8000/
-    
-Symfony uses [nanoserv][3] for this purpose, in order to bypass completely the web server. This results in a very fast access to the development environment - without any control over the server configuration nor access to its log files. This tool is to be used for debug, not in a production environment.
-
->**Note**: This feature is still at an early stage
-
 Automatic completion
 ---------------------
 
