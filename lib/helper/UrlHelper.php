@@ -381,16 +381,16 @@ function _popup_javascript_function($popup, $internal_uri = '')
   {
     if (isset($popup[1]))
     {
-      return "window.open(".$url.",'".$popup[0]."','".$popup[1]."');";
+      return "var w=window.open(".$url.",'".$popup[0]."','".$popup[1]."');focus()";
     }
     else
     {
-      return "window.open(".$url.",'".$popup[0]."');";
+      return "var w=window.open(".$url.",'".$popup[0]."');w.focus()";
     }
   }
   else
   {
-    return "window.open(".$url.");";
+    return "var w=window.open(".$url.");w.focus()";
   }
 }
 
