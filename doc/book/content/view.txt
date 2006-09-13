@@ -449,7 +449,7 @@ To include a slot, use the `include_slot()` helper. Using the `has_slot()` helpe
     [php]
     ...
     <div id="sidebar">
-      <?php if(has_slot('sidebar'): ?>
+      <?php if(has_slot('sidebar')): ?>
         <?php include_slot('sidebar') ?>
       <?php else: ?>
         <!-- default sidebar code -->
