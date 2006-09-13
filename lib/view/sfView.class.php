@@ -329,9 +329,6 @@ abstract class sfView
       $actionStackEntry->setViewInstance($this);
     }
 
-    // set template directory
-    $this->setDirectory(sfLoader::getTemplateDir($moduleName, $this->getTemplate()));
-
     // include view configuration
     $this->configure();
 

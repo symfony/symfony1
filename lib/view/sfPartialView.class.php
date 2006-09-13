@@ -30,6 +30,10 @@ class sfPartialView extends sfPHPView
     {
       $this->setDirectory(sfConfig::get('sf_app_template_dir'));
     }
+    else
+    {
+      $this->setDirectory(sfLoader::getTemplateDir($this->moduleName, $this->getTemplate()));
+    }
   }
 
   public function render($templateVars = array())
