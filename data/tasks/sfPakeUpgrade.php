@@ -65,6 +65,11 @@ function run_upgrade_0_8($task, $args)
       $action_dirs = pakeFinder::type('directory')->name('actions')->mindepth(1)->maxdepth(1)->in($dir);
 
       _upgrade_0_8_deprecated_for_actions($action_dirs);
+
+      // view.yml
+      _upgrade_0_8_view_yml($app_dir);
+
+      _upgrade_0_8_php_files($app_dir);
     }
   }
 
@@ -79,6 +84,72 @@ function run_upgrade_0_8($task, $args)
   pake_echo_comment('you can now:');
   pake_echo_comment(' - rebuild model: symfony propel-build-model');
   pake_echo_comment(' - clear cache: symfony cc');
+}
+
+function _upgrade_0_8_php_files($app_dir)
+{
+  pake_echo_action('upgrade 0.8', 'upgrading sf/ path configuration');
+
+  $php_files = pakeFinder::type('file')->name('*.php')->in($app_dir);
+  foreach ($php_files as $php_file)
+  {
+    $content = file_get_contents($php_file);
+
+    $deprecated = array(
+      "'/sf/js/prototype"     => "sfConfig::get('SF_PROTOTYPE_WEB_DIR').'/js",
+      "'/sf/css/prototype"    => "sfConfig::get('SF_PROTOTYPE_WEB_DIR').'/css",
+      "'/sf/js/sf_admin"      => "sfConfig::get('SF_PROTOTYPE_WEB_DIR').'/js",
+      "'/sf/css/sf_admin"     => "sfConfig::get('SF_PROTOTYPE_WEB_DIR').'/css",
+      "'/sf/images/sf_admin"  => "sfConfig::get('SF_PROTOTYPE_WEB_DIR').'/images",
+    );
+    $seen = array();
+    foreach ($deprecated as $old => $new)
+    {
+      $count = 0;
+      $content = str_replace($old, $new, $content, $count);
+      if ($count && !isset($seen[$old]))
+      {
+        $seen[$old] = true;
+        pake_echo_comment(sprintf('%s is deprecated', $old));
+        pake_echo_comment(sprintf(' use %s', $new));
+      }
+    }
+
+    file_put_contents($php_file, $content);
+  }
+}
+
+function _upgrade_0_8_view_yml($app_dir)
+{
+  pake_echo_action('upgrade 0.8', 'upgrading view configuration');
+
+  $yml_files = pakeFinder::type('file')->name('*.yml')->in($app_dir);
+  foreach ($yml_files as $yml_file)
+  {
+    $content = file_get_contents($yml_file);
+
+    $deprecated = array(
+      '/sf/js/prototype'     => '%SF_PROTOTYPE_WEB_DIR%/js',
+      '/sf/css/prototype'    => '%SF_PROTOTYPE_WEB_DIR%/css',
+      '/sf/js/sf_admin'      => '%SF_ADMIN_WEB_DIR%/js',
+      '/sf/css/sf_admin'     => '%SF_ADMIN_WEB_DIR%/css',
+      '/sf/images/sf_admin'  => '%SF_ADMIN_WEB_DIR%/images',
+    );
+    $seen = array();
+    foreach ($deprecated as $old => $new)
+    {
+      $count = 0;
+      $content = str_replace($old, $new, $content, $count);
+      if ($count && !isset($seen[$old]))
+      {
+        $seen[$old] = true;
+        pake_echo_comment(sprintf('%s is deprecated', $old));
+        pake_echo_comment(sprintf(' use %s', $new));
+      }
+    }
+
+    file_put_contents($yml_file, $content);
+  }
 }
 
 function _upgrade_0_8_cache_yml($app_dir)
