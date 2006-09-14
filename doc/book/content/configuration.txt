@@ -265,6 +265,11 @@ Beware though that the configuration is parsed very early in the life of a reque
 
 Be also aware that in the production environment, the configuration is cached, so the configuration files are parsed (and executed) only once after the cache is cleared.
 
+>**Note**: If what you need is to repeat a setting defined in another configuration file, use the constants trick. Previsously defined settings are available as constants in YAML file - just uppercase the name and enclose it between % signs. For instance, here is how you can reuse a setting from `settings.yml` in a `view.yml`:
+
+         all:
+           javascripts: [%SF_PROTOTYPE_WEB_DIR%/js/prototype] 
+
 And if you are allergic to YAML, or if you prefer to avoid writing both a configuration file and a configuration handler to finally get an associative array in PHP, you can bypass YAML parsing completely and return a PHP array in any YAML file. It means that you can write the `logging.yml` as follows:
 
     [php]
