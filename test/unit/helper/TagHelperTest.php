@@ -12,7 +12,9 @@ $_test_dir = realpath(dirname(__FILE__).'/../..');
 require_once($_test_dir.'/../lib/vendor/lime/lime.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 require_once($_test_dir.'/../lib/util/sfToolkit.class.php');
-require_once($_test_dir.'/../lib/helper/TagHelper.php');
+require_once($_test_dir.'/../lib/config/sfLoader.class.php');
+
+sfLoader::loadHelpers(array('Helper', 'Tag'));
 
 $t = new lime_test(13, new lime_output_color());
 
