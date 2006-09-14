@@ -140,4 +140,9 @@ abstract class sfResponse
    * @return void
    */
   abstract function shutdown ();
+
+  public function __call($method, $arguments)
+  {
+    return sfMixer::callMixins();
+  }
 }

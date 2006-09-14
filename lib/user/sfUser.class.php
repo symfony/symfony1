@@ -206,4 +206,9 @@ class sfUser
 
     session_write_close();
   }
+
+  public function __call($method, $arguments)
+  {
+    return sfMixer::callMixins();
+  }
 }

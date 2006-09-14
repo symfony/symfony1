@@ -586,4 +586,9 @@ abstract class sfView
   {
     $this->extension = $ext;
   }
+
+  public function __call($method, $arguments)
+  {
+    return sfMixer::callMixins();
+  }
 }

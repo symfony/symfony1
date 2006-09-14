@@ -658,4 +658,9 @@ abstract class sfController
   {
     return 'cli' == php_sapi_name();
   }
+
+  public function __call($method, $arguments)
+  {
+    return sfMixer::callMixins();
+  }
 }

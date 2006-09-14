@@ -324,4 +324,9 @@ abstract class sfComponent
   {
     return $this->getUser()->hasAttribute($name, 'symfony/flash');
   }
+
+  public function __call($method, $arguments)
+  {
+    return sfMixer::callMixins();
+  }
 }

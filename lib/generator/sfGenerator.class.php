@@ -144,4 +144,9 @@ abstract class sfGenerator
   {
     $this->theme = $theme;
   }
+
+  public function __call($method, $arguments)
+  {
+    return sfMixer::callMixins();
+  }
 }
