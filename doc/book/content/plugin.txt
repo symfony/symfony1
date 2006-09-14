@@ -201,6 +201,12 @@ On the other hand, if a plugin wants to offer a module with the ability to overr
 How to package a plugin for PEAR
 --------------------------------
 
+
+To override the plugins schema files, you must copy them to your projects config directory, and if they do not contain the PluginName,prefix them with the `PluginName-`, for the example above, you would have make a copy of the plugins schema.yml file, and prefix it `PluginName-`, to produce `PluginName-schema.yml` in your project's config directory. This file will then be used instead of the plugin file when building the model.
+    
+To override the plugins schema files, you must copy them to your projects config directory, and if they do not contain the PluginName,prefix them with the `PluginName-`, for the example above, you would have make a copy of the plugins schema.yml file, and prefix it `PluginName-`, to produce `PluginName-schema.yml` in your project's config directory. This file will then be used instead of the plugin file when building the model.
+    
+To override the plugins schema files, you must copy them to your projects config directory, and if they do not contain the PluginName,prefix them with the `PluginName-`, for the example above, you would have make a copy of the plugins schema.yml file, and prefix it `PluginName-`, to produce `PluginName-schema.yml` in your project's config directory. This file will then be used instead of the plugin file when building the model.
 Plugins provided as PEAR packages are easier to upgrade, can declare dependencies and automatically deploy assets in the `web/` directory. All you need to do to package a plugin as a PEAR package is to add a `package.xml` at the root of the plugin and call the `pear package` command.
 
 ### `package.xml` 
