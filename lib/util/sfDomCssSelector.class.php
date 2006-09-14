@@ -110,7 +110,7 @@ class sfDomCssSelector
               $ok = preg_match('/\b'.$attrValue.'\b/', $found->getAttribute($attrName));
               break;
             case '|': // Match start with value followed by optional hyphen
-              $ok = preg_match('/^'.$attrValue.'-?/', $found->getAttribute(attrName));
+              $ok = preg_match('/^'.$attrValue.'-?/', $found->getAttribute($attrName));
               break;
             case '^': // Match starts with value
               $ok = 0 === strpos($found->getAttribute($attrName), $attrValue);
