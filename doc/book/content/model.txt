@@ -86,7 +86,7 @@ Notice that the name of the database itself (`blog`) doesn't appear in the `sche
 
 ### Basic schema syntax
 
-In a `schema.yml`, the first key represents a connection. It can contain several tables, each having a set of columns. According to the YAML syntax, the keys end with a colon, and the structure is shown through indentation (one or more spaces, but no tabulations).
+In a `schema.yml`, the first key represents a connection. It can contain several tables, each having a set of columns. According to the YAML syntax, the keys end with a colon, and the structure is shown through indentation (one or more spaces, but no tabulations). It is possible to have multiple schema.yml files for your project, please see the notes below on foreign keys to ensure that you can reference foreign tables in seperate schema files.
 
 A table can have special attributes, including the `phpName` describing the name of the class that will be generated. If you don't mention it, the name of the table will be used in place, after removing underscores and capitalizing the first letter of inner words (in the example, the default `phpName` of the tables would be `blogArticle` and `blogComment`). Columns also have a `phpName`, which is the capitalized version of the `name` (`ID`, `TITLE`, `CONTENT`, etc.) and doesn't need overriding in most cases.
 
@@ -386,6 +386,11 @@ The main element supports the defaultIdMethod` attribute; if none is provided th
     propel:
       _attributes:   { defaultIdMethod: none }
 
+If you use plugins, or wish to use multiple schema.yml files, then the databases in each file must be related by the `package` attribute to allow you to reference foreign keys on tables defined in seperate schema.yml files. By default all databases are declared to be part of the `lib.model` package. If you declare tables to belong to sub packages (as in plugins) then these files will be generated there and not in `lib.model`.
+
+    propel:
+      _attributes:   { package: lib.model }
+
 You already saw the `phpName` table attribute, used to set the name of the generated class mapping the table:
 
     propel:
@@ -457,6 +462,8 @@ As compared to the column attributes, it is interesting for multiple-references 
             references:
               - { local: user_id, foreign: id }
               - { local: post_id, foreign: id }
+
+NOTE: Foreign keys between tables defined in seperate schema.yml files must be explicitly defined as outlined above as they cannot be auto detected by symfony. You must also ensure that you have declared each database tag to belong to the same package (see attributes above), and that you have the statement `propel.packageObjectModel  = true` in your propel.ini file (these settings are now default in symfony projects).
 
 ### Index
 

@@ -36,6 +36,9 @@ function run_upgrade_0_8($task, $args)
   // find all applications for this project
   $apps = pakeFinder::type('directory')->name(sfConfig::get('sf_app_module_dir_name'))->mindepth(1)->maxdepth(1)->relative()->in(sfConfig::get('sf_apps_dir_name'));
 
+  // update schemas
+  _upgrade_0_8_schemas();
+
   // upgrade all applications
   foreach ($apps as $app_module_dir)
   {
@@ -331,6 +334,57 @@ function _upgrade_0_8_propel_model()
   }
 }
 
+function _upgrade_0_8_schemas()
+{
+  pake_echo_action('upgrade 0.8', 'upgrading schemas');
+
+  $seen = false;
+  $xml_files = pakeFinder::type('file')->name('*schema.xml')->in(sfConfig::get('sf_config_dir'));
+  foreach ($xml_files as $xml_file)
+  {
+    $content = file_get_contents($xml_file);
+
+    if (preg_match('/<database[^>]*package[^>]*>/', $content))
+    {
+      continue;
+    }
+
+    $count = 0;
+    $content = str_replace('<database', '<database package="lib.model"', $content, $count);
+    if ($count && !$seen)
+    {
+      $seen = true;
+      pake_echo_comment('schema.xml must now have a database package');
+      pake_echo_comment('  default is package="lib.model"');
+    }
+
+    file_put_contents($xml_file, $content);
+  }
+
+  $seen = false;
+  $yml_files = pakeFinder::type('file')->name('*schema.yml')->in(sfConfig::get('sf_config_dir'));
+  foreach ($yml_files as $yml_file)
+  {
+    $content = file_get_contents($yml_file);
+
+    if (preg_match('/^  _attributes:\s*{[^}]*package:[^}]*}/m', $content))
+    {
+      continue;
+    }
+
+    $count = 0;
+    $content = preg_replace('/^(.+\:)/', "\\1\n  _attributes: { package: lib.model }", $content, 1, $count);
+    if ($count && !$seen)
+    {
+      $seen = true;
+      pake_echo_comment('schema.yml must now have a database package');
+      pake_echo_comment('  default is _attributes: { package: lib.model }');
+    }
+
+    file_put_contents($yml_file, $content);
+  }
+}
+
 function _upgrade_0_8_propel_ini()
 {
   pake_echo_action('upgrade 0.8', 'upgrading propel.ini configuration file');
@@ -344,6 +398,12 @@ function _upgrade_0_8_propel_ini()
     // new target package (needed for new plugin system)
     $propel_ini = preg_replace('#propel\.targetPackage(\s*)=(\s*)model#', 'propel.targetPackage$1=$2lib.model', $propel_ini);
     $propel_ini = preg_replace('#propel.php.dir(\s*)=(\s*)\${propel.output.dir}/lib#', 'propel.php.dir$1=$2\${propel.output.dir}', $propel_ini);
+
+    if (false === strpos($propel_ini, 'propel.packageObjectModel'))
+    {
+      $propel_ini = rtrim($propel_ini);
+      $propel_ini .= "\npropel.packageObjectModel = true\n";
+    }
 
     // new propel builder class to be able to remove require_* and strip comments
     $propel_ini = str_replace('propel.engine.builder.om.php5.PHP5ExtensionObjectBuilder', 'symfony.addon.propel.builder.SfExtensionObjectBuilder', $propel_ini);

@@ -137,6 +137,7 @@ class sfPropelDatabaseSchema
     // conventions for database attributes
     $this->setIfNotSet($this->database['_attributes'], 'defaultIdMethod', 'native');
     $this->setIfNotSet($this->database['_attributes'], 'noXsd', true);
+    $this->setIfNotSet($this->database['_attributes'], 'package', 'lib.model');
   }
 
   private function fixYAMLI18n()
