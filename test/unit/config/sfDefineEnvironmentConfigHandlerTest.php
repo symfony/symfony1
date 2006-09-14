@@ -40,4 +40,4 @@ sfConfig::set('sf_environment', 'prod');
 $data = $handler->execute($files);
 $data = preg_replace('#date\: \d+/\d+/\d+ \d+\:\d+\:\d+#', '', $data);
 
-$t->is($data, file_get_contents($dir.'prefix_result.php'));
+$t->is($data, str_replace("\r\n", "\n", file_get_contents($dir.'prefix_result.php')));
