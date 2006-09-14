@@ -13,7 +13,7 @@ require_once($_test_dir.'/../lib/vendor/lime/lime.php');
 require_once($_test_dir.'/../lib/util/sfMixin.class.php');
 
 $o = new lime_output_color();
-$t = new lime_test(9, $o);
+$t = new lime_test(10, $o);
 
 class myClass
 {
@@ -25,6 +25,20 @@ class myClass
     $this->ret  = "before myMethod\n";
     sfMixer::callMixins();
     $this->ret .= "after myMethod\n";
+
+    return $this->ret;
+  }
+
+  public function myMethodWithSeveralHooks()
+  {
+    $this->ret  = "before myMethodWithSeveralHooks\n";
+    sfMixer::callMixins('before');
+
+    $this->ret .= "myMethodWithSeveralHooks\n";
+    sfMixer::callMixins();
+
+    $this->ret .= "after myMethodWithSeveralHooks\n";
+    sfMixer::callMixins('after');
 
     return $this->ret;
   }
@@ -88,6 +102,21 @@ class myClassMixins
     $object->ret .= "in myMethod mixin method\n";
   }
 
+  public function myMethodWithSeveralHooks($object)
+  {
+    $object->ret .= "in myMethodWithSeveralHooks mixin method for default hook\n";
+  }
+
+  public function myMethodWithSeveralHooksBefore($object)
+  {
+    $object->ret .= "in myMethodWithSeveralHooks mixin method for before hook\n";
+  }
+
+  public function myMethodWithSeveralHooksAfter($object)
+  {
+    $object->ret .= "in myMethodWithSeveralHooks mixin method for after hook\n";
+  }
+
 // TODO
   public function myStaticMixinMethod($object)
   {
@@ -137,3 +166,8 @@ $t->is($m->newMethod(), "before __call\nin newMethod mixin method\nafter __call\
 
 sfMixer::register('myClass', array('myClassMixins', 'newMethodWithArgs'));
 $t->is($m->newMethodWithArgs('value'), "before __call\nin newMethodWithArgs mixin method (value, default)\nafter __call\n", 'method call from a mixin with arguments');
+
+sfMixer::register('myClass:myMethodWithSeveralHooks:before', array('myClassMixins', 'myMethodWithSeveralHooksBefore'));
+sfMixer::register('myClass:myMethodWithSeveralHooks', array('myClassMixins', 'myMethodWithSeveralHooks'));
+sfMixer::register('myClass:myMethodWithSeveralHooks:after', array('myClassMixins', 'myMethodWithSeveralHooksAfter'));
+$t->is($m->myMethodWithSeveralHooks(), "before myMethodWithSeveralHooks\nin myMethodWithSeveralHooks mixin method for before hook\nmyMethodWithSeveralHooks\nin myMethodWithSeveralHooks mixin method for default hook\nafter myMethodWithSeveralHooks\nin myMethodWithSeveralHooks mixin method for after hook\n", 'method call with several registered hooks');
