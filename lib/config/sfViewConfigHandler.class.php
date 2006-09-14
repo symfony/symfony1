@@ -266,7 +266,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
 
         if ($key)
         {
-          $data[] = sprintf("  \$response->addStylesheet('%s', '%s', %s);", $key, $position, str_replace("\n", '', var_export($options, true)));
+          $data[] = sprintf("  \$response->addStylesheet('%s', '%s', %s);", $this->replaceConstants($key), $position, str_replace("\n", '', var_export($options, true)));
         }
       }
     }
@@ -312,7 +312,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
       {
         if ($js)
         {
-          $data[] = sprintf("  \$response->addJavascript('%s');", $js);
+          $data[] = sprintf("  \$response->addJavascript('%s');", $this->replaceConstants($js));
         }
       }
     }
