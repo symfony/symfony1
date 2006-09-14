@@ -13,7 +13,7 @@ require_once($_test_dir.'/../lib/vendor/lime/lime.php');
 require_once($_test_dir.'/../lib/util/sfParameterHolder.class.php');
 require_once($_test_dir.'/../lib/util/sfToolkit.class.php');
 require_once($_test_dir.'/../lib/util/sfYaml.class.php');
-require_once($_test_dir.'/../lib/util/spyc.class.php');
+require_once($_test_dir.'/../lib/util/Spyc.class.php');
 require_once($_test_dir.'/../lib/config/sfLoader.class.php');
 require_once($_test_dir.'/../lib/config/sfConfig.class.php');
 require_once($_test_dir.'/../lib/config/sfConfigHandler.class.php');
