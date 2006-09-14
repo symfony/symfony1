@@ -13,7 +13,11 @@ require_once($_test_dir.'/../lib/vendor/lime/lime.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 require_once($_test_dir.'/unit/sfWebRequestMock.class.php');
 require_once($_test_dir.'/../lib/config/sfConfig.class.php');
+sfConfig::set('sf_symfony_lib_dir', realpath(dirname(__FILE__).'/../../../lib'));
 require_once($_test_dir.'/../lib/config/sfLoader.class.php');
+
+class sfException extends Exception {}
+class sfViewException extends sfException {}
 
 sfLoader::loadHelpers(array('Helper', 'Tag', 'Url', 'Asset'));
 

@@ -16,10 +16,10 @@ require_once($_test_dir.'/../lib/config/sfConfig.class.php');
 sfConfig::set('sf_symfony_lib_dir', realpath(dirname(__FILE__).'/../../../lib'));
 require_once($_test_dir.'/../lib/config/sfLoader.class.php');
 
-sfLoader::loadHelpers(array('Helper', 'Tag', 'Form'));
-
 class sfException extends Exception {}
 class sfViewException extends sfException {}
+
+sfLoader::loadHelpers(array('Helper', 'Tag', 'Form'));
 
 $t = new lime_test(16, new lime_output_color());
 
