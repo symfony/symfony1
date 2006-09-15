@@ -360,29 +360,6 @@ function _upgrade_0_8_schemas()
 
     file_put_contents($xml_file, $content);
   }
-
-  $seen = false;
-  $yml_files = pakeFinder::type('file')->name('*schema.yml')->in(sfConfig::get('sf_config_dir'));
-  foreach ($yml_files as $yml_file)
-  {
-    $content = file_get_contents($yml_file);
-
-    if (preg_match('/^  _attributes:\s*{[^}]*package:[^}]*}/m', $content))
-    {
-      continue;
-    }
-
-    $count = 0;
-    $content = preg_replace('/^(.+\:)/', "\\1\n  _attributes: { package: lib.model }", $content, 1, $count);
-    if ($count && !$seen)
-    {
-      $seen = true;
-      pake_echo_comment('schema.yml must now have a database package');
-      pake_echo_comment('  default is _attributes: { package: lib.model }');
-    }
-
-    file_put_contents($yml_file, $content);
-  }
 }
 
 function _upgrade_0_8_propel_ini()
