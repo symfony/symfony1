@@ -449,12 +449,12 @@ class lime_harness
         $nb_failed_tests = $this->stats['failed_tests'],
         $nb_tests = $this->stats['nb_tests'],
         $nb_tests > 0 ? ($nb_tests - $nb_failed_tests) * 100 / $nb_tests : 0
-      ));
+      ), 'ERROR');
     }
     else
     {
-      $this->output->echoln('All tests successful.');
-      $this->output->echoln(sprintf('Files=%d, Tests=%d', count($this->test_files), $this->stats['nb_tests']));
+      $this->output->echoln('All tests successful.', 'INFO');
+      $this->output->echoln(sprintf('Files=%d, Tests=%d', count($this->test_files), $this->stats['nb_tests']), 'INFO');
     }
   }
 
