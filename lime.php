@@ -280,13 +280,13 @@ class lime_output_color extends lime_output
     $messages = func_get_args();
     foreach ($messages as $message)
     {
-      $this->echoln('# '.join("\n# ", (array) $message), 'COMMENT');
+      echo $this->colorizer->colorize('# '.join("\n# ", (array) $message), 'COMMENT')."\n";
     }
   }
 
   function comment($message)
   {
-    $this->echoln(sprintf('# %s', $message), 'COMMENT');
+    echo $this->colorizer->colorize(sprintf('# %s', $message), 'COMMENT')."\n";
   }
 
   function echoln($message, $colorizer_parameter = null)
@@ -294,6 +294,7 @@ class lime_output_color extends lime_output
     $message = preg_replace('/(?:^|\.)((?:not ok|dubious) *\d*)\b/e', '$this->colorizer->colorize(\'$1\', \'ERROR\')', $message);
     $message = preg_replace('/(?:^|\.)(ok *\d*)\b/e', '$this->colorizer->colorize(\'$1\', \'INFO\')', $message);
     $message = preg_replace('/"(.+?)"/e', '$this->colorizer->colorize(\'$1\', \'PARAMETER\')', $message);
+    $message = preg_replace('/(\->|\:\:)(.+?)\(\)/e', '$this->colorizer->colorize(\'$1$2()\', \'PARAMETER\')', $message);
 
     echo ($colorizer_parameter ? $this->colorizer->colorize($message, $colorizer_parameter) : $message)."\n";
   }
