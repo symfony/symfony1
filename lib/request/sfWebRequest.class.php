@@ -692,28 +692,6 @@ class sfWebRequest extends sfRequest
     return isset($pathArray[$name]) ? stripslashes($pathArray[$name]) : null;
   }
 
-  public function __call ($name, $arguments)
-  {
-    if (0 === stripos($name, 'getHttp'))
-    {
-      $header = sfInflector::underscore(substr($name, 7));
-
-      return $this->getHttpHeader($header);
-    }
-    else if (0 === stripos($name, 'getSsl'))
-    {
-      $header = sfInflector::underscore(substr($name, 6));
-
-      return $this->getHttpHeader($header, 'ssl');
-    }
-
-    if (substr($name, 0, 2) != '__')
-    {
-      $error = sprintf('Call to undefined function: %s::%s().', get_class($this), $name);
-      trigger_error($error, E_USER_ERROR);
-    }
-  }
-
   /**
    * Get cookie value.
    *
