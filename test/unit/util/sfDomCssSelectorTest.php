@@ -54,6 +54,9 @@ $dom = new DomDocument('1.0', 'utf-8');
 $dom->validateOnParse = true;
 $dom->loadHTML($html);
 
+// ->getTexts()
+$t->diag('->getTexts()');
+
 $c = new sfDomCssSelector($dom);
 $t->is($c->getTexts('h1'), array('Test page'), '->getTexts() takes a CSS selector as its first argument');
 $t->is($c->getTexts('h2'), array('Title 1', 'Title 2'), '->getTexts() returns an array of matching texts');

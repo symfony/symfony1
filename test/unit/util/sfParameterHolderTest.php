@@ -15,6 +15,7 @@ require_once($_test_dir.'/../lib/util/sfParameterHolder.class.php');
 $t = new lime_test(50, new lime_output_color());
 
 // ->clear()
+$t->diag('->clear()');
 $ph = new sfParameterHolder();
 $ph->clear();
 $t->is($ph->getAll(), null, '->clear() clears all parameters');
@@ -24,6 +25,7 @@ $ph->clear();
 $t->is($ph->getAll(), null, '->clear() clears all parameters');
 
 // ->get()
+$t->diag('->get()');
 $ph = new sfParameterHolder();
 $ph->set('foo', 'bar');
 $t->is($ph->get('foo'), 'bar', '->get() returns the parameter value for the given key');
@@ -51,6 +53,7 @@ $t->is($ph->get('foo[bars][]'), array('foo', 'bar'), '->get() returns an array')
 $t->is($ph->get('foo[bars][]'), $ph->get('foo[bars]'), '->get() returns an array even if you omit the []');
 
 // ->getNames()
+$t->diag('->getNames()');
 $ph = new sfParameterHolder();
 $ph->set('foo', 'bar');
 $ph->set('yourfoo', 'bar');
@@ -60,6 +63,7 @@ $t->is($ph->getNames(), array('foo', 'yourfoo'), '->getNames() returns all key n
 $t->is($ph->getNames('symfony/mynamespace'), array('myfoo'), '->getNames() takes a namepace as its first argument');
 
 // ->getNamespaces()
+$t->diag('->getNamespaces()');
 $ph = new sfParameterHolder();
 $ph->set('foo', 'bar');
 $ph->set('yourfoo', 'bar');
@@ -68,6 +72,7 @@ $ph->set('myfoo', 'bar', 'symfony/mynamespace');
 $t->is($ph->getNamespaces(), array($ph->getDefaultNamespace(), 'symfony/mynamespace'), '->getNamespaces() returns all non empty namespaces');
 
 // ->getAll()
+$t->diag('->getAll()');
 $parameters = array('foo' => 'bar', 'myfoo' => 'bar');
 $ph = new sfParameterHolder();
 $ph->add($parameters);
@@ -75,6 +80,7 @@ $ph->set('myfoo', 'bar', 'symfony/mynamespace');
 $t->is($ph->getAll(), $parameters, '->getAll() returns all parameters from the default namespace');
 
 // ->has()
+$t->diag('->has()');
 $ph = new sfParameterHolder();
 $ph->set('foo', 'bar');
 $ph->set('myfoo', 'bar', 'symfony/mynamespace');
@@ -97,6 +103,7 @@ $t->is($ph->has('foo[bars][]'), true, '->has() returns true if an array exists')
 $t->is($ph->get('foo[bars][]'), $ph->has('foo[bars]'), '->has() returns true for an array even if you omit the []');
 
 // ->hasNamespace()
+$t->diag('->hasNamespace()');
 $ph = new sfParameterHolder();
 $ph->set('foo', 'bar');
 $ph->set('myfoo', 'bar', 'symfony/mynamespace');
@@ -105,6 +112,7 @@ $t->is($ph->hasNamespace('symfony/mynamespace'), true, '->hasNamespace() returns
 $t->is($ph->hasNamespace('symfony/nonexistant'), false, '->hasNamespace() returns false if the namespace does not exist');
 
 // ->remove()
+$t->diag('->remove()');
 $ph = new sfParameterHolder();
 $ph->set('foo', 'bar');
 $ph->set('myfoo', 'bar');
@@ -123,6 +131,7 @@ $t->is($ph->has('myfoo', 'symfony/mynamespace'), false, '->remove() takes a name
 $t->is($ph->getAll(), null, '->remove() removes the key from parameters');
 
 // ->removeNamespace()
+$t->diag('->removeNamespace()');
 $ph = new sfParameterHolder();
 $ph->set('foo', 'bar');
 $ph->set('myfoo', 'bar');
@@ -139,6 +148,7 @@ $t->is($ph->has('myfoo', 'symfony/mynamespace'), false, '->removeNamespace() tak
 $t->is(null, $ph->getAll(), '->removeNamespace() removes all the keys from parameters');
 
 // ->set()
+$t->diag('->set()');
 $foo = 'bar';
 
 $ph = new sfParameterHolder();
@@ -152,6 +162,7 @@ $ph->set('myfoo', 'bar', 'symfony/mynamespace');
 $t->is($ph->get('myfoo', null, 'symfony/mynamespace'), 'bar', '->set() takes a namespace as its third parameter');
 
 // ->setByRef()
+$t->diag('->setByRef()');
 $foo = 'bar';
 
 $ph = new sfParameterHolder();
@@ -166,6 +177,7 @@ $ph->setByRef('myfoo', $myfoo, 'symfony/mynamespace');
 $t->is($ph->get('myfoo', null, 'symfony/mynamespace'), $myfoo, '->setByRef() takes a namespace as its third parameter');
 
 // ->add()
+$t->diag('->add()');
 $foo = 'bar';
 $parameters = array('foo' => $foo, 'bar' => 'bar');
 $myparameters = array('myfoo' => 'bar', 'mybar' => 'bar');
@@ -181,6 +193,7 @@ $foo = 'mybar';
 $t->is($ph->getAll(), $parameters, '->add() adds an array of parameters, not a reference');
 
 // ->addByRef()
+$t->diag('->addByRef()');
 $foo = 'bar';
 $parameters = array('foo' => &$foo, 'bar' => 'bar');
 $myparameters = array('myfoo' => 'bar', 'mybar' => 'bar');

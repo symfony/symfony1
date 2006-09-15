@@ -26,6 +26,7 @@ $user = new sfBasicSecurityUser();
 $user->initialize($context);
 
 // ->hasCredential()
+$t->diag('->hasCredential()');
 $t->is($user->hasCredential('admin'), false, '->hasCredential() returns false if user has not the credential');
 
 $user->addCredential('admin');
@@ -55,9 +56,13 @@ $t->is($user->hasCredential('superadmin1'), true);
 // admin and (user or subscriber) and (superadmin1 or subscriber1)
 $t->is($user->hasCredential(array(array('admin', array('user', 'subscriber'), array('superadmin1', 'subscriber1')))), true);
 
+// ->removeCredential()
+$t->diag('->removeCredential()');
 $user->removeCredential('user');
 $t->is($user->hasCredential('user'), false);
 
+// ->clearCredentials()
+$t->diag('->clearCredentials()');
 $user->clearCredentials();
 $t->is($user->hasCredential('subscriber'), false);
 $t->is($user->hasCredential('superadmin'), false);

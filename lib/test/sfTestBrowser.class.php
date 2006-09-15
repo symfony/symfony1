@@ -67,7 +67,14 @@ class sfTestBrowser extends sfBrowser
   {
     $locations = $this->getContext()->getResponse()->getHttpHeader('location');
 
-    $this->test->ok($locations[0], sprintf('page redirected to "%s"', $locations[0]));
+    if (!isset($locations[0]))
+    {
+      $this->test->fail('page redirected');
+    }
+    else
+    {
+      $this->test->ok($locations[0], sprintf('page redirected to "%s"', $locations[0]));
+    }
 
     return $this;
   }

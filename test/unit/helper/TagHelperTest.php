@@ -26,6 +26,7 @@ $t = new lime_test(13, new lime_output_color());
 $context = new sfContext();
 
 // tag()
+$t->diag('tag()');
 $t->is(tag(''), '', 'tag() returns an empty string with empty input');
 $t->is(tag('br'), '<br />', 'tag() takes a tag as its first parameter');
 $t->is(tag('p', null, true), '<p>', 'tag() takes a boolean parameter as its third parameter');
@@ -35,14 +36,17 @@ $t->is(tag('p', array('class' => 'foo', 'id' => 'bar'), true), '<p class="foo" i
 //$t->is(tag('br', array('class' => '"foo"')), '<br class="&quot;foo&quot;" />');
 
 // content_tag()
+$t->diag('content_tag()');
 $t->is(content_tag(''), '', 'content_tag() returns an empty string with empty input');
 $t->is(content_tag('', ''), '', 'content_tag() returns an empty string with empty input');
 $t->is(content_tag('p', 'Toto'), '<p>Toto</p>', 'content_tag() takes a content as its second parameter');
 $t->is(content_tag('p', ''), '<p></p>', 'content_tag() takes a tag as its first parameter');
 
 // cdata_section()
+$t->diag('cdata_section()');
 $t->is(cdata_section(''), '<![CDATA[]]>');
 $t->is(cdata_section('foobar'), '<![CDATA[foobar]]>');
 
 // escape_javascript()
+$t->diag('escape_javascript()');
 $t->is(escape_javascript("alert('foo');\nalert(\"bar\");"), 'alert(\\\'foo\\\');\\nalert(\\"bar\\");');

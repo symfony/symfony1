@@ -15,6 +15,7 @@ require_once($_test_dir.'/../lib/util/sfToolkit.class.php');
 $t = new lime_test(11, new lime_output_color());
 
 // ::stringToArray()
+$t->diag('::stringToArray()');
 $tests = array(
   'foo=bar' => array('foo' => 'bar'),
   'foo1=bar1 foo=bar   ' => array('foo1' => 'bar1', 'foo' => 'bar'),

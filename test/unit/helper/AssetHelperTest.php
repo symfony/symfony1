@@ -24,6 +24,7 @@ sfLoader::loadHelpers(array('Helper', 'Tag', 'Url', 'Asset'));
 $t = new lime_test(11, new lime_output_color());
 
 // image_tag()
+$t->diag('image_tag()');
 $t->is(image_tag(''), '', 'image_tag() returns nothing when called without arguments');
 $t->is(image_tag('test'), '<img src="/images/test.png" alt="Test" />', 'image_tag() takes an image name as its first argument');
 $t->is(image_tag('test.png'), '<img src="/images/test.png" alt="Test" />', 'image_tag() can take an image name with an extension');

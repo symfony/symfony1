@@ -26,10 +26,12 @@ foreach (array('clearRoutes', 'connect', 'generate', 'getCurrentInternalUri', 'g
 }
 
 // ->getInstance()
+$t->diag('->getInstance()');
 $t->isa_ok(sfRouting::getInstance(), 'sfRouting', '::getInstance() returns a sfRouting instance');
 $t->is(sfRouting::getInstance(), sfRouting::getInstance(), '::getInstance() is a singleton');
 
 // ->getRoutes()
+$t->diag('->getRoutes()');
 $r = sfRouting::getInstance();
 $r->clearRoutes();
 $r->connect('test1', '/:module/:action');
@@ -40,6 +42,7 @@ $t->ok(isset($routes['test1']), '->getRoutes() returns a hash indexed by route n
 $t->ok(isset($routes['test2']), '->getRoutes() returns a hash indexed by route names');
 
 // ->setRoutes()
+$t->diag('->setRoutes()');
 $r = sfRouting::getInstance();
 $r->clearRoutes();
 $r->connect('test1', '/:module/:action');
@@ -50,6 +53,7 @@ $r->setRoutes($routes);
 $t->is($r->getRoutes(), $routes, '->setRoutes() takes a routes array as its first parameter');
 
 // ->clearRoutes()
+$t->diag('->clearRoutes()');
 $r = sfRouting::getInstance();
 $r->clearRoutes();
 $r->connect('test1', '/:module/:action');
@@ -58,6 +62,7 @@ $routes = $r->getRoutes();
 $t->is(count($routes), 0, '->clearRoutes() clears all current routing rules');
 
 // ->getRouteByName()
+$t->diag('->getRouteByName()');
 $r = sfRouting::getInstance();
 $r->clearRoutes();
 $r->connect('test1', '/:module/:action');
@@ -65,6 +70,7 @@ $routes = $r->getRoutes();
 $t->is($r->getRouteByName('test1'), $routes['test1'], '->getRouteByName() returns a route by its name');
 
 // ->hasRoutes()
+$t->diag('->hasRoutes()');
 $r = sfRouting::getInstance();
 $r->clearRoutes();
 $t->is($r->hasRoutes(), false, '->hasRoutes() returns false if there is no route');
@@ -72,6 +78,7 @@ $r->connect('test1', '/:module/:action');
 $t->is($r->hasRoutes(), true, '->hasRoutes() returns true if some routes are registered');
 
 // ->connect(), ->parse(), ->generate()
+$t->diag('->connect(), ->parse(), ->generate()');
 $r = sfRouting::getInstance();
 
 // simple routes

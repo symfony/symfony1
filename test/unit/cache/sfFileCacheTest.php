@@ -27,6 +27,7 @@ $cache = new sfFileCache($temp);
 $namespace = 'symfony'.DIRECTORY_SEPARATOR.'test'.DIRECTORY_SEPARATOR.'sfCache';
 
 // ->set()
+$t->diag('->set()');
 $data = 'some random data to store in the cache system...';
 $cache->set('test', $namespace, $data);
 $t->is($cache->get('test', $namespace), $data, '->set() stores data in a file');
@@ -35,6 +36,7 @@ $cache->set('test', '', $data);
 $t->is($cache->get('test'), $data, '->set() takes a namespace as its second argument');
 
 // ->clear()
+$t->diag('->clear()');
 $data = 'some random data to store in the cache system...';
 $cache->set('test', $namespace, $data);
 $cache->set('test', '', $data);
@@ -55,6 +57,7 @@ $t->is($cache->has('test', $namespace), false, '->clean() takes a namespace as i
 $t->is($cache->has('test'), true, '->clean() takes a namespace as its first argument');
 
 // ->remove()
+$t->diag('->remove()');
 $data = 'some random data to store in the cache system...';
 $cache->set('test', $namespace, $data);
 $cache->set('test', '', $data);

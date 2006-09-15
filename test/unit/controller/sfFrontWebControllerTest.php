@@ -70,6 +70,7 @@ $tests = array(
   ),
 );
 
+$t->diag('->convertUrlStringToParameters()');
 foreach ($tests as $url => $result)
 {
   $t->is($controller->convertUrlStringToParameters($url), $result, '->convertUrlStringToParameters()');

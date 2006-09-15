@@ -26,6 +26,7 @@ sfLoader::loadHelpers(array('Helper', 'Tag', 'Form', 'Object'));
 $t = new lime_test(9, new lime_output_color());
 
 // object_textarea_tag()
+$t->diag('object_textarea_tag()');
 $obj1 = new TestObject();
 
 $t->is(object_textarea_tag($obj1, 'getValue'),
@@ -34,6 +35,7 @@ $t->is(object_textarea_tag($obj1, 'getValue', 'size=60x10'),
                    '<textarea name="value" id="value" rows="10" cols="60">value</textarea>');
 
 // objects_for_select()
+$t->diag('objects_for_select()');
 $obj1 = new TestObject();
 $obj2 = new TestObject();
 $obj2->setText('text2');
@@ -72,18 +74,21 @@ catch (sfViewException $e)
 }
 
 // object_input_hidden_tag()
+$t->diag('object_input_hidden_tag()');
 $obj1 = new TestObject();
 
 $t->is(object_input_hidden_tag($obj1, 'getValue'),
                    '<input type="hidden" name="value" id="value" value="value" />');
 
 // object_input_tag()
+$t->diag('object_input_tag()');
 $obj1 = new TestObject();
 
 $t->is(object_input_tag($obj1, 'getValue'),
                    '<input type="text" name="value" id="value" value="value" />');
 
 // object_checkbox_tag()
+$t->diag('object_checkbox_tag()');
 $obj1 = new TestObject();
 
 $t->is(object_checkbox_tag($obj1, 'getValue'),

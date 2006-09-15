@@ -17,7 +17,7 @@ require_once($_test_dir.'/../lib/request/sfRequest.class.php');
 require_once($_test_dir.'/../lib/request/sfWebRequest.class.php');
 require_once($_test_dir.'/../lib/controller/sfRouting.class.php');
 
-$t = new lime_test(30, new lime_output_color());
+$t = new lime_test(42, new lime_output_color());
 
 sfRouting::getInstance()->clearRoutes();
 
@@ -68,37 +68,17 @@ $t->is($request->removeError($key2), $value_key2_1);
 $t->is($request->hasErrors(), false);
 
 // ->getMethod() ->setMethod()
+$t->diag('->getMethod() ->setMethod()');
 $request->setMethod(sfRequest::GET);
 $t->is($request->getMethod(), sfRequest::GET, '->getMethod() returns the current request method');
 
-// parameter holder
-$name1 = 'test_name1';
-$value1 = 'test_value1';
-$name2 = 'test_name2';
-$value2 = 'test_value2';
-$ns = 'test_ns';
-$t->is($request->hasParameter($name1), false);
-$t->is($request->getParameter($name1, $value1), $value1);
-$request->setParameter($name1, $value1);
-$t->is($request->hasParameter($name1), true);
-$t->is($request->getParameter($name1), $value1);
-$request->setParameter($name2, $value2, $ns);
-$t->is($request->hasParameter($name2), false);
-$t->is($request->hasParameter($name2, $ns), true);
-$t->is($request->getParameter($name2, '', $ns), $value2);
+// parameter holder proxy
+$t->diag('Parameter holder proxy');
+require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');
+$pht = new sfParameterHolderProxyTest($t);
+$pht->launchTests($request, 'parameter');
 
-// attribute holder
-$name1 = 'test_name1';
-$value1 = 'test_value1';
-$name2 = 'test_name2';
-$value2 = 'test_value2';
-$ns = 'test_ns';
-$t->is($request->hasAttribute($name1), false);
-$t->is($request->getAttribute($name1, $value1), $value1);
-$request->setAttribute($name1, $value1);
-$t->is($request->hasAttribute($name1), true);
-$t->is($request->getAttribute($name1), $value1);
-$request->setAttribute($name2, $value2, $ns);
-$t->is($request->hasAttribute($name2), false);
-$t->is($request->hasAttribute($name2, $ns), true);
-$t->is($request->getAttribute($name2, '', $ns), $value2);
+// attribute holder proxy
+$t->diag('Attribute holder proxy');
+$pht = new sfParameterHolderProxyTest($t);
+$pht->launchTests($request, 'attribute');

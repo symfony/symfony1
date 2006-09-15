@@ -15,6 +15,7 @@ require_once($_test_dir.'/../lib/config/sfConfig.class.php');
 $t = new lime_test(6, new lime_output_color());
 
 // ::get() ::set()
+$t->diag('::get() ::set()');
 sfConfig::clear();
 
 sfConfig::set('foo', 'bar');
@@ -22,6 +23,7 @@ $t->is(sfConfig::get('foo'), 'bar', '::get() returns the value of key config');
 $t->is(sfConfig::get('foo1', 'default_value'), 'default_value', '::get() takes a default value as its second argument');
 
 // ::add()
+$t->diag('::add()');
 sfConfig::clear();
 
 sfConfig::set('foo', 'bar');
@@ -33,5 +35,6 @@ $t->is(sfConfig::get('bar'), 'bar', '::add() adds an array of config parameters'
 $t->is(sfConfig::get('foo1'), 'foo1', '::add() adds an array of config parameters');
 
 // ::clear()
+$t->diag('::clear()');
 sfConfig::clear();
 $t->is(sfConfig::get('foo1'), null, '::clear() removes all config parameters');

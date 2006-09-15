@@ -8,7 +8,12 @@
  * file that was distributed with this source code.
  */
 
+$app = 'frontend';
+
 include(dirname(__FILE__).'/bootstrap.php');
+
+$b = new sfTestBrowser();
+$b->initialize();
 
 // default main page
 $b->
