@@ -26,7 +26,6 @@ $filter = new myFilter();
 $filter->initialize($context);
 
 // parameter holder proxy
-$t->diag('Parameter holder proxy');
 require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');
 $pht = new sfParameterHolderProxyTest($t);
 $pht->launchTests($filter, 'parameter');

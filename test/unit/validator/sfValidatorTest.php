@@ -13,23 +13,20 @@ require_once($_test_dir.'/../lib/vendor/lime/lime.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 require_once($_test_dir.'/../lib/config/sfConfig.class.php');
 require_once($_test_dir.'/../lib/util/sfParameterHolder.class.php');
-require_once($_test_dir.'/../lib/storage/sfStorage.class.php');
+require_once($_test_dir.'/../lib/validator/sfValidator.class.php');
 
 $t = new lime_test(13, new lime_output_color());
 
-class myStorage extends sfStorage
+class myValidator extends sfValidator
 {
-  function & read ($key) {}
-  function & remove ($key) {}
-  function shutdown () {}
-  function write ($key, &$data) {}
+  function execute (&$value, &$error) {}
 }
 
 $context = new sfContext();
-$storage = new myStorage();
-$storage->initialize($context);
+$validator = new myValidator();
+$validator->initialize($context);
 
 // parameter holder proxy
 require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');
 $pht = new sfParameterHolderProxyTest($t);
-$pht->launchTests($storage, 'parameter');
+$pht->launchTests($validator, 'parameter');

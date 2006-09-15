@@ -27,6 +27,8 @@ class sfParameterHolderProxyTest
     $setMethod = 'set'.ucfirst($methodName);
     $holderMethod = 'get'.ucfirst($methodName).'Holder';
 
+    $t->diag(ucfirst($methodName).' holder proxy');
+
     $t->isa_ok($object->$holderMethod(), 'sfParameterHolder', "->$holderMethod() returns a parameter holder instance");
     $t->is($object->$hasMethod('foo'), false, "->$hasMethod() returns false if the $methodName does not exist");
     $t->is($object->$getMethod('foo', 'default'), 'default', "->$getMethod() returns the default value if $methodName does not exist");

@@ -24,13 +24,11 @@ $user = new sfUser();
 $user->initialize($context);
 
 // parameter holder proxy
-$t->diag('Parameter holder proxy');
 require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');
 $pht = new sfParameterHolderProxyTest($t);
 $pht->launchTests($user, 'parameter');
 
 // attribute holder proxy
-$t->diag('Attribute holder proxy');
 require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');
 $pht = new sfParameterHolderProxyTest($t);
 $pht->launchTests($user, 'attribute');

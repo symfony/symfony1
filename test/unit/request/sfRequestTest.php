@@ -73,12 +73,10 @@ $request->setMethod(sfRequest::GET);
 $t->is($request->getMethod(), sfRequest::GET, '->getMethod() returns the current request method');
 
 // parameter holder proxy
-$t->diag('Parameter holder proxy');
 require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');
 $pht = new sfParameterHolderProxyTest($t);
 $pht->launchTests($request, 'parameter');
 
 // attribute holder proxy
-$t->diag('Attribute holder proxy');
 $pht = new sfParameterHolderProxyTest($t);
 $pht->launchTests($request, 'attribute');
