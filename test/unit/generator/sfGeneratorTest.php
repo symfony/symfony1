@@ -4,7 +4,7 @@
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
- * For the full copyright and license information, please view the LICENSE
+ * For the full copyright and license information, please generator the LICENSE
  * file that was distributed with this source code.
  */
 
@@ -13,28 +13,20 @@ require_once($_test_dir.'/../lib/vendor/lime/lime.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 require_once($_test_dir.'/../lib/config/sfConfig.class.php');
 require_once($_test_dir.'/../lib/util/sfParameterHolder.class.php');
-require_once($_test_dir.'/../lib/view/sfView.class.php');
+require_once($_test_dir.'/../lib/generator/sfGenerator.class.php');
 
-$t = new lime_test(13, new lime_output_color());
+$t = new lime_test(1, new lime_output_color());
 
-class myView extends sfView
+class myGenerator extends sfGenerator
 {
-  function execute () {}
-  function configure () {}
-  function getEngine () {}
-  function render ($templateVars = null) {}
+  public function generate($params = array()) {}
 }
 
 $context = new sfContext();
-$view = new myView();
-$view->initialize($context, '', '', '');
-
-// parameter holder proxy
-require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');
-$pht = new sfParameterHolderProxyTest($t);
-$pht->launchTests($view, 'parameter');
+$generator = new myGenerator();
+$generator->initialize($context);
 
 // mixins
 require_once($_test_dir.'/unit/sfMixerTest.class.php');
 $mixert = new sfMixerTest($t);
-$mixert->launchTests($view, 'sfView');
+$mixert->launchTests($generator, 'sfGenerator');

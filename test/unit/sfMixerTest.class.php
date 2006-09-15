@@ -1,5 +1,7 @@
 <?php
 
+require_once($_test_dir.'/../lib/util/sfMixer.class.php');
+
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>

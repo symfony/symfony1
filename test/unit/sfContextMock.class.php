@@ -32,6 +32,11 @@ class sfContext
     return new sfWebRequest();
   }
 
+  public function getResponse()
+  {
+    return new sfWebResponse();
+  }
+
   public function getStorage()
   {
     $storage = sfStorage::newInstance('sfSessionTestStorage');

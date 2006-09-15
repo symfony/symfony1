@@ -32,3 +32,8 @@ $pht->launchTests($user, 'parameter');
 require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');
 $pht = new sfParameterHolderProxyTest($t);
 $pht->launchTests($user, 'attribute');
+
+// mixins
+require_once($_test_dir.'/unit/sfMixerTest.class.php');
+$mixert = new sfMixerTest($t);
+$mixert->launchTests($user, 'sfUser');
