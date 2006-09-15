@@ -26,7 +26,7 @@
  * @author     Mike Squire <mike@somosis.co.uk>
  * @version    SVN: $Id$
  */
-class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator implements Iterator
+class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator implements Iterator, Countable
 {
   /**
    * The iterator to be used.
@@ -97,5 +97,15 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator im
   public function valid()
   {
     return $this->iterator->valid();
+  }
+
+  /**
+   * Returns the size of the array (are required by the Countable interface).
+   *
+   * @return int the size of the array
+   */
+  public function count()
+  {
+    return count($this->value);
   }
 }
