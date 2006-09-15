@@ -322,13 +322,6 @@ abstract class sfView
 
     $this->decoratorDirectory = sfConfig::get('sf_app_template_dir');
 
-    // store our current view
-    $actionStackEntry = $context->getController()->getActionStack()->getLastEntry();
-    if (!$actionStackEntry->getViewInstance())
-    {
-      $actionStackEntry->setViewInstance($this);
-    }
-
     // include view configuration
     $this->configure();
 
