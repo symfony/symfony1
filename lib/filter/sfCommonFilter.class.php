@@ -45,8 +45,7 @@ class sfCommonFilter extends sfFilter
       $response = $this->getContext()->getResponse();
 
       // include javascripts and stylesheets
-      require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/TagHelper.php');
-      require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/AssetHelper.php');
+      sfLoader::loadHelpers(array('Tag', 'Asset'));
       $html  = $this->include_javascripts($response);
       $html .= $this->include_stylesheets($response);
       $content = $response->getContent();

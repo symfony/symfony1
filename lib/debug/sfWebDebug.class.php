@@ -110,11 +110,7 @@ class sfWebDebug
 
   private function loadHelpers()
   {
-    // require needed helpers
-    foreach (array('Helper', 'Url', 'Asset', 'Tag', 'Javascript') as $helperName)
-    {
-      include_once(sfConfig::get('sf_symfony_lib_dir').'/helper/'.$helperName.'Helper.php');
-    }
+    sfLoader::loadHelpers(array('Helper', 'Url', 'Asset', 'Tag', 'Javascript'));
   }
 
   private function formatLogLine($type, $log_line)
