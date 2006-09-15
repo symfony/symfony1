@@ -116,7 +116,7 @@ function _propel_convert_xml_schema($check_schema = true, $prefix = '')
     
     $file = str_replace(basename($schema), $prefix.$yml_file_name,  $schema);
     pake_echo_action('schema', 'putting '.$file);    
-    file_put_contents($file, $db_schema->asXML());
+    file_put_contents($file, $db_schema->asYAML());
   }
 }
 
