@@ -10,7 +10,7 @@
 
 $_test_dir = realpath(dirname(__FILE__).'/../..');
 require_once($_test_dir.'/../lib/vendor/lime/lime.php');
-require_once($_test_dir.'/../lib/util/sfMixin.class.php');
+require_once($_test_dir.'/../lib/util/sfMixer.class.php');
 
 $o = new lime_output_color();
 $t = new lime_test(10, $o);
