@@ -49,8 +49,6 @@ if (!sfConfig::get('sf_in_bootstrap'))
 
   // utils
   require_once($sf_symfony_lib_dir.'/util/sfParameterHolder.class.php');
-  require_once($sf_symfony_lib_dir.'/util/sfTimerManager.class.php');
-  require_once($sf_symfony_lib_dir.'/util/sfTimer.class.php');
 }
 else
 {
@@ -190,6 +188,13 @@ try
   $sf_app_config_dir_name = sfConfig::get('sf_app_config_dir_name');
 
   $sf_debug = sfConfig::get('sf_debug');
+
+  // load timer classes if in debug mode
+  if ($sf_debug)
+  {
+    require_once($sf_symfony_lib_dir.'/util/sfTimerManager.class.php');
+    require_once($sf_symfony_lib_dir.'/util/sfTimer.class.php');
+  }
 
   // load base settings
   include($configCache->checkConfig($sf_app_config_dir_name.'/logging.yml'));
