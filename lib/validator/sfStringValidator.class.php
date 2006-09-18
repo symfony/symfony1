@@ -51,9 +51,10 @@ class sfStringValidator extends sfValidator
    */
   public function execute (&$value, &$error)
   {
-    $min = $this->getParameterHolder()->get('min');
+    $decodedValue = sfToolkit::isUTF8($value) && function_exists('utf8_decode') ? utf8_decode($value) : $value;
 
-    if ($min != null && strlen(trim($value)) < $min)
+    $min = $this->getParameterHolder()->get('min');
+    if ($min !== null && strlen(trim($decodedValue)) < $min)
     {
       // too short
       $error = $this->getParameterHolder()->get('min_error');
@@ -62,8 +63,7 @@ class sfStringValidator extends sfValidator
     }
 
     $max = $this->getParameterHolder()->get('max');
-
-    if ($max != null && strlen(trim($value)) > $max)
+    if ($max !== null && strlen(trim($decodedValue)) > $max)
     {
       // too long
       $error = $this->getParameterHolder()->get('max_error');
@@ -72,18 +72,31 @@ class sfStringValidator extends sfValidator
     }
 
     $values = $this->getParameterHolder()->get('values');
-
-    if ($values != null)
+    if ($values !== null)
     {
-      $insensitive = $this->getParameterHolder()->get('insensitive');
-      $lvalue      = ($insensitive) ? strtolower($value) : $value;
-
-      if (!in_array($lvalue, $values))
+      if ($this->getParameterHolder()->get('insensitive'))
       {
-        // can't find a match
-        $error = $this->getParameterHolder()->get('values_error');
+        $value = strtolower($value);
+        foreach ($values as $avalue)
+        {
+          if ($value != strtolower($avalue))
+          {
+            // can't find a match
+            $error = $this->getParameterHolder()->get('values_error');
 
-        return false;
+            return false;
+          }
+        }
+      }
+      else
+      {
+        if (!in_array($value, (array) $values))
+        {
+          // can't find a match
+          $error = $this->getParameterHolder()->get('values_error');
+
+          return false;
+        }
       }
     }
 
