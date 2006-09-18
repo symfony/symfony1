@@ -487,6 +487,9 @@ class sfWebResponse extends sfResponse
 
   public function mergeProperties($response)
   {
+    // slots
+    $this->getParameterHolder()->add($response->getParameterHolder()->getAll('symfony/view/sfView/slot'), 'symfony/view/sfView/slot');
+
     // view configuration
     $this->getParameterHolder()->add($response->getParameterHolder()->getAll('symfony/action/view'), 'symfony/action/view');
 
