@@ -33,7 +33,7 @@ class sfValidatorTestHelper
     }
     else
     {
-      $t->is($error, null, '->execute() don\'t change "$error" if it returns true');
+      $t->is($error, null, '->execute() doesn\'t change "$error" if it returns true');
     }
 
     // test error customization
