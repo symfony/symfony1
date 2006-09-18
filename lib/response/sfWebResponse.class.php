@@ -517,6 +517,10 @@ class sfWebResponse extends sfResponse
     return array('content', 'headers', 'statusCode', 'statusText', 'parameter_holder');
   }
 
+  public function __wakeup()
+  {
+  }
+
   /**
    * Execute the shutdown procedure.
    *
