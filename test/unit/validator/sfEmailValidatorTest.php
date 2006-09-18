@@ -16,8 +16,6 @@ require_once($_test_dir.'/../lib/util/sfParameterHolder.class.php');
 require_once($_test_dir.'/../lib/validator/sfValidator.class.php');
 require_once($_test_dir.'/../lib/validator/sfEmailValidator.class.php');
 
-require_once($_test_dir.'/unit/sfValidatorTestHelper.class.php');
-
 $t = new lime_test(28, new lime_output_color());
 
 $context = new sfContext();
