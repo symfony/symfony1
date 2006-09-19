@@ -12,7 +12,7 @@ $_test_dir = realpath(dirname(__FILE__).'/../..');
 require_once($_test_dir.'/../lib/vendor/lime/lime.php');
 require_once($_test_dir.'/../lib/util/sfDomCssSelector.class.php');
 
-$t = new lime_test(19, new lime_output_color());
+$t = new lime_test(21, new lime_output_color());
 
 $html = <<<EOF
 <html>
@@ -24,6 +24,8 @@ $html = <<<EOF
     <h2>Title 1</h2>
     <p class="header">header</p>
     <p class="foo bar foobar">multi-classes</p>
+    <p class="myfoo">myfoo</p>
+    <p class="myfoo" id="mybar">myfoo bis</p>
 
     <ul id="list">
       <li>First</li>
@@ -82,3 +84,6 @@ $t->is($c->getTexts('ul#list li a[class$="foobar1"]'), array('link'), '->getText
 $t->is($c->getTexts('ul#list li a[class*="oba"]'), array('link'), '->getTexts() supports checking attribute with *');
 //$t->is($c->getTexts('ul#list li a[href="http://www.google.com/"]'), array('link'), '->getTexts() supports checking attribute word matching');
 $t->is($c->getTexts('ul#anotherlist li a[class|="bar1"]'), array('another link'), '->getTexts() supports checking attribute starting with value followed by optional hyphen');
+
+$t->is($c->getTexts('ul#list li a[class*="oba"][class*="ba"]'), array('link'), '->getTexts() supports chaining attribute selectors');
+$t->is($c->getTexts('p[class="myfoo"][id="mybar"]'), array('myfoo bis'), '->getTexts() supports chaining attribute selectors');

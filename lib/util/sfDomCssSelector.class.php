@@ -88,12 +88,10 @@ class sfDomCssSelector
       }
 
       // Code to deal with attribute selectors
-      if (preg_match('/^(\w*)\[(\w+)([=~\|\^\$\*]?)=?"?([^\]"]*)"?\]$/', $token, $match))
+      if (preg_match('/^(\w*)(\[.+\])$/', $token, $matches))
       {
-        $tagName = $match[1] ? $match[1] : '*';
-        $attrName = $match[2];
-        $attrOperator = $match[3];
-        $attrValue = $match[4];
+        $tagName = $matches[1] ? $matches[1] : '*';
+        preg_match_all('/\[(\w+)([=~\|\^\$\*]?)=?"?([^\]"]*)"?\]/', $matches[2], $matches, PREG_SET_ORDER);
 
         // Grab all of the tagName elements within current node
         $founds = $this->getElementsByTagName($nodes, $tagName);
@@ -101,29 +99,41 @@ class sfDomCssSelector
         foreach ($founds as $found)
         {
           $ok = false;
-          switch ($attrOperator)
+          foreach ($matches as $match)
           {
-            case '=': // Equality
-              $ok = $found->getAttribute($attrName) == $attrValue;
+            $attrName = $match[1];
+            $attrOperator = $match[2];
+            $attrValue = $match[3];
+
+            switch ($attrOperator)
+            {
+              case '=': // Equality
+                $ok = $found->getAttribute($attrName) == $attrValue;
+                break;
+              case '~': // Match one of space seperated words
+                $ok = preg_match('/\b'.$attrValue.'\b/', $found->getAttribute($attrName));
+                break;
+              case '|': // Match start with value followed by optional hyphen
+                $ok = preg_match('/^'.$attrValue.'-?/', $found->getAttribute($attrName));
+                break;
+              case '^': // Match starts with value
+                $ok = 0 === strpos($found->getAttribute($attrName), $attrValue);
+                break;
+              case '$': // Match ends with value
+                $ok = $attrValue == substr($found->getAttribute($attrName), -strlen($attrValue));
+                break;
+              case '*': // Match ends with value
+                $ok = false !== strpos($found->getAttribute($attrName), $attrValue);
+                break;
+              default :
+                // Just test for existence of attribute
+                $ok = $found->hasAttribute($attrName);
+            }
+
+            if (false == $ok)
+            {
               break;
-            case '~': // Match one of space seperated words
-              $ok = preg_match('/\b'.$attrValue.'\b/', $found->getAttribute($attrName));
-              break;
-            case '|': // Match start with value followed by optional hyphen
-              $ok = preg_match('/^'.$attrValue.'-?/', $found->getAttribute($attrName));
-              break;
-            case '^': // Match starts with value
-              $ok = 0 === strpos($found->getAttribute($attrName), $attrValue);
-              break;
-            case '$': // Match ends with value
-              $ok = $attrValue == substr($found->getAttribute($attrName), -strlen($attrValue));
-              break;
-            case '*': // Match ends with value
-              $ok = false !== strpos($found->getAttribute($attrName), $attrValue);
-              break;
-            default :
-              // Just test for existence of attribute
-              $ok = $found->hasAttribute($attrName);
+            }
           }
 
           if ($ok)
