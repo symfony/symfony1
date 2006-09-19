@@ -89,7 +89,19 @@ class sfDatabaseConfigHandler extends sfYamlConfigHandler
       }
 
       // parse parameters
-      $parameters = (isset($dbConfig['param']) ? var_export($dbConfig['param'], true) : 'null');
+      if (isset($dbConfig['param']))
+      {
+        foreach ($dbConfig['param'] as &$value)
+        {
+          $value = $this->replaceConstants($value);
+        }
+
+        $parameters = var_export($dbConfig['param'], true);
+      }
+      else
+      {
+        $parameters = 'null';
+      }
 
       // append new data
       $data[] = sprintf("\n\$database = new %s();\n".
