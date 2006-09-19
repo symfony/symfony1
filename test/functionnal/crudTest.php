@@ -87,10 +87,75 @@ $b->
   isRequestParameter('id', 1)->
   checkResponseElement('a[href$="/simple/show/id/1"]', 'cancel')->
   checkResponseElement('a[href$="/simple/delete/id/1"]', 'delete')->
+  checkResponseElement('a[href$="/simple/delete/id/1"][onclick*="confirm"]')->
   checkResponseElement('body table tbody th', 'Title:', array('position' => 0))->
   checkResponseElement('body table tbody th', 'Body:', array('position' => 1))->
   checkResponseElement('body table tbody th', 2)->
   checkResponseElement('body table tbody td', 2)->
-  checkResponseElement('body table tbody td input[id="title"]')->
-  checkResponseElement('body table tbody td textarea[id="body"]')
+  checkResponseElement('body table tbody td input[id="title"][name="title"][value*="title"]')->
+  checkResponseElement('body table tbody td textarea[id="body"][name="body"]', 'bar body')
+;
+
+// create page
+$b->
+  get('/simple/create')->
+  isStatusCode(200)->
+  isRequestParameter('module', 'simple')->
+  isRequestParameter('action', 'create')->
+  isRequestParameter('id', null)->
+  checkResponseElement('a[href$="/simple/list"]', 'cancel')->
+  checkResponseElement('body table tbody th', 'Title:', array('position' => 0))->
+  checkResponseElement('body table tbody th', 'Body:', array('position' => 1))->
+  checkResponseElement('body table tbody th', 2)->
+  checkResponseElement('body table tbody td', 2)->
+  checkResponseElement('body table tbody td input[id="title"][name="title"][value=""]')->
+  checkResponseElement('body table tbody td textarea[id="body"][name="body"]', '')
+;
+
+// save
+$b->
+  click('save', array('title' => 'my title', 'body' => 'my body'))->
+  isStatusCode(200)->
+  isRequestParameter('module', 'simple')->
+  isRequestParameter('action', 'update')->
+  isRedirected()
+;
+
+$b->
+  followRedirect()->
+  isStatusCode(200)->
+  isRequestParameter('module', 'simple')->
+  isRequestParameter('action', 'show')->
+  isRequestParameter('id', 3)->
+  checkResponseElement('a[href$="/simple/edit/id/3"]', 'edit')->
+  checkResponseElement('a[href$="/simple/list"]', 'list')->
+  checkResponseElement('body table tbody tr', '/Id\:\s+3/', array('position' => 0))->
+  checkResponseElement('body table tbody tr', '/Title\:\s+my title/', array('position' => 1))->
+  checkResponseElement('body table tbody tr', '/Body\:\s+my body/', array('position' => 2))->
+  checkResponseElement('body table tbody tr', '/Created at\:\s+[0-9\-\:\s]+/', array('position' => 3))
+;
+
+$b->
+  click('list')->
+  isStatusCode(200)->
+  isRequestParameter('module', 'simple')->
+  isRequestParameter('action', 'list')
+;
+
+// delete
+$b->
+  get('/simple/edit/id/3')->
+
+  click('delete')->
+  isStatusCode(200)->
+  isRequestParameter('module', 'simple')->
+  isRequestParameter('action', 'delete')->
+  isRedirected()->
+  followRedirect()->
+  isStatusCode(200)->
+  isRequestParameter('module', 'simple')->
+  isRequestParameter('action', 'list')->
+
+  get('/simple/edit/id/3')->
+  isStatusCode(404)
 ;
