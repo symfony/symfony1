@@ -1,0 +1,6 @@
+propel:
+  article:
+    id:
+    title: varchar(255)
+    body:  longvarchar
+    created_at:
