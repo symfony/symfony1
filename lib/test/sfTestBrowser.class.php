@@ -137,15 +137,15 @@ class sfTestBrowser extends sfBrowser
 
     if (false === $value)
     {
-      $this->test->is(count($this->getResponseDomCssSelector()->getElements($selector)), 0, sprintf('response selector "%s" does not exist', $selector));
+      $this->test->is(count($texts), 0, sprintf('response selector "%s" does not exist', $selector));
     }
     else if (true === $value)
     {
-      $this->test->cmp_ok(count($this->getResponseDomCssSelector()->getElements($selector)), '>', 0, sprintf('response selector "%s" exists', $selector));
+      $this->test->cmp_ok(count($texts), '>', 0, sprintf('response selector "%s" exists', $selector));
     }
     else if (is_int($value))
     {
-      $this->test->is(count($this->getResponseDomCssSelector()->getElements($selector)), $value, sprintf('response selector "%s" matches "%s" times', $selector, $value));
+      $this->test->is(count($texts), $value, sprintf('response selector "%s" matches "%s" times', $selector, $value));
     }
     else if (preg_match('/^(!)?(.).+?\\2[ims]?$/', $value, $match))
     {
@@ -167,7 +167,7 @@ class sfTestBrowser extends sfBrowser
 
     if (isset($options['count']))
     {
-      $this->test->is(count($this->getResponseDomCssSelector()->getElements($selector)), $options['count'], sprintf('response selector "%s" matches "%s" times', $selector, $options['count']));
+      $this->test->is(count($texts), $options['count'], sprintf('response selector "%s" matches "%s" times', $selector, $options['count']));
     }
 
     return $this;
