@@ -395,6 +395,10 @@
      * @param $indent The indent of the current node
      */ 
      private function _dumpNode($key,$value,$indent) {
+      if (is_object($value))
+      {
+        $value = (string) $value;
+      }
       // do some folding here, for blocks
       if (strpos($value,"\n")) {
         $value = $this->_doLiteralBlock($value,$indent);
