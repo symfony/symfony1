@@ -183,7 +183,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     $this->timedout = true;
   }
 
-  public function getTimedOut()
+  public function isTimedOut()
   {
     return $this->timedout;
   }
@@ -217,7 +217,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     }
 
     // Automatic logout if no request for more than [sf_timeout]
-    if ((time() - $this->lastRequest) > sfConfig::get('sf_timeout'))
+    if (null !== $this->lastRequest && (time() - $this->lastRequest) > sfConfig::get('sf_timeout'))
     {
       if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfUser} automatic user logout');
       $this->setTimedOut();
