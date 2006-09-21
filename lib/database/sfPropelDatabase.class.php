@@ -70,7 +70,6 @@ class sfPropelDatabase extends sfCreoleDatabase
       $this->setParameter('username', $params['username']);
       $this->setParameter('password', $params['password']);
       $this->setParameter('port',     $params['port']);
-      $this->setParameter('encoding', $params['encoding']);
     }
 
     self::$config['propel']['datasources'][$this->getParameter('datasource')] =

@@ -174,7 +174,7 @@ class sfCreoleDatabase extends sfDatabase
     if ($dsn == null)
     {
       // list of available parameters
-      $available = array('database', 'hostspec', 'password', 'phptype', 'username', 'port', 'encoding');
+      $available = array('database', 'hostspec', 'password', 'phptype', 'username', 'port');
 
       $dsn = array();
 
