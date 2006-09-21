@@ -529,6 +529,8 @@ EOF;
     unlink($tmp_file);
 
     ksort($coverage);
+    $total_php_lines = 0;
+    $total_covered_lines = 0;
     foreach ($coverage as $file => $cov)
     {
       if (!file_exists($file) || !in_array($file, $this->files))
@@ -541,12 +543,17 @@ EOF;
       $output = $this->harness->output;
       $percent = count($php_lines) ? count($coverage) * 100 / count($php_lines) : 100;
 
+      $total_php_lines += count($php_lines);
+      $total_covered_lines += count($coverage);
+
       $output->echoln(sprintf("%-30s %3.0f%%", substr($this->get_relative_file($file), -30), $percent), $percent == 100 ? 'INFO' : ($percent > 90 ? 'PARAMETER' : ($percent < 20 ? 'ERROR' : '')));
       if ($this->verbose && $percent != 100)
       {
         $output->comment(sprintf("missing: %s", $this->format_range(array_keys(array_diff_key($php_lines, $cov)))));
       }
     }
+
+    $output->echoln(sprintf("TOTAL COVERAGE: %3.0f%%", $total_covered_lines * 100 / $total_php_lines));
   }
 
   function compute($content, $cov)
