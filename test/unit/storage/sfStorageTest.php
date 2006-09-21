@@ -15,7 +15,10 @@ require_once($_test_dir.'/../lib/config/sfConfig.class.php');
 require_once($_test_dir.'/../lib/util/sfParameterHolder.class.php');
 require_once($_test_dir.'/../lib/storage/sfStorage.class.php');
 
-$t = new lime_test(13, new lime_output_color());
+class sfException extends Exception {}
+class sfFactoryException extends sfException {}
+
+$t = new lime_test(19, new lime_output_color());
 
 class myStorage extends sfStorage
 {
@@ -25,9 +28,43 @@ class myStorage extends sfStorage
   function write ($key, &$data) {}
 }
 
+class fakeStorage
+{
+}
+
 $context = new sfContext();
 $storage = new myStorage();
 $storage->initialize($context);
+
+// ::newInstance()
+$t->diag('::newInstance()');
+$t->isa_ok(sfStorage::newInstance('myStorage'), 'myStorage', '::newInstance() takes a storage class as its first parameter');
+$t->isa_ok(sfStorage::newInstance('myStorage'), 'myStorage', '::newInstance() returns an instance of myStorage');
+
+try
+{
+  sfStorage::newInstance('fakeStorage');
+  $t->fail('::newInstance() throws a sfFactoryException if the class does not extends sfStorage');
+}
+catch (sfFactoryException $e)
+{
+  $t->pass('::newInstance() throws a sfFactoryException if the class does not extends sfStorage');
+}
+
+// ->initialize()
+$t->diag('->initialize()');
+$storage = sfStorage::newInstance('myStorage');
+$t->is($storage->getContext(), null, '->initialize() takes a sfContext object as its first argument');
+$storage->initialize($context, array('foo' => 'bar'));
+$t->is($storage->getParameter('foo'), 'bar', '->initialize() takes an array of parameters as its second argument');
+
+$storage = new myStorage();
+$storage->initialize($context);
+
+// ->getContext()
+$t->diag('->getContext()');
+$storage->initialize($context);
+$t->is($storage->getContext(), $context, '->getContext() returns the current context');
 
 // parameter holder proxy
 require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');
