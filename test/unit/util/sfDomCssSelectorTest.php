@@ -12,7 +12,7 @@ $_test_dir = realpath(dirname(__FILE__).'/../..');
 require_once($_test_dir.'/../lib/vendor/lime/lime.php');
 require_once($_test_dir.'/../lib/util/sfDomCssSelector.class.php');
 
-$t = new lime_test(21, new lime_output_color());
+$t = new lime_test(22, new lime_output_color());
 
 $html = <<<EOF
 <html>
@@ -60,6 +60,7 @@ $dom->loadHTML($html);
 $t->diag('->getTexts()');
 
 $c = new sfDomCssSelector($dom);
+
 $t->is($c->getTexts('h1'), array('Test page'), '->getTexts() takes a CSS selector as its first argument');
 $t->is($c->getTexts('h2'), array('Title 1', 'Title 2'), '->getTexts() returns an array of matching texts');
 $t->is($c->getTexts('#footer'), array('footer'), '->getTexts() supports searching html elements by id');
@@ -87,3 +88,5 @@ $t->is($c->getTexts('ul#anotherlist li a[class|="bar1"]'), array('another link')
 
 $t->is($c->getTexts('ul#list li a[class*="oba"][class*="ba"]'), array('link'), '->getTexts() supports chaining attribute selectors');
 $t->is($c->getTexts('p[class="myfoo"][id="mybar"]'), array('myfoo bis'), '->getTexts() supports chaining attribute selectors');
+
+$t->is($c->getTexts('#nonexistant'), array(), '->getTexts() returns an empty array if the id does not exist');

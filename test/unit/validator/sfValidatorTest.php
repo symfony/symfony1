@@ -15,7 +15,7 @@ require_once($_test_dir.'/../lib/config/sfConfig.class.php');
 require_once($_test_dir.'/../lib/util/sfParameterHolder.class.php');
 require_once($_test_dir.'/../lib/validator/sfValidator.class.php');
 
-$t = new lime_test(13, new lime_output_color());
+$t = new lime_test(14, new lime_output_color());
 
 class myValidator extends sfValidator
 {
@@ -25,6 +25,11 @@ class myValidator extends sfValidator
 $context = new sfContext();
 $validator = new myValidator();
 $validator->initialize($context);
+
+// ->getContext()
+$t->diag('->getContext()');
+$validator->initialize($context);
+$t->is($validator->getContext(), $context, '->getContext() returns the current context');
 
 // parameter holder proxy
 require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');
