@@ -113,7 +113,7 @@ class MSSQLResultSet extends ResultSetCommon implements ResultSet {
                 
         if (!$this->fields) {
             if ($errmsg = mssql_get_last_message()) {
-                throw new SQLWarning("Error fetching result", $errmsg);
+                throw new SQLException("Error fetching result", $errmsg);
              } else {
                 // We've advanced beyond end of recordset.
                 $this->afterLast();

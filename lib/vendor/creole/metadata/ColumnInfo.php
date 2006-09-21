@@ -45,6 +45,9 @@ class ColumnInfo {
 
     /** Column length */
     public $size;
+    
+    /** Column presision */
+    public $precision;
 
     /** Column scale (number of digits after decimal ) */
     public $scale;
@@ -86,6 +89,7 @@ class ColumnInfo {
                          $type = null,
                          $nativeType = null,
                          $size = null,
+                         $precision=null,
                          $scale = null,
                          $is_nullable = null,
                          $default = null,
@@ -97,6 +101,7 @@ class ColumnInfo {
         $this->type = $type;
         $this->nativeType = $nativeType;
         $this->size = $size;
+        $this->precision = $precision;
         $this->scale = $scale;
         $this->isNullable = $is_nullable;
         $this->defaultValue = $default;
@@ -149,6 +154,15 @@ class ColumnInfo {
     public function getSize()
     {
         return $this->size;
+    }
+
+    /**
+     * Get column precision.
+     * @return int
+     */
+    public function getPrecision()
+    {
+        return $this->precision;
     }
 
     /**

@@ -52,6 +52,9 @@ class MySQLiConnection extends ConnectionCommon implements Connection {
 
         $this->dsn = $dsninfo;
         $this->flags = $flags;
+		
+		$dbhost = null;
+		
 
         if (isset($dsninfo['protocol']) && $dsninfo['protocol'] == 'unix') {
             $dbhost = ':' . $dsninfo['socket'];
@@ -63,22 +66,20 @@ class MySQLiConnection extends ConnectionCommon implements Connection {
             }
         }
 
-        $user = $dsninfo['username'];
-        $pw = $dsninfo['password'];
+		$host = !empty($dsninfo['hostspec']) ? $dsninfo['hostspec'] : null;
+        $user = !empty($dsninfo['username']) ? $dsninfo['username'] : null;
+        $pw = !empty($dsninfo['password']) ? $dsninfo['password'] : null;
+		$port = !empty($dsninfo['port']) ? $dsninfo['port'] : null;
+		$socket = !empty($dsninfo['socket']) ? $dsninfo['socket'] : null;
+		$database = !empty($dsninfo['database']) ? $dsninfo['database'] : null;
+
+		$encoding = !empty($dsninfo['encoding']) ? $dsninfo['encoding'] : null;
 
         @ini_set('track_errors', true);
 
-        if ($dbhost && $user && $pw) {
-            $conn = @mysqli_connect($dbhost, $user, $pw);
-        } elseif ($dbhost && $user) {
-            $conn = @mysqli_connect($dbhost, $user);
-        } elseif ($dbhost) {
-            $conn = @mysqli_connect($dbhost);
-        } else {
-            $conn = false;
-        }
+		$conn = mysqli_connect($host, $user, $pw, $database, $port, $socket);
 
-        @ini_restore('track_errors');
+            @ini_restore('track_errors');
 
         if (empty($conn)) {
             if (($err = @mysqli_error()) != '') {
@@ -112,6 +113,10 @@ class MySQLiConnection extends ConnectionCommon implements Connection {
         }
 
         $this->dblink = $conn;
+
+        if ($encoding) {
+			$this->executeUpdate("SET NAMES " . $encoding);
+		}
     }
 
     /**

@@ -68,7 +68,9 @@ class MySQLConnection extends ConnectionCommon implements Connection {
         }
         $user = $dsninfo['username'];
         $pw = $dsninfo['password'];
-
+        
+		$encoding = !empty($dsninfo['encoding']) ? $dsninfo['encoding'] : null;
+		
         $connect_function = $persistent ? 'mysql_pconnect' : 'mysql_connect';
 
         @ini_set('track_errors', true);
@@ -114,6 +116,9 @@ class MySQLConnection extends ConnectionCommon implements Connection {
 
         $this->dblink = $conn;
         
+        if ($encoding) {
+			$this->executeUpdate("SET NAMES " . $encoding);
+		}
     }    
     
     /**

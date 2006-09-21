@@ -157,9 +157,9 @@ class MSSQLCallableStatement extends MSSQLPreparedStatement implements CallableS
     /**
      * @see CallableStatement::registerOutParameter()
      */
-    function registerOutParameter($paramIndex, $sqlType)
+    function registerOutParameter($paramIndex, $sqlType, $maxLength = null)
     {
-        mssql_bind($this->stmt, $paramIndex, $this->boundOutVars[$paramIndex], self::$typeMap[$sqlType], true);
+        mssql_bind($this->stmt, $paramIndex, $this->boundOutVars[$paramIndex], self::$typeMap[$sqlType], true, false, $maxLength);
     }
     
     /**

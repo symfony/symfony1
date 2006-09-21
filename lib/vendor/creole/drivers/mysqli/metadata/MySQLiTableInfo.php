@@ -54,6 +54,7 @@ class MySQLiTableInfo extends TableInfo {
 
             $size = null;
             $precision = null;
+            $scale = null;
 
             if (preg_match('/^(\w+)[\(]?([\d,]*)[\)]?( |$)/', $row['Type'], $matches)) {
                 //            colname[1]   size/precision[2]
@@ -61,7 +62,8 @@ class MySQLiTableInfo extends TableInfo {
                 if ($matches[2]) {
                     if ( ($cpos = strpos($matches[2], ',')) !== false) {
                         $size = (int) substr($matches[2], 0, $cpos);
-                        $precision = (int) substr($matches[2], $cpos + 1);
+                        $precision = $size;
+                        $scale = (int) substr($matches[2], $cpos + 1);
                     } else {
                         $size = (int) $matches[2];
                     }
@@ -72,7 +74,7 @@ class MySQLiTableInfo extends TableInfo {
                 $nativeType = $row['Type'];
             }
 
-            $this->columns[$name] = new ColumnInfo($this, $name, MySQLTypes::getType($nativeType), $nativeType, $size, $precision, $is_nullable, $default);
+            $this->columns[$name] = new ColumnInfo($this, $name, MySQLTypes::getType($nativeType), $nativeType, $size, $precision, $scale, $is_nullable, $default);
         }
 
         $this->colsLoaded = true;

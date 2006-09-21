@@ -53,10 +53,12 @@ class SQLiteTableInfo extends TableInfo {
             
             $fulltype = $row['type'];            
             $size = null;
+            $precision = null;
             $scale = null;
+            
             if (preg_match('/^([^\(]+)\(\s*(\d+)\s*,\s*(\d+)\s*\)$/', $fulltype, $matches)) {
                 $type = $matches[1];
-                $size = $matches[2];
+                $precision = $matches[2];
                 $scale = $matches[3]; // aka precision    
             } elseif (preg_match('/^([^\(]+)\(\s*(\d+)\s*\)$/', $fulltype, $matches)) {
                 $type = $matches[1];
@@ -72,7 +74,7 @@ class SQLiteTableInfo extends TableInfo {
             
             $default_val = $row['dflt_value'];
             
-            $this->columns[$name] = new ColumnInfo($this, $name, SQLiteTypes::getType($type), $type, $size, $scale, $is_nullable, $default_val, $is_auto_increment);
+            $this->columns[$name] = new ColumnInfo($this, $name, SQLiteTypes::getType($type), $type, $size, $precision, $scale, $is_nullable, $default_val);
             
             if (($row['pk'] == 1) || (strtolower($type) == 'integer primary key')) {
                 if ($this->primaryKey === null) {

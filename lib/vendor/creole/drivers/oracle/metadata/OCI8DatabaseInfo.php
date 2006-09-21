@@ -37,13 +37,13 @@ class OCI8DatabaseInfo extends DatabaseInfo {
         
         $dsn = $conn->getDSN();
         
-        // For Changing DB/Schema in Meta Data Interface
-        $this->schema = $dsn['schema'];
-        // For Oracle Type DBs
-        if (!$this->schema) {
-            $this->schema = $dsn['username'];
-        }
-            
+        if (isset($dsn['schema'])) {
+        	$this->schema = $dsn['schema']; 
+        } else {
+			// For Changing DB/Schema in Meta Data Interface
+	        $this->schema = $dsn['username'];
+		}
+        
 		$this->schema = strtoupper( $this->schema );
     }
     

@@ -53,7 +53,8 @@ class ODBCTableInfo extends TableInfo {
             $is_nullable = odbc_result($result, 'NULLABLE');
             $default = '';
             $precision = odbc_result($result, 'PRECISION');
-            $this->columns[$name] = new ColumnInfo($this, $name, ODBCTypes::getType($type), $type, $length, $precision, $is_nullable, $default);
+            $scale = odbc_result($result, 'SCALE');
+            $this->columns[$name] = new ColumnInfo($this, $name, ODBCTypes::getType($type), $type, $length, $precision, $scale, $is_nullable, $default);
         }
 
         @odbc_free_result($result);

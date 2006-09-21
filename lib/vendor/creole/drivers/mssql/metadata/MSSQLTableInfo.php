@@ -56,11 +56,12 @@ class MSSQLTableInfo extends TableInfo {
             $is_nullable = $row['NULLABLE'];
             $default = $row['COLUMN_DEF'];
             $precision = $row['PRECISION'];
+            $scale = $row['SCALE'];
 			$identity = false;
 			if (strtolower($type) == "int identity") {
 			    $identity = true;
 			}
-            $this->columns[$name] = new ColumnInfo($this, $name, MSSQLTypes::getType($type), $type, $length, $precision, $is_nullable, $default, $identity);
+            $this->columns[$name] = new ColumnInfo($this, $name, MSSQLTypes::getType($type), $type, $length, $precision, $scale, $is_nullable, $default, $identity);
         }
                 
         $this->colsLoaded = true;

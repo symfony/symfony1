@@ -58,14 +58,16 @@ class MySQLTableInfo extends TableInfo {
             $is_auto_increment = (strpos($row['Extra'], 'auto_increment') !== false);
             $size = null;
             $precision = null;
-
+			$scale = null;
+			
             if (preg_match('/^(\w+)[\(]?([\d,]*)[\)]?( |$)/', $row['Type'], $matches)) {
                 //            colname[1]   size/precision[2]
                 $nativeType = $matches[1];
                 if ($matches[2]) {
                     if ( ($cpos = strpos($matches[2], ',')) !== false) {
                         $size = (int) substr($matches[2], 0, $cpos);
-                        $precision = (int) substr($matches[2], $cpos + 1);
+                        $precision = $size;
+                        $scale = (int) substr($matches[2], $cpos + 1);
                     } else {
                         $size = (int) $matches[2];
                     }
@@ -83,6 +85,7 @@ class MySQLTableInfo extends TableInfo {
                                                    $nativeType,
                                                    $size,
                                                    $precision,
+                                                   $scale,
                                                    $is_nullable,
                                                    $default,
                                                    $is_auto_increment,
