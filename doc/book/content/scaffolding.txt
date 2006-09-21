@@ -18,7 +18,7 @@ In a web application, the data access actions can be categorized as one of the f
 
 These operations are so common that they have a dedicated acronym: [C.R.U.D.][1]
 
-Many pages can be reduced to one of these actions. For instance, in a forum application, the list of latest posts is a Retrieve action, and the reply to a post is a Create action. During the process of application creation, developers often need to redevelop the basic actions and template that implement the CRUD operations for a given table. And even if there are many ways to code it, the Propel layer offers consistant setters and getters, so it can be automated for the most part.
+Many pages can be reduced to one of these actions. For instance, in a forum application, the list of latest posts is a Retrieve action, and the reply to a post is a Create action. During the process of application creation, developers often need to redevelop the basic actions and template that implement the CRUD operations for a given table. And even if there are many ways to code it, the Propel layer offers consistent setters and getters, so it can be automated for the most part.
 
 This brings up two interesting automated mechanisms based on a table: The generation of a scaffolding and the generation of an administration. They are not used for the same purpose, and symfony provides different utilities for these two, so it is best if you understand clearly their differences:
 
@@ -48,7 +48,7 @@ Symfony offers two ways to create CRUD interfaces: Either by inheritance or by c
         
         ?>
     
-* You can also **generate** the code of the actions and the templates so that it can be modified. The resulting module is independant from the classes of the framework, and cannot be altered using configuration files (see below). The command line tasks for this kind of generation start with:
+* You can also **generate** the code of the actions and the templates so that it can be modified. The resulting module is independent from the classes of the framework, and cannot be altered using configuration files (see below). The command line tasks for this kind of generation start with:
 
         $ symfony propel-generate-
 
