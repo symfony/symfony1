@@ -340,16 +340,13 @@ lime_colorizer::style('INFO',  array('fg' => 'green', 'bold' => true));
 lime_colorizer::style('PARAMETER', array('fg' => 'cyan'));
 lime_colorizer::style('COMMENT',  array('fg' => 'yellow'));
 
-class lime_harness
+class lime_harness extends lime_registration
 {
-  public $test_files = array();
   public $php_cli = '';
   public $failed = array();
   public $passed = array();
   public $stats = array();
   public $output = null;
-  public $extension = '.php';
-  public $base_dir = '';
 
   function __construct($output_instance, $php_cli = null)
   {
@@ -362,28 +359,9 @@ class lime_harness
     $this->output = $output_instance ? $output_instance : new lime_output();
   }
 
-  function register($files_or_directories)
-  {
-    foreach ((array) $files_or_directories as $f_or_d)
-    {
-      if (is_file($f_or_d))
-      {
-        $this->test_files[] = $f_or_d;
-      }
-      elseif (is_dir($f_or_d))
-      {
-        $this->register_dir($f_or_d);
-      }
-      else
-      {
-        throw new Exception(sprintf('The file or directory "%s" does not exist.', $f_or_d));
-      }
-    }
-  }
-
   function run()
   {
-    if (!count($this->test_files))
+    if (!count($this->files))
     {
       throw new Exception('You must register some test files before running them!');
     }
@@ -394,7 +372,7 @@ class lime_harness
       'nb_tests' => 0,
     );
 
-    foreach ($this->test_files as $file)
+    foreach ($this->files as $file)
     {
       $this->failed[$file] = array();
       $this->passed[$file] = array();
@@ -444,7 +422,7 @@ class lime_harness
 
       $this->output->echoln(sprintf('Failed %d/%d test scripts, %.2f%% okay. %d/%d subtests failed, %.2f%% okay.',
         $nb_failed_files = count($this->stats['failed_files']),
-        $nb_files = count($this->test_files),
+        $nb_files = count($this->files),
         $nb_failed_files * 100 / $nb_files,
         $nb_failed_tests = $this->stats['failed_tests'],
         $nb_tests = $this->stats['nb_tests'],
@@ -454,7 +432,7 @@ class lime_harness
     else
     {
       $this->output->echoln('All tests successful.', 'INFO');
-      $this->output->echoln(sprintf('Files=%d, Tests=%d', count($this->test_files), $this->stats['nb_tests']), 'INFO');
+      $this->output->echoln(sprintf('Files=%d, Tests=%d', count($this->files), $this->stats['nb_tests']), 'INFO');
     }
   }
 
@@ -478,12 +456,308 @@ class lime_harness
 
     return;
   }
+}
+
+class lime_coverage extends lime_registration
+{
+  public $files = array();
+  public $extension = '.php';
+  public $base_dir = '';
+  public $harness = null;
+  public $verbose = false;
+
+  function __construct($harness)
+  {
+    $this->harness = $harness;
+  }
+
+  function run()
+  {
+    if (!function_exists('xdebug_start_code_coverage'))
+    {
+      throw new Exception('You must install and enable xdebug before using lime coverage.');
+    }
+
+    if (!count($this->harness->files))
+    {
+      throw new Exception('You must register some test files before running coverage!');
+    }
+
+    if (!count($this->files))
+    {
+      throw new Exception('You must register some files to cover!');
+    }
+
+    $coverage = array();
+    $tmp_file = '/tmp/test.php';
+    foreach ($this->harness->files as $file)
+    {
+      $tmp = <<<EOF
+<?php
+xdebug_start_code_coverage();
+ob_start();
+include('$file');
+ob_end_clean();
+echo serialize(xdebug_get_code_coverage());
+EOF;
+      file_put_contents($tmp_file, $tmp);
+      ob_start();
+      passthru(sprintf('%s %s 2>&1', $this->harness->php_cli, $tmp_file), $return);
+      $retval = ob_get_clean();
+      if (0 == $return)
+      {
+        $cov = unserialize($retval);
+        foreach ($cov as $file => $lines)
+        {
+          if (!isset($coverage[$file]))
+          {
+            $coverage[$file] = array();
+          }
+
+          foreach ($lines as $line => $count)
+          {
+            if (!isset($coverage[$file][$line]))
+            {
+              $coverage[$file][$line] = 0;
+            }
+            $coverage[$file][$line] = $coverage[$file][$line] + $count;
+          }
+        }
+      }
+    }
+    unlink($tmp_file);
+
+    ksort($coverage);
+    foreach ($coverage as $file => $cov)
+    {
+      if (!file_exists($file) || !in_array($file, $this->files))
+      {
+        continue;
+      }
+
+      list($coverage, $php_lines) = $this->compute(file_get_contents($file), $cov);
+
+      $output = $this->harness->output;
+      $percent = count($php_lines) ? count($coverage) * 100 / count($php_lines) : 100;
+
+      $output->echoln(sprintf("%-30s %3.0f%%", substr($this->get_relative_file($file), -30), $percent), $percent == 100 ? 'INFO' : ($percent > 90 ? 'PARAMETER' : ($percent < 20 ? 'ERROR' : '')));
+      if ($this->verbose)
+      {
+        //$output->echoln(sprintf("%s: %s/%s (%.0f%%)", str_replace($this->base_dir, '', $file), count($coverage), count($php_lines), $percent), $percent > 90 ? 'INFO' : ($percent < 20 ? 'ERROR' : ''));
+        $output->comment(sprintf("missing: %s", $this->format_range(array_keys(array_diff_key($php_lines, $cov)))));
+      }
+    }
+  }
+
+  function compute($content, $cov)
+  {
+    $tokens = token_get_all($content);
+    $php_lines = array();
+    $current_line = 1;
+    $in_class = false;
+    $in_function = false;
+    $in_function_declaration = false;
+    $open_braces = 0;
+    foreach ($tokens as $token)
+    {
+      if (is_string($token))
+      {
+        switch ($token)
+        {
+          case '=':
+            if (false === $in_class || (false !== $in_function && !$in_function_declaration))
+            {
+              $php_lines[$current_line] = true;
+            }
+            break;
+          case '{':
+            ++$open_braces;
+            $in_function_declaration = false;
+            break;
+          case '}':
+            --$open_braces;
+            if ($open_braces == $in_class)
+            {
+              $in_class = false;
+            }
+            if ($open_braces == $in_function)
+            {
+              $in_function = false;
+            }
+            break;
+        }
+
+        continue;
+      }
+
+      list($id, $text) = $token;
+
+      switch ($id)
+      {
+        case T_CURLY_OPEN:
+        case T_DOLLAR_OPEN_CURLY_BRACES:
+          ++$open_braces;
+          break;
+        case T_WHITESPACE:
+        case T_OPEN_TAG:
+        case T_CLOSE_TAG:
+          $current_line += count(explode("\n", $text)) - 1;
+          break;
+        case T_COMMENT:
+        case T_DOC_COMMENT:
+          $current_line += count(explode("\n", $text)) - 1;
+          break;
+        case T_CLASS:
+          $in_class = $open_braces;
+          break;
+        case T_FUNCTION:
+          $in_function = $open_braces;
+          $in_function_declaration = true;
+          break;
+        case T_AND_EQUAL:
+        case T_BREAK:
+        case T_CASE:
+        case T_CATCH:
+        case T_CLONE:
+        case T_CONCAT_EQUAL:
+        case T_CONTINUE:
+        case T_DEC:
+        case T_DECLARE:
+        case T_DEFAULT:
+        case T_DIV_EQUAL:
+        case T_DO:
+        case T_DOUBLE_COLON:
+        case T_ECHO:
+        case T_ELSEIF:
+        case T_EMPTY:
+        case T_ENDDECLARE:
+        case T_ENDFOR:
+        case T_ENDFOREACH:
+        case T_ENDIF:
+        case T_ENDSWITCH:
+        case T_ENDWHILE:
+        case T_EVAL:
+        case T_EXIT:
+        case T_FOR:
+        case T_FOREACH:
+        case T_GLOBAL:
+        case T_IF:
+        case T_INC:
+        case T_INCLUDE:
+        case T_INCLUDE_ONCE:
+        case T_INSTANCEOF:
+        case T_ISSET:
+        case T_IS_EQUAL:
+        case T_IS_GREATER_OR_EQUAL:
+        case T_IS_IDENTICAL:
+        case T_IS_NOT_EQUAL:
+        case T_IS_NOT_IDENTICAL:
+        case T_IS_SMALLER_OR_EQUAL:
+        case T_LIST:
+        case T_LOGICAL_AND:
+        case T_LOGICAL_OR:
+        case T_LOGICAL_XOR:
+        case T_MINUS_EQUAL:
+        case T_MOD_EQUAL:
+        case T_MUL_EQUAL:
+        case T_NEW:
+        case T_OBJECT_OPERATOR:
+        case T_OR_EQUAL:
+        case T_PLUS_EQUAL:
+        case T_PRINT:
+        case T_REQUIRE:
+        case T_REQUIRE_ONCE:
+        case T_RETURN:
+        case T_SL:
+        case T_SL_EQUAL:
+        case T_SR:
+        case T_SR_EQUAL:
+        case T_SWITCH:
+        case T_THROW:
+        case T_TRY:
+        case T_UNSET:
+        case T_UNSET_CAST:
+        case T_USE:
+        case T_WHILE:
+        case T_XOR_EQUAL:
+          $php_lines[$current_line] = true;
+          break;
+        default:
+          //print "$current_line: ".token_name($id)."\n";
+      }
+    }
+
+    // we remove from $cov non php lines
+    foreach (array_diff_key($cov, $php_lines) as $line => $tmp)
+    {
+      unset($cov[$line]);
+    }
+
+    return array($cov, $php_lines);
+  }
+
+  function format_range($lines)
+  {
+    sort($lines);
+    $formatted = '';
+    $first = -1;
+    $last = -1;
+    foreach ($lines as $line)
+    {
+      if ($last + 1 != $line)
+      {
+        if ($first != -1)
+        {
+          $formatted .= $first == $last ? "$first " : "[$first - $last] ";
+        }
+        $first = $line;
+        $last = $line;
+      }
+      else
+      {
+        $last = $line;
+      }
+    }
+    if ($first != -1)
+    {
+      $formatted .= $first == $last ? "$first " : "[$first - $last] ";
+    }
+
+    return $formatted;
+  }
+}
+
+class lime_registration
+{
+  public $files = array();
+  public $extension = '.php';
+  public $base_dir = '';
+
+  function register($files_or_directories)
+  {
+    foreach ((array) $files_or_directories as $f_or_d)
+    {
+      if (is_file($f_or_d))
+      {
+        $this->files[] = realpath($f_or_d);
+      }
+      elseif (is_dir($f_or_d))
+      {
+        $this->register_dir($f_or_d);
+      }
+      else
+      {
+        throw new Exception(sprintf('The file or directory "%s" does not exist.', $f_or_d));
+      }
+    }
+  }
 
   function register_glob($glob)
   {
-    $files = glob($glob);
-
-    $this->test_files = array_merge($this->test_files, $files);
+    foreach (glob($glob) as $file)
+    {
+      $this->files[] = realpath($file);
+    }
   }
 
   function register_dir($directory)
@@ -510,10 +784,10 @@ class lime_harness
       }
     }
 
-    $this->test_files = array_merge($this->test_files, $files);
+    $this->files = array_merge($this->files, $files);
   }
 
-  private function get_relative_file($file)
+  protected function get_relative_file($file)
   {
     return str_replace(array(realpath($this->base_dir).'/', $this->extension), '', $file);
   }
