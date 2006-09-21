@@ -26,7 +26,7 @@
  */
 class sfPropelPager
 {
-  private
+  protected
     $page                   = 1,
     $maxPerPage             = 0,
     $lastPage               = 1,
@@ -223,7 +223,7 @@ class sfPropelPager
     }
   }
 
-  private function retrieveObject($offset)
+  protected function retrieveObject($offset)
   {
     $cForRetrieve = clone $this->getCriteria();
     $cForRetrieve->setOffset($offset - 1);
@@ -302,7 +302,7 @@ class sfPropelPager
     return $this->nbResults;
   }
 
-  private function setNbResults($nb)
+  protected function setNbResults($nb)
   {
     $this->nbResults = $nb;
   }
@@ -317,7 +317,7 @@ class sfPropelPager
     return $this->lastPage;
   }
 
-  private function setLastPage($page)
+  protected function setLastPage($page)
   {
     $this->lastPage = $page;
     if ($this->getPage() > $page)
