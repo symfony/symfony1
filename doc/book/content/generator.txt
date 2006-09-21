@@ -330,7 +330,7 @@ And the `comment/list` view:
           params:         %%=content%% (sent by %%author%% on %%date%% about %%article_link%%)
           display:        [date, author, content]
             
-Notice that a `tabular` layout expects a `display`, but a `stacked` layout uses the `params` key for the HTML code generated for each record. However, the `display` param is stille used in a `stacked` layout which columns are available for the interactive sorting.
+Notice that a `tabular` layout expects a `display`, but a `stacked` layout uses the `params` key for the HTML code generated for each record. However, the `display` param is still used in a `stacked` layout which columns are available for the interactive sorting.
 
 ### Filters
 
@@ -355,7 +355,7 @@ Then, in `templates/_state.php`:
       'closed' => 'closed',
     ), isset($filters['state']) ? $filters['state'] : '')) ?>
     
-Notice that the partial has access to a `$filters` variable, whiwh is very useful to get the current value of the filter.
+Notice that the partial has access to a `$filters` variable, which is very useful to get the current value of the filter.
 
 ### Sort
 
@@ -400,7 +400,7 @@ You may want to force the pager to use a `doSelectJoinXXX()` method to optimize 
 
 ### Input type
 
-In an `edit` view, the user can modify the value of each field. Symfony determines the type of input to be used according to the data type of the column. For instance, fields finishing wirh `_id` will be displayed as select inputs. However, you may want to force a certain type of input for a given field, or the options of the object_tag generated. This kind of parameter goes into the `fields` definition:
+In an `edit` view, the user can modify the value of each field. Symfony determines the type of input to be used according to the data type of the column. For instance, fields finishing with `_id` will be displayed as select inputs. However, you may want to force a certain type of input for a given field, or the options of the object_tag generated. This kind of parameter goes into the `fields` definition:
 
     generator:
       class:              sfPropelAdminGenerator
@@ -474,7 +474,7 @@ Table relationships
 
 ### One to many
 
-The 1-n table relationships are taken care of by the admin generator. In the example mentionned above, the `weblog_comment` table is related to the `weblog_article` table via the `article_id` field. If you initiate the module of the `Comment` class with the admin generator:
+The 1-n table relationships are taken care of by the admin generator. In the example mentioned above, the `weblog_comment` table is related to the `weblog_article` table via the `article_id` field. If you initiate the module of the `Comment` class with the admin generator:
 
     $ symfony propel-init-admin myapp comment Comment
 
