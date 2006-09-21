@@ -77,15 +77,21 @@ class sfStringValidator extends sfValidator
       if ($this->getParameterHolder()->get('insensitive'))
       {
         $value = strtolower($value);
+        $found = false;
         foreach ($values as $avalue)
         {
-          if ($value != strtolower($avalue))
+          if ($value == strtolower($avalue))
           {
-            // can't find a match
-            $error = $this->getParameterHolder()->get('values_error');
-
-            return false;
+            $found = true;
+            break;
           }
+        }
+        if (!$found)
+        {
+          // can't find a match
+          $error = $this->getParameterHolder()->get('values_error');
+
+          return false;
         }
       }
       else

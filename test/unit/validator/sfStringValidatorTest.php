@@ -56,6 +56,7 @@ $h->launchTests($v, 'foo', true, 'values', null, array('values' => 'foo'));
 $t->diag('->execute() - insensitive parameter');
 $h->launchTests($v, 'Foo', false, 'values', null, array('values' => array('foo')));
 $h->launchTests($v, 'Foo', true, 'values', null, array('values' => array('foO'), 'insensitive' => true));
+$h->launchTests($v, 'Foo', false, 'values', null, array('values' => array('Bar'), 'insensitive' => true));
 
 // utf-8 support
 $t->diag('->execute() - utf-8 support');
