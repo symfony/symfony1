@@ -581,6 +581,9 @@ EOF;
             ++$open_braces;
             $in_function_declaration = false;
             break;
+          case ';':
+            $in_function_declaration = false;
+            break;
           case '}':
             --$open_braces;
             if ($open_braces == $in_class)
@@ -633,7 +636,6 @@ EOF;
         case T_DEFAULT:
         case T_DIV_EQUAL:
         case T_DO:
-        case T_DOUBLE_COLON:
         case T_ECHO:
         case T_ELSEIF:
         case T_EMPTY:
