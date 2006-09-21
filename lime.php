@@ -541,9 +541,8 @@ EOF;
       $percent = count($php_lines) ? count($coverage) * 100 / count($php_lines) : 100;
 
       $output->echoln(sprintf("%-30s %3.0f%%", substr($this->get_relative_file($file), -30), $percent), $percent == 100 ? 'INFO' : ($percent > 90 ? 'PARAMETER' : ($percent < 20 ? 'ERROR' : '')));
-      if ($this->verbose)
+      if ($this->verbose && $percent != 100)
       {
-        //$output->echoln(sprintf("%s: %s/%s (%.0f%%)", str_replace($this->base_dir, '', $file), count($coverage), count($php_lines), $percent), $percent > 90 ? 'INFO' : ($percent < 20 ? 'ERROR' : ''));
         $output->comment(sprintf("missing: %s", $this->format_range(array_keys(array_diff_key($php_lines, $cov)))));
       }
     }
