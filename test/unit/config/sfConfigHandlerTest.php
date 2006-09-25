@@ -10,7 +10,6 @@
 
 $_test_dir = realpath(dirname(__FILE__).'/../..');
 require_once($_test_dir.'/../lib/vendor/lime/lime.php');
-require_once($_test_dir.'/unit/sfContextMock.class.php');
 require_once($_test_dir.'/unit/bootstrap.php');
 
 $t = new lime_test(8, new lime_output_color());
@@ -20,9 +19,8 @@ class myConfigHandler extends sfConfigHandler
   public function execute($configFiles) {}
 }
 
-$context = new sfContext();
 $config = new myConfigHandler();
-$config->initialize($context);
+$config->initialize();
 
 // ->initialize()
 $t->diag('->initialize()');

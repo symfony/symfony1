@@ -96,7 +96,7 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
 
   protected function getConfigValue($keyName, $category, $defaultValue = null)
   {
-    if ($category && isset($this->yamlConfig[$category][$keyName]))
+    if (isset($this->yamlConfig[$category][$keyName]))
     {
       return $this->yamlConfig[$category][$keyName];
     }
