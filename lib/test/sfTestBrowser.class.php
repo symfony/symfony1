@@ -185,9 +185,20 @@ class sfTestBrowser extends sfBrowser
     // check that cache is activated
     if (!$cacheManager)
     {
-      $this->test->ok(!$boolean, 'page and action are not cached (cache is disabled)');
+      $this->test->ok(!$boolean, 'cache is disabled');
 
       return $this;
+    }
+
+    if ($uri == sfRouting::getInstance()->getCurrentInternalUri())
+    {
+      $main = true;
+      $type = $with_layout ? 'page' : 'action';
+    }
+    else
+    {
+      $main = false;
+      $type = $uri;
     }
 
     // check layout configuration
@@ -206,21 +217,30 @@ class sfTestBrowser extends sfBrowser
       $this->test->pass('cache is configured properly');
 
       // check page is cached
-      $ret = $this->test->is($cacheManager->has($uri), $boolean, sprintf('%s %s in cache', $with_layout ? 'page' : 'action', $boolean ? 'is' : 'is not'));
+      $ret = $this->test->is($cacheManager->has($uri), $boolean, sprintf('"%s" %s in cache', $type, $boolean ? 'is' : 'is not'));
 
       // check that the content is ok in cache
-      if ($ret && $boolean)
+      if ($boolean)
       {
-        if ($with_layout)
+        if (!$ret)
+        {
+          $this->test->fail('content in cache is ok');
+        }
+        else if ($with_layout)
         {
           $response = unserialize($cacheManager->get($uri));
           $content = $response->getContent();
           $this->test->is($content, $this->getResponse()->getContent(), 'content in cache is ok');
         }
-        else
+        else if (true === $main)
         {
           $ret = unserialize($cacheManager->get($uri));
           $content = $ret['content'];
+          $this->test->ok(false !== strpos($this->getResponse()->getContent(), $content), 'content in cache is ok');
+        }
+        else
+        {
+          $content = $cacheManager->get($uri);
           $this->test->ok(false !== strpos($this->getResponse()->getContent(), $content), 'content in cache is ok');
         }
       }
