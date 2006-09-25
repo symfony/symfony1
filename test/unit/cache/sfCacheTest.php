@@ -10,9 +10,7 @@
 
 $_test_dir = realpath(dirname(__FILE__).'/../..');
 require_once($_test_dir.'/../lib/vendor/lime/lime.php');
-require_once($_test_dir.'/../lib/config/sfConfig.class.php');
-require_once($_test_dir.'/../lib/util/sfToolkit.class.php');
-require_once($_test_dir.'/../lib/cache/sfCache.class.php');
+require_once($_test_dir.'/unit/bootstrap.php');
 
 class myCache extends sfCache
 {

@@ -15,7 +15,7 @@ require_once($_test_dir.'/../lib/config/sfConfig.class.php');
 require_once($_test_dir.'/../lib/util/sfParameterHolder.class.php');
 require_once($_test_dir.'/../lib/view/sfView.class.php');
 
-$t = new lime_test(13, new lime_output_color());
+$t = new lime_test(14, new lime_output_color());
 
 class myView extends sfView
 {

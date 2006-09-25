@@ -11,13 +11,7 @@
 $_test_dir = realpath(dirname(__FILE__).'/../..');
 require_once($_test_dir.'/../lib/vendor/lime/lime.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
-require_once($_test_dir.'/../lib/config/sfConfig.class.php');
-require_once($_test_dir.'/../lib/util/sfParameterHolder.class.php');
-require_once($_test_dir.'/../lib/validator/sfValidator.class.php');
-require_once($_test_dir.'/../lib/validator/sfCallbackValidator.class.php');
-
-class sfException extends Exception {}
-class sfValidatorException extends sfException {}
+require_once($_test_dir.'/unit/bootstrap.php');
 
 $t = new lime_test(11, new lime_output_color());
 

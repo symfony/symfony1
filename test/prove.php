@@ -14,6 +14,10 @@ $h = new lime_harness(new lime_output_color());
 
 $h->base_dir = dirname(__FILE__);
 
+// cache autoload files
+require_once(dirname(__FILE__).'/unit/bootstrap.php');
+testAutoloader::initialize(true);
+
 // unit tests
 $h->register_glob($h->base_dir.'/unit/*/*Test.php');
 
@@ -21,3 +25,5 @@ $h->register_glob($h->base_dir.'/unit/*/*Test.php');
 $h->register_glob($h->base_dir.'/functionnal/*Test.php');
 
 $h->run();
+
+testAutoloader::removeCache();

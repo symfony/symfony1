@@ -10,14 +10,8 @@
 
 $_test_dir = realpath(dirname(__FILE__).'/../..');
 require_once($_test_dir.'/../lib/vendor/lime/lime.php');
-require_once($_test_dir.'/../lib/request/sfRequest.class.php');
-require_once($_test_dir.'/../lib/request/sfWebRequest.class.php');
-require_once($_test_dir.'/../lib/response/sfResponse.class.php');
-require_once($_test_dir.'/../lib/response/sfWebResponse.class.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
-require_once($_test_dir.'/../lib/config/sfConfig.class.php');
-require_once($_test_dir.'/../lib/util/sfParameterHolder.class.php');
-require_once($_test_dir.'/../lib/action/sfComponent.class.php');
+require_once($_test_dir.'/unit/bootstrap.php');
 
 $t = new lime_test(1, new lime_output_color());
 

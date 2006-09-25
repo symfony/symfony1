@@ -11,15 +11,10 @@
 $_test_dir = realpath(dirname(__FILE__).'/../..');
 require_once($_test_dir.'/../lib/vendor/lime/lime.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
-require_once($_test_dir.'/../lib/config/sfConfig.class.php');
-require_once($_test_dir.'/../lib/util/sfParameterHolder.class.php');
-require_once($_test_dir.'/../lib/util/sfToolkit.class.php');
-require_once($_test_dir.'/../lib/validator/sfValidator.class.php');
-require_once($_test_dir.'/../lib/validator/sfStringValidator.class.php');
-
+require_once($_test_dir.'/unit/bootstrap.php');
 require_once($_test_dir.'/unit/sfValidatorTestHelper.class.php');
 
-$t = new lime_test(34, new lime_output_color());
+$t = new lime_test(36, new lime_output_color());
 
 $context = new sfContext();
 $v = new sfStringValidator();
