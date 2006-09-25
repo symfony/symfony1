@@ -7,16 +7,16 @@ dev:
     # E_ALL | E_STRICT = 4095
     error_reporting:        4095
     web_debug:              on
-    cache:                  off
+    cache:                  on
     no_script_name:         off
     etag:                   off
 
 test:
   .settings:
-    # E_ALL | E_STRICT & ~E_NOTICE = 2047
-    error_reporting:        2047
-    cache:                  on
+    # E_ALL | E_STRICT = 4095
+    error_reporting:        4095
     web_debug:              off
+    cache:                  on
     no_script_name:         off
     etag:                   off
 

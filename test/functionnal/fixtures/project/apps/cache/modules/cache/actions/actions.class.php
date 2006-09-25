@@ -17,4 +17,13 @@ class cacheActions extends sfActions
   public function executePage()
   {
   }
+
+  public function executeForward()
+  {
+    $this->forward('cache', 'page');
+  }
+
+  public function executeMulti()
+  {
+  }
 }

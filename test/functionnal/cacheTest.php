@@ -46,3 +46,24 @@ $b->
   checkResponseElement('body', '/page in cache/')->
   isCached(true, true)
 ;
+
+$b->
+  get('/cache/forward')->
+  isStatusCode(200)->
+  isRequestParameter('module', 'cache')->
+  isRequestParameter('action', 'forward')->
+  checkResponseElement('body', '/page in cache/')->
+  isCached(true)
+;
+
+$b->
+  get('/cache/multi')->
+  isStatusCode(200)->
+  isRequestParameter('module', 'cache')->
+  isRequestParameter('action', 'multi')->
+  checkResponseElement('div#cacheablePartial', '/IN CACHEABLE PARTIAL/')->
+  checkResponseElement('div#partial', '/IN PARTIAL/')->
+  isCached(false)->
+  isUriCached('cache/_cacheablePartial?key='.md5(serialize(array())), true)->
+  isUriCached('cache/_partial?key='.md5(serialize(array())), false)
+;
