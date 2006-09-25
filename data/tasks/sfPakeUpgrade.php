@@ -99,11 +99,11 @@ function _upgrade_0_8_php_files($app_dir)
     $content = file_get_contents($php_file);
 
     $deprecated = array(
-      "'/sf/js/prototype"     => "sfConfig::get('SF_PROTOTYPE_WEB_DIR').'/js",
-      "'/sf/css/prototype"    => "sfConfig::get('SF_PROTOTYPE_WEB_DIR').'/css",
-      "'/sf/js/sf_admin"      => "sfConfig::get('SF_PROTOTYPE_WEB_DIR').'/js",
-      "'/sf/css/sf_admin"     => "sfConfig::get('SF_PROTOTYPE_WEB_DIR').'/css",
-      "'/sf/images/sf_admin"  => "sfConfig::get('SF_PROTOTYPE_WEB_DIR').'/images",
+      "'/sf/js/prototype"     => "sfConfig::get('sf_prototype_web_dir').'/js",
+      "'/sf/css/prototype"    => "sfConfig::get('sf_prototype_web_dir').'/css",
+      "'/sf/js/sf_admin"      => "sfConfig::get('sf_prototype_web_dir').'/js",
+      "'/sf/css/sf_admin"     => "sfConfig::get('sf_prototype_web_dir').'/css",
+      "'/sf/images/sf_admin"  => "sfConfig::get('sf_prototype_web_dir').'/images",
     );
     $seen = array();
     foreach ($deprecated as $old => $new)
