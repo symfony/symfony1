@@ -344,8 +344,6 @@ lime_colorizer::style('COMMENT',  array('fg' => 'yellow'));
 class lime_harness extends lime_registration
 {
   public $php_cli = '';
-  public $failed = array();
-  public $passed = array();
   public $stats = array();
   public $output = null;
 
@@ -368,17 +366,22 @@ class lime_harness extends lime_registration
     }
 
     $this->stats =array(
-      'failed_files' => array(),
-      'failed_tests' => 0,
-      'nb_tests' => 0,
+      '_failed_files' => array(),
+      '_failed_tests' => 0,
+      '_nb_tests'     => 0,
     );
 
     foreach ($this->files as $file)
     {
-      $this->failed[$file] = array();
-      $this->passed[$file] = array();
+      $this->stats[$file] = array(
+        'plan'     =>   null,
+        'nb_tests' => 0,
+        'failed'   => array(),
+        'passed'   => array(),
+      );
       $this->current_file = $file;
       $this->current_test = 0;
+      $relative_file = $this->get_relative_file($file);
 
       ob_start(array($this, 'process_test_output'), 2);
       passthru(sprintf('%s %s 2>&1', $this->php_cli, $file), $return);
@@ -391,49 +394,78 @@ class lime_harness extends lime_registration
       }
       else
       {
-        $this->stats[$file]['status_code'] = 0;
-        $this->stats[$file]['status'] = $this->failed[$file] ? 'not ok' : 'ok';
+        $delta = $this->stats[$file]['plan'] - $this->stats[$file]['nb_tests'];
+        if ($delta > 0)
+        {
+          $this->output->echoln(sprintf('%s%s%s', substr($relative_file, -37), str_repeat('.', 40 - min(37, strlen($relative_file))), $this->output->colorizer->colorize(sprintf('# Looks like you planned %d tests but only ran %d.', $this->stats[$file]['plan'], $this->stats[$file]['nb_tests']), 'COMMENT')));
+          $this->stats[$file]['status'] = 'dubious';
+          $this->stats[$file]['status_code'] = 255;
+          $this->stats['_nb_tests'] += $delta;
+          for ($i = 1; $i <= $delta; $i++)
+          {
+            $this->stats[$file]['failed'][] = $this->stats[$file]['nb_tests'] + $i;
+          }
+        }
+        else if ($delta < 0)
+        {
+          $this->output->echoln(sprintf('%s%s%s', substr($relative_file, -37), str_repeat('.', 40 - min(37, strlen($relative_file))), $this->output->colorizer->colorize(sprintf('# Looks like you planned %s test but ran %s extra.', $this->stats[$file]['plan'], $this->stats[$file]['nb_tests'] - $this->stats[$file]['plan']), 'COMMENT')));
+          $this->stats[$file]['status'] = 'dubious';
+          $this->stats[$file]['status_code'] = 255;
+          for ($i = 1; $i <= -$delta; $i++)
+          {
+            $this->stats[$file]['failed'][] = $this->stats[$file]['plan'] + $i;
+          }
+        }
+        else
+        {
+          $this->stats[$file]['status_code'] = 0;
+          $this->stats[$file]['status'] = $this->stats[$file]['failed'] ? 'not ok' : 'ok';
+        }
       }
 
-      $relative_file = $this->get_relative_file($file);
       $this->output->echoln(sprintf('%s%s%s', substr($relative_file, -37), str_repeat('.', 40 - min(37, strlen($relative_file))), $this->stats[$file]['status']));
 
-      if ($nb = count($this->failed[$file]) || $return > 0)
+      if ($nb = count($this->stats[$file]['failed']) || $return > 0)
       {
-        if (count($this->failed[$file]))
+        if (count($this->stats[$file]['failed']))
         {
-          $this->output->echoln(sprintf("    Failed tests: %s", implode(', ', $this->failed[$file])));
+          $this->output->echoln(sprintf("    Failed tests: %s", implode(', ', $this->stats[$file]['failed'])));
         }
-        $this->stats['failed_files'][] = $file;
-        $this->stats['failed_tests'] += $nb;
+        $this->stats['_failed_files'][] = $file;
+        $this->stats['_failed_tests']  += $nb;
+      }
+
+      if ('dubious' == $this->stats[$file]['status'])
+      {
+        $this->output->echoln(sprintf('    Test returned status %s', $this->stats[$file]['status_code']));
       }
     }
 
-    if (count($this->stats['failed_files']))
+    if (count($this->stats['_failed_files']))
     {
       $format = "%-30s  %4s  %5s  %5s  %s";
       $this->output->echoln(sprintf($format, 'Failed Test', 'Stat', 'Total', 'Fail', 'List of Failed'));
       $this->output->echoln("------------------------------------------------------------------");
-      foreach ($this->failed as $file => $tests)
+      foreach ($this->stats as $file => $file_stat)
       {
-        if (!in_array($file, $this->stats['failed_files'])) continue;
+        if (!in_array($file, $this->stats['_failed_files'])) continue;
 
-        $this->output->echoln(sprintf($format, substr($this->get_relative_file($file), -30), $this->stats[$file]['status_code'], count($this->failed[$file]) + count($this->passed[$file]), count($this->failed[$file]), implode(' ', $tests)));
+        $this->output->echoln(sprintf($format, substr($this->get_relative_file($file), -30), $file_stat['status_code'], count($file_stat['failed']) + count($file_stat['passed']), count($file_stat['failed']), implode(' ', $file_stat['failed'])));
       }
 
       $this->output->echoln(sprintf('Failed %d/%d test scripts, %.2f%% okay. %d/%d subtests failed, %.2f%% okay.',
-        $nb_failed_files = count($this->stats['failed_files']),
+        $nb_failed_files = count($this->stats['_failed_files']),
         $nb_files = count($this->files),
-        $nb_failed_files * 100 / $nb_files,
-        $nb_failed_tests = $this->stats['failed_tests'],
-        $nb_tests = $this->stats['nb_tests'],
+        ($nb_files - $nb_failed_files) * 100 / $nb_files,
+        $nb_failed_tests = $this->stats['_failed_tests'],
+        $nb_tests = $this->stats['_nb_tests'],
         $nb_tests > 0 ? ($nb_tests - $nb_failed_tests) * 100 / $nb_tests : 0
       ), 'ERROR');
     }
     else
     {
       $this->output->echoln('All tests successful.', 'INFO');
-      $this->output->echoln(sprintf('Files=%d, Tests=%d', count($this->files), $this->stats['nb_tests']), 'INFO');
+      $this->output->echoln(sprintf('Files=%d, Tests=%d', count($this->files), $this->stats['_nb_tests']), 'INFO');
     }
   }
 
@@ -445,13 +477,19 @@ class lime_harness extends lime_registration
       {
         ++$this->current_test;
         $test_number = (int) substr($text, 7);
-        $this->failed[$this->current_file][] = $test_number;
+        $this->stats[$this->current_file]['failed'][] = $test_number;
 
-        ++$this->stats['nb_tests'];
+        ++$this->stats[$this->current_file]['nb_tests'];
+        ++$this->stats['_nb_tests'];
       }
       else if (0 === strpos($text, 'ok '))
       {
-        ++$this->stats['nb_tests'];
+        ++$this->stats[$this->current_file]['nb_tests'];
+        ++$this->stats['_nb_tests'];
+      }
+      else if (preg_match('/^1\.\.(\d+)/', $text, $match))
+      {
+        $this->stats[$this->current_file]['plan'] = $match[1];
       }
     }
 
@@ -531,20 +569,17 @@ EOF;
     ksort($coverage);
     $total_php_lines = 0;
     $total_covered_lines = 0;
-    foreach ($coverage as $file => $cov)
+    foreach ($this->files as $file)
     {
-      if (!file_exists($file) || !in_array($file, $this->files))
-      {
-        continue;
-      }
+      $cov = isset($coverage[$file]) ? $coverage[$file] : array();
 
-      list($coverage, $php_lines) = $this->compute(file_get_contents($file), $cov);
+      list($cov, $php_lines) = $this->compute(file_get_contents($file), $cov);
 
       $output = $this->harness->output;
-      $percent = count($php_lines) ? count($coverage) * 100 / count($php_lines) : 100;
+      $percent = count($php_lines) ? count($cov) * 100 / count($php_lines) : 100;
 
       $total_php_lines += count($php_lines);
-      $total_covered_lines += count($coverage);
+      $total_covered_lines += count($cov);
 
       $output->echoln(sprintf("%-30s %3.0f%%", substr($this->get_relative_file($file), -30), $percent), $percent == 100 ? 'INFO' : ($percent > 90 ? 'PARAMETER' : ($percent < 20 ? 'ERROR' : '')));
       if ($this->verbose && $percent != 100)
