@@ -13,16 +13,33 @@ require_once($_test_dir.'/../lib/vendor/lime/lime.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 require_once($_test_dir.'/unit/bootstrap.php');
 
-$t = new lime_test(1, new lime_output_color());
+$t = new lime_test(3, new lime_output_color());
 
 class myConfigHandler extends sfConfigHandler
 {
   public function execute($configFiles) {}
+
+  public static function replaceConstantsCallback(&$value)
+  {
+    return parent::replaceConstantsCallback($value);
+  }
 }
 
 $context = new sfContext();
 $config = new myConfigHandler();
 $config->initialize($context);
+
+// ::replaceConstantsCallback()
+$t->diag('::replaceConstantsCallback()');
+
+sfConfig::set('foo', 'bar');
+$value = 'my value with a %foo% constant';
+myConfigHandler::replaceConstantsCallback($value);
+$t->is($value, 'my value with a bar constant', '::replaceConstantsCallback() replaces constants enclosed in %');
+
+$value = '%Y/%m/%d %H:%M';
+myConfigHandler::replaceConstantsCallback($value);
+$t->is($value, '%Y/%m/%d %H:%M', '::replaceConstantsCallback() does not replace unknown constants');
 
 // ->getParameterHolder()
 $t->diag('->getParameterHolder()');
