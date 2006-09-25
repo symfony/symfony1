@@ -13,7 +13,7 @@ require_once($_test_dir.'/../lib/vendor/lime/lime.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 require_once($_test_dir.'/unit/bootstrap.php');
 
-$t = new lime_test(6, new lime_output_color());
+$t = new lime_test(8, new lime_output_color());
 
 class myConfigHandler extends sfConfigHandler
 {
@@ -50,3 +50,9 @@ $t->is($value['bar']['foo'], 'my value with a bar constant', '::replaceConstants
 // ->getParameterHolder()
 $t->diag('->getParameterHolder()');
 $t->isa_ok($config->getParameterHolder(), 'sfParameterHolder', "->getParameterHolder() returns a parameter holder instance");
+
+// ->replacePath()
+$t->diag('->replacePath()');
+sfConfig::set('sf_app_dir', 'ROOTDIR');
+$t->is($config->replacePath('test'), 'ROOTDIR/test', '->replacePath() prefix a relative path with "sf_app_dir"');
+$t->is($config->replacePath('/test'), '/test', '->replacePath() prefix a relative path with "sf_app_dir"');
