@@ -89,11 +89,8 @@ class sfRootConfigHandler extends sfYamlConfigHandler
       // append new data
       $data[] = sprintf("\$this->handlers['%s'] = new %s();", $category, $class);
 
-      if ($parameters !== null)
-      {
-        // since we have parameters we will need to init the handler
-        $data[] = sprintf("\$this->handlers['%s']->initialize(%s);", $category, $parameters);
-      }
+      // since we have parameters we will need to init the handler
+      $data[] = sprintf("\$this->handlers['%s']->initialize(%s);", $category, $parameters);
     }
 
     // compile data

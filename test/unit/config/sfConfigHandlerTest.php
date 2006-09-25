@@ -18,35 +18,23 @@ $t = new lime_test(6, new lime_output_color());
 class myConfigHandler extends sfConfigHandler
 {
   public function execute($configFiles) {}
-
-  public static function replaceConstantsCallback(&$value)
-  {
-    return parent::replaceConstantsCallback($value);
-  }
 }
 
 $context = new sfContext();
 $config = new myConfigHandler();
 $config->initialize($context);
 
-// ::replaceConstantsCallback()
-$t->diag('::replaceConstantsCallback()');
-
-sfConfig::set('foo', 'bar');
-$value = 'my value with a %foo% constant';
-myConfigHandler::replaceConstantsCallback($value);
-$t->is($value, 'my value with a bar constant', '::replaceConstantsCallback() replaces constants enclosed in %');
-
-$value = '%Y/%m/%d %H:%M';
-myConfigHandler::replaceConstantsCallback($value);
-$t->is($value, '%Y/%m/%d %H:%M', '::replaceConstantsCallback() does not replace unknown constants');
+// ->initialize()
+$t->diag('->initialize()');
+$config->initialize(array('foo' => 'bar'));
+$t->is($config->getParameterHolder()->get('foo'), 'bar', '->initialize() takes an array of parameters as its first argument');
 
 // ::replaceConstants()
 $t->diag('::replaceConstants()');
 sfConfig::set('foo', 'bar');
-$value = 'my value with a %foo% constant';
-myConfigHandler::replaceConstantsCallback($value);
-$t->is($value, 'my value with a bar constant', '::replaceConstants() replaces constants enclosed in %');
+$t->is(sfConfigHandler::replaceConstants('my value with a %foo% constant'), 'my value with a bar constant', '::replaceConstants() replaces constants enclosed in %');
+
+$t->is(sfConfigHandler::replaceConstants('%Y/%m/%d %H:%M'), '%Y/%m/%d %H:%M', '::replaceConstants() does not replace unknown constants');
 
 sfConfig::set('foo', 'bar');
 $value = array(
@@ -55,7 +43,7 @@ $value = array(
     'foo' => 'my value with a %foo% constant',
   ),
 );
-$value = myConfigHandler::replaceConstants($value);
+$value = sfConfigHandler::replaceConstants($value);
 $t->is($value['foo'], 'my value with a bar constant', '::replaceConstants() replaces constants in arrays recursively');
 $t->is($value['bar']['foo'], 'my value with a bar constant', '::replaceConstants() replaces constants in arrays recursively');
 

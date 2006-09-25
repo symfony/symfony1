@@ -64,56 +64,8 @@ abstract class sfConfigHandler
    */
   public function initialize($parameters = null)
   {
-    $this->getParameterHolder()->add($parameters);
-  }
-
-  public function __construct()
-  {
     $this->parameter_holder = new sfParameterHolder();
-  }
-
-  /**
-   * Literalize a string value.
-   *
-   * @param string The value to literalize.
-   *
-   * @return string A literalized value.
-   */
-  public static function literalize($value)
-  {
-    static
-      $keys = array("\\", "%'", "'"),
-      $reps = array("\\\\", "\"", "\\'");
-
-    if ($value == null)
-    {
-      // null value
-      return 'null';
-    }
-
-    // lowercase our value for comparison
-    $value  = trim($value);
-    $lvalue = strtolower($value);
-
-    if ($lvalue == 'on' || $lvalue == 'yes' || $lvalue == 'true')
-    {
-      // replace values 'on' and 'yes' with a boolean true value
-      return 'true';
-    }
-    else if ($lvalue == 'off' || $lvalue == 'no' || $lvalue == 'false')
-    {
-      // replace values 'off' and 'no' with a boolean false value
-      return 'false';
-    }
-    else if (!is_numeric($value))
-    {
-      $value = str_replace($keys, $reps, $value);
-
-      return "'".$value."'";
-    }
-
-    // numeric value
-    return $value;
+    $this->parameter_holder->add($parameters);
   }
 
   /**
@@ -129,27 +81,14 @@ abstract class sfConfigHandler
   {
     if (is_array($value))
     {
-      array_walk_recursive($value, array('self', 'replaceConstantsCallback'));
+      array_walk_recursive($value, create_function('&$value', '$value = sfToolkit::replaceConstants($value);'));
     }
     else
     {
-      self::replaceConstantsCallback($value);
+      $value = sfToolkit::replaceConstants($value);
     }
 
     return $value;
-  }
-
-  /**
-   * Replaces constant identifiers in a scalar value.
-   *
-   * This is used by the {@link replaceConstants}.
-   *
-   * @param string the value to perform the replacement on
-   * @return string the value with substitutions made
-   */
-  protected static function replaceConstantsCallback(&$value)
-  {
-    $value = preg_replace('/%(.+?)%/e', 'sfConfig::get(strtolower("\\1")) ? sfConfig::get(strtolower("\\1")) : "%\\1%"', $value);
   }
 
   /**
