@@ -26,20 +26,6 @@ abstract class sfConfigHandler
     $parameter_holder = null;
 
   /**
-   * Add a set of replacement values.
-   *
-   * @param string The old value.
-   * @param string The new value which will replace the old value.
-   *
-   * @return void
-   */
-  public function addReplacement($oldValue, $newValue)
-  {
-    $this->oldValues[] = $oldValue;
-    $this->newValues[] = $newValue;
-  }
-
-  /**
    * Execute this configuration handler.
    *
    * @param array An array of filesystem path to a configuration file.
