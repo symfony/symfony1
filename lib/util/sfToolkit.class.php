@@ -32,12 +32,16 @@ class sfToolkit
     $retval = null;
 
     if (self::isPathAbsolute($filename))
+    {
       $filename = basename($filename);
+    }
 
     $pattern = '/(.*?)\.(class|interface)\.php/i';
 
     if (preg_match($pattern, $filename, $match))
+    {
       $retval = $match[1];
+    }
 
     return $retval;
   }

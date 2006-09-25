@@ -17,19 +17,6 @@
  * @version    SVN: $Id$
  */
 
-/**
- * <b>DEPRECATED:</b> use use_helper() instead with the same syntax. 
- */ 
-function use_helpers()
-{
-  if (sfConfig::get('sf_logging_active')) sfContext::getInstance()->getLogger()->err('The function "use_helpers()" is deprecated. Please use "use_helper()"'); 
-
-  foreach (func_get_args() as $helperName)
-  {
-    use_helper($helperName);
-  }
-}
-
 function use_helper()
 {
   sfLoader::loadHelpers(func_get_args(), sfContext::getInstance()->getModuleName());

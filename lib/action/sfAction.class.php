@@ -440,6 +440,11 @@ abstract class sfAction extends sfComponent
     return true;
   }
 
+  public function getSecurityConfiguration()
+  {
+    return $this->security;
+  }
+
   /**
    * Indicates that this action requires security.
    *
