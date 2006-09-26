@@ -198,7 +198,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
 
       // register file/parameter
       $data[] = sprintf("  \$validatorManager->registerName('%s', %s, %s, %s, %s, %s);",
-                        $name, $attributes['required'],
+                        $name, $attributes['required'] ? 1 : 0,
                         $attributes['required_msg'],
                         $attributes['parent'], $attributes['group'],
                         $attributes['file']);
