@@ -581,7 +581,7 @@ EOF;
       $total_php_lines += count($php_lines);
       $total_covered_lines += count($cov);
 
-      $output->echoln(sprintf("%-30s %3.0f%%", substr($this->get_relative_file($file), -30), $percent), $percent == 100 ? 'INFO' : ($percent > 90 ? 'PARAMETER' : ($percent < 20 ? 'ERROR' : '')));
+      $output->echoln(sprintf("%-70s %3.0f%%", substr($this->get_relative_file($file), -70), $percent), $percent == 100 ? 'INFO' : ($percent > 90 ? 'PARAMETER' : ($percent < 20 ? 'ERROR' : '')));
       if ($this->verbose && $percent != 100)
       {
         $output->comment(sprintf("missing: %s", $this->format_range(array_keys(array_diff_key($php_lines, $cov)))));
