@@ -1,3 +1,9 @@
+_cacheableComponent:
+  activate: on
+
+_component:
+  activate: off
+
 _cacheablePartial:
   activate: on
 

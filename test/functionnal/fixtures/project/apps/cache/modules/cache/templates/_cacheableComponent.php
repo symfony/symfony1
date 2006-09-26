@@ -1,0 +1,1 @@
+<div id="cacheableComponent<?php echo isset($foo) ? $foo : '' ?><?php echo isset($bar) ? $bar : '' ?>">IN CACHEABLE COMPONENT<?php echo isset($foo) ? $foo : '' ?><?php echo isset($bar) ? $bar : '' ?></div>

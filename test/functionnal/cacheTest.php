@@ -62,8 +62,27 @@ $b->
   isRequestParameter('module', 'cache')->
   isRequestParameter('action', 'multi')->
   checkResponseElement('div#cacheablePartial', '/IN CACHEABLE PARTIAL/')->
+  checkResponseElement('div#cacheablePartialbar', '/IN CACHEABLE PARTIALbar/')->
   checkResponseElement('div#partial', '/IN PARTIAL/')->
+  checkResponseElement('div#cacheableComponent', '/IN CACHEABLE COMPONENT/')->
+  checkResponseElement('div#cacheableComponentbar', '/IN CACHEABLE COMPONENTbar/')->
+  checkResponseElement('div#component', '/IN COMPONENT/')->
   isCached(false)->
   isUriCached('cache/_cacheablePartial?key='.md5(serialize(array())), true)->
-  isUriCached('cache/_partial?key='.md5(serialize(array())), false)
+  isUriCached('cache/_cacheablePartial?key='.md5(serialize(array('foo' => 'bar'))), true)->
+  isUriCached('cache/_cacheablePartial?key='.md5(serialize(array('foo' => 'foo'))), false)->
+  isUriCached('cache/_partial?key='.md5(serialize(array())), false)->
+  isUriCached('cache/_cacheableComponent?key='.md5(serialize(array())), true)->
+  isUriCached('cache/_cacheableComponent?key='.md5(serialize(array('foo' => 'bar'))), true)->
+  isUriCached('cache/_cacheableComponent?key='.md5(serialize(array('foo' => 'foo'))), false)->
+  isUriCached('cache/_component?key='.md5(serialize(array())), false)
+;
+
+$b->
+  get('/cache/multi/bar/foo')->
+  isStatusCode(200)->
+  isRequestParameter('module', 'cache')->
+  isRequestParameter('action', 'multi')->
+  checkResponseElement('div#cacheableComponentfoo', '/IN CACHEABLE COMPONENTfoo/')->
+  checkResponseElement('div#cacheableComponentbarfoo', '/IN CACHEABLE COMPONENTbarfoo/')
 ;
