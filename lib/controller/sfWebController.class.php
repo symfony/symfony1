@@ -210,7 +210,10 @@ abstract class sfWebController extends sfController
     $response->setHttpHeader('Location', $url);
     $response->setContent(sprintf('<html><head><meta http-equiv="refresh" content="%d;url=%s"/></head></html>', $delay, htmlentities($url)));
 
-    $response->sendHttpHeaders();
+    if (!sfConfig::get('sf_test'))
+    {
+      $response->sendHttpHeaders();
+    }
     $response->sendContent();
   }
 
