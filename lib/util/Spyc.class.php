@@ -128,8 +128,10 @@
       // If it's not a file, assume it's a string
       if (!empty($input) && (strpos($input, "\n") === false) 
           && file_exists($input)) {
+        $file = $input;
         $yaml = file($input);
       } else {
+        $file = null;
         $yaml = explode("\n",$input);
       }
       // Initiate some objects and values
@@ -145,9 +147,9 @@
 
         // If the line starts with a tab (instead of a space), throw a fit.
         if (preg_match('/^(\t)+(\w+)/', $line)) {
-          $err = 'ERROR: Line '. ($linenum + 1) .' in your input YAML begins'.
-                 ' with a tab.  YAML only recognizes spaces.  Please reformat.';
-          throw new Exception($err);
+          $error = sprintf('ERROR: %sLine %d in your input YAML begins with a tab. YAML only recognizes spaces. Please reformat.', ($file ? "File $file " : ''), $linenum + 1);
+
+          throw new Exception($error);
         }
         
         if ($this->_inBlock === false && empty($ifchk)) {
