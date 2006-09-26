@@ -202,7 +202,7 @@ class Spyc
           if ($this->_inBlock === true)
           {
             $parent =& $this->_allNodes[$this->_lastNode];
-            $parent->data[key($parent->data)] .= trim($line).$this->_blockEnd;
+            $parent->data[key($parent->data)] .= substr($line, $this->_lastIndent).$this->_blockEnd;
           }
           else if ($this->_inBlock === false)
           {
