@@ -20,7 +20,7 @@
  */
 abstract class sfAction extends sfComponent
 {
-  private
+  protected
     $security = array();
 
   /**

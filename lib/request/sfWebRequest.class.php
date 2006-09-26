@@ -295,7 +295,7 @@ class sfWebRequest extends sfRequest
    *
    * @return  array
    */
-  private function getPathInfoArray()
+  protected function getPathInfoArray()
   {
     if (!$this->pathInfoArray)
     {
@@ -412,7 +412,7 @@ class sfWebRequest extends sfRequest
    *
    * @return void
    */
-  private function loadParameters ()
+   protected function loadParameters ()
   {
     // merge GET parameters
     $this->getParameterHolder()->addByRef($_GET);

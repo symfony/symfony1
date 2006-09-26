@@ -20,7 +20,7 @@
  */
 abstract class sfValidator
 {
-  private
+  protected
     $parameter_holder = null,
     $context = null;
 

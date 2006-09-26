@@ -22,10 +22,10 @@
  */
 class sfConfigCache
 {
-  private
+  protected
     $handlers = array();
 
-  private static
+  protected static
     $instance = null;
 
   public static function getInstance()
@@ -50,7 +50,7 @@ class sfConfigCache
    * @throws <b>sfConfigurationException</b> If a requested configuration file
    *                                       does not have an associated configuration handler.
    */
-  private function callHandler($handler, $configs, $cache)
+  protected function callHandler($handler, $configs, $cache)
   {
     if (count($this->handlers) == 0)
     {
@@ -275,7 +275,7 @@ class sfConfigCache
    * @throws <b>sfConfigurationException</b> If a configuration related error
    *                                       occurs.
    */
-  private function loadConfigHandlers()
+  protected function loadConfigHandlers()
   {
     // manually create our config_handlers.yml handler
     $this->handlers['config_handlers.yml'] = new sfRootConfigHandler();
@@ -340,7 +340,7 @@ class sfConfigCache
    *
    * @throws sfCacheException If the cache file cannot be written.
    */
-  private function writeCacheFile($config, $cache, &$data)
+  protected function writeCacheFile($config, $cache, &$data)
   {
     $fileCache = new sfFileCache(dirname($cache));
     $fileCache->setSuffix('');

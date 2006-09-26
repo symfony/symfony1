@@ -20,7 +20,7 @@
  */
 class sfPropelAdminGenerator extends sfPropelCrudGenerator
 {
-  private
+  protected
     $params = array(),
     $fields = array();
 
@@ -419,7 +419,7 @@ EOF;
     }
   }
 
-  private function getFieldParameterValue($key, $type = '', $default = null)
+  protected function getFieldParameterValue($key, $type = '', $default = null)
   {
     $retval = $this->getValueFromKey($type.'.fields.'.$key, $default);
     if ($retval !== null)
@@ -444,7 +444,7 @@ EOF;
     }
   }
 
-  private function getValueFromKey($key, $default = null)
+  protected function getValueFromKey($key, $default = null)
   {
     $ref   =& $this->params;
     $parts =  explode('.', $key);
@@ -639,7 +639,7 @@ EOF;
     }
   }
 
-  private function escapeString($string)
+  protected function escapeString($string)
   {
     return preg_replace('/\'/', '\\\'', $string);
   }
@@ -655,7 +655,7 @@ EOF;
  */
 class sfAdminColumn
 {
-  private
+  protected
     $phpName    = '',
     $column     = null,
     $flag       = '';

@@ -21,11 +21,9 @@
  */
 abstract class sfFilter
 {
-  private
-    $parameter_holder = null,
-    $filterCalled     = array();
-
   protected
+    $parameter_holder = null,
+    $filterCalled     = array(),
     $context          = null;
 
   protected function isFirstCallBeforeExecution ()

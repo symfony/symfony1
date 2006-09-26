@@ -22,7 +22,7 @@
  */
 class sfException extends Exception
 {
-  private
+  protected
     $name = null;
 
   /**
@@ -173,12 +173,12 @@ class sfException extends Exception
     }
   }
 
-  private function formatArrayAsHtml($values)
+  protected function formatArrayAsHtml($values)
   {
     return '<pre>'.@sfYaml::Dump($values).'</pre>';
   }
 
-  private function fileExcerpt($file, $line)
+  protected function fileExcerpt($file, $line)
   {
     if (is_readable($file))
     {
@@ -194,7 +194,7 @@ class sfException extends Exception
     }
   }
 
-  private function formatArgs($args, $single = false, $format = 'html')
+  protected function formatArgs($args, $single = false, $format = 'html')
   {
     $result = array();
 

@@ -91,7 +91,7 @@ class sfCompileConfigHandler extends sfYamlConfigHandler
     return $retval;
   }
 
-  private function insertConfig($matches)
+  protected function insertConfig($matches)
   {
     $configFile = sfConfig::get('sf_app_config_dir_name').'/'.$matches[4];
 

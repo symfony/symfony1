@@ -129,7 +129,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
    * 
    * @return boolean Returns true if there is some validators for this file/parameter
    */
-  private function generateRegistration($method, &$data, &$methods, &$names, &$validators)
+  protected function generateRegistration($method, &$data, &$methods, &$names, &$validators)
   {
     // setup validator array
     $data[] = "  \$validators = array();";
@@ -229,7 +229,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
    *
    * @return void
    */
-  private function loadAttributes(&$configFiles, &$methods, &$names, &$validators, &$config, &$list)
+  protected function loadAttributes(&$configFiles, &$methods, &$names, &$validators, &$config, &$list)
   {
     foreach ($config['names'] as $name => $attributes)
     {
@@ -299,7 +299,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
    *
    * @return void
    */
-  private function loadNames(&$configFiles, &$method, &$methods, &$names, &$config, &$list)
+  protected function loadNames(&$configFiles, &$method, &$methods, &$names, &$config, &$list)
   {
     // explode the list of names
     $array = $list;
@@ -386,7 +386,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
    * @return void
    * @param array  A file/parameter name entry.
    */
-  private function loadValidators(&$configFiles, &$validators, &$config, &$list, &$entry)
+  protected function loadValidators(&$configFiles, &$validators, &$config, &$list, &$entry)
   {
     // create our empty entry validator array
     $entry['validators'] = array();

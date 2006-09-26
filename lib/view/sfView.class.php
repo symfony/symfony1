@@ -68,7 +68,7 @@ abstract class sfView
    */
   const RENDER_VAR = 4;
 
-  private
+  protected
     $context            = null,
     $decorator          = false,
     $decoratorDirectory = null,
@@ -77,9 +77,7 @@ abstract class sfView
     $componentSlots     = array(),
     $template           = null,
     $escaping           = null,
-    $escapingMethod     = null;
-
-  protected
+    $escapingMethod     = null,
     $attribute_holder   = null,
     $parameter_holder   = null,
     $moduleName         = '',

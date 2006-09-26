@@ -22,7 +22,7 @@
  */
 class sfActionStackEntry
 {
-  private
+  protected
     $actionInstance = null,
     $actionName     = null,
     $moduleName     = null,

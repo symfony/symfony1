@@ -22,7 +22,7 @@
  */
 class sfActionStack
 {
-  private
+  protected
     $stack = array();
 
   /**

@@ -24,12 +24,12 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
   const AUTH_NAMESPACE = 'symfony/user/sfUser/authenticated';
   const CREDENTIAL_NAMESPACE = 'symfony/user/sfUser/credentials';
 
-  private $lastRequest = null;
+  protected $lastRequest = null;
 
-  private $credentials = null;
-  private $authenticated = null;
+  protected $credentials = null;
+  protected $authenticated = null;
 
-  private $timedout = false;
+  protected $timedout = false;
 
   /**
    * Clears all credentials.

@@ -24,10 +24,10 @@
  */
 class sfRouting
 {
-  private static
+  protected static
     $instance           = null;
 
-  private
+  protected
     $current_route_name = '',
     $routes             = array();
 
@@ -46,7 +46,7 @@ class sfRouting
     return self::$instance;
   }
 
-  private function setCurrentRouteName($name)
+  protected function setCurrentRouteName($name)
   {
     $this->current_route_name = $name;
   }

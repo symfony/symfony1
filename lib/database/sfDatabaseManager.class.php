@@ -22,7 +22,7 @@
  */
 class sfDatabaseManager
 {
-  private
+  protected
     $databases = array();
 
   /**

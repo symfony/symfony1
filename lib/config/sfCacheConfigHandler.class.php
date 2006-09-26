@@ -18,7 +18,7 @@
  */
 class sfCacheConfigHandler extends sfYamlConfigHandler
 {
-  private
+  protected
     $cacheConfig = array();
 
   /**
@@ -77,7 +77,7 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
     return $retval;
   }
 
-  private function addCache($actionName = '')
+  protected function addCache($actionName = '')
   {
     $data = array();
 

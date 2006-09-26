@@ -20,7 +20,7 @@
  */
 abstract class sfStorage
 {
-  private
+  protected
     $parameter_holder = null,
     $context = null;
 

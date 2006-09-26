@@ -112,7 +112,7 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
     return $retval;
   }
 
-  private function get_ini_path()
+  protected function get_ini_path()
   {
     $cfg_path = get_cfg_var('cfg_file_path');
     if ($cfg_path == '')

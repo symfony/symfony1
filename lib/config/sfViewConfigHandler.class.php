@@ -102,7 +102,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     return $retval;
   }
 
-  private function addComponentSlots($viewName = '')
+  protected function addComponentSlots($viewName = '')
   {
     $data = '';
 
@@ -121,7 +121,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     return $data;
   }
 
-  private function addTemplate($viewName = '')
+  protected function addTemplate($viewName = '')
   {
     $data = '';
 
@@ -134,7 +134,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     return $data;
   }
 
-  private function addLayout($viewName = '')
+  protected function addLayout($viewName = '')
   {
     $data = '';
 
@@ -154,7 +154,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     return $data;
   }
 
-  private function addHtmlHead($viewName = '')
+  protected function addHtmlHead($viewName = '')
   {
     $data = array();
 
@@ -171,7 +171,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     return implode("\n", $data)."\n";
   }
 
-  private function addHtmlAsset($viewName = '')
+  protected function addHtmlAsset($viewName = '')
   {
     $data = array();
     $omit = array();
@@ -320,7 +320,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     return implode("\n", $data)."\n";
   }
 
-  private function addEscaping($viewName = '')
+  protected function addEscaping($viewName = '')
   {
     $data = array();
 

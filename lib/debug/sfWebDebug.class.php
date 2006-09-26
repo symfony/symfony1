@@ -18,18 +18,16 @@
  */
 class sfWebDebug
 {
-  private
+  protected
     $log             = array(),
     $short_log       = array(),
     $max_priority    = 1000,
     $types           = array(),
-    $last_time_log   = -1;
-
-  private static
-    $instance        = null;
-
-  protected
+    $last_time_log   = -1,
     $context         = null;
+
+  protected static
+    $instance        = null;
 
   public function initialize()
   {
@@ -108,12 +106,12 @@ class sfWebDebug
     $this->log[] = $logEntry;
   }
 
-  private function loadHelpers()
+  protected function loadHelpers()
   {
     sfLoader::loadHelpers(array('Helper', 'Url', 'Asset', 'Tag', 'Javascript'));
   }
 
-  private function formatLogLine($type, $log_line)
+  protected function formatLogLine($type, $log_line)
   {
     static $constants;
     if (!$constants) {
@@ -334,7 +332,7 @@ class sfWebDebug
     return $result;
   }
 
-  private function getCurrentConfigAsHtml()
+  protected function getCurrentConfigAsHtml()
   {
     $config = array(
       'debug'        => sfConfig::get('sf_debug')             ? 'on' : 'off',
@@ -365,7 +363,7 @@ class sfWebDebug
     return $result;
   }
 
-  private function formatArrayAsHtml($id, $values)
+  protected function formatArrayAsHtml($id, $values)
   {
     $id = ucfirst(strtolower($id));
     $content = '
@@ -436,7 +434,7 @@ class sfWebDebug
     return $content;
   }
 
-  private function getPriority($value)
+  protected function getPriority($value)
   {
     if ($value >= 6)
     {

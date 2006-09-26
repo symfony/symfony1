@@ -17,7 +17,7 @@
  */
 class sfPropelData
 {
-  private
+  protected
     $deleteCurrentData = true,
     $maps              = array(),
     $object_references = array();
@@ -216,7 +216,7 @@ class sfPropelData
     return $fixture_files;
   }
 
-  private function loadMapBuilder($class)
+  protected function loadMapBuilder($class)
   {
     $class_map_builder = $class.'MapBuilder';
     if (!isset($this->maps[$class]))

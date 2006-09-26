@@ -18,7 +18,7 @@
  */
 class sfGeneratorManager
 {
-  private $cache = null;
+  protected $cache = null;
 
   public function initialize ()
   {

@@ -21,7 +21,7 @@
  */
 class sfValidatorManager
 {
-  private
+  protected
     $groups  = array(),
     $names   = array(),
     $request = null;
@@ -196,7 +196,7 @@ class sfValidatorManager
    *
    * @return bool true, if validation completes successfully, otherwise false.
    */
-  private function validate (&$name, &$data, $parent)
+  protected function validate (&$name, &$data, $parent)
   {
     // get defaults
     $error     = null;

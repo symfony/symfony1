@@ -98,7 +98,7 @@ class sfDateValidator extends sfValidator
    * @param $value    Date to convert.
    * @param $culture  Language culture to use.
    */
-  private function getValidDate($value, $culture)
+  protected function getValidDate($value, $culture)
   {
     // Use the language culture date format
     $result = sfI18N::getDateForCulture($value, $culture);

@@ -20,7 +20,7 @@
  */
 abstract class sfWebController extends sfController
 {
-  private
+  protected
     $redirectedUri = null;
 
   /**

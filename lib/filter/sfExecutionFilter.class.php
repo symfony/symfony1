@@ -188,7 +188,7 @@ class sfExecutionFilter extends sfFilter
     }
   }
 
-  private function registerFillInFilter($filterChain, $parameters)
+  protected function registerFillInFilter($filterChain, $parameters)
   {
     // automatically register the fill in filter if it is not already loaded in the chain
     if (isset($parameters['activate']) && $parameters['activate'] && !$filterChain->hasFilter('sfFillInFormFilter'))

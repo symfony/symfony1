@@ -20,7 +20,7 @@
  */
 class sfWebResponse extends sfResponse
 {
-  private
+  protected
     $cookies    = array(),
     $headers    = array(),
     $statusCode = 200,
@@ -295,7 +295,7 @@ class sfWebResponse extends sfResponse
     }
   }
 
-  private function normalizeHeaderName($name)
+  protected function normalizeHeaderName($name)
   {
     if (strtolower($name) == 'etag')
     {

@@ -20,7 +20,7 @@
  */
 abstract class sfController
 {
-  private
+  protected
     $context                  = null,
     $controllerClasses        = array(),
     $maxForwards              = 5,
@@ -81,7 +81,7 @@ abstract class sfController
    *
    * @return boolean true if the controller exists; false otherwise
    */
-  private function controllerExists ($moduleName, $controllerName, $extension, $throwExceptions)
+  protected function controllerExists ($moduleName, $controllerName, $extension, $throwExceptions)
   {
     $dirs = sfLoader::getControllerDirs($moduleName);
     foreach ($dirs as $dir => $checkActivated)
@@ -399,7 +399,7 @@ abstract class sfController
     return $this->getController($moduleName, $componentName, 'component');
   }
 
-  private function getController ($moduleName, $controllerName, $extension)
+  protected function getController ($moduleName, $controllerName, $extension)
   {
     $classSuffix = ucfirst(strtolower($extension));
     if (!isset($this->controllerClasses[$moduleName.'_'.$controllerName.'_'.$classSuffix]))
@@ -540,7 +540,7 @@ abstract class sfController
    *
    * @return void
    */
-  private function loadGlobalFilters ($filterChain)
+  protected function loadGlobalFilters ($filterChain)
   {
     static $list = array();
 
@@ -568,7 +568,7 @@ abstract class sfController
    *
    * @return void
    */
-  private function loadModuleFilters ($filterChain)
+  protected function loadModuleFilters ($filterChain)
   {
     // filter list cache file
     static $list = array();

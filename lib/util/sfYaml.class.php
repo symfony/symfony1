@@ -74,7 +74,7 @@ class sfYaml
     return $spyc->dump($array);
   }
 
-  private static function getIncludeContents($input)
+  protected static function getIncludeContents($input)
   {
     // if input is a file, process it
     if (strpos($input, "\n") === false && is_file($input))

@@ -31,12 +31,10 @@ class sfUser
 
   const CULTURE_NAMESPACE = 'symfony/user/sfUser/culture';
 
-  private
+  protected
     $parameter_holder = null,
     $attribute_holder = null,
-    $culture = null;
-
-  protected
+    $culture          = null,
     $context          = null;
 
   /**

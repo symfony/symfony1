@@ -20,7 +20,7 @@
  */
 class sfFilterChain
 {
-  private
+  protected
     $chain           = array(),
     $index           = -1,
     $execution       = false,

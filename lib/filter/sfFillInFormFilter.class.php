@@ -17,7 +17,7 @@
  */
 class sfFillInFormFilter extends sfFilter
 {
-  private $escapers = array();
+  protected $escapers = array();
 
   public function executeBeforeRendering($filterChain)
   {
@@ -139,7 +139,7 @@ class sfFillInFormFilter extends sfFilter
     $filterChain->execute();
   }
 
-  private function escapeRequestParameter($request, $name)
+  protected function escapeRequestParameter($request, $name)
   {
     $value = $request->getParameter($name);
 

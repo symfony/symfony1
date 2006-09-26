@@ -35,7 +35,7 @@
  */
 class sfLogger extends sfLog
 {
-  private static $logger = null;
+  protected static $logger = null;
 
   /**
    * Returns the sfLogger instance.

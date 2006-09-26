@@ -46,8 +46,8 @@ class sfCommonFilter extends sfFilter
 
       // include javascripts and stylesheets
       sfLoader::loadHelpers(array('Tag', 'Asset'));
-      $html  = $this->include_javascripts($response);
-      $html .= $this->include_stylesheets($response);
+      $html  = $this->includeJavascripts($response);
+      $html .= $this->includeStylesheets($response);
       $content = $response->getContent();
       if (false !== ($pos = strpos($content, '</head>')))
       {
@@ -61,7 +61,7 @@ class sfCommonFilter extends sfFilter
     $filterChain->execute();
   }
 
-  private function include_javascripts($response)
+  protected function includeJavascripts($response)
   {
     $already_seen = array();
     $html = '';
@@ -90,7 +90,7 @@ class sfCommonFilter extends sfFilter
     return $html;
   }
 
-  private function include_stylesheets($response)
+  protected function includeStylesheets($response)
   {
     $already_seen = array();
     $html = '';

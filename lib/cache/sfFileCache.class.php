@@ -94,7 +94,7 @@ class sfFileCache extends sfCache
   */
   protected $hashedDirectoryLevel = 0;
 
-  private
+  protected
     $suffix = '.cache';
 
   /**
@@ -306,7 +306,7 @@ class sfFileCache extends sfCache
   * @param string $id cache id
   * @param string $namespace name of the namespace
   */
-  private function getFileName($id, $namespace)
+  protected function getFileName($id, $namespace)
   {
     $file = ($this->fileNameProtection) ? md5($id).$this->suffix : $id.$this->suffix;
 
@@ -337,7 +337,7 @@ class sfFileCache extends sfCache
   * @param string $file complete file path and name
   * @return boolean true if no problem
   */
-  private function unlink($file)
+  protected function unlink($file)
   {
     return @unlink($file) ? 1 : 0;
   }
@@ -350,7 +350,7 @@ class sfFileCache extends sfCache
   * @param  string  $mode flush cache mode : 'old', 'all'
   * @return boolean true if no problem
   */
-  private function cleanDir($dir, $mode)
+  protected function cleanDir($dir, $mode)
   {
     if (!($dh = opendir($dir)))
     {
@@ -395,7 +395,7 @@ class sfFileCache extends sfCache
   *
   * @return string content of the cache file
   */
-  private function read($path, $file)
+  protected function read($path, $file)
   {
     $fp = @fopen($path.$file, "rb");
     if ($this->fileLocking)
@@ -442,7 +442,7 @@ class sfFileCache extends sfCache
   * @param  string  $data data to put in cache
   * @return boolean true if ok
   */
-  private function write($path, $file, $data)
+  protected function write($path, $file, $data)
   {
     $try = 1;
     while ($try <= 2)
@@ -501,7 +501,7 @@ class sfFileCache extends sfCache
   * @param string $data data to put in cache
   * @return boolean true if the test is ok
   */
-  private function writeAndControl($path, $file, $data)
+  protected function writeAndControl($path, $file, $data)
   {
     $this->write($path, $file, $data);
     $dataRead = $this->read($path, $file);
@@ -515,7 +515,7 @@ class sfFileCache extends sfCache
   * @param string $data data
   * @return string control key
   */
-  private function hash($data)
+  protected function hash($data)
   {
     return sprintf('% 32d', crc32($data));
   }

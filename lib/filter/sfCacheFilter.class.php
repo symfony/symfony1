@@ -16,7 +16,7 @@
  */
 class sfCacheFilter extends sfFilter
 {
-  private
+  protected
     $cacheManager = null,
     $request      = null,
     $response     = null,
@@ -173,7 +173,7 @@ class sfCacheFilter extends sfFilter
     $filterChain->execute();
   }
 
-  private function setPageCache($uri)
+  protected function setPageCache($uri)
   {
     if ($this->getContext()->getController()->getRenderMode() != sfView::RENDER_CLIENT)
     {
@@ -190,7 +190,7 @@ class sfCacheFilter extends sfFilter
     }
   }
 
-  private function getPageCache($uri)
+  protected function getPageCache($uri)
   {
     $context = $this->getContext();
 
@@ -229,7 +229,7 @@ class sfCacheFilter extends sfFilter
     return true;
   }
 
-  private function setActionCache($uri)
+  protected function setActionCache($uri)
   {
     $content = $this->response->getParameter($uri.'_action', null, 'symfony/cache');
 
@@ -239,7 +239,7 @@ class sfCacheFilter extends sfFilter
     }
   }
 
-  private function getActionCache($uri)
+  protected function getActionCache($uri)
   {
     // retrieve content from cache
     $retval = $this->cacheManager->get($uri);

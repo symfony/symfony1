@@ -18,7 +18,7 @@
  */
 class sfSessionTestStorage extends sfStorage
 {
-  private
+  protected
     $sessionId   = null,
     $sessionData = array();
 

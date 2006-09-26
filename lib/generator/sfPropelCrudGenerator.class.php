@@ -20,7 +20,7 @@
  */
 class sfPropelCrudGenerator extends sfGenerator
 {
-  private
+  protected
     $singularName  = '',
     $pluralName    = '',
     $peerClassName = '',
