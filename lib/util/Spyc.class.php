@@ -80,9 +80,9 @@ class Spyc
    * @return array
    * @param string $input Path of YAML file or string containing YAML
    */
-  public function YAMLLoad($input)
+  public static function YAMLLoad($input)
   {
-    $spyc = new Spyc;
+    $spyc = new Spyc();
 
     return $spyc->load($input);
   }
@@ -109,7 +109,7 @@ class Spyc
    */
   public static function YAMLDump($array, $indent = false, $wordwrap = false)
   {
-    $spyc = new Spyc;
+    $spyc = new Spyc();
 
     return $spyc->dump($array,$indent,$wordwrap);
   }
@@ -168,12 +168,12 @@ class Spyc
       {
         continue;
       }
-      elseif ($this->_inBlock == true && empty($ifchk))
+      else if ($this->_inBlock == true && empty($ifchk))
       {
         $last =& $this->_allNodes[$this->_lastNode];
         $last->data[key($last->data)] .= "\n";
       }
-      elseif ($ifchk{0} != '#' && substr($ifchk,0,3) != '---')
+      else if ($ifchk{0} != '#' && substr($ifchk, 0, 3) != '---')
       {
         // Create a new node and get its indent
         $node         = new YAMLNode;
@@ -197,20 +197,20 @@ class Spyc
             }
           }
         }
-        elseif ($this->_lastIndent < $node->indent)
+        else if ($this->_lastIndent < $node->indent)
         {
           if ($this->_inBlock === true)
           {
             $parent =& $this->_allNodes[$this->_lastNode];
             $parent->data[key($parent->data)] .= trim($line).$this->_blockEnd;
           }
-          elseif ($this->_inBlock === false)
+          else if ($this->_inBlock === false)
           {
             // The current node's parent is the previous node
             $node->parent = $this->_lastNode;
 
-            // If the value of the last node's data was > or | we need to 
-            // start blocking i.e. taking in all lines as a text value until 
+            // If the value of the last node's data was > or | we need to
+            // start blocking i.e. taking in all lines as a text value until
             // we drop our indent.
             $parent =& $this->_allNodes[$node->parent];
             $this->_allNodes[$node->parent]->children = true;
@@ -226,7 +226,7 @@ class Spyc
                 $this->_allNodes[$node->parent]->children = false;
                 $this->_lastIndent = $node->indent;
               }
-              elseif ($chk === '|')
+              else if ($chk === '|')
               {
                 $this->_inBlock  = true;
                 $this->_blockEnd = "\n";
@@ -238,7 +238,7 @@ class Spyc
             }
           }
         }
-        elseif ($this->_lastIndent > $node->indent)
+        else if ($this->_lastIndent > $node->indent)
         {
           // Any block we had going is dead now
           if ($this->_inBlock === true)
@@ -288,7 +288,7 @@ class Spyc
           {
             $this->_haveRefs[] =& $this->_allNodes[$node->id];
           }
-          elseif (
+          else if (
             ((is_array($node->data)) &&
              isset($node->data[key($node->data)]) &&
              (is_array($node->data[key($node->data)])))
@@ -367,8 +367,9 @@ class Spyc
     // Start at the base of the array and move through it.
     foreach ($array as $key => $value)
     {
-      $string .= $this->_yamlize($key,$value,0);
+      $string .= $this->_yamlize($key, $value, 0);
     }
+
     return $string;
   }
 
@@ -410,7 +411,7 @@ class Spyc
       // Yamlize the array
       $string .= $this->_yamlizeArray($value, $indent);
     }
-    elseif (!is_array($value))
+    else if (!is_array($value))
     {
       // It doesn't have children.  Yip.
       $string = $this->_dumpNode($key, $value, $indent);
@@ -571,7 +572,7 @@ class Spyc
       $key         = trim(substr(substr($line,1), 0, -1));
       $array[$key] = '';
     }
-    elseif ($line[0] == '-' && substr($line, 0, 3) != '---')
+    else if ($line[0] == '-' && substr($line, 0, 3) != '---')
     {
       // It's a list item but not a new stream
       if (strlen($line) > 1)
@@ -586,7 +587,7 @@ class Spyc
         $array[] = array();
       }
     }
-    elseif (preg_match('/^(.+):/', $line, $key))
+    else if (preg_match('/^(.+):/', $line, $key))
     {
       // It's a key/value pair most likely
       // If the key is in double quotes pull it out
@@ -632,7 +633,7 @@ class Spyc
      $value = (string)preg_replace('/(\'\'|\\\\\')/', "'", end($matches));
      $value = preg_replace('/\\\\"/', '"', $value);
     }
-    elseif (preg_match('/^\\[(.+)\\]$/', $value, $matches))
+    else if (preg_match('/^\\[(.+)\\]$/', $value, $matches))
     {
       // Inline Sequence
 
@@ -646,7 +647,7 @@ class Spyc
         $value[] = $this->_toType($v);
       }
     }
-    elseif (strpos($value,': ')!==false && !preg_match('/^{(.+)/', $value))
+    else if (strpos($value,': ')!==false && !preg_match('/^{(.+)/', $value))
     {
         // It's a map
         $array = explode(': ', $value);
@@ -656,7 +657,7 @@ class Spyc
         $value = $this->_toType($value);
         $value = array($key => $value);
     }
-    elseif (preg_match("/{(.+)}$/", $value, $matches))
+    else if (preg_match("/{(.+)}$/", $value, $matches))
     {
       // Inline Mapping
 
@@ -671,23 +672,23 @@ class Spyc
       }
       $value = $array;
     }
-    elseif (strtolower($value) == 'null' or $value == '' or $value == '~')
+    else if (strtolower($value) == 'null' or $value == '' or $value == '~')
     {
       $value = null;
     }
-    elseif (ctype_digit($value))
+    else if (ctype_digit($value))
     {
       $value = (int) $value;
     }
-    elseif (in_array(strtolower($value), array('true', 'on', '+', 'yes', 'y')))
+    else if (in_array(strtolower($value), array('true', 'on', '+', 'yes', 'y')))
     {
       $value = true;
     }
-    elseif (in_array(strtolower($value), array('false', 'off', '-', 'no', 'n')))
+    else if (in_array(strtolower($value), array('false', 'off', '-', 'no', 'n')))
     {
       $value = false;
     }
-    elseif (is_numeric($value))
+    else if (is_numeric($value))
     {
       $value = (float) $value;
     }
@@ -856,14 +857,14 @@ class Spyc
         $this->_allNodes[$n->id]->data[$key] = substr($n->data[$key], strlen($matches[0]) + 1);
       // Look for *refs
       }
-      elseif (preg_match('/^\*([^ ]+)/', $n->data[$key], $matches))
+      else if (preg_match('/^\*([^ ]+)/', $n->data[$key], $matches))
       {
         $ref = substr($matches[0], 1);
         // Flag the node as having a reference
         $this->_allNodes[$n->id]->refKey = $ref;
       }
     }
-    elseif (!empty($k) && !empty($v))
+    else if (!empty($k) && !empty($v))
     {
       if (preg_match('/^&([^ ]+)/', $v, $matches))
       {
@@ -872,7 +873,7 @@ class Spyc
         $this->_allNodes[$n->id]->data[$key][$k] = substr($v, strlen($matches[0]) + 1);
       // Look for *refs
       }
-      elseif (preg_match('/^\*([^ ]+)/', $v, $matches))
+      else if (preg_match('/^\*([^ ]+)/', $v, $matches))
       {
         $ref = substr($matches[0], 1);
         // Flag the node as having a reference
@@ -934,7 +935,7 @@ class Spyc
         $node->data[$key] = $childs;
       }
     }
-    elseif (!is_array($node->data) && $node->children == true)
+    else if (!is_array($node->data) && $node->children == true)
     {
       // Same as above, find the children of this node
       $childs       = $this->_gatherChildren($node->id);
@@ -962,7 +963,7 @@ class Spyc
       $this->ref[$z->ref] =& $z->data[$key];
     // It has a reference
     }
-    elseif (isset($z->refKey))
+    else if (isset($z->refKey))
     {
       if (isset($this->ref[$z->refKey]))
       {
