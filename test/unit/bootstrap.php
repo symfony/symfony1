@@ -77,4 +77,9 @@ class sfException extends Exception
   {
     $this->name = $name;
   }
+
+  public function getName ()
+  {
+    return $this->name;
+  }
 }
