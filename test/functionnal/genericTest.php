@@ -78,3 +78,11 @@ $b->
   checkResponseElement('p', '/in a filter/i')->
   checkResponseElement('body', '!/congratulation/i')
 ;
+
+// css and js inclusions
+$b->
+  get('/assetInclusion/index')->
+  isStatusCode(200)->
+  checkResponseElement('head link[rel="stylesheet"]', false)->
+  checkResponseElement('head script[type="text/javascript"]', false)
+;
