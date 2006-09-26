@@ -19,8 +19,11 @@ class sfFillInFormFilter extends sfFilter
 {
   protected $escapers = array();
 
-  public function executeBeforeRendering($filterChain)
+  public function execute($filterChain)
   {
+    // execute next filter
+    $filterChain->execute();
+
     $context  = $this->getContext();
     $response = $context->getResponse();
     $request  = $context->getRequest();
@@ -134,9 +137,6 @@ class sfFillInFormFilter extends sfFilter
     $response->setContent($doc->saveHTML());
 
     unset($doc);
-
-    // execute next filter
-    $filterChain->execute();
   }
 
   protected function escapeRequestParameter($request, $name)

@@ -21,11 +21,8 @@
 class sfFilterChain
 {
   protected
-    $chain           = array(),
-    $index           = -1,
-    $execution       = false,
-    $executionFilter = null,
-    $renderingFilter = null;
+    $chain = array(),
+    $index = -1;
 
   /**
    * Execute the next filter in this chain.
@@ -34,53 +31,19 @@ class sfFilterChain
    */
   public function execute ()
   {
+    // skip to the next filter
     ++$this->index;
 
-    $max = count($this->chain);
-    $filter = null;
-    $method = null;
-    if ($this->index < $max)
+    if ($this->index < count($this->chain))
     {
-      $filter = $this->chain[$this->execution ? ($max - $this->index - 1) : $this->index];
-
-      // method to execute?
-      $method = '';
-      if ($this->execution)
+      if (sfConfig::get('sf_logging_active'))
       {
-        $method = method_exists($filter, 'executeBeforeRendering') ? 'executeBeforeRendering' : '';
+        sfContext::getInstance()->getLogger()->info(sprintf('{sfFilterChain} executing filter "%s"', get_class($this->chain[$this->index])));
       }
-      else
-      {
-        $method = method_exists($filter, 'executeBeforeExecution') ? 'executeBeforeExecution' : (method_exists($filter, 'execute') ? 'execute' : '');
-      }
-    }
-    else if ($this->index == $max)
-    {
-      $filter = $this->execution ? $this->renderingFilter : $this->executionFilter;
-      $method = 'execute';
-    }
 
-    if (sfConfig::get('sf_logging_active'))
-    {
-      sfContext::getInstance()->getLogger()->info(sprintf('{sfFilterChain} executing filter "%s"', get_class($filter)));
+      // execute the next filter
+      $this->chain[$this->index]->execute($this);
     }
-
-    if (!$method)
-    {
-      // execute next filter
-      $this->execute();
-    }
-    else
-    {
-      // execute filter
-      $filter->$method($this);
-    }
-  }
-
-  public function executionFilterDone ()
-  {
-    $this->execution = true;
-    $this->index     = -1;
   }
 
   public function hasFilter($class)
@@ -106,15 +69,5 @@ class sfFilterChain
   public function register ($filter)
   {
     $this->chain[] = $filter;
-  }
-
-  public function registerExecution ($filter)
-  {
-    $this->executionFilter = $filter;
-  }
-
-  public function registerRendering ($filter)
-  {
-    $this->renderingFilter = $filter;
   }
 }

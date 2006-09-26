@@ -26,26 +26,16 @@ abstract class sfFilter
     $filterCalled     = array(),
     $context          = null;
 
-  protected function isFirstCallBeforeExecution ()
-  {
-    return $this->isFirstCall('beforeExecution');
-  }
-
-  protected function isFirstCallBeforeRendering ()
-  {
-    return $this->isFirstCall('beforeRendering');
-  }
-
-  protected function isFirstCall ($type = 'beforeExecution')
+  protected function isFirstCall ()
   {
     $class = get_class($this);
-    if (isset($this->filterCalled[$class][$type]))
+    if (isset($this->filterCalled[$class]))
     {
       return false;
     }
     else
     {
-      $this->filterCalled[$class][$type] = true;
+      $this->filterCalled[$class] = true;
 
       return true;
     }

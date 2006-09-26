@@ -20,7 +20,7 @@ class sfCacheFilter extends sfFilter
     $cacheManager = null,
     $request      = null,
     $response     = null,
-    $cache       = array();
+    $cache        = array();
 
   public function initialize($context, $parameters = array())
   {
@@ -48,6 +48,16 @@ class sfCacheFilter extends sfFilter
       return;
     }
 
+    if ($this->executeBeforeExecution())
+    {
+      $filterChain->execute();
+    }
+
+    $this->executeBeforeRendering();
+  }
+
+  public function executeBeforeExecution ()
+  {
     // register our cache configuration
     $this->cacheManager->registerConfiguration($this->getContext()->getModuleName());
 
@@ -66,7 +76,7 @@ class sfCacheFilter extends sfFilter
         if ($inCache)
         {
           // page is in cache, so no need to run execution filter
-          $filterChain->executionFilterDone();
+          return false;
         }
       }
       else
@@ -76,7 +86,7 @@ class sfCacheFilter extends sfFilter
       }
     }
 
-    $filterChain->execute();
+    return true;
   }
 
   /**
@@ -86,16 +96,8 @@ class sfCacheFilter extends sfFilter
    *
    * @return void
    */
-  public function executeBeforeRendering ($filterChain)
+  public function executeBeforeRendering ()
   {
-    // execute this filter only once, if cache is set and no GET or POST parameters
-    if (!$this->isFirstCallBeforeRendering() || !sfConfig::get('sf_cache') || count($_GET) || count($_POST))
-    {
-      $filterChain->execute();
-
-      return;
-    }
-
     // cache only 200 HTTP status
     if ($this->response->getStatusCode() == 200)
     {
@@ -168,9 +170,6 @@ class sfCacheFilter extends sfFilter
         }
       }
     }
-
-    // execute next filter
-    $filterChain->execute();
   }
 
   protected function setPageCache($uri)

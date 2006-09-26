@@ -28,19 +28,9 @@ class sfCommonFilter extends sfFilter
   {
     // execute next filter
     $filterChain->execute();
-  }
 
-  /**
-   * Execute this filter.
-   *
-   * @param FilterChain A FilterChain instance.
-   *
-   * @return void
-   */
-  public function executeBeforeRendering ($filterChain)
-  {
     // execute this filter only once
-    if ($this->isFirstCallBeforeRendering())
+    if ($this->isFirstCall())
     {
       $response = $this->getContext()->getResponse();
 
@@ -56,9 +46,6 @@ class sfCommonFilter extends sfFilter
 
       $response->setContent($content);
     }
-
-    // execute next filter
-    $filterChain->execute();
   }
 
   protected function includeJavascripts($response)

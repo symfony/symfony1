@@ -266,6 +266,11 @@ abstract class sfController
         // create a new filter chain
         $filterChain = new sfFilterChain();
 
+        // register the rendering filter
+        $renderFilter = new $this->renderingFilterClassName();
+        $renderFilter->initialize($this->context);
+        $filterChain->register($renderFilter);
+
         if (sfConfig::get('sf_web_debug'))
         {
           // register web debug toolbar filter
@@ -284,9 +289,7 @@ abstract class sfController
           {
             if (!in_array('sfSecurityUser', class_implements($this->context->getUser())))
             {
-              // we've got security on but the user implementation
-              // isn't a sub-class of SecurityUser
-              $error = 'Security is enabled, but your User implementation isn\'t a sub-class of SecurityUser';
+              $error = 'Security is enabled, but your sfUser implementation does not implement sfSecurityUser interface';
               throw new sfSecurityException($error);
             }
 
@@ -323,12 +326,7 @@ abstract class sfController
         // register the execution filter
         $execFilter = new $this->executionFilterClassName();
         $execFilter->initialize($this->context);
-        $filterChain->registerExecution($execFilter);
-
-        // register the rendering filter
-        $renderFilter = new $this->renderingFilterClassName();
-        $renderFilter->initialize($this->context);
-        $filterChain->registerRendering($renderFilter);
+        $filterChain->register($execFilter);
 
         if ($moduleName == sfConfig::get('sf_error_404_module') && $actionName == sfConfig::get('sf_error_404_action'))
         {

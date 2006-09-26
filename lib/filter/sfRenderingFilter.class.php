@@ -31,6 +31,9 @@ class sfRenderingFilter extends sfFilter
    */
   public function execute ($filterChain)
   {
+    // execute next filter
+    $filterChain->execute();
+
     if (sfConfig::get('sf_logging_active'))
     {
       $this->getContext()->getLogger()->info('{sfRenderingFilter} render to client');

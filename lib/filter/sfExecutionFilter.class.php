@@ -146,8 +146,6 @@ class sfExecutionFilter extends sfFilter
 
     if ($viewName == sfView::HEADER_ONLY)
     {
-      $filterChain->executionFilterDone();
-
       // execute next filter
       $filterChain->execute();
     }
@@ -180,8 +178,6 @@ class sfExecutionFilter extends sfFilter
       }
       else
       {
-        $filterChain->executionFilterDone();
-
         // execute next filter
         $filterChain->execute();
       }
