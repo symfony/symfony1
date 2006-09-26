@@ -144,7 +144,15 @@ class sfLoader
         // search in the include path
         if ((@include('helper/'.$fileName)) != 1)
         {
-          throw new sfViewException(sprintf('Unable to load "%s" helper in: %s', $helperName, implode(', ', array_merge($dirs, explode(PATH_SEPARATOR, get_include_path())))));
+          $dirs = array_merge($dirs, explode(PATH_SEPARATOR, get_include_path()));
+
+          // remove sf_root_dir from dirs
+          foreach ($dirs as &$dir)
+          {
+            $dir = str_replace(sfConfig::get('sf_root_dir'), '%SF_ROOT_DIR%', $dir);
+          }
+
+          throw new sfViewException(sprintf('Unable to load "%s" helper in: %s', $helperName, implode(', ', $dirs)));
         }
       }
 

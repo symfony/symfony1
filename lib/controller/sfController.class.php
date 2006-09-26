@@ -143,7 +143,15 @@ abstract class sfController
     // send an exception if debug
     if ($throwExceptions && sfConfig::get('sf_debug'))
     {
-      throw new sfControllerException(sprintf('{sfController} controller "%s/%s" does not exist in: %s', $moduleName, $controllerName, implode(', ', array_keys($dirs))));
+      $dirs = array_keys($dirs);
+
+      // remove sf_root_dir from dirs
+      foreach ($dirs as &$dir)
+      {
+        $dir = str_replace(sfConfig::get('sf_root_dir'), '%SF_ROOT_DIR%', $dir);
+      }
+
+      throw new sfControllerException(sprintf('{sfController} controller "%s/%s" does not exist in: %s', $moduleName, $controllerName, implode(', ', $dirs)));
     }
 
     return false;
