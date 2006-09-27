@@ -247,7 +247,7 @@ class sfBrowser
           {
             $elementName = $element->getAttribute('name');
             $value = null;
-            if ($element->nodeName == 'input' && ($element->getAttribute('type') != 'submit' || $element->getAttribute('name') == $name))
+            if ($element->nodeName == 'input' && ($element->getAttribute('type') != 'submit' || $element->getAttribute('value') == $name))
             {
               $value = $element->getAttribute('value');
             }
