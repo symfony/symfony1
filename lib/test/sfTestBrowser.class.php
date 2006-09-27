@@ -147,7 +147,7 @@ class sfTestBrowser extends sfBrowser
     {
       $this->test->is(count($texts), $value, sprintf('response selector "%s" matches "%s" times', $selector, $value));
     }
-    else if (preg_match('/^(!)?(.).+?\\2[ims]?$/', $value, $match))
+    else if (preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $value, $match))
     {
       $position = isset($options['position']) ? $options['position'] : 0;
       if ($match[1] == '!')
