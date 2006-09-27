@@ -245,29 +245,30 @@ class sfBrowser
           $defaults = array();
           foreach($xpath->query('descendant::input | descendant::textarea | descendant::select', $form) as $element)
           {
-            $name = $element->getAttribute('name');
-            if ($element->nodeName == 'input')
+            $elementName = $element->getAttribute('name');
+            $value = null;
+            if ($element->nodeName == 'input' && ($element->getAttribute('type') != 'submit' || $element->getAttribute('name') == $name))
             {
-              $defaults[$name] = $element->getAttribute('value');
+              $value = $element->getAttribute('value');
             }
             else if ($element->nodeName == 'textarea')
             {
-              $defaults[$name] = '';
+              $value = '';
               foreach ($element->childNodes as $el)
               {
-                $defaults[$name] .= $dom->saveXML($el);
+                $value .= $dom->saveXML($el);
               }
             }
             else if ($element->nodeName == 'select')
             {
               if ($multiple = $element->hasAttribute('multiple'))
               {
-                $name = str_replace('[]', '', $name);
-                $defaults[$name] = array();
+                $elementName = str_replace('[]', '', $elementName);
+                $value = array();
               }
               else
               {
-                $defaults[$name] = null;
+                $value = null;
               }
               foreach ($xpath->query('descendant::option', $element) as $option)
               {
@@ -275,19 +276,37 @@ class sfBrowser
                 {
                   if ($multiple)
                   {
-                    $defaults[$name][] = $option->getAttribute('value');
+                    $value[] = $option->getAttribute('value');
                   }
                   else
                   {
-                    $defaults[$name] = $option->getAttribute('value');
+                    $value = $option->getAttribute('value');
                   }
                 }
+              }
+            }
+
+            if (null !== $value)
+            {
+              if (false !== $pos = strpos($elementName, '['))
+              {
+                $default = &$defaults;
+                $tmps = array_filter(preg_split('/(\[ | \[\] | \])/x', $elementName));
+                foreach ($tmps as $tmp)
+                {
+                  $default = &$default[$tmp];
+                }
+                $default = $value;
+              }
+              else
+              {
+                $defaults[$elementName] = $value;
               }
             }
           }
 
           // create query_string
-          $arguments = array_merge($defaults, $arguments);
+          $arguments = sfToolkit::arrayDeepMerge($defaults, $arguments);
           $query_string = http_build_query($arguments);
           $sep = false === strpos($url, '?') ? '?' : '&';
 
