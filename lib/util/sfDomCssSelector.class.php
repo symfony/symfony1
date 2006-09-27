@@ -91,7 +91,7 @@ class sfDomCssSelector
       if (preg_match('/^(\w*)(\[.+\])$/', $token, $matches))
       {
         $tagName = $matches[1] ? $matches[1] : '*';
-        preg_match_all('/\[(\w+)([=~\|\^\$\*]?)=?"?([^\]"]*)"?\]/', $matches[2], $matches, PREG_SET_ORDER);
+        preg_match_all('/\[(\w+)([=~\|\^\$\*]?)=?(")?([^\]"]*)\\3\]/', $matches[2], $matches, PREG_SET_ORDER);
 
         // Grab all of the tagName elements within current node
         $founds = $this->getElementsByTagName($nodes, $tagName);
@@ -103,7 +103,7 @@ class sfDomCssSelector
           {
             $attrName = $match[1];
             $attrOperator = $match[2];
-            $attrValue = $match[3];
+            $attrValue = $match[4];
 
             switch ($attrOperator)
             {
