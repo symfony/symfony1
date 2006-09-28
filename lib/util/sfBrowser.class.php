@@ -127,6 +127,7 @@ class sfBrowser
 
     // manually shutdown user to save current session data
     $this->context->getUser()->shutdown();
+    $this->context->getStorage()->shutdown();
 
     // save cookies
     $this->cookieJar = array();
