@@ -40,7 +40,7 @@ class sfTestBrowser extends sfBrowser
     return $this->test;
   }
 
-  public function getAndCheck($module, $action, $code = 200, $url = null)
+  public function getAndCheck($module, $action, $url = null, $code = 200)
   {
     return $this->
       get(null !== null ? $url : sprintf('/%s/%s', $module, $action))->
