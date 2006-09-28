@@ -13,7 +13,7 @@ abstract class BaseArticlePeer {
 	const CLASS_DEFAULT = 'lib.model.Article';
 
 	
-	const NUM_COLUMNS = 4;
+	const NUM_COLUMNS = 5;
 
 	
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -29,6 +29,9 @@ abstract class BaseArticlePeer {
 	const BODY = 'article.BODY';
 
 	
+	const CATEGORY_ID = 'article.CATEGORY_ID';
+
+	
 	const CREATED_AT = 'article.CREATED_AT';
 
 	
@@ -37,18 +40,18 @@ abstract class BaseArticlePeer {
 
 	
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Body', 'CreatedAt', ),
-		BasePeer::TYPE_COLNAME => array (ArticlePeer::ID, ArticlePeer::TITLE, ArticlePeer::BODY, ArticlePeer::CREATED_AT, ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'body', 'created_at', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
+		BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Body', 'CategoryId', 'CreatedAt', ),
+		BasePeer::TYPE_COLNAME => array (ArticlePeer::ID, ArticlePeer::TITLE, ArticlePeer::BODY, ArticlePeer::CATEGORY_ID, ArticlePeer::CREATED_AT, ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'body', 'category_id', 'created_at', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
 	);
 
 	
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Body' => 2, 'CreatedAt' => 3, ),
-		BasePeer::TYPE_COLNAME => array (ArticlePeer::ID => 0, ArticlePeer::TITLE => 1, ArticlePeer::BODY => 2, ArticlePeer::CREATED_AT => 3, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'body' => 2, 'created_at' => 3, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
+		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Body' => 2, 'CategoryId' => 3, 'CreatedAt' => 4, ),
+		BasePeer::TYPE_COLNAME => array (ArticlePeer::ID => 0, ArticlePeer::TITLE => 1, ArticlePeer::BODY => 2, ArticlePeer::CATEGORY_ID => 3, ArticlePeer::CREATED_AT => 4, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'body' => 2, 'category_id' => 3, 'created_at' => 4, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
 	);
 
 	
@@ -107,6 +110,8 @@ abstract class BaseArticlePeer {
 		$criteria->addSelectColumn(ArticlePeer::TITLE);
 
 		$criteria->addSelectColumn(ArticlePeer::BODY);
+
+		$criteria->addSelectColumn(ArticlePeer::CATEGORY_ID);
 
 		$criteria->addSelectColumn(ArticlePeer::CREATED_AT);
 
@@ -187,6 +192,167 @@ abstract class BaseArticlePeer {
 		}
 		return $results;
 	}
+
+	
+	public static function doCountJoinCategory(Criteria $criteria, $distinct = false, $con = null)
+	{
+				$criteria = clone $criteria;
+		
+				$criteria->clearSelectColumns()->clearOrderByColumns();
+		if ($distinct || in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->addSelectColumn(ArticlePeer::COUNT_DISTINCT);
+		} else {
+			$criteria->addSelectColumn(ArticlePeer::COUNT);
+		}
+		
+				foreach($criteria->getGroupByColumns() as $column)
+		{
+			$criteria->addSelectColumn($column);
+		}
+
+		$criteria->addJoin(ArticlePeer::CATEGORY_ID, CategoryPeer::ID);
+
+		$rs = ArticlePeer::doSelectRS($criteria, $con);
+		if ($rs->next()) {
+			return $rs->getInt(1);
+		} else {
+						return 0;
+		}
+	}
+
+
+	
+	public static function doSelectJoinCategory(Criteria $c, $con = null)
+	{
+		$c = clone $c;
+
+				if ($c->getDbName() == Propel::getDefaultDB()) {
+			$c->setDbName(self::DATABASE_NAME);
+		}
+
+		ArticlePeer::addSelectColumns($c);
+		$startcol = (ArticlePeer::NUM_COLUMNS - ArticlePeer::NUM_LAZY_LOAD_COLUMNS) + 1;
+		CategoryPeer::addSelectColumns($c);
+
+		$c->addJoin(ArticlePeer::CATEGORY_ID, CategoryPeer::ID);
+		$rs = BasePeer::doSelect($c, $con);
+		$results = array();
+
+		while($rs->next()) {
+
+			$omClass = ArticlePeer::getOMClass();
+
+			$cls = Propel::import($omClass);
+			$obj1 = new $cls();
+			$obj1->hydrate($rs);
+
+			$omClass = CategoryPeer::getOMClass();
+
+			$cls = Propel::import($omClass);
+			$obj2 = new $cls();
+			$obj2->hydrate($rs, $startcol);
+
+			$newObject = true;
+			foreach($results as $temp_obj1) {
+				$temp_obj2 = $temp_obj1->getCategory(); 				if ($temp_obj2->getPrimaryKey() === $obj2->getPrimaryKey()) {
+					$newObject = false;
+										$temp_obj2->addArticle($obj1); 					break;
+				}
+			}
+			if ($newObject) {
+				$obj2->initArticles();
+				$obj2->addArticle($obj1); 			}
+			$results[] = $obj1;
+		}
+		return $results;
+	}
+
+
+	
+	public static function doCountJoinAll(Criteria $criteria, $distinct = false, $con = null)
+	{
+		$criteria = clone $criteria;
+
+				$criteria->clearSelectColumns()->clearOrderByColumns();
+		if ($distinct || in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->addSelectColumn(ArticlePeer::COUNT_DISTINCT);
+		} else {
+			$criteria->addSelectColumn(ArticlePeer::COUNT);
+		}
+		
+				foreach($criteria->getGroupByColumns() as $column)
+		{
+			$criteria->addSelectColumn($column);
+		}
+
+		$criteria->addJoin(ArticlePeer::CATEGORY_ID, CategoryPeer::ID);
+
+		$rs = ArticlePeer::doSelectRS($criteria, $con);
+		if ($rs->next()) {
+			return $rs->getInt(1);
+		} else {
+						return 0;
+		}
+	}
+
+
+	
+	public static function doSelectJoinAll(Criteria $c, $con = null)
+	{
+		$c = clone $c;
+
+				if ($c->getDbName() == Propel::getDefaultDB()) {
+			$c->setDbName(self::DATABASE_NAME);
+		}
+
+		ArticlePeer::addSelectColumns($c);
+		$startcol2 = (ArticlePeer::NUM_COLUMNS - ArticlePeer::NUM_LAZY_LOAD_COLUMNS) + 1;
+
+		CategoryPeer::addSelectColumns($c);
+		$startcol3 = $startcol2 + CategoryPeer::NUM_COLUMNS;
+
+		$c->addJoin(ArticlePeer::CATEGORY_ID, CategoryPeer::ID);
+
+		$rs = BasePeer::doSelect($c, $con);
+		$results = array();
+		
+		while($rs->next()) {
+
+			$omClass = ArticlePeer::getOMClass();
+
+			
+			$cls = Propel::import($omClass);
+			$obj1 = new $cls();
+			$obj1->hydrate($rs);
+
+				
+					
+			$omClass = CategoryPeer::getOMClass();
+
+	
+			$cls = Propel::import($omClass);
+			$obj2 = new $cls();
+			$obj2->hydrate($rs, $startcol2);
+			
+			$newObject = true;
+			for ($j=0, $resCount=count($results); $j < $resCount; $j++) {
+				$temp_obj1 = $results[$j];
+				$temp_obj2 = $temp_obj1->getCategory(); 				if ($temp_obj2->getPrimaryKey() === $obj2->getPrimaryKey()) {
+					$newObject = false;
+					$temp_obj2->addArticle($obj1); 					break;
+				}
+			}
+			
+			if ($newObject) {
+				$obj2->initArticles();
+				$obj2->addArticle($obj1);
+			}
+
+			$results[] = $obj1;
+		}
+		return $results;
+	}
+
 	
 	public static function getTableMap()
 	{

@@ -40,9 +40,26 @@ if (isset($fixtures))
   $sql = preg_replace('/^\s*\-\-.+$/m', '', $sql);
   $sql = preg_replace('/^\s*DROP TABLE .+?$/m', '', $sql);
   $con = Propel::getConnection();
-  $con->executeQuery($sql);
+  $tables = preg_split('/CREATE TABLE/', $sql);
+  foreach ($tables as $table)
+  {
+    $table = trim($table);
+    if (!$table)
+    {
+      continue;
+    }
+
+    $con->executeQuery('CREATE TABLE '.$table);
+  }
 
   // load fixtures
   $data = new sfPropelData();
-  $data->loadDataFromArray($fixtures);
+  if (is_array($fixtures))
+  {
+    $data->loadDataFromArray($fixtures);
+  }
+  else
+  {
+    $data->loadData(sfConfig::get('sf_data_dir').'/'.$fixtures);
+  }
 }

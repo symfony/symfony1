@@ -21,7 +21,14 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 
 
 	
+	protected $category_id;
+
+
+	
 	protected $created_at;
+
+	
+	protected $aCategory;
 
 	
 	protected $alreadyInSave = false;
@@ -48,6 +55,13 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 	{
 
 		return $this->body;
+	}
+
+	
+	public function getCategoryId()
+	{
+
+		return $this->category_id;
 	}
 
 	
@@ -103,6 +117,20 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 
 	} 
 	
+	public function setCategoryId($v)
+	{
+
+		if ($this->category_id !== $v) {
+			$this->category_id = $v;
+			$this->modifiedColumns[] = ArticlePeer::CATEGORY_ID;
+		}
+
+		if ($this->aCategory !== null && $this->aCategory->getId() !== $v) {
+			$this->aCategory = null;
+		}
+
+	} 
+	
 	public function setCreatedAt($v)
 	{
 
@@ -130,13 +158,15 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 
 			$this->body = $rs->getString($startcol + 2);
 
-			$this->created_at = $rs->getTimestamp($startcol + 3, null);
+			$this->category_id = $rs->getInt($startcol + 3);
+
+			$this->created_at = $rs->getTimestamp($startcol + 4, null);
 
 			$this->resetModified();
 
 			$this->setNew(false);
 
-						return $startcol + 4; 
+						return $startcol + 5; 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating Article object", $e);
 		}
@@ -198,6 +228,15 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 			$this->alreadyInSave = true;
 
 
+												
+			if ($this->aCategory !== null) {
+				if ($this->aCategory->isModified()) {
+					$affectedRows += $this->aCategory->save($con);
+				}
+				$this->setCategory($this->aCategory);
+			}
+
+
 						if ($this->isModified()) {
 				if ($this->isNew()) {
 					$pk = ArticlePeer::doInsert($this, $con);
@@ -245,6 +284,14 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 			$failureMap = array();
 
 
+												
+			if ($this->aCategory !== null) {
+				if (!$this->aCategory->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aCategory->getValidationFailures());
+				}
+			}
+
+
 			if (($retval = ArticlePeer::doValidate($this, $columns)) !== true) {
 				$failureMap = array_merge($failureMap, $retval);
 			}
@@ -278,6 +325,9 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 				return $this->getBody();
 				break;
 			case 3:
+				return $this->getCategoryId();
+				break;
+			case 4:
 				return $this->getCreatedAt();
 				break;
 			default:
@@ -293,7 +343,8 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 			$keys[0] => $this->getId(),
 			$keys[1] => $this->getTitle(),
 			$keys[2] => $this->getBody(),
-			$keys[3] => $this->getCreatedAt(),
+			$keys[3] => $this->getCategoryId(),
+			$keys[4] => $this->getCreatedAt(),
 		);
 		return $result;
 	}
@@ -319,6 +370,9 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 				$this->setBody($value);
 				break;
 			case 3:
+				$this->setCategoryId($value);
+				break;
+			case 4:
 				$this->setCreatedAt($value);
 				break;
 		} 	}
@@ -331,7 +385,8 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 		if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
 		if (array_key_exists($keys[1], $arr)) $this->setTitle($arr[$keys[1]]);
 		if (array_key_exists($keys[2], $arr)) $this->setBody($arr[$keys[2]]);
-		if (array_key_exists($keys[3], $arr)) $this->setCreatedAt($arr[$keys[3]]);
+		if (array_key_exists($keys[3], $arr)) $this->setCategoryId($arr[$keys[3]]);
+		if (array_key_exists($keys[4], $arr)) $this->setCreatedAt($arr[$keys[4]]);
 	}
 
 	
@@ -342,6 +397,7 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 		if ($this->isColumnModified(ArticlePeer::ID)) $criteria->add(ArticlePeer::ID, $this->id);
 		if ($this->isColumnModified(ArticlePeer::TITLE)) $criteria->add(ArticlePeer::TITLE, $this->title);
 		if ($this->isColumnModified(ArticlePeer::BODY)) $criteria->add(ArticlePeer::BODY, $this->body);
+		if ($this->isColumnModified(ArticlePeer::CATEGORY_ID)) $criteria->add(ArticlePeer::CATEGORY_ID, $this->category_id);
 		if ($this->isColumnModified(ArticlePeer::CREATED_AT)) $criteria->add(ArticlePeer::CREATED_AT, $this->created_at);
 
 		return $criteria;
@@ -377,6 +433,8 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 
 		$copyObj->setBody($this->body);
 
+		$copyObj->setCategoryId($this->category_id);
+
 		$copyObj->setCreatedAt($this->created_at);
 
 
@@ -401,6 +459,36 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 			self::$peer = new ArticlePeer();
 		}
 		return self::$peer;
+	}
+
+	
+	public function setCategory($v)
+	{
+
+
+		if ($v === null) {
+			$this->setCategoryId(NULL);
+		} else {
+			$this->setCategoryId($v->getId());
+		}
+
+
+		$this->aCategory = $v;
+	}
+
+
+	
+	public function getCategory($con = null)
+	{
+				include_once 'lib/model/om/BaseCategoryPeer.php';
+
+		if ($this->aCategory === null && ($this->category_id !== null)) {
+
+			$this->aCategory = CategoryPeer::retrieveByPK($this->category_id, $con);
+
+			
+		}
+		return $this->aCategory;
 	}
 
 } 

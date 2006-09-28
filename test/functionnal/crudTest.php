@@ -9,20 +9,7 @@
  */
 
 $app = 'crud';
-$fixtures = array(
-  'Article' => array(
-    'article_1' => array(
-      'title'      => 'foo title',
-      'body'       => 'bar body',
-      'created_at' => time(),
-    ),
-    'article_2'    => array(
-      'title'      => 'foo foo title',
-      'body'       => 'bar bar body',
-      'created_at' => time(),
-    ),
-  ),
-);
+$fixtures = 'fixtures/fixtures.yml';
 
 include(dirname(__FILE__).'/bootstrap.php');
 
@@ -54,9 +41,10 @@ $b->
   isRequestParameter('module', 'simple')->
   isRequestParameter('action', 'list')->
   checkResponseElement('body h1', 'simple')->
-  checkResponseElement('body table thead tr th', '/^(Title|Body|Id|Created at)$/')->
+  checkResponseElement('body table thead tr th', '/^(Title|Body|Id|Category Id|Created at)$/')->
   checkResponseElement('body table tbody tr td', 'foo title', array('position' => 1))->
   checkResponseElement('body table tbody tr td', 'bar body', array('position' => 2))->
+  checkResponseElement('body table tbody tr td', '1', array('position' => 3))->
   checkResponseElement('a[href$="/simple/create"]', 'create')->
   checkResponseElement('a[href*="/simple/show/id/"]', '/\d+/', array('count' => 2))
 ;
@@ -75,7 +63,8 @@ $b->
   checkResponseElement('body table tbody tr', '/Id\:\s+1/', array('position' => 0))->
   checkResponseElement('body table tbody tr', '/Title\:\s+foo title/', array('position' => 1))->
   checkResponseElement('body table tbody tr', '/Body\:\s+bar body/', array('position' => 2))->
-  checkResponseElement('body table tbody tr', '/Created at\:\s+[0-9\-\:\s]+/', array('position' => 3))
+  checkResponseElement('body table tbody tr', '/Category\:\s+1/', array('position' => 3))->
+  checkResponseElement('body table tbody tr', '/Created at\:\s+[0-9\-\:\s]+/', array('position' => 4))
 ;
 
 // edit page
@@ -90,10 +79,13 @@ $b->
   checkResponseElement('a[href$="/simple/delete/id/1"][onclick*="confirm"]')->
   checkResponseElement('body table tbody th', 'Title:', array('position' => 0))->
   checkResponseElement('body table tbody th', 'Body:', array('position' => 1))->
-  checkResponseElement('body table tbody th', 2)->
-  checkResponseElement('body table tbody td', 2)->
+  checkResponseElement('body table tbody th', 3)->
+  checkResponseElement('body table tbody td', 3)->
   checkResponseElement('body table tbody td input[id="title"][name="title"][value*="title"]')->
-  checkResponseElement('body table tbody td textarea[id="body"][name="body"]', 'bar body')
+  checkResponseElement('body table tbody td textarea[id="body"][name="body"]', 'bar body')->
+  checkResponseElement('body table tbody td select[id="category_id"][name="category_id"]', true)->
+  checkResponseElement('body table tbody td select[id="category_id"][name="category_id"] option[value="1"]', '1')->
+  checkResponseElement('body table tbody td select[id="category_id"][name="category_id"] option[value="2"]', '2')
 ;
 
 // create page
@@ -106,15 +98,15 @@ $b->
   checkResponseElement('a[href$="/simple/list"]', 'cancel')->
   checkResponseElement('body table tbody th', 'Title:', array('position' => 0))->
   checkResponseElement('body table tbody th', 'Body:', array('position' => 1))->
-  checkResponseElement('body table tbody th', 2)->
-  checkResponseElement('body table tbody td', 2)->
+  checkResponseElement('body table tbody th', 3)->
+  checkResponseElement('body table tbody td', 3)->
   checkResponseElement('body table tbody td input[id="title"][name="title"][value=""]')->
   checkResponseElement('body table tbody td textarea[id="body"][name="body"]', '')
 ;
 
 // save
 $b->
-  click('save', array('title' => 'my title', 'body' => 'my body'))->
+  click('save', array('title' => 'my title', 'body' => 'my body', 'category_id' => 2))->
   isStatusCode(200)->
   isRequestParameter('module', 'simple')->
   isRequestParameter('action', 'update')->
@@ -132,7 +124,8 @@ $b->
   checkResponseElement('body table tbody tr', '/Id\:\s+3/', array('position' => 0))->
   checkResponseElement('body table tbody tr', '/Title\:\s+my title/', array('position' => 1))->
   checkResponseElement('body table tbody tr', '/Body\:\s+my body/', array('position' => 2))->
-  checkResponseElement('body table tbody tr', '/Created at\:\s+[0-9\-\:\s]+/', array('position' => 3))
+  checkResponseElement('body table tbody tr', '/Category\:\s+2/', array('position' => 3))->
+  checkResponseElement('body table tbody tr', '/Created at\:\s+[0-9\-\:\s]+/', array('position' => 4))
 ;
 
 $b->

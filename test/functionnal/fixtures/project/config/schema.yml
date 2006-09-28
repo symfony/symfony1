@@ -3,4 +3,9 @@ propel:
     id:
     title: varchar(255)
     body:  longvarchar
+    category_id:
     created_at:
+
+  category:
+    id:
+    name: varchar(255)

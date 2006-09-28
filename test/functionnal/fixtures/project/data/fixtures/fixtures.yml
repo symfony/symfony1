@@ -1,0 +1,19 @@
+Category:
+  category_1:
+    name: Category 1
+
+  category_2:
+    name: Category 2
+
+Article:
+  article_1:
+    title:       foo title
+    body:        bar body
+    category_id: category_1
+    created_at:  <?php echo time() ?>
+
+  article_2:
+    title:       foo foo title
+    body:        bar bar body
+    category_id: category_2
+    created_at:  <?php echo time() ?>
