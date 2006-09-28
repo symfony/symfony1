@@ -424,10 +424,9 @@ class lime_harness extends lime_registration
       }
 
       $this->output->echoln(sprintf('%s%s%s', substr($relative_file, -37), str_repeat('.', 40 - min(37, strlen($relative_file))), $this->stats[$file]['status']));
-
-      if ($nb = count($this->stats[$file]['failed']) || $return > 0)
+      if ($return > 0 || $nb = count($this->stats[$file]['failed']))
       {
-        if (count($this->stats[$file]['failed']))
+        if ($nb)
         {
           $this->output->echoln(sprintf("    Failed tests: %s", implode(', ', $this->stats[$file]['failed'])));
         }
