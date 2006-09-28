@@ -78,7 +78,7 @@ $b->
 $b->
   get('/configFiltersSimpleFilter')->
   isStatusCode(200)->
-  checkResponseElement('p', '/in a filter/i')->
+  checkResponseElement('body', '/in a filter/i')->
   checkResponseElement('body', '!/congratulation/i')
 ;
 
