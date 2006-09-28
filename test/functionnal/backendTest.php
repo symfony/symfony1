@@ -13,12 +13,50 @@ $fixtures = 'fixtures/fixtures.yml';
 
 include(dirname(__FILE__).'/bootstrap.php');
 
-$b = new sfTestBrowser();
+class myTestBrowser extends sfTestBrowser
+{
+  public function checkListCustomization($title, $listParams)
+  {
+    $this->test()->diag($title);
+
+    $this->customizeGenerator(array('list' => $listParams));
+
+    return $this->getAndCheck('article', 'list');
+  }
+
+  public function checkEditCustomization($title, $editParams)
+  {
+    $this->test()->diag($title);
+
+    $this->customizeGenerator(array('edit' => $editParams));
+
+    return $this->
+      get('/article/edit/id/1')->
+      isStatusCode(200)->
+      isRequestParameter('module', 'article')->
+      isRequestParameter('action', 'edit')
+    ;
+  }
+
+  private function customizeGenerator($params)
+  {
+    $params['model_class'] = 'Article';
+    $params['moduleName']  = 'article';
+    sfToolkit::clearDirectory(sfConfig::get('sf_cache_dir'));
+    $generatorManager = new sfGeneratorManager();
+    $generatorManager->initialize();
+    mkdir(sfconfig::get('sf_config_cache_dir'), 0777);
+    file_put_contents(sfconfig::get('sf_config_cache_dir').'/modules_article_config_generator.yml.php', $generatorManager->generate('sfPropelAdminGenerator', $params));
+  }
+}
+
+$b = new myTestBrowser();
 $b->initialize();
 
 // check symfony throws an exception if model class does not exist
 $b->
   get('/error')->
+  isStatusCode(200)->
   isRequestParameter('module', 'error')->
   isRequestParameter('action', 'index')->
   responseContains('sfInitializationException')->
@@ -36,10 +74,7 @@ $b->
 $content = $b->getResponse()->getContent();
 
 $b->
-  get('/article/list')->
-  isStatusCode(200)->
-  isRequestParameter('module', 'article')->
-  isRequestParameter('action', 'list')->
+  getAndCheck('article', 'list')->
 
   // title
   checkResponseElement('body h1', 'article list')->
@@ -100,10 +135,7 @@ $b->
   checkResponseElement('body table tbody tr[class="sf_admin_row_1"] td', '1')->
 
   // check that sorting is stored in session
-  get('/article/list')->
-  isStatusCode(200)->
-  isRequestParameter('module', 'article')->
-  isRequestParameter('action', 'list')->
+  getAndCheck('article', 'list')->
 
   // check order
   checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td', '2')->
@@ -195,10 +227,7 @@ $b->
 
 // create
 $b->
-  get('/article/create')->
-  isStatusCode(200)->
-  isRequestParameter('module', 'article')->
-  isRequestParameter('action', 'create')->
+  getAndCheck('article', 'create')->
 
   isRequestParameter('id', '')->
 
@@ -223,10 +252,7 @@ $b->
   checkResponseElement('#article_category_id option[selected="selected"]', '2')->
 
   // check list
-  get('/article/list')->
-  isStatusCode(200)->
-  isRequestParameter('module', 'article')->
-  isRequestParameter('action', 'list')->
+  getAndCheck('article', 'list')->
 
   // nb lines
   checkResponseElement('body table tfoot tr th', '/^\s*3 results\s*$/')
@@ -249,10 +275,7 @@ $b->
   isStatusCode(404)->
 
   // check list
-  get('/article/list')->
-  isStatusCode(200)->
-  isRequestParameter('module', 'article')->
-  isRequestParameter('action', 'list')->
+  getAndCheck('article', 'list')->
 
   // nb lines
   checkResponseElement('body table tfoot tr th', '/^\s*2 results\s*$/')
@@ -266,10 +289,7 @@ for ($i = 0; $i < 30; $i++)
 }
 
 $b->
-  get('/article/list')->
-  isStatusCode(200)->
-  isRequestParameter('module', 'article')->
-  isRequestParameter('action', 'list')->
+  getAndCheck('article', 'list')->
 
   // nb lines
   checkResponseElement('body table tfoot tr th', '/32 results/')->
@@ -294,4 +314,47 @@ $b->
   // check that links for navigation are ok
   checkResponseElement('body table tfoot tr th a[href*="/article/list/page/1"]', 3)->
   checkResponseElement('body table tfoot tr th a[href*="/article/list/page/2"]', 2)
+;
+
+// small customization tests
+$b->
+  // list
+  checkListCustomization('list title customization', array('title' => 'list test title'))->
+  checkResponseElement('body h1', 'list test title')->
+
+  // list fields
+  checkListCustomization('list field name customization', array('fields' => array('body' => array('name' => 'My Body'))))->
+  checkResponseElement('#sf_admin_list_th_body a', 'My Body')->
+
+  // list fields display
+  checkListCustomization('list fields display customization', array('display' => array('body', 'title')))->
+  checkResponseElement('#sf_admin_list_th_body', true)->
+  checkResponseElement('#sf_admin_list_th_title', true)->
+  checkResponseElement('#sf_admin_list_th_id', false)->
+  checkResponseElement('#sf_admin_list_th_category_id', false)->
+  checkResponseElement('#sf_admin_list_th_created_at', false)->
+/*
+  // max per page
+  checkListCustomization('max per page customization', array('max_per_page' => 5))->
+  checkResponseElement('body table tfoot tr th a[href*="/article/list/page/7"]', true)->
+  checkResponseElement('body table tbody tr', 5)->
+*/
+  // list buttons
+  checkListCustomization('remove create button', array('actions' => '-'))->
+  checkResponseElement('body input[class="sf_admin_action_create"][onclick*="/article/create"]', false)->
+
+  checkListCustomization('add custom button', array('actions' => array('_create' => null, 'custom' => array('name' => 'my button', 'action' => 'myAction', 'params' => 'class=myButtonClass'))))->
+  checkResponseElement('body input[class="sf_admin_action_create"][onclick*="/article/create"]', true)->
+  checkResponseElement('body input[class="myButtonClass"][onclick*="/article/myAction"][value*="button"]', true)->
+
+  checkListCustomization('add custom button without create', array('actions' => array('custom' => array('name' => 'my button', 'action' => 'myAction', 'params' => 'class=myButtonClass'))))->
+  checkResponseElement('body input[class="sf_admin_action_create"][onclick*="/article/create"]', false)->
+  checkResponseElement('body input[class="myButtonClass"][onclick*="/article/myAction"][value*="button"]', true)->
+
+  // edit
+  checkEditCustomization('edit title customization', array('title' => 'edit test title'))->
+  checkResponseElement('body h1', 'edit test title')->
+
+  checkEditCustomization('edit title customization', array('title' => 'edit "%%title%%"'))->
+  checkResponseElement('body h1', 'edit "my title"')
 ;
