@@ -230,7 +230,7 @@ class sfConfigCache
     }
 
     // replace unfriendly filename characters with an underscore
-    $config  = str_replace(array('\\', '/'), '_', $config);
+    $config  = str_replace(array('\\', '/', ' '), '_', $config);
     $config .= '.php';
 
     return sfConfig::get('sf_config_cache_dir').'/'.$config;
