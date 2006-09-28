@@ -40,7 +40,7 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler
 
     if (!isset($config['generator']))
     {
-      $error = sprintf('Configuration file "%s" must specify a generator directive', $configFiles[1] ? $configFiles[1] : $configFiles[0]);
+      $error = sprintf('Configuration file "%s" must specify a generator section', $configFiles[1] ? $configFiles[1] : $configFiles[0]);
 
       throw new sfParseException($error);
     }
@@ -49,7 +49,21 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler
 
     if (!isset($config['class']))
     {
-      $error = sprintf('Configuration file "%s" must specify a generator class directive', $configFiles[1] ? $configFiles[1] : $configFiles[0]);
+      $error = sprintf('Configuration file "%s" must specify a generator class section under the generator section', $configFiles[1] ? $configFiles[1] : $configFiles[0]);
+
+      throw new sfParseException($error);
+    }
+
+    if (isset($config['list']))
+    {
+      $error = sprintf('Configuration file "%s" can specify a list directive but only under the param section', $configFiles[1] ? $configFiles[1] : $configFiles[0]);
+
+      throw new sfParseException($error);
+    }
+
+    if (isset($config['edit']))
+    {
+      $error = sprintf('Configuration file "%s" can specify an edit directive but only under the param section', $configFiles[1] ? $configFiles[1] : $configFiles[0]);
 
       throw new sfParseException($error);
     }

@@ -20,7 +20,7 @@ $t = new lime_test(1, new lime_output_color());
 $handler = new sfDefineEnvironmentConfigHandler();
 $handler->initialize(array('prefix' => 'sf_'));
 
-$dir = dirname(__FILE__).DIRECTORY_SEPARATOR.'fixtures'.DIRECTORY_SEPARATOR;
+$dir = dirname(__FILE__).DIRECTORY_SEPARATOR.'fixtures'.DIRECTORY_SEPARATOR.'sfDefineEnvironmentConfigHandler'.DIRECTORY_SEPARATOR;
 
 $files = array(
   $dir.'prefix_default.yml',
