@@ -384,7 +384,7 @@ class lime_harness extends lime_registration
       $relative_file = $this->get_relative_file($file);
 
       ob_start(array($this, 'process_test_output'), 2);
-      passthru(sprintf('%s %s 2>&1', $this->php_cli, $file), $return);
+      passthru(sprintf('%s "%s" 2>&1', $this->php_cli, $file), $return);
       ob_end_clean();
 
       if ($return > 0)
@@ -832,6 +832,6 @@ class lime_registration
 
   protected function get_relative_file($file)
   {
-    return str_replace(array(realpath($this->base_dir).'/', $this->extension), '', $file);
+    return str_replace(array(realpath($this->base_dir).DIRECTORY_SEPARATOR, $this->extension), '', $file);
   }
 }
