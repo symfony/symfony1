@@ -309,7 +309,7 @@ class sfToolkit
    * @param  string
    * @return mixed
    */
-  public static function literalize($value)
+  public static function literalize($value, $quoted = false)
   {
     // lowercase our value for comparison
     $value  = trim($value);
@@ -338,6 +338,10 @@ class sfToolkit
     else
     {
       $value = self::replaceConstants($value);
+      if ($quoted)
+      {
+        $value = '\''.str_replace('\'', '\\\'', $value).'\'';
+      }
     }
 
     return $value;

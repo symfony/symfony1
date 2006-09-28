@@ -278,7 +278,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
         else
         {
           // just a normal attribute
-          $entry[$attribute] = sfToolkit::literalize($value);
+          $entry[$attribute] = sfToolkit::literalize($value, true);
         }
       }
     }
