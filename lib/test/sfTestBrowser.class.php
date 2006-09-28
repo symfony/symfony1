@@ -40,6 +40,16 @@ class sfTestBrowser extends sfBrowser
     return $this->test;
   }
 
+  public function getAndCheck($module, $action, $code = 200, $url = null)
+  {
+    return $this->
+      get(null !== null ? $url : sprintf('/%s/%s', $module, $action))->
+      isStatusCode($code)->
+      isRequestParameter('module', $module)->
+      isRequestParameter('action', $action)
+    ;
+  }
+
   public function call($uri, $method = 'get', $parameters = array(), $changeStack = true)
   {
     $uri = $this->fixUri($uri);
