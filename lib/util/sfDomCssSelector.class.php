@@ -91,7 +91,18 @@ class sfDomCssSelector
       if (preg_match('/^(\w*)(\[.+\])$/', $token, $matches))
       {
         $tagName = $matches[1] ? $matches[1] : '*';
-        preg_match_all('/\[(\w+)([=~\|\^\$\*]?)=?(")?([^\]"]*)\\3\]/', $matches[2], $matches, PREG_SET_ORDER);
+        preg_match_all('/
+          \[
+            (\w+)                 # attribute
+            ([=~\|\^\$\*]?)       # modifier (optional)
+            =?                    # equal (optional)
+            (
+              "([^"]*)"         # quoted value (optional)
+              |
+              ([^\]]*)      # non quoted value (optional)
+            )
+          \]
+        /x', $matches[2], $matches, PREG_SET_ORDER);
 
         // Grab all of the tagName elements within current node
         $founds = $this->getElementsByTagName($nodes, $tagName);
@@ -111,10 +122,10 @@ class sfDomCssSelector
                 $ok = $found->getAttribute($attrName) == $attrValue;
                 break;
               case '~': // Match one of space seperated words
-                $ok = preg_match('/\b'.$attrValue.'\b/', $found->getAttribute($attrName));
+                $ok = preg_match('/\b'.preg_quote($attrValue, '/').'\b/', $found->getAttribute($attrName));
                 break;
               case '|': // Match start with value followed by optional hyphen
-                $ok = preg_match('/^'.$attrValue.'-?/', $found->getAttribute($attrName));
+                $ok = preg_match('/^'.preg_quote($attrValue, '/').'-?/', $found->getAttribute($attrName));
                 break;
               case '^': // Match starts with value
                 $ok = 0 === strpos($found->getAttribute($attrName), $attrValue);
