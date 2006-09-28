@@ -397,7 +397,7 @@ class lime_harness extends lime_registration
         $delta = $this->stats[$file]['plan'] - $this->stats[$file]['nb_tests'];
         if ($delta > 0)
         {
-          $this->output->echoln(sprintf('%s%s%s', substr($relative_file, -37), str_repeat('.', 40 - min(37, strlen($relative_file))), $this->output->colorizer->colorize(sprintf('# Looks like you planned %d tests but only ran %d.', $this->stats[$file]['plan'], $this->stats[$file]['nb_tests']), 'COMMENT')));
+          $this->output->echoln(sprintf('%s%s%s', substr($relative_file, -67), str_repeat('.', 70 - min(67, strlen($relative_file))), $this->output->colorizer->colorize(sprintf('# Looks like you planned %d tests but only ran %d.', $this->stats[$file]['plan'], $this->stats[$file]['nb_tests']), 'COMMENT')));
           $this->stats[$file]['status'] = 'dubious';
           $this->stats[$file]['status_code'] = 255;
           $this->stats['_nb_tests'] += $delta;
@@ -408,7 +408,7 @@ class lime_harness extends lime_registration
         }
         else if ($delta < 0)
         {
-          $this->output->echoln(sprintf('%s%s%s', substr($relative_file, -37), str_repeat('.', 40 - min(37, strlen($relative_file))), $this->output->colorizer->colorize(sprintf('# Looks like you planned %s test but ran %s extra.', $this->stats[$file]['plan'], $this->stats[$file]['nb_tests'] - $this->stats[$file]['plan']), 'COMMENT')));
+          $this->output->echoln(sprintf('%s%s%s', substr($relative_file, -67), str_repeat('.', 70 - min(67, strlen($relative_file))), $this->output->colorizer->colorize(sprintf('# Looks like you planned %s test but ran %s extra.', $this->stats[$file]['plan'], $this->stats[$file]['nb_tests'] - $this->stats[$file]['plan']), 'COMMENT')));
           $this->stats[$file]['status'] = 'dubious';
           $this->stats[$file]['status_code'] = 255;
           for ($i = 1; $i <= -$delta; $i++)
@@ -423,7 +423,7 @@ class lime_harness extends lime_registration
         }
       }
 
-      $this->output->echoln(sprintf('%s%s%s', substr($relative_file, -37), str_repeat('.', 40 - min(37, strlen($relative_file))), $this->stats[$file]['status']));
+      $this->output->echoln(sprintf('%s%s%s', substr($relative_file, -67), str_repeat('.', 70 - min(67, strlen($relative_file))), $this->stats[$file]['status']));
       if ($return > 0 || $nb = count($this->stats[$file]['failed']))
       {
         if ($nb)
