@@ -352,7 +352,14 @@ class lime_harness extends lime_registration
     $this->php_cli = null === $php_cli ? PHP_BINDIR.DIRECTORY_SEPARATOR.'php' : $php_cli;
     if (!is_executable($this->php_cli))
     {
-      throw new Exception(sprintf("Unable to find PHP (%s).", $this->php_cli));
+      // search in PATH
+      require_once('System.php');
+      $this->php_cli = System::which('php');
+
+      if (!is_executable($this->php_cli))
+      {
+        throw new Exception(sprintf("Unable to find PHP (%s).", $this->php_cli));
+      }
     }
 
     $this->output = $output_instance ? $output_instance : new lime_output();
