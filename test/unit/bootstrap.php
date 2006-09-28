@@ -20,9 +20,11 @@ class testAutoloader
 
   static public function initialize($with_cache = true)
   {
-    if (is_readable('/tmp/sf_autoload_paths.php'))
+    require_once('System.php');
+    $tmp_dir = System::tmpdir();
+    if (is_readable($tmp_dir.DIRECTORY_SEPARATOR.'sf_autoload_paths.php'))
     {
-      self::$class_paths = unserialize(file_get_contents('/tmp/sf_autoload_paths.php'));
+      self::$class_paths = unserialize(file_get_contents($tmp_dir.DIRECTORY_SEPARATOR.'sf_autoload_paths.php'));
     }
     else
     {
@@ -39,7 +41,7 @@ class testAutoloader
 
       if ($with_cache)
       {
-        file_put_contents('/tmp/sf_autoload_paths.php', serialize(self::$class_paths));
+        file_put_contents($tmp_dir.DIRECTORY_SEPARATOR.'sf_autoload_paths.php', serialize(self::$class_paths));
       }
     }
   }
@@ -58,7 +60,7 @@ class testAutoloader
 
   static public function removeCache()
   {
-    unlink('/tmp/sf_autoload_paths.php');
+    unlink(System::tmpdir().DIRECTORY_SEPARATOR.'sf_autoload_paths.php');
   }
 }
 
