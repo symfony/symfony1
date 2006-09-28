@@ -20,7 +20,8 @@ class sfSessionTestStorage extends sfStorage
 {
   protected
     $sessionId   = null,
-    $sessionData = array();
+    $sessionData = array(),
+    $sessionPath = null;
 
   /**
    * Initialize this Storage.
@@ -37,12 +38,14 @@ class sfSessionTestStorage extends sfStorage
     // initialize parent
     parent::initialize($context, $parameters);
 
+    $this->sessionPath = sfConfig::get('sf_test_cache_dir').DIRECTORY_SEPARATOR.'sessions'.DIRECTORY_SEPARATOR;
+
     if (array_key_exists('session_id', $_SERVER))
     {
       $this->sessionId = $_SERVER['session_id'];
 
       // we read session data from temp file
-      $file = sfConfig::get('sf_test_cache_dir').'/sessions/'.$this->sessionId.'.session';
+      $file = $this->sessionPath.$this->sessionId.'.session';
       if (file_exists($file))
         $this->sessionData = unserialize(file_get_contents($file));
       else
@@ -111,9 +114,9 @@ class sfSessionTestStorage extends sfStorage
     if ($this->sessionId)
     {
       $current_umask = umask(0000);
-      @mkdir(sfConfig::get('sf_test_cache_dir').'/sessions/', 0777, true);
+      @mkdir($this->sessionPath, 0777, true);
       umask($current_umask);
-      file_put_contents(sfConfig::get('sf_test_cache_dir').'/sessions/'.$this->sessionId.'.session', serialize($this->sessionData));
+      file_put_contents($this->sessionPath.$this->sessionId.'.session', serialize($this->sessionData));
       $this->sessionId   = '';
       $this->sessionData = array();
     }
