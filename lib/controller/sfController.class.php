@@ -543,7 +543,6 @@ abstract class sfController
     static $list = array();
 
     // grab our global filter yaml and preset the module name
-    $config     = sfConfig::get('sf_app_config_dir').'/filters.yml';
     $moduleName = 'global';
 
     if (!isset($list[$moduleName]))
@@ -577,21 +576,13 @@ abstract class sfController
     if (!isset($list[$moduleName]))
     {
       // we haven't loaded a filter list for this module yet
-      $config = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/filters.yml';
+      $config = $moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/filters.yml';
 
-      if (is_readable($config))
-      {
-        require_once(sfConfigCache::getInstance()->checkConfig($config));
-      }
-      else
-      {
-        // add an emptry array for this module since no filters exist
-        $list[$moduleName] = array();
-      }
+      require_once(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$config));
     }
 
     // register filters
-    foreach ($list[$moduleName] as $filter)
+    foreach ((array) $list[$moduleName] as $filter)
     {
       $filterChain->register($filter);
     }
