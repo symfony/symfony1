@@ -10,8 +10,11 @@
 
 $app = 'backend';
 $fixtures = 'fixtures/fixtures.yml';
-
-include(dirname(__FILE__).'/bootstrap.php');
+$ret = include(dirname(__FILE__).'/bootstrap.php');
+if (!$ret)
+{
+  return;
+}
 
 class myTestBrowser extends sfTestBrowser
 {

@@ -9,8 +9,11 @@
  */
 
 $app = 'frontend';
-
-include(dirname(__FILE__).'/bootstrap.php');
+$ret = include(dirname(__FILE__).'/bootstrap.php');
+if (!$ret)
+{
+  return;
+}
 
 $b = new sfTestBrowser();
 $b->initialize();

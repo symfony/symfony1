@@ -10,8 +10,11 @@
 
 $app = 'crud';
 $fixtures = 'fixtures/fixtures.yml';
-
-include(dirname(__FILE__).'/bootstrap.php');
+$ret = include(dirname(__FILE__).'/bootstrap.php');
+if (!$ret)
+{
+  return;
+}
 
 $b = new sfTestBrowser();
 $b->initialize();

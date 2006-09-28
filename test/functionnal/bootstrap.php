@@ -8,6 +8,12 @@
  * file that was distributed with this source code.
  */
 
+// we need sqlite for functionnal tests
+if (!extension_loaded('SQLite'))
+{
+  return false;
+}
+
 define('SF_ROOT_DIR',    realpath(dirname(__FILE__).'/fixtures/project'));
 define('SF_APP',         $app);
 define('SF_ENVIRONMENT', 'test');
@@ -63,3 +69,5 @@ if (isset($fixtures))
     $data->loadData(sfConfig::get('sf_data_dir').'/'.$fixtures);
   }
 }
+
+return true;
