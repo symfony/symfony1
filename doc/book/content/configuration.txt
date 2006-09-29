@@ -225,7 +225,7 @@ There are two ways of adding custom settings to your code:
 
 * Add new lines to the usual configuration files
   * `myproject/apps/myapp/config/app.yml` for application wide settings
-  * `myproject/apps/myapp/modules/mymodule/module.yml` for module wide settings (this files doesn't exist by default)
+  * `myproject/apps/myapp/modules/mymodule/config/module.yml` for module wide settings (this files doesn't exist by default)
 * Create a new configuration file, together with a new config handler 
 
 For instance, if you need to add the credit card operators accepted in you site, you can write in the application `app.yml`:
