@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * This file is part of the symfony package.
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 if (ini_get('zend.ze1_compatibility_mode'))
 {
   die("symfony cannot run with zend.ze1_compatibility_mode enabled.\nPlease turn zend.ze1_compatibility_mode to Off in your php.ini.\n");
@@ -64,6 +72,54 @@ catch (pakeException $e)
 if (count($argv) <= 1)
 {
   $argv[] = '-T';
+}
+
+// autoloading for pake tasks
+class simpleAutoloader
+{
+  static public $class_paths = array();
+
+  static public function initialize()
+  {
+    self::$class_paths = array();
+
+    self::register(PAKEFILE_LIB_DIR, '.class.php');
+    self::register(PAKEFILE_LIB_DIR.'/vendor/propel', '.php');
+    self::register(PAKEFILE_LIB_DIR.'/vendor/creole', '.php');
+    self::register('lib/model', '.php');
+    self::register('plugins', '.php');
+  }
+
+  static public function __autoload($class)
+  {
+    if (!isset(self::$class_paths[$class]))
+    {
+      return false;
+    }
+
+    require(self::$class_paths[$class]);
+
+    return true;
+  }
+
+  protected function register($dir, $ext)
+  {
+    if (!is_dir($dir))
+    {
+      return;
+    }
+
+    foreach (pakeFinder::type('file')->name('*'.$ext)->ignore_version_control()->follow_link()->in($dir) as $file)
+    {
+      self::$class_paths[str_replace($ext, '', basename($file))] = $file;
+    }
+  }
+}
+
+simpleAutoloader::initialize();
+function __autoload($class)
+{
+  return simpleAutoloader::__autoload($class);
 }
 
 $pake = pakeApp::get_instance();

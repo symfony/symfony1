@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * This file is part of the symfony package.
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 pake_desc('initialize a new propel CRUD module');
 pake_task('propel-init-crud', 'app_exists');
 
@@ -77,22 +85,6 @@ function run_propel_generate_crud($task, $args)
   // generate module
   $tmp_dir = $sf_root_dir.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.md5(uniqid(rand(), true));
   sfConfig::set('sf_module_cache_dir', $tmp_dir);
-  $sf_symfony_lib_dir = sfConfig::get('sf_symfony_lib_dir');
-  require_once($sf_symfony_lib_dir.'/config/sfConfig.class.php');
-  require_once($sf_symfony_lib_dir.'/exception/sfException.class.php');
-  require_once($sf_symfony_lib_dir.'/exception/sfInitializationException.class.php');
-  require_once($sf_symfony_lib_dir.'/exception/sfParseException.class.php');
-  require_once($sf_symfony_lib_dir.'/exception/sfConfigurationException.class.php');
-  require_once($sf_symfony_lib_dir.'/cache/sfCache.class.php');
-  require_once($sf_symfony_lib_dir.'/cache/sfFileCache.class.php');
-  require_once($sf_symfony_lib_dir.'/generator/sfGenerator.class.php');
-  require_once($sf_symfony_lib_dir.'/generator/sfGeneratorManager.class.php');
-  require_once($sf_symfony_lib_dir.'/generator/sfPropelCrudGenerator.class.php');
-  require_once($sf_symfony_lib_dir.'/util/sfToolkit.class.php');
-  require_once($sf_symfony_lib_dir.'/util/sfFinder.class.php');
-  require_once($sf_symfony_lib_dir.'/util/sfInflector.class.php');
-  require_once($sf_symfony_lib_dir.'/vendor/propel/Propel.php');
-  require_once('lib/model/'.$model_class.'.php');
   $generator_manager = new sfGeneratorManager();
   $generator_manager->initialize();
   $generator_manager->generate('sfPropelCrudGenerator', array('model_class' => $model_class, 'moduleName' => $module, 'theme' => $theme));

@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * This file is part of the symfony package.
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 pake_desc('clear cached information');
 pake_task('clear-cache', 'project_exists');
 pake_alias('cc', 'clear-cache');
@@ -242,10 +250,6 @@ function run_rotate_log($task, $args)
 function run_purge_logs($task, $args)
 {
   $sf_symfony_data_dir = sfConfig::get('sf_symfony_data_dir');
-  $sf_symfony_lib_dir = sfConfig::get('sf_symfony_lib_dir');
-  require_once($sf_symfony_lib_dir.'/util/Spyc.class.php');
-  require_once($sf_symfony_lib_dir.'/util/sfYaml.class.php');
-  require_once($sf_symfony_lib_dir.'/util/sfToolkit.class.php');
 
   $default_logging = sfYaml::load($sf_symfony_data_dir.'/config/logging.yml');
   $app_dir = sfConfig::get('sf_app_dir');

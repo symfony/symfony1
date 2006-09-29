@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * This file is part of the symfony package.
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 pake_desc('create classes for current model');
 pake_task('propel-build-model', 'project_exists');
 
@@ -49,14 +57,6 @@ function _propel_convert_yml_schema($check_schema = true, $prefix = '')
     throw new Exception('You must create a schema.yml file.');
   }
 
-  $sf_symfony_lib_dir = sfConfig::get('sf_symfony_lib_dir');
-  require_once($sf_symfony_lib_dir.'/util/Spyc.class.php');
-  require_once($sf_symfony_lib_dir.'/util/sfYaml.class.php');
-  require_once($sf_symfony_lib_dir.'/util/sfToolkit.class.php');
-  require_once($sf_symfony_lib_dir.'/util/sfInflector.class.php');
-  require_once($sf_symfony_lib_dir.'/exception/sfException.class.php');
-  require_once($sf_symfony_lib_dir.'/addon/propel/sfPropelDatabaseSchema.class.php');
-
   $db_schema = new sfPropelDatabaseSchema();
   foreach ($schemas as $schema)
   {
@@ -89,14 +89,6 @@ function _propel_convert_xml_schema($check_schema = true, $prefix = '')
   {
     throw new Exception('You must create a schema.xml file.');
   }
-
-  $sf_symfony_lib_dir = sfConfig::get('sf_symfony_lib_dir');
-  require_once($sf_symfony_lib_dir.'/util/Spyc.class.php');
-  require_once($sf_symfony_lib_dir.'/util/sfYaml.class.php');
-  require_once($sf_symfony_lib_dir.'/util/sfToolkit.class.php');
-  require_once($sf_symfony_lib_dir.'/util/sfInflector.class.php');
-  require_once($sf_symfony_lib_dir.'/exception/sfException.class.php');
-  require_once($sf_symfony_lib_dir.'/addon/propel/sfPropelDatabaseSchema.class.php');
 
   $db_schema = new sfPropelDatabaseSchema();
   foreach ($schemas as $schema)

@@ -24,6 +24,9 @@ $h->register_glob($h->base_dir.'/unit/*/*Test.php');
 // functionnal tests
 $h->register_glob($h->base_dir.'/functionnal/*Test.php');
 
+// other tests
+$h->register_glob($h->base_dir.'/other/*Test.php');
+
 $h->run();
 
 testAutoloader::removeCache();
