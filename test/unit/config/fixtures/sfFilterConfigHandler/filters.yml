@@ -1,0 +1,5 @@
+newFilter:
+  class: newFilterClass
+
+anotherDefaultFilter:
+  class: myAnotherDefaultFilterClass
