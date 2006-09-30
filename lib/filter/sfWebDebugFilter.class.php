@@ -26,14 +26,6 @@ class sfWebDebugFilter extends sfFilter
    */
   public function execute ($filterChain)
   {
-    if (!sfConfig::get('sf_web_debug'))
-    {
-      // execute next filter
-      $filterChain->execute();
-
-      return;
-    }
-
     // execute this filter only once
     if ($this->isFirstCall())
     {
@@ -49,7 +41,7 @@ class sfWebDebugFilter extends sfFilter
     // don't add debug toolbar on XHR requests
     // don't add debug if 304
     if (
-        $this->getContext()->getRequest()->isXmlHttpRequest() || 
+        $this->getContext()->getRequest()->isXmlHttpRequest() ||
         strpos($response->getContentType(), 'html') === false ||
         $response->getStatusCode() == 304
     )
