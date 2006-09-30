@@ -46,12 +46,12 @@ class sfDomCssSelector
     foreach ($tokens as $token)
     {
       $token = trim($token);
-      if (false !== strpos($token, '#'))
+      $pos = strpos($token, '#');
+      if (false !== $pos && preg_match('/^[A-Za-z0-9]*$/', substr($token, 0, $pos)))
       {
         // Token is an ID selector
-        $bits = explode('#', $token);
-        $tagName = $bits[0];
-        $id = $bits[1];
+        $tagName = substr($token, 0, $pos);
+        $id = substr($token, $pos + 1);
         $xpath = new DomXPath($this->dom);
         $element = $xpath->query(sprintf("//*[@id = '%s']", $id))->item(0);
         if (!$element || ($tagName && strtolower($element->nodeName) != $tagName))
@@ -66,9 +66,17 @@ class sfDomCssSelector
         continue; // Skip to next token
       }
 
-      if (false !== strpos($token, '.'))
+      $pos = strpos($token, '.');
+      if (false !== $pos && preg_match('/^[A-Za-z0-9]*$/', substr($token, 0, $pos)))
       {
         // Token contains a class selector
+        $tagName = substr($token, 0, $pos);
+        if (!$tagName)
+        {
+          $tagName = '*';
+        }
+        $className = substr($token, $pos + 1);
+
         $bits = explode('.', $token);
         $tagName = $bits[0] ? $bits[0] : '*';
         $className = $bits[1];

@@ -12,7 +12,7 @@ $_test_dir = realpath(dirname(__FILE__).'/../..');
 require_once($_test_dir.'/../lib/vendor/lime/lime.php');
 require_once($_test_dir.'/../lib/util/sfDomCssSelector.class.php');
 
-$t = new lime_test(22, new lime_output_color());
+$t = new lime_test(23, new lime_output_color());
 
 $html = <<<EOF
 <html>
@@ -26,6 +26,8 @@ $html = <<<EOF
     <p class="foo bar foobar">multi-classes</p>
     <p class="myfoo">myfoo</p>
     <p class="myfoo" id="mybar">myfoo bis</p>
+
+    <p onclick="javascript:alert('witha.anda#insideanattribute');">works great</p>
 
     <ul id="list">
       <li>First</li>
@@ -90,3 +92,5 @@ $t->is($c->getTexts('ul#list li a[class*="oba"][class*="ba"]'), array('link'), '
 $t->is($c->getTexts('p[class="myfoo"][id="mybar"]'), array('myfoo bis'), '->getTexts() supports chaining attribute selectors');
 
 $t->is($c->getTexts('#nonexistant'), array(), '->getTexts() returns an empty array if the id does not exist');
+
+$t->is($c->getTexts('p[onclick*="a.anda#"]'), array('works great'), '->getTexts() takes a CSS selector as its first argument');
