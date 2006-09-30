@@ -13,7 +13,7 @@ require_once($_test_dir.'/../lib/vendor/lime/lime.php');
 require_once($_test_dir.'/../lib/config/sfConfig.class.php');
 require_once($_test_dir.'/../lib/util/sfToolkit.class.php');
 
-$t = new lime_test(52, new lime_output_color());
+$t = new lime_test(54, new lime_output_color());
 
 // ::stringToArray()
 $t->diag('::stringToArray()');
@@ -89,3 +89,31 @@ $t->is(sfToolkit::isPathAbsolute('d:/test'), true, '::isPathAbsolute() returns t
 $t->is(sfToolkit::isPathAbsolute('test'), false, '::isPathAbsolute() returns false if path is relative');
 $t->is(sfToolkit::isPathAbsolute('../test'), false, '::isPathAbsolute() returns false if path is relative');
 $t->is(sfToolkit::isPathAbsolute('..\\test'), false, '::isPathAbsolute() returns false if path is relative');
+
+// ::stripComments()
+$t->diag('::isPathAbsolute()');
+
+$php = <<<EOF
+<?php
+
+# A perl like comment
+// Another comment
+/* A very long
+comment
+on several lines
+*/
+
+\$i = 1; // A comment on a PHP line
+EOF;
+
+$stripped_php = <<<EOF
+<?php
+
+
+
+\$i = 1; 
+EOF;
+
+$t->is(sfToolkit::stripComments($php), $stripped_php, '::stripComments() strip all comments from a php string');
+sfConfig::set('sf_strip_comments', false);
+$t->is(sfToolkit::stripComments($php), $php, '::stripComments() do nothing if "sf_strip_comments" is false');
