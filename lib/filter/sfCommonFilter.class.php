@@ -30,22 +30,19 @@ class sfCommonFilter extends sfFilter
     $filterChain->execute();
 
     // execute this filter only once
-    if ($this->isFirstCall())
+    $response = $this->getContext()->getResponse();
+
+    // include javascripts and stylesheets
+    sfLoader::loadHelpers(array('Tag', 'Asset'));
+    $html  = $this->includeJavascripts($response);
+    $html .= $this->includeStylesheets($response);
+    $content = $response->getContent();
+    if (false !== ($pos = strpos($content, '</head>')))
     {
-      $response = $this->getContext()->getResponse();
-
-      // include javascripts and stylesheets
-      sfLoader::loadHelpers(array('Tag', 'Asset'));
-      $html  = $this->includeJavascripts($response);
-      $html .= $this->includeStylesheets($response);
-      $content = $response->getContent();
-      if (false !== ($pos = strpos($content, '</head>')))
-      {
-        $content = substr($content, 0, $pos).$html.substr($content, $pos);
-      }
-
-      $response->setContent($content);
+      $content = substr($content, 0, $pos).$html.substr($content, $pos);
     }
+
+    $response->setContent($content);
   }
 
   protected function includeJavascripts($response)

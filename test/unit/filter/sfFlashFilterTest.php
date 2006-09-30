@@ -63,7 +63,7 @@ class firstTestFilter extends sfFilter
 
     $filterChain->execute();
 
-    // somewhere in your action execution
+    // action execution
     $component = new myComponent();
     $component->user = $user;
     $component->setFlash('this_request', 'foo', 'symfony/flash');
@@ -81,9 +81,15 @@ class lastTestFilter extends sfFilter
     $t  = $this->t;
     $user = $this->user;
 
+    // sfFlashFilter has executed no code
+
+    // register some flash from previous request
+    $user->setAttribute('previous_request', 'foo', 'symfony/flash');
+    $user->setAttribute('every_request', 'foo', 'symfony/flash');
+
     $filterChain->execute();
 
-    // sfFlashFilter has executed all his code
+    // sfFlashFilter has executed all its code
     $t->ok(!$user->hasAttribute('previous_request', 'symfony/flash'), '->execute() removes flash variables that have been tagged before');
     $t->ok(!$user->hasAttribute('previous_request', 'symfony/flash/remove'), '->execute() removes flash variables that have been tagged before');
     $t->is($user->getAttribute('this_request', null, 'symfony/flash'), 'foo', '->execute() keeps current request flash variables');
@@ -95,10 +101,6 @@ $context = new sfContext();
 $user = new myUser();
 $user->initialize($context);
 $context->user = $user;
-
-// register some flash from previous request
-$user->setAttribute('previous_request', 'foo', 'symfony/flash');
-$user->setAttribute('every_request', 'foo', 'symfony/flash');
 
 $filterChain = new sfFilterChain();
 
