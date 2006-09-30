@@ -68,7 +68,7 @@ class symfony_cmd
   }
 }
 
-$t = new lime_test(15, new lime_output_color());
+$t = new lime_test(19, new lime_output_color());
 $c = new symfony_cmd();
 $c->initialize($t);
 
@@ -91,7 +91,13 @@ $t->ok(file_exists($c->tmp_dir.DS.'data'.DS.'sql'.DS.'lib.model.schema.sql'), '"
 $content = $c->execute_command('propel-build-model');
 $t->ok(file_exists($c->tmp_dir.DS.'lib'.DS.'model'.DS.'Article.php'), '"propel-build-model" creates model classes under "lib/model" directory');
 
-$content = $c->execute_command('propel-generate-crud frontend article Article');
-$t->ok(file_exists($c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'modules'.DS.'article'), '"propel-generate-crud" generate a CRUD module');
+$content = $c->execute_command('propel-init-crud frontend articleInitCrud Article');
+$t->ok(file_exists($c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'modules'.DS.'articleInitCrud'.DS.'config'.DS.'generator.yml'), '"propel-init-crud" initializes a CRUD module');
+
+$content = $c->execute_command('propel-generate-crud frontend articleGenCrud Article');
+$t->ok(is_dir($c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'modules'.DS.'articleGenCrud'), '"propel-generate-crud" generates a CRUD module');
+
+$content = $c->execute_command('propel-init-admin frontend articleInitAdmin Article');
+$t->ok(file_exists($c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'modules'.DS.'articleInitAdmin'.DS.'config'.DS.'generator.yml'), '"propel-init-admin" initializes an admin generator module');
 
 $c->shutdown();

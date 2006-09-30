@@ -74,7 +74,7 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
       $parameters = (isset($keys['param']) ? var_export($keys['param'], true) : 'null');
 
       // append new data
-      $data[] = sprintf("\n\$filter = new %s();\n" .
+      $data[] = sprintf("\n\$filter = new %s();\n".
                         "\$filter->initialize(\$this->context, %s);\n".
                         "\$filters[] = \$filter;",
                         $class, $parameters);
