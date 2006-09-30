@@ -10,14 +10,14 @@
 
 /**
  * sfLogger manage all logging in symfony projects. It implements the Singleton pattern.
- * It's a wrapper around Pear_sfLog class. sfLogs are stored in the [sf_app].log file in [sf_log_dir] directory.
- * If [sf_stats_debug] is true, all logging information is also available trough the web debug console.
+ * It's a wrapper around Pear_Log class. Logs are stored in the [sf_app].log file in [sf_log_dir] directory.
+ * If [sf_web_debug] is true, all logging information is also available trough the web debug console.
  *
  * sfLogging can be controlled by 2 constants:
  * - [sf_logging_active]: set to false to disable all logging
  * - [sf_logging_level]:  level of logging
  *
- * Same log levels as Pear_sfLog.
+ * Same log levels as Pear_Log.
  * This list is ordered by highest priority (SF_PEAR_LOG_EMERG) to lowest priority (SF_PEAR_LOG_DEBUG):
  * - EMERG:   System is unusable
  * - ALERT:   Immediate action required
