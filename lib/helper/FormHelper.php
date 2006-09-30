@@ -493,7 +493,7 @@ function textarea_tag($name, $content = null, $options = array())
 
     sfContext::getInstance()->getResponse()->addJavascript($js_path);
 
-    require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/JavascriptHelper.php');
+    use_helper('Javascript');
 
     $tinymce_options = '';
     $style_selector  = '';
