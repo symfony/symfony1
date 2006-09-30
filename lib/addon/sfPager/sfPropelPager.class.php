@@ -43,12 +43,12 @@ class sfPropelPager
     $peer_count_method_name = 'doCount',
     $maxRecordLimit         = false;
 
-  public function __construct($class, $defaultMaxPerPage = 10)
+  public function __construct($class, $maxPerPage = 10)
   {
     $this->setClass($class);
     $this->tableName = constant($class.'Peer::TABLE_NAME');
     $this->setCriteria(new Criteria());
-    $this->setMaxPerPage($defaultMaxPerPage);
+    $this->setMaxPerPage($maxPerPage);
     $this->setPage(1);
     $this->parameter_holder = new sfParameterHolder();
   }
@@ -159,7 +159,7 @@ class sfPropelPager
     $this->currentMaxLink = $links[count($links) - 1];
 
     return $links;
-  }    
+  }
 
   public function haveToPaginate()
   {
