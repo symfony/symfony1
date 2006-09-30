@@ -89,3 +89,12 @@ $b->
   checkResponseElement('head link[rel="stylesheet"]', false)->
   checkResponseElement('head script[type="text/javascript"]', false)
 ;
+
+// libraries autoloading
+$b->
+  get('/autoload/index')->
+  isStatusCode(200)->
+  checkResponseElement('#lib1', 'pong')->
+  checkResponseElement('#lib2', 'pong')->
+  checkResponseElement('#lib3', 'pong')
+;
