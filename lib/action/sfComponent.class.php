@@ -288,16 +288,23 @@ abstract class sfComponent
   }
 
   /**
-   * Sets a flash variable that will be passed to the next
-   * action.
-   * 
+   * Sets a flash variable that will be passed to the next action.
+   *
+   * @param  string  name of the flash variable
+   * @param  string  value of the flash variable
+   * @param  boolean true if the flash have to persist for the following request (true by default)
    * @return void
    */
   public function setFlash($name, $value, $persist = true)
   {
     $this->getUser()->setAttribute($name, $value, 'symfony/flash');
 
-    if (!$persist)
+    if ($persist)
+    {
+      // clear removal flag
+      $this->getUser()->getAttributeHolder()->remove($name, 'symfony/flash/remove');
+    }
+    else
     {
       $this->getUser()->setAttribute($name, true, 'symfony/flash/remove');
     }
