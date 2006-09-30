@@ -77,10 +77,6 @@ class sfDomCssSelector
         }
         $className = substr($token, $pos + 1);
 
-        $bits = explode('.', $token);
-        $tagName = $bits[0] ? $bits[0] : '*';
-        $className = $bits[1];
-
         // Get elements matching tag, filter them for class selector
         $founds = $this->getElementsByTagName($nodes, $tagName);
         $nodes = array();
