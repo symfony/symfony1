@@ -12,7 +12,7 @@ $_test_dir = realpath(dirname(__FILE__).'/../..');
 require_once($_test_dir.'/../lib/vendor/lime/lime.php');
 require_once($_test_dir.'/../lib/util/sfDomCssSelector.class.php');
 
-$t = new lime_test(23, new lime_output_color());
+$t = new lime_test(24, new lime_output_color());
 
 $html = <<<EOF
 <html>
@@ -27,7 +27,7 @@ $html = <<<EOF
     <p class="myfoo">myfoo</p>
     <p class="myfoo" id="mybar">myfoo bis</p>
 
-    <p onclick="javascript:alert('witha.anda#insideanattribute');">works great</p>
+    <p onclick="javascript:alert('with a . and a # inside an attribute');">works great</p>
 
     <ul id="list">
       <li>First</li>
@@ -85,7 +85,7 @@ $t->is($c->getTexts('ul#list li a[class~="foobar1"]'), array('link'), '->getText
 $t->is($c->getTexts('ul#list li a[class^="foo1"]'), array('link'), '->getTexts() supports checking attribute starting with');
 $t->is($c->getTexts('ul#list li a[class$="foobar1"]'), array('link'), '->getTexts() supports checking attribute ending with');
 $t->is($c->getTexts('ul#list li a[class*="oba"]'), array('link'), '->getTexts() supports checking attribute with *');
-//$t->is($c->getTexts('ul#list li a[href="http://www.google.com/"]'), array('link'), '->getTexts() supports checking attribute word matching');
+$t->is($c->getTexts('ul#list li a[href="http://www.google.com/"]'), array('link'), '->getTexts() supports checking attribute word matching');
 $t->is($c->getTexts('ul#anotherlist li a[class|="bar1"]'), array('another link'), '->getTexts() supports checking attribute starting with value followed by optional hyphen');
 
 $t->is($c->getTexts('ul#list li a[class*="oba"][class*="ba"]'), array('link'), '->getTexts() supports chaining attribute selectors');
@@ -93,4 +93,4 @@ $t->is($c->getTexts('p[class="myfoo"][id="mybar"]'), array('myfoo bis'), '->getT
 
 $t->is($c->getTexts('#nonexistant'), array(), '->getTexts() returns an empty array if the id does not exist');
 
-$t->is($c->getTexts('p[onclick*="a.anda#"]'), array('works great'), '->getTexts() takes a CSS selector as its first argument');
+$t->is($c->getTexts('p[onclick*="a . and a #"]'), array('works great'), '->getTexts() support . # and spaces in attribute selectors');

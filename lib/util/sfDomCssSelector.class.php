@@ -41,7 +41,9 @@ class sfDomCssSelector
 
   public function getElements($selector)
   {
-    $tokens = explode(' ', $selector);
+    // split tokens by space except if space is in an attribute selector
+    $tokens = $this->tokenize($selector);
+
     $nodes = array($this->dom);
     foreach ($tokens as $token)
     {
@@ -179,5 +181,36 @@ class sfDomCssSelector
     }
 
     return $founds;
+  }
+
+  protected function tokenize($selector)
+  {
+    $tokens = array();
+
+    $quoted = false;
+    $token = '';
+    for ($i = 0, $max = strlen($selector); $i < $max; $i++)
+    {
+      if (' ' == $selector[$i] && !$quoted)
+      {
+        $tokens[] = $token;
+        $token = '';
+      }
+      else if ('"' == $selector[$i])
+      {
+        $token .= $selector[$i];
+        $quoted = $quoted ? false : true;
+      }
+      else
+      {
+        $token .= $selector[$i];
+      }
+    }
+    if ($token)
+    {
+      $tokens[] = $token;
+    }
+
+    return $tokens;
   }
 }
