@@ -605,6 +605,7 @@ EOF;
     $in_class = false;
     $in_function = false;
     $in_function_declaration = false;
+    $end_of_current_expr = true;
     $open_braces = 0;
     foreach ($tokens as $token)
     {
@@ -624,8 +625,10 @@ EOF;
             break;
           case ';':
             $in_function_declaration = false;
+            $end_of_current_expr = true;
             break;
           case '}':
+            $end_of_current_expr = true;
             --$open_braces;
             if ($open_braces == $in_class)
             {
@@ -652,6 +655,7 @@ EOF;
         case T_WHITESPACE:
         case T_OPEN_TAG:
         case T_CLOSE_TAG:
+          $end_of_current_expr = true;
           $current_line += count(explode("\n", $text)) - 1;
           break;
         case T_COMMENT:
@@ -731,8 +735,13 @@ EOF;
         case T_WHILE:
         case T_XOR_EQUAL:
           $php_lines[$current_line] = true;
+          $end_of_current_expr = false;
           break;
         default:
+          if (false === $end_of_current_expr)
+          {
+            $php_lines[$current_line] = true;
+          }
           //print "$current_line: ".token_name($id)."\n";
       }
     }
