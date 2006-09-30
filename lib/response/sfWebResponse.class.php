@@ -155,7 +155,10 @@ class sfWebResponse extends sfResponse
 
     if ('Content-Type' == $name)
     {
-      $this->setContentType($value);
+      if ($replace)
+      {
+        $this->setContentType($value);
+      }
 
       return;
     }
@@ -207,12 +210,7 @@ class sfWebResponse extends sfResponse
       $value .= '; charset='.sfConfig::get('sf_charset');
     }
 
-    if (isset($this->headers['Content-Type']))
-    {
-      $this->headers['Content-Type'] = array();
-    }
-
-    $this->headers['Content-Type'][] = $value;
+    $this->headers['Content-Type'] = array($value);
   }
 
   /**
@@ -222,7 +220,7 @@ class sfWebResponse extends sfResponse
    */
   public function getContentType ()
   {
-    $ct = $this->getHttpHeader('Content-Type', 'text/html');
+    $ct = $this->getHttpHeader('Content-Type', 'text/html; charset='.sfConfig::get('sf_charset'));
 
     return $ct[0];
   }
