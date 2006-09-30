@@ -46,7 +46,7 @@ abstract class sfGenerator
       // eval template file
       $retval = $this->evalTemplate('templates/'.$template);
 
-      // save actions class
+      // save template file
       $this->getGeneratorManager()->getCache()->set($template, $generatedModuleName.DIRECTORY_SEPARATOR.'templates', $retval);
     }
   }
