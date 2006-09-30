@@ -55,7 +55,7 @@ abstract class sfGenerator
   {
     $templateFile = sfLoader::getGeneratorTemplate($this->getGeneratorClass(), $this->getTheme(), $templateFile);
 
-    // eval template template file
+    // eval template file
     ob_start();
     require($templateFile);
     $content = ob_get_clean();
@@ -74,11 +74,7 @@ abstract class sfGenerator
   protected function replacePhpMarks($text)
   {
     // replace [?php and ?]
-    $text = str_replace('[?php', '<?php',      $text);
-    $text = str_replace('[?=',   '<?php echo', $text);
-    $text = str_replace('?]',    '?>',         $text);
-
-    return $text;
+    return str_replace(array('[?php', '[?=', '?]'), array('<?php', '<?php echo', '?>'), $text);
   }
 
   public function getGeneratorClass()
