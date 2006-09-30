@@ -133,7 +133,7 @@ class sfWebResponse extends sfResponse
   public function setStatusCode ($code, $name = null)
   {
     $this->statusCode = $code;
-    $this->statusText = $name ? $name : $this->statusTexts[$code];
+    $this->statusText = null !== $name ? $name : $this->statusTexts[$code];
   }
 
   public function getStatusCode ()
@@ -163,14 +163,7 @@ class sfWebResponse extends sfResponse
       return;
     }
 
-    $exists = isset($this->headers[$name]);
-
-    if ($exists && !$replace)
-    {
-      return;
-    }
-
-    if (!$exists || $replace)
+    if (!isset($this->headers[$name]) || $replace)
     {
       $this->headers[$name] = array();
     }
@@ -193,6 +186,16 @@ class sfWebResponse extends sfResponse
     }
 
     return $retval;
+  }
+
+  /**
+   * Has a HTTP header.
+   *
+   * @return boolean
+   */
+  public function hasHttpHeader ($name)
+  {
+    return isset($this->headers[$this->normalizeHeaderName($name)]);
   }
 
   /**
@@ -223,16 +226,6 @@ class sfWebResponse extends sfResponse
     $ct = $this->getHttpHeader('Content-Type', 'text/html; charset='.sfConfig::get('sf_charset'));
 
     return $ct[0];
-  }
-
-  /**
-   * Has a HTTP header.
-   *
-   * @return boolean
-   */
-  public function hasHttpHeader ($name)
-  {
-    return isset($this->headers[$this->normalizeHeaderName($name)]);
   }
 
   /**
@@ -387,7 +380,7 @@ class sfWebResponse extends sfResponse
     return $this->parameter_holder->getAll('helper/asset/auto/meta');
   }
 
-  public function addMeta($key, $value, $override = true, $doNotEscape = false)
+  public function addMeta($key, $value, $override = true, $escape = true)
   {
     if ($override || !$this->hasParameter($key, 'helper/asset/auto/meta'))
     {
@@ -396,7 +389,7 @@ class sfWebResponse extends sfResponse
         $value = sfConfig::get('sf_i18n_instance')->__($value);
       }
 
-      if (!$doNotEscape)
+      if ($escape)
       {
         $value = htmlentities($value, ENT_QUOTES, sfConfig::get('sf_charset'));
       }
@@ -408,19 +401,19 @@ class sfWebResponse extends sfResponse
   public function getTitle()
   {
     $metas = $this->parameter_holder->getAll('helper/asset/auto/meta');
-	
-    return (array_key_exists('title', $metas)) ? $metas['title'] : false;
+
+    return (array_key_exists('title', $metas)) ? $metas['title'] : '';
   }
 
-  public function setTitle($title, $doNotEscape = false)
+  public function setTitle($title, $escape = true)
   {
-    if (!$doNotEscape)
+    if (sfConfig::get('sf_i18n'))
     {
-      if (sfConfig::get('sf_i18n'))
-      {
-        $title = sfConfig::get('sf_i18n_instance')->__($title);
-      }
+      $title = sfConfig::get('sf_i18n_instance')->__($title);
+    }
 
+    if ($escape)
+    {
       $title = htmlentities($title, ENT_QUOTES, sfConfig::get('sf_charset'));
     }
 
