@@ -48,8 +48,8 @@ class myTestBrowser extends sfTestBrowser
     sfToolkit::clearDirectory(sfConfig::get('sf_cache_dir'));
     $generatorManager = new sfGeneratorManager();
     $generatorManager->initialize();
-    mkdir(sfconfig::get('sf_config_cache_dir'), 0777);
-    file_put_contents(sfconfig::get('sf_config_cache_dir').'/modules_article_config_generator.yml.php', $generatorManager->generate('sfPropelAdminGenerator', $params));
+    mkdir(sfConfig::get('sf_config_cache_dir'), 0777);
+    file_put_contents(sfConfig::get('sf_config_cache_dir').'/modules_article_config_generator.yml.php', $generatorManager->generate('sfPropelAdminGenerator', $params));
   }
 }
 
@@ -337,11 +337,14 @@ $b->
   checkResponseElement('#sf_admin_list_th_category_id', false)->
   checkResponseElement('#sf_admin_list_th_created_at', false)->
 /*
+  // not possible because actions class is already in memory
+  // and in PHP there is no way to reload a class!
   // max per page
   checkListCustomization('max per page customization', array('max_per_page' => 5))->
   checkResponseElement('body table tfoot tr th a[href*="/article/list/page/7"]', true)->
   checkResponseElement('body table tbody tr', 5)->
 */
+
   // list buttons
   checkListCustomization('remove create button', array('actions' => '-'))->
   checkResponseElement('body input[class="sf_admin_action_create"][onclick*="/article/create"]', false)->
