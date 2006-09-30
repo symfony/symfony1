@@ -179,7 +179,7 @@ $b->
   checkResponseElement('body form#sf_admin_edit_form label[for="article_created_at"]', 'Created at:')->
 
   // form elements
-  checkResponseElement('body form#sf_admin_edit_form input[name="article[title]"][id="article_title"][value*="title"]')->
+  checkResponseElement('body form#sf_admin_edit_form input[name="article[title]"][id="article_title"][value="foo title"]')->
   checkResponseElement('body form#sf_admin_edit_form textarea[name="article[body]"][id="article_body"]', 'bar body')->
   checkResponseElement('body form#sf_admin_edit_form select[name="article[category_id]"][id="article_category_id"]', true)->
   checkResponseElement('body form#sf_admin_edit_form select[name="article[category_id]"][id="article_category_id"] option[value="1"]', '1')->
@@ -208,7 +208,7 @@ $b->
   isRequestParameter('id', 1)->
 
   // check values
-  checkResponseElement('input[id="article_title"][value*="my"]')->
+  checkResponseElement('input[id="article_title"][value="my title"]')->
   checkResponseElement('#article_body', 'my body')->
   checkResponseElement('#article_category_id option[selected="selected"]', '2')
 ;
@@ -250,7 +250,7 @@ $b->
   isRequestParameter('id', 3)->
 
   // check values
-  checkResponseElement('input[id="article_title"][value*="new"]')->
+  checkResponseElement('input[id="article_title"][value="new title"]')->
   checkResponseElement('#article_body', 'new body')->
   checkResponseElement('#article_category_id option[selected="selected"]', '2')->
 
@@ -351,11 +351,11 @@ $b->
 
   checkListCustomization('add custom button', array('actions' => array('_create' => null, 'custom' => array('name' => 'my button', 'action' => 'myAction', 'params' => 'class=myButtonClass'))))->
   checkResponseElement('body input[class="sf_admin_action_create"][onclick*="/article/create"]', true)->
-  checkResponseElement('body input[class="myButtonClass"][onclick*="/article/myAction"][value*="button"]', true)->
+  checkResponseElement('body input[class="myButtonClass"][onclick*="/article/myAction"][value="my button"]', true)->
 
   checkListCustomization('add custom button without create', array('actions' => array('custom' => array('name' => 'my button', 'action' => 'myAction', 'params' => 'class=myButtonClass'))))->
   checkResponseElement('body input[class="sf_admin_action_create"][onclick*="/article/create"]', false)->
-  checkResponseElement('body input[class="myButtonClass"][onclick*="/article/myAction"][value*="button"]', true)->
+  checkResponseElement('body input[class="myButtonClass"][onclick*="/article/myAction"][value="my button"]', true)->
 
   // edit
   checkEditCustomization('edit title customization', array('title' => 'edit test title'))->
