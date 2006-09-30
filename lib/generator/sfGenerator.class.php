@@ -34,19 +34,8 @@ abstract class sfGenerator
 
   protected function generatePhpFiles($generatedModuleName, $templateFiles = array())
   {
-    // template directory
-    $template_dir = sfConfig::get('sf_symfony_data_dir').'/generator/'.$this->getGeneratorClass().'/'.$this->getTheme().'/template';
-
-    // default template directory
-    $default_template_dir = sfConfig::get('sf_symfony_data_dir').'/generator/'.$this->getGeneratorClass().'/default/template';
-
     // eval actions file
-    $action_template = $template_dir.'/actions/actions.class.php';
-    if (!is_readable($action_template))
-    {
-      $action_template = $default_template_dir.'/actions/actions.class.php';
-    }
-    $retval = $this->evalTemplate($action_template);
+    $retval = $this->evalTemplate('actions/actions.class.php');
 
     // save actions class
     $this->getGeneratorManager()->getCache()->set('actions.class.php', $generatedModuleName.DIRECTORY_SEPARATOR.'actions', $retval);
@@ -55,28 +44,20 @@ abstract class sfGenerator
     foreach ($templateFiles as $template)
     {
       // eval template file
-      $template_template = $template_dir.'/templates/'.$template;
-      if (!is_readable($template_template))
-      {
-        $template_template = $default_template_dir.'/templates/'.$template;
-        if (!is_readable($template_template))
-        {
-          // this template does not exist for this generator
-          continue;
-        }
-      }
-      $retval = $this->evalTemplate($template_template);
+      $retval = $this->evalTemplate('templates/'.$template);
 
       // save actions class
       $this->getGeneratorManager()->getCache()->set($template, $generatedModuleName.DIRECTORY_SEPARATOR.'templates', $retval);
     }
   }
 
-  protected function evalTemplate($template_file)
+  protected function evalTemplate($templateFile)
   {
+    $templateFile = sfLoader::getGeneratorTemplate($this->getGeneratorClass(), $this->getTheme(), $templateFile);
+
     // eval template template file
     ob_start();
-    require($template_file);
+    require($templateFile);
     $content = ob_get_clean();
 
     // replace [?php and ?]

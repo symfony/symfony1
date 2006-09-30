@@ -68,6 +68,28 @@ class sfLoader
     return null;
   }
 
+  static public function getGeneratorTemplateDirs($class, $theme)
+  {
+    $dirs = glob(sfConfig::get('sf_plugins_dir').'/*/data/generator/'.$class.'/'.$theme.'/template'); // plugin directories
+    $dirs[] = sfConfig::get('sf_symfony_data_dir').'/generator/'.$class.'/default/template';          // default theme directory
+
+    return $dirs;
+  }
+
+  static public function getGeneratorTemplate($class, $theme, $path)
+  {
+    $dirs = self::getGeneratorTemplateDirs($class, $theme);
+    foreach ($dirs as $dir)
+    {
+      if (is_readable($dir.'/'.$path))
+      {
+        return $dir.'/'.$path;
+      }
+    }
+
+    throw new sfException(sprintf('Unable to load "%s" generator template in: %s', $path, implode(', ', $dirs)));
+  }
+
   static public function getConfigDirs($configPath)
   {
     $globalConfigPath = basename(dirname($configPath)).'/'.basename($configPath);
