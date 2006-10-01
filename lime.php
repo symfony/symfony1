@@ -597,8 +597,13 @@ EOF;
     $output->echoln(sprintf("TOTAL COVERAGE: %3.0f%%", $total_covered_lines * 100 / $total_php_lines));
   }
 
-  function compute($content, $cov)
+  static function get_php_lines($content)
   {
+    if (is_readable($content))
+    {
+      $content = file_get_contents($content);
+    }
+
     $tokens = token_get_all($content);
     $php_lines = array();
     $current_line = 1;
@@ -745,6 +750,13 @@ EOF;
           //print "$current_line: ".token_name($id)."\n";
       }
     }
+
+    return $php_lines;
+  }
+
+  function compute($content, $cov)
+  {
+    $php_lines = self::get_php_lines($content);
 
     // we remove from $cov non php lines
     foreach (array_diff_key($cov, $php_lines) as $line => $tmp)
