@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(24, new lime_output_color());
+$t = new lime_test(29, new lime_output_color());
 
 $html = <<<EOF
 <html>
@@ -47,6 +47,17 @@ $html = <<<EOF
       </ul>
     </ul>
 
+    <div id="combinators">
+      <ul>
+        <li>test 1</li>
+        <li>test 2</li>
+        <ul>
+          <li>test 3</li>
+          <li>test 4</li>
+        </ul>
+      </ul>
+    </div>
+
     <div id="footer">footer</div>
   </body>
 </html>
@@ -61,6 +72,7 @@ $t->diag('->getTexts()');
 
 $c = new sfDomCssSelector($dom);
 
+$t->diag('basic selectors');
 $t->is($c->getTexts('h1'), array('Test page'), '->getTexts() takes a CSS selector as its first argument');
 $t->is($c->getTexts('h2'), array('Title 1', 'Title 2'), '->getTexts() returns an array of matching texts');
 $t->is($c->getTexts('#footer'), array('footer'), '->getTexts() supports searching html elements by id');
@@ -76,6 +88,9 @@ $t->is($c->getTexts('.foobar'), array('multi-classes'), '->getTexts() supports s
 
 $t->is($c->getTexts('ul#mylist ul li'), array('element 3', 'element 4'), '->getTexts() supports searching html elements by several selectors');
 
+$t->is($c->getTexts('#nonexistant'), array(), '->getTexts() returns an empty array if the id does not exist');
+
+$t->diag('attribute selectors');
 $t->is($c->getTexts('ul#list li a[href]'), array('link'), '->getTexts() supports checking attribute existence');
 $t->is($c->getTexts('ul#list li a[class~="foo1"]'), array('link'), '->getTexts() supports checking attribute word matching');
 $t->is($c->getTexts('ul#list li a[class~="bar1"]'), array('link'), '->getTexts() supports checking attribute word matching');
@@ -89,6 +104,11 @@ $t->is($c->getTexts('ul#anotherlist li a[class|="bar1"]'), array('another link')
 $t->is($c->getTexts('ul#list li a[class*="oba"][class*="ba"]'), array('link'), '->getTexts() supports chaining attribute selectors');
 $t->is($c->getTexts('p[class="myfoo"][id="mybar"]'), array('myfoo bis'), '->getTexts() supports chaining attribute selectors');
 
-$t->is($c->getTexts('#nonexistant'), array(), '->getTexts() returns an empty array if the id does not exist');
-
 $t->is($c->getTexts('p[onclick*="a . and a #"]'), array('works great'), '->getTexts() support . # and spaces in attribute selectors');
+
+$t->diag('combinators');
+$t->is($c->getTexts('body  h1'), array('Test page'), '->getTexts() takes a CSS selectors separated by one or more spaces');
+$t->is($c->getTexts('div#combinators > ul  >   li'), array('test 1', 'test 2'), '->getTexts() support > combinator');
+$t->is($c->getTexts('div#combinators>ul>li'), array('test 1', 'test 2'), '->getTexts() support > combinator with optional surrounding spaces');
+$t->is($c->getTexts('div#combinators ul  +   li'), array('test 1', 'test 3'), '->getTexts() support + combinator');
+$t->is($c->getTexts('div#combinators ul+li'), array('test 1', 'test 3'), '->getTexts() support + combinator with optional surrounding spaces');

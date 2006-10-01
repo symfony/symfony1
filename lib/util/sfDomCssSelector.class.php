@@ -41,13 +41,13 @@ class sfDomCssSelector
 
   public function getElements($selector)
   {
-    // split tokens by space except if space is in an attribute selector
     $tokens = $this->tokenize($selector);
 
     $nodes = array($this->dom);
     foreach ($tokens as $token)
     {
-      $token = trim($token);
+      $combinator = $token['combinator'];
+      $token = trim($token['name']);
       $pos = strpos($token, '#');
       if (false !== $pos && preg_match('/^[A-Za-z0-9]*$/', substr($token, 0, $pos)))
       {
@@ -80,7 +80,7 @@ class sfDomCssSelector
         $className = substr($token, $pos + 1);
 
         // Get elements matching tag, filter them for class selector
-        $founds = $this->getElementsByTagName($nodes, $tagName);
+        $founds = $this->getElementsByTagName($nodes, $tagName, $combinator);
         $nodes = array();
         foreach ($founds as $found)
         {
@@ -111,7 +111,7 @@ class sfDomCssSelector
         /x', $matches[2], $matches, PREG_SET_ORDER);
 
         // Grab all of the tagName elements within current node
-        $founds = $this->getElementsByTagName($nodes, $tagName);
+        $founds = $this->getElementsByTagName($nodes, $tagName, $combinator);
         $nodes = array();
         foreach ($founds as $found)
         {
@@ -163,20 +163,41 @@ class sfDomCssSelector
       }
 
       // If we get here, token is JUST an element (not a class or ID selector)
-      $nodes = $this->getElementsByTagName($nodes, $token);
+      $nodes = $this->getElementsByTagName($nodes, $token, $combinator);
     }
 
     return $nodes;
   }
 
-  protected function getElementsByTagName($nodes, $tagName)
+  protected function getElementsByTagName($nodes, $tagName, $combinator = ' ')
   {
     $founds = array();
     foreach ($nodes as $node)
     {
-      foreach ($node->getElementsByTagName($tagName) as $element)
+      switch ($combinator)
       {
-        $founds[] = $element;
+        case ' ':
+          foreach ($node->getElementsByTagName($tagName) as $element)
+          {
+            $founds[] = $element;
+          }
+          break;
+        case '>':
+          foreach ($node->childNodes as $element)
+          {
+            if ($tagName == $element->nodeName)
+            {
+              $founds[] = $element;
+            }
+          }
+          break;
+        case '+':
+          $element = $node->childNodes->item(0);
+          if ($tagName == $element->nodeName)
+          {
+            $founds[] = $element;
+          }
+          break;
       }
     }
 
@@ -185,28 +206,40 @@ class sfDomCssSelector
 
   protected function tokenize($selector)
   {
+    // split tokens by space except if space is in an attribute selector
     $tokens = array();
 
+    $combinators = array(' ', '>', '+');
     $quoted = false;
-    $token = '';
+    $token = array('combinator' => ' ', 'name' => '');
     for ($i = 0, $max = strlen($selector); $i < $max; $i++)
     {
-      if (' ' == $selector[$i] && !$quoted)
+      if (in_array($selector[$i], $combinators) && !$quoted)
       {
+        // remove all whitespaces around the combinator
+        $combinator = $selector[$i];
+        while (in_array($selector[$i + 1], $combinators))
+        {
+          if (' ' != $selector[++$i])
+          {
+            $combinator = $selector[$i];
+          }
+        }
+
         $tokens[] = $token;
-        $token = '';
+        $token = array('combinator' => $combinator, 'name' => '');
       }
       else if ('"' == $selector[$i])
       {
-        $token .= $selector[$i];
+        $token['name'] .= $selector[$i];
         $quoted = $quoted ? false : true;
       }
       else
       {
-        $token .= $selector[$i];
+        $token['name'] .= $selector[$i];
       }
     }
-    if ($token)
+    if ($token['name'])
     {
       $tokens[] = $token;
     }
