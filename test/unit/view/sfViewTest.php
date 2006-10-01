@@ -8,12 +8,8 @@
  * file that was distributed with this source code.
  */
 
-$_test_dir = realpath(dirname(__FILE__).'/../..');
-require_once($_test_dir.'/../lib/vendor/lime/lime.php');
+require_once(dirname(__FILE__).'/../bootstrap.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
-require_once($_test_dir.'/../lib/config/sfConfig.class.php');
-require_once($_test_dir.'/../lib/util/sfParameterHolder.class.php');
-require_once($_test_dir.'/../lib/view/sfView.class.php');
 
 $t = new lime_test(14, new lime_output_color());
 

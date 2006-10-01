@@ -9,6 +9,7 @@
  */
 
 $_test_dir = realpath(dirname(__FILE__).'/..');
+require_once($_test_dir.'/../lib/vendor/lime/lime.php');
 require_once($_test_dir.'/../lib/vendor/pake/pakeFinder.class.php');
 require_once($_test_dir.'/../lib/config/sfConfig.class.php');
 sfConfig::set('sf_symfony_lib_dir', realpath($_test_dir.'/../lib'));
