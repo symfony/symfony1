@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(29, new lime_output_color());
+$t = new lime_test(35, new lime_output_color());
 
 $html = <<<EOF
 <html>
@@ -112,3 +112,11 @@ $t->is($c->getTexts('div#combinators > ul  >   li'), array('test 1', 'test 2'), 
 $t->is($c->getTexts('div#combinators>ul>li'), array('test 1', 'test 2'), '->getTexts() support > combinator with optional surrounding spaces');
 $t->is($c->getTexts('div#combinators ul  +   li'), array('test 1', 'test 3'), '->getTexts() support + combinator');
 $t->is($c->getTexts('div#combinators ul+li'), array('test 1', 'test 3'), '->getTexts() support + combinator with optional surrounding spaces');
+
+$t->is($c->getTexts('h1, h2'), array('Test page', 'Title 1', 'Title 2'), '->getTexts() takes a multiple CSS selectors separated by a ,');
+$t->is($c->getTexts('h1,h2'), array('Test page', 'Title 1', 'Title 2'), '->getTexts() takes a multiple CSS selectors separated by a ,');
+$t->is($c->getTexts('h1  ,   h2'), array('Test page', 'Title 1', 'Title 2'), '->getTexts() takes a multiple CSS selectors separated by a ,');
+$t->is($c->getTexts('h1, h1,h1'), array('Test page'), '->getTexts() returns nodes only once for multiple selectors');
+$t->is($c->getTexts('h1,h2,h1'), array('Test page', 'Title 1', 'Title 2'), '->getTexts() returns nodes only once for multiple selectors');
+
+$t->is($c->getTexts('p[onclick*="a . and a #"], div#combinators > ul + li'), array('works great', 'test 1'), '->getTexts() mega example!');

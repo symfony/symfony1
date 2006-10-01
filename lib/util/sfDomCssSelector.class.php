@@ -41,132 +41,136 @@ class sfDomCssSelector
 
   public function getElements($selector)
   {
-    $tokens = $this->tokenize($selector);
-
-    $nodes = array($this->dom);
-    foreach ($tokens as $token)
+    $all_nodes = array();
+    foreach ($this->tokenize_selectors($selector) as $selector)
     {
-      $combinator = $token['combinator'];
-      $token = trim($token['name']);
-      $pos = strpos($token, '#');
-      if (false !== $pos && preg_match('/^[A-Za-z0-9]*$/', substr($token, 0, $pos)))
+      $nodes = array($this->dom);
+      foreach ($this->tokenize($selector) as $token)
       {
-        // Token is an ID selector
-        $tagName = substr($token, 0, $pos);
-        $id = substr($token, $pos + 1);
-        $xpath = new DomXPath($this->dom);
-        $element = $xpath->query(sprintf("//*[@id = '%s']", $id))->item(0);
-        if (!$element || ($tagName && strtolower($element->nodeName) != $tagName))
+        $combinator = $token['combinator'];
+        $token = trim($token['name']);
+        $pos = strpos($token, '#');
+        if (false !== $pos && preg_match('/^[A-Za-z0-9]*$/', substr($token, 0, $pos)))
         {
-          // tag with that ID not found
-          return array();
-        }
-
-        // Set nodes to contain just this element
-        $nodes = array($element);
-
-        continue; // Skip to next token
-      }
-
-      $pos = strpos($token, '.');
-      if (false !== $pos && preg_match('/^[A-Za-z0-9]*$/', substr($token, 0, $pos)))
-      {
-        // Token contains a class selector
-        $tagName = substr($token, 0, $pos);
-        if (!$tagName)
-        {
-          $tagName = '*';
-        }
-        $className = substr($token, $pos + 1);
-
-        // Get elements matching tag, filter them for class selector
-        $founds = $this->getElementsByTagName($nodes, $tagName, $combinator);
-        $nodes = array();
-        foreach ($founds as $found)
-        {
-          if (preg_match('/\b'.$className.'\b/', $found->getAttribute('class')))
+          // Token is an ID selector
+          $tagName = substr($token, 0, $pos);
+          $id = substr($token, $pos + 1);
+          $xpath = new DomXPath($this->dom);
+          $element = $xpath->query(sprintf("//*[@id = '%s']", $id))->item(0);
+          if (!$element || ($tagName && strtolower($element->nodeName) != $tagName))
           {
-            $nodes[] = $found;
+            // tag with that ID not found
+            return array();
           }
+
+          // Set nodes to contain just this element
+          $nodes = array($element);
+
+          continue; // Skip to next token
         }
 
-        continue; // Skip to next token
-      }
-
-      // Code to deal with attribute selectors
-      if (preg_match('/^(\w*)(\[.+\])$/', $token, $matches))
-      {
-        $tagName = $matches[1] ? $matches[1] : '*';
-        preg_match_all('/
-          \[
-            (\w+)                 # attribute
-            ([=~\|\^\$\*]?)       # modifier (optional)
-            =?                    # equal (optional)
-            (
-              "([^"]*)"         # quoted value (optional)
-              |
-              ([^\]]*)      # non quoted value (optional)
-            )
-          \]
-        /x', $matches[2], $matches, PREG_SET_ORDER);
-
-        // Grab all of the tagName elements within current node
-        $founds = $this->getElementsByTagName($nodes, $tagName, $combinator);
-        $nodes = array();
-        foreach ($founds as $found)
+        $pos = strpos($token, '.');
+        if (false !== $pos && preg_match('/^[A-Za-z0-9]*$/', substr($token, 0, $pos)))
         {
-          $ok = false;
-          foreach ($matches as $match)
+          // Token contains a class selector
+          $tagName = substr($token, 0, $pos);
+          if (!$tagName)
           {
-            $attrName = $match[1];
-            $attrOperator = $match[2];
-            $attrValue = $match[4];
+            $tagName = '*';
+          }
+          $className = substr($token, $pos + 1);
 
-            switch ($attrOperator)
+          // Get elements matching tag, filter them for class selector
+          $founds = $this->getElementsByTagName($nodes, $tagName, $combinator);
+          $nodes = array();
+          foreach ($founds as $found)
+          {
+            if (preg_match('/\b'.$className.'\b/', $found->getAttribute('class')))
             {
-              case '=': // Equality
-                $ok = $found->getAttribute($attrName) == $attrValue;
-                break;
-              case '~': // Match one of space seperated words
-                $ok = preg_match('/\b'.preg_quote($attrValue, '/').'\b/', $found->getAttribute($attrName));
-                break;
-              case '|': // Match start with value followed by optional hyphen
-                $ok = preg_match('/^'.preg_quote($attrValue, '/').'-?/', $found->getAttribute($attrName));
-                break;
-              case '^': // Match starts with value
-                $ok = 0 === strpos($found->getAttribute($attrName), $attrValue);
-                break;
-              case '$': // Match ends with value
-                $ok = $attrValue == substr($found->getAttribute($attrName), -strlen($attrValue));
-                break;
-              case '*': // Match ends with value
-                $ok = false !== strpos($found->getAttribute($attrName), $attrValue);
-                break;
-              default :
-                // Just test for existence of attribute
-                $ok = $found->hasAttribute($attrName);
-            }
-
-            if (false == $ok)
-            {
-              break;
+              $nodes[] = $found;
             }
           }
 
-          if ($ok)
-          {
-            $nodes[] = $found;
-          }
+          continue; // Skip to next token
         }
 
-        continue; // Skip to next token
+        // Code to deal with attribute selectors
+        if (preg_match('/^(\w*)(\[.+\])$/', $token, $matches))
+        {
+          $tagName = $matches[1] ? $matches[1] : '*';
+          preg_match_all('/
+            \[
+              (\w+)                 # attribute
+              ([=~\|\^\$\*]?)       # modifier (optional)
+              =?                    # equal (optional)
+              (
+                "([^"]*)"           # quoted value (optional)
+                |
+                ([^\]]*)            # non quoted value (optional)
+              )
+            \]
+          /x', $matches[2], $matches, PREG_SET_ORDER);
+
+          // Grab all of the tagName elements within current node
+          $founds = $this->getElementsByTagName($nodes, $tagName, $combinator);
+          $nodes = array();
+          foreach ($founds as $found)
+          {
+            $ok = false;
+            foreach ($matches as $match)
+            {
+              $attrName = $match[1];
+              $attrOperator = $match[2];
+              $attrValue = $match[4];
+
+              switch ($attrOperator)
+              {
+                case '=': // Equality
+                  $ok = $found->getAttribute($attrName) == $attrValue;
+                  break;
+                case '~': // Match one of space seperated words
+                  $ok = preg_match('/\b'.preg_quote($attrValue, '/').'\b/', $found->getAttribute($attrName));
+                  break;
+                case '|': // Match start with value followed by optional hyphen
+                  $ok = preg_match('/^'.preg_quote($attrValue, '/').'-?/', $found->getAttribute($attrName));
+                  break;
+                case '^': // Match starts with value
+                  $ok = 0 === strpos($found->getAttribute($attrName), $attrValue);
+                  break;
+                case '$': // Match ends with value
+                  $ok = $attrValue == substr($found->getAttribute($attrName), -strlen($attrValue));
+                  break;
+                case '*': // Match ends with value
+                  $ok = false !== strpos($found->getAttribute($attrName), $attrValue);
+                  break;
+                default :
+                  // Just test for existence of attribute
+                  $ok = $found->hasAttribute($attrName);
+              }
+
+              if (false == $ok)
+              {
+                break;
+              }
+            }
+
+            if ($ok)
+            {
+              $nodes[] = $found;
+            }
+          }
+
+          continue; // Skip to next token
+        }
+
+        // If we get here, token is JUST an element (not a class or ID selector)
+        $nodes = $this->getElementsByTagName($nodes, $token, $combinator);
       }
 
-      // If we get here, token is JUST an element (not a class or ID selector)
-      $nodes = $this->getElementsByTagName($nodes, $token, $combinator);
+      $all_nodes = array_unique(array_merge($all_nodes, $nodes));
     }
 
-    return $nodes;
+    return $all_nodes;
   }
 
   protected function getElementsByTagName($nodes, $tagName, $combinator = ' ')
@@ -204,11 +208,41 @@ class sfDomCssSelector
     return $founds;
   }
 
+  protected function tokenize_selectors($selector)
+  {
+    // split tokens by , except in an attribute selector
+    $tokens = array();
+    $quoted = false;
+    $token = '';
+    for ($i = 0, $max = strlen($selector); $i < $max; $i++)
+    {
+      if (',' == $selector[$i] && !$quoted)
+      {
+        $tokens[] = trim($token);
+        $token = '';
+      }
+      else if ('"' == $selector[$i])
+      {
+        $token .= $selector[$i];
+        $quoted = $quoted ? false : true;
+      }
+      else
+      {
+        $token .= $selector[$i];
+      }
+    }
+    if ($token)
+    {
+      $tokens[] = trim($token);
+    }
+
+    return $tokens;
+  }
+
   protected function tokenize($selector)
   {
     // split tokens by space except if space is in an attribute selector
     $tokens = array();
-
     $combinators = array(' ', '>', '+');
     $quoted = false;
     $token = array('combinator' => ' ', 'name' => '');
