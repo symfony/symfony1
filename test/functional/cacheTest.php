@@ -9,7 +9,7 @@
  */
 
 $app = 'cache';
-$ret = include(dirname(__FILE__).'/bootstrap.php');
+$ret = include(dirname(__FILE__).'/../bootstrap/functional.php');
 if (!$ret)
 {
   return;

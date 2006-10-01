@@ -15,7 +15,7 @@ $h = new lime_harness(new lime_output_color());
 $h->base_dir = dirname(__FILE__);
 
 // cache autoload files
-require_once(dirname(__FILE__).'/unit/bootstrap.php');
+require_once(dirname(__FILE__).'/bootstrap/unit.php');
 testAutoloader::initialize(true);
 
 // unit tests

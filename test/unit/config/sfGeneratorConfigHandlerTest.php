@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-require_once(dirname(__FILE__).'/../bootstrap.php');
+require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 sfConfig::set('sf_symfony_lib_dir', realpath(dirname(__FILE__).'/../../../lib'));
 

@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-require_once(dirname(__FILE__).'/../bootstrap.php');
+require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
 $t = new lime_test(14, new lime_output_color());
