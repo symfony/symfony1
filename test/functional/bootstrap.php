@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-// we need sqlite for functionnal tests
+// we need sqlite for functional tests
 if (!extension_loaded('SQLite'))
 {
   return false;

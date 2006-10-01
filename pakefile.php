@@ -43,8 +43,8 @@ function run_test($task, $args)
   // unit tests
   $h->register_glob($h->base_dir.'/unit/*/*Test.php');
 
-  // functionnal tests
-  $h->register_glob($h->base_dir.'/functionnal/*Test.php');
+  // functional tests
+  $h->register_glob($h->base_dir.'/functional/*Test.php');
 
   $h->run();
 }

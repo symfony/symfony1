@@ -21,8 +21,8 @@ testAutoloader::initialize(true);
 // unit tests
 $h->register_glob($h->base_dir.'/unit/*/*Test.php');
 
-// functionnal tests
-$h->register_glob($h->base_dir.'/functionnal/*Test.php');
+// functional tests
+$h->register_glob($h->base_dir.'/functional/*Test.php');
 
 // other tests
 $h->register_glob($h->base_dir.'/other/*Test.php');
