@@ -14,6 +14,11 @@ pake_task('upgrade', 'project_exists');
 pake_desc('downgrade to a previous symfony release');
 pake_task('downgrade', 'project_exists');
 
+function run_downgrade($task, $args)
+{
+  throw new Exception('I have no downgrade script for this release.');
+}
+
 function run_upgrade($task, $args)
 {
   if (!isset($args[0]))
