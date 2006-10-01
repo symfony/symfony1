@@ -21,6 +21,9 @@ test:
     etag:                   off
 
 all:
+  .settings:
+    activated_modules:      [default, autoloadPlugin]
+
 #  .actions:
 #    default_module:         default
 #    default_action:         index

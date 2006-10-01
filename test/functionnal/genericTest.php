@@ -96,5 +96,15 @@ $b->
   isStatusCode(200)->
   checkResponseElement('#lib1', 'pong')->
   checkResponseElement('#lib2', 'pong')->
+  checkResponseElement('#lib3', 'pong')->
+  checkResponseElement('#lib4', 'nopong')
+;
+
+// libraries autoloading in a plugin
+$b->
+  get('/autoloadPlugin/index')->
+  isStatusCode(200)->
+  checkResponseElement('#lib1', 'pong')->
+  checkResponseElement('#lib2', 'pong')->
   checkResponseElement('#lib3', 'pong')
 ;

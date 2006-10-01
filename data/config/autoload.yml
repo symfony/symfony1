@@ -31,6 +31,7 @@ autoload:
   plugins_module_lib:
     name:           plugins module lib
     path:           %SF_PLUGINS_DIR%/*/modules/*/lib
+    prefix:         2
     recursive:      on
 
   # project
@@ -54,4 +55,5 @@ autoload:
   modules:
     name:           module
     path:           %SF_APP_DIR%/modules/*/lib
+    prefix:         1
     recursive:      on

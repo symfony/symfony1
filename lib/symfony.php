@@ -91,13 +91,11 @@ final class Symfony
     // must be in a module context
     if (sfContext::hasInstance())
     {
-      $current_module = sfContext::getInstance()->getModuleName();
-      if ($current_module)
+      if ($module = sfContext::getInstance()->getModuleName())
       {
-        $module_lib = sfConfig::get('sf_app_module_dir').'/'.$current_module.'/'.sfConfig::get('sf_app_module_lib_dir_name').'/'.$class.'.class.php';
-        if (is_readable($module_lib))
+        if (isset(self::$classes[$module.'/'.$class]))
         {
-          require($module_lib);
+          require(self::$classes[$module.'/'.$class]);
 
           return true;
         }
