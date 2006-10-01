@@ -1,0 +1,5 @@
+functional/frontend/articleInitCrudActionsTest.......................ok
+functional/frontend/fooActionsTest...................................ok
+unit/testTest........................................................ok
+All tests successful.
+Files=3, Tests=9

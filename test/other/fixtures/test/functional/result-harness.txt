@@ -1,0 +1,4 @@
+articleInitCrudActionsTest...........................................ok
+fooActionsTest.......................................................ok
+All tests successful.
+Files=2, Tests=8

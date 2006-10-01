@@ -106,7 +106,7 @@ function run_init_app($task, $args)
   run_fix_perms($task, $args);
 
   // create test dir
-  pake_mkdirs($sf_root_dir.'/test/'.$app);
+  pake_mkdirs($sf_root_dir.'/test/functional/'.$app);
 }
 
 function run_init_module($task, $args)
@@ -156,10 +156,10 @@ function run_init_module($task, $args)
   pake_mirror($finder, $sf_skeleton_dir.'/module/', $module_dir);
 
   // create basic test
-  pake_copy($sf_skeleton_dir.'/test/actionsTest.php', $sf_root_dir.'/test/'.$app.'/'.$module.'ActionsTest.php');
+  pake_copy($sf_skeleton_dir.'/test/actionsTest.php', $sf_root_dir.'/test/functional/'.$app.'/'.$module.'ActionsTest.php');
 
   // customize test file
-  pake_replace_tokens($module.'ActionsTest.php', $sf_root_dir.'/test/'.$app, '##', '##', $constants);
+  pake_replace_tokens($module.'ActionsTest.php', $sf_root_dir.'/test/functional/'.$app, '##', '##', $constants);
 
   // customize php and yml files
   $finder = pakeFinder::type('file')->name('*.php', '*.yml');

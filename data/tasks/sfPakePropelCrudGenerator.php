@@ -45,10 +45,10 @@ function run_propel_init_crud($task, $args)
   pake_mirror($finder, sfConfig::get('sf_symfony_data_dir').'/generator/sfPropelCrud/default/skeleton/', $moduleDir);
 
   // create basic test
-  pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/module/test/actionsTest.php', $sf_root_dir.'/test/'.$app.'/'.$module.'ActionsTest.php');
+  pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/module/test/actionsTest.php', $sf_root_dir.'/test/functional/'.$app.'/'.$module.'ActionsTest.php');
 
   // customize test file
-  pake_replace_tokens($module.'ActionsTest.php', $sf_root_dir.'/test/'.$app, '##', '##', $constants);
+  pake_replace_tokens($module.'ActionsTest.php', $sf_root_dir.'/test/functional/'.$app, '##', '##', $constants);
 
   // customize php and yml files
   $finder = pakeFinder::type('file')->name('*.php', '*.yml');

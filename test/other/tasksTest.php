@@ -68,12 +68,13 @@ class symfony_cmd
   }
 }
 
-$t = new lime_test(19, new lime_output_color());
+$t = new lime_test(29, new lime_output_color());
 $c = new symfony_cmd();
 $c->initialize($t);
 
 $t->is($c->execute_command('-T'), $c->execute_command(''), '"symfony" is an alias for "symfony -T"');
 
+// sfPakeGenerator
 $content = $c->execute_command('init-project myproject');
 $t->ok(file_exists($c->tmp_dir.DS.'SYMFONY'), '"init-project" creates a SYMFONY file in root project directory');
 
@@ -83,7 +84,8 @@ $t->ok(is_dir($c->tmp_dir.DS.'apps'.DS.'frontend'), '"init-app" creates a "front
 $content = $c->execute_command('init-module frontend foo');
 $t->ok(is_dir($c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'modules'.DS.'foo'), '"init-module" creates a "foo" directory under "modules" directory');
 
-copy(dirname(__FILE__).'/fixtures/schema.yml', $c->tmp_dir.DS.'config'.DS.'schema.yml');
+// sfPakePropel
+copy(dirname(__FILE__).'/fixtures/propel/schema.yml', $c->tmp_dir.DS.'config'.DS.'schema.yml');
 
 $content = $c->execute_command('propel-build-sql');
 $t->ok(file_exists($c->tmp_dir.DS.'data'.DS.'sql'.DS.'lib.model.schema.sql'), '"propel-build-sql" creates a "schema.sql" file under "data/sql" directory');
@@ -91,13 +93,33 @@ $t->ok(file_exists($c->tmp_dir.DS.'data'.DS.'sql'.DS.'lib.model.schema.sql'), '"
 $content = $c->execute_command('propel-build-model');
 $t->ok(file_exists($c->tmp_dir.DS.'lib'.DS.'model'.DS.'Article.php'), '"propel-build-model" creates model classes under "lib/model" directory');
 
+// sfPakePropelCrudGenerator
 $content = $c->execute_command('propel-init-crud frontend articleInitCrud Article');
 $t->ok(file_exists($c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'modules'.DS.'articleInitCrud'.DS.'config'.DS.'generator.yml'), '"propel-init-crud" initializes a CRUD module');
 
 $content = $c->execute_command('propel-generate-crud frontend articleGenCrud Article');
 $t->ok(is_dir($c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'modules'.DS.'articleGenCrud'), '"propel-generate-crud" generates a CRUD module');
 
+// sfPakePropelAdminGenerator
 $content = $c->execute_command('propel-init-admin frontend articleInitAdmin Article');
 $t->ok(file_exists($c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'modules'.DS.'articleInitAdmin'.DS.'config'.DS.'generator.yml'), '"propel-init-admin" initializes an admin generator module');
+
+// sfPakeTest
+$content = $c->execute_command('test-functional frontend articleInitCrudActions');
+$t->is($content, str_replace("\r\n", "\n", file_get_contents(dirname(__FILE__).'/fixtures/test/functional/result.txt')), '"test-functional" can launch a particular functional test');
+
+$content = $c->execute_command('test-functional frontend');
+$t->is($content, str_replace("\r\n", "\n", file_get_contents(dirname(__FILE__).'/fixtures/test/functional/result-harness.txt')), '"test-functional" can launch all functional tests');
+
+copy(dirname(__FILE__).'/fixtures/test/unit/testTest.php', $c->tmp_dir.DS.'test'.DS.'unit'.DS.'testTest.php');
+
+$content = $c->execute_command('test-unit test');
+$t->is($content, str_replace("\r\n", "\n", file_get_contents(dirname(__FILE__).'/fixtures/test/unit/result.txt')), '"test-unit" can launch a particular unit test');
+
+$content = $c->execute_command('test-unit');
+$t->is($content, str_replace("\r\n", "\n", file_get_contents(dirname(__FILE__).'/fixtures/test/unit/result-harness.txt')), '"test-unit" can launch all unit tests');
+
+$content = $c->execute_command('test-all');
+$t->is($content, str_replace("\r\n", "\n", file_get_contents(dirname(__FILE__).'/fixtures/test/result-harness.txt')), '"test-all" launches all unit and functional tests');
 
 $c->shutdown();

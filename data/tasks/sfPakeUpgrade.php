@@ -52,6 +52,9 @@ function run_upgrade_0_8($task, $args)
   // update schemas
   _upgrade_0_8_schemas();
 
+  // add bootstrap files for tests
+  _add_0_8_test_bootstraps();
+
   // upgrade all applications
   foreach ($apps as $app_module_dir)
   {
@@ -418,4 +421,13 @@ EOF;
 
     file_put_contents($propel_file, $propel_ini);
   }
+}
+
+function _add_0_8_test_bootstraps()
+{
+  pake_echo_action('upgrade 0.8', 'add test bootstrap files');
+
+  pake_mkdirs(sfConfig::get('sf_root_dir').'/test/bootstrap');
+  pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/project/test/bootstrap/functional.php', sfConfig::get('sf_root_dir').'/test/bootstrap/functional.php');
+  pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/project/test/bootstrap/unit.php', sfConfig::get('sf_root_dir').'/test/bootstrap/unit.php');
 }
