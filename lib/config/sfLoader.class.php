@@ -71,6 +71,7 @@ class sfLoader
   static public function getGeneratorTemplateDirs($class, $theme)
   {
     $dirs = glob(sfConfig::get('sf_plugins_dir').'/*/data/generator/'.$class.'/'.$theme.'/template'); // plugin directories
+    $dirs[] = sfConfig::get('sf_data_dir').'/generator/'.$class.'/'.$theme.'/template';               // project directory
     $dirs[] = sfConfig::get('sf_symfony_data_dir').'/generator/'.$class.'/default/template';          // default theme directory
 
     return $dirs;
