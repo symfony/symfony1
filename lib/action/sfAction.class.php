@@ -162,7 +162,7 @@ abstract class sfAction extends sfComponent
    *
    * @param  string module name
    * @param  string action name
-   * @throws sfActionStopException always
+   * @throws sfStopException always
    */
   public function forward ($module, $action)
   {
@@ -170,7 +170,7 @@ abstract class sfAction extends sfComponent
 
     $this->getController()->forward($module, $action);
 
-    throw new sfActionStopException();
+    throw new sfStopException();
   }
 
   /**
@@ -186,7 +186,7 @@ abstract class sfAction extends sfComponent
    * @param  bool   A condition that evaluates to true or false.
    * @param  string module name
    * @param  string action name
-   * @throws sfActionStopException always
+   * @throws sfStopException always
    */
   public function forwardIf ($condition, $module, $action)
   {
@@ -209,7 +209,7 @@ abstract class sfAction extends sfComponent
    * @param  bool   A condition that evaluates to true or false.
    * @param  string module name
    * @param  string action name
-   * @throws sfActionStopException always
+   * @throws sfStopException always
    */
   public function forwardUnless ($condition, $module, $action)
   {
@@ -301,7 +301,7 @@ abstract class sfAction extends sfComponent
    * <code>return $this->redirect('/ModuleName/ActionName')</code>
    *
    * @param  string url
-   * @throws sfActionStopException always
+   * @throws sfStopException always
    */
   public function redirect($url)
   {
@@ -311,7 +311,7 @@ abstract class sfAction extends sfComponent
 
     $this->getController()->redirect($url);
 
-    throw new sfActionStopException();
+    throw new sfStopException();
   }
 
   /**
@@ -325,7 +325,7 @@ abstract class sfAction extends sfComponent
    *
    * @param  bool   A condition that evaluates to true or false.
    * @param  string url
-   * @throws sfActionStopException always
+   * @throws sfStopException always
    */
   public function redirectIf ($condition, $url)
   {
@@ -346,7 +346,7 @@ abstract class sfAction extends sfComponent
    *
    * @param  bool   A condition that evaluates to true or false.
    * @param  string url
-   * @throws sfActionStopException always
+   * @throws sfStopException always
    */
   public function redirectUnless ($condition, $url)
   {

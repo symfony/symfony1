@@ -117,13 +117,13 @@ class sfBrowser
     // we register a fake rendering filter
     $controller->setRenderingFilterClassName('sfFakeRenderingFilter');
 
-    // dispatch our request and ignore output
+    // dispatch our request
     ob_start();
     $controller->dispatch();
     $retval = ob_get_clean();
 
     // append retval to the response content
-    $this->getResponse()->setContent($this->getResponse()->getContent().$retval);
+    $this->getResponse()->setContent($retval);
 
     // manually shutdown user to save current session data
     $this->context->getUser()->shutdown();
@@ -371,5 +371,7 @@ class sfFakeRenderingFilter extends sfFilter
   public function execute ($filterChain)
   {
     $filterChain->execute();
+
+    $this->getContext()->getResponse()->sendContent();
   }
 }

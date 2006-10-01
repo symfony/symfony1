@@ -9,14 +9,14 @@
  */
 
 /**
- * sfActionStopException is thrown when you want to stop action flow.
+ * sfStopException is thrown when you want to stop action flow.
  *
  * @package    symfony
  * @subpackage exception
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfActionStopException extends sfException
+class sfStopException extends sfException
 {
   /**
    * Class constructor.
@@ -26,7 +26,7 @@ class sfActionStopException extends sfException
    */
   public function __construct ($message = null, $code = 0)
   {
-    $this->setName('sfActionStopException');
+    $this->setName('sfStopException');
     parent::__construct($message, $code);
   }
 
