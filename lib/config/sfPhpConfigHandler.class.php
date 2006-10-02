@@ -42,7 +42,7 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
     // get all php.ini configuration
     $configs = ini_get_all();
 
-    // let's do our fancy work
+    // set some php.ini keys
     if (isset($config['set']))
     {
       foreach ($config['set'] as $key => $value)
@@ -70,6 +70,7 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
       }
     }
 
+    // check some php.ini settings
     if (isset($config['check']))
     {
       foreach ($config['check'] as $key => $value)
@@ -85,13 +86,35 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
 
         if (ini_get($key) != $value)
         {
-          $error = sprintf('Configuration file "%s" specifies that php.ini "%s" key must be set to "%s". The current value is "%s" (%s). [err0001]', $configFiles[0], $key, $value, ini_get($key), $this->get_ini_path());
+          $error = sprintf('Configuration file "%s" specifies that php.ini "%s" key must be set to "%s". The current value is "%s" (%s). [err0001]', $configFiles[0], $key, var_export($value, true), var_export(ini_get($key), true), $this->get_ini_path());
           throw new sfInitializationException($error);
         }
       }
     }
 
-    // Check for some extensions
+    // warn about some php.ini settings
+    if (isset($config['warn']))
+    {
+      foreach ($config['warn'] as $key => $value)
+      {
+        $key = strtolower($key);
+
+        // key exists?
+        if (!array_key_exists($key, $configs))
+        {
+          $error = sprintf('Configuration file "%s" specifies key "%s" which is not a php.ini directive [err0002]', $configFiles[0], $key);
+          throw new sfParseException($error);
+        }
+
+        if (ini_get($key) != $value)
+        {
+          $warning = sprintf('{sfPhpConfigHandler} php.ini "%s" key is better set to "%s" (current value is "%s" - %s)', $key, var_export($value, true), var_export(ini_get($key), true), $this->get_ini_path());
+          $data[] = sprintf("sfLogger::getInstance()->warning('%s');", str_replace("'", "\\'", $warning));
+        }
+      }
+    }
+
+    // check for some extensions
     if (isset($config['extensions']))
     {
       foreach ($config['extensions'] as $extension_name)
@@ -121,8 +144,7 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
     }
     else
     {
-      $ini_path = 'php.ini location: "%s"';
-      $ini_path = sprintf($ini_path, $cfg_path);
+      $ini_path = sprintf('php.ini location: "%s"', $cfg_path);
     }
 
     return $ini_path;

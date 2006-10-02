@@ -193,6 +193,11 @@ class sfToolkit
     return $output;
   }
 
+  public static function stripslashesDeep($value)
+  {
+    return is_array($value) ? array_map(array('sfToolkit', 'stripslashesDeep'), $value) : stripslashes($value);
+  }
+
   // code from php at moechofe dot com (array_merge comment on php.net)
   /*
    * array arrayDeepMerge ( array array1 [, array array2 [, array ...]] )

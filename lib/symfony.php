@@ -196,9 +196,9 @@ try
 
   // load base settings
   include($configCache->checkConfig($sf_app_config_dir_name.'/logging.yml'));
-  $configCache->import($sf_app_config_dir_name.'/php.yml', false);
   include($configCache->checkConfig($sf_app_config_dir_name.'/settings.yml'));
   include($configCache->checkConfig($sf_app_config_dir_name.'/app.yml'));
+  $configCache->import($sf_app_config_dir_name.'/php.yml', false);
 
   // create bootstrap file for next time
   if (!sfConfig::get('sf_in_bootstrap') && !$sf_debug && !sfConfig::get('sf_test'))
