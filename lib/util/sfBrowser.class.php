@@ -23,7 +23,8 @@ class sfBrowser
     $dom           = null,
     $stack         = array(),
     $stackPosition = -1,
-    $cookieJar     = array();
+    $cookieJar     = array(),
+    $fields        = array();
 
   public function initialize ($hostname = null, $remote = null)
   {
@@ -73,6 +74,9 @@ class sfBrowser
 
     // remove anchor
     $path = preg_replace('/#.*/', '', $path);
+
+    // removes all fields from previous request
+    $this->fields = array();
 
     // prepare the request object
     unset($_SERVER['argv']);
@@ -213,124 +217,126 @@ class sfBrowser
     return $this->get($locations[0]);
   }
 
+  public function setField($name, $value)
+  {
+    // as we don't know yet the form, just store name/value pairs
+    $this->parseArgumentAsArray($name, $value, $this->fields);
+
+    return $this;
+  }
+
   // link or button
   public function click($name, $arguments = array())
   {
     $xpath = new DomXpath($this->dom);
     $dom   = $this->dom;
 
-    if ($link = $xpath->query('//a[.="'.$name.'"]')->item(0))
+    // link
+    if ($link = $xpath->query(sprintf('//a[.="%s"]', $name))->item(0))
     {
-      // link
-      return $this->call($link->getAttribute('href'));
+      return $this->get($link->getAttribute('href'));
     }
-    else
+
+    // form
+    if (!$form = $xpath->query(sprintf('//input[(@type="submit" or @type="button") and @value="%s"]/ancestor::form', $name))->item(0))
     {
-      $forms = $xpath->query('//form');
-      foreach ($forms as $form)
+      throw new sfException(sprintf('Cannot find the "%s" link or button.', $name));
+    }
+
+    // form attributes
+    $url = $form->getAttribute('action');
+    $method = $form->getAttribute('method') ? strtolower($form->getAttribute('method')) : 'get';
+
+    // merge form default values and arguments
+    $defaults = array();
+    foreach($xpath->query('descendant::input | descendant::textarea | descendant::select', $form) as $element)
+    {
+      $elementName = $element->getAttribute('name');
+      $value = null;
+      if ($element->nodeName == 'input' && (($element->getAttribute('type') != 'submit' && $element->getAttribute('type') != 'button') || $element->getAttribute('value') == $name))
       {
-        if ($button = $xpath->query('//input[(@type="submit" or @type="button") and @value="'.$name.'"]', $form)->item(0))
+        $value = $element->getAttribute('value');
+      }
+      else if ($element->nodeName == 'textarea')
+      {
+        $value = '';
+        foreach ($element->childNodes as $el)
         {
-          // button
-          $url = $form->getAttribute('action');
-          if ($form->getAttribute('method'))
+          $value .= $dom->saveXML($el);
+        }
+      }
+      else if ($element->nodeName == 'select')
+      {
+        if ($multiple = $element->hasAttribute('multiple'))
+        {
+          $elementName = str_replace('[]', '', $elementName);
+          $value = array();
+        }
+        else
+        {
+          $value = null;
+        }
+        foreach ($xpath->query('descendant::option', $element) as $option)
+        {
+          if ($option->getAttribute('selected'))
           {
-            $method = strtolower($form->getAttribute('method'));
-          }
-          else
-          {
-            $method = 'get';
-          }
-
-          // merge form default values and arguments
-          $defaults = array();
-          foreach($xpath->query('descendant::input | descendant::textarea | descendant::select', $form) as $element)
-          {
-            $elementName = $element->getAttribute('name');
-            $value = null;
-            if ($element->nodeName == 'input' && ($element->getAttribute('type') != 'submit' || $element->getAttribute('value') == $name))
+            if ($multiple)
             {
-              $value = $element->getAttribute('value');
+              $value[] = $option->getAttribute('value');
             }
-            else if ($element->nodeName == 'textarea')
+            else
             {
-              $value = '';
-              foreach ($element->childNodes as $el)
-              {
-                $value .= $dom->saveXML($el);
-              }
+              $value = $option->getAttribute('value');
             }
-            else if ($element->nodeName == 'select')
-            {
-              if ($multiple = $element->hasAttribute('multiple'))
-              {
-                $elementName = str_replace('[]', '', $elementName);
-                $value = array();
-              }
-              else
-              {
-                $value = null;
-              }
-              foreach ($xpath->query('descendant::option', $element) as $option)
-              {
-                if ($option->getAttribute('selected'))
-                {
-                  if ($multiple)
-                  {
-                    $value[] = $option->getAttribute('value');
-                  }
-                  else
-                  {
-                    $value = $option->getAttribute('value');
-                  }
-                }
-              }
-            }
-
-            if (null !== $value)
-            {
-              if (false !== $pos = strpos($elementName, '['))
-              {
-                $default = &$defaults;
-                $tmps = array_filter(preg_split('/(\[ | \[\] | \])/x', $elementName));
-                foreach ($tmps as $tmp)
-                {
-                  $default = &$default[$tmp];
-                }
-                $default = $value;
-              }
-              else
-              {
-                $defaults[$elementName] = $value;
-              }
-            }
-          }
-
-          // create query_string
-          $arguments = sfToolkit::arrayDeepMerge($defaults, $arguments);
-          $query_string = http_build_query($arguments);
-          $sep = false === strpos($url, '?') ? '?' : '&';
-
-          if ('post' === $method)
-          {
-            return $this->call($url, $method, $arguments);
-          }
-          else
-          {
-            return $this->call($url.($query_string ? $sep.$query_string : ''), $method);
           }
         }
       }
+
+      if (null !== $value)
+      {
+        $this->parseArgumentAsArray($elementName, $value, $defaults);
+      }
     }
 
-    throw new sfException(sprintf('Cannot find the "%s" link or button.', $name));
+    // create query_string
+    $arguments = sfToolkit::arrayDeepMerge($defaults, $this->fields, $arguments);
+    $query_string = http_build_query($arguments);
+    $sep = false === strpos($url, '?') ? '?' : '&';
+
+    if ('post' == $method)
+    {
+      return $this->post($url, $arguments);
+    }
+    else
+    {
+      return $this->get($url.($query_string ? $sep.$query_string : ''));
+    }
+  }
+
+  protected function parseArgumentAsArray($name, $value, &$vars)
+  {
+    if (false !== $pos = strpos($name, '['))
+    {
+      $var = &$vars;
+      $tmps = array_filter(preg_split('/(\[ | \[\] | \])/x', $name));
+      foreach ($tmps as $tmp)
+      {
+        $var = &$var[$tmp];
+      }
+      $var = $value;
+    }
+    else
+    {
+      $vars[$name] = $value;
+    }
   }
 
   public function restart()
   {
     $this->newSession();
-    $this->cookieJar = array();
-    $this->stack = array();
+    $this->cookieJar     = array();
+    $this->stack         = array();
+    $this->fields        = array();
     $this->stackPosition = -1;
 
     return $this;
