@@ -54,6 +54,13 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler
       throw new sfParseException($error);
     }
 
+    if (isset($config['fields']))
+    {
+      $error = sprintf('Configuration file "%s" can specify a fields directive but only under the param section', $configFiles[1] ? $configFiles[1] : $configFiles[0]);
+
+      throw new sfParseException($error);
+    }
+
     if (isset($config['list']))
     {
       $error = sprintf('Configuration file "%s" can specify a list directive but only under the param section', $configFiles[1] ? $configFiles[1] : $configFiles[0]);

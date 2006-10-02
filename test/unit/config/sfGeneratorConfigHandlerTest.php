@@ -12,7 +12,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 sfConfig::set('sf_symfony_lib_dir', realpath(dirname(__FILE__).'/../../../lib'));
 
-$t = new lime_test(4, new lime_output_color());
+$t = new lime_test(5, new lime_output_color());
 
 $handler = new sfGeneratorConfigHandler();
 $handler->initialize();
@@ -48,6 +48,21 @@ try
 catch (sfParseException $e)
 {
   $t->like($e->getMessage(), '/must specify a generator section/', 'generator.yml must have a "generator" section');
+}
+
+$files = array(
+  $dir.'empty.yml',
+  $dir.'root_fields_section.yml',
+);
+
+try
+{
+  $data = $handler->execute($files);
+  $t->fail('generator.yml can have a "fields" section but only under "param"');
+}
+catch (sfParseException $e)
+{
+  $t->like($e->getMessage(), '/can specify a fields directive but only under the param section/', 'generator.yml can have a "fields" section but only under "param"');
 }
 
 $files = array(
