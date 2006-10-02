@@ -6,7 +6,7 @@
  * @package    ##PROJECT_NAME##
  * @subpackage <?php echo $this->getGeneratedModuleName() ?>
 
- * @author     Your name here
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
 class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions

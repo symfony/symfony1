@@ -27,11 +27,21 @@ function run_propel_init_admin($task, $args)
   $module      = $args[1];
   $model_class = $args[2];
 
+  try
+  {
+    $author_name = $task->get_property('author', 'symfony');
+  }
+  catch (pakeException $e)
+  {
+    $author_name = 'Your name here';
+  }
+
   $constants = array(
     'PROJECT_NAME' => $task->get_property('name', 'symfony'),
     'APP_NAME'     => $app,
     'MODULE_NAME'  => $module,
     'MODEL_CLASS'  => $model_class,
+    'AUTHOR_NAME'  => $author_name,
   );
 
   $moduleDir = sfConfig::get('sf_root_dir').'/'.sfConfig::get('sf_apps_dir_name').'/'.$app.'/'.sfConfig::get('sf_app_module_dir_name').'/'.$module;

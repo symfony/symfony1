@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * autoload actions.
+ *
+ * @package    project
+ * @subpackage autoload
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @version    SVN: $Id$
+ */
 class autoloadActions extends sfActions
 {
   public function executeIndex()

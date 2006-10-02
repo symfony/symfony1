@@ -30,11 +30,21 @@ function run_propel_init_crud($task, $args)
   $module      = $args[1];
   $model_class = $args[2];
 
+  try
+  {
+    $author_name = $task->get_property('author', 'symfony');
+  }
+  catch (pakeException $e)
+  {
+    $author_name = 'Your name here';
+  }
+
   $constants = array(
     'PROJECT_NAME' => $task->get_property('name', 'symfony'),
     'APP_NAME'     => $app,
     'MODULE_NAME'  => $module,
     'MODEL_CLASS'  => $model_class,
+    'AUTHOR_NAME'  => $author_name,
   );
 
   $sf_root_dir = sfConfig::get('sf_root_dir');
@@ -97,6 +107,27 @@ function run_propel_generate_crud($task, $args)
 
   // change module name
   pake_replace_tokens($moduleDir.'/actions/actions.class.php', getcwd(), '', '', array('auto'.ucfirst($module) => $module));
+
+  try
+  {
+    $author_name = $task->get_property('author', 'symfony');
+  }
+  catch (pakeException $e)
+  {
+    $author_name = 'Your name here';
+  }
+
+  $constants = array(
+    'PROJECT_NAME' => $task->get_property('name', 'symfony'),
+    'APP_NAME'     => $app,
+    'MODULE_NAME'  => $module,
+    'MODEL_CLASS'  => $model_class,
+    'AUTHOR_NAME'  => $author_name,
+  );
+
+  // customize php and yml files
+  $finder = pakeFinder::type('file')->name('*.php', '*.yml');
+  pake_replace_tokens($finder, $moduleDir, '##', '##', $constants);
 
   // delete temp files
   $finder = pakeFinder::type('any');

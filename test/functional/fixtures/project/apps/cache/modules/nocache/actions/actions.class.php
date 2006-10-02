@@ -5,7 +5,7 @@
  *
  * @package    project
  * @subpackage nocache
- * @author     Your name here
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
 class nocacheActions extends sfActions
