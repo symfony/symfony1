@@ -10,50 +10,13 @@
 
 $app = 'backend';
 $fixtures = 'fixtures/fixtures.yml';
-$ret = include(dirname(__FILE__).'/../bootstrap/functional.php');
+$ret = include(dirname(__FILE__).'/../../bootstrap/functional.php');
 if (!$ret)
 {
   return;
 }
 
-class myTestBrowser extends sfTestBrowser
-{
-  public function checkListCustomization($title, $listParams)
-  {
-    $this->test()->diag($title);
-
-    $this->customizeGenerator(array('list' => $listParams));
-
-    return $this->getAndCheck('article', 'list');
-  }
-
-  public function checkEditCustomization($title, $editParams)
-  {
-    $this->test()->diag($title);
-
-    $this->customizeGenerator(array('edit' => $editParams));
-
-    return $this->
-      get('/article/edit/id/1')->
-      isStatusCode(200)->
-      isRequestParameter('module', 'article')->
-      isRequestParameter('action', 'edit')
-    ;
-  }
-
-  private function customizeGenerator($params)
-  {
-    $params['model_class'] = 'Article';
-    $params['moduleName']  = 'article';
-    sfToolkit::clearDirectory(sfConfig::get('sf_cache_dir'));
-    $generatorManager = new sfGeneratorManager();
-    $generatorManager->initialize();
-    mkdir(sfConfig::get('sf_config_cache_dir'), 0777);
-    file_put_contents(sfConfig::get('sf_config_cache_dir').'/modules_article_config_generator.yml.php', $generatorManager->generate('sfPropelAdminGenerator', $params));
-  }
-}
-
-$b = new myTestBrowser();
+$b = new sfTestBrowser();
 $b->initialize();
 
 // check symfony throws an exception if model class does not exist
@@ -317,50 +280,4 @@ $b->
   // check that links for navigation are ok
   checkResponseElement('body table tfoot tr th a[href*="/article/list/page/1"]', 3)->
   checkResponseElement('body table tfoot tr th a[href*="/article/list/page/2"]', 2)
-;
-
-// small customization tests
-$b->
-  // list
-  checkListCustomization('list title customization', array('title' => 'list test title'))->
-  checkResponseElement('body h1', 'list test title')->
-
-  // list fields
-  checkListCustomization('list field name customization', array('fields' => array('body' => array('name' => 'My Body'))))->
-  checkResponseElement('#sf_admin_list_th_body a', 'My Body')->
-
-  // list fields display
-  checkListCustomization('list fields display customization', array('display' => array('body', 'title')))->
-  checkResponseElement('#sf_admin_list_th_body', true)->
-  checkResponseElement('#sf_admin_list_th_title', true)->
-  checkResponseElement('#sf_admin_list_th_id', false)->
-  checkResponseElement('#sf_admin_list_th_category_id', false)->
-  checkResponseElement('#sf_admin_list_th_created_at', false)->
-/*
-  // not possible because actions class is already in memory
-  // and in PHP there is no way to reload a class!
-  // max per page
-  checkListCustomization('max per page customization', array('max_per_page' => 5))->
-  checkResponseElement('body table tfoot tr th a[href*="/article/list/page/7"]', true)->
-  checkResponseElement('body table tbody tr', 5)->
-*/
-
-  // list buttons
-  checkListCustomization('remove create button', array('actions' => '-'))->
-  checkResponseElement('body input[class="sf_admin_action_create"][onclick*="/article/create"]', false)->
-
-  checkListCustomization('add custom button', array('actions' => array('_create' => null, 'custom' => array('name' => 'my button', 'action' => 'myAction', 'params' => 'class=myButtonClass'))))->
-  checkResponseElement('body input[class="sf_admin_action_create"][onclick*="/article/create"]', true)->
-  checkResponseElement('body input[class="myButtonClass"][onclick*="/article/myAction"][value="my button"]', true)->
-
-  checkListCustomization('add custom button without create', array('actions' => array('custom' => array('name' => 'my button', 'action' => 'myAction', 'params' => 'class=myButtonClass'))))->
-  checkResponseElement('body input[class="sf_admin_action_create"][onclick*="/article/create"]', false)->
-  checkResponseElement('body input[class="myButtonClass"][onclick*="/article/myAction"][value="my button"]', true)->
-
-  // edit
-  checkEditCustomization('edit title customization', array('title' => 'edit test title'))->
-  checkResponseElement('body h1', 'edit test title')->
-
-  checkEditCustomization('edit title customization', array('title' => 'edit "%%title%%"'))->
-  checkResponseElement('body h1', 'edit "my title"')
 ;
