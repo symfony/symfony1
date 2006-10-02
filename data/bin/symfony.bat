@@ -28,10 +28,14 @@ if "%PHP_COMMAND%" == "" goto no_phpcommand
 goto run
 
 :run
-IF EXIST "@DATA-DIR@" (
-  %PHP_COMMAND% -d html_errors=off "%SYMFONY_HOME%\bin\symfony.php" %1 %2 %3 %4 %5 %6 %7 %8 %9
+IF EXIST "data\symfony\bin\symfony.php" (
+  %PHP_COMMAND% -d html_errors=off "data\symfony\bin\symfony.php" %1 %2 %3 %4 %5 %6 %7 %8 %9
 ) ELSE (
-  %PHP_COMMAND% -d html_errors=off "%DEFAULT_SYMFONY_HOME%\symfony.php" %1 %2 %3 %4 %5 %6 %7 %8 %9
+  IF EXIST "@DATA-DIR@" (
+    %PHP_COMMAND% -d html_errors=off "%SYMFONY_HOME%\bin\symfony.php" %1 %2 %3 %4 %5 %6 %7 %8 %9
+  ) ELSE (
+    %PHP_COMMAND% -d html_errors=off "%DEFAULT_SYMFONY_HOME%\symfony.php" %1 %2 %3 %4 %5 %6 %7 %8 %9
+  )
 )
 goto cleanup
 
