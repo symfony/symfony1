@@ -1032,7 +1032,7 @@ function select_day_tag($name, $value = null, $options = array(), $html_options 
 
   for ($x = 1; $x < 32; $x++)
   {
-    $select_options[$x] = _prepend_zeros($x, 2);
+    $select_options[$x] = str_pad($x, 2, '0', STR_PAD_LEFT);
   }
 
   return select_tag($name, options_for_select($select_options, $value), $html_options);
@@ -1096,7 +1096,7 @@ function select_month_tag($name, $value = null, $options = array(), $html_option
   {
     for ($k = 1; $k < 13; $k++) 
     {
-      $select_options[$k] = _prepend_zeros($k, 2);
+      $select_options[$k] = str_pad($k, 2, '0', STR_PAD_LEFT);
     }
   }
   else
@@ -1378,7 +1378,7 @@ function select_second_tag($name, $value = null, $options = array(), $html_optio
   $second_step = _get_option($options, 'second_step', 1);
   for ($x = 0; $x < 60; $x += $second_step)
   {
-    $select_options[$x] = _prepend_zeros($x, 2);
+    $select_options[$x] = str_pad($x, 2, '0', STR_PAD_LEFT);
   }
 
   return select_tag($name, options_for_select($select_options, $value), $html_options);
@@ -1437,7 +1437,7 @@ function select_minute_tag($name, $value = null, $options = array(), $html_optio
   $minute_step = _get_option($options, 'minute_step', 1);
   for ($x = 0; $x < 60; $x += $minute_step)
   {
-    $select_options[$x] = _prepend_zeros($x, 2);
+    $select_options[$x] = str_pad($x, 2, '0', STR_PAD_LEFT);
   }
 
   return select_tag($name, options_for_select($select_options, $value), $html_options);
@@ -1498,7 +1498,7 @@ function select_hour_tag($name, $value = null, $options = array(), $html_options
 
   for ($x = $start_hour; $x <= $end_hour; $x++)
   {
-    $select_options[$x] = _prepend_zeros($x, 2);
+    $select_options[$x] = str_pad($x, 2, '0', STR_PAD_LEFT);
   }
 
   return select_tag($name, options_for_select($select_options, $value), $html_options);
@@ -1844,26 +1844,6 @@ function get_id_from_name($name, $value = null)
   }
 
   return $name;
-}
-
-/**
- * Prepends zeros to the begging of <i>$string</i> until the string reaches <i>$strlen</i> length.
- *
- * @param  string string to check
- * @param  string required length of string
- * @return string formatted string with zeros at the beginning of the string until it reaches <i>$strlen</i> length
- */
-function _prepend_zeros($string, $strlen)
-{
-  if ($strlen > strlen($string))
-  {
-    for ($x = strlen($string); $x < $strlen; $x++)
-    {
-      $string = '0'.$string;
-    }
-  }
-
-  return $string;
 }
 
 /**
