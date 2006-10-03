@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(22, new lime_output_color());
+$t = new lime_test(35, new lime_output_color());
 
 $context = new sfContext();
 
@@ -59,12 +59,51 @@ $t->is($user->hasCredential('admin'), false, '->hasCredential() returns false if
 $user->addCredential('admin');
 $t->is($user->hasCredential('admin'), true, '->addCredential() takes a credential as its first argument');
 
-// admin and user
+// admin AND user
 $t->is($user->hasCredential(array('admin', 'user')), false, '->hasCredential() can takes an array of credential as a parameter');
 
-// admin or user
+// admin OR user
 $t->is($user->hasCredential(array(array('admin', 'user'))), true, '->hasCredential() can takes an array of credential as a parameter');
 
+// (admin OR user) AND owner
+$t->is($user->hasCredential(array(array('admin', 'user'), 'owner')), false, '->hasCredential() can takes an array of credential as a parameter');
+$user->addCredential('owner');
+$t->is($user->hasCredential(array(array('admin', 'user'), 'owner')), true, '->hasCredential() can takes an array of credential as a parameter');
+
+// [[root, admin, editor, [supplier, owner], [supplier, group], accounts]]
+// root OR admin OR editor OR (supplier AND owner) OR (supplier AND group) OR accounts
+$user->clearCredentials();
+$credential = array(array('root', 'admin', 'editor', array('supplier', 'owner'), array('supplier', 'group'), 'accounts'));
+$t->is($user->hasCredential($credential), false, '->hasCredential() can takes an array of credential as a parameter');
+$user->addCredential('admin');
+$t->is($user->hasCredential($credential), true, '->hasCredential() can takes an array of credential as a parameter');
+$user->clearCredentials();
+$user->addCredential('supplier');
+$t->is($user->hasCredential($credential), false, '->hasCredential() can takes an array of credential as a parameter');
+$user->addCredential('owner');
+$t->is($user->hasCredential($credential), true, '->hasCredential() can takes an array of credential as a parameter');
+
+// [[root, [supplier, [owner, quasiowner]], accounts]]
+// root OR (supplier AND (owner OR quasiowner)) OR accounts
+$user->clearCredentials();
+$credential = array(array('root', array('supplier', array('owner', 'quasiowner')), 'accounts'));
+$t->is($user->hasCredential($credential), false, '->hasCredential() can takes an array of credential as a parameter');
+$user->addCredential('root');
+$t->is($user->hasCredential($credential), true, '->hasCredential() can takes an array of credential as a parameter');
+$user->clearCredentials();
+$user->addCredential('supplier');
+$t->is($user->hasCredential($credential), false, '->hasCredential() can takes an array of credential as a parameter');
+$user->addCredential('owner');
+$t->is($user->hasCredential($credential), true, '->hasCredential() can takes an array of credential as a parameter');
+$user->addCredential('quasiowner');
+$t->is($user->hasCredential($credential), true, '->hasCredential() can takes an array of credential as a parameter');
+$user->removeCredential('owner');
+$t->is($user->hasCredential($credential), true, '->hasCredential() can takes an array of credential as a parameter');
+$user->removeCredential('supplier');
+$t->is($user->hasCredential($credential), false, '->hasCredential() can takes an array of credential as a parameter');
+
+$user->clearCredentials();
+$user->addCredential('admin');
 $user->addCredential('user');
 $t->is($user->hasCredential('admin'), true);
 $t->is($user->hasCredential('user'), true);

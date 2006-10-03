@@ -109,42 +109,50 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
    *
    * @param  mixed credential
    * @return boolean
-   *
-   * @author David Zuelke <dz@bitxtender.com>
    */
   public function hasCredential($credential)
   {
     if (is_array($credential))
     {
-      $credentials = (array)$credential;
-      foreach ($credentials as $credential)
-      {
-        if (is_array($credential))
-        {
-          foreach ($credential as $subcred)
-          {
-            if (in_array($subcred, $this->credentials, true))
-            {
-              continue 2;
-            }
-          }
-
-          return false;
-        }
-        else
-        {
-          if (!in_array($credential, $this->credentials, true))
-          {
-            return false;
-          }
-        }
-      }
-
-      return true;
+      return $this->checkCredentials($credential, true);
     }
     else
     {
       return in_array($credential, $this->credentials, true);
+    }
+  }
+
+  /**
+   * Checks an array of credentials
+   *
+   * @param  array of credentials
+   * @param  boolean if user must match all credentials in array
+   * @return boolean
+   */
+  private function checkCredentials($credentials, $matchAll)
+  {
+    $matched = 0;
+    foreach ($credentials as $credential)
+    {
+      // if credential is an array, then recursive with the opposite logical operator
+      $hasCredential = is_array($credential) ? $this->checkCredentials($credential, !$matchAll) : in_array($credential, $this->credentials, true);
+
+      // if the user has the credential, increment number of credential in this array matched
+      $matched = $hasCredential ? $matched + 1 : $matched;
+    }
+
+    if ($matchAll && count($credentials) == $matched)
+    {
+      // return true if all credentials must be matched and they have been
+      return true;
+    }
+    else if ($matchAll)
+    {
+      return false;
+    }
+    else
+    {
+      return $matched ? true : false;
     }
   }
 
