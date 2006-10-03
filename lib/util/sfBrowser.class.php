@@ -20,18 +20,19 @@ class sfBrowser
 {
   protected
     $context       = null,
+    $hostname      = null,
+    $remote        = null,
     $dom           = null,
     $stack         = array(),
     $stackPosition = -1,
     $cookieJar     = array(),
     $fields        = array();
 
-  public function initialize ($hostname = null, $remote = null, $options = array())
+  public function initialize($hostname = null, $remote = null, $options = array())
   {
     // setup our fake environment
-    $_SERVER['HTTP_HOST'] = $hostname ? $hostname : sfConfig::get('sf_app').'-'.sfConfig::get('sf_environment');
-    $_SERVER['HTTP_USER_AGENT'] = 'PHP5/CLI';
-    $_SERVER['REMOTE_ADDR'] = $remote ? $remote : '127.0.0.1';
+    $this->hostname = $hostname;
+    $this->remote   = $remote;
 
     sfConfig::set('sf_path_info_array', 'SERVER');
     sfConfig::set('sf_test', true);
@@ -80,6 +81,9 @@ class sfBrowser
 
     // prepare the request object
     unset($_SERVER['argv']);
+    $_SERVER['HTTP_HOST']       = $this->hostname ? $this->hostname : sfConfig::get('sf_app').'-'.sfConfig::get('sf_environment');
+    $_SERVER['HTTP_USER_AGENT'] = 'PHP5/CLI';
+    $_SERVER['REMOTE_ADDR']     = $this->remote ? $this->remote : '127.0.0.1';
     $_SERVER['REQUEST_METHOD']  = strtoupper($method);
     $_SERVER['PATH_INFO']       = $path;
     $_SERVER['REQUEST_URI']     = '/index.php'.$uri;
