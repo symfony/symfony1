@@ -23,14 +23,11 @@ class sfTestBrowser extends sfBrowser
   protected
     $test = null;
 
-  public function initialize($output = null)
+  public function initialize($hostname = null, $remote = null, $options = array())
   {
-    parent::initialize();
+    parent::initialize($hostname, $remote, $options);
 
-    if (null === $output)
-    {
-      $output = new lime_output_color();
-    }
+    $output = isset($options['output']) ? $options['output'] : new lime_output_color();
 
     $this->test = new lime_test(null, $output);
   }

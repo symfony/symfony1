@@ -26,7 +26,7 @@ class sfBrowser
     $cookieJar     = array(),
     $fields        = array();
 
-  public function initialize ($hostname = null, $remote = null)
+  public function initialize ($hostname = null, $remote = null, $options = array())
   {
     // setup our fake environment
     $_SERVER['HTTP_HOST'] = $hostname ? $hostname : sfConfig::get('sf_app').'-'.sfConfig::get('sf_environment');
