@@ -34,12 +34,36 @@ function sfWebDebugToggleMenu()
 {
   var element = document.getElementById('sfWebDebugDetails');
 
+  var cacheElements = sfWebDebugGetElementsByClassName('sfWebDebugCache');
+  var mainCacheElements = sfWebDebugGetElementsByClassName('sfWebDebugActionCache');
+
   if (element.style.display != 'none')
   {
     document.getElementById('sfWebDebugLog').style.display = 'none';
     document.getElementById('sfWebDebugConfig').style.display = 'none';
     document.getElementById('sfWebDebugDatabaseDetails').style.display = 'none';
     document.getElementById('sfWebDebugTimeDetails').style.display = 'none';
+
+    // hide all cache information
+    for (var i = 0; i < cacheElements.length; ++i)
+    {
+      cacheElements[i].style.display = 'none';
+    }
+    for (var i = 0; i < mainCacheElements.length; ++i)
+    {
+      mainCacheElements[i].style.border = 'none';
+    }
+  }
+  else
+  {
+    for (var i = 0; i < cacheElements.length; ++i)
+    {
+      cacheElements[i].style.display = '';
+    }
+    for (var i = 0; i < mainCacheElements.length; ++i)
+    {
+      mainCacheElements[i].style.border = '1px solid #f00';
+    }
   }
 
   sfWebDebugToggle('sfWebDebugDetails');

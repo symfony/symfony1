@@ -380,7 +380,10 @@ class sfWebDebug
     {
       // get Propel statistics if available (user created a model and a db)
       // we require Propel here to avoid autoloading and automatic connection
-      require_once('propel/Propel.php');
+      if (!class_exists('Propel'))
+      {
+        require_once('propel/Propel.php');
+      }
       if (Propel::isInit())
       {
         try
@@ -408,7 +411,6 @@ class sfWebDebug
       return $content;
     }
 
-    $border_color = $new ? '#f00' : '#f00';
     $bg_color     = $new ? '#9ff' : '#ff9';
 
     $cache = $this->context->getViewCacheManager();
@@ -417,8 +419,8 @@ class sfWebDebug
     $last_modified = $cache->lastModified($internalUri);
     $id            = md5($internalUri);
     $content = '
-      <div id="main_'.$id.'" class="sfWebDebugActionCache" style="border: 1px solid '.$border_color.'">
-      <div id="sub_main_'.$id.'" class="sfWebDebugCache" style="background-color: '.$bg_color.'; border-right: 1px solid '.$border_color.'; border-bottom: 1px solid '.$border_color.';">
+      <div id="main_'.$id.'" class="sfWebDebugActionCache" style="border: 1px solid #f00">
+      <div id="sub_main_'.$id.'" class="sfWebDebugCache" style="background-color: '.$bg_color.'; border-right: 1px solid #f00; border-bottom: 1px solid #f00;">
       <div style="height: 16px; padding: 2px"><a href="#" onclick="sfWebDebugToggle(\''.$id.'\'); return false;"><strong>cache information</strong></a>&nbsp;<a href="#" onclick="sfWebDebugToggle(\'sub_main_'.$id.'\'); document.getElementById(\'main_'.$id.'\').style.border = \'none\'; return false;">'.image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/close.png').'</a>&nbsp;</div>
         <div style="padding: 2px; display: none" id="'.$id.'">
         [uri]&nbsp;'.$internalUri.'<br />
