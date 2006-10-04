@@ -22,10 +22,6 @@ $sf_symfony_lib_dir = sfConfig::get('sf_symfony_lib_dir');
 if (!sfConfig::get('sf_in_bootstrap'))
 {
   // YAML support
-  if (!function_exists('syck_load'))
-  {
-    require_once($sf_symfony_lib_dir.'/util/Spyc.class.php');
-  }
   require_once($sf_symfony_lib_dir.'/util/sfYaml.class.php');
 
   // cache support
@@ -55,115 +51,8 @@ else
   require_once($sf_symfony_lib_dir.'/config/sfConfigCache.class.php');
 }
 
-final class Symfony
-{
-  protected static $classes = array();
-
-  public static function getClassPath($class)
-  {
-    return isset(self::$classes[$class]) ? self::$classes[$class] : null;
-  }
-
-  public static function __autoload($class)
-  {
-    // load the list of autoload classes
-    if (!self::$classes)
-    {
-      $file = sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/autoload.yml');
-      self::$classes = include($file);
-    }
-
-    // class already exists
-    if (class_exists($class, false))
-    {
-      return true;
-    }
-
-    // we have a class path, let's include it
-    if (isset(self::$classes[$class]))
-    {
-      require(self::$classes[$class]);
-
-      return true;
-    }
-
-    // see if the file exists in the current module lib directory
-    // must be in a module context
-    if (sfContext::hasInstance())
-    {
-      if ($module = sfContext::getInstance()->getModuleName())
-      {
-        if (isset(self::$classes[$module.'/'.$class]))
-        {
-          require(self::$classes[$module.'/'.$class]);
-
-          return true;
-        }
-      }
-    }
-
-    return false;
-  }
-}
-
-/**
- * Handles autoloading of classes that have been specified in autoload.yml.
- *
- * @param string A class name.
- *
- * @return void
- */
-if (function_exists('spl_autoload_register'))
-{
-  ini_set('unserialize_callback_func', 'spl_autoload_call');
-
-  // load functions and methods that can autoload classes
-  $functions = (array) sfConfig::get('sf_autoloading_functions', array());
-  array_unshift($functions, array('Symfony', '__autoload'));
-
-  foreach ($functions as $function)
-  {
-    spl_autoload_register($function);
-  }
-  unset($functions);
-
-}
-elseif (!function_exists('__autoload'))
-{
-  ini_set('unserialize_callback_func', '__autoload');
-
-  function __autoload($class)
-  {
-    static $functions = null;
-
-    if (null === $functions)
-    {
-      // load functions and methods that can autoload classes
-      $functions = (array) sfConfig::get('sf_autoloading_functions', array());
-      array_unshift($functions, array('Symfony', '__autoload'));
-    }
-
-    foreach ($functions as $function)
-    {
-      if (call_user_func($function, $class))
-      {
-        return true;
-      }
-    }
-
-    // unspecified class
-
-    // do not print an error if the autoload came from class_exists
-    $trace = debug_backtrace();
-    if (count($trace) < 1 || ($trace[1]['function'] != 'class_exists' && $trace[1]['function'] != 'is_a'))
-    {
-      $error = sprintf('Autoloading of class "%s" failed. Try to clear the symfony cache and refresh. [err0003]', $class);
-      $e = new sfAutoloadException($error);
-
-      $e->printStackTrace();
-    }
-  }
-}
+// autoloading
+require_once($sf_symfony_lib_dir.'/util/sfAutoload.class.php');
 
 try
 {
@@ -200,18 +89,15 @@ try
   include($configCache->checkConfig($sf_app_config_dir_name.'/app.yml'));
   $configCache->import($sf_app_config_dir_name.'/php.yml', false);
 
+  // error settings
+  ini_set('display_errors', $sf_debug ? 'on' : 'off');
+  error_reporting(sfConfig::get('sf_error_reporting'));
+
   // create bootstrap file for next time
   if (!sfConfig::get('sf_in_bootstrap') && !$sf_debug && !sfConfig::get('sf_test'))
   {
     $configCache->checkConfig($sf_app_config_dir_name.'/bootstrap_compile.yml');
   }
-
-  // error settings
-  ini_set('display_errors', $sf_debug ? 'on' : 'off');
-  error_reporting(sfConfig::get('sf_error_reporting'));
-
-  // compress output
-  ob_start(sfConfig::get('sf_compressed') ? 'ob_gzhandler' : '');
 
   // required core classes for the framework
   // create a temp var to avoid substitution during compilation
@@ -225,6 +111,9 @@ try
 
   // include all config.php from plugins
   sfLoader::loadPluginConfig();
+
+  // compress output
+  ob_start(sfConfig::get('sf_compressed') ? 'ob_gzhandler' : '');
 }
 catch (sfException $e)
 {
