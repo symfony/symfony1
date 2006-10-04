@@ -49,8 +49,8 @@ default:
 
     no_script_name:         off
 
-    # E_COMPILE_ERROR | E_ERROR | E_CORE_ERROR | E_USER_ERROR = 337
-    error_reporting:        337
+    # E_PARSE | E_COMPILE_ERROR | E_ERROR | E_CORE_ERROR | E_USER_ERROR = 341
+    error_reporting:        341
 
     rich_text_js_dir:       js/tiny_mce
 
