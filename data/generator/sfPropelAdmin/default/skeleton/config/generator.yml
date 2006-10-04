@@ -2,4 +2,4 @@ generator:
   class:              sfPropelAdminGenerator
   param:
     model_class:      ##MODEL_CLASS##
-    theme:            default
+    theme:            ##THEME##

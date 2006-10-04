@@ -77,6 +77,15 @@ class sfLoader
     return $dirs;
   }
 
+  static public function getGeneratorSkeletonDirs($class, $theme)
+  {
+    $dirs = glob(sfConfig::get('sf_plugins_dir').'/*/data/generator/'.$class.'/'.$theme.'/skeleton'); // plugin directories
+    $dirs[] = sfConfig::get('sf_data_dir').'/generator/'.$class.'/'.$theme.'/skeleton';               // project directory
+    $dirs[] = sfConfig::get('sf_symfony_data_dir').'/generator/'.$class.'/default/skeleton';          // default theme directory
+
+    return $dirs;
+  }
+
   static public function getGeneratorTemplate($class, $theme, $path)
   {
     $dirs = self::getGeneratorTemplateDirs($class, $theme);

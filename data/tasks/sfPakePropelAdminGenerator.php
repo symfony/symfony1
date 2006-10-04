@@ -26,6 +26,7 @@ function run_propel_init_admin($task, $args)
   $app         = $args[0];
   $module      = $args[1];
   $model_class = $args[2];
+  $theme       = isset($args[3]) ? $args[3] : 'default';
 
   try
   {
@@ -42,14 +43,24 @@ function run_propel_init_admin($task, $args)
     'MODULE_NAME'  => $module,
     'MODEL_CLASS'  => $model_class,
     'AUTHOR_NAME'  => $author_name,
+    'THEME'        => $theme, 
   );
 
   $moduleDir = sfConfig::get('sf_root_dir').'/'.sfConfig::get('sf_apps_dir_name').'/'.$app.'/'.sfConfig::get('sf_app_module_dir_name').'/'.$module;
 
-  // create basic application structure
+  // create module structure
   $finder = pakeFinder::type('any')->ignore_version_control()->discard('.sf');
-  pake_mirror($finder, sfConfig::get('sf_symfony_data_dir').'/generator/sfPropelAdmin/default/skeleton/', $moduleDir);
-
+  $dirs = sfLoader::getGeneratorSkeletonDirs('sfPropelAdmin', $theme);
+  foreach($dirs as $dir)
+  {
+    echo $dir;
+    if(is_dir($dir))
+    {
+      pake_mirror($finder, $dir, $moduleDir);
+      break;      
+    }
+  }
+  
   // customize php and yml files
   $finder = pakeFinder::type('file')->name('*.php', '*.yml');
   pake_replace_tokens($finder, $moduleDir, '##', '##', $constants);
