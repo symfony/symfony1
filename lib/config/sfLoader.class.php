@@ -128,6 +128,8 @@ class sfLoader
 
     $dirs[] = sfConfig::get('sf_app_lib_dir').'/helper';                                                                      // application
 
+    $dirs[] = sfConfig::get('sf_lib_dir').'/helper';                                                                      // project
+
     if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/lib/helper'))
     {
       $dirs = array_merge($dirs, $pluginDirs);                                                                                // plugins
