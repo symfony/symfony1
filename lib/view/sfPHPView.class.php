@@ -75,7 +75,7 @@ class sfPHPView extends sfView
 
   protected function renderFile($_sfFile)
   {
-    if ($sf_logging_active = sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_active'))
     {
       $this->getContext()->getLogger()->info('{sfPHPView} render "'.$_sfFile.'"');
     }

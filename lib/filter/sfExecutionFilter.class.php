@@ -102,10 +102,9 @@ class sfExecutionFilter extends sfFilter
         // - or automatic validation returns false but errors have been 'removed' by manual validation
         $validated = ($manualValidated && $validated) || ($manualValidated && !$validated && !$context->getRequest()->hasErrors());
 
-        $sf_logging_active = sfConfig::get('sf_logging_active');
         if ($validated)
         {
-          if (sfConfig::get('sf_debug') && $sf_logging_active)
+          if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_active'))
           {
             $timer = sfTimerManager::getTimer(sprintf('Action "%s/%s"', $moduleName, $actionName));
           }
@@ -119,14 +118,14 @@ class sfExecutionFilter extends sfFilter
           }
           $actionInstance->postExecute();
 
-          if (sfConfig::get('sf_debug') && $sf_logging_active)
+          if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_active'))
           {
             $timer->addTime();
           }
         }
         else
         {
-          if ($sf_logging_active)
+          if (sfConfig::get('sf_logging_active'))
           {
             $this->context->getLogger()->info('{sfExecutionFilter} action validation failed');
           }

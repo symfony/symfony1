@@ -159,14 +159,14 @@ class sfWebDebug
 
     // max priority
     $max_priority = '';
-    if ($sf_logging_active = sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_active'))
     {
       $max_priority = $this->getPriority($this->max_priority);
     }
 
     $logs = '';
     $sql_logs = array();
-    if ($sf_logging_active)
+    if (sfConfig::get('sf_logging_active'))
     {
       $logs = '<table class="sfWebDebugLogs">
         <tr>
@@ -291,7 +291,7 @@ class sfWebDebug
 
     // logs
     $logInfo = '';
-    if ($sf_logging_active)
+    if (sfConfig::get('sf_logging_active'))
     {
       $logInfo .= $short_messages.'
         <ul id="sfWebDebugLogMenu">
