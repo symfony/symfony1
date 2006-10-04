@@ -178,7 +178,7 @@ class sfPropelData
         {
           $peer_class = trim($class.'Peer');
 
-          if (!$classPath = Symfony::getClassPath($peer_class))
+          if (!$classPath = sfAutoload::getClassPath($peer_class))
           {
             throw new sfException(sprintf('Unable to find path for class "%s".', $peer_class));
           }
@@ -221,7 +221,7 @@ class sfPropelData
     $class_map_builder = $class.'MapBuilder';
     if (!isset($this->maps[$class]))
     {
-      if (!$classPath = Symfony::getClassPath($class_map_builder))
+      if (!$classPath = sfAutoload::getClassPath($class_map_builder))
       {
         throw new sfException(sprintf('Unable to find path for class "%s".', $class_map_builder));
       }

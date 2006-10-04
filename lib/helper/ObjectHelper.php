@@ -148,7 +148,7 @@ function object_select_tag($object, $method, $options = array(), $default_value 
 function _get_values_for_object_select_tag($object, $class, $text_method = null, $peer_method = null)
 {
   // FIXME: drop Propel dependency
-  if (!$classPath = Symfony::getClassPath($class.'Peer'))
+  if (!$classPath = sfAutoload::getClassPath($class.'Peer'))
   {
     throw new sfException(sprintf('Unable to find path for class "%s".', $class.'Peer'));
   }

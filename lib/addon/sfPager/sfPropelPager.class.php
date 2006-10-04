@@ -64,7 +64,7 @@ class sfPropelPager
     $cForCount->clearGroupByColumns();
 
     // require the model class (because autoloading can crash under some conditions)
-    if (!$classPath = Symfony::getClassPath($this->getClassPeer()))
+    if (!$classPath = sfAutoload::getClassPath($this->getClassPeer()))
     {
       throw new sfException(sprintf('Unable to find path for class "%s".', $this->getClassPeer()));
     }
