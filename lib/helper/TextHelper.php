@@ -205,11 +205,3 @@ function _auto_link_email_addresses($text)
 {
   return preg_replace('/([\w\.!#\$%\-+.]+@[A-Za-z0-9\-]+(\.[A-Za-z0-9\-]+)+)/', '<a href="mailto:\\1">\\1</a>', $text);
 }
-
-/**
- * Wraps echo to automatically provide a newline
- */
-function echoln($string)
-{
-  echo $string."\n";
-}

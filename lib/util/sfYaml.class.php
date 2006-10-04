@@ -52,6 +52,8 @@ class sfYaml
     }
     else
     {
+      require_once(dirname(__FILE__).'/Spyc.class.php');
+
       $spyc = new Spyc();
 
       return $spyc->load($input);
@@ -79,9 +81,6 @@ class sfYaml
     // if input is a file, process it
     if (strpos($input, "\n") === false && is_file($input))
     {
-      require_once(sfConfig::get('sf_symfony_lib_dir').'/config/sfLoader.class.php');
-      sfLoader::loadHelpers(array('Text'));
-
       ob_start();
       $retval = include($input);
       $contents = ob_get_clean();
@@ -93,4 +92,12 @@ class sfYaml
     // else return original input
     return $input;
   }
+}
+
+/**
+ * Wraps echo to automatically provide a newline
+ */
+function echoln($string)
+{
+  echo $string."\n";
 }
