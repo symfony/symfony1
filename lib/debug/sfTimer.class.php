@@ -29,7 +29,7 @@ class sfTimer
    *
    * @param string The name of the timer.
    */
-  public function __construct($name)
+  public function __construct($name = '')
   {
     $this->name = $name;
     $this->startTimer();
