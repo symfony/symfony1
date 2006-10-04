@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(14, new lime_output_color());
+$t = new lime_test(17, new lime_output_color());
 
 class myView extends sfView
 {
@@ -24,6 +24,17 @@ class myView extends sfView
 $context = new sfContext();
 $view = new myView();
 $view->initialize($context, '', '', '');
+
+// ->getContext()
+$t->diag('->getContext()');
+$view->initialize($context, '', '', '');
+$t->is($view->getContext(), $context, '->getContext() returns the current context');
+
+// ->isDecorator() ->setDecorator()
+$t->diag('->isDecorator() ->setDecorator()');
+$t->is($view->isDecorator(), false, '->isDecorator() returns true if the current view have to be decorated');
+$view->setDecorator(true);
+$t->is($view->isDecorator(), true, '->setDecorator() sets the decorator status for the view');
 
 // parameter holder proxy
 require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');
