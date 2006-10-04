@@ -79,8 +79,8 @@ try
   // load timer classes if in debug mode
   if ($sf_debug)
   {
-    require_once($sf_symfony_lib_dir.'/util/sfTimerManager.class.php');
-    require_once($sf_symfony_lib_dir.'/util/sfTimer.class.php');
+    require_once($sf_symfony_lib_dir.'/debug/sfTimerManager.class.php');
+    require_once($sf_symfony_lib_dir.'/debug/sfTimer.class.php');
   }
 
   // load base settings
