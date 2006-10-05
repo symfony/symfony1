@@ -560,7 +560,7 @@ EOF;
     return preg_replace('/\'/', '\\\'', $string);
   }
 
-// here come the propel specific methods
+  // here come the propel specific methods
 
   public function getAllColumns()
   {
@@ -571,13 +571,13 @@ EOF;
     }
     return $phpNames;
   }
-  
+
   public function getAdminColumnForField($field, $flag = null)
   {
     $phpName = sfInflector::camelize($field);
     return new sfAdminColumn($phpName, $this->getColumnForPhpName($phpName), $flag);
   }
-  
+
   // returns a column phpName or null if none was found
   public function getColumnForPhpName($phpName)
   {
@@ -592,7 +592,7 @@ EOF;
         break;
       }
     }
-    
+
     // not a "real" column, so we will simulate one
     return null;
   }

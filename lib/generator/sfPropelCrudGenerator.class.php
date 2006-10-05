@@ -27,10 +27,8 @@ class sfPropelCrudGenerator extends sfGenerator
     $map           = null,
     $tableMap      = null,
     $primaryKey    = array(),
-    $className     = '';
-  
-  protected
-    $params = array();
+    $className     = '',
+    $params        = array();
 
   public function initialize($generatorManager)
   {
@@ -79,7 +77,6 @@ class sfPropelCrudGenerator extends sfGenerator
 
     // theme exists?
     $theme = isset($this->params['theme']) ? $this->params['theme'] : 'default';
-    #$themeDir = sfConfig::get('sf_symfony_data_dir')."/generator/{$this->getGeneratorClass()}/$theme/template";
     $themeDir = sfLoader::getGeneratorTemplate($this->getGeneratorClass(), $theme, '');
     if (!is_dir($themeDir))
     {
@@ -296,7 +293,7 @@ class sfPropelCrudGenerator extends sfGenerator
   public function getColumnEditTag($column, $params = array())
   {
     $type = $column->getCreoleType();
-       
+
     if ($column->isForeignKey())
     {
       $params = $this->getObjectTagParams($params, array('related_class' => $this->getRelatedClassName($column)));
@@ -346,14 +343,14 @@ class sfPropelCrudGenerator extends sfGenerator
       return $this->getPHPObjectHelper('input_tag', $column, $params);
     }
   }
-  
-// here come the propel specific functions
-  
+
+  // here come the propel specific functions
+
   function getPHPObjectHelper($helperName, $column, $params)
   {
     return sprintf ('object_%s($%s, \'%s\', %s)', $helperName, $this->getSingularName(), $this->getColumnGetter($column, false), $params);
   }
-  
+
   function getColumnGetter($column, $developed = false)
   {
     $getter = 'get'.$column->getPhpName();
@@ -361,7 +358,7 @@ class sfPropelCrudGenerator extends sfGenerator
       $getter = sprintf('$%s->%s()', $this->getSingularName(), $getter);
     return $getter;
   }
-  
+
   function getRelatedClassName($column)
   {
     $relatedTable = $this->getMap()->getDatabaseMap()->getTable($column->getRelatedTableName());
