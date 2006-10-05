@@ -7,7 +7,7 @@ If you try to use this release with 0.6.X projects, you must upgrade them with: 
 When you upgrade your 0.9 release, re-run the upgrade script (you can safely run the upgrade several times).
 
 * new sfMixin class to allow adding methods to core classes without inheritance
-* new sfBrowser, sfTestBrowser and sfDomCssSelector classes to ease functionnal tests writing
+* new sfBrowser, sfTestBrowser and sfDomCssSelector classes to ease functional tests writing
 * new unit test library (lime)
 * major partial and component refactoring (big speed improvement)
 * output escaping is now a global setting
