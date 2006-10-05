@@ -1,11 +1,23 @@
-<?php include_partial('cache/partial') ?>
+<div id="partial"><?php include_partial('cache/partial') ?></div>
 
-<?php include_partial('cache/cacheablePartial') ?>
+<div id="cacheablePartial"><?php include_partial('cache/cacheablePartial') ?></div>
 
-<?php include_partial('cache/cacheablePartial', array('foo' => 'bar')) ?>
+<div id="cacheablePartialVarParam"><?php include_partial('cache/cacheablePartial', array('varParam' => 'varParam')) ?></div>
 
-<?php include_component('cache', 'component') ?>
 
-<?php include_component('cache', 'cacheableComponent') ?>
+<div id="component"><?php include_component('cache', 'component') ?></div>
 
-<?php include_component('cache', 'cacheableComponent', array('foo' => 'bar')) ?>
+<div id="componentVarParam"><?php include_component('cache', 'component', array('varParam' => 'varParam')) ?></div>
+
+<div id="cacheableComponent"><?php include_component('cache', 'cacheableComponent') ?></div>
+
+<div id="cacheableComponentVarParam"><?php include_component('cache', 'cacheableComponent', array('varParam' => 'varParam')) ?></div>
+
+
+<div id="contextualComponent"><?php include_component('cache', 'contextualComponent') ?></div>
+
+<div id="contextualComponentVarParam"><?php include_component('cache', 'contextualComponent', array('varParam' => 'varParam')) ?></div>
+
+<div id="contextualCacheableComponent"><?php include_component('cache', 'contextualCacheableComponent') ?></div>
+
+<div id="contextualCacheableComponentVarParam"><?php include_component('cache', 'contextualCacheableComponent', array('varParam' => 'varParam')) ?></div>

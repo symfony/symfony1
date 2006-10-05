@@ -17,6 +17,58 @@ if (!$ret)
 
 class myTestBrowser extends sfTestBrowser
 {
+  function getMultiAction($parameter = null)
+  {
+    return $this->
+      get('/cache/multi'.(null !== $parameter ? '/param/'.$parameter : ''))->
+      isStatusCode(200)->
+      isRequestParameter('module', 'cache')->
+      isRequestParameter('action', 'multi')->
+      isCached(false)->
+
+      // partials
+      checkResponseElement('#partial .partial')->
+      checkResponseElement('#cacheablePartial .cacheablePartial_')->
+      checkResponseElement('#cacheablePartialVarParam .cacheablePartial_varParam')->
+
+      // components
+      checkResponseElement('#component .component__componentParam_'.$parameter)->
+      checkResponseElement('#componentVarParam .component_varParam_componentParam_'.$parameter)->
+
+      // contextual components
+      checkResponseElement('#contextualComponent .contextualComponent__componentParam_'.$parameter)->
+      checkResponseElement('#contextualComponentVarParam .contextualComponent_varParam_componentParam_'.$parameter)->
+      checkResponseElement('#contextualCacheableComponent .contextualCacheableComponent__componentParam_'.$parameter)->
+      checkResponseElement('#contextualCacheableComponentVarParam .contextualCacheableComponent_varParam_componentParam_'.$parameter)->
+
+      // partial cache
+      isUriCached('@_sf_cache_partial?module=cache&action=_partial&sf_cache_key='.md5(serialize(array())), false)->
+      isUriCached('@_sf_cache_partial?module=cache&action=_partial&sf_cache_key='.md5(serialize(array('varParam' => 'varParam'))), false)->
+
+      isUriCached('@_sf_cache_partial?module=cache&action=_cacheablePartial&sf_cache_key='.md5(serialize(array())), true)->
+      isUriCached('@_sf_cache_partial?module=cache&action=_cacheablePartial&sf_cache_key='.md5(serialize(array('varParam' => 'varParam'))), true)->
+
+      isUriCached('@_sf_cache_partial?module=cache&action=_cacheablePartial&sf_cache_key='.md5(serialize(array('varParam' => 'another'))), false)->
+
+      // component cache
+      isUriCached('@_sf_cache_partial?module=cache&action=_component&sf_cache_key='.md5(serialize(array())), false)->
+      isUriCached('@_sf_cache_partial?module=cache&action=_component&sf_cache_key='.md5(serialize(array('varParam' => 'varParam'))), false)->
+
+      isUriCached('@_sf_cache_partial?module=cache&action=_cacheableComponent&sf_cache_key='.md5(serialize(array())), true)->
+      isUriCached('@_sf_cache_partial?module=cache&action=_cacheableComponent&sf_cache_key='.md5(serialize(array('varParam' => 'varParam'))), true)->
+
+      isUriCached('@_sf_cache_partial?module=cache&action=_cacheableComponent&sf_cache_key='.md5(serialize(array('varParam' => 'another'))), false)->
+
+      // contextual component cache
+      isUriCached('@_sf_cache_partial?module=cache&action=_contextualComponent&sf_cache_key='.md5(serialize(array())), false)->
+      isUriCached('@_sf_cache_partial?module=cache&action=_contextualComponent&sf_cache_key='.md5(serialize(array('varParam' => 'varParam'))), false)->
+
+      isUriCached('@_sf_cache_partial?module=cache&action=_contextualCacheableComponent&sf_cache_key='.md5(serialize(array())), true)->
+      isUriCached('@_sf_cache_partial?module=cache&action=_contextualCacheableComponent&sf_cache_key='.md5(serialize(array('varParam' => 'varParam'))), true)->
+
+      isUriCached('@_sf_cache_partial?module=cache&action=_contextualCacheableComponent&sf_cache_key='.md5(serialize(array('varParam' => 'another'))), false)
+    ;
+  }
 }
 
 $b = new myTestBrowser();
@@ -59,33 +111,37 @@ $b->
   isCached(true)
 ;
 
-$b->
-  get('/cache/multi')->
-  isStatusCode(200)->
-  isRequestParameter('module', 'cache')->
-  isRequestParameter('action', 'multi')->
-  checkResponseElement('div#cacheablePartial', '/IN CACHEABLE PARTIAL/')->
-  checkResponseElement('div#cacheablePartialbar', '/IN CACHEABLE PARTIALbar/')->
-  checkResponseElement('div#partial', '/IN PARTIAL/')->
-  checkResponseElement('div#cacheableComponent', '/IN CACHEABLE COMPONENT/')->
-  checkResponseElement('div#cacheableComponentbar', '/IN CACHEABLE COMPONENTbar/')->
-  checkResponseElement('div#component', '/IN COMPONENT/')->
-  isCached(false)->
-  isUriCached('cache/_cacheablePartial?key='.md5(serialize(array())), true)->
-  isUriCached('cache/_cacheablePartial?key='.md5(serialize(array('foo' => 'bar'))), true)->
-  isUriCached('cache/_cacheablePartial?key='.md5(serialize(array('foo' => 'foo'))), false)->
-  isUriCached('cache/_partial?key='.md5(serialize(array())), false)->
-  isUriCached('cache/_cacheableComponent?key='.md5(serialize(array())), true)->
-  isUriCached('cache/_cacheableComponent?key='.md5(serialize(array('foo' => 'bar'))), true)->
-  isUriCached('cache/_cacheableComponent?key='.md5(serialize(array('foo' => 'foo'))), false)->
-  isUriCached('cache/_component?key='.md5(serialize(array())), false)
-;
+// remove all cache
+sfToolkit::clearDirectory(sfConfig::get('sf_cache_dir'));
 
 $b->
-  get('/cache/multi/bar/foo')->
-  isStatusCode(200)->
-  isRequestParameter('module', 'cache')->
-  isRequestParameter('action', 'multi')->
-  checkResponseElement('div#cacheableComponentfoo', '/IN CACHEABLE COMPONENTfoo/')->
-  checkResponseElement('div#cacheableComponentbarfoo', '/IN CACHEABLE COMPONENTbarfoo/')
+  getMultiAction()->
+
+  getMultiAction('requestParam')->
+
+  // component already in cache and not contextual, so request parameter is not there
+  checkResponseElement('#cacheableComponent .cacheableComponent__componentParam_')->
+  checkResponseElement('#cacheableComponentVarParam .cacheableComponent_varParam_componentParam_')
 ;
+
+// remove all cache
+sfToolkit::clearDirectory(sfConfig::get('sf_cache_dir'));
+
+$b->
+  getMultiAction('requestParam')->
+
+  checkResponseElement('#cacheableComponent .cacheableComponent__componentParam_requestParam')->
+  checkResponseElement('#cacheableComponentVarParam .cacheableComponent_varParam_componentParam_requestParam')->
+
+  getMultiAction()->
+
+  checkResponseElement('#cacheableComponent .cacheableComponent__componentParam_requestParam')->
+  checkResponseElement('#cacheableComponentVarParam .cacheableComponent_varParam_componentParam_requestParam')->
+
+  getMultiAction('anotherRequestParam')->
+
+  checkResponseElement('#cacheableComponent .cacheableComponent__componentParam_requestParam')->
+  checkResponseElement('#cacheableComponentVarParam .cacheableComponent_varParam_componentParam_requestParam')
+;
+
+//print $b->getResponse()->getContent();

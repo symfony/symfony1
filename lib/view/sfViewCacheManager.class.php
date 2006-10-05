@@ -43,6 +43,13 @@ class sfViewCacheManager
     // create cache instance
     $this->cache = new $this->viewCacheClassName(sfConfig::get('sf_template_cache_dir'));
     $this->cache->initialize($this->viewCacheOptions);
+
+    // register a named route for our partial cache (at the end)
+    $r = sfRouting::getInstance();
+    if (!$r->hasRouteName('_sf_cache_partial'))
+    {
+      $r->connect('_sf_cache_partial', '/_sf_cache_partial/:module/:action/:sf_cache_key.', array(), array());
+    }
   }
 
   public function getContext()
@@ -87,7 +94,15 @@ class sfViewCacheManager
     }
 
     // generate uri
-    $uri = $this->controller->genUrl($internalUri);
+    if ($this->isContextual($internalUri))
+    {
+      list($route_name, $params) = $this->controller->convertUrlStringToParameters($internalUri);
+      $uri = $this->controller->genUrl(sfRouting::getInstance()->getCurrentInternalUri()).sprintf('/%s/%s/%s', $params['module'], $params['action'], $params['sf_cache_key']);
+    }
+    else
+    {
+      $uri = $this->controller->genUrl($internalUri);
+    }
 
     // prefix with vary headers
     $varyHeaders = $this->getVary($internalUri);
@@ -140,6 +155,7 @@ class sfViewCacheManager
       'withLayout'     => isset($options['withLayout']) ? $options['withLayout'] : false,
       'lifeTime'       => $options['lifeTime'],
       'clientLifeTime' => isset($options['clientLifeTime']) && $options['clientLifeTime'] ? $options['clientLifeTime'] : $options['lifeTime'],
+      'contextual'     => isset($options['contextual']) ? $options['contextual'] : false,
       'vary'           => isset($options['vary']) ? $options['vary'] : array(),
     );
   }
@@ -166,6 +182,11 @@ class sfViewCacheManager
   public function getClientLifeTime($internalUri)
   {
     return $this->getCacheConfig($internalUri, 'clientLifeTime', 0);
+  }
+
+  public function isContextual($internalUri)
+  {
+    return $this->getCacheConfig($internalUri, 'contextual', false);
   }
 
   public function getVary($internalUri)

@@ -1,3 +1,11 @@
+_contextualCacheableComponent:
+  activate:   on
+  contextual: true
+
+_contextualComponent:
+  activate:   off
+  contextual: true
+
 _cacheableComponent:
   activate: on
 

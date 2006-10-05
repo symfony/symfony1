@@ -1,1 +1,1 @@
-<div id="partial">IN PARTIAL</div>
+<div class="partial">OK</div>

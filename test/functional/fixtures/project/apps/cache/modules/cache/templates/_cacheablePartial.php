@@ -1,1 +1,1 @@
-<div id="cacheablePartial<?php echo isset($foo) ? $foo : '' ?>">IN CACHEABLE PARTIAL<?php echo isset($foo) ? $foo : '' ?></div>
+<div class="cacheablePartial_<?php echo isset($varParam) ? $varParam : '' ?>">OK</div>

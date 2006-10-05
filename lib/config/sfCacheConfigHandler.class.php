@@ -93,6 +93,9 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
     // client_lifetime
     $clientLifetime = !$activate ? '0' : $this->getConfigValue('client_lifetime', $actionName, $lifeTime, '0');
 
+    // contextual
+    $contextual = $this->getConfigValue('contextual', $actionName) ? 'true' : 'false';
+
     // vary
     $vary = $this->getConfigValue('vary', $actionName, array());
     if (!is_array($vary))
@@ -101,8 +104,8 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
     }
 
     // add cache information to cache manager
-    $data[] = sprintf("\$this->addCache(\$moduleName, '%s', array('withLayout' => %s, 'lifeTime' => %s, 'clientLifeTime' => %s, 'vary' => %s));\n",
-                      $actionName, $withLayout, $lifeTime, $clientLifetime, str_replace("\n", '', var_export($vary, true)));
+    $data[] = sprintf("\$this->addCache(\$moduleName, '%s', array('withLayout' => %s, 'lifeTime' => %s, 'clientLifeTime' => %s, 'contextual' => %s, 'vary' => %s));\n",
+                      $actionName, $withLayout, $lifeTime, $clientLifetime, $contextual, str_replace("\n", '', var_export($vary, true)));
 
     return implode("\n", $data);
   }

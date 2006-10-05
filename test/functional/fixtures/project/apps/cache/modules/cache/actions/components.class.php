@@ -12,10 +12,25 @@ class cacheComponents extends sfComponents
 {
   public function executeComponent()
   {
+    $this->componentParam = 'componentParam';
+    $this->requestParam = $this->getRequestParameter('param');
   }
 
   public function executeCacheableComponent()
   {
-    $this->bar = $this->getRequestParameter('bar');
+    $this->componentParam = 'componentParam';
+    $this->requestParam = $this->getRequestParameter('param');
+  }
+
+  public function executeContextualComponent()
+  {
+    $this->componentParam = 'componentParam';
+    $this->requestParam = $this->getRequestParameter('param');
+  }
+
+  public function executeContextualCacheableComponent()
+  {
+    $this->componentParam = 'componentParam';
+    $this->requestParam = $this->getRequestParameter('param');
   }
 }

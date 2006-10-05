@@ -119,7 +119,7 @@ function get_component($moduleName, $componentName, $vars = array())
   if ($cacheManager = $context->getViewCacheManager())
   {
     $cacheManager->registerConfiguration($moduleName);
-    $uri = $moduleName.'/'.$actionName.'?key='.md5(serialize($vars));
+    $uri = '@_sf_cache_partial?module='.$moduleName.'&action='.$actionName.'&sf_cache_key='.(isset($vars['sf_cache_key']) ? $vars['sf_cache_key'] : md5(serialize($vars)));
     if ($retval = _get_cache($cacheManager, $uri))
     {
       return $retval;
@@ -176,15 +176,14 @@ function get_component($moduleName, $componentName, $vars = array())
   }
 
   // run component
-  $sf_logging_active = sfConfig::get('sf_logging_active');
-  if (sfConfig::get('sf_debug') && $sf_logging_active)
+  if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_active'))
   {
     $timer = sfTimerManager::getTimer(sprintf('Component "%s/%s"', $moduleName, $componentName));
   }
 
   $retval = $componentInstance->$componentToRun();
 
-  if (sfConfig::get('sf_debug') && $sf_logging_active)
+  if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_active'))
   {
     $timer->addTime();
   }
@@ -194,6 +193,7 @@ function get_component($moduleName, $componentName, $vars = array())
     // render
     $view = new sfPartialView();
     $view->initialize($context, $moduleName, $actionName, '');
+
     $retval = $view->render($componentInstance->getVarHolder()->getAll());
 
     if ($cacheManager)
@@ -262,7 +262,7 @@ function get_partial($templateName, $vars = array())
   if ($cacheManager = $context->getViewCacheManager())
   {
     $cacheManager->registerConfiguration($moduleName);
-    $uri = $moduleName.'/'.$actionName.'?key='.md5(serialize($vars));
+    $uri = '@_sf_cache_partial?module='.$moduleName.'&action='.$actionName.'&sf_cache_key='.(isset($vars['sf_cache_key']) ? $vars['sf_cache_key'] : md5(serialize($vars)));
     if ($retval = _get_cache($cacheManager, $uri))
     {
       return $retval;
