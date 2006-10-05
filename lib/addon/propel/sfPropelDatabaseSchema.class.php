@@ -219,6 +219,26 @@ class sfPropelDatabaseSchema
             );
             $has_primary_key = true;
           }
+          
+          $pos = strpos($column, '_id');
+          if ($pos > 0 && $pos == strlen($column) - 3)
+          {
+            // foreign key convention
+            $foreign_table = $this->findTable(substr($column, 0, $pos));
+            if ($foreign_table)
+            {
+              $this->database[$table][$column] = array(
+                'type'             => 'integer',
+                'foreignTable'     => $foreign_table,
+                'foreignReference' => 'id'
+              );
+            }
+            else
+            {
+              throw new sfException(sprintf('Unable to resolve foreign table for column "%s"', $column));
+            }
+          }
+          
         }
         else
         {
@@ -239,29 +259,7 @@ class sfPropelDatabaseSchema
               $has_primary_key = true;
             }
           }
-        }
-        
-        $pos = strpos($column, '_id');
-        if ($pos > 0 && $pos == strlen($column) - 3)
-        {
-          // foreign key convention
-          $foreign_table = $this->findTable(substr($column, 0, $pos));
-          if ($foreign_table || isset($this->database[$table][$column]['foreignTable']))
-          {
-            $this->database[$table][$column] = array_merge(
-              array(
-                'type'             => 'integer',
-                'foreignReference' => 'id'
-              ),
-              ($foreign_table ? array('foreignTable' => $foreign_table) : array()),
-              ($attributes != null ? $this->database[$table][$column] : array())
-            );
-          }
-          else
-          {
-            throw new sfException(sprintf('Unable to resolve foreign table for column "%s"', $column));
-          }
-        }
+        }        
       }
       
       if(!$has_primary_key)

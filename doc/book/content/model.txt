@@ -96,11 +96,11 @@ Of course, if you want to specify your own primary keys, foreign-keys, default v
 
 ### Schema conventions
 
-Columns called `id` are considered to be primary keys. 
+Empty columns called `id` are considered to be primary keys. 
 
-Column ending with `_id` are considered to be foreign keys, and the related table is automatically determined according to the first part of the column name. 
+Empty column ending with `_id` are considered to be foreign keys, and the related table is automatically determined according to the first part of the column name. 
 
-Columns called `created_at` are automatically set to the `timestamp` type. 
+Empty columns called `created_at` are automatically set to the `timestamp` type. 
 
 For all these columns, you don't need to specify any type, since symfony will deduce their format from their name. That is why the `schema.yml` is so easy to write.
 
@@ -463,7 +463,7 @@ As compared to the column attributes, it is interesting for multiple-references 
               - { local: user_id, foreign: id }
               - { local: post_id, foreign: id }
 
-NOTE: Foreign keys between tables defined in seperate schema.yml files must be explicitly defined as outlined above as they cannot be auto detected by symfony. You must also ensure that you have declared each database tag to belong to the same package (see attributes above), and that you have the statement `propel.packageObjectModel  = true` in your propel.ini file (these settings are now default in symfony projects).
+>**Note**: Foreign keys between tables defined in separate `schema.yml` files must be explicitly defined as outlined above as they cannot be auto detected by symfony. You must also ensure that you have declared each database to belong to the same package (see the 'Attributes' section above), and that you have the statement `propel.packageObjectModel  = true` in your `propel.ini` file (these settings are now default in symfony projects).
 
 ### Index
 
@@ -483,7 +483,7 @@ As for the foreign-key explicit syntax, it is only useful for indexes built on m
 
 ### Column automatisms
 
-When meeting a column with names it recognizes, symfony will do some magic and add a value of its own if they are not already set:
+When meeting a column with no value and a name it recognizes, symfony will do some magic and add a value of its own:
 
     id:         { type: integer, required: true, primaryKey: true, autoincrement: true }
     foobar_id:  { type: integer, foreignTable: db_foobar, foreignReference: id }
