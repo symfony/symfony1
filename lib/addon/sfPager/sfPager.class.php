@@ -17,14 +17,14 @@
 
 /**
  *
- * sfPropelPager class.
+ * sfPager class.
  *
  * @package    symfony
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfPropelPager
+abstract class sfPager
 {
   protected
     $page                   = 1,
@@ -33,99 +33,29 @@ class sfPropelPager
     $nbResults              = 0,
     $class                  = '',
     $tableName              = '',
-    $criteria               = null,
     $objects                = null,
     $cursor                 = 1,
     $parameters             = array(),
     $currentMaxLink         = 1,
     $parameter_holder       = null,
-    $peer_method_name       = 'doSelect',
-    $peer_count_method_name = 'doCount',
     $maxRecordLimit         = false;
-
+    
   public function __construct($class, $maxPerPage = 10)
   {
     $this->setClass($class);
-    $this->tableName = constant($class.'Peer::TABLE_NAME');
-    $this->setCriteria(new Criteria());
     $this->setMaxPerPage($maxPerPage);
     $this->setPage(1);
     $this->parameter_holder = new sfParameterHolder();
   }
 
-  public function init()
-  {
-    $hasMaxRecordLimit = ($this->getMaxRecordLimit() !== false);
-    $maxRecordLimit = $this->getMaxRecordLimit();
-
-    $cForCount = clone $this->getCriteria();
-    $cForCount->setOffset(0);
-    $cForCount->setLimit(0);
-    $cForCount->clearGroupByColumns();
-
-    // require the model class (because autoloading can crash under some conditions)
-    if (!$classPath = sfAutoload::getClassPath($this->getClassPeer()))
-    {
-      throw new sfException(sprintf('Unable to find path for class "%s".', $this->getClassPeer()));
-    }
-    require_once($classPath);
-    $count = call_user_func(array($this->getClassPeer(), $this->getPeerCountMethod()), $cForCount);
-
-    $this->setNbResults($hasMaxRecordLimit ? min($count, $maxRecordLimit) : $count);
-
-    $c = $this->getCriteria();
-    $c->setOffset(0);
-    $c->setLimit(0);
-
-    if (($this->getPage() == 0 || $this->getMaxPerPage() == 0))
-    {
-      $this->setLastPage(0);
-    }
-    else
-    {
-      $this->setLastPage(ceil($this->getNbResults() / $this->getMaxPerPage()));
-
-      $offset = ($this->getPage() - 1) * $this->getMaxPerPage();
-      $c->setOffset($offset);
-
-      if ($hasMaxRecordLimit)
-      {
-        $maxRecordLimit = $maxRecordLimit - $offset;
-        if ($maxRecordLimit > $this->getMaxPerPage())
-        {
-          $c->setLimit($this->getMaxPerPage());
-        }
-        else
-        {
-          $c->setLimit($maxRecordLimit);
-        }
-      }
-      else
-      {
-        $c->setLimit($this->getMaxPerPage());
-      }
-    }
-  }
-
-  public function getPeerMethod()
-  {
-    return $this->peer_method_name;
-  }
-
-  public function setPeerMethod($peer_method_name)
-  {
-    $this->peer_method_name = $peer_method_name;
-  }
-
-  public function getPeerCountMethod()
-  {
-    return $this->peer_count_method_name;
-  }
-
-  public function setPeerCountMethod($peer_count_method_name)
-  {
-    $this->peer_count_method_name = $peer_count_method_name;
-  }
+  // function to be called after parameters have been set
+  abstract public function init();
+  
+  // main method: returns an array of result on the given page
+  abstract public function getResults();
+  
+  // used internally by getCurrent()
+  abstract protected function retrieveObject($offset);
 
   public function getCurrentMaxLink()
   {
@@ -223,24 +153,6 @@ class sfPropelPager
     }
   }
 
-  protected function retrieveObject($offset)
-  {
-    $cForRetrieve = clone $this->getCriteria();
-    $cForRetrieve->setOffset($offset - 1);
-    $cForRetrieve->setLimit(1);
-
-    $results = call_user_func(array($this->getClassPeer(), $this->getPeerMethod()), $cForRetrieve);
-
-    return $results[0];
-  }
-
-  public function getResults()
-  {
-    $c = $this->getCriteria();
-
-    return call_user_func(array($this->getClassPeer(), $this->getPeerMethod()), $c);
-  }
-
   public function getFirstIndice()
   {
     if ($this->page == 0)
@@ -290,11 +202,6 @@ class sfPropelPager
   public function setClass($class)
   {
     $this->class = $class;
-  }
-
-  public function getClassPeer()
-  {
-    return $this->class.'Peer';
   }
 
   public function getNbResults()
