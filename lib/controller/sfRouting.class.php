@@ -123,6 +123,11 @@ class sfRouting
     return count($this->routes) ? true : false;
   }
 
+  public function hasRouteName($name)
+  {
+    return isset($this->routes[$name]) ? true : false;
+  }
+
   /**
    * Get a route by its name.
    *
@@ -310,6 +315,15 @@ class sfRouting
       if ($global_defaults !== null)
       {
         $defaults = array_merge($defaults, $global_defaults);
+      }
+
+      // all params must be given
+      foreach ($names as $name)
+      {
+        if (!isset($params[$name]) && !isset($default[$name]))
+        {
+          throw new sfException(sprintf('Route named "%s" have a mandatory "%s" parameter', $name, $name));
+        }
       }
     }
     else
