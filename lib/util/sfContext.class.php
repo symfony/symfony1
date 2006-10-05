@@ -51,10 +51,9 @@ class sfContext
 
   protected function initialize()
   {
+    $this->logger = sfLogger::getInstance();
     if (sfConfig::get('sf_logging_active'))
     {
-      $this->logger = sfLogger::getInstance();
-      $this->logger->info('{sfContext} '."\n\n");
       $this->logger->info('{sfContext} initialization');
     }
 
@@ -65,7 +64,7 @@ class sfContext
       $this->databaseManager->initialize();
     }
 
-    if ($sf_cache = sfConfig::get('sf_cache'))
+    if (sfConfig::get('sf_cache'))
     {
       $this->viewCacheManager = new sfViewCacheManager();
     }
@@ -83,7 +82,7 @@ class sfContext
     // include the factories configuration
     require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/factories.yml'));
 
-    if ($sf_cache)
+    if (sfConfig::get('sf_cache'))
     {
       $this->viewCacheManager->initialize($this);
     }
