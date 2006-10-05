@@ -21,7 +21,6 @@
 class sfPropelAdminGenerator extends sfPropelCrudGenerator
 {
   protected
-    $params = array(),
     $fields = array();
 
   public function initialize($generatorManager)
@@ -29,65 +28,6 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     parent::initialize($generatorManager);
 
     $this->setGeneratorClass('sfPropelAdmin');
-  }
-
-  public function generate($params = array())
-  {
-    $this->params = $params;
-
-    $required_parameters = array('model_class', 'moduleName');
-    foreach ($required_parameters as $entry)
-    {
-      if (!isset($this->params[$entry]))
-      {
-        $error = 'You must specify a "%s"';
-        $error = sprintf($error, $entry);
-
-        throw new sfParseException($error);
-      }
-    }
-
-    $modelClass = $this->params['model_class'];
-
-    if (!class_exists($modelClass))
-    {
-      $error = 'Unable to scaffold unexistant model "%s"';
-      $error = sprintf($error, $modelClass);
-
-      throw new sfInitializationException($error);
-    }
-
-    $this->setScaffoldingClassName($modelClass);
-
-    // generated module name
-    $this->setGeneratedModuleName('auto'.ucfirst($params['moduleName']));
-    $this->setModuleName($params['moduleName']);
-
-    // get some model metadata
-    $this->loadMapBuilderClasses();
-
-    // load all primary keys
-    $this->loadPrimaryKeys();
-
-    // theme exists?
-    $theme = isset($this->params['theme']) ? $this->params['theme'] : 'default';
-    $themeDir = sfConfig::get('sf_symfony_data_dir').'/generator/sfPropelAdmin/'.$theme.'/template';
-    if (!is_dir($themeDir))
-    {
-      $error = 'The theme "%s" does not exist.';
-      $error = sprintf($error, $theme);
-      throw new sfConfigurationException($error);
-    }
-
-    $this->setTheme($theme);
-
-    $templateFiles = sfFinder::type('file')->name('*.php')->relative()->in($themeDir.'/templates');
-    $this->generatePhpFiles($this->generatedModuleName, $templateFiles);
-
-    // require generated action class
-    $data = "require_once(sfConfig::get('sf_module_cache_dir').'/".$this->generatedModuleName."/actions/actions.class.php');\n";
-
-    return $data;
   }
 
   public function getHelpAsIcon($column, $type = '')
@@ -288,8 +228,8 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
       else
       {
         $params = $this->getObjectTagParams($params);
-
-        return "object_$inputType(\${$this->getSingularName()}, 'get{$column->getPhpName()}', $params)";
+        
+        return $this->getPHPObjectHelper($inputType, $column, $params);
       }
     }
 
@@ -358,41 +298,17 @@ EOF;
 
       foreach ($fields[$category] as $field)
       {
-        $found = false;
-
         list($field, $flag) = $this->splitFlag($field);
-        $phpName = sfInflector::camelize($field);
-
-        // search the matching column for this column name
-        foreach ($this->getTableMap()->getColumns() as $column)
-        {
-          if ($column->getPhpName() == $phpName)
-          {
-            $found = true;
-            $phpNames[] = new sfAdminColumn($column->getPhpName(), $column, $flag);
-            break;
-          }
-        }
-
-        // not a "real" column, so we simulate one
-        if (!$found)
-        {
-          $phpNames[] = new sfAdminColumn($phpName, null, $flag);
-        }
+        
+        $phpNames[] = $this->getAdminColumnForField($field, $flag);
       }
     }
-    else
-    {
-      // no, just return the full list of columns in table
-      foreach ($this->getTableMap()->getColumns() as $column)
-      {
-        $phpNames[] = new sfAdminColumn($column->getPhpName(), $column);
-      }
-    }
+    else     // no, just return the full list of columns in table
+      return $this->getAllColumns();
 
     return $phpNames;
   }
-
+  
   public function splitFlag($text)
   {
     $flag = '';
@@ -534,6 +450,8 @@ EOF;
     $params      = $user_params ? array_merge($params, $user_params) : $params;
 
     $type = $column->getCreoleType();
+    
+    $columnGetter = $this->getColumnGetter($column, true);
 
     if ($column->isComponent())
     {
@@ -546,15 +464,15 @@ EOF;
     else if ($type == CreoleTypes::DATE || $type == CreoleTypes::TIMESTAMP)
     {
       $format = isset($params['date_format']) ? $params['date_format'] : 'f';
-      return "(\${$this->getSingularName()}->get{$column->getPhpName()}() !== null && \${$this->getSingularName()}->get{$column->getPhpName()}() !== '') ? format_date(\${$this->getSingularName()}->get{$column->getPhpName()}(), \"$format\") : ''";
+      return "($columnGetter !== null && $columnGetter !== '') ? format_date($columnGetter, \"$format\") : ''";
     }
     elseif ($type == CreoleTypes::BOOLEAN)
     {
-      return "\${$this->getSingularName()}->get{$column->getPhpName()}() ? image_tag(sfConfig::get('sf_admin_web_dir').'/images/tick.png') : '&nbsp;'";
+      return "$columnGetter ? image_tag(sfConfig::get('sf_admin_web_dir').'/images/tick.png') : '&nbsp;'";
     }
     else
     {
-      return "\${$this->getSingularName()}->get{$column->getPhpName()}()";
+      return "$columnGetter";
     }
   }
 
@@ -576,16 +494,14 @@ EOF;
     $type = $column->getCreoleType();
 
     $default_value = "isset(\$filters['".$column->getName()."']) ? \$filters['".$column->getName()."'] : null";
-    $name = '\'filters['.$column->getName().']\'';
+    $unquotedName = 'filters['.$column->getName().']';
+    $name = "'$unquotedName'";
 
     if ($column->isForeignKey())
     {
-      $relatedTable = $this->getMap()->getDatabaseMap()->getTable($column->getRelatedTableName());
-      $params = $this->getObjectTagParams($params, array('include_blank' => true));
+      $params = $this->getObjectTagParams($params, array('include_blank' => true, 'related_class'=>$this->getRelatedClassName($column), 'text_method'=>'__toString', 'control_name'=>$unquotedName));
+      return "object_select_tag($default_value, null, $params)";
 
-      $options = "objects_for_select(".$relatedTable->getPhpName()."Peer::doSelect(new Criteria()), 'getPrimaryKey', '__toString', $default_value, $params)";
-
-      return "select_tag($name, $options, $params)";
     }
     else if ($type == CreoleTypes::DATE)
     {
@@ -643,6 +559,44 @@ EOF;
   {
     return preg_replace('/\'/', '\\\'', $string);
   }
+
+// here come the propel specific methods
+
+  public function getAllColumns()
+  {
+    $phpNames = array();
+    foreach ($this->getTableMap()->getColumns() as $column)
+    {
+      $phpNames[] = new sfAdminColumn($column->getPhpName(), $column);
+    }
+    return $phpNames;
+  }
+  
+  public function getAdminColumnForField($field, $flag = null)
+  {
+    $phpName = sfInflector::camelize($field);
+    return new sfAdminColumn($phpName, $this->getColumnForPhpName($phpName), $flag);
+  }
+  
+  // returns a column phpName or null if none was found
+  public function getColumnForPhpName($phpName)
+  {
+    // search the matching column for this column name
+
+    foreach ($this->getTableMap()->getColumns() as $column)
+    {
+      if ($column->getPhpName() == $phpName)
+      {
+        $found = true;
+        return $column;
+        break;
+      }
+    }
+    
+    // not a "real" column, so we will simulate one
+    return null;
+  }
+
 }
 
 /**

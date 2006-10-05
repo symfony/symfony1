@@ -28,6 +28,9 @@ class sfPropelCrudGenerator extends sfGenerator
     $tableMap      = null,
     $primaryKey    = array(),
     $className     = '';
+  
+  protected
+    $params = array();
 
   public function initialize($generatorManager)
   {
@@ -38,10 +41,12 @@ class sfPropelCrudGenerator extends sfGenerator
 
   public function generate($params = array())
   {
+    $this->params = $params;
+
     $required_parameters = array('model_class', 'moduleName');
     foreach ($required_parameters as $entry)
     {
-      if (!isset($params[$entry]))
+      if (!isset($this->params[$entry]))
       {
         $error = 'You must specify a "%s"';
         $error = sprintf($error, $entry);
@@ -50,7 +55,7 @@ class sfPropelCrudGenerator extends sfGenerator
       }
     }
 
-    $modelClass = $params['model_class'];
+    $modelClass = $this->params['model_class'];
 
     if (!class_exists($modelClass))
     {
@@ -63,8 +68,8 @@ class sfPropelCrudGenerator extends sfGenerator
     $this->setScaffoldingClassName($modelClass);
 
     // generated module name
-    $this->setGeneratedModuleName('auto'.ucfirst($params['moduleName']));
-    $this->setModuleName($params['moduleName']);
+    $this->setGeneratedModuleName('auto'.ucfirst($this->params['moduleName']));
+    $this->setModuleName($this->params['moduleName']);
 
     // get some model metadata
     $this->loadMapBuilderClasses();
@@ -73,8 +78,10 @@ class sfPropelCrudGenerator extends sfGenerator
     $this->loadPrimaryKeys();
 
     // theme exists?
-    $theme = isset($params['theme']) ? $params['theme'] : 'default';
-    if (!is_dir(sfConfig::get('sf_symfony_data_dir').'/generator/sfPropelCrud/'.$theme.'/template'))
+    $theme = isset($this->params['theme']) ? $this->params['theme'] : 'default';
+    #$themeDir = sfConfig::get('sf_symfony_data_dir')."/generator/{$this->getGeneratorClass()}/$theme/template";
+    $themeDir = sfLoader::getGeneratorTemplate($this->getGeneratorClass(), $theme, '');
+    if (!is_dir($themeDir))
     {
       $error = 'The theme "%s" does not exist.';
       $error = sprintf($error, $theme);
@@ -82,7 +89,10 @@ class sfPropelCrudGenerator extends sfGenerator
     }
 
     $this->setTheme($theme);
-    $this->generatePhpFiles($this->generatedModuleName, array('listSuccess.php', 'editSuccess.php', 'showSuccess.php'));
+    #$this->generatePhpFiles($this->generatedModuleName, array('listSuccess.php', 'editSuccess.php', 'showSuccess.php'));
+    $templateFiles = sfFinder::type('file')->name('*.php')->relative()->in($themeDir.'/templates');
+    
+    $this->generatePhpFiles($this->generatedModuleName, $templateFiles);
 
     // require generated action class
     $data = "require_once(sfConfig::get('sf_module_cache_dir').'/".$this->generatedModuleName."/actions/actions.class.php');\n";
@@ -270,69 +280,91 @@ class sfPropelCrudGenerator extends sfGenerator
   public function getColumnListTag($column, $params = array())
   {
     $type = $column->getCreoleType();
+    
+    $columnGetter = $this->getColumnGetter($column, true);
 
     if ($type == CreoleTypes::DATE || $type == CreoleTypes::TIMESTAMP)
     {
-      return "format_date(\${$this->getSingularName()}->get{$column->getPhpName()}(), 'f')";
+      return "format_date($columnGetter, 'f')";
     }
     else
     {
-      return "\${$this->getSingularName()}->get{$column->getPhpName()}()";
+      return "$columnGetter";
     }
   }
 
   public function getColumnEditTag($column, $params = array())
   {
     $type = $column->getCreoleType();
-
+       
     if ($column->isForeignKey())
     {
-      $relatedTable = $this->getMap()->getDatabaseMap()->getTable($column->getRelatedTableName());
-      $params = $this->getObjectTagParams($params, array('related_class' => $relatedTable->getPhpName()));
-      return "object_select_tag(\${$this->getSingularName()}, 'get{$column->getPhpName()}', $params)";
+      $params = $this->getObjectTagParams($params, array('related_class' => $this->getRelatedClassName($column)));
+      return $this->getPHPObjectHelper('select_tag', $column, $params);
     }
     else if ($type == CreoleTypes::DATE)
     {
       // rich=false not yet implemented
       $params = $this->getObjectTagParams($params, array('rich' => true));
-      return "object_input_date_tag(\${$this->getSingularName()}, 'get{$column->getPhpName()}', $params)";
+      return $this->getPHPObjectHelper('input_date_tag', $column, $params);
     }
     else if ($type == CreoleTypes::TIMESTAMP)
     {
       // rich=false not yet implemented
       $params = $this->getObjectTagParams($params, array('rich' => true, 'withtime' => true));
-      return "object_input_date_tag(\${$this->getSingularName()}, 'get{$column->getPhpName()}', $params)";
+      return $this->getPHPObjectHelper('input_date_tag', $column, $params);
     }
     else if ($type == CreoleTypes::BOOLEAN)
     {
       $params = $this->getObjectTagParams($params);
-      return "object_checkbox_tag(\${$this->getSingularName()}, 'get{$column->getPhpName()}', $params)";
+      return $this->getPHPObjectHelper('checkbox_tag', $column, $params);
     }
     else if ($type == CreoleTypes::CHAR || $type == CreoleTypes::VARCHAR)
     {
       $size = ($column->getSize() > 20 ? ($column->getSize() < 80 ? $column->getSize() : 80) : 20);
       $params = $this->getObjectTagParams($params, array('size' => $size));
-      return "object_input_tag(\${$this->getSingularName()}, 'get{$column->getPhpName()}', $params)";
+      return $this->getPHPObjectHelper('input_tag', $column, $params);
     }
     else if ($type == CreoleTypes::INTEGER || $type == CreoleTypes::TINYINT || $type == CreoleTypes::SMALLINT || $type == CreoleTypes::BIGINT)
     {
       $params = $this->getObjectTagParams($params, array('size' => 7));
-      return "object_input_tag(\${$this->getSingularName()}, 'get{$column->getPhpName()}', $params)";
+      return $this->getPHPObjectHelper('input_tag', $column, $params);
     }
     else if ($type == CreoleTypes::FLOAT || $type == CreoleTypes::DOUBLE || $type == CreoleTypes::DECIMAL || $type == CreoleTypes::NUMERIC || $type == CreoleTypes::REAL)
     {
       $params = $this->getObjectTagParams($params, array('size' => 7));
-      return "object_input_tag(\${$this->getSingularName()}, 'get{$column->getPhpName()}', $params)";
+      return $this->getPHPObjectHelper('input_tag', $column, $params);
     }
     else if ($type == CreoleTypes::TEXT || $type == CreoleTypes::LONGVARCHAR)
     {
       $params = $this->getObjectTagParams($params, array('size' => '30x3'));
-      return "object_textarea_tag(\${$this->getSingularName()}, 'get{$column->getPhpName()}', $params)";
+      return $this->getPHPObjectHelper('textarea_tag', $column, $params);
     }
     else
     {
       $params = $this->getObjectTagParams($params, array('disabled' => true));
-      return "object_input_tag(\${$this->getSingularName()}, 'get{$column->getPhpName()}', $params)";
+      return $this->getPHPObjectHelper('input_tag', $column, $params);
     }
+  }
+  
+// here come the propel specific functions
+  
+  function getPHPObjectHelper($helperName, $column, $params)
+  {
+    return sprintf ('object_%s($%s, \'%s\', %s)', $helperName, $this->getSingularName(), $this->getColumnGetter($column, false), $params);
+  }
+  
+  function getColumnGetter($column, $developed = false)
+  {
+    $getter = 'get'.$column->getPhpName();
+    if ($developed)
+      $getter = sprintf('$%s->%s()', $this->getSingularName(), $getter);
+    return $getter;
+  }
+  
+  function getRelatedClassName($column)
+  {
+    $relatedTable = $this->getMap()->getDatabaseMap()->getTable($column->getRelatedTableName());
+    return $relatedTable->getPhpName();
   }
 }
