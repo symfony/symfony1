@@ -130,6 +130,7 @@ class sfCacheFilter extends sfFilter
     // remove PHP automatic Cache-Control and Expires headers if not overwritten by application or cache
     if ($this->response->hasHttpHeader('Last-Modified') || sfConfig::get('sf_etag'))
     {
+      // FIXME: these headers are set by PHP sessions (see session_cache_limiter())
       $this->response->setHttpHeader('Cache-Control', null, false);
       $this->response->setHttpHeader('Expires', null, false);
       $this->response->setHttpHeader('Pragma', null, false);
