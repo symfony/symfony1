@@ -318,11 +318,11 @@ class sfRouting
       }
 
       // all params must be given
-      foreach ($names as $name)
+      foreach ($names as $tmp)
       {
-        if (!isset($params[$name]) && !isset($default[$name]))
+        if (!isset($params[$tmp]) && !isset($defaults[$tmp]))
         {
-          throw new sfException(sprintf('Route named "%s" have a mandatory "%s" parameter', $name, $name));
+          throw new sfException(sprintf('Route named "%s" have a mandatory "%s" parameter', $name, $tmp));
         }
       }
     }
