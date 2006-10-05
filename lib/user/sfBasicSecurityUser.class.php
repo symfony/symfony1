@@ -104,56 +104,48 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     }
   }
 
+  
   /**
    * Returns true if user has credential.
    *
-   * @param  mixed credential
+   * @param  mixed credentials
+   * @param boolean useAnd specify the mode, either AND or OR
    * @return boolean
-   */
-  public function hasCredential($credential)
-  {
-    if (is_array($credential))
-    {
-      return $this->checkCredentials($credential, true);
-    }
-    else
-    {
-      return in_array($credential, $this->credentials, true);
-    }
-  }
-
-  /**
-   * Checks an array of credentials
    *
-   * @param  array of credentials
-   * @param  boolean if user must match all credentials in array
-   * @return boolean
+   * @author Olivier Verdier <Olivier.Verdier@free.fr>
    */
-  private function checkCredentials($credentials, $matchAll)
+  public function hasCredential($credentials, $useAnd = true)
   {
-    $matched = 0;
-    foreach ($credentials as $credential)
+    if (!is_array($credentials))
     {
-      // if credential is an array, then recursive with the opposite logical operator
-      $hasCredential = is_array($credential) ? $this->checkCredentials($credential, !$matchAll) : in_array($credential, $this->credentials, true);
-
-      // if the user has the credential, increment number of credential in this array matched
-      $matched = $hasCredential ? $matched + 1 : $matched;
+      return (in_array($credentials, $this->credentials, true));
     }
-
-    if ($matchAll && count($credentials) == $matched)
+      
+    // now we assume that $credentials is an array
+    $test = false;
+    
+    foreach($credentials as $credential)
     {
-      // return true if all credentials must be matched and they have been
-      return true;
+      // recursively check the credential with a switched AND/OR mode
+      $test = $this->hasCredential($credential, ($useAnd ? false : true));
+      
+      if ($useAnd)
+      {
+        $test = ($test ? false : true);
+      }
+      
+      if ($test) // either passed one in OR mode or failed one in AND mode
+      {
+        break; // the matter is settled
+      }
     }
-    else if ($matchAll)
+    
+    if ($useAnd) // in AND mode we succeed if $test is false
     {
-      return false;
+      $test = ($test ? false : true);
     }
-    else
-    {
-      return $matched ? true : false;
-    }
+    
+    return $test;
   }
 
   /**
