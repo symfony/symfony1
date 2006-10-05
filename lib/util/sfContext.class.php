@@ -51,9 +51,10 @@ class sfContext
 
   protected function initialize()
   {
-    $this->logger = sfLogger::getInstance();
     if (sfConfig::get('sf_logging_active'))
     {
+      $this->logger = sfLogger::getInstance();
+      $this->logger->info('{sfContext} '."\n\n");
       $this->logger->info('{sfContext} initialization');
     }
 
@@ -64,7 +65,7 @@ class sfContext
       $this->databaseManager->initialize();
     }
 
-    if (sfConfig::get('sf_cache'))
+    if ($sf_cache = sfConfig::get('sf_cache'))
     {
       $this->viewCacheManager = new sfViewCacheManager();
     }
@@ -82,7 +83,7 @@ class sfContext
     // include the factories configuration
     require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/factories.yml'));
 
-    if (sfConfig::get('sf_cache'))
+    if ($sf_cache)
     {
       $this->viewCacheManager->initialize($this);
     }
@@ -175,6 +176,17 @@ class sfContext
     }
 
     return null;
+  }
+  
+  // this function gets the database from the default_database factory config
+  public function getDefaultDatabase()
+  {
+    return $this->databaseManager->getDatabase(sfConfig::get('sf_default_database'));
+  }
+
+  public function retrieveObjects($class, $peer_method)
+  {
+    return $this->getDefaultDatabase()->retrieveObjects($class, $peer_method);
   }
 
   /**

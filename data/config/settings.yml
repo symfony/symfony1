@@ -79,3 +79,5 @@ default:
     prototype_web_dir: /sf/prototype
     admin_web_dir:     /sf/sf_admin
     web_debug_web_dir: /sf/sf_web_debug
+
+    default_database: propel

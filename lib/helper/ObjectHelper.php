@@ -72,14 +72,14 @@ function objects_for_select($options = array(), $value_method, $text_method = nu
   foreach($options as $option)
   {
     // text method exists?
-    if ($text_method && !is_callable(array($option, $text_method)))
+    if ($text_method && !method_exists($option, $text_method))
     {
       $error = sprintf('Method "%s" doesn\'t exist for object of class "%s"', $text_method, get_class($option));
       throw new sfViewException($error);
     }
 
     // value method exists?
-    if (!is_callable(array($option, $value_method)))
+    if (!method_exists($option, $value_method))
     {
       $error = sprintf('Method "%s" doesn\'t exist for object of class "%s"', $value_method, get_class($option));
       throw new sfViewException($error);
@@ -97,7 +97,7 @@ function objects_for_select($options = array(), $value_method, $text_method = nu
 /**
  * Returns a list html tag.
  *
- * @param object An object.
+ * @param object An object or the selected value
  * @param string An object column.
  * @param array Input options (related_class option is mandatory).
  * @param bool Input default value.
@@ -138,8 +138,14 @@ function object_select_tag($object, $method, $options = array(), $default_value 
     $select_options = array('' => '') + $select_options;
     unset($options['include_blank']);
   }
+  
+  if (is_object($object))
+  {
+    $value = _get_object_value($object, $method, $default_value);
+  }
+  else
+    $value = $object;
 
-  $value = _get_object_value($object, $method, $default_value);
   $option_tags = options_for_select($select_options, $value, $options);
 
   return select_tag(_convert_method_to_name($method, $options), $option_tags, $options);
@@ -147,15 +153,7 @@ function object_select_tag($object, $method, $options = array(), $default_value 
 
 function _get_values_for_object_select_tag($object, $class, $text_method = null, $peer_method = null)
 {
-  // FIXME: drop Propel dependency
-  if (!$classPath = sfAutoload::getClassPath($class.'Peer'))
-  {
-    throw new sfException(sprintf('Unable to find path for class "%s".', $class.'Peer'));
-  }
-  require_once($classPath);
-  $method = $peer_method ? $peer_method : 'doSelect';
-  $objects = call_user_func(array($class.'Peer', $method), new Criteria());
-
+  $objects = sfContext::getInstance()->retrieveObjects($class, $peer_method);
   return _get_options_from_objects($objects, $text_method);
 }
 
@@ -172,7 +170,7 @@ function _get_options_from_objects($objects, $text_method = null)
     $methodToCall = '';
     foreach (array($text_method, 'toString', '__toString', 'getPrimaryKey') as $method)
     {
-      if (is_callable(array($objects[0], $method)))
+      if (method_exists($objects[0], $method))
       {
         $methodToCall = $method;
         break;
@@ -277,16 +275,24 @@ function _convert_method_to_name ($method, &$options)
 
   if (!$name)
   {
-    $name = sfInflector::underscore($method);
-    $name = preg_replace('/^get_?/', '', $name);
+    if (is_array($method))
+      $name = implode('-',$method[1]);
+    else
+    {
+      $name = sfInflector::underscore($method);
+      $name = preg_replace('/^get_?/', '', $name);
+    }
   }
 
   return $name;
 }
 
 // returns default_value if object value is null
+// method is either a string or: array('method',array('param1','param2'))
 function _get_object_value ($object, $method, $default_value = null, $param = null)
 {
+  if (is_string($method))
+  {
   // method exists?
   if (!is_callable(array($object, $method)))
   {
@@ -303,6 +309,11 @@ function _get_object_value ($object, $method, $default_value = null, $param = nu
   else
   {
     $object_value = $object->$method();
+  }
+  }
+  elseif (is_array($method))
+  {
+    $object_value = call_user_func_array(array($object, $method[0]), $method[1]);
   }
 
   return ($default_value !== null && $object_value === null) ? $default_value : $object_value;
