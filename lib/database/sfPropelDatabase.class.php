@@ -104,25 +104,30 @@ class sfPropelDatabase extends sfCreoleDatabase
     self::$config['propel']['datasources'][$this->getParameter('datasource')]['connection'][$key] = $value;
     $this->setParameter($key, $value);
   }
-  
-  public function retrieveObjects($class, $peer_method = null)
+
+  public function retrieveObjects($class, $peerMethod = null)
   {
     if (!$classPath = sfAutoload::getClassPath($class.'Peer'))
     {
       throw new sfException(sprintf('Unable to find path for class "%s".', $class.'Peer'));
     }
-    
+
     require_once($classPath);
-    
-    if (!$peer_method)
-      $peer_method = 'doSelect';
-    
+
+    if (!$peerMethod)
+    {
+      $peerMethod = 'doSelect';
+    }
+
     $classPeer = $class.'Peer';
-    
-    if (!is_callable(array($classPeer, $peer_method)))
-      throw new sfException(sprintf('Peer method "%s" not found for class "%s"', $peer_method, $classPeer));
-      
-    $objects = call_user_func(array($classPeer, $peer_method), new Criteria());
+
+    if (!is_callable(array($classPeer, $peerMethod)))
+    {
+      throw new sfException(sprintf('Peer method "%s" not found for class "%s"', $peerMethod, $classPeer));
+    }
+
+    $objects = call_user_func(array($classPeer, $peerMethod), new Criteria());
+
     return $objects;
   }
 }

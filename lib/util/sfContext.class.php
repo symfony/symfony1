@@ -176,16 +176,16 @@ class sfContext
 
     return null;
   }
-  
+
   // this function gets the database from the default_database factory config
   public function getDefaultDatabase()
   {
     return $this->databaseManager->getDatabase(sfConfig::get('sf_default_database'));
   }
 
-  public function retrieveObjects($class, $peer_method)
+  public function retrieveObjects($class, $peerMethod)
   {
-    return $this->getDefaultDatabase()->retrieveObjects($class, $peer_method);
+    return $this->getDefaultDatabase()->retrieveObjects($class, $peerMethod);
   }
 
   /**

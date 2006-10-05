@@ -144,7 +144,9 @@ function object_select_tag($object, $method, $options = array(), $default_value 
     $value = _get_object_value($object, $method, $default_value);
   }
   else
+  {
     $value = $object;
+  }
 
   $option_tags = options_for_select($select_options, $value, $options);
 
@@ -154,6 +156,7 @@ function object_select_tag($object, $method, $options = array(), $default_value 
 function _get_values_for_object_select_tag($object, $class, $text_method = null, $peer_method = null)
 {
   $objects = sfContext::getInstance()->retrieveObjects($class, $peer_method);
+
   return _get_options_from_objects($objects, $text_method);
 }
 
@@ -276,7 +279,9 @@ function _convert_method_to_name ($method, &$options)
   if (!$name)
   {
     if (is_array($method))
+    {
       $name = implode('-',$method[1]);
+    }
     else
     {
       $name = sfInflector::underscore($method);
@@ -293,23 +298,23 @@ function _get_object_value ($object, $method, $default_value = null, $param = nu
 {
   if (is_string($method))
   {
-  // method exists?
-  if (!is_callable(array($object, $method)))
-  {
-    $error = 'Method "%s" doesn\'t exist for object of class "%s"';
-    $error = sprintf($error, $method, get_class($object));
+    // method exists?
+    if (!is_callable(array($object, $method)))
+    {
+      $error = 'Method "%s" doesn\'t exist for object of class "%s"';
+      $error = sprintf($error, $method, get_class($object));
 
-    throw new sfViewException($error);
-  }
+      throw new sfViewException($error);
+    }
 
-  if (null !== $param)
-  {
-    $object_value = $object->$method($param);
-  }
-  else
-  {
-    $object_value = $object->$method();
-  }
+    if (null !== $param)
+    {
+      $object_value = $object->$method($param);
+    }
+    else
+    {
+      $object_value = $object->$method();
+    }
   }
   elseif (is_array($method))
   {
