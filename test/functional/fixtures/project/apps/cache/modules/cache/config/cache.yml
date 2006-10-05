@@ -12,6 +12,14 @@ _cacheableComponent:
 _component:
   activate: off
 
+_contextualCacheablePartial:
+  activate:   on
+  contextual: true
+
+_contextualPartial:
+  activate:   off
+  contextual: true
+
 _cacheablePartial:
   activate: on
 
@@ -19,6 +27,9 @@ _partial:
   activate: off
 
 multi:
+  activate: off
+
+multiBis:
   activate: off
 
 page:

@@ -5,6 +5,13 @@
 <div id="cacheablePartialVarParam"><?php include_partial('cache/cacheablePartial', array('varParam' => 'varParam')) ?></div>
 
 
+<div id="contextualPartial"><?php include_partial('cache/contextualPartial') ?></div>
+
+<div id="contextualCacheablePartial"><?php include_partial('cache/contextualCacheablePartial') ?></div>
+
+<div id="contextualCacheablePartialVarParam"><?php include_partial('cache/contextualCacheablePartial', array('varParam' => 'varParam')) ?></div>
+
+
 <div id="component"><?php include_component('cache', 'component') ?></div>
 
 <div id="componentVarParam"><?php include_component('cache', 'component', array('varParam' => 'varParam')) ?></div>

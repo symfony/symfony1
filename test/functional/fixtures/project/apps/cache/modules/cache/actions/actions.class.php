@@ -26,4 +26,8 @@ class cacheActions extends sfActions
   public function executeMulti()
   {
   }
+
+  public function executeMultiBis()
+  {
+  }
 }
