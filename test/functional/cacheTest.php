@@ -28,13 +28,11 @@ class myTestBrowser extends sfTestBrowser
 
       // partials
       checkResponseElement('#partial .partial')->
-      checkResponseElement('#cacheablePartial .cacheablePartial_')->
-      checkResponseElement('#cacheablePartialVarParam .cacheablePartial_varParam')->
 
       // contextual partials
       checkResponseElement('#contextualPartial .contextualPartial')->
-      checkResponseElement('#contextualCacheablePartial .contextualCacheablePartial_')->
-      checkResponseElement('#contextualCacheablePartialVarParam .contextualCacheablePartial_varParam')->
+      checkResponseElement('#contextualCacheablePartial .contextualCacheablePartial__'.$parameter)->
+      checkResponseElement('#contextualCacheablePartialVarParam .contextualCacheablePartial_varParam_'.$parameter)->
 
       // components
       checkResponseElement('#component .component__componentParam_'.$parameter)->
@@ -135,7 +133,9 @@ $b->
 
   // component already in cache and not contextual, so request parameter is not there
   checkResponseElement('#cacheableComponent .cacheableComponent__componentParam_')->
-  checkResponseElement('#cacheableComponentVarParam .cacheableComponent_varParam_componentParam_')
+  checkResponseElement('#cacheableComponentVarParam .cacheableComponent_varParam_componentParam_')->
+  checkResponseElement('#cacheablePartial .cacheablePartial__')->
+  checkResponseElement('#cacheablePartialVarParam .cacheablePartial_varParam_')
 ;
 
 // remove all cache
@@ -146,16 +146,22 @@ $b->
 
   checkResponseElement('#cacheableComponent .cacheableComponent__componentParam_requestParam')->
   checkResponseElement('#cacheableComponentVarParam .cacheableComponent_varParam_componentParam_requestParam')->
+  checkResponseElement('#cacheablePartial .cacheablePartial__requestParam')->
+  checkResponseElement('#cacheablePartialVarParam .cacheablePartial_varParam_requestParam')->
 
   getMultiAction()->
 
   checkResponseElement('#cacheableComponent .cacheableComponent__componentParam_requestParam')->
   checkResponseElement('#cacheableComponentVarParam .cacheableComponent_varParam_componentParam_requestParam')->
+  checkResponseElement('#cacheablePartial .cacheablePartial__requestParam')->
+  checkResponseElement('#cacheablePartialVarParam .cacheablePartial_varParam_requestParam')->
 
   getMultiAction('anotherRequestParam')->
 
   checkResponseElement('#cacheableComponent .cacheableComponent__componentParam_requestParam')->
-  checkResponseElement('#cacheableComponentVarParam .cacheableComponent_varParam_componentParam_requestParam')
+  checkResponseElement('#cacheableComponentVarParam .cacheableComponent_varParam_componentParam_requestParam')->
+  checkResponseElement('#cacheablePartial .cacheablePartial__requestParam')->
+  checkResponseElement('#cacheablePartialVarParam .cacheablePartial_varParam_requestParam')
 ;
 
 // check contextual cache with another action
@@ -167,10 +173,10 @@ $b->
   isCached(false)->
 
   // partials
-  checkResponseElement('#cacheablePartial .cacheablePartial_')->
+  checkResponseElement('#cacheablePartial .cacheablePartial__requestParam')->
 
   // contextual partials
-  checkResponseElement('#contextualCacheablePartial .contextualCacheablePartial_')->
+  checkResponseElement('#contextualCacheablePartial .contextualCacheablePartial__')->
 
   // components
   checkResponseElement('#cacheableComponent .cacheableComponent__componentParam_requestParam')->
