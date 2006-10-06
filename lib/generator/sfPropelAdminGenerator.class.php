@@ -23,13 +23,6 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
   protected
     $fields = array();
 
-  public function initialize($generatorManager)
-  {
-    parent::initialize($generatorManager);
-
-    $this->setGeneratorClass('sfPropelAdmin');
-  }
-
   public function getHelpAsIcon($column, $type = '')
   {
     $help = $this->getParameterValue($type.'.fields.'.$column->getName().'.help');
@@ -561,6 +554,13 @@ EOF;
   }
 
   // here come the propel specific methods
+
+  public function initialize($generatorManager)
+  {
+    parent::initialize($generatorManager);
+
+    $this->setGeneratorClass('sfPropelAdmin');
+  }
 
   public function getAllColumns()
   {
