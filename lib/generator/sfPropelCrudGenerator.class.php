@@ -251,7 +251,7 @@ class sfPropelCrudGenerator extends sfGenerator
     {
       $phpName   = $pk->getPhpName();
       $fieldName = sfInflector::underscore($phpName);
-      $params[]  = "$fieldName='.\$".$prefix.$this->singularName."->get$phpName()";
+      $params[]  = "$fieldName='.".$this->getColumnGetter($pk, true, $prefix);
     }
 
     return implode(".'&", $params);
@@ -262,8 +262,7 @@ class sfPropelCrudGenerator extends sfGenerator
     $params = array();
     foreach ($this->getPrimaryKey() as $pk)
     {
-      $phpName  = $pk->getPhpName();
-      $params[] = "\$".$prefix.$this->singularName."->get$phpName()";
+      $params[] = $this->getColumnGetter($pk, true);
     }
 
     return implode(' && ', $params);
@@ -351,11 +350,11 @@ class sfPropelCrudGenerator extends sfGenerator
     return sprintf ('object_%s($%s, \'%s\', %s)', $helperName, $this->getSingularName(), $this->getColumnGetter($column, false), $params);
   }
 
-  function getColumnGetter($column, $developed = false)
+  function getColumnGetter($column, $developed = false , $prefix = '')
   {
     $getter = 'get'.$column->getPhpName();
     if ($developed)
-      $getter = sprintf('$%s->%s()', $this->getSingularName(), $getter);
+      $getter = sprintf('$%s%s->%s()', $prefix, $this->getSingularName(), $getter);
     return $getter;
   }
 
