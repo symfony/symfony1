@@ -296,30 +296,23 @@ function _convert_method_to_name ($method, &$options)
 // method is either a string or: array('method',array('param1','param2'))
 function _get_object_value ($object, $method, $default_value = null, $param = null)
 {
+  // compatibility with the array syntax
   if (is_string($method))
   {
-    // method exists?
-    if (!is_callable(array($object, $method)))
-    {
-      $error = 'Method "%s" doesn\'t exist for object of class "%s"';
-      $error = sprintf($error, $method, get_class($object));
-
-      throw new sfViewException($error);
-    }
-
-    if (null !== $param)
-    {
-      $object_value = $object->$method($param);
-    }
-    else
-    {
-      $object_value = $object->$method();
-    }
+    $param = ($param == null ? array() : array($param));
+    $method = array($method, array($param));
   }
-  elseif (is_array($method))
+  
+  // method exists?
+  if (!method_exists($object, $method[0]))
   {
-    $object_value = call_user_func_array(array($object, $method[0]), $method[1]);
+    $error = 'Method "%s" doesn\'t exist for object of class "%s"';
+    $error = sprintf($error, $method, get_class($object));
+
+    throw new sfViewException($error);
   }
+
+  $object_value = call_user_func_array(array($object, $method[0]), $method[1]);
 
   return ($default_value !== null && $object_value === null) ? $default_value : $object_value;
 }
