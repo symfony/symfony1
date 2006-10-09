@@ -85,7 +85,7 @@ Inserts the SQL code from `data/schema.sql` into the database.
     
     $ symfony propel-build-all
 
-Executes `propel-build-schema`, `propel-build-sql` and then `propel-insert-sql` all in one command.
+Executes `propel-build-model`, `propel-build-sql` and then `propel-insert-sql` all in one command.
 
     $ symfony propel-load-data  <APPLICATION_NAME> [<ENVIRONMENT_NAME>] [<FIXTURES_DIR_OR_FILE>]
     
@@ -98,6 +98,10 @@ Executes `propel-build-all` then `propel-load-data`. Accepts same arguments as `
     $ symfony propel-build-schema
     
 Creates a `schema.yml` from an existing database.  
+
+    $ symfony propel-build-schema xml
+    
+Creates a `schema.xml` from an existing database.  
 
 Find more about these commands in the [model chapter](model.txt).
 
