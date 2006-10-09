@@ -144,11 +144,16 @@ Enables the application and clears the cache.
 
     $ symfony purge-logs
 
-Clears the logs files in the log directory depending on your settings in logging.yml (find more in the [logging chapter](logging.txt)).
+Clears the logs files in the log directory in applications and environments where the `logging.yml` specifies `purge: on` (which is the default value).
 
     $ symfony rotate-log <APPLICATION_NAME> <ENVIRONMENT_NAME>
     
-Forces a rotation of a log file if rotate is enabled for the log file in logging.yml. (find more in the [logging chapter](logging.txt)).   
+Forces a rotation of a log file if `rotate` is enabled for the log file in `logging.yml`. The rotation parameters are the `period` (the number of days a single log file lasts) and the `history` (the number of backup log files kept). Here is an example of `logging.yml` withrotation configutation:
+
+    prod:
+      rotate:  on
+      period:  7       ## Log files are rotated every 7 days by default
+      history: 10      ## A maximum history of 10 log files is kepts   
 
 ### Scaffolding and admin generation
 
