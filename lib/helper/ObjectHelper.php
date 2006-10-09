@@ -307,7 +307,7 @@ function _get_object_value ($object, $method, $default_value = null, $param = nu
   if (!method_exists($object, $method[0]))
   {
     $error = 'Method "%s" doesn\'t exist for object of class "%s"';
-    $error = sprintf($error, $method, get_class($object));
+    $error = sprintf($error, $method[0], get_class($object));
 
     throw new sfViewException($error);
   }
