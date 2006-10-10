@@ -652,7 +652,6 @@ class sfWebRequest extends sfRequest
         }
       }
 
-//      if(CultureInfo::validCulture($lang))
       $this->languages[] = $lang;
     }
 
