@@ -65,7 +65,6 @@ class sfPHPView extends sfView
     }
 
     $coreHelpersLoaded = 1;
-
     $core_helpers = array('Helper', 'Url', 'Asset', 'Tag', 'Escaping');
     $standard_helpers = sfConfig::get('sf_standard_helpers');
 
@@ -82,17 +81,15 @@ class sfPHPView extends sfView
 
     $this->loadCoreAndStandardHelpers();
 
-    $_escaping       = $this->getEscaping();
-    $_escapingMethod = $this->getEscapingMethod();
-
-    if (($_escaping === false) || ($_escaping === 'bc'))
+    $_escaping = $this->getEscaping();
+    if ($_escaping === false || $_escaping === 'bc')
     {
       extract($this->attribute_holder->getAll());
     }
 
     if ($_escaping !== false)
     {
-      $sf_data = sfOutputEscaper::escape($_escapingMethod, $this->attribute_holder->getAll());
+      $sf_data = sfOutputEscaper::escape($this->getEscapingMethod(), $this->attribute_holder->getAll());
 
       if ($_escaping === 'both')
       {
@@ -103,13 +100,12 @@ class sfPHPView extends sfView
       }
     }
 
-    // render to variable
+    // render
     ob_start();
     ob_implicit_flush(0);
     require($_sfFile);
-    $retval = ob_get_clean();
 
-    return $retval;
+    return ob_get_clean();
   }
 
   /**
