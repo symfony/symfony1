@@ -339,6 +339,17 @@ EOF;
 
     file_put_contents(sfConfig::get('sf_root_dir').'/config/config.php', $content);
   }
+
+  // remove symlinks
+  if (is_link('lib/symfony'))
+  {
+    unlink('lib/symfony');
+  }
+
+  if (is_link('data/symfony'))
+  {
+    unlink('data/symfony');
+  }
 }
 
 function _upgrade_0_8_propel_model()
