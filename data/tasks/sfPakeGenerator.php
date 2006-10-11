@@ -54,12 +54,11 @@ function run_init_project($task, $args)
   $finder = pakeFinder::type('file')->name('propel.ini');
   pake_replace_tokens($finder, $sf_root_dir, '##', '##', array('PROJECT_DIR' => $sf_root_dir));
 
-  // create symlink if needed
-  if (sfConfig::get('sf_symfony_symlink') && function_exists('symlink'))
-  {
-    pake_symlink(sfConfig::get('sf_symfony_lib_dir'),  $sf_root_dir.'/lib/symfony');
-    pake_symlink(sfConfig::get('sf_symfony_data_dir'), $sf_root_dir.'/data/symfony');
-  }
+  // update config/config.php
+  pake_replace_tokens('config.php', sfConfig::get('sf_config_dir'), '##', '##', array(
+    'SYMFONY_LIB_DIR'  => sfConfig::get('sf_symfony_lib_dir'),
+    'SYMFONY_DATA_DIR' => sfConfig::get('sf_symfony_data_dir'),
+  ));
 
   run_fix_perms($task, $args);
 }

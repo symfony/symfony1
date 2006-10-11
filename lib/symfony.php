@@ -52,7 +52,8 @@ else
 }
 
 // autoloading
-require_once($sf_symfony_lib_dir.'/util/sfAutoload.class.php');
+require_once($sf_symfony_lib_dir.'/util/sfCore.class.php');
+sfCore::initAutoloading();
 
 try
 {

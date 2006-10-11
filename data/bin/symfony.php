@@ -13,79 +13,59 @@ if (ini_get('zend.ze1_compatibility_mode'))
   die("symfony cannot run with zend.ze1_compatibility_mode enabled.\nPlease turn zend.ze1_compatibility_mode to Off in your php.ini.\n");
 }
 
-// define some PEAR directory constants
-$pear_lib_dir = '@PEAR-DIR@';
-$pear_data_dir = '@DATA-DIR@';
-define('PAKEFILE_SYMLINK', false);
-
-if (is_readable('lib/symfony'))
+// project exists?
+if (file_exists('config/config.php'))
 {
-  // symlink in a project
-  define('PAKEFILE_LIB_DIR',  getcwd().'/lib/symfony');
-  define('PAKEFILE_DATA_DIR', getcwd().'/data/symfony');
-  define('SYMFONY_VERSION',   trim(file_get_contents(PAKEFILE_LIB_DIR.'/BRANCH')));
-}
-elseif (is_file(dirname(__FILE__).'/../../lib/BRANCH'))
-{
-  // called directly from SVN
-  define('PAKEFILE_LIB_DIR',  realpath(dirname(__FILE__).'/../../lib'));
-  define('PAKEFILE_DATA_DIR', realpath(dirname(__FILE__).'/..'));
-  define('SYMFONY_VERSION',   trim(file_get_contents(PAKEFILE_LIB_DIR.'/BRANCH')));
-}
-elseif (is_readable($pear_lib_dir))
-{
-  // installed as PEAR package
-  define('PAKEFILE_LIB_DIR',  '@PEAR-DIR@/symfony');
-  define('PAKEFILE_DATA_DIR', '@DATA-DIR@/symfony');
-  define('SYMFONY_VERSION',   '@SYMFONY-VERSION@');
-}
+  include('config/config.php');
 
-set_include_path(PAKEFILE_LIB_DIR.'/vendor'.PATH_SEPARATOR.get_include_path());
-$pakefile = PAKEFILE_DATA_DIR.'/bin/pakefile.php';
-
-include_once('pake/pakeFunction.php');
-
-// we trap -V before pake
-require_once 'pake/pakeGetopt.class.php';
-$OPTIONS = array(
-  array('--version',  '-V', pakeGetopt::NO_ARGUMENT, ''),
-  array('--pakefile', '-f', pakeGetopt::OPTIONAL_ARGUMENT, ''),
-  array('--tasks',    '-T', pakeGetopt::OPTIONAL_ARGUMENT, ''),
-);
-$opt = new pakeGetopt($OPTIONS);
-try
-{
-  $opt->parse();
-
-  foreach ($opt->get_options() as $opt => $value)
+  // check if we are using an old project
+  if (!isset($sf_symfony_lib_dir))
   {
-    if ($opt == 'version')
+    // allow only upgrading
+    if (!in_array('upgrade', $argv))
     {
-      echo sprintf('symfony version %s', pakeColor::colorize(SYMFONY_VERSION, 'INFO'))."\n";
-      exit(0);
+      echo "Please upgrade your project before launching any other symfony task\n";
+      exit();
     }
   }
 }
-catch (pakeException $e)
+
+if (!isset($sf_symfony_lib_dir))
 {
+  if (is_readable(dirname(__FILE__).'/../../lib/VERSION'))
+  {
+    // SVN
+    $sf_symfony_lib_dir  = realpath(dirname(__FILE__).'/../../lib');
+    $sf_symfony_data_dir = realpath(dirname(__FILE__).'/..');
+  }
+  else
+  {
+    // PEAR
+    $sf_symfony_lib_dir  = '@PEAR-DIR@/symfony';
+    $sf_symfony_data_dir = '@DATA-DIR@/symfony';
+
+    if (!is_dir($sf_symfony_lib_dir))
+    {
+      throw new Exception('Unable to find symfony libraries');
+    }
+  }
 }
-if (count($argv) <= 1)
-{
-  $argv[] = '-T';
-}
+
+require_once($sf_symfony_lib_dir.'/vendor/pake/pakeFunction.php');
+require_once($sf_symfony_lib_dir.'/vendor/pake/pakeGetopt.class.php');
 
 // autoloading for pake tasks
 class simpleAutoloader
 {
   static public $class_paths = array();
 
-  static public function initialize()
+  static public function initialize($sf_symfony_lib_dir)
   {
     self::$class_paths = array();
 
-    self::register(PAKEFILE_LIB_DIR, '.class.php');
-    self::register(PAKEFILE_LIB_DIR.'/vendor/propel', '.php');
-    self::register(PAKEFILE_LIB_DIR.'/vendor/creole', '.php');
+    self::register($sf_symfony_lib_dir, '.class.php');
+    self::register($sf_symfony_lib_dir.'/vendor/propel', '.php');
+    self::register($sf_symfony_lib_dir.'/vendor/creole', '.php');
     self::register('lib/model', '.php');
     self::register('plugins', '.php');
   }
@@ -116,11 +96,58 @@ class simpleAutoloader
   }
 }
 
-simpleAutoloader::initialize();
+simpleAutoloader::initialize($sf_symfony_lib_dir);
 function __autoload($class)
 {
   return simpleAutoloader::__autoload($class);
 }
 
-$pake = pakeApp::get_instance();
-$pake->run($pakefile);
+// trap -V before pake
+if (in_array('-V', $argv) || in_array('--version', $argv))
+{
+  printf("symfony version %s\n", pakeColor::colorize(trim(file_get_contents($sf_symfony_lib_dir.'/VERSION')), 'INFO'));
+  exit(0);
+}
+
+if (count($argv) <= 1)
+{
+  $argv[] = '-T';
+}
+
+require_once($sf_symfony_lib_dir.'/config/sfConfig.class.php');
+
+sfConfig::add(array(
+  'sf_root_dir'         => getcwd(),
+  'sf_symfony_lib_dir'  => $sf_symfony_lib_dir,
+  'sf_symfony_data_dir' => $sf_symfony_data_dir,
+));
+
+// directory layout
+include($sf_symfony_data_dir.'/config/constants.php');
+
+// include path
+set_include_path(
+  sfConfig::get('sf_lib_dir').PATH_SEPARATOR.
+  sfConfig::get('sf_app_lib_dir').PATH_SEPARATOR.
+  sfConfig::get('sf_model_dir').PATH_SEPARATOR.
+  sfConfig::get('sf_symfony_lib_dir').DIRECTORY_SEPARATOR.'vendor'.PATH_SEPARATOR.
+  get_include_path()
+);
+
+// register tasks
+$dirs = array(
+  sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.'tasks'         => 'myPake*.php', // project tasks
+  sfConfig::get('sf_symfony_data_dir').DIRECTORY_SEPARATOR.'tasks' => 'sfPake*.php', // symfony tasks
+  sfConfig::get('sf_root_dir').'/plugins/*/data/tasks'             => '*.php',       // plugin tasks
+);
+foreach ($dirs as $globDir => $name)
+{
+  $tasks = pakeFinder::type('file')->name($name)->in(glob($globDir));
+  foreach ($tasks as $task)
+  {
+    include_once($task);
+  }
+}
+
+// run task
+pakeApp::get_instance()->run(null, null, false);

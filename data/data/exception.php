@@ -53,7 +53,7 @@
   <div id="sf_globals" style="display: none"><?php echo $globalsTable ?></div>
 
   <p id="footer">
-    symfony v.<?php echo sfConfig::get('sf_version') ?> - php <?php echo PHP_VERSION ?><br />
+    symfony v.<?php echo file_get_contents(sfConfig::get('sf_symfony_lib_dir').'/VERSION') ?> - php <?php echo PHP_VERSION ?><br />
     for help resolving this issue, please visit <a href="http://www.symfony-project.com/">http://www.symfony-project.com/</a>.
   </p>
   </div></center>

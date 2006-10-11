@@ -17,19 +17,19 @@ pake_task('unfreeze', 'project_exists');
 function run_freeze($task, $args)
 {
   // check that the symfony librairies are not already freeze for this project
-  if (is_readable('lib/symfony') && !is_link('lib/symfony'))
+  if (is_readable('lib/symfony'))
   {
-    throw new Exception('You can only freeze when lib/symfony is empty (symfony as PEAR) or if lib/symfony is a symlink to a symfony installation.');
+    throw new Exception('You can only freeze when lib/symfony is empty.');
   }
 
-  if (is_readable('data/symfony') && !is_link('data/symfony'))
+  if (is_readable('data/symfony'))
   {
-    throw new Exception('You can only freeze when data/symfony is empty (symfony as PEAR) or if data/symfony is a symlink to a symfony installation.');
+    throw new Exception('You can only freeze when data/symfony is empty.');
   }
 
-  if (is_readable('web/sf') && !is_link('web/sf'))
+  if (is_readable('web/sf'))
   {
-    throw new Exception('You can only freeze when web/sf is empty or if web/sf is a symlink to a symfony installation.');
+    throw new Exception('You can only freeze when web/sf is empty.');
   }
 
   if (is_link('web/sf'))
@@ -37,25 +37,8 @@ function run_freeze($task, $args)
     pake_remove('web/sf', '');
   }
 
-  if (is_link('lib/symfony'))
-  {
-    $symfony_lib_dir = realpath(getcwd().'/lib/symfony');
-    pake_remove('lib/symfony', '');
-  }
-  else
-  {
-    $symfony_lib_dir = PAKEFILE_LIB_DIR;
-  }
-
-  if (is_link('data/symfony'))
-  {
-    $symfony_data_dir = realpath(getcwd().'/data/symfony');
-    pake_remove('data/symfony', '');
-  }
-  else
-  {
-    $symfony_data_dir = PAKEFILE_DATA_DIR;
-  }
+  $symfony_lib_dir  = sfConfig::get('sf_symfony_lib_dir');
+  $symfony_data_dir = sfConfig::get('sf_symfony_data_dir');
 
   pake_echo_action('freeze', 'freezing lib found in "'.$symfony_lib_dir.'"');
   pake_echo_action('freeze', 'freezing data found in "'.$symfony_data_dir.'"');
@@ -66,6 +49,10 @@ function run_freeze($task, $args)
 
   pake_rename('data/symfony/web/sf', 'web/sf');
 
+  // change symfony paths in config/config.php
+  file_put_contents('config/config.php.bak', "$symfony_lib_dir#$symfony_data_dir");
+  _change_symfony_dirs("dirname(__FILE__).'/../lib/symfony'", "dirname(__FILE__).'/../data/symfony'");
+
   // install the command line
   pake_copy($symfony_data_dir.'/bin/symfony.php', 'symfony.php');
 }
@@ -73,15 +60,13 @@ function run_freeze($task, $args)
 function run_unfreeze($task, $args)
 {
   // remove lib/symfony and data/symfony directories
-  if (is_link('lib/symfony'))
+  if (!is_dir('lib/symfony'))
   {
     throw new Exception('You can unfreeze only if you froze the symfony libraries before.');
   }
 
-  if (!is_dir('lib/symfony') || !is_readable('lib/symfony'))
-  {
-    throw new Exception('Your lib/symfony directory does not seem to be accessible.');
-  }
+  $dirs = explode('#', file_get_contents('config/config.php.bak'));
+  _change_symfony_dirs('\''.$dirs[0].'\'', '\''.$dirs[1].'\'');
 
   $finder = pakeFinder::type('any');
   pake_remove($finder, 'lib/symfony');
@@ -91,4 +76,12 @@ function run_unfreeze($task, $args)
   pake_remove('symfony.php', '');
   pake_remove($finder, 'web/sf');
   pake_remove('web/sf', '');
+}
+
+function _change_symfony_dirs($symfony_lib_dir, $symfony_data_dir)
+{
+  $content = file_get_contents('config/config.php');
+  $content = preg_replace("/^(\s*.sf_symfony_lib_dir\s*=\s*).+?;/m", "$1$symfony_lib_dir;", $content);
+  $content = preg_replace("/^(\s*.sf_symfony_data_dir\s*=\s*).+?;/m", "$1$symfony_data_dir;", $content);
+  file_put_contents('config/config.php', $content);
 }

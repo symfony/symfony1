@@ -68,7 +68,7 @@ class symfony_cmd
   }
 }
 
-$t = new lime_test(29, new lime_output_color());
+$t = new lime_test(33, new lime_output_color());
 $c = new symfony_cmd();
 $c->initialize($t);
 
@@ -121,5 +121,11 @@ $t->is($content, str_replace("\r\n", "\n", file_get_contents(dirname(__FILE__).'
 
 $content = $c->execute_command('test-all');
 $t->is($content, str_replace("\r\n", "\n", file_get_contents(dirname(__FILE__).'/fixtures/test/result-harness.txt')), '"test-all" launches all unit and functional tests');
+
+$content = $c->execute_command('freeze');
+$t->like(file_get_contents($c->tmp_dir.DS.'config'.DS.'config.php'), '/dirname\(__FILE__\)/', '"freeze" freezes symfony lib and data dir into the project directory');
+
+$content = $c->execute_command('unfreeze');
+$t->unlike(file_get_contents($c->tmp_dir.DS.'config'.DS.'config.php'), '/dirname\(__FILE__\)/', '"unfreeze" unfreezes symfony lib and data dir');
 
 $c->shutdown();

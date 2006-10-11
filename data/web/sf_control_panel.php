@@ -17,20 +17,7 @@ if ('127.0.0.1' != $_SERVER['REMOTE_ADDR'])
 define('SF_ROOT_DIR', realpath(dirname(__FILE__).'/..'));
 
 // symfony directories
-if (is_readable(SF_ROOT_DIR.'/lib/symfony/symfony.php'))
-{
-  // symlink exists
-  $sf_symfony_lib_dir  = SF_ROOT_DIR.'/lib/symfony';
-  $sf_symfony_data_dir = SF_ROOT_DIR.'/data/symfony';
-}
-else
-{
-  // PEAR config
-  if ((include('symfony/pear.php')) != 'OK')
-  {
-    throw new Exception('Unable to find symfony librairies');
-  }
-}
+include(SF_ROOT_DIR.'/config/config.php');
 
 // as we are in the web/ dir, we need to go up one level to get to the project root
 chdir(dirname(__FILE__).DIRECTORY_SEPARATOR.'..');

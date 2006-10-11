@@ -81,3 +81,6 @@ default:
     web_debug_web_dir: /sf/sf_web_debug
 
     default_database: propel
+
+    check_lock:            off
+    check_symfony_version: off

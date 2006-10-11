@@ -149,18 +149,7 @@ function _pear_init()
   require_once 'PEAR/Remote.php';
 
   // current symfony release
-  if (is_readable('lib/symfony'))
-  {
-    $sf_version = file_get_contents('lib/symfony/BRANCH');
-  }
-  else
-  {
-    // PEAR config
-    if ((include('symfony/pear.php')) != 'OK')
-    {
-      throw new Exception('Unable to find symfony librairies.');
-    }
-  }
+  $sf_version = sfConfig::get('sf_symfony_lib_dir').'/VERSION';
 
   // PEAR
   PEAR_Command::setFrontendType('CLI');

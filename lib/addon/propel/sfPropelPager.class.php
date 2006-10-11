@@ -50,7 +50,7 @@ class sfPropelPager extends sfPager
     $cForCount->clearGroupByColumns();
 
     // require the model class (because autoloading can crash under some conditions)
-    if (!$classPath = sfAutoload::getClassPath($this->getClassPeer()))
+    if (!$classPath = sfCore::getClassPath($this->getClassPeer()))
     {
       throw new sfException(sprintf('Unable to find path for class "%s".', $this->getClassPeer()));
     }

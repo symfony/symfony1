@@ -55,6 +55,9 @@ function run_upgrade_0_8($task, $args)
   // add bootstrap files for tests
   _add_0_8_test_bootstraps();
 
+  // upgrade main config.php
+  _upgrade_0_8_main_config_php();
+
   // upgrade all applications
   foreach ($apps as $app_module_dir)
   {
@@ -312,17 +315,30 @@ function _upgrade_0_8_config_php($app_dir)
 {
   pake_echo_action('upgrade 0.8', 'upgrading config.php');
 
-  $config_file = $app_dir.DIRECTORY_SEPARATOR.sfConfig::get('sf_config_dir_name').DIRECTORY_SEPARATOR.'config.php';
+  pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/app/app/config/config.php', $app_dir.DIRECTORY_SEPARATOR.sfConfig::get('sf_config_dir_name').DIRECTORY_SEPARATOR.'config.php');
+}
 
-  $config_php = file_get_contents($config_file);
+function _upgrade_0_8_main_config_php()
+{
+  pake_echo_action('upgrade 0.8', 'upgrading main config.php');
 
-  $replace_string = "sfConfig::get('sf_lib_dir').PATH_SEPARATOR.\n  sfConfig::get('sf_root_dir').PATH_SEPARATOR";
-  if (!preg_match('/'.preg_quote($replace_string, '/').'/', $config_php))
+  $content = file_get_contents(sfConfig::get('sf_root_dir').'/config/config.php');
+
+  if (false === strpos($content, 'sf_symfony_lib_dir'))
   {
-    $config_php = str_replace('sfConfig::get(\'sf_lib_dir\').PATH_SEPARATOR', $replace_string, $config_php);
-  }
+    pake_echo_comment('symfony lib and data dir are now configured in main config.php');
 
-  file_put_contents($config_file, $config_php);
+    $lib_dir = sfConfig::get('sf_symfony_lib_dir');
+    $data_dir = sfConfig::get('sf_symfony_data_dir');
+    $content .= <<<EOF
+
+\$sf_symfony_lib_dir  = '$lib_dir';
+\$sf_symfony_data_dir = '$data_dir';
+
+EOF;
+
+    file_put_contents(sfConfig::get('sf_root_dir').'/config/config.php', $content);
+  }
 }
 
 function _upgrade_0_8_propel_model()
@@ -428,6 +444,7 @@ function _add_0_8_test_bootstraps()
   pake_echo_action('upgrade 0.8', 'add test bootstrap files');
 
   pake_mkdirs(sfConfig::get('sf_root_dir').'/test/bootstrap');
+
   pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/project/test/bootstrap/functional.php', sfConfig::get('sf_root_dir').'/test/bootstrap/functional.php');
   pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/project/test/bootstrap/unit.php', sfConfig::get('sf_root_dir').'/test/bootstrap/unit.php');
 }

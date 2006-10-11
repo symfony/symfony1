@@ -107,7 +107,7 @@ class sfPropelDatabase extends sfCreoleDatabase
 
   public function retrieveObjects($class, $peerMethod = null)
   {
-    if (!$classPath = sfAutoload::getClassPath($class.'Peer'))
+    if (!$classPath = sfCore::getClassPath($class.'Peer'))
     {
       throw new sfException(sprintf('Unable to find path for class "%s".', $class.'Peer'));
     }
