@@ -360,7 +360,7 @@ class sfToolkit
    */
   public static function replaceConstants($value)
   {
-    return preg_replace('/%(.+?)%/e', 'sfConfig::get(strtolower("\\1")) ? sfConfig::get(strtolower("\\1")) : "%\\1%"', $value);
+    return is_string($value) ? preg_replace('/%(.+?)%/e', 'sfConfig::get(strtolower("\\1")) ? sfConfig::get(strtolower("\\1")) : "%\\1%"', $value) : $value;
   }
 
   /**
