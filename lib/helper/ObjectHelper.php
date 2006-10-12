@@ -300,7 +300,7 @@ function _get_object_value ($object, $method, $default_value = null, $param = nu
   if (is_string($method))
   {
     $param = ($param == null ? array() : array($param));
-    $method = array($method, array($param));
+    $method = array($method, $param);
   }
   
   // method exists?
