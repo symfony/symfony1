@@ -311,7 +311,7 @@ function mail_to($email, $name = '', $options = array())
     if (!$name)
     {
       $name = $email;
-    }    
+    }
   }
 
   return content_tag('a', $name, $html_options);
