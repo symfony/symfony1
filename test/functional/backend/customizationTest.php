@@ -56,5 +56,52 @@ $b->
   checkResponseElement('body h1', 'edit test title')->
 
   checkEditCustomization('edit title customization', array('title' => 'edit "%%title%%"'))->
-  checkResponseElement('body h1', 'edit "foo title"')
+  checkResponseElement('body h1', 'edit "foo title"')->
+
+  // edit fields
+  checkEditCustomization('edit field name customization', array('fields' => array('body' => array('name' => 'My Body'))))->
+  checkResponseElement('label[for="article_body"]', 'My Body:')->
+
+  // edit fields display
+  checkEditCustomization('edit fields display customization', array('display' => array('body', 'title')))->
+  checkResponseElement('label[for="article_body"]', true)->
+  checkResponseElement('label[for="article_title"]', true)->
+  checkResponseElement('label[for="article_id"]', false)->
+  checkResponseElement('label[for="article_category_id"]', false)->
+  checkResponseElement('label[for="article_created_at"]', false)->
+
+  checkEditCustomization('edit fields display customization', array('display' => array('NONE' => array('body'), 'Another' => array('title'))))->
+  checkResponseElement('label[for="article_body"]', true)->
+  checkResponseElement('label[for="article_title"]', true)->
+  checkResponseElement('label[for="article_id"]', false)->
+  checkResponseElement('label[for="article_category_id"]', false)->
+  checkResponseElement('label[for="article_created_at"]', false)->
+  checkResponseElement('fieldset#sf_fieldset_none', true)->
+  checkResponseElement('fieldset#sf_fieldset_none + h2', false)->
+  checkResponseElement('fieldset#sf_fieldset_none textarea[name="article[body]"]', true)->
+  checkResponseElement('fieldset#sf_fieldset_another', true)->
+  checkResponseElement('fieldset#sf_fieldset_another + h2', 'Another')->
+  checkResponseElement('fieldset#sf_fieldset_another input[name="article[title]"]', true)->
+
+  // edit buttons
+  checkEditCustomization('remove save button', array('actions' => '-'))->
+  checkResponseElement('body input[class="sf_admin_action_list"][onclick*="/article/list"]', false)->
+  checkResponseElement('body input[name="save_and_add"]', false)->
+  checkResponseElement('body input[name="save"]', false)->
+  checkResponseElement('body input[class="sf_admin_action_delete"][onclick*="confirm"]', false)->
+
+  checkEditCustomization('remove save button', array('actions' => array('_save' => null)))->
+  checkResponseElement('body input[name="save_and_add"]', false)->
+  checkResponseElement('body input[name="save"]', true)->
+
+  checkEditCustomization('add custom button', array('actions' => array('_save' => null, 'custom' => array('name' => 'my button', 'action' => 'myAction', 'params' => 'class=myButtonClass'))))->
+  checkResponseElement('body input[name="save"]', true)->
+  checkResponseElement('body input[class="myButtonClass"][onclick*="/article/myAction/id/1"][value="my button"]', true)->
+
+  checkEditCustomization('add custom button without save', array('actions' => array('custom' => array('name' => 'my button', 'action' => 'myAction', 'params' => 'class=myButtonClass'))))->
+  checkResponseElement('body input[name="save"]', false)->
+  checkResponseElement('body input[class="myButtonClass"][onclick*="/article/myAction/id/1"][value="my button"]', true)->
+
+  checkEditCustomization('rename save button', array('actions' => array('save' => array('name' => 'My save'))))->
+  checkResponseElement('body input[value="My save"]', true)
 ;

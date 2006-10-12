@@ -12,10 +12,12 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 sfLoader::loadHelpers(array('Helper', 'Tag', 'Text'));
 
-$t = new lime_test(33, new lime_output_color());
+$t = new lime_test(41, new lime_output_color());
 
-// text_truncate()
-$t->diag('text_truncate()');
+// truncate_text()
+$t->diag('truncate_text()');
+$t->is(truncate_text(''), '', 'text_truncate() does nothing on an empty string');
+
 $t->is(truncate_text('Test'), 'Test', 'text_truncate() truncates to 30 characters by default');
 
 $text = str_repeat('A', 35);
@@ -28,10 +30,16 @@ $t->is(truncate_text($text, 25), $truncated, 'text_truncate() takes the max leng
 
 $text = str_repeat('A', 35);
 $truncated = str_repeat('A', 21).'BBBB';
-$t->is($truncated, truncate_text($text, 25, 'BBBB'), 'text_truncate() takes the ... text as its third argument');
+$t->is(truncate_text($text, 25, 'BBBB'), $truncated, 'text_truncate() takes the ... text as its third argument');
 
-// text_highlighter()
-$t->diag('text_highlighter()');
+$text = str_repeat('A', 10).str_repeat(' ', 10).str_repeat('A', 10);
+$truncated_true = str_repeat('A', 10).'...';
+$truncated_false = str_repeat('A', 10).str_repeat(' ', 2).'...';
+$t->is(truncate_text($text, 15, '...', false), $truncated_false, 'text_truncate() accepts a truncate lastspace boolean as its fourth argument');
+$t->is(truncate_text($text, 15, '...', true), $truncated_true, 'text_truncate() accepts a truncate lastspace boolean as its fourth argument');
+
+// highlight_text()
+$t->diag('highlight_text()');
 $t->is(highlight_text("This is a beautiful morning", "beautiful"),
   "This is a <strong class=\"highlight\">beautiful</strong> morning",
   'text_highlighter() highlights a word given as its second argument'
@@ -56,16 +64,25 @@ $t->is(highlight_text("This is a beautiful! morning", "beautiful!"), "This is a 
 $t->is(highlight_text("This is a beautiful! morning", "beautiful! morning"), "This is a <strong class=\"highlight\">beautiful! morning</strong>", 'text_highlighter() escapes search string to be safe in a regex');
 $t->is(highlight_text("This is a beautiful? morning", "beautiful? morning"), "This is a <strong class=\"highlight\">beautiful? morning</strong>", 'text_highlighter() escapes search string to be safe in a regex');
 
-// text_excerpt()
-$t->diag('text_excerpt()');
+// excerpt_text()
+$t->diag('excerpt_text()');
+$t->is(excerpt_text('', 'foo', 5), '', 'text_excerpt() return an empty string if argument is empty');
+$t->is(excerpt_text('foo', '', 5), '', 'text_excerpt() return an empty string if phrase is empty');
 $t->is(excerpt_text("This is a beautiful morning", "beautiful", 5), "...is a beautiful morn...", 'text_excerpt() creates an excerpt of a text');
 $t->is(excerpt_text("This is a beautiful morning", "this", 5), "This is a...", 'text_excerpt() creates an excerpt of a text');
 $t->is(excerpt_text("This is a beautiful morning", "morning", 5), "...iful morning", 'text_excerpt() creates an excerpt of a text');
 $t->is(excerpt_text("This is a beautiful morning", "morning", 5), "...iful morning", 'text_excerpt() creates an excerpt of a text');
 $t->is(excerpt_text("This is a beautiful morning", "day"), '', 'text_excerpt() does nothing if the search string is not in input');
 
-// text_simple_format()
-$t->diag('text_simple_format()');
+// wrap_text()
+$t->diag('wrap_text()');
+$line = 'This is a very long line to be wrapped...';
+$t->is(wrap_text($line), "This is a very long line to be wrapped...\n", 'wrap_text() wraps long lines with a default of 80');
+$t->is(wrap_text($line, 10), "This is a\nvery long\nline to be\nwrapped...\n", 'wrap_text() takes a line length as its second argument');
+$t->is(wrap_text($line, 5), "This\nis a\nvery\nlong\nline\nto be\nwrapped...\n", 'wrap_text() takes a line length as its second argument');
+
+// simple_format_text()
+$t->diag('simple_format_text()');
 $t->is(simple_format_text("crazy\r\n cross\r platform linebreaks"), "<p>crazy\n<br /> cross\n<br /> platform linebreaks</p>", 'text_simple_format() replaces \n by <br />');
 $t->is(simple_format_text("A paragraph\n\nand another one!"), "<p>A paragraph</p>\n\n<p>and another one!</p>", 'text_simple_format() replaces \n\n by <p>');
 $t->is(simple_format_text("A paragraph\n With a newline"), "<p>A paragraph\n<br /> With a newline</p>", 'text_simple_format() wrap all string with <p>');

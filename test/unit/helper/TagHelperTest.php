@@ -13,7 +13,7 @@ require_once($_test_dir.'/unit/sfContextMock.class.php');
 
 sfLoader::loadHelpers(array('Helper', 'Tag'));
 
-$t = new lime_test(13, new lime_output_color());
+$t = new lime_test(16, new lime_output_color());
 
 $context = new sfContext();
 
@@ -36,9 +36,19 @@ $t->is(content_tag('p', ''), '<p></p>', 'content_tag() takes a tag as its first 
 
 // cdata_section()
 $t->diag('cdata_section()');
-$t->is(cdata_section(''), '<![CDATA[]]>');
-$t->is(cdata_section('foobar'), '<![CDATA[foobar]]>');
+$t->is(cdata_section(''), '<![CDATA[]]>', 'cdata_section() returns a string wrapped into a CDATA section');
+$t->is(cdata_section('foobar'), '<![CDATA[foobar]]>', 'cdata_section() returns a string wrapped into a CDATA section');
 
 // escape_javascript()
 $t->diag('escape_javascript()');
-$t->is(escape_javascript("alert('foo');\nalert(\"bar\");"), 'alert(\\\'foo\\\');\\nalert(\\"bar\\");');
+$t->is(escape_javascript("alert('foo');\nalert(\"bar\");"), 'alert(\\\'foo\\\');\\nalert(\\"bar\\");', 'escape_javascript() escapes JavaScript scripts');
+
+// _get_option()
+$t->diag('_get_option()');
+$options = array(
+  'foo' => 'bar',
+  'bar' => 'foo',
+);
+$t->is(_get_option($options, 'foo'), 'bar', '_get_option() returns the value for the given key');
+$t->ok(!isset($options['foo']), '_get_option() removes the key from the original array');
+$t->is(_get_option($options, 'nofoo', 'nobar'), 'nobar', '_get_option() returns the default value if the key does not exist');

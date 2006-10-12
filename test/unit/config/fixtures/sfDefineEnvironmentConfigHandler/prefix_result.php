@@ -4,8 +4,8 @@
 sfConfig::add(array(
   'sf_error_404_module' => 'default',
   'sf_error_404_action' => 'error404',
-  'sf_available' => '',
-  'sf_i18n' => '1',
+  'sf_available' => false,
+  'sf_i18n' => true,
   'sf_activated_modules' => array (
   0 => 'default',
   1 => 'user',
