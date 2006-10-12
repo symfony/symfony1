@@ -180,6 +180,13 @@ class sfCreoleSessionStorage extends sfSessionStorage
     // what database are we using?
     $database = $this->getParameterHolder()->get('database', 'default');
 
+    // autoload propel propely if we're reusing the propel connection for session storage
+    if ($this->getContext()->getDatabaseManager()->getDatabase($database) instanceof sfPropelDatabase && !Propel::isInit())
+    {
+      $error = 'Creole dabatase connection is the same as the propel database connection, but could not be initialized.';
+      throw new sfDatabaseException($error);
+    }
+
     $this->db = $this->getContext()->getDatabaseConnection($database);
     if ($this->db == null || !$this->db instanceof Connection)
     {
