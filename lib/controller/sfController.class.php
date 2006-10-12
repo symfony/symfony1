@@ -30,16 +30,6 @@ abstract class sfController
     $viewCacheClassName       = null;
 
   /**
-   * Removes current sfController instance
-   *
-   * This method only exists for testing purpose. Don't use it in your application code.
-   */
-  public static function removeInstance()
-  {
-    self::$instance = null;
-  }
-
-  /**
    * Indicates whether or not a module has a specific component.
    *
    * @param string A module name.
