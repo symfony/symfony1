@@ -151,3 +151,5 @@ foreach ($dirs as $globDir => $name)
 
 // run task
 pakeApp::get_instance()->run(null, null, false);
+
+exit(0);
