@@ -8,7 +8,7 @@ When you upgrade your 0.9 release, re-run the upgrade script (you can safely run
 
 * added new sfOptimizer classes
 * greater credential flexibility
-* symfony is now compatible with magic_quotes_gpc set to off
+* symfony is now compatible with magic_quotes_gpc set to on
 * refactored sfFilter class (executeBeforeExecution, executeBeforeRendering)
 * new coverage script for symfony core
 * new encoding parameter in databases.yml

@@ -26,7 +26,7 @@ To allow developers to adapt to any existing symfony project, it is recommended 
 Root tree structure
 -------------------
 
-These are the directories found at the root of a ymfony project:
+These are the directories found at the root of a symfony project:
 
     apps/
       fo/
