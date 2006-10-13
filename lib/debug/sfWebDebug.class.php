@@ -115,7 +115,7 @@ class sfWebDebug
     $log_line = htmlentities($log_line, ENT_QUOTES, sfConfig::get('sf_charset'));
 
     // replace constants value with constant name
-    $log_line = strtr($log_line, $constants);
+    $log_line = str_replace(array_keys($constants), array_values($constants), $log_line);
 
     $log_line = sfToolkit::pregtr($log_line, array('/&quot;(.+?)&quot;/s' => '"<span class="sfWebDebugLogInfo">\\1</span>"',
                                                    '/^(.+?)\(\)\:/S'      => '<span class="sfWebDebugLogInfo">\\1()</span>:',
