@@ -84,7 +84,8 @@ function _propel_convert_yml_schema($check_schema = true, $prefix = '')
 function _propel_convert_xml_schema($check_schema = true, $prefix = '')
 {
   $finder = pakeFinder::type('file')->name('*schema.xml');
-  $schemas = array_merge($finder->in('config'), $finder->in('data/plugins'));
+
+  $schemas = array_merge($finder->in('config'), $finder->in(glob(sfConfig::get('sf_root_dir').'/plugins/*/config')));
   if ($check_schema && !count($schemas))
   {
     throw new Exception('You must create a schema.xml file.');
