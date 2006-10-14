@@ -105,6 +105,9 @@ function run_clear_cache($task, $args)
     throw new Exception('Cache directory does not exist.');
   }
 
+  // clear process cache
+  sfProcessCache::clear();
+
   $cache_dir = sfConfig::get('sf_cache_dir_name');
 
   // app

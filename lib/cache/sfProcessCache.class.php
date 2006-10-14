@@ -85,4 +85,26 @@ class sfProcessCache
 
     return false;
   }
+
+  public static function clear()
+  {
+    switch (self::cacher())
+    {
+      case 'apc':
+        return apc_clear_cache('user');
+      case 'xcache':
+        for ($i = 0, $max = xcache_count(XC_TYPE_VAR); $i < $max; $i++)
+        {
+          if (!xcache_clear_cache(XC_TYPE_VAR, $i))
+          {
+            return false;
+          }
+        }
+        return true;
+      case 'eaccelerator':
+        eaccelerator_clean();
+    }
+
+    return false;
+  }
 }
