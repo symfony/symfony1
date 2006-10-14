@@ -837,12 +837,13 @@ function input_date_tag($name, $value, $options = array())
   $calendar_date_format = preg_replace('/([mdy])+/i', '%\\1', $calendar_date_format);
 
   $id_inputField = (isset($options['id']))? $options['id'] : get_id_from_name($name);
+  $id_calendarButton = 'trigger_'.get_id_from_name($name);
   $js = '
-    document.getElementById("trigger_'.$name.'").disabled = false;
+    document.getElementById("'.$id_calendarButton.'").disabled = false;
     Calendar.setup({
       inputField : "'.$id_inputField.'",
       ifFormat : "'.$calendar_date_format.'",
-      button : "trigger_'.$name.'"';
+      button : "'.$id_calendarButton.'"';
 
   // calendar options
   if (isset($options['calendar_options']))
@@ -854,13 +855,6 @@ function input_date_tag($name, $value, $options = array())
   $js .= '
     });
   ';
-
-  // construct html
-  if (!isset($options['size']))
-  {
-    $options['size'] = 11;
-  }
-  $html = input_tag($name, $value, $options);
 
   // calendar button
   $calendar_button = '...';
@@ -878,13 +872,20 @@ function input_date_tag($name, $value, $options = array())
     unset($options['calendar_button_txt']);
   }
 
+  // construct html
+  if (!isset($options['size']))
+  {
+    $options['size'] = 11;
+  }
+  $html = input_tag($name, $value, $options);
+
   if ($calendar_button_type == 'img')
   {
-    $html .= image_tag($calendar_button, array('id' => 'trigger_'.$name, 'style' => 'cursor: pointer; vertical-align: middle'));
+    $html .= image_tag($calendar_button, array('id' => $id_calendarButton, 'style' => 'cursor: pointer; vertical-align: middle'));
   }
   else
   {
-    $html .= content_tag('button', $calendar_button, array('type' => 'button', 'disabled' => 'disabled', 'onclick' => 'return false', 'id' => 'trigger_'.$name));
+    $html .= content_tag('button', $calendar_button, array('type' => 'button', 'disabled' => 'disabled', 'onclick' => 'return false', 'id' => $id_calendarButton));
   }
 
   if (isset($options['with_format']))
