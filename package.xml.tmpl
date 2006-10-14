@@ -22,6 +22,7 @@
  </stability>
  <license uri="http://www.symfony-project.com/license">MIT license</license>
  <notes>-</notes>
+
  <contents>
   <dir name="/">
 
@@ -32,13 +33,14 @@
     <tasks:replace type="pear-config" from="@PEAR-DIR@" to="php_dir" />
    </file>
 
-   <file role="lib" baseinstalldir="symfony" install-as="VERSION" name="VERSION">
+   <file role="php" baseinstalldir="symfony" install-as="VERSION" name="lib/VERSION">
     <tasks:replace type="package-info" from="0.9.0-DEV" to="version" />
    </file>
 
    <file role="doc" baseinstalldir="symfony" name="LICENSE" />
   </dir>
  </contents>
+
  <dependencies>
   <required>
    <php>
@@ -49,6 +51,9 @@
    </pearinstaller>
   </required>
  </dependencies>
+
+ <phprelease>
+ </phprelease>
 
  <changelog>
  </changelog>
