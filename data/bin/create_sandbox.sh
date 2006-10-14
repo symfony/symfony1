@@ -17,12 +17,6 @@ echo ">>> create a new project and a new app"
 php ${DIR}/symfony.php init-project ${SANDBOX_NAME}
 php ${DIR}/symfony.php init-app ${APP_NAME}
 
-echo ">>> add symfony command line"
-cp ${DIR}/symfony.sh symfony.sh
-cp ${DIR}/symfony.bat symfony.bat
-cp ${DIR}/symfony.php symfony.php
-chmod 755 symfony.sh
-
 echo ">>> add LICENSE"
 cp ${DIR}/../../LICENSE LICENSE
 
