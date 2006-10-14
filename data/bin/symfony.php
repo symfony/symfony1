@@ -8,46 +8,24 @@
  * file that was distributed with this source code.
  */
 
+if (!isset($sf_symfony_lib_dir))
+{
+  die("You must launch symfony command line with the symfony script\n");
+}
+
 if (ini_get('zend.ze1_compatibility_mode'))
 {
   die("symfony cannot run with zend.ze1_compatibility_mode enabled.\nPlease turn zend.ze1_compatibility_mode to Off in your php.ini.\n");
 }
 
-// project exists?
-if (file_exists('config/config.php'))
+// check if we are using an old project
+if (file_exists('config/config.php') && !isset($sf_symfony_lib_dir))
 {
-  include('config/config.php');
-
-  // check if we are using an old project
-  if (!isset($sf_symfony_lib_dir))
+  // allow only upgrading
+  if (!in_array('upgrade', $argv))
   {
-    // allow only upgrading
-    if (!in_array('upgrade', $argv))
-    {
-      echo "Please upgrade your project before launching any other symfony task\n";
-      exit();
-    }
-  }
-}
-
-if (!isset($sf_symfony_lib_dir))
-{
-  if (is_readable(dirname(__FILE__).'/../../lib/VERSION'))
-  {
-    // SVN
-    $sf_symfony_lib_dir  = realpath(dirname(__FILE__).'/../../lib');
-    $sf_symfony_data_dir = realpath(dirname(__FILE__).'/..');
-  }
-  else
-  {
-    // PEAR
-    $sf_symfony_lib_dir  = '@PEAR-DIR@/symfony';
-    $sf_symfony_data_dir = '@DATA-DIR@/symfony';
-
-    if (!is_dir($sf_symfony_lib_dir))
-    {
-      throw new Exception('Unable to find symfony libraries');
-    }
+    echo "Please upgrade your project before launching any other symfony task\n";
+    exit();
   }
 }
 

@@ -30,7 +30,7 @@ pake_alias('controller', 'init-controller');
 
 function run_init_project($task, $args)
 {
-  if (file_exists('SYMFONY'))
+  if (file_exists('symfony'))
   {
     throw new Exception('A symfony project already exists in this directory.');
   }
@@ -173,7 +173,7 @@ function run_init_batch($task, $args)
     throw new Exception('You must provide the batch skeleton name');
   }
 
-  // TODO: ADD FINDER HERE TO LOCATE BATCH SKELTON LOCALLY OR IN SYMFONY DIRS, AND SEND PATH TO SKELETONS FUNCTION
+  // TODO: add finder here to locate batch skeleton locally or in symfony dirs, and send path to skeletons function
   $batch = '_batch_'.$args[0];
   $batch($task, $args);
 

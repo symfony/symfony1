@@ -27,24 +27,13 @@
 
     ##CLASS_FILES##
 
-   <file role="script" baseinstalldir="/" name="data/bin/symfony.sh">
-    <tasks:replace type="pear-config" from="@PHP-BIN@" to="php_bin"/>
-    <tasks:replace type="pear-config" from="@BIN-DIR@" to="bin_dir"/>
-    <tasks:replace type="pear-config" from="@PEAR-DIR@" to="php_dir"/>
-    <tasks:replace type="pear-config" from="@DATA-DIR@" to="data_dir" />
-   </file>
-   <file role="script" baseinstalldir="/" name="data/bin/symfony.bat">
-    <tasks:replace type="pear-config" from="@PHP-BIN@" to="php_bin"/>
-    <tasks:replace type="pear-config" from="@BIN-DIR@" to="bin_dir"/>
-    <tasks:replace type="pear-config" from="@PEAR-DIR@" to="php_dir"/>
-    <tasks:replace type="pear-config" from="@DATA-DIR@" to="data_dir" />
-   </file>
-
-   <file role="data" baseinstalldir="symfony" install-as="bin/symfony.php" name="data/bin/symfony.php">
+   <file role="data" baseinstalldir="symfony" install-as="bin/symfony" name="data/bin/symfony">
     <tasks:replace type="pear-config" from="@DATA-DIR@" to="data_dir" />
     <tasks:replace type="pear-config" from="@PEAR-DIR@" to="php_dir" />
-    <tasks:replace type="package-info" from="@SYMFONY-VERSION@" to="version" />
-    <tasks:replace type="pear-config" from="@DATA-DIR@" to="data_dir" />
+   </file>
+
+   <file role="lib" baseinstalldir="symfony" install-as="VERSION" name="VERSION">
+    <tasks:replace type="package-info" from="0.9.0-DEV" to="version" />
    </file>
 
    <file role="doc" baseinstalldir="symfony" name="LICENSE" />
@@ -60,25 +49,6 @@
    </pearinstaller>
   </required>
  </dependencies>
-
- <phprelease>
-   <installconditions>
-    <os>
-     <name>windows</name>
-    </os>
-   </installconditions>
-   <filelist>
-    <install as="symfony.bat" name="data/bin/symfony.bat" />
-    <ignore name="data/bin/symfony.sh" />
-   </filelist>
-  </phprelease>
-
-  <phprelease>
-   <filelist>
-    <install as="symfony" name="data/bin/symfony.sh" />
-    <ignore name="data/bin/symfony.bat" />
-   </filelist>
-  </phprelease>
 
  <changelog>
  </changelog>

@@ -76,7 +76,7 @@ $t->is($c->execute_command('-T'), $c->execute_command(''), '"symfony" is an alia
 
 // sfPakeGenerator
 $content = $c->execute_command('init-project myproject');
-$t->ok(file_exists($c->tmp_dir.DS.'SYMFONY'), '"init-project" creates a SYMFONY file in root project directory');
+$t->ok(file_exists($c->tmp_dir.DS.'symfony'), '"init-project" installs the symfony CLI in root project directory');
 
 $content = $c->execute_command('init-app frontend');
 $t->ok(is_dir($c->tmp_dir.DS.'apps'.DS.'frontend'), '"init-app" creates a "frontend" directory under "apps" directory');

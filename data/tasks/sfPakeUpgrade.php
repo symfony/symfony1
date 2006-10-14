@@ -49,6 +49,9 @@ function run_upgrade_0_8($task, $args)
   // find all applications for this project
   $apps = pakeFinder::type('directory')->name(sfConfig::get('sf_app_module_dir_name'))->mindepth(1)->maxdepth(1)->relative()->in(sfConfig::get('sf_apps_dir_name'));
 
+  // install symfony CLI
+  pake_copy(sfConfig::get('sf_symfony_data_dir').'/bin/symfony_project', sfConfig::get('sf_root_dir').'/symfony');
+
   // update schemas
   _upgrade_0_8_schemas();
 

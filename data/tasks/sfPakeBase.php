@@ -14,7 +14,7 @@ pake_task('module_exists', 'app_exists');
 
 function run_project_exists($task, $args)
 {
-  if (!file_exists('SYMFONY'))
+  if (!file_exists('symfony'))
   {
     throw new Exception('you must be in a symfony project directory');
   }
