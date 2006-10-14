@@ -14,20 +14,15 @@
  *
  * <b>Required parameters:</b>
  *
- * # <b>db_table</b> - [none] - The database table in which session data will be
- *                              stored.
+ * # <b>db_table</b> - [none] - The database table in which session data will be stored.
  *
  * <b>Optional parameters:</b>
  *
- * # <b>database</b>     - [default]   - The database connection to use
- *                                       (see databases.ini).
- * # <b>db_id_col</b>    - [sess_id]   - The database column in which the
- *                                       session id will be stored.
- * # <b>db_data_col</b>  - [sess_data] - The database column in which the
- *                                       session data will be stored.
- * # <b>db_time_col</b>  - [sess_time] - The database column in which the
- *                                       session timestamp will be stored.
- * # <b>session_name</b> - [symfony]    - The name of the session.
+ * # <b>database</b>     - [default]   - The database connection to use (see databases.yml).
+ * # <b>db_id_col</b>    - [sess_id]   - The database column in which the session id will be stored.
+ * # <b>db_data_col</b>  - [sess_data] - The database column in which the session data will be stored.
+ * # <b>db_time_col</b>  - [sess_time] - The database column in which the session timestamp will be stored.
+ * # <b>session_name</b> - [symfony]   - The name of the session.
  *
  * @package    symfony
  * @subpackage storage
@@ -48,14 +43,12 @@ class sfPDOSessionStorage extends sfSessionStorage
   /**
    * Initialize this Storage.
    *
-   * @param Context A Context instance.
-   * @param array   An associative array of initialization parameters.
+   * @param sfContext A sfContext instance.
+   * @param array     An associative array of initialization parameters.
    *
-   * @return bool true, if initialization completes successfully, otherwise
-   *              false.
+   * @return bool true, if initialization completes successfully, otherwise false.
    *
-   * @throws <b>InitializationException</b> If an error occurs while
-   *                                        initializing this Storage.
+   * @throws <b>InitializationException</b> If an error occurs while initializing this Storage.
    */
   public function initialize ($context, $parameters = null)
   {
@@ -101,8 +94,7 @@ class sfPDOSessionStorage extends sfSessionStorage
    *
    * @param string A session ID.
    *
-   * @return bool true, if the session was destroyed, otherwise an exception
-   *              is thrown.
+   * @return bool true, if the session was destroyed, otherwise an exception is thrown.
    *
    * @throws <b>DatabaseException</b> If the session cannot be destroyed.
    */
@@ -113,7 +105,7 @@ class sfPDOSessionStorage extends sfSessionStorage
     $db_id_col = $this->getParameterHolder()->get('db_id_col', 'sess_id');
 
     // delete the record associated with this id
-    $sql = 'DELETE FROM ' . $db_table . ' WHERE ' . $db_id_col . '=?';
+    $sql = 'DELETE FROM '.$db_table.' WHERE '.$db_id_col.'= ?';
 
     try
     {
@@ -121,9 +113,10 @@ class sfPDOSessionStorage extends sfSessionStorage
       $stmt->bindParam(1, $id, PDO::PARAM_STR); // setString(1, $id);
       $stmt->execute();
     }
-    catch (PDOException $e) {
-      $error = 'PDOException was thrown when trying to manipulate session data. ';
-      $error .= 'Message: ' . $e->getMessage();
+    catch (PDOException $e)
+    {
+      $error = sprintf('PDOException was thrown when trying to manipulate session data. Message: %s', $e->getMessage());
+
       throw new sfDatabaseException($error);
     }
   }
@@ -133,8 +126,7 @@ class sfPDOSessionStorage extends sfSessionStorage
    *
    * @param int The lifetime of a session.
    *
-   * @return bool true, if old sessions have been cleaned, otherwise an
-   *              exception is thrown.
+   * @return bool true, if old sessions have been cleaned, otherwise an exception is thrown.
    *
    * @throws <b>DatabaseException</b> If any old sessions cannot be cleaned.
    */
@@ -148,8 +140,7 @@ class sfPDOSessionStorage extends sfSessionStorage
     $db_time_col = $this->getParameterHolder()->get('db_time_col', 'sess_time');
 
     // delete the record associated with this id
-    $sql = 'DELETE FROM ' . $db_table . ' ' .
-      'WHERE ' . $db_time_col . ' < ' . $time;
+    $sql = 'DELETE FROM '.$db_table.' WHERE '.$db_time_col.' < '.$time;
 
     try
     {
@@ -158,8 +149,8 @@ class sfPDOSessionStorage extends sfSessionStorage
     }
     catch (PDOException $e)
     {
-      $error = 'PDOException was thrown when trying to manipulate session data. ';
-      $error .= 'Message: ' . $e->getMessage();
+      $error = sprintf('PDOException was thrown when trying to manipulate session data. Message: %s', $e->getMessage());
+
       throw new sfDatabaseException($error);
     }
   }
@@ -170,11 +161,9 @@ class sfPDOSessionStorage extends sfSessionStorage
    * @param string
    * @param string
    *
-   * @return bool true, if the session was opened, otherwise an exception is
-   *              thrown.
+   * @return bool true, if the session was opened, otherwise an exception is thrown.
    *
-   * @throws <b>DatabaseException</b> If a connection with the database does
-   *                                  not exist or cannot be created.
+   * @throws <b>DatabaseException</b> If a connection with the database does not exist or cannot be created.
    */
   public function sessionOpen ($path, $name)
   {
@@ -185,6 +174,7 @@ class sfPDOSessionStorage extends sfSessionStorage
     if ($this->db == null || !$this->db instanceof PDO)
     {
       $error = 'PDO dabatase connection doesn\'t exist. Unable to open session.';
+
       throw new sfDatabaseException($error);
     }
 
@@ -196,8 +186,7 @@ class sfPDOSessionStorage extends sfSessionStorage
    *
    * @param string A session ID.
    *
-   * @return bool true, if the session was read, otherwise an exception is
-   *              thrown.
+   * @return bool true, if the session was read, otherwise an exception is thrown.
    *
    * @throws <b>DatabaseException</b> If the session cannot be read.
    */
@@ -211,13 +200,12 @@ class sfPDOSessionStorage extends sfSessionStorage
 
     try
     {
-      $sql = 'SELECT ' . $db_data_col . ' FROM ' . $db_table . ' WHERE ' . $db_id_col . '=?';
+      $sql = 'SELECT '.$db_data_col.' FROM '.$db_table.' WHERE '.$db_id_col.'=?';
 
       $stmt = $this->db->prepare($sql);
-      $stmt->bindParam(1, $id, PDO::PARAM_STR, 255); // setString(1, $id);
+      $stmt->bindParam(1, $id, PDO::PARAM_STR, 255);
 
-      $stmt->execute(); // ResultSet::FETCHMODE_NUM);
-
+      $stmt->execute();
       if ($data = $stmt->fetchColumn())
       {
         return $data;
@@ -225,21 +213,21 @@ class sfPDOSessionStorage extends sfSessionStorage
       else
       {
         // session does not exist, create it
-        $sql = 'INSERT INTO ' . $db_table . '('.$db_id_col.','.$db_data_col.','.$db_time_col;
-        $sql .= ') VALUES (?,?,?)';
+        $sql = 'INSERT INTO ' . $db_table . '('.$db_id_col.', '.$db_data_col.', '.$db_time_col.') VALUES (?, ?, ?)';
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(1, $id, PDO::PARAM_STR); // setString(1, $id);
         $stmt->bindValue(2, '', PDO::PARAM_STR); // setString(2, '');
         $stmt->bindValue(3, time(), PDO::PARAM_INT); // setInt(3, time());
         $stmt->execute();
+
         return '';
       }
     }
     catch (PDOException $e)
     {
-      $error = 'PDOException was thrown when trying to manipulate session data. ';
-      $error .= 'Message: ' . $e->getMessage();
+      $error = sprintf('PDOException was thrown when trying to manipulate session data. Message: %s', $e->getMessage());
+
       throw new sfDatabaseException($error);
     }
   }
@@ -250,8 +238,7 @@ class sfPDOSessionStorage extends sfSessionStorage
    * @param string A session ID.
    * @param string A serialized chunk of session data.
    *
-   * @return bool true, if the session was written, otherwise an exception is
-   *              thrown.
+   * @return bool true, if the session was written, otherwise an exception is thrown.
    *
    * @throws <b>DatabaseException</b> If the session data cannot be written.
    */
@@ -263,8 +250,7 @@ class sfPDOSessionStorage extends sfSessionStorage
     $db_id_col   = $this->getParameterHolder()->get('db_id_col', 'sess_id');
     $db_time_col = $this->getParameterHolder()->get('db_time_col', 'sess_time');
 
-    $sql = 'UPDATE ' . $db_table . ' SET ' . $db_data_col . '=?, ' . $db_time_col . ' = ' . time() .
-      ' WHERE ' . $db_id_col . '=?';
+    $sql = 'UPDATE '.$db_table.' SET '.$db_data_col.' = ?, '.$db_time_col.' = '.time().' WHERE '.$db_id_col.'= ?';
 
     try
     {
@@ -277,8 +263,8 @@ class sfPDOSessionStorage extends sfSessionStorage
 
     catch (PDOException $e)
     {
-      $error = 'PDOException was thrown when trying to manipulate session data. ';
-      $error .= 'Message: ' . $e->getMessage();
+      $error = sprintf('PDOException was thrown when trying to manipulate session data. Message: %s', $e->getMessage());
+
       throw new sfDatabaseException($error);
     }
 
@@ -293,5 +279,4 @@ class sfPDOSessionStorage extends sfSessionStorage
   public function shutdown ()
   {
   }
-
 }
