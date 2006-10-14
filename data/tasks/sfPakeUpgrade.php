@@ -50,7 +50,9 @@ function run_upgrade_0_8($task, $args)
   $apps = pakeFinder::type('directory')->name(sfConfig::get('sf_app_module_dir_name'))->mindepth(1)->maxdepth(1)->relative()->in(sfConfig::get('sf_apps_dir_name'));
 
   // install symfony CLI
-  pake_copy(sfConfig::get('sf_symfony_data_dir').'/bin/symfony_project', sfConfig::get('sf_root_dir').'/symfony');
+  pake_remove(sfConfig::get('sf_root_dir').'/symfony', '');
+  pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/project/symfony', sfConfig::get('sf_root_dir').'/symfony');
+  pake_chmod('symfony', sfConfig::get('sf_root_dir'), 0777);
 
   // update schemas
   _upgrade_0_8_schemas();
@@ -429,10 +431,13 @@ function _upgrade_0_8_propel_ini()
     }
 
     // new propel builder class to be able to remove require_* and strip comments
-    $propel_ini = str_replace('propel.engine.builder.om.php5.PHP5ExtensionObjectBuilder', 'symfony.addon.propel.builder.SfExtensionObjectBuilder', $propel_ini);
-    $propel_ini = str_replace('propel.engine.builder.om.php5.PHP5ExtensionPeerBuilder', 'symfony.addon.propel.builder.SfExtensionPeerBuilder', $propel_ini);
-    $propel_ini = str_replace('propel.engine.builder.om.php5.PHP5MultiExtendObjectBuilder', 'symfony.addon.propel.builder.SfMultiExtendObjectBuilder', $propel_ini);
-    $propel_ini = str_replace('propel.engine.builder.om.php5.PHP5MapBuilderBuilder', 'symfony.addon.propel.builder.SfMapBuilderBuilder', $propel_ini);
+    $propel_ini = str_replace('propel.engine.builder.om.php5.PHP5ExtensionObjectBuilder', 'addon.propel.builder.SfExtensionObjectBuilder', $propel_ini);
+    $propel_ini = str_replace('propel.engine.builder.om.php5.PHP5ExtensionPeerBuilder', 'addon.propel.builder.SfExtensionPeerBuilder', $propel_ini);
+    $propel_ini = str_replace('propel.engine.builder.om.php5.PHP5MultiExtendObjectBuilder', 'addon.propel.builder.SfMultiExtendObjectBuilder', $propel_ini);
+    $propel_ini = str_replace('propel.engine.builder.om.php5.PHP5MapBuilderBuilder', 'addon.propel.builder.SfMapBuilderBuilder', $propel_ini);
+
+    // replace old symfony.addon.propel path to addon.propel
+    $propel_ini = str_replace('symfony.addon.propel.builder.', 'addon.propel.builder.', $propel_ini);
 
     if (false === strpos($propel_ini, 'addIncludes'))
     {

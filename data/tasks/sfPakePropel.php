@@ -295,6 +295,9 @@ function _call_phing($task, $task_name, $check_schema = true)
     set_include_path(sfConfig::get('sf_symfony_lib_dir').'/vendor/propel-generator/classes'.PATH_SEPARATOR.get_include_path());
   }
 
+  // needed to include the right Propel builders
+  set_include_path(sfConfig::get('sf_symfony_lib_dir').PATH_SEPARATOR.get_include_path());
+
   $options = array(
     'project.dir'       => sfConfig::get('sf_root_dir').'/config',
     'build.properties'  => 'propel.ini',
