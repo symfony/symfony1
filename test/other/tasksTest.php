@@ -60,7 +60,7 @@ class symfony_cmd
   public function execute_command($cmd)
   {
     ob_start();
-    passthru(sprintf('%s "%s" %s 2>&1', $this->php_cli, dirname(__FILE__).'/../../data/bin/symfony.php', $cmd), $return);
+    passthru(sprintf('%s "%s" %s 2>&1', $this->php_cli, dirname(__FILE__).'/../../data/bin/symfony', $cmd), $return);
     $content = ob_get_clean();
     $this->t->cmp_ok($return, '<=', 0, sprintf('"symfony %s" returns ok', $cmd));
 
