@@ -372,6 +372,9 @@ class lime_harness extends lime_registration
       throw new Exception('You must register some test files before running them!');
     }
 
+    // sort the files to be able to predict the order
+    sort($this->files);
+
     $this->stats =array(
       '_failed_files' => array(),
       '_failed_tests' => 0,
