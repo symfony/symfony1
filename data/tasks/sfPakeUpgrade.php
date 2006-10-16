@@ -9,7 +9,7 @@
  */
 
 pake_desc('upgrade to a new symfony release');
-pake_task('upgrade', 'project_exists');
+pake_task('upgrade');
 
 pake_desc('downgrade to a previous symfony release');
 pake_task('downgrade', 'project_exists');
@@ -40,6 +40,12 @@ function run_upgrade($task, $args)
 
 function run_upgrade_0_8($task, $args)
 {
+  // check we have a project
+  if (!file_exists('symfony') && !file_exists('SYMFONY'))
+  {
+    throw new Exception('You must be in a symfony project directory');
+  }
+
   // upgrade propel.ini
   _upgrade_0_8_propel_ini();
 
@@ -50,7 +56,10 @@ function run_upgrade_0_8($task, $args)
   $apps = pakeFinder::type('directory')->name(sfConfig::get('sf_app_module_dir_name'))->mindepth(1)->maxdepth(1)->relative()->in(sfConfig::get('sf_apps_dir_name'));
 
   // install symfony CLI
-  pake_remove(sfConfig::get('sf_root_dir').'/symfony', '');
+  if (file_exists(sfConfig::get('sf_root_dir').'/SYMFONY'))
+  {
+    pake_remove(sfConfig::get('sf_root_dir').'/SYMFONY', '');
+  }
   pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/project/symfony', sfConfig::get('sf_root_dir').'/symfony');
   pake_chmod('symfony', sfConfig::get('sf_root_dir'), 0777);
 
