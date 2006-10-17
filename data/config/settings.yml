@@ -54,8 +54,6 @@ default:
 
     rich_text_js_dir:       js/tiny_mce
 
-    safe_slot:              on
-
     use_flash:              on
 
     activated_modules:      [default]
