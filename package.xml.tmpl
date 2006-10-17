@@ -33,6 +33,8 @@
     <tasks:replace type="pear-config" from="@PEAR-DIR@" to="php_dir" />
    </file>
 
+   <file role="script" baseinstalldir="/" name="data/bin/symfony.bat" />
+
    <file role="php" baseinstalldir="symfony" install-as="VERSION" name="lib/VERSION">
     <tasks:replace type="package-info" from="0.9.0-DEV" to="version" />
    </file>
