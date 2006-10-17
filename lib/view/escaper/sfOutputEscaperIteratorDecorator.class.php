@@ -26,7 +26,7 @@
  * @author     Mike Squire <mike@somosis.co.uk>
  * @version    SVN: $Id$
  */
-class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator implements Iterator, Countable
+class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator implements Iterator, Countable, ArrayAccess
 {
   /**
    * The iterator to be used.
@@ -97,6 +97,61 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator im
   public function valid()
   {
     return $this->iterator->valid();
+  }
+  
+  /**
+   * Returns true if the supplied offset is set in the array (as required by
+   * the ArrayAccess interface).
+   *
+   * @param string $offset the offset of the value to check existance of
+   * @return boolean true if the offset exists; false otherwise
+   */
+  public function offsetExists($offset)
+  {
+    return array_key_exists($offset, $this->value);
+  }
+
+  /**
+   * Returns the element associated with the offset supplied (as required by
+   * the ArrayAccess interface).
+   *
+   * @param string $offset the offset of the value to get
+   * @return mixed the escaped value
+   */
+  public function offsetGet($offset)
+  {
+    return sfOutputEscaper::escape($this->escapingMethod, $this->value[$offset]);
+  }
+
+  /**
+   * Throws an exception saying that values cannot be set (this method is
+   * required for the ArrayAccess interface).
+   *
+   * This (and the other sfOutputEscaper classes) are designed to be read only
+   * so this is an illegal operation.
+   *
+   * @throws sfException
+   * @param string $offset (ignored)
+   * @param string $value (ignored)
+   */
+  public function offsetSet($offset, $value)
+  {
+    throw new sfException('Cannot set values.');
+  }
+
+  /**
+   * Throws an exception saying that values cannot be unset (this method is
+   * required for the ArrayAccess interface).
+   *
+   * This (and the other sfOutputEscaper classes) are designed to be read only
+   * so this is an illegal operation.
+   *
+   * @param string $offset (ignored)
+   * @throws sfException
+   */
+  public function offsetUnset($offset)
+  {
+    throw new sfException('Cannot unset values.');
   }
 
   /**
