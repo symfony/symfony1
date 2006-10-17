@@ -53,6 +53,20 @@
  </dependencies>
 
  <phprelease>
+   <installconditions>
+     <os>
+       <name>windows</name>
+     </os>
+   </installconditions>
+   <filelist>
+     <install as="symfony.bat" name="data/bin/symfony.bat" />
+   </filelist>
+ </phprelease>
+
+ <phprelease>
+  <filelist>
+   <ignore name="data/bin/symfony.bat" />
+  </filelist>
  </phprelease>
 
  <changelog>
