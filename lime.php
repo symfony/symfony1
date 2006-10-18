@@ -66,10 +66,19 @@ class lime_test
     }
     $this->output->echoln(sprintf("%s %d%s", $result ? 'ok' : 'not ok', ++$this->test_nb, $message = $message ? sprintf('%s %s', 0 === strpos($message, '#') ? '' : ' -', $message) : ''));
 
-    $traces = debug_backtrace();
-    $i = strstr($traces[0]['file'], $_SERVER['PHP_SELF']) ? 0 : 1;
-
-    !$result and $this->output->diag(sprintf('    Failed test (%s at line %d)', str_replace(getcwd(), '.', $traces[$i]['file']), $traces[$i]['line']));
+    if (!$result)
+    {
+      $traces = debug_backtrace();
+      if ($_SERVER['PHP_SELF'])
+      {
+        $i = strstr($traces[0]['file'], $_SERVER['PHP_SELF']) ? 0 : 1;
+      }
+      else
+      {
+        $i = 0;
+      }
+      $this->output->diag(sprintf('    Failed test (%s at line %d)', str_replace(getcwd(), '.', $traces[$i]['file']), $traces[$i]['line']));
+    }
 
     return $result;
   }
