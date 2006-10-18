@@ -344,25 +344,26 @@ function _upgrade_0_8_main_config_php()
 
     $lib_dir = sfConfig::get('sf_symfony_lib_dir');
     $data_dir = sfConfig::get('sf_symfony_data_dir');
-    $content .= <<<EOF
+    if (is_link('lib/symfony') && is_link('data/symfony'))
+    {
+      $content .= <<<EOF
+
+\$sf_symfony_lib_dir  = dirname(__FILE__).'/../lib/symfony';
+\$sf_symfony_data_dir = dirname(__FILE__).'/../data/symfony';
+
+EOF;
+    }
+    else
+    {
+      $content .= <<<EOF
 
 \$sf_symfony_lib_dir  = '$lib_dir';
 \$sf_symfony_data_dir = '$data_dir';
 
 EOF;
+    }
 
     file_put_contents(sfConfig::get('sf_root_dir').'/config/config.php', $content);
-  }
-
-  // remove symlinks
-  if (is_link('lib/symfony'))
-  {
-    unlink('lib/symfony');
-  }
-
-  if (is_link('data/symfony'))
-  {
-    unlink('data/symfony');
   }
 }
 
