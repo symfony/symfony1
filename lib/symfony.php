@@ -88,7 +88,6 @@ try
   include($configCache->checkConfig($sf_app_config_dir_name.'/logging.yml'));
   include($configCache->checkConfig($sf_app_config_dir_name.'/settings.yml'));
   include($configCache->checkConfig($sf_app_config_dir_name.'/app.yml'));
-  $configCache->import($sf_app_config_dir_name.'/php.yml', false);
 
   // error settings
   ini_set('display_errors', $sf_debug ? 'on' : 'off');
@@ -108,6 +107,7 @@ try
     $configCache->import($core_classes, false);
   }
 
+  $configCache->import($sf_app_config_dir_name.'/php.yml', false);
   $configCache->import($sf_app_config_dir_name.'/routing.yml', false);
 
   // include all config.php from plugins
