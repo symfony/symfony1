@@ -363,11 +363,17 @@ class lime_harness extends lime_registration
     {
       // search in PATH
       require_once('System.php');
-      $this->php_cli = System::which('php');
+      foreach (array('php5', 'php') as $php_cli)
+      {
+        if ($this->php_cli = System::which('php5'))
+        {
+          break;
+        }
+      }
 
       if (!is_executable($this->php_cli))
       {
-        throw new Exception(sprintf("Unable to find PHP (%s).", $this->php_cli));
+        throw new Exception("Unable to find PHP executable.");
       }
     }
 
@@ -403,7 +409,7 @@ class lime_harness extends lime_registration
       $relative_file = $this->get_relative_file($file);
 
       ob_start(array($this, 'process_test_output'), 2);
-      passthru(sprintf('%s "%s" 2>&1', $this->php_cli, $file), $return);
+      passthru(sprintf('%s -q "%s" 2>&1', $this->php_cli, $file), $return);
       ob_end_clean();
 
       if ($return > 0)
