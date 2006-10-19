@@ -88,7 +88,8 @@ class sfRouting
       {
         foreach ($request->getParameterHolder()->getAll() as $key => $value)
         {
-          if ($key == 'module' || $key == 'action' || in_array($key, $names)) {
+          if ($key == 'module' || $key == 'action' || in_array($key, $names))
+          {
             continue;
           }
 
@@ -142,7 +143,7 @@ class sfRouting
 
     if (!isset($this->routes[$name]))
     {
-      $error = 'The route "%s" does not exist.';
+      $error = 'The route "%s" does not exist';
       $error = sprintf($error, $name);
 
       throw new sfConfigurationException($error);
