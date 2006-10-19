@@ -168,6 +168,10 @@ class sfMixer
     {
       array_unshift($parameters, $traces[1]['object']);
     }
+    else
+    {
+      array_unshift($parameters, $class);
+    }
 
     if ('__call' == $function)
     {
