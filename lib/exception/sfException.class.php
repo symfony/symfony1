@@ -83,7 +83,7 @@ class sfException extends Exception
     }
 
     // clean current output buffer
-    ob_end_clean();
+    while (@ob_end_clean());
 
     // send an error 500 if not in debug mode
     if (!sfConfig::get('sf_debug'))
