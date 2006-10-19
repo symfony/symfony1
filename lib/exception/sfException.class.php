@@ -82,6 +82,9 @@ class sfException extends Exception
       header('HTTP/1.0 500 Internal Server Error');
     }
 
+    // clean current output buffer
+    ob_end_clean();
+
     // send an error 500 if not in debug mode
     if (!sfConfig::get('sf_debug'))
     {
