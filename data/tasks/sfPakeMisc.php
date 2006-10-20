@@ -80,7 +80,7 @@ function run_fix_perms($task, $args)
   pake_chmod(sfConfig::get('sf_log_dir_name'), $sf_root_dir, 0777);
   pake_chmod('symfony', $sf_root_dir, 0777);
 
-  $dirs = array('cache', 'upload', 'log');
+  $dirs = array('root_cache', 'upload', 'log');
   $dir_finder = pakeFinder::type('dir')->ignore_version_control();
   $file_finder = pakeFinder::type('file')->ignore_version_control();
   foreach ($dirs as $dir)
