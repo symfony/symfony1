@@ -878,6 +878,6 @@ class lime_registration
 
   protected function get_relative_file($file)
   {
-    return str_replace(array(realpath($this->base_dir).DIRECTORY_SEPARATOR, $this->extension), '', $file);
+    return str_replace(DIRECTORY_SEPARATOR, '/', str_replace(array(realpath($this->base_dir).DIRECTORY_SEPARATOR, $this->extension), '', $file));
   }
 }
