@@ -40,7 +40,7 @@ $b->
   checkResponseElement('#sf_admin_list_th_created_at', false)->
 
   // list buttons
-  checkListCustomization('remove create button', array('actions' => '-'))->
+  checkListCustomization('remove create button', array('actions' => array()))->
   checkResponseElement('body input[class="sf_admin_action_create"][onclick*="/article/create"]', false)->
 
   checkListCustomization('add custom button', array('actions' => array('_create' => null, 'custom' => array('name' => 'my button', 'action' => 'myAction', 'params' => 'class=myButtonClass'))))->
@@ -84,7 +84,7 @@ $b->
   checkResponseElement('fieldset#sf_fieldset_another input[name="article[title]"]', true)->
 
   // edit buttons
-  checkEditCustomization('remove save button', array('actions' => '-'))->
+  checkEditCustomization('remove save button', array('actions' => array()))->
   checkResponseElement('body input[class="sf_admin_action_list"][onclick*="/article/list"]', false)->
   checkResponseElement('body input[name="save_and_add"]', false)->
   checkResponseElement('body input[name="save"]', false)->
@@ -93,6 +93,7 @@ $b->
   checkEditCustomization('remove save button', array('actions' => array('_save' => null)))->
   checkResponseElement('body input[name="save_and_add"]', false)->
   checkResponseElement('body input[name="save"]', true)->
+  checkResponseElement('body input[class="sf_admin_action_delete"][onclick*="confirm"]', false)->
 
   checkEditCustomization('add custom button', array('actions' => array('_save' => null, 'custom' => array('name' => 'my button', 'action' => 'myAction', 'params' => 'class=myButtonClass'))))->
   checkResponseElement('body input[name="save"]', true)->

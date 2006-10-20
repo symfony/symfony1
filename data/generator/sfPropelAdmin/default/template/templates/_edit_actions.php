@@ -1,6 +1,7 @@
 <ul class="sf_admin_actions">
-<?php $editActions = $this->getParameterValue('edit.actions'); if ($editActions): ?>
-<?php foreach ($editActions as $actionName => $params): ?>
+<?php $editActions = $this->getParameterValue('edit.actions') ?>
+<?php if (null !== $editActions): ?>
+<?php foreach ((array) $editActions as $actionName => $params): ?>
   <?php if ($actionName == '_delete') continue ?>
   <?php echo $this->addCredentialCondition($this->getButtonToAction($actionName, $params, true), $params) ?>
 <?php endforeach; ?>
