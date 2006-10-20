@@ -131,7 +131,7 @@ class myClassMixins
     myClass::$retStatic .= "in myStaticMethod mixin method\n";
   }
 
-  public function myMixinStaticMethodWithArgs($arg1, $arg2 = 'default')
+  public function myMixinStaticMethodWithArgs($class, $arg1, $arg2 = 'default')
   {
     myClass::$retStatic .= "in myStaticMethodWithArgs mixin method ($arg1, $arg2)\n";
   }
