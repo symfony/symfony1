@@ -14,7 +14,7 @@ mkdir ${SANDBOX_NAME}
 cd ${SANDBOX_NAME}
 
 echo ">>> create a new project and a new app"
-${PHP} symfony init-project ${SANDBOX_NAME}
+${PHP} ${DIR}/../../data/bin/symfony init-project ${SANDBOX_NAME}
 ${PHP} symfony init-app ${APP_NAME}
 
 echo ">>> add LICENSE"
