@@ -65,6 +65,23 @@ require_once \''.$this->getFilePath($this->getStubObjectBuilder()->getPackage().
 
       $this->addI18nMethods($script);
     }
+
+    if (DataModelBuilder::getBuildProperty('builderAddBehaviors'))
+    {
+      $this->addCall($script);
+    }
+  }
+
+  protected function addCall(&$script)
+  {
+    $script .= "
+
+  public function __call(\$method, \$parameters)
+  {
+    return sfMixer::callMixins();
+  }
+
+";
   }
 
   protected function addAttributes(&$script)
@@ -212,66 +229,100 @@ $script .= '
     return $value;
   }
 
+  protected function addDelete(&$script)
+  {
+    $tmp = '';
+    parent::addDelete($tmp);
+
+    if (DataModelBuilder::getBuildProperty('builderAddBehaviors'))
+    {
+      // add sfMixer call
+      $pre_mixer_script = "
+
+    foreach (sfMixer::getCallables('".$this->getClassname().":delete:pre') as \$callable)
+    {
+      \$ret = call_user_func(\$callable, \$this, \$con);
+      if (\$ret)
+      {
+        return;
+      }
+    }
+
+";
+      $post_mixer_script = "
+
+    sfMixer::callMixins('post');
+
+";
+      $tmp = preg_replace('/{/', '{'.$pre_mixer_script, $tmp, 1);
+      $tmp = preg_replace('/}\s*$/', $post_mixer_script.'  }', $tmp);
+    }
+
+    // update current script
+    $script .= $tmp;
+  }
+
   protected function addSave(&$script)
   {
     $tmp = '';
     parent::addSave($tmp);
 
+    // add support for created_(at|on) and updated_(at|on) columns
     $date_script = '';
-
     $updated = false;
     $created = false;
     foreach ($this->getTable()->getColumns() as $col)
     {
       $clo = strtolower($col->getName());
 
-      if (!$updated && $clo == 'updated_at')
+      if (!$updated && in_array($clo, array('updated_at', 'updated_on')))
       {
-        // add automatic UpdatedAt updating
         $updated = true;
         $date_script .= "
-    if (\$this->isModified() && !\$this->isColumnModified('updated_at'))
+    if (\$this->isModified() && !\$this->isColumnModified(".$this->getColumnConstant($col)."))
     {
-      \$this->setUpdatedAt(time());
+      \$this->set".$col->getPhpName()."(time());
     }
 ";
       }
-      else if (!$updated && $clo == 'updated_on')
+      else if (!$created && in_array($clo, array('created_at', 'created_on')))
       {
-        // add automatic UpdatedOn updating
-        $updated = true;
-        $date_script .= "
-    if (\$this->isModified() && !\$this->isColumnModified('updated_on'))
-    {
-      \$this->setUpdatedOn(time());
-    }
-";
-      }
-      else if (!$created && $clo == 'created_at')
-      {
-        // add automatic CreatedAt updating
         $created = true;
         $date_script .= "
-    if (\$this->isNew() && !\$this->isColumnModified('created_at'))
+    if (\$this->isNew() && !\$this->isColumnModified(".$this->getColumnConstant($col)."))
     {
-      \$this->setCreatedAt(time());
+      \$this->set".$col->getPhpName()."(time());
     }
 ";
       }
-      else if (!$created && $clo == 'created_on')
-      {
-        // add automatic CreatedOn updating
-        $created = true;
-        $date_script .= "
-    if (\$this->isNew() && !\$this->isColumnModified('created_on'))
-    {
-      \$this->setCreatedOn(time());
     }
-";
+    $tmp = preg_replace('/{/', '{'.$date_script, $tmp, 1);
+
+    if (DataModelBuilder::getBuildProperty('builderAddBehaviors'))
+    {
+      // add sfMixer call
+      $pre_mixer_script = "
+
+    foreach (sfMixer::getCallables('".$this->getClassname().":save:pre') as \$callable)
+    {
+      \$affectedRows = call_user_func(\$callable, \$this, \$con);
+      if (is_int(\$affectedRows))
+      {
+        return \$affectedRows;
       }
     }
 
-    $tmp = preg_replace('/{/', '{'.$date_script, $tmp, 1);
+";
+      $post_mixer_script = <<<EOF
+
+    sfMixer::callMixins('post');
+
+EOF;
+      $tmp = preg_replace('/{/', '{'.$pre_mixer_script, $tmp, 1);
+      $tmp = preg_replace('/}\s*$/', $post_mixer_script.'  }', $tmp);
+    }
+
+    // update current script
     $script .= $tmp;
   }
 }

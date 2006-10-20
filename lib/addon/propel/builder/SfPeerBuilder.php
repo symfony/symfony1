@@ -24,7 +24,7 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
     {
       return sfToolkit::stripComments(parent::build());
     }
-    
+
     return parent::build();
   }
 
@@ -159,7 +159,8 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
 ";
   }
 
-  public function addDoValidate(&$script) {
+  protected function addDoValidate(&$script)
+  {
       $tmp = '';
       parent::addDoValidate($tmp);
 
@@ -173,5 +174,23 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
         "        }\n".
         "    }\n\n".
         "    return \$res;\n", $tmp);
+  }
+
+  protected function addDoSelectRS(&$script)
+  {
+    $tmp = '';
+    parent::addDoSelectRS($tmp);
+
+    if (DataModelBuilder::getBuildProperty('builderAddBehaviors'))
+    {
+      $mixer_script = "
+
+    sfMixer::callMixins();
+
+";
+      $tmp = preg_replace('/{/', '{'.$mixer_script, $tmp, 1);
+    }
+
+    $script .= $tmp;
   }
 }
