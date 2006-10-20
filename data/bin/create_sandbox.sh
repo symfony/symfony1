@@ -14,8 +14,8 @@ mkdir ${SANDBOX_NAME}
 cd ${SANDBOX_NAME}
 
 echo ">>> create a new project and a new app"
-php ${DIR}/symfony.php init-project ${SANDBOX_NAME}
-php ${DIR}/symfony.php init-app ${APP_NAME}
+${PHP} symfony init-project ${SANDBOX_NAME}
+${PHP} symfony init-app ${APP_NAME}
 
 echo ">>> add LICENSE"
 cp ${DIR}/../../LICENSE LICENSE
@@ -23,8 +23,11 @@ cp ${DIR}/../../LICENSE LICENSE
 echo ">>> add README"
 cp ${DIR}/../../doc/SANDBOX_README README
 
+echo ">>> add symfony command line for windows users"
+cp ${DIR}/../../data/bin/symfony.bat symfony.bat
+
 echo ">>> freeze symfony"
-php ${DIR}/symfony.php freeze
+${PHP} symfony freeze
 
 echo ">>> default to sqlite"
 sed -i '' -e "s#\(propel.database *= *\)mysql#\1sqlite#" config/propel.ini
