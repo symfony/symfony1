@@ -365,7 +365,7 @@ class lime_harness extends lime_registration
       require_once('System.php');
       foreach (array('php5', 'php') as $php_cli)
       {
-        if ($this->php_cli = System::which('php5'))
+        if ($this->php_cli = System::which($php_cli))
         {
           break;
         }
