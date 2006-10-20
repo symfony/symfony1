@@ -44,6 +44,7 @@ touch data/symfony/generator/sfPropelAdmin/default/skeleton/validate/.sf
 touch data/symfony/modules/default/config/.sf
 touch lib/model/.sf plugins/.sf web/js/.sf
 touch test/unit/.sf test/functional/.sf test/functional/${APP_NAME}/.sf
+touch web/uploads/assets/.sf
 
 echo ">>> create archive"
 cd ..
