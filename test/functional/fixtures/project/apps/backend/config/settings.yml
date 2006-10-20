@@ -67,7 +67,6 @@ all:
 #    web_debug:              off
 #
 #    cache:                  off
-#    default_cache_lifetime: 86400
 #
 #    no_script_name:         on
 #

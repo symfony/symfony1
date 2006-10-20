@@ -27,14 +27,9 @@
 <?php endif; ?>
 
 */
-function cache($name, $lifeTime = null)
+function cache($name, $lifeTime = 86400)
 {
   $context = sfContext::getInstance();
-
-  if ($lifeTime === null)
-  {
-    $lifeTime = sfConfig::get('sf_default_cache_lifetime');
-  }
 
   if (!sfConfig::get('sf_cache'))
   {
