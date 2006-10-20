@@ -80,10 +80,10 @@ class sfException extends Exception
     if (!sfConfig::get('sf_test'))
     {
       header('HTTP/1.0 500 Internal Server Error');
-    }
 
-    // clean current output buffer
-    while (@ob_end_clean());
+      // clean current output buffer
+      while (@ob_end_clean());
+    }
 
     // send an error 500 if not in debug mode
     if (!sfConfig::get('sf_debug'))
