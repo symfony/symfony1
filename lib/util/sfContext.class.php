@@ -124,7 +124,7 @@ class sfContext
     // get the last action stack entry
     $actionEntry = $this->actionStack->getLastEntry();
 
-    return $actionEntry->getActionName();
+    return $actionEntry ? $actionEntry->getActionName() : null;
   }
 
 
