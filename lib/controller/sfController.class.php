@@ -322,6 +322,8 @@ abstract class sfController
         {
           $this->getContext()->getResponse()->setStatusCode(404);
           $this->getContext()->getResponse()->setHttpHeader('Status', '404 Not Found');
+
+          sfMixer::callMixins('error404');
         }
 
         // change i18n message source directory to our module

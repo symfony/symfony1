@@ -77,6 +77,20 @@ class sfException extends Exception
       return;
     }
 
+    foreach (sfMixer::getCallables('sfException:printStackTrace:printStackTrace') as $callable)
+    {
+      $ret = call_user_func($callable, $this, $exception);
+      if ($ret)
+      {
+        if (!sfConfig::get('sf_test'))
+        {
+          exit(1);
+        }
+
+        return;
+      }
+    }
+
     if (!sfConfig::get('sf_test'))
     {
       header('HTTP/1.0 500 Internal Server Error');
@@ -107,9 +121,41 @@ class sfException extends Exception
       return;
     }
 
-    $message = ($exception->getMessage() != null) ? $exception->getMessage() : 'n/a';
+    $message = null !== $exception->getMessage() ? $exception->getMessage() : 'n/a';
     $name    = get_class($exception);
+    $format = 'cli' == php_sapi_name() ? 'plain' : 'html';
+    $traces  = $this->getTraces($exception, $format);
 
+    // extract error reference from message
+    $error_reference = '';
+    if (preg_match('/\[(err\d+)\]/', $message, $matches))
+    {
+      $error_reference = $matches[1];
+    }
+
+    // dump main objects values
+    $sf_settings = '';
+    $settingsTable = $requestTable = $responseTable = $globalsTable = '';
+    if (class_exists('sfContext', false) && sfContext::hasInstance())
+    {
+      $context = sfContext::getInstance();
+      $settingsTable = $this->formatArrayAsHtml(sfDebug::settingsAsArray());
+      $requestTable  = $this->formatArrayAsHtml(sfDebug::requestAsArray($context->getRequest()));
+      $responseTable = $this->formatArrayAsHtml(sfDebug::responseAsArray($context->getResponse()));
+      $globalsTable  = $this->formatArrayAsHtml(sfDebug::globalsAsArray());
+    }
+
+    include(sfConfig::get('sf_symfony_data_dir').'/data/exception.'.($format == 'html' ? 'php' : 'txt'));
+
+    // if test, do not exit
+    if (!sfConfig::get('sf_test'))
+    {
+      exit(1);
+    }
+  }
+
+  public function getTraces($exception, $format = 'plain')
+  {
     $traceData = $exception->getTrace();
     array_unshift($traceData, array(
       'function' => '',
@@ -119,7 +165,6 @@ class sfException extends Exception
     ));
 
     $traces = array();
-    $format = 'cli' == php_sapi_name() ? 'plain' : 'html';
     if ($format == 'html')
     {
       $lineFormat = 'at <strong>%s%s%s</strong>(%s)<br />in <em>%s</em> line %s <a href="#" onclick="toggle(\'%s\'); return false;">...</a><br /><ul id="%s" style="display: %s">%s</ul>';
@@ -148,32 +193,7 @@ class sfException extends Exception
       );
     }
 
-    // extract error reference from message
-    $error_reference = '';
-    if (preg_match('/\[(err\d+)\]/', $message, $matches))
-    {
-      $error_reference = $matches[1];
-    }
-
-    // dump main objects values
-    $sf_settings = '';
-    $settingsTable = $requestTable = $responseTable = $globalsTable = '';
-    if (class_exists('sfContext', false) && sfContext::hasInstance())
-    {
-      $context = sfContext::getInstance();
-      $settingsTable = $this->formatArrayAsHtml(sfDebug::settingsAsArray());
-      $requestTable  = $this->formatArrayAsHtml(sfDebug::requestAsArray($context->getRequest()));
-      $responseTable = $this->formatArrayAsHtml(sfDebug::responseAsArray($context->getResponse()));
-      $globalsTable  = $this->formatArrayAsHtml(sfDebug::globalsAsArray());
-    }
-
-    include(sfConfig::get('sf_symfony_data_dir').'/data/exception.'.($format == 'html' ? 'php' : 'txt'));
-
-    // if test, do not exit
-    if (!sfConfig::get('sf_test'))
-    {
-      exit(1);
-    }
+    return $traces;
   }
 
   protected function formatArrayAsHtml($values)
