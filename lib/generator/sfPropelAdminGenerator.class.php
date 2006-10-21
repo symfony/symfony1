@@ -89,7 +89,7 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     }
 
     $name   = isset($params['name']) ? $params['name'] : $default_name;
-    $icon   = isset($params['icon']) ? $params['icon'] : $default_icon;
+    $icon   = isset($params['icon']) ? sfToolkit::replaceConstants($params['icon']) : $default_icon;
     $action = isset($params['action']) ? $params['action'] : $default_action;
     $url_params = $pk_link ? '?'.$this->getPrimaryKeyUrlParams() : '\'';
 
@@ -167,7 +167,7 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
     else
     {
       $name   = isset($params['name']) ? $params['name'] : $actionName;
-      $icon   = isset($params['icon']) ? $params['icon'] : sfConfig::get('sf_admin_web_dir').'/images/default_icon.png';
+      $icon   = isset($params['icon']) ? sfToolkit::replaceConstants($params['icon']) : sfConfig::get('sf_admin_web_dir').'/images/default_icon.png';
       $action = isset($params['action']) ? $params['action'] : 'List'.sfInflector::camelize($actionName);
     }
 
