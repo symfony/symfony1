@@ -4,6 +4,7 @@
 abstract class BaseCategory extends BaseObject  implements Persistent {
 
 
+	const DATABASE_NAME = 'propel';
 	
 	protected static $peer;
 
