@@ -147,7 +147,7 @@ class sfMixer
     return isset(self::$mixins[$name]) ? self::$mixins[$name][0] : null;
   }
 
-  static public function callMixins($hookName = null)
+  static public function callMixins($hookName = null, $moreParams = array())
   {
     $traces = debug_backtrace();
     $function = $traces[1]['function'];
@@ -172,6 +172,9 @@ class sfMixer
     {
       array_unshift($parameters, $class);
     }
+
+    // add more parameters
+    $parameters = array_merge($parameters, (array) $moreParams);
 
     if ('__call' == $function)
     {
