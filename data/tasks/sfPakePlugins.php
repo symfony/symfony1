@@ -224,7 +224,7 @@ function _pear_init()
     'stability'     => array('release' => 'stable', 'api' => 'stable'),
     'xsdversion'    => '2.0',
     '_lastmodified' => time(),
-    'old'           => array('version' => $sf_version),
+    'old'           => array('version' => $sf_version, 'release_state' => 'stable'),
   );
   $dir = sfConfig::get('sf_plugins_dir').DIRECTORY_SEPARATOR.'.registry'.DIRECTORY_SEPARATOR.'.channel.pear.symfony-project.com';
   pake_mkdirs($dir);
