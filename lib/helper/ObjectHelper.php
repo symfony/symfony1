@@ -304,7 +304,7 @@ function _get_object_value ($object, $method, $default_value = null, $param = nu
   }
   
   // method exists?
-  if (!method_exists($object, $method[0]))
+  if (!is_callable(array($object, $method[0])))
   {
     $error = 'Method "%s" doesn\'t exist for object of class "%s"';
     $error = sprintf($error, $method[0], get_class($object));
