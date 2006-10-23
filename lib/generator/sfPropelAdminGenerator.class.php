@@ -47,6 +47,7 @@ class sfPropelAdminGenerator extends sfPropelCrudGenerator
 
   public function getButtonToAction($actionName, $params, $pk_link = false)
   {
+    $params   = (array) $params;
     $options  = isset($params['params']) ? sfToolkit::stringToArray($params['params']) : array();
     $method   = 'button_to';
     $li_class = '';
