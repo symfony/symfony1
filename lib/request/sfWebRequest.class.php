@@ -589,7 +589,7 @@ class sfWebRequest extends sfRequest
    *
    * @return  string
    */
-  public function getRequestMethod()
+  public function getMethodName()
   {
     $pathArray = $this->getPathInfoArray();
 
