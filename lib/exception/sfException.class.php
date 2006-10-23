@@ -103,13 +103,13 @@ class sfException extends Exception
     if (!sfConfig::get('sf_debug'))
     {
       $file = sfConfig::get('sf_web_dir').'/error500.html';
+      error_log($exception->getMessage());
       if (is_readable($file))
       {
         include($file);
       }
       else
       {
-        error_log($exception->getMessage());
         echo 'internal server error';
       }
 
