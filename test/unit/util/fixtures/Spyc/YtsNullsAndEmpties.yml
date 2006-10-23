@@ -1,6 +1,5 @@
 --- %YAML:1.0 
 test: Empty Sequence 
-todo: true
 brief: > 
     You can represent the empty sequence 
     with an empty inline sequence. 
@@ -10,7 +9,6 @@ php: |
     array('empty' => array())
 --- 
 test: Empty Mapping 
-todo: true
 brief: > 
     You can represent the empty mapping 
     with an empty inline mapping. 
