@@ -633,6 +633,14 @@ class Spyc
      $value = (string)preg_replace('/(\'\'|\\\\\')/', "'", end($matches));
      $value = preg_replace('/\\\\"/', '"', $value);
     }
+    else if (preg_match('/^\\[\\]$/', $value, $matches))
+    {
+      $value = array();
+    }
+    else if (preg_match('/^{}$/', $value, $matches))
+    {
+      $value = array();
+    }
     else if (preg_match('/^\\[(.+)\\]$/', $value, $matches))
     {
       // Inline Sequence
