@@ -202,6 +202,7 @@ abstract class sfWebController extends sfController
     $response = $this->getContext()->getResponse();
 
     // redirect
+    $response->clearHttpHeaders();
     $response->setHttpHeader('Location', $url);
     $response->setContent(sprintf('<html><head><meta http-equiv="refresh" content="%d;url=%s"/></head></html>', $delay, htmlentities($url)));
 

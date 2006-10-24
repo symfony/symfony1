@@ -217,9 +217,7 @@ class sfBrowser
 
   public function followRedirect()
   {
-    $locations = $this->getContext()->getResponse()->getHttpHeader('location');
-
-    return $this->get($locations[0]);
+    return $this->get($this->getContext()->getResponse()->getHttpHeader('Location'));
   }
 
   public function setField($name, $value)
