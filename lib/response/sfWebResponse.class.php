@@ -165,7 +165,7 @@ class sfWebResponse extends sfResponse
     if (!$replace)
     {
       $current = $this->getParameter($name, '', 'symfony/response/http/headers');
-      $value = $current.($current ? ', ' : '').$value;
+      $value = ($current ? $current.', ' : '').$value;
     }
 
     $this->setParameter($name, $value, 'symfony/response/http/headers');
@@ -354,7 +354,8 @@ class sfWebResponse extends sfResponse
 
     if (!$replace)
     {
-      $value = $this->getParameter($key, '', 'helper/asset/auto/httpmeta').', '.$value;
+      $current = $this->getParameter($key, '', 'helper/asset/auto/httpmeta');
+      $value = ($current ? $current.', ' : '').$value;
     }
 
     $this->setParameter($key, $value, 'helper/asset/auto/httpmeta');
@@ -379,7 +380,8 @@ class sfWebResponse extends sfResponse
 
     if (!$replace)
     {
-      $value = $this->getParameter($key, '', 'helper/asset/auto/meta').', '.$value;
+      $current = $this->getParameter($key, '', 'helper/asset/auto/meta');
+      $value = ($current ? $current.', ' : '').$value;
     }
 
     $this->setParameter($key, $value, 'helper/asset/auto/meta');
