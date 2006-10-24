@@ -193,4 +193,72 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
 
     $script .= $tmp;
   }
+
+  protected function addDoUpdate(&$script)
+  {
+    $tmp = '';
+    parent::addDoUpdate($tmp);
+
+    if (DataModelBuilder::getBuildProperty('builderAddBehaviors'))
+    {
+      // add sfMixer call
+      $pre_mixer_script = "
+
+    foreach (sfMixer::getCallables('".$this->getClassname().":doUpdate:pre') as \$callable)
+    {
+      \$ret = call_user_func(\$callable, '{$this->getClassname()}', \$values, \$con);
+      if (false !== \$ret)
+      {
+        return \$ret;
+      }
+    }
+
+";
+
+      $post_mixer_script = "
+
+    sfMixer::callMixins('post', \$ret);
+
+    return \$ret;
+";
+
+      $tmp = preg_replace('/{/', '{'.$pre_mixer_script, $tmp, 1);
+      $tmp = preg_replace("/\t\treturn ([^}]+)/", "\t\t\$ret = $1".$post_mixer_script.'  ', $tmp, 1);
+    }
+
+    $script .= $tmp;
+  }
+
+  protected function addDoInsert(&$script)
+  {
+    $tmp = '';
+    parent::addDoInsert($tmp);
+
+    if (DataModelBuilder::getBuildProperty('builderAddBehaviors'))
+    {
+      // add sfMixer call
+      $pre_mixer_script = "
+
+    foreach (sfMixer::getCallables('".$this->getClassname().":doInsert:pre') as \$callable)
+    {
+      \$ret = call_user_func(\$callable, '{$this->getClassname()}', \$values, \$con);
+      if (false !== \$ret)
+      {
+        return \$ret;
+      }
+    }
+
+";
+
+      $post_mixer_script = "
+    sfMixer::callMixins('post', \$pk);
+
+    return";
+
+      $tmp = preg_replace('/{/', '{'.$pre_mixer_script, $tmp, 1);
+      $tmp = preg_replace("/\t\treturn/", "\t\t".$post_mixer_script, $tmp, 1);
+    }
+
+    $script .= $tmp;
+  }
 }
