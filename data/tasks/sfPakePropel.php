@@ -139,7 +139,10 @@ function _propel_copy_xml_schema_from_plugins($prefix = '')
     }
 
     pake_copy($schema, 'config'.DIRECTORY_SEPARATOR.$localprefix.basename($schema));
-    pake_remove($schema, '');
+    if ('' === $localprefix)
+    {
+      pake_remove($schema, '');
+    }
   }
 }
 
