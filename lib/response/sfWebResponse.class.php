@@ -344,10 +344,12 @@ class sfWebResponse extends sfResponse
 
   public function addHttpMeta($key, $value, $replace = true)
   {
+    $key = $this->normalizeHeaderName($key);
+
     // set HTTP header
     $this->setHttpHeader($key, $value, $replace);
 
-    if ('Content-Type' == $this->normalizeHeaderName($key))
+    if ('Content-Type' == $key)
     {
       $value = $this->getContentType();
     }
@@ -368,6 +370,8 @@ class sfWebResponse extends sfResponse
 
   public function addMeta($key, $value, $replace = true, $escape = true)
   {
+    $key = $this->normalizeHeaderName($key);
+
     if (sfConfig::get('sf_i18n'))
     {
       $value = sfConfig::get('sf_i18n_instance')->__($value);

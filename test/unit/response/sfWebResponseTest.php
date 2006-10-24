@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(28, new lime_output_color());
+$t = new lime_test(33, new lime_output_color());
 
 class myWebResponse extends sfWebResponse
 {
@@ -66,6 +66,11 @@ $t->is($response->getHttpHeader('My-Other-Header'), 'foo', '->setHttpHeader() ta
 $response->setHttpHeader('my-header', 'foo');
 $t->is($response->getHttpHeader('My-Header'), 'foo', '->setHttpHeader() normalizes http header name');
 
+// ->clearHttpHeaders();
+$response->setHttpHeader('my-header', 'foo');
+$response->clearHttpHeaders();
+$t->is($response->getHttpHeader('My-Header'), '', '->clearHttpHeaders() clears all current http headers');
+
 // ->normalizeHeaderName()
 $t->diag('->normalizeHeaderName()');
 foreach (array(
@@ -108,3 +113,19 @@ $t->diag('->getTitle() ->setTitle()');
 $t->is($response->getTitle(), '', '->getTitle() returns an empty string by default');
 $response->setTitle('my title');
 $t->is($response->getTitle(), 'my title', '->setTitle() sets the title');
+
+// ->addHttpMeta()
+$t->diag('->addHttpMeta()');
+$response->clearHttpHeaders();
+$response->addHttpMeta('My-Header', 'foo');
+$response->addHttpMeta('My-Header', 'bar', false);
+$response->addHttpMeta('my-header', 'foobar', false);
+$metas = $response->getHttpMetas();
+$t->is($metas['My-Header'], 'foo, bar, foobar', '->addHttpMeta() takes a replace argument as its third argument');
+$t->is($response->getHttpHeader('My-Header'), 'foo, bar, foobar', '->addHttpMeta() also sets the corresponding http header');
+$response->addHttpMeta('My-Other-Header', 'foo', false);
+$metas = $response->getHttpMetas();
+$t->is($metas['My-Other-Header'], 'foo', '->addHttpMeta() takes a replace argument as its third argument');
+$response->addHttpMeta('my-header', 'foo');
+$metas = $response->getHttpMetas();
+$t->is($metas['My-Header'], 'foo', '->addHttpMeta() normalizes http header name');
