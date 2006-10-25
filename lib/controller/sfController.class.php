@@ -323,7 +323,10 @@ abstract class sfController
           $this->getContext()->getResponse()->setStatusCode(404);
           $this->getContext()->getResponse()->setHttpHeader('Status', '404 Not Found');
 
-          sfMixer::callMixins('error404');
+          foreach (sfMixer::getCallables('sfController:forward:error404') as $callable)
+          {
+            call_user_func($callable, $this, $moduleName, $actionName);
+          }
         }
 
         // change i18n message source directory to our module
@@ -650,6 +653,13 @@ abstract class sfController
 
   public function __call($method, $arguments)
   {
-    return sfMixer::callMixins();
+    if (!$callable = sfMixer::getCallable('sfController:'.$method))
+    {
+      throw new sfException(sprintf('Call to undefined method sfController::%s', $method));
+    }
+
+    array_unshift($arguments, $this);
+
+    return call_user_func_array($callable, $arguments);
   }
 }

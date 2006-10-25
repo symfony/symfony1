@@ -143,6 +143,13 @@ abstract class sfResponse
 
   public function __call($method, $arguments)
   {
-    return sfMixer::callMixins();
+    if (!$callable = sfMixer::getCallable('sfResponse:'.$method))
+    {
+      throw new sfException(sprintf('Call to undefined method sfResponse::%s', $method));
+    }
+
+    array_unshift($arguments, $this);
+
+    return call_user_func_array($callable, $arguments);
   }
 }

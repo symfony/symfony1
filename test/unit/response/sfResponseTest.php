@@ -20,7 +20,7 @@ class fakeResponse
 {
 }
 
-$t = new lime_test(24, new lime_output_color());
+$t = new lime_test(25, new lime_output_color());
 
 $context = new sfContext();
 

@@ -185,7 +185,10 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
     {
       $mixer_script = "
 
-    sfMixer::callMixins();
+    foreach (sfMixer::getCallables('{$this->getClassname()}:addDoSelectRS:addDoSelectRS') as \$callable)
+    {
+      call_user_func(\$callable, '{$this->getClassname()}', \$criteria, \$con);
+    }
 
 ";
       $tmp = preg_replace('/{/', '{'.$mixer_script, $tmp, 1);
@@ -204,7 +207,7 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
       // add sfMixer call
       $pre_mixer_script = "
 
-    foreach (sfMixer::getCallables('".$this->getClassname().":doUpdate:pre') as \$callable)
+    foreach (sfMixer::getCallables('{$this->getClassname()}:doUpdate:pre') as \$callable)
     {
       \$ret = call_user_func(\$callable, '{$this->getClassname()}', \$values, \$con);
       if (false !== \$ret)
@@ -217,7 +220,10 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
 
       $post_mixer_script = "
 
-    sfMixer::callMixins('post', \$ret);
+    foreach (sfMixer::getCallables('{$this->getClassname()}:doUpdate:post') as \$callable)
+    {
+      call_user_func(\$callable, '{$this->getClassname()}', \$values, \$con, \$ret);
+    }
 
     return \$ret;
 ";
@@ -239,7 +245,7 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
       // add sfMixer call
       $pre_mixer_script = "
 
-    foreach (sfMixer::getCallables('".$this->getClassname().":doInsert:pre') as \$callable)
+    foreach (sfMixer::getCallables('{$this->getClassname()}:doInsert:pre') as \$callable)
     {
       \$ret = call_user_func(\$callable, '{$this->getClassname()}', \$values, \$con);
       if (false !== \$ret)
@@ -251,7 +257,10 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
 ";
 
       $post_mixer_script = "
-    sfMixer::callMixins('post', \$pk);
+    foreach (sfMixer::getCallables('{$this->getClassname()}:doInsert:post') as \$callable)
+    {
+      call_user_func(\$callable, '{$this->getClassname()}', \$values, \$con, \$pk);
+    }
 
     return";
 

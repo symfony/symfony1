@@ -580,6 +580,13 @@ abstract class sfView
 
   public function __call($method, $arguments)
   {
-    return sfMixer::callMixins();
+    if (!$callable = sfMixer::getCallable('sfView:'.$method))
+    {
+      throw new sfException(sprintf('Call to undefined method sfView::%s', $method));
+    }
+
+    array_unshift($arguments, $this);
+
+    return call_user_func_array($callable, $arguments);
   }
 }

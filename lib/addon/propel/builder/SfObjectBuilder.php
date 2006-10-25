@@ -78,7 +78,14 @@ require_once \''.$this->getFilePath($this->getStubObjectBuilder()->getPackage().
 
   public function __call(\$method, \$parameters)
   {
-    return sfMixer::callMixins();
+    if (!\$callable = sfMixer::getCallable('{$this->getClassname()}:'.\$method))
+    {
+      throw new sfException(sprintf('Call to undefined method {$this->getClassname()}::%s', \$method));
+    }
+
+    array_unshift(\$arguments, \$this);
+
+    return call_user_func_array(\$callable, \$arguments);
   }
 
 ";
@@ -248,7 +255,7 @@ $script .= '
       // add sfMixer call
       $pre_mixer_script = "
 
-    foreach (sfMixer::getCallables('".$this->getClassname().":delete:pre') as \$callable)
+    foreach (sfMixer::getCallables('{$this->getClassname()}:delete:pre') as \$callable)
     {
       \$ret = call_user_func(\$callable, \$this, \$con);
       if (\$ret)
@@ -260,7 +267,10 @@ $script .= '
 ";
       $post_mixer_script = "
 
-    sfMixer::callMixins('post');
+    foreach (sfMixer::getCallables('{$this->getClassname()}:delete:post') as \$callable)
+    {
+      call_user_func(\$callable, \$this, \$con);
+    }
 
 ";
       $tmp = preg_replace('/{/', '{'.$pre_mixer_script, $tmp, 1);
@@ -312,7 +322,7 @@ $script .= '
       // add sfMixer call
       $pre_mixer_script = "
 
-    foreach (sfMixer::getCallables('".$this->getClassname().":save:pre') as \$callable)
+    foreach (sfMixer::getCallables('{$this->getClassname()}:save:pre') as \$callable)
     {
       \$affectedRows = call_user_func(\$callable, \$this, \$con);
       if (is_int(\$affectedRows))
@@ -324,7 +334,10 @@ $script .= '
 ";
       $post_mixer_script = <<<EOF
 
-    sfMixer::callMixins('post');
+    foreach (sfMixer::getCallables('{$this->getClassname()}:save:post') as \$callable)
+    {
+      call_user_func(\$callable, \$this, \$con, \$affectedRows);
+    }
 
 EOF;
       $tmp = preg_replace('/{/', '{'.$pre_mixer_script, $tmp, 1);

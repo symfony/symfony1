@@ -25,6 +25,16 @@ class sfMixerTest
     $this->t->diag('Mixins via sfMixer');
     sfMixer::register($class, array('myMixinTest', 'newMethod'));
     $this->t->is($object->newMethod(), 'ok', '__call() accepts mixins via sfMixer');
+
+    try
+    {
+      $object->nonexistantmethodname();
+      $this->t->fail('__call() throws an exception if the method does not exist as a mixin');
+    }
+    catch (sfException $e)
+    {
+      $this->t->pass('__call() throws an exception if the method does not exist as a mixin');
+    }
   }
 }
 

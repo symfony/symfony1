@@ -207,6 +207,13 @@ class sfUser
 
   public function __call($method, $arguments)
   {
-    return sfMixer::callMixins();
+    if (!$callable = sfMixer::getCallable('sfUser:'.$method))
+    {
+      throw new sfException(sprintf('Call to undefined method sfUser::%s', $method));
+    }
+
+    array_unshift($arguments, $this);
+
+    return call_user_func_array($callable, $arguments);
   }
 }

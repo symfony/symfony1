@@ -334,6 +334,13 @@ abstract class sfComponent
 
   public function __call($method, $arguments)
   {
-    return sfMixer::callMixins();
+    if (!$callable = sfMixer::getCallable('sfComponent:'.$method))
+    {
+      throw new sfException(sprintf('Call to undefined method sfComponent::%s', $method));
+    }
+
+    array_unshift($arguments, $this);
+
+    return call_user_func_array($callable, $arguments);
   }
 }
