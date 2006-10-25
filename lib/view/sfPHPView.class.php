@@ -135,7 +135,10 @@ class sfPHPView extends sfView
     require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$viewConfigFile));
 
     // set template directory
-    $this->setDirectory(sfLoader::getTemplateDir($this->moduleName, $this->getTemplate()));
+    if (!$this->directory)
+    {
+      $this->setDirectory(sfLoader::getTemplateDir($this->moduleName, $this->getTemplate()));
+    }
   }
 
   /**
