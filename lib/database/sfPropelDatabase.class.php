@@ -64,27 +64,29 @@ class sfPropelDatabase extends sfCreoleDatabase
       require_once('creole/Creole.php');
       $params = Creole::parseDSN($dsn);
 
-      $this->setParameter('phptype',  $params['phptype']);
-      $this->setParameter('hostspec', $params['hostspec'] ? $params['hostspec'] : ($params['host'] ? $params['host'] : null));
-      $this->setParameter('database', $params['database']);
-      $this->setParameter('username', $params['username']);
-      $this->setParameter('password', $params['password']);
-      $this->setParameter('port',     $params['port']);
-      $this->setParameter('encoding', isset($params['encoding']) ? $params['encoding'] : null);
+      $this->setParameter('phptype',    $params['phptype']);
+      $this->setParameter('hostspec',   $params['hostspec'] ? $params['hostspec'] : ($params['host'] ? $params['host'] : null));
+      $this->setParameter('database',   $params['database']);
+      $this->setParameter('username',   $params['username']);
+      $this->setParameter('password',   $params['password']);
+      $this->setParameter('port',       $params['port']);
+      $this->setParameter('encoding',   isset($params['encoding']) ? $params['encoding'] : null);
+      $this->setParameter('persistent', isset($params['persistent']) ? $params['persistent'] : null);
     }
 
     self::$config['propel']['datasources'][$this->getParameter('datasource')] =
       array(
-        'adapter'    => $this->getParameter('phptype'),
-        'connection' =>
+        'adapter'      => $this->getParameter('phptype'),
+        'connection'   =>
         array(
-          'phptype'  => $this->getParameter('phptype'),
-          'hostspec' => $this->getParameter('hostspec') ? $this->getParameter('hostspec') : ($this->getParameter('host') ? $this->getParameter('host') : null),
-          'database' => $this->getParameter('database'),
-          'username' => $this->getParameter('username'),
-          'password' => $this->getParameter('password'),
-          'port'     => $this->getParameter('port'),
-          'encoding' => $this->getParameter('encoding'),
+          'phptype'    => $this->getParameter('phptype'),
+          'hostspec'   => $this->getParameter('hostspec') ? $this->getParameter('hostspec') : ($this->getParameter('host') ? $this->getParameter('host') : null),
+          'database'   => $this->getParameter('database'),
+          'username'   => $this->getParameter('username'),
+          'password'   => $this->getParameter('password'),
+          'port'       => $this->getParameter('port'),
+          'encoding'   => $this->getParameter('encoding'),
+          'persistent' => $this->getParameter('persistent'),
         ),
       );
   }
