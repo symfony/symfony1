@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(33, new lime_output_color());
+$t = new lime_test(39, new lime_output_color());
 
 class myWebResponse extends sfWebResponse
 {
@@ -129,3 +129,23 @@ $t->is($metas['My-Other-Header'], 'foo', '->addHttpMeta() takes a replace argume
 $response->addHttpMeta('my-header', 'foo');
 $metas = $response->getHttpMetas();
 $t->is($metas['My-Header'], 'foo', '->addHttpMeta() normalizes http header name');
+
+// ->addVaryHttpHeader()
+$t->diag('->addVaryHttpHeader()');
+$response->clearHttpHeaders();
+$response->addVaryHttpHeader('Cookie');
+$t->is($response->getHttpHeader('Vary'), 'Cookie', '->addVaryHttpHeader() adds a new Vary header');
+$response->addVaryHttpHeader('Cookie');
+$t->is($response->getHttpHeader('Vary'), 'Cookie', '->addVaryHttpHeader() does not add the same header twice');
+$response->addVaryHttpHeader('Accept-Language');
+$t->is($response->getHttpHeader('Vary'), 'Cookie, Accept-Language', '->addVaryHttpHeader() respects ordering');
+
+// ->addCacheControlHttpHeader()
+$t->diag('->addCacheControlHttpHeader()');
+$response->clearHttpHeaders();
+$response->addCacheControlHttpHeader('max-age', 0);
+$t->is($response->getHttpHeader('Cache-Control'), 'max-age=0', '->addCacheControlHttpHeader() adds a new Cache-Control header');
+$response->addCacheControlHttpHeader('max-age', 12);
+$t->is($response->getHttpHeader('Cache-Control'), 'max-age=12', '->addCacheControlHttpHeader() does not add the same header twice');
+$response->addCacheControlHttpHeader('no-cache');
+$t->is($response->getHttpHeader('Cache-Control'), 'max-age=12, no-cache', '->addCacheControlHttpHeader() respects ordering');

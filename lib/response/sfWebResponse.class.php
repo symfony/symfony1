@@ -307,9 +307,9 @@ class sfWebResponse extends sfResponse
   {
     $vary = $this->getHttpHeader('Vary');
     $currentHeaders = array();
-    if ($vary[0])
+    if ($vary)
     {
-      $currentHeaders = split('/\s*,\s*/', $vary[0]);
+      $currentHeaders = split('/\s*,\s*/', $vary);
     }
     $header = $this->normalizeHeaderName($header);
 
@@ -324,17 +324,23 @@ class sfWebResponse extends sfResponse
   {
     $cacheControl = $this->getHttpHeader('Cache-Control');
     $currentHeaders = array();
-    if ($cacheControl[0])
+    if ($cacheControl)
     {
-      $currentHeaders = split('/\s*,\s*/', $cacheControl[0]);
+      foreach (split('/\s*,\s*/', $cacheControl) as $tmp)
+      {
+        $tmp = explode('=', $tmp);
+        $currentHeaders[$tmp[0]] = isset($tmp[1]) ? $tmp[1] : null;
+      }
     }
-    $name = strtr(strtolower($name), '_', '-');
+    $currentHeaders[strtr(strtolower($name), '_', '-')] = $value;
 
-    if (!in_array($name, $currentHeaders))
+    $headers = array();
+    foreach ($currentHeaders as $key => $value)
     {
-      $currentHeaders[] = $name.($value !== null ? '='.$value : '');
-      $this->setHttpHeader('Cache-Control', implode(', ', $currentHeaders));
+      $headers[] = $key.(null !== $value ? '='.$value : '');
     }
+
+    $this->setHttpHeader('Cache-Control', implode(', ', $headers));
   }
 
   public function getHttpMetas()
