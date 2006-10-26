@@ -133,6 +133,7 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
       \$cls = Propel::import(\$omClass);
       \$obj1 = new \$cls();
       \$obj1->hydrate(\$rs);
+      \$obj1->setCulture(\$culture);
 ";
 //            if ($i18nTable->getChildrenColumn()) {
               $script .= "
