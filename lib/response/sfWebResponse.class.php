@@ -401,7 +401,7 @@ class sfWebResponse extends sfResponse
   {
     $metas = $this->getParameterHolder()->getAll('helper/asset/auto/meta');
 
-    return (array_key_exists('title', $metas)) ? $metas['title'] : '';
+    return (array_key_exists('Title', $metas)) ? $metas['Title'] : '';
   }
 
   public function setTitle($title, $escape = true)
@@ -416,7 +416,7 @@ class sfWebResponse extends sfResponse
       $title = htmlentities($title, ENT_QUOTES, sfConfig::get('sf_charset'));
     }
 
-    $this->setParameter('title', $title, 'helper/asset/auto/meta');
+    $this->setParameter('Title', $title, 'helper/asset/auto/meta');
   }
 
   public function getStylesheets($position = '')
