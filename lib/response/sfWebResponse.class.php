@@ -376,7 +376,7 @@ class sfWebResponse extends sfResponse
 
   public function addMeta($key, $value, $replace = true, $escape = true)
   {
-    $key = $this->normalizeHeaderName($key);
+    $key = strtolower($key);
 
     if (sfConfig::get('sf_i18n'))
     {
@@ -399,24 +399,12 @@ class sfWebResponse extends sfResponse
 
   public function getTitle()
   {
-    $metas = $this->getParameterHolder()->getAll('helper/asset/auto/meta');
-
-    return (array_key_exists('Title', $metas)) ? $metas['Title'] : '';
+    return $this->getParameter('title', '', 'helper/asset/auto/meta');
   }
 
   public function setTitle($title, $escape = true)
   {
-    if (sfConfig::get('sf_i18n'))
-    {
-      $title = sfConfig::get('sf_i18n_instance')->__($title);
-    }
-
-    if ($escape)
-    {
-      $title = htmlentities($title, ENT_QUOTES, sfConfig::get('sf_charset'));
-    }
-
-    $this->setParameter('Title', $title, 'helper/asset/auto/meta');
+    $this->addMeta('title', $title, true, $escape);
   }
 
   public function getStylesheets($position = '')
