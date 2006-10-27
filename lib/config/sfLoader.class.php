@@ -154,7 +154,7 @@ class sfLoader
     static $loaded = array();
 
     $dirs = self::getHelperDirs($moduleName);
-    foreach ($helpers as $helperName)
+    foreach ((array) $helpers as $helperName)
     {
       if (isset($loaded[$helperName]))
       {
