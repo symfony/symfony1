@@ -4,7 +4,9 @@
 abstract class BaseArticle extends BaseObject  implements Persistent {
 
 
+	
 	const DATABASE_NAME = 'propel';
+
 	
 	protected static $peer;
 
@@ -19,6 +21,10 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 
 	
 	protected $body;
+
+
+	
+	protected $online;
 
 
 	
@@ -56,6 +62,13 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 	{
 
 		return $this->body;
+	}
+
+	
+	public function getOnline()
+	{
+
+		return $this->online;
 	}
 
 	
@@ -118,6 +131,16 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 
 	} 
 	
+	public function setOnline($v)
+	{
+
+		if ($this->online !== $v) {
+			$this->online = $v;
+			$this->modifiedColumns[] = ArticlePeer::ONLINE;
+		}
+
+	} 
+	
 	public function setCategoryId($v)
 	{
 
@@ -159,15 +182,17 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 
 			$this->body = $rs->getString($startcol + 2);
 
-			$this->category_id = $rs->getInt($startcol + 3);
+			$this->online = $rs->getBoolean($startcol + 3);
 
-			$this->created_at = $rs->getTimestamp($startcol + 4, null);
+			$this->category_id = $rs->getInt($startcol + 4);
+
+			$this->created_at = $rs->getTimestamp($startcol + 5, null);
 
 			$this->resetModified();
 
 			$this->setNew(false);
 
-						return $startcol + 5; 
+						return $startcol + 6; 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating Article object", $e);
 		}
@@ -198,7 +223,7 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 	
 	public function save($con = null)
 	{
-    if ($this->isNew() && !$this->isColumnModified('created_at'))
+    if ($this->isNew() && !$this->isColumnModified(ArticlePeer::CREATED_AT))
     {
       $this->setCreatedAt(time());
     }
@@ -326,9 +351,12 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 				return $this->getBody();
 				break;
 			case 3:
-				return $this->getCategoryId();
+				return $this->getOnline();
 				break;
 			case 4:
+				return $this->getCategoryId();
+				break;
+			case 5:
 				return $this->getCreatedAt();
 				break;
 			default:
@@ -344,8 +372,9 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 			$keys[0] => $this->getId(),
 			$keys[1] => $this->getTitle(),
 			$keys[2] => $this->getBody(),
-			$keys[3] => $this->getCategoryId(),
-			$keys[4] => $this->getCreatedAt(),
+			$keys[3] => $this->getOnline(),
+			$keys[4] => $this->getCategoryId(),
+			$keys[5] => $this->getCreatedAt(),
 		);
 		return $result;
 	}
@@ -371,9 +400,12 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 				$this->setBody($value);
 				break;
 			case 3:
-				$this->setCategoryId($value);
+				$this->setOnline($value);
 				break;
 			case 4:
+				$this->setCategoryId($value);
+				break;
+			case 5:
 				$this->setCreatedAt($value);
 				break;
 		} 	}
@@ -386,8 +418,9 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 		if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
 		if (array_key_exists($keys[1], $arr)) $this->setTitle($arr[$keys[1]]);
 		if (array_key_exists($keys[2], $arr)) $this->setBody($arr[$keys[2]]);
-		if (array_key_exists($keys[3], $arr)) $this->setCategoryId($arr[$keys[3]]);
-		if (array_key_exists($keys[4], $arr)) $this->setCreatedAt($arr[$keys[4]]);
+		if (array_key_exists($keys[3], $arr)) $this->setOnline($arr[$keys[3]]);
+		if (array_key_exists($keys[4], $arr)) $this->setCategoryId($arr[$keys[4]]);
+		if (array_key_exists($keys[5], $arr)) $this->setCreatedAt($arr[$keys[5]]);
 	}
 
 	
@@ -398,6 +431,7 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 		if ($this->isColumnModified(ArticlePeer::ID)) $criteria->add(ArticlePeer::ID, $this->id);
 		if ($this->isColumnModified(ArticlePeer::TITLE)) $criteria->add(ArticlePeer::TITLE, $this->title);
 		if ($this->isColumnModified(ArticlePeer::BODY)) $criteria->add(ArticlePeer::BODY, $this->body);
+		if ($this->isColumnModified(ArticlePeer::ONLINE)) $criteria->add(ArticlePeer::ONLINE, $this->online);
 		if ($this->isColumnModified(ArticlePeer::CATEGORY_ID)) $criteria->add(ArticlePeer::CATEGORY_ID, $this->category_id);
 		if ($this->isColumnModified(ArticlePeer::CREATED_AT)) $criteria->add(ArticlePeer::CREATED_AT, $this->created_at);
 
@@ -433,6 +467,8 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 		$copyObj->setTitle($this->title);
 
 		$copyObj->setBody($this->body);
+
+		$copyObj->setOnline($this->online);
 
 		$copyObj->setCategoryId($this->category_id);
 

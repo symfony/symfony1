@@ -9,11 +9,13 @@ Article:
   article_1:
     title:       foo title
     body:        bar body
+    online:      true
     category_id: category_1
     created_at:  <?php echo time() ?>
 
   article_2:
     title:       foo foo title
     body:        bar bar body
+    online:      false
     category_id: category_2
     created_at:  <?php echo time() ?>

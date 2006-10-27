@@ -266,8 +266,7 @@ function object_checkbox_tag($object, $method, $options = array(), $default_valu
 {
   $options = _parse_attributes($options);
 
-  $value = _get_object_value($object, $method, $default_value);
-  $value = in_array($value, array(true, 1, 'on', 'true', 't', 'yes', 'y'), true);
+  $value = (boolean) _get_object_value($object, $method, $default_value);
 
   return checkbox_tag(_convert_method_to_name($method, $options), 1, $value, $options);
 }

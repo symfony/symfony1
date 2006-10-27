@@ -1,11 +1,12 @@
 propel:
   article:
     id:
-    title: varchar(255)
-    body:  longvarchar
+    title:       varchar(255)
+    body:        longvarchar
+    online:      boolean
     category_id:
     created_at:
 
   category:
     id:
-    name: varchar(255)
+    name:        varchar(255)

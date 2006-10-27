@@ -38,6 +38,8 @@ class ArticleMapBuilder {
 
 		$tMap->addColumn('BODY', 'Body', 'string', CreoleTypes::LONGVARCHAR, false);
 
+		$tMap->addColumn('ONLINE', 'Online', 'boolean', CreoleTypes::BOOLEAN, false);
+
 		$tMap->addForeignKey('CATEGORY_ID', 'CategoryId', 'int', CreoleTypes::INTEGER, 'category', 'ID', false, null);
 
 		$tMap->addColumn('CREATED_AT', 'CreatedAt', 'int', CreoleTypes::TIMESTAMP, false);

@@ -1,0 +1,11 @@
+methods:
+  post: [title, body]
+
+names:
+  title:
+    required:     yes
+    required_msg: required
+
+  body:
+    required:     yes
+    required_msg: required

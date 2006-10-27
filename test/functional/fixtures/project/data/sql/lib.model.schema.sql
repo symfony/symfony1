@@ -11,6 +11,7 @@ CREATE TABLE [article]
 	[id] INTEGER  NOT NULL PRIMARY KEY,
 	[title] VARCHAR(255),
 	[body] MEDIUMTEXT,
+	[online] INTEGER,
 	[category_id] INTEGER,
 	[created_at] TIMESTAMP
 );

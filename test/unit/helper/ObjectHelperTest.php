@@ -14,7 +14,7 @@ require_once($_test_dir.'/unit/helper/TestObject.php');
 
 sfLoader::loadHelpers(array('Helper', 'Tag', 'Form', 'Object'));
 
-$t = new lime_test(9, new lime_output_color());
+$t = new lime_test(10, new lime_output_color());
 
 // object_textarea_tag()
 $t->diag('object_textarea_tag()');
@@ -82,5 +82,8 @@ $t->is(object_input_tag($obj1, 'getValue'),
 $t->diag('object_checkbox_tag()');
 $obj1 = new TestObject();
 
-$t->is(object_checkbox_tag($obj1, 'getValue'),
-                   '<input type="checkbox" name="value" id="value" value="1" />');
+$t->is(object_checkbox_tag($obj1, 'getBooleanFalse'),
+                   '<input type="checkbox" name="boolean_false" id="boolean_false" value="1" />');
+
+$t->is(object_checkbox_tag($obj1, 'getBooleanTrue'),
+                   '<input type="checkbox" name="boolean_true" id="boolean_true" value="1" checked="checked" />');

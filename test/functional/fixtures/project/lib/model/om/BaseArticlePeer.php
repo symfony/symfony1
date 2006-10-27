@@ -13,7 +13,7 @@ abstract class BaseArticlePeer {
 	const CLASS_DEFAULT = 'lib.model.Article';
 
 	
-	const NUM_COLUMNS = 5;
+	const NUM_COLUMNS = 6;
 
 	
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -29,6 +29,9 @@ abstract class BaseArticlePeer {
 	const BODY = 'article.BODY';
 
 	
+	const ONLINE = 'article.ONLINE';
+
+	
 	const CATEGORY_ID = 'article.CATEGORY_ID';
 
 	
@@ -40,18 +43,18 @@ abstract class BaseArticlePeer {
 
 	
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Body', 'CategoryId', 'CreatedAt', ),
-		BasePeer::TYPE_COLNAME => array (ArticlePeer::ID, ArticlePeer::TITLE, ArticlePeer::BODY, ArticlePeer::CATEGORY_ID, ArticlePeer::CREATED_AT, ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'body', 'category_id', 'created_at', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
+		BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Body', 'Online', 'CategoryId', 'CreatedAt', ),
+		BasePeer::TYPE_COLNAME => array (ArticlePeer::ID, ArticlePeer::TITLE, ArticlePeer::BODY, ArticlePeer::ONLINE, ArticlePeer::CATEGORY_ID, ArticlePeer::CREATED_AT, ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'body', 'online', 'category_id', 'created_at', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
 	);
 
 	
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Body' => 2, 'CategoryId' => 3, 'CreatedAt' => 4, ),
-		BasePeer::TYPE_COLNAME => array (ArticlePeer::ID => 0, ArticlePeer::TITLE => 1, ArticlePeer::BODY => 2, ArticlePeer::CATEGORY_ID => 3, ArticlePeer::CREATED_AT => 4, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'body' => 2, 'category_id' => 3, 'created_at' => 4, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
+		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Body' => 2, 'Online' => 3, 'CategoryId' => 4, 'CreatedAt' => 5, ),
+		BasePeer::TYPE_COLNAME => array (ArticlePeer::ID => 0, ArticlePeer::TITLE => 1, ArticlePeer::BODY => 2, ArticlePeer::ONLINE => 3, ArticlePeer::CATEGORY_ID => 4, ArticlePeer::CREATED_AT => 5, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'body' => 2, 'online' => 3, 'category_id' => 4, 'created_at' => 5, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
 	);
 
 	
@@ -110,6 +113,8 @@ abstract class BaseArticlePeer {
 		$criteria->addSelectColumn(ArticlePeer::TITLE);
 
 		$criteria->addSelectColumn(ArticlePeer::BODY);
+
+		$criteria->addSelectColumn(ArticlePeer::ONLINE);
 
 		$criteria->addSelectColumn(ArticlePeer::CATEGORY_ID);
 

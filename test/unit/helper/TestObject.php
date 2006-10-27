@@ -33,4 +33,13 @@ class TestObject
     $this->value = $value;
   }
 
+  public function getBooleanTrue()
+  {
+    return true;
+  }
+
+  public function getBooleanFalse()
+  {
+    return false;
+  }
 }
