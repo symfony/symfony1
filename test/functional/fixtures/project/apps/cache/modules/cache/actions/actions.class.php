@@ -30,4 +30,8 @@ class cacheActions extends sfActions
   public function executeMultiBis()
   {
   }
+
+  public function executeSpecificCacheKey()
+  {
+  }
 }

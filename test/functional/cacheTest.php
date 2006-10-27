@@ -196,3 +196,27 @@ $b->
   // contextual component cache
   isUriCached('@_sf_cache_partial?module=cache&action=_contextualCacheableComponent&sf_cache_key='.md5(serialize(array())), true)
 ;
+
+// remove all cache
+sfToolkit::clearDirectory(sfConfig::get('sf_cache_dir'));
+
+// check user supplied cache key for partials and components
+$b->
+  get('/cache/specificCacheKey')->
+  isStatusCode(200)->
+  isRequestParameter('module', 'cache')->
+  isRequestParameter('action', 'specificCacheKey')->
+  isCached(false)->
+
+  // partial cache
+  isUriCached('@_sf_cache_partial?module=cache&action=_cacheablePartial&sf_cache_key=cacheablePartial', true)->
+
+  // contextual partial cache
+  isUriCached('@_sf_cache_partial?module=cache&action=_contextualCacheableComponent&sf_cache_key=contextualCacheableComponent', true)->
+
+  // component cache
+  isUriCached('@_sf_cache_partial?module=cache&action=_cacheableComponent&sf_cache_key=cacheableComponent', true)->
+
+  // contextual component cache
+  isUriCached('@_sf_cache_partial?module=cache&action=_contextualCacheableComponent&sf_cache_key=contextualCacheableComponent', true)
+;

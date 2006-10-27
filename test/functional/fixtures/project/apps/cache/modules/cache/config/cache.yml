@@ -32,5 +32,8 @@ multi:
 multiBis:
   activate: off
 
+specificCacheKey:
+  activate: off
+
 page:
   with_layout: true
