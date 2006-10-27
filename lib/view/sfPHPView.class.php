@@ -30,19 +30,12 @@ class sfPHPView extends sfView
   {
     $context = $this->getContext();
 
-    $lastActionEntry  = $context->getActionStack()->getLastEntry();
-    $firstActionEntry = $context->getActionStack()->getFirstEntry();
-
     $shortcuts = array(
       'sf_context'       => $context,
       'sf_params'        => $context->getRequest()->getParameterHolder(),
       'sf_request'       => $context->getRequest(),
       'sf_user'          => $context->getUser(),
       'sf_view'          => $this,
-      'sf_last_module'   => $lastActionEntry->getModuleName(),
-      'sf_last_action'   => $lastActionEntry->getActionName(),
-      'sf_first_module'  => $firstActionEntry->getModuleName(),
-      'sf_first_action'  => $firstActionEntry->getActionName(),
     );
 
     if (sfConfig::get('sf_use_flash'))

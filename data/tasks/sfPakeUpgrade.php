@@ -290,6 +290,10 @@ function _upgrade_0_8_deprecated_for_templates($template_dirs)
     'use_helpers'                   => 'use_helper',
     'object_admin_input_upload_tag' => 'object_admin_input_file_tag',
     'input_upload_tag'              => 'input_file_tag',
+    '$sf_last_module'               => '$context->getModuleName()',
+    '$sf_last_action'               => '$context->getActionName()',
+    '$sf_first_module'              => '$context->getActionStack()->getFirstEntry()->getModuleName()',
+    '$sf_first_action'              => '$context->getActionStack()->getFirstEntry()->getActionName()',
   );
   foreach ($php_files as $php_file)
   {
