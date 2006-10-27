@@ -125,16 +125,21 @@ body, #sf_admin_container td
   background: #f33 url(/sf/sf_admin/images/error.png) no-repeat 5px 2px;
 }
 
-#sf_admin_container .form-errors ul
+#sf_admin_container .form-errors dl
 {
   padding: 5px;
-  list-style-type: none;
 }
 
-#sf_admin_container .form-errors li
+#sf_admin_container .form-errors dt
 {
-  padding: 5px 20px;
-  background: url(/sf/sf_admin/images/error.png) no-repeat 0 2px;
+  font-weight: bold;
+  float: left;
+  padding-right: 5px;
+}
+
+#sf_admin_container .form-errors dd
+{
+  margin: 0;
 }
 
 #sf_admin_container .form-error
