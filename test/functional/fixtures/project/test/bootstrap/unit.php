@@ -12,6 +12,6 @@ $_test_dir = realpath(dirname(__FILE__).'/..');
 define('SF_ROOT_DIR', realpath($_test_dir.'/..'));
 
 // symfony directories
-require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
+include(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
 
 require_once($sf_symfony_lib_dir.'/vendor/lime/lime.php');
