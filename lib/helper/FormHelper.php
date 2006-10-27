@@ -1786,7 +1786,10 @@ function select_number_tag($name, $value, $options = array(), $html_options = ar
     $range[(string) $x] = $x;
   }
 
-  if (isset($options['reverse'])) $range = array_reverse($range);
+  if (isset($options['reverse']))
+  {
+    $range = array_reverse($range, true);
+  }
 
   unset($options['start']);
   unset($options['end']);
