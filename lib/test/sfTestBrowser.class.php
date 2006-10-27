@@ -70,17 +70,15 @@ class sfTestBrowser extends sfBrowser
     return parent::forward();
   }
 
-  public function isRedirected()
+  public function isRedirected($boolean = true)
   {
-    $locations = $this->getContext()->getResponse()->getHttpHeader('location');
-
-    if (!isset($locations[0]))
+    if ($location = $this->getContext()->getResponse()->getHttpHeader('location'))
     {
-      $this->test->fail('page redirected');
+      $boolean ? $this->test->pass(sprintf('page redirected to "%s"', $location)) : $this->test->fail(sprintf('page redirected to "%s"', $location));
     }
     else
     {
-      $this->test->ok($locations[0], sprintf('page redirected to "%s"', $locations[0]));
+      $boolean ? $this->test->fail('page redirected') : $this->test->pass('page not redirected');
     }
 
     return $this;
