@@ -231,6 +231,11 @@ class sfBrowser
   // link or button
   public function click($name, $arguments = array())
   {
+    if (!$this->dom)
+    {
+      throw new sfException('Cannot click because there is no current page in the browser');
+    }
+
     $xpath = new DomXpath($this->dom);
     $dom   = $this->dom;
 
@@ -340,6 +345,7 @@ class sfBrowser
     $this->cookieJar     = array();
     $this->stack         = array();
     $this->fields        = array();
+    $this->dom           = null;
     $this->stackPosition = -1;
 
     return $this;
@@ -361,7 +367,7 @@ class sfBrowser
     $uri = str_replace('/index.php', '', $uri);
 
     // # as a uri
-    if ('#' == $uri[0])
+    if ($uri && '#' == $uri[0])
     {
       $uri = $this->stack[$this->stackPosition]['uri'].$uri;
     }
