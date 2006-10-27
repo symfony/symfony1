@@ -320,8 +320,8 @@ function _upgrade_0_8_deprecated_for_templates($template_dirs)
       if ($count && !isset($seen[$old]))
       {
         $seen[$old] = true;
-        pake_echo_comment(sprintf('%s() has been removed', $old));
-        pake_echo_comment(sprintf(' use %s()', $new));
+        pake_echo_comment(sprintf('%s has been removed', $old));
+        pake_echo_comment(sprintf(' use %s', $new));
       }
     }
 
