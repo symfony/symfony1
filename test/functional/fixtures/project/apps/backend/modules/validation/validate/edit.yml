@@ -1,11 +1,13 @@
 methods:
-  post: [title, body]
+  post:
+    - "article{title}"
+    - "article{body}"
 
 names:
-  title:
+  article{title}:
     required:     yes
     required_msg: required
 
-  body:
+  article{body}:
     required:     yes
     required_msg: required

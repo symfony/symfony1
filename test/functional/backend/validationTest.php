@@ -40,6 +40,8 @@ $b->
 
   checkResponseElement('.form-errors dt', 'Title:')->
   checkResponseElement('.form-errors dt', 'Body:', array('position' => 1))->
+  checkResponseElement('#error_for_article_title', true)->
+  checkResponseElement('#error_for_article_body', true)->
 
   // check form repopulation
   checkResponseElement('body form#sf_admin_edit_form input[name="article[title]"][id="article_title"][value=""]')->
