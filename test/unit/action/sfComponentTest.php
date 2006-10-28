@@ -11,16 +11,36 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(2, new lime_output_color());
+$t = new lime_test(7, new lime_output_color());
 
 class myComponent extends sfComponent
 {
-  function execute () {}
+  function execute() {}
 }
 
 $context = new sfContext();
+
+// ->initialize()
+$t->diag('->initialize()');
 $component = new myComponent();
+$t->is($component->getContext(), null, '->initialize() takes a sfContext object as its first argument');
 $component->initialize($context);
+$t->is($component->getContext(), $context, '->initialize() takes a sfContext object as its first argument');
+
+// ->getContext()
+$t->diag('->getContext()');
+$component->initialize($context);
+$t->is($component->getContext(), $context, '->getContext() returns the current context');
+
+// ->getRequest()
+$t->diag('->getRequest()');
+$component->initialize($context);
+$t->is($component->getRequest(), $context->getRequest(), '->getRequest() returns the current request');
+
+// ->getResponse()
+$t->diag('->getResponse()');
+$component->initialize($context);
+$t->is($component->getResponse(), $context->getResponse(), '->getResponse() returns the current response');
 
 // mixins
 require_once($_test_dir.'/unit/sfMixerTest.class.php');
