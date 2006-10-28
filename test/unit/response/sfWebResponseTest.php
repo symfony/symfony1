@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(42, new lime_output_color());
+$t = new lime_test(57, new lime_output_color());
 
 class myWebResponse extends sfWebResponse
 {
@@ -165,3 +165,43 @@ $response2->mergeProperties($response1);
 $t->is($response1->getHttpHeader('symfony'), $response2->getHttpHeader('symfony'), '->mergerProperties() merges http headers');
 $t->is($response1->getContentType(), $response2->getContentType(), '->mergerProperties() merges content type');
 $t->is($response1->getTitle(), $response2->getTitle(), '->mergerProperties() merges titles');
+
+// ->addStylesheet()
+$t->diag('->addStylesheet()');
+$response = sfResponse::newInstance('myWebResponse');
+$response->initialize($context);
+$response->addStylesheet('test');
+$t->ok($response->getParameterHolder()->has('test', 'helper/asset/auto/stylesheet'), '->addStylesheet() adds a new stylesheet for the response');
+$response->addStylesheet('foo', '');
+$t->ok($response->getParameterHolder()->has('foo', 'helper/asset/auto/stylesheet'), '->addStylesheet() adds a new stylesheet for the response');
+$response->addStylesheet('first', 'first');
+$t->ok($response->getParameterHolder()->has('first', 'helper/asset/auto/stylesheet/first'), '->addStylesheet() takes a position as its second argument');
+$response->addStylesheet('last', 'last');
+$t->ok($response->getParameterHolder()->has('last', 'helper/asset/auto/stylesheet/last'), '->addStylesheet() takes a position as its second argument');
+$response->addStylesheet('bar', '', array('media' => 'print'));
+$t->is($response->getParameterHolder()->get('bar', null, 'helper/asset/auto/stylesheet'), array('media' => 'print'), '->addStylesheet() takes an array of parameters as its third argument');
+
+// ->getStylesheets()
+$t->diag('->getStylesheets()');
+$t->is($response->getStylesheets(), array('test' => array(), 'foo' => array(), 'bar' => array('media' => 'print')), '->getStylesheets() returns all current registered stylesheets');
+$t->is($response->getStylesheets('first'), array('first' => array()), '->getStylesheets() takes a position as its first argument');
+$t->is($response->getStylesheets('last'), array('last' => array()), '->getStylesheets() takes a position as its first argument');
+
+// ->addJavascript()
+$t->diag('->addJavascript()');
+$response = sfResponse::newInstance('myWebResponse');
+$response->initialize($context);
+$response->addJavascript('test');
+$t->ok($response->getParameterHolder()->has('test', 'helper/asset/auto/javascript'), '->addJavascript() adds a new javascript for the response');
+$response->addJavascript('foo', '');
+$t->ok($response->getParameterHolder()->has('foo', 'helper/asset/auto/javascript'), '->addJavascript() adds a new javascript for the response');
+$response->addJavascript('first', 'first');
+$t->ok($response->getParameterHolder()->has('first', 'helper/asset/auto/javascript/first'), '->addJavascript() takes a position as its second argument');
+$response->addJavascript('last', 'last');
+$t->ok($response->getParameterHolder()->has('last', 'helper/asset/auto/javascript/last'), '->addJavascript() takes a position as its second argument');
+
+// ->getJavascripts()
+$t->diag('->getJavascripts()');
+$t->is($response->getJavascripts(), array('test' => 'test', 'foo' => 'foo'), '->getJavascripts() returns all current registered javascripts');
+$t->is($response->getJavascripts('first'), array('first' => 'first'), '->getJavascripts() takes a position as its first argument');
+$t->is($response->getJavascripts('last'), array('last' => 'last'), '->getJavascripts() takes a position as its first argument');
