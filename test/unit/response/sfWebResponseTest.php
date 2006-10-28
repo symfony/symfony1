@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(57, new lime_output_color());
+$t = new lime_test(59, new lime_output_color());
 
 class myWebResponse extends sfWebResponse
 {
@@ -66,10 +66,19 @@ $t->is($response->getHttpHeader('My-Other-Header'), 'foo', '->setHttpHeader() ta
 $response->setHttpHeader('my-header', 'foo');
 $t->is($response->getHttpHeader('My-Header'), 'foo', '->setHttpHeader() normalizes http header name');
 
-// ->clearHttpHeaders();
+// ->clearHttpHeaders()
+$t->diag('->clearHttpHeaders()');
 $response->setHttpHeader('my-header', 'foo');
 $response->clearHttpHeaders();
 $t->is($response->getHttpHeader('My-Header'), '', '->clearHttpHeaders() clears all current http headers');
+
+// ->getHttpHeaders()
+$t->diag('->getHttpHeaders()');
+$response->clearHttpHeaders();
+$response->setHttpHeader('my-header', 'foo');
+$response->setHttpHeader('my-header', 'bar', false);
+$response->setHttpHeader('another', 'foo');
+$t->is($response->getHttpHeaders(), array('My-Header' => 'foo, bar', 'Another' => 'foo'), '->getHttpHeaders() return all current response http headers');
 
 // ->normalizeHeaderName()
 $t->diag('->normalizeHeaderName()');
@@ -205,3 +214,8 @@ $t->diag('->getJavascripts()');
 $t->is($response->getJavascripts(), array('test' => 'test', 'foo' => 'foo'), '->getJavascripts() returns all current registered javascripts');
 $t->is($response->getJavascripts('first'), array('first' => 'first'), '->getJavascripts() takes a position as its first argument');
 $t->is($response->getJavascripts('last'), array('last' => 'last'), '->getJavascripts() takes a position as its first argument');
+
+// ->setCookie() ->getCookies()
+$t->diag('->setCookie() ->getCookies()');
+$response->setCookie('foo', 'bar');
+$t->is($response->getCookies(), array('foo' => array('name' => 'foo', 'value' => 'bar', 'expire' => null, 'path' => '/', 'domain' => '', 'secure' => false, 'httpOnly' => false)), '->setCookie() adds a cookie for the response');
