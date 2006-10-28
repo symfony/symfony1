@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(39, new lime_output_color());
+$t = new lime_test(42, new lime_output_color());
 
 class myWebResponse extends sfWebResponse
 {
@@ -149,3 +149,19 @@ $response->addCacheControlHttpHeader('max-age', 12);
 $t->is($response->getHttpHeader('Cache-Control'), 'max-age=12', '->addCacheControlHttpHeader() does not add the same header twice');
 $response->addCacheControlHttpHeader('no-cache');
 $t->is($response->getHttpHeader('Cache-Control'), 'max-age=12, no-cache', '->addCacheControlHttpHeader() respects ordering');
+
+// ->mergeProperties()
+$t->diag('->mergeProperties()');
+$response1 = sfResponse::newInstance('myWebResponse');
+$response1->initialize($context);
+$response2 = sfResponse::newInstance('myWebResponse');
+$response2->initialize($context);
+
+$response1->setHttpHeader('symfony', 'foo');
+$response1->setContentType('text/plain');
+$response1->setTitle('My title');
+
+$response2->mergeProperties($response1);
+$t->is($response1->getHttpHeader('symfony'), $response2->getHttpHeader('symfony'), '->mergerProperties() merges http headers');
+$t->is($response1->getContentType(), $response2->getContentType(), '->mergerProperties() merges content type');
+$t->is($response1->getTitle(), $response2->getTitle(), '->mergerProperties() merges titles');

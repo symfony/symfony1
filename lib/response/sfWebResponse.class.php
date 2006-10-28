@@ -470,35 +470,7 @@ class sfWebResponse extends sfResponse
 
   public function mergeProperties($response)
   {
-    $ph  = $this->getParameterHolder();
-    $phn = $response->getParameterHolder();
-
-    // slots
-    $ph->add($phn->getAll('symfony/view/sfView/slot'), 'symfony/view/sfView/slot');
-
-    // view configuration
-    $ph->add($phn->getAll('symfony/action/view'), 'symfony/action/view');
-
-    // add stylesheets
-    foreach (array('first', '', 'last') as $position)
-    {
-      $ph->add($response->getStylesheets($position), 'helper/asset/auto/stylesheet'.$position);
-    }
-
-    // add javascripts
-    foreach (array('first', '', 'last') as $position)
-    {
-      $ph->add($response->getJavascripts($position), 'helper/asset/auto/javascript'.$position);
-    }
-
-    // add headers
-    foreach ($response->getHttpHeaders() as $name => $values)
-    {
-      foreach ($values as $value)
-      {
-        $this->setHttpHeader($name, $value);
-      }
-    }
+    $this->parameter_holder = clone $response->getParameterHolder();
   }
 
   public function __sleep()

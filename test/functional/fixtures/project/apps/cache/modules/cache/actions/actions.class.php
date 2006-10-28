@@ -34,4 +34,16 @@ class cacheActions extends sfActions
   public function executeSpecificCacheKey()
   {
   }
+
+  public function executeAction()
+  {
+    $response = $this->getResponse();
+    $response->setHttpHeader('symfony', 'foo');
+    $response->setContentType('text/plain');
+    $response->setTitle('My title');
+    $response->addMeta('meta1', 'bar');
+    $response->addHttpMeta('httpmeta1', 'foobar');
+
+    sfConfig::set('ACTION_EXECUTED', true);
+  }
 }
