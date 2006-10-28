@@ -350,7 +350,8 @@ function _upgrade_0_8_main_config_php()
     $data_dir = sfConfig::get('sf_symfony_data_dir');
     if (is_link('lib/symfony') && is_link('data/symfony'))
     {
-      $content .= <<<EOF
+      $config = <<<EOF
+
 
 \$sf_symfony_lib_dir  = dirname(__FILE__).'/../lib/symfony';
 \$sf_symfony_data_dir = dirname(__FILE__).'/../data/symfony';
@@ -359,13 +360,16 @@ EOF;
     }
     else
     {
-      $content .= <<<EOF
+      $config = <<<EOF
+
 
 \$sf_symfony_lib_dir  = '$lib_dir';
 \$sf_symfony_data_dir = '$data_dir';
 
 EOF;
     }
+
+    $content = preg_replace('/^<\?php/s', '<?php'.$config, $content);
 
     file_put_contents(sfConfig::get('sf_root_dir').'/config/config.php', $content);
   }
