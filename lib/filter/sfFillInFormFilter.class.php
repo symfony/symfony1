@@ -98,11 +98,9 @@ class sfFillInFormFilter extends sfFilter
         }
         else if ($element->nodeName == 'textarea')
         {
-          foreach ($element->childNodes as $child_node)
-          {
-            $element->removeChild($child_node);
-          }
-          $element->appendChild($doc->createTextNode($this->escapeRequestParameter($request, $element->getAttribute('name'))));
+          $el = $element->cloneNode(false);
+          $el->appendChild($doc->createTextNode($this->escapeRequestParameter($request, $element->getAttribute('name'))));
+          $element->parentNode->replaceChild($el, $element);
         }
         else if ($element->nodeName == 'select')
         {
