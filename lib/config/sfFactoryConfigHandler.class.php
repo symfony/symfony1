@@ -112,14 +112,6 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           $inits[] = sprintf("  \$this->response->initialize(\$this);");
           break;
 
-        case 'security_filter':
-          // append creation/initialization in one swipe
-          $inits[] = sprintf("\n  if (sfConfig::get('sf_use_security'))\n  {\n" .
-                             "    \$this->securityFilter = sfSecurityFilter::newInstance(sfConfig::get('sf_factory_security_filter', '%s'));\n".
-                             "    \$this->securityFilter->initialize(\$this, %s);\n  }\n",
-                             $class, $parameters);
-          break;
-
         case 'storage':
           // append instance creation
           $instances[] = sprintf("  \$this->storage = sfStorage::newInstance(sfConfig::get('sf_factory_storage', '%s'));", $class);
@@ -136,14 +128,21 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           $inits[] = sprintf("  \$this->user->initialize(\$this, %s);", $parameters);
           break;
 
+        case 'security_filter':
+          // append creation/initialization in one swipe
+          $inits[] = sprintf("\n  if (sfConfig::get('sf_use_security'))\n  {\n".
+                             "    sfConfig::set('sf_factory_security_filter', array('%s', %s));\n  }\n",
+                             $class, $parameters);
+          break;
+
         case 'execution_filter':
           // append execution filter class name
-          $inits[] = sprintf("  \$this->controller->setExecutionFilterClassName(sfConfig::get('sf_factory_execution_filter', '%s'));", $class);
+          $inits[] = sprintf("  sfConfig::set('sf_factory_execution_filter', array('%s', %s));", $class, $parameters);
           break;
 
         case 'rendering_filter':
           // append rendering filter class name
-          $inits[] = sprintf("  \$this->controller->setRenderingFilterClassName(sfConfig::get('sf_factory_rendering_filter', '%s'));", $class);
+          $inits[] = sprintf("  sfConfig::set('sf_factory_rendering_filter', array('%s', %s));", $class, $parameters);
           break;
 
         case 'view_cache':

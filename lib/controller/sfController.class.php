@@ -25,8 +25,6 @@ abstract class sfController
     $controllerClasses        = array(),
     $maxForwards              = 5,
     $renderMode               = sfView::RENDER_CLIENT,
-    $executionFilterClassName = null,
-    $renderingFilterClassName = null,
     $viewCacheClassName       = null;
 
   /**
@@ -255,68 +253,7 @@ abstract class sfController
       {
         // create a new filter chain
         $filterChain = new sfFilterChain();
-
-        // register the rendering filter
-        $renderFilter = new $this->renderingFilterClassName();
-        $renderFilter->initialize($this->context);
-        $filterChain->register($renderFilter);
-
-        if (sfConfig::get('sf_web_debug'))
-        {
-          // register web debug toolbar filter
-          $webDebugFilter = new sfWebDebugFilter();
-          $webDebugFilter->initialize($this->context);
-          $filterChain->register($webDebugFilter);
-        }
-
-        if (sfConfig::get('sf_available'))
-        {
-          // the application is available so we'll register
-          // global and module filters, otherwise skip them
-
-          // does this action require security?
-          if (sfConfig::get('sf_use_security') && $actionInstance->isSecure())
-          {
-            if (!in_array('sfSecurityUser', class_implements($this->context->getUser())))
-            {
-              $error = 'Security is enabled, but your sfUser implementation does not implement sfSecurityUser interface';
-              throw new sfSecurityException($error);
-            }
-
-            // register security filter
-            $filterChain->register($this->context->getSecurityFilter());
-          }
-
-          // load filters
-          $this->loadGlobalFilters($filterChain);
-          $this->loadModuleFilters($filterChain);
-        }
-
-        if (sfConfig::get('sf_cache'))
-        {
-          // register cache filter
-          $cacheFilter = new sfCacheFilter();
-          $cacheFilter->initialize($this->context);
-          $filterChain->register($cacheFilter);
-        }
-
-        // register common HTTP filter
-        $commonFilter = new sfCommonFilter();
-        $commonFilter->initialize($this->context);
-        $filterChain->register($commonFilter);
-
-        if (sfConfig::get('sf_use_flash'))
-        {
-          // register flash filter
-          $flashFilter = new sfFlashFilter();
-          $flashFilter->initialize($this->context);
-          $filterChain->register($flashFilter);
-        }
-
-        // register the execution filter
-        $execFilter = new $this->executionFilterClassName();
-        $execFilter->initialize($this->context);
-        $filterChain->register($execFilter);
+        $this->loadFilters($filterChain, $actionInstance);
 
         if ($moduleName == sfConfig::get('sf_error_404_module') && $actionName == sfConfig::get('sf_error_404_action'))
         {
@@ -484,30 +421,6 @@ abstract class sfController
   }
 
   /**
-   * Set the name of the ExecutionFilter class that is used in forward()
-   *
-   * @param string The class name of the ExecutionFilter to use
-   *
-   * @return void
-   */
-  public function setExecutionFilterClassName($className)
-  {
-    $this->executionFilterClassName = $className;
-  }
-
-  /**
-   * Set the name of the RenderingFilter class that is used in forward()
-   *
-   * @param string The class name of the RenderingFilter to use
-   *
-   * @return void
-   */
-  public function setRenderingFilterClassName($className)
-  {
-    $this->renderingFilterClassName = $className;
-  }
-
-  /**
    * Initialize this controller.
    *
    * @return void
@@ -523,63 +436,6 @@ abstract class sfController
 
     // set max forwards
     $this->maxForwards = sfConfig::get('sf_max_forwards');
-  }
-
-  /**
-   * Load global filters.
-   *
-   * @param FilterChain A FilterChain instance.
-   *
-   * @return void
-   */
-  protected function loadGlobalFilters ($filterChain)
-  {
-    static $list = array();
-
-    // grab our global filter yaml and preset the module name
-    $moduleName = 'global';
-
-    if (!isset($list[$moduleName]))
-    {
-      // load global filters
-      require_once(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/filters.yml'));
-    }
-
-    // register filters
-    foreach ($list[$moduleName] as $filter)
-    {
-      $filterChain->register($filter);
-    }
-  }
-
-  /**
-   * Load module filters.
-   *
-   * @param FilterChain A FilterChain instance.
-   *
-   * @return void
-   */
-  protected function loadModuleFilters ($filterChain)
-  {
-    // filter list cache file
-    static $list = array();
-
-    // get the module name
-    $moduleName = $this->context->getModuleName();
-
-    if (!isset($list[$moduleName]))
-    {
-      // we haven't loaded a filter list for this module yet
-      $config = $moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/filters.yml';
-
-      require_once(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$config));
-    }
-
-    // register filters
-    foreach ((array) $list[$moduleName] as $filter)
-    {
-      $filterChain->register($filter);
-    }
   }
 
   /**
@@ -660,5 +516,92 @@ abstract class sfController
     array_unshift($arguments, $this);
 
     return call_user_func_array($callable, $arguments);
+  }
+
+  /**
+   * Load module filters.
+   *
+   * @param sfFilterChain A sfFilterChain instance.
+   * @param sfAction      A sfAction instance.
+   *
+   * @return void
+   */
+  public function loadFilters($filterChain, $actionInstance)
+  {
+    // register the rendering filter
+    list($renderingFilterClassName, $renderingFilterParameters) = (array) sfConfig::get('sf_factory_rendering_filter');
+    if (!class_exists($renderingFilterClassName))
+    {
+      throw new sfConfigurationException(sprintf('Rendering filter class "%s" does not exists', $renderingFilterClassName));
+    }
+    $renderFilter = new $renderingFilterClassName();
+    $renderFilter->initialize($this->context, $renderingFilterParameters);
+    $filterChain->register($renderFilter);
+
+    if (sfConfig::get('sf_web_debug'))
+    {
+      // register web debug toolbar filter
+      $webDebugFilter = new sfWebDebugFilter();
+      $webDebugFilter->initialize($this->context);
+      $filterChain->register($webDebugFilter);
+    }
+
+    if (sfConfig::get('sf_available'))
+    {
+      // the application is available so we'll register
+      // global and module filters, otherwise skip them
+
+      // does this action require security?
+      if (sfConfig::get('sf_use_security') && $actionInstance->isSecure())
+      {
+        if (!in_array('sfSecurityUser', class_implements($this->context->getUser())))
+        {
+          $error = 'Security is enabled, but your sfUser implementation does not implement sfSecurityUser interface';
+          throw new sfSecurityException($error);
+        }
+
+        // register security filter
+        list($securityFilterClassName, $securityFilterParameters) = (array) sfConfig::get('sf_factory_security_filter');
+        $securityFilter = sfSecurityFilter::newInstance($securityFilterClassName);
+        $securityFilter->initialize($this->context, $securityFilterParameters);
+        $filterChain->register($securityFilter);
+      }
+
+      $moduleName = $this->context->getModuleName();
+
+      // register module/global filters
+      require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/filters.yml'));
+    }
+
+    if (sfConfig::get('sf_cache'))
+    {
+      // register cache filter
+      $cacheFilter = new sfCacheFilter();
+      $cacheFilter->initialize($this->context);
+      $filterChain->register($cacheFilter);
+    }
+
+    // register common HTTP filter
+    $commonFilter = new sfCommonFilter();
+    $commonFilter->initialize($this->context);
+    $filterChain->register($commonFilter);
+
+    if (sfConfig::get('sf_use_flash'))
+    {
+      // register flash filter
+      $flashFilter = new sfFlashFilter();
+      $flashFilter->initialize($this->context);
+      $filterChain->register($flashFilter);
+    }
+
+    // register the execution filter
+    list($executionFilterClassName, $executionFilterParameters) = (array) sfConfig::get('sf_factory_execution_filter');
+    if (!class_exists($executionFilterClassName))
+    {
+      throw new sfConfigurationException(sprintf('Execution filter class "%s" does not exists', $executionFilterClassName));
+    }
+    $execFilter = new $executionFilterClassName();
+    $execFilter->initialize($this->context, $executionFilterParameters);
+    $filterChain->register($execFilter);
   }
 }

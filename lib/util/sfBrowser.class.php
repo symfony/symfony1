@@ -122,9 +122,10 @@ class sfBrowser
     // launch request via controller
     $controller = $this->context->getController();
     $request    = $this->context->getRequest();
+    $response   = $this->context->getResponse();
 
     // we register a fake rendering filter
-    $controller->setRenderingFilterClassName('sfFakeRenderingFilter');
+    sfConfig::set('sf_factory_rendering_filter', array('sfFakeRenderingFilter', null));
 
     // dispatch our request
     ob_start();
@@ -132,7 +133,7 @@ class sfBrowser
     $retval = ob_get_clean();
 
     // append retval to the response content
-    $this->getResponse()->setContent($retval);
+    $response->setContent($retval);
 
     // manually shutdown user to save current session data
     $this->context->getUser()->shutdown();
@@ -140,18 +141,18 @@ class sfBrowser
 
     // save cookies
     $this->cookieJar = array();
-    foreach ($this->getResponse()->getCookies() as $name => $cookie)
+    foreach ($response->getCookies() as $name => $cookie)
     {
       // FIXME: deal with expire, path, secure, ...
       $this->cookieJar[$name] = $cookie;
     }
 
     // for HTML/XML content, create a DOM and sfDomCssSelector objects for the response content
-    if (preg_match('/(x|ht)ml/i', $this->getResponse()->getContentType()))
+    if (preg_match('/(x|ht)ml/i', $response->getContentType()))
     {
       $this->dom = new DomDocument('1.0', sfConfig::get('sf_charset'));
       $this->dom->validateOnParse = true;
-      @$this->dom->loadHTML($this->getResponse()->getContent());
+      @$this->dom->loadHTML($response->getContent());
       $this->domCssSelector = new sfDomCssSelector($this->dom);
     }
 

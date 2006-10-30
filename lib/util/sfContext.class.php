@@ -30,7 +30,6 @@ class sfContext
     $request           = null,
     $response          = null,
     $storage           = null,
-    $securityFilter    = null,
     $viewCacheManager  = null,
     $i18n              = null,
     $logger            = null,
@@ -274,16 +273,6 @@ class sfContext
   public function getStorage ()
   {
     return $this->storage;
-  }
-
-  /**
-   * Retrieve the securityFilter
-   *
-   * @return sfSecurityFilter The current sfSecurityFilter implementation instance.
-   */
-  public function getSecurityFilter ()
-  {
-    return $this->securityFilter;
   }
 
   /**
