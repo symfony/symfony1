@@ -241,7 +241,7 @@ class sfWebDebug
       $dbInfo = '<li><a href="#" onclick="sfWebDebugShowDetailsFor(\'sfWebDebugDatabaseDetails\'); return false;">'.image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/database.png').' '.$nb.'</a></li>';
 
       $dbInfoDetails = '
-        <div id="sfWebDebugDatabaseDetails">
+        <div id="sfWebDebugDatabaseLogs">
         <ol><li>'.implode('</li><li>', $sql_logs).'</li></ol>
         </div>
       ';
@@ -292,7 +292,7 @@ class sfWebDebug
           <li><a href="#" onclick="sfWebDebugShowOnlyLogLines(\'error\'); return false;">'.image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/error.png').'</a></li>
           <li>'.implode("</li>\n<li>", $types).'</li>
         </ul>
-        <div id="sfWebDebugLog">'.$logs.'</div>
+        <div id="sfWebDebugLogLines">'.$logs.'</div>
       ';
     }
 
