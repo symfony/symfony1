@@ -121,7 +121,7 @@ $b->
 // save
 $b->
   click('save', array('title' => 'my title', 'body' => 'my body', 'online' => true, 'category_id' => 2))->
-  isStatusCode(200)->
+  isStatusCode(302)->
   isRequestParameter('module', 'simple')->
   isRequestParameter('action', 'update')->
   isRedirected()
@@ -155,7 +155,7 @@ $b->
   get('/simple/edit/id/3')->
 
   click('delete')->
-  isStatusCode(200)->
+  isStatusCode(302)->
   isRequestParameter('module', 'simple')->
   isRequestParameter('action', 'delete')->
   isRedirected()->

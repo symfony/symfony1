@@ -303,13 +303,13 @@ abstract class sfAction extends sfComponent
    * @param  string url
    * @throws sfStopException always
    */
-  public function redirect($url)
+  public function redirect($url, $statusCode = 302)
   {
     $url = $this->getController()->genUrl($url, true);
 
     if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfAction} redirect to "'.$url.'"');
 
-    $this->getController()->redirect($url);
+    $this->getController()->redirect($url, 0, $statusCode);
 
     throw new sfStopException();
   }

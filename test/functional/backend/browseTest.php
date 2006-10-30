@@ -166,7 +166,7 @@ $b->
 // save
 $b->
   click('save', array('article' => array('title' => 'my title', 'body' => 'my body', 'category_id' => 2)))->
-  isStatusCode(200)->
+  isStatusCode(302)->
   isRequestParameter('module', 'article')->
   isRequestParameter('action', 'edit')->
 
@@ -187,7 +187,7 @@ $b->
 // save and add
 $b->
   click('save and add')->
-  isStatusCode(200)->
+  isStatusCode(302)->
   isRequestParameter('module', 'article')->
   isRequestParameter('action', 'edit')->
 
@@ -209,7 +209,7 @@ $b->
   checkResponseElement('body form#sf_admin_edit_form input[name="article[title]"][id="article_title"][value=""]')->
 
   click('save', array('article' => array('title' => 'new title', 'body' => 'new body', 'category_id' => 2)))->
-  isStatusCode(200)->
+  isStatusCode(302)->
   isRequestParameter('module', 'article')->
   isRequestParameter('action', 'edit')->
 
@@ -235,7 +235,7 @@ $b->
 // delete
 $b->
   post('/article/delete/id/3')->
-  isStatusCode(200)->
+  isStatusCode(302)->
   isRequestParameter('module', 'article')->
   isRequestParameter('action', 'delete')->
   isRedirected()->
