@@ -205,7 +205,7 @@ function _upgrade_0_8_cache_yml($app_dir)
     {
       $seen = true;
       pake_echo_comment('"type" has been removed in cache.yml');
-      pake_echo_comment(' read the doc about "with_layout"');
+      pake_echo_comment('  read the doc about "with_layout"');
     }
 
     file_put_contents($yml_file, $content);
@@ -300,14 +300,14 @@ function _upgrade_0_8_deprecated_for_templates($template_dirs)
     $content = file_get_contents($php_file);
 
     $count = 0;
-    $content = preg_replace('#<\?php\s+include_javascripts\(\);?\s*\?>#', '', $content, -1, $count);
+    $content = preg_replace('#<\?php\s+(echo)?\s+include_javascripts\(\);?\s*\?>#', '', $content, -1, $count);
     if ($count && !isset($seen['include_javascripts']))
     {
       $seen['include_javascripts'] = true;
       pake_echo_comment('include_javascripts() has been removed');
     }
 
-    $content = preg_replace('#<\?php\s+include_stylesheets\(\);?\s*\?>#', '', $content, -1, $count);
+    $content = preg_replace('#<\?php\s+(echo)?\s+include_stylesheets\(\);?\s*\?>#', '', $content, -1, $count);
     if ($count && !isset($seen['include_stylesheets']))
     {
       $seen['include_stylesheets'] = true;
