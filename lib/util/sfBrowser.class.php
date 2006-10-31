@@ -82,6 +82,7 @@ class sfBrowser
     // prepare the request object
     unset($_SERVER['argv']);
     $_SERVER['HTTP_HOST']       = $this->hostname ? $this->hostname : sfConfig::get('sf_app').'-'.sfConfig::get('sf_environment');
+    $_SERVER['SERVER_NAME']     = $_SERVER['HTTP_HOST'];
     $_SERVER['SERVER_PORT']     = 80;
     $_SERVER['HTTP_USER_AGENT'] = 'PHP5/CLI';
     $_SERVER['REMOTE_ADDR']     = $this->remote ? $this->remote : '127.0.0.1';
