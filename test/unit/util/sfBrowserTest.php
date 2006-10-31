@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(36, new lime_output_color());
+$t = new lime_test(38, new lime_output_color());
 
 // ->click()
 $t->diag('->click()');
@@ -35,6 +35,7 @@ $html = <<<EOF
 <html>
   <body>
     <a href="/mylink">test link</a>
+    <a href="/myimagelink"><img src="myimage.gif" alt="image link" /></a>
     <form action="/myform" method="post">
       <input type="text" name="text_default_value" value="default" />
       <input type="text" name="text" value="" />
@@ -78,6 +79,7 @@ $html = <<<EOF
     <form action="/myform4">
       <div><span>
         <input type="submit" name="submit" value="submit4" />
+        <input type="image" src="myimage.png" alt="image submit" name="submit_image" value="image" />
       </span></div>
     </form>
   </body>
@@ -98,6 +100,9 @@ catch (Exception $e)
 
 list($method, $uri, $parameters) = $b->click('test link');
 $t->is($uri, '/mylink', '->click() clicks on links');
+
+list($method, $uri, $parameters) = $b->click('image link');
+$t->is($uri, '/myimagelink', '->click() clicks on image links');
 
 list($method, $uri, $parameters) = $b->click('submit');
 $t->is($method, 'post', '->click() gets the form method');
@@ -131,6 +136,9 @@ $t->is($uri, '/myform3?key=value&text_default_value=default&submit=submit3', '->
 
 list($method, $uri, $parameters) = $b->click('submit4');
 $t->is($uri, '/myform4?submit=submit4', '->click() can click on submit button anywhere in a form');
+
+list($method, $uri, $parameters) = $b->click('image submit');
+$t->is($uri, '/myform4?submit_image=image', '->click() can click on image button in forms');
 
 list($method, $uri, $parameters) = $b->click('submit', array(
   'text_default_value' => 'myvalue',

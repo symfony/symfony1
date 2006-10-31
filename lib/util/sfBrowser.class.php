@@ -240,14 +240,20 @@ class sfBrowser
     $xpath = new DomXpath($this->dom);
     $dom   = $this->dom;
 
-    // link
+    // text link
     if ($link = $xpath->query(sprintf('//a[.="%s"]', $name))->item(0))
     {
       return $this->get($link->getAttribute('href'));
     }
 
+    // image link
+    if ($link = $xpath->query(sprintf('//a/img[@alt="%s"]/ancestor::a', $name))->item(0))
+    {
+      return $this->get($link->getAttribute('href'));
+    }
+
     // form
-    if (!$form = $xpath->query(sprintf('//input[(@type="submit" or @type="button") and @value="%s"]/ancestor::form', $name))->item(0))
+    if (!$form = $xpath->query(sprintf('//input[((@type="submit" or @type="button") and @value="%s") or (@type="image" and @alt="%s")]/ancestor::form', $name, $name))->item(0))
     {
       throw new sfException(sprintf('Cannot find the "%s" link or button.', $name));
     }
@@ -262,7 +268,13 @@ class sfBrowser
     {
       $elementName = $element->getAttribute('name');
       $value = null;
-      if ($element->nodeName == 'input' && (($element->getAttribute('type') != 'submit' && $element->getAttribute('type') != 'button') || $element->getAttribute('value') == $name))
+      if (
+        $element->nodeName == 'input'
+        &&
+        (($element->getAttribute('type') != 'submit' && $element->getAttribute('type') != 'button') || $element->getAttribute('value') == $name)
+        &&
+        ($element->getAttribute('type') != 'image' || $element->getAttribute('alt') == $name)
+      )
       {
         $value = $element->getAttribute('value');
       }
