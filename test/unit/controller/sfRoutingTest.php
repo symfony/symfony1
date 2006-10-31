@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(60, new lime_output_color());
+$t = new lime_test(62, new lime_output_color());
 
 // public methods
 $r = sfRouting::getInstance();
@@ -237,3 +237,26 @@ $r->connect('test', '/test/:foo/:id', array('module' => 'default', 'action' => '
 $params = array('module' => 'default', 'action' => 'index', 'id' => 12);
 $url = '/test/bar/12';
 $t->is($r->generate('', $params), $url, '->generate() merge parameters with defaults from "sf_routing_defaults"');
+
+// ->appendRoute()
+$t->diag('->appendRoute()');
+$r->clearRoutes();
+$r->connect('test',  '/:module', array('action' => 'index'));
+$r->connect('test1', '/:module/:action/*', array());
+$routes = $r->getRoutes();
+$r->clearRoutes();
+$r->appendRoute('test',  '/:module', array('action' => 'index'));
+$r->appendRoute('test1', '/:module/:action/*', array());
+$t->is($r->getRoutes(), $routes, '->appendRoute() is an alias for ->connect()');
+
+// ->prependRoute()
+$t->diag('->prependRoute()');
+$r->clearRoutes();
+$r->connect('test',  '/:module', array('action' => 'index'));
+$r->connect('test1', '/:module/:action/*', array());
+$route_names = array_keys($r->getRoutes());
+$r->clearRoutes();
+$r->prependRoute('test',  '/:module', array('action' => 'index'));
+$r->prependRoute('test1', '/:module/:action/*', array());
+$p_route_names = array_keys($r->getRoutes());
+$t->is(implode('-', $p_route_names), implode('-', array_reverse($route_names)), '->prependRoute() adds new routes at the beginning of the existings ones');

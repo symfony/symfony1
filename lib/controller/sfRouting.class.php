@@ -166,8 +166,35 @@ class sfRouting
     $this->routes = array();
   }
 
+  /**
+   * Adds a new route at the beginning of the current list of routes.
+   *
+   * @see connect
+   */
+  public function prependRoute($name, $route, $default = array(), $requirements = array())
+  {
+    $routes = $this->routes;
+    $this->routes = array();
+    $newroutes = $this->connect($name, $route, $default, $requirements);
+    $this->routes = array_merge($newroutes, $routes);
+
+    return $this->routes;
+  }
+
+  /**
+   * Adds a new route.
+   *
+   * Alias for the connect method.
+   *
+   * @see connect
+   */
+  public function appendRoute($name, $route, $default = array(), $requirements = array())
+  {
+    return $this->connect($name, $route, $default, $requirements);
+  }
+
  /**
-  * Adds a new route.
+  * Adds a new route at the end of the current list of routes.
   *
   * A route string is a string with 2 special constructions:
   * - :string: :string denotes a named paramater (available later as $request->getParameter('string'))
