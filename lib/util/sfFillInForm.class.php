@@ -1,0 +1,207 @@
+<?php
+
+/*
+ * This file is part of the symfony package.
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+/**
+ *
+ * @package    symfony
+ * @subpackage util
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @version    SVN: $Id$
+ */
+class sfFillInForm
+{
+  protected
+    $converters  = array(),
+    $skipFields  = array(),
+    $types       = array('text', 'checkbox', 'radio', 'hidden', 'password');
+
+  public function addConverter($callable, $fields)
+  {
+    foreach ((array) $fields as $field)
+    {
+      $this->converters[$field][] = $callable;
+    }
+  }
+
+  public function setSkipFields($fields)
+  {
+    $this->skipFields = $fields;
+  }
+
+  public function setTypes($types)
+  {
+    $this->types = $types;
+  }
+
+  public function fillIn($html, $formName, $values)
+  {
+    $dom = new DomDocument('1.0', sfConfig::get('sf_charset', 'UTF-8'));
+    @$dom->loadHTML($html);
+
+    $dom = $this->fillInDom($dom, $formName, $values);
+
+    return $dom->saveHTML();
+  }
+
+  public function fillInDom($dom, $formName, $values)
+  {
+    $xpath = new DomXPath($dom);
+
+    $query = 'descendant::input[@name and (not(@type)';
+    foreach ($this->types as $type)
+    {
+      $query .= ' or @type="'.$type.'"';
+    }
+    $query .= ')] | descendant::textarea[@name] | descendant::select[@name]';
+
+    // find our form
+    $xpath_query = $formName ? '//form[@name="'.$formName.'"]' : '//form';
+    if ($form = $xpath->query($xpath_query)->item(0))
+    {
+      foreach ($xpath->query($query, $form) as $element)
+      {
+        $name  = (string) $element->getAttribute('name');
+        $value = (string) $element->getAttribute('value');
+        $type  = (string) $element->getAttribute('type');
+
+        // skip fields
+        if (!$this->hasValue($values, $name) || in_array($name, $this->skipFields))
+        {
+          continue;
+        }
+
+        if ($element->nodeName == 'input')
+        {
+          if ($type == 'checkbox' || $type == 'radio')
+          {
+            // checkbox and radio
+            $element->removeAttribute('checked');
+            if ($this->hasValue($values, $name) && ($this->getValue($values, $name) == $value || !$element->hasAttribute('value')))
+            {
+              $element->setAttribute('checked', 'checked');
+            }
+          }
+          else
+          {
+            // text input
+            $element->removeAttribute('value');
+            if ($this->hasValue($values, $name))
+            {
+              $element->setAttribute('value', $this->escapeValue($this->getValue($values, $name), $name));
+            }
+          }
+        }
+        else if ($element->nodeName == 'textarea')
+        {
+          $el = $element->cloneNode(false);
+          $el->appendChild($dom->createTextNode($this->escapeValue($this->getValue($values, $name), $name)));
+          $element->parentNode->replaceChild($el, $element);
+        }
+        else if ($element->nodeName == 'select')
+        {
+          // select
+          $value    = $this->getValue($values, $name);
+          $multiple = $element->hasAttribute('multiple');
+          foreach ($xpath->query('descendant::option', $element) as $option)
+          {
+            $option->removeAttribute('selected');
+            if ($multiple && is_array($value))
+            {
+              if (in_array($option->getAttribute('value'), $value))
+              {
+                $option->setAttribute('selected', 'selected');
+              }
+            }
+            else if ($value == $option->getAttribute('value'))
+            {
+              $option->setAttribute('selected', 'selected');
+            }
+          }
+        }
+      }
+    }
+
+    return $dom;
+  }
+
+  protected function hasValue($values, $name)
+  {
+    if (array_key_exists($name, $values))
+    {
+      return true;
+    }
+
+    return null !== $this->getValueForStringKey($values, $name);
+  }
+
+  protected function getValue($values, $name)
+  {
+    if (array_key_exists($name, $values))
+    {
+      return $values[$name];
+    }
+
+    return $this->getValueForStringKey($values, $name);
+  }
+
+// FIXME: dans sfToolkit et l'appeler dans sfParameterHolder
+  protected function getValueForStringKey($values, $name, $default = null)
+  {
+    if (false !== ($offset = strpos($name, '[')))
+    {
+      if (isset($values[substr($name, 0, $offset)]))
+      {
+        $array = $values[substr($name, 0, $offset)];
+
+        while ($pos = strpos($name, '[', $offset))
+        {
+          $end = strpos($name, ']', $pos);
+          if ($end == $pos + 1)
+          {
+            // reached a []
+            break;
+          }
+          else if (!isset($array[substr($name, $pos + 1, $end - $pos - 1)]))
+          {
+            return $default;
+          }
+          $array = $array[substr($name, $pos + 1, $end - $pos - 1)];
+          $offset = $end;
+        }
+
+        return $array;
+      }
+    }
+
+    return $default;
+  }
+
+  protected function escapeValue($value, $name)
+  {
+    if (extension_loaded('iconv') && strtolower(sfConfig::get('sf_charset')) != 'utf-8')
+    {
+      $new_value = iconv(sfConfig::get('sf_charset'), 'UTF-8', $value);
+      if (false !== $new_value)
+      {
+        $value = $new_value;
+      }
+    }
+
+    if (isset($this->converters[$name]))
+    {
+      foreach ($this->converters[$name] as $callable)
+      {
+        $value = call_user_func($callable, $value);
+      }
+    }
+
+    return $value;
+  }
+}

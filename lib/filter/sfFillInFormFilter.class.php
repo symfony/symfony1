@@ -17,8 +17,6 @@
  */
 class sfFillInFormFilter extends sfFilter
 {
-  protected $escapers = array();
-
   public function execute($filterChain)
   {
     // execute next filter
@@ -28,136 +26,25 @@ class sfFillInFormFilter extends sfFilter
     $response = $context->getResponse();
     $request  = $context->getRequest();
 
-    $doc = new DomDocument('1.0', sfConfig::get('sf_charset'));
-    @$doc->loadHTML($response->getContent());
-    $xpath = new DomXPath($doc);
+    $fillInForm = new sfFillInForm();
 
-    // load converters
-    foreach ($this->getParameter('converters', array()) as $functionName => $parameters)
+    // converters
+    foreach ($this->getParameter('converters', array()) as $functionName => $fields)
     {
-      if (!is_array($parameters))
-      {
-        $parameters = array($parameters);
-      }
-
-      foreach ($parameters as $parameter)
-      {
-        $this->escapers[$parameter][] = $functionName;
-      }
+      $fillInform->addConverter($functionName, $fields);
     }
 
-    $skip_fields = $this->getParameter('skip_fields', array());
+    // skip fields
+    $fillInForm->setSkipFields($this->getParameter('skip_fields', array()));
 
-    $exclude_types = $this->getParameter('exclude_types', array('hidden', 'password'));
-    $check_types   = $this->getParameter('check_types',   array('text', 'checkbox', 'radio', 'password', 'hidden'));
-    $types = array_diff($check_types, $exclude_types);
-    $query = 'descendant::input[@name and (not(@type)';
-    foreach ($types as $type)
-    {
-      $query .= ' or @type="'.$type.'"';
-    }
-    $query .= ')] | descendant::textarea[@name] | descendant::select[@name]';
+    // types
+    $excludeTypes = $this->getParameter('exclude_types', array('hidden', 'password'));
+    $checkTypes   = $this->getParameter('check_types',   array('text', 'checkbox', 'radio', 'password', 'hidden'));
+    $fillInForm->setTypes(array_diff($checkTypes, $excludeTypes));
 
-    // find our form
-    $xpath_query = $this->getParameter('name') ? '//form[@name="'.$this->getParameter('name').'"]' : '//form';
-    if ($form = $xpath->query($xpath_query)->item(0))
-    {
-      $filledFields = array();
+    // fill in
+    $content = $fillInForm->fillIn($response->getContent(), $this->getParameter('name'), $request->getParameterHolder()->getAll());
 
-      foreach ($xpath->query($query, $form) as $element)
-      {
-        // skip fields specified in the 'skip_fields' attribute
-        if ($request->hasParameter($element->getAttribute('name')) && in_array($element->getAttribute('name'), $skip_fields))
-        {
-          continue;
-        }
-
-        $filledFields[] = $element->getAttribute('name');
-
-        if ($element->nodeName == 'input')
-        {
-          if ($element->getAttribute('type') == 'checkbox' || $element->getAttribute('type') == 'radio')
-          {
-            // checkbox and radio
-            $name = $element->getAttribute('name');
-            $element->removeAttribute('checked');
-            if ($request->hasParameter($name) && ($request->getParameter($name) == $element->getAttribute('value') || !$element->hasAttribute('value')))
-            {
-              $element->setAttribute('checked', 'checked');
-            }
-          }
-          else
-          {
-            // text input
-            $element->removeAttribute('value');
-            if ($request->hasParameter($element->getAttribute('name')))
-            {
-              $element->setAttribute('value', $this->escapeRequestParameter($request, $element->getAttribute('name')));
-            }
-          }
-        }
-        else if ($element->nodeName == 'textarea')
-        {
-          $el = $element->cloneNode(false);
-          $el->appendChild($doc->createTextNode($this->escapeRequestParameter($request, $element->getAttribute('name'))));
-          $element->parentNode->replaceChild($el, $element);
-        }
-        else if ($element->nodeName == 'select')
-        {
-          // select
-          $name     = $element->getAttribute('name');
-          $value    = $request->getParameter($name);
-          $multiple = $element->hasAttribute('multiple');
-          foreach ($xpath->query('descendant::option', $element) as $option)
-          {
-            $option->removeAttribute('selected');
-            if ($multiple && is_array($value))
-            {
-              if (in_array($option->getAttribute('value'), $value))
-              {
-                $option->setAttribute('selected', 'selected');
-              }
-            }
-            else if ($value == $option->getAttribute('value'))
-            {
-              $option->setAttribute('selected', 'selected');
-            }
-          }
-        }
-      } // foreach
-
-      if (sfConfig::get('sf_logging_active'))
-      {
-        $context->getLogger()->info(sprintf('{sfFillInFilter} Filled the following fields: %s', implode(', ', $filledFields)));
-      }
-    }
-
-    $response->setContent($doc->saveHTML());
-
-    unset($doc);
-  }
-
-  protected function escapeRequestParameter($request, $name)
-  {
-    $value = $request->getParameter($name);
-
-    if (extension_loaded('iconv') && strtolower(sfConfig::get('sf_charset')) != 'utf-8')
-    {
-      $new_value = iconv(sfConfig::get('sf_charset'), 'UTF-8', $value);
-      if (false !== $new_value)
-      {
-        $value = $new_value;
-      }
-    }
-
-    if (isset($this->escapers[$name]))
-    {
-      foreach ($this->escapers[$name] as $function)
-      {
-        $value = $function($value);
-      }
-    }
-
-    return $value;
+    $response->setContent($content);
   }
 }
