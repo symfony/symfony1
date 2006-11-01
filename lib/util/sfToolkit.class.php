@@ -408,4 +408,35 @@ class sfToolkit
            |  \xF4[\x80-\x8F][\x80-\xBF]{2}     # plane 16
        )*$%xs', $string);
   }
+
+  public static function getArrayValueForPath($values, $name, $default = null)
+  {
+    if (false !== ($offset = strpos($name, '[')))
+    {
+      if (isset($values[substr($name, 0, $offset)]))
+      {
+        $array = $values[substr($name, 0, $offset)];
+
+        while ($pos = strpos($name, '[', $offset))
+        {
+          $end = strpos($name, ']', $pos);
+          if ($end == $pos + 1)
+          {
+            // reached a []
+            break;
+          }
+          else if (!isset($array[substr($name, $pos + 1, $end - $pos - 1)]))
+          {
+            return $default;
+          }
+          $array = $array[substr($name, $pos + 1, $end - $pos - 1)];
+          $offset = $end;
+        }
+
+        return $array;
+      }
+    }
+
+    return $default;
+  }
 }

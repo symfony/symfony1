@@ -138,7 +138,7 @@ class sfFillInForm
       return true;
     }
 
-    return null !== $this->getValueForStringKey($values, $name);
+    return null !== sfToolkit::getArrayValueForPath($values, $name);
   }
 
   protected function getValue($values, $name)
@@ -148,39 +148,7 @@ class sfFillInForm
       return $values[$name];
     }
 
-    return $this->getValueForStringKey($values, $name);
-  }
-
-// FIXME: dans sfToolkit et l'appeler dans sfParameterHolder
-  protected function getValueForStringKey($values, $name, $default = null)
-  {
-    if (false !== ($offset = strpos($name, '[')))
-    {
-      if (isset($values[substr($name, 0, $offset)]))
-      {
-        $array = $values[substr($name, 0, $offset)];
-
-        while ($pos = strpos($name, '[', $offset))
-        {
-          $end = strpos($name, ']', $pos);
-          if ($end == $pos + 1)
-          {
-            // reached a []
-            break;
-          }
-          else if (!isset($array[substr($name, $pos + 1, $end - $pos - 1)]))
-          {
-            return $default;
-          }
-          $array = $array[substr($name, $pos + 1, $end - $pos - 1)];
-          $offset = $end;
-        }
-
-        return $array;
-      }
-    }
-
-    return $default;
+    return sfToolkit::getArrayValueForPath($values, $name);
   }
 
   protected function escapeValue($value, $name)
