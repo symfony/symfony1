@@ -512,16 +512,18 @@ EOF;
     else if ($type == CreoleTypes::BOOLEAN)
     {
       $defaultIncludeCustom = '__("yes or no")';
-      $params = $this->getObjectTagParams($params, array('include_custom' => $defaultIncludeCustom));
+
+      $option_params = $this->getObjectTagParams($params, array('include_custom' => $defaultIncludeCustom));
+      $params = $this->getObjectTagParams($params);
 
       // little hack
-      $params = preg_replace("/'".preg_quote($defaultIncludeCustom)."'/", $defaultIncludeCustom, $params);
+      $option_params = preg_replace("/'".preg_quote($defaultIncludeCustom)."'/", $defaultIncludeCustom, $option_params);
 
-      $options = "options_for_select(array(1 => __('yes'), 0 => __('no')), $default_value, $params)";
+      $options = "options_for_select(array(1 => __('yes'), 0 => __('no')), $default_value, $option_params)";
 
       return "select_tag($name, $options, $params)";
     }
-    else if ($type == CreoleTypes::CHAR || $type == CreoleTypes::VARCHAR)
+    else if ($type == CreoleTypes::CHAR || $type == CreoleTypes::VARCHAR || $type == CreoleTypes::TEXT || $type == CreoleTypes::LONGVARCHAR)
     {
       $size = ($column->getSize() < 15 ? $column->getSize() : 15);
       $params = $this->getObjectTagParams($params, array('size' => $size));
@@ -536,11 +538,6 @@ EOF;
     {
       $params = $this->getObjectTagParams($params, array('size' => 7));
       return "input_tag($name, $default_value, $params)";
-    }
-    else if ($type == CreoleTypes::TEXT || $type == CreoleTypes::LONGVARCHAR)
-    {
-      $params = $this->getObjectTagParams($params, array('size' => '15x2'));
-      return "textarea_tag($name, $default_value, $params)";
     }
     else
     {
