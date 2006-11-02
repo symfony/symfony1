@@ -21,6 +21,21 @@ include(dirname(__FILE__).'/backendTestBrowser.class.php');
 $b = new backendTestBrowser();
 $b->initialize();
 
+// list with stacked layout
+$b->
+  // simple
+  checkListCustomization('list stacked layout', array('layout' => 'stacked'))->
+  checkResponseElement('table.sf_admin_list tr.sf_admin_row_0 td[colspan="6"] a', 1)->
+  checkResponseElement('table.sf_admin_list tr.sf_admin_row_0 td[colspan="6"]', '/foo title/')->
+  checkResponseElement('table.sf_admin_list tr.sf_admin_row_0 td[colspan="6"]', '/bar body/')->
+  checkResponseElement('table.sf_admin_list tr.sf_admin_row_0 td[colspan="6"] img[src*="tick"]')->
+
+  // with some customization
+  checkListCustomization('list stacked layout', array('layout' => 'stacked', 'params' => 'Article %%=title%% with body %%body%%'))->
+  checkResponseElement('table.sf_admin_list tr.sf_admin_row_0 td[colspan="6"] a', 'foo title')->
+  checkResponseElement('table.sf_admin_list tr.sf_admin_row_0 td[colspan="6"]', '/with body bar body/')
+;
+
 // small customization tests
 $b->
   // list
