@@ -569,7 +569,11 @@ EOF;
       $retval = ob_get_clean();
       if (0 == $return)
       {
-        $cov = unserialize($retval);
+        if (false === $cov = unserialize($retval))
+        {
+          throw new Exception(sprintf('Unable to unserialize coverage for file "%s"', $file));
+        }
+
         foreach ($cov as $file => $lines)
         {
           if (!isset($coverage[$file]))
