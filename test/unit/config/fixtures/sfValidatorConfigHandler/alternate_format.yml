@@ -1,0 +1,33 @@
+fillin:
+  activate:      Yes
+
+validators:
+  myStringValidator:
+    class: sfStringValidator
+    param:
+      min:       2
+      min_error: This field is too short (2 characters minimum)
+      max:       100
+      max_error: This field is too long (100 characters maximum)
+
+fields:
+  name:
+    required:
+      msg:       The name field cannot be left blank
+    myStringValidator:
+  email:
+    required:
+      msg:       The email field cannot be left blank
+    myStringValidator:
+    sfEmailValidator:
+      email_error:  This email address is invalid
+  age:
+    sfNumberValidator:
+      nan_error:    Please enter an integer
+      min:          0
+      min_error:    "You're not even born. How do you want to send a message?"
+      max:          120
+      max_error:    "Hey, grandma, aren't you too old to surf on the Internet?"
+  message:
+    required:
+      msg:          The message field cannot be left blank

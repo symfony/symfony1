@@ -32,13 +32,22 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
    */
   public function execute($configFiles)
   {
-    // set our required categories list and initialize our handler
-    $categories = array('required_categories' => array('methods', 'names'));
-
-    $this->initialize($categories);
-
     // parse the yaml
     $config = $this->parseYamls($configFiles);
+
+    // alternate format?
+    if (isset($config['fields']))
+    {
+      $this->convertAlternate2Standard($config);
+    }
+
+    foreach (array('methods', 'names') as $category)
+    {
+      if (!isset($config[$category]))
+      {
+        throw new sfParseException(sprintf('Configuration file "%s" is missing "%s" category', $configFiles[0], $category));
+      }
+    }
 
     // init our data, includes, methods, names and validators arrays
     $data       = array();
@@ -84,6 +93,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
     $fillin = var_export(isset($config['fillin']) ? $config['fillin'] : array(), true);
 
     // generate GET file/parameter data
+
     $data[] = "if (\$_SERVER['REQUEST_METHOD'] == 'GET')";
     $data[] = "{";
 
@@ -457,6 +467,85 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
       $parameters = (isset($config[$validator]['param']) ? var_export($config[$validator]['param'], true) : 'null');
 
       $validators[$validator]['parameters'] = $parameters;
+    }
+  }
+
+  /**
+   * Convert alternate format to standard format
+   *
+   * @param array  Configuration data.
+   */
+  protected function convertAlternate2Standard(&$config)
+  {
+    $defaultMethods = isset($config['methods']) ? $config['methods'] : array('post');
+    $config['methods'] = array();
+
+    // validators
+    if (isset($config['validators']))
+    {
+      foreach ((array) $config['validators'] as $validator => $params)
+      {
+        $config[$validator] = $params;
+      }
+
+      unset($config['validators']);
+    }
+
+    // names
+    $config['names'] = $config['fields'];
+    unset($config['fields']);
+
+    foreach ($config['names'] as $name => $values)
+    {
+      // validators
+      $validators = array();
+      foreach ($values as $validator => $params)
+      {
+        if ('required' == $validator)
+        {
+          continue;
+        }
+
+        // class or validator
+        if (!isset($config[$validator]))
+        {
+          $config[$validator] = array('class' => $validator);
+        }
+
+        $validatorName = $validator;
+        if ($params)
+        {
+          // create a new validator
+          $validatorName = $validator.'_'.$name;
+          $config[$validatorName] = $config[$validator];
+          $config[$validatorName]['param'] = array_merge(isset($config[$validator]['param']) ? (array) $config[$validator]['param'] : array(), $params);
+        }
+
+        $validators[] = $validatorName;
+
+        unset($values[$validator]);
+      }
+      $values['validators'] = $validators;
+
+      // required
+      if (isset($values['required']))
+      {
+        $values['required_msg'] = $values['required']['msg'];
+        $values['required'] = true;
+      }
+      else
+      {
+        $values['required'] = false;
+      }
+
+      // methods
+      $methods = isset($values['methods']) ? (array) $values['methods'] : $defaultMethods;
+      foreach ($methods as $method)
+      {
+        $config['methods'][$method][] = $name;
+      }
+
+      $config['names'][$name] = $values;
     }
   }
 }
