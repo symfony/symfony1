@@ -83,7 +83,7 @@ function _parse_attributes($string)
 
 function _get_option(&$options, $name, $default = null)
 {
-  if (isset($options[$name]))
+  if (array_key_exists($name, $options))
   {
     $value = $options[$name];
     unset($options[$name]);

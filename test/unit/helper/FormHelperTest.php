@@ -9,109 +9,287 @@
  */
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
-require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-sfLoader::loadHelpers(array('Helper', 'Tag', 'Form'));
+sfLoader::loadHelpers(array('Helper', 'Asset', 'Url', 'Tag', 'Form'));
 
-$t = new lime_test(16, new lime_output_color());
+class myController
+{
+  public function genUrl($parameters = array(), $absolute = false)
+  {
+    return 'module/action';
+  }
+}
 
-$context = new sfContext();
+class myUser
+{
+  public function getCulture()
+  {
+    return 'en';
+  }
+}
 
-// checkbox_tag()
-$t->diag('checkbox_tag()');
-$actual = checkbox_tag('admin');
-$expected = '<input type="checkbox" name="admin" id="admin" value="1" />';
-$t->is($actual, $expected);
+class myRequest
+{
+  public function getRelativeUrlRoot()
+  {
+    return '';
+  }
+}
 
-// input_hidden_tag()
-$t->diag('input_hidden_tag()');
-$actual = input_hidden_tag('id', 3);
-$expected = '<input type="hidden" name="id" id="id" value="3" />';
-$t->is($actual, $expected);
+class sfContext
+{
+  public $controller = null;
+  public $user = null;
+  public $request = null;
 
-// input_password_tag()
-$t->diag('input_password_tag()');
-$actual = input_password_tag();
-$expected = '<input type="password" name="password" id="password" value="" />';
-$t->is($actual, $expected);
+  static public $instance = null;
 
-// radiobutton_tag()
-$t->diag('radiobutton_tag()');
-$actual = radiobutton_tag("people", "fabien");
-$expected = '<input type="radio" name="people" id="people" value="fabien" />';
-$t->is($actual, $expected);
+  public static function getInstance()
+  {
+    if (!isset(self::$instance))
+    {
+      self::$instance = new sfContext();
+    }
+
+    return self::$instance;
+  }
+
+  public function getController()
+  {
+    return $this->controller;
+  }
+
+  public function getUser()
+  {
+    return $this->user;
+  }
+
+  public function getRequest()
+  {
+    return $this->request;
+  }
+
+  public function getModuleName()
+  {
+    return 'module';
+  }
+
+  public function getActionName()
+  {
+    return 'action';
+  }
+}
+
+$t = new lime_test(89, new lime_output_color());
+
+$context = sfContext::getInstance();
+$context->controller = new myController();
+$context->user = new myUser();
+$context->request = new myRequest();
 
 // options_for_select()
 $t->diag('options_for_select()');
-$t->is("<option value=\"0\" selected=\"selected\">item1</option>\n<option value=\"1\">item2</option>\n",
-                   options_for_select(array('item1', 'item2'), '0'));
+$t->is(options_for_select(array('item1', 'item2', 'item3')), "<option value=\"0\">item1</option>\n<option value=\"1\">item2</option>\n<option value=\"2\">item3</option>\n", 'options_for_select() takes an array of options as its first argument');
+$t->is(options_for_select(array(1 => 'item1', 2 => 'item2', 'foo' => 'item3')), "<option value=\"1\">item1</option>\n<option value=\"2\">item2</option>\n<option value=\"foo\">item3</option>\n", 'options_for_select() takes an array of options as its first argument');
+$t->is(options_for_select(array('item1', 'item2', 'item3'), '0'), "<option value=\"0\" selected=\"selected\">item1</option>\n<option value=\"1\">item2</option>\n<option value=\"2\">item3</option>\n", 'options_for_select() takes the selected index as its second argument');
+$t->is(options_for_select(array('item1', 'item2', 'item3'), '2'), "<option value=\"0\">item1</option>\n<option value=\"1\">item2</option>\n<option value=\"2\" selected=\"selected\">item3</option>\n", 'options_for_select() takes the selected index as its second argument');
+$t->is(options_for_select(array('item1', 'item2', 'item3'), '2'), "<option value=\"0\">item1</option>\n<option value=\"1\">item2</option>\n<option value=\"2\" selected=\"selected\">item3</option>\n", 'options_for_select() takes the selected index as its second argument');
+$t->is(options_for_select(array('item1', 'item2', 'item3'), array('1', '2')), "<option value=\"0\">item1</option>\n<option value=\"1\" selected=\"selected\">item2</option>\n<option value=\"2\" selected=\"selected\">item3</option>\n", 'options_for_select() takes the selected index as its second argument');
+$t->is(options_for_select(array('group1' => array('item1', 'item2'), 'bar' => 'item3')), "<optgroup label=\"group1\"><option value=\"0\">item1</option>\n<option value=\"1\">item2</option>\n</optgroup>\n<option value=\"bar\">item3</option>\n", 'options_for_select() can deal with optgroups');
+
+// options
+$t->is(options_for_select(array('item1'), '', array('include_custom' => 'test')), "<option value=\"\">test</option>\n<option value=\"0\">item1</option>\n", 'options_for_select() can take an "include_custom" option');
+$t->is(options_for_select(array('item1'), '', array('include_blank' => true)), "<option value=\"\"></option>\n<option value=\"0\">item1</option>\n", 'options_for_select() can take an "include_blank" option');
+
+// form_tag()
+$t->diag('form_tag()');
+$t->is(form_tag(), '<form method="post" action="module/action">', 'form_tag() creates a form tag');
+
+// options
+$t->is(form_tag('', array('class' => 'foo')), '<form class="foo" method="post" action="module/action">', 'form_tag() takes an array of attribute options');
+$t->is(form_tag('', array('method' => 'get')), '<form method="get" action="module/action">', 'form_tag() takes a "method" as an option');
+$t->is(form_tag('', array('multipart' => true)), '<form method="post" enctype="multipart/form-data" action="module/action">', 'form_tag() takes a "multipart" boolean option');
 
 // select_tag()
 $t->diag('select_tag()');
-$actual = select_tag("people", "<option>fabien</option>");
-$expected = '<select name="people" id="people"><option>fabien</option></select>';
-$t->is($actual, $expected);
+$t->is(select_tag('name'), '<select name="name" id="name"></select>', 'select_tag() takes a name as its first argument');
+$option_for_select = options_for_select(array('item1'));
+$t->is(select_tag('name', $option_for_select), '<select name="name" id="name">'.$option_for_select.'</select>', 'select_tag() takes an HTML string of options as its second argument');
 
-// textarea_tag_size()
-$t->diag('textarea_tag_size()');
-$actual = textarea_tag("body", "hello world", array("size" => "20x40"));
-$expected = '<textarea name="body" id="body" rows="40" cols="20">hello world</textarea>';
-$t->is($actual, $expected);
+// options
+$t->is(select_tag('name', $option_for_select, array('class' => 'foo')), '<select name="name" id="name" class="foo">'.$option_for_select.'</select>', 'select_tag() takes an array of attribute options as its third argument');
+$t->is(select_tag('name', $option_for_select, array('multiple' => true)), '<select name="name[]" id="name" multiple="multiple">'.$option_for_select.'</select>', 'select_tag() takes a "multiple" boolean option');
+$t->is(select_tag('name[]', $option_for_select, array('multiple' => true)), '<select name="name[]" id="name" multiple="multiple">'.$option_for_select.'</select>', 'select_tag() takes a "multiple" boolean option');
+$t->is(select_tag('name', $option_for_select, array('multiple' => false)), '<select name="name" id="name">'.$option_for_select.'</select>', 'select_tag() takes a "multiple" boolean option');
+$t->is(select_tag('name', $option_for_select, array('id' => 'bar')), '<select name="name" id="bar">'.$option_for_select.'</select>', 'select_tag() can take a "id" option');
 
-$actual = textarea_tag("body", "hello world", "size=20x40");
-$expected = '<textarea name="body" id="body" rows="40" cols="20">hello world</textarea>';
-$t->is($actual, $expected);
+// select_country_tag()
+$t->diag('select_country_tag()');
+$t->like(select_country_tag('name'), '/'.preg_quote('<select name="name" id="name">').'/', 'select_country_tag() takes a name as its first argument');
+$t->cmp_ok(preg_match_all('/<option/', select_country_tag('name'), $matches), '>', 200, 'select_country_tag() takes a name as its first argument');
+$t->like(select_country_tag('name', 'FR'), '/'.preg_quote('<option value="FR" selected="selected">').'/', 'select_country_tag() takes an ISO code for the selected country as its second argument');
+
+// options
+$t->like(select_country_tag('name', null, array('class' => 'foo')), '/'.preg_quote('<select name="name" id="name" class="foo">').'/', 'select_country_tag() takes an array of options as its third argument');
+$t->is(preg_match_all('/<option/', select_country_tag('name', null, array('countries' => array('FR', 'GB'))), $matches), 2, 'select_country_tag() takes a "countries" option');
+
+// select_language_tag()
+$t->diag('select_language_tag()');
+$t->like(select_language_tag('name'), '/'.preg_quote('<select name="name" id="name">').'/', 'select_language_tag() takes a name as its first argument');
+$t->cmp_ok(preg_match_all('/<option/', select_language_tag('name'), $matches), '>', 200, 'select_language_tag() takes a name as its first argument');
+$t->like(select_language_tag('name', 'fr'), '/'.preg_quote('<option value="fr" selected="selected">').'/', 'select_language_tag() takes an ISO code for the selected language as its second argument');
+
+// option
+$t->like(select_language_tag('name', null, array('class' => 'foo')), '/'.preg_quote('<select name="name" id="name" class="foo">').'/', 'select_language_tag() takes an array of options as its third argument');
+$t->is(preg_match_all('/<option/', select_language_tag('name', null, array('languages' => array('fr', 'en'))), $matches), 2, 'select_language_tag() takes a "languages" option');
 
 // input_tag()
 $t->diag('input_tag()');
-$actual = input_tag("title", "Hello!");
-$expected = '<input type="text" name="title" id="title" value="Hello!" />';
-$t->is($actual, $expected);
+$t->is(input_tag('name'), '<input type="text" name="name" id="name" value="" />', 'input_tag() takes a name as its first argument');
+$t->is(input_tag('name', 'foo'), '<input type="text" name="name" id="name" value="foo" />', 'input_tag() takes a value as its second argument');
 
-$actual = input_tag('title', 'Hello!', array('class' => 'admin'));
-$expected = '<input type="text" name="title" id="title" value="Hello!" class="admin" />';
-$t->is($actual, $expected);
+// options
+$t->is(input_tag('name', null, array('class' => 'foo')), '<input type="text" name="name" id="name" value="" class="foo" />', 'input_tag() takes an array of attribute options as its third argument');
+$t->is(input_tag('name', null, array('type' => 'password')), '<input type="password" name="name" id="name" value="" />', 'input_tag() can override the "type" attribute');
+$t->is(input_tag('name', null, array('id' => 'foo')), '<input type="text" name="name" id="foo" value="" />', 'input_tag() can override the "id" attribute');
 
-$actual = input_tag('title', 'Hello!', 'class=admin');
-$expected = '<input type="text" name="title" id="title" value="Hello!" class="admin" />';
-$t->is($actual, $expected);
+// input_hidden_tag()
+$t->diag('input_hidden_tag()');
+$t->is(input_hidden_tag('name'), '<input type="hidden" name="name" id="name" value="" />', 'input_hidden_tag() takes a name as its first argument');
+$t->is(input_hidden_tag('name', 'foo'), '<input type="hidden" name="name" id="name" value="foo" />', 'input_hidden_tag() takes a value as its second argument');
+$t->is(input_hidden_tag('name', null, array('class' => 'foo')), '<input type="hidden" name="name" id="name" value="" class="foo" />', 'input_hidden_tag() takes an array of attribute options as its third argument');
 
-/*
-// tag()
-    $actual = tag();
-    $expected = '<form action="http://www.example.com" method="post">';
+// input_file_tag()
+$t->diag('input_file_tag()');
+$t->is(input_file_tag('name'), '<input type="file" name="name" id="name" value="" />', 'input_file_tag() takes a name as its first argument');
+$t->is(input_file_tag('name', array('class' => 'foo')), '<input type="file" name="name" id="name" value="" class="foo" />', 'input_hidden_tag() takes an array of attribute options as its second argument');
 
-    $t->is($actual, $expected);
+// input_password_tag()
+$t->diag('input_password_tag()');
+$t->is(input_password_tag('name'), '<input type="password" name="name" id="name" value="" />', 'input_password_tag() takes a name as its first argument');
+$t->is(input_password_tag('name', 'foo'), '<input type="password" name="name" id="name" value="foo" />', 'input_password_tag() takes a value as its second argument');
+$t->is(input_password_tag('name', null, array('class' => 'foo')), '<input type="password" name="name" id="name" value="" class="foo" />', 'input_password_tag() takes an array of attribute options as its third argument');
 
-// tag_multipart()
-    $actual = form_tag(null, array('multipart' => true ));
-    $expected = '<form action="http://www.example.com" enctype="multipart/form-data" method="post">';
+// textarea_tag()
+$t->diag('textarea_tag()');
+$t->is(textarea_tag('name'), '<textarea name="name" id="name"></textarea>', 'textarea_tag() takes a name as its first argument');
+$t->is(textarea_tag('name', 'content'), '<textarea name="name" id="name">content</textarea>', 'textarea_tag() takes a value as its second argument');
 
-    $this->assert_equal($actual, $expected);
-*/
+// options
+$t->is(textarea_tag('name', null, array('class' => 'foo')), '<textarea name="name" id="name" class="foo"></textarea>', 'textarea_tag() takes an array of attribute options as its third argument');
+$t->is(textarea_tag('name', null, array('id' => 'foo')), '<textarea name="name" id="foo"></textarea>', 'textarea_tag() can override the "id" attribute');
+$t->is(textarea_tag('name', null, array('size' => '5x20')), '<textarea name="name" id="name" rows="20" cols="5"></textarea>', 'textarea_tag() can take a "size" attribute');
 
 // checkbox_tag()
 $t->diag('checkbox_tag()');
-$actual = checkbox_tag('admin', 1, true, array('disabled' => true, 'readonly' => 'yes'));
-$expected = '<input type="checkbox" name="admin" id="admin" value="1" disabled="disabled" readonly="readonly" checked="checked" />';
-$t->is($actual, $expected);
+$t->is(checkbox_tag('name'), '<input type="checkbox" name="name" id="name" value="1" />', 'checkbox_tag() takes a name as its first argument');
+$t->is(checkbox_tag('name', 'foo'), '<input type="checkbox" name="name" id="name" value="foo" />', 'checkbox_tag() takes a value as its second argument');
+$t->is(checkbox_tag('name', null, true), '<input type="checkbox" name="name" id="name" value="" checked="checked" />', 'checkbox_tag() takes a boolean as its third argument');
 
-$actual = checkbox_tag('admin', 1, true, array('disabled' => false, 'readonly' => null));
-$expected = '<input type="checkbox" name="admin" id="admin" value="1" checked="checked" />';
-$t->is($actual, $expected);
+// options
+$t->is(checkbox_tag('name', null, false, array('class' => 'foo')), '<input type="checkbox" name="name" id="name" value="" class="foo" />', 'checkbox_tag() takes an array of attribute options as its fourth argument');
+$t->is(checkbox_tag('name', null, false, array('id' => 'foo')), '<input type="checkbox" name="name" id="foo" value="" />', 'checkbox_tag() can override the "id" attribute');
 
-// select_tag()
-$t->diag('select_tag()');
-$actual = select_tag('people', "<option>fabien</option>", array('multiple' => true));
-$expected = '<select name="people[]" id="people" multiple="multiple"><option>fabien</option></select>';
-$t->is($actual, $expected);
+// radiobutton_tag()
+$t->diag('radiobutton_tag()');
+$t->is(radiobutton_tag('name', 1), '<input type="radio" name="name" id="name" value="1" />', 'radiobutton_tag() takes a name as its first argument');
+$t->is(radiobutton_tag('name', 2), '<input type="radio" name="name" id="name" value="2" />', 'radiobutton_tag() takes a value as its second argument');
+$t->is(radiobutton_tag('name', null, true), '<input type="radio" name="name" id="name" value="" checked="checked" />', 'radiobutton_tag() takes a boolean as its third argument');
 
-$actual = select_tag('people', "<option>fabien</option>", array('multiple' => null));
-$expected = '<select name="people" id="people"><option>fabien</option></select>';
-$t->is($actual, $expected);
+// options
+$t->is(radiobutton_tag('name', null, false, array('class' => 'foo')), '<input type="radio" name="name" id="name" value="" class="foo" />', 'radiobutton_tag() takes an array of attribute options as its fourth argument');
+$t->is(radiobutton_tag('name', null, false, array('id' => 'foo')), '<input type="radio" name="name" id="foo" value="" />', 'radiobutton_tag() can override the "id" attribute');
 
-// input_tag()
-$t->diag('input_tag()');
-$actual = input_tag('title', 'Hello!', array('id'=> 'admin'));
-$expected = '<input type="text" name="title" id="admin" value="Hello!" />';
-$t->is($actual, $expected);
+// input_date_range_tag()
+$t->diag('input_date_range_tag()');
+$t->todo('input_date_range_tag()');
+
+// input_date_tag()
+$t->diag('input_date_tag()');
+$t->todo('input_date_tag()');
+
+// submit_tag()
+$t->diag('submit_tag()');
+$t->is(submit_tag(), '<input type="submit" name="commit" value="Save changes" />', 'submit_tag() default value is "Save changes"');
+$t->is(submit_tag("save"), '<input type="submit" name="commit" value="save" />', 'submit_tag() takes a value as its first argument');
+
+// options
+$t->is(submit_tag('save', array('class' => 'foo')), '<input type="submit" name="commit" value="save" class="foo" />', 'submit_tag() takes an array of attribute options as its second argument');
+$t->is(submit_tag('save', array('name' => 'foo')), '<input type="submit" name="foo" value="save" />', 'submit_tag() can override the "name" attribute');
+
+// reset_tag()
+$t->diag('reset_tag()');
+$t->is(reset_tag(), '<input type="reset" name="reset" value="Reset" />', 'reset_tag() default value is "Reset"');
+$t->is(reset_tag("save"), '<input type="reset" name="reset" value="save" />', 'reset_tag() takes a value as its first argument');
+
+// options
+$t->is(reset_tag('save', array('class' => 'foo')), '<input type="reset" name="reset" value="save" class="foo" />', 'reset_tag() takes an array of attribute options as its second argument');
+$t->is(reset_tag('save', array('name' => 'foo')), '<input type="reset" name="foo" value="save" />', 'reset_tag() can override the "name" attribute');
+
+// submit_image_tag()
+$t->diag('submit_image_tag()');
+$t->is(submit_image_tag('submit'), '<input type="image" name="commit" src="/images/submit.png" alt="Submit" />', 'submit_image_tag() takes an image source as its first argument');
+$t->is(submit_image_tag('/img/submit.gif'), '<input type="image" name="commit" src="/img/submit.gif" alt="Submit" />', 'submit_image_tag() takes an image source as its first argument');
+
+// options
+$t->is(submit_image_tag('submit', array('class' => 'foo')), '<input type="image" name="commit" src="/images/submit.png" class="foo" alt="Submit" />', 'submit_image_tag() takes an array of attribute options as its second argument');
+$t->is(submit_image_tag('submit', array('alt' => 'foo')), '<input type="image" name="commit" src="/images/submit.png" alt="foo" />', 'reset_tag() can override the "alt" attribute');
+$t->is(submit_image_tag('submit', array('name' => 'foo')), '<input type="image" name="foo" src="/images/submit.png" alt="Submit" />', 'reset_tag() can override the "name" attribute');
+
+// select_day_tag()
+$t->diag('select_day_tag()');
+$t->todo('select_day_tag()');
+
+// select_month_tag()
+$t->diag('select_month_tag()');
+$t->todo('select_month_tag()');
+
+// select_year_tag()
+$t->diag('select_year_tag()');
+$t->todo('select_year_tag()');
+
+// select_date_tag()
+$t->diag('select_date_tag()');
+$t->todo('select_date_tag()');
+
+// select_second_tag()
+$t->diag('select_second_tag()');
+$t->todo('select_second_tag()');
+
+// select_minute_tag()
+$t->diag('select_minute_tag()');
+$t->todo('select_minute_tag()');
+
+// select_hour_tag()
+$t->diag('select_hour_tag()');
+$t->todo('select_hour_tag()');
+
+// select_ampm_tag()
+$t->diag('select_ampm_tag()');
+$t->todo('select_ampm_tag()');
+
+// select_time_tag()
+$t->diag('select_time_tag()');
+$t->todo('select_time_tag()');
+
+// select_datetime_tag()
+$t->diag('select_datetime_tag()');
+$t->todo('select_datetime_tag()');
+
+// select_number_tag()
+$t->diag('select_number_tag()');
+$t->todo('select_number_tag()');
+
+// label_for()
+$t->diag('label_for()');
+$t->todo('label_for()');
+
+// get_id_from_name()
+$t->diag('get_id_from_name()');
+$t->is(get_id_from_name('foo'), 'foo', 'get_id_from_name() returns the id if there is no [] in the id');
+$t->is(get_id_from_name('foo[]', 'name'), 'foo_name', 'get_id_from_name() removes all [] from ids');
+
+// _convert_options()
+$t->diag('_convert_options()');
+$t->is(_convert_options(array('class' => 'foo', 'multiple' => true)), array('class' => 'foo', 'multiple' => 'multiple'), '_convert_options() converts some options for XHTML compliance');
+$t->is(_convert_options(array('class' => 'foo', 'multiple' => false)), array('class' => 'foo'), '_convert_options() converts some options for XHTML compliance');

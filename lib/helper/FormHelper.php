@@ -61,17 +61,16 @@ function options_for_select($options = array(), $selected = '', $html_options = 
 
   if (is_array($selected))
   {
-    $valid = array_values($selected);
-    $valid = array_map('strval', $valid);
+    $selected = array_map('strval', array_values($selected));
   }
 
   $html = '';
 
-  if (isset($html_options['include_custom']))
+  if ($value = _get_option($html_options, 'include_custom'))
   {
-    $html .= content_tag('option', $html_options['include_custom'], array('value' => ''))."\n";
+    $html .= content_tag('option', $value, array('value' => ''))."\n";
   }
-  else if (isset($html_options['include_blank']))
+  else if (_get_option($html_options, 'include_blank'))
   {
     $html .= content_tag('option', '', array('value' => ''))."\n";
   }
@@ -80,19 +79,14 @@ function options_for_select($options = array(), $selected = '', $html_options = 
   {
     if (is_array($value))
     {
-      $optgroup_html_options = $html_options;
-      unset($optgroup_html_options['include_custom']);
-      unset($optgroup_html_options['include_blank']);
-      $html .= content_tag('optgroup', options_for_select($value, $selected, $optgroup_html_options), array('label' => $key));
+      $html .= content_tag('optgroup', options_for_select($value, $selected, $html_options), array('label' => $key))."\n";
     }
-    else 
+    else
     {
       $option_options = array('value' => $key);
-      
+
       if (
-          isset($selected)
-          &&
-          (is_array($selected) && in_array(strval($key), $valid, true))
+          (is_array($selected) && in_array(strval($key), $selected, true))
           ||
           (strval($key) == strval($selected))
          )
@@ -130,15 +124,14 @@ function form_tag($url_for_options = '', $options = array())
   $options = _parse_attributes($options);
 
   $html_options = $options;
-  if (!array_key_exists('method', $html_options))
+  if (!isset($html_options['method']))
   {
     $html_options['method'] = 'post';
   }
 
-  if (array_key_exists('multipart', $html_options))
+  if (_get_option($html_options, 'multipart'))
   {
     $html_options['enctype'] = 'multipart/form-data';
-    unset($html_options['multipart']);
   }
 
   $html_options['action'] = url_for($url_for_options);
@@ -214,25 +207,23 @@ function select_tag($name, $option_tags = null, $options = array())
  * @return string <select> tag populated with all the countries in the world.
  * @see select_tag, options_for_select, sfCultureInfo
  */
-function select_country_tag($name, $value, $options = array())
+function select_country_tag($name, $selected = null, $options = array())
 {
   $c = new sfCultureInfo(sfContext::getInstance()->getUser()->getCulture());
   $countries = $c->getCountries();
 
-  if (isset($options['countries']) && is_array($options['countries']))
+  if ($country_option = _get_option($options, 'countries'))
   {
-    $diff = array_diff_key($countries, array_flip($options['countries']));
+    $diff = array_diff_key($countries, array_flip((array) $country_option));
     foreach ($diff as $key => $v)
     {
       unset($countries[$key]);
     }
-
-    unset($options['countries']);
   }
 
   asort($countries);
 
-  $option_tags = options_for_select($countries, $value);
+  $option_tags = options_for_select($countries, $selected);
 
   return select_tag($name, $option_tags, $options);
 }
@@ -261,25 +252,23 @@ function select_country_tag($name, $value, $options = array())
  * @return string <select> tag populated with all the languages in the world.
  * @see select_tag, options_for_select, sfCultureInfo
  */
-function select_language_tag($name, $value, $options = array())
+function select_language_tag($name, $selected = null, $options = array())
 {
   $c = new sfCultureInfo(sfContext::getInstance()->getUser()->getCulture());
   $languages = $c->getLanguages();
 
-  if (isset($options['languages']) && is_array($options['languages']))
+  if ($language_option = _get_option($options, 'languages'))
   {
-    $diff = array_diff_key($languages, array_flip($options['languages']));
+    $diff = array_diff_key($languages, array_flip((array) $language_option));
     foreach ($diff as $key => $v)
     {
       unset($languages[$key]);
     }
-
-    unset($options['languages']);
   }
 
   asort($languages);
 
-  $option_tags = options_for_select($languages, $value);
+  $option_tags = options_for_select($languages, $selected);
 
   return select_tag($name, $option_tags, $options);
 }
@@ -437,53 +426,28 @@ function input_password_tag($name = 'password', $value = null, $options = array(
 function textarea_tag($name, $content = null, $options = array())
 {
   $options = _parse_attributes($options);
-  
-  if (array_key_exists('size', $options))
+
+  if ($size = _get_option($options, 'size'))
   {
-    list($options['cols'], $options['rows']) = split('x', $options['size'], 2);
-    unset($options['size']);
+    list($options['cols'], $options['rows']) = split('x', $size, 2);
   }
 
   // rich control?
-  $rich = false;
-  if (isset($options['rich']))
+  $rich = _get_option($options, 'rich', false);
+  if ($rich === true)
   {
-    $rich = $options['rich'];
-    if ($rich === true)
-    {
-      $rich = 'tinymce';
-    }
-    unset($options['rich']);
+    $rich = 'tinymce';
   }
 
   // we need to know the id for things the rich text editor
   // in advance of building the tag
-  if (isset($options['id']))
-  {
-    $id = $options['id'];
-    unset($options['id']);
-  }
-  else
-  {
-    $id = $name;
-  }
+  $id = _get_option($options, 'id', $name);
 
   if ($rich == 'tinymce')
   {
-    if (isset($options['tinymce_gzip']))
-    {
-      // use tinymce's gzipped js?
-      if ($options['tinymce_gzip'] === true)
-      {
-        $tinymce_file = '/tiny_mce_gzip.php';
-      }
-      unset($options['tinymce_gzip']);
-    }
-    // use standard tinymce js
-    else
-    {
-      $tinymce_file = '/tiny_mce.js';
-    }
+    // use tinymce's gzipped js?
+    $tinymce_file = _get_option($options, 'tinymce_gzip') ? '/tiny_mce_gzip.php' : '/tiny_mce.js';
+
     // tinymce installed?
     $js_path = sfConfig::get('sf_rich_text_js_dir') ? '/'.sfConfig::get('sf_rich_text_js_dir').$tinymce_file : '/sf/tinymce/js'.$tinymce_file;
     if (!is_readable(sfConfig::get('sf_web_dir').$js_path))
@@ -499,11 +463,8 @@ function textarea_tag($name, $content = null, $options = array())
     $style_selector  = '';
 
     // custom CSS file?
-    if (isset($options['css']))
+    if ($css_file = _get_option($options, 'css'))
     {
-      $css_file = $options['css'];
-      unset($options['css']);
-
       $css_path = stylesheet_path($css_file);
 
       sfContext::getInstance()->getResponse()->addStylesheet($css_path);
@@ -656,18 +617,22 @@ tinyMCE.init({
 function checkbox_tag($name, $value = '1', $checked = false, $options = array())
 {
   $html_options = array_merge(array('type' => 'checkbox', 'name' => $name, 'id' => get_id_from_name($name, $value), 'value' => $value), _convert_options($options));
-  if ($checked) $html_options['checked'] = 'checked';
+
+  if ($checked)
+  {
+    $html_options['checked'] = 'checked';
+  }
 
   return tag('input', $html_options);
 }
 
 /**
  * Returns an XHTML compliant <input> tag with type="radio".
- * 
+ *
  * <b>Examples:</b>
  * <code>
- *  echo ' Yes ' . radiobutton_tag('newsletter', 1);
- *  echo ' No ' . radiobutton_tag('newsletter', 0); 
+ *  echo ' Yes '.radiobutton_tag('newsletter', 1);
+ *  echo ' No '.radiobutton_tag('newsletter', 0); 
  * </code>
  *
  * @param  string field name 
@@ -679,7 +644,11 @@ function checkbox_tag($name, $value = '1', $checked = false, $options = array())
 function radiobutton_tag($name, $value, $checked = false, $options = array())
 {
   $html_options = array_merge(array('type' => 'radio', 'name' => $name, 'id' => get_id_from_name($name, $value), 'value' => $value), _convert_options($options));
-  if ($checked) $html_options['checked'] = 'checked';
+
+  if ($checked)
+  {
+    $html_options['checked'] = 'checked';
+  }
 
   return tag('input', $html_options);
 }
@@ -723,32 +692,11 @@ function input_date_range_tag($name, $value, $options = array())
 {
   $options = _parse_attributes($options);
 
-  $before = '';
-  if (isset($options['before']))
-  {
-    $before = $options['before'];
-    unset($options['before']);
-  }
-
-  $middle = '';
-  if (isset($options['middle']))
-  {
-    $middle = $options['middle'];
-    unset($options['middle']);
-  }
-
-  $after = '';
-  if (isset($options['after']))
-  {
-    $after = $options['after'];
-    unset($options['after']);
-  }
-
-  return $before.
+  return _get_option($options, 'before', '').
          input_date_tag($name.'[from]', $value['from'], $options).
-         $middle.
+         _get_option($options, 'middle', '').
          input_date_tag($name.'[to]', $value['to'], $options).
-         $after;
+         _get_option($options, 'after', '');
 }
 
 /**
@@ -775,29 +723,16 @@ function input_date_range_tag($name, $value, $options = array())
  * @return string XHTML compliant <input> tag with optional JS calendar integration
  * @see input_date_range_tag
  */
-function input_date_tag($name, $value, $options = array())
+function input_date_tag($name, $value = null, $options = array())
 {
   $options = _parse_attributes($options);
 
   $context = sfContext::getInstance();
-  if (isset($options['culture']))
-  {
-    $culture = $options['culture'];
-    unset($options['culture']);
-  }
-  else
-  {
-    $culture = $context->getUser()->getCulture();
-  }
+
+  $culture = _get_option($options, 'culture', $context->getUser()->getCulture());
 
   // rich control?
-  $rich = false;
-  if (isset($options['rich']))
-  {
-    $rich = $options['rich'];
-    unset($options['rich']);
-  }
-
+  $rich = _get_option($options, 'rich', false);
   if (!$rich)
   {
     throw new sfException('input_date_tag (rich=off) is not yet implemented');
@@ -846,10 +781,9 @@ function input_date_tag($name, $value, $options = array())
       button : "'.$id_calendarButton.'"';
 
   // calendar options
-  if (isset($options['calendar_options']))
+  if ($calendar_options = _get_option($options, 'calendar_options'))
   {
-    $js .= ",\n".$options['calendar_options'];
-    unset($options['calendar_options']);
+    $js .= ",\n".$calendar_options;
   }
 
   $js .= '
@@ -859,17 +793,15 @@ function input_date_tag($name, $value, $options = array())
   // calendar button
   $calendar_button = '...';
   $calendar_button_type = 'txt';
-  if (isset($options['calendar_button_img']))
+  if ($calendar_button_img = _get_option($options, 'calendar_button_img'))
   {
-    $calendar_button = $options['calendar_button_img'];
+    $calendar_button = $calendar_button_img;
     $calendar_button_type = 'img';
-    unset($options['calendar_button_img']);
   }
-  else if (isset($options['calendar_button_txt']))
+  else if ($calendar_button_txt = _get_option($options, 'calendar_button_txt'))
   {
-    $calendar_button = $options['calendar_button_txt'];
+    $calendar_button = $calendar_button_txt;
     $calendar_button_type = 'txt';
-    unset($options['calendar_button_txt']);
   }
 
   // construct html
@@ -888,10 +820,9 @@ function input_date_tag($name, $value, $options = array())
     $html .= content_tag('button', $calendar_button, array('type' => 'button', 'disabled' => 'disabled', 'onclick' => 'return false', 'id' => $id_calendarButton));
   }
 
-  if (isset($options['with_format']))
+  if (_get_option($options, 'with_format'))
   {
     $html .= '('.$date_format.')';
-    unset($options['with_format']);
   }
 
   // add javascript
@@ -985,6 +916,7 @@ function submit_image_tag($source, $options = array())
     $nb_str = ($dot_pos ? $dot_pos : strlen($source)) - $begin;
     $options['alt'] = ucfirst(substr($source, $begin, $nb_str));
   }
+
   return tag('input', array_merge(array('type' => 'image', 'name' => 'commit', 'src' => image_path($source)), _convert_options_to_javascript(_convert_options($options))));
 }
 
@@ -1018,7 +950,7 @@ function select_day_tag($name, $value = null, $options = array(), $html_options 
   {
     $value = date('j');
   }
-    
+
   $options = _parse_attributes($options);
 
   $select_options = array();
@@ -1253,18 +1185,18 @@ function select_date_tag($name, $value = null, $options = array(), $html_options
   $options = _parse_attributes($options);
 
   $culture = _get_option($options, 'culture', sfContext::getInstance()->getUser()->getCulture());
-  //set it back for month tag
+
+  // set it back for month tag
   $option['culture'] = $culture;
 
   $I18n_arr = _get_I18n_date_locales($culture);
 
   $date_seperator = _get_option($options, 'date_seperator', $I18n_arr['date_seperator']);
+  $discard_month  = _get_option($options, 'discard_month');
+  $discard_day    = _get_option($options, 'discard_day');
+  $discard_year   = _get_option($options, 'discard_year');
 
-  $discard_month = _get_option($options, 'discard_month');
-  $discard_day = _get_option($options, 'discard_day');
-  $discard_year = _get_option($options, 'discard_year');
-
-  //discarding month automatically discards day
+  // discarding month automatically discards day
   if ($discard_month)
   {
     $discard_day = true;
@@ -1272,7 +1204,6 @@ function select_date_tag($name, $value = null, $options = array(), $html_options
 
   $order = _get_option($options, 'order');
   $tags = array();
-
   if (is_array($order) && count($order) == 3)
   {
     foreach ($order as $v)
@@ -1288,33 +1219,32 @@ function select_date_tag($name, $value = null, $options = array(), $html_options
   if ($include_custom = _get_option($options, 'include_custom'))
   {
     $include_custom_month = (is_array($include_custom))
-        ? ((isset($include_custom['month'])) ? array('include_custom'=>$include_custom['month']) : array()) 
+        ? ((isset($include_custom['month'])) ? array('include_custom' => $include_custom['month']) : array())
         : array('include_custom'=>$include_custom);
 
     $include_custom_day = (is_array($include_custom))
-        ? ((isset($include_custom['day'])) ? array('include_custom'=>$include_custom['day']) : array()) 
+        ? ((isset($include_custom['day'])) ? array('include_custom' => $include_custom['day']) : array())
         : array('include_custom'=>$include_custom);
 
     $include_custom_year = (is_array($include_custom))
-        ? ((isset($include_custom['year'])) ? array('include_custom'=>$include_custom['year']) : array()) 
+        ? ((isset($include_custom['year'])) ? array('include_custom' => $include_custom['year']) : array())
         : array('include_custom'=>$include_custom);
   }
   else
   {
     $include_custom_month = array();
-    $include_custom_day = array();
-    $include_custom_year = array();
+    $include_custom_day   = array();
+    $include_custom_year  = array();
   }
 
-  $month_name = $name . '[month]';
-  $m = (!$discard_month) ? select_month_tag($month_name, _parse_value_for_date($value, 'month', 'm'), $options + $include_custom_month, $html_options) : '';
+  $month_name = $name.'[month]';
+  $m = !$discard_month ? select_month_tag($month_name, _parse_value_for_date($value, 'month', 'm'), $options + $include_custom_month, $html_options) : '';
 
+  $day_name = $name.'[day]';
+  $d = !$discard_day ? select_day_tag($day_name, _parse_value_for_date($value, 'day', 'd'), $options + $include_custom_day, $html_options) : '';
 
-  $day_name = $name . '[day]';
-  $d = (!$discard_day) ? select_day_tag($day_name, _parse_value_for_date($value, 'day', 'd'), $options + $include_custom_day, $html_options) : '';
-
-  $year_name = $name . '[year]';
-  $y = (!$discard_year) ? select_year_tag($year_name, _parse_value_for_date($value, 'year', 'Y'), $options + $include_custom_year, $html_options) : '';
+  $year_name = $name.'[year]';
+  $y = !$discard_year ? select_year_tag($year_name, _parse_value_for_date($value, 'year', 'Y'), $options + $include_custom_year, $html_options) : '';
 
   // we have $tags = array ('m','d','y')
   foreach ($tags as $k => $v)
@@ -1422,7 +1352,7 @@ function select_minute_tag($name, $value = null, $options = array(), $html_optio
   {
     $value = date('i');
   }
-    
+
   $options = _parse_attributes($options);
   $select_options = array();
 
@@ -1775,26 +1705,18 @@ function select_datetime_tag($name, $value = null, $options = array(), $html_opt
  */
 function select_number_tag($name, $value, $options = array(), $html_options = array())
 {
-  if (!isset($options['start'])) $options['start'] = 1;
-  if (empty($options['end'])) $options['end'] = 10;
-  if (empty($options['increment'])) $options['increment'] = 1;
+  $increment = _get_option($options, 'increment', 1);
 
   $range = array();
-
-  for ($x = $options['start']; $x < ($options['end'] + $options['increment']); $x += $options['increment'])
+  for ($x = _get_option($options, 'start', 1); $x < (_get_option($options, 'end', 10) + $increment); $x += $increment)
   {
     $range[(string) $x] = $x;
   }
 
-  if (isset($options['reverse']))
+  if (_get_option($options, 'reverse'))
   {
     $range = array_reverse($range, true);
   }
-
-  unset($options['start']);
-  unset($options['end']);
-  unset($options['increment']);
-  unset($options['reverse']);
 
   return select_tag($name, options_for_select($range, $value, $options), $html_options);
 }
@@ -1840,11 +1762,7 @@ function get_id_from_name($name, $value = null)
   // check to see if we have an array variable for a field name
   if (strstr($name, '['))
   {
-    $name = str_replace(
-        array('[]', '][', '[', ']'),
-        array((($value != null) ? '_'.$value : ''), '_', '_', ''),
-        $name
-    );
+    $name = str_replace(array('[]', '][', '[', ']'), array((($value != null) ? '_'.$value : ''), '_', '_', ''), $name);
   }
 
   return $name;
@@ -1872,26 +1790,26 @@ function _get_I18n_date_locales($culture = null)
   $date_format = strtolower($dateFormatInfo->getShortDatePattern());
 
   $retval['dateFormatInfo'] = $dateFormatInfo;
-    
+
   $match_pattern = "/([dmy]+)(.*?)([dmy]+)(.*?)([dmy]+)/";
   if (!preg_match($match_pattern, $date_format, $match_arr))
   {
-    //if matching fails use en shortdate
+    // if matching fails use en shortdate
     preg_match($match_pattern, 'm/d/yy', $match_arr);
   }
 
   $retval['date_seperator'] = $match_arr[2];
 
-  //unset all but [dmy]+
+  // unset all but [dmy]+
   unset($match_arr[0], $match_arr[2], $match_arr[4]);
-  
+
   $retval['date_order'] = array();
   foreach ($match_arr as $v)
   {
     // 'm/d/yy' => $retval[date_order] = array ('m', 'd', 'y');
     $retval['date_order'][] = $v[0];
   }
-  
+
   return $retval;
 }
 
@@ -1942,29 +1860,16 @@ function _convert_options($options)
 
   foreach (array('disabled', 'readonly', 'multiple') as $attribute)
   {
-    $options = _boolean_attribute($options, $attribute);
-  }
-
-  return $options;
-}
-
-/**
- * Removes an attribute if it is found in an array of <i>$options</i>.
- *
- * @param  array options
- * @return string filtered array of <i>$options</i>
- */
-function _boolean_attribute($options, $attribute)
-{
-  if (array_key_exists($attribute, $options))
-  {
-    if ($options[$attribute])
+    if (array_key_exists($attribute, $options))
     {
-      $options[$attribute] = $attribute;
-    }
-    else
-    {
-      unset($options[$attribute]);
+      if ($options[$attribute])
+      {
+        $options[$attribute] = $attribute;
+      }
+      else
+      {
+        unset($options[$attribute]);
+      }
     }
   }
 

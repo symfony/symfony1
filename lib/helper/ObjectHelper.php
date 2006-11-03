@@ -108,37 +108,32 @@ function objects_for_select($options = array(), $value_method, $text_method = nu
 function object_select_tag($object, $method, $options = array(), $default_value = null)
 {
   $options = _parse_attributes($options);
-  $related_class = isset($options['related_class']) ? $options['related_class'] : '';
-  if (!isset($options['related_class']) && preg_match('/^get(.+?)Id$/', $method, $match))
+
+  $related_class = _get_option($options, 'related_class', false);
+  if (false === $related_class && preg_match('/^get(.+?)Id$/', $method, $match))
   {
     $related_class = $match[1];
   }
-  unset($options['related_class']);
 
-  $peer_method = isset($options['peer_method']) ? $options['peer_method'] : null;
-  unset($options['peer_method']);
+  $peer_method = _get_option($options, 'peer_method');
 
-  $text_method = isset($options['text_method']) ? $options['text_method'] : null;
-  unset($options['text_method']);
+  $text_method = _get_option($options, 'text_method');
 
   $select_options = _get_values_for_object_select_tag($object, $related_class, $text_method, $peer_method);
 
-  if (isset($options['include_custom']))
+  if ($value = _get_option($options, 'include_custom'))
   {
-    $select_options = array('' => $options['include_custom']) + $select_options;
-    unset($options['include_custom']);
+    $select_options = array('' => $value) + $select_options;
   }
-  else if (isset($options['include_title']))
+  else if (_get_option($options, 'include_title'))
   {
     $select_options = array('' => '-- '._convert_method_to_name($method, $options).' --') + $select_options;
-    unset($options['include_title']);
   }
-  else if (isset($options['include_blank']))
+  else if (_get_option($options, 'include_blank'))
   {
     $select_options = array('' => '') + $select_options;
-    unset($options['include_blank']);
   }
-  
+
   if (is_object($object))
   {
     $value = _get_object_value($object, $method, $default_value);

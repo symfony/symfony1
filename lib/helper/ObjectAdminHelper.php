@@ -28,23 +28,19 @@ function object_admin_input_file_tag($object, $method, $options = array())
 
   if ($object->$method())
   {
-    if (isset($options['include_link']) && $options['include_link'])
+    if ($include_link = _get_option($options, 'include_link'))
     {
-      $image_path = image_path('/'.sfConfig::get('sf_upload_dir_name').'/'.$options['include_link'].'/'.$object->$method());
-      $image_text = isset($options['include_text']) ? __($options['include_text']) : __('[show file]');
+      $image_path = image_path('/'.sfConfig::get('sf_upload_dir_name').'/'.$include_link.'/'.$object->$method());
+      $image_text = ($include_text = _get_option($options, 'include_text')) ? __($include_text) : __('[show file]');
 
       $html .= sprintf('<a onclick="window.open(this.href);return false;" href="%s">%s</a>', $image_path, $image_text)."\n";
     }
 
-    if (isset($options['include_remove']) && $options['include_remove'])
+    if ($include_remove = _get_option($options, 'include_remove'))
     {
-      $html .= checkbox_tag(strpos($name, ']') !== false ? substr($name, 0, -1).'_remove]' : $name).' '.($options['include_remove'] != true ? __($options['include_remove']) : __('remove file'))."\n";
+      $html .= checkbox_tag(strpos($name, ']') !== false ? substr($name, 0, -1).'_remove]' : $name).' '.($options['include_remove'] != true ? __($include_remove) : __('remove file'))."\n";
     }
   }
-
-  unset($options['include_link']);
-  unset($options['include_text']);
-  unset($options['include_remove']);
 
   return input_file_tag($name, $options)."\n<br />".$html;
 }
@@ -64,9 +60,7 @@ function object_admin_double_list($object, $method, $options = array())
 
   // get the lists of objects
   $through_class = _get_option($options, 'through_class');
-  $sort         = _get_option($options, 'sort');
-  unset($options['through_class']);
-  unset($options['sort']);
+  $sort          = _get_option($options, 'sort');
   $objects_associated = sfPropelManyToMany::getRelatedObjects($object, $through_class);
   $all_objects = sfPropelManyToMany::getAllObjects($object, $through_class);
   $objects_unassociated = array();
@@ -130,8 +124,6 @@ function object_admin_select_list($object, $method, $options = array())
   $objects = sfPropelManyToMany::getAllObjects($object, $through_class);
   $objects_associated = sfPropelManyToMany::getRelatedObjects($object, $through_class);
   $ids = array_map(create_function('$o', 'return $o->getPrimaryKey();'), $objects_associated);
-  unset($options['through_class']);
-  unset($options['sort']);
 
   // override field name
   unset($options['control_name']);
@@ -147,8 +139,6 @@ function object_admin_check_list($object, $method, $options = array())
   // get the lists of objects
   $through_class = _get_option($options, 'through_class');
   $sort          = _get_option($options, 'sort');
-  unset($options['through_class']);
-  unset($options['sort']);
   $objects = sfPropelManyToMany::getAllObjects($object, $through_class);
   $objects_associated = sfPropelManyToMany::getRelatedObjects($object, $through_class);
   $assoc_ids = array_map(create_function('$o', 'return $o->getPrimaryKey();'), $objects_associated);
