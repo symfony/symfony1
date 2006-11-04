@@ -62,7 +62,7 @@ try
 }
 catch (sfParseException $e)
 {
-  $t->like($e->getMessage(), '/can specify a fields directive but only under the param section/', 'generator.yml can have a "fields" section but only under "param"');
+  $t->like($e->getMessage(), '/can specify a "fields" section but only under the param section/', 'generator.yml can have a "fields" section but only under "param"');
 }
 
 $files = array(
@@ -77,7 +77,7 @@ try
 }
 catch (sfParseException $e)
 {
-  $t->like($e->getMessage(), '/can specify a list directive but only under the param section/', 'generator.yml can have a "list" section but only under "param"');
+  $t->like($e->getMessage(), '/can specify a "list" section but only under the param section/', 'generator.yml can have a "list" section but only under "param"');
 }
 
 $files = array(
@@ -92,5 +92,5 @@ try
 }
 catch (sfParseException $e)
 {
-  $t->like($e->getMessage(), '/can specify an edit directive but only under the param section/', 'generator.yml can have a "edit" section but only under "param"');
+  $t->like($e->getMessage(), '/can specify a "edit" section but only under the param section/', 'generator.yml can have a "edit" section but only under "param"');
 }

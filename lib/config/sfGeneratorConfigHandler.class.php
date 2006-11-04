@@ -40,54 +40,36 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler
 
     if (!isset($config['generator']))
     {
-      $error = sprintf('Configuration file "%s" must specify a generator section', $configFiles[1] ? $configFiles[1] : $configFiles[0]);
-
-      throw new sfParseException($error);
+      throw new sfParseException(sprintf('Configuration file "%s" must specify a generator section', $configFiles[1] ? $configFiles[1] : $configFiles[0]));
     }
 
     $config = $config['generator'];
 
     if (!isset($config['class']))
     {
-      $error = sprintf('Configuration file "%s" must specify a generator class section under the generator section', $configFiles[1] ? $configFiles[1] : $configFiles[0]);
-
-      throw new sfParseException($error);
+      throw new sfParseException(sprintf('Configuration file "%s" must specify a generator class section under the generator section', $configFiles[1] ? $configFiles[1] : $configFiles[0]));
     }
 
-    if (isset($config['fields']))
+    foreach (array('fields', 'list', 'edit') as $section)
     {
-      $error = sprintf('Configuration file "%s" can specify a fields directive but only under the param section', $configFiles[1] ? $configFiles[1] : $configFiles[0]);
-
-      throw new sfParseException($error);
+      if (isset($config[$section]))
+      {
+        throw new sfParseException(sprintf('Configuration file "%s" can specify a "%s" section but only under the param section', $configFiles[1] ? $configFiles[1] : $configFiles[0], $section));
+      }
     }
-
-    if (isset($config['list']))
-    {
-      $error = sprintf('Configuration file "%s" can specify a list directive but only under the param section', $configFiles[1] ? $configFiles[1] : $configFiles[0]);
-
-      throw new sfParseException($error);
-    }
-
-    if (isset($config['edit']))
-    {
-      $error = sprintf('Configuration file "%s" can specify an edit directive but only under the param section', $configFiles[1] ? $configFiles[1] : $configFiles[0]);
-
-      throw new sfParseException($error);
-    }
-
-    // generator class
-    $class = $config['class'];
 
     // generate class and add a reference to it
-    $generator_manager = new sfGeneratorManager();
-    $generator_manager->initialize();
-    $generator_param = (isset($config['param']) ? $config['param'] : array());
+    $generatorManager = new sfGeneratorManager();
+    $generatorManager->initialize();
+
+    // generator parameters
+    $generatorParam = (isset($config['param']) ? $config['param'] : array());
 
     // hack to find the module name
     preg_match('#'.sfConfig::get('sf_app_module_dir_name').'/([^/]+)/#', $configFiles[1], $match);
-    $generator_param['moduleName'] = $match[1];
+    $generatorParam['moduleName'] = $match[1];
 
-    $data = $generator_manager->generate($class, $generator_param);
+    $data = $generatorManager->generate($config['class'], $generatorParam);
 
     // compile data
     $retval = "<?php\n".
