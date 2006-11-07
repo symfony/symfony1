@@ -35,11 +35,11 @@ class sfFillInFormFilter extends sfFilter
     }
 
     // skip fields
-    $fillInForm->setSkipFields($this->getParameter('skip_fields', array()));
+    $fillInForm->setSkipFields((array) $this->getParameter('skip_fields', array()));
 
     // types
-    $excludeTypes = $this->getParameter('exclude_types', array('hidden', 'password'));
-    $checkTypes   = $this->getParameter('check_types',   array('text', 'checkbox', 'radio', 'password', 'hidden'));
+    $excludeTypes = (array) $this->getParameter('exclude_types', array('hidden', 'password'));
+    $checkTypes   = (array) $this->getParameter('check_types',   array('text', 'checkbox', 'radio', 'password', 'hidden'));
     $fillInForm->setTypes(array_diff($checkTypes, $excludeTypes));
 
     // fill in
