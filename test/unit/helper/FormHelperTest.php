@@ -80,7 +80,7 @@ class sfContext
   }
 }
 
-$t = new lime_test(89, new lime_output_color());
+$t = new lime_test(88, new lime_output_color());
 
 $context = sfContext::getInstance();
 $context->controller = new myController();
@@ -92,7 +92,6 @@ $t->diag('options_for_select()');
 $t->is(options_for_select(array('item1', 'item2', 'item3')), "<option value=\"0\">item1</option>\n<option value=\"1\">item2</option>\n<option value=\"2\">item3</option>\n", 'options_for_select() takes an array of options as its first argument');
 $t->is(options_for_select(array(1 => 'item1', 2 => 'item2', 'foo' => 'item3')), "<option value=\"1\">item1</option>\n<option value=\"2\">item2</option>\n<option value=\"foo\">item3</option>\n", 'options_for_select() takes an array of options as its first argument');
 $t->is(options_for_select(array('item1', 'item2', 'item3'), '0'), "<option value=\"0\" selected=\"selected\">item1</option>\n<option value=\"1\">item2</option>\n<option value=\"2\">item3</option>\n", 'options_for_select() takes the selected index as its second argument');
-$t->is(options_for_select(array('item1', 'item2', 'item3'), '2'), "<option value=\"0\">item1</option>\n<option value=\"1\">item2</option>\n<option value=\"2\" selected=\"selected\">item3</option>\n", 'options_for_select() takes the selected index as its second argument');
 $t->is(options_for_select(array('item1', 'item2', 'item3'), '2'), "<option value=\"0\">item1</option>\n<option value=\"1\">item2</option>\n<option value=\"2\" selected=\"selected\">item3</option>\n", 'options_for_select() takes the selected index as its second argument');
 $t->is(options_for_select(array('item1', 'item2', 'item3'), array('1', '2')), "<option value=\"0\">item1</option>\n<option value=\"1\" selected=\"selected\">item2</option>\n<option value=\"2\" selected=\"selected\">item3</option>\n", 'options_for_select() takes the selected index as its second argument');
 $t->is(options_for_select(array('group1' => array('item1', 'item2'), 'bar' => 'item3')), "<optgroup label=\"group1\"><option value=\"0\">item1</option>\n<option value=\"1\">item2</option>\n</optgroup>\n<option value=\"bar\">item3</option>\n", 'options_for_select() can deal with optgroups');
