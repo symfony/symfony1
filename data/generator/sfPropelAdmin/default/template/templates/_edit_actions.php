@@ -7,7 +7,7 @@
 <?php endforeach; ?>
 <?php else: ?>
   <?php echo $this->getButtonToAction('_list', array(), true) ?>
-  <?php echo $this->getButtonToAction('_save_and_add', array(), true) ?>
   <?php echo $this->getButtonToAction('_save', array(), true) ?>
+  <?php echo $this->getButtonToAction('_save_and_add', array(), true) ?>
 <?php endif; ?>
 </ul>
