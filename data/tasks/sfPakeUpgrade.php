@@ -139,19 +139,24 @@ function _upgrade_0_8_php_files($app_dir)
       "'/sf/images/sf_admin"  => "sfConfig::get('sf_prototype_web_dir').'/images",
     );
     $seen = array();
+    $updated = false;
     foreach ($deprecated as $old => $new)
     {
       $count = 0;
       $content = str_replace($old, $new, $content, $count);
       if ($count && !isset($seen[$old]))
       {
+        $updated = true;
         $seen[$old] = true;
         pake_echo_comment(sprintf('%s is deprecated', $old));
         pake_echo_comment(sprintf(' use %s', $new));
       }
     }
 
-    file_put_contents($php_file, $content);
+    if ($updated)
+    {
+      file_put_contents($php_file, $content);
+    }
   }
 }
 
@@ -172,19 +177,24 @@ function _upgrade_0_8_view_yml($app_dir)
       '/sf/images/sf_admin'  => '%SF_ADMIN_WEB_DIR%/images',
     );
     $seen = array();
+    $updated = false;
     foreach ($deprecated as $old => $new)
     {
       $count = 0;
       $content = str_replace($old, $new, $content, $count);
       if ($count && !isset($seen[$old]))
       {
+        $updated = true;
         $seen[$old] = true;
         pake_echo_comment(sprintf('%s is deprecated', $old));
         pake_echo_comment(sprintf(' use %s', $new));
       }
     }
 
-    file_put_contents($yml_file, $content);
+    if ($updated)
+    {
+      file_put_contents($yml_file, $content);
+    }
   }
 }
 
@@ -200,15 +210,20 @@ function _upgrade_0_8_cache_yml($app_dir)
     $content = file_get_contents($yml_file);
 
     $count = 0;
+    $updated = false;
     $content = preg_replace_callback('/type\:(\s*)(.+)$/m', '_upgrade_0_8_cache_yml_callback', $content, -1, $count);
     if ($count && !$seen)
     {
+      $updated = true;
       $seen = true;
       pake_echo_comment('"type" has been removed in cache.yml');
       pake_echo_comment('  read the doc about "with_layout"');
     }
 
-    file_put_contents($yml_file, $content);
+    if ($updated)
+    {
+      file_put_contents($yml_file, $content);
+    }
   }
 }
 
@@ -234,16 +249,21 @@ function _upgrade_0_8_deprecated_for_generator($app_dir)
       $content = file_get_contents($yml_file);
 
       $count = 0;
+      $updated = false;
       $content = str_replace($old, $new, $content, $count);
       if ($count && !isset($seen[$old]))
       {
         $seen[$old] = true;
+        $updated = true;
         pake_echo_comment(sprintf('%s() has been removed', $old));
         pake_echo_comment(sprintf(' use %s()', $new));
       }
     }
 
-    file_put_contents($yml_file, $content);
+    if ($updated)
+    {
+      file_put_contents($yml_file, $content);
+    }
   }
 }
 
@@ -264,19 +284,24 @@ function _upgrade_0_8_deprecated_for_actions($action_dirs)
       '$this->addJavascript' => '$this->getContext()->getResponse()->addJavascript',
     );
     $seen = array();
+    $updated = false;
     foreach ($deprecated as $old => $new)
     {
       $count = 0;
       $content = str_replace($old, $new, $content, $count);
       if ($count && !isset($seen[$old]))
       {
+        $updated = true;
         $seen[$old] = true;
         pake_echo_comment(sprintf('%s has been removed', $old));
         pake_echo_comment(sprintf(' use %s', $new));
       }
     }
 
-    file_put_contents($php_file, $content);
+    if ($updated)
+    {
+      file_put_contents($php_file, $content);
+    }
   }
 }
 
@@ -299,10 +324,12 @@ function _upgrade_0_8_deprecated_for_templates($template_dirs)
   {
     $content = file_get_contents($php_file);
 
+    $updated = false;
     $count = 0;
     $content = preg_replace('#<\?php\s+(echo)?\s+include_javascripts\(\);?\s*\?>#', '', $content, -1, $count);
     if ($count && !isset($seen['include_javascripts']))
     {
+      $updated = true;
       $seen['include_javascripts'] = true;
       pake_echo_comment('include_javascripts() has been removed');
     }
@@ -310,6 +337,7 @@ function _upgrade_0_8_deprecated_for_templates($template_dirs)
     $content = preg_replace('#<\?php\s+(echo)?\s+include_stylesheets\(\);?\s*\?>#', '', $content, -1, $count);
     if ($count && !isset($seen['include_stylesheets']))
     {
+      $updated = true;
       $seen['include_stylesheets'] = true;
       pake_echo_comment('include_stylesheets() has been removed');
     }
@@ -319,13 +347,17 @@ function _upgrade_0_8_deprecated_for_templates($template_dirs)
       $content = str_replace($old, $new, $content, $count);
       if ($count && !isset($seen[$old]))
       {
+        $updated = true;
         $seen[$old] = true;
         pake_echo_comment(sprintf('%s has been removed', $old));
         pake_echo_comment(sprintf(' use %s', $new));
       }
     }
 
-    file_put_contents($php_file, $content);
+    if ($updated)
+    {
+      file_put_contents($php_file, $content);
+    }
   }
 }
 
@@ -387,16 +419,21 @@ function _upgrade_0_8_propel_model()
 
     $count1 = 0;
     $count2 = 0;
+    $updated = false;
     $content = str_replace('require_once \'model', 'require_once \'lib/model', $content, $count1);
     $content = str_replace('include_once \'model', 'include_once \'lib/model', $content, $count2);
     if (($count1 || $count2) && !$seen)
     {
+      $updated = true;
       $seen = true;
       pake_echo_comment('model require must be lib/model/...');
       pake_echo_comment('  instead of model/...');
     }
 
-    file_put_contents($php_file, $content);
+    if ($updated)
+    {
+      file_put_contents($php_file, $content);
+    }
   }
 }
 
@@ -416,15 +453,20 @@ function _upgrade_0_8_schemas()
     }
 
     $count = 0;
+    $updated = false;
     $content = str_replace('<database', '<database package="lib.model"', $content, $count);
     if ($count && !$seen)
     {
+      $updated = true;
       $seen = true;
       pake_echo_comment('schema.xml must now have a database package');
       pake_echo_comment('  default is package="lib.model"');
     }
 
-    file_put_contents($xml_file, $content);
+    if ($updated)
+    {
+      file_put_contents($xml_file, $content);
+    }
   }
 }
 
@@ -436,29 +478,62 @@ function _upgrade_0_8_propel_ini()
 
   if (is_readable($propel_file))
   {
+    $updated = false;
     $propel_ini = file_get_contents($propel_file);
 
+    $count = 0;
+
     // new target package (needed for new plugin system)
-    $propel_ini = preg_replace('#propel\.targetPackage(\s*)=(\s*)model#', 'propel.targetPackage$1=$2lib.model', $propel_ini);
-    $propel_ini = preg_replace('#propel.php.dir(\s*)=(\s*)\${propel.output.dir}/lib#', 'propel.php.dir$1=$2\${propel.output.dir}', $propel_ini);
+    $propel_ini = preg_replace('#propel\.targetPackage(\s*)=(\s*)model#', 'propel.targetPackage$1=$2lib.model', $propel_ini, $count);
+    if ($count)
+    {
+      $updated = true;
+    }
+    $propel_ini = preg_replace('#propel.php.dir(\s*)=(\s*)\${propel.output.dir}/lib#', 'propel.php.dir$1=$2\${propel.output.dir}', $propel_ini, $count);
+    if ($count)
+    {
+      $updated = true;
+    }
 
     if (false === strpos($propel_ini, 'propel.packageObjectModel'))
     {
+      $updated = true;
       $propel_ini = rtrim($propel_ini);
       $propel_ini .= "\npropel.packageObjectModel = true\n";
     }
 
     // new propel builder class to be able to remove require_* and strip comments
-    $propel_ini = str_replace('propel.engine.builder.om.php5.PHP5ExtensionObjectBuilder', 'addon.propel.builder.SfExtensionObjectBuilder', $propel_ini);
-    $propel_ini = str_replace('propel.engine.builder.om.php5.PHP5ExtensionPeerBuilder', 'addon.propel.builder.SfExtensionPeerBuilder', $propel_ini);
-    $propel_ini = str_replace('propel.engine.builder.om.php5.PHP5MultiExtendObjectBuilder', 'addon.propel.builder.SfMultiExtendObjectBuilder', $propel_ini);
-    $propel_ini = str_replace('propel.engine.builder.om.php5.PHP5MapBuilderBuilder', 'addon.propel.builder.SfMapBuilderBuilder', $propel_ini);
+    $propel_ini = str_replace('propel.engine.builder.om.php5.PHP5ExtensionObjectBuilder', 'addon.propel.builder.SfExtensionObjectBuilder', $propel_ini, $count);
+    if ($count)
+    {
+      $updated = true;
+    }
+    $propel_ini = str_replace('propel.engine.builder.om.php5.PHP5ExtensionPeerBuilder', 'addon.propel.builder.SfExtensionPeerBuilder', $propel_ini, $count);
+    if ($count)
+    {
+      $updated = true;
+    }
+    $propel_ini = str_replace('propel.engine.builder.om.php5.PHP5MultiExtendObjectBuilder', 'addon.propel.builder.SfMultiExtendObjectBuilder', $propel_ini, $count);
+    if ($count)
+    {
+      $updated = true;
+    }
+    $propel_ini = str_replace('propel.engine.builder.om.php5.PHP5MapBuilderBuilder', 'addon.propel.builder.SfMapBuilderBuilder', $propel_ini, $count);
+    if ($count)
+    {
+      $updated = true;
+    }
 
     // replace old symfony.addon.propel path to addon.propel
-    $propel_ini = str_replace('symfony.addon.propel.builder.', 'addon.propel.builder.', $propel_ini);
+    $propel_ini = str_replace('symfony.addon.propel.builder.', 'addon.propel.builder.', $propel_ini, $count);
+    if ($count)
+    {
+      $updated = true;
+    }
 
     if (false === strpos($propel_ini, 'addIncludes'))
     {
+      $updated = true;
       $propel_ini .= <<<EOF
 
 propel.builder.addIncludes = false
@@ -472,7 +547,10 @@ EOF;
 
     }
 
-    file_put_contents($propel_file, $propel_ini);
+    if ($updated)
+    {
+      file_put_contents($propel_file, $propel_ini);
+    }
   }
 }
 
