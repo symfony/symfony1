@@ -34,36 +34,34 @@ class sfPropelUniqueValidator extends sfValidator
   public function execute (&$value, &$error)
   {
     $className  = $this->getParameter('class').'Peer';
-    $columnName = strtoupper($this->getParameter('column'));
-    $tableMap = call_user_func(array($className, 'getTableMap'));
-    $primaryKey = null;
-    foreach ($tableMap->getColumns() as $column)
-    {
-      if ($column->isPrimaryKey())
-      {
-        $primaryKey = $column->getPhpName();
-        break;
-      }
-    }
-    $primaryKeyValue = $this->getContext()->getRequest()->getParameter(strtolower($primaryKey));
+    $columnName = call_user_func(array($className, 'translateFieldName'), $this->getParameter('column'), BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_COLNAME);
 
     $c = new Criteria();
-    $c->add(constant($className.'::'.$columnName), $value);
-    if ($primaryKeyValue)
-    {
-      $c->add(constant($className.'::'.strtoupper($primaryKey)), $primaryKeyValue, Criteria::NOT_EQUAL);
-    }
-
+    $c->add($columnName, $value);
     $object = call_user_func(array($className, 'doSelectOne'), $c);
 
-    if (!$object)
+    if ($object)
     {
-      return true;
+      $tableMap = call_user_func(array($className, 'getTableMap'));
+      foreach ($tableMap->getColumns() as $column)
+      {
+        if (!$column->isPrimaryKey())
+        {
+          continue;
+        }
+
+        $method = 'get'.$column->getPhpName();
+        $primaryKey = call_user_func(array($className, 'translateFieldName'), $column->getPhpName(), BasePeer::TYPE_PHPNAME, BasePeer::TYPE_FIELDNAME);
+        if ($object->$method() != $this->getContext()->getRequest()->getParameter($primaryKey))
+        {
+          $error = $this->getParameter('unique_error');
+
+          return false;
+        }
+      }
     }
 
-    $error = $this->getParameter('unique_error');
-
-    return false;
+    return true;
   }
 
   /**
