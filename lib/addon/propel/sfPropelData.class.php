@@ -93,6 +93,12 @@ class sfPropelData
         {
           // create a new entry in the database
           $obj = new $class();
+
+          if (!is_array($data))
+          {
+            throw new Exception('You must give a name for each fixture data entry');
+          }
+
           foreach ($data as $name => $value)
           {
             // foreign key?
