@@ -27,4 +27,39 @@ class SfExtensionPeerBuilder extends PHP5ExtensionPeerBuilder
 
     parent::addIncludes($script);
   }
+
+  /**
+   * Adds class phpdoc comment and openning of class.
+   * @param string &$script The script will be modified in this method.
+   */
+  protected function addClassOpen(&$script)
+  {
+    $table = $this->getTable();
+    $tableName = $table->getName();
+    $tableDesc = $table->getDescription();
+
+    $baseClassname = $this->getPeerBuilder()->getClassname();
+
+    $script .= "
+/**
+ * Subclass for performing query and update operations on the '$tableName' table.
+ *
+ * $tableDesc
+ *
+ * @package ".$this->getPackage()."
+ */ 
+class ".$this->getClassname()." extends $baseClassname
+{";
+  }
+
+  /**
+   * Closes class.
+   * @param string &$script The script will be modified in this method.
+   */ 
+  protected function addClassClose(&$script)
+  {
+    $script .= "
+}
+";
+  }
 }
