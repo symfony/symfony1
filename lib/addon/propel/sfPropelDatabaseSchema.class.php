@@ -35,7 +35,8 @@ class sfPropelDatabaseSchema
       throw new sfException('A schema.yml must only contain 1 database entry.');
     }
 
-    $this->connection_name = array_shift(array_keys($schema));
+    $tmp = array_keys($schema);
+    $this->connection_name = array_shift($tmp);
     if ($this->connection_name)
     {
       $this->database = $schema[$this->connection_name];

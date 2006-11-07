@@ -60,7 +60,7 @@ class simpleAutoloader
     return true;
   }
 
-  protected function register($dir, $ext)
+  static protected function register($dir, $ext)
   {
     if (!is_dir($dir))
     {
