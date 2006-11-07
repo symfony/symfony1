@@ -292,27 +292,30 @@ EOF;
 
       foreach ($fields[$category] as $field)
       {
-        list($field, $flag) = $this->splitFlag($field);
-        
-        $phpNames[] = $this->getAdminColumnForField($field, $flag);
+        list($field, $flags) = $this->splitFlag($field);
+
+        $phpNames[] = $this->getAdminColumnForField($field, $flags);
       }
     }
-    else     // no, just return the full list of columns in table
+    else
+    {
+      // no, just return the full list of columns in table
       return $this->getAllColumns();
+    }
 
     return $phpNames;
   }
-  
+
   public function splitFlag($text)
   {
-    $flag = '';
-    if (in_array($text[0], array('=', '-', '+', '_', '~')))
+    $flags = array();
+    while (in_array($text[0], array('=', '-', '+', '_', '~')))
     {
-      $flag = $text[0];
+      $flags[] = $text[0];
       $text = substr($text, 1);
     }
 
-    return array($text, $flag);
+    return array($text, $flags);
   }
 
   // $name example: list.display
@@ -567,12 +570,14 @@ EOF;
     {
       $phpNames[] = new sfAdminColumn($column->getPhpName(), $column);
     }
+
     return $phpNames;
   }
 
   public function getAdminColumnForField($field, $flag = null)
   {
     $phpName = sfInflector::camelize($field);
+
     return new sfAdminColumn($phpName, $this->getColumnForPhpName($phpName), $flag);
   }
 
@@ -586,8 +591,8 @@ EOF;
       if ($column->getPhpName() == $phpName)
       {
         $found = true;
+
         return $column;
-        break;
       }
     }
 
@@ -610,13 +615,13 @@ class sfAdminColumn
   protected
     $phpName    = '',
     $column     = null,
-    $flag       = '';
+    $flags      = array();
 
-  public function __construct($phpName, $column = null, $flag = '')
+  public function __construct($phpName, $column = null, $flags = array())
   {
     $this->phpName = $phpName;
     $this->column  = $column;
-    $this->flag    = $flag;
+    $this->flags   = (array) $flags;
   }
 
   public function __call ($name, $arguments)
@@ -641,16 +646,16 @@ class sfAdminColumn
 
   public function isPartial ()
   {
-    return (($this->flag == '_') ? true : false);
+    return in_array('_', $this->flags) ? true : false;
   }
 
   public function isComponent ()
   {
-    return (($this->flag == '~') ? true : false);
+    return in_array('~', $this->flags) ? true : false;
   }
 
   public function isLink ()
   {
-    return (($this->flag == '=' || $this->isPrimaryKey()) ? true : false);
+    return (in_array('=', $this->flags) || $this->isPrimaryKey()) ? true : false;
   }
 }
