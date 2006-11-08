@@ -5,7 +5,7 @@
 <h1><?php echo $this->getI18NString('list.title', $this->getModuleName().' list') ?></h1>
 
 <div id="sf_admin_header">
-[?php include_partial('<?php echo $this->getModuleName() ?>/list_header') ?]
+[?php include_partial('<?php echo $this->getModuleName() ?>/list_header', array('pager' => $pager)) ?]
 [?php if ($sf_request->getError('delete')): ?]
 <div class="form-errors">
   <h2>Could not delete the selected <?php echo sfInflector::humanize($this->getSingularName()) ?></h2>
@@ -72,7 +72,7 @@
 </div>
 
 <div id="sf_admin_footer">
-[?php include_partial('<?php echo $this->getModuleName() ?>/list_footer') ?]
+[?php include_partial('<?php echo $this->getModuleName() ?>/list_footer', array('pager' => $pager)) ?]
 </div>
 
 </div>
