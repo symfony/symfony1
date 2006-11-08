@@ -845,7 +845,7 @@
       }
       if (isset($options['with']))
       {
-        $js_options['callback'] = "function(form) { return".$options['with']."}";
+        $js_options['callback'] = "function(form) { return ".$options['with']." }";
       }
       if (isset($options['highlightcolor']))
       {
