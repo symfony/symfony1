@@ -231,7 +231,7 @@ $column = sfPropelManyToMany::getColumn($class, $through_class);
 <?php if ($this->getParameterValue('edit.fields.'.$column->getName().'.filename')): ?>
       $fileName = "<?php echo str_replace('"', '\\"', $this->replaceConstants($this->getParameterValue('edit.fields.'.$column->getName().'.filename'))) ?>";
 <?php else: ?>
-      $fileName = md5($this->getRequest()->getFileName('<?php echo $this->getSingularName() ?>[<?php echo $name ?>]').time());
+      $fileName = md5($this->getRequest()->getFileName('<?php echo $this->getSingularName() ?>[<?php echo $name ?>]').time().rand(0, 99999));
 <?php endif ?>
       $ext = $this->getRequest()->getFileExtension('<?php echo $this->getSingularName() ?>[<?php echo $name ?>]');
       if (is_file($currentFile))
