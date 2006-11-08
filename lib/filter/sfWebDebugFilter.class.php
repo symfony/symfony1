@@ -36,17 +36,20 @@ class sfWebDebugFilter extends sfFilter
     // execute next filter
     $filterChain->execute();
 
-    $response = $this->getContext()->getResponse();
+    $context    = $this->getContext();
+    $response   = $context->getResponse();
+    $controller = $context->getController();
 
     // don't add debug toolbar on XHR requests
     // don't add debug if 304
+    // don't add debug if not rendering to the client
     if (
         $this->getContext()->getRequest()->isXmlHttpRequest() ||
         strpos($response->getContentType(), 'html') === false ||
-        $response->getStatusCode() == 304
+        $response->getStatusCode() == 304 ||
+        $controller->getRenderMode() != sfView::RENDER_CLIENT
     )
     {
-      $filterChain->execute();
       return;
     }
 
