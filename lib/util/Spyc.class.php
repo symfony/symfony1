@@ -457,7 +457,15 @@ class Spyc
    {
     if (is_object($value))
     {
-      $value = (string) $value;
+       if (method_exists($value, '__toString'))
+       {
+         $value = (string) $value;
+       }
+       else
+       {
+         $ref = new ReflectionObject($value);
+         $value = $ref->getName();
+       }
     }
 
     // do some folding here, for blocks
