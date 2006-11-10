@@ -35,6 +35,18 @@ class sfConfig
   }
 
   /**
+   * Indicates whether or not a config parameter exists.
+   *
+   * @param string A config parameter name.
+   *
+   * @return bool true, if the config parameter exists, otherwise false.
+   */
+  public static function has ($name)
+  {
+    return array_key_exists($name, self::$config);
+  }
+
+  /**
    * Set a config parameter.
    *
    * If a config parameter with the name already exists the value will be overridden.

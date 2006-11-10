@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(58, new lime_output_color());
+$t = new lime_test(59, new lime_output_color());
 
 // ::stringToArray()
 $t->diag('::stringToArray()');
@@ -76,6 +76,8 @@ $t->diag('::replaceConstants()');
 sfConfig::set('foo', 'bar');
 $t->is(sfToolkit::replaceConstants('my value with a %foo% constant'), 'my value with a bar constant', '::replaceConstantsCallback() replaces constants enclosed in %');
 $t->is(sfToolkit::replaceConstants('%Y/%m/%d %H:%M'), '%Y/%m/%d %H:%M', '::replaceConstantsCallback() does not replace unknown constants');
+sfConfig::set('bar', null);
+$t->is(sfToolkit::replaceConstants('my value with a %bar% constant'), 'my value with a  constant', '::replaceConstantsCallback() replaces constants enclosed in % even if value is null');
 
 // ::isPathAbsolute()
 $t->diag('::isPathAbsolute()');
