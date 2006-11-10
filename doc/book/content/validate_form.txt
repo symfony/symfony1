@@ -75,32 +75,20 @@ Symfony can apply these rules almost automatically, provided that you add a new 
 ### Configuration file
 
 By convention, if you want to validate the form data on the call to the `send` action, a configuration file called `send.yml` must be created in the `validate` directory of the module. To validate only the `name` field, you need the following configuration:
-
-    methods:
-      get:            [name]
-      post:           [name]
     
-    names:
+    fields:
       name:
-        required:     Yes
-        required_msg: The name field cannot be left blank
-        validators:   nameValidator
-    
-    nameValidator:
-      class:          sfStringValidator
-      param:
-        min:          2
-        min_error:    You didn't enter a valid name (at least 2 characters). Please try again.
-        max:          100
-        max_error:    You didn't enter a valid name (less than 100 characters). Please try again.
+        required:
+          msg: The name field cannot be left blank
+        sfStringValidator:
+          min:          2
+          min_error:    You didn't enter a valid name (at least 2 characters). Please try again.
+          max:          100
+          max_error:    You didn't enter a valid name (less than 100 characters). Please try again.
 
 Let's have a closer look at this file:
 
-First, under the `methods` header, the list of fields to be validated is defined for the method of the form (post by default). To be able to change your mind in the future,  you should double the statement for the other method.
-
-Then, under the `names` header, the list of the the fields to be checked, along with their 'required' flag, corresponding error message and mention of any specific validation rules header, are specified.
-
-Eventually, as the 'name' field is declared to have a specific set of validation rules, they are detailed under the corresponding header.
+Under the `fields` header appears the list of the the fields to be checked. Each can have a `required` section with an error message to be displayed if the form is submitted without the field. Each field can also have a list of validators, together with parameters.
 
 ### Action modification
 
@@ -160,50 +148,74 @@ Now you may suggest that the field with incorrect data should be highlighted, fo
 ### Complete configuration file
 
 You can add the other rules to the `send.yml` configuration file to force the validation of all fields. This is what a complete YAML validation file looks like:
-
-    methods:
-      get:      [name, email, age, message]
-      post:     [name, email, age, message]
     
-    names:
+    fields:
       name:
-        required:       Yes
-        required_msg:   The name field cannot be left blank
-        validators:     nameValidator
+        required:
+          msg:   The name field cannot be left blank
+        sfStringValidator:
+          min:          2
+          min_error:    You didn't enter a valid name (at least 2 characters). Please try again.
+          max:          100
+          max_error:    You didn't enter a valid name (less than 100 characters). Please try again.
       email:
-        required:       Yes
-        required_msg:   The name field cannot be left blank
-        validators:     emailValidator
+        required:
+          msg:   The name field cannot be left blank
+        sfRegexValidator:
+          match:        Yes
+          match_error:  "You didn't enter a valid email address (for example: name@domain.com). Please try again."
+          pattern:      /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/i
       age:
-        required:       No
-        validators:     ageValidator
+        sfNumberValidator:
+          nan_error:    Please enter an integer
+          min:          0
+          min_error:    You're not even born. How do you want to send a message ?
+          max:          120
+          max_error:    Hey, grandma, aren't you too old to surf on the Internet ?        
       message:
-        required:       Yes
-        required_msg:   The message field cannot be left blank
-    
-    nameValidator:
-      class:          sfStringValidator
-      param:
-        min:          2
-        min_error:    You didn't enter a valid name (at least 2 characters). Please try again.
-        max:          100
-        max_error:    You didn't enter a valid name (less than 100 characters). Please try again.
-    
-    ageValidator:
-      class:          sfNumberValidator
-      param:
-        nan_error:    Please enter an integer
-        min:          0
-        min_error:    You're not even born. How do you want to send a message ?
-        max:          120
-        max_error:    Hey, grandma, aren't you too old to surf on the Internet ?
-    
-    emailValidator:
-      class:          sfRegexValidator
-      param:
-        match:        Yes
-        match_error:  "You didn't enter a valid email address (for example: name@domain.com). Please try again."
-        pattern:      /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/i
+        required:
+          msg:   The message field cannot be left blank    
+
+## Named validator
+
+If you reuse the same validator with the same parameter more than once in a validation file, you may wish to avoid repetition. You can define a named validator under the `validators` header, and reuse this validator in the `fields` section as follows:
+
+    validators:
+      myEmailValidator:
+        class: sfRegexValidator:
+        param:
+          match:        Yes
+          match_error:  "You didn't enter a valid email address (for example: name@domain.com). Please try again."
+          pattern:      /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/i        
+
+    fields:
+      email:
+        required:
+          msg:   The name field cannot be left blank
+        myEmailValidator:
+          match_error:  "The email is compulsory."
+
+As you can see, it is possible to override any parameter defined in the `validators` header when you actually declare the use of this validator in a `fields` section.
+
+## Request mode
+
+By default, the validation will be triggered only by a POST request. You can choose to have it triggered also on a GET request, by overriding the value of the `methods` key:
+
+    methods: [post, get]
+      
+It is even possible to declare distinct fields for disstinct request modes. For instance, if you want the `name` field to be validated in GET but not in POST, you can override the global `methods` declaration from within the `fields` section:
+
+      name:
+        methods: [get]
+        required:
+          msg:   The name field cannot be left blank
+        sfStringValidator:
+          min:          2
+          min_error:    You didn't enter a valid name (at least 2 characters). Please try again.
+          max:          100
+          max_error:    You didn't enter a valid name (less than 100 characters). Please try again.
+
+>**Note**: In previous versions of symfony, the validation file had another syntax, slighly longer and more complex. This older syntax still works but is deprecated.
 
 Available validators
 --------------------
@@ -250,25 +262,17 @@ The available validators can be found in the symfony lib `validator` directory. 
             email_error:  This email address is invalid
 
 * `sfCompareValidator`: checks the equality of two different request parameters; very useful for password check
-
-        methods:
-          get:            [password1, password2]
-          post:           [password1, password2]
         
-        names:
+        fields:
           password1:
-            required:     Yes
-            required_msg: Please enter a password
+            required:     
+              msg: Please enter a password
           password2:
-            required:     Yes
-            required_msg: Please retype the password
-            validators:   passwordValidator
-            
-        passwordValidator:
-          class:          sfCompareValidator
-          param:
-            check:        password1
-            compare_error: The passwords you entered do not match. Please try again.
+            required:
+              msg: Please retype the password
+            sfCompareValidator:
+              check:        password1
+              compare_error: The passwords you entered do not match. Please try again.
 
   The `check` param contains the name of the field that the current field must match to be valid.
   
@@ -284,30 +288,23 @@ The available validators can be found in the symfony lib `validator` directory. 
   In the example above, the validator will look in the database for a record of class `User` where the column `login` has the same value as the parameter to validate. Note that this validator relies on Propel.
 
 * `sfFileValidator`: applies format (an array of mime types) and size constraints to file upload fields
-
-        methods:
-          post:               [image]
           
-        names:
+        fields:
           image:
-            required:         Yes
-            required_msg:     Please upload an image file
-            validators:       imageValidator
-            file:             true
-            
-        imageValidator:
-          class:              sfFileValidator
-          param:
-            mime_types:       
-              - 'image/jpeg'
-              - 'image/png'
-              - 'image/x-png'
-              - 'image/pjpeg'        
-            mime_types_error: Only PNG and JPEG images are allowed
-            max_size:         512000
-            max_size_error:   Max size is 512Kb
+            required:
+              msg:             Please upload an image file
+            file:              true
+            sfFileValidator:
+              mime_types:       
+                - 'image/jpeg'
+                - 'image/png'
+                - 'image/x-png'
+                - 'image/pjpeg'        
+              mime_types_error: Only PNG and JPEG images are allowed
+              max_size:         512000
+              max_size_error:   Max size is 512Kb
 
-  Beware that the attribute `file` has to be set to `true` for the field in the `names` section - and that the template must declare the form as `multipart`. Find more information in the [file upload chapter](upload.txt).
+  Beware that the attribute `file` has to be set to `true` for the field in the `fields` section - and that the template must declare the form as `multipart`. Find more information in the [file upload chapter](upload.txt).
 
 * `sfCallbackValidator`: Passes the hand to a third party method or function to do the validation (and return true or false).
  
@@ -390,12 +387,15 @@ Each `Validator` is a particular class that can have certain parameters. If the 
       }
     }
 
-Now the last part of the `send.yml` file can be replaced with:
+Now the `email` validation in the `send.yml` file can be replaced with:
 
-    emailValidator:
-      class:          sfEmailValidator
-      param:
-       email_error:   You didn't enter a valid email address (for example: name@domain.com). Please try again.
+    fields:
+      ...
+      email:
+        required:
+          msg:   The name field cannot be left blank
+        sfEmailValidator:
+          email_error:   You didn't enter a valid email address (for example: name@domain.com). Please try again.
 
 If you need to create a new validation class and if it is a generic one, you should ask to have it included in the framework.
 
@@ -446,15 +446,9 @@ PHP allows you to use an array syntax for the form fields. When writing forms by
     <label for="story[title]">Titre:</label>
     <input type="text" name="story[title]" id="story[title]" value="default value" size="45" />
 
-The trouble is that using the input `id` as is (with brackets) in a validation file will push the YAML parser to its limits, and you will end up with errors. The solution here is to replace square brackets `[]` by curly brackets `{}` in the `names:` and `methods:` sections, and to use the explicit list declaration syntax with quotation marks for the `methods:` section:
-
-    methods:
-      get:
-        - "story{title}"
-      post:
-        - "story{title}"
+The trouble is that using the input `id` as is (with brackets) in a validation file will push the YAML parser to its limits, and you will end up with errors. The solution here is to replace square brackets `[]` by curly brackets `{}` in the `fields:` section:
         
-    names:
+    fields:
       story{title}:
         required:     Yes
 
@@ -464,18 +458,12 @@ Symfony will do the translation automatically, and the validation will run as ex
 
 You sometimes need to execute a validator on a field which is not required, on an empty value. This happens, for instance, with a form where the user can (but may not) want to change his password, and in this case a confirmation password must be entered:
 
-    names:
-      password1:
-        required:     false
-      password2:
-        required:     false
-        validators:   passwordValidator
-        
-    passwordValidator:
-       class:         sfCompareValidator
-       param:
-         check:       password1
-         compare_error: The passwords you entered do not match. Please try again.
+    fields:
+      password1:      # Not required
+      password2:      # Not required either
+        sfCompareValidator:
+          check:         password1
+          compare_error: The passwords you entered do not match. Please try again.
 
 * If `password1 == null` and `password2 == null`
   * The `required` test passes
@@ -491,20 +479,14 @@ You may want to execute your `password2` validator IF `password1` is not null. F
 
 So, if you change the configuration to:
 
-    names:
+    fields:
       password1:
-        required:     false
         group:        password_group
       password2:
-        required:     false
         group:        password_group
-        validators:   passwordValidator
-    
-    passwordValidator:
-       class:         sfCompareValidator
-       param:
-         check:       password1
-         compare_error: The passwords you entered do not match. Please try again.
+        validators:   sfCompareValidator
+          check:       password1
+          compare_error: The passwords you entered do not match. Please try again.
 
 Now, the validation occurs as follows:
 
