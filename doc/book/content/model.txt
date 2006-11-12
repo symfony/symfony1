@@ -51,7 +51,8 @@ Data model
 
 In order to create the data object model that symfony will use, you need to translate whatever relational model your database has to an object data model. This is done through a schema file called `schema.yml`, in which are defined the tables, their relations and the type of their columns.
 
-The `schema.yml` file must be located in the `myproject/config/` directory. This file uses the [YAML](configuration.txt) syntax, but it is simple to read without any knoledge of that format (which, by the way, takes 5 minutes to learn).
+The `schema.yml` file must be located in the `myproject/config/` directory. This file uses the [YAML](configuration.txt) syntax, but it is simple to 
+read without any knowledge of that format (which, by the way, takes 5 minutes to learn).
 
 ### Example
 
