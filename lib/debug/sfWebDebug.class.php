@@ -194,7 +194,7 @@ class sfWebDebug
         // sql queries log
         if (preg_match('/execute(?:Query|Update).+?\:\s+(.+)$/', $log, $match))
         {
-          $sql_logs[] .= $match[1]."\n";
+          $sql_logs[] .= $match[1];
         }
 
         ++$line_nb;
@@ -236,13 +236,13 @@ class sfWebDebug
     // database information
     $dbInfo = '';
     $dbInfoDetails = '';
-    if (0 != ($nb = $this->getDatabaseRequestNumber()))
+    if ($sql_logs)
     {
-      $dbInfo = '<li><a href="#" onclick="sfWebDebugShowDetailsFor(\'sfWebDebugDatabaseDetails\'); return false;">'.image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/database.png').' '.$nb.'</a></li>';
+      $dbInfo = '<li><a href="#" onclick="sfWebDebugShowDetailsFor(\'sfWebDebugDatabaseDetails\'); return false;">'.image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/database.png').' '.count($sql_logs).'</a></li>';
 
       $dbInfoDetails = '
         <div id="sfWebDebugDatabaseLogs">
-        <ol><li>'.implode('</li><li>', $sql_logs).'</li></ol>
+        <ol><li>'.implode("</li>\n<li>", $sql_logs).'</li></ol>
         </div>
       ';
     }
@@ -363,28 +363,6 @@ class sfWebDebug
     ';
 
     return $content;
-  }
-
-  public function getDatabaseRequestNumber()
-  {
-    // get Propel statistics if available (user created a model and a db)
-    // only if Propel was used
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_use_database') && class_exists('Propel') && Propel::isInit())
-    {
-      try
-      {
-        $con = Propel::getConnection();
-        if (method_exists($con, 'getNumQueriesExecuted'))
-        {
-          return $con->getNumQueriesExecuted();
-        }
-      }
-      catch (Exception $e)
-      {
-      }
-    }
-
-    return 0;
   }
 
   public function decorateContentWithDebug($internalUri, $content, $new = false)
