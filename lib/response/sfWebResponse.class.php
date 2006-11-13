@@ -241,7 +241,7 @@ class sfWebResponse extends sfResponse
 
     if (sfConfig::get('sf_logging_active'))
     {
-      $this->getContext()->getLogger()->info('{sfWebResponse} send status "'.$status.'"');
+      $this->getContext()->getLogger()->info('{sfResponse} send status "'.$status.'"');
     }
 
     // headers
@@ -251,7 +251,7 @@ class sfWebResponse extends sfResponse
 
       if (sfConfig::get('sf_logging_active') && $value != '')
       {
-        $this->getContext()->getLogger()->info('{sfWebResponse} send header "'.$name.'": "'.$value.'"');
+        $this->getContext()->getLogger()->info('{sfResponse} send header "'.$name.'": "'.$value.'"');
       }
     }
 
@@ -269,7 +269,7 @@ class sfWebResponse extends sfResponse
 
       if (sfConfig::get('sf_logging_active'))
       {
-        $this->getContext()->getLogger()->info('{sfWebResponse} send cookie "'.$cookie['name'].'": "'.$cookie['value'].'"');
+        $this->getContext()->getLogger()->info('{sfResponse} send cookie "'.$cookie['name'].'": "'.$cookie['value'].'"');
       }
     }
   }

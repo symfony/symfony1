@@ -69,7 +69,7 @@ class sfPHPView extends sfView
   {
     if (sfConfig::get('sf_logging_active'))
     {
-      $this->getContext()->getLogger()->info('{sfPHPView} render "'.$_sfFile.'"');
+      $this->getContext()->getLogger()->info('{sfView} render "'.$_sfFile.'"');
     }
 
     $this->loadCoreAndStandardHelpers();
@@ -148,7 +148,7 @@ class sfPHPView extends sfView
 
     if (sfConfig::get('sf_logging_active'))
     {
-      $this->getContext()->getLogger()->info('{sfPHPView} decorate content with "'.$template.'"');
+      $this->getContext()->getLogger()->info('{sfView} decorate content with "'.$template.'"');
     }
 
     // set the decorator content as an attribute
