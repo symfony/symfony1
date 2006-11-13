@@ -388,13 +388,10 @@ class sfWebResponse extends sfResponse
       $value = htmlentities($value, ENT_QUOTES, sfConfig::get('sf_charset'));
     }
 
-    if (!$replace)
+    if ($replace || !$this->getParameter($key, null, 'helper/asset/auto/meta'))
     {
-      $current = $this->getParameter($key, '', 'helper/asset/auto/meta');
-      $value = ($current ? $current.', ' : '').$value;
+      $this->setParameter($key, $value, 'helper/asset/auto/meta');
     }
-
-    $this->setParameter($key, $value, 'helper/asset/auto/meta');
   }
 
   public function getTitle()
