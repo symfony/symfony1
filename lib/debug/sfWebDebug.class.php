@@ -121,16 +121,13 @@ class sfWebDebug
                                                    '/^(.+?)\(\)\:/S'      => '<span class="sfWebDebugLogInfo">\\1()</span>:',
                                                    '/line (\d+)$/'        => 'line <span class="sfWebDebugLogInfo">\\1</span>'));
 
-    // special formatting for creole/SQL lines
-    if (strtolower($type) == 'creole')
-    {
-      $log_line = preg_replace('/\b(SELECT|FROM|AS|LIMIT|ASC|COUNT|DESC|WHERE|LEFT JOIN|INNER JOIN|RIGHT JOIN|ORDER BY|GROUP BY|IN|LIKE|DISTINCT|DELETE|INSERT|INTO|VALUES)\b/', '<span class="sfWebDebugLogInfo">\\1</span>', $log_line);
+    // special formatting for SQL lines
+    $log_line = preg_replace('/\b(SELECT|FROM|AS|LIMIT|ASC|COUNT|DESC|WHERE|LEFT JOIN|INNER JOIN|RIGHT JOIN|ORDER BY|GROUP BY|IN|LIKE|DISTINCT|DELETE|INSERT|INTO|VALUES)\b/', '<span class="sfWebDebugLogInfo">\\1</span>', $log_line);
 
-      // remove username/password from DSN
-      if (strpos($log_line, 'DSN') !== false)
-      {
-        $log_line = preg_replace("/=&gt;\s+'?[^'\s,]+'?/", "=&gt; '****'", $log_line);
-      }
+    // remove username/password from DSN
+    if (strpos($log_line, 'DSN') !== false)
+    {
+      $log_line = preg_replace("/=&gt;\s+'?[^'\s,]+'?/", "=&gt; '****'", $log_line);
     }
 
     return $log_line;
