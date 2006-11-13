@@ -236,7 +236,7 @@ class sfWebDebug
     // database information
     $dbInfo = '';
     $dbInfoDetails = '';
-    if (null !== ($nb = $this->getDatabaseRequestNumber()))
+    if (0 != ($nb = $this->getDatabaseRequestNumber()))
     {
       $dbInfo = '<li><a href="#" onclick="sfWebDebugShowDetailsFor(\'sfWebDebugDatabaseDetails\'); return false;">'.image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/database.png').' '.$nb.'</a></li>';
 
@@ -367,31 +367,24 @@ class sfWebDebug
 
   public function getDatabaseRequestNumber()
   {
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_use_database'))
+    // get Propel statistics if available (user created a model and a db)
+    // only if Propel was used
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_use_database') && class_exists('Propel') && Propel::isInit())
     {
-      // get Propel statistics if available (user created a model and a db)
-      // we require Propel here to avoid autoloading and automatic connection
-      if (!class_exists('Propel'))
+      try
       {
-        require_once('propel/Propel.php');
+        $con = Propel::getConnection();
+        if (method_exists($con, 'getNumQueriesExecuted'))
+        {
+          return $con->getNumQueriesExecuted();
+        }
       }
-      if (Propel::isInit())
+      catch (Exception $e)
       {
-        try
-        {
-          $con = Propel::getConnection();
-          if (method_exists($con, 'getNumQueriesExecuted'))
-          {
-            return $con->getNumQueriesExecuted();
-          }
-        }
-        catch (Exception $e)
-        {
-        }
       }
     }
 
-    return null;
+    return 0;
   }
 
   public function decorateContentWithDebug($internalUri, $content, $new = false)
