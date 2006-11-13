@@ -128,6 +128,9 @@ class sfUser
       {
         $this->context->getI18N()->setCulture($culture);
       }
+
+      // add the culture in the routing default parameters
+      sfConfig::set('sf_routing_defaults', array_merge((array) sfConfig::get('sf_routing_defaults'), array('sf_culture' => $culture)));
     }
   }
 
