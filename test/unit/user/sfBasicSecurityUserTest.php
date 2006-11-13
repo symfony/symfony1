@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(35, new lime_output_color());
+$t = new lime_test(39, new lime_output_color());
 
 $context = new sfContext();
 
@@ -121,6 +121,14 @@ $t->is($user->hasCredential('superadmin1'), true);
 
 // admin and (user or subscriber) and (superadmin1 or subscriber1)
 $t->is($user->hasCredential(array(array('admin', array('user', 'subscriber'), array('superadmin1', 'subscriber1')))), true);
+
+// numerical credentials
+$user->clearCredentials();
+$user->addCredentials(array('1', 2));
+$t->is($user->hasCredential(1), true, '->hasCrendential() supports numerical credentials');
+$t->is($user->hasCredential('2'), true, '->hasCrendential() supports numerical credentials');
+$t->is($user->hasCredential(array('1', 2)), true, '->hasCrendential() supports numerical credentials');
+$t->is($user->hasCredential(array(1, '2')), true, '->hasCrendential() supports numerical credentials');
 
 // ->removeCredential()
 $t->diag('->removeCredential()');

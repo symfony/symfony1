@@ -109,7 +109,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
    * Returns true if user has credential.
    *
    * @param  mixed credentials
-   * @param boolean useAnd specify the mode, either AND or OR
+   * @param  boolean useAnd specify the mode, either AND or OR
    * @return boolean
    *
    * @author Olivier Verdier <Olivier.Verdier@free.fr>
@@ -118,33 +118,33 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
   {
     if (!is_array($credentials))
     {
-      return (in_array($credentials, $this->credentials, true));
+      return in_array($credentials, $this->credentials);
     }
-      
+
     // now we assume that $credentials is an array
     $test = false;
-    
+
     foreach($credentials as $credential)
     {
       // recursively check the credential with a switched AND/OR mode
-      $test = $this->hasCredential($credential, ($useAnd ? false : true));
-      
+      $test = $this->hasCredential($credential, $useAnd ? false : true);
+
       if ($useAnd)
       {
-        $test = ($test ? false : true);
+        $test = $test ? false : true;
       }
-      
+
       if ($test) // either passed one in OR mode or failed one in AND mode
       {
         break; // the matter is settled
       }
     }
-    
+
     if ($useAnd) // in AND mode we succeed if $test is false
     {
-      $test = ($test ? false : true);
+      $test = $test ? false : true;
     }
-    
+
     return $test;
   }
 
