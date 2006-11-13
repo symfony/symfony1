@@ -48,7 +48,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
     $instances = array();
 
     // available list of factories
-    $factories = array('controller', 'request', 'response', 'storage', 'user', 'security_filter', 'execution_filter', 'rendering_filter', 'view_cache');
+    $factories = array('controller', 'request', 'response', 'storage', 'user', 'view_cache');
 
     // let's do our fancy work
     foreach ($factories as $factory)
@@ -127,24 +127,6 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           // append instance initialization
           $inits[] = sprintf("  \$this->user->initialize(\$this, %s);", $parameters);
           break;
-
-        case 'security_filter':
-          // append creation/initialization in one swipe
-          $inits[] = sprintf("\n  if (sfConfig::get('sf_use_security'))\n  {\n".
-                             "    sfConfig::set('sf_factory_security_filter', array('%s', %s));\n  }\n",
-                             $class, $parameters);
-          break;
-
-        case 'execution_filter':
-          // append execution filter class name
-          $inits[] = sprintf("  sfConfig::set('sf_factory_execution_filter', array('%s', %s));", $class, $parameters);
-          break;
-
-        case 'rendering_filter':
-          // append rendering filter class name
-          $inits[] = sprintf("  sfConfig::set('sf_factory_rendering_filter', array('%s', %s));", $class, $parameters);
-          break;
-
         case 'view_cache':
           // append view cache class name
           $inits[] = sprintf("\n  if (sfConfig::get('sf_cache'))\n  {\n".

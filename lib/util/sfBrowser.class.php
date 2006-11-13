@@ -126,7 +126,7 @@ class sfBrowser
     $response   = $this->context->getResponse();
 
     // we register a fake rendering filter
-    sfConfig::set('sf_factory_rendering_filter', array('sfFakeRenderingFilter', null));
+    sfConfig::set('sf_rendering_filter', array('sfFakeRenderingFilter', null));
 
     // dispatch our request
     ob_start();

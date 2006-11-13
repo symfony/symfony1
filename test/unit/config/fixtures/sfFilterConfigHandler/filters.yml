@@ -1,5 +1,11 @@
-newFilter:
-  class: newFilterClass
+execution: ~
+default:   ~
 
-anotherDefaultFilter:
-  class: myAnotherDefaultFilterClass
+new:
+  class: newFilterClass
+  param:
+    key: value
+
+rendering:
+  param:
+    key: value

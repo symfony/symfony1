@@ -76,12 +76,15 @@ function run_upgrade_0_8($task, $args)
   foreach ($apps as $app_module_dir)
   {
     $app = str_replace(DIRECTORY_SEPARATOR.sfConfig::get('sf_app_module_dir_name'), '', $app_module_dir);
-    pake_echo_action('upgrade 0.8', sprintf('[upgrading application "%s"]', $app));
+    pake_echo_action('upgrade 0.8', pakeColor::colorize(sprintf('upgrading application "%s"', $app), array('fg' => 'cyan')));
 
     $app_dir = sfConfig::get('sf_apps_dir_name').'/'.$app;
 
     // upgrade config.php
     _upgrade_0_8_config_php($app_dir);
+
+    // upgrade filters.yml
+    _upgrade_0_8_filters_yml($app_dir);
 
     // upgrade all modules
     $dir = $app_dir.'/'.sfConfig::get('sf_app_module_dir_name');
@@ -117,9 +120,9 @@ function run_upgrade_0_8($task, $args)
     pake_echo_comment('WARNING: you must re-install all your plugins');
   }
 
-  pake_echo_comment('you can now:');
-  pake_echo_comment(' - rebuild model: symfony propel-build-model');
-  pake_echo_comment(' - clear cache: symfony cc');
+  pake_echo_comment('Now, you must:');
+  pake_echo_comment(' - rebuild your model classes: symfony propel-build-model');
+  pake_echo_comment(' - clear the cache: symfony cc');
 }
 
 function _upgrade_0_8_php_files($app_dir)
@@ -366,6 +369,54 @@ function _upgrade_0_8_config_php($app_dir)
   pake_echo_action('upgrade 0.8', 'upgrading config.php');
 
   pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/app/app/config/config.php', $app_dir.DIRECTORY_SEPARATOR.sfConfig::get('sf_config_dir_name').DIRECTORY_SEPARATOR.'config.php');
+}
+
+function _upgrade_0_8_filters_yml($app_dir)
+{
+  pake_echo_action('upgrade 0.8', 'upgrading filters.yml');
+
+  $configFile = $app_dir.DIRECTORY_SEPARATOR.sfConfig::get('sf_config_dir_name').DIRECTORY_SEPARATOR.'filters.yml';
+  $content = file_get_contents($configFile);
+
+  // default symfony filters
+  $default = file_get_contents(sfConfig::get('sf_symfony_data_dir').'/skeleton/app/app/config/filters.yml');
+
+  $placeholder = '# generally, you will want to insert your own filters here';
+
+  // upgrade module filters.yml
+  $seen = false;
+  $yml_files = pakeFinder::type('file')->name('filters.yml')->in($app_dir.DIRECTORY_SEPARATOR.'modules');
+  foreach ($yml_files as $yml_file)
+  {
+    $module_content = file_get_contents($yml_file);
+
+    if (false === strpos($module_content, 'rendering:'))
+    {
+      $module_content = str_replace($placeholder, $placeholder."\n".$content."\n".$module_content, $default);
+
+      file_put_contents($yml_file, $module_content);
+
+      if (!$seen)
+      {
+        pake_echo_comment('filters.yml now contains core symfony filters');
+      }
+
+      $seen = true;
+    }
+  }
+
+  // upgrade app filters.yml
+  if (false === strpos($content, 'rendering:'))
+  {
+    $content = str_replace($placeholder, $placeholder."\n".$content, $default);
+
+    file_put_contents($configFile, $content);
+
+    if (!$seen)
+    {
+      pake_echo_comment('filters.yml now contains core symfony filters');
+    }
+  }
 }
 
 function _upgrade_0_8_main_config_php()

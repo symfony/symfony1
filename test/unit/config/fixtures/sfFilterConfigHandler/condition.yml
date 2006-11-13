@@ -4,7 +4,9 @@ execution:
     type: execution
 
 default:
-  class: defaultFilterClass
+  class:     defaultFilterClass
+  param:
+    condition: %DEFAULT_TEST%
 
 rendering:
   class:  sfRenderingFilter

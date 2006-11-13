@@ -16,15 +16,6 @@ default:
     param:
       session_name: symfony
 
-  execution_filter:
-    class: sfExecutionFilter
-
-  rendering_filter:
-    class: sfRenderingFilter
-
-  security_filter:
-    class: sfBasicSecurityFilter
-
   view_cache:
     class: sfFileCache
     param:

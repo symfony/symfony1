@@ -4,7 +4,8 @@ execution:
     type: execution
 
 default:
-  class: defaultFilterClass
+  class:   defaultFilterClass
+  enabled: false
 
 rendering:
   class:  sfRenderingFilter
