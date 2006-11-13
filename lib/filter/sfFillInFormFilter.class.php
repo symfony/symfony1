@@ -31,7 +31,7 @@ class sfFillInFormFilter extends sfFilter
     // converters
     foreach ($this->getParameter('converters', array()) as $functionName => $fields)
     {
-      $fillInform->addConverter($functionName, $fields);
+      $fillInForm->addConverter($functionName, $fields);
     }
 
     // skip fields
