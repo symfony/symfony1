@@ -127,7 +127,7 @@ class sfExecutionFilter extends sfFilter
         {
           if (sfConfig::get('sf_logging_active'))
           {
-            $this->context->getLogger()->info('{sfExecutionFilter} action validation failed');
+            $this->context->getLogger()->info('{sfFilter} action validation failed');
           }
 
           // validation failed
