@@ -88,7 +88,7 @@ define('ESC_JS', 'esc_js');
  */
 function esc_js_no_entities($value)
 {
-  return addcslashes($value, "\0..\37\\'\"\177..\377");
+  return addcslashes($value, "\0..\37\\'\"\177..\377\/");
 }
 
 define('ESC_JS_NO_ENTITIES', 'esc_js_no_entities');
