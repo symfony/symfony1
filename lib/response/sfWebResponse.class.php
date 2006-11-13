@@ -154,7 +154,7 @@ class sfWebResponse extends sfResponse
 
     if ('Content-Type' == $name)
     {
-      if ($replace)
+      if ($replace || !$this->getHttpHeader('Content-Type', null))
       {
         $this->setContentType($value);
       }
