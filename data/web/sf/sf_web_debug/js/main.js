@@ -9,6 +9,7 @@ function sfWebDebugGetElementsByClassName(strClass, strTag, objContElm)
   var arrClass = strClass.split(delim);
   var j = objColl.length;
   for (var i = 0; i < j; i++) {
+    if(objColl[i].className == undefined) continue;
     var arrObjClass = objColl[i].className.split(' ');
     if (delim == ' ' && arrClass.length > arrObjClass.length) continue;
     var c = 0;
