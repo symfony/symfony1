@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/../lib/util/sfFillInForm.class.php');
 
-$t = new lime_test(42, new lime_output_color());
+$t = new lime_test(46, new lime_output_color());
 
 $html = <<<EOF
 <html>
@@ -43,6 +43,14 @@ $html = <<<EOF
     <input name="article[or][much][longer]" value="very long!"/>
     <input type="submit" name="submit" value="submit" />
   </form>
+
+  <form name="foo">
+    <input type="text" name="foo" value="bar" />
+  </form>
+
+  <form id="bar">
+    <input type="text" name="bar" value="foo" />
+  </form>
 </body>
 </html>
 EOF;
@@ -50,14 +58,12 @@ EOF;
 $dom = new DomDocument('1.0', 'UTF-8');
 $dom->loadHTML($html);
 
-//print $dom->saveXML();
-
 // ->fillInDom()
 $t->diag('->fillInDom()');
 $f = new sfFillInForm();
 
 // default values
-$xml = simplexml_import_dom($f->fillInDom(clone $dom, null, array()));
+$xml = simplexml_import_dom($f->fillInDom(clone $dom, null, null, array()));
 $t->is(get_input_value($xml, 'hidden_input'), '1', '->fillInDom() preserves default values for hidden input');
 $t->is(get_input_value($xml, 'input_text'), 'default_value', '->fillInDom() preserves default values for text input');
 $t->is(get_input_value($xml, 'empty_input_text'), '', '->fillInDom() preserves default values for text input');
@@ -70,6 +76,34 @@ $t->is($xml->xpath('//form[@name="form1"]/select[@name="select_multiple"]/option
 $t->is(get_input_value($xml, 'article[title]'), 'title', '->fillInDom() preserves default values for text input');
 $t->is($xml->xpath('//form[@name="form1"]/select[@name="article[category]"]/option[@selected="selected"]'), array(2, 3), '->fillInDom() preserves default values for select');
 
+// check form selection by name
+$xml = simplexml_import_dom($f->fillInDom(clone $dom, 'foo', null, array()));
+$t->is(get_input_value($xml, 'foo'), 'bar', '->fillInDom() takes a "name" attribute parameter as its second argument');
+
+try
+{
+  $xml = simplexml_import_dom($f->fillInDom(clone $dom, 'foobar', null, array()));
+  $t->fail('->fillInDom() throws a sfException if the form is not found');
+}
+catch (sfException $e)
+{
+  $t->pass('->fillInDom() throws a sfException if the form is not found');
+}
+
+// check form selection by id
+$xml = simplexml_import_dom($f->fillInDom(clone $dom, null, 'bar', array()));
+$t->is(get_input_value($xml, 'bar'), 'foo', '->fillInDom() takes an "id" attribute parameter as its third argument');
+
+try
+{
+  $xml = simplexml_import_dom($f->fillInDom(clone $dom, null, 'foobar', array()));
+  $t->fail('->fillInDom() throws a sfException if the form is not found');
+}
+catch (sfException $e)
+{
+  $t->pass('->fillInDom() throws a sfException if the form is not found');
+}
+
 // test with article[title]
 $values = array(
   'article' => array(
@@ -78,7 +112,7 @@ $values = array(
   ),
 );
 $f = new sfFillInForm();
-$xml = simplexml_import_dom($f->fillInDom(clone $dom, null, $values));
+$xml = simplexml_import_dom($f->fillInDom(clone $dom, null, null, $values));
 $t->is(get_input_value($xml, 'article[title]'), 'my article title', '->fillInDom() fills in values for article[title] fields');
 $t->is($xml->xpath('//form[@name="form1"]/select[@name="article[category]"]/option[@selected="selected"]'), array(1, 2), '->fillInDom() fills in values for article[title] fields');
 
@@ -97,7 +131,7 @@ $values = array(
 );
 
 $f = new sfFillInForm();
-$xml = simplexml_import_dom($f->fillInDom(clone $dom, null, $values));
+$xml = simplexml_import_dom($f->fillInDom(clone $dom, null, null, $values));
 $t->is(get_input_value($xml, 'hidden_input'), '2', '->fillInDom() fills in values for hidden input');
 $t->is(get_input_value($xml, 'input_text'), 'my input text', '->fillInDom() fills in values for text input');
 $t->is(get_input_value($xml, 'empty_input_text'), 'input text', '->fillInDom() fills in values for text input');
@@ -114,7 +148,7 @@ $t->is($xml->xpath('//form[@name="form1"]/select[@name="article[category]"]/opti
 $t->diag('->setTypes()');
 $f = new sfFillInForm();
 $f->setTypes(array('text', 'checkbox', 'radio'));
-$xml = simplexml_import_dom($f->fillInDom(clone $dom, null, $values));
+$xml = simplexml_import_dom($f->fillInDom(clone $dom, null, null, $values));
 $t->is(get_input_value($xml, 'hidden_input'), '1', '->setTypes() allows to prevent some input fields from being filled');
 $t->is(get_input_value($xml, 'password'), '', '->setTypes() allows to prevent some input fields from being filled');
 $t->is(get_input_value($xml, 'input_text'), 'my input text', '->setTypes() allows to prevent some input fields from being filled');
@@ -123,7 +157,7 @@ $t->is(get_input_value($xml, 'input_text'), 'my input text', '->setTypes() allow
 $t->diag('->setSkipFields()');
 $f = new sfFillInForm();
 $f->setSkipFields(array('input_text', 'input_checkbox', 'textarea', 'select_multiple', 'article[title]'));
-$xml = simplexml_import_dom($f->fillInDom(clone $dom, null, $values));
+$xml = simplexml_import_dom($f->fillInDom(clone $dom, null, null, $values));
 $t->is(get_input_value($xml, 'hidden_input'), '2', '->setSkipFields() allows to prevent some fields to be filled');
 $t->is(get_input_value($xml, 'input_text'), 'default_value', '->setSkipFields() allows to prevent some fields to be filled');
 $t->is(get_input_value($xml, 'empty_input_text'), 'input text', '->setSkipFields() allows to prevent some fields to be filled');
@@ -140,7 +174,7 @@ $t->is($xml->xpath('//form[@name="form1"]/select[@name="article[category]"]/opti
 $t->diag('->addConverter()');
 $f = new sfFillInForm();
 $f->addConverter('str_rot13', array('input_text', 'textarea'));
-$xml = simplexml_import_dom($f->fillInDom(clone $dom, null, $values));
+$xml = simplexml_import_dom($f->fillInDom(clone $dom, null, null, $values));
 $t->is(get_input_value($xml, 'input_text'), str_rot13('my input text'), '->addConverter() register a callable to be called for each value');
 $t->is(get_input_value($xml, 'empty_input_text'), 'input text', '->addConverter() register a callable to be called for each value');
 $t->is(get_input_value($xml, 'input_checkbox', 'checked'), '', '->addConverter() register a callable to be called for each value');

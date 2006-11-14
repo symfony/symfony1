@@ -75,66 +75,69 @@ class sfFillInForm
       $xpath_query = '//form';
     }
 
-    if ($form = $xpath->query($xpath_query)->item(0))
+    $form = $xpath->query($xpath_query)->item(0);
+    if (!$form)
     {
-      foreach ($xpath->query($query, $form) as $element)
+      throw new sfException(sprintf('The form "%s" cannot be found', $formName ? $formName : $formId));
+    }
+
+    foreach ($xpath->query($query, $form) as $element)
+    {
+      $name  = (string) $element->getAttribute('name');
+      $value = (string) $element->getAttribute('value');
+      $type  = (string) $element->getAttribute('type');
+
+      // skip fields
+      if (!$this->hasValue($values, $name) || in_array($name, $this->skipFields))
       {
-        $name  = (string) $element->getAttribute('name');
-        $value = (string) $element->getAttribute('value');
-        $type  = (string) $element->getAttribute('type');
+        continue;
+      }
 
-        // skip fields
-        if (!$this->hasValue($values, $name) || in_array($name, $this->skipFields))
+      if ($element->nodeName == 'input')
+      {
+        if ($type == 'checkbox' || $type == 'radio')
         {
-          continue;
-        }
-
-        if ($element->nodeName == 'input')
-        {
-          if ($type == 'checkbox' || $type == 'radio')
+          // checkbox and radio
+          $element->removeAttribute('checked');
+          if ($this->hasValue($values, $name) && ($this->getValue($values, $name) == $value || !$element->hasAttribute('value')))
           {
-            // checkbox and radio
-            $element->removeAttribute('checked');
-            if ($this->hasValue($values, $name) && ($this->getValue($values, $name) == $value || !$element->hasAttribute('value')))
-            {
-              $element->setAttribute('checked', 'checked');
-            }
-          }
-          else
-          {
-            // text input
-            $element->removeAttribute('value');
-            if ($this->hasValue($values, $name))
-            {
-              $element->setAttribute('value', $this->escapeValue($this->getValue($values, $name), $name));
-            }
+            $element->setAttribute('checked', 'checked');
           }
         }
-        else if ($element->nodeName == 'textarea')
+        else
         {
-          $el = $element->cloneNode(false);
-          $el->appendChild($dom->createTextNode($this->escapeValue($this->getValue($values, $name), $name)));
-          $element->parentNode->replaceChild($el, $element);
-        }
-        else if ($element->nodeName == 'select')
-        {
-          // select
-          $value    = $this->getValue($values, $name);
-          $multiple = $element->hasAttribute('multiple');
-          foreach ($xpath->query('descendant::option', $element) as $option)
+          // text input
+          $element->removeAttribute('value');
+          if ($this->hasValue($values, $name))
           {
-            $option->removeAttribute('selected');
-            if ($multiple && is_array($value))
-            {
-              if (in_array($option->getAttribute('value'), $value))
-              {
-                $option->setAttribute('selected', 'selected');
-              }
-            }
-            else if ($value == $option->getAttribute('value'))
+            $element->setAttribute('value', $this->escapeValue($this->getValue($values, $name), $name));
+          }
+        }
+      }
+      else if ($element->nodeName == 'textarea')
+      {
+        $el = $element->cloneNode(false);
+        $el->appendChild($dom->createTextNode($this->escapeValue($this->getValue($values, $name), $name)));
+        $element->parentNode->replaceChild($el, $element);
+      }
+      else if ($element->nodeName == 'select')
+      {
+        // select
+        $value    = $this->getValue($values, $name);
+        $multiple = $element->hasAttribute('multiple');
+        foreach ($xpath->query('descendant::option', $element) as $option)
+        {
+          $option->removeAttribute('selected');
+          if ($multiple && is_array($value))
+          {
+            if (in_array($option->getAttribute('value'), $value))
             {
               $option->setAttribute('selected', 'selected');
             }
+          }
+          else if ($value == $option->getAttribute('value'))
+          {
+            $option->setAttribute('selected', 'selected');
           }
         }
       }
