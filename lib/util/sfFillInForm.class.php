@@ -40,17 +40,17 @@ class sfFillInForm
     $this->types = $types;
   }
 
-  public function fillIn($html, $formName, $values)
+  public function fillIn($html, $formName, $formId, $values)
   {
     $dom = new DomDocument('1.0', sfConfig::get('sf_charset', 'UTF-8'));
     @$dom->loadHTML($html);
 
-    $dom = $this->fillInDom($dom, $formName, $values);
+    $dom = $this->fillInDom($dom, $formName, $formId, $values);
 
     return $dom->saveHTML();
   }
 
-  public function fillInDom($dom, $formName, $values)
+  public function fillInDom($dom, $formName, $formId, $values)
   {
     $xpath = new DomXPath($dom);
 
@@ -62,7 +62,19 @@ class sfFillInForm
     $query .= ')] | descendant::textarea[@name] | descendant::select[@name]';
 
     // find our form
-    $xpath_query = $formName ? '//form[@name="'.$formName.'"]' : '//form';
+    if ($formName)
+    {
+      $xpath_query = '//form[@name="'.$formName.'"]';
+    }
+    elseif ($formId)
+    {
+      $xpath_query = '//form[@id="'.$formId.'"]';
+    }
+    else
+    {
+      $xpath_query = '//form';
+    }
+
     if ($form = $xpath->query($xpath_query)->item(0))
     {
       foreach ($xpath->query($query, $form) as $element)
