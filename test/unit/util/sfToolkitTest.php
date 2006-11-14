@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(59, new lime_output_color());
+$t = new lime_test(65, new lime_output_color());
 
 // ::stringToArray()
 $t->diag('::stringToArray()');
@@ -117,3 +117,32 @@ $t->is(sfToolkit::stripslashesDeep('foo'), 'foo', '::stripslashesDeep() strip sl
 $t->is(sfToolkit::stripslashesDeep(addslashes("foo's bar")), "foo's bar", '::stripslashesDeep() strip slashes on array');
 $t->is(sfToolkit::stripslashesDeep(array(addslashes("foo's bar"), addslashes("foo's bar"))), array("foo's bar", "foo's bar"), '::stripslashesDeep() strip slashes on deep arrays');
 $t->is(sfToolkit::stripslashesDeep(array(array('foo' => addslashes("foo's bar")), addslashes("foo's bar"))), array(array('foo' => "foo's bar"), "foo's bar"), '::stripslashesDeep() strip slashes on deep arrays');
+
+// ::clearDirectory()
+$t->diag('::clearDirectory()');
+$tmp_dir = System::tmpdir().DIRECTORY_SEPARATOR.'symfony_tests_'.rand(1, 999);
+mkdir($tmp_dir);
+file_put_contents($tmp_dir.DIRECTORY_SEPARATOR.'test', 'ok');
+mkdir($tmp_dir.DIRECTORY_SEPARATOR.'foo');
+file_put_contents($tmp_dir.DIRECTORY_SEPARATOR.'foo'.DIRECTORY_SEPARATOR.'bar', 'ok');
+sfToolkit::clearDirectory($tmp_dir);
+$t->ok(!is_dir($tmp_dir.DIRECTORY_SEPARATOR.'foo'), '::clearDirectory() removes all directories from the directory parameter');
+$t->ok(!is_file($tmp_dir.DIRECTORY_SEPARATOR.'foo'.DIRECTORY_SEPARATOR.'bar'), '::clearDirectory() removes all directories from the directory parameter');
+$t->ok(!is_file($tmp_dir.DIRECTORY_SEPARATOR.'test'), '::clearDirectory() removes all directories from the directory parameter');
+rmdir($tmp_dir);
+
+// ::clearGlob()
+$t->diag('::clearGlob()');
+$tmp_dir = System::tmpdir().DIRECTORY_SEPARATOR.'symfony_tests_'.rand(1, 999);
+mkdir($tmp_dir);
+mkdir($tmp_dir.DIRECTORY_SEPARATOR.'foo');
+mkdir($tmp_dir.DIRECTORY_SEPARATOR.'bar');
+file_put_contents($tmp_dir.DIRECTORY_SEPARATOR.'foo'.DIRECTORY_SEPARATOR.'bar', 'ok');
+file_put_contents($tmp_dir.DIRECTORY_SEPARATOR.'foo'.DIRECTORY_SEPARATOR.'foo', 'ok');
+file_put_contents($tmp_dir.DIRECTORY_SEPARATOR.'bar'.DIRECTORY_SEPARATOR.'bar', 'ok');
+sfToolkit::clearGlob($tmp_dir.'/*/bar');
+$t->ok(!is_file($tmp_dir.DIRECTORY_SEPARATOR.'foo'.DIRECTORY_SEPARATOR.'bar'), '::clearGlob() removes all files and directories matching the pattern parameter');
+$t->ok(!is_file($tmp_dir.DIRECTORY_SEPARATOR.'foo'.DIRECTORY_SEPARATOR.'bar'), '::clearGlob() removes all files and directories matching the pattern parameter');
+$t->ok(is_file($tmp_dir.DIRECTORY_SEPARATOR.'foo'.DIRECTORY_SEPARATOR.'foo'), '::clearGlob() removes all files and directories matching the pattern parameter');
+sfToolkit::clearDirectory($tmp_dir);
+rmdir($tmp_dir);

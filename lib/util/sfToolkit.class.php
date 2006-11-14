@@ -96,6 +96,35 @@ class sfToolkit
   }
 
   /**
+   * Clear all files and directories corresponding to a glob pattern.
+   *
+   * @param  string An absolute filesystem pattern.
+   *
+   * @return void
+   */
+  public static function clearGlob ($pattern)
+  {
+    $files = glob($pattern);
+
+    // order is important when removing directories
+    sort($files);
+
+    foreach ($files as $file)
+    {
+      if (is_dir($file))
+      {
+        // delete directory
+        self::clearDirectory($file);
+      }
+      else
+      {
+        // delete file
+        unlink($file);
+      }
+    }
+  }
+
+  /**
    * Determine if a filesystem path is absolute.
    *
    * @param path A filesystem path.
