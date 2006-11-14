@@ -21,9 +21,13 @@ class sfProcessCache
   {
     static $cacher = null;
 
-    if (!$cacher)
+    if (null === $cacher)
     {
-      if (function_exists('apc_store'))
+      if (!sfConfig::get('sf_use_process_cache'))
+      {
+        $cacher = false;
+      }
+      elseif (function_exists('apc_store'))
       {
         $cacher = 'apc';
       }
@@ -34,6 +38,10 @@ class sfProcessCache
       elseif (function_exists('ecacher_put'))
       {
         $cacher = 'eaccelerator';
+      }
+      else
+      {
+        $cacher = false;
       }
     }
 

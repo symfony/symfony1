@@ -79,3 +79,5 @@ default:
 
     check_lock:            off
     check_symfony_version: off
+
+    use_process_cache:     on
