@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(13, new lime_output_color());
+$t = new lime_test(12, new lime_output_color());
 
 class myController extends sfWebController
 {
@@ -164,11 +164,6 @@ $m->addCache('module', 'action', get_cache_config());
 $m->set('test', 'module/action');
 $m->remove('module/action');
 $t->is($m->has('module/action'), false, '->remove() removes cache content for an action');
-
-// ->clean()
-$t->diag('->clean()');
-$m = get_cache_manager($context);
-$t->is($m->clean('module/action'), null, '->clean() returns null if the action is not cacheable');
 
 function get_cache_manager($context)
 {

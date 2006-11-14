@@ -43,9 +43,9 @@ class sfViewCacheManager
 
     // register a named route for our partial cache (at the end)
     $r = sfRouting::getInstance();
-    if (!$r->hasRouteName('_sf_cache_partial'))
+    if (!$r->hasRouteName('sf_cache_partial'))
     {
-      $r->connect('_sf_cache_partial', '/_sf_cache_partial/:module/:action/:sf_cache_key.', array(), array());
+      $r->connect('sf_cache_partial', '/sf_cache_partial/:module/:action/:sf_cache_key.', array(), array());
     }
   }
 
@@ -295,22 +295,6 @@ class sfViewCacheManager
     {
       $this->cache->remove($id, $namespace);
     }
-  }
-
-  public function clean($internalUri, $mode = 'all')
-  {
-    if (!$this->isCacheable($internalUri))
-    {
-      return null;
-    }
-
-    list($namespace, $id) = $this->generateNamespace($internalUri);
-
-    try
-    {
-      return $this->cache->clean($namespace, $mode);
-    }
-    catch (sfCacheException $e) {}
   }
 
   public function lastModified($internalUri)
