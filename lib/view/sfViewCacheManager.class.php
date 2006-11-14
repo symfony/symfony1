@@ -11,7 +11,7 @@
 /**
  * Cache class to cache the HTML results for actions and templates.
  *
- * This class users viewCacheClassName to serialize cache.
+ * This class uses $cacheClass class to store cache.
  * All cache files are stored in files in the [sf_root_dir].'/cache/'.[sf_app].'/html' directory.
  * To disable all caching, you can set to false [sf_cache] constant.
  *
@@ -25,24 +25,21 @@ class sfViewCacheManager
   protected
     $cache              = null,
     $cacheConfig        = array(),
-    $viewCacheClassName = '',
-    $viewCacheOptions   = array(),
     $context            = null,
     $controller         = null,
     $loaded             = array();
 
-  public function initialize($context)
+  public function initialize($context, $cacheClass, $cacheParameters = array())
   {
-    $this->context = $context;
-
+    $this->context    = $context;
     $this->controller = $context->getController();
 
     // empty configuration
     $this->cacheConfig = array();
 
     // create cache instance
-    $this->cache = new $this->viewCacheClassName(sfConfig::get('sf_template_cache_dir'));
-    $this->cache->initialize($this->viewCacheOptions);
+    $this->cache = new $cacheClass();
+    $this->cache->initialize($cacheParameters);
 
     // register a named route for our partial cache (at the end)
     $r = sfRouting::getInstance();
@@ -55,30 +52,6 @@ class sfViewCacheManager
   public function getContext()
   {
     return $this->context;
-  }
-
-  /**
-   * Set the name of the sfCache class to use
-   *
-   * @param string The class name of the sfCache to use
-   *
-   * @return void
-   */
-  public function setViewCacheClassName($className)
-  {
-    $this->viewCacheClassName = $className;
-  }
-
-  /**
-   * Set the options to pass to the sfCache class to use
-   *
-   * @param array An array of sfCache class options
-   *
-   * @return void
-   */
-  public function setViewCacheOptions($options)
-  {
-    $this->viewCacheOptions = $options;
   }
 
   public function generateNamespace($internalUri)

@@ -83,7 +83,19 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
       }
 
       // parse parameters
-      $parameters = (isset($keys['param']) ? var_export($keys['param'], true) : 'null');
+      if (isset($keys['param']))
+      {
+        $parameters = array();
+        foreach ($keys['param'] as $key => $value)
+        {
+          $parameters[$key] = $this->replaceConstants($value);
+        }
+      }
+      else
+      {
+        $parameters = null;
+      }
+      $parameters = var_export($parameters, true);
 
       // append new data
       switch ($factory)
@@ -130,8 +142,9 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
         case 'view_cache':
           // append view cache class name
           $inits[] = sprintf("\n  if (sfConfig::get('sf_cache'))\n  {\n".
-                             "    \$this->viewCacheManager->setViewCacheClassName(sfConfig::get('sf_factory_view_cache_manager', '%s'));\n".
-                             "    \$this->viewCacheManager->setViewCacheOptions(%s);\n }\n",
+                             "    \$this->viewCacheManager = new sfViewCacheManager();\n".
+                             "    \$this->viewCacheManager->initialize(\$this, sfConfig::get('sf_factory_view_cache', '%s'), %s);\n".
+                             " }\n",
                              $class, $parameters);
           break;
       }

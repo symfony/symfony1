@@ -107,13 +107,18 @@ class sfFileCache extends sfCache
   *     'hashedDirectoryLevel' => level of the hashed directory system (int)
   * );
   */
-  public function __construct($cacheDir)
+  public function __construct($cacheDir = null)
   {
     $this->setCacheDir($cacheDir);
   }
 
   public function initialize($options = array())
   {
+    if (isset($options['cacheDir']))
+    {
+      $this->setCacheDir($options['cacheDir']);
+    }
+
     foreach (array('fileLocking', 'writeControl', 'readControl', 'fileNameProtection', 'automaticCleaningFactor', 'hashedDirectoryLevel') as $option)
     {
       if (array_key_exists($option, $options))

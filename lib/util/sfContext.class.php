@@ -63,11 +63,6 @@ class sfContext
       $this->databaseManager->initialize();
     }
 
-    if (sfConfig::get('sf_cache'))
-    {
-      $this->viewCacheManager = new sfViewCacheManager();
-    }
-
     // create a new action stack
     $this->actionStack = new sfActionStack();
 
@@ -80,11 +75,6 @@ class sfContext
 
     // include the factories configuration
     require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/factories.yml'));
-
-    if (sfConfig::get('sf_cache'))
-    {
-      $this->viewCacheManager->initialize($this);
-    }
 
     // register our shutdown function
     register_shutdown_function(array($this, 'shutdown'));
