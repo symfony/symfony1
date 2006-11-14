@@ -67,6 +67,9 @@ class sfViewCacheManager
     }
 
     // generate uri
+    // we want our URL with / only
+    $oldUrlFormat = sfConfig::get('sf_url_format');
+    sfConfig::set('sf_url_format', 'PATH');
     if ($this->isContextual($internalUri))
     {
       list($route_name, $params) = $this->controller->convertUrlStringToParameters($internalUri);
@@ -76,6 +79,7 @@ class sfViewCacheManager
     {
       $uri = $this->controller->genUrl($internalUri);
     }
+    sfConfig::set('sf_url_format', $oldUrlFormat);
 
     // prefix with vary headers
     $varyHeaders = $this->getVary($internalUri);
@@ -293,11 +297,18 @@ class sfViewCacheManager
     }
   }
 
-  public function clean($namespace = null, $mode = 'all')
+  public function clean($internalUri, $mode = 'all')
   {
+    if (!$this->isCacheable($internalUri))
+    {
+      return null;
+    }
+
+    list($namespace, $id) = $this->generateNamespace($internalUri);
+
     try
     {
-      $this->cache->clean($namespace, $mode);
+      return $this->cache->clean($namespace, $mode);
     }
     catch (sfCacheException $e) {}
   }
@@ -334,7 +345,7 @@ class sfViewCacheManager
     $this->addCache($params['module'], $params['action'], array('withLayout' => false, 'lifeTime' => $lifeTime, 'clientLifeTime' => $clientLifeTime, 'vary' => $vary));
 
     // get data from cache if available
-    $data = $this->get($internalUri.(strpos($internalUri, '?') ? '&' : '?').'_key='.$name);
+    $data = $this->get($internalUri.(strpos($internalUri, '?') ? '&' : '?').'_sf_cache_key='.$name);
     if ($data !== null)
     {
       return $data;
@@ -359,7 +370,7 @@ class sfViewCacheManager
     $internalUri = sfRouting::getInstance()->getCurrentInternalUri();
     try
     {
-      $this->set($data, $internalUri.(strpos($internalUri, '?') ? '&' : '?').'_key='.$name);
+      $this->set($data, $internalUri.(strpos($internalUri, '?') ? '&' : '?').'_sf_cache_key='.$name);
     }
     catch (Exception $e)
     {
