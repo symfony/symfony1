@@ -194,6 +194,12 @@ class sfConfigCache
     {
       // configuration has changed so we need to reparse it
       $this->callHandler($configPath, $files, $cache);
+
+      // clear process cache
+      if ('config/config_handlers.yml' != $configPath)
+      {
+        sfProcessCache::clear();
+      }
     }
 
     if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_active'))
