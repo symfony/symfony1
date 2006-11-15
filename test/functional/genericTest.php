@@ -64,7 +64,7 @@ $b->
 $b->
   get('/configSecurityIsSecure')->
   isStatusCode(200)->
-  checkResponseElement('body', '/You must enter your credentials to access this page/i')->
+  checkResponseElement('body', '/Credentials Required/i')->
   checkResponseElement('body', 1) // check that there is no double output caused by the forwarding in a filter
 ;
 

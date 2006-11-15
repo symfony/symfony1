@@ -92,7 +92,9 @@ class sfCore
     if (sfToolkit::hasLockFile(SF_ROOT_DIR.DIRECTORY_SEPARATOR.SF_APP.'_'.SF_ENVIRONMENT.'.lck', 5))
     {
       // application is not available
-      include(sfConfig::get('sf_web_dir').'/unavailable.html');
+      $file = sfConfig::get('sf_web_dir').'/unavailable.html';
+      include(is_readable($file) ? $file : sfConfig::get('sf_symfony_data_dir').'/web/unavailable.php');
+
       die(1);
     }
   }

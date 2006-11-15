@@ -16,5 +16,6 @@ class ##MODULE_NAME##Actions extends sfActions
    */
   public function executeIndex()
   {
+    $this->forward('default', 'module');
   }
 }

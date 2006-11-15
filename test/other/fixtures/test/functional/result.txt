@@ -2,5 +2,5 @@
 ok 1 - status code is 200
 ok 2 - request parameter module is articleInitCrud
 ok 3 - request parameter action is index
-ok 4 - response selector body matches regex /articleInitCrud/
+ok 4 - response selector body does not match regex /This is a temporary page/
 1..4

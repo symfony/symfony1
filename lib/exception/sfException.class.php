@@ -104,16 +104,10 @@ class sfException extends Exception
     // send an error 500 if not in debug mode
     if (!sfConfig::get('sf_debug'))
     {
-      $file = sfConfig::get('sf_web_dir').'/error500.html';
       error_log($exception->getMessage());
-      if (is_readable($file))
-      {
-        include($file);
-      }
-      else
-      {
-        echo 'internal server error';
-      }
+
+      $file = sfConfig::get('sf_web_dir').'/error500.html';
+      include(is_readable($file) ? $file : sfConfig::get('sf_symfony_data_dir').'/web/error500.php');
 
       if (!sfConfig::get('sf_test'))
       {
