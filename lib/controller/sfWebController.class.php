@@ -167,22 +167,27 @@ abstract class sfWebController extends sfController
       $params['action'] = isset($tmp[1]) ? $tmp[1] : sfConfig::get('sf_default_action');
     }
 
-    $url_params = explode('&', $query_string);
-    $ind_max = count($url_params) - 1;
-    for ($i = 0; $i <= $ind_max; $i++)
+    // split the query string
+    if ($query_string)
     {
-      if (!$url_params[$i]) continue;
-
-      $pos = strpos($url_params[$i], '=');
-      if ($pos === false)
+      $matched = preg_match_all('/
+        ([^&=]+)            # key
+        =                   # =
+        (.*?)               # value
+        (?:
+          (?=&[^&=]+=) | $   # followed by another key= or the end of the string
+        )
+      /x', $query_string, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
+      foreach ($matches as $match)
       {
-        $error = 'Unable to parse url ("%s").';
-        $error = sprintf($error, $url);
-
-        throw new sfParseException($error);
+        $params[$match[1][0]] = $match[2][0];
       }
 
-      $params[substr($url_params[$i], 0, $pos)] = substr($url_params[$i], $pos + 1);
+      // check that all string is matched
+      if (!$matched)
+      {
+        throw new sfParseException(sprintf('Unable to parse query string "%s".', $query_string));
+      }
     }
 
     return array($route_name, $params);
