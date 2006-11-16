@@ -119,7 +119,7 @@ function object_select_tag($object, $method, $options = array(), $default_value 
 
   $text_method = _get_option($options, 'text_method');
 
-  $select_options = _get_values_for_object_select_tag($object, $related_class, $text_method, $peer_method);
+  $select_options = _get_options_from_objects(sfContext::getInstance()->retrieveObjects($related_class, $peer_method), $text_method);
 
   if ($value = _get_option($options, 'include_custom'))
   {
@@ -146,13 +146,6 @@ function object_select_tag($object, $method, $options = array(), $default_value 
   $option_tags = options_for_select($select_options, $value, $options);
 
   return select_tag(_convert_method_to_name($method, $options), $option_tags, $options);
-}
-
-function _get_values_for_object_select_tag($object, $class, $text_method = null, $peer_method = null)
-{
-  $objects = sfContext::getInstance()->retrieveObjects($class, $peer_method);
-
-  return _get_options_from_objects($objects, $text_method);
 }
 
 function _get_options_from_objects($objects, $text_method = null)
