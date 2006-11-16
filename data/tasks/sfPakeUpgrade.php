@@ -417,6 +417,21 @@ function _upgrade_0_8_filters_yml($app_dir)
       pake_echo_comment('filters.yml now contains core symfony filters');
     }
   }
+
+  // upgrade project filters.yml
+  $configFile = sfConfig::get('sf_config_dir').DIRECTORY_SEPARATOR.'filters.yml';
+  $content = file_get_contents($configFile);
+  if (false === strpos($content, 'rendering:'))
+  {
+    $content = str_replace($placeholder, $placeholder."\n".$content, $default);
+
+    file_put_contents($configFile, $content);
+
+    if (!$seen)
+    {
+      pake_echo_comment('filters.yml now contains core symfony filters');
+    }
+  }
 }
 
 function _upgrade_0_8_main_config_php()
