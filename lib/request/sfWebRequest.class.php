@@ -35,6 +35,11 @@ class sfWebRequest extends sfRequest
    */
   protected $charsets = null;
 
+  /**
+   * @var array  List of content types accepted by the client.
+   */
+  protected $acceptableContentTypes = null;
+
   protected $pathInfoArray = null;
 
   protected $relativeUrlRoot = null;
@@ -608,21 +613,14 @@ class sfWebRequest extends sfRequest
       return $this->languages;
     }
 
-    $this->languages = array();
-
     if (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
     {
-      return $this->languages;
+      return array();
     }
 
-    foreach (explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']) as $lang)
+    $languages = $this->splitHttpAcceptHeader($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    foreach ($languages as $lang)
     {
-      // Cut off any q-value that might come after a semi-colon
-      if ($pos = strpos($lang, ';'))
-      {
-        $lang = trim(substr($lang, 0, $pos));
-      }
-
       if (strstr($lang, '-'))
       {
         $codes = explode('-', $lang);
@@ -666,18 +664,40 @@ class sfWebRequest extends sfRequest
   public function getCharsets()
   {
     if ($this->charsets)
-      return $this->charsets;
-
-    $this->charsets = array();
-
-    if (!isset($_SERVER['HTTP_ACCEPT_CHARSET']))
     {
       return $this->charsets;
     }
 
-    $this->charsets = preg_replace('/;.*/', '', explode(',', $_SERVER['HTTP_ACCEPT_CHARSET']));
+    if (!isset($_SERVER['HTTP_ACCEPT_CHARSET']))
+    {
+      return array();
+    }
+
+    $this->charsets = $this->splitHttpAcceptHeader($_SERVER['HTTP_ACCEPT_CHARSET']);
 
     return $this->charsets;
+  }
+
+  /**
+   * Get a list of content types acceptable by the client browser
+   *
+   * @return array languages ordered in the user browser preferences.
+   */
+  public function getAcceptableContentTypes()
+  {
+    if ($this->acceptableContentTypes)
+    {
+      return $this->acceptableContentTypes;
+    }
+
+    if (!isset($_SERVER['HTTP_ACCEPT']))
+    {
+      return array();
+    }
+
+    $this->acceptableContentTypes = $this->splitHttpAcceptHeader($_SERVER['HTTP_ACCEPT']);
+
+    return $this->acceptableContentTypes;
   }
 
   /**
@@ -754,5 +774,29 @@ class sfWebRequest extends sfRequest
    */
   public function shutdown ()
   {
+  }
+
+  public function splitHttpAcceptHeader($header)
+  {
+    $values = array();
+    foreach (array_filter(explode(',', $header)) as $value)
+    {
+      // Cut off any q-value that might come after a semi-colon
+      if ($pos = strpos($value, ';'))
+      {
+        $q     = (float) trim(substr($value, $pos + 3));
+        $value = trim(substr($value, 0, $pos));
+      }
+      else
+      {
+        $q = 1;
+      }
+
+      $values[$value] = $q;
+    }
+
+    arsort($values);
+
+    return array_keys($values);
   }
 }
