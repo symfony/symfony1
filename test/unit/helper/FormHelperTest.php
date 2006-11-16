@@ -80,7 +80,7 @@ class sfContext
   }
 }
 
-$t = new lime_test(88, new lime_output_color());
+$t = new lime_test(113, new lime_output_color());
 
 $context = sfContext::getInstance();
 $context->controller = new myController();
@@ -237,15 +237,46 @@ $t->is(submit_image_tag('submit', array('name' => 'foo')), '<input type="image" 
 
 // select_day_tag()
 $t->diag('select_day_tag()');
-$t->todo('select_day_tag()');
+$t->like(select_day_tag('day'), '/<select name="day" id="day">/', 'select_day_tag() outputs a select tag for days');
+$t->like(select_day_tag('day'), '/<option value="'.date('j').'" selected="selected">/', 'select_day_tag() selects the current day by default');
+$t->like(select_day_tag('day', 31), '/<option value="31" selected="selected">/', 'select_day_tag() takes a day as its second argument');
+
+// options
+$t->like(select_day_tag('day', null, array('include_custom' => 'test')), "/<option value=\"\">test<\/option>/", 'select_day_tag() can take an "include_custom" option');
+$t->like(select_day_tag('day', null, array('include_blank' => true)), "/<option value=\"\"><\/option>/", 'select_day_tag() can take an "include_blank" option');
+$t->like(select_day_tag('day', null, array(), array('class' => 'foo')), '<select name="day" id="day" class="foo">', 'select_day_tag() takes an array of attribute options as its fourth argument');
+$t->like(select_day_tag('day', null, array(), array('id' => 'foo')), '<select name="day" id="foo">', 'select_day_tag() takes an array of attribute options as its fourth argument');
 
 // select_month_tag()
 $t->diag('select_month_tag()');
-$t->todo('select_month_tag()');
+$t->like(select_month_tag('month'), '/<select name="month" id="month">/', 'select_month_tag() outputs a select tag for months');
+$t->like(select_month_tag('month'), '/<option value="'.date('n').'" selected="selected">/', 'select_month_tag() selects the current month by default');
+$t->like(select_month_tag('month', 12), '/<option value="12" selected="selected">/', 'select_month_tag() takes a month as its second argument');
+$t->like(select_month_tag('month', 2), '/<option value="1">January<\/option>/i', 'select_month_tag() displays month names by default');
+
+// options
+$t->like(select_month_tag('month', 2, array('use_short_month' => true)), '/<option value="1">Jan<\/option>/i', 'select_month_tag() displays short month names if passed a "use_short_month" options');
+$t->like(select_month_tag('month', 2, array('use_month_numbers' => true)), '/<option value="1">01<\/option>/i', 'select_month_tag() displays numbers if passed a "use_month_numbers" options');
+$t->like(select_month_tag('month', 2, array('culture' => 'fr')), '/<option value="1">janvier<\/option>/i', 'select_month_tag() takes a culture option');
+$t->like(select_month_tag('month', 2, array('use_short_month' => true, 'culture' => 'fr')), '/<option value="1">janv.<\/option>/i', 'select_month_tag() displays short month names if passed a "use_short_month" options');
+$t->like(select_month_tag('month', 2, array('use_short_month' => true, 'add_month_numbers' => true)), '/<option value="1">1 - Jan<\/option>/i', 'select_month_tag() displays month names and month number if passed a "add_month_numbers" options');
+$t->like(select_month_tag('month', null, array('include_custom' => 'test')), "/<option value=\"\">test<\/option>/", 'select_month_tag() can take an "include_custom" option');
+$t->like(select_month_tag('month', null, array('include_blank' => true)), "/<option value=\"\"><\/option>/", 'select_month_tag() can take an "include_blank" option');
+$t->like(select_month_tag('month', null, array(), array('class' => 'foo')), '<select name="month" id="month" class="foo">', 'select_month_tag() takes an array of attribute options as its fourth argument');
+$t->like(select_month_tag('month', null, array(), array('id' => 'foo')), '<select name="month" id="foo">', 'select_month_tag() takes an array of attribute options as its fourth argument');
 
 // select_year_tag()
 $t->diag('select_year_tag()');
-$t->todo('select_year_tag()');
+$t->like(select_year_tag('year'), '/<select name="year" id="year">/', 'select_year_tag() outputs a select tag for years');
+$t->like(select_year_tag('year'), '/<option value="'.date('Y').'" selected="selected">/', 'select_year_tag() selects the current year by default');
+$t->like(select_year_tag('year', 2006), '/<option value="2006" selected="selected">/', 'select_year_tag() takes a year as its second argument');
+
+// options
+$t->is(preg_match_all('/<option /', select_year_tag('year', 2006, array('year_start' => 2005, 'year_end' => 2007)), $matches), 3, 'select_year_tag() takes a "year_start" and a "year_end" options');
+$t->like(select_year_tag('year', null, array('include_custom' => 'test')), "/<option value=\"\">test<\/option>/", 'select_year_tag() can take an "include_custom" option');
+$t->like(select_year_tag('year', null, array('include_blank' => true)), "/<option value=\"\"><\/option>/", 'select_year_tag() can take an "include_blank" option');
+$t->like(select_year_tag('year', null, array(), array('class' => 'foo')), '<select name="year" id="year" class="foo">', 'select_year_tag() takes an array of attribute options as its fourth argument');
+$t->like(select_year_tag('year', null, array(), array('id' => 'foo')), '<select name="year" id="foo">', 'select_year_tag() takes an array of attribute options as its fourth argument');
 
 // select_date_tag()
 $t->diag('select_date_tag()');

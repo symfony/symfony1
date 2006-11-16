@@ -926,7 +926,7 @@ function submit_image_tag($source, $options = array())
  * By default, the <i>$value</i> parameter is set to today's day. To override this, simply pass an integer 
  * (1 - 31) to the <i>$value</i> parameter. You can also set the <i>$value</i> parameter to null which will disable
  * the <i>$value</i>, however this will only be useful if you pass 'include_blank' or 'include_custom' to the <i>$options</i>
- * parameter. For convenience, Symfony also offers the select_date_tag helper function which combines the 
+ * parameter. For convenience, symfony also offers the select_date_tag helper function which combines the 
  * select_year_tag, select_month_tag, and select_day_tag functions into a single helper.
  *
  * <b>Options:</b>
@@ -942,7 +942,7 @@ function submit_image_tag($source, $options = array())
  * @param  integer selected value (1 - 31)
  * @param  array  additional HTML compliant <select> tag parameters
  * @return string <select> tag populated with all the days of the month (1 - 31).
- * @see select_date_tag, select datetime_tag
+ * @see    select_date_tag, select datetime_tag
  */
 function select_day_tag($name, $value = null, $options = array(), $html_options = array())
 {
@@ -1009,11 +1009,8 @@ function select_month_tag($name, $value = null, $options = array(), $html_option
   {
     $value = date('n');
   }
-    
-  $options = _parse_attributes($options);
 
-  $culture = _get_option($options, 'culture', sfContext::getInstance()->getUser()->getCulture());
-  $I18n_arr = _get_I18n_date_locales($culture);
+  $options = _parse_attributes($options);
 
   $select_options = array();
   if (_get_option($options, 'include_blank'))
@@ -1025,7 +1022,7 @@ function select_month_tag($name, $value = null, $options = array(), $html_option
     $select_options[''] = $include_custom;
   }
 
-  if (_get_option($options, 'use_month_numbers')) 
+  if (_get_option($options, 'use_month_numbers'))
   {
     for ($k = 1; $k < 13; $k++) 
     {
@@ -1033,8 +1030,11 @@ function select_month_tag($name, $value = null, $options = array(), $html_option
     }
   }
   else
-  {  
-    if (_get_option($options, 'use_short_month')) 
+  {
+    $culture = _get_option($options, 'culture', sfContext::getInstance()->getUser()->getCulture());
+    $I18n_arr = _get_I18n_date_locales($culture);
+
+    if (_get_option($options, 'use_short_month'))
     {
       $month_names = $I18n_arr['dateFormatInfo']->getAbbreviatedMonthNames();
     }
@@ -1046,7 +1046,7 @@ function select_month_tag($name, $value = null, $options = array(), $html_option
     $add_month_numbers = _get_option($options, 'add_month_numbers');
     foreach ($month_names as $k => $v) 
     {
-      $select_options[$k + 1] = ($add_month_numbers) ? ($k + 1 . ' - ' . $v) : $v;
+      $select_options[$k + 1] = $add_month_numbers ? ($k + 1).' - '.$v : $v;
     }
   }
 
@@ -1117,9 +1117,9 @@ function select_year_tag($name, $value = null, $options = array(), $html_options
   }
 
   $year_start = _get_option($options, 'year_start', $year_origin - 5);
-  $year_end = _get_option($options, 'year_end', $year_origin + 5);
+  $year_end   = _get_option($options, 'year_end', $year_origin + 5);
 
-  $ascending = ($year_start < $year_end);
+  $ascending  = ($year_start < $year_end);
   $until_year = ($ascending) ? $year_end + 1 : $year_end - 1;
 
   for ($x = $year_start; $x != $until_year; ($ascending) ? $x++ : $x--)
