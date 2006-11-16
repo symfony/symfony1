@@ -568,12 +568,12 @@ If you start your application by writing the `schema.yml`, you might not want to
 
     $ symfony propel-build-sql
 
-A `schema.sql` will be created in `myproject/data/sql/`. Note that the generated SQL code will be optimized for the database system defined in the `phptype` parameter of the `databases.yml` file. You can also precise the connection that you want to use in the `propel.ini`.
+A `lib.model.schema.sql` will be created in `myproject/data/sql/`. Note that the generated SQL code will be optimized for the database system defined in the `phptype` parameter of the `databases.yml` file. You can also precise the connection that you want to use in the `propel.ini`.
 
-You can use the `schema.sql` directly to build the tables. For instance, in MySQL:
+You can use the `lib.model.schema.sql` directly to build the tables. For instance, in MySQL:
 
     $ mysqladmin -u root -p create blog
-    $ mysql -u root -p blog < data/sql/schema.sql
+    $ mysql -u root -p blog < data/sql/lib.model.schema.sql
 
 This command is also helpful to rebuild the database in another environment, or to change RDBMS.
 
