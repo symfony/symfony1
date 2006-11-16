@@ -23,14 +23,14 @@ function run_upgrade($task, $args)
 {
   if (!isset($args[0]))
   {
-    throw new Exception('You must provide the upgrade script to use (0.8 to upgrade to 0.8 for example).');
+    throw new Exception('You must provide the upgrade script to use (1.0 to upgrade to symfony 1.0 for example).');
   }
 
   $version = $args[0];
 
-   if ($version == '0.8')
+   if ($version == '1.0')
    {
-     run_upgrade_0_8($task, $args);
+     run_upgrade_1_0($task, $args);
    }
    else
    {
@@ -38,7 +38,7 @@ function run_upgrade($task, $args)
    }
 }
 
-function run_upgrade_0_8($task, $args)
+function run_upgrade_1_0($task, $args)
 {
   // check we have a project
   if (!file_exists('symfony') && !file_exists('SYMFONY'))
@@ -47,10 +47,10 @@ function run_upgrade_0_8($task, $args)
   }
 
   // upgrade propel.ini
-  _upgrade_0_8_propel_ini();
+  _upgrade_1_0_propel_ini();
 
   // upgrade model classes
-  _upgrade_0_8_propel_model();
+  _upgrade_1_0_propel_model();
 
   // find all applications for this project
   $apps = pakeFinder::type('directory')->name(sfConfig::get('sf_app_module_dir_name'))->mindepth(1)->maxdepth(1)->relative()->in(sfConfig::get('sf_apps_dir_name'));
@@ -64,27 +64,27 @@ function run_upgrade_0_8($task, $args)
   pake_chmod('symfony', sfConfig::get('sf_root_dir'), 0777);
 
   // update schemas
-  _upgrade_0_8_schemas();
+  _upgrade_1_0_schemas();
 
   // add bootstrap files for tests
-  _add_0_8_test_bootstraps();
+  _add_1_0_test_bootstraps();
 
   // upgrade main config.php
-  _upgrade_0_8_main_config_php();
+  _upgrade_1_0_main_config_php();
 
   // upgrade all applications
   foreach ($apps as $app_module_dir)
   {
     $app = str_replace(DIRECTORY_SEPARATOR.sfConfig::get('sf_app_module_dir_name'), '', $app_module_dir);
-    pake_echo_action('upgrade 0.8', pakeColor::colorize(sprintf('upgrading application "%s"', $app), array('fg' => 'cyan')));
+    pake_echo_action('upgrade 1.0', pakeColor::colorize(sprintf('upgrading application "%s"', $app), array('fg' => 'cyan')));
 
     $app_dir = sfConfig::get('sf_apps_dir_name').'/'.$app;
 
     // upgrade config.php
-    _upgrade_0_8_config_php($app_dir);
+    _upgrade_1_0_config_php($app_dir);
 
     // upgrade filters.yml
-    _upgrade_0_8_filters_yml($app_dir);
+    _upgrade_1_0_filters_yml($app_dir);
 
     // upgrade all modules
     $dir = $app_dir.'/'.sfConfig::get('sf_app_module_dir_name');
@@ -94,25 +94,25 @@ function run_upgrade_0_8($task, $args)
       $template_dirs   = pakeFinder::type('directory')->name('templates')->mindepth(1)->maxdepth(1)->in($dir);
       $template_dirs[] = $app_dir.'/'.sfConfig::get('sf_app_template_dir_name');
 
-      _upgrade_0_8_deprecated_for_templates($template_dirs);
+      _upgrade_1_0_deprecated_for_templates($template_dirs);
 
-      _upgrade_0_8_deprecated_for_generator($app_dir);
+      _upgrade_1_0_deprecated_for_generator($app_dir);
 
-      _upgrade_0_8_cache_yml($app_dir);
+      _upgrade_1_0_cache_yml($app_dir);
 
       // actions dirs
       $action_dirs = pakeFinder::type('directory')->name('actions')->mindepth(1)->maxdepth(1)->in($dir);
 
-      _upgrade_0_8_deprecated_for_actions($action_dirs);
+      _upgrade_1_0_deprecated_for_actions($action_dirs);
 
       // view.yml
-      _upgrade_0_8_view_yml($app_dir);
+      _upgrade_1_0_view_yml($app_dir);
 
-      _upgrade_0_8_php_files($app_dir);
+      _upgrade_1_0_php_files($app_dir);
     }
   }
 
-  pake_echo_action('upgrade 0.8', 'done');
+  pake_echo_action('upgrade 1.0', 'done');
 
   pake_mkdirs(sfConfig::get('sf_root_dir').'/plugins');
   if (is_dir(sfConfig::get('sf_lib_dir').'/plugins'))
@@ -125,9 +125,9 @@ function run_upgrade_0_8($task, $args)
   pake_echo_comment(' - clear the cache: symfony cc');
 }
 
-function _upgrade_0_8_php_files($app_dir)
+function _upgrade_1_0_php_files($app_dir)
 {
-  pake_echo_action('upgrade 0.8', 'upgrading sf/ path configuration');
+  pake_echo_action('upgrade 1.0', 'upgrading sf/ path configuration');
 
   $php_files = pakeFinder::type('file')->name('*.php')->in($app_dir);
   foreach ($php_files as $php_file)
@@ -163,9 +163,9 @@ function _upgrade_0_8_php_files($app_dir)
   }
 }
 
-function _upgrade_0_8_view_yml($app_dir)
+function _upgrade_1_0_view_yml($app_dir)
 {
-  pake_echo_action('upgrade 0.8', 'upgrading view configuration');
+  pake_echo_action('upgrade 1.0', 'upgrading view configuration');
 
   $yml_files = pakeFinder::type('file')->name('*.yml')->in($app_dir);
   foreach ($yml_files as $yml_file)
@@ -201,9 +201,9 @@ function _upgrade_0_8_view_yml($app_dir)
   }
 }
 
-function _upgrade_0_8_cache_yml($app_dir)
+function _upgrade_1_0_cache_yml($app_dir)
 {
-  pake_echo_action('upgrade 0.8', 'upgrading cache configuration');
+  pake_echo_action('upgrade 1.0', 'upgrading cache configuration');
 
   $yml_files = pakeFinder::type('files')->name('cache.yml')->in($app_dir);
 
@@ -214,7 +214,7 @@ function _upgrade_0_8_cache_yml($app_dir)
 
     $count = 0;
     $updated = false;
-    $content = preg_replace_callback('/type\:(\s*)(.+)$/m', '_upgrade_0_8_cache_yml_callback', $content, -1, $count);
+    $content = preg_replace_callback('/type\:(\s*)(.+)$/m', '_upgrade_1_0_cache_yml_callback', $content, -1, $count);
     if ($count && !$seen)
     {
       $updated = true;
@@ -230,14 +230,14 @@ function _upgrade_0_8_cache_yml($app_dir)
   }
 }
 
-function _upgrade_0_8_cache_yml_callback($match)
+function _upgrade_1_0_cache_yml_callback($match)
 {
   return 'with_layout:'.str_repeat(' ', max(1, strlen($match[1]) - 6)).(0 === strpos($match[2], 'page') ? 'true' : 'false');
 }
 
-function _upgrade_0_8_deprecated_for_generator($app_dir)
+function _upgrade_1_0_deprecated_for_generator($app_dir)
 {
-  pake_echo_action('upgrade 0.8', 'upgrading deprecated helpers in generator.yml');
+  pake_echo_action('upgrade 1.0', 'upgrading deprecated helpers in generator.yml');
 
   $yml_files = pakeFinder::type('files')->name('generator.yml')->in($app_dir);
 
@@ -270,9 +270,9 @@ function _upgrade_0_8_deprecated_for_generator($app_dir)
   }
 }
 
-function _upgrade_0_8_deprecated_for_actions($action_dirs)
+function _upgrade_1_0_deprecated_for_actions($action_dirs)
 {
-  pake_echo_action('upgrade 0.8', 'upgrading deprecated methods in actions');
+  pake_echo_action('upgrade 1.0', 'upgrading deprecated methods in actions');
 
   $php_files = pakeFinder::type('file')->name('*.php')->in($action_dirs);
   foreach ($php_files as $php_file)
@@ -308,9 +308,9 @@ function _upgrade_0_8_deprecated_for_actions($action_dirs)
   }
 }
 
-function _upgrade_0_8_deprecated_for_templates($template_dirs)
+function _upgrade_1_0_deprecated_for_templates($template_dirs)
 {
-  pake_echo_action('upgrade 0.8', 'upgrading deprecated helpers');
+  pake_echo_action('upgrade 1.0', 'upgrading deprecated helpers');
 
   $php_files = pakeFinder::type('file')->name('*.php')->in($template_dirs);
   $seen = array();
@@ -364,16 +364,16 @@ function _upgrade_0_8_deprecated_for_templates($template_dirs)
   }
 }
 
-function _upgrade_0_8_config_php($app_dir)
+function _upgrade_1_0_config_php($app_dir)
 {
-  pake_echo_action('upgrade 0.8', 'upgrading config.php');
+  pake_echo_action('upgrade 1.0', 'upgrading config.php');
 
   pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/app/app/config/config.php', $app_dir.DIRECTORY_SEPARATOR.sfConfig::get('sf_config_dir_name').DIRECTORY_SEPARATOR.'config.php');
 }
 
-function _upgrade_0_8_filters_yml($app_dir)
+function _upgrade_1_0_filters_yml($app_dir)
 {
-  pake_echo_action('upgrade 0.8', 'upgrading filters.yml');
+  pake_echo_action('upgrade 1.0', 'upgrading filters.yml');
 
   $configFile = $app_dir.DIRECTORY_SEPARATOR.sfConfig::get('sf_config_dir_name').DIRECTORY_SEPARATOR.'filters.yml';
   $content = file_get_contents($configFile);
@@ -420,23 +420,26 @@ function _upgrade_0_8_filters_yml($app_dir)
 
   // upgrade project filters.yml
   $configFile = sfConfig::get('sf_config_dir').DIRECTORY_SEPARATOR.'filters.yml';
-  $content = file_get_contents($configFile);
-  if (false === strpos($content, 'rendering:'))
+  if (is_readable($configFile))
   {
-    $content = str_replace($placeholder, $placeholder."\n".$content, $default);
-
-    file_put_contents($configFile, $content);
-
-    if (!$seen)
+    $content = file_get_contents($configFile);
+    if (false === strpos($content, 'rendering:'))
     {
-      pake_echo_comment('filters.yml now contains core symfony filters');
+      $content = str_replace($placeholder, $placeholder."\n".$content, $default);
+
+      file_put_contents($configFile, $content);
+
+      if (!$seen)
+      {
+        pake_echo_comment('filters.yml now contains core symfony filters');
+      }
     }
   }
 }
 
-function _upgrade_0_8_main_config_php()
+function _upgrade_1_0_main_config_php()
 {
-  pake_echo_action('upgrade 0.8', 'upgrading main config.php');
+  pake_echo_action('upgrade 1.0', 'upgrading main config.php');
 
   $content = file_get_contents(sfConfig::get('sf_root_dir').'/config/config.php');
 
@@ -473,9 +476,9 @@ EOF;
   }
 }
 
-function _upgrade_0_8_propel_model()
+function _upgrade_1_0_propel_model()
 {
-  pake_echo_action('upgrade 0.8', 'upgrading require in models');
+  pake_echo_action('upgrade 1.0', 'upgrading require in models');
 
   $seen = false;
   $php_files = pakeFinder::type('file')->name('*.php')->in(sfConfig::get('sf_lib_dir').'/model');
@@ -503,9 +506,9 @@ function _upgrade_0_8_propel_model()
   }
 }
 
-function _upgrade_0_8_schemas()
+function _upgrade_1_0_schemas()
 {
-  pake_echo_action('upgrade 0.8', 'upgrading schemas');
+  pake_echo_action('upgrade 1.0', 'upgrading schemas');
 
   $seen = false;
   $xml_files = pakeFinder::type('file')->name('*schema.xml')->in(sfConfig::get('sf_config_dir'));
@@ -536,9 +539,9 @@ function _upgrade_0_8_schemas()
   }
 }
 
-function _upgrade_0_8_propel_ini()
+function _upgrade_1_0_propel_ini()
 {
-  pake_echo_action('upgrade 0.8', 'upgrading propel.ini configuration file');
+  pake_echo_action('upgrade 1.0', 'upgrading propel.ini configuration file');
 
   $propel_file = sfConfig::get('sf_config_dir').DIRECTORY_SEPARATOR.'propel.ini';
 
@@ -620,9 +623,9 @@ EOF;
   }
 }
 
-function _add_0_8_test_bootstraps()
+function _add_1_0_test_bootstraps()
 {
-  pake_echo_action('upgrade 0.8', 'add test bootstrap files');
+  pake_echo_action('upgrade 1.0', 'add test bootstrap files');
 
   pake_mkdirs(sfConfig::get('sf_root_dir').'/test/bootstrap');
 
