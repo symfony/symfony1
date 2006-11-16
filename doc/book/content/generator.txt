@@ -699,11 +699,11 @@ If you want to learn more about credentials, please refer to the [security chapt
 Customize the theme
 -------------------
 
-If you customize several modules in the same way, you should probably create a **theme** that could be reused across modules. The `theme` defined at the beginning of the `generator.yml` can be changed to use an alternative set of templates and stylesheets. With the `default` theme, symfony uses the files defined in `symfony/data/generator/sfPropelAdmin/default`, and you can create a new theme in the framework to override any of the actions or templates.
+If you customize several modules in the same way, you should probably create a **theme** that could be reused across modules. The `theme` defined at the beginning of the `generator.yml` can be changed to use an alternative set of templates and stylesheets. With the `default` theme, symfony uses the files defined in `$sf_symfony_data_dir/generator/sfPropelAdmin/default`, and you can create a new theme in the framework to override any of the actions or templates.
 
 The generator templates are cut into small parts that can be overridden independently, and the actions can also be changed one by one.
 
-To create your own theme, add a new directory in the `symfony/data/generator/sfPropelAdmin/` folder and fill it with your custom version of the following elements, using the same structure as the `default/` theme:
+To create your own theme, add a new directory in the `$sf_symfony_data_dir/generator/sfPropelAdmin/` folder and fill it with your custom version of the following elements, using the same structure as the `default/` theme:
 
     fragments:
     _edit_actions.php
