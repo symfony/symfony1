@@ -6,6 +6,7 @@ WARNING: All deprecated function, methods and tasks has been removed (see r1631,
 If you try to use this release with 0.6.X projects, you must upgrade them with: symfony upgrade 1.0
 When you upgrade symfony, re-run the upgrade script (you can safely run the upgrade several times).
 
+* moved 500 and unavailable errors to web/errors (and changed .html extension to .php)
 * user filters can now be registered anywhere in the filter chain
 * minor changes to be compatible with PHP 5.2
 * new sfFillInForm class

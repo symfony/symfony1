@@ -106,8 +106,8 @@ class sfException extends Exception
     {
       error_log($exception->getMessage());
 
-      $file = sfConfig::get('sf_web_dir').'/error500.html';
-      include(is_readable($file) ? $file : sfConfig::get('sf_symfony_data_dir').'/web/error500.php');
+      $file = sfConfig::get('sf_web_dir').'/errors/error500.php';
+      include(is_readable($file) ? $file : sfConfig::get('sf_symfony_data_dir').'/web/errors/error500.php');
 
       if (!sfConfig::get('sf_test'))
       {
