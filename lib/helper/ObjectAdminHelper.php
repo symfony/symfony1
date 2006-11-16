@@ -38,7 +38,7 @@ function object_admin_input_file_tag($object, $method, $options = array())
 
     if ($include_remove = _get_option($options, 'include_remove'))
     {
-      $html .= checkbox_tag(strpos($name, ']') !== false ? substr($name, 0, -1).'_remove]' : $name).' '.($options['include_remove'] != true ? __($include_remove) : __('remove file'))."\n";
+      $html .= checkbox_tag(strpos($name, ']') !== false ? substr($name, 0, -1).'_remove]' : $name).' '.($include_remove != true ? __($include_remove) : __('remove file'))."\n";
     }
   }
 
