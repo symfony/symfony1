@@ -215,6 +215,8 @@ If the flag is set to array('encode' => true) the displayed and pointed addresse
     // will generate in HTML something like
     <a href="&#109;&#x61;&#105;&#108;&#x74;&#x6f;&#58;&#x6d;&#121;&#x61;&#x64;&#x64;&#114;&#101;&#x73;&#115;&#64;&#x6d;&#x79;&#100;o&#x6d;&#97;&#105;&#110;&#46;&#x63;&#111;&#x6d;">&#x63;&#111;&#110;&#x74;&#x61;c&#x74;&#32;&#x61;d&#100;&#114;e&#115;&#x73;</a>
 
+>**Note**: The encoded e-mail address is reverted to human readable text when [form repopulation](fillin.txt) is enabled.
+
 Image helper
 ------------
 
