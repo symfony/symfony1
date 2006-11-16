@@ -34,6 +34,12 @@ $b->
   checkResponseElement('body', '!/congratulations/i')
 ;
 
+// unexistant action
+$b->
+  get('/default/nonexistantaction')->
+  isStatusCode(404)
+;
+
 // available
 sfConfig::set('sf_available', false);
 $b->

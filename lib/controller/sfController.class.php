@@ -87,7 +87,6 @@ abstract class sfController
       $classFile   = strtolower($extension);
       $classSuffix = ucfirst(strtolower($extension));
       $file        = $dir.'/'.$controllerName.$classSuffix.'.class.php';
-      $module_file = $dir.'/'.$classFile.'s.class.php';
       if (is_readable($file))
       {
         // action class exists
@@ -97,7 +96,9 @@ abstract class sfController
 
         return true;
       }
-      else if (is_readable($module_file))
+
+      $module_file = $dir.'/'.$classFile.'s.class.php';
+      if (is_readable($module_file))
       {
         // module class exists
         require_once($module_file);
@@ -113,7 +114,7 @@ abstract class sfController
         }
 
         // action is defined in this class?
-        if (!method_exists($moduleName.'Actions', '__call') && !in_array('execute'.ucfirst($controllerName), get_class_methods($moduleName.$classSuffix.'s')))
+        if (!in_array('execute'.ucfirst($controllerName), get_class_methods($moduleName.$classSuffix.'s')))
         {
           if ($throwExceptions)
           {
