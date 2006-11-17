@@ -19,9 +19,16 @@
 
 function __($text, $args = array(), $culture = null, $catalogue = 'messages')
 {
+  static $i18n;
+
+  if (!isset($i18n))
+  {
+    $i18n = sfContext::getInstance()->getI18N();
+  }
+
   if (sfConfig::get('sf_i18n'))
   {
-    return sfConfig::get('sf_i18n_instance')->__($text, $args, $catalogue);
+    return $i18n->__($text, $args, $catalogue);
   }
   else
   {

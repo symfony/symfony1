@@ -17,7 +17,7 @@
  */
 class sfI18N
 {
-  private
+  protected
     $context             = null,
     $globalMessageSource = null,
     $messageSource       = null,

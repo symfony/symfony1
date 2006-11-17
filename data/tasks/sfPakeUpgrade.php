@@ -49,6 +49,9 @@ function run_upgrade_1_0($task, $args)
   // upgrade propel.ini
   _upgrade_1_0_propel_ini();
 
+  // upgrade i18n support
+  _upgrade_1_0_i18n();
+
   // upgrade model classes
   _upgrade_1_0_propel_model();
 
@@ -123,6 +126,33 @@ function run_upgrade_1_0($task, $args)
   pake_echo_comment('Now, you must:');
   pake_echo_comment(' - rebuild your model classes: symfony propel-build-model');
   pake_echo_comment(' - clear the cache: symfony cc');
+}
+
+function _upgrade_1_0_i18n()
+{
+  $dirs = array(sfConfig::get('sf_lib_dir_name'), sfConfig::get('sf_apps_dir_name'));
+  $finder = pakeFinder::type('file')->name('*.php');
+
+  $seen = false;
+  foreach ($finder->in($dirs) as $php_file)
+  {
+    $content = file_get_contents($php_file);
+
+    $count = 0;
+    $content = str_replace('sfConfig::get(\'sf_i18n_instance\')', 'sfContext::getInstance()->getI18N()', $content, $count);
+
+    if ($count && !$seen)
+    {
+      $seen = true;
+      pake_echo_comment('sfConfig::get(\'sf_i18n_instance\') is deprecated');
+      pake_echo_comment(' use sfContext::getInstance()->getI18N()');
+    }
+
+    if ($count)
+    {
+      file_put_contents($php_file, $content);
+    }
+  }
 }
 
 function _upgrade_1_0_php_files($app_dir)

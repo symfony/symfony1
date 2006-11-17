@@ -66,13 +66,6 @@ class sfContext
     // create a new action stack
     $this->actionStack = new sfActionStack();
 
-    if (sfConfig::get('sf_i18n'))
-    {
-      $this->i18n = new sfI18N();
-      $this->i18n->initialize($this);
-      sfConfig::set('sf_i18n_instance', $this->i18n);
-    }
-
     // include the factories configuration
     require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/factories.yml'));
 
@@ -282,6 +275,17 @@ class sfContext
    */
   public function getI18N ()
   {
+    if (!sfConfig::get('sf_i18n'))
+    {
+      throw new sfConfigurationException('You must enable i18n in your settings.yml to be able to use i18n methods');
+    }
+
+    if (!$this->i18n && sfConfig::get('sf_i18n'))
+    {
+      $this->i18n = new sfI18N();
+      $this->i18n->initialize($this);
+    }
+
     return $this->i18n;
   }
 
