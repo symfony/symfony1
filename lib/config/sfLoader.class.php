@@ -68,6 +68,23 @@ class sfLoader
     return null;
   }
 
+  static public function getI18NDir($moduleName)
+  {
+    // application
+    $dir = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_i18n_dir_name');
+    if (is_dir($dir))
+    {
+      return $dir;
+    }
+
+    // plugins
+    $dirs = glob(sfConfig::get('sf_plugins_dir').'/*/modules/'.$moduleName.'/'.sfConfig::get('sf_app_module_i18n_dir_name'));
+    if (isset($dirs[0]))
+    {
+      return $dirs[0];
+    }
+  }
+
   static public function getGeneratorTemplateDirs($class, $theme)
   {
     $dirs = glob(sfConfig::get('sf_plugins_dir').'/*/data/generator/'.$class.'/'.$theme.'/template'); // plugin directories

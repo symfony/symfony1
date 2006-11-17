@@ -1,14 +1,14 @@
 <?php
 
 /**
- * i18n actions.
+ * sfI18NPlugin actions.
  *
  * @package    project
  * @subpackage i18n
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class i18nActions extends sfActions
+class sfI18NPluginActions extends sfActions
 {
   public function executeIndex()
   {

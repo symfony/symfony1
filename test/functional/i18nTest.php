@@ -39,6 +39,7 @@ $b->
   checkResponseElement('#template', '/an english sentence/i')
 ;
 
+// messages in the global and module directories
 $b->
   get('/fr/i18n/index')->
   isStatusCode(200)->
@@ -46,5 +47,20 @@ $b->
   isRequestParameter('action', 'index')->
   isUserCulture('fr')->
   checkResponseElement('#action', '/une phrase en français/i')->
-  checkResponseElement('#template', '/une phrase en français/i')
+  checkResponseElement('#template', '/une phrase en français/i')->
+  checkResponseElement('#action_local', '/une phrase locale en français/i')->
+  checkResponseElement('#template_local', '/une phrase locale en français/i')
+;
+
+// messages for a module plugin
+$b->
+  get('/fr/sfI18NPlugin/index')->
+  isStatusCode(200)->
+  isRequestParameter('module', 'sfI18NPlugin')->
+  isRequestParameter('action', 'index')->
+  isUserCulture('fr')->
+  checkResponseElement('#action', '/une phrase en français/i')->
+  checkResponseElement('#template', '/une phrase en français/i')->
+  checkResponseElement('#action_local', '/une phrase locale en français/i')->
+  checkResponseElement('#template_local', '/une phrase locale en français/i')
 ;
