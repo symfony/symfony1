@@ -22,8 +22,10 @@ $b = new backendTestBrowser();
 $b->initialize();
 
 // partial in a tabular list
+// we add a filters parameter because the action class won't be reloaded after the first time!
+// and we need the filter line definition for the last test!
 $b->
-  checkListCustomization('partial support in tabular list', array('display' => array('_body')))->
+  checkListCustomization('partial support in tabular list', array('display' => array('_body'), 'filters' => array('title')))->
   checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td', '/\s*before bar body after\s*/')->
   checkResponseElement('body table tbody tr[class="sf_admin_row_1"] td', '/\s*before bar bar body after\s*/')
 ;
