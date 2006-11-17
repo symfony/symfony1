@@ -12,7 +12,7 @@
  * @package    symfony
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelPager.class.php 2313 2006-10-04 19:21:37Z fabien $
+ * @version    SVN: $Id$
  */
 
 /**
@@ -22,7 +22,7 @@
  * @package    symfony
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelPager.class.php 2313 2006-10-04 19:21:37Z fabien $
+ * @version    SVN: $Id$
  */
 class sfPropelPager extends sfPager
 {
