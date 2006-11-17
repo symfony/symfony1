@@ -23,6 +23,20 @@ class sfI18N
     $messageSource       = null,
     $messageFormat       = null;
 
+  static protected
+    $instance            = null;
+
+  public function getInstance()
+  {
+    if (!isset(self::$instance))
+    {
+      $class = __CLASS__;
+      self::$instance = new $class();
+    }
+
+    return self::$instance;
+  }
+
   public function initialize($context)
   {
     $this->context = $context;

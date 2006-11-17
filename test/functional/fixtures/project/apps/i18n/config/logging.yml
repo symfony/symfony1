@@ -1,0 +1,17 @@
+prod:
+  active: off
+  level:  err
+  rotate: on
+  purge:  off
+
+dev:
+
+test:
+
+all:
+#  active: on
+#  level:  debug
+#  rotate:  off
+#  period:  7
+#  history: 10
+#  purge:   on
