@@ -13,7 +13,7 @@
 <?php if ($name == 'CREATED_AT' || $name == 'UPDATED_AT') continue ?>
 <tr>
   <th><?php echo sfInflector::humanize(sfInflector::underscore($column->getPhpName())) ?><?php if ($column->isNotNull()): ?>*<?php endif; ?>:</th>
-  <td>[?php echo <?php echo $this->getColumnEditTag($column) ?> ?]</td>
+  <td>[?php echo <?php echo $this->getCrudColumnEditTag($column) ?> ?]</td>
 </tr>
 <?php endforeach; ?>
 </tbody>
