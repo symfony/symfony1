@@ -38,22 +38,19 @@ class sfSessionTestStorage extends sfStorage
     // initialize parent
     parent::initialize($context, $parameters);
 
-    $this->sessionPath = sfConfig::get('sf_test_cache_dir').DIRECTORY_SEPARATOR.'sessions'.DIRECTORY_SEPARATOR;
+    $this->sessionPath = sfConfig::get('sf_test_cache_dir').DIRECTORY_SEPARATOR.'sessions';
 
     if (array_key_exists('session_id', $_SERVER))
     {
       $this->sessionId = $_SERVER['session_id'];
 
       // we read session data from temp file
-      $file = $this->sessionPath.$this->sessionId.'.session';
-      if (file_exists($file))
-        $this->sessionData = unserialize(file_get_contents($file));
-      else
-        $this->sessionData = array();
+      $file = $this->sessionPath.DIRECTORY_SEPARATOR.$this->sessionId.'.session';
+      $this->sessionData = file_exists($file) ? unserialize(file_get_contents($file)) : array();
     }
     else
     {
-      $this->sessionId = md5(uniqid(rand(), true));
+      $this->sessionId   = md5(uniqid(rand(), true));
       $this->sessionData = array();
     }
   }
@@ -77,7 +74,9 @@ class sfSessionTestStorage extends sfStorage
     $retval = null;
 
     if (isset($this->sessionData[$key]))
+    {
       $retval =& $this->sessionData[$key];
+    }
 
     return $retval;
   }
@@ -116,7 +115,7 @@ class sfSessionTestStorage extends sfStorage
       $current_umask = umask(0000);
       @mkdir($this->sessionPath, 0777, true);
       umask($current_umask);
-      file_put_contents($this->sessionPath.$this->sessionId.'.session', serialize($this->sessionData));
+      file_put_contents($this->sessionPath.DIRECTORY_SEPARATOR.$this->sessionId.'.session', serialize($this->sessionData));
       $this->sessionId   = '';
       $this->sessionData = array();
     }
@@ -136,5 +135,13 @@ class sfSessionTestStorage extends sfStorage
   public function write ($key, &$data)
   {
     $this->sessionData[$key] =& $data;
+  }
+
+  /**
+   * Clear all test sessions
+   */
+  public function clear ()
+  {
+    sfToolkit::clearDirectory($this->sessionPath);
   }
 }

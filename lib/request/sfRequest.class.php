@@ -165,6 +165,11 @@ abstract class sfRequest
   public function initialize ($context, $parameters = array())
   {
     $this->context = $context;
+
+    // initialize parameter and attribute holders
+    $this->parameter_holder = new sfParameterHolder();
+    $this->attribute_holder = new sfParameterHolder();
+
     $this->parameter_holder->add($parameters);
   }
 
@@ -186,10 +191,6 @@ abstract class sfRequest
   {
     // the class exists
     $object = new $class();
-
-    // initialize parameter and attribute holders
-    $object->parameter_holder = new sfParameterHolder();
-    $object->attribute_holder = new sfParameterHolder();
 
     if (!($object instanceof sfRequest))
     {

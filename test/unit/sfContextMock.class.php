@@ -29,12 +29,18 @@ class sfContext
 
   public function getRequest()
   {
-    return new sfWebRequest();
+    $request = new sfWebRequest();
+    $request->initialize($this);
+
+    return $request;
   }
 
   public function getResponse()
   {
-    return new sfWebResponse();
+    $response = new sfWebResponse();
+    $response->initialize($this);
+
+    return $response;
   }
 
   public function getStorage()
