@@ -26,7 +26,7 @@ class sfI18N
   static protected
     $instance            = null;
 
-  public function getInstance()
+  static public function getInstance()
   {
     if (!isset(self::$instance))
     {
