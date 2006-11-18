@@ -45,9 +45,9 @@ function __($text, $args = array(), $catalogue = 'messages')
   }
 }
 
-function format_number_choice($text, $args = array(), $number, $culture = null, $catalogue = 'messages')
+function format_number_choice($text, $args = array(), $number, $catalogue = 'messages')
 {
-  $translated = __($text, $args, $culture, $catalogue);
+  $translated = __($text, $args, $catalogue);
 
   $choice = new sfChoiceFormat();
 
