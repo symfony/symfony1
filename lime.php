@@ -697,7 +697,6 @@ EOF;
           $in_function_declaration = true;
           break;
         case T_AND_EQUAL:
-        case T_BREAK:
         case T_CASE:
         case T_CATCH:
         case T_CLONE:
