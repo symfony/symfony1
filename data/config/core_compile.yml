@@ -11,9 +11,7 @@
 - %SF_SYMFONY_LIB_DIR%/filter/sfExecutionFilter.class.php
 - %SF_SYMFONY_LIB_DIR%/filter/sfRenderingFilter.class.php
 - %SF_SYMFONY_LIB_DIR%/filter/sfFilterChain.class.php
-- %SF_SYMFONY_LIB_DIR%/log/sfLog.class.php
 - %SF_SYMFONY_LIB_DIR%/log/sfLogger.class.php
-- %SF_SYMFONY_LIB_DIR%/log/sfLogger/no.class.php
 - %SF_SYMFONY_LIB_DIR%/request/sfRequest.class.php
 - %SF_SYMFONY_LIB_DIR%/response/sfResponse.class.php
 - %SF_SYMFONY_LIB_DIR%/storage/sfStorage.class.php
