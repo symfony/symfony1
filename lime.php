@@ -752,7 +752,6 @@ EOF;
         case T_SL_EQUAL:
         case T_SR:
         case T_SR_EQUAL:
-        case T_SWITCH:
         case T_THROW:
         case T_TRY:
         case T_UNSET:
