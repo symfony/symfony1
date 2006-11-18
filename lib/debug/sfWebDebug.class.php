@@ -78,19 +78,19 @@ class sfWebDebug
     $this->last_time_log = microtime(true);
 
     // update max priority
-    if ($logEntry->getPriority() < $this->max_priority)
+    if ($logEntry['priority'] < $this->max_priority)
     {
-      $this->max_priority = $logEntry->getPriority();
+      $this->max_priority = $logEntry['priority'];
     }
 
     // update types
-    if (!isset($this->types[$logEntry->getType()]))
+    if (!isset($this->types[$logEntry['type']]))
     {
-      $this->types[$logEntry->getType()] = 1;
+      $this->types[$logEntry['type']] = 1;
     }
     else
     {
-      ++$this->types[$logEntry->getType()];
+      ++$this->types[$logEntry['type']];
     }
 
     $this->log[] = $logEntry;
@@ -164,21 +164,21 @@ class sfWebDebug
       $line_nb = 0;
       foreach($this->log as $logEntry)
       {
-        $log = $logEntry->getMessage();
+        $log = $logEntry['message'];
 
-        $priority = $this->getPriority($logEntry->getPriority());
+        $priority = $this->getPriority($logEntry['priority']);
 
-        if (strpos($type = $logEntry->getType(), 'sf') === 0)
+        if (strpos($type = $logEntry['type'], 'sf') === 0)
         {
           $type = substr($type, 2);
         }
 
         // xdebug information
         $debug_info = '';
-        if ($logEntry->getDebugStack())
+        if ($logEntry['debugStack'])
         {
           $debug_info .= '&nbsp;<a href="#" onclick="sfWebDebugToggle(\'debug_'.$line_nb.'\'); return false;">'.image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/toggle.gif').'</a><div class="sfWebDebugDebugInfo" id="debug_'.$line_nb.'" style="display:none">';
-          foreach ($logEntry->getDebugStack() as $i => $log_line)
+          foreach ($logEntry['debugStack'] as $i => $log_line)
           {
             $debug_info .= '#'.$i.' &raquo; '.$this->formatLogLine($type, $log_line).'<br/>';
           }
@@ -197,7 +197,7 @@ class sfWebDebug
         ++$line_nb;
         $logs .= sprintf("<tr class='sfWebDebugLogLine sfWebDebug%s %s'><td class=\"sfWebDebugLogNumber\">%s</td><td class=\"sfWebDebugLogType\">%s&nbsp;%s</td><td>%s%s</td></tr>\n", 
           ucfirst($priority),
-          $logEntry->getType(),
+          $logEntry['type'],
           $line_nb,
           image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/'.$priority.'.png'),
           $type,

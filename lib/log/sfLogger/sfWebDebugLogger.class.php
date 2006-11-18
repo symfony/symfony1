@@ -27,8 +27,6 @@ class sfWebDebugLogger
 
   public function log($message, $priority, $priorityName)
   {
-    $logEntry = new sfLogEntry();
-
     // if we have xdebug, add some stack information
     $debug_stack = array();
     if (function_exists('xdebug_get_function_stack'))
@@ -60,12 +58,14 @@ class sfWebDebugLogger
     }
 
     // build the object containing the complete log information.
-    $logEntry->setPriority($priority);
-    $logEntry->setPriorityString($priorityName);
-    $logEntry->setTime(time());
-    $logEntry->setMessage($message);
-    $logEntry->setType($type);
-    $logEntry->setDebugStack($debug_stack);
+    $logEntry = array(
+      'priority'       => $priority,
+      'priorityString' => $priorityName,
+      'time'           => time(),
+      'message'        => $message,
+      'type'           => $type,
+      'debugStack'     => $debug_stack,
+    );
 
     // send the log object.
     $this->webDebug->log($logEntry);
