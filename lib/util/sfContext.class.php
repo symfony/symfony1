@@ -307,6 +307,11 @@ class sfContext
     $this->getRequest()->shutdown();
     $this->getResponse()->shutdown();
 
+    if (sfConfig::get('sf_logging_active'))
+    {
+      $this->getLogger()->shutdown();
+    }
+
     if (sfConfig::get('sf_use_database'))
     {
       $this->getDatabaseManager()->shutdown();
