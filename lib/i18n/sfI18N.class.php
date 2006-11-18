@@ -69,19 +69,8 @@ class sfI18N
 
     if (sfConfig::get('sf_i18n_cache'))
     {
-      $subdir = str_replace(str_replace('/', DIRECTORY_SEPARATOR, sfConfig::get('sf_root_dir')), '', $dir);
+      $subdir   = str_replace(str_replace('/', DIRECTORY_SEPARATOR, sfConfig::get('sf_root_dir')), '', $dir);
       $cacheDir = str_replace('/', DIRECTORY_SEPARATOR, sfConfig::get('sf_i18n_cache_dir').$subdir);
-
-      // create cache dir if needed
-      if (!is_dir($cacheDir))
-      {
-        $current_umask = umask(0000);
-        if (!is_dir($cacheDir))
-        {
-          mkdir($cacheDir, 0777, true);
-        }
-        umask($current_umask);
-      }
 
       $cache = new sfMessageCache();
       $cache->initialize(array(
