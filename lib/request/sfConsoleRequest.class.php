@@ -31,6 +31,8 @@ class sfConsoleRequest extends sfRequest
    */
   public function initialize ($context, $parameters = null)
   {
+    parent::initialize ($context, $parameters);
+
     $this->getParameterHolder()->add($_SERVER['argv']);
   }
 
