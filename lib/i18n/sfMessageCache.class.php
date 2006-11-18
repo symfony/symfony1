@@ -8,20 +8,14 @@
  */
 
 /**
- * Load the cache lite library.
- */
-require_once(dirname(__FILE__).'/TCache_Lite.php');
-
-/**
  * Cache the translation table into the file system.
  * It can cache each cataloug+variant or just the whole section.
  * @package System.I18N.core
  * @author $Author: weizhuo $
  * @version $Id$
  */
-class sfMessageCache 
+class sfMessageCache
 {
-
   /**
    * Cache Lite instance.
    * @var TCache_Lite
@@ -32,32 +26,15 @@ class sfMessageCache
    * Caceh life time, default is 1 year.
    */
   protected $lifetime = 3153600;
-  
 
   /**
    * Create a new Translation cache.
    * @param string $cacheDir Directory to store the cache files.
    */
-  public function __construct($cacheDir)
-  {   
-    $cacheDir = $cacheDir.'/';
-    
-    if(!is_dir($cacheDir))
-      throw new sfException(
-        'The cache directory '.$cacheDir.' does not exists.'.
-        'The cache directory must be writable by the server.');
-    if(!is_writable($cacheDir))
-      throw new sfException(
-        'The cache directory '.$cacheDir.' must be writable '.
-        'by the server.');
-    
-    $options = array(
-      'cacheDir' => $cacheDir,
-      'lifeTime' => $this->getLifeTime(),
-      'automaticSerialization' => true
-    );
-
-    $this->cache = new TCache_Lite($options);
+  public function initialize($options = array())
+  {
+    $this->cache = new sfFileCache();
+    $this->cache->initialize($options);
   }
 
   /**
@@ -85,7 +62,7 @@ class sfMessageCache
    */
   protected function getID($catalogue, $culture)
   {
-    return $catalogue.':'.$culture;
+    return $culture;
   }
 
   /**
@@ -95,7 +72,7 @@ class sfMessageCache
    */
   protected function getGroup($catalogue, $culture)
   {
-    return $catalogue.':'.get_class($this);
+    return $catalogue;
   }
 
   /**
@@ -107,28 +84,17 @@ class sfMessageCache
    * @return mixed Boolean FALSE if no cache hit. Otherwise, translation
    * table data for the specified section and locale.
    */
-  public function get($catalogue, $culture, $lastmodified=0) 
+  public function get($catalogue, $culture, $lastmodified = 0)
   {
     $ID = $this->getID($catalogue, $culture);
-    $group = $this->getGroup($catalogue, $culture); 
+    $group = $this->getGroup($catalogue, $culture);
 
-    $this->cache->_setFileName($ID, $group);
-
-    $cache = $this->cache->getCacheFile();
-    
-    if(is_file($cache) == false) 
+    if ($lastmodified <= 0 || $lastmodified > $this->cache->lastModified($ID, $group))
+    {
       return false;
+    }
 
-
-    $lastmodified = intval($lastmodified);
-    
-    if($lastmodified <= 0 || $lastmodified > filemtime($cache))
-      return false;   
-    
-    //echo '@@ Cache hit: "'.$ID.'" : "'.$group.'"';
-    //echo "<br>\n";
-      
-    return $this->cache->get($ID, $group);
+    return unserialize($this->cache->get($ID, $group));
   }
 
   /**
@@ -137,28 +103,25 @@ class sfMessageCache
    * @param string $catalogue The translation section.
    * @param string $culture The translation locale, e.g. "en_AU".
    */
-  public function save($data, $catalogue, $culture) 
-  {   
+  public function save($data, $catalogue, $culture)
+  {
     $ID = $this->getID($catalogue, $culture);
-    $group = $this->getGroup($catalogue, $culture); 
-    
-    //echo '## Cache save: "'.$ID.'" : "'.$group.'"';
-    //echo "<br>\n";
-    
-    return $this->cache->save($data, $ID, $group);
+    $group = $this->getGroup($catalogue, $culture);
+
+    return $this->cache->set($ID, $group, serialize($data));
   }
-  
+
   /**
    * Clean up the cache for the specified section and locale.
    * @param string $catalogue The translation section.
    * @param string $culture The translation locale, e.g. "en_AU".
    */
-  public function clean($catalogue, $culture) 
+  public function clean($catalogue, $culture)
   {
-    $group = $this->getGroup($catalogue, $culture); 
+    $group = $this->getGroup($catalogue, $culture);
     $this->cache->clean($group);
   }
-  
+
   /**
    * Flush the cache. Deletes all the cache files.
    */
@@ -166,5 +129,4 @@ class sfMessageCache
   {
     $this->cache->clean();
   }
-
 }

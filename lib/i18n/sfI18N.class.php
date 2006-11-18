@@ -69,20 +69,27 @@ class sfI18N
 
     if (sfConfig::get('sf_i18n_cache'))
     {
-      $subdir = preg_replace('|'.preg_quote(sfConfig::get('sf_app_dir')).'(.*)[\/\\\\]'.sfConfig::get('sf_app_i18n_dir_name').'|', '\\1', $dir);
-
-      $cache_dir = sfConfig::get('sf_i18n_cache_dir').$subdir;
+      $subdir = str_replace(str_replace('/', DIRECTORY_SEPARATOR, sfConfig::get('sf_root_dir')), '', $dir);
+      $cacheDir = str_replace('/', DIRECTORY_SEPARATOR, sfConfig::get('sf_i18n_cache_dir').$subdir);
 
       // create cache dir if needed
-      if (!is_dir($cache_dir))
+      if (!is_dir($cacheDir))
       {
-        $cache_dir = str_replace('/', DIRECTORY_SEPARATOR, $cache_dir);
         $current_umask = umask(0000);
-        @mkdir($cache_dir, 0777, true);
+        if (!is_dir($cacheDir))
+        {
+          mkdir($cacheDir, 0777, true);
+        }
         umask($current_umask);
       }
 
-      $messageSource->setCache(new sfMessageCache($cache_dir));
+      $cache = new sfMessageCache();
+      $cache->initialize(array(
+        'cacheDir' => $cacheDir,
+        'lifeTime' => 86400,
+      ));
+
+      $messageSource->setCache($cache);
     }
 
     return $messageSource;

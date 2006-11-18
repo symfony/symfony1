@@ -4,7 +4,7 @@
     <body>   
       <trans-unit id="1">
         <source>a local english sentence</source>
-        <target>une phrase locale en français</target>
+        <target>une autre phrase locale en français</target>
       </trans-unit>
     </body>
   </file>

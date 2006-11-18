@@ -5,7 +5,7 @@
       <trans-unit id="1">
         <source>an english sentence</source>
         <target>une phrase en français</target>
-      </trans-unit>              
+      </trans-unit>
     </body>
   </file>
 </xliff>

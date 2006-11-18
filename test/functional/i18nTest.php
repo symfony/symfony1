@@ -39,17 +39,28 @@ $b->
   checkResponseElement('#template', '/an english sentence/i')
 ;
 
-// messages in the global and module directories
 $b->
   get('/fr/i18n/index')->
   isStatusCode(200)->
   isRequestParameter('module', 'i18n')->
   isRequestParameter('action', 'index')->
   isUserCulture('fr')->
+
+  // messages in the global directories
   checkResponseElement('#action', '/une phrase en français/i')->
   checkResponseElement('#template', '/une phrase en français/i')->
+
+  // messages in the module directories
   checkResponseElement('#action_local', '/une phrase locale en français/i')->
-  checkResponseElement('#template_local', '/une phrase locale en français/i')
+  checkResponseElement('#template_local', '/une phrase locale en français/i')->
+
+  // messages in another global catalogue
+  checkResponseElement('#action_other', '/une autre phrase en français/i')->
+  checkResponseElement('#template_other', '/une autre phrase en français/i')->
+
+  // messages in another module catalogue
+  checkResponseElement('#action_other_local', '/une autre phrase locale en français/i')->
+  checkResponseElement('#template_other_local', '/une autre phrase locale en français/i')
 ;
 
 // messages for a module plugin
@@ -64,3 +75,4 @@ $b->
   checkResponseElement('#action_local', '/une phrase locale en français/i')->
   checkResponseElement('#template_local', '/une phrase locale en français/i')
 ;
+

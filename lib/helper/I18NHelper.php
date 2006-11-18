@@ -17,7 +17,7 @@
  * @version    SVN: $Id$
  */
 
-function __($text, $args = array(), $culture = null, $catalogue = 'messages')
+function __($text, $args = array(), $catalogue = 'messages')
 {
   static $i18n;
 
