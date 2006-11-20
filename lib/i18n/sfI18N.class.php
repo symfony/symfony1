@@ -41,8 +41,6 @@ class sfI18N
   {
     $this->context = $context;
 
-    include(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/i18n.yml'));
-
     $this->globalMessageSource = $this->createMessageSource(sfConfig::get('sf_app_i18n_dir'));
 
     $this->globalMessageFormat = $this->createMessageFormat($this->globalMessageSource);

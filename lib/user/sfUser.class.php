@@ -80,7 +80,7 @@ class sfUser
     // set the user culture to sf_culture parameter if present in the request
     // otherwise
     //  - use the culture defined in the user session
-    //  - use the default culture set in settings.yml
+    //  - use the default culture set in i18n.yml
     if (!($culture = $context->getRequest()->getParameter('sf_culture')))
     {
       if (null === ($culture = $context->getStorage()->read(self::CULTURE_NAMESPACE)))
