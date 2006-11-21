@@ -108,6 +108,11 @@ class sfPropelDatabaseSchema
           {
             $xml .= " onDelete=\"$fkey[on_delete]\"";
           }
+          // onUpdate
+          if(isset($fkey['on_update']))
+          {
+            $xml .= " onUpdate=\"$fkey[on_update]\"";
+          }
           $xml .= ">\n";
 
           // references
@@ -318,7 +323,7 @@ class sfPropelDatabaseSchema
     {
       foreach ($column as $key => $value)
       {
-        if (!in_array($key, array('foreignTable', 'foreignReference', 'onDelete', 'index', 'unique')))
+        if (!in_array($key, array('foreignTable', 'foreignReference', 'onDelete', 'onUpdate', 'index', 'unique')))
         {
           $attributes_string .= " $key=\"".$this->getCorrectValueFor($key, $value)."\"";
         }
@@ -337,6 +342,10 @@ class sfPropelDatabaseSchema
       if (isset($column['onDelete']))
       {
         $attributes_string .= " onDelete=\"$column[onDelete]\"";
+      }
+      if (isset($column['onUpdate']))
+      {
+        $attributes_string .= " onUpdate=\"$column[onUpdate]\"";
       }
       $attributes_string .= ">\n";
       $attributes_string .= "      <reference local=\"$col_name\" foreign=\"$column[foreignReference]\" />\n";
@@ -488,7 +497,11 @@ class sfPropelDatabaseSchema
         {
           $foreign_key_table['on_delete'] = (string) $foreign_key['onDelete']; 
         }
-
+        if(isset($foreign_key['onUpdate']))
+        {
+          $foreign_key_table['on_update'] = (string) $foreign_key['onUpdate']; 
+        }
+        
         // foreign key references
         $foreign_key_table['references'] = array();
         foreach($foreign_key->xpath('reference') as $reference)
@@ -571,6 +584,10 @@ class sfPropelDatabaseSchema
             if(isset($foreign_key_attributes['_attributes']['onDelete']))
             {
               $this->database[$table][$reference['local']]['onDelete'] = $foreign_key_attributes['_attributes']['onDelete'];
+            }
+            if(isset($foreign_key_attributes['_attributes']['onUpdate']))
+            {
+              $this->database[$table][$reference['local']]['onUpdate'] = $foreign_key_attributes['_attributes']['onUpdate'];
             }
             
             // remove complex foreign key
