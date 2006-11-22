@@ -8,12 +8,15 @@ test:
   storage:
     class: sfSessionTestStorage
 
-all:
+#all:
 #  controller:
 #    class: sfFrontWebController
 #
 #  request:
 #    class: sfWebRequest
+#
+#  response:
+#    class: sfWebResponse
 #
 #  user:
 #    class: myUser
@@ -23,11 +26,8 @@ all:
 #    param:
 #      session_name: symfony
 #
-#  execution_filter:
-#    class: sfExecutionFilter
-#
-#  security_filter:
-#    class: sfBasicSecurityFilter
-#
 #  view_cache:
 #    class: sfFileCache
+#    param:
+#      automaticCleaningFactor: 0
+#      cacheDir:                %SF_TEMPLATE_CACHE_DIR%
