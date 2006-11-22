@@ -581,13 +581,13 @@ class sfPropelDatabaseSchema
             // set simple foreign key
             $this->database[$table][$reference['local']]['foreignTable'] = $foreign_key_attributes['foreign_table'];
             $this->database[$table][$reference['local']]['foreignReference'] = $reference['foreign'];
-            if(isset($foreign_key_attributes['_attributes']['onDelete']))
+            if(isset($foreign_key_attributes['on_delete']))
             {
-              $this->database[$table][$reference['local']]['onDelete'] = $foreign_key_attributes['_attributes']['onDelete'];
+              $this->database[$table][$reference['local']]['onDelete'] = $foreign_key_attributes['on_delete'];
             }
-            if(isset($foreign_key_attributes['_attributes']['onUpdate']))
+            if(isset($foreign_key_attributes['on_update']))
             {
-              $this->database[$table][$reference['local']]['onUpdate'] = $foreign_key_attributes['_attributes']['onUpdate'];
+              $this->database[$table][$reference['local']]['onUpdate'] = $foreign_key_attributes['on_update'];
             }
             
             // remove complex foreign key
