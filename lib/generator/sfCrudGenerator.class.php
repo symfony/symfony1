@@ -79,9 +79,8 @@ abstract class sfCrudGenerator extends sfGenerator
     }
 
     $this->setTheme($theme);
-    #$this->generatePhpFiles($this->generatedModuleName, array('listSuccess.php', 'editSuccess.php', 'showSuccess.php'));
     $templateFiles = sfFinder::type('file')->name('*.php')->relative()->in($themeDir.'/templates');
-    
+
     $this->generatePhpFiles($this->generatedModuleName, $templateFiles);
 
     // require generated action class
@@ -89,7 +88,6 @@ abstract class sfCrudGenerator extends sfGenerator
 
     return $data;
   }
-
 
   public function getRetrieveByPkParamsForAction($indent)
   {
