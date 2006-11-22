@@ -11,17 +11,13 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once(dirname(__FILE__).'/sfCacheDriverTests.class.php');
 
-$t = new lime_test(18, new lime_output_color());
+$t = new lime_test(36, new lime_output_color());
 
-// setup
-sfConfig::set('sf_logging_active', false);
-$temp = tempnam('/tmp/cachedir', 'tmp');
-unlink($temp);
-mkdir($temp);
-$cache = new sfFileCache($temp);
+// database in memory
+sfCacheDriverTests::launch($t, new sfSQLiteCache(':memory:'));
 
-sfCacheDriverTests::launch($t, $cache);
-
-// teardown
-sfToolkit::clearDirectory($temp);
-rmdir($temp);
+// database on disk
+$database = tempnam('/tmp/cachedir', 'tmp');
+unlink($database);
+sfCacheDriverTests::launch($t, new sfSQLiteCache($database));
+unlink($database);

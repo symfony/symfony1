@@ -264,11 +264,11 @@ class sfFileCache extends sfCache
 
     if ($this->writeControl)
     {
-      $this->writeAndControl($path, $file, $data);
+      return $this->writeAndControl($path, $file, $data);
     }
     else
     {
-      $this->write($path, $file, $data);
+      return $this->write($path, $file, $data);
     }
   }
 
