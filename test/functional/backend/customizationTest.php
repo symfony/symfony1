@@ -73,10 +73,6 @@ $b->
   checkEditCustomization('edit title customization', array('title' => 'edit "%%title%%"'))->
   checkResponseElement('body h1', 'edit "foo title"')->
 
-  // edit fields
-  checkEditCustomization('edit field name customization', array('fields' => array('body' => array('name' => 'My Body'))))->
-  checkResponseElement('label[for="article_body"]', 'My Body:')->
-
   // edit fields display
   checkEditCustomization('edit fields display customization', array('display' => array('body', 'title')))->
   checkResponseElement('label[for="article_body"]', true)->

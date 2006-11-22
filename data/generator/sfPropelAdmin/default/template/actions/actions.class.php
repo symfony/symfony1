@@ -75,15 +75,13 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
       else
       {
         return $this->redirect('<?php echo $this->getModuleName() ?>/edit?<?php echo $this->getPrimaryKeyUrlParams('this->') ?>);
-<?php //' ?>
       }
     }
     else
     {
-      // add javascripts
-      $this->getResponse()->addJavascript(sfConfig::get('sf_prototype_web_dir').'/js/prototype');
-      $this->getResponse()->addJavascript(sfConfig::get('sf_admin_web_dir').'/js/collapse');
-      $this->getResponse()->addJavascript(sfConfig::get('sf_admin_web_dir').'/js/double_list');
+      $this->addJavascriptsForEdit();
+
+      $this->labels = $this->getLabels();
     }
   }
 
@@ -125,6 +123,10 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     $this->preExecute();
     $this-><?php echo $this->getSingularName() ?> = $this->get<?php echo $this->getClassName() ?>OrCreate();
     $this->update<?php echo $this->getClassName() ?>FromRequest();
+
+    $this->addJavascriptsForEdit();
+
+    $this->labels = $this->getLabels();
 
     return sfView::SUCCESS;
   }
@@ -406,5 +408,23 @@ $column = sfPropelManyToMany::getColumn($class, $through_class);
         $c->addDescendingOrderByColumn($sort_column);
       }
     }
+  }
+
+  protected function addJavascriptsForEdit()
+  {
+    $this->getResponse()->addJavascript(sfConfig::get('sf_prototype_web_dir').'/js/prototype');
+    $this->getResponse()->addJavascript(sfConfig::get('sf_admin_web_dir').'/js/collapse');
+    $this->getResponse()->addJavascript(sfConfig::get('sf_admin_web_dir').'/js/double_list');
+  }
+
+  protected function getLabels()
+  {
+    return array(
+<?php foreach ($this->getColumnCategories('edit.display') as $category): ?>
+<?php foreach ($this->getColumns('edit.display', $category) as $name => $column): ?>
+      '<?php echo $this->getSingularName() ?>{<?php echo $column->getName() ?>}' => '<?php $label_name = str_replace("'", "\\'", $this->getParameterValue('edit.fields.'.$column->getName().'.name')); echo $label_name ?><?php if ($label_name): ?>:<?php endif ?>',
+<?php endforeach; ?>
+<?php endforeach; ?>
+    );
   }
 }
