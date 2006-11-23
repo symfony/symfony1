@@ -69,7 +69,7 @@ class sfSQLiteCache extends sfCache
     {
       if (!in_array($key, $availableOptions))
       {
-        throw new sfConfigurationException(sprintf('sfFileCache cannot take "%s" as an option', $key));
+        sfLogger::getInstance()->error(sprintf('sfSQLiteCache cannot take "%s" as an option', $key));
       }
 
       $this->$key = $value;
