@@ -94,7 +94,7 @@ abstract class sfComponent
   {
     if (sfConfig::get('sf_logging_active'))
     {
-      return $this->context->getLogger()->log($message, constant('SF_PEAR_LOG_'.strtoupper($priority)));
+      return $this->context->getLogger()->log($message, constant('SF_LOG_'.strtoupper($priority)));
     }
   }
 

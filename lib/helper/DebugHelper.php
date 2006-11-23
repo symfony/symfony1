@@ -12,6 +12,6 @@ function log_message($message, $priority = 'info')
 {
   if (sfConfig::get('sf_logging_active'))
   {
-    sfContext::getInstance()->getLogger()->log($message, constant('SF_PEAR_LOG_'.strtoupper($priority)));
+    sfContext::getInstance()->getLogger()->log($message, constant('SF_LOG_'.strtoupper($priority)));
   }
 }
