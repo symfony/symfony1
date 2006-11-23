@@ -175,6 +175,12 @@ function run_init_batch($task, $args)
 
   // TODO: add finder here to locate batch skeleton locally or in symfony dirs, and send path to skeletons function
   $batch = '_batch_'.$args[0];
+
+  if (!function_exists($batch))
+  {
+    throw new Exception(sprintf('The specified batch "%s" does not exist.', $args[0]));
+  }
+
   $batch($task, $args);
 
   if (!file_exists(sfConfig::get('sf_symfony_data_dir').'/skeleton/batch/'.$args[0].'.php'))
