@@ -80,7 +80,7 @@ class sfContext
   }
 }
 
-$t = new lime_test(113, new lime_output_color());
+$t = new lime_test(154, new lime_output_color());
 
 $context = sfContext::getInstance();
 $context->controller = new myController();
@@ -284,19 +284,55 @@ $t->todo('select_date_tag()');
 
 // select_second_tag()
 $t->diag('select_second_tag()');
-$t->todo('select_second_tag()');
+$t->like(select_second_tag('second'), '/<select name="second" id="second">/', 'select_second_tag() outputs a select tag for seconds');
+$t->like(select_second_tag('second'), '/selected="selected">'.date('s').'/', 'select_second_tag() selects the current seconds by default');
+$t->like(select_second_tag('second', 12), '/<option value="12" selected="selected">/', 'select_second_tag() takes a second number as its second argument');
+
+// options
+$t->like(select_second_tag('second', null, array('include_custom' => 'test')), "/<option value=\"\">test<\/option>/", 'select_second_tag() can take an "include_custom" option');
+$t->like(select_second_tag('second', null, array('include_blank' => true)), "/<option value=\"\"><\/option>/", 'select_second_tag() can take an "include_blank" option');
+$t->like(select_second_tag('second', null, array(), array('class' => 'foo')), '<select name="second" id="second" class="foo">', 'select_second_tag() takes an array of attribute options as its fourth argument');
+$t->like(select_second_tag('second', null, array(), array('id' => 'foo')), '<select name="second" id="foo">', 'select_second_tag() takes an array of attribute options as its fourth argument');
+$t->is(preg_match_all("/<option value=\"/", select_second_tag('second', null, array('second_step' => 10)), $matches), 6, 'select_second_tag() can take an "second_step" option');
 
 // select_minute_tag()
 $t->diag('select_minute_tag()');
-$t->todo('select_minute_tag()');
+$t->like(select_minute_tag('minute'), '/<select name="minute" id="minute">/', 'select_minute_tag() outputs a select tag for minutes');
+$t->like(select_minute_tag('minute'), '/selected="selected">'.date('i').'/', 'select_minute_tag() selects the current minutes by default');
+$t->like(select_minute_tag('minute', 12), '/<option value="12" selected="selected">/', 'select_minute_tag() takes a minute number as its second argument');
+
+// options
+$t->like(select_minute_tag('minute', null, array('include_custom' => 'test')), "/<option value=\"\">test<\/option>/", 'select_minute_tag() can take an "include_custom" option');
+$t->like(select_minute_tag('minute', null, array('include_blank' => true)), "/<option value=\"\"><\/option>/", 'select_minute_tag() can take an "include_blank" option');
+$t->like(select_minute_tag('minute', null, array(), array('class' => 'foo')), '<select name="minute" id="minute" class="foo">', 'select_minute_tag() takes an array of attribute options as its fourth argument');
+$t->like(select_minute_tag('minute', null, array(), array('id' => 'foo')), '<select name="minute" id="foo">', 'select_minute_tag() takes an array of attribute options as its fourth argument');
+$t->is(preg_match_all("/<option value=\"/", select_minute_tag('minute', null, array('minute_step' => 10)), $matches), 6, 'select_minute_tag() can take an "minute_step" option');
 
 // select_hour_tag()
 $t->diag('select_hour_tag()');
-$t->todo('select_hour_tag()');
+$t->like(select_hour_tag('hour'), '/<select name="hour" id="hour">/', 'select_hour_tag() outputs a select tag for hours');
+$t->like(select_hour_tag('hour'), '/selected="selected">'.date('H').'/', 'select_hour_tag() selects the current hours by default');
+$t->like(select_hour_tag('hour', 1), '/<option value="1" selected="selected">/', 'select_hour_tag() takes a hour number as its second argument');
+
+// options
+$t->like(select_hour_tag('hour', null, array('include_custom' => 'test')), "/<option value=\"\">test<\/option>/", 'select_hour_tag() can take an "include_custom" option');
+$t->like(select_hour_tag('hour', null, array('include_blank' => true)), "/<option value=\"\"><\/option>/", 'select_hour_tag() can take an "include_blank" option');
+$t->like(select_hour_tag('hour', null, array(), array('class' => 'foo')), '<select name="hour" id="hour" class="foo">', 'select_hour_tag() takes an array of attribute options as its fourth argument');
+$t->like(select_hour_tag('hour', null, array(), array('id' => 'foo')), '<select name="hour" id="foo">', 'select_hour_tag() takes an array of attribute options as its fourth argument');
+$t->is(preg_match_all("/<option value=\"/", select_hour_tag('hour'), $matches), 24, 'select_hour_tag() can take an "12hour_time" option');
+$t->is(preg_match_all("/<option value=\"/", select_hour_tag('hour', null, array('12hour_time' => true)), $matches), 12, 'select_hour_tag() can take an "12hour_time" option');
 
 // select_ampm_tag()
 $t->diag('select_ampm_tag()');
-$t->todo('select_ampm_tag()');
+$t->like(select_ampm_tag('ampm'), '/<select name="ampm" id="ampm">/', 'select_ampm_tag() outputs a select tag for ampm');
+$t->like(select_ampm_tag('ampm'), '/<option value="'.date('A').'" selected="selected">/', 'select_ampm_tag() selects the current ampm by default');
+$t->like(select_ampm_tag('ampm', 'AM'), '/<option value="AM" selected="selected">/', 'select_ampm_tag() takes a ampm as its second argument');
+
+// options
+$t->like(select_ampm_tag('ampm', null, array('include_custom' => 'test')), "/<option value=\"\">test<\/option>/", 'select_ampm_tag() can take an "include_custom" option');
+$t->like(select_ampm_tag('ampm', null, array('include_blank' => true)), "/<option value=\"\"><\/option>/", 'select_ampm_tag() can take an "include_blank" option');
+$t->like(select_ampm_tag('ampm', null, array(), array('class' => 'foo')), '<select name="ampm" id="ampm" class="foo">', 'select_ampm_tag() takes an array of attribute options as its fourth argument');
+$t->like(select_ampm_tag('ampm', null, array(), array('id' => 'foo')), '<select name="ampm" id="foo">', 'select_ampm_tag() takes an array of attribute options as its fourth argument');
 
 // select_time_tag()
 $t->diag('select_time_tag()');
@@ -308,7 +344,23 @@ $t->todo('select_datetime_tag()');
 
 // select_number_tag()
 $t->diag('select_number_tag()');
-$t->todo('select_number_tag()');
+$t->like(select_number_tag('number', 3), '/<select name="number" id="number">/', 'select_number_tag() outputs a select tag for a range of numbers');
+
+// options
+$t->like(select_number_tag('number', null, array('include_custom' => 'test')), "/<option value=\"\">test<\/option>/", 'select_number_tag() can take an "include_custom" option');
+$t->like(select_number_tag('number', null, array('include_blank' => true)), "/<option value=\"\"><\/option>/", 'select_number_tag() can take an "include_blank" option');
+$t->like(select_number_tag('number', null, array(), array('class' => 'foo')), '<select name="number" id="number" class="foo">', 'select_number_tag() takes an array of attribute options as its fourth argument');
+$t->like(select_number_tag('number', null, array(), array('id' => 'foo')), '<select name="number" id="foo">', 'select_number_tag() takes an array of attribute options as its fourth argument');
+$t->is(preg_match_all('/<option/', select_number_tag('number', 3, array('increment' => 4)), $matches), 4, 'select_number_tag() can take an "increment" option');
+foreach (array(1, 5, 9, 13) as $number)
+{
+  $t->like(select_number_tag('number', 3, array('increment' => 4)), '/<option value="'.$number.'"/', 'select_number_tag() can take an "increment" option');
+}
+$t->is(preg_match_all('/<option/', select_number_tag('number', 40, array('start' => 38, 'end' => 40)), $matches), 3, 'select_number_tag() can take a "start" and "end" options');
+foreach (array(38, 39, 40) as $number)
+{
+  $t->like(select_number_tag('number', 40, array('start' => 38, 'end' => 40)), '/<option value="'.$number.'"/', 'select_number_tag() can take a "start" and an "end" option');
+}
 
 // label_for()
 $t->diag('label_for()');

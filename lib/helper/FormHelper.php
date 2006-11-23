@@ -732,14 +732,13 @@ function input_date_tag($name, $value = null, $options = array())
   $culture = _get_option($options, 'culture', $context->getUser()->getCulture());
 
   // rich control?
-  $rich = _get_option($options, 'rich', false);
-  if (!$rich)
+  if (!_get_option($options, 'rich', false))
   {
-    throw new sfException('input_date_tag (rich=off) is not yet implemented');
+    return select_date_tag($name, $value, $options, isset($options['html']) ? $options['html'] : array());
   }
 
   // parse date
-  if (($value === null) || ($value === ''))
+  if ($value === null || $value === '')
   {
     $value = '';
   }
@@ -954,14 +953,7 @@ function select_day_tag($name, $value = null, $options = array(), $html_options 
   $options = _parse_attributes($options);
 
   $select_options = array();
-  if (_get_option($options, 'include_blank'))
-  {
-    $select_options[''] = '';
-  }
-  else if ($include_custom = _get_option($options, 'include_custom'))
-  {
-    $select_options[''] = $include_custom;
-  }
+  _convert_include_custom_for_select($options, $select_options);
 
   for ($x = 1; $x < 32; $x++)
   {
@@ -1013,14 +1005,7 @@ function select_month_tag($name, $value = null, $options = array(), $html_option
   $options = _parse_attributes($options);
 
   $select_options = array();
-  if (_get_option($options, 'include_blank'))
-  {
-    $select_options[''] = '';
-  }
-  else if ($include_custom = _get_option($options, 'include_custom'))
-  {
-    $select_options[''] = $include_custom;
-  }
+  _convert_include_custom_for_select($options, $select_options);
 
   if (_get_option($options, 'use_month_numbers'))
   {
@@ -1098,14 +1083,7 @@ function select_year_tag($name, $value = null, $options = array(), $html_options
   $options = _parse_attributes($options);
 
   $select_options = array();
-  if (_get_option($options, 'include_blank'))
-  {
-    $select_options[''] = '';
-  }
-  else if ($include_custom = _get_option($options, 'include_custom'))
-  {
-    $select_options[''] = $include_custom;
-  }
+  _convert_include_custom_for_select($options, $select_options);
 
   if (strlen($value) > 0 && is_numeric($value))
   {
@@ -1187,7 +1165,7 @@ function select_date_tag($name, $value = null, $options = array(), $html_options
   $culture = _get_option($options, 'culture', sfContext::getInstance()->getUser()->getCulture());
 
   // set it back for month tag
-  $option['culture'] = $culture;
+  $options['culture'] = $culture;
 
   $I18n_arr = _get_I18n_date_locales($culture);
 
@@ -1218,17 +1196,17 @@ function select_date_tag($name, $value = null, $options = array(), $html_options
 
   if ($include_custom = _get_option($options, 'include_custom'))
   {
-    $include_custom_month = (is_array($include_custom))
-        ? ((isset($include_custom['month'])) ? array('include_custom' => $include_custom['month']) : array())
-        : array('include_custom'=>$include_custom);
+    $include_custom_month = is_array($include_custom)
+        ? (isset($include_custom['month']) ? array('include_custom' => $include_custom['month']) : array())
+        : array('include_custom' => $include_custom);
 
-    $include_custom_day = (is_array($include_custom))
-        ? ((isset($include_custom['day'])) ? array('include_custom' => $include_custom['day']) : array())
-        : array('include_custom'=>$include_custom);
+    $include_custom_day = is_array($include_custom)
+        ? (isset($include_custom['day']) ? array('include_custom' => $include_custom['day']) : array())
+        : array('include_custom' => $include_custom);
 
-    $include_custom_year = (is_array($include_custom))
-        ? ((isset($include_custom['year'])) ? array('include_custom' => $include_custom['year']) : array())
-        : array('include_custom'=>$include_custom);
+    $include_custom_year = is_array($include_custom)
+        ? (isset($include_custom['year']) ? array('include_custom' => $include_custom['year']) : array())
+        : array('include_custom' => $include_custom);
   }
   else
   {
@@ -1293,18 +1271,10 @@ function select_second_tag($name, $value = null, $options = array(), $html_optio
   {
     $value = date('s');
   }
-  
+
   $options = _parse_attributes($options);
   $select_options = array();
-
-  if (_get_option($options, 'include_blank'))
-  {
-    $select_options[''] = '';
-  }
-  else if ($include_custom = _get_option($options, 'include_custom'))
-  {
-    $select_options[''] = $include_custom;
-  }
+  _convert_include_custom_for_select($options, $select_options);
 
   $second_step = _get_option($options, 'second_step', 1);
   for ($x = 0; $x < 60; $x += $second_step)
@@ -1355,15 +1325,7 @@ function select_minute_tag($name, $value = null, $options = array(), $html_optio
 
   $options = _parse_attributes($options);
   $select_options = array();
-
-  if (_get_option($options, 'include_blank'))
-  {
-    $select_options[''] = '';
-  }
-  else if ($include_custom = _get_option($options, 'include_custom'))
-  {
-    $select_options[''] = $include_custom;
-  }
+  _convert_include_custom_for_select($options, $select_options);
 
   $minute_step = _get_option($options, 'minute_step', 1);
   for ($x = 0; $x < 60; $x += $minute_step)
@@ -1407,15 +1369,7 @@ function select_hour_tag($name, $value = null, $options = array(), $html_options
 {
   $options = _parse_attributes($options);
   $select_options = array();
-
-  if (_get_option($options, 'include_blank'))
-  {
-    $select_options[''] = '';
-  }
-  else if ($include_custom = _get_option($options, 'include_custom'))
-  {
-    $select_options[''] = $include_custom;
-  }
+  _convert_include_custom_for_select($options, $select_options);
 
   $_12hour_time = _get_option($options, '12hour_time');
 
@@ -1470,18 +1424,10 @@ function select_ampm_tag($name, $value = null, $options = array(), $html_options
   {
     $value = date('A');
   }
-    
+
   $options = _parse_attributes($options);
   $select_options = array();
-
-  if (_get_option($options, 'include_blank'))
-  {
-    $select_options[''] = '';
-  }
-  else if ($include_custom = _get_option($options, 'include_custom'))
-  {
-    $select_options[''] = $include_custom;
-  }
+  _convert_include_custom_for_select($options, $select_options);
 
   $select_options['AM'] = 'AM';
   $select_options['PM'] = 'PM';
@@ -1708,7 +1654,8 @@ function select_number_tag($name, $value, $options = array(), $html_options = ar
   $increment = _get_option($options, 'increment', 1);
 
   $range = array();
-  for ($x = _get_option($options, 'start', 1); $x < (_get_option($options, 'end', 10) + $increment); $x += $increment)
+  $max = _get_option($options, 'end', 10) + $increment;
+  for ($x = _get_option($options, 'start', 1); $x < $max; $x += $increment)
   {
     $range[(string) $x] = $x;
   }
@@ -1874,4 +1821,16 @@ function _convert_options($options)
   }
 
   return $options;
+}
+
+function _convert_include_custom_for_select($options, &$select_options)
+{
+  if (_get_option($options, 'include_blank'))
+  {
+    $select_options[''] = '';
+  }
+  else if ($include_custom = _get_option($options, 'include_custom'))
+  {
+    $select_options[''] = $include_custom;
+  }
 }
