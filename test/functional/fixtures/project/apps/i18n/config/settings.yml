@@ -77,7 +77,7 @@ all:
 #
 #    use_flash:              on
 #
-    activated_modules:      [default, sfI18NPlugin]
+    enabled_modules:        [default, sfI18NPlugin]
 #
 #    strip_comments:         on
 #

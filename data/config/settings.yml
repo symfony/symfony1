@@ -55,7 +55,7 @@ default:
 
     use_flash:              on
 
-    activated_modules:      [default]
+    enabled_modules:        [default]
 
     strip_comments:         on
 

@@ -6,7 +6,7 @@ sfConfig::add(array(
   'sf_error_404_action' => 'error404',
   'sf_available' => false,
   'sf_i18n' => true,
-  'sf_activated_modules' => array (
+  'sf_enabled_modules' => array (
   0 => 'default',
   1 => 'user',
 ),

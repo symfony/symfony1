@@ -187,7 +187,7 @@ class sfTestBrowser extends sfBrowser
   {
     $cacheManager = $this->getContext()->getViewCacheManager();
 
-    // check that cache is activated
+    // check that cache is enabled
     if (!$cacheManager)
     {
       $this->test->ok(!$boolean, 'cache is disabled');

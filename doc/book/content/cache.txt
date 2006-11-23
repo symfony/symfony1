@@ -11,7 +11,7 @@ Introduction
 
 The principle of HTML caching is simple: part or all of the HTML code that is sent to a user upon a request can be reused for a similar request, so this HTML code is stored in a special place (the `cache` folder in symfony), where the front controller will look for it before executing an action. If a cached version is found, it is sent without executing the action, thus greatly speeding up the process. If there is no cached version found, the action is executed, and its result (the view) is stored in the cache folder for future requests.
 
-As all the pages may contain dynamic information, the HTML cache is disabled by default. It is up to the site administrator to activate it in order to improve performance.
+As all the pages may contain dynamic information, the HTML cache is disabled by default. It is up to the site administrator to enable it in order to improve performance.
 
 Symfony handles four different types of HTML cache:
 
@@ -27,7 +27,7 @@ The symfony cache system uses files stored on the web server hard disk. This kee
 Global cache settings
 ---------------------
 
-For each application of a project, the HTML cache mechanism can be activated or deactivated completely per environment. In the `settings.yml` configuration file, notice the `cache` parameter:
+For each application of a project, the HTML cache mechanism can be enabled or disabled completely per environment. In the `settings.yml` configuration file, notice the `cache` parameter:
 
     prod:
     
@@ -56,10 +56,10 @@ For instance, imagine an action that returns the list of all the users of your w
 
 The result of the above-mentioned action is a processed template (`listSuccess.php`), and this is what is going to be cached.
 
-To activate the cache on such actions, simply add a `cache.yml` file in the `myproject/apps/myapp/modules/user/config/` directory, with the following content: 
+To enable the cache on such actions, simply add a `cache.yml` file in the `myproject/apps/myapp/modules/user/config/` directory, with the following content: 
 
     list:
-      activate:   on
+      enabled     on
       type:       slot
     
     all:
@@ -72,7 +72,7 @@ Now, if you try to call this action from your browser (probably by requesting an
 The caching system also works for pages with arguments. The `user` module may have, for instance, a `show` action that expects an `id` argument to display the details of a user. You would then just need to add the following lines at the top of the module `cache.yml` file:
 
     show:
-      activate:   on
+      enabled:    on
       type:       slot
 
 Now, requests like `http://myapp.example.com/user/show/id/12` will create new records in the cache folder and if you repeat this request, it will be much faster the second time. 
@@ -87,13 +87,13 @@ The [view chapter](view.txt) explains how to reuse code fragments across several
     [php]
     <?php include_partial('mymodule/mypartial') ?>
 
-A partial is as easy to cache as an action. To activate it, create a `cache.yml` in the partial module `config/` directory (in the example above, in `modules/mymodule/config/`) and activate the cache for the partials by declaring their names with a leading underscore:
+A partial is as easy to cache as an action. To enable it, create a `cache.yml` in the partial module `config/` directory (in the example above, in `modules/mymodule/config/`) and enable the cache for the partials by declaring their names with a leading underscore:
 
     _mypartial:
-      activate: on
+      enabled: on
     
     all:
-      activate: off
+      enabled: off
 
 Now all the templates using this partial won't actually execute the PHP code of the partial, but use the cached version instead. 
 
@@ -112,7 +112,7 @@ A component is a lightweight action put on top of a partial. A component slot is
 ...in order to show the current date, then you can cache this component with such a `cache.yml`:
 
     _day:
-      activate: on
+      enabled: on
 
 >**Note**: Global components (the ones located in the application `templates/` directory) can be cached, provided you declare the activation in the application `cache.yml` file.
 
@@ -126,11 +126,11 @@ The final page is the combination of the template and the layout, according to t
 Let's say this is the case for the test application described above: the layout simply contains navigation links, nothing dynamic, and can easily be cached. The cache can then be set to `page` type instead of `slot`. Modify the `cache.yml` as follows:
 
     show:
-      activate:   on
+      enabled:    on
       type:       page
       
     list:
-      activate:   on
+      enabled:    on
       type:       page
     
     all:
@@ -193,7 +193,7 @@ Here's how it works: if a cached version of the fragment named 'users' is found,
 Note that the `list` action must not have a `slot`- or `page`- type cache enabled, since this would bypass the whole template execution and ignore the fragment cache declaration. So either remove the `list` part of the `cache.yml` file, or write instead:
 
     list:
-      activate:   off
+      enabled:   off
 
 After requesting twice the `http://myapp.example.com/user/list` URL, notice that the second execution is faster than the first. However, the answer is not as fast as when the cache was set to `slot` or `page`, since the template is partially processed and the decoration is made for every request.
 
@@ -334,7 +334,7 @@ Testing and monitoring the cache improvements
 
 ### Staging environment
 
-The caching system is prone to new errors in the production environment that can't be detected in the development environment, since the HTML cache is deactivated by default in development. If you use the HTML cache, it is strongly recommended to add a new environment, that will be called `staging` here, which is a copy of the production environment (thus with cache activated) but with the web debug set to on.
+The caching system is prone to new errors in the production environment that can't be detected in the development environment, since the HTML cache is disabled by default in development. If you use the HTML cache, it is strongly recommended to add a new environment, that will be called `staging` here, which is a copy of the production environment (thus with cache enabled) but with the web debug set to on.
 
 To set it up, edit the `settings.yml` of your application and add at the top:
 
@@ -359,7 +359,7 @@ You will notice the familiar web debug box at the top right corner of the browse
 
 After a bunch of flags, this debug box also displays the process duration. Go ahead, clear the cache and make some tests: the second time you request a page, depending on the complexity of the action and template, can be several times faster with caching turned on.        
 
-To get more details about the caching impact, activate the debug mode by editing the `myapp_staging.php` and changing the `SF_DEBUG` value:
+To get more details about the caching impact, enable the debug mode by editing the `myapp_staging.php` and changing the `SF_DEBUG` value:
 
     [php]
     define('SF_DEBUG', true);
@@ -389,13 +389,13 @@ The [HTTP 1.1 specifications](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.
 
 ### ETags
 
-When `ETag` is activated, the web server adds to the response a special header containing a md5 hash of the response itself. 
+When `ETag` is enabled, the web server adds to the response a special header containing a md5 hash of the response itself. 
 
     ETag: "1A2Z3E4R5T6Y7U"
 
 The user's browser will store this hash, and send it again together with the request the next time it needs the same page. If the new hash shows that the page didn't change since the first request, the browser doesn't sent the response back. Instead, it just sends a '304: not modified' header. It saves cpu time (gzipping) and bandwidth (page transfer) for the server, and cpu time (page rendering) for the client. Overall, pages in cache with an etag are even faster to load than pages in cache without etag.
 
-In symfony, you activate the etags feature for the whole application in the `settings.yml`. Here is the default setting:
+In symfony, you enable the etags feature for the whole application in the `settings.yml`. Here is the default setting:
 
     all:
       .settings:
@@ -439,7 +439,7 @@ Symfony will store a different version of the page in the cache for each value o
 
 ### Cache-Control
 
-Up to now, even by adding headers, the browser kept sending requests to the server even if it held a cached version of the page. There is a way to avoid that by adding `Cache-Control` and `Expires` headers to the response. These headers are deactivated by default in PHP, but symfony can override this behaviour to avoid unecessary requests to your server.
+Up to now, even by adding headers, the browser kept sending requests to the server even if it held a cached version of the page. There is a way to avoid that by adding `Cache-Control` and `Expires` headers to the response. These headers are disabled by default in PHP, but symfony can override this behaviour to avoid unecessary requests to your server.
 
 Beware that the major consequence of turning this mechanism on is that your server logs won't show all the requests issued by the users, but only the ones received. If the performance gets better, the apparent popularity of the site may decrease in the statistics.
 

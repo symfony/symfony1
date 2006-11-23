@@ -24,7 +24,7 @@ When the user types a word and submits a query to the search engine (in this exa
 
 But try to imagine more complicated cases, where the default value comes from the server, or where you have a radiobutton tag or a select tag. Handling all that becomes long and painful in the long run, especially if you have forms with a large number of controls.
 
-Symfony can handle repopulation automatically. To enable that behaviour, you just need to add a `filters.yml` in your module `config/` folder and activate the `sfFillInFormFilter`:
+Symfony can handle repopulation automatically. To enable that behaviour, you just need to add a `filters.yml` in your module `config/` folder and enable the `sfFillInFormFilter`:
 
     myFillInFormFilter:
       class: sfFillInFormFilter
@@ -39,7 +39,7 @@ If you defined a validation file for a form (see how in the [form validation cha
 For instance, if a `product` form calls an `add` action, its validation uses a `validate/add.yml` file. To enable repopulation in the form on failed validation, add the following lines to the `add.yml` file:
 
      fillin:
-      activate: on
+      enabled: on
 
 Filter parameters
 -----------------
@@ -64,7 +64,7 @@ Is targeted in a `filter.yml` by:
 If you prefer a validation file, the syntax is:
 
      fillin:
-      activate: on
+      enabled: on
       param:
         name: search        # name of the form
 

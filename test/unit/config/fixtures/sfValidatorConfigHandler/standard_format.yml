@@ -2,7 +2,7 @@ methods:
   post: [name, email, age, message, image]
 
 fillin:
-  activate:      Yes
+  enabled:       Yes
 
 names:
   name:

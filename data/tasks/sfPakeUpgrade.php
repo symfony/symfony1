@@ -55,6 +55,9 @@ function run_upgrade_1_0($task, $args)
   // upgrade model classes
   _upgrade_1_0_propel_model();
 
+  // migrate activate to enabled
+  _upgrade_1_0_activate();
+
   // find all applications for this project
   $apps = pakeFinder::type('directory')->name(sfConfig::get('sf_app_module_dir_name'))->mindepth(1)->maxdepth(1)->relative()->in(sfConfig::get('sf_apps_dir_name'));
 
@@ -177,9 +180,12 @@ function _upgrade_1_0_php_files($app_dir)
     {
       $count = 0;
       $content = str_replace($old, $new, $content, $count);
-      if ($count && !isset($seen[$old]))
+      if ($count)
       {
         $updated = true;
+      }
+      if ($count && !isset($seen[$old]))
+      {
         $seen[$old] = true;
         pake_echo_comment(sprintf('%s is deprecated', $old));
         pake_echo_comment(sprintf(' use %s', $new));
@@ -189,6 +195,55 @@ function _upgrade_1_0_php_files($app_dir)
     if ($updated)
     {
       file_put_contents($php_file, $content);
+    }
+  }
+}
+
+function _upgrade_1_0_activate()
+{
+  pake_echo_action('upgrade 1.0', 'migrate activate to enabled');
+
+  $config_files = array(
+    'settings.yml' => array(
+      'activated_modules:' => 'enabled_modules:  ',
+    ),
+    'cache.yml' => array(
+      'activate:' => 'enabled: ',
+    ),
+    'apps/*/modules/*/validate/*.yml' => array(
+      'activate:' => 'enabled: ',
+    ),
+  );
+  $seen = array();
+  foreach ($config_files as $config_file => $changed)
+  {
+    list($dir, $config_file) = array(dirname($config_file), basename($config_file));
+    $yml_files = pakeFinder::type('file')->name($config_file)->in(sfConfig::get('sf_root_dir').DIRECTORY_SEPARATOR.$dir);
+    foreach ($yml_files as $yml_file)
+    {
+      $content = file_get_contents($yml_file);
+
+      $updated = false;
+      foreach ($changed as $old => $new)
+      {
+        $content = str_replace($old, $new, $content, $count);
+        if ($count)
+        {
+          $updated = true;
+        }
+        if ($count && !isset($seen[$config_file.$old]))
+        {
+          $seen[$config_file.$old] = true;
+
+          pake_echo_comment(sprintf('%s is deprecated in %s', $old, $config_file));
+          pake_echo_comment(sprintf(' use %s', $new));
+        }
+      }
+
+      if ($updated)
+      {
+        file_put_contents($yml_file, $content);
+      }
     }
   }
 }
@@ -215,9 +270,12 @@ function _upgrade_1_0_view_yml($app_dir)
     {
       $count = 0;
       $content = str_replace($old, $new, $content, $count);
-      if ($count && !isset($seen[$old]))
+      if ($count)
       {
         $updated = true;
+      }
+      if ($count && !isset($seen[$old]))
+      {
         $seen[$old] = true;
         pake_echo_comment(sprintf('%s is deprecated', $old));
         pake_echo_comment(sprintf(' use %s', $new));
@@ -245,9 +303,12 @@ function _upgrade_1_0_cache_yml($app_dir)
     $count = 0;
     $updated = false;
     $content = preg_replace_callback('/type\:(\s*)(.+)$/m', '_upgrade_1_0_cache_yml_callback', $content, -1, $count);
-    if ($count && !$seen)
+    if ($count)
     {
       $updated = true;
+    }
+    if ($count && !$seen)
+    {
       $seen = true;
       pake_echo_comment('"type" has been removed in cache.yml');
       pake_echo_comment('  read the doc about "with_layout"');
@@ -277,17 +338,20 @@ function _upgrade_1_0_deprecated_for_generator($app_dir)
   );
   foreach ($yml_files as $yml_file)
   {
+    $updated = false;
     foreach ($deprecated_str as $old => $new)
     {
       $content = file_get_contents($yml_file);
 
       $count = 0;
-      $updated = false;
       $content = str_replace($old, $new, $content, $count);
+      if ($count)
+      {
+        $updated = true;
+      }
       if ($count && !isset($seen[$old]))
       {
         $seen[$old] = true;
-        $updated = true;
         pake_echo_comment(sprintf('%s() has been removed', $old));
         pake_echo_comment(sprintf(' use %s()', $new));
       }
@@ -322,9 +386,12 @@ function _upgrade_1_0_deprecated_for_actions($action_dirs)
     {
       $count = 0;
       $content = str_replace($old, $new, $content, $count);
-      if ($count && !isset($seen[$old]))
+      if ($count)
       {
         $updated = true;
+      }
+      if ($count && !isset($seen[$old]))
+      {
         $seen[$old] = true;
         pake_echo_comment(sprintf('%s has been removed', $old));
         pake_echo_comment(sprintf(' use %s', $new));
@@ -360,17 +427,23 @@ function _upgrade_1_0_deprecated_for_templates($template_dirs)
     $updated = false;
     $count = 0;
     $content = preg_replace('#<\?php\s+(echo)?\s+include_javascripts\(\);?\s*\?>#', '', $content, -1, $count);
-    if ($count && !isset($seen['include_javascripts']))
+    if ($count)
     {
       $updated = true;
+    }
+    if ($count && !isset($seen['include_javascripts']))
+    {
       $seen['include_javascripts'] = true;
       pake_echo_comment('include_javascripts() has been removed');
     }
 
     $content = preg_replace('#<\?php\s+(echo)?\s+include_stylesheets\(\);?\s*\?>#', '', $content, -1, $count);
-    if ($count && !isset($seen['include_stylesheets']))
+    if ($count)
     {
       $updated = true;
+    }
+    if ($count && !isset($seen['include_stylesheets']))
+    {
       $seen['include_stylesheets'] = true;
       pake_echo_comment('include_stylesheets() has been removed');
     }
@@ -378,9 +451,12 @@ function _upgrade_1_0_deprecated_for_templates($template_dirs)
     foreach ($deprecated_str as $old => $new)
     {
       $content = str_replace($old, $new, $content, $count);
-      if ($count && !isset($seen[$old]))
+      if ($count)
       {
         $updated = true;
+      }
+      if ($count && !isset($seen[$old]))
+      {
         $seen[$old] = true;
         pake_echo_comment(sprintf('%s has been removed', $old));
         pake_echo_comment(sprintf(' use %s', $new));
@@ -521,9 +597,12 @@ function _upgrade_1_0_propel_model()
     $updated = false;
     $content = str_replace('require_once \'model', 'require_once \'lib/model', $content, $count1);
     $content = str_replace('include_once \'model', 'include_once \'lib/model', $content, $count2);
-    if (($count1 || $count2) && !$seen)
+    if ($count1 || $count2)
     {
       $updated = true;
+    }
+    if (($count1 || $count2) && !$seen)
+    {
       $seen = true;
       pake_echo_comment('model require must be lib/model/...');
       pake_echo_comment('  instead of model/...');
@@ -554,9 +633,12 @@ function _upgrade_1_0_schemas()
     $count = 0;
     $updated = false;
     $content = str_replace('<database', '<database package="lib.model"', $content, $count);
-    if ($count && !$seen)
+    if ($count)
     {
       $updated = true;
+    }
+    if ($count && !$seen)
+    {
       $seen = true;
       pake_echo_comment('schema.xml must now have a database package');
       pake_echo_comment('  default is package="lib.model"');

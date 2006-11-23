@@ -6,7 +6,7 @@ methods:
     - "article[body]"
 
 fillin:
-  activate: on
+  enabled:  on
 
 names:
   fake:

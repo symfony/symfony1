@@ -12,4 +12,4 @@ all:
 
     i18n:                   off
 
-    activated_modules:      [default, user]
+    enabled_modules:       [default, user]

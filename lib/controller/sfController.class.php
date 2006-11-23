@@ -63,7 +63,7 @@ abstract class sfController
    *               controller to look for
    * @param boolean $throwExceptions whether to throw exceptions if the controller doesn't exist
    *
-   * @throws sfConfigurationException thrown if the module is not activated
+   * @throws sfConfigurationException thrown if the module is not enabled
    * @throws sfControllerException thrown if the controller doesn't exist and the $throwExceptions
    *                               parameter is set to true
    *
@@ -72,12 +72,12 @@ abstract class sfController
   protected function controllerExists ($moduleName, $controllerName, $extension, $throwExceptions)
   {
     $dirs = sfLoader::getControllerDirs($moduleName);
-    foreach ($dirs as $dir => $checkActivated)
+    foreach ($dirs as $dir => $checkEnabled)
     {
-      // plugin module activated?
-      if ($checkActivated && !in_array($moduleName, sfConfig::get('sf_activated_modules')) && is_readable($dir))
+      // plugin module enabled?
+      if ($checkEnabled && !in_array($moduleName, sfConfig::get('sf_enabled_modules')) && is_readable($dir))
       {
-        $error = 'The module "%s" is not activated.';
+        $error = 'The module "%s" is not enabled.';
         $error = sprintf($error, $moduleName);
 
         throw new sfConfigurationException($error);

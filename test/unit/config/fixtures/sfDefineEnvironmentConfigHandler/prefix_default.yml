@@ -8,4 +8,4 @@ default:
 
     i18n:                   off
 
-    activated_modules:      [default]
+    enabled_modules:       [default]

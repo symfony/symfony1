@@ -332,7 +332,7 @@ One common concern about forms is the value that the form fields will have when 
 Fortunately, symfony takes care of the form repopulation for you. If you want your form to be filled in with the values previously entered by the user, simply add these lines to your validation file:
 
     fillin:
-      activate: on   # activate the form repopulation
+      enabled:  on   # enable the form repopulation
       param:
         name: test   # name of the form
 
@@ -343,14 +343,14 @@ The repopulation works for text and hidden inputs, textareas, radiobuttons, chec
 You might want to transform the values entered by the user before putting them in a form input. Escaping, url rewriting, transformation of special characters into entities, etc., all the transformations that can be called through a function (existing or defined by you) can be applied to the fields of your form if you define the transformation under the `converters:` key:
 
      fillin:
-      activate: on
+      enabled: on
       param:
         name: test
         converters:         # converters to apply
           htmlentities:     [first_name, comments]
           htmlspecialchars: [comments]
 
-The repopulation feature is based on a filter called `sfFillInFormFilter`, and it means that you can take advantage of form repopulation even if you don't use the symfony validation files. To activate the filter, just add it to your `filters.yml` as you would do with a normal filter (see more in the [filter chapter](filters.txt)).
+The repopulation feature is based on a filter called `sfFillInFormFilter`, and it means that you can take advantage of form repopulation even if you don't use the symfony validation files. To enable the filter, just add it to your `filters.yml` as you would do with a normal filter (see more in the [filter chapter](filters.txt)).
 
 Complex validation needs
 ------------------------
