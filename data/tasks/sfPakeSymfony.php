@@ -43,6 +43,9 @@ function run_freeze($task, $args)
   pake_echo_action('freeze', 'freezing lib found in "'.$symfony_lib_dir.'"');
   pake_echo_action('freeze', 'freezing data found in "'.$symfony_data_dir.'"');
 
+  pake_mkdirs('lib'.DIRECTORY_SEPARATOR.'symfony');
+  pake_mkdirs('data'.DIRECTORY_SEPARATOR.'symfony');
+
   $finder = pakeFinder::type('any')->ignore_version_control();
   pake_mirror($finder, $symfony_lib_dir, 'lib/symfony');
   pake_mirror($finder, $symfony_data_dir, 'data/symfony');
