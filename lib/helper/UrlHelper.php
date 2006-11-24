@@ -92,11 +92,15 @@ function link_to($name = '', $internal_uri = '', $options = array())
   $html_options = _convert_options_to_javascript($html_options);
 
   $absolute = false;
-  if (isset($html_options['absolute_url']) || isset($html_options['absolute']))
+  if (isset($html_options['absolute_url']))
   {
+    $html_options['absolute'] = $html_options['absolute_url'];
     unset($html_options['absolute_url']);
+  }
+  if (isset($html_options['absolute']))
+  {
+    $absolute = (boolean) $html_options['absolute'];
     unset($html_options['absolute']);
-    $absolute = true;
   }
 
   $html_options['href'] = url_for($internal_uri, $absolute);
@@ -109,7 +113,7 @@ function link_to($name = '', $internal_uri = '', $options = array())
 
   if (is_object($name))
   {
-    $name = $name->__toString();
+    $name = method_exists($name, '__toString') ? $name->__toString() : (string) $name;
   }
 
   if (!strlen($name))
@@ -158,16 +162,7 @@ function link_to_if($condition, $name = '', $internal_uri = '', $options = array
   else
   {
     $html_options = _parse_attributes($options);
-    
-    if (isset($html_options['tag']))
-    {
-      $tag = $html_options['tag'];
-      unset($html_options['tag']);
-    }
-    else
-    {
-      $tag = 'span';
-    }
+    $tag = _get_option($html_options, 'tag', 'span');
 
     return content_tag($tag, $name, $html_options);
   }
