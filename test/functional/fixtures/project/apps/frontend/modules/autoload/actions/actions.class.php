@@ -17,4 +17,9 @@ class autoloadActions extends sfActions
     $this->lib3 = myAppsFrontendModulesAutoloadLibClass::ping();
     $this->lib4 = class_exists('myPluginsSfAutoloadPluginModulesAutoloadPluginLibClass') ? 'pong' : 'nopong';
   }
+
+  public function executeMyAutoload()
+  {
+    $this->o = new myAutoloadedClass();
+  }
 }

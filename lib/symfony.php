@@ -52,8 +52,7 @@ else
 }
 
 // autoloading
-require_once($sf_symfony_lib_dir.'/util/sfCore.class.php');
-sfCore::initAutoloading();
+sfCore::initAutoload();
 
 try
 {
@@ -91,6 +90,12 @@ try
   if (sfConfig::get('sf_i18n'))
   {
     include($configCache->checkConfig($sf_app_config_dir_name.'/i18n.yml'));
+  }
+
+  // add autoloading callables
+  foreach ((array) sfConfig::get('sf_autoloading_functions', array()) as $callable)
+  {
+    sfCore::addAutoloadCallable($callable);
   }
 
   // error settings
