@@ -6,6 +6,8 @@ WARNING: All deprecated function, methods and tasks has been removed (see r1631,
 If you try to use this release with 0.6.X projects, you must upgrade them with: symfony upgrade 1.0
 When you upgrade symfony, re-run the upgrade script (you can safely run the upgrade several times).
 
+* refactored admin generator templates
+* new sfLogger class (more flexible)
 * moved 500 and unavailable errors to web/errors (and changed .html extension to .php)
 * user filters can now be registered anywhere in the filter chain
 * minor changes to be compatible with PHP 5.2
@@ -20,7 +22,7 @@ When you upgrade symfony, re-run the upgrade script (you can safely run the upgr
 * refactored sfFilter class (executeBeforeExecution, executeBeforeRendering)
 * new coverage script for symfony core
 * new encoding parameter in databases.yml
-* new functional and unit tests for the core framework (more than 2000)
+* new functional and unit tests for the core framework (more than 2600)
 * new sfMixin class to allow adding methods to core classes without inheritance
 * new sfBrowser, sfTestBrowser and sfDomCssSelector classes to ease functional tests writing
 * new unit test library (lime)
@@ -43,10 +45,10 @@ When you upgrade symfony, re-run the upgrade script (you can safely run the upgr
 * bundled pake and phing (symfony has no external dependancy)
 * better i18n support thanks to the new charset setting (FillInFilter, translations, ...)
 * added a new charset setting
-* updated creole, Propel and scriptaculous (1.6.2)
+* updated creole, Propel, script.aculo.us (1.6.5) and prototype (1.5.0_rc1)
 * many-to-many relationship support in admin generator
 * removed my* classes from skeleton except myUser
-* new classes :sfProcessCache, sfLogManager
+* new classes :sfProcessCache, sfLogManager, sfSQLiteCache
 * removed all deprecated functions, methods and tasks.
 * removed old php, css and js files that are not used anymore
 * strip comments in production environment by default
