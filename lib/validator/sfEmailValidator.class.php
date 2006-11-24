@@ -76,6 +76,18 @@ class sfEmailValidator extends sfValidator
       return false;
     }
 
+    $checkDomain = $this->getParameterHolder()->get('check_domain');
+    if ($checkDomain && function_exists('checkdnsrr'))
+    {
+      $tokens = explode('@', $value);
+      if (!checkdnsrr($tokens[1], 'MX') && !checkdnsrr($tokens[1], 'A'))
+      {
+        $error = $this->getParameterHolder()->get('email_error');
+
+        return false;
+      }
+    }
+
     return true;
   }
 
@@ -85,8 +97,9 @@ class sfEmailValidator extends sfValidator
     parent::initialize($context);
 
     // set defaults
-    $this->getParameterHolder()->set('strict',      true);
-    $this->getParameterHolder()->set('email_error', 'Invalid input');
+    $this->getParameterHolder()->set('strict',       true);
+    $this->getParameterHolder()->set('check_domain', false);
+    $this->getParameterHolder()->set('email_error',  'Invalid input');
 
     $this->getParameterHolder()->add($parameters);
 
