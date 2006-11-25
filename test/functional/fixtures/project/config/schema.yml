@@ -10,3 +10,11 @@ propel:
   category:
     id:
     name:        varchar(255)
+
+  author:
+    id:
+    name:        varchar(255)
+
+  author_article:
+    author_id:
+    article_id:

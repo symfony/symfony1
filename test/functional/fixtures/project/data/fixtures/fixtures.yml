@@ -19,3 +19,22 @@ Article:
     online:      false
     category_id: category_2
     created_at:  <?php echo time() ?>
+
+Author:
+  fabien:
+    name: Fabien
+  thomas:
+    name: Thomas
+  helene:
+    name: Hélène
+
+AuthorArticle:
+  article_1_fabien:
+    author_id:  fabien
+    article_id: article_1
+  article_1_thomas:
+    author_id:  thomas
+    article_id: article_1
+  article_2_fabien:
+    author_id:  fabien
+    article_id: article_2

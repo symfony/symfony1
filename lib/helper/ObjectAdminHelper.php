@@ -61,6 +61,9 @@ function object_admin_double_list($object, $method, $options = array())
   // get the lists of objects
   $through_class = _get_option($options, 'through_class');
   $sort          = _get_option($options, 'sort');
+
+  $object = get_class($object) == 'sfOutputEscaperObjectDecorator' ? $object->getRawValue() : $object;
+
   $objects_associated = sfPropelManyToMany::getRelatedObjects($object, $through_class);
   $all_objects = sfPropelManyToMany::getAllObjects($object, $through_class);
   $objects_unassociated = array();
@@ -121,6 +124,9 @@ function object_admin_select_list($object, $method, $options = array())
   // get the lists of objects
   $through_class = _get_option($options, 'through_class');
   $sort          = _get_option($options, 'sort');
+
+  $object = get_class($object) == 'sfOutputEscaperObjectDecorator' ? $object->getRawValue() : $object;
+
   $objects = sfPropelManyToMany::getAllObjects($object, $through_class);
   $objects_associated = sfPropelManyToMany::getRelatedObjects($object, $through_class);
   $ids = array_map(create_function('$o', 'return $o->getPrimaryKey();'), $objects_associated);
@@ -139,6 +145,9 @@ function object_admin_check_list($object, $method, $options = array())
   // get the lists of objects
   $through_class = _get_option($options, 'through_class');
   $sort          = _get_option($options, 'sort');
+
+  $object = get_class($object) == 'sfOutputEscaperObjectDecorator' ? $object->getRawValue() : $object;
+
   $objects = sfPropelManyToMany::getAllObjects($object, $through_class);
   $objects_associated = sfPropelManyToMany::getRelatedObjects($object, $through_class);
   $assoc_ids = array_map(create_function('$o', 'return $o->getPrimaryKey();'), $objects_associated);

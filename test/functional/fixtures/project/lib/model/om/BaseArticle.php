@@ -38,6 +38,12 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 	protected $aCategory;
 
 	
+	protected $collAuthorArticles;
+
+	
+	protected $lastAuthorArticleCriteria = null;
+
+	
 	protected $alreadyInSave = false;
 
 	
@@ -274,6 +280,14 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 				}
 				$this->resetModified(); 			}
 
+			if ($this->collAuthorArticles !== null) {
+				foreach($this->collAuthorArticles as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
 			$this->alreadyInSave = false;
 		}
 		return $affectedRows;
@@ -322,6 +336,14 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 				$failureMap = array_merge($failureMap, $retval);
 			}
 
+
+				if ($this->collAuthorArticles !== null) {
+					foreach($this->collAuthorArticles as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
 
 
 			$this->alreadyInValidation = false;
@@ -475,6 +497,15 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 		$copyObj->setCreatedAt($this->created_at);
 
 
+		if ($deepCopy) {
+									$copyObj->setNew(false);
+
+			foreach($this->getAuthorArticles() as $relObj) {
+				$copyObj->addAuthorArticle($relObj->copy($deepCopy));
+			}
+
+		} 
+
 		$copyObj->setNew(true);
 
 		$copyObj->setId(NULL); 
@@ -526,6 +557,111 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 			
 		}
 		return $this->aCategory;
+	}
+
+	
+	public function initAuthorArticles()
+	{
+		if ($this->collAuthorArticles === null) {
+			$this->collAuthorArticles = array();
+		}
+	}
+
+	
+	public function getAuthorArticles($criteria = null, $con = null)
+	{
+				include_once 'lib/model/om/BaseAuthorArticlePeer.php';
+		if ($criteria === null) {
+			$criteria = new Criteria();
+		}
+		elseif ($criteria instanceof Criteria)
+		{
+			$criteria = clone $criteria;
+		}
+
+		if ($this->collAuthorArticles === null) {
+			if ($this->isNew()) {
+			   $this->collAuthorArticles = array();
+			} else {
+
+				$criteria->add(AuthorArticlePeer::ARTICLE_ID, $this->getId());
+
+				AuthorArticlePeer::addSelectColumns($criteria);
+				$this->collAuthorArticles = AuthorArticlePeer::doSelect($criteria, $con);
+			}
+		} else {
+						if (!$this->isNew()) {
+												
+
+				$criteria->add(AuthorArticlePeer::ARTICLE_ID, $this->getId());
+
+				AuthorArticlePeer::addSelectColumns($criteria);
+				if (!isset($this->lastAuthorArticleCriteria) || !$this->lastAuthorArticleCriteria->equals($criteria)) {
+					$this->collAuthorArticles = AuthorArticlePeer::doSelect($criteria, $con);
+				}
+			}
+		}
+		$this->lastAuthorArticleCriteria = $criteria;
+		return $this->collAuthorArticles;
+	}
+
+	
+	public function countAuthorArticles($criteria = null, $distinct = false, $con = null)
+	{
+				include_once 'lib/model/om/BaseAuthorArticlePeer.php';
+		if ($criteria === null) {
+			$criteria = new Criteria();
+		}
+		elseif ($criteria instanceof Criteria)
+		{
+			$criteria = clone $criteria;
+		}
+
+		$criteria->add(AuthorArticlePeer::ARTICLE_ID, $this->getId());
+
+		return AuthorArticlePeer::doCount($criteria, $distinct, $con);
+	}
+
+	
+	public function addAuthorArticle(AuthorArticle $l)
+	{
+		$this->collAuthorArticles[] = $l;
+		$l->setArticle($this);
+	}
+
+
+	
+	public function getAuthorArticlesJoinAuthor($criteria = null, $con = null)
+	{
+				include_once 'lib/model/om/BaseAuthorArticlePeer.php';
+		if ($criteria === null) {
+			$criteria = new Criteria();
+		}
+		elseif ($criteria instanceof Criteria)
+		{
+			$criteria = clone $criteria;
+		}
+
+		if ($this->collAuthorArticles === null) {
+			if ($this->isNew()) {
+				$this->collAuthorArticles = array();
+			} else {
+
+				$criteria->add(AuthorArticlePeer::ARTICLE_ID, $this->getId());
+
+				$this->collAuthorArticles = AuthorArticlePeer::doSelectJoinAuthor($criteria, $con);
+			}
+		} else {
+									
+			$criteria->add(AuthorArticlePeer::ARTICLE_ID, $this->getId());
+
+			if (!isset($this->lastAuthorArticleCriteria) || !$this->lastAuthorArticleCriteria->equals($criteria)) {
+				$this->collAuthorArticles = AuthorArticlePeer::doSelectJoinAuthor($criteria, $con);
+			}
+		}
+		$this->lastAuthorArticleCriteria = $criteria;
+
+		return $this->collAuthorArticles;
 	}
 
 } 
