@@ -47,15 +47,14 @@ function run_test_functional($task, $args)
 
   if (isset($args[1]))
   {
-    $test = $args[1];
-    $test_file = sfConfig::get('sf_test_dir').DIRECTORY_SEPARATOR.'functional'.DIRECTORY_SEPARATOR.$app.DIRECTORY_SEPARATOR.$test.'Test.php';
-
-    if (!is_readable($test_file))
+    foreach (array_splice($args, 1) as $path)
     {
-      throw new Exception(sprintf('The functionnal test "%s" does not exist', $test));
+      $files = pakeFinder::type('file')->ignore_version_control()->name(basename($path).'Test.php')->in(sfConfig::get('sf_test_dir').DIRECTORY_SEPARATOR.'functional'.DIRECTORY_SEPARATOR.dirname($path));
+      foreach ($files as $file)
+      {
+        include($file);
+      }
     }
-
-    include($test_file);
   }
   else
   {
@@ -78,14 +77,9 @@ function run_test_unit($task, $args)
   {
     foreach ($args as $path)
     {
-      $files = pakeFinder::type('file')->ignore_version_control()->name($path.'Test.php')->in(sfConfig::get('sf_test_dir').DIRECTORY_SEPARATOR.'unit');
+      $files = pakeFinder::type('file')->ignore_version_control()->name(basename($path).'Test.php')->in(sfConfig::get('sf_test_dir').DIRECTORY_SEPARATOR.'unit'.DIRECTORY_SEPARATOR.dirname($path));
       foreach ($files as $file)
       {
-        if (!is_readable($file))
-        {
-          throw new Exception(sprintf('The functionnal test "%s" does not exist', $path));
-        }
-
         include($file);
       }
     }
@@ -97,7 +91,7 @@ function run_test_unit($task, $args)
     $h = new lime_harness(new lime_output_color());
     $h->base_dir = sfConfig::get('sf_test_dir').'/unit';
 
-    // register functional tests
+    // register unit tests
     $finder = pakeFinder::type('file')->ignore_version_control()->name('*Test.php');
     $h->register($finder->in($h->base_dir));
 
