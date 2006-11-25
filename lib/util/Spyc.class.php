@@ -15,37 +15,22 @@
  */
 class YAMLNode
 {
-  /**#@+
-   * @access public
-   * @var string
-   */ 
   public $parent;
   public $id;
-  /**#@+*/
-  /** 
-   * @access public
-   * @var mixed
-   */
   public $data;
-  /** 
-   * @access public
-   * @var int
-   */
   public $indent;
-  /** 
-   * @access public
-   * @var bool
-   */
   public $children = false;
+
+  static protected $lastNodeId = 0;
 
   /**
    * The constructor assigns the node a unique ID.
-   * @access public
+   *
    * @return void
    */
-  public function YAMLNode()
+  public function __construct()
   {
-    $this->id = uniqid('');
+    $this->id = ++self::$lastNodeId;
   }
 }
 
@@ -76,7 +61,7 @@ class Spyc
    *   $array = Spyc::YAMLLoad('lucky.yml');
    *   print_r($array);
    *  </code>
-   * @access public
+   *
    * @return array
    * @param string $input Path of YAML file or string containing YAML
    */
@@ -101,7 +86,6 @@ class Spyc
    * Indent's default is 2 spaces, wordwrap's default is 40 characters.  And
    * you can turn off wordwrap by passing in 0.
    *
-   * @access public
    * @return string
    * @param array $array PHP array
    * @param int $indent Pass in false to use the default, which is 2 
@@ -125,7 +109,7 @@ class Spyc
    *   $array  = $parser->load('lucky.yml');
    *   print_r($array);
    *  </code>
-   * @access public
+   *
    * @return array
    * @param string $input Path of YAML file or string containing YAML
    */
@@ -145,7 +129,7 @@ class Spyc
     }
 
     // Initiate some objects and values
-    $base              = new YAMLNode;
+    $base              = new YAMLNode();
     $base->indent      = 0;
     $this->_lastIndent = 0;
     $this->_lastNode   = $base->id;
@@ -176,7 +160,7 @@ class Spyc
       else if ($ifchk{0} != '#' && substr($ifchk, 0, 3) != '---')
       {
         // Create a new node and get its indent
-        $node         = new YAMLNode;
+        $node         = new YAMLNode();
         $node->indent = $this->_getIndent($line);
 
         // Check where the node lies in the hierarchy
@@ -331,7 +315,6 @@ class Spyc
    * Indent's default is 2 spaces, wordwrap's default is 40 characters.  And
    * you can turn off wordwrap by passing in 0.
    *
-   * @access public
    * @return string
    * @param array $array PHP array
    * @param int $indent Pass in false to use the default, which is 2 
@@ -373,33 +356,24 @@ class Spyc
     return $string;
   }
 
-  /**** Private Properties ****/
-
-  /**#@+
-   * @access private
-   * @var mixed
-   */ 
-  private $_haveRefs;
-  private $_allNodes;
-  private $_lastIndent;
-  private $_lastNode;
-  private $_inBlock;
-  private $_isInline;
-  private $_dumpIndent;
-  private $_dumpWordWrap;
-  /**#@+*/
-
-  /**** Private Methods ****/
+  protected $_haveRefs;
+  protected $_allNodes;
+  protected $_lastIndent;
+  protected $_lastNode;
+  protected $_inBlock;
+  protected $_isInline;
+  protected $_dumpIndent;
+  protected $_dumpWordWrap;
 
   /**
    * Attempts to convert a key / value array item to YAML
-   * @access private
+   *
    * @return string
    * @param $key The name of the key
    * @param $value The value of the item
    * @param $indent The indent of the current node
    */
-   private function _yamlize($key, $value, $indent)
+   protected function _yamlize($key, $value, $indent)
    {
     if (is_array($value))
     {
@@ -422,12 +396,12 @@ class Spyc
 
   /**
    * Attempts to convert an array to YAML
-   * @access private
+   *
    * @return string
    * @param $array The array you want to convert
    * @param $indent The indent of the current level
    */
-   private function _yamlizeArray($array, $indent)
+   protected function _yamlizeArray($array, $indent)
    {
     if (is_array($array))
     {
@@ -447,13 +421,13 @@ class Spyc
 
   /**
    * Returns YAML from a key and a value
-   * @access private
+   *
    * @return string
    * @param $key The name of the key
    * @param $value The value of the item
    * @param $indent The indent of the current node
    */
-   private function _dumpNode($key, $value, $indent)
+   protected function _dumpNode($key, $value, $indent)
    {
     if (is_object($value))
     {
@@ -496,12 +470,12 @@ class Spyc
 
   /**
    * Creates a literal block for dumping
-   * @access private
+   *
    * @return string
    * @param $value 
    * @param $indent int The value of the indent
    */ 
-   private function _doLiteralBlock($value, $indent)
+   protected function _doLiteralBlock($value, $indent)
    {
     $exploded = explode("\n", $value);
     $newValue = '|';
@@ -516,11 +490,11 @@ class Spyc
 
   /**
    * Folds a string of text, if necessary
-   * @access private
+   *
    * @return string
    * @param $value The string you wish to fold
    */
-   private function _doFolding($value, $indent)
+   protected function _doFolding($value, $indent)
    {
     // Don't do anything if wordwrap is set to 0
     if ($this->_dumpWordWrap === 0)
@@ -543,11 +517,11 @@ class Spyc
 
   /**
    * Finds and returns the indentation of a YAML line
-   * @access private
+   *
    * @return int
    * @param string $line A line from the YAML file
    */
-   private function _getIndent($line)
+   protected function _getIndent($line)
    {
     preg_match('/^\s{1,}/', $line, $match);
     if (!empty($match[0]))
@@ -564,11 +538,11 @@ class Spyc
 
   /**
    * Parses YAML code and returns an array for a node
-   * @access private
+   *
    * @return array
    * @param string $line A line from the YAML file
    */
-   private function _parseLine($line)
+   protected function _parseLine($line)
    {
     $line = trim($line);  
 
@@ -630,11 +604,11 @@ class Spyc
 
   /**
    * Finds the type of the passed value, returns the value as the new type.
-   * @access private
+   *
    * @param string $value
    * @return mixed
    */
-   private function _toType($value)
+   protected function _toType($value)
    {
     if (preg_match('/^("(.*)"|\'(.*)\')/', $value, $matches))
     {
@@ -719,10 +693,10 @@ class Spyc
 
   /**
    * Used in inlines to check for more inlines or quoted strings
-   * @access private
+   *
    * @return array
    */
-   private function _inlineEscape($inline)
+   protected function _inlineEscape($inline)
    {
     // There's gotta be a cleaner way to do this...
     // While pure sequences seem to be nesting just fine,
@@ -801,10 +775,10 @@ class Spyc
 
   /**
    * Builds the PHP array from all the YAML nodes we've gathered
-   * @access private
+   *
    * @return array
    */
-   private function _buildArray()
+   protected function _buildArray()
    {
     $trunk = array();
 
@@ -830,10 +804,10 @@ class Spyc
 
   /**
    * Traverses node-space and sets references (& and *) accordingly
-   * @access private
+   *
    * @return bool
    */
-   private function _linkReferences()
+   protected function _linkReferences()
    {
     if (is_array($this->_haveRefs))
     {
@@ -900,11 +874,11 @@ class Spyc
 
   /**
    * Finds the children of a node and aids in the building of the PHP array
-   * @access private
+   *
    * @param int $nid The id of the node whose children we're gathering
    * @return array
    */
-   private function _gatherChildren($nid)
+   protected function _gatherChildren($nid)
    {
     $return = array();
     $node   =& $this->_allNodes[$nid];
@@ -928,11 +902,11 @@ class Spyc
   /**
    * Turns a node's data and its children's data into a PHP array
    *
-   * @access private
+   *
    * @param array $node The node which you want to arrayize
    * @return boolean
    */
-   private function _nodeArrayizeData(&$node)
+   protected function _nodeArrayizeData(&$node)
    {
     if (is_array($node->data) && $node->children == true)
     {
@@ -965,11 +939,11 @@ class Spyc
 
   /**
    * Traverses node-space and copies references to / from this object.
-   * @access private
+   *
    * @param object $z A node whose references we wish to make real
    * @return bool
    */
-   private function _makeReferences(&$z)
+   protected function _makeReferences(&$z)
    {
     // It is a reference
     if (isset($z->ref))
@@ -1000,44 +974,35 @@ class Spyc
    *
    * http://us3.php.net/manual/en/function.array-merge.php#41394
    *
-   * @access private
    * @param array $arr1
    * @param array $arr2
    * @return array
    */
-   private function _array_kmerge($arr1,$arr2)
-   {
+  protected function _array_kmerge($arr1, $arr2)
+  {
     if (!is_array($arr1))
     {
       $arr1 = array();
     }
-
     if (!is_array($arr2))
     {
-      $arr2 = array(); 
+      $arr2 = array();
     }
 
-    $keys1 = array_keys($arr1);
-    $keys2 = array_keys($arr2);
-    $keys  = array_merge($keys1, $keys2);
-    $vals1 = array_values($arr1);
-    $vals2 = array_values($arr2);
-    $vals  = array_merge($vals1, $vals2);
+    $keys  = array_merge(array_keys($arr1), array_keys($arr2));
+    $vals  = array_merge(array_values($arr1), array_values($arr2));
     $ret   = array();
-
-    foreach($keys as $key)
+    foreach ($keys as $key)
     {
       list($unused, $val) = each($vals);
-      // This is the good part!  If a key already exists, but it's part of a
-      // sequence (an int), just keep addin numbers until we find a fresh one.
-      if (isset($ret[$key]) and is_int($key))
+      if (isset($ret[$key]) && is_int($key))
       {
-        while (array_key_exists($key, $ret))
-        {
-          $key++;
-        }
+        $ret[] = $val;
       }
-      $ret[$key] = $val;
+      else
+      {
+        $ret[$key] = $val;
+      }
     }
 
     return $ret;
