@@ -361,23 +361,32 @@ class lime_harness extends lime_registration
     $this->php_cli = null === $php_cli ? PHP_BINDIR.DIRECTORY_SEPARATOR.'php' : $php_cli;
     if (!is_executable($this->php_cli))
     {
-      // search in PATH
-      require_once('System.php');
-      foreach (array('php5', 'php') as $php_cli)
-      {
-        if ($this->php_cli = System::which($php_cli))
-        {
-          break;
-        }
-      }
-
-      if (!is_executable($this->php_cli))
-      {
-        throw new Exception("Unable to find PHP executable.");
-      }
+      $this->php_cli = $this->find_php_cli();
     }
 
     $this->output = $output_instance ? $output_instance : new lime_output();
+  }
+
+  protected function find_php_cli()
+  {
+    $path = getenv('PATH') ? getenv('PATH') : getenv('Path');
+    $exe_suffixes = OS_WINDOWS ? (getenv('PATHEXT') ? explode(PATH_SEPARATOR, getenv('PATHEXT')) : array('.exe', '.bat', '.cmd', '.com')) : array();
+    foreach (array('php5', 'php') as $php_cli)
+    {
+      foreach ($exe_suffixes as $suffix)
+      {
+        foreach (explode(PATH_SEPARATOR, $path) as $dir)
+        {
+          $file = $dir.DIRECTORY_SEPARATOR.$php_cli.$suffix;
+          if (is_executable($file))
+          {
+            return $file;
+          }
+        }
+      }
+    }
+
+    throw new Exception("Unable to find PHP executable.");
   }
 
   function run()
