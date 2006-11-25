@@ -175,28 +175,6 @@ class sfCore
     return false;
   }
 
-  static public function autoload($class)
-  {
-    foreach (self::getautoloadCallables() as $callable)
-    {
-      if (call_user_func($callable, $class))
-      {
-        return true;
-      }
-    }
-
-    // unspecified class
-    // do not print an error if the autoload came from class_exists
-    $trace = debug_backtrace();
-    if (count($trace) < 1 || ($trace[1]['function'] != 'class_exists' && $trace[1]['function'] != 'is_a'))
-    {
-      $error = sprintf('Autoloading of class "%s" failed. Try to clear the symfony cache and refresh. [err0003]', $class);
-      $e = new sfAutoloadException($error);
-
-      $e->printStackTrace();
-    }
-  }
-
   static public function initAutoload()
   {
     if (function_exists('spl_autoload_register'))
@@ -205,7 +183,29 @@ class sfCore
     }
     elseif (!function_exists('__autoload'))
     {
-      ini_set('unserialize_callback_func', array('sfCore', 'autoload'));
+      ini_set('unserialize_callback_func', '__autoload');
+
+      function __autoload($class)
+      {
+        foreach (sfCore::getautoloadCallables() as $callable)
+        {
+          if (call_user_func($callable, $class))
+          {
+            return true;
+          }
+        }
+
+        // unspecified class
+        // do not print an error if the autoload came from class_exists
+        $trace = debug_backtrace();
+        if (count($trace) < 1 || ($trace[1]['function'] != 'class_exists' && $trace[1]['function'] != 'is_a'))
+        {
+          $error = sprintf('Autoloading of class "%s" failed. Try to clear the symfony cache and refresh. [err0003]', $class);
+          $e = new sfAutoloadException($error);
+
+          $e->printStackTrace();
+        }
+      }
     }
 
     self::addAutoloadCallable(array('sfCore', 'splAutoload'));
