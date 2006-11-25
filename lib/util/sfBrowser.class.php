@@ -268,9 +268,17 @@ class sfBrowser
     foreach($xpath->query('descendant::input | descendant::textarea | descendant::select', $form) as $element)
     {
       $elementName = $element->getAttribute('name');
-      $value = null;
-      if (
-        $element->nodeName == 'input'
+      $nodeName    = $element->nodeName;
+      $value       = null;
+      if ($nodeName == 'input' && ($element->getAttribute('type') == 'checkbox' || $element->getAttribute('type') == 'radio'))
+      {
+        if ($element->getAttribute('checked'))
+        {
+          $value = $element->getAttribute('value');
+        }
+      }
+      else if (
+        $nodeName == 'input'
         &&
         (($element->getAttribute('type') != 'submit' && $element->getAttribute('type') != 'button') || $element->getAttribute('value') == $name)
         &&
@@ -279,7 +287,7 @@ class sfBrowser
       {
         $value = $element->getAttribute('value');
       }
-      else if ($element->nodeName == 'textarea')
+      else if ($nodeName == 'textarea')
       {
         $value = '';
         foreach ($element->childNodes as $el)
@@ -287,7 +295,7 @@ class sfBrowser
           $value .= $dom->saveXML($el);
         }
       }
-      else if ($element->nodeName == 'select')
+      else if ($nodeName == 'select')
       {
         if ($multiple = $element->hasAttribute('multiple'))
         {
@@ -320,10 +328,8 @@ class sfBrowser
       }
     }
 
-    // create query_string
+    // create request parameters
     $arguments = sfToolkit::arrayDeepMerge($defaults, $this->fields, $arguments);
-    $query_string = http_build_query($arguments);
-    $sep = false === strpos($url, '?') ? '?' : '&';
 
     if ('post' == $method)
     {
@@ -331,6 +337,9 @@ class sfBrowser
     }
     else
     {
+      $query_string = http_build_query($arguments);
+      $sep = false === strpos($url, '?') ? '?' : '&';
+
       return $this->get($url.($query_string ? $sep.$query_string : ''));
     }
   }
@@ -345,7 +354,18 @@ class sfBrowser
       {
         $var = &$var[$tmp];
       }
-      $var = $value;
+      if ($var)
+      {
+        if (!is_array($var))
+        {
+          $var = array($var);
+        }
+        $var[] = $value;
+      }
+      else
+      {
+        $var = $value;
+      }
     }
     else
     {

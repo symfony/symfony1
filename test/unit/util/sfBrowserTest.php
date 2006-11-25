@@ -56,7 +56,10 @@ $html = <<<EOF
         <option value="2" selected="selected">2</option>
         <option value="3" selected="selected">3</option>
       </select>
-      <input name="article[or][much][longer]" value="very long!"/>
+      <input name="article[or][much][longer]" value="very long!" />
+      <input name="myarray[]" value="value1" />
+      <input name="myarray[]" value="value2" />
+      <input name="myarray[]" value="value3" />
       <input type="button" name="mybutton" value="mybuttonvalue" />
       <input type="submit" name="submit" value="submit" />
     </form>
@@ -117,6 +120,7 @@ $t->is($parameters['article']['category'], array('2', '3'), '->click() recognize
 $t->is($parameters['article']['or']['much']['longer'], 'very long!', '->click() recognizes array names');
 $t->is($parameters['submit'], 'submit', '->click() populates button clicked');
 $t->ok(!isset($parameters['mybutton']), '->click() do not populate buttons not clicked');
+$t->is($parameters['myarray'], array('value1', 'value2', 'value3'), '->click() recognizes array names');
 
 list($method, $uri, $parameters) = $b->click('mybuttonvalue');
 $t->is($uri, '/myform', '->click() clicks on form buttons');
