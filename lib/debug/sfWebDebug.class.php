@@ -146,14 +146,14 @@ class sfWebDebug
 
     // max priority
     $max_priority = '';
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_enabled'))
     {
       $max_priority = $this->getPriority($this->max_priority);
     }
 
     $logs = '';
     $sql_logs = array();
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_enabled'))
     {
       $logs = '<table class="sfWebDebugLogs">
         <tr>
@@ -225,7 +225,7 @@ class sfWebDebug
 
     // logging information
     $logLink = '';
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_enabled'))
     {
       $logLink = '<li><a href="#" onclick="sfWebDebugShowDetailsFor(\'sfWebDebugLog\'); return false;">'.image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/comment.png').' logs &amp; msgs</a></li>';
     }
@@ -278,7 +278,7 @@ class sfWebDebug
 
     // logs
     $logInfo = '';
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_enabled'))
     {
       $logInfo .= $short_messages.'
         <ul id="sfWebDebugLogMenu">
@@ -325,7 +325,7 @@ class sfWebDebug
     $config = array(
       'debug'        => sfConfig::get('sf_debug')             ? 'on' : 'off',
       'xdebug'       => (extension_loaded('xdebug'))          ? 'on' : 'off',
-      'logging'      => sfConfig::get('sf_logging_active')    ? 'on' : 'off',
+      'logging'      => sfConfig::get('sf_logging_enabled')   ? 'on' : 'off',
       'cache'        => sfConfig::get('sf_cache')             ? 'on' : 'off',
       'eaccelerator' => (extension_loaded('eaccelerator') && ini_get('eaccelerator.enable')) ? 'on' : 'off',
       'apc'          => (extension_loaded('apc') && ini_get('apc.enabled')) ? 'on' : 'off',

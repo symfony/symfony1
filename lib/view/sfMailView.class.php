@@ -54,7 +54,7 @@ class sfMailView extends sfPHPView
     // execute pre-render check
     $this->preRenderCheck();
 
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_enabled'))
     {
       $this->getContext()->getLogger()->info('{sfView} render "'.$template.'"');
     }
@@ -88,7 +88,7 @@ class sfMailView extends sfPHPView
     }
 
     // send email
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_enabled'))
     {
       $this->getContext()->getLogger()->info('{sfView} send email to client');
     }

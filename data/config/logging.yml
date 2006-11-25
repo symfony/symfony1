@@ -1,6 +1,6 @@
 default:
-  active: on
-  level:  debug
+  enabled: on
+  level:   debug
   rotate:  off
   period:  7
   history: 10

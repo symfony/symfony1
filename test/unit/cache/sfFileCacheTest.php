@@ -14,7 +14,7 @@ require_once(dirname(__FILE__).'/sfCacheDriverTests.class.php');
 $t = new lime_test(18, new lime_output_color());
 
 // setup
-sfConfig::set('sf_logging_active', false);
+sfConfig::set('sf_logging_enabled', false);
 $temp = tempnam('/tmp/cachedir', 'tmp');
 unlink($temp);
 mkdir($temp);

@@ -158,7 +158,7 @@ class sfRouting
    */
   public function clearRoutes()
   {
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_enabled'))
     {
       sfLogger::getInstance()->info('{sfRouting} clear all current routes');
     }
@@ -308,7 +308,7 @@ class sfRouting
       $this->routes[$name] = array($route, $regexp, $names, $names_hash, $default, $suffix);
     }
 
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_enabled'))
     {
       sfLogger::getInstance()->info('{sfRouting} connect "'.$route.'"'.($suffix ? ' ("'.$suffix.'" suffix)' : ''));
     }
@@ -554,7 +554,7 @@ class sfRouting
           // we store route name
           $this->setCurrentRouteName($route_name);
 
-          if (sfConfig::get('sf_logging_active'))
+          if (sfConfig::get('sf_logging_enabled'))
           {
             sfLogger::getInstance()->info('{sfRouting} match route ['.$route_name.'] "'.$route.'"');
           }

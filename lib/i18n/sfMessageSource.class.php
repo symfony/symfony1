@@ -114,7 +114,7 @@ abstract class sfMessageSource implements sfIMessageSource
    * @return sfMessageSource a new message source of the specified type.
    * @throw InvalidsfMessageSourceTypeException
    */
-  static function &factory($type, $source='.', $filename='')
+  static function &factory($type, $source = '.', $filename = '')
   {
     $types = array('XLIFF', 'SQLite', 'MySQL', 'gettext', 'Creole');
 

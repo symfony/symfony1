@@ -92,7 +92,7 @@ abstract class sfComponent
    */
   public function logMessage ($message, $priority = 'info')
   {
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_enabled'))
     {
       return $this->context->getLogger()->log($message, constant('SF_LOG_'.strtoupper($priority)));
     }

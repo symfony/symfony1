@@ -62,7 +62,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
       {
         if ($credential == $value)
         {
-          if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfUser} remove credential "'.$credential.'"');
+          if (sfConfig::get('sf_logging_enabled')) $this->getContext()->getLogger()->info('{sfUser} remove credential "'.$credential.'"');
 
           unset($this->credentials[$key]);
           return;
@@ -93,7 +93,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     // Add all credentials
     $credentials = (is_array(func_get_arg(0))) ? func_get_arg(0) : func_get_args();
 
-    if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfUser} add credential(s) "'.implode(', ', $credentials).'"');
+    if (sfConfig::get('sf_logging_enabled')) $this->getContext()->getLogger()->info('{sfUser} add credential(s) "'.implode(', ', $credentials).'"');
 
     foreach ($credentials as $aCredential)
     {
@@ -165,7 +165,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
    */
   public function setAuthenticated($authenticated)
   {
-    if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfUser} user is '.($authenticated === true ? '' : 'not ').'authenticated');
+    if (sfConfig::get('sf_logging_enabled')) $this->getContext()->getLogger()->info('{sfUser} user is '.($authenticated === true ? '' : 'not ').'authenticated');
 
     if ($authenticated === true)
     {
@@ -219,7 +219,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     // Automatic logout if no request for more than [sf_timeout]
     if (null !== $this->lastRequest && (time() - $this->lastRequest) > sfConfig::get('sf_timeout'))
     {
-      if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfUser} automatic user logout');
+      if (sfConfig::get('sf_logging_enabled')) $this->getContext()->getLogger()->info('{sfUser} automatic user logout');
       $this->setTimedOut();
       $this->clearCredentials();
       $this->setAuthenticated(false);

@@ -23,7 +23,7 @@ define('SF_LOG_DEBUG',   7); // Debug-level messages
  * If [sf_web_debug] is true, all logging information is also available trough the web debug console.
  *
  * sfLogger can be controlled by 2 constants:
- * - [sf_logging_active]: set to false to disable all logging
+ * - [sf_logging_enabled]: set to false to disable all logging
  * - [sf_logging_level]:  level of logging
  *
  * This level list is ordered by highest priority (SF_LOG_EMERG) to lowest priority (SF_LOG_DEBUG):
@@ -82,7 +82,7 @@ class sfLogger
   {
     $this->loggers = array();
 
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_enabled'))
     {
       $this->level = constant('SF_LOG_'.strtoupper(sfConfig::get('sf_logging_level')));
 

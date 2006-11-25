@@ -51,7 +51,7 @@ class sfContext
   protected function initialize()
   {
     $this->logger = sfLogger::getInstance();
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_enabled'))
     {
       $this->logger->info('{sfContext} initialization');
     }
@@ -307,7 +307,7 @@ class sfContext
     $this->getRequest()->shutdown();
     $this->getResponse()->shutdown();
 
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_enabled'))
     {
       $this->getLogger()->shutdown();
     }

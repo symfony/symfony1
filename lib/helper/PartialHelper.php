@@ -170,20 +170,20 @@ function get_component($moduleName, $componentName, $vars = array())
     $componentToRun = 'execute';
   }
 
-  if (sfConfig::get('sf_logging_active'))
+  if (sfConfig::get('sf_logging_enabled'))
   {
     $context->getLogger()->info('{PartialHelper} call "'.$moduleName.'->'.$componentToRun.'()'.'"');
   }
 
   // run component
-  if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_active'))
+  if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
   {
     $timer = sfTimerManager::getTimer(sprintf('Component "%s/%s"', $moduleName, $componentName));
   }
 
   $retval = $componentInstance->$componentToRun();
 
-  if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_active'))
+  if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
   {
     $timer->addTime();
   }
@@ -330,7 +330,7 @@ function slot($name)
   $response->setParameter('slots', $slots, 'symfony/view/sfView/slot');
   $response->setParameter('slot_names', $slot_names, 'symfony/view/sfView/slot');
 
-  if (sfConfig::get('sf_logging_active'))
+  if (sfConfig::get('sf_logging_enabled'))
   {
     $context->getLogger()->info(sprintf('{PartialHelper} set slot "%s"', $name));
   }
@@ -413,7 +413,7 @@ function get_slot($name)
   $context = sfContext::getInstance();
   $slots = $context->getResponse()->getParameter('slots', array(), 'symfony/view/sfView/slot');
 
-  if (sfConfig::get('sf_logging_active'))
+  if (sfConfig::get('sf_logging_enabled'))
   {
     $context->getLogger()->info(sprintf('{PartialHelper} get slot "%s"', $name));
   }

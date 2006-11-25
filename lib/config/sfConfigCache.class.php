@@ -140,7 +140,7 @@ class sfConfigCache
    */
   public function checkConfig($configPath, $optional = false)
   {
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
     {
       $timer = sfTimerManager::getTimer('Configuration');
     }
@@ -150,7 +150,7 @@ class sfConfigCache
 
     if (sfConfig::get('sf_in_bootstrap') && is_readable($cache))
     {
-      if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_active'))
+      if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
       {
         $timer->addTime();
       }
@@ -202,7 +202,7 @@ class sfConfigCache
       }
     }
 
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
     {
       $timer->addTime();
     }

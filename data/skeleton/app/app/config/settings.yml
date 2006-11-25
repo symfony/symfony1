@@ -20,7 +20,7 @@ test:
     no_script_name:         off
     etag:                   off
 
-all:
+#all:
 #  .actions:
 #    default_module:         default
 #    default_action:         index

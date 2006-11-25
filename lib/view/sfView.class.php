@@ -303,7 +303,7 @@ abstract class sfView
    */
   public function initialize ($context, $moduleName, $actionName, $viewName)
   {
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_enabled'))
     {
       $context->getLogger()->info(sprintf('{sfView} initialize view for "%s/%s"', $moduleName, $actionName));
     }

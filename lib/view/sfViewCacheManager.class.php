@@ -218,7 +218,7 @@ class sfViewCacheManager
 
     $retval = $this->cache->get($id, $namespace);
 
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_enabled'))
     {
       $this->getContext()->getLogger()->info(sprintf('{sfViewCacheManager} cache for "%s" %s', $internalUri, ($retval !== null ? 'exists' : 'does not exist')));
     }
@@ -245,7 +245,7 @@ class sfViewCacheManager
     // ignore cache parameter? (only available in debug mode)
     if (sfConfig::get('sf_debug') && $this->getContext()->getRequest()->getParameter('_sf_ignore_cache', false, 'symfony/request/sfWebRequest') == true)
     {
-      if (sfConfig::get('sf_logging_active'))
+      if (sfConfig::get('sf_logging_enabled'))
       {
         $this->getContext()->getLogger()->info('{sfViewCacheManager} discard cache');
       }
@@ -274,7 +274,7 @@ class sfViewCacheManager
       return false;
     }
 
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_enabled'))
     {
       $this->context->getLogger()->info(sprintf('{sfViewCacheManager} save cache for "%s"', $internalUri));
     }
@@ -286,7 +286,7 @@ class sfViewCacheManager
   {
     list($namespace, $id) = $this->generateNamespace($internalUri);
 
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_enabled'))
     {
       $this->context->getLogger()->info(sprintf('{sfViewCacheManager} remove cache for "%s"', $internalUri));
     }

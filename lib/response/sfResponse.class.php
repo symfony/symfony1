@@ -106,7 +106,7 @@ abstract class sfResponse
    */
   public function sendContent ()
   {
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_enabled'))
     {
       $this->getContext()->getLogger()->info('{sfResponse} send content ('.strlen($this->content).' o)');
     }

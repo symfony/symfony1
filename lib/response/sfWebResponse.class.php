@@ -239,7 +239,7 @@ class sfWebResponse extends sfResponse
 
     header($status);
 
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_enabled'))
     {
       $this->getContext()->getLogger()->info('{sfResponse} send status "'.$status.'"');
     }
@@ -249,7 +249,7 @@ class sfWebResponse extends sfResponse
     {
       header($name.': '.$value);
 
-      if (sfConfig::get('sf_logging_active') && $value != '')
+      if (sfConfig::get('sf_logging_enabled') && $value != '')
       {
         $this->getContext()->getLogger()->info('{sfResponse} send header "'.$name.'": "'.$value.'"');
       }
@@ -267,7 +267,7 @@ class sfWebResponse extends sfResponse
         setrawcookie($cookie['name'], $cookie['value'], $cookie['expire'], $cookie['path'], $cookie['domain'], $cookie['secure']);
       }
 
-      if (sfConfig::get('sf_logging_active'))
+      if (sfConfig::get('sf_logging_enabled'))
       {
         $this->getContext()->getLogger()->info('{sfResponse} send cookie "'.$cookie['name'].'": "'.$cookie['value'].'"');
       }

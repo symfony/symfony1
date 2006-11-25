@@ -31,11 +31,11 @@ class sfPHPView extends sfView
     $context = $this->getContext();
 
     $shortcuts = array(
-      'sf_context'       => $context,
-      'sf_params'        => $context->getRequest()->getParameterHolder(),
-      'sf_request'       => $context->getRequest(),
-      'sf_user'          => $context->getUser(),
-      'sf_view'          => $this,
+      'sf_context' => $context,
+      'sf_params'  => $context->getRequest()->getParameterHolder(),
+      'sf_request' => $context->getRequest(),
+      'sf_user'    => $context->getUser(),
+      'sf_view'    => $this,
     );
 
     if (sfConfig::get('sf_use_flash'))
@@ -67,7 +67,7 @@ class sfPHPView extends sfView
 
   protected function renderFile($_sfFile)
   {
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_enabled'))
     {
       $this->getContext()->getLogger()->info('{sfView} render "'.$_sfFile.'"');
     }
@@ -146,7 +146,7 @@ class sfPHPView extends sfView
   {
     $template = $this->getDecoratorDirectory().'/'.$this->getDecoratorTemplate();
 
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_enabled'))
     {
       $this->getContext()->getLogger()->info('{sfView} decorate content with "'.$template.'"');
     }

@@ -92,7 +92,7 @@ abstract class sfAction extends sfComponent
    */
   public function mustExecute()
   {
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_enabled'))
     {
       $this->getContext()->getLogger()->err('This method is deprecated.');
     }
@@ -166,7 +166,7 @@ abstract class sfAction extends sfComponent
    */
   public function forward ($module, $action)
   {
-    if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfAction} forward to action "'.$module.'/'.$action.'"');
+    if (sfConfig::get('sf_logging_enabled')) $this->getContext()->getLogger()->info('{sfAction} forward to action "'.$module.'/'.$action.'"');
 
     $this->getController()->forward($module, $action);
 
@@ -226,7 +226,7 @@ abstract class sfAction extends sfComponent
 
   public function getPresentationFor($module, $action, $viewName = null)
   {
-    if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfAction} get presentation for action "'.$module.'/'.$action.'" (view class: "'.$viewName.'")');
+    if (sfConfig::get('sf_logging_enabled')) $this->getContext()->getLogger()->info('{sfAction} get presentation for action "'.$module.'/'.$action.'" (view class: "'.$viewName.'")');
 
     $controller = $this->getController();
 
@@ -307,7 +307,7 @@ abstract class sfAction extends sfComponent
   {
     $url = $this->getController()->genUrl($url, true);
 
-    if (sfConfig::get('sf_logging_active')) $this->getContext()->getLogger()->info('{sfAction} redirect to "'.$url.'"');
+    if (sfConfig::get('sf_logging_enabled')) $this->getContext()->getLogger()->info('{sfAction} redirect to "'.$url.'"');
 
     $this->getController()->redirect($url, 0, $statusCode);
 
@@ -502,7 +502,7 @@ abstract class sfAction extends sfComponent
    */
   public function setTemplate($name)
   {
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_enabled'))
     {
       $this->getContext()->getLogger()->info('{sfAction} change template to "'.$name.'"');
     }
@@ -536,7 +536,7 @@ abstract class sfAction extends sfComponent
    */
   public function setLayout($name)
   {
-    if (sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_logging_enabled'))
     {
       $this->getContext()->getLogger()->info('{sfAction} change layout to "'.$name.'"');
     }

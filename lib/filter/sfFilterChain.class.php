@@ -36,7 +36,7 @@ class sfFilterChain
 
     if ($this->index < count($this->chain))
     {
-      if (sfConfig::get('sf_logging_active'))
+      if (sfConfig::get('sf_logging_enabled'))
       {
         sfContext::getInstance()->getLogger()->info(sprintf('{sfFilter} executing filter "%s"', get_class($this->chain[$this->index])));
       }

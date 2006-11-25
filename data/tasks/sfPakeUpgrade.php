@@ -210,6 +210,12 @@ function _upgrade_1_0_activate()
     'cache.yml' => array(
       'activate:' => 'enabled: ',
     ),
+    'logging.yml' => array(
+      'active:' => 'enabled:',
+    ),
+    '*.php' => array(
+      'sf_logging_active' => 'sf_logging_enabled',
+    ),
     'apps/*/modules/*/validate/*.yml' => array(
       'activate:' => 'enabled: ',
     ),
@@ -218,10 +224,10 @@ function _upgrade_1_0_activate()
   foreach ($config_files as $config_file => $changed)
   {
     list($dir, $config_file) = array(dirname($config_file), basename($config_file));
-    $yml_files = pakeFinder::type('file')->name($config_file)->in(sfConfig::get('sf_root_dir').DIRECTORY_SEPARATOR.$dir);
-    foreach ($yml_files as $yml_file)
+    $files = pakeFinder::type('file')->name($config_file)->in(sfConfig::get('sf_root_dir').DIRECTORY_SEPARATOR.$dir);
+    foreach ($files as $file)
     {
-      $content = file_get_contents($yml_file);
+      $content = file_get_contents($file);
 
       $updated = false;
       foreach ($changed as $old => $new)
@@ -242,7 +248,7 @@ function _upgrade_1_0_activate()
 
       if ($updated)
       {
-        file_put_contents($yml_file, $content);
+        file_put_contents($file, $content);
       }
     }
   }

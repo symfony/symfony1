@@ -38,7 +38,7 @@ class sfPartialView extends sfPHPView
 
   public function render($templateVars = array())
   {
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
     {
       $timer = sfTimerManager::getTimer(sprintf('Partial "%s/%s"', $this->moduleName, $this->actionName));
     }
@@ -53,7 +53,7 @@ class sfPartialView extends sfPHPView
     // render template
     $retval = $this->renderFile($this->getDirectory().'/'.$this->getTemplate());
 
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_active'))
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
     {
       $timer->addTime();
     }

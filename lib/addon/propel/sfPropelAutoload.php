@@ -16,7 +16,7 @@
  */
 require_once 'propel/Propel.php';
 
-if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_active'))
+if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
 {
   // register debug driver
   require_once 'creole/Creole.php';
