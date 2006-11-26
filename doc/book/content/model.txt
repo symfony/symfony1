@@ -19,7 +19,7 @@ This means that switching to another database system in the middle of a project 
 
 An abstraction layer encapsulates the data logic. The rest of the application doesn't need to know about the SQL queries, and the SQL that accesses the database is easy to find. Developers who are specialized in database programming also know clearly where to go.
 
-Using objects instead of records, and classes instead of tables, have another benefit: They allow you to add new accessors to your tables. For instance, if you have a table called 'Client' with two fields 'FirstName' and 'LastName', you might like to be able to require just a 'Name'. In an object-oriented world, it is as easy as adding a new accessor method to the `Client` class.
+Using objects instead of records, and classes instead of tables, have another benefit. They allow you to add new accessors to your tables. For instance, if you have a table called 'Client' with two fields 'FirstName' and 'LastName', you might like to be able to require just a 'Name'. In an object-oriented world, it is as easy as adding a new accessor method to the `Client` class.
 
     [php]
     public function getName()
