@@ -27,7 +27,7 @@ The `sfUser` class, used to manage the user session, has a native implementation
     $culture = $this->getUser()->getCulture();
     // setter
     $this->getUser()->setCulture('en_US');
-    
+
 This culture is persistent between pages because it is serialized in the user session.
 
 Keeping both the language and the country in the culture is necessary because you may have a different French translation for users from France, Belgium or Canada, and a different Spanish translation for users from Spain or Mexico.
@@ -87,15 +87,15 @@ First, create tables in the `schema.yml` file:
         id:          { type: integer, required: true, primaryKey: true, foreignTable: my_product, foreignReference: id }
         culture:     { isCulture: true, type: varchar, size: 7, required: true, primaryKey: true }
         name:        { type: varchar, size: 50 }
-    
+
 Notice the `isI18N` and `i18nTable` attributes of the first table key, and the special `culture` column. Also, the `_i18n` suffix of the second table is a convention that automates many data access mechanisms. All these are symfony specific Propel enhancements.
 
->**Note**: The symfony automatisms can make this much faster to write. If the table containing internationalized data has the same name as the main table with `_i18n` as a suffix, and that they are related with a cilumn named `id` in both tables, you can write the same as above with only:
+>**Note**: The symfony automatisms can make this much faster to write. If the table containing internationalized data has the same name as the main table with `_i18n` as a suffix, and that they are related with a column named `id` in both tables, you can write the same as above with only:
 >
 >     my_connection:
 >       my_product:
 >         _attributes: { phpName: Product}
->         id:          
+>         id:
 >         price:       float
 >       my_product_i18n:
 >         _attributes: { phpName: ProductI18n }
@@ -110,11 +110,11 @@ Once the corresponding object model is built (don't forget to call `symfony prop
     $product->setCulture('fr');
     $product->setName('Nom du produit');
     $product->save();
-    
+
     $product->setCulture('en');
     $product->setName('Product name');
     $product->save();
-    
+
     echo $product->getName();           =>    'Product name'
     $product->setCulture('fr');
     echo $product->getName();           =>    'Nom du produit'
@@ -127,7 +127,7 @@ Once the corresponding object model is built (don't forget to call `symfony prop
 >       parent::hydrate($rs, $startcol);
 >       $this->setCulture(SF_DEFAULT_CULTURE);
 >     }
->  
+>
 >or even, to get the actual user culture:
 >
 >     [php]
@@ -168,7 +168,7 @@ For this to work you need to:
         all:
           .settings:
             i18n: on
-        
+
 2. Activate the I18N helper by adding `,I18N` to `standard_helpers:` in the `settings.yml` file. Alternatively, you can put `<?php use_helper('I18N') ?>` at the top of the template where you want to use internationalisation.
 
   The same goes for the 'Date' helper to make sure the date is being formatted right.
@@ -178,8 +178,8 @@ For this to work you need to:
         [php]
         Welcome to our website. Today's date is
         <?php echo format_date(date()) ?>
-    
-  It must be written like this: 
+
+  It must be written like this:
 
         [php]
         <?php echo __('Welcome to our website.') ?>     // (this matches the first trans-unit's source node)
@@ -192,11 +192,11 @@ For this to work you need to:
         <?xml version="1.0" ?>
         <xliff version="1.0">
           <file orginal="global" source-language="en_US" datatype="plaintext">
-            <body>   
+            <body>
               <trans-unit id="1">
                 <source>Welcome to our website.</source>
                 <target>Bienvenue sur notre site web</target>
-              </trans-unit>              
+              </trans-unit>
               <trans-unit id="2">
                 <source>Today's date is </source>
                 <target>La date d'aujourd'hui est </target>
@@ -211,7 +211,7 @@ The default user culture is set to `en_US`, so the text outputs in English. Howe
 
     [php]
     $this->getUser()->setCulture('fr_BE');
-    
+
 ...the text then outputs in French.
 
 If, in the near future, you want to add a Dutch translation, all you have to do is duplicate `messages.fr.xml` and call it `messages.nl.xml`. Then, open the newly created file and change all the text contained in the `<target>` nodes to the dutch translation.
@@ -245,16 +245,16 @@ What if there is only one person logged? The message would be:
 
     [php]
     <?php echo __('There is 1 person logged') ?>
-    
+
 To avoid multiple tests, symfony provides a special translation helper called `format_number_choice()`. Use it like this:
 
     [php]
     <?php echo format_number_choice(
-      '[0]Nobody is logged|[1]There is 1 person logged|(1,+Inf] There are %1% persons logged', 
+      '[0]Nobody is logged|[1]There is 1 person logged|(1,+Inf] There are %1% persons logged',
       array('%1%' => count_logged()),
       count_logged()
     ) ?>
-    
+
 The first argument is the multiple possibilities of text. The second argument is the replacement pattern (as for the `__()` helper) and is optional. The third argument is the number on which the test is made to determine which text is taken.
 
 The message/string choices are separated by the pipe "|" followed by a set notation of the form
