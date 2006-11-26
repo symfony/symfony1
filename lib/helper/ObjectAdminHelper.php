@@ -59,7 +59,7 @@ function object_admin_double_list($object, $method, $options = array())
   $label_assoc = isset($options['associated_label'])   ? $options['associated_label']   : 'Associated';
 
   // get the lists of objects
-  list($all_objects, $objects_associated, $associated_ids) = _get_object_list($object, $options);
+  list($all_objects, $objects_associated, $associated_ids) = _get_object_list($object, $method, $options);
   
   $objects_unassociated = array();
   foreach ($all_objects as $object)
@@ -116,7 +116,7 @@ function object_admin_select_list($object, $method, $options = array())
   if (!isset($options['size']))  $options['size'] = 10;
 
   // get the lists of objects
-  list($objects, $objects_associated, $ids) = _get_object_list($object, $options);
+  list($objects, $objects_associated, $ids) = _get_object_list($object, $method, $options);
   // override field name
   unset($options['control_name']);
   $name = 'associated_'._convert_method_to_name($method, $options);
@@ -129,7 +129,7 @@ function object_admin_check_list($object, $method, $options = array())
   $options = _parse_attributes($options);
 
   // get the lists of objects
-  list($objects, $objects_associated, $assoc_ids) = _get_object_list($object, $options);
+  list($objects, $objects_associated, $assoc_ids) = _get_object_list($object, $method, $options);
 
   // override field name
   unset($options['control_name']);
@@ -139,10 +139,10 @@ function object_admin_check_list($object, $method, $options = array())
   if (!empty($objects))
   {
     // which method to call?
-    $methodToCall = '';
-    foreach (array('toString', '__toString', 'getPrimaryKey') as $method)
+    $methodToCall = '__toString';
+    foreach (array('__toString', 'toString', 'getPrimaryKey') as $method)
     {
-      if (is_callable(array($objects[0], $method)))
+      if (method_exists($objects[0], $method))
       {
         $methodToCall = $method;
         break;
@@ -152,7 +152,19 @@ function object_admin_check_list($object, $method, $options = array())
     $html .= "<ul class=\"sf_admin_checklist\">\n";
     foreach ($objects as $related_object)
     {
-      $html .= '<li>'.checkbox_tag($name, $related_object->getPrimaryKey(), in_array($related_object->getPrimaryKey(), $assoc_ids)).' '.$related_object->$methodToCall()."</li>\n";
+      $relatedPrimaryKey = $related_object->getPrimaryKey();
+      
+      // multi primary key handling
+      if (is_array($relatedPrimaryKey))
+      {
+        $relatedPrimaryKeyHtmlId = implode('/', $relatedPrimaryKey);
+      }
+      else
+      {
+        $relatedPrimaryKeyHtmlId = $relatedPrimaryKey;
+      }
+       
+      $html .= '<li>'.checkbox_tag($name, $relatedPrimaryKeyHtmlId, in_array($relatedPrimaryKey, $assoc_ids)).' '.$related_object->$methodToCall()."</li>\n";
     }
     $html .= "</ul>\n";
   }
@@ -164,8 +176,6 @@ function _get_propel_object_list($object, $options)
 {
   // get the lists of objects
   $through_class = _get_option($options, 'through_class');
-  #$sort          = _get_option($options, 'sort');
-  $object = get_class($object) == 'sfOutputEscaperObjectDecorator' ? $object->getRawValue() : $object;
 
   $objects = sfPropelManyToMany::getAllObjects($object, $through_class);
   $objects_associated = sfPropelManyToMany::getRelatedObjects($object, $through_class);
@@ -173,7 +183,8 @@ function _get_propel_object_list($object, $options)
   return array($objects, $objects_associated, $ids);
 }
 
-function _get_object_list($object, $options)
+function _get_object_list($object, $method, $options)
 {
-  return _get_propel_object_list($object, $options);
+  $object = get_class($object) == 'sfOutputEscaperObjectDecorator' ? $object->getRawValue() : $object;
+  return _get_propel_object_list($object, $options);  
 }
