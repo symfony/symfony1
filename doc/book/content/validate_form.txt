@@ -45,9 +45,9 @@ To handle the form submission, the `send` action must be created. For this examp
     [php]
     class contactActions extends sfActions
     {
-    
+
       ...
-    
+
       public function executeSend()
       {
         $this->email = $this->getRequestParameter('email');
@@ -57,7 +57,7 @@ To handle the form submission, the `send` action must be created. For this examp
 The `sendSuccess.php` template just contains:
 
     [php]
-    Your message was sent to our services. The answer will be sent at <?php echo $email ?> 
+    Your message was sent to our services. The answer will be sent at <?php echo $email ?>
 
 You can test the whole process of submitting the form and getting the confirmation, it already works fine. Except that if you try to enter invalid data in the fields, the action may very well crash. The fields do require validation.
 
@@ -75,7 +75,7 @@ Symfony can apply these rules almost automatically, provided that you add a new 
 ### Configuration file
 
 By convention, if you want to validate the form data on the call to the `send` action, a configuration file called `send.yml` must be created in the `validate` directory of the module. To validate only the `name` field, you need the following configuration:
-    
+
     fields:
       name:
         required:
@@ -99,9 +99,9 @@ But if you prefer to display the form again with an error message in it, you nee
     [php]
     class ContactActions extends sfActions
     {
-    
+
       ...
-    
+
       public function handleErrorSend()
       {
         $this->forward('contact', 'index');
@@ -124,7 +124,7 @@ Since the *forward* method kept the original request, the template has access to
       <label for="message">Message</label> : <?php echo textarea_tag('message', $sf_params->get('message')) ?><br />
       <?php echo submit_tag() ?>
     </form>
-    
+
 >**Note**: You can avoid setting manually the value of the fields from the request by using a special filter. See the **Repopulation** section below.
 
 You can detect whether the form has errors by calling the `->hasErrors()` method of the `sfRequest` object. To get the list of the error messages, you need the method `->getErrors()`. So you should add the following lines at the top of the template:
@@ -148,7 +148,7 @@ Now you may suggest that the field with incorrect data should be highlighted, fo
 ### Complete configuration file
 
 You can add the other rules to the `send.yml` configuration file to force the validation of all fields. This is what a complete YAML validation file looks like:
-    
+
     fields:
       name:
         required:
@@ -171,10 +171,10 @@ You can add the other rules to the `send.yml` configuration file to force the va
           min:          0
           min_error:    You're not even born. How do you want to send a message ?
           max:          120
-          max_error:    Hey, grandma, aren't you too old to surf on the Internet ?        
+          max_error:    Hey, grandma, aren't you too old to surf on the Internet ?
       message:
         required:
-          msg:   The message field cannot be left blank    
+          msg:   The message field cannot be left blank
 
 ## Named validator
 
@@ -186,7 +186,7 @@ If you reuse the same validator with the same parameter more than once in a vali
         param:
           match:        Yes
           match_error:  "You didn't enter a valid email address (for example: name@domain.com). Please try again."
-          pattern:      /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/i        
+          pattern:      /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/i
 
     fields:
       email:
@@ -202,7 +202,7 @@ As you can see, it is possible to override any parameter defined in the `validat
 By default, the validation will be triggered only by a POST request. You can choose to have it triggered also on a GET request, by overriding the value of the `methods` key:
 
     methods: [post, get]
-      
+
 It is even possible to declare distinct fields for disstinct request modes. For instance, if you want the `name` field to be validated in GET but not in POST, you can override the global `methods` declaration from within the `fields` section:
 
       name:
@@ -242,8 +242,8 @@ The available validators can be found in the symfony lib `validator` directory. 
             min_error:    You're not even born. How do you want to send a message ?
             max:          120
             max_error:    "Hey, grandma, aren't you too old to surf on the Internet ?"
-        
-* `sfRegexValidator`: allows you to match a value against a regular expression pattern	
+
+* `sfRegexValidator`: allows you to match a value against a regular expression pattern
 
         spamValidator:
           class:          sfRegexValidator
@@ -253,7 +253,7 @@ The available validators can be found in the symfony lib `validator` directory. 
             pattern:      /http.*http/si
 
     The `match` param determines if the request parameter must match the pattern to be valid (value `Yes`) or match the pattern to be invalid (value `No`)
-        
+
 * `sfEmailValidator`: verifies if a parameter contains a value that qualifies as an email address
 
         emailValidator:
@@ -262,10 +262,10 @@ The available validators can be found in the symfony lib `validator` directory. 
             email_error:  This email address is invalid
 
 * `sfCompareValidator`: checks the equality of two different request parameters; very useful for password check
-        
+
         fields:
           password1:
-            required:     
+            required:
               msg: Please enter a password
           password2:
             required:
@@ -275,9 +275,9 @@ The available validators can be found in the symfony lib `validator` directory. 
               compare_error: The passwords you entered do not match. Please try again.
 
   The `check` param contains the name of the field that the current field must match to be valid.
-  
+
 * `sfPropelUniqueValidator`: validates that the value of a request parameter doesn't already exist in your database. Very useful for primary keys.
- 
+
         loginValidator:
           class:          sfPropelUniqueValidator
           param:
@@ -288,18 +288,18 @@ The available validators can be found in the symfony lib `validator` directory. 
   In the example above, the validator will look in the database for a record of class `User` where the column `login` has the same value as the parameter to validate. Note that this validator relies on Propel.
 
 * `sfFileValidator`: applies format (an array of mime types) and size constraints to file upload fields
-          
+
         fields:
           image:
             required:
               msg:             Please upload an image file
             file:              true
             sfFileValidator:
-              mime_types:       
+              mime_types:
                 - 'image/jpeg'
                 - 'image/png'
                 - 'image/x-png'
-                - 'image/pjpeg'        
+                - 'image/pjpeg'
               mime_types_error: Only PNG and JPEG images are allowed
               max_size:         512000
               max_size_error:   Max size is 512Kb
@@ -307,19 +307,19 @@ The available validators can be found in the symfony lib `validator` directory. 
   Beware that the attribute `file` has to be set to `true` for the field in the `fields` section - and that the template must declare the form as `multipart`. Find more information in the [file upload chapter](upload.txt).
 
 * `sfCallbackValidator`: Passes the hand to a third party method or function to do the validation (and return true or false).
- 
+
         ageValidator:
           class:          sfCallbackValidator
           param:
             callback:      is_integer
             invalid_error: Please enter a number.
-        
+
         creditCardValidator:
           class:          sfCallbackValidator
           param:
             callback:      [myTools, validateCreditCard]
             invalid_error: Please enter a valid credit card number.
-        
+
   The callback method or function receives the value to be validated as a first parameter. This is very useful when you don't want to create a full validator class but reuse existing methods of functions.
 
 Repopulation
@@ -371,7 +371,7 @@ Each `Validator` is a particular class that can have certain parameters. If the 
         }
         return true;
       }
-    
+
       public function initialize ($context, $parameters = null)
       {
         // initialize parent
@@ -406,14 +406,14 @@ Sometimes the power of validators is not enough. This happens mostly when you ne
     [php]
     class ContactActions extends sfActions
     {
-    
+
       ...
       public function executeIndex()
       {
         // display the form
         ...
       }
-      
+
       public function validateSend()
       {
         // validate request parameters
@@ -431,7 +431,7 @@ Sometimes the power of validators is not enough. This happens mostly when you ne
         // handle the form submission
         ...
       }
-      
+
       public function handleErrorSend()
       {
         $this->forward('contact', 'index');
@@ -443,11 +443,11 @@ Sometimes the power of validators is not enough. This happens mostly when you ne
 PHP allows you to use an array syntax for the form fields. When writing forms by yourself, or when using the ones generated by the [Propel admin](generator.txt), you end up with HTML code looking like:
 
     [php]
-    <label for="story[title]">Titre:</label>
+    <label for="story[title]">Title:</label>
     <input type="text" name="story[title]" id="story[title]" value="default value" size="45" />
 
 The trouble is that using the input `id` as is (with brackets) in a validation file will push the YAML parser to its limits, and you will end up with errors. The solution here is to replace square brackets `[]` by curly brackets `{}` in the `fields:` section:
-        
+
     fields:
       story{title}:
         required:     Yes
@@ -493,7 +493,7 @@ Now, the validation occurs as follows:
 * If `password1 == null` and `password2 == null`
   * The `required` test passes
   * Validators are not run
-  * The form is valid 
+  * The form is valid
 
 * If `password1 == null and password2 == 'foo'`
   * The `required` test passes
@@ -504,11 +504,11 @@ Now, the validation occurs as follows:
   * The `required` test passes
   * `password1` is not null, so the validator for `password2`, which is in the same group, is executed - and it fails
   * An error message is thrown for `password2`
-  
+
 * If `password1 == 'foo' and password2 == 'foo'`
   * The `required` test passes
   * `password2` is not null, so its validator is executed - and it passes
-  * The form is valid 
+  * The form is valid
 
 Client side validation
 ----------------------
