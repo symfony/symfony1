@@ -160,7 +160,7 @@ You can add the other rules to the `send.yml` configuration file to force the va
           max_error:    You didn't enter a valid name (less than 100 characters). Please try again.
       email:
         required:
-          msg:   The name field cannot be left blank
+          msg:   The email field cannot be left blank
         sfRegexValidator:
           match:        Yes
           match_error:  "You didn't enter a valid email address (for example: name@domain.com). Please try again."
@@ -191,7 +191,7 @@ If you reuse the same validator with the same parameter more than once in a vali
     fields:
       email:
         required:
-          msg:   The name field cannot be left blank
+          msg:   The email field cannot be left blank
         myEmailValidator:
           match_error:  "The email is compulsory."
 
@@ -393,7 +393,7 @@ Now the `email` validation in the `send.yml` file can be replaced with:
       ...
       email:
         required:
-          msg:   The name field cannot be left blank
+          msg:   The email field cannot be left blank
         sfEmailValidator:
           email_error:   You didn't enter a valid email address (for example: name@domain.com). Please try again.
 
