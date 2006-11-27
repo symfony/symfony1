@@ -45,7 +45,7 @@ function object_admin_input_file_tag($object, $method, $options = array())
   return input_file_tag($name, $options)."\n<br />".$html;
 }
 
-function object_admin_double_list($object, $method, $options = array())
+function object_admin_double_list($object, $method, $options = array(), $callback = null)
 {
   $options = _parse_attributes($options);
 
@@ -59,7 +59,7 @@ function object_admin_double_list($object, $method, $options = array())
   $label_assoc = isset($options['associated_label'])   ? $options['associated_label']   : 'Associated';
 
   // get the lists of objects
-  list($all_objects, $objects_associated, $associated_ids) = _get_object_list($object, $method, $options);
+  list($all_objects, $objects_associated, $associated_ids) = _get_object_list($object, $method, $options, $callback);
   
   $objects_unassociated = array();
   foreach ($all_objects as $object)
@@ -107,7 +107,7 @@ function object_admin_double_list($object, $method, $options = array())
   );
 }
 
-function object_admin_select_list($object, $method, $options = array())
+function object_admin_select_list($object, $method, $options = array(), $callback = null)
 {
   $options = _parse_attributes($options);
 
@@ -116,7 +116,7 @@ function object_admin_select_list($object, $method, $options = array())
   if (!isset($options['size']))  $options['size'] = 10;
 
   // get the lists of objects
-  list($objects, $objects_associated, $ids) = _get_object_list($object, $method, $options);
+  list($objects, $objects_associated, $ids) = _get_object_list($object, $method, $options, $callback);
   // override field name
   unset($options['control_name']);
   $name = 'associated_'._convert_method_to_name($method, $options);
@@ -124,12 +124,12 @@ function object_admin_select_list($object, $method, $options = array())
   return select_tag($name, options_for_select(_get_options_from_objects($objects), $ids, $options), $options);
 }
 
-function object_admin_check_list($object, $method, $options = array())
+function object_admin_check_list($object, $method, $options = array(), $callback = null)
 {
   $options = _parse_attributes($options);
 
   // get the lists of objects
-  list($objects, $objects_associated, $assoc_ids) = _get_object_list($object, $method, $options);
+  list($objects, $objects_associated, $assoc_ids) = _get_object_list($object, $method, $options, $callback);
 
   // override field name
   unset($options['control_name']);
@@ -172,7 +172,7 @@ function object_admin_check_list($object, $method, $options = array())
   return $html;
 }
 
-function _get_propel_object_list($object, $options)
+function _get_propel_object_list($object, $method, $options)
 {
   // get the lists of objects
   $through_class = _get_option($options, 'through_class');
@@ -183,8 +183,11 @@ function _get_propel_object_list($object, $options)
   return array($objects, $objects_associated, $ids);
 }
 
-function _get_object_list($object, $method, $options)
+function _get_object_list($object, $method, $options, $callback)
 {
   $object = get_class($object) == 'sfOutputEscaperObjectDecorator' ? $object->getRawValue() : $object;
-  return _get_propel_object_list($object, $options);  
+  // the default callback is the propel one
+  if (!$callback)
+    $callback = '_get_propel_object_list';
+  return call_user_func($callback, $object, $method, $options);
 }
