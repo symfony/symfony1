@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(38, new lime_output_color());
+$t = new lime_test(39, new lime_output_color());
 
 // ->click()
 $t->diag('->click()');
