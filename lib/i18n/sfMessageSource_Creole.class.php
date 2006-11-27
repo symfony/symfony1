@@ -21,7 +21,7 @@
 /**
  * sfMessageSource_Creole class.
  *
- * Retrive the message translation from a Creole supported database.
+ * Retrieve the message translation from a Creole supported database.
  *
  * See the MessageSource::factory() method to instantiate this class.
  *
@@ -75,9 +75,9 @@ class sfMessageSource_Creole extends sfMessageSource
    */
   protected function &loadData($variant)
   {
-    $sql = 'SELECT t.id, t.source, t.target, t.comments ' .
-           'FROM trans_unit t, catalogue c ' .
-           'WHERE c.cat_id =  t.cat_id AND c.name = ? ' .
+    $sql = 'SELECT t.id, t.source, t.target, t.comments '.
+           'FROM trans_unit t, catalogue c '.
+           'WHERE c.cat_id =  t.cat_id AND c.name = ? '.
            'ORDER BY id ASC';
 
     $stmt = $this->db->prepareStatement($sql);
@@ -90,7 +90,7 @@ class sfMessageSource_Creole extends sfMessageSource
     {
       $source = $rs->getString(2);
       $result[$source][] = $rs->getString(3); //target
-      $result[$source][] = $rs->getInt(1); //id
+      $result[$source][] = $rs->getInt(1);    //id
       $result[$source][] = $rs->getString(4); //comments
     }
 
@@ -100,6 +100,7 @@ class sfMessageSource_Creole extends sfMessageSource
   /**
    * Get the last modified unix-time for this particular catalogue+variant.
    * We need to query the database to get the date_modified.
+   *
    * @param string catalogue+variant
    * @return int last modified in unix-time format.
    */
@@ -111,16 +112,16 @@ class sfMessageSource_Creole extends sfMessageSource
 
     $rs = $stmt->executeQuery(array($source), ResultSet::FETCHMODE_NUM);
 
-    $result = $rs->next()? $rs->getInt(1): 0;
+    $result = $rs->next() ? $rs->getInt(1) : 0;
 
     return $result;
   }
 
   /**
    * Check if a particular catalogue+variant exists in the database.
+   *
    * @param string catalogue+variant
-   * @return boolean true if the catalogue+variant is in the database,
-   * false otherwise.
+   * @return boolean true if the catalogue+variant is in the database, false otherwise.
    */
   protected function isValidSource($variant)
   {
@@ -130,13 +131,14 @@ class sfMessageSource_Creole extends sfMessageSource
 
     $rs = $stmt->executeQuery(array($variant), ResultSet::FETCHMODE_NUM);
 
-    $result = $rs->next()? $rs->getInt(1) == 1: false;
+    $result = $rs->next() ? $rs->getInt(1) == 1 : false;
 
     return $result;
   }
 
   /**
    * Get all the variants of a particular catalogue.
+   *
    * @param string catalogue name
    * @return array list of all variants for this catalogue.
    */
@@ -148,26 +150,30 @@ class sfMessageSource_Creole extends sfMessageSource
 
     $variant = null;
 
-    for($i = 0; $i < count($variants); $i++)
+    for ($i = 0, $max = count($variants); $i < $max; $i++)
     {
-      if (strlen($variants[$i])>0)
+      if (strlen($variants[$i]) > 0)
       {
-        $variant .= ($variant)?'_'.$variants[$i]:$variants[$i];
+        $variant .= ($variant) ? '_'.$variants[$i] : $variants[$i];
         $catalogues[] = $catalogue.'.'.$variant;
       }
     }
+
     return array_reverse($catalogues);
   }
 
   /**
-   * Retrive catalogue details, array($cat_id, $variant, $count).
+   * Retrieve catalogue details, array($cat_id, $variant, $count).
+   *
    * @param string catalogue
    * @return array catalogue details, array($cat_id, $variant, $count).
    */
-  private function getCatalogueDetails($catalogue='messages')
+  protected function getCatalogueDetails($catalogue = 'messages')
   {
     if (empty($catalogue))
+    {
       $catalogue = 'messages';
+    }
 
     $variant = $catalogue.'.'.$this->culture;
 
@@ -203,9 +209,10 @@ class sfMessageSource_Creole extends sfMessageSource
 
   /**
    * Update the catalogue last modified time.
+   *
    * @return boolean true if updated, false otherwise.
    */
-  private function updateCatalogueTime($cat_id, $variant)
+  protected function updateCatalogueTime($cat_id, $variant)
   {
     $time = time();
 
@@ -227,6 +234,7 @@ class sfMessageSource_Creole extends sfMessageSource
    * Save the list of untranslated blocks to the translation source.
    * If the translation was not found, you should add those
    * strings to the translation source via the <b>append()</b> method.
+   *
    * @param string the catalogue to add to
    * @return boolean true if saved successfuly, false otherwise.
    */
@@ -234,16 +242,26 @@ class sfMessageSource_Creole extends sfMessageSource
   {
     $messages = $this->untranslated;
 
-    if (count($messages) <= 0) return false;
+    if (count($messages) <= 0)
+    {
+      return false;
+    }
 
     $details = $this->getCatalogueDetails($catalogue);
 
     if ($details)
+    {
       list($cat_id, $variant, $count) = $details;
+    }
     else
+    {
       return false;
+    }
 
-    if ($cat_id <= 0) return false;
+    if ($cat_id <= 0)
+    {
+      return false;
+    }
     $inserted = 0;
 
     $time = time();
@@ -252,17 +270,16 @@ class sfMessageSource_Creole extends sfMessageSource
     {
       $this->db->begin();
 
-      $sql = 'INSERT INTO trans_unit ' .
-             '(cat_id, id, source, date_added, date_modified) VALUES ' .
-             '(?, ?, ?, ?, ?)';
+      $sql = 'INSERT INTO trans_unit (cat_id, id, source, date_added, date_modified) VALUES (?, ?, ?, ?, ?)';
 
-        $stmt = $this->db->prepareStatement($sql);
+      $stmt = $this->db->prepareStatement($sql);
 
       foreach($messages as $message)
       {
         $stmt->executeUpdate(array($cat_id, $count, $message, $time, $time));
 
-        ++$count; ++$inserted;
+        ++$count;
+        ++$inserted;
       }
 
       $this->db->commit();
@@ -273,13 +290,16 @@ class sfMessageSource_Creole extends sfMessageSource
     }
 
     if ($inserted > 0)
+    {
       $this->updateCatalogueTime($cat_id, $variant);
+    }
 
     return $inserted > 0;
   }
 
   /**
    * Delete a particular message from the specified catalogue.
+   *
    * @param string the source message to delete.
    * @param string the catalogue to delete from.
    * @return boolean true if deleted, false otherwise.
@@ -287,10 +307,15 @@ class sfMessageSource_Creole extends sfMessageSource
   function delete($message, $catalogue='messages')
   {
     $details = $this->getCatalogueDetails($catalogue);
+
     if ($details)
+    {
       list($cat_id, $variant, $count) = $details;
+    }
     else
+    {
       return false;
+    }
 
     $deleted = false;
 
@@ -310,6 +335,7 @@ class sfMessageSource_Creole extends sfMessageSource
 
   /**
    * Update the translation.
+   *
    * @param string the source string.
    * @param string the new translation string.
    * @param string comments
@@ -330,8 +356,7 @@ class sfMessageSource_Creole extends sfMessageSource
 
     $time = time();
 
-    $sql = 'UPDATE trans_unit SET target = ?, comments = ?, date_modified = ? ' .
-           'WHERE cat_id = ? AND source = ?';
+    $sql = 'UPDATE trans_unit SET target = ?, comments = ?, date_modified = ? WHERE cat_id = ? AND source = ?';
 
     $updated = false;
 
@@ -349,6 +374,7 @@ class sfMessageSource_Creole extends sfMessageSource
 
   /**
    * Returns a list of catalogue as key and all it variants as value.
+   *
    * @return array list of catalogues
    */
   function catalogues()

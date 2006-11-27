@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(49, new lime_output_color());
+$t = new lime_test(52, new lime_output_color());
 
 // __construct()
 $t->diag('__construct()');
@@ -151,6 +151,18 @@ catch (sfException $e)
   $t->pass('__get() throws an exception if the property does not exist');
 }
 
+// __set()
+$t->diag('__set()');
+try
+{
+  $c->NonExistant = 12;
+  $t->fail('__set() throws an exception if the property does not exist');
+}
+catch (sfException $e)
+{
+  $t->pass('__set() throws an exception if the property does not exist');
+}
+
 // ->getDateTimeFormat()
 $t->diag('->getDateTimeFormat()');
 $c = new sfCultureInfo();
@@ -159,8 +171,10 @@ $t->isa_ok($c->getDateTimeFormat(), 'sfDateTimeFormatInfo', '->getDateTimeFormat
 // ->setDateTimeFormat()
 $t->diag('->setDateTimeFormat()');
 $d = $c->getDateTimeFormat();
-$c->setDateTimeFormat($d);
-$t->is($c->getDateTimeFormat(), $d, '->setDateTimeFormat() sets the sfDateTimeFormatInfo instance');
+$c->setDateTimeFormat('yyyy');
+$t->is($c->getDateTimeFormat(), 'yyyy', '->setDateTimeFormat() sets the sfDateTimeFormatInfo instance');
+$c->DateTimeFormat = 'mm';
+$t->is($c->getDateTimeFormat(), 'mm', '->setDateTimeFormat() is equivalent to ->DateTimeFormat = ');
 
 // ->getNumberFormat()
 $t->diag('->getNumberFormat()');
@@ -170,5 +184,7 @@ $t->isa_ok($c->getNumberFormat(), 'sfNumberFormatInfo', '->getNumberFormat() ret
 // ->setNumberFormat()
 $t->diag('->setNumberFormat()');
 $d = $c->getNumberFormat();
-$c->setNumberFormat($d);
-$t->is($c->getNumberFormat(), $d, '->setNumberFormat() sets the sfNumberFormatInfo instance');
+$c->setNumberFormat('.');
+$t->is($c->getNumberFormat(), '.', '->setNumberFormat() sets the sfNumberFormatInfo instance');
+$c->NumberFormat = '#';
+$t->is($c->getNumberFormat(), '#', '->setNumberFormat() is equivalent to ->NumberFormat = ');

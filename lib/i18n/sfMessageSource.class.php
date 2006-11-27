@@ -99,8 +99,8 @@ abstract class sfMessageSource implements sfIMessageSource
 
   /**
    * Factory method to instantiate a new sfMessageSource depending on the
-   * source type. The allowed source types are 'XLIFF', 'SQLite',
-   * 'MySQL', and 'gettext'. The source parameter is dependent on the
+   * source type. The built-in source types are 'XLIFF', 'SQLite',
+   * 'MySQL', 'gettext' and Creole. The source parameter is dependent on the
    * source type. For 'gettext' and 'XLIFF', it should point to the directory
    * where the messages are stored. For database types, e.g. 'SQLite' and
    * 'MySQL', it should be a PEAR DB style DSN string.
@@ -112,34 +112,27 @@ abstract class sfMessageSource implements sfIMessageSource
    * @param string the location of the resource.
    * @param string the filename of the custom message source.
    * @return sfMessageSource a new message source of the specified type.
-   * @throw InvalidsfMessageSourceTypeException
+   * @throws sfException
    */
-  static function &factory($type, $source = '.', $filename = '')
+  static function factory($type, $source = '.', $filename = '')
   {
-    $types = array('XLIFF', 'SQLite', 'MySQL', 'gettext', 'Creole');
-
-    if (empty($filename) && in_array($type, $types) == false)
+    if ($filename)
     {
-      throw new sfException('Invalid type "'.$type.'", valid types are '.implode(', ', $types));
+      if (!is_file($filename))
+      {
+        throw new sfException("File $filename not found");
+      }
+
+      include_once($filename);
     }
 
     $class = 'sfMessageSource_'.$type;
-
-    if (empty($filename))
+    if (!class_exists($class))
     {
-      $filename = dirname(__FILE__).'/'.$class.'.class.php';
+      throw new sfException(sprintf('Unable to find type "%s"', $type));
     }
 
-    if (is_file($filename) == false)
-    {
-      throw new sfException("File $filename not found");
-    }
-
-    include_once($filename);
-
-    $obj = new $class($source);
-
-    return $obj;
+    return new $class($source);
   }
 
   /**
@@ -167,34 +160,39 @@ abstract class sfMessageSource implements sfIMessageSource
 
     $this->messages = array();
 
-    foreach($variants as $variant)
+    foreach ($variants as $variant)
     {
       $source = $this->getSource($variant);
 
-      if($this->isValidSource($source) == false) continue;
+      if ($this->isValidSource($source) == false)
+      {
+        continue;
+      }
 
       $loadData = true;
 
-      if($this->cache)
+      if ($this->cache)
       {
-        $data = $this->cache->get($variant,
-          $this->culture, $this->getLastModified($source));
+        $data = $this->cache->get($variant, $this->culture, $this->getLastModified($source));
 
-        if(is_array($data))
+        if (is_array($data))
         {
           $this->messages[$variant] = $data;
           $loadData = false;
         }
         unset($data);
       }
-      if($loadData)
+
+      if ($loadData)
       {
         $data = &$this->loadData($source);
-        if(is_array($data))
+        if (is_array($data))
         {
           $this->messages[$variant] = $data;
-          if($this->cache)
+          if ($this->cache)
+          {
             $this->cache->save($data, $variant, $this->culture);
+          }
         }
         unset($data);
       }
@@ -205,6 +203,7 @@ abstract class sfMessageSource implements sfIMessageSource
 
   /**
    * Get the array of messages.
+   *
    * @param parameter
    * @return array translation messages.
    */
@@ -215,6 +214,7 @@ abstract class sfMessageSource implements sfIMessageSource
 
   /**
    * Get the cache handler for this source.
+   *
    * @return sfMessageCache cache handler
    */
   public function getCache()
@@ -224,6 +224,7 @@ abstract class sfMessageSource implements sfIMessageSource
 
   /**
    * Set the cache handler for caching the messages.
+   *
    * @param sfMessageCache the cache handler.
    */
   public function setCache(sfMessageCache $cache)
@@ -234,16 +235,20 @@ abstract class sfMessageSource implements sfIMessageSource
   /**
    * Add a untranslated message to the source. Need to call save()
    * to save the messages to source.
+   *
    * @param string message to add
    */
   public function append($message)
   {
-    if(!in_array($message, $this->untranslated))
+    if (!in_array($message, $this->untranslated))
+    {
       $this->untranslated[] = $message;
+    }
   }
 
   /**
    * Set the culture for this message source.
+   *
    * @param string culture name
    */
   public function setCulture($culture)
@@ -253,6 +258,7 @@ abstract class sfMessageSource implements sfIMessageSource
 
   /**
    * Get the culture identifier for the source.
+   *
    * @return string culture identifier.
    */
   public function getCulture()
@@ -262,6 +268,7 @@ abstract class sfMessageSource implements sfIMessageSource
 
   /**
    * Get the last modified unix-time for this particular catalogue+variant.
+   *
    * @param string catalogue+variant
    * @return int last modified in unix-time format.
    */
@@ -273,6 +280,7 @@ abstract class sfMessageSource implements sfIMessageSource
   /**
    * Load the message for a particular catalogue+variant.
    * This methods needs to implemented by subclasses.
+   *
    * @param string catalogue+variant.
    * @return array of translation messages.
    */
@@ -283,6 +291,7 @@ abstract class sfMessageSource implements sfIMessageSource
 
   /**
    * Get the source, this could be a filename or database ID.
+   *
    * @param string catalogue+variant
    * @return string the resource key
    */
@@ -293,6 +302,7 @@ abstract class sfMessageSource implements sfIMessageSource
 
   /**
    * Determine if the source is valid.
+   *
    * @param string catalogue+variant
    * @return boolean true if valid, false otherwise.
    */
@@ -304,6 +314,7 @@ abstract class sfMessageSource implements sfIMessageSource
   /**
    * Get all the variants of a particular catalogue.
    * This method must be implemented by subclasses.
+   *
    * @param string catalogue name
    * @return array list of all variants for this catalogue.
    */

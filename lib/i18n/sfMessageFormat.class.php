@@ -51,34 +51,34 @@ class sfMessageFormat
 {
   /**
    * The message source.
-   * @var MessageSource 
+   * @var sfMessageSource
    */
   protected $source;
-  
+
   /**
    * A list of loaded message catalogues.
-   * @var array 
+   * @var array
    */
   protected $catagloues = array();
-  
+
   /**
    * The translation messages.
-   * @var array 
+   * @var array
    */
   protected $messages = array();
-  
+
   /**
    * A list of untranslated messages.
-   * @var array 
+   * @var array
    */
   protected $untranslated = array();
-  
+
   /**
    * The prefix and suffix to append to untranslated messages.
-   * @var array 
+   * @var array
    */
-  protected $postscript = array('','');
-  
+  protected $postscript = array('', '');
+
   /**
    * Set the default catalogue.
    * @var string 
@@ -89,23 +89,25 @@ class sfMessageFormat
    * Output encoding charset
    * @var string
    */
-  protected $charset = 'UTF-8'; 
+  protected $charset = 'UTF-8';
 
   /**
    * Constructor.
    * Create a new instance of sfMessageFormat using the messages
    * from the supplied message source.
+   *
    * @param MessageSource the source of translation messages.
    * @param string charset for the message output.
    */
-  function __construct(sfIMessageSource $source, $charset='UTF-8')
+  function __construct(sfIMessageSource $source, $charset = 'UTF-8')
   {
-    $this->source = $source;  
+    $this->source = $source;
     $this->setCharset($charset);
   }
 
   /** 
    * Sets the charset for message output.
+   *
    * @param string charset, default is UTF-8
    */
   public function setCharset($charset)
@@ -115,6 +117,7 @@ class sfMessageFormat
 
   /**
    * Gets the charset for message output. Default is UTF-8.
+   *
    * @return string charset, default UTF-8
    */
   public function getCharset()
@@ -127,17 +130,20 @@ class sfMessageFormat
    * loaded catalogues is kept to prevent reload of the same
    * catalogue. The load catalogue messages are stored
    * in the $this->message array.
+   *
    * @param string message catalogue to load.
    */
   protected function loadCatalogue($catalogue)
   {
-    if(in_array($catalogue,$this->catagloues))
+    if (in_array($catalogue,$this->catagloues))
+    {
       return;
-      
-    if($this->source->load($catalogue))
+    }
+
+    if ($this->source->load($catalogue))
     {
       $this->messages[$catalogue] = $this->source->read();
-      $this->catagloues[] = $catalogue;           
+      $this->catagloues[] = $catalogue;
     }
   }
 
@@ -147,11 +153,11 @@ class sfMessageFormat
    * for the $args parameter. A different catalogue can be specified
    * using the $catalogue parameter.
    * The output charset is determined by $this->getCharset();
+   *
    * @param string the string to translate.
    * @param array a list of string to substitute.
    * @param string get the translation from a particular message
-   * @param string charset, the input AND output charset
-   * catalogue.
+   * @param string charset, the input AND output charset catalogue.
    * @return string translated string.
    */
   public function format($string, $args = array(), $catalogue = null, $charset = null)
@@ -180,10 +186,10 @@ class sfMessageFormat
 
   /**
    * Do string translation.
+   *
    * @param string the string to translate.
    * @param array a list of string to substitute.
-   * @param string get the translation from a particular message
-   * catalogue.
+   * @param string get the translation from a particular message catalogue.
    * @return string translated string.
    */
   protected function formatString($string, $args = array(), $catalogue = null)
@@ -253,7 +259,7 @@ class sfMessageFormat
     return null;
   }
 
-  private function replaceArgs($string, $args)
+  protected function replaceArgs($string, $args)
   {
     // replace object with strings
     foreach ($args as $key => $value)
@@ -269,6 +275,7 @@ class sfMessageFormat
 
   /**
    * Get the message source.
+   *
    * @return MessageSource 
    */
   function getSource()
@@ -280,11 +287,12 @@ class sfMessageFormat
    * Set the prefix and suffix to append to untranslated messages.
    * e.g. $postscript=array('[T]','[/T]'); will output 
    * "[T]Hello[/T]" if the translation for "Hello" can not be determined.
+   *
    * @param array first element is the prefix, second element the suffix.
    */
   function setUntranslatedPS($postscript)
   {
-    if(is_array($postscript) && count($postscript)>=2)
+    if (is_array($postscript) && count($postscript) >= 2)
     {
       $this->postscript[0] = $postscript[0];
       $this->postscript[1] = $postscript[1];

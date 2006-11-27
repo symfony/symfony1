@@ -54,43 +54,43 @@ class sfCultureInfo
    * ICU data filename extension.
    * @var string 
    */
-  private $dataFileExt = '.dat';
+  protected $dataFileExt = '.dat';
 
   /**
    * The ICU data array.
    * @var array 
    */
-  private $data = array();
+  protected $data = array();
 
   /**
    * The current culture.
    * @var string 
    */
-  private $culture;
+  protected $culture;
 
   /**
    * Directory where the ICU data is stored.
    * @var string 
    */
-  private $dataDir;
+  protected $dataDir;
 
   /**
    * A list of ICU date files loaded.
    * @var array 
    */
-  private $dataFiles = array();
+  protected $dataFiles = array();
 
   /**
    * The current date time format info.
    * @var sfDateTimeFormatInfo 
    */
-  private $dateTimeFormat;
+  protected $dateTimeFormat;
 
   /**
    * The current number format info.
    * @var sfNumberFormatInfo 
    */
-  private $numberFormat;
+  protected $numberFormat;
   
   /**
    * A list of properties that are accessable/writable.
@@ -263,7 +263,7 @@ class sfCultureInfo
 
     $files = array($current_part);
 
-    for ($i = 1; $i < count($file_parts); $i++)
+    for ($i = 1, $max = count($file_parts); $i < $max; $i++)
     {
       $current_part .= '_'.$file_parts[$i];
       $files[] = $current_part;
@@ -363,20 +363,20 @@ class sfCultureInfo
    * @param string slash "/" separated array path.
    * @return mixed the value array using the path
    */
-  private function searchArray($info, $path = '/')
+  protected function searchArray($info, $path = '/')
   {
     $index = explode('/', $path);
 
     $array = $info;
 
-    for ($i = 0; $i < count($index); $i++)
+    for ($i = 0, $max = count($index); $i < $max; $i++)
     {
       $k = $index[$i];
-      if ($i < count($index) - 1 && isset($array[$k]))
+      if ($i < $max - 1 && isset($array[$k]))
       {
         $array = $array[$k];
       }
-      else if ($i == count($index) - 1 && isset($array[$k]))
+      else if ($i == $max - 1 && isset($array[$k]))
       {
         return $array[$k];
       }
@@ -621,9 +621,9 @@ class sfCultureInfo
    * @param array with single elements arrays
    * @return array simplified array.
    */
-  private function simplify($array)
+  protected function simplify($array)
   {
-    for ($i = 0; $i<count($array); $i++)
+    for ($i = 0, $max = count($array); $i < $max; $i++)
     {
       $key = key($array);
       if (is_array($array[$key]) && count($array[$key]) == 1)

@@ -48,115 +48,135 @@ class sfDateFormat
    * @var array 
    */
   protected $tokens = array(
-      'G'=>'Era',
-      'y'=>'Year',
-      'M'=>'Month',
-      'd'=>'Day',
-      'h'=>'Hour12',
-      'H'=>'Hour24',
-      'm'=>'Minutes',
-      's'=>'Seconds',
-      'E'=>'DayInWeek',
-      'D'=>'DayInYear',
-      'F'=>'DayInMonth',
-      'w'=>'WeekInYear',
-      'W'=>'WeekInMonth',
-      'a'=>'AMPM',
-      'k'=>'HourInDay',
-      'K'=>'HourInAMPM',
-      'z'=>'TimeZone'
-      );  
-  
+    'G'=>'Era',
+    'y'=>'Year',
+    'M'=>'Month',
+    'd'=>'Day',
+    'h'=>'Hour12',
+    'H'=>'Hour24',
+    'm'=>'Minutes',
+    's'=>'Seconds',
+    'E'=>'DayInWeek',
+    'D'=>'DayInYear',
+    'F'=>'DayInMonth',
+    'w'=>'WeekInYear',
+    'W'=>'WeekInMonth',
+    'a'=>'AMPM',
+    'k'=>'HourInDay',
+    'K'=>'HourInAMPM',
+    'z'=>'TimeZone'
+  );
+
   /**
    * A list of methods, to be used by the token function calls.
    * @var array 
    */
   protected $methods = array();
-  
+
   /**
-   * The DateTimeFormatInfo, containing culture specific patterns and names.
-   * @var DateTimeFormatInfo   
+   * The sfDateTimeFormatInfo, containing culture specific patterns and names.
+   * @var sfDateTimeFormatInfo   
    */
   protected $formatInfo;
-  
+
   /**
-   * Initialize a new sfDateFormat. 
-   * @param mixed either, null, a sfCultureInfo instance, 
-   * a DateTimeFormatInfo instance, or a locale.
-   * @return sfDateFormat instance 
+   * Initialize a new sfDateFormat.
+   *
+   * @param mixed either, null, a sfCultureInfo instance, a DateTimeFormatInfo instance, or a locale.
+   * @return sfDateFormat instance
    */
-  function __construct($formatInfo=null)
+  function __construct($formatInfo = null)
   {
-    if(is_null($formatInfo))
+    if (is_null($formatInfo))
+    {
       $this->formatInfo = sfDateTimeFormatInfo::getInvariantInfo();
-    else if($formatInfo instanceof sfCultureInfo)
+    }
+    else if ($formatInfo instanceof sfCultureInfo)
+    {
       $this->formatInfo = $formatInfo->DateTimeFormat;
-    else if($formatInfo instanceof sfDateTimeFormatInfo)
+    }
+    else if ($formatInfo instanceof sfDateTimeFormatInfo)
+    {
       $this->formatInfo = $formatInfo;
+    }
     else
+    {
       $this->formatInfo = sfDateTimeFormatInfo::getInstance($formatInfo);
-    
+    }
+
     $this->methods = get_class_methods($this);
   }
-  
+
   /**
    * Format a date according to the pattern.
+   *
    * @param mixed the time as integer or string in strtotime format.
    * @return string formatted date time. 
    */
-  public function format($time, $pattern='F', $charset='UTF-8')
+  public function format($time, $pattern = 'F', $charset = 'UTF-8')
   {
-    if(!ctype_digit((string) $time))
+    if (!ctype_digit((string) $time))
+    {
       $time = @strtotime($time);
-    
-    if(is_null($pattern))
+    }
+
+    if (is_null($pattern))
+    {
       $pattern = 'F';
-      
+    }
+
     $date = @getdate($time);
-      
+
     $pattern = $this->getPattern($pattern);
 
     $tokens = $this->getTokens($pattern);
-    
-    for($i = 0; $i<count($tokens); $i++)
+
+    for ($i = 0, $max = count($tokens); $i < $max; $i++)
     {
       $pattern = $tokens[$i];
-      if($pattern{0} == "'" 
-        && $pattern{strlen($pattern)-1} == "'")
+      if ($pattern{0} == "'" && $pattern{strlen($pattern) - 1} == "'")
       {
-        $tokens[$i] = preg_replace('/(^\')|(\'$)/','',$pattern);
+        $tokens[$i] = str_replace('``````', '\'', preg_replace('/(^\')|(\'$)/', '', $pattern));
+      }
+      else if ($pattern == '``````')
+      {
+        $tokens[$i] = '\'';
       }
       else
       {
         $function = $this->getFunctionName($pattern);
-        if($function != null)
+        if ($function != null)
         {
           $fName = 'get'.$function;
-          if(in_array($fName, $this->methods))
+          if (in_array($fName, $this->methods))
           {
-            $rs = $this->$fName($date, $pattern);
-            $tokens[$i] = $rs;
+            $tokens[$i] = $this->$fName($date, $pattern);
           }
           else
+          {
             throw new sfException('function '.$function.' not found.');
+          }
         }
       }
     }
-    
-    return I18N_toEncoding(implode('',$tokens), $charset);
+
+    return I18N_toEncoding(implode('', $tokens), $charset);
   }
-    
+
   /**
    * For a particular token, get the corresponding function to call.
+   *
    * @param string token
-   * @return mixed the function if good token, null otherwise. 
+   * @return mixed the function if good token, null otherwise.
    */
   protected function getFunctionName($token)
   {
-    if(isset($this->tokens[$token{0}]))
+    if (isset($this->tokens[$token{0}]))
+    {
       return $this->tokens[$token{0}];
-  } 
-  
+    }
+  }
+
   /**
    * Get the pattern from DateTimeFormatInfo or some predefined patterns.
    * If the $pattern parameter is an array of 2 element, it will assume
@@ -164,20 +184,19 @@ class sfDateFormat
    * and try to find an appropriate pattern and apply 
    * DateTimeFormatInfo::formatDateTime
    * See the tutorial documentation for futher details on the patterns.
+   *
    * @param mixed a pattern.
-   * @return string a pattern. 
+   * @return string a pattern.
    * @see DateTimeFormatInfo::formatDateTime()
    */
-  protected function getPattern($pattern) 
+  protected function getPattern($pattern)
   {
-    if(is_array($pattern) && count($pattern) == 2)
+    if (is_array($pattern) && count($pattern) == 2)
     {
-      return $this->formatInfo->formatDateTime(
-              $this->getPattern($pattern[0]), 
-              $this->getPattern($pattern[1]));
+      return $this->formatInfo->formatDateTime($this->getPattern($pattern[0]), $this->getPattern($pattern[1]));
     }
-    
-    switch($pattern)
+
+    switch ($pattern)
     {
       case 'd':
         return $this->formatInfo->ShortDatePattern;
@@ -202,26 +221,18 @@ class sfDateFormat
         break;
       case 'Q':
         return $this->formatInfo->FullTimePattern;
-        break;        
+        break;
       case 'f':
-        return $this->formatInfo->formatDateTime(
-          $this->formatInfo->LongDatePattern, 
-          $this->formatInfo->ShortTimePattern);
+        return $this->formatInfo->formatDateTime($this->formatInfo->LongDatePattern, $this->formatInfo->ShortTimePattern);
         break;
       case 'F':
-        return $this->formatInfo->formatDateTime(
-          $this->formatInfo->LongDatePattern, 
-          $this->formatInfo->LongTimePattern);
+        return $this->formatInfo->formatDateTime($this->formatInfo->LongDatePattern, $this->formatInfo->LongTimePattern);
         break;
       case 'g':
-        return $this->formatInfo->formatDateTime(
-          $this->formatInfo->ShortDatePattern, 
-          $this->formatInfo->ShortTimePattern);     
+        return $this->formatInfo->formatDateTime($this->formatInfo->ShortDatePattern, $this->formatInfo->ShortTimePattern);
         break;
       case 'G':
-        return $this->formatInfo->formatDateTime(
-          $this->formatInfo->ShortDatePattern, 
-          $this->formatInfo->LongTimePattern);            
+        return $this->formatInfo->formatDateTime($this->formatInfo->ShortDatePattern, $this->formatInfo->LongTimePattern);
         break;
       case 'M':
       case 'm':
@@ -248,14 +259,15 @@ class sfDateFormat
         return $pattern;
     }
   }
-  
+
   /**
    * Tokenize the pattern. The tokens are delimited by group of
    * similar characters, e.g. 'aabb' will form 2 tokens of 'aa' and 'bb'.
    * Any substrings, starting and ending with a single quote (') 
    * will be treated as a single token.
+   *
    * @param string pattern.
-   * @return array string tokens in an array. 
+   * @return array string tokens in an array.
    */
   protected function getTokens($pattern)
   {
@@ -265,29 +277,36 @@ class sfDateFormat
 
     $text = false;
 
-    for($i = 0; $i < strlen($pattern); $i++)
-    { 
-      if($char==null || $pattern{$i} == $char || $text)
+    for ($i = 0, $max = strlen($pattern); $i < $max; $i++)
+    {
+      if ($char == null || $pattern{$i} == $char || $text)
       {
         $token .= $pattern{$i};
       }
       else
       {
-        $tokens[] = str_replace("''","'",$token);
+        $tokens[] = str_replace("''", "'", $token);
         $token = $pattern{$i};
       }
 
-      if($pattern{$i} == "'" && $text == false)
-        $text = true;     
-      else if($text && $pattern{$i} == "'" && $char == "'")
+      if ($pattern{$i} == "'" && $text == false)
+      {
         $text = true;
-      else if($text && $char != "'" && $pattern{$i} == "'")
+      }
+      else if ($text && $pattern{$i} == "'" && $char == "'")
+      {
+        $text = true;
+      }
+      else if ($text && $char != "'" && $pattern{$i} == "'")
+      {
         $text = false;
-    
+      }
+
       $char = $pattern{$i};
 
     }
     $tokens[] = $token;
+
     return $tokens;
   }
 
@@ -295,17 +314,18 @@ class sfDateFormat
    * Get the year.
    * "yy" will return the last two digits of year.
    * "yyyy" will return the full integer year.
+   *
    * @param array getdate format.
-   * @param string a pattern.  
+   * @param string a pattern.
    * @return string year
-   */   
-  protected function getYear($date, $pattern='yyyy')
+   */
+  protected function getYear($date, $pattern = 'yyyy')
   {
     $year = $date['year'];
-    switch($pattern)
+    switch ($pattern)
     {
       case 'yy':
-        return substr($year,2);
+        return substr($year, 2);
       case 'yyyy':
         return $year;
       default: 
@@ -319,28 +339,28 @@ class sfDateFormat
    * "MM" will return the narrow month name, e.g. "J"
    * "MMM" will return the abrreviated month name, e.g. "Jan"
    * "MMMM" will return the month name, e.g. "January"
+   *
    * @param array getdate format.
-   * @param string a pattern.  
+   * @param string a pattern.
    * @return string month name
-   */ 
-  protected function getMonth($date, $pattern='M')
+   */
+  protected function getMonth($date, $pattern = 'M')
   {
     $month = $date['mon'];
 
-    switch($pattern)
+    switch ($pattern)
     {
       case 'M':
         return $month;
       case 'MM':
-        return str_pad($month, 2,'0',STR_PAD_LEFT);
+        return str_pad($month, 2, '0', STR_PAD_LEFT);
       case 'MMM':
-        return $this->formatInfo->AbbreviatedMonthNames[$month-1];
+        return $this->formatInfo->AbbreviatedMonthNames[$month - 1];
         break;
       case 'MMMM':
-        return $this->formatInfo->MonthNames[$month-1];
+        return $this->formatInfo->MonthNames[$month - 1];
       default:
-        throw new sfException('The pattern for month '.
-            'is "M", "MM", "MMM", or "MMMM".');
+        throw new sfException('The pattern for month is "M", "MM", "MMM", or "MMMM".');
     }
   }
 
@@ -350,15 +370,16 @@ class sfDateFormat
    * "EE" will return the narrow day of the week, e.g. "M"
    * "EEE" will return the abrreviated day of the week, e.g. "Mon"
    * "EEEE" will return the day of the week, e.g. "Monday"
+   *
    * @param array getdate format.
-   * @param string a pattern.  
+   * @param string a pattern.
    * @return string day of the week.
-   */   
-  protected function getDayInWeek($date, $pattern='EEEE')
+   */
+  protected function getDayInWeek($date, $pattern = 'EEEE')
   {
     $day = $date['wday'];
 
-    switch($pattern)
+    switch ($pattern)
     {
       case 'E':
         return $day;
@@ -379,20 +400,21 @@ class sfDateFormat
   /**
    * Get the day of the month.
    * "d" for non-padding, "dd" will always return 2 characters.
+   *
    * @param array getdate format.
-   * @param string a pattern.  
+   * @param string a pattern.
    * @return string day of the month
-   */     
-  protected function getDay($date, $pattern='d')
+   */
+  protected function getDay($date, $pattern = 'd')
   {
     $day = $date['mday'];
 
-    switch($pattern)
+    switch ($pattern)
     {
       case 'd':
         return $day;
       case 'dd':
-        return str_pad($day, 2,'0',STR_PAD_LEFT);
+        return str_pad($day, 2, '0', STR_PAD_LEFT);
       case 'dddd':
         return $this->getDayInWeek($date);
       default:
@@ -400,239 +422,260 @@ class sfDateFormat
     }
   }
 
-  
   /**
-   * Get the era. i.e. in gregorian, year > 0 is AD, else BC.  
+   * Get the era. i.e. in gregorian, year > 0 is AD, else BC.
+   *
    * @todo How to support multiple Eras?, e.g. Japanese.
    * @param array getdate format.
-   * @param string a pattern.  
+   * @param string a pattern.
    * @return string era
-   */     
-  protected function getEra($date, $pattern='G')
+   */
+  protected function getEra($date, $pattern = 'G')
   {
-
-    if($pattern != 'G')
+    if ($pattern != 'G')
+    {
       throw new sfException('The pattern for era is "G".');
-    
-    $year = $date['year'];
-    if($year > 0)
-      return $this->formatInfo->getEra(1);
-    else
-      return $this->formatInfo->getEra(0);
+    }
+
+    return $this->formatInfo->getEra($date['year'] > 0 ? 1 : 0);
   }
 
   /**
    * Get the hours in 24 hour format, i.e. [0-23]. 
    * "H" for non-padding, "HH" will always return 2 characters.
+   *
    * @param array getdate format.
-   * @param string a pattern.  
+   * @param string a pattern.
    * @return string hours in 24 hour format.
-   */     
-  protected function getHour24($date, $pattern='H')
+   */
+  protected function getHour24($date, $pattern = 'H')
   {
     $hour = $date['hours'];
 
-    switch($pattern)
+    switch ($pattern)
     {
       case 'H':
         return $hour;
       case 'HH':
-        return str_pad($hour, 2,'0',STR_PAD_LEFT);
+        return str_pad($hour, 2, '0', STR_PAD_LEFT);
       default:
-        throw new sfException('The pattern for 24 hour '.
-            'format is "H" or "HH".');
+        throw new sfException('The pattern for 24 hour format is "H" or "HH".');
     }
   }
 
   /**
    * Get the AM/PM designator, 12 noon is PM, 12 midnight is AM.
+   *
    * @param array getdate format.
-   * @param string a pattern.  
+   * @param string a pattern.
    * @return string AM or PM designator
-   */     
-  protected function getAMPM($date, $pattern='a')
-  { 
-    if($pattern != 'a')
+   */
+  protected function getAMPM($date, $pattern = 'a')
+  {
+    if ($pattern != 'a')
+    {
       throw new sfException('The pattern for AM/PM marker is "a".');
-    
-    $hour = $date['hours'];
-    $ampm = intval($hour/12);
-    return $this->formatInfo->AMPMMarkers[$ampm];
+    }
+
+    return $this->formatInfo->AMPMMarkers[intval($date['hours'] / 12)];
   }
 
   /**
    * Get the hours in 12 hour format. 
    * "h" for non-padding, "hh" will always return 2 characters.
+   *
    * @param array getdate format.
-   * @param string a pattern.  
+   * @param string a pattern.
    * @return string hours in 12 hour format.
-   */   
-  protected function getHour12($date, $pattern='h')
+   */
+  protected function getHour12($date, $pattern = 'h')
   {
     $hour = $date['hours'];
-    $hour = ($hour==12|$hour==0)?12:($hour)%12;
+    $hour = ($hour == 12 | $hour == 0) ? 12 : ($hour) % 12;
 
-    switch($pattern)
+    switch ($pattern)
     {
       case 'h':
         return $hour;
       case 'hh':
-        return str_pad($hour, 2,'0',STR_PAD_LEFT);
+        return str_pad($hour, 2, '0', STR_PAD_LEFT);
       default:
-        throw new sfException('The pattern for 24 hour '.
-            'format is "H" or "HH".');
+        throw new sfException('The pattern for 24 hour format is "H" or "HH".');
     }
   }
 
   /**
    * Get the minutes.
    * "m" for non-padding, "mm" will always return 2 characters.
+   *
    * @param array getdate format.
-   * @param string a pattern.  
+   * @param string a pattern.
    * @return string minutes.
-   */   
-  protected function getMinutes($date, $pattern='m')
+   */
+  protected function getMinutes($date, $pattern = 'm')
   {
     $minutes = $date['minutes'];
 
-    switch($pattern)
+    switch ($pattern)
     {
       case 'm':
         return $minutes;
       case 'mm':
-        return str_pad($minutes, 2,'0',STR_PAD_LEFT);
+        return str_pad($minutes, 2, '0', STR_PAD_LEFT);
       default:
-      throw new sfException('The pattern for minutes is "m" or "mm".');
+        throw new sfException('The pattern for minutes is "m" or "mm".');
     }
   }
 
   /**
-   * Get the seconds. 
+   * Get the seconds.
    * "s" for non-padding, "ss" will always return 2 characters.
+   *
    * @param array getdate format.
-   * @param string a pattern.  
+   * @param string a pattern.
    * @return string seconds
-   */ 
-  protected function getSeconds($date, $pattern='s')
+   */
+  protected function getSeconds($date, $pattern = 's')
   {
     $seconds = $date['seconds'];
 
-    switch($pattern)
+    switch ($pattern)
     {
       case 's':
         return $seconds;
       case 'ss':
-        return str_pad($seconds, 2,'0',STR_PAD_LEFT);
+        return str_pad($seconds, 2, '0', STR_PAD_LEFT);
       default:
-      throw new sfException('The pattern for seconds is "s" or "ss".');
+        throw new sfException('The pattern for seconds is "s" or "ss".');
     }
   }
 
   /**
    * Get the timezone from the server machine.
+   *
    * @todo How to get the timezone for a different region?
    * @param array getdate format.
-   * @param string a pattern.  
+   * @param string a pattern.
    * @return string time zone 
    */
-  protected function getTimeZone($date, $pattern='z')
+  protected function getTimeZone($date, $pattern = 'z')
   {
-    if($pattern != 'z')
+    if ($pattern != 'z')
+    {
       throw new sfException('The pattern for time zone is "z".');
+    }
 
     return @date('T', @mktime($date['hours'], $date['minutes'], $date['seconds'], $date['mon'], $date['mday'], $date['year']));
   }
 
   /**
    * Get the day in the year, e.g. [1-366]
+   *
    * @param array getdate format.
    * @param string a pattern.
    * @return int hours in AM/PM format.
-   */ 
-  protected function getDayInYear($date, $pattern='D')
+   */
+  protected function getDayInYear($date, $pattern = 'D')
   {
-    if($pattern != 'D')
+    if ($pattern != 'D')
+    {
       throw new sfException('The pattern for day in year is "D".');
+    }
 
     return $date['yday'];
   }
 
   /**
-   * Get day in the month. 
+   * Get day in the month.
+   *
    * @param array getdate format.
    * @param string a pattern.
    * @return int day in month
-   */ 
-  protected function getDayInMonth($date, $pattern='FF')
+   */
+  protected function getDayInMonth($date, $pattern = 'FF')
   {
-    switch ($pattern) {
-        case 'F':
-          return @date('j', @mktime(0, 0, 0, $date['mon'], $date['mday'], $date['year']));
-          break;
-        case 'FF':
-          return @date('d', @mktime(0, 0, 0, $date['mon'], $date['mday'], $date['year']));
-          break;
-        default:
-          throw new sfException('The pattern for day in month is "F" or "FF".');
+    switch ($pattern)
+    {
+      case 'F':
+        return @date('j', @mktime(0, 0, 0, $date['mon'], $date['mday'], $date['year']));
+        break;
+      case 'FF':
+        return @date('d', @mktime(0, 0, 0, $date['mon'], $date['mday'], $date['year']));
+        break;
+      default:
+        throw new sfException('The pattern for day in month is "F" or "FF".');
     }
   }
-  
+
   /**
    * Get the week in the year.
+   *
    * @param array getdate format.
    * @param string a pattern.
    * @return int week in year
-   */ 
-  protected function getWeekInYear($date, $pattern='w')
+   */
+  protected function getWeekInYear($date, $pattern = 'w')
   {
-    if($pattern != 'w')
+    if ($pattern != 'w')
+    {
       throw new sfException('The pattern for week in year is "w".');
+    }
 
     return @date('W', @mktime(0, 0, 0, $date['mon'], $date['mday'], $date['year']));
   }
 
   /**
-   * Get week in the month. 
+   * Get week in the month.
+   *
    * @param array getdate format.
    * @return int week in month
    */
-  protected function getWeekInMonth($date, $pattern='W')
+  protected function getWeekInMonth($date, $pattern = 'W')
   {
-    if($pattern != 'W')
+    if ($pattern != 'W')
+    {
       throw new sfException('The pattern for week in month is "W".');
-    
+    }
+
     return @date('W', @mktime(0, 0, 0, $date['mon'], $date['mday'], $date['year'])) - date('W', mktime(0, 0, 0, $date['mon'], 1, $date['year']));
   }
 
   /**
    * Get the hours [1-24].
+   *
    * @param array getdate format.
    * @param string a pattern.
    * @return int hours [1-24]
-   */ 
-  protected function getHourInDay($date, $pattern='k')
+   */
+  protected function getHourInDay($date, $pattern = 'k')
   {
-    if(is_null($dateTimeInfo))
+    if (is_null($dateTimeInfo))
+    {
       $dateTimeInfo = $this->dateTimeInfo;
-    
-    if($pattern != 'k')
-      throw new sfException('The pattern for hour in day is "k".');
+    }
 
-    return $date['hours']+1;
+    if ($pattern != 'k')
+    {
+      throw new sfException('The pattern for hour in day is "k".');
+    }
+
+    return $date['hours'] + 1;
   }
 
   /**
    * Get the hours in AM/PM format, e.g [1-12]
+   *
    * @param array getdate format.
    * @param string a pattern.
    * @return int hours in AM/PM format.
    */
-  protected function getHourInAMPM($date, $pattern='K')
+  protected function getHourInAMPM($date, $pattern = 'K')
   {
-    if($pattern != 'K')
+    if ($pattern != 'K')
+    {
       throw new sfException('The pattern for hour in AM/PM is "K".');
-      
-    return ($date['hours']+1)%12;
-  }
+    }
 
+    return ($date['hours'] + 1) % 12;
+  }
 }

@@ -10,6 +10,7 @@
 /**
  * Cache the translation table into the file system.
  * It can cache each cataloug+variant or just the whole section.
+ *
  * @package System.I18N.core
  * @author $Author: weizhuo $
  * @version $Id$
@@ -18,17 +19,19 @@ class sfMessageCache
 {
   /**
    * Cache Lite instance.
+   *
    * @var TCache_Lite
    */
   protected $cache;
 
   /**
-   * Caceh life time, default is 1 year.
+   * Cache life time, default is 1 year.
    */
   protected $lifetime = 3153600;
 
   /**
    * Create a new Translation cache.
+   *
    * @param string $cacheDir Directory to store the cache files.
    */
   public function initialize($options = array())
@@ -39,6 +42,7 @@ class sfMessageCache
 
   /**
    * Get the cache life time.
+   *
    * @return int Cache life time.
    */
   public function getLifeTime()
@@ -48,6 +52,7 @@ class sfMessageCache
 
   /**
    * Set the cache life time.
+   *
    * @param int $time Cache life time.
    */
   public function setLifeTime($time)
@@ -57,6 +62,7 @@ class sfMessageCache
 
   /**
    * Get the cache file ID based section and locale.
+   *
    * @param string $catalogue The translation section.
    * @param string $culture The translation locale, e.g. "en_AU".
    */
@@ -67,6 +73,7 @@ class sfMessageCache
 
   /**
    * Get the cache file GROUP based section and locale.
+   *
    * @param string $catalogue The translation section.
    * @param string $culture The translation locale, e.g. "en_AU".
    */
@@ -77,10 +84,10 @@ class sfMessageCache
 
   /**
    * Get the data from the cache.
+   *
    * @param string $catalogue The translation section.
    * @param string $culture The translation locale, e.g. "en_AU".
-   * @param string $filename If the source is a file, this file's modified
-   * time is newer than the cache's modified time, no cache hit. 
+   * @param string $filename If the source is a file, this file's modified time is newer than the cache's modified time, no cache hit.
    * @return mixed Boolean FALSE if no cache hit. Otherwise, translation
    * table data for the specified section and locale.
    */
@@ -99,6 +106,7 @@ class sfMessageCache
 
   /**
    * Save the data to cache for the specified section and locale.
+   *
    * @param array $data The data to save.
    * @param string $catalogue The translation section.
    * @param string $culture The translation locale, e.g. "en_AU".
@@ -113,6 +121,7 @@ class sfMessageCache
 
   /**
    * Clean up the cache for the specified section and locale.
+   *
    * @param string $catalogue The translation section.
    * @param string $culture The translation locale, e.g. "en_AU".
    */
