@@ -671,12 +671,12 @@ function _upgrade_1_0_propel_ini()
     $count = 0;
 
     // new target package (needed for new plugin system)
-    $propel_ini = preg_replace('#propel\.targetPackage(\s*)=(\s*)model#', 'propel.targetPackage$1=$2lib.model', $propel_ini, $count);
+    $propel_ini = preg_replace('#propel\.targetPackage(\s*)=(\s*)model#', 'propel.targetPackage$1=$2lib.model', $propel_ini, -1, $count);
     if ($count)
     {
       $updated = true;
     }
-    $propel_ini = preg_replace('#propel.php.dir(\s*)=(\s*)\${propel.output.dir}/lib#', 'propel.php.dir$1=$2\${propel.output.dir}', $propel_ini, $count);
+    $propel_ini = preg_replace('#propel.php.dir(\s*)=(\s*)\${propel.output.dir}/lib#', 'propel.php.dir$1=$2\${propel.output.dir}', $propel_ini, -1, $count);
     if ($count)
     {
       $updated = true;
