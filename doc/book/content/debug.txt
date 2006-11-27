@@ -105,12 +105,12 @@ There are 8 levels of log messages: `emerg`, `alert`, `crit`, `err`, `warning`, 
     test:
     
     all:
-    #  active: on
-    #  level:  debug
+    #  enabled: on
+    #  level:   debug
 
-This means that the symfony logging mechanism is active by default in all environments (but can be deactivated). In all environments except the production one, all the messages are logged (up to the least important level - the `debug` level). In production, only the most important messages are logged. You can change the `level` in this file for each environment to limit the type of logged messages.
+This means that the symfony logging mechanism is enabled by default in all environments (but can be deactivated). In all environments except the production one, all the messages are logged (up to the least important level - the `debug` level). In production, only the most important messages are logged. You can change the `level` in this file for each environment to limit the type of logged messages.
 
-The value of these parameters is accessible during execution through `sfConfig::get('sf_logging_active')` and `sfConfig::get('sf_logging_level')`.
+The value of these parameters is accessible during execution through `sfConfig::get('sf_logging_enabled')` and `sfConfig::get('sf_logging_level')`.
 
 Web debug
 ---------

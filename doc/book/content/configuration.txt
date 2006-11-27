@@ -276,16 +276,16 @@ And if you are allergic to YAML, or if you prefer to avoid writing both a config
     <?php
     return array(
       'default' => array(
-        'active' => true,
-        'level'  => 'debug'
+        'enabled' => true,
+        'level'   => 'debug'
       )
     );
 
 ...instead of the classic
 
     default:
-      active: on
-      level:  debug
+      enabled: on
+      level:   debug
       
 Configuration handlers
 ----------------------
