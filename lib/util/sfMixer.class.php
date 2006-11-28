@@ -23,11 +23,6 @@ class sfMixer
     $mixinParameters = array(),
     $mixinInstances  = array();
 
-  static public function register_class($name, $class)
-  {
-    
-  }
-
   static public function register($name, $callable)
   {
     $lazy = false;
