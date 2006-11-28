@@ -102,6 +102,8 @@ function run_upgrade_1_0($task, $args)
 
       _upgrade_1_0_deprecated_for_templates($template_dirs);
 
+      _upgrade_1_0_date_form_helpers($template_dirs);
+
       _upgrade_1_0_deprecated_for_generator($app_dir);
 
       _upgrade_1_0_cache_yml($app_dir);
@@ -401,6 +403,45 @@ function _upgrade_1_0_deprecated_for_actions($action_dirs)
         $seen[$old] = true;
         pake_echo_comment(sprintf('%s has been removed', $old));
         pake_echo_comment(sprintf(' use %s', $new));
+      }
+    }
+
+    if ($updated)
+    {
+      file_put_contents($php_file, $content);
+    }
+  }
+}
+
+function _upgrade_1_0_date_form_helpers($template_dirs)
+{
+  pake_echo_action('upgrade 1.0', 'upgrading date form helpers');
+
+  $helpers = array(
+    'select_day_tag', 'select_month_tag', 'select_year_tag', 'select_date_tag', 'select_second_tag', 'select_minute_tag',
+    'select_hour_tag', 'select_ampm_tag', 'select_time_tag', 'select_datetime_tag', 'select_number_tag', 'select_timezone_tag',
+  );
+  $regex = '/('.implode('|', $helpers).')/';
+
+  $php_files = pakeFinder::type('file')->name('*.php')->in($template_dirs);
+  $seen = false;
+  foreach ($php_files as $php_file)
+  {
+    $updated = false;
+
+    $content = file_get_contents($php_file);
+
+    if (preg_match($regex, $content) && false === strpos($content, 'DateForm'))
+    {
+      $content = "<?php use_helper('DateForm') ?>\n\n".$content;
+
+      $updated = true;
+      if (!$seen)
+      {
+        $seen = true;
+
+        pake_echo_comment('date form helpers has been moved to the DateForm helper group');
+        pake_echo_comment(' add use_helper(\'DateForm\')');
       }
     }
 
