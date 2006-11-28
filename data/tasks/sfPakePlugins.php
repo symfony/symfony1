@@ -101,7 +101,7 @@ function run_plugin_list($task, $args)
     foreach ($packages as $package)
     {
       $pobj = $registry->getPackage(isset($package['package']) ? $package['package'] : $package['name'], $channel);
-      pake_echo(sprintf(" %-40s %10s-%-6s %s", pakeColor::colorize($pobj->getPackage(), 'INFO'), $pobj->getVersion(), $pobj->getState() ? $pobj->getState() : null, pakeColor::colorize('# '.$channel, 'COMMENT')));
+      pake_echo(sprintf(" %-40s %10s-%-6s %s", pakeColor::colorize($pobj->getPackage(), 'INFO'), $pobj->getVersion(), $pobj->getState() ? $pobj->getState() : null, pakeColor::colorize(sprintf('# %s (%s)', $channel, $registry->getChannel($channel)->getAlias()), 'COMMENT')));
     }
   }
 }
