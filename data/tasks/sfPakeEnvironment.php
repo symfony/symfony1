@@ -51,7 +51,21 @@ function run_sync($task, $args)
   }
   catch (pakeException $e)
   {
-    $parameters = '-azC --exclude-from=config/rsync_exclude.txt --force --delete';
+    $parameters = '-azC --force --delete';
+    if (file_exists('config/rsync_exclude.txt'))
+    {
+      $parameters .= ' --exclude-from=config/rsync_exclude.txt';
+    }
+
+    if (file_exists('config/rsync_include.txt'))
+    {
+      $parameters .= ' --include-from=config/rsync_include.txt';
+    }
+
+    if (file_exists('config/rsync.txt'))
+    {
+      $parameters .= ' --files-from=config/rsync.txt';
+    }
   }
 
   $dry_run = ($dryrun == 'go' || $dryrun == 'ok') ? '' : '--dry-run';
