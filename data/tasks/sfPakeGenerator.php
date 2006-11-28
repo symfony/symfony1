@@ -152,7 +152,7 @@ function run_init_module($task, $args)
 
   // create basic application structure
   $finder = pakeFinder::type('any')->ignore_version_control()->discard('.sf');
-  pake_mirror($finder, $sf_skeleton_dir.'/module/', $module_dir);
+  pake_mirror($finder, $sf_skeleton_dir.'/module', $module_dir);
 
   // create basic test
   pake_copy($sf_skeleton_dir.'/test/actionsTest.php', $sf_root_dir.'/test/functional/'.$app.'/'.$module.'ActionsTest.php');
