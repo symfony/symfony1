@@ -37,6 +37,11 @@ class sfPropelCrudGenerator extends sfAdminGenerator
         $this->primaryKey[] = $column;
       }
     }
+
+    if (!count($this->primaryKey))
+    {
+      throw new sfException(sprintf('Cannot generate a module for a model without a primary key (%s)', $this->className));
+    }
   }
 
   protected function loadMapBuilderClasses()
@@ -70,22 +75,26 @@ class sfPropelCrudGenerator extends sfAdminGenerator
   {
     return sprintf ('object_%s($%s, \'%s\', %s)', $helperName, $this->getSingularName(), $this->getColumnGetter($column, false), $params);
   }
-  
+
   // returns the getter either non-developped: 'getFoo'
   // or developped: '$class->getFoo()'
   function getColumnGetter($column, $developed = false , $prefix = '')
   {
     $getter = 'get'.$column->getPhpName();
     if ($developed)
+    {
       $getter = sprintf('$%s%s->%s()', $prefix, $this->getSingularName(), $getter);
+    }
+
     return $getter;
   }
-  
+
   // used for foreign keys only; this method should be removed when we use
   // sfAdminColumn instead
   function getRelatedClassName($column)
   {
     $relatedTable = $this->getMap()->getDatabaseMap()->getTable($column->getRelatedTableName());
+
     return $relatedTable->getPhpName();
   }
 }

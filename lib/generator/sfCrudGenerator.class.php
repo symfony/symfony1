@@ -299,19 +299,17 @@ abstract class sfCrudGenerator extends sfGenerator
   }
 
   // here come the ORM specific functions
-
-
   abstract protected function loadPrimaryKeys();
 
   abstract protected function loadMapBuilderClasses();
-  
+
   // generates a PHP call to an object helper
   abstract function getPHPObjectHelper($helperName, $column, $params);
-  
+
   // returns the getter either non-developped: 'getFoo'
   // or developped: '$class->getFoo()'
   abstract function getColumnGetter($column, $developed = false , $prefix = '');
-  
+
   // used for foreign keys only; this method should be removed when we use
   // sfAdminColumn instead
   abstract function getRelatedClassName($column);
