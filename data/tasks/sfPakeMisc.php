@@ -19,10 +19,10 @@ pake_desc('fix directories permissions');
 pake_task('fix-perms', 'project_exists');
 
 pake_desc('rotates an applications log files');
-pake_task('rotate-log', 'app_exists');
+pake_task('log-rotate', 'app_exists');
 
 pake_desc('purges an applications log files');
-pake_task('purge-logs', 'project_exists');
+pake_task('log-purge', 'project_exists');
 
 pake_desc('enables an application in a given environment');
 pake_task('enable', 'app_exists');
@@ -218,7 +218,7 @@ function _safe_cache_remove($finder, $sub_dir, $lock_name)
  * @param object $task
  * @param array $args
  */
-function run_rotate_log($task, $args)
+function run_log_rotate($task, $args)
 {
   // handling two required arguments (application and environment)
   if (count($args) < 2)
@@ -243,12 +243,12 @@ function run_rotate_log($task, $args)
 /**
  * purges the application log directory as per settings in logging.yml
  *
- * @example symfony log-rotate
+ * @example symfony log-purge
  *
  * @param object $task
  * @param array $args
  */
-function run_purge_logs($task, $args)
+function run_log_purge($task, $args)
 {
   $sf_symfony_data_dir = sfConfig::get('sf_symfony_data_dir');
 
