@@ -11,6 +11,11 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once(dirname(__FILE__).'/sfCacheDriverTests.class.php');
 
+if (!extension_loaded('SQLite'))
+{
+  return;
+}
+
 $t = new lime_test(36, new lime_output_color());
 
 // database in memory
