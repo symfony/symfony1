@@ -86,16 +86,18 @@ class sfParameterHolder
 
     if (isset($this->parameters[$ns][$name]))
     {
-      return $this->parameters[$ns][$name];
+      $value = $this->parameters[$ns][$name];
     }
     else if (isset($this->parameters[$ns]))
     {
       $value = sfToolkit::getArrayValueForPath($this->parameters[$ns], $name, $default);
-
-      return $value;
+    }
+    else
+    {
+      $value = $default;
     }
 
-    return $default;
+    return $value;
   }
 
   /**
