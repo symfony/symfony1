@@ -19,7 +19,7 @@ class sfCore
 {
   static protected
     $autoloadCallables = array(),
-    $classes              = array();
+    $classes           = array();
 
   static public function bootstrap($sf_symfony_lib_dir, $sf_symfony_data_dir)
   {
@@ -128,7 +128,7 @@ class sfCore
     }
   }
 
-  static public function getautoloadCallables()
+  static public function getAutoloadCallables()
   {
     return self::$autoloadCallables;
   }
@@ -187,7 +187,7 @@ class sfCore
 
       function __autoload($class)
       {
-        foreach (sfCore::getautoloadCallables() as $callable)
+        foreach (sfCore::getAutoloadCallables() as $callable)
         {
           if (call_user_func($callable, $class))
           {
@@ -209,5 +209,62 @@ class sfCore
     }
 
     self::addAutoloadCallable(array('sfCore', 'splAutoload'));
+  }
+
+  static public function splSimpleAutoload($class)
+  {
+    // class already exists
+    if (class_exists($class, false))
+    {
+      return true;
+    }
+
+    // we have a class path, let's include it
+    if (isset(self::$classes[$class]))
+    {
+      require(self::$classes[$class]);
+
+      return true;
+    }
+
+    return false;
+  }
+
+  static public function initSimpleAutoload($dirs)
+  {
+    require_once(dirname(__FILE__).'/sfFinder.class.php');
+    self::$classes = array();
+    $finder = sfFinder::type('file')->ignore_version_control()->name('*.php');
+    foreach ((array) $dirs as $dir)
+    {
+      $files = $finder->in(glob($dir));
+      if (is_array($files))
+      {
+        foreach ($files as $file)
+        {
+          preg_match_all('~^\s*(?:abstract\s+|final\s+)?(?:class|interface)\s+(\w+)~mi', file_get_contents($file), $classes);
+          foreach ($classes[1] as $class)
+          {
+            self::$classes[$class] = $file;
+          }
+        }
+      }
+    }
+
+    if (function_exists('spl_autoload_register'))
+    {
+      ini_set('unserialize_callback_func', 'spl_autoload_call');
+
+      spl_autoload_register(array('sfCore', 'splSimpleAutoload'));
+    }
+    elseif (!function_exists('__autoload'))
+    {
+      ini_set('unserialize_callback_func', '__autoload');
+
+      function __autoload($class)
+      {
+        return sfCore::splSimpleAutolaod($class);
+      }
+    }
   }
 }
