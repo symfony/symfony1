@@ -85,7 +85,16 @@ class lime_test
 
   function is($exp1, $exp2, $message = '')
   {
-    if (!$result = $this->ok($exp1 == $exp2, $message))
+    if (is_object($exp1) || is_object($exp2))
+    {
+      $value = $exp1 === $exp2;
+    }
+    else
+    {
+      $value = $exp1 == $exp2;
+    }
+
+    if (!$result = $this->ok($value, $message))
     {
       $this->output->diag(sprintf("           got: %s", str_replace("\n", '', var_export($exp1, true))), sprintf("      expected: %s", str_replace("\n", '', var_export($exp2, true))));
     }
@@ -506,7 +515,7 @@ class lime_harness extends lime_registration
   {
     foreach (explode("\n", $lines) as $text)
     {
-      if (0 === strpos($text, 'not ok '))
+      if (false !== strpos($text, 'not ok '))
       {
         ++$this->current_test;
         $test_number = (int) substr($text, 7);
@@ -515,7 +524,7 @@ class lime_harness extends lime_registration
         ++$this->stats[$this->current_file]['nb_tests'];
         ++$this->stats['_nb_tests'];
       }
-      else if (0 === strpos($text, 'ok '))
+      else if (false !== strpos($text, 'ok '))
       {
         ++$this->stats[$this->current_file]['nb_tests'];
         ++$this->stats['_nb_tests'];
