@@ -120,10 +120,13 @@ $dirs = array(
 );
 foreach ($dirs as $globDir => $name)
 {
-  $tasks = pakeFinder::type('file')->name($name)->in(glob($globDir));
-  foreach ($tasks as $task)
+  if ($dirs = glob($globDir))
   {
-    include_once($task);
+    $tasks = pakeFinder::type('file')->name($name)->in($dirs);
+    foreach ($tasks as $task)
+    {
+      include_once($task);
+    }
   }
 }
 

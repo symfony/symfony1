@@ -51,7 +51,12 @@ function run_propel_convert_xml_schema($task, $args)
 function _propel_convert_yml_schema($check_schema = true, $prefix = '')
 {
   $finder = pakeFinder::type('file')->name('*schema.yml');
-  $schemas = $finder->in(array_merge(array('config'), glob(sfConfig::get('sf_root_dir').'/plugins/*/config')));
+  $dirs = array('config');
+  if ($pluginDirs = glob(sfConfig::get('sf_root_dir').'/plugins/*/config'))
+  {
+    $dirs = array_merge($dirs, $pluginDirs);
+  }
+  $schemas = $finder->in($dirs);
   if ($check_schema && !count($schemas))
   {
     throw new Exception('You must create a schema.yml file.');
@@ -259,7 +264,11 @@ function run_propel_load_data($task, $args)
 
   if (count($args) == 1)
   {
-    $fixtures_dirs = sfFinder::type('dir')->name('fixtures')->in(array_merge(glob(sfConfig::get('sf_root_dir').'/plugins/*/data'), array(sfConfig::get('sf_data_dir'))));
+    if (!$pluginDirs = glob(sfConfig::get('sf_root_dir').'/plugins/*/data'))
+    {
+      $pluginDirs = array();
+    }
+    $fixtures_dirs = sfFinder::type('dir')->name('fixtures')->in(array_merge($pluginDirs, array(sfConfig::get('sf_data_dir'))));
   }
   else
   {
