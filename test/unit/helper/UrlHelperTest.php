@@ -63,8 +63,17 @@ $t->is(link_to(''), '<a href="module/action">module/action</a>', 'link_to() take
 class testObject
 {
 }
-$o1 = new testObject();
-$t->like(link_to($o1), '#<a href="module/action">Object id \#\d+</a>#', 'link_to() can take an object as its first argument');
+try
+{
+  $o1 = new testObject();
+  link_to($o1);
+  $t->fail('link_to() can take an object as its first argument if __toString() method is defined');
+}
+catch (sfException $e)
+{
+  $t->pass('link_to() can take an object as its first argument if __toString() method is defined');
+}
+
 class testObjectWithToString
 {
   public function __toString()

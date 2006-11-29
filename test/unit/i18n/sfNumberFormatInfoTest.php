@@ -28,7 +28,7 @@ catch (sfException $e)
 $t->diag('::getInstance()');
 $t->isa_ok(sfNumberFormatInfo::getInstance(), 'sfNumberFormatInfo', '::getInstance() returns an sfNumberFormatInfo instance');
 $c = new sfCultureInfo();
-$t->is(sfNumberFormatInfo::getInstance(), $c->getNumberFormat(), '::getInstance() can take a sfCultureInfo instance as its first argument');
+$t->is(sfNumberFormatInfo::getInstance($c), $c->getNumberFormat(), '::getInstance() can take a sfCultureInfo instance as its first argument');
 $t->isa_ok(sfNumberFormatInfo::getInstance('fr'), 'sfNumberFormatInfo', '::getInstance() can take a culture as its first argument');
 $n = sfNumberFormatInfo::getInstance();
 $n->setPattern(sfNumberFormatInfo::PERCENTAGE);
@@ -51,15 +51,15 @@ $t->is($n->getPattern(), $n->Pattern, '->getPattern() is equivalent to ->Pattern
 
 // ::getCurrencyInstance()
 $t->diag('::getCurrencyInstance()');
-$t->is(sfNumberFormatInfo::getCurrencyInstance(), sfNumberFormatInfo::getInstance(null, sfNumberFormatInfo::CURRENCY), '::getCurrencyInstance() is a shortcut for ::getInstance() and type sfNumberFormatInfo::CURRENCY');
+$t->is(sfNumberFormatInfo::getCurrencyInstance()->getPattern(), sfNumberFormatInfo::getInstance(null, sfNumberFormatInfo::CURRENCY)->getPattern(), '::getCurrencyInstance() is a shortcut for ::getInstance() and type sfNumberFormatInfo::CURRENCY');
 
 // ::getPercentageInstance()
 $t->diag('::getPercentageInstance()');
-$t->is(sfNumberFormatInfo::getPercentageInstance(), sfNumberFormatInfo::getInstance(null, sfNumberFormatInfo::PERCENTAGE), '::getPercentageInstance() is a shortcut for ::getInstance() and type sfNumberFormatInfo::PERCENTAGE');
+$t->is(sfNumberFormatInfo::getPercentageInstance()->getPattern(), sfNumberFormatInfo::getInstance(null, sfNumberFormatInfo::PERCENTAGE)->getPattern(), '::getPercentageInstance() is a shortcut for ::getInstance() and type sfNumberFormatInfo::PERCENTAGE');
 
 // ::getScientificInstance()
 $t->diag('::getScientificInstance()');
-$t->is(sfNumberFormatInfo::getScientificInstance(), sfNumberFormatInfo::getInstance(null, sfNumberFormatInfo::SCIENTIFIC), '::getScientificInstance() is a shortcut for ::getInstance() and type sfNumberFormatInfo::SCIENTIFIC');
+$t->is(sfNumberFormatInfo::getScientificInstance()->getPattern(), sfNumberFormatInfo::getInstance(null, sfNumberFormatInfo::SCIENTIFIC)->getPattern(), '::getScientificInstance() is a shortcut for ::getInstance() and type sfNumberFormatInfo::SCIENTIFIC');
 
 // setters/getters
 foreach (array(

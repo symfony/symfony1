@@ -167,7 +167,19 @@ class sfDomCssSelector
         $nodes = $this->getElementsByTagName($nodes, $token, $combinator);
       }
 
-      $all_nodes = array_unique(array_merge($all_nodes, $nodes));
+      foreach ($nodes as $node)
+      {
+        if (!$node->getAttribute('sf_matched'))
+        {
+          $node->setAttribute('sf_matched', true);
+          $all_nodes[] = $node;
+        }
+      }
+    }
+
+    foreach ($all_nodes as $node)
+    {
+      $node->removeAttribute('sf_matched');
     }
 
     return $all_nodes;

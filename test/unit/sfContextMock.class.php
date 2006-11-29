@@ -29,16 +29,26 @@ class sfContext
 
   public function getRequest()
   {
-    $request = new sfWebRequest();
-    $request->initialize($this);
+    static $request;
+
+    if (!$request)
+    {
+      $request = new sfWebRequest();
+      $request->initialize($this);
+    }
 
     return $request;
   }
 
   public function getResponse()
   {
-    $response = new sfWebResponse();
-    $response->initialize($this);
+    static $response;
+
+    if (!$response)
+    {
+      $response = new sfWebResponse();
+      $response->initialize($this);
+    }
 
     return $response;
   }

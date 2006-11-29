@@ -113,7 +113,14 @@ function link_to($name = '', $internal_uri = '', $options = array())
 
   if (is_object($name))
   {
-    $name = method_exists($name, '__toString') ? $name->__toString() : (string) $name;
+    if (method_exists($name, '__toString'))
+    {
+      $name = $name->__toString();
+    }
+    else
+    {
+      throw new sfException(sprintf('Object of class "%s" cannot be converted to string (Please create a __toString() method)', get_class($name)));
+    }
   }
 
   if (!strlen($name))
