@@ -18,6 +18,7 @@ $h->register_glob($h->base_dir.'/unit/*/*Test.php');
 
 // functional tests
 $h->register_glob($h->base_dir.'/functional/*Test.php');
+$h->register_glob($h->base_dir.'/functional/*/*Test.php');
 
 $c = new lime_coverage($h);
 $c->extension = '.class.php';
