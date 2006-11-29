@@ -52,7 +52,7 @@ function run_propel_init_crud($task, $args)
 
   // create basic application structure
   $finder = pakeFinder::type('any')->ignore_version_control()->discard('.sf');
-  pake_mirror($finder, sfConfig::get('sf_symfony_data_dir').'/generator/sfPropelCrud/default/skeleton/', $moduleDir);
+  pake_mirror($finder, sfConfig::get('sf_symfony_data_dir').'/generator/sfPropelCrud/default/skeleton', $moduleDir);
 
   // create basic test
   pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/module/test/actionsTest.php', $sf_root_dir.'/test/functional/'.$app.'/'.$module.'ActionsTest.php');

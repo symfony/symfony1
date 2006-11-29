@@ -57,7 +57,7 @@ function run_propel_init_admin($task, $args)
     if(is_dir($dir))
     {
       pake_mirror($finder, $dir, $moduleDir);
-      break;      
+      break;
     }
   }
   
