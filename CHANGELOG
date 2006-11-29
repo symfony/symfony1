@@ -22,7 +22,7 @@ When you upgrade symfony, re-run the upgrade script (you can safely run the upgr
 * refactored sfFilter class (executeBeforeExecution, executeBeforeRendering)
 * new coverage script for symfony core
 * new encoding parameter in databases.yml
-* new functional and unit tests for the core framework (more than 2600)
+* new functional and unit tests for the core framework (more than 2800)
 * new sfMixin class to allow adding methods to core classes without inheritance
 * new sfBrowser, sfTestBrowser and sfDomCssSelector classes to ease functional tests writing
 * new unit test library (lime)
@@ -56,7 +56,7 @@ When you upgrade symfony, re-run the upgrade script (you can safely run the upgr
 * support for database schema in YAML format
 * updated calendar language files (js, ca)
 * new tasks: init-batch, propel-convert-yaml-schema, propel-load-data, propel-build-all, propel-build-all-load
-             init-controller, clear-controllers, rotate-log, purge-logs, freeze, unfreeze, enable, disable,
+             init-controller, clear-controllers, log-rotate, log-purge, freeze, unfreeze, enable, disable,
              plugin-list
 * new validators: sfDateValidator, sfUrlValidator, sfCallbackValidator
 * and more than 200 bug fixes and small enhancements
