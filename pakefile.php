@@ -30,8 +30,6 @@ pake_task('test');
 pake_desc('release a new symfony version');
 pake_task('release', 'test');
 
-pake_task('release');
-
 function run_test($task, $args)
 {
   require_once(dirname(__FILE__).'/lib/vendor/lime/lime.php');
@@ -100,7 +98,7 @@ function run_release($task, $args)
 {
   if (!isset($args[0]))
   {
-    throw new Exception('you must provide version prefix (0.5 for beta release or 0.6.0 for stable release)');
+    throw new Exception('you must provide version prefix');
   }
 
   if (!isset($args[1]))
@@ -110,7 +108,7 @@ function run_release($task, $args)
 
   $stability = $args[1];
 
-  if ($stability == 'beta' || $stability == 'alpha')
+  if (($stability == 'beta' || $stability == 'alpha') && count(explode('.', $args[0])) < 2)
   {
     $version_prefix = $args[0];
 
