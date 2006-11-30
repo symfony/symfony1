@@ -101,27 +101,25 @@ Web server setup
 
 To be able to access and test the new application, the web server has to be configured. Here is an example for Apache, where a new VirtualHost is added in the `httpd.conf` file:
 
-    <Directory "/$data_dir/symfony/web/sf">
-      AllowOverride All
-      Allow from All
-    </Directory>
     <VirtualHost *:80>
       ServerName myapp.example.com
       DocumentRoot "/home/steve/myproject/web"
       DirectoryIndex index.php
-      Alias /sf /$data_dir/symfony/web/sf
-
+      Alias /sf /$sf_symfony_data_dir/web/sf
+      <Directory "/$sf_symfony_data_dir/web/sf">
+        AllowOverride All
+        Allow from All
+      </Directory>
       <Directory "/home/steve/myproject/web">
         AllowOverride All
         Allow from All
       </Directory>
     </VirtualHost>
 
->**Note**: In the above configuration, the `$data_dir` placeholders have to be replaced by your PEAR data directory. For example, for *nix, you should type:
+>**Note**: In the above configuration, the `$sf_symfony_data_dir` placeholders have to be replaced by your symfony data directory. For example, for a PEAR installation on *nix, you should type:
 >
 >         Alias /sf /usr/local/lib/php/data/symfony/web/sf
 >
->You will find more about the PEAR directories in the [installation chapter](installation.txt).
 
 Restart Apache, and that's it: the newly created application can now be called and viewed through a standard web browser at the url:
 
