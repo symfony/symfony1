@@ -72,6 +72,7 @@ class sfPropelDatabase extends sfCreoleDatabase
       $this->setParameter('port',       $params['port']);
       $this->setParameter('encoding',   isset($params['encoding']) ? $params['encoding'] : null);
       $this->setParameter('persistent', isset($params['persistent']) ? $params['persistent'] : null);
+      $this->setParameter('protocol',   isset($params['protocol']) ? $params['protocol'] : null);
     }
 
     self::$config['propel']['datasources'][$this->getParameter('datasource')] =
@@ -87,6 +88,7 @@ class sfPropelDatabase extends sfCreoleDatabase
           'port'       => $this->getParameter('port'),
           'encoding'   => $this->getParameter('encoding'),
           'persistent' => $this->getParameter('persistent'),
+          'protocol'   => $this->getParameter('protocol'),
         ),
       );
   }
