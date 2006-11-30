@@ -69,7 +69,7 @@ class simpleAutoloader
 
     foreach (pakeFinder::type('file')->name('*'.$ext)->ignore_version_control()->follow_link()->in($dir) as $file)
     {
-      self::$class_paths[str_replace($ext, '', basename($file))] = $file;
+      self::$class_paths[str_replace($ext, '', str_replace('.class', '', basename($file)))] = $file;
     }
   }
 }
