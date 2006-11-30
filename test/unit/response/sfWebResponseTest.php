@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(59, new lime_output_color());
+$t = new lime_test(63, new lime_output_color());
 
 class myWebResponse extends sfWebResponse
 {
@@ -219,3 +219,25 @@ $t->is($response->getJavascripts('last'), array('last' => 'last'), '->getJavascr
 $t->diag('->setCookie() ->getCookies()');
 $response->setCookie('foo', 'bar');
 $t->is($response->getCookies(), array('foo' => array('name' => 'foo', 'value' => 'bar', 'expire' => null, 'path' => '/', 'domain' => '', 'secure' => false, 'httpOnly' => false)), '->setCookie() adds a cookie for the response');
+
+// ->setHeaderOnly() ->getHeaderOnly()
+$t->diag('->setHeaderOnly() ->isHeaderOnly()');
+$response = sfResponse::newInstance('myWebResponse');
+$response->initialize($context);
+$t->is($response->isHeaderOnly(), false, '->isHeaderOnly() returns false if the content must be send to the client');
+$response->setHeaderOnly(true);
+$t->is($response->isHeaderOnly(), true, '->setHeaderOnly() changes the current value of header only');
+
+// ->sendContent()
+$t->diag('->sendContent()');
+$response->setHeaderOnly(true);
+$response->setContent('foo');
+ob_start();
+$response->sendContent();
+$t->is(ob_get_clean(), '', '->sendContent() returns nothing if headerOnly is true');
+
+$response->setHeaderOnly(false);
+$response->setContent('foo');
+ob_start();
+$response->sendContent();
+$t->is(ob_get_clean(), 'foo', '->sendContent() returns the response content if headerOnly is false');
