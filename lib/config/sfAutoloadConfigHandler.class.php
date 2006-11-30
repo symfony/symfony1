@@ -87,7 +87,15 @@ class sfAutoloadConfigHandler extends sfYamlConfigHandler
           $finder->prune($entry['exclude'])->discard($entry['exclude']);
         }
 
-        $files = $finder->in(glob($path));
+        if ($matches = glob($path))
+        {
+          $files = $finder->in($matches);
+        }
+        else
+        {
+          $files = array();
+        }
+
         $regex = '~^\s*(?:abstract\s+|final\s+)?(?:class|interface)\s+(\w+)~mi';
         foreach ($files as $file)
         {
