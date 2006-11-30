@@ -45,6 +45,11 @@ class myRequest
   {
     return '';
   }
+
+  public function getMethodName()
+  {
+    return 'GET';
+  }
 }
 
 class firstTestFilter extends sfFilter
@@ -122,10 +127,10 @@ class lastTestFilter extends sfFilter
 }
 
 $context = sfContext::getInstance();
+$context->request = new myRequest();
 $response = new sfWebResponse();
 $response->initialize($context);
 $context->response = $response;
-$context->request = new myRequest();
 
 $filterChain = new sfFilterChain();
 

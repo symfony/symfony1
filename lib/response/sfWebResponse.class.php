@@ -21,10 +21,11 @@
 class sfWebResponse extends sfResponse
 {
   protected
-    $cookies    = array(),
-    $statusCode = 200,
-    $statusText = 'OK',
-    $statusTexts = array();
+    $cookies     = array(),
+    $statusCode  = 200,
+    $statusText  = 'OK',
+    $statusTexts = array(),
+    $headerOnly  = false;
 
   /**
    * Initialize this sfWebResponse.
@@ -38,6 +39,11 @@ class sfWebResponse extends sfResponse
   public function initialize ($context, $parameters = array())
   {
     parent::initialize($context, $parameters);
+
+    if ('HEAD' == $context->getRequest()->getMethodName())
+    {
+      $this->setHeaderOnly(true);
+    }
 
     $this->statusTexts = array(
       '100' => 'Continue',
@@ -82,6 +88,26 @@ class sfWebResponse extends sfResponse
       '504' => 'Gateway Timeout',
       '505' => 'HTTP Version Not Supported',
     );
+  }
+
+  /**
+   * Sets if the response consist of just HTTP headers
+   *
+   * @param boolean
+   */
+  public function setHeaderOnly($value = true)
+  {
+    $this->headerOnly = (boolean) $value;
+  }
+
+  /**
+   * Returns if the response must only consist of HTTP headers
+   *
+   * @return boolean returns true if, false otherwise
+   */
+  public function isHeaderOnly()
+  {
+    return $this->headerOnly;
   }
 
   /**
@@ -271,6 +297,14 @@ class sfWebResponse extends sfResponse
       {
         $this->getContext()->getLogger()->info('{sfResponse} send cookie "'.$cookie['name'].'": "'.$cookie['value'].'"');
       }
+    }
+  }
+
+  public function sendContent ()
+  {
+    if (!$this->headerOnly)
+    {
+      parent::sendContent();
     }
   }
 

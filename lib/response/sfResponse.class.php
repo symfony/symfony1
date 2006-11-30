@@ -78,11 +78,9 @@ abstract class sfResponse
   }
 
   /**
-   * Set the content.
+   * Set the response content
    *
    * @param string content
-   *
-   * @return void
    */
   public function setContent ($content)
   {
@@ -90,7 +88,7 @@ abstract class sfResponse
   }
 
   /**
-   * get the content.
+   * Get the current response content
    *
    * @return string
    */
@@ -100,9 +98,7 @@ abstract class sfResponse
   }
 
   /**
-   * echo the content.
-   *
-   * @return string
+   * Outputs the response content
    */
   public function sendContent ()
   {

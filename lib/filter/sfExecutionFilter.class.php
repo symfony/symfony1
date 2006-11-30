@@ -149,6 +149,8 @@ class sfExecutionFilter extends sfFilter
 
     if ($viewName == sfView::HEADER_ONLY)
     {
+      $context->getResponse()->setHeaderOnly(true);
+
       // execute next filter
       $filterChain->execute();
     }
