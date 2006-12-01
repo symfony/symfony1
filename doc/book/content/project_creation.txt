@@ -121,6 +121,11 @@ To be able to access and test the new application, the web server has to be conf
 >         Alias /sf /usr/local/lib/php/data/symfony/web/sf
 >
 
+>**Note**: On Windows platforms, you will need to add the new server name to the list of hosts in the C:\Windows\system32\drivers\etc\hosts file as follows:
+>
+>         127.0.0.1       myapp.example.com
+>
+
 Restart Apache, and that's it: the newly created application can now be called and viewed through a standard web browser at the url:
 
     http://myapp.example.com/index.php/
