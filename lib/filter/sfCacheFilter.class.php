@@ -145,7 +145,7 @@ class sfCacheFilter extends sfFilter
       if ($this->request->getHttpHeader('IF_NONE_MATCH') == $etag)
       {
         $this->response->setStatusCode(304);
-        $this->response->setContent('');
+        $this->response->setHeaderOnly(true);
 
         if (sfConfig::get('sf_logging_enabled'))
         {
@@ -163,7 +163,7 @@ class sfCacheFilter extends sfFilter
       if ($this->request->getHttpHeader('IF_MODIFIED_SINCE') == $last_modified)
       {
         $this->response->setStatusCode(304);
-        $this->response->setContent('');
+        $this->response->setHeaderOnly(true);
 
         if (sfConfig::get('sf_logging_enabled'))
         {
