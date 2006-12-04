@@ -10,13 +10,20 @@
 
 class backendTestBrowser extends sfTestBrowser
 {
+  protected $moduleName = 'article';
+
+  public function setModuleName($moduleName)
+  {
+    $this->moduleName = $moduleName;
+  }
+
   public function checkListCustomization($title, $listParams)
   {
     $this->test()->diag($title);
 
     $this->customizeGenerator(array('list' => $listParams));
 
-    return $this->getAndCheck('article', 'list');
+    return $this->getAndCheck($this->moduleName, 'list');
   }
 
   public function checkEditCustomization($title, $editParams)
@@ -26,9 +33,9 @@ class backendTestBrowser extends sfTestBrowser
     $this->customizeGenerator(array('edit' => $editParams));
 
     return $this->
-      get('/article/edit/id/1')->
+      get(sprintf('/%s/edit/id/1', $this->moduleName))->
       isStatusCode(200)->
-      isRequestParameter('module', 'article')->
+      isRequestParameter('module', $this->moduleName)->
       isRequestParameter('action', 'edit')
     ;
   }
@@ -36,11 +43,11 @@ class backendTestBrowser extends sfTestBrowser
   private function customizeGenerator($params)
   {
     $params['model_class'] = 'Article';
-    $params['moduleName']  = 'article';
+    $params['moduleName']  = $this->moduleName;
     sfToolkit::clearDirectory(sfConfig::get('sf_cache_dir'));
     $generatorManager = new sfGeneratorManager();
     $generatorManager->initialize();
     mkdir(sfConfig::get('sf_config_cache_dir'), 0777);
-    file_put_contents(sfConfig::get('sf_config_cache_dir').'/modules_article_config_generator.yml.php', '<?php '.$generatorManager->generate('sfPropelAdminGenerator', $params));
+    file_put_contents(sprintf('%s/modules_%s_config_generator.yml.php', sfConfig::get('sf_config_cache_dir'), $this->moduleName), '<?php '.$generatorManager->generate('sfPropelAdminGenerator', $params));
   }
 }
