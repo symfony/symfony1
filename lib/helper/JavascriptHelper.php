@@ -837,7 +837,7 @@
       }
       if (isset($options['external_control']))
       {
-        $js_options['externalControl'] = $options['external_control'];
+        $js_options['externalControl'] = "'".$options['external_control']."'";
       }
       if (isset($options['options']))
       {
