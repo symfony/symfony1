@@ -204,15 +204,15 @@ function _batch_default($task, $args)
   $app   = $args[2];
 
   // handling two optional arguments (environment and debug)
-  $env   = isset($args[3]) && in_array($args[3], array('prod', 'dev')) ? $args[3] : 'dev';
-  $debug = isset($args[4]) && in_array($args[4], array(true, false)) ? $args[4] : true;
+  $env   = isset($args[3]) ? $args[3] : 'dev';
+  $debug = isset($args[4]) ? $args[4] : true;
 
   $constants = array(
     'PROJECT_NAME' => $task->get_property('name', 'symfony'),
     'APP_NAME'     => $app,
     'BATCH_NAME'   => $batch,
     'ENV_NAME'     => $env,
-    'DEBUG'        => $debug,
+    'DEBUG'        => (boolean) $debug,
   );
 
   $sf_bin_dir = sfConfig::get('sf_bin_dir');
@@ -231,26 +231,27 @@ function _batch_rotate_log($task, $args)
   {
     throw new Exception('You must provide the environment');
   }
-	
+
   $app = $args[1];
-	$env = $args[2];
-	$batch = 'rotate_log_'.$app.'_'.$env;
-	
+  $env = $args[2];
+  $batch = 'rotate_log_'.$app.'_'.$env;
+
   // handling two optional arguments (environment and debug)
-  $debug = isset($args[4]) && in_array($args[4], array(true, false)) ? $args[4] : true;
+  $env   = isset($args[3]) ? $args[3] : 'dev';
+  $debug = isset($args[4]) ? $args[4] : true;
 
   $constants = array(
     'PROJECT_NAME' => $task->get_property('name', 'symfony'),
     'APP_NAME'     => $app,
     'BATCH_NAME'   => $batch,
     'ENV_NAME'     => $env,
-    'DEBUG'        => $debug,
+    'DEBUG'        => (boolean) $debug,
   );
 
   $sf_bin_dir = sfConfig::get('sf_bin_dir');
 
   pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/batch/rotate_log.php', $sf_bin_dir.'/'.$batch.'.php');
-  pake_replace_tokens($batch.'.php', $sf_bin_dir, '##', '##', $constants);		
+  pake_replace_tokens($batch.'.php', $sf_bin_dir, '##', '##', $constants);
 }
 
 function run_init_controller($task, $args)
@@ -265,15 +266,15 @@ function run_init_controller($task, $args)
   $env = $args[1];
 
   // handling two optional arguments (environment and debug)
-  $controller   = isset($args[2]) ? $args[2] : $app.'_'.$env;
-  $debug        = isset($args[3]) && in_array($args[3], array(true, false)) ? $args[3] : true;
+  $controller   = isset($args[2]) : $app.'_'.$env;
+  $debug        = isset($args[3]) ? $args[3] : true;
 
   $constants = array(
     'PROJECT_NAME'    => $task->get_property('name', 'symfony'),
     'APP_NAME'        => $app,
     'CONTROLLER_NAME' => $controller,
     'ENV_NAME'        => $env,
-    'DEBUG'           => $debug,
+    'DEBUG'           => (boolean) $debug,
   );
 
   $sf_web_dir = sfConfig::get('sf_web_dir');
