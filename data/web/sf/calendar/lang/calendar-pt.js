@@ -125,3 +125,6 @@ Calendar._TT["TT_DATE_FORMAT"] = "%a, %e %b";
 
 Calendar._TT["WK"] = "sm";
 Calendar._TT["TIME"] = "Hora:";
+
+Calendar._SMN_len = 3;
+
