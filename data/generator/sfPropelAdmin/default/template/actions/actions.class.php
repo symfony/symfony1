@@ -333,7 +333,7 @@ $column = sfPropelManyToMany::getColumn($class, $through_class);
     }
   }
 
-  protected function addFiltersCriteria (&$c)
+  protected function addFiltersCriteria ($c)
   {
 <?php if ($this->getParameterValue('list.filters')): ?>
 <?php foreach ($this->getColumns('list.filters') as $column): $type = $column->getCreoleType() ?>
@@ -394,7 +394,7 @@ $column = sfPropelManyToMany::getColumn($class, $through_class);
 <?php endif; ?>
   }
 
-  protected function addSortCriteria (&$c)
+  protected function addSortCriteria ($c)
   {
     if ($sort_column = $this->getUser()->getAttribute('sort', null, 'sf_admin/<?php echo $this->getSingularName() ?>/sort'))
     {
