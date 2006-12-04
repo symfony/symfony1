@@ -764,15 +764,16 @@ function _upgrade_1_0_propel_ini()
       $updated = true;
       $propel_ini .= <<<EOF
 
-propel.builder.addIncludes = false
-propel.builder.addComments = false
+propel.builder.addIncludes  = false
+propel.builder.addComments  = false
+propel.builder.addBehaviors = false
 
 EOF;
 
-      pake_echo_comment('there are 2 new propel.ini options:');
+      pake_echo_comment('there are 3 new propel.ini options:');
       pake_echo_comment(' - propel.builder.addIncludes');
       pake_echo_comment(' - propel.builder.addComments');
-
+      pake_echo_comment(' - propel.builder.addBehaviors');
     }
 
     if ($updated)
