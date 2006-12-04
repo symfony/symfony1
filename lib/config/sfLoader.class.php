@@ -209,7 +209,7 @@ class sfLoader
           // remove sf_root_dir from dirs
           foreach ($dirs as &$dir)
           {
-            $dir = str_replace(sfConfig::get('sf_root_dir'), '%SF_ROOT_DIR%', $dir);
+            $dir = str_replace('%SF_ROOT_DIR%', sfConfig::get('sf_root_dir'), $dir);
           }
 
           throw new sfViewException(sprintf('Unable to load "%s" helper in: %s', $helperName, implode(', ', $dirs)));
