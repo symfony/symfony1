@@ -171,5 +171,7 @@ class sfLogger
         $logger->shutdown();
       }
     }
+
+    $this->loggers = array();
   }
 }
