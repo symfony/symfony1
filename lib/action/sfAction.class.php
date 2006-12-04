@@ -364,7 +364,7 @@ abstract class sfAction extends sfComponent
    */
   public function renderText($text)
   {
-    echo $text;
+    $this->getResponse()->setContent($this->getResponse()->getContent().$text);
 
     return sfView::NONE;
   }

@@ -115,3 +115,10 @@ $b->
   checkResponseElement('#lib2', 'pong')->
   checkResponseElement('#lib3', 'pong')
 ;
+
+// renderText
+$b->
+  get('/renderText')->
+  isStatusCode(200)->
+  responseContains('foo')
+;
