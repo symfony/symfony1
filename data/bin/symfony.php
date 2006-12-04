@@ -72,6 +72,16 @@ class simpleAutoloader
       self::$class_paths[str_replace($ext, '', str_replace('.class', '', basename($file, $ext)))] = $file;
     }
   }
+
+  static protected function add($class, $file)
+  {
+    if (!is_file($file))
+    {
+      return;
+    }
+
+    self::$class_paths[$class] = $file;
+  }
 }
 
 simpleAutoloader::initialize($sf_symfony_lib_dir);
