@@ -53,14 +53,13 @@ function run_propel_init_admin($task, $args)
   $dirs = sfLoader::getGeneratorSkeletonDirs('sfPropelAdmin', $theme);
   foreach($dirs as $dir)
   {
-    echo $dir;
-    if(is_dir($dir))
+    if (is_dir($dir))
     {
       pake_mirror($finder, $dir, $moduleDir);
       break;
     }
   }
-  
+
   // customize php and yml files
   $finder = pakeFinder::type('file')->name('*.php', '*.yml');
   pake_replace_tokens($finder, $moduleDir, '##', '##', $constants);
