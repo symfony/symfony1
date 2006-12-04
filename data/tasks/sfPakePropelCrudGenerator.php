@@ -83,13 +83,6 @@ function run_propel_generate_crud($task, $args)
   $module      = $args[1];
   $model_class = $args[2];
 
-  // model class exists?
-  if (!is_readable('lib/model/'.$model_class.'.php'))
-  {
-    $error = sprintf('The model class "%s" does not exist.', $model_class);
-    throw new Exception($error);
-  }
-
   $sf_root_dir = sfConfig::get('sf_root_dir');
 
   // generate module
