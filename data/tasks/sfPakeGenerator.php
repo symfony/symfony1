@@ -266,7 +266,7 @@ function run_init_controller($task, $args)
   $env = $args[1];
 
   // handling two optional arguments (environment and debug)
-  $controller   = isset($args[2]) : $app.'_'.$env;
+  $controller   = isset($args[2]) ? $args[2] : $app.'_'.$env;
   $debug        = isset($args[3]) ? $args[3] : true;
 
   $constants = array(
