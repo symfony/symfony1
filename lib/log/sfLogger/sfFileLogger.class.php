@@ -29,7 +29,7 @@ class sfFileLogger
 
     if (!is_dir(dirname($options['file'])))
     {
-      mkdir($options['file'], 0777, 1);
+      mkdir(dirname($options['file']), 0777, 1);
     }
 
     $this->fp = fopen($options['file'], 'a');
