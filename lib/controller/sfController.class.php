@@ -200,7 +200,10 @@ abstract class sfController
     if (!$this->actionExists($moduleName, $actionName))
     {
       // the requested action doesn't exist
-      if (sfConfig::get('sf_logging_enabled')) $this->getContext()->getLogger()->info('{sfController} action does not exist');
+      if (sfConfig::get('sf_logging_enabled'))
+      {
+        $this->getContext()->getLogger()->info('{sfController} action does not exist');
+      }
 
       // track the requested module so we have access to the data in the error 404 page
       $this->context->getRequest()->setAttribute('requested_action', $actionName);
