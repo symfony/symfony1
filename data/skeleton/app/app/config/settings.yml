@@ -84,15 +84,15 @@ test:
 #    # Helpers included in all templates by default
 #    standard_helpers:       [Partial, Cache, Form]
 #
-#    # Activated modules from plugins or from the symfony core 
+#    # Activated modules from plugins or from the symfony core
 #    enabled_modules:        [default]
 #
-#    # Charset used by the response elements
+#    # Charset used for the response
 #    charset:                utf-8
 #
 #    # Miscellaneous
 #    strip_comments:         on         # Remove comments in core framework classes as defined in the core_compile.yml
-#    autoloading_functions:  ~          # Functions called when a class is requested and this it is not already loaded. Expects an array of callabales. Used by the framework bridges. 
+#    autoloading_functions:  ~          # Functions called when a class is requested and this it is not already loaded. Expects an array of callables. Used by the framework bridges.
 #    timeout:                1800       # Session timeout, in seconds
 #    max_forwards:           5
 #    path_info_array:        SERVER
