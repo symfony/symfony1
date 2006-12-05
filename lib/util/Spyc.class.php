@@ -125,7 +125,7 @@ class Spyc
     else
     {
       $file = null;
-      $yaml = explode("\n",$input);
+      $yaml = explode("\n", $input);
     }
 
     // Initiate some objects and values
@@ -542,9 +542,9 @@ class Spyc
    * @return array
    * @param string $line A line from the YAML file
    */
-   protected function _parseLine($line)
-   {
-    $line = trim($line);  
+  protected function _parseLine($line)
+  {
+    $line = trim($line);
 
     $array = array();
 
@@ -608,12 +608,18 @@ class Spyc
    * @param string $value
    * @return mixed
    */
-   protected function _toType($value)
-   {
+  protected function _toType($value)
+  {
+    $value = trim($value);
+    if ($value && !('"' == $value[0] || "'" == $value[0]))
+    {
+      $value = preg_replace('/\s*#(.+)$/', '', $value);
+    }
+
     if (preg_match('/^("(.*)"|\'(.*)\')/', $value, $matches))
     {
-     $value = (string)preg_replace('/(\'\'|\\\\\')/', "'", end($matches));
-     $value = preg_replace('/\\\\"/', '"', $value);
+      $value = (string) preg_replace('/(\'\'|\\\\\')/', "'", end($matches));
+      $value = preg_replace('/\\\\"/', '"', $value);
     }
     else if (preg_match('/^\\[\\]$/', $value, $matches))
     {
@@ -637,7 +643,7 @@ class Spyc
         $value[] = $this->_toType($v);
       }
     }
-    else if (strpos($value,': ')!==false && !preg_match('/^{(.+)/', $value))
+    else if (strpos($value,': ') !== false && !preg_match('/^{(.+)/', $value))
     {
         // It's a map
         $array = explode(': ', $value);
@@ -681,11 +687,6 @@ class Spyc
     else if (is_numeric($value))
     {
       $value = (float) $value;
-    }
-    else
-    {
-      // Just a normal string, right?
-      $value = trim(preg_replace('/#(.+)$/','',$value));
     }
 
     return $value;

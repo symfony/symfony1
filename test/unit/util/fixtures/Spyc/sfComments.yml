@@ -1,0 +1,10 @@
+--- %YAML:1.0 
+test: Comments at the end of a line
+brief: > 
+    Comments at the end of a line
+yaml: | 
+    ex1: "foo # bar"
+    ex2: "foo # bar" # comment
+    ex3: 'foo # bar' # comment
+php: | 
+    array('ex1' => 'foo # bar', 'ex2' => 'foo # bar', 'ex3' => 'foo # bar')
