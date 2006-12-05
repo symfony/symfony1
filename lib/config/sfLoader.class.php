@@ -22,7 +22,7 @@ class sfLoader
     $dirs = array(sfConfig::get('sf_lib_dir').'/model' ? sfConfig::get('sf_lib_dir').'/model' : 'lib/model'); // project
     if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/lib/model'))
     {
-      $dirs = array_merge($dirs, $pluginDirs);                                                               // plugins
+      $dirs = array_merge($dirs, $pluginDirs);                                                                // plugins
     }
 
     return $dirs;
@@ -30,32 +30,45 @@ class sfLoader
 
   static public function getControllerDirs($moduleName)
   {
-    $actionDir = sfConfig::get('sf_app_module_action_dir_name');
+    $suffix = $moduleName.'/'.sfConfig::get('sf_app_module_action_dir_name');
 
-    $dirs = array(sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.$actionDir => false);         // application
+    $dirs = array();
+    foreach (sfConfig::get('sf_module_dirs', array()) as $key => $value)
+    {
+      $dirs[$key.'/'.$suffix] = $value;
+    }
 
-    if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/modules/'.$moduleName.'/'.$actionDir))
+    $dirs[sfConfig::get('sf_app_module_dir').'/'.$suffix] = false;                                     // application
+
+    if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/modules/'.$suffix))
     {
       $dirs = array_merge($dirs, array_combine($pluginDirs, array_fill(0, count($pluginDirs), true))); // plugins
     }
 
-    $dirs[sfConfig::get('sf_symfony_data_dir').'/modules/'.$moduleName.'/'.$actionDir] = true;         // core modules
+    $dirs[sfConfig::get('sf_symfony_data_dir').'/modules/'.$suffix] = true;                            // core modules
 
     return $dirs;
   }
 
   static public function getTemplateDirs($moduleName)
   {
-    $templateDir = sfConfig::get('sf_app_module_template_dir_name');
-    $dirs = array(sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.$templateDir);                                        // application
+    $suffix = $moduleName.'/'.sfConfig::get('sf_app_module_template_dir_name');
 
-    if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/modules/'.$moduleName.'/'.$templateDir))
+    $dirs = array();
+    foreach (sfConfig::get('sf_module_dirs', array()) as $key => $value)
     {
-      $dirs = array_merge($dirs, $pluginDirs);                                                                                 // plugins
+      $dirs[] = $key.'/'.$suffix;
     }
 
-    $dirs[] = sfConfig::get('sf_symfony_data_dir').'/modules/'.$moduleName.'/'.$templateDir;                                   // core modules
-    $dirs[] = sfConfig::get('sf_module_cache_dir').'/auto'.ucfirst($moduleName).'/'.$templateDir;                              // generated templates in cache
+    $dirs[] = sfConfig::get('sf_app_module_dir').'/'.$suffix;                   // application
+
+    if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/modules/'.$suffix))
+    {
+      $dirs = array_merge($dirs, $pluginDirs);                                       // plugins
+    }
+
+    $dirs[] = sfConfig::get('sf_symfony_data_dir').'/modules/'.$suffix;              // core modules
+    $dirs[] = sfConfig::get('sf_module_cache_dir').'/auto'.ucfirst($suffix);         // generated templates in cache
 
     return $dirs;
   }
@@ -76,15 +89,17 @@ class sfLoader
 
   static public function getI18NDir($moduleName)
   {
+    $suffix = $moduleName.'/'.sfConfig::get('sf_app_module_i18n_dir_name');
+
     // application
-    $dir = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_i18n_dir_name');
+    $dir = sfConfig::get('sf_app_module_dir').'/'.$suffix;
     if (is_dir($dir))
     {
       return $dir;
     }
 
     // plugins
-    $dirs = glob(sfConfig::get('sf_plugins_dir').'/*/modules/'.$moduleName.'/'.sfConfig::get('sf_app_module_i18n_dir_name'));
+    $dirs = glob(sfConfig::get('sf_plugins_dir').'/*/modules/'.$suffix);
     if (isset($dirs[0]))
     {
       return $dirs[0];
@@ -128,20 +143,20 @@ class sfLoader
     $globalConfigPath = basename(dirname($configPath)).'/'.basename($configPath);
 
     $dirs = array(
-      sfConfig::get('sf_symfony_data_dir').'/'.$globalConfigPath,                                     // default symfony configuration
-      sfConfig::get('sf_app_dir').'/'.$globalConfigPath,                                              // default project configuration
+      sfConfig::get('sf_symfony_data_dir').'/'.$globalConfigPath,                    // default symfony configuration
+      sfConfig::get('sf_app_dir').'/'.$globalConfigPath,                             // default project configuration
     );
 
     if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/'.$configPath))
     {
-      $dirs = array_merge($dirs, $pluginDirs);                                                        // plugins
+      $dirs = array_merge($dirs, $pluginDirs);                                       // plugins
     }
 
     $dirs = array_merge($dirs, array(
-      sfConfig::get('sf_symfony_data_dir').'/'.$configPath,                                           // core modules
-      sfConfig::get('sf_root_dir').'/'.$globalConfigPath,                                             // used for main configuration
-      sfConfig::get('sf_cache_dir').'/'.$configPath,                                                  // used for generated modules
-      sfConfig::get('sf_app_dir').'/'.$configPath,
+      sfConfig::get('sf_symfony_data_dir').'/'.$configPath,                          // core modules
+      sfConfig::get('sf_root_dir').'/'.$globalConfigPath,                            // used for main configuration
+      sfConfig::get('sf_cache_dir').'/'.$configPath,                                 // used for generated modules
+      sfConfig::get('sf_app_dir').'/'.$configPath,                                   // module configuration
     ));
 
     return $dirs;
