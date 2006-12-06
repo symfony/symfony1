@@ -102,6 +102,13 @@ class sfExecutionFilter extends sfFilter
         // - or automatic validation returns false but errors have been 'removed' by manual validation
         $validated = ($manualValidated && $validated) || ($manualValidated && !$validated && !$context->getRequest()->hasErrors());
 
+        // register fill-in filter
+        if (null !== ($parameters = $context->getRequest()->getAttribute('fillin', null, 'symfony/filter')))
+        {
+          $this->registerFillInFilter($filterChain, $parameters);
+          $context->getRequest()->setAttribute('fillin', null, 'symfony/filter');
+        }
+
         if ($validated)
         {
           if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
@@ -137,12 +144,6 @@ class sfExecutionFilter extends sfFilter
           {
             $viewName = sfView::ERROR;
           }
-        }
-
-        // register fill-in filter
-        if (null !== ($parameters = $context->getRequest()->getAttribute('fillin', null, 'symfony/filter')))
-        {
-          $this->registerFillInFilter($filterChain, $parameters);
         }
       }
     }
