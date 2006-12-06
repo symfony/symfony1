@@ -55,12 +55,12 @@ class simpleAutoloader
       return false;
     }
 
-    require(self::$class_paths[$class]);
+    require_once(self::$class_paths[$class]);
 
     return true;
   }
 
-  static protected function register($dir, $ext)
+  static public function register($dir, $ext)
   {
     if (!is_dir($dir))
     {
@@ -73,7 +73,7 @@ class simpleAutoloader
     }
   }
 
-  static protected function add($class, $file)
+  static public function add($class, $file)
   {
     if (!is_file($file))
     {
