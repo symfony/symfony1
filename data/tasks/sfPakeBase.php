@@ -42,7 +42,7 @@ function run_module_exists($task, $args)
     throw new Exception('you must provide your module name');
   }
 
-  if (!is_dir(getcwd().'/'.$args[0].'/modules/'.$args[1]))
+  if (!is_dir(getcwd().'/apps/'.$args[0].'/modules/'.$args[1]))
   {
     throw new Exception('module "'.$args[1].'" does not exist');
   }
