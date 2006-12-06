@@ -268,7 +268,7 @@ function run_propel_load_data($task, $args)
     {
       $pluginDirs = array();
     }
-    $fixtures_dirs = sfFinder::type('dir')->name('fixtures')->in(array_merge($pluginDirs, array(sfConfig::get('sf_data_dir'))));
+    $fixtures_dirs = pakeFinder::type('dir')->name('fixtures')->in(array_merge($pluginDirs, array(sfConfig::get('sf_data_dir'))));
   }
   else
   {
