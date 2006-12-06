@@ -43,7 +43,7 @@ class sfFillInFormFilter extends sfFilter
     $fillInForm->setTypes(array_diff($checkTypes, $excludeTypes));
 
     // fill in
-    $method  = $this->getParameter('content_type', preg_match('/xh?ml/', $response->getHttpHeader('Content-Type')) ? 'fillInXml' : 'fillInHtml');
+    $method  = 'fillIn'.ucfirst(strtolower($this->getParameter('content_type', 'Html')));
     $content = $fillInForm->$method($response->getContent(), $this->getParameter('name'), $this->getParameter('id'), $request->getParameterHolder()->getAll());
 
     $response->setContent($content);
