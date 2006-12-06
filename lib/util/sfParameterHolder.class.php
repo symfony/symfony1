@@ -68,7 +68,7 @@ class sfParameterHolder
    * Retrieve a parameter with an optionally specified namespace.
    *
    * An isolated namespace may be identified by providing a value for the third
-   * argument.  If not specified, the default namespace is 'symfony/default' is
+   * argument.  If not specified, the default namespace 'symfony/default' is
    * used.
    *
    * @param string A parameter name.
@@ -86,7 +86,7 @@ class sfParameterHolder
 
     if (isset($this->parameters[$ns][$name]))
     {
-      $value = $this->parameters[$ns][$name];
+      $value = & $this->parameters[$ns][$name];
     }
     else if (isset($this->parameters[$ns]))
     {
