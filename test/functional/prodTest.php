@@ -13,8 +13,7 @@ sfToolkit::clearDirectory(dirname(__FILE__).'/fixtures/project/cache');
 
 $app = 'frontend';
 $debug = false;
-$ret = include(dirname(__FILE__).'/../bootstrap/functional.php');
-if (!$ret)
+if (!include(dirname(__FILE__).'/../bootstrap/functional.php'))
 {
   return;
 }
