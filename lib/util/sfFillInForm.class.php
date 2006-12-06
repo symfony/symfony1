@@ -40,7 +40,7 @@ class sfFillInForm
     $this->types = $types;
   }
 
-  public function fillIn($html, $formName, $formId, $values)
+  public function fillInHtml($html, $formName, $formId, $values)
   {
     $dom = new DomDocument('1.0', sfConfig::get('sf_charset', 'UTF-8'));
     @$dom->loadHTML($html);
@@ -48,6 +48,16 @@ class sfFillInForm
     $dom = $this->fillInDom($dom, $formName, $formId, $values);
 
     return $dom->saveHTML();
+  }
+
+  public function fillInXml($xml, $formName, $formId, $values)
+  {
+    $dom = new DomDocument('1.0', sfConfig::get('sf_charset', 'UTF-8'));
+    @$dom->loadXML($xml);
+
+    $dom = $this->fillInDom($dom, $formName, $formId, $values);
+
+    return $dom->saveXML();
   }
 
   public function fillInDom($dom, $formName, $formId, $values)
@@ -78,7 +88,14 @@ class sfFillInForm
     $form = $xpath->query($xpath_query)->item(0);
     if (!$form)
     {
-      throw new sfException(sprintf('The form "%s" cannot be found', $formName ? $formName : $formId));
+      if (!$formName && !$formId)
+      {
+        throw new sfException('No form found in this page');
+      }
+      else
+      {
+        throw new sfException(sprintf('The form "%s" cannot be found', $formName ? $formName : $formId));
+      }
     }
 
     foreach ($xpath->query($query, $form) as $element)
