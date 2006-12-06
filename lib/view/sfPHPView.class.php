@@ -123,7 +123,6 @@ class sfPHPView extends sfView
     }
 
     // require our configuration
-    $context = $this->getContext();
     $viewConfigFile = $this->moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/view.yml';
     require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$viewConfigFile));
 

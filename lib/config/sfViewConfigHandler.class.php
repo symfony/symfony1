@@ -54,9 +54,10 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     // init our data array
     $data = array();
 
-    $data[] = "\$response = \$context->getResponse();\n";
+    $data[] = "\$context  = \$this->getContext();\n";
+    $data[] = "\$response = \$context->getResponse();\n\n";
 
-    // iterate through all view names
+    // first pass: iterate through all view names to determine the real view name
     $first = true;
     foreach ($this->yamlConfig as $viewName => $values)
     {
@@ -67,8 +68,29 @@ class sfViewConfigHandler extends sfYamlConfigHandler
 
       $data[] = ($first ? '' : 'else ')."if (\$this->actionName.\$this->viewName == '$viewName')\n".
                 "{\n";
-
       $data[] = $this->addTemplate($viewName);
+      $data[] = "}\n";
+
+      $first = false;
+    }
+
+    // general view configuration
+    $data[] = ($first ? '' : "else\n{")."\n";
+    $data[] = $this->addTemplate($viewName);
+    $data[] = ($first ? '' : "}")."\n\n";
+
+    // second pass: iterate through all real view names
+    $first = true;
+    foreach ($this->yamlConfig as $viewName => $values)
+    {
+      if ($viewName == 'all')
+      {
+        continue;
+      }
+
+      $data[] = ($first ? '' : 'else ')."if (\$templateName.\$this->viewName == '$viewName')\n".
+                "{\n";
+
       $data[] = $this->addLayout($viewName);
       $data[] = $this->addComponentSlots($viewName);
       $data[] = $this->addHtmlHead($viewName);
@@ -84,7 +106,6 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     // general view configuration
     $data[] = ($first ? '' : "else\n{")."\n";
 
-    $data[] = $this->addTemplate();
     $data[] = $this->addLayout();
     $data[] = $this->addComponentSlots();
     $data[] = $this->addHtmlHead();

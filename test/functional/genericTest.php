@@ -122,3 +122,10 @@ $b->
   isStatusCode(200)->
   responseContains('foo')
 ;
+
+// view.yml when changing template
+$b->
+  get('/view')->
+  isStatusCode(200)->
+  checkResponseElement('head title', 'foo title')
+;
