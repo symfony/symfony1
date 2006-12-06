@@ -334,7 +334,7 @@ class sfFinder
 
       if (!is_dir($real_dir))
       {
-        throw new sfException('directory "'.$arg_list[$i].'" does not exist');
+        return array();
       }
 
       if ($this->relative)
