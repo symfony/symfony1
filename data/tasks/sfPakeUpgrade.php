@@ -545,7 +545,9 @@ function _upgrade_1_0_filters_yml($app_dir)
 
     if (false === strpos($module_content, 'rendering:'))
     {
-      $module_content = str_replace($placeholder, $placeholder."\n".$content."\n".$module_content, $default);
+      $lb = (strpos($module_content, "\r\n") !== false) ? "\r\n" : "\n";
+
+      $module_content = str_replace($placeholder, $placeholder.$lb.$content.$lb.$module_content, $default);
 
       file_put_contents($yml_file, $module_content);
 
@@ -561,7 +563,8 @@ function _upgrade_1_0_filters_yml($app_dir)
   // upgrade app filters.yml
   if (false === strpos($content, 'rendering:'))
   {
-    $content = str_replace($placeholder, $placeholder."\n".$content, $default);
+    $lb = (strpos($content, "\r\n") !== false) ? "\r\n" : "\n";
+    $content = str_replace($placeholder, $placeholder.$lb.$content, $default);
 
     file_put_contents($configFile, $content);
 
@@ -578,7 +581,8 @@ function _upgrade_1_0_filters_yml($app_dir)
     $content = file_get_contents($configFile);
     if (false === strpos($content, 'rendering:'))
     {
-      $content = str_replace($placeholder, $placeholder."\n".$content, $default);
+      $lb = (strpos($content, "\r\n") !== false) ? "\r\n" : "\n";
+      $content = str_replace($placeholder, $placeholder.$lb.$content, $default);
 
       file_put_contents($configFile, $content);
 
