@@ -184,7 +184,7 @@ function run_propel_build_sql($task, $args)
 
 function run_propel_build_db($task, $args)
 {
-  _call_phing($task, 'create-db');
+  _call_phing($task, 'create-db', false);
 }
 
 function run_propel_insert_sql($task, $args)
