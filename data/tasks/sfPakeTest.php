@@ -49,7 +49,7 @@ function run_test_functional($task, $args)
   {
     foreach (array_splice($args, 1) as $path)
     {
-      $files = pakeFinder::type('file')->ignore_version_control()->name(basename($path).'Test.php')->in(sfConfig::get('sf_test_dir').DIRECTORY_SEPARATOR.'functional'.DIRECTORY_SEPARATOR.dirname($path));
+      $files = pakeFinder::type('file')->ignore_version_control()->name(basename($path).'Test.php')->in(sfConfig::get('sf_test_dir').DIRECTORY_SEPARATOR.'functional'.DIRECTORY_SEPARATOR.$app.DIRECTORY_SEPARATOR.dirname($path));
       foreach ($files as $file)
       {
         include($file);
