@@ -79,35 +79,6 @@ abstract class sfAction extends sfComponent
   }
 
   /**
-   * DEPRECATED: Returns true if current action template will be executed by the view.
-   *
-   * This is the case if:
-   * - cache is off;
-   * - action is not available;
-   * - cache is not fresh enough.
-   *
-   * Use this method to know if you have to populate parameters for the template.
-   *
-   * @return boolean
-   */
-  public function mustExecute()
-  {
-    if (sfConfig::get('sf_logging_enabled'))
-    {
-      $this->getContext()->getLogger()->err('This method is deprecated.');
-    }
-
-    if (!sfConfig::get('sf_cache'))
-    {
-      return 1;
-    }
-
-    $cache = $this->getContext()->getViewCacheManager();
-
-    return (!$cache->has(sfRouting::getInstance()->getCurrentInternalUri()));
-  }
-
-  /**
    * Forwards current action to the default 404 error action
    *
    */

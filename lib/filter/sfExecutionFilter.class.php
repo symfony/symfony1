@@ -50,7 +50,7 @@ class sfExecutionFilter extends sfFilter
 
     $viewName = null;
 
-    if (sfConfig::get('sf_cache') && !sfConfig::get('sf_cache_always_execute_action', false))
+    if (sfConfig::get('sf_cache'))
     {
       $uri = sfRouting::getInstance()->getCurrentInternalUri();
       if (null !== $context->getResponse()->getParameter($uri.'_action', null, 'symfony/cache'))
