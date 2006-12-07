@@ -365,7 +365,7 @@ class sfWebRequest extends sfRequest
 
     $port = $pathArray['SERVER_PORT'] == $standardPort || !$pathArray['SERVER_PORT'] ? '' : ':'.$pathArray['SERVER_PORT'];
 
-    return $proto.'://'.$pathArray['HTTP_HOST'].$port;
+    return $proto.'://'.$pathArray['SERVER_NAME'].$port;
   }
 
   public function getPathInfo ()
