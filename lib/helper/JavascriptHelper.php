@@ -731,7 +731,7 @@
     }
 
     $javascript  = input_tag($name, $value, $tag_options);
-    $javascript .= content_tag('div', '' , array('id' => (isset($tag_options['id']) ? $tag_options['id'] : $name).'_auto_complete', 'class' => 'auto_complete'));
+    $javascript .= content_tag('div', '' , array('id' => isset($tag_options['id']) ? $tag_options['id'] : get_id_from_name($name).'_auto_complete', 'class' => 'auto_complete'));
     $javascript .= _auto_complete_field($name, $url, $comp_options);
 
     return $javascript;
@@ -884,7 +884,7 @@
     }
     else
     {
-      $javascript .= "'{$field_id}_auto_complete', ";
+      $javascript .= "'".get_id_from_name($field_id)."_auto_complete', ";
     }
 
     $javascript .= "'".url_for($url)."'";
