@@ -258,14 +258,15 @@ class sfWebRequest extends sfRequest
    *
    * @param Context A Context instance.
    * @param array   An associative array of initialization parameters.
+   * @param array   An associative array of initialization attributes.
    *
    * @return bool true, if initialization completes successfully, otherwise false.
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this Request.
    */
-  public function initialize ($context, $parameters = null)
+  public function initialize ($context, $parameters = array(), $attributes = array())
   {
-    parent::initialize ($context, $parameters);
+    parent::initialize($context, $parameters, $attributes);
 
     if (isset($_SERVER['REQUEST_METHOD']))
     {

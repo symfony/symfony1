@@ -113,7 +113,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           $instances[] = sprintf("  \$this->request = sfRequest::newInstance(sfConfig::get('sf_factory_request', '%s'));", $class);
 
           // append instance initialization
-          $inits[] = sprintf("  \$this->request->initialize(\$this, sfConfig::get('sf_factory_request_parameters', %s));", $parameters);
+          $inits[] = sprintf("  \$this->request->initialize(\$this, sfConfig::get('sf_factory_request_parameters', %s), sfConfig::get('sf_factory_request_attributes', array()));", $parameters);
           break;
 
         case 'response':

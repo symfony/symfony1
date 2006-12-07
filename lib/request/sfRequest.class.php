@@ -157,12 +157,13 @@ abstract class sfRequest
    *
    * @param Context A sfContext instance.
    * @param array   An associative array of initialization parameters.
+   * @param array   An associative array of initialization attributes.
    *
    * @return bool true, if initialization completes successfully, otherwise false.
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this Request.
    */
-  public function initialize ($context, $parameters = array())
+  public function initialize ($context, $parameters = array(), $attributes = array())
   {
     $this->context = $context;
 
@@ -171,6 +172,7 @@ abstract class sfRequest
     $this->attribute_holder = new sfParameterHolder();
 
     $this->parameter_holder->add($parameters);
+    $this->attribute_holder->add($attributes);
   }
 
   public function getContext ()
