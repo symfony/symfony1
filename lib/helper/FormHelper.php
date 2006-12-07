@@ -745,7 +745,7 @@ function input_date_tag($name, $value = null, $options = array())
   else
   {
     $dateFormat = new sfDateFormat($culture);
-    $value = $dateFormat->format($value, 'd');
+    $value = $dateFormat->format($value, _get_option($options, 'format', 'd'));
   }
 
   // register our javascripts and stylesheets
