@@ -49,6 +49,9 @@ function launch_tests($b)
     checkResponseElement('div.form-row label', 'Author article:', array('position' => 2))->
     checkResponseElement('div.form-row input[type="checkbox"][name="associated_author_article[]"][checked="checked"]', 2)->
     checkResponseElement('div.form-row input[type="checkbox"][name="associated_author_article[]"]', 3)->
+    checkResponseElement('div.form-row label[for="associated_author_article_1"]')->
+    checkResponseElement('div.form-row label[for="associated_author_article_2"]')->
+    checkResponseElement('div.form-row label[for="associated_author_article_3"]')->
 
     // update m2m
     click('save', array('associated_author_article' => array(2, 3)))->

@@ -113,7 +113,10 @@ function object_admin_select_list($object, $method, $options = array(), $callbac
 
   $options['multiple'] = true;
   $options['class'] = 'sf_admin_multiple';
-  if (!isset($options['size']))  $options['size'] = 10;
+  if (!isset($options['size']))
+  {
+    $options['size'] = 10;
+  }
 
   // get the lists of objects
   list($objects, $objects_associated, $ids) = _get_object_list($object, $method, $options, $callback);
@@ -153,7 +156,7 @@ function object_admin_check_list($object, $method, $options = array(), $callback
     foreach ($objects as $related_object)
     {
       $relatedPrimaryKey = $related_object->getPrimaryKey();
-      
+
       // multi primary key handling
       if (is_array($relatedPrimaryKey))
       {
@@ -163,8 +166,8 @@ function object_admin_check_list($object, $method, $options = array(), $callback
       {
         $relatedPrimaryKeyHtmlId = $relatedPrimaryKey;
       }
-       
-      $html .= '<li>'.checkbox_tag($name, $relatedPrimaryKeyHtmlId, in_array($relatedPrimaryKey, $assoc_ids)).' '.$related_object->$methodToCall()."</li>\n";
+
+      $html .= '<li>'.checkbox_tag($name, $relatedPrimaryKeyHtmlId, in_array($relatedPrimaryKey, $assoc_ids)).' <label for="'.get_id_from_name($name, $relatedPrimaryKeyHtmlId).'">'.$related_object->$methodToCall()."</label></li>\n";
     }
     $html .= "</ul>\n";
   }
@@ -180,6 +183,7 @@ function _get_propel_object_list($object, $method, $options)
   $objects = sfPropelManyToMany::getAllObjects($object, $through_class);
   $objects_associated = sfPropelManyToMany::getRelatedObjects($object, $through_class);
   $ids = array_map(create_function('$o', 'return $o->getPrimaryKey();'), $objects_associated);
+
   return array($objects, $objects_associated, $ids);
 }
 
@@ -188,6 +192,9 @@ function _get_object_list($object, $method, $options, $callback)
   $object = get_class($object) == 'sfOutputEscaperObjectDecorator' ? $object->getRawValue() : $object;
   // the default callback is the propel one
   if (!$callback)
+  {
     $callback = '_get_propel_object_list';
+  }
+
   return call_user_func($callback, $object, $method, $options);
 }
