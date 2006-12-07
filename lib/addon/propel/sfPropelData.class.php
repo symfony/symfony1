@@ -38,7 +38,7 @@ class sfPropelData
     $fixture_files = $this->getFiles($directory_or_file);
 
     // wrap all database operations in a single transaction
-    $con = Propel::getConnection();
+    $con = sfContext::getInstance()->getDatabaseConnection($connectionName);
     try
     {
       $con->begin();
