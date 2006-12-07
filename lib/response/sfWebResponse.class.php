@@ -481,12 +481,12 @@ class sfWebResponse extends sfResponse
 
   public function mergeProperties($response)
   {
-    $this->parameter_holder = clone $response->getParameterHolder();
+    $this->parameterHolder = clone $response->getParameterHolder();
   }
 
   public function __sleep()
   {
-    return array('content', 'statusCode', 'statusText', 'parameter_holder');
+    return array('content', 'statusCode', 'statusText', 'parameterHolder');
   }
 
   public function __wakeup()

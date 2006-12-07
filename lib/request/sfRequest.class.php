@@ -41,12 +41,12 @@ abstract class sfRequest
   const POST = 4;
 
   protected
-    $errors           = array(),
-    $context          = null,
-    $method           = null,
-    $parameter_holder = null,
-    $config           = null,
-    $attribute_holder = null;
+    $errors          = array(),
+    $context         = null,
+    $method          = null,
+    $parameterHolder = null,
+    $config          = null,
+    $attributeHolder = null;
 
   /**
    * Extract parameter values from the request.
@@ -61,7 +61,7 @@ abstract class sfRequest
   {
     $array = array();
 
-    $parameters =& $this->parameter_holder->getAll();
+    $parameters =& $this->parameterHolder->getAll();
     foreach ($parameters as $key => &$value)
     {
       if (in_array($key, $names))
@@ -168,11 +168,11 @@ abstract class sfRequest
     $this->context = $context;
 
     // initialize parameter and attribute holders
-    $this->parameter_holder = new sfParameterHolder();
-    $this->attribute_holder = new sfParameterHolder();
+    $this->parameterHolder = new sfParameterHolder();
+    $this->attributeHolder = new sfParameterHolder();
 
-    $this->parameter_holder->add($parameters);
-    $this->attribute_holder->add($attributes);
+    $this->parameterHolder->add($parameters);
+    $this->attributeHolder->add($attributes);
   }
 
   public function getContext ()
@@ -286,42 +286,42 @@ abstract class sfRequest
 
   public function getParameterHolder()
   {
-    return $this->parameter_holder;
+    return $this->parameterHolder;
   }
 
   public function getAttributeHolder()
   {
-    return $this->attribute_holder;
+    return $this->attributeHolder;
   }
 
   public function getAttribute($name, $default = null, $ns = null)
   {
-    return $this->attribute_holder->get($name, $default, $ns);
+    return $this->attributeHolder->get($name, $default, $ns);
   }
 
   public function hasAttribute($name, $ns = null)
   {
-    return $this->attribute_holder->has($name, $ns);
+    return $this->attributeHolder->has($name, $ns);
   }
 
   public function setAttribute($name, $value, $ns = null)
   {
-    return $this->attribute_holder->set($name, $value, $ns);
+    return $this->attributeHolder->set($name, $value, $ns);
   }
 
   public function getParameter($name, $default = null, $ns = null)
   {
-    return $this->parameter_holder->get($name, $default, $ns);
+    return $this->parameterHolder->get($name, $default, $ns);
   }
 
   public function hasParameter($name, $ns = null)
   {
-    return $this->parameter_holder->has($name, $ns);
+    return $this->parameterHolder->has($name, $ns);
   }
 
   public function setParameter($name, $value, $ns = null)
   {
-    return $this->parameter_holder->set($name, $value, $ns);
+    return $this->parameterHolder->set($name, $value, $ns);
   }
 
   /**

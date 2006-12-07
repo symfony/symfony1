@@ -68,8 +68,8 @@ class sfMailView extends sfPHPView
     }
 
     // assigns some variables to the template
-    $this->attribute_holder->add($this->getGlobalVars());
-    $this->attribute_holder->add($actionInstance->getVarHolder()->getAll());
+    $this->attributeHolder->add($this->getGlobalVars());
+    $this->attributeHolder->add($actionInstance->getVarHolder()->getAll());
 
     // render main template
     $retval = $this->renderFile($template);

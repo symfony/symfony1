@@ -32,10 +32,10 @@ class sfUser
   const CULTURE_NAMESPACE = 'symfony/user/sfUser/culture';
 
   protected
-    $parameter_holder = null,
-    $attribute_holder = null,
-    $culture          = null,
-    $context          = null;
+    $parameterHolder = null,
+    $attributeHolder = null,
+    $culture         = null,
+    $context         = null;
 
   /**
    * Retrieve the current application context.
@@ -62,10 +62,10 @@ class sfUser
   {
     $this->context = $context;
 
-    $this->parameter_holder = new sfParameterHolder();
-    $this->parameter_holder->add($parameters);
+    $this->parameterHolder = new sfParameterHolder();
+    $this->parameterHolder->add($parameters);
 
-    $this->attribute_holder = new sfParameterHolder(self::ATTRIBUTE_NAMESPACE);
+    $this->attributeHolder = new sfParameterHolder(self::ATTRIBUTE_NAMESPACE);
 
     // read attributes from storage
     $attributes = $context->getStorage()->read(self::ATTRIBUTE_NAMESPACE);
@@ -73,7 +73,7 @@ class sfUser
     {
       foreach ($attributes as $namespace => $values)
       {
-        $this->attribute_holder->add($values, $namespace);
+        $this->attributeHolder->add($values, $namespace);
       }
     }
 
@@ -152,42 +152,42 @@ class sfUser
 
   public function getParameterHolder()
   {
-    return $this->parameter_holder;
+    return $this->parameterHolder;
   }
 
   public function getAttributeHolder()
   {
-    return $this->attribute_holder;
+    return $this->attributeHolder;
   }
 
   public function getAttribute($name, $default = null, $ns = null)
   {
-    return $this->attribute_holder->get($name, $default, $ns);
+    return $this->attributeHolder->get($name, $default, $ns);
   }
 
   public function hasAttribute($name, $ns = null)
   {
-    return $this->attribute_holder->has($name, $ns);
+    return $this->attributeHolder->has($name, $ns);
   }
 
   public function setAttribute($name, $value, $ns = null)
   {
-    return $this->attribute_holder->set($name, $value, $ns);
+    return $this->attributeHolder->set($name, $value, $ns);
   }
 
   public function getParameter($name, $default = null, $ns = null)
   {
-    return $this->parameter_holder->get($name, $default, $ns);
+    return $this->parameterHolder->get($name, $default, $ns);
   }
 
   public function hasParameter($name, $ns = null)
   {
-    return $this->parameter_holder->has($name, $ns);
+    return $this->parameterHolder->has($name, $ns);
   }
 
   public function setParameter($name, $value, $ns = null)
   {
-    return $this->parameter_holder->set($name, $value, $ns);
+    return $this->parameterHolder->set($name, $value, $ns);
   }
 
   /**
@@ -200,9 +200,9 @@ class sfUser
     $storage = $this->getContext()->getStorage();
 
     $attributes = array();
-    foreach ($this->attribute_holder->getNamespaces() as $namespace)
+    foreach ($this->attributeHolder->getNamespaces() as $namespace)
     {
-      $attributes[$namespace] = $this->attribute_holder->getAll($namespace);
+      $attributes[$namespace] = $this->attributeHolder->getAll($namespace);
     }
 
     // write attributes to the storage

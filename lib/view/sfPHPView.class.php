@@ -77,12 +77,12 @@ class sfPHPView extends sfView
     $_escaping = $this->getEscaping();
     if ($_escaping === false || $_escaping === 'bc')
     {
-      extract($this->attribute_holder->getAll());
+      extract($this->attributeHolder->getAll());
     }
 
     if ($_escaping !== false)
     {
-      $sf_data = sfOutputEscaper::escape($this->getEscapingMethod(), $this->attribute_holder->getAll());
+      $sf_data = sfOutputEscaper::escape($this->getEscapingMethod(), $this->attributeHolder->getAll());
 
       if ($_escaping === 'both')
       {
@@ -151,10 +151,10 @@ class sfPHPView extends sfView
     }
 
     // set the decorator content as an attribute
-    $this->attribute_holder->set('sf_content', $content);
+    $this->attributeHolder->set('sf_content', $content);
 
     // for backwards compatibility with old layouts; remove at 0.8.0?
-    $this->attribute_holder->set('content', $content);
+    $this->attributeHolder->set('content', $content);
 
     // render the decorator template and return the result
     $retval = $this->renderFile($template);
@@ -217,8 +217,8 @@ class sfPHPView extends sfView
     }
 
     // assigns some variables to the template
-    $this->attribute_holder->add($this->getGlobalVars());
-    $this->attribute_holder->add($retval !== null ? $vars : $templateVars);
+    $this->attributeHolder->add($this->getGlobalVars());
+    $this->attributeHolder->add($retval !== null ? $vars : $templateVars);
 
     // render template if no cache
     if ($retval === null)

@@ -22,9 +22,9 @@
 abstract class sfDatabase
 {
   protected
-    $connection       = null,
-    $parameter_holder = null,
-    $resource         = null;
+    $connection      = null,
+    $parameterHolder = null,
+    $resource        = null;
 
   /**
    * Connect to the database.
@@ -81,28 +81,28 @@ abstract class sfDatabase
    */
   public function initialize ($parameters = array())
   {
-    $this->parameter_holder = new sfParameterHolder();
-    $this->parameter_holder->add($parameters);
+    $this->parameterHolder = new sfParameterHolder();
+    $this->parameterHolder->add($parameters);
   }
 
   public function getParameterHolder()
   {
-    return $this->parameter_holder;
+    return $this->parameterHolder;
   }
 
   public function getParameter($name, $default = null, $ns = null)
   {
-    return $this->parameter_holder->get($name, $default, $ns);
+    return $this->parameterHolder->get($name, $default, $ns);
   }
 
   public function hasParameter($name, $ns = null)
   {
-    return $this->parameter_holder->has($name, $ns);
+    return $this->parameterHolder->has($name, $ns);
   }
 
   public function setParameter($name, $value, $ns = null)
   {
-    return $this->parameter_holder->set($name, $value, $ns);
+    return $this->parameterHolder->set($name, $value, $ns);
   }
 
   /**

@@ -23,7 +23,7 @@ abstract class sfComponent
     $var_holder               = null,
     $request                  = null,
     $response                 = null,
-    $request_parameter_holder = null;
+    $requestParameterHolder = null;
 
   /**
    * Execute any application/business logic for this action.
@@ -54,11 +54,11 @@ abstract class sfComponent
    */
   public function initialize($context)
   {
-    $this->context                  = $context;
-    $this->var_holder               = new sfParameterHolder();
-    $this->request                  = $context->getRequest();
-    $this->response                 = $context->getResponse();
-    $this->request_parameter_holder = $this->request->getParameterHolder();
+    $this->context                = $context;
+    $this->var_holder             = new sfParameterHolder();
+    $this->request                = $context->getRequest();
+    $this->response               = $context->getResponse();
+    $this->requestParameterHolder = $this->request->getParameterHolder();
 
     return true;
   }
@@ -123,7 +123,7 @@ abstract class sfComponent
    */
   public function getRequestParameter($name, $default = null)
   {
-    return $this->request_parameter_holder->get($name, $default);
+    return $this->requestParameterHolder->get($name, $default);
   }
 
   /**
@@ -138,7 +138,7 @@ abstract class sfComponent
    */
   public function hasRequestParameter($name)
   {
-    return $this->request_parameter_holder->has($name);
+    return $this->requestParameterHolder->has($name);
   }
 
   /**

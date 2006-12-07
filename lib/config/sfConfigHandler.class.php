@@ -23,7 +23,7 @@
 abstract class sfConfigHandler
 {
   protected
-    $parameter_holder = null;
+    $parameterHolder = null;
 
   /**
    * Execute this configuration handler.
@@ -50,8 +50,8 @@ abstract class sfConfigHandler
    */
   public function initialize($parameters = null)
   {
-    $this->parameter_holder = new sfParameterHolder();
-    $this->parameter_holder->add($parameters);
+    $this->parameterHolder = new sfParameterHolder();
+    $this->parameterHolder->add($parameters);
   }
 
   /**
@@ -97,6 +97,6 @@ abstract class sfConfigHandler
 
   public function getParameterHolder()
   {
-    return $this->parameter_holder;
+    return $this->parameterHolder;
   }
 }

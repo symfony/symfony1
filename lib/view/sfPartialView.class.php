@@ -47,8 +47,8 @@ class sfPartialView extends sfPHPView
     $this->preRenderCheck();
 
     // assigns some variables to the template
-    $this->attribute_holder->add($this->getGlobalVars());
-    $this->attribute_holder->add($templateVars);
+    $this->attributeHolder->add($this->getGlobalVars());
+    $this->attributeHolder->add($templateVars);
 
     // render template
     $retval = $this->renderFile($this->getDirectory().'/'.$this->getTemplate());

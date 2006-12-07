@@ -78,8 +78,8 @@ abstract class sfView
     $template           = null,
     $escaping           = null,
     $escapingMethod     = null,
-    $attribute_holder   = null,
-    $parameter_holder   = null,
+    $attributeHolder    = null,
+    $parameterHolder    = null,
     $moduleName         = '',
     $actionName         = '',
     $viewName           = '',
@@ -313,10 +313,10 @@ abstract class sfView
     $this->viewName   = $viewName;
 
     $this->context = $context;
-    $this->attribute_holder = new sfParameterHolder();
-    $this->parameter_holder = new sfParameterHolder();
+    $this->attributeHolder = new sfParameterHolder();
+    $this->parameterHolder = new sfParameterHolder();
 
-    $this->parameter_holder->add(sfConfig::get('mod_'.strtolower($moduleName).'_view_param', array()));
+    $this->parameterHolder->add(sfConfig::get('mod_'.strtolower($moduleName).'_view_param', array()));
 
     $this->decoratorDirectory = sfConfig::get('sf_app_template_dir');
 
@@ -328,42 +328,42 @@ abstract class sfView
 
   public function getAttributeHolder()
   {
-    return $this->attribute_holder;
+    return $this->attributeHolder;
   }
 
   public function getAttribute($name, $default = null, $ns = null)
   {
-    return $this->attribute_holder->get($name, $default, $ns);
+    return $this->attributeHolder->get($name, $default, $ns);
   }
 
   public function hasAttribute($name, $ns = null)
   {
-    return $this->attribute_holder->has($name, $ns);
+    return $this->attributeHolder->has($name, $ns);
   }
 
   public function setAttribute($name, $value, $ns = null)
   {
-    return $this->attribute_holder->set($name, $value, $ns);
+    return $this->attributeHolder->set($name, $value, $ns);
   }
 
   public function getParameterHolder()
   {
-    return $this->parameter_holder;
+    return $this->parameterHolder;
   }
 
   public function getParameter($name, $default = null, $ns = null)
   {
-    return $this->parameter_holder->get($name, $default, $ns);
+    return $this->parameterHolder->get($name, $default, $ns);
   }
 
   public function hasParameter($name, $ns = null)
   {
-    return $this->parameter_holder->has($name, $ns);
+    return $this->parameterHolder->has($name, $ns);
   }
 
   public function setParameter($name, $value, $ns = null)
   {
-    return $this->parameter_holder->set($name, $value, $ns);
+    return $this->parameterHolder->set($name, $value, $ns);
   }
 
   /**

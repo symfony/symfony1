@@ -64,8 +64,8 @@ class sfDebug
   public static function requestAsArray($request)
   {
     $values = array(
-      'parameter_holder' => self::flattenParameterHolder($request->getParameterHolder()),
-      'attribute_holder' => self::flattenParameterHolder($request->getAttributeHolder()),
+      'parameterHolder' => self::flattenParameterHolder($request->getParameterHolder()),
+      'attributeHolder' => self::flattenParameterHolder($request->getAttributeHolder()),
     );
 
     return $values;
@@ -74,9 +74,9 @@ class sfDebug
   public static function responseAsArray($response)
   {
     $values = array(
-      'cookies'          => array(),
-      'http_headers'     => array(),
-      'parameter_holder' => self::flattenParameterHolder($response->getParameterHolder()),
+      'cookies'         => array(),
+      'http_headers'    => array(),
+      'parameterHolder' => self::flattenParameterHolder($response->getParameterHolder()),
     );
     foreach ($response->getHttpHeaders() as $key => $value)
     {

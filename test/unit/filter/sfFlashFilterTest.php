@@ -27,7 +27,7 @@ class myUser extends sfUser
   public function initialize ($context, $parameters = array())
   {
     $this->context = $context;
-    $this->attribute_holder = new sfParameterHolder(self::ATTRIBUTE_NAMESPACE);
+    $this->attributeHolder = new sfParameterHolder(self::ATTRIBUTE_NAMESPACE);
   }
 }
 

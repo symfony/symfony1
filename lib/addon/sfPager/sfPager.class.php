@@ -27,33 +27,33 @@
 abstract class sfPager
 {
   protected
-    $page                   = 1,
-    $maxPerPage             = 0,
-    $lastPage               = 1,
-    $nbResults              = 0,
-    $class                  = '',
-    $tableName              = '',
-    $objects                = null,
-    $cursor                 = 1,
-    $parameters             = array(),
-    $currentMaxLink         = 1,
-    $parameter_holder       = null,
-    $maxRecordLimit         = false;
-    
+    $page            = 1,
+    $maxPerPage      = 0,
+    $lastPage        = 1,
+    $nbResults       = 0,
+    $class           = '',
+    $tableName       = '',
+    $objects         = null,
+    $cursor          = 1,
+    $parameters      = array(),
+    $currentMaxLink  = 1,
+    $parameterHolder = null,
+    $maxRecordLimit = false;
+
   public function __construct($class, $maxPerPage = 10)
   {
     $this->setClass($class);
     $this->setMaxPerPage($maxPerPage);
     $this->setPage(1);
-    $this->parameter_holder = new sfParameterHolder();
+    $this->parameterHolder = new sfParameterHolder();
   }
 
   // function to be called after parameters have been set
   abstract public function init();
-  
+
   // main method: returns an array of result on the given page
   abstract public function getResults();
-  
+
   // used internally by getCurrent()
   abstract protected function retrieveObject($offset);
 
@@ -287,21 +287,21 @@ abstract class sfPager
 
   public function getParameterHolder()
   {
-    return $this->parameter_holder;
+    return $this->parameterHolder;
   }
 
   public function getParameter($name, $default = null, $ns = null)
   {
-    return $this->parameter_holder->get($name, $default, $ns);
+    return $this->parameterHolder->get($name, $default, $ns);
   }
 
   public function hasParameter($name, $ns = null)
   {
-    return $this->parameter_holder->has($name, $ns);
+    return $this->parameterHolder->has($name, $ns);
   }
 
   public function setParameter($name, $value, $ns = null)
   {
-    return $this->parameter_holder->set($name, $value, $ns);
+    return $this->parameterHolder->set($name, $value, $ns);
   }
 }
