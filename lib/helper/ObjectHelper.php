@@ -72,16 +72,16 @@ function objects_for_select($options = array(), $value_method, $text_method = nu
   foreach($options as $option)
   {
     // text method exists?
-    if ($text_method && !method_exists($option, $text_method))
+    if ($text_method && !is_callable(array($option, $text_method)))
     {
-      $error = sprintf('Method "%s" doesn\'t exist for object of class "%s"', $text_method, get_class($option));
+      $error = sprintf('Method "%s" doesn\'t exist for object of class "%s"', $text_method, _get_class_decorated($option));
       throw new sfViewException($error);
     }
 
     // value method exists?
-    if (!method_exists($option, $value_method))
+    if (!is_callable(array($option, $value_method)))
     {
-      $error = sprintf('Method "%s" doesn\'t exist for object of class "%s"', $value_method, get_class($option));
+      $error = sprintf('Method "%s" doesn\'t exist for object of class "%s"', $value_method, _get_class_decorated($option));
       throw new sfViewException($error);
     }
 
@@ -161,7 +161,7 @@ function _get_options_from_objects($objects, $text_method = null)
     $methodToCall = '';
     foreach (array($text_method, 'toString', '__toString', 'getPrimaryKey') as $method)
     {
-      if (method_exists($objects[0], $method))
+      if (is_callable(array($objects[0], $method)))
       {
         $methodToCall = $method;
         break;
@@ -294,7 +294,7 @@ function _get_object_value ($object, $method, $default_value = null, $param = nu
   if (!is_callable(array($object, $method[0])))
   {
     $error = 'Method "%s" doesn\'t exist for object of class "%s"';
-    $error = sprintf($error, $method[0], get_class($object));
+    $error = sprintf($error, $method[0], _get_class_decorated($object));
 
     throw new sfViewException($error);
   }
@@ -302,4 +302,23 @@ function _get_object_value ($object, $method, $default_value = null, $param = nu
   $object_value = call_user_func_array(array($object, $method[0]), $method[1]);
 
   return ($default_value !== null && $object_value === null) ? $default_value : $object_value;
+}
+
+/**
+ * Returns the name of the class of an decorated object
+ *
+ * @param object An object that might be wrapped in an sfOutputEscaperObjectDecorator(-derivative)
+ *
+ * @return string The name of the class of the object being decorated for escaping, or the class of the object if it isn't decorated
+ */
+function _get_class_decorated($object)
+{
+  if ($object instanceof sfOutputEscaperObjectDecorator)
+  {
+    return sprintf('%s (decorated with %s)', get_class($object->getRawValue()), get_class($object));
+  }
+  else
+  {
+    return get_class($object);
+  }
 }
