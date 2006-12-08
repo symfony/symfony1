@@ -178,6 +178,41 @@ class sfTestBrowser extends sfBrowser
     return $this;
   }
 
+  public function throwsException($class = null, $message = null)
+  {
+    $e = $this->getCurrentException();
+
+    if (null === $e)
+    {
+      $this->test->fail('response returns an exception');
+    }
+    else
+    {
+      if (null !== $class)
+      {
+        $this->test->ok($e instanceof $class, sprintf('response returns an exception of class "%s"', $class));
+      }
+
+      if (null !== $message && preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $message, $match))
+      {
+        if ($match[1] == '!')
+        {
+          $this->test->unlike($e->getMessage(), substr($message, 1), sprintf('response exception message does not match regex "%s"', $message));
+        }
+        else
+        {
+          $this->test->like($e->getMessage(), $message, sprintf('response exception message matches regex "%s"', $message));
+        }
+      }
+      else if (null !== $message)
+      {
+        $this->test->is($e->getMessage(), $message, sprintf('response exception message matches regex "%s"', $message));
+      }
+    }
+
+    return $this;
+  }
+
   public function isCached($boolean, $with_layout = false)
   {
     return $this->isUriCached(sfRouting::getInstance()->getCurrentInternalUri(), $boolean, $with_layout);

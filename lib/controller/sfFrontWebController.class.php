@@ -49,10 +49,20 @@ class sfFrontWebController extends sfWebController
     }
     catch (sfException $e)
     {
+      if (sfConfig::get('sf_test'))
+      {
+        throw $e;
+      }
+
       $e->printStackTrace();
     }
     catch (Exception $e)
     {
+      if (sfConfig::get('sf_test'))
+      {
+        throw $e;
+      }
+
       // wrap non symfony exceptions
       $sfException = new sfException();
       $sfException->printStackTrace($e);

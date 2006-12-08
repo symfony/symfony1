@@ -19,14 +19,15 @@
 class sfBrowser
 {
   protected
-    $context       = null,
-    $hostname      = null,
-    $remote        = null,
-    $dom           = null,
-    $stack         = array(),
-    $stackPosition = -1,
-    $cookieJar     = array(),
-    $fields        = array();
+    $context          = null,
+    $hostname         = null,
+    $remote           = null,
+    $dom              = null,
+    $stack            = array(),
+    $stackPosition    = -1,
+    $cookieJar        = array(),
+    $fields           = array(),
+    $currentException = null;
 
   public function initialize($hostname = null, $remote = null, $options = array())
   {
@@ -128,10 +129,33 @@ class sfBrowser
     // we register a fake rendering filter
     sfConfig::set('sf_rendering_filter', array('sfFakeRenderingFilter', null));
 
+    $this->currentException = null;
+
     // dispatch our request
     ob_start();
-    $controller->dispatch();
+    try
+    {
+      $controller->dispatch();
+    }
+    catch (sfException $e)
+    {
+      $this->currentException = $e;
+
+      $e->printStackTrace();
+    }
+    catch (Exception $e)
+    {
+      $this->currentException = $e;
+
+      $sfException = new sfException();
+      $sfException->printStackTrace($e);
+    }
     $retval = ob_get_clean();
+
+    if ($this->currentException instanceof sfStopException)
+    {
+      $this->currentException = null;
+    }
 
     // append retval to the response content
     $response->setContent($retval);
@@ -215,6 +239,11 @@ class sfBrowser
   public function getRequest()
   {
     return $this->context->getRequest();
+  }
+
+  public function getCurrentException()
+  {
+    return $this->currentException;
   }
 
   public function followRedirect()

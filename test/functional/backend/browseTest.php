@@ -24,8 +24,7 @@ $b->
   isStatusCode(200)->
   isRequestParameter('module', 'error')->
   isRequestParameter('action', 'index')->
-  responseContains('sfInitializationException')->
-  responseContains('Unable to scaffold unexistant model')
+  throwsException('sfInitializationException', '/Unable to scaffold unexistant model/')
 ;
 
 // list page
