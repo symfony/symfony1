@@ -863,9 +863,12 @@ class lime_registration
 
   function register_glob($glob)
   {
-    foreach (glob($glob) as $file)
+    if ($dirs = glob($glob))
     {
-      $this->files[] = realpath($file);
+      foreach ($dirs as $file)
+      {
+        $this->files[] = realpath($file);
+      }
     }
   }
 
