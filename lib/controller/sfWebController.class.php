@@ -202,7 +202,7 @@ abstract class sfWebController extends sfController
    *
    * @return void
    */
-  public function redirect ($url, $delay = 0, $statusCode = 302)
+  public function redirect($url, $delay = 0, $statusCode = 302)
   {
     $response = $this->getContext()->getResponse();
 

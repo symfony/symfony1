@@ -33,7 +33,7 @@ class sfYaml
    * @return array
    * @param string $input Path of YAML file or string containing YAML
    */
-  public static function load ($input)
+  public static function load($input)
   {
     $input = self::getIncludeContents($input);
 
@@ -69,7 +69,7 @@ class sfYaml
    * @return string
    * @param array $array PHP array
    */
-  public static function dump ($array)
+  public static function dump($array)
   {
     $spyc = new Spyc();
 

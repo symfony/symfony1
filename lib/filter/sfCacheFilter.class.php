@@ -38,7 +38,7 @@ class sfCacheFilter extends sfFilter
    *
    * @return void
    */
-  public function execute ($filterChain)
+  public function execute($filterChain)
   {
     // execute this filter only once, if cache is set and no GET or POST parameters
     if (!$this->isFirstCall() || !sfConfig::get('sf_cache') || count($_GET) || count($_POST))
@@ -56,7 +56,7 @@ class sfCacheFilter extends sfFilter
     $this->executeBeforeRendering();
   }
 
-  public function executeBeforeExecution ()
+  public function executeBeforeExecution()
   {
     // register our cache configuration
     $this->cacheManager->registerConfiguration($this->getContext()->getModuleName());
@@ -96,7 +96,7 @@ class sfCacheFilter extends sfFilter
    *
    * @return void
    */
-  public function executeBeforeRendering ()
+  public function executeBeforeRendering()
   {
     // cache only 200 HTTP status
     if ($this->response->getStatusCode() == 200)

@@ -20,7 +20,7 @@ class sfGeneratorManager
 {
   protected $cache = null;
 
-  public function initialize ()
+  public function initialize()
   {
     // create cache instance
     $this->cache = new sfFileCache(sfConfig::get('sf_module_cache_dir'));
@@ -32,7 +32,7 @@ class sfGeneratorManager
     return $this->cache;
   }
 
-  public function generate ($generator_class, $param)
+  public function generate($generator_class, $param)
   {
     $generator = new $generator_class();
     $generator->initialize($this);

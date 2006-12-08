@@ -25,7 +25,7 @@ class sfConsoleController extends sfController
    *
    * @return void
    */
-  public function dispatch ($moduleName, $actionName, $parameters = array())
+  public function dispatch($moduleName, $actionName, $parameters = array())
   {
     try
     {

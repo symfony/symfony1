@@ -29,7 +29,7 @@ class sfDateValidator extends sfValidator
    *
    * @return bool true, if this validator executes successfully, otherwise false.
    */
-  public function execute (&$value, &$error)
+  public function execute(&$value, &$error)
   {
     $culture = $this->getContext()->getUser()->getCulture();
 

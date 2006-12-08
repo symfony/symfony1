@@ -24,7 +24,7 @@ class sfFlashFilter extends sfFilter
    *
    * @return void
    */
-  public function execute ($filterChain)
+  public function execute($filterChain)
   {
     $context = $this->getContext();
     $userAttributeHolder = $context->getUser()->getAttributeHolder();

@@ -33,7 +33,7 @@ class sfSessionTestStorage extends sfStorage
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this Storage.
    */
-  public function initialize ($context, $parameters = null)
+  public function initialize($context, $parameters = null)
   {
     // initialize parent
     parent::initialize($context, $parameters);
@@ -108,7 +108,7 @@ class sfSessionTestStorage extends sfStorage
    *
    * @return void
    */
-  public function shutdown ()
+  public function shutdown()
   {
     if ($this->sessionId)
     {
@@ -135,7 +135,7 @@ class sfSessionTestStorage extends sfStorage
    *
    * @return void
    */
-  public function write ($key, &$data)
+  public function write($key, &$data)
   {
     $this->sessionData[$key] =& $data;
   }
@@ -143,7 +143,7 @@ class sfSessionTestStorage extends sfStorage
   /**
    * Clear all test sessions
    */
-  public function clear ()
+  public function clear()
   {
     sfToolkit::clearDirectory($this->sessionPath);
   }

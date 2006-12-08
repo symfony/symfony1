@@ -21,7 +21,7 @@
  */
 abstract class sfSecurityFilter extends sfFilter
 {
-  public static function newInstance ($class)
+  public static function newInstance($class)
   {
     // the class exists
     $object = new $class();

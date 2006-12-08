@@ -24,7 +24,7 @@ class sfWebDebugFilter extends sfFilter
    *
    * @return void
    */
-  public function execute ($filterChain)
+  public function execute($filterChain)
   {
     // execute this filter only once
     if ($this->isFirstCall())

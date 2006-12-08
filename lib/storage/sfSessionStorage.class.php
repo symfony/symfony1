@@ -35,7 +35,7 @@ class sfSessionStorage extends sfStorage
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this Storage.
    */
-  public function initialize ($context, $parameters = null)
+  public function initialize($context, $parameters = null)
   {
     // initialize parent
     parent::initialize($context, $parameters);
@@ -126,7 +126,7 @@ class sfSessionStorage extends sfStorage
    *
    * @return void
    */
-  public function shutdown ()
+  public function shutdown()
   {
     // don't need a shutdown procedure because read/write do it in real-time
   }
@@ -142,7 +142,7 @@ class sfSessionStorage extends sfStorage
    *
    * @return void
    */
-  public function write ($key, &$data)
+  public function write($key, &$data)
   {
     $_SESSION[$key] =& $data;
   }

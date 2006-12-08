@@ -368,7 +368,7 @@ class sfViewCacheManager
    *
    * @return void
    */
-  public function shutdown ()
+  public function shutdown()
   {
   }
 }

@@ -26,7 +26,7 @@ abstract class sfFilter
     $filterCalled    = array(),
     $context         = null;
 
-  protected function isFirstCall ()
+  protected function isFirstCall()
   {
     $class = get_class($this);
     if (isset($this->filterCalled[$class]))
@@ -46,7 +46,7 @@ abstract class sfFilter
    *
    * @return Context The current Context instance.
    */
-  public final function getContext ()
+  public final function getContext()
   {
     return $this->context;
   }
@@ -61,7 +61,7 @@ abstract class sfFilter
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this Filter.
    */
-  public function initialize ($context, $parameters = array())
+  public function initialize($context, $parameters = array())
   {
     $this->context = $context;
 

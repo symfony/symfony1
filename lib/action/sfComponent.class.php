@@ -43,7 +43,7 @@ abstract class sfComponent
    *               - The parent module of the view that will be executed.
    *               - The view that will be executed.
    */
-  abstract function execute ();
+  abstract function execute();
 
   /**
    * Initialize this action.
@@ -68,7 +68,7 @@ abstract class sfComponent
    *
    * @return sfContext The current sfContext instance.
    */
-  public final function getContext ()
+  public final function getContext()
   {
     return $this->context;
   }
@@ -78,7 +78,7 @@ abstract class sfComponent
    *
    * @return sfLogger The current sfLogger instance.
    */
-  public final function getLogger ()
+  public final function getLogger()
   {
     return $this->context->getLogger();
   }
@@ -90,7 +90,7 @@ abstract class sfComponent
    * @param string The priority of the message
    *               (available priorities: emerg, alert, crit, err, warning, notice, info, debug).
    */
-  public function logMessage ($message, $priority = 'info')
+  public function logMessage($message, $priority = 'info')
   {
     if (sfConfig::get('sf_logging_enabled'))
     {
@@ -103,7 +103,7 @@ abstract class sfComponent
    *
    * @param string The message text.
    */
-  public function debugMessage ($message)
+  public function debugMessage($message)
   {
     if (sfConfig::get('sf_web_debug'))
     {

@@ -417,7 +417,7 @@ class sfBrowser
 
 class sfFakeRenderingFilter extends sfFilter
 {
-  public function execute ($filterChain)
+  public function execute($filterChain)
   {
     $filterChain->execute();
 

@@ -27,7 +27,7 @@ class sfFilterException extends sfException
    * @param string The error message.
    * @param int    The error code.
    */
-  public function __construct ($message = null, $code = 0)
+  public function __construct($message = null, $code = 0)
   {
     $this->setName('sfFilterException');
     parent::__construct($message, $code);

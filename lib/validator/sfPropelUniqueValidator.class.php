@@ -31,7 +31,7 @@
  */
 class sfPropelUniqueValidator extends sfValidator
 {
-  public function execute (&$value, &$error)
+  public function execute(&$value, &$error)
   {
     $className  = $this->getParameter('class').'Peer';
     $columnName = call_user_func(array($className, 'translateFieldName'), $this->getParameter('column'), BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_COLNAME);
@@ -72,7 +72,7 @@ class sfPropelUniqueValidator extends sfValidator
    *
    * @return bool true, if initialization completes successfully, otherwise false.
    */
-  public function initialize ($context, $parameters = null)
+  public function initialize($context, $parameters = null)
   {
     // initialize parent
     parent::initialize($context);

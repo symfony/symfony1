@@ -19,7 +19,7 @@
  */
 class sfHtmlValidator extends sfValidator
 {
-    public function execute (&$value, &$error)
+    public function execute(&$value, &$error)
     {
       if (trim(strip_tags($value)) == '')
       {
@@ -36,7 +36,7 @@ class sfHtmlValidator extends sfValidator
       return true;
     }
 
-    public function initialize ($context, $parameters = null)
+    public function initialize($context, $parameters = null)
     {
       // initialize parent
       parent::initialize($context);

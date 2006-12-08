@@ -34,7 +34,7 @@ class sfActionStack
    *
    * @return sfActionStackEntry sfActionStackEntry instance
    */
-  public function addEntry ($moduleName, $actionName, $actionInstance)
+  public function addEntry($moduleName, $actionName, $actionInstance)
   {
     // create our action stack entry and add it to our stack
     $actionEntry = new sfActionStackEntry($moduleName, $actionName, $actionInstance);
@@ -51,7 +51,7 @@ class sfActionStack
    *
    * @return sfActionStackEntry An action stack entry implementation.
    */
-  public function getEntry ($index)
+  public function getEntry($index)
   {
     $retval = null;
 
@@ -70,7 +70,7 @@ class sfActionStack
    *
    * @return sfActionStackEntry An action stack entry implementation.
    */
-  public function popEntry ()
+  public function popEntry()
   {
     return array_pop($this->stack);
   }
@@ -80,7 +80,7 @@ class sfActionStack
    *
    * @return sfActionStackEntry An action stack entry implementation.
    */
-  public function getFirstEntry ()
+  public function getFirstEntry()
   {
     $retval = null;
 
@@ -97,7 +97,7 @@ class sfActionStack
    *
    * @return sfActionStackEntry An action stack entry implementation.
    */
-  public function getLastEntry ()
+  public function getLastEntry()
   {
     $count  = count($this->stack);
     $retval = null;
@@ -115,7 +115,7 @@ class sfActionStack
    *
    * @return int The size of this stack.
    */
-  public function getSize ()
+  public function getSize()
   {
     return count($this->stack);
   }

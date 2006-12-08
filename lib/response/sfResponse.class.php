@@ -33,7 +33,7 @@ abstract class sfResponse
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this Response.
    */
-  public function initialize ($context, $parameters = array())
+  public function initialize($context, $parameters = array())
   {
     $this->context = $context;
 
@@ -41,12 +41,12 @@ abstract class sfResponse
     $this->parameterHolder->add($parameters);
   }
 
-  public function setContext ($context)
+  public function setContext($context)
   {
     $this->context = $context;
   }
 
-  public function getContext ()
+  public function getContext()
   {
     return $this->context;
   }
@@ -60,7 +60,7 @@ abstract class sfResponse
    *
    * @throws <b>sfFactoryException</b> If a request implementation instance cannot be created.
    */
-  public static function newInstance ($class)
+  public static function newInstance($class)
   {
     // the class exists
     $object = new $class();
@@ -82,7 +82,7 @@ abstract class sfResponse
    *
    * @param string content
    */
-  public function setContent ($content)
+  public function setContent($content)
   {
     $this->content = $content;
   }
@@ -92,7 +92,7 @@ abstract class sfResponse
    *
    * @return string
    */
-  public function getContent ()
+  public function getContent()
   {
     return $this->content;
   }
@@ -100,7 +100,7 @@ abstract class sfResponse
   /**
    * Outputs the response content
    */
-  public function sendContent ()
+  public function sendContent()
   {
     if (sfConfig::get('sf_logging_enabled'))
     {
@@ -135,7 +135,7 @@ abstract class sfResponse
    *
    * @return void
    */
-  abstract function shutdown ();
+  abstract function shutdown();
 
   public function __call($method, $arguments)
   {

@@ -38,7 +38,7 @@ class sfActionStackEntry
    *
    * @return void
    */
-  public function __construct ($moduleName, $actionName, $actionInstance)
+  public function __construct($moduleName, $actionName, $actionInstance)
   {
     $this->actionName     = $actionName;
     $this->actionInstance = $actionInstance;
@@ -50,7 +50,7 @@ class sfActionStackEntry
    *
    * @return string An action name.
    */
-  public function getActionName ()
+  public function getActionName()
   {
     return $this->actionName;
   }
@@ -60,7 +60,7 @@ class sfActionStackEntry
    *
    * @return sfAction An action implementation instance.
    */
-  public function getActionInstance ()
+  public function getActionInstance()
   {
     return $this->actionInstance;
   }
@@ -70,7 +70,7 @@ class sfActionStackEntry
    *
    * @return sfView A view implementation instance.
    */
-  public function getViewInstance ()
+  public function getViewInstance()
   {
     return $this->viewInstance;
   }
@@ -82,7 +82,7 @@ class sfActionStackEntry
    *
    * @return void
    */
-  public function setViewInstance ($viewInstance)
+  public function setViewInstance($viewInstance)
   {
     $this->viewInstance = $viewInstance;
   }
@@ -92,7 +92,7 @@ class sfActionStackEntry
    *
    * @return string A module name.
    */
-  public function getModuleName ()
+  public function getModuleName()
   {
     return $this->moduleName;
   }
@@ -117,7 +117,7 @@ class sfActionStackEntry
    *
    * @return void
    */
-  public function setPresentation (&$presentation)
+  public function setPresentation(&$presentation)
   {
     $this->presentation =& $presentation;
   }

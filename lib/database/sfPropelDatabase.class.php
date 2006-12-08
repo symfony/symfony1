@@ -30,7 +30,7 @@ class sfPropelDatabase extends sfCreoleDatabase
 {
   static $config = array();
 
-  public function initialize ($parameters = null, $name = null)
+  public function initialize($parameters = null, $name = null)
   {
     parent::initialize($parameters);
 
@@ -50,12 +50,12 @@ class sfPropelDatabase extends sfCreoleDatabase
     }
   }
 
-  public function setDefaultConfig ()
+  public function setDefaultConfig()
   {
     self::$config['propel']['datasources']['default'] = $this->getParameter('datasource');
   }
 
-  public function addConfig ()
+  public function addConfig()
   {
     $dsn = $this->getParameter('dsn');
 
@@ -93,12 +93,12 @@ class sfPropelDatabase extends sfCreoleDatabase
       );
   }
 
-  public static function getConfiguration ()
+  public static function getConfiguration()
   {
     return self::$config;
   }
 
-  public function setConnectionParameter ($key, $value)
+  public function setConnectionParameter($key, $value)
   {
     if ($key == 'host')
     {

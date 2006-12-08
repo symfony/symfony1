@@ -29,7 +29,7 @@ class sfFilterChain
    *
    * @return void
    */
-  public function execute ()
+  public function execute()
   {
     // skip to the next filter
     ++$this->index;
@@ -66,7 +66,7 @@ class sfFilterChain
    *
    * @return void
    */
-  public function register ($filter)
+  public function register($filter)
   {
     $this->chain[] = $filter;
   }

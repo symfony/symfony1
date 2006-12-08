@@ -27,7 +27,7 @@ class sfUrlValidator extends sfValidator
    *
    * @return bool true, if this validator executes successfully, otherwise false.
    */
-  public function execute (&$value, &$error)
+  public function execute(&$value, &$error)
   {
     $re = '/^(http|https|ftp):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)/i';
 
@@ -40,7 +40,7 @@ class sfUrlValidator extends sfValidator
     return true;
   }
 
-  public function initialize ($context, $parameters = null)
+  public function initialize($context, $parameters = null)
   {
     // initialize parent
     parent::initialize($context);

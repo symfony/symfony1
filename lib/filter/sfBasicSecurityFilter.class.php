@@ -29,7 +29,7 @@ class sfBasicSecurityFilter extends sfSecurityFilter
    *
    * @return void
    */
-  public function execute ($filterChain)
+  public function execute($filterChain)
   {
     // get the cool stuff
     $context    = $this->getContext();

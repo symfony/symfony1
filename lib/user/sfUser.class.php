@@ -42,7 +42,7 @@ class sfUser
    *
    * @return Context A Context instance.
    */
-  public function getContext ()
+  public function getContext()
   {
     return $this->context;
   }
@@ -58,7 +58,7 @@ class sfUser
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this User.
    */
-  public function initialize ($context, $parameters = array())
+  public function initialize($context, $parameters = array())
   {
     $this->context = $context;
 
@@ -101,7 +101,7 @@ class sfUser
    *
    * @throws <b>sfFactoryException</b> If a user implementation instance cannot
    */
-  public static function newInstance ($class)
+  public static function newInstance($class)
   {
     // the class exists
     $object = new $class();
@@ -123,7 +123,7 @@ class sfUser
    *
    * @param  string culture
    */
-  public function setCulture ($culture)
+  public function setCulture($culture)
   {
     if ($this->culture != $culture)
     {
@@ -195,7 +195,7 @@ class sfUser
    *
    * @return void
    */
-  public function shutdown ()
+  public function shutdown()
   {
     $storage = $this->getContext()->getStorage();
 

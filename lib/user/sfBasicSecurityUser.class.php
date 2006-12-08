@@ -228,7 +228,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     $this->lastRequest = time();
   }
 
-  public function shutdown ()
+  public function shutdown()
   {
     $storage = $this->getContext()->getStorage();
 

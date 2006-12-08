@@ -48,7 +48,7 @@ class sfParameterHolder
    *
    * @return string The default namespace.
    */
-  public function getDefaultNamespace ()
+  public function getDefaultNamespace()
   {
     return $this->default_namespace;
   }
@@ -58,7 +58,7 @@ class sfParameterHolder
    *
    * @return void
    */
-  public function clear ()
+  public function clear()
   {
     $this->parameters = null;
     $this->parameters = array();
@@ -107,7 +107,7 @@ class sfParameterHolder
    *
    * @return array An indexed array of parameter names, if the namespace exists, otherwise null.
    */
-  public function getNames ($ns = null)
+  public function getNames($ns = null)
   {
     if (!$ns)
     {
@@ -127,7 +127,7 @@ class sfParameterHolder
    *
    * @return array An indexed array of parameter namespaces.
    */
-  public function getNamespaces ()
+  public function getNamespaces()
   {
     return array_keys($this->parameters);
   }
@@ -169,7 +169,7 @@ class sfParameterHolder
    *
    * @return bool true, if the parameter exists, otherwise false.
    */
-  public function has ($name, $ns = null)
+  public function has($name, $ns = null)
   {
     if (!$ns)
     {
@@ -216,7 +216,7 @@ class sfParameterHolder
    *
    * @return bool true, if the namespace exists, otherwise false.
    */
-  public function hasNamespace ($ns)
+  public function hasNamespace($ns)
   {
     return isset($this->parameters[$ns]);
   }
@@ -278,7 +278,7 @@ class sfParameterHolder
    *
    * @return void
    */
-  public function set ($name, $value, $ns = null)
+  public function set($name, $value, $ns = null)
   {
     if (!$ns)
     {
@@ -304,7 +304,7 @@ class sfParameterHolder
    *
    * @return void
    */
-  public function setByRef ($name, & $value, $ns = null)
+  public function setByRef($name, & $value, $ns = null)
   {
     if (!$ns)
     {
@@ -330,7 +330,7 @@ class sfParameterHolder
    *
    * @return void
    */
-  public function add ($parameters, $ns = null)
+  public function add($parameters, $ns = null)
   {
     if ($parameters === null) return;
 
@@ -361,7 +361,7 @@ class sfParameterHolder
    *
    * @return void
    */
-  public function addByRef (& $parameters, $ns = null)
+  public function addByRef(& $parameters, $ns = null)
   {
     if (!$ns)
     {

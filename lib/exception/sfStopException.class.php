@@ -24,7 +24,7 @@ class sfStopException extends sfException
    * @param string The error message.
    * @param int    The error code.
    */
-  public function __construct ($message = null, $code = 0)
+  public function __construct($message = null, $code = 0)
   {
     $this->setName('sfStopException');
 
@@ -37,7 +37,7 @@ class sfStopException extends sfException
     parent::__construct($message, $code);
   }
 
-  public function printStackTrace ($exception = null)
+  public function printStackTrace($exception = null)
   {
   }
 }

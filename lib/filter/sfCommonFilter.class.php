@@ -24,7 +24,7 @@ class sfCommonFilter extends sfFilter
    *
    * @return void
    */
-  public function execute ($filterChain)
+  public function execute($filterChain)
   {
     // execute next filter
     $filterChain->execute();

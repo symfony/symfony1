@@ -80,7 +80,7 @@ abstract class sfRequest
    *
    * @return string An error message, if the error exists, otherwise null.
    */
-  public function getError ($name, $catalogue = 'messages')
+  public function getError($name, $catalogue = 'messages')
   {
     $retval = null;
 
@@ -103,7 +103,7 @@ abstract class sfRequest
    *
    * @return array An indexed array of error names.
    */
-  public function getErrorNames ()
+  public function getErrorNames()
   {
     return array_keys($this->errors);
   }
@@ -113,7 +113,7 @@ abstract class sfRequest
    *
    * @return array An associative array of errors.
    */
-  public function getErrors ()
+  public function getErrors()
   {
     return $this->errors;
   }
@@ -125,7 +125,7 @@ abstract class sfRequest
    *             - sfRequest::GET
    *             - sfRequest::POST
    */
-  public function getMethod ()
+  public function getMethod()
   {
     return $this->method;
   }
@@ -137,7 +137,7 @@ abstract class sfRequest
    *
    * @return bool true, if the error exists, otherwise false.
    */
-  public function hasError ($name)
+  public function hasError($name)
   {
     return isset($this->errors[$name]);
   }
@@ -147,7 +147,7 @@ abstract class sfRequest
    *
    * @return bool true, if any error exist, otherwise false.
    */
-  public function hasErrors ()
+  public function hasErrors()
   {
     return (count($this->errors) > 0);
   }
@@ -163,7 +163,7 @@ abstract class sfRequest
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this Request.
    */
-  public function initialize ($context, $parameters = array(), $attributes = array())
+  public function initialize($context, $parameters = array(), $attributes = array())
   {
     $this->context = $context;
 
@@ -175,7 +175,7 @@ abstract class sfRequest
     $this->attributeHolder->add($attributes);
   }
 
-  public function getContext ()
+  public function getContext()
   {
     return $this->context;
   }
@@ -189,7 +189,7 @@ abstract class sfRequest
    *
    * @throws <b>sfFactoryException</b> If a request implementation instance cannot be created.
    */
-  public static function newInstance ($class)
+  public static function newInstance($class)
   {
     // the class exists
     $object = new $class();
@@ -235,7 +235,7 @@ abstract class sfRequest
    *
    * @return void
    */
-  public function setError ($name, $message)
+  public function setError($name, $message)
   {
     if (sfConfig::get('sf_logging_enabled')) $this->getContext()->getLogger()->info('{sfRequest} error in form for parameter "'.$name.'" (with message "'.$message.'")');
 
@@ -252,7 +252,7 @@ abstract class sfRequest
    *
    * @return void
    */
-  public function setErrors ($errors)
+  public function setErrors($errors)
   {
     $this->errors = array_merge($this->errors, $errors);
   }
@@ -268,7 +268,7 @@ abstract class sfRequest
    *
    * @throws <b>sfException</b> - If the specified request method is invalid.
    */
-  public function setMethod ($method)
+  public function setMethod($method)
   {
     if ($method == self::GET || $method == self::POST)
     {
@@ -329,7 +329,7 @@ abstract class sfRequest
    *
    * @return void
    */
-  abstract function shutdown ();
+  abstract function shutdown();
 
   public function __call($method, $arguments)
   {

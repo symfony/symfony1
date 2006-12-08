@@ -29,7 +29,7 @@ class sfEmailValidator extends sfValidator
    *
    * @return bool true, if this validator executes successfully, otherwise false.
    */
-  public function execute (&$value, &$error)
+  public function execute(&$value, &$error)
   {
     $strict = $this->getParameterHolder()->get('strict');
     if ($strict == true)
@@ -91,7 +91,7 @@ class sfEmailValidator extends sfValidator
     return true;
   }
 
-  public function initialize ($context, $parameters = null)
+  public function initialize($context, $parameters = null)
   {
     // initialize parent
     parent::initialize($context);

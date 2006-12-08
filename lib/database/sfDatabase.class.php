@@ -31,7 +31,7 @@ abstract class sfDatabase
    *
    * @throws <b>sfDatabaseException</b> If a connection could not be created.
    */
-  abstract function connect ();
+  abstract function connect();
 
   /**
    * Retrieve the database connection associated with this sfDatabase implementation.
@@ -43,7 +43,7 @@ abstract class sfDatabase
    *
    * @throws <b>sfDatabaseException</b> If a connection could not be retrieved.
    */
-  public function getConnection ()
+  public function getConnection()
   {
     if ($this->connection == null)
     {
@@ -60,7 +60,7 @@ abstract class sfDatabase
    *
    * @throws <b>sfDatabaseException</b> If a resource could not be retrieved.
    */
-  public function getResource ()
+  public function getResource()
   {
     if ($this->resource == null)
     {
@@ -79,7 +79,7 @@ abstract class sfDatabase
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this Database.
    */
-  public function initialize ($parameters = array())
+  public function initialize($parameters = array())
   {
     $this->parameterHolder = new sfParameterHolder();
     $this->parameterHolder->add($parameters);
@@ -112,5 +112,5 @@ abstract class sfDatabase
    *
    * @throws <b>sfDatabaseException</b> If an error occurs while shutting down this database.
    */
-  abstract function shutdown ();
+  abstract function shutdown();
 }

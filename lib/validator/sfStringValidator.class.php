@@ -49,7 +49,7 @@ class sfStringValidator extends sfValidator
    *
    * @return bool true, if this validator executes successfully, otherwise false.
    */
-  public function execute (&$value, &$error)
+  public function execute(&$value, &$error)
   {
     $decodedValue = sfToolkit::isUTF8($value) && function_exists('utf8_decode') ? utf8_decode($value) : $value;
 
@@ -118,7 +118,7 @@ class sfStringValidator extends sfValidator
    * @return bool true, if initialization completes successfully, otherwise
    *              false.
    */
-  public function initialize ($context, $parameters = null)
+  public function initialize($context, $parameters = null)
   {
     // initialize parent
     parent::initialize($context);

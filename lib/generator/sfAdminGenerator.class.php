@@ -582,37 +582,37 @@ class sfAdminColumn
     $this->flags   = (array) $flags;
   }
 
-  public function __call ($name, $arguments)
+  public function __call($name, $arguments)
   {
     return $this->column ? $this->column->$name() : null;
   }
 
-  public function isReal ()
+  public function isReal()
   {
     return $this->column ? true : false;
   }
 
-  public function getPhpName ()
+  public function getPhpName()
   {
     return $this->phpName;
   }
 
-  public function getName ()
+  public function getName()
   {
     return sfInflector::underscore($this->phpName);
   }
 
-  public function isPartial ()
+  public function isPartial()
   {
     return in_array('_', $this->flags) ? true : false;
   }
 
-  public function isComponent ()
+  public function isComponent()
   {
     return in_array('~', $this->flags) ? true : false;
   }
 
-  public function isLink ()
+  public function isLink()
   {
     return (in_array('=', $this->flags) || $this->isPrimaryKey()) ? true : false;
   }

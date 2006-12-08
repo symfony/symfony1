@@ -36,7 +36,7 @@ class sfWebResponse extends sfResponse
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this Response.
    */
-  public function initialize ($context, $parameters = array())
+  public function initialize($context, $parameters = array())
   {
     parent::initialize($context, $parameters);
 
@@ -118,7 +118,7 @@ class sfWebResponse extends sfResponse
    *
    * @return void
    */
-  public function setCookie ($name, $value, $expire = null, $path = '/', $domain = '', $secure = false, $httpOnly = false)
+  public function setCookie($name, $value, $expire = null, $path = '/', $domain = '', $secure = false, $httpOnly = false)
   {
     if ($expire !== null)
     {
@@ -155,13 +155,13 @@ class sfWebResponse extends sfResponse
    *
    * @return void
    */
-  public function setStatusCode ($code, $name = null)
+  public function setStatusCode($code, $name = null)
   {
     $this->statusCode = $code;
     $this->statusText = null !== $name ? $name : $this->statusTexts[$code];
   }
 
-  public function getStatusCode ()
+  public function getStatusCode()
   {
     return $this->statusCode;
   }
@@ -174,7 +174,7 @@ class sfWebResponse extends sfResponse
    *
    * @return void
    */
-  public function setHttpHeader ($name, $value, $replace = true)
+  public function setHttpHeader($name, $value, $replace = true)
   {
     $name = $this->normalizeHeaderName($name);
 
@@ -202,7 +202,7 @@ class sfWebResponse extends sfResponse
    *
    * @return array
    */
-  public function getHttpHeader ($name, $default = null)
+  public function getHttpHeader($name, $default = null)
   {
     return $this->getParameter($this->normalizeHeaderName($name), $default, 'symfony/response/http/headers');
   }
@@ -212,7 +212,7 @@ class sfWebResponse extends sfResponse
    *
    * @return boolean
    */
-  public function hasHttpHeader ($name)
+  public function hasHttpHeader($name)
   {
     return $this->hasParameter($this->normalizeHeaderName($name), 'symfony/response/http/headers');
   }
@@ -224,7 +224,7 @@ class sfWebResponse extends sfResponse
    *
    * @return void
    */
-  public function setContentType ($value)
+  public function setContentType($value)
   {
     // add charset if needed
     if (false === stripos($value, 'charset'))
@@ -240,7 +240,7 @@ class sfWebResponse extends sfResponse
    *
    * @return array
    */
-  public function getContentType ()
+  public function getContentType()
   {
     return $this->getHttpHeader('Content-Type', 'text/html; charset='.sfConfig::get('sf_charset'));
   }
@@ -250,7 +250,7 @@ class sfWebResponse extends sfResponse
    *
    * @return void
    */
-  public function sendHttpHeaders ()
+  public function sendHttpHeaders()
   {
     // status
     if (substr(php_sapi_name(), 0, 3) == 'cgi' && isset($_SERVER['SERVER_SOFTWARE']) && false !== stripos($_SERVER['SERVER_SOFTWARE'], 'apache/2'))
@@ -300,7 +300,7 @@ class sfWebResponse extends sfResponse
     }
   }
 
-  public function sendContent ()
+  public function sendContent()
   {
     if (!$this->headerOnly)
     {
@@ -498,7 +498,7 @@ class sfWebResponse extends sfResponse
    *
    * @return void
    */
-  public function shutdown ()
+  public function shutdown()
   {
   }
 }

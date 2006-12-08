@@ -35,7 +35,7 @@ abstract class sfController
    *
    * @return bool true, if the component exists, otherwise false.
    */
-  public function componentExists ($moduleName, $componentName)
+  public function componentExists($moduleName, $componentName)
   {
     return $this->controllerExists($moduleName, $componentName, 'component', false);
   }
@@ -48,7 +48,7 @@ abstract class sfController
    *
    * @return bool true, if the action exists, otherwise false.
    */
-  public function actionExists ($moduleName, $actionName)
+  public function actionExists($moduleName, $actionName)
   {
     return $this->controllerExists($moduleName, $actionName, 'action', false);
   }
@@ -69,7 +69,7 @@ abstract class sfController
    *
    * @return boolean true if the controller exists; false otherwise
    */
-  protected function controllerExists ($moduleName, $controllerName, $extension, $throwExceptions)
+  protected function controllerExists($moduleName, $controllerName, $extension, $throwExceptions)
   {
     $dirs = sfLoader::getControllerDirs($moduleName);
     foreach ($dirs as $dir => $checkEnabled)
@@ -159,7 +159,7 @@ abstract class sfController
    * @throws <b>sfInitializationException</b> If the action could not be initialized.
    * @throws <b>sfSecurityException</b> If the action requires security but the user implementation is not of type sfSecurityUser.
    */
-  public function forward ($moduleName, $actionName)
+  public function forward($moduleName, $actionName)
   {
     // replace unwanted characters
     $moduleName = preg_replace('/[^a-z0-9\-_]+/i', '', $moduleName);
@@ -315,7 +315,7 @@ abstract class sfController
    *
    * @return Action An Action implementation instance, if the action exists, otherwise null.
    */
-  public function getAction ($moduleName, $actionName)
+  public function getAction($moduleName, $actionName)
   {
     return $this->getController($moduleName, $actionName, 'action');
   }
@@ -328,12 +328,12 @@ abstract class sfController
    *
    * @return Component A Component implementation instance, if the component exists, otherwise null.
    */
-  public function getComponent ($moduleName, $componentName)
+  public function getComponent($moduleName, $componentName)
   {
     return $this->getController($moduleName, $componentName, 'component');
   }
 
-  protected function getController ($moduleName, $controllerName, $extension)
+  protected function getController($moduleName, $controllerName, $extension)
   {
     $classSuffix = ucfirst(strtolower($extension));
     if (!isset($this->controllerClasses[$moduleName.'_'.$controllerName.'_'.$classSuffix]))
@@ -359,7 +359,7 @@ abstract class sfController
    *
    * @return sfActionStack An sfActionStack instance, if the action stack is enabled, otherwise null.
    */
-  public function getActionStack ()
+  public function getActionStack()
   {
     return $this->context->getActionStack();
   }
@@ -369,7 +369,7 @@ abstract class sfController
    *
    * @return Context A Context instance.
    */
-  public function getContext ()
+  public function getContext()
   {
     return $this->context;
   }
@@ -381,7 +381,7 @@ abstract class sfController
    *             - sfView::RENDER_CLIENT
    *             - sfView::RENDER_VAR
    */
-  public function getRenderMode ()
+  public function getRenderMode()
   {
     return $this->renderMode;
   }
@@ -395,7 +395,7 @@ abstract class sfController
    *
    * @return View A View implementation instance, if the view exists, otherwise null.
    */
-  public function getView ($moduleName, $actionName, $viewName)
+  public function getView($moduleName, $actionName, $viewName)
   {
     // user view exists?
     $file = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_view_dir_name').'/'.$actionName.$viewName.'View.class.php';
@@ -429,7 +429,7 @@ abstract class sfController
    *
    * @return void
    */
-  public function initialize ($context)
+  public function initialize($context)
   {
     $this->context = $context;
 
@@ -451,7 +451,7 @@ abstract class sfController
    *
    * @throws sfFactoryException If a new controller implementation instance cannot be created.
    */
-  public static function newInstance ($class)
+  public static function newInstance($class)
   {
     try
     {
@@ -484,7 +484,7 @@ abstract class sfController
    *
    * @throws sfRenderException - If an invalid render mode has been set.
    */
-  public function setRenderMode ($mode)
+  public function setRenderMode($mode)
   {
     if ($mode == sfView::RENDER_CLIENT || $mode == sfView::RENDER_VAR || $mode == sfView::RENDER_NONE)
     {

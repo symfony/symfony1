@@ -259,7 +259,7 @@ function object_checkbox_tag($object, $method, $options = array(), $default_valu
   return checkbox_tag(_convert_method_to_name($method, $options), 1, $value, $options);
 }
 
-function _convert_method_to_name ($method, &$options)
+function _convert_method_to_name($method, &$options)
 {
   $name = _get_option($options, 'control_name');
 
@@ -281,7 +281,7 @@ function _convert_method_to_name ($method, &$options)
 
 // returns default_value if object value is null
 // method is either a string or: array('method',array('param1','param2'))
-function _get_object_value ($object, $method, $default_value = null, $param = null)
+function _get_object_value($object, $method, $default_value = null, $param = null)
 {
   // compatibility with the array syntax
   if (is_string($method))

@@ -27,7 +27,7 @@ class sfToolkit
    *
    * @return string A class or interface name, if one can be extracted, otherwise null.
    */
-  public static function extractClassName ($filename)
+  public static function extractClassName($filename)
   {
     $retval = null;
 
@@ -53,7 +53,7 @@ class sfToolkit
    *
    * @return void
    */
-  public static function clearDirectory ($directory)
+  public static function clearDirectory($directory)
   {
     if (!is_dir($directory))
     {
@@ -102,7 +102,7 @@ class sfToolkit
    *
    * @return void
    */
-  public static function clearGlob ($pattern)
+  public static function clearGlob($pattern)
   {
     $files = glob($pattern);
 
@@ -131,7 +131,7 @@ class sfToolkit
    *
    * @return bool true, if the path is absolute, otherwise false.
    */
-  public static function isPathAbsolute ($path)
+  public static function isPathAbsolute($path)
   {
     if ($path[0] == '/' || $path[0] == '\\' ||
         (strlen($path) > 3 && ctype_alpha($path[0]) &&
@@ -174,7 +174,7 @@ class sfToolkit
     return $isLocked;
   }
 
-  public static function stripComments ($source)
+  public static function stripComments($source)
   {
     if (!sfConfig::get('sf_strip_comments', true))
     {

@@ -65,7 +65,7 @@ abstract class sfAction extends sfComponent
    *
    * By Default, this method is empty.
    */
-  public function preExecute ()
+  public function preExecute()
   {
   }
 
@@ -74,7 +74,7 @@ abstract class sfAction extends sfComponent
    *
    * By Default, this method is empty.
    */
-  public function postExecute ()
+  public function postExecute()
   {
   }
 
@@ -82,7 +82,7 @@ abstract class sfAction extends sfComponent
    * Forwards current action to the default 404 error action
    *
    */
-  public function forward404 ($message = '')
+  public function forward404($message = '')
   {
     throw new sfError404Exception($message);
   }
@@ -93,7 +93,7 @@ abstract class sfAction extends sfComponent
    *
    * @param bool A condition that evaluates to true or false.
    */
-  public function forward404Unless ($condition, $message = '')
+  public function forward404Unless($condition, $message = '')
   {
     if (!$condition)
     {
@@ -107,7 +107,7 @@ abstract class sfAction extends sfComponent
    *
    * @param bool A condition that evaluates to true or false.
    */
-  public function forward404If ($condition, $message = '')
+  public function forward404If($condition, $message = '')
   {
     if ($condition)
     {
@@ -119,7 +119,7 @@ abstract class sfAction extends sfComponent
    * Redirects current action to the default 404 error action (with browser redirection)
    *
    */
-  public function redirect404 ()
+  public function redirect404()
   {
     return $this->redirect('/'.sfConfig::get('sf_error_404_module').'/'.sfConfig::get('sf_error_404_action'));
   }
@@ -135,7 +135,7 @@ abstract class sfAction extends sfComponent
    * @param  string action name
    * @throws sfStopException always
    */
-  public function forward ($module, $action)
+  public function forward($module, $action)
   {
     if (sfConfig::get('sf_logging_enabled')) $this->getContext()->getLogger()->info('{sfAction} forward to action "'.$module.'/'.$action.'"');
 
@@ -159,7 +159,7 @@ abstract class sfAction extends sfComponent
    * @param  string action name
    * @throws sfStopException always
    */
-  public function forwardIf ($condition, $module, $action)
+  public function forwardIf($condition, $module, $action)
   {
     if ($condition)
     {
@@ -182,7 +182,7 @@ abstract class sfAction extends sfComponent
    * @param  string action name
    * @throws sfStopException always
    */
-  public function forwardUnless ($condition, $module, $action)
+  public function forwardUnless($condition, $module, $action)
   {
     if (!$condition)
     {
@@ -298,7 +298,7 @@ abstract class sfAction extends sfComponent
    * @param  string url
    * @throws sfStopException always
    */
-  public function redirectIf ($condition, $url)
+  public function redirectIf($condition, $url)
   {
     if ($condition)
     {
@@ -319,7 +319,7 @@ abstract class sfAction extends sfComponent
    * @param  string url
    * @throws sfStopException always
    */
-  public function redirectUnless ($condition, $url)
+  public function redirectUnless($condition, $url)
   {
     if (!$condition)
     {
@@ -352,7 +352,7 @@ abstract class sfAction extends sfComponent
    *               - The parent module of the view that will be executed.
    *               - The view that will be executed.
    */
-  public function getDefaultView ()
+  public function getDefaultView()
   {
     return sfView::INPUT;
   }
@@ -369,7 +369,7 @@ abstract class sfAction extends sfComponent
    *
    * @see sfRequest
    */
-  public function getRequestMethods ()
+  public function getRequestMethods()
   {
     return sfRequest::GET | sfRequest::POST | sfRequest::NONE;
   }
@@ -385,7 +385,7 @@ abstract class sfAction extends sfComponent
    *               - The parent module of the view that will be executed.
    *               - The view that will be executed.
    */
-  public function handleError ()
+  public function handleError()
   {
     return sfView::ERROR;
   }
@@ -397,7 +397,7 @@ abstract class sfAction extends sfComponent
    *
    * @return void
    */
-  public function registerValidators ($validatorManager)
+  public function registerValidators($validatorManager)
   {
   }
 
@@ -406,7 +406,7 @@ abstract class sfAction extends sfComponent
    *
    * @return bool true, if validation completes successfully, otherwise false.
    */
-  public function validate ()
+  public function validate()
   {
     return true;
   }

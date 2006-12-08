@@ -30,7 +30,7 @@ class sfFrontWebController extends sfWebController
    *
    * @return void
    */
-  public function dispatch ()
+  public function dispatch()
   {
     try
     {

@@ -31,7 +31,7 @@ class sfException extends Exception
    * @param string The error message.
    * @param int    The error code.
    */
-  public function __construct ($message = null, $code = 0)
+  public function __construct($message = null, $code = 0)
   {
     if ($this->getName() === null)
     {
@@ -51,7 +51,7 @@ class sfException extends Exception
    *
    * @return string This exception's name.
    */
-  public function getName ()
+  public function getName()
   {
     return $this->name;
   }
@@ -59,7 +59,7 @@ class sfException extends Exception
   /**
    * Print the stack trace for this exception.
    */
-  public function printStackTrace ($exception = null)
+  public function printStackTrace($exception = null)
   {
     if (!$exception)
     {
@@ -251,7 +251,7 @@ class sfException extends Exception
    *
    * @param string An exception name.
    */
-  protected function setName ($name)
+  protected function setName($name)
   {
     $this->name = $name;
   }

@@ -26,7 +26,7 @@ class sfPDODatabase extends sfDatabase
    *
    * @throws <b>sfDatabaseException</b> If a connection could not be created.
    */
-  public function connect ()
+  public function connect()
   {
     // determine how to get our parameters
     $method = $this->getParameter('method', 'dsn');
@@ -78,7 +78,7 @@ class sfPDODatabase extends sfDatabase
    *
    * @throws <b>sfDatabaseException</b> If an error occurs while shutting down this database.
    */
-  public function shutdown ()
+  public function shutdown()
   {
     if ($this->connection !== null)
     {

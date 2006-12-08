@@ -50,7 +50,7 @@ class sfPDOSessionStorage extends sfSessionStorage
    *
    * @throws <b>InitializationException</b> If an error occurs while initializing this Storage.
    */
-  public function initialize ($context, $parameters = null)
+  public function initialize($context, $parameters = null)
   {
     // disable auto_start
     $parameters['auto_start'] = false;
@@ -83,7 +83,7 @@ class sfPDOSessionStorage extends sfSessionStorage
   *
   * @return bool true, if the session was closed, otherwise false.
   */
-  public function sessionClose ()
+  public function sessionClose()
   {
     // do nothing
     return true;
@@ -98,7 +98,7 @@ class sfPDOSessionStorage extends sfSessionStorage
    *
    * @throws <b>DatabaseException</b> If the session cannot be destroyed.
    */
-  public function sessionDestroy ($id)
+  public function sessionDestroy($id)
   {
     // get table/column
     $db_table  = $this->getParameterHolder()->get('db_table');
@@ -130,7 +130,7 @@ class sfPDOSessionStorage extends sfSessionStorage
    *
    * @throws <b>DatabaseException</b> If any old sessions cannot be cleaned.
    */
-  public function sessionGC ($lifetime)
+  public function sessionGC($lifetime)
   {
     // determine deletable session time
     $time = time() - $lifetime;
@@ -165,7 +165,7 @@ class sfPDOSessionStorage extends sfSessionStorage
    *
    * @throws <b>DatabaseException</b> If a connection with the database does not exist or cannot be created.
    */
-  public function sessionOpen ($path, $name)
+  public function sessionOpen($path, $name)
   {
     // what database are we using?
     $database = $this->getParameterHolder()->get('database', 'default');
@@ -190,7 +190,7 @@ class sfPDOSessionStorage extends sfSessionStorage
    *
    * @throws <b>DatabaseException</b> If the session cannot be read.
    */
-  public function sessionRead ($id)
+  public function sessionRead($id)
   {
     // get table/columns
     $db_table    = $this->getParameterHolder()->get('db_table');
@@ -242,7 +242,7 @@ class sfPDOSessionStorage extends sfSessionStorage
    *
    * @throws <b>DatabaseException</b> If the session data cannot be written.
    */
-  public function sessionWrite ($id, $data)
+  public function sessionWrite($id, $data)
   {
     // get table/column
     $db_table    = $this->getParameterHolder()->get('db_table');
@@ -276,7 +276,7 @@ class sfPDOSessionStorage extends sfSessionStorage
    *
    * @return void
    */
-  public function shutdown ()
+  public function shutdown()
   {
   }
 }

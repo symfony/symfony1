@@ -27,14 +27,14 @@ interface sfSecurityUser
    *
    * @return void
    */
-  public function addCredential ($credential);
+  public function addCredential($credential);
 
   /**
    * Clear all credentials associated with this user.
    *
    * @return void
    */
-  public function clearCredentials ();
+  public function clearCredentials();
 
   /**
    * Indicates whether or not this user has a credential.
@@ -43,14 +43,14 @@ interface sfSecurityUser
    *
    * @return bool true, if this user has the credential, otherwise false.
    */
-  public function hasCredential ($credential);
+  public function hasCredential($credential);
 
   /**
    * Indicates whether or not this user is authenticated.
    *
    * @return bool true, if this user is authenticated, otherwise false.
    */
-  public function isAuthenticated ();
+  public function isAuthenticated();
 
   /**
    * Remove a credential from this user.
@@ -59,7 +59,7 @@ interface sfSecurityUser
    *
    * @return void
    */
-  public function removeCredential ($credential);
+  public function removeCredential($credential);
 
   /**
    * Set the authenticated status of this user.
@@ -68,5 +68,5 @@ interface sfSecurityUser
    *
    * @return void
    */
-  public function setAuthenticated ($authenticated);
+  public function setAuthenticated($authenticated);
 }

@@ -34,7 +34,7 @@ class sfFunctionCache extends sfFileCache
    * @return mixed result of the function/method
    * @access public
    */
-  public function call ()
+  public function call()
   {
     $arguments = func_get_args();
 

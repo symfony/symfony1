@@ -33,7 +33,7 @@ class sfCompareValidator extends sfValidator
    * @return bool true, if this validator executes successfully, otherwise
    *              false.
    */
-  public function execute (&$value, &$error)
+  public function execute(&$value, &$error)
   {
     $check_param = $this->getParameterHolder()->get('check');
     $check_value = $this->getContext()->getRequest()->getParameter($check_param);
@@ -47,7 +47,7 @@ class sfCompareValidator extends sfValidator
     return true;
   }
 
-  public function initialize ($context, $parameters = null)
+  public function initialize($context, $parameters = null)
   {
     // initialize parent
     parent::initialize($context);

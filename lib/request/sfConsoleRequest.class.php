@@ -29,7 +29,7 @@ class sfConsoleRequest extends sfRequest
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this Request.
    */
-  public function initialize ($context, $parameters = null)
+  public function initialize($context, $parameters = null)
   {
     parent::initialize ($context, $parameters);
 
@@ -41,7 +41,7 @@ class sfConsoleRequest extends sfRequest
    *
    * @return void
    */
-  public function shutdown ()
+  public function shutdown()
   {
   }
 }
