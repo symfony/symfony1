@@ -185,7 +185,7 @@ class sfFillInForm
 
   protected function escapeValue($value, $name)
   {
-    if (extension_loaded('iconv') && strtolower(sfConfig::get('sf_charset')) != 'utf-8')
+    if (function_exists('iconv') && strtolower(sfConfig::get('sf_charset')) != 'utf-8')
     {
       $new_value = iconv(sfConfig::get('sf_charset'), 'UTF-8', $value);
       if (false !== $new_value)
