@@ -128,11 +128,6 @@
   border-bottom: 1px solid #aaa;
 }
 
-#sfWebDebug .top[id]
-{
-  position: fixed;
-}
-
 #sfWebDebugLog
 {
   margin: 0;
