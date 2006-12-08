@@ -35,7 +35,9 @@ require_once($sf_symfony_lib_dir.'/vendor/pake/pakeGetopt.class.php');
 // autoloading for pake tasks
 class simpleAutoloader
 {
-  static public $class_paths = array();
+  static public
+    $class_paths        = array(),
+    $autoload_callables = array();
 
   static public function initialize($sf_symfony_lib_dir)
   {
@@ -52,6 +54,14 @@ class simpleAutoloader
   {
     if (!isset(self::$class_paths[$class]))
     {
+      foreach((array) self::$autoload_callables as $callable)
+      {
+        if (call_user_func($callable, $class))
+        {
+          return true;
+        }
+      }
+
       return false;
     }
 
@@ -81,6 +91,16 @@ class simpleAutoloader
     }
 
     self::$class_paths[$class] = $file;
+  }
+
+  static public function registerCallable($callable)
+  {
+    if (!is_callable($callable))
+    {
+      throw new Exception('Autoload callable does not exist');
+    }
+
+    self::$autoload_callables[] = $callable;
   }
 }
 
