@@ -379,7 +379,7 @@ class lime_harness extends lime_registration
   protected function find_php_cli()
   {
     $path = getenv('PATH') ? getenv('PATH') : getenv('Path');
-    $exe_suffixes = substr(PHP_OS, 0, 3) == 'WIN' ? (getenv('PATHEXT') ? explode(PATH_SEPARATOR, getenv('PATHEXT')) : array('.exe', '.bat', '.cmd', '.com')) : array();
+    $exe_suffixes = substr(PHP_OS, 0, 3) == 'WIN' ? (getenv('PATHEXT') ? explode(PATH_SEPARATOR, getenv('PATHEXT')) : array('.exe', '.bat', '.cmd', '.com')) : array('');
     foreach (array('php5', 'php') as $php_cli)
     {
       foreach ($exe_suffixes as $suffix)
@@ -583,7 +583,7 @@ echo serialize(xdebug_get_code_coverage());
 EOF;
       file_put_contents($tmp_file, $tmp);
       ob_start();
-      passthru(sprintf('%s %s 2>&1', $this->harness->php_cli, $tmp_file), $return);
+      passthru(sprintf('%s -q "%s" 2>&1', $this->harness->php_cli, $tmp_file), $return);
       $retval = ob_get_clean();
       if (0 == $return)
       {
