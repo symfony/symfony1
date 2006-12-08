@@ -734,6 +734,9 @@ function input_date_tag($name, $value = null, $options = array())
   {
     use_helper('DateForm');
 
+    // set culture for month tag
+    $options['culture'] = $culture;
+
     return select_date_tag($name, $value, $options, isset($options['html']) ? $options['html'] : array());
   }
 
