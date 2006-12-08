@@ -181,7 +181,7 @@ class sfCore
     {
       ini_set('unserialize_callback_func', 'spl_autoload_call');
     }
-    elseif (!function_exists('__autoload'))
+    else if (!function_exists('__autoload'))
     {
       ini_set('unserialize_callback_func', '__autoload');
 
