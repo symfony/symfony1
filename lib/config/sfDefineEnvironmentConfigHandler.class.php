@@ -39,13 +39,7 @@ class sfDefineEnvironmentConfigHandler extends sfYamlConfigHandler
     }
 
     // parse the yaml
-    $myConfig = $this->parseYamls($configFiles);
-
-    $myConfig = sfToolkit::arrayDeepMerge(
-      isset($myConfig['default']) && is_array($myConfig['default']) ? $myConfig['default'] : array(),
-      isset($myConfig['all']) && is_array($myConfig['all']) ? $myConfig['all'] : array(),
-      isset($myConfig[sfConfig::get('sf_environment')]) && is_array($myConfig[sfConfig::get('sf_environment')]) ? $myConfig[sfConfig::get('sf_environment')] : array()
-    );
+    $myConfig = $this->mergeEnvironment($this->parseYamls($configFiles));
 
     $values = array();
     foreach ($myConfig as $category => $keys)
@@ -119,5 +113,14 @@ class sfDefineEnvironmentConfigHandler extends sfYamlConfigHandler
     }
 
     return $category;
+  }
+
+  protected function mergeEnvironment($config)
+  {
+    return sfToolkit::arrayDeepMerge(
+      isset($config['default']) && is_array($config['default']) ? $config['default'] : array(),
+      isset($config['all']) && is_array($config['all']) ? $config['all'] : array(),
+      isset($config[sfConfig::get('sf_environment')]) && is_array($config[sfConfig::get('sf_environment')]) ? $config[sfConfig::get('sf_environment')] : array()
+    );
   }
 }
