@@ -47,7 +47,7 @@ class sfContext
 $t = new lime_test(33, new lime_output_color());
 
 $_SERVER['session_id'] = 'test';
-sfConfig::set('sf_test_cache_dir', System::tmpdir());
+sfConfig::set('sf_test_cache_dir', sfToolkit::getTmpDir());
 
 $context = new sfContext();
 

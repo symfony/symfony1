@@ -9,6 +9,7 @@
  */
 
 require_once(dirname(__FILE__).'/../../lib/vendor/pake/pakeFinder.class.php');
+require_once(dirname(__FILE__).'/../../lib/util/sfToolkit.class.php');
 
 class testAutoloader
 {
@@ -16,8 +17,7 @@ class testAutoloader
 
   static public function initialize($with_cache = true)
   {
-    require_once('System.php');
-    $tmp_dir = System::tmpdir();
+    $tmp_dir = sfToolkit::getTmpDir();
     if (is_readable($tmp_dir.DIRECTORY_SEPARATOR.'sf_autoload_paths.php'))
     {
       self::$class_paths = unserialize(file_get_contents($tmp_dir.DIRECTORY_SEPARATOR.'sf_autoload_paths.php'));
@@ -56,6 +56,6 @@ class testAutoloader
 
   static public function removeCache()
   {
-    unlink(System::tmpdir().DIRECTORY_SEPARATOR.'sf_autoload_paths.php');
+    unlink(sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.'sf_autoload_paths.php');
   }
 }

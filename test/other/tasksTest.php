@@ -2,6 +2,7 @@
 
 $_test_dir = realpath(dirname(__FILE__).'/..');
 require_once($_test_dir.'/../lib/vendor/lime/lime.php');
+require_once($_test_dir.'/../lib/util/sfToolkit.class.php');
 
 define('DS', DIRECTORY_SEPARATOR);
 
@@ -16,8 +17,7 @@ class symfony_cmd
   {
     $this->t = $t;
 
-    require_once('System.php');
-    $this->tmp_dir = System::tmpdir().DIRECTORY_SEPARATOR.'symfony_cmd';
+    $this->tmp_dir = sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.'symfony_cmd';
 
     if (is_dir($this->tmp_dir))
     {
@@ -30,18 +30,7 @@ class symfony_cmd
     $this->current_dir = getcwd();
     chdir($this->tmp_dir);
 
-    // php cli
-    $this->php_cli = PHP_BINDIR.DIRECTORY_SEPARATOR.'php';
-    if (!is_executable($this->php_cli))
-    {
-      require_once('System.php');
-      $this->php_cli = System::which('php');
-
-      if (!is_executable($this->php_cli))
-      {
-        throw new Exception("Unable to find PHP executable.");
-      }
-    }
+    $this->php_cli = sfToolkit::getPhpCli();
   }
 
   public function shutdown()

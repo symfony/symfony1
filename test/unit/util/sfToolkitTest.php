@@ -120,7 +120,7 @@ $t->is(sfToolkit::stripslashesDeep(array(array('foo' => addslashes("foo's bar"))
 
 // ::clearDirectory()
 $t->diag('::clearDirectory()');
-$tmp_dir = System::tmpdir().DIRECTORY_SEPARATOR.'symfony_tests_'.rand(1, 999);
+$tmp_dir = sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.'symfony_tests_'.rand(1, 999);
 mkdir($tmp_dir);
 file_put_contents($tmp_dir.DIRECTORY_SEPARATOR.'test', 'ok');
 mkdir($tmp_dir.DIRECTORY_SEPARATOR.'foo');
@@ -133,7 +133,7 @@ rmdir($tmp_dir);
 
 // ::clearGlob()
 $t->diag('::clearGlob()');
-$tmp_dir = System::tmpdir().DIRECTORY_SEPARATOR.'symfony_tests_'.rand(1, 999);
+$tmp_dir = sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.'symfony_tests_'.rand(1, 999);
 mkdir($tmp_dir);
 mkdir($tmp_dir.DIRECTORY_SEPARATOR.'foo');
 mkdir($tmp_dir.DIRECTORY_SEPARATOR.'bar');
