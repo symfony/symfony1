@@ -212,10 +212,12 @@ function select_country_tag($name, $selected = null, $options = array())
 
   if ($country_option = _get_option($options, 'countries'))
   {
-    $diff = array_diff_key($countries, array_flip((array) $country_option));
-    foreach ($diff as $key => $v)
+    foreach ($countries as $key => $value)
     {
-      unset($countries[$key]);
+      if (!in_array($key, $country_option))
+      {
+        unset($countries[$key]);
+      }
     }
   }
 
@@ -257,10 +259,12 @@ function select_language_tag($name, $selected = null, $options = array())
 
   if ($language_option = _get_option($options, 'languages'))
   {
-    $diff = array_diff_key($languages, array_flip((array) $language_option));
-    foreach ($diff as $key => $v)
+    foreach ($languages as $key => $value)
     {
-      unset($languages[$key]);
+      if (!in_array($key, $language_option))
+      {
+        unset($languages[$key]);
+      }
     }
   }
 
