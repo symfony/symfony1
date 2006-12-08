@@ -216,7 +216,7 @@ function _upgrade_1_0_activate()
       'active:' => 'enabled:',
     ),
     '*.php' => array(
-      'sf_logging_active' => 'sf_logging_enabled',
+      'sf_logging_'.'active' => 'sf_logging_enabled',
     ),
     'apps/*/modules/*/validate/*.yml' => array(
       'activate:' => 'enabled: ',
