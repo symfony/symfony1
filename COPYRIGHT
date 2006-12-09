@@ -8,7 +8,7 @@ symfony is originally based on Mojavi3 by Sean Kerr
 
 Url:       http://www.symfony-project.com/
 Copyright: Fabien Potencier
-License:   MIT - LICENSE
+License:   MIT - see LICENSE file
 
 Propel
 ------
@@ -17,7 +17,7 @@ symfony contains the Propel software
 
 Url:       http://propel.phpdb.org/
 Copyright: Authors
-License:   LGPL - LICENSE.Propel
+License:   LGPL - see licenses/LICENSE.Propel file
 
 Creole
 ------
@@ -26,7 +26,7 @@ symfony contains the Creole software
 
 Url:       http://creole.phpdb.org/
 Copyright: Authors
-License:   LGPL - LICENSE.Creole
+License:   LGPL - see licenses/LICENSE.Creole file
 
 International Components for Unicode
 ------------------------------------
@@ -35,7 +35,7 @@ symfony contains a port of parts of the International Components for Unicode lib
 
 Url:       http://www.ibm.com/software/globalization/icu/, http://icu.sourceforge.net/
 Copyright: 1995-2006 International Business Machines Corporation and others.
-License:   ICU License - LICENSE.ICU
+License:   ICU License - see licenses/LICENSE.ICU file
 
 Dynarch calendar
 ----------------
@@ -53,7 +53,7 @@ symfony contains the Prototype software
 
 Url:       http://prototype.conio.net/
 Copyright: 2005 Sam Stephenson
-License:   MIT - LICENSE.prototype
+License:   MIT - see licenses/LICENSE.prototype file
 
 script.aculo.us
 ---------------
@@ -62,7 +62,7 @@ symfony contains the script.aculo.us software
 
 Url:       http://script.aculo.us, http://mir.aculo.us
 Copyright: 2005, 2006 Thomas Fuchs
-License:   MIT - LICENSE.script.aculo.us
+License:   MIT - see licenses/LICENSE.script.aculo.us file
 
 famfamfam icons
 ---------------
@@ -79,7 +79,7 @@ symfony contains the Prado i18n core classes
 
 Url:       http://www.pradosoft.com/
 Copyright: 2004-2006, The PRADO Group
-License:   BSD - LICENSE.prado
+License:   BSD - see licenses/LICENSE.prado file
 
 PHPMailer
 ---------
@@ -88,7 +88,7 @@ symfony contains the PHPMailer software
 
 Url:       http://phpmailer.sourceforge.net/
 Copyright: Chris Ryan
-License:   LGPL - LICENSE.PHPMailer
+License:   LGPL - see licenses/LICENSE.PHPMailer file
 
 Spyc
 ----
@@ -106,7 +106,7 @@ symfony uses the pake software
 
 Url:       http://www.symfony-project.com/
 Copyright: Fabien Potencier
-License:   MIT - LICENSE.pake
+License:   MIT - see licenses/LICENSE.pake file
 
 lime
 ----
@@ -115,7 +115,7 @@ symfony uses the lime software
 
 Url:       http://www.symfony-project.com/
 Copyright: Fabien Potencier
-License:   MIT - LICENSE.lime
+License:   MIT - see licenses/LICENSE.lime file
 
 Phing
 -----
@@ -124,4 +124,5 @@ symfony uses the Phing software
 
 Url:       http://phing.info/
 Copyright: Authors
-License:   LGPL - LICENSE.phing
+License:   LGPL - see licenses/LICENSE.phing file
+
