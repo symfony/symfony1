@@ -507,7 +507,7 @@ abstract class sfController
    */
   public function inCLI()
   {
-    return strncasecmp(PHP_SAPI, 'cli', 3);
+    return 0 == strncasecmp(PHP_SAPI, 'cli', 3);
   }
 
   public function __call($method, $arguments)
