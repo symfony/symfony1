@@ -37,7 +37,7 @@ class sfFileLogger
 
   public function log($message, $priority, $priorityName)
   {
-    $line = sprintf("%s %s [%s] %s%s", strftime('%b %d %H:%M:%S'), 'symfony', $priorityName, $message, strstr(PHP_OS, 'WIN') ? "\r\n" : "\n");
+    $line = sprintf("%s %s [%s] %s%s", strftime('%b %d %H:%M:%S'), 'symfony', $priorityName, $message, DIRECTORY_SEPARATOR == '\\' ? "\r\n" : "\n");
 
     flock($this->fp, LOCK_EX);
     fwrite($this->fp, $line);

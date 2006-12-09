@@ -472,7 +472,7 @@ class sfToolkit
   public static function getPhpCli()
   {
     $path = getenv('PATH') ? getenv('PATH') : getenv('Path');
-    $suffixes = substr(PHP_OS, 0, 3) == 'WIN' ? (getenv('PATHEXT') ? explode(PATH_SEPARATOR, getenv('PATHEXT')) : array('.exe', '.bat', '.cmd', '.com')) : array('');
+    $suffixes = DIRECTORY_SEPARATOR == '\\' ? (getenv('PATHEXT') ? explode(PATH_SEPARATOR, getenv('PATHEXT')) : array('.exe', '.bat', '.cmd', '.com')) : array('');
     foreach (array('php5', 'php') as $phpCli)
     {
       foreach ($suffixes as $suffix)
@@ -506,7 +506,7 @@ class sfToolkit
    */
   public static function getTmpDir()
   {
-    if (substr(PHP_OS, 0, 3) == 'WIN')
+    if (DIRECTORY_SEPARATOR == '\\')
     {
       if ($var = isset($_ENV['TEMP']) ? $_ENV['TEMP'] : getenv('TEMP'))
       {
