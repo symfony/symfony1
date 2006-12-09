@@ -341,7 +341,7 @@ $script .= '
 
 EOF;
       $tmp = preg_replace('/{/', '{'.$pre_mixer_script, $tmp, 1);
-      $tmp = preg_replace('/}\s*$/', $post_mixer_script.'  }', $tmp);
+      $tmp = preg_replace('/(\$con\->commit\(\);)/', '$1'.$post_mixer_script, $tmp);
     }
 
     // update current script
