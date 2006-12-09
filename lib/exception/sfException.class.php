@@ -119,7 +119,7 @@ class sfException extends Exception
 
     $message = null !== $exception->getMessage() ? $exception->getMessage() : 'n/a';
     $name    = get_class($exception);
-    $format = 'cli' == php_sapi_name() ? 'plain' : 'html';
+    $format  = strncasecmp(PHP_SAPI, 'cli', 3) ? 'plain' : 'html';
     $traces  = $this->getTraces($exception, $format);
 
     // extract error reference from message
