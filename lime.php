@@ -331,7 +331,7 @@ class lime_colorizer
   static function colorize($text = '', $parameters = array())
   {
     // disable colors if not supported (windows or non tty console)
-    if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN' || !function_exists('posix_isatty') || !@posix_isatty(STDOUT))
+    if (DIRECTORY_SEPARATOR == '\\' || !function_exists('posix_isatty') || !@posix_isatty(STDOUT))
     {
       return $text;
     }
@@ -379,7 +379,7 @@ class lime_harness extends lime_registration
   protected function find_php_cli()
   {
     $path = getenv('PATH') ? getenv('PATH') : getenv('Path');
-    $exe_suffixes = substr(PHP_OS, 0, 3) == 'WIN' ? (getenv('PATHEXT') ? explode(PATH_SEPARATOR, getenv('PATHEXT')) : array('.exe', '.bat', '.cmd', '.com')) : array('');
+    $exe_suffixes = DIRECTORY_SEPARATOR == '\\' ? (getenv('PATHEXT') ? explode(PATH_SEPARATOR, getenv('PATHEXT')) : array('.exe', '.bat', '.cmd', '.com')) : array('');
     foreach (array('php5', 'php') as $php_cli)
     {
       foreach ($exe_suffixes as $suffix)
