@@ -1,7 +1,7 @@
 /* 
 	calendar-cs-win.js
 	language: Czech
-	encoding: windows-1250
+	encoding: utf8
 	author: Lubos Jerabek (xnet@seznam.cz)
 	        Jan Uhlir (espinosa@centrum.cz)
 */
