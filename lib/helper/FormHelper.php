@@ -744,7 +744,7 @@ function input_date_tag($name, $value = null, $options = array())
     return select_date_tag($name, $value, $options, isset($options['html']) ? $options['html'] : array());
   }
   
-  if (_get_option($options, 'withtime', false))
+  if ($withTime = _get_option($options, 'withtime', false))
   {
     $pattern = 'g';
   }
@@ -778,13 +778,15 @@ function input_date_tag($name, $value = null, $options = array())
   $context->getResponse()->addStylesheet('/sf/calendar/skins/aqua/theme');
 
   // date format
-  $dateFormatInfo = sfDateTimeFormatInfo::getInstance($culture);
-  $date_format = strtolower($dateFormatInfo->getShortDatePattern());
+  $dateFormatInfo = new sfDateFormat($culture);
+  $date_format = $dateFormatInfo->getPattern($pattern);
 
   // calendar date format
-  $calendar_date_format = $date_format;
-  $calendar_date_format = strtr($calendar_date_format, array('M' => 'm', 'y' => 'Y'));
-  $calendar_date_format = preg_replace('/([mdy])+/i', '%\\1', $calendar_date_format);
+  $calendar_date_format = $date_format;error_log($date_format);
+  $calendar_date_format = strtr($date_format, array('MM' => 'm', 'M'=>'m', 'dd'=>'d', 'yyyy' => 'Y', 'HH'=>'H', 'h'=>'l', 'mm'=>'M', 'ss'=>'S', 'a'=>'p'));
+
+  $calendar_date_format = preg_replace('/([mdyhlsp])+/i', '%\\1', $calendar_date_format);
+error_log($calendar_date_format);
 
   $id_inputField = (isset($options['id']))? $options['id'] : get_id_from_name($name);
   $id_calendarButton = 'trigger_'.get_id_from_name($name);
@@ -793,7 +795,13 @@ function input_date_tag($name, $value = null, $options = array())
     Calendar.setup({
       inputField : "'.$id_inputField.'",
       ifFormat : "'.$calendar_date_format.'",
+      daFormat : "'.$calendar_date_format.'",
       button : "'.$id_calendarButton.'"';
+  
+  if ($withTime)
+  {
+    $js .= ",\n showsTime : true";
+  }
 
   // calendar options
   if ($calendar_options = _get_option($options, 'calendar_options'))
@@ -822,7 +830,8 @@ function input_date_tag($name, $value = null, $options = array())
   // construct html
   if (!isset($options['size']))
   {
-    $options['size'] = 11;
+    // educated guess about the size
+    $options['size'] = strlen($date_format)+2;
   }
   $html = input_tag($name, $value, $options);
 

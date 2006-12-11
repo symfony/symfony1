@@ -189,7 +189,7 @@ class sfDateFormat
    * @return string a pattern.
    * @see DateTimeFormatInfo::formatDateTime()
    */
-  protected function getPattern($pattern)
+  public function getPattern($pattern)
   {
     if (is_array($pattern) && count($pattern) == 2)
     {
