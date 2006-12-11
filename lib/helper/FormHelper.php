@@ -743,6 +743,15 @@ function input_date_tag($name, $value = null, $options = array())
 
     return select_date_tag($name, $value, $options, isset($options['html']) ? $options['html'] : array());
   }
+  
+  if (_get_option($options, 'withtime', false))
+  {
+    $pattern = 'g';
+  }
+  else
+  {
+    $pattern = 'd';
+  }
 
   // parse date
   if ($value === null || $value === '')
@@ -752,7 +761,7 @@ function input_date_tag($name, $value = null, $options = array())
   else
   {
     $dateFormat = new sfDateFormat($culture);
-    $value = $dateFormat->format($value, _get_option($options, 'format', 'd'));
+    $value = $dateFormat->format($value, _get_option($options, 'format', $pattern));
   }
 
   // register our javascripts and stylesheets
