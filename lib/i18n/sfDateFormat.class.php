@@ -117,7 +117,7 @@ class sfDateFormat
   public function getDate($time, $pattern = null)
   {    
     // if the type is not a php timestamp
-    if (!ctype_digit((string) $time))
+    if (is_string($time))
     {
       if (!$pattern)
       {
@@ -159,7 +159,10 @@ class sfDateFormat
     // the last attempt has failed we fall back on the default method
     if (!isset($date))
     {
-      $time = @strtotime($time);
+      if (is_string($time))
+      {
+        $time = @strtotime($time);
+      }
       $date = @getdate($time);
     }
     
