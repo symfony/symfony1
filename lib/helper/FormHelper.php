@@ -752,6 +752,8 @@ function input_date_tag($name, $value = null, $options = array())
   {
     $pattern = 'd';
   }
+  
+  $pattern = _get_option($options, 'format', $pattern);
 
   // parse date
   if ($value === null || $value === '')
@@ -761,7 +763,7 @@ function input_date_tag($name, $value = null, $options = array())
   else
   {
     $dateFormat = new sfDateFormat($culture);
-    $value = $dateFormat->format($value, _get_option($options, 'format', $pattern));
+    $value = $dateFormat->format($value, $pattern);
   }
 
   // register our javascripts and stylesheets
@@ -783,9 +785,9 @@ function input_date_tag($name, $value = null, $options = array())
 
   // calendar date format
   $calendar_date_format = $date_format;
-  $calendar_date_format = strtr($date_format, array('MM' => 'm', 'M'=>'m', 'dd'=>'d', 'yyyy' => 'Y', 'HH'=>'H', 'h'=>'l', 'mm'=>'M', 'ss'=>'S', 'a'=>'p'));
+  $calendar_date_format = strtr($date_format, array('yyyy' => 'Y', 'yy'=>'y', 'MM' => 'm', 'M'=>'m', 'dd'=>'d', 'd'=>'e', 'HH'=>'H', 'H'=>'k', 'hh'=>'I', 'h'=>'l', 'mm'=>'M', 'ss'=>'S', 'a'=>'p'));
 
-  $calendar_date_format = preg_replace('/([mdyhlsp])+/i', '%\\1', $calendar_date_format);
+  $calendar_date_format = preg_replace('/([mdyhklspe])+/i', '%\\1', $calendar_date_format);
 
   $id_inputField = (isset($options['id']))? $options['id'] : get_id_from_name($name);
   $id_calendarButton = 'trigger_'.get_id_from_name($name);
