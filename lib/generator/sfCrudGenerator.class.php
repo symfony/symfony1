@@ -234,9 +234,13 @@ abstract class sfCrudGenerator extends sfGenerator
     
     $columnGetter = $this->getColumnGetter($column, true);
 
-    if ($type == CreoleTypes::DATE || $type == CreoleTypes::TIMESTAMP)
+    if ($type == CreoleTypes::TIMESTAMP)
     {
       return "format_date($columnGetter, 'f')";
+    }
+    elseif ($type == CreoleTypes::DATE)
+    {
+      return "format_date($columnGetter, 'D')";
     }
     else
     {
