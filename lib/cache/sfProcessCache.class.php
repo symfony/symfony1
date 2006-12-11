@@ -48,47 +48,59 @@ class sfProcessCache
     return $cacher;
   }
 
-  public static function set($name, $value, $lifeTime = 0)
+  public static function getPrefix()
+  {
+    static $prefix = null;
+
+    if (!$prefix)
+    {
+      $prefix = md5(sfConfig::get('sf_app_dir')).'_';
+    }
+
+    return $prefix;
+  }
+
+  public static function set($key, $value, $lifeTime = 0)
   {
     switch (self::cacher())
     {
       case 'apc':
-        return apc_store($name, $value, $lifeTime);
+        return apc_store(self::getPrefix().$key, $value, $lifeTime);
       case 'xcache':
-        return xcache_set($name, $value, $lifeTime);
+        return xcache_set(self::getPrefix().$key, $value, $lifeTime);
       case 'eaccelerator':
-        return eaccelerator_put($name, serialize($value), $lifeTime);
+        return eaccelerator_put(self::getPrefix().$key, serialize($value), $lifeTime);
     }
 
     return false;
   }
 
-  public static function get($name)
+  public static function get($key)
   {
     switch (self::cacher())
     {
       case 'apc':
-        $value = apc_fetch($name);
+        $value = apc_fetch(self::getPrefix().$key);
         return false === $value ? null : $value;
       case 'xcache':
-        return xcache_isset($name) ? xcache_get($name) : null;
+        return xcache_isset(self::getPrefix().$key) ? xcache_get(self::getPrefix().$key) : null;
       case 'eaccelerator':
-        return unserialize(eaccelerator_get($name));
+        return unserialize(eaccelerator_get(self::getPrefix().$key));
     }
 
     return null;
   }
 
-  public static function has($name)
+  public static function has($key)
   {
     switch (self::cacher())
     {
       case 'apc':
-        return false === apc_fetch($name) ? false : true;
+        return false === apc_fetch(self::getPrefix().$key) ? false : true;
       case 'xcache':
-        return xcache_isset($name);
+        return xcache_isset(self::getPrefix().$key);
       case 'eaccelerator':
-        return null === eaccelerator_get($name) ? false : true;
+        return null === eaccelerator_get(self::getPrefix().$key) ? false : true;
     }
 
     return false;
