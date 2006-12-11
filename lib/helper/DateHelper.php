@@ -53,7 +53,7 @@ function format_date($date, $format = 'd', $culture = null, $charset = null)
 
   $dateFormat = new sfDateFormat($culture);
 
-  return $dateFormat->format($date, $format, $charset);
+  return $dateFormat->format($date, $format, null, $charset);
 }
 
 function format_datetime($date, $format = 'F', $culture = null, $charset = null)
@@ -69,7 +69,7 @@ function format_datetime($date, $format = 'F', $culture = null, $charset = null)
 
   $dateFormat = new sfDateFormat($culture);
 
-  return $dateFormat->format($date, $format, $charset);
+  return $dateFormat->format($date, $format, null, $charset);
 }
 
 function distance_of_time_in_words($from_time, $to_time = null, $include_seconds = false)

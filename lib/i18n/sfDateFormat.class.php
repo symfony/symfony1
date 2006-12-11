@@ -49,15 +49,15 @@ class sfDateFormat
    */
   protected $tokens = array(
     'G'=>'Era',
-    'y'=>'Year',
-    'M'=>'Month',
-    'd'=>'Day',
+    'y'=>'year',
+    'M'=>'mon',
+    'd'=>'mday',
     'h'=>'Hour12',
-    'H'=>'Hour24',
-    'm'=>'Minutes',
-    's'=>'Seconds',
-    'E'=>'DayInWeek',
-    'D'=>'DayInYear',
+    'H'=>'hours',
+    'm'=>'minutes',
+    's'=>'seconds',
+    'E'=>'wday',
+    'D'=>'yday',
     'F'=>'DayInMonth',
     'w'=>'WeekInYear',
     'W'=>'WeekInMonth',
@@ -106,6 +106,74 @@ class sfDateFormat
 
     $this->methods = get_class_methods($this);
   }
+  
+  /**
+   * Guesses a date without calling strtotime.
+   *
+   * @param mixed the time as integer or string in strtotime format.
+   * @param string the input pattern; default is sql date or timestamp
+   * @return string formatted date time. 
+   */
+  public function getDate($time, $pattern = null)
+  {    
+    // if the type is not a php timestamp
+    if (!ctype_digit((string) $time))
+    {
+      if (!$pattern)
+      {
+        if (strlen($time) == 10)
+        {
+          $pattern = 'yyyy-MM-dd';
+        }
+        else   // otherwise, default:
+        {
+          $pattern = 'yyyy-MM-dd HH:mm:ss';
+        }
+      }
+    
+      $tokens = $this->getTokens($pattern);
+      $pregPattern = '';
+      $matchNames = array();
+      foreach($tokens as $token)
+      {
+        if ($matchName = $this->getFunctionName($token))
+        {
+          #$pregPattern .= sprintf('(\d{%s})', strlen($token));
+          $pregPattern .= '(\d+)';
+          $matchNames[] = $matchName;
+        }
+        else
+          $pregPattern .= $token;
+      }
+      preg_match('@'.$pregPattern.'@', $time, $matches);
+      
+      array_shift($matches);      
+      
+      if (count($matchNames) == count($matches))
+      {
+        $result = array_combine($matchNames, $matches);       
+        $date = $result;
+      }
+    }
+    
+    // the last attempt has failed we fall back on the default method
+    if (!isset($date))
+    {
+      $time = @strtotime($time);
+      $date = @getdate($time);
+    }
+    
+    // we set default values for the time
+    foreach (array('hours', 'minutes', 'seconds') as $timeDiv)
+    {
+      if (!isset($date[$timeDiv]))
+      {
+        $date[$timeDiv] = 0;
+      }
+    }
+        
+    return $date;
+  }
 
   /**
    * Format a date according to the pattern.
@@ -113,22 +181,17 @@ class sfDateFormat
    * @param mixed the time as integer or string in strtotime format.
    * @return string formatted date time. 
    */
-  public function format($time, $pattern = 'F', $charset = 'UTF-8')
+  public function format($time, $pattern = 'F', $inputPattern = null, $charset = 'UTF-8')
   {
-    if (!ctype_digit((string) $time))
-    {
-      $time = @strtotime($time);
-    }
+
+    $date = $this->getDate($time, $inputPattern);
 
     if (is_null($pattern))
     {
       $pattern = 'F';
     }
 
-    $date = @getdate($time);
-
     $pattern = $this->getPattern($pattern);
-
     $tokens = $this->getTokens($pattern);
 
     for ($i = 0, $max = count($tokens); $i < $max; $i++)
@@ -144,7 +207,7 @@ class sfDateFormat
       }
       else
       {
-        $function = $this->getFunctionName($pattern);
+        $function = ucfirst($this->getFunctionName($pattern));
         if ($function != null)
         {
           $fName = 'get'.$function;
@@ -344,7 +407,7 @@ class sfDateFormat
    * @param string a pattern.
    * @return string month name
    */
-  protected function getMonth($date, $pattern = 'M')
+  protected function getMon($date, $pattern = 'M')
   {
     $month = $date['mon'];
 
@@ -375,7 +438,7 @@ class sfDateFormat
    * @param string a pattern.
    * @return string day of the week.
    */
-  protected function getDayInWeek($date, $pattern = 'EEEE')
+  protected function getWday($date, $pattern = 'EEEE')
   {
     $day = $date['wday'];
 
@@ -405,7 +468,7 @@ class sfDateFormat
    * @param string a pattern.
    * @return string day of the month
    */
-  protected function getDay($date, $pattern = 'd')
+  protected function getMday($date, $pattern = 'd')
   {
     $day = $date['mday'];
 
@@ -448,7 +511,7 @@ class sfDateFormat
    * @param string a pattern.
    * @return string hours in 24 hour format.
    */
-  protected function getHour24($date, $pattern = 'H')
+  protected function getHours($date, $pattern = 'H')
   {
     $hour = $date['hours'];
 
@@ -575,7 +638,7 @@ class sfDateFormat
    * @param string a pattern.
    * @return int hours in AM/PM format.
    */
-  protected function getDayInYear($date, $pattern = 'D')
+  protected function getYday($date, $pattern = 'D')
   {
     if ($pattern != 'D')
     {
