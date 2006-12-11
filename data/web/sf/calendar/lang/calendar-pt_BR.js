@@ -1,4 +1,4 @@
-﻿// ** I18N
+// ** I18N
 
 // Calendar pt-BR language
 // Author: Fernando Dourado, <fernando.dourado@ig.com.br>
@@ -34,6 +34,10 @@ Calendar._DN = new Array
 
 // short day names
 // [No changes using default values]
+
+// First day of the week. "0" means display Sunday first, "1" means display
+// Monday first, etc.
+Calendar._FD = 0;
 
 // full month names
 Calendar._MN = new Array

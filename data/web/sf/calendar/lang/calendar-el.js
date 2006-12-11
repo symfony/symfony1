@@ -1,4 +1,4 @@
-﻿// ** I18N
+// ** I18N
 Calendar._DN = new Array
 ("Κυριακή",
  "Δευτέρα",
@@ -18,6 +18,10 @@ Calendar._SDN = new Array
  "Πα",
  "Σα",
  "Κυ");
+
+// First day of the week. "0" means display Sunday first, "1" means display
+// Monday first, etc.
+Calendar._FD = 1;
 
 Calendar._MN = new Array
 ("Ιανουάριος",
@@ -74,6 +78,16 @@ Calendar._TT["NEXT_MONTH"] = "Επόμενος μήνας (κρατήστε γι
 Calendar._TT["NEXT_YEAR"] = "Επόμενο έτος (κρατήστε για το μενού)";
 Calendar._TT["SEL_DATE"] = "Επιλέξτε ημερομηνία";
 Calendar._TT["DRAG_TO_MOVE"] = "Σύρτε για να μετακινήσετε";
+
+// the following is to inform that "%s" is to be the first day of week
+// %s will be replaced with the day name.
+Calendar._TT["DAY_FIRST"] = "Display %s first";
+
+// This may be locale-dependent.  It specifies the week-end days, as an array
+// of comma-separated numbers.  The numbers are from 0 to 6: 0 means Sunday, 1
+// means Monday, etc.
+Calendar._TT["WEEKEND"] = "0,6";
+
 Calendar._TT["PART_TODAY"] = " (σήμερα)";
 Calendar._TT["MON_FIRST"] = "Εμφάνιση Δευτέρας πρώτα";
 Calendar._TT["SUN_FIRST"] = "Εμφάνιση Κυριακής πρώτα";

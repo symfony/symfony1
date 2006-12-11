@@ -24,6 +24,11 @@ Calendar._DN = new Array
  "Sob",
  "Ned");
 // short month names
+
+// First day of the week. "0" means display Sunday first, "1" means display
+// Monday first, etc.
+Calendar._FD = 1;
+
 Calendar._SMN = new Array
 ("Jan",
  "Feb",
@@ -84,6 +89,16 @@ Calendar._TT["DRAG_TO_MOVE"] = "Pritisni in povleci za spremembo pozicije";
 Calendar._TT["PART_TODAY"] = " (danes)";
 Calendar._TT["MON_FIRST"] = "Prikaži ponedeljek kot prvi dan";
 Calendar._TT["SUN_FIRST"] = "Prikaži nedeljo kot prvi dan";
+
+// the following is to inform that "%s" is to be the first day of week
+// %s will be replaced with the day name.
+Calendar._TT["DAY_FIRST"] = "Display %s first";
+
+// This may be locale-dependent.  It specifies the week-end days, as an array
+// of comma-separated numbers.  The numbers are from 0 to 6: 0 means Sunday, 1
+// means Monday, etc.
+Calendar._TT["WEEKEND"] = "0,6";
+
 Calendar._TT["CLOSE"] = "Zapri";
 Calendar._TT["TODAY"] = "Danes";
 

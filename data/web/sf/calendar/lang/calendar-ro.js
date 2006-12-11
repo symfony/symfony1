@@ -9,6 +9,12 @@ Calendar._DN = new Array
  "Sâmbătă",
  "Duminică");
 Calendar._SDN_len = 2;
+
+
+// First day of the week. "0" means display Sunday first, "1" means display
+// Monday first, etc.
+Calendar._FD = 1;
+
 Calendar._MN = new Array
 ("Ianuarie",
  "Februarie",

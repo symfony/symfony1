@@ -23,6 +23,10 @@ Calendar._SDN = new Array
 "Sht",
 "Die");
 
+// First day of the week. "0" means display Sunday first, "1" means display
+// Monday first, etc.
+Calendar._FD = 1;
+
 // muajt
 Calendar._MN = new Array
 ("Janar",
@@ -89,8 +93,7 @@ Calendar._TT["WEEKEND"] = "0,6";
 
 Calendar._TT["CLOSE"] = "Mbyll";
 Calendar._TT["TODAY"] = "Sot";
-Calendar._TT["TIME_PART"] = "Kliko me (Shift-)ose terhiqe per te ndryshuar 
-vleren";
+Calendar._TT["TIME_PART"] = "Kliko me (Shift-)ose terhiqe per te ndryshuar vleren";
 
 // date formats
 Calendar._TT["DEF_DATE_FORMAT"] = "%Y-%m-%d";
