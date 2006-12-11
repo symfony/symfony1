@@ -782,11 +782,10 @@ function input_date_tag($name, $value = null, $options = array())
   $date_format = $dateFormatInfo->getPattern($pattern);
 
   // calendar date format
-  $calendar_date_format = $date_format;error_log($date_format);
+  $calendar_date_format = $date_format;
   $calendar_date_format = strtr($date_format, array('MM' => 'm', 'M'=>'m', 'dd'=>'d', 'yyyy' => 'Y', 'HH'=>'H', 'h'=>'l', 'mm'=>'M', 'ss'=>'S', 'a'=>'p'));
 
   $calendar_date_format = preg_replace('/([mdyhlsp])+/i', '%\\1', $calendar_date_format);
-error_log($calendar_date_format);
 
   $id_inputField = (isset($options['id']))? $options['id'] : get_id_from_name($name);
   $id_calendarButton = 'trigger_'.get_id_from_name($name);
