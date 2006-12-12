@@ -1,16 +1,18 @@
-/* 
-	calendar-cs-win.js
+/*
+	calendar-cs.js
 	language: Czech
-	encoding: utf8
-	author: Lubos Jerabek (xnet@seznam.cz)
+	encoding: utf-8
+	author: Mishal (mishal AT mishal DOT cz) 
+	        (opraven formát dnů, měsíců + kosmetické změny :-))
+	        Lubos Jerabek (xnet@seznam.cz)
 	        Jan Uhlir (espinosa@centrum.cz)
 */
 
 // ** I18N
-Calendar._DN  = new Array('Neděle','Pondělí','Úterý','Středa','Čtvrtek','Pátek','Sobota','Neděle');
-Calendar._SDN = new Array('Ne','Po','Út','St','Čt','Pá','So','Ne');
-Calendar._MN  = new Array('Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec');
-Calendar._SMN = new Array('Led','Úno','Bře','Dub','Kvě','Črv','Čvc','Srp','Zář','Říj','Lis','Pro');
+Calendar._DN  = new Array('neděle','pondělí','úterý','středa','čtvrtek','pátek','sobota','neděle');
+Calendar._SDN = new Array('ne','po','út','st','čt','pá','so','ne');
+Calendar._MN  = new Array('leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec');
+Calendar._SMN = new Array('led','úno','bře','dub','kvě','črn','čvc','srp','zář','říj','lis','pro');
 
 // First day of the week. "0" means display Sunday first, "1" means display
 // Monday first, etc.
@@ -40,12 +42,12 @@ Calendar._TT["ABOUT"] =
 "Výběr datumu:\n" +
 "- Použijte \xab, \xbb tlačítka k výběru roku\n" +
 "- Použijte tlačítka " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " k výběru měsíce\n" +
-"- Podržte tlačítko myši na jakémkoliv z těch tlačítek pro rychlejší výběr.";
+"- Podržte tlačítko myši na jakémkoliv z těchto tlačítek pro rychlejší výběr.";
 
 Calendar._TT["ABOUT_TIME"] = "\n\n" +
 "Výběr času:\n" +
 "- Klikněte na jakoukoliv z částí výběru času pro zvýšení.\n" +
-"- nebo Shift-click pro snížení\n" +
+"- nebo shift-click pro snížení\n" +
 "- nebo klikněte a táhněte pro rychlejší výběr.";
 
 // the following is to inform that "%s" is to be the first day of week
@@ -65,6 +67,6 @@ Calendar._TT["TIME_PART"] = "(Shift-)Klikni nebo táhni pro změnu hodnoty";
 Calendar._TT["DEF_DATE_FORMAT"] = "d.m.yy";
 Calendar._TT["TT_DATE_FORMAT"] = "%a, %b %e";
 
-Calendar._TT["WK"] = "wk";
+Calendar._TT["WK"] = "týden";
 Calendar._TT["TIME"] = "Čas:";
 
