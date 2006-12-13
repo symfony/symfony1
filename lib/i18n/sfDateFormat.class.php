@@ -482,7 +482,7 @@ class sfDateFormat
       case 'dd':
         return str_pad($day, 2, '0', STR_PAD_LEFT);
       case 'dddd':
-        return $this->getDayInWeek($date);
+        return $this->getWday($date);
       default:
         throw new sfException('The pattern for day of the month is "d", "dd" or "dddd".');
     }
