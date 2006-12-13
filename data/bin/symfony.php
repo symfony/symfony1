@@ -104,9 +104,16 @@ class simpleAutoloader
   }
 }
 
-simpleAutoloader::initialize($sf_symfony_lib_dir);
 function __autoload($class)
 {
+  static $initialized = false;
+
+  if (!$initialized)
+  {
+    simpleAutoloader::initialize(sfConfig::get('sf_symfony_lib_dir'));
+    $initialized = true;
+  }
+
   return simpleAutoloader::__autoload($class);
 }
 
