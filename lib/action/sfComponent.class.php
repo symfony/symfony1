@@ -19,10 +19,10 @@
 abstract class sfComponent
 {
   protected
-    $context                  = null,
-    $var_holder               = null,
-    $request                  = null,
-    $response                 = null,
+    $context                = null,
+    $var_holder             = null,
+    $request                = null,
+    $response               = null,
     $requestParameterHolder = null;
 
   /**
@@ -44,6 +44,26 @@ abstract class sfComponent
    *               - The view that will be executed.
    */
   abstract function execute();
+
+  /**
+   * Gets current module name
+   *
+   * @return string
+   */
+  public function getModuleName()
+  {
+    return $this->getContext()->getModuleName();
+  }
+
+  /**
+   * Gets current action name
+   *
+   * @return string
+   */
+  public function getActionName()
+  {
+    return $this->getContext()->getActionName();
+  }
 
   /**
    * Initialize this action.

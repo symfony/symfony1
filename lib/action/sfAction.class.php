@@ -24,26 +24,6 @@ abstract class sfAction extends sfComponent
     $security = array();
 
   /**
-   * Gets current module name
-   *
-   * @return string
-   */
-  public function getModuleName()
-  {
-    return $this->getContext()->getModuleName();
-  }
-
-  /**
-   * Gets current action name
-   *
-   * @return string
-   */
-  public function getActionName()
-  {
-    return $this->getContext()->getActionName();
-  }
-
-  /**
    * Initialize this action.
    *
    * @param sfContext The current application context.
@@ -388,17 +368,6 @@ abstract class sfAction extends sfComponent
   public function handleError()
   {
     return sfView::ERROR;
-  }
-
-  /**
-   * Manually register validators for this action.
-   *
-   * @param sfValidatorManager A sfValidatorManager instance.
-   *
-   * @return void
-   */
-  public function registerValidators($validatorManager)
-  {
   }
 
   /**
