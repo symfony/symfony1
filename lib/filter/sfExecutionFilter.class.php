@@ -62,10 +62,6 @@ class sfExecutionFilter extends sfFilter
 
     if (!$viewName)
     {
-      // create validator manager
-      $validatorManager = new sfValidatorManager();
-      $validatorManager->initialize($context);
-
       if (($actionInstance->getRequestMethods() & $method) != $method)
       {
         // this action will skip validation/execution for this method
@@ -84,14 +80,15 @@ class sfExecutionFilter extends sfFilter
         // do NOT use require_once
         if (null !== $validateFile = sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$validationConfig, true))
         {
+          // create validator manager
+          $validatorManager = new sfValidatorManager();
+          $validatorManager->initialize($context);
+
           require($validateFile);
+
+          // process validators
+          $validated = $validatorManager->execute();
         }
-
-        // manually load validators
-        $actionInstance->registerValidators($validatorManager);
-
-        // process validators
-        $validated = $validatorManager->execute();
 
         // process manual validation
         $validateToRun = 'validate'.ucfirst($actionName);
