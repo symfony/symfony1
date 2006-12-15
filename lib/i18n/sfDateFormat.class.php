@@ -115,7 +115,7 @@ class sfDateFormat
    * @return string formatted date time. 
    */
   public function getDate($time, $pattern = null)
-  {    
+  {
     // if the type is not a php timestamp
     if (is_string($time))
     {
@@ -130,32 +130,33 @@ class sfDateFormat
           $pattern = 'yyyy-MM-dd HH:mm:ss';
         }
       }
-    
+
       $tokens = $this->getTokens($pattern);
       $pregPattern = '';
       $matchNames = array();
-      foreach($tokens as $token)
+      foreach ($tokens as $token)
       {
         if ($matchName = $this->getFunctionName($token))
         {
-          #$pregPattern .= sprintf('(\d{%s})', strlen($token));
           $pregPattern .= '(\d+)';
           $matchNames[] = $matchName;
         }
         else
+        {
           $pregPattern .= $token;
+        }
       }
       preg_match('@'.$pregPattern.'@', $time, $matches);
-      
-      array_shift($matches);      
-      
+
+      array_shift($matches);
+
       if (count($matchNames) == count($matches))
       {
-        $result = array_combine($matchNames, $matches);       
+        $result = array_combine($matchNames, $matches);
         $date = $result;
       }
     }
-    
+
     // the last attempt has failed we fall back on the default method
     if (!isset($date))
     {
@@ -165,7 +166,7 @@ class sfDateFormat
       }
       $date = @getdate($time);
     }
-    
+
     // we set default values for the time
     foreach (array('hours', 'minutes', 'seconds') as $timeDiv)
     {
@@ -174,7 +175,7 @@ class sfDateFormat
         $date[$timeDiv] = 0;
       }
     }
-        
+
     return $date;
   }
 
@@ -186,7 +187,6 @@ class sfDateFormat
    */
   public function format($time, $pattern = 'F', $inputPattern = null, $charset = 'UTF-8')
   {
-
     $date = $this->getDate($time, $inputPattern);
 
     if (is_null($pattern))
