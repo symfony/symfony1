@@ -34,7 +34,11 @@ class sfCompileConfigHandler extends sfYamlConfigHandler
   public function execute($configFiles)
   {
     // parse the yaml
-    $config = $this->parseYamls($configFiles);
+    $config = array();
+    foreach ($configFiles as $configFile)
+    {
+      $config = array_merge($config, $this->parseYaml($configFile));
+    }
 
     // init our data
     $data = '';
