@@ -257,12 +257,12 @@ function run_log_purge($task, $args)
   $apps = pakeFinder::type('dir')->maxdepth(0)->relative()->ignore_version_control()->in('apps');
   $ignore = array('all', 'default');
 
-  foreach($apps as $app)
+  foreach ($apps as $app)
   {
     $logging = sfYaml::load($app_dir.'/'.$app.'/config/logging.yml');
     $logging = array_merge($default_logging, $logging);
 
-    foreach($logging as $env => $config)
+    foreach ($logging as $env => $config)
     {
       if (in_array($env, $ignore))
       {
@@ -276,7 +276,7 @@ function run_log_purge($task, $args)
         $filename = sfConfig::get('sf_log_dir').'/'.$app.'_'.$env.'.log';
         if (file_exists($filename))
         {
-          pake_remove($filename);
+          pake_remove($filename, '');
         }
       }
     }
