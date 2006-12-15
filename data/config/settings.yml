@@ -58,6 +58,7 @@ default:
     prototype_web_dir:      /sf/prototype
     admin_web_dir:          /sf/sf_admin
     web_debug_web_dir:      /sf/sf_web_debug
+    calendar_web_dir:       /sf/calendar
 
     # Helpers included in all templates by default
     standard_helpers:       [Partial, Cache, Form]
