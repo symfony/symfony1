@@ -17,59 +17,47 @@
  * @version    SVN: $Id$
  */
 
-function format_daterange($start_date, $end_date, $format = 'd', $full_text, $start_text, $end_text, $culture = null)
+function format_daterange($start_date, $end_date, $format = 'd', $full_text, $start_text, $end_text, $culture = null, $charset = null)
 {
-  if (!$culture)
-  {
-    $culture = sfContext::getInstance()->getUser()->getCulture();
-  }
-
-  $dateFormat = new sfDateFormat($culture);
-
   if ($start_date != '' && $end_date != '')
   {
-    return sprintf($full_text, $dateFormat->format($start_date, $format), $dateFormat->format($end_date, $format));
+    return sprintf($full_text, format_date($start_date, $format, $culture, $charset), format_date($end_date, $format, $culture, $charset));
   }
   else if ($start_date != '')
   {
-    return sprintf($start_text, $dateFormat->format($start_date, $format));
+    return sprintf($start_text, format_date($start_date, $format, $culture, $charset));
   }
   else if ($end_date != '')
   {
-    return sprintf($end_text, $dateFormat->format($end_date, $format));
+    return sprintf($end_text, format_date($end_date, $format, $culture, $charset));
   }
 }
 
 function format_date($date, $format = 'd', $culture = null, $charset = null)
 {
+  static $dateFormats = array();
+
   if (!$culture)
   {
     $culture = sfContext::getInstance()->getUser()->getCulture();
   }
+
   if (!$charset)
   {
     $charset = sfConfig::get('sf_charset');
   }
 
-  $dateFormat = new sfDateFormat($culture);
+  if (!isset($dateFormats[$culture]))
+  {
+    $dateFormats[$culture] = new sfDateFormat($culture);
+  }
 
-  return $dateFormat->format($date, $format, null, $charset);
+  return $dateFormats[$culture]->format($date, $format, null, $charset);
 }
 
 function format_datetime($date, $format = 'F', $culture = null, $charset = null)
 {
-  if (!$culture)
-  {
-    $culture = sfContext::getInstance()->getUser()->getCulture();
-  }
-  if (!$charset)
-  {
-    $charset = sfConfig::get('sf_charset');
-  }
-
-  $dateFormat = new sfDateFormat($culture);
-
-  return $dateFormat->format($date, $format, null, $charset);
+  return format_date($date, $format, $culture, $charset);
 }
 
 function distance_of_time_in_words($from_time, $to_time = null, $include_seconds = false)

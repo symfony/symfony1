@@ -12,7 +12,44 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 sfLoader::loadHelpers(array('Helper', 'Asset', 'Url', 'Tag', 'Date'));
 
-$t = new lime_test(21, new lime_output_color());
+$t = new lime_test(27, new lime_output_color());
+
+class sfContext
+{
+  public $user = null;
+  public static $instance = null;
+
+  public function getInstance()
+  {
+    if (!isset(self::$instance))
+    {
+      self::$instance = new sfContext();
+    }
+
+    return self::$instance;
+  }
+
+  public function getUser()
+  {
+    return $this->user;
+  }
+}
+
+class sfUser
+{
+  public $culture = 'en';
+
+  public function getCulture()
+  {
+    return $this->culture;
+  }
+}
+
+sfConfig::set('sf_charset', 'utf-8');
+
+$context = sfContext::getInstance();
+$user = new sfUser();
+$context->user = $user;
 
 // distance_of_time_in_words()
 $t->diag('distance_of_time_in_words()');
@@ -44,3 +81,23 @@ $t->is(distance_of_time_in_words($now - 75 * 86400, $now), '3 months', $msg);
 
 $t->is(distance_of_time_in_words($now - 370 * 86400, $now), 'about 1 year', $msg);
 $t->is(distance_of_time_in_words($now - 4 * 365 * 86400, $now), 'over 4 years', $msg);
+
+// format_date()
+$t->diag('format_date()');
+$user->culture = 'fr';
+$t->is(format_date(time()), date('d/m/Y'), 'format_date() format a date according to the user culture');
+$t->is(format_date(date('Y-m-d')), date('d/m/Y'), 'format_date() format a date according to the user culture');
+
+$user->culture = 'en';
+$time = time();
+$t->is(format_date($time, 'F'), date('d F Y H:i:s', $time).' CET', 'format_date() takes a format string as its second argument');
+
+$user->culture = 'fr';
+$t->is(format_date($time, 'F', 'en'), date('d F Y H:i:s', $time).' CET', 'format_date() takes a culture as its third argument');
+
+// format_datetime()
+$t->diag('format_datetime()');
+$user->culture = 'en';
+$time = time();
+$t->is(format_datetime($time), date('d F Y H:i:s', $time).' CET', 'format_datetime() format a date time according to the user culture');
+$t->is(format_datetime(date('Y-m-d')), date('d F Y').' 00:00:00 CET', 'format_datetime() format a date time according to the user culture');
