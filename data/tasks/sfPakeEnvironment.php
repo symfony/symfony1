@@ -28,8 +28,15 @@ function run_sync($task, $args)
   }
 
   $host = $task->get_property('host', $env);
-  $user = $task->get_property('user', $env);
-  $dir = $task->get_property('dir', $env);
+  $dir  = $task->get_property('dir', $env);
+  try
+  {
+    $user = $task->get_property('user', $env).'@';
+  }
+  catch (pakeException $e)
+  {
+    $user = '';
+  }
 
   if (substr($dir, -1) != '/')
   {
@@ -69,7 +76,7 @@ function run_sync($task, $args)
   }
 
   $dry_run = ($dryrun == 'go' || $dryrun == 'ok') ? '' : '--dry-run';
-  $cmd = "rsync --progress $dry_run $parameters -e $ssh ./ $user@$host:$dir";
+  $cmd = "rsync --progress $dry_run $parameters -e $ssh ./ $user$host:$dir";
 
   echo pake_sh($cmd);
 }
