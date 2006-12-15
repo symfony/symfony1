@@ -254,8 +254,13 @@ class sfParameterHolder
    *
    * @return void
    */
-  public function & removeNamespace ($ns)
+  public function & removeNamespace ($ns = null)
   {
+    if (!$ns)
+    {
+      $ns = $this->default_namespace;
+    }
+
     $retval = null;
 
     if (isset($this->parameters[$ns]))
