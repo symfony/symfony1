@@ -439,7 +439,7 @@ EOF;
 
     foreach ($this->getColumns('tmp.display') as $column)
     {
-      $value = str_replace('%%'.$column->getName().'%%', '{$this->'.$this->getSingularName().'->get'.$column->getPhpName().'()}', $value);
+      $value = str_replace('%%'.$column->getName().'%%', '{'.$this->getColumnGetter($column, true, 'this->').'}', $value);
     }
 
     return $value;
@@ -582,19 +582,9 @@ class sfAdminColumn
     $this->flags   = (array) $flags;
   }
 
-  public function __call($name, $arguments)
-  {
-    return $this->column ? $this->column->$name() : null;
-  }
-
   public function isReal()
   {
     return $this->column ? true : false;
-  }
-
-  public function getPhpName()
-  {
-    return $this->phpName;
   }
 
   public function getName()
@@ -615,5 +605,17 @@ class sfAdminColumn
   public function isLink()
   {
     return (in_array('=', $this->flags) || $this->isPrimaryKey()) ? true : false;
+  }
+  
+  // FIXME: those methods are only used in the propel admin generator
+  
+  public function __call($name, $arguments)
+  {
+    return $this->column ? $this->column->$name() : null;
+  }
+  
+  public function getPhpName()
+  {
+    return $this->phpName;
   }
 }
