@@ -20,30 +20,30 @@
 
 /**
  * sfCultureInfo class.
- * 
- * Represents information about a specific culture including the 
- * names of the culture, the calendar used, as well as access to 
- * culture-specific objects that provide methods for common operations, 
+ *
+ * Represents information about a specific culture including the
+ * names of the culture, the calendar used, as well as access to
+ * culture-specific objects that provide methods for common operations,
  * such as formatting dates, numbers, and currency.
- * 
- * The sfCultureInfo class holds culture-specific information, such as the 
- * associated language, sublanguage, country/region, calendar, and cultural 
- * conventions. This class also provides access to culture-specific 
+ *
+ * The sfCultureInfo class holds culture-specific information, such as the
+ * associated language, sublanguage, country/region, calendar, and cultural
+ * conventions. This class also provides access to culture-specific
  * instances of sfDateTimeFormatInfo and sfNumberFormatInfo. These objects
  * contain the information required for culture-specific operations,
  * such as formatting dates, numbers and currency.
- *  
- * The culture names follow the format "<languagecode>_<country/regioncode>", 
+ *
+ * The culture names follow the format "<languagecode>_<country/regioncode>",
  * where <languagecode> is a lowercase two-letter code derived from ISO 639
- * codes. You can find a full list of the ISO-639 codes at 
- * http://www.ics.uci.edu/pub/ietf/http/related/iso639.txt 
- * 
- * The <country/regioncode2> is an uppercase two-letter code derived from 
- * ISO 3166. A copy of ISO-3166 can be found at 
+ * codes. You can find a full list of the ISO-639 codes at
+ * http://www.ics.uci.edu/pub/ietf/http/related/iso639.txt
+ *
+ * The <country/regioncode2> is an uppercase two-letter code derived from
+ * ISO 3166. A copy of ISO-3166 can be found at
  * http://www.chemie.fu-berlin.de/diverse/doc/ISO_3166.html
  *
- * For example, Australian English is "en_AU". 
- * 
+ * For example, Australian English is "en_AU".
+ *
  * @author Xiang Wei Zhuo <weizhuo[at]gmail[dot]com>
  * @version v1.0, last update on Sat Dec 04 13:41:46 EST 2004
  * @package System.I18N.core
@@ -52,63 +52,63 @@ class sfCultureInfo
 {
   /**
    * ICU data filename extension.
-   * @var string 
+   * @var string
    */
   protected $dataFileExt = '.dat';
 
   /**
    * The ICU data array.
-   * @var array 
+   * @var array
    */
   protected $data = array();
 
   /**
    * The current culture.
-   * @var string 
+   * @var string
    */
   protected $culture;
 
   /**
    * Directory where the ICU data is stored.
-   * @var string 
+   * @var string
    */
   protected $dataDir;
 
   /**
    * A list of ICU date files loaded.
-   * @var array 
+   * @var array
    */
   protected $dataFiles = array();
 
   /**
    * The current date time format info.
-   * @var sfDateTimeFormatInfo 
+   * @var sfDateTimeFormatInfo
    */
   protected $dateTimeFormat;
 
   /**
    * The current number format info.
-   * @var sfNumberFormatInfo 
+   * @var sfNumberFormatInfo
    */
   protected $numberFormat;
   
   /**
    * A list of properties that are accessable/writable.
-   * @var array 
+   * @var array
    */ 
   protected $properties = array();
 
   /**
-   * Culture type, all. 
+   * Culture type, all.
    * @see getCultures()
-   * @var int 
+   * @var int
    */
   const ALL = 0;
 
   /**
-   * Culture type, neutral. 
+   * Culture type, neutral.
    * @see getCultures()
-   * @var int 
+   * @var int
    */ 
   const NEUTRAL = 1;
 
@@ -116,7 +116,7 @@ class sfCultureInfo
    * Culture type, specific.
    *
    * @see getCultures()
-   * @var int 
+   * @var int
    */ 
   const SPECIFIC = 2;
 
@@ -304,13 +304,13 @@ class sfCultureInfo
    */
   protected function &getData($filename)
   {
-    static $data = array();
+    static $data  = array();
     static $files = array();
 
-    if(!in_array($filename, $files))
+    if (!isset($files[$filename]))
     {
-      $data[$filename] = unserialize(file_get_contents($filename));
-      $files[] = $filename;
+      $data[$filename]  = unserialize(file_get_contents($filename));
+      $files[$filename] = true;
     }
 
     return $data[$filename];
@@ -353,7 +353,7 @@ class sfCultureInfo
 
     return $result;
   }
-  
+
   /**
    * Search the array for a specific value using a path separated using
    * slash "/" separated path. e.g to find $info['hello']['world'],
