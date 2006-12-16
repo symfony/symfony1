@@ -34,7 +34,7 @@ class ArticleMapBuilder {
 
 		$tMap->addPrimaryKey('ID', 'Id', 'int', CreoleTypes::INTEGER, true, null);
 
-		$tMap->addColumn('TITLE', 'Title', 'string', CreoleTypes::VARCHAR, false);
+		$tMap->addColumn('TITLE', 'Title', 'string', CreoleTypes::VARCHAR, false, 255);
 
 		$tMap->addColumn('BODY', 'Body', 'string', CreoleTypes::LONGVARCHAR, false);
 

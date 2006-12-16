@@ -34,7 +34,7 @@ class CategoryMapBuilder {
 
 		$tMap->addPrimaryKey('ID', 'Id', 'int', CreoleTypes::INTEGER, true, null);
 
-		$tMap->addColumn('NAME', 'Name', 'string', CreoleTypes::VARCHAR, false);
+		$tMap->addColumn('NAME', 'Name', 'string', CreoleTypes::VARCHAR, false, 255);
 				
     } 
 } 
