@@ -26,4 +26,18 @@ class fillInFilterActions extends sfActions
   {
     return sfView::SUCCESS;
   }
+
+  public function executeIndex()
+  {
+  }
+
+  public function executeUpdate()
+  {
+    $this->forward('fillInFilter', 'index');
+  }
+
+  public function handleErrorUpdate()
+  {
+    $this->forward('fillInFilter', 'index');
+  }
 }

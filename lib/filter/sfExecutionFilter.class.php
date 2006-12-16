@@ -103,7 +103,6 @@ class sfExecutionFilter extends sfFilter
         if (null !== ($parameters = $context->getRequest()->getAttribute('fillin', null, 'symfony/filter')))
         {
           $this->registerFillInFilter($filterChain, $parameters);
-          $context->getRequest()->setAttribute('fillin', null, 'symfony/filter');
         }
 
         if ($validated)
