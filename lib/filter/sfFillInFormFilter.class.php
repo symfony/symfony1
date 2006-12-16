@@ -44,8 +44,18 @@ class sfFillInFormFilter extends sfFilter
 
     // fill in
     $method  = 'fillIn'.ucfirst(strtolower($this->getParameter('content_type', 'Html')));
-    $content = $fillInForm->$method($response->getContent(), $this->getParameter('name'), $this->getParameter('id'), $request->getParameterHolder()->getAll());
 
-    $response->setContent($content);
+    try
+    {
+      $content = $fillInForm->$method($response->getContent(), $this->getParameter('name'), $this->getParameter('id'), $request->getParameterHolder()->getAll());
+      $response->setContent($content);
+    }
+    catch (sfException $e)
+    {
+      if (sfConfig::get('sf_logging_enabled'))
+      {
+        $this->getContext()->getLogger()->err(sprintf('{sfFilter} %s', $e->getMessage()));
+      }
+    }
   }
 }
