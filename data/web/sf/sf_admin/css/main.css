@@ -84,7 +84,7 @@ body, #sf_admin_container td
 
 #sf_admin_container .sf_admin_filters input[type="checkbox"] + label
 {
-  display: inline !important;
+  display: inline;
   float: none;
 }
 
@@ -329,13 +329,19 @@ body, #sf_admin_container td
   padding: 0px;
 }
 
-select.sf_admin_multiple, select.sf_admin_multiple-selected
+#sf_admin_container select.sf_admin_multiple, #sf_admin_container select.sf_admin_multiple-selected
 {
   width: 12em;
 }
 
-ul.sf_admin_checklist li
+#sf_admin_container ul.sf_admin_checklist li
 {
   list-style: none;
   line-height: 1.5em;
+}
+
+#sf_admin_container ul.sf_admin_checklist li label
+{
+  display: inline;
+  float: none;
 }
