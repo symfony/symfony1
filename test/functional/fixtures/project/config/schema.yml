@@ -4,6 +4,7 @@ propel:
     title:       varchar(255)
     body:        longvarchar
     online:      boolean
+    end_date:    timestamp
     category_id:
     created_at:
 

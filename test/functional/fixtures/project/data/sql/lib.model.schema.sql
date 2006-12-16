@@ -12,6 +12,7 @@ CREATE TABLE [article]
 	[title] VARCHAR(255),
 	[body] MEDIUMTEXT,
 	[online] INTEGER,
+	[end_date] TIMESTAMP,
 	[category_id] INTEGER,
 	[created_at] TIMESTAMP
 );
