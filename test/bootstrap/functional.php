@@ -14,7 +14,7 @@ if (!extension_loaded('SQLite'))
   return false;
 }
 
-define('SF_ROOT_DIR',    realpath(dirname(__FILE__).'/../functional/fixtures/project'));
+define('SF_ROOT_DIR',    realpath(dirname(__FILE__).sprintf('/../%s/fixtures/project', isset($type) ? $type : 'functional')));
 define('SF_APP',         $app);
 define('SF_ENVIRONMENT', 'test');
 define('SF_DEBUG',       isset($debug) ? $debug : true);
