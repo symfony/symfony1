@@ -3,3 +3,8 @@ generator:
   param:
     model_class:      Article
     theme:            default
+
+    list:
+      filters: [title]
+      fields:
+        title: { filter_is_empty: true }

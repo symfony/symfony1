@@ -35,3 +35,8 @@ $b->
   checkResponseElement('div.sf_admin_filters input[name="filters[created_at][from]"][id="filters_created_at_from"]')->
   checkResponseElement('div.sf_admin_filters input[name="filters[created_at][to]"][id="filters_created_at_to"]')
 ;
+
+$b->
+  checkListCustomization('filters', array('filters' => array('title'), 'fields' => array('title' => array('filter_is_empty' => true))))->
+  checkResponseElement('div.sf_admin_filters label[for="filters[title_is_empty]"]')
+;
