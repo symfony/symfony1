@@ -209,7 +209,7 @@ class sfDomCssSelector
           break;
         case '+':
           $element = $node->childNodes->item(0);
-          if ($tagName == $element->nodeName)
+          if ($element && $tagName == $element->nodeName)
           {
             $founds[] = $element;
           }
