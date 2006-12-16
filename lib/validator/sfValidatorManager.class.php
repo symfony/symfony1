@@ -46,6 +46,11 @@ class sfValidatorManager
    */
   public function execute()
   {
+    if (sfConfig::get('sf_logging_enabled'))
+    {
+      sfContext::getInstance()->getLogger()->info('{sfValidator} validation execution');
+    }
+
     $retval = true;
 
     // loop through the names and start our validation
