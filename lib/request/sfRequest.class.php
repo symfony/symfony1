@@ -237,7 +237,10 @@ abstract class sfRequest
    */
   public function setError($name, $message)
   {
-    if (sfConfig::get('sf_logging_enabled')) $this->getContext()->getLogger()->info('{sfRequest} error in form for parameter "'.$name.'" (with message "'.$message.'")');
+    if (sfConfig::get('sf_logging_enabled'))
+    {
+      $this->getContext()->getLogger()->info('{sfRequest} error in form for parameter "'.$name.'" (with message "'.$message.'")');
+    }
 
     $this->errors[$name] = $message;
   }
