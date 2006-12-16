@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(50, new lime_output_color());
+$t = new lime_test(53, new lime_output_color());
 
 // ->clear()
 $t->diag('->clear()');
@@ -138,6 +138,15 @@ $ph->set('myfoo', 'bar', 'symfony/mynamespace');
 $ph->removeNamespace($ph->getDefaultNamespace());
 $t->is($ph->has('foo'), false, '->removeNamespace() removes all keys and values from a namespace');
 $t->is($ph->has('myfoo'), false, '->removeNamespace() removes all keys and values from a namespace');
+$t->is($ph->has('myfoo', 'symfony/mynamespace'), true, '->removeNamespace() does not remove keys in other namepaces');
+
+$ph->set('foo', 'bar');
+$ph->set('myfoo', 'bar');
+$ph->set('myfoo', 'bar', 'symfony/mynamespace');
+
+$ph->removeNamespace();
+$t->is($ph->has('foo'), false, '->removeNamespace() removes all keys and values from the default namespace by default');
+$t->is($ph->has('myfoo'), false, '->removeNamespace() removes all keys and values from the default namespace by default');
 $t->is($ph->has('myfoo', 'symfony/mynamespace'), true, '->removeNamespace() does not remove keys in other namepaces');
 
 $ph->removeNamespace('symfony/mynamespace');
