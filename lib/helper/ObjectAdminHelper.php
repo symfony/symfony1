@@ -55,8 +55,8 @@ function object_admin_double_list($object, $method, $options = array(), $callbac
   {
     $options['size'] = 10;
   }
-  $label_all   = isset($options['unassociated_label']) ? $options['unassociated_label'] : 'Unassociated';
-  $label_assoc = isset($options['associated_label'])   ? $options['associated_label']   : 'Associated';
+  $label_all   = __(isset($options['unassociated_label']) ? $options['unassociated_label'] : 'Unassociated');
+  $label_assoc = __(isset($options['associated_label'])   ? $options['associated_label']   : 'Associated');
 
   // get the lists of objects
   list($all_objects, $objects_associated, $associated_ids) = _get_object_list($object, $method, $options, $callback);
