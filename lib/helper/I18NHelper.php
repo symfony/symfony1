@@ -21,13 +21,13 @@ function __($text, $args = array(), $catalogue = 'messages')
 {
   static $i18n;
 
-  if (!isset($i18n))
-  {
-    $i18n = sfContext::getInstance()->getI18N();
-  }
-
   if (sfConfig::get('sf_i18n'))
   {
+    if (!isset($i18n))
+    {
+      $i18n = sfContext::getInstance()->getI18N();
+    }
+
     return $i18n->__($text, $args, $catalogue);
   }
   else
