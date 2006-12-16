@@ -84,8 +84,8 @@ $b->
   checkResponseElement('body table tbody th', 'Body:', array('position' => 1))->
   checkResponseElement('body table tbody th', 'Online:', array('position' => 2))->
   checkResponseElement('body table tbody th', 'Category:', array('position' => 3))->
-  checkResponseElement('body table tbody th', 4)->
-  checkResponseElement('body table tbody td', 4)->
+  checkResponseElement('body table tbody th', 5)->
+  checkResponseElement('body table tbody td', 5)->
   checkResponseElement('body table tbody td input[id="title"][name="title"][value*="title"]')->
   checkResponseElement('body table tbody td textarea[id="body"][name="body"]', 'bar body')->
   checkResponseElement('body table tbody td input[id="online"][name="online"][type="checkbox"]', true)->
@@ -106,8 +106,8 @@ $b->
   checkResponseElement('body table tbody th', 'Body:', array('position' => 1))->
   checkResponseElement('body table tbody th', 'Online:', array('position' => 2))->
   checkResponseElement('body table tbody th', 'Category:', array('position' => 3))->
-  checkResponseElement('body table tbody th', 4)->
-  checkResponseElement('body table tbody td', 4)->
+  checkResponseElement('body table tbody th', 5)->
+  checkResponseElement('body table tbody td', 5)->
   checkResponseElement('body table tbody td input[id="title"][name="title"][value=""]')->
   checkResponseElement('body table tbody td textarea[id="body"][name="body"]', '')->
   checkResponseElement('body table tbody td input[id="online"][name="online"][type="checkbox"]', true)->
