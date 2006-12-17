@@ -34,7 +34,7 @@ function object_input_date_tag($object, $method, $options = array(), $default_va
 {
   $options = _parse_attributes($options);
 
-  $value = _get_object_value($object, $method, $default_value, $param = 'm/d/y');
+  $value = _get_object_value($object, $method, $default_value, $param = 'Y-m-d');
 
   return input_date_tag(_convert_method_to_name($method, $options), $value, $options);
 }
@@ -159,7 +159,7 @@ function _get_options_from_objects($objects, $text_method = null)
 
     // which method to call?
     $methodToCall = '';
-    foreach (array($text_method, 'toString', '__toString', 'getPrimaryKey') as $method)
+    foreach (array($text_method, '__toString', 'toString', 'getPrimaryKey') as $method)
     {
       if (is_callable(array($objects[0], $method)))
       {
