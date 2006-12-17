@@ -175,6 +175,10 @@ class sfDateFormat
           throw new sfException(sprintf('Impossible to parse date "%s" with format "%s"', $time, $pattern));
         }
       }
+      else
+      {
+        $numericalTime = $time;
+      }
       $date = @getdate($numericalTime);
     }
 
