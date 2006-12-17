@@ -12,7 +12,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 sfLoader::loadHelpers(array('Helper', 'Asset', 'Url', 'Tag', 'Date'));
 
-$t = new lime_test(27, new lime_output_color());
+$t = new lime_test(493, new lime_output_color());
 
 class sfContext
 {
@@ -85,8 +85,10 @@ $t->is(distance_of_time_in_words($now - 4 * 365 * 86400, $now), 'over 4 years', 
 // format_date()
 $t->diag('format_date()');
 $user->culture = 'fr';
-$t->is(format_date(time()), date('d/m/Y'), 'format_date() format a date according to the user culture');
-$t->is(format_date(date('Y-m-d')), date('d/m/Y'), 'format_date() format a date according to the user culture');
+$t->is(format_date(time()), date('d/m/Y'), 'format_date() format a numerical date according to the user culture');
+$t->is(format_date(date('Y-m-d')), date('d/m/Y'), 'format_date() format a string date according to the user culture');
+$t->is(format_date(date('y-m-d')), date('d/m/Y'), 'format_date() format a string date with two digit year according to the user culture');
+$t->is(format_date('1789-07-14'), '14/07/1789', 'format_date() formats pre-epoch dates');
 
 $user->culture = 'en';
 $time = time();
@@ -99,5 +101,26 @@ $t->is(format_date($time, 'F', 'en'), date('d F Y H:i:s', $time).' CET', 'format
 $t->diag('format_datetime()');
 $user->culture = 'en';
 $time = time();
-$t->is(format_datetime($time), date('d F Y H:i:s', $time).' CET', 'format_datetime() format a date time according to the user culture');
-$t->is(format_datetime(date('Y-m-d')), date('d F Y').' 00:00:00 CET', 'format_datetime() format a date time according to the user culture');
+$t->is(format_datetime($time), date('d F Y H:i:s', $time).' CET', 'format_datetime() format a numerical date time according to the user culture');
+$t->is(format_datetime(date('Y-m-d')), date('d F Y').' 00:00:00 CET', 'format_datetime() format a string date time according to the user culture');
+$t->is(format_datetime(date('Y-m-d H:i:s', $now), 'f'), date('d F Y G:i', $now), 'formats timestamps correctly');
+
+$t->diag('sfDateFormat');
+$df = new sfDateFormat('en_US');
+$t->is($df->format('7/14/1789', 'i', 'd'), '1789-07-14', 'pre-epoch date from en_US to iso');
+$t->is($df->format('7/14/1789 14:29', 'I', $df->getInputPattern('g')), '1789-07-14 14:29:00', 'pre-epoch date-time from en_US to iso with getInputPattern()');
+$df = new sfDateFormat('fr');
+$t->is($df->format(date('d/m/y'), 'i', 'd'), date('Y-m-d'), 'format two digit year from fr to iso');
+
+$cultures = sfCultureInfo::getCultures();
+foreach ($cultures as $culture)
+{
+  if (sfCultureInfo::validCulture($culture))
+  {
+  $df = new sfDateFormat($culture);
+  $shortDate = $df->format($now, 'd');
+  $t->is($df->format($shortDate, 'i', 'd'), date('Y-m-d'), sprintf('"%s": conversion "d" to "i"', $culture));
+  $dateTime = $df->format($now, $df->getInputPattern('g'));
+  $t->is($df->format($dateTime, 'I', $df->getInputPattern('g')), date('Y-m-d H:i:', $now).'00', sprintf('"%s": Conversion "g" to "I"', $culture));
+  }
+}
