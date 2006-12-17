@@ -755,6 +755,10 @@ function input_date_tag($name, $value = null, $options = array())
   
   $pattern = _get_option($options, 'format', $pattern);
 
+  $dateFormat = new sfDateFormat($culture);
+  
+  $pattern = $dateFormat->getInputPattern($pattern);
+
   // parse date
   if ($value === null || $value === '')
   {
@@ -762,7 +766,6 @@ function input_date_tag($name, $value = null, $options = array())
   }
   else
   {
-    $dateFormat = new sfDateFormat($culture);
     $value = $dateFormat->format($value, $pattern);
   }
 
@@ -780,8 +783,7 @@ function input_date_tag($name, $value = null, $options = array())
   $context->getResponse()->addStylesheet(sfConfig::get('sf_calendar_web_dir').'/skins/aqua/theme');
 
   // date format
-  $dateFormatInfo = new sfDateFormat($culture);
-  $date_format = $dateFormatInfo->getPattern($pattern);
+  $date_format = $dateFormat->getPattern($pattern);
 
   // calendar date format
   $calendar_date_format = $date_format;

@@ -110,9 +110,10 @@ class sfDateFormat
   /**
    * Guesses a date without calling strtotime.
    *
+   * @author Olivier Verdier <Olivier.Verdier@gmail.com>
    * @param mixed the time as integer or string in strtotime format.
    * @param string the input pattern; default is sql date or timestamp
-   * @return string formatted date time. 
+   * @return array same array as the getdate function
    */
   public function getDate($time, $pattern = null)
   {
@@ -123,14 +124,15 @@ class sfDateFormat
       {
         if (strlen($time) == 10)
         {
-          $pattern = 'yyyy-MM-dd';
+          $pattern = 'i';
         }
         else   // otherwise, default:
         {
-          $pattern = 'yyyy-MM-dd HH:mm:ss';
+          $pattern = 'I';
         }
       }
 
+      $pattern = $this->getPattern($pattern);
       $tokens = $this->getTokens($pattern);
       $pregPattern = '';
       $matchNames = array();
@@ -143,7 +145,7 @@ class sfDateFormat
         }
         else
         {
-          $pregPattern .= $token;
+          $pregPattern .= '[^\d]+';
         }
       }
       preg_match('@'.$pregPattern.'@', $time, $matches);
@@ -152,8 +154,13 @@ class sfDateFormat
 
       if (count($matchNames) == count($matches))
       {
-        $result = array_combine($matchNames, $matches);
-        $date = $result;
+        $date = array_combine($matchNames, $matches);
+        // guess the date if input with two digits
+        if (strlen($date['year']) == 2)
+        {
+          $date['year'] = date('Y', mktime(0, 0, 0, 1, 1, $date['year']));
+        }
+        $date = array_map('intval', $date);
       }
     }
 
@@ -162,9 +169,13 @@ class sfDateFormat
     {
       if (is_string($time))
       {
-        $time = @strtotime($time);
+        $numericalTime = @strtotime($time);
+        if ($numericalTime === false)
+        {
+          throw new sfException(sprintf('Impossible to parse date "%s" with format "%s"', $time, $pattern));
+        }
       }
-      $date = @getdate($time);
+      $date = @getdate($numericalTime);
     }
 
     // we set default values for the time
@@ -300,6 +311,12 @@ class sfDateFormat
       case 'G':
         return $this->formatInfo->formatDateTime($this->formatInfo->ShortDatePattern, $this->formatInfo->LongTimePattern);
         break;
+      case 'i':
+        return 'yyyy-MM-dd';
+        break;
+      case 'I':
+        return 'yyyy-MM-dd HH:mm:ss';
+        break;
       case 'M':
       case 'm':
         return 'MMMM dd';
@@ -324,6 +341,23 @@ class sfDateFormat
       default :
         return $pattern;
     }
+  }
+
+  /**
+   * Returns an easy to parse input pattern
+   * yy is replaced by yyyy and h by H
+   *
+   * @param string pattern.
+   * @return string input pattern
+   */
+  public function getInputPattern($pattern)
+  {
+    $pattern = $this->getPattern($pattern);
+    
+    $pattern = strtr($pattern, array('yyyy' => 'Y', 'h'=>'H', 'z'=>'', 'a'=>''));
+    $pattern = strtr($pattern, array('yy'=>'yyyy', 'Y'=>'yyyy'));
+    
+    return trim($pattern);
   }
 
   /**
