@@ -1776,8 +1776,10 @@ Date.prototype.print = function (str) {
 	s["%%"] = "%";		// a literal '%' character
 
 	var re = /%./g;
-	if (!Calendar.is_ie5 && !Calendar.is_khtml)
-		return str.replace(re, function (par) { return s[par] || par; });
+	if (!Calendar.is_ie5 && !Calendar.is_khtml) {
+		str = str.replace(re, function (par) { return s[par]; });
+		return str;
+	}
 
 	var a = str.match(re);
 	for (var i = 0; i < a.length; i++) {
