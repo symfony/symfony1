@@ -117,10 +117,10 @@ foreach ($cultures as $culture)
 {
   if (sfCultureInfo::validCulture($culture))
   {
-  $df = new sfDateFormat($culture);
-  $shortDate = $df->format($now, 'd');
-  $t->is($df->format($shortDate, 'i', 'd'), date('Y-m-d'), sprintf('"%s": conversion "d" to "i"', $culture));
-  $dateTime = $df->format($now, $df->getInputPattern('g'));
-  $t->is($df->format($dateTime, 'I', $df->getInputPattern('g')), date('Y-m-d H:i:', $now).'00', sprintf('"%s": Conversion "g" to "I"', $culture));
+    $df = new sfDateFormat($culture);
+    $shortDate = $df->format($now, 'd');
+    $t->is($df->format($shortDate, 'i', 'd'), date('Y-m-d'), sprintf('"%s": conversion "d" to "i"', $culture));
+    $dateTime = $df->format($now, $df->getInputPattern('g'));
+    $t->is($df->format($dateTime, 'I', $df->getInputPattern('g')), date('Y-m-d H:i:', $now).'00', sprintf('"%s": Conversion "g" to "I"', $culture));
   }
 }
