@@ -408,12 +408,12 @@ class sfPropelDatabaseSchema
     } 
   }
 
-  protected function getTables()
+  public function getTables()
   {
     return $this->getChildren($this->database); 
   }
   
-  protected function getChildren($hash)
+  public function getChildren($hash)
   {
     foreach ($hash as $key => $value)
     {
