@@ -6,6 +6,10 @@ Version 1.0.0-beta2
 
 Major changes and major bug fixes since beta1:
 
+* r3077: better error messages when initializing sfContext object
+* r3059: added a new sfSimpleYamlConfigHandler class for simple configuration file needs
+* r3047: removed exception when sfFillInFilter does not find the form
+* better date support (admin generator, helpers, i18n, calendar files, i18n files)
 * r2995: all Creole and Propel files are now under addon/
 * r2985: added all licenses in one place
 * r2984: removed PEAR dependence
