@@ -77,17 +77,20 @@ class sfException extends Exception
       return;
     }
 
-    foreach (sfMixer::getCallables('sfException:printStackTrace:printStackTrace') as $callable)
+    if (class_exists('sfMixer', false))
     {
-      $ret = call_user_func($callable, $this, $exception);
-      if ($ret)
+      foreach (sfMixer::getCallables('sfException:printStackTrace:printStackTrace') as $callable)
       {
-        if (!sfConfig::get('sf_test'))
+        $ret = call_user_func($callable, $this, $exception);
+        if ($ret)
         {
-          exit(1);
-        }
+          if (!sfConfig::get('sf_test'))
+          {
+            exit(1);
+          }
 
-        return;
+          return;
+        }
       }
     }
 

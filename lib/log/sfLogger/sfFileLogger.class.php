@@ -27,9 +27,16 @@ class sfFileLogger
       throw new sfConfigurationException('File option is mandatory for a file logger');
     }
 
-    if (!is_dir(dirname($options['file'])))
+    $dir = dirname($options['file']);
+
+    if (!is_dir($dir))
     {
-      mkdir(dirname($options['file']), 0777, 1);
+      mkdir($dir, 0777, 1);
+    }
+
+    if (!is_writable($dir) || (file_exists($options['file']) && !is_writable($options['file'])))
+    {
+      throw new sfFileException(sprintf('Unable to open the log file "%s" for writing', $options['file']));
     }
 
     $this->fp = fopen($options['file'], 'a');

@@ -104,9 +104,10 @@ class sfContext
   public function getActionName()
   {
     // get the last action stack entry
-    $actionEntry = $this->actionStack->getLastEntry();
-
-    return $actionEntry ? $actionEntry->getActionName() : null;
+    if ($this->actionStack && $lastEntry = $this->actionStack->getLastEntry())
+    {
+      return $lastEntry->getActionName();
+    }
   }
 
 
@@ -183,9 +184,10 @@ class sfContext
   public function getModuleDirectory()
   {
     // get the last action stack entry
-    $actionEntry = $this->actionStack->getLastEntry();
-
-    return $actionEntry ? sfConfig::get('sf_app_module_dir').'/'.$actionEntry->getModuleName() : null;
+    if ($this->actionStack && $lastEntry = $this->actionStack->getLastEntry())
+    {
+      return sfConfig::get('sf_app_module_dir').'/'.$lastEntry->getModuleName();
+    }
   }
 
   /**
@@ -197,9 +199,10 @@ class sfContext
   public function getModuleName()
   {
     // get the last action stack entry
-    $actionEntry = $this->actionStack->getLastEntry();
-
-    return $actionEntry ? $actionEntry->getModuleName() : null;
+    if ($this->actionStack && $lastEntry = $this->actionStack->getLastEntry())
+    {
+      return $lastEntry->getModuleName();
+    }
   }
 
   /**
@@ -211,9 +214,10 @@ class sfContext
   public function getCurrentViewInstance()
   {
     // get the last action stack entry
-    $actionEntry = $this->actionStack->getLastEntry();
-
-    return $actionEntry ? $actionEntry->getViewInstance() : null;
+    if ($this->actionStack && $lastEntry = $this->actionStack->getLastEntry())
+    {
+      return $lastEntry->getViewInstance();
+    }
   }
 
   /**

@@ -63,30 +63,44 @@ class sfDebug
 
   public static function requestAsArray($request)
   {
-    $values = array(
-      'parameterHolder' => self::flattenParameterHolder($request->getParameterHolder()),
-      'attributeHolder' => self::flattenParameterHolder($request->getAttributeHolder()),
-    );
+    if ($request)
+    {
+      $values = array(
+        'parameterHolder' => self::flattenParameterHolder($request->getParameterHolder()),
+        'attributeHolder' => self::flattenParameterHolder($request->getAttributeHolder()),
+      );
+    }
+    else
+    {
+      $values = array('parameterHolder' => array(), 'attributeHolder' => array());
+    }
 
     return $values;
   }
 
   public static function responseAsArray($response)
   {
-    $values = array(
-      'cookies'         => array(),
-      'http_headers'    => array(),
-      'parameterHolder' => self::flattenParameterHolder($response->getParameterHolder()),
-    );
-    foreach ($response->getHttpHeaders() as $key => $value)
+    if ($response)
     {
-      $values['http_headers'][$key] = $value;
-    }
+      $values = array(
+        'cookies'         => array(),
+        'httpHeaders'     => array(),
+        'parameterHolder' => self::flattenParameterHolder($response->getParameterHolder()),
+      );
+      foreach ($response->getHttpHeaders() as $key => $value)
+      {
+        $values['httpHeaders'][$key] = $value;
+      }
 
-    $cookies = array();
-    foreach ($response->getCookies() as $key => $value)
+      $cookies = array();
+      foreach ($response->getCookies() as $key => $value)
+      {
+        $values['cookies'][$key] = $value;
+      }
+    }
+    else
     {
-      $values['cookies'][$key] = $value;
+      $values = array('cookies' => array(), 'httpHeaders' => array(), 'parameterHolder' => array());
     }
 
     return $values;
