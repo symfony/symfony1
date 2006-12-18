@@ -120,7 +120,7 @@ License:   MIT - see licenses/LICENSE.lime file
 Phing
 -----
 
-symfony uses the Phing software
+symfony contains the Phing software
 
 Url:       http://phing.info/
 Copyright: Authors
