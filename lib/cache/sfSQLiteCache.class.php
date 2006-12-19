@@ -18,6 +18,8 @@ class sfSQLiteCache extends sfCache
 {
   const DEFAULT_NAMESPACE = '';
 
+  protected $conn = null;
+
   /**
   * File where to put the cache database
   * (or :memory: to store cache in memory)
@@ -99,14 +101,14 @@ class sfSQLiteCache extends sfCache
 
       // create cache dir if needed
       $dir = dirname($database);
+      $current_umask = umask(0000);
       if (!is_dir($dir))
       {
-        $current_umask = umask(0000);
         @mkdir($dir, 0777, true);
-        umask($current_umask);
       }
 
       touch($database);
+      umask($current_umask);
     }
 
     if (!($this->conn = @sqlite_open($this->database, 0644, $errmsg)))
@@ -122,20 +124,22 @@ class sfSQLiteCache extends sfCache
 
   protected function createSchema()
   {
-    $result = sqlite_query("
-      CREATE TABLE [cache]
-      (
+    $statements = array(
+      "CREATE TABLE [cache] (
         [id] VARCHAR(255),
         [namespace] VARCHAR(255),
         [data] LONGVARCHAR,
         [created_at] TIMESTAMP
-      );", $this->conn
+      )",
+      "CREATE INDEX [cache_unique] ON [cache] ([namespace], [id])",
     );
-// FIXME: create indexes
 
-    if (!$result)
+    foreach ($statements as $statement)
     {
-      throw new sfException(sqlite_error_string(sqlite_last_error($this->database)));
+      if (!sqlite_query($statement, $this->conn))
+      {
+        throw new sfException(sqlite_error_string(sqlite_last_error($this->database)));
+      }
     }
   }
 
