@@ -18,7 +18,7 @@
 class sfPropelData extends sfData
 {
   protected
-    $maps              = array();
+    $maps = array();
 
   // symfony load-data (file|dir)
   public function loadData($directory_or_file = null, $connectionName = 'propel')
@@ -67,64 +67,66 @@ class sfPropelData extends sfData
 
       // iterate through datas for this class
       // might have been empty just for force a table to be emptied on import
-      if (is_array($datas))
+      if (!is_array($datas))
       {
-        foreach ($datas as $key => $data)
+        return;
+      }
+
+      foreach ($datas as $key => $data)
+      {
+        // create a new entry in the database
+        $obj = new $class();
+
+        if (!is_array($data))
         {
-          // create a new entry in the database
-          $obj = new $class();
+          throw new Exception('You must give a name for each fixture data entry');
+        }
 
-          if (!is_array($data))
+        foreach ($data as $name => $value)
+        {
+          // foreign key?
+          try
           {
-            throw new Exception('You must give a name for each fixture data entry');
-          }
-
-          foreach ($data as $name => $value)
-          {
-            // foreign key?
-            try
+            $column = $tableMap->getColumn($name);
+            if ($column->isForeignKey())
             {
-              $column = $tableMap->getColumn($name);
-              if ($column->isForeignKey())
+              $relatedTable = $this->maps[$class]->getDatabaseMap()->getTable($column->getRelatedTableName());
+              if (!isset($this->object_references[$relatedTable->getPhpName().'_'.$value]))
               {
-                $relatedTable = $this->maps[$class]->getDatabaseMap()->getTable($column->getRelatedTableName());
-                if (!isset($this->object_references[$relatedTable->getPhpName().'_'.$value]))
-                {
-                  $error = 'The object "%s" from class "%s" is not defined in your data file.';
-                  $error = sprintf($error, $value, $relatedTable->getPhpName());
-                  throw new sfException($error);
-                }
-                $value = $this->object_references[$relatedTable->getPhpName().'_'.$value];
+                $error = 'The object "%s" from class "%s" is not defined in your data file.';
+                $error = sprintf($error, $value, $relatedTable->getPhpName());
+                throw new sfException($error);
               }
-            }
-            catch (PropelException $e)
-            {
-            }
-
-            $pos = array_search($name, $column_names);
-            $method = 'set'.sfInflector::camelize($name);
-            if ($pos)
-            {
-              $obj->setByPosition($pos, $value);
-            }
-            else if (is_callable(array($obj, $method)))
-            {
-              $obj->$method($value);
-            }
-            else
-            {
-              $error = 'Column "%s" does not exist for class "%s"';
-              $error = sprintf($error, $name, $class);
-              throw new sfException($error);
+              $value = $this->object_references[$relatedTable->getPhpName().'_'.$value];
             }
           }
-          $obj->save();
-
-          // save the id for future reference
-          if (method_exists($obj, 'getPrimaryKey'))
+          catch (PropelException $e)
           {
-            $this->object_references[$class.'_'.$key] = $obj->getPrimaryKey();
           }
+
+          $pos = array_search($name, $column_names);
+          $method = 'set'.sfInflector::camelize($name);
+          if ($pos)
+          {
+            $obj->setByPosition($pos, $value);
+          }
+          else if (is_callable(array($obj, $method)))
+          {
+            $obj->$method($value);
+          }
+          else
+          {
+            $error = 'Column "%s" does not exist for class "%s"';
+            $error = sprintf($error, $name, $class);
+            throw new sfException($error);
+          }
+        }
+        $obj->save();
+
+        // save the id for future reference
+        if (method_exists($obj, 'getPrimaryKey'))
+        {
+          $this->object_references[$class.'_'.$key] = $obj->getPrimaryKey();
         }
       }
     }
@@ -133,34 +135,36 @@ class sfPropelData extends sfData
   protected function doDeleteCurrentData($fixture_files)
   {
     // delete all current datas in database
-    if ($this->deleteCurrentData)
+    if (!$this->deleteCurrentData)
     {
-      rsort($fixture_files);
-      foreach ($fixture_files as $fixture_file)
+      return;
+    }
+
+    rsort($fixture_files);
+    foreach ($fixture_files as $fixture_file)
+    {
+      $data = sfYaml::load($fixture_file);
+
+      if ($data === null)
       {
-        $data = sfYaml::load($fixture_file);
+        // no data
+        continue;
+      }
 
-        if ($data === null)
+      $classes = array_keys($data);
+      krsort($classes);
+      foreach ($classes as $class)
+      {
+        $peer_class = trim($class.'Peer');
+
+        if (!$classPath = sfCore::getClassPath($peer_class))
         {
-          // no data
-          continue;
+          throw new sfException(sprintf('Unable to find path for class "%s".', $peer_class));
         }
 
-        $classes = array_keys($data);
-        krsort($classes);
-        foreach ($classes as $class)
-        {
-          $peer_class = trim($class.'Peer');
+        require_once($classPath);
 
-          if (!$classPath = sfCore::getClassPath($peer_class))
-          {
-            throw new sfException(sprintf('Unable to find path for class "%s".', $peer_class));
-          }
-
-          require_once($classPath);
-
-          call_user_func(array($peer_class, 'doDeleteAll'));
-        }
+        call_user_func(array($peer_class, 'doDeleteAll'));
       }
     }
   }
@@ -253,8 +257,8 @@ class sfPropelData extends sfData
           {
             $dumpData[$table][$table.$pk][$col] = $rs->get($col);
           }
-        } // foreach
-      } // while
+        }
+      }
     }
 
     // save to file(s)
