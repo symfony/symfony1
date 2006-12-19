@@ -1,4 +1,4 @@
-// script.aculo.us effects.js v1.7.0_beta1, Tue Nov 21 10:25:25 CET 2006
+// script.aculo.us effects.js v1.7.0_beta2, Mon Dec 18 23:38:56 CET 2006
 
 // Copyright (c) 2005, 2006 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
 // Contributors:
@@ -50,32 +50,11 @@ Element.setContentZoom = function(element, percent) {
 }
 
 Element.getOpacity = function(element){
-  element = $(element);
-  var opacity;
-  if (opacity = element.getStyle('opacity'))  
-    return parseFloat(opacity);  
-  if (opacity = (element.getStyle('filter') || '').match(/alpha\(opacity=(.*)\)/))  
-    if(opacity[1]) return parseFloat(opacity[1]) / 100;  
-  return 1.0;  
+  return $(element).getStyle('opacity');
 }
 
-Element.setOpacity = function(element, value){  
-  element= $(element);  
-  if (value == 1){
-    element.setStyle({ opacity: 
-      (/Gecko/.test(navigator.userAgent) && !/Konqueror|Safari|KHTML/.test(navigator.userAgent)) ? 
-      0.999999 : 1.0 });
-    if(/MSIE/.test(navigator.userAgent) && !window.opera)  
-      element.setStyle({filter: Element.getStyle(element,'filter').replace(/alpha\([^\)]*\)/gi,'')});  
-  } else {  
-    if(value < 0.00001) value = 0;  
-    element.setStyle({opacity: value});
-    if(/MSIE/.test(navigator.userAgent) && !window.opera)  
-      element.setStyle(
-        { filter: element.getStyle('filter').replace(/alpha\([^\)]*\)/gi,'') +
-            'alpha(opacity='+value*100+')' });  
-  }
-  return element;
+Element.setOpacity = function(element, value){
+  return $(element).setStyle({opacity:value});
 }  
  
 Element.getInlineOpacity = function(element){  
@@ -235,7 +214,7 @@ Object.extend(Object.extend(Effect.ScopedQueue.prototype, Enumerable), {
       this.effects.push(effect);
     
     if(!this.interval) 
-      this.interval = setInterval(this.loop.bind(this), 40);
+      this.interval = setInterval(this.loop.bind(this), 15);
   },
   remove: function(effect) {
     this.effects = this.effects.reject(function(e) { return e==effect });
@@ -266,7 +245,7 @@ Effect.Queue = Effect.Queues.get('global');
 Effect.DefaultOptions = {
   transition: Effect.Transitions.sinoidal,
   duration:   1.0,   // seconds
-  fps:        25.0,  // max. 25fps due to Effect.Queue implementation
+  fps:        60.0,  // max. 60fps due to Effect.Queue implementation
   sync:       false, // true for combining
   from:       0.0,
   to:         1.0,
@@ -947,8 +926,32 @@ Object.extend(Object.extend(Effect.Morph.prototype, Effect.Base.prototype), {
     this.element = $(element);
     if(!this.element) throw(Effect._elementDoesNotExistError);
     var options = Object.extend({
-      style: ''
+      style: {}
     }, arguments[1] || {});
+    if (typeof options.style == 'string') {
+      if(options.style.indexOf(':') == -1) {
+        var cssText = '', selector = '.' + options.style;
+        $A(document.styleSheets).reverse().each(function(styleSheet) {
+          if (styleSheet.cssRules) cssRules = styleSheet.cssRules;
+          else if (styleSheet.rules) cssRules = styleSheet.rules;
+          $A(cssRules).reverse().each(function(rule) {
+            if (selector == rule.selectorText) {
+              cssText = rule.style.cssText;
+              throw $break;
+            }
+          });
+          if (cssText) throw $break;
+        });
+        this.style = cssText.parseStyle();
+        options.afterFinishInternal = function(effect){
+          effect.element.addClassName(effect.options.style);
+          effect.transforms.each(function(transform) {
+            if(transform.style != 'opacity')
+              effect.element.style[transform.style.camelize()] = '';
+          });
+        }
+      } else this.style = options.style.parseStyle();
+    } else this.style = $H(options.style)
     this.start(options);
   },
   setup: function(){
@@ -959,15 +962,26 @@ Object.extend(Object.extend(Effect.Morph.prototype, Effect.Base.prototype), {
         return parseInt( color.slice(i*2+1,i*2+3), 16 ) 
       });
     }
-    this.transforms = this.options.style.parseStyle().map(function(property){
-      var originalValue = this.element.getStyle(property[0]);
+    this.transforms = this.style.map(function(pair){
+      var property = pair[0].underscore().dasherize(), value = pair[1], unit = null;
+
+      if(value.parseColor('#zzzzzz') != '#zzzzzz') {
+        value = value.parseColor();
+        unit  = 'color';
+      } else if(property == 'opacity') {
+        value = parseFloat(value);
+        if(/MSIE/.test(navigator.userAgent) && !window.opera && (!this.element.currentStyle.hasLayout))
+          this.element.setStyle({zoom: 1});
+      } else if(Element.CSS_LENGTH.test(value)) 
+        var components = value.match(/^([\+\-]?[0-9\.]+)(.*)$/),
+          value = parseFloat(components[1]), unit = (components.length == 3) ? components[2] : null;
+
+      var originalValue = this.element.getStyle(property);
       return $H({ 
-        style: property[0], 
-        originalValue: property[1].unit=='color' ? 
-          parseColor(originalValue) : parseFloat(originalValue || 0), 
-        targetValue: property[1].unit=='color' ? 
-          parseColor(property[1].value) : property[1].value,
-        unit: property[1].unit
+        style: property, 
+        originalValue: unit=='color' ? parseColor(originalValue) : parseFloat(originalValue || 0), 
+        targetValue: unit=='color' ? parseColor(value) : value,
+        unit: unit
       });
     }.bind(this)).reject(function(transform){
       return (
@@ -1049,25 +1063,12 @@ String.prototype.parseStyle = function(){
   var style = element.down().style, styleRules = $H();
   
   Element.CSS_PROPERTIES.each(function(property){
-   if(style[property]) styleRules[property] = style[property]; 
+    if(style[property]) styleRules[property] = style[property]; 
   });
-  
-  var result = $H();
-  
-  styleRules.each(function(pair){
-    var property = pair[0], value = pair[1], unit = null;
-    
-    if(value.parseColor('#zzzzzz') != '#zzzzzz') {
-      value = value.parseColor();
-      unit  = 'color';
-    } else if(Element.CSS_LENGTH.test(value)) 
-      var components = value.match(/^([\+\-]?[0-9\.]+)(.*)$/),
-          value = parseFloat(components[1]), unit = (components.length == 3) ? components[2] : null;
-    
-    result[property.underscore().dasherize()] = $H({ value:value, unit:unit });
-  }.bind(this));
-  
-  return result;
+  if(/MSIE/.test(navigator.userAgent) && !window.opera && this.indexOf('opacity') > -1) {
+    styleRules.opacity = this.match(/opacity:\s*((?:0|1)?(?:\.\d*)?)/)[1];
+  }
+  return styleRules;
 };
 
 Element.morph = function(element, style) {

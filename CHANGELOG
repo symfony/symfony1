@@ -27,10 +27,10 @@ Major changes and major bug fixes since beta1:
 * r2880: fixed autoloading for plugins
 * r2879: fixed glob() problem with PHP < 5.1
 * r2875: added simple autoloader to ease unit tests (for model classes for example)
-* updated script.aculo.us (1.7.0_beta1) and prototype (1.5.0_rc2)
+* updated script.aculo.us (1.7.0_beta2) and prototype (1.5.0_rc2)
 
 * fixed some bugs (see trac)
-* added more unit tests (> 3000 now)
+* added more unit tests (> 3400 now)
 
 Version 1.0.0-beta1
 -------------------

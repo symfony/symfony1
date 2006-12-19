@@ -251,6 +251,11 @@ Object.extend(String.prototype, {
     return this.split('');
   },
 
+  succ: function() {
+    return this.slice(0, this.length - 1) +
+      String.fromCharCode(this.charCodeAt(this.length - 1) + 1);
+  },
+
   camelize: function() {
     var parts = this.split('-'), len = parts.length;
     if (len == 1) return parts[0];
@@ -335,7 +340,7 @@ var Enumerable = {
     var index = -number, slices = [], array = this.toArray();
     while ((index += number) < array.length)
       slices.push(array.slice(index, index+number));
-    return slices.collect(iterator || Prototype.K);
+    return slices.map(iterator);
   },
 
   all: function(iterator) {
@@ -359,7 +364,7 @@ var Enumerable = {
   collect: function(iterator) {
     var results = [];
     this.each(function(value, index) {
-      results.push(iterator(value, index));
+      results.push((iterator || Prototype.K)(value, index));
     });
     return results;
   },
@@ -406,12 +411,11 @@ var Enumerable = {
   },
 
   inGroupsOf: function(number, fillWith) {
-    fillWith = fillWith || null;
-    var results = this.eachSlice(number);
-    if (results.length > 0) (number - results.last().length).times(function() {
-      results.last().push(fillWith)
+    fillWith = fillWith === undefined ? null : fillWith;
+    return this.eachSlice(number, function(slice) {
+      while(slice.length < number) slice.push(fillWith);
+      return slice;
     });
-    return results;
   },
 
   inject: function(memo, iterator) {
@@ -423,7 +427,7 @@ var Enumerable = {
 
   invoke: function(method) {
     var args = $A(arguments).slice(1);
-    return this.collect(function(value) {
+    return this.map(function(value) {
       return value[method].apply(value, args);
     });
   },
@@ -475,7 +479,7 @@ var Enumerable = {
   },
 
   sortBy: function(iterator) {
-    return this.collect(function(value, index) {
+    return this.map(function(value, index) {
       return {value: value, criteria: iterator(value, index)};
     }).sort(function(left, right) {
       var a = left.criteria, b = right.criteria;
@@ -484,7 +488,7 @@ var Enumerable = {
   },
 
   toArray: function() {
-    return this.collect(Prototype.K);
+    return this.map();
   },
 
   zip: function() {
@@ -496,6 +500,10 @@ var Enumerable = {
     return this.map(function(value, index) {
       return iterator(collections.pluck(index));
     });
+  },
+
+  size: function() {
+    return this.toArray().length;
   },
 
   inspect: function() {
@@ -590,12 +598,21 @@ Object.extend(Array.prototype, {
     return [].concat(this);
   },
 
+  size: function() {
+    return this.length;
+  },
+
   inspect: function() {
     return '[' + this.map(Object.inspect).join(', ') + ']';
   }
 });
 
 Array.prototype.toArray = Array.prototype.clone;
+
+function $w(string){
+  string = string.strip();
+  return string ? string.split(/\s+/) : [];
+}
 
 if(window.opera){
   Array.prototype.concat = function(){
@@ -807,8 +824,7 @@ Ajax.Request.prototype = Object.extend(new Ajax.Base(), {
       Ajax.Responders.dispatch('onCreate', this, this.transport);
 
       this.transport.open(this.options.method.toUpperCase(), this.url,
-        this.options.asynchronous, this.options.username,
-        this.options.password);
+        this.options.asynchronous);
 
       if (this.options.asynchronous)
         setTimeout(function() { this.respondToReadyState(1) }.bind(this), 10);
@@ -1167,8 +1183,7 @@ Element.Methods = {
   },
 
   descendants: function(element) {
-    element = $(element);
-    return $A(element.getElementsByTagName('*'));
+    return $A($(element).getElementsByTagName('*'));
   },
 
   immediateDescendants: function(element) {
@@ -1192,10 +1207,9 @@ Element.Methods = {
   },
 
   match: function(element, selector) {
-    element = $(element);
     if (typeof selector == 'string')
       selector = new Selector(selector);
-    return selector.match(element);
+    return selector.match($(element));
   },
 
   up: function(element, expression, index) {
@@ -1220,7 +1234,6 @@ Element.Methods = {
   },
 
   getElementsByClassName: function(element, className) {
-    element = $(element);
     return document.getElementsByClassName(className, element);
   },
 
@@ -1229,8 +1242,7 @@ Element.Methods = {
   },
 
   getHeight: function(element) {
-    element = $(element);
-    return element.offsetHeight;
+    return $(element).offsetHeight;
   },
 
   classNames: function(element) {
@@ -1256,6 +1268,12 @@ Element.Methods = {
   removeClassName: function(element, className) {
     if (!(element = $(element))) return;
     Element.classNames(element).remove(className);
+    return element;
+  },
+
+  toggleClassName: function(element, className) {
+    if (!(element = $(element))) return;
+    Element.classNames(element)[element.hasClassName(className) ? 'remove' : 'add'](className);
     return element;
   },
 
@@ -1295,9 +1313,8 @@ Element.Methods = {
 
   scrollTo: function(element) {
     element = $(element);
-    var x = element.x ? element.x : element.offsetLeft,
-        y = element.y ? element.y : element.offsetTop;
-    window.scrollTo(x, y);
+    var pos = Position.cumulativeOffset(element);
+    window.scrollTo(pos[0], pos[1]);
     return element;
   },
 
@@ -1735,7 +1752,7 @@ Selector.prototype = {
 Object.extend(Selector, {
   matchElements: function(elements, expression) {
     var selector = new Selector(expression);
-    return elements.select(selector.match.bind(selector)).collect(Element.extend);
+    return elements.select(selector.match.bind(selector)).map(Element.extend);
   },
 
   findElement: function(elements, expression, index) {
