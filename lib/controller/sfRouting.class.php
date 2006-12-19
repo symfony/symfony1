@@ -475,7 +475,6 @@ class sfRouting
 
     // we remove multiple /
     $url = preg_replace('#/+#', '/', $url);
-
     foreach ($this->routes as $route_name => $route)
     {
       $out = array();
@@ -493,7 +492,10 @@ class sfRouting
         array_shift($r);
 
         // hack, pre-fill the default route names
-        foreach ($names as $name) $out[$name] = null;
+        foreach ($names as $name)
+        {
+          $out[$name] = null;
+        }
 
         // defaults
         foreach ($defaults as $name => $value)
@@ -558,6 +560,7 @@ class sfRouting
           {
             sfLogger::getInstance()->info('{sfRouting} match route ['.$route_name.'] "'.$route.'"');
           }
+
           break;
         }
       }
@@ -566,6 +569,11 @@ class sfRouting
     // no route found
     if (!$break)
     {
+      if (sfConfig::get('sf_logging_enabled'))
+      {
+        sfLogger::getInstance()->info('{sfRouting} no matching route found');
+      }
+
       return null;
     }
 
