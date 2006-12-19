@@ -23,8 +23,7 @@ class sfWebDebug
     $short_log       = array(),
     $max_priority    = 1000,
     $types           = array(),
-    $last_time_log   = -1,
-    $context         = null;
+    $last_time_log   = -1;
 
   protected static
     $instance        = null;
@@ -52,14 +51,11 @@ class sfWebDebug
 
   public function registerAssets()
   {
-    if (!$this->context)
-    {
-      $this->context = sfContext::getInstance();
-    }
+    $response = sfContext::getInstance()->getResponse();
 
     // register our css and js
-    $this->context->getResponse()->addJavascript(sfConfig::get('sf_web_debug_web_dir').'/js/main');
-    $this->context->getResponse()->addStylesheet(sfConfig::get('sf_web_debug_web_dir').'/css/main');
+    $response->addJavascript(sfConfig::get('sf_web_debug_web_dir').'/js/main');
+    $response->addStylesheet(sfConfig::get('sf_web_debug_web_dir').'/css/main');
   }
 
   public function logShortMessage($message)
@@ -364,17 +360,18 @@ class sfWebDebug
 
   public function decorateContentWithDebug($internalUri, $content, $new = false)
   {
+    $context = sfContext::getInstance();
+
     // don't decorate if not html or if content is null
-    if (!sfConfig::get('sf_web_debug') || !$content || false === strpos($this->context->getResponse()->getContentType(), 'html'))
+    if (!sfConfig::get('sf_web_debug') || !$content || false === strpos($context->getResponse()->getContentType(), 'html'))
     {
       return $content;
     }
 
-    $bg_color     = $new ? '#9ff' : '#ff9';
-
-    $cache = $this->context->getViewCacheManager();
+    $cache = $context->getViewCacheManager();
     $this->loadHelpers();
 
+    $bg_color      = $new ? '#9ff' : '#ff9';
     $last_modified = $cache->lastModified($internalUri);
     $id            = md5($internalUri);
     $content = '
