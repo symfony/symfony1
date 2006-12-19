@@ -270,7 +270,7 @@ class sfTestBrowser extends sfBrowser
         {
           $response = unserialize($cacheManager->get($uri));
           $content = $response->getContent();
-          $this->test->is($content, $this->getResponse()->getContent(), 'content in cache is ok');
+          $this->test->ok($content == $this->getResponse()->getContent(), 'content in cache is ok');
         }
         else if (true === $main)
         {
