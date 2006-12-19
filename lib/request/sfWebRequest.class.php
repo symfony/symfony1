@@ -418,7 +418,7 @@ class sfWebRequest extends sfRequest
    *
    * @return void
    */
-   protected function loadParameters()
+  protected function loadParameters()
   {
     // merge GET parameters
     if (get_magic_quotes_gpc())
