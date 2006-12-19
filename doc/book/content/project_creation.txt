@@ -1,4 +1,4 @@
-Project creation and the 'symfony' command
+﻿Project creation and the 'symfony' command
 ==========================================
 
 Overview
@@ -60,6 +60,7 @@ Here is an overview of the file structure created:
     doc/
     lib/
     log/
+    plugins/
     test/
     web/
 
