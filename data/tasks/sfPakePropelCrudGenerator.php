@@ -122,6 +122,12 @@ function run_propel_generate_crud($task, $args)
   $finder = pakeFinder::type('file')->name('*.php', '*.yml');
   pake_replace_tokens($finder, $moduleDir, '##', '##', $constants);
 
+  // create basic test
+  pake_copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/module/test/actionsTest.php', $sf_root_dir.'/test/functional/'.$app.'/'.$module.'ActionsTest.php');
+
+  // customize test file
+  pake_replace_tokens($module.'ActionsTest.php', $sf_root_dir.'/test/functional/'.$app, '##', '##', $constants);
+
   // delete temp files
   $finder = pakeFinder::type('any');
   pake_remove($finder, $tmp_dir);
