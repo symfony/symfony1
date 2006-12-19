@@ -16,6 +16,13 @@ if (!include(dirname(__FILE__).'/../bootstrap/functional.php'))
 
 class myTestBrowser extends sfTestBrowser
 {
+  function checkResponseContent($content, $message)
+  {
+    $this->test()->ok($this->getResponse()->getContent() == $content, $message);
+
+    return $this;
+  }
+
   function getMultiAction($parameter = null)
   {
     return $this->
@@ -262,9 +269,41 @@ class myTestBrowser extends sfTestBrowser
   }
 }
 
-// test with sfFileCache class (default)
 $b = new myTestBrowser();
 $b->initialize();
+
+// non HTML cache
+$image = file_get_contents($sf_symfony_data_dir.'/web/sf/sf_default/images/icons/ok48.png');
+sfConfig::set('sf_web_debug', true);
+$b->
+  get('/cache/imageWithLayoutCacheWithLayout')->
+  isCached(true, true)->
+  checkResponseContent($image, 'image (with layout/page cache) in cache is not decorated when web_debug is on')->
+  get('/cache/imageWithLayoutCacheWithLayout')->
+  isCached(true, true)->
+  checkResponseContent($image, 'image (with layout/page cache) in cache is not decorated when web_debug is on')->
+  get('/cache/imageWithLayoutCacheNoLayout')->
+  isCached(true)->
+  checkResponseContent($image, 'image (with layout/action cache) in cache is not decorated when web_debug is on')->
+  get('/cache/imageWithLayoutCacheNoLayout')->
+  isCached(true)->
+  checkResponseContent($image, 'image (with layout/action cache) in cache is not decorated when web_debug is on')->
+  get('/cache/imageNoLayoutCacheWithLayout')->
+  isCached(true, true)->
+  checkResponseContent($image, 'image (no layout/page cache) in cache is not decorated when web_debug is on')->
+  get('/cache/imageNoLayoutCacheWithLayout')->
+  isCached(true, true)->
+  checkResponseContent($image, 'image (no layout/page cache) in cache is not decorated when web_debug is on')->
+  get('/cache/imageNoLayoutCacheNoLayout')->
+  isCached(true)->
+  checkResponseContent($image, 'image (no layout/action cache) in cache is not decorated when web_debug is on')->
+  get('/cache/imageNoLayoutCacheNoLayout')->
+  isCached(true)->
+  checkResponseContent($image, 'image (no layout/action cache) in cache is not decorated when web_debug is on')
+;
+sfConfig::set('sf_web_debug', false);
+
+// test with sfFileCache class (default)
 $b->launch();
 
 // test with sfSQLiteCache class

@@ -46,4 +46,35 @@ class cacheActions extends sfActions
 
     sfConfig::set('ACTION_EXECUTED', true);
   }
+
+  public function executeImageWithLayoutCacheWithLayout()
+  {
+    $this->prepareImage();
+    $this->setLayout('image');
+  }
+
+  public function executeImageWithLayoutCacheNoLayout()
+  {
+    $this->prepareImage();
+    $this->setLayout('image');
+  }
+
+  public function executeImageNoLayoutCacheWithLayout()
+  {
+    $this->prepareImage();
+    $this->setLayout(false);
+  }
+
+  public function executeImageNoLayoutCacheNoLayout()
+  {
+    $this->prepareImage();
+    $this->setLayout(false);
+  }
+
+  protected function prepareImage()
+  {
+    $this->getResponse()->setContentType('image/png');
+    $this->image = file_get_contents(sfConfig::get('sf_symfony_data_dir').'/web/sf/sf_default/images/icons/ok48.png');
+    $this->setTemplate('image');
+  }
 }

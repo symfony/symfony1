@@ -41,3 +41,15 @@ action:
 
 page:
   with_layout: true
+
+imageWithLayoutCacheWithLayout:
+  with_layout: true
+
+imageWithLayoutCacheNoLayout:
+  with_layout: false
+
+imageNoLayoutCacheWithLayout:
+  with_layout: true
+
+imageNoLayoutCacheNoLayout:
+  with_layout: false

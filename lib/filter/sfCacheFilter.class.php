@@ -246,9 +246,10 @@ class sfCacheFilter extends sfFilter
 
     if ($retval && sfConfig::get('sf_web_debug'))
     {
-      $tmp = unserialize($retval);
-      $tmp['content'] = sfWebDebug::getInstance()->decorateContentWithDebug($uri, $tmp['content'], false);
-      $retval = serialize($tmp);
+      $cache = unserialize($retval);
+      $this->response->mergeProperties($cache['response']);
+      $cache['content'] = sfWebDebug::getInstance()->decorateContentWithDebug($uri, $cache['content'], false);
+      $retval = serialize($cache);
     }
 
     $this->response->setParameter('current_key', $uri.'_action', 'symfony/cache/current');
