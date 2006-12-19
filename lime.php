@@ -426,7 +426,7 @@ class lime_harness extends lime_registration
       $this->current_test = 0;
       $relative_file = $this->get_relative_file($file);
 
-      ob_start(array($this, 'process_test_output'), 2);
+      ob_start(array($this, 'process_test_output'));
       passthru(sprintf('%s -q "%s" 2>&1', $this->php_cli, $file), $return);
       ob_end_clean();
 
