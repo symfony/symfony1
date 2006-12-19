@@ -54,6 +54,11 @@ class sfViewCacheManager
     return $this->context;
   }
 
+  public function getCache()
+  {
+    return $this->cache;
+  }
+
   public function generateNamespace($internalUri)
   {
     if ($callable = sfConfig::get('sf_cache_namespace_callable'))
