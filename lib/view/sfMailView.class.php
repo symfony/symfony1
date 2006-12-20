@@ -20,9 +20,7 @@ class sfMailView extends sfPHPView
   /**
    * Retrieve the template engine associated with this view.
    *
-   * Note: This will return null because PHP itself has no engine reference.
-   *
-   * @return null
+   * @return string sfMail
    */
   public function getEngine()
   {
