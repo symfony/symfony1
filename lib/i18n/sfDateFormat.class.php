@@ -413,6 +413,12 @@ class sfDateFormat
 
     return $tokens;
   }
+  
+  // makes a unix date from our incomplete $date array
+  protected function getUnixDate($date)
+  {
+    return getdate(mktime($date['hours'], $date['minutes'], $date['seconds'], $date['mon'], $date['mday'], $date['year']));
+  }
 
   /**
    * Get the year.
@@ -481,6 +487,11 @@ class sfDateFormat
    */
   protected function getWday($date, $pattern = 'EEEE')
   {
+    // if the $date comes from our home-made get date
+    if (!isset($date['wday']))
+    {
+      $date = $this->getUnixDate($date);
+    }
     $day = $date['wday'];
 
     switch ($pattern)
