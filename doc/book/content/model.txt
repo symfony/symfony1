@@ -101,7 +101,7 @@ Empty columns called `id` are considered to be primary keys.
 
 Empty column ending with `_id` are considered to be foreign keys, and the related table is automatically determined according to the first part of the column name.
 
-Empty columns called `created_at` are automatically set to the `timestamp` type.
+Empty columns called `created_at` or `updated_at` are automatically set to the `timestamp` type.
 
 For all these columns, you don't need to specify any type, since symfony will deduce their format from their name. That is why the `schema.yml` is so easy to write.
 
@@ -334,7 +334,7 @@ The data model is independent from the database used, but you will definitely us
           # encoding:         utf8
           # persistent:       true
 
-The database access is environment dependant. You can define different settings for the `prod`, `dev`, `test` environments, or any other environment you defined. The `all` header defines settings for all environments. This configuration can also be overridden per application, by setting different values in an application-specific file, for instance in `myproject/apps/myapp/config/databases.yml`.
+The database access is environment dependent. You can define different settings for the `prod`, `dev`, `test` environments, or any other environment you defined. The `all` header defines settings for all environments. This configuration can also be overridden per application, by setting different values in an application-specific file, for instance in `myproject/apps/myapp/config/databases.yml`.
 
 >**Note:** The `host` parameter can also be defined as `hostspec`.
 
@@ -376,12 +376,12 @@ Extended schema syntax
 
 Database can have specific attributes. They are set under an `_attributes:` key.
 
-You may wish that your schema gets validated before code generation takes place. To do that, deactivate the `noXSD` attribute:
+You may wish that your schema gets validated before code generation takes place. To do that, deactivate the `noXsd` attribute:
 
     propel:
       _attributes:   { noXsd: false }
 
-The main element supports the defaultIdMethod` attribute; if none is provided then the databases native method of generating IDs will be used -- e.g. autoincrement for MySQL, sequences for PostgreSQL. The other possible value is `none`:
+The main element supports the `defaultIdMethod` attribute; if none is provided then the databases native method of generating IDs will be used -- e.g. autoincrement for MySQL, sequences for PostgreSQL. The other possible value is `none`:
 
     propel:
       _attributes:   { defaultIdMethod: none }
@@ -440,7 +440,7 @@ The column parameters are:
 
 ### Column magic
 
-The "Schema conventions" section above mentionned that symfony can interpret some column names and deduce columns attributes from them. This happens when no value is defined for a column in the schema. The conventions translate names into attributes as follows:
+The "Schema conventions" section above mentioned that symfony can interpret some column names and deduce columns attributes from them. This happens when no value is defined for a column in the schema. The conventions translate names into attributes as follows:
 
     # 'id' column: Primary key
     id:         { type: integer, required: true, primaryKey: true, autoIncrement: true }
@@ -597,7 +597,7 @@ You can call the `propel-build-schema` command:
 
 And a brand new `schema.yml` built from your database structure is written in your `myproject/config/` directory. You can build your model based on this structure.
 
-The schema generation command is quite powerfull and can add to your schema a lot of database dependent information. As the YAML format doesn't handle this kind of vendor information, you need to generate a XML schema to take advantage of it. It is simply done by adding an argument to the `build-schema` task:
+The schema generation command is quite powerful and can add to your schema a lot of database dependent information. As the YAML format doesn't handle this kind of vendor information, you need to generate a XML schema to take advantage of it. It is simply done by adding an argument to the `build-schema` task:
 
     $ symfony propel-build-schema xml
 
