@@ -239,7 +239,7 @@ class sfLoader
             $dir = str_replace('%SF_ROOT_DIR%', sfConfig::get('sf_root_dir'), $dir);
           }
 
-          throw new sfViewException(sprintf('Unable to load "%s" helper in: %s', $helperName, implode(', ', $dirs)));
+          throw new sfViewException(sprintf('Unable to load "%sHelper.php" helper in: %s', $helperName, implode(', ', $dirs)));
         }
       }
 
