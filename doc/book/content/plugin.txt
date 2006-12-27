@@ -178,7 +178,7 @@ The module settings and their default value are often described in the README fi
 
 You can replace the default contents of a plugin **module** by creating a module of the same name in your own application. It is not really overriding, since the elements in your application are used instead of the ones of the plugin. It works fine if you create **templates** and **configuration** files of the same name as the ones of the plugins.
 
-On the other hand, if a plugin wants to offer a module with the ability to override its **actions**, the `actions.class.php` in the plugin module must be empty and inherit from an autoloading class, so that the method of this class can be inherited as well by the `actions.class.php` of the application module.
+On the other hand, if a plugin wants to offer a module with the ability to override its **actions**, the `actions.class.php` in the plugin module must be empty and inherit from an autoloading class, so that the methods of this class can be inherited as well by the `actions.class.php` of the application module.
 
     [php]
     // in myPlugin/modules/mymodule/lib/myPluginmymoduleActions.class.php

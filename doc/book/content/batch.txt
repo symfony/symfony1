@@ -38,7 +38,7 @@ The value that you define for `SF_APP` could be the name of any of the applicati
 
 The `SF_ENVIRONMENT` has to be initialized with the name of the environment you want to run the batch in. The default possible environments are `prod`, `dev`, and `test`.
 
-The `SF_DEBUG` constant defines whether the configuration has to be parsed every time the batch is run (`true`), or if a cached version can be used to imrpove speed (`false`). In general, the debug mode is used only in development. You can read more about the debug mode in the [debug chapter](debug.txt).
+The `SF_DEBUG` constant defines whether the configuration has to be parsed every time the batch is run (`true`), or if a cached version can be used to improve speed (`false`). In general, the debug mode is used only in development. You can read more about the debug mode in the [debug chapter](debug.txt).
 
 Example batch processes
 -----------------------
@@ -53,7 +53,7 @@ Loading test data in the development and/or test environments is something that 
       recordlabel:
         column:  value
         column:  value
-        
+
 Save one or more data files with this format in a `myproject/data/fixtures/` directory. You can find more about how to create the data population files in the [data files chapter](populate.txt).
 
 The following script excerpt reads all YAML files in the `fixtures/` directory and loads the data into the database defined in the `app/config/databases.yml` configuration file.
@@ -63,7 +63,7 @@ The following script excerpt reads all YAML files in the `fixtures/` directory a
     $data = new sfPropelData();
     $data->loadData(sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.'fixtures');
 
-### Processing 
+### Processing
 
 *TODO*
 

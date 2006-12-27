@@ -89,7 +89,7 @@ Simply add the following lines in the `routing.yml` file:
 
 Notice that in the pattern, the word `article` is a string whereas `id` is a variable (because it starts with a `:`).
 
->**Note**: you smart readers may have guessed that as soon as a rule such as the one mentionned above is added, the default rule (which is `/:module/:action/*`) will not work anymore with the `article` module, because the module name will match the pattern `/article/:id` first. If you start creating rules with strings that match the names of your modules, you probably need to change the default rule to something like:
+>**Note**: you smart readers may have guessed that as soon as a rule such as the one mentioned above is added, the default rule (which is `/:module/:action/*`) will not work anymore with the `article` module, because the module name will match the pattern `/article/:id` first. If you start creating rules with strings that match the names of your modules, you probably need to change the default rule to something like:
 >
 >     default:
         url:   /action/:module/:action/*
@@ -162,50 +162,50 @@ The default `routing.yml` has a few default rules. To allow the old style 'modul
     default:
       url:   /:module/:action/*
 
-As mentionned above, you may need to change this rule if some of your modules have names that can match other patterns.
+As mentioned above, you may need to change this rule if some of your modules have names that can match other patterns.
 
 The other default rules are used to set the root URL to point the default module and action:
 
     homepage:
       url:   /
       param: { module: #SF_DEFAULT_MODULE#, action: #SF_DEFAULT_ACTION# }
-      
+
     default_index:
       url:   /:module
       param: { action: #SF_DEFAULT_ACTION# }
-    
+
 The default module and action themselves are configured in the `settings.yml` file.
 
-### How to avoid mentionning the front controller ?
+### How to avoid mentioning the front controller ?
 
-In all previous examples, the URLs still have contain the `index.php` header to be processed. This is because the front controller has to be called first so that the routing feature can work. 
+In all previous examples, the URLs still have contain the `index.php` header to be processed. This is because the front controller has to be called first so that the routing feature can work.
 
 If you have the `mod_rewrite` module activated, use the following configuration (which is the default configuration bundled with symfony in the `myproject/web/.htaccess` file) to tell apache to call the `index.php` file by default:
 
     Options +FollowSymLinks +ExecCGI
-    
+
     RewriteEngine On
-    
+
     # we skip all files with .something
     RewriteCond %{REQUEST_URI} \..+$
     RewriteRule .* - [L]
-    
+
     # we check if the .html version is here (caching)
     RewriteRule ^$ index.html [QSA]
     RewriteRule ^([^.]+)$ $1.html [QSA]
     RewriteCond %{REQUEST_FILENAME} !-f
-    
+
     # if no rule matched the url, we redirect to our front web controller
     RewriteRule ^(.*)$ index.php [QSA,L]
-    
+
     # big crash from our front web controller
     ErrorDocument 500 "<h2>Application error</h2>Symfony application failed to start properly"
 
-Now a call to 
+Now a call to
 
     http://myapp.example.com/article/read/id/100
-    
-Will be properly understood as 
+
+Will be properly understood as
 
     http://myapp.example.com/index.php/article/read/id/100
 
@@ -252,7 +252,7 @@ Having an output URL like:
 is not bad, but
 
     http://myapp.example.com/2005/06/25/my_article_title.html
-    
+
 is much better. It changes the way your application is perceived by the user, from "a dynamic thing with cryptic calls" to "a deep and well organized web directory". All that with a simple suffix. In addition, the search engines will grant more stability to a page named like that.
 
 As before, this is simply done in the `settings.yml` configuration file of the application:
@@ -270,11 +270,11 @@ It is sometimes necessary to specify a suffix for a unique routing rule. In that
     article_list_feed:
       url:          /latest_articles.rss
       param:        { module: article, action: list, type: rss }
-    
+
     update_directory:
       url:          /updates/
       param:        { module: update, action: list }
-    
+
 Retrieve information about the current route
 --------------------------------------------
 
@@ -283,19 +283,19 @@ If you need to retrieve information about the current route, for instance to pre
     my_rule:
       url:   /call_my_rule
       param: { module: mymodule, action: myaction }
- 
+
 Use the following calls in the action:
- 
+
     [php]
     // if you require an URL like
     http://myapp.example.com/call_my_rule/param1/xxx/param2/yyy
-    
+
     $uri = sfRouting::getInstance()->getCurrentInternalUri();
     // will return 'mymodule/myaction?param1=xxx&param2=yyy'
-    
+
     $uri = sfRouting::getInstance()->getCurrentInternalUri(true);
     // will return '@myrule?param1=xxx&param2=yyy'
-    
+
     $route = sfRouting::getInstance()->getCurrentRouteName();
     // will return 'myrule'
 
@@ -308,4 +308,4 @@ In addition, you might want to get the first or the last action called in a temp
     $sf_last_action
     $sf_last_module
 
-You might ask: Why can't I simply retrieve the current module/action ? Because the calls to actions is a stack, and several calls can be made for a unique request. For instance, if the end of an action contents a `forward` statement, several actions will be called.    
+You might ask: Why can't I simply retrieve the current module/action ? Because the calls to actions is a stack, and several calls can be made for a unique request. For instance, if the end of an action contents a `forward` statement, several actions will be called.

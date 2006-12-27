@@ -86,7 +86,7 @@ Most of the customization of a generated administration is done through a YAML c
         model_class:      Article
         theme:            default
 
-This configuration is enough to generate the basic administration. The customization is added under the `param:` key (which means that all lines added in the `generator.yml` mus at least start with `four` blank spaces). Here is a typical customized `generator.yml` for a `post` module (extracted from the screencast source):
+This configuration is enough to generate the basic administration. The customization is added under the `param:` key (which means that all lines added in the `generator.yml` must at least start with `four` blank spaces). Here is a typical customized `generator.yml` for a `post` module (extracted from the screencast source):
 
     generator:
       class:              sfPropelAdminGenerator
