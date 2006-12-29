@@ -764,11 +764,6 @@ class sfDateFormat
    */
   protected function getHourInDay($date, $pattern = 'k')
   {
-    if (is_null($dateTimeInfo))
-    {
-      $dateTimeInfo = $this->dateTimeInfo;
-    }
-
     if ($pattern != 'k')
     {
       throw new sfException('The pattern for hour in day is "k".');
