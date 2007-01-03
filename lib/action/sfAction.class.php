@@ -352,15 +352,23 @@ abstract class sfAction extends sfComponent
    *
    * @return int One of the following values:
    *
-   *             - sfRequest::GET
-   *             - sfRequest::POST
-   *             - sfRequest::NONE
+   * - sfRequest::GET
+   * - sfRequest::POST
+   * - sfRequest::PUT
+   * - sfRequest::DELETE
+   * - sfRequest::HEAD
+   * - sfRequest::NONE
    *
    * @see sfRequest
    */
   public function getRequestMethods()
   {
-    return sfRequest::GET | sfRequest::POST | sfRequest::NONE;
+    return sfRequest::GET
+           | sfRequest::POST
+           | sfRequest::PUT
+           | sfRequest::DELETE
+           | sfRequest::HEAD 
+           | sfRequest::NONE;
   }
 
   /**

@@ -280,6 +280,18 @@ class sfWebRequest extends sfRequest
           $this->setMethod(self::POST);
           break;
 
+        case 'PUT':
+          $this->setMethod(self::PUT);
+          break;
+
+        case 'DELETE':
+          $this->setMethod(self::DELETE);
+          break;
+
+        case 'HEAD':
+          $this->setMethod(self::HEAD);
+          break;
+
         default:
           $this->setMethod(self::GET);
       }

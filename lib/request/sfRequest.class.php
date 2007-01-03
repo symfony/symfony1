@@ -40,6 +40,24 @@ abstract class sfRequest
    */
   const POST = 4;
 
+  /**
+   * Process validation and execution for only PUT requests.
+   *
+   */
+  const PUT = 5;
+
+  /**
+   * Process validation and execution for only DELETE requests.
+   *
+   */
+  const DELETE = 6;
+
+  /**
+   * Process validation and execution for only HEAD requests.
+   *
+   */
+  const HEAD = 7;
+
   protected
     $errors          = array(),
     $context         = null,
@@ -264,25 +282,30 @@ abstract class sfRequest
    * Set the request method.
    *
    * @param int One of the following constants:
-   *            - sfRequest::GET
-   *            - sfRequest::POST
+   * 
+   * - sfRequest::GET
+   * - sfRequest::POST
+   * - sfRequest::PUT
+   * - sfRequest::DELETE
+   * - sfRequest::HEAD
    *
    * @return void
    *
    * @throws <b>sfException</b> - If the specified request method is invalid.
    */
-  public function setMethod($method)
+  public function setMethod($methodCode)
   {
-    if ($method == self::GET || $method == self::POST)
+    $available_methods = array(self::GET, self::POST, self::PUT, self::DELETE, self::HEAD, self::NONE);
+    if (in_array($methodCode, $available_methods))
     {
-      $this->method = $method;
+      $this->method = $methodCode;
 
       return;
     }
 
     // invalid method type
     $error = 'Invalid request method: %s';
-    $error = sprintf($error, $method);
+    $error = sprintf($error, $methodCode);
 
     throw new sfException($error);
   }
