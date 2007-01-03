@@ -92,18 +92,18 @@ $t->is(format_date('1789-07-14'), '14/07/1789', 'format_date() formats pre-epoch
 
 $user->culture = 'en';
 $time = time();
-$t->is(format_date($time, 'F'), date('d F Y H:i:s', $time).' CET', 'format_date() takes a format string as its second argument');
+$t->is(format_date($time, 'F'), date('j F Y H:i:s', $time).' CET', 'format_date() takes a format string as its second argument');
 
 $user->culture = 'fr';
-$t->is(format_date($time, 'F', 'en'), date('d F Y H:i:s', $time).' CET', 'format_date() takes a culture as its third argument');
+$t->is(format_date($time, 'F', 'en'), date('j F Y H:i:s', $time).' CET', 'format_date() takes a culture as its third argument');
 
 // format_datetime()
 $t->diag('format_datetime()');
 $user->culture = 'en';
 $time = time();
-$t->is(format_datetime($time), date('d F Y H:i:s', $time).' CET', 'format_datetime() format a numerical date time according to the user culture');
-$t->is(format_datetime(date('Y-m-d')), date('d F Y').' 00:00:00 CET', 'format_datetime() format a string date time according to the user culture');
-$t->is(format_datetime(date('Y-m-d H:i:s', $now), 'f'), date('d F Y G:i', $now), 'formats timestamps correctly');
+$t->is(format_datetime($time), date('j F Y H:i:s', $time).' CET', 'format_datetime() format a numerical date time according to the user culture');
+$t->is(format_datetime(date('Y-m-d')), date('j F Y').' 00:00:00 CET', 'format_datetime() format a string date time according to the user culture');
+$t->is(format_datetime(date('Y-m-d H:i:s', $now), 'f'), date('j F Y G:i', $now), 'formats timestamps correctly');
 
 $t->diag('sfDateFormat');
 $df = new sfDateFormat('en_US');
