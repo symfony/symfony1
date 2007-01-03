@@ -25,4 +25,6 @@ $c->extension = '.class.php';
 $c->verbose = false;
 $c->base_dir = realpath(dirname(__FILE__).'/../../lib');
 $c->register_glob($c->base_dir.'/*/*.php');
+$c->register_glob($c->base_dir.'/*/*/*.php');
+$c->register_glob($c->base_dir.'/*/*/*/*.php');
 $c->run();
