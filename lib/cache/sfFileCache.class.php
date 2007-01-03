@@ -467,8 +467,7 @@ class sfFileCache extends sfCache
         {
           @fwrite($fp, $this->hash($data), 32);
         }
-        $len = strlen($data);
-        @fwrite($fp, $data, $len);
+        @fwrite($fp, $data);
         if ($this->fileLocking)
         {
           @flock($fp, LOCK_UN);
