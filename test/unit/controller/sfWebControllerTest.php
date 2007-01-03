@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(14, new lime_output_color());
+$t = new lime_test(16, new lime_output_color());
 
 sfConfig::set('sf_max_forwards', 10);
 $context = new sfContext();
@@ -142,3 +142,13 @@ catch (sfParseException $e)
 {
   $t->pass('->convertUrlStringToParameters() throw a sfParseException if it cannot parse the query string');
 }
+
+// ->redirect()
+$t->diag('->redirect()');
+sfConfig::set('sf_test', true);
+sfConfig::set('sf_charset', 'utf-8');
+ob_start();
+$controller->redirect('/module/action/id/1#photos');
+$content = ob_get_clean();
+$t->like($content, '~/module/action/id/1#photos~', '->redirect() adds a refresh meta in the content');
+$t->like($context->getResponse()->getHttpHeader('Location'), '~/module/action/id/1#photos~', '->redirect() adds a Location HTTP header');
