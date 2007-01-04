@@ -207,7 +207,7 @@ class sfWebDebug
       $types = array();
       foreach ($this->types as $type => $nb)
       {
-        $types[] = '<a id="sfWebDebug'.$type.'" href="#" onclick="sfWebDebugToggleMessages(\''.$type.'\'); return false;">'.$type.'</a>';
+        $types[] = '<a href="#" onclick="sfWebDebugToggleMessages(\''.$type.'\'); return false;">'.$type.'</a>';
       }
     }
 
