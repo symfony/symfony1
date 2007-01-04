@@ -3,6 +3,8 @@ cli:
     class: sfConsoleController
   request:
     class: sfConsoleRequest
+  response:
+    class: sfConsoleResponse
 
 test:
   storage:
