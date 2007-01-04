@@ -513,4 +513,14 @@ abstract class sfAction extends sfComponent
   {
     return $this->getResponse()->getParameter($this->getModuleName().'_'.$this->getActionName().'_layout', null, 'symfony/action/view');
   }
+
+  /**
+   * Changes the default view class used for rendering the template associated with the current action.
+   *
+   * @param string View class name
+   */
+  public function setViewClass($class)
+  {
+    sfConfig::set('mod_'.strtolower($this->getModuleName()).'_view_class', $class);
+  }
 }
