@@ -101,7 +101,7 @@ class TGettext
     {
         $format = strToUpper($format);
         $filename = dirname(__FILE__).'/'.$format.'.php';
-        if(is_file($filename) == false)
+        if (is_file($filename) == false)
         	throw new Exception ("Class file $file not found");
         	
         include_once $filename;

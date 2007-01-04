@@ -311,7 +311,7 @@ class sfMessageSource_MySQL extends sfMessageSource
   {
     $messages = $this->untranslated;
 
-    if(count($messages) <= 0)
+    if (count($messages) <= 0)
     {
       return false;
     }
@@ -335,7 +335,7 @@ class sfMessageSource_MySQL extends sfMessageSource
 
     $time = time();
 
-    foreach($messages as $message)
+    foreach ($messages as $message)
     {
       $count++;
       $inserted++;

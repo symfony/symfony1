@@ -302,7 +302,7 @@ class sfMail
   public function prepare()
   {
     // Set whether the message is multipart/alternative
-    if(!empty($this->mailer->AltBody))
+    if (!empty($this->mailer->AltBody))
     {
       $this->mailer->ContentType = "multipart/alternative";
     }

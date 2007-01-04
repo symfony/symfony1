@@ -148,11 +148,11 @@ class sfChoiceFormat
     }
 
     $right = false;
-    if($rightBracket==']')
+    if ($rightBracket==']')
     {
       $right = $number <= $elements[$total - 1];
     }
-    else if($rightBracket == ')')
+    else if ($rightBracket == ')')
     {
       $right = $number < $elements[$total - 1];
     }

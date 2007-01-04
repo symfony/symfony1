@@ -17,7 +17,7 @@ define('SF_DEBUG',       ##DEBUG##);
 
 require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
 
-if(sfConfig::get('sf_logging_enabled') && sfConfig::get('sf_logging_rotate'))
+if (sfConfig::get('sf_logging_enabled') && sfConfig::get('sf_logging_rotate'))
 {
   sfLogManager::rotate(SF_APP, SF_ENVIRONMENT, sfConfig::get('sf_logging_period'), sfConfig::get('sf_logging_history'));
 }

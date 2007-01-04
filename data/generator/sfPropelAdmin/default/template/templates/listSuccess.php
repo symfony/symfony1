@@ -16,7 +16,7 @@
 </div>
 
 <div id="sf_admin_content">
-[?php if(!$pager->getNbResults()): ?]
+[?php if (!$pager->getNbResults()): ?]
 [?php echo __('no result') ?]
 [?php else: ?]
 [?php include_partial('<?php echo $this->getModuleName() ?>/list', array('pager' => $pager)) ?]

@@ -69,7 +69,7 @@ function object_textarea_tag($object, $method, $options = array(), $default_valu
 function objects_for_select($options = array(), $value_method, $text_method = null, $selected = null, $html_options = array())
 {
   $select_options = array();
-  foreach($options as $option)
+  foreach ($options as $option)
   {
     // text method exists?
     if ($text_method && !is_callable(array($option, $text_method)))

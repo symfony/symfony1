@@ -242,7 +242,7 @@ class sfMessageSource_gettext extends sfMessageSource
 
     // set the strings as untranslated.
     $strings = array();
-    foreach($messages as $message)
+    foreach ($messages as $message)
     {
       $strings[$message] = ''; 
     }
@@ -317,7 +317,7 @@ class sfMessageSource_gettext extends sfMessageSource
     $po->load();
     $result = $po->toArray(); 
 
-    foreach($result['strings'] as $string => $value)
+    foreach ($result['strings'] as $string => $value)
     {
       if ($string == $message)
       {

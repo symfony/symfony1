@@ -294,7 +294,7 @@ class sfBrowser
 
     // merge form default values and arguments
     $defaults = array();
-    foreach($xpath->query('descendant::input | descendant::textarea | descendant::select', $form) as $element)
+    foreach ($xpath->query('descendant::input | descendant::textarea | descendant::select', $form) as $element)
     {
       $elementName = $element->getAttribute('name');
       $nodeName    = $element->nodeName;

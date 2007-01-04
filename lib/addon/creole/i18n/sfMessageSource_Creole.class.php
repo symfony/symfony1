@@ -274,7 +274,7 @@ class sfMessageSource_Creole extends sfMessageSource
 
       $stmt = $this->db->prepareStatement($sql);
 
-      foreach($messages as $message)
+      foreach ($messages as $message)
       {
         $stmt->executeUpdate(array($cat_id, $count, $message, $time, $time));
 

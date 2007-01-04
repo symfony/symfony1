@@ -158,7 +158,7 @@ class sfWebDebug
           <th>message</th>
         </tr>'."\n";
       $line_nb = 0;
-      foreach($this->log as $logEntry)
+      foreach ($this->log as $logEntry)
       {
         $log = $logEntry['message'];
 

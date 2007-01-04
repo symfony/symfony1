@@ -130,7 +130,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     // now we assume that $credentials is an array
     $test = false;
 
-    foreach($credentials as $credential)
+    foreach ($credentials as $credential)
     {
       // recursively check the credential with a switched AND/OR mode
       $test = $this->hasCredential($credential, $useAnd ? false : true);

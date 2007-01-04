@@ -406,12 +406,15 @@ class sfToolkit
   public static function isArrayValuesEmpty($array)
   {
     static $isEmpty = true;
-    foreach($array as $value)
+    foreach ($array as $value)
     {
       $isEmpty = (is_array($value)) ? self::isArrayValuesEmpty($value) : (strlen($value) == 0);
-      if (!$isEmpty) break;
+      if (!$isEmpty)
+      {
+        break;
+      }
     }
-  
+
     return $isEmpty;
   }
 

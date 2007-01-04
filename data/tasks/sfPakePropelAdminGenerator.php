@@ -51,7 +51,7 @@ function run_propel_init_admin($task, $args)
   // create module structure
   $finder = pakeFinder::type('any')->ignore_version_control()->discard('.sf');
   $dirs = sfLoader::getGeneratorSkeletonDirs('sfPropelAdmin', $theme);
-  foreach($dirs as $dir)
+  foreach ($dirs as $dir)
   {
     if (is_dir($dir))
     {

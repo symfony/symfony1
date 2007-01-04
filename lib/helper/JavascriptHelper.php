@@ -855,7 +855,7 @@
       {
         $js_options['highlightendcolor'] = "'".$options['highlightendcolor']."'";
       }
-      if(isset($options['loadTextURL']))
+      if (isset($options['loadTextURL']))
       {
         $js_options['loadTextURL'] =  "'".$options['loadTextURL']."'";
       }

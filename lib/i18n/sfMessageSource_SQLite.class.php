@@ -248,7 +248,7 @@ class sfMessageSource_SQLite extends sfMessageSource
     $db = sqlite_open($this->source);
     $time = time();
 
-    foreach($messages as $message)
+    foreach ($messages as $message)
     {
       $message = sqlite_escape_string($message);
       $statement = "INSERT INTO trans_unit (cat_id,id,source,date_added) VALUES ({$cat_id}, {$count},'{$message}',$time)";

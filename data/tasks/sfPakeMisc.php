@@ -322,7 +322,7 @@ function run_disable($task, $args)
 
   $lockFile = $app.'_'.$env.'.clilock';
 
-  if(!file_exists(sfConfig::get('sf_root_dir').'/'.$lockFile))
+  if (!file_exists(sfConfig::get('sf_root_dir').'/'.$lockFile))
   {
     pake_touch(sfConfig::get('sf_root_dir').'/'.$lockFile, '777');
 

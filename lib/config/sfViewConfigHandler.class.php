@@ -347,12 +347,12 @@ class sfViewConfigHandler extends sfYamlConfigHandler
 
     $escaping = $this->getConfigValue('escaping', $viewName);
 
-    if(isset($escaping['strategy']))
+    if (isset($escaping['strategy']))
     {
       $data[] = sprintf("  \$this->setEscaping(%s);", var_export($escaping['strategy'], true));
     }
 
-    if(isset($escaping['method']))
+    if (isset($escaping['method']))
     {
       $data[] = sprintf("  \$this->setEscapingMethod(%s);", var_export($escaping['method'], true));
     }

@@ -54,7 +54,7 @@ class simpleAutoloader
   {
     if (!isset(self::$class_paths[$class]))
     {
-      foreach((array) self::$autoload_callables as $callable)
+      foreach ((array) self::$autoload_callables as $callable)
       {
         if (call_user_func($callable, $class))
         {
