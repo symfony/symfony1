@@ -209,10 +209,10 @@ $t->is($r->generate('', $params), $url, '->generate() routes can take a * in the
 
 // requirements
 $r->clearRoutes();
-$r->connect('test', '/:module/:action/:id', array('module' => 'default', 'action' => 'integer'), array('id' => '\d+'));
+$r->connect('test', '/:module/:action/id/:id', array('module' => 'default', 'action' => 'integer'), array('id' => '\d+'));
 $r->connect('test1', '/:module/:action/:id', array('module' => 'default', 'action' => 'string'));
 $params = array('module' => 'default', 'action' => 'integer', 'id' => 12);
-$url = '/default/integer/12';
+$url = '/default/integer/id/12';
 $t->is($r->parse($url), $params, '->parse() routes can take requirements for parameters');
 $t->is($r->generate('', $params), $url, '->generate() routes can take requirements for parameters');
 

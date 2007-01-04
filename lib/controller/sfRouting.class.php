@@ -60,7 +60,7 @@ class sfRouting
   {
     if ($this->current_route_name)
     {
-      list($url, $regexp, $names, $names_hash, $defaults, $suffix) = $this->routes[$this->current_route_name];
+      list($url, $regexp, $names, $names_hash, $defaults, $requirements, $suffix) = $this->routes[$this->current_route_name];
 
       $request = sfContext::getInstance()->getRequest();
 
@@ -233,7 +233,7 @@ class sfRouting
     if (($route == '') || ($route == '/'))
     {
       $regexp = '/^[\/]*$/';
-      $this->routes[$name] = array($route, $regexp, array(), array(), $default, $suffix);
+      $this->routes[$name] = array($route, $regexp, array(), array(), $default, $requirements, $suffix);
     }
     else
     {
@@ -305,7 +305,7 @@ class sfRouting
       }
       $regexp = '#^'.join('', $parsed).$regexp_suffix.'$#';
 
-      $this->routes[$name] = array($route, $regexp, $names, $names_hash, $default, $suffix);
+      $this->routes[$name] = array($route, $regexp, $names, $names_hash, $default, $requirements, $suffix);
     }
 
     if (sfConfig::get('sf_logging_enabled'))
@@ -339,7 +339,7 @@ class sfRouting
         throw new sfConfigurationException($error);
       }
 
-      list($url, $regexp, $names, $names_hash, $defaults, $suffix) = $this->routes[$name];
+      list($url, $regexp, $names, $names_hash, $defaults, $requirements, $suffix) = $this->routes[$name];
       if ($global_defaults !== null)
       {
         $defaults = array_merge($defaults, $global_defaults);
@@ -360,7 +360,7 @@ class sfRouting
       $found = false;
       foreach ($this->routes as $name => $route)
       {
-        list($url, $regexp, $names, $names_hash, $defaults, $suffix) = $route;
+        list($url, $regexp, $names, $names_hash, $defaults, $requirements, $suffix) = $route;
         if ($global_defaults !== null)
         {
           $defaults = array_merge($defaults, $global_defaults);
@@ -380,6 +380,15 @@ class sfRouting
           if (isset($names_hash[$key])) continue;
 
           if (!isset($tparams[$key]) || $tparams[$key] != $value) continue 2;
+        }
+
+        // we must match all requirements for rule
+        foreach ($requirements as $req_param => $req_regexp)
+        {
+          if (!preg_match('/'.$req_regexp.'/', $tparams[$req_param]))
+          {
+            continue 2;
+          }
         }
 
         // we must have consumed all $params keys if there is no * in route
@@ -480,7 +489,7 @@ class sfRouting
       $out = array();
       $r = null;
 
-      list($route, $regexp, $names, $names_hash, $defaults, $suffix) = $route;
+      list($route, $regexp, $names, $names_hash, $defaults, $requirements, $suffix) = $route;
 
       $break = false;
 
