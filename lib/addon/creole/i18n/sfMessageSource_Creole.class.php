@@ -179,7 +179,7 @@ class sfMessageSource_Creole extends sfMessageSource
 
     $name = $this->getSource($variant);
 
-    $aql = 'SELECT cat_id FROM catalogue WHERE name = ?';
+    $sql = 'SELECT cat_id FROM catalogue WHERE name = ?';
 
     $stmt = $this->db->prepareStatement($sql);
 
@@ -220,7 +220,7 @@ class sfMessageSource_Creole extends sfMessageSource
 
     $stmt = $this->db->prepareStatement($sql);
 
-    $stmt->executeUpdate(array($time, $cat_id));
+    $result = $stmt->executeUpdate(array($time, $cat_id));
 
     if (!empty($this->cache))
     {
