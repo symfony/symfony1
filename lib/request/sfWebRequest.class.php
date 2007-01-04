@@ -725,7 +725,12 @@ class sfWebRequest extends sfRequest
 
   public function getHttpHeader($name, $prefix = 'http')
   {
-    $name = strtoupper($prefix).'_'.strtoupper(strtr($name, '-', '_'));
+    if ($prefix)
+    {
+      $prefix = strtoupper($prefix).'_';
+    }
+
+    $name = $prefix.strtoupper(strtr($name, '-', '_'));
 
     $pathArray = $this->getPathInfoArray();
 
