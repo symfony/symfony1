@@ -253,16 +253,7 @@ class sfWebResponse extends sfResponse
   public function sendHttpHeaders()
   {
     // status
-    if (0 == strncasecmp(PHP_SAPI, 'cgi', 3) && isset($_SERVER['SERVER_SOFTWARE']) && false !== stripos($_SERVER['SERVER_SOFTWARE'], 'apache/2'))
-    {
-      // fix bug http://www.symfony-project.com/trac/ticket/669 for apache2/mod_fastcgi
-      $status = 'Status: '.$this->statusCode.' '.$this->statusText;
-    }
-    else
-    {
-      $status = 'HTTP/1.0 '.$this->statusCode.' '.$this->statusText;
-    }
-
+    $status = 'HTTP/1.0 '.$this->statusCode.' '.$this->statusText;
     header($status);
 
     if (sfConfig::get('sf_logging_enabled'))
