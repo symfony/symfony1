@@ -88,7 +88,7 @@ class sfPropelData extends sfData
           try
           {
             $column = $tableMap->getColumn($name);
-            if ($column->isForeignKey())
+            if ($column->isForeignKey() && !is_null($value))
             {
               $relatedTable = $this->maps[$class]->getDatabaseMap()->getTable($column->getRelatedTableName());
               if (!isset($this->object_references[$relatedTable->getPhpName().'_'.$value]))
