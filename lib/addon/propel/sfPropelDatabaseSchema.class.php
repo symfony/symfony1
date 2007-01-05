@@ -61,7 +61,7 @@ class sfPropelDatabaseSchema
       // columns
       foreach ($this->getChildren($table) as $col_name => $column)
       {
-        $xml .= "    <column name=\"$col_name\"".$this->getAttributesForColumn($col_name, $column);
+        $xml .= "    <column name=\"$col_name\"".$this->getAttributesForColumn($tb_name, $col_name, $column);
       }
 
       // indexes
@@ -321,7 +321,7 @@ class sfPropelDatabaseSchema
     return $table_match;
   }
 
-  protected function getAttributesForColumn($col_name, $column)
+  protected function getAttributesForColumn($tb_name, $col_name, $column)
   {
     $attributes_string = '';
     if (is_array($column))
@@ -362,13 +362,13 @@ class sfPropelDatabaseSchema
     {
       if ($column['index'] === 'unique')
       {
-        $attributes_string .= "    <unique name=\"${col_name}_unique\">\n";
+        $attributes_string .= "    <unique name=\"${tb_name}_${col_name}_unique\">\n";
         $attributes_string .= "      <unique-column name=\"$col_name\" />\n";
         $attributes_string .= "    </unique>\n";
       }
       else
       {
-        $attributes_string .= "    <index name=\"${col_name}_index\">\n";
+        $attributes_string .= "    <index name=\"${tb_name}_${col_name}_index\">\n";
         $attributes_string .= "      <index-column name=\"$col_name\" />\n";
         $attributes_string .= "    </index>\n";
       }
