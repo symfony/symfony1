@@ -106,7 +106,7 @@ class sfDateFormat
 
     $this->methods = get_class_methods($this);
   }
-  
+
   /**
    * Guesses a date without calling strtotime.
    *
@@ -118,8 +118,9 @@ class sfDateFormat
   public function getDate($time, $pattern = null)
   {
     // if the type is not a php timestamp
-    $is_str = ! ( (string)$time === (string)(int)$time);
-    if ($is_str)
+    $isString = (string) $time !== (string) (int) $time;
+
+    if ($isString)
     {
       if (!$pattern)
       {
@@ -168,7 +169,7 @@ class sfDateFormat
     // the last attempt has failed we fall back on the default method
     if (!isset($date))
     {
-      if ($is_str)
+      if ($isString)
       {
         $numericalTime = @strtotime($time);
         if ($numericalTime === false)
