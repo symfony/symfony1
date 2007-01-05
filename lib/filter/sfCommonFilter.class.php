@@ -34,72 +34,25 @@ class sfCommonFilter extends sfFilter
 
     // include javascripts and stylesheets
     sfLoader::loadHelpers(array('Tag', 'Asset'));
-    $html  = $this->includeJavascripts($response);
-    $html .= $this->includeStylesheets($response);
-    $content = $response->getContent();
-    if (false !== ($pos = strpos($content, '</head>')))
-    {
-      $content = substr($content, 0, $pos).$html.substr($content, $pos);
-    }
-
-    $response->setContent($content);
-  }
-
-  protected function includeJavascripts($response)
-  {
-    $already_seen = array();
     $html = '';
-
-    foreach (array('first', '', 'last') as $position)
+    if (!$response->getParameter('javascripts_included', false, 'symfony/view/asset'))
     {
-      foreach ($response->getJavascripts($position) as $files)
-      {
-        if (!is_array($files))
-        {
-          $files = array($files);
-        }
-
-        foreach ($files as $file)
-        {
-          $file = javascript_path($file);
-
-          if (isset($already_seen[$file])) continue;
-
-          $already_seen[$file] = 1;
-          $html .= javascript_include_tag($file);
-        }
-      }
+      $html .= get_javascripts($response);
+    }
+    if (!$response->getParameter('stylesheets_included', false, 'symfony/view/asset'))
+    {
+      $html .= get_stylesheets($response);
     }
 
-    return $html;
-  }
-
-  protected function includeStylesheets($response)
-  {
-    $already_seen = array();
-    $html = '';
-
-    foreach (array('first', '', 'last') as $position)
+    if ($html)
     {
-      foreach ($response->getStylesheets($position) as $files => $options)
+      $content = $response->getContent();
+      if (false !== ($pos = strpos($content, '</head>')))
       {
-        if (!is_array($files))
-        {
-          $files = array($files);
-        }
-
-        foreach ($files as $file)
-        {
-          $file = stylesheet_path($file);
-
-          if (isset($already_seen[$file])) continue;
-
-          $already_seen[$file] = 1;
-          $html .= stylesheet_tag($file, $options);
-        }
+        $content = substr($content, 0, $pos).$html.substr($content, $pos);
       }
-    }
 
-    return $html;
+      $response->setContent($content);
+    }
   }
 }

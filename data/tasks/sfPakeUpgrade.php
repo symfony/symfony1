@@ -473,27 +473,6 @@ function _upgrade_1_0_deprecated_for_templates($template_dirs)
 
     $updated = false;
     $count = 0;
-    $content = preg_replace('#<\?php\s+(echo)?\s+include_javascripts\(\);?\s*\?>#', '', $content, -1, $count);
-    if ($count)
-    {
-      $updated = true;
-    }
-    if ($count && !isset($seen['include_javascripts']))
-    {
-      $seen['include_javascripts'] = true;
-      pake_echo_comment('include_javascripts() has been removed');
-    }
-
-    $content = preg_replace('#<\?php\s+(echo)?\s+include_stylesheets\(\);?\s*\?>#', '', $content, -1, $count);
-    if ($count)
-    {
-      $updated = true;
-    }
-    if ($count && !isset($seen['include_stylesheets']))
-    {
-      $seen['include_stylesheets'] = true;
-      pake_echo_comment('include_stylesheets() has been removed');
-    }
 
     foreach ($deprecated_str as $old => $new)
     {
