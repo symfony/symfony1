@@ -97,7 +97,7 @@ class TGettext
      * @param   string  $format MO or PO
      * @param   string  $file   path to GNU gettext file
      */
-    function factory($format, $file = '')
+    static function factory($format, $file = '')
     {
         $format = strToUpper($format);
         $filename = dirname(__FILE__).'/'.$format.'.php';
