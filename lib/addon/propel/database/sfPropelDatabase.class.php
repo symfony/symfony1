@@ -70,8 +70,6 @@ class sfPropelDatabase extends sfCreoleDatabase
       $this->setParameter('username',   $params['username']);
       $this->setParameter('password',   $params['password']);
       $this->setParameter('port',       $params['port']);
-      $this->setParameter('encoding',   isset($params['encoding']) ? $params['encoding'] : null);
-      $this->setParameter('persistent', isset($params['persistent']) ? $params['persistent'] : null);
       $this->setParameter('protocol',   isset($params['protocol']) ? $params['protocol'] : null);
     }
 
