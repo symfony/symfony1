@@ -85,4 +85,20 @@ class sfOutputEscaperObjectDecorator extends sfOutputEscaperGetterDecorator
     return $this->value->get($key);
   }
 
+  /**
+   * Try to call decorated object __toString() method if exists.
+   *
+   * @return string
+   */
+  public function __toString()
+  {
+    if (method_exists($this->value, '__toString'))
+    {
+      return $this->value->__toString();
+    }
+    else
+    {
+      throw new sfException(sprintf('Object of class "%s" cannot be converted to string (Please create a __toString() method)', get_class($name)));
+    }
+  }
 }
