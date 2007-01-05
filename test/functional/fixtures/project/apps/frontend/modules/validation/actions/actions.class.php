@@ -18,4 +18,13 @@ class validationActions extends sfActions
   {
     return sfView::SUCCESS;
   }
+
+  public function executeGroup()
+  {
+  }
+
+  public function handleErrorGroup()
+  {
+    return sfView::SUCCESS;
+  }
 }

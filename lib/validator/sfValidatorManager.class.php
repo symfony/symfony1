@@ -91,7 +91,9 @@ class sfValidatorManager
       }
 
       if (count($this->groups) == 0 || $pass == 2)
+      {
         break;
+      }
 
       // increase our pass indicator
       ++$pass;
@@ -206,7 +208,7 @@ class sfValidatorManager
     // get defaults
     $error     = null;
     $errorName = null;
-    $force     = ($data['group'] != null) ? $data['group']['_force'] : false;
+    $force     = null !== $data['group'] ? $data['group']['_force'] : false;
     $retval    = true;
     $value     = null;
 

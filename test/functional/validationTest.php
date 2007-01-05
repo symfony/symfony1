@@ -60,3 +60,80 @@ $b->
 
   checkResponseElement('body ul[class="errors"] li[class="fake"]')
 ;
+
+// test group feature (with validator)
+$b->test()->diag('test group feature (with validator)');
+$b->
+  get('/validation/group')->
+  isStatusCode(200)->
+  isRequestParameter('module', 'validation')->
+  isRequestParameter('action', 'group')
+;
+
+$b->test()->diag('when none of the two inputs are filled, the validation passes (ok)');
+$b->
+  click('submit')->
+  checkResponseElement('body ul[class="errors"] li', false)
+;
+
+$b->test()->diag('when both fields are filled, the validation passes (ok)');
+$b->
+  click('submit', array('input1' => 'foo', 'input2' => '1234567890'))->
+  checkResponseElement('body ul[class="errors"] li', false)
+;
+
+$b->test()->diag('when both fields are filled, and input2 has incorrect data, the validation fails because of the nameValidator on input2');
+$b->
+  click('submit', array('input1' => 'foo', 'input2' => 'bar'))->
+  checkResponseElement('body ul[class="errors"] li[class="input1"]', false)->
+  checkResponseElement('body ul[class="errors"] li[class="input2"]', 'nameValidator')
+;
+
+$b->test()->diag('when only the second input is filled, and with incorrect data, the validation fails because of the nameValidator on input2 and input1 is required');
+$b->
+  click('submit', array('input2' => 'foo'))->
+  checkResponseElement('body ul[class="errors"] li[class="input1"]', 'Required')->
+  checkResponseElement('body ul[class="errors"] li[class="input2"]', 'nameValidator')
+;
+
+$b->test()->diag('when only the first input is filled, the validation fails because of a required on input2');
+$b->
+  click('submit', array('input1' => 'foo'))->
+  checkResponseElement('body ul[class="errors"] li[class="input1"]', false)->
+  checkResponseElement('body ul[class="errors"] li[class="input2"]', 'Required')
+;
+
+// test group feature (without validator)
+$b->test()->diag('test group feature (without validator)');
+$b->
+  get('/validation/group')->
+  isStatusCode(200)->
+  isRequestParameter('module', 'validation')->
+  isRequestParameter('action', 'group')
+;
+
+$b->test()->diag('when none of the two inputs are filled, the validation passes (ok)');
+$b->
+  click('submit')->
+  checkResponseElement('body ul[class="errors"] li', false)
+;
+
+$b->test()->diag('when both fields are filled, the validation passes (ok)');
+$b->
+  click('submit', array('input3' => 'foo', 'input4' => 'bar'))->
+  checkResponseElement('body ul[class="errors"] li', false)
+;
+
+$b->test()->diag('when only input4 is filled, the validation fails because input3 is required');
+$b->
+  click('submit', array('input4' => 'foo'))->
+  checkResponseElement('body ul[class="errors"] li[class="input3"]', 'Required')->
+  checkResponseElement('body ul[class="errors"] li[class="input4"]', false)
+;
+
+$b->test()->diag('when only input3 is filled, the validation fails because input4 is required');
+$b->
+  click('submit', array('input3' => 'foo'))->
+  checkResponseElement('body ul[class="errors"] li[class="input3"]', false)->
+  checkResponseElement('body ul[class="errors"] li[class="input4"]', 'Required')
+;
