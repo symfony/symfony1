@@ -15,7 +15,7 @@
 </head>
 <body>
 <div class="sfTContainer">
-  <?php echo link_to(image_tag('/sf/sf_default/images/sfTLogo.png', array('alt' => 'symfony PHP Framework', 'class' => 'sfTLogo', 'size' => '186x39')), 'http://www.symfony-project.com/', array('alt' => 'symfony website')) ?>
+  <?php echo link_to(image_tag('/sf/sf_default/images/sfTLogo.png', array('alt' => 'symfony PHP Framework', 'class' => 'sfTLogo', 'size' => '186x39')), 'http://www.symfony-project.com/') ?>
   <?php echo $sf_data->getRaw('sf_content') ?>
 </div>
 </body>
