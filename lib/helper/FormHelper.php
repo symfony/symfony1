@@ -743,7 +743,7 @@ function input_date_tag($name, $value = null, $options = array())
 
     return select_date_tag($name, $value, $options, isset($options['html']) ? $options['html'] : array());
   }
-  
+
   if ($withTime = _get_option($options, 'withtime', false))
   {
     $pattern = 'g';
@@ -752,11 +752,11 @@ function input_date_tag($name, $value = null, $options = array())
   {
     $pattern = 'd';
   }
-  
+
   $pattern = _get_option($options, 'format', $pattern);
 
   $dateFormat = new sfDateFormat($culture);
-  
+
   $pattern = $dateFormat->getInputPattern($pattern);
 
   // parse date

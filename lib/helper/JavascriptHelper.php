@@ -390,7 +390,7 @@
    * Takes the same arguments as 'link_to_remote()'.
    *
    * Example:
-   *   <select id="options" onchange="<?= remote_function(array('update' => 'options', 'url' => '@update_options')) ?>">
+   *   <select id="options" onchange="<?php echo remote_function(array('update' => 'options', 'url' => '@update_options')) ?>">
    *     <option value="0">Hello</option>
    *     <option value="1">World</option>
    *   </select>

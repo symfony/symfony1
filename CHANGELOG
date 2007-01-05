@@ -1,6 +1,20 @@
 Version 1.0.0-beta3
 -------------------
 
+Major changes and major bug fixes since beta2:
+
+* r3172: fixed mailer.yml configuration file handling
+* r3166: FastCGI compatibility
+* r3165: re-introduced include_javascripts() and include_stylesheets()
+* r3163: fixed value escaping in tag attributes
+* r3160: added `hide` parameter to the admin generator
+* r3147: added a setViewClass() method to sfAction
+* r3140: fixed route generation when using requirements
+* r3134: added support for PUT, DELETE and HEAD HTTP methods
+* r3129: fixed symfony CLI when using open_basedir
+
+* fixed some minor bugs (see trac)
+
 Version 1.0.0-beta2
 -------------------
 
