@@ -16,7 +16,6 @@ fields:
       msg:       The name field cannot be left blank
     myStringValidator:
   email:
-    group:       foo
     required:
       msg:       The email field cannot be left blank
     myStringValidator:
@@ -37,11 +36,17 @@ fields:
       msg:          Please upload an image file
     file:           true
     sfFileValidator:
-      mime_types:       
+      mime_types:
         - 'image/jpeg'
         - 'image/png'
         - 'image/x-png'
-        - 'image/pjpeg'        
+        - 'image/pjpeg'
       mime_types_error: Only PNG and JPEG images are allowed
       max_size:         512000
       max_size_error:   Max size is 512Kb
+  password:
+    group:       foo
+    group_msg:   This is required
+  password_bis:
+    group:       foo
+    group_msg:   This is required bis

@@ -1,5 +1,5 @@
 methods:
-  post: [name, email, age, message, image]
+  post: [name, email, age, message, image, password, password_bis]
 
 fillin:
   enabled:       Yes
@@ -10,7 +10,6 @@ names:
     required_msg: The name field cannot be left blank
     validators:   [myStringValidator]
   email:
-    group:        foo
     required:     on
     required_msg: The email field cannot be left blank
     validators:   [myStringValidator, sfEmailValidator_email]
@@ -21,10 +20,18 @@ names:
     required:     on
     required_msg: The message field cannot be left blank
   image:
-    required:   on
+    required:     on
     required_msg: Please upload an image file
     validators:   [sfFileValidator_image]
     file:         true
+  password:
+    group:        foo
+    required:     off
+    required_msg: This is required
+  password_bis:
+    group:        foo
+    required:     off
+    required_msg: This is required bis
 
 myStringValidator:
   class: sfStringValidator

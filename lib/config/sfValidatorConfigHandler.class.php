@@ -501,7 +501,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
       $validators = array();
       foreach ($values as $validator => $params)
       {
-        if (in_array($validator, array('required', 'group', 'parent', 'file')))
+        if (in_array($validator, array('required', 'group', 'group_msg', 'parent', 'file')))
         {
           continue;
         }
@@ -526,6 +526,12 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
         unset($values[$validator]);
       }
       $values['validators'] = $validators;
+
+      // group
+      if (isset($values['group']) && isset($values['group_msg']))
+      {
+        $values['required_msg'] = $values['group_msg'];
+      }
 
       // required
       if (isset($values['required']))
