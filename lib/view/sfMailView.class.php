@@ -99,11 +99,13 @@ class sfMailView extends sfPHPView
       'priority', 'content_type', 'charset', 'encoding', 'wordwrap',
       'hostname', 'port', 'domain', 'username', 'password'
     );
+    $defaultMail = new sfMail();
+
     foreach ($vars as $var)
     {
       $setter = 'set'.sfInflector::camelize($var);
       $getter = 'get'.sfInflector::camelize($var);
-      $value  = $mail->$getter() !== null ? $mail->$getter() : sfConfig::get($config_prefix.strtolower($var));
+      $value  = $mail->$getter() !== $defaultMail->$getter() ? $mail->$getter() : sfConfig::get($config_prefix.strtolower($var));
       $mail->$setter($value);
     }
 

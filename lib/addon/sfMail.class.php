@@ -95,7 +95,7 @@ class sfMail
 
   public function setMailer($type = 'mail', $options = array())
   {
-    switch($type)
+    switch ($type)
     {
       case 'smtp':
         $this->mailer->IsSMTP();
