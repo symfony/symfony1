@@ -63,9 +63,16 @@ class sfFrontWebController extends sfWebController
         throw $e;
       }
 
-      // wrap non symfony exceptions
-      $sfException = new sfException();
-      $sfException->printStackTrace($e);
+      try
+      {
+        // wrap non symfony exceptions
+        $sfException = new sfException();
+        $sfException->printStackTrace($e);
+      }
+      catch (Exception $e)
+      {
+        header('HTTP/1.0 500 Internal Server Error');
+      }
     }
   }
 }

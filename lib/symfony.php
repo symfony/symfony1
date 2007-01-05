@@ -140,7 +140,19 @@ catch (sfException $e)
 }
 catch (Exception $e)
 {
-  // wrap non symfony exceptions
-  $sfException = new sfException();
-  $sfException->printStackTrace($e);
+  if (sfConfig::get('sf_test'))
+  {
+    throw $e;
+  }
+
+  try
+  {
+    // wrap non symfony exceptions
+    $sfException = new sfException();
+    $sfException->printStackTrace($e);
+  }
+  catch (Exception $e)
+  {
+    header('HTTP/1.0 500 Internal Server Error');
+  }
 }
