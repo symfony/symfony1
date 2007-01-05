@@ -484,7 +484,7 @@ class sfWebRequest extends sfRequest
     // move symfony parameters in a protected namespace (parameters prefixed with _sf_)
     foreach ($this->getParameterHolder()->getAll() as $key => $value)
     {
-      if (stripos($key, '_sf_') !== false)
+      if (0 === stripos($key, '_sf_'))
       {
         $this->getParameterHolder()->remove($key);
         $this->setParameter($key, $value, 'symfony/request/sfWebRequest');
