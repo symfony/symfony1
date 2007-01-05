@@ -113,7 +113,7 @@ function link_to($name = '', $internal_uri = '', $options = array())
 
   if (is_object($name))
   {
-    if (method_exists($name, '__toString'))
+    if (is_callable($name, '__toString'))
     {
       $name = $name->__toString();
     }
