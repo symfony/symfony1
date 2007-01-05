@@ -67,7 +67,7 @@ abstract class sfAdminGenerator extends sfCrudGenerator
       $default_action = $actionName;
       $default_class  = 'sf_admin_action_'.$actionName;
 
-      if ($actionName == 'save' || $actionName == 'save_and_add')
+      if ($actionName == 'save' || $actionName == 'save_and_add' || $actionName == 'save_and_list')
       {
         $method = 'submit_tag';
         $options['name'] = $actionName;

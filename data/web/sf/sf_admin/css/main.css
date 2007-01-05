@@ -241,6 +241,12 @@ body, #sf_admin_container td
   border-right: 4px solid #73B65A !important;
 }
 
+#sf_admin_container .sf_admin_action_save_and_list
+{
+  background: url(/sf/sf_admin/images/save.png) no-repeat 3px 2px;
+  border-right: 4px solid #73B65A !important;
+}
+
 #sf_admin_container .sf_admin_action_delete
 {
   background: url(/sf/sf_admin/images/delete.png) no-repeat 3px 2px;

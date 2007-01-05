@@ -72,6 +72,10 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
       {
         return $this->redirect('<?php echo $this->getModuleName() ?>/create');
       }
+      else if ($this->getRequestParameter('save_and_list'))
+      {
+        return $this->redirect('<?php echo $this->getModuleName() ?>/list');
+      }
       else
       {
         return $this->redirect('<?php echo $this->getModuleName() ?>/edit?<?php echo $this->getPrimaryKeyUrlParams('this->') ?>);
