@@ -241,6 +241,16 @@ function run_propel_load_data($task, $args)
     throw new Exception('The app "'.$app.'" does not exist.');
   }
 
+  if (count($args) > 1 && $args[count($args) - 1] == 'append')
+  {
+    array_pop($args);
+    $delete = false;
+  }
+  else
+  {
+    $delete = true;
+  }
+
   $env = empty($args[1]) ? 'dev' : $args[1];
 
   // define constants
@@ -251,16 +261,6 @@ function run_propel_load_data($task, $args)
 
   // get configuration
   require_once SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php';
-
-  if (count($args) > 1 && $args[count($args) - 1] == 'append')
-  {
-    array_pop($args);
-    $delete = false;
-  }
-  else
-  {
-    $delete = true;
-  }
 
   if (count($args) == 1)
   {
