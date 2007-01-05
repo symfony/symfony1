@@ -21,7 +21,10 @@
 <?php if ($category != 'NONE'): ?><h2>[?php echo __('<?php echo $category_name ?>') ?]</h2>
 
 <?php endif; ?>
+
+<?php $hides = $this->getParameterValue('edit.hide', array()) ?>
 <?php foreach ($this->getColumns('edit.display', $category) as $name => $column): ?>
+<?php if (in_array($column->getName(), $hides)) continue ?>
 <?php if ($column->isPrimaryKey()) continue ?>
 <?php $credentials = $this->getParameterValue('edit.fields.'.$column->getName().'.credentials') ?>
 <?php if ($credentials): $credentials = str_replace("\n", ' ', var_export($credentials, true)) ?>

@@ -114,5 +114,21 @@ $b->
   checkResponseElement('body input[class="myButtonClass"][onclick*="/article/myAction/id/1"][value="my button"]', true)->
 
   checkEditCustomization('rename save button', array('actions' => array('save' => array('name' => 'My save'))))->
-  checkResponseElement('body input[value="My save"]', true)
+  checkResponseElement('body input[value="My save"]', true)->
+
+  // list hide
+  checkListCustomization('list fields hiding customization', array('hide' => array('body', 'category_id')))->
+  checkResponseElement('#sf_admin_list_th_body', false)->
+  checkResponseElement('#sf_admin_list_th_title', true)->
+  checkResponseElement('#sf_admin_list_th_id', true)->
+  checkResponseElement('#sf_admin_list_th_category_id', false)->
+  checkResponseElement('#sf_admin_list_th_created_at', true)->
+
+  // edit hide
+  checkEditCustomization('edit fields hiding customization', array('hide' => array('body', 'title')))->
+  checkResponseElement('label[for="article_body"]', false)->
+  checkResponseElement('label[for="article_title"]', false)->
+  checkResponseElement('label[for="article_id"]', false)->
+  checkResponseElement('label[for="article_category_id"]', true)->
+  checkResponseElement('label[for="article_created_at"]', true)
 ;
