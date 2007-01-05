@@ -63,6 +63,28 @@ function escape_javascript($javascript = '')
   return $javascript;
 }
 
+/**
+ * Escapes an HTML string.
+ *
+ * @param  string HTML string to escape
+ * @return string escaped string
+ */
+function escape_once($html)
+{
+  return fix_double_escape(htmlspecialchars($html));
+}
+
+/**
+ * Fixes double escaped strings.
+ *
+ * @param  string HTML string to fix
+ * @return string escaped string
+ */
+function fix_double_escape($escaped)
+{
+  return preg_replace('/&amp;([a-z]+|(#\d+));/i', '&$1;', $escaped);
+}
+
 function _tag_options($options = array())
 {
   $options = _parse_attributes($options);
@@ -70,7 +92,7 @@ function _tag_options($options = array())
   $html = '';
   foreach ($options as $key => $value)
   {
-    $html .= ' '.$key.'="'.$value.'"';
+    $html .= ' '.$key.'="'.escape_once($value).'"';
   }
 
   return $html;

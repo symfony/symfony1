@@ -13,7 +13,7 @@ require_once($_test_dir.'/unit/sfContextMock.class.php');
 
 sfLoader::loadHelpers(array('Helper', 'Tag'));
 
-$t = new lime_test(16, new lime_output_color());
+$t = new lime_test(20, new lime_output_color());
 
 $context = new sfContext();
 
@@ -52,3 +52,13 @@ $options = array(
 $t->is(_get_option($options, 'foo'), 'bar', '_get_option() returns the value for the given key');
 $t->ok(!isset($options['foo']), '_get_option() removes the key from the original array');
 $t->is(_get_option($options, 'nofoo', 'nobar'), 'nobar', '_get_option() returns the default value if the key does not exist');
+
+// escape_once()
+$t->diag('escape_once()');
+$t->is(escape_once('This a > text to "escape"'), 'This a &gt; text to &quot;escape&quot;', 'escape_once() escapes an HTML strings');
+$t->is(escape_once(escape_once('This a > text to "escape"')), 'This a &gt; text to &quot;escape&quot;', 'escape_once() does not escape an already escaped string');
+$t->is(escape_once('This a &gt; text to "escape"'), 'This a &gt; text to &quot;escape&quot;', 'escape_once() does not escape an already escaped string');
+
+// fix_double_escape()
+$t->diag('fix_double_escape()');
+$t->is(fix_double_escape(htmlspecialchars(htmlspecialchars('This a > text to "escape"'))), 'This a &gt; text to &quot;escape&quot;', 'fix_double_escape() fixes double escaped strings');
