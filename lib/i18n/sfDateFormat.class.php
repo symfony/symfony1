@@ -118,7 +118,8 @@ class sfDateFormat
   public function getDate($time, $pattern = null)
   {
     // if the type is not a php timestamp
-    if (is_string($time))
+    $is_str = ! ( (string)$time === (string)(int)$time);
+    if ($is_str)
     {
       if (!$pattern)
       {
@@ -167,7 +168,7 @@ class sfDateFormat
     // the last attempt has failed we fall back on the default method
     if (!isset($date))
     {
-      if (is_string($time))
+      if ($is_str)
       {
         $numericalTime = @strtotime($time);
         if ($numericalTime === false)
