@@ -270,13 +270,13 @@ class lime_output
     $messages = func_get_args();
     foreach ($messages as $message)
     {
-      $this->echoln('# '.join("\n# ", (array) $message));
+      array_map(array($this, 'comment'), (array) $message);
     }
   }
 
   function comment($message)
   {
-    echo "$message\n";
+    echo "# $message\n";
   }
 
   function echoln($message)
