@@ -159,19 +159,26 @@ class sfLoader
       sfConfig::get('sf_symfony_data_dir').'/'.$configPath,                          // core modules
     );
 
-    if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/'.$configPath))
+    if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/'.$globalConfigPath))
     {
       $dirs = array_merge($dirs, $pluginDirs);                                       // plugins
     }
 
     $dirs = array_merge($dirs, array(
       sfConfig::get('sf_root_dir').'/'.$globalConfigPath,                            // project
+      sfConfig::get('sf_root_dir').'/'.$configPath,                                  // project
       sfConfig::get('sf_app_dir').'/'.$globalConfigPath,                             // application
       sfConfig::get('sf_cache_dir').'/'.$configPath,                                 // generated modules
-      sfConfig::get('sf_app_dir').'/'.$configPath,                                   // module
     ));
 
-    return $dirs;
+    if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/'.$configPath))
+    {
+      $dirs = array_merge($dirs, $pluginDirs);                                       // plugins
+    }
+
+    $dirs[] = sfConfig::get('sf_app_dir').'/'.$configPath;                           // module
+
+    return array_unique($dirs);
   }
 
   static public function getHelperDirs($moduleName = '')
