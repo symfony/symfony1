@@ -1,4 +1,4 @@
-#!/usr/bin/env php -d html_errors=off -d open_basedir= -q
+#!/usr/bin/env php
 <?php
 
 /*
