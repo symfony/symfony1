@@ -38,10 +38,12 @@ class sfCommonFilter extends sfFilter
     if (!$response->getParameter('javascripts_included', false, 'symfony/view/asset'))
     {
       $html .= get_javascripts($response);
+      $response->setParameter('javascripts_included', false, 'symfony/view/asset');
     }
     if (!$response->getParameter('stylesheets_included', false, 'symfony/view/asset'))
     {
       $html .= get_stylesheets($response);
+      $response->setParameter('stylesheets_included', false, 'symfony/view/asset');
     }
 
     if ($html)
