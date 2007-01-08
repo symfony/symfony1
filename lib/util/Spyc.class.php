@@ -95,7 +95,7 @@ class Spyc
   {
     $spyc = new Spyc();
 
-    return $spyc->dump($array,$indent,$wordwrap);
+    return $spyc->dump($array, $indent, $wordwrap);
   }
 
   /**
@@ -265,9 +265,9 @@ class Spyc
               isset($node->data[key($node->data)]) &&
               (!is_array($node->data[key($node->data)])))
             &&
-             ((preg_match('/^&([^ ]+)/',$node->data[key($node->data)]))
+             ((preg_match('/^&([^ ]+)/', $node->data[key($node->data)]))
               || 
-              (preg_match('/^\*([^ ]+)/',$node->data[key($node->data)])))
+              (preg_match('/^\*([^ ]+)/', $node->data[key($node->data)])))
           )
           {
             $this->_haveRefs[] =& $this->_allNodes[$node->id];
@@ -281,7 +281,7 @@ class Spyc
             // Incomplete reference making code.  Ugly, needs cleaned up.
             foreach ($node->data[key($node->data)] as $d)
             {
-              if (!is_array($d) && ((preg_match('/^&([^ ]+)/',$d)) || (preg_match('/^\*([^ ]+)/',$d))))
+              if (!is_array($d) && ((preg_match('/^&([^ ]+)/', $d)) || (preg_match('/^\*([^ ]+)/', $d))))
               {
                 $this->_haveRefs[] =& $this->_allNodes[$node->id];
               }
@@ -706,28 +706,31 @@ class Spyc
 
     // Check for strings
     $regex = '/(?:(")|(?:\'))((?(1)[^"]+|[^\']+))(?(1)"|\')/';
-    if (preg_match_all($regex,$inline,$strings))
+    if (preg_match_all($regex, $inline, $strings))
     {
-      $saved_strings[] = $strings[0][0];
-      $inline  = preg_replace($regex,'YAMLString',$inline); 
+      foreach ($strings[0] as $string)
+      {
+        $saved_strings[] = $string;
+      }
+      $inline  = preg_replace($regex, 'YAMLString', $inline);
     }
     unset($regex);
 
     // Check for sequences
-    if (preg_match_all('/\[(.+)\]/U',$inline,$seqs))
+    if (preg_match_all('/\[(.+)\]/U', $inline, $seqs))
     {
-      $inline = preg_replace('/\[(.+)\]/U','YAMLSeq',$inline);
+      $inline = preg_replace('/\[(.+)\]/U', 'YAMLSeq', $inline);
       $seqs   = $seqs[0];
     }
 
     // Check for mappings
-    if (preg_match_all('/{(.+)}/U',$inline,$maps))
+    if (preg_match_all('/{(.+)}/U', $inline, $maps))
     {
-      $inline = preg_replace('/{(.+)}/U','YAMLMap',$inline);
+      $inline = preg_replace('/{(.+)}/U', 'YAMLMap', $inline);
       $maps   = $maps[0];
     }
 
-    $explode = explode(', ',$inline);
+    $explode = explode(', ', $inline);
 
     // Re-add the strings
     if (!empty($saved_strings))
@@ -737,7 +740,7 @@ class Spyc
       {
         if (strpos($value,'YAMLString'))
         {
-          $explode[$key] = str_replace('YAMLString',$saved_strings[$i],$value);
+          $explode[$key] = str_replace('YAMLString', $saved_strings[$i], $value);
           ++$i;
         }
       }
@@ -751,7 +754,7 @@ class Spyc
       {
         if (strpos($value,'YAMLSeq') !== false)
         {
-          $explode[$key] = str_replace('YAMLSeq',$seqs[$i],$value);
+          $explode[$key] = str_replace('YAMLSeq', $seqs[$i], $value);
           ++$i;
         }
       }
@@ -841,7 +844,7 @@ class Spyc
     if (empty($k) && empty($v))
     {
       // Look for &refs
-      if (preg_match('/^&([^ ]+)/',$n->data[$key],$matches))
+      if (preg_match('/^&([^ ]+)/', $n->data[$key], $matches))
       {
         // Flag the node so we know it's a reference
         $this->_allNodes[$n->id]->ref = substr($matches[0], 1);

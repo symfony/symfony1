@@ -1,0 +1,8 @@
+--- %YAML:1.0 
+test: Multiple quoted string on one line
+brief: > 
+    Multiple quoted string on one line
+yaml: | 
+    stripped_title: { name: "foo bar", help: "bar foo" }
+php: | 
+    array('stripped_title' => array('name' => 'foo bar', 'help' => 'bar foo'))
