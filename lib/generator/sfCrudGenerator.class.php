@@ -112,13 +112,13 @@ abstract class sfCrudGenerator extends sfGenerator
     return implode(', ', $method_params);
   }
 
-  public function getTestPksForGetOrCreate()
+  public function getTestPksForGetOrCreate($fieldNameAsArgument = true)
   {
     $test_pks = array();
     foreach ($this->getPrimaryKey() as $pk)
     {
       $fieldName  = sfInflector::underscore($pk->getPhpName());
-      $test_pks[] = "!\$this->getRequestParameter('$fieldName', 0)";
+      $test_pks[] = sprintf("!\$this->getRequestParameter(%s)", $fieldNameAsArgument ? "\$$fieldName" : "'".$fieldName."'");
     }
 
     return implode("\n     || ", $test_pks);

@@ -11,38 +11,38 @@
  */
 class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 {
-  public function executeIndex ()
+  public function executeIndex()
   {
     return $this->forward('<?php echo $this->getModuleName() ?>', 'list');
   }
 
-  public function executeList ()
+  public function executeList()
   {
     $this-><?php echo $this->getPluralName() ?> = <?php echo $this->getClassName() ?>Peer::doSelect(new Criteria());
   }
 
-  public function executeShow ()
+  public function executeShow()
   {
     $this-><?php echo $this->getSingularName() ?> = <?php echo $this->getClassName() ?>Peer::retrieveByPk(<?php echo $this->getRetrieveByPkParamsForAction(49) ?>);
     $this->forward404Unless($this-><?php echo $this->getSingularName() ?>);
   }
 
-  public function executeCreate ()
+  public function executeCreate()
   {
     $this-><?php echo $this->getSingularName() ?> = new <?php echo $this->getClassName() ?>();
 
     $this->setTemplate('edit');
   }
 
-  public function executeEdit ()
+  public function executeEdit()
   {
     $this-><?php echo $this->getSingularName() ?> = <?php echo $this->getClassName() ?>Peer::retrieveByPk(<?php echo $this->getRetrieveByPkParamsForAction(49) ?>);
     $this->forward404Unless($this-><?php echo $this->getSingularName() ?>);
   }
 
-  public function executeUpdate ()
+  public function executeUpdate()
   {
-    if (<?php echo $this->getTestPksForGetOrCreate() ?>)
+    if (<?php echo $this->getTestPksForGetOrCreate(false) ?>)
     {
       $<?php echo $this->getSingularName() ?> = new <?php echo $this->getClassName() ?>();
     }
@@ -74,7 +74,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 <?php //' ?>
   }
 
-  public function executeDelete ()
+  public function executeDelete()
   {
     $<?php echo $this->getSingularName() ?> = <?php echo $this->getClassName() ?>Peer::retrieveByPk(<?php echo $this->getRetrieveByPkParamsForAction(43) ?>);
 

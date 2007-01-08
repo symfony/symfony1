@@ -11,17 +11,17 @@
  */
 class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 {
-  public function preExecute ()
+  public function preExecute()
   {
     $this->getResponse()->addStylesheet('<?php echo $this->getParameterValue('css', sfConfig::get('sf_admin_web_dir').'/css/main') ?>');
   }
 
-  public function executeIndex ()
+  public function executeIndex()
   {
     return $this->forward('<?php echo $this->getModuleName() ?>', 'list');
   }
 
-  public function executeList ()
+  public function executeList()
   {
     $this->processSort();
 
@@ -44,17 +44,17 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     $this->pager->init();
   }
 
-  public function executeCreate ()
+  public function executeCreate()
   {
     return $this->forward('<?php echo $this->getModuleName() ?>', 'edit');
   }
 
-  public function executeSave ()
+  public function executeSave()
   {
     return $this->forward('<?php echo $this->getModuleName() ?>', 'edit');
   }
 
-  public function executeEdit ()
+  public function executeEdit()
   {
     $this-><?php echo $this->getSingularName() ?> = $this->get<?php echo $this->getClassName() ?>OrCreate();
 
@@ -89,7 +89,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     }
   }
 
-  public function executeDelete ()
+  public function executeDelete()
   {
     $this-><?php echo $this->getSingularName() ?> = <?php echo $this->getClassName() ?>Peer::retrieveByPk(<?php echo $this->getRetrieveByPkParamsForAction(40) ?>);
     $this->forward404Unless($this-><?php echo $this->getSingularName() ?>);
@@ -274,7 +274,7 @@ $column = sfPropelManyToMany::getColumn($class, $through_class);
 <?php endforeach; ?>
   }
 
-  protected function get<?php echo $this->getClassName() ?>OrCreate (<?php echo $this->getMethodParamsForGetOrCreate() ?>)
+  protected function get<?php echo $this->getClassName() ?>OrCreate(<?php echo $this->getMethodParamsForGetOrCreate() ?>)
   {
     if (<?php echo $this->getTestPksForGetOrCreate() ?>)
     {
@@ -290,7 +290,7 @@ $column = sfPropelManyToMany::getColumn($class, $through_class);
     return $<?php echo $this->getSingularName() ?>;
   }
 
-  protected function processFilters ()
+  protected function processFilters()
   {
 <?php if ($this->getParameterValue('list.filters')): ?>
     if ($this->getRequest()->hasParameter('filter'))
@@ -315,7 +315,7 @@ $column = sfPropelManyToMany::getColumn($class, $through_class);
 <?php endif; ?>
   }
 
-  protected function processSort ()
+  protected function processSort()
   {
     if ($this->getRequestParameter('sort'))
     {
@@ -337,7 +337,7 @@ $column = sfPropelManyToMany::getColumn($class, $through_class);
     }
   }
 
-  protected function addFiltersCriteria ($c)
+  protected function addFiltersCriteria($c)
   {
 <?php if ($this->getParameterValue('list.filters')): ?>
 <?php foreach ($this->getColumns('list.filters') as $column): $type = $column->getCreoleType() ?>
@@ -398,7 +398,7 @@ $column = sfPropelManyToMany::getColumn($class, $through_class);
 <?php endif; ?>
   }
 
-  protected function addSortCriteria ($c)
+  protected function addSortCriteria($c)
   {
     if ($sort_column = $this->getUser()->getAttribute('sort', null, 'sf_admin/<?php echo $this->getSingularName() ?>/sort'))
     {
