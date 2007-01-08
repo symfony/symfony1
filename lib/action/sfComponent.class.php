@@ -26,7 +26,7 @@ abstract class sfComponent
     $requestParameterHolder = null;
 
   /**
-   * Execute any application/business logic for this action.
+   * Execute any application/business logic for this component.
    *
    * In a typical database-driven application, execute() handles application
    * logic itself and then proceeds to create a model instance. Once the model
@@ -36,19 +36,14 @@ abstract class sfComponent
    * user account, a shopping cart, or even a something as simple as a
    * single product.
    *
-   * @return mixed A string containing the view name associated with this action.
-   *
-   *               Or an array with the following indices:
-   *
-   *               - The parent module of the view that will be executed.
-   *               - The view that will be executed.
+   * @return mixed A string containing the view name associated with this action
    */
   abstract function execute();
 
   /**
-   * Gets current module name
+   * Gets the module name associated with this component.
    *
-   * @return string
+   * @return string A module name
    */
   public function getModuleName()
   {
@@ -56,9 +51,9 @@ abstract class sfComponent
   }
 
   /**
-   * Gets current action name
+   * Gets the action name associated with this component.
    *
-   * @return string
+   * @return string An action name
    */
   public function getActionName()
   {
@@ -66,16 +61,16 @@ abstract class sfComponent
   }
 
   /**
-   * Initialize this action.
+   * Initializes this component.
    *
-   * @param sfContext The current application context.
+   * @param sfContext The current application context
    *
-   * @return bool true, if initialization completes successfully, otherwise false.
+   * @return boolean true, if initialization completes successfully, otherwise false
    */
   public function initialize($context)
   {
     $this->context                = $context;
-    $this->varHolder             = new sfParameterHolder();
+    $this->varHolder              = new sfParameterHolder();
     $this->request                = $context->getRequest();
     $this->response               = $context->getResponse();
     $this->requestParameterHolder = $this->request->getParameterHolder();
@@ -84,9 +79,9 @@ abstract class sfComponent
   }
 
   /**
-   * Retrieve the current application context.
+   * Retrieves the current application context.
    *
-   * @return sfContext The current sfContext instance.
+   * @return sfContext The current sfContext instance
    */
   public final function getContext()
   {
@@ -94,9 +89,9 @@ abstract class sfComponent
   }
 
   /**
-   * Retrieve the current logger instance.
+   * Retrieves the current logger instance.
    *
-   * @return sfLogger The current sfLogger instance.
+   * @return sfLogger The current sfLogger instance
    */
   public final function getLogger()
   {
@@ -104,24 +99,28 @@ abstract class sfComponent
   }
 
   /**
-   * Log $message using sfLogger object.
-   * 
-   * @param mixed  String or object containing the message to log.
+   * Logs a message using the sfLogger object.
+   *
+   * @param mixed  String or object containing the message to log
    * @param string The priority of the message
-   *               (available priorities: emerg, alert, crit, err, warning, notice, info, debug).
+   *               (available priorities: emerg, alert, crit, err, warning, notice, info, debug)
+   *
+   * @see sfLogger
    */
   public function logMessage($message, $priority = 'info')
   {
     if (sfConfig::get('sf_logging_enabled'))
     {
-      return $this->context->getLogger()->log($message, constant('SF_LOG_'.strtoupper($priority)));
+      $this->context->getLogger()->log($message, constant('SF_LOG_'.strtoupper($priority)));
     }
   }
 
   /**
-   * Display $message as a short message in the sfWebDebug toolbar
+   * Displays a message as a short message in the sfWebDebug toolbar.
    *
-   * @param string The message text.
+   * @param string The message text
+   *
+   * @see sfWebDebug
    */
   public function debugMessage($message)
   {
@@ -138,8 +137,9 @@ abstract class sfComponent
    *
    * <code>$this->getRequest()->getParameterHolder()->get($name)</code>
    *
-   * @param  $name parameter name
-   * @return string
+   * @param  string The parameter name
+   *
+   * @return string The request parameter value
    */
   public function getRequestParameter($name, $default = null)
   {
@@ -153,8 +153,8 @@ abstract class sfComponent
    *
    * <code>$this->getRequest()->getParameterHolder()->has($name)</code>
    *
-   * @param  $name parameter name
-   * @return boolean
+   * @param  string  The parameter name
+   * @return boolean true if the request parameter exists, false otherwise
    */
   public function hasRequestParameter($name)
   {
@@ -162,13 +162,13 @@ abstract class sfComponent
   }
 
   /**
-   * Retrieve the request.
+   * Retrieves the current sfRequest object.
    *
    * This is a proxy method equivalent to:
    *
    * <code>$this->getContext()->getRequest()</code>
    *
-   * @return sfRequest The current sfRequest implementation instance.
+   * @return sfRequest The current sfRequest implementation instance
    */
   public function getRequest()
   {
@@ -176,13 +176,13 @@ abstract class sfComponent
   }
 
   /**
-   * Retrieve the response.
+   * Retrieves the current sfResponse object.
    *
    * This is a proxy method equivalent to:
    *
    * <code>$this->getContext()->getResponse()</code>
    *
-   * @return sfResponse The current sfResponse implementation instance.
+   * @return sfResponse The current sfResponse implementation instance
    */
   public function getResponse()
   {
@@ -190,13 +190,13 @@ abstract class sfComponent
   }
 
   /**
-   * Retrieve the Controller.
+   * Retrieves the current sfController object.
    *
    * This is a proxy method equivalent to:
    *
    * <code>$this->getContext()->getController()</code>
    *
-   * @return sfController The current sfController implementation instance.
+   * @return sfController The current sfController implementation instance
    */
   public function getController()
   {
@@ -204,13 +204,13 @@ abstract class sfComponent
   }
 
   /**
-   * Retrieve the user.
+   * Retrieves the current sfUser object.
    *
    * This is a proxy method equivalent to:
    *
    * <code>$this->getContext()->getController()</code>
    *
-   * @return sfUser The current sfUser implementation instance.
+   * @return sfUser The current sfUser implementation instance
    */
   public function getUser()
   {
@@ -221,8 +221,7 @@ abstract class sfComponent
    * Sets a variable for the template.
    *
    * @param  string The variable name
-   * @param  mixed  The variable's value
-   * @return void
+   * @param  mixed  The variable value
    */
   public function setVar($name, $value)
   {
@@ -230,10 +229,10 @@ abstract class sfComponent
   }
 
   /**
-   * Gets a variable for the template.
+   * Gets a variable set for the template.
    *
-   * @param  string The variable name.
-   * @return mixed
+   * @param  string The variable name
+   * @return mixed  The variable value
    */
   public function getVar($name)
   {
@@ -241,8 +240,8 @@ abstract class sfComponent
   }
 
   /**
-   * Gets the sfParameterHolder object.
-   * 
+   * Gets the sfParameterHolder object that stores the template variables.
+   *
    * @return sfParameterHolder The variable holder.
    */
   public function getVarHolder()
@@ -253,12 +252,16 @@ abstract class sfComponent
   /**
    * Sets a variable for the template.
    *
-   * This is just really a shortcut for:
+   * This is a shortcut for:
+   *
    * <code>$this->setVar('name', 'value')</code>
    *
-   * @param  string key
-   * @param  string value
+   * @param  string The variable name
+   * @param  string The variable value
+   *
    * @return boolean always true
+   *
+   * @see setVar()
    */
   public function __set($key, $value)
   {
@@ -268,11 +271,15 @@ abstract class sfComponent
   /**
    * Gets a variable for the template.
    *
-   * This is just really a shortcut for:
+   * This is a shortcut for:
+   *
    * <code>$this->getVar('name')</code>
    *
-   * @param  string key
-   * @return mixed
+   * @param  string The variable name
+   *
+   * @return mixed The variable value
+   *
+   * @see getVar()
    */
   public function __get($key)
   {
@@ -282,11 +289,13 @@ abstract class sfComponent
   /**
    * Returns true if a variable for the template is set.
    *
-   * This is just really a shortcut for:
+   * This is a shortcut for:
+   *
    * <code>$this->getVarHolder()->has('name')</code>
    *
-   * @param  string key
-   * @return boolean
+   * @param  string The variable name
+   *
+   * @return boolean true if the variable is set
    */
   public function __isset($name)
   {
@@ -297,10 +306,10 @@ abstract class sfComponent
    * Removes a variable for the template.
    *
    * This is just really a shortcut for:
+   *
    * <code>$this->getVarHolder()->remove('name')</code>
    *
-   * @param  string key
-   * @return void
+   * @param  string The variable Name
    */
   public function __unset($name)
   {
@@ -308,12 +317,11 @@ abstract class sfComponent
   }
 
   /**
-   * Sets a flash variable that will be passed to the next action.
+   * Sets a flash variable that will be passed to the very next action.
    *
-   * @param  string  name of the flash variable
-   * @param  string  value of the flash variable
+   * @param  string  The name of the flash variable
+   * @param  string  The value of the flash variable
    * @param  boolean true if the flash have to persist for the following request (true by default)
-   * @return void
    */
   public function setFlash($name, $value, $persist = true)
   {
@@ -332,9 +340,10 @@ abstract class sfComponent
 
   /**
    * Gets a flash variable.
-   * 
-   * @param  string The name of the flash variable.
-   * @return mixed
+   *
+   * @param  string The name of the flash variable
+   *
+   * @return mixed The value of the flash variable
    */
   public function getFlash($name)
   {
@@ -344,14 +353,25 @@ abstract class sfComponent
   /**
    * Returns true if a flash variable of the specified name exists.
    * 
-   * @param  string The name of the flash variable.
-   * @return bool   True if the variable exists, false otherwise.
+   * @param  string The name of the flash variable
+   *
+   * @return boolean   true if the variable exists, false otherwise
    */
   public function hasFlash($name)
   {
     return $this->getUser()->hasAttribute($name, 'symfony/flash');
   }
 
+  /**
+   * Calls methods defined via the sfMixer class.
+   *
+   * @param string The method name
+   * @param array  The method arguments
+   *
+   * @return mixed The returned value of the called method
+   *
+   * @see sfMixer
+   */
   public function __call($method, $arguments)
   {
     if (!$callable = sfMixer::getCallable('sfComponent:'.$method))

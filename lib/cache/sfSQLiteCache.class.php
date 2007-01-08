@@ -9,6 +9,8 @@
  */
 
 /**
+ * Cache class that stores content in a sqlite database.
+ *
  * @package    symfony
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
@@ -20,15 +22,12 @@ class sfSQLiteCache extends sfCache
 
   protected $conn = null;
 
-  /**
-  * File where to put the cache database
-  * (or :memory: to store cache in memory)
-  *
-  * @var string
+ /**
+  * File where to put the cache database (or :memory: to store cache in memory)
   */
   protected $database = '';
 
-  /**
+ /**
   * Disable / Tune the automatic cleaning process
   *
   * The automatic cleaning process destroy too old (for the given life time)
@@ -36,17 +35,13 @@ class sfSQLiteCache extends sfCache
   * 0               => no automatic cache cleaning
   * 1               => systematic cache cleaning
   * x (integer) > 1 => automatic cleaning randomly 1 times on x cache write
-  *
-  * @var int $automaticCleaning
   */
   protected $automaticCleaningFactor = 500;
 
-  /**
-  * Constructor
+ /**
+  * Constructor.
   *
-  * $options = array(
-  *     'automaticCleaningFactor' => disable / tune automatic cleaning process (int)
-  * );
+  * @param string The database name
   */
   public function __construct($database = null)
   {
@@ -58,6 +53,15 @@ class sfSQLiteCache extends sfCache
     $this->setDatabase($database);
   }
 
+ /**
+   * Initializes the cache.
+   *
+   * @param array An array of options
+   * Available options:
+   *  - database:                database name
+   *  - automaticCleaningFactor: disable / tune automatic cleaning process (int)
+   *
+   */
   public function initialize($options = array())
   {
     if (isset($options['database']))
@@ -78,8 +82,10 @@ class sfSQLiteCache extends sfCache
     }
   }
 
-  /**
-   * @param string database where to put the cache
+ /**
+   * Sets the database name.
+   *
+   * @param string The database name where to store the cache
    */
   public function setDatabase($database)
   {
@@ -122,6 +128,11 @@ class sfSQLiteCache extends sfCache
     }
   }
 
+ /**
+   * Creates the database schema.
+   *
+   * @throws sfException
+   */
   protected function createSchema()
   {
     $statements = array(
@@ -143,23 +154,34 @@ class sfSQLiteCache extends sfCache
     }
   }
 
+ /**
+   * Destructor.
+   */
   public function __destruct()
   {
     sqlite_close($this->conn);
   }
 
+ /**
+   * Gets the database name.
+   *
+   * @return string The database name
+   */
   public function getDatabase()
   {
     return $this->database;
   }
 
-  /**
-  * Test if a cache is available and (if yes) return it
+ /**
+  * Tests if a cache is available and (if yes) returns it.
   *
-  * @param  string  $id cache id
-  * @param  string  $namespace name of the cache namespace
-  * @param  boolean $doNotTestCacheValidity if set to true, the cache validity won't be tested
-  * @return string  data of the cache (or null if no cache available)
+  * @param  string  The cache id
+  * @param  string  The name of the cache namespace
+  * @param  boolean If set to true, the cache validity won't be tested
+  *
+  * @return string  The data in the cache (or null if no cache available)
+  *
+  * @see sfCache
   */
   public function get($id, $namespace = self::DEFAULT_NAMESPACE, $doNotTestCacheValidity = false)
   {
@@ -174,6 +196,17 @@ class sfSQLiteCache extends sfCache
     return sqlite_num_rows($rs) ? sqlite_fetch_single($rs) : null;
   }
 
+  /**
+   * Returns true if there is a cache for the given id and namespace.
+   *
+   * @param  string  The cache id
+   * @param  string  The name of the cache namespace
+   * @param  boolean If set to true, the cache validity won't be tested
+   *
+   * @return boolean true if the cache exists, false otherwise
+   *
+   * @see sfCache
+   */
   public function has($id, $namespace = self::DEFAULT_NAMESPACE, $doNotTestCacheValidity = false)
   {
     $statement = sprintf("SELECT id FROM cache WHERE id = '%s' AND namespace = '%s'", sqlite_escape_string($id), sqlite_escape_string($namespace));
@@ -185,13 +218,16 @@ class sfSQLiteCache extends sfCache
     return sqlite_num_rows(sqlite_query($statement, $this->conn)) ? true : false;
   }
   
-  /**
-  * Save some data in a cache file
+ /**
+  * Saves some data in the cache.
   *
-  * @param string $data data to put in cache
-  * @param string $id cache id
-  * @param string $namespace name of the cache namespace
+  * @param string The cache id
+  * @param string The name of the cache namespace
+  * @param string The data to put in cache
+  *
   * @return boolean true if no problem
+  *
+  * @see sfCache
   */
   public function set($id, $namespace = self::DEFAULT_NAMESPACE, $data)
   {
@@ -221,12 +257,15 @@ class sfSQLiteCache extends sfCache
     return false;
   }
 
-  /**
-  * Remove a cache file
+ /**
+  * Removes an element from the cache.
   *
-  * @param string $id cache id
-  * @param string $namespace name of the cache namespace
+  * @param string The cache id
+  * @param string The name of the cache namespace
+  *
   * @return boolean true if no problem
+  *
+  * @see sfCache
   */
   public function remove($id, $namespace = self::DEFAULT_NAMESPACE)
   {
@@ -239,13 +278,14 @@ class sfSQLiteCache extends sfCache
     return false;
   }
 
-  /**
-  * Clean the cache
+ /**
+  * Cleans the cache.
   *
-  * if no namespace is specified all cache files will be destroyed
-  * else only cache files of the specified namespace will be destroyed
+  * If no namespace is specified all cache files will be destroyed
+  * else only cache files of the specified namespace will be destroyed.
   *
-  * @param string $namespace name of the cache namespace
+  * @param string The name of the cache namespace
+  *
   * @return boolean true if no problem
   */
   public function clean($namespace = null, $mode = 'all')

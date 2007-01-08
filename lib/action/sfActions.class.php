@@ -10,7 +10,7 @@
  */
 
 /**
- * sfAction executes all the logic for the current request.
+ * sfActions executes all the logic for the current request.
  *
  * @package    symfony
  * @subpackage action
@@ -21,22 +21,16 @@
 abstract class sfActions extends sfAction
 {
   /**
-   * Execute any application/business logic for this action.
+   * Dispatches to the action defined by the 'action' parameter of the sfRequest object.
    *
-   * In a typical database-driven application, execute() handles application
-   * logic itself and then proceeds to create a model instance. Once the model
-   * instance is initialized it handles all business logic for the action.
+   * This method try to execute the executeXXX() method of the current object where XXX is the
+   * defined action name.
    *
-   * A model should represent an entity in your application. This could be a
-   * user account, a shopping cart, or even a something as simple as a
-   * single product.
+   * @return string A string containing the view name associated with this action
    *
-   * @return mixed A string containing the view name associated with this action.
+   * @throws sfInitializationException
    *
-   *               Or an array with the following indices:
-   *
-   *               - The parent module of the view that will be executed.
-   *               - The view that will be executed.
+   * @see sfAction
    */
   public function execute()
   {

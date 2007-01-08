@@ -9,7 +9,7 @@
  */
 
 /**
- * Cache class to cache the HTML results for actions and templates.
+ * Cache class that stores content in files.
  *
  * This class is based on the PEAR_Cache_Lite class.
  * All cache files are stored in files in the [sf_root_dir].'/cache/'.[sf_app].'/template' directory.
@@ -25,56 +25,43 @@ class sfFileCache extends sfCache
 {
   const DEFAULT_NAMESPACE = '';
 
-  /**
+ /**
   * Directory where to put the cache files
-  * (make sure to add a trailing slash)
-  *
-  * @var string
   */
   protected $cacheDir = '';
 
-  /**
-  * Enable / disable fileLocking
-  *
-  * (can avoid cache corruption under bad circumstances)
-  *
+ /**
+  * Enable / disable fileLocking (can avoid cache corruption under bad circumstances)
   * @var boolean $fileLocking
   */
   protected $fileLocking = true;
 
-  /**
+ /**
   * Enable / disable write control (the cache is read just after writing to detect corrupt entries)
   *
   * Enable write control will lightly slow the cache writing but not the cache reading
   * Write control can detect some corrupt cache files but maybe it's not a perfect control
-  *
-  * @var boolean $writeControl
   */
   protected $writeControl = false;
 
-  /**
+ /**
   * Enable / disable read control
   *
-  * If enabled, a control key is embeded in cache file and this key is compared with the one
-  * calculated after the reading.
-  *
-  * @var boolean $readControl
+  * If enabled, a control key is embeded in cache file and this key is compared with the one calculated after the reading.
   */
   protected $readControl = false;
 
-  /**
+ /**
   * File Name protection
   *
   * if set to true, you can use any cache id or namespace name
   * if set to false, it can be faster but cache ids and namespace names
   * will be used directly in cache file names so be carefull with
   * special characters...
-  *
-  * @var boolean $fileNameProtection
   */
   protected $fileNameProtection = false;
 
-  /**
+ /**
   * Disable / Tune the automatic cleaning process
   *
   * The automatic cleaning process destroy too old (for the given life time)
@@ -82,36 +69,45 @@ class sfFileCache extends sfCache
   * 0               => no automatic cache cleaning
   * 1               => systematic cache cleaning
   * x (integer) > 1 => automatic cleaning randomly 1 times on x cache write
-  *
-  * @var int $automaticCleaning
   */
   protected $automaticCleaningFactor = 500;
   
-  /**
+ /**
   * Nested directory level
-  *
-  * @var int $hashedDirectoryLevel
   */
   protected $hashedDirectoryLevel = 0;
 
+ /**
+  * Cache suffix
+  */
   protected
     $suffix = '.cache';
 
-  /**
-  * Constructor
+ /**
+  * Constructor.
   *
-  * $options = array(
-  *     'readControl' => enable / disable read control (boolean),
-  *     'fileNameProtection' => enable / disable automatic file name protection (boolean),
-  *     'automaticCleaningFactor' => disable / tune automatic cleaning process (int)
-  *     'hashedDirectoryLevel' => level of the hashed directory system (int)
-  * );
+  * @param string The cache root directory
   */
   public function __construct($cacheDir = null)
   {
     $this->setCacheDir($cacheDir);
   }
 
+  /**
+   * Initializes the cache.
+   *
+   * @param array An array of options
+   * Available options:
+   *  - cacheDir:                cache root directory
+   *  - fileLocking:             enable / disable file locking (boolean)
+   *  - writeControl:            enable / disable write control (boolean)
+   *  - readControl:             enable / disable read control (boolean)
+   *  - fileNameProtection:      enable / disable automatic file name protection (boolean)
+   *  - automaticCleaningFactor: disable / tune automatic cleaning process (int)
+   *  - hashedDirectoryLevel:    level of the hashed directory system (int)
+   *  - lifeTime:                default life time
+   *
+   */
   public function initialize($options = array())
   {
     if (isset($options['cacheDir']))
@@ -132,73 +128,95 @@ class sfFileCache extends sfCache
     }
   }
 
+  /**
+   * Sets the suffix for cache files.
+   *
+   * @param string The suffix name (with the leading .)
+   */
   public function setSuffix($suffix)
   {
     $this->suffix = $suffix;
   }
 
-  /**
-   * enable / disable write control
-   * @param boolean
-   */
-   public function setWriteControl($boolean)
-   {
-     $this->writeControl = $boolean;
-   }
-
-   public function getWriteControl()
-   {
-     return $this->writeControl;
-   }
+ /**
+  * Enables / disables write control.
+  *
+  * @param boolean
+  */
+  public function setWriteControl($boolean)
+  {
+    $this->writeControl = $boolean;
+  }
 
   /**
-   * enable / disable fileLocking
-   * @param boolean
+   * Gets the value of the writeControl option.
+   *
+   * @return boolean
    */
-   public function setFileLocking($boolean)
-   {
-     $this->fileLocking = $boolean;
-   }
+  public function getWriteControl()
+  {
+    return $this->writeControl;
+  }
 
-   public function getFileLocking()
-   {
-     return $this->fileLocking;
-   }
+ /**
+  * Enables / disables file locking.
+  *
+  * @param boolean
+  */
+  public function setFileLocking($boolean)
+  {
+    $this->fileLocking = $boolean;
+  }
 
-   /**
-    * @param string directory where to put the cache files
-    */
-    public function setCacheDir($cacheDir)
+  /**
+   * Gets the value of the fileLocking option.
+   *
+   * @return boolean
+   */
+  public function getFileLocking()
+  {
+    return $this->fileLocking;
+  }
+
+  /**
+   * Sets the cache root directory.
+   *
+   * @param string The directory where to put the cache files
+   */
+  public function setCacheDir($cacheDir)
+  {
+    // remove last DIRECTORY_SEPARATOR
+    if (DIRECTORY_SEPARATOR == substr($cacheDir, -1))
     {
-      // remove last DIRECTORY_SEPARATOR
-      if (DIRECTORY_SEPARATOR == substr($cacheDir, -1))
-      {
-        $cacheDir = substr($cacheDir, 0, -1);
-      }
-
-      // create cache dir if needed
-      if (!is_dir($cacheDir))
-      {
-        $current_umask = umask(0000);
-        @mkdir($cacheDir, 0777, true);
-        umask($current_umask);
-      }
-
-      $this->cacheDir = $cacheDir;
+      $cacheDir = substr($cacheDir, 0, -1);
     }
+
+    // create cache dir if needed
+    if (!is_dir($cacheDir))
+    {
+      $current_umask = umask(0000);
+      @mkdir($cacheDir, 0777, true);
+      umask($current_umask);
+    }
+
+     $this->cacheDir = $cacheDir;
+   }
 
     public function getCacheDir()
     {
       return $this->cacheDir;
     }
 
-  /**
-  * Test if a cache is available and (if yes) return it
+ /**
+  * Tests if a cache is available and (if yes) returns it.
   *
-  * @param  string  $id cache id
-  * @param  string  $namespace name of the cache namespace
-  * @param  boolean $doNotTestCacheValidity if set to true, the cache validity won't be tested
-  * @return string  data of the cache (or null if no cache available)
+  * @param  string  The cache id
+  * @param  string  The name of the cache namespace
+  * @param  boolean If set to true, the cache validity won't be tested
+  *
+  * @return string  Data of the cache (or null if no cache available)
+  *
+  * @see sfCache
   */
   public function get($id, $namespace = self::DEFAULT_NAMESPACE, $doNotTestCacheValidity = false)
   {
@@ -224,30 +242,49 @@ class sfFileCache extends sfCache
     return $data ? $data : null;
   }
 
+  /**
+   * Returns true if there is a cache for the given id and namespace.
+   *
+   * @param  string  The cache id
+   * @param  string  The name of the cache namespace
+   * @param  boolean If set to true, the cache validity won't be tested
+   *
+   * @return boolean true if the cache exists, false otherwise
+   *
+   * @see sfCache
+   */
   public function has($id, $namespace = self::DEFAULT_NAMESPACE, $doNotTestCacheValidity = false)
   {
     list($path, $file) = $this->getFileName($id, $namespace);
 
-    $data = 0;
     if ($doNotTestCacheValidity)
     {
-      if (file_exists($path.$file)) return 1;
+      if (file_exists($path.$file))
+      {
+        return true;
+      }
     }
     else
     {
-      if ((file_exists($path.$file)) && (@filemtime($path.$file) > $this->refreshTime)) return 1;
+      if ((file_exists($path.$file)) && (@filemtime($path.$file) > $this->refreshTime))
+      {
+        return true;
+      }
     }
 
-    return 0;
+    return false;
   }
   
-  /**
-  * Save some data in a cache file
+ /**
+  * Saves some data in a cache file.
   *
-  * @param string $data data to put in cache
-  * @param string $id cache id
-  * @param string $namespace name of the cache namespace
+  * @param string The cache id
+  * @param string The name of the cache namespace
+  * @param string The data to put in cache
+  *
   * @return boolean true if no problem
+  *
+  * @see sfCache
   */
   public function set($id, $namespace = self::DEFAULT_NAMESPACE, $data)
   {
@@ -272,11 +309,12 @@ class sfFileCache extends sfCache
     }
   }
 
-  /**
-  * Remove a cache file
+ /**
+  * Removes a cache file.
   *
-  * @param string $id cache id
-  * @param string $namespace name of the cache namespace
+  * @param string The cache id
+  * @param string The name of the cache namespace
+  *
   * @return boolean true if no problem
   */
   public function remove($id, $namespace = self::DEFAULT_NAMESPACE)
@@ -286,13 +324,14 @@ class sfFileCache extends sfCache
     return $this->unlink($path.$file);
   }
 
-  /**
-  * Clean the cache
+ /**
+  * Cleans the cache.
   *
-  * if no namespace is specified all cache files will be destroyed
-  * else only cache files of the specified namespace will be destroyed
+  * If no namespace is specified all cache files will be destroyed
+  * else only cache files of the specified namespace will be destroyed.
   *
-  * @param string $namespace name of the cache namespace
+  * @param string The name of the cache namespace
+  *
   * @return boolean true if no problem
   */
   public function clean($namespace = null, $mode = 'all')
@@ -302,6 +341,11 @@ class sfFileCache extends sfCache
     return $this->cleanDir($this->cacheDir.DIRECTORY_SEPARATOR.$namespace, $mode);
   }
 
+  /**
+   * Returns the cache last modification time.
+   *
+   * @return int The last modification time
+   */
   public function lastModified($id, $namespace = self::DEFAULT_NAMESPACE)
   {
     list($path, $file) = $this->getFileName($id, $namespace);
@@ -309,11 +353,13 @@ class sfFileCache extends sfCache
     return (file_exists($path.$file) ? filemtime($path.$file) : 0);
   }
 
-  /**
-  * Make a file name (with path)
+ /**
+  * Makes a file name (with path).
   *
-  * @param string $id cache id
-  * @param string $namespace name of the namespace
+  * @param string The cache id
+  * @param string The name of the namespace
+  *
+  * @return array An array containing the path and the file name
   */
   protected function getFileName($id, $namespace)
   {
@@ -340,24 +386,28 @@ class sfFileCache extends sfCache
     return array($path, $file);
   }
 
-  /**
-  * Remove a file
-  * 
-  * @param string $file complete file path and name
+ /**
+  * Removes a file.
+  *
+  * @param string The complete file path and name
+  *
   * @return boolean true if no problem
   */
   protected function unlink($file)
   {
-    return @unlink($file) ? 1 : 0;
+    return @unlink($file) ? true : false;
   }
 
-  /**
-  * Recursive function for cleaning cache file in the given directory
+ /**
+  * Recursive function for cleaning cache file in the given directory.
   *
-  * @param  string  $dir directory complete path
-  * @param  string  $namespace name of the cache namespace
-  * @param  string  $mode flush cache mode : 'old', 'all'
+  * @param  string  The directory complete path
+  * @param  string  The name of the cache namespace
+  * @param  string  The flush cache mode : 'old', 'all'
+  *
   * @return boolean true if no problem
+  *
+  * @throws sfCacheException
   */
   protected function cleanDir($dir, $mode)
   {
@@ -399,10 +449,15 @@ class sfFileCache extends sfCache
     return $result;
   }
 
-  /**
-  * Read the cache file and return the content
+ /**
+  * Reads the cache file and returns the content.
   *
-  * @return string content of the cache file
+  * @param string The file path
+  * @param string The file name
+  *
+  * @return string The content of the cache file.
+  *
+  * @throws sfCacheException
   */
   protected function read($path, $file)
   {
@@ -411,6 +466,7 @@ class sfFileCache extends sfCache
     {
       @flock($fp, LOCK_SH);
     }
+
     if ($fp)
     {
       clearstatcache(); // because the filesize can be cached by PHP itself...
@@ -445,11 +501,16 @@ class sfFileCache extends sfCache
     throw new sfCacheException('Unable to read cache file "'.$path.$file.'"');
   }
 
-  /**
-  * Write the given data in the cache file
+ /**
+  * Writes the given data in the cache file.
   *
-  * @param  string  $data data to put in cache
+  * @param string The file path
+  * @param string The file name
+  * @param string The data to put in cache
+  *
   * @return boolean true if ok
+  *
+  * @throws sfCacheException
   */
   protected function write($path, $file, $data)
   {
@@ -503,10 +564,13 @@ class sfFileCache extends sfCache
     throw new sfCacheException('Unable to write cache file "'.$path.$file.'"');
   }
   
-  /**
-  * Write the given data in the cache file and control it just after to avoir corrupted cache entries
+ /**
+  * Writes the given data in the cache file and controls it just after to avoid corrupted cache entries.
   *
-  * @param string $data data to put in cache
+  * @param string The file path
+  * @param string The file name
+  * @param string The data to put in cache
+  *
   * @return boolean true if the test is ok
   */
   protected function writeAndControl($path, $file, $data)
@@ -517,10 +581,11 @@ class sfFileCache extends sfCache
     return ($dataRead == $data);
   }
   
-  /**
-  * Make a control key with the string containing datas
+ /**
+  * Makes a control key with the string containing datas.
   *
   * @param string $data data
+  *
   * @return string control key
   */
   protected function hash($data)

@@ -24,15 +24,13 @@
 class sfFunctionCache extends sfFileCache
 {
   /**
-   * Calls a cacheable function or method (or not if there is already a cache for it)
+   * Calls a cacheable function or method (or not if there is already a cache for it).
    *
-   * Arguments of this method are read with func_get_args. So it doesn't appear
-   * in the function definition. Synopsis : 
+   * Arguments of this method are read with func_get_args. So it doesn't appear in the function definition. Synopsis : 
    * call('functionName', $arg1, $arg2, ...)
    * (arg1, arg2... are arguments of 'functionName')
    *
-   * @return mixed result of the function/method
-   * @access public
+   * @return mixed The result of the function/method
    */
   public function call()
   {

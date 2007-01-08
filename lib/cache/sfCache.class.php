@@ -9,6 +9,7 @@
  */
 
 /**
+ * sfCache is an abstract class for all cache classes in symfony.
  *
  * @package    symfony
  * @subpackage cache
@@ -18,66 +19,79 @@
  */
 abstract class sfCache
 {
-  /**
+ /**
   * Cache lifetime (in seconds)
   *
   * @var int $lifeTime
   */
   protected $lifeTime = 86400;
 
-  /**
+ /**
   * Timestamp of the last valid cache
   *
   * @var int $refreshTime
   */
   protected $refreshTime;
 
-  /**
-  * Test if a cache is available and (if yes) return it
+ /**
+  * Gets the cache content for a given id and namespace.
   *
-  * @param  string  $id cache id
-  * @param  string  $namespace name of the cache namespace
-  * @param  boolean $doNotTestCacheValidity if set to true, the cache validity won't be tested
-  * @return string  data of the cache (or null if no cache available)
+  * @param  string  The cache id
+  * @param  string  The name of the cache namespace
+  * @param  boolean If set to true, the cache validity won't be tested
+  *
+  * @return string  The data of the cache (or null if no cache available)
   */
   abstract public function get($id, $namespace = self::DEFAULT_NAMESPACE, $doNotTestCacheValidity = false);
 
+  /**
+   * Returns true if there is a cache for the given id and namespace.
+   *
+   * @param  string  The cache id
+   * @param  string  The name of the cache namespace
+   * @param  boolean If set to true, the cache validity won't be tested
+   *
+   * @return boolean true if the cache exists, false otherwise
+   */
   abstract public function has($id, $namespace = self::DEFAULT_NAMESPACE, $doNotTestCacheValidity = false);
 
-  /**
-  * Save some data in a cache file
+ /**
+  * Saves some data in the cache.
   *
-  * @param string $data data to put in cache
-  * @param string $id cache id
-  * @param string $namespace name of the cache namespace
+  * @param string The cache id
+  * @param string The name of the cache namespace
+  * @param string The data to put in cache
+  *
   * @return boolean true if no problem
   */
   abstract public function set($id, $namespace = self::DEFAULT_NAMESPACE, $data);
 
-  /**
-  * Remove a cache file
+ /**
+  * Removes a content from the cache.
   *
-  * @param string $id cache id
-  * @param string $namespace name of the cache namespace
+  * @param string The cache id
+  * @param string The name of the cache namespace
+  *
   * @return boolean true if no problem
   */
   abstract public function remove($id, $namespace = self::DEFAULT_NAMESPACE);
 
-  /**
-  * Clean the cache
+ /**
+  * Cleans the cache.
   *
-  * if no namespace is specified all cache files will be destroyed
-  * else only cache files of the specified namespace will be destroyed
+  * If no namespace is specified all cache content will be destroyed
+  * else only cache contents of the specified namespace will be destroyed.
   *
-  * @param string $namespace name of the cache namespace
+  * @param string The name of the cache namespace
+  *
   * @return boolean true if no problem
   */
   abstract public function clean($namespace = null, $mode = 'all');
 
-  /**
-  * Set a new life time
+ /**
+  * Sets a new life time.
   *
-  * @param int $newLifeTime new life time (in seconds)
+  * @param int The new life time (in seconds)
   */
   public function setLifeTime($newLifeTime)
   {
@@ -85,15 +99,20 @@ abstract class sfCache
     $this->refreshTime = time() - $newLifeTime;
   }
 
+  /**
+   * Returns the current life time.
+   *
+   * @return int The current life time (in seconds)
+   */
   public function getLifeTime()
   {
     return $this->lifeTime;
   }
 
-  /**
-  * Return the cache last modification time
+ /**
+  * Returns the cache last modification time.
   *
-  * @return int last modification time
+  * @return int The last modification time
   */
   abstract public function lastModified($id, $namespace = self::DEFAULT_NAMESPACE);
 }

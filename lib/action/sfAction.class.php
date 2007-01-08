@@ -24,11 +24,11 @@ abstract class sfAction extends sfComponent
     $security = array();
 
   /**
-   * Initialize this action.
+   * Initializes this action.
    *
    * @param sfContext The current application context.
    *
-   * @return bool true, if initialization completes successfully, otherwise false.
+   * @return bool true, if initialization completes successfully, otherwise false
    */
   public function initialize($context)
   {
@@ -41,25 +41,29 @@ abstract class sfAction extends sfComponent
   }
 
   /**
-   * Execute an application defined process prior to execution of this Action.
+   * Executes an application defined process prior to execution of this sfAction object.
    *
-   * By Default, this method is empty.
+   * By default, this method is empty.
    */
   public function preExecute()
   {
   }
 
   /**
-   * Execute an application defined process immediately after execution of this Action.
+   * Execute an application defined process immediately after execution of this sfAction object.
    *
-   * By Default, this method is empty.
+   * By default, this method is empty.
    */
   public function postExecute()
   {
   }
 
   /**
-   * Forwards current action to the default 404 error action
+   * Forwards current action to the default 404 error action.
+   *
+   * @param  string Message of the generated exception
+   *
+   * @throws sfError404Exception
    *
    */
   public function forward404($message = '')
@@ -68,10 +72,12 @@ abstract class sfAction extends sfComponent
   }
 
   /**
-   * Forwards current action to the default 404 error action
-   * unless the specified condition is true.
+   * Forwards current action to the default 404 error action unless the specified condition is true.
    *
-   * @param bool A condition that evaluates to true or false.
+   * @param bool A condition that evaluates to true or false
+   * @param  string Message of the generated exception
+   *
+   * @throws sfError404Exception
    */
   public function forward404Unless($condition, $message = '')
   {
@@ -82,10 +88,12 @@ abstract class sfAction extends sfComponent
   }
 
   /**
-   * Forwards current action to the default 404 error action
-   * if the specified condition is true.
+   * Forwards current action to the default 404 error action if the specified condition is true.
    *
-   * @param bool A condition that evaluates to true or false.
+   * @param bool A condition that evaluates to true or false
+   * @param  string Message of the generated exception
+   *
+   * @throws sfError404Exception
    */
   public function forward404If($condition, $message = '')
   {
@@ -96,7 +104,9 @@ abstract class sfAction extends sfComponent
   }
 
   /**
-   * Redirects current action to the default 404 error action (with browser redirection)
+   * Redirects current action to the default 404 error action (with browser redirection).
+   *
+   * This method stops the current code flow.
    *
    */
   public function redirect404()
@@ -107,13 +117,12 @@ abstract class sfAction extends sfComponent
   /**
    * Forwards current action to a new one (without browser redirection).
    *
-   * This method must be called as with a return:
+   * This method stops the action. So, no code is executed after a call to this method.
    *
-   * <code>return $this->forward('module', 'action')</code>
+   * @param  string A module name
+   * @param  string An action name
    *
-   * @param  string module name
-   * @param  string action name
-   * @throws sfStopException always
+   * @throws sfStopException
    */
   public function forward($module, $action)
   {
@@ -130,17 +139,13 @@ abstract class sfAction extends sfComponent
   /**
    * If the condition is true, forwards current action to a new one (without browser redirection).
    *
-   * This method must be called as with a return:
+   * This method stops the action. So, no code is executed after a call to this method.
    *
-   * <code>
-   *  $condition = true
-   *  return $this->forwardIf($condition, 'module', 'action')
-   * </code>
+   * @param  bool   A condition that evaluates to true or false
+   * @param  string A module name
+   * @param  string An action name
    *
-   * @param  bool   A condition that evaluates to true or false.
-   * @param  string module name
-   * @param  string action name
-   * @throws sfStopException always
+   * @throws sfStopException
    */
   public function forwardIf($condition, $module, $action)
   {
@@ -153,17 +158,13 @@ abstract class sfAction extends sfComponent
   /**
    * Unless the condition is true, forwards current action to a new one (without browser redirection).
    *
-   * This method must be called as with a return:
+   * This method stops the action. So, no code is executed after a call to this method.
    *
-   * <code>
-   *  $condition = false
-   *  return $this->forwardUnless($condition, 'module', 'action')
-   * </code>
+   * @param  bool   A condition that evaluates to true or false
+   * @param  string A module name
+   * @param  string An action name
    *
-   * @param  bool   A condition that evaluates to true or false.
-   * @param  string module name
-   * @param  string action name
-   * @throws sfStopException always
+   * @throws sfStopException
    */
   public function forwardUnless($condition, $module, $action)
   {
@@ -173,11 +174,32 @@ abstract class sfAction extends sfComponent
     }
   }
 
+  /**
+   * Sends and email from the current action.
+   *
+   * This methods calls an module/action with the sfMailView class.
+   *
+   * @param  string A module name
+   * @param  string An action name
+   *
+   * @return string The generated mail content
+   *
+   * @see sfMailView, getPresentationFor()
+   */
   public function sendEmail($module, $action)
   {
     return $this->getPresentationFor($module, $action, 'sfMail');
   }
 
+  /**
+   * Returns the rendered view presentation of a given module/action.
+   *
+   * @param  string A module name
+   * @param  string An action name
+   * @param  string A View class name
+   *
+   * @return string The generated mail content
+   */
   public function getPresentationFor($module, $action, $viewName = null)
   {
     if (sfConfig::get('sf_logging_enabled'))
@@ -250,15 +272,15 @@ abstract class sfAction extends sfComponent
    * Redirects current request to a new URL.
    *
    * 2 URL formats are accepted :
-   * - a full URL: http://www.google.com/
-   * - an internal URL (url_for() format): 'ModuleName/ActionName'
+   *  - a full URL: http://www.google.com/
+   *  - an internal URL (url_for() format): module/action
    *
-   * This method must be called as with a return:
+   * This method stops the action. So, no code is executed after a call to this method.
    *
-   * <code>return $this->redirect('/ModuleName/ActionName')</code>
+   * @param  string Url
+   * @param  string Status code (default to 302)
    *
-   * @param  string url
-   * @throws sfStopException always
+   * @throws sfStopException
    */
   public function redirect($url, $statusCode = 302)
   {
@@ -277,15 +299,14 @@ abstract class sfAction extends sfComponent
   /**
    * Redirects current request to a new URL, only if specified condition is true.
    *
-   * @see redirect
+   * This method stops the action. So, no code is executed after a call to this method.
    *
-   * This method must be called as with a return:
-   *
-   * <code>return $this->redirectIf($condition, '/ModuleName/ActionName')</code>
-   *
-   * @param  bool   A condition that evaluates to true or false.
+   * @param  bool   A condition that evaluates to true or false
    * @param  string url
-   * @throws sfStopException always
+   *
+   * @throws sfStopException
+   *
+   * @see redirect
    */
   public function redirectIf($condition, $url)
   {
@@ -298,15 +319,14 @@ abstract class sfAction extends sfComponent
   /**
    * Redirects current request to a new URL, unless specified condition is true.
    *
+   * This method stops the action. So, no code is executed after a call to this method.
+   *
+   * @param  bool   A condition that evaluates to true or false
+   * @param  string Url
+   *
+   * @throws sfStopException
+   *
    * @see redirect
-   *
-   * This method must be called as with a return:
-   *
-   * <code>return $this->redirectUnless($condition, '/ModuleName/ActionName')</code>
-   *
-   * @param  bool   A condition that evaluates to true or false.
-   * @param  string url
-   * @throws sfStopException always
    */
   public function redirectUnless($condition, $url)
   {
@@ -317,9 +337,14 @@ abstract class sfAction extends sfComponent
   }
 
   /**
-   * Renders text to the browser, bypassing templating system.
+   * Appends the given text to the response content and bypasses the built-in view system.
    *
-   * @param  string text to render to the browser
+   * This method must be called as with a return:
+   *
+   * <code>return $this->renderText('some text')</code>
+   *
+   * @param  string Text to append to the response
+   *
    * @return sfView::NONE
    */
   public function renderText($text)
@@ -330,16 +355,9 @@ abstract class sfAction extends sfComponent
   }
 
   /**
-   * Retrieve the default view to be executed when a given request is not
-   * served by this action.
+   * Retrieves the default view to be executed when a given request is not served by this action.
    *
-   * @return mixed A string containing the view name associated with this
-   *               action.
-   *
-   *               Or an array with the following indices:
-   *
-   *               - The parent module of the view that will be executed.
-   *               - The view that will be executed.
+   * @return string A string containing the view name associated with this action
    */
   public function getDefaultView()
   {
@@ -347,8 +365,7 @@ abstract class sfAction extends sfComponent
   }
 
   /**
-   * Retrieve the request methods on which this action will process
-   * validation and execution.
+   * Retrieves the request methods on which this action will process validation and execution.
    *
    * @return int One of the following values:
    *
@@ -372,15 +389,9 @@ abstract class sfAction extends sfComponent
   }
 
   /**
-   * Execute any post-validation error application logic.
+   * Executes any post-validation error application logic.
    *
-   * @return mixed A string containing the view name associated with this
-   *               action.
-   *
-   *               Or an array with the following indices:
-   *
-   *               - The parent module of the view that will be executed.
-   *               - The view that will be executed.
+   * @return string A string containing the view name associated with this action
    */
   public function handleError()
   {
@@ -388,7 +399,7 @@ abstract class sfAction extends sfComponent
   }
 
   /**
-   * Manually validate files and parameters.
+   * Validates manually files and parameters.
    *
    * @return bool true, if validation completes successfully, otherwise false.
    */
@@ -397,11 +408,21 @@ abstract class sfAction extends sfComponent
     return true;
   }
 
+  /**
+   * Returns the security configuration for this module.
+   *
+   * @return string Current security configuration as an array
+   */
   public function getSecurityConfiguration()
   {
     return $this->security;
   }
 
+  /**
+   * Overrides the current security configuration for this module.
+   *
+   * @param array The new security configuration
+   */
   public function setSecurityConfiguration($security)
   {
     $this->security = $security;
@@ -430,7 +451,7 @@ abstract class sfAction extends sfComponent
   /**
    * Gets credentials the user must have to access this action.
    *
-   * @return mixed
+   * @return mixed An array or a string describing the credentials the user must have to access this action
    */
   public function getCredential()
   {
@@ -451,11 +472,11 @@ abstract class sfAction extends sfComponent
   }
 
   /**
-   * Sets an alternate template for this Action.
+   * Sets an alternate template for this sfAction.
    *
    * See 'Naming Conventions' in the 'Symfony View' documentation.
    *
-   * @param string template name
+   * @param string Template name
    */
   public function setTemplate($name)
   {
@@ -468,14 +489,14 @@ abstract class sfAction extends sfComponent
   }
 
   /**
-   * Gets the name of the alternate template for this Action.
+   * Gets the name of the alternate template for this sfAction.
    *
    * WARNING: It only returns the template you set with the setTemplate() method,
    *          and does not return the template that you configured in your view.yml.
    *
    * See 'Naming Conventions' in the 'Symfony View' documentation.
    *
-   * @return string
+   * @return string Template name. Returns null if no template has been set within the action
    */
   public function getTemplate()
   {
@@ -483,13 +504,13 @@ abstract class sfAction extends sfComponent
   }
 
   /**
-   * Sets an alternate layout for this Component.
+   * Sets an alternate layout for this sfAction.
    *
    * To de-activate the layout, set the layout name to false.
    *
    * To revert the layout to the one configured in the view.yml, set the template name to null.
    *
-   * @param string layout name
+   * @param mixed Layout name or false to de-activate the layout
    */
   public function setLayout($name)
   {
@@ -502,12 +523,12 @@ abstract class sfAction extends sfComponent
   }
 
   /**
-   * Gets the name of the alternate layout for this Component.
+   * Gets the name of the alternate layout for this sfAction.
    *
    * WARNING: It only returns the layout you set with the setLayout() method,
    *          and does not return the layout that you configured in your view.yml.
    *
-   * @return string
+   * @return mixed Layout name. Returns null if no layout has been set within the action
    */
   public function getLayout()
   {

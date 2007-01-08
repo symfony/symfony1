@@ -9,6 +9,9 @@
  */
 
 /**
+ * sfProcessCache stores content in memory if you run a PHP accelerator.
+ *
+ * Current PHP accelerator supported: APC, XCache and Eaccelerator.
  *
  * @package    symfony
  * @subpackage cache
@@ -17,6 +20,11 @@
  */
 class sfProcessCache
 {
+  /**
+   * Gets the cache engine name or false if no PHP accelerator is enabled.
+   *
+   * @return string The cache engine name
+   */
   public static function cacher()
   {
     static $cacher = null;
@@ -48,6 +56,11 @@ class sfProcessCache
     return $cacher;
   }
 
+  /**
+   * Gets the prefix to use for all key name.
+   *
+   * @return string The prefix string
+   */
   public static function getPrefix()
   {
     static $prefix = null;
@@ -60,6 +73,15 @@ class sfProcessCache
     return $prefix;
   }
 
+  /**
+   * Sets a value in the cache for the specified key.
+   *
+   * @param string The key name
+   * @param string The content to put in cache
+   * @param int The life time to keep the content in the cache
+   *
+   * @return boolean true if ok
+   */
   public static function set($key, $value, $lifeTime = 0)
   {
     switch (self::cacher())
@@ -75,6 +97,13 @@ class sfProcessCache
     return false;
   }
 
+  /**
+   * Gets a value in the cache for the specified key.
+   *
+   * @param string The key name
+   *
+   * @return mixed The content associated with the key or null if the key does not exist
+   */
   public static function get($key)
   {
     switch (self::cacher())
@@ -91,6 +120,13 @@ class sfProcessCache
     return null;
   }
 
+  /**
+   * Returns true if a given key exists in the cache, false otherwise.
+   *
+   * @param string The key name
+   *
+   * @return boolean true if the key exists, false otherwise
+   */
   public static function has($key)
   {
     switch (self::cacher())
@@ -106,6 +142,11 @@ class sfProcessCache
     return false;
   }
 
+  /**
+   * Clears the cache.
+   *
+   * @return boolean true if ok, false otherwise
+   */
   public static function clear()
   {
     switch (self::cacher())
