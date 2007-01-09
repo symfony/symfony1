@@ -28,9 +28,10 @@
  */
 class sfPropelDatabase extends sfCreoleDatabase
 {
-  static $config = array();
+  static protected
+    $config = array();
 
-  public function initialize($parameters = null, $name = null)
+  public function initialize($parameters = null, $name = 'propel')
   {
     parent::initialize($parameters);
 
@@ -57,20 +58,24 @@ class sfPropelDatabase extends sfCreoleDatabase
 
   public function addConfig()
   {
-    $dsn = $this->getParameter('dsn');
+    if ($this->hasParameter('host'))
+    {
+      $this->setParameter('hostspec', $this->getParameter('host'));
+    }
 
-    if ($dsn)
+    if ($dsn = $this->getParameter('dsn'))
     {
       require_once('creole/Creole.php');
       $params = Creole::parseDSN($dsn);
 
-      $this->setParameter('phptype',    $params['phptype']);
-      $this->setParameter('hostspec',   $params['hostspec'] ? $params['hostspec'] : ($params['host'] ? $params['host'] : null));
-      $this->setParameter('database',   $params['database']);
-      $this->setParameter('username',   $params['username']);
-      $this->setParameter('password',   $params['password']);
-      $this->setParameter('port',       $params['port']);
-      $this->setParameter('protocol',   isset($params['protocol']) ? $params['protocol'] : null);
+      $options = array('phptype', 'hostspec', 'database', 'username', 'password', 'port', 'protocol', 'encoding', 'persistent');
+      foreach ($options as $option)
+      {
+        if (!$this->getParameter($option) && isset($params[$option]))
+        {
+          $this->setParameter($option, $params[$option]);
+        }
+      }
     }
 
     self::$config['propel']['datasources'][$this->getParameter('datasource')] =
@@ -79,7 +84,7 @@ class sfPropelDatabase extends sfCreoleDatabase
         'connection'   =>
         array(
           'phptype'    => $this->getParameter('phptype'),
-          'hostspec'   => $this->getParameter('hostspec') ? $this->getParameter('hostspec') : ($this->getParameter('host') ? $this->getParameter('host') : null),
+          'hostspec'   => $this->getParameter('hostspec'),
           'database'   => $this->getParameter('database'),
           'username'   => $this->getParameter('username'),
           'password'   => $this->getParameter('password'),
