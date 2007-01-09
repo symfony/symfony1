@@ -17,13 +17,11 @@
 class sfConsoleController extends sfController
 {
   /**
-   * Dispatch a request.
+   * Dispatches a request.
    *
-   * @param string A module name.
-   * @param string An action name.
-   * @param array  An associative array of parameters to be set.
-   *
-   * @return void
+   * @param string A module name
+   * @param string An action name
+   * @param array  An associative array of parameters to be set
    */
   public function dispatch($moduleName, $actionName, $parameters = array())
   {

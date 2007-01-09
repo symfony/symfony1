@@ -32,9 +32,9 @@ class sfRouting
     $routes             = array();
 
   /**
-   * Returns the sfRouting instance.
+  * Retrieve the singleton instance of this class.
    *
-   * @return  object the sfRouting instance
+   * @return  sfRouting The sfRouting implementation instance
    */
   public static function getInstance()
   {
@@ -46,16 +46,34 @@ class sfRouting
     return self::$instance;
   }
 
+  /**
+   * Sets the current route name.
+   *
+   * @param string The route name
+   */
   protected function setCurrentRouteName($name)
   {
     $this->current_route_name = $name;
   }
 
+  /**
+   * Gets the current route name.
+   *
+   * @return string The route name
+   */
   public function getCurrentRouteName()
   {
     return $this->current_route_name;
   }
 
+  /**
+   * Gets the internal URI for the current request.
+   *
+   * @param boolean Whether to give an internal URI with the route name (@route)
+   *                or with the module/action pair
+   *
+   * @return string The current internal URI
+   */
   public function getCurrentInternalUri($with_route_name = false)
   {
     if ($this->current_route_name)
@@ -104,18 +122,30 @@ class sfRouting
     }
   }
 
+  /**
+   * Gets the current compiled route array.
+   *
+   * @return array The route array
+   */
   public function getRoutes()
   {
     return $this->routes;
   }
 
+  /**
+   * Sets the compiled route array.
+   *
+   * @param array The route array
+   *
+   * @return array The route array
+   */
   public function setRoutes($routes)
   {
     return $this->routes = $routes;
   }
 
   /**
-   * Has this instance some routes.
+   * Returns true if this instance has some routes.
    *
    * @return  boolean
    */
@@ -124,15 +154,24 @@ class sfRouting
     return count($this->routes) ? true : false;
   }
 
+  /**
+   * Returns true if the route name given is defined.
+   *
+   * @param string The route name
+   *
+   * @return  boolean
+   */
   public function hasRouteName($name)
   {
     return isset($this->routes[$name]) ? true : false;
   }
 
   /**
-   * Get a route by its name.
+   * Gets a route by its name.
    *
-   * @return  array a route array
+   * @param string The route name
+   *
+   * @return  array A route array
    */
   public function getRouteByName($name)
   {
@@ -154,7 +193,6 @@ class sfRouting
 
   /**
    * Clears all current routes.
-   *
    */
   public function clearRoutes()
   {
@@ -206,9 +244,11 @@ class sfRouting
   * $r->connect('/:module/:action/*');
   * </code>
   *
-  * @param  string a route string
-  * @param  array  default parameter values
-  * @param  array  regexps parameters must match
+  * @param  string The route name
+  * @param  string The route string
+  * @param  array  The default parameter values
+  * @param  array  The regexps parameters must match
+  *
   * @return array  current routes
   */
   public function connect($name, $route, $default = array(), $requirements = array())
@@ -319,10 +359,11 @@ class sfRouting
  /**
   * Generates a valid URLs for parameters.
   *
-  * @param  array  parameter values
-  * @param  string divider between key/value pairs
-  * @param  string equal sign to use between key and value
-  * @return string url
+  * @param  array  The parameter values
+  * @param  string The divider between key/value pairs
+  * @param  string The equal sign to use between key and value
+  *
+  * @return string The generated URL
   */
   public function generate($name, $params, $querydiv = '/', $divider = '/', $equals = '/')
   {
@@ -466,7 +507,8 @@ class sfRouting
   * Returns null if no route match the URL.
   *
   * @param  string URL to be parsed
-  * @return array  parameters
+  *
+  * @return array  An array of parameters
   */
   public function parse($url)
   {
