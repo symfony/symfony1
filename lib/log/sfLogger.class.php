@@ -124,42 +124,42 @@ class sfLogger
 
   public function emerg($message)
   {
-    return $this->log($message, SF_LOG_EMERG);
+    $this->log($message, SF_LOG_EMERG);
   }
 
   public function alert($message)
   {
-    return $this->log($message, SF_LOG_ALERT);
+    $this->log($message, SF_LOG_ALERT);
   }
 
   public function crit($message)
   {
-    return $this->log($message, SF_LOG_CRIT);
+    $this->log($message, SF_LOG_CRIT);
   }
 
   public function err($message)
   {
-    return $this->log($message, SF_LOG_ERR);
+    $this->log($message, SF_LOG_ERR);
   }
 
   public function warning($message)
   {
-    return $this->log($message, SF_LOG_WARNING);
+    $this->log($message, SF_LOG_WARNING);
   }
 
   public function notice($message)
   {
-    return $this->log($message, SF_LOG_NOTICE);
+    $this->log($message, SF_LOG_NOTICE);
   }
 
   public function info($message)
   {
-    return $this->log($message, SF_LOG_INFO);
+    $this->log($message, SF_LOG_INFO);
   }
 
   public function debug($message)
   {
-    return $this->log($message, SF_LOG_DEBUG);
+    $this->log($message, SF_LOG_DEBUG);
   }
 
   public function shutdown()
