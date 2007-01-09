@@ -52,12 +52,9 @@ $t->is(get_config_dirs('config/dirmyconfig/myconfig.yml'), array(
 function get_config_dirs($configPath)
 {
   $dirs = array();
-  foreach (sfLoader::getConfigDirs($configPath) as $dir)
+  foreach (sfLoader::getConfigPaths($configPath) as $dir)
   {
-    if (is_file($dir))
-    {
-      $dirs[] = $dir;
-    }
+    $dirs[] = $dir;
   }
 
   return array_map('strip_paths', $dirs);

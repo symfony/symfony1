@@ -21,14 +21,14 @@
 class sfValidatorConfigHandler extends sfYamlConfigHandler
 {
   /**
-   * Execute this configuration handler.
+   * Executes this configuration handler.
    *
-   * @param array An array of absolute filesystem path to a configuration file.
+   * @param array An array of absolute filesystem path to a configuration file
    *
-   * @return string Data to be written to a cache file.
+   * @return string Data to be written to a cache file
    *
-   * @throws sfConfigurationException If a requested configuration file does not exist or is not readable.
-   * @throws sfParseException If a requested configuration file is improperly formatted.
+   * @throws sfConfigurationException If a requested configuration file does not exist or is not readable
+   * @throws sfParseException If a requested configuration file is improperly formatted
    */
   public function execute($configFiles)
   {
@@ -129,14 +129,14 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
   }
 
   /**
-   * Generate raw cache data.
+   * Generates raw cache data.
    *
-   * @param string A request method.
-   * @param array  The data array where our cache code will be appended.
-   * @param array  An associative array of request method data.
-   * @param array  An associative array of file/parameter data.
-   * @param array  A validators array.
-   * 
+   * @param string A request method
+   * @param array  The data array where our cache code will be appended
+   * @param array  An associative array of request method data
+   * @param array  An associative array of file/parameter data
+   * @param array  A validators array
+   *
    * @return boolean Returns true if there is some validators for this file/parameter
    */
   protected function generateRegistration($method, &$data, &$methods, &$names, &$validators)
@@ -226,18 +226,14 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
   }
 
   /**
-   * Load the linear list of attributes from the [names] category.
+   * Loads the linear list of attributes from the [names] category.
    *
-   * @param string The configuration file name (for exception usage).
-   * @param array  An associative array of request method data.
-   * @param array  An associative array of file/parameter names in which to
-   *               store loaded information.
-   * @param array  An associative array of validator data.
-   * @param array  The loaded ini configuration that we'll use for
-   *               verification purposes.
-   * @param string A comma delimited list of file/parameter names.
-   *
-   * @return void
+   * @param string The configuration file name (for exception usage)
+   * @param array  An associative array of request method data
+   * @param array  An associative array of file/parameter names in which to store loaded information
+   * @param array  An associative array of validator data
+   * @param array  The loaded ini configuration that we'll use for verification purposes
+   * @param string A comma delimited list of file/parameter names
    */
   protected function loadAttributes(&$configFiles, &$methods, &$names, &$validators, &$config, &$list)
   {
@@ -295,19 +291,15 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
   }
 
   /**
-   * Load all request methods and the file/parameter names that will be
+   * Loads all request methods and the file/parameter names that will be
    * validated from the [methods] category.
    *
-   * @param string The configuration file name (for exception usage).
-   * @param string A request method.
-   * @param array  An associative array of request method data.
-   * @param array  An associative array of file/parameter names in which to
-   *               store loaded information.
-   * @param array  The loaded ini configuration that we'll use for
-   *               verification purposes.
-   * @param string A comma delimited list of file/parameter names.
-   *
-   * @return void
+   * @param string The configuration file name (for exception usage)
+   * @param string A request method
+   * @param array  An associative array of request method data
+   * @param array  An associative array of file/parameter names in which to store loaded information
+   * @param array  The loaded ini configuration that we'll use for verification purposes
+   * @param string A comma delimited list of file/parameter names
    */
   protected function loadNames(&$configFiles, &$method, &$methods, &$names, &$config, &$list)
   {
@@ -386,15 +378,13 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
   }
 
   /**
-   * Load a list of validators.
+   * Loads a list of validators.
    *
-   * @param string The configuration file name (for exception usage).
-   * @param array  An associative array of validator data.
-   * @param array  The loaded ini configuration that we'll use for
-   *               verification purposes.
-   * @param string A comma delimited list of validator names.
-   * @return void
-   * @param array  A file/parameter name entry.
+   * @param string The configuration file name (for exception usage)
+   * @param array  An associative array of validator data
+   * @param array  The loaded ini configuration that we'll use for verification purposes
+   * @param string A comma delimited list of validator names
+   * @param array  A file/parameter name entry
    */
   protected function loadValidators(&$configFiles, &$validators, &$config, &$list, &$entry)
   {
@@ -471,9 +461,9 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
   }
 
   /**
-   * Convert alternate format to standard format
+   * Converts alternate format to standard format.
    *
-   * @param array  Configuration data.
+   * @param array  Configuration data
    */
   protected function convertAlternate2Standard(&$config)
   {

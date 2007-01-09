@@ -24,14 +24,14 @@
 class sfDatabaseConfigHandler extends sfYamlConfigHandler
 {
   /**
-   * Execute this configuration handler.
+   * Executes this configuration handler.
    *
-   * @param array An array of absolute filesystem path to a configuration file.
+   * @param array An array of absolute filesystem path to a configuration file
    *
-   * @return string Data to be written to a cache file.
+   * @return string Data to be written to a cache file
    *
-   * @throws sfConfigurationException If a requested configuration file does not exist or is not readable.
-   * @throws sfParseException If a requested configuration file is improperly formatted.
+   * @throws sfConfigurationException If a requested configuration file does not exist or is not readable
+   * @throws sfParseException If a requested configuration file is improperly formatted
    */
   public function execute($configFiles)
   {

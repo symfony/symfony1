@@ -22,12 +22,12 @@ class sfConfig
     $config = array();
 
   /**
-   * Retrieve a config parameter.
+   * Retrieves a config parameter.
    *
-   * @param string A config parameter name.
-   * @param mixed  A default config parameter value.
+   * @param string A config parameter name
+   * @param mixed  A default config parameter value
    *
-   * @return mixed A config parameter value, if the config parameter exists, otherwise null.
+   * @return mixed A config parameter value, if the config parameter exists, otherwise null
    */
   public static function get($name, $default = null)
   {
@@ -37,9 +37,9 @@ class sfConfig
   /**
    * Indicates whether or not a config parameter exists.
    *
-   * @param string A config parameter name.
+   * @param string A config parameter name
    *
-   * @return bool true, if the config parameter exists, otherwise false.
+   * @return bool true, if the config parameter exists, otherwise false
    */
   public static function has($name)
   {
@@ -47,14 +47,12 @@ class sfConfig
   }
 
   /**
-   * Set a config parameter.
+   * Sets a config parameter.
    *
    * If a config parameter with the name already exists the value will be overridden.
    *
-   * @param string A config parameter name.
-   * @param mixed  A config parameter value.
-   *
-   * @return void
+   * @param string A config parameter name
+   * @param mixed  A config parameter value
    */
   public static function set($name, $value)
   {
@@ -62,14 +60,12 @@ class sfConfig
   }
 
   /**
-   * Set an array of config parameters.
+   * Sets an array of config parameters.
    *
    * If an existing config parameter name matches any of the keys in the supplied
    * array, the associated value will be overridden.
    *
-   * @param array An associative array of config parameters and their associated values.
-   *
-   * @return void
+   * @param array An associative array of config parameters and their associated values
    */
   public static function add($parameters = array())
   {
@@ -77,7 +73,7 @@ class sfConfig
   }
 
   /**
-   * Retrieve all configuration parameters.
+   * Retrieves all configuration parameters.
    *
    * @return array An associative array of configuration parameters.
    */
@@ -87,9 +83,7 @@ class sfConfig
   }
 
   /**
-   * Clear all current config parameters.
-   *
-   * @return void
+   * Clears all current config parameters.
    */
   public static function clear()
   {

@@ -1,7 +1,30 @@
 <?php
 
+/*
+ * This file is part of the symfony package.
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+/**
+ * sfSimpleYamlConfigHandler allows you to load simple configuration files formatted as YAML.
+ *
+ * @package    symfony
+ * @subpackage config
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @version    SVN: $Id$
+ */
 class sfSimpleYamlConfigHandler extends sfYamlConfigHandler
 {
+  /**
+   * Executes this configuration handler.
+   *
+   * @param array An array of absolute filesystem path to a configuration file
+   *
+   * @return string Data to be written to a cache file
+   */
   public function execute($configFiles)
   {
     $config = $this->parseYamls($configFiles);

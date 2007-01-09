@@ -22,15 +22,15 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
     $cacheConfig = array();
 
   /**
-   * Execute this configuration handler.
+   * Executes this configuration handler.
    *
-   * @param array An array of absolute filesystem path to a configuration file.
+   * @param array An array of absolute filesystem path to a configuration file
    *
-   * @return string Data to be written to a cache file.
+   * @return string Data to be written to a cache file
    *
-   * @throws <b>sfConfigurationException</b> If a requested configuration file does not exist or is not readable.
-   * @throws <b>sfParseException</b> If a requested configuration file is improperly formatted.
-   * @throws <b>sfInitializationException</b> If a cache.yml key check fails.
+   * @throws <b>sfConfigurationException</b> If a requested configuration file does not exist or is not readable
+   * @throws <b>sfParseException</b> If a requested configuration file is improperly formatted
+   * @throws <b>sfInitializationException</b> If a cache.yml key check fails
    */
   public function execute($configFiles)
   {
@@ -77,6 +77,13 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
     return $retval;
   }
 
+  /**
+   * Returns a single addCache statement.
+   *
+   * @param string The action name
+   *
+   * @return string PHP code for the addCache statement
+   */
   protected function addCache($actionName = '')
   {
     $data = array();

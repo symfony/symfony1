@@ -26,27 +26,25 @@ abstract class sfConfigHandler
     $parameterHolder = null;
 
   /**
-   * Execute this configuration handler.
+   * Executes this configuration handler
    *
-   * @param array An array of filesystem path to a configuration file.
+   * @param array An array of filesystem path to a configuration file
    *
-   * @return string Data to be written to a cache file.
+   * @return string Data to be written to a cache file
    *
-   * @throws <b>sfConfigurationException</b> If a requested configuration file
-   *                                       does not exist or is not readable.
-   * @throws <b>sfParseException</b> If a requested configuration file is
-   *                               improperly formatted.
+   * @throws <b>sfConfigurationException</b> If a requested configuration file does not exist or is not readable
+   * @throws <b>sfParseException</b> If a requested configuration file is improperly formatted
    */
   abstract public function execute($configFiles);
 
   /**
-   * Initialize this ConfigHandler.
+   * Initializes this configuration handler.
    *
-   * @param array An associative array of initialization parameters.
+   * @param array An associative array of initialization parameters
    *
-   * @return bool true, if initialization completes successfully, otherwise false.
+   * @return bool true, if initialization completes successfully, otherwise false
    *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this ConfigHandler.
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this ConfigHandler
    */
   public function initialize($parameters = null)
   {
@@ -55,13 +53,13 @@ abstract class sfConfigHandler
   }
 
   /**
-   * Replace constant identifiers in a value.
+   * Replaces constant identifiers in a value.
    *
    * If the value is an array replacements are made recursively.
-   * 
-   * @param mixed The value on which to run the replacement procedure.
    *
-   * @return string The new value.
+   * @param mixed The value on which to run the replacement procedure
+   *
+   * @return string The new value
    */
   public static function replaceConstants($value)
   {
@@ -78,11 +76,11 @@ abstract class sfConfigHandler
   }
 
   /**
-   * Replace a relative filesystem path with an absolute one.
+   * Replaces a relative filesystem path with an absolute one.
    *
-   * @param string A relative filesystem path.
+   * @param string A relative filesystem path
    *
-   * @return string The new path.
+   * @return string The new path
    */
   public static function replacePath($path)
   {
@@ -95,6 +93,11 @@ abstract class sfConfigHandler
     return $path;
   }
 
+  /**
+   * Gets the parameter holder for this configuration handler.
+   *
+   * @return sfParameterHolder A sfParameterHolder instance
+   */
   public function getParameterHolder()
   {
     return $this->parameterHolder;

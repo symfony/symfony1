@@ -22,6 +22,13 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
   protected
     $yamlConfig = null;
 
+  /**
+   * Parses an array of YAMLs files and merges them in one configuration array.
+   *
+   * @param array An array of configuration file paths
+   *
+   * @param array A merged configuration array
+   */
   protected function parseYamls($configFiles)
   {
     $config = array();
@@ -34,14 +41,14 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
   }
 
   /**
-   * Parse a YAML (.yml) configuration file.
+   * Parses a YAML (.yml) configuration file.
    *
-   * @param string An absolute filesystem path to a configuration file.
+   * @param string An absolute filesystem path to a configuration file
    *
-   * @return string A parsed .yml configuration.
+   * @return string A parsed .yml configuration
    *
-   * @throws sfConfigurationException If a requested configuration file does not exist or is not readable.
-   * @throws sfParseException If a requested configuration file is improperly formatted.
+   * @throws sfConfigurationException If a requested configuration file does not exist or is not readable
+   * @throws sfParseException If a requested configuration file is improperly formatted
    */
   protected function parseYaml($configFile)
   {
@@ -77,6 +84,14 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
     return $config;
   }
 
+  /**
+   * Merges configuration values for a given key and category.
+   *
+   * @param string The key name
+   * @param string The category name
+   *
+   * @return string The value associated with this key name and category
+   */
   protected function mergeConfigValue($keyName, $category)
   {
     $values = array();
@@ -94,6 +109,15 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
     return $values;
   }
 
+  /**
+   * Gets a configuration value for a given key and category.
+   *
+   * @param string The key name
+   * @param string The category name
+   * @param string The default value
+   *
+   * @return string The value associated with this key name and category
+   */
   protected function getConfigValue($keyName, $category, $defaultValue = null)
   {
     if (isset($this->yamlConfig[$category][$keyName]))

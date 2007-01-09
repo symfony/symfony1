@@ -9,6 +9,7 @@
  */
 
 /**
+ * sfLoader is a class which contains the logic to look for files/classes in symfony.
  *
  * @package    symfony
  * @subpackage util
@@ -17,6 +18,11 @@
  */
 class sfLoader
 {
+  /**
+   * Gets directories where model classes are stored.
+   *
+   * @return array An array of directories
+   */
   static public function getModelDirs()
   {
     $dirs = array(sfConfig::get('sf_lib_dir').'/model' ? sfConfig::get('sf_lib_dir').'/model' : 'lib/model'); // project
@@ -28,6 +34,13 @@ class sfLoader
     return $dirs;
   }
 
+  /**
+   * Gets directories where controller classes are stored for a given module.
+   *
+   * @param string The module name
+   *
+   * @return array An array of directories
+   */
   static public function getControllerDirs($moduleName)
   {
     $suffix = $moduleName.'/'.sfConfig::get('sf_app_module_action_dir_name');
@@ -50,6 +63,13 @@ class sfLoader
     return $dirs;
   }
 
+  /**
+   * Gets directories where template files are stored for a given module.
+   *
+   * @param string The module name
+   *
+   * @return array An array of directories
+   */
   static public function getTemplateDirs($moduleName)
   {
     $suffix = $moduleName.'/'.sfConfig::get('sf_app_module_template_dir_name');
@@ -73,6 +93,14 @@ class sfLoader
     return $dirs;
   }
 
+  /**
+   * Gets the template directory to use for a given module and template file.
+   *
+   * @param string The module name
+   * @param string The template file
+   *
+   * @return string A template directory
+   */
   static public function getTemplateDir($moduleName, $templateFile)
   {
     $dirs = self::getTemplateDirs($moduleName);
@@ -87,6 +115,13 @@ class sfLoader
     return null;
   }
 
+  /**
+   * Gets the i18n directory to use for a given module.
+   *
+   * @param string The module name
+   *
+   * @return string An i18n directory
+   */
   static public function getI18NDir($moduleName)
   {
     $suffix = $moduleName.'/'.sfConfig::get('sf_app_module_i18n_dir_name');
@@ -106,6 +141,14 @@ class sfLoader
     }
   }
 
+  /**
+   * Gets directories where template files are stored for a generator class and a specific theme.
+   *
+   * @param string The generator class name
+   * @param string The theme name
+   *
+   * @return array An array of directories
+   */
   static public function getGeneratorTemplateDirs($class, $theme)
   {
     $dirs = array();
@@ -121,6 +164,14 @@ class sfLoader
     return $dirs;
   }
 
+  /**
+   * Gets directories where the skeleton is stored for a generator class and a specific theme.
+   *
+   * @param string The generator class name
+   * @param string The theme name
+   *
+   * @return array An array of directories
+   */
   static public function getGeneratorSkeletonDirs($class, $theme)
   {
     $dirs = array();
@@ -136,6 +187,17 @@ class sfLoader
     return $dirs;
   }
 
+  /**
+   * Gets the template to use for a generator class.
+   *
+   * @param string The generator class name
+   * @param string The theme name
+   * @param string The template path
+   *
+   * @return string A template path
+   *
+   * @throws sfException
+   */
   static public function getGeneratorTemplate($class, $theme, $path)
   {
     $dirs = self::getGeneratorTemplateDirs($class, $theme);
@@ -150,21 +212,28 @@ class sfLoader
     throw new sfException(sprintf('Unable to load "%s" generator template in: %s', $path, implode(', ', $dirs)));
   }
 
-  static public function getConfigDirs($configPath)
+  /**
+   * Gets the configuration file paths for a given relative configuration path.
+   *
+   * @param string The configuration path
+   *
+   * @return array An array of paths
+   */
+  static public function getConfigPaths($configPath)
   {
     $globalConfigPath = basename(dirname($configPath)).'/'.basename($configPath);
 
-    $dirs = array(
+    $files = array(
       sfConfig::get('sf_symfony_data_dir').'/'.$globalConfigPath,                    // symfony
       sfConfig::get('sf_symfony_data_dir').'/'.$configPath,                          // core modules
     );
 
     if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/'.$globalConfigPath))
     {
-      $dirs = array_merge($dirs, $pluginDirs);                                       // plugins
+      $files = array_merge($files, $pluginDirs);                                     // plugins
     }
 
-    $dirs = array_merge($dirs, array(
+    $files = array_merge($files, array(
       sfConfig::get('sf_root_dir').'/'.$globalConfigPath,                            // project
       sfConfig::get('sf_root_dir').'/'.$configPath,                                  // project
       sfConfig::get('sf_app_dir').'/'.$globalConfigPath,                             // application
@@ -173,14 +242,30 @@ class sfLoader
 
     if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/'.$configPath))
     {
-      $dirs = array_merge($dirs, $pluginDirs);                                       // plugins
+      $files = array_merge($files, $pluginDirs);                                     // plugins
     }
 
-    $dirs[] = sfConfig::get('sf_app_dir').'/'.$configPath;                           // module
+    $files[] = sfConfig::get('sf_app_dir').'/'.$configPath;                          // module
 
-    return array_unique($dirs);
+    $configs = array();
+    foreach (array_unique($files) as $file)
+    {
+      if (is_readable($file))
+      {
+        $configs[] = $file;
+      }
+    }
+
+    return $configs;
   }
 
+  /**
+   * Gets the helper directories for a given module name.
+   *
+   * @param string The module name
+   *
+   * @return array An array of directories
+   */
   static public function getHelperDirs($moduleName = '')
   {
     $dirs = array();
@@ -209,6 +294,14 @@ class sfLoader
     return $dirs;
   }
 
+  /**
+   * Loads helpers.
+   *
+   * @param array  An array of helpers to load
+   * @param string A module name (optional)
+   *
+   * @throws sfViewException
+   */
   static public function loadHelpers($helpers, $moduleName = '')
   {
     static $loaded = array();

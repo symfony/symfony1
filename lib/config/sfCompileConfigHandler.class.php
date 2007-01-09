@@ -22,14 +22,14 @@
 class sfCompileConfigHandler extends sfYamlConfigHandler
 {
   /**
-   * Execute this configuration handler.
+   * Executes this configuration handler.
    *
-   * @param array An array of absolute filesystem path to a configuration file.
+   * @param array An array of absolute filesystem path to a configuration file
    *
-   * @return string Data to be written to a cache file.
+   * @return string Data to be written to a cache file
    *
-   * @throws sfConfigurationException If a requested configuration file does not exist or is not readable.
-   * @throws sfParseException If a requested configuration file is improperly formatted.
+   * @throws sfConfigurationException If a requested configuration file does not exist or is not readable
+   * @throws sfParseException If a requested configuration file is improperly formatted
    */
   public function execute($configFiles)
   {
@@ -65,7 +65,7 @@ class sfCompileConfigHandler extends sfYamlConfigHandler
     // insert configuration files
     $data = preg_replace_callback(array('#(require|include)(_once)?\((sfConfigCache::getInstance\(\)|\$configCache)->checkConfig\([^_]+sf_app_config_dir_name[^\.]*\.\'/([^\']+)\'\)\);#m',
                                         '#()()(sfConfigCache::getInstance\(\)|\$configCache)->import\(.sf_app_config_dir_name\.\'/([^\']+)\'(, false)?\);#m'),
-                                  array($this, 'insertConfig'), $data);
+                                  array($this, 'insertConfigFileCallback'), $data);
 
     // strip comments (not in debug mode)
     if (!sfConfig::get('sf_debug'))
@@ -95,7 +95,11 @@ class sfCompileConfigHandler extends sfYamlConfigHandler
     return $retval;
   }
 
-  protected function insertConfig($matches)
+  /**
+   * Callback for configuration file insertion in the cache.
+   *
+   */
+  protected function insertConfigFileCallback($matches)
   {
     $configFile = sfConfig::get('sf_app_config_dir_name').'/'.$matches[4];
 

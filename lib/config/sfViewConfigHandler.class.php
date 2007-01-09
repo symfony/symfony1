@@ -19,15 +19,15 @@
 class sfViewConfigHandler extends sfYamlConfigHandler
 {
   /**
-   * Execute this configuration handler.
+   * Executes this configuration handler.
    *
-   * @param array An array of absolute filesystem path to a configuration file.
+   * @param array An array of absolute filesystem path to a configuration file
    *
-   * @return string Data to be written to a cache file.
+   * @return string Data to be written to a cache file
    *
-   * @throws <b>sfConfigurationException</b> If a requested configuration file does not exist or is not readable.
-   * @throws <b>sfParseException</b> If a requested configuration file is improperly formatted.
-   * @throws <b>sfInitializationException</b> If a view.yml key check fails.
+   * @throws <b>sfConfigurationException</b> If a requested configuration file does not exist or is not readable
+   * @throws <b>sfParseException</b> If a requested configuration file is improperly formatted
+   * @throws <b>sfInitializationException</b> If a view.yml key check fails
    */
   public function execute($configFiles)
   {
@@ -123,6 +123,13 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     return $retval;
   }
 
+  /**
+   * Adds a component slot statement to the data.
+   *
+   * @param string The view name
+   *
+   * @return string The PHP statement
+   */
   protected function addComponentSlots($viewName = '')
   {
     $data = '';
@@ -142,6 +149,13 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     return $data;
   }
 
+  /**
+   * Adds a template setting statement to the data.
+   *
+   * @param string The view name
+   *
+   * @return string The PHP statement
+   */
   protected function addTemplate($viewName = '')
   {
     $data = '';
@@ -155,6 +169,13 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     return $data;
   }
 
+  /**
+   * Adds a layour statement statement to the data.
+   *
+   * @param string The view name
+   *
+   * @return string The PHP statement
+   */
   protected function addLayout($viewName = '')
   {
     $data = '';
@@ -175,6 +196,13 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     return $data;
   }
 
+  /**
+   * Adds http metas and metas statements to the data.
+   *
+   * @param string The view name
+   *
+   * @return string The PHP statement
+   */
   protected function addHtmlHead($viewName = '')
   {
     $data = array();
@@ -192,6 +220,13 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     return implode("\n", $data)."\n";
   }
 
+  /**
+   * Adds stylesheets and javascripts statements to the data.
+   *
+   * @param string The view name
+   *
+   * @return string The PHP statement
+   */
   protected function addHtmlAsset($viewName = '')
   {
     $data = array();
@@ -341,6 +376,13 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     return implode("\n", $data)."\n";
   }
 
+  /**
+   * Adds an escaping statement to the data.
+   *
+   * @param string The view name
+   *
+   * @return string The PHP statement
+   */
   protected function addEscaping($viewName = '')
   {
     $data = array();
