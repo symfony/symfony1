@@ -60,8 +60,6 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 
     if ($this->getRequest()->getMethod() == sfRequest::POST)
     {
-      $this-><?php echo $this->getSingularName() ?> = $this->get<?php echo $this->getClassName() ?>OrCreate();
-
       $this->update<?php echo $this->getClassName() ?>FromRequest();
 
       $this->save<?php echo $this->getClassName() ?>($this-><?php echo $this->getSingularName() ?>);
