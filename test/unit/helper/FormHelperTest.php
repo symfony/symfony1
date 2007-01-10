@@ -80,7 +80,7 @@ class sfContext
   }
 }
 
-$t = new lime_test(77, new lime_output_color());
+$t = new lime_test(78, new lime_output_color());
 
 $context = sfContext::getInstance();
 $context->controller = new myController();
@@ -114,6 +114,7 @@ $t->diag('select_tag()');
 $t->is(select_tag('name'), '<select name="name" id="name"></select>', 'select_tag() takes a name as its first argument');
 $option_for_select = options_for_select(array('item1'));
 $t->is(select_tag('name', $option_for_select), '<select name="name" id="name">'.$option_for_select.'</select>', 'select_tag() takes an HTML string of options as its second argument');
+$t->is(select_tag('name', array('item1')), '<select name="name" id="name">'.$option_for_select.'</select>', 'select_tag() takes an array of options as its second argument');
 
 // options
 $t->is(select_tag('name', $option_for_select, array('class' => 'foo')), '<select name="name" id="name" class="foo">'.$option_for_select.'</select>', 'select_tag() takes an array of attribute options as its third argument');

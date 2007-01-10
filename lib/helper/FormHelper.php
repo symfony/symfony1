@@ -164,7 +164,7 @@ function form_tag($url_for_options = '', $options = array())
  * </code>
  *
  * @param  string field name 
- * @param  string contains a string of valid <option></option> tags
+ * @param  mixed contains a string of valid <option></option> tags, or an array of options that will be passed to options_for_select
  * @param  array  additional HTML compliant <select> tag parameters
  * @return string <select> tag optionally comprised of <option> tags.
  * @see options_for_select, content_tag
@@ -176,6 +176,10 @@ function select_tag($name, $option_tags = null, $options = array())
   if (isset($options['multiple']) && $options['multiple'] && substr($name, -2) !== '[]')
   {
     $name .= '[]';
+  }
+  if (is_array($option_tags))
+  {
+    $option_tags = options_for_select($option_tags);
   }
 
   return content_tag('select', $option_tags, array_merge(array('name' => $name, 'id' => get_id_from_name($id)), $options));
