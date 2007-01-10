@@ -4,7 +4,7 @@
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  * (c) 2004-2006 Sean Kerr.
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -26,14 +26,13 @@ class sfDatabaseManager
     $databases = array();
 
   /**
-   * Retrieve the database connection associated with this Database
-   * implementation.
+   * Retrieves the database connection associated with this sfDatabase implementation.
    *
-   * @param string A database name.
+   * @param string A database name
    *
-   * @return mixed A Database instance.
+   * @return mixed A Database instance
    *
-   * @throws <b>sfDatabaseException</b> If the requested database name does not exist.
+   * @throws <b>sfDatabaseException</b> If the requested database name does not exist
    */
   public function getDatabase($name = 'default')
   {
@@ -50,11 +49,11 @@ class sfDatabaseManager
   }
 
   /**
-   * Initialize this DatabaseManager.
+   * Initializes this sfDatabaseManager object
    *
-   * @return bool true, if initialization completes successfully, otherwise false.
+   * @return bool true, if initialization completes successfully, otherwise false
    *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this DatabaseManager.
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfDatabaseManager object
    */
   public function initialize()
   {
@@ -63,11 +62,11 @@ class sfDatabaseManager
   }
 
   /**
-   * Execute the shutdown procedure.
+   * Executes the shutdown procedure
    *
    * @return void
    *
-   * @throws <b>sfDatabaseException</b> If an error occurs while shutting down this DatabaseManager.
+   * @throws <b>sfDatabaseException</b> If an error occurs while shutting down this DatabaseManager
    */
   public function shutdown()
   {

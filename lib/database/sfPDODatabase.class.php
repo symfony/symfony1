@@ -22,9 +22,9 @@
 class sfPDODatabase extends sfDatabase
 {
   /**
-   * Connect to the database.
+   * Connects to the database.
    *
-   * @throws <b>sfDatabaseException</b> If a connection could not be created.
+   * @throws <b>sfDatabaseException</b> If a connection could not be created
    */
   public function connect()
   {
@@ -72,11 +72,11 @@ class sfPDODatabase extends sfDatabase
   }
 
   /**
-   * Execute the shutdown procedure.
+   * Executes the shutdown procedure.
    *
    * @return void
    *
-   * @throws <b>sfDatabaseException</b> If an error occurs while shutting down this database.
+   * @throws <b>sfDatabaseException</b> If an error occurs while shutting down this database
    */
   public function shutdown()
   {

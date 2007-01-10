@@ -27,21 +27,21 @@ abstract class sfDatabase
     $resource        = null;
 
   /**
-   * Connect to the database.
+   * Connects to the database.
    *
-   * @throws <b>sfDatabaseException</b> If a connection could not be created.
+   * @throws <b>sfDatabaseException</b> If a connection could not be created
    */
   abstract function connect();
 
   /**
-   * Retrieve the database connection associated with this sfDatabase implementation.
+   * Retrieves the database connection associated with this sfDatabase implementation.
    *
    * When this is executed on a Database implementation that isn't an
    * abstraction layer, a copy of the resource will be returned.
    *
-   * @return mixed A database connection.
+   * @return mixed A database connection
    *
-   * @throws <b>sfDatabaseException</b> If a connection could not be retrieved.
+   * @throws <b>sfDatabaseException</b> If a connection could not be retrieved
    */
   public function getConnection()
   {
@@ -54,11 +54,11 @@ abstract class sfDatabase
   }
 
   /**
-   * Retrieve a raw database resource associated with this sfDatabase implementation.
+   * Retrieves a raw database resource associated with this sfDatabase implementation.
    *
-   * @return mixed A database resource.
+   * @return mixed A database resource
    *
-   * @throws <b>sfDatabaseException</b> If a resource could not be retrieved.
+   * @throws <b>sfDatabaseException</b> If a resource could not be retrieved
    */
   public function getResource()
   {
@@ -71,13 +71,13 @@ abstract class sfDatabase
   }
 
   /**
-   * Initialize this Database.
+   * Initializes this sfDatabase object.
    *
-   * @param array An associative array of initialization parameters.
+   * @param array An associative array of initialization parameters
    *
-   * @return bool true, if initialization completes successfully, otherwise false.
+   * @return bool true, if initialization completes successfully, otherwise false
    *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Database.
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfDatabase object
    */
   public function initialize($parameters = array())
   {
@@ -85,32 +85,79 @@ abstract class sfDatabase
     $this->parameterHolder->add($parameters);
   }
 
+  /**
+   * Gets the parameter holder for this object.
+   *
+   * @return sfParameterHolder A sfParameterHolder instance
+   */
   public function getParameterHolder()
   {
     return $this->parameterHolder;
   }
 
+  /**
+   * Gets the parameter associated with the given key.
+   *
+   * This is a shortcut for:
+   *
+   * <code>$this->getParameterHolder()->get()</code>
+   *
+   * @param string The key name
+   * @param string The default value
+   * @param string The namespace to use
+   *
+   * @return string The value associated with the key
+   *
+   * @see sfParameterHolder
+   */
   public function getParameter($name, $default = null, $ns = null)
   {
     return $this->parameterHolder->get($name, $default, $ns);
   }
 
+  /**
+   * Returns true if the given key exists in the parameter holder.
+   *
+   * This is a shortcut for:
+   *
+   * <code>$this->getParameterHolder()->has()</code>
+   *
+   * @param string The key name
+   * @param string The namespace to use
+   *
+   * @return boolean true if the given key exists, false otherwise
+   *
+   * @see sfParameterHolder
+   */
   public function hasParameter($name, $ns = null)
   {
     return $this->parameterHolder->has($name, $ns);
   }
 
+  /**
+   * Sets the value for the given key.
+   *
+   * This is a shortcut for:
+   *
+   * <code>$this->getParameterHolder()->set()</code>
+   *
+   * @param string The key name
+   * @param string The value
+   * @param string The namespace to use
+   *
+   * @see sfParameterHolder
+   */
   public function setParameter($name, $value, $ns = null)
   {
-    return $this->parameterHolder->set($name, $value, $ns);
+    $this->parameterHolder->set($name, $value, $ns);
   }
 
   /**
-   * Execute the shutdown procedure.
+   * Executes the shutdown procedure.
    *
    * @return void
    *
-   * @throws <b>sfDatabaseException</b> If an error occurs while shutting down this database.
+   * @throws <b>sfDatabaseException</b> If an error occurs while shutting down this database
    */
   abstract function shutdown();
 }
