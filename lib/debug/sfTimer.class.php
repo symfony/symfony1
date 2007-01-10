@@ -25,9 +25,9 @@ class sfTimer
     $calls = 0;
 
   /**
-   * Create a new sfTimer instance.
+   * Creates a new sfTimer instance.
    *
-   * @param string The name of the timer.
+   * @param string The name of the timer
    */
   public function __construct($name = '')
   {
@@ -36,7 +36,7 @@ class sfTimer
   }
 
   /**
-   * Start the timer.
+   * Starts the timer.
    */
   public function startTimer()
   {
@@ -44,7 +44,7 @@ class sfTimer
   }
 
   /**
-   * Stop the timer and add the amount of time since the start to the total time.
+   * Stops the timer and add the amount of time since the start to the total time.
    */
   public function addTime()
   {
@@ -53,7 +53,7 @@ class sfTimer
   }
 
   /**
-   * Get the number of calls this timer has been called to time code.
+   * Gets the number of calls this timer has been called to time code.
    *
    * @return integer Number of calls
    */
@@ -63,7 +63,7 @@ class sfTimer
   }
 
   /**
-   * Get the total time elapsed for all calls of this timer.
+   * Gets the total time elapsed for all calls of this timer.
    *
    * @return integer Time in milliseconds
    */

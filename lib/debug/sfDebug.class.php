@@ -18,17 +18,27 @@
  */
 class sfDebug
 {
+  /**
+   * Returns PHP information as an array.
+   *
+   * @return array An array of php information
+   */
   public static function phpInfoAsArray()
   {
     $values = array(
-      'php' => phpversion(),
-      'os' => php_uname(),
+      'php'        => phpversion(),
+      'os'         => php_uname(),
       'extensions' => get_loaded_extensions(),
     );
 
     return $values;
   }
 
+  /**
+   * Returns PHP globals variables as a sorted array.
+   *
+   * @return array PHP globals
+   */
   public static function globalsAsArray()
   {
     $values = array();
@@ -52,6 +62,11 @@ class sfDebug
     return $values;
   }
 
+  /**
+   * Returns sfConfig variables as a sorted array.
+   *
+   * @return array sfConfig variables
+   */
   public static function settingsAsArray()
   {
     $config = sfConfig::getAll();
@@ -61,6 +76,13 @@ class sfDebug
     return $config;
   }
 
+  /**
+   * Returns request parameter holders as an array.
+   *
+   * @param sfRequest A sfRequest instance
+   *
+   * @return array The request parameter holders
+   */
   public static function requestAsArray($request)
   {
     if ($request)
@@ -78,6 +100,13 @@ class sfDebug
     return $values;
   }
 
+  /**
+   * Returns response parameters as an array.
+   *
+   * @param sfResponse A sfResponse instance
+   *
+   * @return array The response parameters
+   */
   public static function responseAsArray($response)
   {
     if ($response)
@@ -106,6 +135,13 @@ class sfDebug
     return $values;
   }
 
+  /**
+   * Returns a parameter holder as an array.
+   *
+   * @param sfParameterHolder A sfParameterHolder instance
+   *
+   * @return array The parameter holder as an array
+   */
   public static function flattenParameterHolder($parameterHolder)
   {
     $values = array();

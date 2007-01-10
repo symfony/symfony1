@@ -33,9 +33,9 @@ class sfWebDebug
   }
 
   /**
-   * Retrieve the singleton instance of this class.
+   * Retrieves the singleton instance of this class.
    *
-   * @return sfWebDebug A sfWebDebug implementation instance.
+   * @return sfWebDebug A sfWebDebug implementation instance
    */
   public static function getInstance()
   {
@@ -49,6 +49,9 @@ class sfWebDebug
     return self::$instance;
   }
 
+  /**
+   * Registers javascripts and stylesheets needed for the web debug toolbar.
+   */
   public function registerAssets()
   {
     $response = sfContext::getInstance()->getResponse();
@@ -58,11 +61,23 @@ class sfWebDebug
     $response->addStylesheet(sfConfig::get('sf_web_debug_web_dir').'/css/main');
   }
 
+  /**
+   * Logs a short message to be displayed in the web debug toolbar.
+   *
+   * @param string The message string
+   */
   public function logShortMessage($message)
   {
     $this->short_log[] = $message;
   }
 
+  /**
+   * Logs a message to the web debug toolbar.
+   *
+   * @param array An array of parameter
+   *
+   * @see sfWebDebugLogger
+   */
   public function log($logEntry)
   {
     // elapsed time
@@ -92,15 +107,27 @@ class sfWebDebug
     $this->log[] = $logEntry;
   }
 
+  /**
+   * Loads helpers needed for the web debug toolbar.
+   */
   protected function loadHelpers()
   {
     sfLoader::loadHelpers(array('Helper', 'Url', 'Asset', 'Tag', 'Javascript'));
   }
 
-  protected function formatLogLine($type, $log_line)
+  /**
+   * Formats a log line.
+   *
+   * @param string The log line to format
+   *
+   * @return string The formatted log lin
+   */
+  protected function formatLogLine($log_line)
   {
     static $constants;
-    if (!$constants) {
+
+    if (!$constants)
+    {
       foreach (array('sf_app_dir', 'sf_root_dir', 'sf_symfony_lib_dir', 'sf_symfony_data_dir') as $constant)
       {
         $constants[realpath(sfConfig::get($constant)).DIRECTORY_SEPARATOR] = $constant.DIRECTORY_SEPARATOR;
@@ -129,6 +156,11 @@ class sfWebDebug
     return $log_line;
   }
 
+  /**
+   * Returns the web debug toolbar as HTML.
+   *
+   * @return string The web debug toolbar HTML
+   */
   public function getResults()
   {
     if (!sfConfig::get('sf_web_debug'))
@@ -176,13 +208,13 @@ class sfWebDebug
           $debug_info .= '&nbsp;<a href="#" onclick="sfWebDebugToggle(\'debug_'.$line_nb.'\'); return false;">'.image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/toggle.gif').'</a><div class="sfWebDebugDebugInfo" id="debug_'.$line_nb.'" style="display:none">';
           foreach ($logEntry['debugStack'] as $i => $log_line)
           {
-            $debug_info .= '#'.$i.' &raquo; '.$this->formatLogLine($type, $log_line).'<br/>';
+            $debug_info .= '#'.$i.' &raquo; '.$this->formatLogLine($log_line).'<br/>';
           }
           $debug_info .= "</div>\n";
         }
 
         // format log
-        $log = $this->formatLogLine($type, $log);
+        $log = $this->formatLogLine($log);
 
         // sql queries log
         if (preg_match('/execute(?:Query|Update).+?\:\s+(.+)$/', $log, $match))
@@ -316,6 +348,11 @@ class sfWebDebug
     return $result;
   }
 
+  /**
+   * Returns the current configuration as HTML.
+   *
+   * @return string The current configuration as HTML
+   */
   protected function getCurrentConfigAsHtml()
   {
     $config = array(
@@ -347,6 +384,14 @@ class sfWebDebug
     return $result;
   }
 
+  /**
+   * Converts an array to HTML.
+   *
+   * @param string The identifier to use
+   * @param array  The array of values
+   *
+   * @return string An HTML string
+   */
   protected function formatArrayAsHtml($id, $values)
   {
     $id = ucfirst(strtolower($id));
@@ -358,6 +403,15 @@ class sfWebDebug
     return $content;
   }
 
+  /**
+   * Decorates a chunk of HTML with cache information.
+   *
+   * @param string  The internalUri representing the content
+   * @param string  The HTML content
+   * @param boolean true if the content is new in the cache, false otherwise
+   *
+   * @return string The decorated HTML string
+   */
   public function decorateContentWithDebug($internalUri, $content, $new = false)
   {
     $context = sfContext::getInstance();
@@ -392,6 +446,13 @@ class sfWebDebug
     return $content;
   }
 
+  /**
+   * Converts a proprity value to a string.
+   *
+   * @param integer The priority value
+   *
+   * @return string The priority as a string
+   */
   protected function getPriority($value)
   {
     if ($value >= 6)

@@ -21,12 +21,13 @@ class sfTimerManager
   static public $timers = array();
 
   /**
-   * Get a sfTimer instance.
+   * Gets a sfTimer instance.
    *
    * It returns the timer named $name or create a new one if it does not exist.
    *
-   * @param string The name of the timer.
-   * @return sfTimer The timer instance.
+   * @param string The name of the timer
+   *
+   * @return sfTimer The timer instance
    */
   public static function getTimer($name)
   {
@@ -41,9 +42,9 @@ class sfTimerManager
   }
 
   /**
-   * Get all sfTimer instances stored in sfTimerManager.
+   * Gets all sfTimer instances stored in sfTimerManager.
    *
-   * @return array An array of all sfTimer instances.
+   * @return array An array of all sfTimer instances
    */
   public static function getTimers()
   {
@@ -51,7 +52,7 @@ class sfTimerManager
   }
 
   /**
-   * Clear all sfTimer instances stored in sfTimerManager.
+   * Clears all sfTimer instances stored in sfTimerManager.
    */
   public static function clearTimers()
   {
