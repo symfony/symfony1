@@ -742,7 +742,7 @@
   }
 
   /**
-   * wrapper for script.aculo.us/prototype Ajax.Autocompleter.
+   * wrapper for script.aculo.us/prototype Ajax.InPlaceEditor.
    * @param string name id of field that can be edited
    * @param string url of module/action to be called when ok is clicked
    * @param array editor tag options. (rows, cols, highlightcolor, highlightendcolor, etc...)
