@@ -51,9 +51,9 @@ class sfCommonFilter extends sfFilter
       {
         $response->setContent(substr($content, 0, $pos).$html.substr($content, $pos));
       }
-
-      $response->setParameter('javascripts_included', false, 'symfony/view/asset');
-      $response->setParameter('stylesheets_included', false, 'symfony/view/asset');
     }
+
+    $response->setParameter('javascripts_included', false, 'symfony/view/asset');
+    $response->setParameter('stylesheets_included', false, 'symfony/view/asset');
   }
 }
