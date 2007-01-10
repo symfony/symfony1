@@ -128,3 +128,12 @@ $b->
   isStatusCode(200)->
   checkResponseElement('head title', 'foo title')
 ;
+
+// getPresentationFor()
+$b->
+  get('/presentation')->
+  isStatusCode(200)->
+  checkResponseElement('#foo1', 'foo')->
+  checkResponseElement('#foo2', 'foo')->
+  checkResponseElement('#foo3', 'foo')
+;

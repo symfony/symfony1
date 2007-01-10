@@ -483,6 +483,98 @@ abstract class sfController
   }
 
   /**
+   * Sends and email from the current action.
+   *
+   * This methods calls a module/action with the sfMailView class.
+   *
+   * @param  string A module name
+   * @param  string An action name
+   *
+   * @return string The generated mail content
+   *
+   * @see sfMailView, getPresentationFor(), sfController
+   */
+  public function sendEmail($module, $action)
+  {
+    return $this->getPresentationFor($module, $action, 'sfMail');
+  }
+
+  /**
+   * Returns the rendered view presentation of a given module/action.
+   *
+   * @param  string A module name
+   * @param  string An action name
+   * @param  string A View class name
+   *
+   * @return string The generated content
+   */
+  public function getPresentationFor($module, $action, $viewName = null)
+  {
+    if (sfConfig::get('sf_logging_enabled'))
+    {
+      $this->getContext()->getLogger()->info('{sfController} get presentation for action "'.$module.'/'.$action.'" (view class: "'.$viewName.'")');
+    }
+
+    // get original render mode
+    $renderMode = $this->getRenderMode();
+
+    // set render mode to var
+    $this->setRenderMode(sfView::RENDER_VAR);
+
+    // grab the action stack
+    $actionStack = $this->getActionStack();
+
+    // grab this next forward's action stack index
+    $index = $actionStack->getSize();
+
+    // set viewName if needed
+    if ($viewName)
+    {
+      $this->getRequest()->setAttribute($module.'_'.$action.'_view_name', $viewName, 'symfony/action/view');
+    }
+
+    // forward to the mail action
+    $this->forward($module, $action);
+
+    // grab the action entry from this forward
+    $actionEntry = $actionStack->getEntry($index);
+
+    // get raw email content
+    $presentation =& $actionEntry->getPresentation();
+
+    // put render mode back
+    $this->setRenderMode($renderMode);
+
+    // remove the action entry
+    $nb = $actionStack->getSize() - $index;
+    while ($nb-- > 0)
+    {
+      $actionEntry = $actionStack->popEntry();
+
+      if ($actionEntry->getModuleName() == sfConfig::get('sf_login_module') && $actionEntry->getActionName() == sfConfig::get('sf_login_action'))
+      {
+        $error = 'Your mail action is secured but the user is not authenticated.';
+
+        throw new sfException($error);
+      }
+      else if ($actionEntry->getModuleName() == sfConfig::get('sf_secure_module') && $actionEntry->getActionName() == sfConfig::get('sf_secure_action'))
+      {
+        $error = 'Your mail action is secured but the user does not have access.';
+
+        throw new sfException($error);
+      }
+    }
+
+    // remove viewName
+    if ($viewName)
+    {
+      $this->getRequest()->getAttributeHolder()->remove($module.'_'.$action.'_view_name', 'symfony/action/view');
+    }
+
+    return $presentation;
+  }
+
+  /**
    * Sets the presentation rendering mode.
    *
    * @param int A rendering mode

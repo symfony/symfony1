@@ -363,6 +363,47 @@ abstract class sfComponent
   }
 
   /**
+   * Sends and email from the current action.
+   *
+   * This methods calls a module/action with the sfMailView class.
+   *
+   * This is a shortcut for
+   *
+   * <code>$this->getController()->sendEmail($module, $action)</code>
+   *
+   * @param  string A module name
+   * @param  string An action name
+   *
+   * @return string The generated mail content
+   *
+   * @see sfMailView, getPresentationFor(), sfController
+   */
+  public function sendEmail($module, $action)
+  {
+    return $this->getController()->getPresentationFor($module, $action, 'sfMail');
+  }
+
+  /**
+   * Returns the rendered view presentation of a given module/action.
+   *
+   * This is a shortcut for
+   *
+   * <code>$this->getController()->getPresentationFor($module, $action, $viewName)</code>
+   *
+   * @param  string A module name
+   * @param  string An action name
+   * @param  string A View class name
+   *
+   * @return string The generated content
+   *
+   * @see sfController
+   */
+  public function getPresentationFor($module, $action, $viewName = null)
+  {
+    return $this->getController()->getPresentationFor($module, $action, $viewName);
+  }
+
+  /**
    * Calls methods defined via the sfMixer class.
    *
    * @param string The method name
