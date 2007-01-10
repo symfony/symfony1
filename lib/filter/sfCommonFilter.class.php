@@ -33,28 +33,27 @@ class sfCommonFilter extends sfFilter
     $response = $this->getContext()->getResponse();
 
     // include javascripts and stylesheets
-    sfLoader::loadHelpers(array('Tag', 'Asset'));
-    $html = '';
-    if (!$response->getParameter('javascripts_included', false, 'symfony/view/asset'))
+    $content = $response->getContent();
+    if (false !== ($pos = strpos($content, '</head>')))
     {
-      $html .= get_javascripts($response);
-      $response->setParameter('javascripts_included', false, 'symfony/view/asset');
-    }
-    if (!$response->getParameter('stylesheets_included', false, 'symfony/view/asset'))
-    {
-      $html .= get_stylesheets($response);
-      $response->setParameter('stylesheets_included', false, 'symfony/view/asset');
-    }
-
-    if ($html)
-    {
-      $content = $response->getContent();
-      if (false !== ($pos = strpos($content, '</head>')))
+      sfLoader::loadHelpers(array('Tag', 'Asset'));
+      $html = '';
+      if (!$response->getParameter('javascripts_included', false, 'symfony/view/asset'))
       {
-        $content = substr($content, 0, $pos).$html.substr($content, $pos);
+        $html .= get_javascripts($response);
+      }
+      if (!$response->getParameter('stylesheets_included', false, 'symfony/view/asset'))
+      {
+        $html .= get_stylesheets($response);
       }
 
-      $response->setContent($content);
+      if ($html)
+      {
+        $response->setContent(substr($content, 0, $pos).$html.substr($content, $pos));
+      }
+
+      $response->setParameter('javascripts_included', false, 'symfony/view/asset');
+      $response->setParameter('stylesheets_included', false, 'symfony/view/asset');
     }
   }
 }
