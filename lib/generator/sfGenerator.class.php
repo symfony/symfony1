@@ -32,7 +32,7 @@ abstract class sfGenerator
 
   abstract public function generate($params = array());
 
-  protected function generatePhpFiles($generatedModuleName, $templateFiles = array())
+  protected function generatePhpFiles($generatedModuleName, $templateFiles = array(), $configFiles = array())
   {
     // eval actions file
     $retval = $this->evalTemplate('actions/actions.class.php');
@@ -48,6 +48,16 @@ abstract class sfGenerator
 
       // save template file
       $this->getGeneratorManager()->getCache()->set($template, $generatedModuleName.DIRECTORY_SEPARATOR.'templates', $retval);
+    }
+    
+    // generate config files
+    foreach ($configFiles as $config)
+    {
+      // eval config file
+      $retval = $this->evalTemplate('config/'.$config);
+
+      // save config file
+      $this->getGeneratorManager()->getCache()->set($config, $generatedModuleName.DIRECTORY_SEPARATOR.'config', $retval);
     }
   }
 
