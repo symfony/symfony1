@@ -36,11 +36,10 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator im
   private $iterator;
 
   /**
-   * Construct a new escaping iteratoror using the escaping method and value
-   * supplied.
+   * Constructs a new escaping iteratoror using the escaping method and value supplied.
    *
-   * @param string $escapingMethod the escaping method to use
-   * @param Traversable $value the iterator to escape
+   * @param string The escaping method to use
+   * @param Traversable The iterator to escape
    */
   public function __construct($escapingMethod, Traversable $value)
   {
@@ -53,7 +52,9 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator im
   }
 
   /**
-   * Reset the iterator (as required by the Iterator interface).
+   * Resets the iterator (as required by the Iterator interface).
+   *
+   * @return boolean true, if the iterator rewinds successfully otherwise false
    */
   public function rewind()
   {
@@ -61,10 +62,9 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator im
   }
 
   /**
-   * Escapes and gets the current element (as required by the Iterator
-   * interface).
+   * Escapes and gets the current element (as required by the Iterator interface).
    *
-   * @return mixed the escaped value
+   * @return mixed The escaped value
    */
   public function current()
   {
@@ -73,6 +73,8 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator im
 
   /**
    * Gets the current key (as required by the Iterator interface).
+   *
+   * @return string Iterator key
    */
   public function key()
   {
@@ -80,8 +82,7 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator im
   }
 
   /**
-   * Moves to the next element in the iterator (as required by the Iterator
-   * interface).
+   * Moves to the next element in the iterator (as required by the Iterator interface).
    */
   public function next()
   {
@@ -103,7 +104,8 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator im
    * Returns true if the supplied offset is set in the array (as required by
    * the ArrayAccess interface).
    *
-   * @param string $offset the offset of the value to check existance of
+   * @param string The offset of the value to check existance of
+   *
    * @return boolean true if the offset exists; false otherwise
    */
   public function offsetExists($offset)
@@ -112,11 +114,11 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator im
   }
 
   /**
-   * Returns the element associated with the offset supplied (as required by
-   * the ArrayAccess interface).
+   * Returns the element associated with the offset supplied (as required by the ArrayAccess interface).
    *
-   * @param string $offset the offset of the value to get
-   * @return mixed the escaped value
+   * @param string The offset of the value to get
+   *
+   * @return mixed The escaped value
    */
   public function offsetGet($offset)
   {
@@ -130,9 +132,10 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator im
    * This (and the other sfOutputEscaper classes) are designed to be read only
    * so this is an illegal operation.
    *
-   * @throws sfException
-   * @param string $offset (ignored)
-   * @param string $value (ignored)
+   * @param string (ignored)
+   * @param string (ignored)
+   *
+   * @throws <b>sfException</b>
    */
   public function offsetSet($offset, $value)
   {
@@ -146,8 +149,9 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator im
    * This (and the other sfOutputEscaper classes) are designed to be read only
    * so this is an illegal operation.
    *
-   * @param string $offset (ignored)
-   * @throws sfException
+   * @param string (ignored)
+   *
+   * @throws <b>sfException</b>
    */
   public function offsetUnset($offset)
   {
@@ -157,7 +161,7 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator im
   /**
    * Returns the size of the array (are required by the Countable interface).
    *
-   * @return int the size of the array
+   * @return int The size of the array
    */
   public function count()
   {

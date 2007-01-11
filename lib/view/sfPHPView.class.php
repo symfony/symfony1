@@ -19,12 +19,17 @@
  */
 class sfPHPView extends sfView
 {
+  /**
+   * Executes any presentation logic for this view.
+   */
   public function execute()
   {
   }
 
   /**
-   * Returns an array with some variables that will be accessible to the template.
+   * Returns variables that will be accessible to the template.
+   *
+   * @return array Attributes from the template
    */
   protected function getGlobalVars()
   {
@@ -48,6 +53,9 @@ class sfPHPView extends sfView
     return $shortcuts;
   }
 
+  /**
+   * Load core and standard helpers to be use in the template.
+   */
   protected function loadCoreAndStandardHelpers()
   {
     static $coreHelpersLoaded = 0;
@@ -65,6 +73,13 @@ class sfPHPView extends sfView
     sfLoader::loadHelpers($helpers);
   }
 
+  /**
+   * Renders the presentation.
+   *
+   * @param string Filename
+   *
+   * @return string File content
+   */
   protected function renderFile($_sfFile)
   {
     if (sfConfig::get('sf_logging_enabled'))
@@ -102,7 +117,7 @@ class sfPHPView extends sfView
   }
 
   /**
-   * Retrieve the template engine associated with this view.
+   * Retrieves the template engine associated with this view.
    *
    * Note: This will return null because PHP itself has no engine reference.
    *
@@ -113,6 +128,11 @@ class sfPHPView extends sfView
     return null;
   }
 
+  /**
+   * Configures template.
+   *
+   * @return void
+   */
   public function configure()
   {
     // store our current view
@@ -137,9 +157,9 @@ class sfPHPView extends sfView
    * Loop through all template slots and fill them in with the results of
    * presentation data.
    *
-   * @param string A chunk of decorator content.
+   * @param string A chunk of decorator content
    *
-   * @return string A decorated template.
+   * @return string A decorated template
    */
   protected function decorate($content)
   {
@@ -163,13 +183,13 @@ class sfPHPView extends sfView
   }
 
   /**
-   * Render the presentation.
+   * Renders the presentation.
    *
    * When the controller render mode is sfView::RENDER_CLIENT, this method will
    * render the presentation directly to the client and null will be returned.
    *
    * @return string A string representing the rendered presentation, if
-   *                the controller render mode is sfView::RENDER_VAR, otherwise null.
+   *                the controller render mode is sfView::RENDER_VAR, otherwise null
    */
   public function render($templateVars = null)
   {

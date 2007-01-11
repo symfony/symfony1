@@ -18,7 +18,7 @@
 class sfMailView extends sfPHPView
 {
   /**
-   * Retrieve the template engine associated with this view.
+   * Retrieves the template engine associated with this view.
    *
    * @return string sfMail
    */
@@ -27,6 +27,11 @@ class sfMailView extends sfPHPView
     return 'sfMail';
   }
 
+  /**
+   * Configures template for this view.
+   *
+   * @throws <b>sfActionException</b> If the configure fails
+   */
   public function configure()
   {
     // view.yml configure
@@ -38,8 +43,9 @@ class sfMailView extends sfPHPView
   }
 
   /**
-   * Render the presentation and send the email to the client.
+   * Renders the presentation and send the email to the client.
    *
+   * @return mixed Raw data of the mail
    */
   public function render($templateVars = null)
   {

@@ -86,23 +86,19 @@ abstract class sfView
     $extension          = '.php';
 
   /**
-   * Execute any presentation logic and set template attributes.
-   *
-   * @return void
+   * Executes any presentation logic and set template attributes.
    */
   abstract function execute();
 
   /**
-   * Configure template.
-   *
-   * @return void
+   * Configures template.
    */
   abstract function configure();
 
   /**
-   * Retrieve the current application context.
+   * Retrieves the current application context.
    *
-   * @return Context The current Context instance.
+   * @return sfContext The current sfContext instance
    */
   public final function getContext()
   {
@@ -110,9 +106,9 @@ abstract class sfView
   }
 
   /**
-   * Retrieve this views decorator template directory.
+   * Retrieves this views decorator template directory.
    *
-   * @return string An absolute filesystem path to this views decorator template directory.
+   * @return string An absolute filesystem path to this views decorator template directory
    */
   public function getDecoratorDirectory()
   {
@@ -120,9 +116,9 @@ abstract class sfView
   }
 
   /**
-   * Retrieve this views decorator template.
+   * Retrieves this views decorator template.
    *
-   * @return string A template filename, if a template has been set, otherwise null.
+   * @return string A template filename, if a template has been set, otherwise null
    */
   public function getDecoratorTemplate()
   {
@@ -130,9 +126,9 @@ abstract class sfView
   }
 
   /**
-   * Retrieve this views template directory.
+   * Retrieves this view template directory.
    *
-   * @return string An absolute filesystem path to this views template directory.
+   * @return string An absolute filesystem path to this views template directory
    */
   public function getDirectory()
   {
@@ -140,18 +136,18 @@ abstract class sfView
   }
 
   /**
-   * Retrieve the template engine associated with this view.
+   * Retrieves the template engine associated with this view.
    *
    * Note: This will return null for PHPView instances.
    *
-   * @return mixed A template engine instance.
+   * @return mixed A template engine instance
    */
   abstract function getEngine();
 
   /**
-   * Retrieve this views template.
+   * Retrieves this views template.
    *
-   * @return string A template filename, if a template has been set, otherwise null.
+   * @return string A template filename, if a template has been set, otherwise null
    */
   public function getTemplate()
   {
@@ -163,7 +159,7 @@ abstract class sfView
    *
    * The escaping strategy specifies how the variables get passed to the view.
    *
-   * @return string the escaping strategy.
+   * @return string the escaping strategy
    */
   public function getEscaping()
   {
@@ -178,7 +174,9 @@ abstract class sfView
    * the sense there is no define associated with the method) and exception is
    * thrown.
    *
-   * @return string the escaping method as the name of the function to use
+   * @return string The escaping method as the name of the function to use
+   *
+   * @throws <b>sfException</b> If the method does not exist
    */
   public function getEscapingMethod()
   {
@@ -198,16 +196,13 @@ abstract class sfView
   }
 
   /**
-   * Import parameter values and error messages from the request directly as
-   * view attributes.
+   * Imports parameter values and error messages from the request directly as view attributes.
    *
-   * @param array An indexed array of file/parameter names.
-   * @param bool  Is this a list of files?
-   * @param bool  Import error messages too?
-   * @param bool  Run strip_tags() on attribute value?
-   * @param bool  Run htmlspecialchars() on attribute value?
-   *
-   * @return void
+   * @param array An indexed array of file/parameter names
+   * @param boolean  Is this a list of files?
+   * @param boolean  Import error messages too?
+   * @param boolean  Run strip_tags() on attribute value?
+   * @param boolean  Run htmlspecialchars() on attribute value?
    */
   public function importAttributes($names, $files = false, $errors = true, $stripTags = true, $specialChars = true)
   {
@@ -292,14 +287,14 @@ abstract class sfView
   }
 
   /**
-   * Initialize this view.
+   * Initializes this view.
    *
-   * @param Context The current application context.
-   * @param string The module name for this view.
-   * @param string The action name for this view.
-   * @param string The view name.
+   * @param sfContext The current application context
+   * @param string The module name for this view
+   * @param string The action name for this view
+   * @param string The view name
    *
-   * @return bool true, if initialization completes successfully, otherwise false.
+   * @return boolean true, if initialization completes successfully, otherwise false
    */
   public function initialize($context, $moduleName, $actionName, $viewName)
   {
@@ -326,68 +321,129 @@ abstract class sfView
     return true;
   }
 
+  /**
+   * Retrieves attributes for the current view.
+   *
+   * @return sfParameterHolder The attribute parameter holder
+   */
   public function getAttributeHolder()
   {
     return $this->attributeHolder;
   }
 
+  /**
+   * Retrieves an attribute for the current view.
+   *
+   * @param string Name of the attribute
+   * @param string Value of the attribute
+   * @param string The current namespace
+   *
+   * @return mixed Attribute
+   */
   public function getAttribute($name, $default = null, $ns = null)
   {
     return $this->attributeHolder->get($name, $default, $ns);
   }
 
+  /**
+   * Returns true if the view have attributes.
+   *
+   * @param string Name of the attribute
+   * @param string Namespace for the current view
+   *
+   * @return mixed Attribute of the view
+   */
   public function hasAttribute($name, $ns = null)
   {
     return $this->attributeHolder->has($name, $ns);
   }
 
+  /**
+   * Sets an attribute of the view.
+   *
+   * @param string Attribute name
+   * @param string Value for the attribute
+   * @param string Namespace for the current
+   */
   public function setAttribute($name, $value, $ns = null)
   {
-    return $this->attributeHolder->set($name, $value, $ns);
+    $this->attributeHolder->set($name, $value, $ns);
   }
 
+  /**
+   * Retrieves the parameters for the current view.
+   *
+   * @return sfParameterHolder The parameter parameter holder
+   */
   public function getParameterHolder()
   {
     return $this->parameterHolder;
   }
 
+  /**
+   * Retrieves a parameter from the current view.
+   *
+   * @param string Parameter name
+   * @param string Default parameter value
+   * @param string Namespace for the current view
+   *
+   * @return mixed A parameter value
+   */
   public function getParameter($name, $default = null, $ns = null)
   {
     return $this->parameterHolder->get($name, $default, $ns);
   }
 
+  /**
+   * Indicates whether or not a parameter exist for the current view.
+   *
+   * @param string Name of the paramater
+   * @param string Namespace for the current view
+   *
+   * @return boolean true, if the parameter exists otherwise false
+   */
   public function hasParameter($name, $ns = null)
   {
     return $this->parameterHolder->has($name, $ns);
   }
 
+  /**
+   * Sets a parameter for the view.
+   *
+   * @param string Name of the parameter
+   * @param string The parameter value
+   * @param string Namespace for the current view
+   */
   public function setParameter($name, $value, $ns = null)
   {
-    return $this->parameterHolder->set($name, $value, $ns);
+    $this->parameterHolder->set($name, $value, $ns);
   }
 
   /**
    * Indicates that this view is a decorating view.
    *
-   * @return bool true, if this view is a decorating view, otherwise false.
+   * @return boolean true, if this view is a decorating view, otherwise false
    */
   public function isDecorator()
   {
     return $this->decorator;
   }
 
+  /**
+   * Sets the decorating mode for the current view.
+   *
+   * @param boolean Set the decorating mode for the view
+   */
   public function setDecorator($boolean)
   {
     $this->decorator = (boolean) $boolean;
   }
 
   /**
-   * Execute a basic pre-render check to verify all required variables exist
+   * Executes a basic pre-render check to verify all required variables exist
    * and that the template is readable.
    *
-   * @return void
-   *
-   * @throws <b>sfRenderException</b> If the pre-render check fails.
+   * @throws <b>sfRenderException</b> If the pre-render check fails
    */
   protected function preRenderCheck()
   {
@@ -424,49 +480,55 @@ abstract class sfView
   }
 
   /**
-   * Render the presentation.
+   * Renders the presentation.
    *
    * When the controller render mode is sfView::RENDER_CLIENT, this method will
    * render the presentation directly to the client and null will be returned.
    *
    * @param  array  An array with variables that will be extracted for the template
-   *                If empty, the current actions var holder will be extracted.
+   *                If empty, the current actions var holder will be extracted
    * @return string A string representing the rendered presentation, if
-   *                the controller render mode is sfView::RENDER_VAR, otherwise null.
+   *                the controller render mode is sfView::RENDER_VAR, otherwise null
    */
   abstract function render($templateVars = null);
 
   /**
-   * Set the decorator template directory for this view.
+   * Sets the decorator template directory for this view.
    *
-   * @param string An absolute filesystem path to a template directory.
-   *
-   * @return void
+   * @param string An absolute filesystem path to a template directory
    */
   public function setDecoratorDirectory($directory)
   {
     $this->decoratorDirectory = $directory;
   }
 
+  /**
+   * Sets the escape caracter mode.
+   *
+   * @param string Escape code
+   */
   public function setEscaping($escaping)
   {
     $this->escaping = $escaping;
   }
 
+  /**
+   * Sets the escaping method for the current view.
+   *
+   * @param string Method for escaping
+   */
   public function setEscapingMethod($method)
   {
     $this->escapingMethod = $method;
   }
 
   /**
-   * Set the decorator template for this view.
+   * Sets the decorator template for this view.
    *
    * If the template path is relative, it will be based on the currently
    * executing module's template sub-directory.
    *
-   * @param string An absolute or relative filesystem path to a template.
-   *
-   * @return void
+   * @param string An absolute or relative filesystem path to a template
    */
   public function setDecoratorTemplate($template)
   {
@@ -490,11 +552,9 @@ abstract class sfView
   }
 
   /**
-   * Set the template directory for this view.
+   * Sets the template directory for this view.
    *
-   * @param string An absolute filesystem path to a template directory.
-   *
-   * @return void
+   * @param string An absolute filesystem path to a template directory
    */
   public function setDirectory($directory)
   {
@@ -502,14 +562,11 @@ abstract class sfView
   }
 
   /**
-   * Set the module and action to be executed in place of a particular
-   * template attribute.
+   * Sets the module and action to be executed in place of a particular template attribute.
    *
-   * @param string A template attribute name.
-   * @param string A module name.
-   * @param string A omponent name.
-   *
-   * @return void
+   * @param string A template attribute name
+   * @param string A module name
+   * @param string A component name
    */
   public function setComponentSlot($attributeName, $moduleName, $componentName)
   {
@@ -521,8 +578,9 @@ abstract class sfView
   /**
    * Indicates whether or not a component slot exists.
    *
-   * @param  string component slot name
-   * @return bool true, if the component slot exists, otherwise false.
+   * @param  string The component slot name
+   *
+   * @return boolean true, if the component slot exists, otherwise false
    */
   public function hasComponentSlot($name)
   {
@@ -530,10 +588,11 @@ abstract class sfView
   }
 
   /**
-   * Get a component slot.
+   * Gets a component slot
    *
-   * @param  string component slot name
-   * @return array component slot.
+   * @param  string The component slot name
+   *
+   * @return array The component slot
    */
   public function getComponentSlot($name)
   {
@@ -546,14 +605,12 @@ abstract class sfView
   }
 
   /**
-   * Set the template for this view.
+   * Sets the template for this view.
    *
    * If the template path is relative, it will be based on the currently
    * executing module's template sub-directory.
    *
-   * @param string An absolute or relative filesystem path to a template.
-   *
-   * @return void
+   * @param string An absolute or relative filesystem path to a template
    */
   public function setTemplate($template)
   {
@@ -568,16 +625,36 @@ abstract class sfView
     }
   }
 
+  /**
+   * Retrieves the current view extension.
+   *
+   * @return string The extension for current view.
+   */
   public function getExtension()
   {
     return $this->extension;
   }
 
+  /**
+   * Sets an extension for the current view.
+   *
+   * @param string The extension name.
+   */
   public function setExtension($ext)
   {
     $this->extension = $ext;
   }
 
+  /**
+   * Overloads a given method
+   *
+   * @param string Method name
+   * @param string Method arguments
+   *
+   * @return mixed User function callback
+   *
+   * @throws <b>sfException</b> If the call fails
+   */
   public function __call($method, $arguments)
   {
     if (!$callable = sfMixer::getCallable('sfView:'.$method))

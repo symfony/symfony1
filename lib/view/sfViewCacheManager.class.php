@@ -29,6 +29,13 @@ class sfViewCacheManager
     $controller         = null,
     $loaded             = array();
 
+  /**
+   * Initializes the cache manager.
+   *
+   * @param sfContext Current application context
+   * @param sfCache Type of the cache
+   * @param array Cache parameters
+   */
   public function initialize($context, $cacheClass, $cacheParameters = array())
   {
     $this->context    = $context;
@@ -49,16 +56,35 @@ class sfViewCacheManager
     }
   }
 
+  /**
+   * Retrieves the current cache context.
+   *
+   * @return sfContext The sfContext instance
+   */
   public function getContext()
   {
     return $this->context;
   }
 
+  /**
+   * Retrieves the current cache type.
+   *
+   * @return sfCache The current cache type
+   */
   public function getCache()
   {
     return $this->cache;
   }
 
+  /**
+   * Generates namespaces for the cache manager
+   *
+   * @param string Internal unified resource identifier.
+   *
+   * @return array Path and filename for the current namespace
+   *
+   * @throws <b>sfException</b> if the generation fails
+   */
   public function generateNamespace($internalUri)
   {
     if ($callable = sfConfig::get('sf_cache_namespace_callable'))
@@ -120,6 +146,13 @@ class sfViewCacheManager
     return array(dirname($uri), basename($uri));
   }
 
+  /**
+   * Adds a cache to the manager.
+   *
+   * @param string Module name
+   * @param string Action name
+   * @param array Options for the cache
+   */
   public function addCache($moduleName, $actionName, $options = array())
   {
     // normalize vary headers
@@ -142,6 +175,11 @@ class sfViewCacheManager
     );
   }
 
+  /**
+   * Registers configuration options for the cache.
+   *
+   * @param string Module name
+   */
   public function registerConfiguration($moduleName)
   {
     if (!isset($loaded[$moduleName]))
@@ -151,31 +189,75 @@ class sfViewCacheManager
     }
   }
 
+  /**
+   * Retrieves the layout from the cache option list.
+   *
+   * @param string Internal uniform resource identifier
+   *
+   * @return boolean true, if have layout otherwise false
+   */
   public function withLayout($internalUri)
   {
     return $this->getCacheConfig($internalUri, 'withLayout', false);
   }
 
+  /**
+   * Retrieves lifetime from the cache option list.
+   *
+   * @param string Internal uniform resource identifier
+   *
+   * @return int LifeTime
+   */
   public function getLifeTime($internalUri)
   {
     return $this->getCacheConfig($internalUri, 'lifeTime', 0);
   }
 
+  /**
+   * Retrieves client lifetime from the cache option list
+   *
+   * @param string Internal uniform resource identifier
+   *
+   * @return int Client lifetime
+   */
   public function getClientLifeTime($internalUri)
   {
     return $this->getCacheConfig($internalUri, 'clientLifeTime', 0);
   }
 
+  /**
+   * Retrieves contextual option from the cache option list.
+   *
+   * @param string Internal uniform resource identifier
+   *
+   * @return boolean true, if is contextual otherwise false
+   */
   public function isContextual($internalUri)
   {
     return $this->getCacheConfig($internalUri, 'contextual', false);
   }
 
+  /**
+   * Retrieves vary option from the cache option list.
+   *
+   * @param string Internal uniform resource identifier
+   *
+   * @return array Vary options for the cache
+   */
   public function getVary($internalUri)
   {
     return $this->getCacheConfig($internalUri, 'vary', array());
   }
 
+  /**
+   * Gets a config option from the cache.
+   *
+   * @param string Internal uniform resource identifier
+   * @param string Option name
+   * @param string Default value of the option
+   *
+   * @return mixed Value of the option
+   */
   protected function getCacheConfig($internalUri, $key, $defaultValue = null)
   {
     list($route_name, $params) = $this->controller->convertUrlStringToParameters($internalUri);
@@ -193,6 +275,13 @@ class sfViewCacheManager
     return $value;
   }
 
+  /**
+   * Returns true if the current content is cacheable.
+   *
+   * @param string Internal uniform resource identifier
+   *
+   * @return boolean true, if the content is cacheable otherwise false
+   */
   public function isCacheable($internalUri)
   {
     list($route_name, $params) = $this->controller->convertUrlStringToParameters($internalUri);
@@ -209,6 +298,13 @@ class sfViewCacheManager
     return false;
   }
 
+  /**
+   * Retrieves namespace for the current cache.
+   *
+   * @param string Internal uniform resource identifier
+   *
+   * @return string The data of the cache
+   */
   public function get($internalUri)
   {
     // no cache or no cache set for this action
@@ -231,6 +327,13 @@ class sfViewCacheManager
     return $retval;
   }
 
+  /**
+   * Returns true if there is a cache.
+   *
+   * @param string Internal uniform resource identifier
+   *
+   * @return boolean true, if there is a cache otherwise false
+   */
   public function has($internalUri)
   {
     if (!$this->isCacheable($internalUri) || $this->ignore())
@@ -245,6 +348,11 @@ class sfViewCacheManager
     return $this->cache->has($id, $namespace);
   }
 
+  /**
+   * Ignores the cache functionality.
+   *
+   * @return boolean true, if the cache is ignore otherwise false
+   */
   protected function ignore()
   {
     // ignore cache parameter? (only available in debug mode)
@@ -261,6 +369,14 @@ class sfViewCacheManager
     return false;
   }
 
+  /**
+   * Sets the cache content
+   *
+   * @param string Data to put in the cache
+   * @param string Internal uniform resource identifier
+   *
+   * @return boolean true, if the data get set successfully otherwise false
+   */
   public function set($data, $internalUri)
   {
     if (!$this->isCacheable($internalUri))
@@ -287,6 +403,13 @@ class sfViewCacheManager
     return true;
   }
 
+  /**
+   * Removes the cache for the current namespace.
+   *
+   * @param string Internal uniform resource identifier
+   *
+   * @return boolean true, if the remove happend otherwise false
+   */
   public function remove($internalUri)
   {
     list($namespace, $id) = $this->generateNamespace($internalUri);
@@ -302,6 +425,13 @@ class sfViewCacheManager
     }
   }
 
+  /**
+   * Retrieves the last modified time.
+   *
+   * @param string Internal uniform resource identifier
+   *
+   * @return string Last modified datetime for the current namespace
+   */
   public function lastModified($internalUri)
   {
     if (!$this->isCacheable($internalUri))
@@ -315,11 +445,15 @@ class sfViewCacheManager
   }
 
   /**
-  * Start the cache
-  *
-  * @param  string  unique fragment name
-  * @return boolean cache life time
-  */
+   * Starts the fragment cache.
+   *
+   * @param string Unique fragment name
+   * @param string Life time for the cache
+   * @param string Client life time for the cache
+   * @param array Vary options for the cache
+   *
+   * @return boolean true, if success otherwise false
+   */
   public function start($name, $lifeTime, $clientLifeTime = null, $vary = array())
   {
     $internalUri = sfRouting::getInstance()->getCurrentInternalUri();
@@ -349,8 +483,12 @@ class sfViewCacheManager
   }
 
   /**
-  * Stop the cache
-  */
+   * Stops the fragment cache.
+   *
+   * @param string Unique fragment name
+   *
+   * @return boolean true, if success otherwise false
+   */
   public function stop($name)
   {
     $data = ob_get_clean();
@@ -369,9 +507,7 @@ class sfViewCacheManager
   }
 
   /**
-   * Execute the shutdown procedure.
-   *
-   * @return void
+   * Executes the shutdown procedure.
    */
   public function shutdown()
   {

@@ -38,6 +38,9 @@ abstract class sfOutputEscaper
    *
    * Since sfOutputEscaper is an abstract class, instances cannot be created
    * directly but the constructor will be inherited by sub-classes.
+   *
+   * @param string Escaping method
+   * @param string Escaping value
    */
   public function __construct($escapingMethod, $value)
   {
@@ -67,10 +70,13 @@ abstract class sfOutputEscaper
    * of standard escaping methods listed in the escaping helper
    * (sfEscapingHelper.php).
    *
-   * @param string $escapingMethod the escaping method (a PHP function) to apply
-   *    to the value
+   * @param string $escapingMethod the escaping method (a PHP function) to apply to the value
    * @param mixed $value the value to escape
    * @param mixed the escaped value
+   *
+   * @return mixed Escaping value
+   *
+   * @throws <b>sfException</b> If the escaping fails
    */
   public static function escape($escapingMethod, $value)
   {
@@ -116,18 +122,25 @@ abstract class sfOutputEscaper
   }
 
   /**
-   * Return the raw value associated with this instance.
+   * Returns the raw value associated with this instance.
    *
    * Concrete instances of sfOutputEscaper classes decorate a value which is
    * stored by the constructor. This returns that original, unescaped, value.
    *
-   * @return mixed the original value used to construct the decorator
+   * @return mixed The original value used to construct the decorator
    */
   public function getRawValue()
   {
     return $this->value;
   }
   
+  /**
+   * Gets a value from the escaper.
+   *
+   * @param string Value to get
+   *
+   * @return mixed Value
+   */
   public function __get($var)
   {
     return $this->escape($this->escapingMethod, $this->value->$var);

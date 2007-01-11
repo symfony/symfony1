@@ -17,10 +17,16 @@
  */
 class sfPartialView extends sfPHPView
 {
+  /**
+   * Executes any presentation logic for this view.
+   */
   public function execute()
   {
   }
 
+  /**
+   * Configures template for this view.
+   */
   public function configure()
   {
     $this->setDecorator(false);
@@ -36,6 +42,13 @@ class sfPartialView extends sfPHPView
     }
   }
 
+  /**
+   * Renders the presentation.
+   *
+   * @param array Template attributes
+   *
+   * @return string Current template content
+   */
   public function render($templateVars = array())
   {
     if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
