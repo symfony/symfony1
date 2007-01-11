@@ -186,7 +186,7 @@ For this to work you need to:
         <?php echo __('Today's date is ') ?>            // (this matches the second trans-unit's source node)
         <?php echo format_date(date()) ?>
 
-4. Make a `messages.fr.xml` file in the `app/i18n` directory, according to the XLIFF format, containing one `trans-unit` node for eah call to the `__()` function:
+4. Make a `messages.fr.xml` file in the `app/i18n` directory, according to the XLIFF format, containing one `trans-unit` node for each call to the `__()` function:
 
         [xml]
         <?xml version="1.0" ?>
