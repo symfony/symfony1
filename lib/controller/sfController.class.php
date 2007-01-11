@@ -530,7 +530,7 @@ abstract class sfController
     // set viewName if needed
     if ($viewName)
     {
-      $this->getRequest()->setAttribute($module.'_'.$action.'_view_name', $viewName, 'symfony/action/view');
+      $this->getContext()->getRequest()->setAttribute($module.'_'.$action.'_view_name', $viewName, 'symfony/action/view');
     }
 
     // forward to the mail action
@@ -568,7 +568,7 @@ abstract class sfController
     // remove viewName
     if ($viewName)
     {
-      $this->getRequest()->getAttributeHolder()->remove($module.'_'.$action.'_view_name', 'symfony/action/view');
+      $this->getContext()->getRequest()->getAttributeHolder()->remove($module.'_'.$action.'_view_name', 'symfony/action/view');
     }
 
     return $presentation;
