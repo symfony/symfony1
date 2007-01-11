@@ -602,7 +602,7 @@ xdebug_start_code_coverage();
 ob_start();
 include('$file');
 ob_end_clean();
-echo serialize(xdebug_get_code_coverage());
+echo '<PHP_SER>'.serialize(xdebug_get_code_coverage()).'</PHP_SER>';
 EOF;
       file_put_contents($tmp_file, $tmp);
       ob_start();
@@ -610,7 +610,7 @@ EOF;
       $retval = ob_get_clean();
       if (0 == $return)
       {
-        if (false === $cov = unserialize($retval))
+        if (false === $cov = unserialize(substr($retval, strpos($retval, '<PHP_SER>') + 9, strpos($retval, '</PHP_SER>') - 9)))
         {
           throw new Exception(sprintf('Unable to unserialize coverage for file "%s"', $file));
         }
@@ -662,7 +662,7 @@ EOF;
 
   static function get_php_lines($content)
   {
-    if (is_readable($content))
+    if (is_file($content))
     {
       $content = file_get_contents($content);
     }
