@@ -9,6 +9,7 @@
  */
 
 require_once(dirname(__FILE__).'/../../lib/vendor/lime/lime.php');
+require_once(dirname(__FILE__).'/../../lib/vendor/pake/pakeFinder.class.php');
 
 $h = new lime_harness(new lime_output_color());
 $h->base_dir = realpath(dirname(__FILE__).'/..');
@@ -24,7 +25,7 @@ $c = new lime_coverage($h);
 $c->extension = '.class.php';
 $c->verbose = false;
 $c->base_dir = realpath(dirname(__FILE__).'/../../lib');
-$c->register_glob($c->base_dir.'/*/*.php');
-$c->register_glob($c->base_dir.'/*/*/*.php');
-$c->register_glob($c->base_dir.'/*/*/*/*.php');
+
+$finder = pakeFinder::type('file')->name('*.php')->prune('vendor');
+$c->register($finder->in($c->base_dir));
 $c->run();
