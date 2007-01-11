@@ -261,6 +261,29 @@ class lime_test
   {
     $this->output->comment($message);
   }
+
+  static function get_temp_directory()
+  {
+    if ('\\' == DIRECTORY_SEPARATOR)
+    {
+      foreach (array('TEMP', 'TMP', 'windir') as $dir)
+      {
+        if ($var = isset($_ENV[$dir]) ? $_ENV[$dir] : getenv($dir))
+        {
+          return $var;
+        }
+      }
+
+      return getenv('SystemRoot').'\temp';
+    }
+
+    if ($var = isset($_ENV['TMPDIR']) ? $_ENV['TMPDIR'] : getenv('TMPDIR'))
+    {
+      return $var;
+    }
+
+    return '/tmp';
+  }
 }
 
 class lime_output
@@ -570,7 +593,7 @@ class lime_coverage extends lime_registration
     }
 
     $coverage = array();
-    $tmp_file = '/tmp/test.php';
+    $tmp_file = lime_test::get_temp_directory().DIRECTORY_SEPARATOR.'test.php';
     foreach ($this->harness->files as $file)
     {
       $tmp = <<<EOF
