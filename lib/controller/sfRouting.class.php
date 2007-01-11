@@ -426,7 +426,7 @@ class sfRouting
         // we must match all requirements for rule
         foreach ($requirements as $req_param => $req_regexp)
         {
-          if (!preg_match('/'.preg_quote($req_regexp, '/').'/', $tparams[$req_param]))
+          if (!preg_match('/'.str_replace('/', '\\/', $req_regexp).'/', $tparams[$req_param]))
           {
             continue 2;
           }

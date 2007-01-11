@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(62, new lime_output_color());
+$t = new lime_test(64, new lime_output_color());
 
 // public methods
 $r = sfRouting::getInstance();
@@ -218,6 +218,13 @@ $t->is($r->generate('', $params), $url, '->generate() routes can take requiremen
 
 $params = array('module' => 'default', 'action' => 'string', 'id' => 'NOTANINTEGER');
 $url = '/default/string/NOTANINTEGER';
+$t->is($r->parse($url), $params, '->parse() routes can take requirements for parameters');
+$t->is($r->generate('', $params), $url, '->generate() routes can take requirements for parameters');
+
+$r->clearRoutes();
+$r->connect('test', '/:module/:action/id/:id', array('module' => 'default', 'action' => 'integer'), array('id' => '[^/]{2}'));
+$params = array('module' => 'default', 'action' => 'integer', 'id' => 'a1');
+$url = '/default/integer/id/a1';
 $t->is($r->parse($url), $params, '->parse() routes can take requirements for parameters');
 $t->is($r->generate('', $params), $url, '->generate() routes can take requirements for parameters');
 
