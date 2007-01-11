@@ -35,12 +35,12 @@
 class sfRegexValidator extends sfValidator
 {
   /**
-   * Execute this validator.
+   * Executes this validator.
    *
-   * @param string A parameter value.
-   * @param string An error message reference.
+   * @param string A parameter value
+   * @param string An error message reference
    *
-   * @return bool true, if this validator executes successfully, otherwise false.
+   * @return bool true, if this validator executes successfully, otherwise false
    */
   public function execute(&$value, &$error)
   {
@@ -59,12 +59,12 @@ class sfRegexValidator extends sfValidator
   }
 
   /**
-   * Initialize this validator.
+   * Initializes this validator.
    *
-   * @param Context The current application context.
-   * @param array   An associative array of initialization parameters.
+   * @param sfContext The current application context
+   * @param array   An associative array of initialization parameters
    *
-   * @return bool true, if initialization completes successfully, otherwise false.
+   * @return bool true, if initialization completes successfully, otherwise false
    */
   public function initialize($context, $parameters = null)
   {

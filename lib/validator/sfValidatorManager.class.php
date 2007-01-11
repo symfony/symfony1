@@ -27,9 +27,7 @@ class sfValidatorManager
     $request = null;
 
   /**
-   * Clear this validator manager so it can be reused.
-   *
-   * @return void
+   * Clears this validator manager so it can be reused.
    */
   public function clear()
   {
@@ -40,9 +38,9 @@ class sfValidatorManager
   }
 
   /**
-   * Execute all validators and determine the validation status.
+   * Executes all validators and determine the validation status.
    *
-   * @return bool true, if validation completed successfully, otherwise false.
+   * @return bool true, if validation completed successfully, otherwise false
    */
   public function execute()
   {
@@ -103,11 +101,9 @@ class sfValidatorManager
   }
 
   /**
-   * Initialize this validator manager.
+   * Initializes this validator manager.
    *
-   * @param Context A context instance.
-   *
-   * @return void
+   * @param sfContext A sfContext instance
    */
   public function initialize($context)
   {
@@ -115,13 +111,13 @@ class sfValidatorManager
   }
 
   /**
-   * Register a file or parameter.
+   * Registers a file or parameter.
    *
-   * @param string  A file or parameter name.
-   * @param bool    The required status.
-   * @param string  A required error message.
-   * @param string  A group name.
-   * @param string  A parent array.
+   * @param string  A file or parameter name
+   * @param bool    The required status
+   * @param string  A required error message
+   * @param string  A group name
+   * @param string  A parent array
    */
   public function registerName($name, $required = true, $message = 'Required', $parent = null, $group = null, $isFile = false)
   {
@@ -172,13 +168,11 @@ class sfValidatorManager
   }
 
   /**
-   * Register a validator for a file or parameter.
+   * Registers a validator for a file or parameter.
    *
-   * @param string    A file or parameter name.
-   * @param Validator A validator implementation instance.
-   * @param string    A parent array name.
-   *
-   * @return void
+   * @param string    A file or parameter name
+   * @param Validator A validator implementation instance
+   * @param string    A parent array name
    */
   public function registerValidator($name, $validator, $parent = null)
   {
@@ -195,13 +189,13 @@ class sfValidatorManager
   }
 
   /**
-   * Validate a file or parameter.
+   * Validates a file or parameter.
    *
-   * @param string A file or parameter name.
-   * @param array  Data associated with the file or parameter.
-   * @param string A parent name.
+   * @param string A file or parameter name
+   * @param array  Data associated with the file or parameter
+   * @param string A parent name
    *
-   * @return bool true, if validation completes successfully, otherwise false.
+   * @return bool true, if validation completes successfully, otherwise false
    */
   protected function validate(&$name, &$data, $parent)
   {

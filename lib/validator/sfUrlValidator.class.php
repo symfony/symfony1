@@ -20,12 +20,12 @@
 class sfUrlValidator extends sfValidator
 {
   /**
-   * Execute this validator.
+   * Executes this validator.
    *
-   * @param mixed A file or parameter value/array.
-   * @param error An error message reference.
+   * @param mixed A file or parameter value/array
+   * @param error An error message reference
    *
-   * @return bool true, if this validator executes successfully, otherwise false.
+   * @return bool true, if this validator executes successfully, otherwise false
    */
   public function execute(&$value, &$error)
   {
@@ -40,6 +40,14 @@ class sfUrlValidator extends sfValidator
     return true;
   }
 
+  /**
+   * Initializes this validator.
+   *
+   * @param sfContext The current application context
+   * @param array   An associative array of initialization parameters
+   *
+   * @return bool true, if initialization completes successfully, otherwise false
+   */
   public function initialize($context, $parameters = null)
   {
     // initialize parent

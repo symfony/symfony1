@@ -24,10 +24,10 @@ class sfDateValidator extends sfValidator
   /**
    * Execute this validator.
    *
-   * @param mixed A file or parameter value/array.
-   * @param error An error message reference.
+   * @param mixed A file or parameter value/array
+   * @param error An error message reference
    *
-   * @return bool true, if this validator executes successfully, otherwise false.
+   * @return bool true, if this validator executes successfully, otherwise false
    */
   public function execute(&$value, &$error)
   {
@@ -93,10 +93,10 @@ class sfDateValidator extends sfValidator
   /**
    * Converts the given date into a Unix timestamp.
    * 
-   * Returns null if the date is invalid.
+   * Returns null if the date is invalid
    * 
-   * @param $value    Date to convert.
-   * @param $culture  Language culture to use.
+   * @param $value    Date to convert
+   * @param $culture  Language culture to use
    */
   protected function getValidDate($value, $culture)
   {
@@ -115,6 +115,11 @@ class sfDateValidator extends sfValidator
 
   /**
    * Initializes the validator.
+   *
+   * @param sfContext The current application context
+   * @param array   An associative array of initialization parameters
+   *
+   * @return bool true, if initialization completes successfully, otherwise false
    */
   public function initialize($context, $parameters = null)
   {

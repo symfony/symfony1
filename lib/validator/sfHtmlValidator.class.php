@@ -19,33 +19,49 @@
  */
 class sfHtmlValidator extends sfValidator
 {
-    public function execute(&$value, &$error)
+  /**
+   * Executes this validator.
+   *
+   * @param mixed A file or parameter value/array
+   * @param error An error message reference
+   *
+   * @return bool true, if this validator executes successfully, otherwise false
+   */
+  public function execute(&$value, &$error)
+  {
+    if (trim(strip_tags($value)) == '')
     {
-      if (trim(strip_tags($value)) == '')
+      // If page contains an object or an image, it's ok
+      if (preg_match('/<img/i', $value) || preg_match('/<object/i', $value))
+        return true;
+      else
       {
-        // If page contains an object or an image, it's ok
-        if (preg_match('/<img/i', $value) || preg_match('/<object/i', $value))
-          return true;
-        else
-        {
-          $error = $this->getParameterHolder()->get('html_error');
-          return false;
-        }
+        $error = $this->getParameterHolder()->get('html_error');
+        return false;
       }
-
-      return true;
     }
 
-    public function initialize($context, $parameters = null)
-    {
-      // initialize parent
-      parent::initialize($context);
+    return true;
+  }
 
-      // set defaults
-      $this->getParameterHolder()->set('html_error', 'Invalid input');
+  /**
+   * Initializes this validator.
+   *
+   * @param sfContext The current application context
+   * @param array   An associative array of initialization parameters
+   *
+   * @return bool true, if initialization completes successfully, otherwise false
+   */
+  public function initialize($context, $parameters = null)
+  {
+    // initialize parent
+    parent::initialize($context);
 
-      $this->getParameterHolder()->add($parameters);
+    // set defaults
+    $this->getParameterHolder()->set('html_error', 'Invalid input');
 
-      return true;
-    }
+    $this->getParameterHolder()->add($parameters);
+
+    return true;
+  }
 }
