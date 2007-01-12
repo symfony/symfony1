@@ -18,6 +18,33 @@
  * @subpackage i18n
  */
 
+/*
+CREATE TABLE `catalogue` (
+  `cat_id` int(11) NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  `source_lang` varchar(100) NOT NULL default '',
+  `target_lang` varchar(100) NOT NULL default '',
+  `date_created` int(11) NOT NULL default '0',
+  `date_modified` int(11) NOT NULL default '0',
+  `author` varchar(255) NOT NULL default '',
+  PRIMARY KEY  (`cat_id`)
+);
+
+CREATE TABLE `trans_unit` (
+  `msg_id` int(11) NOT NULL auto_increment,
+  `cat_id` int(11) NOT NULL default '1',
+  `source` text NOT NULL,
+  `target` text NOT NULL,
+  `comments` text NOT NULL,
+  `date_added` int(11) NOT NULL default '0',
+  `date_modified` int(11) NOT NULL default '0',
+  `author` varchar(255) NOT NULL default '',
+  `translated` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`msg_id`)
+);
+
+*/
+
 /**
  * sfMessageSource_Creole class.
  *
@@ -75,10 +102,10 @@ class sfMessageSource_Creole extends sfMessageSource
    */
   protected function &loadData($variant)
   {
-    $sql = 'SELECT t.id, t.source, t.target, t.comments '.
+    $sql = 'SELECT t.source, t.target, t.comments '.
            'FROM trans_unit t, catalogue c '.
            'WHERE c.cat_id =  t.cat_id AND c.name = ? '.
-           'ORDER BY id ASC';
+           'ORDER BY msg_id ASC';
 
     $stmt = $this->db->prepareStatement($sql);
 
@@ -86,12 +113,13 @@ class sfMessageSource_Creole extends sfMessageSource
 
     $result = array();
 
+    $count = 0;
     while ($rs->next())
     {
-      $source = $rs->getString(2);
-      $result[$source][] = $rs->getString(3); //target
-      $result[$source][] = $rs->getInt(1);    //id
-      $result[$source][] = $rs->getString(4); //comments
+      $source = $rs->getString(1);
+      $result[$source][] = $rs->getString(2); //target
+      $result[$source][] = $count++;          //id
+      $result[$source][] = $rs->getString(3); //comments
     }
 
     return $result;
@@ -227,7 +255,7 @@ class sfMessageSource_Creole extends sfMessageSource
       $this->cache->clean($variant, $this->culture);
     }
 
-    return $result;
+    return true;
   }
 
   /**
@@ -268,17 +296,34 @@ class sfMessageSource_Creole extends sfMessageSource
 
     try
     {
+      $sql = 'SELECT msg_id FROM trans_unit WHERE source = ?';
+
+      $stmt = $this->db->prepareStatement($sql);
+
+      foreach($messages as $key => $message)
+      {
+        $rs = $stmt->executeQuery(array($message), ResultSet::FETCHMODE_NUM);
+        if ($rs->next())
+        {
+           unset($messages[$key]);
+        }
+      }
+    }
+    catch (Exception $e)
+    {
+    }
+
+    try
+    {
       $this->db->begin();
 
-      $sql = 'INSERT INTO trans_unit (cat_id, id, source, date_added, date_modified) VALUES (?, ?, ?, ?, ?)';
+      $sql = 'INSERT INTO trans_unit (cat_id, source, target, comments, date_added, date_modified) VALUES (?, ?, ?, ?, ?, ?)';
 
       $stmt = $this->db->prepareStatement($sql);
 
       foreach ($messages as $message)
       {
-        $stmt->executeUpdate(array($cat_id, $count, $message, $time, $time));
-
-        ++$count;
+        $stmt->executeUpdate(array($cat_id, $message, '', '', $time, $time));
         ++$inserted;
       }
 
