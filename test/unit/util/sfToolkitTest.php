@@ -3,14 +3,14 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(65, new lime_output_color());
+$t = new lime_test(69, new lime_output_color());
 
 // ::stringToArray()
 $t->diag('::stringToArray()');
@@ -146,3 +146,26 @@ $t->ok(!is_file($tmp_dir.DIRECTORY_SEPARATOR.'foo'.DIRECTORY_SEPARATOR.'bar'), '
 $t->ok(is_file($tmp_dir.DIRECTORY_SEPARATOR.'foo'.DIRECTORY_SEPARATOR.'foo'), '::clearGlob() removes all files and directories matching the pattern parameter');
 sfToolkit::clearDirectory($tmp_dir);
 rmdir($tmp_dir);
+
+// ::arrayDeepMerge()
+$t->diag('::arrayDeepMerge()');
+$t->is(
+  sfToolkit::arrayDeepMerge(array('d' => 'due', 't' => 'tre'), array('d' => 'bis', 'q' => 'quattro')),
+  array('d' => 'bis', 't' => 'tre', 'q' => 'quattro'),
+  '::arrayDeepMerge() merges linear arrays preserving literal keys'
+);
+$t->is(
+  sfToolkit::arrayDeepMerge(array('d' => 'due', 't' => 'tre', 'c' => array('c' => 'cinco')), array('d' => array('due', 'bis'), 'q' => 'quattro', 'c' => array('c' => 'cinque', 'c2' => 'cinco'))),
+  array('d' => array('due', 'bis'), 't' => 'tre', 'q' => 'quattro', 'c' => array('c' => 'cinque', 'c2' => 'cinco')),
+  '::arrayDeepMerge() recursively merges arrays preserving literal keys'
+);
+$t->is(
+  sfToolkit::arrayDeepMerge(array(2 => 'due', 3 => 'tre'), array(2 => 'bis', 4 => 'quattro')),
+  array(2 => 'bis', 3 => 'tre', 4 => 'quattro'),
+  '::arrayDeepMerge() merges linear arrays preserving numerical keys'
+);
+$t->is(
+  sfToolkit::arrayDeepMerge(array(2 => array('due'), 3 => 'tre'), array(2 => array('bis', 'bes'), 4 => 'quattro')),
+  array(2 => array('bis', 'bes'), 3 => 'tre', 4 => 'quattro'),
+  '::arrayDeepMerge() recursively merges arrays preserving numerical keys'
+);

@@ -263,33 +263,13 @@ class sfToolkit
           {
             $isKey0 = array_key_exists($key, $args[0]);
             $isKey1 = array_key_exists($key, $args[1]);
-            if (is_string($key) && $isKey0 && $isKey1 && is_array($args[0][$key]) && is_array($args[1][$key]))
+            if ($isKey0 && $isKey1 && is_array($args[0][$key]) && is_array($args[1][$key]))
             {
               $args[2][$key] = self::arrayDeepMerge($args[0][$key], $args[1][$key]);
             }
-            else if (is_string($key) && $isKey0 && $isKey1)
+            else if ($isKey0 && $isKey1)
             {
               $args[2][$key] = $args[1][$key];
-            }
-            else if (is_integer($key) && $isKey0 && $isKey1)
-            {
-              if ($isKey0 == $isKey1)
-              {
-                $args[2][] = $args[1][$key];
-              }
-              else
-              {
-                $args[2][] = $args[0][$key];
-                $args[2][] = $args[1][$key];
-              }
-            }
-            else if (is_integer($key) && $isKey0)
-            {
-              $args[2][] = $args[0][$key];
-            }
-            else if (is_integer($key) && $isKey1)
-            {
-              $args[2][] = $args[1][$key];
             }
             else if (!$isKey1)
             {
