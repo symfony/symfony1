@@ -9,6 +9,7 @@
  */
 
 /**
+ * sfFlashFilter removes flash attributes from the session.
  *
  * @package    symfony
  * @subpackage filter
@@ -18,11 +19,9 @@
 class sfFlashFilter extends sfFilter
 {
   /**
-   * Execute this filter.
+   * Executes this filter.
    *
-   * @param FilterChain A FilterChain instance.
-   *
-   * @return void
+   * @param sfFilterChain A sfFilterChain instance.
    */
   public function execute($filterChain)
   {

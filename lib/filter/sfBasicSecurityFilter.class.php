@@ -11,7 +11,7 @@
 
 /**
  * sfBasicSecurityFilter checks security by calling the getCredential() method
- * of the action. Once the credential has been acquired, BasicSecurityFilter
+ * of the action. Once the credential has been acquired, sfBasicSecurityFilter
  * verifies the user has the same credential by calling the hasCredential()
  * method of SecurityUser.
  *
@@ -23,11 +23,9 @@
 class sfBasicSecurityFilter extends sfSecurityFilter
 {
   /**
-   * Execute this filter.
+   * Executes this filter.
    *
-   * @param FilterChain A FilterChain instance.
-   *
-   * @return void
+   * @param sfFilterChain A sfFilterChain instance
    */
   public function execute($filterChain)
   {

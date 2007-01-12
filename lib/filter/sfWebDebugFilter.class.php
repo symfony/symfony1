@@ -18,11 +18,9 @@
 class sfWebDebugFilter extends sfFilter
 {
   /**
-   * Execute this filter.
+   * Executes this filter.
    *
-   * @param FilterChain A FilterChain instance.
-   *
-   * @return void
+   * @param sfFilterChain A sfFilterChain instance
    */
   public function execute($filterChain)
   {

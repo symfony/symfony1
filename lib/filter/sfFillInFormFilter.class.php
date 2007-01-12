@@ -9,6 +9,7 @@
  */
 
 /**
+ * sfFillInFormFilter fills in forms.
  *
  * @package    symfony
  * @subpackage filter
@@ -17,6 +18,11 @@
  */
 class sfFillInFormFilter extends sfFilter
 {
+  /**
+   * Executes this filter.
+   *
+   * @param sfFilterChain A sfFilterChain instance
+   */
   public function execute($filterChain)
   {
     // execute next filter

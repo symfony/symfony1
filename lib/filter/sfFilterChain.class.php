@@ -25,9 +25,7 @@ class sfFilterChain
     $index = -1;
 
   /**
-   * Execute the next filter in this chain.
-   *
-   * @return void
+   * Executes the next filter in this chain.
    */
   public function execute()
   {
@@ -46,6 +44,13 @@ class sfFilterChain
     }
   }
 
+  /**
+   * Returns true if the filter chain contains a filter of a given class.
+   *
+   * @param string The class name of the filter
+   *
+   * @return boolean true if the filter exists, false otherwise
+   */
   public function hasFilter($class)
   {
     foreach ($this->chain as $filter)
@@ -60,11 +65,9 @@ class sfFilterChain
   }
 
   /**
-   * Register a filter with this chain.
+   * Registers a filter with this chain.
    *
-   * @param Filter A Filter implementation instance.
-   *
-   * @return void
+   * @param sfFilter A sfFilter implementation instance.
    */
   public function register($filter)
   {

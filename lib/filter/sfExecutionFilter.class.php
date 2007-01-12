@@ -22,11 +22,9 @@
 class sfExecutionFilter extends sfFilter
 {
   /**
-   * Execute this filter.
+   * Executes this filter.
    *
-   * @param sfFilterChain The filter chain.
-   *
-   * @return void
+   * @param sfFilterChain The filter chain
    *
    * @throws <b>sfInitializeException</b> If an error occurs during view initialization.
    * @throws <b>sfViewException</b>       If an error occurs while executing the view.
@@ -186,6 +184,12 @@ class sfExecutionFilter extends sfFilter
     }
   }
 
+  /**
+   * Registers the fill in filter in the filter chain.
+   *
+   * @param sfFilterChain A sfFilterChain implementation instance
+   * @param array An array of parameters to pass to the fill in filter.
+   */
   protected function registerFillInFilter($filterChain, $parameters)
   {
     // automatically register the fill in filter if it is not already loaded in the chain

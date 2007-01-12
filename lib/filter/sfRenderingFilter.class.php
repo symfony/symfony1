@@ -20,14 +20,12 @@
 class sfRenderingFilter extends sfFilter
 {
   /**
-   * Execute this filter.
+   * Executes this filter.
    *
    * @param sfFilterChain The filter chain.
    *
-   * @return void
-   *
-   * @throws <b>sfInitializeException</b> If an error occurs during view initialization.
-   * @throws <b>sfViewException</b>       If an error occurs while executing the view.
+   * @throws <b>sfInitializeException</b> If an error occurs during view initialization
+   * @throws <b>sfViewException</b>       If an error occurs while executing the view
    */
   public function execute($filterChain)
   {

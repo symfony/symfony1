@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
@@ -8,6 +9,7 @@
  */
 
 /**
+ * sfCacheFilter deals with page caching and action caching.
  *
  * @package    symfony
  * @subpackage filter
@@ -22,6 +24,16 @@ class sfCacheFilter extends sfFilter
     $response     = null,
     $cache        = array();
 
+  /**
+   * Initializes this Filter.
+   *
+   * @param sfContext The current application context
+   * @param array   An associative array of initialization parameters
+   *
+   * @return bool true, if initialization completes successfully, otherwise false
+   *
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Filter
+   */
   public function initialize($context, $parameters = array())
   {
     parent::initialize($context, $parameters);
@@ -32,11 +44,9 @@ class sfCacheFilter extends sfFilter
   }
 
   /**
-   * Execute this filter.
+   * Executes this filter.
    *
-   * @param FilterChain A FilterChain instance.
-   *
-   * @return void
+   * @param sfFilterChain A sfFilterChain instance
    */
   public function execute($filterChain)
   {
@@ -90,11 +100,9 @@ class sfCacheFilter extends sfFilter
   }
 
   /**
-   * Execute this filter.
+   * Executes this filter.
    *
-   * @param FilterChain A FilterChain instance.
-   *
-   * @return void
+   * @param sfFilterChain A sfFilterChain instance.
    */
   public function executeBeforeRendering()
   {
@@ -173,6 +181,11 @@ class sfCacheFilter extends sfFilter
     }
   }
 
+  /**
+   * Sets a page template in the cache.
+   *
+   * @param string The internal URI
+   */
   protected function setPageCache($uri)
   {
     if ($this->getContext()->getController()->getRenderMode() != sfView::RENDER_CLIENT)
@@ -190,6 +203,11 @@ class sfCacheFilter extends sfFilter
     }
   }
 
+  /**
+   * Gets a page template from the cache.
+   *
+   * @param string The internal URI
+   */
   protected function getPageCache($uri)
   {
     $context = $this->getContext();
@@ -229,6 +247,11 @@ class sfCacheFilter extends sfFilter
     return true;
   }
 
+  /**
+   * Sets an action template in the cache.
+   *
+   * @param string The internal URI
+   */
   protected function setActionCache($uri)
   {
     $content = $this->response->getParameter($uri.'_action', null, 'symfony/cache');
@@ -239,6 +262,11 @@ class sfCacheFilter extends sfFilter
     }
   }
 
+  /**
+   * Gets an action template from the cache.
+   *
+   * @param string The internal URI
+   */
   protected function getActionCache($uri)
   {
     // retrieve content from cache
@@ -255,6 +283,6 @@ class sfCacheFilter extends sfFilter
     $this->response->setParameter('current_key', $uri.'_action', 'symfony/cache/current');
     $this->response->setParameter($uri.'_action', $retval, 'symfony/cache');
 
-    return ($retval ? true : false);
+    return $retval ? true : false;
   }
 }
