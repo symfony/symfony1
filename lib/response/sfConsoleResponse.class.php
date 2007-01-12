@@ -19,9 +19,8 @@
 class sfConsoleResponse extends sfResponse
 {
   /**
-   * Execute the shutdown procedure.
+   * Executes the shutdown procedure.
    *
-   * @return void
    */
   public function shutdown()
   {

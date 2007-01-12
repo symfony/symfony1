@@ -373,7 +373,7 @@ abstract class sfView
   /**
    * Retrieves the parameters for the current view.
    *
-   * @return sfParameterHolder The parameter parameter holder
+   * @return sfParameterHolder The parameter holder
    */
   public function getParameterHolder()
   {

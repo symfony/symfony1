@@ -45,11 +45,11 @@ class sfWebRequest extends sfRequest
   protected $relativeUrlRoot = null;
 
   /**
-   * Retrieve an array of file information.
+   * Retrieves an array of file information.
    *
    * @param string A file name
    *
-   * @return array An associative array of file information, if the file exists, otherwise null.
+   * @return array An associative array of file information, if the file exists, otherwise null
    */
   public function getFile($name)
   {
@@ -57,9 +57,9 @@ class sfWebRequest extends sfRequest
   }
 
   /**
-   * Retrieve a file error.
+   * Retrieves a file error.
    *
-   * @param string A file name.
+   * @param string A file name
    *
    * @return int One of the following error codes:
    *
@@ -80,11 +80,11 @@ class sfWebRequest extends sfRequest
   }
 
   /**
-   * Retrieve a file name.
+   * Retrieves a file name.
    *
-   * @param string A file name.
+   * @param string A file nam.
    *
-   * @return string A file name, if the file exists, otherwise null.
+   * @return string A file name, if the file exists, otherwise null
    */
   public function getFileName($name)
   {
@@ -92,9 +92,9 @@ class sfWebRequest extends sfRequest
   }
 
   /**
-   * Retrieve an array of file names.
+   * Retrieves an array of file names.
    *
-   * @return array An indexed array of file names.
+   * @return array An indexed array of file names
    */
   public function getFileNames()
   {
@@ -102,9 +102,9 @@ class sfWebRequest extends sfRequest
   }
 
   /**
-   * Retrieve an array of files.
+   * Retrieves an array of files.
    *
-   * @return array An associative array of files.
+   * @return array An associative array of files
    */
   public function getFiles()
   {
@@ -112,11 +112,11 @@ class sfWebRequest extends sfRequest
   }
 
   /**
-   * Retrieve a file path.
+   * Retrieves a file path.
    *
-   * @param string A file name.
+   * @param string A file name
    *
-   * @return string A file path, if the file exists, otherwise null.
+   * @return string A file path, if the file exists, otherwise null
    */
   public function getFilePath($name)
   {
@@ -126,9 +126,9 @@ class sfWebRequest extends sfRequest
   /**
    * Retrieve a file size.
    *
-   * @param string A file name.
+   * @param string A file name
    *
-   * @return int A file size, if the file exists, otherwise null.
+   * @return int A file size, if the file exists, otherwise null
    */
   public function getFileSize($name)
   {
@@ -136,14 +136,14 @@ class sfWebRequest extends sfRequest
   }
 
   /**
-   * Retrieve a file type.
+   * Retrieves a file type.
    *
    * This may not be accurate. This is the mime-type sent by the browser
    * during the upload.
    *
-   * @param string A file name.
+   * @param string A file name
    *
-   * @return string A file type, if the file exists, otherwise null.
+   * @return string A file type, if the file exists, otherwise null
    */
   public function getFileType($name)
   {
@@ -153,9 +153,9 @@ class sfWebRequest extends sfRequest
   /**
    * Indicates whether or not a file exists.
    *
-   * @param string A file name.
+   * @param string A file name
    *
-   * @return bool true, if the file exists, otherwise false.
+   * @return boolean true, if the file exists, otherwise false
    */
   public function hasFile($name)
   {
@@ -172,9 +172,9 @@ class sfWebRequest extends sfRequest
   /**
    * Indicates whether or not a file error exists.
    *
-   * @param string A file name.
+   * @param string A file name
    *
-   * @return bool true, if the file error exists, otherwise false.
+   * @return boolean true, if the file error exists, otherwise false
    */
   public function hasFileError($name)
   {
@@ -184,7 +184,7 @@ class sfWebRequest extends sfRequest
   /**
    * Indicates whether or not any file errors occured.
    *
-   * @return bool true, if any file errors occured, otherwise false.
+   * @return boolean true, if any file errors occured, otherwise false
    */
   public function hasFileErrors()
   {
@@ -202,13 +202,21 @@ class sfWebRequest extends sfRequest
   /**
    * Indicates whether or not any files exist.
    *
-   * @return bool true, if any files exist, otherwise false.
+   * @return boolean true, if any files exist, otherwise false
    */
   public function hasFiles()
   {
     return (count($_FILES) > 0);
   }
 
+  /**
+   * Retrieves a file value.
+   *
+   * @param string A file name
+   * @param string Value to search in the file
+   * 
+   * @return string File value
+   */
   public function getFileValue($name, $key)
   {
     if (preg_match('/^(.+?)\[(.+?)\]$/', $name, $match))
@@ -221,6 +229,13 @@ class sfWebRequest extends sfRequest
     }
   }
 
+  /**
+   * Retrieves all the values from a file.
+   *
+   * @param string A file name
+   *
+   * @return array Associative list of the file values
+   */
   public function getFileValues($name)
   {
     if (preg_match('/^(.+?)\[(.+?)\]$/', $name, $match))
@@ -239,6 +254,13 @@ class sfWebRequest extends sfRequest
     }
   }
 
+  /**
+   * Retrieves an extension for a given file.
+   *
+   * @param string A file name
+   *
+   * @return string Extension for the file
+   */
   public function getFileExtension($name)
   {
     $fileType = $this->getFileType($name);
@@ -254,15 +276,15 @@ class sfWebRequest extends sfRequest
   }
 
   /**
-   * Initialize this Request.
+   * Initializes this sfRequest.
    *
-   * @param Context A Context instance.
-   * @param array   An associative array of initialization parameters.
-   * @param array   An associative array of initialization attributes.
+   * @param sfContext A sfContext instance
+   * @param array   An associative array of initialization parameters
+   * @param array   An associative array of initialization attributes
    *
-   * @return bool true, if initialization completes successfully, otherwise false.
+   * @return boolean true, if initialization completes successfully, otherwise false
    *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Request.
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Request
    */
   public function initialize($context, $parameters = array(), $attributes = array())
   {
@@ -311,7 +333,7 @@ class sfWebRequest extends sfRequest
    *
    * This information is stored in the [sf_path_info_array] constant.
    *
-   * @return  array
+   * @return  array Path information
    */
   protected function getPathInfoArray()
   {
@@ -333,6 +355,11 @@ class sfWebRequest extends sfRequest
     return $this->pathInfoArray;
   }
 
+  /**
+   * Retrieves the uniform resource identifier for the current web request.
+   *
+   * @return string Unified resource identifier
+   */
   public function getUri()
   {
     $pathArray = $this->getPathInfoArray();
@@ -348,7 +375,7 @@ class sfWebRequest extends sfRequest
   /**
    * See if the client is using absolute uri
    *
-   * @return boolean
+   * @return boolean true, if is absolute uri otherwise false
    */
   public function isAbsUri()
   {
@@ -358,9 +385,9 @@ class sfWebRequest extends sfRequest
   }
 
   /**
-   * Uri prefix,including protocol,hostname and server port
+   * Returns Uri prefix, including protocol, hostname and server port.
    *
-   * @return string
+   * @return string Uniform resource identifier prefix
    */
   public function getUriPrefix()
   {
@@ -381,6 +408,11 @@ class sfWebRequest extends sfRequest
     return $proto.'://'.$pathArray['SERVER_NAME'].$port;
   }
 
+  /**
+   * Retrieves the path info for the current web request.
+   *
+   * @return string Path info
+   */
   public function getPathInfo()
   {
     $pathInfo = '';
@@ -428,7 +460,6 @@ class sfWebRequest extends sfRequest
   /**
    * Loads GET, PATH_INFO and POST data into the parameter list.
    *
-   * @return void
    */
   protected function loadParameters()
   {
@@ -499,19 +530,19 @@ class sfWebRequest extends sfRequest
   }
 
   /**
-   * Move an uploaded file.
+   * Moves an uploaded file.
    *
-   * @param string A file name.
+   * @param string A file name
    * @param string An absolute filesystem path to where you would like the
    *               file moved. This includes the new filename as well, since
-   *               uploaded files are stored with random names.
-   * @param int    The octal mode to use for the new file.
-   * @param bool   Indicates that we should make the directory before moving the file.
-   * @param int    The octal mode to use when creating the directory.
+   *               uploaded files are stored with random names
+   * @param int    The octal mode to use for the new file
+   * @param boolean   Indicates that we should make the directory before moving the file
+   * @param int    The octal mode to use when creating the directory
    *
-   * @return bool true, if the file was moved, otherwise false.
+   * @return boolean true, if the file was moved, otherwise false
    *
-   * @throws sfFileException If a major error occurs while attempting to move the file.
+   * @throws <b>sfFileException</b> If a major error occurs while attempting to move the file
    */
   public function moveFile($name, $file, $fileMode = 0666, $create = true, $dirMode = 0777)
   {
@@ -615,9 +646,9 @@ class sfWebRequest extends sfRequest
   }
 
   /**
-   * Get a list of languages acceptable by the client browser
+   * Gets a list of languages acceptable by the client browser
    *
-   * @return array languages ordered in the user browser preferences.
+   * @return array Languages ordered in the user browser preferences
    */
   public function getLanguages()
   {
@@ -670,9 +701,9 @@ class sfWebRequest extends sfRequest
   }
 
   /**
-   * Get a list of charsets acceptable by the client browser.
+   * Gets a list of charsets acceptable by the client browser.
    *
-   * @return array list of charsets in preferable order.
+   * @return array List of charsets in preferable order
    */
   public function getCharsets()
   {
@@ -692,9 +723,9 @@ class sfWebRequest extends sfRequest
   }
 
   /**
-   * Get a list of content types acceptable by the client browser
+   * Gets a list of content types acceptable by the client browser
    *
-   * @return array languages ordered in the user browser preferences.
+   * @return array Languages ordered in the user browser preferences
    */
   public function getAcceptableContentTypes()
   {
@@ -714,7 +745,7 @@ class sfWebRequest extends sfRequest
   }
 
   /**
-   * Return true id the request is a XMLHttpRequest (via prototype 'HTTP_X_REQUESTED_WITH' header).
+   * Returns true id the request is a XMLHttpRequest (via prototype 'HTTP_X_REQUESTED_WITH' header).
    *
    * @return boolean
    */
@@ -738,7 +769,7 @@ class sfWebRequest extends sfRequest
   }
 
   /**
-   * Get cookie value.
+   * Gets a cookie value.
    *
    * @return mixed
    */
@@ -770,6 +801,11 @@ class sfWebRequest extends sfRequest
     );
   }
 
+  /**
+   * Retrieves relative root url.
+   *
+   * @return string URL
+   */
   public function getRelativeUrlRoot()
   {
     if ($this->relativeUrlRoot === null)
@@ -780,20 +816,29 @@ class sfWebRequest extends sfRequest
     return $this->relativeUrlRoot;
   }
 
+  /**
+   * Sets the relative root url for the current web request.
+   *
+   * @param string Value for the url
+   */
   public function setRelativeUrlRoot($value)
   {
     $this->relativeUrlRoot = $value;
   }
 
   /**
-   * Execute the shutdown procedure.
+   * Executes the shutdown procedure.
    *
-   * @return void
    */
   public function shutdown()
   {
   }
 
+  /**
+   * Splits an HTTP header for the current web request.
+   *
+   * @param string Header to split
+   */
   public function splitHttpAcceptHeader($header)
   {
     $values = array();

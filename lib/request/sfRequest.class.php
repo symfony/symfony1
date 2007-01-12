@@ -67,13 +67,13 @@ abstract class sfRequest
     $attributeHolder = null;
 
   /**
-   * Extract parameter values from the request.
+   * Extracts parameter values from the request.
    *
-   * @param array An indexed array of parameter names to extract.
+   * @param array An indexed array of parameter names to extract
    *
    * @return array An associative array of parameters and their values. If
    *               a specified parameter doesn't exist an empty string will
-   *               be returned for its value.
+   *               be returned for its value
    */
   public function & extractParameters ($names)
   {
@@ -92,11 +92,11 @@ abstract class sfRequest
   }
 
   /**
-   * Retrieve an error message.
+   * Retrieves an error message.
    *
-   * @param string An error name.
+   * @param string An error name
    *
-   * @return string An error message, if the error exists, otherwise null.
+   * @return string An error message, if the error exists, otherwise null
    */
   public function getError($name, $catalogue = 'messages')
   {
@@ -117,9 +117,9 @@ abstract class sfRequest
   }
 
   /**
-   * Retrieve an array of error names.
+   * Retrieves an array of error names.
    *
-   * @return array An indexed array of error names.
+   * @return array An indexed array of error names
    */
   public function getErrorNames()
   {
@@ -127,9 +127,9 @@ abstract class sfRequest
   }
 
   /**
-   * Retrieve an array of errors.
+   * Retrieves an array of errors.
    *
-   * @return array An associative array of errors.
+   * @return array An associative array of errors
    */
   public function getErrors()
   {
@@ -137,7 +137,7 @@ abstract class sfRequest
   }
 
   /**
-   * Retrieve this request's method.
+   * Retrieves this request's method.
    *
    * @return int One of the following constants:
    *             - sfRequest::GET
@@ -151,9 +151,9 @@ abstract class sfRequest
   /**
    * Indicates whether or not an error exists.
    *
-   * @param string An error name.
+   * @param string An error name
    *
-   * @return bool true, if the error exists, otherwise false.
+   * @return boolean true, if the error exists, otherwise false
    */
   public function hasError($name)
   {
@@ -163,7 +163,7 @@ abstract class sfRequest
   /**
    * Indicates whether or not any errors exist.
    *
-   * @return bool true, if any error exist, otherwise false.
+   * @return boolean true, if any error exist, otherwise false
    */
   public function hasErrors()
   {
@@ -171,15 +171,15 @@ abstract class sfRequest
   }
 
   /**
-   * Initialize this sfRequest.
+   * Initializes this sfRequest.
    *
-   * @param Context A sfContext instance.
-   * @param array   An associative array of initialization parameters.
-   * @param array   An associative array of initialization attributes.
+   * @param sfContext A sfContext instance
+   * @param array   An associative array of initialization parameters
+   * @param array   An associative array of initialization attributes
    *
-   * @return bool true, if initialization completes successfully, otherwise false.
+   * @return boolean true, if initialization completes successfully, otherwise false
    *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Request.
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Request
    */
   public function initialize($context, $parameters = array(), $attributes = array())
   {
@@ -193,19 +193,24 @@ abstract class sfRequest
     $this->attributeHolder->add($attributes);
   }
 
+  /**
+   * Retrieves the current application context.
+   *
+   * @return sfContext Current application context
+   */
   public function getContext()
   {
     return $this->context;
   }
 
   /**
-   * Retrieve a new Request implementation instance.
+   * Retrieves a new sfRequest implementation instance.
    *
-   * @param string A Request implementation name.
+   * @param string A sfRequest implementation name
    *
-   * @return Request A Request implementation instance.
+   * @return sfRequest A sfRequest implementation instance
    *
-   * @throws <b>sfFactoryException</b> If a request implementation instance cannot be created.
+   * @throws <b>sfFactoryException</b> If a request implementation instance cannot be created
    */
   public static function newInstance($class)
   {
@@ -225,11 +230,11 @@ abstract class sfRequest
   }
 
   /**
-   * Remove an error.
+   * Removes an error.
    *
-   * @param string An error name.
+   * @param string An error name
    *
-   * @return string An error message, if the error was removed, otherwise null.
+   * @return string An error message, if the error was removed, otherwise null
    */
   public function & removeError ($name)
   {
@@ -246,12 +251,11 @@ abstract class sfRequest
   }
 
   /**
-   * Set an error.
+   * Sets an error.
    *
-   * @param name    An error name.
-   * @param message An error message.
+   * @param string An error name
+   * @param string An error message
    *
-   * @return void
    */
   public function setError($name, $message)
   {
@@ -264,14 +268,13 @@ abstract class sfRequest
   }
 
   /**
-   * Set an array of errors
+   * Sets an array of errors
    *
    * If an existing error name matches any of the keys in the supplied
    * array, the associated message will be overridden.
    *
-   * @param array An associative array of errors and their associated messages.
+   * @param array An associative array of errors and their associated messages
    *
-   * @return void
    */
   public function setErrors($errors)
   {
@@ -279,10 +282,10 @@ abstract class sfRequest
   }
 
   /**
-   * Set the request method.
+   * Sets the request method.
    *
    * @param int One of the following constants:
-   * 
+   *
    * - sfRequest::GET
    * - sfRequest::POST
    * - sfRequest::PUT
@@ -291,7 +294,7 @@ abstract class sfRequest
    *
    * @return void
    *
-   * @throws <b>sfException</b> - If the specified request method is invalid.
+   * @throws <b>sfException</b> - If the specified request method is invalid
    */
   public function setMethod($methodCode)
   {
@@ -310,53 +313,121 @@ abstract class sfRequest
     throw new sfException($error);
   }
 
+  /**
+   * Retrieves the parameters for the current request.
+   *
+   * @return sfParameterHolder The parameter holder
+   */
   public function getParameterHolder()
   {
     return $this->parameterHolder;
   }
 
+  /**
+   * Retrieves the attributes holder.
+   *
+   * @return sfParameterHolder The attribute holder
+   */
   public function getAttributeHolder()
   {
     return $this->attributeHolder;
   }
 
+  /**
+   * Retrieves an attribute from the current request.
+   *
+   * @param string Attribute name
+   * @param string Default attribute value
+   * @param string Namespace for the current request
+   *
+   * @return mixed An attribute value
+   */
   public function getAttribute($name, $default = null, $ns = null)
   {
     return $this->attributeHolder->get($name, $default, $ns);
   }
 
+  /**
+   * Indicates whether or not an attribute exist for the current request.
+   *
+   * @param string Attribute name
+   * @param string Namespace for the current request
+   *
+   * @return boolean true, if the attribute exists otherwise false
+   */
   public function hasAttribute($name, $ns = null)
   {
     return $this->attributeHolder->has($name, $ns);
   }
 
+  /**
+   * Sets an attribute for the request.
+   *
+   * @param string Attribute name
+   * @param string Value for the attribute
+   * @param string Namespace for the current request
+   *
+   */
   public function setAttribute($name, $value, $ns = null)
   {
-    return $this->attributeHolder->set($name, $value, $ns);
+    $this->attributeHolder->set($name, $value, $ns);
   }
 
+  /**
+   * Retrieves a paramater for the current request.
+   *
+   * @param string Parameter name
+   * @param string Parameter default value
+   * @param string Namespace for the current request
+   *
+   */
   public function getParameter($name, $default = null, $ns = null)
   {
     return $this->parameterHolder->get($name, $default, $ns);
   }
 
+  /**
+   * Indicates whether or not a parameter exist for the current request.
+   *
+   * @param string Parameter name
+   * @param string Namespace for the current request
+   *
+   * @return boolean true, if the paramater exists otherwise false
+   */
   public function hasParameter($name, $ns = null)
   {
     return $this->parameterHolder->has($name, $ns);
   }
 
+  /**
+   * Sets a parameter for the current request.
+   *
+   * @param string Parameter name
+   * @param string Parameter value
+   * @param string Namespace for the current request
+   *
+   */
   public function setParameter($name, $value, $ns = null)
   {
-    return $this->parameterHolder->set($name, $value, $ns);
+    $this->parameterHolder->set($name, $value, $ns);
   }
 
   /**
-   * Execute the shutdown procedure.
+   * Executes the shutdown procedure.
    *
-   * @return void
    */
   abstract function shutdown();
 
+  /**
+   * Overloads a given method.
+   *
+   * @param string Method name
+   * @param string Method arguments
+   *
+   * @return mixed User function callback
+   *
+   * @throws <b>sfException</b> if call fails
+   */
   public function __call($method, $arguments)
   {
     if (!$callable = sfMixer::getCallable('sfRequest:'.$method))

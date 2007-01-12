@@ -65,7 +65,7 @@ abstract class sfValidator
   /**
    * Retrieves the parameters from the validator.
    *
-   * @return sfParameterHolder List of parameters.
+   * @return sfParameterHolder List of parameters
    */
   public function getParameterHolder()
   {
@@ -108,6 +108,6 @@ abstract class sfValidator
    */
   public function setParameter($name, $value, $ns = null)
   {
-    return $this->parameterHolder->set($name, $value, $ns);
+    $this->parameterHolder->set($name, $value, $ns);
   }
 }

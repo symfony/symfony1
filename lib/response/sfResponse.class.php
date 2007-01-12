@@ -25,13 +25,13 @@ abstract class sfResponse
     $content         = '';
 
   /**
-   * Initialize this sfResponse.
+   * Initializes this sfResponse.
    *
-   * @param sfContext A sfContext instance.
+   * @param sfContext A sfContext instance
    *
-   * @return bool true, if initialization completes successfully, otherwise false.
+   * @return boolean true, if initialization completes successfully, otherwise false
    *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Response.
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Response
    */
   public function initialize($context, $parameters = array())
   {
@@ -41,24 +41,34 @@ abstract class sfResponse
     $this->parameterHolder->add($parameters);
   }
 
+  /**
+   * Sets the context for the current response.
+   *
+   * @param sfContext  A sfContext instance
+   */
   public function setContext($context)
   {
     $this->context = $context;
   }
 
+  /**
+   * Retrieves the current application context.
+   *
+   * @return sfContext The application context
+   */
   public function getContext()
   {
     return $this->context;
   }
 
   /**
-   * Retrieve a new sfResponse implementation instance.
+   * Retrieves a new sfResponse implementation instance.
    *
-   * @param string A sfResponse implementation name.
+   * @param string A sfResponse implementation name
    *
-   * @return sfResponse A sfResponse implementation instance.
+   * @return sfResponse A sfResponse implementation instance
    *
-   * @throws <b>sfFactoryException</b> If a request implementation instance cannot be created.
+   * @throws <b>sfFactoryException</b> If a request implementation instance cannot be created
    */
   public static function newInstance($class)
   {
@@ -78,9 +88,9 @@ abstract class sfResponse
   }
 
   /**
-   * Set the response content
+   * Sets the response content
    *
-   * @param string content
+   * @param string Content
    */
   public function setContent($content)
   {
@@ -88,9 +98,9 @@ abstract class sfResponse
   }
 
   /**
-   * Get the current response content
+   * Gets the current response content
    *
-   * @return string
+   * @return string Content
    */
   public function getContent()
   {
@@ -110,33 +120,71 @@ abstract class sfResponse
     echo $this->content;
   }
 
+  /**
+   * Retrieves the parameters from the current response.
+   *
+   * @return sfParameterHolder List of parameters
+   */
   public function getParameterHolder()
   {
     return $this->parameterHolder;
   }
 
+  /**
+   * Retrieves a parameter from the current response.
+   *
+   * @param string A parameter name
+   * @param string A default paramter value
+   * @param string Namespace for the current response
+   *
+   * @return mixed A parameter value
+   */
   public function getParameter($name, $default = null, $ns = null)
   {
     return $this->parameterHolder->get($name, $default, $ns);
   }
 
+  /**
+   * Indicates whether or not a parameter exist for the current response.
+   *
+   * @param string A parameter name
+   * @param string Namespace for the current response
+   *
+   * @return boolean true, if the parameter exists otherwise false
+   */
   public function hasParameter($name, $ns = null)
   {
     return $this->parameterHolder->has($name, $ns);
   }
 
+  /**
+   * Sets a parameter for the current response.
+   *
+   * @param string A parameter name
+   * @param string The parameter value to be set
+   * @param string Namespace for the current response
+   */
   public function setParameter($name, $value, $ns = null)
   {
-    return $this->parameterHolder->set($name, $value, $ns);
+    $this->parameterHolder->set($name, $value, $ns);
   }
 
   /**
-   * Execute the shutdown procedure.
+   * Executes the shutdown procedure.
    *
-   * @return void
    */
   abstract function shutdown();
 
+  /**
+   * Overloads a given method.
+   *
+   * @param string Method name
+   * @param string Method arguments
+   *
+   * @return mixed User function callback
+   *
+   * @throws <b>sfException</b> If the calls fails
+   */
   public function __call($method, $arguments)
   {
     if (!$callable = sfMixer::getCallable('sfResponse:'.$method))

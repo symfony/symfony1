@@ -28,13 +28,13 @@ class sfWebResponse extends sfResponse
     $headerOnly  = false;
 
   /**
-   * Initialize this sfWebResponse.
+   * Initializes this sfWebResponse.
    *
-   * @param sfContext A sfContext instance.
+   * @param sfContext A sfContext instance
    *
-   * @return bool true, if initialization completes successfully, otherwise false.
+   * @return boolean true, if initialization completes successfully, otherwise false
    *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Response.
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Response
    */
   public function initialize($context, $parameters = array())
   {
@@ -91,7 +91,7 @@ class sfWebResponse extends sfResponse
   }
 
   /**
-   * Sets if the response consist of just HTTP headers
+   * Sets if the response consist of just HTTP headers.
    *
    * @param boolean
    */
@@ -101,7 +101,7 @@ class sfWebResponse extends sfResponse
   }
 
   /**
-   * Returns if the response must only consist of HTTP headers
+   * Returns if the response must only consist of HTTP headers.
    *
    * @return boolean returns true if, false otherwise
    */
@@ -111,12 +111,17 @@ class sfWebResponse extends sfResponse
   }
 
   /**
-   * Set a cookie.
+   * Sets a cookie.
    *
    * @param string HTTP header name
-   * @param string value
+   * @param string Value for the cookie
+   * @param string Cookie expiration period
+   * @param string Path
+   * @param string Domain name
+   * @param boolean If secure
+   * @param boolean If uses only HTTP
    *
-   * @return void
+   * @throws <b>sfException</b> If fails to set the cookie
    */
   public function setCookie($name, $value, $expire = null, $path = '/', $domain = '', $secure = false, $httpOnly = false)
   {
@@ -148,12 +153,11 @@ class sfWebResponse extends sfResponse
   }
 
   /**
-   * Set response status code.
+   * Sets response status code.
    *
    * @param string HTTP status code
    * @param string HTTP status text
    *
-   * @return void
    */
   public function setStatusCode($code, $name = null)
   {
@@ -161,18 +165,23 @@ class sfWebResponse extends sfResponse
     $this->statusText = null !== $name ? $name : $this->statusTexts[$code];
   }
 
+  /**
+   * Retrieves status code for the current web response.
+   *
+   * @return string Status code
+   */
   public function getStatusCode()
   {
     return $this->statusCode;
   }
 
   /**
-   * Set a HTTP header.
+   * Sets a HTTP header.
    *
    * @param string HTTP header name
-   * @param string value
+   * @param string Value
+   * @param boolean Replace for the value
    *
-   * @return void
    */
   public function setHttpHeader($name, $value, $replace = true)
   {
@@ -198,7 +207,7 @@ class sfWebResponse extends sfResponse
   }
 
   /**
-   * Get HTTP header current value.
+   * Gets HTTP header current value.
    *
    * @return array
    */
@@ -218,11 +227,10 @@ class sfWebResponse extends sfResponse
   }
 
   /**
-   * Set response content type.
+   * Sets response content type.
    *
-   * @param string value
+   * @param string Content type
    *
-   * @return void
    */
   public function setContentType($value)
   {
@@ -236,7 +244,7 @@ class sfWebResponse extends sfResponse
   }
 
   /**
-   * Get response content type.
+   * Gets response content type.
    *
    * @return array
    */
@@ -248,7 +256,6 @@ class sfWebResponse extends sfResponse
   /**
    * Send HTTP headers and cookies.
    *
-   * @return void
    */
   public function sendHttpHeaders()
   {
@@ -291,6 +298,10 @@ class sfWebResponse extends sfResponse
     }
   }
 
+  /**
+   * Send content for the current web response.
+   *
+   */
   public function sendContent()
   {
     if (!$this->headerOnly)
@@ -299,11 +310,26 @@ class sfWebResponse extends sfResponse
     }
   }
 
+  /**
+   * Retrieves a normalized Header.
+   *
+   * @param string Header name
+   *
+   * @return string Normalized header
+   */
   protected function normalizeHeaderName($name)
   {
     return preg_replace('/\-(.)/e', "'-'.strtoupper('\\1')", strtr(ucfirst(strtolower($name)), '_', '-'));
   }
 
+  /**
+   * Retrieves a formated date.
+   *
+   * @param string Timestamp
+   * @param string Format type
+   *
+   * @return string Formated date
+   */
   public function getDate($timestamp, $type = 'rfc1123')
   {
     $type = strtolower($type);
@@ -328,6 +354,11 @@ class sfWebResponse extends sfResponse
     }
   }
 
+  /**
+   * Adds vary to a http header.
+   *
+   * @param string HTTP header
+   */
   public function addVaryHttpHeader($header)
   {
     $vary = $this->getHttpHeader('Vary');
@@ -345,6 +376,12 @@ class sfWebResponse extends sfResponse
     }
   }
 
+  /**
+   * Adds an control cache http header.
+   *
+   * @param string HTTP header
+   * @param string Value for the http header
+   */
   public function addCacheControlHttpHeader($name, $value = null)
   {
     $cacheControl = $this->getHttpHeader('Cache-Control');
@@ -368,11 +405,23 @@ class sfWebResponse extends sfResponse
     $this->setHttpHeader('Cache-Control', implode(', ', $headers));
   }
 
+  /**
+   * Retrieves meta headers for the current web response.
+   *
+   * @return string Meta headers
+   */
   public function getHttpMetas()
   {
     return $this->getParameterHolder()->getAll('helper/asset/auto/httpmeta');
   }
 
+  /**
+   * Adds meta headers to the current web response.
+   *
+   * @param string Key to replace
+   * @param string Value for the replacement
+   * @param boolean Replace or not
+   */
   public function addHttpMeta($key, $value, $replace = true)
   {
     $key = $this->normalizeHeaderName($key);
@@ -394,11 +443,24 @@ class sfWebResponse extends sfResponse
     $this->setParameter($key, $value, 'helper/asset/auto/httpmeta');
   }
 
+  /**
+   * Retrieves all meta headers for the current web response.
+   *
+   * @return array List of meta headers
+   */
   public function getMetas()
   {
     return $this->getParameterHolder()->getAll('helper/asset/auto/meta');
   }
 
+  /**
+   * Adds a meta header to the current web response.
+   *
+   * @param string Name of the header
+   * @param string Meta header to be set
+   * @param boolean true if it's replaceable
+   * @param boolean true for escaping the header
+   */
   public function addMeta($key, $value, $replace = true, $escape = true)
   {
     $key = strtolower($key);
@@ -419,36 +481,79 @@ class sfWebResponse extends sfResponse
     }
   }
 
+  /**
+   * Retrieves title for the current web response.
+   *
+   * @return string Title
+   */
   public function getTitle()
   {
     return $this->getParameter('title', '', 'helper/asset/auto/meta');
   }
 
+  /**
+   * Sets title for the current web response.
+   *
+   * @param string Title name
+   * @param boolean true, for escaping the title
+   */
   public function setTitle($title, $escape = true)
   {
     $this->addMeta('title', $title, true, $escape);
   }
 
+  /**
+   * Retrieves stylesheets for the current web response.
+   *
+   * @param string Direcotry delimiter
+   *
+   * @return string Stylesheets
+   */
   public function getStylesheets($position = '')
   {
     return $this->getParameterHolder()->getAll('helper/asset/auto/stylesheet'.($position ? '/'.$position : ''));
   }
 
+  /**
+   * Adds an stylesheet to the current web response.
+   *
+   * @param string Stylesheet
+   * @param string Direcotry delimiter
+   * @param string Stylesheet options
+   */
   public function addStylesheet($css, $position = '', $options = array())
   {
     $this->setParameter($css, $options, 'helper/asset/auto/stylesheet'.($position ? '/'.$position : ''));
   }
 
+  /**
+   * Retrieves javascript code from the current web response.
+   *
+   * @param string Directory delimiter
+   *
+   * @return string Javascript code
+   */
   public function getJavascripts($position = '')
   {
     return $this->getParameterHolder()->getAll('helper/asset/auto/javascript'.($position ? '/'.$position : ''));
   }
 
+  /**
+   * Adds javascript code to the current web response.
+   *
+   * @param string Javascript code
+   * @param string Directory delimiter
+   */
   public function addJavascript($js, $position = '')
   {
     $this->setParameter($js, $js, 'helper/asset/auto/javascript'.($position ? '/'.$position : ''));
   }
 
+  /**
+   * Retrieves cookies from the current web response.
+   *
+   * @return array Cookies
+   */
   public function getCookies()
   {
     $cookies = array();
@@ -460,34 +565,53 @@ class sfWebResponse extends sfResponse
     return $cookies;
   }
 
+  /**
+   * Retrieves HTTP headers from the current web response.
+   *
+   * @return string HTTP headers
+   */
   public function getHttpHeaders()
   {
     return $this->getParameterHolder()->getAll('symfony/response/http/headers');
   }
 
+  /**
+   * Cleans HTTP headers from the current web response.
+   */
   public function clearHttpHeaders()
   {
     $this->getParameterHolder()->removeNamespace('symfony/response/http/headers');
   }
 
+  /**
+   * Copies a propertie to a new one.
+   *
+   * @param sfResponse Response instance
+   */
   public function mergeProperties($response)
   {
     $this->parameterHolder = clone $response->getParameterHolder();
   }
 
+  /**
+   * Retrieves all objects handlers for the current web response.
+   *
+   * @return array Objects instance
+   */
   public function __sleep()
   {
     return array('content', 'statusCode', 'statusText', 'parameterHolder');
   }
 
+  /**
+   * Reconstructs any result that web response instance needs.
+   */
   public function __wakeup()
   {
   }
 
   /**
-   * Execute the shutdown procedure.
-   *
-   * @return void
+   * Executes the shutdown procedure.
    */
   public function shutdown()
   {
