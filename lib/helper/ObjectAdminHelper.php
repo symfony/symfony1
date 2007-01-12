@@ -1,6 +1,6 @@
 <?php
 
-use_helper('Form', 'Javascript');
+use_helper('Form', 'Javascript', 'Helper');
 
 /*
  * This file is part of the symfony package.
@@ -26,11 +26,13 @@ function object_admin_input_file_tag($object, $method, $options = array())
 
   $html = '';
 
-  if ($object->$method())
+  $value = _get_object_value($object, $method);
+
+  if ($value)
   {
     if ($include_link = _get_option($options, 'include_link'))
     {
-      $image_path = image_path('/'.sfConfig::get('sf_upload_dir_name').'/'.$include_link.'/'.$object->$method());
+      $image_path = image_path('/'.sfConfig::get('sf_upload_dir_name').'/'.$include_link.'/'.$value);
       $image_text = ($include_text = _get_option($options, 'include_text')) ? __($include_text) : __('[show file]');
 
       $html .= sprintf('<a onclick="window.open(this.href);return false;" href="%s">%s</a>', $image_path, $image_text)."\n";
