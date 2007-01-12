@@ -28,8 +28,8 @@ class sfException extends Exception
   /**
    * Class constructor.
    *
-   * @param string The error message.
-   * @param int    The error code.
+   * @param string The error message
+   * @param int    The error code
    */
   public function __construct($message = null, $code = 0)
   {
@@ -47,9 +47,9 @@ class sfException extends Exception
   }
 
   /**
-   * Retrieve the name of this exception.
+   * Retrieves the name of this exception.
    *
-   * @return string This exception's name.
+   * @return string This exception's name
    */
   public function getName()
   {
@@ -57,7 +57,9 @@ class sfException extends Exception
   }
 
   /**
-   * Print the stack trace for this exception.
+   * Prints the stack trace for this exception.
+   *
+   * @param Exception An Exception implementation instance
    */
   public function printStackTrace($exception = null)
   {
@@ -153,13 +155,21 @@ class sfException extends Exception
     }
   }
 
+  /**
+   * Returns an array of exception traces.
+   *
+   * @param Exception An Exception implementation instance
+   * @param string The trace format (plain or html)
+   *
+   * @return array An array of traces
+   */
   public function getTraces($exception, $format = 'plain')
   {
     $traceData = $exception->getTrace();
     array_unshift($traceData, array(
       'function' => '',
-      'file'     => ($exception->getFile() != null) ? $exception->getFile() : 'n/a',
-      'line'     => ($exception->getLine() != null) ? $exception->getLine() : 'n/a',
+      'file'     => $exception->getFile() != null ? $exception->getFile() : 'n/a',
+      'line'     => $exception->getLine() != null ? $exception->getLine() : 'n/a',
       'args'     => array(),
     ));
 
@@ -195,11 +205,26 @@ class sfException extends Exception
     return $traces;
   }
 
+  /**
+   * Returns an HTML version of an array as YAML.
+   *
+   * @param array The values array
+   *
+   * @return string An HTML string
+   */
   protected function formatArrayAsHtml($values)
   {
     return '<pre>'.@sfYaml::Dump($values).'</pre>';
   }
 
+  /**
+   * Returns an excerpt of a code file around the given line number.
+   *
+   * @param string A file path
+   * @param int The selected line number
+   *
+   * @return string An HTML string
+   */
   protected function fileExcerpt($file, $line)
   {
     if (is_readable($file))
@@ -216,6 +241,15 @@ class sfException extends Exception
     }
   }
 
+  /**
+   * Formats an array as a string.
+   *
+   * @param array The argument array
+   * @param boolean 
+   * @param string The format string (html or plain)
+   *
+   * @return string
+   */
   protected function formatArgs($args, $single = false, $format = 'html')
   {
     $result = array();
@@ -250,9 +284,9 @@ class sfException extends Exception
   }
 
   /**
-   * Set the name of this exception.
+   * Sets the name of this exception.
    *
-   * @param string An exception name.
+   * @param string An exception name
    */
   protected function setName($name)
   {

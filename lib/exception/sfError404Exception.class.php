@@ -21,8 +21,8 @@ class sfError404Exception extends sfException
   /**
    * Class constructor.
    *
-   * @param string The error message.
-   * @param int    The error code.
+   * @param string The error message
+   * @param int    The error code
    */
   public function __construct($message = null, $code = 0)
   {
@@ -30,6 +30,11 @@ class sfError404Exception extends sfException
     parent::__construct($message, $code);
   }
 
+  /**
+   * Forwards to the 404 action.
+   *
+   * @param Exception An Exception implementation instance
+   */
   public function printStackTrace($exception = null)
   {
     sfContext::getInstance()->getController()->forward(sfConfig::get('sf_error_404_module'), sfConfig::get('sf_error_404_action'));
