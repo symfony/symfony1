@@ -19,18 +19,23 @@
 class sfBrowser
 {
   protected
-    $context          = null,
-    $hostname         = null,
-    $remote           = null,
-    $dom              = null,
-    $stack            = array(),
-    $stackPosition    = -1,
-    $cookieJar        = array(),
-    $fields           = array(),
-    $currentException = null;
+    $context            = null,
+    $hostname           = null,
+    $remote             = null,
+    $dom                = null,
+    $stack              = array(),
+    $stackPosition      = -1,
+    $cookieJar          = array(),
+    $fields             = array(),
+    $vars               = array(),
+    $defaultServerArray = array(),
+    $currentException   = null;
 
   public function initialize($hostname = null, $remote = null, $options = array())
   {
+    unset($_SERVER['argv']);
+    unset($_SERVER['argc']);
+
     // setup our fake environment
     $this->hostname = $hostname;
     $this->remote   = $remote;
@@ -41,8 +46,26 @@ class sfBrowser
     // we set a session id (fake cookie / persistence)
     $this->newSession();
 
+    // store default global $_SERVER array
+    $this->defaultServerArray = $_SERVER;
+
     // register our shutdown function
     register_shutdown_function(array($this, 'shutdown'));
+  }
+
+  public function setVar($name, $value)
+  {
+    $this->vars[$name] = $value;
+
+    return $this;
+  }
+
+  public function setAuth($login, $password)
+  {
+    $this->vars['PHP_AUTH_USER'] = $login;
+    $this->vars['PHP_AUTH_PW']   = $password;
+
+    return $this;
   }
 
   public function get($uri, $parameters = array())
@@ -81,7 +104,7 @@ class sfBrowser
     $this->fields = array();
 
     // prepare the request object
-    unset($_SERVER['argv']);
+    $_SERVER = $this->defaultServerArray;
     $_SERVER['HTTP_HOST']       = $this->hostname ? $this->hostname : sfConfig::get('sf_app').'-'.sfConfig::get('sf_environment');
     $_SERVER['SERVER_NAME']     = $_SERVER['HTTP_HOST'];
     $_SERVER['SERVER_PORT']     = 80;
@@ -93,6 +116,10 @@ class sfBrowser
     $_SERVER['SCRIPT_NAME']     = '/index.php';
     $_SERVER['SCRIPT_FILENAME'] = '/index.php';
     $_SERVER['QUERY_STRING']    = $query_string;
+    foreach ($this->vars as $key => $value)
+    {
+      $_SERVER[strtoupper($key)] = $value;
+    }
 
     // request parameters
     $_GET = $_POST = array();
@@ -408,6 +435,7 @@ class sfBrowser
     $this->cookieJar     = array();
     $this->stack         = array();
     $this->fields        = array();
+    $this->vars          = array();
     $this->dom           = null;
     $this->stackPosition = -1;
 
