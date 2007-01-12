@@ -55,7 +55,8 @@ class sfFunctionCache extends sfFileCache
       {
         // classname::staticMethod
         list($class, $method) = explode('::', $target);
-        try {
+        try
+        {
           $result = call_user_func_array(array($class, $method), $arguments);
         }
         catch (Exception $e)
@@ -71,7 +72,8 @@ class sfFunctionCache extends sfFileCache
         // name is the same as this var name
         list($object_123456789, $method) = explode('->', $target);
         global $$object_123456789;
-        try {
+        try
+        {
           $result = call_user_func_array(array($$object_123456789, $method), $arguments);
         }
         catch (Exception $e)
