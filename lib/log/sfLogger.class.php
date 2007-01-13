@@ -19,12 +19,9 @@ define('SF_LOG_DEBUG',   7); // Debug-level messages
 
 /**
  * sfLogger manages all logging in symfony projects.
- * Logs are stored in the [sf_app].log file in [sf_log_dir] directory.
- * If [sf_web_debug] is true, all logging information is also available trough the web debug console.
  *
- * sfLogger can be controlled by 2 constants:
- * - [sf_logging_enabled]: set to false to disable all logging
- * - [sf_logging_level]:  level of logging
+ * sfLogger can be configuration via the logging.yml configuration file.
+ * Loggers can also be registered directly in the logging.yml configuration file.
  *
  * This level list is ordered by highest priority (SF_LOG_EMERG) to lowest priority (SF_LOG_DEBUG):
  * - EMERG:   System is unusable
@@ -81,22 +78,21 @@ class sfLogger
   public function initialize()
   {
     $this->loggers = array();
+  }
 
-    if (sfConfig::get('sf_logging_enabled'))
-    {
-      $this->level = constant('SF_LOG_'.strtoupper(sfConfig::get('sf_logging_level')));
+  public function getLogLevel($level)
+  {
+    return $this->level;
+  }
 
-      $webDebugLogger = new sfWebDebugLogger();
-      $webDebugLogger->initialize();
-      $this->loggers[] = $webDebugLogger;
+  public function setLogLevel($level)
+  {
+    $this->level = $level;
+  }
 
-      $fileLogger = new sfFileLogger();
-      $options = array(
-        'file' => sfConfig::get('sf_log_dir').DIRECTORY_SEPARATOR.sfConfig::get('sf_app').'_'.sfConfig::get('sf_environment').'.log',
-      );
-      $fileLogger->initialize($options);
-      $this->loggers[] = $fileLogger;
-    }
+  public function getLoggers()
+  {
+    return $this->loggers;
   }
 
   public function registerLogger($logger)

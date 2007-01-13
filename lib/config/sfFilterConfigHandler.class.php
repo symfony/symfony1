@@ -110,11 +110,11 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
       $type = isset($keys['param']['type']) ? $keys['param']['type'] : null;
       unset($keys['param']['type']);
 
-      // parse parameters
-      $parameters = isset($keys['param']) ? var_export($keys['param'], true) : 'null';
-
       if ($condition)
       {
+        // parse parameters
+        $parameters = isset($keys['param']) ? var_export($keys['param'], true) : 'null';
+
         // append new data
         if ('security' == $type)
         {

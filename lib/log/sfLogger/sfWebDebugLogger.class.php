@@ -22,11 +22,21 @@ class sfWebDebugLogger
 
   public function initialize($options = array())
   {
+    if (!sfConfig::get('sf_web_debug'))
+    {
+      return;
+    }
+
     $this->webDebug = sfWebDebug::getInstance();
   }
 
   public function log($message, $priority, $priorityName)
   {
+    if (!sfConfig::get('sf_web_debug'))
+    {
+      return;
+    }
+
     // if we have xdebug, add some stack information
     $debug_stack = array();
     if (function_exists('xdebug_get_function_stack'))

@@ -30,7 +30,7 @@ config/filters.yml:
   class:    sfFilterConfigHandler
 
 config/logging.yml:
-  class:    sfDefineEnvironmentConfigHandler
+  class:    sfLoggingConfigHandler
   param:
     prefix: sf_logging_
 
