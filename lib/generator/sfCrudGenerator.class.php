@@ -255,51 +255,42 @@ abstract class sfCrudGenerator extends sfGenerator
 
     if ($column->isForeignKey())
     {
-      $params = $this->getObjectTagParams($params, array('related_class' => $this->getRelatedClassName($column)));
-      return $this->getPHPObjectHelper('select_tag', $column, $params);
+      return $this->getPHPObjectHelper('select_tag', $column, $params, array('related_class' => $this->getRelatedClassName($column)));
     }
     else if ($type == CreoleTypes::DATE)
     {
       // rich=false not yet implemented
-      $params = $this->getObjectTagParams($params, array('rich' => true));
-      return $this->getPHPObjectHelper('input_date_tag', $column, $params);
+      return $this->getPHPObjectHelper('input_date_tag', $column, $params, array('rich' => true));
     }
     else if ($type == CreoleTypes::TIMESTAMP)
     {
       // rich=false not yet implemented
-      $params = $this->getObjectTagParams($params, array('rich' => true, 'withtime' => true));
-      return $this->getPHPObjectHelper('input_date_tag', $column, $params);
+      return $this->getPHPObjectHelper('input_date_tag', $column, $params, array('rich' => true, 'withtime' => true));
     }
     else if ($type == CreoleTypes::BOOLEAN)
     {
-      $params = $this->getObjectTagParams($params);
       return $this->getPHPObjectHelper('checkbox_tag', $column, $params);
     }
     else if ($type == CreoleTypes::CHAR || $type == CreoleTypes::VARCHAR)
     {
       $size = ($column->getSize() > 20 ? ($column->getSize() < 80 ? $column->getSize() : 80) : 20);
-      $params = $this->getObjectTagParams($params, array('size' => $size));
-      return $this->getPHPObjectHelper('input_tag', $column, $params);
+      return $this->getPHPObjectHelper('input_tag', $column, $params, array('size' => $size));
     }
     else if ($type == CreoleTypes::INTEGER || $type == CreoleTypes::TINYINT || $type == CreoleTypes::SMALLINT || $type == CreoleTypes::BIGINT)
     {
-      $params = $this->getObjectTagParams($params, array('size' => 7));
-      return $this->getPHPObjectHelper('input_tag', $column, $params);
+      return $this->getPHPObjectHelper('input_tag', $column, $params, array('size' => 7));
     }
     else if ($type == CreoleTypes::FLOAT || $type == CreoleTypes::DOUBLE || $type == CreoleTypes::DECIMAL || $type == CreoleTypes::NUMERIC || $type == CreoleTypes::REAL)
     {
-      $params = $this->getObjectTagParams($params, array('size' => 7));
-      return $this->getPHPObjectHelper('input_tag', $column, $params);
+      return $this->getPHPObjectHelper('input_tag', $column, $params, array('size' => 7));
     }
     else if ($type == CreoleTypes::TEXT || $type == CreoleTypes::LONGVARCHAR)
     {
-      $params = $this->getObjectTagParams($params, array('size' => '30x3'));
-      return $this->getPHPObjectHelper('textarea_tag', $column, $params);
+      return $this->getPHPObjectHelper('textarea_tag', $column, $params, array('size' => '30x3'));
     }
     else
     {
-      $params = $this->getObjectTagParams($params, array('disabled' => true));
-      return $this->getPHPObjectHelper('input_tag', $column, $params);
+      return $this->getPHPObjectHelper('input_tag', $column, $params, array('disabled' => true));
     }
   }
 
@@ -309,7 +300,7 @@ abstract class sfCrudGenerator extends sfGenerator
   abstract protected function loadMapBuilderClasses();
 
   // generates a PHP call to an object helper
-  abstract function getPHPObjectHelper($helperName, $column, $params);
+  abstract function getPHPObjectHelper($helperName, $column, $params, $localParams = array());
 
   // returns the getter either non-developped: 'getFoo'
   // or developped: '$class->getFoo()'

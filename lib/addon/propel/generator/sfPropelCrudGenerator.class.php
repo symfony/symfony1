@@ -71,8 +71,9 @@ class sfPropelCrudGenerator extends sfAdminGenerator
   }
 
   // generates a PHP call to an object helper
-  function getPHPObjectHelper($helperName, $column, $params)
+  function getPHPObjectHelper($helperName, $column, $params, $localParams = array())
   {
+    $params = $this->getObjectTagParams($params, $localParams);
     return sprintf ('object_%s($%s, \'%s\', %s)', $helperName, $this->getSingularName(), $this->getColumnGetter($column, false), $params);
   }
 

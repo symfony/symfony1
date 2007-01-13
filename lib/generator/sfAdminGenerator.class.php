@@ -226,8 +226,6 @@ abstract class sfAdminGenerator extends sfCrudGenerator
       }
       else
       {
-        $params = $this->getObjectTagParams($params);
-        
         return $this->getPHPObjectHelper($inputType, $column, $params);
       }
     }
