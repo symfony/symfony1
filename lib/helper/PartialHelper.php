@@ -393,7 +393,24 @@ function has_slot($name)
  */
 function include_slot($name)
 {
-  echo get_slot($name);
+  $context = sfContext::getInstance();
+  $slots = $context->getResponse()->getParameter('slots', array(), 'symfony/view/sfView/slot');
+
+  if (sfConfig::get('sf_logging_enabled'))
+  {
+    $context->getLogger()->info(sprintf('{PartialHelper} get slot "%s"', $name));
+  }
+
+  if (isset($slots[$name]))
+  {
+    echo $slots[$name];
+
+    return true;
+  }
+  else
+  {
+    return false;
+  }
 }
 
 /**
