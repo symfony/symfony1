@@ -532,6 +532,8 @@ class lime_harness extends lime_registration
       $this->output->echoln('All tests successful.', 'INFO');
       $this->output->echoln(sprintf('Files=%d, Tests=%d', count($this->files), $this->stats['_nb_tests']), 'INFO');
     }
+
+    return $this->stats['_failed_tests'] ? false : true;
   }
 
   private function process_test_output($lines)
