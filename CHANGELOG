@@ -1,8 +1,11 @@
-Version 1.0.0-RC1
------------------
+Version 1.0.0-beta4
+-------------------
 
 Major changes since beta3:
 
+* r3271: refactored rich text editors
+* r3258: refactored sfLogger configuration
+* r3245: fixed Creole i18n driver
 * r3237: added HTTP authentification support for sfBrowser
 * r3209: moved getPresentationFor() to the sfController class
 * updated phpdoc comments
