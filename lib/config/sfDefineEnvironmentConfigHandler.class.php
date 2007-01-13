@@ -18,7 +18,7 @@
 class sfDefineEnvironmentConfigHandler extends sfYamlConfigHandler
 {
   /**
-   * Executes this configuration handler
+   * Executes this configuration handler.
    *
    * @param  string An absolute filesystem path to a configuration file
    *

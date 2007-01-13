@@ -10,7 +10,6 @@
  */
 
 /**
- *
  * sfDatabaseConfigHandler allows you to setup database connections in a
  * configuration file that will be created for you automatically upon first
  * request.
