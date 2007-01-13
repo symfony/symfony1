@@ -3,5 +3,5 @@ default:
   source:              XLIFF
   debug:               off
   cache:               on
-  untranslated_prefix: [T]
-  untranslated_suffix: [/T]
+  untranslated_prefix: "[T]"
+  untranslated_suffix: "[/T]"
