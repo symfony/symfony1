@@ -334,7 +334,7 @@ class sfFinder
 
       if (!is_dir($real_dir))
       {
-        return array();
+        continue;
       }
 
       if ($this->relative)
