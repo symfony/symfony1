@@ -393,27 +393,10 @@ function input_password_tag($name = 'password', $value = null, $options = array(
  * The texarea_tag helper generates a standard HTML <textarea> tag and can be manipulated with
  * any number of standard HTML parameters via the <i>$options</i> array variable.  However, the 
  * textarea tag also has the unique capability of being transformed into a WYSIWYG rich-text editor
- * such as TinyMCE (http://tinymce.moxiecode.com) or FCKEditor (http://www.fckeditor.net) very 
- * easily with the use of some specific options:
+ * such as TinyMCE (http://tinymce.moxiecode.com) very easily with the use of some specific options:
  *
  * <b>Options:</b>
- *  - rich - Enables TinyMCE or FCKEditor with the value <i>tinymce</i> or <i>fck</i> respectively
- *
- * <b>TinyMCE Specific Options:</b>
- *  - css - Path to the TinyMCE editor stylesheet
- *
- *    <b>Css example:</b>
- *    <code>
- *    / * user: foo * / => without spaces. 'foo' is the name in the select box
- *    .foobar
- *    {
- *      color: #f00;
- *    }
- *    </code>
- *
- * <b>FCKEditor Specific Options:</b>
- *  - tool   - Sets the FCKEditor toolbar style
- *  - config - Sets custom path to the FCKEditor configuration file
+ *  - rich: A rich text editor class (for example sfRichTextEditorTinyMCE for TinyMCE).
  *
  * <b>Examples:</b>
  * <code>
@@ -427,6 +410,7 @@ function input_password_tag($name = 'password', $value = null, $options = array(
  * @param  string field name
  * @param  string populated field value
  * @param  array  additional HTML compliant <textarea> tag parameters
+ *
  * @return string <textarea> tag optionally wrapped with a rich-text WYSIWYG editor
  */
 function textarea_tag($name, $content = null, $options = array())
@@ -439,145 +423,38 @@ function textarea_tag($name, $content = null, $options = array())
   }
 
   // rich control?
-  $rich = _get_option($options, 'rich', false);
-  if ($rich === true)
+  if ($rich = _get_option($options, 'rich', false))
   {
-    $rich = 'tinymce';
+    // switch for backward compatibility
+    switch ($rich)
+    {
+      case true:
+      case 'tinymce':
+        $rich = 'TinyMCE';
+        break;
+      case 'fck':
+        $rich = 'FCK';
+        break;
+    }
+
+    $editorClass = 'sfRichTextEditor'.$rich;
+
+    if (!class_exists($editorClass))
+    {
+      throw new sfConfigurationException(sprintf('The rich text editor "%s" does not exist.', $editorClass));
+    }
+
+    $sfEditor = new $editorClass();
+    if (!in_array('sfRichTextEditor', class_parents($sfEditor)))
+    {
+      throw new sfConfigurationException(sprintf('The editor "%s" must extend sfRichTextEditor.', $editorClass));
+    }
+    $sfEditor->initialize($name, $content, $options);
+
+    return $sfEditor->toHTML();
   }
 
-  // we need to know the id for things the rich text editor
-  // in advance of building the tag
-  $id = _get_option($options, 'id', $name);
-
-  if ($rich == 'tinymce')
-  {
-    // use tinymce's gzipped js?
-    $tinymce_file = _get_option($options, 'tinymce_gzip') ? '/tiny_mce_gzip.php' : '/tiny_mce.js';
-
-    // tinymce installed?
-    $js_path = sfConfig::get('sf_rich_text_js_dir') ? '/'.sfConfig::get('sf_rich_text_js_dir').$tinymce_file : '/sf/tinymce/js'.$tinymce_file;
-    if (!is_readable(sfConfig::get('sf_web_dir').$js_path))
-    {
-      throw new sfConfigurationException('You must install TinyMCE to use this helper (see rich_text_js_dir settings).');
-    }
-
-    sfContext::getInstance()->getResponse()->addJavascript($js_path);
-
-    use_helper('Javascript');
-
-    $tinymce_options = '';
-    $style_selector  = '';
-
-    // custom CSS file?
-    if ($css_file = _get_option($options, 'css'))
-    {
-      $css_path = stylesheet_path($css_file);
-
-      sfContext::getInstance()->getResponse()->addStylesheet($css_path);
-
-      $css    = file_get_contents(sfConfig::get('sf_web_dir').DIRECTORY_SEPARATOR.$css_path);
-      $styles = array();
-      preg_match_all('#^/\*\s*user:\s*(.+?)\s*\*/\s*\015?\012\s*\.([^\s]+)#Smi', $css, $matches, PREG_SET_ORDER);
-      foreach ($matches as $match)
-      {
-        $styles[] = $match[1].'='.$match[2];
-      }
-
-      $tinymce_options .= '  content_css: "'.$css_path.'",'."\n";
-      $tinymce_options .= '  theme_advanced_styles: "'.implode(';', $styles).'"'."\n";
-      $style_selector   = 'styleselect,separator,';
-    }
-
-    $culture = sfContext::getInstance()->getUser()->getCulture();
-
-    $tinymce_js = '
-tinyMCE.init({
-  mode: "exact",
-  language: "'.strtolower(substr($culture, 0, 2)).'",
-  elements: "'.$id.'",
-  plugins: "table,advimage,advlink,flash",
-  theme: "advanced",
-  theme_advanced_toolbar_location: "top",
-  theme_advanced_toolbar_align: "left",
-  theme_advanced_path_location: "bottom",
-  theme_advanced_buttons1: "'.$style_selector.'justifyleft,justifycenter,justifyright,justifyfull,separator,bold,italic,strikethrough,separator,sub,sup,separator,charmap",
-  theme_advanced_buttons2: "bullist,numlist,separator,outdent,indent,separator,undo,redo,separator,link,unlink,image,flash,separator,cleanup,removeformat,separator,code",
-  theme_advanced_buttons3: "tablecontrols",
-  extended_valid_elements: "img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name]",
-  relative_urls: false,
-  debug: false
-  '.($tinymce_options ? ','.$tinymce_options : '').'
-  '.(isset($options['tinymce_options']) ? ','.$options['tinymce_options'] : '').'
-});';
-
-    if (isset($options['tinymce_options']))
-    {
-      unset($options['tinymce_options']);
-    }
-
-    return
-      content_tag('script', javascript_cdata_section($tinymce_js), array('type' => 'text/javascript')).
-      content_tag('textarea', $content, array_merge(array('name' => $name, 'id' => get_id_from_name($id, null)), _convert_options($options)));
-  }
-  elseif ($rich === 'fck')
-  {
-    $php_file = sfConfig::get('sf_rich_text_fck_js_dir').DIRECTORY_SEPARATOR.'fckeditor.php';
-
-    if (!is_readable(sfConfig::get('sf_web_dir').DIRECTORY_SEPARATOR.$php_file))
-    {
-      throw new sfConfigurationException('You must install FCKEditor to use this helper (see rich_text_fck_js_dir settings).');
-    }
-
-    // FCKEditor.php class is written with backward compatibility of PHP4.
-    // This reportings are to turn off errors with public properties and already declared constructor
-    $error_reporting = ini_get('error_reporting');
-    error_reporting(E_ALL);
-
-    require_once(sfConfig::get('sf_web_dir').DIRECTORY_SEPARATOR.$php_file);
-
-    // turn error reporting back to your settings
-    error_reporting($error_reporting);
-
-    $fckeditor           = new FCKeditor($name);
-    $fckeditor->BasePath = sfContext::getInstance()->getRequest()->getRelativeUrlRoot().'/'.sfConfig::get('sf_rich_text_fck_js_dir').'/';
-    $fckeditor->Value    = $content;
-
-    if (isset($options['width']))
-    {
-      $fckeditor->Width = $options['width'];
-    }   
-    elseif (isset($options['cols']))
-    {
-      $fckeditor->Width = (string)((int) $options['cols'] * 10).'px';
-    }
-
-    if (isset($options['height']))
-    {
-      $fckeditor->Height = $options['height'];
-    }
-    elseif (isset($options['rows']))
-    {
-      $fckeditor->Height = (string)((int) $options['rows'] * 10).'px';
-    }
-
-    if (isset($options['tool']))
-    {
-      $fckeditor->ToolbarSet = $options['tool'];
-    }
-
-    if (isset($options['config']))
-    {
-      $fckeditor->Config['CustomConfigurationsPath'] = javascript_path($options['config']);
-    }
-
-    $content = $fckeditor->CreateHtml();
-
-    return $content;
-  }
-  else
-  {
-    return content_tag('textarea', (is_object($content)) ? $content->__toString() : $content, array_merge(array('name' => $name, 'id' => get_id_from_name($id, null)), _convert_options($options)));
-  }
+  return content_tag('textarea', (is_object($content)) ? $content->__toString() : $content, array_merge(array('name' => $name, 'id' => get_id_from_name(_get_option($options, 'id', $name), null)), _convert_options($options)));
 }
 
 /**

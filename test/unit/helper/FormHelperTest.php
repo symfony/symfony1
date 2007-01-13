@@ -36,11 +36,19 @@ class myRequest
   }
 }
 
+class myResponse
+{
+  public function addJavascript()
+  {
+  }
+}
+
 class sfContext
 {
   public $controller = null;
   public $user = null;
   public $request = null;
+  public $response = null;
 
   static public $instance = null;
 
@@ -69,6 +77,11 @@ class sfContext
     return $this->request;
   }
 
+  public function getResponse()
+  {
+    return $this->response;
+  }
+
   public function getModuleName()
   {
     return 'module';
@@ -80,12 +93,13 @@ class sfContext
   }
 }
 
-$t = new lime_test(78, new lime_output_color());
+$t = new lime_test(79, new lime_output_color());
 
 $context = sfContext::getInstance();
 $context->controller = new myController();
 $context->user = new myUser();
 $context->request = new myRequest();
+$context->response = new myResponse();
 
 // options_for_select()
 $t->diag('options_for_select()');
@@ -179,6 +193,11 @@ $t->is(textarea_tag('name', 'content'), '<textarea name="name" id="name">content
 $t->is(textarea_tag('name', null, array('class' => 'foo')), '<textarea name="name" id="name" class="foo"></textarea>', 'textarea_tag() takes an array of attribute options as its third argument');
 $t->is(textarea_tag('name', null, array('id' => 'foo')), '<textarea name="name" id="foo"></textarea>', 'textarea_tag() can override the "id" attribute');
 $t->is(textarea_tag('name', null, array('size' => '5x20')), '<textarea name="name" id="name" rows="20" cols="5"></textarea>', 'textarea_tag() can take a "size" attribute');
+
+require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/sfRichTextEditor.class.php');
+require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/sfRichTextEditorTinyMCE.class.php');
+sfConfig::set('sf_rich_text_js_dir', dirname(__FILE__).'/fixtures');
+$t->like(textarea_tag('name', 'content', array('rich' => true)), '/tinyMCE\.init/', 'textarea_tag() can create a rich textarea tag based on tinyMCE');
 
 // checkbox_tag()
 $t->diag('checkbox_tag()');
