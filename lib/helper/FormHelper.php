@@ -425,10 +425,14 @@ function textarea_tag($name, $content = null, $options = array())
   // rich control?
   if ($rich = _get_option($options, 'rich', false))
   {
+    if (true === $rich)
+    {
+      $rich = sfConfig::get('sf_rich_text_editor_class', 'TinyMCE');
+    }
+
     // switch for backward compatibility
     switch ($rich)
     {
-      case true:
       case 'tinymce':
         $rich = 'TinyMCE';
         break;
