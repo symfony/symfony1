@@ -3,14 +3,14 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(39, new lime_output_color());
+$t = new lime_test(42, new lime_output_color());
 
 // ->click()
 $t->diag('->click()');
@@ -25,9 +25,16 @@ class myClickBrowser extends sfBrowser
 
   public function call($uri, $method = 'get', $parameters = array(), $changeStack = true)
   {
+    $uri = $this->fixUri($uri);
+
     $this->fields = array();
 
     return array($method, $uri, $parameters);
+  }
+
+  public function getDefaultServerArray($name)
+  {
+    return isset($this->defaultServerArray[$name]) ? $this->defaultServerArray[$name] : false;
   }
 }
 
@@ -184,3 +191,11 @@ list($method, $uri, $parameters) = $b->
 ;
 $t->is($parameters['text_default_value'], 'yourvalue', '->setField() is overriden by parameters from click call');
 $t->is($parameters['text'], 'yourothervalue', '->setField() is overriden by parameters from click call');
+
+// ->call()
+$t->diag('->call()');
+$b->call('https://app-test/index.phpmain/index');
+$t->is($b->getDefaultServerArray('HTTPS'), 'on', '->call() detects secure requests');
+$t->is($b->getDefaultServerArray('HTTPS'), 'on', '->call() preserves SSL information between requests');
+$b->call('http://app-test/index.phpmain/index');
+$t->is($b->getDefaultServerArray('HTTPS'), null, '->call() preserve non-secure requests');
