@@ -306,7 +306,7 @@ function _compute_public_path($source, $dir, $ext, $absolute = false)
  *
  * <b>Examples:</b>
  * <code>
- *  echo include_metas();
+ *  include_metas();
  *    => <meta name="title" content="symfony - open-source PHP5 web framework" />
  *       <meta name="robots" content="index, follow" />
  *       <meta name="description" content="symfony - open-source PHP5 web framework" />
@@ -333,7 +333,7 @@ function include_metas()
  *
  * <b>Examples:</b>
  * <code>
- *  echo include_http_metas();
+ *  include_http_metas();
  *    => <meta http-equiv="content-type" content="text/html; charset=utf-8" />
  * </code>
  *

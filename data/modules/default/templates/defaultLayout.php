@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 
-<?php echo include_http_metas() ?>
-<?php echo include_metas() ?>
-<?php echo include_title() ?>
+<?php include_http_metas() ?>
+<?php include_metas() ?>
+<?php include_title() ?>
 
 <link rel="shortcut icon" href="/favicon.ico" />
 
