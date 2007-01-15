@@ -246,11 +246,18 @@ $column = sfPropelManyToMany::getColumn($class, $through_class);
 <?php elseif ($type == CreoleTypes::DATE || $type == CreoleTypes::TIMESTAMP): ?>
       if ($<?php echo $this->getSingularName() ?>['<?php echo $name ?>'])
       {
-        $dateFormat = new sfDateFormat($this->getUser()->getCulture());
-        <?php $inputPattern = ($type == CreoleTypes::DATE ? 'd' : 'g'); ?>
-        <?php $outputPattern = ($type == CreoleTypes::DATE ? 'i' : 'I'); ?>
-        $value = $dateFormat->format($<?php echo $this->getSingularName() ?>['<?php echo $name ?>'], '<?php echo $outputPattern ?>', $dateFormat->getInputPattern('<?php echo $inputPattern ?>'));
-        $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>($value);
+        try
+        {
+          $dateFormat = new sfDateFormat($this->getUser()->getCulture());
+          <?php $inputPattern = ($type == CreoleTypes::DATE ? 'd' : 'g'); ?>
+          <?php $outputPattern = ($type == CreoleTypes::DATE ? 'i' : 'I'); ?>
+          $value = $dateFormat->format($<?php echo $this->getSingularName() ?>['<?php echo $name ?>'], '<?php echo $outputPattern ?>', $dateFormat->getInputPattern('<?php echo $inputPattern ?>'));
+          $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>($value);
+        }
+        catch (sfException $e)
+        {
+          // not a date
+        }
       }
       else
       {
