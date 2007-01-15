@@ -130,9 +130,6 @@ try
 
   // compress output
   ob_start(sfConfig::get('sf_compressed') ? 'ob_gzhandler' : '');
-
-  // initialize the context to catch exceptions
-  sfContext::getInstance();
 }
 catch (sfException $e)
 {
