@@ -36,20 +36,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     $this->initialize($categories);
 
     // parse the yaml
-    $myConfig = $this->parseYamls($configFiles);
-
-    $myConfig['all'] = sfToolkit::arrayDeepMerge(
-      isset($myConfig['default']) && is_array($myConfig['default']) ? $myConfig['default'] : array(),
-      isset($myConfig['all']) && is_array($myConfig['all']) ? $myConfig['all'] : array()
-    );
-
-    // merge javascripts and stylesheets
-    $myConfig['all']['stylesheets'] = array_merge(isset($myConfig['default']['stylesheets']) && is_array($myConfig['default']['stylesheets']) ? $myConfig['default']['stylesheets'] : array(), isset($myConfig['all']['stylesheets']) && is_array($myConfig['all']['stylesheets']) ? $myConfig['all']['stylesheets'] : array());
-    $myConfig['all']['javascripts'] = array_merge(isset($myConfig['default']['javascripts']) && is_array($myConfig['default']['javascripts']) ? $myConfig['default']['javascripts'] : array(), isset($myConfig['all']['javascripts']) && is_array($myConfig['all']['javascripts']) ? $myConfig['all']['javascripts'] : array());
-
-    unset($myConfig['default']);
-
-    $this->yamlConfig = $myConfig;
+    $this->mergeConfig($this->parseYamls($configFiles));
 
     // init our data array
     $data = array();
@@ -121,6 +108,31 @@ class sfViewConfigHandler extends sfYamlConfigHandler
                       date('Y/m/d H:i:s'), implode('', $data));
 
     return $retval;
+  }
+
+  /**
+   * Merges assets and environement configuration.
+   *
+   * @param array A configuration array
+   */
+  protected function mergeConfig($myConfig)
+  {
+    // merge javascripts and stylesheets
+    $myConfig['all']['stylesheets'] = array_merge(isset($myConfig['default']['stylesheets']) && is_array($myConfig['default']['stylesheets']) ? $myConfig['default']['stylesheets'] : array(), isset($myConfig['all']['stylesheets']) && is_array($myConfig['all']['stylesheets']) ? $myConfig['all']['stylesheets'] : array());
+    unset($myConfig['default']['stylesheets']);
+
+    $myConfig['all']['javascripts'] = array_merge(isset($myConfig['default']['javascripts']) && is_array($myConfig['default']['javascripts']) ? $myConfig['default']['javascripts'] : array(), isset($myConfig['all']['javascripts']) && is_array($myConfig['all']['javascripts']) ? $myConfig['all']['javascripts'] : array());
+    unset($myConfig['default']['javascripts']);
+
+    // merge default and all
+    $myConfig['all'] = sfToolkit::arrayDeepMerge(
+      isset($myConfig['default']) && is_array($myConfig['default']) ? $myConfig['default'] : array(),
+      isset($myConfig['all']) && is_array($myConfig['all']) ? $myConfig['all'] : array()
+    );
+
+    unset($myConfig['default']);
+
+    $this->yamlConfig = $myConfig;
   }
 
   /**
@@ -234,144 +246,71 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     $delete = array();
     $delete_all = false;
 
-    // Populate $stylesheets with the values from ONLY the current view
-    $stylesheets = $this->getConfigValue('stylesheets', $viewName);
-
-    // If we find results from the view, check to see if there is a '-*'
-    // This indicates that we will remove ALL stylesheets EXCEPT for those passed in the current view
-    if (is_array($stylesheets) AND in_array('-*', $stylesheets))
-    {
-      $delete_all = true;
-      foreach ($stylesheets as $stylesheet)
-      {
-        $key = is_array($stylesheet) ? key($stylesheet) : $stylesheet;
-
-        if ($key != '-*')
-        {
-          $omit[] = $key;
-        }
-      }
-    }
-    else
-    {
-      // If '-*' is not found and there are items in the current view's stylesheet array
-      // loop through each one and see if there are any values that start with '-'.
-      // If so, we add store the actual stylesheet name to the $delete array to be used below
-      foreach ($stylesheets as $stylesheet)
-      {
-        if (!is_array($stylesheet))
-        {
-          if (substr($stylesheet, 0, 1) == '-')
-          {
-          $delete[] = substr($stylesheet, 1);
-          }
-        }
-      }
-    }
-
     // Merge the current view's stylesheets with the app's default stylesheets
     $stylesheets = $this->mergeConfigValue('stylesheets', $viewName);
-    if (is_array($stylesheets))
+    $tmp = array();
+    foreach ((array) $stylesheets as $css)
     {
-      // Loop through each stylesheet in the merged array
-      foreach ($stylesheets as $index => $stylesheet)
+      $position = '';
+      if (is_array($css))
       {
-        $key = is_array($stylesheet) ? key($stylesheet) : $stylesheet;
-
-        // If $delete_all is true, a '-*' was found above.
-        // We remove all stylesheets from the array EXCEPT those specified in the $omit array
-        if ($delete_all == true)
+        $key = key($css);
+        $options = $css[$key];
+        if (isset($options['position']))
         {
-          if (!in_array($key, $omit))
-          {
-            unset($stylesheets[$index]);
-          }
-        }
-        else
-        {
-          // Loop through the $delete array and see if the stylesheet name is in the array
-          // We check for both the stylesheet and the -stylesheet. If found, we remove them.
-          foreach ($delete as $value)
-          {
-            if ($key == $value OR substr($key, 1) == $value)
-            {
-              unset($stylesheets[$index]);
-            }
-          }
+          $position = $options['position'];
+          unset($options['position']);
         }
       }
-
-      foreach ($stylesheets as $css)
+      else
       {
-        $position = '';
-        if (is_array($css))
-        {
-          $key = key($css);
-          $options = $css[$key];
-          if (isset($options['position']))
-          {
-            $position = $options['position'];
-            unset($options['position']);
-          }
-        }
-        else
-        {
-          $key = $css;
-          $options = array();
-        }
+        $key = $css;
+        $options = array();
+      }
 
-        if ($key)
-        {
-          $data[] = sprintf("  \$response->addStylesheet('%s', '%s', %s);", $this->replaceConstants($key), $position, str_replace("\n", '', var_export($options, true)));
-        }
+      $key = $this->replaceConstants($key);
+
+      if ('-*' == $key)
+      {
+        $tmp = array();
+      }
+      else if ('-' == $key[0])
+      {
+        unset($tmp[substr($key, 1)]);
+      }
+      else
+      {
+        $tmp[$key] = sprintf("  \$response->addStylesheet('%s', '%s', %s);", $key, $position, str_replace("\n", '', var_export($options, true)));
       }
     }
+
+    $data = array_merge($data, array_values($tmp));
 
     $omit = array();
     $delete_all = false;
 
     // Populate $javascripts with the values from ONLY the current view
-    $javascripts = $this->getConfigValue('javascripts', $viewName);
-
-    // If we find results from the view, check to see if there is a '-*'
-    // This indicates that we will remove ALL javascripts EXCEPT for those passed in the current view
-    if (is_array($javascripts) AND in_array('-*', $javascripts))
-    {
-      $delete_all = true;
-      foreach ($javascripts as $javascript)
-      {     
-        if (substr($javascript, 0, 1) != '-')
-        {
-          $omit[] = $javascript;
-        }
-      }
-    }
-
     $javascripts = $this->mergeConfigValue('javascripts', $viewName);
-    if (is_array($javascripts))
+    $tmp = array();
+    foreach ((array) $javascripts as $js)
     {
-      // remove javascripts marked with a beginning '-'
-      // We exclude any javascripts that were omitted above
-      $delete = array();
+      $js = $this->replaceConstants($js);
 
-      foreach ($javascripts as $javascript)
+      if ('-*' == $js)
       {
-        if (!in_array($javascript, $omit) && (substr($javascript, 0, 1) == '-' || $delete_all == true))
-        {
-          $delete[] = $javascript;
-          $delete[] = substr($javascript, 1);
-        }
+        $tmp = array();
       }
-      $javascripts = array_diff($javascripts, $delete);
-
-      foreach ($javascripts as $js)
+      else if ('-' == $js[0])
       {
-        if ($js)
-        {
-          $data[] = sprintf("  \$response->addJavascript('%s');", $this->replaceConstants($js));
-        }
+        unset($tmp[substr($js, 1)]);
+      }
+      else
+      {
+        $tmp[$js] = sprintf("  \$response->addJavascript('%s');", $js);
       }
     }
+
+    $data = array_merge($data, array_values($tmp));
 
     return implode("\n", $data)."\n";
   }
