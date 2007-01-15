@@ -95,7 +95,6 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     try
     {
       $this->delete<?php echo $this->getClassName() ?>($this-><?php echo $this->getSingularName() ?>);
-      return $this->redirect('<?php echo $this->getModuleName() ?>/list');
     }
     catch (PropelException $e)
     {
