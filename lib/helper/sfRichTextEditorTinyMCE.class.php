@@ -30,6 +30,11 @@
  */
 class sfRichTextEditorTinyMCE extends sfRichTextEditor
 {
+  /**
+   * Returns the rich text editor as HTML.
+   *
+   * @return string Rich text editor HTML representation
+   */
   public function toHTML()
   {
     $options = $this->options;

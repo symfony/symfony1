@@ -23,6 +23,13 @@ abstract class sfRichTextEditor
     $content = '',
     $options = array();
 
+  /**
+   * Initializes this rich text editor.
+   *
+   * @param string The tag name
+   * @param string The rich text editor content
+   * @param array  An array of options
+   */
   public function initialize($name, $content, $options = array())
   {
     $this->name = $name;
@@ -30,5 +37,10 @@ abstract class sfRichTextEditor
     $this->options = $options;
   }
 
+  /**
+   * Returns the rich text editor as HTML.
+   *
+   * @return string Rich text editor HTML representation
+   */
   abstract public function toHTML();
 }
