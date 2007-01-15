@@ -665,7 +665,12 @@ function input_date_tag($name, $value = null, $options = array())
   {
     $context->getResponse()->addJavascript($js);
   }
-  $context->getResponse()->addStylesheet(sfConfig::get('sf_calendar_web_dir').'/skins/aqua/theme');
+
+  // css
+  if ($calendar_style = _get_option($options, 'css', 'skins/aqua/theme'))
+  {
+    $context->getResponse()->addStylesheet(sfConfig::get('sf_calendar_web_dir').'/'.$calendar_style);
+  }
 
   // date format
   $date_format = $dateFormat->getPattern($pattern);
