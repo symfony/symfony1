@@ -618,6 +618,8 @@ function input_date_tag($name, $value = null, $options = array())
 
   $culture = _get_option($options, 'culture', $context->getUser()->getCulture());
 
+  $withTime = _get_option($options, 'withtime', false);
+
   // rich control?
   if (!_get_option($options, 'rich', false))
   {
@@ -626,19 +628,17 @@ function input_date_tag($name, $value = null, $options = array())
     // set culture for month tag
     $options['culture'] = $culture;
 
-    return select_date_tag($name, $value, $options, isset($options['html']) ? $options['html'] : array());
+    if ($withTime)
+    {
+      return select_datetime_tag($name, $value, $options, isset($options['html']) ? $options['html'] : array());
+    }
+    else
+    {
+      return select_date_tag($name, $value, $options, isset($options['html']) ? $options['html'] : array());
+    }
   }
 
-  if ($withTime = _get_option($options, 'withtime', false))
-  {
-    $pattern = 'g';
-  }
-  else
-  {
-    $pattern = 'd';
-  }
-
-  $pattern = _get_option($options, 'format', $pattern);
+  $pattern = _get_option($options, 'format', $withTime ? 'g' : 'd');
 
   $dateFormat = new sfDateFormat($culture);
 

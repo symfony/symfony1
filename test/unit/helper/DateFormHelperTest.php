@@ -80,7 +80,7 @@ class sfContext
   }
 }
 
-$t = new lime_test(77, new lime_output_color());
+$t = new lime_test(81, new lime_output_color());
 
 $context = sfContext::getInstance();
 $context->controller = new myController();
@@ -188,6 +188,10 @@ $t->like(select_ampm_tag('ampm', null, array(), array('id' => 'foo')), '<select 
 
 // select_time_tag()
 $t->diag('select_time_tag()');
+$t->like(select_time_tag('time'), '/<select name="time\[hour\]" id="time_hour">/', 'select_time_tag() outputs a select tag for hours');
+$t->like(select_time_tag('time'), '/selected="selected">'.date('H').'/', 'select_time_tag() selects the current hours by default');
+$t->like(select_time_tag('time'), '/<select name="time\[minute\]" id="time_minute">/', 'select_time_tag() outputs a select tag for minutes');
+$t->like(select_time_tag('time'), '/selected="selected">'.date('i').'/', 'select_time_tag() selects the current minutes by default');
 $t->todo('select_time_tag()');
 
 // select_datetime_tag()

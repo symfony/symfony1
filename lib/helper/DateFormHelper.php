@@ -587,9 +587,9 @@ function select_time_tag($name, $value = null, $options = array(), $html_options
   $time_seperator = _get_option($options, 'time_seperator', ':');
   $ampm_seperator = _get_option($options, 'ampm_seperator', '');
   $include_second = _get_option($options, 'include_second');
-  $_12hour_time = _get_option($options, '12hour_time');
+  $_12hour_time   = _get_option($options, '12hour_time');
 
-  $options['12hour_time'] = $_12hour_time; //set it back. hour tag needs it.
+  $options['12hour_time'] = $_12hour_time; // set it back. hour tag needs it.
 
   if ($include_custom = _get_option($options, 'include_custom'))
   {
@@ -619,15 +619,15 @@ function select_time_tag($name, $value = null, $options = array(), $html_options
 
   $tags = array();
 
-  $hour_name = $name . '[hour]';
-  $tags[] = select_hour_tag($hour_name, _parse_value_for_date($value, 'hour', ($_12hour_time) ? 'h' : 'H'), $options + $include_custom_hour, $html_options);
+  $hour_name = $name.'[hour]';
+  $tags[] = select_hour_tag($hour_name, _parse_value_for_date($value, 'hour', $_12hour_time ? 'h' : 'H'), $options + $include_custom_hour, $html_options);
 
-  $minute_name = $name . '[minute]';
+  $minute_name = $name.'[minute]';
   $tags[] = select_minute_tag($minute_name, _parse_value_for_date($value, 'minute', 'i'), $options + $include_custom_minute, $html_options);
 
   if ($include_second)
   {
-    $second_name = $name . '[second]';
+    $second_name = $name.'[second]';
     $tags[] = select_second_tag($second_name, _parse_value_for_date($value, 'second', 's'), $options + $include_custom_second, $html_options);
   }
 
@@ -635,8 +635,8 @@ function select_time_tag($name, $value = null, $options = array(), $html_options
 
   if ($_12hour_time)
   {
-    $ampm_name = $name . "[ampm]";
-    $time .=  $ampm_seperator . select_ampm_tag($ampm_name, _parse_value_for_date($value, 'ampm', 'A'), $options + $include_custom_ampm, $html_options);
+    $ampm_name = $name.'[ampm]';
+    $time .=  $ampm_seperator.select_ampm_tag($ampm_name, _parse_value_for_date($value, 'ampm', 'A'), $options + $include_custom_ampm, $html_options);
   }
 
   return $time;

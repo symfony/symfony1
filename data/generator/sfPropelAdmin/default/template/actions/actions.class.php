@@ -249,8 +249,8 @@ $column = sfPropelManyToMany::getColumn($class, $through_class);
         try
         {
           $dateFormat = new sfDateFormat($this->getUser()->getCulture());
-          <?php $inputPattern = ($type == CreoleTypes::DATE ? 'd' : 'g'); ?>
-          <?php $outputPattern = ($type == CreoleTypes::DATE ? 'i' : 'I'); ?>
+          <?php $inputPattern  = $type == CreoleTypes::DATE ? 'd' : 'g'; ?>
+          <?php $outputPattern = $type == CreoleTypes::DATE ? 'i' : 'I'; ?>
           if (!is_array($<?php echo $this->getSingularName() ?>['<?php echo $name ?>']))
           {
             $value = $dateFormat->format($<?php echo $this->getSingularName() ?>['<?php echo $name ?>'], '<?php echo $outputPattern ?>', $dateFormat->getInputPattern('<?php echo $inputPattern ?>'));
@@ -258,7 +258,7 @@ $column = sfPropelManyToMany::getColumn($class, $through_class);
           else
           {
             $value_array = $<?php echo $this->getSingularName() ?>['<?php echo $name ?>'];
-            $value = $value_array['year'].'-'.$value_array['month'].'-'.$value_array['day'];
+            $value = $value_array['year'].'-'.$value_array['month'].'-'.$value_array['day'].(isset($value_array['hour']) ? ' '.$value_array['hour'].':'.$value_array['minute'].(isset($value_array['second']) ? ':'.$value_array['second'] : '') : '');
           }
           $this-><?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>($value);
         }
