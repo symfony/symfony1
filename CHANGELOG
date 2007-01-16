@@ -3,6 +3,9 @@ Version 1.0.0-beta4
 
 Major changes since beta3:
 
+* r3288, r3291, r3293, r3294: better date/time handling in admin generator
+* r3285: removed sfContext initialization when initializing symfony
+* r3277: added SSL support to sfBrowser
 * r3271: refactored rich text editors
 * r3258: refactored sfLogger configuration
 * r3245: fixed Creole i18n driver
@@ -11,6 +14,7 @@ Major changes since beta3:
 * updated phpdoc comments
 
 * fixed some minor bugs (see trac)
+* added more unit tests (> 3700 now)
 
 Version 1.0.0-beta3
 -------------------
