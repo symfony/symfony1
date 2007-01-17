@@ -44,10 +44,10 @@ class sfLogger
     $loggers = array(),
     $level   = SF_LOG_EMERG,
     $levels  = array(
-      SF_LOG_EMERG   => 'emergency',
+      SF_LOG_EMERG   => 'emerg',
       SF_LOG_ALERT   => 'alert',
-      SF_LOG_CRIT    => 'critical',
-      SF_LOG_ERR     => 'error',
+      SF_LOG_CRIT    => 'crit',
+      SF_LOG_ERR     => 'err',
       SF_LOG_WARNING => 'warning',
       SF_LOG_NOTICE  => 'notice',
       SF_LOG_INFO    => 'info',
@@ -80,7 +80,7 @@ class sfLogger
     $this->loggers = array();
   }
 
-  public function getLogLevel($level)
+  public function getLogLevel()
   {
     return $this->level;
   }
@@ -100,13 +100,8 @@ class sfLogger
     $this->loggers[] = $logger;
   }
 
-  public function log($message, $priority = null)
+  public function log($message, $priority = SF_LOG_INFO)
   {
-    if (!$priority)
-    {
-      $priority = SF_LOG_INFO;
-    }
-
     if ($this->level < $priority)
     {
       return;
