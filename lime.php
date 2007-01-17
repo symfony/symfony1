@@ -52,6 +52,8 @@ class lime_test
     {
       $this->output->diag(sprintf("Looks like you failed %d tests of %d.", $this->failed, $this->plan));
     }
+
+    flush();
   }
 
   function ok($exp, $message = '')
