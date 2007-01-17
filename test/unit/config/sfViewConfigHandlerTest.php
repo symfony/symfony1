@@ -39,7 +39,7 @@ $content = <<<EOF
   \$response->addStylesheet('foobar', '', array ());
 
 EOF;
-$t->is($handler->addHtmlAsset('myView'), $content, 'addHtmlAsset() adds stylesheets to the response');
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() adds stylesheets to the response');
 
 $handler->mergeConfig(array(
   'myView' => array(
@@ -50,7 +50,7 @@ $content = <<<EOF
   \$response->addJavascript('foobar');
 
 EOF;
-$t->is($handler->addHtmlAsset('myView'), $content, 'addHtmlAsset() adds JavaScript to the response');
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() adds JavaScript to the response');
 
 // Insertion order for stylesheets
 $t->diag('addHtmlAsset() insertion order for stylesheets');
@@ -68,7 +68,7 @@ $content = <<<EOF
   \$response->addStylesheet('foobar', '', array ());
 
 EOF;
-$t->is($handler->addHtmlAsset('myView'), $content, 'addHtmlAsset() adds view-specific stylesheets after application-wide assets');
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() adds view-specific stylesheets after application-wide assets');
 
 $handler->mergeConfig(array(
   'all' => array(
@@ -83,7 +83,7 @@ $content = <<<EOF
   \$response->addStylesheet('foobar', '', array ());
 
 EOF;
-$t->is($handler->addHtmlAsset('myView'), $content, 'addHtmlAsset() adds view-specific stylesheets after application-wide assets');
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() adds view-specific stylesheets after application-wide assets');
 
 $handler->mergeConfig(array(
   'myView' => array(
@@ -98,7 +98,7 @@ $content = <<<EOF
   \$response->addStylesheet('foobar', '', array ());
 
 EOF;
-$t->is($handler->addHtmlAsset('myView'), $content, 'addHtmlAsset() adds view-specific stylesheets after default assets');
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() adds view-specific stylesheets after default assets');
 
 $handler->mergeConfig(array(
   'default' => array(
@@ -113,7 +113,7 @@ $content = <<<EOF
   \$response->addStylesheet('foobar', '', array ());
 
 EOF;
-$t->is($handler->addHtmlAsset('myView'), $content, 'addHtmlAsset() adds view-specific stylesheets after default assets');
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() adds view-specific stylesheets after default assets');
 
 $handler->mergeConfig(array(
   'default' => array(
@@ -128,7 +128,7 @@ $content = <<<EOF
   \$response->addStylesheet('all_foobar', '', array ());
 
 EOF;
-$t->is($handler->addHtmlAsset('myView'), $content, 'addHtmlAsset() adds application-specific stylesheets after default assets');
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() adds application-specific stylesheets after default assets');
 
 $handler->mergeConfig(array(
   'all' => array(
@@ -143,7 +143,7 @@ $content = <<<EOF
   \$response->addStylesheet('all_foobar', '', array ());
 
 EOF;
-$t->is($handler->addHtmlAsset('myView'), $content, 'addHtmlAsset() adds application-specific stylesheets after default assets');
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() adds application-specific stylesheets after default assets');
 
 // Insertion order for javascripts
 $t->diag('addHtmlAsset() insertion order for javascripts');
@@ -161,7 +161,7 @@ $content = <<<EOF
   \$response->addJavascript('foobar');
 
 EOF;
-$t->is($handler->addHtmlAsset('myView'), $content, 'addHtmlAsset() adds view-specific javascripts after application-wide assets');
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() adds view-specific javascripts after application-wide assets');
 
 $handler->mergeConfig(array(
   'all' => array(
@@ -176,7 +176,7 @@ $content = <<<EOF
   \$response->addJavascript('foobar');
 
 EOF;
-$t->is($handler->addHtmlAsset('myView'), $content, 'addHtmlAsset() adds view-specific javascripts after application-wide assets');
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() adds view-specific javascripts after application-wide assets');
 
 $handler->mergeConfig(array(
   'myView' => array(
@@ -191,7 +191,7 @@ $content = <<<EOF
   \$response->addJavascript('foobar');
 
 EOF;
-$t->is($handler->addHtmlAsset('myView'), $content, 'addHtmlAsset() adds view-specific javascripts after default assets');
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() adds view-specific javascripts after default assets');
 
 $handler->mergeConfig(array(
   'default' => array(
@@ -206,7 +206,7 @@ $content = <<<EOF
   \$response->addJavascript('foobar');
 
 EOF;
-$t->is($handler->addHtmlAsset('myView'), $content, 'addHtmlAsset() adds view-specific javascripts after default assets');
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() adds view-specific javascripts after default assets');
 
 $handler->mergeConfig(array(
   'default' => array(
@@ -221,7 +221,7 @@ $content = <<<EOF
   \$response->addJavascript('all_foobar');
 
 EOF;
-$t->is($handler->addHtmlAsset('myView'), $content, 'addHtmlAsset() adds application-specific javascripts after default assets');
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() adds application-specific javascripts after default assets');
 
 $handler->mergeConfig(array(
   'all' => array(
@@ -236,7 +236,7 @@ $content = <<<EOF
   \$response->addJavascript('all_foobar');
 
 EOF;
-$t->is($handler->addHtmlAsset('myView'), $content, 'addHtmlAsset() adds application-specific javascripts after default assets');
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() adds application-specific javascripts after default assets');
 
 // removal of assets
 $t->diag('addHtmlAsset() removal of assets');
@@ -254,7 +254,7 @@ $content = <<<EOF
   \$response->addStylesheet('foobar', '', array ());
 
 EOF;
-$t->is($handler->addHtmlAsset('myView'), $content, 'addHtmlAsset() supports the - option to remove one stylesheet previously added');
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() supports the - option to remove one stylesheet previously added');
 
 $handler->mergeConfig(array(
   'all' => array(
@@ -269,7 +269,7 @@ $content = <<<EOF
   \$response->addJavascript('foobar');
 
 EOF;
-$t->is($handler->addHtmlAsset('myView'), $content, 'addHtmlAsset() supports the - option to remove one javascript previously added');
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() supports the - option to remove one javascript previously added');
 
 $handler->mergeConfig(array(
   'all' => array(
@@ -280,7 +280,7 @@ $content = <<<EOF
   \$response->addStylesheet('baz', '', array ());
 
 EOF;
-$t->is($handler->addHtmlAsset('myView'), $content, 'addHtmlAsset() supports the -* option to remove all stylesheets previously added');
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() supports the -* option to remove all stylesheets previously added');
 
 $handler->mergeConfig(array(
   'all' => array(
@@ -291,7 +291,7 @@ $content = <<<EOF
   \$response->addJavascript('baz');
 
 EOF;
-$t->is($handler->addHtmlAsset('myView'), $content, 'addHtmlAsset() supports the -* option to remove all javascripts previously added');
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() supports the -* option to remove all javascripts previously added');
 
 $handler->mergeConfig(array(
   'all' => array(
@@ -305,8 +305,7 @@ $content = <<<EOF
   \$response->addStylesheet('foobar', '', array ());
 
 EOF;
-$t->is($handler->addHtmlAsset('myView'), $content, 'addHtmlAsset() supports the -* option to remove all assets previously added');
-
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() supports the -* option to remove all assets previously added');
 
 $handler->mergeConfig(array(
   'myView' => array(
@@ -327,4 +326,9 @@ $content = <<<EOF
   \$response->addJavascript('bar');
 
 EOF;
-$t->is($handler->addHtmlAsset('myView'), $content, 'addHtmlAsset() supports the -* option to remove all assets previously added');
+$t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() supports the -* option to remove all assets previously added');
+
+function fix_content($content)
+{
+  return str_replace(array("\r\n", "\n", "\r"), "\n", $content);
+}
