@@ -14,9 +14,9 @@
  * This class generates an admin module.
  *
  * This class calls two ORM specific methods:
- *  getAllColumns()
+ *   getAllColumns()
  * and
- * getAdminColumnForField($field, $flag = null);
+ *   getAdminColumnForField($field, $flag = null)
  *
  * @package    symfony
  * @subpackage generator
@@ -28,6 +28,14 @@ abstract class sfAdminGenerator extends sfCrudGenerator
   protected
     $fields = array();
 
+  /**
+   * Returns HTML code for a help icon.
+   *
+   * @param string The column name
+   * @param string The field type (list, edit)
+   *
+   * @return string HTML code
+   */
   public function getHelpAsIcon($column, $type = '')
   {
     $help = $this->getParameterValue($type.'.fields.'.$column->getName().'.help');
@@ -39,6 +47,14 @@ abstract class sfAdminGenerator extends sfCrudGenerator
     return '';
   }
 
+  /**
+   * Returns HTML code for a help text.
+   *
+   * @param string The column name
+   * @param string The field type (list, edit)
+   *
+   * @return string HTML code
+   */
   public function getHelp($column, $type = '')
   {
     $help = $this->getParameterValue($type.'.fields.'.$column->getName().'.help');
@@ -50,6 +66,15 @@ abstract class sfAdminGenerator extends sfCrudGenerator
     return '';
   }
 
+  /**
+   * Returns HTML code for an action button.
+   *
+   * @param string  The action name
+   * @param array   The parameters
+   * @param boolean Whether to add a primary key link or not
+   *
+   * @return string HTML code
+   */
   public function getButtonToAction($actionName, $params, $pk_link = false)
   {
     $params   = (array) $params;
@@ -149,6 +174,15 @@ abstract class sfAdminGenerator extends sfCrudGenerator
     return $html;
   }
 
+  /**
+   * Returns HTML code for an action link.
+   *
+   * @param string  The action name
+   * @param array   The parameters
+   * @param boolean Whether to add a primary key link or not
+   *
+   * @return string HTML code
+   */
   public function getLinkToAction($actionName, $params, $pk_link = false)
   {
     $options = isset($params['params']) ? sfToolkit::stringToArray($params['params']) : array();
@@ -187,6 +221,14 @@ abstract class sfAdminGenerator extends sfCrudGenerator
     return '<li>[?php echo link_to(image_tag(\''.$icon.'\', array(\'alt\' => __(\''.$name.'\'), \'title\' => __(\''.$name.'\'))), \''.$this->getModuleName().'/'.$action.$url_params.($options ? ', '.$phpOptions : '').') ?]</li>'."\n";
   }
 
+  /**
+   * Returns HTML code for a column in edit mode.
+   *
+   * @param string  The column name
+   * @param array   The parameters
+   *
+   * @return string HTML code
+   */
   public function getColumnEditTag($column, $params = array())
   {
     // user defined parameters
@@ -234,6 +276,13 @@ abstract class sfAdminGenerator extends sfCrudGenerator
     return parent::getCrudColumnEditTag($column, $params);
   }
 
+  /**
+   * Returns all column categories.
+   *
+   * @param string  The parameter name
+   *
+   * @return array The column categories
+   */
   public function getColumnCategories($paramName)
   {
     if (is_array($this->getParameterValue($paramName)))
@@ -251,6 +300,14 @@ abstract class sfAdminGenerator extends sfCrudGenerator
     return array('NONE');
   }
 
+  /**
+   * Wraps content with a credential condition.
+   *
+   * @param string  The content
+   * @param array   The parameters
+   *
+   * @return string HTML code
+   */
   public function addCredentialCondition($content, $params = array())
   {
     if (isset($params['credentials']))
@@ -270,8 +327,11 @@ EOF;
   }
 
   /**
-   * returns an array of sfAdminColumn objects
-   * from the $paramName list or the list of all columns (in table) if it does not exist
+   * Gets sfAdminColumn objects for a given category.
+   *
+   * @param string The parameter name
+   *
+   * @return array sfAdminColumn array
    */
   public function getColumns($paramName, $category = 'NONE')
   {
@@ -309,6 +369,13 @@ EOF;
     return $phpNames;
   }
 
+  /**
+   * Gets modifier flags from a column name.
+   *
+   * @param string The column name
+   *
+   * @return array An array of detected flags
+   */
   public function splitFlag($text)
   {
     $flags = array();
@@ -321,8 +388,14 @@ EOF;
     return array($text, $flags);
   }
 
-  // $name example: list.display
-  // special default behaviour for fields. keys
+  /**
+   * Gets a parameter value.
+   *
+   * @param string The key name
+   * @param mixed  The default value
+   *
+   * @return mixed The parameter value
+   */
   public function getParameterValue($key, $default = null)
   {
     if (preg_match('/^([^\.]+)\.fields\.(.+)$/', $key, $matches))
@@ -335,6 +408,15 @@ EOF;
     }
   }
 
+  /**
+   * Gets a field parameter value.
+   *
+   * @param string The key name
+   * @param string The type (list, edit)
+   * @param mixed  The default value
+   *
+   * @return mixed The parameter value
+   */
   protected function getFieldParameterValue($key, $type = '', $default = null)
   {
     $retval = $this->getValueFromKey($type.'.fields.'.$key, $default);
@@ -360,6 +442,14 @@ EOF;
     }
   }
 
+  /**
+   * Gets the value for a given key.
+   *
+   * @param string The key name
+   * @param mixed  The default value
+   *
+   * @return mixed The key value
+   */
   protected function getValueFromKey($key, $default = null)
   {
     $ref   =& $this->params;
@@ -386,6 +476,14 @@ EOF;
     return $default;
   }
 
+  /**
+   * Wraps a content for I18N.
+   *
+   * @param string The key name
+   * @param string The defaul value
+   *
+   * @return string HTML code
+   */
   public function getI18NString($key, $default = null)
   {
     $value = $this->escapeString($this->getParameterValue($key, $default));
@@ -425,6 +523,13 @@ EOF;
     return '[?php echo __(\''.$value.'\', '."\n".'array('.implode(",\n", $vars).')) ?]';
   }
 
+  /**
+   * Replaces constants in a string.
+   *
+   * @param string
+   *
+   * @return string
+   */
   public function replaceConstants($value)
   {
     // find %%xx%% strings
@@ -443,6 +548,14 @@ EOF;
     return $value;
   }
 
+  /**
+   * Returns HTML code for a column in list mode.
+   *
+   * @param string  The column name
+   * @param array   The parameters
+   *
+   * @return string HTML code
+   */
   public function getColumnListTag($column, $params = array())
   {
     $user_params = $this->getParameterValue('list.fields.'.$column->getName().'.params');
@@ -476,6 +589,14 @@ EOF;
     }
   }
 
+  /**
+   * Returns HTML code for a column in filter mode.
+   *
+   * @param string  The column name
+   * @param array   The parameters
+   *
+   * @return string HTML code
+   */
   public function getColumnFilterTag($column, $params = array())
   {
     $user_params = $this->getParameterValue('list.fields.'.$column->getName().'.params');
@@ -552,6 +673,13 @@ EOF;
     }
   }
 
+  /**
+   * Escapes a string.
+   *
+   * @param string
+   *
+   * @param string
+   */
   protected function escapeString($string)
   {
     return preg_replace('/\'/', '\\\'', $string);
@@ -573,6 +701,13 @@ class sfAdminColumn
     $column     = null,
     $flags      = array();
 
+  /**
+   * Constructor.
+   *
+   * @param string The column php name
+   * @param string The column name
+   * @param array  The column flags
+   */
   public function __construct($phpName, $column = null, $flags = array())
   {
     $this->phpName = $phpName;
@@ -580,40 +715,69 @@ class sfAdminColumn
     $this->flags   = (array) $flags;
   }
 
+  /**
+   * Returns true if the column maps a database column.
+   *
+   * @return boolean true if the column maps a database column, false otherwise
+   */
   public function isReal()
   {
     return $this->column ? true : false;
   }
 
+  /**
+   * Gets the name of the column.
+   *
+   * @return string The column name
+   */
   public function getName()
   {
     return sfInflector::underscore($this->phpName);
   }
 
+  /**
+   * Returns true if the column is a partial.
+   *
+   * @return boolean true if the column is a partial, false otherwise
+   */
   public function isPartial()
   {
     return in_array('_', $this->flags) ? true : false;
   }
 
+  /**
+   * Returns true if the column is a component.
+   *
+   * @return boolean true if the column is a component, false otherwise
+   */
   public function isComponent()
   {
     return in_array('~', $this->flags) ? true : false;
   }
 
+  /**
+   * Returns true if the column has a link.
+   *
+   * @return boolean true if the column has a link, false otherwise
+   */
   public function isLink()
   {
     return (in_array('=', $this->flags) || $this->isPrimaryKey()) ? true : false;
   }
-  
-  // FIXME: those methods are only used in the propel admin generator
-  
-  public function __call($name, $arguments)
-  {
-    return $this->column ? $this->column->$name() : null;
-  }
-  
+
+  /**
+   * Gets the php name of the column.
+   *
+   * @return string The php name
+   */
   public function getPhpName()
   {
     return $this->phpName;
+  }
+
+  // FIXME: those methods are only used in the propel admin generator
+  public function __call($name, $arguments)
+  {
+    return $this->column ? $this->column->$name() : null;
   }
 }

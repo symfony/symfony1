@@ -20,6 +20,9 @@ class sfGeneratorManager
 {
   protected $cache = null;
 
+  /**
+   * Initializes the sfGeneratorManager instance.
+   */
   public function initialize()
   {
     // create cache instance
@@ -27,11 +30,24 @@ class sfGeneratorManager
     $this->cache->setSuffix('');
   }
 
+  /**
+   * Returns the current sfCache implementation instance.
+   *
+   * @return sfCache A sfCache implementation instance
+   */
   public function getCache()
   {
     return $this->cache;
   }
 
+  /**
+   * Generates classes and templates for a given generator class.
+   *
+   * @param string The generator class name
+   * @param array  An array of parameters
+   *
+   * @return string The cache for the configuration file
+   */
   public function generate($generator_class, $param)
   {
     $generator = new $generator_class();

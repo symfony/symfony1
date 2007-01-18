@@ -21,6 +21,11 @@
 
 class sfPropelCrudGenerator extends sfAdminGenerator
 {
+  /**
+   * Initializes the current sfGenerator instance.
+   *
+   * @param sfGeneratorManager A sfGeneratorManager instance
+   */
   public function initialize($generatorManager)
   {
     parent::initialize($generatorManager);
@@ -28,6 +33,13 @@ class sfPropelCrudGenerator extends sfAdminGenerator
     $this->setGeneratorClass('sfPropelCrud');
   }
 
+  /**
+   * Loads primary keys.
+   *
+   * This method is ORM dependant.
+   *
+   * @throws sfException
+   */
   protected function loadPrimaryKeys()
   {
     foreach ($this->tableMap->getColumns() as $column)
@@ -44,6 +56,13 @@ class sfPropelCrudGenerator extends sfAdminGenerator
     }
   }
 
+  /**
+   * Loads map builder classes.
+   *
+   * This method is ORM dependant.
+   *
+   * @throws sfException
+   */
   protected function loadMapBuilderClasses()
   {
     // we must load all map builder classes to be able to deal with foreign keys (cf. editSuccess.php template)
@@ -70,16 +89,33 @@ class sfPropelCrudGenerator extends sfAdminGenerator
     $this->tableMap = $this->map->getDatabaseMap()->getTable(constant($this->className.'Peer::TABLE_NAME'));
   }
 
-  // generates a PHP call to an object helper
+  /**
+   * Generates a PHP call to an object helper.
+   *
+   * @param string The helper name
+   * @param string The column name
+   * @param array  An array of parameters
+   * @param array  An array of local parameters
+   *
+   * @return string PHP code
+   */
   function getPHPObjectHelper($helperName, $column, $params, $localParams = array())
   {
     $params = $this->getObjectTagParams($params, $localParams);
-    return sprintf ('object_%s($%s, \'%s\', %s)', $helperName, $this->getSingularName(), $this->getColumnGetter($column, false), $params);
+
+    return sprintf('object_%s($%s, \'%s\', %s)', $helperName, $this->getSingularName(), $this->getColumnGetter($column, false), $params);
   }
 
-  // returns the getter either non-developped: 'getFoo'
-  // or developped: '$class->getFoo()'
-  function getColumnGetter($column, $developed = false , $prefix = '')
+  /**
+   * Returns the getter either non-developped: 'getFoo' or developped: '$class->getFoo()'.
+   *
+   * @param string  The column name
+   * @param boolean true if you want developped method names, false otherwise
+   * @param string The prefix value
+   *
+   * @return string PHP code
+   */
+  function getColumnGetter($column, $developed = false, $prefix = '')
   {
     $getter = 'get'.$column->getPhpName();
     if ($developed)
@@ -90,8 +126,15 @@ class sfPropelCrudGenerator extends sfAdminGenerator
     return $getter;
   }
 
-  // used for foreign keys only; this method should be removed when we use
-  // sfAdminColumn instead
+  /*
+   * Gets the PHP name of the related class name.
+   *
+   * Used for foreign keys only; this method should be removed when we use sfAdminColumn instead.
+   *
+   * @param string The column name
+   *
+   * @return string The PHP name of the related class name
+   */
   function getRelatedClassName($column)
   {
     $relatedTable = $this->getMap()->getDatabaseMap()->getTable($column->getRelatedTableName());

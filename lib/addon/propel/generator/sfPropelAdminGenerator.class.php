@@ -21,6 +21,11 @@
 
 class sfPropelAdminGenerator extends sfPropelCrudGenerator
 {
+  /**
+   * Initializes the current sfGenerator instance.
+   *
+   * @param sfGeneratorManager A sfGeneratorManager instance
+   */
   public function initialize($generatorManager)
   {
     parent::initialize($generatorManager);

@@ -30,6 +30,13 @@ abstract class sfCrudGenerator extends sfGenerator
     $className     = '',
     $params        = array();
 
+  /**
+   * Generates classes and templates in cache.
+   *
+   * @param array The parameters
+   *
+   * @return string The data to put in configuration cache
+   */
   public function generate($params = array())
   {
     $this->params = $params;
@@ -90,6 +97,13 @@ abstract class sfCrudGenerator extends sfGenerator
     return $data;
   }
 
+  /**
+   * Returns PHP code for primary keys parameters.
+   *
+   * @param integer The indentation value
+   *
+   * @return string The PHP code
+   */
   public function getRetrieveByPkParamsForAction($indent)
   {
     $params = array();
@@ -101,6 +115,11 @@ abstract class sfCrudGenerator extends sfGenerator
     return implode(",\n".str_repeat(' ', max(0, $indent - strlen($this->singularName.$this->className))), $params);
   }
 
+  /**
+   * Returns PHP code for getOrCreate() parameters.
+   *
+   * @return string The PHP code
+   */
   public function getMethodParamsForGetOrCreate()
   {
     $method_params = array();
@@ -113,6 +132,13 @@ abstract class sfCrudGenerator extends sfGenerator
     return implode(', ', $method_params);
   }
 
+  /**
+   * Returns PHP code for getOrCreate() promary keys condition.
+   *
+   * @param boolean true if we pass the field name as an argument, false otherwise
+   *
+   * @return string The PHP code
+   */
   public function getTestPksForGetOrCreate($fieldNameAsArgument = true)
   {
     $test_pks = array();
@@ -125,6 +151,11 @@ abstract class sfCrudGenerator extends sfGenerator
     return implode("\n     || ", $test_pks);
   }
 
+  /**
+   * Returns PHP code for primary keys parameters used in getOrCreate() method.
+   *
+   * @return string The PHP code
+   */
   public function getRetrieveByPkParamsForGetOrCreate()
   {
     $retrieve_params = array();
@@ -137,6 +168,11 @@ abstract class sfCrudGenerator extends sfGenerator
     return implode(",\n".str_repeat(' ', max(0, 45 - strlen($this->singularName.$this->className))), $retrieve_params);
   }
 
+  /**
+   * Gets the table map for the current model class.
+   *
+   * @return TableMap A TableMap instance
+   */
   public function getTableMap()
   {
     return $this->tableMap;
@@ -185,21 +221,43 @@ abstract class sfCrudGenerator extends sfGenerator
     return $this->className;
   }
 
+  /**
+   * Gets the Peer class name.
+   *
+   * @return string
+   */
   public function getPeerClassName()
   {
     return $this->peerClassName;
   }
 
+  /**
+   * Gets the primary key name.
+   *
+   * @return string
+   */
   public function getPrimaryKey()
   {
     return $this->primaryKey;
   }
 
+  /**
+   * Gets the Map object.
+   *
+   * @return object
+   */
   public function getMap()
   {
     return $this->map;
   }
 
+  /**
+   * Returns PHP code to add to a URL for primary keys.
+   *
+   * @param string The prefix value
+   *
+   * @return string PHP code
+   */
   public function getPrimaryKeyUrlParams($prefix = '')
   {
     $params = array();
@@ -213,6 +271,13 @@ abstract class sfCrudGenerator extends sfGenerator
     return implode(".'&", $params);
   }
 
+  /**
+   * Gets PHP code for primary key condition.
+   *
+   * @param string The prefix value
+   *
+   * @return string PHP code
+   */
   public function getPrimaryKeyIsSet($prefix = '')
   {
     $params = array();
@@ -224,11 +289,27 @@ abstract class sfCrudGenerator extends sfGenerator
     return implode(' && ', $params);
   }
 
+  /**
+   * Gets object tag parameters.
+   *
+   * @param array An array of parameters
+   * @param array An array of default parameters
+   *
+   * @return string PHP code
+   */
   protected function getObjectTagParams($params, $default_params = array())
   {
     return var_export(array_merge($default_params, $params), true);
   }
 
+  /**
+   * Returns HTML code for a column in list mode.
+   *
+   * @param string  The column name
+   * @param array   The parameters
+   *
+   * @return string HTML code
+   */
   public function getColumnListTag($column, $params = array())
   {
     $type = $column->getCreoleType();
@@ -249,6 +330,14 @@ abstract class sfCrudGenerator extends sfGenerator
     }
   }
 
+  /**
+   * Returns HTML code for a column in edit mode.
+   *
+   * @param string  The column name
+   * @param array   The parameters
+   *
+   * @return string HTML code
+   */
   public function getCrudColumnEditTag($column, $params = array())
   {
     $type = $column->getCreoleType();
@@ -294,19 +383,61 @@ abstract class sfCrudGenerator extends sfGenerator
     }
   }
 
-  // here come the ORM specific functions
+  /**
+   * Loads primary keys.
+   *
+   * This method is ORM dependant.
+   *
+   * @throws sfException
+   */
   abstract protected function loadPrimaryKeys();
 
+  /**
+   * Loads map builder classes.
+   *
+   * This method is ORM dependant.
+   *
+   * @throws sfException
+   */
   abstract protected function loadMapBuilderClasses();
 
-  // generates a PHP call to an object helper
+  /**
+   * Generates a PHP call to an object helper.
+   *
+   * This method is ORM dependant.
+   *
+   * @param string The helper name
+   * @param string The column name
+   * @param array  An array of parameters
+   * @param array  An array of local parameters
+   *
+   * @return string PHP code
+   */
   abstract function getPHPObjectHelper($helperName, $column, $params, $localParams = array());
 
-  // returns the getter either non-developped: 'getFoo'
-  // or developped: '$class->getFoo()'
+  /**
+   * Returns the getter either non-developped: 'getFoo' or developped: '$class->getFoo()'.
+   *
+   * This method is ORM dependant.
+   *
+   * @param string  The column name
+   * @param boolean true if you want developped method names, false otherwise
+   * @param string The prefix value
+   *
+   * @return string PHP code
+   */
   abstract function getColumnGetter($column, $developed = false , $prefix = '');
 
-  // used for foreign keys only; this method should be removed when we use
-  // sfAdminColumn instead
+  /*
+   * Gets the PHP name of the related class name.
+   *
+   * Used for foreign keys only; this method should be removed when we use sfAdminColumn instead.
+   *
+   * This method is ORM dependant.
+   *
+   * @param string The column name
+   *
+   * @return string The PHP name of the related class name
+   */
   abstract function getRelatedClassName($column);
 }
