@@ -172,9 +172,9 @@ function _upgrade_1_0_php_files($app_dir)
     $deprecated = array(
       "'/sf/js/prototype"     => "sfConfig::get('sf_prototype_web_dir').'/js",
       "'/sf/css/prototype"    => "sfConfig::get('sf_prototype_web_dir').'/css",
-      "'/sf/js/sf_admin"      => "sfConfig::get('sf_prototype_web_dir').'/js",
-      "'/sf/css/sf_admin"     => "sfConfig::get('sf_prototype_web_dir').'/css",
-      "'/sf/images/sf_admin"  => "sfConfig::get('sf_prototype_web_dir').'/images",
+      "'/sf/js/sf_admin"      => "sfConfig::get('sf_admin_web_dir').'/js",
+      "'/sf/css/sf_admin"     => "sfConfig::get('sf_admin_web_dir').'/css",
+      "'/sf/images/sf_admin"  => "sfConfig::get('sf_admin_web_dir').'/images",
     );
     $seen = array();
     $updated = false;
