@@ -34,7 +34,7 @@ $b->
 // non rich date (without time)
 $tomorrow = time() + 86400 + 3600;
 $b->
-  customizeGenerator(array('edit' => array('fields' => array('end_date' => array('params' => 'withtime=false rich=false')))))->
+  customizeGenerator(array('edit' => array('display' => array('title', 'end_date'), 'fields' => array('end_date' => array('params' => 'withtime=false rich=false')))))->
 
   post('/article/edit/id/1', array('article' => array('end_date' => array('day' => date('d', $tomorrow), 'month' => date('m', $tomorrow), 'year' => date('Y', $tomorrow)))))->
   isStatusCode(302)->
@@ -47,7 +47,12 @@ $b->
   checkResponseElement(sprintf('select[name="article[end_date][month]"] option[value="%s"][selected="selected"]', date('m', $tomorrow)))->
   checkResponseElement(sprintf('select[name="article[end_date][year]"] option[value="%s"][selected="selected"]', date('Y', $tomorrow)))->
   checkResponseElement('select[name="article[end_date][hour]"]', false)->
-  checkResponseElement('select[name="article[end_date][minute]"]', false)
+  checkResponseElement('select[name="article[end_date][minute]"]', false)->
+
+  checkResponseElement('script[src*="calendar"]', false)->
+  checkResponseElement('script[src]', false)->
+  checkResponseElement('link[href*="calendar"]', false)->
+  checkResponseElement('link[href][media]', 2)
 ;
 
 // non rich date (with time)

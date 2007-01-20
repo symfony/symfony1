@@ -31,6 +31,10 @@ function launch_tests($b)
   $b->
     // admin_double_list
     checkEditCustomization('m2m relationship (admin_double_list)', array('display' => array('title', 'body', 'author_article'), 'fields' => array('author_article' => array('type' => 'admin_double_list', 'params' => array('through_class' => 'AuthorArticle')))))->
+    checkResponseElement('script[src*="double_list"]')->
+    checkResponseElement('script[src*="prototype"]')->
+    checkResponseElement('script[src]', 2)->
+    checkResponseElement('link[href][media]', 2)->
     checkResponseElement('div.form-row label', 'Author article:', array('position' => 2))->
     checkResponseElement('div.form-row select[name="unassociated_author_article[]"]', true, array('position' => 2))->
     checkResponseElement('div.form-row select[name="unassociated_author_article[]"] option', 1)->
@@ -39,6 +43,7 @@ function launch_tests($b)
 
     // admin_select_list
     checkEditCustomization('m2m relationship (admin_select_list)', array('display' => array('title', 'body', 'author_article'), 'fields' => array('author_article' => array('type' => 'admin_select_list', 'params' => array('through_class' => 'AuthorArticle')))))->
+    checkResponseElement('script[src]', false)->
     checkResponseElement('div.form-row label', 'Author article:', array('position' => 2))->
     checkResponseElement('div.form-row select[name="associated_author_article[]"][multiple="multiple"]', true)->
     checkResponseElement('div.form-row select[name="associated_author_article[]"] option', 3)->
@@ -46,6 +51,7 @@ function launch_tests($b)
 
     // admin_check_list
     checkEditCustomization('m2m relationship (admin_check_list)', array('display' => array('title', 'body', 'author_article'), 'fields' => array('author_article' => array('type' => 'admin_check_list', 'params' => array('through_class' => 'AuthorArticle')))))->
+    checkResponseElement('script[src]', false)->
     checkResponseElement('div.form-row label', 'Author article:', array('position' => 2))->
     checkResponseElement('div.form-row input[type="checkbox"][name="associated_author_article[]"][checked="checked"]', 2)->
     checkResponseElement('div.form-row input[type="checkbox"][name="associated_author_article[]"]', 3)->

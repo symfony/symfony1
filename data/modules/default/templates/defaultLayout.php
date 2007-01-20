@@ -6,6 +6,8 @@
 <?php include_metas() ?>
 <?php include_title() ?>
 
+<?php use_stylesheet('/sf/sf_default/css/screen.css', 'last') ?>
+
 <link rel="shortcut icon" href="/favicon.ico" />
 
 <!--[if lt IE 7.]>

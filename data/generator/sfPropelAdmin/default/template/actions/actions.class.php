@@ -11,11 +11,6 @@
  */
 class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 {
-  public function preExecute()
-  {
-    $this->getResponse()->addStylesheet('<?php echo $this->getParameterValue('css', sfConfig::get('sf_admin_web_dir').'/css/main') ?>');
-  }
-
   public function executeIndex()
   {
     return $this->forward('<?php echo $this->getModuleName() ?>', 'list');
@@ -81,8 +76,6 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     }
     else
     {
-      $this->addJavascriptsForEdit();
-
       $this->labels = $this->getLabels();
     }
   }
@@ -124,8 +117,6 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     $this->preExecute();
     $this-><?php echo $this->getSingularName() ?> = $this->get<?php echo $this->getClassName() ?>OrCreate();
     $this->update<?php echo $this->getClassName() ?>FromRequest();
-
-    $this->addJavascriptsForEdit();
 
     $this->labels = $this->getLabels();
 
@@ -424,13 +415,6 @@ $column = sfPropelManyToMany::getColumn($class, $through_class);
         $c->addDescendingOrderByColumn($sort_column);
       }
     }
-  }
-
-  protected function addJavascriptsForEdit()
-  {
-    $this->getResponse()->addJavascript(sfConfig::get('sf_prototype_web_dir').'/js/prototype');
-    $this->getResponse()->addJavascript(sfConfig::get('sf_admin_web_dir').'/js/collapse');
-    $this->getResponse()->addJavascript(sfConfig::get('sf_admin_web_dir').'/js/double_list');
   }
 
   protected function getLabels()

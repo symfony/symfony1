@@ -32,7 +32,10 @@ $b->
   get('/article')->
   isStatusCode(200)->
   isRequestParameter('module', 'article')->
-  isRequestParameter('action', 'index')
+  isRequestParameter('action', 'index')->
+  checkResponseElement('script', false)->
+  checkResponseElement('link[href="/sf/sf_admin/css/main.css"]')->
+  checkResponseElement('link[href][media]', 2)
 ;
 
 $content = $b->getResponse()->getContent();
@@ -131,6 +134,11 @@ $b->
   isStatusCode(200)->
   isRequestParameter('module', 'article')->
   isRequestParameter('action', 'edit')->
+  checkResponseElement('script[src*="calendar"]', 3)->
+  checkResponseElement('script[src]', 3)->
+  checkResponseElement('link[href*="calendar"]')->
+  checkResponseElement('link[href="/sf/sf_admin/css/main.css"]')->
+  checkResponseElement('link[href][media]', 3)->
 
   // title
   checkResponseElement('body h1', 'edit article')->

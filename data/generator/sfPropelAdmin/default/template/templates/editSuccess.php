@@ -1,5 +1,7 @@
 [?php use_helper('Object', 'Validation', 'ObjectAdmin', 'I18N', 'Date') ?]
 
+[?php use_stylesheet('<?php echo $this->getParameterValue('css', sfConfig::get('sf_admin_web_dir').'/css/main') ?>') ?]
+
 <div id="sf_admin_container">
 
 <h1><?php echo $this->getI18NString('edit.title', 'edit '.$this->getModuleName()) ?></h1>

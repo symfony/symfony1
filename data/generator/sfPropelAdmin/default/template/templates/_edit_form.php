@@ -4,12 +4,20 @@
 [?php echo object_input_hidden_tag($<?php echo $this->getSingularName() ?>, 'get<?php echo $pk->getPhpName() ?>') ?]
 <?php endforeach; ?>
 
+<?php $first = true ?>
 <?php foreach ($this->getColumnCategories('edit.display') as $category): ?>
 <?php
   if ($category[0] == '-')
   {
     $category_name = substr($category, 1);
     $collapse = true;
+
+    if ($first)
+    {
+      $first = false;
+      echo "[?php use_javascript(sfConfig::get('sf_prototype_web_dir').'/js/prototype') ?]\n";
+      echo "[?php use_javascript(sfConfig::get('sf_admin_web_dir').'/js/collapse') ?]\n";
+    }
   }
   else
   {
