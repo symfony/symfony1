@@ -116,6 +116,21 @@ class sfLoader
   }
 
   /**
+   * Gets the template to use for a given module and template file.
+   *
+   * @param string The module name
+   * @param string The template file
+   *
+   * @return string A template path
+   */
+  static public function getTemplatePath($moduleName, $templateFile)
+  {
+    $dir = self::getTemplateDir($moduleName, $templateFile);
+
+    return $dir ? $dir.'/'.$templateFile : null;
+  }
+
+  /**
    * Gets the i18n directory to use for a given module.
    *
    * @param string The module name

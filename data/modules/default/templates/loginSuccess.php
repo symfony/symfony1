@@ -1,3 +1,5 @@
+<?php decorate_with(sfLoader::getTemplatePath('default', 'defaultLayout.php')) ?>
+
 <div class="sfTMessageContainer sfTLock"> 
   <?php echo image_tag('/sf/sf_default/images/icons/lock48.png', array('alt' => 'credentials required', 'class' => 'sfTMessageIcon', 'size' => '48x48')) ?>
   <div class="sfTMessageWrap">

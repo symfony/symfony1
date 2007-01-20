@@ -190,6 +190,24 @@ function use_javascript($js, $position = '')
 }
 
 /**
+ * Decorates the current template with a given layout.
+ *
+ * @param mixed The layout name or path or false to disable the layout
+ */
+function decorate_with($layout)
+{
+  $view = sfContext::getInstance()->getActionStack()->getLastEntry()->getViewInstance();
+  if (false === $layout)
+  {
+    $view->setDecorator(false);
+  }
+  else
+  {
+    $view->setDecoratorTemplate($layout);
+  }
+}
+
+/**
  * Returns the path to an image asset.
  *
  * <b>Example:</b>

@@ -1,3 +1,5 @@
+<?php decorate_with(sfLoader::getTemplatePath('default', 'defaultLayout.php')) ?>
+
 <div class="sfTMessageContainer sfTAlert"> 
   <?php echo image_tag('/sf/sf_default/images/icons/cancel48.png', array('alt' => 'page not found', 'class' => 'sfTMessageIcon', 'size' => '48x48')) ?>
   <div class="sfTMessageWrap">

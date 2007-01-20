@@ -18,11 +18,6 @@
  */
 class defaultActions extends sfActions
 {
-  public function preExecute()
-  {
-    $this->setLayout(sfLoader::getTemplateDir('default', 'defaultLayout.php').'/defaultLayout');
-  }
-
   /**
    * Congratulations page for creating an application
    *

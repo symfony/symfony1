@@ -1,3 +1,5 @@
+<?php decorate_with(sfLoader::getTemplatePath('default', 'defaultLayout.php')) ?>
+
 <div class="sfTMessageContainer sfTAlert"> 
   <?php echo image_tag('/sf/sf_default/images/icons/disabled48.png', array('alt' => 'module disabled', 'class' => 'sfTMessageIcon', 'size' => '48x48')) ?>
   <div class="sfTMessageWrap">
