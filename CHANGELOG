@@ -3,6 +3,7 @@ Version 1.0.0-rc1
 
 No major changes since beta4.
 
+* r3316: updated script.aculo.us to 1.7.0 and prototype to 1.5.0
 * r3313: added a new decorate_with() helper
 * r3312: added a new isForwardedTo() method to sfTestBrowser
 * r3298: fixed tests on windows
