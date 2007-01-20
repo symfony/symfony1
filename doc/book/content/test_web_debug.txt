@@ -1,5 +1,0 @@
-= Utiliser le module Debug =
-
-== Résumé ==
-
-SymFony étant un framework complexe, il intègre un debugger très puissant directement dans les pages Web, permettant d'avoir toutes les informations nécessaires lorsqu'un problème survient.
