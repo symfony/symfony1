@@ -1,3 +1,14 @@
+Version 1.0.0-rc1
+-----------------
+
+No major changes since beta4.
+
+* r3313: added a new decorate_with() helper
+* r3312: added a new isForwardedTo() method to sfTestBrowser
+* r3298: fixed tests on windows
+* updated phpdoc comments
+* added more unit tests (> 3800 now)
+
 Version 1.0.0-beta4
 -------------------
 
