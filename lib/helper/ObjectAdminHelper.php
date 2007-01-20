@@ -99,6 +99,10 @@ function object_admin_double_list($object, $method, $options = array(), $callbac
 </div>
 ';
 
+  $response = sfContext::getInstance()->getResponse();
+  $response->addJavascript(sfConfig::get('sf_prototype_web_dir').'/js/prototype');
+  $response->addJavascript(sfConfig::get('sf_admin_web_dir').'/js/double_list');
+
   return sprintf($html,
     $label_all,
     $select1,
