@@ -117,6 +117,37 @@ class sfTestBrowser extends sfBrowser
     return $this;
   }
 
+  /**
+   * Checks that the request is forwarded to a given module/action.
+   *
+   * @param string The module name
+   * @param string The action name
+   * @param mixed  The position in the action stack (default to the last entry)
+   *
+   * @return object this
+   */
+  public function isForwardedTo($moduleName, $actionName, $position = 'last')
+  {
+    $actionStack = $this->getContext()->getActionStack();
+
+    switch ($position)
+    {
+      case 'first':
+        $entry = $actionStack->getFirstEntry();
+        break;
+      case 'last':
+        $entry = $actionStack->getLastEntry();
+        break;
+      default:
+        $entry = $actionStack->getEntry($position);
+    }
+
+    $this->test->is($entry->getModuleName(), $moduleName, sprintf('request is forwarded to the "%s" module (%s)', $moduleName, $position));
+    $this->test->is($entry->getActionName(), $actionName, sprintf('request is forwarded to the "%s" action (%s)', $actionName, $position));
+
+    return $this;
+  }
+
   public function isResponseHeader($key, $value)
   {
     $headers = $this->getResponse()->getHttpHeader($key);

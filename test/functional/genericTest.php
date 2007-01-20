@@ -23,20 +23,25 @@ $b->
   isStatusCode(200)->
   isRequestParameter('module', 'default')->
   isRequestParameter('action', 'index')->
-  checkResponseElement('body', '/congratulations/i')
+  checkResponseElement('body', '/congratulations/i')->
+  checkResponseElement('link[href="/sf/sf_default/css/screen.css"]')
 ;
 
 // default 404
 $b->
   get('/nonexistant')->
   isStatusCode(404)->
-  checkResponseElement('body', '!/congratulations/i')
+  isForwardedTo('default', 'error404')->
+  checkResponseElement('body', '!/congratulations/i')->
+  checkResponseElement('link[href="/sf/sf_default/css/screen.css"]')
 ;
 
 // unexistant action
 $b->
   get('/default/nonexistantaction')->
-  isStatusCode(404)
+  isStatusCode(404)->
+  isForwardedTo('default', 'error404')->
+  checkResponseElement('link[href="/sf/sf_default/css/screen.css"]')
 ;
 
 // available
@@ -44,8 +49,10 @@ sfConfig::set('sf_available', false);
 $b->
   get('/')->
   isStatusCode(200)->
+  isForwardedTo('default', 'unavailable')->
   checkResponseElement('body', '/unavailable/i')->
-  checkResponseElement('body', '!/congratulations/i')
+  checkResponseElement('body', '!/congratulations/i')->
+  checkResponseElement('link[href="/sf/sf_default/css/screen.css"]')
 ;
 sfConfig::set('sf_available', true);
 
@@ -53,8 +60,10 @@ sfConfig::set('sf_available', true);
 $b->
   get('/configModuleDisabled')->
   isStatusCode(200)->
+  isForwardedTo('default', 'disabled')->
   checkResponseElement('body', '/module is unavailable/i')->
-  checkResponseElement('body', '!/congratulations/i')
+  checkResponseElement('body', '!/congratulations/i')->
+  checkResponseElement('link[href="/sf/sf_default/css/screen.css"]')
 ;
 
 // view.yml: has_layout
@@ -69,8 +78,11 @@ $b->
 $b->
   get('/configSecurityIsSecure')->
   isStatusCode(200)->
+  isForwardedTo('default', 'login')->
   checkResponseElement('body', '/Credentials Required/i')->
-  checkResponseElement('body', 1) // check that there is no double output caused by the forwarding in a filter
+  // check that there is no double output caused by the forwarding in a filter
+  checkResponseElement('body', 1)->
+  checkResponseElement('link[href="/sf/sf_default/css/screen.css"]')
 ;
 
 // settings.yml: max_forwards
