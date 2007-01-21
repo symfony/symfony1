@@ -491,7 +491,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
       $validators = array();
       foreach ($values as $validator => $params)
       {
-        if (in_array($validator, array('required', 'group', 'group_msg', 'parent', 'file')))
+        if (in_array($validator, array('required', 'group', 'group_msg', 'parent', 'file', 'methods')))
         {
           continue;
         }
