@@ -11,7 +11,7 @@
   text-decoration: underline;
 }
 
-body, #sf_admin_container td
+#sf_admin_container td
 {
   margin: 0;
   padding: 20px;
