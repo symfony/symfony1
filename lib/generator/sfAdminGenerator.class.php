@@ -484,7 +484,7 @@ EOF;
    *
    * @return string HTML code
    */
-  public function getI18NString($key, $default = null)
+  public function getI18NString($key, $default = null, $withEcho = true)
   {
     $value = $this->escapeString($this->getParameterValue($key, $default));
 
@@ -520,7 +520,9 @@ EOF;
     // strip all = signs
     $value = preg_replace('/%%=([^%]+)%%/', '%%$1%%', $value);
 
-    return '[?php echo __(\''.$value.'\', '."\n".'array('.implode(",\n", $vars).')) ?]';
+    $i18n = '__(\''.$value.'\', '."\n".'array('.implode(",\n", $vars).'))';
+
+    return $withEcho ? '[?php echo '.$i18n.' ?]' : $i18n;
   }
 
   /**
