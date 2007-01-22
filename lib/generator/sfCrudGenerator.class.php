@@ -86,8 +86,16 @@ abstract class sfCrudGenerator extends sfGenerator
     }
 
     $this->setTheme($theme);
-    $templateFiles = sfFinder::type('file')->name('*.php')->relative()->in($themeDir.'/templates');
-    $configFiles = sfFinder::type('file')->name('*.yml')->relative()->in($themeDir.'/config');
+
+    $templateFiles = array_merge(
+      sfFinder::type('file')->name('*.php')->relative()->in(sfLoader::getGeneratorTemplate($this->getGeneratorClass(), 'default', '').'/templates'),
+      sfFinder::type('file')->name('*.php')->relative()->in($themeDir.'/templates')
+    );
+
+    $configFiles = array_merge(
+      sfFinder::type('file')->name('*.yml')->relative()->in(sfLoader::getGeneratorTemplate($this->getGeneratorClass(), 'default', '').'/config'),
+      sfFinder::type('file')->name('*.yml')->relative()->in($themeDir.'/config')
+    );
 
     $this->generatePhpFiles($this->generatedModuleName, $templateFiles, $configFiles);
 
