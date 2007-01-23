@@ -352,6 +352,10 @@ abstract class sfCrudGenerator extends sfGenerator
 
     if ($column->isForeignKey())
     {
+      if (!$column->isNotNull())
+      {
+        $params['include_blank'] = true;
+      }
       return $this->getPHPObjectHelper('select_tag', $column, $params, array('related_class' => $this->getRelatedClassName($column)));
     }
     else if ($type == CreoleTypes::DATE)
