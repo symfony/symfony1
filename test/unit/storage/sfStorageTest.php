@@ -15,10 +15,10 @@ $t = new lime_test(19, new lime_output_color());
 
 class myStorage extends sfStorage
 {
-  function & read ($key) {}
-  function & remove ($key) {}
-  function shutdown () {}
-  function write ($key, &$data) {}
+  function & read($key) {}
+  function & remove($key) {}
+  function shutdown() {}
+  function write($key, &$data) {}
 }
 
 class fakeStorage
