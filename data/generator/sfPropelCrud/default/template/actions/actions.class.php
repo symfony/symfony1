@@ -63,6 +63,8 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     }
 <?php elseif ($type == CreoleTypes::BOOLEAN): ?>
     $<?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>($this->getRequestParameter('<?php echo $name ?>', 0));
+<?php elseif ($column->isForeignKey()): ?>
+    $<?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>($this->getRequestParameter('<?php echo $name ?>') ? $this->getRequestParameter('<?php echo $name ?>') : null);
 <?php else: ?>
     $<?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>($this->getRequestParameter('<?php echo $name ?>'));
 <?php endif; ?>

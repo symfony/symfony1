@@ -13,7 +13,7 @@ abstract class BaseArticlePeer {
 	const CLASS_DEFAULT = 'lib.model.Article';
 
 	
-	const NUM_COLUMNS = 7;
+	const NUM_COLUMNS = 8;
 
 	
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -41,23 +41,26 @@ abstract class BaseArticlePeer {
 	const END_DATE = 'article.END_DATE';
 
 	
+	const BOOK_ID = 'article.BOOK_ID';
+
+	
 	private static $phpNameMap = null;
 
 
 	
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Body', 'Online', 'CategoryId', 'CreatedAt', 'EndDate', ),
-		BasePeer::TYPE_COLNAME => array (ArticlePeer::ID, ArticlePeer::TITLE, ArticlePeer::BODY, ArticlePeer::ONLINE, ArticlePeer::CATEGORY_ID, ArticlePeer::CREATED_AT, ArticlePeer::END_DATE, ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'body', 'online', 'category_id', 'created_at', 'end_date', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
+		BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Body', 'Online', 'CategoryId', 'CreatedAt', 'EndDate', 'BookId', ),
+		BasePeer::TYPE_COLNAME => array (ArticlePeer::ID, ArticlePeer::TITLE, ArticlePeer::BODY, ArticlePeer::ONLINE, ArticlePeer::CATEGORY_ID, ArticlePeer::CREATED_AT, ArticlePeer::END_DATE, ArticlePeer::BOOK_ID, ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'body', 'online', 'category_id', 'created_at', 'end_date', 'book_id', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
 	);
 
 	
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Body' => 2, 'Online' => 3, 'CategoryId' => 4, 'CreatedAt' => 5, 'EndDate' => 6, ),
-		BasePeer::TYPE_COLNAME => array (ArticlePeer::ID => 0, ArticlePeer::TITLE => 1, ArticlePeer::BODY => 2, ArticlePeer::ONLINE => 3, ArticlePeer::CATEGORY_ID => 4, ArticlePeer::CREATED_AT => 5, ArticlePeer::END_DATE => 6, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'body' => 2, 'online' => 3, 'category_id' => 4, 'created_at' => 5, 'end_date' => 6, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
+		BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Body' => 2, 'Online' => 3, 'CategoryId' => 4, 'CreatedAt' => 5, 'EndDate' => 6, 'BookId' => 7, ),
+		BasePeer::TYPE_COLNAME => array (ArticlePeer::ID => 0, ArticlePeer::TITLE => 1, ArticlePeer::BODY => 2, ArticlePeer::ONLINE => 3, ArticlePeer::CATEGORY_ID => 4, ArticlePeer::CREATED_AT => 5, ArticlePeer::END_DATE => 6, ArticlePeer::BOOK_ID => 7, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'body' => 2, 'online' => 3, 'category_id' => 4, 'created_at' => 5, 'end_date' => 6, 'book_id' => 7, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
 	);
 
 	
@@ -124,6 +127,8 @@ abstract class BaseArticlePeer {
 		$criteria->addSelectColumn(ArticlePeer::CREATED_AT);
 
 		$criteria->addSelectColumn(ArticlePeer::END_DATE);
+
+		$criteria->addSelectColumn(ArticlePeer::BOOK_ID);
 
 	}
 
@@ -232,6 +237,34 @@ abstract class BaseArticlePeer {
 
 
 	
+	public static function doCountJoinBook(Criteria $criteria, $distinct = false, $con = null)
+	{
+				$criteria = clone $criteria;
+		
+				$criteria->clearSelectColumns()->clearOrderByColumns();
+		if ($distinct || in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->addSelectColumn(ArticlePeer::COUNT_DISTINCT);
+		} else {
+			$criteria->addSelectColumn(ArticlePeer::COUNT);
+		}
+		
+				foreach($criteria->getGroupByColumns() as $column)
+		{
+			$criteria->addSelectColumn($column);
+		}
+
+		$criteria->addJoin(ArticlePeer::BOOK_ID, BookPeer::ID);
+
+		$rs = ArticlePeer::doSelectRS($criteria, $con);
+		if ($rs->next()) {
+			return $rs->getInt(1);
+		} else {
+						return 0;
+		}
+	}
+
+
+	
 	public static function doSelectJoinCategory(Criteria $c, $con = null)
 	{
 		$c = clone $c;
@@ -279,6 +312,53 @@ abstract class BaseArticlePeer {
 
 
 	
+	public static function doSelectJoinBook(Criteria $c, $con = null)
+	{
+		$c = clone $c;
+
+				if ($c->getDbName() == Propel::getDefaultDB()) {
+			$c->setDbName(self::DATABASE_NAME);
+		}
+
+		ArticlePeer::addSelectColumns($c);
+		$startcol = (ArticlePeer::NUM_COLUMNS - ArticlePeer::NUM_LAZY_LOAD_COLUMNS) + 1;
+		BookPeer::addSelectColumns($c);
+
+		$c->addJoin(ArticlePeer::BOOK_ID, BookPeer::ID);
+		$rs = BasePeer::doSelect($c, $con);
+		$results = array();
+
+		while($rs->next()) {
+
+			$omClass = ArticlePeer::getOMClass();
+
+			$cls = Propel::import($omClass);
+			$obj1 = new $cls();
+			$obj1->hydrate($rs);
+
+			$omClass = BookPeer::getOMClass();
+
+			$cls = Propel::import($omClass);
+			$obj2 = new $cls();
+			$obj2->hydrate($rs, $startcol);
+
+			$newObject = true;
+			foreach($results as $temp_obj1) {
+				$temp_obj2 = $temp_obj1->getBook(); 				if ($temp_obj2->getPrimaryKey() === $obj2->getPrimaryKey()) {
+					$newObject = false;
+										$temp_obj2->addArticle($obj1); 					break;
+				}
+			}
+			if ($newObject) {
+				$obj2->initArticles();
+				$obj2->addArticle($obj1); 			}
+			$results[] = $obj1;
+		}
+		return $results;
+	}
+
+
+	
 	public static function doCountJoinAll(Criteria $criteria, $distinct = false, $con = null)
 	{
 		$criteria = clone $criteria;
@@ -296,6 +376,8 @@ abstract class BaseArticlePeer {
 		}
 
 		$criteria->addJoin(ArticlePeer::CATEGORY_ID, CategoryPeer::ID);
+
+		$criteria->addJoin(ArticlePeer::BOOK_ID, BookPeer::ID);
 
 		$rs = ArticlePeer::doSelectRS($criteria, $con);
 		if ($rs->next()) {
@@ -321,7 +403,12 @@ abstract class BaseArticlePeer {
 		CategoryPeer::addSelectColumns($c);
 		$startcol3 = $startcol2 + CategoryPeer::NUM_COLUMNS;
 
+		BookPeer::addSelectColumns($c);
+		$startcol4 = $startcol3 + BookPeer::NUM_COLUMNS;
+
 		$c->addJoin(ArticlePeer::CATEGORY_ID, CategoryPeer::ID);
+
+		$c->addJoin(ArticlePeer::BOOK_ID, BookPeer::ID);
 
 		$rs = BasePeer::doSelect($c, $con);
 		$results = array();
@@ -350,6 +437,199 @@ abstract class BaseArticlePeer {
 				$temp_obj2 = $temp_obj1->getCategory(); 				if ($temp_obj2->getPrimaryKey() === $obj2->getPrimaryKey()) {
 					$newObject = false;
 					$temp_obj2->addArticle($obj1); 					break;
+				}
+			}
+			
+			if ($newObject) {
+				$obj2->initArticles();
+				$obj2->addArticle($obj1);
+			}
+
+				
+					
+			$omClass = BookPeer::getOMClass();
+
+	
+			$cls = Propel::import($omClass);
+			$obj3 = new $cls();
+			$obj3->hydrate($rs, $startcol3);
+			
+			$newObject = true;
+			for ($j=0, $resCount=count($results); $j < $resCount; $j++) {
+				$temp_obj1 = $results[$j];
+				$temp_obj3 = $temp_obj1->getBook(); 				if ($temp_obj3->getPrimaryKey() === $obj3->getPrimaryKey()) {
+					$newObject = false;
+					$temp_obj3->addArticle($obj1); 					break;
+				}
+			}
+			
+			if ($newObject) {
+				$obj3->initArticles();
+				$obj3->addArticle($obj1);
+			}
+
+			$results[] = $obj1;
+		}
+		return $results;
+	}
+
+
+	
+	public static function doCountJoinAllExceptCategory(Criteria $criteria, $distinct = false, $con = null)
+	{
+				$criteria = clone $criteria;
+		
+				$criteria->clearSelectColumns()->clearOrderByColumns();
+		if ($distinct || in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->addSelectColumn(ArticlePeer::COUNT_DISTINCT);
+		} else {
+			$criteria->addSelectColumn(ArticlePeer::COUNT);
+		}
+		
+				foreach($criteria->getGroupByColumns() as $column)
+		{
+			$criteria->addSelectColumn($column);
+		}
+
+		$criteria->addJoin(ArticlePeer::BOOK_ID, BookPeer::ID);
+
+		$rs = ArticlePeer::doSelectRS($criteria, $con);
+		if ($rs->next()) {
+			return $rs->getInt(1);
+		} else {
+						return 0;
+		}
+	}
+
+
+	
+	public static function doCountJoinAllExceptBook(Criteria $criteria, $distinct = false, $con = null)
+	{
+				$criteria = clone $criteria;
+		
+				$criteria->clearSelectColumns()->clearOrderByColumns();
+		if ($distinct || in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->addSelectColumn(ArticlePeer::COUNT_DISTINCT);
+		} else {
+			$criteria->addSelectColumn(ArticlePeer::COUNT);
+		}
+		
+				foreach($criteria->getGroupByColumns() as $column)
+		{
+			$criteria->addSelectColumn($column);
+		}
+
+		$criteria->addJoin(ArticlePeer::CATEGORY_ID, CategoryPeer::ID);
+
+		$rs = ArticlePeer::doSelectRS($criteria, $con);
+		if ($rs->next()) {
+			return $rs->getInt(1);
+		} else {
+						return 0;
+		}
+	}
+
+
+	
+	public static function doSelectJoinAllExceptCategory(Criteria $c, $con = null)
+	{
+		$c = clone $c;
+
+								if ($c->getDbName() == Propel::getDefaultDB()) {
+			$c->setDbName(self::DATABASE_NAME);
+		}
+
+		ArticlePeer::addSelectColumns($c);
+		$startcol2 = (ArticlePeer::NUM_COLUMNS - ArticlePeer::NUM_LAZY_LOAD_COLUMNS) + 1;
+
+		BookPeer::addSelectColumns($c);
+		$startcol3 = $startcol2 + BookPeer::NUM_COLUMNS;
+
+		$c->addJoin(ArticlePeer::BOOK_ID, BookPeer::ID);
+
+
+		$rs = BasePeer::doSelect($c, $con);
+		$results = array();
+		
+		while($rs->next()) {
+
+			$omClass = ArticlePeer::getOMClass();
+
+			$cls = Propel::import($omClass);
+			$obj1 = new $cls();
+			$obj1->hydrate($rs);		
+
+			$omClass = BookPeer::getOMClass();
+
+	
+			$cls = Propel::import($omClass);
+			$obj2  = new $cls();
+			$obj2->hydrate($rs, $startcol2);
+			
+			$newObject = true;
+			for ($j=0, $resCount=count($results); $j < $resCount; $j++) {
+				$temp_obj1 = $results[$j];
+				$temp_obj2 = $temp_obj1->getBook(); 				if ($temp_obj2->getPrimaryKey() === $obj2->getPrimaryKey()) {
+					$newObject = false;
+					$temp_obj2->addArticle($obj1);
+					break;
+				}
+			}
+			
+			if ($newObject) {
+				$obj2->initArticles();
+				$obj2->addArticle($obj1);
+			}
+
+			$results[] = $obj1;
+		}
+		return $results;
+	}
+
+
+	
+	public static function doSelectJoinAllExceptBook(Criteria $c, $con = null)
+	{
+		$c = clone $c;
+
+								if ($c->getDbName() == Propel::getDefaultDB()) {
+			$c->setDbName(self::DATABASE_NAME);
+		}
+
+		ArticlePeer::addSelectColumns($c);
+		$startcol2 = (ArticlePeer::NUM_COLUMNS - ArticlePeer::NUM_LAZY_LOAD_COLUMNS) + 1;
+
+		CategoryPeer::addSelectColumns($c);
+		$startcol3 = $startcol2 + CategoryPeer::NUM_COLUMNS;
+
+		$c->addJoin(ArticlePeer::CATEGORY_ID, CategoryPeer::ID);
+
+
+		$rs = BasePeer::doSelect($c, $con);
+		$results = array();
+		
+		while($rs->next()) {
+
+			$omClass = ArticlePeer::getOMClass();
+
+			$cls = Propel::import($omClass);
+			$obj1 = new $cls();
+			$obj1->hydrate($rs);		
+
+			$omClass = CategoryPeer::getOMClass();
+
+	
+			$cls = Propel::import($omClass);
+			$obj2  = new $cls();
+			$obj2->hydrate($rs, $startcol2);
+			
+			$newObject = true;
+			for ($j=0, $resCount=count($results); $j < $resCount; $j++) {
+				$temp_obj1 = $results[$j];
+				$temp_obj2 = $temp_obj1->getCategory(); 				if ($temp_obj2->getPrimaryKey() === $obj2->getPrimaryKey()) {
+					$newObject = false;
+					$temp_obj2->addArticle($obj1);
+					break;
 				}
 			}
 			

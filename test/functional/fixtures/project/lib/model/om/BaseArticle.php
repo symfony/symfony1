@@ -38,8 +38,15 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 	
 	protected $end_date;
 
+
+	
+	protected $book_id;
+
 	
 	protected $aCategory;
+
+	
+	protected $aBook;
 
 	
 	protected $collAuthorArticles;
@@ -133,6 +140,13 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 	}
 
 	
+	public function getBookId()
+	{
+
+		return $this->book_id;
+	}
+
+	
 	public function setId($v)
 	{
 
@@ -221,6 +235,20 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 
 	} 
 	
+	public function setBookId($v)
+	{
+
+		if ($this->book_id !== $v) {
+			$this->book_id = $v;
+			$this->modifiedColumns[] = ArticlePeer::BOOK_ID;
+		}
+
+		if ($this->aBook !== null && $this->aBook->getId() !== $v) {
+			$this->aBook = null;
+		}
+
+	} 
+	
 	public function hydrate(ResultSet $rs, $startcol = 1)
 	{
 		try {
@@ -239,11 +267,13 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 
 			$this->end_date = $rs->getTimestamp($startcol + 6, null);
 
+			$this->book_id = $rs->getInt($startcol + 7);
+
 			$this->resetModified();
 
 			$this->setNew(false);
 
-						return $startcol + 7; 
+						return $startcol + 8; 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating Article object", $e);
 		}
@@ -313,6 +343,13 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 				$this->setCategory($this->aCategory);
 			}
 
+			if ($this->aBook !== null) {
+				if ($this->aBook->isModified()) {
+					$affectedRows += $this->aBook->save($con);
+				}
+				$this->setBook($this->aBook);
+			}
+
 
 						if ($this->isModified()) {
 				if ($this->isNew()) {
@@ -376,6 +413,12 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 				}
 			}
 
+			if ($this->aBook !== null) {
+				if (!$this->aBook->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aBook->getValidationFailures());
+				}
+			}
+
 
 			if (($retval = ArticlePeer::doValidate($this, $columns)) !== true) {
 				$failureMap = array_merge($failureMap, $retval);
@@ -429,6 +472,9 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 			case 6:
 				return $this->getEndDate();
 				break;
+			case 7:
+				return $this->getBookId();
+				break;
 			default:
 				return null;
 				break;
@@ -446,6 +492,7 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 			$keys[4] => $this->getCategoryId(),
 			$keys[5] => $this->getCreatedAt(),
 			$keys[6] => $this->getEndDate(),
+			$keys[7] => $this->getBookId(),
 		);
 		return $result;
 	}
@@ -482,6 +529,9 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 			case 6:
 				$this->setEndDate($value);
 				break;
+			case 7:
+				$this->setBookId($value);
+				break;
 		} 	}
 
 	
@@ -496,6 +546,7 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 		if (array_key_exists($keys[4], $arr)) $this->setCategoryId($arr[$keys[4]]);
 		if (array_key_exists($keys[5], $arr)) $this->setCreatedAt($arr[$keys[5]]);
 		if (array_key_exists($keys[6], $arr)) $this->setEndDate($arr[$keys[6]]);
+		if (array_key_exists($keys[7], $arr)) $this->setBookId($arr[$keys[7]]);
 	}
 
 	
@@ -510,6 +561,7 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 		if ($this->isColumnModified(ArticlePeer::CATEGORY_ID)) $criteria->add(ArticlePeer::CATEGORY_ID, $this->category_id);
 		if ($this->isColumnModified(ArticlePeer::CREATED_AT)) $criteria->add(ArticlePeer::CREATED_AT, $this->created_at);
 		if ($this->isColumnModified(ArticlePeer::END_DATE)) $criteria->add(ArticlePeer::END_DATE, $this->end_date);
+		if ($this->isColumnModified(ArticlePeer::BOOK_ID)) $criteria->add(ArticlePeer::BOOK_ID, $this->book_id);
 
 		return $criteria;
 	}
@@ -551,6 +603,8 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 		$copyObj->setCreatedAt($this->created_at);
 
 		$copyObj->setEndDate($this->end_date);
+
+		$copyObj->setBookId($this->book_id);
 
 
 		if ($deepCopy) {
@@ -613,6 +667,36 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 			
 		}
 		return $this->aCategory;
+	}
+
+	
+	public function setBook($v)
+	{
+
+
+		if ($v === null) {
+			$this->setBookId(NULL);
+		} else {
+			$this->setBookId($v->getId());
+		}
+
+
+		$this->aBook = $v;
+	}
+
+
+	
+	public function getBook($con = null)
+	{
+				include_once 'lib/model/om/BaseBookPeer.php';
+
+		if ($this->aBook === null && ($this->book_id !== null)) {
+
+			$this->aBook = BookPeer::retrieveByPK($this->book_id, $con);
+
+			
+		}
+		return $this->aBook;
 	}
 
 	

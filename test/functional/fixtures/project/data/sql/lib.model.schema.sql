@@ -12,13 +12,17 @@ CREATE TABLE [article]
 	[title] VARCHAR(255),
 	[body] MEDIUMTEXT,
 	[online] INTEGER,
+	[category_id] INTEGER  NOT NULL,
+	[created_at] TIMESTAMP,
 	[end_date] TIMESTAMP,
-	[category_id] INTEGER,
-	[created_at] TIMESTAMP
+	[book_id] INTEGER
 );
 
 -- SQLite does not support foreign keys; this is just for reference
 -- FOREIGN KEY ([category_id]) REFERENCES category ([id])
+
+-- SQLite does not support foreign keys; this is just for reference
+-- FOREIGN KEY ([book_id]) REFERENCES book ([id])
 
 -----------------------------------------------------------------------------
 -- category
@@ -28,6 +32,19 @@ DROP TABLE [category];
 
 
 CREATE TABLE [category]
+(
+	[id] INTEGER  NOT NULL PRIMARY KEY,
+	[name] VARCHAR(255)
+);
+
+-----------------------------------------------------------------------------
+-- book
+-----------------------------------------------------------------------------
+
+DROP TABLE [book];
+
+
+CREATE TABLE [book]
 (
 	[id] INTEGER  NOT NULL PRIMARY KEY,
 	[name] VARCHAR(255)

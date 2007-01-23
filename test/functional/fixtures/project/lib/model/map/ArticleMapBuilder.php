@@ -40,11 +40,13 @@ class ArticleMapBuilder {
 
 		$tMap->addColumn('ONLINE', 'Online', 'boolean', CreoleTypes::BOOLEAN, false);
 
-		$tMap->addForeignKey('CATEGORY_ID', 'CategoryId', 'int', CreoleTypes::INTEGER, 'category', 'ID', false, null);
+		$tMap->addForeignKey('CATEGORY_ID', 'CategoryId', 'int', CreoleTypes::INTEGER, 'category', 'ID', true, null);
 
 		$tMap->addColumn('CREATED_AT', 'CreatedAt', 'int', CreoleTypes::TIMESTAMP, false);
 
 		$tMap->addColumn('END_DATE', 'EndDate', 'int', CreoleTypes::TIMESTAMP, false);
+
+		$tMap->addForeignKey('BOOK_ID', 'BookId', 'int', CreoleTypes::INTEGER, 'book', 'ID', false, null);
 				
     } 
 } 

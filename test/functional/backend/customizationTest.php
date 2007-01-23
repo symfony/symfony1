@@ -24,15 +24,15 @@ $b->initialize();
 $b->
   // simple
   checkListCustomization('list stacked layout', array('layout' => 'stacked'))->
-  checkResponseElement('table.sf_admin_list tr.sf_admin_row_0 td[colspan="7"] a', 1)->
-  checkResponseElement('table.sf_admin_list tr.sf_admin_row_0 td[colspan="7"]', '/foo title/')->
-  checkResponseElement('table.sf_admin_list tr.sf_admin_row_0 td[colspan="7"]', '/bar body/')->
-  checkResponseElement('table.sf_admin_list tr.sf_admin_row_0 td[colspan="7"] img[src*="tick"]')->
+  checkResponseElement('table.sf_admin_list tr.sf_admin_row_0 td[colspan="8"] a', 1)->
+  checkResponseElement('table.sf_admin_list tr.sf_admin_row_0 td[colspan="8"]', '/foo title/')->
+  checkResponseElement('table.sf_admin_list tr.sf_admin_row_0 td[colspan="8"]', '/bar body/')->
+  checkResponseElement('table.sf_admin_list tr.sf_admin_row_0 td[colspan="8"] img[src*="tick"]')->
 
   // with some customization
   checkListCustomization('list stacked layout', array('layout' => 'stacked', 'params' => 'Article %%=title%% with body %%body%%'))->
-  checkResponseElement('table.sf_admin_list tr.sf_admin_row_0 td[colspan="7"] a', 'foo title')->
-  checkResponseElement('table.sf_admin_list tr.sf_admin_row_0 td[colspan="7"]', '/with body bar body/')
+  checkResponseElement('table.sf_admin_list tr.sf_admin_row_0 td[colspan="8"] a', 'foo title')->
+  checkResponseElement('table.sf_admin_list tr.sf_admin_row_0 td[colspan="8"]', '/with body bar body/')
 ;
 
 // small customization tests

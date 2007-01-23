@@ -1,7 +1,7 @@
 <?php
 
 
-abstract class BaseCategory extends BaseObject  implements Persistent {
+abstract class BaseBook extends BaseObject  implements Persistent {
 
 
 	
@@ -50,7 +50,7 @@ abstract class BaseCategory extends BaseObject  implements Persistent {
 
 		if ($this->id !== $v) {
 			$this->id = $v;
-			$this->modifiedColumns[] = CategoryPeer::ID;
+			$this->modifiedColumns[] = BookPeer::ID;
 		}
 
 	} 
@@ -60,7 +60,7 @@ abstract class BaseCategory extends BaseObject  implements Persistent {
 
 		if ($this->name !== $v) {
 			$this->name = $v;
-			$this->modifiedColumns[] = CategoryPeer::NAME;
+			$this->modifiedColumns[] = BookPeer::NAME;
 		}
 
 	} 
@@ -79,7 +79,7 @@ abstract class BaseCategory extends BaseObject  implements Persistent {
 
 						return $startcol + 2; 
 		} catch (Exception $e) {
-			throw new PropelException("Error populating Category object", $e);
+			throw new PropelException("Error populating Book object", $e);
 		}
 	}
 
@@ -91,12 +91,12 @@ abstract class BaseCategory extends BaseObject  implements Persistent {
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(CategoryPeer::DATABASE_NAME);
+			$con = Propel::getConnection(BookPeer::DATABASE_NAME);
 		}
 
 		try {
 			$con->begin();
-			CategoryPeer::doDelete($this, $con);
+			BookPeer::doDelete($this, $con);
 			$this->setDeleted(true);
 			$con->commit();
 		} catch (PropelException $e) {
@@ -113,7 +113,7 @@ abstract class BaseCategory extends BaseObject  implements Persistent {
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(CategoryPeer::DATABASE_NAME);
+			$con = Propel::getConnection(BookPeer::DATABASE_NAME);
 		}
 
 		try {
@@ -136,12 +136,12 @@ abstract class BaseCategory extends BaseObject  implements Persistent {
 
 						if ($this->isModified()) {
 				if ($this->isNew()) {
-					$pk = CategoryPeer::doInsert($this, $con);
+					$pk = BookPeer::doInsert($this, $con);
 					$affectedRows += 1; 										 										 
 					$this->setId($pk);  
 					$this->setNew(false);
 				} else {
-					$affectedRows += CategoryPeer::doUpdate($this, $con);
+					$affectedRows += BookPeer::doUpdate($this, $con);
 				}
 				$this->resetModified(); 			}
 
@@ -189,7 +189,7 @@ abstract class BaseCategory extends BaseObject  implements Persistent {
 			$failureMap = array();
 
 
-			if (($retval = CategoryPeer::doValidate($this, $columns)) !== true) {
+			if (($retval = BookPeer::doValidate($this, $columns)) !== true) {
 				$failureMap = array_merge($failureMap, $retval);
 			}
 
@@ -212,7 +212,7 @@ abstract class BaseCategory extends BaseObject  implements Persistent {
 	
 	public function getByName($name, $type = BasePeer::TYPE_PHPNAME)
 	{
-		$pos = CategoryPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+		$pos = BookPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 		return $this->getByPosition($pos);
 	}
 
@@ -234,7 +234,7 @@ abstract class BaseCategory extends BaseObject  implements Persistent {
 	
 	public function toArray($keyType = BasePeer::TYPE_PHPNAME)
 	{
-		$keys = CategoryPeer::getFieldNames($keyType);
+		$keys = BookPeer::getFieldNames($keyType);
 		$result = array(
 			$keys[0] => $this->getId(),
 			$keys[1] => $this->getName(),
@@ -245,7 +245,7 @@ abstract class BaseCategory extends BaseObject  implements Persistent {
 	
 	public function setByName($name, $value, $type = BasePeer::TYPE_PHPNAME)
 	{
-		$pos = CategoryPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+		$pos = BookPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 		return $this->setByPosition($pos, $value);
 	}
 
@@ -264,7 +264,7 @@ abstract class BaseCategory extends BaseObject  implements Persistent {
 	
 	public function fromArray($arr, $keyType = BasePeer::TYPE_PHPNAME)
 	{
-		$keys = CategoryPeer::getFieldNames($keyType);
+		$keys = BookPeer::getFieldNames($keyType);
 
 		if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
 		if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
@@ -273,10 +273,10 @@ abstract class BaseCategory extends BaseObject  implements Persistent {
 	
 	public function buildCriteria()
 	{
-		$criteria = new Criteria(CategoryPeer::DATABASE_NAME);
+		$criteria = new Criteria(BookPeer::DATABASE_NAME);
 
-		if ($this->isColumnModified(CategoryPeer::ID)) $criteria->add(CategoryPeer::ID, $this->id);
-		if ($this->isColumnModified(CategoryPeer::NAME)) $criteria->add(CategoryPeer::NAME, $this->name);
+		if ($this->isColumnModified(BookPeer::ID)) $criteria->add(BookPeer::ID, $this->id);
+		if ($this->isColumnModified(BookPeer::NAME)) $criteria->add(BookPeer::NAME, $this->name);
 
 		return $criteria;
 	}
@@ -284,9 +284,9 @@ abstract class BaseCategory extends BaseObject  implements Persistent {
 	
 	public function buildPkeyCriteria()
 	{
-		$criteria = new Criteria(CategoryPeer::DATABASE_NAME);
+		$criteria = new Criteria(BookPeer::DATABASE_NAME);
 
-		$criteria->add(CategoryPeer::ID, $this->id);
+		$criteria->add(BookPeer::ID, $this->id);
 
 		return $criteria;
 	}
@@ -337,7 +337,7 @@ abstract class BaseCategory extends BaseObject  implements Persistent {
 	public function getPeer()
 	{
 		if (self::$peer === null) {
-			self::$peer = new CategoryPeer();
+			self::$peer = new BookPeer();
 		}
 		return self::$peer;
 	}
@@ -367,7 +367,7 @@ abstract class BaseCategory extends BaseObject  implements Persistent {
 			   $this->collArticles = array();
 			} else {
 
-				$criteria->add(ArticlePeer::CATEGORY_ID, $this->getId());
+				$criteria->add(ArticlePeer::BOOK_ID, $this->getId());
 
 				ArticlePeer::addSelectColumns($criteria);
 				$this->collArticles = ArticlePeer::doSelect($criteria, $con);
@@ -376,7 +376,7 @@ abstract class BaseCategory extends BaseObject  implements Persistent {
 						if (!$this->isNew()) {
 												
 
-				$criteria->add(ArticlePeer::CATEGORY_ID, $this->getId());
+				$criteria->add(ArticlePeer::BOOK_ID, $this->getId());
 
 				ArticlePeer::addSelectColumns($criteria);
 				if (!isset($this->lastArticleCriteria) || !$this->lastArticleCriteria->equals($criteria)) {
@@ -400,7 +400,7 @@ abstract class BaseCategory extends BaseObject  implements Persistent {
 			$criteria = clone $criteria;
 		}
 
-		$criteria->add(ArticlePeer::CATEGORY_ID, $this->getId());
+		$criteria->add(ArticlePeer::BOOK_ID, $this->getId());
 
 		return ArticlePeer::doCount($criteria, $distinct, $con);
 	}
@@ -409,12 +409,12 @@ abstract class BaseCategory extends BaseObject  implements Persistent {
 	public function addArticle(Article $l)
 	{
 		$this->collArticles[] = $l;
-		$l->setCategory($this);
+		$l->setBook($this);
 	}
 
 
 	
-	public function getArticlesJoinBook($criteria = null, $con = null)
+	public function getArticlesJoinCategory($criteria = null, $con = null)
 	{
 				include_once 'lib/model/om/BaseArticlePeer.php';
 		if ($criteria === null) {
@@ -430,16 +430,16 @@ abstract class BaseCategory extends BaseObject  implements Persistent {
 				$this->collArticles = array();
 			} else {
 
-				$criteria->add(ArticlePeer::CATEGORY_ID, $this->getId());
+				$criteria->add(ArticlePeer::BOOK_ID, $this->getId());
 
-				$this->collArticles = ArticlePeer::doSelectJoinBook($criteria, $con);
+				$this->collArticles = ArticlePeer::doSelectJoinCategory($criteria, $con);
 			}
 		} else {
 									
-			$criteria->add(ArticlePeer::CATEGORY_ID, $this->getId());
+			$criteria->add(ArticlePeer::BOOK_ID, $this->getId());
 
 			if (!isset($this->lastArticleCriteria) || !$this->lastArticleCriteria->equals($criteria)) {
-				$this->collArticles = ArticlePeer::doSelectJoinBook($criteria, $con);
+				$this->collArticles = ArticlePeer::doSelectJoinCategory($criteria, $con);
 			}
 		}
 		$this->lastArticleCriteria = $criteria;

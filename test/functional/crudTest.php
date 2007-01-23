@@ -67,7 +67,9 @@ $b->
   checkResponseElement('body table tbody tr', '/Body\:\s+bar body/', array('position' => 2))->
   checkResponseElement('body table tbody tr', '/Online\:\s+1/', array('position' => 3))->
   checkResponseElement('body table tbody tr', '/Category\:\s+1/', array('position' => 4))->
-  checkResponseElement('body table tbody tr', '/Created at\:\s+[0-9\-\:\s]+/', array('position' => 5))
+  checkResponseElement('body table tbody tr', '/Created at\:\s+[0-9\-\:\s]+/', array('position' => 5))->
+  checkResponseElement('body table tbody tr', '/End date\:\s+[0-9\-\:\s]+/', array('position' => 6))->
+  checkResponseElement('body table tbody tr', '/Book\:\s+/', array('position' => 7))
 ;
 
 // edit page
@@ -83,9 +85,9 @@ $b->
   checkResponseElement('body table tbody th', 'Title:', array('position' => 0))->
   checkResponseElement('body table tbody th', 'Body:', array('position' => 1))->
   checkResponseElement('body table tbody th', 'Online:', array('position' => 2))->
-  checkResponseElement('body table tbody th', 'Category:', array('position' => 3))->
-  checkResponseElement('body table tbody th', 5)->
-  checkResponseElement('body table tbody td', 5)->
+  checkResponseElement('body table tbody th', 'Category*:', array('position' => 3))->
+  checkResponseElement('body table tbody th', 6)->
+  checkResponseElement('body table tbody td', 6)->
   checkResponseElement('body table tbody td input[id="title"][name="title"][value*="title"][size="80"]')->
   checkResponseElement('body table tbody td textarea[id="body"][name="body"]', 'bar body')->
   checkResponseElement('body table tbody td input[id="online"][name="online"][type="checkbox"]', true)->
@@ -105,9 +107,9 @@ $b->
   checkResponseElement('body table tbody th', 'Title:', array('position' => 0))->
   checkResponseElement('body table tbody th', 'Body:', array('position' => 1))->
   checkResponseElement('body table tbody th', 'Online:', array('position' => 2))->
-  checkResponseElement('body table tbody th', 'Category:', array('position' => 3))->
-  checkResponseElement('body table tbody th', 5)->
-  checkResponseElement('body table tbody td', 5)->
+  checkResponseElement('body table tbody th', 'Category*:', array('position' => 3))->
+  checkResponseElement('body table tbody th', 6)->
+  checkResponseElement('body table tbody td', 6)->
   checkResponseElement('body table tbody td input[id="title"][name="title"][value=""]')->
   checkResponseElement('body table tbody td textarea[id="body"][name="body"]', '')->
   checkResponseElement('body table tbody td input[id="online"][name="online"][type="checkbox"]', true)->
@@ -138,7 +140,9 @@ $b->
   checkResponseElement('body table tbody tr', '/Body\:\s+my body/', array('position' => 2))->
   checkResponseElement('body table tbody tr', '/Online\:\s+1/', array('position' => 3))->
   checkResponseElement('body table tbody tr', '/Category\:\s+2/', array('position' => 4))->
-  checkResponseElement('body table tbody tr', '/Created at\:\s+[0-9\-\:\s]+/', array('position' => 5))
+  checkResponseElement('body table tbody tr', '/Created at\:\s+[0-9\-\:\s]+/', array('position' => 5))->
+  checkResponseElement('body table tbody tr', '/End date\:\s+[0-9\-\:\s]+/', array('position' => 6))->
+  checkResponseElement('body table tbody tr', '/Book\:\s+$/', array('position' => 7))
 ;
 
 $b->

@@ -233,6 +233,7 @@ $b->
 
   // check list
   getAndCheck('article', 'list')->
+  checkResponseElement('body table tbody tr[class="sf_admin_row_1"] td', '', array('position' => 7))->
 
   // nb lines
   checkResponseElement('body table tfoot tr th', '/^\s*3 results\s*$/')
@@ -265,7 +266,7 @@ $b->
 $b->get('/article/create');
 for ($i = 0; $i < 30; $i++)
 {
-  $b->click('save and add', array('article' => array('title' => 'title '.$i, 'body' => 'body '.$i)))->followRedirect();
+  $b->click('save and add', array('article' => array('title' => 'title '.$i, 'body' => 'body '.$i)))->isRedirected()->followRedirect();
 }
 
 $b->
