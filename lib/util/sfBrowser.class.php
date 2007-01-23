@@ -275,6 +275,11 @@ class sfBrowser
 
   public function followRedirect()
   {
+    if (null === $this->getContext()->getResponse()->getHttpHeader('Location'))
+    {
+      throw new sfException('The request was not redirected');
+    }
+
     return $this->get($this->getContext()->getResponse()->getHttpHeader('Location'));
   }
 
@@ -362,10 +367,13 @@ class sfBrowser
         {
           $value = null;
         }
+
+        $found = false;
         foreach ($xpath->query('descendant::option', $element) as $option)
         {
           if ($option->getAttribute('selected'))
           {
+            $found = true;
             if ($multiple)
             {
               $value[] = $option->getAttribute('value');
@@ -375,6 +383,12 @@ class sfBrowser
               $value = $option->getAttribute('value');
             }
           }
+        }
+
+        // if no option is selected and if it is a simple select box, take the first option as the value
+        if (!$found && !$multiple)
+        {
+          $value = $xpath->query('descendant::option', $element)->item(0)->getAttribute('value');
         }
       }
 
@@ -386,7 +400,6 @@ class sfBrowser
 
     // create request parameters
     $arguments = sfToolkit::arrayDeepMerge($defaults, $this->fields, $arguments);
-
     if ('post' == $method)
     {
       return $this->post($url, $arguments);
