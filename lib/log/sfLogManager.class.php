@@ -25,9 +25,14 @@ class sfLogManager
   const DEF_HISTORY   = 10;
 
   /**
-   * rotates log file
+   * Rotates log file.
    *
-   * @return void
+   * @param string Application name
+   * @param string Enviroment name
+   * @param string Period 
+   * @param string History
+   * @param boolean Override
+   *
    * @author Joe Simms
    **/
   public static function rotate($app, $env, $period = null, $history = null, $override = false)

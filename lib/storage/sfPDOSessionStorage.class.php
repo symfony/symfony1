@@ -40,14 +40,14 @@ class sfPDOSessionStorage extends sfSessionStorage
   protected $db;
 
   /**
-   * Initialize this Storage.
+   * Initializes this Storage instance.
    *
-   * @param sfContext A sfContext instance.
-   * @param array     An associative array of initialization parameters.
+   * @param sfContext A sfContext instance
+   * @param array     An associative array of initialization parameters
    *
-   * @return bool true, if initialization completes successfully, otherwise false.
+   * @return boolean true, if initialization completes successfully, otherwise false
    *
-   * @throws <b>InitializationException</b> If an error occurs while initializing this Storage.
+   * @throws <b>InitializationException</b> If an error occurs while initializing this Storage
    */
   public function initialize($context, $parameters = null)
   {
@@ -78,9 +78,9 @@ class sfPDOSessionStorage extends sfSessionStorage
   }
 
   /**
-  * Close a session.
+  * Closes a session.
   *
-  * @return bool true, if the session was closed, otherwise false.
+  * @return boolean true, if the session was closed, otherwise false
   */
   public function sessionClose()
   {
@@ -89,13 +89,13 @@ class sfPDOSessionStorage extends sfSessionStorage
   }
 
   /**
-   * Destroy a session.
+   * Destroys a session.
    *
-   * @param string A session ID.
+   * @param string A session ID
    *
-   * @return bool true, if the session was destroyed, otherwise an exception is thrown.
+   * @return boolean true, if the session was destroyed, otherwise an exception is thrown
    *
-   * @throws <b>DatabaseException</b> If the session cannot be destroyed.
+   * @throws <b>DatabaseException</b> If the session cannot be destroyed
    */
   public function sessionDestroy($id)
   {
@@ -121,13 +121,13 @@ class sfPDOSessionStorage extends sfSessionStorage
   }
 
   /**
-   * Cleanup old sessions.
+   * Cleans up old sessions.
    *
-   * @param int The lifetime of a session.
+   * @param int The lifetime of a session
    *
-   * @return bool true, if old sessions have been cleaned, otherwise an exception is thrown.
+   * @return boolean true, if old sessions have been cleaned, otherwise an exception is thrown
    *
-   * @throws <b>DatabaseException</b> If any old sessions cannot be cleaned.
+   * @throws <b>DatabaseException</b> If any old sessions cannot be cleaned
    */
   public function sessionGC($lifetime)
   {
@@ -155,14 +155,14 @@ class sfPDOSessionStorage extends sfSessionStorage
   }
 
   /**
-   * Open a session.
+   * Opens a session.
    *
    * @param string
    * @param string
    *
-   * @return bool true, if the session was opened, otherwise an exception is thrown.
+   * @return boolean true, if the session was opened, otherwise an exception is thrown
    *
-   * @throws <b>DatabaseException</b> If a connection with the database does not exist or cannot be created.
+   * @throws <b>DatabaseException</b> If a connection with the database does not exist or cannot be created
    */
   public function sessionOpen($path, $name)
   {
@@ -181,13 +181,13 @@ class sfPDOSessionStorage extends sfSessionStorage
   }
 
   /**
-   * Read a session.
+   * Reads a session.
    *
-   * @param string A session ID.
+   * @param string A session ID
    *
-   * @return bool true, if the session was read, otherwise an exception is thrown.
+   * @return boolean true, if the session was read, otherwise an exception is thrown
    *
-   * @throws <b>DatabaseException</b> If the session cannot be read.
+   * @throws <b>DatabaseException</b> If the session cannot be read
    */
   public function sessionRead($id)
   {
@@ -212,7 +212,7 @@ class sfPDOSessionStorage extends sfSessionStorage
       else
       {
         // session does not exist, create it
-        $sql = 'INSERT INTO ' . $db_table . '('.$db_id_col.', '.$db_data_col.', '.$db_time_col.') VALUES (?, ?, ?)';
+        $sql = 'INSERT INTO '.$db_table.'('.$db_id_col.', '.$db_data_col.', '.$db_time_col.') VALUES (?, ?, ?)';
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(1, $id, PDO::PARAM_STR); // setString(1, $id);
@@ -232,14 +232,14 @@ class sfPDOSessionStorage extends sfSessionStorage
   }
 
   /**
-   * Write session data.
+   * Writes session data.
    *
-   * @param string A session ID.
-   * @param string A serialized chunk of session data.
+   * @param string A session ID
+   * @param string A serialized chunk of session data
    *
-   * @return bool true, if the session was written, otherwise an exception is thrown.
+   * @return boolean true, if the session was written, otherwise an exception is thrown
    *
-   * @throws <b>DatabaseException</b> If the session data cannot be written.
+   * @throws <b>DatabaseException</b> If the session data cannot be written
    */
   public function sessionWrite($id, $data)
   {
@@ -271,9 +271,8 @@ class sfPDOSessionStorage extends sfSessionStorage
   }
 
   /**
-   * Execute the shutdown procedure.
+   * Executes the shutdown procedure.
    *
-   * @return void
    */
   public function shutdown()
   {

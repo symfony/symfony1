@@ -5,7 +5,7 @@ require_once(dirname(__FILE__).'/../vendor/lime/lime.php');
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -23,6 +23,13 @@ class sfTestBrowser extends sfBrowser
   protected
     $test = null;
 
+  /**
+   * Initializes the browser tester instance.
+   *
+   * @param string Hostname
+   * @param string Remote IP address
+   * @param array  Options
+   */
   public function initialize($hostname = null, $remote = null, $options = array())
   {
     parent::initialize($hostname, $remote, $options);
@@ -32,11 +39,26 @@ class sfTestBrowser extends sfBrowser
     $this->test = new lime_test(null, $output);
   }
 
+  /**
+   * Retrieves the lime_test instance.
+   *
+   * @return sfTestBrowser The lime_test instance
+   */
   public function test()
   {
     return $this->test;
   }
 
+  /**
+   * Retrieves and checks an action.
+   *
+   * @param string Module name
+   * @param string Action name
+   * @param string Url
+   * @param string The expected return status code
+   *
+   * @return sfBrowser The current sfBrowser instance
+   */
   public function getAndCheck($module, $action, $url = null, $code = 200)
   {
     return $this->
@@ -47,6 +69,11 @@ class sfTestBrowser extends sfBrowser
     ;
   }
 
+  /**
+   * Calls a request.
+   *
+   * @return sfBrowser The current sfBrowser instance
+   */
   public function call($uri, $method = 'get', $parameters = array(), $changeStack = true)
   {
     $uri = $this->fixUri($uri);
@@ -56,6 +83,11 @@ class sfTestBrowser extends sfBrowser
     return parent::call($uri, $method, $parameters, $changeStack);
   }
 
+  /**
+   * Simulates the browser back button.
+   *
+   * @return sfBrowser The current sfBrowser instance
+   */
   public function back()
   {
     $this->test->comment('back');
@@ -63,6 +95,11 @@ class sfTestBrowser extends sfBrowser
     return parent::back();
   }
 
+  /**
+   * Simulates the browser forward button.
+   *
+   * @return sfBrowser The current sfBrowser instance
+   */
   public function forward()
   {
     $this->test->comment('forward');
@@ -70,6 +107,13 @@ class sfTestBrowser extends sfBrowser
     return parent::forward();
   }
 
+  /**
+   * Tests if the current request has been redirected.
+   *
+   * @param boolean Flag for redirection mode
+   *
+   * @return sfBrowser The current sfBrowser instance
+   */
   public function isRedirected($boolean = true)
   {
     if ($location = $this->getContext()->getResponse()->getHttpHeader('location'))
@@ -84,6 +128,14 @@ class sfTestBrowser extends sfBrowser
     return $this;
   }
 
+  /**
+   * Checks that the current response contains a given text.
+   *
+   * @param string Uniform resource identifier
+   * @param string Text in the response
+   *
+   * @return sfBrowser The current sfBrowser instance
+   */
   public function check($uri, $text = null)
   {
     $this->get($uri)->isStatusCode();
@@ -96,6 +148,13 @@ class sfTestBrowser extends sfBrowser
     return $this;
   }
 
+  /**
+   * Test an status code for the current test browser.
+   *
+   * @param string Status code to check, default 200
+   *
+   * @return sfBrowser The current sfBrowser instance
+   */
   public function isStatusCode($statusCode = 200)
   {
     $this->test->is($this->getResponse()->getStatusCode(), $statusCode, sprintf('status code is "%s"', $statusCode));
@@ -103,6 +162,13 @@ class sfTestBrowser extends sfBrowser
     return $this;
   }
 
+  /**
+   * Tests whether or not a given string is in the response.
+   *
+   * @param string Text to check
+   *
+   * @return sfBrowser The current sfBrowser instance
+   */
   public function responseContains($text)
   {
     $this->test->like($this->getResponse()->getContent(), '/'.preg_quote($text, '/').'/', sprintf('response contains "%s"', substr($text, 0, 40)));
@@ -110,6 +176,14 @@ class sfTestBrowser extends sfBrowser
     return $this;
   }
 
+  /**
+   * Tests whether or not a given key and value exists in the current request.
+   *
+   * @param string Key
+   * @param string Value
+   *
+   * @return sfBrowser The current sfBrowser instance
+   */
   public function isRequestParameter($key, $value)
   {
     $this->test->is($this->getRequest()->getParameter($key), $value, sprintf('request parameter "%s" is "%s"', $key, $value));
@@ -148,6 +222,14 @@ class sfTestBrowser extends sfBrowser
     return $this;
   }
 
+  /**
+   * Tests for a response header.
+   *
+   * @param string Key
+   * @param string Value
+   *
+   * @return sfBrowser The current sfBrowser instance
+   */
   public function isResponseHeader($key, $value)
   {
     $headers = $this->getResponse()->getHttpHeader($key);
@@ -167,6 +249,15 @@ class sfTestBrowser extends sfBrowser
     return $this;
   }
 
+  /**
+   * Tests that the current response matches a given CSS selector.
+   *
+   * @param string The response selector
+   * @param string Flag for the selector
+   * @param array Options for the current test
+   *
+   * @return sfBrowser The current sfBrowser instance
+   */
   public function checkResponseElement($selector, $value = true, $options = array())
   {
     $texts = $this->getResponseDomCssSelector()->getTexts($selector);
@@ -209,6 +300,14 @@ class sfTestBrowser extends sfBrowser
     return $this;
   }
 
+  /**
+   * Tests if an exception is thrown by the latest request.
+   *
+   * @param string Class name
+   * @param string Message name
+   *
+   * @return sfBrowser The current sfBrowser instance
+   */
   public function throwsException($class = null, $message = null)
   {
     $e = $this->getCurrentException();
@@ -244,11 +343,28 @@ class sfTestBrowser extends sfBrowser
     return $this;
   }
 
+  /**
+   * Tests if the given uri is cached.
+   *
+   * @param boolean Flag for checking the cache
+   * @param boolean If have or not layout
+   *
+   * @return sfBrowser The current sfBrowser instance
+   */
   public function isCached($boolean, $with_layout = false)
   {
     return $this->isUriCached(sfRouting::getInstance()->getCurrentInternalUri(), $boolean, $with_layout);
   }
 
+  /**
+   * Tests if the given uri is cached.
+   *
+   * @param string Uniform resource identifier
+   * @param boolean Flag for checking the cache
+   * @param boolean If have or not layout
+   *
+   * @param sfTestBrowser Test browser instance
+   */
   public function isUriCached($uri, $boolean, $with_layout = false)
   {
     $cacheManager = $this->getContext()->getViewCacheManager();
@@ -321,6 +437,14 @@ class sfTestBrowser extends sfBrowser
   }
 }
 
+/**
+ * Error handler for the current test browser instance.
+ *
+ * @param mixed Error number
+ * @param string Error message
+ * @param string Error file
+ * @param mixed Error line
+ */
 function sfTestBrowserErrorHandler($errno, $errstr, $errfile, $errline)
 {
   if (($errno & error_reporting()) == 0)

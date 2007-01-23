@@ -166,7 +166,7 @@ class sfCreoleDatabase extends sfDatabase
    *
    * @return array An associative array of connection parameters.
    */
-  protected function & loadDSN (&$array)
+  protected function & loadDSN(&$array)
   {
     // determine if a dsn is set, otherwise use separate parameters
     $dsn = $this->getParameter('dsn');

@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -24,14 +24,14 @@ class sfSessionTestStorage extends sfStorage
     $sessionPath = null;
 
   /**
-   * Initialize this Storage.
+   * Initializes this Storage instance.
    *
-   * @param sfContext A sfContext instance.
-   * @param array   An associative array of initialization parameters.
+   * @param sfContext A sfContext instance
+   * @param array   An associative array of initialization parameters
    *
-   * @return bool true, if initialization completes successfully, otherwise false.
+   * @return boolean true, if initialization completes successfully, otherwise false
    *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Storage.
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Storage
    */
   public function initialize($context, $parameters = null)
   {
@@ -55,21 +55,26 @@ class sfSessionTestStorage extends sfStorage
     }
   }
 
+  /**
+   * Gets session id for the current session storage instance.
+   *
+   * @return string Session id
+   */
   public function getSessionId()
   {
     return $this->sessionId;
   }
 
   /**
-   * Read data from this storage.
+   * Reads data from this storage.
    *
    * The preferred format for a key is directory style so naming conflicts can be avoided.
    *
-   * @param string A unique key identifying your data.
+   * @param string A unique key identifying your data
    *
-   * @return mixed Data associated with the key.
+   * @return mixed Data associated with the key
    */
-  public function & read ($key)
+  public function & read($key)
   {
     $retval = null;
 
@@ -82,15 +87,15 @@ class sfSessionTestStorage extends sfStorage
   }
 
   /**
-   * Remove data from this storage.
+   * Removes data from this storage.
    *
    * The preferred format for a key is directory style so naming conflicts can be avoided.
    *
-   * @param string A unique key identifying your data.
+   * @param string A unique key identifying your data
    *
-   * @return mixed Data associated with the key.
+   * @return mixed Data associated with the key
    */
-  public function & remove ($key)
+  public function & remove($key)
   {
     $retval = null;
 
@@ -104,9 +109,30 @@ class sfSessionTestStorage extends sfStorage
   }
 
   /**
-   * Execute the shutdown procedure.
+   * Writes data to this storage.
    *
-   * @return void
+   * The preferred format for a key is directory style so naming conflicts can be avoided
+   *
+   * @param string A unique key identifying your data
+   * @param mixed  Data associated with your key
+   *
+   */
+  public function write($key, &$data)
+  {
+    $this->sessionData[$key] =& $data;
+  }
+
+  /**
+   * Clears all test sessions.
+   */
+  public function clear()
+  {
+    sfToolkit::clearDirectory($this->sessionPath);
+  }
+
+  /**
+   * Executes the shutdown procedure.
+   *
    */
   public function shutdown()
   {
@@ -122,29 +148,5 @@ class sfSessionTestStorage extends sfStorage
       $this->sessionId   = '';
       $this->sessionData = array();
     }
-  }
-
-  /**
-   * Write data to this storage.
-   *
-   * The preferred format for a key is directory style so naming conflicts can
-   * be avoided.
-   *
-   * @param string A unique key identifying your data.
-   * @param mixed  Data associated with your key.
-   *
-   * @return void
-   */
-  public function write($key, &$data)
-  {
-    $this->sessionData[$key] =& $data;
-  }
-
-  /**
-   * Clear all test sessions
-   */
-  public function clear()
-  {
-    sfToolkit::clearDirectory($this->sessionPath);
   }
 }

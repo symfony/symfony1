@@ -75,31 +75,60 @@ class sfLogger
     return sfLogger::$logger;
   }
 
+  /**
+   * Initializes the logger.
+   */
   public function initialize()
   {
     $this->loggers = array();
   }
 
+  /**
+   * Retrieves the log level for the current logger instance.
+   *
+   * @return string Log level
+   */
   public function getLogLevel()
   {
     return $this->level;
   }
 
+  /**
+   * Sets a log level for the current logger instance.
+   *
+   * @param string Log level
+   */
   public function setLogLevel($level)
   {
     $this->level = $level;
   }
-
+  
+  /**
+   * Retrieves current loggers.
+   *
+   * @return array List of loggers
+   */
   public function getLoggers()
   {
     return $this->loggers;
   }
-
+  
+  /**
+   * Registers a logger.
+   *
+   * @param string Logger name
+   */
   public function registerLogger($logger)
   {
     $this->loggers[] = $logger;
   }
 
+  /**
+   * Logs a message.
+   *
+   * @param string Message
+   * @param string Message priority
+   */
   public function log($message, $priority = SF_LOG_INFO)
   {
     if ($this->level < $priority)
@@ -113,46 +142,91 @@ class sfLogger
     }
   }
 
+  /**
+   * Sets an emerg message.
+   *
+   * @param string Message
+   */
   public function emerg($message)
   {
     $this->log($message, SF_LOG_EMERG);
   }
 
+  /**
+   * Sets an alert message.
+   *
+   * @param string Message
+   */
   public function alert($message)
   {
     $this->log($message, SF_LOG_ALERT);
   }
 
+  /**
+   * Sets a critical message.
+   *
+   * @param string Message
+   */
   public function crit($message)
   {
     $this->log($message, SF_LOG_CRIT);
   }
 
+  /**
+   * Sets an error message.
+   *
+   * @param string Message
+   */
   public function err($message)
   {
     $this->log($message, SF_LOG_ERR);
   }
 
+  /**
+   * Sets a warning message.
+   *
+   * @param string Message
+   */
   public function warning($message)
   {
     $this->log($message, SF_LOG_WARNING);
   }
 
+  /**
+   * Sets a notice message.
+   *
+   * @param string Message
+   */
   public function notice($message)
   {
     $this->log($message, SF_LOG_NOTICE);
   }
 
+  /**
+   * Sets an info message.
+   *
+   * @param string Message
+   */
   public function info($message)
   {
     $this->log($message, SF_LOG_INFO);
   }
 
+  /**
+   * Sets a debug message.
+   *
+   * @param string Message
+   */
   public function debug($message)
   {
     $this->log($message, SF_LOG_DEBUG);
   }
 
+  /**
+   * Executes the shutdown procedure.
+   *
+   * Cleans up the current logger instance.
+   */
   public function shutdown()
   {
     foreach ($this->loggers as $logger)

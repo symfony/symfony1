@@ -20,6 +20,11 @@ class sfWebDebugLogger
   protected
     $webDebug = null;
 
+  /**
+   * Initializes the web debug logger.
+   *
+   * @param array Logger options
+   */
   public function initialize($options = array())
   {
     if (!sfConfig::get('sf_web_debug'))
@@ -30,6 +35,13 @@ class sfWebDebugLogger
     $this->webDebug = sfWebDebug::getInstance();
   }
 
+  /**
+   * Logs a message.
+   *
+   * @param string Message
+   * @param string Message priority
+   * @param string Message priority name
+   */
   public function log($message, $priority, $priorityName)
   {
     if (!sfConfig::get('sf_web_debug'))

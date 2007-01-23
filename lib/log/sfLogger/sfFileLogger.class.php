@@ -20,6 +20,11 @@ class sfFileLogger
   protected
     $fp = null;
 
+  /**
+   * Initializes the file logger.
+   *
+   * @param array Options for the logger
+   */
   public function initialize($options = array())
   {
     if (!isset($options['file']))
@@ -42,6 +47,13 @@ class sfFileLogger
     $this->fp = fopen($options['file'], 'a');
   }
 
+  /**
+   * Logs a message.
+   *
+   * @param string Message
+   * @param string Message priority
+   * @param string Message priority name
+   */
   public function log($message, $priority, $priorityName)
   {
     $line = sprintf("%s %s [%s] %s%s", strftime('%b %d %H:%M:%S'), 'symfony', $priorityName, $message, DIRECTORY_SEPARATOR == '\\' ? "\r\n" : "\n");
@@ -51,6 +63,9 @@ class sfFileLogger
     flock($this->fp, LOCK_UN);
   }
 
+  /**
+   * Executes the shutdown method.
+   */
   public function shutdown()
   {
     if ($this->fp)

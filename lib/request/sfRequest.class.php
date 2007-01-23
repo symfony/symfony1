@@ -75,7 +75,7 @@ abstract class sfRequest
    *               a specified parameter doesn't exist an empty string will
    *               be returned for its value
    */
-  public function & extractParameters ($names)
+  public function & extractParameters($names)
   {
     $array = array();
 
@@ -236,7 +236,7 @@ abstract class sfRequest
    *
    * @return string An error message, if the error was removed, otherwise null
    */
-  public function & removeError ($name)
+  public function & removeError($name)
   {
     $retval = null;
 

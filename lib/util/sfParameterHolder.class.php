@@ -77,7 +77,7 @@ class sfParameterHolder
    *
    * @return mixed A parameter value, if the parameter exists, otherwise null.
    */
-  public function & get ($name, $default = null, $ns = null)
+  public function & get($name, $default = null, $ns = null)
   {
     if (!$ns)
     {
@@ -144,7 +144,7 @@ class sfParameterHolder
    *
    * @return array An associative array of parameters.
    */
-  public function & getAll ($ns = null)
+  public function & getAll($ns = null)
   {
     if (!$ns)
     {
@@ -229,7 +229,7 @@ class sfParameterHolder
    *
    * @return string A parameter value, if the parameter was removed, otherwise null.
    */
-  public function & remove ($name, $ns = null)
+  public function & remove($name, $ns = null)
   {
     if (!$ns)
     {
@@ -254,7 +254,7 @@ class sfParameterHolder
    *
    * @return void
    */
-  public function & removeNamespace ($ns = null)
+  public function & removeNamespace($ns = null)
   {
     if (!$ns)
     {

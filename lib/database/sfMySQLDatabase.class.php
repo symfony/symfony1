@@ -132,7 +132,7 @@ class sfMySQLDatabase extends sfDatabase
    *
    * @return array An associative array of connection parameters
    */
-  protected function & loadParameters (&$array)
+  protected function & loadParameters(&$array)
   {
     // list of available parameters
     $available = array('database', 'host', 'password', 'user');

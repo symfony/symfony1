@@ -25,9 +25,9 @@ abstract class sfStorage
     $context         = null;
 
   /**
-   * Retrieve the current application context.
+   * Retrieves the current application context.
    *
-   * @return sfContext A sfContext instance.
+   * @return sfContext A sfContext instance
    */
   public function getContext()
   {
@@ -35,14 +35,14 @@ abstract class sfStorage
   }
 
   /**
-   * Initialize this Storage.
+   * Initializes this Storage instance.
    *
-   * @param sfContext A sfContext instance.
-   * @param array   An associative array of initialization parameters.
+   * @param sfContext A sfContext instance
+   * @param array   An associative array of initialization parameters
    *
-   * @return bool true, if initialization completes successfully, otherwise false.
+   * @return boolean true, if initialization completes successfully, otherwise false
    *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfStorage.
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfStorage
    */
   public function initialize($context, $parameters = array())
   {
@@ -53,13 +53,13 @@ abstract class sfStorage
   }
 
   /**
-   * Retrieve a new Storage implementation instance.
+   * Retrieves a new Storage implementation instance.
    *
    * @param string A Storage implementation name
    *
-   * @return Storage A Storage implementation instance.
+   * @return Storage A Storage implementation instance
    *
-   * @throws <b>sfFactoryException</b> If a storage implementation instance cannot be created.
+   * @throws <b>sfFactoryException</b> If a storage implementation instance cannot be created
    */
   public static function newInstance($class)
   {
@@ -79,72 +79,94 @@ abstract class sfStorage
   }
 
   /**
-   * Read data from this storage.
+   * Reads data from this storage.
    *
-   * The preferred format for a key is directory style so naming conflicts can
-   * be avoided.
+   * The preferred format for a key is directory style so naming conflicts can be avoided.
    *
-   * @param string A unique key identifying your data.
+   * @param string A unique key identifying your data
    *
-   * @return mixed Data associated with the key.
+   * @return mixed Data associated with the key
    *
-   * @throws <b>sfStorageException</b> If an error occurs while reading data from this storage.
+   * @throws <b>sfStorageException</b> If an error occurs while reading data from this storage
    */
-  abstract function & read ($key);
+  abstract function & read($key);
 
   /**
-   * Remove data from this storage.
+   * Removes data from this storage.
    *
-   * The preferred format for a key is directory style so naming conflicts can
-   * be avoided.
+   * The preferred format for a key is directory style so naming conflicts can be avoided.
    *
-   * @param string A unique key identifying your data.
+   * @param string A unique key identifying your data
    *
-   * @return mixed Data associated with the key.
+   * @return mixed Data associated with the key
    *
-   * @throws <b>sfStorageException</b> If an error occurs while removing data from this storage.
+   * @throws <b>sfStorageException</b> If an error occurs while removing data from this storage
    */
-  abstract function & remove ($key);
+  abstract function & remove($key);
 
   /**
-   * Execute the shutdown procedure.
+   * Executes the shutdown procedure.
    *
-   * @return void
-   *
-   * @throws <b>sfStorageException</b> If an error occurs while shutting down this storage.
+   * @throws <b>sfStorageException</b> If an error occurs while shutting down this storage
    */
   abstract function shutdown();
 
   /**
-   * Write data to this storage.
+   * Writes data to this storage.
    *
-   * The preferred format for a key is directory style so naming conflicts can
-   * be avoided.
+   * The preferred format for a key is directory style so naming conflicts can be avoided.
    *
-   * @param string A unique key identifying your data.
-   * @param mixed  Data associated with your key.
+   * @param string A unique key identifying your data
+   * @param mixed  Data associated with your key
    *
-   * @return void
-   *
-   * @throws <b>sfStorageException</b> If an error occurs while writing to this storage.
+   * @throws <b>sfStorageException</b> If an error occurs while writing to this storage
    */
   abstract function write($key, &$data);
-  
+
+  /**
+   * Retrieves the parameters from the storage.
+   *
+   * @return sfParameterHolder List of parameters
+   */
   public function getParameterHolder()
   {
     return $this->parameterHolder;
   }
 
+  /**
+   * Retrieves a parameter from the validator.
+   *
+   * @param string Parameter name
+   * @param mixed A default parameter
+   * @param string Namespace for the current storage
+   *
+   * @return mixed A parameter value
+   */
   public function getParameter($name, $default = null, $ns = null)
   {
     return $this->parameterHolder->get($name, $default, $ns);
   }
 
+  /**
+   * Indicates whether or not a parameter exist for the storage instance.
+   *
+   * @param string A parameter name
+   * @param string A parameter namespace
+   *
+   * @return boolean true, if parameter exists, otherwise false
+   */
   public function hasParameter($name, $ns = null)
   {
     return $this->parameterHolder->has($name, $ns);
   }
 
+  /**
+   * Sets a parameter for the current storage instance.
+   *
+   * @param string A parameter name
+   * @param mixed A parameter value
+   * @param string Namespace for the current storage
+   */
   public function setParameter($name, $value, $ns = null)
   {
     return $this->parameterHolder->set($name, $value, $ns);

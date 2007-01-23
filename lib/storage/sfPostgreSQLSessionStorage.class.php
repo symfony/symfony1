@@ -38,16 +38,14 @@ class sfPostgreSQLSessionStorage extends sfSessionStorage
     $resource = null;
 
   /**
-   * Initialize this Storage.
+   * Initializes this Storage instance.
    *
-   * @param Context A Context instance.
-   * @param array   An associative array of initialization parameters.
+   * @param sfContext A sfContext instance
+   * @param array   An associative array of initialization parameters
    *
-   * @return bool true, if initialization completes successfully, otherwise
-   *              false.
+   * @return boolean true, if initialization completes successfully, otherwise false
    *
-   * @throws <b>sfInitializationException</b> If an error occurs while
-   *                                        initializing this Storage.
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Storage
    */
   public function initialize($context, $parameters = null)
   {
@@ -78,9 +76,9 @@ class sfPostgreSQLSessionStorage extends sfSessionStorage
   }
 
   /**
-   * Close a session.
+   * Closes a session.
    *
-   * @return bool true, if the session was closed, otherwise false.
+   * @return boolean true, if the session was closed, otherwise false
    */
   public function sessionClose()
   {
@@ -89,14 +87,13 @@ class sfPostgreSQLSessionStorage extends sfSessionStorage
   }
 
   /**
-   * Destroy a session.
+   * Destroys a session.
    *
-   * @param string A session ID.
+   * @param string A session ID
    *
-   * @return bool true, if the session was destroyed, otherwise an exception
-   *              is thrown.
+   * @return boolean true, if the session was destroyed, otherwise an exception is thrown
    *
-   * @throws <b>sfDatabaseException</b> If the session cannot be destroyed.
+   * @throws <b>sfDatabaseException</b> If the session cannot be destroyed
    */
   public function sessionDestroy($id)
   {
@@ -108,10 +105,12 @@ class sfPostgreSQLSessionStorage extends sfSessionStorage
     $id = addslashes($id);
 
     // delete the record associated with this id
-    $sql = 'DELETE FROM ' . $db_table . ' WHERE ' . $db_id_col . ' = \'' . $id . '\'';
+    $sql = 'DELETE FROM '.$db_table.' WHERE '.$db_id_col.' = \''.$id.'\'';
 
     if (@pg_query($this->resource, $sql))
+    {
       return true;
+    }
 
     // failed to destroy session
     $error = 'PostgreSQLSessionStorage cannot destroy session id "%s"';
@@ -121,14 +120,13 @@ class sfPostgreSQLSessionStorage extends sfSessionStorage
   }
 
   /**
-   * Cleanup old sessions.
+   * Cleans up old sessions.
    *
-   * @param int The lifetime of a session.
+   * @param int The lifetime of a session
    *
-   * @return bool true, if old sessions have been cleaned, otherwise an
-   *              exception is thrown.
+   * @return boolean true, if old sessions have been cleaned, otherwise an exception is thrown
    *
-   * @throws <b>sfDatabaseException</b> If any old sessions cannot be cleaned.
+   * @throws <b>sfDatabaseException</b> If any old sessions cannot be cleaned
    */
   public function sessionGC($lifetime)
   {
@@ -140,10 +138,12 @@ class sfPostgreSQLSessionStorage extends sfSessionStorage
     $db_time_col = $this->getParameterHolder()->get('db_time_col', 'sess_time');
 
     // delete the record associated with this id
-    $sql = 'DELETE FROM ' . $db_table . ' WHERE ' . $db_time_col . ' < ' . $lifetime;
+    $sql = 'DELETE FROM '.$db_table.' WHERE '.$db_time_col.' < '.$lifetime;
 
     if (@pg_query($this->resource, $sql))
+    {
       return true;
+    }
 
     // failed to cleanup old sessions
     $error = 'PostgreSQLSessionStorage cannot delete old sessions';
@@ -152,16 +152,15 @@ class sfPostgreSQLSessionStorage extends sfSessionStorage
   }
 
   /**
-   * Open a session.
+   * Opens a session.
    *
    * @param string
    * @param string
    *
-   * @return bool true, if the session was opened, otherwise an exception is
-   *              thrown.
+   * @return boolean true, if the session was opened, otherwise an exception is thrown
    *
    * @throws <b>sfDatabaseException</b> If a connection with the database does
-   *                                  not exist or cannot be created.
+   *                                  not exist or cannot be created
    */
   public function sessionOpen($path, $name)
   {
@@ -178,14 +177,13 @@ class sfPostgreSQLSessionStorage extends sfSessionStorage
   }
 
   /**
-   * Read a session.
+   * Reads a session.
    *
-   * @param string A session ID.
+   * @param string A session ID
    *
-   * @return bool true, if the session was read, otherwise an exception is
-   *              thrown.
+   * @return boolean true, if the session was read, otherwise an exception is thrown
    *
-   * @throws <b>sfDatabaseException</b> If the session cannot be read.
+   * @throws <b>sfDatabaseException</b> If the session cannot be read
    */
   public function sessionRead($id)
   {
@@ -199,9 +197,9 @@ class sfPostgreSQLSessionStorage extends sfSessionStorage
     $id = addslashes($id);
 
     // delete the record associated with this id
-    $sql = 'SELECT ' . $db_data_col . ' ' .
-           'FROM ' . $db_table . ' ' .
-           'WHERE ' . $db_id_col . ' = \'' . $id . '\'';
+    $sql = 'SELECT '.$db_data_col.' ' .
+           'FROM '.$db_table.' ' .
+           'WHERE '.$db_id_col.' = \''.$id.'\'';
 
     $result = @pg_query($this->resource, $sql);
 
@@ -215,12 +213,14 @@ class sfPostgreSQLSessionStorage extends sfSessionStorage
     else
     {
       // session does not exist, create it
-      $sql = 'INSERT INTO ' . $db_table . ' (' . $db_id_col . ', ' .
-             $db_data_col . ', ' . $db_time_col . ') VALUES (' .
-             '\'' . $id . '\', \'\', ' . time() . ')';
+      $sql = 'INSERT INTO '.$db_table.' ('.$db_id_col.', ' .
+             $db_data_col.', '.$db_time_col.') VALUES (' .
+             '\''.$id.'\', \'\', '.time().')';
 
       if (@pg_query($this->resource, $sql))
+      {
         return '';
+      }
 
       // can't create record
       $error = 'PostgreSQLSessionStorage cannot create new record for id "%s"';
@@ -231,14 +231,14 @@ class sfPostgreSQLSessionStorage extends sfSessionStorage
   }
 
   /**
-   * Write session data.
+   * Writes session data.
    *
-   * @param string A session ID.
-   * @param string A serialized chunk of session data.
+   * @param string A session ID
+   * @param string A serialized chunk of session data
    *
-   * @return bool true, if the session was written, otherwise an exception is thrown.
+   * @return boolean true, if the session was written, otherwise an exception is thrown
    *
-   * @throws <b>sfDatabaseException</b> If the session data cannot be written.
+   * @throws <b>sfDatabaseException</b> If the session data cannot be written
    */
   public function sessionWrite($id, &$data)
   {
@@ -253,13 +253,15 @@ class sfPostgreSQLSessionStorage extends sfSessionStorage
     $data = addslashes($data);
 
     // delete the record associated with this id
-    $sql = 'UPDATE ' . $db_table . ' ' .
-           'SET ' . $db_data_col . ' = \'' . $data . '\', ' .
-           $db_time_col . ' = ' . time() . ' ' .
-           'WHERE ' . $db_id_col . ' = \'' . $id . '\'';
+    $sql = 'UPDATE '.$db_table.' '.
+           'SET '.$db_data_col.' = \''.$data.'\', '.
+           $db_time_col.' = '.time().' '.
+           'WHERE '.$db_id_col.' = \''.$id.'\'';
 
     if (@pg_query($this->resource, $sql))
+    {
       return true;
+    }
 
     // failed to write session data
     $error = 'PostgreSQLSessionStorage cannot write session data for id "%s"';
@@ -269,9 +271,8 @@ class sfPostgreSQLSessionStorage extends sfSessionStorage
   }
 
   /**
-   * Execute the shutdown procedure.
+   * Executes the shutdown procedure.
    *
-   * @return void
    */
   public function shutdown()
   {
