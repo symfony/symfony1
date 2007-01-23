@@ -1,5 +1,6 @@
 methods:
   post: [name, email, age, message, image, password, password_bis]
+  get:  [name]
 
 fillin:
   enabled:       Yes

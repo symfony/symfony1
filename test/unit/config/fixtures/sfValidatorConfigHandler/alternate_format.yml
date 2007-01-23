@@ -15,6 +15,7 @@ fields:
     required:
       msg:       The name field cannot be left blank
     myStringValidator:
+    methods:     [get, post]
   email:
     required:
       msg:       The email field cannot be left blank

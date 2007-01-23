@@ -535,7 +535,15 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
       }
 
       // methods
-      $methods = isset($values['methods']) ? (array) $values['methods'] : $defaultMethods;
+      if (isset($values['methods']))
+      {
+        $methods = (array) $values['methods'];
+        unset($values['methods']);
+      }
+      else
+      {
+        $methods = $defaultMethods;
+      }
       foreach ($methods as $method)
       {
         $config['methods'][$method][] = $name;
