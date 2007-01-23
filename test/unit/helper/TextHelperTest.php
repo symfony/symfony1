@@ -93,7 +93,7 @@ $t->is(strip_links_text("<a href='almost'>on my mind</a>"), "on my mind", 'text_
 
 // auto_linking()
 $t->diag('auto_linking()');
-$email_raw = 'fabien.potencier@symfony-project.com.com';
+$email_raw = 'fabien.potencier@symfony-project.com';
 $email_result = '<a href="mailto:'.$email_raw.'">'.$email_raw.'</a>';
 $link_raw = 'http://www.google.com';
 $link_result = '<a href="'.$link_raw.'">'.$link_raw.'</a>';
