@@ -21,7 +21,7 @@ echo ">>> add LICENSE"
 cp ${DIR}/../../LICENSE LICENSE
 
 echo ">>> add README"
-cp ${DIR}/../../doc/SANDBOX_README README
+cp ${DIR}/../../data/data/SANDBOX_README README
 
 echo ">>> add symfony command line for windows users"
 cp ${DIR}/../../data/bin/symfony.bat symfony.bat
