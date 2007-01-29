@@ -9,8 +9,7 @@
  */
 
 /**
- * sfUrlValidator verifies a parameter contains a value that qualifies as a
- * valid URL.
+ * sfUrlValidator verifies a parameter contains a value that qualifies as a valid URL.
  *
  * @package    symfony
  * @subpackage validator
