@@ -30,9 +30,6 @@ $validUrls = array(
 $invalidUrls = array(
   'google.com',
   'http:/google.com',
-  'http://www.symfony-project,com/api/symfony/validator/sfUrlValidator.html',
-  'http://www.symfony-project@com/api/symfony/v alidator/sfUrlValidator.html',
-  'http://www.symfony-project@com/api/ symfony/valid\ator/sfUrlValidator.html#',
 );
 
 $v->initialize($context);
