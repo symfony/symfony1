@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(16, new lime_output_color());
+$t = new lime_test(17, new lime_output_color());
 
 sfConfig::set('sf_max_forwards', 10);
 $context = new sfContext();
@@ -152,3 +152,11 @@ $controller->redirect('/module/action/id/1#photos');
 $content = ob_get_clean();
 $t->like($content, '~/module/action/id/1#photos~', '->redirect() adds a refresh meta in the content');
 $t->like($context->getResponse()->getHttpHeader('Location'), '~/module/action/id/1#photos~', '->redirect() adds a Location HTTP header');
+
+// ->genUrl()
+$t->diag('->genUrl()');
+
+$r = sfRouting::getInstance();
+$r->clearRoutes();
+$r->connect('test1', '/:module/:action/:id', array('module' => 'default', 'action' => 'index'));
+$t->is($controller->genUrl('module/action?id=4'), $controller->genUrl(array('module' => 'module', 'action' => 'action', 'id' => 4)), '->genUrl() accepts a string or an array as its first argument');

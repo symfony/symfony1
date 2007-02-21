@@ -63,6 +63,8 @@ class sfConfigCache
     // handler to call for this configuration file
     $handlerToCall = null;
 
+    $handler = str_replace(DIRECTORY_SEPARATOR, '/', $handler);
+
     // grab the base name of the handler
     $basename = basename($handler);
     if (isset($this->handlers[$handler]))
@@ -130,6 +132,8 @@ class sfConfigCache
    */
   public function checkConfig($configPath, $optional = false)
   {
+    static $process_cache_cleared = false;
+
     if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
     {
       $timer = sfTimerManager::getTimer('Configuration');
@@ -186,9 +190,10 @@ class sfConfigCache
       $this->callHandler($configPath, $files, $cache);
 
       // clear process cache
-      if ('config/config_handlers.yml' != $configPath)
+      if ('config/config_handlers.yml' != $configPath && sfConfig::has('sf_use_process_cache') && !$process_cache_cleared)
       {
         sfProcessCache::clear();
+        $process_cache_cleared = true;
       }
     }
 

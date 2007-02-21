@@ -292,16 +292,24 @@ function button_to($name, $internal_uri, $options = array())
  * @return string XHTML compliant <a href> tag
  * @see    link_to
  */
-function mail_to($email, $name = '', $options = array())
+function mail_to($email, $name = '', $options = array(), $default_value = array())
 {
   $html_options = _parse_attributes($options);
 
   $html_options = _convert_options_to_javascript($html_options);
 
+  $default_tmp = _parse_attributes($default_value);
+  $default = array();
+  foreach ($default_tmp as $key => $value)
+  {
+    $default[] = urlencode($key).'='.urlencode($value);
+  }
+  $options = count($default) ? '?'.implode('&', $default) : '';
+
   if (isset($html_options['encode']) && $html_options['encode'])
   {
     unset($html_options['encode']);
-    $html_options['href'] = _encodeText('mailto:'.$email);
+    $html_options['href'] = _encodeText('mailto:'.$email.$options);
     if (!$name)
     {
       $name = _encodeText($email);
@@ -309,7 +317,7 @@ function mail_to($email, $name = '', $options = array())
   }
   else
   {
-    $html_options['href'] = 'mailto:'.$email;
+    $html_options['href'] = 'mailto:'.$email.$options;
     if (!$name)
     {
       $name = $email;

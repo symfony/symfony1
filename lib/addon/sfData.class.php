@@ -9,6 +9,8 @@
  */
 
 /**
+ * This class defines the interface for interacting with data, as well
+ * as default implementations.
  *
  * @package    symfony
  * @subpackage addon
@@ -22,16 +24,33 @@ abstract class sfData
     $deleteCurrentData = true,
     $object_references = array();
 
+  /**
+   * Sets a flag to indicate if the current data in the database
+   * should be deleted before new data is loaded.
+   *
+   * @param boolean The flag value
+   */
   public function setDeleteCurrentData($boolean)
   {
     $this->deleteCurrentData = $boolean;
   }
 
+  /**
+   * Gets the current value of the flag that indicates whether
+   * current data is to be deleted or not.
+   *
+   * @returns boolean
+   */
   public function getDeleteCurrentData()
   {
     return $this->deleteCurrentData;
   }
 
+  /**
+   * Loads data for the database from a YAML file
+   *
+   * @param string The path to the YAML file.
+   */
   protected function doLoadDataFromFile($fixture_file)
   {
     // import new datas
@@ -40,8 +59,19 @@ abstract class sfData
     $this->loadDataFromArray($data);
   }
 
+  /**
+   * Manages the insertion of data into the data source
+   *
+   * @param array The data to be inserted into the data source
+   */
   abstract public function loadDataFromArray($data);
 
+  /**
+   * Manages reading all of the fixture data files and
+   * loading them into the data source
+   *
+   * @param array The path names of the YAML data files
+   */
   protected function doLoadData($fixture_files)
   {
     $this->object_references = array();
@@ -54,6 +84,15 @@ abstract class sfData
     }
   }
 
+  /**
+   * Gets a list of one or more *.yml files and returns the list in an array
+   *
+   * @param string A directory or file name; if null, then defaults to 'sf_data_dir'/fixtures
+   *
+   * @returns array A list of *.yml files.
+   *
+   * @throws sfInitializationException If the directory or file does not exist.
+   */
   protected function getFiles($directory_or_file = null)
   {
     // directory or file?

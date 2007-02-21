@@ -36,6 +36,9 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 <?php if ($this->getParameterValue('list.peer_method')): ?>
     $this->pager->setPeerMethod('<?php echo $this->getParameterValue('list.peer_method') ?>');
 <?php endif ?>
+<?php if ($this->getParameterValue('list.peer_count_method')): ?>
+    $this->pager->setPeerCountMethod('<?php echo $this->getParameterValue('list.peer_count_method') ?>');
+<?php endif ?>
     $this->pager->init();
   }
 
@@ -392,7 +395,7 @@ $column = sfPropelManyToMany::getColumn($class, $through_class);
 <?php else: ?>
     else if (isset($this->filters['<?php echo $column->getName() ?>']) && $this->filters['<?php echo $column->getName() ?>'] !== '')
     {
-<?php if ($type == CreoleTypes::CHAR || $type == CreoleTypes::VARCHAR): ?>
+<?php if ($type == CreoleTypes::CHAR || $type == CreoleTypes::VARCHAR || $type == CreoleTypes::LONGVARCHAR): ?>
       $c->add(<?php echo $this->getPeerClassName() ?>::<?php echo strtoupper($column->getName()) ?>, strtr($this->filters['<?php echo $column->getName() ?>'], '*', '%'), Criteria::LIKE);
 <?php else: ?>
       $c->add(<?php echo $this->getPeerClassName() ?>::<?php echo strtoupper($column->getName()) ?>, $this->filters['<?php echo $column->getName() ?>']);

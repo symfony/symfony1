@@ -117,6 +117,11 @@ class sfDateFormat
    */
   public function getDate($time, $pattern = null)
   {
+    if (is_null($time))
+    {
+      return null;
+    }
+
     // if the type is not a php timestamp
     $isString = (string) $time !== (string) (int) $time;
 

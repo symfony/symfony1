@@ -54,6 +54,10 @@ touch lib/model/.sf plugins/.sf web/js/.sf
 touch test/unit/.sf test/functional/.sf test/functional/${APP_NAME}/.sf
 touch web/uploads/assets/.sf
 
+touch data/sandbox.db
+chmod 777 data
+chmod 777 data/sandbox.db
+
 echo ">>> create archive"
 cd ..
 tar zcpf ${SANDBOX_NAME}.tgz ${SANDBOX_NAME}

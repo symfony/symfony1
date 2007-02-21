@@ -9,6 +9,8 @@
  */
 
 /**
+ * This class is the Propel implementation of sfData.  It interacts with the data source
+ * and loads data.
  *
  * @package    symfony
  * @subpackage addon
@@ -21,6 +23,14 @@ class sfPropelData extends sfData
     $maps = array();
 
   // symfony load-data (file|dir)
+  /**
+   * Loads data from a file or directory into a Propel data source
+   *
+   * @param mixed A file or directory path
+   * @param string The Propel connection name, default 'propel'
+   *
+   * @throws Exception If the database throws an error, rollback transaction and rethrows exception
+   */
   public function loadData($directory_or_file = null, $connectionName = 'propel')
   {
     $fixture_files = $this->getFiles($directory_or_file);
@@ -44,6 +54,15 @@ class sfPropelData extends sfData
     }
   }
 
+  /**
+   * Implements the abstract loadDataFromArray method and loads the data using the generated data model.
+   *
+   * @param array The data to be loaded into the data source
+   *
+   * @throws Exception If data is unnamed.
+   * @throws sfException If an object defined in the model does not exist in the data
+   * @throws sfException If a column that does not exist is referenced
+   */
   public function loadDataFromArray($data)
   {
     if ($data === null)
@@ -132,6 +151,15 @@ class sfPropelData extends sfData
     }
   }
 
+  /**
+   * Clears existing data from the data source by reading the fixture files
+   * and deleting the existing data for only those classes that are mentioned
+   * in the fixtures.
+   *
+   * @param array The list of YAML files.
+   *
+   * @throws sfException If a class mentioned in a fixture can not be found
+   */
   protected function doDeleteCurrentData($fixture_files)
   {
     // delete all current datas in database
@@ -169,6 +197,13 @@ class sfPropelData extends sfData
     }
   }
 
+  /**
+   * Loads the mappings for the classes
+   *
+   * @param string The name of a data object
+   *
+   * @throws sfException If the class cannot be found
+   */
   protected function loadMapBuilder($class)
   {
     $class_map_builder = $class.'MapBuilder';
@@ -227,37 +262,66 @@ class sfPropelData extends sfData
     // load map classes
     array_walk($tables, array($this, 'loadMapBuilder'));
 
-    foreach ($tables as $table)
+    // reordering tables to take foreign keys into account
+    $move = true;
+    while ($move)
     {
-      $tableMap = $this->maps[$table]->getDatabaseMap()->getTable(constant($table.'Peer::TABLE_NAME'));
+      foreach ($tables as $i => $tableName)
+      {
+        $tableMap = $this->maps[$tableName]->getDatabaseMap()->getTable(constant($tableName.'Peer::TABLE_NAME'));
+
+        foreach ($tableMap->getColumns() as $column)
+        {
+          if ($column->isForeignKey())
+          {
+            $relatedTable = $this->maps[$tableName]->getDatabaseMap()->getTable($column->getRelatedTableName());
+            if (array_search($relatedTable->getPhpName(), $tables) > $i)
+            {
+              unset($tables[$i]);
+              $tables[] = $tableName;
+              $move = true;
+              continue 2;
+            }
+          }
+        }
+
+        $move = false;
+      }
+    }
+
+    foreach ($tables as $tableName)
+    {
+      $tableMap = $this->maps[$tableName]->getDatabaseMap()->getTable(constant($tableName.'Peer::TABLE_NAME'));
 
       // get db info
-      $rs = $con->executeQuery('SELECT * FROM '.constant($table.'Peer::TABLE_NAME'));
+      $rs = $con->executeQuery('SELECT * FROM '.constant($tableName.'Peer::TABLE_NAME'));
 
-      $dumpData[$table] = array();
+      $dumpData[$tableName] = array();
 
-      while ($rs->next()) {
-        $pk = '';
+      while ($rs->next())
+      {
+        $pk = $tableName;
+        $values = array();
         foreach ($tableMap->getColumns() as $column)
         {
           $col = strtolower($column->getColumnName());
-
           if ($column->isPrimaryKey())
           {
-            $pk .= '_' .$rs->get($col);
-            continue;
+            $pk .= '_'.$rs->get($col);
           }
           else if ($column->isForeignKey())
           {
-            $relatedTable = $this->maps[$table]->getDatabaseMap()->getTable($column->getRelatedTableName());
+            $relatedTable = $this->maps[$tableName]->getDatabaseMap()->getTable($column->getRelatedTableName());
 
-            $dumpData[$table][$table.$pk][$col] = $relatedTable->getPhpName().'_'.$rs->get($col);
+            $values[$col] = $relatedTable->getPhpName().'_'.$rs->get($col);
           }
           else
           {
-            $dumpData[$table][$table.$pk][$col] = $rs->get($col);
+            $values[$col] = $rs->get($col);
           }
         }
+
+        $dumpData[$tableName][$pk] = $values;
       }
     }
 

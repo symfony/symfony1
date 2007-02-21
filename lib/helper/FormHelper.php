@@ -458,7 +458,7 @@ function textarea_tag($name, $content = null, $options = array())
     return $sfEditor->toHTML();
   }
 
-  return content_tag('textarea', (is_object($content)) ? $content->__toString() : $content, array_merge(array('name' => $name, 'id' => get_id_from_name(_get_option($options, 'id', $name), null)), _convert_options($options)));
+  return content_tag('textarea', escape_once((is_object($content)) ? $content->__toString() : $content), array_merge(array('name' => $name, 'id' => get_id_from_name(_get_option($options, 'id', $name), null)), _convert_options($options)));
 }
 
 /**

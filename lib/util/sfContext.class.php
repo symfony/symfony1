@@ -162,7 +162,9 @@ class sfContext
 
   public function retrieveObjects($class, $peerMethod)
   {
-    return $this->databaseManager->getDatabase(constant("$class::DATABASE_NAME"))->retrieveObjects($class, $peerMethod);
+    $retrievingClass = 'sf'.ucfirst(sfConfig::get('sf_orm', 'propel')).'DataRetriever';
+
+    return call_user_func(array($retrievingClass, 'retrieveObjects'), $class, $peerMethod);
   }
 
   /**

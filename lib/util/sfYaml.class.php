@@ -48,7 +48,7 @@ class sfYaml
     {
       $retval = syck_load($input);
 
-      return (is_array($retval)) ? $retval : array();
+      return is_array($retval) ? $retval : array();
     }
     else
     {
@@ -71,6 +71,8 @@ class sfYaml
    */
   public static function dump($array)
   {
+    require_once(dirname(__FILE__).'/Spyc.class.php');
+
     $spyc = new Spyc();
 
     return $spyc->dump($array);

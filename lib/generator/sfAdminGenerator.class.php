@@ -124,13 +124,16 @@ abstract class sfAdminGenerator extends sfCrudGenerator
     $action = isset($params['action']) ? $params['action'] : $default_action;
     $url_params = $pk_link ? '?'.$this->getPrimaryKeyUrlParams() : '\'';
 
-    if (!isset($options['class']) && $default_class)
+    if (!isset($options['class']))
     {
-      $options['class'] = $default_class;
-    }
-    else
-    {
-      $options['style'] = 'background: #ffc url('.$icon.') no-repeat 3px 2px';
+      if ($default_class)
+      {
+        $options['class'] = $default_class;
+      }
+      else
+      {
+        $options['style'] = 'background: #ffc url('.$icon.') no-repeat 3px 2px';
+      }
     }
 
     $li_class = $li_class ? ' class="'.$li_class.'"' : '';

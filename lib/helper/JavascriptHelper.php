@@ -1000,7 +1000,7 @@
     $callback = remote_function($options);
 
     $javascript  = 'new '.$klass.'("'.$name.'", ';
-    if (isset($options['frequency']))
+    if (isset($options['frequency']) && $options['frequency'] > 0)
     {
       $javascript .= $options['frequency'].", ";
     }

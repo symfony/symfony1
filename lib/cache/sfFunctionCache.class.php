@@ -51,7 +51,7 @@ class sfFunctionCache extends sfFileCache
       $target = array_shift($arguments);
       ob_start();
       ob_implicit_flush(false);
-      if (strstr($target, '::'))
+      if (is_string($target) && strstr($target, '::'))
       {
         // classname::staticMethod
         list($class, $method) = explode('::', $target);
@@ -65,7 +65,7 @@ class sfFunctionCache extends sfFileCache
           throw $e;
         }
       }
-      else if (strstr($target, '->'))
+      else if (is_string($target) && strstr($target, '->'))
       {
         // object->method
         // use a stupid name ($objet_123456789 because) of problems when the object

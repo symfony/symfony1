@@ -12,7 +12,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 sfLoader::loadHelpers(array('Helper', 'Tag', 'Text'));
 
-$t = new lime_test(41, new lime_output_color());
+$t = new lime_test(42, new lime_output_color());
 
 // truncate_text()
 $t->diag('truncate_text()');
@@ -110,3 +110,4 @@ $t->is(auto_link_text('Go to '.$link2_raw, 'urls'), 'Go to '.$link2_result, 'aut
 $t->is(auto_link_text('Go to '.$link2_raw, 'email_addresses'), 'Go to '.$link2_raw, 'auto_linking() converts URLs to links');
 $t->is(auto_link_text('<p>Link '.$link2_raw.'</p>'), '<p>Link '.$link2_result.'</p>', 'auto_linking() converts URLs to links');
 $t->is(auto_link_text('<p>'.$link2_raw.' Link</p>'), '<p>'.$link2_result.' Link</p>', 'auto_linking() converts URLs to links');
+$t->is(auto_link_text('<p>http://www.google.com/?q=symfony Link</p>'), '<p><a href="http://www.google.com/?q=symfony">http://www.google.com/?q=symfony</a> Link</p>', 'auto_linking() converts URLs to links');

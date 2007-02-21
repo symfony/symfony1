@@ -4,8 +4,6 @@
 abstract class BaseAuthorArticle extends BaseObject  implements Persistent {
 
 
-	
-	const DATABASE_NAME = 'propel';
 
 	
 	protected static $peer;

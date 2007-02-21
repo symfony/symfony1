@@ -76,7 +76,7 @@ require_once \''.$this->getFilePath($this->getStubObjectBuilder()->getPackage().
   {
     $script .= "
 
-  public function __call(\$method, \$parameters)
+  public function __call(\$method, \$arguments)
   {
     if (!\$callable = sfMixer::getCallable('{$this->getClassname()}:'.\$method))
     {
@@ -88,15 +88,6 @@ require_once \''.$this->getFilePath($this->getStubObjectBuilder()->getPackage().
     return call_user_func_array(\$callable, \$arguments);
   }
 
-";
-  }
-  
-  protected function addConstants(&$script)
-  {
-    parent::addConstants($script);
-    $script .= "
-	/** the default database name for this class */
-	const DATABASE_NAME = '{$this->getDatabase()->getName()}';
 ";
   }
 

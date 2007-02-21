@@ -68,7 +68,7 @@ abstract class sfGenerator
       // save template file
       $this->getGeneratorManager()->getCache()->set($template, $generatedModuleName.DIRECTORY_SEPARATOR.'templates', $retval);
     }
-    
+
     // generate config files
     foreach ($configFiles as $config)
     {

@@ -1,12 +1,36 @@
+Version 1.0.0
+-------------
+
+No major changes since 1.0.0-rc2.
+
+* r3502: fixed sfFilter::isFirstCall() method
+* r3493: removed the DATABASE_NAME constants
+
+* fixed typos in the book
+
+Version 1.0.0-rc2
+-----------------
+
+No major changes since 1.0.0-rc1.
+
+* r3385: new propel-dump-data task
+* r3377: fixed PEAR installation problem with PEAR 1.5
+
+* new book is now bundled with symfony under the doc/ directory
+* added some phpdoc comments
+
 Version 1.0.0-rc1
 -----------------
 
 No major changes since beta4.
 
+* r3348: added "The Definitive guide to symfony"
+* r3325: better inheritance for admin generator templates
 * r3316: updated script.aculo.us to 1.7.0 and prototype to 1.5.0
 * r3313: added a new decorate_with() helper
 * r3312: added a new isForwardedTo() method to sfTestBrowser
 * r3298: fixed tests on windows
+
 * updated phpdoc comments
 * added more unit tests (> 3800 now)
 

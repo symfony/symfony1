@@ -11,23 +11,13 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(19, new lime_output_color());
+$t = new lime_test(20, new lime_output_color());
 
 class myFilter extends sfFilter
 {
-  public function isFirstCallBeforeExecution()
+  public function isFirstCall()
   {
-    return parent::isFirstCallBeforeExecution();
-  }
-
-  public function isFirstCallBeforeRendering()
-  {
-    return parent::isFirstCallBeforeRendering();
-  }
-
-  public function isFirstCall($type = 'beforeExecution')
-  {
-    return parent::isFirstCall($type);
+    return parent::isFirstCall();
   }
 }
 
@@ -50,6 +40,10 @@ $t->is($filter->getContext(), $context, '->getContext() returns the current cont
 $t->diag('->isFirstCall()');
 $t->is($filter->isFirstCall('beforeExecution'), true, '->isFirstCall() returns true if this is the first call with this argument');
 $t->is($filter->isFirstCall('beforeExecution'), false, '->isFirstCall() returns false if this is not the first call with this argument');
+$t->is($filter->isFirstCall('beforeExecution'), false, '->isFirstCall() returns false if this is not the first call with this argument');
+
+$filter = new myFilter();
+$filter->initialize($context);
 $t->is($filter->isFirstCall('beforeExecution'), false, '->isFirstCall() returns false if this is not the first call with this argument');
 
 // parameter holder proxy

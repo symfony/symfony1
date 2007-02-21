@@ -286,4 +286,9 @@ class sfDebugConnection implements Connection
       self::$logger->log($msg);
     }
   }
+
+  public function __call($method, $arguments)
+  {
+    return $this->childConnection->$method($arguments);
+  }
 }

@@ -26,6 +26,9 @@ pake_task('propel-convert-xml-schema', 'project_exists');
 pake_desc('load data from fixtures directory');
 pake_task('propel-load-data', 'project_exists');
 
+pake_desc('dump data to fixtures directory');
+pake_task('propel-dump-data', 'project_exists');
+
 pake_desc('create database for current model');
 pake_task('propel-build-db', 'project_exists');
 
@@ -217,7 +220,64 @@ function run_propel_build_schema($task, $args)
 }
 
 /**
- * loads yml data from fixtures directory and inserts into database
+ * Dumps yml database data to fixtures directory.
+ *
+ * @example symfony dump-data frontend data.yml
+ * @example symfony dump-data frontend data.yml dev
+ *
+ * @param object $task
+ * @param array $args
+ */
+function run_propel_dump_data($task, $args)
+{
+  if (!count($args))
+  {
+    throw new Exception('You must provide the app.');
+  }
+
+  $app = $args[0];
+
+  if (!is_dir(sfConfig::get('sf_app_dir').DIRECTORY_SEPARATOR.$app))
+  {
+    throw new Exception('The app "'.$app.'" does not exist.');
+  }
+
+  if (!isset($args[1]))
+  {
+    throw new Exception('You must provide a filename.');
+  }
+
+  $filename = $args[1];
+
+  $env = empty($args[2]) ? 'dev' : $args[2];
+
+  // define constants
+  define('SF_ROOT_DIR',    sfConfig::get('sf_root_dir'));
+  define('SF_APP',         $app);
+  define('SF_ENVIRONMENT', $env);
+  define('SF_DEBUG',       true);
+
+  // get configuration
+  require_once SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php';
+
+  $databaseManager = new sfDatabaseManager();
+  $databaseManager->initialize();
+
+  if (!sfToolkit::isPathAbsolute($filename))
+  {
+    $dir = sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.'fixtures';
+    pake_mkdirs($dir);
+    $filename = $dir.DIRECTORY_SEPARATOR.$filename;
+  }
+
+  pake_echo_action('propel', sprintf('dumping data to "%s"', $filename));
+
+  $data = new sfPropelData();
+  $data->dumpData($filename);
+}
+
+/**
+ * Loads yml data from fixtures directory and inserts into database.
  *
  * @example symfony load-data frontend
  * @example symfony load-data frontend dev fixtures append

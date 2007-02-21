@@ -25,7 +25,7 @@ function run_test_all($task, $args)
   $h->base_dir = sfConfig::get('sf_test_dir');
 
   // register all tests
-  $finder = pakeFinder::type('file')->ignore_version_control()->name('*Test.php');
+  $finder = pakeFinder::type('file')->ignore_version_control()->follow_link()->name('*Test.php');
   $h->register($finder->in($h->base_dir));
 
   $h->run();
@@ -49,7 +49,7 @@ function run_test_functional($task, $args)
   {
     foreach (array_splice($args, 1) as $path)
     {
-      $files = pakeFinder::type('file')->ignore_version_control()->name(basename($path).'Test.php')->in(sfConfig::get('sf_test_dir').DIRECTORY_SEPARATOR.'functional'.DIRECTORY_SEPARATOR.$app.DIRECTORY_SEPARATOR.dirname($path));
+      $files = pakeFinder::type('file')->ignore_version_control()->follow_link()->name(basename($path).'Test.php')->in(sfConfig::get('sf_test_dir').DIRECTORY_SEPARATOR.'functional'.DIRECTORY_SEPARATOR.$app.DIRECTORY_SEPARATOR.dirname($path));
       foreach ($files as $file)
       {
         include($file);
@@ -64,7 +64,7 @@ function run_test_functional($task, $args)
     $h->base_dir = sfConfig::get('sf_test_dir').'/functional/'.$app;
 
     // register functional tests
-    $finder = pakeFinder::type('file')->ignore_version_control()->name('*Test.php');
+    $finder = pakeFinder::type('file')->ignore_version_control()->follow_link()->name('*Test.php');
     $h->register($finder->in($h->base_dir));
 
     $h->run();
@@ -77,7 +77,7 @@ function run_test_unit($task, $args)
   {
     foreach ($args as $path)
     {
-      $files = pakeFinder::type('file')->ignore_version_control()->name(basename($path).'Test.php')->in(sfConfig::get('sf_test_dir').DIRECTORY_SEPARATOR.'unit'.DIRECTORY_SEPARATOR.dirname($path));
+      $files = pakeFinder::type('file')->ignore_version_control()->follow_link()->name(basename($path).'Test.php')->in(sfConfig::get('sf_test_dir').DIRECTORY_SEPARATOR.'unit'.DIRECTORY_SEPARATOR.dirname($path));
       foreach ($files as $file)
       {
         include($file);
@@ -92,7 +92,7 @@ function run_test_unit($task, $args)
     $h->base_dir = sfConfig::get('sf_test_dir').'/unit';
 
     // register unit tests
-    $finder = pakeFinder::type('file')->ignore_version_control()->name('*Test.php');
+    $finder = pakeFinder::type('file')->ignore_version_control()->follow_link()->name('*Test.php');
     $h->register($finder->in($h->base_dir));
 
     $h->run();

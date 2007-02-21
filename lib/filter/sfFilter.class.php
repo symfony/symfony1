@@ -22,8 +22,10 @@ abstract class sfFilter
 {
   protected
     $parameterHolder = null,
-    $filterCalled    = array(),
     $context         = null;
+
+  public static
+    $filterCalled    = array();
 
   /**
    * Returns true if this is the first call to the sfFilter instance.
@@ -33,13 +35,13 @@ abstract class sfFilter
   protected function isFirstCall()
   {
     $class = get_class($this);
-    if (isset($this->filterCalled[$class]))
+    if (isset(self::$filterCalled[$class]))
     {
       return false;
     }
     else
     {
-      $this->filterCalled[$class] = true;
+      self::$filterCalled[$class] = true;
 
       return true;
     }

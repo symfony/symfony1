@@ -19,6 +19,11 @@
 
 function format_number($number, $culture = null)
 {
+  if (is_null($number))
+  {
+    return null;
+  }
+
   $numberFormat = new sfNumberFormat(_current_language($culture));
 
   return $numberFormat->format($number);
@@ -26,6 +31,11 @@ function format_number($number, $culture = null)
 
 function format_currency($amount, $currency = null, $culture = null)
 {
+  if (is_null($amount))
+  {
+    return null;
+  }
+
   $numberFormat = new sfNumberFormat(_current_language($culture));
 
   return $numberFormat->format($amount, 'c', $currency);

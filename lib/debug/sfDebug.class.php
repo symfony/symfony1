@@ -116,9 +116,12 @@ class sfDebug
         'httpHeaders'     => array(),
         'parameterHolder' => self::flattenParameterHolder($response->getParameterHolder()),
       );
-      foreach ($response->getHttpHeaders() as $key => $value)
+      if (method_exists($response, 'getHttpHeaders'))
       {
-        $values['httpHeaders'][$key] = $value;
+        foreach ($response->getHttpHeaders() as $key => $value)
+        {
+          $values['httpHeaders'][$key] = $value;
+        }
       }
 
       $cookies = array();

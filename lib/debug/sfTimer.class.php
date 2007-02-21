@@ -45,11 +45,16 @@ class sfTimer
 
   /**
    * Stops the timer and add the amount of time since the start to the total time.
+   *
+   * @return integer Time spend for the last call
    */
   public function addTime()
   {
-    $this->totalTime += microtime(true) - $this->startTime;
+    $spend = microtime(true) - $this->startTime;
+    $this->totalTime += $spend;
     ++$this->calls;
+
+    return $spend;
   }
 
   /**

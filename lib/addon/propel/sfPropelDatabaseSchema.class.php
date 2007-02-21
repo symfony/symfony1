@@ -93,11 +93,11 @@ class sfPropelDatabaseSchema
       }
 
       // foreign-keys
-      if (isset($table['_foreign_keys']))
+      if (isset($table['_foreignKeys']))
       {
-        foreach ($table['_foreign_keys'] as $fkey_name => $fkey)
+        foreach ($table['_foreignKeys'] as $fkey_name => $fkey)
         {
-          $xml .= "    <foreign-key foreignTable=\"$fkey[foreign_table]\"";
+          $xml .= "    <foreign-key foreignTable=\"$fkey[foreignTable]\"";
 
           // foreign key name
           if (!is_numeric($fkey_name))
@@ -106,15 +106,15 @@ class sfPropelDatabaseSchema
           }
 
           // onDelete
-          if (isset($fkey['on_delete']))
+          if (isset($fkey['onDelete']))
           {
-            $xml .= " onDelete=\"$fkey[on_delete]\"";
+            $xml .= " onDelete=\"$fkey[onDelete]\"";
           }
 
           // onUpdate
-          if (isset($fkey['on_update']))
+          if (isset($fkey['onUpdate']))
           {
-            $xml .= " onUpdate=\"$fkey[on_update]\"";
+            $xml .= " onUpdate=\"$fkey[onUpdate]\"";
           }
           $xml .= ">\n";
 
@@ -405,11 +405,11 @@ class sfPropelDatabaseSchema
     $booleans = array('required', 'primaryKey', 'autoincrement', 'autoIncrement', 'noXsd', 'isI18N', 'isCulture');
     if (in_array($key, $booleans))
     {
-      return ($value == 1) ? 'true' : 'false';
+      return $value == 1 ? 'true' : 'false';
     }
     else
     {
-      return $value;
+      return is_null($value) ? 'null' : $value;
     }
   }
 

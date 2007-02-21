@@ -281,7 +281,7 @@ abstract class sfComponent
    *
    * @see getVar()
    */
-  public function __get($key)
+  public function & __get($key)
   {
     return $this->varHolder->get($key);
   }

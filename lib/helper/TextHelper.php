@@ -155,23 +155,26 @@ function strip_links_text($text)
 
 if (!defined('SF_AUTO_LINK_RE'))
 {
-  define('SF_AUTO_LINK_RE', '/
+  define('SF_AUTO_LINK_RE', '~
     (                       # leading text
       <\w+.*?>|             #   leading HTML tag, or
-      [^=!:\'"\/]|          #   leading punctuation, or
+      [^=!:\'"/]|           #   leading punctuation, or
       ^                     #   beginning of line
     )
     (
-      (?:http[s]?:\/\/)|    # protocol spec, or
+      (?:https?://)|        # protocol spec, or
       (?:www\.)             # www.*
-    ) 
+    )
     (
-      ([\w]+:?[=?&\/.-]?)*  # url segment
-      \w+[\/]?              # url tail
-      (?:\#\w*)?            # trailing anchor
+      [-\w]+                   # subdomain or domain
+      (?:\.[-\w]+)*            # remaining subdomains or domain
+      (?::\d+)?                # port
+      (?:/(?:(?:[\~\w\+%-]|(?:[,.;:][^\s$]))+)?)* # path
+      (?:\?[\w\+%&=.;-]+)?     # query string
+      (?:\#[\w\-]*)?           # trailing anchor
     )
     ([[:punct:]]|\s|<|$)    # trailing text
-   /x');
+   ~x');
 }
 
 /**
@@ -189,7 +192,7 @@ function _auto_link_urls($text, $href_options = array())
       }
       else
       {
-        return $matches[1].\'<a href="\'.($matches[2] == "www." ? "http://www." : $matches[2]).$matches[3].\'"'.$href_options.'>\'.$matches[2].$matches[3].\'</a>\'.$matches[5];
+        return $matches[1].\'<a href="\'.($matches[2] == "www." ? "http://www." : $matches[2]).$matches[3].\'"'.$href_options.'>\'.$matches[2].$matches[3].\'</a>\'.$matches[4];
       }
     ')
   , $text);
