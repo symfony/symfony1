@@ -73,9 +73,9 @@ class sfSQLiteCache extends sfCache
     $availableOptions = array('automaticCleaningFactor');
     foreach ($options as $key => $value)
     {
-      if (!in_array($key, $availableOptions))
+      if (!in_array($key, $availableOptions) && sfConfig::get('sf_logging_enabled'))
       {
-        sfLogger::getInstance()->error(sprintf('sfSQLiteCache cannot take "%s" as an option', $key));
+        sfLogger::getInstance()->err(sprintf('sfSQLiteCache cannot take "%s" as an option', $key));
       }
 
       $this->$key = $value;

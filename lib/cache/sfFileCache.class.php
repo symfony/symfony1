@@ -119,9 +119,9 @@ class sfFileCache extends sfCache
     $availableOptions = array('fileLocking', 'writeControl', 'readControl', 'fileNameProtection', 'automaticCleaningFactor', 'hashedDirectoryLevel', 'lifeTime');
     foreach ($options as $key => $value)
     {
-      if (!in_array($key, $availableOptions))
+      if (!in_array($key, $availableOptions) && sfConfig::get('sf_logging_enabled'))
       {
-        sfLogger::getInstance()->error(sprintf('sfFileCache cannot take "%s" as an option', $key));
+        sfLogger::getInstance()->err(sprintf('sfFileCache cannot take "%s" as an option', $key));
       }
 
       $this->$key = $value;
