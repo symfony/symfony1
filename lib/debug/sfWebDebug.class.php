@@ -112,7 +112,7 @@ class sfWebDebug
    */
   protected function loadHelpers()
   {
-    sfLoader::loadHelpers(array('Helper', 'Url', 'Asset', 'Tag', 'Javascript'));
+    sfLoader::loadHelpers(array('Helper', 'Url', 'Asset', 'Tag'));
   }
 
   /**
