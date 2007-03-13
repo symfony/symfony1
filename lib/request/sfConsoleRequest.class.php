@@ -24,14 +24,15 @@ class sfConsoleRequest extends sfRequest
    *
    * @param sfContext A sfContext instance
    * @param array   An associative array of initialization parameters
+   * @param array   An associative array of initialization attributes
    *
    * @return boolean true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this Request
    */
-  public function initialize($context, $parameters = null)
+  public function initialize($context, $parameters = array(), $attributes = array())
   {
-    parent::initialize ($context, $parameters);
+    parent::initialize($context, $parameters, $attributes);
 
     $this->getParameterHolder()->add($_SERVER['argv']);
   }
