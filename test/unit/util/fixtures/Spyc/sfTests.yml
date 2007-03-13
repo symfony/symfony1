@@ -12,3 +12,11 @@ yaml: |
     foo: [ ]
 php: |
     array('foo' => array())
+
+test: Inline string parsing
+brief: >
+    Inline string parsing
+yaml: |
+    test: ['complex: string', 'another [string]']
+php: |
+    array('test' => array('complex: string', 'another [string]'))
