@@ -85,6 +85,21 @@ $b->
   checkResponseElement('link[href="/sf/sf_default/css/screen.css"]')
 ;
 
+// security.yml: case sensitivity
+$b->
+  get('/configSecurityIsSecureAction/index')->
+  isStatusCode(200)->
+  isForwardedTo('default', 'login')->
+  checkResponseElement('body', '/Credentials Required/i')
+;
+
+$b->
+  get('/configSecurityIsSecureAction/Index')->
+  isStatusCode(200)->
+  isForwardedTo('default', 'login')->
+  checkResponseElement('body', '/Credentials Required/i')
+;
+
 // settings.yml: max_forwards
 $b->
   get('/configSettingsMaxForwards/selfForward')->

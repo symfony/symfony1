@@ -341,9 +341,11 @@ abstract class sfAction extends sfComponent
    */
   public function isSecure()
   {
-    if (isset($this->security[$this->getActionName()]['is_secure']))
+    $actionName = strtolower($this->getActionName());
+
+    if (isset($this->security[$actionName]['is_secure']))
     {
-      return $this->security[$this->getActionName()]['is_secure'];
+      return $this->security[$actionName]['is_secure'];
     }
 
     if (isset($this->security['all']['is_secure']))
@@ -361,9 +363,11 @@ abstract class sfAction extends sfComponent
    */
   public function getCredential()
   {
-    if (isset($this->security[$this->getActionName()]['credentials']))
+    $actionName = strtolower($this->getActionName());
+
+    if (isset($this->security[$actionName]['credentials']))
     {
-      $credentials = $this->security[$this->getActionName()]['credentials'];
+      $credentials = $this->security[$actionName]['credentials'];
     }
     else if (isset($this->security['all']['credentials']))
     {
