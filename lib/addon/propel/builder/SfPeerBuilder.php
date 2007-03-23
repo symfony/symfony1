@@ -186,9 +186,72 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
     {
       $mixer_script = "
 
-    foreach (sfMixer::getCallables('{$this->getClassname()}:addDoSelectRS:addDoSelectRS') as \$callable)
+    foreach (sfMixer::getCallables('{$this->getClassname()}:doSelectRS:doSelectRS') as \$callable)
     {
       call_user_func(\$callable, '{$this->getClassname()}', \$criteria, \$con);
+    }
+
+";
+      $tmp = preg_replace('/{/', '{'.$mixer_script, $tmp, 1);
+    }
+
+    $script .= $tmp;
+  }
+
+  protected function addDoSelectJoin(&$script)
+  {
+    $tmp = '';
+    parent::addDoSelectJoin($tmp);
+
+    if (DataModelBuilder::getBuildProperty('builderAddBehaviors'))
+    {
+      $mixer_script = "
+
+    foreach (sfMixer::getCallables('{$this->getClassname()}:doSelectJoin:doSelectJoin') as \$callable)
+    {
+      call_user_func(\$callable, '{$this->getClassname()}', \$c, \$con);
+    }
+
+";
+      $tmp = preg_replace('/{/', '{'.$mixer_script, $tmp, 1);
+    }
+
+    $script .= $tmp;
+  }
+
+  protected function addDoSelectJoinAll(&$script)
+  {
+    $tmp = '';
+    parent::addDoSelectJoinAll($tmp);
+
+    if (DataModelBuilder::getBuildProperty('builderAddBehaviors'))
+    {
+      $mixer_script = "
+
+    foreach (sfMixer::getCallables('{$this->getClassname()}:doSelectJoinAll:doSelectJoinAll') as \$callable)
+    {
+      call_user_func(\$callable, '{$this->getClassname()}', \$c, \$con);
+    }
+
+";
+      $tmp = preg_replace('/{/', '{'.$mixer_script, $tmp, 1);
+    }
+
+    $script .= $tmp;
+  }
+  
+  protected function addDoSelectJoinAllExcept(&$script)
+  {
+    $tmp = '';
+    parent::addDoSelectJoinAllExcept($tmp);
+
+    if (DataModelBuilder::getBuildProperty('builderAddBehaviors'))
+    {
+      $mixer_script = "
+
+    foreach (sfMixer::getCallables('{$this->getClassname()}:doSelectJoinAllExcept:doSelectJoinAllExcept') as \$callable)
+    {
+      call_user_func(\$callable, '{$this->getClassname()}', \$c, \$con);
     }
 
 ";
