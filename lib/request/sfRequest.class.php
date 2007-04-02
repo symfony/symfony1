@@ -105,12 +105,12 @@ abstract class sfRequest
     if (isset($this->errors[$name]))
     {
       $retval = $this->errors[$name];
-    }
 
-    // translate error message if needed
-    if (sfConfig::get('sf_i18n'))
-    {
-      $retval = $this->context->getI18N()->__($retval, null, $catalogue);
+      // translate error message if needed
+      if (sfConfig::get('sf_i18n'))
+      {
+        $retval = $this->context->getI18N()->__($retval, null, $catalogue);
+      }
     }
 
     return $retval;
