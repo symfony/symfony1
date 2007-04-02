@@ -64,7 +64,7 @@ function highlight_text($text, $phrase, $highlighter = '<strong class="highlight
     return $text;
   }
 
-  return preg_replace('/('.preg_quote($phrase).')/i', $highlighter, $text);
+  return preg_replace('/('.preg_quote($phrase, '/').')/i', $highlighter, $text);
 }
 
 /**
@@ -78,8 +78,6 @@ function excerpt_text($text, $phrase, $radius = 100, $excerpt_string = '...')
   {
     return '';
   }
-
-  $phrase = preg_quote($phrase);
 
   $found_pos = strpos(strtolower($text), strtolower($phrase));
   if ($found_pos !== false)

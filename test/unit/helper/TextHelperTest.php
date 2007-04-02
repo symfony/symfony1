@@ -12,7 +12,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 sfLoader::loadHelpers(array('Helper', 'Tag', 'Text'));
 
-$t = new lime_test(42, new lime_output_color());
+$t = new lime_test(43, new lime_output_color());
 
 // truncate_text()
 $t->diag('truncate_text()');
@@ -63,6 +63,8 @@ $t->is(highlight_text('foobar', ''), 'foobar', 'text_highlighter() returns input
 $t->is(highlight_text("This is a beautiful! morning", "beautiful!"), "This is a <strong class=\"highlight\">beautiful!</strong> morning", 'text_highlighter() escapes search string to be safe in a regex');
 $t->is(highlight_text("This is a beautiful! morning", "beautiful! morning"), "This is a <strong class=\"highlight\">beautiful! morning</strong>", 'text_highlighter() escapes search string to be safe in a regex');
 $t->is(highlight_text("This is a beautiful? morning", "beautiful? morning"), "This is a <strong class=\"highlight\">beautiful? morning</strong>", 'text_highlighter() escapes search string to be safe in a regex');
+
+$t->is(highlight_text("The http://www.google.com/ website is great", "http://www.google.com/"), "The <strong class=\"highlight\">http://www.google.com/</strong> website is great", 'text_highlighter() escapes search string to be safe in a regex');
 
 // excerpt_text()
 $t->diag('excerpt_text()');
