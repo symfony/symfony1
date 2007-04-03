@@ -23,7 +23,8 @@
 class sfConfigCache
 {
   protected
-    $handlers = array();
+    $handlers = array(),
+    $userHandlers = array();
 
   protected static
     $instance = null;
@@ -58,6 +59,12 @@ class sfConfigCache
     {
       // we need to load the handlers first
       $this->loadConfigHandlers();
+    }
+
+    if (count($this->userHandlers) != 0)
+    {
+      // we load user defined handlers
+      $this->mergeUserConfigHandlers();
     }
 
     // handler to call for this configuration file
@@ -318,8 +325,7 @@ class sfConfigCache
     else
     {
       // module directory doesn't exist or isn't readable
-      $error = sprintf('Module directory "%s" does not exist or is not readable',
-                       sfConfig::get('sf_app_module_dir'));
+      $error = sprintf('Module directory "%s" does not exist or is not readable', sfConfig::get('sf_app_module_dir'));
       throw new sfConfigurationException($error);
     }
   }
@@ -338,5 +344,31 @@ class sfConfigCache
     $fileCache = new sfFileCache(dirname($cache));
     $fileCache->setSuffix('');
     $fileCache->set(basename($cache), '', $data);
+  }
+
+  /**
+   * Registers a configuration handler.
+   *
+   * @param string The handler to use when parsing a configuration file
+   * @param class  A configuration handler class
+   * @param string An array of options for the handler class initialization
+   */
+  public function registerConfigHandler($handler, $class, $params = array())
+  {
+    $this->userHandlers[$handler] = new $class();
+    $this->userHandlers[$handler]->initialize($params);
+  }
+
+  /**
+   * Merges configuration handlers from the config_handlers.yml  
+   * and the ones defined with registerConfigHandler()
+   *
+   */
+  protected function mergeUserConfigHandlers()
+  {
+    // user defined configuration handlers
+    $this->handlers = array_merge($this->handlers, $this->userHandlers);
+
+    $this->userHandlers = array();
   }
 }
