@@ -24,66 +24,66 @@ require_once 'propel/engine/platform/DefaultPlatform.php';
 /**
  * SQLite Platform implementation.
  *
- * @author Hans Lellelid <hans@xmpl.org>
- * @version $Revision: 268 $
- * @package propel.engine.platform
+ * @author     Hans Lellelid <hans@xmpl.org>
+ * @version    $Revision: 536 $
+ * @package    propel.engine.platform
  */
 class SqlitePlatform extends DefaultPlatform {
 
-    /**
-     * Initializes db specific domain mapping.
-     */
-    protected function initialize()
-    {
-        parent::initialize();
-        $this->setSchemaDomainMapping(new Domain(PropelTypes::NUMERIC, "DECIMAL"));
-        $this->setSchemaDomainMapping(new Domain(PropelTypes::LONGVARCHAR, "MEDIUMTEXT"));
-        $this->setSchemaDomainMapping(new Domain(PropelTypes::DATE, "DATETIME"));
-        $this->setSchemaDomainMapping(new Domain(PropelTypes::BINARY, "BLOB"));
-        $this->setSchemaDomainMapping(new Domain(PropelTypes::VARBINARY, "MEDIUMBLOB"));
-        $this->setSchemaDomainMapping(new Domain(PropelTypes::LONGVARBINARY, "LONGBLOB"));
-        $this->setSchemaDomainMapping(new Domain(PropelTypes::BLOB, "LONGBLOB"));
-        $this->setSchemaDomainMapping(new Domain(PropelTypes::CLOB, "LONGTEXT"));
-    }
-
-    /**
-	 * @see Platform#getAutoIncrement()
-	 * @link http://www.sqlite.org/autoinc.html
-     */
-    public function getAutoIncrement()
-    {
-		
-        return "PRIMARY KEY";
-    }
-
-    /**
-     * @see Platform#getMaxColumnNameLength()
-     */
-    public function getMaxColumnNameLength()
-    {
-        return 1024;
-    }
-    
-    /**
-     * @see Platform#hasSize(String)
-     */
-    public function hasSize($sqlType) {
-        return !("MEDIUMTEXT" == $sqlType || "LONGTEXT" == $sqlType
-                || "BLOB" == $sqlType || "MEDIUMBLOB" == $sqlType
-                || "LONGBLOB" == $sqlType);
-    }
-    
-    /**
-     * Escape the string for RDBMS.
-     * @param string $text
-     * @return string
-     */ 
-    public function escapeText($text) {
-        return sqlite_escape_string($text);
-    }
+	/**
+	 * Initializes db specific domain mapping.
+	 */
+	protected function initialize()
+	{
+		parent::initialize();
+		$this->setSchemaDomainMapping(new Domain(PropelTypes::NUMERIC, "DECIMAL"));
+		$this->setSchemaDomainMapping(new Domain(PropelTypes::LONGVARCHAR, "MEDIUMTEXT"));
+		$this->setSchemaDomainMapping(new Domain(PropelTypes::DATE, "DATETIME"));
+		$this->setSchemaDomainMapping(new Domain(PropelTypes::BINARY, "BLOB"));
+		$this->setSchemaDomainMapping(new Domain(PropelTypes::VARBINARY, "MEDIUMBLOB"));
+		$this->setSchemaDomainMapping(new Domain(PropelTypes::LONGVARBINARY, "LONGBLOB"));
+		$this->setSchemaDomainMapping(new Domain(PropelTypes::BLOB, "LONGBLOB"));
+		$this->setSchemaDomainMapping(new Domain(PropelTypes::CLOB, "LONGTEXT"));
+	}
 
 	/**
-	 * @see Platform::quoteIdentifier()
+	 * @see        Platform#getAutoIncrement()
+	 * @link       http://www.sqlite.org/autoinc.html
+	 */
+	public function getAutoIncrement()
+	{
+
+		return "PRIMARY KEY";
+	}
+
+	/**
+	 * @see        Platform#getMaxColumnNameLength()
+	 */
+	public function getMaxColumnNameLength()
+	{
+		return 1024;
+	}
+
+	/**
+	 * @see        Platform#hasSize(String)
+	 */
+	public function hasSize($sqlType) {
+		return !("MEDIUMTEXT" == $sqlType || "LONGTEXT" == $sqlType
+				|| "BLOB" == $sqlType || "MEDIUMBLOB" == $sqlType
+				|| "LONGBLOB" == $sqlType);
+	}
+
+	/**
+	 * Escape the string for RDBMS.
+	 * @param      string $text
+	 * @return     string
+	 */
+	public function escapeText($text) {
+		return sqlite_escape_string($text);
+	}
+
+	/**
+	 * @see        Platform::quoteIdentifier()
 	 */
 	public function quoteIdentifier($text)
 	{

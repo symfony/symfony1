@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: DataModelBuilder.php 351 2006-03-15 18:42:34Z hans $
+ *  $Id: DataModelBuilder.php 536 2007-01-10 14:30:38Z heltem $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -37,8 +37,8 @@
  * // $builder (by default) instanceof PHP5ComplexPeerBuilder
  * </code>
  *
- * @author Hans Lellelid <hans@xmpl.org>
- * @package propel.engine.builder
+ * @author     Hans Lellelid <hans@xmpl.org>
+ * @package    propel.engine.builder
  */
 abstract class DataModelBuilder {
 
@@ -48,13 +48,13 @@ abstract class DataModelBuilder {
 
 	/**
 	 * Build properties (after they've been transformed from "propel.some.name" => "someName").
-	 * @var array string[]
+	 * @var        array string[]
 	 */
 	private static $buildProperties = array();
 
 	/**
 	 * Sets the [name transformed] build properties to use.
-	 * @param array Property values keyed by [transformed] prop names.
+	 * @param      array Property values keyed by [transformed] prop names.
 	 */
 	public static function setBuildProperties($props)
 	{
@@ -63,8 +63,8 @@ abstract class DataModelBuilder {
 
 	/**
 	 * Get a specific [name transformed] build property.
-	 * @param string $name
-	 * @return string
+	 * @param      string $name
+	 * @return     string
 	 */
 	public static function getBuildProperty($name)
 	{
@@ -73,13 +73,13 @@ abstract class DataModelBuilder {
 
 	/**
 	 * Imports and returns the classname of the builder class for specified 'type'.
-	 * @param $type The "key" for class to load.
-	 * @return string The unqualified classname.
+	 * @param      $type The "key" for class to load.
+	 * @return     string The unqualified classname.
 	 */
 	public static function getBuilderClass($type)
 	{
 		if (empty(self::$buildProperties)) {
-		    throw new BuildException("Cannot determine builder class when no build properties have been loaded (hint: Did you call DataModelBuilder::setBuildProperties(\$props) first?)");
+			throw new BuildException("Cannot determine builder class when no build properties have been loaded (hint: Did you call DataModelBuilder::setBuildProperties(\$props) first?)");
 		}
 		$propname = 'builder' . ucfirst(strtolower($type)) . 'Class';
 		$classpath = self::getBuildProperty($propname);
@@ -99,9 +99,9 @@ abstract class DataModelBuilder {
 
 	/**
 	 * Factory method to load a new builder instance based on specified type.
-	 * @param Table $table
-	 * @param $type The "key" for class to load.
-	 * @throws BuildException if specified class cannot be found / loaded.
+	 * @param      Table $table
+	 * @param      $type The "key" for class to load.
+	 * @throws     BuildException if specified class cannot be found / loaded.
 	 */
 	public static function builderFactory(Table $table, $type)
 	{
@@ -110,26 +110,26 @@ abstract class DataModelBuilder {
 	}
 
 	/**
-     * Utility function to build a path for use in include()/require() statement.
-     *
-     * Supports two function signatures:
-     * (1) getFilePath($dotPathClass);
-     * (2) getFilePath($dotPathPrefix, $className);
-     *
-     * @param string $path dot-path to class or to package prefix.
-     * @param string $classname class name
-     * @return string
-     */
-    public static function getFilePath($path, $classname = null, $extension = '.php')
-    {
-        $path = strtr(ltrim($path, '.'), '.', '/');
-        if ($classname !== null) {
-            if ($path !== "") { $path .= '/'; }
-            return $path . $classname . $extension;
-        } else {
-            return $path . $extension;
-        }
-    }
+	 * Utility function to build a path for use in include()/require() statement.
+	 *
+	 * Supports two function signatures:
+	 * (1) getFilePath($dotPathClass);
+	 * (2) getFilePath($dotPathPrefix, $className);
+	 *
+	 * @param      string $path dot-path to class or to package prefix.
+	 * @param      string $classname class name
+	 * @return     string
+	 */
+	public static function getFilePath($path, $classname = null, $extension = '.php')
+	{
+		$path = strtr(ltrim($path, '.'), '.', '/');
+		if ($classname !== null) {
+			if ($path !== "") { $path .= '/'; }
+			return $path . $classname . $extension;
+		} else {
+			return $path . $extension;
+		}
+	}
 
 	// --------------------------------------------------------------
 	// Non-static properties & methods inherited by subclasses
@@ -137,19 +137,19 @@ abstract class DataModelBuilder {
 
 	/**
 	 * The current table.
-	 * @var Table
+	 * @var        Table
 	 */
 	private $table;
 
 	/**
 	 * An array of warning messages that can be retrieved for display (e.g. as part of phing build process).
-	 * @var array string[]
+	 * @var        array string[]
 	 */
 	private $warnings = array();
 
 	/**
 	 * Creates new instance of DataModelBuilder subclass.
-	 * @param Table $table The Table which we are using to build [OM, DDL, etc.].
+	 * @param      Table $table The Table which we are using to build [OM, DDL, etc.].
 	 */
 	public function __construct(Table $table)
 	{
@@ -158,7 +158,7 @@ abstract class DataModelBuilder {
 
 	/**
 	 * Returns the Platform class for this table (database).
-	 * @return Platform
+	 * @return     Platform
 	 */
 	protected function getPlatform()
 	{
@@ -167,7 +167,7 @@ abstract class DataModelBuilder {
 
 	/**
 	 * Returns the database for current table.
-	 * @return Database
+	 * @return     Database
 	 */
 	protected function getDatabase()
 	{
@@ -176,7 +176,7 @@ abstract class DataModelBuilder {
 
 	/**
 	 * Returns the current Table object.
-	 * @return Table
+	 * @return     Table
 	 */
 	protected function getTable()
 	{
@@ -185,7 +185,7 @@ abstract class DataModelBuilder {
 
 	/**
 	 * Pushes a message onto the stack of warnings.
-	 * @param string $msg The warning message.
+	 * @param      string $msg The warning message.
 	 */
 	protected function warn($msg)
 	{
@@ -194,7 +194,7 @@ abstract class DataModelBuilder {
 
 	/**
 	 * Gets array of warning messages.
-	 * @return array string[]
+	 * @return     array string[]
 	 */
 	public function getWarnings()
 	{
@@ -208,8 +208,8 @@ abstract class DataModelBuilder {
 	 * method directly.  This method is used by both DataSQLBuilder and DDLBuilder, and potentially
 	 * in the OM builders also, which is why it is defined in this class.
 	 *
-	 * @param string $text The text to quote.
-	 * @return string Quoted text.
+	 * @param      string $text The text to quote.
+	 * @return     string Quoted text.
 	 */
 	public function quoteIdentifier($text)
 	{

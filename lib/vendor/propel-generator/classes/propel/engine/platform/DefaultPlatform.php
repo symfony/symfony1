@@ -18,49 +18,49 @@
  * and is licensed under the LGPL. For more information please see
  * <http://propel.phpdb.org>.
  */
- 
+
 require_once 'propel/engine/platform/Platform.php';
 include_once 'propel/engine/database/model/Domain.php';
 
 /**
  * Default implementation for the Platform interface.
  *
- * @author Martin Poeschl <mpoeschl@marmot.at> (Torque)
- * @version $Revision: 258 $
- * @package propel.engine.platform
+ * @author     Martin Poeschl <mpoeschl@marmot.at> (Torque)
+ * @version    $Revision: 536 $
+ * @package    propel.engine.platform
  */
 class DefaultPlatform implements Platform {
 
-    private $schemaDomainMap;
-    
-    /**
-     * Default constructor.
-     */
-    public function __construct() 
-    {
-        $this->initialize();
-    }
-    
-    protected function initialize()
-    {
-        $this->schemaDomainMap = array();
-        foreach(PropelTypes::getPropelTypes() as $type) {
-            $this->schemaDomainMap[$type] = new Domain($type);
-        }
+	private $schemaDomainMap;
+
+	/**
+	 * Default constructor.
+	 */
+	public function __construct()
+	{
+		$this->initialize();
+	}
+
+	protected function initialize()
+	{
+		$this->schemaDomainMap = array();
+		foreach(PropelTypes::getPropelTypes() as $type) {
+			$this->schemaDomainMap[$type] = new Domain($type);
+		}
 		$this->schemaDomainMap[PropelTypes::BU_DATE] = new Domain("DATE");
 		$this->schemaDomainMap[PropelTypes::BU_TIMESTAMP] = new Domain("TIMESTAMP");
-        $this->schemaDomainMap[PropelTypes::BOOLEAN] = new Domain("INTEGER");
-    }
-    
-    protected function setSchemaDomainMapping(Domain $domain) 
-    {
-        $this->schemaDomainMap[$domain->getType()] = $domain;
-    }
-    
+		$this->schemaDomainMap[PropelTypes::BOOLEAN] = new Domain("INTEGER");
+	}
+
+	protected function setSchemaDomainMapping(Domain $domain)
+	{
+		$this->schemaDomainMap[$domain->getType()] = $domain;
+	}
+
 	/**
 	 * Returns the short name of the database type that this platform represents.
 	 * For example MysqlPlatform->getDatabaseType() returns 'mysql'.
-	 * @return string
+	 * @return     string
 	 */
 	public function getDatabaseType()
 	{
@@ -68,102 +68,102 @@ class DefaultPlatform implements Platform {
 		$pos = strpos($clazz, 'Platform');
 		return strtolower(substr($clazz,0,$pos));
 	}
-	
-    /**
-     * @see Platform::getMaxColumnNameLength()
-     */
-    public function getMaxColumnNameLength()
-    {
-        return 64;
-    }
 
-    /**
-     * @see Platform::getNativeIdMethod()
-     */
-    public function getNativeIdMethod()
-    {
-        return Platform::IDENTITY;
-    }
+	/**
+	 * @see        Platform::getMaxColumnNameLength()
+	 */
+	public function getMaxColumnNameLength()
+	{
+		return 64;
+	}
 
-    /**
-     * @see Platform::getDomainForType()
-     */
-    public function getDomainForType($propelType) 
-    {
+	/**
+	 * @see        Platform::getNativeIdMethod()
+	 */
+	public function getNativeIdMethod()
+	{
+		return Platform::IDENTITY;
+	}
+
+	/**
+	 * @see        Platform::getDomainForType()
+	 */
+	public function getDomainForType($propelType)
+	{
 		if (!isset($this->schemaDomainMap[$propelType])) {
 			throw new EngineException("Cannot map unknown Propel type " . var_export($propelType, true) . " to native database type.");
 		}
-        return $this->schemaDomainMap[$propelType];
-    }
+		return $this->schemaDomainMap[$propelType];
+	}
 
-    /**
-     * @return Only produces a SQL fragment if null values are
-     * disallowed.
-     * @see Platform::getNullString(boolean)
-     */
-    public function getNullString($notNull)
-    {
-        // TODO: Check whether this is true for all DBs.  Also verify
-        // the old Sybase templates.
-        return ($notNull ? "NOT NULL" : "");
-    }
-
-    /**
-     * @see Platform::getAutoIncrement()
-     */
-    public function getAutoIncrement()
-    {
-        return "IDENTITY";
-    }
-
-    /**
-     * @see Platform::hasScale(String)
-     * TODO collect info for all platforms
-     */
-    public function hasScale($sqlType)
-    {
-        return true;
-    }
-
-    /**
-     * @see Platform::hasSize(String)
-     * TODO collect info for all platforms
-     */
-    public function hasSize($sqlType)
-    {
-        return true;
-    }
-
-    /**
-     * @see Platform::escapeText()
-     */ 
-    public function escapeText($text)
-    {
-        return str_replace("'", "''", $text);
-    }
-    
 	/**
-	 * @see Platform::quoteIdentifier()
+	 * @return     Only produces a SQL fragment if null values are
+	 * disallowed.
+	 * @see        Platform::getNullString(boolean)
+	 */
+	public function getNullString($notNull)
+	{
+		// TODO: Check whether this is true for all DBs.  Also verify
+		// the old Sybase templates.
+		return ($notNull ? "NOT NULL" : "");
+	}
+
+	/**
+	 * @see        Platform::getAutoIncrement()
+	 */
+	public function getAutoIncrement()
+	{
+		return "IDENTITY";
+	}
+
+	/**
+	 * @see        Platform::hasScale(String)
+	 * TODO collect info for all platforms
+	 */
+	public function hasScale($sqlType)
+	{
+		return true;
+	}
+
+	/**
+	 * @see        Platform::hasSize(String)
+	 * TODO collect info for all platforms
+	 */
+	public function hasSize($sqlType)
+	{
+		return true;
+	}
+
+	/**
+	 * @see        Platform::escapeText()
+	 */
+	public function escapeText($text)
+	{
+		return str_replace("'", "''", $text);
+	}
+
+	/**
+	 * @see        Platform::quoteIdentifier()
 	 */
 	public function quoteIdentifier($text)
 	{
 		return '"' . $text . '"';
 	}
-	
-    /**
-     * @see Platform::supportsNativeDeleteTrigger()
-     */
-    public function supportsNativeDeleteTrigger()
-    {
-        return false;
-    }
-    
-    /**
-     * @see Platform::getBooleanString()
-     */
-    public function getBooleanString($b)
-    {
-        $b = ($b === true || strtolower($b) === 'true' || $b === 1 || $b === '1' || strtolower($b) === 'y' || strtolower($b) === 'yes');
-        return ($b ? '1' : '0');
-    }
+
+	/**
+	 * @see        Platform::supportsNativeDeleteTrigger()
+	 */
+	public function supportsNativeDeleteTrigger()
+	{
+		return false;
+	}
+
+	/**
+	 * @see        Platform::getBooleanString()
+	 */
+	public function getBooleanString($b)
+	{
+		$b = ($b === true || strtolower($b) === 'true' || $b === 1 || $b === '1' || strtolower($b) === 'y' || strtolower($b) === 'yes');
+		return ($b ? '1' : '0');
+	}
 }

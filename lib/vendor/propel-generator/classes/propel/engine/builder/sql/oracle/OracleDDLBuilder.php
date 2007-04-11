@@ -26,14 +26,14 @@ require_once 'propel/engine/builder/sql/DDLBuilder.php';
  * The SQL DDL-building class for Oracle.
  *
  *
- * @author Hans Lellelid <hans@xmpl.org>
- * @package propel.engine.builder.sql.pgsql
+ * @author     Hans Lellelid <hans@xmpl.org>
+ * @package    propel.engine.builder.sql.pgsql
  */
 class OracleDDLBuilder extends DDLBuilder {
 
 	/**
 	 *
-	 * @see parent::addDropStatement()
+	 * @see        parent::addDropStatement()
 	 */
 	protected function addDropStatements(&$script)
 	{
@@ -51,7 +51,7 @@ DROP SEQUENCE ".$this->quoteIdentifier($table->getSequenceName()).";
 
 	/**
 	 *
-	 * @see parent::addColumns()
+	 * @see        parent::addColumns()
 	 */
 	protected function addTable(&$script)
 	{
@@ -105,7 +105,7 @@ CREATE TABLE ".$table->getName()."
 		if ( is_array($table->getPrimaryKey()) && count($table->getPrimaryKey()) ) {
 			$script .= "
 	ALTER TABLE ".$this->quoteIdentifier($table->getName())."
-	    ADD CONSTRAINT ".substr($tableName,0,$length)."_PK
+		ADD CONSTRAINT ".substr($tableName,0,$length)."_PK
 	PRIMARY KEY (";
 			$delim = "";
 			foreach ($table->getPrimaryKey() as $col) {
@@ -134,7 +134,7 @@ CREATE TABLE ".$table->getName()."
 
 	/**
 	 * Adds CREATE INDEX statements for this table.
-	 * @see parent::addIndices()
+	 * @see        parent::addIndices()
 	 */
 	protected function addIndices(&$script)
 	{
@@ -152,7 +152,7 @@ CREATE TABLE ".$table->getName()."
 
 	/**
 	 *
-	 * @see parent::addForeignKeys()
+	 * @see        parent::addForeignKeys()
 	 */
 	protected function addForeignKeys(&$script)
 	{

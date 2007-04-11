@@ -25,15 +25,15 @@ require_once 'propel/engine/builder/DataModelBuilder.php';
 /**
  * Baseclass for SQL data dump SQL building classes.
  *
- * @author Hans Lellelid <hans@xmpl.org>
- * @package propel.engine.builder.sql
+ * @author     Hans Lellelid <hans@xmpl.org>
+ * @package    propel.engine.builder.sql
  */
 abstract class DataSQLBuilder extends DataModelBuilder {
 
 	/**
 	 * The main method in this class, returns the SQL for INSERTing data into a row.
-	 * @param DataRow $row The row to process.
-	 * @return string
+	 * @param      DataRow $row The row to process.
+	 * @return     string
 	 */
 	public function buildRowSql(DataRow $row)
 	{
@@ -67,8 +67,8 @@ abstract class DataSQLBuilder extends DataModelBuilder {
 
 	/**
 	 * Gets the propertly escaped (and quoted) value for a column.
-	 * @param ColumnValue $colValue
-	 * @return mixed The proper value to be added to the string.
+	 * @param      ColumnValue $colValue
+	 * @return     mixed The proper value to be added to the string.
 	 */
 	protected function getColumnValueSql(ColumnValue $colValue)
 	{
@@ -82,134 +82,134 @@ abstract class DataSQLBuilder extends DataModelBuilder {
 
 
 	/**
-     * Gets a representation of a binary value suitable for use in a SQL statement.
-     * Default behavior is true = 1, false = 0.
-     * @param boolean $value
-     * @return int
-     */
-    protected function getBooleanSql($value)
-    {
+	 * Gets a representation of a binary value suitable for use in a SQL statement.
+	 * Default behavior is true = 1, false = 0.
+	 * @param      boolean $value
+	 * @return     int
+	 */
+	protected function getBooleanSql($value)
+	{
 		return (int) $value;
-    }
+	}
 
 
-    /**
-     * Gets a representation of a BLOB/LONGVARBINARY value suitable for use in a SQL statement.
-	 * @param mixed $blob Blob object or string data.
-	 * @return string
-     */
-    protected function getBlobSql($blob)
-    {
-        // they took magic __toString() out of PHP5.0.0; this sucks
+	/**
+	 * Gets a representation of a BLOB/LONGVARBINARY value suitable for use in a SQL statement.
+	 * @param      mixed $blob Blob object or string data.
+	 * @return     string
+	 */
+	protected function getBlobSql($blob)
+	{
+		// they took magic __toString() out of PHP5.0.0; this sucks
 		if (is_object($blob)) {
 			return "'" . $this->escape($blob->__toString()) . "'";
 		} else {
 			return "'" . $this->escape($blob) . "'";
 		}
-    }
+	}
 
-    /**
-     * Gets a representation of a CLOB/LONGVARCHAR value suitable for use in a SQL statement.
-	 * @param mixed $clob Clob object or string data.
-	 * @return string
-     */
-    protected function getClobSql($clob)
-    {
+	/**
+	 * Gets a representation of a CLOB/LONGVARCHAR value suitable for use in a SQL statement.
+	 * @param      mixed $clob Clob object or string data.
+	 * @return     string
+	 */
+	protected function getClobSql($clob)
+	{
 		// they took magic __toString() out of PHP5.0.0; this sucks
 		if (is_object($clob)) {
 			return "'" . $this->escape($clob->__toString()) . "'";
 		} else {
 			return "'" . $this->escape($clob) . "'";
 		}
-    }
+	}
 
-    /**
-     * Gets a representation of a date value suitable for use in a SQL statement.
-     * @param string $value
-     * @return string
-     */
-    protected function getDateSql($value)
-    {
-        return "'" . date('Y-m-d', strtotime($value)) . "'";
-    }
+	/**
+	 * Gets a representation of a date value suitable for use in a SQL statement.
+	 * @param      string $value
+	 * @return     string
+	 */
+	protected function getDateSql($value)
+	{
+		return "'" . date('Y-m-d', strtotime($value)) . "'";
+	}
 
-    /**
-     * Gets a representation of a decimal value suitable for use in a SQL statement.
-     * @param double $value
-     * @return float
-     */
-    protected function getDecimalSql($value)
-    {
-        return (float) $value;
-    }
+	/**
+	 * Gets a representation of a decimal value suitable for use in a SQL statement.
+	 * @param      double $value
+	 * @return     float
+	 */
+	protected function getDecimalSql($value)
+	{
+		return (float) $value;
+	}
 
-    /**
-     * Gets a representation of a double value suitable for use in a SQL statement.
-     * @param double $value
-     * @return double
-     */
-    protected function getDoubleSql($value)
-    {
-        return (double) $value;
-    }
+	/**
+	 * Gets a representation of a double value suitable for use in a SQL statement.
+	 * @param      double $value
+	 * @return     double
+	 */
+	protected function getDoubleSql($value)
+	{
+		return (double) $value;
+	}
 
-    /**
-     * Gets a representation of a float value suitable for use in a SQL statement.
-     * @param float $value
-     * @return float
-     */
-    protected function getFloatSql($value)
-    {
-        return (float) $value;
-    }
+	/**
+	 * Gets a representation of a float value suitable for use in a SQL statement.
+	 * @param      float $value
+	 * @return     float
+	 */
+	protected function getFloatSql($value)
+	{
+		return (float) $value;
+	}
 
-    /**
-     * Gets a representation of an integer value suitable for use in a SQL statement.
-     * @param int $value
-     * @return int
-     */
-    protected function getIntSql($value)
-    {
+	/**
+	 * Gets a representation of an integer value suitable for use in a SQL statement.
+	 * @param      int $value
+	 * @return     int
+	 */
+	protected function getIntSql($value)
+	{
 		return (int) $value;
-    }
+	}
 
-    /**
-     * Gets a representation of a NULL value suitable for use in a SQL statement.
-     * @return null
-     */
-    protected function getNullSql()
-    {
-        return 'NULL';
-    }
+	/**
+	 * Gets a representation of a NULL value suitable for use in a SQL statement.
+	 * @return     null
+	 */
+	protected function getNullSql()
+	{
+		return 'NULL';
+	}
 
-    /**
-     * Gets a representation of a string value suitable for use in a SQL statement.
-	 * @param string $value
-     * @return string
-     */
-    protected function getStringSql($value)
-    {
+	/**
+	 * Gets a representation of a string value suitable for use in a SQL statement.
+	 * @param      string $value
+	 * @return     string
+	 */
+	protected function getStringSql($value)
+	{
 		return "'" . $this->getPlatform()->escapeText($value) . "'";
-    }
+	}
 
-    /**
-     * Gets a representation of a time value suitable for use in a SQL statement.
-     * @param string $value
-     * @return string
-     */
-    protected function getTimeSql($paramIndex, $value)
-    {
+	/**
+	 * Gets a representation of a time value suitable for use in a SQL statement.
+	 * @param      string $value
+	 * @return     string
+	 */
+	protected function getTimeSql($paramIndex, $value)
+	{
 		return "'" . date('H:i:s', strtotime($value)) . "'";
-    }
+	}
 
-    /**
-     * Gets a representation of a timestamp value suitable for use in a SQL statement.
-     * @param string $value
-     * @return string
-     */
-    function getTimestampSql($value)
-    {
+	/**
+	 * Gets a representation of a timestamp value suitable for use in a SQL statement.
+	 * @param      string $value
+	 * @return     string
+	 */
+	function getTimestampSql($value)
+	{
 		return "'" . date('Y-m-d H:i:s', strtotime($value)) . "'";
-    }
+	}
 
 }

@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: PHP5BasicObjectBuilder.php 120 2005-06-17 02:18:41Z hans $
+ *  $Id: PHP5MapBuilderBuilder.php 562 2007-02-01 02:17:24Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -24,27 +24,27 @@ require_once 'propel/engine/builder/om/OMBuilder.php';
 
 /**
  * Generates the PHP5 map builder class for user object model (OM).
- * 
+ *
  * This class replaces the MapBuilder.tpl, with the intent of being easier for users
  * to customize (through extending & overriding).
- * 
- * @author Hans Lellelid <hans@xmpl.org>
- * @package propel.engine.builder.om.php5
+ *
+ * @author     Hans Lellelid <hans@xmpl.org>
+ * @package    propel.engine.builder.om.php5
  */
 class PHP5MapBuilderBuilder extends OMBuilder {
 
 	/**
 	 * Gets the package for the map builder classes.
-	 * @return string
+	 * @return     string
 	 */
 	public function getPackage()
 	{
 		return parent::getPackage() . '.map';
 	}
-	
+
 	/**
 	 * Returns the name of the current class being built.
-	 * @return string
+	 * @return     string
 	 */
 	public function getClassname()
 	{
@@ -53,25 +53,25 @@ class PHP5MapBuilderBuilder extends OMBuilder {
 
 	/**
 	 * Adds the include() statements for files that this class depends on or utilizes.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addIncludes(&$script)
-	{		
-		$script .= "		
+	{
+		$script .= "
 require_once 'propel/map/MapBuilder.php';
 include_once 'creole/CreoleTypes.php';
 ";
-		
-		
+
+
 	} // addIncludes()
-	
+
 	/**
 	 * Adds class phpdoc comment and openning of class.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addClassOpen(&$script)
 	{
-		$table = $this->getTable();		
+		$table = $this->getTable();
 		$script .= "
 
 /**
@@ -89,34 +89,34 @@ include_once 'creole/CreoleTypes.php';
 		$script .= "
  *
  * These statically-built map classes are used by Propel to do runtime db structure discovery.
- * For example, the createSelectSql() method checks the type of a given column used in an 
- * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive 
+ * For example, the createSelectSql() method checks the type of a given column used in an
+ * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive
  * (i.e. if it's a text column type).
  *
- * @package ".$this->getPackage()."
- */	
+ * @package    ".$this->getPackage()."
+ */
 class ".$this->getClassname()." {
 ";
 	}
-	
+
 	/**
 	 * Specifies the methods that are added as part of the map builder class.
 	 * This can be overridden by subclasses that wish to add more methods.
-	 * @see ObjectBuilder::addClassBody()
+	 * @see        ObjectBuilder::addClassBody()
 	 */
 	protected function addClassBody(&$script)
 	{
 		$this->addConstants($script);
 		$this->addAttributes($script);
-		
+
 		$this->addIsBuilt($script);
 		$this->addGetDatabaseMap($script);
 		$this->addDoBuild($script);
 	}
-	
+
 	/**
 	 * Adds any constants needed for this MapBuilder class.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addConstants(&$script)
 	{
@@ -124,103 +124,103 @@ class ".$this->getClassname()." {
 	/**
 	 * The (dot-path) name of this class
 	 */
-	const CLASS_NAME = '".$this->getClasspath()."';	
+	const CLASS_NAME = '".$this->getClasspath()."';
 ";
 	}
-	
+
 	/**
 	 * Adds any attributes needed for this MapBuilder class.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addAttributes(&$script)
 	{
 		$script .= "
-    /**
-     * The database map.
-     */
-    private \$dbMap;
+	/**
+	 * The database map.
+	 */
+	private \$dbMap;
 ";
 	}
-	
+
 	/**
 	 * Closes class.
-	 * @param string &$script The script will be modified in this method.
-	 */	
+	 * @param      string &$script The script will be modified in this method.
+	 */
 	protected function addClassClose(&$script)
 	{
 		$script .= "
 } // " . $this->getClassname() . "
 ";
 	}
-	
+
 	/**
 	 * Adds the method that indicates whether this map has already been built.
-	 * @param string &$script The script will be modified in this method.
-	 */	
+	 * @param      string &$script The script will be modified in this method.
+	 */
 	protected function addIsBuilt(&$script)
 	{
 		$script .= "
 	/**
-     * Tells us if this DatabaseMapBuilder is built so that we
-     * don't have to re-build it every time.
-     *
-     * @return boolean true if this DatabaseMapBuilder is built, false otherwise.
-     */
-    public function isBuilt()
-    {
-        return (\$this->dbMap !== null);
-    }
+	 * Tells us if this DatabaseMapBuilder is built so that we
+	 * don't have to re-build it every time.
+	 *
+	 * @return     boolean true if this DatabaseMapBuilder is built, false otherwise.
+	 */
+	public function isBuilt()
+	{
+		return (\$this->dbMap !== null);
+	}
 ";
 	}
-	
+
 	/**
 	 * Adds the DatabaseMap accessor method.
-	 * @param string &$script The script will be modified in this method.
-	 */	
+	 * @param      string &$script The script will be modified in this method.
+	 */
 	protected function addGetDatabaseMap(&$script)
 	{
 		$script .= "
 	/**
-     * Gets the databasemap this map builder built.
-     *
-     * @return the databasemap
-     */
-    public function getDatabaseMap()
-    {
-        return \$this->dbMap;
-    }
+	 * Gets the databasemap this map builder built.
+	 *
+	 * @return     the databasemap
+	 */
+	public function getDatabaseMap()
+	{
+		return \$this->dbMap;
+	}
 ";
 	}
-	
+
 	/**
 	 * Adds the main doBuild() method to the map builder class.
-	 * @param string &$script The script will be modified in this method.
-	 */	
+	 * @param      string &$script The script will be modified in this method.
+	 */
 	protected function addDoBuild(&$script)
 	{
-	
+
 		$table = $this->getTable();
 		$platform = $this->getPlatform();
-		
+
 		$script .= "
-    /**
-     * The doBuild() method builds the DatabaseMap
-     *
-	 * @return void
-     * @throws PropelException
-     */
-    public function doBuild()
-    {
+	/**
+	 * The doBuild() method builds the DatabaseMap
+	 *
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function doBuild()
+	{
 		\$this->dbMap = Propel::getDatabaseMap('".$table->getDatabase()->getName()."');
-		
+
 		\$tMap = \$this->dbMap->addTable('".$table->getName()."');
 		\$tMap->setPhpName('".$table->getPhpName()."');
 ";
-		if ($table->getIdMethod() == "native") { 
+		if ($table->getIdMethod() == "native") {
 			$script .= "
 		\$tMap->setUseIdGenerator(true);
 ";
-		} else { 
+		} else {
 			$script .= "
 		\$tMap->setUseIdGenerator(false);
 ";
@@ -233,15 +233,15 @@ class ".$this->getClassname()." {
 		\$tMap->setPrimaryKeyMethodInfo('".$imp->getValue()."');
 ";
 		} elseif ($table->getIdMethod() == "native" && ($platform->getNativeIdMethod() == Platform::SEQUENCE)) {
-			$script .= " 
+			$script .= "
 		\$tMap->setPrimaryKeyMethodInfo('".$table->getSequenceName()."');
 ";
 		} elseif ($table->getIdMethod() == "native" && ($platform->getNativeIdMethod() == Platform::SEQUENCE)) {
-			$script .= " 
+			$script .= "
 		\$tMap->setPrimaryKeyMethodInfo('".$table->getName()."');
 ";
 		}
-		
+
 		// Add columns to map
 		foreach ($table->getColumns() as $col) {
 			$tfc=$table->getPhpName();
@@ -261,20 +261,20 @@ class ".$this->getClassname()." {
 					$script .= "
 		\$tMap->addPrimaryKey('$cup', '$cfc', '".$col->getPhpType()."', CreoleTypes::".$col->getType().", ".var_export($col->isNotNull(), true).", ".$size.");
 ";
-				} 
+				}
 			} else {
 				if($col->isForeignKey()) {
 					$script .= "
 		\$tMap->addForeignKey('$cup', '$cfc', '".$col->getPhpType()."', CreoleTypes::".$col->getType().", '".$col->getRelatedTableName()."', '".strtoupper($col->getRelatedColumnName())."', ".($col->isNotNull() ? 'true' : 'false').", ".$size.");
 ";
-            } else { 
+			} else {
 					$script .= "
 		\$tMap->addColumn('$cup', '$cfc', '".$col->getPhpType()."', CreoleTypes::".$col->getType().", ".var_export($col->isNotNull(), true).");
 ";
-				} 
+				}
 			} // if col-is prim key
 		} // foreach
-		
+
 		foreach($table->getValidators() as $val) {
 			$col = $val->getColumn();
 			$cup = strtoupper($col->getName());
@@ -290,11 +290,11 @@ class ".$this->getClassname()." {
 				} // if ($rule->getTranslation() ...
   			} // foreach rule
 		}  // foreach validator
-		
-		$script .= "				
-    } // doBuild()
+
+		$script .= "
+	} // doBuild()
 ";
 
 	}
-	
+
 } // PHP5ExtensionPeerBuilder

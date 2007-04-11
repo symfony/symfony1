@@ -26,70 +26,70 @@ require_once 'propel/engine/builder/sql/DDLBuilder.php';
  * The SQL DDL-building class for PostgreSQL.
  *
  *
- * @author Hans Lellelid <hans@xmpl.org>
- * @package propel.engine.builder.sql.pgsql
+ * @author     Hans Lellelid <hans@xmpl.org>
+ * @package    propel.engine.builder.sql.pgsql
  */
 class PgsqlDDLBuilder extends DDLBuilder {
 
 
-    /**
-     * Array that keeps track of already
-     * added schema names
-     *
-     * @var Array of schema names
-     */
-    protected static $addedSchemas = array();
+	/**
+	 * Array that keeps track of already
+	 * added schema names
+	 *
+	 * @var        Array of schema names
+	 */
+	protected static $addedSchemas = array();
 
-    /**
-     * Get the schema for the current table
-     *
-     * @author Markus Lervik <markus.lervik@necora.fi>
-     * @access protected
-     * @return schema name if table has one, else
-     *         null
-     **/
-    protected function getSchema()
-    {
+	/**
+	 * Get the schema for the current table
+	 *
+	 * @author     Markus Lervik <markus.lervik@necora.fi>
+	 * @access     protected
+	 * @return     schema name if table has one, else
+	 *         null
+	 **/
+	protected function getSchema()
+	{
 
-        $table = $this->getTable();
-        $schema = $table->getVendorSpecificInfo();
-        if (!empty($schema) && isset($schema['schema'])) {
-            return $schema['schema'];
-        }
+		$table = $this->getTable();
+		$schema = $table->getVendorSpecificInfo();
+		if (!empty($schema) && isset($schema['schema'])) {
+			return $schema['schema'];
+		}
 
-        return null;
+		return null;
 
-    }
+	}
 
-    /**
-     * Add a schema to the generated SQL script
-     *
-     * @author Markus Lervik <markus.lervik@necora.fi>
-     * @access protected
-     * @return string with CREATE SCHEMA statement if
-     *         applicable, else empty string
-     **/
-    protected function addSchema()
-    {
+	/**
+	 * Add a schema to the generated SQL script
+	 *
+	 * @author     Markus Lervik <markus.lervik@necora.fi>
+	 * @access     protected
+	 * @return     string with CREATE SCHEMA statement if
+	 *         applicable, else empty string
+	 **/
+	protected function addSchema()
+	{
 
-        $schemaName = $this->getSchema();
+		$schemaName = $this->getSchema();
 
-        if ($schemaName !== null) {
+		if ($schemaName !== null) {
 
-            if (!in_array($schemaName, self::$addedSchemas)) {
+			if (!in_array($schemaName, self::$addedSchemas)) {
 		$platform = $this->getPlatform();
-                self::$addedSchemas[] = $schemaName;
+				self::$addedSchemas[] = $schemaName;
 		return "\nCREATE SCHEMA " . $this->quoteIdentifier($schemaName) . ";\n";
-            }
-        }
+			}
+		}
 
-        return '';
+		return '';
 
-    }
+	}
 
 	/**
 	 *
-	 * @see parent::addDropStatement()
+	 * @see        parent::addDropStatement()
 	 */
 	protected function addDropStatements(&$script)
 	{
@@ -108,7 +108,7 @@ DROP SEQUENCE ".$this->quoteIdentifier(strtolower($table->getSequenceName())).";
 
 	/**
 	 *
-	 * @see parent::addColumns()
+	 * @see        parent::addColumns()
 	 */
 	protected function addTable(&$script)
 	{
@@ -121,17 +121,17 @@ DROP SEQUENCE ".$this->quoteIdentifier(strtolower($table->getSequenceName())).";
 -----------------------------------------------------------------------------
 ";
 
-        $script .= $this->addSchema();
+		$script .= $this->addSchema();
 
-        $schemaName = $this->getSchema();
-        if ($schemaName !== null) {
-            $script .= "\nSET search_path TO " . $this->quoteIdentifier($schemaName) . ";\n";
-        }
+		$schemaName = $this->getSchema();
+		if ($schemaName !== null) {
+			$script .= "\nSET search_path TO " . $this->quoteIdentifier($schemaName) . ";\n";
+		}
 
 		$this->addDropStatements($script);
 		$this->addSequences($script);
 
-        $script .= "
+		$script .= "
 
 CREATE TABLE ".$this->quoteIdentifier($table->getName())."
 (
@@ -149,7 +149,7 @@ CREATE TABLE ".$this->quoteIdentifier($table->getName())."
 
 		foreach ($table->getUnices() as $unique ) {
 			$lines[] = "CONSTRAINT ".$this->quoteIdentifier($unique->getName())." UNIQUE (".$this->getColumnList($unique->getColumns()).")";
-    	}
+		}
 
 		$sep = ",
 	";
@@ -163,7 +163,7 @@ COMMENT ON TABLE ".$this->quoteIdentifier($table->getName())." IS '" . $platform
 
 		$this->addColumnComments($script);
 
-        $script .= "\nSET search_path TO public;";
+		$script .= "\nSET search_path TO public;";
 
 	}
 
@@ -177,7 +177,7 @@ COMMENT ON TABLE ".$this->quoteIdentifier($table->getName())." IS '" . $platform
 		$platform = $this->getPlatform();
 
 		foreach ($this->getTable()->getColumns() as $col) {
-    		if( $col->getDescription() != '' ) {
+			if( $col->getDescription() != '' ) {
 				$script .= "
 COMMENT ON COLUMN ".$this->quoteIdentifier($table->getName()).".".$this->quoteIdentifier($col->getName())." IS '".$platform->escapeText($col->getDescription()) ."';
 ";
@@ -204,7 +204,7 @@ CREATE SEQUENCE ".$this->quoteIdentifier(strtolower($table->getSequenceName())).
 
 	/**
 	 * Adds CREATE INDEX statements for this table.
-	 * @see parent::addIndices()
+	 * @see        parent::addIndices()
 	 */
 	protected function addIndices(&$script)
 	{
@@ -224,7 +224,7 @@ CREATE ";
 
 	/**
 	 *
-	 * @see parent::addForeignKeys()
+	 * @see        parent::addForeignKeys()
 	 */
 	protected function addForeignKeys(&$script)
 	{

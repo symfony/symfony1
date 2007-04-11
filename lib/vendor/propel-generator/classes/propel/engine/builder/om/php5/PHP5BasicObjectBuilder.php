@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: PHP5BasicObjectBuilder.php 298 2005-12-09 13:47:25Z hans $
+ *  $Id: PHP5BasicObjectBuilder.php 566 2007-02-02 16:27:12Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -31,14 +31,14 @@ require_once 'propel/engine/builder/om/ObjectBuilder.php';
  * This class replaces the Object.tpl, with the intent of being easier for users
  * to customize (through extending & overriding).
  *
- * @author Hans Lellelid <hans@xmpl.org>
- * @package propel.engine.builder.om.php5
+ * @author     Hans Lellelid <hans@xmpl.org>
+ * @package    propel.engine.builder.om.php5
  */
 class PHP5BasicObjectBuilder extends ObjectBuilder {
 
 	/**
 	 * Gets the package for the [base] object classes.
-	 * @return string
+	 * @return     string
 	 */
 	public function getPackage()
 	{
@@ -47,7 +47,7 @@ class PHP5BasicObjectBuilder extends ObjectBuilder {
 
 	/**
 	 * Returns the name of the current class being built.
-	 * @return string
+	 * @return     string
 	 */
 	public function getClassname()
 	{
@@ -56,7 +56,7 @@ class PHP5BasicObjectBuilder extends ObjectBuilder {
 
 	/**
 	 * Adds the include() statements for files that this class depends on or utilizes.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addIncludes(&$script)
 	{
@@ -113,7 +113,7 @@ include_once '".$this->getStubPeerBuilder()->getClassFilePath()."';
 
 	/**
 	 * Adds class phpdoc comment and openning of class.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addClassOpen(&$script)
 	{
@@ -138,13 +138,13 @@ include_once '".$this->getStubPeerBuilder()->getClassFilePath()."';
  *";
 		}
 		$script .= "
- * @package ".$this->getPackage()."
+ * @package    ".$this->getPackage()."
  */
 abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->getBaseClass())." ";
 
 		$interface = ClassTools::getInterface($table);
 		if ($interface) {
-		    $script .= " implements " . ClassTools::classname($interface);
+			$script .= " implements " . ClassTools::classname($interface);
 		}
 
 		$script .= " {
@@ -155,7 +155,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	/**
 	 * Specifies the methods that are added as part of the basic OM class.
 	 * This can be overridden by subclasses that wish to add more methods.
-	 * @see ObjectBuilder::addClassBody()
+	 * @see        ObjectBuilder::addClassBody()
 	 */
 	protected function addClassBody(&$script)
 	{
@@ -172,7 +172,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 
 		$this->addManipulationMethods($script);
 		$this->addValidationMethods($script);
-		
+
 		if ($this->isAddGenericAccessors()) {
 			$this->addGetByName($script);
 			$this->addGetByPosition($script);
@@ -180,7 +180,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		}
 
 		if ($this->isAddGenericMutators()) {
-		    $this->addSetByName($script);
+			$this->addSetByName($script);
 			$this->addSetByPosition($script);
 			$this->addFromArray($script);
 		}
@@ -199,7 +199,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 
 	/**
 	 * Closes class.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addClassClose(&$script)
 	{
@@ -210,7 +210,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 
 	/**
 	 * Adds any constants to the class.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addConstants(&$script)
 	{
@@ -220,7 +220,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 
 	/**
 	 * Adds class attributes.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addAttributes(&$script)
 	{
@@ -229,19 +229,19 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 * The Peer class.
 	 * Instance provides a convenient way of calling static methods on a class
 	 * that calling code may not be able to identify.
-	 * @var ".$this->getPeerClassname()."
+	 * @var        ".$this->getPeerClassname()."
 	 */
 	protected static \$peer;
 ";
 		if (!$this->getTable()->isAlias()) {
-		    $this->addColumnAttributes($script);
+			$this->addColumnAttributes($script);
 		}
 	}
 
 	/**
 	 * Adds variables that store column values.
-	 * @param string &$script The script will be modified in this method.
-	 * @see addColumnNameConstants()
+	 * @param      string &$script The script will be modified in this method.
+	 * @see        addColumnNameConstants()
 	 */
 	protected function addColumnAttributes(&$script) {
 
@@ -262,7 +262,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 
 	/**
 	 * The value for the $clo field.
-	 * @var $cptype
+	 * @var        $cptype
 	 */
 	protected \$" . $clo . $defVal . ";
 ";
@@ -272,7 +272,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	/**
 	 * Whether the lazy-loaded $clo value has been loaded from database.
 	 * This is necessary to avoid repeated lookups if $clo column is NULL in the db.
-	 * @var boolean
+	 * @var        boolean
 	 */
 	protected \$".$clo."_isLoaded = false;
 ";
@@ -285,7 +285,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	/**
 	 * Adds the getPeer() method.
 	 * This is a convenient, non introspective way of getting the Peer class for a particular object.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addGetPeer(&$script)
 	{
@@ -297,7 +297,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 * same instance for all member of this class. The method could therefore
 	 * be static, but this would prevent one from overriding the behavior.
 	 *
-	 * @return ".$this->getPeerClassname()."
+	 * @return     ".$this->getPeerClassname()."
 	 */
 	public function getPeer()
 	{
@@ -317,9 +317,9 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 
 	/**
 	 * Adds a date/time/timestamp getter method.
-	 * @param string &$script The script will be modified in this method.
-	 * @param Column $col The current column.
-	 * @see parent::addColumnAccessors()
+	 * @param      string &$script The script will be modified in this method.
+	 * @param      Column $col The current column.
+	 * @see        parent::addColumnAccessors()
 	 */
 	protected function addTemporalAccessor(&$script, $col)
 	{
@@ -335,7 +335,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		} elseif ($col->getType() === PropelTypes::TIMESTAMP) {
 			$defaultfmt = $this->getBuildProperty('defaultTimeStampFormat');
 		}
-		
+
 		// if the default format property was an empty string, then we'll set it
 		// to NULL, which will return the "native" integer timestamp
 		if (empty($defaultfmt)) { $defaultfmt = null; }
@@ -344,10 +344,10 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	/**
 	 * Get the [optionally formatted] [$clo] column value.
 	 * ".$col->getDescription()."
-	 * @param string \$format The date/time format string (either date()-style or strftime()-style).
+	 * @param      string \$format The date/time format string (either date()-style or strftime()-style).
 	 *							If format is NULL, then the integer unix timestamp will be returned.
-	 * @return mixed Formatted date/time value as string or integer unix timestamp (if format is NULL).
-	 * @throws PropelException - if unable to convert the date/time to timestamp.
+	 * @return     mixed Formatted date/time value as string or integer unix timestamp (if format is NULL).
+	 * @throws     PropelException - if unable to convert the date/time to timestamp.
 	 */
 	public function get$cfc(\$format = ".var_export($defaultfmt, true)."";
 		if ($col->isLazyLoad()) $script .= ", \$con = null";
@@ -386,9 +386,9 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 
 	/**
 	 * Adds a normal (non-temporal) getter method.
-	 * @param string &$script The script will be modified in this method.
-	 * @param Column $col The current column.
-	 * @see parent::addColumnAccessors()
+	 * @param      string &$script The script will be modified in this method.
+	 * @param      Column $col The current column.
+	 * @see        parent::addColumnAccessors()
 	 */
 	protected function addGenericAccessor(&$script, $col)
 	{
@@ -399,7 +399,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	/**
 	 * Get the [$clo] column value.
 	 * ".$col->getDescription()."
-	 * @return ".$col->getPhpNative()."
+	 * @return     ".$col->getPhpNative()."
 	 */
 	public function get$cfc(";
 		if ($col->isLazyLoad()) $script .= "\$con = null";
@@ -421,9 +421,9 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 
 	/**
 	 * Adds the lazy loader method.
-	 * @param string &$script The script will be modified in this method.
-	 * @param Column $col The current column.
-	 * @see parent::addColumnAccessors()
+	 * @param      string &$script The script will be modified in this method.
+	 * @param      Column $col The current column.
+	 * @see        parent::addColumnAccessors()
 	 */
 	protected function addLazyLoader(&$script, $col)
 	{
@@ -438,9 +438,9 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 * the [$clo] column, since it is not populated by
 	 * the hydrate() method.
 	 *
-	 * @param \$con Connection
-	 * @return void
-	 * @throws PropelException - any underlying error will be wrapped and re-thrown.
+	 * @param      \$con Connection
+	 * @return     void
+	 * @throws     PropelException - any underlying error will be wrapped and re-thrown.
 	 */
 	protected function load$cfc(\$con = null)
 	{
@@ -485,8 +485,8 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 
 	/**
 	 * Adds the open of the mutator (setter) method for a column.
-	 * @param string &$script The script will be modified in this method.
-	 * @param Column $col The current column.
+	 * @param      string &$script The script will be modified in this method.
+	 * @param      Column $col The current column.
 	 */
 	protected function addMutatorOpen(&$script, Column $col)
 	{
@@ -497,8 +497,8 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	/**
 	 * Set the value of [$clo] column.
 	 * ".$col->getDescription()."
-	 * @param ".$col->getPhpNative()." \$v new value
-	 * @return void
+	 * @param      ".$col->getPhpNative()." \$v new value
+	 * @return     void
 	 */
 	public function set$cfc(\$v)
 	{
@@ -518,8 +518,8 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	/**
 	 * Adds the close of the mutator (setter) method for a column.
 	 * This can be overridden (e.g. by PHP5ComplexObjectBuilder) if additional functionality is needed.
-	 * @param string &$script The script will be modified in this method.
-	 * @param Column $col The current column.
+	 * @param      string &$script The script will be modified in this method.
+	 * @param      Column $col The current column.
 	 */
 	protected function addMutatorClose(&$script, Column $col)
 	{
@@ -530,9 +530,9 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 
 	/**
 	 * Adds a setter for date/time/timestamp columns.
-	 * @param string &$script The script will be modified in this method.
-	 * @param Column $col The current column.
-	 * @see parent::addColumnMutators()
+	 * @param      string &$script The script will be modified in this method.
+	 * @param      Column $col The current column.
+	 * @see        parent::addColumnMutators()
 	 */
 	protected function addLobMutator(&$script, Column $col)
 	{
@@ -572,9 +572,9 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 
 	/**
 	 * Adds a setter method for date/time/timestamp columns.
-	 * @param string &$script The script will be modified in this method.
-	 * @param Column $col The current column.
-	 * @see parent::addColumnMutators()
+	 * @param      string &$script The script will be modified in this method.
+	 * @param      Column $col The current column.
+	 * @see        parent::addColumnMutators()
 	 */
 	protected function addTemporalMutator(&$script, Column $col)
 	{
@@ -611,9 +611,9 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 
 	/**
 	 * Adds setter method for "normal" columns.
-	 * @param string &$script The script will be modified in this method.
-	 * @param Column $col The current column.
-	 * @see parent::addColumnMutators()
+	 * @param      string &$script The script will be modified in this method.
+	 * @param      Column $col The current column.
+	 * @see        parent::addColumnMutators()
 	 */
 	protected function addDefaultMutator(&$script, Column $col)
 	{
@@ -656,10 +656,10 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 * for results of JOIN queries where the resultset row includes columns from two or
 	 * more tables.
 	 *
-	 * @param ResultSet \$rs The ResultSet class with cursor advanced to desired record pos.
-	 * @param int \$startcol 1-based offset column which indicates which restultset column to start with.
-	 * @return int next starting column
-	 * @throws PropelException  - Any caught Exception will be rewrapped as a PropelException.
+	 * @param      ResultSet \$rs The ResultSet class with cursor advanced to desired record pos.
+	 * @param      int \$startcol 1-based offset column which indicates which restultset column to start with.
+	 * @return     int next starting column
+	 * @throws     PropelException  - Any caught Exception will be rewrapped as a PropelException.
 	 */
 	public function hydrate(ResultSet \$rs, \$startcol = 1)
 	{
@@ -722,7 +722,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 * Unlike buildCriteria() this method includes the primary key values regardless
 	 * of whether or not they have been modified.
 	 *
-	 * @return Criteria The Criteria object containing value(s) for primary key(s).
+	 * @return     Criteria The Criteria object containing value(s) for primary key(s).
 	 */
 	public function buildPkeyCriteria()
 	{
@@ -753,7 +753,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	/**
 	 * Build a Criteria object containing the values of all modified columns in this object.
 	 *
-	 * @return Criteria The Criteria object containing all modified values.
+	 * @return     Criteria The Criteria object containing all modified values.
 	 */
 	public function buildCriteria()
 	{
@@ -780,9 +780,9 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 * You can specify the key type of the array by passing one of the class
 	 * type constants.
 	 *
-	 * @param string \$keyType One of the class type constants TYPE_PHPNAME,
+	 * @param      string \$keyType One of the class type constants TYPE_PHPNAME,
 	 *                        TYPE_COLNAME, TYPE_FIELDNAME, TYPE_NUM
-	 * @return an associative array containing the field names (as keys) and field values
+	 * @return     an associative array containing the field names (as keys) and field values
 	 */
 	public function toArray(\$keyType = BasePeer::TYPE_PHPNAME)
 	{
@@ -805,11 +805,11 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	/**
 	 * Retrieves a field from the object by name passed in as a string.
 	 *
-	 * @param string \$name name
-	 * @param string \$type The type of fieldname the \$name is of:
+	 * @param      string \$name name
+	 * @param      string \$type The type of fieldname the \$name is of:
 	 *                     one of the class type constants TYPE_PHPNAME,
 	 *                     TYPE_COLNAME, TYPE_FIELDNAME, TYPE_NUM
-	 * @return mixed Value of field.
+	 * @return     mixed Value of field.
 	 */
 	public function getByName(\$name, \$type = BasePeer::TYPE_PHPNAME)
 	{
@@ -827,8 +827,8 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	 * Retrieves a field from the object by Position as specified in the xml schema.
 	 * Zero-based.
 	 *
-	 * @param int \$pos position in xml schema
-	 * @return mixed Value of field at \$pos
+	 * @param      int \$pos position in xml schema
+	 * @return     mixed Value of field at \$pos
 	 */
 	public function getByPosition(\$pos)
 	{
@@ -859,12 +859,12 @@ $script .= "
 	/**
 	 * Sets a field from the object by name passed in as a string.
 	 *
-	 * @param string \$name peer name
-	 * @param mixed \$value field value
-	 * @param string \$type The type of fieldname the \$name is of:
+	 * @param      string \$name peer name
+	 * @param      mixed \$value field value
+	 * @param      string \$type The type of fieldname the \$name is of:
 	 *                     one of the class type constants TYPE_PHPNAME,
 	 *                     TYPE_COLNAME, TYPE_FIELDNAME, TYPE_NUM
-	 * @return void
+	 * @return     void
 	 */
 	public function setByName(\$name, \$value, \$type = BasePeer::TYPE_PHPNAME)
 	{
@@ -882,9 +882,9 @@ $script .= "
 	 * Sets a field from the object by Position as specified in the xml schema.
 	 * Zero-based.
 	 *
-	 * @param int \$pos position in xml schema
-	 * @param mixed \$value field value
-	 * @return void
+	 * @param      int \$pos position in xml schema
+	 * @param      mixed \$value field value
+	 * @return     void
 	 */
 	public function setByPosition(\$pos, \$value)
 	{
@@ -921,9 +921,9 @@ $script .= "
 	 * of the class type constants TYPE_PHPNAME, TYPE_COLNAME, TYPE_FIELDNAME,
 	 * TYPE_NUM. The default key type is the column's phpname (e.g. 'authorId')
 	 *
-	 * @param array  \$arr     An array to populate the object from.
-	 * @param string \$keyType The type of keys the array uses.
-	 * @return void
+	 * @param      array  \$arr     An array to populate the object from.
+	 * @param      string \$keyType The type of keys the array uses.
+	 * @return     void
 	 */
 	public function fromArray(\$arr, \$keyType = BasePeer::TYPE_PHPNAME)
 	{
@@ -948,11 +948,11 @@ $script .= "
 	/**
 	 * Removes this object from datastore and sets delete attribute.
 	 *
-	 * @param Connection \$con
-	 * @return void
-	 * @throws PropelException
-	 * @see BaseObject::setDeleted()
-	 * @see BaseObject::isDeleted()
+	 * @param      Connection \$con
+	 * @return     void
+	 * @throws     PropelException
+	 * @see        BaseObject::setDeleted()
+	 * @see        BaseObject::isDeleted()
 	 */
 	public function delete(\$con = null)
 	{
@@ -979,17 +979,17 @@ $script .= "
 
 	/**
 	 * Adds the methods related to saving and deleting the object.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addManipulationMethods(&$script)
 	{
 		$this->addDelete($script);
 		$this->addSave($script);
 	}
-	
+
 	/**
 	 * Adds the methods related to validationg the object.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addValidationMethods(&$script)
 	{
@@ -997,10 +997,10 @@ $script .= "
 		$this->addGetValidationFailures($script);
 		$this->addValidate($script);
 	}
-	
+
 	/**
 	 * Adds the save() method.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addSave(&$script)
 	{
@@ -1011,9 +1011,9 @@ $script .= "
 	 *
 	 * If the object is new, it inserts it; otherwise an update is performed.
 	 *
-	 * @param Connection \$con
-	 * @return int The number of rows affected by this insert/update operation (for non-complex OM this will be at most 1).
-	 * @throws PropelException
+	 * @param      Connection \$con
+	 * @return     int The number of rows affected by this insert/update operation (for non-complex OM this will be at most 1).
+	 * @throws     PropelException
 	 */
 	public function save(\$con = null)
 	{
@@ -1054,14 +1054,14 @@ $script .= "
 
 	/**
 	 * Adds the $validationFailures attribute to store ValidationFailed objects.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addValidationFailuresAttribute(&$script)
 	{
 		$script .= "
 	/**
 	 * Array of ValidationFailed objects.
-	 * @var array ValidationFailed[]
+	 * @var        array ValidationFailed[]
 	 */
 	protected \$validationFailures = array();
 ";
@@ -1069,7 +1069,7 @@ $script .= "
 
 	/**
 	 * Adds the validate() method.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addValidate(&$script)
 	{
@@ -1080,9 +1080,9 @@ $script .= "
 	 * If \$columns is either a column name or an array of column names
 	 * only those columns are validated.
 	 *
-	 * @param mixed \$columns Column name or an array of column names.
+	 * @param      mixed \$columns Column name or an array of column names.
 	 *
-	 * @return mixed <code>true</code> if all columns pass validation
+	 * @return     mixed <code>true</code> if all columns pass validation
 	 *			  or an array of <code>ValidationFailed</code> objects for columns that fail.
 	 */
 	public function validate(\$columns = null)
@@ -1098,7 +1098,7 @@ $script .= "
 
 	/**
 	 * Adds the getValidationFailures() method.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addGetValidationFailures(&$script)
 	{
@@ -1107,8 +1107,8 @@ $script .= "
 	 * Gets any ValidationFailed objects that resulted from last call to validate().
 	 *
 	 *
-	 * @return array ValidationFailed[]
-	 * @see validate()
+	 * @return     array ValidationFailed[]
+	 * @see        validate()
 	 */
 	public function getValidationFailures()
 	{
@@ -1119,13 +1119,13 @@ $script .= "
 
 	/**
 	 * Adds the correct getPrimaryKey() method for this object.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addGetPrimaryKey(&$script)
 	{
 		$pkeys = $this->getTable()->getPrimaryKey();
 		if (count($pkeys) == 1) {
-		    $this->addGetPrimaryKey_SinglePK($script);
+			$this->addGetPrimaryKey_SinglePK($script);
 		} elseif (count($pkeys) > 1) {
 			$this->addGetPrimaryKey_MultiPK($script);
 		} else {
@@ -1136,7 +1136,7 @@ $script .= "
 
 	/**
 	 * Adds the getPrimaryKey() method for tables that contain a single-column primary key.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addGetPrimaryKey_SinglePK(&$script)
 	{
@@ -1147,7 +1147,7 @@ $script .= "
 		$script .= "
 	/**
 	 * Returns the primary key for this object (row).
-	 * @return $cptype
+	 * @return     $cptype
 	 */
 	public function getPrimaryKey()
 	{
@@ -1158,7 +1158,7 @@ $script .= "
 
 	/**
 	 * Adds the setPrimaryKey() method for tables that contain a multi-column primary key.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addGetPrimaryKey_MultiPK(&$script)
 	{
@@ -1167,7 +1167,7 @@ $script .= "
 	/**
 	 * Returns the composite primary key for this object.
 	 * The array elements will be in same order as specified in XML.
-	 * @return array
+	 * @return     array
 	 */
 	public function getPrimaryKey()
 	{
@@ -1191,7 +1191,7 @@ $script .= "
 	 * This "feature" is dreprecated, since the getPrimaryKey() method is not required
 	 * by the Persistent interface (or used by the templates).  Hence, this method is also
 	 * deprecated.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 * @deprecated
 	 */
 	protected function addGetPrimaryKey_NoPK(&$script)
@@ -1200,7 +1200,7 @@ $script .= "
 	/**
 	 * Returns NULL since this table doesn't have a primary key.
 	 * This method exists only for BC and is deprecated!
-	 * @return null
+	 * @return     null
 	 */
 	public function getPrimaryKey()
 	{
@@ -1210,13 +1210,13 @@ $script .= "
 	}
 	/**
 	 * Adds the correct setPrimaryKey() method for this object.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addSetPrimaryKey(&$script)
 	{
 		$pkeys = $this->getTable()->getPrimaryKey();
 		if (count($pkeys) == 1) {
-		    $this->addSetPrimaryKey_SinglePK($script);
+			$this->addSetPrimaryKey_SinglePK($script);
 		} elseif (count($pkeys) > 1) {
 			$this->addSetPrimaryKey_MultiPK($script);
 		} else {
@@ -1227,7 +1227,7 @@ $script .= "
 
 	/**
 	 * Adds the setPrimaryKey() method for tables that contain a single-column primary key.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addSetPrimaryKey_SinglePK(&$script)
 	{
@@ -1241,8 +1241,8 @@ $script .= "
 	/**
 	 * Generic method to set the primary key ($clo column).
 	 *
-	 * @param $ctype \$key Primary key.
-	 * @return void
+	 * @param      $ctype \$key Primary key.
+	 * @return     void
 	 */
 	public function setPrimaryKey(\$key)
 	{
@@ -1253,7 +1253,7 @@ $script .= "
 
 	/**
 	 * Adds the setPrimaryKey() method for tables that contain a multi-columnprimary key.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addSetPrimaryKey_MultiPK(&$script)
 	{
@@ -1262,8 +1262,8 @@ $script .= "
 	/**
 	 * Set the [composite] primary key.
 	 *
-	 * @param array \$keys The elements of the composite key (order must match the order in XML file).
-	 * @return void
+	 * @param      array \$keys The elements of the composite key (order must match the order in XML file).
+	 * @return     void
 	 */
 	public function setPrimaryKey(\$keys)
 	{
@@ -1286,7 +1286,7 @@ $script .= "
 	 * This "feature" is dreprecated, since the setPrimaryKey() method is not required
 	 * by the Persistent interface (or used by the templates).  Hence, this method is also
 	 * deprecated.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 * @deprecated
 	 */
 	protected function addSetPrimaryKey_NoPK(&$script)
@@ -1310,7 +1310,7 @@ $script .= "
 
 	/**
 	 * Adds the copy() method, which (in complex OM) includes the $deepCopy param for making copies of related objects.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addCopy(&$script)
 	{
@@ -1324,8 +1324,8 @@ $script .= "
 	 * It creates a new object filling in the simple attributes, but skipping any primary
 	 * keys that are defined for the table.
 	 *
-	 * @return ".$table->getPhpName()." Clone of current object.
-	 * @throws PropelException
+	 * @return     ".$table->getPhpName()." Clone of current object.
+	 * @throws     PropelException
 	 */
 	public function copy()
 	{
@@ -1349,9 +1349,9 @@ $script .= "
 	/**
 	 * Sets contents of passed object to values from current object.
 	 *
-	 * @param object \$copyObj An object of ".$table->getPhpName()." (or compatible) type.
-	 * @return ".$table->getPhpName()." Clone of current object.
-	 * @throws PropelException
+	 * @param      object \$copyObj An object of ".$table->getPhpName()." (or compatible) type.
+	 * @return     ".$table->getPhpName()." Clone of current object.
+	 * @throws     PropelException
 	 */
 	public function copyInto(\$copyObj)
 	{

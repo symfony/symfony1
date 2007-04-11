@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: PHP5BasicPeerBuilder.php 358 2006-04-18 17:40:40Z oliver $
+ *  $Id: PHP5BasicPeerBuilder.php 592 2007-03-02 21:41:42Z hans $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -31,14 +31,14 @@ require_once 'propel/engine/builder/om/PeerBuilder.php';
  * This class replaces the Peer.tpl, with the intent of being easier for users
  * to customize (through extending & overriding).
  *
- * @author Hans Lellelid <hans@xmpl.org>
- * @package propel.engine.builder.om.php5
+ * @author     Hans Lellelid <hans@xmpl.org>
+ * @package    propel.engine.builder.om.php5
  */
 class PHP5BasicPeerBuilder extends PeerBuilder {
 
 	/**
 	 * Returns the name of the current class being built.
-	 * @return string
+	 * @return     string
 	 */
 	public function getClassname()
 	{
@@ -47,7 +47,7 @@ class PHP5BasicPeerBuilder extends PeerBuilder {
 
 	/**
 	 * Gets the package for the [base] peer classes.
-	 * @return string
+	 * @return     string
 	 */
 	public function getPackage()
 	{
@@ -56,7 +56,7 @@ class PHP5BasicPeerBuilder extends PeerBuilder {
 
 	/**
 	 * Adds the include() statements for files that this class depends on or utilizes.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addIncludes(&$script) {
 
@@ -78,7 +78,7 @@ include_once '$objectFile';";
 
 	/**
 	 * Adds class phpdoc comment and openning of class.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addClassOpen(&$script) {
 
@@ -100,7 +100,7 @@ include_once '$objectFile';";
  *";
 		}
 		$script .= "
- * @package ".$this->getPackage()."
+ * @package    ".$this->getPackage()."
  */
 abstract class ".$this->getClassname()." {
 ";
@@ -109,8 +109,8 @@ abstract class ".$this->getClassname()." {
 	/**
 	 * Closes class.
 	 * Adds closing brace at end of class and the static map builder registration code.
-	 * @param string &$script The script will be modified in this method.
-	 * @see addStaticMapBuilderRegistration()
+	 * @param      string &$script The script will be modified in this method.
+	 * @see        addStaticMapBuilderRegistration()
 	 */
 	protected function addClassClose(&$script)
 	{
@@ -122,7 +122,7 @@ abstract class ".$this->getClassname()." {
 
 	/**
 	 * Adds the static map builder registraction code.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addStaticMapBuilderRegistration(&$script)
 	{
@@ -150,8 +150,8 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds constant and variable declarations that go at the top of the class.
-	 * @param string &$script The script will be modified in this method.
-	 * @see addColumnNameConstants()
+	 * @param      string &$script The script will be modified in this method.
+	 * @see        addColumnNameConstants()
 	 */
 	protected function addConstantsAndAttributes(&$script)
 	{
@@ -185,12 +185,12 @@ if (Propel::isInit()) {
 
 		$this->addFieldNamesAttribute($script);
 		$this->addFieldKeysAttribute($script);
-		
+
 	}
 
 	/**
 	 * Adds the COLUMN_NAME contants to the class definition.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addColumnNameConstants(&$script)
 	{
@@ -288,10 +288,10 @@ if (Propel::isInit()) {
 	/**
 	 * Returns an array of of field names.
 	 *
-	 * @param  string \$type The type of fieldnames to return:
+	 * @param      string \$type The type of fieldnames to return:
 	 *                      One of the class type constants TYPE_PHPNAME,
 	 *                      TYPE_COLNAME, TYPE_FIELDNAME, TYPE_NUM
-	 * @return array A list of field names
+	 * @return     array A list of field names
 	 */
 
 	static public function getFieldNames(\$type = BasePeer::TYPE_PHPNAME)
@@ -311,11 +311,11 @@ if (Propel::isInit()) {
 	/**
 	 * Translates a fieldname to another type
 	 *
-	 * @param string \$name field name
-	 * @param string \$fromType One of the class type constants TYPE_PHPNAME,
+	 * @param      string \$name field name
+	 * @param      string \$fromType One of the class type constants TYPE_PHPNAME,
 	 *                         TYPE_COLNAME, TYPE_FIELDNAME, TYPE_NUM
-	 * @param string \$toType   One of the class type constants
-	 * @return string translated name of the field.
+	 * @param      string \$toType   One of the class type constants
+	 * @return     string translated name of the field.
 	 */
 	static public function translateFieldName(\$name, \$fromType, \$toType)
 	{
@@ -331,14 +331,14 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds the getMapBuilder() method.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addGetMapBuilder(&$script)
 	{
 		$script .= "
 	/**
-	 * @return MapBuilder the map builder for this peer
-	 * @throws PropelException Any exceptions caught during processing will be
+	 * @return     MapBuilder the map builder for this peer
+	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
 	public static function getMapBuilder()
@@ -350,8 +350,8 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds the getPhpNameMap() method.
-	 * @param string &$script The script will be modified in this method.
-	 * @todo Replace with static version (this can be built at build-time).
+	 * @param      string &$script The script will be modified in this method.
+	 * @todo       Replace with static version (this can be built at build-time).
 	 */
 	protected function addGetPhpNameMap(&$script)
 	{
@@ -359,8 +359,8 @@ if (Propel::isInit()) {
 	/**
 	 * Gets a map (hash) of PHP names to DB column names.
 	 *
-	 * @return array The PHP to DB name map for this peer
-	 * @throws PropelException Any exceptions caught during processing will be
+	 * @return     array The PHP to DB name map for this peer
+	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 * @deprecated Use the getFieldNames() and translateFieldName() methods instead of this.
 	 */
@@ -381,7 +381,7 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds the CLASSKEY_* and CLASSNAME_* constants used for inheritance.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	public function addInheritanceColumnConstants(&$script)
 	{
@@ -403,14 +403,12 @@ if (Propel::isInit()) {
 					$script .= "
 	/** A key representing a particular subclass */
 	const CLASSKEY_".strtoupper($child->getKey())." = '" . $child->getKey() . "';
-
-        /** A key representing a particular subclass */
+	/** A key representing a particular subclass */
         const CLASSKEY_".strtoupper($child->getClassName())." = '" . $child->getKey() . "';
-
 	/** A class that can be returned by this peer. */
 	const CLASSNAME_".strtoupper($child->getKey())." = '". $childBuilder->getClasspath() . "';
 ";
-				} /* foreach children */
+					} /* foreach children */
 			} /* if col->isenumerated...() */
 		} /* if table->getchildrencolumn() */
 
@@ -420,7 +418,7 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds the alias() utility method.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addAlias(&$script)
 	{
@@ -433,9 +431,9 @@ if (Propel::isInit()) {
 	 *		\$c->addAlias(\"alias1\", TablePeer::TABLE_NAME);
 	 *		\$c->addJoin(TablePeer::alias(\"alias1\", TablePeer::PRIMARY_KEY_COLUMN), TablePeer::PRIMARY_KEY_COLUMN);
 	 * </code>
-	 * @param string \$alias The alias for the current table.
-	 * @param string \$column The column name for current table. (i.e. ".$this->getTable()->getPhpName()."Peer::COLUMN_NAME).
-	 * @return string
+	 * @param      string \$alias The alias for the current table.
+	 * @param      string \$column The column name for current table. (i.e. ".$this->getTable()->getPhpName()."Peer::COLUMN_NAME).
+	 * @return     string
 	 */
 	public static function alias(\$alias, \$column)
 	{
@@ -446,7 +444,7 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds the addSelectColumns() method.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addAddSelectColumns(&$script)
 	{
@@ -458,8 +456,8 @@ if (Propel::isInit()) {
 	 * XML schema will not be added to the select list and only loaded
 	 * on demand.
 	 *
-	 * @param criteria object containing the columns to add.
-	 * @throws PropelException Any exceptions caught during processing will be
+	 * @param      criteria object containing the columns to add.
+	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
 	public static function addSelectColumns(Criteria \$criteria)
@@ -481,7 +479,7 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds the COUNT constants.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addCountConstants(&$script)
 	{
@@ -506,7 +504,7 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds the doCount() method.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addDoCount(&$script)
 	{
@@ -514,10 +512,10 @@ if (Propel::isInit()) {
 	/**
 	 * Returns the number of rows matching criteria.
 	 *
-	 * @param Criteria \$criteria
-	 * @param boolean \$distinct Whether to select only distinct columns (You can also set DISTINCT modifier in Criteria).
-	 * @param Connection \$con
-	 * @return int Number of matching rows.
+	 * @param      Criteria \$criteria
+	 * @param      boolean \$distinct Whether to select only distinct columns (You can also set DISTINCT modifier in Criteria).
+	 * @param      Connection \$con
+	 * @return     int Number of matching rows.
 	 */
 	public static function doCount(Criteria \$criteria, \$distinct = false, \$con = null)
 	{
@@ -550,7 +548,7 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds the doSelectOne() method.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addDoSelectOne(&$script)
 	{
@@ -558,10 +556,10 @@ if (Propel::isInit()) {
 	/**
 	 * Method to select one object from the DB.
 	 *
-	 * @param Criteria \$criteria object used to create the SELECT statement.
-	 * @param Connection \$con
-	 * @return ".$this->getTable()->getPhpName()."
-	 * @throws PropelException Any exceptions caught during processing will be
+	 * @param      Criteria \$criteria object used to create the SELECT statement.
+	 * @param      Connection \$con
+	 * @return     ".$this->getTable()->getPhpName()."
+	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
 	public static function doSelectOne(Criteria \$criteria, \$con = null)
@@ -578,7 +576,7 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds the doSelect() method.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addDoSelect(&$script)
 	{
@@ -586,10 +584,10 @@ if (Propel::isInit()) {
 	/**
 	 * Method to do selects.
 	 *
-	 * @param Criteria \$criteria The Criteria object used to build the SELECT statement.
-	 * @param Connection \$con
-	 * @return array Array of selected Objects
-	 * @throws PropelException Any exceptions caught during processing will be
+	 * @param      Criteria \$criteria The Criteria object used to build the SELECT statement.
+	 * @param      Connection \$con
+	 * @return     array Array of selected Objects
+	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
 	public static function doSelect(Criteria \$criteria, \$con = null)
@@ -600,7 +598,7 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds the doSelectRS() method.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addDoSelectRS(&$script)
 	{
@@ -613,12 +611,12 @@ if (Propel::isInit()) {
 	 * Use this method directly if you want to just get the resultset
 	 * (instead of an array of objects).
 	 *
-	 * @param Criteria \$criteria The Criteria object used to build the SELECT statement.
-	 * @param Connection \$con the connection to use
-	 * @throws PropelException Any exceptions caught during processing will be
+	 * @param      Criteria \$criteria The Criteria object used to build the SELECT statement.
+	 * @param      Connection \$con the connection to use
+	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
-	 * @return ResultSet The resultset object with numerically-indexed fields.
-	 * @see ".$this->basePeerClassname."::doSelect()
+	 * @return     ResultSet The resultset object with numerically-indexed fields.
+	 * @see        ".$this->basePeerClassname."::doSelect()
 	 */
 	public static function doSelectRS(Criteria \$criteria, \$con = null)
 	{
@@ -642,7 +640,7 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds the populateObjects() method.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addPopulateObjects(&$script)
 	{
@@ -652,7 +650,7 @@ if (Propel::isInit()) {
 	 * The returned array will contain objects of the default type or
 	 * objects that inherit from the default.
 	 *
-	 * @throws PropelException Any exceptions caught during processing will be
+	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
 	public static function populateObjects(ResultSet \$rs)
@@ -693,7 +691,7 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds a getOMClass() for non-abstract tables that have inheritance.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addGetOMClass_Inheritance(&$script)
 	{
@@ -703,9 +701,9 @@ if (Propel::isInit()) {
 	 * The returned Class will contain objects of the default type or
 	 * objects that inherit from the default.
 	 *
-	 * @param ResultSet \$rs ResultSet with pointer to record containing om class.
-	 * @param int \$colnum Column to examine for OM class information (first is 1).
-	 * @throws PropelException Any exceptions caught during processing will be
+	 * @param      ResultSet \$rs ResultSet with pointer to record containing om class.
+	 * @param      int \$colnum Column to examine for OM class information (first is 1).
+	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
 	public static function getOMClass(ResultSet \$rs, \$colnum)
@@ -749,7 +747,7 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds a getOMClass() signature for abstract tables that have inheritance.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addGetOMClass_Inheritance_Abstract(&$script)
 	{
@@ -761,9 +759,9 @@ if (Propel::isInit()) {
 	 * This method must be overridden by the stub subclass, because
 	 * ".$this->getTable()->getPhpName()." is declared abstract in the schema.
 	 *
-	 * @param ResultSet \$rs ResultSet with pointer to record containing om class.
-	 * @param int \$colnum Column to examine for OM class information (first is 1).
-	 * @throws PropelException Any exceptions caught during processing will be
+	 * @param      ResultSet \$rs ResultSet with pointer to record containing om class.
+	 * @param      int \$colnum Column to examine for OM class information (first is 1).
+	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
 	abstract public static function getOMClass();
@@ -772,7 +770,7 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds a getOMClass() for non-abstract tables that do note use inheritance.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addGetOMClass_NoInheritance(&$script)
 	{
@@ -784,7 +782,7 @@ if (Propel::isInit()) {
 	 * relative to a location on the PHP include_path.
 	 * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
 	 *
-	 * @return string path.to.ClassName
+	 * @return     string path.to.ClassName
 	 */
 	public static function getOMClass()
 	{
@@ -795,7 +793,7 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds a getOMClass() signature for abstract tables that do not have inheritance.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addGetOMClass_NoInheritance_Abstract(&$script)
 	{
@@ -812,7 +810,7 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds the doInsert() method.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addDoInsert(&$script)
 	{
@@ -821,10 +819,10 @@ if (Propel::isInit()) {
 	/**
 	 * Method perform an INSERT on the database, given a ".$table->getPhpName()." or Criteria object.
 	 *
-	 * @param mixed \$values Criteria or ".$table->getPhpName()." object containing data that is used to create the INSERT statement.
-	 * @param Connection \$con the connection to use
-	 * @return mixed The new primary key.
-	 * @throws PropelException Any exceptions caught during processing will be
+	 * @param      mixed \$values Criteria or ".$table->getPhpName()." object containing data that is used to create the INSERT statement.
+	 * @param      Connection \$con the connection to use
+	 * @return     mixed The new primary key.
+	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
 	public static function doInsert(\$values, \$con = null)
@@ -871,7 +869,7 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds the doUpdate() method.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addDoUpdate(&$script)
 	{
@@ -880,10 +878,10 @@ if (Propel::isInit()) {
 	/**
 	 * Method perform an UPDATE on the database, given a ".$table->getPhpName()." or Criteria object.
 	 *
-	 * @param mixed \$values Criteria or ".$table->getPhpName()." object containing data that is used to create the UPDATE statement.
-	 * @param Connection \$con The connection to use (specify Connection object to exert more control over transactions).
-	 * @return int The number of affected rows (if supported by underlying database driver).
-	 * @throws PropelException Any exceptions caught during processing will be
+	 * @param      mixed \$values Criteria or ".$table->getPhpName()." object containing data that is used to create the UPDATE statement.
+	 * @param      Connection \$con The connection to use (specify Connection object to exert more control over transactions).
+	 * @return     int The number of affected rows (if supported by underlying database driver).
+	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
 	public static function doUpdate(\$values, \$con = null)
@@ -922,7 +920,7 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds the doDeleteAll() method.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addDoDeleteAll(&$script)
 	{
@@ -931,7 +929,7 @@ if (Propel::isInit()) {
 	/**
 	 * Method to DELETE all rows from the ".$table->getName()." table.
 	 *
-	 * @return int The number of affected rows (if supported by underlying database driver).
+	 * @return     int The number of affected rows (if supported by underlying database driver).
 	 */
 	public static function doDeleteAll(\$con = null)
 	{
@@ -945,7 +943,7 @@ if (Propel::isInit()) {
 			\$con->begin();
 			";
 			if ($this->isDeleteCascadeEmulationNeeded()) {
-			    $script .="\$affectedRows += ".$this->getPeerClassname()."::doOnDeleteCascade(new Criteria(), \$con);
+				$script .="\$affectedRows += ".$this->getPeerClassname()."::doOnDeleteCascade(new Criteria(), \$con);
 			";
 			}
 			if ($this->isDeleteSetNullEmulationNeeded()) {
@@ -965,7 +963,7 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds the doDelete() method.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addDoDelete(&$script)
 	{
@@ -974,12 +972,12 @@ if (Propel::isInit()) {
 	/**
 	 * Method perform a DELETE on the database, given a ".$table->getPhpName()." or Criteria object OR a primary key value.
 	 *
-	 * @param mixed \$values Criteria or ".$table->getPhpName()." object or primary key or array of primary keys
+	 * @param      mixed \$values Criteria or ".$table->getPhpName()." object or primary key or array of primary keys
 	 *              which is used to create the DELETE statement
-	 * @param Connection \$con the connection to use
-	 * @return int 	The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+	 * @param      Connection \$con the connection to use
+	 * @return     int 	The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
 	 *				if supported by native driver or if emulated using Propel.
-	 * @throws PropelException Any exceptions caught during processing will be
+	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
 	 public static function doDelete(\$values, \$con = null)
@@ -1056,7 +1054,7 @@ if (Propel::isInit()) {
 			";
 
 		if ($this->isDeleteCascadeEmulationNeeded()) {
-		    $script .= "\$affectedRows += ".$this->getPeerClassname()."::doOnDeleteCascade(\$criteria, \$con);";
+			$script .= "\$affectedRows += ".$this->getPeerClassname()."::doOnDeleteCascade(\$criteria, \$con);";
 		}
 		if ($this->isDeleteSetNullEmulationNeeded()) {
 			$script .= $this->getPeerClassname() . "::doOnDeleteSetNull(\$criteria, \$con);";
@@ -1076,7 +1074,7 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds the doOnDeleteCascade() method, which provides ON DELETE CASCADE emulation.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addDoOnDeleteCascade(&$script)
 	{
@@ -1091,9 +1089,9 @@ if (Propel::isInit()) {
 	 *
 	 * This method should be used within a transaction if possible.
 	 *
-	 * @param Criteria \$criteria
-	 * @param Connection \$con
-	 * @return int The number of affected rows (if supported by underlying database driver).
+	 * @param      Criteria \$criteria
+	 * @param      Connection \$con
+	 * @return     int The number of affected rows (if supported by underlying database driver).
 	 */
 	protected static function doOnDeleteCascade(Criteria \$criteria, Connection \$con)
 	{
@@ -1159,7 +1157,7 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds the doOnDeleteSetNull() method, which provides ON DELETE SET NULL emulation.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addDoOnDeleteSetNull(&$script)
 	{
@@ -1174,9 +1172,9 @@ if (Propel::isInit()) {
 	 *
 	 * This method should be used within a transaction if possible.
 	 *
-	 * @param Criteria \$criteria
-	 * @param Connection \$con
-	 * @return void
+	 * @param      Criteria \$criteria
+	 * @param      Connection \$con
+	 * @return     void
 	 */
 	protected static function doOnDeleteSetNull(Criteria \$criteria, Connection \$con)
 	{
@@ -1240,7 +1238,7 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds the doValidate() method.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addDoValidate(&$script)
 	{
@@ -1253,10 +1251,10 @@ if (Propel::isInit()) {
 	 *
 	 * NOTICE: This does not apply to primary or foreign keys for now.
 	 *
-	 * @param ".$table->getPhpName()." \$obj The object to validate.
-	 * @param mixed \$cols Column name or array of column names.
+	 * @param      ".$table->getPhpName()." \$obj The object to validate.
+	 * @param      mixed \$cols Column name or array of column names.
 	 *
-	 * @return mixed TRUE if all columns are valid or the error message of the first invalid column.
+	 * @return     mixed TRUE if all columns are valid or the error message of the first invalid column.
 	 */
 	public static function doValidate(".$table->getPhpName()." \$obj, \$cols = null)
 	{
@@ -1298,7 +1296,7 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds the retrieveByPK method for tables with single-column primary key.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addRetrieveByPK_SinglePK(&$script)
 	{
@@ -1307,9 +1305,9 @@ if (Propel::isInit()) {
 	/**
 	 * Retrieve a single object by pkey.
 	 *
-	 * @param mixed \$pk the primary key.
-	 * @param Connection \$con the connection to use
-	 * @return " . $table->getPhpName() . "
+	 * @param      mixed \$pk the primary key.
+	 * @param      Connection \$con the connection to use
+	 * @return     " . $table->getPhpName() . "
 	 */
 	public static function ".$this->getRetrieveMethodName()."(\$pk, \$con = null)
 	{
@@ -1347,7 +1345,7 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds the retrieveByPKs method for tables with single-column primary key.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addRetrieveByPKs_SinglePK(&$script)
 	{
@@ -1356,9 +1354,9 @@ if (Propel::isInit()) {
 	/**
 	 * Retrieve multiple objects by pkey.
 	 *
-	 * @param array \$pks List of primary keys
-	 * @param Connection \$con the connection to use
-	 * @throws PropelException Any exceptions caught during processing will be
+	 * @param      array \$pks List of primary keys
+	 * @param      Connection \$con the connection to use
+	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
 	public static function ".$this->getRetrieveMethodName()."s(\$pks, \$con = null)
@@ -1406,7 +1404,7 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds the retrieveByPK method for tables with multi-column primary key.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addRetrieveByPK_MultiPK(&$script)
 	{
@@ -1422,8 +1420,8 @@ if (Propel::isInit()) {
 	   ";
 	   }
 	   $script .= "
-	 * @param Connection \$con
-	 * @return ".$table->getPhpName()."
+	 * @param      Connection \$con
+	 * @return     ".$table->getPhpName()."
 	 */
 	public static function ".$this->getRetrieveMethodName()."(";
 		$co = 0;
@@ -1450,7 +1448,7 @@ if (Propel::isInit()) {
 
 	/**
 	 * Adds the getTableMap() method which is a convenience method for apps to get DB metadata.
-	 * @param string &$script The script will be modified in this method.
+	 * @param      string &$script The script will be modified in this method.
 	 */
 	protected function addGetTableMap(&$script)
 	{
@@ -1458,8 +1456,8 @@ if (Propel::isInit()) {
 	/**
 	 * Returns the TableMap related to this peer.
 	 * This method is not needed for general use but a specific application could have a need.
-	 * @return TableMap
-	 * @throws PropelException Any exceptions caught during processing will be
+	 * @return     TableMap
+	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
 	public static function getTableMap()
