@@ -261,6 +261,24 @@ abstract class sfAction extends sfComponent
   }
 
   /**
+   * Appends the result of the given partial execution to the response content
+   * and bypasses the built-in view system.
+   *
+   * This method must be called as with a return:
+   *
+   * <code>return $this->renderPartial('foo/bar')</code>
+   *
+   * @param  string partial name
+   *
+   * @return sfView::NONE
+   */
+  public function renderPartial($templateName)
+  {
+    sfLoader::loadHelpers('Partial');
+    return $this->renderText(get_partial($templateName, $this->varHolder->getAll()));
+  }
+
+  /**
    * Retrieves the default view to be executed when a given request is not served by this action.
    *
    * @return string A string containing the view name associated with this action
