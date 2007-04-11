@@ -275,6 +275,7 @@ abstract class sfAction extends sfComponent
   public function renderPartial($templateName)
   {
     sfLoader::loadHelpers('Partial');
+
     return $this->renderText(get_partial($templateName, $this->varHolder->getAll()));
   }
 
