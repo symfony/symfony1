@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: PropelPager.php 308 2005-12-23 16:16:40Z hans $
+ *  $Id: PropelPager.php 536 2007-01-10 14:30:38Z heltem $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -33,7 +33,7 @@
  *  // with join
  *  $pager = new PropelPager($c, 'poemPeer', 'doSelectJoinPoemUsers', 1, 50);
  *
- *  // without Join 
+ *  // without Join
  *
  *  $pager = new PropelPager($c, 'poemPeer', 'doSelect', 1, 50);
  *
@@ -94,14 +94,14 @@
  * <?endforeach?>
  * </table>
  *
- * 
- * @author	Rob Halff <info@rhalff.com>
- * @version   $Revision: 308 $
- * @copyright Copyright (c) 2004 Rob Halff: LGPL - See LICENCE
- * @package   propel.util 
+ *
+ * @author     Rob Halff <info@rhalff.com>
+ * @version    $Revision: 536 $
+ * @copyright  Copyright (c) 2004 Rob Halff: LGPL - See LICENCE
+ * @package    propel.util
  */
 class PropelPager {
-	
+
 	private $recordCount;
 	private $pages;
 	private $peerClass;
@@ -111,58 +111,58 @@ class PropelPager {
 	private $countCriteria;
 	private $page;
 	private $rs = null;
-	
-	/** @var int Start row (offset) */
+
+	/** @var        int Start row (offset) */
 	protected $start = 0;
-	
-	/** @var int Max rows to return (0 means all) */
+
+	/** @var        int Max rows to return (0 means all) */
 	protected $max = 0;
-	
+
 	/**
 	 * Create a new Propel Pager.
-	 * @param Criteria $c
-	 * @param string $peerClass The name of the static Peer class.
-	 * @param string $peerSelectMethod The name of the static method for selecting content from the Peer class.
-	 * @param int $page The current page (1-based).
-	 * @param int $rowsPerPage The number of rows that should be displayed per page.
+	 * @param      Criteria $c
+	 * @param      string $peerClass The name of the static Peer class.
+	 * @param      string $peerSelectMethod The name of the static method for selecting content from the Peer class.
+	 * @param      int $page The current page (1-based).
+	 * @param      int $rowsPerPage The number of rows that should be displayed per page.
 	 */
 	public function __construct($c = null, $peerClass = null, $peerSelectMethod = null, $page = 1, $rowsPerPage = 25)
 	{
-        if(!isset($c)) {
-            $c = new Criteria();
-        }
-        $this->setCriteria($c);
+		if(!isset($c)) {
+			$c = new Criteria();
+		}
+		$this->setCriteria($c);
 		$this->setPeerClass($peerClass);
 		$this->setPeerSelectMethod($peerSelectMethod);
 		$this->guessPeerCountMethod();
 		$this->setPage($page);
 		$this->setRowsPerPage($rowsPerPage);
 	}
-	
+
 	/**
 	 * Set the criteria for this pager.
-	 * @param Criteria $c
-	 * @return void
+	 * @param      Criteria $c
+	 * @return     void
 	 */
 	public function setCriteria(Criteria $c)
 	{
 		$this->criteria = $c;
 	}
-	
+
 	/**
 	 * Return the Criteria object for this pager.
-	 * @return Criteria
+	 * @return     Criteria
 	 */
 	public function getCriteria()
 	{
 		return $this->criteria;
 	}
-	
+
 	/**
 	 * Set the Peer Classname
-	 * 
-	 * @param string $class
-	 * @return void
+	 *
+	 * @param      string $class
+	 * @return     void
 	 */
 	public function setPeerClass($class)
 	{
@@ -171,19 +171,19 @@ class PropelPager {
 
 	/**
 	 * Return the Peer Classname.
-	 * @return string
+	 * @return     string
 	 */
 	public function getPeerClass()
 	{
 		return $this->peerClass;
 	}
-	
+
 	/**
 	 * Set the Peer select method.
 	 * This exists for legacy support, please use setPeerSelectMethod().
-	 * @param string $method The name of the static method to call on the Peer class.
-	 * @return void
-	 * @see setPeerSelectMethod()
+	 * @param      string $method The name of the static method to call on the Peer class.
+	 * @return     void
+	 * @see        setPeerSelectMethod()
 	 * @deprecated
 	 */
 	public function setPeerMethod($method)
@@ -194,46 +194,46 @@ class PropelPager {
 	/**
 	 * Return the Peer select method.
 	 * This exists for legacy support, please use getPeerSelectMethod().
-	 * @return string
-	 * @see getPeerSelectMethod()
+	 * @return     string
+	 * @see        getPeerSelectMethod()
 	 * @deprecated
 	 */
 	public function getPeerMethod()
 	{
 		return $this->getPeerSelectMethod();
 	}
-	
+
 	/**
 	 * Set the Peer select method.
-	 * 
-	 * @param string $method The name of the static method to call on the Peer class.
-	 * @return void
+	 *
+	 * @param      string $method The name of the static method to call on the Peer class.
+	 * @return     void
 	 */
 	public function setPeerSelectMethod($method)
 	{
 		$this->peerSelectMethod = $method;
 	}
-	
+
 	/**
 	 * Return the Peer select method.
-	 * @return string
+	 * @return     string
 	 */
 	public function getPeerSelectMethod()
 	{
 		return $this->peerSelectMethod;
 	}
-	
+
 	/**
 	 * Sets the Count method.
-	 * This is set based on the Peer method, for example if Peer method is doSelectJoin*() then the 
+	 * This is set based on the Peer method, for example if Peer method is doSelectJoin*() then the
 	 * count method will be doCountJoin*().
-	 * @param string $method The name of the static method to call on the Peer class.
+	 * @param      string $method The name of the static method to call on the Peer class.
 	 */
 	public function setPeerCountMethod($method)
 	{
 		$this->peerCountMethod = $method;
 	}
-	
+
 	/**
 	 * Return the Peer count method.
 	 */
@@ -241,7 +241,7 @@ class PropelPager {
 	{
 		return $this->peerCountMethod;
 	}
-	
+
 	/**
 	 * Guesses the Peer count method based on the select method.
 	 */
@@ -254,17 +254,17 @@ class PropelPager {
 			$countMethod = 'doCount' . substr($selectMethod, strlen('doSelect'));
 		} else {
 			// we will fall back to doCount() if we don't understand the join
-			// method; however, it probably won't be accurate.  Maybe triggering an error would 
+			// method; however, it probably won't be accurate.  Maybe triggering an error would
 			// be appropriate ...
 			$countMethod = 'doCount';
 		}
 		$this->setPeerCountMethod($countMethod);
 	}
-	
+
 	/**
-	 * Get the paged resultset 
-	 * 
-	 * @return mixed $rs 
+	 * Get the paged resultset
+	 *
+	 * @return     mixed $rs
 	 */
 	public function getResult()
 	{
@@ -274,48 +274,48 @@ class PropelPager {
 
 		return $this->rs;
 	}
-	
+
 	/**
-	 * Get the paged resultset 
-	 * 
-	 * Main method which creates a paged result set based on the criteria 
+	 * Get the paged resultset
+	 *
+	 * Main method which creates a paged result set based on the criteria
 	 * and the requested peer select method.
-	 * 
+	 *
 	 */
 	private function doRs()
-	{   
+	{
 		$this->criteria->setOffset($this->start);
 		$this->criteria->setLimit($this->max);
 		$this->rs = call_user_func(array($this->getPeerClass(), $this->getPeerSelectMethod()), $this->criteria);
 	}
-	
+
 	/**
-	 * Get the first page 
-	 * 
+	 * Get the first page
+	 *
 	 * For now I can only think of returning 1 always.
 	 * It should probably return 0 if there are no pages
-	 * 
-	 * @return int 1 
+	 *
+	 * @return     int 1
 	 */
 	public function getFirstPage()
 	{
 		return '1';
 	}
-	
+
 	/**
 	 * Convenience method to indicate whether current page is the first page.
-	 * 
-	 * @return boolean
+	 *
+	 * @return     boolean
 	 */
 	public function atFirstPage()
 	{
 		return $this->getPage() == $this->getFirstPage();
 	}
-	
+
 	/**
-	 * Get last page 
-	 * 
-	 * @return int $lastPage 
+	 * Get last page
+	 *
+	 * @return     int $lastPage
 	 */
 	public function getLastPage()
 	{
@@ -326,21 +326,21 @@ class PropelPager {
 			return $totalPages;
 		}
 	}
-	
+
 	/**
 	 * Convenience method to indicate whether current page is the last page.
-	 * 
-	 * @return boolean
+	 *
+	 * @return     boolean
 	 */
 	public function atLastPage()
 	{
 		return $this->getPage() == $this->getLastPage();
 	}
-	
+
 	/**
-	 * get total pages 
-	 * 
-	 * @return int $this->pages
+	 * get total pages
+	 *
+	 * @return     int $this->pages
 	 */
 	public function getTotalPages() {
 		if(!isset($this->pages)) {
@@ -353,12 +353,12 @@ class PropelPager {
 		}
 		return $this->pages;
 	}
-	
+
 	/**
-	 * get an array of previous id's  
-	 * 
-	 * @param int $range
-	 * @return array $links
+	 * get an array of previous id's
+	 *
+	 * @param      int $range
+	 * @return     array $links
 	 */
 	public function getPrevLinks($range = 5)
 	{
@@ -376,12 +376,12 @@ class PropelPager {
 
 		return array_reverse($links);
 	}
-	
+
 	/**
-	 * get an array of next id's  
-	 * 
-	 * @param int $range
-	 * @return array $links
+	 * get an array of next id's
+	 *
+	 * @param      int $range
+	 * @return     array $links
 	 */
 	public function getNextLinks($range = 5)
 	{
@@ -398,22 +398,22 @@ class PropelPager {
 		}
 
 		return $links;
-	}	
-	
+	}
+
 	/**
 	 * Returns whether last page is complete
 	 *
-	 * @return bool Last page complete or not
+	 * @return     bool Last page complete or not
 	 */
 	public function isLastPageComplete()
 	{
 		return !($this->getTotalRecordCount() % $this->max);
 	}
-	
+
 	/**
-	 * get previous id  
-	 * 
-	 * @return mixed $prev
+	 * get previous id
+	 *
+	 * @return     mixed $prev
 	 */
 	public function getPrev() {
 		if($this->getPage() != $this->getFirstPage()) {
@@ -423,11 +423,11 @@ class PropelPager {
 		}
 		return $prev;
 	}
-	
+
 	/**
-	 * get next id  
-	 * 
-	 * @return mixed $next
+	 * get next id
+	 *
+	 * @return     mixed $next
 	 */
 	public function getNext() {
 		if($this->getPage() != $this->getLastPage()) {
@@ -437,11 +437,11 @@ class PropelPager {
 		}
 		return $next;
 	}
-	
+
 	/**
 	 * Set the current page number (First page is 1).
-	 * @param int $page
-	 * @return void
+	 * @param      int $page
+	 * @return     void
 	 */
 	public function setPage($page)
 	{
@@ -449,19 +449,19 @@ class PropelPager {
 		// (re-)calculate start rec
 		$this->calculateStart();
 	}
-	
+
 	/**
 	 * Get current page.
-	 * @return int
+	 * @return     int
 	 */
 	public function getPage()
 	{
 		return $this->page;
 	}
-	
+
 	/**
 	 * Set the number of rows per page.
-	 * @param int $r
+	 * @param      int $r
 	 */
 	public function setRowsPerPage($r)
 	{
@@ -469,76 +469,75 @@ class PropelPager {
 		// (re-)calculate start rec
 		$this->calculateStart();
 	}
-	
+
 	/**
 	 * Get number of rows per page.
-	 * @return int
+	 * @return     int
 	 */
 	public function getRowsPerPage()
 	{
 		return $this->max;
 	}
-	
+
 	/**
 	 * Calculate startrow / max rows based on current page and rows-per-page.
-	 * @return void
+	 * @return     void
 	 */
 	private function calculateStart()
 	{
 		$this->start = ( ($this->page - 1) * $this->max );
 	}
-	
+
 	/**
 	 * Gets the total number of (un-LIMITed) records.
-	 * 
-	 * This method will perform a query that executes un-LIMITed query. 
 	 *
-	 * @return int Total number of records - disregarding page, maxrows, etc.
+	 * This method will perform a query that executes un-LIMITed query.
+	 *
+	 * @return     int Total number of records - disregarding page, maxrows, etc.
 	 */
 	public function getTotalRecordCount()
-	{	
+	{
 
-                if(!isset($this->rs)) {
-                    $this->doRs();
-                }
+				if(!isset($this->rs)) {
+					$this->doRs();
+				}
 
-                if(empty($this->recordCount)) {
-                        $this->countCriteria = clone $this->criteria;
-                        $this->countCriteria->setLimit(0);
-                        $this->countCriteria->setOffset(0);
+				if(empty($this->recordCount)) {
+						$this->countCriteria = clone $this->criteria;
+						$this->countCriteria->setLimit(0);
+						$this->countCriteria->setOffset(0);
 
-                        $this->recordCount = call_user_func(
-                                        array(
-                                                $this->getPeerClass(),
+						$this->recordCount = call_user_func(
+								        array(
+								                $this->getPeerClass(),
 												$this->getPeerCountMethod()
-                                             ),
-                                        $this->countCriteria
-                                        );
+								             ),
+								        $this->countCriteria
+								        );
 
-                }
+				}
 
-                return $this->recordCount;
+				return $this->recordCount;
 
 	}
-	
+
 	/**
 	 * Sets the start row or offset.
-	 * @param int $v
+	 * @param      int $v
 	 */
 	public function setStart($v)
 	{
 		$this->start = $v;
 	}
-	
+
 	/**
 	 * Sets max rows (limit).
-	 * @param int $v
-	 * @return void
+	 * @param      int $v
+	 * @return     void
 	 */
 	public function setMax($v)
 	{
 		$this->max = $v;
 	}
 
-} 
-?>
+}

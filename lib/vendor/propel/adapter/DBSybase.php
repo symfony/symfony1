@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: DBSybase.php 286 2005-11-25 17:12:29Z hans $
+ *  $Id: DBSybase.php 536 2007-01-10 14:30:38Z heltem $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,101 +30,101 @@ require_once 'propel/adapter/DBAdapter.php';
  * methods for ResultSetMetaData, and therefore the village API's may
  * not function.  For connection pooling, everything works.</I>
  *
- * @author Hans Lellelid <hans@xmpl.org> (Propel)
- * @author Jeff Brekke <ekkerbj@netscape.net> (Torque)
- * @version $Revision: 286 $
- * @package propel.adapter
+ * @author     Hans Lellelid <hans@xmpl.org> (Propel)
+ * @author     Jeff Brekke <ekkerbj@netscape.net> (Torque)
+ * @version    $Revision: 536 $
+ * @package    propel.adapter
  */
 class DBSybase extends DBAdapter {
 
-    /**
-     * This method is used to ignore case.
-     *
-     * @param in The string to transform to upper case.
-     * @return The upper case string.
-     */
-    public function toUpperCase($in)
-    {
-        return "UPPER(" . $in . ")";
-    }
-
-    /**
-     * This method is used to ignore case.
-     *
-     * @param in The string whose case to ignore.
-     * @return The string in a case that can be ignored.
-     */
-    public function ignoreCase($in)
-    {
-        return "UPPER(" . $in . ")";
-    }
-
-    /**
-     * Returns SQL which concatenates the second string to the first.
-     *
-     * @param string String to concatenate.
-     * @param string String to append.
-     * @return string 
-     */
-    public function concatString($s1, $s2)
-    {
-        return "($s1 + $s2)";
-    }
-
-    /**
-     * Returns SQL which extracts a substring.
-     *
-     * @param string String to extract from.
-     * @param int Offset to start from.
-     * @param int Number of characters to extract.
-     * @return string 
-     */
-    public function subString($s, $pos, $len)
-    {
-        return "SUBSTRING($s, $pos, $len)";
-    }
-
-    /**
-     * Returns SQL which calculates the length (in chars) of a string.
-     *
-     * @param string String to calculate length of.
-     * @return string 
-     */
-    public function strLength($s)
-    {
-        return "LEN($s)";
-    }
-     
-    /**
-     * Locks the specified table.
-     *
-     * @param Connection $con The Creole connection to use.
-     * @param string $table The name of the table to lock.
-     * @throws SQLException No Statement could be created or executed.
-     */
-    public function lockTable(Connection $con, $table)
-    {
-        $statement = $con->createStatement();
-        $sql = "SELECT next_id FROM " . $table . " FOR UPDATE";
-        $statement->executeQuery($sql);
-    }
-
-    /**
-     * Unlocks the specified table.
-     *
-     * @param Connection $con The Creole connection to use.
-     * @param string $table The name of the table to unlock.
-     * @throws SQLException No Statement could be created or executed.
-     */
-    public function unlockTable(Connection $con, $table)
-    {
-        // Tables in Sybase are unlocked when a commit is issued.  The
-        // user may have issued a commit but do it here to be sure.
-        $con->commit();
-    }
-	
 	/**
-	 * @see DBAdapter::quoteIdentifier()
+	 * This method is used to ignore case.
+	 *
+	 * @param      in The string to transform to upper case.
+	 * @return     The upper case string.
+	 */
+	public function toUpperCase($in)
+	{
+		return "UPPER(" . $in . ")";
+	}
+
+	/**
+	 * This method is used to ignore case.
+	 *
+	 * @param      in The string whose case to ignore.
+	 * @return     The string in a case that can be ignored.
+	 */
+	public function ignoreCase($in)
+	{
+		return "UPPER(" . $in . ")";
+	}
+
+	/**
+	 * Returns SQL which concatenates the second string to the first.
+	 *
+	 * @param      string String to concatenate.
+	 * @param      string String to append.
+	 * @return     string
+	 */
+	public function concatString($s1, $s2)
+	{
+		return "($s1 + $s2)";
+	}
+
+	/**
+	 * Returns SQL which extracts a substring.
+	 *
+	 * @param      string String to extract from.
+	 * @param      int Offset to start from.
+	 * @param      int Number of characters to extract.
+	 * @return     string
+	 */
+	public function subString($s, $pos, $len)
+	{
+		return "SUBSTRING($s, $pos, $len)";
+	}
+
+	/**
+	 * Returns SQL which calculates the length (in chars) of a string.
+	 *
+	 * @param      string String to calculate length of.
+	 * @return     string
+	 */
+	public function strLength($s)
+	{
+		return "LEN($s)";
+	}
+
+	/**
+	 * Locks the specified table.
+	 *
+	 * @param      Connection $con The Creole connection to use.
+	 * @param      string $table The name of the table to lock.
+	 * @throws     SQLException No Statement could be created or executed.
+	 */
+	public function lockTable(Connection $con, $table)
+	{
+		$statement = $con->createStatement();
+		$sql = "SELECT next_id FROM " . $table . " FOR UPDATE";
+		$statement->executeQuery($sql);
+	}
+
+	/**
+	 * Unlocks the specified table.
+	 *
+	 * @param      Connection $con The Creole connection to use.
+	 * @param      string $table The name of the table to unlock.
+	 * @throws     SQLException No Statement could be created or executed.
+	 */
+	public function unlockTable(Connection $con, $table)
+	{
+		// Tables in Sybase are unlocked when a commit is issued.  The
+		// user may have issued a commit but do it here to be sure.
+		$con->commit();
+	}
+
+	/**
+	 * @see        DBAdapter::quoteIdentifier()
 	 */
 	public function quoteIdentifier($text)
 	{

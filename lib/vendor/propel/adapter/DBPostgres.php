@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: DBPostgres.php 64 2005-05-13 02:43:56Z root $
+ *  $Id: DBPostgres.php 536 2007-01-10 14:30:38Z heltem $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -19,7 +19,7 @@
  * and is licensed under the LGPL. For more information please see
  * <http://propel.phpdb.org>.
  */
- 
+
 require_once 'propel/adapter/DBAdapter.php';
 
 /**
@@ -27,91 +27,91 @@ require_once 'propel/adapter/DBAdapter.php';
  *
  * <a href="http://www.pgsql.org">http://www.pgsql.org</a>
  *
- * @author Hans Lellelid <hans@xmpl.org> (Propel)
- * @author Hakan Tandogan <hakan42@gmx.de> (Torque)
- * @version $Revision: 64 $
- * @package propel.adapter
+ * @author     Hans Lellelid <hans@xmpl.org> (Propel)
+ * @author     Hakan Tandogan <hakan42@gmx.de> (Torque)
+ * @version    $Revision: 536 $
+ * @package    propel.adapter
  */
 class DBPostgres extends DBAdapter {
 
-    /**
-     * This method is used to ignore case.
-     *
-     * @param string $in The string to transform to upper case.
-     * @return string The upper case string.
-     */
-    public function toUpperCase($in)
-    {
-        return "UPPER(" . $in . ")";
-    }
+	/**
+	 * This method is used to ignore case.
+	 *
+	 * @param      string $in The string to transform to upper case.
+	 * @return     string The upper case string.
+	 */
+	public function toUpperCase($in)
+	{
+		return "UPPER(" . $in . ")";
+	}
 
-    /**
-     * This method is used to ignore case.
-     *
-     * @param in The string whose case to ignore.
-     * @return The string in a case that can be ignored.
-     */
-    public function ignoreCase($in)
-    {
-        return "UPPER(" . $in . ")";
-    }
+	/**
+	 * This method is used to ignore case.
+	 *
+	 * @param      in The string whose case to ignore.
+	 * @return     The string in a case that can be ignored.
+	 */
+	public function ignoreCase($in)
+	{
+		return "UPPER(" . $in . ")";
+	}
 
-    /**
-     * Returns SQL which concatenates the second string to the first.
-     *
-     * @param string String to concatenate.
-     * @param string String to append.
-     * @return string 
-     */
-    public function concatString($s1, $s2)
-    {
-        return "($s1 || $s2)";
-    }
+	/**
+	 * Returns SQL which concatenates the second string to the first.
+	 *
+	 * @param      string String to concatenate.
+	 * @param      string String to append.
+	 * @return     string
+	 */
+	public function concatString($s1, $s2)
+	{
+		return "($s1 || $s2)";
+	}
 
-    /**
-     * Returns SQL which extracts a substring.
-     *
-     * @param string String to extract from.
-     * @param int Offset to start from.
-     * @param int Number of characters to extract.
-     * @return string 
-     */
-    public function subString($s, $pos, $len)
-    {
-        return "substring($s from $pos" . ($len > -1 ? "for $len" : "") . ")";
-    }
+	/**
+	 * Returns SQL which extracts a substring.
+	 *
+	 * @param      string String to extract from.
+	 * @param      int Offset to start from.
+	 * @param      int Number of characters to extract.
+	 * @return     string
+	 */
+	public function subString($s, $pos, $len)
+	{
+		return "substring($s from $pos" . ($len > -1 ? "for $len" : "") . ")";
+	}
 
-    /**
-     * Returns SQL which calculates the length (in chars) of a string.
-     *
-     * @param string String to calculate length of.
-     * @return string 
-     */
-    public function strLength($s)
-    {
-        return "char_length($s)";
-    }
-     
-    /**
-     * Locks the specified table.
-     *
-     * @param Connection $con The Creole connection to use.
-     * @param string $table The name of the table to lock.
-     * @exception SQLException No Statement could be created or executed.
-     */
-    public function lockTable(Connection $con, $table)
-    {
-    }
+	/**
+	 * Returns SQL which calculates the length (in chars) of a string.
+	 *
+	 * @param      string String to calculate length of.
+	 * @return     string
+	 */
+	public function strLength($s)
+	{
+		return "char_length($s)";
+	}
 
-    /**
-     * Unlocks the specified table.
-     *
-     * @param Connection $con The Creole connection to use.
-     * @param string $table The name of the table to unlock.
-     * @exception SQLException No Statement could be created or executed.
-     */
-    public function unlockTable(Connection $con, $table)
-    {
-    }
+	/**
+	 * Locks the specified table.
+	 *
+	 * @param      Connection $con The Creole connection to use.
+	 * @param      string $table The name of the table to lock.
+	 * @exception SQLException No Statement could be created or executed.
+	 */
+	public function lockTable(Connection $con, $table)
+	{
+	}
+
+	/**
+	 * Unlocks the specified table.
+	 *
+	 * @param      Connection $con The Creole connection to use.
+	 * @param      string $table The name of the table to unlock.
+	 * @exception SQLException No Statement could be created or executed.
+	 */
+	public function unlockTable(Connection $con, $table)
+	{
+	}
 
 }
