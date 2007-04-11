@@ -269,7 +269,7 @@ class ".$this->getClassname()." {
 ";
 			} else {
 					$script .= "
-		\$tMap->addColumn('$cup', '$cfc', '".$col->getPhpType()."', CreoleTypes::".$col->getType().", ".var_export($col->isNotNull(), true).");
+		\$tMap->addColumn('$cup', '$cfc', '".$col->getPhpType()."', CreoleTypes::".$col->getType().", ".var_export($col->isNotNull(), true).", ".$size.");
 ";
 				}
 			} // if col-is prim key

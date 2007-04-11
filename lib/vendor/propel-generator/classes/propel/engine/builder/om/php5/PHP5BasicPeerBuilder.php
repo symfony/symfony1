@@ -403,8 +403,16 @@ if (Propel::isInit()) {
 					$script .= "
 	/** A key representing a particular subclass */
 	const CLASSKEY_".strtoupper($child->getKey())." = '" . $child->getKey() . "';
+";
+					
+	if (strtoupper($child->getClassname()) != strtoupper($child->getKey())) {
+		$script .= "
 	/** A key representing a particular subclass */
-        const CLASSKEY_".strtoupper($child->getClassName())." = '" . $child->getKey() . "';
+	const CLASSKEY_".strtoupper($child->getClassname())." = '" . $child->getKey() . "';
+";
+	}
+	
+	$script .= "
 	/** A class that can be returned by this peer. */
 	const CLASSNAME_".strtoupper($child->getKey())." = '". $childBuilder->getClasspath() . "';
 ";
@@ -719,7 +727,7 @@ if (Propel::isInit()) {
 ";
 			foreach ($col->getChildren() as $child) {
 				$script .= "
-				case self::CLASSKEY_".$child->getKey().":
+				case self::CLASSKEY_".strtoupper($child->getKey()).":
 					\$omClass = self::CLASSNAME_".strtoupper($child->getKey()).";
 					break;
 ";

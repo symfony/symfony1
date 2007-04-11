@@ -67,7 +67,7 @@ DROP SEQUENCE ".$this->quoteIdentifier($table->getSequenceName()).";
 
 		$script .= "
 
-CREATE TABLE ".$table->getName()."
+CREATE TABLE ".$this->quoteIdentifier($table->getName())."
 (
 	";
 
@@ -105,11 +105,11 @@ CREATE TABLE ".$table->getName()."
 		if ( is_array($table->getPrimaryKey()) && count($table->getPrimaryKey()) ) {
 			$script .= "
 	ALTER TABLE ".$this->quoteIdentifier($table->getName())."
-		ADD CONSTRAINT ".substr($tableName,0,$length)."_PK
+		ADD CONSTRAINT ".$this->quoteIdentifier(substr($tableName,0,$length)."_PK")."
 	PRIMARY KEY (";
 			$delim = "";
 			foreach ($table->getPrimaryKey() as $col) {
-				echo $delim . $col->getName();
+				$script .= $delim . $this->quoteIdentifier($col->getName());
 				$delim = ",";
 			}
 	$script .= ");

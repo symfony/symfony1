@@ -734,13 +734,13 @@ class PropelCreoleTransformTask extends Task {
 		// create message
 		$colName = $column->getName();
 		$tableName = $column->getTable()->getName();
-		$msg = self::$validatorMessages[strtolower($type)];
+		$msg = self::$validatorMessages[strtolower($rule)];
 		array_unshift($tmp = compact($msg['var']), $msg['msg']);
 		$msg = call_user_func_array('sprintf', $tmp);
 
 		// add node
 		$node = $this->doc->createElement('rule');
-		$node->setAttribute('name', $type == 'type' ? 'notMatch' : $type);
+		$node->setAttribute('name', $rule == 'type' ? 'notMatch' : $rule);
 		$node->setAttribute('message', $msg);
 
 		return $node;
