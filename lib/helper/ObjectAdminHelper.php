@@ -195,7 +195,8 @@ function _get_propel_object_list($object, $method, $options)
 
 function _get_object_list($object, $method, $options, $callback)
 {
-  $object = get_class($object) == 'sfOutputEscaperObjectDecorator' ? $object->getRawValue() : $object;
+  $object = $object instanceof sfOutputEscaper ? $object->getRawValue() : $object;
+
   // the default callback is the propel one
   if (!$callback)
   {
