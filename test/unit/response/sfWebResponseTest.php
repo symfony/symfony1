@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(63, new lime_output_color());
+$t = new lime_test(71, new lime_output_color());
 
 class myWebResponse extends sfWebResponse
 {
@@ -202,18 +202,18 @@ $response = sfResponse::newInstance('myWebResponse');
 $response->initialize($context);
 $response->addJavascript('test');
 $t->ok($response->getParameterHolder()->has('test', 'helper/asset/auto/javascript'), '->addJavascript() adds a new javascript for the response');
-$response->addJavascript('foo', '');
+$response->addJavascript('foo', '', array('raw_name' => true));
 $t->ok($response->getParameterHolder()->has('foo', 'helper/asset/auto/javascript'), '->addJavascript() adds a new javascript for the response');
-$response->addJavascript('first', 'first');
-$t->ok($response->getParameterHolder()->has('first', 'helper/asset/auto/javascript/first'), '->addJavascript() takes a position as its second argument');
-$response->addJavascript('last', 'last');
-$t->ok($response->getParameterHolder()->has('last', 'helper/asset/auto/javascript/last'), '->addJavascript() takes a position as its second argument');
+$response->addJavascript('first_js', 'first');
+$t->ok($response->getParameterHolder()->has('first_js', 'helper/asset/auto/javascript/first'), '->addJavascript() takes a position as its second argument');
+$response->addJavascript('last_js', 'last');
+$t->ok($response->getParameterHolder()->has('last_js', 'helper/asset/auto/javascript/last'), '->addJavascript() takes a position as its second argument');
 
 // ->getJavascripts()
 $t->diag('->getJavascripts()');
-$t->is($response->getJavascripts(), array('test' => 'test', 'foo' => 'foo'), '->getJavascripts() returns all current registered javascripts');
-$t->is($response->getJavascripts('first'), array('first' => 'first'), '->getJavascripts() takes a position as its first argument');
-$t->is($response->getJavascripts('last'), array('last' => 'last'), '->getJavascripts() takes a position as its first argument');
+$t->is($response->getJavascripts(), array('test' => array(), 'foo' => array('raw_name' => true)), '->getJavascripts() returns all current registered javascripts');
+$t->is($response->getJavascripts('first'), array('first_js' => array()), '->getJavascripts() takes a position as its first argument');
+$t->is($response->getJavascripts('last'), array('last_js' => array()), '->getJavascripts() takes a position as its first argument');
 
 // ->setCookie() ->getCookies()
 $t->diag('->setCookie() ->getCookies()');
@@ -241,3 +241,46 @@ $response->setContent('foo');
 ob_start();
 $response->sendContent();
 $t->is(ob_get_clean(), 'foo', '->sendContent() returns the response content if headerOnly is false');
+
+
+sfLoader::loadHelpers(array('Helper', 'Tag', 'Url', 'Asset'));
+
+// use and get javascript()
+$t->diag('use and get javascript from the template');
+use_javascript('xmlhr');
+$t->is(get_javascripts(),
+  '<script type="text/javascript" src="/js/xmlhr.js"></script>'."\n", 
+  'get_javascripts() returns a javascript previously added by use_javascript()');
+use_javascript('xmlhr', '', array('raw_name' => true));
+$t->is(get_javascripts(),
+  '<script type="text/javascript" src="xmlhr"></script>'."\n", 
+  'use_javascript() accepts an array of options as a third parameter');
+use_javascript('xmlhr', '', array('absolute' => true));
+$t->is(get_javascripts(),
+  '<script type="text/javascript" src="http:///js/xmlhr.js"></script>'."\n", 
+  'use_javascript() accepts an array of options as a third parameter');
+use_javascript('xmlhr');
+use_javascript('xmlhr2');
+$t->is(get_javascripts(),
+  '<script type="text/javascript" src="/js/xmlhr.js"></script>'."\n".'<script type="text/javascript" src="/js/xmlhr2.js"></script>'."\n", 
+  'get_javascripts() returns all the javascripts previously added by use_javascript()');
+
+// use and get stylesheet()
+$t->diag('use and get stylesheet from the template');
+use_stylesheet('style');
+$t->is(get_stylesheets(),
+  '<link rel="stylesheet" type="text/css" media="screen" href="/css/style.css" />'."\n", 
+  'get_stylesheets() returns a stylesheet previously added by use_stylesheet()');
+use_stylesheet('style', '', array('raw_name' => true));
+$t->is(get_stylesheets(),
+  '<link rel="stylesheet" type="text/css" media="screen" href="style" />'."\n", 
+  'use_stylesheet() accepts an array of options as a third parameter');
+use_stylesheet('style', '', array('absolute' => true));
+$t->is(get_stylesheets(),
+  '<link rel="stylesheet" type="text/css" media="screen" href="http:///css/style.css" />'."\n", 
+  'use_stylesheet() accepts an array of options as a third parameter');
+use_stylesheet('style');
+use_stylesheet('style2');
+$t->is(get_stylesheets(),
+  '<link rel="stylesheet" type="text/css" media="screen" href="/css/style.css" />'."\n".'<link rel="stylesheet" type="text/css" media="screen" href="/css/style2.css" />'."\n",
+  'get_stylesheets() returns all the stylesheets previously added by use_stylesheet()');

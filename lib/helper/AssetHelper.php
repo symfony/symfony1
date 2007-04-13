@@ -94,14 +94,33 @@ function javascript_path($source, $absolute = false)
  */
 function javascript_include_tag()
 {
+  $sources = func_get_args();
+  $sourceOptions = (func_num_args() > 1 && is_array($sources[func_num_args() - 1])) ? array_pop($sources) : array();
+
   $html = '';
-  foreach (func_get_args() as $source)
+  foreach ($sources as $source)
   {
-    $source = javascript_path($source);
-    $html .= content_tag('script', '', array('type' => 'text/javascript', 'src' => $source))."\n";
+    
+    $absolute = false;
+    if (isset($sourceOptions['absolute']))
+    {
+      unset($sourceOptions['absolute']);
+      $absolute = true;
+    }
+  
+    if(!isset($sourceOptions['raw_name']))
+    {
+      $source = javascript_path($source, $absolute);
+    }
+    else
+    {
+      unset($sourceOptions['raw_name']);
+    }
+    $options = array_merge(array('type' => 'text/javascript', 'src' => $source), $sourceOptions);
+    $html   .= content_tag('script', '', $options)."\n";
   }
 
-  return $html;
+  return $html;  
 }
 
 /**
@@ -143,6 +162,8 @@ function stylesheet_path($source, $absolute = false)
  *    => <link href="/stylesheets/style.css" media="screen" rel="stylesheet" type="text/css" />
  *  echo stylesheet_tag('style', array('media' => 'all'));
  *    => <link href="/stylesheets/style.css" media="all" rel="stylesheet" type="text/css" />
+ *  echo stylesheet_tag('style', array('raw_name' => true));
+ *    => <link href="style" media="all" rel="stylesheet" type="text/css" />
  *  echo stylesheet_tag('random.styles', '/css/stylish');
  *    => <link href="/stylesheets/random.styles" media="screen" rel="stylesheet" type="text/css" />
  *       <link href="/css/stylish.css" media="screen" rel="stylesheet" type="text/css" />
@@ -161,7 +182,21 @@ function stylesheet_tag()
   $html = '';
   foreach ($sources as $source)
   {
-    $source  = stylesheet_path($source);
+    $absolute = false;
+    if (isset($sourceOptions['absolute']))
+    {
+      unset($sourceOptions['absolute']);
+      $absolute = true;
+    }
+        
+    if(!isset($sourceOptions['raw_name']))
+    {
+      $source = stylesheet_path($source, $absolute);
+    }
+    else
+    {
+      unset($sourceOptions['raw_name']);
+    }
     $options = array_merge(array('rel' => 'stylesheet', 'type' => 'text/css', 'media' => 'screen', 'href' => $source), $sourceOptions);
     $html   .= tag('link', $options)."\n";
   }
@@ -184,9 +219,9 @@ function use_stylesheet($css, $position = '', $options = array())
  *
  * @see sfResponse->addJavascript()
  */
-function use_javascript($js, $position = '')
+function use_javascript($js, $position = '', $options = array())
 {
-  sfContext::getInstance()->getResponse()->addJavascript($js, $position);
+  sfContext::getInstance()->getResponse()->addJavascript($js, $position, $options);
 }
 
 /**
@@ -268,7 +303,15 @@ function image_tag($source, $options = array())
     $absolute = true;
   }
 
-  $options['src'] = image_path($source, $absolute);
+  if(!isset($options['raw_name']))
+  {
+    $options['src'] = image_path($source, $absolute);
+  }
+  else
+  {
+    $options['src'] = $source;
+    unset($options['raw_name']);
+  }
 
   if (!isset($options['alt']))
   {
@@ -411,7 +454,7 @@ function get_javascripts()
 
   foreach (array('first', '', 'last') as $position)
   {
-    foreach ($response->getJavascripts($position) as $files)
+    foreach ($response->getJavascripts($position) as $files => $options)
     {
       if (!is_array($files))
       {
@@ -420,12 +463,10 @@ function get_javascripts()
 
       foreach ($files as $file)
       {
-        $file = javascript_path($file);
-
         if (isset($already_seen[$file])) continue;
 
         $already_seen[$file] = 1;
-        $html .= javascript_include_tag($file);
+        $html .= javascript_include_tag($file, $options);
       }
     }
   }
@@ -471,8 +512,6 @@ function get_stylesheets()
 
       foreach ($files as $file)
       {
-        $file = stylesheet_path($file);
-
         if (isset($already_seen[$file])) continue;
 
         $already_seen[$file] = 1;

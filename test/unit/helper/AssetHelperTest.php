@@ -12,7 +12,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 sfLoader::loadHelpers(array('Helper', 'Tag', 'Url', 'Asset'));
 
-$t = new lime_test(15, new lime_output_color());
+$t = new lime_test(37, new lime_output_color());
 
 class myRequest
 {
@@ -81,51 +81,66 @@ $t->is(image_tag('/images/test'), '<img src="/images/test.png" alt="Test" />', '
 $t->is(image_tag('test.jpg'), '<img src="/images/test.jpg" alt="Test" />', 'image_tag() can take an image name with an extension');
 $t->is(image_tag('test', array('alt' => 'Foo')), '<img alt="Foo" src="/images/test.png" />', 'image_tag() takes an array of options as its second argument to override alt');
 $t->is(image_tag('test', array('size' => '10x10')), '<img src="/images/test.png" alt="Test" height="10" width="10" />', 'image_tag() takes a size option');
+$t->is(image_tag('test', array('absolute' => true)), '<img src="http://localhost/images/test.png" alt="Test" />', 'image_tag() can take an absolute parameter');
 $t->is(image_tag('test', array('class' => 'bar')), '<img class="bar" src="/images/test.png" alt="Test" />', 'image_tag() takes whatever option you want');
-/*
-// stylesheet_tag()
-$t->is(stylesheet_tag('style'), '<link rel="stylesheet" type="text/css" media="screen" href="/css/style.css" />'."\n", 'stylesheet_tag() takes a stylesheet name as its first argument');
 
+// stylesheet_tag()
+$t->diag('stylesheet_tag()');
+$t->is(stylesheet_tag('style'), 
+  '<link rel="stylesheet" type="text/css" media="screen" href="/css/style.css" />'."\n", 
+  'stylesheet_tag() takes a stylesheet name as its first argument');
 $t->is(stylesheet_tag('random.styles', '/css/stylish'),
   '<link rel="stylesheet" type="text/css" media="screen" href="/css/random.styles" />'."\n".
-  '<link rel="stylesheet" type="text/css" media="screen" href="/css/stylish.css" />'."\n", 'stylesheet_tag() can takes n stylesheet names as its arguments');
+  '<link rel="stylesheet" type="text/css" media="screen" href="/css/stylish.css" />'."\n", 
+  'stylesheet_tag() can takes n stylesheet names as its arguments');
+$t->is(stylesheet_tag('style', array('media' => 'all')), 
+  '<link rel="stylesheet" type="text/css" media="all" href="/css/style.css" />'."\n", 
+  'stylesheet_tag() can take a media option');
+$t->is(stylesheet_tag('style', array('absolute' => true)), 
+  '<link rel="stylesheet" type="text/css" media="screen" href="http://localhost/css/style.css" />'."\n", 
+  'stylesheet_tag() can take an absolute option to output an absolute file name');
+$t->is(stylesheet_tag('style', array('raw_name' => true)), 
+  '<link rel="stylesheet" type="text/css" media="screen" href="style" />'."\n", 
+  'stylesheet_tag() can take a raw_name option to bypass file name decoration');
 
 // javascript_include_tag()
+$t->diag('javascript_include_tag()');
 $t->is(javascript_include_tag('xmlhr'),
-  '<script type="text/javascript" src="/js/xmlhr.js"></script>'."\n");
-
+  '<script type="text/javascript" src="/js/xmlhr.js"></script>'."\n", 
+  'javascript_include_tag() takes a javascript name as its first argument');
 $t->is(javascript_include_tag('common.javascript', '/elsewhere/cools'),
   '<script type="text/javascript" src="/js/common.javascript"></script>'."\n".
-  '<script type="text/javascript" src="/elsewhere/cools.js"></script>'."\n");
+  '<script type="text/javascript" src="/elsewhere/cools.js"></script>'."\n",
+  'javascript_include_tag() can takes n javascript file names as its arguments');
+$t->is(javascript_include_tag('xmlhr', array('absolute' => true)),
+  '<script type="text/javascript" src="http://localhost/js/xmlhr.js"></script>'."\n", 
+  'javascript_include_tag() can take an absolute option to output an absolute file name');
+$t->is(javascript_include_tag('xmlhr', array('raw_name' => true)),
+  '<script type="text/javascript" src="xmlhr"></script>'."\n", 
+  'javascript_include_tag() can take a raw_name option to bypass file name decoration');
 
-// asset_javascript_path()
-$t->is(javascript_path('xmlhr'),
-  '/js/xmlhr.js');
+// javascript_path()
+$t->diag('javascript_path()');
+$t->is(javascript_path('xmlhr'), '/js/xmlhr.js', 'javascript_path() decorates a relative filename with js dir name and extension');
+$t->is(javascript_path('/xmlhr'), '/xmlhr.js', 'javascript_path() does not decorate absolute file names with js dir name');
+$t->is(javascript_path('xmlhr.foo'), '/js/xmlhr.foo', 'javascript_path() does not decorate file names with extension with .js');
+$t->is(javascript_path('xmlhr.foo', true), 'http://localhost/js/xmlhr.foo', 'javascript_path() accepts a second parameter to output an absolute resource path');
 
-// asset_style_path()
-$t->is(stylesheet_path('style'),
-  '/css/style.css');
+// stylesheet_path()
+$t->diag('stylesheet_path()');
+$t->is(stylesheet_path('style'), '/css/style.css', 'stylesheet_path() decorates a relative filename with css dir name and extension');
+$t->is(stylesheet_path('/style'), '/style.css', 'stylesheet_path() does not decorate absolute file names with css dir name');
+$t->is(stylesheet_path('style.foo'), '/css/style.foo', 'stylesheet_path() does not decorate file names with extension with .css');
+$t->is(stylesheet_path('style.foo', true), 'http://localhost/css/style.foo', 'stylesheet_path() accepts a second parameter to output an absolute resource path');
 
-// asset_style_link()
-$t->is(stylesheet_tag('style'),
-  "<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"/css/style.css\" />\n");
+// image_path()
+$t->diag('image_path()');
+$t->is(image_path('img'), '/images/img.png', 'image_path() decorates a relative filename with images dir name and png extension');
+$t->is(image_path('/img'), '/img.png', 'image_path() does not decorate absolute file names with images dir name');
+$t->is(image_path('img.jpg'), '/images/img.jpg', 'image_path() does not decorate file names with extension with .png');
+$t->is(image_path('img.jpg', true), 'http://localhost/images/img.jpg', 'image_path() accepts a second parameter to output an absolute resource path');
 
-$t->is(stylesheet_tag('random.styles', '/css/stylish'),
-  "<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"/css/random.styles\" />\n".
-  "<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"/css/stylish.css\" />\n");
-
-// asset_image_path()
-$t->is(image_path('xml'), '/images/xml.png');
-
-// asset_image_tag()
-$t->is(image_tag('xml'),
-  '<img src="/images/xml.png" alt="Xml" />');
-
-$t->is(image_tag('rss', array('alt' => 'rss syndication')),
-  '<img alt="rss syndication" src="/images/rss.png" />');
-
-$t->is(image_tag('gold', array('size' => '45x70')),
-  '<img src="/images/gold.png" alt="Gold" height="70" width="45" />');
+/*
 
 // auto_discovery_link_tag()
 $t->is(auto_discovery_link_tag(),
@@ -151,48 +166,4 @@ $t->is(auto_discovery_link_tag('atom'),
 $t->is(auto_discovery_link_tag(),
   '<link href="http://www.example.com/mypath" rel="alternate" title="RSS" type="application/rss+xml" />');
 
-// javascript_path()
-$t->is(javascript_path('xmlhr'),
-  '/mypath/js/xmlhr.js');
-
-// javascript_include()
-$t->is(javascript_include_tag('xmlhr'),
-  '<script type="text/javascript" src="/mypath/js/xmlhr.js"></script>'."\n");
-
-$t->is(javascript_include_tag('common.javascript', '/elsewhere/cools'),
-  '<script type="text/javascript" src="/mypath/js/common.javascript"></script>'."\n".
-  '<script type="text/javascript" src="/mypath/elsewhere/cools.js"></script>'."\n");
-
-// style_path()
-$t->is(stylesheet_path('style'),
-  '/mypath/css/style.css');
-
-// style_link()
-$t->is(stylesheet_tag('style'),
-  '<link rel="stylesheet" type="text/css" media="screen" href="/mypath/css/style.css" />'."\n");
-
-$t->is(stylesheet_tag('random.styles', '/css/stylish'),
-  '<link rel="stylesheet" type="text/css" media="screen" href="/mypath/css/random.styles" />'."\n".
-  '<link rel="stylesheet" type="text/css" media="screen" href="/mypath/css/stylish.css" />'."\n");
-
-// image_path()
-$t->is(image_path('xml'),
-  '/mypath/images/xml.png');
-
-// image_tag()
-$t->is(image_tag('xml'),
-  '<img src="/mypath/images/xml.png" alt="Xml" />');
-
-$t->is(image_tag('rss', array('alt' => 'rss syndication')),
-  '<img alt="rss syndication" src="/mypath/images/rss.png" />');
-
-$t->is(image_tag('gold', array('size' => '45x70')),
-  '<img src="/mypath/images/gold.png" alt="Gold" height="70" width="45" />');
-
-$t->is(image_tag('http://www.example.com/images/icon.gif'),
-  '<img src="http://www.example.com/images/icon.gif" alt="Icon" />');
-
-// stylesheet_with_asset_host_already_encoded()
-$t->is(stylesheet_tag("http://bar.example.com/css/style.css"),
-  '<link rel="stylesheet" type="text/css" media="screen" href="http://bar.example.com/css/style.css" />'."\n");
 */

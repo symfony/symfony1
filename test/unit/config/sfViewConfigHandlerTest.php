@@ -47,7 +47,7 @@ $handler->mergeConfig(array(
   ),
 ));
 $content = <<<EOF
-  \$response->addJavascript('foobar');
+  \$response->addJavascript('foobar', '', array ());
 
 EOF;
 $t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() adds JavaScript to the response');
@@ -157,8 +157,8 @@ $handler->mergeConfig(array(
   ),
 ));
 $content = <<<EOF
-  \$response->addJavascript('all_foobar');
-  \$response->addJavascript('foobar');
+  \$response->addJavascript('all_foobar', '', array ());
+  \$response->addJavascript('foobar', '', array ());
 
 EOF;
 $t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() adds view-specific javascripts after application-wide assets');
@@ -172,8 +172,8 @@ $handler->mergeConfig(array(
   ),
 ));
 $content = <<<EOF
-  \$response->addJavascript('all_foobar');
-  \$response->addJavascript('foobar');
+  \$response->addJavascript('all_foobar', '', array ());
+  \$response->addJavascript('foobar', '', array ());
 
 EOF;
 $t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() adds view-specific javascripts after application-wide assets');
@@ -187,8 +187,8 @@ $handler->mergeConfig(array(
   ),
 ));
 $content = <<<EOF
-  \$response->addJavascript('default_foobar');
-  \$response->addJavascript('foobar');
+  \$response->addJavascript('default_foobar', '', array ());
+  \$response->addJavascript('foobar', '', array ());
 
 EOF;
 $t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() adds view-specific javascripts after default assets');
@@ -202,8 +202,8 @@ $handler->mergeConfig(array(
   ),
 ));
 $content = <<<EOF
-  \$response->addJavascript('default_foobar');
-  \$response->addJavascript('foobar');
+  \$response->addJavascript('default_foobar', '', array ());
+  \$response->addJavascript('foobar', '', array ());
 
 EOF;
 $t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() adds view-specific javascripts after default assets');
@@ -217,8 +217,8 @@ $handler->mergeConfig(array(
   ),
 ));
 $content = <<<EOF
-  \$response->addJavascript('default_foobar');
-  \$response->addJavascript('all_foobar');
+  \$response->addJavascript('default_foobar', '', array ());
+  \$response->addJavascript('all_foobar', '', array ());
 
 EOF;
 $t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() adds application-specific javascripts after default assets');
@@ -232,8 +232,8 @@ $handler->mergeConfig(array(
   ),
 ));
 $content = <<<EOF
-  \$response->addJavascript('default_foobar');
-  \$response->addJavascript('all_foobar');
+  \$response->addJavascript('default_foobar', '', array ());
+  \$response->addJavascript('all_foobar', '', array ());
 
 EOF;
 $t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() adds application-specific javascripts after default assets');
@@ -265,8 +265,8 @@ $handler->mergeConfig(array(
   ),
 ));
 $content = <<<EOF
-  \$response->addJavascript('all_foo');
-  \$response->addJavascript('foobar');
+  \$response->addJavascript('all_foo', '', array ());
+  \$response->addJavascript('foobar', '', array ());
 
 EOF;
 $t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() supports the - option to remove one javascript previously added');
@@ -288,7 +288,7 @@ $handler->mergeConfig(array(
   ),
 ));
 $content = <<<EOF
-  \$response->addJavascript('baz');
+  \$response->addJavascript('baz', '', array ());
 
 EOF;
 $t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() supports the -* option to remove all javascripts previously added');
@@ -323,7 +323,7 @@ $handler->mergeConfig(array(
 ));
 $content = <<<EOF
   \$response->addStylesheet('bar', '', array ());
-  \$response->addJavascript('bar');
+  \$response->addJavascript('bar', '', array ());
 
 EOF;
 $t->is(fix_content($handler->addHtmlAsset('myView')), fix_content($content), 'addHtmlAsset() supports the -* option to remove all assets previously added');
