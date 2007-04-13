@@ -11,8 +11,10 @@
 /**
  * sfDomCssSelector allows to navigate a DOM with CSS selector.
  *
- * based on getElementsBySelector version 0.4 - Simon Willison, March 25th 2003
+ * Based on getElementsBySelector version 0.4 - Simon Willison, March 25th 2003
  * http://simon.incutio.com/archive/2003/03/25/getElementsBySelector
+ *
+ * Some methods based on the jquery library
  *
  * @package    symfony
  * @subpackage util
@@ -21,13 +23,49 @@
  */
 class sfDomCssSelector
 {
-  protected $dom = null;
+  public $nodes = array();
 
-  public function __construct($dom)
+  public function __construct($nodes)
   {
-    $this->dom = $dom;
+    if (!is_array($nodes))
+    {
+      $nodes = array($nodes);
+    }
+
+    $this->nodes = $nodes;
   }
 
+  public function getValue()
+  {
+    return $this->nodes[0]->nodeValue;
+  }
+
+  public function getValues()
+  {
+    $values = array();
+    foreach ($this->nodes as $node)
+    {
+      $values[] = $node->nodeValue;
+    }
+
+    return $values;
+  }
+
+  public function matchSingle($selector)
+  {
+    $nodes = $this->getElements($selector);
+
+    return new sfDomCssSelector($nodes[0]);
+  }
+
+  public function matchAll($selector)
+  {
+    $nodes = $this->getElements($selector);
+
+    return new sfDomCssSelector($nodes);
+  }
+
+  /* DEPRECATED */
   public function getTexts($selector)
   {
     $texts = array();
@@ -39,23 +77,47 @@ class sfDomCssSelector
     return $texts;
   }
 
+  /* DEPRECATED */
   public function getElements($selector)
+  {
+    $nodes = array();
+    foreach ($this->nodes as $node)
+    {
+      $result_nodes = $this->getElementsForNode($selector, $node);
+      if ($result_nodes)
+      {
+        $nodes = array_merge($nodes, $result_nodes);
+      }
+    }
+
+    foreach ($nodes as $node)
+    {
+      $node->removeAttribute('sf_matched');
+    }
+
+    return $nodes;
+  }
+
+  protected function getElementsForNode($selector, $root_node)
   {
     $all_nodes = array();
     foreach ($this->tokenize_selectors($selector) as $selector)
     {
-      $nodes = array($this->dom);
+      $nodes = array($root_node);
       foreach ($this->tokenize($selector) as $token)
       {
         $combinator = $token['combinator'];
+        $selector = $token['selector'];
+
         $token = trim($token['name']);
+
         $pos = strpos($token, '#');
         if (false !== $pos && preg_match('/^[A-Za-z0-9]*$/', substr($token, 0, $pos)))
         {
           // Token is an ID selector
           $tagName = substr($token, 0, $pos);
           $id = substr($token, $pos + 1);
-          $xpath = new DomXPath($this->dom);
+          $xpath = new DomXPath($root_node);
           $element = $xpath->query(sprintf("//*[@id = '%s']", $id))->item(0);
           if (!$element || ($tagName && strtolower($element->nodeName) != $tagName))
           {
@@ -65,12 +127,13 @@ class sfDomCssSelector
 
           // Set nodes to contain just this element
           $nodes = array($element);
+          $nodes = $this->matchCustomSelector($nodes, $selector);
 
           continue; // Skip to next token
         }
 
         $pos = strpos($token, '.');
-        if (false !== $pos && preg_match('/^[A-Za-z0-9]*$/', substr($token, 0, $pos)))
+        if (false !== $pos && preg_match('/^[A-Za-z0-9\*]*$/', substr($token, 0, $pos)))
         {
           // Token contains a class selector
           $tagName = substr($token, 0, $pos);
@@ -91,11 +154,13 @@ class sfDomCssSelector
             }
           }
 
+          $nodes = $this->matchCustomSelector($nodes, $selector);
+
           continue; // Skip to next token
         }
 
         // Code to deal with attribute selectors
-        if (preg_match('/^(\w*)(\[.+\])$/', $token, $matches))
+        if (preg_match('/^(\w+|\*)(\[.+\])$/', $token, $matches))
         {
           $tagName = $matches[1] ? $matches[1] : '*';
           preg_match_all('/
@@ -165,6 +230,8 @@ class sfDomCssSelector
 
         // If we get here, token is JUST an element (not a class or ID selector)
         $nodes = $this->getElementsByTagName($nodes, $token, $combinator);
+
+        $nodes = $this->matchCustomSelector($nodes, $selector);
       }
 
       foreach ($nodes as $node)
@@ -175,11 +242,6 @@ class sfDomCssSelector
           $all_nodes[] = $node;
         }
       }
-    }
-
-    foreach ($all_nodes as $node)
-    {
-      $node->removeAttribute('sf_matched');
     }
 
     return $all_nodes;
@@ -214,6 +276,8 @@ class sfDomCssSelector
             $founds[] = $element;
           }
           break;
+        default:
+          throw new Exception(sprintf('Unrecognized combinator "%s"', $combinator));
       }
     }
 
@@ -290,6 +354,168 @@ class sfDomCssSelector
       $tokens[] = $token;
     }
 
+    foreach ($tokens as &$token)
+    {
+      list($token['name'], $token['selector']) = $this->tokenize_selector_name($token['name']);
+    }
+
     return $tokens;
+  }
+
+  protected function tokenize_selector_name($token_name)
+  {
+    // split custom selector
+    $quoted = false;
+    $name = '';
+    $selector = '';
+    $in_selector = false;
+    for ($i = 0, $max = strlen($token_name); $i < $max; $i++)
+    {
+      if ('"' == $token_name[$i])
+      {
+        $quoted = $quoted ? false : true;
+      }
+
+      if (!$quoted && ':' == $token_name[$i])
+      {
+        $in_selector = true;
+      }
+
+      if ($in_selector)
+      {
+        $selector .= $token_name[$i];
+      }
+      else
+      {
+        $name .= $token_name[$i];
+      }
+    }
+
+    return array($name, $selector);
+  }
+
+  protected function matchCustomSelector($nodes, $selector)
+  {
+    if (!$selector)
+    {
+      return $nodes;
+    }
+
+    $selector = $this->tokenize_custom_selector($selector);
+    $matchingNodes = array();
+    for ($i = 0, $max = count($nodes); $i < $max; $i++)
+    {
+      switch ($selector['selector'])
+      {
+        case 'contains':
+          if (false !== strpos($nodes[$i]->textContent, $selector['parameter']))
+          {
+            $matchingNodes[] = $nodes[$i];
+          }
+          break;
+        case 'nth-child':
+          if ($nodes[$i] === $this->nth($nodes[$i]->parentNode->firstChild, (integer) $selector['parameter']))
+          {
+            $matchingNodes[] = $nodes[$i];
+          }
+          break;
+        case 'first-child':
+          if ($nodes[$i] === $this->nth($nodes[$i]->parentNode->firstChild))
+          {
+            $matchingNodes[] = $nodes[$i];
+          }
+          break;
+        case 'last-child':
+          if ($nodes[$i] === $this->nth($nodes[$i]->parentNode->lastChild, 1, 'previousSibling'))
+          {
+            $matchingNodes[] = $nodes[$i];
+          }
+          break;
+        case 'lt':
+          if ($i < (integer) $selector['parameter'])
+          {
+            $matchingNodes[] = $nodes[$i];
+          }
+          break;
+        case 'gt':
+          if ($i > (integer) $selector['parameter'])
+          {
+            $matchingNodes[] = $nodes[$i];
+          }
+          break;
+        case 'odd':
+          if ($i % 2)
+          {
+            $matchingNodes[] = $nodes[$i];
+          }
+          break;
+        case 'even':
+          if (0 == $i % 2)
+          {
+            $matchingNodes[] = $nodes[$i];
+          }
+          break;
+        case 'nth':
+        case 'eq':
+          if ($i == (integer) $selector['parameter'])
+          {
+            $matchingNodes[] = $nodes[$i];
+          }
+          break;
+        case 'first':
+          if ($i == 0)
+          {
+            $matchingNodes[] = $nodes[$i];
+          }
+          break;
+        case 'last':
+          if ($i == $max - 1)
+          {
+            $matchingNodes[] = $nodes[$i];
+          }
+          break;
+        default:
+          throw new Exception(sprintf('Unrecognized selector "%s"', $selector['selector']));
+      }
+    }
+
+    return $matchingNodes;
+  }
+
+  protected function tokenize_custom_selector($selector)
+  {
+    if (!preg_match('/
+      ([a-zA-Z0-9\-]+)
+      (?:
+        \(
+          (?:
+            ("|\')(.*)?\2
+            |
+            (.*?)
+          )
+        \)
+      )?
+    /x', substr($selector, 1), $matches))
+    {
+      throw new Exception(sprintf('Unable to parse custom selector "%s"', $selector));
+    }
+    return array('selector' => $matches[1], 'parameter' => isset($matches[3]) ? ($matches[3] ? $matches[3] : $matches[4]) : '');
+  }
+
+  protected function nth($cur, $result = 1, $dir = 'nextSibling')
+  {
+    $num = 0;
+    for (; $cur; $cur = $cur->$dir)
+    {
+      if (1 == $cur->nodeType)
+      {
+        ++$num;
+      }
+
+      if ($num == $result)
+      {
+        return $cur;
+      }
+    }
   }
 }

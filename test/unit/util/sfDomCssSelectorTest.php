@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(35, new lime_output_color());
+$t = new lime_test(56, new lime_output_color());
 
 $html = <<<EOF
 <html>
@@ -27,24 +27,29 @@ $html = <<<EOF
 
     <p onclick="javascript:alert('with a . and a # inside an attribute');">works great</p>
 
-    <ul id="list">
-      <li>First</li>
-      <li>Second with a <a href="http://www.google.com/" class="foo1 bar1 bar1-foo1 foobar1">link</a></li>
-    </ul>
+    <div id="simplelist">
+      <ul id="list">
+        <li>First</li>
+        <li>Second with a <a href="http://www.google.com/" class="foo1 bar1 bar1-foo1 foobar1">link</a></li>
+      </ul>
 
-    <ul id="anotherlist">
-      <li>First</li>
-      <li>Third with a <a class="bar1-foo1">another link</a></li>
-    </ul>
+      <ul id="anotherlist">
+        <li>First</li>
+        <li>Second</li>
+        <li>Third with <a class="bar1-foo1">another link</a></li>
+      </ul>
+    </div>
 
     <h2>Title 2</h2>
     <ul id="mylist">
       <li>element 1</li>
       <li>element 2</li>
-      <ul>
-        <li>element 3</li>
-        <li>element 4</li>
-      </ul>
+      <li>
+        <ul>
+          <li>element 3</li>
+          <li>element 4</li>
+        </ul>
+      </li>
     </ul>
 
     <div id="combinators">
@@ -67,20 +72,22 @@ $dom = new DomDocument('1.0', 'utf-8');
 $dom->validateOnParse = true;
 $dom->loadHTML($html);
 
+$c = new sfDomCssSelector($dom);
+
 // ->getTexts()
 $t->diag('->getTexts()');
-
-$c = new sfDomCssSelector($dom);
 
 $t->diag('basic selectors');
 $t->is($c->getTexts('h1'), array('Test page'), '->getTexts() takes a CSS selector as its first argument');
 $t->is($c->getTexts('h2'), array('Title 1', 'Title 2'), '->getTexts() returns an array of matching texts');
 $t->is($c->getTexts('#footer'), array('footer'), '->getTexts() supports searching html elements by id');
 $t->is($c->getTexts('div#footer'), array('footer'), '->getTexts() supports searching html elements by id for a tag name');
+$t->is($c->getTexts('*[class="myfoo"]'), array('myfoo', 'myfoo bis'), '->getTexts() can take a * to match every elements');
 
 $t->is($c->getTexts('.header'), array('header'), '->getTexts() supports searching html elements by class name');
 $t->is($c->getTexts('p.header'), array('header'), '->getTexts() supports searching html elements by class name for a tag name');
 $t->is($c->getTexts('div.header'), array(), '->getTexts() supports searching html elements by class name for a tag name');
+$t->is($c->getTexts('*.header'), array('header'), '->getTexts() supports searching html elements by class name');
 
 $t->is($c->getTexts('.foo'), array('multi-classes'), '->getTexts() supports searching html elements by class name for multi-class elements');
 $t->is($c->getTexts('.bar'), array('multi-classes'), '->getTexts() supports searching html elements by class name for multi-class elements');
@@ -120,3 +127,35 @@ $t->is($c->getTexts('h1, h1,h1'), array('Test page'), '->getTexts() returns node
 $t->is($c->getTexts('h1,h2,h1'), array('Test page', 'Title 1', 'Title 2'), '->getTexts() returns nodes only once for multiple selectors');
 
 $t->is($c->getTexts('p[onclick*="a . and a #"], div#combinators > ul + li'), array('works great', 'test 1'), '->getTexts() mega example!');
+
+$t->is($c->getTexts('.myfoo:contains("bis")'), array('myfoo bis'), '->getTexts() :contains()');
+$t->is($c->getTexts('.myfoo:eq(1)'), array('myfoo bis'), '->getTexts() :eq()');
+$t->is($c->getTexts('.myfoo:last'), array('myfoo bis'), '->getTexts() :last');
+$t->is($c->getTexts('.myfoo:first'), array('myfoo'), '->getTexts() :first');
+$t->is($c->getTexts('h2:first'), array('Title 1'), '->getTexts() :first');
+$t->is($c->getTexts('p.myfoo:first'), array('myfoo'), '->getTexts() :first');
+$t->is($c->getTexts('p:lt(2)'), array('header', 'multi-classes'), '->getTexts() :lt');
+$t->is($c->getTexts('p:gt(2)'), array('myfoo bis', 'works great'), '->getTexts() :gt');
+$t->is($c->getTexts('p:odd'), array('multi-classes', 'myfoo bis'), '->getTexts() :odd');
+$t->is($c->getTexts('p:even'), array('header', 'myfoo', 'works great'), '->getTexts() :even');
+$t->is($c->getTexts('#simplelist li:first-child'), array('First', 'First'), '->getTexts() :first-child');
+$t->is($c->getTexts('#simplelist li:nth-child(1)'), array('First', 'First'), '->getTexts() :nth-child');
+$t->is($c->getTexts('#simplelist li:nth-child(2)'), array('Second with a link', 'Second'), '->getTexts() :nth-child');
+$t->is($c->getTexts('#simplelist li:nth-child(3)'), array('Third with another link'), '->getTexts() :nth-child');
+$t->is($c->getTexts('#simplelist li:last-child'), array('Second with a link', 'Third with another link'), '->getTexts() :last-child');
+
+// ->matchAll()
+$t->diag('->matchAll()');
+$t->is($c->matchAll('ul')->matchAll('li')->getValues(), $c->matchAll('ul li')->getValues(), '->matchAll() returns a new sfDomCssSelector restricted to the result nodes');
+
+// ->matchSingle()
+$t->diag('->matchSingle()');
+$t->is(array($c->matchAll('ul li')->getValue()), $c->matchSingle('ul li')->getValues(), '->matchSingle() returns a new sfDomCssSelector restricted to the first result node');
+
+// ->getValues()
+$t->diag('->getValues()');
+$t->is($c->matchAll('p.myfoo')->getValues(), array('myfoo', 'myfoo bis'), '->getValues() returns all node values');
+
+// ->getValue()
+$t->diag('->getValue()');
+$t->is($c->matchAll('h1')->getValue(), 'Test page', '->getValue() returns the first node value');

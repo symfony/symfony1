@@ -252,7 +252,7 @@ class sfTestBrowser extends sfBrowser
   /**
    * Tests that the current response matches a given CSS selector.
    *
-   * @param string The response selector
+   * @param string The response selector or a sfDomCssSelector object
    * @param string Flag for the selector
    * @param array Options for the current test
    *
@@ -260,41 +260,48 @@ class sfTestBrowser extends sfBrowser
    */
   public function checkResponseElement($selector, $value = true, $options = array())
   {
-    $texts = $this->getResponseDomCssSelector()->getTexts($selector);
+    if (is_object($selector))
+    {
+      $values = $selector->getValues();
+    }
+    else
+    {
+      $values = $this->getResponseDomCssSelector()->matchAll($selector)->getValues();
+    }
 
     if (false === $value)
     {
-      $this->test->is(count($texts), 0, sprintf('response selector "%s" does not exist', $selector));
+      $this->test->is(count($values), 0, sprintf('response selector "%s" does not exist', $selector));
     }
     else if (true === $value)
     {
-      $this->test->cmp_ok(count($texts), '>', 0, sprintf('response selector "%s" exists', $selector));
+      $this->test->cmp_ok(count($values), '>', 0, sprintf('response selector "%s" exists', $selector));
     }
     else if (is_int($value))
     {
-      $this->test->is(count($texts), $value, sprintf('response selector "%s" matches "%s" times', $selector, $value));
+      $this->test->is(count($values), $value, sprintf('response selector "%s" matches "%s" times', $selector, $value));
     }
     else if (preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $value, $match))
     {
       $position = isset($options['position']) ? $options['position'] : 0;
       if ($match[1] == '!')
       {
-        $this->test->unlike(@$texts[$position], substr($value, 1), sprintf('response selector "%s" does not match regex "%s"', $selector, substr($value, 1)));
+        $this->test->unlike(@$values[$position], substr($value, 1), sprintf('response selector "%s" does not match regex "%s"', $selector, substr($value, 1)));
       }
       else
       {
-        $this->test->like(@$texts[$position], $value, sprintf('response selector "%s" matches regex "%s"', $selector, $value));
+        $this->test->like(@$values[$position], $value, sprintf('response selector "%s" matches regex "%s"', $selector, $value));
       }
     }
     else
     {
       $position = isset($options['position']) ? $options['position'] : 0;
-      $this->test->is(@$texts[$position], $value, sprintf('response selector "%s" matches "%s"', $selector, $value));
+      $this->test->is(@$values[$position], $value, sprintf('response selector "%s" matches "%s"', $selector, $value));
     }
 
     if (isset($options['count']))
     {
-      $this->test->is(count($texts), $options['count'], sprintf('response selector "%s" matches "%s" times', $selector, $options['count']));
+      $this->test->is(count($values), $options['count'], sprintf('response selector "%s" matches "%s" times', $selector, $options['count']));
     }
 
     return $this;
