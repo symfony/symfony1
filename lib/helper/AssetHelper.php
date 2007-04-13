@@ -297,15 +297,24 @@ function _compute_public_path($source, $dir, $ext, $absolute = false)
 
   $request = sfContext::getInstance()->getRequest();
   $sf_relative_url_root = $request->getRelativeUrlRoot();
-  if (strpos($source, '/') !== 0)
+  if (0 !== strpos($source, '/'))
   {
     $source = $sf_relative_url_root.'/'.$dir.'/'.$source;
   }
-  if (strpos(basename($source), '.') === false)
+
+  $query_string = '';
+  if (false !== $pos = strpos($source, '?'))
+  {
+    $query_string = substr($source, $pos);
+    $source = substr($source, 0, $pos);
+  }
+
+  if (false === strpos(basename($source), '.'))
   {
     $source .= '.'.$ext;
   }
-  if ($sf_relative_url_root && strpos($source, $sf_relative_url_root) !== 0)
+
+  if ($sf_relative_url_root && 0 !== strpos($source, $sf_relative_url_root))
   {
     $source = $sf_relative_url_root.$source;
   }
@@ -315,7 +324,7 @@ function _compute_public_path($source, $dir, $ext, $absolute = false)
     $source = 'http'.($request->isSecure() ? 's' : '').'://'.$request->getHost().$source;
   }
 
-  return $source;
+  return $source.$query_string;
 }
 
 /**

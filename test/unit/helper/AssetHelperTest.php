@@ -9,12 +9,67 @@
  */
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
-require_once($_test_dir.'/unit/sfContextMock.class.php');
-require_once($_test_dir.'/unit/sfWebRequestMock.class.php');
 
 sfLoader::loadHelpers(array('Helper', 'Tag', 'Url', 'Asset'));
 
-$t = new lime_test(9, new lime_output_color());
+$t = new lime_test(15, new lime_output_color());
+
+class myRequest
+{
+  public $relativeUrlRoot = '';
+
+  public function getRelativeUrlRoot()
+  {
+    return $this->relativeUrlRoot;
+  }
+
+  public function isSecure()
+  {
+    return false;
+  }
+
+  public function getHost()
+  {
+    return 'localhost';
+  }
+}
+
+class sfContext
+{
+  public $request = null;
+
+  static public $instance = null;
+
+  public static function getInstance()
+  {
+    if (!isset(self::$instance))
+    {
+      self::$instance = new sfContext();
+    }
+
+    return self::$instance;
+  }
+
+  public function getRequest()
+  {
+    return $this->request;
+  }
+}
+
+$context = sfContext::getInstance();
+$request = new myRequest();
+$context->request = $request;
+
+// _compute_public_path()
+$t->diag('_compute_public_path');
+$t->is(_compute_public_path('foo', 'css', 'css'), '/css/foo.css', '_compute_public_path() converts a string to a web path');
+$t->is(_compute_public_path('foo', 'css', 'css', true), 'http://localhost/css/foo.css', '_compute_public_path() can create absolute links');
+$t->is(_compute_public_path('foo.css2', 'css', 'css'), '/css/foo.css2', '_compute_public_path() does not add suffix if one already exists');
+$request->relativeUrlRoot = '/bar';
+$t->is(_compute_public_path('foo', 'css', 'css'), '/bar/css/foo.css', '_compute_public_path() takes into account the relative url root configuration');
+$request->relativeUrlRoot = '';
+$t->is(_compute_public_path('foo.css?foo=bar', 'css', 'css'), '/css/foo.css?foo=bar', '_compute_public_path() takes into account query strings');
+$t->is(_compute_public_path('foo?foo=bar', 'css', 'css'), '/css/foo.css?foo=bar', '_compute_public_path() takes into account query strings');
 
 // image_tag()
 $t->diag('image_tag()');
