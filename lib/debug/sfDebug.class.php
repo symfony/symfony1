@@ -124,10 +124,13 @@ class sfDebug
         }
       }
 
-      $cookies = array();
-      foreach ($response->getCookies() as $key => $value)
+      if (method_exists($response, 'getCookies'))
       {
-        $values['cookies'][$key] = $value;
+        $cookies = array();
+        foreach ($response->getCookies() as $key => $value)
+        {
+          $values['cookies'][$key] = $value;
+        }
       }
     }
     else
