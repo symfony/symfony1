@@ -109,21 +109,21 @@ function distance_of_time_in_words($from_time, $to_time = null, $include_seconds
       }
     }
   }
-  else if ($distance_in_minutes >= 2 && $distance_in_minutes <= 45)
+  else if ($distance_in_minutes >= 2 && $distance_in_minutes <= 44)
   {
     $string = '%minutes% minutes';
     $parameters['%minutes%'] = $distance_in_minutes;
   }
-  else if ($distance_in_minutes >= 46 && $distance_in_minutes <= 90)
+  else if ($distance_in_minutes >= 45 && $distance_in_minutes <= 89)
   {
     $string = 'about 1 hour';
   }
-  else if ($distance_in_minutes >= 90 && $distance_in_minutes <= 1440)
+  else if ($distance_in_minutes >= 90 && $distance_in_minutes <= 1439)
   {
     $string = 'about %hours% hours';
     $parameters['%hours%'] = round($distance_in_minutes / 60);
   }
-  else if ($distance_in_minutes >= 1441 && $distance_in_minutes <= 2880)
+  else if ($distance_in_minutes >= 1440 && $distance_in_minutes <= 2879)
   {
     $string = '1 day';
   }
