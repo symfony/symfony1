@@ -32,7 +32,14 @@ class sfZendFrameworkBridge
   {
     try
     {
-      Zend::loadClass($class);
+      if (class_exists('Zend_Version'))
+      {
+        Zend_Loader::loadClass($class);
+      }
+      else
+      {
+        Zend::loadClass($class);
+      }
     }
     catch (Zend_Exception $e)
     {
