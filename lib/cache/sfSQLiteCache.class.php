@@ -142,7 +142,7 @@ class sfSQLiteCache extends sfCache
         [data] LONGVARCHAR,
         [created_at] TIMESTAMP
       )",
-      "CREATE INDEX [cache_unique] ON [cache] ([namespace], [id])",
+      "CREATE UNIQUE INDEX [cache_unique] ON [cache] ([namespace], [id])",
     );
 
     foreach ($statements as $statement)
@@ -240,7 +240,7 @@ class sfSQLiteCache extends sfCache
       }
     }
 
-    if (!$this->has($id, $namespace))
+    if (!$this->has($id, $namespace, true))
     {
       $statement = sprintf("INSERT INTO cache (id, namespace, data, created_at) VALUES ('%s', '%s', '%s', %d)", sqlite_escape_string($id), sqlite_escape_string($namespace), sqlite_escape_string($data), time());
     }
