@@ -50,8 +50,10 @@ class sfI18N
   {
     $this->messageSource = $this->createMessageSource($dir);
     $this->messageSource->setCulture($culture);
-
     $this->messageFormat = $this->createMessageFormat($this->messageSource);
+
+    $this->globalMessageSource->setCulture($culture);
+    $this->globalMessageFormat = $this->createMessageFormat($this->globalMessageSource);
   }
 
   public function createMessageSource($dir)
@@ -99,9 +101,11 @@ class sfI18N
     if ($this->messageSource)
     {
       $this->messageSource->setCulture($culture);
+      $this->messageFormat = $this->createMessageFormat($this->messageSource);
     }
 
     $this->globalMessageSource->setCulture($culture);
+    $this->globalMessageFormat = $this->createMessageFormat($this->globalMessageSource);
   }
 
   public function getMessageSource()
