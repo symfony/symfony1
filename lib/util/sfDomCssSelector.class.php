@@ -1,7 +1,5 @@
 <?php
 
-include_once(dirname(__FILE__).'/sfCssSelectorToXPath.class.php');
-
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
@@ -102,19 +100,6 @@ class sfDomCssSelector
 
   protected function getElementsForNode($selector, $root_node)
   {
-    $xpath = new DomXPath($root_node);
-    $nodes = array();
-    $path = selectorToXpath($selector);
-    print "**  $path  **\n";
-    foreach ($xpath->query($path) as $node)
-    {
-      $nodes[] = $node;
-    }
-    return $nodes;
-
-
-
-
     $all_nodes = array();
     foreach ($this->tokenize_selectors($selector) as $selector)
     {
