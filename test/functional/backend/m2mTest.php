@@ -63,7 +63,7 @@ function launch_tests($b)
     click('save', array('associated_author_article' => array(2, 3)))->
     isStatusCode(302)->
     isRequestParameter('module', 'article')->
-    isRequestParameter('action', 'edit')->
+    isRequestParameter('action', 'save')->
 
     isRedirected()->
     followRedirect()->

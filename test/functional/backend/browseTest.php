@@ -174,7 +174,7 @@ $b->
   click('save', array('article' => array('title' => 'my title', 'body' => 'my body', 'category_id' => 2)))->
   isStatusCode(302)->
   isRequestParameter('module', 'article')->
-  isRequestParameter('action', 'edit')->
+  isRequestParameter('action', 'save')->
 
   isRedirected()->
   followRedirect()->
@@ -195,7 +195,7 @@ $b->
   click('save and add')->
   isStatusCode(302)->
   isRequestParameter('module', 'article')->
-  isRequestParameter('action', 'edit')->
+  isRequestParameter('action', 'save')->
 
   isRedirected()->
   followRedirect()->
@@ -217,7 +217,7 @@ $b->
   click('save', array('article' => array('title' => 'new title', 'body' => 'new body', 'category_id' => 2)))->
   isStatusCode(302)->
   isRequestParameter('module', 'article')->
-  isRequestParameter('action', 'edit')->
+  isRequestParameter('action', 'save')->
 
   isRedirected()->
   followRedirect()->
