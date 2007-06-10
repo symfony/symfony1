@@ -27,6 +27,11 @@ class sfCore
     require_once($sf_symfony_lib_dir.'/config/sfConfig.class.php');
 
     sfCore::initConfiguration($sf_symfony_lib_dir, $sf_symfony_data_dir);
+
+    sfCore::initIncludePath();
+
+    sfCore::callBootstrap();
+
     if (sfConfig::get('sf_check_lock'))
     {
       sfCore::checkLock();
@@ -35,9 +40,6 @@ class sfCore
     {
       sfCore::checkSymfonyVersion();
     }
-    sfCore::initIncludePath();
-
-    sfCore::callBootstrap();
   }
 
   static public function callBootstrap()
