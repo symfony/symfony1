@@ -169,6 +169,11 @@ function link_to_if($condition, $name = '', $internal_uri = '', $options = array
   else
   {
     $html_options = _parse_attributes($options);
+
+    unset($html_options['query_string']);
+    unset($html_options['absolute_url']);
+    unset($html_options['absolute']);
+
     $tag = _get_option($html_options, 'tag', 'span');
 
     return content_tag($tag, $name, $html_options);
