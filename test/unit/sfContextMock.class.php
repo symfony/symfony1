@@ -12,7 +12,7 @@ class sfContext
 {
   private static $instance = null;
 
-  public function getInstance()
+  static public function getInstance()
   {
     if (!isset(self::$instance))
     {
