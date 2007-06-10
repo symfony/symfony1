@@ -124,7 +124,10 @@ function sfWebDebugShowOnlyLogLines(type)
     var x = elements.length;
     for (var i = 0; i < x; ++i)
     {
-      elements[i].style.display = (type == types[klass]) ? '' : 'none';
+      if ('tr' == elements[i].tagName.toLowerCase())
+      {
+        elements[i].style.display = (type == types[klass]) ? '' : 'none';
+      }
     }
   }
 }
