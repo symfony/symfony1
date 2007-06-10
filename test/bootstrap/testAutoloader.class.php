@@ -17,10 +17,10 @@ class testAutoloader
 
   static public function initialize($with_cache = true)
   {
-    $tmp_dir = sfToolkit::getTmpDir();
-    if (is_readable($tmp_dir.DIRECTORY_SEPARATOR.'sf_autoload_paths.php'))
+    $autoload_file = self::getAutoloadFile();
+    if (is_readable($autoload_file))
     {
-      self::$class_paths = unserialize(file_get_contents($tmp_dir.DIRECTORY_SEPARATOR.'sf_autoload_paths.php'));
+      self::$class_paths = unserialize(file_get_contents($autoload_file));
     }
     else
     {
@@ -37,7 +37,7 @@ class testAutoloader
 
       if ($with_cache)
       {
-        file_put_contents($tmp_dir.DIRECTORY_SEPARATOR.'sf_autoload_paths.php', serialize(self::$class_paths));
+        file_put_contents($autoload_file, serialize(self::$class_paths));
       }
     }
   }
@@ -54,8 +54,13 @@ class testAutoloader
     return false;
   }
 
+  static public function getAutoloadFile()
+  {
+    return sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.sprintf('sf_autoload_paths_%s.php', trim(file_get_contents(dirname(__FILE__).'/../../lib/VERSION')));
+  }
+
   static public function removeCache()
   {
-    unlink(sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.'sf_autoload_paths.php');
+    unlink(self::getAutoloadFile());
   }
 }
