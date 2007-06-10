@@ -681,8 +681,8 @@ function input_date_tag($name, $value = null, $options = array())
 
   $calendar_date_format = preg_replace('/([mdyhklspe])+/i', '%\\1', $calendar_date_format);
 
-  $id_inputField = (isset($options['id']))? $options['id'] : get_id_from_name($name);
-  $id_calendarButton = 'trigger_'.get_id_from_name($name);
+  $id_inputField = isset($options['id']) ? $options['id'] : get_id_from_name($name);
+  $id_calendarButton = 'trigger_'.get_id_from_name($id).'_inputField';
   $js = '
     document.getElementById("'.$id_calendarButton.'").disabled = false;
     Calendar.setup({
