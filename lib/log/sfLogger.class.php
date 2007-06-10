@@ -42,7 +42,10 @@ class sfLogger
 {
   protected
     $loggers = array(),
-    $level   = SF_LOG_EMERG,
+    $level   = SF_LOG_EMERG;
+
+  protected static
+    $logger = null,
     $levels  = array(
       SF_LOG_EMERG   => 'emerg',
       SF_LOG_ALERT   => 'alert',
@@ -53,9 +56,6 @@ class sfLogger
       SF_LOG_INFO    => 'info',
       SF_LOG_DEBUG   => 'debug',
     );
-
-  protected static
-    $logger = null;
 
   /**
    * Returns the sfLogger instance.
@@ -118,7 +118,7 @@ class sfLogger
    *
    * @param string Logger name
    */
-  public function registerLogger($logger)
+  public function registerLogger(sfLoggerInterface $logger)
   {
     $this->loggers[] = $logger;
   }
@@ -138,7 +138,7 @@ class sfLogger
 
     foreach ($this->loggers as $logger)
     {
-      $logger->log((string) $message, $priority, $this->levels[$priority]);
+      $logger->log((string) $message, $priority);
     }
   }
 
@@ -238,5 +238,15 @@ class sfLogger
     }
 
     $this->loggers = array();
+  }
+
+  public static function getPriorityName($priority)
+  {
+    if (!isset(self::$levels[$priority]))
+    {
+      throw new sfException(sprintf('The priority level "%s" does not exist.'));
+    }
+
+    return self::$levels[$priority];
   }
 }

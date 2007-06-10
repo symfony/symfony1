@@ -16,13 +16,17 @@ class myLogger
 {
   public $log = '';
 
-  public function log($message, $priority)
+  public function log($message, $priority = null)
   {
     $this->log .= $message;
   }
 }
 
-$myLogger = new myLogger();
+class myRealLogger extends myLogger implements sfLoggerInterface
+{
+}
+
+$myRealLogger = new myRealLogger();
 
 // ->getInstance()
 $t->diag('->getInstance()');
@@ -37,8 +41,8 @@ $t->is($logger->getLoggers(), array(), '->getLoggers() returns an array of regis
 
 // ->registerLogger()
 $t->diag('->registerLogger()');
-$logger->registerLogger($myLogger);
-$t->is($logger->getLoggers(), array($myLogger), '->registerLogger() registers a new logger instance');
+$logger->registerLogger($myRealLogger);
+$t->is($logger->getLoggers(), array($myRealLogger), '->registerLogger() registers a new logger instance that must implement the sfLoggerInterface interface');
 
 // ->initialize()
 $t->diag('->initialize()');
@@ -55,10 +59,10 @@ $t->is($logger->getLogLevel(), SF_LOG_WARNING, '->setLogLevel() sets the log lev
 $t->diag('->log()');
 $logger->initialize();
 $logger->setLogLevel(SF_LOG_DEBUG);
-$logger->registerLogger($myLogger);
-$logger->registerLogger($myLogger);
+$logger->registerLogger($myRealLogger);
+$logger->registerLogger($myRealLogger);
 $logger->log('message');
-$t->is($myLogger->log, 'messagemessage', '->log() calls all registered loggers');
+$t->is($myRealLogger->log, 'messagemessage', '->log() calls all registered loggers');
 
 // log level
 $t->diag('log levels');
@@ -71,10 +75,10 @@ foreach (array('emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'de
     $logLevelConstant = 'SF_LOG_'.strtoupper($logLevel);
     $logger->setLogLevel(constant($logLevelConstant));
 
-    $myLogger->log = '';
+    $myRealLogger->log = '';
     $logger->log('foo', constant($levelConstant));
 
-    $t->is($myLogger->log, constant($logLevelConstant) >= constant($levelConstant), sprintf('->log() only logs if the level is >= to the defined log level (%s >= %s)', $logLevelConstant, $levelConstant));
+    $t->is($myRealLogger->log, constant($logLevelConstant) >= constant($levelConstant), sprintf('->log() only logs if the level is >= to the defined log level (%s >= %s)', $logLevelConstant, $levelConstant));
   }
 }
 
@@ -88,13 +92,13 @@ foreach (array('emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'de
   {
     $logger->setLogLevel(constant('SF_LOG_'.strtoupper($logLevel)));
 
-    $myLogger->log = '';
+    $myRealLogger->log = '';
     $logger->log('foo', constant($levelConstant));
-    $log1 = $myLogger->log;
+    $log1 = $myRealLogger->log;
 
-    $myLogger->log = '';
+    $myRealLogger->log = '';
     $logger->$level('foo');
-    $log2 = $myLogger->log;
+    $log2 = $myRealLogger->log;
 
     $t->is($log1, $log2, sprintf('->%s($msg) is a shortcut for ->log($msg, %s)', $level, $levelConstant));
   }

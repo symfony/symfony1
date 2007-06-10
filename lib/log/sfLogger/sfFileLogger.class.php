@@ -15,7 +15,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfFileLogger
+class sfFileLogger implements sfLoggerInterface
 {
   protected
     $fp = null;
@@ -52,11 +52,10 @@ class sfFileLogger
    *
    * @param string Message
    * @param string Message priority
-   * @param string Message priority name
    */
-  public function log($message, $priority, $priorityName)
+  public function log($message, $priority = null)
   {
-    $line = sprintf("%s %s [%s] %s%s", strftime('%b %d %H:%M:%S'), 'symfony', $priorityName, $message, DIRECTORY_SEPARATOR == '\\' ? "\r\n" : "\n");
+    $line = sprintf("%s %s [%s] %s%s", strftime('%b %d %H:%M:%S'), 'symfony', sfLogger::getPriorityName($priority), $message, DIRECTORY_SEPARATOR == '\\' ? "\r\n" : "\n");
 
     flock($this->fp, LOCK_EX);
     fwrite($this->fp, $line);

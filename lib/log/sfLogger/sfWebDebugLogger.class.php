@@ -15,7 +15,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfWebDebugLogger
+class sfWebDebugLogger implements sfLoggerInterface
 {
   protected
     $webDebug = null;
@@ -40,9 +40,8 @@ class sfWebDebugLogger
    *
    * @param string Message
    * @param string Message priority
-   * @param string Message priority name
    */
-  public function log($message, $priority, $priorityName)
+  public function log($message, $priority = null)
   {
     if (!sfConfig::get('sf_web_debug'))
     {
@@ -82,7 +81,7 @@ class sfWebDebugLogger
     // build the object containing the complete log information.
     $logEntry = array(
       'priority'       => $priority,
-      'priorityString' => $priorityName,
+      'priorityString' => sfLogger::getPriorityName($priority),
       'time'           => time(),
       'message'        => $message,
       'type'           => $type,
