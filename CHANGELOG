@@ -2,7 +2,7 @@ Version 1.1.0
 -------------
 
 * r3742: added sfAction::renderPartial() method
-* All bug fixes from 1.0.0 -> 1.0.2
+* All bug fixes from 1.0.0 -> 1.0.4
 
 Version 1.0.0
 -------------
