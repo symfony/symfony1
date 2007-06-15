@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(64, new lime_output_color());
+$t = new lime_test(66, new lime_output_color());
 
 // public methods
 $r = sfRouting::getInstance();
@@ -201,10 +201,13 @@ $t->is($r->generate('', $params), $url, '->generate() takes the first matching r
 // * in the middle
 $r->clearRoutes();
 $r->connect('test', '/:module/:action/*/test', array('module' => 'default', 'action' => 'index'));
+$params = array('module' => 'default', 'action' => 'index');
+$url = '/default/index/test';
+$t->is($r->parse($url), $params, '->parse() routes can take a * in the middle of a url');
+$t->is($r->generate('', $params), $url, '->generate() routes can take a * in the middle of a url');
 $params = array('module' => 'default', 'action' => 'index', 'foo' => true, 'bar' => 'foobar');
 $url = '/default/index/foo/1/bar/foobar/test';
 $t->is($r->parse($url), $params, '->parse() routes can take a * in the middle of a url');
-$url = '/default/index/foo/1/bar/foobar/test';
 $t->is($r->generate('', $params), $url, '->generate() routes can take a * in the middle of a url');
 
 // requirements
