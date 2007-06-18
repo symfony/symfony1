@@ -273,7 +273,7 @@ class sfMessageSource_MySQL extends sfMessageSource
     $cat_id = intval(mysql_result($rs, 0));
 
     // first get the catalogue ID
-    $rs = mysql_query("SELECT count(msg_id) FROM trans_unit WHERE cat_id = {$cat_id}", $this->db);
+    $rs = mysql_query("SELECT COUNT(*) FROM trans_unit WHERE cat_id = {$cat_id}", $this->db);
 
     $count = intval(mysql_result($rs, 0));
 
