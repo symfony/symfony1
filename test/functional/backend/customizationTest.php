@@ -87,10 +87,10 @@ $b->
   checkResponseElement('label[for="article_category_id"]', false)->
   checkResponseElement('label[for="article_created_at"]', false)->
   checkResponseElement('fieldset#sf_fieldset_none', true)->
-  checkResponseElement('fieldset#sf_fieldset_none + h2', false)->
+  checkResponseElement('fieldset#sf_fieldset_none h2', false)->
   checkResponseElement('fieldset#sf_fieldset_none textarea[name="article[body]"]', true)->
   checkResponseElement('fieldset#sf_fieldset_another', true)->
-  checkResponseElement('fieldset#sf_fieldset_another + h2', 'Another')->
+  checkResponseElement('fieldset#sf_fieldset_another h2', 'Another')->
   checkResponseElement('fieldset#sf_fieldset_another input[name="article[title]"]', true)->
 
   // edit buttons

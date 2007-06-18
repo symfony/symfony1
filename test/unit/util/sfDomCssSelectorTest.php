@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(56, new lime_output_color());
+$t = new lime_test(61, new lime_output_color());
 
 $html = <<<EOF
 <html>
@@ -61,6 +61,12 @@ $html = <<<EOF
           <li>test 4</li>
         </ul>
       </ul>
+    </div>
+
+    <div id="adjacent_bug">
+      <p>First paragraph</p>
+      <p>Second paragraph</p>
+      <p>Third <a href='#'>paragraph</a></p>
     </div>
 
     <div id="footer">footer</div>
@@ -117,8 +123,8 @@ $t->diag('combinators');
 $t->is($c->getTexts('body  h1'), array('Test page'), '->getTexts() takes a CSS selectors separated by one or more spaces');
 $t->is($c->getTexts('div#combinators > ul  >   li'), array('test 1', 'test 2'), '->getTexts() support > combinator');
 $t->is($c->getTexts('div#combinators>ul>li'), array('test 1', 'test 2'), '->getTexts() support > combinator with optional surrounding spaces');
-$t->is($c->getTexts('div#combinators ul  +   li'), array('test 1', 'test 3'), '->getTexts() support + combinator');
-$t->is($c->getTexts('div#combinators ul+li'), array('test 1', 'test 3'), '->getTexts() support + combinator with optional surrounding spaces');
+$t->is($c->getTexts('div#combinators li  +   li'), array('test 2', 'test 4'), '->getTexts() support + combinator');
+$t->is($c->getTexts('div#combinators li+li'), array('test 2', 'test 4'), '->getTexts() support + combinator with optional surrounding spaces');
 
 $t->is($c->getTexts('h1, h2'), array('Test page', 'Title 1', 'Title 2'), '->getTexts() takes a multiple CSS selectors separated by a ,');
 $t->is($c->getTexts('h1,h2'), array('Test page', 'Title 1', 'Title 2'), '->getTexts() takes a multiple CSS selectors separated by a ,');
@@ -126,7 +132,7 @@ $t->is($c->getTexts('h1  ,   h2'), array('Test page', 'Title 1', 'Title 2'), '->
 $t->is($c->getTexts('h1, h1,h1'), array('Test page'), '->getTexts() returns nodes only once for multiple selectors');
 $t->is($c->getTexts('h1,h2,h1'), array('Test page', 'Title 1', 'Title 2'), '->getTexts() returns nodes only once for multiple selectors');
 
-$t->is($c->getTexts('p[onclick*="a . and a #"], div#combinators > ul + li'), array('works great', 'test 1'), '->getTexts() mega example!');
+$t->is($c->getTexts('p[onclick*="a . and a #"], div#combinators > ul li + li'), array('works great', 'test 2', 'test 4'), '->getTexts() mega example!');
 
 $t->is($c->getTexts('.myfoo:contains("bis")'), array('myfoo bis'), '->getTexts() :contains()');
 $t->is($c->getTexts('.myfoo:eq(1)'), array('myfoo bis'), '->getTexts() :eq()');
@@ -135,9 +141,9 @@ $t->is($c->getTexts('.myfoo:first'), array('myfoo'), '->getTexts() :first');
 $t->is($c->getTexts('h2:first'), array('Title 1'), '->getTexts() :first');
 $t->is($c->getTexts('p.myfoo:first'), array('myfoo'), '->getTexts() :first');
 $t->is($c->getTexts('p:lt(2)'), array('header', 'multi-classes'), '->getTexts() :lt');
-$t->is($c->getTexts('p:gt(2)'), array('myfoo bis', 'works great'), '->getTexts() :gt');
-$t->is($c->getTexts('p:odd'), array('multi-classes', 'myfoo bis'), '->getTexts() :odd');
-$t->is($c->getTexts('p:even'), array('header', 'myfoo', 'works great'), '->getTexts() :even');
+$t->is($c->getTexts('p:gt(2)'), array('myfoo bis', 'works great', 'First paragraph', 'Second paragraph', 'Third paragraph'), '->getTexts() :gt');
+$t->is($c->getTexts('p:odd'), array('multi-classes', 'myfoo bis', 'First paragraph', 'Third paragraph'), '->getTexts() :odd');
+$t->is($c->getTexts('p:even'), array('header', 'myfoo', 'works great', 'Second paragraph'), '->getTexts() :even');
 $t->is($c->getTexts('#simplelist li:first-child'), array('First', 'First'), '->getTexts() :first-child');
 $t->is($c->getTexts('#simplelist li:nth-child(1)'), array('First', 'First'), '->getTexts() :nth-child');
 $t->is($c->getTexts('#simplelist li:nth-child(2)'), array('Second with a link', 'Second'), '->getTexts() :nth-child');
@@ -159,3 +165,9 @@ $t->is($c->matchAll('p.myfoo')->getValues(), array('myfoo', 'myfoo bis'), '->get
 // ->getValue()
 $t->diag('->getValue()');
 $t->is($c->matchAll('h1')->getValue(), 'Test page', '->getValue() returns the first node value');
+
+$t->is($c->getTexts('#adjacent_bug > p'), array('First paragraph', 'Second paragraph', 'Third paragraph'), '->getTexts() suppports the + combinator');
+$t->is($c->getTexts('#adjacent_bug > p > a'), array('paragraph'), '->getTexts() suppports the + combinator');
+$t->is($c->getTexts('#adjacent_bug p + p'), array('Second paragraph', 'Third paragraph'), '->getTexts() suppports the + combinator');
+$t->is($c->getTexts('#adjacent_bug > p + p'), array('Second paragraph', 'Third paragraph'), '->getTexts() suppports the + combinator');
+$t->is($c->getTexts('#adjacent_bug > p + p > a'), array('paragraph'), '->getTexts() suppports the + combinator');
