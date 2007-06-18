@@ -159,16 +159,16 @@ class sfMessageSource_MySQL extends sfMessageSource
    */
   protected function &loadData($variant)
   {
-    $variant = mysql_escape_string($variant);
+    $variant = mysql_real_escape_string($variant, $this->db);
 
-    $statement = 
+    $statement =
       "SELECT t.id, t.source, t.target, t.comments
         FROM trans_unit t, catalogue c
         WHERE c.cat_id =  t.cat_id
-          AND c.name = '{$variant}' 
+          AND c.name = '{$variant}'
         ORDER BY id ASC";
 
-    $rs = mysql_query($statement,$this->db);
+    $rs = mysql_query($statement, $this->db);
 
     $result = array();
 
@@ -192,7 +192,7 @@ class sfMessageSource_MySQL extends sfMessageSource
    */
   protected function getLastModified($source)
   {
-    $source = mysql_escape_string($source);
+    $source = mysql_real_escape_string($source, $this->db);
 
     $rs = mysql_query("SELECT date_modified FROM catalogue WHERE name = '{$source}'", $this->db);
 
@@ -209,7 +209,7 @@ class sfMessageSource_MySQL extends sfMessageSource
    */ 
   protected function isValidSource($variant)
   {
-    $variant = mysql_escape_string ($variant);
+    $variant = mysql_real_escape_string ($variant, $this->db);
 
     $rs = mysql_query("SELECT COUNT(*) FROM catalogue WHERE name = '{$variant}'", $this->db);
 
@@ -261,7 +261,7 @@ class sfMessageSource_MySQL extends sfMessageSource
 
     $variant = $catalogue.'.'.$this->culture;
 
-    $name = mysql_escape_string($this->getSource($variant));
+    $name = mysql_real_escape_string($this->getSource($variant), $this->db);
 
     $rs = mysql_query("SELECT cat_id FROM catalogue WHERE name = '{$name}'", $this->db);
 
@@ -339,7 +339,7 @@ class sfMessageSource_MySQL extends sfMessageSource
     {
       $count++;
       $inserted++;
-      $message = mysql_escape_string($message);
+      $message = mysql_real_escape_string($message, $this->db);
       $statement = "INSERT INTO trans_unit
         (cat_id,id,source,date_added) VALUES
         ({$cat_id}, {$count},'{$message}',$time)";
@@ -372,7 +372,7 @@ class sfMessageSource_MySQL extends sfMessageSource
       return false;
     }
 
-    $text = mysql_escape_string($message);
+    $text = mysql_real_escape_string($message, $this->db);
 
     $statement = "DELETE FROM trans_unit WHERE cat_id = {$cat_id} AND source = '{$message}'";
     $deleted = false;
@@ -408,9 +408,9 @@ class sfMessageSource_MySQL extends sfMessageSource
       return false;
     }
 
-    $comments = mysql_escape_string($comments);
-    $target = mysql_escape_string($target);
-    $text = mysql_escape_string($text);
+    $comments = mysql_real_escape_string($comments, $this->db);
+    $target = mysql_real_escape_string($target, $this->db);
+    $text = mysql_real_escape_string($text, $this->db);
 
     $time = time();
 

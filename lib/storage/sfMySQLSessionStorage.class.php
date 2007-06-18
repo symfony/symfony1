@@ -103,7 +103,7 @@ class sfMySQLSessionStorage extends sfSessionStorage
     $db_id_col = $this->getParameterHolder()->get('db_id_col', 'sess_id');
 
     // cleanup the session id, just in case
-    $id = mysql_escape_string($id);
+    $id = mysql_real_escape_string($id, $this->resource);
 
     // delete the record associated with this id
     $sql = 'DELETE FROM '.$db_table.' WHERE '.$db_id_col.' = \''.$id.'\'';
@@ -195,7 +195,7 @@ class sfMySQLSessionStorage extends sfSessionStorage
     $db_time_col = $this->getParameterHolder()->get('db_time_col', 'sess_time');
 
     // cleanup the session id, just in case
-    $id = mysql_escape_string($id);
+    $id = mysql_real_escape_string($id, $this->resource);
 
     // delete the record associated with this id
     $sql = 'SELECT '.$db_data_col.' ' .
@@ -250,8 +250,8 @@ class sfMySQLSessionStorage extends sfSessionStorage
     $db_time_col = $this->getParameterHolder()->get('db_time_col', 'sess_time');
 
     // cleanup the session id and data, just in case
-    $id   = mysql_escape_string($id);
-    $data = mysql_escape_string($data);
+    $id   = mysql_real_escape_string($id, $this->resource);
+    $data = mysql_real_escape_string($data, $this->resource);
 
     // delete the record associated with this id
     $sql = 'UPDATE '.$db_table.' ' .
