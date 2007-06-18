@@ -587,6 +587,11 @@ class lime_coverage extends lime_registration
       throw new Exception('You must install and enable xdebug before using lime coverage.');
     }
 
+    if (!ini_get('xdebug.extended_info'))
+    {
+      throw new Exception('You must set xdebug.extended_info to 1 in your php.ini to use lime coverage.');
+    }
+
     if (!count($this->harness->files))
     {
       throw new Exception('You must register some test files before running coverage!');
