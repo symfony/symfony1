@@ -41,16 +41,20 @@ class lime_test
 
     if ($total > $this->plan)
     {
-      $this->output->diag(sprintf("Looks like you planned %d tests but ran %d extra.", $this->plan, $total - $this->plan));
+      $this->output->red_bar(sprintf(" Looks like you planned %d tests but ran %d extra.", $this->plan, $total - $this->plan));
     }
     elseif ($total < $this->plan)
     {
-      $this->output->diag(sprintf("Looks like you planned %d tests but only ran %d.", $this->plan, $total));
+      $this->output->red_bar(sprintf(" Looks like you planned %d tests but only ran %d.", $this->plan, $total));
     }
 
     if ($this->failed)
     {
-      $this->output->diag(sprintf("Looks like you failed %d tests of %d.", $this->failed, $this->plan));
+      $this->output->red_bar(sprintf(" Looks like you failed %d tests of %d.", $this->failed, $this->plan));
+    }
+    else
+    {
+      $this->output->green_bar(" Looks like everything went fine.");
     }
 
     flush();
@@ -308,6 +312,16 @@ class lime_output
   {
     echo "$message\n";
   }
+
+  function green_bar($message)
+  {
+    echo "$message\n";
+  }
+
+  function red_bar($message)
+  {
+    echo "$message\n";
+  }
 }
 
 class lime_output_color extends lime_output
@@ -341,6 +355,16 @@ class lime_output_color extends lime_output
     $message = preg_replace('/(\->|\:\:)?([a-zA-Z0-9_]+?)\(\)/e', '$this->colorizer->colorize(\'$1$2()\', \'PARAMETER\')', $message);
 
     echo ($colorizer_parameter ? $this->colorizer->colorize($message, $colorizer_parameter) : $message)."\n";
+  }
+
+  function green_bar($message)
+  {
+    echo $this->colorizer->colorize($message.str_repeat(' ', 71 - min(71, strlen($message))), 'GREEN_BAR')."\n";
+  }
+
+  function red_bar($message)
+  {
+    echo $this->colorizer->colorize($message.str_repeat(' ', 71 - min(71, strlen($message))), 'RED_BAR')."\n";
   }
 }
 
@@ -383,6 +407,9 @@ lime_colorizer::style('ERROR', array('bg' => 'red', 'fg' => 'white', 'bold' => t
 lime_colorizer::style('INFO',  array('fg' => 'green', 'bold' => true));
 lime_colorizer::style('PARAMETER', array('fg' => 'cyan'));
 lime_colorizer::style('COMMENT',  array('fg' => 'yellow'));
+
+lime_colorizer::style('GREEN_BAR',  array('fg' => 'white', 'bg' => 'green', 'bold' => true));
+lime_colorizer::style('RED_BAR',  array('fg' => 'white', 'bg' => 'red', 'bold' => true));
 
 class lime_harness extends lime_registration
 {
@@ -521,19 +548,19 @@ class lime_harness extends lime_registration
         $this->output->echoln(sprintf($format, substr($relative_file, -min(30, strlen($relative_file))), $file_stat['status_code'], count($file_stat['failed']) + count($file_stat['passed']), count($file_stat['failed']), implode(' ', $file_stat['failed'])));
       }
 
-      $this->output->echoln(sprintf('Failed %d/%d test scripts, %.2f%% okay. %d/%d subtests failed, %.2f%% okay.',
+      $this->output->red_bar(sprintf('Failed %d/%d test scripts, %.2f%% okay. %d/%d subtests failed, %.2f%% okay.',
         $nb_failed_files = count($this->stats['_failed_files']),
         $nb_files = count($this->files),
         ($nb_files - $nb_failed_files) * 100 / $nb_files,
         $nb_failed_tests = $this->stats['_failed_tests'],
         $nb_tests = $this->stats['_nb_tests'],
         $nb_tests > 0 ? ($nb_tests - $nb_failed_tests) * 100 / $nb_tests : 0
-      ), 'ERROR');
+      ));
     }
     else
     {
-      $this->output->echoln('All tests successful.', 'INFO');
-      $this->output->echoln(sprintf('Files=%d, Tests=%d', count($this->files), $this->stats['_nb_tests']), 'INFO');
+      $this->output->green_bar(' All tests successful.');
+      $this->output->green_bar(sprintf(' Files=%d, Tests=%d', count($this->files), $this->stats['_nb_tests']));
     }
 
     return $this->stats['_failed_tests'] ? false : true;
