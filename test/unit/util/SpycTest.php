@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(42, new lime_output_color());
+$t = new lime_test(46, new lime_output_color());
 
 $path = dirname(__FILE__).'/fixtures/Spyc';
 $files = Spyc::YAMLLoad($path.'/index.yml');
@@ -38,5 +38,26 @@ foreach ($files as $file)
     {
       $t->is(var_export(Spyc::YAMLLoad($test['yaml']), true), var_export(eval('return '.trim($test['php']).';'), true), $test['test']);
     }
+  }
+}
+
+// test tabs in YAML
+$yamls = array(
+  "foo:\n	bar",
+  "foo:\n 	bar",
+  "foo:\n	 bar",
+  "foo:\n 	 bar",
+);
+
+foreach ($yamls as $yaml)
+{
+  try
+  {
+    $content = Spyc::YAMLLoad($yaml);
+    $t->fail('YAML files must not contain tabs');
+  }
+  catch (Exception $e)
+  {
+    $t->pass('YAML files must not contain tabs');
   }
 }
