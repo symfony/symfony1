@@ -66,9 +66,9 @@ abstract class sfOutputEscaper
    *    - The value is another type of object: decorated such that the result of
    *      method calls is escaped.
    *
-   * The escaping method is actually the name of a PHP function. There are a set
+   * The escaping method is actually the name of a PHP callable. There are a set
    * of standard escaping methods listed in the escaping helper
-   * (sfEscapingHelper.php).
+   * (EscapingHelper.php).
    *
    * @param string $escapingMethod the escaping method (a PHP function) to apply to the value
    * @param mixed $value the value to escape
