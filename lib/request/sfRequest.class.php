@@ -157,7 +157,7 @@ abstract class sfRequest
    */
   public function hasError($name)
   {
-    return isset($this->errors[$name]);
+    return array_key_exists($name, $this->errors);
   }
 
   /**
