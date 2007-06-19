@@ -512,7 +512,7 @@ EOF;
       }
       else if ($column->isComponent())
       {
-        $vars[] = '\'%%_'.$column->getName().'%%\' => '.$this->getColumnListTag($column);
+        $vars[] = '\'%%~'.$column->getName().'%%\' => '.$this->getColumnListTag($column);
       }
       else
       {
