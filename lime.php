@@ -419,7 +419,18 @@ class lime_harness extends lime_registration
 
   function __construct($output_instance, $php_cli = null)
   {
+    if (getenv('PHP_PATH'))
+    {
+      $this->php_cli = getenv('PHP_PATH');
+
+      if (!is_executable($this->php_cli))
+      {
+        throw new Exception('The defined PHP_PATH environment variable is not a valid PHP executable.');
+      }
+    }
+
     $this->php_cli = null === $php_cli ? PHP_BINDIR.DIRECTORY_SEPARATOR.'php' : $php_cli;
+
     if (!is_executable($this->php_cli))
     {
       $this->php_cli = $this->find_php_cli();
