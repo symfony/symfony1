@@ -52,7 +52,7 @@ class lime_test
     {
       $this->output->red_bar(sprintf(" Looks like you failed %d tests of %d.", $this->failed, $this->plan));
     }
-    else
+    else if ($total == $this->plan)
     {
       $this->output->green_bar(" Looks like everything went fine.");
     }
