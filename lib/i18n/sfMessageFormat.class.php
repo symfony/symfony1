@@ -59,7 +59,7 @@ class sfMessageFormat
    * A list of loaded message catalogues.
    * @var array
    */
-  protected $catagloues = array();
+  protected $catalogues = array();
 
   /**
    * The translation messages.
@@ -135,7 +135,7 @@ class sfMessageFormat
    */
   protected function loadCatalogue($catalogue)
   {
-    if (in_array($catalogue,$this->catagloues))
+    if (in_array($catalogue,$this->catalogues))
     {
       return;
     }
@@ -143,7 +143,7 @@ class sfMessageFormat
     if ($this->source->load($catalogue))
     {
       $this->messages[$catalogue] = $this->source->read();
-      $this->catagloues[] = $catalogue;
+      $this->catalogues[] = $catalogue;
     }
   }
 

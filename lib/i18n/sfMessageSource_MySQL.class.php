@@ -46,7 +46,7 @@ class sfMessageSource_MySQL extends sfMessageSource
    * The DSN array property, parsed by PEAR's DB DSN parser.
    * @var array 
    */
-  protected $dns;
+  protected $dsn;
 
   /**
    * A resource link to the database
@@ -64,7 +64,7 @@ class sfMessageSource_MySQL extends sfMessageSource
   function __construct($source)
   {
     $this->source = (string)$source;
-    $this->dns = parseDSN($this->source);
+    $this->dsn = parseDSN($this->source);
     $this->db = $this->connect();
   }
 
@@ -84,7 +84,7 @@ class sfMessageSource_MySQL extends sfMessageSource
    */
   protected function connect()
   {
-    $dsninfo = $this->dns;
+    $dsninfo = $this->dsn;
 
     if (isset($dsninfo['protocol']) && $dsninfo['protocol'] == 'unix')
     {
@@ -129,7 +129,7 @@ class sfMessageSource_MySQL extends sfMessageSource
     {
       if (!@mysql_select_db($dsninfo['database'], $conn))
       {
-        throw new sfException('Error in connecting database, dns:'.$dsninfo);
+        throw new sfException('Error in connecting database, dsn:'.$dsninfo);
       }
     }
     else
