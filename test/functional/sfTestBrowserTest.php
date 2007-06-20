@@ -41,3 +41,22 @@ $b->
   throwsException('sfException')->
   throwsException('sfException', 'sfException message')
 ;
+
+$b->
+  get('/browser')->
+  responseContains('html')->
+  checkResponseElement('h1', 'html')->
+
+  get('/browser/text')->
+  responseContains('text')
+;
+
+try
+{
+  $b->checkResponseElement('h1', 'text');
+  $b->test()->fail('The DOM is not accessible if the response content type is not HTML');
+}
+catch (sfException $e)
+{
+  $b->test()->pass('The DOM is not accessible if the response content type is not HTML');
+}
