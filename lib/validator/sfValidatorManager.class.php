@@ -254,7 +254,7 @@ class sfValidatorManager
     if (
       ($data['is_file'] && !$value['name'])
       ||
-      (!$data['is_file'] && (is_array($value) ? sfToolkit::isArrayValuesEmpty($value) : ($value == null || strlen($value) == 0)))
+      (!$data['is_file'] && (is_array($value) ? sfToolkit::isArrayValuesEmpty($value) : ($value === null || strlen($value) == 0)))
     )
     {
       if ($data['required'] || $force)
