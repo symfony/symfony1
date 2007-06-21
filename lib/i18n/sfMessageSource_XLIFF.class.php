@@ -311,7 +311,16 @@ class sfMessageSource_XLIFF extends sfMessageSource
     $xpath = new DomXPath($dom);
     $body = $xpath->query('//body')->item(0);
 
-    $count = $xpath->query('//trans-unit')->length;
+    // find the biggest "id" used
+    $lastNodes = $xpath->query('//trans-unit[not(@id <= preceding-sibling::trans-unit/@id) and not(@id <= following-sibling::trans-unit/@id)]');
+    if (null !== $last = $lastNodes->item(0))
+    {
+      $count = intval($last->getAttribute('id'));
+    }
+    else
+    {
+      $count = 0;
+    }
 
     // for each message add it to the XML file using DOM
     foreach ($messages as $message)
