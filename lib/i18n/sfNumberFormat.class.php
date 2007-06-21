@@ -126,7 +126,7 @@ class sfNumberFormat
 
     $string = (string) $number;
 
-    list($number, $decimal) = $this->formatDecimal($string);
+    $decimal = $this->formatDecimal($string);
     $integer = $this->formatInteger(abs($number));
 
     $result = (strlen($decimal) > 0) ? $integer.$decimal : $integer;
@@ -169,6 +169,14 @@ class sfNumberFormat
   protected function formatInteger($string)
   {
     $string = (string) $string;
+
+    $decimalDigits = $this->formatInfo->DecimalDigits;
+    // if not decimal digits, assume 0 decimal points.
+    if (is_int($decimalDigits) && $decimalDigits > 0)
+    {
+      $string = (string) round(floatval($string), $decimalDigits);
+    }
+
     $dp = strpos($string, '.');
 
     if (is_int($dp))
@@ -177,6 +185,9 @@ class sfNumberFormat
     }
 
     $integer = '';
+
+    $digitSize = $this->formatInfo->getDigitSize();
+    $string = str_pad($string, $digitSize, '0', STR_PAD_LEFT);
 
     $len = strlen($string);
 
@@ -268,17 +279,17 @@ class sfNumberFormat
       }
       else
       {
-        return array($string, $decimal);
+        return $decimal;
       }
 
-      return array($string, $decimalSeparator.$decimal);
+      return $decimalSeparator.$decimal;
     }
     else if ($decimalDigits > 0)
     {
-      return array($string, $decimalSeparator.str_pad($decimal, $decimalDigits, '0'));
+      return $decimalSeparator.str_pad($decimal, $decimalDigits, '0');
     }
 
-    return array($string, $decimal);
+    return $decimal;
   }
 
   /**

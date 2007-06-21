@@ -295,7 +295,7 @@ class sfMessageSource_XLIFF extends sfMessageSource
     }
     else
     {
-      return false;
+      list($variant, $filename) = $this->createMessageTemplate($catalogue);
     }
 
     if (is_writable($filename) == false)
@@ -526,5 +526,54 @@ class sfMessageSource_XLIFF extends sfMessageSource
     }
 
     return false;
+  }
+
+  protected function createMessageTemplate($catalogue)
+  {
+    if (is_null($catalogue))
+    {
+      $catalogue = 'messages';
+    }
+
+    $variants = $this->getCatalogueList($catalogue);
+    $variant = array_shift($variants);
+    $file = $this->getSource($variant);
+    $dir = dirname($file);
+    if (!is_dir($dir))
+    {
+      @mkdir($dir);
+      @chmod($dir, 0777);
+    }
+
+    if (!is_dir($dir))
+    {
+      throw new sfException("Unable to create directory $dir");
+    }
+
+    file_put_contents($file, $this->getTemplate($catalogue));
+    chmod($file, 0777);
+
+    return array($variant, $file);
+  }
+
+  protected function getTemplate($catalogue)
+  {
+    $date = date('c');
+
+    return <<<EOD
+<?xml version="1.0" ?>
+<xliff version="1.0">
+ <file
+  source-language="EN"
+  target-language="{$this->culture}"
+  datatype="plaintext"
+  original="$catalogue"
+  date="$date"
+  product-name="$catalogue">
+  <body>
+  </body>
+ </file>
+</xliff>
+EOD;
   }
 }

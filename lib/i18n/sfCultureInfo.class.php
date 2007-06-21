@@ -307,10 +307,10 @@ class sfCultureInfo
     static $data  = array();
     static $files = array();
 
-    if (!isset($files[$filename]))
+    if (!in_array($filename, $files))
     {
       $data[$filename]  = unserialize(file_get_contents($filename));
-      $files[$filename] = true;
+      $files[] = $filename;
     }
 
     return $data[$filename];
@@ -471,6 +471,11 @@ class sfCultureInfo
     $culture = $this->getInvariantCulture();
 
     $language = $culture->findInfo("Languages/{$lang}");
+    if (count($language) == 0)
+    {
+      return $this->culture;
+    }
+
     $region = $culture->findInfo("Countries/{$reg}");
     if ($region)
     {

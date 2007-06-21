@@ -307,11 +307,20 @@ class sfDateTimeFormatInfo
    * for InvariantInfo contains "Jan", "Feb", "Mar", "Apr", "May", 
    * "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", and "Dec".
    *
+   * Returns wide names if abbreviated names doesn't exist.
+   *
    * @return array abbreviated month names.
    */
   function getAbbreviatedMonthNames()
   {
-    return $this->data['monthNames']['format']['abbreviated'];
+    if (isset($this->data['monthNames']['format']['abbreviated']))
+    {
+      return $this->data['monthNames']['format']['abbreviated'];
+    }
+    else
+    {
+      return $this->data['monthNames']['format']['wide'];
+    }
   }
 
   /**

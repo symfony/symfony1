@@ -48,23 +48,23 @@ class sfDateFormat
    * @var array 
    */
   protected $tokens = array(
-    'G'=>'Era',
-    'y'=>'year',
-    'M'=>'mon',
-    'd'=>'mday',
-    'h'=>'Hour12',
-    'H'=>'hours',
-    'm'=>'minutes',
-    's'=>'seconds',
-    'E'=>'wday',
-    'D'=>'yday',
-    'F'=>'DayInMonth',
-    'w'=>'WeekInYear',
-    'W'=>'WeekInMonth',
-    'a'=>'AMPM',
-    'k'=>'HourInDay',
-    'K'=>'HourInAMPM',
-    'z'=>'TimeZone'
+    'G' => 'Era',
+    'y' => 'year',
+    'M' => 'mon',
+    'd' => 'mday',
+    'h' => 'Hour12',
+    'H' => 'hours',
+    'm' => 'minutes',
+    's' => 'seconds',
+    'E' => 'wday',
+    'D' => 'yday',
+    'F' => 'DayInMonth',
+    'w' => 'WeekInYear',
+    'W' => 'WeekInMonth',
+    'a' => 'AMPM',
+    'k' => 'HourInDay',
+    'K' => 'HourInAMPM',
+    'z' => 'TimeZone'
   );
 
   /**

@@ -228,7 +228,7 @@ class sfMessageSource_gettext extends sfMessageSource
     }
     else
     {
-      return false;
+      list($variant, $MOFile, $POFile) = $this->createMessageTemplate($catalogue);
     }
 
     if (is_writable($MOFile) == false)
@@ -462,5 +462,45 @@ class sfMessageSource_gettext extends sfMessageSource
     sort($catalogue);
 
     return $catalogue;
+  }
+
+  protected function createMessageTemplate($catalogue)
+  {
+    if (is_null($catalogue))
+    {
+      $catalogue = 'messages';
+    }
+
+    $variants = $this->getCatalogueList($catalogue);
+    $variant = array_shift($variants);
+    $mo_file = $this->getSource($variant);
+    $po_file = $this->getPOFile($mo_file);
+
+    $dir = dirname($mo_file);
+    if (!is_dir($dir))
+    {
+      @mkdir($dir);
+      @chmod($dir, 0777);
+    }
+
+    if (!is_dir($dir))
+    {
+      throw new sfException("Unable to create directory $dir");
+    }
+
+    $po = TGettext::factory('PO', $po_file);
+    $result['meta']['PO-Revision-Date'] = date('Y-m-d H:i:s');
+    $result['strings'] = array();
+
+    $po->fromArray($result);
+    $mo = $po->toMO();
+    if ($po->save() && $mo->save($mo_file))
+    {
+      return array($variant, $mo_file, $po_file);
+    }
+    else
+    {
+      throw sfException("Unable to create file $po_file and $mo_file");
+    }
   }
 }

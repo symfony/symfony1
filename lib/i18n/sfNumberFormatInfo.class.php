@@ -340,12 +340,16 @@ class sfNumberFormatInfo
       }
     }
 
+    $digitPattern = is_int($decimalPos) ? substr($pattern, 0, $decimalPos) : $pattern;
+    $digitPattern  = preg_replace('/[^0]/', '', $digitPattern);
+
     $info['groupPos1']     = $groupPos1;
     $info['groupSize1']    = $groupSize1;
     $info['groupPos2']     = $groupPos2;
     $info['groupSize2']    = $groupSize2;
     $info['decimalPos']    = $decimalPos;
     $info['decimalPoints'] = $decimalPoints;
+    $info['digitSize']     = strlen($digitPattern);
 
     return $info;
   }
@@ -382,6 +386,26 @@ class sfNumberFormatInfo
   function setDecimalDigits($value)
   {
     return $this->pattern['decimalPoints'] = $value;
+  }
+
+  /**
+   * Indicates the digit size.
+   *
+   * @return int digit size.
+   */
+  function getDigitSize()
+  {
+    return $this->pattern['digitSize'];
+  }
+
+  /**
+   * Set the digit size.
+   *
+   * @param int digit size.
+   */
+  function setDigitSize($value)
+  {
+    $this->pattern['digitSize'] = $value;
   }
 
   /**
