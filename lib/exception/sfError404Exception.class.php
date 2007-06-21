@@ -39,6 +39,8 @@ class sfError404Exception extends sfException
   {
     if (sfConfig::get('sf_debug'))
     {
+      sfContext::getInstance()->getResponse()->setStatusCode(404);
+
       return parent::printStackTrace($exception);
     }
     else
