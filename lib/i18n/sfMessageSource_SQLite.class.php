@@ -30,6 +30,61 @@ require_once(dirname(__FILE__).'/util.php');
  *
  * See the MessageSource::factory() method to instantiate this class.
  *
+ * SQLite schema:
+ *
+ * CREATE TABLE catalogue (
+ *   cat_id INTEGER PRIMARY KEY,
+ *   name VARCHAR NOT NULL,
+ *   source_lang VARCHAR ,
+ *   target_lang VARCHAR ,
+ *   date_created INT,
+ *   date_modified INT,
+ *   author VARCHAR);
+ *
+ * CREATE TABLE trans_unit (
+ *   msg_id INTEGER PRIMARY KEY,
+ *   cat_id INTEGER NOT NULL DEFAULT '1',
+ *   id VARCHAR,
+ *   source TEXT,
+ *   target TEXT,
+ *   comments TEXT,
+ *   date_added INT,
+ *   date_modified INT,
+ *   author VARCHAR,
+ *   translated INT(1) NOT NULL DEFAULT '0');
+ *
+ * Propel schema (in .xml format):
+ *
+ *  <database ...>
+ *    ...
+ *    <table name="catalogue">
+ *     <column name="cat_id" type="integer" required="true" primaryKey="true" autoincrement="true" />
+ *     <column name="name" type="varchar" size="100" />
+ *     <column name="source_lang" type="varchar" size="100" />
+ *     <column name="target_lang" type="varchar" size="100" />
+ *     <column name="date_created" type="timestamp" />
+ *     <column name="date_modified" type="timestamp" />
+ *     <column name="author" type="varchar" size="255" />
+ *    </table>
+ *
+ *    <table name="trans_unit">
+ *     <column name="msg_id" type="integer" required="true" primaryKey="true" autoincrement="true" />
+ *     <column name="cat_id" type="integer" />
+ *       <foreign-key foreignTable="catalogue" onDelete="cascade">
+ *         <reference local="cat_id" foreign="cat_id"/>
+ *       </foreign-key>
+ *     <column name="id" type="varchar" size="255" />
+ *     <column name="source" type="longvarchar" />
+ *     <column name="target" type="longvarchar" />
+ *     <column name="comments" type="longvarchar" />
+ *     <column name="date_created" type="timestamp" />
+ *     <column name="date_modified" type="timestamp" />
+ *     <column name="author" type="varchar" size="255" />
+ *     <column name="translated" type="integer" />
+ *    </table>
+ *    ...
+ *  </database>
+ *
  * @author Xiang Wei Zhuo <weizhuo[at]gmail[dot]com>
  * @version v1.0, last update on Fri Dec 24 16:58:58 EST 2004
  * @package System.I18N.core
