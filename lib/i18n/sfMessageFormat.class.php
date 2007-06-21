@@ -215,7 +215,7 @@ class sfMessageFormat
   {
     if (empty($catalogue))
     {
-      $catalogue = empty($this->Catalogue) ? 'messages' : $this->Catalogue;
+      $catalogue = empty($this->catalogue) ? 'messages' : $this->catalogue;
     }
 
     if (empty($args))
