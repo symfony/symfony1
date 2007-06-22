@@ -23,7 +23,7 @@ function __($text, $args = array(), $catalogue = 'messages')
 
   if (sfConfig::get('sf_i18n'))
   {
-    if (!isset($i18n))
+    if (!isset($i18n) || sfConfig::get('sf_test'))
     {
       $i18n = sfContext::getInstance()->getI18N();
     }

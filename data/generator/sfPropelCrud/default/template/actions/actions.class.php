@@ -58,7 +58,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 <?php if ($type == CreoleTypes::DATE || $type == CreoleTypes::TIMESTAMP): ?>
     if ($this->getRequestParameter('<?php echo $name ?>'))
     {
-      list($d, $m, $y) = sfI18N::getDateForCulture($this->getRequestParameter('<?php echo $name ?>'), $this->getUser()->getCulture());
+      list($d, $m, $y) = $this->getContext()->getI18N()->getDateForCulture($this->getRequestParameter('<?php echo $name ?>'), $this->getUser()->getCulture());
       $<?php echo $this->getSingularName() ?>->set<?php echo $column->getPhpName() ?>("$y-$m-$d");
     }
 <?php elseif ($type == CreoleTypes::BOOLEAN): ?>

@@ -281,10 +281,9 @@ class sfContext
    */
   public function getI18N()
   {
-    if (!$this->i18n && sfConfig::get('sf_i18n'))
+    if (!sfConfig::get('sf_i18n'))
     {
-      $this->i18n = sfI18N::getInstance();
-      $this->i18n->initialize($this);
+      throw new sfConfigurationException('You must enabled i18n support in your settings.yml configuration file.');
     }
 
     return $this->i18n;

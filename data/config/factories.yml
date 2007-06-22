@@ -21,3 +21,6 @@ default:
     param:
       automaticCleaningFactor: 0
       cacheDir:                %SF_TEMPLATE_CACHE_DIR%
+
+  i18n:
+    class: sfI18N

@@ -101,7 +101,7 @@ class sfDateValidator extends sfValidator
   protected function getValidDate($value, $culture)
   {
     // Use the language culture date format
-    $result = sfI18N::getDateForCulture($value, $culture);
+    $result = $this->getContext()->getI18N()->getDateForCulture($value, $culture);
     list($d, $m, $y) = $result;
 
     // Make sure the date is a valid gregorian calendar date also

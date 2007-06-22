@@ -23,20 +23,6 @@ class sfI18N
     $messageSource       = null,
     $messageFormat       = null;
 
-  static protected
-    $instance            = null;
-
-  static public function getInstance()
-  {
-    if (!isset(self::$instance))
-    {
-      $class = __CLASS__;
-      self::$instance = new $class();
-    }
-
-    return self::$instance;
-  }
-
   public function initialize($context)
   {
     $this->context = $context;
@@ -140,7 +126,7 @@ class sfI18N
     return $retval;
   }
 
-  public static function getCountry($iso, $culture)
+  public function getCountry($iso, $culture)
   {
     $c = new sfCultureInfo($culture);
     $countries = $c->getCountries();
@@ -148,21 +134,21 @@ class sfI18N
     return (array_key_exists($iso, $countries)) ? $countries[$iso] : '';
   }
 
-  public static function getNativeName($culture)
+  public function getNativeName($culture)
   {
     $cult = new sfCultureInfo($culture);
     return $cult->getNativeName();
   }
 
   // Return timestamp from a date formatted with a given culture
-  public static function getTimestampForCulture($date, $culture)
+  public function getTimestampForCulture($date, $culture)
   {
-    list($d, $m, $y) = self::getDateForCulture($date, $culture);
+    list($d, $m, $y) = $this->getDateForCulture($date, $culture);
     return mktime(0, 0, 0, $m, $d, $y);
   }
 
   // Return a d, m and y from a date formatted with a given culture
-  public static function getDateForCulture($date, $culture)
+  public function getDateForCulture($date, $culture)
   {
     if (!$date) return 0;
 

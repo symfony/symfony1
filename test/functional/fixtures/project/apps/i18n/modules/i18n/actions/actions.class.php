@@ -12,9 +12,11 @@ class i18nActions extends sfActions
 {
   public function executeIndex()
   {
-    $this->test = $this->getContext()->getI18N()->__('an english sentence');
-    $this->localTest = $this->getContext()->getI18N()->__('a local english sentence');
-    $this->otherTest = $this->getContext()->getI18N()->__('an english sentence', array(), 'other');
-    $this->otherLocalTest = $this->getContext()->getI18N()->__('a local english sentence', array(), 'other');
+    $i18n = $this->getContext()->getI18N();
+
+    $this->test = $i18n->__('an english sentence');
+    $this->localTest = $i18n->__('a local english sentence');
+    $this->otherTest = $i18n->__('an english sentence', array(), 'other');
+    $this->otherLocalTest = $i18n->__('a local english sentence', array(), 'other');
   }
 }
