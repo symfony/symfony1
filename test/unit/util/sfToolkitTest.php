@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(69, new lime_output_color());
+$t = new lime_test(70, new lime_output_color());
 
 // ::stringToArray()
 $t->diag('::stringToArray()');
@@ -37,7 +37,10 @@ foreach ($tests as $string => $attributes)
 $t->diag('::isUTF8()');
 $t->is('été', true, '::isUTF8() returns true if the parameter is an UTF-8 encoded string');
 $t->is(sfToolkit::isUTF8('AZERTYazerty1234-_'), true, '::isUTF8() returns true if the parameter is an UTF-8 encoded string');
-$t->is(sfToolkit::isUTF8('AZERTYazerty1234-_'.chr(1)), false, '::isUTF8() returns false if the parameter is not an UTF-8 encoded string');
+$t->is(sfToolkit::isUTF8('AZERTYazerty1234-_'.chr(254)), false, '::isUTF8() returns false if the parameter is not an UTF-8 encoded string');
+// check a very long string
+$string = str_repeat('Here is an UTF8 string avec du français.', 1000);
+$t->is(sfToolkit::isUTF8($string), true, '::isUTF8() can operate on very large strings');
 
 // ::literalize()
 $t->diag('::literalize()');
