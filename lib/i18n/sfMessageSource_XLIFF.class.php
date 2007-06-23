@@ -55,7 +55,7 @@ class sfMessageSource_XLIFF extends sfMessageSource
    */
   function __construct($source)
   {
-    $this->source = (string)$source;
+    $this->source = (string) $source;
   }
 
   /**
@@ -117,6 +117,7 @@ class sfMessageSource_XLIFF extends sfMessageSource
    */
   protected function getSource($variant)
   {
+error_log($this->source.'-----'.$variant."**\n");
     return $this->source.'/'.$variant;
   }
 
@@ -150,7 +151,7 @@ class sfMessageSource_XLIFF extends sfMessageSource
     {
       if (strlen($variants[$i]) > 0)
       {
-        $variant .= ($variant) ? '_'.$variants[$i] : $variants[$i];
+        $variant .= $variant ? '_'.$variants[$i] : $variants[$i];
         $catalogues[] = $catalogue.$this->dataSeparator.$variant.$this->dataExt;
       }
     }
@@ -190,7 +191,7 @@ class sfMessageSource_XLIFF extends sfMessageSource
 
   /**
    * Returns a list of catalogue and its culture ID.
-   * E.g. array('messages','en_AU')
+   * E.g. array('messages', 'en_AU')
    *
    * @return array list of catalogues 
    * @see getCatalogues()
@@ -203,7 +204,7 @@ class sfMessageSource_XLIFF extends sfMessageSource
   /**
    * Returns a list of catalogue and its culture ID. This takes care
    * of directory structures.
-   * E.g. array('messages','en_AU')
+   * E.g. array('messages', 'en_AU')
    *
    * @return array list of catalogues 
    */
