@@ -30,7 +30,7 @@
  * @version v1.0, last update on Fri Dec 24 16:18:44 EST 2004
  * @package System.I18N.core
  */
-class sfMessageSource_gettext extends sfMessageSource
+class sfMessageSource_gettext extends sfMessageSource_File
 { 
   /**
    * Message data filename extension.
@@ -43,17 +43,6 @@ class sfMessageSource_gettext extends sfMessageSource
    * @var string 
    */
   protected $poExt = '.po';
-
-  /**
-   * Separator between culture name and source.
-   * @var string 
-   */
-  protected $dataSeparator = '.';
-
-  function __construct($source)
-  {
-    $this->source = (string) $source;
-  }
 
   /**
    * Loads the messages from a MO file.
@@ -77,96 +66,6 @@ class sfMessageSource_gettext extends sfMessageSource
     }
 
     return $results;
-  }
-
-  /**
-   * Determines if the MO file source is valid.
-   *
-   * @param string MO file
-   * @return boolean true if valid, false otherwise. 
-   */
-  protected function isValidSource($filename)
-  {
-    return is_file($filename);
-  }
-
-  /**
-   * Gets the MO file for a specific message catalogue and cultural variant.
-   *
-   * @param string message catalogue
-   * @return string full path to the MO file. 
-   */
-  protected function getSource($variant)
-  {
-    return $this->source.'/'.$variant;
-  }
-
-  /**
-   * Gets the last modified unix-time for this particular catalogue+variant.
-   * Just use the file modified time.
-   *
-   * @param string catalogue+variant
-   * @return int last modified in unix-time format.
-   */
-  protected function getLastModified($source)
-  {
-    return is_file($source) ? filemtime($source) : 0;
-  }
-
-  /**
-   * Gets all the variants of a particular catalogue.
-   *
-   * @param string catalogue name
-   * @return array list of all variants for this catalogue.
-   */
-  protected function getCatalogueList($catalogue)
-  {
-    $variants = explode('_', $this->culture);
-    $source = $catalogue.$this->dataExt;
-
-    $catalogues = array($source);
-
-    $variant = null;
-
-    for ($i = 0, $max = count($variants); $i < $max; $i++)
-    {
-      if (strlen($variants[$i]) > 0)
-      {
-        $variant .= $variant ? '_'.$variants[$i] : $variants[$i];
-        $catalogues[] = $catalogue.$this->dataSeparator.$variant.$this->dataExt;
-      }
-    }
-    $byDir = $this->getCatalogueByDir($catalogue);
-    $catalogues = array_merge($byDir,array_reverse($catalogues));
-
-    return $catalogues;
-  }
-
-  /**
-   * Traverses through the directory structure to find the catalogues.
-   * This should only be called by getCatalogueList()
-   *
-   * @param string a particular catalogue.
-   * @return array a list of catalogues. 
-   * @see getCatalogueList()
-   */
-  protected function getCatalogueByDir($catalogue)
-  {
-    $variants = explode('_', $this->culture);
-    $catalogues = array();
-
-    $variant = null;
-
-    for($i = 0, $max = count($variants); $i < $max; $i++)
-    {
-      if (strlen($variants[$i]) > 0)
-      {
-        $variant .= $variant ? '_'.$variants[$i] : $variants[$i];
-        $catalogues[] = $variant.'/'.$catalogue.$this->dataExt;
-      }
-    }
-
-    return array_reverse($catalogues);
   }
 
   /**
@@ -407,61 +306,6 @@ class sfMessageSource_gettext extends sfMessageSource
     }
 
     return false;
-  }
-
-  /**
-   * Returns a list of catalogue as key and all it variants as value.
-   *
-   * @return array list of catalogues 
-   */
-  function catalogues()
-  {
-    return $this->getCatalogues();
-  }
-
-  /**
-   * Returns a list of catalogue and its culture ID. This takes care
-   * of directory structures.
-   * E.g. array('messages','en_AU')
-   *
-   * @return array list of catalogues 
-   */
-  protected function getCatalogues($dir = null, $variant = null)
-  {
-    $dir = $dir ? $dir : $this->source;
-    $files = scandir($dir);
-
-    $catalogue = array();
-
-    foreach ($files as $file)
-    {
-      if (is_dir($dir.'/'.$file) && preg_match('/^[a-z]{2}(_[A-Z]{2,3})?$/', $file))
-      {
-        $catalogue = array_merge($catalogue, $this->getCatalogues($dir.'/'.$file, $file));
-      }
-
-      $pos = strpos($file, $this->dataExt);
-
-      if ($pos > 0 && substr($file, -1 * strlen($this->dataExt)) == $this->dataExt)
-      {
-        $name = substr($file, 0, $pos);
-        $dot = strrpos($name, $this->dataSeparator);
-        $culture = $variant;
-        $cat = $name;
-        if (is_int($dot))
-        {
-          $culture = substr($name, $dot + 1, strlen($name));
-          $cat = substr($name, 0, $dot);
-        }
-        $details[0] = $cat;
-        $details[1] = $culture;
-
-        $catalogue[] = $details;
-      }
-    }
-    sort($catalogue);
-
-    return $catalogue;
   }
 
   protected function createMessageTemplate($catalogue)
