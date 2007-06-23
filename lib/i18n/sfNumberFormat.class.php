@@ -19,11 +19,6 @@
  */
 
 /**
- * Get the encoding utilities
- */
-require_once(dirname(__FILE__).'/util.php');
-
-/**
  * sfNumberFormat class.
  * 
  * sfNumberFormat formats decimal numbers in any locale. The decimal
@@ -157,7 +152,7 @@ class sfNumberFormat
 
     $result = str_replace('¤', $symbol, $result);
 
-    return I18N_toEncoding($result, $charset);
+    return sfToolkit::I18N_toEncoding($result, $charset);
   }
 
   /**

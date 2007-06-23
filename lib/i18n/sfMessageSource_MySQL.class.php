@@ -19,11 +19,6 @@
  */
 
 /**
- * Get the I18N utility file, contains the DSN parser.
- */
-require_once(dirname(__FILE__).'/util.php');
-
-/**
  * sfMessageSource_MySQL class.
  * 
  * Retrieve the message translation from a MySQL database.
@@ -93,7 +88,7 @@ require_once(dirname(__FILE__).'/util.php');
  * @version v1.0, last update on Fri Dec 24 16:58:58 EST 2004
  * @package System.I18N.core
  */
-class sfMessageSource_MySQL extends sfMessageSource
+class sfMessageSource_MySQL extends sfMessageSource_Database
 {
   /**
    * The datasource string, full DSN to the database.
@@ -123,7 +118,7 @@ class sfMessageSource_MySQL extends sfMessageSource
   function __construct($source)
   {
     $this->source = (string) $source;
-    $this->dsn = parseDSN($this->source);
+    $this->dsn = $this->parseDSN($this->source);
     $this->db = $this->connect();
   }
 

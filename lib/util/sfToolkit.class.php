@@ -548,4 +548,46 @@ class sfToolkit
 
     return '/tmp';
   }
+
+  /**
+   * Converts strings to UTF-8 via iconv. NB, the result may not by UTF-8 if the conversion failed.
+   *
+   * This file comes from Prado (BSD License)
+   *
+   * @param string string to convert to UTF-8
+   * @return string UTF-8 encoded string, original string if iconv failed.
+   */
+  function I18N_toUTF8($string, $from)
+  {
+    $from = strtoupper($from);
+    if ($from != 'UTF-8')
+    {
+      $s = iconv($from,'UTF-8',$string); //to UTF-8
+
+      return $s !== false ? $s : $string; //it could return false
+    }
+
+    return $string;
+  }
+
+  /**
+   * Converts UTF-8 strings to a different encoding. NB. The result may not have been encoded if iconv fails.
+   *
+   * This file comes from Prado (BSD License)
+   *
+   * @param string the UTF-8 string for conversion
+   * @return string encoded string.
+   */
+  function I18N_toEncoding($string, $to)
+  {
+    $to = strtoupper($to);
+    if ($to != 'UTF-8')
+    {
+      $s = iconv('UTF-8', $to, $string);
+
+      return $s !== false ? $s : $string;
+    }
+
+    return $string;
+  }
 }

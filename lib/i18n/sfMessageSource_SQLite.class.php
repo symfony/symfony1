@@ -19,11 +19,6 @@
  */
 
 /**
- * Get the I18N utility file, contains the DSN parser.
- */
-require_once(dirname(__FILE__).'/util.php');
-
-/**
  * sfMessageSource_SQLite class.
  * 
  * Retrieve the message translation from a SQLite database.
@@ -89,7 +84,7 @@ require_once(dirname(__FILE__).'/util.php');
  * @version v1.0, last update on Fri Dec 24 16:58:58 EST 2004
  * @package System.I18N.core
  */
-class sfMessageSource_SQLite extends sfMessageSource
+class sfMessageSource_SQLite extends sfMessageSource_Database
 {
   /**
    * The SQLite datasource, the filename of the database.
@@ -105,7 +100,7 @@ class sfMessageSource_SQLite extends sfMessageSource
    */
   function __construct($source)
   {
-    $dsn = parseDSN((string) $source);
+    $dsn = $this->parseDSN((string) $source);
     $this->source = $dsn['database'];
   }
 

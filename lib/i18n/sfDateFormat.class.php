@@ -18,11 +18,6 @@
  */
 
 /**
- * Gets the encoding utilities
- */
-require_once(dirname(__FILE__).'/util.php');
-
-/**
  * sfDateFormat class.
  * 
  * The sfDateFormat class allows you to format dates and times with 
@@ -248,7 +243,7 @@ class sfDateFormat
       }
     }
 
-    return I18N_toEncoding(implode('', $tokens), $charset);
+    return sfToolkit::I18N_toEncoding(implode('', $tokens), $charset);
   }
 
   /**

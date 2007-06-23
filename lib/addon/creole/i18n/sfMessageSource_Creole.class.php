@@ -54,7 +54,7 @@ CREATE TABLE `trans_unit` (
  *
  * @author RoVeRT <symfony[at]rovert[dot]net>
  */
-class sfMessageSource_Creole extends sfMessageSource
+class sfMessageSource_Creole extends sfMessageSource_Database
 {
   /**
    * A resource link to the database

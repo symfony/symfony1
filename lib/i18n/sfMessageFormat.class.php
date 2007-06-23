@@ -19,11 +19,6 @@
  */
 
 /**
- * Gets the encoding utilities
- */
-require_once(dirname(__FILE__).'/util.php');
-
-/**
  * sfMessageFormat class.
  * 
  * Format a message, that is, for a particular message find the 
@@ -96,7 +91,7 @@ class sfMessageFormat
    * Create a new instance of sfMessageFormat using the messages
    * from the supplied message source.
    *
-   * @param MessageSource the source of translation messages.
+   * @param sfMessageSource the source of translation messages.
    * @param string charset for the message output.
    */
   function __construct(sfIMessageSource $source, $charset = 'UTF-8')
@@ -105,7 +100,7 @@ class sfMessageFormat
     $this->setCharset($charset);
   }
 
-  /** 
+  /**
    * Sets the charset for message output.
    *
    * @param string charset, default is UTF-8
@@ -167,9 +162,9 @@ class sfMessageFormat
       $charset = $this->getCharset();
     }
 
-    $s = $this->formatString(I18N_toUTF8($string, $charset), $args, $catalogue);
+    $s = $this->formatString(sfToolkit::I18N_toUTF8($string, $charset), $args, $catalogue);
 
-    return I18N_toEncoding($s, $charset);
+    return sfToolkit::I18N_toEncoding($s, $charset);
   }
 
   public function formatExists($string, $args = array(), $catalogue = null, $charset = null)
@@ -179,9 +174,9 @@ class sfMessageFormat
       $charset = $this->getCharset();
     }
 
-    $s = $this->getFormattedString(I18N_toUTF8($string, $charset), $args, $catalogue);
+    $s = $this->getFormattedString(sfToolkit::I18N_toUTF8($string, $charset), $args, $catalogue);
 
-    return I18N_toEncoding($s, $charset);
+    return sfToolkit::I18N_toEncoding($s, $charset);
   }
 
   /**
@@ -234,14 +229,7 @@ class sfMessageFormat
         if ($source == $string)
         {
           // check if it contains only strings.
-          if (is_string($result))
-          {
-            $target = $result;
-          }
-          else
-          {
-            $target = $result[0];
-          }
+          $target = is_string($result) ? $result : $result[0];
 
           // found, but untranslated
           if (empty($target))
