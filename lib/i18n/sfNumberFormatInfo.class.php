@@ -67,7 +67,7 @@ class sfNumberFormatInfo
   const SCIENTIFIC = 3;
 
   /**
-   * Allow functions that begins with 'set' to be called directly
+   * Allows functions that begins with 'set' to be called directly
    * as an attribute/property to retrieve the value.
    *
    * @return mixed
@@ -81,15 +81,15 @@ class sfNumberFormatInfo
     }
     else
     {
-      throw new sfException('Property '.$name.' does not exists.');
+      throw new sfException(sprintf('Property %s does not exists.', $name));
     }
   }
 
   /**
-   * Allow functions that begins with 'set' to be called directly
+   * Allows functions that begins with 'set' to be called directly
    * as an attribute/property to set the value.
    */
-  function __set($name, $value) 
+  function __set($name, $value)
   {
     $setProperty = 'set'.$name;
     if (in_array($setProperty, $this->properties))
@@ -98,7 +98,7 @@ class sfNumberFormatInfo
     }
     else
     {
-      throw new sfException('Property '.$name.' can not be set.');
+      throw new sfException(sprintf('Property %s can not be set.', $name));
     }
   }
 
@@ -127,7 +127,7 @@ class sfNumberFormatInfo
   }
 
   /**
-   * Set the pattern for a specific number pattern. The validate patterns
+   * Sets the pattern for a specific number pattern. The validate patterns
    * sfNumberFormatInfo::DECIMAL, sfNumberFormatInfo::CURRENCY,
    * sfNumberFormatInfo::PERCENTAGE, or sfNumberFormatInfo::SCIENTIFIC
    *
@@ -245,7 +245,7 @@ class sfNumberFormatInfo
   }
 
   /**
-   * Parse the given pattern and return a list of known properties.
+   * Parses the given pattern and return a list of known properties.
    *
    * @param string a number pattern.
    * @return array list of pattern properties.
@@ -355,7 +355,7 @@ class sfNumberFormatInfo
   }
 
   /**
-   * Get the prefix and postfix of a pattern.
+   * Gets the prefix and postfix of a pattern.
    *
    * @param string pattern
    * @return array of prefix and postfix, array(prefix,postfix). 
@@ -379,7 +379,7 @@ class sfNumberFormatInfo
   }
 
   /**
-   * Set the number of decimal places.
+   * Sets the number of decimal places.
    *
    * @param int number of decimal places.
    */
@@ -399,7 +399,7 @@ class sfNumberFormatInfo
   }
 
   /**
-   * Set the digit size.
+   * Sets the digit size.
    *
    * @param int digit size.
    */
@@ -419,7 +419,7 @@ class sfNumberFormatInfo
   }
 
   /**
-   * Set the string to use as the decimal separator.
+   * Sets the string to use as the decimal separator.
    *
    * @param string the decimal point
    */
@@ -441,7 +441,7 @@ class sfNumberFormatInfo
   }
 
   /**
-   * Set the string to use as the group separator.
+   * Sets the string to use as the group separator.
    *
    * @param string the group separator.
    */
@@ -467,7 +467,7 @@ class sfNumberFormatInfo
   }
 
   /**
-   * Set the number of digits in each group to the left of the decimal.
+   * Sets the number of digits in each group to the left of the decimal.
    * There can be two grouping sizes, the value should
    * be an <b>array(group1, group2)</b>, if there is only 1 grouping size,
    * group2 should be false.
@@ -496,7 +496,7 @@ class sfNumberFormatInfo
   }
 
   /**
-   * Set the format pattern for negative values.
+   * Sets the format pattern for negative values.
    * The negative pattern is composed of a prefix, and postfix in the form
    * <b>array(prefix, postfix)</b>.
    *
@@ -524,7 +524,7 @@ class sfNumberFormatInfo
   }
 
   /**
-   * Set the format pattern for positive values.
+   * Sets the format pattern for positive values.
    * The positive pattern is composed of a prefix, and postfix in the form
    * <b>array(prefix, postfix)</b>.
    *
@@ -554,7 +554,7 @@ class sfNumberFormatInfo
   }
 
   /**
-   * Set the string to use as the currency symbol.
+   * Sets the string to use as the currency symbol.
    *
    * @param string currency symbol.
    */
@@ -574,7 +574,7 @@ class sfNumberFormatInfo
   }
 
   /**
-   * Set the string that represents negative infinity.
+   * Sets the string that represents negative infinity.
    *
    * @param string negative infinity. 
    */
@@ -594,7 +594,7 @@ class sfNumberFormatInfo
   }
 
   /**
-   * Set the string that represents positive infinity.
+   * Sets the string that represents positive infinity.
    *
    * @param string positive infinity. 
    */
@@ -614,7 +614,7 @@ class sfNumberFormatInfo
   }
 
   /**
-   * Set the string that denotes that the associated number is negative.
+   * Sets the string that denotes that the associated number is negative.
    *
    * @param string negative sign. 
    */
@@ -634,7 +634,7 @@ class sfNumberFormatInfo
   }
 
   /**
-   * Set the string that denotes that the associated number is positive.
+   * Sets the string that denotes that the associated number is positive.
    *
    * @param string positive sign. 
    */
@@ -654,7 +654,7 @@ class sfNumberFormatInfo
   }
 
   /**
-   * Set the string that represents the IEEE NaN (not a number) value.
+   * Sets the string that represents the IEEE NaN (not a number) value.
    *
    * @param string NaN symbol.
    */
@@ -674,7 +674,7 @@ class sfNumberFormatInfo
   }
 
   /**
-   * Set the string to use as the percent symbol.
+   * Sets the string to use as the percent symbol.
    *
    * @param string percent symbol.
    */
@@ -694,7 +694,7 @@ class sfNumberFormatInfo
   }
 
   /**
-   * Set the string to use as the per mille symbol.
+   * Sets the string to use as the per mille symbol.
    *
    * @param string percent symbol.
    */

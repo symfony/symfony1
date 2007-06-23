@@ -19,8 +19,6 @@ class sfMessageCache
 {
   /**
    * Cache Lite instance.
-   *
-   * @var TCache_Lite
    */
   protected $cache;
 
@@ -30,7 +28,7 @@ class sfMessageCache
   protected $lifetime = 3153600;
 
   /**
-   * Create a new Translation cache.
+   * Creates a new Translation cache.
    *
    * @param string $cacheDir Directory to store the cache files.
    */
@@ -41,7 +39,7 @@ class sfMessageCache
   }
 
   /**
-   * Get the cache life time.
+   * Gets the cache life time.
    *
    * @return int Cache life time.
    */
@@ -51,7 +49,7 @@ class sfMessageCache
   }
 
   /**
-   * Set the cache life time.
+   * Sets the cache life time.
    *
    * @param int $time Cache life time.
    */
@@ -61,7 +59,7 @@ class sfMessageCache
   }
 
   /**
-   * Get the cache file ID based section and locale.
+   * Gets the cache file ID based section and locale.
    *
    * @param string $catalogue The translation section.
    * @param string $culture The translation locale, e.g. "en_AU".
@@ -72,7 +70,7 @@ class sfMessageCache
   }
 
   /**
-   * Get the cache file GROUP based section and locale.
+   * Gets the cache file GROUP based section and locale.
    *
    * @param string $catalogue The translation section.
    * @param string $culture The translation locale, e.g. "en_AU".
@@ -83,7 +81,7 @@ class sfMessageCache
   }
 
   /**
-   * Get the data from the cache.
+   * Gets the data from the cache.
    *
    * @param string $catalogue The translation section.
    * @param string $culture The translation locale, e.g. "en_AU".
@@ -105,7 +103,7 @@ class sfMessageCache
   }
 
   /**
-   * Save the data to cache for the specified section and locale.
+   * Saves the data to cache for the specified section and locale.
    *
    * @param array $data The data to save.
    * @param string $catalogue The translation section.
@@ -120,7 +118,7 @@ class sfMessageCache
   }
 
   /**
-   * Clean up the cache for the specified section and locale.
+   * Cleans up the cache for the specified section and locale.
    *
    * @param string $catalogue The translation section.
    * @param string $culture The translation locale, e.g. "en_AU".
@@ -132,7 +130,7 @@ class sfMessageCache
   }
 
   /**
-   * Flush the cache. Deletes all the cache files.
+   * Flushes the cache. Deletes all the cache files.
    */
   public function clear()
   {

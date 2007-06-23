@@ -120,7 +120,7 @@ abstract class sfMessageSource implements sfIMessageSource
     {
       if (!is_file($filename))
       {
-        throw new sfException("File $filename not found");
+        throw new sfException(sprintf("File %s not found.", $filename));
       }
 
       include_once($filename);
@@ -129,32 +129,30 @@ abstract class sfMessageSource implements sfIMessageSource
     $class = 'sfMessageSource_'.$type;
     if (!class_exists($class))
     {
-      throw new sfException(sprintf('Unable to find type "%s"', $type));
+      throw new sfException(sprintf('Unable to find type "%s".', $type));
     }
 
     return new $class($source);
   }
 
   /**
-   * Load a particular message catalogue. Use read() to
+   * Loads a particular message catalogue. Use read() to
    * to get the array of messages. The catalogue loading sequence
-   * is as follows
+   * is as follows:
    *
-   *  # [1] call getCatalogeList($catalogue) to get a list of
-   *    variants for for the specified $catalogue.
-   *  # [2] for each of the variants, call getSource($variant)
-   *    to get the resource, could be a file or catalogue ID.
-   *  # [3] verify that this resource is valid by calling isValidSource($source)
-   *  # [4] try to get the messages from the cache
-   *  # [5] if a cache miss, call load($source) to load the message array
-   *  # [6] store the messages to cache.
-   *  # [7] continue with the foreach loop, e.g. goto [2].
+   *  # [1] Call getCatalogueList($catalogue) to get a list of variants for for the specified $catalogue.
+   *  # [2] For each of the variants, call getSource($variant) to get the resource, could be a file or catalogue ID.
+   *  # [3] Verify that this resource is valid by calling isValidSource($source)
+   *  # [4] Try to get the messages from the cache
+   *  # [5] If a cache miss, call load($source) to load the message array
+   *  # [6] Store the messages to cache.
+   *  # [7] Continue with the foreach loop, e.g. goto [2].
    *
-   * @param string a catalogue to load
+   * @param  string  a catalogue to load
    * @return boolean true if loaded, false otherwise.
-   * @see read()
+   * @see    read()
    */
-  function load($catalogue='messages')
+  function load($catalogue = 'messages')
   {
     $variants = $this->getCatalogueList($catalogue);
 
@@ -180,6 +178,7 @@ abstract class sfMessageSource implements sfIMessageSource
           $this->messages[$variant] = $data;
           $loadData = false;
         }
+
         unset($data);
       }
 
@@ -194,6 +193,7 @@ abstract class sfMessageSource implements sfIMessageSource
             $this->cache->save($data, $variant, $this->culture);
           }
         }
+
         unset($data);
       }
     }
@@ -202,7 +202,7 @@ abstract class sfMessageSource implements sfIMessageSource
   }
 
   /**
-   * Get the array of messages.
+   * Gets the array of messages.
    *
    * @param parameter
    * @return array translation messages.
@@ -213,7 +213,7 @@ abstract class sfMessageSource implements sfIMessageSource
   }
 
   /**
-   * Get the cache handler for this source.
+   * Gets the cache handler for this source.
    *
    * @return sfMessageCache cache handler
    */
@@ -223,7 +223,7 @@ abstract class sfMessageSource implements sfIMessageSource
   }
 
   /**
-   * Set the cache handler for caching the messages.
+   * Sets the cache handler for caching the messages.
    *
    * @param sfMessageCache the cache handler.
    */
@@ -233,7 +233,7 @@ abstract class sfMessageSource implements sfIMessageSource
   }
 
   /**
-   * Add a untranslated message to the source. Need to call save()
+   * Adds a untranslated message to the source. Need to call save()
    * to save the messages to source.
    *
    * @param string message to add
@@ -247,7 +247,7 @@ abstract class sfMessageSource implements sfIMessageSource
   }
 
   /**
-   * Set the culture for this message source.
+   * Sets the culture for this message source.
    *
    * @param string culture name
    */
@@ -257,7 +257,7 @@ abstract class sfMessageSource implements sfIMessageSource
   }
 
   /**
-   * Get the culture identifier for the source.
+   * Gets the culture identifier for the source.
    *
    * @return string culture identifier.
    */
@@ -267,7 +267,7 @@ abstract class sfMessageSource implements sfIMessageSource
   }
 
   /**
-   * Get the last modified unix-time for this particular catalogue+variant.
+   * Gets the last modified unix-time for this particular catalogue+variant.
    *
    * @param string catalogue+variant
    * @return int last modified in unix-time format.
@@ -278,7 +278,7 @@ abstract class sfMessageSource implements sfIMessageSource
   }
 
   /**
-   * Load the message for a particular catalogue+variant.
+   * Loads the message for a particular catalogue+variant.
    * This methods needs to implemented by subclasses.
    *
    * @param string catalogue+variant.
@@ -290,7 +290,7 @@ abstract class sfMessageSource implements sfIMessageSource
   }
 
   /**
-   * Get the source, this could be a filename or database ID.
+   * Gets the source, this could be a filename or database ID.
    *
    * @param string catalogue+variant
    * @return string the resource key
@@ -301,7 +301,7 @@ abstract class sfMessageSource implements sfIMessageSource
   }
 
   /**
-   * Determine if the source is valid.
+   * Determines if the source is valid.
    *
    * @param string catalogue+variant
    * @return boolean true if valid, false otherwise.
@@ -312,7 +312,7 @@ abstract class sfMessageSource implements sfIMessageSource
   }
 
   /**
-   * Get all the variants of a particular catalogue.
+   * Gets all the variants of a particular catalogue.
    * This method must be implemented by subclasses.
    *
    * @param string catalogue name

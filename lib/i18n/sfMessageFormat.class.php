@@ -19,7 +19,7 @@
  */
 
 /**
- * Get the encoding utilities
+ * Gets the encoding utilities
  */
 require_once(dirname(__FILE__).'/util.php');
 
@@ -126,7 +126,7 @@ class sfMessageFormat
   }
   
   /**
-   * Load the message from a particular catalogue. A listed
+   * Loads the message from a particular catalogue. A listed
    * loaded catalogues is kept to prevent reload of the same
    * catalogue. The load catalogue messages are stored
    * in the $this->message array.
@@ -135,7 +135,7 @@ class sfMessageFormat
    */
   protected function loadCatalogue($catalogue)
   {
-    if (in_array($catalogue,$this->catalogues))
+    if (in_array($catalogue, $this->catalogues))
     {
       return;
     }
@@ -148,7 +148,7 @@ class sfMessageFormat
   }
 
   /**
-   * Format the string. That is, for a particular string find
+   * Formats the string. That is, for a particular string find
    * the corresponding translation. Variable subsitution is performed
    * for the $args parameter. A different catalogue can be specified
    * using the $catalogue parameter.
@@ -274,7 +274,7 @@ class sfMessageFormat
   }
 
   /**
-   * Get the message source.
+   * Gets the message source.
    *
    * @return MessageSource 
    */
@@ -284,7 +284,7 @@ class sfMessageFormat
   }
   
   /**
-   * Set the prefix and suffix to append to untranslated messages.
+   * Sets the prefix and suffix to append to untranslated messages.
    * e.g. $postscript=array('[T]','[/T]'); will output 
    * "[T]Hello[/T]" if the translation for "Hello" can not be determined.
    *

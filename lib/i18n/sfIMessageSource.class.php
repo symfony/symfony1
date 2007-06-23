@@ -33,12 +33,10 @@
 interface sfIMessageSource
 {
   /**
-   * Load the translation table for this particular catalogue.
+   * Loads the translation table for this particular catalogue.
    * The translation should be loaded in the following order.
-   *  # [1] call getCatalogeList($catalogue) to get a list of 
-   *    variants for for the specified $catalogue.
-   *  # [2] for each of the variants, call getSource($variant)
-   *    to get the resource, could be a file or catalogue ID.
+   *  # [1] call getCatalogueList($catalogue) to get a list of variants for for the specified $catalogue.
+   *  # [2] for each of the variants, call getSource($variant) to get the resource, could be a file or catalogue ID.
    *  # [3] verify that this resource is valid by calling isValidSource($source)
    *  # [4] try to get the messages from the cache
    *  # [5] if a cache miss, call load($source) to load the message array
@@ -51,7 +49,7 @@ interface sfIMessageSource
   function load($catalogue = 'messages');
 
   /**
-   * Get the translation table. This includes all the loaded sections.
+   * Gets the translation table. This includes all the loaded sections.
    * It must return a 2 level array of translation strings.
    * # "catalogue+variant" the catalogue and its variants.
    * # "source string" translation keys, and its translations.
@@ -67,7 +65,7 @@ interface sfIMessageSource
   function read();
 
   /**
-   * Save the list of untranslated blocks to the translation source. 
+   * Saves the list of untranslated blocks to the translation source. 
    * If the translation was not found, you should add those
    * strings to the translation source via the <b>append()</b> method.
    *
@@ -77,7 +75,7 @@ interface sfIMessageSource
   function save($catalogue = 'messages');
 
   /**
-   * Add a untranslated message to the source. Need to call save()
+   * Adds a untranslated message to the source. Need to call save()
    * to save the messages to source.
    *
    * @param string message to add
@@ -86,7 +84,7 @@ interface sfIMessageSource
   function append($message);
 
   /**
-   * Delete a particular message from the specified catalogue.
+   * Deletes a particular message from the specified catalogue.
    *
    * @param string the source message to delete.
    * @param string the catalogue to delete from.
@@ -95,7 +93,7 @@ interface sfIMessageSource
   function delete($message, $catalogue = 'messages');
 
   /**
-   * Update the translation.
+   * Updates the translation.
    *
    * @param string the source string.
    * @param string the new translation string.

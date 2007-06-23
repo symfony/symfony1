@@ -74,18 +74,16 @@ class sfDateTimeFormatInfo
 {
   /**
    * ICU date time formatting data.
-   * @var array 
    */
   protected $data = array();
 
   /**
    * A list of properties that are accessable/writable.
-   * @var array 
    */
   protected $properties = array();
 
   /**
-   * Allow functions that begins with 'set' to be called directly
+   * Allows functions that begins with 'set' to be called directly
    * as an attribute/property to retrieve the value.
    *
    * @return mixed
@@ -99,12 +97,12 @@ class sfDateTimeFormatInfo
     }
     else
     {
-      throw new sfException('Property '.$name.' does not exists.');
+      throw new sfException(sprintf('Property %s does not exists.', $name));
     }
   }
 
   /**
-   * Allow functions that begins with 'set' to be called directly
+   * Allows functions that begins with 'set' to be called directly
    * as an attribute/property to set the value.
    */
   function __set($name, $value)
@@ -116,7 +114,7 @@ class sfDateTimeFormatInfo
     }
     else
     {
-      throw new sfException('Property '.$name.' can not be set.');
+      throw new sfException(sprintf('Property %s can not be set.', $name));
     }
   }
 
@@ -130,7 +128,7 @@ class sfDateTimeFormatInfo
    * @param array ICU data for date time formatting.
    * @see getInstance()
    */
-  function __construct($data=array())
+  function __construct($data = array())
   {
     $this->properties = get_class_methods($this);
 
@@ -143,7 +141,7 @@ class sfDateTimeFormatInfo
   }
 
   /**
-   * Get the internal ICU data for date time formatting.
+   * Gets the internal ICU data for date time formatting.
    *
    * @return array ICU date time formatting data.
    */
@@ -210,7 +208,7 @@ class sfDateTimeFormatInfo
   }
 
   /**
-   * Set the abbreviated day names. The value should be
+   * Sets the abbreviated day names. The value should be
    * an array of string starting with Sunday and ends in Saturady.
    * For example,
    * <code>array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat");</code>
@@ -236,7 +234,7 @@ class sfDateTimeFormatInfo
   }
 
   /**
-   * Set the narrow day names. The value should be
+   * Sets the narrow day names. The value should be
    * an array of string starting with Sunday and ends in Saturady.
    * For example,
    * <code>array("S", "M", "T", "W", "T", "F", "S");</code>
@@ -262,7 +260,7 @@ class sfDateTimeFormatInfo
   }
 
   /**
-   * Set the day names. The value should be
+   * Sets the day names. The value should be
    * an array of string starting with Sunday and ends in Saturady.
    * For example,
    * <code>array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
@@ -289,7 +287,7 @@ class sfDateTimeFormatInfo
   }
 
   /**
-   * Set the narrow month names. The value should be
+   * Sets the narrow month names. The value should be
    * an array of string starting with J and ends in D.
    * For example,
    * <code>array("J","F","M","A","M","J","J","A","S","O","N","D");</code>
@@ -324,7 +322,7 @@ class sfDateTimeFormatInfo
   }
 
   /**
-   * Set the abbreviated month names. The value should be
+   * Sets the abbreviated month names. The value should be
    * an array of string starting with Jan and ends in Dec.
    * For example,
    * <code>array("Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -352,7 +350,7 @@ class sfDateTimeFormatInfo
   }
 
   /**
-   * Set the month names. The value should be
+   * Sets the month names. The value should be
    * an array of string starting with Janurary and ends in December.
    * For example,
    * <code>array("January", "February", "March", "April", "May", "June",
@@ -390,7 +388,7 @@ class sfDateTimeFormatInfo
   }
 
   /**
-   * Set the AM Designator. For example, 'AM'.
+   * Sets the AM Designator. For example, 'AM'.
    *
    * @param string AM designator.
    */
@@ -415,7 +413,7 @@ class sfDateTimeFormatInfo
   }
 
   /**
-   * Set the PM Designator. For example, 'PM'.
+   * Sets the PM Designator. For example, 'PM'.
    *
    * @param string PM designator.
    */
@@ -427,7 +425,7 @@ class sfDateTimeFormatInfo
   }
 
   /**
-   * Get the AM and PM markers array.
+   * Gets the AM and PM markers array.
    * Default InvariantInfo for AM and PM is <code>array('AM','PM');</code>
    *
    * @return array AM and PM markers
@@ -438,7 +436,7 @@ class sfDateTimeFormatInfo
   }
 
   /**
-   * Set the AM and PM markers array.
+   * Sets the AM and PM markers array.
    * For example <code>array('AM','PM');</code>
    *
    * @param array AM and PM markers

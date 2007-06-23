@@ -52,11 +52,11 @@ class sfMessageSource_gettext extends sfMessageSource
 
   function __construct($source)
   {
-    $this->source = (string)$source;
+    $this->source = (string) $source;
   }
 
   /**
-   * Load the messages from a MO file.
+   * Loads the messages from a MO file.
    *
    * @param string MO file.
    * @return array of messages.
@@ -80,7 +80,7 @@ class sfMessageSource_gettext extends sfMessageSource
   }
 
   /**
-   * Determin if the MO file source is valid.
+   * Determines if the MO file source is valid.
    *
    * @param string MO file
    * @return boolean true if valid, false otherwise. 
@@ -91,7 +91,7 @@ class sfMessageSource_gettext extends sfMessageSource
   }
 
   /**
-   * Get the MO file for a specific message catalogue and cultural variant.
+   * Gets the MO file for a specific message catalogue and cultural variant.
    *
    * @param string message catalogue
    * @return string full path to the MO file. 
@@ -102,7 +102,7 @@ class sfMessageSource_gettext extends sfMessageSource
   }
 
   /**
-   * Get the last modified unix-time for this particular catalogue+variant.
+   * Gets the last modified unix-time for this particular catalogue+variant.
    * Just use the file modified time.
    *
    * @param string catalogue+variant
@@ -114,7 +114,7 @@ class sfMessageSource_gettext extends sfMessageSource
   }
 
   /**
-   * Get all the variants of a particular catalogue.
+   * Gets all the variants of a particular catalogue.
    *
    * @param string catalogue name
    * @return array list of all variants for this catalogue.
@@ -143,7 +143,7 @@ class sfMessageSource_gettext extends sfMessageSource
   }
 
   /**
-   * Traverse through the directory structure to find the catalogues.
+   * Traverses through the directory structure to find the catalogues.
    * This should only be called by getCatalogueList()
    *
    * @param string a particular catalogue.
@@ -170,7 +170,7 @@ class sfMessageSource_gettext extends sfMessageSource
   }
 
   /**
-   * Get the variant for a catalogue depending on the current culture.
+   * Gets the variant for a catalogue depending on the current culture.
    *
    * @param string catalogue
    * @return string the variant. 
@@ -204,14 +204,14 @@ class sfMessageSource_gettext extends sfMessageSource
   }
 
   /**
-   * Save the list of untranslated blocks to the translation source. 
+   * Saves the list of untranslated blocks to the translation source. 
    * If the translation was not found, you should add those
    * strings to the translation source via the <b>append()</b> method.
    *
    * @param string the catalogue to add to
    * @return boolean true if saved successfuly, false otherwise.   
    */
-  function save($catalogue='messages')
+  function save($catalogue = 'messages')
   {
     $messages = $this->untranslated;
 
@@ -233,11 +233,11 @@ class sfMessageSource_gettext extends sfMessageSource
 
     if (is_writable($MOFile) == false)
     {
-      throw new sfException("Unable to save to file {$MOFile}, file must be writable.");
+      throw new sfException(sprintf("Unable to save to file %s, file must be writable.", $MOFile));
     }
     if (is_writable($POFile) == false)
     {
-      throw new sfException("Unable to save to file {$POFile}, file must be writable.");
+      throw new sfException(sprintf("Unable to save to file %s, file must be writable.", $POFile));
     }
 
     // set the strings as untranslated.
@@ -285,7 +285,7 @@ class sfMessageSource_gettext extends sfMessageSource
   }
 
   /**
-   * Delete a particular message from the specified catalogue.
+   * Deletes a particular message from the specified catalogue.
    *
    * @param string the source message to delete.
    * @param string the catalogue to delete from.
@@ -305,12 +305,12 @@ class sfMessageSource_gettext extends sfMessageSource
 
     if (is_writable($MOFile) == false)
     {
-      throw new sfException("Unable to modify file {$MOFile}, file must be writable.");
+      throw new sfException(sprintf("Unable to modify file %s, file must be writable.", $MOFile));
     }
 
     if (is_writable($POFile) == false)
     {
-      throw new sfException("Unable to modify file {$POFile}, file must be writable.");
+      throw new sfException(sprintf("Unable to modify file %s, file must be writable.", $POFile));
     }
 
     $po = TGettext::factory('PO', $POFile);
@@ -346,7 +346,7 @@ class sfMessageSource_gettext extends sfMessageSource
   }
 
   /**
-   * Update the translation.
+   * Updates the translation.
    *
    * @param string the source string.
    * @param string the new translation string.
@@ -368,12 +368,12 @@ class sfMessageSource_gettext extends sfMessageSource
 
     if (is_writable($MOFile) == false)
     {
-      throw new sfException("Unable to update file {$MOFile}, file must be writable.");
+      throw new sfException(sprintf("Unable to update file %s, file must be writable.", $MOFile));
     }
 
     if (is_writable($POFile) == false)
     {
-      throw new sfException("Unable to update file {$POFile}, file must be writable.");
+      throw new sfException(sprintf("Unable to update file %s, file must be writable.", $POFile));
     }
 
     $po = TGettext::factory('PO',$POFile);
@@ -426,32 +426,32 @@ class sfMessageSource_gettext extends sfMessageSource
    *
    * @return array list of catalogues 
    */
-  protected function getCatalogues($dir=null,$variant=null)
+  protected function getCatalogues($dir = null, $variant = null)
   {
-    $dir = $dir?$dir:$this->source;
+    $dir = $dir ? $dir : $this->source;
     $files = scandir($dir);
 
     $catalogue = array();
 
     foreach ($files as $file)
     {
-      if (is_dir($dir.'/'.$file) && preg_match('/^[a-z]{2}(_[A-Z]{2,3})?$/',$file))
+      if (is_dir($dir.'/'.$file) && preg_match('/^[a-z]{2}(_[A-Z]{2,3})?$/', $file))
       {
         $catalogue = array_merge($catalogue, $this->getCatalogues($dir.'/'.$file, $file));
       }
 
-      $pos = strpos($file,$this->dataExt);
+      $pos = strpos($file, $this->dataExt);
 
       if ($pos > 0 && substr($file, -1 * strlen($this->dataExt)) == $this->dataExt)
       {
-        $name = substr($file,0,$pos);
-        $dot = strrpos($name,$this->dataSeparator);
+        $name = substr($file, 0, $pos);
+        $dot = strrpos($name, $this->dataSeparator);
         $culture = $variant;
         $cat = $name;
         if (is_int($dot))
         {
-          $culture = substr($name, $dot+1,strlen($name));
-          $cat = substr($name,0,$dot);
+          $culture = substr($name, $dot + 1, strlen($name));
+          $cat = substr($name, 0, $dot);
         }
         $details[0] = $cat;
         $details[1] = $culture;
@@ -485,7 +485,7 @@ class sfMessageSource_gettext extends sfMessageSource
 
     if (!is_dir($dir))
     {
-      throw new sfException("Unable to create directory $dir");
+      throw new sfException(sprintf("Unable to create directory %s.", $dir));
     }
 
     $po = TGettext::factory('PO', $po_file);
@@ -500,7 +500,7 @@ class sfMessageSource_gettext extends sfMessageSource
     }
     else
     {
-      throw sfException("Unable to create file $po_file and $mo_file");
+      throw new sfException(sprintf("Unable to create file %s and %s.", $po_file, $mo_file));
     }
   }
 }

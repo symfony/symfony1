@@ -58,22 +58,16 @@ class sfChoiceFormat
 {
   /**
    * The pattern to validate a set notation
-   *
-   * @var string
    */
   protected $validate = '/[\(\[\{]|[-Inf\d:\s]+|,|[\+Inf\d\s:\?\-=!><%\|&\(\)]+|[\)\]\}]/ms';
 
   /**
    * The pattern to parse the formatting string.
-   *
-   * @var string 
    */
   protected $parse = '/\s*\|?([\(\[\{]([-Inf\d:\s]+,?[\+Inf\d\s:\?\-=!><%\|&\(\)]*)+[\)\]\}])\s*/';
 
   /**
    * The value for positive infinity.
-   *
-   * @var float 
    */
   protected $inf;
 
@@ -86,7 +80,7 @@ class sfChoiceFormat
   }
 
   /**
-   * Determine if the given number belongs to a given set
+   * Determines if the given number belongs to a given set
    *
    * @param  float the number to test.
    * @param  string the set, in set notation.
@@ -98,7 +92,7 @@ class sfChoiceFormat
 
     if ($n < 3)
     {
-      throw new sfException(sprintf('Invalid set "%s"', $set));
+      throw new sfException(sprintf('Invalid set "%s".', $set));
     }
 
     if (preg_match('/\{\s*n:([^\}]+)\}/', $set, $def))
@@ -176,14 +170,14 @@ class sfChoiceFormat
       eval($str);
       return $result;
     }
-    catch(Exception $e)
+    catch (Exception $e)
     {
       return false;
     }
   }
 
   /**
-   * Parse a choice string and get a list of sets and a list of strings corresponding to the sets.
+   * Parses a choice string and get a list of sets and a list of strings corresponding to the sets.
    *
    * @param  string the string containing the choices
    * @return array array($sets, $strings)

@@ -109,7 +109,7 @@ class sfCultureInfo
    * Culture type, neutral.
    * @see getCultures()
    * @var int
-   */ 
+   */
   const NEUTRAL = 1;
 
   /**
@@ -117,11 +117,11 @@ class sfCultureInfo
    *
    * @see getCultures()
    * @var int
-   */ 
+   */
   const SPECIFIC = 2;
 
   /**
-   * Display the culture name.
+   * Displays the culture name.
    *
    * @return string the culture name.
    * @see getName()
@@ -132,7 +132,7 @@ class sfCultureInfo
   }
 
   /**
-   * Allow functions that begins with 'set' to be called directly
+   * Allows functions that begins with 'set' to be called directly
    * as an attribute/property to retrieve the value.
    *
    * @return mixed
@@ -146,12 +146,12 @@ class sfCultureInfo
     }
     else
     {
-      throw new sfException('Property '.$name.' does not exists.');
+      throw new sfException(sprintf('Property %s does not exists.', $name));
     }
   }
 
   /**
-   * Allow functions that begins with 'set' to be called directly
+   * Allows functions that begins with 'set' to be called directly
    * as an attribute/property to set the value.
    */
   public function __set($name, $value)
@@ -163,7 +163,7 @@ class sfCultureInfo
     }
     else
     {
-      throw new sfException('Property '.$name.' can not be set.');
+      throw new sfException(sprintf('Property %s can not be set.', $name));
     }
   }
 
@@ -195,7 +195,7 @@ class sfCultureInfo
   }
 
   /**
-   * Get the default directory for the ICU data.
+   * Gets the default directory for the ICU data.
    * The default is the "data" directory for this class.
    *
    * @return string directory containing the ICU data.
@@ -206,7 +206,7 @@ class sfCultureInfo
   }
 
   /**
-   * Get the filename extension for ICU data. Default is ".dat".
+   * Gets the filename extension for ICU data. Default is ".dat".
    *
    * @return string filename extension for ICU data.
    */
@@ -216,7 +216,7 @@ class sfCultureInfo
   }
 
   /**
-   * Determine if a given culture is valid. Simply checks that the
+   * Determines if a given culture is valid. Simply checks that the
    * culture data exists.
    *
    * @param string a culture
@@ -233,7 +233,7 @@ class sfCultureInfo
   }
 
   /**
-   * Set the culture for the current instance. The culture indentifier
+   * Sets the culture for the current instance. The culture indentifier
    * must be of the form "<language>_(country/region)".
    *
    * @param string culture identifier, e.g. "fr_FR_EURO".
@@ -244,7 +244,7 @@ class sfCultureInfo
     {
       if (!preg_match('/^[a-z]{2}(_[A-Z]{2,5}){0,2}$/', $culture))
       {
-        throw new sfException('Invalid culture supplied: '.$culture);
+        throw new sfException(sprintf('Invalid culture supplied: %s', $culture));
       }
     }
 
@@ -252,13 +252,13 @@ class sfCultureInfo
   }
 
   /**
-   * Load the ICU culture data for the specific culture identifier.
+   * Loads the ICU culture data for the specific culture identifier.
    *
    * @param string the culture identifier.
    */
   protected function loadCultureData($culture)
   {
-    $file_parts = explode('_',$culture);
+    $file_parts = explode('_', $culture);
     $current_part = $file_parts[0];
 
     $files = array($current_part);
@@ -275,7 +275,7 @@ class sfCultureInfo
 
       if (is_file($filename) == false)
       {
-        throw new sfException('Data file for "'.$file.'" was not found.');
+        throw new sfException(sprintf('Data file for "%s" was not found.', $file));
       }
 
       if (in_array($filename, $this->dataFiles) == false)
@@ -295,7 +295,7 @@ class sfCultureInfo
   }
 
   /**
-   * Get the data by unserializing the ICU data from disk.
+   * Gets the data by unserializing the ICU data from disk.
    * The data files are cached in a static variable inside
    * this function.
    *
@@ -309,7 +309,7 @@ class sfCultureInfo
 
     if (!in_array($filename, $files))
     {
-      $data[$filename]  = unserialize(file_get_contents($filename));
+      $data[$filename] = unserialize(file_get_contents($filename));
       $files[] = $filename;
     }
 
@@ -317,7 +317,7 @@ class sfCultureInfo
   }
 
   /**
-   * Find the specific ICU data information from the data.
+   * Finds the specific ICU data information from the data.
    * The path to the specific ICU data is separated with a slash "/".
    * E.g. To find the default calendar used by the culture, the path
    * "calendar/default" will return the corresponding default calendar.
@@ -355,7 +355,7 @@ class sfCultureInfo
   }
 
   /**
-   * Search the array for a specific value using a path separated using
+   * Searches the array for a specific value using a path separated using
    * slash "/" separated path. e.g to find $info['hello']['world'],
    * the path "hello/world" will return the corresponding value.
    *
@@ -413,7 +413,7 @@ class sfCultureInfo
   }
 
   /**
-   * Set the date time format information.
+   * Sets the date time format information.
    *
    * @param sfDateTimeFormatInfo the new date time format info.
    */
@@ -477,14 +477,8 @@ class sfCultureInfo
     }
 
     $region = $culture->findInfo("Countries/{$reg}");
-    if ($region)
-    {
-      return $language[0].' ('.$region[0].')';
-    }
-    else
-    {
-      return $language[0];
-    }
+
+    return $region ? $language[0].' ('.$region[0].')' : $language[0];
   }
 
   /**
@@ -541,7 +535,7 @@ class sfCultureInfo
   }
 
   /**
-   * Set the number format information.
+   * Sets the number format information.
    *
    * @param sfNumberFormatInfo the new number format info.
    */
@@ -619,7 +613,7 @@ class sfCultureInfo
   }
 
   /**
-   * Simplify a single element array into its own value.
+   * Simplifies a single element array into its own value.
    * E.g. <code>array(0 => array('hello'), 1 => 'world');</code>
    * becomes <code>array(0 => 'hello', 1 => 'world');</code>
    *
@@ -642,7 +636,7 @@ class sfCultureInfo
   }
 
   /**
-   * Get a list of countries in the language of the localized version.
+   * Gets a list of countries in the language of the localized version.
    *
    * @return array a list of localized country names. 
    */
@@ -652,7 +646,7 @@ class sfCultureInfo
   }
 
   /**
-   * Get a list of currencies in the language of the localized version.
+   * Gets a list of currencies in the language of the localized version.
    *
    * @return array a list of localized currencies.
    */
@@ -662,7 +656,7 @@ class sfCultureInfo
   }
 
   /**
-   * Get a list of languages in the language of the localized version.
+   * Gets a list of languages in the language of the localized version.
    *
    * @return array list of localized language names.
    */
@@ -672,7 +666,7 @@ class sfCultureInfo
   }
 
   /**
-   * Get a list of scripts in the language of the localized version.
+   * Gets a list of scripts in the language of the localized version.
    *
    * @return array list of localized script names.
    */
@@ -682,7 +676,7 @@ class sfCultureInfo
   }
 
   /**
-   * Get a list of timezones in the language of the localized version.
+   * Gets a list of timezones in the language of the localized version.
    *
    * @return array list of localized timezones.
    */
