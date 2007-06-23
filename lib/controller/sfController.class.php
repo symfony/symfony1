@@ -269,7 +269,7 @@ abstract class sfController
         // change i18n message source directory to our module
         if (sfConfig::get('sf_i18n'))
         {
-          $this->context->getI18N()->setMessageSourceDir(sfLoader::getI18NDir($moduleName), $this->context->getUser()->getCulture());
+          $this->context->getI18N()->setMessageSource(sfLoader::getI18NDirs($moduleName), $this->context->getUser()->getCulture());
         }
 
         // process the filter chain

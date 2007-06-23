@@ -22,6 +22,27 @@ class myTestBrowser extends sfTestBrowser
 
     return $this;
   }
+
+  public function checkResponseForCulture($culture = 'fr')
+  {
+    return $this->
+      // messages in the global directories
+      checkResponseElement('#action', '/une phrase en français/i')->
+      checkResponseElement('#template', '/une phrase en français/i')->
+
+      // messages in the module directories
+      checkResponseElement('#action_local', '/une phrase locale en français/i')->
+      checkResponseElement('#template_local', '/une phrase locale en français/i')->
+
+      // messages in another global catalogue
+      checkResponseElement('#action_other', '/une autre phrase en français/i')->
+      checkResponseElement('#template_other', '/une autre phrase en français/i')->
+
+      // messages in another module catalogue
+      checkResponseElement('#action_other_local', '/une autre phrase locale en français/i')->
+      checkResponseElement('#template_other_local', '/une autre phrase locale en français/i')
+    ;
+  }
 }
 
 $b = new myTestBrowser();
@@ -44,22 +65,17 @@ $b->
   isRequestParameter('module', 'i18n')->
   isRequestParameter('action', 'index')->
   isUserCulture('fr')->
+  checkResponseForCulture('fr')
+;
 
-  // messages in the global directories
-  checkResponseElement('#action', '/une phrase en français/i')->
-  checkResponseElement('#template', '/une phrase en français/i')->
-
-  // messages in the module directories
-  checkResponseElement('#action_local', '/une phrase locale en français/i')->
-  checkResponseElement('#template_local', '/une phrase locale en français/i')->
-
-  // messages in another global catalogue
-  checkResponseElement('#action_other', '/une autre phrase en français/i')->
-  checkResponseElement('#template_other', '/une autre phrase en français/i')->
-
-  // messages in another module catalogue
-  checkResponseElement('#action_other_local', '/une autre phrase locale en français/i')->
-  checkResponseElement('#template_other_local', '/une autre phrase locale en français/i')
+// change user culture in the action
+$b->
+  get('/en/i18n/indexForFr')->
+  isStatusCode(200)->
+  isRequestParameter('module', 'i18n')->
+  isRequestParameter('action', 'indexForFr')->
+  isUserCulture('fr')->
+  checkResponseForCulture('fr')
 ;
 
 // messages for a module plugin
@@ -69,9 +85,12 @@ $b->
   isRequestParameter('module', 'sfI18NPlugin')->
   isRequestParameter('action', 'index')->
   isUserCulture('fr')->
-  checkResponseElement('#action', '/une phrase en français/i')->
-  checkResponseElement('#template', '/une phrase en français/i')->
-  checkResponseElement('#action_local', '/une phrase locale en français/i')->
-  checkResponseElement('#template_local', '/une phrase locale en français/i')
+  checkResponseElement('#action', '/une phrase en français - from plugin/i')->
+  checkResponseElement('#template', '/une phrase en français - from plugin/i')->
+  checkResponseElement('#action_local', '/une phrase locale en français - from plugin/i')->
+  checkResponseElement('#template_local', '/une phrase locale en français - from plugin/i')->
+  checkResponseElement('#action_other', '/une autre phrase en français - from plugin but translation overridden in the module/i')->
+  checkResponseElement('#template_other', '/une autre phrase en français - from plugin but translation overridden in the module/i')->
+  checkResponseElement('#action_yetAnother', '/encore une autre phrase en français - from plugin but translation overridden in the application/i')->
+  checkResponseElement('#template_yetAnother', '/encore une autre phrase en français - from plugin but translation overridden in the application/i')
 ;
-

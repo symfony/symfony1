@@ -12,8 +12,11 @@ class sfI18NPluginActions extends sfActions
 {
   public function executeIndex()
   {
-    $this->test = $this->getContext()->getI18N()->__('an english sentence');
+    $i18n = $this->getContext()->getI18N();
 
-    $this->localTest = $this->getContext()->getI18N()->__('a local english sentence');
+    $this->test = $i18n->__('an english sentence from plugin');
+    $this->localTest = $i18n->__('a local english sentence from plugin');
+    $this->otherTest = $i18n->__('another english sentence from plugin');
+    $this->yetAnotherTest = $i18n->__('yet another english sentence from plugin');
   }
 }

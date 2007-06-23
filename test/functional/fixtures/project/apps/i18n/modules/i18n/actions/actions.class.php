@@ -19,4 +19,14 @@ class i18nActions extends sfActions
     $this->otherTest = $i18n->__('an english sentence', array(), 'other');
     $this->otherLocalTest = $i18n->__('a local english sentence', array(), 'other');
   }
+
+  public function executeIndexForFr()
+  {
+    // change user culture
+    $this->getUser()->setCulture('fr');
+    $this->getUser()->setCulture('en');
+    $this->getUser()->setCulture('fr');
+
+    $this->forward('i18n', 'index');
+  }
 }

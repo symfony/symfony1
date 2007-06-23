@@ -131,29 +131,41 @@ class sfLoader
   }
 
   /**
-   * Gets the i18n directory to use for a given module.
+   * Gets the i18n directories to use for a given module.
    *
    * @param string The module name
    *
    * @return string An i18n directory
    */
-  static public function getI18NDir($moduleName)
+  static public function getI18NDirs($moduleName)
   {
-    $suffix = $moduleName.'/'.sfConfig::get('sf_app_module_i18n_dir_name');
+    if (!in_array(sfConfig::get('sf_i18n_source'), array('XLIFF', 'gettext')))
+    {
+      return null;
+    }
+
+    $dirs = array();
+
+    // module
+    if (is_dir($dir = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_i18n_dir_name')))
+    {
+      $dirs[] = $dir;
+    }
 
     // application
-    $dir = sfConfig::get('sf_app_module_dir').'/'.$suffix;
-    if (is_dir($dir))
+    if (is_dir($dir = sfConfig::get('sf_app_dir').'/'.sfConfig::get('sf_app_module_i18n_dir_name')))
     {
-      return $dir;
+      $dirs[] = $dir;
     }
 
     // plugins
-    $dirs = glob(sfConfig::get('sf_plugins_dir').'/*/modules/'.$suffix);
-    if (isset($dirs[0]))
+    $pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/modules/'.$moduleName.'/'.sfConfig::get('sf_app_module_i18n_dir_name'));
+    if (isset($pluginDirs[0]))
     {
-      return $dirs[0];
+      $dirs[] = $pluginDirs[0];
     }
+
+    return $dirs;
   }
 
   /**
