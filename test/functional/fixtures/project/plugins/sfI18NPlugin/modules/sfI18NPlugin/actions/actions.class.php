@@ -18,5 +18,7 @@ class sfI18NPluginActions extends sfActions
     $this->localTest = $i18n->__('a local english sentence from plugin');
     $this->otherTest = $i18n->__('another english sentence from plugin');
     $this->yetAnotherTest = $i18n->__('yet another english sentence from plugin');
+
+    $this->testForPluginI18N = $i18n->__('an english sentence from plugin - global');
   }
 }

@@ -33,12 +33,11 @@ class sfI18N
   {
     $this->context = $context;
 
-    $this->messageSources = array($this->createMessageSource(is_dir(sfConfig::get('sf_app_i18n_dir')) ? sfConfig::get('sf_app_i18n_dir') : null));
-    $this->messageFormats = array();
+    $this->setMessageSource(sfLoader::getI18NGlobalDirs(), $context->getUser()->getCulture());
   }
 
   /**
-   * Sets the message sources for the given symfony context
+   * Sets the message sources.
    *
    * @param mixed  An array of i18n directories if message source configuration is XLIFF or gettext, null otherwise
    * @param string The culture
@@ -46,6 +45,7 @@ class sfI18N
   public function setMessageSource($dirs, $culture)
   {
     $this->messageSources = array();
+    $this->messageFormats = array();
 
     if (is_null($dirs))
     {

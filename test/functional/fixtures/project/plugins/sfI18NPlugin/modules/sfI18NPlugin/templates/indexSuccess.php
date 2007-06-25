@@ -11,3 +11,6 @@
 
 <div id="action_yetAnother"><?php echo $yetAnotherTest ?></div>
 <div id="template_yetAnother"><?php echo __('yet another english sentence from plugin') ?></div>
+
+<div id="action_testForPluginI18N"><?php echo $testForPluginI18N ?></div>
+<div id="template_testForPluginI18N"><?php echo __('an english sentence from plugin - global') ?></div>

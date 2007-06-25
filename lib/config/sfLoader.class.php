@@ -131,11 +131,45 @@ class sfLoader
   }
 
   /**
+   * Gets the i18n directories to use globally.
+   *
+   * Returns null if the current i18n source is not a file based i18n backend (XLIFF or gettext).
+   *
+   * @return array An array of i18n directories
+   */
+  static public function getI18NGlobalDirs()
+  {
+    if (!in_array(sfConfig::get('sf_i18n_source'), array('XLIFF', 'gettext')))
+    {
+      return null;
+    }
+
+    $dirs = array();
+
+    // application
+    if (is_dir($dir = sfConfig::get('sf_app_dir').'/'.sfConfig::get('sf_app_module_i18n_dir_name')))
+    {
+      $dirs[] = $dir;
+    }
+
+    // plugins
+    $pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/'.sfConfig::get('sf_app_module_i18n_dir_name'));
+    if (isset($pluginDirs[0]))
+    {
+      $dirs[] = $pluginDirs[0];
+    }
+
+    return $dirs;
+  }
+
+  /**
    * Gets the i18n directories to use for a given module.
+   *
+   * Returns null if the current i18n source is not a file based i18n backend (XLIFF or gettext).
    *
    * @param string The module name
    *
-   * @return string An i18n directory
+   * @return array An array of i18n directories
    */
   static public function getI18NDirs($moduleName)
   {
@@ -158,8 +192,15 @@ class sfLoader
       $dirs[] = $dir;
     }
 
-    // plugins
+    // module in plugins
     $pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/modules/'.$moduleName.'/'.sfConfig::get('sf_app_module_i18n_dir_name'));
+    if (isset($pluginDirs[0]))
+    {
+      $dirs[] = $pluginDirs[0];
+    }
+
+    // plugins
+    $pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/'.sfConfig::get('sf_app_module_i18n_dir_name'));
     if (isset($pluginDirs[0]))
     {
       $dirs[] = $pluginDirs[0];

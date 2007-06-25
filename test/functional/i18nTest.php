@@ -92,5 +92,7 @@ $b->
   checkResponseElement('#action_other', '/une autre phrase en français - from plugin but translation overridden in the module/i')->
   checkResponseElement('#template_other', '/une autre phrase en français - from plugin but translation overridden in the module/i')->
   checkResponseElement('#action_yetAnother', '/encore une autre phrase en français - from plugin but translation overridden in the application/i')->
-  checkResponseElement('#template_yetAnother', '/encore une autre phrase en français - from plugin but translation overridden in the application/i')
+  checkResponseElement('#template_yetAnother', '/encore une autre phrase en français - from plugin but translation overridden in the application/i')->
+  checkResponseElement('#action_testForPluginI18N', '/une phrase en français depuis un plugin - global/i')->
+  checkResponseElement('#template_testForPluginI18N', '/une phrase en français depuis un plugin - global/i')
 ;
