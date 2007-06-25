@@ -56,23 +56,13 @@ class sfI18nApplicationExtract extends sfI18nExtract
   }
 
   /**
-   * Gets the new i18n strings.
-   *
-   * @param array An array of i18n strings
-   */
-  function getNewMessages()
-  {
-    return array_merge($this->newMessages, $this->aggregateMessages('getNewMessages'));
-  }
-
-  /**
    * Gets the current i18n strings.
    *
    * @param array An array of i18n strings
    */
   function getCurrentMessages()
   {
-    return $this->aggregateMessages('getCurrentMessages');
+    return array_unique(array_merge($this->currentMessages, $this->aggregateMessages('getCurrentMessages')));
   }
 
   /**
@@ -82,7 +72,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
    */
   function getAllSeenMessages()
   {
-    return array_merge($this->allSeenMessages, $this->aggregateMessages('getAllSeenMessages'));
+    return array_unique(array_merge($this->allSeenMessages, $this->aggregateMessages('getAllSeenMessages')));
   }
 
   protected function aggregateMessages($method)

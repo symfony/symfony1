@@ -103,9 +103,9 @@ abstract class sfI18nExtract
    *
    * @param array An array of i18n strings
    */
-  public function getNewMessages()
+  final public function getNewMessages()
   {
-    return $this->newMessages;
+    return array_diff($this->getAllSeenMessages(), $this->getCurrentMessages());
   }
 
   /**
@@ -136,7 +136,7 @@ abstract class sfI18nExtract
    *
    * @param array An array of i18n strings
    */
-  public function getOldMessages()
+  final public function getOldMessages()
   {
     return array_diff($this->getCurrentMessages(), $this->getAllSeenMessages());
   }
@@ -197,10 +197,6 @@ abstract class sfI18nExtract
    */
   protected function updateMessages($messages)
   {
-    $messages = array_unique($messages);
-
     $this->allSeenMessages = array_unique(array_merge($this->allSeenMessages, $messages));
-
-    $this->newMessages = array_merge($this->newMessages, array_diff($messages, $this->currentMessages));
   }
 }
