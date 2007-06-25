@@ -557,7 +557,7 @@ class sfToolkit
    * @param string string to convert to UTF-8
    * @return string UTF-8 encoded string, original string if iconv failed.
    */
-  function I18N_toUTF8($string, $from)
+  static public function I18N_toUTF8($string, $from)
   {
     $from = strtoupper($from);
     if ($from != 'UTF-8')
@@ -578,7 +578,7 @@ class sfToolkit
    * @param string the UTF-8 string for conversion
    * @return string encoded string.
    */
-  function I18N_toEncoding($string, $to)
+  static public function I18N_toEncoding($string, $to)
   {
     $to = strtoupper($to);
     if ($to != 'UTF-8')
