@@ -249,7 +249,7 @@ $t->is(radiobutton_tag('name', null, false, array('id' => 'foo')), '<input type=
 
 // input_date_range_tag()
 $t->diag('input_date_range_tag()');
-$t->todo('input_date_range_tag()');
+$t->unlike(input_date_range_tag('date', array('from' => time(), 'to' => time()), array('after' => 'foo')), '/after/', 'input_date_range_tag() output date fields for a date range');
 
 // input_date_tag()
 $t->diag('input_date_tag()');

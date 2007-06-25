@@ -579,11 +579,15 @@ function input_date_range_tag($name, $value, $options = array())
 {
   $options = _parse_attributes($options);
 
-  return _get_option($options, 'before', '').
+  $before = _get_option($options, 'before', '');
+  $middle = _get_option($options, 'middle', '');
+  $after  = _get_option($options, 'after', '');
+
+  return $before.
          input_date_tag($name.'[from]', $value['from'], $options).
-         _get_option($options, 'middle', '').
+         $middle.
          input_date_tag($name.'[to]', $value['to'], $options).
-         _get_option($options, 'after', '');
+         $after;
 }
 
 /**
