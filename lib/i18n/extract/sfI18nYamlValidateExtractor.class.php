@@ -38,6 +38,11 @@ class sfI18nYamlValidateExtractor extends sfI18nYamlExtractor
       {
         foreach ($validation as $type => $parameters)
         {
+          if (!is_array($parameters))
+          {
+            continue;
+          }
+
           foreach ($parameters as $key => $value)
           {
             if (preg_match('/(msg|error)$/', $key))
