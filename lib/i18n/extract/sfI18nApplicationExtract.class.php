@@ -51,7 +51,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
     // Add global templates
     $this->extractFromPhpFiles(sfConfig::get('sf_app_template_dir'));
 
-    // Ad global librairies
+    // Add global librairies
     $this->extractFromPhpFiles(sfConfig::get('sf_app_lib_dir'));
   }
 
@@ -75,7 +75,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
     return array_unique(array_merge($this->allSeenMessages, $this->aggregateMessages('getAllSeenMessages')));
   }
 
-  protected public function aggregateMessages($method)
+  protected function aggregateMessages($method)
   {
     $messages = array();
     foreach ($this->extractObjects as $extractObject)
