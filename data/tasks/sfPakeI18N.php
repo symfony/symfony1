@@ -56,11 +56,29 @@ function run_i18n_extract($task, $args, $options)
   pake_echo_action('i18n', sprintf('found "%d" new i18n strings', count($extract->getNewMessages())));
   pake_echo_action('i18n', sprintf('found "%d" old i18n strings', count($extract->getOldMessages())));
 
+  if (isset($options['display-new']))
+  {
+    pake_echo_action('i18n', sprintf('display new i18n strings', count($extract->getOldMessages())));
+    foreach ($extract->getNewMessages() as $message)
+    {
+      echo '               '.$message."\n";
+    }
+  }
+
   if (isset($options['auto-save']))
   {
     pake_echo_action('i18n', 'saving new i18n strings');
 
     $extract->saveNewMessages();
+  }
+
+  if (isset($options['display-old']))
+  {
+    pake_echo_action('i18n', sprintf('display old i18n strings', count($extract->getOldMessages())));
+    foreach ($extract->getOldMessages() as $message)
+    {
+      echo '               '.$message."\n";
+    }
   }
 
   if (isset($options['auto-delete']))

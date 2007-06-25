@@ -63,7 +63,37 @@ class sfI18nYamlValidateExtractor extends sfI18nYamlExtractor
         {
           continue;
         }
+
         foreach ($config['validators'][$name]['param'] as $key => $value)
+        {
+          if (preg_match('/(msg|error)$/', $key))
+          {
+            $strings[] = $value;
+          }
+        }
+      }
+    }
+
+    // Old validate.yml format
+
+    // required messages
+    if (isset($config['names']))
+    {
+      foreach ($config['names'] as $key => $value)
+      {
+        if (isset($value['required_msg']))
+        {
+          $strings[] = $value['required_msg'];
+        }
+      }
+    }
+
+    // validators
+    foreach ($config as $key => $value)
+    {
+      if (isset($value['param']) && isset($value['class']))
+      {
+        foreach ($value['param'] as $key => $value)
         {
           if (preg_match('/(msg|error)$/', $key))
           {
