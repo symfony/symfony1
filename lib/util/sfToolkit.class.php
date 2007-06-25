@@ -167,7 +167,7 @@ class sfToolkit
       }
       else
       {
-        unlink($lockFile);
+        $isLocked = @unlink($lockFile) ? false : true;
       }
     }
 
