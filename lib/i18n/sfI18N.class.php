@@ -147,17 +147,25 @@ class sfI18N
   /**
    * Gets the message source for the given index.
    *
-   * @param  integer         The indice
+   * @param  integer         The indice (1 based)
    * @return sfMessageSource A sfMessageSource object
    */
-  public function getMessageSource($i = 0)
+  public function getMessageSource($i = 1)
   {
-    if (!isset($this->messageSources[$i]))
+    if (!isset($this->messageSources[$i - 1]))
     {
       throw new sfException(sprintf('The "$i" message source does not exist.', $i));
     }
 
-    return $this->messageSources[$i];
+    return $this->messageSources[$i - 1];
+  }
+
+  /**
+   * Gets the last message source.
+   */
+  public function getLastMessageSource()
+  {
+    return $this->getMessageSource(count($this->messageSources));
   }
 
   /**
@@ -178,17 +186,25 @@ class sfI18N
   /**
    * Gets the message format for the given index.
    *
-   * @param  integer         The indice
+   * @param  integer         The indice (1 based)
    * @return sfMessageFormat A sfMessageFormat object
    */
-  public function getMessageFormat($i = 0)
+  public function getMessageFormat($i = 1)
   {
-    if (!isset($this->messageFormats[$i]))
+    if (!isset($this->messageFormats[$i - 1]))
     {
-      $this->messageFormats[$i] = $this->createMessageFormat($this->getMessageSource($i));
+      $this->messageFormats[$i - 1] = $this->createMessageFormat($this->getMessageSource($i));
     }
 
-    return $this->messageFormats[$i];
+    return $this->messageFormats[$i - 1];
+  }
+
+  /**
+   * Gets the last message format.
+   */
+  public function getLastMessageFormat()
+  {
+    return $this->getMessageFormat(count($this->messageSources));
   }
 
   /**
@@ -203,13 +219,13 @@ class sfI18N
   {
     for ($i = 0, $count = count($this->messageSources); $i < $count; $i++)
     {
-      if ($retval = $this->getMessageFormat($i)->formatExists($string, $args, $catalogue))
+      if ($retval = $this->getMessageFormat($i + 1)->formatExists($string, $args, $catalogue))
       {
         return $retval;
       }
     }
 
-    return $this->getMessageFormat(0)->format($string, $args, $catalogue);
+    return $this->getLastMessageFormat()->format($string, $args, $catalogue);
   }
 
   /**
