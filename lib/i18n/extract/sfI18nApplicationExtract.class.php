@@ -60,7 +60,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
    *
    * @param array An array of i18n strings
    */
-  function getCurrentMessages()
+  public function getCurrentMessages()
   {
     return array_unique(array_merge($this->currentMessages, $this->aggregateMessages('getCurrentMessages')));
   }
@@ -70,12 +70,12 @@ class sfI18nApplicationExtract extends sfI18nExtract
    *
    * @param array An array of i18n strings
    */
-  function getAllSeenMessages()
+  public function getAllSeenMessages()
   {
     return array_unique(array_merge($this->allSeenMessages, $this->aggregateMessages('getAllSeenMessages')));
   }
 
-  protected function aggregateMessages($method)
+  protected public function aggregateMessages($method)
   {
     $messages = array();
     foreach ($this->extractObjects as $extractObject)
