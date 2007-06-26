@@ -60,3 +60,12 @@ catch (sfException $e)
 {
   $b->test()->pass('The DOM is not accessible if the response content type is not HTML');
 }
+
+// check response headers
+$b->
+  get('/browser/responseHeader')->
+  isStatusCode()->
+  isResponseHeader('content-type', 'text/plain; charset=utf-8')->
+  isResponseHeader('foo', 'bar')->
+  isResponseHeader('foo', 'foobar')
+;

@@ -232,9 +232,10 @@ class sfTestBrowser extends sfBrowser
    */
   public function isResponseHeader($key, $value)
   {
-    $headers = $this->getResponse()->getHttpHeader($key);
+    $headers = explode(', ', $this->getResponse()->getHttpHeader($key));
 
     $ok = false;
+
     foreach ($headers as $header)
     {
       if ($header == $value)
@@ -244,7 +245,7 @@ class sfTestBrowser extends sfBrowser
       }
     }
 
-    $this->test->ok($ok, sprintf('response header "%s" is "%s"', $key, $value));
+    $this->test->ok($ok, sprintf('response header "%s" is "%s" (%s)', $key, $value, $this->getResponse()->getHttpHeader($key)));
 
     return $this;
   }
