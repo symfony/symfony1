@@ -9,6 +9,7 @@
  */
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
+require_once($_test_dir.'/unit/sfContextMock.class.php');
 
 $t = new lime_test(12, new lime_output_color());
 
@@ -26,40 +27,6 @@ class myRequest
   public function getScriptName()
   {
     return 'index.php';
-  }
-}
-
-class sfContext
-{
-  public $controller = null;
-  public $request = null;
-  public $routing = null;
-
-  static public $instance = null;
-
-  public static function getInstance()
-  {
-    if (!isset(self::$instance))
-    {
-      self::$instance = new sfContext();
-    }
-
-    return self::$instance;
-  }
-
-  public function getController()
-  {
-    return $this->controller;
-  }
-
-  public function getRequest()
-  {
-    return $this->request;
-  }
-
-  public function getRouting()
-  {
-    return $this->routing;
   }
 }
 
@@ -108,17 +75,9 @@ class myCache extends sfCache
   }
 }
 
-$context = sfContext::getInstance();
-$context->controller = new myController();
-$context->controller->initialize($context);
+$context = sfContext::getInstance(array('controller' => 'myController', 'routing' => 'sfPatternRouting', 'request' => 'myRequest'));
 
-$routing = new sfPatternRouting();
-$routing->initialize($context);
-$context->routing = $routing;
-
-$context->request = new myRequest();
-
-$r = $routing;
+$r = $context->routing;
 $r->connect('default', '/:module/:action/*');
 
 // ->initialize()

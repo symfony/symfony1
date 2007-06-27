@@ -18,7 +18,10 @@ class myComponent extends sfComponent
   function execute() {}
 }
 
-$context = new sfContext();
+$context = sfContext::getInstance(array(
+  'routing'  => 'sfNoRouting',
+  'request'  => 'sfWebRequest',
+));
 
 // ->initialize()
 $t->diag('->initialize()');

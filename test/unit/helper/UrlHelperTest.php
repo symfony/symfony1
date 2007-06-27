@@ -9,8 +9,7 @@
  */
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
-
-sfLoader::loadHelpers(array('Helper', 'Asset', 'Url', 'Tag'));
+require_once($_test_dir.'/unit/sfContextMock.class.php');
 
 class myController
 {
@@ -20,32 +19,11 @@ class myController
   }
 }
 
-class sfContext
-{
-  public $controller = null;
-
-  static public $instance = null;
-
-  public static function getInstance()
-  {
-    if (!isset(self::$instance))
-    {
-      self::$instance = new sfContext();
-    }
-
-    return self::$instance;
-  }
-
-  public function getController()
-  {
-    return $this->controller;
-  }
-}
-
 $t = new lime_test(24, new lime_output_color());
 
-$context = sfContext::getInstance();
-$context->controller = new myController();
+$context = sfContext::getInstance(array('controller' => 'myController'));
+
+sfLoader::loadHelpers(array('Helper', 'Asset', 'Url', 'Tag'));
 
 // url_for()
 $t->diag('url_for()');

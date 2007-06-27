@@ -18,7 +18,7 @@ class myValidator extends sfValidator
   function execute (&$value, &$error) {}
 }
 
-$context = new sfContext();
+$context = sfContext::getInstance();
 $validator = new myValidator();
 $validator->initialize($context);
 

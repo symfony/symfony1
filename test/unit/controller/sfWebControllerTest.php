@@ -14,7 +14,12 @@ require_once($_test_dir.'/unit/sfContextMock.class.php');
 $t = new lime_test(17, new lime_output_color());
 
 sfConfig::set('sf_max_forwards', 10);
-$context = new sfContext();
+$context = sfContext::getInstance(array(
+  'routing'  => 'sfNoRouting',
+  'request'  => 'sfWebRequest',
+  'response' => 'sfWebResponse',
+));
+
 $controller = sfController::newInstance('sfFrontWebController');
 $controller->initialize($context, null);
 

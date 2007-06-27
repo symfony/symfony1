@@ -9,72 +9,20 @@
  */
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
-
-class sfContext
-{
-  public static
-    $instance = null;
-
-  public
-    $storage  = null,
-    $user     = null,
-    $routing  = null,
-    $request  = null;
-
-  static public function getInstance()
-  {
-    if (!isset(self::$instance))
-    {
-      self::$instance = new sfContext();
-    }
-
-    return self::$instance;
-  }
-
-  public function getRequest()
-  {
-    return $this->request;
-  }
-
-  public function getUser()
-  {
-    return $this->user;
-  }
-
-  public function getStorage()
-  {
-    return $this->storage;
-  }
-
-  public function getRouting()
-  {
-    return $this->routing;
-  }
-}
+require_once($_test_dir.'/unit/sfContextMock.class.php');
 
 $t = new lime_test(33, new lime_output_color());
 
 $_SERVER['session_id'] = 'test';
 sfConfig::set('sf_test_cache_dir', sfToolkit::getTmpDir());
 
-$context = sfContext::getInstance();
-
-$routing = new sfNoRouting();
-$routing->initialize($context);
-$context->routing = $routing;
-
-$request = new sfWebRequest();
-$request->initialize($context);
-$context->request = $request;
-
-$storage = sfStorage::newInstance('sfSessionTestStorage');
-$storage->initialize($context);
-$storage->clear();
-$context->storage = $storage;
-
-$user = new sfUser();
-$user->initialize($context);
-$context->user = $user;
+$context = sfContext::getInstance(array(
+  'routing' => 'sfNoRouting',
+  'request' => 'sfWebRequest',
+  'user' => 'sfUser',
+));
+$user = $context->user;
+$storage = $context->storage;
 
 // ->initialize()
 $t->diag('->initialize()');

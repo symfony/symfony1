@@ -14,7 +14,7 @@ require_once($_test_dir.'/unit/sfValidatorTestHelper.class.php');
 
 $t = new lime_test(49, new lime_output_color());
 
-$context = new sfContext();
+$context = sfContext::getInstance();
 $v = new sfNumberValidator();
 $v->initialize($context);
 

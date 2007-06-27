@@ -9,18 +9,9 @@
  */
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
+require_once($_test_dir.'/unit/sfContextMock.class.php');
 
 $t = new lime_test(6, new lime_output_color());
-
-class sfContext
-{
-  public $user = null;
-
-  public function getUser()
-  {
-    return $this->user;
-  }
-}
 
 class myUser extends sfUser
 {
@@ -95,16 +86,13 @@ class lastTestFilter extends sfFilter
   }
 }
 
-$context = new sfContext();
-$user = new myUser();
-$user->initialize($context);
-$context->user = $user;
+$context = sfContext::getInstance(array('user' => 'myUser'));
 
 $filterChain = new sfFilterChain();
 
 $filter = new lastTestFilter();
 $filter->t = $t;
-$filter->user = $user;
+$filter->user = $context->user;
 $filter->initialize($context);
 $filterChain->register($filter);
 
@@ -114,7 +102,7 @@ $filterChain->register($filter);
 
 $filter = new firstTestFilter();
 $filter->t = $t;
-$filter->user = $user;
+$filter->user = $context->user;
 $filter->initialize($context);
 $filterChain->register($filter);
 

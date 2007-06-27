@@ -25,9 +25,7 @@ class fakeStorage
 {
 }
 
-$context = new sfContext();
-$storage = new myStorage();
-$storage->initialize($context);
+$context = sfContext::getInstance(array('storage' => 'myStorage'));
 
 // ::newInstance()
 $t->diag('::newInstance()');

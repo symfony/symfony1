@@ -13,7 +13,7 @@ require_once($_test_dir.'/unit/sfContextMock.class.php');
 
 $t = new lime_test(12, new lime_output_color());
 
-$context = new sfContext();
+$context = sfContext::getInstance();
 $v = new sfUrlValidator();
 $v->initialize($context);
 

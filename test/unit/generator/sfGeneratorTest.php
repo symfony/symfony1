@@ -18,7 +18,7 @@ class myGenerator extends sfGenerator
   public function generate($params = array()) {}
 }
 
-$context = new sfContext();
+$context = sfContext::getInstance();
 $generator = new myGenerator();
 $generator->initialize($context);
 

@@ -18,7 +18,8 @@ class myController extends sfController
   function execute () {}
 }
 
-$context = new sfContext();
+$context = sfContext::getInstance();
+
 $controller = new myController();
 $controller->initialize($context);
 

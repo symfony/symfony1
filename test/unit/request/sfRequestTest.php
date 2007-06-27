@@ -22,7 +22,7 @@ class fakeRequest
 
 $t = new lime_test(54, new lime_output_color());
 
-$context = new sfContext();
+$context = sfContext::getInstance(array('routing' => 'sfNoRouting'));
 $context->getRouting()->clearRoutes();
 
 // ::newInstance()

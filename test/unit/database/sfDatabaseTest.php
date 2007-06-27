@@ -19,7 +19,8 @@ class myDatabase extends sfDatabase
   function shutdown () {}
 }
 
-$context = new sfContext();
+$context = sfContext::getInstance();
+
 $database = new myDatabase();
 $database->initialize($context);
 

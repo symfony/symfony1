@@ -13,7 +13,22 @@ require_once($_test_dir.'/unit/sfContextMock.class.php');
 
 $t = new lime_test(39, new lime_output_color());
 
-$context = new sfContext();
+class myRequest
+{
+  public function getParameter($key)
+  {
+    if ($key == 'sf_culture')
+    {
+      return 'en';
+    }
+  }
+}
+
+$context = sfContext::getInstance(array(
+  'request' => 'myRequest',
+  'user' => 'sfBasicSecurityUser',
+));
+$user = $context->user;
 
 // ->initialize()
 $t->diag('->initialize()');
@@ -24,9 +39,6 @@ $user = new sfBasicSecurityUser();
 $user->initialize($context);
 $t->is($user->isTimedOut(), true, '->initialize() times out the user if no request made for a long time');
 */
-
-$user = new sfBasicSecurityUser();
-$user->initialize($context);
 
 // ->listCredentials()
 $t->diag('->listCredentials()');
@@ -46,6 +58,7 @@ $t->is($user->isAuthenticated(), false, '->setAuthenticated() accepts a boolean 
 sfConfig::set('sf_timeout', 86400);
 $user = new sfBasicSecurityUser();
 $user->initialize($context);
+$context->user = $user;
 $t->diag('->setTimedOut() ->isTimedOut()');
 $t->is($user->isTimedOut(), false, '->isTimedOut() returns false if the session is not timed out');
 $user->setTimedOut();

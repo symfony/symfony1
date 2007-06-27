@@ -9,31 +9,9 @@
  */
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
-
-sfLoader::loadHelpers(array('Helper', 'Asset', 'Url', 'Tag', 'Date'));
+require_once($_test_dir.'/unit/sfContextMock.class.php');
 
 $t = new lime_test(493, new lime_output_color());
-
-class sfContext
-{
-  public $user = null;
-  public static $instance = null;
-
-  public function getInstance()
-  {
-    if (!isset(self::$instance))
-    {
-      self::$instance = new sfContext();
-    }
-
-    return self::$instance;
-  }
-
-  public function getUser()
-  {
-    return $this->user;
-  }
-}
 
 class sfUser
 {
@@ -47,9 +25,9 @@ class sfUser
 
 sfConfig::set('sf_charset', 'utf-8');
 
-$context = sfContext::getInstance();
-$user = new sfUser();
-$context->user = $user;
+$context = sfContext::getInstance(array('user' => 'sfUser'));
+
+sfLoader::loadHelpers(array('Helper', 'Asset', 'Url', 'Tag', 'Date'));
 
 // distance_of_time_in_words()
 $t->diag('distance_of_time_in_words()');
@@ -84,22 +62,22 @@ $t->is(distance_of_time_in_words($now - 4 * 365 * 86400, $now), 'over 4 years', 
 
 // format_date()
 $t->diag('format_date()');
-$user->culture = 'fr';
+$context->user->culture = 'fr';
 $t->is(format_date(time()), date('d/m/Y'), 'format_date() format a numerical date according to the user culture');
 $t->is(format_date(date('Y-m-d')), date('d/m/Y'), 'format_date() format a string date according to the user culture');
 $t->is(format_date(date('y-m-d')), date('d/m/Y'), 'format_date() format a string date with two digit year according to the user culture');
 $t->is(format_date('1789-07-14'), '14/07/1789', 'format_date() formats pre-epoch dates');
 
-$user->culture = 'en';
+$context->user->culture = 'en';
 $time = time();
 $t->is(format_date($time, 'F'), date('j F Y H:i:s', $time).' '.date('T'), 'format_date() takes a format string as its second argument');
 
-$user->culture = 'fr';
+$context->user->culture = 'fr';
 $t->is(format_date($time, 'F', 'en'), date('j F Y H:i:s', $time).' '.date('T'), 'format_date() takes a culture as its third argument');
 
 // format_datetime()
 $t->diag('format_datetime()');
-$user->culture = 'en';
+$context->user->culture = 'en';
 $time = time();
 $t->is(format_datetime($time), date('j F Y H:i:s', $time).' '.date('T'), 'format_datetime() format a numerical date time according to the user culture');
 $t->is(format_datetime(date('Y-m-d')), date('j F Y').' 00:00:00 '.date('T'), 'format_datetime() format a string date time according to the user culture');

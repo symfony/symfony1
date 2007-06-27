@@ -9,19 +9,10 @@
  */
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
+require_once($_test_dir.'/unit/sfContextMock.class.php');
 require_once($_test_dir.'/unit/sfValidatorTestHelper.class.php');
 
 $t = new lime_test(55, new lime_output_color());
-
-class sfContext
-{
-  public $request = null;
-
-  function getRequest()
-  {
-    return $this->request;
-  }
-}
 
 class sfRequest
 {
@@ -33,9 +24,9 @@ class sfRequest
   }
 }
 
-$context = new sfContext();
-$request = new sfRequest();
-$context->request = $request;
+$context = sfContext::getInstance(array('request' => 'sfRequest'));
+$request = $context->request;
+
 $v = new sfCompareValidator();
 $h = new sfValidatorTestHelper($context, $t);
 

@@ -21,7 +21,7 @@ class myView extends sfView
   function render ($templateVars = null) {}
 }
 
-$context = new sfContext();
+$context = sfContext::getInstance();
 $view = new myView();
 $view->initialize($context, '', '', '');
 

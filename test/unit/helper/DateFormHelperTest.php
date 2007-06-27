@@ -9,8 +9,7 @@
  */
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
-
-sfLoader::loadHelpers(array('Helper', 'Asset', 'Url', 'Tag', 'DateForm'));
+require_once($_test_dir.'/unit/sfContextMock.class.php');
 
 class myController
 {
@@ -36,56 +35,11 @@ class myRequest
   }
 }
 
-class sfContext
-{
-  public $controller = null;
-  public $user = null;
-  public $request = null;
-
-  static public $instance = null;
-
-  public static function getInstance()
-  {
-    if (!isset(self::$instance))
-    {
-      self::$instance = new sfContext();
-    }
-
-    return self::$instance;
-  }
-
-  public function getController()
-  {
-    return $this->controller;
-  }
-
-  public function getUser()
-  {
-    return $this->user;
-  }
-
-  public function getRequest()
-  {
-    return $this->request;
-  }
-
-  public function getModuleName()
-  {
-    return 'module';
-  }
-
-  public function getActionName()
-  {
-    return 'action';
-  }
-}
-
 $t = new lime_test(81, new lime_output_color());
 
-$context = sfContext::getInstance();
-$context->controller = new myController();
-$context->user = new myUser();
-$context->request = new myRequest();
+$context = sfContext::getInstance(array('user' => 'myUser', 'request' => 'myRequest', 'controller' => 'myController'));
+
+sfLoader::loadHelpers(array('Helper', 'Asset', 'Url', 'Tag', 'DateForm'));
 
 // select_day_tag()
 $t->diag('select_day_tag()');

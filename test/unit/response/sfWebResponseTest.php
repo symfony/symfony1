@@ -26,9 +26,8 @@ class myWebResponse extends sfWebResponse
   }
 }
 
-$context = new sfContext();
-$response = sfResponse::newInstance('myWebResponse');
-$response->initialize($context);
+$context = sfContext::getInstance(array('routing' => 'sfNoRouting', 'request' => 'sfWebRequest', 'response' => 'myWebResponse'));
+$response = $context->response;
 
 // ->getStatusCode() ->setStatusCode()
 $t->diag('->getStatusCode() ->setStatusCode()');

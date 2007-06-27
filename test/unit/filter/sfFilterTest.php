@@ -21,7 +21,7 @@ class myFilter extends sfFilter
   }
 }
 
-$context = new sfContext();
+$context = sfContext::getInstance();
 $filter = new myFilter();
 
 // ->initialize()

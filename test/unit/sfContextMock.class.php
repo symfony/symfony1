@@ -10,13 +10,30 @@
 
 class sfContext
 {
-  private static $instance = null;
+  protected static
+    $instance = null;
 
-  static public function getInstance()
+  public
+    $request    = null,
+    $response   = null,
+    $controller = null,
+    $routing    = null,
+    $user       = null,
+    $storage    = null;
+
+  static public function getInstance($factories = array())
   {
     if (!isset(self::$instance))
     {
       self::$instance = new sfContext();
+
+      self::$instance->storage = sfStorage::newInstance('sfSessionTestStorage');
+      self::$instance->storage->initialize(self::$instance);
+
+      foreach ($factories as $type => $class)
+      {
+        self::$instance->inject($type, $class);
+      }
     }
 
     return self::$instance;
@@ -24,53 +41,51 @@ class sfContext
 
   public function getModuleName()
   {
-    return '';
+    return 'module';
+  }
+
+  public function getActionName()
+  {
+    return 'action';
   }
 
   public function getRequest()
   {
-    static $request;
-
-    if (!$request)
-    {
-      $request = new sfWebRequest();
-      $request->initialize($this);
-    }
-
-    return $request;
+    return $this->request;
   }
 
   public function getResponse()
   {
-    static $response;
-
-    if (!$response)
-    {
-      $response = new sfWebResponse();
-      $response->initialize($this);
-    }
-
-    return $response;
+    return $this->response;
   }
 
   public function getRouting()
   {
-    static $routing;
-
-    if (!$routing)
-    {
-      $routing = new sfNoRouting();
-      $routing->initialize($this);
-    }
-
-    return $routing;
+    return $this->routing;
   }
 
   public function getStorage()
   {
-    $storage = sfStorage::newInstance('sfSessionTestStorage');
-    $storage->initialize($this);
+    return $this->storage;
+  }
 
-    return $storage;
+  public function getUser()
+  {
+    return $this->user;
+  }
+
+  public function getController()
+  {
+    return $this->controller;
+  }
+
+  public function inject($type, $class)
+  {
+    $object = new $class();
+    if (method_exists($object, 'initialize'))
+    {
+      $object->initialize($this);
+    }
+    $this->$type = $object;
   }
 }

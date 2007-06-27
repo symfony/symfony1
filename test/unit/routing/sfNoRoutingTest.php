@@ -9,48 +9,16 @@
  */
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
+require_once($_test_dir.'/unit/sfContextMock.class.php');
 
 $t = new lime_test(12, new lime_output_color());
-
-class sfContext
-{
-  public static $instance;
-
-  public $routing = null;
-  public $request = null;
-
-  static public function getInstance()
-  {
-    if (!isset(self::$instance))
-    {
-      self::$instance = new sfContext();
-    }
-
-    return self::$instance;
-  }
-
-  public function getRouting()
-  {
-    return $this->routing;
-  }
-
-  public function getRequest()
-  {
-    return $this->request;
-  }
-}
 
 sfConfig::set('sf_default_module', 'main');
 sfConfig::set('sf_default_action', 'index');
 
-$context = sfContext::getInstance();
-$routing = new sfNoRouting();
-$routing->initialize($context);
-$context->routing = $routing;
-
-$request = new sfWebRequest();
-$request->initialize($context);
-$context->request = $request;
+$context = sfContext::getInstance(array('routing' => 'sfNoRouting', 'request' => 'sfWebRequest'));
+$request = $context->request;
+$routing = $context->routing;
 
 // ->getCurrentInternalUri()
 $t->diag('->getCurrentInternalUri()');

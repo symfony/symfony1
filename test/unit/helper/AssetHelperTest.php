@@ -9,6 +9,7 @@
  */
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
+require_once($_test_dir.'/unit/sfContextMock.class.php');
 
 sfLoader::loadHelpers(array('Helper', 'Tag', 'Url', 'Asset'));
 
@@ -34,40 +35,16 @@ class myRequest
   }
 }
 
-class sfContext
-{
-  public $request = null;
-
-  static public $instance = null;
-
-  public static function getInstance()
-  {
-    if (!isset(self::$instance))
-    {
-      self::$instance = new sfContext();
-    }
-
-    return self::$instance;
-  }
-
-  public function getRequest()
-  {
-    return $this->request;
-  }
-}
-
-$context = sfContext::getInstance();
-$request = new myRequest();
-$context->request = $request;
+$context = sfContext::getInstance(array('request' => 'myRequest'));
 
 // _compute_public_path()
 $t->diag('_compute_public_path');
 $t->is(_compute_public_path('foo', 'css', 'css'), '/css/foo.css', '_compute_public_path() converts a string to a web path');
 $t->is(_compute_public_path('foo', 'css', 'css', true), 'http://localhost/css/foo.css', '_compute_public_path() can create absolute links');
 $t->is(_compute_public_path('foo.css2', 'css', 'css'), '/css/foo.css2', '_compute_public_path() does not add suffix if one already exists');
-$request->relativeUrlRoot = '/bar';
+$context->request->relativeUrlRoot = '/bar';
 $t->is(_compute_public_path('foo', 'css', 'css'), '/bar/css/foo.css', '_compute_public_path() takes into account the relative url root configuration');
-$request->relativeUrlRoot = '';
+$context->request->relativeUrlRoot = '';
 $t->is(_compute_public_path('foo.css?foo=bar', 'css', 'css'), '/css/foo.css?foo=bar', '_compute_public_path() takes into account query strings');
 $t->is(_compute_public_path('foo?foo=bar', 'css', 'css'), '/css/foo.css?foo=bar', '_compute_public_path() takes into account query strings');
 
@@ -152,9 +129,8 @@ $t->is(auto_discovery_link_tag('atom'),
 $t->is(auto_discovery_link_tag('rss', array('action' => 'feed')),
   '<link href="http://www.example.com" rel="alternate" title="RSS" type="application/rss+xml" />');
 
-$request = new sfWebRequest();
+$context->request = new sfWebRequest();
 sfConfig::set('test_sfWebRequest_relative_url_root', '/mypath');
-$context = new sfContext();
 
 // auto_discovery()
 $t->is(auto_discovery_link_tag('rss', array('action' => 'feed')),
