@@ -69,6 +69,6 @@ class Doctrine_Query_Orderby extends Doctrine_Query_Part
             }
             $ret[] = $r;
         }
-        return implode(', ', $ret);
+        return $ret;
     }
 }
