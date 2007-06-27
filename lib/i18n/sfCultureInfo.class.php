@@ -222,7 +222,7 @@ class sfCultureInfo
    * @param string a culture
    * @return boolean true if valid, false otherwise.
    */
-  public function validCulture($culture)
+  static public function validCulture($culture)
   {
     if (preg_match('/^[a-z]{2}(_[A-Z]{2,5}){0,2}$/', $culture))
     {
