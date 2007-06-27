@@ -11,18 +11,25 @@
 /**
  * This class can be used to cache the result and output of functions/methods.
  *
- * This class is based on the PEAR_Cache_Lite class.
- * All cache files are stored in files in the [sf_root_dir].'/cache/'.[sf_app].'/function' directory.
- * To disable all caching, you can set to false [sf_cache] constant.
- *
  * @package    symfony
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @author     Fabien Marty <fab@php.net>
  * @version    SVN: $Id$
  */
-class sfFunctionCache extends sfFileCache
+class sfFunctionCache
 {
+  protected $cache = null;
+
+  /**
+   * Constructor.
+   *
+   * @param sfCache An sfCache object instance
+   */
+  public function __construct($cache)
+  {
+    $this->cache = $cache;
+  }
+
   /**
    * Calls a cacheable function or method (or not if there is already a cache for it).
    *
@@ -39,7 +46,7 @@ class sfFunctionCache extends sfFileCache
     // Generate a cache id
     $id = md5(serialize($arguments));
 
-    $data = $this->get($id);
+    $data = $this->cache->get($id, '');
     if ($data !== null)
     {
       $array = unserialize($data);
@@ -48,55 +55,37 @@ class sfFunctionCache extends sfFileCache
     }
     else
     {
-      $target = array_shift($arguments);
+      $callable = array_shift($arguments);
+
       ob_start();
       ob_implicit_flush(false);
-      if (is_string($target) && strstr($target, '::'))
+
+      if (!is_callable($callable))
       {
-        // classname::staticMethod
-        list($class, $method) = explode('::', $target);
-        try
-        {
-          $result = call_user_func_array(array($class, $method), $arguments);
-        }
-        catch (Exception $e)
-        {
-          ob_end_clean();
-          throw $e;
-        }
+        throw new sfException('The first argument to call() must be a valid callable.');
       }
-      else if (is_string($target) && strstr($target, '->'))
+
+      try
       {
-        // object->method
-        // use a stupid name ($objet_123456789 because) of problems when the object
-        // name is the same as this var name
-        list($object_123456789, $method) = explode('->', $target);
-        global $$object_123456789;
-        try
-        {
-          $result = call_user_func_array(array($$object_123456789, $method), $arguments);
-        }
-        catch (Exception $e)
-        {
-          ob_end_clean();
-          throw $e;
-        }
+        $result = call_user_func_array($callable, $arguments);
       }
-      else
+      catch (Exception $e)
       {
-        // function
-        $result = call_user_func_array($target, $arguments);
+        ob_end_clean();
+        throw $e;
       }
+
       $output = ob_get_contents();
       ob_end_clean();
 
       $array['output'] = $output;
       $array['result'] = $result;
 
-      $this->set($id, '', serialize($array));
+      $this->cache->set($id, '', serialize($array));
     }
 
     echo($output);
+
     return $result;
   }
 }

@@ -7,6 +7,9 @@ WARNING: sfI18N class is not a singleton anymore. To use the sfI18N object, you 
          sfRouting class is not a singleton anymore. To use the sfRouting object, you must get it from the context:
          sfContext::getInstance()->getRouting()
 
+         The sfFunctionCache object does not extend sfFileCache anymore. You must now pass a cache object to the constructor.
+         The first argument to the call() method must now be a callable (dropped support for "class::method" string).
+
 * r3742: added sfAction::renderPartial() method
 * All bug fixes from 1.0.0 -> 1.0.X
 
