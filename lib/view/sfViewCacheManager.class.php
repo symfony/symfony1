@@ -34,10 +34,9 @@ class sfViewCacheManager
    * Initializes the cache manager.
    *
    * @param sfContext Current application context
-   * @param sfCache Type of the cache
-   * @param array Cache parameters
+   * @param sfCache   An sfCache instance
    */
-  public function initialize($context, $cacheClass, $cacheParameters = array())
+  public function initialize($context, $cache)
   {
     $this->context    = $context;
     $this->controller = $context->getController();
@@ -45,9 +44,8 @@ class sfViewCacheManager
     // empty configuration
     $this->cacheConfig = array();
 
-    // create cache instance
-    $this->cache = new $cacheClass();
-    $this->cache->initialize($cacheParameters);
+    // cache instance
+    $this->cache = $cache;
 
     // register a named route for our partial cache (at the end)
     $this->routing = $context->getRouting();

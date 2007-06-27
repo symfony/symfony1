@@ -87,7 +87,7 @@ $t->is($m->getContext(), null, '->initialize() takes a sfContext object as its f
 
 // ->getContext()
 $t->diag('->getContext()');
-$m->initialize($context, 'myCache');
+$m->initialize($context, new myCache());
 $t->is($m->getContext(), $context, '->getContext() returns the current context');
 
 // ->generateNamespace()
@@ -140,7 +140,7 @@ function get_cache_manager($context)
 {
   myCache::clear();
   $m = new sfViewCacheManager();
-  $m->initialize($context, 'myCache');
+  $m->initialize($context, new myCache());
 
   return $m;
 }

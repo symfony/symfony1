@@ -144,7 +144,10 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           // append view cache class name
           $inits[] = sprintf("\n  if (sfConfig::get('sf_cache'))\n  {\n".
                              "    \$this->factories['viewCacheManager'] = new sfViewCacheManager();\n".
-                             "    \$this->factories['viewCacheManager']->initialize(\$this, sfConfig::get('sf_factory_view_cache', '%s'), sfConfig::get('sf_factory_view_cache_parameters', %s));\n".
+                             "    \$viewCacheClass = sfConfig::get('sf_factory_view_cache', '%s');\n".
+                             "    \$viewCache = new \$viewCacheClass();\n".
+                             "    \$viewCache->initialize(sfConfig::get('sf_factory_view_cache_parameters', %s));\n".
+                             "    \$this->factories['viewCacheManager']->initialize(\$this, \$viewCache);\n".
                              "  }\n".
                              "  else\n".
                              "  {\n".
