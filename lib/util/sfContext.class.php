@@ -12,8 +12,7 @@
 /**
  * sfContext provides information about the current application context, such as
  * the module and action names and the module directory. References to the
- * current controller, request, and user implementation instances are also
- * provided.
+ * main symfony instances are also provided.
  *
  * @package    symfony
  * @subpackage util
@@ -78,7 +77,14 @@ class sfContext
       {
         $class = __CLASS__;
       }
+
       self::$instances[$name] = new $class();
+
+      if (!self::$instances[$name] instanceof sfContext)
+      {
+        throw new sfFactoryException(sprintf('Class "%s" is not of the type sfContext', $class));
+      }
+
       self::$instances[$name]->initialize();
     }
 
