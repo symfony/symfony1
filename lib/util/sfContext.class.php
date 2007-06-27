@@ -37,19 +37,13 @@ class sfContext
     $routing           = null;
 
   protected static
-    $instance          = null;
+    $instances         = array(),
+    $current           = 'default';
 
   /**
-   * Removes current sfContext instance
-   *
-   * This method only exists for testing purpose. Don't use it in your application code.
+   * Initializes the current sfContext instance.
    */
-  public static function removeInstance()
-  {
-    self::$instance = null;
-  }
-
-  protected function initialize()
+  public function initialize()
   {
     $this->logger = sfLogger::getInstance();
     if (sfConfig::get('sf_logging_enabled'))
@@ -75,25 +69,45 @@ class sfContext
   }
 
   /**
-   * Retrieve the singleton instance of this class.
+   * Retrieves the singleton instance of this class.
+   *
+   * @param  string    The name of the sfContext to retrieve.
    *
    * @return sfContext A sfContext implementation instance.
    */
-  public static function getInstance()
+  public static function getInstance($name = null, $class = null)
   {
-    if (!isset(self::$instance))
+    if (is_null($name))
     {
-      $class = __CLASS__;
-      self::$instance = new $class();
-      self::$instance->initialize();
+      $name = self::$current;
     }
 
-    return self::$instance;
+    if (!isset(self::$instances[$name]))
+    {
+      if (is_null($class))
+      {
+        $class = __CLASS__;
+      }
+      self::$instances[$name] = new $class();
+      self::$instances[$name]->initialize();
+    }
+
+    return self::$instances[$name];
   }
 
-  public static function hasInstance()
+  public static function hasInstance($name = null)
   {
-    return isset(self::$instance);
+    if (is_null($name))
+    {
+      $name = self::$current;
+    }
+
+    return isset(self::$instances[$name]);
+  }
+
+  public static function switchTo($name)
+  {
+    self::$current = $name;
   }
 
   /**

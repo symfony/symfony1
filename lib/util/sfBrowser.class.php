@@ -145,8 +145,8 @@ class sfBrowser
     }
 
     // recycle our context object
-    sfContext::removeInstance();
     $this->context = sfContext::getInstance();
+    $this->context->initialize();
 
     // launch request via controller
     $controller = $this->context->getController();
