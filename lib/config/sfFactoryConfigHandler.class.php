@@ -102,49 +102,53 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
       {
         case 'controller':
           // append instance creation
-          $instances[] = sprintf("  \$this->controller = sfController::newInstance(sfConfig::get('sf_factory_controller', '%s'));", $class);
+          $instances[] = sprintf("  \$this->factories['controller'] = sfController::newInstance(sfConfig::get('sf_factory_controller', '%s'));", $class);
 
           // append instance initialization
-          $inits[] = "  \$this->controller->initialize(\$this);";
+          $inits[] = "  \$this->factories['controller']->initialize(\$this);";
           break;
 
         case 'request':
           // append instance creation
-          $instances[] = sprintf("  \$this->request = sfRequest::newInstance(sfConfig::get('sf_factory_request', '%s'));", $class);
+          $instances[] = sprintf("  \$this->factories['request'] = sfRequest::newInstance(sfConfig::get('sf_factory_request', '%s'));", $class);
 
           // append instance initialization
-          $inits[] = sprintf("  \$this->request->initialize(\$this, sfConfig::get('sf_factory_request_parameters', %s), sfConfig::get('sf_factory_request_attributes', array()));", $parameters);
+          $inits[] = sprintf("  \$this->factories['request']->initialize(\$this, sfConfig::get('sf_factory_request_parameters', %s), sfConfig::get('sf_factory_request_attributes', array()));", $parameters);
           break;
 
         case 'response':
           // append instance creation
-          $instances[] = sprintf("  \$this->response = sfResponse::newInstance(sfConfig::get('sf_factory_response', '%s'));", $class);
+          $instances[] = sprintf("  \$this->factories['response'] = sfResponse::newInstance(sfConfig::get('sf_factory_response', '%s'));", $class);
 
           // append instance initialization
-          $inits[] = sprintf("  \$this->response->initialize(\$this, sfConfig::get('sf_factory_response_parameters', %s));", $parameters);
+          $inits[] = sprintf("  \$this->factories['response']->initialize(\$this, sfConfig::get('sf_factory_response_parameters', %s));", $parameters);
           break;
 
         case 'storage':
           // append instance creation
-          $instances[] = sprintf("  \$this->storage = sfStorage::newInstance(sfConfig::get('sf_factory_storage', '%s'));", $class);
+          $instances[] = sprintf("  \$this->factories['storage'] = sfStorage::newInstance(sfConfig::get('sf_factory_storage', '%s'));", $class);
 
           // append instance initialization
-          $inits[] = sprintf("  \$this->storage->initialize(\$this, sfConfig::get('sf_factory_storage_parameters', %s));", $parameters);
+          $inits[] = sprintf("  \$this->factories['storage']->initialize(\$this, sfConfig::get('sf_factory_storage_parameters', %s));", $parameters);
           break;
 
         case 'user':
           // append instance creation
-          $instances[] = sprintf("  \$this->user = sfUser::newInstance(sfConfig::get('sf_factory_user', '%s'));", $class);
+          $instances[] = sprintf("  \$this->factories['user'] = sfUser::newInstance(sfConfig::get('sf_factory_user', '%s'));", $class);
 
           // append instance initialization
-          $inits[] = sprintf("  \$this->user->initialize(\$this, sfConfig::get('sf_factory_user_parameters', %s));", $parameters);
+          $inits[] = sprintf("  \$this->factories['user']->initialize(\$this, sfConfig::get('sf_factory_user_parameters', %s));", $parameters);
           break;
 
         case 'view_cache':
           // append view cache class name
           $inits[] = sprintf("\n  if (sfConfig::get('sf_cache'))\n  {\n".
-                             "    \$this->viewCacheManager = new sfViewCacheManager();\n".
-                             "    \$this->viewCacheManager->initialize(\$this, sfConfig::get('sf_factory_view_cache', '%s'), sfConfig::get('sf_factory_view_cache_parameters', %s));\n".
+                             "    \$this->factories['viewCacheManager'] = new sfViewCacheManager();\n".
+                             "    \$this->factories['viewCacheManager']->initialize(\$this, sfConfig::get('sf_factory_view_cache', '%s'), sfConfig::get('sf_factory_view_cache_parameters', %s));\n".
+                             "  }\n".
+                             "  else\n".
+                             "  {\n".
+                             "    \$this->factories['viewCacheManager'] = null;\n".
                              "  }\n",
                              $class, $parameters);
           break;
@@ -152,17 +156,17 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
         case 'i18n':
           // append i18n instance initialization
           $inits[] = "\n  if (sfConfig::get('sf_i18n'))\n  {\n".
-                     "    \$this->i18n = new sfI18N();\n".
-                     "    \$this->i18n->initialize(\$this);\n".
+                     "    \$this->factories['i18n'] = new sfI18N();\n".
+                     "    \$this->factories['i18n']->initialize(\$this);\n".
                      "  }\n";
           break;
 
         case 'routing':
           // append instance creation
-          $instances[] = sprintf("  \$this->routing = sfRouting::newInstance(sfConfig::get('sf_factory_routing', '%s'));", $class);
+          $instances[] = sprintf("  \$this->factories['routing'] = sfRouting::newInstance(sfConfig::get('sf_factory_routing', '%s'));", $class);
 
           // append instance initialization
-          $inits[] = sprintf("  \$this->routing->initialize(\$this, sfConfig::get('sf_factory_routing_parameters', %s));", $parameters);
+          $inits[] = sprintf("  \$this->factories['routing']->initialize(\$this, sfConfig::get('sf_factory_routing_parameters', %s));", $parameters);
           break;
       }
     }
