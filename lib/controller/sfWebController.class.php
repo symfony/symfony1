@@ -93,7 +93,7 @@ abstract class sfWebController extends sfController
       $parameters['action'] = sfConfig::get('sf_default_action');
     }
 
-    $r = sfRouting::getInstance();
+    $r = $this->getContext()->getRouting();
     if ($r->hasRoutes() && $generated_url = $r->generate($route_name, $parameters, $querydiv, $divider, $equals))
     {
       $url .= $generated_url;

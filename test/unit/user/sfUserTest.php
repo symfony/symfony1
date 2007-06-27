@@ -13,12 +13,15 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 class sfContext
 {
   public static
-    $instance = null,
+    $instance = null;
+
+  public
     $storage  = null,
     $user     = null,
+    $routing  = null,
     $request  = null;
 
-  public function getInstance()
+  static public function getInstance()
   {
     if (!isset(self::$instance))
     {
@@ -42,6 +45,11 @@ class sfContext
   {
     return $this->storage;
   }
+
+  public function getRouting()
+  {
+    return $this->routing;
+  }
 }
 
 $t = new lime_test(33, new lime_output_color());
@@ -49,7 +57,11 @@ $t = new lime_test(33, new lime_output_color());
 $_SERVER['session_id'] = 'test';
 sfConfig::set('sf_test_cache_dir', sfToolkit::getTmpDir());
 
-$context = new sfContext();
+$context = sfContext::getInstance();
+
+$routing = new sfNoRouting();
+$routing->initialize($context);
+$context->routing = $routing;
 
 $request = new sfWebRequest();
 $request->initialize($context);

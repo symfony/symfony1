@@ -33,6 +33,7 @@ class sfContext
 {
   public $controller = null;
   public $request = null;
+  public $routing = null;
 
   static public $instance = null;
 
@@ -54,6 +55,11 @@ class sfContext
   public function getRequest()
   {
     return $this->request;
+  }
+
+  public function getRouting()
+  {
+    return $this->routing;
   }
 }
 
@@ -105,8 +111,14 @@ class myCache extends sfCache
 $context = sfContext::getInstance();
 $context->controller = new myController();
 $context->controller->initialize($context);
+
+$routing = new sfPatternRouting();
+$routing->initialize($context);
+$context->routing = $routing;
+
 $context->request = new myRequest();
-$r = sfRouting::getInstance();
+
+$r = $routing;
 $r->connect('default', '/:module/:action/*');
 
 // ->initialize()

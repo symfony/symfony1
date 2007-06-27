@@ -123,7 +123,6 @@ try
   }
 
   $configCache->import($sf_app_config_dir_name.'/php.yml', false);
-  $configCache->import($sf_app_config_dir_name.'/routing.yml', false);
 
   // include all config.php from plugins
   sfLoader::loadPluginConfig();

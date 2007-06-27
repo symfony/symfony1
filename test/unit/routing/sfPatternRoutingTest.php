@@ -10,23 +10,25 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(66, new lime_output_color());
+$t = new lime_test(61, new lime_output_color());
+
+class sfPatternRoutingTest extends sfPatternRouting
+{
+  public function getCurrentRouteName()
+  {
+    return $this->current_route_name;
+  }
+}
 
 // public methods
-$r = sfRouting::getInstance();
-foreach (array('clearRoutes', 'connect', 'generate', 'getCurrentInternalUri', 'getCurrentRouteName', 'getInstance', 'getRouteByName', 'getRoutes', 'hasRoutes', 'parse', 'setRoutes') as $method)
+$r = new sfPatternRoutingTest();
+foreach (array('clearRoutes', 'connect', 'generate', 'getCurrentInternalUri', 'getCurrentRouteName', 'getRoutes', 'hasRoutes', 'parse', 'setRoutes') as $method)
 {
   $t->can_ok($r, $method, sprintf('"%s" is a method of sfRouting', $method));
 }
 
-// ->getInstance()
-$t->diag('->getInstance()');
-$t->isa_ok(sfRouting::getInstance(), 'sfRouting', '::getInstance() returns a sfRouting instance');
-$t->is(sfRouting::getInstance(), sfRouting::getInstance(), '::getInstance() is a singleton');
-
 // ->getRoutes()
 $t->diag('->getRoutes()');
-$r = sfRouting::getInstance();
 $r->clearRoutes();
 $r->connect('test1', '/:module/:action');
 $r->connect('test2', '/home');
@@ -37,7 +39,6 @@ $t->ok(isset($routes['test2']), '->getRoutes() returns a hash indexed by route n
 
 // ->setRoutes()
 $t->diag('->setRoutes()');
-$r = sfRouting::getInstance();
 $r->clearRoutes();
 $r->connect('test1', '/:module/:action');
 $r->connect('test2', '/home');
@@ -48,24 +49,14 @@ $t->is($r->getRoutes(), $routes, '->setRoutes() takes a routes array as its firs
 
 // ->clearRoutes()
 $t->diag('->clearRoutes()');
-$r = sfRouting::getInstance();
 $r->clearRoutes();
 $r->connect('test1', '/:module/:action');
 $r->clearRoutes();
 $routes = $r->getRoutes();
 $t->is(count($routes), 0, '->clearRoutes() clears all current routing rules');
 
-// ->getRouteByName()
-$t->diag('->getRouteByName()');
-$r = sfRouting::getInstance();
-$r->clearRoutes();
-$r->connect('test1', '/:module/:action');
-$routes = $r->getRoutes();
-$t->is($r->getRouteByName('test1'), $routes['test1'], '->getRouteByName() returns a route by its name');
-
 // ->hasRoutes()
 $t->diag('->hasRoutes()');
-$r = sfRouting::getInstance();
 $r->clearRoutes();
 $t->is($r->hasRoutes(), false, '->hasRoutes() returns false if there is no route');
 $r->connect('test1', '/:module/:action');
@@ -73,7 +64,6 @@ $t->is($r->hasRoutes(), true, '->hasRoutes() returns true if some routes are reg
 
 // ->connect(), ->parse(), ->generate()
 $t->diag('->connect(), ->parse(), ->generate()');
-$r = sfRouting::getInstance();
 
 // simple routes
 $r->clearRoutes();

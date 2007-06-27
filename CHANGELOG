@@ -4,8 +4,11 @@ Version 1.1.0
 WARNING: sfI18N class is not a singleton anymore. To use the sfI18N object, you must get it from the context:
          sfContext::getInstance()->getI18N()
 
+         sfRouting class is not a singleton anymore. To use the sfRouting object, you must get it from the context:
+         sfContext::getInstance()->getRouting()
+
 * r3742: added sfAction::renderPartial() method
-* All bug fixes from 1.0.0 -> 1.0.4
+* All bug fixes from 1.0.0 -> 1.0.X
 
 Version 1.0.0
 -------------

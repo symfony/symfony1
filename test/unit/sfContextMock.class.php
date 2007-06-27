@@ -53,6 +53,19 @@ class sfContext
     return $response;
   }
 
+  public function getRouting()
+  {
+    static $routing;
+
+    if (!$routing)
+    {
+      $routing = new sfNoRouting();
+      $routing->initialize($this);
+    }
+
+    return $routing;
+  }
+
   public function getStorage()
   {
     $storage = sfStorage::newInstance('sfSessionTestStorage');

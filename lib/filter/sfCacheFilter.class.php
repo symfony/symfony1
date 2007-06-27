@@ -22,6 +22,7 @@ class sfCacheFilter extends sfFilter
     $cacheManager = null,
     $request      = null,
     $response     = null,
+    $routing      = null,
     $cache        = array();
 
   /**
@@ -41,6 +42,7 @@ class sfCacheFilter extends sfFilter
     $this->cacheManager = $context->getViewCacheManager();
     $this->request      = $context->getRequest();
     $this->response     = $context->getResponse();
+    $this->routing      = $context->getRouting();
   }
 
   /**
@@ -71,7 +73,7 @@ class sfCacheFilter extends sfFilter
     // register our cache configuration
     $this->cacheManager->registerConfiguration($this->getContext()->getModuleName());
 
-    $uri = sfRouting::getInstance()->getCurrentInternalUri();
+    $uri = $this->routing->getCurrentInternalUri();
 
     // page cache
     $this->cache[$uri] = array('page' => false, 'action' => false);
@@ -109,7 +111,7 @@ class sfCacheFilter extends sfFilter
     // cache only 200 HTTP status
     if ($this->response->getStatusCode() == 200)
     {
-      $uri = sfRouting::getInstance()->getCurrentInternalUri();
+      $uri = $this->routing->getCurrentInternalUri();
 
       // save page in cache
       if ($this->cache[$uri]['page'])

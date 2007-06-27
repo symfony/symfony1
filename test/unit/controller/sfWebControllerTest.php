@@ -156,7 +156,5 @@ $t->like($context->getResponse()->getHttpHeader('Location'), '~/module/action/id
 // ->genUrl()
 $t->diag('->genUrl()');
 
-$r = sfRouting::getInstance();
-$r->clearRoutes();
-$r->connect('test1', '/:module/:action/:id', array('module' => 'default', 'action' => 'index'));
+$r = $context->getRouting();
 $t->is($controller->genUrl('module/action?id=4'), $controller->genUrl(array('module' => 'module', 'action' => 'action', 'id' => 4)), '->genUrl() accepts a string or an array as its first argument');

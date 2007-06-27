@@ -24,3 +24,6 @@ default:
 
   i18n:
     class: sfI18N
+
+  routing:
+    class: sfPatternRouting
