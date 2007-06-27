@@ -141,7 +141,7 @@ class sfPatternRouting extends sfRouting
   {
     if (sfConfig::get('sf_logging_enabled'))
     {
-      sfLogger::getInstance()->info('{sfRouting} clear all current routes');
+      $this->context->getLogger()->info('{sfRouting} clear all current routes');
     }
 
     $this->routes = array();
@@ -305,7 +305,7 @@ class sfPatternRouting extends sfRouting
 
     if (sfConfig::get('sf_logging_enabled'))
     {
-      sfLogger::getInstance()->info('{sfRouting} connect "'.$route.'"'.($suffix ? ' ("'.$suffix.'" suffix)' : ''));
+      $this->context->getLogger()->info('{sfRouting} connect "'.$route.'"'.($suffix ? ' ("'.$suffix.'" suffix)' : ''));
     }
 
     return $this->routes;
@@ -564,7 +564,7 @@ class sfPatternRouting extends sfRouting
 
           if (sfConfig::get('sf_logging_enabled'))
           {
-            sfLogger::getInstance()->info('{sfRouting} match route ['.$route_name.'] "'.$route.'"');
+            $this->context->getLogger()->info('{sfRouting} match route ['.$route_name.'] "'.$route.'"');
           }
 
           break;
@@ -577,7 +577,7 @@ class sfPatternRouting extends sfRouting
     {
       if (sfConfig::get('sf_logging_enabled'))
       {
-        sfLogger::getInstance()->info('{sfRouting} no matching route found');
+        $this->context->getLogger()->info('{sfRouting} no matching route found');
       }
 
       return null;
