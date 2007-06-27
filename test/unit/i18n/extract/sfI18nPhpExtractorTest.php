@@ -24,9 +24,13 @@ $content = <<<EOF
 __('bar')
 
 <?php __('foo') ?>
+
+<?php __('I\'m "happy"') ?>
+<?php __("I'm very \"happy\"") ?>
+<?php __("I\\'m so \"happy\"") ?>
 EOF;
 
-$t->is($e->extract($content), array('foo'), '->extract() extracts strings from PHP files');
+$t->is($e->extract($content), array('foo', 'I\'m "happy"', 'I\'m very "happy"', 'I\\\'m so "happy"'), '->extract() extracts strings from PHP files');
 
 $content = <<<EOF
 <?php format_number_choice('foo') ?>

@@ -81,7 +81,8 @@ class sfI18nPhpExtractor implements sfI18nExtractorInterface
           case T_CONSTANT_ENCAPSED_STRING:
             if (2 == $i18n_function)
             {
-              $strings[] = substr($text, 1, -1);
+              $delimiter = $text[0];
+              $strings[] = str_replace('\\'.$delimiter, $delimiter, substr($text, 1, -1));
             }
             $i18n_function = 0;
             break;
