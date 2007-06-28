@@ -8,15 +8,6 @@
  * file that was distributed with this source code.
  */
 
-// fix for PHP 5.0 (no Countable interface)
-if (!interface_exists('Countable', false))
-{
-  interface Countable
-  {
-    public function count();
-  }
-}
-
 /**
  * Output escaping decorator class for arrays.
  *
