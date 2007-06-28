@@ -50,7 +50,7 @@ class simpleAutoloader
     self::register('plugins', '.php');
   }
 
-  static public function __autoload($class)
+  static public function autoload($class)
   {
     if (!isset(self::$class_paths[$class]))
     {
@@ -104,19 +104,6 @@ class simpleAutoloader
   }
 }
 
-function __autoload($class)
-{
-  static $initialized = false;
-
-  if (!$initialized)
-  {
-    simpleAutoloader::initialize(sfConfig::get('sf_symfony_lib_dir'));
-    $initialized = true;
-  }
-
-  return simpleAutoloader::__autoload($class);
-}
-
 // trap -V before pake
 if (in_array('-V', $argv) || in_array('--version', $argv))
 {
@@ -148,6 +135,11 @@ set_include_path(
   sfConfig::get('sf_symfony_lib_dir').DIRECTORY_SEPARATOR.'vendor'.PATH_SEPARATOR.
   get_include_path()
 );
+
+// initialize class autoloading
+ini_set('unserialize_callback_func', 'spl_autoload_call');
+simpleAutoloader::initialize(sfConfig::get('sf_symfony_lib_dir'));
+spl_autoload_register(array('simpleAutoloader', 'autoload'));
 
 // register tasks
 $dirs = array(

@@ -16,12 +16,9 @@ sfConfig::set('sf_symfony_data_dir', realpath($_test_dir.'/../data'));
 
 require_once(dirname(__FILE__).'/testAutoloader.class.php');
 
+ini_set('unserialize_callback_func', 'spl_autoload_call');
 testAutoloader::initialize();
-
-function __autoload($class)
-{
-  return testAutoloader::__autoload($class);
-}
+spl_autoload_register(array('testAutoloader', 'autoload'));
 
 class sfException extends Exception
 {

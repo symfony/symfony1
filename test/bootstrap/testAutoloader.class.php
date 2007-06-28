@@ -42,7 +42,7 @@ class testAutoloader
     }
   }
 
-  static public function __autoload($class)
+  static public function autoload($class)
   {
     if (isset(self::$class_paths[$class]))
     {
