@@ -53,26 +53,21 @@ abstract class sfStorage
   }
 
   /**
-   * Retrieves a new Storage implementation instance.
+   * Retrieves a new sfStorage implementation instance.
    *
-   * @param string A Storage implementation name
+   * @param string A sfStorage implementation name
    *
-   * @return Storage A Storage implementation instance
+   * @return sfStorage A sfStorage implementation instance
    *
    * @throws <b>sfFactoryException</b> If a storage implementation instance cannot be created
    */
   public static function newInstance($class)
   {
-    // the class exists
     $object = new $class();
 
-    if (!($object instanceof sfStorage))
+    if (!$object instanceof sfStorage)
     {
-      // the class name is of the wrong type
-      $error = 'Class "%s" is not of the type sfStorage';
-      $error = sprintf($error, $class);
-
-      throw new sfFactoryException($error);
+      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfStorage', $class));
     }
 
     return $object;

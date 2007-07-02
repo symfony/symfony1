@@ -72,16 +72,11 @@ abstract class sfResponse
    */
   public static function newInstance($class)
   {
-    // the class exists
     $object = new $class();
 
-    if (!($object instanceof sfResponse))
+    if (!$object instanceof sfResponse)
     {
-      // the class name is of the wrong type
-      $error = 'Class "%s" is not of the type sfResponse';
-      $error = sprintf($error, $class);
-
-      throw new sfFactoryException($error);
+      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfResponse', $class));
     }
 
     return $object;

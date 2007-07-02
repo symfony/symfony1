@@ -462,16 +462,11 @@ abstract class sfController
   {
     try
     {
-      // the class exists
       $object = new $class();
 
-      if (!($object instanceof sfController))
+      if (!$object instanceof sfController)
       {
-          // the class name is of the wrong type
-          $error = 'Class "%s" is not of the type sfController';
-          $error = sprintf($error, $class);
-
-          throw new sfFactoryException($error);
+        throw new sfFactoryException(sprintf('Class "%s" is not of the type sfController', $class));
       }
 
       return $object;

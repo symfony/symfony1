@@ -214,16 +214,11 @@ abstract class sfRequest
    */
   public static function newInstance($class)
   {
-    // the class exists
     $object = new $class();
 
-    if (!($object instanceof sfRequest))
+    if (!$object instanceof sfRequest)
     {
-      // the class name is of the wrong type
-      $error = 'Class "%s" is not of the type sfRequest';
-      $error = sprintf($error, $class);
-
-      throw new sfFactoryException($error);
+      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfRequest', $class));
     }
 
     return $object;

@@ -19,15 +19,15 @@
 abstract class sfRouting
 {
   protected
-    $context            = null,
-    $parameterHolder    = null;
+    $context         = null,
+    $parameterHolder = null;
 
   /**
-   * Retrieve a new sfRouting implementation instance.
+   * Retrieves a new sfRouting implementation instance.
    *
    * @param string A sfRouting implementation name
    *
-   * @return User A sfRouting implementation instance.
+   * @return sfRouting A sfRouting implementation instance.
    *
    * @throws <b>sfFactoryException</b> If a user implementation instance cannot
    */
@@ -36,20 +36,16 @@ abstract class sfRouting
     // the class exists
     $object = new $class();
 
-    if (!($object instanceof sfRouting))
+    if (!$object instanceof sfRouting)
     {
-      // the class name is of the wrong type
-      $error = 'Class "%s" is not of the type sfRouting';
-      $error = sprintf($error, $class);
-
-      throw new sfFactoryException($error);
+      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfRouting', $class));
     }
 
     return $object;
   }
 
   /**
-   * Initialize this Routing.
+   * Initializes this sfRouting instance.
    *
    * @param sfContext A sfContext instance.
    * @param array     An associative array of initialization parameters.
