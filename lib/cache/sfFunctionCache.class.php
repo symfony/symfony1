@@ -9,7 +9,7 @@
  */
 
 /**
- * This class can be used to cache the result and output of functions/methods.
+ * This class can be used to cache the result and output of any PHP callable (function and method calls).
  *
  * @package    symfony
  * @subpackage cache
@@ -27,35 +27,44 @@ class sfFunctionCache
    */
   public function __construct($cache)
   {
+    if (!is_object($cache))
+    {
+      $this->cache = new sfFileCache($cache);
+
+      throw new sfException('DEPRECATED: You must now pass a sfCache object when initializing a sfFunctionCache object. Be warned that the call() method signature has also changed.');
+    }
+
     $this->cache = $cache;
   }
 
   /**
    * Calls a cacheable function or method (or not if there is already a cache for it).
    *
-   * Arguments of this method are read with func_get_args. So it doesn't appear in the function definition. Synopsis : 
-   * call('functionName', $arg1, $arg2, ...)
-   * (arg1, arg2... are arguments of 'functionName')
+   * Arguments of this method are read with func_get_args. So it doesn't appear in the function definition.
+   *
+   * The first argument can be any PHP callable:
+   *
+   * $cache->call('functionName', array($arg1, $arg2));
+   * $cache->call(array($object, 'methodName'), array($arg1, $arg2));
+   *
+   * @param mixed  A PHP callable
+   * @param array  An array of arguments to pass to the callable
    *
    * @return mixed The result of the function/method
    */
-  public function call()
+  public function call($callable, $arguments = array())
   {
-    $arguments = func_get_args();
-
     // Generate a cache id
-    $id = md5(serialize($arguments));
+    $id = md5(serialize($callable).serialize($arguments));
 
-    $data = $this->cache->get($id, '');
-    if ($data !== null)
+    $serialized = $this->cache->get($id, '');
+    if ($serialized !== null)
     {
-      $array = unserialize($data);
-      $output = $array['output'];
-      $result = $array['result'];
+      $data = unserialize($serialized);
     }
     else
     {
-      $callable = array_shift($arguments);
+      $data = array();
 
       ob_start();
       ob_implicit_flush(false);
@@ -67,7 +76,7 @@ class sfFunctionCache
 
       try
       {
-        $result = call_user_func_array($callable, $arguments);
+        $data['result'] = call_user_func_array($callable, $arguments);
       }
       catch (Exception $e)
       {
@@ -75,17 +84,13 @@ class sfFunctionCache
         throw $e;
       }
 
-      $output = ob_get_contents();
-      ob_end_clean();
+      $data['output'] = ob_get_clean();
 
-      $array['output'] = $output;
-      $array['result'] = $result;
-
-      $this->cache->set($id, '', serialize($array));
+      $this->cache->set($id, '', serialize($data));
     }
 
-    echo($output);
+    echo $data['output'];
 
-    return $result;
+    return $data['result'];
   }
 }
