@@ -39,64 +39,17 @@ class sfExecutionFilter extends sfFilter
     $actionEntry    = $controller->getActionStack()->getLastEntry();
     $actionInstance = $actionEntry->getActionInstance();
 
-    // get the request method
-    $method = $context->getRequest()->getMethod();
-
-    $viewName = null;
-
     // validate and execute the action
-    if (sfConfig::get('sf_cache') && null !== $context->getResponse()->getParameter($context->getRouting()->getCurrentInternalUri().'_action', null, 'symfony/cache'))
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
     {
-      // action in cache, so go to the view
-      $viewName = sfView::SUCCESS;
-    }
-    else if (($actionInstance->getRequestMethods() & $method) != $method)
-    {
-      // this action will skip validation/execution for this method
-      // get the default view
-      $viewName = $actionInstance->getDefaultView();
-    }
-    else
-    {
-      if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-      {
-        $timer = sfTimerManager::getTimer(sprintf('Action "%s/%s"', $actionInstance->getModuleName(), $actionInstance->getActionName()));
-      }
-
-      $validated = $this->validateAction($actionInstance);
-
-      // register fill-in filter
-      if (null !== ($parameters = $context->getRequest()->getAttribute('fillin', null, 'symfony/filter')))
-      {
-        $this->registerFillInFilter($filterChain, $parameters);
-      }
-
-      if (!$validated && sfConfig::get('sf_logging_enabled'))
-      {
-        $this->context->getLogger()->info('{sfFilter} action validation failed');
-      }
-
-      $viewName = $validated ? $this->executeAction($actionInstance) : $this->handleErrorAction($actionInstance);
-
-      if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-      {
-        $timer->addTime();
-      }
+      $timer = sfTimerManager::getTimer(sprintf('Action "%s/%s"', $actionInstance->getModuleName(), $actionInstance->getActionName()));
     }
 
-    if (sfView::HEADER_ONLY == $viewName)
+    $viewName = $this->handleAction($filterChain, $actionInstance);
+
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
     {
-      $context->getResponse()->setHeaderOnly(true);
-
-      // execute next filter
-      $filterChain->execute();
-
-      return;
-    }
-
-    if (sfView::NONE == $viewName)
-    {
-      return;
+      $timer->addTime();
     }
 
     // execute and render the view
@@ -105,24 +58,67 @@ class sfExecutionFilter extends sfFilter
       $timer = sfTimerManager::getTimer(sprintf('View "%s" for "%s/%s"', $viewName, $actionInstance->getModuleName(), $actionInstance->getActionName()));
     }
 
-    $viewData = $this->executeView($actionInstance->getModuleName(), $actionInstance->getActionName(), $viewName);
+    $this->handleView($filterChain, $actionInstance, $viewName);
 
     if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
     {
       $timer->addTime();
     }
 
-    if (sfView::RENDER_VAR == $controller->getRenderMode())
-    {
-      $actionEntry->setPresentation($viewData);
-
-      return;
-    }
-
-    // execute next filter
+    // execute the filter chain (needed if fill-in filter is activated by the validation system)
     $filterChain->execute();
   }
 
+  /*
+   * Handles the action.
+   *
+   * @param  sfFilterChain The current filter chain
+   * @param  sfAction      An sfAction instance
+   *
+   * @return string        The view type
+   */
+  protected function handleAction($filterChain, $actionInstance)
+  {
+    // get the request method
+    $context = $this->getContext();
+    $method  = $context->getRequest()->getMethod();
+
+    if (sfConfig::get('sf_cache') && null !== $context->getResponse()->getParameter($context->getRouting()->getCurrentInternalUri().'_action', null, 'symfony/cache'))
+    {
+      // action in cache, so go to the view
+      return sfView::SUCCESS;
+    }
+
+    if (($actionInstance->getRequestMethods() & $method) != $method)
+    {
+      // this action will skip validation/execution for this method
+      // get the default view
+      return $actionInstance->getDefaultView();
+    }
+
+    $validated = $this->validateAction($actionInstance);
+
+    // register fill-in filter
+    if (null !== ($parameters = $context->getRequest()->getAttribute('fillin', null, 'symfony/filter')))
+    {
+      $this->registerFillInFilter($filterChain, $parameters);
+    }
+
+    if (!$validated && sfConfig::get('sf_logging_enabled'))
+    {
+      $context->getLogger()->info('{sfFilter} action validation failed');
+    }
+
+    return $validated ? $this->executeAction($actionInstance) : $this->handleErrorAction($actionInstance);
+  }
+
+  /**
+   * Validates an sfAction instance.
+   *
+   * @param  sfAction An sfAction instance
+   *
+   * @return boolean  True if the action is validated, false otherwise
+   */
   protected function validateAction($actionInstance)
   {
     $moduleName = $actionInstance->getModuleName();
@@ -162,9 +158,9 @@ class sfExecutionFilter extends sfFilter
   /**
    * Executes the execute method of an action.
    *
-   * @param sfAction An sfAction instance
+   * @param  sfAction An sfAction instance
    *
-   * @param string   The view type
+   * @return string   The view type
    */
   protected function executeAction($actionInstance)
   {
@@ -179,9 +175,9 @@ class sfExecutionFilter extends sfFilter
   /**
    * Executes the handleError method of an action.
    *
-   * @param sfAction An sfAction instance
+   * @param  sfAction An sfAction instance
    *
-   * @param string   The view type
+   * @return string   The view type
    */
   protected function handleErrorAction($actionInstance)
   {
@@ -193,13 +189,43 @@ class sfExecutionFilter extends sfFilter
   }
 
   /**
+   * Handles the view.
+   *
+   * @param  sfFilterChain The current filter chain
+   * @param sfAction       An sfAction instance
+   * @param string         The view name
+   */
+  protected function handleView($filterChain, $actionInstance, $viewName)
+  {
+    if (sfView::HEADER_ONLY == $viewName)
+    {
+      $context->getResponse()->setHeaderOnly(true);
+
+      return;
+    }
+
+    if (sfView::NONE == $viewName)
+    {
+      return;
+    }
+
+    $viewData = $this->executeView($actionInstance->getModuleName(), $actionInstance->getActionName(), $viewName);
+
+    $controller = $this->getContext()->getController();
+    if (sfView::RENDER_VAR == $controller->getRenderMode())
+    {
+      $controller->getActionStack()->getLastEntry()->setPresentation($viewData);
+    }
+  }
+
+  /**
    * Executes and renders the view.
    *
-   * @param string The module name
-   * @param string The action name
-   * @param string The view name
+   * @param  string The module name
+   * @param  string The action name
+   * @param  string The view name
    *
-   * @param string The view data
+   * @return string The view data
    */
   protected function executeView($moduleName, $actionName, $viewName)
   {
@@ -220,7 +246,7 @@ class sfExecutionFilter extends sfFilter
    * Registers the fill in filter in the filter chain.
    *
    * @param sfFilterChain A sfFilterChain implementation instance
-   * @param array An array of parameters to pass to the fill in filter.
+   * @param array         An array of parameters to pass to the fill in filter.
    */
   protected function registerFillInFilter($filterChain, $parameters)
   {
