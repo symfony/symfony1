@@ -44,7 +44,7 @@ class sfExecutionFilter extends sfFilter
 
     $viewName = null;
 
-    // Validation and execute the action
+    // validate and execute the action
     if (sfConfig::get('sf_cache') && null !== $context->getResponse()->getParameter($context->getRouting()->getCurrentInternalUri().'_action', null, 'symfony/cache'))
     {
       // action in cache, so go to the view
@@ -71,6 +71,11 @@ class sfExecutionFilter extends sfFilter
         $this->registerFillInFilter($filterChain, $parameters);
       }
 
+      if (!$validated && sfConfig::get('sf_logging_enabled'))
+      {
+        $this->context->getLogger()->info('{sfFilter} action validation failed');
+      }
+
       $viewName = $validated ? $this->executeAction($actionInstance) : $this->handleErrorAction($actionInstance);
 
       if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
@@ -79,38 +84,43 @@ class sfExecutionFilter extends sfFilter
       }
     }
 
-    // Execute and render the view
-    if ($viewName == sfView::HEADER_ONLY)
+    if (sfView::HEADER_ONLY == $viewName)
     {
       $context->getResponse()->setHeaderOnly(true);
 
       // execute next filter
       $filterChain->execute();
+
+      return;
     }
-    else if ($viewName != sfView::NONE)
+
+    if (sfView::NONE == $viewName)
     {
-      if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-      {
-        $timer = sfTimerManager::getTimer(sprintf('View "%s" for "%s/%s"', $viewName, $actionInstance->getModuleName(), $actionInstance->getActionName()));
-      }
-
-      $viewData = $this->executeView($actionInstance->getModuleName(), $actionInstance->getActionName(), $viewName);
-
-      if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-      {
-        $timer->addTime();
-      }
-
-      if ($controller->getRenderMode() == sfView::RENDER_VAR)
-      {
-        $actionEntry->setPresentation($viewData);
-      }
-      else
-      {
-        // execute next filter
-        $filterChain->execute();
-      }
+      return;
     }
+
+    // execute and render the view
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
+    {
+      $timer = sfTimerManager::getTimer(sprintf('View "%s" for "%s/%s"', $viewName, $actionInstance->getModuleName(), $actionInstance->getActionName()));
+    }
+
+    $viewData = $this->executeView($actionInstance->getModuleName(), $actionInstance->getActionName(), $viewName);
+
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
+    {
+      $timer->addTime();
+    }
+
+    if (sfView::RENDER_VAR == $controller->getRenderMode())
+    {
+      $actionEntry->setPresentation($viewData);
+
+      return;
+    }
+
+    // execute next filter
+    $filterChain->execute();
   }
 
   protected function validateAction($actionInstance)
@@ -175,11 +185,6 @@ class sfExecutionFilter extends sfFilter
    */
   protected function handleErrorAction($actionInstance)
   {
-    if (sfConfig::get('sf_logging_enabled'))
-    {
-      $this->context->getLogger()->info('{sfFilter} action validation failed');
-    }
-
     // validation failed
     $handleErrorToRun = 'handleError'.ucfirst($actionInstance->getActionName());
     $viewName = method_exists($actionInstance, $handleErrorToRun) ? $actionInstance->$handleErrorToRun() : $actionInstance->handleError();
