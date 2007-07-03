@@ -49,9 +49,9 @@ abstract class sfView
   const SUCCESS = 'Success';
 
   /**
-    * Skip view rendering but output http headers
-    */
-  const HEADER_ONLY = 'Headers';
+   * Do not render the presentation.
+   */
+  const RENDER_NONE = 1;
 
   /**
    * Render the presentation to the client.
@@ -59,14 +59,14 @@ abstract class sfView
   const RENDER_CLIENT = 2;
 
   /**
-   * Do not render the presentation.
-   */
-  const RENDER_NONE = 1;
-
-  /**
    * Render the presentation to a variable.
    */
   const RENDER_VAR = 4;
+
+  /**
+   * Skip view rendering but output http headers
+   */
+  const HEADER_ONLY = 8;
 
   protected
     $context            = null,
