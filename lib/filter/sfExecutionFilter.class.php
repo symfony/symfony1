@@ -58,6 +58,11 @@ class sfExecutionFilter extends sfFilter
     }
     else
     {
+      if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
+      {
+        $timer = sfTimerManager::getTimer(sprintf('Action "%s/%s"', $actionInstance->getModuleName(), $actionInstance->getActionName()));
+      }
+
       $validated = $this->validateAction($actionInstance);
 
       // register fill-in filter
@@ -67,6 +72,11 @@ class sfExecutionFilter extends sfFilter
       }
 
       $viewName = $validated ? $this->executeAction($actionInstance) : $this->handleErrorAction($actionInstance);
+
+      if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
+      {
+        $timer->addTime();
+      }
     }
 
     // Execute and render the view
@@ -79,7 +89,17 @@ class sfExecutionFilter extends sfFilter
     }
     else if ($viewName != sfView::NONE)
     {
+      if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
+      {
+        $timer = sfTimerManager::getTimer(sprintf('View "%s" for "%s/%s"', $viewName, $actionInstance->getModuleName(), $actionInstance->getActionName()));
+      }
+
       $viewData = $this->executeView($actionInstance->getModuleName(), $actionInstance->getActionName(), $viewName);
+
+      if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
+      {
+        $timer->addTime();
+      }
 
       if ($controller->getRenderMode() == sfView::RENDER_VAR)
       {
@@ -138,20 +158,10 @@ class sfExecutionFilter extends sfFilter
    */
   protected function executeAction($actionInstance)
   {
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-    {
-      $timer = sfTimerManager::getTimer(sprintf('Action "%s/%s"', $actionInstance->getModuleName(), $actionInstance->getActionName()));
-    }
-
     // execute the action
     $actionInstance->preExecute();
     $viewName = $actionInstance->execute();
     $actionInstance->postExecute();
-
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-    {
-      $timer->addTime();
-    }
 
     return $viewName ? $viewName : sfView::SUCCESS;
   }
@@ -188,11 +198,6 @@ class sfExecutionFilter extends sfFilter
    */
   protected function executeView($moduleName, $actionName, $viewName)
   {
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-    {
-      $timer = sfTimerManager::getTimer(sprintf('View "%s" for "%s/%s"', $viewName, $moduleName, $actionName));
-    }
-
     // get the view instance
     $viewInstance = $this->getContext()->getController()->getView($moduleName, $actionName, $viewName);
     $viewInstance->initialize($this->getContext(), $moduleName, $actionName, $viewName);
@@ -202,11 +207,6 @@ class sfExecutionFilter extends sfFilter
     // render the view and if data is returned, stick it in the
     // action entry which was retrieved from the execution chain
     $viewData = $viewInstance->render();
-
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-    {
-      $timer->addTime();
-    }
 
     return $viewData;
   }
