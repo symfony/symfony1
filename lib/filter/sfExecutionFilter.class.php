@@ -39,109 +39,37 @@ class sfExecutionFilter extends sfFilter
     $actionEntry    = $controller->getActionStack()->getLastEntry();
     $actionInstance = $actionEntry->getActionInstance();
 
-    // get the current action information
-    $moduleName = $context->getModuleName();
-    $actionName = $context->getActionName();
-
     // get the request method
     $method = $context->getRequest()->getMethod();
 
     $viewName = null;
 
-    if (sfConfig::get('sf_cache'))
+    // Validation and execute the action
+    if (sfConfig::get('sf_cache') && null !== $context->getResponse()->getParameter($context->getRouting()->getCurrentInternalUri().'_action', null, 'symfony/cache'))
     {
-      $uri = $context->getRouting()->getCurrentInternalUri();
-      if (null !== $context->getResponse()->getParameter($uri.'_action', null, 'symfony/cache'))
+      // action in cache, so go to the view
+      $viewName = sfView::SUCCESS;
+    }
+    else if (($actionInstance->getRequestMethods() & $method) != $method)
+    {
+      // this action will skip validation/execution for this method
+      // get the default view
+      $viewName = $actionInstance->getDefaultView();
+    }
+    else
+    {
+      $validated = $this->validateAction($actionInstance);
+
+      // register fill-in filter
+      if (null !== ($parameters = $context->getRequest()->getAttribute('fillin', null, 'symfony/filter')))
       {
-        // action in cache, so go to the view
-        $viewName = sfView::SUCCESS;
+        $this->registerFillInFilter($filterChain, $parameters);
       }
+
+      $viewName = $validated ? $this->executeAction($actionInstance) : $this->handleErrorAction($actionInstance);
     }
 
-    if (!$viewName)
-    {
-      if (($actionInstance->getRequestMethods() & $method) != $method)
-      {
-        // this action will skip validation/execution for this method
-        // get the default view
-        $viewName = $actionInstance->getDefaultView();
-      }
-      else
-      {
-        // set default validated status
-        $validated = true;
-
-        // get the current action validation configuration
-        $validationConfig = $moduleName.'/'.sfConfig::get('sf_app_module_validate_dir_name').'/'.$actionName.'.yml';
-
-        // load validation configuration
-        // do NOT use require_once
-        if (null !== $validateFile = sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$validationConfig, true))
-        {
-          // create validator manager
-          $validatorManager = new sfValidatorManager();
-          $validatorManager->initialize($context);
-
-          require($validateFile);
-
-          // process validators
-          $validated = $validatorManager->execute();
-        }
-
-        // process manual validation
-        $validateToRun = 'validate'.ucfirst($actionName);
-        $manualValidated = method_exists($actionInstance, $validateToRun) ? $actionInstance->$validateToRun() : $actionInstance->validate();
-
-        // action is validated if:
-        // - all validation methods (manual and automatic) return true
-        // - or automatic validation returns false but errors have been 'removed' by manual validation
-        $validated = ($manualValidated && $validated) || ($manualValidated && !$validated && !$context->getRequest()->hasErrors());
-
-        // register fill-in filter
-        if (null !== ($parameters = $context->getRequest()->getAttribute('fillin', null, 'symfony/filter')))
-        {
-          $this->registerFillInFilter($filterChain, $parameters);
-        }
-
-        if ($validated)
-        {
-          if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-          {
-            $timer = sfTimerManager::getTimer(sprintf('Action "%s/%s"', $moduleName, $actionName));
-          }
-
-          // execute the action
-          $actionInstance->preExecute();
-          $viewName = $actionInstance->execute();
-          if ($viewName == '')
-          {
-            $viewName = sfView::SUCCESS;
-          }
-          $actionInstance->postExecute();
-
-          if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-          {
-            $timer->addTime();
-          }
-        }
-        else
-        {
-          if (sfConfig::get('sf_logging_enabled'))
-          {
-            $this->context->getLogger()->info('{sfFilter} action validation failed');
-          }
-
-          // validation failed
-          $handleErrorToRun = 'handleError'.ucfirst($actionName);
-          $viewName = method_exists($actionInstance, $handleErrorToRun) ? $actionInstance->$handleErrorToRun() : $actionInstance->handleError();
-          if ($viewName == '')
-          {
-            $viewName = sfView::ERROR;
-          }
-        }
-      }
-    }
-
+    // Execute and render the view
     if ($viewName == sfView::HEADER_ONLY)
     {
       $context->getResponse()->setHeaderOnly(true);
@@ -151,26 +79,7 @@ class sfExecutionFilter extends sfFilter
     }
     else if ($viewName != sfView::NONE)
     {
-      if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-      {
-        $timer = sfTimerManager::getTimer(sprintf('View "%s" for "%s/%s"', $viewName, $moduleName, $actionName));
-      }
-
-      // get the view instance
-      $viewInstance = $controller->getView($moduleName, $actionName, $viewName);
-
-      $viewInstance->initialize($context, $moduleName, $actionName, $viewName);
-
-      $viewInstance->execute();
-
-      // render the view and if data is returned, stick it in the
-      // action entry which was retrieved from the execution chain
-      $viewData = $viewInstance->render();
-
-      if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-      {
-        $timer->addTime();
-      }
+      $viewData = $this->executeView($actionInstance->getModuleName(), $actionInstance->getActionName(), $viewName);
 
       if ($controller->getRenderMode() == sfView::RENDER_VAR)
       {
@@ -182,6 +91,124 @@ class sfExecutionFilter extends sfFilter
         $filterChain->execute();
       }
     }
+  }
+
+  protected function validateAction($actionInstance)
+  {
+    $moduleName = $actionInstance->getModuleName();
+    $actionName = $actionInstance->getActionName();
+
+    // set default validated status
+    $validated = true;
+
+    // get the current action validation configuration
+    $context = $this->getContext();
+    $validationConfig = $moduleName.'/'.sfConfig::get('sf_app_module_validate_dir_name').'/'.$actionName.'.yml';
+
+    // load validation configuration
+    // do NOT use require_once
+    if (null !== $validateFile = sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$validationConfig, true))
+    {
+      // create validator manager
+      $validatorManager = new sfValidatorManager();
+      $validatorManager->initialize($this->getContext());
+
+      require($validateFile);
+
+      // process validators
+      $validated = $validatorManager->execute();
+    }
+
+    // process manual validation
+    $validateToRun = 'validate'.ucfirst($actionName);
+    $manualValidated = method_exists($actionInstance, $validateToRun) ? $actionInstance->$validateToRun() : $actionInstance->validate();
+
+    // action is validated if:
+    // - all validation methods (manual and automatic) return true
+    // - or automatic validation returns false but errors have been 'removed' by manual validation
+    return ($manualValidated && $validated) || ($manualValidated && !$validated && !$context->getRequest()->hasErrors());
+  }
+
+  /**
+   * Executes the execute method of an action.
+   *
+   * @param sfAction An sfAction instance
+   *
+   * @param string   The view type
+   */
+  protected function executeAction($actionInstance)
+  {
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
+    {
+      $timer = sfTimerManager::getTimer(sprintf('Action "%s/%s"', $actionInstance->getModuleName(), $actionInstance->getActionName()));
+    }
+
+    // execute the action
+    $actionInstance->preExecute();
+    $viewName = $actionInstance->execute();
+    $actionInstance->postExecute();
+
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
+    {
+      $timer->addTime();
+    }
+
+    return $viewName ? $viewName : sfView::SUCCESS;
+  }
+
+  /**
+   * Executes the handleError method of an action.
+   *
+   * @param sfAction An sfAction instance
+   *
+   * @param string   The view type
+   */
+  protected function handleErrorAction($actionInstance)
+  {
+    if (sfConfig::get('sf_logging_enabled'))
+    {
+      $this->context->getLogger()->info('{sfFilter} action validation failed');
+    }
+
+    // validation failed
+    $handleErrorToRun = 'handleError'.ucfirst($actionInstance->getActionName());
+    $viewName = method_exists($actionInstance, $handleErrorToRun) ? $actionInstance->$handleErrorToRun() : $actionInstance->handleError();
+
+    return $viewName ? $viewName : sfView::ERROR;
+  }
+
+  /**
+   * Executes and renders the view.
+   *
+   * @param string The module name
+   * @param string The action name
+   * @param string The view name
+   *
+   * @param string The view data
+   */
+  protected function executeView($moduleName, $actionName, $viewName)
+  {
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
+    {
+      $timer = sfTimerManager::getTimer(sprintf('View "%s" for "%s/%s"', $viewName, $moduleName, $actionName));
+    }
+
+    // get the view instance
+    $viewInstance = $this->getContext()->getController()->getView($moduleName, $actionName, $viewName);
+    $viewInstance->initialize($this->getContext(), $moduleName, $actionName, $viewName);
+
+    $viewInstance->execute();
+
+    // render the view and if data is returned, stick it in the
+    // action entry which was retrieved from the execution chain
+    $viewData = $viewInstance->render();
+
+    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
+    {
+      $timer->addTime();
+    }
+
+    return $viewData;
   }
 
   /**
