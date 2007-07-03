@@ -31,13 +31,8 @@ class sfExecutionFilter extends sfFilter
    */
   public function execute($filterChain)
   {
-    // get the context and controller
-    $context    = $this->getContext();
-    $controller = $context->getController();
-
     // get the current action instance
-    $actionEntry    = $controller->getActionStack()->getLastEntry();
-    $actionInstance = $actionEntry->getActionInstance();
+    $actionInstance = $this->getContext()->getController()->getActionStack()->getLastEntry()->getActionInstance();
 
     // validate and execute the action
     if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
