@@ -71,7 +71,6 @@ default:
 
     # Miscellaneous
     strip_comments:         on         # Remove comments in core framework classes as defined in the core_compile.yml
-    autoloading_functions:  ~          # Functions called when a class is requested and this it is not already loaded. Expects an array of callables. Used by the framework bridges.
     timeout:                1800       # Session timeout, in seconds
     max_forwards:           5
     path_info_array:        SERVER

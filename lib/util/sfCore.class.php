@@ -17,10 +17,6 @@
  */
 class sfCore
 {
-  static protected
-    $autoloadCallables = array(),
-    $classes           = array();
-
   static public function bootstrap($sf_symfony_lib_dir, $sf_symfony_data_dir)
   {
     require_once($sf_symfony_lib_dir.'/util/sfToolkit.class.php');
@@ -113,114 +109,5 @@ class sfCore
       // clear cache
       sfToolkit::clearDirectory(sfConfig::get('sf_config_cache_dir'));
     }
-  }
-
-  static public function getClassPath($class)
-  {
-    return isset(self::$classes[$class]) ? self::$classes[$class] : null;
-  }
-
-  static public function addAutoloadCallable($callable)
-  {
-    self::$autoloadCallables[] = $callable;
-
-    spl_autoload_register($callable);
-  }
-
-  static public function getAutoloadCallables()
-  {
-    return self::$autoloadCallables;
-  }
-
-  /**
-   * Handles autoloading of classes that have been specified in autoload.yml.
-   *
-   * @param  string  A class name.
-   *
-   * @return boolean Returns true if the class has been loaded
-   */
-  static public function splAutoload($class)
-  {
-    // load the list of autoload classes
-    if (!self::$classes)
-    {
-      $file = sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/autoload.yml');
-      self::$classes = include($file);
-    }
-
-    // class already exists
-    if (class_exists($class, false))
-    {
-      return true;
-    }
-
-    // we have a class path, let's include it
-    if (isset(self::$classes[$class]))
-    {
-      require(self::$classes[$class]);
-
-      return true;
-    }
-
-    // see if the file exists in the current module lib directory
-    // must be in a module context
-    if (sfContext::hasInstance() && ($module = sfContext::getInstance()->getModuleName()) && isset(self::$classes[$module.'/'.$class]))
-    {
-      require(self::$classes[$module.'/'.$class]);
-
-      return true;
-    }
-
-    return false;
-  }
-
-  static public function initAutoload()
-  {
-    ini_set('unserialize_callback_func', 'spl_autoload_call');
-    self::addAutoloadCallable(array('sfCore', 'splAutoload'));
-  }
-
-  static public function splSimpleAutoload($class)
-  {
-    // class already exists
-    if (class_exists($class, false))
-    {
-      return true;
-    }
-
-    // we have a class path, let's include it
-    if (isset(self::$classes[$class]))
-    {
-      require(self::$classes[$class]);
-
-      return true;
-    }
-
-    return false;
-  }
-
-  static public function initSimpleAutoload($dirs)
-  {
-    require_once(dirname(__FILE__).'/sfFinder.class.php');
-    self::$classes = array();
-    $finder = sfFinder::type('file')->ignore_version_control()->name('*.php');
-    foreach ((array) $dirs as $dir)
-    {
-      $files = $finder->in(glob($dir));
-      if (is_array($files))
-      {
-        foreach ($files as $file)
-        {
-          preg_match_all('~^\s*(?:abstract\s+|final\s+)?(?:class|interface)\s+(\w+)~mi', file_get_contents($file), $classes);
-          foreach ($classes[1] as $class)
-          {
-            self::$classes[$class] = $file;
-          }
-        }
-      }
-    }
-
-    ini_set('unserialize_callback_func', 'spl_autoload_call');
-    spl_autoload_register(array('sfCore', 'splSimpleAutoload'));
   }
 }
