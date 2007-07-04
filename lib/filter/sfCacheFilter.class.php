@@ -226,7 +226,6 @@ class sfCacheFilter extends sfFilter
     }
 
     $cachedResponse = unserialize($retval);
-    $cachedResponse->setContext($context);
 
     $controller = $context->getController();
     if ($controller->getRenderMode() == sfView::RENDER_VAR)

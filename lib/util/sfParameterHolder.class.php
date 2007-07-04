@@ -21,7 +21,7 @@
  * @author     Sean Kerr <skerr@mojavi.org>
  * @version    SVN: $Id$
  */
-class sfParameterHolder
+class sfParameterHolder implements Serializable
 {
   protected $default_namespace = null;
   protected $parameters = array();
@@ -382,5 +382,26 @@ class sfParameterHolder
     {
       $this->parameters[$ns][$key] =& $value;
     }
+  }
+
+  /**
+   * Serializes the current instance.
+   *
+   * @return array Objects instance
+   */
+  public function serialize()
+  {
+    return serialize(array($this->default_namespace, $this->parameters));
+  }
+
+  /**
+   * Unserializes a sfParameterHolder instance.
+   */
+  public function unserialize($serialized)
+  {
+    $data = unserialize($serialized);
+
+    $this->default_namespace = $data[0];
+    $this->parameters = $data[1];
   }
 }

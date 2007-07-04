@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(53, new lime_output_color());
+$t = new lime_test(54, new lime_output_color());
 
 // ->clear()
 $t->diag('->clear()');
@@ -214,3 +214,7 @@ $t->is($myparameters, $ph->getAll('symfony/mynamespace'), '->add() takes a names
 
 $foo = 'mybar';
 $t->is($parameters, $ph->getAll(), '->add() adds a reference of an array of parameters');
+
+// ->serialize() ->unserialize()
+$t->diag('->serialize() ->unserialize()');
+$t->ok($ph == unserialize(serialize($ph)), 'sfParameterHolder implements the Serializable interface');

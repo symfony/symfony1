@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(71, new lime_output_color());
+$t = new lime_test(72, new lime_output_color());
 
 class myWebResponse extends sfWebResponse
 {
@@ -241,6 +241,9 @@ ob_start();
 $response->sendContent();
 $t->is(ob_get_clean(), 'foo', '->sendContent() returns the response content if headerOnly is false');
 
+// ->serialize() ->unserialize()
+$t->diag('->serialize() ->unserialize()');
+$t->ok($response == unserialize(serialize($response)), 'sfWebResponse implements the Serializable interface');
 
 sfLoader::loadHelpers(array('Helper', 'Tag', 'Url', 'Asset'));
 

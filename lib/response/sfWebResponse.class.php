@@ -348,9 +348,7 @@ class sfWebResponse extends sfResponse
     }
     else
     {
-      $error = 'The second getDate() method parameter must be one of: rfc1123, rfc1036 or asctime';
-
-      throw new sfParameterException($error);
+      throw new sfParameterException('The second getDate() method parameter must be one of: rfc1123, rfc1036 or asctime');
     }
   }
 
@@ -595,20 +593,28 @@ class sfWebResponse extends sfResponse
   }
 
   /**
-   * Retrieves all objects handlers for the current web response.
+   * Serializes the current instance.
    *
    * @return array Objects instance
    */
-  public function __sleep()
+  public function serialize()
   {
-    return array('content', 'statusCode', 'statusText', 'parameterHolder');
+    return serialize(array($this->content, $this->statusCode, $this->statusText, serialize($this->parameterHolder)));
   }
 
   /**
-   * Reconstructs any result that web response instance needs.
+   * Unserializes a sfWebResponse instance.
    */
-  public function __wakeup()
+  public function unserialize($serialized)
   {
+    $data = unserialize($serialized);
+
+    $this->initialize(sfContext::getInstance());
+
+    $this->content = $data[0];
+    $this->statusCode = $data[1];
+    $this->statusText = $data[2];
+    $this->parameterHolder = unserialize($data[3]);
   }
 
   /**

@@ -14,6 +14,8 @@ require_once($_test_dir.'/unit/sfContextMock.class.php');
 class myResponse extends sfResponse
 {
   function shutdown() {}
+  function serialize() {}
+  function unserialize($serialized) {}
 }
 
 class fakeResponse
@@ -51,12 +53,6 @@ $t->diag('->getContext()');
 $response->initialize($context);
 $t->is($response->getContext(), $context, '->getContext() returns the current context');
 
-// ->setContext()
-$t->diag('->setContext()');
-$response->setContext(null);
-$t->is($response->getContext(), null, '->setContext() changes the current context');
-$response->setContext($context);
-
 // ->getContent() ->setContent()
 $t->diag('->getContent() ->setContent()');
 $t->is($response->getContent(), null, '->getContent() returns the current response content which is null by default');
@@ -69,6 +65,10 @@ ob_start();
 $response->sendContent();
 $content = ob_get_clean();
 $t->is($content, 'test', '->sendContent() output the current response content');
+
+// ->serialize() ->unserialize()
+$t->diag('->serialize() ->unserialize()');
+$t->ok(sfResponse::newInstance('myResponse') instanceof Serializable, 'sfResponse implements the Serializable interface');
 
 // parameter holder proxy
 require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');

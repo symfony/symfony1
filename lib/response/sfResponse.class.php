@@ -17,7 +17,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-abstract class sfResponse
+abstract class sfResponse implements Serializable
 {
   protected
     $parameterHolder = null,
@@ -39,16 +39,6 @@ abstract class sfResponse
 
     $this->parameterHolder = new sfParameterHolder();
     $this->parameterHolder->add($parameters);
-  }
-
-  /**
-   * Sets the context for the current response.
-   *
-   * @param sfContext  A sfContext instance
-   */
-  public function setContext($context)
-  {
-    $this->context = $context;
   }
 
   /**
