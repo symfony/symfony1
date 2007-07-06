@@ -173,9 +173,6 @@ class sfPHPView extends sfView
     // set the decorator content as an attribute
     $this->attributeHolder->set('sf_content', $content);
 
-    // for backwards compatibility with old layouts; remove at 0.8.0?
-    $this->attributeHolder->set('content', $content);
-
     // render the decorator template and return the result
     $retval = $this->renderFile($template);
 
@@ -232,8 +229,8 @@ class sfPHPView extends sfView
     // template variables
     if ($templateVars === null)
     {
-      $actionInstance   = $context->getActionStack()->getLastEntry()->getActionInstance();
-      $templateVars     = $actionInstance->getVarHolder()->getAll();
+      $actionInstance = $context->getActionStack()->getLastEntry()->getActionInstance();
+      $templateVars   = $actionInstance->getVarHolder()->getAll();
     }
 
     // assigns some variables to the template

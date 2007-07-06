@@ -163,7 +163,7 @@ abstract class sfView
    */
   public function getEscaping()
   {
-    return null === $this->escaping ? sfConfig::get('sf_escaping_strategy') : $this->escaping;
+    return is_null($this->escaping) ? sfConfig::get('sf_escaping_strategy') : $this->escaping;
   }
 
   /**
@@ -180,7 +180,7 @@ abstract class sfView
    */
   public function getEscapingMethod()
   {
-    $method = null === $this->escapingMethod ? sfConfig::get('sf_escaping_method') : $this->escapingMethod;
+    $method = is_null($this->escapingMethod) ? sfConfig::get('sf_escaping_method') : $this->escapingMethod;
 
     if (empty($method))
     {
@@ -189,112 +189,21 @@ abstract class sfView
 
     if (!defined($method))
     {
-      throw new sfException(sprintf('Escaping method "%s" is not available; perhaps another helper needs to be loaded in?', $method));
+      throw new sfConfigurationException(sprintf('Escaping method "%s" is not available; perhaps another helper needs to be loaded in?', $method));
     }
 
     return constant($method);
   }
 
   /**
-   * Imports parameter values and error messages from the request directly as view attributes.
-   *
-   * @param array An indexed array of file/parameter names
-   * @param boolean  Is this a list of files?
-   * @param boolean  Import error messages too?
-   * @param boolean  Run strip_tags() on attribute value?
-   * @param boolean  Run htmlspecialchars() on attribute value?
-   */
-  public function importAttributes($names, $files = false, $errors = true, $stripTags = true, $specialChars = true)
-  {
-    // alias $request to keep the code clean
-    $request = $this->context->getRequest();
-
-    // get our array
-    if ($files)
-    {
-      // file names
-      $array =& $request->getFiles();
-    }
-    else
-    {
-      // parameter names
-      $array =& $request->getParameterHolder()->getAll();
-    }
-
-    // loop through our parameter names and import them
-    foreach ($names as &$name)
-    {
-        if (preg_match('/^([a-z0-9\-_]+)\{([a-z0-9\s\-_]+)\}$/i', $name, $match))
-        {
-          // we have a parent
-          $parent  = $match[1];
-          $subname = $match[2];
-
-          // load the file/parameter value for this attribute if one exists
-          if (isset($array[$parent]) && isset($array[$parent][$subname]))
-          {
-            $value = $array[$parent][$subname];
-
-            if ($stripTags)
-              $value = strip_tags($value);
-
-            if ($specialChars)
-              $value = htmlspecialchars($value);
-
-            $this->setAttribute($name, $value);
-          }
-          else
-          {
-            // set an empty value
-            $this->setAttribute($name, '');
-          }
-        }
-        else
-        {
-          // load the file/parameter value for this attribute if one exists
-          if (isset($array[$name]))
-          {
-            $value = $array[$name];
-
-            if ($stripTags)
-              $value = strip_tags($value);
-
-            if ($specialChars)
-              $value = htmlspecialchars($value);
-
-            $this->setAttribute($name, $value);
-          }
-          else
-          {
-            // set an empty value
-            $this->setAttribute($name, '');
-          }
-        }
-
-        if ($errors)
-        {
-          if ($request->hasError($name))
-          {
-            $this->setAttribute($name.'_error', $request->getError($name));
-          }
-          else
-          {
-            // set empty error
-            $this->setAttribute($name.'_error', '');
-          }
-        }
-    }
-  }
-
-  /**
    * Initializes this view.
    *
    * @param sfContext The current application context
-   * @param string The module name for this view
-   * @param string The action name for this view
-   * @param string The view name
+   * @param string    The module name for this view
+   * @param string    The action name for this view
+   * @param string    The view name
    *
-   * @return boolean true, if initialization completes successfully, otherwise false
+   * @return boolean  true, if initialization completes successfully, otherwise false
    */
   public function initialize($context, $moduleName, $actionName, $viewName)
   {
@@ -447,35 +356,21 @@ abstract class sfView
    */
   protected function preRenderCheck()
   {
-    if ($this->template == null)
+    if (is_null($this->template))
     {
       // a template has not been set
-      $error = 'A template has not been set';
-
-      throw new sfRenderException($error);
+      throw new sfRenderException('A template has not been set.');
     }
 
-    $template = $this->directory.'/'.$this->template;
-
-    if (!is_readable($template))
+    if (!is_readable($this->directory.'/'.$this->template))
     {
-      // the template isn't readable
-      throw new sfRenderException(sprintf('The template "%s" does not exist in: %s', $template, $this->directory));
+      throw new sfRenderException(sprintf('The template "%s" does not exist or is unreadable in "%s".', $this->template, $this->directory));
     }
 
     // check to see if this is a decorator template
-    if ($this->decorator)
+    if ($this->decorator && !is_readable($this->decoratorDirectory.'/'.$this->decoratorTemplate))
     {
-      $template = $this->decoratorDirectory.'/'.$this->decoratorTemplate;
-
-      if (!is_readable($template))
-      {
-        // the decorator template isn't readable
-        $error = 'The decorator template "%s" does not exist or is unreadable';
-        $error = sprintf($error, $template);
-
-        throw new sfRenderException($error);
-      }
+      throw new sfRenderException(sprintf('The decorator template "%s" does not exist or is unreadable in "%s".', $this->decoratorTemplate, $this->decoratorDirectory));
     }
   }
 
@@ -640,9 +535,9 @@ abstract class sfView
    *
    * @param string The extension name.
    */
-  public function setExtension($ext)
+  public function setExtension($extension)
   {
-    $this->extension = $ext;
+    $this->extension = $extension;
   }
 
   /**
