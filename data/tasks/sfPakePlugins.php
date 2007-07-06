@@ -152,7 +152,7 @@ function _pear_init()
   require_once 'PEAR/Remote.php';
 
   // current symfony release
-  $sf_version = preg_replace('/\-\w+$/', '', file_get_contents(sfConfig::get('sf_symfony_lib_dir').'/VERSION'));
+  $sf_version = preg_replace('/\-\w+$/', '', sfCore::VERSION);
 
   // PEAR
   PEAR_Command::setFrontendType('CLI');

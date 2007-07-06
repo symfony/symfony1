@@ -17,6 +17,8 @@
  */
 class sfCore
 {
+  const VERSION = '1.1.0-DEV';
+
   static public function bootstrap($sf_symfony_lib_dir, $sf_symfony_data_dir)
   {
     require_once($sf_symfony_lib_dir.'/util/sfToolkit.class.php');
@@ -102,9 +104,7 @@ class sfCore
   static public function checkSymfonyVersion()
   {
     // recent symfony update?
-    $last_version    = @file_get_contents(sfConfig::get('sf_config_cache_dir').'/VERSION');
-    $current_version = trim(file_get_contents(sfConfig::get('sf_symfony_lib_dir').'/VERSION'));
-    if ($last_version != $current_version)
+    if (self::VERSION != @file_get_contents(sfConfig::get('sf_config_cache_dir').'/VERSION'))
     {
       // clear cache
       sfToolkit::clearDirectory(sfConfig::get('sf_config_cache_dir'));

@@ -104,10 +104,12 @@ class simpleAutoloader
   }
 }
 
+require_once($sf_symfony_lib_dir.'/util/sfCore.class.php');
+
 // trap -V before pake
 if (in_array('-V', $argv) || in_array('--version', $argv))
 {
-  printf("symfony version %s\n", pakeColor::colorize(trim(file_get_contents($sf_symfony_lib_dir.'/VERSION')), 'INFO'));
+  printf("symfony version %s\n", pakeColor::colorize(sfCore::VERSION, 'INFO'));
   exit(0);
 }
 

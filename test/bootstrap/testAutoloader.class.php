@@ -56,7 +56,9 @@ class testAutoloader
 
   static public function getAutoloadFile()
   {
-    return sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.sprintf('sf_autoload_paths_%s.php', trim(file_get_contents(dirname(__FILE__).'/../../lib/VERSION')));
+    require_once(dirname(__FILE__).'/../../lib/util/sfCore.class.php');
+
+    return sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.sprintf('sf_autoload_paths_%s.php', sfCore::VERSION);
   }
 
   static public function removeCache()

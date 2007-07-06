@@ -17,7 +17,7 @@ if (file_exists('config/config.php'))
 
 if (!isset($sf_symfony_lib_dir))
 {
-  if (is_readable(dirname(__FILE__).'/../../lib/VERSION'))
+  if (is_readable(dirname(__FILE__).'/../../lib/util/sfCore.class.php'))
   {
     // SVN
     $sf_symfony_lib_dir  = realpath(dirname(__FILE__).'/../../lib');
