@@ -59,15 +59,7 @@ class defaultActions extends sfActions
   }
 
   /**
-   * Website temporarily unavailable
-   *
-   */
-  public function executeUnavailable()
-  {
-  }
-
-  /**
-   * Website disabled by the site administrator (in settings.yml)
+   * Module disabled in settings.yml
    *
    */
   public function executeDisabled()

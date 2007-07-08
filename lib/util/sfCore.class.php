@@ -34,6 +34,7 @@ class sfCore
     {
       sfCore::checkLock();
     }
+
     if (sfConfig::get('sf_check_symfony_version'))
     {
       sfCore::checkSymfonyVersion();

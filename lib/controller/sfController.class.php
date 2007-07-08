@@ -174,22 +174,6 @@ abstract class sfController
     $app     = sfConfig::get('sf_app');
     $env     = sfConfig::get('sf_environment');
 
-    if (!sfConfig::get('sf_available') || sfToolkit::hasLockFile($rootDir.'/'.$app.'_'.$env.'.clilock'))
-    {
-      // application is unavailable
-      $moduleName = sfConfig::get('sf_unavailable_module');
-      $actionName = sfConfig::get('sf_unavailable_action');
-
-      if (!$this->actionExists($moduleName, $actionName))
-      {
-        // cannot find unavailable module/action
-        $error = 'Invalid configuration settings: [sf_unavailable_module] "%s", [sf_unavailable_action] "%s"';
-        $error = sprintf($error, $moduleName, $actionName);
-
-        throw new sfConfigurationException($error);
-      }
-    }
-
     // check for a module generator config file
     sfConfigCache::getInstance()->import(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/generator.yml', true, true);
 

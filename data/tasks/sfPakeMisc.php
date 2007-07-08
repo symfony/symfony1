@@ -295,19 +295,17 @@ function run_enable($task, $args)
   $app = $args[0];
   $env = $args[1];
 
-  $lockFile = $app.'_'.$env.'.clilock';
-  $locks = pakeFinder::type('file')->prune('.svn')->discard('.svn')->maxdepth(0)->name($lockFile)->relative()->in('./');
-
+  $lockFile = $app.'_'.$env.'.lck';
   if (file_exists(sfConfig::get('sf_root_dir').'/'.$lockFile))
   {
     pake_remove($lockFile, '');
     run_clear_cache($task, array()); 
     pake_echo_action('enable', "$app [$env] has been ENABLED");
-
-    return;
   }
-
-  pake_echo_action('enable', "$app [$env] is currently ENABLED");
+  else
+  {
+    pake_echo_action('enable', "$app [$env] is currently ENABLED");
+  }
 }
 
 function run_disable($task, $args)
@@ -321,18 +319,14 @@ function run_disable($task, $args)
   $app = $args[0];
   $env = $args[1];
 
-  $lockFile = $app.'_'.$env.'.clilock';
-
+  $lockFile = $app.'_'.$env.'.lck';
   if (!file_exists(sfConfig::get('sf_root_dir').'/'.$lockFile))
   {
     pake_touch(sfConfig::get('sf_root_dir').'/'.$lockFile, '777');
-
     pake_echo_action('enable', "$app [$env] has been DISABLED");
-
-    return;
   }
-
-  pake_echo_action('enable', "$app [$env] is currently DISABLED");
-
-  return;
+  else
+  {
+    pake_echo_action('enable', "$app [$env] is currently DISABLED");
+  }
 }

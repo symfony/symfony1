@@ -4,7 +4,7 @@
   <?php echo image_tag('/sf/sf_default/images/icons/disabled48.png', array('alt' => 'module disabled', 'class' => 'sfTMessageIcon', 'size' => '48x48')) ?>
   <div class="sfTMessageWrap">
     <h1>This Module is Unavailable</h1>
-    <h5>This module has been disabled by a site administrator.</h5>
+    <h5>This module has been disabled.</h5>
   </div>
 </div>
 <dl class="sfTMessageInfo">

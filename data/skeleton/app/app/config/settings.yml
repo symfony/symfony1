@@ -37,12 +37,7 @@ test:
 #    module_disabled_module: default   # To be called when a user requests 
 #    module_disabled_action: disabled  # A module disabled in the module.yml
 #
-#    unavailable_module:     default   # To be called when a user requests a page
-#    unavailable_action:  unavailable  # From an application disabled via the available setting below
-#
 #  .settings:
-#    available:              on        # Enable the whole application. Switch to off to redirect all requests to the unavailable module and action.
-#
 #    # Optional features. Deactivating unused features boots performance a bit.
 #    use_database:           on        # Enable database manager. Set to off if you don't use a database.
 #    use_security:           on        # Enable security features (login and credentials). Set to off for public applications.

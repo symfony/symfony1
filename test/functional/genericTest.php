@@ -44,18 +44,6 @@ $b->
   checkResponseElement('link[href="/sf/sf_default/css/screen.css"]')
 ;
 
-// available
-sfConfig::set('sf_available', false);
-$b->
-  get('/')->
-  isStatusCode(200)->
-  isForwardedTo('default', 'unavailable')->
-  checkResponseElement('body', '/unavailable/i')->
-  checkResponseElement('body', '!/congratulations/i')->
-  checkResponseElement('link[href="/sf/sf_default/css/screen.css"]')
-;
-sfConfig::set('sf_available', true);
-
 // module.yml: enabled
 $b->
   get('/configModuleDisabled')->
