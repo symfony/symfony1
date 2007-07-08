@@ -109,32 +109,34 @@ class sfCacheFilter extends sfFilter
   public function executeBeforeRendering()
   {
     // cache only 200 HTTP status
-    if ($this->response->getStatusCode() == 200)
+    if (200 != $this->response->getStatusCode())
     {
-      $uri = $this->routing->getCurrentInternalUri();
+      return;
+    }
 
-      // save page in cache
-      if ($this->cache[$uri]['page'])
+    $uri = $this->routing->getCurrentInternalUri();
+
+    // save page in cache
+    if ($this->cache[$uri]['page'])
+    {
+      // set some headers that deals with cache
+      $lifetime = $this->cacheManager->getClientLifeTime($uri, 'page');
+      $this->response->setHttpHeader('Last-Modified', $this->response->getDate(time()), false);
+      $this->response->setHttpHeader('Expires', $this->response->getDate(time() + $lifetime), false);
+      $this->response->addCacheControlHttpHeader('max-age', $lifetime);
+
+      // set Vary headers
+      foreach ($this->cacheManager->getVary($uri, 'page') as $vary)
       {
-        // set some headers that deals with cache
-        $lifetime = $this->cacheManager->getClientLifeTime($uri, 'page');
-        $this->response->setHttpHeader('Last-Modified', $this->response->getDate(time()), false);
-        $this->response->setHttpHeader('Expires', $this->response->getDate(time() + $lifetime), false);
-        $this->response->addCacheControlHttpHeader('max-age', $lifetime);
-
-        // set Vary headers
-        foreach ($this->cacheManager->getVary($uri, 'page') as $vary)
-        {
-          $this->response->addVaryHttpHeader($vary);
-        }
-
-        $this->setPageCache($uri);
+        $this->response->addVaryHttpHeader($vary);
       }
-      else if ($this->cache[$uri]['action'])
-      {
-        // save action in cache
-        $this->setActionCache($uri);
-      }
+
+      $this->setPageCache($uri);
+    }
+    else if ($this->cache[$uri]['action'])
+    {
+      // save action in cache
+      $this->setActionCache($uri);
     }
 
     // remove PHP automatic Cache-Control and Expires headers if not overwritten by application or cache

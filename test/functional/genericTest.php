@@ -36,6 +36,25 @@ $b->
   checkResponseElement('link[href="/sf/sf_default/css/screen.css"]')
 ;
 
+// 404 with ETag enabled must returns 404, not 304
+sfConfig::set('sf_cache', true);
+sfConfig::set('sf_etag', true);
+$b->
+  get('/notfound')->
+  isStatusCode(404)->
+  isRequestParameter('module', 'notfound')->
+  isRequestParameter('action', 'index')->
+  checkResponseElement('body', '/404/')->
+
+  get('/notfound')->
+  isStatusCode(404)->
+  isRequestParameter('module', 'notfound')->
+  isRequestParameter('action', 'index')->
+  checkResponseElement('body', '/404/')
+;
+sfConfig::set('sf_cache', false);
+sfConfig::set('sf_etag', false);
+
 // unexistant action
 $b->
   get('/default/nonexistantaction')->
