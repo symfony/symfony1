@@ -199,6 +199,26 @@ class sfBrowser
       $this->cookieJar[$name] = $cookie;
     }
 
+    // support for the ETag header
+    if ($etag = $this->context->getResponse()->getHttpHeader('Etag'))
+    {
+      $this->vars['HTTP_IF_NONE_MATCH'] = $etag;
+    }
+    else
+    {
+      unset($this->vars['HTTP_IF_NONE_MATCH']);
+    }
+
+    // support for the last modified header
+    if ($lastModified = $this->context->getResponse()->getHttpHeader('Last-Modified'))
+    {
+      $this->vars['HTTP_IF_MODIFIED_SINCE'] = $lastModified;
+    }
+    else
+    {
+      unset($this->vars['HTTP_IF_MODIFIED_SINCE']);
+    }
+
     // for HTML/XML content, create a DOM and sfDomCssSelector objects for the response content
     if (preg_match('/(x|ht)ml/i', $response->getContentType()))
     {
