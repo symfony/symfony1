@@ -45,11 +45,9 @@ class sfPartialView extends sfPHPView
   /**
    * Renders the presentation.
    *
-   * @param array Template attributes
-   *
    * @return string Current template content
    */
-  public function render($templateVars = array())
+  public function render()
   {
     if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
     {
@@ -58,10 +56,6 @@ class sfPartialView extends sfPHPView
 
     // execute pre-render check
     $this->preRenderCheck();
-
-    // assigns some variables to the template
-    $this->attributeHolder->add($this->getGlobalVars());
-    $this->attributeHolder->add($templateVars);
 
     // render template
     $retval = $this->renderFile($this->getDirectory().'/'.$this->getTemplate());

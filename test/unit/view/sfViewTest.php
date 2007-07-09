@@ -18,7 +18,21 @@ class myView extends sfView
   function execute () {}
   function configure () {}
   function getEngine () {}
-  function render ($templateVars = null) {}
+  function render () {}
+}
+
+class sfViewParameterHolder extends sfParameterHolder
+{
+  public function initialize($context, $parameters = array())
+  {
+    $this->context = $context;
+    $this->add($parameters);
+  }
+
+  public function toArray()
+  {
+    return $this->getAll();
+  }
 }
 
 $context = sfContext::getInstance();

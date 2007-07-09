@@ -194,7 +194,9 @@ function get_component($moduleName, $componentName, $vars = array())
     $view = new sfPartialView();
     $view->initialize($context, $moduleName, $actionName, '');
 
-    $retval = $view->render($componentInstance->getVarHolder()->getAll());
+    $view->getAttributeHolder()->add($componentInstance->getVarHolder()->getAll());
+
+    $retval = $view->render();
 
     if ($cacheManager)
     {
@@ -271,7 +273,9 @@ function get_partial($templateName, $vars = array())
 
   $view = new sfPartialView();
   $view->initialize($context, $moduleName, $actionName, '');
-  $retval = $view->render($vars);
+  $view->getAttributeHolder()->add($vars);
+
+  $retval = $view->render();
 
   if ($cacheManager)
   {

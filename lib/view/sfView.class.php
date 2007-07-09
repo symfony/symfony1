@@ -76,8 +76,6 @@ abstract class sfView
     $directory          = null,
     $componentSlots     = array(),
     $template           = null,
-    $escaping           = null,
-    $escapingMethod     = null,
     $attributeHolder    = null,
     $parameterHolder    = null,
     $moduleName         = '',
@@ -155,47 +153,6 @@ abstract class sfView
   }
 
   /**
-   * Gets the default escaping strategy associated with this view.
-   *
-   * The escaping strategy specifies how the variables get passed to the view.
-   *
-   * @return string the escaping strategy
-   */
-  public function getEscaping()
-  {
-    return is_null($this->escaping) ? sfConfig::get('sf_escaping_strategy') : $this->escaping;
-  }
-
-  /**
-   * Returns the name of the function that is to be used as the escaping method.
-   *
-   * If the escaping method is empty, then that is returned. The default value
-   * specified by the sub-class will be used. If the method does not exist (in
-   * the sense there is no define associated with the method) and exception is
-   * thrown.
-   *
-   * @return string The escaping method as the name of the function to use
-   *
-   * @throws <b>sfException</b> If the method does not exist
-   */
-  public function getEscapingMethod()
-  {
-    $method = is_null($this->escapingMethod) ? sfConfig::get('sf_escaping_method') : $this->escapingMethod;
-
-    if (empty($method))
-    {
-      return $method;
-    }
-
-    if (!defined($method))
-    {
-      throw new sfConfigurationException(sprintf('Escaping method "%s" is not available; perhaps another helper needs to be loaded in?', $method));
-    }
-
-    return constant($method);
-  }
-
-  /**
    * Initializes this view.
    *
    * @param sfContext The current application context
@@ -217,9 +174,11 @@ abstract class sfView
     $this->viewName   = $viewName;
 
     $this->context = $context;
-    $this->attributeHolder = new sfParameterHolder();
-    $this->parameterHolder = new sfParameterHolder();
 
+    $this->attributeHolder = false === sfConfig::get('sf_escaping_method') ? new sfViewParameterHolder() : new sfEscapedViewParameterHolder();
+    $this->attributeHolder->initialize($context);
+
+    $this->parameterHolder = new sfParameterHolder();
     $this->parameterHolder->add(sfConfig::get('mod_'.strtolower($moduleName).'_view_param', array()));
 
     $this->decoratorDirectory = sfConfig::get('sf_app_template_dir');
@@ -380,12 +339,10 @@ abstract class sfView
    * When the controller render mode is sfView::RENDER_CLIENT, this method will
    * render the presentation directly to the client and null will be returned.
    *
-   * @param  array  An array with variables that will be extracted for the template
-   *                If empty, the current actions var holder will be extracted
    * @return string A string representing the rendered presentation, if
    *                the controller render mode is sfView::RENDER_VAR, otherwise null
    */
-  abstract function render($templateVars = null);
+  abstract function render();
 
   /**
    * Sets the decorator template directory for this view.
@@ -395,26 +352,6 @@ abstract class sfView
   public function setDecoratorDirectory($directory)
   {
     $this->decoratorDirectory = $directory;
-  }
-
-  /**
-   * Sets the escape caracter mode.
-   *
-   * @param string Escape code
-   */
-  public function setEscaping($escaping)
-  {
-    $this->escaping = $escaping;
-  }
-
-  /**
-   * Sets the escaping method for the current view.
-   *
-   * @param string Method for escaping
-   */
-  public function setEscapingMethod($method)
-  {
-    $this->escapingMethod = $method;
   }
 
   /**

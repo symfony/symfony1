@@ -204,7 +204,7 @@ class sfExecutionFilter extends sfFilter
       return;
     }
 
-    $viewData = $this->executeView($actionInstance->getModuleName(), $actionInstance->getActionName(), $viewName);
+    $viewData = $this->executeView($actionInstance->getModuleName(), $actionInstance->getActionName(), $viewName, $actionInstance->getVarHolder()->getAll());
 
     $controller = $this->getContext()->getController();
     if (sfView::RENDER_VAR == $controller->getRenderMode())
@@ -219,20 +219,25 @@ class sfExecutionFilter extends sfFilter
    * @param  string The module name
    * @param  string The action name
    * @param  string The view name
+   * @param  array  An array of view attributes
    *
    * @return string The view data
    */
-  protected function executeView($moduleName, $actionName, $viewName)
+  protected function executeView($moduleName, $actionName, $viewName, $viewAttributes)
   {
     // get the view instance
-    $viewInstance = $this->getContext()->getController()->getView($moduleName, $actionName, $viewName);
-    $viewInstance->initialize($this->getContext(), $moduleName, $actionName, $viewName);
+    $view = $this->getContext()->getController()->getView($moduleName, $actionName, $viewName);
+    $view->initialize($this->getContext(), $moduleName, $actionName, $viewName);
 
-    $viewInstance->execute();
+    $view->execute();
+
+    // get view attributes from the action
+    // and pass them to the view
+    $view->getAttributeHolder()->add($viewAttributes);
 
     // render the view and if data is returned, stick it in the
     // action entry which was retrieved from the execution chain
-    $viewData = $viewInstance->render();
+    $viewData = $view->render();
 
     return $viewData;
   }

@@ -47,11 +47,9 @@ class sfMailView extends sfPHPView
    *
    * @return mixed Raw data of the mail
    */
-  public function render($templateVars = null)
+  public function render()
   {
-    $template         = $this->getDirectory().'/'.$this->getTemplate();
-    $actionStackEntry = $this->getContext()->getActionStack()->getLastEntry();
-    $actionInstance   = $actionStackEntry->getActionInstance();
+    $template = $this->getDirectory().'/'.$this->getTemplate();
 
     $retval = null;
 
@@ -64,16 +62,12 @@ class sfMailView extends sfPHPView
     }
 
     // get sfMail object from action
-    $mail = $actionInstance->getVarHolder()->get('mail');
+    $mail = $this->attributeHolder->get('mail');
     if (!$mail)
     {
       $error = 'You must define a sfMail object named $mail ($this->mail) in your action to be able to use a sfMailView.';
       throw new sfActionException($error);
     }
-
-    // assigns some variables to the template
-    $this->attributeHolder->add($this->getGlobalVars());
-    $this->attributeHolder->add($actionInstance->getVarHolder()->getAll());
 
     // render main template
     $retval = $this->renderFile($template);
