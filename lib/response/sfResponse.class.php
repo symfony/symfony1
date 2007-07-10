@@ -99,10 +99,10 @@ abstract class sfResponse implements Serializable
   {
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfResponse} send content ('.strlen($this->content).' o)');
+      $this->getContext()->getLogger()->info('{sfResponse} send content ('.strlen($this->getContent()).' o)');
     }
 
-    echo $this->content;
+    echo $this->getContent();
   }
 
   /**
