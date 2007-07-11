@@ -32,6 +32,8 @@ class sfI18N
   public function initialize($context)
   {
     $this->context = $context;
+
+    include(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/i18n.yml'));
   }
 
   /**

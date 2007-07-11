@@ -94,10 +94,6 @@ try
   {
     include($file);
   }
-  if (sfConfig::get('sf_i18n'))
-  {
-    include($configCache->checkConfig($sf_app_config_dir_name.'/i18n.yml'));
-  }
 
   // error settings
   ini_set('display_errors', $sf_debug ? 'on' : 'off');
