@@ -57,7 +57,7 @@ abstract class sfGenerator
     $retval = $this->evalTemplate('actions/actions.class.php');
 
     // save actions class
-    $this->getGeneratorManager()->getCache()->set('actions.class.php', $generatedModuleName.DIRECTORY_SEPARATOR.'actions', $retval);
+    $this->getGeneratorManager()->save($generatedModuleName.'/actions/actions.class.php', $retval);
 
     // generate template files
     foreach ($templateFiles as $template)
@@ -66,7 +66,7 @@ abstract class sfGenerator
       $retval = $this->evalTemplate('templates/'.$template);
 
       // save template file
-      $this->getGeneratorManager()->getCache()->set($template, $generatedModuleName.DIRECTORY_SEPARATOR.'templates', $retval);
+      $this->getGeneratorManager()->save($generatedModuleName.'/templates/'.$template, $retval);
     }
 
     // generate config files
@@ -76,7 +76,7 @@ abstract class sfGenerator
       $retval = $this->evalTemplate('config/'.$config);
 
       // save config file
-      $this->getGeneratorManager()->getCache()->set($config, $generatedModuleName.DIRECTORY_SEPARATOR.'config', $retval);
+      $this->getGeneratorManager()->save($generatedModuleName.'/config/'.$config, $retval);
     }
   }
 

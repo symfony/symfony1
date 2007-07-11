@@ -339,11 +339,19 @@ class sfConfigCache
    *
    * @throws sfCacheException If the cache file cannot be written
    */
-  protected function writeCacheFile($config, $cache, &$data)
+  protected function writeCacheFile($config, $cache, $data)
   {
-    $fileCache = new sfFileCache(dirname($cache));
-    $fileCache->setSuffix('');
-    $fileCache->set(basename($cache), '', $data);
+    if (!is_dir(dirname($cache)))
+    {
+      $current_umask = umask(0000);
+      @mkdir(dirname($cache), 0777, true);
+      umask($current_umask);
+    }
+
+    if (false === @file_put_contents($cache, $data))
+    {
+      throw new sfCacheException(sprintf('Failed to write cache file "%s" generated from configuration file "%s"', $cachePath, $config));
+    }
   }
 
   /**

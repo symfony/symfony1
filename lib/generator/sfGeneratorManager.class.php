@@ -18,26 +18,25 @@
  */
 class sfGeneratorManager
 {
-  protected $cache = null;
-
   /**
    * Initializes the sfGeneratorManager instance.
    */
   public function initialize()
   {
-    // create cache instance
-    $this->cache = new sfFileCache(sfConfig::get('sf_module_cache_dir'));
-    $this->cache->setSuffix('');
   }
 
-  /**
-   * Returns the current sfCache implementation instance.
-   *
-   * @return sfCache A sfCache implementation instance
-   */
-  public function getCache()
+  public function save($path, $content)
   {
-    return $this->cache;
+    $path = sfConfig::get('sf_module_cache_dir').DIRECTORY_SEPARATOR.$path;
+
+    if (!is_dir(dirname($path)))
+    {
+      $current_umask = umask(0000);
+      @mkdir(dirname($path), 0777, true);
+      umask($current_umask);
+    }
+
+    return file_put_contents($path, $content);
   }
 
   /**
@@ -52,8 +51,7 @@ class sfGeneratorManager
   {
     $generator = new $generator_class();
     $generator->initialize($this);
-    $data = $generator->generate($param);
 
-    return $data;
+    return $generator->generate($param);
   }
 }
