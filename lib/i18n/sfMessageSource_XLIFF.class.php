@@ -47,10 +47,8 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
    * @param string XLIFF file.
    * @return array of messages.
    */
-  protected function &loadData($filename)
+  public function &loadData($filename)
   {
-    //load it.
-
     $XML = simplexml_load_file($filename);
 
     if (!$XML)
@@ -66,8 +64,8 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
     {
       $source = (string) $unit->source;
       $translations[$source][] = (string) $unit->target;
-      $translations[$source][]= (string) $unit['id'];
-      $translations[$source][]= (string) $unit->note;
+      $translations[$source][] = (string) $unit['id'];
+      $translations[$source][] = (string) $unit->note;
     }
 
     return $translations;

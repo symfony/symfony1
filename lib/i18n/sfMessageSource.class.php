@@ -100,8 +100,9 @@ abstract class sfMessageSource implements sfIMessageSource
   /**
    * Factory method to instantiate a new sfMessageSource depending on the
    * source type. The built-in source types are 'XLIFF', 'SQLite',
-   * 'MySQL', 'gettext' and Creole. The source parameter is dependent on the
-   * source type. For 'gettext' and 'XLIFF', it should point to the directory
+   * 'MySQL', 'gettext', 'Creole' and 'Aggregate'.
+   * The source parameter is dependent on the source type.
+   * For 'gettext' and 'XLIFF', it should point to the directory
    * where the messages are stored. For database types, e.g. 'SQLite' and
    * 'MySQL', it should be a PEAR DB style DSN string.
    *
@@ -284,7 +285,7 @@ abstract class sfMessageSource implements sfIMessageSource
    * @param string catalogue+variant.
    * @return array of translation messages.
    */
-  protected function &loadData($variant)
+  public function &loadData($variant)
   {
     return array();
   }
@@ -295,7 +296,7 @@ abstract class sfMessageSource implements sfIMessageSource
    * @param string catalogue+variant
    * @return string the resource key
    */
-  protected function getSource($variant)
+  public function getSource($variant)
   {
     return $variant;
   }
@@ -306,7 +307,7 @@ abstract class sfMessageSource implements sfIMessageSource
    * @param string catalogue+variant
    * @return boolean true if valid, false otherwise.
    */
-  protected function isValidSource($source)
+  public function isValidSource($source)
   {
     return false;
   }
@@ -318,7 +319,7 @@ abstract class sfMessageSource implements sfIMessageSource
    * @param string catalogue name
    * @return array list of all variants for this catalogue.
    */
-  protected function getCatalogueList($catalogue)
+  public function getCatalogueList($catalogue)
   {
     return array();
   }

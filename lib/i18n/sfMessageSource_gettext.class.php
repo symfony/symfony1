@@ -50,7 +50,7 @@ class sfMessageSource_gettext extends sfMessageSource_File
    * @param string MO file.
    * @return array of messages.
    */
-  protected function &loadData($filename)
+  public function &loadData($filename)
   {
     $mo = TGettext::factory('MO',$filename);
     $mo->load();

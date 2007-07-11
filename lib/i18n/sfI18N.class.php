@@ -19,10 +19,10 @@
 class sfI18N
 {
   protected
-    $context        = null,
-    $culture        = null,
-    $messageSources = array(),
-    $messageFormats = array();
+    $context       = null,
+    $culture       = null,
+    $messageSource = null,
+    $messageFormat = null;
 
   /**
    * Initializes this class.
@@ -32,40 +32,34 @@ class sfI18N
   public function initialize($context)
   {
     $this->context = $context;
-
-    $this->setMessageSource(sfLoader::getI18NGlobalDirs(), $context->getUser()->getCulture());
   }
 
   /**
    * Sets the message sources.
    *
-   * @param mixed  An array of i18n directories if message source configuration is XLIFF or gettext, null otherwise
+   * @param mixed  An array of i18n directories if message source is XLIFF or gettext, null otherwise
    * @param string The culture
    */
   public function setMessageSource($dirs, $culture)
   {
-    $this->messageSources = array();
-    $this->messageFormats = array();
-
     if (is_null($dirs))
     {
-      $this->messageSources = $this->createMessageSource();
+      $this->messageSource = $this->createMessageSource();
     }
     else
     {
-      foreach ($dirs as $dir)
-      {
-        $this->messageSources[] = $this->createMessageSource($dir);
-      }
+      $this->messageSource = sfMessageSource::factory('Aggregate', array_map(array($this, 'createMessageSource'), $dirs));
     }
 
     $this->setCulture($culture);
+    $this->messageFormat = null;
   }
 
   /**
    * Returns a new message source.
    *
    * @param  mixed           An array of i18n directories to create a XLIFF or gettext message source, null otherwise
+   *
    * @return sfMessageSource A sfMessageSource object
    */
   public function createMessageSource($dir = null)
@@ -97,114 +91,52 @@ class sfI18N
   }
 
   /**
-   * Returns a new message format for the given message source.
-   *
-   * @param  sfIMessageSource A sfMessageSource object
-   * @return sfMessageFormat  A sfMessageFormat object
-   */
-  public function createMessageFormat(sfIMessageSource $source)
-  {
-    $messageFormat = new sfMessageFormat($source, sfConfig::get('sf_charset'));
-
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_i18n_debug'))
-    {
-      $messageFormat->setUntranslatedPS(array(sfConfig::get('sf_i18n_untranslated_prefix'), sfConfig::get('sf_i18n_untranslated_suffix')));
-    }
-
-    return $messageFormat;
-  }
-
-  /**
    * Sets the current culture for i18n format objects.
    *
    * @param string The culture
    */
   public function setCulture($culture)
   {
-    if ($culture != $this->culture)
+    if ($this->messageSource)
     {
       $this->culture = $culture;
-
-      $this->messageFormats = array();
-    }
-
-    foreach ($this->messageSources as $messageSource)
-    {
-      $messageSource->setCulture($culture);
+      $this->messageSource->setCulture($culture);
     }
   }
 
   /**
-   * Gets all current message sources.
+   * Gets the message source.
    *
-   * @return array An array of sfMessageSource objects
-   */
-  public function getMessageSources()
-  {
-    return $this->messageSources;
-  }
-
-  /**
-   * Gets the message source for the given index.
-   *
-   * @param  integer         The indice (1 based)
    * @return sfMessageSource A sfMessageSource object
    */
-  public function getMessageSource($i = 1)
+  public function getMessageSource()
   {
-    if (!isset($this->messageSources[$i - 1]))
+    if (!isset($this->messageSource))
     {
-      throw new sfException(sprintf('The "$i" message source does not exist.', $i));
+      $this->setMessageSource(sfLoader::getI18NGlobalDirs(), $this->context->getUser()->getCulture());
     }
 
-    return $this->messageSources[$i - 1];
+    return $this->messageSource;
   }
 
   /**
-   * Gets the last message source.
-   */
-  public function getLastMessageSource()
-  {
-    return $this->getMessageSource(count($this->messageSources));
-  }
-
-  /**
-   * Gets all current message formats.
+   * Gets the message format.
    *
-   * @return array An array of sfMessageFormat objects
-   */
-  public function getMessageFormats()
-  {
-    for ($i = 0, $count = count($this->messageSources); $i < $count; $i++)
-    {
-      $this->getMessageFormat($i);
-    }
-
-    return $this->messageFormats;
-  }
-
-  /**
-   * Gets the message format for the given index.
-   *
-   * @param  integer         The indice (1 based)
    * @return sfMessageFormat A sfMessageFormat object
    */
-  public function getMessageFormat($i = 1)
+  public function getMessageFormat()
   {
-    if (!isset($this->messageFormats[$i - 1]))
+    if (!isset($this->messageFormat))
     {
-      $this->messageFormats[$i - 1] = $this->createMessageFormat($this->getMessageSource($i));
+      $this->messageFormat = new sfMessageFormat($this->getMessageSource(), sfConfig::get('sf_charset'));
+
+      if (sfConfig::get('sf_debug') && sfConfig::get('sf_i18n_debug'))
+      {
+        $this->messageFormat->setUntranslatedPS(array(sfConfig::get('sf_i18n_untranslated_prefix'), sfConfig::get('sf_i18n_untranslated_suffix')));
+      }
     }
 
-    return $this->messageFormats[$i - 1];
-  }
-
-  /**
-   * Gets the last message format.
-   */
-  public function getLastMessageFormat()
-  {
-    return $this->getMessageFormat(count($this->messageSources));
+    return $this->messageFormat;
   }
 
   /**
@@ -213,19 +145,12 @@ class sfI18N
    * @param  string The string to translate
    * @param  array  An array of arguments for the translation
    * @param  string The catalogue name
+   *
    * @return string The translated string
    */
   public function __($string, $args = array(), $catalogue = 'messages')
   {
-    for ($i = 0, $count = count($this->messageSources); $i < $count; $i++)
-    {
-      if ($retval = $this->getMessageFormat($i + 1)->formatExists($string, $args, $catalogue))
-      {
-        return $retval;
-      }
-    }
-
-    return $this->getLastMessageFormat()->format($string, $args, $catalogue);
+    return $this->getMessageFormat()->format($string, $args, $catalogue);
   }
 
   /**
@@ -233,6 +158,7 @@ class sfI18N
    *
    * @param  string The ISO code
    * @param  string The culture
+   *
    * @return string The country name
    */
   public function getCountry($iso, $culture)
@@ -247,6 +173,7 @@ class sfI18N
    * Gets a native culture name.
    *
    * @param  string The culture
+   *
    * @return string The culture name
    */
   public function getNativeName($culture)
@@ -261,6 +188,7 @@ class sfI18N
    *
    * @param  string  The formatted date as string
    * @param  string  The culture
+   *
    * @return integer The timestamp
    */
   public function getTimestampForCulture($date, $culture)
@@ -275,6 +203,7 @@ class sfI18N
    *
    * @param  string  The formatted date as string
    * @param  string  The culture
+   *
    * @return array   An array with the day, month and year
    */
   public function getDateForCulture($date, $culture)

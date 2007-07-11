@@ -78,7 +78,7 @@ class sfMessageFormat
    * Set the default catalogue.
    * @var string 
    */
-  public $Catalogue;
+  public $catalogue;
 
   /**
    * Output encoding charset
@@ -167,18 +167,6 @@ class sfMessageFormat
     return sfToolkit::I18N_toEncoding($s, $charset);
   }
 
-  public function formatExists($string, $args = array(), $catalogue = null, $charset = null)
-  {
-    if (empty($charset))
-    {
-      $charset = $this->getCharset();
-    }
-
-    $s = $this->getFormattedString(sfToolkit::I18N_toUTF8($string, $charset), $args, $catalogue);
-
-    return sfToolkit::I18N_toEncoding($s, $charset);
-  }
-
   /**
    * Do string translation.
    *
@@ -189,36 +177,17 @@ class sfMessageFormat
    */
   protected function formatString($string, $args = array(), $catalogue = null)
   {
-    if (empty($args))
-    {
-      $args = array();
-    }
-
-    $target = $this->getFormattedString($string, $args, $catalogue);
-
-    // well we did not find the translation string.
-    if (!$target)
-    {
-      $this->source->append($string);
-      $target = $this->postscript[0].$this->replaceArgs($string, $args).$this->postscript[1];
-    }
-
-    return $target;
-  }
-
-  protected function getFormattedString($string, $args = array(), $catalogue = null)
-  {
     if (empty($catalogue))
     {
       $catalogue = empty($this->catalogue) ? 'messages' : $this->catalogue;
     }
 
+    $this->loadCatalogue($catalogue);
+
     if (empty($args))
     {
       $args = array();
     }
-
-    $this->loadCatalogue($catalogue);
 
     foreach ($this->messages[$catalogue] as $variant)
     {
@@ -244,7 +213,10 @@ class sfMessageFormat
       }
     }
 
-    return null;
+    // well we did not find the translation string.
+    $this->source->append($string);
+
+    return $this->postscript[0].$this->replaceArgs($string, $args).$this->postscript[1];
   }
 
   protected function replaceArgs($string, $args)

@@ -74,7 +74,7 @@ abstract class sfI18nExtract
    */
   public function saveNewMessages()
   {
-    $messageSource = $this->i18n->getLastMessageSource();
+    $messageSource = $this->i18n->getMessageSource();
     foreach ($this->getNewMessages() as $message)
     {
       $messageSource->append($message);
@@ -91,7 +91,7 @@ abstract class sfI18nExtract
    */
   public function deleteOldMessages()
   {
-    $messageSource = $this->i18n->getLastMessageSource();
+    $messageSource = $this->i18n->getMessageSource();
     foreach ($this->getOldMessages() as $message)
     {
       $messageSource->delete($message);
@@ -146,11 +146,8 @@ abstract class sfI18nExtract
    */
   protected function loadMessageSources()
   {
-    foreach ($this->i18n->getMessageSources() as $messageSource)
-    {
-      $messageSource->setCulture($this->culture);
-      $messageSource->load();
-    }
+    $this->i18n->getMessageSource()->setCulture($this->culture);
+    $this->i18n->getMessageSource()->load();
   }
 
   /**
@@ -159,14 +156,11 @@ abstract class sfI18nExtract
   protected function loadCurrentMessages()
   {
     $this->currentMessages = array();
-    foreach ($this->i18n->getMessageSources() as $messageSource)
+    foreach ($this->i18n->getMessageSource()->read() as $catalogue => $translations)
     {
-      foreach ($messageSource->read() as $catalogue => $translations)
+      foreach ($translations as $key => $values)
       {
-        foreach ($translations as $key => $values)
-        {
-          $this->currentMessages[] = $key;
-        }
+        $this->currentMessages[] = $key;
       }
     }
   }

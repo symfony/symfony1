@@ -53,7 +53,7 @@ abstract class sfMessageSource_File extends sfMessageSource
    * @param string catalogue+variant
    * @return int last modified in unix-time format.
    */
-  protected function getLastModified($source)
+  public function getLastModified($source)
   {
     return is_file($source) ? filemtime($source) : 0;
   }
@@ -64,7 +64,7 @@ abstract class sfMessageSource_File extends sfMessageSource
    * @param string message catalogue
    * @return string full path to the message file.
    */
-  protected function getSource($variant)
+  public function getSource($variant)
   {
     return $this->source.'/'.$variant;
   }
@@ -75,7 +75,7 @@ abstract class sfMessageSource_File extends sfMessageSource
    * @param string message file
    * @return boolean true if valid, false otherwise.
    */
-  protected function isValidSource($source)
+  public function isValidSource($source)
   {
     return is_file($source);
   }
@@ -86,7 +86,7 @@ abstract class sfMessageSource_File extends sfMessageSource
    * @param string catalogue name
    * @return array list of all variants for this catalogue. 
    */
-  protected function getCatalogueList($catalogue)
+  public function getCatalogueList($catalogue)
   {
     $variants = explode('_', $this->culture);
     $source = $catalogue.$this->dataExt;

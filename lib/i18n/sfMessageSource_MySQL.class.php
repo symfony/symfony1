@@ -210,7 +210,7 @@ class sfMessageSource_MySQL extends sfMessageSource_Database
    * @param string the catalogue name + variant
    * @return array translation messages.
    */
-  protected function &loadData($variant)
+  public function &loadData($variant)
   {
     $variant = mysql_real_escape_string($variant, $this->db);
 
@@ -260,7 +260,7 @@ class sfMessageSource_MySQL extends sfMessageSource_Database
    * @param string catalogue+variant
    * @return boolean true if the catalogue+variant is in the database, false otherwise.
    */ 
-  protected function isValidSource($variant)
+  public function isValidSource($variant)
   {
     $variant = mysql_real_escape_string ($variant, $this->db);
 
@@ -271,32 +271,6 @@ class sfMessageSource_MySQL extends sfMessageSource_Database
     $result = $row && $row[0] == '1';
 
     return $result;
-  }
-
-  /**
-   * Gets all the variants of a particular catalogue.
-   *
-   * @param string catalogue name
-   * @return array list of all variants for this catalogue. 
-   */
-  protected function getCatalogueList($catalogue)
-  {
-    $variants = explode('_', $this->culture);
-
-    $catalogues = array($catalogue);
-
-    $variant = null;
-
-    for ($i = 0, $max = count($variants); $i < $max; $i++)
-    {
-      if (strlen($variants[$i]) > 0)
-      {
-        $variant .= $variant ? '_'.$variants[$i] : $variants[$i];
-        $catalogues[] = $catalogue.'.'.$variant;
-      }
-    }
-
-    return array_reverse($catalogues);
   }
 
   /**
