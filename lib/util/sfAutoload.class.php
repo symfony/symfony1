@@ -84,7 +84,7 @@ class sfAutoload
   static public function loadClass($class)
   {
     // class already exists
-    if (class_exists($class, false))
+    if (class_exists($class, false) || interface_exists($class, false))
     {
       return true;
     }
@@ -150,6 +150,6 @@ class sfAutoload
     }
 
     ini_set('unserialize_callback_func', 'spl_autoload_call');
-    spl_autoload_register(array('sfCore', 'splSimpleAutoload'));
+    spl_autoload_register(array('sfAutoload', 'splSimpleAutoload'));
   }
 }
