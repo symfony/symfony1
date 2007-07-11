@@ -62,7 +62,7 @@ class sfTestBrowser extends sfBrowser
   public function getAndCheck($module, $action, $url = null, $code = 200)
   {
     return $this->
-      get(null !== null ? $url : sprintf('/%s/%s', $module, $action))->
+      get(null !== $url ? $url : sprintf('/%s/%s', $module, $action))->
       isStatusCode($code)->
       isRequestParameter('module', $module)->
       isRequestParameter('action', $action)
