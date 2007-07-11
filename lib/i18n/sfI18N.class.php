@@ -20,6 +20,7 @@ class sfI18N
 {
   protected
     $context       = null,
+    $cache         = null,
     $culture       = null,
     $messageSource = null,
     $messageFormat = null;
@@ -29,15 +30,16 @@ class sfI18N
    *
    * @param sfContext A sfContext implementation instance
    */
-  public function initialize($context)
+  public function initialize($context, sfCache $cache = null)
   {
     $this->context = $context;
+    $this->cache   = $cache;
 
     include(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/i18n.yml'));
   }
 
   /**
-   * Sets the message sources.
+   * Sets the message source.
    *
    * @param mixed  An array of i18n directories if message source is XLIFF or gettext, null otherwise
    * @param string The culture
@@ -52,7 +54,12 @@ class sfI18N
     {
       $this->messageSource = sfMessageSource::factory('Aggregate', array_map(array($this, 'createMessageSource'), $dirs));
     }
-
+/*
+    if (!is_null($this->cache))
+    {
+      $this->messageSource->setCache(new sfMessageCache($this->cache));
+    }
+*/
     $this->setCulture($culture);
     $this->messageFormat = null;
   }
@@ -68,28 +75,12 @@ class sfI18N
   {
     if (in_array(sfConfig::get('sf_i18n_source'), array('Creole', 'MySQL', 'SQLite')))
     {
-      $messageSource = sfMessageSource::factory(sfConfig::get('sf_i18n_source'), sfConfig::get('sf_i18n_database', 'default'));
+      return sfMessageSource::factory(sfConfig::get('sf_i18n_source'), sfConfig::get('sf_i18n_database', 'default'));
     }
     else
     {
-      $messageSource = sfMessageSource::factory(sfConfig::get('sf_i18n_source'), $dir);
+      return sfMessageSource::factory(sfConfig::get('sf_i18n_source'), $dir);
     }
-
-    if (sfConfig::get('sf_i18n_cache'))
-    {
-      $subdir   = str_replace(str_replace('/', DIRECTORY_SEPARATOR, sfConfig::get('sf_root_dir')), '', $dir);
-      $cacheDir = str_replace('/', DIRECTORY_SEPARATOR, sfConfig::get('sf_i18n_cache_dir').$subdir);
-
-      $cache = new sfMessageCache();
-      $cache->initialize(array(
-        'cacheDir' => $cacheDir,
-        'lifeTime' => 86400,
-      ));
-
-      $messageSource->setCache($cache);
-    }
-
-    return $messageSource;
   }
 
   /**

@@ -11,14 +11,29 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once(dirname(__FILE__).'/sfCacheDriverTests.class.php');
 
-$t = new lime_test(18, new lime_output_color());
+$t = new lime_test(61, new lime_output_color());
 
 // setup
 sfConfig::set('sf_logging_enabled', false);
 $temp = tempnam('/tmp/cachedir', 'tmp');
 unlink($temp);
 mkdir($temp);
-$cache = new sfFileCache($temp);
+
+// ->initialize()
+$t->diag('->initialize()');
+$cache = sfCache::newInstance('sfFileCache');
+try
+{
+  $cache->initialize();
+  $t->fail('->initialize() throws an sfInitializationException exception if you don\'t pass a "cacheDir" parameter');
+}
+catch (sfInitializationException $e)
+{
+  $t->pass('->initialize() throws an sfInitializationException exception if you don\'t pass a "cacheDir" parameter');
+}
+
+$cache = sfCache::newInstance('sfFileCache');
+$cache->initialize(array('cacheDir' => $temp));
 
 sfCacheDriverTests::launch($t, $cache);
 

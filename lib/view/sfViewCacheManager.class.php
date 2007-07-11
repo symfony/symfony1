@@ -11,9 +11,9 @@
 /**
  * Cache class to cache the HTML results for actions and templates.
  *
- * This class uses $cacheClass class to store cache.
- * All cache files are stored in files in the [sf_root_dir].'/cache/'.[sf_app].'/html' directory.
- * To disable all caching, you can set to false [sf_cache] constant.
+ * This class uses a sfCache instance implementation to store cache.
+ *
+ * To disable all caching, you can set the [sf_cache] constant to false.
  *
  * @package    symfony
  * @subpackage view
@@ -23,12 +23,12 @@
 class sfViewCacheManager
 {
   protected
-    $cache              = null,
-    $cacheConfig        = array(),
-    $context            = null,
-    $controller         = null,
-    $routing            = null,
-    $loaded             = array();
+    $cache       = null,
+    $cacheConfig = array(),
+    $context     = null,
+    $controller  = null,
+    $routing     = null,
+    $loaded      = array();
 
   /**
    * Initializes the cache manager.
@@ -36,7 +36,7 @@ class sfViewCacheManager
    * @param sfContext Current application context
    * @param sfCache   An sfCache instance
    */
-  public function initialize($context, $cache)
+  public function initialize($context, sfCache $cache)
   {
     $this->context    = $context;
     $this->controller = $context->getController();
@@ -66,9 +66,9 @@ class sfViewCacheManager
   }
 
   /**
-   * Retrieves the current cache type.
+   * Retrieves the current cache object.
    *
-   * @return sfCache The current cache type
+   * @return sfCache The current cache object
    */
   public function getCache()
   {
@@ -76,15 +76,13 @@ class sfViewCacheManager
   }
 
   /**
-   * Generates namespaces for the cache manager
+   * Generates a unique cache key for an internal URI.
    *
-   * @param string Internal unified resource identifier.
+   * @param  string The internal unified resource identifier.
    *
-   * @return array Path and filename for the current namespace
-   *
-   * @throws <b>sfException</b> if the generation fails
+   * @return string The cache key
    */
-  public function generateNamespace($internalUri)
+  public function generateCacheKey($internalUri)
   {
     if ($callable = sfConfig::get('sf_cache_namespace_callable'))
     {
@@ -142,7 +140,7 @@ class sfViewCacheManager
     // replace multiple /
     $uri = preg_replace('#/+#', '/', $uri);
 
-    return array(dirname($uri), basename($uri));
+    return $uri;
   }
 
   /**
@@ -298,11 +296,11 @@ class sfViewCacheManager
   }
 
   /**
-   * Retrieves namespace for the current cache.
+   * Retrieves content in the cache.
    *
-   * @param string Internal uniform resource identifier
+   * @param  string Internal uniform resource identifier
    *
-   * @return string The data of the cache
+   * @return string The content in the cache
    */
   public function get($internalUri)
   {
@@ -312,15 +310,11 @@ class sfViewCacheManager
       return null;
     }
 
-    list($namespace, $id) = $this->generateNamespace($internalUri);
-
-    $this->cache->setLifeTime($this->getLifeTime($internalUri));
-
-    $retval = $this->cache->get($id, $namespace);
+    $retval = $this->cache->get($this->generateCacheKey($internalUri));
 
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info(sprintf('{sfViewCacheManager} cache for "%s" %s', $internalUri, ($retval !== null ? 'exists' : 'does not exist')));
+      $this->getContext()->getLogger()->info(sprintf('{sfViewCacheManager} cache for "%s" %s', $internalUri, $retval !== null ? 'exists' : 'does not exist'));
     }
 
     return $retval;
@@ -340,11 +334,7 @@ class sfViewCacheManager
       return null;
     }
 
-    list($namespace, $id) = $this->generateNamespace($internalUri);
-
-    $this->cache->setLifeTime($this->getLifeTime($internalUri));
-
-    return $this->cache->has($id, $namespace);
+    return $this->cache->has($this->generateCacheKey($internalUri));
   }
 
   /**
@@ -369,7 +359,7 @@ class sfViewCacheManager
   }
 
   /**
-   * Sets the cache content
+   * Sets the cache content.
    *
    * @param string Data to put in the cache
    * @param string Internal uniform resource identifier
@@ -383,11 +373,9 @@ class sfViewCacheManager
       return false;
     }
 
-    list($namespace, $id) = $this->generateNamespace($internalUri);
-
     try
     {
-      $ret = $this->cache->set($id, $namespace, $data);
+      $ret = $this->cache->set($this->generateCacheKey($internalUri), $data, $this->getLifeTime($internalUri));
     }
     catch (Exception $e)
     {
@@ -403,7 +391,7 @@ class sfViewCacheManager
   }
 
   /**
-   * Removes the cache for the current namespace.
+   * Removes the content in the cache.
    *
    * @param string Internal uniform resource identifier
    *
@@ -411,36 +399,50 @@ class sfViewCacheManager
    */
   public function remove($internalUri)
   {
-    list($namespace, $id) = $this->generateNamespace($internalUri);
-
     if (sfConfig::get('sf_logging_enabled'))
     {
       $this->context->getLogger()->info(sprintf('{sfViewCacheManager} remove cache for "%s"', $internalUri));
     }
 
-    if ($this->cache->has($id, $namespace))
+    $key = $this->generateCacheKey($internalUri);
+    if ($this->cache->has($key))
     {
-      $this->cache->remove($id, $namespace);
+      $this->cache->remove($key);
     }
   }
 
   /**
    * Retrieves the last modified time.
    *
-   * @param string Internal uniform resource identifier
+   * @param  string Internal uniform resource identifier
    *
-   * @return string Last modified datetime for the current namespace
+   * @return int    The last modified datetime
    */
-  public function lastModified($internalUri)
+  public function getLastModified($internalUri)
   {
     if (!$this->isCacheable($internalUri))
     {
-      return null;
+      return 0;
     }
 
-    list($namespace, $id) = $this->generateNamespace($internalUri);
+    return $this->cache->getLastModified($this->generateCacheKey($internalUri));
+  }
 
-    return $this->cache->lastModified($id, $namespace);
+  /**
+   * Retrieves the timeout.
+   *
+   * @param  string Internal uniform resource identifier
+   *
+   * @return int    The timeout datetime
+   */
+  public function getTimeout($internalUri)
+  {
+    if (!$this->isCacheable($internalUri))
+    {
+      return 0;
+    }
+
+    return $this->cache->getTimeout($this->generateCacheKey($internalUri));
   }
 
   /**

@@ -33,9 +33,17 @@ test:
 #    param:
 #      automaticCleaningFactor: 0
 #      cacheDir:                %SF_TEMPLATE_CACHE_DIR%
+#      lifetime:                86400
 #
 #  i18n:
 #    class: sfI18N
+#    param:
+#      cache:
+#        class: sfFileCache
+#        param:
+#          automaticCleaningFactor: 0
+#          cacheDir:                %SF_I18N_CACHE_DIR%
+#          lifetime:                86400
 #
 #  routing:
 #    class: sfPatternRouting

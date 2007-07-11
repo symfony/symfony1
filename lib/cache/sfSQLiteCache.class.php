@@ -9,7 +9,7 @@
  */
 
 /**
- * Cache class that stores content in a sqlite database.
+ * Cache class that stores cached content in a SQLite database.
  *
  * @package    symfony
  * @subpackage cache
@@ -18,82 +18,122 @@
  */
 class sfSQLiteCache extends sfCache
 {
-  const DEFAULT_NAMESPACE = '';
+  protected $dbh = null;
 
-  protected $conn = null;
-
- /**
-  * File where to put the cache database (or :memory: to store cache in memory)
-  */
   protected $database = '';
 
- /**
-  * Disable / Tune the automatic cleaning process
-  *
-  * The automatic cleaning process destroy too old (for the given life time)
-  * cache files when a new cache file is written.
-  * 0               => no automatic cache cleaning
-  * 1               => systematic cache cleaning
-  * x (integer) > 1 => automatic cleaning randomly 1 times on x cache write
-  */
-  protected $automaticCleaningFactor = 500;
-
- /**
-  * Constructor.
-  *
-  * @param string The database name
-  */
-  public function __construct($database = null)
+  /**
+   * Initializes this sfCache instance.
+   *
+   * Available parameters:
+   *
+   * * database: File where to put the cache database (or :memory: to store cache in memory)
+   *
+   * * see sfCache for default parameters available for all drivers
+   *
+   * @see sfCache
+   */
+  public function initialize($parameters = array())
   {
     if (!extension_loaded('sqlite'))
     {
-      throw new sfConfigurationException('sfSQLiteCache class needs "sqlite" extension');
+      throw new sfConfigurationException('sfSQLiteCache class needs "sqlite" extension to be loaded.');
     }
 
-    $this->setDatabase($database);
+    parent::initialize($parameters);
+
+    if (!$this->getParameter('database'))
+    {
+      throw new sfInitializationException('You must pass a "database" parameter to initialize a sfSQLiteCache object.');
+    }
+
+    $this->setDatabase($this->getParameter('database'));
   }
 
- /**
-   * Initializes the cache.
-   *
-   * @param array An array of options
-   * Available options:
-   *  - database:                database name
-   *  - automaticCleaningFactor: disable / tune automatic cleaning process (int)
-   *
+  /**
+   * @see sfCache
    */
-  public function initialize($options = array())
+  public function get($key, $default = null)
   {
-    if (isset($options['database']))
-    {
-      $this->setDatabase($options['database']);
-      unset($options['database']);
-    }
+    $data = $this->dbh->singleQuery(sprintf("SELECT data FROM cache WHERE key = '%s' AND timeout > %d", sqlite_escape_string($key), time()));
 
-    $availableOptions = array('automaticCleaningFactor');
-    foreach ($options as $key => $value)
-    {
-      if (!in_array($key, $availableOptions) && sfConfig::get('sf_logging_enabled'))
-      {
-        sfLogger::getInstance()->err(sprintf('sfSQLiteCache cannot take "%s" as an option', $key));
-      }
-
-      $this->$key = $value;
-    }
+    return is_null($data) ? $default : $data;
   }
 
- /**
+  /**
+   * @see sfCache
+   */
+  public function has($key)
+  {
+    return (boolean) $this->dbh->query(sprintf("SELECT key FROM cache WHERE key = '%s' AND timeout > %d", sqlite_escape_string($key), time()))->numRows();
+  }
+
+  /**
+   * @see sfCache
+   */
+  public function set($key, $data, $lifetime = null)
+  {
+    if ($this->getParameter('automaticCleaningFactor') > 0 && rand(1, $this->getParameter('automaticCleaningFactor')) == 1)
+    {
+      $this->clean(sfCache::OLD);
+    }
+
+    $lifetime = is_null($lifetime) ? $this->getParameter('lifetime') : $lifetime;
+
+    return (boolean) $this->dbh->query(sprintf("INSERT OR REPLACE INTO cache (key, data, timeout, last_modified) VALUES ('%s', '%s', %d, %d)", sqlite_escape_string($key), sqlite_escape_string($data), time() + $lifetime, time()));
+  }
+
+  /**
+   * @see sfCache
+   */
+  public function remove($key)
+  {
+    return (boolean) $this->dbh->query(sprintf("DELETE FROM cache WHERE key = '%s'", sqlite_escape_string($key)));
+  }
+
+  /**
+   * @see sfCache
+   */
+  public function removePattern($pattern)
+  {
+    return (boolean) $this->dbh->query(sprintf("DELETE FROM cache WHERE REGEXP('%s', key)", sqlite_escape_string(self::patternToRegexp($pattern))));
+  }
+
+  /**
+   * @see sfCache
+   */
+  public function clean($mode = sfCache::ALL)
+  {
+    return (boolean) $this->dbh->query("DELETE FROM cache".(sfCache::OLD == $mode ? sprintf(" WHERE timeout < '%s'", time()) : ''))->numRows();
+  }
+
+  /**
+   * @see sfCache
+   */
+  public function getTimeout($key)
+  {
+    $rs = $this->dbh->query(sprintf("SELECT timeout FROM cache WHERE key = '%s' AND timeout > %d", sqlite_escape_string($key), time()));
+
+    return $rs->numRows() ? intval($rs->fetchSingle()) : 0;
+  }
+
+  /**
+   * @see sfCache
+   */
+  public function getLastModified($key)
+  {
+    $rs = $this->dbh->query(sprintf("SELECT last_modified FROM cache WHERE key = '%s' AND timeout > %d", sqlite_escape_string($key), time()));
+
+    return $rs->numRows() ? intval($rs->fetchSingle()) : 0;
+  }
+
+  /**
    * Sets the database name.
    *
    * @param string The database name where to store the cache
    */
-  public function setDatabase($database)
+  protected function setDatabase($database)
   {
-    if (!$database)
-    {
-      return;
-    }
-
     $this->database = $database;
 
     $new = false;
@@ -101,7 +141,7 @@ class sfSQLiteCache extends sfCache
     {
       $new = true;
     }
-    elseif (!is_file($database))
+    else if (!is_file($database))
     {
       $new = true;
 
@@ -117,10 +157,12 @@ class sfSQLiteCache extends sfCache
       umask($current_umask);
     }
 
-    if (!($this->conn = @sqlite_open($this->database, 0644, $errmsg)))
+    if (!$this->dbh = new SQLiteDatabase($this->database, 0644, $errmsg))
     {
-      throw new sfException(sprintf("Unable to connect to SQLite database: %s", $errmsg));
+      throw new sfCacheException(sprintf('Unable to connect to SQLite database: %s.', $errmsg));
     }
+
+    $this->dbh->createFunction('regexp', array($this, 'removePatternRegexpCallback'), 2);
 
     if ($new)
     {
@@ -128,190 +170,53 @@ class sfSQLiteCache extends sfCache
     }
   }
 
- /**
+  /**
+   * Callback used when deleting keys from cache.
+   */
+  public function removePatternRegexpCallback($regexp, $key)
+  {
+    return preg_match($regexp, $key);
+  }
+
+  /**
+   * @see sfCache
+   */
+  public function getMany($keys)
+  {
+    $rows = $this->dbh->arrayQuery(sprintf("SELECT key, data FROM cache WHERE key IN ('%s') AND timeout > %d", implode('\', \'', array_map('sqlite_escape_string', $keys)), time()));
+
+    $data = array();
+    foreach ($rows as $row)
+    {
+      $data[$row['key']] = $row['data'];
+    }
+
+    return $data;
+  }
+
+  /**
    * Creates the database schema.
    *
-   * @throws sfException
+   * @throws sfCacheException
    */
   protected function createSchema()
   {
     $statements = array(
-      "CREATE TABLE [cache] (
-        [id] VARCHAR(255),
-        [namespace] VARCHAR(255),
+      'CREATE TABLE [cache] (
+        [key] VARCHAR(255),
         [data] LONGVARCHAR,
-        [created_at] TIMESTAMP
-      )",
-      "CREATE UNIQUE INDEX [cache_unique] ON [cache] ([namespace], [id])",
+        [timeout] TIMESTAMP,
+        [last_modified] TIMESTAMP
+      )',
+      'CREATE UNIQUE INDEX [cache_unique] ON [cache] ([key])',
     );
 
     foreach ($statements as $statement)
     {
-      if (!sqlite_query($statement, $this->conn))
+      if (!$this->dbh->query($statement))
       {
-        throw new sfException(sqlite_error_string(sqlite_last_error($this->database)));
+        throw new sfCacheException(sqlite_error_string($this->dbh->lastError()));
       }
     }
-  }
-
- /**
-   * Destructor.
-   */
-  public function __destruct()
-  {
-    sqlite_close($this->conn);
-  }
-
- /**
-   * Gets the database name.
-   *
-   * @return string The database name
-   */
-  public function getDatabase()
-  {
-    return $this->database;
-  }
-
- /**
-  * Tests if a cache is available and (if yes) returns it.
-  *
-  * @param  string  The cache id
-  * @param  string  The name of the cache namespace
-  * @param  boolean If set to true, the cache validity won't be tested
-  *
-  * @return string  The data in the cache (or null if no cache available)
-  *
-  * @see sfCache
-  */
-  public function get($id, $namespace = self::DEFAULT_NAMESPACE, $doNotTestCacheValidity = false)
-  {
-    $statement = sprintf("SELECT data FROM cache WHERE id = '%s' AND namespace = '%s'", sqlite_escape_string($id), sqlite_escape_string($namespace));
-    if (!$doNotTestCacheValidity)
-    {
-      $statement .= sprintf(" AND created_at > '%s'", sqlite_escape_string($this->refreshTime));
-    }
-
-    $rs = sqlite_query($statement, $this->conn);
-
-    return sqlite_num_rows($rs) ? sqlite_fetch_single($rs) : null;
-  }
-
-  /**
-   * Returns true if there is a cache for the given id and namespace.
-   *
-   * @param  string  The cache id
-   * @param  string  The name of the cache namespace
-   * @param  boolean If set to true, the cache validity won't be tested
-   *
-   * @return boolean true if the cache exists, false otherwise
-   *
-   * @see sfCache
-   */
-  public function has($id, $namespace = self::DEFAULT_NAMESPACE, $doNotTestCacheValidity = false)
-  {
-    $statement = sprintf("SELECT id FROM cache WHERE id = '%s' AND namespace = '%s'", sqlite_escape_string($id), sqlite_escape_string($namespace));
-    if (!$doNotTestCacheValidity)
-    {
-      $statement .= sprintf(" AND created_at > '%s'", sqlite_escape_string($this->refreshTime));
-    }
-
-    return sqlite_num_rows(sqlite_query($statement, $this->conn)) ? true : false;
-  }
-  
- /**
-  * Saves some data in the cache.
-  *
-  * @param string The cache id
-  * @param string The name of the cache namespace
-  * @param string The data to put in cache
-  *
-  * @return boolean true if no problem
-  *
-  * @see sfCache
-  */
-  public function set($id, $namespace = self::DEFAULT_NAMESPACE, $data)
-  {
-    if ($this->automaticCleaningFactor > 0)
-    {
-      $rand = rand(1, $this->automaticCleaningFactor);
-      if ($rand == 1)
-      {
-        $this->clean(false, 'old');
-      }
-    }
-
-    if (!$this->has($id, $namespace, true))
-    {
-      $statement = sprintf("INSERT INTO cache (id, namespace, data, created_at) VALUES ('%s', '%s', '%s', %d)", sqlite_escape_string($id), sqlite_escape_string($namespace), sqlite_escape_string($data), time());
-    }
-    else
-    {
-      $statement = sprintf("UPDATE cache SET data = '%s', created_at = %s WHERE id = '%s' AND namespace = '%s'", sqlite_escape_string($data), time(), sqlite_escape_string($id), sqlite_escape_string($namespace));
-    }
-
-    if (sqlite_query($statement, $this->conn))
-    {
-      return true;
-    }
-
-    return false;
-  }
-
- /**
-  * Removes an element from the cache.
-  *
-  * @param string The cache id
-  * @param string The name of the cache namespace
-  *
-  * @return boolean true if no problem
-  *
-  * @see sfCache
-  */
-  public function remove($id, $namespace = self::DEFAULT_NAMESPACE)
-  {
-    $statement = sprintf("DELETE FROM cache WHERE id = '%s' AND namespace = '%s'", sqlite_escape_string($id), sqlite_escape_string($namespace));
-    if (sqlite_query($statement, $this->conn))
-    {
-      return true;
-    }
-
-    return false;
-  }
-
- /**
-  * Cleans the cache.
-  *
-  * If no namespace is specified all cache files will be destroyed
-  * else only cache files of the specified namespace will be destroyed.
-  *
-  * @param string The name of the cache namespace
-  *
-  * @return boolean true if no problem
-  */
-  public function clean($namespace = null, $mode = 'all')
-  {
-    if (!$namespace)
-    {
-      $statement = "DELETE FROM cache";
-    }
-    else
-    {
-      $statement = sprintf("DELETE FROM cache WHERE namespace LIKE '%s%%'", $namespace);
-    }
-
-    if ('old' == $mode)
-    {
-      $statement .= sprintf(" %s created_at < '%s'", $namespace ? 'AND' : 'WHERE', sqlite_escape_string($this->refreshTime));
-    }
-
-    return sqlite_num_rows(sqlite_query($statement, $this->conn)) ? true : false;
-  }
-
-  public function lastModified($id, $namespace = self::DEFAULT_NAMESPACE)
-  {
-    $statement = sprintf("SELECT created_at FROM cache WHERE id = '%s' AND namespace = '%s'", sqlite_escape_string($id), sqlite_escape_string($namespace));
-    $rs = sqlite_query($statement, $this->conn);
-
-    return sqlite_num_rows($rs) ? intval(sqlite_fetch_single($rs)) : 0;
   }
 }

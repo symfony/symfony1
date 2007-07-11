@@ -426,7 +426,7 @@ class sfWebDebug
     $this->loadHelpers();
 
     $bg_color      = $new ? '#9ff' : '#ff9';
-    $last_modified = $cache->lastModified($internalUri);
+    $last_modified = $cache->getLastModified($internalUri);
     $id            = md5($internalUri);
     $content = '
       <div id="main_'.$id.'" class="sfWebDebugActionCache" style="border: 1px solid #f00">

@@ -55,9 +55,9 @@ class sfFunctionCache
   public function call($callable, $arguments = array())
   {
     // Generate a cache id
-    $id = md5(serialize($callable).serialize($arguments));
+    $key = md5(serialize($callable).serialize($arguments));
 
-    $serialized = $this->cache->get($id, '');
+    $serialized = $this->cache->get($key);
     if ($serialized !== null)
     {
       $data = unserialize($serialized);
@@ -86,7 +86,7 @@ class sfFunctionCache
 
       $data['output'] = ob_get_clean();
 
-      $this->cache->set($id, '', serialize($data));
+      $this->cache->set($key, serialize($data));
     }
 
     echo $data['output'];

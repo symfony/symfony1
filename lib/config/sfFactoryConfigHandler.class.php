@@ -144,10 +144,9 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           // append view cache class name
           $inits[] = sprintf("\n  if (sfConfig::get('sf_cache'))\n  {\n".
                              "    \$this->factories['viewCacheManager'] = new sfViewCacheManager();\n".
-                             "    \$viewCacheClass = sfConfig::get('sf_factory_view_cache', '%s');\n".
-                             "    \$viewCache = new \$viewCacheClass();\n".
-                             "    \$viewCache->initialize(sfConfig::get('sf_factory_view_cache_parameters', %s));\n".
-                             "    \$this->factories['viewCacheManager']->initialize(\$this, \$viewCache);\n".
+                             "    \$cache = sfCache::newInstance(sfConfig::get('sf_factory_view_cache', '%s'));\n".
+                             "    \$cache->initialize(sfConfig::get('sf_factory_view_cache_parameters', %s));\n".
+                             "    \$this->factories['viewCacheManager']->initialize(\$this, \$cache);\n".
                              "  }\n".
                              "  else\n".
                              "  {\n".
@@ -158,10 +157,20 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
 
         case 'i18n':
           // append i18n instance initialization
-          $inits[] = "\n  if (sfConfig::get('sf_i18n'))\n  {\n".
-                     "    \$this->factories['i18n'] = new sfI18N();\n".
-                     "    \$this->factories['i18n']->initialize(\$this);\n".
-                     "  }\n";
+          $inits[] = sprintf("\n  if (sfConfig::get('sf_i18n'))\n  {\n".
+                     "    \$class = sfConfig::get('sf_factory_i18n', '%s');\n".
+                     "    \$this->factories['i18n'] = new \$class();\n".
+                     "    \$parameters = sfConfig::get('sf_factory_i18n_cache', %s);\n".
+                     "    if (isset(\$parameters['cache']))\n  {\n".
+                     "      \$cache = sfCache::newInstance(\$parameters['cache']['class']);\n".
+                     "      \$cache->initialize(\$parameters['cache']['param']);\n".
+                     "      \$this->factories['i18n']->initialize(\$this, \$cache);\n".
+                     "    }\n  else {  \n".
+                     "      \$this->factories['i18n']->initialize(\$this);\n".
+                     "    }\n".
+                     "  }\n"
+                     , $class, $parameters
+                     );
           break;
 
         case 'routing':

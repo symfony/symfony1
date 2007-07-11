@@ -11,18 +11,38 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once(dirname(__FILE__).'/sfCacheDriverTests.class.php');
 
+$plan = 121;
+$t = new lime_test($plan, new lime_output_color());
+
 if (!extension_loaded('SQLite'))
 {
+  $t->skip('APC needed to run these tests', $plan);
   return;
 }
 
-$t = new lime_test(36, new lime_output_color());
+// ->initialize()
+$t->diag('->initialize()');
+$cache = sfCache::newInstance('sfSQLiteCache');
+try
+{
+  $cache->initialize();
+  $t->fail('->initialize() throws an sfInitializationException exception if you don\'t pass a "database" parameter');
+}
+catch (sfInitializationException $e)
+{
+  $t->pass('->initialize() throws an sfInitializationException exception if you don\'t pass a "database" parameter');
+}
 
 // database in memory
-sfCacheDriverTests::launch($t, new sfSQLiteCache(':memory:'));
+$cache = sfCache::newInstance('sfSQLiteCache');
+$cache->initialize(array('database' => ':memory:'));
+
+sfCacheDriverTests::launch($t, $cache);
 
 // database on disk
 $database = tempnam('/tmp/cachedir', 'tmp');
 unlink($database);
-sfCacheDriverTests::launch($t, new sfSQLiteCache($database));
+$cache = sfCache::newInstance('sfSQLiteCache');
+$cache->initialize(array('database' => $database));
+sfCacheDriverTests::launch($t, $cache);
 unlink($database);

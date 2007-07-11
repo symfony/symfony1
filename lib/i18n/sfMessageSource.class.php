@@ -51,7 +51,7 @@
  *
  *   //set the culture and cache, store the cache in the /tmp directory.
  *   $source->setCulture('en_AU')l
- *   $source->setCache(new sfMessageCache('/tmp'));
+ *   $source->setCache(new sfMessageCache(new sfFileCache(array('/tmp'))));
  *
  *   $formatter = new sfMessageFormat($source);
  * </code>
@@ -191,7 +191,7 @@ abstract class sfMessageSource implements sfIMessageSource
           $this->messages[$variant] = $data;
           if ($this->cache)
           {
-            $this->cache->save($data, $variant, $this->culture);
+            $this->cache->set($variant, $this->culture, $data);
           }
         }
 

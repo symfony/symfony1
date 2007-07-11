@@ -1,6 +1,8 @@
 <?php
+
 /**
  * Translation table cache.
+ *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
  * @version    $Id$
  * @package    symfony
@@ -9,7 +11,8 @@
 
 /**
  * Cache the translation table into the file system.
- * It can cache each cataloug+variant or just the whole section.
+ *
+ * It can cache each catalogue + variant or just the whole section.
  *
  * @package System.I18N.core
  * @author $Author: weizhuo $
@@ -17,67 +20,16 @@
  */
 class sfMessageCache
 {
-  /**
-   * Cache Lite instance.
-   */
   protected $cache;
 
   /**
-   * Cache life time, default is 1 year.
-   */
-  protected $lifetime = 3153600;
-
-  /**
-   * Creates a new Translation cache.
+   * Constructor.
    *
-   * @param string $cacheDir Directory to store the cache files.
+   * @param sfCache An sfCache instance
    */
-  public function initialize($options = array())
+  public function __construct(sfCache $cache)
   {
-    $this->cache = new sfFileCache();
-    $this->cache->initialize($options);
-  }
-
-  /**
-   * Gets the cache life time.
-   *
-   * @return int Cache life time.
-   */
-  public function getLifeTime()
-  {
-    return $this->lifetime;
-  }
-
-  /**
-   * Sets the cache life time.
-   *
-   * @param int $time Cache life time.
-   */
-  public function setLifeTime($time)
-  {
-    $this->lifetime = intval($time);
-  }
-
-  /**
-   * Gets the cache file ID based section and locale.
-   *
-   * @param string $catalogue The translation section.
-   * @param string $culture The translation locale, e.g. "en_AU".
-   */
-  protected function getID($catalogue, $culture)
-  {
-    return $culture;
-  }
-
-  /**
-   * Gets the cache file GROUP based section and locale.
-   *
-   * @param string $catalogue The translation section.
-   * @param string $culture The translation locale, e.g. "en_AU".
-   */
-  protected function getGroup($catalogue, $culture)
-  {
-    return $catalogue;
+    $this->cache = $cache;
   }
 
   /**
@@ -86,35 +38,29 @@ class sfMessageCache
    * @param string $catalogue The translation section.
    * @param string $culture The translation locale, e.g. "en_AU".
    * @param string $filename If the source is a file, this file's modified time is newer than the cache's modified time, no cache hit.
-   * @return mixed Boolean FALSE if no cache hit. Otherwise, translation
-   * table data for the specified section and locale.
+   *
+   * @return mixed Boolean false if no cache hit. Otherwise, translation table data for the specified section and locale.
    */
   public function get($catalogue, $culture, $lastmodified = 0)
   {
-    $ID = $this->getID($catalogue, $culture);
-    $group = $this->getGroup($catalogue, $culture);
-
-    if ($lastmodified <= 0 || $lastmodified > $this->cache->lastModified($ID, $group))
+    if ($lastmodified <= 0 || $lastmodified > $this->cache->getLastModified($catalogue.':'.$culture))
     {
       return false;
     }
 
-    return unserialize($this->cache->get($ID, $group));
+    return unserialize($this->cache->get($catalogue.':'.$culture));
   }
 
   /**
    * Saves the data to cache for the specified section and locale.
    *
-   * @param array $data The data to save.
    * @param string $catalogue The translation section.
    * @param string $culture The translation locale, e.g. "en_AU".
+   * @param array $data The data to save.
    */
-  public function save($data, $catalogue, $culture)
+  public function set($catalogue, $culture, $data)
   {
-    $ID = $this->getID($catalogue, $culture);
-    $group = $this->getGroup($catalogue, $culture);
-
-    return $this->cache->set($ID, $group, serialize($data));
+    return $this->cache->set($catalogue.':'.$culture, serialize($data));
   }
 
   /**
@@ -125,8 +71,7 @@ class sfMessageCache
    */
   public function clean($catalogue, $culture)
   {
-    $group = $this->getGroup($catalogue, $culture);
-    $this->cache->clean($group);
+    $this->cache->removePattern($catalogue.':*');
   }
 
   /**

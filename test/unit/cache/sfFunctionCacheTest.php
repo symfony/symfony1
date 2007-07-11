@@ -17,37 +17,42 @@ class sfSimpleCache extends sfCache
 {
   public $data = array();
 
-  public function get($id, $namespace = 'default', $doNotTestCacheValidity = false)
+  public function get($key, $default = null)
   {
-    return isset($this->data[$namespace][$id]) ? $this->data[$namespace][$id] : null;
+    return isset($this->data[$key]) ? $this->data[$key] : $default;
   }
 
-  public function set($id, $namespace = 'default', $data)
+  public function set($key, $data, $lifetime = null)
   {
-    if (!isset($this->data[$namespace]))
-    {
-      $this->data[$namespace] = array();
-    }
-
-    $this->data[$namespace][$id] = $data;
+    $this->data[$key] = $data;
   }
 
-  public function remove($id, $namespace = 'default')
+  public function remove($key)
   {
-    unset($this->data[$namespace][$id]);
+    unset($this->data[$key]);
   }
 
-  public function has($id, $namespace = 'default', $doNotTestCacheValidity = false)
-  {
-    return isset($this->data[$namespace][$id]);
-  }
-
-  public function clean($namespace = null, $mode = 'all')
+  public function removePattern($pattern, $delimiter = ':')
   {
     $this->data = array();
   }
 
-  public function lastModified($id, $namespace = 'default')
+  public function has($key)
+  {
+    return isset($this->data[$key]);
+  }
+
+  public function clean($mode = sfCache::ALL)
+  {
+    $this->data = array();
+  }
+
+  public function getLastModified($key)
+  {
+    return 0;
+  }
+
+  public function getTimeout($key)
   {
     return 0;
   }

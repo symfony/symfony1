@@ -51,6 +51,11 @@ class sfProcessCache
       {
         $cacher = false;
       }
+
+      if (sfConfig::get('sf_logging_enabled'))
+      {
+        sfContext::getInstance()->getLogger()->err('{sfProcessCache} DEPRECATED. Use the new sfCache system.');
+      }
     }
 
     return $cacher;

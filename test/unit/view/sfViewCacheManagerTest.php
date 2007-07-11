@@ -34,39 +34,48 @@ class myCache extends sfCache
 {
   static public $cache = array();
 
-  public function initialize()
+  public function initialize($parameters = array())
   {
   }
 
-  public function get($id, $namespace = self::DEFAULT_NAMESPACE, $doNotTestCacheValidity = false)
+  public function get($key, $default = null)
   {
-    return isset(self::$cache[$namespace][$id]) ? self::$cache[$namespace][$id] : false;
+    return isset(self::$cache[$key]) ? self::$cache[$key] : $default;
   }
 
-  public function has($id, $namespace = self::DEFAULT_NAMESPACE, $doNotTestCacheValidity = false)
+  public function has($key)
   {
-    return isset(self::$cache[$namespace][$id]);
+    return isset(self::$cache[$key]);
   }
 
-  public function set($id, $namespace = self::DEFAULT_NAMESPACE, $data)
+  public function set($key, $data, $lifetime = null)
   {
-    self::$cache[$namespace][$id] = $data;
+    self::$cache[$key] = $data;
   }
 
-  public function remove($id, $namespace = self::DEFAULT_NAMESPACE)
+  public function remove($key)
   {
-    unset(self::$cache[$namespace][$id]);
+    unset(self::$cache[$key]);
   }
 
-  public function clean($namespace = null, $mode = 'all')
+  public function removePattern($pattern, $delimiter = ':')
   {
-    // FIXME
-    print "***".$namespace."***\n";
+    self::$cache = array();
   }
 
-  public function lastModified($id, $namespace = self::DEFAULT_NAMESPACE)
+  public function clean($mode = sfCache::ALL)
+  {
+    self::$cache = array();
+  }
+
+  public function getTimeout($key)
   {
     return time() - 60;
+  }
+
+  public function getLastModified($key)
+  {
+    return time() - 600;
   }
 
   static public function clear()
