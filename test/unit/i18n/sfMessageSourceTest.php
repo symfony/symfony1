@@ -19,6 +19,7 @@ class sfMessageSource_Simple extends sfMessageSource
   function update($text, $target, $comments, $catalogue = 'messages') {}
   function catalogues() {}
   function save($catalogue = 'messages') {}
+  function getId() {}
 }
 
 // ::factory()

@@ -77,7 +77,7 @@ class sfMessageSource_Aggregate extends sfMessageSource
     $sources = array();
     foreach ($this->messageSources as $messageSource)
     {
-      $sources[] = array($messageSource, $messageSource->getSource($variant));
+      $sources[] = array($messageSource, $messageSource->getSource(str_replace($messageSource->getId(), '', $variant)));
     }
 
     return $sources;
@@ -108,10 +108,13 @@ class sfMessageSource_Aggregate extends sfMessageSource
     $variants = array();
     foreach ($this->messageSources as $messageSource)
     {
-      $variants = array_merge($variants, $messageSource->getCatalogueList($catalogue));
+      foreach ($messageSource->getCatalogueList($catalogue) as $variant)
+      {
+        $variants[] = $messageSource->getId().$variant;
+      }
     }
 
-    return array_unique($variants);
+    return $variants;
   }
 
   public function append($message)
@@ -160,6 +163,17 @@ class sfMessageSource_Aggregate extends sfMessageSource
     }
 
     return $retval;
+  }
+
+  public function getId()
+  {
+    $id = '';
+    foreach ($this->messageSources as $messageSource)
+    {
+      $id .= $messageSource->getId();
+    }
+
+    return md5($id);
   }
 
   public function catalogues()

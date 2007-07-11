@@ -210,4 +210,9 @@ abstract class sfMessageSource_Database extends sfMessageSource
 
     return array_reverse($catalogues);
   }
+
+  public function getId()
+  {
+    return md5($this->source);
+  }
 }

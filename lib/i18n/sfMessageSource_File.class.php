@@ -192,4 +192,9 @@ abstract class sfMessageSource_File extends sfMessageSource
 
     return $catalogue;
   }
+
+  public function getId()
+  {
+    return md5($this->source);
+  }
 }

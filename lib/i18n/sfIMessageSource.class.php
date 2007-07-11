@@ -123,4 +123,9 @@ interface sfIMessageSource
    * @return string culture identifier. 
    */
   function getCulture();
+
+  /**
+   * Returns a unique identifier for the current message source.
+   */
+  function getId();
 }

@@ -54,12 +54,12 @@ class sfI18N
     {
       $this->messageSource = sfMessageSource::factory('Aggregate', array_map(array($this, 'createMessageSource'), $dirs));
     }
-/*
+
     if (!is_null($this->cache))
     {
       $this->messageSource->setCache(new sfMessageCache($this->cache));
     }
-*/
+
     $this->setCulture($culture);
     $this->messageFormat = null;
   }
