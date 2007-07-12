@@ -194,7 +194,7 @@ class sfExecutionFilter extends sfFilter
   {
     if (sfView::HEADER_ONLY == $viewName)
     {
-      $context->getResponse()->setHeaderOnly(true);
+      $this->getContext()->getResponse()->setHeaderOnly(true);
 
       return;
     }
