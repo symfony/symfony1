@@ -179,6 +179,28 @@ abstract class sfCache
   }
 
   /**
+   * Computes lifetime.
+   *
+   * @param  integer Lifetime in seconds
+   *
+   * @return integer Lifetime in seconds
+   */
+  public function getLifetime($lifetime)
+  {
+    return is_null($lifetime) ? $this->getParameter('lifetime') : $lifetime;
+  }
+
+  /**
+   * Gets the backend object.
+   *
+   * @return object The backend object
+   */
+  public function getBackend()
+  {
+    throw new sfException('This cache class does not have a backend object.');
+  }
+
+  /**
    * Retrieves the parameters for the current request.
    *
    * @return sfParameterHolder The parameter holder

@@ -64,9 +64,7 @@ class sfAPCCache extends sfCache
    */
   public function set($key, $data, $lifetime = null)
   {
-    $lifetime = is_null($lifetime) ? $this->getParameter('lifetime') : $lifetime;
-
-    return apc_store($this->prefix.$key, $data, $lifetime);
+    return apc_store($this->prefix.$key, $data, $this->getLifetime($lifetime));
   }
 
   /**

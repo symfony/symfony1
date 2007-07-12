@@ -82,9 +82,7 @@ class sfFileCache extends sfCache
       $this->clean(sfCache::OLD);
     }
 
-    $lifetime = is_null($lifetime) ? $this->getParameter('lifetime') : $lifetime;
-
-    return $this->write($this->getFilePath($key), $data, time() + $lifetime);
+    return $this->write($this->getFilePath($key), $data, time() + $this->getLifetime($lifetime));
   }
 
   /**

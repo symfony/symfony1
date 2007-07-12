@@ -64,9 +64,7 @@ class sfEAcceleratorCache extends sfCache
    */
   public function set($key, $data, $lifetime = null)
   {
-    $lifetime = is_null($lifetime) ? $this->getParameter('lifetime') : $lifetime;
-
-    return eaccelerator_put($this->prefix.$key, $data, $lifetime);
+    return eaccelerator_put($this->prefix.$key, $data, $this->getLifetime($lifetime));
   }
 
   /**

@@ -53,6 +53,14 @@ class sfSQLiteCache extends sfCache
   /**
    * @see sfCache
    */
+  public function getBackend()
+  {
+    return $this->dbh;
+  }
+
+  /**
+   * @see sfCache
+   */
   public function get($key, $default = null)
   {
     $data = $this->dbh->singleQuery(sprintf("SELECT data FROM cache WHERE key = '%s' AND timeout > %d", sqlite_escape_string($key), time()));
@@ -78,9 +86,7 @@ class sfSQLiteCache extends sfCache
       $this->clean(sfCache::OLD);
     }
 
-    $lifetime = is_null($lifetime) ? $this->getParameter('lifetime') : $lifetime;
-
-    return (boolean) $this->dbh->query(sprintf("INSERT OR REPLACE INTO cache (key, data, timeout, last_modified) VALUES ('%s', '%s', %d, %d)", sqlite_escape_string($key), sqlite_escape_string($data), time() + $lifetime, time()));
+    return (boolean) $this->dbh->query(sprintf("INSERT OR REPLACE INTO cache (key, data, timeout, last_modified) VALUES ('%s', '%s', %d, %d)", sqlite_escape_string($key), sqlite_escape_string($data), time() + $this->getLifetime($lifetime), time()));
   }
 
   /**
