@@ -29,7 +29,7 @@ class sfFileLogger implements sfLoggerInterface
   {
     if (!isset($options['file']))
     {
-      throw new sfConfigurationException('File option is mandatory for a file logger');
+      throw new sfConfigurationException('File option is mandatory for a file logger.');
     }
 
     $dir = dirname($options['file']);
@@ -41,7 +41,7 @@ class sfFileLogger implements sfLoggerInterface
 
     if (!is_writable($dir) || (file_exists($options['file']) && !is_writable($options['file'])))
     {
-      throw new sfFileException(sprintf('Unable to open the log file "%s" for writing', $options['file']));
+      throw new sfFileException(sprintf('Unable to open the log file "%s" for writing.', $options['file']));
     }
 
     $this->fp = fopen($options['file'], 'a');

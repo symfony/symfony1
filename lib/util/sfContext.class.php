@@ -82,7 +82,7 @@ class sfContext
 
       if (!self::$instances[$name] instanceof sfContext)
       {
-        throw new sfFactoryException(sprintf('Class "%s" is not of the type sfContext', $class));
+        throw new sfFactoryException(sprintf('Class "%s" is not of the type sfContext.', $class));
       }
 
       self::$instances[$name]->initialize();

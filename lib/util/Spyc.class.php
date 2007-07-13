@@ -143,9 +143,7 @@ class Spyc
       // If the line starts with a tab (instead of a space), throw a fit.
       if (preg_match('/^ *(\t) *+(\w+)/', $line))
       {
-        $error = sprintf('ERROR: %sLine %d in your input YAML begins with a tab. YAML only recognizes spaces. Please reformat.', ($file ? "File $file " : ''), $linenum + 1);
-
-        throw new Exception($error);
+        throw new Exception(sprintf('ERROR: %sLine %d in your input YAML begins with a tab. YAML only recognizes spaces. Please reformat.', ($file ? "File $file " : ''), $linenum + 1));
       }
 
       if ($this->_inBlock === false && empty($ifchk))

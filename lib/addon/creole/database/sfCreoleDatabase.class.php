@@ -89,9 +89,7 @@ class sfCreoleDatabase extends sfDatabase
           if ($dsn == null)
           {
             // missing required dsn parameter
-            $error = 'Database configuration specifies method "dsn", but is missing dsn parameter';
-
-            throw new sfDatabaseException($error);
+            throw new sfDatabaseException('Database configuration specifies method "dsn", but is missing dsn parameter.');
           }
 
           break;
@@ -110,10 +108,7 @@ class sfCreoleDatabase extends sfDatabase
 
         default:
           // who knows what the user wants...
-          $error = 'Invalid CreoleDatabase parameter retrieval method "%s"';
-          $error = sprintf($error, $method);
-
-          throw new sfDatabaseException($error);
+          throw new sfDatabaseException(sprintf('Invalid CreoleDatabase parameter retrieval method "%s".', $method));
       }
 
       // get creole class path

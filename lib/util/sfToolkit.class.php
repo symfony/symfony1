@@ -505,7 +505,7 @@ class sfToolkit
       }
     }
 
-    throw new sfException('Unable to find PHP executable');
+    throw new sfException('Unable to find PHP executable.');
   }
 
   /**

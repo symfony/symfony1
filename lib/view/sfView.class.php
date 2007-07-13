@@ -487,7 +487,7 @@ abstract class sfView
   {
     if (!$callable = sfMixer::getCallable('sfView:'.$method))
     {
-      throw new sfException(sprintf('Call to undefined method sfView::%s', $method));
+      throw new sfException(sprintf('Call to undefined method sfView::%s.', $method));
     }
 
     array_unshift($arguments, $this);

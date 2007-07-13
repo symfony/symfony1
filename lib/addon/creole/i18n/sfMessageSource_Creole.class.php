@@ -73,8 +73,7 @@ class sfMessageSource_Creole extends sfMessageSource_Database
     $this->db = sfContext::getInstance()->getDatabaseConnection($source);
     if ($this->db == null || !$this->db instanceof Connection)
     {
-      $error = 'Creole dabatase connection doesn\'t exist. Unable to open session.';
-      throw new sfDatabaseException($error);
+      throw new sfDatabaseException('Creole dabatase connection doesn\'t exist. Unable to open session.');
     }
   }
 

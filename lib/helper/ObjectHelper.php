@@ -74,15 +74,13 @@ function objects_for_select($options = array(), $value_method, $text_method = nu
     // text method exists?
     if ($text_method && !is_callable(array($option, $text_method)))
     {
-      $error = sprintf('Method "%s" doesn\'t exist for object of class "%s"', $text_method, _get_class_decorated($option));
-      throw new sfViewException($error);
+      throw new sfViewException(sprintf('Method "%s" doesn\'t exist for object of class "%s".', $text_method, _get_class_decorated($option)));
     }
 
     // value method exists?
     if (!is_callable(array($option, $value_method)))
     {
-      $error = sprintf('Method "%s" doesn\'t exist for object of class "%s"', $value_method, _get_class_decorated($option));
-      throw new sfViewException($error);
+      throw new sfViewException(sprintf('Method "%s" doesn\'t exist for object of class "%s".', $value_method, _get_class_decorated($option)));
     }
 
     $value = $option->$value_method();
@@ -293,10 +291,7 @@ function _get_object_value($object, $method, $default_value = null, $param = nul
   // method exists?
   if (!is_callable(array($object, $method[0])))
   {
-    $error = 'Method "%s" doesn\'t exist for object of class "%s"';
-    $error = sprintf($error, $method[0], _get_class_decorated($object));
-
-    throw new sfViewException($error);
+    throw new sfViewException(sprintf('Method "%s" doesn\'t exist for object of class "%s".', $method[0], _get_class_decorated($object)));
   }
 
   $object_value = call_user_func_array(array($object, $method[0]), $method[1]);

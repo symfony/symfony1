@@ -90,11 +90,11 @@ class sfFillInForm
     {
       if (!$formName && !$formId)
       {
-        throw new sfException('No form found in this page');
+        throw new sfException('No form found in this page.');
       }
       else
       {
-        throw new sfException(sprintf('The form "%s" cannot be found', $formName ? $formName : $formId));
+        throw new sfException(sprintf('The form "%s" cannot be found.', $formName ? $formName : $formId));
       }
     }
 

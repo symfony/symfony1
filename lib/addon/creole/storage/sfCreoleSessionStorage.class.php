@@ -70,9 +70,7 @@ class sfCreoleSessionStorage extends sfSessionStorage
     if (!$this->getParameterHolder()->has('db_table'))
     {
       // missing required 'db_table' parameter
-      $error = 'Factory configuration file is missing required "db_table" parameter for the Storage category';
-
-      throw new sfInitializationException($error);
+      throw new sfInitializationException('Factory configuration file is missing required "db_table" parameter for the Storage category.');
     }
 
     // use this object as the session handler
@@ -103,8 +101,7 @@ class sfCreoleSessionStorage extends sfSessionStorage
    *
    * @param string A session ID.
    *
-   * @return bool true, if the session was destroyed, otherwise an exception
-   *              is thrown.
+   * @return bool true, if the session was destroyed, otherwise an exception is thrown.
    *
    * @throws <b>DatabaseException</b> If the session cannot be destroyed.
    */
@@ -123,10 +120,9 @@ class sfCreoleSessionStorage extends sfSessionStorage
       $stmt->setString(1, $id);
       $stmt->executeUpdate();
     }
-    catch (SQLException $e) {
-      $error = 'Creole SQLException was thrown when trying to manipulate session data. ';
-      $error .= 'Message: ' . $e->getMessage();
-      throw new sfDatabaseException($error);
+    catch (SQLException $e)
+    {
+      throw new sfDatabaseException(sprintf('Creole SQLException was thrown when trying to manipulate session data. Message: %s.', $e->getMessage()));
     }
   }
 
@@ -135,8 +131,7 @@ class sfCreoleSessionStorage extends sfSessionStorage
    *
    * @param int The lifetime of a session.
    *
-   * @return bool true, if old sessions have been cleaned, otherwise an
-   *              exception is thrown.
+   * @return bool true, if old sessions have been cleaned, otherwise an exception is thrown.
    *
    * @throws <b>DatabaseException</b> If any old sessions cannot be cleaned.
    */
@@ -160,9 +155,7 @@ class sfCreoleSessionStorage extends sfSessionStorage
     }
     catch (SQLException $e)
     {
-      $error = 'Creole SQLException was thrown when trying to manipulate session data. ';
-      $error .= 'Message: ' . $e->getMessage();
-      throw new sfDatabaseException($error);
+      throw new sfDatabaseException(sprintf('Creole SQLException was thrown when trying to manipulate session data. Message: %s.', $e->getMessage()));
     }
   }
 
@@ -172,8 +165,7 @@ class sfCreoleSessionStorage extends sfSessionStorage
    * @param string
    * @param string
    *
-   * @return bool true, if the session was opened, otherwise an exception is
-   *              thrown.
+   * @return bool true, if the session was opened, otherwise an exception is thrown.
    *
    * @throws <b>DatabaseException</b> If a connection with the database does
    *                                  not exist or cannot be created.
@@ -186,15 +178,13 @@ class sfCreoleSessionStorage extends sfSessionStorage
     // autoload propel propely if we're reusing the propel connection for session storage
     if ($this->getContext()->getDatabaseManager()->getDatabase($database) instanceof sfPropelDatabase && !Propel::isInit())
     {
-      $error = 'Creole dabatase connection is the same as the propel database connection, but could not be initialized.';
-      throw new sfDatabaseException($error);
+      throw new sfDatabaseException('Creole dabatase connection is the same as the propel database connection, but could not be initialized.');
     }
 
     $this->db = $this->getContext()->getDatabaseConnection($database);
     if ($this->db == null || !$this->db instanceof Connection)
     {
-      $error = 'Creole dabatase connection doesn\'t exist. Unable to open session.';
-      throw new sfDatabaseException($error);
+      throw new sfDatabaseException('Creole dabatase connection doesn\'t exist. Unable to open session.');
     }
 
     return true;
@@ -205,8 +195,7 @@ class sfCreoleSessionStorage extends sfSessionStorage
    *
    * @param string A session ID.
    *
-   * @return bool true, if the session was read, otherwise an exception is
-   *              thrown.
+   * @return bool true, if the session was read, otherwise an exception is thrown.
    *
    * @throws <b>DatabaseException</b> If the session cannot be read.
    */
@@ -248,9 +237,7 @@ class sfCreoleSessionStorage extends sfSessionStorage
     }
     catch (SQLException $e)
     {
-      $error = 'Creole SQLException was thrown when trying to manipulate session data. ';
-      $error .= 'Message: ' . $e->getMessage();
-      throw new sfDatabaseException($error);
+      throw new sfDatabaseException(sprintf('Creole SQLException was thrown when trying to manipulate session data. Message: %s.', $e->getMessage()));
     }
   }
 
@@ -287,9 +274,7 @@ class sfCreoleSessionStorage extends sfSessionStorage
 
     catch (SQLException $e)
     {
-      $error = 'Creole SQLException was thrown when trying to manipulate session data. ';
-      $error .= 'Message: ' . $e->getMessage();
-      throw new sfDatabaseException($error);
+      throw new sfDatabaseException(sprintf('Creole SQLException was thrown when trying to manipulate session data. Message: %s.', $e->getMessage()));
     }
 
     return false;

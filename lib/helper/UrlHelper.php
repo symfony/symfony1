@@ -119,7 +119,7 @@ function link_to($name = '', $internal_uri = '', $options = array())
     }
     else
     {
-      throw new sfException(sprintf('Object of class "%s" cannot be converted to string (Please create a __toString() method)', get_class($name)));
+      throw new sfException(sprintf('Object of class "%s" cannot be converted to string (Please create a __toString() method).', get_class($name)));
     }
   }
 
@@ -247,7 +247,7 @@ function button_to($name, $internal_uri, $options = array())
   {
     if (isset($html_options['popup']))
     {
-      throw new sfConfigurationException('You can\'t use "popup" and "post" together');
+      throw new sfConfigurationException('You can\'t use "popup" and "post" together.');
     }
     $html_options['type'] = 'submit';
     unset($html_options['post']);
@@ -350,7 +350,7 @@ function _convert_options_to_javascript($html_options, $internal_uri = '')
 
   if ($popup && $post)
   {
-    throw new sfConfigurationException('You can\'t use "popup" and "post" in the same link');
+    throw new sfConfigurationException('You can\'t use "popup" and "post" in the same link.');
   }
   else if ($confirm && $popup)
   {

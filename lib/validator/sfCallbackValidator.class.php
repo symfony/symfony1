@@ -75,9 +75,7 @@ class sfCallbackValidator extends sfValidator
     if (!is_callable($this->getParameterHolder()->get('callback')))
     {
       // no pattern specified
-      $error = 'Callback function must be a valid callback using is_callable()';
-
-      throw new sfValidatorException($error);
+      throw new sfValidatorException('Callback function must be a valid callback using is_callable().');
     }
 
     return true;

@@ -58,9 +58,7 @@ class sfPostgreSQLSessionStorage extends sfSessionStorage
     if (!$this->getParameterHolder()->has('db_table'))
     {
       // missing required 'db_table' parameter
-      $error = 'Factory configuration file is missing required "db_table" parameter for the Storage category';
-
-      throw new sfInitializationException($error);
+      throw new sfInitializationException('Factory configuration file is missing required "db_table" parameter for the Storage category.');
     }
 
     // use this object as the session handler
@@ -113,10 +111,7 @@ class sfPostgreSQLSessionStorage extends sfSessionStorage
     }
 
     // failed to destroy session
-    $error = 'PostgreSQLSessionStorage cannot destroy session id "%s"';
-    $error = sprintf($error, $id);
-
-    throw new sfDatabaseException($error);
+    throw new sfDatabaseException(sprintf('PostgreSQLSessionStorage cannot destroy session id "%s".', $id));
   }
 
   /**
@@ -146,9 +141,7 @@ class sfPostgreSQLSessionStorage extends sfSessionStorage
     }
 
     // failed to cleanup old sessions
-    $error = 'PostgreSQLSessionStorage cannot delete old sessions';
-
-    throw new sfDatabaseException($error);
+    throw new sfDatabaseException('PostgreSQLSessionStorage cannot delete old sessions.');
   }
 
   /**
@@ -223,10 +216,7 @@ class sfPostgreSQLSessionStorage extends sfSessionStorage
       }
 
       // can't create record
-      $error = 'PostgreSQLSessionStorage cannot create new record for id "%s"';
-      $error = sprintf($error, $id);
-
-      throw new sfDatabaseException($error);
+      throw new sfDatabaseException(sprintf('PostgreSQLSessionStorage cannot create new record for id "%s".', $id));
     }
   }
 
@@ -264,10 +254,7 @@ class sfPostgreSQLSessionStorage extends sfSessionStorage
     }
 
     // failed to write session data
-    $error = 'PostgreSQLSessionStorage cannot write session data for id "%s"';
-    $error = sprintf($error, $id);
-
-    throw new sfDatabaseException($error);
+    throw new sfDatabaseException(sprintf('PostgreSQLSessionStorage cannot write session data for id "%s".', $id));
   }
 
   /**

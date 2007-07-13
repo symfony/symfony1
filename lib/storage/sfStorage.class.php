@@ -67,7 +67,7 @@ abstract class sfStorage
 
     if (!$object instanceof sfStorage)
     {
-      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfStorage', $class));
+      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfStorage.', $class));
     }
 
     return $object;

@@ -244,7 +244,7 @@ class sfLogger
   {
     if (!isset(self::$levels[$priority]))
     {
-      throw new sfException(sprintf('The priority level "%s" does not exist.'));
+      throw new sfException(sprintf('The priority level "%s" does not exist.', $priority));
     }
 
     return self::$levels[$priority];

@@ -40,21 +40,21 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler
 
     if (!isset($config['generator']))
     {
-      throw new sfParseException(sprintf('Configuration file "%s" must specify a generator section', $configFiles[1] ? $configFiles[1] : $configFiles[0]));
+      throw new sfParseException(sprintf('Configuration file "%s" must specify a generator section.', $configFiles[1] ? $configFiles[1] : $configFiles[0]));
     }
 
     $config = $config['generator'];
 
     if (!isset($config['class']))
     {
-      throw new sfParseException(sprintf('Configuration file "%s" must specify a generator class section under the generator section', $configFiles[1] ? $configFiles[1] : $configFiles[0]));
+      throw new sfParseException(sprintf('Configuration file "%s" must specify a generator class section under the generator section.', $configFiles[1] ? $configFiles[1] : $configFiles[0]));
     }
 
     foreach (array('fields', 'list', 'edit') as $section)
     {
       if (isset($config[$section]))
       {
-        throw new sfParseException(sprintf('Configuration file "%s" can specify a "%s" section but only under the param section', $configFiles[1] ? $configFiles[1] : $configFiles[0], $section));
+        throw new sfParseException(sprintf('Configuration file "%s" can specify a "%s" section but only under the param section.', $configFiles[1] ? $configFiles[1] : $configFiles[0], $section));
       }
     }
 

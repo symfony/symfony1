@@ -45,7 +45,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
     {
       if (!isset($config[$category]))
       {
-        throw new sfParseException(sprintf('Configuration file "%s" is missing "%s" category', $configFiles[0], $category));
+        throw new sfParseException(sprintf('Configuration file "%s" is missing "%s" category.', $configFiles[0], $category));
       }
     }
 
@@ -67,9 +67,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
         if ($method != 'GET' && $method != 'POST')
         {
           // unsupported request method
-          $error = sprintf('Configuration file "%s" specifies unsupported request method "%s"', $configFiles[0], $method);
-
-          throw new sfParseException($error);
+          throw new sfParseException(sprintf('Configuration file "%s" specifies unsupported request method "%s".', $configFiles[0], $method));
         }
 
         // create our method
@@ -249,8 +247,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
         if (!isset($names[$parent][$subname]))
         {
           // unknown parent or subname
-          $error = sprintf('Configuration file "%s" specifies unregistered parent "%s" or subname "%s"', $configFiles[0], $parent, $subname);
-          throw new sfParseException($error);
+          throw new sfParseException(sprintf('Configuration file "%s" specifies unregistered parent "%s" or subname "%s".', $configFiles[0], $parent, $subname));
         }
 
         $entry =& $names[$parent][$subname];
@@ -261,8 +258,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
         if (!isset($names[$name]))
         {
           // unknown name
-          $error = sprintf('Configuration file "%s" specifies unregistered name "%s"', $configFiles[0], $name);
-          throw new sfParseException($error);
+          throw new sfParseException(sprintf('Configuration file "%s" specifies unregistered name "%s".', $configFiles[0], $name));
         }
 
         $entry =& $names[$name];
@@ -313,8 +309,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
       if (!isset($config['names'][$name]['required']))
       {
         // missing 'required' attribute
-        $error = sprintf('Configuration file "%s" specifies file or parameter "%s", but it is missing the "required" attribute', $configFiles[0], $name);
-        throw new sfParseException($error);
+        throw new sfParseException(sprintf('Configuration file "%s" specifies file or parameter "%s", but it is missing the "required" attribute.', $configFiles[0], $name));
       }
 
       // determine parent status
@@ -349,8 +344,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
       {
         // name contains an invalid character
         // this is most likely a typo where the user forgot to add a brace
-        $error = sprintf('Configuration file "%s" specifies method "%s" with invalid file/parameter name "%s"', $configFiles[0], $method, $name);
-        throw new sfParseException($error);
+        throw new sfParseException(sprintf('Configuration file "%s" specifies method "%s" with invalid file/parameter name "%s".', $configFiles[0], $method, $name));
       }
       else
       {
@@ -411,8 +405,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
       if (!isset($config[$validator]))
       {
         // validator hasn't been registered
-        $error = sprintf('Configuration file "%s" specifies unregistered validator "%s"', $configFiles[0], $validator);
-        throw new sfParseException($error);
+        throw new sfParseException(sprintf('Configuration file "%s" specifies unregistered validator "%s".', $configFiles[0], $validator));
       }
 
       // has it already been registered?
@@ -424,8 +417,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
       if (!isset($config[$validator]['class']))
       {
         // missing class key
-        $error = sprintf('Configuration file "%s" specifies category "%s" with missing class key', $configFiles[0], $validator);
-        throw new sfParseException($error);
+        throw new sfParseException(sprintf('Configuration file "%s" specifies category "%s" with missing class key.', $configFiles[0], $validator));
       }
 
       // create our validator
@@ -446,8 +438,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
         if (!is_readable($file))
         {
           // file doesn't exist
-          $error = sprintf('Configuration file "%s" specifies category "%s" with nonexistent or unreadable file "%s"', $configFiles[0], $validator, $file);
-          throw new sfParseException($error);
+          throw new sfParseException(sprintf('Configuration file "%s" specifies category "%s" with nonexistent or unreadable file "%s".', $configFiles[0], $validator, $file));
         }
 
         $validators[$validator]['file'] = $file;

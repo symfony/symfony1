@@ -112,9 +112,7 @@ class sfPropelData extends sfData
               $relatedTable = $this->maps[$class]->getDatabaseMap()->getTable($column->getRelatedTableName());
               if (!isset($this->object_references[$relatedTable->getPhpName().'_'.$value]))
               {
-                $error = 'The object "%s" from class "%s" is not defined in your data file.';
-                $error = sprintf($error, $value, $relatedTable->getPhpName());
-                throw new sfException($error);
+                throw new sfException(sprintf('The object "%s" from class "%s" is not defined in your data file.', $value, $relatedTable->getPhpName()));
               }
               $value = $this->object_references[$relatedTable->getPhpName().'_'.$value];
             }
@@ -135,9 +133,7 @@ class sfPropelData extends sfData
           }
           else
           {
-            $error = 'Column "%s" does not exist for class "%s"';
-            $error = sprintf($error, $name, $class);
-            throw new sfException($error);
+            throw new sfException(sprintf('Column "%s" does not exist for class "%s"', $name, $class));
           }
         }
         $obj->save();

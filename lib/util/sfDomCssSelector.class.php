@@ -285,7 +285,7 @@ class sfDomCssSelector
           }
           break;
         default:
-          throw new Exception(sprintf('Unrecognized combinator "%s"', $combinator));
+          throw new Exception(sprintf('Unrecognized combinator "%s".', $combinator));
       }
     }
 
@@ -483,7 +483,7 @@ class sfDomCssSelector
           }
           break;
         default:
-          throw new Exception(sprintf('Unrecognized selector "%s"', $selector['selector']));
+          throw new Exception(sprintf('Unrecognized selector "%s".', $selector['selector']));
       }
     }
 
@@ -505,7 +505,7 @@ class sfDomCssSelector
       )?
     /x', substr($selector, 1), $matches))
     {
-      throw new Exception(sprintf('Unable to parse custom selector "%s"', $selector));
+      throw new Exception(sprintf('Unable to parse custom selector "%s".', $selector));
     }
     return array('selector' => $matches[1], 'parameter' => isset($matches[3]) ? ($matches[3] ? $matches[3] : $matches[4]) : '');
   }

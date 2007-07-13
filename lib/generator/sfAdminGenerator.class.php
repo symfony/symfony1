@@ -150,7 +150,7 @@ abstract class sfAdminGenerator extends sfCrudGenerator
     }
     else if ($only_for !== null)
     {
-      throw new sfConfigurationException(sprintf('The "only_for" parameter can only takes "create" or "edit" as argument ("%s")', $only_for));
+      throw new sfConfigurationException(sprintf('The "only_for" parameter can only takes "create" or "edit" as argument ("%s").', $only_for));
     }
 
     if ($method == 'submit_tag')

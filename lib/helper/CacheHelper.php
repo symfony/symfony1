@@ -41,7 +41,7 @@ function cache($name, $lifeTime = 86400)
 
   if ($request->getAttribute('cache_started') !== null)
   {
-    throw new sfCacheException('Cache already started');
+    throw new sfCacheException('Cache already started.');
   }
 
   $data = $cache->start($name, $lifeTime);
@@ -74,7 +74,7 @@ function cache_save()
 
   if ($request->getAttribute('started', null, 'symfony/action/sfAction/cache') === null)
   {
-    throw new sfCacheException('Cache not started');
+    throw new sfCacheException('Cache not started.');
   }
 
   $name = $request->getAttribute('current_name', '', 'symfony/action/sfAction/cache');

@@ -66,7 +66,7 @@ abstract class sfResponse implements Serializable
 
     if (!$object instanceof sfResponse)
     {
-      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfResponse', $class));
+      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfResponse.', $class));
     }
 
     return $object;
@@ -174,7 +174,7 @@ abstract class sfResponse implements Serializable
   {
     if (!$callable = sfMixer::getCallable('sfResponse:'.$method))
     {
-      throw new sfException(sprintf('Call to undefined method sfResponse::%s', $method));
+      throw new sfException(sprintf('Call to undefined method sfResponse::%s.', $method));
     }
 
     array_unshift($arguments, $this);

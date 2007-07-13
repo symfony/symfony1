@@ -40,9 +40,7 @@ class sfPDODatabase extends sfDatabase
         if ($dsn == null)
         {
           // missing required dsn parameter
-          $error = 'Database configuration specifies method "dsn", but is missing dsn parameter';
-
-          throw new sfDatabaseException($error);
+          throw new sfDatabaseException('Database configuration specifies method "dsn", but is missing dsn parameter.');
         }
 
         break;

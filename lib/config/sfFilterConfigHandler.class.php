@@ -51,7 +51,7 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
       {
         if (!isset($config[$key]))
         {
-          throw new sfConfigurationException(sprintf('The filter name "%s" is defined in "%s" but not present in "%s" file. To disable a filter, add a "enabled" key with a false value', $key, $configFiles[$i], $configFile));
+          throw new sfConfigurationException(sprintf('The filter name "%s" is defined in "%s" but not present in "%s" file. To disable a filter, add a "enabled" key with a false value.', $key, $configFiles[$i], $configFile));
         }
       }
     }
@@ -74,10 +74,7 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
       if (!isset($keys['class']))
       {
         // missing class key
-        $error = 'Configuration file "%s" specifies category "%s" with missing class key';
-        $error = sprintf($error, $configFiles[0], $category);
-
-        throw new sfParseException($error);
+        throw new sfParseException(sprintf('Configuration file "%s" specifies category "%s" with missing class key.', $configFiles[0], $category));
       }
 
       $class = $keys['class'];
@@ -91,9 +88,7 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
         if (!is_readable($file))
         {
           // filter file doesn't exist
-          $error = sprintf('Configuration file "%s" specifies class "%s" with nonexistent or unreadable file "%s"', $configFiles[0], $class, $file);
-
-          throw new sfParseException($error);
+          throw new sfParseException(sprintf('Configuration file "%s" specifies class "%s" with nonexistent or unreadable file "%s".', $configFiles[0], $class, $file));
         }
 
         // append our data
@@ -139,16 +134,12 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
 
     if (!$rendering)
     {
-      $error = sprintf('Configuration file "%s" must register a filter of type "rendering"', $configFiles[0]);
-
-      throw new sfParseException($error);
+      throw new sfParseException(sprintf('Configuration file "%s" must register a filter of type "rendering".', $configFiles[0]));
     }
 
     if (!$execution)
     {
-      $error = sprintf('Configuration file "%s" must register a filter of type "execution"', $configFiles[0]);
-
-      throw new sfParseException($error);
+      throw new sfParseException(sprintf('Configuration file "%s" must register a filter of type "execution".', $configFiles[0]));
     }
 
     // compile data
@@ -196,8 +187,7 @@ if (\$actionInstance->isSecure())
 {
   if (!in_array('sfSecurityUser', class_implements(\$this->context->getUser())))
   {
-    \$error = 'Security is enabled, but your sfUser implementation does not implement sfSecurityUser interface';
-    throw new sfSecurityException(\$error);
+    throw new sfSecurityException('Security is enabled, but your "sfUser" implementation does not implement "sfSecurityUser" interface.');
   }
   {$this->addFilter($category, $class, $parameters)}
 }

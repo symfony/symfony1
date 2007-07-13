@@ -55,8 +55,7 @@ function format_number_choice($text, $args = array(), $number, $catalogue = 'mes
 
   if ($retval === false)
   {
-    $error = sprintf('Unable to parse your choice "%s"', $translated);
-    throw new sfException($error);
+    throw new sfException(sprintf('Unable to parse your choice "%s".', $translated));
   }
 
   return $retval;

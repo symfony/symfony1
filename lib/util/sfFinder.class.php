@@ -262,11 +262,11 @@ class sfFinder
     {
       if (is_array($args[$i]) && !method_exists($args[$i][0], $args[$i][1]))
       {
-        throw new sfException("method {$args[$i][1]} does not exist for object {$args[$i][0]}");
+        throw new sfException(sprintf('method "%s" does not exist for object "%s".', $args[$i][1], $args[$i][0]));
       }
       else if (!is_array($args[$i]) && !function_exists($args[$i]))
       {
-        throw new sfException("function {$args[$i]} does not exist");
+        throw new sfException(sprintf('function "%s" does not exist.', $args[$i]));
       }
 
       $this->execs[] = $args[$i];
@@ -684,7 +684,7 @@ class sfNumberCompare
   {
     if (!preg_match('{^([<>]=?)?(.*?)([kmg]i?)?$}i', $this->test, $matches))
     {
-      throw new sfException('don\'t understand "'.$this->test.'" as a test');
+      throw new sfException(sprintf('don\'t understand "%s" as a test.', $this->test));
     }
 
     $target = array_key_exists(2, $matches) ? $matches[2] : '';

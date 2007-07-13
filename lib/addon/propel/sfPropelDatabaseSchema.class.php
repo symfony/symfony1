@@ -337,7 +337,7 @@ class sfPropelDatabaseSchema
     }
     else
     {
-      throw new sfException('Incorrect settings for column '.$col_name);
+      throw new sfException(sprintf('Incorrect settings for column %s', $col_name));
     }
 
     // conventions for foreign key attributes
@@ -445,7 +445,7 @@ class sfPropelDatabaseSchema
     }
     else
     {
-      throw new sfException('The database tag misses a name attribute');
+      throw new sfException('The database tag misses a name attribute.');
     }
     if ($database_attributes)
     {
@@ -462,7 +462,7 @@ class sfPropelDatabaseSchema
       }
       else
       {
-        throw new sfException('A table tag misses the name attribute');
+        throw new sfException('A table tag misses the name attribute.');
       }
       if ($table_attributes)
       {
@@ -479,7 +479,7 @@ class sfPropelDatabaseSchema
         }
         else
         {
-          throw new sfException('A column tag misses the name attribute');
+          throw new sfException('A column tag misses the name attribute.');
         }
       }
 
@@ -496,8 +496,8 @@ class sfPropelDatabaseSchema
         }
         else
         {
-          throw new sfException('A foreign key misses the foreignTable attribute');
-        } 
+          throw new sfException('A foreign key misses the foreignTable attribute.');
+        }
         if (isset($foreign_key['onDelete']))
         {
           $foreign_key_table['on_delete'] = (string) $foreign_key['onDelete'];

@@ -33,7 +33,7 @@ abstract class sfSecurityFilter extends sfFilter
 
     if (!$object instanceof sfSecurityFilter)
     {
-      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfSecurityFilter', $class));
+      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfSecurityFilter.', $class));
     }
 
     return $object;

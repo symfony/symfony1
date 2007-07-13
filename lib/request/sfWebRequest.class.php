@@ -558,10 +558,7 @@ class sfWebRequest extends sfRequest
         if ($create && !@mkdir($directory, $dirMode, true))
         {
           // failed to create the directory
-          $error = 'Failed to create file upload directory "%s"';
-          $error = sprintf($error, $directory);
-
-          throw new sfFileException($error);
+          throw new sfFileException(sprintf('Failed to create file upload directory "%s".', $directory));
         }
 
         // chmod the directory since it doesn't seem to work on
@@ -571,18 +568,12 @@ class sfWebRequest extends sfRequest
       else if (!is_dir($directory))
       {
         // the directory path exists but it's not a directory
-        $error = 'File upload path "%s" exists, but is not a directory';
-        $error = sprintf($error, $directory);
-
-        throw new sfFileException($error);
+        throw new sfFileException(sprintf('File upload path "%s" exists, but is not a directory.', $directory));
       }
       else if (!is_writable($directory))
       {
         // the directory isn't writable
-        $error = 'File upload path "%s" is not writable';
-        $error = sprintf($error, $directory);
-
-        throw new sfFileException($error);
+        throw new sfFileException(sprintf('File upload path "%s" is not writable.', $directory));
       }
 
       if (@move_uploaded_file($this->getFileValue($name, 'tmp_name'), $file))

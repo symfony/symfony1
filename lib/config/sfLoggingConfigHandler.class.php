@@ -51,7 +51,7 @@ class sfLoggingConfigHandler extends sfDefineEnvironmentConfigHandler
         if (!isset($keys['class']))
         {
           // missing class key
-          throw new sfParseException(sprintf('Configuration file "%s" specifies filter "%s" with missing class key', $configFiles[0], $name));
+          throw new sfParseException(sprintf('Configuration file "%s" specifies filter "%s" with missing class key.', $configFiles[0], $name));
         }
 
         $condition = true;

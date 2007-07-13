@@ -62,10 +62,7 @@ function get_component_slot($name, $vars = array())
   if (!$viewInstance->hasComponentSlot($name))
   {
     // cannot find component slot
-    $error = 'The component slot "%s" is not set';
-    $error = sprintf($error, $name);
-
-    throw new sfConfigurationException($error);
+    throw new sfConfigurationException(sprintf('The component slot "%s" is not set.', $name));
   }
 
   if ($componentSlot = $viewInstance->getComponentSlot($name))
@@ -131,10 +128,7 @@ function get_component($moduleName, $componentName, $vars = array())
   if (!$controller->componentExists($moduleName, $componentName))
   {
     // cannot find component
-    $error = 'The component does not exist: "%s", "%s"';
-    $error = sprintf($error, $moduleName, $componentName);
-
-    throw new sfConfigurationException($error);
+    throw new sfConfigurationException(sprintf('The component does not exist: "%s", "%s".', $moduleName, $componentName));
   }
 
   // create an instance of the action
@@ -144,10 +138,7 @@ function get_component($moduleName, $componentName, $vars = array())
   if (!$componentInstance->initialize($context))
   {
     // component failed to initialize
-    $error = 'Component initialization failed for module "%s", component "%s"';
-    $error = sprintf($error, $moduleName, $componentName);
-
-    throw new sfInitializationException($error);
+    throw new sfInitializationException(sprintf('Component initialization failed for module "%s", component "%s".', $moduleName, $componentName));
   }
 
   // load component's module config file
@@ -162,9 +153,7 @@ function get_component($moduleName, $componentName, $vars = array())
     if (!method_exists($componentInstance, 'execute'))
     {
       // component not found
-      $error = 'sfComponent initialization failed for module "%s", component "%s"';
-      $error = sprintf($error, $moduleName, $componentName);
-      throw new sfInitializationException($error);
+      throw new sfInitializationException(sprintf('sfComponent initialization failed for module "%s", component "%s".', $moduleName, $componentName));
     }
 
     $componentToRun = 'execute';

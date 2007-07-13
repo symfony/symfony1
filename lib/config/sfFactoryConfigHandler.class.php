@@ -59,8 +59,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
       if (!isset($keys['class']))
       {
         // missing class key
-        $error = sprintf('Configuration file "%s" specifies category "%s" with missing class key', $configFiles[0], $factory);
-        throw new sfParseException($error);
+        throw new sfParseException(sprintf('Configuration file "%s" specifies category "%s" with missing class key.', $configFiles[0], $factory));
       }
 
       $class = $keys['class'];
@@ -73,9 +72,8 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
 
         if (!is_readable($file))
         {
-            // factory file doesn't exist
-            $error = sprintf('Configuration file "%s" specifies class "%s" with nonexistent or unreadable file "%s"', $configFiles[0], $class, $file);
-            throw new sfParseException($error);
+          // factory file doesn't exist
+          throw new sfParseException(sprintf('Configuration file "%s" specifies class "%s" with nonexistent or unreadable file "%s".', $configFiles[0], $class, $file));
         }
 
         // append our data

@@ -104,12 +104,12 @@ class sfCompareValidator extends sfValidator
 
     if (!$this->hasParameter('check'))
     {
-      throw new sfValidatorException('You must specify a "check" parameter for your sfCompareValidator');
+      throw new sfValidatorException('You must specify a "check" parameter for your sfCompareValidator.');
     }
 
     if (!in_array($this->getParameter('operator'), array('==', '!=', '>', '<', '<=', '>=')))
     {
-      throw new sfValidatorException(sprintf('The operator "%s" is not available for your sfCompareValidator', $this->getParameter('operator')));
+      throw new sfValidatorException(sprintf('The operator "%s" is not available for your sfCompareValidator.', $this->getParameter('operator')));
     }
 
     return true;

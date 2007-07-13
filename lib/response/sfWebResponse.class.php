@@ -348,7 +348,7 @@ class sfWebResponse extends sfResponse
     }
     else
     {
-      throw new sfParameterException('The second getDate() method parameter must be one of: rfc1123, rfc1036 or asctime');
+      throw new sfParameterException('The second getDate() method parameter must be one of: rfc1123, rfc1036 or asctime.');
     }
   }
 

@@ -224,7 +224,7 @@ abstract class sfGenerator
   {
     if (!$callable = sfMixer::getCallable('sfGenerator:'.$method))
     {
-      throw new sfException(sprintf('Call to undefined method sfGenerator::%s', $method));
+      throw new sfException(sprintf('Call to undefined method sfGenerator::%s.', $method));
     }
 
     array_unshift($arguments, $this);

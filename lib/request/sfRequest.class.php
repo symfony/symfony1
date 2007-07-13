@@ -218,7 +218,7 @@ abstract class sfRequest
 
     if (!$object instanceof sfRequest)
     {
-      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfRequest', $class));
+      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfRequest.', $class));
     }
 
     return $object;
@@ -302,10 +302,7 @@ abstract class sfRequest
     }
 
     // invalid method type
-    $error = 'Invalid request method: %s';
-    $error = sprintf($error, $methodCode);
-
-    throw new sfException($error);
+    throw new sfException(sprintf('Invalid request method: %s.', $methodCode));
   }
 
   /**
@@ -427,7 +424,7 @@ abstract class sfRequest
   {
     if (!$callable = sfMixer::getCallable('sfRequest:'.$method))
     {
-      throw new sfException(sprintf('Call to undefined method sfRequest::%s', $method));
+      throw new sfException(sprintf('Call to undefined method sfRequest::%s.', $method));
     }
 
     array_unshift($arguments, $this);

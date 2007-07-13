@@ -76,7 +76,7 @@ class sfMixer
     // we cannot register 2 new methods with the same name
     if (!$hook && isset(self::$mixins[$name]))
     {
-      throw new Exception(sprintf('The class "%s" has already a mixin for method "%s"', $class, $mixinMethod));
+      throw new Exception(sprintf('The class "%s" has already a mixin for method "%s".', $class, $mixinMethod));
     }
 
     // register mixin
@@ -179,7 +179,7 @@ class sfMixer
       }
       else
       {
-        throw new Exception(sprintf('Call to undefined method %s::%s', $class, $method));
+        throw new Exception(sprintf('Call to undefined method %s::%s.', $class, $method));
       }
     }
     else

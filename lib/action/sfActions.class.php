@@ -39,9 +39,7 @@ abstract class sfActions extends sfAction
     if (!is_callable(array($this, $actionToRun)))
     {
       // action not found
-      $error = 'sfAction initialization failed for module "%s", action "%s". You must create a "%s" method.';
-      $error = sprintf($error, $this->getModuleName(), $this->getActionName(), $actionToRun);
-      throw new sfInitializationException($error);
+      throw new sfInitializationException(sprintf('sfAction initialization failed for module "%s", action "%s". You must create a "%s" method.', $this->getModuleName(), $this->getActionName(), $actionToRun));
     }
 
     if (sfConfig::get('sf_logging_enabled'))

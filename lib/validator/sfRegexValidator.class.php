@@ -82,9 +82,7 @@ class sfRegexValidator extends sfValidator
     if ($this->getParameterHolder()->get('pattern') == null)
     {
       // no pattern specified
-      $error = 'Please specify a PCRE regular expression pattern for your registered RegexValidator';
-
-      throw new sfValidatorException($error);
+      throw new sfValidatorException('Please specify a PCRE regular expression pattern for your registered RegexValidator.');
     }
 
     return true;

@@ -148,10 +148,7 @@ class sfNumberValidator extends sfValidator
     if (!in_array(strtolower($type), $allowed_types))
     {
       // unknown type
-      $error = 'Unknown number type "%s" in NumberValidator';
-      $error = sprintf($error, $this->getParameterHolder()->get('type'));
-
-      throw new sfValidatorException($error);
+      throw new sfValidatorException(sprintf('Unknown number type "%s" in NumberValidator.', $this->getParameterHolder()->get('type')));
     }
 
     return true;

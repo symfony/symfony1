@@ -55,9 +55,7 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
     if (!is_readable($configFile))
     {
       // can't read the configuration
-      $error = sprintf('Configuration file "%s" does not exist or is not readable', $configFile);
-
-      throw new sfConfigurationException($error);
+      throw new sfConfigurationException(sprintf('Configuration file "%s" does not exist or is not readable.', $configFile));
     }
 
     // parse our config
@@ -66,8 +64,7 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
     if ($config === false || $config === null)
     {
       // configuration couldn't be parsed
-      $error = sprintf('Configuration file "%s" could not be parsed', $configFile);
-      throw new sfParseException($error);
+      throw new sfParseException(sprintf('Configuration file "%s" could not be parsed', $configFile));
     }
 
     // get a list of the required categories
@@ -76,8 +73,7 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
     {
       if (!isset($config[$category]))
       {
-        $error = sprintf('Configuration file "%s" is missing "%s" category', $configFile, $category);
-        throw new sfParseException($error);
+        throw new sfParseException(sprintf('Configuration file "%s" is missing "%s" category.', $configFile, $category));
       }
     }
 

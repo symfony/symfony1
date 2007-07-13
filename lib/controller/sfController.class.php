@@ -75,10 +75,7 @@ abstract class sfController
       // plugin module enabled?
       if ($checkEnabled && !in_array($moduleName, sfConfig::get('sf_enabled_modules')) && is_readable($dir))
       {
-        $error = 'The module "%s" is not enabled.';
-        $error = sprintf($error, $moduleName);
-
-        throw new sfConfigurationException($error);
+        throw new sfConfigurationException(sprintf('The module "%s" is not enabled.', $moduleName));
       }
 
       // one action per file or one file for all actions
@@ -116,7 +113,7 @@ abstract class sfController
         {
           if ($throwExceptions)
           {
-            throw new sfControllerException(sprintf('There is no "%s" method in your action class "%s"', 'execute'.ucfirst($controllerName), $moduleName.$classSuffix.'s'));
+            throw new sfControllerException(sprintf('There is no "%s" method in your action class "%s".', 'execute'.ucfirst($controllerName), $moduleName.$classSuffix.'s'));
           }
 
           return false;
@@ -138,7 +135,7 @@ abstract class sfController
         $dir = str_replace(sfConfig::get('sf_root_dir'), '%SF_ROOT_DIR%', $dir);
       }
 
-      throw new sfControllerException(sprintf('{sfController} controller "%s/%s" does not exist in: %s', $moduleName, $controllerName, implode(', ', $dirs)));
+      throw new sfControllerException(sprintf('{sfController} controller "%s/%s" does not exist in: %s.', $moduleName, $controllerName, implode(', ', $dirs)));
     }
 
     return false;
@@ -164,10 +161,7 @@ abstract class sfController
     if ($this->getActionStack()->getSize() >= $this->maxForwards)
     {
       // let's kill this party before it turns into cpu cycle hell
-      $error = 'Too many forwards have been detected for this request (> %d)';
-      $error = sprintf($error, $this->maxForwards);
-
-      throw new sfForwardException($error);
+      throw new sfForwardException(sprintf('Too many forwards have been detected for this request (> %d).', $this->maxForwards));
     }
 
     // check for a module generator config file
@@ -192,10 +186,7 @@ abstract class sfController
       if (!$this->actionExists($moduleName, $actionName))
       {
         // cannot find unavailable module/action
-        $error = 'Invalid configuration settings: [sf_error_404_module] "%s", [sf_error_404_action] "%s"';
-        $error = sprintf($error, $moduleName, $actionName);
-
-        throw new sfConfigurationException($error);
+        throw new sfConfigurationException(sprintf('Invalid configuration settings: [sf_error_404_module] "%s", [sf_error_404_action] "%s".', $moduleName, $actionName));
       }
     }
 
@@ -211,10 +202,7 @@ abstract class sfController
     // check if this module is internal
     if ($this->getActionStack()->getSize() == 1 && sfConfig::get('mod_'.strtolower($moduleName).'_is_internal') && !sfConfig::get('sf_test'))
     {
-      $error = 'Action "%s" from module "%s" cannot be called directly';
-      $error = sprintf($error, $actionName, $moduleName);
-
-      throw new sfConfigurationException($error);
+      throw new sfConfigurationException(sprintf('Action "%s" from module "%s" cannot be called directly.', $actionName, $moduleName));
     }
 
     if (sfConfig::get('mod_'.strtolower($moduleName).'_enabled'))
@@ -259,10 +247,7 @@ abstract class sfController
       else
       {
         // action failed to initialize
-        $error = 'Action initialization failed for module "%s", action "%s"';
-        $error = sprintf($error, $moduleName, $actionName);
-
-        throw new sfInitializationException($error);
+        throw new sfInitializationException(sprintf('Action initialization failed for module "%s", action "%s".', $moduleName, $actionName));
       }
     }
     else
@@ -274,10 +259,7 @@ abstract class sfController
       if (!$this->actionExists($moduleName, $actionName))
       {
         // cannot find mod disabled module/action
-        $error = 'Invalid configuration settings: [sf_module_disabled_module] "%s", [sf_module_disabled_action] "%s"';
-        $error = sprintf($error, $moduleName, $actionName);
-
-        throw new sfConfigurationException($error);
+        throw new sfConfigurationException(sprintf('Invalid configuration settings: [sf_module_disabled_module] "%s", [sf_module_disabled_action] "%s".', $moduleName, $actionName));
       }
 
       $this->forward($moduleName, $actionName);
@@ -447,7 +429,7 @@ abstract class sfController
 
       if (!$object instanceof sfController)
       {
-        throw new sfFactoryException(sprintf('Class "%s" is not of the type sfController', $class));
+        throw new sfFactoryException(sprintf('Class "%s" is not of the type "sfController".', $class));
       }
 
       return $object;
@@ -529,15 +511,11 @@ abstract class sfController
 
       if ($actionEntry->getModuleName() == sfConfig::get('sf_login_module') && $actionEntry->getActionName() == sfConfig::get('sf_login_action'))
       {
-        $error = 'Your mail action is secured but the user is not authenticated.';
-
-        throw new sfException($error);
+        throw new sfException('Your mail action is secured but the user is not authenticated.');
       }
       else if ($actionEntry->getModuleName() == sfConfig::get('sf_secure_module') && $actionEntry->getActionName() == sfConfig::get('sf_secure_action'))
       {
-        $error = 'Your mail action is secured but the user does not have access.';
-
-        throw new sfException($error);
+        throw new sfException('Your mail action is secured but the user does not have access.');
       }
     }
 
@@ -567,10 +545,7 @@ abstract class sfController
     }
 
     // invalid rendering mode type
-    $error = 'Invalid rendering mode: %s';
-    $error = sprintf($error, $mode);
-
-    throw new sfRenderException($error);
+    throw new sfRenderException(sprintf('Invalid rendering mode: %s.', $mode));
   }
 
   /**
@@ -597,7 +572,7 @@ abstract class sfController
   {
     if (!$callable = sfMixer::getCallable('sfController:'.$method))
     {
-      throw new sfException(sprintf('Call to undefined method sfController::%s', $method));
+      throw new sfException(sprintf('Call to undefined method sfController::%s.', $method));
     }
 
     array_unshift($arguments, $this);

@@ -77,10 +77,7 @@ class sfMySQLDatabase extends sfDatabase
 
       default:
         // who knows what the user wants...
-        $error = 'Invalid MySQLDatabase parameter retrieval method "%s"';
-        $error = sprintf($error, $method);
-
-        throw new sfDatabaseException($error);
+        throw new sfDatabaseException(sprintf('Invalid MySQLDatabase parameter retrieval method "%s".', $method));
     }
 
     // let's see if we need a persistent connection
@@ -107,19 +104,14 @@ class sfMySQLDatabase extends sfDatabase
     if ($this->connection === false)
     {
       // the connection's foobar'd
-      $error = 'Failed to create a MySQLDatabase connection';
-
-      throw new sfDatabaseException($error);
+      throw new sfDatabaseException('Failed to create a MySQLDatabase connection.');
     }
 
     // select our database
     if ($database != null && !@mysql_select_db($database, $this->connection))
     {
       // can't select the database
-      $error = 'Failed to select MySQLDatabase "%s"';
-      $error = sprintf($error, $database);
-
-      throw new sfDatabaseException($error);
+      throw new sfDatabaseException(sprintf('Failed to select MySQLDatabase "%s".', $database));
     }
 
     // since we're not an abstraction layer, we copy the connection

@@ -211,10 +211,7 @@ class sfPatternRouting extends sfRouting
     // route already exists?
     if (isset($this->routes[$name]))
     {
-      $error = 'This named route already exists ("%s").';
-      $error = sprintf($error, $name);
-
-      throw new sfConfigurationException($error);
+      throw new sfConfigurationException(sprintf('This named route already exists ("%s").', $name));
     }
 
     $parsed = array();
@@ -329,10 +326,7 @@ class sfPatternRouting extends sfRouting
     {
       if (!isset($this->routes[$name]))
       {
-        $error = 'The route "%s" does not exist.';
-        $error = sprintf($error, $name);
-
-        throw new sfConfigurationException($error);
+        throw new sfConfigurationException(sprintf('The route "%s" does not exist.', $name));
       }
 
       list($url, $regexp, $names, $names_hash, $defaults, $requirements, $suffix) = $this->routes[$name];
@@ -346,7 +340,7 @@ class sfPatternRouting extends sfRouting
       {
         if (!isset($params[$tmp]) && !isset($defaults[$tmp]))
         {
-          throw new sfException(sprintf('Route named "%s" have a mandatory "%s" parameter', $name, $tmp));
+          throw new sfException(sprintf('Route named "%s" have a mandatory "%s" parameter.', $name, $tmp));
         }
       }
     }
@@ -403,10 +397,7 @@ class sfPatternRouting extends sfRouting
 
       if (!$found)
       {
-        $error = 'Unable to find a matching routing rule to generate url for params "%s".';
-        $error = sprintf($error, var_export($params));
-
-        throw new sfConfigurationException($error);
+        throw new sfConfigurationException(sprintf('Unable to find a matching routing rule to generate url for params "%s".', var_export($params)));
       }
     }
 

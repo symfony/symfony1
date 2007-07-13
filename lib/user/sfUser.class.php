@@ -107,7 +107,7 @@ class sfUser
 
     if (!$object instanceof sfUser)
     {
-      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfUser', $class));
+      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfUser.', $class));
     }
 
     return $object;
@@ -213,7 +213,7 @@ class sfUser
   {
     if (!$callable = sfMixer::getCallable('sfUser:'.$method))
     {
-      throw new sfException(sprintf('Call to undefined method sfUser::%s', $method));
+      throw new sfException(sprintf('Call to undefined method sfUser::%s.', $method));
     }
 
     array_unshift($arguments, $this);

@@ -75,7 +75,7 @@ class sfDateValidator extends sfValidator
             break;
 
           default:
-            throw new sfValidatorException(sprintf('Invalid date comparison operator "%s"', $operator));
+            throw new sfValidatorException(sprintf('Invalid date comparison operator "%s".', $operator));
         }
 
         if (!$valid)

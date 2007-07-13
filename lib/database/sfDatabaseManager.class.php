@@ -42,10 +42,7 @@ class sfDatabaseManager
     }
 
     // nonexistent database name
-    $error = 'Database "%s" does not exist';
-    $error = sprintf($error, $name);
-
-    throw new sfDatabaseException($error);
+    throw new sfDatabaseException(sprintf('Database "%s" does not exist.', $name));
   }
 
   /**

@@ -114,9 +114,7 @@ class sfConfigCache
     else
     {
       // we do not have a registered handler for this file
-      $error = sprintf('Configuration file "%s" does not have a registered handler', implode(', ', $configs));
-
-      throw new sfConfigurationException($error);
+      throw new sfConfigurationException(sprintf('Configuration file "%s" does not have a registered handler.', implode(', ', $configs)));
     }
   }
 
@@ -176,9 +174,7 @@ class sfConfigCache
       }
 
       // configuration does not exist
-      $error = sprintf('Configuration "%s" does not exist or is unreadable', $configPath);
-
-      throw new sfConfigurationException($error);
+      throw new sfConfigurationException(sprintf('Configuration "%s" does not exist or is unreadable.', $configPath));
     }
 
     // find the more recent configuration file last modification time
@@ -325,8 +321,7 @@ class sfConfigCache
     else
     {
       // module directory doesn't exist or isn't readable
-      $error = sprintf('Module directory "%s" does not exist or is not readable', sfConfig::get('sf_app_module_dir'));
-      throw new sfConfigurationException($error);
+      throw new sfConfigurationException(sprintf('Module directory "%s" does not exist or is not readable.', sfConfig::get('sf_app_module_dir')));
     }
   }
 
@@ -350,7 +345,7 @@ class sfConfigCache
 
     if (false === @file_put_contents($cache, $data))
     {
-      throw new sfCacheException(sprintf('Failed to write cache file "%s" generated from configuration file "%s"', $cachePath, $config));
+      throw new sfCacheException(sprintf('Failed to write cache file "%s" generated from configuration file "%s".', $cachePath, $config));
     }
   }
 

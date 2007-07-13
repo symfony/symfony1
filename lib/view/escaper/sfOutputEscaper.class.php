@@ -118,7 +118,7 @@ abstract class sfOutputEscaper
     }
 
     // it must be a resource; cannot escape that.
-    throw new sfException(sprintf('Unable to escape value "%s"', print_r($value, true)));
+    throw new sfException(sprintf('Unable to escape value "%s".', print_r($value, true)));
   }
 
   /**

@@ -46,10 +46,7 @@ abstract class sfCrudGenerator extends sfGenerator
     {
       if (!isset($this->params[$entry]))
       {
-        $error = 'You must specify a "%s"';
-        $error = sprintf($error, $entry);
-
-        throw new sfParseException($error);
+        throw new sfParseException(sprintf('You must specify a "%s".', $entry));
       }
     }
 
@@ -57,10 +54,7 @@ abstract class sfCrudGenerator extends sfGenerator
 
     if (!class_exists($modelClass))
     {
-      $error = 'Unable to scaffold unexistant model "%s"';
-      $error = sprintf($error, $modelClass);
-
-      throw new sfInitializationException($error);
+      throw new sfInitializationException(sprintf('Unable to scaffold unexistant model "%s".', $modelClass));
     }
 
     $this->setScaffoldingClassName($modelClass);
@@ -80,9 +74,7 @@ abstract class sfCrudGenerator extends sfGenerator
     $themeDir = sfLoader::getGeneratorTemplate($this->getGeneratorClass(), $theme, '');
     if (!is_dir($themeDir))
     {
-      $error = 'The theme "%s" does not exist.';
-      $error = sprintf($error, $theme);
-      throw new sfConfigurationException($error);
+      throw new sfConfigurationException(sprintf('The theme "%s" does not exist.', $theme));
     }
 
     $this->setTheme($theme);

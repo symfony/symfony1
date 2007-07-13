@@ -83,7 +83,7 @@ class sfPropelCrudGenerator extends sfAdminGenerator
     }
     if (!$this->map)
     {
-      throw new sfException('The model class "'.$this->className.'" does not exist.');
+      throw new sfException(sprintf('The model class "%s" does not exist.', $this->className));
     }
 
     $this->tableMap = $this->map->getDatabaseMap()->getTable(constant($this->className.'Peer::TABLE_NAME'));

@@ -83,10 +83,7 @@ class sfPostgreSQLDatabase extends sfDatabase
 
       default:
         // who knows what the user wants...
-        $error = 'Invalid PostgreSQLDatabase parameter retrieval method "%s"';
-        $error = sprintf($error, $method);
-
-        throw new sfDatabaseException($error);
+        throw new sfDatabaseException(sprintf('Invalid PostgreSQLDatabase parameter retrieval method "%s".', $method));
     }
 
     // let's see if we need a persistent connection
@@ -99,9 +96,7 @@ class sfPostgreSQLDatabase extends sfDatabase
     if ($this->connection === false)
     {
       // the connection's foobar'd
-      $error = 'Failed to create a PostgreSQLDatabase connection';
-
-      throw new sfDatabaseException($error);
+      throw new sfDatabaseException('Failed to create a PostgreSQLDatabase connection.');
     }
 
     // since we're not an abstraction layer, we copy the connection

@@ -59,9 +59,7 @@ class sfMySQLSessionStorage extends sfSessionStorage
     if (!$this->getParameterHolder()->has('db_table'))
     {
         // missing required 'db_table' parameter
-        $error = 'Factory configuration file is missing required "db_table" parameter for the Storage category';
-
-        throw new sfInitializationException($error);
+        throw new sfInitializationException('Factory configuration file is missing required "db_table" parameter for the Storage category.');
     }
 
     // use this object as the session handler
@@ -114,10 +112,7 @@ class sfMySQLSessionStorage extends sfSessionStorage
     }
 
     // failed to destroy session
-    $error = 'MySQLSessionStorage cannot destroy session id "%s"';
-    $error = sprintf($error, $id);
-
-    throw new sfDatabaseException($error);
+    throw new sfDatabaseException(sprintf('MySQLSessionStorage cannot destroy session id "%s".', $id));
   }
 
   /**
@@ -148,9 +143,7 @@ class sfMySQLSessionStorage extends sfSessionStorage
     }
 
     // failed to cleanup old sessions
-    $error = 'MySQLSessionStorage cannot delete old sessions';
-
-    throw new sfDatabaseException($error);
+    throw new sfDatabaseException('MySQLSessionStorage cannot delete old sessions.');
   }
 
   /**
@@ -224,10 +217,7 @@ class sfMySQLSessionStorage extends sfSessionStorage
       }
 
       // can't create record
-      $error = 'MySQLSessionStorage cannot create new record for id "%s"';
-      $error = sprintf($error, $id);
-
-      throw new sfDatabaseException($error);
+      throw new sfDatabaseException(sprintf('MySQLSessionStorage cannot create new record for id "%s".', $id));
     }
   }
 
@@ -265,10 +255,7 @@ class sfMySQLSessionStorage extends sfSessionStorage
     }
 
     // failed to write session data
-    $error = 'MySQLSessionStorage cannot write session data for id "%s"';
-    $error = sprintf($error, $id);
-
-    throw new sfDatabaseException($error);
+    throw new sfDatabaseException(sprintf('MySQLSessionStorage cannot write session data for id "%s".', $id));
   }
 
   /**

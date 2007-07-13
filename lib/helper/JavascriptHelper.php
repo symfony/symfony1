@@ -367,7 +367,7 @@
         break;
 
       default:
-        throw new sfException('Invalid action, choose one of update, remove, empty');
+        throw new sfException('Invalid action, choose one of update, remove, empty.');
     }
 
     $javascript_function .= ";\n";
