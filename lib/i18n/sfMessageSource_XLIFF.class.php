@@ -174,9 +174,9 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
 
     // save it and clear the cache for this variant
     $dom->save($filename);
-    if (!empty($this->cache))
+    if ($this->cache)
     {
-      $this->cache->clean($variant, $this->culture);
+      $this->cache->remove($variant.':'.$this->culture);
     }
 
     return true;
@@ -276,9 +276,9 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
 
     if ($dom->save($filename) > 0)
     {
-      if (!empty($this->cache))
+      if ($this->cache)
       {
-        $this->cache->clean($variant, $this->culture);
+        $this->cache->remove($variant.':'.$this->culture);
       }
 
       return true;

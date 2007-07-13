@@ -227,9 +227,9 @@ class sfMessageSource_SQLite extends sfMessageSource_Database
 
     $result = sqlite_query("UPDATE catalogue SET date_modified = {$time} WHERE cat_id = {$cat_id}", $db);
 
-    if (!empty($this->cache))
+    if ($this->cache)
     {
-      $this->cache->clean($variant, $this->culture);
+      $this->cache->remove($variant.':'.$this->culture);
     }
 
     return $result;

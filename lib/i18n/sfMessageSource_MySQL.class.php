@@ -318,9 +318,9 @@ class sfMessageSource_MySQL extends sfMessageSource_Database
 
     $result = mysql_query("UPDATE catalogue SET date_modified = {$time} WHERE cat_id = {$cat_id}", $this->db);
 
-    if (!empty($this->cache))
+    if ($this->cache)
     {
-      $this->cache->clean($variant, $this->culture);
+      $this->cache->remove($variant.':'.$this->culture);
     }
 
     return $result;

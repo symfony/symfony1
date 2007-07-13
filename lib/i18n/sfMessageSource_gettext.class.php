@@ -167,9 +167,9 @@ class sfMessageSource_gettext extends sfMessageSource_File
       $mo = $po->toMO();
       if ($po->save() && $mo->save($MOFile))
       {
-        if (!empty($this->cache))
+        if ($this->cache)
         {
-          $this->cache->clean($variant, $this->culture);
+          $this->cache->remove($variant.':'.$this->culture);
         }
 
         return true;
@@ -227,9 +227,9 @@ class sfMessageSource_gettext extends sfMessageSource_File
         $mo = $po->toMO();
         if ($po->save() && $mo->save($MOFile))
         {
-          if (!empty($this->cache))
+          if ($this->cache)
           {
-            $this->cache->clean($variant, $this->culture);
+            $this->cache->remove($variant.':'.$this->culture);
           }
 
           return true;
@@ -291,9 +291,9 @@ class sfMessageSource_gettext extends sfMessageSource_File
 
         if ($po->save() && $mo->save($MOFile))
         {
-          if (!empty($this->cache))
+          if ($this->cache)
           {
-            $this->cache->clean($variant, $this->culture);
+            $this->cache->remove($variant.':'.$this->culture);
           }
 
           return true;

@@ -57,7 +57,7 @@ class sfI18N
 
     if (!is_null($this->cache))
     {
-      $this->messageSource->setCache(new sfMessageCache($this->cache));
+      $this->messageSource->setCache($this->cache);
     }
 
     $this->setCulture($culture);

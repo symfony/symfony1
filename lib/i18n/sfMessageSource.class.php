@@ -172,15 +172,19 @@ abstract class sfMessageSource implements sfIMessageSource
 
       if ($this->cache)
       {
-        $data = $this->cache->get($variant, $this->culture, $this->getLastModified($source));
-
-        if (is_array($data))
+        $lastModified = $this->getLastModified($source);
+        if ($this->getLastModified($source) >= 0 && $this->getLastModified($source) < $this->cache->getLastModified($variant.':'.$this->culture))
         {
-          $this->messages[$variant] = $data;
-          $loadData = false;
-        }
+          $data = unserialize($this->cache->get($variant.':'.$this->culture));
 
-        unset($data);
+          if (is_array($data))
+          {
+            $this->messages[$variant] = $data;
+            $loadData = false;
+          }
+
+          unset($data);
+        }
       }
 
       if ($loadData)
@@ -191,7 +195,7 @@ abstract class sfMessageSource implements sfIMessageSource
           $this->messages[$variant] = $data;
           if ($this->cache)
           {
-            $this->cache->set($variant, $this->culture, $data);
+            $this->cache->set($variant.':'.$this->culture, serialize($data));
           }
         }
 
@@ -228,7 +232,7 @@ abstract class sfMessageSource implements sfIMessageSource
    *
    * @param sfMessageCache the cache handler.
    */
-  public function setCache(sfMessageCache $cache)
+  public function setCache(sfCache $cache)
   {
     $this->cache = $cache;
   }
