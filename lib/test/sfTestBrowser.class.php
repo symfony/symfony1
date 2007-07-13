@@ -116,7 +116,7 @@ class sfTestBrowser extends sfBrowser
    */
   public function isRedirected($boolean = true)
   {
-    if ($location = $this->getContext()->getResponse()->getHttpHeader('location'))
+    if ($location = $this->context->getResponse()->getHttpHeader('location'))
     {
       $boolean ? $this->test->pass(sprintf('page redirected to "%s"', $location)) : $this->test->fail(sprintf('page redirected to "%s"', $location));
     }
@@ -202,7 +202,7 @@ class sfTestBrowser extends sfBrowser
    */
   public function isForwardedTo($moduleName, $actionName, $position = 'last')
   {
-    $actionStack = $this->getContext()->getActionStack();
+    $actionStack = $this->context->getActionStack();
 
     switch ($position)
     {
@@ -361,7 +361,7 @@ class sfTestBrowser extends sfBrowser
    */
   public function isCached($boolean, $with_layout = false)
   {
-    return $this->isUriCached($this->getContext()->getRouting()->getCurrentInternalUri(), $boolean, $with_layout);
+    return $this->isUriCached($this->context->getRouting()->getCurrentInternalUri(), $boolean, $with_layout);
   }
 
   /**
@@ -375,7 +375,7 @@ class sfTestBrowser extends sfBrowser
    */
   public function isUriCached($uri, $boolean, $with_layout = false)
   {
-    $cacheManager = $this->getContext()->getViewCacheManager();
+    $cacheManager = $this->context->getViewCacheManager();
 
     // check that cache is enabled
     if (!$cacheManager)
@@ -385,7 +385,7 @@ class sfTestBrowser extends sfBrowser
       return $this;
     }
 
-    if ($uri == $this->getContext()->getRouting()->getCurrentInternalUri())
+    if ($uri == $this->context->getRouting()->getCurrentInternalUri())
     {
       $main = true;
       $type = $with_layout ? 'page' : 'action';

@@ -34,11 +34,11 @@ class sfRenderingFilter extends sfFilter
 
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfFilter} render to client');
+      $this->context->getLogger()->info('{sfFilter} render to client');
     }
 
     // get response object
-    $response = $this->getContext()->getResponse();
+    $response = $this->context->getResponse();
 
     // send headers
     $response->sendHttpHeaders();
@@ -49,7 +49,7 @@ class sfRenderingFilter extends sfFilter
     // log timers information
     if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
     {
-      $logger = $this->getContext()->getLogger();
+      $logger = $this->context->getLogger();
       foreach (sfTimerManager::getTimers() as $name => $timer)
       {
         $logger->info(sprintf('{sfTimerManager} %s %.2f ms (%d)', $name, $timer->getElapsedTime() * 1000, $timer->getCalls()));

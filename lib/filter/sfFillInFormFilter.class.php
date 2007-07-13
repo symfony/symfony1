@@ -28,9 +28,8 @@ class sfFillInFormFilter extends sfFilter
     // execute next filter
     $filterChain->execute();
 
-    $context  = $this->getContext();
-    $response = $context->getResponse();
-    $request  = $context->getRequest();
+    $response = $this->context->getResponse();
+    $request  = $this->context->getRequest();
 
     $fillInForm = new sfFillInForm();
 
@@ -49,7 +48,7 @@ class sfFillInFormFilter extends sfFilter
     $fillInForm->setTypes(array_diff($checkTypes, $excludeTypes));
 
     // fill in
-    $method  = 'fillIn'.ucfirst(strtolower($this->getParameter('content_type', 'Html')));
+    $method = 'fillIn'.ucfirst(strtolower($this->getParameter('content_type', 'Html')));
 
     try
     {
@@ -60,7 +59,7 @@ class sfFillInFormFilter extends sfFilter
     {
       if (sfConfig::get('sf_logging_enabled'))
       {
-        $this->getContext()->getLogger()->err(sprintf('{sfFilter} %s', $e->getMessage()));
+        $this->context->getLogger()->err(sprintf('{sfFilter} %s', $e->getMessage()));
       }
     }
   }

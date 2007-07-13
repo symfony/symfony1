@@ -265,7 +265,7 @@ class sfWebResponse extends sfResponse
 
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfResponse} send status "'.$status.'"');
+      $this->context->getLogger()->info('{sfResponse} send status "'.$status.'"');
     }
 
     // headers
@@ -275,7 +275,7 @@ class sfWebResponse extends sfResponse
 
       if (sfConfig::get('sf_logging_enabled') && $value != '')
       {
-        $this->getContext()->getLogger()->info('{sfResponse} send header "'.$name.'": "'.$value.'"');
+        $this->context->getLogger()->info('{sfResponse} send header "'.$name.'": "'.$value.'"');
       }
     }
 
@@ -293,7 +293,7 @@ class sfWebResponse extends sfResponse
 
       if (sfConfig::get('sf_logging_enabled'))
       {
-        $this->getContext()->getLogger()->info('{sfResponse} send cookie "'.$cookie['name'].'": "'.$cookie['value'].'"');
+        $this->context->getLogger()->info('{sfResponse} send cookie "'.$cookie['name'].'": "'.$cookie['value'].'"');
       }
     }
   }
@@ -465,7 +465,7 @@ class sfWebResponse extends sfResponse
 
     if (sfConfig::get('sf_i18n'))
     {
-      $value = $this->getContext()->getI18N()->__($value);
+      $value = $this->context->getI18N()->__($value);
     }
 
     if ($escape)

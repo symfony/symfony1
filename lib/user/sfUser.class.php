@@ -192,7 +192,7 @@ class sfUser
    */
   public function shutdown()
   {
-    $storage = $this->getContext()->getStorage();
+    $storage = $this->context->getStorage();
 
     $attributes = array();
     foreach ($this->attributeHolder->getNamespaces() as $namespace)

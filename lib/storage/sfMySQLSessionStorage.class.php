@@ -169,7 +169,7 @@ class sfMySQLSessionStorage extends sfSessionStorage
     $database = $this->getParameterHolder()->get('database', 'default');
 
     // get the database resource
-    $this->resource = $this->getContext()
+    $this->resource = $this->context
                            ->getDatabaseManager()
                            ->getDatabase($database)
                            ->getResource();

@@ -44,9 +44,9 @@ abstract class sfWebController extends sfController
     $url = '';
     if (!($sf_no_script_name = sfConfig::get('sf_no_script_name')))
     {
-      $url = $this->getContext()->getRequest()->getScriptName();
+      $url = $this->context->getRequest()->getScriptName();
     }
-    else if (($sf_relative_url_root = $this->getContext()->getRequest()->getRelativeUrlRoot()) && $sf_no_script_name)
+    else if (($sf_relative_url_root = $this->context->getRequest()->getRelativeUrlRoot()) && $sf_no_script_name)
     {
       $url = $sf_relative_url_root;
     }
@@ -93,7 +93,7 @@ abstract class sfWebController extends sfController
       $parameters['action'] = sfConfig::get('sf_default_action');
     }
 
-    $r = $this->getContext()->getRouting();
+    $r = $this->context->getRouting();
     if ($r->hasRoutes() && $generated_url = $r->generate($route_name, $parameters, $querydiv, $divider, $equals))
     {
       $url .= $generated_url;
@@ -112,7 +112,7 @@ abstract class sfWebController extends sfController
 
     if ($absolute)
     {
-      $request = $this->getContext()->getRequest();
+      $request = $this->context->getRequest();
       $url = 'http'.($request->isSecure() ? 's' : '').'://'.$request->getHost().$url;
     }
 
@@ -210,7 +210,7 @@ abstract class sfWebController extends sfController
    */
   public function redirect($url, $delay = 0, $statusCode = 302)
   {
-    $response = $this->getContext()->getResponse();
+    $response = $this->context->getResponse();
 
     // redirect
     $response->clearHttpHeaders();

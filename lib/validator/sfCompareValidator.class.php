@@ -48,7 +48,7 @@ class sfCompareValidator extends sfValidator
   {
     $check_param    = $this->getParameter('check');
     $check_operator = $this->getParameter('operator');
-    $check_value    = $this->getContext()->getRequest()->getParameter($check_param);
+    $check_value    = $this->context->getRequest()->getParameter($check_param);
 
     switch ($check_operator)
     {

@@ -30,16 +30,15 @@ class sfBasicSecurityFilter extends sfSecurityFilter
   public function execute($filterChain)
   {
     // get the cool stuff
-    $context    = $this->getContext();
-    $controller = $context->getController();
-    $user       = $context->getUser();
+    $controller = $this->context->getController();
+    $user       = $this->context->getUser();
 
     // get the current action instance
     $actionEntry    = $controller->getActionStack()->getLastEntry();
     $actionInstance = $actionEntry->getActionInstance();
 
     // disable security on [sf_login_module] / [sf_login_action]
-    if ((sfConfig::get('sf_login_module') == $context->getModuleName()) && (sfConfig::get('sf_login_action') == $context->getActionName()))
+    if ((sfConfig::get('sf_login_module') == $this->context->getModuleName()) && (sfConfig::get('sf_login_action') == $this->context->getActionName()))
     {
       $filterChain->execute();
 

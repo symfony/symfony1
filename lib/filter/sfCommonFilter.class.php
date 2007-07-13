@@ -29,7 +29,7 @@ class sfCommonFilter extends sfFilter
     $filterChain->execute();
 
     // execute this filter only once
-    $response = $this->getContext()->getResponse();
+    $response = $this->context->getResponse();
 
     // include javascripts and stylesheets
     $content = $response->getContent();

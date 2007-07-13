@@ -25,8 +25,7 @@ class sfFlashFilter extends sfFilter
    */
   public function execute($filterChain)
   {
-    $context = $this->getContext();
-    $userAttributeHolder = $context->getUser()->getAttributeHolder();
+    $userAttributeHolder = $this->context->getUser()->getAttributeHolder();
 
     // execute this filter only once
     if ($this->isFirstCall())
@@ -37,7 +36,7 @@ class sfFlashFilter extends sfFilter
       {
         if (sfConfig::get('sf_logging_enabled'))
         {
-          $context->getLogger()->info('{sfFilter} flag old flash messages ("'.implode('", "', $names).'")');
+          $this->context->getLogger()->info('{sfFilter} flag old flash messages ("'.implode('", "', $names).'")');
         }
         foreach ($names as $name)
         {
@@ -55,7 +54,7 @@ class sfFlashFilter extends sfFilter
     {
       if (sfConfig::get('sf_logging_enabled'))
       {
-        $context->getLogger()->info('{sfFilter} remove old flash messages ("'.implode('", "', $names).'")');
+        $this->context->getLogger()->info('{sfFilter} remove old flash messages ("'.implode('", "', $names).'")');
       }
       foreach ($names as $name)
       {

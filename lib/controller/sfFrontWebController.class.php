@@ -33,14 +33,14 @@ class sfFrontWebController extends sfWebController
     {
       if (sfConfig::get('sf_logging_enabled'))
       {
-        $this->getContext()->getLogger()->info('{sfController} dispatch request');
+        $this->context->getLogger()->info('{sfController} dispatch request');
       }
 
       // reinitialize filters (needed for unit and functional tests)
       sfFilter::$filterCalled = array();
 
       // determine our module and action
-      $request    = $this->getContext()->getRequest();
+      $request    = $this->context->getRequest();
       $moduleName = $request->getParameter('module');
       $actionName = $request->getParameter('action');
 

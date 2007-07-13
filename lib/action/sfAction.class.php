@@ -128,7 +128,7 @@ abstract class sfAction extends sfComponent
   {
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfAction} forward to action "'.$module.'/'.$action.'"');
+      $this->context->getLogger()->info('{sfAction} forward to action "'.$module.'/'.$action.'"');
     }
 
     $this->getController()->forward($module, $action);
@@ -194,7 +194,7 @@ abstract class sfAction extends sfComponent
 
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfAction} redirect to "'.$url.'"');
+      $this->context->getLogger()->info('{sfAction} redirect to "'.$url.'"');
     }
 
     $this->getController()->redirect($url, 0, $statusCode);
@@ -411,7 +411,7 @@ abstract class sfAction extends sfComponent
   {
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfAction} change template to "'.$name.'"');
+      $this->context->getLogger()->info('{sfAction} change template to "'.$name.'"');
     }
 
     $this->getResponse()->setParameter($this->getModuleName().'_'.$this->getActionName().'_template', $name, 'symfony/action/view');
@@ -445,7 +445,7 @@ abstract class sfAction extends sfComponent
   {
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfAction} change layout to "'.$name.'"');
+      $this->context->getLogger()->info('{sfAction} change layout to "'.$name.'"');
     }
 
     $this->getResponse()->setParameter($this->getModuleName().'_'.$this->getActionName().'_layout', $name, 'symfony/action/view');

@@ -525,7 +525,7 @@ class sfWebRequest extends sfRequest
 
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info(sprintf('{sfRequest} request parameters %s', str_replace("\n", '', var_export($this->getParameterHolder()->getAll(), true))));
+      $this->context->getLogger()->info(sprintf('{sfRequest} request parameters %s', str_replace("\n", '', var_export($this->getParameterHolder()->getAll(), true))));
     }
   }
 

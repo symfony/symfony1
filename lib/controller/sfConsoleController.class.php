@@ -28,7 +28,7 @@ class sfConsoleController extends sfController
     try
     {
       // set parameters
-      $this->getContext()->getRequest()->getParameterHolder()->add($parameters);
+      $this->context->getRequest()->getParameterHolder()->add($parameters);
 
       // make the first request
       $this->forward($moduleName, $actionName);

@@ -41,8 +41,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     // init our data array
     $data = array();
 
-    $data[] = "\$context  = \$this->getContext();\n";
-    $data[] = "\$response = \$context->getResponse();\n\n";
+    $data[] = "\$response = \$this->context->getResponse();\n\n";
 
     // first pass: iterate through all view names to determine the real view name
     $first = true;
@@ -155,7 +154,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
       }
 
       $data .= "  \$this->setComponentSlot('$name', '{$component[0]}', '{$component[1]}');\n";
-      $data .= "  if (sfConfig::get('sf_logging_enabled')) \$context->getLogger()->info('{sfViewConfig} set component \"$name\" ({$component[0]}/{$component[1]})');\n";
+      $data .= "  if (sfConfig::get('sf_logging_enabled')) \$this->context->getLogger()->info('{sfViewConfig} set component \"$name\" ({$component[0]}/{$component[1]})');\n";
     }
 
     return $data;
@@ -202,7 +201,7 @@ class sfViewConfigHandler extends sfYamlConfigHandler
     $localLayout = isset($this->yamlConfig[$viewName]['layout']) || isset($this->yamlConfig[$viewName]['has_layout']);
     if (!$localLayout && $data)
     {
-      $data = "  if (!\$context->getRequest()->isXmlHttpRequest())\n  {\n  $data  }\n";
+      $data = "  if (!\$this->context->getRequest()->isXmlHttpRequest())\n  {\n  $data  }\n";
     }
 
     return $data;

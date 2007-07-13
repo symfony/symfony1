@@ -71,7 +71,7 @@ class sfCacheFilter extends sfFilter
   public function executeBeforeExecution()
   {
     // register our cache configuration
-    $this->cacheManager->registerConfiguration($this->getContext()->getModuleName());
+    $this->cacheManager->registerConfiguration($this->context->getModuleName());
 
     $uri = $this->routing->getCurrentInternalUri();
 
@@ -161,7 +161,7 @@ class sfCacheFilter extends sfFilter
 
         if (sfConfig::get('sf_logging_enabled'))
         {
-          $this->getContext()->getLogger()->info('{sfFilter} ETag matches If-None-Match (send 304)');
+          $this->context->getLogger()->info('{sfFilter} ETag matches If-None-Match (send 304)');
         }
       }
     }
@@ -179,7 +179,7 @@ class sfCacheFilter extends sfFilter
 
         if (sfConfig::get('sf_logging_enabled'))
         {
-          $this->getContext()->getLogger()->info('{sfFilter} Last-Modified matches If-Modified-Since (send 304)');
+          $this->context->getLogger()->info('{sfFilter} Last-Modified matches If-Modified-Since (send 304)');
         }
       }
     }
@@ -192,7 +192,7 @@ class sfCacheFilter extends sfFilter
    */
   protected function setPageCache($uri)
   {
-    if ($this->getContext()->getController()->getRenderMode() != sfView::RENDER_CLIENT)
+    if ($this->context->getController()->getRenderMode() != sfView::RENDER_CLIENT)
     {
       return;
     }
@@ -214,11 +214,9 @@ class sfCacheFilter extends sfFilter
    */
   protected function getPageCache($uri)
   {
-    $context = $this->getContext();
-
     // get the current action information
-    $moduleName = $context->getModuleName();
-    $actionName = $context->getActionName();
+    $moduleName = $this->context->getModuleName();
+    $actionName = $this->context->getActionName();
 
     $retval = $this->cacheManager->get($uri);
 
@@ -229,7 +227,7 @@ class sfCacheFilter extends sfFilter
 
     $cachedResponse = unserialize($retval);
 
-    $controller = $context->getController();
+    $controller = $this->context->getController();
     if ($controller->getRenderMode() == sfView::RENDER_VAR)
     {
       $controller->getActionStack()->getLastEntry()->setPresentation($cachedResponse->getContent());
@@ -237,8 +235,8 @@ class sfCacheFilter extends sfFilter
     }
     else
     {
-      $context->setResponse($cachedResponse);
-      $this->response = $this->getContext()->getResponse();
+      $this->context->setResponse($cachedResponse);
+      $this->response = $this->context->getResponse();
 
       if (sfConfig::get('sf_web_debug'))
       {

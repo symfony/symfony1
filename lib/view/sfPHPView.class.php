@@ -57,7 +57,7 @@ class sfPHPView extends sfView
   {
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfView} render "'.$_sfFile.'"');
+      $this->context->getLogger()->info('{sfView} render "'.$_sfFile.'"');
     }
 
     $this->loadCoreAndStandardHelpers();
@@ -92,7 +92,7 @@ class sfPHPView extends sfView
   public function configure()
   {
     // store our current view
-    $actionStackEntry = $this->getContext()->getActionStack()->getLastEntry();
+    $actionStackEntry = $this->context->getActionStack()->getLastEntry();
     if (!$actionStackEntry->getViewInstance())
     {
       $actionStackEntry->setViewInstance($this);
@@ -121,7 +121,7 @@ class sfPHPView extends sfView
   {
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info(sprintf('{sfView} decorate content with "%s"', $this->getDecoratorDirectory().'/'.$this->getDecoratorTemplate()));
+      $this->context->getLogger()->info(sprintf('{sfView} decorate content with "%s"', $this->getDecoratorDirectory().'/'.$this->getDecoratorTemplate()));
     }
 
     // set the decorator content as an attribute
@@ -139,7 +139,7 @@ class sfPHPView extends sfView
   public function render()
   {
     $retval = null;
-    $response = $this->getContext()->getResponse();
+    $response = $this->context->getResponse();
     if (sfConfig::get('sf_cache'))
     {
       $key   = $response->getParameterHolder()->remove('current_key', 'symfony/cache/current');
@@ -180,7 +180,7 @@ class sfPHPView extends sfView
           'content'    => $retval,
           'attributes' => serialize($this->attributeHolder),
           'view_name'  => $this->viewName,
-          'response'   => $this->getContext()->getResponse(),
+          'response'   => $this->context->getResponse(),
         );
         $response->setParameter($key, serialize($cache), 'symfony/cache');
 

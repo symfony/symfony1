@@ -47,7 +47,7 @@ abstract class sfComponent
    */
   public function getModuleName()
   {
-    return $this->getContext()->getModuleName();
+    return $this->context->getModuleName();
   }
 
   /**
@@ -57,7 +57,7 @@ abstract class sfComponent
    */
   public function getActionName()
   {
-    return $this->getContext()->getActionName();
+    return $this->context->getActionName();
   }
 
   /**
@@ -200,7 +200,7 @@ abstract class sfComponent
    */
   public function getController()
   {
-    return $this->getContext()->getController();
+    return $this->context->getController();
   }
 
   /**
@@ -214,7 +214,7 @@ abstract class sfComponent
    */
   public function getUser()
   {
-    return $this->getContext()->getUser();
+    return $this->context->getUser();
   }
 
   /**

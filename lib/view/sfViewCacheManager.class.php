@@ -114,7 +114,7 @@ class sfViewCacheManager
     if ($varyHeaders)
     {
       sort($varyHeaders);
-      $request = $this->getContext()->getRequest();
+      $request = $this->context->getRequest();
       $vary = '';
 
       foreach ($varyHeaders as $header)
@@ -314,7 +314,7 @@ class sfViewCacheManager
 
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info(sprintf('{sfViewCacheManager} cache for "%s" %s', $internalUri, $retval !== null ? 'exists' : 'does not exist'));
+      $this->context->getLogger()->info(sprintf('{sfViewCacheManager} cache for "%s" %s', $internalUri, $retval !== null ? 'exists' : 'does not exist'));
     }
 
     return $retval;
@@ -345,11 +345,11 @@ class sfViewCacheManager
   protected function ignore()
   {
     // ignore cache parameter? (only available in debug mode)
-    if (sfConfig::get('sf_debug') && $this->getContext()->getRequest()->getParameter('_sf_ignore_cache', false, 'symfony/request/sfWebRequest') == true)
+    if (sfConfig::get('sf_debug') && $this->context->getRequest()->getParameter('_sf_ignore_cache', false, 'symfony/request/sfWebRequest') == true)
     {
       if (sfConfig::get('sf_logging_enabled'))
       {
-        $this->getContext()->getLogger()->info('{sfViewCacheManager} discard cache');
+        $this->context->getLogger()->info('{sfViewCacheManager} discard cache');
       }
 
       return true;

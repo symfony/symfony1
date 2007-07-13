@@ -31,7 +31,7 @@ class sfDateValidator extends sfValidator
    */
   public function execute(&$value, &$error)
   {
-    $culture = $this->getContext()->getUser()->getCulture();
+    $culture = $this->context->getUser()->getCulture();
 
     // Validate the given date
     $value1 = $this->getValidDate($value, $culture);
@@ -44,7 +44,7 @@ class sfDateValidator extends sfValidator
 
     // Is there a compare to do?
     $compareDateParam = $this->getParameter('compare');
-    $compareDate = $this->getContext()->getRequest()->getParameter($compareDateParam);
+    $compareDate = $this->context->getRequest()->getParameter($compareDateParam);
 
     // If the compare date is given
     if ($compareDate)
@@ -101,7 +101,7 @@ class sfDateValidator extends sfValidator
   protected function getValidDate($value, $culture)
   {
     // Use the language culture date format
-    $result = $this->getContext()->getI18N()->getDateForCulture($value, $culture);
+    $result = $this->context->getI18N()->getDateForCulture($value, $culture);
     list($d, $m, $y) = $result;
 
     // Make sure the date is a valid gregorian calendar date also

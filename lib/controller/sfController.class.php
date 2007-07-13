@@ -182,7 +182,7 @@ abstract class sfController
       // the requested action doesn't exist
       if (sfConfig::get('sf_logging_enabled'))
       {
-        $this->getContext()->getLogger()->info('{sfController} action does not exist');
+        $this->context->getLogger()->info('{sfController} action does not exist');
       }
 
       // track the requested module so we have access to the data in the error 404 page
@@ -241,8 +241,8 @@ abstract class sfController
 
         if ($moduleName == sfConfig::get('sf_error_404_module') && $actionName == sfConfig::get('sf_error_404_action'))
         {
-          $this->getContext()->getResponse()->setStatusCode(404);
-          $this->getContext()->getResponse()->setHttpHeader('Status', '404 Not Found');
+          $this->context->getResponse()->setStatusCode(404);
+          $this->context->getResponse()->setHttpHeader('Status', '404 Not Found');
 
           foreach (sfMixer::getCallables('sfController:forward:error404') as $callable)
           {
@@ -408,7 +408,7 @@ abstract class sfController
     else
     {
       // view class (as configured in module.yml or defined in action)
-      $viewName = $this->getContext()->getRequest()->getAttribute($moduleName.'_'.$actionName.'_view_name', sfConfig::get('mod_'.strtolower($moduleName).'_view_class'), 'symfony/action/view');
+      $viewName = $this->context->getRequest()->getAttribute($moduleName.'_'.$actionName.'_view_name', sfConfig::get('mod_'.strtolower($moduleName).'_view_class'), 'symfony/action/view');
       $class    = sfAutoload::getClassPath($viewName.'View') ? $viewName.'View' : 'sfPHPView';
     }
 
@@ -491,7 +491,7 @@ abstract class sfController
   {
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfController} get presentation for action "'.$module.'/'.$action.'" (view class: "'.$viewName.'")');
+      $this->context->getLogger()->info('{sfController} get presentation for action "'.$module.'/'.$action.'" (view class: "'.$viewName.'")');
     }
 
     // get original render mode
@@ -509,7 +509,7 @@ abstract class sfController
     // set viewName if needed
     if ($viewName)
     {
-      $this->getContext()->getRequest()->setAttribute($module.'_'.$action.'_view_name', $viewName, 'symfony/action/view');
+      $this->context->getRequest()->setAttribute($module.'_'.$action.'_view_name', $viewName, 'symfony/action/view');
     }
 
     // forward to the mail action
@@ -547,7 +547,7 @@ abstract class sfController
     // remove viewName
     if ($viewName)
     {
-      $this->getContext()->getRequest()->getAttributeHolder()->remove($module.'_'.$action.'_view_name', 'symfony/action/view');
+      $this->context->getRequest()->getAttributeHolder()->remove($module.'_'.$action.'_view_name', 'symfony/action/view');
     }
 
     return $presentation;

@@ -64,7 +64,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
         {
           if (sfConfig::get('sf_logging_enabled'))
           {
-            $this->getContext()->getLogger()->info('{sfUser} remove credential "'.$credential.'"');
+            $this->context->getLogger()->info('{sfUser} remove credential "'.$credential.'"');
           }
 
           unset($this->credentials[$key]);
@@ -98,7 +98,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
 
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfUser} add credential(s) "'.implode(', ', $credentials).'"');
+      $this->context->getLogger()->info('{sfUser} add credential(s) "'.implode(', ', $credentials).'"');
     }
 
     foreach ($credentials as $aCredential)
@@ -173,7 +173,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
   {
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfUser} user is '.($authenticated === true ? '' : 'not ').'authenticated');
+      $this->context->getLogger()->info('{sfUser} user is '.($authenticated === true ? '' : 'not ').'authenticated');
     }
 
     if ($authenticated === true)
@@ -213,7 +213,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     parent::initialize($context, $parameters);
 
     // read data from storage
-    $storage = $this->getContext()->getStorage();
+    $storage = $this->context->getStorage();
 
     $this->authenticated = $storage->read(self::AUTH_NAMESPACE);
     $this->credentials   = $storage->read(self::CREDENTIAL_NAMESPACE);
@@ -230,7 +230,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     {
       if (sfConfig::get('sf_logging_enabled'))
       {
-        $this->getContext()->getLogger()->info('{sfUser} automatic user logout');
+        $this->context->getLogger()->info('{sfUser} automatic user logout');
       }
       $this->setTimedOut();
       $this->clearCredentials();
@@ -242,7 +242,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
 
   public function shutdown()
   {
-    $storage = $this->getContext()->getStorage();
+    $storage = $this->context->getStorage();
 
     // write the last request time to the storage
     $storage->write(self::LAST_REQUEST_NAMESPACE, $this->lastRequest);

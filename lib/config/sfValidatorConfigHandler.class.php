@@ -101,7 +101,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
 
     if ($ret)
     {
-      $data[] = sprintf("  \$context->getRequest()->setAttribute('fillin', %s, 'symfony/filter');", $fillin);
+      $data[] = sprintf("  \$this->context->getRequest()->setAttribute('fillin', %s, 'symfony/filter');", $fillin);
     }
 
     // generate POST file/parameter data
@@ -114,7 +114,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
 
     if ($ret)
     {
-      $data[] = sprintf("  \$context->getRequest()->setAttribute('fillin', %s, 'symfony/filter');", $fillin);
+      $data[] = sprintf("  \$this->context->getRequest()->setAttribute('fillin', %s, 'symfony/filter');", $fillin);
     }
 
     $data[] = "}";
@@ -180,8 +180,8 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
           $validator =& $validators[$valName];
 
           $data[] = sprintf("  \$validators['%s'] = new %s();\n".
-                            "  \$validators['%s']->initialize(%s, %s);",
-                            $valName, $validator['class'], $valName, '$context', $validator['parameters']);
+                            "  \$validators['%s']->initialize(\$this->context, %s);",
+                            $valName, $validator['class'], $valName, $validator['parameters']);
 
           // mark this validator as created for this request method
           $validators[$valName][$method] = true;

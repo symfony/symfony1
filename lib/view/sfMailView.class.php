@@ -58,7 +58,7 @@ class sfMailView extends sfPHPView
 
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfView} render "'.$template.'"');
+      $this->context->getLogger()->info('{sfView} render "'.$template.'"');
     }
 
     // get sfMail object from action
@@ -88,7 +88,7 @@ class sfMailView extends sfPHPView
     // send email
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->getContext()->getLogger()->info('{sfView} send email to client');
+      $this->context->getLogger()->info('{sfView} send email to client');
     }
 
     // configuration prefix
