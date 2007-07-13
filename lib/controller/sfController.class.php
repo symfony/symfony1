@@ -170,10 +170,6 @@ abstract class sfController
       throw new sfForwardException($error);
     }
 
-    $rootDir = sfConfig::get('sf_root_dir');
-    $app     = sfConfig::get('sf_app');
-    $env     = sfConfig::get('sf_environment');
-
     // check for a module generator config file
     sfConfigCache::getInstance()->import(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/generator.yml', true, true);
 
@@ -237,7 +233,8 @@ abstract class sfController
       {
         // create a new filter chain
         $filterChain = new sfFilterChain();
-        $this->loadFilters($filterChain, $actionInstance);
+
+        require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/filters.yml'));
 
         if ($moduleName == sfConfig::get('sf_error_404_module') && $actionName == sfConfig::get('sf_error_404_action'))
         {
@@ -584,19 +581,6 @@ abstract class sfController
   public function inCLI()
   {
     return 0 == strncasecmp(PHP_SAPI, 'cli', 3);
-  }
-
-  /**
-   * Loads application nad module filters.
-   *
-   * @param sfFilterChain A sfFilterChain instance
-   * @param sfAction      A sfAction instance
-   */
-  public function loadFilters($filterChain, $actionInstance)
-  {
-    $moduleName = $this->context->getModuleName();
-
-    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/filters.yml'));
   }
 
   /**
