@@ -14,22 +14,21 @@ require_once($_test_dir.'/../lib/config/sfConfig.class.php');
 sfConfig::set('sf_symfony_lib_dir', realpath($_test_dir.'/../lib'));
 sfConfig::set('sf_symfony_data_dir', realpath($_test_dir.'/../data'));
 
-require_once(dirname(__FILE__).'/testAutoloader.class.php');
-
-ini_set('unserialize_callback_func', 'spl_autoload_call');
-testAutoloader::initialize();
-spl_autoload_register(array('testAutoloader', 'autoload'));
+require_once(dirname(__FILE__).'/../../lib/util/sfSimpleAutoload.class.php');
+$autoload = new sfSimpleAutoload('unit');
+$autoload->addDirectory(realpath(dirname(__FILE__).'/../../lib'));
+$autoload->register();
 
 class sfException extends Exception
 {
   private $name = null;
 
-  protected function setName ($name)
+  protected function setName($name)
   {
     $this->name = $name;
   }
 
-  public function getName ()
+  public function getName()
   {
     return $this->name;
   }

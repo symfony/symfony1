@@ -174,6 +174,9 @@ function run_propel_build_model($task, $args)
   _call_phing($task, 'om');
   $finder = pakeFinder::type('file')->name('generated-*schema.xml');
   pake_remove($finder, array('config', 'plugins'));
+
+  global $sf_autoload;
+  $sf_autoload->reload();
 }
 
 function run_propel_build_sql($task, $args)

@@ -31,79 +31,6 @@ if (file_exists('config/config.php') && !isset($sf_symfony_lib_dir))
 
 require_once($sf_symfony_lib_dir.'/vendor/pake/pakeFunction.php');
 require_once($sf_symfony_lib_dir.'/vendor/pake/pakeGetopt.class.php');
-
-// autoloading for pake tasks
-class simpleAutoloader
-{
-  static public
-    $class_paths        = array(),
-    $autoload_callables = array();
-
-  static public function initialize($sf_symfony_lib_dir)
-  {
-    self::$class_paths = array();
-
-    self::register($sf_symfony_lib_dir, '.class.php');
-    self::register($sf_symfony_lib_dir.'/vendor/propel', '.php');
-    self::register($sf_symfony_lib_dir.'/vendor/creole', '.php');
-    self::register('lib/model', '.php');
-    self::register('plugins', '.php');
-  }
-
-  static public function autoload($class)
-  {
-    if (!isset(self::$class_paths[$class]))
-    {
-      foreach ((array) self::$autoload_callables as $callable)
-      {
-        if (call_user_func($callable, $class))
-        {
-          return true;
-        }
-      }
-
-      return false;
-    }
-
-    require_once(self::$class_paths[$class]);
-
-    return true;
-  }
-
-  static public function register($dir, $ext)
-  {
-    if (!is_dir($dir))
-    {
-      return;
-    }
-
-    foreach (pakeFinder::type('file')->name('*'.$ext)->ignore_version_control()->follow_link()->in($dir) as $file)
-    {
-      self::$class_paths[str_replace($ext, '', str_replace('.class', '', basename($file, $ext)))] = $file;
-    }
-  }
-
-  static public function add($class, $file)
-  {
-    if (!is_file($file))
-    {
-      return;
-    }
-
-    self::$class_paths[$class] = $file;
-  }
-
-  static public function registerCallable($callable)
-  {
-    if (!is_callable($callable))
-    {
-      throw new Exception('Autoload callable does not exist');
-    }
-
-    self::$autoload_callables[] = $callable;
-  }
-}
-
 require_once($sf_symfony_lib_dir.'/util/sfCore.class.php');
 
 // trap -V before pake
@@ -138,10 +65,14 @@ set_include_path(
   get_include_path()
 );
 
-// initialize class autoloading
-ini_set('unserialize_callback_func', 'spl_autoload_call');
-simpleAutoloader::initialize(sfConfig::get('sf_symfony_lib_dir'));
-spl_autoload_register(array('simpleAutoloader', 'autoload'));
+require_once(sfConfig::get('sf_symfony_lib_dir').'/util/sfSimpleAutoload.class.php');
+$sf_autoload = new sfSimpleAutoload('cmd');
+$sf_autoload->addDirectory(sfConfig::get('sf_symfony_lib_dir'));
+$sf_autoload->addDirectory(sfConfig::get('sf_symfony_lib_dir').'/vendor/propel');
+$sf_autoload->addDirectory(sfConfig::get('sf_symfony_lib_dir').'/vendor/creole');
+$sf_autoload->addDirectory('lib/model');
+$sf_autoload->addDirectory('plugins');
+$sf_autoload->register();
 
 // register tasks
 $dirs = array(
