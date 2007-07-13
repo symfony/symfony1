@@ -204,17 +204,17 @@ class sfExecutionFilter extends sfFilter
       return;
     }
 
-    $viewData = $this->executeView($actionInstance->getModuleName(), $actionInstance->getActionName(), $viewName, $actionInstance->getVarHolder()->getAll());
-
-    $controller = $this->getContext()->getController();
-    if (sfView::RENDER_VAR == $controller->getRenderMode())
-    {
-      $controller->getActionStack()->getLastEntry()->setPresentation($viewData);
-    }
+    $this->executeView($actionInstance->getModuleName(), $actionInstance->getActionName(), $viewName, $actionInstance->getVarHolder()->getAll());
   }
 
   /**
    * Executes and renders the view.
+   *
+   * The behavior of this method depends on the controller render mode:
+   *
+   *   - sfView::NONE: Nothing happens.
+   *   - sfView::RENDER_CLIENT: View data populates the response content.
+   *   - sfView::RENDER_DATA: View data populates the data presentation variable.
    *
    * @param  string The module name
    * @param  string The action name
@@ -225,21 +225,34 @@ class sfExecutionFilter extends sfFilter
    */
   protected function executeView($moduleName, $actionName, $viewName, $viewAttributes)
   {
+    $controller = $this->getContext()->getController();
+
     // get the view instance
-    $view = $this->getContext()->getController()->getView($moduleName, $actionName, $viewName);
+    $view = $controller->getView($moduleName, $actionName, $viewName);
     $view->initialize($this->getContext(), $moduleName, $actionName, $viewName);
 
+    // execute the view
     $view->execute();
 
-    // get view attributes from the action
-    // and pass them to the view
+    // pass attributes to the view
     $view->getAttributeHolder()->add($viewAttributes);
 
-    // render the view and if data is returned, stick it in the
-    // action entry which was retrieved from the execution chain
-    $viewData = $view->render();
+    // render the view
+    switch ($controller->getRenderMode())
+    {
+      case sfView::RENDER_NONE:
+        break;
 
-    return $viewData;
+      case sfView::RENDER_CLIENT:
+        $viewData = $view->render();
+        $this->getContext()->getResponse()->setContent($viewData);
+        break;
+
+      case sfView::RENDER_VAR:
+        $viewData = $view->render();
+        $controller->getActionStack()->getLastEntry()->setPresentation($viewData);
+        break;
+    }
   }
 
   /**
