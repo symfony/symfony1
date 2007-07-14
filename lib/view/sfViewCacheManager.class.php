@@ -508,6 +508,138 @@ class sfViewCacheManager
   }
 
   /**
+   * Returns whether an action template is in the cache.
+   *
+   * @param  string  The internal URI
+   *
+   * @return Boolean true if an action is in the cache, false otherwise
+   */
+  public function hasActionCache($uri)
+  {
+    return $this->has($uri) && !$this->withLayout($uri);
+  }
+
+  /**
+   * Gets an action template from the cache.
+   *
+   * @param  string The internal URI
+   *
+   * @return array  An array composed of the cached content and the view attribute holder
+   */
+  public function getActionCache($uri)
+  {
+    if (!$this->isCacheable($uri) || $this->withLayout($uri))
+    {
+      return null;
+    }
+
+    // retrieve content from cache
+    $cache = $this->get($uri);
+
+    if (is_null($cache))
+    {
+      return null;
+    }
+
+    $cache = unserialize($cache);
+    $content = $cache['content'];
+    $this->context->getResponse()->mergeProperties($cache['response']);
+
+    if (sfConfig::get('sf_web_debug'))
+    {
+      $content = sfWebDebug::getInstance()->decorateContentWithDebug($uri, $content, false);
+    }
+
+    return array($content, $cache['attributeHolder']);
+  }
+
+  /**
+   * Sets an action template in the cache.
+   *
+   * @param  string The internal URI
+   * @param  string The content to cache
+   * @param  string The view attribute holder to cache
+   *
+   * @return string The cached content
+   */
+  public function setActionCache($uri, $content, $attributeHolder)
+  {
+    if (!$this->isCacheable($uri) || $this->withLayout($uri))
+    {
+      return $content;
+    }
+
+    $this->set(serialize(array('content' => $content, 'attributeHolder' => $attributeHolder, 'response' => $this->context->getResponse())), $uri);
+
+    if (sfConfig::get('sf_web_debug'))
+    {
+      $content = sfWebDebug::getInstance()->decorateContentWithDebug($uri, $content, true);
+    }
+
+    return $content;
+  }
+
+  /**
+   * Sets a page in the cache.
+   *
+   * @param string The internal URI
+   */
+  public function setPageCache($uri)
+  {
+    if (sfView::RENDER_CLIENT != $this->context->getController()->getRenderMode())
+    {
+      return;
+    }
+
+    // save content in cache
+    $this->set(serialize($this->context->getResponse()), $uri);
+
+    if (sfConfig::get('sf_web_debug'))
+    {
+      $content = sfWebDebug::getInstance()->decorateContentWithDebug($uri, $this->context->getResponse()->getContent(), true);
+      $this->context->getResponse()->setContent($content);
+    }
+  }
+
+  /**
+   * Gets a page from the cache.
+   *
+   * @param  string The internal URI
+   *
+   * @return string The cached page
+   */
+  public function getPageCache($uri)
+  {
+    $retval = $this->get($uri);
+
+    if (is_null($retval))
+    {
+      return false;
+    }
+
+    $cachedResponse = unserialize($retval);
+
+    $controller = $this->context->getController();
+    if (sfView::RENDER_VAR == $controller->getRenderMode())
+    {
+      $controller->getActionStack()->getLastEntry()->setPresentation($cachedResponse->getContent());
+      $this->response->setContent('');
+    }
+    else
+    {
+      $this->context->setResponse($cachedResponse);
+
+      if (sfConfig::get('sf_web_debug'))
+      {
+        $content = sfWebDebug::getInstance()->decorateContentWithDebug($uri, $this->context->getResponse()->getContent(), false);
+        $this->context->getResponse()->setContent($content);
+      }
+    }
+
+    return true;
+  }
+
+  /**
    * Executes the shutdown procedure.
    */
   public function shutdown()

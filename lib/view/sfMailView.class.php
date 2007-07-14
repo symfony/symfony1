@@ -49,17 +49,10 @@ class sfMailView extends sfPHPView
    */
   public function render()
   {
-    $template = $this->getDirectory().'/'.$this->getTemplate();
-
     $retval = null;
 
     // execute pre-render check
     $this->preRenderCheck();
-
-    if (sfConfig::get('sf_logging_enabled'))
-    {
-      $this->context->getLogger()->info('{sfView} render "'.$template.'"');
-    }
 
     // get sfMail object from action
     $mail = $this->attributeHolder->get('mail');
@@ -69,6 +62,7 @@ class sfMailView extends sfPHPView
     }
 
     // render main template
+    $template = $this->getDirectory().'/'.$this->getTemplate();
     $retval = $this->renderFile($template);
 
     // render main and alternate templates
@@ -87,7 +81,7 @@ class sfMailView extends sfPHPView
     // send email
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->context->getLogger()->info('{sfView} send email to client');
+      $this->context->getLogger()->info('{sfMailView} send email to client');
     }
 
     // configuration prefix

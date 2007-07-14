@@ -74,15 +74,14 @@ class sfExecutionFilter extends sfFilter
    */
   protected function handleAction($filterChain, $actionInstance)
   {
-    // get the request method
-    $method  = $this->context->getRequest()->getMethod();
-
-    if (sfConfig::get('sf_cache') && null !== $this->context->getResponse()->getParameter($this->context->getRouting()->getCurrentInternalUri().'_action', null, 'symfony/cache'))
+    if (sfConfig::get('sf_cache') && $this->context->getViewCacheManager()->hasActionCache($this->context->getRouting()->getCurrentInternalUri()))
     {
       // action in cache, so go to the view
       return sfView::SUCCESS;
     }
 
+    // get the request method
+    $method = $this->context->getRequest()->getMethod();
     if (($actionInstance->getRequestMethods() & $method) != $method)
     {
       // this action will skip validation/execution for this method
