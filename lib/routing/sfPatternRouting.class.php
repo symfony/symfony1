@@ -23,7 +23,8 @@
 class sfPatternRouting extends sfRouting
 {
   protected
-    $current_route_name = '',
+    $currentRouteName   = null,
+    $currentInternalUri = null,
     $routes             = array();
 
   /**
@@ -56,15 +57,20 @@ class sfPatternRouting extends sfRouting
    */
   public function getCurrentInternalUri($with_route_name = false)
   {
-    if ($this->current_route_name)
+    if (is_null($this->currentRouteName))
     {
-      list($url, $regexp, $names, $names_hash, $defaults, $requirements, $suffix) = $this->routes[$this->current_route_name];
+      return null;
+    }
+
+    if (is_null($this->currentInternalUri))
+    {
+      list($url, $regexp, $names, $names_hash, $defaults, $requirements, $suffix) = $this->routes[$this->currentRouteName];
 
       $request = $this->context->getRequest();
 
       if ($with_route_name)
       {
-        $internal_uri = '@'.$this->current_route_name;
+        $internal_uri = '@'.$this->currentRouteName;
       }
       else
       {
@@ -98,8 +104,10 @@ class sfPatternRouting extends sfRouting
       // sort to guaranty unicity
       sort($params);
 
-      return $internal_uri.($params ? '?'.implode('&', $params) : '');
+      $this->currentInternalUri = $internal_uri.($params ? '?'.implode('&', $params) : '');
     }
+
+    return $this->currentInternalUri;
   }
 
   /**
@@ -551,7 +559,8 @@ class sfPatternRouting extends sfRouting
         if ($break)
         {
           // we store route name
-          $this->current_route_name = $route_name;
+          $this->currentRouteName = $route_name;
+          $this->currentInternalUri = null;
 
           if (sfConfig::get('sf_logging_enabled'))
           {
