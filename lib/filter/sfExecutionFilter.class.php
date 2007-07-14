@@ -89,20 +89,7 @@ class sfExecutionFilter extends sfFilter
       return $actionInstance->getDefaultView();
     }
 
-    $validated = $this->validateAction($actionInstance);
-
-    // register fill-in filter
-    if (null !== ($parameters = $this->context->getRequest()->getAttribute('fillin', null, 'symfony/filter')))
-    {
-      $this->registerFillInFilter($filterChain, $parameters);
-    }
-
-    if (!$validated && sfConfig::get('sf_logging_enabled'))
-    {
-      $this->context->getLogger()->info('{sfFilter} action validation failed');
-    }
-
-    return $validated ? $this->executeAction($actionInstance) : $this->handleErrorAction($actionInstance);
+    return $this->validateAction($filterChain, $actionInstance) ? $this->executeAction($actionInstance) : $this->handleErrorAction($actionInstance);
   }
 
   /**
@@ -112,7 +99,7 @@ class sfExecutionFilter extends sfFilter
    *
    * @return boolean  True if the action is validated, false otherwise
    */
-  protected function validateAction($actionInstance)
+  protected function validateAction($filterChain, $actionInstance)
   {
     $moduleName = $actionInstance->getModuleName();
     $actionName = $actionInstance->getActionName();
@@ -144,7 +131,20 @@ class sfExecutionFilter extends sfFilter
     // action is validated if:
     // - all validation methods (manual and automatic) return true
     // - or automatic validation returns false but errors have been 'removed' by manual validation
-    return ($manualValidated && $validated) || ($manualValidated && !$validated && !$this->context->getRequest()->hasErrors());
+    $validated = ($manualValidated && $validated) || ($manualValidated && !$validated && !$this->context->getRequest()->hasErrors());
+
+    // register fill-in filter
+    if (null !== ($parameters = $this->context->getRequest()->getAttribute('fillin', null, 'symfony/filter')))
+    {
+      $this->registerFillInFilter($filterChain, $parameters);
+    }
+
+    if (!$validated && sfConfig::get('sf_logging_enabled'))
+    {
+      $this->context->getLogger()->info('{sfFilter} action validation failed');
+    }
+
+    return $validated;
   }
 
   /**
