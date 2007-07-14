@@ -569,9 +569,9 @@ class sfViewCacheManager
       return $content;
     }
 
-    $this->set(serialize(array('content' => $content, 'attributeHolder' => $attributeHolder, 'response' => $this->context->getResponse())), $uri);
+    $saved = $this->set(serialize(array('content' => $content, 'attributeHolder' => $attributeHolder, 'response' => $this->context->getResponse())), $uri);
 
-    if (sfConfig::get('sf_web_debug'))
+    if ($saved && sfConfig::get('sf_web_debug'))
     {
       $content = sfWebDebug::getInstance()->decorateContentWithDebug($uri, $content, true);
     }
@@ -592,9 +592,9 @@ class sfViewCacheManager
     }
 
     // save content in cache
-    $this->set(serialize($this->context->getResponse()), $uri);
+    $saved = $this->set(serialize($this->context->getResponse()), $uri);
 
-    if (sfConfig::get('sf_web_debug'))
+    if ($saved && sfConfig::get('sf_web_debug'))
     {
       $content = sfWebDebug::getInstance()->decorateContentWithDebug($uri, $this->context->getResponse()->getContent(), true);
       $this->context->getResponse()->setContent($content);
