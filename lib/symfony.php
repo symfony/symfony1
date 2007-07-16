@@ -55,91 +55,66 @@ else
 require_once($sf_symfony_lib_dir.'/util/sfAutoload.class.php');
 sfAutoload::initAutoload();
 
-try
+$configCache = sfConfigCache::getInstance();
+
+// force setting default timezone if not set
+if (function_exists('date_default_timezone_get'))
 {
-  $configCache = sfConfigCache::getInstance();
-
-  // force setting default timezone if not set
-  if (function_exists('date_default_timezone_get'))
+  if ($default_timezone = sfConfig::get('sf_default_timezone'))
   {
-    if ($default_timezone = sfConfig::get('sf_default_timezone'))
-    {
-      date_default_timezone_set($default_timezone);
-    }
-    else if (sfConfig::get('sf_force_default_timezone', true))
-    {
-      date_default_timezone_set(@date_default_timezone_get());
-    }
+    date_default_timezone_set($default_timezone);
   }
-
-  // get config instance
-  $sf_app_config_dir_name = sfConfig::get('sf_app_config_dir_name');
-
-  $sf_debug = sfConfig::get('sf_debug');
-
-  // load timer classes if in debug mode
-  if ($sf_debug)
+  else if (sfConfig::get('sf_force_default_timezone', true))
   {
-    require_once($sf_symfony_lib_dir.'/debug/sfTimerManager.class.php');
-    require_once($sf_symfony_lib_dir.'/debug/sfTimer.class.php');
-  }
-
-  // load base settings
-  include($configCache->checkConfig($sf_app_config_dir_name.'/settings.yml'));
-  if (sfConfig::get('sf_logging_enabled', true))
-  {
-    include($configCache->checkConfig($sf_app_config_dir_name.'/logging.yml'));
-  }
-  if ($file = $configCache->checkConfig($sf_app_config_dir_name.'/app.yml', true))
-  {
-    include($file);
-  }
-
-  // error settings
-  ini_set('display_errors', $sf_debug ? 'on' : 'off');
-  error_reporting(sfConfig::get('sf_error_reporting'));
-
-  // create bootstrap file for next time
-  if (!sfConfig::get('sf_in_bootstrap') && !$sf_debug && !sfConfig::get('sf_test'))
-  {
-    $configCache->checkConfig($sf_app_config_dir_name.'/bootstrap_compile.yml');
-  }
-
-  // required core classes for the framework
-  // create a temp var to avoid substitution during compilation
-  if (!$sf_debug && !sfConfig::get('sf_test'))
-  {
-    $core_classes = $sf_app_config_dir_name.'/core_compile.yml';
-    $configCache->import($core_classes, false);
-  }
-
-  $configCache->import($sf_app_config_dir_name.'/php.yml', false);
-
-  // include all config.php from plugins
-  sfLoader::loadPluginConfig();
-
-  // compress output
-  ob_start(sfConfig::get('sf_compressed') ? 'ob_gzhandler' : '');
-}
-catch (sfException $e)
-{
-  $e->printStackTrace();
-}
-catch (Exception $e)
-{
-  if (sfConfig::get('sf_test'))
-  {
-    throw $e;
-  }
-
-  try
-  {
-    // wrap non symfony exceptions
-    $sfException = new sfException();
-    $sfException->printStackTrace($e);
-  }
-  catch (Exception $e)
-  {
-    header('HTTP/1.0 500 Internal Server Error');
+    date_default_timezone_set(@date_default_timezone_get());
   }
 }
+
+// get config instance
+$sf_app_config_dir_name = sfConfig::get('sf_app_config_dir_name');
+
+$sf_debug = sfConfig::get('sf_debug');
+
+// load timer classes if in debug mode
+if ($sf_debug)
+{
+  require_once($sf_symfony_lib_dir.'/debug/sfTimerManager.class.php');
+  require_once($sf_symfony_lib_dir.'/debug/sfTimer.class.php');
+}
+
+// load base settings
+include($configCache->checkConfig($sf_app_config_dir_name.'/settings.yml'));
+if (sfConfig::get('sf_logging_enabled', true))
+{
+  include($configCache->checkConfig($sf_app_config_dir_name.'/logging.yml'));
+}
+if ($file = $configCache->checkConfig($sf_app_config_dir_name.'/app.yml', true))
+{
+  include($configCache->checkConfig($sf_app_config_dir_name.'/app.yml'));
+}
+
+// error settings
+ini_set('display_errors', $sf_debug ? 'on' : 'off');
+error_reporting(sfConfig::get('sf_error_reporting'));
+
+// create bootstrap file for next time
+if (!sfConfig::get('sf_in_bootstrap') && !$sf_debug && !sfConfig::get('sf_test'))
+{
+  $configCache->checkConfig($sf_app_config_dir_name.'/bootstrap_compile.yml');
+}
+
+// required core classes for the framework
+// create a temp var to avoid substitution during compilation
+if (!$sf_debug && !sfConfig::get('sf_test'))
+{
+  $core_classes = $sf_app_config_dir_name.'/core_compile.yml';
+  $configCache->import($core_classes, false);
+}
+
+$configCache->import($sf_app_config_dir_name.'/php.yml', false);
+
+// include all config.php from plugins
+sfLoader::loadPluginConfig();
+
+// compress output
+ob_start(sfConfig::get('sf_compressed') ? 'ob_gzhandler' : '');

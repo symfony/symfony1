@@ -21,23 +21,45 @@ class sfCore
 
   static public function bootstrap($sf_symfony_lib_dir, $sf_symfony_data_dir)
   {
-    require_once($sf_symfony_lib_dir.'/util/sfToolkit.class.php');
-    require_once($sf_symfony_lib_dir.'/config/sfConfig.class.php');
-
-    sfCore::initConfiguration($sf_symfony_lib_dir, $sf_symfony_data_dir);
-
-    sfCore::initIncludePath();
-
-    sfCore::callBootstrap();
-
-    if (sfConfig::get('sf_check_lock'))
+    try
     {
-      sfCore::checkLock();
+      sfCore::initConfiguration($sf_symfony_lib_dir, $sf_symfony_data_dir);
+
+      sfCore::initIncludePath();
+
+      sfCore::callBootstrap();
+
+      if (sfConfig::get('sf_check_lock'))
+      {
+        sfCore::checkLock();
+      }
+
+      if (sfConfig::get('sf_check_symfony_version'))
+      {
+        sfCore::checkSymfonyVersion();
+      }
     }
-
-    if (sfConfig::get('sf_check_symfony_version'))
+    catch (sfException $e)
     {
-      sfCore::checkSymfonyVersion();
+      $e->printStackTrace();
+    }
+    catch (Exception $e)
+    {
+      if (sfConfig::get('sf_test'))
+      {
+        throw $e;
+      }
+
+      try
+      {
+        // wrap non symfony exceptions
+        $sfException = new sfException();
+        $sfException->printStackTrace($e);
+      }
+      catch (Exception $e)
+      {
+        header('HTTP/1.0 500 Internal Server Error');
+      }
     }
   }
 
@@ -57,6 +79,9 @@ class sfCore
 
   static public function initConfiguration($sf_symfony_lib_dir, $sf_symfony_data_dir, $test = false)
   {
+    require_once($sf_symfony_lib_dir.'/util/sfToolkit.class.php');
+    require_once($sf_symfony_lib_dir.'/config/sfConfig.class.php');
+
     // start timer
     if (SF_DEBUG)
     {
