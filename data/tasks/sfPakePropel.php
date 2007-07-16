@@ -302,16 +302,7 @@ function run_propel_load_data($task, $args, $options)
     throw new Exception(sprintf('The app "%s" does not exist.', $app));
   }
 
-  if (isset($options['append']))
-  {
-    array_pop($args);
-    $delete = false;
-  }
-  else
-  {
-    $delete = true;
-  }
-
+  $delete = isset($options['append']) ? false : true;
   $env = isset($options['env']) ? $options['env'] : 'dev';
 
   // define constants
