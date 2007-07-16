@@ -283,7 +283,7 @@ function run_propel_dump_data($task, $args)
  * Loads yml data from fixtures directory and inserts into database.
  *
  * @example symfony propel-load-data frontend
- * @example symfony --env=dev --dir[]=data/fixtures --append propel-load-data frontend
+ * @example symfony --env=dev --dir[]=data/fixtures --append propel-load-data --connection=propel frontend
  *
  * @param object $task
  * @param array  $args
@@ -304,6 +304,7 @@ function run_propel_load_data($task, $args, $options)
 
   $delete = isset($options['append']) ? false : true;
   $env = isset($options['env']) ? $options['env'] : 'dev';
+  $connection_name = isset($options['connection']) ? $options['connection'] : 'propel';
 
   // define constants
   define('SF_ROOT_DIR',    sfConfig::get('sf_root_dir'));
@@ -313,6 +314,9 @@ function run_propel_load_data($task, $args, $options)
 
   // get configuration
   require_once SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php';
+  global $sf_autoload;
+  $sf_autoload->unregister();
+  $sf_autoload->register();
 
   if (isset($options['dir[]']))
   {
@@ -341,7 +345,7 @@ function run_propel_load_data($task, $args, $options)
     }
 
     pake_echo_action('propel', sprintf('load data from "%s"', $fixtures_dir));
-    $data->loadData($fixtures_dir);
+    $data->loadData($fixtures_dir, $connection_name);
   }
 }
 
