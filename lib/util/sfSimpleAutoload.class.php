@@ -48,6 +48,11 @@ class sfSimpleAutoload
     }
   }
 
+  public function unregister()
+  {
+    spl_autoload_unregister(array($this, 'autoload'));
+  }
+
   public function autoload($class)
   {
     // class already exists

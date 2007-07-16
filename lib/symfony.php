@@ -53,7 +53,7 @@ else
 
 // autoloading
 require_once($sf_symfony_lib_dir.'/util/sfAutoload.class.php');
-sfAutoload::initAutoload();
+sfAutoload::register();
 
 $configCache = sfConfigCache::getInstance();
 

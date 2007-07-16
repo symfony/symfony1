@@ -20,11 +20,16 @@ class sfAutoload
   static protected
     $classes = array();
 
-  static public function initAutoload()
+  static public function register()
   {
     ini_set('unserialize_callback_func', 'spl_autoload_call');
 
     spl_autoload_register(array('sfAutoload', 'autoload'));
+  }
+
+  static public function unregister()
+  {
+    spl_autoload_unregister(array('sfAutoload', 'autoload'));
   }
 
   static public function getClassPath($class)
