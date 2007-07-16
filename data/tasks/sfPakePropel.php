@@ -282,15 +282,13 @@ function run_propel_dump_data($task, $args)
 /**
  * Loads yml data from fixtures directory and inserts into database.
  *
- * @example symfony load-data frontend
- * @example symfony load-data frontend dev fixtures append
- *
- * @todo replace delete argument with flag -d
+ * @example symfony propel-load-data frontend
+ * @example symfony --env=dev --dir[]=data/fixtures --append propel-load-data frontend
  *
  * @param object $task
- * @param array $args
+ * @param array  $args
  */
-function run_propel_load_data($task, $args)
+function run_propel_load_data($task, $args, $options)
 {
   if (!count($args))
   {
@@ -301,10 +299,10 @@ function run_propel_load_data($task, $args)
 
   if (!is_dir(sfConfig::get('sf_app_dir').DIRECTORY_SEPARATOR.$app))
   {
-    throw new Exception('The app "'.$app.'" does not exist.');
+    throw new Exception(sprintf('The app "%s" does not exist.', $app));
   }
 
-  if (count($args) > 1 && $args[count($args) - 1] == 'append')
+  if (isset($options['append']))
   {
     array_pop($args);
     $delete = false;
@@ -314,7 +312,7 @@ function run_propel_load_data($task, $args)
     $delete = true;
   }
 
-  $env = empty($args[1]) ? 'dev' : $args[1];
+  $env = isset($options['env']) ? $options['env'] : 'dev';
 
   // define constants
   define('SF_ROOT_DIR',    sfConfig::get('sf_root_dir'));
@@ -325,17 +323,17 @@ function run_propel_load_data($task, $args)
   // get configuration
   require_once SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php';
 
-  if (count($args) == 1)
+  if (isset($options['dir[]']))
+  {
+    $fixtures_dirs = $options['dir[]'];
+  }
+  else
   {
     if (!$pluginDirs = glob(sfConfig::get('sf_root_dir').'/plugins/*/data'))
     {
       $pluginDirs = array();
     }
     $fixtures_dirs = pakeFinder::type('dir')->name('fixtures')->in(array_merge($pluginDirs, array(sfConfig::get('sf_data_dir'))));
-  }
-  else
-  {
-    $fixtures_dirs = array_slice($args, 1);
   }
 
   $databaseManager = new sfDatabaseManager();
