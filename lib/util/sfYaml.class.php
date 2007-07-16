@@ -71,11 +71,18 @@ class sfYaml
    */
   public static function dump($array)
   {
-    require_once(dirname(__FILE__).'/Spyc.class.php');
+    if (function_exists('syck_dump'))
+    {
+      return syck_dump($array);
+    }
+    else
+    {
+      require_once(dirname(__FILE__).'/Spyc.class.php');
 
-    $spyc = new Spyc();
+      $spyc = new Spyc();
 
-    return $spyc->dump($array);
+      return $spyc->dump($array);
+    }
   }
 
   protected static function getIncludeContents($input)
