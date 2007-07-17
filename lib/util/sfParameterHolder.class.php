@@ -42,6 +42,23 @@ class sfParameterHolder implements Serializable
   }
 
   /**
+   * Sets the default namespace value.
+   *
+   * @param string  Default namespace.
+   * @param Boolean Move all values of the old default namespace to the new one or not.
+   */
+  public function setDefaultNamespace($namespace, $move = true)
+  {
+    if ($move)
+    {
+      $values = $this->removeNamespace();
+      $this->addByRef($values, $namespace);
+    }
+
+    $this->default_namespace = $namespace;
+  }
+
+  /**
    * Get the default namespace value.
    *
    * The $default_namespace is defined as 'symfony/default'.

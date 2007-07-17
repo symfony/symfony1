@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(54, new lime_output_color());
+$t = new lime_test(59, new lime_output_color());
 
 // ->clear()
 $t->diag('->clear()');
@@ -68,6 +68,25 @@ $ph->set('yourfoo', 'bar');
 $ph->set('myfoo', 'bar', 'symfony/mynamespace');
 
 $t->is($ph->getNamespaces(), array($ph->getDefaultNamespace(), 'symfony/mynamespace'), '->getNamespaces() returns all non empty namespaces');
+
+// ->setDefaultNamespace()
+$t->diag('->setDefaultNamespace()');
+$ph = new sfParameterHolder('symfony/mynamespace');
+$ph->setDefaultNamespace('othernamespace');
+
+$t->is($ph->getDefaultNamespace(), 'othernamespace', '->setDefaultNamespace() sets the default namespace');
+
+$ph->set('foo', 'bar');
+$ph->setDefaultNamespace('foonamespace');
+
+$t->is($ph->get('foo'), 'bar', '->setDefaultNamespace() moves values from the old namespace to the new');
+$t->is($ph->get('foo', null, 'othernamespace'), null, '->setDefaultNamespace() moves values from the old namespace to the new');
+
+$ph->set('foo', 'bar');
+$ph->setDefaultNamespace('barnamespace', false);
+
+$t->is($ph->get('foo'), null, '->setDefaultNamespace() does not move old values to the new namespace if the second argument is false');
+$t->is($ph->get('foo', null, 'foonamespace'), 'bar', '->setDefaultNamespace() does not move old values to the new namespace if the second argument is false');
 
 // ->getAll()
 $t->diag('->getAll()');
