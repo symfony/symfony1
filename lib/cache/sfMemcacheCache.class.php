@@ -46,7 +46,7 @@ class sfMemcacheCache extends sfCache
     $method = $this->getParameter('persistent', false) ? 'pconnect' : 'connect';
     if (!$this->memcache->$method($this->getParameter('host', 'localhost'), $this->getParameter('port', 11211), $this->getParameter('timeout', 1)))
     {
-      throw sfInitializationException(sprintf('Unable to connect to the memcache server (%s:%s).', $this->getParameter('host', 'localhost'), $this->getParameter('port', 11211)));
+      throw new sfInitializationException(sprintf('Unable to connect to the memcache server (%s:%s).', $this->getParameter('host', 'localhost'), $this->getParameter('port', 11211)));
     }
   }
 

@@ -27,6 +27,14 @@ sfConfig::set('sf_logging_enabled', false);
 // ->initialize()
 $t->diag('->initialize()');
 $cache = sfCache::newInstance('sfMemcacheCache');
-$cache->initialize(array('storeCacheInfo' => true));
+try
+{
+  $cache->initialize(array('storeCacheInfo' => true));
+}
+catch (sfInitializationException $e)
+{
+  $t->skip('Memcached must be active to run these tests', $plan);
+  return;
+}
 
 sfCacheDriverTests::launch($t, $cache);
