@@ -21,11 +21,10 @@
 abstract class sfController
 {
   protected
-    $context                  = null,
-    $controllerClasses        = array(),
-    $maxForwards              = 5,
-    $renderMode               = sfView::RENDER_CLIENT,
-    $viewCacheClassName       = null;
+    $context           = null,
+    $controllerClasses = array(),
+    $maxForwards       = 5,
+    $renderMode        = sfView::RENDER_CLIENT;
 
   /**
    * Indicates whether or not a module has a specific component.
