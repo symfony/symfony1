@@ -135,4 +135,14 @@ class sfPropelPager extends sfPager
   {
     return $this->class.'Peer';
   }
+
+  public function getCriteria()
+  {
+    return $this->criteria;
+  }
+
+  public function setCriteria($c)
+  {
+    $this->criteria = $c;
+  }
 }

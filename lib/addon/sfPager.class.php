@@ -184,16 +184,6 @@ abstract class sfPager
     }
   }
 
-  public function getCriteria()
-  {
-    return $this->criteria;
-  }
-
-  public function setCriteria($c)
-  {
-    $this->criteria = $c;
-  }
-
   public function getClass()
   {
     return $this->class;
