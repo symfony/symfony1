@@ -9,6 +9,7 @@
  */
 
 /**
+ * sfWebDebugLogger logs messages into the web debug toolbar.
  *
  * @package    symfony
  * @subpackage log
@@ -21,7 +22,7 @@ class sfWebDebugLogger implements sfLoggerInterface
     $webDebug = null;
 
   /**
-   * Initializes the web debug logger.
+   * Initializes this logger.
    *
    * @param array Logger options
    */

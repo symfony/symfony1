@@ -8,22 +8,13 @@
  * file that was distributed with this source code.
  */
 
-define('SF_LOG_EMERG',   0); // System is unusable
-define('SF_LOG_ALERT',   1); // Immediate action required
-define('SF_LOG_CRIT',    2); // Critical conditions
-define('SF_LOG_ERR',     3); // Error conditions
-define('SF_LOG_WARNING', 4); // Warning conditions
-define('SF_LOG_NOTICE',  5); // Normal but significant
-define('SF_LOG_INFO',    6); // Informational
-define('SF_LOG_DEBUG',   7); // Debug-level messages
-
 /**
  * sfLogger manages all logging in symfony projects.
  *
  * sfLogger can be configuration via the logging.yml configuration file.
  * Loggers can also be registered directly in the logging.yml configuration file.
  *
- * This level list is ordered by highest priority (SF_LOG_EMERG) to lowest priority (SF_LOG_DEBUG):
+ * This level list is ordered by highest priority (self::EMERG) to lowest priority (self::DEBUG):
  * - EMERG:   System is unusable
  * - ALERT:   Immediate action required
  * - CRIT:    Critical conditions
@@ -40,22 +31,21 @@ define('SF_LOG_DEBUG',   7); // Debug-level messages
  */
 class sfLogger
 {
+  const EMERG   = 0; // System is unusable
+  const ALERT   = 1; // Immediate action required
+  const CRIT    = 2; // Critical conditions
+  const ERR     = 3; // Error conditions
+  const WARNING = 4; // Warning conditions
+  const NOTICE  = 5; // Normal but significant
+  const INFO    = 6; // Informational
+  const DEBUG   = 7; // Debug-level messages
+
   protected
     $loggers = array(),
-    $level   = SF_LOG_EMERG;
+    $level   = self::INFO;
 
   protected static
-    $logger = null,
-    $levels  = array(
-      SF_LOG_EMERG   => 'emerg',
-      SF_LOG_ALERT   => 'alert',
-      SF_LOG_CRIT    => 'crit',
-      SF_LOG_ERR     => 'err',
-      SF_LOG_WARNING => 'warning',
-      SF_LOG_NOTICE  => 'notice',
-      SF_LOG_INFO    => 'info',
-      SF_LOG_DEBUG   => 'debug',
-    );
+    $logger = null;
 
   /**
    * Returns the sfLogger instance.
@@ -64,15 +54,15 @@ class sfLogger
    */
   public static function getInstance()
   {
-    if (!sfLogger::$logger)
+    if (!self::$logger)
     {
       // the class exists
       $class = __CLASS__;
-      sfLogger::$logger = new $class();
-      sfLogger::$logger->initialize();
+      self::$logger = new $class();
+      self::$logger->initialize();
     }
 
-    return sfLogger::$logger;
+    return self::$logger;
   }
 
   /**
@@ -129,7 +119,7 @@ class sfLogger
    * @param string Message
    * @param string Message priority
    */
-  public function log($message, $priority = SF_LOG_INFO)
+  public function log($message, $priority = self::INFO)
   {
     if ($this->level < $priority)
     {
@@ -143,83 +133,83 @@ class sfLogger
   }
 
   /**
-   * Sets an emerg message.
+   * Logs an emerg message.
    *
    * @param string Message
    */
   public function emerg($message)
   {
-    $this->log($message, SF_LOG_EMERG);
+    $this->log($message, self::EMERG);
   }
 
   /**
-   * Sets an alert message.
+   * Logs an alert message.
    *
    * @param string Message
    */
   public function alert($message)
   {
-    $this->log($message, SF_LOG_ALERT);
+    $this->log($message, self::ALERT);
   }
 
   /**
-   * Sets a critical message.
+   * Logs a critical message.
    *
    * @param string Message
    */
   public function crit($message)
   {
-    $this->log($message, SF_LOG_CRIT);
+    $this->log($message, self::CRIT);
   }
 
   /**
-   * Sets an error message.
+   * Logs an error message.
    *
    * @param string Message
    */
   public function err($message)
   {
-    $this->log($message, SF_LOG_ERR);
+    $this->log($message, self::ERR);
   }
 
   /**
-   * Sets a warning message.
+   * Logs a warning message.
    *
    * @param string Message
    */
   public function warning($message)
   {
-    $this->log($message, SF_LOG_WARNING);
+    $this->log($message, self::WARNING);
   }
 
   /**
-   * Sets a notice message.
+   * Logs a notice message.
    *
    * @param string Message
    */
   public function notice($message)
   {
-    $this->log($message, SF_LOG_NOTICE);
+    $this->log($message, self::NOTICE);
   }
 
   /**
-   * Sets an info message.
+   * Logs an info message.
    *
    * @param string Message
    */
   public function info($message)
   {
-    $this->log($message, SF_LOG_INFO);
+    $this->log($message, self::INFO);
   }
 
   /**
-   * Sets a debug message.
+   * Logs a debug message.
    *
    * @param string Message
    */
   public function debug($message)
   {
-    $this->log($message, SF_LOG_DEBUG);
+    $this->log($message, self::DEBUG);
   }
 
   /**
@@ -242,11 +232,22 @@ class sfLogger
 
   public static function getPriorityName($priority)
   {
-    if (!isset(self::$levels[$priority]))
+    static $levels  = array(
+      self::EMERG   => 'emerg',
+      self::ALERT   => 'alert',
+      self::CRIT    => 'crit',
+      self::ERR     => 'err',
+      self::WARNING => 'warning',
+      self::NOTICE  => 'notice',
+      self::INFO    => 'info',
+      self::DEBUG   => 'debug',
+    );
+
+    if (!isset($levels[$priority]))
     {
       throw new sfException(sprintf('The priority level "%s" does not exist.', $priority));
     }
 
-    return self::$levels[$priority];
+    return $levels[$priority];
   }
 }

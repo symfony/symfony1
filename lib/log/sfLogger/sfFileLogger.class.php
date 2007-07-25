@@ -9,6 +9,7 @@
  */
 
 /**
+ * sfFileLogger logs messages in a file.
  *
  * @package    symfony
  * @subpackage log
@@ -21,7 +22,12 @@ class sfFileLogger implements sfLoggerInterface
     $fp = null;
 
   /**
-   * Initializes the file logger.
+   * Initializes this logger.
+   *
+   * Available options:
+   *
+   * - file: The file path or a php wrapper to log messages
+   *         You can use any support php wrapper. To write logs to the Apache error log, use php://stderr
    *
    * @param array Options for the logger
    */
@@ -33,10 +39,9 @@ class sfFileLogger implements sfLoggerInterface
     }
 
     $dir = dirname($options['file']);
-
     if (!is_dir($dir))
     {
-      mkdir($dir, 0777, 1);
+      mkdir($dir, 0777, true);
     }
 
     if (!is_writable($dir) || (file_exists($options['file']) && !is_writable($options['file'])))
@@ -55,10 +60,8 @@ class sfFileLogger implements sfLoggerInterface
    */
   public function log($message, $priority = null)
   {
-    $line = sprintf("%s %s [%s] %s%s", strftime('%b %d %H:%M:%S'), 'symfony', sfLogger::getPriorityName($priority), $message, DIRECTORY_SEPARATOR == '\\' ? "\r\n" : "\n");
-
     flock($this->fp, LOCK_EX);
-    fwrite($this->fp, $line);
+    fwrite($this->fp, sprintf("%s %s [%s] %s%s", strftime('%b %d %H:%M:%S'), 'symfony', sfLogger::getPriorityName($priority), $message, DIRECTORY_SEPARATOR == '\\' ? "\r\n" : "\n"));
     flock($this->fp, LOCK_UN);
   }
 

@@ -51,14 +51,14 @@ $t->is($logger->getLoggers(), array(), '->initialize() initializes the logger an
 
 // ->setLogLevel() ->getLogLevel()
 $t->diag('->setLogLevel() ->getLogLevel()');
-$t->is($logger->getLogLevel(), SF_LOG_EMERG, '->getLogLevel() gets the current log level');
-$logger->setLogLevel(SF_LOG_WARNING);
-$t->is($logger->getLogLevel(), SF_LOG_WARNING, '->setLogLevel() sets the log level');
+$t->is($logger->getLogLevel(), sfLogger::INFO, '->getLogLevel() gets the current log level');
+$logger->setLogLevel(sfLogger::WARNING);
+$t->is($logger->getLogLevel(), sfLogger::WARNING, '->setLogLevel() sets the log level');
 
 // ->log()
 $t->diag('->log()');
 $logger->initialize();
-$logger->setLogLevel(SF_LOG_DEBUG);
+$logger->setLogLevel(sfLogger::DEBUG);
 $logger->registerLogger($myRealLogger);
 $logger->registerLogger($myRealLogger);
 $logger->log('message');
@@ -68,11 +68,11 @@ $t->is($myRealLogger->log, 'messagemessage', '->log() calls all registered logge
 $t->diag('log levels');
 foreach (array('emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'debug') as $level)
 {
-  $levelConstant = 'SF_LOG_'.strtoupper($level);
+  $levelConstant = 'sfLogger::'.strtoupper($level);
 
   foreach (array('emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'debug') as $logLevel)
   {
-    $logLevelConstant = 'SF_LOG_'.strtoupper($logLevel);
+    $logLevelConstant = 'sfLogger::'.strtoupper($logLevel);
     $logger->setLogLevel(constant($logLevelConstant));
 
     $myRealLogger->log = '';
@@ -86,11 +86,11 @@ foreach (array('emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'de
 $t->diag('log shortcuts');
 foreach (array('emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'debug') as $level)
 {
-  $levelConstant = 'SF_LOG_'.strtoupper($level);
+  $levelConstant = 'sfLogger::'.strtoupper($level);
 
   foreach (array('emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'debug') as $logLevel)
   {
-    $logger->setLogLevel(constant('SF_LOG_'.strtoupper($logLevel)));
+    $logger->setLogLevel(constant('sfLogger::'.strtoupper($logLevel)));
 
     $myRealLogger->log = '';
     $logger->log('foo', constant($levelConstant));

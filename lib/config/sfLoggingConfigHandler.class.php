@@ -38,7 +38,7 @@ class sfLoggingConfigHandler extends sfDefineEnvironmentConfigHandler
       $data .= "\n\$logger = sfLogger::getInstance();\n";
 
       // log level
-      $data .= "\$logger->setLogLevel(constant('SF_LOG_'.strtoupper(sfConfig::get('sf_logging_level'))));\n";
+      $data .= "\$logger->setLogLevel(constant('sfLogger::'.strtoupper(sfConfig::get('sf_logging_level'))));\n";
 
       // register loggers defined in the logging.yml configuration file
       foreach ($this->loggers as $name => $keys)
