@@ -33,27 +33,12 @@ class sfException extends Exception
    */
   public function __construct($message = null, $code = 0)
   {
-    if ($this->getName() === null)
-    {
-      $this->setName('sfException');
-    }
-
     parent::__construct($message, $code);
 
-    if (sfConfig::get('sf_logging_enabled') && $this->getName() != 'sfStopException')
+    if (sfConfig::get('sf_logging_enabled') && __CLASS__ != 'sfStopException')
     {
-      sfLogger::getInstance()->err('{'.$this->getName().'} '.$message);
+      sfLogger::getInstance()->err(sprintf('{%s} %s', __CLASS__, $message));
     }
-  }
-
-  /**
-   * Retrieves the name of this exception.
-   *
-   * @return string This exception's name
-   */
-  public function getName()
-  {
-    return $this->name;
   }
 
   /**
@@ -69,7 +54,7 @@ class sfException extends Exception
     }
 
     // don't print message if it is an sfStopException exception
-    if (method_exists($exception, 'getName') && $exception->getName() == 'sfStopException')
+    if (get_class($exception) == 'sfStopException')
     {
       if (!sfConfig::get('sf_test'))
       {
