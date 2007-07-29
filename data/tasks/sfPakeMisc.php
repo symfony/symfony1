@@ -166,7 +166,6 @@ function run_clear_cache($task, $args)
 function run_clear_controllers($task, $args)
 {
   $web_dir = sfConfig::get('sf_web_dir');
-  $app_dir = sfConfig::get('sf_app_dir');
 
   $apps = count($args) > 1 ? $args : null;
 
@@ -254,7 +253,7 @@ function run_log_purge($task, $args)
   $sf_symfony_data_dir = sfConfig::get('sf_symfony_data_dir');
 
   $default_logging = sfYaml::load($sf_symfony_data_dir.'/config/logging.yml');
-  $app_dir = sfConfig::get('sf_app_dir');
+  $app_dir = sfConfig::get('sf_apps_dir');
   $apps = pakeFinder::type('dir')->maxdepth(0)->relative()->ignore_version_control()->in('apps');
   $ignore = array('all', 'default');
 

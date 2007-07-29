@@ -240,7 +240,7 @@ function run_propel_dump_data($task, $args)
 
   $app = $args[0];
 
-  if (!is_dir(sfConfig::get('sf_app_dir').DIRECTORY_SEPARATOR.$app))
+  if (!is_dir(sfConfig::get('sf_apps_dir').DIRECTORY_SEPARATOR.$app))
   {
     throw new Exception('The app "'.$app.'" does not exist.');
   }
@@ -297,7 +297,7 @@ function run_propel_load_data($task, $args, $options)
 
   $app = $args[0];
 
-  if (!is_dir(sfConfig::get('sf_app_dir').DIRECTORY_SEPARATOR.$app))
+  if (!is_dir(sfConfig::get('sf_apps_dir').DIRECTORY_SEPARATOR.$app))
   {
     throw new Exception(sprintf('The app "%s" does not exist.', $app));
   }

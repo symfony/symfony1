@@ -29,7 +29,7 @@ function run_i18n_find($task, $args)
 
   $app = $args[0];
 
-  if (!is_dir(sfConfig::get('sf_app_dir').DIRECTORY_SEPARATOR.$app))
+  if (!is_dir(sfConfig::get('sf_apps_dir').DIRECTORY_SEPARATOR.$app))
   {
     throw new Exception(sprintf('The app "%s" does not exist.', $app));
   }
@@ -38,7 +38,7 @@ function run_i18n_find($task, $args)
 
   sfConfig::set('sf_app', $app);
   sfConfig::set('sf_environment', 'dev');
-  include(sfConfig::get('sf_symfony_data_dir').'/config/constants.php');
+  sfCore::initDirectoryLayout(sfConfig::get('sf_root_dir'), $app, 'dev')
 
   // Look in templates
   $moduleNames = sfFinder::type('dir')->maxdepth(0)->ignore_version_control()->relative()->in(sfConfig::get('sf_app_dir').'/modules');
@@ -107,7 +107,7 @@ function run_i18n_extract($task, $args, $options)
 
   $app = $args[0];
 
-  if (!is_dir(sfConfig::get('sf_app_dir').DIRECTORY_SEPARATOR.$app))
+  if (!is_dir(sfConfig::get('sf_apps_dir').DIRECTORY_SEPARATOR.$app))
   {
     throw new Exception(sprintf('The app "%s" does not exist.', $app));
   }

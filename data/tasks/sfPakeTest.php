@@ -40,7 +40,7 @@ function run_test_functional($task, $args)
 
   $app = $args[0];
 
-  if (!is_dir(sfConfig::get('sf_app_dir').DIRECTORY_SEPARATOR.$app))
+  if (!is_dir(sfConfig::get('sf_apps_dir').DIRECTORY_SEPARATOR.$app))
   {
     throw new Exception(sprintf('The app "%s" does not exist.', $app));
   }

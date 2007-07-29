@@ -48,13 +48,12 @@ if (count($argv) <= 1)
 require_once($sf_symfony_lib_dir.'/config/sfConfig.class.php');
 
 sfConfig::add(array(
-  'sf_root_dir'         => getcwd(),
   'sf_symfony_lib_dir'  => $sf_symfony_lib_dir,
   'sf_symfony_data_dir' => $sf_symfony_data_dir,
 ));
 
 // directory layout
-include($sf_symfony_data_dir.'/config/constants.php');
+sfCore::initDirectoryLayout(getcwd());
 
 // include path
 set_include_path(
