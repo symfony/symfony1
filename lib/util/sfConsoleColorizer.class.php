@@ -41,6 +41,11 @@ class sfConsoleColorizer
       return $text;
     }
 
+    if (!is_array($parameters) && 'NONE' == $parameters)
+    {
+      return $text;
+    }
+
     if (!is_array($parameters) && isset($this->styles[$parameters]))
     {
       $parameters = $this->styles[$parameters];
