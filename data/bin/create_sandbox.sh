@@ -14,8 +14,8 @@ mkdir ${SANDBOX_NAME}
 cd ${SANDBOX_NAME}
 
 echo ">>> create a new project and a new app"
-${PHP} ${DIR}/../../data/bin/symfony init-project ${SANDBOX_NAME}
-${PHP} symfony init-app ${APP_NAME}
+${PHP} ${DIR}/../../data/bin/symfony generate:project ${SANDBOX_NAME}
+${PHP} symfony generate:app ${APP_NAME}
 
 echo ">>> add LICENSE"
 cp ${DIR}/../../LICENSE LICENSE
@@ -27,7 +27,7 @@ echo ">>> add symfony command line for windows users"
 cp ${DIR}/../../data/bin/symfony.bat symfony.bat
 
 echo ">>> freeze symfony"
-${PHP} symfony freeze
+${PHP} symfony project:freeze
 rm config/config.php.bak
 
 echo ">>> default to sqlite (propel.ini)"

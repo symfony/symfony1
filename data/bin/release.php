@@ -17,8 +17,8 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-require_once(dirname(__FILE__).'/../../lib/vendor/pake/pakeFunction.php');
-require_once(dirname(__FILE__).'/../../lib/vendor/pake/pakeGetopt.class.php');
+require_once(dirname(__FILE__).'/../../lib/task/sfFilesystem.class.php');
+require_once(dirname(__FILE__).'/../../lib/util/sfFinder.class.php');
 require_once(dirname(__FILE__).'/../../lib/vendor/lime/lime.php');
 
 if (!isset($argv[1]))
@@ -33,11 +33,13 @@ if (!isset($argv[2]))
 
 $stability = $argv[2];
 
+$filesystem = new sfFilesystem();
+
 if (($stability == 'beta' || $stability == 'alpha') && count(explode('.', $argv[1])) < 2)
 {
   $version_prefix = $argv[1];
 
-  $result = pake_sh('svn status -u '.getcwd());
+  $result = $filesystem->sh('svn status -u '.getcwd());
   if (preg_match('/Status against revision\:\s+(\d+)\s*$/im', $result, $match))
   {
     $version = $match[1];
@@ -79,13 +81,13 @@ if (!$ret)
 
 if (is_file('package.xml'))
 {
-  pake_remove('package.xml', getcwd());
+  $filesystem->remove(getcwd().DIRECTORY_SEPARATOR.'package.xml');
 }
 
-pake_copy(getcwd().'/package.xml.tmpl', getcwd().'/package.xml');
+$filesystem->copy(getcwd().'/package.xml.tmpl', getcwd().'/package.xml');
 
 // add class files
-$finder = pakeFinder::type('file')->ignore_version_control()->relative();
+$finder = sfFinder::type('file')->ignore_version_control()->relative();
 $xml_classes = '';
 $dirs = array('lib' => 'php', 'data' => 'data');
 foreach ($dirs as $dir => $role)
@@ -98,19 +100,19 @@ foreach ($dirs as $dir => $role)
 }
 
 // replace tokens
-pake_replace_tokens('package.xml', getcwd(), '##', '##', array(
+$filesystem->replaceTokens(getcwd().DIRECTORY_SEPARATOR.'package.xml', '##', '##', array(
   'SYMFONY_VERSION' => $version,
   'CURRENT_DATE'    => date('Y-m-d'),
   'CLASS_FILES'     => $xml_classes,
   'STABILITY'       => $stability,
 ));
 
-$results = pake_sh('pear package');
+$results = $filesystem->sh('pear package');
 echo $results;
 
-pake_remove('package.xml', getcwd());
+$filesystem->remove(getcwd().DIRECTORY_SEPARATOR.'package.xml');
 
 // copy .tgz as symfony-latest.tgz
-pake_copy(getcwd().'/symfony-'.$version.'.tgz', getcwd().'/symfony-latest.tgz');
+$filesystem->copy(getcwd().'/symfony-'.$version.'.tgz', getcwd().'/symfony-latest.tgz');
 
 exit(0);

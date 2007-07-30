@@ -9,7 +9,7 @@
  */
 
 require_once(dirname(__FILE__).'/../../lib/vendor/lime/lime.php');
-require_once(dirname(__FILE__).'/../../lib/vendor/pake/pakeFinder.class.php');
+require_once(dirname(__FILE__).'/../../lib/util/sfFinder.class.php');
 
 $h = new lime_harness(new lime_output_color());
 $h->base_dir = realpath(dirname(__FILE__).'/..');
@@ -26,6 +26,6 @@ $c->extension = '.class.php';
 $c->verbose = false;
 $c->base_dir = realpath(dirname(__FILE__).'/../../lib');
 
-$finder = pakeFinder::type('file')->name('*.php')->prune('vendor');
+$finder = sfFinder::type('file')->name('*.php')->prune('vendor');
 $c->register($finder->in($c->base_dir));
 $c->run();

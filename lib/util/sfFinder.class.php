@@ -235,7 +235,7 @@ class sfFinder
    *
    * Currently supports subversion, CVS, DARCS, Gnu Arch, Monotone, Bazaar-NG
    *
-   * @return object current pakeFinder object
+   * @return object current sfFinder object
    */
   public function ignore_version_control()
   {

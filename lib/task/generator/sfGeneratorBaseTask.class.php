@@ -8,10 +8,14 @@
  * file that was distributed with this source code.
  */
 
-pake_desc('upgrade to a new symfony release');
-pake_task('upgrade');
-
-function run_upgrade($task, $args)
+/**
+ * Base class for all symfony generator tasks.
+ *
+ * @package    symfony
+ * @subpackage command
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @version    SVN: $Id$
+ */
+abstract class sfGeneratorBaseTask extends sfBaseTask
 {
-   throw new Exception('I have no upgrade script for this release.');
 }
