@@ -64,7 +64,7 @@ class sfContext
    *
    * @return sfContext A sfContext implementation instance.
    */
-  public static function getInstance($name = null, $class = null)
+  public static function getInstance($name = null, $class = __CLASS__)
   {
     if (is_null($name))
     {
@@ -73,11 +73,6 @@ class sfContext
 
     if (!isset(self::$instances[$name]))
     {
-      if (is_null($class))
-      {
-        $class = __CLASS__;
-      }
-
       self::$instances[$name] = new $class();
 
       if (!self::$instances[$name] instanceof sfContext)
