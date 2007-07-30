@@ -65,6 +65,19 @@ class sfCore
 
   static public function callBootstrap()
   {
+    // force setting default timezone if not set
+    if (function_exists('date_default_timezone_get'))
+    {
+      if ($default_timezone = sfConfig::get('sf_default_timezone'))
+      {
+        date_default_timezone_set($default_timezone);
+      }
+      else if (sfConfig::get('sf_force_default_timezone', true))
+      {
+        date_default_timezone_set(@date_default_timezone_get());
+      }
+    }
+
     $bootstrap = sfConfig::get('sf_config_cache_dir').'/config_bootstrap_compile.yml.php';
     if (is_readable($bootstrap))
     {
@@ -75,6 +88,18 @@ class sfCore
     {
       require(sfConfig::get('sf_symfony_lib_dir').'/symfony.php');
     }
+
+    // error settings
+    ini_set('display_errors', SF_DEBUG ? 'on' : 'off');
+    error_reporting(sfConfig::get('sf_error_reporting'));
+
+    $configCache->import($sf_app_config_dir_name.'/php.yml', false);
+
+    // include all config.php from plugins
+    sfLoader::loadPluginConfig();
+
+    // compress output
+    ob_start(sfConfig::get('sf_compressed') ? 'ob_gzhandler' : '');
   }
 
   static public function initConfiguration($sf_symfony_lib_dir, $sf_symfony_data_dir, $test = false)
@@ -82,9 +107,11 @@ class sfCore
     require_once($sf_symfony_lib_dir.'/util/sfToolkit.class.php');
     require_once($sf_symfony_lib_dir.'/config/sfConfig.class.php');
 
-    // start timer
+    // in debug mode, load timer classes and start global timer
     if (SF_DEBUG)
     {
+      require_once($sf_symfony_lib_dir.'/debug/sfTimerManager.class.php');
+      require_once($sf_symfony_lib_dir.'/debug/sfTimer.class.php');
       sfConfig::set('sf_timer_start', microtime(true));
     }
 
@@ -95,6 +122,10 @@ class sfCore
       'sf_symfony_data_dir' => $sf_symfony_data_dir,
       'sf_test'             => $test,
     ));
+
+    // autoloading
+    require_once($sf_symfony_lib_dir.'/util/sfAutoload.class.php');
+    sfAutoload::register();
 
     // directory layout
     self::initDirectoryLayout(SF_ROOT_DIR, SF_APP, SF_ENVIRONMENT);
