@@ -345,7 +345,7 @@ class sfConfigCache
 
     if (false === @file_put_contents($cache, $data))
     {
-      throw new sfCacheException(sprintf('Failed to write cache file "%s" generated from configuration file "%s".', $cachePath, $config));
+      throw new sfCacheException(sprintf('Failed to write cache file "%s" generated from configuration file "%s".', $cache, $config));
     }
   }
 
