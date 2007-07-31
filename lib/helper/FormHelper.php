@@ -853,6 +853,11 @@ function label_for($id, $label, $options = array())
 {
   $options = _parse_attributes($options);
 
+  if (is_object($label) && method_exists($label, '__toString'))
+  {
+    $label = $label->__toString();
+  }
+
   return content_tag('label', $label, array_merge(array('for' => get_id_from_name($id, null)), $options));
 }
 
