@@ -272,7 +272,7 @@ class sfBrowser
   {
     if (is_null($this->dom))
     {
-      throw new sfException('The DOM is not accessible because the browser response content type is not HMTL.');
+      throw new sfException('The DOM is not accessible because the browser response content type is not HTML.');
     }
 
     return $this->domCssSelector;
@@ -282,7 +282,7 @@ class sfBrowser
   {
     if (is_null($this->dom))
     {
-      throw new sfException('The DOM is not accessible because the browser response content type is not HMTL.');
+      throw new sfException('The DOM is not accessible because the browser response content type is not HTML.');
     }
 
     return $this->dom;
