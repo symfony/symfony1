@@ -42,11 +42,11 @@ abstract class sfWebController extends sfController
     }
 
     $url = '';
-    if (!($sf_no_script_name = sfConfig::get('sf_no_script_name')))
+    if (!sfConfig::get('sf_no_script_name'))
     {
       $url = $this->context->getRequest()->getScriptName();
     }
-    else if (($sf_relative_url_root = $this->context->getRequest()->getRelativeUrlRoot()) && $sf_no_script_name)
+    else if ($sf_relative_url_root = $this->context->getRequest()->getRelativeUrlRoot())
     {
       $url = $sf_relative_url_root;
     }
