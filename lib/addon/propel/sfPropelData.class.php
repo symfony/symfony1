@@ -196,31 +196,31 @@ class sfPropelData extends sfData
   /**
    * Loads the mappings for the classes
    *
-   * @param string The name of a data object
+   * @param string The model class name
    *
    * @throws sfException If the class cannot be found
    */
   protected function loadMapBuilder($class)
   {
-    $class_map_builder = $class.'MapBuilder';
+    $mapBuilderClass = $class.'MapBuilder';
     if (!isset($this->maps[$class]))
     {
-      if (!$classPath = sfAutoload::getClassPath($class_map_builder))
+      if (!$classPath = sfAutoload::getClassPath($mapBuilderClass))
       {
-        throw new sfException(sprintf('Unable to find path for class "%s".', $class_map_builder));
+        throw new sfException(sprintf('Unable to find path for class "%s".', $mapBuilderClass));
       }
 
       require_once($classPath);
-      $this->maps[$class] = new $class_map_builder();
+      $this->maps[$class] = new $mapBuilderClass();
       $this->maps[$class]->doBuild();
     }
   }
 
   /**
-   * Dumps data to fixture from 1 or more tables.
+   * Dumps data to fixture from one or more tables.
    *
    * @param string directory or file to dump to
-   * @param mixed name or names of tables to dump
+   * @param mixed  name or names of tables to dump (or all to dump all tables)
    * @param string connection name
    */
   public function dumpData($directory_or_file = null, $tables = 'all', $connectionName = 'propel')
@@ -240,12 +240,22 @@ class sfPropelData extends sfData
     $con = Propel::getConnection($connectionName);
 
     // get tables
-    if ('all' === $tables || null === $tables)
+    if ('all' === $tables || is_null($tables))
     {
-      $tables = sfFinder::type('file')->name('/(?<!Peer)\.php$/')->maxdepth(0)->in(sfConfig::get('sf_model_lib_dir'));
-      foreach ($tables as &$table)
+      // load all map builder classes
+      $files = sfFinder::type('file')->name('*MapBuilder.php')->in(sfLoader::getModelDirs());
+      foreach ($files as $file)
       {
-        $table = basename($table, '.php');
+        $mapBuilderClass = basename($file, '.php');
+        $map = new $mapBuilderClass();
+        $map->doBuild();
+      }
+
+      $dbMap = Propel::getDatabaseMap($connectionName);
+      $tables = array();
+      foreach ($dbMap->getTables() as $table)
+      {
+        $tables[] = $table->getPhpName();
       }
     }
     else if (!is_array($tables))
