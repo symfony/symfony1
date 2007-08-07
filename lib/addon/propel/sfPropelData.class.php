@@ -88,7 +88,7 @@ class sfPropelData extends sfData
       // might have been empty just for force a table to be emptied on import
       if (!is_array($datas))
       {
-        return;
+        continue;
       }
 
       foreach ($datas as $key => $data)
