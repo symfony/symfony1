@@ -312,15 +312,19 @@ class sfPropelData extends sfData
     // save to file(s)
     if ($sameFile)
     {
-      $yaml = Spyc::YAMLDump($dumpData);
-      file_put_contents($directory_or_file, $yaml);
+      file_put_contents($directory_or_file, Spyc::YAMLDump($dumpData));
     }
     else
     {
-      foreach ($dumpData as $table => $data)
+      $i = 0;
+      foreach ($tables as $tableName)
       {
-        $yaml = Spyc::YAMLDump($data);
-        file_put_contents($directory_or_file."/$table.yml", $yaml);
+        if (!isset($dumpData[$tableName]))
+        {
+          continue;
+        }
+
+        file_put_contents(sprintf("%s/%03d-%s.yml", $directory_or_file, ++$i, $tableName), Spyc::YAMLDump($dumpData[$tableName]));
       }
     }
   }
