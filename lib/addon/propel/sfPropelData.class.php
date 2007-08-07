@@ -268,32 +268,7 @@ class sfPropelData extends sfData
     // load map classes
     array_walk($tables, array($this, 'loadMapBuilder'));
 
-    // reordering tables to take foreign keys into account
-    $move = true;
-    while ($move)
-    {
-      foreach ($tables as $i => $tableName)
-      {
-        $tableMap = $this->maps[$tableName]->getDatabaseMap()->getTable(constant($tableName.'Peer::TABLE_NAME'));
-
-        foreach ($tableMap->getColumns() as $column)
-        {
-          if ($column->isForeignKey())
-          {
-            $relatedTable = $this->maps[$tableName]->getDatabaseMap()->getTable($column->getRelatedTableName());
-            if (array_search($relatedTable->getPhpName(), $tables) > $i)
-            {
-              unset($tables[$i]);
-              $tables[] = $tableName;
-              $move = true;
-              continue 2;
-            }
-          }
-        }
-
-        $move = false;
-      }
-    }
+    $tables = $this->fixOrderingOfForeignKeyData($tables);
 
     foreach ($tables as $tableName)
     {
@@ -348,5 +323,45 @@ class sfPropelData extends sfData
         file_put_contents($directory_or_file."/$table.yml", $yaml);
       }
     }
+  }
+
+  /**
+   * Fixes the ordering of foreign key data, by outputting data a foreign key depends on before the table with the foreign key.
+   *
+   * @param array The array with the class names.
+   */
+  public function fixOrderingOfForeignKeyData($classes)
+  {
+    // reordering classes to take foreign keys into account
+    for ($i = 0, $count = count($classes); $i < $count; $i++)
+    {
+      $class = $classes[$i];
+      $tableMap = $this->maps[$class]->getDatabaseMap()->getTable(constant($class.'Peer::TABLE_NAME'));
+      foreach ($tableMap->getColumns() as $column)
+      {
+        if ($column->isForeignKey())
+        {
+          $relatedTable = $this->maps[$class]->getDatabaseMap()->getTable($column->getRelatedTableName());
+          $relatedTablePos = array_search($relatedTable->getPhpName(), $classes);
+
+          // check if relatedTable is after the current table
+          if ($relatedTablePos > $i)
+          {
+            // move related table 1 position before current table
+            $classes = array_merge(
+              array_slice($classes, 0, $i),
+              array($classes[$relatedTablePos]),
+              array_slice($classes, $i, $relatedTablePos - $i),
+              array_slice($classes, $relatedTablePos + 1)
+            );
+
+            // we have moved a table, so let's see if we are done
+            return $this->fixOrderingOfForeignKeyData($classes);
+          }
+        }
+      }
+    }
+
+    return $classes;
   }
 }
