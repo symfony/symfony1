@@ -74,3 +74,6 @@ default:
 
     # ORM
     orm:                    propel
+
+    # Logging
+    logging_enabled:        on

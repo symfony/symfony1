@@ -49,7 +49,7 @@ abstract class sfTask
    *
    * @throws <b>sfFactoryException</b> If a task implementation instance cannot
    */
-  public static function newInstance($class, sfCommandApplication $commandApplication = null, sfLoggerInterface $logger = null)
+  public static function newInstance($class, sfCommandApplication $commandApplication = null, sfLogger $logger = null)
   {
     $object = new $class();
 
@@ -249,9 +249,9 @@ abstract class sfTask
   /**
    * Sets the logger.
    *
-   * @param sfLoggerInterface The logger object
+   * @param sfLogger The logger object
    */
-  public function setLogger(sfLoggerInterface $logger = null)
+  public function setLogger(sfLogger $logger = null)
   {
     $this->logger = $logger;
   }
@@ -259,7 +259,7 @@ abstract class sfTask
   /**
    * Gets the logger.
    *
-   * @return sfLoggerInterface The logger object
+   * @return sfLogger The logger object
    */
   public function getLogger()
   {

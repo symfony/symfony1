@@ -36,9 +36,9 @@ class sfCommandApplication
   /**
    * Constructor.
    *
-   * @param object A logger that implements the sfLoggerInterface
+   * @param object A logger that extends sfLogger
    */
-  public function __construct(sfLoggerInterface $logger = null)
+  public function __construct(sfLogger $logger = null)
   {
     $this->logger = $logger;
     $this->fixCgi();
@@ -47,9 +47,9 @@ class sfCommandApplication
   /**
    * Sets the logger.
    *
-   * @param object A logger that implements the sfLoggerInterface
+   * @param object A logger that extends sfLogger
    */
-  public function setLogger(sfLoggerInterface $logger = null)
+  public function setLogger(sfLogger $logger = null)
   {
     $this->logger = $logger;
   }

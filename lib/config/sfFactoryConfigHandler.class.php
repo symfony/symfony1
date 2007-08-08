@@ -48,7 +48,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
     $instances = array();
 
     // available list of factories
-    $factories = array('routing', 'controller', 'request', 'response', 'storage', 'i18n', 'user', 'view_cache');
+    $factories = array('logger', 'routing', 'controller', 'request', 'response', 'storage', 'i18n', 'user', 'view_cache');
 
     // let's do our fancy work
     foreach ($factories as $factory)
@@ -179,6 +179,51 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
 
           // append instance initialization
           $inits[] = sprintf("  \$this->factories['routing']->initialize(\$this, sfConfig::get('sf_factory_routing_parameters', %s));", var_export($parameters, true));
+          break;
+
+        case 'logger':
+          // append instance creation and initialization
+          $loggers = '';
+          if (isset($parameters['loggers']))
+          {
+            foreach ($parameters['loggers'] as $name => $keys)
+            {
+              if (isset($keys['enabled']) && !$this->replaceConstants($keys['enabled']))
+              {
+                continue;
+              }
+
+              if (!isset($keys['class']))
+              {
+                // missing class key
+                throw new sfParseException(sprintf('Configuration file "%s" specifies logger "%s" with missing class key.', $configFiles[0], $name));
+              }
+
+              $condition = true;
+              if (isset($keys['param']['condition']))
+              {
+                $condition = $this->replaceConstants($keys['param']['condition']);
+                unset($keys['param']['condition']);
+              }
+
+              if ($condition)
+              {
+                // create logger instance
+                $loggers .= sprintf("\n\$logger = sfLogger::newInstance('%s');\n\$logger->initialize(%s);\n\$this->factories['logger']->addLogger(\$logger);\n", 
+                              $keys['class'],
+                              isset($keys['param']) ? var_export($keys['param'], true) : ''
+                            );
+              }
+            }
+
+            unset($parameters['loggers']);
+          }
+
+          $instances[] = sprintf(
+                         "  \$this->factories['logger'] = sfLogger::newInstance(sfConfig::get('sf_factory_logger', '%s'));\n".
+                         "  \$this->factories['logger']->initialize(sfConfig::get('sf_factory_logger_parameters', %s));\n".
+                         "  %s"
+                         , $class, var_export($parameters, true), $loggers);
           break;
       }
     }

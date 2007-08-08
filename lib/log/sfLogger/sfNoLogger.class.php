@@ -9,14 +9,14 @@
  */
 
 /**
- * sfLoggerInterface is the interface all symfony loggers must implement.
+ * sfNoLogger is a noop logger.
  *
  * @package    symfony
  * @subpackage log
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-interface sfLoggerInterface
+class sfNoLogger extends sfLogger
 {
   /**
    * Logs a message.
@@ -24,5 +24,7 @@ interface sfLoggerInterface
    * @param string Message
    * @param string Message priority
    */
-  public function log($message, $priority = null);
+  protected function doLog($message, $priority)
+  {
+  }
 }

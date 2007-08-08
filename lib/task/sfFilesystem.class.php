@@ -21,7 +21,7 @@ class sfFilesystem
   protected
     $logger = null;
 
-  public function __construct(sfLoggerInterface $logger = null)
+  public function __construct(sfLogger $logger = null)
   {
     $this->logger = $logger;
   }

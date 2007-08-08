@@ -16,7 +16,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfFileLogger implements sfLoggerInterface
+class sfFileLogger extends sfLogger
 {
   protected
     $fp = null;
@@ -35,7 +35,7 @@ class sfFileLogger implements sfLoggerInterface
   {
     if (!isset($options['file']))
     {
-      throw new sfConfigurationException('File option is mandatory for a file logger.');
+      throw new sfConfigurationException('You must provide a "file" parameter for this logger.');
     }
 
     $dir = dirname($options['file']);
@@ -50,6 +50,8 @@ class sfFileLogger implements sfLoggerInterface
     }
 
     $this->fp = fopen($options['file'], 'a');
+
+    return parent::initialize($options);
   }
 
   /**
@@ -58,7 +60,7 @@ class sfFileLogger implements sfLoggerInterface
    * @param string Message
    * @param string Message priority
    */
-  public function log($message, $priority = null)
+  protected function doLog($message, $priority)
   {
     flock($this->fp, LOCK_EX);
     fwrite($this->fp, sprintf("%s %s [%s] %s%s", strftime('%b %d %H:%M:%S'), 'symfony', sfLogger::getPriorityName($priority), $message, DIRECTORY_SEPARATOR == '\\' ? "\r\n" : "\n"));

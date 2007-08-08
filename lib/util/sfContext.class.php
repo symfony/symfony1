@@ -34,12 +34,6 @@ class sfContext
    */
   public function initialize()
   {
-    $this->factories['logger'] = sfLogger::getInstance();
-    if (sfConfig::get('sf_logging_enabled'))
-    {
-      $this->factories['logger']->info('{sfContext} initialization');
-    }
-
     if (sfConfig::get('sf_use_database'))
     {
       // setup our database connections
@@ -52,6 +46,11 @@ class sfContext
 
     // include the factories configuration
     require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/factories.yml'));
+
+    if (sfConfig::get('sf_logging_enabled'))
+    {
+      $this->factories['logger']->info('{sfContext} initialization');
+    }
 
     // register our shutdown function
     register_shutdown_function(array($this, 'shutdown'));
@@ -139,6 +138,11 @@ class sfContext
 
    public function getLogger()
    {
+     if (!isset($this->factories['logger']))
+     {
+       $this->factories['logger'] = new sfNoLogger();
+     }
+
      return $this->factories['logger'];
    }
 
@@ -369,11 +373,6 @@ class sfContext
     $this->getResponse()->shutdown();
     $this->getRouting()->shutdown();
 
-    if (sfConfig::get('sf_logging_enabled'))
-    {
-      $this->getLogger()->shutdown();
-    }
-
     if (sfConfig::get('sf_use_database'))
     {
       $this->getDatabaseManager()->shutdown();
@@ -382,6 +381,11 @@ class sfContext
     if (sfConfig::get('sf_cache'))
     {
       $this->getViewCacheManager()->shutdown();
+    }
+
+    if (sfConfig::get('sf_logging_enabled'))
+    {
+      $this->getLogger()->shutdown();
     }
   }
 }

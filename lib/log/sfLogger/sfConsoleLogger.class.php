@@ -16,7 +16,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfConsoleLogger implements sfLoggerInterface
+class sfConsoleLogger extends sfLogger
 {
   /**
    * Logs a message.
@@ -24,7 +24,7 @@ class sfConsoleLogger implements sfLoggerInterface
    * @param string Message
    * @param string Message priority
    */
-  public function log($message, $priority = null)
+  protected function doLog($message, $priority)
   {
     echo $message;
   }

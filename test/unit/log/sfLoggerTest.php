@@ -10,59 +10,67 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(136, new lime_output_color());
+$t = new lime_test(137, new lime_output_color());
 
-class myLogger
+class myLogger extends sfLogger
 {
   public $log = '';
 
-  public function log($message, $priority = null)
+  protected function doLog($message, $priority)
   {
     $this->log .= $message;
   }
 }
 
-class myRealLogger extends myLogger implements sfLoggerInterface
+class notaLogger
 {
 }
 
-$myRealLogger = new myRealLogger();
-
-// ->getInstance()
-$t->diag('->getInstance()');
-$t->isa_ok(sfLogger::getInstance(), 'sfLogger', '::getInstance() returns a sfLogger instance');
-$t->is(sfLogger::getInstance(), sfLogger::getInstance(), '::getInstance() is a singleton');
-
-$logger = sfLogger::getInstance();
-
-// ->getLoggers()
-$t->diag('->getLoggers()');
-$t->is($logger->getLoggers(), array(), '->getLoggers() returns an array of registered loggers');
-
-// ->registerLogger()
-$t->diag('->registerLogger()');
-$logger->registerLogger($myRealLogger);
-$t->is($logger->getLoggers(), array($myRealLogger), '->registerLogger() registers a new logger instance that must implement the sfLoggerInterface interface');
-
-// ->initialize()
-$t->diag('->initialize()');
-$logger->initialize();
-$t->is($logger->getLoggers(), array(), '->initialize() initializes the logger and clears all current registered loggers');
+// ->newInstance()
+$t->diag('->newInstance()');
+$logger = sfLogger::newInstance('myLogger');
+$t->isa_ok($logger, 'myLogger', '::getInstance() returns a sfLogger instance');
+try
+{
+  sfLogger::newInstance('notaLogger');
+  $t->fail('->newInstance() throws a sfFactoryException if the logger does not extend sfLogger');
+}
+catch (sfFactoryException $e)
+{
+  $t->pass('->newInstance() throws a sfFactoryException if the logger does not extend sfLogger');
+}
 
 // ->setLogLevel() ->getLogLevel()
 $t->diag('->setLogLevel() ->getLogLevel()');
 $t->is($logger->getLogLevel(), sfLogger::INFO, '->getLogLevel() gets the current log level');
 $logger->setLogLevel(sfLogger::WARNING);
 $t->is($logger->getLogLevel(), sfLogger::WARNING, '->setLogLevel() sets the log level');
+$logger->setLogLevel('err');
+$t->is($logger->getLogLevel(), sfLogger::ERR, '->setLogLevel() accepts a class constant or a string as its argument');
+
+// ->initialize()
+$t->diag('->initialize()');
+$logger->initialize(array('level' => sfLogger::ERR));
+$t->is($logger->getLogLevel(), sfLogger::ERR, '->initialize() takes an array of parameters as its first argument');
+
+// ::getPriorityName()
+$t->diag('::getPriorityName()');
+$t->is(sfLogger::getPriorityName(sfLogger::INFO), 'info', '::getPriorityName() returns the name of a priority class constant');
+try
+{
+  sfLogger::getPriorityName(100);
+  $t->fail('::getPriorityName() throws an sfException if the priority constant does not exist');
+}
+catch (sfException $e)
+{
+  $t->pass('::getPriorityName() throws an sfException if the priority constant does not exist');
+}
 
 // ->log()
 $t->diag('->log()');
-$logger->initialize();
 $logger->setLogLevel(sfLogger::DEBUG);
-$logger->registerLogger($myRealLogger);
-$logger->registerLogger($myRealLogger);
 $logger->log('message');
-$t->is($myRealLogger->log, 'messagemessage', '->log() calls all registered loggers');
+$t->is($logger->log, 'message', '->log() logs a message');
 
 // log level
 $t->diag('log levels');
@@ -75,10 +83,10 @@ foreach (array('emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'de
     $logLevelConstant = 'sfLogger::'.strtoupper($logLevel);
     $logger->setLogLevel(constant($logLevelConstant));
 
-    $myRealLogger->log = '';
+    $logger->log = '';
     $logger->log('foo', constant($levelConstant));
 
-    $t->is($myRealLogger->log, constant($logLevelConstant) >= constant($levelConstant), sprintf('->log() only logs if the level is >= to the defined log level (%s >= %s)', $logLevelConstant, $levelConstant));
+    $t->is($logger->log, constant($logLevelConstant) >= constant($levelConstant), sprintf('->log() only logs if the level is >= to the defined log level (%s >= %s)', $logLevelConstant, $levelConstant));
   }
 }
 
@@ -92,13 +100,13 @@ foreach (array('emerg', 'alert', 'crit', 'err', 'warning', 'notice', 'info', 'de
   {
     $logger->setLogLevel(constant('sfLogger::'.strtoupper($logLevel)));
 
-    $myRealLogger->log = '';
+    $logger->log = '';
     $logger->log('foo', constant($levelConstant));
-    $log1 = $myRealLogger->log;
+    $log1 = $logger->log;
 
-    $myRealLogger->log = '';
+    $logger->log = '';
     $logger->$level('foo');
-    $log2 = $myRealLogger->log;
+    $log2 = $logger->log;
 
     $t->is($log1, $log2, sprintf('->%s($msg) is a shortcut for ->log($msg, %s)', $level, $levelConstant));
   }

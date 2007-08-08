@@ -102,7 +102,8 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
         }
 
         $warning = sprintf('{sfPhpConfigHandler} php.ini "%s" key is better set to "%s" (current value is "%s" - %s)', $key, var_export($value, true), var_export(ini_get($key), true), $this->get_ini_path());
-        $data[] = sprintf("if (ini_get('%s') != %s)\n{\n  sfLogger::getInstance()->warning('%s');\n}\n", $key, var_export($value, true), str_replace("'", "\\'", $warning));
+// FIXME: sfContext is not yet initialized, so the logger is a sfNoLogger instance.
+//        $data[] = sprintf("if (ini_get('%s') != %s)\n{\n  sfContext::getInstance()->getLogger()->warning('%s');\n}\n", $key, var_export($value, true), str_replace("'", "\\'", $warning));
       }
     }
 

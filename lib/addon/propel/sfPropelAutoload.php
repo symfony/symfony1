@@ -24,7 +24,7 @@ if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
 
   // register our logger
   require_once(sfConfig::get('sf_symfony_lib_dir').'/addon/creole/drivers/sfDebugConnection.php');
-  sfDebugConnection::setLogger(sfLogger::getInstance());
+  sfDebugConnection::setLogger(sfContext::getInstance()->getLogger());
 }
 
 // propel initialization

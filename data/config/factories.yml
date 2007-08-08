@@ -35,3 +35,17 @@ default:
 
   routing:
     class: sfPatternRouting
+
+  logger:
+    class: sfAggregateLogger
+    param:
+      level: debug
+      loggers:
+        sf_web_debug:
+          class: sfWebDebugLogger
+          param:
+            condition: %SF_WEB_DEBUG%
+        sf_file_debug:
+          class: sfFileLogger
+          param:
+            file: %SF_LOG_DIR%/%SF_APP%_%SF_ENVIRONMENT%.log

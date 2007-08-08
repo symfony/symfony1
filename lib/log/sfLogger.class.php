@@ -9,10 +9,7 @@
  */
 
 /**
- * sfLogger manages all logging in symfony projects.
- *
- * sfLogger can be configuration via the logging.yml configuration file.
- * Loggers can also be registered directly in the logging.yml configuration file.
+ * sfLogger is the abstract class for all logging classes.
  *
  * This level list is ordered by highest priority (self::EMERG) to lowest priority (self::DEBUG):
  * - EMERG:   System is unusable
@@ -29,7 +26,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfLogger
+abstract class sfLogger
 {
   const EMERG   = 0; // System is unusable
   const ALERT   = 1; // Immediate action required
@@ -41,36 +38,48 @@ class sfLogger
   const DEBUG   = 7; // Debug-level messages
 
   protected
-    $loggers = array(),
-    $level   = self::INFO;
-
-  protected static
-    $logger = null;
+    $level = self::INFO;
 
   /**
-   * Returns the sfLogger instance.
+   * Retrieves a new sfLogger implementation instance.
    *
-   * @return  object the sfLogger instance
+   * @param string A sfLogger implementation name
+   *
+   * @return User A sfLogger implementation instance.
+   *
+   * @throws <b>sfFactoryException</b> If a logger implementation instance cannot
    */
-  public static function getInstance()
+  public static function newInstance($class)
   {
-    if (!self::$logger)
+    $object = new $class();
+
+    if (!$object instanceof sfLogger)
     {
-      // the class exists
-      $class = __CLASS__;
-      self::$logger = new $class();
-      self::$logger->initialize();
+      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfLogger.', $class));
     }
 
-    return self::$logger;
+    return $object;
   }
 
   /**
-   * Initializes the logger.
+   * Initializes this sfLogger instance.
+   *
+   * @param array An associative array of initialization parameters.
+   *
+   * Available options:
+   *
+   * - level: The log level.
+   *
+   * @return bool true, if initialization completes successfully, otherwise false.
+   *
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this User.
    */
-  public function initialize()
+  public function initialize($parameters = array())
   {
-    $this->loggers = array();
+    if (isset($parameters['level']))
+    {
+      $this->setLogLevel($parameters['level']);
+    }
   }
 
   /**
@@ -90,27 +99,12 @@ class sfLogger
    */
   public function setLogLevel($level)
   {
+    if (!is_int($level))
+    {
+      $level = constant('sfLogger::'.strtoupper($level));
+    }
+
     $this->level = $level;
-  }
-  
-  /**
-   * Retrieves current loggers.
-   *
-   * @return array List of loggers
-   */
-  public function getLoggers()
-  {
-    return $this->loggers;
-  }
-  
-  /**
-   * Registers a logger.
-   *
-   * @param string Logger name
-   */
-  public function registerLogger(sfLoggerInterface $logger)
-  {
-    $this->loggers[] = $logger;
   }
 
   /**
@@ -123,14 +117,19 @@ class sfLogger
   {
     if ($this->level < $priority)
     {
-      return;
+      return false;
     }
 
-    foreach ($this->loggers as $logger)
-    {
-      $logger->log((string) $message, $priority);
-    }
+    return $this->doLog($message, $priority);
   }
+
+  /**
+   * Logs a message.
+   *
+   * @param string Message
+   * @param string Message priority
+   */
+  abstract protected function doLog($message, $priority);
 
   /**
    * Logs an emerg message.
@@ -219,18 +218,18 @@ class sfLogger
    */
   public function shutdown()
   {
-    foreach ($this->loggers as $logger)
-    {
-      if (method_exists($logger, 'shutdown'))
-      {
-        $logger->shutdown();
-      }
-    }
-
-    $this->loggers = array();
   }
 
-  public static function getPriorityName($priority)
+  /**
+   * Returns the priority name given a priority class constant
+   *
+   * @param  integer A priority class constant
+   *
+   * @return string  The priority name
+   *
+   * @throws sfException if the priority level does not exist
+   */
+  static public function getPriorityName($priority)
   {
     static $levels  = array(
       self::EMERG   => 'emerg',

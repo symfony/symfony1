@@ -1,6 +1,7 @@
 prod:
   .settings:
     no_script_name:         ##NO_SCRIPT_NAME##
+    logging_enabled:        off
 
 dev:
   .settings:
@@ -93,3 +94,6 @@ test:
 #
 #    # ORM
 #    orm:                    propel
+#
+#    # Logging
+#    logging_enabled:        on
