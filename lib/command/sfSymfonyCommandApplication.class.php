@@ -19,9 +19,7 @@
 class sfSymfonyCommandApplication extends sfCommandApplication
 {
   protected
-    $symfonyLibDir  = '',
-    $symfonyDataDir = '',
-    $autoloader     = null;
+    $autoloader = null;
 
   /**
    * Initializes the current symfony command application.
@@ -96,7 +94,17 @@ class sfSymfonyCommandApplication extends sfCommandApplication
    */
   protected function initializeAutoloader()
   {
-    $this->autoloader = new sfSimpleAutoload(sfConfig::get('sf_base_cache_dir').DIRECTORY_SEPARATOR.'autoload_cmd.data');
+    if (is_dir(sfConfig::get('sf_base_cache_dir')))
+    {
+      $cache = sfConfig::get('sf_base_cache_dir').DIRECTORY_SEPARATOR.'autoload_cmd.data';
+    }
+    else
+    {
+      require_once(sfConfig::get('sf_symfony_lib_dir').'/util/sfToolkit.class.php');
+      $cache = sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.sprintf('sf_autoload_cmd_%s.data', md5(__FILE__));
+    }
+
+    $this->autoloader = new sfSimpleAutoload($cache);
     $this->autoloader->addDirectory(sfConfig::get('sf_symfony_lib_dir'));
     $this->autoloader->addDirectory(sfConfig::get('sf_symfony_lib_dir').'/vendor/propel');
     $this->autoloader->addDirectory(sfConfig::get('sf_symfony_lib_dir').'/vendor/creole');
