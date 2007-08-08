@@ -26,19 +26,15 @@ class sfException extends Exception
     $name = null;
 
   /**
-   * Class constructor.
+   * Wraps an Exception.
    *
-   * @param string The error message
-   * @param int    The error code
+   * @param Exception An Exception instance
+   *
+   * @return sfException An sfException instance that wraps the given Exception object
    */
-  public function __construct($message = null, $code = 0)
+  static public function createFromException(Exception $e)
   {
-    parent::__construct($message, $code);
-
-    if (sfConfig::get('sf_logging_enabled') && __CLASS__ != 'sfStopException')
-    {
-      sfLogger::getInstance()->err(sprintf('{%s} %s', __CLASS__, $message));
-    }
+    return new sfException(sprintf('Wrapped %s: %s', get_class($e), $e->getMessage()));
   }
 
   /**
@@ -79,6 +75,11 @@ class sfException extends Exception
           return;
         }
       }
+    }
+
+    if (sfConfig::get('sf_logging_enabled') && sfContext::hasInstance())
+    {
+      sfContext::getInstance()->getLogger()->err(sprintf('{%s} %s', __CLASS__, $exception->getMessage()));
     }
 
     if (!sfConfig::get('sf_test'))
