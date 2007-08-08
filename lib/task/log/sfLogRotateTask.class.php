@@ -28,6 +28,11 @@ class sfLogRotateTask extends sfBaseTask
       new sfCommandArgument('env', sfCommandArgument::REQUIRED, 'The environment name'),
     ));
 
+    $this->addOptions(array(
+      new sfCommandOption('history', null, sfCommandOption::PARAMETER_REQUIRED, 'The maximum number of old log files to keep', 10),
+      new sfCommandOption('period', null, sfCommandOption::PARAMETER_REQUIRED, 'The period in days', 7),
+    ));
+
     $this->aliases = array('log-rotate');
     $this->namespace = 'log';
     $this->name = 'rotate';
@@ -37,10 +42,11 @@ class sfLogRotateTask extends sfBaseTask
 The [log:rotate|INFO] task rotates application log files for a given
 environment:
 
-  [./symfony log:rotate frontend |INFO]
+  [./symfony log:rotate frontend dev|INFO]
 
-This tasks uses the [logging.yml|COMMENT] file to configure the [period|COMMENT]
-and [history|COMMENT].
+You can specify a [period|COMMENT] or a [history|COMMENT] option:
+
+  [./symfony --history=10 --period=7 log:rotate frontend dev|INFO]
 EOF;
   }
 
@@ -52,8 +58,6 @@ EOF;
     $app = $arguments['application'];
     $env = $arguments['env'];
 
-    $this->bootstrapSymfony($app, $env, true);
-
-    sfLogManager::rotate($app, $env, sfConfig::get('sf_logging_period'), sfConfig::get('sf_logging_history'), true);
+    sfLogManager::rotate($app, $env, $options['period'], $options['history'], true);
   }
 }

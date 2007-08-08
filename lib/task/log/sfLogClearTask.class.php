@@ -29,13 +29,9 @@ class sfLogClearTask extends sfBaseTask
     $this->briefDescription = 'Clears log files';
 
     $this->detailedDescription = <<<EOF
-The [log:clear|INFO] task clears the symfony log files:
+The [log:clear|INFO] task clears all symfony log files:
 
   [./symfony log:clear|INFO]
-
-This tasks uses the [logging.yml|COMMENT] file for its configuration.
-To clear a log file, the [active|COMMENT] property must be set to [true|COMMENT]
-and the [purge|COMMENT] property must also be set to [true|COMMENT].
 EOF;
   }
 
@@ -44,34 +40,7 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $defaultLogging = sfYaml::load(sfConfig::get('sf_symfony_data_dir').'/config/logging.yml');
-    $apps = sfFinder::type('dir')->maxdepth(0)->relative()->ignore_version_control()->in('apps');
-    $ignore = array('all', 'default');
-
-    foreach ($apps as $app)
-    {
-      $logging = sfYaml::load(sfConfig::get('sf_app_dir').'/'.$app.'/config/logging.yml');
-      $logging = array_merge($defaultLogging, $logging);
-
-      foreach ($logging as $env => $config)
-      {
-        if (in_array($env, $ignore))
-        {
-          continue;
-        }
-
-        $props = array_merge($defaultLogging['default'], is_array($config) ? $config : array());
-        $active = isset($props['active']) ? $props['active'] : true;
-        $purge  = isset($props['purge']) ? $props['purge'] : true;
-        if ($active && $purge)
-        {
-          $filename = sfConfig::get('sf_log_dir').'/'.$app.'_'.$env.'.log';
-          if (file_exists($filename))
-          {
-            $this->filesystem->remove($filename);
-          }
-        }
-      }
-    }
+    $logs = sfFinder::type('file')->ignore_version_control()->in(sfConfig::get('sf_log_dir'));
+    $this->filesystem->remove($logs);
   }
 }
