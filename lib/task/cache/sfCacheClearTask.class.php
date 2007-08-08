@@ -91,6 +91,13 @@ EOF;
     // finder to find directories (1 level) in a directory
     $dirFinder = sfFinder::type('dir')->ignore_version_control()->discard('.sf')->maxdepth(0)->relative();
 
+    // clear global cache
+    if (!$mainApp)
+    {
+      $this->filesystem->remove($finder->in(sfConfig::get('sf_base_cache_dir')));
+    }
+
+
     // iterate through applications
     $apps = array();
     if ($mainApp)

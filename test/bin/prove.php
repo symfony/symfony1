@@ -14,7 +14,8 @@ $h = new lime_harness(new lime_output_color());
 
 $h->base_dir = realpath(dirname(__FILE__).'/..');
 require_once(dirname(__FILE__).'/../../lib/util/sfSimpleAutoload.class.php');
-$autoload = new sfSimpleAutoload('unit');
+require_once(dirname(__FILE__).'/../../lib/util/sfToolkit.class.php');
+$autoload = new sfSimpleAutoload(sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.sprintf('sf_autoload_unit_%s.data', md5(__FILE__)));
 $autoload->removeCache();
 
 // cache autoload files

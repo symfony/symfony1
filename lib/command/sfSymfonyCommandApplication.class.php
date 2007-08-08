@@ -96,7 +96,7 @@ class sfSymfonyCommandApplication extends sfCommandApplication
    */
   protected function initializeAutoloader()
   {
-    $this->autoloader = new sfSimpleAutoload('cmd');
+    $this->autoloader = new sfSimpleAutoload(sfConfig::get('sf_base_cache_dir').DIRECTORY_SEPARATOR.'autoload_cmd.data');
     $this->autoloader->addDirectory(sfConfig::get('sf_symfony_lib_dir'));
     $this->autoloader->addDirectory(sfConfig::get('sf_symfony_lib_dir').'/vendor/propel');
     $this->autoloader->addDirectory(sfConfig::get('sf_symfony_lib_dir').'/vendor/creole');

@@ -25,13 +25,11 @@ class sfSimpleAutoload
     $files        = array(),
     $classes      = array();
 
-  public function __construct($id = '', $withCache = true)
+  public function __construct($cacheFile = null)
   {
-    if ($withCache)
+    if (!is_null($cacheFile))
     {
-      require_once(dirname(__FILE__).'/sfToolkit.class.php');
-
-      $this->cacheFile = sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.sprintf('sf_simple_autoload_cache_%s_%s.php', $id, md5(__FILE__));
+      $this->cacheFile = $cacheFile;
     }
 
     $this->loadCache();
