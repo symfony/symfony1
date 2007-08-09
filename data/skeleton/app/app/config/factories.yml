@@ -2,7 +2,8 @@ prod:
   logger:
     class:   sfNoLogger
     param:
-      level: err
+      level:   err
+      loggers: ~
 
 cli:
   controller:
