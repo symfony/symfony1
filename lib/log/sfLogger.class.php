@@ -53,6 +53,11 @@ abstract class sfLogger
   {
     $object = new $class();
 
+    if ($object instanceof sfLoggerInterface)
+    {
+      return new sfLoggerWrapper($object);
+    }
+
     if (!$object instanceof sfLogger)
     {
       throw new sfFactoryException(sprintf('Class "%s" is not of the type sfLogger.', $class));
