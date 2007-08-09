@@ -18,14 +18,6 @@ foreach ($files as $file)
   $total_loc += count(lime_coverage::get_php_lines($file));
 }
 
-// symfony tasks LOC
-$total_tasks_loc = 0;
-$files = sfFinder::type('file')->name('*.php')->ignore_version_control()->prune('vendor')->in($root_dir.'/data/tasks');
-foreach ($files as $file)
-{
-  $total_tasks_loc += count(lime_coverage::get_php_lines($file));
-}
-
 // symfony tests LOC
 $total_tests_loc = 0;
 $files = sfFinder::type('file')->name('*Test.php')->ignore_version_control()->in(array($root_dir.'/test/unit', $root_dir.'/test/functional', $root_dir.'/test/other'));
@@ -38,5 +30,3 @@ printf("core librairies:           %6d\n", $total_loc);
 printf("unit and functional tests: %6d\n", $total_tests_loc);
 echo "---------------------------------\n";
 printf("ratio tests/librairies:    %5d%%\n", $total_tests_loc / $total_loc * 100);
-echo "---------------------------------\n";
-printf("tasks:                     %6d\n", $total_tasks_loc);
