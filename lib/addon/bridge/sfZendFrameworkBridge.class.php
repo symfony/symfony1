@@ -59,10 +59,10 @@ class sfZendFrameworkBridge
    * available in ZF <= 0.9.0 and returns its path if its exists.
    * 
    * If neither Zend/Version.php nor Zend.php exists,
-   * then this function will raise a sfAutoloadException exception.
+   * then this function will raise a sfConfigurationException exception.
    *
    * @return  string  Path to default Zend Loader class
-   * @throws  sfAutoloadException
+   * @throws  sfConfigurationException
    *
    * @author  Simone Carletti <weppos@weppos.net>
    */
@@ -86,7 +86,7 @@ class sfZendFrameworkBridge
     }
     else
     {
-      throw new sfAutoloadException('Invalid Zend Framework library structure, unable to find Zend/Version.php (ZF >= 0.9.0) or Zend.php (ZF < 0.9.0) library');
+      throw new sfConfigurationException('Invalid Zend Framework library structure, unable to find Zend/Version.php (ZF >= 0.9.0) or Zend.php (ZF < 0.9.0) library');
     }
   }
 }

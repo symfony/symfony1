@@ -10,10 +10,10 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(20, new lime_output_color());
+$t = new lime_test(19, new lime_output_color());
 
 foreach (array(
-  'action', 'autoload', 'cache', 'configuration', 'context', 'controller', 'database', 
+  'action', 'cache', 'configuration', 'context', 'controller', 'database', 
   'error404', 'factory', 'file', 'filter', 'forward', 'initialization', 'parse', 'render', 'security',
   'stop', 'storage', 'validator', 'view'
 ) as $class)

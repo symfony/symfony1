@@ -24,10 +24,6 @@ if (!sfConfig::get('sf_in_bootstrap'))
   // YAML support
   require_once($sf_symfony_lib_dir.'/util/sfYaml.class.php');
 
-  // cache support
-  require_once($sf_symfony_lib_dir.'/cache/sfCache.class.php');
-  require_once($sf_symfony_lib_dir.'/cache/sfFileCache.class.php');
-
   // config support
   require_once($sf_symfony_lib_dir.'/config/sfConfigCache.class.php');
   require_once($sf_symfony_lib_dir.'/config/sfConfigHandler.class.php');
@@ -38,8 +34,6 @@ if (!sfConfig::get('sf_in_bootstrap'))
 
   // basic exception classes
   require_once($sf_symfony_lib_dir.'/exception/sfException.class.php');
-  require_once($sf_symfony_lib_dir.'/exception/sfAutoloadException.class.php');
-  require_once($sf_symfony_lib_dir.'/exception/sfCacheException.class.php');
   require_once($sf_symfony_lib_dir.'/exception/sfConfigurationException.class.php');
   require_once($sf_symfony_lib_dir.'/exception/sfParseException.class.php');
 
@@ -63,17 +57,15 @@ if ($file = $configCache->checkConfig($sf_app_config_dir_name.'/app.yml', true))
   include($configCache->checkConfig($sf_app_config_dir_name.'/app.yml'));
 }
 
-$sf_debug = sfConfig::get('sf_debug');
-
 // create bootstrap file for next time
-if (!sfConfig::get('sf_in_bootstrap') && !$sf_debug && !sfConfig::get('sf_test'))
+if (!sfConfig::get('sf_in_bootstrap') && !sfConfig::get('sf_debug') && !sfConfig::get('sf_test'))
 {
   $configCache->checkConfig($sf_app_config_dir_name.'/bootstrap_compile.yml');
 }
 
 // required core classes for the framework
 // create a temp var to avoid substitution during compilation
-if (!$sf_debug && !sfConfig::get('sf_test'))
+if (!sfConfig::get('sf_debug') && !sfConfig::get('sf_test'))
 {
   $core_classes = $sf_app_config_dir_name.'/core_compile.yml';
   $configCache->import($core_classes, false);
