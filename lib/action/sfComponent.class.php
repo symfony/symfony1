@@ -126,7 +126,7 @@ abstract class sfComponent
   {
     if (sfConfig::get('sf_web_debug'))
     {
-      sfWebDebug::getInstance()->logShortMessage($message);
+      $this->context->get('sf_web_debug')->logShortMessage($message);
     }
   }
 

@@ -24,18 +24,27 @@ class sfWebDebugFilter extends sfFilter
    */
   public function execute($filterChain)
   {
-    // execute this filter only once
+    if (!$this->context->has('sf_web_debug'))
+    {
+      $webDebug = new sfWebDebug();
+
+      $this->context->set('sf_web_debug', $webDebug);
+    }
+    else
+    {
+      $webDebug = $this->context->get('sf_web_debug');
+    }
+
     if ($this->isFirstCall())
     {
       // register sfWebDebug assets
-      sfWebDebug::getInstance()->registerAssets();
+      $webDebug->registerAssets();
     }
 
     // execute next filter
     $filterChain->execute();
 
-    $response   = $this->context->getResponse();
-    $controller = $this->context->getController();
+    $response = $this->context->getResponse();
 
     // don't add debug toolbar:
     // * for XHR requests
@@ -46,7 +55,7 @@ class sfWebDebugFilter extends sfFilter
       $this->context->getRequest()->isXmlHttpRequest() ||
       strpos($response->getContentType(), 'html') === false ||
       $response->getStatusCode() == 304 ||
-      $controller->getRenderMode() != sfView::RENDER_CLIENT ||
+      $this->context->getController()->getRenderMode() != sfView::RENDER_CLIENT ||
       $response->isHeaderOnly()
     )
     {
@@ -54,15 +63,16 @@ class sfWebDebugFilter extends sfFilter
     }
 
     $content  = $response->getContent();
-    $webDebug = sfWebDebug::getInstance()->getResults();
+    $webDebugContent = $webDebug->getResults();
 
     // add web debug information to response content
-    $newContent = str_ireplace('</body>', $webDebug.'</body>', $content);
-    if ($content == $newContent)
+    $count = 0;
+    $content = str_ireplace('</body>', $webDebugContent.'</body>', $content, $count);
+    if (!$count)
     {
-      $newContent .= $webDebug;
+      $content .= $webDebugContent;
     }
 
-    $response->setContent($newContent);
+    $response->setContent($content);
   }
 }

@@ -19,6 +19,8 @@
 class sfWebDebugLogger extends sfLogger
 {
   protected
+    $context  = null,
+    $buffer   = array(),
     $webDebug = null;
 
   /**
@@ -33,7 +35,8 @@ class sfWebDebugLogger extends sfLogger
       return;
     }
 
-    $this->webDebug = sfWebDebug::getInstance();
+    $this->buffer  = array();
+    $this->context = sfContext::getInstance();
 
     return parent::initialize($options);
   }
@@ -52,7 +55,7 @@ class sfWebDebugLogger extends sfLogger
     }
 
     // if we have xdebug, add some stack information
-    $debug_stack = array();
+    $debugStack = array();
     if (function_exists('xdebug_get_function_stack'))
     {
       foreach (xdebug_get_function_stack() as $i => $stack)
@@ -68,7 +71,7 @@ class sfWebDebugLogger extends sfLogger
             $tmp .= 'in "'.$stack['function'].'" ';
           }
           $tmp .= 'from "'.$stack['file'].'" line '.$stack['line'];
-          $debug_stack[] = $tmp;
+          $debugStack[] = $tmp;
         }
       }
     }
@@ -83,15 +86,30 @@ class sfWebDebugLogger extends sfLogger
 
     // build the object containing the complete log information
     $logEntry = array(
-      'priority'       => $priority,
-      'priorityString' => sfLogger::getPriorityName($priority),
-      'time'           => time(),
-      'message'        => $message,
-      'type'           => $type,
-      'debugStack'     => $debug_stack,
+      'priority'   => $priority,
+      'time'       => time(),
+      'message'    => $message,
+      'type'       => $type,
+      'debugStack' => $debugStack,
     );
 
     // send the log object
-    $this->webDebug->log($logEntry);
+    if (is_null($this->webDebug))
+    {
+      $this->buffer[] = $logEntry;
+
+      if ($this->context->has('sf_web_debug'))
+      {
+        $this->webDebug = $this->context->get('sf_web_debug');
+        while ($buffer = array_shift($this->buffer))
+        {
+          $this->webDebug->log($buffer);
+        }
+      }
+    }
+    else
+    {
+      $this->webDebug->log($logEntry);
+    }
   }
 }
