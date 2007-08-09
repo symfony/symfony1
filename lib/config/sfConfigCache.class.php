@@ -147,13 +147,8 @@ class sfConfigCache
     // the cache filename we'll be using
     $cache = $this->getCacheName($configPath);
 
-    if (sfConfig::get('sf_in_bootstrap') && is_readable($cache))
+    if (!sfConfig::get('sf_debug') && !sfConfig::get('sf_test') && is_readable($cache))
     {
-      if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-      {
-        $timer->addTime();
-      }
-
       return $cache;
     }
 

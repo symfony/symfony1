@@ -77,22 +77,26 @@ class sfCore
       }
     }
 
-    $bootstrap = sfConfig::get('sf_config_cache_dir').'/config_bootstrap_compile.yml.php';
-    if (is_readable($bootstrap))
+    $configCache = sfConfigCache::getInstance();
+
+    // load base settings
+    include($configCache->checkConfig(sfConfig::get('sf_app_config_dir_name').'/settings.yml'));
+    if ($file = $configCache->checkConfig(sfConfig::get('sf_app_config_dir_name').'/app.yml', true))
     {
-      sfConfig::set('sf_in_bootstrap', true);
-      require($bootstrap);
+      include($configCache->checkConfig(sfConfig::get('sf_app_config_dir_name').'/app.yml'));
     }
-    else
+
+    // required core classes for the framework
+    if (!sfConfig::get('sf_debug') && !sfConfig::get('sf_test'))
     {
-      require(sfConfig::get('sf_symfony_lib_dir').'/symfony.php');
+      $configCache->import(sfConfig::get('sf_app_config_dir_name').'/core_compile.yml', false);
     }
 
     // error settings
     ini_set('display_errors', SF_DEBUG ? 'on' : 'off');
     error_reporting(sfConfig::get('sf_error_reporting'));
 
-    $configCache->import($sf_app_config_dir_name.'/php.yml', false);
+    $configCache->import(sfConfig::get('sf_app_config_dir_name').'/php.yml', false);
 
     // include all config.php from plugins
     sfLoader::loadPluginConfig();
@@ -103,8 +107,29 @@ class sfCore
 
   static public function initConfiguration($sf_symfony_lib_dir, $sf_symfony_data_dir, $test = false)
   {
-    require_once($sf_symfony_lib_dir.'/util/sfToolkit.class.php');
+    // YAML support
+    require_once($sf_symfony_lib_dir.'/util/sfYaml.class.php');
+
+    // config support
     require_once($sf_symfony_lib_dir.'/config/sfConfig.class.php');
+    require_once($sf_symfony_lib_dir.'/config/sfConfigCache.class.php');
+    require_once($sf_symfony_lib_dir.'/config/sfConfigHandler.class.php');
+    require_once($sf_symfony_lib_dir.'/config/sfYamlConfigHandler.class.php');
+    require_once($sf_symfony_lib_dir.'/config/sfAutoloadConfigHandler.class.php');
+    require_once($sf_symfony_lib_dir.'/config/sfRootConfigHandler.class.php');
+    require_once($sf_symfony_lib_dir.'/config/sfLoader.class.php');
+
+    // exceptions
+    require_once($sf_symfony_lib_dir.'/exception/sfException.class.php');
+    require_once($sf_symfony_lib_dir.'/exception/sfConfigurationException.class.php');
+    require_once($sf_symfony_lib_dir.'/exception/sfParseException.class.php');
+
+    // utils
+    require_once($sf_symfony_lib_dir.'/util/sfParameterHolder.class.php');
+    require_once($sf_symfony_lib_dir.'/util/sfToolkit.class.php');
+
+    // autoloading
+    require_once($sf_symfony_lib_dir.'/util/sfAutoload.class.php');
 
     // in debug mode, load timer classes and start global timer
     if (SF_DEBUG)
@@ -122,8 +147,6 @@ class sfCore
       'sf_test'             => $test,
     ));
 
-    // autoloading
-    require_once($sf_symfony_lib_dir.'/util/sfAutoload.class.php');
     sfAutoload::register();
 
     // directory layout
