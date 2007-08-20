@@ -66,7 +66,7 @@ function object_textarea_tag($object, $method, $options = array(), $default_valu
  *
  * NOTE: Only the option tags are returned, you have to wrap this call in a regular HTML select tag.
  */
-function objects_for_select($options = array(), $value_method, $text_method = null, $selected = null, $html_options = array())
+function objects_for_select($options, $value_method, $text_method = null, $selected = null, $html_options = array())
 {
   $select_options = array();
   foreach ($options as $option)
