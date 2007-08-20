@@ -18,9 +18,9 @@
 class sfFillInForm
 {
   protected
-    $converters  = array(),
-    $skipFields  = array(),
-    $types       = array('text', 'checkbox', 'radio', 'hidden', 'password');
+    $converters = array(),
+    $skipFields = array(),
+    $types      = array('text', 'checkbox', 'radio', 'hidden', 'password');
 
   public function addConverter($callable, $fields)
   {
@@ -63,26 +63,35 @@ class sfFillInForm
   public function fillInDom($dom, $formName, $formId, $values)
   {
     $xpath = new DomXPath($dom);
+    if ($dom->documentElement && $dom->documentElement->namespaceURI)
+    {
+      $xpath->registerNamespace('xhtml', $dom->documentElement->namespaceURI);
+      $ns = 'xhtml:';
+    }
+    else
+    {
+      $ns = '';
+    }
 
-    $query = 'descendant::input[@name and (not(@type)';
+    $query = 'descendant::'.$ns.'input[@name and (not(@type)';
     foreach ($this->types as $type)
     {
       $query .= ' or @type="'.$type.'"';
     }
-    $query .= ')] | descendant::textarea[@name] | descendant::select[@name]';
+    $query .= ')] | descendant::'.$ns.'textarea[@name] | descendant::'.$ns.'select[@name]';
 
     // find our form
     if ($formName)
     {
-      $xpath_query = '//form[@name="'.$formName.'"]';
+      $xpath_query = '//'.$ns.'form[@name="'.$formName.'"]';
     }
     elseif ($formId)
     {
-      $xpath_query = '//form[@id="'.$formId.'"]';
+      $xpath_query = '//'.$ns.'form[@id="'.$formId.'"]';
     }
     else
     {
-      $xpath_query = '//form';
+      $xpath_query = '//'.$ns.'form';
     }
 
     $form = $xpath->query($xpath_query)->item(0);
@@ -142,7 +151,7 @@ class sfFillInForm
         // select
         $value    = $this->getValue($values, $name);
         $multiple = $element->hasAttribute('multiple');
-        foreach ($xpath->query('descendant::option', $element) as $option)
+        foreach ($xpath->query('descendant::'.$ns.'option', $element) as $option)
         {
           $option->removeAttribute('selected');
           if ($multiple && is_array($value))

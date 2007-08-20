@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/../lib/util/sfFillInForm.class.php');
 
-$t = new lime_test(46, new lime_output_color());
+$t = new lime_test(50, new lime_output_color());
 
 $html = <<<EOF
 <html>
@@ -188,3 +188,61 @@ function get_input_value($xml, $name, $attribute = 'value', $form = null)
 
   return (string) $values[0][$attribute];
 }
+
+// ->fillInXml()
+$t->diag('->fillInXml()');
+$f = new sfFillInForm();
+
+$xml = <<<EOF
+<html>
+  <body>
+    <form action="#" method="post" name="form">
+      <input type="text" name="foo" />
+    </form>
+  </body>
+</html>
+EOF;
+$xml = $f->fillInXml($xml, 'form', null, array('foo' => 'bar'));
+$t->like($xml, '#<input type="text" name="foo" value="bar"\s*/>#', '->fillInXml() outputs valid XML');
+
+$xml = <<<EOF
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <body>
+    <form action="#" method="post" name="form">
+      <input type="text" name="foo" />
+    </form>
+  </body>
+</html>
+EOF;
+$xml = $f->fillInXml($xml, 'form', null, array('foo' => 'bar'));
+$t->like($xml, '#<input type="text" name="foo" value="bar"\s*/>#', '->fillInXml() outputs valid XML');
+
+// ->fillInHtml()
+$t->diag('->fillInHtml()');
+$f = new sfFillInForm();
+
+$xml = <<<EOF
+<html>
+  <body>
+    <form action="#" method="post" name="form">
+      <input type="text" name="foo">
+    </form>
+  </body>
+</html>
+EOF;
+$xml = $f->fillInHtml($xml, 'form', null, array('foo' => 'bar'));
+$t->like($xml, '#<input type="text" name="foo" value="bar">#', '->fillInHtml() outputs valid HTML');
+
+$xml = <<<EOF
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+  <body>
+    <form action="#" method="post" name="form">
+      <input type="text" name="foo">
+    </form>
+  </body>
+</html>
+EOF;
+$xml = $f->fillInHtml($xml, 'form', null, array('foo' => 'bar'));
+$t->like($xml, '#<input type="text" name="foo" value="bar">#', '->fillInHtml() outputs valid HTML');
