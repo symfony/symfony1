@@ -64,17 +64,17 @@ class sfPatternRouting extends sfRouting
 
     if (is_null($this->currentInternalUri))
     {
-      list($url, $regexp, $names, $names_hash, $defaults, $requirements, $suffix) = $this->routes[$this->currentRouteName];
+      list($url, $regexp, $names, $namesHash, $defaults, $requirements, $suffix) = $this->routes[$this->currentRouteName];
 
       $request = $this->context->getRequest();
 
       if ($with_route_name)
       {
-        $internal_uri = '@'.$this->currentRouteName;
+        $internalUri = '@'.$this->currentRouteName;
       }
       else
       {
-        $internal_uri = $request->getParameter('module', isset($defaults['module']) ? $defaults['module'] : '').'/'.$request->getParameter('action', isset($defaults['action']) ? $defaults['action'] : '');
+        $internalUri = $request->getParameter('module', isset($defaults['module']) ? $defaults['module'] : '').'/'.$request->getParameter('action', isset($defaults['action']) ? $defaults['action'] : '');
       }
 
       $params = array();
@@ -104,7 +104,7 @@ class sfPatternRouting extends sfRouting
       // sort to guaranty unicity
       sort($params);
 
-      $this->currentInternalUri = $internal_uri.($params ? '?'.implode('&', $params) : '');
+      $this->currentInternalUri = $internalUri.($params ? '?'.implode('&', $params) : '');
     }
 
     return $this->currentInternalUri;
@@ -227,7 +227,7 @@ class sfPatternRouting extends sfRouting
     $suffix = (($sf_suffix = sfConfig::get('sf_suffix')) == '.') ? '' : $sf_suffix;
 
     // used for performance reasons
-    $names_hash = array();
+    $namesHash = array();
 
     $r = null;
     if (($route == '') || ($route == '/'))
@@ -292,7 +292,7 @@ class sfPatternRouting extends sfRouting
 
           $parsed[] = '(?:\/('.$regex.'))?';
           $names[] = $element;
-          $names_hash[$element] = 1;
+          $namesHash[$element] = 1;
         }
         elseif (preg_match('/^\*$/', $element, $r))
         {
@@ -305,7 +305,7 @@ class sfPatternRouting extends sfRouting
       }
       $regexp = '#^'.join('', $parsed).$regexp_suffix.'$#';
 
-      $this->routes[$name] = array($route, $regexp, $names, $names_hash, $default, $requirements, $suffix);
+      $this->routes[$name] = array($route, $regexp, $names, $namesHash, $default, $requirements, $suffix);
     }
 
     if (sfConfig::get('sf_logging_enabled'))
@@ -327,7 +327,7 @@ class sfPatternRouting extends sfRouting
   */
   public function generate($name, $params, $querydiv = '/', $divider = '/', $equals = '/')
   {
-    $global_defaults = sfConfig::get('sf_routing_defaults', null);
+    $globalDefaults = sfConfig::get('sf_routing_defaults', null);
 
     // named route?
     if ($name)
@@ -337,10 +337,10 @@ class sfPatternRouting extends sfRouting
         throw new sfConfigurationException(sprintf('The route "%s" does not exist.', $name));
       }
 
-      list($url, $regexp, $names, $names_hash, $defaults, $requirements, $suffix) = $this->routes[$name];
-      if ($global_defaults !== null)
+      list($url, $regexp, $names, $namesHash, $defaults, $requirements, $suffix) = $this->routes[$name];
+      if ($globalDefaults !== null)
       {
-        $defaults = array_merge($defaults, $global_defaults);
+        $defaults = array_merge($defaults, $globalDefaults);
       }
 
       // all params must be given
@@ -358,10 +358,10 @@ class sfPatternRouting extends sfRouting
       $found = false;
       foreach ($this->routes as $name => $route)
       {
-        list($url, $regexp, $names, $names_hash, $defaults, $requirements, $suffix) = $route;
-        if ($global_defaults !== null)
+        list($url, $regexp, $names, $namesHash, $defaults, $requirements, $suffix) = $route;
+        if ($globalDefaults !== null)
         {
-          $defaults = array_merge($defaults, $global_defaults);
+          $defaults = array_merge($defaults, $globalDefaults);
         }
 
         $tparams = array_merge($defaults, $params);
@@ -375,7 +375,7 @@ class sfPatternRouting extends sfRouting
         // we must match all defaults with value except if present in names
         foreach ($defaults as $key => $value)
         {
-          if (isset($names_hash[$key])) continue;
+          if (isset($namesHash[$key])) continue;
 
           if (!isset($tparams[$key]) || $tparams[$key] != $value) continue 2;
         }
@@ -411,15 +411,15 @@ class sfPatternRouting extends sfRouting
 
     $params = array_merge($defaults, $params);
 
-    $real_url = preg_replace('/\:([^\/]+)/e', 'urlencode($params["\\1"])', $url);
+    $realUrl = preg_replace('/\:([^\/]+)/e', 'urlencode($params["\\1"])', $url);
 
     // we add all other params if *
-    if (strpos($real_url, '*'))
+    if (strpos($realUrl, '*'))
     {
       $tmp = array();
       foreach ($params as $key => $value)
       {
-        if (isset($names_hash[$key]) || isset($defaults[$key])) continue;
+        if (isset($namesHash[$key]) || isset($defaults[$key])) continue;
 
         if (is_array($value))
         {
@@ -438,21 +438,21 @@ class sfPatternRouting extends sfRouting
       {
         $tmp = $querydiv.$tmp;
       }
-      $real_url = preg_replace('/\/\*(\/|$)/', "$tmp$1", $real_url);
+      $realUrl = preg_replace('/\/\*(\/|$)/', "$tmp$1", $realUrl);
     }
 
     // strip off last divider character
-    if (strlen($real_url) > 1)
+    if (strlen($realUrl) > 1)
     {
-      $real_url = rtrim($real_url, $divider);
+      $realUrl = rtrim($realUrl, $divider);
     }
 
-    if ($real_url != '/')
+    if ($realUrl != '/')
     {
-      $real_url .= $suffix;
+      $realUrl .= $suffix;
     }
 
-    return $real_url;
+    return $realUrl;
   }
 
  /**
@@ -485,7 +485,7 @@ class sfPatternRouting extends sfRouting
       $out = array();
       $r = null;
 
-      list($route, $regexp, $names, $names_hash, $defaults, $requirements, $suffix) = $route;
+      list($route, $regexp, $names, $namesHash, $defaults, $requirements, $suffix) = $route;
 
       $break = false;
 
@@ -538,7 +538,7 @@ class sfPatternRouting extends sfRouting
             foreach ($pass as $key => $value)
             {
               // we add this parameters if not in conflict with named url element (i.e. ':action')
-              if (!isset($names_hash[$key]))
+              if (!isset($namesHash[$key]))
               {
                 $out[$key] = $value;
               }

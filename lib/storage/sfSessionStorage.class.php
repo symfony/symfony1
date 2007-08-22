@@ -45,8 +45,7 @@ class sfSessionStorage extends sfStorage
 
     session_name($sessionName);
 
-    $use_cookies = (boolean) ini_get('session.use_cookies');
-    if (!$use_cookies)
+    if (!(boolean) ini_get('session.use_cookies'))
     {
       $sessionId = $context->getRequest()->getParameter($sessionName, '');
 

@@ -44,7 +44,6 @@ class sfMySQLDatabase extends sfDatabase
    */
   public function connect()
   {
-
     // determine how to get our
     $method = $this->getParameter('method', 'normal');
 
@@ -82,7 +81,7 @@ class sfMySQLDatabase extends sfDatabase
 
     // let's see if we need a persistent connection
     $persistent = $this->getParameter('persistent', false);
-    $connect    = ($persistent) ? 'mysql_pconnect' : 'mysql_connect';
+    $connect    = $persistent ? 'mysql_pconnect' : 'mysql_connect';
 
     if ($password == null)
     {

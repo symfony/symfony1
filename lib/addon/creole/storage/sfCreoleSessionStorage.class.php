@@ -112,7 +112,7 @@ class sfCreoleSessionStorage extends sfSessionStorage
     $db_id_col = $this->getParameterHolder()->get('db_id_col', 'sess_id');
 
     // delete the record associated with this id
-    $sql = 'DELETE FROM ' . $db_table . ' WHERE ' . $db_id_col . '=?';
+    $sql = 'DELETE FROM '.$db_table.' WHERE '.$db_id_col.'=?';
 
     try
     {
@@ -145,8 +145,7 @@ class sfCreoleSessionStorage extends sfSessionStorage
     $db_time_col = $this->getParameterHolder()->get('db_time_col', 'sess_time');
 
     // delete the record associated with this id
-    $sql = 'DELETE FROM ' . $db_table . ' ' .
-      'WHERE ' . $db_time_col . ' < ' . $time;
+    $sql = 'DELETE FROM '.$db_table.' '.'WHERE '.$db_time_col.' < '.$time;
 
     try
     {
@@ -209,7 +208,7 @@ class sfCreoleSessionStorage extends sfSessionStorage
 
     try
     {
-      $sql = 'SELECT ' . $db_data_col . ' FROM ' . $db_table . ' WHERE ' . $db_id_col . '=?';
+      $sql = 'SELECT '.$db_data_col.' FROM '.$db_table.' WHERE '.$db_id_col.'=?';
 
       $stmt = $this->db->prepareStatement($sql);
       $stmt->setString(1, $id);
@@ -219,19 +218,20 @@ class sfCreoleSessionStorage extends sfSessionStorage
       if ($dbRes->next())
       {
         $data = $dbRes->getString(1);
+
         return $data;
       }
       else
       {
         // session does not exist, create it
-        $sql = 'INSERT INTO ' . $db_table . '('.$db_id_col.','.$db_data_col.','.$db_time_col;
-        $sql .= ') VALUES (?,?,?)';
+        $sql = 'INSERT INTO '.$db_table.'('.$db_id_col.','.$db_data_col.','.$db_time_col.') VALUES (?,?,?)';
 
         $stmt = $this->db->prepareStatement($sql);
         $stmt->setString(1, $id);
         $stmt->setString(2, '');
         $stmt->setInt(3, time());
         $stmt->executeUpdate();
+
         return '';
       }
     }
@@ -260,8 +260,7 @@ class sfCreoleSessionStorage extends sfSessionStorage
     $db_id_col   = $this->getParameterHolder()->get('db_id_col', 'sess_id');
     $db_time_col = $this->getParameterHolder()->get('db_time_col', 'sess_time');
 
-    $sql = 'UPDATE ' . $db_table . ' SET ' . $db_data_col . '=?, ' . $db_time_col . ' = ' . time() .
-      ' WHERE ' . $db_id_col . '=?';
+    $sql = 'UPDATE '.$db_table.' SET '.$db_data_col.'=?, '.$db_time_col.' = '.time().' WHERE '.$db_id_col.'=?';
 
     try
     {
@@ -269,6 +268,7 @@ class sfCreoleSessionStorage extends sfSessionStorage
       $stmt->setString(1, $data);
       $stmt->setString(2, $id);
       $stmt->executeUpdate();
+
       return true;
     }
 
@@ -288,5 +288,4 @@ class sfCreoleSessionStorage extends sfSessionStorage
   public function shutdown()
   {
   }
-
 }

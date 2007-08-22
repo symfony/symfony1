@@ -164,10 +164,10 @@ class sfMessageSource_Creole extends sfMessageSource_Database
   }
 
   /**
-   * Retrieve catalogue details, array($cat_id, $variant, $count).
+   * Retrieve catalogue details, array($catId, $variant, $count).
    *
    * @param string catalogue
-   * @return array catalogue details, array($cat_id, $variant, $count).
+   * @return array catalogue details, array($catId, $variant, $count).
    */
   protected function getCatalogueDetails($catalogue = 'messages')
   {
@@ -193,19 +193,19 @@ class sfMessageSource_Creole extends sfMessageSource_Database
 
     $rs->next();
 
-    $cat_id = $rs->getInt(1);
+    $catId = $rs->getInt(1);
 
     //first get the catalogue ID
     $sql = 'SELECT count(msg_id) FROM trans_unit WHERE cat_id = ?';
 
     $stmt = $this->db->prepareStatement($sql);
 
-    $rs = $stmt->executeQuery(array($cat_id), ResultSet::FETCHMODE_NUM);
+    $rs = $stmt->executeQuery(array($catId), ResultSet::FETCHMODE_NUM);
 
     $rs->next();
     $count = $rs->getInt(1);
 
-    return array($cat_id, $variant, $count);
+    return array($catId, $variant, $count);
   }
 
   /**
@@ -213,7 +213,7 @@ class sfMessageSource_Creole extends sfMessageSource_Database
    *
    * @return boolean true if updated, false otherwise.
    */
-  protected function updateCatalogueTime($cat_id, $variant)
+  protected function updateCatalogueTime($catId, $variant)
   {
     $time = time();
 
@@ -221,7 +221,7 @@ class sfMessageSource_Creole extends sfMessageSource_Database
 
     $stmt = $this->db->prepareStatement($sql);
 
-    $result = $stmt->executeUpdate(array($time, $cat_id));
+    $result = $stmt->executeUpdate(array($time, $catId));
 
     if (!empty($this->cache))
     {
@@ -252,14 +252,14 @@ class sfMessageSource_Creole extends sfMessageSource_Database
 
     if ($details)
     {
-      list($cat_id, $variant, $count) = $details;
+      list($catId, $variant, $count) = $details;
     }
     else
     {
       return false;
     }
 
-    if ($cat_id <= 0)
+    if ($catId <= 0)
     {
       return false;
     }
@@ -296,7 +296,7 @@ class sfMessageSource_Creole extends sfMessageSource_Database
 
       foreach ($messages as $message)
       {
-        $stmt->executeUpdate(array($cat_id, $message, '', '', $time, $time));
+        $stmt->executeUpdate(array($catId, $message, '', '', $time, $time));
         ++$inserted;
       }
 
@@ -309,7 +309,7 @@ class sfMessageSource_Creole extends sfMessageSource_Database
 
     if ($inserted > 0)
     {
-      $this->updateCatalogueTime($cat_id, $variant);
+      $this->updateCatalogueTime($catId, $variant);
     }
 
     return $inserted > 0;
@@ -328,7 +328,7 @@ class sfMessageSource_Creole extends sfMessageSource_Database
 
     if ($details)
     {
-      list($cat_id, $variant, $count) = $details;
+      list($catId, $variant, $count) = $details;
     }
     else
     {
@@ -341,11 +341,11 @@ class sfMessageSource_Creole extends sfMessageSource_Database
 
     $stmt = $this->db->prepareStatement($sql);
 
-    $rows = $stmt->executeUpdate(array($cat_id, $message));
+    $rows = $stmt->executeUpdate(array($catId, $message));
 
     if ($rows == 1)
     {
-      $deleted = $this->updateCatalogueTime($cat_id, $variant);
+      $deleted = $this->updateCatalogueTime($catId, $variant);
     }
 
     return $deleted;
@@ -360,12 +360,12 @@ class sfMessageSource_Creole extends sfMessageSource_Database
    * @param string the catalogue of the translation.
    * @return boolean true if translation was updated, false otherwise.
    */
-  function update($text, $target, $comments, $catalogue='messages')
+  function update($text, $target, $comments, $catalogue = 'messages')
   {
     $details = $this->getCatalogueDetails($catalogue);
     if ($details)
     {
-      list($cat_id, $variant, $count) = $details;
+      list($catId, $variant, $count) = $details;
     }
     else
     {
@@ -380,11 +380,11 @@ class sfMessageSource_Creole extends sfMessageSource_Database
 
     $stmt = $this->db->prepareStatement($sql);
 
-    $rows = $stmt->executeUpdate(array($target, $comments, $time, $cat_id, $text));
+    $rows = $stmt->executeUpdate(array($target, $comments, $time, $catId, $text));
 
     if ($rows == 1)
     {
-      $updated = $this->updateCatalogueTime($cat_id, $variant);
+      $updated = $this->updateCatalogueTime($catId, $variant);
     }
 
     return $updated;

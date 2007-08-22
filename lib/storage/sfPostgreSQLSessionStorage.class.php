@@ -161,10 +161,7 @@ class sfPostgreSQLSessionStorage extends sfSessionStorage
     $database = $this->getParameterHolder()->get('database', 'default');
 
     // get the database resource
-    $this->resource = $this->context
-                           ->getDatabaseManager()
-                           ->getDatabase($database)
-                           ->getResource();
+    $this->resource = $this->context->getDatabaseManager()->getDatabase($database)->getResource();
 
     return true;
   }

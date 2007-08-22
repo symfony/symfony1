@@ -474,7 +474,7 @@ class sfWebRequest extends sfRequest
     if ($pathInfo)
     {
       // routing map defined?
-      $r = sfContext::getInstance()->getRouting();
+      $r = $this->context->getRouting();
       if ($r->hasRoutes())
       {
         $results = $r->parse($pathInfo);

@@ -162,7 +162,7 @@ class sfContext
    */
   public function getDatabaseConnection($name = 'default')
   {
-    if ($this->factories['databaseManager'] != null)
+    if (!is_null($this->factories['databaseManager']))
     {
       return $this->factories['databaseManager']->getDatabase($name)->getConnection();
     }

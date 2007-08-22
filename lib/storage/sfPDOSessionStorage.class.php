@@ -169,7 +169,7 @@ class sfPDOSessionStorage extends sfSessionStorage
     // what database are we using?
     $database = $this->getParameterHolder()->get('database', 'default');
 
-    $this->db = $this->context->getDatabaseConnection($database);
+    $this->db = $this->context->getDatabaseManager()->getDatabase($database)->getResource();
     if ($this->db == null || !$this->db instanceof PDO)
     {
       $error = 'PDO dabatase connection doesn\'t exist. Unable to open session.';

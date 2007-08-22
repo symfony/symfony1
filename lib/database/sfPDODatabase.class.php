@@ -67,6 +67,8 @@ class sfPDODatabase extends sfDatabase
     {
       $this->connection->setAttribute(PDO_ATTR_ERRMODE, PDO_ERRMODE_EXCEPTION);
     }
+
+    $this->resource = $this->connection;
   }
 
   /**
@@ -78,9 +80,6 @@ class sfPDODatabase extends sfDatabase
    */
   public function shutdown()
   {
-    if ($this->connection !== null)
-    {
-      $this->connection = null;
-    }
+    $this->connection = null;
   }
 }
