@@ -54,10 +54,7 @@ function include_component_slot($name, $vars = array())
  */
 function get_component_slot($name, $vars = array())
 {
-  $context = sfContext::getInstance();
-
-  $actionStackEntry = $context->getController()->getActionStack()->getLastEntry();
-  $viewInstance     = $actionStackEntry->getViewInstance();
+  $viewInstance = sfContext::getInstance()->get('view_instance');
 
   if (!$viewInstance->hasComponentSlot($name))
   {

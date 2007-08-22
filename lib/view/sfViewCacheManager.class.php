@@ -586,7 +586,7 @@ class sfViewCacheManager
    */
   public function setPageCache($uri)
   {
-    if (sfView::RENDER_CLIENT != $this->context->getController()->getRenderMode())
+    if (sfView::RENDER_CLIENT != $this->controller->getRenderMode())
     {
       return;
     }
@@ -619,10 +619,9 @@ class sfViewCacheManager
 
     $cachedResponse = unserialize($retval);
 
-    $controller = $this->context->getController();
-    if (sfView::RENDER_VAR == $controller->getRenderMode())
+    if (sfView::RENDER_VAR == $this->controller->getRenderMode())
     {
-      $controller->getActionStack()->getLastEntry()->setPresentation($cachedResponse->getContent());
+      $this->controller->getActionStack()->getLastEntry()->setPresentation($cachedResponse->getContent());
       $this->response->setContent('');
     }
     else

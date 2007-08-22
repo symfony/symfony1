@@ -24,8 +24,7 @@ class sfActionStackEntry
     $actionInstance = null,
     $actionName     = null,
     $moduleName     = null,
-    $presentation   = null,
-    $viewInstance   = null;
+    $presentation   = null;
 
   /**
    * Class constructor.
@@ -59,26 +58,6 @@ class sfActionStackEntry
   public function getActionInstance()
   {
     return $this->actionInstance;
-  }
-
-  /**
-   * Retrieves this entry's view instance.
-   *
-   * @return sfView A sfView implementation instance.
-   */
-  public function getViewInstance()
-  {
-    return $this->viewInstance;
-  }
-
-  /**
-   * Sets this entry's view instance.
-   *
-   * @param sfView A sfView implementation instance.
-   */
-  public function setViewInstance($viewInstance)
-  {
-    $this->viewInstance = $viewInstance;
   }
 
   /**
