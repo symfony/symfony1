@@ -28,28 +28,25 @@ class sfSessionStorage extends sfStorage
   /**
    * Initializes this Storage instance.
    *
-   * @param sfContext A sfContext instance
    * @param array   An associative array of initialization parameters
    *
    * @return boolean true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this Storage
    */
-  public function initialize($context, $parameters = null)
+  public function initialize($parameters = null)
   {
     // initialize parent
-    parent::initialize($context, $parameters);
+    parent::initialize($parameters);
 
     // set session name
-    $sessionName = $this->getParameterHolder()->get('session_name', 'symfony');
+    $sessionName = $this->getParameter('session_name', 'symfony');
 
     session_name($sessionName);
 
     if (!(boolean) ini_get('session.use_cookies'))
     {
-      $sessionId = $context->getRequest()->getParameter($sessionName, '');
-
-      if ($sessionId != '')
+      if ($sessionId = $this->getParameter('session_id'))
       {
         session_id($sessionId);
       }
@@ -86,13 +83,13 @@ class sfSessionStorage extends sfStorage
    *
    * @return mixed Data associated with the key
    */
-  public function & read($key)
+  public function read($key)
   {
     $retval = null;
 
     if (isset($_SESSION[$key]))
     {
-      $retval =& $_SESSION[$key];
+      $retval = $_SESSION[$key];
     }
 
     return $retval;
@@ -107,13 +104,13 @@ class sfSessionStorage extends sfStorage
    *
    * @return mixed Data associated with the key
    */
-  public function & remove($key)
+  public function remove($key)
   {
     $retval = null;
 
     if (isset($_SESSION[$key]))
     {
-      $retval =& $_SESSION[$key];
+      $retval = $_SESSION[$key];
       unset($_SESSION[$key]);
     }
 
@@ -129,9 +126,9 @@ class sfSessionStorage extends sfStorage
    * @param mixed  Data associated with your key
    *
    */
-  public function write($key, &$data)
+  public function write($key, $data)
   {
-    $_SESSION[$key] =& $data;
+    $_SESSION[$key] = $data;
   }
 
   /**

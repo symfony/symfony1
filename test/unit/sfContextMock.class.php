@@ -28,7 +28,7 @@ class sfContext
       self::$instance = new sfContext();
 
       self::$instance->storage = sfStorage::newInstance('sfSessionTestStorage');
-      self::$instance->storage->initialize(self::$instance);
+      self::$instance->storage->initialize(array('session_path' => sfConfig::get('sf_test_cache_dir').'/sessions'));
 
       foreach ($factories as $type => $class)
       {

@@ -16,6 +16,8 @@ cli:
 test:
   storage:
     class: sfSessionTestStorage
+    param:
+      session_path: %SF_TEST_CACHE_DIR%/sessions
 
 #all:
 #  controller:

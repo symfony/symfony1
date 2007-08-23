@@ -68,6 +68,7 @@ function user_flush($context)
 {
   $context->getUser()->shutdown();
   $context->getUser()->initialize($context);
+  $parameters = $context->getStorage()->getParameterHolder()->getAll();
   $context->getStorage()->shutdown();
-  $context->getStorage()->initialize($context);
+  $context->getStorage()->initialize($parameters);
 }

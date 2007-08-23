@@ -21,33 +21,19 @@
 abstract class sfStorage
 {
   protected
-    $parameterHolder = null,
-    $context         = null;
-
-  /**
-   * Retrieves the current application context.
-   *
-   * @return sfContext A sfContext instance
-   */
-  public function getContext()
-  {
-    return $this->context;
-  }
+    $parameterHolder = null;
 
   /**
    * Initializes this Storage instance.
    *
-   * @param sfContext A sfContext instance
    * @param array   An associative array of initialization parameters
    *
    * @return boolean true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfStorage
    */
-  public function initialize($context, $parameters = array())
+  public function initialize($parameters = array())
   {
-    $this->context = $context;
-
     $this->parameterHolder = new sfParameterHolder();
     $this->getParameterHolder()->add($parameters);
   }
@@ -84,7 +70,7 @@ abstract class sfStorage
    *
    * @throws <b>sfStorageException</b> If an error occurs while reading data from this storage
    */
-  abstract function & read($key);
+  abstract public function read($key);
 
   /**
    * Removes data from this storage.
@@ -97,14 +83,14 @@ abstract class sfStorage
    *
    * @throws <b>sfStorageException</b> If an error occurs while removing data from this storage
    */
-  abstract function & remove($key);
+  abstract public function remove($key);
 
   /**
    * Executes the shutdown procedure.
    *
    * @throws <b>sfStorageException</b> If an error occurs while shutting down this storage
    */
-  abstract function shutdown();
+  abstract public function shutdown();
 
   /**
    * Writes data to this storage.
@@ -116,7 +102,7 @@ abstract class sfStorage
    *
    * @throws <b>sfStorageException</b> If an error occurs while writing to this storage
    */
-  abstract function write($key, &$data);
+  abstract public function write($key, $data);
 
   /**
    * Retrieves the parameters from the storage.

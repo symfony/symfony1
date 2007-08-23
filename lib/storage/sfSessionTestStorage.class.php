@@ -20,32 +20,33 @@ class sfSessionTestStorage extends sfStorage
 {
   protected
     $sessionId   = null,
-    $sessionData = array(),
-    $sessionPath = null;
+    $sessionData = array();
 
   /**
    * Initializes this Storage instance.
    *
-   * @param sfContext A sfContext instance
    * @param array   An associative array of initialization parameters
    *
    * @return boolean true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this Storage
    */
-  public function initialize($context, $parameters = null)
+  public function initialize($parameters = null)
   {
     // initialize parent
-    parent::initialize($context, $parameters);
+    parent::initialize($parameters);
 
-    $this->sessionPath = sfConfig::get('sf_test_cache_dir').DIRECTORY_SEPARATOR.'sessions';
+    if (!$this->getParameter('session_path'))
+    {
+      throw new sfInitializationException('Factory configuration file is missing required "session_path" parameter for the "storage" category.');
+    }
 
     if (array_key_exists('session_id', $_SERVER))
     {
       $this->sessionId = $_SERVER['session_id'];
 
       // we read session data from temp file
-      $file = $this->sessionPath.DIRECTORY_SEPARATOR.$this->sessionId.'.session';
+      $file = $this->getParameter('session_path').DIRECTORY_SEPARATOR.$this->sessionId.'.session';
       $this->sessionData = file_exists($file) ? unserialize(file_get_contents($file)) : array();
     }
     else
@@ -74,13 +75,13 @@ class sfSessionTestStorage extends sfStorage
    *
    * @return mixed Data associated with the key
    */
-  public function & read($key)
+  public function read($key)
   {
     $retval = null;
 
     if (isset($this->sessionData[$key]))
     {
-      $retval =& $this->sessionData[$key];
+      $retval = $this->sessionData[$key];
     }
 
     return $retval;
@@ -95,13 +96,13 @@ class sfSessionTestStorage extends sfStorage
    *
    * @return mixed Data associated with the key
    */
-  public function & remove($key)
+  public function remove($key)
   {
     $retval = null;
 
     if (isset($this->sessionData[$key]))
     {
-      $retval =& $this->sessionData[$key];
+      $retval = $this->sessionData[$key];
       unset($this->sessionData[$key]);
     }
 
@@ -117,9 +118,9 @@ class sfSessionTestStorage extends sfStorage
    * @param mixed  Data associated with your key
    *
    */
-  public function write($key, &$data)
+  public function write($key, $data)
   {
-    $this->sessionData[$key] =& $data;
+    $this->sessionData[$key] = $data;
   }
 
   /**
@@ -127,7 +128,7 @@ class sfSessionTestStorage extends sfStorage
    */
   public function clear()
   {
-    sfToolkit::clearDirectory($this->sessionPath);
+    sfToolkit::clearDirectory($this->getParameter('session_path'));
   }
 
   /**
@@ -139,12 +140,12 @@ class sfSessionTestStorage extends sfStorage
     if ($this->sessionId)
     {
       $current_umask = umask(0000);
-      if (!is_dir($this->sessionPath))
+      if (!is_dir($this->getParameter('session_path')))
       {
-        mkdir($this->sessionPath, 0777, true);
+        mkdir($this->getParameter('session_path'), 0777, true);
       }
       umask($current_umask);
-      file_put_contents($this->sessionPath.DIRECTORY_SEPARATOR.$this->sessionId.'.session', serialize($this->sessionData));
+      file_put_contents($this->getParameter('session_path').DIRECTORY_SEPARATOR.$this->sessionId.'.session', serialize($this->sessionData));
       $this->sessionId   = '';
       $this->sessionData = array();
     }

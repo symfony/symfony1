@@ -22,8 +22,8 @@
 abstract class sfDatabase
 {
   protected
-    $connection      = null,
     $parameterHolder = null,
+    $connection      = null,
     $resource        = null;
 
   /**
@@ -45,7 +45,7 @@ abstract class sfDatabase
    */
   public function getConnection()
   {
-    if ($this->connection == null)
+    if (is_null($this->connection))
     {
       $this->connect();
     }
@@ -62,7 +62,7 @@ abstract class sfDatabase
    */
   public function getResource()
   {
-    if ($this->resource == null)
+    if (is_null($this->resource))
     {
       $this->connect();
     }

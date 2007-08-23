@@ -12,20 +12,7 @@
 /**
  * Provides support for session storage using a MySQL brand database.
  *
- * <b>Required parameters:</b>
- *
- * # <b>db_table</b> - [none] - The database table in which session data will be
- *                              stored.
- *
- * <b>Optional parameters:</b>
- *
- * # <b>db_id_col</b>    - [sess_id]   - The database column in which the
- *                                       session id will be stored.
- * # <b>db_data_col</b>  - [sess_data] - The database column in which the
- *                                       session data will be stored.
- * # <b>db_time_col</b>  - [sess_time] - The database column in which the
- *                                       session timestamp will be stored.
- * # <b>session_name</b> - [symfony]   - The name of the session.
+ * <b>parameters:</b> see sfDatabaseSessionStorage
  *
  * @package    symfony
  * @subpackage storage
@@ -33,58 +20,8 @@
  * @author     Sean Kerr <skerr@mojavi.org>
  * @version    SVN: $Id$
  */
-class sfMySQLSessionStorage extends sfSessionStorage
+class sfMySQLSessionStorage extends sfDatabaseSessionStorage
 {
-  protected
-    $resource = null;
-
-  /**
-   * Initializes this Storage instance.
-   *
-   * @param sfContext A sfContext instance
-   * @param array   An associative array of initialization parameters
-   *
-   * @return boolean true, if initialization completes successfully, otherwise false
-   *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Storage
-   */
-  public function initialize($context, $parameters = null)
-  {
-    // disable auto_start
-    $parameters['auto_start'] = false;
-
-    // initialize the parent
-    parent::initialize($context, $parameters);
-
-    if (!$this->getParameterHolder()->has('db_table'))
-    {
-        // missing required 'db_table' parameter
-        throw new sfInitializationException('Factory configuration file is missing required "db_table" parameter for the Storage category.');
-    }
-
-    // use this object as the session handler
-    session_set_save_handler(array($this, 'sessionOpen'),
-                             array($this, 'sessionClose'),
-                             array($this, 'sessionRead'),
-                             array($this, 'sessionWrite'),
-                             array($this, 'sessionDestroy'),
-                             array($this, 'sessionGC'));
-
-    // start our session
-    session_start();
-  }
-
-  /**
-   * Closes a session.
-   *
-   * @return boolean true, if the session was closed, otherwise false
-   */
-  public function sessionClose()
-  {
-    // do nothing
-    return true;
-  }
-
   /**
    * Destroys a session.
    *
@@ -97,22 +34,22 @@ class sfMySQLSessionStorage extends sfSessionStorage
   public function sessionDestroy($id)
   {
     // get table/column
-    $db_table  = $this->getParameterHolder()->get('db_table');
-    $db_id_col = $this->getParameterHolder()->get('db_id_col', 'sess_id');
+    $db_table  = $this->getParameter('db_table');
+    $db_id_col = $this->getParameter('db_id_col', 'sess_id');
 
     // cleanup the session id, just in case
-    $id = mysql_real_escape_string($id, $this->resource);
+    $id = mysql_real_escape_string($id, $this->db);
 
     // delete the record associated with this id
     $sql = 'DELETE FROM '.$db_table.' WHERE '.$db_id_col.' = \''.$id.'\'';
 
-    if (@mysql_query($sql, $this->resource))
+    if (@mysql_query($sql, $this->db))
     {
       return true;
     }
 
     // failed to destroy session
-    throw new sfDatabaseException(sprintf('MySQLSessionStorage cannot destroy session id "%s".', $id));
+    throw new sfDatabaseException(sprintf('sfMySQLSessionStorage cannot destroy session id "%s".', $id));
   }
 
   /**
@@ -126,43 +63,17 @@ class sfMySQLSessionStorage extends sfSessionStorage
    */
   public function sessionGC($lifetime)
   {
-    // determine deletable session time
-    $time = time() - $lifetime;
-
     // get table/column
-    $db_table    = $this->getParameterHolder()->get('db_table');
-    $db_time_col = $this->getParameterHolder()->get('db_time_col', 'sess_time');
+    $db_table    = $this->getParameter('db_table');
+    $db_time_col = $this->getParameter('db_time_col', 'sess_time');
 
     // delete the record associated with this id
-    $sql = 'DELETE FROM '.$db_table.' '.
-           'WHERE '.$db_time_col.' < '.$time;
+    $sql = 'DELETE FROM '.$db_table.' WHERE '.$db_time_col.' < '.(time() - $lifetime);
 
-    if (@mysql_query($sql, $this->resource))
+    if (!@mysql_query($sql, $this->db))
     {
-      return true;
+      throw new sfDatabaseException('sfMySQLSessionStorage cannot delete old sessions.');
     }
-
-    // failed to cleanup old sessions
-    throw new sfDatabaseException('MySQLSessionStorage cannot delete old sessions.');
-  }
-
-  /**
-   * Opens a session.
-   *
-   * @param string
-   * @param string
-   *
-   * @return boolean true, if the session was opened, otherwise an exception is thrown
-   *
-   * @throws <b>sfDatabaseException</b> If a connection with the database does not exist or cannot be created
-   */
-  public function sessionOpen($path, $name)
-  {
-    // what database are we using?
-    $database = $this->getParameterHolder()->get('database', 'default');
-
-    // get the database resource
-    $this->resource = $this->context->getDatabaseManager()->getDatabase($database)->getResource();
 
     return true;
   }
@@ -179,20 +90,18 @@ class sfMySQLSessionStorage extends sfSessionStorage
   public function sessionRead($id)
   {
     // get table/column
-    $db_table    = $this->getParameterHolder()->get('db_table');
-    $db_data_col = $this->getParameterHolder()->get('db_data_col', 'sess_data');
-    $db_id_col   = $this->getParameterHolder()->get('db_id_col', 'sess_id');
-    $db_time_col = $this->getParameterHolder()->get('db_time_col', 'sess_time');
+    $db_table    = $this->getParameter('db_table');
+    $db_data_col = $this->getParameter('db_data_col', 'sess_data');
+    $db_id_col   = $this->getParameter('db_id_col', 'sess_id');
+    $db_time_col = $this->getParameter('db_time_col', 'sess_time');
 
     // cleanup the session id, just in case
-    $id = mysql_real_escape_string($id, $this->resource);
+    $id = mysql_real_escape_string($id, $this->db);
 
     // delete the record associated with this id
-    $sql = 'SELECT '.$db_data_col.' ' .
-           'FROM '.$db_table.' ' .
-           'WHERE '.$db_id_col.' = \''.$id.'\'';
+    $sql = 'SELECT '.$db_data_col.' FROM '.$db_table.' WHERE '.$db_id_col.' = \''.$id.'\'';
 
-    $result = @mysql_query($sql, $this->resource);
+    $result = @mysql_query($sql, $this->db);
 
     if ($result != false && @mysql_num_rows($result) == 1)
     {
@@ -204,17 +113,15 @@ class sfMySQLSessionStorage extends sfSessionStorage
     else
     {
       // session does not exist, create it
-      $sql = 'INSERT INTO '.$db_table.' ('.$db_id_col.', ' .
-             $db_data_col.', '.$db_time_col.') VALUES (' .
-             '\''.$id.'\', \'\', '.time().')';
+      $sql = 'INSERT INTO '.$db_table.' ('.$db_id_col.', '.$db_data_col.', '.$db_time_col.') VALUES (\''.$id.'\', \'\', '.time().')';
 
-      if (@mysql_query($sql, $this->resource))
+      if (@mysql_query($sql, $this->db))
       {
         return '';
       }
 
       // can't create record
-      throw new sfDatabaseException(sprintf('MySQLSessionStorage cannot create new record for id "%s".', $id));
+      throw new sfDatabaseException(sprintf('sfMySQLSessionStorage cannot create new record for id "%s".', $id));
     }
   }
 
@@ -231,35 +138,24 @@ class sfMySQLSessionStorage extends sfSessionStorage
   public function sessionWrite($id, &$data)
   {
     // get table/column
-    $db_table    = $this->getParameterHolder()->get('db_table');
-    $db_data_col = $this->getParameterHolder()->get('db_data_col', 'sess_data');
-    $db_id_col   = $this->getParameterHolder()->get('db_id_col', 'sess_id');
-    $db_time_col = $this->getParameterHolder()->get('db_time_col', 'sess_time');
+    $db_table    = $this->getParameter('db_table');
+    $db_data_col = $this->getParameter('db_data_col', 'sess_data');
+    $db_id_col   = $this->getParameter('db_id_col', 'sess_id');
+    $db_time_col = $this->getParameter('db_time_col', 'sess_time');
 
     // cleanup the session id and data, just in case
-    $id   = mysql_real_escape_string($id, $this->resource);
-    $data = mysql_real_escape_string($data, $this->resource);
+    $id   = mysql_real_escape_string($id, $this->db);
+    $data = mysql_real_escape_string($data, $this->db);
 
     // delete the record associated with this id
-    $sql = 'UPDATE '.$db_table.' ' .
-           'SET '.$db_data_col.' = \''.$data.'\', ' .
-           $db_time_col.' = '.time().' ' .
-           'WHERE '.$db_id_col.' = \''.$id.'\'';
+    $sql = 'UPDATE '.$db_table.' SET '.$db_data_col.' = \''.$data.'\', '.$db_time_col.' = '.time().' WHERE '.$db_id_col.' = \''.$id.'\'';
 
-    if (@mysql_query($sql, $this->resource))
+    if (@mysql_query($sql, $this->db))
     {
       return true;
     }
 
     // failed to write session data
-    throw new sfDatabaseException(sprintf('MySQLSessionStorage cannot write session data for id "%s".', $id));
-  }
-
-  /**
-   * Executes the shutdown procedure.
-   *
-   */
-  public function shutdown()
-  {
+    throw new sfDatabaseException(sprintf('sfMySQLSessionStorage cannot write session data for id "%s".', $id));
   }
 }

@@ -9,23 +9,20 @@
  */
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
-require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(19, new lime_output_color());
+$t = new lime_test(17, new lime_output_color());
 
 class myStorage extends sfStorage
 {
-  function & read($key) {}
-  function & remove($key) {}
-  function shutdown() {}
-  function write($key, &$data) {}
+  public function read($key) {}
+  public function remove($key) {}
+  public function shutdown() {}
+  public function write($key, $data) {}
 }
 
 class fakeStorage
 {
 }
-
-$context = sfContext::getInstance(array('storage' => 'myStorage'));
 
 // ::newInstance()
 $t->diag('::newInstance()');
@@ -45,17 +42,11 @@ catch (sfFactoryException $e)
 // ->initialize()
 $t->diag('->initialize()');
 $storage = sfStorage::newInstance('myStorage');
-$t->is($storage->getContext(), null, '->initialize() takes a sfContext object as its first argument');
-$storage->initialize($context, array('foo' => 'bar'));
+$storage->initialize(array('foo' => 'bar'));
 $t->is($storage->getParameter('foo'), 'bar', '->initialize() takes an array of parameters as its second argument');
 
 $storage = new myStorage();
-$storage->initialize($context);
-
-// ->getContext()
-$t->diag('->getContext()');
-$storage->initialize($context);
-$t->is($storage->getContext(), $context, '->getContext() returns the current context');
+$storage->initialize();
 
 // parameter holder proxy
 require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');
