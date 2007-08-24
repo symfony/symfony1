@@ -9,15 +9,18 @@
  */
 
 /**
- * sfNoRouting class is a very simple routing class that uses GET parameters.
+ * sfPathInfoRouting class is a very simple routing class that uses PATH_INFO.
  *
  * @package    symfony
  * @subpackage routing
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfNoRouting extends sfRouting
+class sfPathInfoRouting extends sfRouting
 {
+  protected
+    $currentRouteParameters = array();
+
   /**
    * Gets the internal URI for the current request.
    *
@@ -28,9 +31,7 @@ class sfNoRouting extends sfRouting
    */
   public function getCurrentInternalUri($with_route_name = false)
   {
-    $parameters = $_GET;
-
-    // module/action
+    $parameters = $this->currentRouteParameters;
     $module = isset($parameters['module']) ? $parameters['module'] : $this->parameterHolder->get('default_module');
     $action = isset($parameters['action']) ? $parameters['action'] : $this->parameterHolder->get('default_action');
 
@@ -53,9 +54,14 @@ class sfNoRouting extends sfRouting
   */
   public function generate($name, $params, $querydiv = '/', $divider = '/', $equals = '/')
   {
-    $parameters = http_build_query(array_merge($this->defaultParameters, $params));
+    $url = '';
+    $params = array_merge($this->defaultParameters, $params);
+    foreach ($params as $key => $value)
+    {
+      $url .= '/'.$key.'/'.$value;
+    }
 
-    return '/'.($parameters ? '?'.$parameters : '');
+    return $url ? $url : '/';
   }
 
  /**
@@ -69,7 +75,20 @@ class sfNoRouting extends sfRouting
   */
   public function parse($url)
   {
-    return array();
+    $this->currentRouteParameters = array();
+    $array = explode('/', trim($url, '/'));
+    $count = count($array);
+
+    for ($i = 0; $i < $count; $i++)
+    {
+      // see if there's a value associated with this parameter, if not we're done with path data
+      if ($count > ($i + 1))
+      {
+        $this->currentRouteParameters[$array[$i]] = $array[++$i];
+      }
+    }
+
+    return $this->currentRouteParameters;
   }
 
   /**

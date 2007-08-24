@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(61, new lime_output_color());
+$t = new lime_test(63, new lime_output_color());
 
 class sfPatternRoutingTest extends sfPatternRouting
 {
@@ -22,6 +22,7 @@ class sfPatternRoutingTest extends sfPatternRouting
 
 // public methods
 $r = new sfPatternRoutingTest();
+$r->initialize();
 foreach (array('clearRoutes', 'connect', 'generate', 'getCurrentInternalUri', 'getCurrentRouteName', 'getRoutes', 'hasRoutes', 'parse', 'setRoutes') as $method)
 {
   $t->can_ok($r, $method, sprintf('"%s" is a method of sfRouting', $method));
@@ -79,7 +80,7 @@ $t->is($r->generate('', $params), $url, 'generate /:module/:action url');
 
 // suffix
 $r->clearRoutes();
-sfConfig::set('sf_suffix', '.html');
+$r->setDefaultSuffix('.html');
 $r->connect('foo', '/foo/:module/:action/:param.foo', array('module' => 'default', 'action' => 'index'));
 $url  = '/foo/default/index/foo.foo';
 $r->connect('foo1', '/foo1/:module/:action/:param1.', array('module' => 'default', 'action' => 'index1'));
@@ -92,13 +93,13 @@ $url3 = '/foo3/default/index3/foo3.html';
 $t->is($r->generate('', array('module' => 'default', 'action' => 'index',  'param'  => 'foo'),  '/', '/', '='), $url,  '->generate() routes can override the default suffix');
 $t->is($r->generate('', array('module' => 'default', 'action' => 'index1', 'param1' => 'foo1')), $url1, '->generate() routes can remove the default suffix');
 $t->is($r->generate('', array('module' => 'default', 'action' => 'index2', 'param2' => 'foo2')), $url2, '->generate() routes does not have suffix when they end by /');
-$t->is($r->generate('', array('module' => 'default', 'action' => 'index3', 'param3' => 'foo3')), $url3, '->generate() routes takes a suffix defined by "sf_suffix"');
+$t->is($r->generate('', array('module' => 'default', 'action' => 'index3', 'param3' => 'foo3')), $url3, '->generate() routes takes a suffix defined by the "suffix" parameter');
 
 $t->is($r->parse($url),  array('module' => 'default', 'action' => 'index',  'param'  => 'foo'),  '->parse() routes can override the default suffix');
 $t->is($r->parse($url1), array('module' => 'default', 'action' => 'index1', 'param1' => 'foo1'), '->parse() routes can remove the default suffix');
 $t->is($r->parse($url2), array('module' => 'default', 'action' => 'index2', 'param2' => 'foo2'), '->parse() routes does not have suffix when they end by /');
-$t->is($r->parse($url3), array('module' => 'default', 'action' => 'index3', 'param3' => 'foo3'), '->parse() routes takes a suffix defined by "sf_suffix"');
-sfConfig::set('sf_suffix', '');
+$t->is($r->parse($url3), array('module' => 'default', 'action' => 'index3', 'param3' => 'foo3'), '->parse() routes takes a suffix defined by the "suffix" parameter');
+$r->setDefaultSuffix('.');
 
 // duplicate names
 $msg = '->connect() throws an sfConfigurationException when a route already exists with same name';
@@ -231,12 +232,13 @@ $t->is($r->generate('', $params), $url, '->generate() takes a route name as its 
 $t->is($r->generate('test', $named_params), $url, '->generate() takes a route name as its first parameter');
 
 // routing defaults parameters
-sfConfig::set('sf_routing_defaults', array('foo' => 'bar'));
+$r->setDefaultParameter('foo', 'bar');
 $r->clearRoutes();
 $r->connect('test', '/test/:foo/:id', array('module' => 'default', 'action' => 'index'));
 $params = array('module' => 'default', 'action' => 'index', 'id' => 12);
 $url = '/test/bar/12';
-$t->is($r->generate('', $params), $url, '->generate() merge parameters with defaults from "sf_routing_defaults"');
+$t->is($r->generate('', $params), $url, '->generate() merge parameters with defaults parameters');
+$r->setDefaultParameters(array());
 
 // ->appendRoute()
 $t->diag('->appendRoute()');
@@ -260,3 +262,13 @@ $r->prependRoute('test',  '/:module', array('action' => 'index'));
 $r->prependRoute('test1', '/:module/:action/*', array());
 $p_route_names = array_keys($r->getRoutes());
 $t->is(implode('-', $p_route_names), implode('-', array_reverse($route_names)), '->prependRoute() adds new routes at the beginning of the existings ones');
+
+// ->getCurrentInternalUri()
+$t->diag('->getCurrentInternalUri()');
+$r->clearRoutes();
+$r->connect('test',  '/:module', array('action' => 'index'));
+$r->connect('test1', '/:module/:action/*', array());
+$r->parse('/');
+$t->is($r->getCurrentInternalUri(), 'default/index', '->getCurrentInternalUri() returns the internal URI for last parsed URL');
+$r->parse('/foo/bar/bar/foo/a/b');
+$t->is($r->getCurrentInternalUri(), 'foo/bar?a=b&bar=foo', '->getCurrentInternalUri() returns the internal URI for last parsed URL');

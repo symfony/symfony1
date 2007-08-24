@@ -79,12 +79,12 @@ class sfContext
     return $this->controller;
   }
 
-  public function inject($type, $class)
+  public function inject($type, $class, $parameters = array())
   {
     $object = new $class();
     if (method_exists($object, 'initialize'))
     {
-      $object->initialize($this);
+      in_array($type, array('routing')) ? $object->initialize(null, $parameters) : $object->initialize($this, $parameters);
     }
     $this->$type = $object;
   }

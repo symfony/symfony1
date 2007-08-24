@@ -25,8 +25,9 @@ class myRequest
 }
 
 $context = sfContext::getInstance(array(
+  'routing' => 'sfPatternRouting',
   'request' => 'myRequest',
-  'user' => 'sfBasicSecurityUser',
+  'user'    => 'sfBasicSecurityUser',
 ));
 $user = $context->user;
 

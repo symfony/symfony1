@@ -12,15 +12,16 @@
  * sfRouting class controls the generation and parsing of URLs.
  *
  * @package    symfony
- * @subpackage controller
+ * @subpackage routing
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
 abstract class sfRouting
 {
   protected
-    $context         = null,
-    $parameterHolder = null;
+    $logger            = null,
+    $defaultParameters = array(),
+    $parameterHolder   = null;
 
   /**
    * Retrieves a new sfRouting implementation instance.
@@ -47,16 +48,26 @@ abstract class sfRouting
   /**
    * Initializes this sfRouting instance.
    *
-   * @param sfContext A sfContext instance.
-   * @param array     An associative array of initialization parameters.
+   * @param sfLogger A sfLogger instance (or null)
+   * @param array    An associative array of initialization parameters.
    *
-   * @return bool true, if initialization completes successfully, otherwise false.
+   * @return bool    true, if initialization completes successfully, otherwise false.
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this User.
    */
-  public function initialize($context, $parameters = array())
+  public function initialize(sfLogger $logger = null, $parameters = array())
   {
-    $this->context = $context;
+    $this->logger = $logger;
+
+    if (!isset($parameters['default_module']))
+    {
+      $parameters['default_module'] = 'default';
+    }
+
+    if (!isset($parameters['default_action']))
+    {
+      $parameters['default_action'] = 'index';
+    }
 
     $this->parameterHolder = new sfParameterHolder();
     $this->parameterHolder->add($parameters);
@@ -121,6 +132,27 @@ abstract class sfRouting
   * @return array  An array of parameters
   */
   abstract public function parse($url);
+
+  /**
+   * Sets a default parameter for URL generation.
+   *
+   * @param string The key
+   * @param string The value
+   */
+  public function setDefaultParameter($key, $value)
+  {
+    $this->defaultParameters[$key] = $value;
+  }
+
+  /**
+   * Sets the default parameters for URL generation.
+   *
+   * @param array An array of default parameters
+   */
+  public function setDefaultParameters($parameters)
+  {
+    $this->defaultParameters = $parameters;
+  }
 
   /**
    * Execute the shutdown procedure.

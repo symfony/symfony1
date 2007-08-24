@@ -246,6 +246,7 @@ $t->diag('->serialize() ->unserialize()');
 $t->ok($response == unserialize(serialize($response)), 'sfWebResponse implements the Serializable interface');
 
 sfLoader::loadHelpers(array('Helper', 'Tag', 'Url', 'Asset'));
+$_SERVER['SCRIPT_NAME'] = '';
 
 // use and get javascript()
 $t->diag('use and get javascript from the template');

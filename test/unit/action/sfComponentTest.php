@@ -19,8 +19,8 @@ class myComponent extends sfComponent
 }
 
 $context = sfContext::getInstance(array(
-  'routing'  => 'sfNoRouting',
-  'request'  => 'sfWebRequest',
+  'routing' => 'sfNoRouting',
+  'request' => 'sfWebRequest',
 ));
 
 // ->initialize()
