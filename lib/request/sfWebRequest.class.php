@@ -34,6 +34,60 @@ class sfWebRequest extends sfRequest
     $routingParameters      = null;
 
   /**
+   * Initializes this sfRequest.
+   *
+   * @param  sfLogger  A sfLogger instance (can be null)
+   * @param  sfRouting A sfRouting instance (can be null)
+   * @param  array     An associative array of initialization parameters
+   * @param  array     An associative array of initialization attributes
+   *
+   * @return Boolean   true, if initialization completes successfully, otherwise false
+   *
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Request
+   */
+  public function initialize(sfLogger $logger = null, sfRouting $routing = null, $parameters = array(), $attributes = array())
+  {
+    parent::initialize($logger, $routing, $parameters, $attributes);
+
+    if (isset($_SERVER['REQUEST_METHOD']))
+    {
+      switch ($_SERVER['REQUEST_METHOD'])
+      {
+        case 'GET':
+          $this->setMethod(self::GET);
+          break;
+
+        case 'POST':
+          $this->setMethod(self::POST);
+          break;
+
+        case 'PUT':
+          $this->setMethod(self::PUT);
+          break;
+
+        case 'DELETE':
+          $this->setMethod(self::DELETE);
+          break;
+
+        case 'HEAD':
+          $this->setMethod(self::HEAD);
+          break;
+
+        default:
+          $this->setMethod(self::GET);
+      }
+    }
+    else
+    {
+      // set the default method
+      $this->setMethod(self::GET);
+    }
+
+    // load parameters from GET/PATH_INFO/POST
+    $this->loadParameters();
+  }
+
+  /**
    * Retrieves an array of file information.
    *
    * @param string A file name
@@ -262,59 +316,6 @@ class sfWebRequest extends sfRequest
     $mimeTypes = unserialize(file_get_contents(sfConfig::get('sf_symfony_data_dir').'/data/mime_types.dat'));
 
     return isset($mimeTypes[$fileType]) ? '.'.$mimeTypes[$fileType] : '.bin';
-  }
-
-  /**
-   * Initializes this sfRequest.
-   *
-   * @param sfContext A sfContext instance
-   * @param array   An associative array of initialization parameters
-   * @param array   An associative array of initialization attributes
-   *
-   * @return boolean true, if initialization completes successfully, otherwise false
-   *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Request
-   */
-  public function initialize($context, $parameters = array(), $attributes = array())
-  {
-    parent::initialize($context, $parameters, $attributes);
-
-    if (isset($_SERVER['REQUEST_METHOD']))
-    {
-      switch ($_SERVER['REQUEST_METHOD'])
-      {
-        case 'GET':
-          $this->setMethod(self::GET);
-          break;
-
-        case 'POST':
-          $this->setMethod(self::POST);
-          break;
-
-        case 'PUT':
-          $this->setMethod(self::PUT);
-          break;
-
-        case 'DELETE':
-          $this->setMethod(self::DELETE);
-          break;
-
-        case 'HEAD':
-          $this->setMethod(self::HEAD);
-          break;
-
-        default:
-          $this->setMethod(self::GET);
-      }
-    }
-    else
-    {
-      // set the default method
-      $this->setMethod(self::GET);
-    }
-
-    // load parameters from GET/PATH_INFO/POST
-    $this->loadParameters();
   }
 
   /**
@@ -723,14 +724,6 @@ class sfWebRequest extends sfRequest
   }
 
   /**
-   * Executes the shutdown procedure.
-   *
-   */
-  public function shutdown()
-  {
-  }
-
-  /**
    * Splits an HTTP header for the current web request.
    *
    * @param string Header to split
@@ -788,23 +781,28 @@ class sfWebRequest extends sfRequest
 
   protected function parseRoutingParameters()
   {
-    $parameters = $this->context->getRouting()->parse($this->getPathInfo());
+    if (is_null($this->routing))
+    {
+      return;
+    }
+
+    $parameters = $this->routing->parse($this->getPathInfo());
     if (!is_null($parameters))
     {
       if (!isset($parameters['module']))
       {
-        $parameters['module'] = sfConfig::get('sf_default_module');
+        $parameters['module'] = sfConfig::get('sf_default_module', 'default');
       }
 
       if (!isset($parameters['action']))
       {
-        $parameters['action'] = sfConfig::get('sf_default_action');
+        $parameters['action'] = sfConfig::get('sf_default_action', 'index');
       }
     }
     else
     {
-      $parameters['module'] = sfConfig::get('sf_error_404_module');
-      $parameters['action'] = sfConfig::get('sf_error_404_action');
+      $parameters['module'] = sfConfig::get('sf_error_404_module', 'default');
+      $parameters['action'] = sfConfig::get('sf_error_404_action', 'error404');
     }
 
     $this->routingParameters = $parameters;
@@ -838,9 +836,9 @@ class sfWebRequest extends sfRequest
       }
     }
 
-    if (sfConfig::get('sf_logging_enabled'))
+    if (!is_null($this->logger))
     {
-      $this->context->getLogger()->info(sprintf('{sfRequest} request parameters %s', str_replace("\n", '', var_export($this->getParameterHolder()->getAll(), true))));
+      $this->logger->info(sprintf('{sfRequest} request parameters %s', str_replace("\n", '', var_export($this->getParameterHolder()->getAll(), true))));
     }
   }
 }

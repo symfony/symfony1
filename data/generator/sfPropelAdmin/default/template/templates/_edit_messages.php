@@ -4,7 +4,7 @@
 <dl>
 [?php foreach ($sf_request->getErrorNames() as $name): ?]
   <dt>[?php echo __($labels[$name]) ?]</dt>
-  <dd>[?php echo $sf_request->getError($name) ?]</dd>
+  <dd>[?php echo __($sf_request->getError($name)) ?]</dd>
 [?php endforeach; ?]
 </dl>
 </div>

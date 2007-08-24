@@ -84,7 +84,18 @@ class sfContext
     $object = new $class();
     if (method_exists($object, 'initialize'))
     {
-      in_array($type, array('routing')) ? $object->initialize(null, $parameters) : $object->initialize($this, $parameters);
+      switch ($type)
+      {
+        case 'routing':
+        case 'response':
+          $object->initialize(null, $parameters);
+          break;
+        case request:
+          $object->initialize(null, $this->routing, $parameters);
+          break;
+        default:
+          $object->initialize($this, $parameters);
+      }
     }
     $this->$type = $object;
   }

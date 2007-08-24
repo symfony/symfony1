@@ -29,7 +29,8 @@ function form_error($param, $options = array(), $catalogue = 'messages')
 
   $options = _parse_attributes($options);
 
-  $request = sfContext::getInstance()->getRequest();
+  $context = sfContext::getInstance();
+  $request = $context->getRequest();
 
   $style = $request->hasError($param_for_sf) ? '' : 'display:none;';
   $options['style'] = $style.(isset($options['style']) ? $options['style']:'');
@@ -57,7 +58,12 @@ function form_error($param, $options = array(), $catalogue = 'messages')
     unset($options['suffix']);
   }
 
-  $error = $request->getError($param_for_sf, $catalogue);
+  // translate error message if needed
+  $error = $request->getError($param_for_sf);
+  if (sfConfig::get('sf_i18n'))
+  {
+    $error = $context->getI18N()->__($error, null, $catalogue);
+  }
 
   return content_tag('div', $prefix.$error.$suffix, $options)."\n";
 }

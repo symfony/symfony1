@@ -9,21 +9,23 @@
  */
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
-require_once($_test_dir.'/unit/sfContextMock.class.php');
 
 class myRequest extends sfRequest
 {
-  function shutdown() {}
+  public function getRouting()
+  {
+    return $this->routing;
+  }
 }
 
 class fakeRequest
 {
 }
 
-$t = new lime_test(54, new lime_output_color());
+$t = new lime_test(53, new lime_output_color());
 
-$context = sfContext::getInstance(array('routing' => 'sfNoRouting'));
-$context->getRouting()->clearRoutes();
+$routing = new sfNoRouting();
+$routing->initialize();
 
 // ::newInstance()
 $t->diag('::newInstance()');
@@ -43,14 +45,10 @@ catch (sfFactoryException $e)
 // ->initialize()
 $t->diag('->initialize()');
 $request = sfRequest::newInstance('myRequest');
-$t->is($request->getContext(), null, '->initialize() takes a sfContext object as its first argument');
-$request->initialize($context, array('foo' => 'bar'));
+$request->initialize(null, $routing);
+$t->is($routing, $request->getRouting(), '->initialize() takes a sfRouting object as its second argument');
+$request->initialize(null, $routing, array('foo' => 'bar'));
 $t->is($request->getParameter('foo'), 'bar', '->initialize() takes an array of parameters as its second argument');
-
-// ->getContext()
-$t->diag('->getContext()');
-$request->initialize($context);
-$t->is($request->getContext(), $context, '->getContext() returns the current context');
 
 // ->getMethod() ->setMethod()
 $t->diag('->getMethod() ->setMethod()');
@@ -69,13 +67,13 @@ catch (sfException $e)
 
 // ->extractParameters()
 $t->diag('->extractParameters()');
-$request->initialize($context, array('foo' => 'foo', 'bar' => 'bar'));
+$request->initialize(null, $routing, array('foo' => 'foo', 'bar' => 'bar'));
 $t->is($request->extractParameters(array()), array(), '->extractParameters() returns parameters');
 $t->is($request->extractParameters(array('foo')), array('foo' => 'foo'), '->extractParameters() returns parameters for keys in its first parameter');
 $t->is($request->extractParameters(array('bar')), array('bar' => 'bar'), '->extractParameters() returns parameters for keys in its first parameter');
 
 $request = sfRequest::newInstance('myRequest');
-$request->initialize($context);
+$request->initialize(null, $routing);
 
 // ->setError() ->hasError() ->hasErrors() ->getError() ->removeError() ->getErrorNames
 $t->diag('->setError() ->hasError() ->hasErrors() ->getError() ->removeError() ->getErrorNames');

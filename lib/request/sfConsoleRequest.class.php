@@ -22,26 +22,19 @@ class sfConsoleRequest extends sfRequest
   /**
    * Initializes this sfRequest.
    *
-   * @param sfContext A sfContext instance
-   * @param array   An associative array of initialization parameters
-   * @param array   An associative array of initialization attributes
+   * @param sfLogger  A sfLogger instance (can be null)
+   * @param sfRouting A sfRouting instance (can be null)
+   * @param array     An associative array of initialization parameters
+   * @param array     An associative array of initialization attributes
    *
-   * @return boolean true, if initialization completes successfully, otherwise false
+   * @return Boolean true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this Request
    */
-  public function initialize($context, $parameters = array(), $attributes = array())
+  public function initialize(sfLogger $logger = null, sfRouting $routing = null, $parameters = array(), $attributes = array())
   {
-    parent::initialize($context, $parameters, $attributes);
+    parent::initialize($logger, $routing, $parameters, $attributes);
 
     $this->getParameterHolder()->add($_SERVER['argv']);
-  }
-
-  /**
-   * Executes the shutdown procedure.
-   *
-   */
-  public function shutdown()
-  {
   }
 }

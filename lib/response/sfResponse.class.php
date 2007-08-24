@@ -21,34 +21,24 @@ abstract class sfResponse implements Serializable
 {
   protected
     $parameterHolder = null,
-    $context         = null,
+    $logger          = null,
     $content         = '';
 
   /**
    * Initializes this sfResponse.
    *
-   * @param sfContext A sfContext instance
+   * @param  sfLogger  A sfLogger instance (can be null)
    *
-   * @return boolean true, if initialization completes successfully, otherwise false
+   * @return Boolean   true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this Response
    */
-  public function initialize($context, $parameters = array())
+  public function initialize(sfLogger $logger = null, $parameters = array())
   {
-    $this->context = $context;
+    $this->logger = $logger;
 
     $this->parameterHolder = new sfParameterHolder();
     $this->parameterHolder->add($parameters);
-  }
-
-  /**
-   * Retrieves the current application context.
-   *
-   * @return sfContext The application context
-   */
-  public function getContext()
-  {
-    return $this->context;
   }
 
   /**
@@ -58,7 +48,7 @@ abstract class sfResponse implements Serializable
    *
    * @return sfResponse A sfResponse implementation instance
    *
-   * @throws <b>sfFactoryException</b> If a request implementation instance cannot be created
+   * @throws <b>sfFactoryException</b> If a response implementation instance cannot be created
    */
   public static function newInstance($class)
   {
@@ -97,9 +87,9 @@ abstract class sfResponse implements Serializable
    */
   public function sendContent()
   {
-    if (sfConfig::get('sf_logging_enabled'))
+    if (!is_null($this->logger))
     {
-      $this->context->getLogger()->info('{sfResponse} send content ('.strlen($this->getContent()).' o)');
+      $this->logger->info('{sfResponse} send content ('.strlen($this->getContent()).' o)');
     }
 
     echo $this->getContent();
@@ -153,12 +143,6 @@ abstract class sfResponse implements Serializable
   {
     $this->parameterHolder->set($name, $value, $ns);
   }
-
-  /**
-   * Executes the shutdown procedure.
-   *
-   */
-  abstract function shutdown();
 
   /**
    * Overloads a given method.

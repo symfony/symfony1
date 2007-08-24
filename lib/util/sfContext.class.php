@@ -354,8 +354,6 @@ class sfContext
     // shutdown all factories
     $this->getUser()->shutdown();
     $this->getStorage()->shutdown();
-    $this->getRequest()->shutdown();
-    $this->getResponse()->shutdown();
     $this->getRouting()->shutdown();
 
     if (sfConfig::get('sf_use_database'))

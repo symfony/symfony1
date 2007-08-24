@@ -60,11 +60,37 @@ abstract class sfRequest
 
   protected
     $errors          = array(),
-    $context         = null,
+    $logger          = null,
+    $routing         = null,
     $method          = null,
     $parameterHolder = null,
     $config          = null,
     $attributeHolder = null;
+
+  /**
+   * Initializes this sfRequest.
+   *
+   * @param  sfLogger  A sfLogger instance (can be null)
+   * @param  sfRouting A sfRouting instance (can be null)
+   * @param  array     An associative array of initialization parameters
+   * @param  array     An associative array of initialization attributes
+   *
+   * @return Boolean   true, if initialization completes successfully, otherwise false
+   *
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Request
+   */
+  public function initialize(sfLogger $logger = null, sfRouting $routing = null, $parameters = array(), $attributes = array())
+  {
+    $this->logger  = $logger;
+    $this->routing = $routing;
+
+    // initialize parameter and attribute holders
+    $this->parameterHolder = new sfParameterHolder();
+    $this->attributeHolder = new sfParameterHolder();
+
+    $this->parameterHolder->add($parameters);
+    $this->attributeHolder->add($attributes);
+  }
 
   /**
    * Extracts parameter values from the request.
@@ -75,16 +101,16 @@ abstract class sfRequest
    *               a specified parameter doesn't exist an empty string will
    *               be returned for its value
    */
-  public function & extractParameters($names)
+  public function extractParameters($names)
   {
     $array = array();
 
-    $parameters =& $this->parameterHolder->getAll();
-    foreach ($parameters as $key => &$value)
+    $parameters = $this->parameterHolder->getAll();
+    foreach ($parameters as $key => $value)
     {
       if (in_array($key, $names))
       {
-        $array[$key] =& $value;
+        $array[$key] = $value;
       }
     }
 
@@ -98,22 +124,9 @@ abstract class sfRequest
    *
    * @return string An error message, if the error exists, otherwise null
    */
-  public function getError($name, $catalogue = 'messages')
+  public function getError($name)
   {
-    $retval = null;
-
-    if (isset($this->errors[$name]))
-    {
-      $retval = $this->errors[$name];
-
-      // translate error message if needed
-      if (sfConfig::get('sf_i18n'))
-      {
-        $retval = $this->context->getI18N()->__($retval, null, $catalogue);
-      }
-    }
-
-    return $retval;
+    return isset($this->errors[$name]) ? $this->errors[$name] : null;
   }
 
   /**
@@ -167,40 +180,7 @@ abstract class sfRequest
    */
   public function hasErrors()
   {
-    return (count($this->errors) > 0);
-  }
-
-  /**
-   * Initializes this sfRequest.
-   *
-   * @param sfContext A sfContext instance
-   * @param array   An associative array of initialization parameters
-   * @param array   An associative array of initialization attributes
-   *
-   * @return boolean true, if initialization completes successfully, otherwise false
-   *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Request
-   */
-  public function initialize($context, $parameters = array(), $attributes = array())
-  {
-    $this->context = $context;
-
-    // initialize parameter and attribute holders
-    $this->parameterHolder = new sfParameterHolder();
-    $this->attributeHolder = new sfParameterHolder();
-
-    $this->parameterHolder->add($parameters);
-    $this->attributeHolder->add($attributes);
-  }
-
-  /**
-   * Retrieves the current application context.
-   *
-   * @return sfContext Current application context
-   */
-  public function getContext()
-  {
-    return $this->context;
+    return count($this->errors) > 0;
   }
 
   /**
@@ -231,13 +211,13 @@ abstract class sfRequest
    *
    * @return string An error message, if the error was removed, otherwise null
    */
-  public function & removeError($name)
+  public function removeError($name)
   {
     $retval = null;
 
     if (isset($this->errors[$name]))
     {
-      $retval =& $this->errors[$name];
+      $retval = $this->errors[$name];
 
       unset($this->errors[$name]);
     }
@@ -254,9 +234,9 @@ abstract class sfRequest
    */
   public function setError($name, $message)
   {
-    if (sfConfig::get('sf_logging_enabled'))
+    if (!is_null($this->logger))
     {
-      $this->context->getLogger()->info('{sfRequest} error in form for parameter "'.$name.'" (with message "'.$message.'")');
+      $this->logger->info('{sfRequest} error in form for parameter "'.$name.'" (with message "'.$message.'")');
     }
 
     $this->errors[$name] = $message;
@@ -403,12 +383,6 @@ abstract class sfRequest
   {
     $this->parameterHolder->set($name, $value, $ns);
   }
-
-  /**
-   * Executes the shutdown procedure.
-   *
-   */
-  abstract function shutdown();
 
   /**
    * Overloads a given method.

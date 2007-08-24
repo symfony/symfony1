@@ -383,16 +383,19 @@ function _compute_public_path($source, $dir, $ext, $absolute = false)
  *       <meta name="language" content="en" /><link href="/stylesheets/style.css" media="screen" rel="stylesheet" type="text/css" />
  * </code>
  *
- * <b>Note:</b> Modify the sfResponse object or the view.yml to change, add or remove metas.
+ * <b>Note:</b> Modify the view.yml or use sfWebResponse::addMeta() to change, add or remove metas.
  *
  * @return string XHTML compliant <meta> tag(s)
  * @see    include_http_metas 
+ * @see    sfWebResponse::addMeta()
  */
 function include_metas()
 {
-  foreach (sfContext::getInstance()->getResponse()->getMetas() as $name => $content)
+  $context = sfContext::getInstance();
+  $i18n = sfConfig::get('sf_i18n') ? $context->getI18N() : null;
+  foreach ($context->getResponse()->getMetas() as $name => $content)
   {
-    echo tag('meta', array('name' => $name, 'content' => $content))."\n";
+    echo tag('meta', array('name' => $name, 'content' => is_null($i18n) ? $content : $i18n->__($content)))."\n";
   }
 }
 
@@ -406,10 +409,11 @@ function include_metas()
  *    => <meta http-equiv="content-type" content="text/html; charset=utf-8" />
  * </code>
  *
- * <b>Note:</b> Modify the sfResponse object or the view.yml to change, add or remove metas.
+ * <b>Note:</b> Modify the view.yml or use sfWebResponse::addMeta() to change, add or remove HTTP metas.
  *
  * @return string XHTML compliant <meta> tag(s)
- * @see    include_metas 
+ * @see    include_metas
+ * @see    sfWebResponse::addHttpMeta()
  */
 function include_http_metas()
 {

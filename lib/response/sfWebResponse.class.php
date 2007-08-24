@@ -30,20 +30,15 @@ class sfWebResponse extends sfResponse
   /**
    * Initializes this sfWebResponse.
    *
-   * @param sfContext A sfContext instance
+   * @param  sfLogger  A sfLogger instance (can be null)
    *
-   * @return boolean true, if initialization completes successfully, otherwise false
+   * @return Boolean   true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this Response
    */
-  public function initialize($context, $parameters = array())
+  public function initialize(sfLogger $logger = null, $parameters = array())
   {
-    parent::initialize($context, $parameters);
-
-    if ('HEAD' == $context->getRequest()->getMethodName())
-    {
-      $this->setHeaderOnly(true);
-    }
+    parent::initialize($logger, $parameters);
 
     $this->statusTexts = array(
       '100' => 'Continue',
@@ -178,14 +173,21 @@ class sfWebResponse extends sfResponse
   /**
    * Sets a HTTP header.
    *
-   * @param string HTTP header name
-   * @param string Value
+   * @param string  HTTP header name
+   * @param string  Value (if null, remove the HTTP header)
    * @param boolean Replace for the value
    *
    */
   public function setHttpHeader($name, $value, $replace = true)
   {
     $name = $this->normalizeHeaderName($name);
+
+    if (is_null($value))
+    {
+      $this->getParameterHolder()->remove($name, 'symfony/response/http/headers');
+
+      return;
+    }
 
     if ('Content-Type' == $name)
     {
@@ -263,9 +265,9 @@ class sfWebResponse extends sfResponse
     $status = 'HTTP/1.0 '.$this->statusCode.' '.$this->statusText;
     header($status);
 
-    if (sfConfig::get('sf_logging_enabled'))
+    if (!is_null($this->logger))
     {
-      $this->context->getLogger()->info('{sfResponse} send status "'.$status.'"');
+      $this->logger->info('{sfResponse} send status "'.$status.'"');
     }
 
     // headers
@@ -273,9 +275,9 @@ class sfWebResponse extends sfResponse
     {
       header($name.': '.$value);
 
-      if (sfConfig::get('sf_logging_enabled') && $value != '')
+      if (!is_null($this->logger) && $value != '')
       {
-        $this->context->getLogger()->info('{sfResponse} send header "'.$name.'": "'.$value.'"');
+        $this->logger->info('{sfResponse} send header "'.$name.'": "'.$value.'"');
       }
     }
 
@@ -291,9 +293,9 @@ class sfWebResponse extends sfResponse
         setrawcookie($cookie['name'], $cookie['value'], $cookie['expire'], $cookie['path'], $cookie['domain'], $cookie['secure']);
       }
 
-      if (sfConfig::get('sf_logging_enabled'))
+      if (!is_null($this->logger))
       {
-        $this->context->getLogger()->info('{sfResponse} send cookie "'.$cookie['name'].'": "'.$cookie['value'].'"');
+        $this->logger->info('{sfResponse} send cookie "'.$cookie['name'].'": "'.$cookie['value'].'"');
       }
     }
   }
@@ -414,10 +416,10 @@ class sfWebResponse extends sfResponse
   }
 
   /**
-   * Adds meta headers to the current web response.
+   * Adds a HTTP meta header.
    *
-   * @param string Key to replace
-   * @param string Value for the replacement
+   * @param string  Key to replace
+   * @param string  HTTP meta header value (if null, remove the HTTP meta)
    * @param boolean Replace or not
    */
   public function addHttpMeta($key, $value, $replace = true)
@@ -426,6 +428,13 @@ class sfWebResponse extends sfResponse
 
     // set HTTP header
     $this->setHttpHeader($key, $value, $replace);
+
+    if (is_null($value))
+    {
+      $this->getParameterHolder()->remove($key, 'helper/asset/auto/httpmeta');
+
+      return;
+    }
 
     if ('Content-Type' == $key)
     {
@@ -442,7 +451,7 @@ class sfWebResponse extends sfResponse
   }
 
   /**
-   * Retrieves all meta headers for the current web response.
+   * Retrieves all meta headers.
    *
    * @return array List of meta headers
    */
@@ -452,10 +461,10 @@ class sfWebResponse extends sfResponse
   }
 
   /**
-   * Adds a meta header to the current web response.
+   * Adds a meta header.
    *
-   * @param string Name of the header
-   * @param string Meta header to be set
+   * @param string  Name of the header
+   * @param string  Meta header value (if null, remove the meta)
    * @param boolean true if it's replaceable
    * @param boolean true for escaping the header
    */
@@ -463,11 +472,15 @@ class sfWebResponse extends sfResponse
   {
     $key = strtolower($key);
 
-    if (sfConfig::get('sf_i18n'))
+    if (is_null($value))
     {
-      $value = $this->context->getI18N()->__($value);
+      $this->getParameterHolder()->remove($key, 'helper/asset/auto/meta');
+
+      return;
     }
 
+    // FIXME: If you use the i18n layer and escape the data here, it won't work
+    // see include_metas() in AssetHelper
     if ($escape)
     {
       $value = htmlentities($value, ENT_QUOTES, sfConfig::get('sf_charset'));
@@ -599,7 +612,7 @@ class sfWebResponse extends sfResponse
    */
   public function serialize()
   {
-    return serialize(array($this->content, $this->statusCode, $this->statusText, $this->parameterHolder));
+    return serialize(array($this->content, $this->statusCode, $this->statusText, $this->parameterHolder, $this->cookies, $this->headerOnly));
   }
 
   /**
@@ -609,18 +622,13 @@ class sfWebResponse extends sfResponse
   {
     $data = unserialize($serialized);
 
-    $this->initialize(sfContext::getInstance());
+    $this->initialize();
 
-    $this->content = $data[0];
-    $this->statusCode = $data[1];
-    $this->statusText = $data[2];
+    $this->content         = $data[0];
+    $this->statusCode      = $data[1];
+    $this->statusText      = $data[2];
     $this->parameterHolder = $data[3];
-  }
-
-  /**
-   * Executes the shutdown procedure.
-   */
-  public function shutdown()
-  {
+    $this->cookies         = $data[4];
+    $this->headerOnly      = $data[5];
   }
 }

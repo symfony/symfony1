@@ -9,11 +9,9 @@
  */
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
-require_once($_test_dir.'/unit/sfContextMock.class.php');
 
 class myResponse extends sfResponse
 {
-  function shutdown() {}
   function serialize() {}
   function unserialize($serialized) {}
 }
@@ -22,9 +20,7 @@ class fakeResponse
 {
 }
 
-$t = new lime_test(25, new lime_output_color());
-
-$context = sfContext::getInstance();
+$t = new lime_test(23, new lime_output_color());
 
 // ::newInstance()
 $t->diag('::newInstance()');
@@ -44,14 +40,8 @@ catch (sfFactoryException $e)
 // ->initialize()
 $t->diag('->initialize()');
 $response = sfResponse::newInstance('myResponse');
-$t->is($response->getContext(), null, '->initialize() takes a sfContext object as its first argument');
-$response->initialize($context, array('foo' => 'bar'));
+$response->initialize(null, array('foo' => 'bar'));
 $t->is($response->getParameter('foo'), 'bar', '->initialize() takes an array of parameters as its second argument');
-
-// ->getContext()
-$t->diag('->getContext()');
-$response->initialize($context);
-$t->is($response->getContext(), $context, '->getContext() returns the current context');
 
 // ->getContent() ->setContent()
 $t->diag('->getContent() ->setContent()');
@@ -72,6 +62,8 @@ $t->ok(sfResponse::newInstance('myResponse') instanceof Serializable, 'sfRespons
 
 // parameter holder proxy
 require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');
+$response = sfResponse::newInstance('myResponse');
+$response->initialize();
 $pht = new sfParameterHolderProxyTest($t);
 $pht->launchTests($response, 'parameter');
 

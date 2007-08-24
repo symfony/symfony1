@@ -13,7 +13,7 @@ require_once($_test_dir.'/unit/sfContextMock.class.php');
 
 sfLoader::loadHelpers(array('Helper', 'Tag', 'Url', 'Asset'));
 
-$t = new lime_test(37, new lime_output_color());
+$t = new lime_test(45, new lime_output_color());
 
 class myRequest
 {
@@ -35,7 +35,7 @@ class myRequest
   }
 }
 
-$context = sfContext::getInstance(array('request' => 'myRequest'));
+$context = sfContext::getInstance(array('request' => 'myRequest', 'response' => 'sfWebResponse'));
 
 // _compute_public_path()
 $t->diag('_compute_public_path');
@@ -117,29 +117,42 @@ $t->is(image_path('/img'), '/img.png', 'image_path() does not decorate absolute 
 $t->is(image_path('img.jpg'), '/images/img.jpg', 'image_path() does not decorate file names with extension with .png');
 $t->is(image_path('img.jpg', true), 'http://localhost/images/img.jpg', 'image_path() accepts a second parameter to output an absolute resource path');
 
-/*
+// use_javascript() get_javascripts()
+$t->diag('use_javascript() get_javascripts()');
+use_javascript('xmlhr');
+$t->is(get_javascripts(),
+  '<script type="text/javascript" src="/js/xmlhr.js"></script>'."\n", 
+  'get_javascripts() returns a javascript previously added by use_javascript()');
+use_javascript('xmlhr', '', array('raw_name' => true));
+$t->is(get_javascripts(),
+  '<script type="text/javascript" src="xmlhr"></script>'."\n", 
+  'use_javascript() accepts an array of options as a third parameter');
+use_javascript('xmlhr', '', array('absolute' => true));
+$t->is(get_javascripts(),
+  '<script type="text/javascript" src="http://localhost/js/xmlhr.js"></script>'."\n", 
+  'use_javascript() accepts an array of options as a third parameter');
+use_javascript('xmlhr');
+use_javascript('xmlhr2');
+$t->is(get_javascripts(),
+  '<script type="text/javascript" src="/js/xmlhr.js"></script>'."\n".'<script type="text/javascript" src="/js/xmlhr2.js"></script>'."\n", 
+  'get_javascripts() returns all the javascripts previously added by use_javascript()');
 
-// auto_discovery_link_tag()
-$t->is(auto_discovery_link_tag(),
-  '<link href="http://www.example.com" rel="alternate" title="RSS" type="application/rss+xml" />');
-
-$t->is(auto_discovery_link_tag('atom'),
-  '<link href="http://www.example.com" rel="alternate" title="ATOM" type="application/atom+xml" />');
-
-$t->is(auto_discovery_link_tag('rss', array('action' => 'feed')),
-  '<link href="http://www.example.com" rel="alternate" title="RSS" type="application/rss+xml" />');
-
-$context->request = new sfWebRequest();
-sfConfig::set('test_sfWebRequest_relative_url_root', '/mypath');
-
-// auto_discovery()
-$t->is(auto_discovery_link_tag('rss', array('action' => 'feed')),
-  '<link href="http://www.example.com/mypath" rel="alternate" title="RSS" type="application/rss+xml" />');
-
-$t->is(auto_discovery_link_tag('atom'),
-  '<link href="http://www.example.com/mypath" rel="alternate" title="ATOM" type="application/atom+xml" />');
-
-$t->is(auto_discovery_link_tag(),
-  '<link href="http://www.example.com/mypath" rel="alternate" title="RSS" type="application/rss+xml" />');
-
-*/
+// use_stylesheet() get_stylesheets()
+$t->diag('use_stylesheet() get_stylesheets()');
+use_stylesheet('style');
+$t->is(get_stylesheets(),
+  '<link rel="stylesheet" type="text/css" media="screen" href="/css/style.css" />'."\n", 
+  'get_stylesheets() returns a stylesheet previously added by use_stylesheet()');
+use_stylesheet('style', '', array('raw_name' => true));
+$t->is(get_stylesheets(),
+  '<link rel="stylesheet" type="text/css" media="screen" href="style" />'."\n", 
+  'use_stylesheet() accepts an array of options as a third parameter');
+use_stylesheet('style', '', array('absolute' => true));
+$t->is(get_stylesheets(),
+  '<link rel="stylesheet" type="text/css" media="screen" href="http://localhost/css/style.css" />'."\n", 
+  'use_stylesheet() accepts an array of options as a third parameter');
+use_stylesheet('style');
+use_stylesheet('style2');
+$t->is(get_stylesheets(),
+  '<link rel="stylesheet" type="text/css" media="screen" href="/css/style.css" />'."\n".'<link rel="stylesheet" type="text/css" media="screen" href="/css/style2.css" />'."\n",
+  'get_stylesheets() returns all the stylesheets previously added by use_stylesheet()');
