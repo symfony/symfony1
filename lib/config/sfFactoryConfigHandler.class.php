@@ -184,7 +184,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           $instances[] = sprintf("  \$this->factories['routing'] = sfRouting::newInstance(sfConfig::get('sf_factory_routing', '%s'));", $class);
 
           // append instance initialization
-          $inits[] = sprintf("  \$this->factories['routing']->initialize(\$this->factories['logger'], array_merge(array('load_configuration' => true, 'suffix' => sfConfig::get('sf_suffix'), 'default_module' => sfConfig::get('sf_default_module'), 'default_action' => sfConfig::get('sf_default_action')), sfConfig::get('sf_factory_routing_parameters', %s)));", var_export(is_array($parameters) ? $parameters : array(), true));
+          $inits[] = sprintf("  \$this->factories['routing']->initialize(\$this->factories['logger'], array_merge(array('suffix' => sfConfig::get('sf_suffix'), 'default_module' => sfConfig::get('sf_default_module'), 'default_action' => sfConfig::get('sf_default_action')), sfConfig::get('sf_factory_routing_parameters', %s)));", var_export(is_array($parameters) ? $parameters : array(), true));
           break;
 
         case 'logger':

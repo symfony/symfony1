@@ -43,7 +43,7 @@ class sfPatternRouting extends sfRouting
   {
     parent::initialize($logger, $parameters);
 
-    $this->defaultSuffix = $this->parameterHolder->get('suffix', '');
+    $this->setDefaultSuffix($this->parameterHolder->get('suffix'));
 
     if ($this->parameterHolder->get('load_configuration', false))
     {
