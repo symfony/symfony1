@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(63, new lime_output_color());
+$t = new lime_test(64, new lime_output_color());
 
 class sfPatternRoutingTest extends sfPatternRouting
 {
@@ -266,9 +266,12 @@ $t->is(implode('-', $p_route_names), implode('-', array_reverse($route_names)), 
 // ->getCurrentInternalUri()
 $t->diag('->getCurrentInternalUri()');
 $r->clearRoutes();
+$r->connect('test2', '/module/action/:id', array('module' => 'foo', 'action' => 'bar'));
 $r->connect('test',  '/:module', array('action' => 'index'));
 $r->connect('test1', '/:module/:action/*', array());
 $r->parse('/');
 $t->is($r->getCurrentInternalUri(), 'default/index', '->getCurrentInternalUri() returns the internal URI for last parsed URL');
 $r->parse('/foo/bar/bar/foo/a/b');
 $t->is($r->getCurrentInternalUri(), 'foo/bar?a=b&bar=foo', '->getCurrentInternalUri() returns the internal URI for last parsed URL');
+$r->parse('/module/action/2');
+$t->is($r->getCurrentInternalUri(true), '@test2?id=2', '->getCurrentInternalUri() returns the internal URI for last parsed URL');

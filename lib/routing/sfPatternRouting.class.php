@@ -92,9 +92,12 @@ class sfPatternRouting extends sfRouting
       // add parameters
       foreach ($names as $name)
       {
-        if ($name == 'module' || $name == 'action') continue;
+        if ($name == 'module' || $name == 'action')
+        {
+          continue;
+        }
 
-        $params[] = $name.'='.isset($parameters[$name]) ? $parameters[$name] : (isset($defaults[$name]) ? $defaults[$name] : '');
+        $params[] = $name.'='.(isset($parameters[$name]) ? $parameters[$name] : (isset($defaults[$name]) ? $defaults[$name] : ''));
       }
 
       // add * parameters if needed
