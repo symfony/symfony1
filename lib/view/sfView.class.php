@@ -176,7 +176,7 @@ abstract class sfView
     $this->context = $context;
 
     $this->attributeHolder = false === sfConfig::get('sf_escaping_method') ? new sfViewParameterHolder() : new sfEscapedViewParameterHolder();
-    $this->attributeHolder->initialize($context);
+    $this->attributeHolder->initialize($context, array('escaping_method' => sfConfig::get('sf_escaping_method'), 'escaping_strategy' => sfConfig::get('sf_escaping_strategy')));
 
     $this->parameterHolder = new sfParameterHolder();
     $this->parameterHolder->add(sfConfig::get('mod_'.strtolower($moduleName).'_view_param', array()));

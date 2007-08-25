@@ -26,12 +26,13 @@ class sfViewParameterHolder extends sfParameterHolder
    *
    * @param sfContext A sfContext instance.
    * @param array     An associative array of initialization parameters.
+   * @param array     An associative array of options.
    *
-   * @return bool true, if initialization completes successfully, otherwise false.
+   * @return Boolean  true, if initialization completes successfully, otherwise false.
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this view parameter holder.
    */
-  public function initialize($context, $parameters = array())
+  public function initialize($context, $parameters = array(), $options = array())
   {
     $this->context = $context;
 
@@ -39,6 +40,11 @@ class sfViewParameterHolder extends sfParameterHolder
     $this->add($parameters);
   }
 
+  /**
+   * Returns an array representation of the view parameters.
+   *
+   * @return array An array of view parameters
+   */
   public function toArray()
   {
     return $this->getAll();
@@ -51,20 +57,17 @@ class sfViewParameterHolder extends sfParameterHolder
    */
   protected function getGlobalAttributes()
   {
+    $flash = new sfParameterHolder();
+    $flash->add($this->context->getUser()->getAttributeHolder()->getAll('symfony/flash'));
+
     $attributes = array(
       'sf_context'  => $this->context,
       'sf_params'   => $this->context->getRequest()->getParameterHolder(),
       'sf_request'  => $this->context->getRequest(),
       'sf_response' => $this->context->getResponse(),
       'sf_user'     => $this->context->getUser(),
+      'sf_flash'    => $flash,
     );
-
-    if (sfConfig::get('sf_use_flash'))
-    {
-      $sf_flash = new sfParameterHolder();
-      $sf_flash->add($this->context->getUser()->getAttributeHolder()->getAll('symfony/flash'));
-      $attributes['sf_flash'] = $sf_flash;
-    }
 
     return $attributes;
   }

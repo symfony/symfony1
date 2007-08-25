@@ -246,7 +246,7 @@ class sfParameterHolder implements Serializable
    *
    * @return string A parameter value, if the parameter was removed, otherwise null.
    */
-  public function & remove($name, $ns = null)
+  public function remove($name, $ns = null)
   {
     if (!$ns)
     {
@@ -255,9 +255,9 @@ class sfParameterHolder implements Serializable
 
     $retval = null;
 
-    if (isset($this->parameters[$ns]) && isset($this->parameters[$ns][$name]))
+    if (isset($this->parameters[$ns]) && array_key_exists($name, $this->parameters[$ns]))
     {
-      $retval =& $this->parameters[$ns][$name];
+      $retval = $this->parameters[$ns][$name];
       unset($this->parameters[$ns][$name]);
     }
 

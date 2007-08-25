@@ -9,9 +9,9 @@
  */
 
 /**
- * A sfEscapedViewParameterHolder stores all variables that will be available to the template.
+ * sfEscapedViewParameterHolder stores all variables that will be available to the template.
  *
- * It also escape all variables with an escaping method.
+ * It also escapes variables with an escaping method.
  *
  * @package    symfony
  * @subpackage view
@@ -27,21 +27,32 @@ class sfEscapedViewParameterHolder extends sfViewParameterHolder
   /**
    * Initializes this view parameter holder.
    *
-   * @param sfContext A sfContext instance.
-   * @param array     An associative array of initialization parameters.
+   * @param  sfContext A sfContext instance.
+   * @param  array     An associative array of initialization parameters.
+   * @param  array     An associative array of options.
    *
-   * @return bool true, if initialization completes successfully, otherwise false.
+   * <b>Options:</b>
+   *
+   * # <b>escaping_strategy</b> - [bc]           - The escaping strategy (bc, both, on or off)
+   * # <b>escaping_method</b>   - [ESC_ENTITIES] - The escaping method (ESC_RAW, ESC_ENTITIES, ESC_JS or ESC_JS_NO_ENTITIES)
+   *
+   * @return Boolean   true, if initialization completes successfully, otherwise false.
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this view parameter holder.
    */
-  public function initialize($context, $parameters = array())
+  public function initialize($context, $parameters = array(), $options = array())
   {
-    parent::initialize($context, $parameters);
+    parent::initialize($context, $parameters, $options);
 
-    $this->setEscaping(sfConfig::get('sf_escaping_strategy'));
-    $this->setEscapingMethod(sfConfig::get('sf_escaping_method'));
+    $this->setEscaping(isset($options['escaping_strategy']) ? $options['escaping_strategy'] : 'bc');
+    $this->setEscapingMethod(isset($options['escaping_method']) ? $options['escaping_method'] : 'ESC_ENTITIES');
   }
 
+  /**
+   * Returns an array representation of the view parameters.
+   *
+   * @return array An array of view parameters
+   */
   public function toArray()
   {
     $attributes = array();
@@ -109,7 +120,7 @@ class sfEscapedViewParameterHolder extends sfViewParameterHolder
 
     if (!defined($this->escapingMethod))
     {
-      throw new sfConfigurationException(sprintf('Escaping method "%s" is not available; perhaps another helper needs to be loaded in?', $this->escapingMethod));
+      throw new sfConfigurationException(sprintf('The escaping method "%s" is not available.', $this->escapingMethod));
     }
 
     return constant($this->escapingMethod);
@@ -123,5 +134,34 @@ class sfEscapedViewParameterHolder extends sfViewParameterHolder
   public function setEscapingMethod($method)
   {
     $this->escapingMethod = $method;
+  }
+
+  /**
+   * Serializes the current instance.
+   *
+   * @return array Objects instance
+   */
+  public function serialize()
+  {
+    $this->set('_sf_escaping_method', $this->escapingMethod);
+    $this->set('_sf_escaping', $this->escaping);
+
+    $serialized = parent::serialize();
+
+    $this->remove('_sf_escaping_method');
+    $this->remove('_sf_escaping');
+
+    return $serialized;
+  }
+
+  /**
+   * Unserializes a sfViewParameterHolder instance.
+   */
+  public function unserialize($serialized)
+  {
+    parent::unserialize($serialized);
+
+    $this->setEscapingMethod($this->remove('_sf_escaping_method'));
+    $this->setEscaping($this->remove('_sf_escaping'));
   }
 }
