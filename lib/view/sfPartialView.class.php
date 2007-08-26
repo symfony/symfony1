@@ -15,7 +15,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfPartialView extends sfPHPView
+class sfPartialView extends sfView
 {
   /**
    * Executes any presentation logic for this view.

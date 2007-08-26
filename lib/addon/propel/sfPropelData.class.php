@@ -324,7 +324,7 @@ class sfPropelData extends sfData
           continue;
         }
 
-        file_put_contents(sprintf("%s/%03d-%s.yml", $directory_or_file, ++$i, $tableName), Spyc::YAMLDump($dumpData[$tableName]));
+        file_put_contents(sprintf("%s/%03d-%s.yml", $directory_or_file, ++$i, $tableName), Spyc::YAMLDump(array($tableName => $dumpData[$tableName]));
       }
     }
   }
