@@ -29,7 +29,7 @@ class sfPHPView extends sfView
   /**
    * Load core and standard helpers to be use in the template.
    */
-  protected function loadHelpers()
+  protected function loadCoreAndStandardHelpers()
   {
     static $coreHelpersLoaded = 0;
 
@@ -44,6 +44,44 @@ class sfPHPView extends sfView
 
     $helpers = array_unique(array_merge($core_helpers, $standard_helpers));
     sfLoader::loadHelpers($helpers);
+  }
+
+  /**
+   * Renders the presentation.
+   *
+   * @param string Filename
+   *
+   * @return string File content
+   */
+  protected function renderFile($_sfFile)
+  {
+    if (sfConfig::get('sf_logging_enabled'))
+    {
+      $this->context->getLogger()->info(sprintf('{sfView} render "%s"', $_sfFile));
+    }
+
+    $this->loadCoreAndStandardHelpers();
+
+    extract($this->attributeHolder->toArray());
+
+    // render
+    ob_start();
+    ob_implicit_flush(0);
+    require($_sfFile);
+
+    return ob_get_clean();
+  }
+
+  /**
+   * Retrieves the template engine associated with this view.
+   *
+   * Note: This will return null because PHP itself has no engine reference.
+   *
+   * @return null
+   */
+  public function getEngine()
+  {
+    return null;
   }
 
   /**
@@ -68,8 +106,6 @@ class sfPHPView extends sfView
     {
       $this->setDirectory(sfLoader::getTemplateDir($this->moduleName, $this->getTemplate()));
     }
-
-    $this->loadHelpers();
   }
 
   /**

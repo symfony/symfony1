@@ -15,13 +15,16 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfMailView extends sfView
+class sfMailView extends sfPHPView
 {
   /**
-   * Executes any presentation logic for this view.
+   * Retrieves the template engine associated with this view.
+   *
+   * @return string sfMail
    */
-  public function execute()
+  public function getEngine()
   {
+    return 'sfMail';
   }
 
   /**

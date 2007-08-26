@@ -134,6 +134,15 @@ abstract class sfView
   }
 
   /**
+   * Retrieves the template engine associated with this view.
+   *
+   * Note: This will return null for PHPView instances.
+   *
+   * @return mixed A template engine instance
+   */
+  abstract function getEngine();
+
+  /**
    * Retrieves this views template.
    *
    * @return string A template filename, if a template has been set, otherwise null
