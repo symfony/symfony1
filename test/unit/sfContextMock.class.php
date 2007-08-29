@@ -90,7 +90,7 @@ class sfContext
         case 'response':
           $object->initialize(null, $parameters);
           break;
-        case request:
+        case 'request':
           $object->initialize(null, $this->routing, $parameters);
           break;
         default:
