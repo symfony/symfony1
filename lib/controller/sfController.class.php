@@ -440,7 +440,7 @@ abstract class sfController
   }
 
   /**
-   * Sends and email from the current action.
+   * Sends and email.
    *
    * This methods calls a module/action with the sfMailView class.
    *

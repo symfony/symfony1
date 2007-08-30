@@ -40,3 +40,19 @@ The flash entry in `filters.yml` must be removed too as the `sfFlashFilter`
 was removed.
 
 The `project:upgrade1.1` task makes all those changes for you.
+
+Deprecated methods in sfComponent
+---------------------------------
+
+The following methods of `sfComponent` have been removed:
+
+  * `->getPresentationFor()`
+  * `->sendEmail()`
+
+They are accessible from `sfController`:
+
+  [php]
+  // action
+  $this->getController()->getPresentationFor(...);
+
+The `project:upgrade1.1` task makes all those changes for you.

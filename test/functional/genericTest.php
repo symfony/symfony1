@@ -167,7 +167,6 @@ $b->
 $b->
   get('/presentation')->
   isStatusCode(200)->
-  checkResponseElement('#foo1', 'foo')->
-  checkResponseElement('#foo2', 'foo')->
-  checkResponseElement('#foo3', 'foo')
+  checkResponseElement('#foo', 'foo')->
+  checkResponseElement('#foo_bis', 'foo')
 ;
