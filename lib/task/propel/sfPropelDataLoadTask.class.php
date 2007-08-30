@@ -93,7 +93,7 @@ EOF;
     $databaseManager->initialize();
 
     $data = new sfPropelData();
-    $data->setDeleteCurrentData(isset($options['append']) ? false : true);
+    $data->setDeleteCurrentData(isset($options['append']) ? ($options['append'] ? false : true) : true);
 
     foreach ($fixturesDirs as $fixturesDir)
     {
