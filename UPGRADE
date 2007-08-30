@@ -1,0 +1,42 @@
+Upgrade from 1.0 to 1.1
+=======================
+
+This document describes the changes made in symfony 1.1 and what need
+to be done to upgrade your symfony 1.0 projects.
+
+How to upgrade?
+---------------
+
+To upgrade a project, you first need to upgrade symfony via PEAR or
+change your `config/config.php` to update the symfony directory.
+
+Then, you can launch the following task from your project directory to
+perform an automatic upgrade:
+
+  ./symfony project:upgrade1.1
+
+This task can be launched several times without any side effect. Each time
+you upgrade to a new symfony 1.1 beta / RC or the final symfony 1.1, you
+need to launch this task.
+
+The remaining sections explains backward incompatible changes.
+
+Flash attributes
+----------------
+
+Flash attributes are now managed directly by `sfUser`. New usage:
+
+  [php]
+  // action
+  $this->getUser()->setFlash('notice', 'foo');
+  $notice = $this->getUser()->getFlash('notice');
+
+  // template
+  <?php $sf_user->hasFlash('notice'): ?>
+    <?php echo $sf_user->getFlash('notice') ?>
+  <?php endif; ?>
+
+The flash entry in `filters.yml` must be removed too as the `sfFlashFilter`
+was removed.
+
+The `project:upgrade1.1` task makes all those changes for you.
