@@ -20,7 +20,9 @@
 class sfPropelData extends sfData
 {
   protected
-    $maps = array();
+    $maps           = array(),
+    $deletedClasses = array(),
+    $con            = null;
 
   // symfony load-data (file|dir)
   /**
@@ -36,20 +38,20 @@ class sfPropelData extends sfData
     $fixture_files = $this->getFiles($directory_or_file);
 
     // wrap all database operations in a single transaction
-    $con = Propel::getConnection($connectionName);
+    $this->con = Propel::getConnection($connectionName);
     try
     {
-      $con->begin();
+      $this->con->begin();
 
       $this->doDeleteCurrentData($fixture_files);
 
       $this->doLoadData($fixture_files);
 
-      $con->commit();
+      $this->con->commit();
     }
     catch (Exception $e)
     {
-      $con->rollback();
+      $this->con->rollback();
       throw $e;
     }
   }
@@ -136,7 +138,7 @@ class sfPropelData extends sfData
             throw new sfException(sprintf('Column "%s" does not exist for class "%s"', $name, $class));
           }
         }
-        $obj->save();
+        $obj->save($this->con);
 
         // save the id for future reference
         if (method_exists($obj, 'getPrimaryKey'))
@@ -179,7 +181,13 @@ class sfPropelData extends sfData
       krsort($classes);
       foreach ($classes as $class)
       {
-        $peer_class = trim($class.'Peer');
+        $class = trim($class);
+        if (in_array($class, $this->deletedClasses))
+        {
+          continue;
+        }
+
+        $peer_class = $class.'Peer';
 
         if (!$classPath = sfAutoload::getClassPath($peer_class))
         {
@@ -188,7 +196,9 @@ class sfPropelData extends sfData
 
         require_once($classPath);
 
-        call_user_func(array($peer_class, 'doDeleteAll'));
+        call_user_func(array($peer_class, 'doDeleteAll'), $this->con);
+
+        $this->deletedClasses[] = $class;
       }
     }
   }
@@ -237,7 +247,7 @@ class sfPropelData extends sfData
       // delete file
     }
 
-    $con = Propel::getConnection($connectionName);
+    $this->con = Propel::getConnection($connectionName);
 
     // get tables
     if ('all' === $tables || is_null($tables))
@@ -275,7 +285,7 @@ class sfPropelData extends sfData
       $tableMap = $this->maps[$tableName]->getDatabaseMap()->getTable(constant($tableName.'Peer::TABLE_NAME'));
 
       // get db info
-      $rs = $con->executeQuery('SELECT * FROM '.constant($tableName.'Peer::TABLE_NAME'));
+      $rs = $this->con->executeQuery('SELECT * FROM '.constant($tableName.'Peer::TABLE_NAME'));
 
       while ($rs->next())
       {
