@@ -62,7 +62,7 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
 
       $this->save<?php echo $this->getClassName() ?>($this-><?php echo $this->getSingularName() ?>);
 
-      $this->setFlash('notice', 'Your modifications have been saved');
+      $this->getUser()->setFlash('notice', 'Your modifications have been saved');
 
       if ($this->getRequestParameter('save_and_add'))
       {

@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(33, new lime_output_color());
+$t = new lime_test(39, new lime_output_color());
 
 $_SERVER['session_id'] = 'test';
 sfConfig::set('sf_test_cache_dir', sfToolkit::getTmpDir());
@@ -40,12 +40,31 @@ $t->is($user->getCulture(), 'de', '->initialize() reads the culture from the ses
 
 $userBis = new sfUser();
 $userBis->initialize($context);
-$t->is($userBis->getCulture(), 'de', '->intialize() serializes the culture to the session data');
+$t->is($userBis->getCulture(), 'de', '->initialize() serializes the culture to the session data');
 
 // ->setCulture() ->getCulture()
 $t->diag('->setCulture() ->getCulture()');
 $user->setCulture('fr');
 $t->is($user->getCulture(), 'fr', '->setCulture() changes the current user culture');
+
+// ->setFlash() ->getFlash() ->hasFlash()
+$t->diag('->setFlash() ->getFlash() ->hasFlash()');
+$user->initialize($context, array('use_flash' => true));
+$user->setFlash('foo', 'bar');
+$t->is($user->getFlash('foo'), 'bar', '->setFlash() sets a flash variable');
+$t->is($user->hasFlash('foo'), true, '->hasFlash() returns true if the flash variable exists');
+user_flush($context, array('use_flash' => true));
+
+$userBis = new sfUser();
+$userBis->initialize($context, array('use_flash' => true));
+$t->is($userBis->getFlash('foo'), 'bar', '->getFlash() returns a flash previously set');
+$t->is($userBis->hasFlash('foo'), true, '->hasFlash() returns true if the flash variable exists');
+user_flush($context, array('use_flash' => true));
+
+$userBis = new sfUser();
+$userBis->initialize($context, array('use_flash' => true));
+$t->is($userBis->getFlash('foo'), null, 'Flashes are automatically removed after the next request');
+$t->is($userBis->hasFlash('foo'), false, '->hasFlash() returns true if the flash variable exists');
 
 // parameter holder proxy
 require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');
@@ -64,10 +83,10 @@ $mixert->launchTests($user, 'sfUser');
 
 $storage->clear();
 
-function user_flush($context)
+function user_flush($context, $parameters = array())
 {
   $context->getUser()->shutdown();
-  $context->getUser()->initialize($context);
+  $context->getUser()->initialize($context, $parameters);
   $parameters = $context->getStorage()->getParameterHolder()->getAll();
   $context->getStorage()->shutdown();
   $context->getStorage()->initialize($parameters);

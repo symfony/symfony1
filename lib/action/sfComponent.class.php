@@ -317,52 +317,6 @@ abstract class sfComponent
   }
 
   /**
-   * Sets a flash variable that will be passed to the very next action.
-   *
-   * @param  string  The name of the flash variable
-   * @param  string  The value of the flash variable
-   * @param  boolean true if the flash have to persist for the following request (true by default)
-   */
-  public function setFlash($name, $value, $persist = true)
-  {
-    $this->getUser()->setAttribute($name, $value, 'symfony/flash');
-
-    if ($persist)
-    {
-      // clear removal flag
-      $this->getUser()->getAttributeHolder()->remove($name, 'symfony/flash/remove');
-    }
-    else
-    {
-      $this->getUser()->setAttribute($name, true, 'symfony/flash/remove');
-    }
-  }
-
-  /**
-   * Gets a flash variable.
-   *
-   * @param  string The name of the flash variable
-   *
-   * @return mixed The value of the flash variable
-   */
-  public function getFlash($name)
-  {
-    return $this->getUser()->getAttribute($name, null, 'symfony/flash');
-  }
-
-  /**
-   * Returns true if a flash variable of the specified name exists.
-   * 
-   * @param  string The name of the flash variable
-   *
-   * @return boolean   true if the variable exists, false otherwise
-   */
-  public function hasFlash($name)
-  {
-    return $this->getUser()->hasAttribute($name, 'symfony/flash');
-  }
-
-  /**
    * Sends and email from the current action.
    *
    * This methods calls a module/action with the sfMailView class.

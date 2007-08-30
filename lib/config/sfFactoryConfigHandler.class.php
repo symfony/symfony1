@@ -141,7 +141,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           $instances[] = sprintf("  \$this->factories['user'] = sfUser::newInstance(sfConfig::get('sf_factory_user', '%s'));", $class);
 
           // append instance initialization
-          $inits[] = sprintf("  \$this->factories['user']->initialize(\$this, sfConfig::get('sf_factory_user_parameters', %s));", var_export($parameters, true));
+          $inits[] = sprintf("  \$this->factories['user']->initialize(\$this, array_merge(array('use_flash' => sfConfig::get('sf_use_flash')), sfConfig::get('sf_factory_user_parameters', %s)));", var_export(is_array($parameters) ? $parameters : array(), true));
           break;
 
         case 'view_cache':

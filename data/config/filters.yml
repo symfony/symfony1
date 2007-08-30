@@ -26,11 +26,6 @@ cache:
 common:
   class: sfCommonFilter
 
-flash:
-  class: sfFlashFilter
-  param:
-    condition: %SF_USE_FLASH%
-
 # execution filter must be the last registered filter
 execution:
   class: sfExecutionFilter

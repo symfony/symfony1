@@ -50,13 +50,12 @@ class sfUser
   /**
    * Initialize this User.
    *
-   * @param Context A Context instance.
-   * @param array   An associative array of initialization parameters.
+   * @param sfContext A sfContext instance.
+   * @param array     An associative array of initialization parameters.
    *
-   * @return bool true, if initialization completes successfully, otherwise
-   *              false.
+   * @return Boolean  true, if initialization completes successfully, otherwise false.
    *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this User.
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfUser.
    */
   public function initialize($context, $parameters = array())
   {
@@ -90,6 +89,20 @@ class sfUser
     }
 
     $this->setCulture($culture);
+
+    // flag current flash to be removed at shutdown
+    if ($this->parameterHolder->get('use_flash', false) && $names = $this->attributeHolder->getNames('symfony/user/sfUser/flash'))
+    {
+      if (sfConfig::get('sf_logging_enabled'))
+      {
+        $this->context->getLogger()->info(sprintf('{sfUser} flag old flash messages ("%s")', implode('", "', $names)));
+      }
+
+      foreach ($names as $name)
+      {
+        $this->attributeHolder->set($name, true, 'symfony/user/sfUser/flash/remove');
+      }
+    }
   }
 
   /**
@@ -133,6 +146,67 @@ class sfUser
       // change the culture in the routing default parameters
       $this->context->getRouting()->setDefaultParameter('sf_culture', $culture);
     }
+  }
+
+  /**
+   * Sets a flash variable that will be passed to the very next action.
+   *
+   * @param  string  The name of the flash variable
+   * @param  string  The value of the flash variable
+   * @param  Boolean true if the flash have to persist for the following request (true by default)
+   */
+  public function setFlash($name, $value, $persist = true)
+  {
+    if (!$this->parameterHolder->get('use_flash', false))
+    {
+      return;
+    }
+
+    $this->setAttribute($name, $value, 'symfony/user/sfUser/flash');
+
+    if ($persist)
+    {
+      // clear removal flag
+      $this->attributeHolder->remove($name, 'symfony/user/sfUser/flash/remove');
+    }
+    else
+    {
+      $this->setAttribute($name, true, 'symfony/user/sfUser/flash/remove');
+    }
+  }
+
+  /**
+   * Gets a flash variable.
+   *
+   * @param  string The name of the flash variable
+   *
+   * @return mixed  The value of the flash variable
+   */
+  public function getFlash($name, $default = null)
+  {
+    if (!$this->parameterHolder->get('use_flash', false))
+    {
+      return $default;
+    }
+
+    return $this->getAttribute($name, $default, 'symfony/user/sfUser/flash');
+  }
+
+  /**
+   * Returns true if a flash variable of the specified name exists.
+   * 
+   * @param  string  The name of the flash variable
+   *
+   * @return Boolean true if the variable exists, false otherwise
+   */
+  public function hasFlash($name)
+  {
+    if (!$this->parameterHolder->get('use_flash', false))
+    {
+      return false;
+    }
+
+    return $this->hasAttribute($name, 'symfony/user/sfUser/flash');
   }
 
   /**
@@ -192,6 +266,21 @@ class sfUser
    */
   public function shutdown()
   {
+    // remove flash that are tagged to be removed
+    if ($this->parameterHolder->get('use_flash', false) && $names = $this->attributeHolder->getNames('symfony/user/sfUser/flash/remove'))
+    {
+      if (sfConfig::get('sf_logging_enabled'))
+      {
+        $this->context->getLogger()->info(sprintf('{sfUser} remove old flash messages ("%s")', implode('", "', $names)));
+      }
+
+      foreach ($names as $name)
+      {
+        $this->attributeHolder->remove($name, 'symfony/user/sfUser/flash');
+        $this->attributeHolder->remove($name, 'symfony/user/sfUser/flash/remove');
+      }
+    }
+
     $storage = $this->context->getStorage();
 
     $attributes = array();

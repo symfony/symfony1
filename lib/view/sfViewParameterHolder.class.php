@@ -57,16 +57,12 @@ class sfViewParameterHolder extends sfParameterHolder
    */
   protected function getGlobalAttributes()
   {
-    $flash = new sfParameterHolder();
-    $flash->add($this->context->getUser()->getAttributeHolder()->getAll('symfony/flash'));
-
     $attributes = array(
       'sf_context'  => $this->context,
       'sf_params'   => $this->context->getRequest()->getParameterHolder(),
       'sf_request'  => $this->context->getRequest(),
       'sf_response' => $this->context->getResponse(),
       'sf_user'     => $this->context->getUser(),
-      'sf_flash'    => $flash,
     );
 
     return $attributes;
