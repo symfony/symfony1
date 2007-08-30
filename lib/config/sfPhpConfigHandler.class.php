@@ -78,12 +78,12 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
         // key exists?
         if (!array_key_exists($key, $configs))
         {
-          throw new sfParseException(sprintf('Configuration file "%s" specifies key "%s" which is not a php.ini directive [err0002].', $configFiles[0], $key));
+          throw new sfParseException(sprintf('Configuration file "%s" specifies key "%s" which is not a php.ini directive.', $configFiles[0], $key));
         }
 
         if (ini_get($key) != $value)
         {
-          throw new sfInitializationException(sprintf('Configuration file "%s" specifies that php.ini "%s" key must be set to "%s". The current value is "%s" (%s). [err0001].', $configFiles[0], $key, var_export($value, true), var_export(ini_get($key), true), $this->get_ini_path()));
+          throw new sfInitializationException(sprintf('Configuration file "%s" specifies that php.ini "%s" key must be set to "%s". The current value is "%s" (%s).', $configFiles[0], $key, var_export($value, true), var_export(ini_get($key), true), $this->get_ini_path()));
         }
       }
     }
@@ -98,7 +98,7 @@ class sfPhpConfigHandler extends sfYamlConfigHandler
         // key exists?
         if (!array_key_exists($key, $configs))
         {
-          throw new sfParseException(sprintf('Configuration file "%s" specifies key "%s" which is not a php.ini directive [err0002].', $configFiles[0], $key));
+          throw new sfParseException(sprintf('Configuration file "%s" specifies key "%s" which is not a php.ini directive.', $configFiles[0], $key));
         }
 
         $warning = sprintf('{sfPhpConfigHandler} php.ini "%s" key is better set to "%s" (current value is "%s" - %s)', $key, var_export($value, true), var_export(ini_get($key), true), $this->get_ini_path());

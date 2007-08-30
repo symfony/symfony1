@@ -113,13 +113,6 @@ class sfException extends Exception
     $format  = 0 == strncasecmp(PHP_SAPI, 'cli', 3) ? 'plain' : 'html';
     $traces  = $this->getTraces($exception, $format);
 
-    // extract error reference from message
-    $error_reference = '';
-    if (preg_match('/\[(err\d+)\]/', $message, $matches))
-    {
-      $error_reference = $matches[1];
-    }
-
     // dump main objects values
     $sf_settings = '';
     $settingsTable = $requestTable = $responseTable = $globalsTable = '';
