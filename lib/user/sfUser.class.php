@@ -35,31 +35,24 @@ class sfUser
     $parameterHolder = null,
     $attributeHolder = null,
     $culture         = null,
-    $context         = null;
+    $storage         = null,
+    $dispatcher      = null;
 
   /**
-   * Retrieve the current application context.
+   * Initializes this sfUser.
    *
-   * @return Context A Context instance.
-   */
-  public function getContext()
-  {
-    return $this->context;
-  }
-
-  /**
-   * Initialize this User.
+   * @param sfEventDispatcher A sfEventDispatcher instance.
+   * @param sfStorage    A sfStorage instance.
+   * @param array        An associative array of initialization parameters.
    *
-   * @param sfContext A sfContext instance.
-   * @param array     An associative array of initialization parameters.
-   *
-   * @return Boolean  true, if initialization completes successfully, otherwise false.
+   * @return Boolean     true, if initialization completes successfully, otherwise false.
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfUser.
    */
-  public function initialize($context, $parameters = array())
+  public function initialize(sfEventDispatcher $dispatcher, sfStorage $storage, $parameters = array())
   {
-    $this->context = $context;
+    $this->dispatcher = $dispatcher;
+    $this->storage    = $storage;
 
     $this->parameterHolder = new sfParameterHolder();
     $this->parameterHolder->add($parameters);
@@ -67,7 +60,7 @@ class sfUser
     $this->attributeHolder = new sfParameterHolder(self::ATTRIBUTE_NAMESPACE);
 
     // read attributes from storage
-    $attributes = $context->getStorage()->read(self::ATTRIBUTE_NAMESPACE);
+    $attributes = $storage->read(self::ATTRIBUTE_NAMESPACE);
     if (is_array($attributes))
     {
       foreach ($attributes as $namespace => $values)
@@ -80,13 +73,8 @@ class sfUser
     // otherwise
     //  - use the culture defined in the user session
     //  - use the default culture set in i18n.yml
-    if (!($culture = $context->getRequest()->getParameter('sf_culture')))
-    {
-      if (null === ($culture = $context->getStorage()->read(self::CULTURE_NAMESPACE)))
-      {
-        $culture = sfConfig::get('sf_i18n_default_culture', 'en');
-      }
-    }
+    $currentCulture = $storage->read(self::CULTURE_NAMESPACE);
+    $culture = $this->parameterHolder->get('culture', !is_null($currentCulture) ? $currentCulture : $this->parameterHolder->get('default_culture', 'en'));
 
     $this->setCulture($culture);
 
@@ -95,7 +83,7 @@ class sfUser
     {
       if (sfConfig::get('sf_logging_enabled'))
       {
-        $this->context->getLogger()->info(sprintf('{sfUser} flag old flash messages ("%s")', implode('", "', $names)));
+        $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Flag old flash messages ("%s")', implode('", "', $names)))));
       }
 
       foreach ($names as $name)
@@ -137,14 +125,7 @@ class sfUser
     {
       $this->culture = $culture;
 
-      // change the message format object with the new culture
-      if (sfConfig::get('sf_i18n'))
-      {
-        $this->context->getI18N()->setCulture($culture);
-      }
-
-      // change the culture in the routing default parameters
-      $this->context->getRouting()->setDefaultParameter('sf_culture', $culture);
+      $this->dispatcher->notify(new sfEvent($this, 'user.change_culture', array('culture' => $culture)));
     }
   }
 
@@ -271,7 +252,7 @@ class sfUser
     {
       if (sfConfig::get('sf_logging_enabled'))
       {
-        $this->context->getLogger()->info(sprintf('{sfUser} remove old flash messages ("%s")', implode('", "', $names)));
+        $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Remove old flash messages ("%s")', implode('", "', $names)))));
       }
 
       foreach ($names as $name)
@@ -281,8 +262,6 @@ class sfUser
       }
     }
 
-    $storage = $this->context->getStorage();
-
     $attributes = array();
     foreach ($this->attributeHolder->getNamespaces() as $namespace)
     {
@@ -290,23 +269,32 @@ class sfUser
     }
 
     // write attributes to the storage
-    $storage->write(self::ATTRIBUTE_NAMESPACE, $attributes);
+    $this->storage->write(self::ATTRIBUTE_NAMESPACE, $attributes);
 
     // write culture to the storage
-    $storage->write(self::CULTURE_NAMESPACE, $this->culture);
+    $this->storage->write(self::CULTURE_NAMESPACE, $this->culture);
 
     session_write_close();
   }
 
+  /**
+   * Calls methods defined via sfEventDispatcher.
+   *
+   * @param string The method name
+   * @param array  The method arguments
+   *
+   * @return mixed The returned value of the called method
+   *
+   * @throws <b>sfException</b> If the calls fails
+   */
   public function __call($method, $arguments)
   {
-    if (!$callable = sfMixer::getCallable('sfUser:'.$method))
+    $event = $this->dispatcher->notifyUntil(new sfEvent($this, 'user.method_not_found', array('method' => $method, 'arguments' => $arguments)));
+    if (!$event->isProcessed())
     {
       throw new sfException(sprintf('Call to undefined method sfUser::%s.', $method));
     }
 
-    array_unshift($arguments, $this);
-
-    return call_user_func_array($callable, $arguments);
+    return $event->getReturnValue();
   }
 }

@@ -158,7 +158,7 @@ function get_component($moduleName, $componentName, $vars = array())
 
   if (sfConfig::get('sf_logging_enabled'))
   {
-    $context->getLogger()->info('{PartialHelper} call "'.$moduleName.'->'.$componentToRun.'()'.'"');
+    $context->getEventDispatcher()->notify(new sfEvent(null, 'application.log', array(sprintf('Call "%s->%s()'.'"', $moduleName, $componentToRun))));
   }
 
   // run component
@@ -322,7 +322,7 @@ function slot($name)
 
   if (sfConfig::get('sf_logging_enabled'))
   {
-    $context->getLogger()->info(sprintf('{PartialHelper} set slot "%s"', $name));
+    $context->getEventDispatcher()->notify(new sfEvent(null, 'application.log', array(sprintf('Set slot "%s"', $name))));
   }
 
   ob_start();
@@ -388,7 +388,7 @@ function include_slot($name)
 
   if (sfConfig::get('sf_logging_enabled'))
   {
-    $context->getLogger()->info(sprintf('{PartialHelper} get slot "%s"', $name));
+    $context->getEventDispatcher()->notify(new sfEvent(null, 'application.log', array(sprintf('Get slot "%s"', $name))));
   }
 
   if (isset($slots[$name]))
@@ -422,7 +422,7 @@ function get_slot($name)
 
   if (sfConfig::get('sf_logging_enabled'))
   {
-    $context->getLogger()->info(sprintf('{PartialHelper} get slot "%s"', $name));
+    $context->getEventDispatcher()->notify(new sfEvent(null, 'application.log', array(sprintf('Get slot "%s"', $name))));
   }
 
   return isset($slots[$name]) ? $slots[$name] : '';

@@ -26,6 +26,7 @@ class sfViewCacheManager
     $cache       = null,
     $cacheConfig = array(),
     $context     = null,
+    $dispatcher  = null,
     $controller  = null,
     $routing     = null,
     $loaded      = array();
@@ -39,6 +40,7 @@ class sfViewCacheManager
   public function initialize($context, sfCache $cache)
   {
     $this->context    = $context;
+    $this->dispatcher = $context->getEventDispatcher();
     $this->controller = $context->getController();
 
     // empty configuration
@@ -314,7 +316,7 @@ class sfViewCacheManager
 
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->context->getLogger()->info(sprintf('{sfViewCacheManager} cache for "%s" %s', $internalUri, $retval !== null ? 'exists' : 'does not exist'));
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Cache for "%s" %s', $internalUri, $retval !== null ? 'exists' : 'does not exist'))));
     }
 
     return $retval;
@@ -349,7 +351,7 @@ class sfViewCacheManager
     {
       if (sfConfig::get('sf_logging_enabled'))
       {
-        $this->context->getLogger()->info('{sfViewCacheManager} discard cache');
+        $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Discard cache')));
       }
 
       return true;
@@ -384,7 +386,7 @@ class sfViewCacheManager
 
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->context->getLogger()->info(sprintf('{sfViewCacheManager} save cache for "%s"', $internalUri));
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Save cache for "%s"', $internalUri))));
     }
 
     return true;
@@ -401,7 +403,7 @@ class sfViewCacheManager
   {
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->context->getLogger()->info(sprintf('{sfViewCacheManager} remove cache for "%s"', $internalUri));
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Remove cache for "%s"', $internalUri))));
     }
 
     $key = $this->generateCacheKey($internalUri);

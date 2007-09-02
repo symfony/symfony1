@@ -46,7 +46,7 @@ class sfValidatorManager
   {
     if (sfConfig::get('sf_logging_enabled'))
     {
-      sfContext::getInstance()->getLogger()->info('{sfValidator} validation execution');
+      sfContext::getInstance()->getEventDispatcher()->notify(new sfEvent($this, 'application.log', array('Validation execution')));
     }
 
     $retval = true;

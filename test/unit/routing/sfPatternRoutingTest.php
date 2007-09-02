@@ -22,7 +22,7 @@ class sfPatternRoutingTest extends sfPatternRouting
 
 // public methods
 $r = new sfPatternRoutingTest();
-$r->initialize();
+$r->initialize(new sfEventDispatcher());
 foreach (array('clearRoutes', 'connect', 'generate', 'getCurrentInternalUri', 'getCurrentRouteName', 'getRoutes', 'hasRoutes', 'parse', 'setRoutes') as $method)
 {
   $t->can_ok($r, $method, sprintf('"%s" is a method of sfRouting', $method));
@@ -269,6 +269,7 @@ $r->clearRoutes();
 $r->connect('test2', '/module/action/:id', array('module' => 'foo', 'action' => 'bar'));
 $r->connect('test',  '/:module', array('action' => 'index'));
 $r->connect('test1', '/:module/:action/*', array());
+$r->connect('test3', '/', array());
 $r->parse('/');
 $t->is($r->getCurrentInternalUri(), 'default/index', '->getCurrentInternalUri() returns the internal URI for last parsed URL');
 $r->parse('/foo/bar/bar/foo/a/b');

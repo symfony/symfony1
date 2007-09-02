@@ -9,27 +9,15 @@
  */
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
-require_once($_test_dir.'/unit/sfContextMock.class.php');
 
 $t = new lime_test(39, new lime_output_color());
 
-class myRequest
-{
-  public function getParameter($key)
-  {
-    if ($key == 'sf_culture')
-    {
-      return 'en';
-    }
-  }
-}
+$dispatcher = new sfEventDispatcher();
+$storage = sfStorage::newInstance('sfSessionTestStorage');
+$storage->initialize(array('session_path' => sfConfig::get('sf_test_cache_dir').'/sessions'));
 
-$context = sfContext::getInstance(array(
-  'routing' => 'sfPatternRouting',
-  'request' => 'myRequest',
-  'user'    => 'sfBasicSecurityUser',
-));
-$user = $context->user;
+$user = new sfBasicSecurityUser();
+$user->initialize($dispatcher, $storage);
 
 // ->initialize()
 $t->diag('->initialize()');
@@ -58,8 +46,7 @@ $t->is($user->isAuthenticated(), false, '->setAuthenticated() accepts a boolean 
 // ->setTimedOut() ->getTimedOut()
 sfConfig::set('sf_timeout', 86400);
 $user = new sfBasicSecurityUser();
-$user->initialize($context);
-$context->user = $user;
+$user->initialize($dispatcher, $storage);
 $t->diag('->setTimedOut() ->isTimedOut()');
 $t->is($user->isTimedOut(), false, '->isTimedOut() returns false if the session is not timed out');
 $user->setTimedOut();

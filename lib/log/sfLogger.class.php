@@ -69,22 +69,25 @@ abstract class sfLogger
   /**
    * Initializes this sfLogger instance.
    *
-   * @param array An associative array of initialization parameters.
-   *
    * Available options:
    *
    * - level: The log level.
    *
-   * @return bool true, if initialization completes successfully, otherwise false.
+   * @param  sfEventDispatcher A sfEventDispatcher instance
+   * @param  array        An array of options.
    *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this User.
+   * @return Boolean      true, if initialization completes successfully, otherwise false.
+   *
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfLogger.
    */
-  public function initialize($parameters = array())
+  public function initialize(sfEventDispatcher $dispatcher, $options = array())
   {
-    if (isset($parameters['level']))
+    if (isset($options['level']))
     {
-      $this->setLogLevel($parameters['level']);
+      $this->setLogLevel($options['level']);
     }
+
+    $dispatcher->connect('application.log',   array($this, 'listenToLogEvent'));
   }
 
   /**
@@ -214,6 +217,27 @@ abstract class sfLogger
   public function debug($message)
   {
     $this->log($message, self::DEBUG);
+  }
+
+  /**
+   * Listens to application.log events.
+   *
+   * @param sfEvent An sfEvent instance
+   *
+   */
+  public function listenToLogEvent(sfEvent $event)
+  {
+    $priority = $event->getParameterHolder()->remove('priority');
+    if (!$priority)
+    {
+      $priority = self::INFO;
+    }
+    $subject = $event->getSubject();
+    $subject = is_object($subject) ? get_class($subject) : (is_string($subject) ? $subject : 'main');
+    foreach ($event->getParameterHolder()->getAll() as $message)
+    {
+      $this->log(sprintf('{%s} %s', $subject, $message), $priority);
+    }
   }
 
   /**

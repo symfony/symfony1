@@ -23,7 +23,8 @@
 class sfContext
 {
   protected
-    $factories = array();
+    $dispatcher = null,
+    $factories  = array();
 
   protected static
     $instances = array(),
@@ -34,6 +35,8 @@ class sfContext
    */
   public function initialize()
   {
+    $this->dispatcher = new sfEventDispatcher();
+
     if (sfConfig::get('sf_use_database'))
     {
       // setup our database connections
@@ -98,6 +101,16 @@ class sfContext
   public static function switchTo($name)
   {
     self::$current = $name;
+  }
+
+  /**
+   * Retrieves the current event dispatcher.
+   *
+   * @return sfEventDispatcher A sfEventDispatcher instance
+   */
+  public function getEventDispatcher()
+  {
+    return $this->dispatcher;
   }
 
   /**

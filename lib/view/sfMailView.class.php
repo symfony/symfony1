@@ -81,7 +81,7 @@ class sfMailView extends sfPHPView
     // send email
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->context->getLogger()->info('{sfMailView} send email to client');
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Send email to client')));
     }
 
     // configuration prefix

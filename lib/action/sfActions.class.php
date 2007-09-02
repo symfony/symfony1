@@ -44,7 +44,7 @@ abstract class sfActions extends sfAction
 
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->context->getLogger()->info('{sfAction} call "'.get_class($this).'->'.$actionToRun.'()'.'"');
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Call "%s->%s()"', get_class($this), $actionToRun))));
     }
 
     // run action

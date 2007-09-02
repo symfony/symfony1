@@ -36,6 +36,9 @@ class sfI18N
     $this->cache   = $cache;
 
     include(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/i18n.yml'));
+
+    $context->getEventDispatcher()->connect('user.change_culture', array($this, 'listenToChangeCultureEvent'));
+    $context->getEventDispatcher()->connect('controller.change_action', array($this, 'listenToChangeActionEvent'));
   }
 
   /**
@@ -44,7 +47,7 @@ class sfI18N
    * @param mixed  An array of i18n directories if message source is XLIFF or gettext, null otherwise
    * @param string The culture
    */
-  public function setMessageSource($dirs, $culture)
+  public function setMessageSource($dirs, $culture = null)
   {
     if (is_null($dirs))
     {
@@ -60,7 +63,15 @@ class sfI18N
       $this->messageSource->setCache($this->cache);
     }
 
-    $this->setCulture($culture);
+    if (!is_null($culture))
+    {
+      $this->setCulture($culture);
+    }
+    else
+    {
+      $this->messageSource->setCulture($this->culture);
+    }
+
     $this->messageFormat = null;
   }
 
@@ -90,9 +101,10 @@ class sfI18N
    */
   public function setCulture($culture)
   {
+    $this->culture = $culture;
+
     if ($this->messageSource)
     {
-      $this->culture = $culture;
       $this->messageSource->setCulture($culture);
     }
   }
@@ -232,5 +244,29 @@ class sfI18N
     {
       return null;
     }
+  }
+
+  /**
+   * Listens to the user.change_culture event.
+   *
+   * @param sfEvent An sfEvent instance
+   *
+   */
+  public function listenToChangeCultureEvent(sfEvent $event)
+  {
+    // change the message format object with the new culture
+    $this->setCulture($event->getParameter('culture'));
+  }
+
+  /**
+   * Listens to the controller.change_action event.
+   *
+   * @param sfEvent An sfEvent instance
+   *
+   */
+  public function listenToChangeActionEvent(sfEvent $event)
+  {
+    // change message source directory to our module
+    $this->setMessageSource(sfLoader::getI18NDirs($event->getParameter('module')));
   }
 }

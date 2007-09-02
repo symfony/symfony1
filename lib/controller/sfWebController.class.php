@@ -93,22 +93,8 @@ abstract class sfWebController extends sfController
       $parameters['action'] = sfConfig::get('sf_default_action');
     }
 
-    $r = $this->context->getRouting();
-    if ($r->hasRoutes() && $generated_url = $r->generate($route_name, $parameters, $querydiv, $divider, $equals))
-    {
-      $url .= $generated_url;
-    }
-    else
-    {
-      $query = http_build_query($parameters);
-
-      if (sfConfig::get('sf_url_format') == 'PATH')
-      {
-        $query = strtr($query, ini_get('arg_separator.output').'=', '/');
-      }
-
-      $url .= $query;
-    }
+    // routing to generate path
+    $url .= $this->context->getRouting()->generate($route_name, $parameters, $querydiv, $divider, $equals);
 
     if ($absolute)
     {
@@ -210,6 +196,8 @@ abstract class sfWebController extends sfController
    */
   public function redirect($url, $delay = 0, $statusCode = 302)
   {
+    $url = $this->genUrl($url, true);
+
     $response = $this->context->getResponse();
 
     // redirect
@@ -217,6 +205,11 @@ abstract class sfWebController extends sfController
     $response->setStatusCode($statusCode);
     $response->setHttpHeader('Location', $url);
     $response->setContent(sprintf('<html><head><meta http-equiv="refresh" content="%d;url=%s"/></head></html>', $delay, htmlentities($url, ENT_QUOTES, sfConfig::get('sf_charset'))));
+
+    if (sfConfig::get('sf_logging_enabled'))
+    {
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Redirect to "%s"', $url))));
+    }
 
     if (!sfConfig::get('sf_test'))
     {

@@ -30,6 +30,8 @@ class sfContext
       self::$instance->storage = sfStorage::newInstance('sfSessionTestStorage');
       self::$instance->storage->initialize(array('session_path' => sfConfig::get('sf_test_cache_dir').'/sessions'));
 
+      self::$instance->dispatcher = new sfEventDispatcher();
+
       foreach ($factories as $type => $class)
       {
         self::$instance->inject($type, $class);
@@ -37,6 +39,11 @@ class sfContext
     }
 
     return self::$instance;
+  }
+
+  public function getEventDispatcher()
+  {
+    return self::$instance->dispatcher;
   }
 
   public function getModuleName()
@@ -88,10 +95,10 @@ class sfContext
       {
         case 'routing':
         case 'response':
-          $object->initialize(null, $parameters);
+          $object->initialize($this->dispatcher, $parameters);
           break;
         case 'request':
-          $object->initialize(null, $this->routing, $parameters);
+          $object->initialize($this->dispatcher, $this->routing, $parameters);
           break;
         default:
           $object->initialize($this, $parameters);

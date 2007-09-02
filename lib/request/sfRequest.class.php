@@ -60,8 +60,7 @@ abstract class sfRequest
 
   protected
     $errors          = array(),
-    $logger          = null,
-    $routing         = null,
+    $dispatcher      = null,
     $method          = null,
     $parameterHolder = null,
     $config          = null,
@@ -70,19 +69,17 @@ abstract class sfRequest
   /**
    * Initializes this sfRequest.
    *
-   * @param  sfLogger  A sfLogger instance (can be null)
-   * @param  sfRouting A sfRouting instance (can be null)
-   * @param  array     An associative array of initialization parameters
-   * @param  array     An associative array of initialization attributes
+   * @param  sfEventDispatcher  A sfEventDispatcher instance
+   * @param  array              An associative array of initialization parameters
+   * @param  array              An associative array of initialization attributes
    *
-   * @return Boolean   true, if initialization completes successfully, otherwise false
+   * @return Boolean            true, if initialization completes successfully, otherwise false
    *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Request
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfRequest
    */
-  public function initialize(sfLogger $logger = null, sfRouting $routing = null, $parameters = array(), $attributes = array())
+  public function initialize(sfEventDispatcher $dispatcher, $parameters = array(), $attributes = array())
   {
-    $this->logger  = $logger;
-    $this->routing = $routing;
+    $this->dispatcher = $dispatcher;
 
     // initialize parameter and attribute holders
     $this->parameterHolder = new sfParameterHolder();
@@ -234,9 +231,9 @@ abstract class sfRequest
    */
   public function setError($name, $message)
   {
-    if (!is_null($this->logger))
+    if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->logger->info('{sfRequest} error in form for parameter "'.$name.'" (with message "'.$message.'")');
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Error in form for parameter "%s" (with message "%s")', $name, $message))));
     }
 
     $this->errors[$name] = $message;
@@ -385,24 +382,23 @@ abstract class sfRequest
   }
 
   /**
-   * Overloads a given method.
+   * Calls methods defined via sfEventDispatcher.
    *
-   * @param string Method name
-   * @param string Method arguments
+   * @param string The method name
+   * @param array  The method arguments
    *
-   * @return mixed User function callback
+   * @return mixed The returned value of the called method
    *
    * @throws <b>sfException</b> if call fails
    */
   public function __call($method, $arguments)
   {
-    if (!$callable = sfMixer::getCallable('sfRequest:'.$method))
+    $event = $this->dispatcher->notifyUntil(new sfEvent($this, 'request.method_not_found', array('method' => $method, 'arguments' => $arguments)));
+    if (!$event->isProcessed())
     {
       throw new sfException(sprintf('Call to undefined method sfRequest::%s.', $method));
     }
 
-    array_unshift($arguments, $this);
-
-    return call_user_func_array($callable, $arguments);
+    return $event->getReturnValue();
   }
 }

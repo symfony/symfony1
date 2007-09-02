@@ -36,19 +36,19 @@ class sfDebugConnection implements Connection
   private $lastExecutedQuery = '';
 
   /**
-   * Optional PEAR Log class; if set queries will be logged at PEAR_LOG_INFO level.
+   * Optional sfEventDispatcher object.
    * @var Log
    */
-  private static $logger;
+  private static $dispatcher;
 
   /**
-   * Sets a Logger class (e.g. PEAR Log) to use for logging.
-   * The logger class must have a log() method.  All messages are logged at default log level.
-   * @param object $logger
+   * Sets a sfEventDispatcher object.
+   *
+   * @param object $dispatcher
    */
-  public static function setLogger($logger)
+  public static function setDispatcher($dispatcher)
   {
-    self::$logger = $logger;
+    self::$dispatcher = $dispatcher;
   }
 
   /**
@@ -82,7 +82,7 @@ class sfDebugConnection implements Connection
     }
     $connectionClass = Creole::import($driver);
     $this->childConnection = new $connectionClass();
-    $this->log("{sfCreole} connect(): DSN: ". var_export($dsninfo, true) . ", FLAGS: " . var_export($flags, true));
+    $this->log("connect(): DSN: ". var_export($dsninfo, true) . ", FLAGS: " . var_export($flags, true));
     return $this->childConnection->connect($dsninfo, $flags);
   }
 
@@ -115,7 +115,7 @@ class sfDebugConnection implements Connection
    */
   public function prepareStatement($sql)
   {
-    $this->log("{sfCreole} prepareStatement(): $sql");
+    $this->log("prepareStatement(): $sql");
     $obj = $this->childConnection->prepareStatement($sql);
     $objClass = get_class($obj);
     return new $objClass($this, $sql);
@@ -136,7 +136,7 @@ class sfDebugConnection implements Connection
    */
   public function applyLimit(&$sql, $offset, $limit)
   {
-    $this->log("{sfCreole} applyLimit(): $sql, offset: $offset, limit: $limit");
+    $this->log("applyLimit(): $sql, offset: $offset, limit: $limit");
     return $this->childConnection->applyLimit($sql, $offset, $limit);
   }
 
@@ -145,7 +145,7 @@ class sfDebugConnection implements Connection
    */
   public function close()
   {
-    $this->log("{sfCreole} close(): Closing connection.");
+    $this->log("close(): Closing connection.");
     return $this->childConnection->close();
   }
 
@@ -172,7 +172,7 @@ class sfDebugConnection implements Connection
       $elapsedTime = $timer->getElapsedTime();
     }
 
-    $this->log(sprintf("{sfCreole} executeQuery(): [%.2f ms] %s", $elapsedTime * 1000, $sql));
+    $this->log(sprintf("executeQuery(): [%.2f ms] %s", $elapsedTime * 1000, $sql));
 
     return $retval;
   }
@@ -182,7 +182,7 @@ class sfDebugConnection implements Connection
   **/
   public function executeUpdate($sql)
   {
-    $this->log("{sfCreole} executeUpdate(): $sql");
+    $this->log("executeUpdate(): $sql");
     $this->lastExecutedQuery = $sql;
     $this->numQueriesExecuted++;
     return $this->childConnection->executeUpdate($sql);
@@ -201,7 +201,7 @@ class sfDebugConnection implements Connection
    **/
   public function prepareCall($sql)
   {
-    $this->log("{sfCreole} prepareCall(): $sql");
+    $this->log("prepareCall(): $sql");
     return $this->childConnection->prepareCall($sql);
   }
 
@@ -234,7 +234,7 @@ class sfDebugConnection implements Connection
    */
   public function begin()
   {
-    $this->log("{sfCreole} beginning transaction.");
+    $this->log("beginning transaction.");
     return $this->childConnection->begin();
   }
 
@@ -243,7 +243,7 @@ class sfDebugConnection implements Connection
    */
   public function commit()
   {
-    $this->log("{sfCreole} committing transaction.");
+    $this->log("committing transaction.");
     return $this->childConnection->commit();
   }
 
@@ -252,7 +252,7 @@ class sfDebugConnection implements Connection
    */
   public function rollback()
   {
-    $this->log("{sfCreole} rolling back transaction.");
+    $this->log("rolling back transaction.");
     return $this->childConnection->rollback();
   }
 
@@ -261,7 +261,7 @@ class sfDebugConnection implements Connection
    */
   public function setAutoCommit($bit)
   {
-    $this->log("{sfCreole} setting autocommit to: ".var_export($bit, true));
+    $this->log("setting autocommit to: ".var_export($bit, true));
     return $this->childConnection->setAutoCommit($bit);
   }
 
@@ -274,16 +274,16 @@ class sfDebugConnection implements Connection
   }
 
   /**
-   * Private function that logs message using specified logger (if provided).
+   * Private function that logs message using specified dispatcher (if provided).
    * @param string $msg Message to log.
    */
   private function log($msg)
   {
-    if (self::$logger)
+    if (self::$dispatcher && sfConfig::get('sf_logging_enabled'))
     {
       // message on one line
       $msg = preg_replace("/\r?\n/", ' ', $msg);
-      self::$logger->log($msg);
+      self::$dispatcher->notify(new sfEvent($this, 'application.log', array($msg)));
     }
   }
 

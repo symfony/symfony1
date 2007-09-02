@@ -110,7 +110,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           $instances[] = sprintf("  \$this->factories['request'] = sfRequest::newInstance(sfConfig::get('sf_factory_request', '%s'));", $class);
 
           // append instance initialization
-          $inits[] = sprintf("  \$this->factories['request']->initialize(\$this->factories['logger'], \$this->factories['routing'], sfConfig::get('sf_factory_request_parameters', %s), sfConfig::get('sf_factory_request_attributes', array()));", var_export($parameters, true));
+          $inits[] = sprintf("  \$this->factories['request']->initialize(\$this->dispatcher, sfConfig::get('sf_factory_request_parameters', %s), sfConfig::get('sf_factory_request_attributes', array()));", var_export($parameters, true));
           break;
 
         case 'response':
@@ -118,7 +118,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           $instances[] = sprintf("  \$this->factories['response'] = sfResponse::newInstance(sfConfig::get('sf_factory_response', '%s'));", $class);
 
           // append instance initialization
-          $inits[] = sprintf("  \$this->factories['response']->initialize(\$this->factories['logger'], sfConfig::get('sf_factory_response_parameters', %s));", var_export($parameters, true));
+          $inits[] = sprintf("  \$this->factories['response']->initialize(\$this->dispatcher, sfConfig::get('sf_factory_response_parameters', %s));", var_export($parameters, true));
           $inits[] = sprintf("  if ('HEAD' == \$this->factories['request']->getMethodName())\n  {  \n    \$this->factories['response']->setHeaderOnly(true);\n  }\n");
           break;
 
@@ -141,7 +141,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           $instances[] = sprintf("  \$this->factories['user'] = sfUser::newInstance(sfConfig::get('sf_factory_user', '%s'));", $class);
 
           // append instance initialization
-          $inits[] = sprintf("  \$this->factories['user']->initialize(\$this, array_merge(array('use_flash' => sfConfig::get('sf_use_flash')), sfConfig::get('sf_factory_user_parameters', %s)));", var_export(is_array($parameters) ? $parameters : array(), true));
+          $inits[] = sprintf("  \$this->factories['user']->initialize(\$this->dispatcher, \$this->factories['storage'], array_merge(array('culture' => \$this->factories['request']->getParameter('sf_culture'), 'default_culture' => sfConfig::get('sf_i18n_default_culture'), 'use_flash' => sfConfig::get('sf_use_flash')), sfConfig::get('sf_factory_user_parameters', %s)));", var_export(is_array($parameters) ? $parameters : array(), true));
           break;
 
         case 'view_cache':
@@ -185,7 +185,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           $instances[] = sprintf("  \$this->factories['routing'] = sfRouting::newInstance(sfConfig::get('sf_factory_routing', '%s'));", $class);
 
           // append instance initialization
-          $inits[] = sprintf("  \$this->factories['routing']->initialize(\$this->factories['logger'], array_merge(array('suffix' => sfConfig::get('sf_suffix'), 'default_module' => sfConfig::get('sf_default_module'), 'default_action' => sfConfig::get('sf_default_action')), sfConfig::get('sf_factory_routing_parameters', %s)));", var_export(is_array($parameters) ? $parameters : array(), true));
+          $inits[] = sprintf("  \$this->factories['routing']->initialize(\$this->dispatcher, array_merge(array('suffix' => sfConfig::get('sf_suffix'), 'default_module' => sfConfig::get('sf_default_module'), 'default_action' => sfConfig::get('sf_default_action')), sfConfig::get('sf_factory_routing_parameters', %s)));", var_export(is_array($parameters) ? $parameters : array(), true));
           break;
 
         case 'logger':
@@ -216,7 +216,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
               if ($condition)
               {
                 // create logger instance
-                $loggers .= sprintf("\n\$logger = sfLogger::newInstance('%s');\n\$logger->initialize(%s);\n\$this->factories['logger']->addLogger(\$logger);\n", 
+                $loggers .= sprintf("\n\$logger = sfLogger::newInstance('%s');\n\$logger->initialize(\$this->dispatcher, %s);\n\$this->factories['logger']->addLogger(\$logger);\n", 
                               $keys['class'],
                               isset($keys['param']) ? var_export($keys['param'], true) : ''
                             );
@@ -228,7 +228,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
 
           $instances[] = sprintf(
                          "  \$this->factories['logger'] = sfLogger::newInstance(sfConfig::get('sf_factory_logger', '%s'));\n".
-                         "  \$this->factories['logger']->initialize(sfConfig::get('sf_factory_logger_parameters', %s));\n".
+                         "  \$this->factories['logger']->initialize(\$this->dispatcher, sfConfig::get('sf_factory_logger_parameters', %s));\n".
                          "  %s"
                          , $class, var_export($parameters, true), $loggers);
           break;

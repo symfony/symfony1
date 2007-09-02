@@ -12,9 +12,9 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 class myRequest extends sfRequest
 {
-  public function getRouting()
+  public function getEventDispatcher()
   {
-    return $this->routing;
+    return $this->dispatcher;
   }
 }
 
@@ -24,8 +24,7 @@ class fakeRequest
 
 $t = new lime_test(53, new lime_output_color());
 
-$routing = new sfNoRouting();
-$routing->initialize();
+$dispatcher = new sfEventDispatcher();
 
 // ::newInstance()
 $t->diag('::newInstance()');
@@ -45,9 +44,9 @@ catch (sfFactoryException $e)
 // ->initialize()
 $t->diag('->initialize()');
 $request = sfRequest::newInstance('myRequest');
-$request->initialize(null, $routing);
-$t->is($routing, $request->getRouting(), '->initialize() takes a sfRouting object as its second argument');
-$request->initialize(null, $routing, array('foo' => 'bar'));
+$request->initialize($dispatcher);
+$t->is($dispatcher, $request->getEventDispatcher(), '->initialize() takes a sfEventDispatcher object as its first argument');
+$request->initialize($dispatcher, array('foo' => 'bar'));
 $t->is($request->getParameter('foo'), 'bar', '->initialize() takes an array of parameters as its second argument');
 
 // ->getMethod() ->setMethod()
@@ -67,13 +66,13 @@ catch (sfException $e)
 
 // ->extractParameters()
 $t->diag('->extractParameters()');
-$request->initialize(null, $routing, array('foo' => 'foo', 'bar' => 'bar'));
+$request->initialize($dispatcher, array('foo' => 'foo', 'bar' => 'bar'));
 $t->is($request->extractParameters(array()), array(), '->extractParameters() returns parameters');
 $t->is($request->extractParameters(array('foo')), array('foo' => 'foo'), '->extractParameters() returns parameters for keys in its first parameter');
 $t->is($request->extractParameters(array('bar')), array('bar' => 'bar'), '->extractParameters() returns parameters for keys in its first parameter');
 
 $request = sfRequest::newInstance('myRequest');
-$request->initialize(null, $routing);
+$request->initialize($dispatcher);
 
 // ->setError() ->hasError() ->hasErrors() ->getError() ->removeError() ->getErrorNames
 $t->diag('->setError() ->hasError() ->hasErrors() ->getError() ->removeError() ->getErrorNames');
@@ -120,7 +119,7 @@ $pht->launchTests($request, 'parameter');
 $pht = new sfParameterHolderProxyTest($t);
 $pht->launchTests($request, 'attribute');
 
-// mixins
-require_once($_test_dir.'/unit/sfMixerTest.class.php');
-$mixert = new sfMixerTest($t);
-$mixert->launchTests($request, 'sfRequest');
+// new methods via sfEventDispatcher
+require_once($_test_dir.'/unit/sfEventDispatcherTest.class.php');
+$dispatcherTest = new sfEventDispatcherTest($t);
+$dispatcherTest->launchTests($dispatcher, $request, 'request');

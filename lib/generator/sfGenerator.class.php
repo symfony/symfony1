@@ -30,7 +30,7 @@ abstract class sfGenerator
    *
    * @param sfGeneratorManager A sfGeneratorManager instance
    */
-  public function initialize($generatorManager)
+  public function initialize(sfGeneratorManager $generatorManager)
   {
     $this->generatorManager = $generatorManager;
   }
@@ -208,27 +208,5 @@ abstract class sfGenerator
   public function setTheme($theme)
   {
     $this->theme = $theme;
-  }
-
-  /**
-   * Calls methods defined via the sfMixer class.
-   *
-   * @param string The method name
-   * @param array  The method arguments
-   *
-   * @return mixed The returned value of the called method
-   *
-   * @see sfMixer
-   */
-  public function __call($method, $arguments)
-  {
-    if (!$callable = sfMixer::getCallable('sfGenerator:'.$method))
-    {
-      throw new sfException(sprintf('Call to undefined method sfGenerator::%s.', $method));
-    }
-
-    array_unshift($arguments, $this);
-
-    return call_user_func_array($callable, $arguments);
   }
 }

@@ -26,6 +26,8 @@ class notaLogger
 {
 }
 
+$dispatcher = new sfEventDispatcher();
+
 // ->newInstance()
 $t->diag('->newInstance()');
 $logger = sfLogger::newInstance('myLogger');
@@ -50,8 +52,8 @@ $t->is($logger->getLogLevel(), sfLogger::ERR, '->setLogLevel() accepts a class c
 
 // ->initialize()
 $t->diag('->initialize()');
-$logger->initialize(array('level' => sfLogger::ERR));
-$t->is($logger->getLogLevel(), sfLogger::ERR, '->initialize() takes an array of parameters as its first argument');
+$logger->initialize($dispatcher, array('level' => sfLogger::ERR));
+$t->is($logger->getLogLevel(), sfLogger::ERR, '->initialize() takes an array of parameters as its second argument');
 
 // ::getPriorityName()
 $t->diag('::getPriorityName()');

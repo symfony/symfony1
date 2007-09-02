@@ -22,6 +22,7 @@ abstract class sfController
 {
   protected
     $context           = null,
+    $dispatcher        = null,
     $controllerClasses = array(),
     $maxForwards       = 5,
     $renderMode        = sfView::RENDER_CLIENT;
@@ -171,7 +172,7 @@ abstract class sfController
       // the requested action doesn't exist
       if (sfConfig::get('sf_logging_enabled'))
       {
-        $this->context->getLogger()->info('{sfController} action does not exist');
+        $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Action does not exist')));
       }
 
       // track the requested module so we have access to the data in the error 404 page
@@ -223,22 +224,7 @@ abstract class sfController
 
         require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/filters.yml'));
 
-        if ($moduleName == sfConfig::get('sf_error_404_module') && $actionName == sfConfig::get('sf_error_404_action'))
-        {
-          $this->context->getResponse()->setStatusCode(404);
-          $this->context->getResponse()->setHttpHeader('Status', '404 Not Found');
-
-          foreach (sfMixer::getCallables('sfController:forward:error404') as $callable)
-          {
-            call_user_func($callable, $this, $moduleName, $actionName);
-          }
-        }
-
-        // change i18n message source directory to our module
-        if (sfConfig::get('sf_i18n'))
-        {
-          $this->context->getI18N()->setMessageSource(sfLoader::getI18NDirs($moduleName), $this->context->getUser()->getCulture());
-        }
+        $this->context->getEventDispatcher()->notify(new sfEvent($this, 'controller.change_action', array('module' => $moduleName, 'action' => $actionName)));
 
         // process the filter chain
         $filterChain->execute();
@@ -334,16 +320,6 @@ abstract class sfController
   }
 
   /**
-   * Retrieves the current application context.
-   *
-   * @return sfContext A sfContext instance
-   */
-  public function getContext()
-  {
-    return $this->context;
-  }
-
-  /**
    * Retrieves the presentation rendering mode.
    *
    * @return int One of the following:
@@ -400,11 +376,12 @@ abstract class sfController
    */
   public function initialize($context)
   {
-    $this->context = $context;
+    $this->context    = $context;
+    $this->dispatcher = $context->getEventDispatcher();
 
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->context->getLogger()->info('{sfController} initialization');
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Initialization')));
     }
 
     // set max forwards
@@ -469,7 +446,7 @@ abstract class sfController
   {
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->context->getLogger()->info('{sfController} get presentation for action "'.$module.'/'.$action.'" (view class: "'.$viewName.'")');
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Get presentation for action "%s/%s" (view class: "%s")', $module, $action, $viewName))));
     }
 
     // get original render mode
@@ -558,24 +535,21 @@ abstract class sfController
   }
 
   /**
-   * Calls methods defined via the sfMixer class.
+   * Calls methods defined via sfEventDispatcher.
    *
    * @param string The method name
    * @param array  The method arguments
    *
    * @return mixed The returned value of the called method
-   *
-   * @see sfMixer
    */
   public function __call($method, $arguments)
   {
-    if (!$callable = sfMixer::getCallable('sfController:'.$method))
+    $event = $this->dispatcher->notifyUntil(new sfEvent($this, 'controller.method_not_found', array('method' => $method, 'arguments' => $arguments)));
+    if (!$event->isProcessed())
     {
       throw new sfException(sprintf('Call to undefined method sfController::%s.', $method));
     }
 
-    array_unshift($arguments, $this);
-
-    return call_user_func_array($callable, $arguments);
+    return $event->getReturnValue();
   }
 }

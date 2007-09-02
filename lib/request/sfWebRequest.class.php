@@ -13,7 +13,6 @@
  * sfWebRequest class.
  *
  * This class manages web requests. It parses input from the request and store them as parameters.
- * sfWebRequest is able to parse request with routing support enabled.
  *
  * @package    symfony
  * @subpackage request
@@ -31,23 +30,22 @@ class sfWebRequest extends sfRequest
     $relativeUrlRoot        = null,
     $getParameters          = null,
     $postParameters         = null,
-    $routingParameters      = null;
+    $requestParameters      = null;
 
   /**
    * Initializes this sfRequest.
    *
-   * @param  sfLogger  A sfLogger instance (can be null)
-   * @param  sfRouting A sfRouting instance (can be null)
-   * @param  array     An associative array of initialization parameters
-   * @param  array     An associative array of initialization attributes
+   * @param  sfEventDispatcher  A sfEventDispatcher instance
+   * @param  array         An associative array of initialization parameters
+   * @param  array         An associative array of initialization attributes
    *
-   * @return Boolean   true, if initialization completes successfully, otherwise false
+   * @return Boolean       true, if initialization completes successfully, otherwise false
    *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Request
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfRequest
    */
-  public function initialize(sfLogger $logger = null, sfRouting $routing = null, $parameters = array(), $attributes = array())
+  public function initialize(sfEventDispatcher $dispatcher, $parameters = array(), $attributes = array())
   {
-    parent::initialize($logger, $routing, $parameters, $attributes);
+    parent::initialize($dispatcher, $parameters, $attributes);
 
     if (isset($_SERVER['REQUEST_METHOD']))
     {
@@ -430,9 +428,9 @@ class sfWebRequest extends sfRequest
     return $this->postParameters;
   }
 
-  public function getRoutingParameters()
+  public function getRequestParameters()
   {
-    return $this->routingParameters;
+    return $this->requestParameters;
   }
 
   /**
@@ -779,33 +777,31 @@ class sfWebRequest extends sfRequest
     return $this->pathInfoArray;
   }
 
-  protected function parseRoutingParameters()
+  protected function parseRequestParameters()
   {
-    if (is_null($this->routing))
-    {
-      return;
-    }
+    $parameters = array();
 
-    $parameters = $this->routing->parse($this->getPathInfo());
-    if (!is_null($parameters))
+    try
     {
-      if (!isset($parameters['module']))
-      {
-        $parameters['module'] = sfConfig::get('sf_default_module', 'default');
-      }
-
-      if (!isset($parameters['action']))
-      {
-        $parameters['action'] = sfConfig::get('sf_default_action', 'index');
-      }
+      $parameters = $this->dispatcher->filter(new sfEvent($this, 'request.load_parameters', array('path_info' => $this->getPathInfo())), $parameters)->getReturnValue();
     }
-    else
+    catch (sfError404Exception $e)
     {
       $parameters['module'] = sfConfig::get('sf_error_404_module', 'default');
       $parameters['action'] = sfConfig::get('sf_error_404_action', 'error404');
     }
 
-    $this->routingParameters = $parameters;
+    if (!isset($parameters['module']))
+    {
+      $parameters['module'] = sfConfig::get('sf_default_module', 'default');
+    }
+
+    if (!isset($parameters['action']))
+    {
+      $parameters['action'] = sfConfig::get('sf_default_action', 'index');
+    }
+
+    $this->requestParameters = $parameters;
   }
 
   /**
@@ -818,9 +814,9 @@ class sfWebRequest extends sfRequest
     $this->getParameters = get_magic_quotes_gpc() ? sfToolkit::stripslashesDeep($_GET) : $_GET;
     $this->parameterHolder->add($this->getParameters);
 
-    // routing parameters
-    $this->parseRoutingParameters();
-    $this->parameterHolder->add($this->routingParameters);
+    // additional parameters
+    $this->parseRequestParameters();
+    $this->parameterHolder->add($this->requestParameters);
 
     // POST parameters
     $this->postParameters = get_magic_quotes_gpc() ? sfToolkit::stripslashesDeep($_POST) : $_POST;
@@ -836,9 +832,9 @@ class sfWebRequest extends sfRequest
       }
     }
 
-    if (!is_null($this->logger))
+    if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->logger->info(sprintf('{sfRequest} request parameters %s', str_replace("\n", '', var_export($this->getParameterHolder()->getAll(), true))));
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Request parameters %s', str_replace("\n", '', var_export($this->getParameterHolder()->getAll(), true))))));
     }
   }
 }

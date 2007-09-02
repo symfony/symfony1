@@ -23,7 +23,7 @@ $context = sfContext::getInstance();
 $controller = new myController();
 $controller->initialize($context);
 
-// mixins
-require_once($_test_dir.'/unit/sfMixerTest.class.php');
-$mixert = new sfMixerTest($t);
-$mixert->launchTests($controller, 'sfController');
+// new methods via sfEventDispatcher
+require_once($_test_dir.'/unit/sfEventDispatcherTest.class.php');
+$dispatcherTest = new sfEventDispatcherTest($t);
+$dispatcherTest->launchTests($context->getEventDispatcher(), $controller, 'controller');

@@ -20,10 +20,30 @@ abstract class sfComponent
 {
   protected
     $context                = null,
+    $dispatcher             = null,
     $request                = null,
     $response               = null,
     $varHolder              = null,
     $requestParameterHolder = null;
+
+  /**
+   * Initializes this component.
+   *
+   * @param sfContext The current application context
+   *
+   * @return boolean true, if initialization completes successfully, otherwise false
+   */
+  public function initialize($context)
+  {
+    $this->context                = $context;
+    $this->dispatcher             = $context->getEventDispatcher();
+    $this->varHolder              = new sfParameterHolder();
+    $this->request                = $context->getRequest();
+    $this->response               = $context->getResponse();
+    $this->requestParameterHolder = $this->request->getParameterHolder();
+
+    return true;
+  }
 
   /**
    * Execute any application/business logic for this component.
@@ -61,24 +81,6 @@ abstract class sfComponent
   }
 
   /**
-   * Initializes this component.
-   *
-   * @param sfContext The current application context
-   *
-   * @return boolean true, if initialization completes successfully, otherwise false
-   */
-  public function initialize($context)
-  {
-    $this->context                = $context;
-    $this->varHolder              = new sfParameterHolder();
-    $this->request                = $context->getRequest();
-    $this->response               = $context->getResponse();
-    $this->requestParameterHolder = $this->request->getParameterHolder();
-
-    return true;
-  }
-
-  /**
    * Retrieves the current application context.
    *
    * @return sfContext The current sfContext instance
@@ -111,7 +113,7 @@ abstract class sfComponent
   {
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->context->getLogger()->log($message, constant('sfLogger::'.strtoupper($priority)));
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array($message, 'priority' => constant('sfLogger::'.strtoupper($priority)))));
     }
   }
 
@@ -317,24 +319,21 @@ abstract class sfComponent
   }
 
   /**
-   * Calls methods defined via the sfMixer class.
+   * Calls methods defined via sfEventDispatcher.
    *
    * @param string The method name
    * @param array  The method arguments
    *
    * @return mixed The returned value of the called method
-   *
-   * @see sfMixer
    */
   public function __call($method, $arguments)
   {
-    if (!$callable = sfMixer::getCallable('sfComponent:'.$method))
+    $event = $this->dispatcher->notifyUntil(new sfEvent($this, 'component.method_not_found', array('method' => $method, 'arguments' => $arguments)));
+    if (!$event->isProcessed())
     {
       throw new sfException(sprintf('Call to undefined method sfComponent::%s.', $method));
     }
 
-    array_unshift($arguments, $this);
-
-    return call_user_func_array($callable, $arguments);
+    return $event->getReturnValue();
   }
 }

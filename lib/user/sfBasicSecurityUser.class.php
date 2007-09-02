@@ -64,7 +64,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
         {
           if (sfConfig::get('sf_logging_enabled'))
           {
-            $this->context->getLogger()->info('{sfUser} remove credential "'.$credential.'"');
+            $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Remove credential "%s"', $credential))));
           }
 
           unset($this->credentials[$key]);
@@ -98,7 +98,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
 
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->context->getLogger()->info('{sfUser} add credential(s) "'.implode(', ', $credentials).'"');
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Add credential(s) "%s"', implode(', ', $credentials)))));
     }
 
     foreach ($credentials as $aCredential)
@@ -173,7 +173,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
   {
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->context->getLogger()->info('{sfUser} user is '.($authenticated === true ? '' : 'not ').'authenticated');
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('User is %sauthenticated', $authenticated === true ? '' : 'not '))));
     }
 
     if ($authenticated === true)
@@ -207,14 +207,23 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     return $this->lastRequest;
   }
 
-  public function initialize($context, $parameters = null)
+  /**
+   * Initializes this sfUser.
+   *
+   * @param sfEventDispatcher A sfEventDispatcher instance.
+   * @param sfStorage    A sfStorage instance.
+   * @param array        An associative array of initialization parameters.
+   *
+   * @return Boolean     true, if initialization completes successfully, otherwise false.
+   *
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfUser.
+   */
+  public function initialize(sfEventDispatcher $dispatcher, sfStorage $storage, $parameters = array())
   {
     // initialize parent
-    parent::initialize($context, $parameters);
+    parent::initialize($dispatcher, $storage, $parameters);
 
     // read data from storage
-    $storage = $this->context->getStorage();
-
     $this->authenticated = $storage->read(self::AUTH_NAMESPACE);
     $this->credentials   = $storage->read(self::CREDENTIAL_NAMESPACE);
     $this->lastRequest   = $storage->read(self::LAST_REQUEST_NAMESPACE);
@@ -230,8 +239,9 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     {
       if (sfConfig::get('sf_logging_enabled'))
       {
-        $this->context->getLogger()->info('{sfUser} automatic user logout');
+        $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Automatic user logout')));
       }
+
       $this->setTimedOut();
       $this->clearCredentials();
       $this->setAuthenticated(false);
@@ -242,13 +252,11 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
 
   public function shutdown()
   {
-    $storage = $this->context->getStorage();
-
     // write the last request time to the storage
-    $storage->write(self::LAST_REQUEST_NAMESPACE, $this->lastRequest);
+    $this->storage->write(self::LAST_REQUEST_NAMESPACE, $this->lastRequest);
 
-    $storage->write(self::AUTH_NAMESPACE,         $this->authenticated);
-    $storage->write(self::CREDENTIAL_NAMESPACE,   $this->credentials);
+    $this->storage->write(self::AUTH_NAMESPACE,         $this->authenticated);
+    $this->storage->write(self::CREDENTIAL_NAMESPACE,   $this->credentials);
 
     // call the parent shutdown method
     parent::shutdown();

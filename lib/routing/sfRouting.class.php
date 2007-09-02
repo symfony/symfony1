@@ -19,7 +19,7 @@
 abstract class sfRouting
 {
   protected
-    $logger            = null,
+    $dispatcher        = null,
     $defaultParameters = array(),
     $parameterHolder   = null;
 
@@ -30,11 +30,10 @@ abstract class sfRouting
    *
    * @return sfRouting A sfRouting implementation instance.
    *
-   * @throws <b>sfFactoryException</b> If a routing implementation instance cannot
+   * @throws <b>sfFactoryException</b> If a routing implementation instance cannot be created
    */
   public static function newInstance($class)
   {
-    // the class exists
     $object = new $class();
 
     if (!$object instanceof sfRouting)
@@ -48,16 +47,16 @@ abstract class sfRouting
   /**
    * Initializes this sfRouting instance.
    *
-   * @param sfLogger A sfLogger instance (or null)
-   * @param array    An associative array of initialization parameters.
+   * @param  sfEventDispatcher A sfEventDispatcher instance
+   * @param  array        An associative array of initialization parameters.
    *
-   * @return bool    true, if initialization completes successfully, otherwise false.
+   * @return Boolean     true, if initialization completes successfully, otherwise false.
    *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this User.
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfRouting.
    */
-  public function initialize(sfLogger $logger = null, $parameters = array())
+  public function initialize(sfEventDispatcher $dispatcher, $parameters = array())
   {
-    $this->logger = $logger;
+    $this->dispatcher = $dispatcher;
 
     if (!isset($parameters['default_module']))
     {
@@ -71,6 +70,9 @@ abstract class sfRouting
 
     $this->parameterHolder = new sfParameterHolder();
     $this->parameterHolder->add($parameters);
+
+    $this->dispatcher->connect('user.change_culture', array($this, 'listenToChangeCultureEvent'));
+    $this->dispatcher->connect('request.load_parameters', array($this, 'listenToLoadParametersInfoEvent'));
   }
 
   /**
@@ -130,6 +132,8 @@ abstract class sfRouting
   * @param  string URL to be parsed
   *
   * @return array  An array of parameters
+  *
+  * @throws sfError404Exception if the url is not parseable by the sfRouting object
   */
   abstract public function parse($url);
 
@@ -152,6 +156,29 @@ abstract class sfRouting
   public function setDefaultParameters($parameters)
   {
     $this->defaultParameters = $parameters;
+  }
+
+  /**
+   * Listens to the user.change_culture event.
+   *
+   * @param sfEvent An sfEvent instance
+   *
+   */
+  public function listenToChangeCultureEvent(sfEvent $event)
+  {
+    // change the culture in the routing default parameters
+    $this->setDefaultParameter('sf_culture', $event->getParameter('culture'));
+  }
+
+  /**
+   * Listens to the request.load_parameters event.
+   *
+   * @param sfEvent An sfEvent instance
+   *
+   */
+  public function listenToLoadParametersInfoEvent(sfEvent $event, $parameters)
+  {
+    return array_merge($parameters, $this->parse($event->getParameter('path_info')));
   }
 
   /**

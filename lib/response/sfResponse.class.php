@@ -21,21 +21,22 @@ abstract class sfResponse implements Serializable
 {
   protected
     $parameterHolder = null,
-    $logger          = null,
+    $dispatcher      = null,
     $content         = '';
 
   /**
    * Initializes this sfResponse.
    *
-   * @param  sfLogger  A sfLogger instance (can be null)
+   * @param  sfEventDispatcher  A sfEventDispatcher instance
+   * @param  array         An array of parameters
    *
-   * @return Boolean   true, if initialization completes successfully, otherwise false
+   * @return Boolean       true, if initialization completes successfully, otherwise false
    *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Response
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfResponse
    */
-  public function initialize(sfLogger $logger = null, $parameters = array())
+  public function initialize(sfEventDispatcher $dispatcher, $parameters = array())
   {
-    $this->logger = $logger;
+    $this->dispatcher = $dispatcher;
 
     $this->parameterHolder = new sfParameterHolder();
     $this->parameterHolder->add($parameters);
@@ -87,9 +88,9 @@ abstract class sfResponse implements Serializable
    */
   public function sendContent()
   {
-    if (!is_null($this->logger))
+    if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->logger->info('{sfResponse} send content ('.strlen($this->getContent()).' o)');
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Send content (%s o)', strlen($this->getContent())))));
     }
 
     echo $this->getContent();
@@ -145,24 +146,23 @@ abstract class sfResponse implements Serializable
   }
 
   /**
-   * Overloads a given method.
+   * Calls methods defined via sfEventDispatcher.
    *
-   * @param string Method name
-   * @param string Method arguments
+   * @param string The method name
+   * @param array  The method arguments
    *
-   * @return mixed User function callback
+   * @return mixed The returned value of the called method
    *
    * @throws <b>sfException</b> If the calls fails
    */
   public function __call($method, $arguments)
   {
-    if (!$callable = sfMixer::getCallable('sfResponse:'.$method))
+    $event = $this->dispatcher->notifyUntil(new sfEvent($this, 'response.method_not_found', array('method' => $method, 'arguments' => $arguments)));
+    if (!$event->isProcessed())
     {
       throw new sfException(sprintf('Call to undefined method sfResponse::%s.', $method));
     }
 
-    array_unshift($arguments, $this);
-
-    return call_user_func_array($callable, $arguments);
+    return $event->getReturnValue();
   }
 }

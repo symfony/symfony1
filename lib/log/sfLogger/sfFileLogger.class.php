@@ -29,9 +29,12 @@ class sfFileLogger extends sfLogger
    * - file: The file path or a php wrapper to log messages
    *         You can use any support php wrapper. To write logs to the Apache error log, use php://stderr
    *
-   * @param array Options for the logger
+   * @param  sfEventDispatcher A sfEventDispatcher instance
+   * @param  array        An array of options.
+   *
+   * @return Boolean      true, if initialization completes successfully, otherwise false.
    */
-  public function initialize($options = array())
+  public function initialize(sfEventDispatcher $dispatcher, $options = array())
   {
     if (!isset($options['file']))
     {
@@ -51,7 +54,7 @@ class sfFileLogger extends sfLogger
 
     $this->fp = fopen($options['file'], 'a');
 
-    return parent::initialize($options);
+    return parent::initialize($dispatcher, $options);
   }
 
   /**

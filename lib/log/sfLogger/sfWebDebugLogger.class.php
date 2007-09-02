@@ -26,9 +26,12 @@ class sfWebDebugLogger extends sfLogger
   /**
    * Initializes this logger.
    *
-   * @param array Logger options
+   * @param  sfEventDispatcher A sfEventDispatcher instance
+   * @param  array        An array of options.
+   *
+   * @return Boolean      true, if initialization completes successfully, otherwise false.
    */
-  public function initialize($options = array())
+  public function initialize(sfEventDispatcher $dispatcher, $options = array())
   {
     if (!sfConfig::get('sf_web_debug'))
     {
@@ -38,7 +41,7 @@ class sfWebDebugLogger extends sfLogger
     $this->buffer  = array();
     $this->context = sfContext::getInstance();
 
-    return parent::initialize($options);
+    return parent::initialize($dispatcher, $options);
   }
 
   /**

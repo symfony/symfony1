@@ -22,6 +22,8 @@ class fakeResponse
 
 $t = new lime_test(23, new lime_output_color());
 
+$dispatcher = new sfEventDispatcher();
+
 // ::newInstance()
 $t->diag('::newInstance()');
 $t->isa_ok(sfResponse::newInstance('myResponse'), 'myResponse', '::newInstance() takes a response class as its first parameter');
@@ -40,7 +42,7 @@ catch (sfFactoryException $e)
 // ->initialize()
 $t->diag('->initialize()');
 $response = sfResponse::newInstance('myResponse');
-$response->initialize(null, array('foo' => 'bar'));
+$response->initialize($dispatcher, array('foo' => 'bar'));
 $t->is($response->getParameter('foo'), 'bar', '->initialize() takes an array of parameters as its second argument');
 
 // ->getContent() ->setContent()
@@ -63,11 +65,11 @@ $t->ok(sfResponse::newInstance('myResponse') instanceof Serializable, 'sfRespons
 // parameter holder proxy
 require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');
 $response = sfResponse::newInstance('myResponse');
-$response->initialize();
+$response->initialize($dispatcher);
 $pht = new sfParameterHolderProxyTest($t);
 $pht->launchTests($response, 'parameter');
 
-// mixins
-require_once($_test_dir.'/unit/sfMixerTest.class.php');
-$mixert = new sfMixerTest($t);
-$mixert->launchTests($response, 'sfResponse');
+// new methods via sfEventDispatcher
+require_once($_test_dir.'/unit/sfEventDispatcherTest.class.php');
+$dispatcherTest = new sfEventDispatcherTest($t);
+$dispatcherTest->launchTests($dispatcher, $response, 'response');

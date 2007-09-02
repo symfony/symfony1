@@ -51,7 +51,7 @@ $component->foo = array();
 $component->foo[] = 'bar';
 $t->is($component->foo, array('bar'), '__set() populates component variables');
 
-// mixins
-require_once($_test_dir.'/unit/sfMixerTest.class.php');
-$mixert = new sfMixerTest($t);
-$mixert->launchTests($component, 'sfComponent');
+// new methods via sfEventDispatcher
+require_once($_test_dir.'/unit/sfEventDispatcherTest.class.php');
+$dispatcherTest = new sfEventDispatcherTest($t);
+$dispatcherTest->launchTests($context->getEventDispatcher(), $component, 'component');

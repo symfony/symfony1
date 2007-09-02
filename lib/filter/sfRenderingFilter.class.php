@@ -34,7 +34,7 @@ class sfRenderingFilter extends sfFilter
 
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->context->getLogger()->info('{sfFilter} render to client');
+      $this->context->getEventDispatcher()->notify(new sfEvent($this, 'application.log', array('Render to the client')));
     }
 
     // get response object
@@ -49,11 +49,13 @@ class sfRenderingFilter extends sfFilter
     // log timers information
     if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
     {
-      $logger = $this->context->getLogger();
+      $messages = array();
       foreach (sfTimerManager::getTimers() as $name => $timer)
       {
-        $logger->info(sprintf('{sfTimerManager} %s %.2f ms (%d)', $name, $timer->getElapsedTime() * 1000, $timer->getCalls()));
+        $messages[] = sprintf('%s %.2f ms (%d)', $name, $timer->getElapsedTime() * 1000, $timer->getCalls());
       }
+
+      $this->context->getEventDispatcher()->notify(new sfEvent($this, 'application.log', $messages));
     }
   }
 }

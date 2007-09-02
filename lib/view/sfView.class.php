@@ -70,6 +70,7 @@ abstract class sfView
 
   protected
     $context            = null,
+    $dispatcher         = null,
     $decorator          = false,
     $decoratorDirectory = null,
     $decoratorTemplate  = null,
@@ -92,16 +93,6 @@ abstract class sfView
    * Configures template.
    */
   abstract function configure();
-
-  /**
-   * Retrieves the current application context.
-   *
-   * @return sfContext The current sfContext instance
-   */
-  public final function getContext()
-  {
-    return $this->context;
-  }
 
   /**
    * Retrieves this views decorator template directory.
@@ -164,16 +155,17 @@ abstract class sfView
    */
   public function initialize($context, $moduleName, $actionName, $viewName)
   {
-    if (sfConfig::get('sf_logging_enabled'))
-    {
-      $context->getLogger()->info(sprintf('{sfView} initialize view for "%s/%s"', $moduleName, $actionName));
-    }
-
     $this->moduleName = $moduleName;
     $this->actionName = $actionName;
     $this->viewName   = $viewName;
 
-    $this->context = $context;
+    $this->context    = $context;
+    $this->dispatcher = $context->getEventDispatcher();
+
+    if (sfConfig::get('sf_logging_enabled'))
+    {
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Initialize view for "%s/%s"', $moduleName, $actionName))));
+    }
 
     $this->attributeHolder = false === sfConfig::get('sf_escaping_method') ? new sfViewParameterHolder() : new sfEscapedViewParameterHolder();
     $this->attributeHolder->initialize($context, array(), array(
@@ -477,24 +469,23 @@ abstract class sfView
   }
 
   /**
-   * Overloads a given method
+   * Calls methods defined via sfEventDispatcher.
    *
-   * @param string Method name
-   * @param string Method arguments
+   * @param string The method name
+   * @param array  The method arguments
    *
-   * @return mixed User function callback
+   * @return mixed The returned value of the called method
    *
-   * @throws <b>sfException</b> If the call fails
+   * @throws <b>sfException</b> If the calls fails
    */
   public function __call($method, $arguments)
   {
-    if (!$callable = sfMixer::getCallable('sfView:'.$method))
+    $event = $this->dispatcher->notifyUntil(new sfEvent($this, 'view.method_not_found', array('method' => $method, 'arguments' => $arguments)));
+    if (!$event->isProcessed())
     {
       throw new sfException(sprintf('Call to undefined method sfView::%s.', $method));
     }
 
-    array_unshift($arguments, $this);
-
-    return call_user_func_array($callable, $arguments);
+    return $event->getReturnValue();
   }
 }

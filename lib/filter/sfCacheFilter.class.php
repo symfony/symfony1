@@ -147,7 +147,7 @@ class sfCacheFilter extends sfFilter
 
         if (sfConfig::get('sf_logging_enabled'))
         {
-          $this->context->getLogger()->info('{sfFilter} ETag matches If-None-Match (send 304)');
+          $this->context->getEventDispatcher()->notify(new sfEvent($this, 'application.log', array('ETag matches If-None-Match (send 304)')));
         }
       }
     }
@@ -165,7 +165,7 @@ class sfCacheFilter extends sfFilter
 
         if (sfConfig::get('sf_logging_enabled'))
         {
-          $this->context->getLogger()->info('{sfFilter} Last-Modified matches If-Modified-Since (send 304)');
+          $this->context->getEventDispatcher()->notify(new sfEvent($this, 'application.log', array('Last-Modified matches If-Modified-Since (send 304)')));
         }
       }
     }

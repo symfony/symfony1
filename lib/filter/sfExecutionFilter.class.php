@@ -139,9 +139,9 @@ class sfExecutionFilter extends sfFilter
       $this->registerFillInFilter($filterChain, $parameters);
     }
 
-    if (!$validated && sfConfig::get('sf_logging_enabled'))
+    if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->context->getLogger()->info('{sfFilter} action validation failed');
+      $this->context->getEventDispatcher()->notify(new sfEvent($this, 'application.log', array('Action validation failed')));
     }
 
     return $validated;

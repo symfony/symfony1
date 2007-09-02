@@ -19,6 +19,18 @@
 class sfNoLogger extends sfLogger
 {
   /**
+   * Initializes this logger.
+   *
+   * @param  sfEventDispatcher A sfEventDispatcher instance
+   * @param  array        An array of options.
+   *
+   * @return Boolean      true, if initialization completes successfully, otherwise false.
+   */
+  public function initialize(sfEventDispatcher $dispatcher, $options = array())
+  {
+  }
+
+  /**
    * Logs a message.
    *
    * @param string Message

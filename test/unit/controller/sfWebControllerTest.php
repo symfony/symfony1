@@ -13,6 +13,9 @@ require_once($_test_dir.'/unit/sfContextMock.class.php');
 
 $t = new lime_test(17, new lime_output_color());
 
+$_SERVER['HTTP_HOST'] = 'localhost';
+$_SERVER['SCRIPT_NAME'] = '/index.php';
+sfConfig::set('sf_url_format', 'PATH');
 sfConfig::set('sf_max_forwards', 10);
 $context = sfContext::getInstance(array(
   'routing'  => 'sfNoRouting',
@@ -153,10 +156,10 @@ $t->diag('->redirect()');
 sfConfig::set('sf_test', true);
 sfConfig::set('sf_charset', 'utf-8');
 ob_start();
-$controller->redirect('/module/action/id/1#photos');
+$controller->redirect('module/action?id=1#photos');
 $content = ob_get_clean();
-$t->like($content, '~/module/action/id/1#photos~', '->redirect() adds a refresh meta in the content');
-$t->like($context->getResponse()->getHttpHeader('Location'), '~/module/action/id/1#photos~', '->redirect() adds a Location HTTP header');
+$t->like($content, '~http\://localhost/index.php/\?module=module&amp;action=action&amp;id=1#photos~', '->redirect() adds a refresh meta in the content');
+$t->like($context->getResponse()->getHttpHeader('Location'), '~http\://localhost/index.php/\?module=module&action=action&id=1#photos~', '->redirect() adds a Location HTTP header');
 
 // ->genUrl()
 $t->diag('->genUrl()');

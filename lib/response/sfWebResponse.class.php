@@ -30,15 +30,18 @@ class sfWebResponse extends sfResponse
   /**
    * Initializes this sfWebResponse.
    *
-   * @param  sfLogger  A sfLogger instance (can be null)
+   * @param  sfEventDispatcher  A sfEventDispatcher instance
+   * @param  array         An array of parameters
    *
-   * @return Boolean   true, if initialization completes successfully, otherwise false
+   * @return Boolean       true, if initialization completes successfully, otherwise false
    *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Response
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfResponse
    */
-  public function initialize(sfLogger $logger = null, $parameters = array())
+  public function initialize(sfEventDispatcher $dispatcher, $parameters = array())
   {
-    parent::initialize($logger, $parameters);
+    parent::initialize($dispatcher, $parameters);
+
+    $this->dispatcher->connect('controller.change_action', array($this, 'listenToChangeActionEvent'));
 
     $this->statusTexts = array(
       '100' => 'Continue',
@@ -265,9 +268,9 @@ class sfWebResponse extends sfResponse
     $status = 'HTTP/1.0 '.$this->statusCode.' '.$this->statusText;
     header($status);
 
-    if (!is_null($this->logger))
+    if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->logger->info('{sfResponse} send status "'.$status.'"');
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Send status "%s"', $status))));
     }
 
     // headers
@@ -275,9 +278,9 @@ class sfWebResponse extends sfResponse
     {
       header($name.': '.$value);
 
-      if (!is_null($this->logger) && $value != '')
+      if ($value != '' && sfConfig::get('sf_logging_enabled'))
       {
-        $this->logger->info('{sfResponse} send header "'.$name.'": "'.$value.'"');
+        $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Send header "%s": "%s"', $name, $value))));
       }
     }
 
@@ -293,9 +296,9 @@ class sfWebResponse extends sfResponse
         setrawcookie($cookie['name'], $cookie['value'], $cookie['expire'], $cookie['path'], $cookie['domain'], $cookie['secure']);
       }
 
-      if (!is_null($this->logger))
+      if (sfConfig::get('sf_logging_enabled'))
       {
-        $this->logger->info('{sfResponse} send cookie "'.$cookie['name'].'": "'.$cookie['value'].'"');
+        $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Send cookie "%s": "%s"', $cookie['name'], $cookie['value']))));
       }
     }
   }
@@ -310,6 +313,15 @@ class sfWebResponse extends sfResponse
     {
       parent::sendContent();
     }
+  }
+
+  /**
+   * Sends the HTTP headers and the content.
+   */
+  final public function send()
+  {
+    $this->sendHttpHeaders();
+    $this->sendContent();
   }
 
   /**
@@ -622,7 +634,7 @@ class sfWebResponse extends sfResponse
   {
     $data = unserialize($serialized);
 
-    $this->initialize();
+    $this->initialize(sfContext::hasInstance() ? sfContext::getInstance()->getEventDispatcher() : new sfEventDispatcher());
 
     $this->content         = $data[0];
     $this->statusCode      = $data[1];
@@ -630,5 +642,25 @@ class sfWebResponse extends sfResponse
     $this->parameterHolder = $data[3];
     $this->cookies         = $data[4];
     $this->headerOnly      = $data[5];
+  }
+
+  /**
+   * Listens to the controller.change_action event.
+   *
+   * @param sfEvent An sfEvent instance
+   *
+   */
+  public function listenToChangeActionEvent(sfEvent $event)
+  {
+    $moduleName = $event->getParameter('module');
+    $actionName = $event->getParameter('action');
+
+    if ($moduleName == sfConfig::get('sf_error_404_module') && $actionName == sfConfig::get('sf_error_404_action'))
+    {
+      $this->setStatusCode(404);
+      $this->setHttpHeader('Status', '404 Not Found');
+
+      $this->dispatcher->notify(new sfEvent($this, 'controller.page_not_found', array('module' => $moduleName, 'action' => $actionName)));
+    }
   }
 }

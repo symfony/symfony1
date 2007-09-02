@@ -57,7 +57,7 @@ class sfPHPView extends sfView
   {
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->context->getLogger()->info(sprintf('{sfView} render "%s"', $_sfFile));
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Render "%s"', $_sfFile))));
     }
 
     $this->loadCoreAndStandardHelpers();
@@ -120,7 +120,7 @@ class sfPHPView extends sfView
   {
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->context->getLogger()->info(sprintf('{sfView} decorate content with "%s"', $this->getDecoratorDirectory().'/'.$this->getDecoratorTemplate()));
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Decorate content with "%s/%s"', $this->getDecoratorDirectory(), $this->getDecoratorTemplate()))));
     }
 
     // set the decorator content as an attribute
