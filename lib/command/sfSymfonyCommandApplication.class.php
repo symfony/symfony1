@@ -143,7 +143,7 @@ class sfSymfonyCommandApplication extends sfCommandApplication
       $r = new Reflectionclass($class);
       if ($r->isSubclassOf('sfTask') && !$r->isAbstract())
       {
-        $this->registerTask(new $class($this));
+        $this->registerTask(new $class($this, $this->getLogger()));
       }
     }
   }
