@@ -41,7 +41,6 @@ class sfContext
     {
       // setup our database connections
       $this->factories['databaseManager'] = new sfDatabaseManager();
-      $this->factories['databaseManager']->initialize();
     }
 
     // create a new action stack

@@ -26,6 +26,16 @@ class sfI18N
     $messageFormat = null;
 
   /**
+   * Class constructor.
+   *
+   * @see initialize()
+   */
+  public function __construct($context, sfCache $cache = null)
+  {
+    $this->initialize($context, $cache);
+  }
+
+  /**
    * Initializes this class.
    *
    * @param sfContext A sfContext implementation instance

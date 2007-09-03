@@ -26,24 +26,13 @@ abstract class sfCache
     $parameterHolder = null;
 
   /**
-   * Retrieves a new sfCache implementation instance.
+   * Class constructor.
    *
-   * @param  string  A sfCache class name
-   *
-   * @return sfCache A sfCache implementation instance
-   *
-   * @throws <b>sfFactoryException</b> If a cache implementation instance cannot be created
+   * @see initialize()
    */
-  public static function newInstance($class)
+  public function __construct($parameters = array())
   {
-    $object = new $class();
-
-    if (!$object instanceof sfCache)
-    {
-      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfCache.', $class));
-    }
-
-    return $object;
+    $this->initialize($parameters);
   }
 
   /**

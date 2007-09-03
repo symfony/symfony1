@@ -27,6 +27,31 @@ abstract class sfDatabase
     $resource        = null;
 
   /**
+   * Class constructor.
+   *
+   * @see initialize()
+   */
+  public function __construct($parameters = array())
+  {
+    $this->initialize($parameters);
+  }
+
+  /**
+   * Initializes this sfDatabase object.
+   *
+   * @param array An associative array of initialization parameters
+   *
+   * @return bool true, if initialization completes successfully, otherwise false
+   *
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfDatabase object
+   */
+  public function initialize($parameters = array())
+  {
+    $this->parameterHolder = new sfParameterHolder();
+    $this->parameterHolder->add($parameters);
+  }
+
+  /**
    * Connects to the database.
    *
    * @throws <b>sfDatabaseException</b> If a connection could not be created
@@ -68,21 +93,6 @@ abstract class sfDatabase
     }
 
     return $this->resource;
-  }
-
-  /**
-   * Initializes this sfDatabase object.
-   *
-   * @param array An associative array of initialization parameters
-   *
-   * @return bool true, if initialization completes successfully, otherwise false
-   *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfDatabase object
-   */
-  public function initialize($parameters = array())
-  {
-    $this->parameterHolder = new sfParameterHolder();
-    $this->parameterHolder->add($parameters);
   }
 
   /**

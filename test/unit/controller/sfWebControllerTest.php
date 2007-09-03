@@ -23,8 +23,7 @@ $context = sfContext::getInstance(array(
   'response' => 'sfWebResponse',
 ));
 
-$controller = sfController::newInstance('sfFrontWebController');
-$controller->initialize($context, null);
+$controller = new sfFrontWebController($context, null);
 
 $tests = array(
   'module/action' => array(

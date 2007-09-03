@@ -20,8 +20,7 @@ class myController extends sfController
 
 $context = sfContext::getInstance();
 
-$controller = new myController();
-$controller->initialize($context);
+$controller = new myController($context);
 
 // new methods via sfEventDispatcher
 require_once($_test_dir.'/unit/sfEventDispatcherTest.class.php');

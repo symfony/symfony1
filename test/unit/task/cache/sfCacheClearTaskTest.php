@@ -12,8 +12,10 @@ require_once(dirname(__FILE__).'/../../../bootstrap/task.php');
 
 $t = new lime_test(2, new lime_output_color());
 
-sfTask::newInstance('sfGenerateProjectTask')->run(array('test'));
-sfTask::newInstance('sfGenerateAppTask')->run(array('frontend'));
+$task = new sfGenerateProjectTask();
+$task->run(array('test'));
+$task = new sfGenerateAppTask();
+$task->run(array('frontend'));
 
 sfCore::initDirectoryLayout(sfConfig::get('sf_root_dir'), 'frontend', 'dev');
 
@@ -24,6 +26,7 @@ touch($file);
 
 $t->ok(file_exists($file), 'The test file is in the cache');
 
-sfTask::newInstance('sfCacheClearTask')->run();
+$task = new sfCacheClearTask();
+$task->run();
 
 $t->ok(!file_exists($file), 'The test file is removed by the cache:clear task');

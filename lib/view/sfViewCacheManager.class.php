@@ -32,6 +32,16 @@ class sfViewCacheManager
     $loaded      = array();
 
   /**
+   * Class constructor.
+   *
+   * @see initialize()
+   */
+  public function __construct($context, sfCache $cache)
+  {
+    $this->initialize($context, $cache);
+  }
+
+  /**
    * Initializes the cache manager.
    *
    * @param sfContext Current application context

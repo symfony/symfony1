@@ -21,10 +21,9 @@ mkdir($temp);
 
 // ->initialize()
 $t->diag('->initialize()');
-$cache = sfCache::newInstance('sfFileCache');
 try
 {
-  $cache->initialize();
+  $cache = new sfFileCache();
   $t->fail('->initialize() throws an sfInitializationException exception if you don\'t pass a "cacheDir" parameter');
 }
 catch (sfInitializationException $e)
@@ -32,8 +31,7 @@ catch (sfInitializationException $e)
   $t->pass('->initialize() throws an sfInitializationException exception if you don\'t pass a "cacheDir" parameter');
 }
 
-$cache = sfCache::newInstance('sfFileCache');
-$cache->initialize(array('cacheDir' => $temp));
+$cache = new sfFileCache(array('cacheDir' => $temp));
 
 sfCacheDriverTests::launch($t, $cache);
 

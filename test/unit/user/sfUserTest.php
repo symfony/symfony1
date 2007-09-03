@@ -16,11 +16,9 @@ $_SERVER['session_id'] = 'test';
 sfConfig::set('sf_test_cache_dir', sfToolkit::getTmpDir());
 
 $dispatcher = new sfEventDispatcher();
-$storage = sfStorage::newInstance('sfSessionTestStorage');
-$storage->initialize(array('session_path' => sfConfig::get('sf_test_cache_dir').'/sessions'));
+$storage = new sfSessionTestStorage(array('session_path' => sfConfig::get('sf_test_cache_dir').'/sessions'));
 
-$user = new sfUser();
-$user->initialize($dispatcher, $storage);
+$user = new sfUser($dispatcher, $storage);
 
 // ->initialize()
 $t->diag('->initialize()');
@@ -37,8 +35,7 @@ sfConfig::set('sf_i18n_default_culture', 'fr');
 user_flush($dispatcher, $user, $storage);
 $t->is($user->getCulture(), 'de', '->initialize() reads the culture from the session data if available');
 
-$userBis = new sfUser();
-$userBis->initialize($dispatcher, $storage);
+$userBis = new sfUser($dispatcher, $storage);
 $t->is($userBis->getCulture(), 'de', '->initialize() serializes the culture to the session data');
 
 // ->setCulture() ->getCulture()
@@ -54,14 +51,12 @@ $t->is($user->getFlash('foo'), 'bar', '->setFlash() sets a flash variable');
 $t->is($user->hasFlash('foo'), true, '->hasFlash() returns true if the flash variable exists');
 user_flush($dispatcher, $user, $storage, array('use_flash' => true));
 
-$userBis = new sfUser();
-$userBis->initialize($dispatcher, $storage, array('use_flash' => true));
+$userBis = new sfUser($dispatcher, $storage, array('use_flash' => true));
 $t->is($userBis->getFlash('foo'), 'bar', '->getFlash() returns a flash previously set');
 $t->is($userBis->hasFlash('foo'), true, '->hasFlash() returns true if the flash variable exists');
 user_flush($dispatcher, $user, $storage, array('use_flash' => true));
 
-$userBis = new sfUser();
-$userBis->initialize($dispatcher, $storage, array('use_flash' => true));
+$userBis = new sfUser($dispatcher, $storage, array('use_flash' => true));
 $t->is($userBis->getFlash('foo'), null, 'Flashes are automatically removed after the next request');
 $t->is($userBis->hasFlash('foo'), false, '->hasFlash() returns true if the flash variable exists');
 

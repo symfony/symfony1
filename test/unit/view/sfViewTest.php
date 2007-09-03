@@ -36,8 +36,7 @@ class sfViewParameterHolder extends sfParameterHolder
 }
 
 $context = sfContext::getInstance();
-$view = new myView();
-$view->initialize($context, '', '', '');
+$view = new myView($context, '', '', '');
 
 // ->isDecorator() ->setDecorator()
 $t->diag('->isDecorator() ->setDecorator()');

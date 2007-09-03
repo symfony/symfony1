@@ -20,7 +20,7 @@
  * @author     Sean Kerr <skerr@mojavi.org>
  * @version    SVN: $Id$
  */
-class sfBasicSecurityFilter extends sfSecurityFilter
+class sfBasicSecurityFilter extends sfFilter
 {
   /**
    * Executes this filter.

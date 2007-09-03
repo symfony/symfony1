@@ -115,8 +115,7 @@ class sfExecutionFilter extends sfFilter
     if (null !== $validateFile = sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$validationConfig, true))
     {
       // create validator manager
-      $validatorManager = new sfValidatorManager();
-      $validatorManager->initialize($this->context);
+      $validatorManager = new sfValidatorManager($this->context);
 
       require($validateFile);
 
@@ -226,7 +225,6 @@ class sfExecutionFilter extends sfFilter
 
     // get the view instance
     $view = $controller->getView($moduleName, $actionName, $viewName);
-    $view->initialize($this->context, $moduleName, $actionName, $viewName);
 
     // execute the view
     $view->execute();
@@ -264,8 +262,7 @@ class sfExecutionFilter extends sfFilter
     if (isset($parameters['enabled']) && $parameters['enabled'] && !$filterChain->hasFilter('sfFillInFormFilter'))
     {
       // register the fill in form filter
-      $fillInFormFilter = new sfFillInFormFilter();
-      $fillInFormFilter->initialize($this->context, isset($parameters['param']) ? $parameters['param'] : array());
+      $fillInFormFilter = new sfFillInFormFilter($this->context, isset($parameters['param']) ? $parameters['param'] : array());
       $filterChain->register($fillInFormFilter);
     }
   }

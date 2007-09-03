@@ -85,6 +85,57 @@ abstract class sfView
     $extension          = '.php';
 
   /**
+   * Class constructor.
+   *
+   * @see initialize()
+   */
+  public function __construct($context, $moduleName, $actionName, $viewName)
+  {
+    $this->initialize($context, $moduleName, $actionName, $viewName);
+  }
+
+  /**
+   * Initializes this view.
+   *
+   * @param sfContext The current application context
+   * @param string    The module name for this view
+   * @param string    The action name for this view
+   * @param string    The view name
+   *
+   * @return boolean  true, if initialization completes successfully, otherwise false
+   */
+  public function initialize($context, $moduleName, $actionName, $viewName)
+  {
+    $this->moduleName = $moduleName;
+    $this->actionName = $actionName;
+    $this->viewName   = $viewName;
+
+    $this->context    = $context;
+    $this->dispatcher = $context->getEventDispatcher();
+
+    if (sfConfig::get('sf_logging_enabled'))
+    {
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Initialize view for "%s/%s"', $moduleName, $actionName))));
+    }
+
+    $this->attributeHolder = false === sfConfig::get('sf_escaping_method') ? new sfViewParameterHolder() : new sfEscapedViewParameterHolder();
+    $this->attributeHolder->initialize($context, array(), array(
+      'escaping_method'   => sfConfig::get('sf_escaping_method'),
+      'escaping_strategy' => sfConfig::get('sf_escaping_strategy')
+    ));
+
+    $this->parameterHolder = new sfParameterHolder();
+    $this->parameterHolder->add(sfConfig::get('mod_'.strtolower($moduleName).'_view_param', array()));
+
+    $this->decoratorDirectory = sfConfig::get('sf_app_template_dir');
+
+    // include view configuration
+    $this->configure();
+
+    return true;
+  }
+
+  /**
    * Executes any presentation logic and set template attributes.
    */
   abstract function execute();
@@ -141,47 +192,6 @@ abstract class sfView
   public function getTemplate()
   {
     return $this->template;
-  }
-
-  /**
-   * Initializes this view.
-   *
-   * @param sfContext The current application context
-   * @param string    The module name for this view
-   * @param string    The action name for this view
-   * @param string    The view name
-   *
-   * @return boolean  true, if initialization completes successfully, otherwise false
-   */
-  public function initialize($context, $moduleName, $actionName, $viewName)
-  {
-    $this->moduleName = $moduleName;
-    $this->actionName = $actionName;
-    $this->viewName   = $viewName;
-
-    $this->context    = $context;
-    $this->dispatcher = $context->getEventDispatcher();
-
-    if (sfConfig::get('sf_logging_enabled'))
-    {
-      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Initialize view for "%s/%s"', $moduleName, $actionName))));
-    }
-
-    $this->attributeHolder = false === sfConfig::get('sf_escaping_method') ? new sfViewParameterHolder() : new sfEscapedViewParameterHolder();
-    $this->attributeHolder->initialize($context, array(), array(
-      'escaping_method'   => sfConfig::get('sf_escaping_method'),
-      'escaping_strategy' => sfConfig::get('sf_escaping_strategy')
-    ));
-
-    $this->parameterHolder = new sfParameterHolder();
-    $this->parameterHolder->add(sfConfig::get('mod_'.strtolower($moduleName).'_view_param', array()));
-
-    $this->decoratorDirectory = sfConfig::get('sf_app_template_dir');
-
-    // include view configuration
-    $this->configure();
-
-    return true;
   }
 
   /**

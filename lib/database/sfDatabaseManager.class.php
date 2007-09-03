@@ -26,6 +26,29 @@ class sfDatabaseManager
     $databases = array();
 
   /**
+   * Class constructor.
+   *
+   * @see initialize()
+   */
+  public function __construct()
+  {
+    $this->initialize();
+  }
+
+  /**
+   * Initializes this sfDatabaseManager object
+   *
+   * @return bool true, if initialization completes successfully, otherwise false
+   *
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfDatabaseManager object
+   */
+  public function initialize()
+  {
+    // load database configuration
+    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/databases.yml'));
+  }
+
+  /**
    * Retrieves the database connection associated with this sfDatabase implementation.
    *
    * @param string A database name
@@ -43,19 +66,6 @@ class sfDatabaseManager
 
     // nonexistent database name
     throw new sfDatabaseException(sprintf('Database "%s" does not exist.', $name));
-  }
-
-  /**
-   * Initializes this sfDatabaseManager object
-   *
-   * @return bool true, if initialization completes successfully, otherwise false
-   *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfDatabaseManager object
-   */
-  public function initialize()
-  {
-    // load database configuration
-    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/databases.yml'));
   }
 
   /**

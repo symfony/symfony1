@@ -22,29 +22,13 @@ class fakeRequest
 {
 }
 
-$t = new lime_test(53, new lime_output_color());
+$t = new lime_test(50, new lime_output_color());
 
 $dispatcher = new sfEventDispatcher();
 
-// ::newInstance()
-$t->diag('::newInstance()');
-$t->isa_ok(sfRequest::newInstance('myRequest'), 'myRequest', '::newInstance() takes a request class as its first parameter');
-$t->isa_ok(sfRequest::newInstance('myRequest'), 'myRequest', '::newInstance() returns an instance of myRequest');
-
-try
-{
-  sfRequest::newInstance('fakeRequest');
-  $t->fail('::newInstance() throws a sfFactoryException if the class does not extends sfRequest');
-}
-catch (sfFactoryException $e)
-{
-  $t->pass('::newInstance() throws a sfFactoryException if the class does not extends sfRequest');
-}
-
 // ->initialize()
 $t->diag('->initialize()');
-$request = sfRequest::newInstance('myRequest');
-$request->initialize($dispatcher);
+$request = new myRequest($dispatcher);
 $t->is($dispatcher, $request->getEventDispatcher(), '->initialize() takes a sfEventDispatcher object as its first argument');
 $request->initialize($dispatcher, array('foo' => 'bar'));
 $t->is($request->getParameter('foo'), 'bar', '->initialize() takes an array of parameters as its second argument');
@@ -71,8 +55,7 @@ $t->is($request->extractParameters(array()), array(), '->extractParameters() ret
 $t->is($request->extractParameters(array('foo')), array('foo' => 'foo'), '->extractParameters() returns parameters for keys in its first parameter');
 $t->is($request->extractParameters(array('bar')), array('bar' => 'bar'), '->extractParameters() returns parameters for keys in its first parameter');
 
-$request = sfRequest::newInstance('myRequest');
-$request->initialize($dispatcher);
+$request = new myRequest($dispatcher);
 
 // ->setError() ->hasError() ->hasErrors() ->getError() ->removeError() ->getErrorNames
 $t->diag('->setError() ->hasError() ->hasErrors() ->getError() ->removeError() ->getErrorNames');

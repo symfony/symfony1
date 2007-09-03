@@ -26,7 +26,7 @@ sfConfig::set('sf_logging_enabled', false);
 
 // ->initialize()
 $t->diag('->initialize()');
-$cache = sfCache::newInstance('sfMemcacheCache');
+$cache = new sfMemcacheCache();
 try
 {
   $cache->initialize(array('storeCacheInfo' => true));

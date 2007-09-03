@@ -19,6 +19,8 @@
 abstract class sfComponent
 {
   protected
+    $moduleName             = '',
+    $actionName             = '',
     $context                = null,
     $dispatcher             = null,
     $request                = null,
@@ -27,22 +29,32 @@ abstract class sfComponent
     $requestParameterHolder = null;
 
   /**
+   * Class constructor.
+   *
+   * @see initialize()
+   */
+  public function __construct($context, $moduleName, $actionName)
+  {
+    $this->initialize($context, $moduleName, $actionName);
+  }
+
+  /**
    * Initializes this component.
    *
    * @param sfContext The current application context
    *
    * @return boolean true, if initialization completes successfully, otherwise false
    */
-  public function initialize($context)
+  public function initialize($context, $moduleName, $actionName)
   {
+    $this->moduleName             = $moduleName;
+    $this->actionName             = $actionName;
     $this->context                = $context;
     $this->dispatcher             = $context->getEventDispatcher();
     $this->varHolder              = new sfParameterHolder();
     $this->request                = $context->getRequest();
     $this->response               = $context->getResponse();
     $this->requestParameterHolder = $this->request->getParameterHolder();
-
-    return true;
   }
 
   /**
@@ -67,7 +79,7 @@ abstract class sfComponent
    */
   public function getModuleName()
   {
-    return $this->context->getModuleName();
+    return $this->moduleName;
   }
 
   /**
@@ -77,7 +89,7 @@ abstract class sfComponent
    */
   public function getActionName()
   {
-    return $this->context->getActionName();
+    return $this->actionName;
   }
 
   /**

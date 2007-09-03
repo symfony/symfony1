@@ -27,13 +27,12 @@ class sfRequest
 $context = sfContext::getInstance(array('request' => 'sfRequest'));
 $request = $context->request;
 
-$v = new sfCompareValidator();
 $h = new sfValidatorTestHelper($context, $t);
 
 // check exceptions
 try
 {
-  $v->initialize($context);
+  $v = new sfCompareValidator($context);
   $t->fail('->initialize() takes a required "check" parameter');
 }
 catch (sfValidatorException $e)
@@ -43,7 +42,7 @@ catch (sfValidatorException $e)
 
 try
 {
-  $v->initialize($context, array('check' => 'value', 'operator' => 'N'));
+  $v = new sfCompareValidator($context, array('check' => 'value', 'operator' => 'N'));
   $t->fail('->initialize() takes an "operator" parameter in (>, >=, <, <=, ==, !=)');
 }
 catch (sfValidatorException $e)
@@ -53,6 +52,7 @@ catch (sfValidatorException $e)
 
 // == operator (default operator)
 $t->diag('->execute() - == operator (default operator)');
+$v = new sfCompareValidator($context, array('check' => 'value'));
 $request->parameters = array('value2' => 'azerty');
 $options = array('check' => 'value2');
 $h->launchTests($v, 'azerty', true, 'check', null, $options);

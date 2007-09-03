@@ -28,6 +28,35 @@ abstract class sfController
     $renderMode        = sfView::RENDER_CLIENT;
 
   /**
+   * Class constructor.
+   *
+   * @see initialize()
+   */
+  public function __construct($context)
+  {
+    $this->initialize($context);
+  }
+
+  /**
+   * Initializes this controller.
+   *
+   * @param sfContext A sfContext implementation instance
+   */
+  public function initialize($context)
+  {
+    $this->context    = $context;
+    $this->dispatcher = $context->getEventDispatcher();
+
+    if (sfConfig::get('sf_logging_enabled'))
+    {
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Initialization')));
+    }
+
+    // set max forwards
+    $this->maxForwards = sfConfig::get('sf_max_forwards');
+  }
+
+  /**
    * Indicates whether or not a module has a specific component.
    *
    * @param string A module name
@@ -205,10 +234,9 @@ abstract class sfController
       throw new sfConfigurationException(sprintf('Action "%s" from module "%s" cannot be called directly.', $actionName, $moduleName));
     }
 
+    // module enabled?
     if (sfConfig::get('mod_'.strtolower($moduleName).'_enabled'))
     {
-      // module is enabled
-
       // check for a module config.php
       $moduleConfig = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/config.php';
       if (is_readable($moduleConfig))
@@ -216,28 +244,18 @@ abstract class sfController
         require_once($moduleConfig);
       }
 
-      // initialize the action
-      if ($actionInstance->initialize($this->context))
-      {
-        // create a new filter chain
-        $filterChain = new sfFilterChain();
+      // create a new filter chain
+      $filterChain = new sfFilterChain();
 
-        require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/filters.yml'));
+      require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/filters.yml'));
 
-        $this->context->getEventDispatcher()->notify(new sfEvent($this, 'controller.change_action', array('module' => $moduleName, 'action' => $actionName)));
+      $this->context->getEventDispatcher()->notify(new sfEvent($this, 'controller.change_action', array('module' => $moduleName, 'action' => $actionName)));
 
-        // process the filter chain
-        $filterChain->execute();
-      }
-      else
-      {
-        // action failed to initialize
-        throw new sfInitializationException(sprintf('Action initialization failed for module "%s", action "%s".', $moduleName, $actionName));
-      }
+      // process the filter chain
+      $filterChain->execute();
     }
     else
     {
-      // module is disabled
       $moduleName = sfConfig::get('sf_module_disabled_module');
       $actionName = sfConfig::get('sf_module_disabled_action');
 
@@ -306,7 +324,7 @@ abstract class sfController
       $class = $moduleClass;
     }
 
-    return new $class();
+    return new $class($this->context, $moduleName, $controllerName);
   }
 
   /**
@@ -362,58 +380,11 @@ abstract class sfController
     else
     {
       // view class (as configured in module.yml or defined in action)
-      $viewName = $this->context->getRequest()->getAttribute($moduleName.'_'.$actionName.'_view_name', sfConfig::get('mod_'.strtolower($moduleName).'_view_class'), 'symfony/action/view');
-      $class    = sfAutoload::getClassPath($viewName.'View') ? $viewName.'View' : 'sfPHPView';
+      $viewClassName = $this->context->getRequest()->getAttribute($moduleName.'_'.$actionName.'_view_name', sfConfig::get('mod_'.strtolower($moduleName).'_view_class'), 'symfony/action/view');
+      $class    = sfAutoload::getClassPath($viewClassName.'View') ? $viewClassName.'View' : 'sfPHPView';
     }
 
-    return new $class();
-  }
-
-  /**
-   * Initializes this controller.
-   *
-   * @param sfContext A sfContext implementation instance
-   */
-  public function initialize($context)
-  {
-    $this->context    = $context;
-    $this->dispatcher = $context->getEventDispatcher();
-
-    if (sfConfig::get('sf_logging_enabled'))
-    {
-      $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Initialization')));
-    }
-
-    // set max forwards
-    $this->maxForwards = sfConfig::get('sf_max_forwards');
-  }
-
-  /**
-   * Retrieves a new sfController implementation instance.
-   *
-   * @param string A sfController class name
-   *
-   * @return sfController A sfController implementation instance
-   *
-   * @throws sfFactoryException If a new controller implementation instance cannot be created
-   */
-  public static function newInstance($class)
-  {
-    try
-    {
-      $object = new $class();
-
-      if (!$object instanceof sfController)
-      {
-        throw new sfFactoryException(sprintf('Class "%s" is not of the type "sfController".', $class));
-      }
-
-      return $object;
-    }
-    catch (sfException $e)
-    {
-      $e->printStackTrace();
-    }
+    return new $class($this->context, $moduleName, $actionName, $viewName);
   }
 
   /**

@@ -26,6 +26,16 @@ abstract class sfGenerator
     $moduleName          = '';
 
   /**
+   * Class constructor.
+   *
+   * @see initialize()
+   */
+  public function __construct(sfGeneratorManager $generatorManager)
+  {
+    $this->initialize($generatorManager);
+  }
+
+  /**
    * Initializes the current sfGenerator instance.
    *
    * @param sfGeneratorManager A sfGeneratorManager instance

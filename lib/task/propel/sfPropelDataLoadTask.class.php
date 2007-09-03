@@ -90,7 +90,6 @@ EOF;
     }
 
     $databaseManager = new sfDatabaseManager();
-    $databaseManager->initialize();
 
     $data = new sfPropelData();
     $data->setDeleteCurrentData(isset($options['append']) ? ($options['append'] ? false : true) : true);

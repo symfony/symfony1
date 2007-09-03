@@ -20,29 +20,13 @@ class fakeResponse
 {
 }
 
-$t = new lime_test(23, new lime_output_color());
+$t = new lime_test(20, new lime_output_color());
 
 $dispatcher = new sfEventDispatcher();
 
-// ::newInstance()
-$t->diag('::newInstance()');
-$t->isa_ok(sfResponse::newInstance('myResponse'), 'myResponse', '::newInstance() takes a response class as its first parameter');
-$t->isa_ok(sfResponse::newInstance('myResponse'), 'myResponse', '::newInstance() returns an instance of myResponse');
-
-try
-{
-  sfResponse::newInstance('fakeResponse');
-  $t->fail('::newInstance() throws a sfFactoryException if the class does not extends sfResponse');
-}
-catch (sfFactoryException $e)
-{
-  $t->pass('::newInstance() throws a sfFactoryException if the class does not extends sfResponse');
-}
-
 // ->initialize()
 $t->diag('->initialize()');
-$response = sfResponse::newInstance('myResponse');
-$response->initialize($dispatcher, array('foo' => 'bar'));
+$response = new myResponse($dispatcher, array('foo' => 'bar'));
 $t->is($response->getParameter('foo'), 'bar', '->initialize() takes an array of parameters as its second argument');
 
 // ->getContent() ->setContent()
@@ -60,12 +44,11 @@ $t->is($content, 'test', '->sendContent() output the current response content');
 
 // ->serialize() ->unserialize()
 $t->diag('->serialize() ->unserialize()');
-$t->ok(sfResponse::newInstance('myResponse') instanceof Serializable, 'sfResponse implements the Serializable interface');
+$t->ok(new myResponse($dispatcher) instanceof Serializable, 'sfResponse implements the Serializable interface');
 
 // parameter holder proxy
 require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');
-$response = sfResponse::newInstance('myResponse');
-$response->initialize($dispatcher);
+$response = new myResponse($dispatcher);
 $pht = new sfParameterHolderProxyTest($t);
 $pht->launchTests($response, 'parameter');
 

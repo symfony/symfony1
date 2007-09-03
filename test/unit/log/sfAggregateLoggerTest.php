@@ -20,18 +20,15 @@ if (file_exists($file))
 {
   unlink($file);
 }
-$fileLogger = sfLogger::newInstance('sfFileLogger');
-$fileLogger->initialize($dispatcher, array('file' => $file));
-$consoleLogger = sfLogger::newInstance('sfConsoleLogger');
+$fileLogger = new sfFileLogger($dispatcher, array('file' => $file));
+$consoleLogger = new sfConsoleLogger($dispatcher);
 
 // ->initialize()
 $t->diag('->initialize()');
-$logger = sfLogger::newInstance('sfAggregateLogger');
-$logger->initialize($dispatcher, array('loggers' => $fileLogger));
+$logger = new sfAggregateLogger($dispatcher, array('loggers' => $fileLogger));
 $t->is($logger->getLoggers(), array($fileLogger), '->initialize() can take a "loggers" parameter');
 
-$logger = sfLogger::newInstance('sfAggregateLogger');
-$logger->initialize($dispatcher, array('loggers' => array($fileLogger, $consoleLogger)));
+$logger = new sfAggregateLogger($dispatcher, array('loggers' => array($fileLogger, $consoleLogger)));
 $t->is($logger->getLoggers(), array($fileLogger, $consoleLogger), '->initialize() can take a "loggers" parameter');
 
 // ->log()
@@ -44,11 +41,11 @@ $t->like($lines[0], '/foo/', '->log() logs a message to all loggers');
 $t->is($content, 'foo', '->log() logs a message to all loggers');
 
 // ->getLoggers() ->addLoggers() ->addLogger()
-$logger = sfLogger::newInstance('sfAggregateLogger');
+$logger = new sfAggregateLogger($dispatcher);
 $logger->addLogger($fileLogger);
 $t->is($logger->getLoggers(), array($fileLogger), '->addLogger() adds a new sfLogger instance');
 
-$logger = sfLogger::newInstance('sfAggregateLogger');
+$logger = new sfAggregateLogger($dispatcher);
 $logger->addLoggers(array($fileLogger, $consoleLogger));
 $t->is($logger->getLoggers(), array($fileLogger, $consoleLogger), '->addLoggers() adds an array of sfLogger instances');
 

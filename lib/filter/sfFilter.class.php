@@ -28,6 +28,36 @@ abstract class sfFilter
     $filterCalled    = array();
 
   /**
+   * Class constructor.
+   *
+   * @see initialize()
+   */
+  public function __construct($context, $parameters = array())
+  {
+    $this->initialize($context, $parameters);
+  }
+
+  /**
+   * Initializes this Filter.
+   *
+   * @param sfContext The current application context
+   * @param array   An associative array of initialization parameters
+   *
+   * @return boolean true, if initialization completes successfully, otherwise false
+   *
+   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Filter
+   */
+  public function initialize($context, $parameters = array())
+  {
+    $this->context = $context;
+
+    $this->parameterHolder = new sfParameterHolder();
+    $this->parameterHolder->add($parameters);
+
+    return true;
+  }
+
+  /**
    * Returns true if this is the first call to the sfFilter instance.
    *
    * @return boolean true if this is the first call to the sfFilter instance, false otherwise
@@ -55,26 +85,6 @@ abstract class sfFilter
   public final function getContext()
   {
     return $this->context;
-  }
-
-  /**
-   * Initializes this Filter.
-   *
-   * @param sfContext The current application context
-   * @param array   An associative array of initialization parameters
-   *
-   * @return boolean true, if initialization completes successfully, otherwise false
-   *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Filter
-   */
-  public function initialize($context, $parameters = array())
-  {
-    $this->context = $context;
-
-    $this->parameterHolder = new sfParameterHolder();
-    $this->parameterHolder->add($parameters);
-
-    return true;
   }
 
   /**

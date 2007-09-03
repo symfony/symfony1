@@ -131,13 +131,6 @@ function get_component($moduleName, $componentName, $vars = array())
   // create an instance of the action
   $componentInstance = $controller->getComponent($moduleName, $componentName);
 
-  // initialize the action
-  if (!$componentInstance->initialize($context))
-  {
-    // component failed to initialize
-    throw new sfInitializationException(sprintf('Component initialization failed for module "%s", component "%s".', $moduleName, $componentName));
-  }
-
   // load component's module config file
   require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/module.yml'));
 
@@ -177,9 +170,7 @@ function get_component($moduleName, $componentName, $vars = array())
   if ($retval != sfView::NONE)
   {
     // render
-    $view = new sfPartialView();
-    $view->initialize($context, $moduleName, $actionName, '');
-
+    $view = new sfPartialView($context, $moduleName, $actionName, '');
     $view->getAttributeHolder()->add($componentInstance->getVarHolder()->getAll());
 
     $retval = $view->render();
@@ -257,8 +248,7 @@ function get_partial($templateName, $vars = array())
     }
   }
 
-  $view = new sfPartialView();
-  $view->initialize($context, $moduleName, $actionName, '');
+  $view = new sfPartialView($context, $moduleName, $actionName, '');
   $view->getAttributeHolder()->add($vars);
 
   $retval = $view->render();

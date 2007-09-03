@@ -14,14 +14,13 @@ require_once($_test_dir.'/unit/sfContextMock.class.php');
 $t = new lime_test(11, new lime_output_color());
 
 $context = sfContext::getInstance();
-$v = new sfCallbackValidator();
 
 // ->initialize()
 $t->diag('->initialize()');
 
 try
 {
-  $v->initialize($context);
+  $v = new sfCallbackValidator($context);
   $t->fail('->initialize() takes a mandatory "callback" parameter');
 }
 catch (sfValidatorException $e)
@@ -31,7 +30,7 @@ catch (sfValidatorException $e)
 
 try
 {
-  $v->initialize($context, array('callback' => 'arandomstring'));
+  $v = new sfCallbackValidator($context, array('callback' => 'arandomstring'));
   $t->fail('->initialize() takes a callable as a "callback" parameter');
 }
 catch (sfValidatorException $e)
@@ -57,11 +56,11 @@ class callbackClassValidator
   }
 }
 
-$t->ok($v->initialize($context, array('callback' => 'callbackValidator')), '->initialize() can take a function as a callback');
-$t->ok($v->initialize($context, array('callback' => array(new callbackClassValidator(), 'callbackValidator'))), '->initialize() can take an instance method as a callback');
-$t->ok($v->initialize($context, array('callback' => array('callbackClassValidator', 'staticCallbackValidator'))), '->initialize() can take a static method as a callback');
+$t->ok(new sfCallbackValidator($context, array('callback' => 'callbackValidator')), '->initialize() can take a function as a callback');
+$t->ok(new sfCallbackValidator($context, array('callback' => array(new callbackClassValidator(), 'callbackValidator'))), '->initialize() can take an instance method as a callback');
+$t->ok(new sfCallbackValidator($context, array('callback' => array('callbackClassValidator', 'staticCallbackValidator'))), '->initialize() can take a static method as a callback');
 
-$t->ok($v->initialize($context, array('callback' => 'callbackValidator', 'invalid_error' => 'my error')), '->initialize() takes a custom message "invalid_error"');
+$t->ok($v = new sfCallbackValidator($context, array('callback' => 'callbackValidator', 'invalid_error' => 'my error')), '->initialize() takes a custom message "invalid_error"');
 $value = false;
 $error = null;
 $v->execute($value, $error);
@@ -69,7 +68,7 @@ $t->is($error, 'my error', '->execute() changes "$error" with a custom message')
 
 // ->execute()
 $t->diag('->execute()');
-$v->initialize($context, array('callback' => 'callbackValidator'));
+$c = new sfCallbackValidator($context, array('callback' => 'callbackValidator'));
 
 $value = true;
 $error = null;

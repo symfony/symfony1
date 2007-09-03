@@ -21,8 +21,7 @@ class sfPatternRoutingTest extends sfPatternRouting
 }
 
 // public methods
-$r = new sfPatternRoutingTest();
-$r->initialize(new sfEventDispatcher());
+$r = new sfPatternRoutingTest(new sfEventDispatcher());
 foreach (array('clearRoutes', 'connect', 'generate', 'getCurrentInternalUri', 'getCurrentRouteName', 'getRoutes', 'hasRoutes', 'parse', 'setRoutes') as $method)
 {
   $t->can_ok($r, $method, sprintf('"%s" is a method of sfRouting', $method));

@@ -19,6 +19,16 @@
 class sfGeneratorManager
 {
   /**
+   * Class constructor.
+   *
+   * @see initialize()
+   */
+  public function __construct()
+  {
+    $this->initialize();
+  }
+
+  /**
    * Initializes the sfGeneratorManager instance.
    */
   public function initialize()
@@ -49,8 +59,7 @@ class sfGeneratorManager
    */
   public function generate($generator_class, $param)
   {
-    $generator = new $generator_class();
-    $generator->initialize($this);
+    $generator = new $generator_class($this);
 
     return $generator->generate($param);
   }

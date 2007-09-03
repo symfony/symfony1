@@ -27,6 +27,26 @@ class sfValidatorManager
     $request = null;
 
   /**
+   * Class constructor.
+   *
+   * @see initialize()
+   */
+  public function __construct($context)
+  {
+    $this->initialize($context);
+  }
+
+  /**
+   * Initializes this validator manager.
+   *
+   * @param sfContext A sfContext instance
+   */
+  public function initialize($context)
+  {
+    $this->request = $context->getRequest();
+  }
+
+  /**
    * Clears this validator manager so it can be reused.
    */
   public function clear()
@@ -98,16 +118,6 @@ class sfValidatorManager
     }
 
     return $retval;
-  }
-
-  /**
-   * Initializes this validator manager.
-   *
-   * @param sfContext A sfContext instance
-   */
-  public function initialize($context)
-  {
-    $this->request = $context->getRequest();
   }
 
   /**

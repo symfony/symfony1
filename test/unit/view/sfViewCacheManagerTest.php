@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(12, new lime_output_color());
+$t = new lime_test(11, new lime_output_color());
 
 class myController extends sfWebController
 {
@@ -91,13 +91,8 @@ $r->connect('default', '/:module/:action/*');
 
 // ->initialize()
 $t->diag('->initialize()');
-$m = new sfViewCacheManager();
-$t->is($m->getContext(), null, '->initialize() takes a sfContext object as its first argument');
-
-// ->getContext()
-$t->diag('->getContext()');
-$m->initialize($context, new myCache());
-$t->is($m->getContext(), $context, '->getContext() returns the current context');
+$m = new sfViewCacheManager($context, $cache = new myCache());
+$t->is($m->getCache(), $cache, '->initialize() takes a sfCache object as its second argument');
 
 // ->generateNamespace()
 $t->diag('->generateNamespace()');
@@ -148,8 +143,7 @@ $t->is($m->has('module/action'), false, '->remove() removes cache content for an
 function get_cache_manager($context)
 {
   myCache::clear();
-  $m = new sfViewCacheManager();
-  $m->initialize($context, new myCache());
+  $m = new sfViewCacheManager($context, new myCache());
 
   return $m;
 }

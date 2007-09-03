@@ -44,13 +44,16 @@ class sfPatternRouting extends sfRouting
     parent::initialize($dispatcher, $parameters);
 
     $this->setDefaultSuffix($this->parameterHolder->get('suffix'));
+  }
 
-    if ($this->parameterHolder->get('load_configuration', false))
+  /**
+   * Loads routing configuration.
+   */
+  public function loadConfiguration()
+  {
+    if ($config = sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/routing.yml', true))
     {
-      if ($config = sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/routing.yml', true))
-      {
-        include($config);
-      }
+      include($config);
     }
   }
 

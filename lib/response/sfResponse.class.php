@@ -25,6 +25,16 @@ abstract class sfResponse implements Serializable
     $content         = '';
 
   /**
+   * Class constructor.
+   *
+   * @see initialize()
+   */
+  public function __construct(sfEventDispatcher $dispatcher, $parameters = array())
+  {
+    $this->initialize($dispatcher, $parameters);
+  }
+
+  /**
    * Initializes this sfResponse.
    *
    * @param  sfEventDispatcher  A sfEventDispatcher instance
@@ -40,27 +50,6 @@ abstract class sfResponse implements Serializable
 
     $this->parameterHolder = new sfParameterHolder();
     $this->parameterHolder->add($parameters);
-  }
-
-  /**
-   * Retrieves a new sfResponse implementation instance.
-   *
-   * @param string A sfResponse implementation name
-   *
-   * @return sfResponse A sfResponse implementation instance
-   *
-   * @throws <b>sfFactoryException</b> If a response implementation instance cannot be created
-   */
-  public static function newInstance($class)
-  {
-    $object = new $class();
-
-    if (!$object instanceof sfResponse)
-    {
-      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfResponse.', $class));
-    }
-
-    return $object;
   }
 
   /**

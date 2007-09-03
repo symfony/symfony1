@@ -26,25 +26,10 @@ class fakeCache
 {
 }
 
-$t = new lime_test(4, new lime_output_color());
-
-// ::newInstance()
-$t->diag('::newInstance()');
-$t->isa_ok(sfCache::newInstance('myCache'), 'myCache', '::newInstance() takes a cache class as its first parameter');
-$t->isa_ok(sfCache::newInstance('myCache'), 'myCache', '::newInstance() returns an instance of myCache');
-
-try
-{
-  sfCache::newInstance('fakeCache');
-  $t->fail('::newInstance() throws a sfFactoryException if the class does not extends sfCache');
-}
-catch (sfFactoryException $e)
-{
-  $t->pass('::newInstance() throws a sfFactoryException if the class does not extends sfCache');
-}
+$t = new lime_test(1, new lime_output_color());
 
 // ->initialize()
 $t->diag('->initialize()');
-$cache = sfCache::newInstance('myCache');
+$cache = new myCache();
 $cache->initialize(array('foo' => 'bar'));
 $t->is($cache->getParameterHolder()->get('foo'), 'bar', '->initialize() takes an array of parameters as its first argument');

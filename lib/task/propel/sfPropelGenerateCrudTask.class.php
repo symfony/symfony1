@@ -65,7 +65,6 @@ EOF;
     $tmpDir = sfConfig::get('sf_root_dir').DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.md5(uniqid(rand(), true));
     sfConfig::set('sf_module_cache_dir', $tmpDir);
     $generatorManager = new sfGeneratorManager();
-    $generatorManager->initialize();
     $generatorManager->generate('sfPropelCrudGenerator', array('model_class' => $arguments['model'], 'moduleName' => $arguments['module'], 'theme' => $options['theme']));
 
     $moduleDir = sfConfig::get('sf_root_dir').'/'.sfConfig::get('sf_apps_dir_name').'/'.$arguments['application'].'/'.sfConfig::get('sf_app_module_dir_name').'/'.$arguments['module'];

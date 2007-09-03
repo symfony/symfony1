@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(137, new lime_output_color());
+$t = new lime_test(135, new lime_output_color());
 
 class myLogger extends sfLogger
 {
@@ -27,20 +27,7 @@ class notaLogger
 }
 
 $dispatcher = new sfEventDispatcher();
-
-// ->newInstance()
-$t->diag('->newInstance()');
-$logger = sfLogger::newInstance('myLogger');
-$t->isa_ok($logger, 'myLogger', '::getInstance() returns a sfLogger instance');
-try
-{
-  sfLogger::newInstance('notaLogger');
-  $t->fail('->newInstance() throws a sfFactoryException if the logger does not extend sfLogger');
-}
-catch (sfFactoryException $e)
-{
-  $t->pass('->newInstance() throws a sfFactoryException if the logger does not extend sfLogger');
-}
+$logger = new myLogger($dispatcher);
 
 // ->setLogLevel() ->getLogLevel()
 $t->diag('->setLogLevel() ->getLogLevel()');

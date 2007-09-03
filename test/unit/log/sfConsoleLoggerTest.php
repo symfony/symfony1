@@ -12,7 +12,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 $t = new lime_test(1, new lime_output_color());
 
-$logger = sfLogger::newInstance('sfConsoleLogger');
+$logger = new sfConsoleLogger(new sfEventDispatcher());
 ob_start();
 $logger->log('foo');
 $t->is(ob_get_clean(), 'foo', 'sfConsoleLogger logs messages to the console');

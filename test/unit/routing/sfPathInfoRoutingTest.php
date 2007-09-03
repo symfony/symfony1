@@ -12,8 +12,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 $t = new lime_test(12, new lime_output_color());
 
-$routing = new sfPathInfoRouting();
-$routing->initialize(new sfEventDispatcher());
+$routing = new sfPathInfoRouting(new sfEventDispatcher());
 
 // ->getCurrentInternalUri()
 $t->diag('->getCurrentInternalUri()');

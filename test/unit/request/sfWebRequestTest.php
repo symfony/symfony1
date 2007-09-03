@@ -19,7 +19,8 @@ class myRequest extends sfWebRequest
   public $acceptableContentTypes = null;
 }
 
-$request = sfRequest::newInstance('myRequest');
+$dispatcher = new sfEventDispatcher();
+$request = new myRequest($dispatcher);
 
 // ->getLanguages()
 $t->diag('->getLanguages()');

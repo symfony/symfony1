@@ -13,8 +13,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 $t = new lime_test(1, new lime_output_color());
 
 // initialize the storage
-$storage = sfStorage::newInstance('sfNoStorage');
-$storage->initialize();
+$storage = new sfNoStorage();
 
 $t->ok($storage instanceof sfStorage, 'sfNoStorage is an instance of sfStorage');
 

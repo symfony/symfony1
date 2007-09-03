@@ -23,10 +23,9 @@ $dispatcher = new sfEventDispatcher();
 
 // ->initialize()
 $t->diag('->initialize()');
-$logger = sfLogger::newInstance('sfFileLogger');
 try
 {
-  $logger->initialize($dispatcher);
+  $logger = new sfFileLogger($dispatcher);
   $t->fail('->initialize() parameters must contains a "file" parameter');
 }
 catch (sfConfigurationException $e)
@@ -36,7 +35,7 @@ catch (sfConfigurationException $e)
 
 // ->log()
 $t->diag('->log()');
-$logger->initialize($dispatcher, array('file' => $file));
+$logger = new sfFileLogger($dispatcher, array('file' => $file));
 $logger->log('foo');
 $lines = explode("\n", file_get_contents($file));
 $t->like($lines[0], '/foo/', '->log() logs a message to the file');

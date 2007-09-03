@@ -270,7 +270,6 @@ class sfConfigCache
   {
     // manually create our config_handlers.yml handler
     $this->handlers['config_handlers.yml'] = new sfRootConfigHandler();
-    $this->handlers['config_handlers.yml']->initialize();
 
     // application configuration handlers
 
@@ -353,8 +352,7 @@ class sfConfigCache
    */
   public function registerConfigHandler($handler, $class, $params = array())
   {
-    $this->userHandlers[$handler] = new $class();
-    $this->userHandlers[$handler]->initialize($params);
+    $this->userHandlers[$handler] = new $class($params);
   }
 
   /**

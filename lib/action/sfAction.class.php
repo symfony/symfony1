@@ -30,14 +30,12 @@ abstract class sfAction extends sfComponent
    *
    * @return bool true, if initialization completes successfully, otherwise false
    */
-  public function initialize($context)
+  public function initialize($context, $moduleName, $actionName)
   {
-    parent::initialize($context);
+    parent::initialize($context, $moduleName, $actionName);
 
     // include security configuration
     require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$this->getModuleName().'/'.sfConfig::get('sf_app_module_config_dir_name').'/security.yml', true));
-
-    return true;
   }
 
   /**

@@ -33,35 +33,25 @@ abstract class sfTask
    *
    * @param sfCommandApplication A sfCommandApplication object
    */
-  public function __construct(sfCommandApplication $commandApplication = null)
+  public function __construct(sfCommandApplication $commandApplication = null, sfLogger $logger = null)
   {
-    $this->commandApplication = $commandApplication;
+    $this->initialize($commandApplication, $logger);
 
     $this->configure();
   }
 
   /**
-   * Retrieves a new sfTask implementation instance.
+   * Initializes the sfTask instance.
    *
-   * @param string A sfTask implementation name
-   *
-   * @return User A sfTask implementation instance.
+   * @param sfCommandApplication A sfCommandApplication instance
+   * @param sfLogger             A sfLogger instance
    *
    * @throws <b>sfFactoryException</b> If a task implementation instance cannot
    */
-  public static function newInstance($class, sfCommandApplication $commandApplication = null, sfLogger $logger = null)
+  public function initialize(sfCommandApplication $commandApplication = null, sfLogger $logger = null)
   {
-    $object = new $class();
-
-    if (!$object instanceof sfTask)
-    {
-      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfTask.', $class));
-    }
-
-    $object->commandApplication = $commandApplication;
-    $object->setLogger($logger);
-
-    return $object;
+    $this->commandApplication = $commandApplication;
+    $this->setLogger($logger);
   }
 
   /**

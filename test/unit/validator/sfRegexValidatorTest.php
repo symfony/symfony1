@@ -14,14 +14,13 @@ require_once($_test_dir.'/unit/sfContextMock.class.php');
 $t = new lime_test(9, new lime_output_color());
 
 $context = sfContext::getInstance();
-$v = new sfRegexValidator();
 
 // ->initialize()
 $t->diag('->initialize()');
 
 try
 {
-  $v->initialize($context);
+  $v = new sfRegexValidator($context);
   $t->fail('->initialize() takes a mandatory "pattern" parameter');
 }
 catch (sfValidatorException $e)
@@ -29,9 +28,9 @@ catch (sfValidatorException $e)
   $t->pass('->initialize() takes a mandatory "pattern" parameter');
 }
 
-$t->ok($v->initialize($context, array('pattern' => '/\d+/')), '->initialize() takes a "pattern" as a parameter');
+$t->ok(new sfRegexValidator($context, array('pattern' => '/\d+/')), '->initialize() takes a "pattern" as a parameter');
 
-$v->initialize($context, array('pattern' => '/\d+/', 'match_error' => 'my error message'));
+$v = new sfRegexValidator($context, array('pattern' => '/\d+/', 'match_error' => 'my error message'));
 $value = 'a string';
 $error = null;
 $v->execute($value, $error);

@@ -18,5 +18,4 @@ class myGenerator extends sfGenerator
 }
 
 $manager = new sfGeneratorManager();
-$generator = new myGenerator();
-$generator->initialize($manager);
+$generator = new myGenerator($manager);

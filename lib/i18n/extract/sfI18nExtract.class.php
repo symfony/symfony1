@@ -25,6 +25,16 @@ abstract class sfI18nExtract
     $i18n = null;
 
   /**
+   * Class constructor.
+   *
+   * @see initialize()
+   */
+  public function __construct($culture, $parameters = array())
+  {
+    $this->initialize($culture, $parameters);
+  }
+
+  /**
    * Initializes the current extract object.
    *
    * @param string The culture

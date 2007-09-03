@@ -26,7 +26,7 @@ sfConfig::set('sf_logging_enabled', false);
 
 // ->initialize()
 $t->diag('->initialize()');
-$cache = sfCache::newInstance('sfEAcceleratorCache');
+$cache = new sfEAcceleratorCache();
 $cache->initialize();
 
 sfCacheDriverTests::launch($t, $cache);

@@ -25,8 +25,8 @@ $context = sfContext::getInstance(array(
 
 // ->initialize()
 $t->diag('->initialize()');
-$component = new myComponent();
-$t->is($component->getContext(), null, '->initialize() takes a sfContext object as its first argument');
+$component = new myComponent($context);
+$t->is($component->getContext(), $context, '->initialize() takes a sfContext object as its first argument');
 $component->initialize($context);
 $t->is($component->getContext(), $context, '->initialize() takes a sfContext object as its first argument');
 

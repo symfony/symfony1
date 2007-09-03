@@ -177,9 +177,8 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
           // retrieve this validator's info
           $validator =& $validators[$valName];
 
-          $data[] = sprintf("  \$validators['%s'] = new %s();\n".
-                            "  \$validators['%s']->initialize(\$this->context, %s);",
-                            $valName, $validator['class'], $valName, $validator['parameters']);
+          $data[] = sprintf("  \$validators['%s'] = new %s(\$this->context, %s);\n",
+                            $valName, $validator['class'], $validator['parameters']);
 
           // mark this validator as created for this request method
           $validators[$valName][$method] = true;

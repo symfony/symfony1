@@ -26,16 +26,14 @@ abstract class sfConfigHandler
     $parameterHolder = null;
 
   /**
-   * Executes this configuration handler
+   * Class constructor.
    *
-   * @param array An array of filesystem path to a configuration file
-   *
-   * @return string Data to be written to a cache file
-   *
-   * @throws <b>sfConfigurationException</b> If a requested configuration file does not exist or is not readable
-   * @throws <b>sfParseException</b> If a requested configuration file is improperly formatted
+   * @see initialize()
    */
-  abstract public function execute($configFiles);
+  public function __construct($parameters = null)
+  {
+    $this->initialize($parameters);
+  }
 
   /**
    * Initializes this configuration handler.
@@ -51,6 +49,18 @@ abstract class sfConfigHandler
     $this->parameterHolder = new sfParameterHolder();
     $this->parameterHolder->add($parameters);
   }
+
+  /**
+   * Executes this configuration handler
+   *
+   * @param array An array of filesystem path to a configuration file
+   *
+   * @return string Data to be written to a cache file
+   *
+   * @throws <b>sfConfigurationException</b> If a requested configuration file does not exist or is not readable
+   * @throws <b>sfParseException</b> If a requested configuration file is improperly formatted
+   */
+  abstract public function execute($configFiles);
 
   /**
    * Replaces constant identifiers in a value.

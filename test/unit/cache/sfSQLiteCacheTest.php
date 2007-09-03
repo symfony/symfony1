@@ -22,10 +22,9 @@ if (!extension_loaded('SQLite'))
 
 // ->initialize()
 $t->diag('->initialize()');
-$cache = sfCache::newInstance('sfSQLiteCache');
 try
 {
-  $cache->initialize();
+  $cache = new sfSQLiteCache();
   $t->fail('->initialize() throws an sfInitializationException exception if you don\'t pass a "database" parameter');
 }
 catch (sfInitializationException $e)
@@ -34,15 +33,13 @@ catch (sfInitializationException $e)
 }
 
 // database in memory
-$cache = sfCache::newInstance('sfSQLiteCache');
-$cache->initialize(array('database' => ':memory:'));
+$cache = new sfSQLiteCache(array('database' => ':memory:'));
 
 sfCacheDriverTests::launch($t, $cache);
 
 // database on disk
 $database = tempnam('/tmp/cachedir', 'tmp');
 unlink($database);
-$cache = sfCache::newInstance('sfSQLiteCache');
-$cache->initialize(array('database' => $database));
+$cache = new sfSQLiteCache(array('database' => $database));
 sfCacheDriverTests::launch($t, $cache);
 unlink($database);

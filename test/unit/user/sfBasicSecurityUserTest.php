@@ -13,19 +13,16 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 $t = new lime_test(39, new lime_output_color());
 
 $dispatcher = new sfEventDispatcher();
-$storage = sfStorage::newInstance('sfSessionTestStorage');
-$storage->initialize(array('session_path' => sfConfig::get('sf_test_cache_dir').'/sessions'));
+$storage = new sfSessionTestStorage(array('session_path' => sfConfig::get('sf_test_cache_dir').'/sessions'));
 
-$user = new sfBasicSecurityUser();
-$user->initialize($dispatcher, $storage);
+$user = new sfBasicSecurityUser($dispatcher, $storage);
 
 // ->initialize()
 $t->diag('->initialize()');
 $t->todo('->initialize() times out the user if no request made for a long time');
 /*
 sfConfig::set('sf_timeout', 0);
-$user = new sfBasicSecurityUser();
-$user->initialize($context);
+$user = new sfBasicSecurityUser($context);
 $t->is($user->isTimedOut(), true, '->initialize() times out the user if no request made for a long time');
 */
 
@@ -45,8 +42,7 @@ $t->is($user->isAuthenticated(), false, '->setAuthenticated() accepts a boolean 
 
 // ->setTimedOut() ->getTimedOut()
 sfConfig::set('sf_timeout', 86400);
-$user = new sfBasicSecurityUser();
-$user->initialize($dispatcher, $storage);
+$user = new sfBasicSecurityUser($dispatcher, $storage);
 $t->diag('->setTimedOut() ->isTimedOut()');
 $t->is($user->isTimedOut(), false, '->isTimedOut() returns false if the session is not timed out');
 $user->setTimedOut();

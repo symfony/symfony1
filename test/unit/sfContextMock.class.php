@@ -27,8 +27,7 @@ class sfContext
     {
       self::$instance = new sfContext();
 
-      self::$instance->storage = sfStorage::newInstance('sfSessionTestStorage');
-      self::$instance->storage->initialize(array('session_path' => sfConfig::get('sf_test_cache_dir').'/sessions'));
+      self::$instance->storage = new sfSessionTestStorage(array('session_path' => sfConfig::get('sf_test_cache_dir').'/sessions'));
 
       self::$instance->dispatcher = new sfEventDispatcher();
 
@@ -88,22 +87,19 @@ class sfContext
 
   public function inject($type, $class, $parameters = array())
   {
-    $object = new $class();
-    if (method_exists($object, 'initialize'))
+    switch ($type)
     {
-      switch ($type)
-      {
-        case 'routing':
-        case 'response':
-          $object->initialize($this->dispatcher, $parameters);
-          break;
-        case 'request':
-          $object->initialize($this->dispatcher, $this->routing, $parameters);
-          break;
-        default:
-          $object->initialize($this, $parameters);
-      }
+      case 'routing':
+      case 'response':
+        $object = new $class($this->dispatcher, $parameters);
+        break;
+      case 'request':
+        $object = new $class($this->dispatcher, $this->routing, $parameters);
+        break;
+      default:
+        $object = new $class($this, $parameters);
     }
+
     $this->$type = $object;
   }
 }

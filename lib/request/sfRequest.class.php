@@ -67,6 +67,16 @@ abstract class sfRequest
     $attributeHolder = null;
 
   /**
+   * Class constructor.
+   *
+   * @see initialize()
+   */
+  public function __construct(sfEventDispatcher $dispatcher, $parameters = array(), $attributes = array())
+  {
+    $this->initialize($dispatcher, $parameters, $attributes);
+  }
+
+  /**
    * Initializes this sfRequest.
    *
    * @param  sfEventDispatcher  A sfEventDispatcher instance
@@ -178,27 +188,6 @@ abstract class sfRequest
   public function hasErrors()
   {
     return count($this->errors) > 0;
-  }
-
-  /**
-   * Retrieves a new sfRequest implementation instance.
-   *
-   * @param string A sfRequest implementation name
-   *
-   * @return sfRequest A sfRequest implementation instance
-   *
-   * @throws <b>sfFactoryException</b> If a request implementation instance cannot be created
-   */
-  public static function newInstance($class)
-  {
-    $object = new $class();
-
-    if (!$object instanceof sfRequest)
-    {
-      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfRequest.', $class));
-    }
-
-    return $object;
   }
 
   /**

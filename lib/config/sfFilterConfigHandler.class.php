@@ -163,8 +163,7 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
   protected function addFilter($category, $class, $parameters)
   {
     return sprintf("\nlist(\$class, \$parameters) = (array) sfConfig::get('sf_%s_filter', array('%s', %s));\n".
-                      "\$filter = new \$class();\n".
-                      "\$filter->initialize(\$this->context, \$parameters);\n".
+                      "\$filter = new \$class(\$this->context, \$parameters);\n".
                       "\$filterChain->register(\$filter);",
                       $category, $class, $parameters);
   }
@@ -185,10 +184,6 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
 // does this action require security?
 if (\$actionInstance->isSecure())
 {
-  if (!in_array('sfSecurityUser', class_implements(\$this->context->getUser())))
-  {
-    throw new sfSecurityException('Security is enabled, but your "sfUser" implementation does not implement "sfSecurityUser" interface.');
-  }
   {$this->addFilter($category, $class, $parameters)}
 }
 EOF;

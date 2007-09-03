@@ -14,7 +14,7 @@ $t = new lime_test(8, new lime_output_color());
 
 // ->initialize()
 $t->diag('->initialize()');
-$cache = sfCache::newInstance('sfNoCache');
+$cache = new sfNoCache();
 $cache->initialize();
 
 // ->get() ->set() ->has() ->remove() ->removePattern() ->clean() ->getLastModified() ->getTimeout()
