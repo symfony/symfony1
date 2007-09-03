@@ -48,6 +48,11 @@ abstract class sfLogger
   public function __construct(sfEventDispatcher $dispatcher, $options = array())
   {
     $this->initialize($dispatcher, $options);
+
+    if (isset($options['auto_shutdown']) && $options['auto_shutdown'])
+    {
+      register_shutdown_function(array($this, 'shutdown'));
+    }
   }
 
   /**

@@ -31,6 +31,11 @@ abstract class sfRouting
   public function __construct(sfEventDispatcher $dispatcher, $parameters = array())
   {
     $this->initialize($dispatcher, $parameters);
+
+    if ($this->parameterHolder->get('auto_shutdown', true))
+    {
+      register_shutdown_function(array($this, 'shutdown'));
+    }
   }
 
   /**

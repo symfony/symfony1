@@ -649,11 +649,4 @@ class sfViewCacheManager
 
     return true;
   }
-
-  /**
-   * Executes the shutdown procedure.
-   */
-  public function shutdown()
-  {
-  }
 }

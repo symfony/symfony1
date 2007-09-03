@@ -112,7 +112,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
 
         case 'storage':
           $defaultParameters = array();
-          $defaultParameters[] = sprintf("'session_id' => \$this->getRequest()->getParameter('%s'),", $parameters['session_name']);
+          $defaultParameters[] = sprintf("'auto_shutdown' => false, 'session_id' => \$this->getRequest()->getParameter('%s'),", $parameters['session_name']);
           if (is_subclass_of($class, 'sfDatabaseSessionStorage'))
           {
             $defaultParameters[] = sprintf("'database' => \$this->getDatabaseManager()->getDatabase('%s'),", isset($parameters['database']) ? $parameters['database'] : 'default');
@@ -122,7 +122,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           break;
 
         case 'user':
-          $instances[] = sprintf("  \$class = sfConfig::get('sf_factory_user', '%s');\n  \$this->factories['user'] = new \$class(\$this->dispatcher, \$this->factories['storage'], array_merge(array('culture' => \$this->factories['request']->getParameter('sf_culture'), 'default_culture' => sfConfig::get('sf_i18n_default_culture'), 'use_flash' => sfConfig::get('sf_use_flash')), sfConfig::get('sf_factory_user_parameters', %s)));", $class, var_export(is_array($parameters) ? $parameters : array(), true));
+          $instances[] = sprintf("  \$class = sfConfig::get('sf_factory_user', '%s');\n  \$this->factories['user'] = new \$class(\$this->dispatcher, \$this->factories['storage'], array_merge(array('auto_shutdown' => false, 'culture' => \$this->factories['request']->getParameter('sf_culture'), 'default_culture' => sfConfig::get('sf_i18n_default_culture'), 'use_flash' => sfConfig::get('sf_use_flash')), sfConfig::get('sf_factory_user_parameters', %s)));", $class, var_export(is_array($parameters) ? $parameters : array(), true));
           break;
 
         case 'view_cache':
@@ -158,7 +158,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           break;
 
         case 'routing':
-          $instances[] = sprintf("  \$class = sfConfig::get('sf_factory_routing', '%s');\n  \$this->factories['routing'] = new \$class(\$this->dispatcher, array_merge(array('suffix' => sfConfig::get('sf_suffix'), 'default_module' => sfConfig::get('sf_default_module'), 'default_action' => sfConfig::get('sf_default_action')), sfConfig::get('sf_factory_routing_parameters', %s)));", $class, var_export(is_array($parameters) ? $parameters : array(), true));
+          $instances[] = sprintf("  \$class = sfConfig::get('sf_factory_routing', '%s');\n  \$this->factories['routing'] = new \$class(\$this->dispatcher, array_merge(array('auto_shutdown' => false, 'suffix' => sfConfig::get('sf_suffix'), 'default_module' => sfConfig::get('sf_default_module'), 'default_action' => sfConfig::get('sf_default_action')), sfConfig::get('sf_factory_routing_parameters', %s)));", $class, var_export(is_array($parameters) ? $parameters : array(), true));
           if (isset($parameters['load_configuration']) && $parameters['load_configuration'])
           {
             $instances[] = "  \$this->factories['routing']->loadConfiguration();\n";
@@ -192,9 +192,9 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
               if ($condition)
               {
                 // create logger instance
-                $loggers .= sprintf("\n\$logger = new %s(\$this->dispatcher, %s);\n\$this->factories['logger']->addLogger(\$logger);\n", 
+                $loggers .= sprintf("\n\$logger = new %s(\$this->dispatcher, array_merge(array('auto_shutdown' => false), %s));\n\$this->factories['logger']->addLogger(\$logger);\n", 
                               $keys['class'],
-                              isset($keys['param']) ? var_export($keys['param'], true) : ''
+                              isset($keys['param']) ? var_export($keys['param'], true) : 'array()'
                             );
               }
             }
@@ -203,9 +203,9 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           }
 
           $instances[] = sprintf(
-                         "  \$class = sfConfig::get('sf_factory_logger', '%s');\n  \$this->factories['logger'] = new \$class(\$this->dispatcher, sfConfig::get('sf_factory_logger_parameters', %s));\n".
+                         "  \$class = sfConfig::get('sf_factory_logger', '%s');\n  \$this->factories['logger'] = new \$class(\$this->dispatcher, array_merge(array('auto_shutdown' => false), sfConfig::get('sf_factory_logger_parameters', %s)));\n".
                          "  %s"
-                         , $class, var_export($parameters, true), $loggers);
+                         , $class, var_export(is_array($parameters) ? $parameters : array(), true), $loggers);
           break;
       }
     }

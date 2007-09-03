@@ -46,6 +46,11 @@ class sfUser
   public function __construct(sfEventDispatcher $dispatcher, sfStorage $storage, $parameters = array())
   {
     $this->initialize($dispatcher, $storage, $parameters);
+
+    if ($this->getParameter('auto_shutdown', true))
+    {
+      register_shutdown_function(array($this, 'shutdown'));
+    }
   }
 
   /**
@@ -228,7 +233,7 @@ class sfUser
   }
 
   /**
-   * Execute the shutdown procedure.
+   * Executes the shutdown procedure.
    *
    * @return void
    */

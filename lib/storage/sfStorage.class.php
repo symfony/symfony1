@@ -31,6 +31,11 @@ abstract class sfStorage
   public function __construct($parameters = array())
   {
     $this->initialize($parameters);
+
+    if ($this->getParameter('auto_shutdown', true))
+    {
+      register_shutdown_function(array($this, 'shutdown'));
+    }
   }
 
   /**

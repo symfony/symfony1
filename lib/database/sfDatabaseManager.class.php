@@ -30,9 +30,14 @@ class sfDatabaseManager
    *
    * @see initialize()
    */
-  public function __construct()
+  public function __construct($options = array())
   {
     $this->initialize();
+
+    if (isset($options['auto_shutdown']) && $options['auto_shutdown'])
+    {
+      register_shutdown_function(array($this, 'shutdown'));
+    }
   }
 
   /**
