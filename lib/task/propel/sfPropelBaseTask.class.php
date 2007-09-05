@@ -177,9 +177,12 @@ abstract class sfPropelBaseTask extends sfBaseTask
     }
 
     // Logger
-    $args[] = '-logger';
-    $args[] = 'phing.listener.AnsiColorLogger';
-
+    if (DIRECTORY_SEPARATOR != '\\' && (function_exists('posix_isatty') && @posix_isatty(STDOUT)))
+    {
+      $args[] = '-logger';
+      $args[] = 'phing.listener.AnsiColorLogger';
+    }
+    
     $args[] = $taskName;
 
     Phing::startup();
