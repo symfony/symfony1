@@ -359,6 +359,17 @@ abstract class sfView
    */
   public function setDecoratorTemplate($template)
   {
+    if (false === $template)
+    {
+      $this->decorator = false;
+
+      return;
+    }
+    else if (is_null($template))
+    {
+      return;
+    }
+
     if (sfToolkit::isPathAbsolute($template))
     {
       $this->decoratorDirectory = dirname($template);

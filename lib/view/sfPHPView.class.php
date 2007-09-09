@@ -99,7 +99,7 @@ class sfPHPView extends sfView
     require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$viewConfigFile));
 
     // decorator configuration
-    $this->updateDecoratorConfiguration();
+    $this->setDecoratorTemplate(sfConfig::get($this->moduleName.'_'.$this->actionName.'_layout'));
 
     // set template directory
     if (!$this->directory)
@@ -143,14 +143,12 @@ class sfPHPView extends sfView
       $viewCache = $this->context->getViewCacheManager();
       $uri = $this->context->getRouting()->getCurrentInternalUri();
 
-      list($content, $attributeHolder) = $viewCache->getActionCache($uri);
+      list($content, $attributeHolder, $decoratorTemplate) = $viewCache->getActionCache($uri);
       if (!is_null($content))
       {
         $this->attributeHolder = $attributeHolder;
+        $this->setDecoratorTemplate($decoratorTemplate);
       }
-
-      // FIXME: needed because the response in cache can change the layout
-      $this->updateDecoratorConfiguration();
     }
 
     // render template if no cache
@@ -164,7 +162,7 @@ class sfPHPView extends sfView
 
       if (sfConfig::get('sf_cache'))
       {
-        $content = $viewCache->setActionCache($uri, $content, $this->attributeHolder);
+        $content = $viewCache->setActionCache($uri, $content, $this->attributeHolder, $this->isDecorator() ? $this->getDecoratorDirectory().'/'.$this->getDecoratorTemplate() : false);
       }
     }
 
@@ -175,19 +173,5 @@ class sfPHPView extends sfView
     }
 
     return $content;
-  }
-
-  protected function updateDecoratorConfiguration()
-  {
-    // decorator configuration
-    $layout = $this->context->getResponse()->getParameter($this->moduleName.'_'.$this->actionName.'_layout', null, 'symfony/action/view');
-    if (false === $layout)
-    {
-      $this->setDecorator(false);
-    }
-    else if (!is_null($layout))
-    {
-      $this->setDecoratorTemplate($layout.$this->getExtension());
-    }
   }
 }
