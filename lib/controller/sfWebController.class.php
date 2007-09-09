@@ -198,23 +198,17 @@ abstract class sfWebController extends sfController
   {
     $url = $this->genUrl($url, true);
 
-    $response = $this->context->getResponse();
-
-    // redirect
-    $response->clearHttpHeaders();
-    $response->setStatusCode($statusCode);
-    $response->setHttpHeader('Location', $url);
-    $response->setContent(sprintf('<html><head><meta http-equiv="refresh" content="%d;url=%s"/></head></html>', $delay, htmlentities($url, ENT_QUOTES, sfConfig::get('sf_charset'))));
-
     if (sfConfig::get('sf_logging_enabled'))
     {
       $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Redirect to "%s"', $url))));
     }
 
-    if (!sfConfig::get('sf_test'))
-    {
-      $response->sendHttpHeaders();
-    }
-    $response->sendContent();
+    // redirect
+    $response = $this->context->getResponse();
+    $response->clearHttpHeaders();
+    $response->setStatusCode($statusCode);
+    $response->setHttpHeader('Location', $url);
+    $response->setContent(sprintf('<html><head><meta http-equiv="refresh" content="%d;url=%s"/></head></html>', $delay, htmlentities($url, ENT_QUOTES, sfConfig::get('sf_charset'))));
+    $response->send();
   }
 }

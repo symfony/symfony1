@@ -40,11 +40,8 @@ class sfRenderingFilter extends sfFilter
     // get response object
     $response = $this->context->getResponse();
 
-    // send headers
-    $response->sendHttpHeaders();
-
-    // send content
-    $response->sendContent();
+    // send headers + content
+    $response->send();
 
     // log timers information
     if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))

@@ -271,6 +271,11 @@ class sfWebResponse extends sfResponse
    */
   public function sendHttpHeaders()
   {
+    if (sfConfig::get('sf_test'))
+    {
+      return;
+    }
+
     // status
     $status = 'HTTP/1.0 '.$this->statusCode.' '.$this->statusText;
     header($status);
