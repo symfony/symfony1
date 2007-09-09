@@ -87,26 +87,24 @@ abstract class sfValidator
    *
    * @param string Parameter name
    * @param mixed A default parameter value
-   * @param string A parameter namespace
    *
    * @return mixed A parameter value
    */
-  public function getParameter($name, $default = null, $ns = null)
+  public function getParameter($name, $default = null)
   {
-    return $this->parameterHolder->get($name, $default, $ns);
+    return $this->parameterHolder->get($name, $default);
   }
 
   /**
    * Indicates whether or not a parameter exist for the validator.
    *
    * @param string A parameter name
-   * @param string A parameter namespace
    *
    * @return boolean true, if parameter exists, otherwise false
    */
-  public function hasParameter($name, $ns = null)
+  public function hasParameter($name)
   {
-    return $this->parameterHolder->has($name, $ns);
+    return $this->parameterHolder->has($name);
   }
 
   /**
@@ -114,10 +112,9 @@ abstract class sfValidator
    *
    * @param string A parameter name
    * @param mixed A parameter value
-   * @param string A parameter namespace
    */
-  public function setParameter($name, $value, $ns = null)
+  public function setParameter($name, $value)
   {
-    $this->parameterHolder->set($name, $value, $ns);
+    $this->parameterHolder->set($name, $value);
   }
 }

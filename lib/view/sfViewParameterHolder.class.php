@@ -85,7 +85,7 @@ class sfViewParameterHolder extends sfParameterHolder
     }
     $tmp->context = null;
 
-    return serialize(array($tmp->default_namespace, $tmp->parameters));
+    return serialize($tmp->parameters);
   }
 
   /**

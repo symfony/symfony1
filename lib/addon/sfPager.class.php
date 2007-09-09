@@ -280,18 +280,18 @@ abstract class sfPager
     return $this->parameterHolder;
   }
 
-  public function getParameter($name, $default = null, $ns = null)
+  public function getParameter($name, $default = null)
   {
-    return $this->parameterHolder->get($name, $default, $ns);
+    return $this->parameterHolder->get($name, $default);
   }
 
-  public function hasParameter($name, $ns = null)
+  public function hasParameter($name)
   {
-    return $this->parameterHolder->has($name, $ns);
+    return $this->parameterHolder->has($name);
   }
 
-  public function setParameter($name, $value, $ns = null)
+  public function setParameter($name, $value)
   {
-    return $this->parameterHolder->set($name, $value, $ns);
+    return $this->parameterHolder->set($name, $value);
   }
 }

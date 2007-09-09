@@ -20,6 +20,8 @@ $autoload = new sfSimpleAutoload(sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.spri
 $autoload->addDirectory(realpath(dirname(__FILE__).'/../../lib'));
 $autoload->register();
 
+sfConfig::set('sf_test_cache_dir', sfToolkit::getTmpDir());
+
 class sfException extends Exception
 {
   private $name = null;

@@ -14,7 +14,7 @@ $t = new lime_test(59, new lime_output_color());
 
 // ->clear()
 $t->diag('->clear()');
-$ph = new sfParameterHolder();
+$ph = new sfNamespacedParameterHolder();
 $ph->clear();
 $t->is($ph->getAll(), null, '->clear() clears all parameters');
 
@@ -24,20 +24,20 @@ $t->is($ph->getAll(), null, '->clear() clears all parameters');
 
 // ->get()
 $t->diag('->get()');
-$ph = new sfParameterHolder();
+$ph = new sfNamespacedParameterHolder();
 $ph->set('foo', 'bar');
 $t->is($ph->get('foo'), 'bar', '->get() returns the parameter value for the given key');
 $t->is($ph->get('bar'), null, '->get() returns null if the key does not exist');
 
-$ph = new sfParameterHolder();
+$ph = new sfNamespacedParameterHolder();
 $t->is('default_value', $ph->get('foo1', 'default_value'), '->get() takes the default value as its second argument');
 
-$ph = new sfParameterHolder();
+$ph = new sfNamespacedParameterHolder();
 $ph->set('myfoo', 'bar', 'symfony/mynamespace');
 $t->is('bar', $ph->get('myfoo', null, 'symfony/mynamespace'), '->get() takes an optional namespace as its third argument');
 $t->is(null, $ph->get('myfoo'), '->get() can have the same key for several namespaces');
 
-$ph = new sfParameterHolder();
+$ph = new sfNamespacedParameterHolder();
 $ph->add(array('foo' => array(
   'bar' => array(
     'baz' => 'foo bar',
@@ -52,7 +52,7 @@ $t->is($ph->get('foo[bars][]'), $ph->get('foo[bars]'), '->get() returns an array
 
 // ->getNames()
 $t->diag('->getNames()');
-$ph = new sfParameterHolder();
+$ph = new sfNamespacedParameterHolder();
 $ph->set('foo', 'bar');
 $ph->set('yourfoo', 'bar');
 $ph->set('myfoo', 'bar', 'symfony/mynamespace');
@@ -62,7 +62,7 @@ $t->is($ph->getNames('symfony/mynamespace'), array('myfoo'), '->getNames() takes
 
 // ->getNamespaces()
 $t->diag('->getNamespaces()');
-$ph = new sfParameterHolder();
+$ph = new sfNamespacedParameterHolder();
 $ph->set('foo', 'bar');
 $ph->set('yourfoo', 'bar');
 $ph->set('myfoo', 'bar', 'symfony/mynamespace');
@@ -71,7 +71,7 @@ $t->is($ph->getNamespaces(), array($ph->getDefaultNamespace(), 'symfony/mynamesp
 
 // ->setDefaultNamespace()
 $t->diag('->setDefaultNamespace()');
-$ph = new sfParameterHolder('symfony/mynamespace');
+$ph = new sfNamespacedParameterHolder('symfony/mynamespace');
 $ph->setDefaultNamespace('othernamespace');
 
 $t->is($ph->getDefaultNamespace(), 'othernamespace', '->setDefaultNamespace() sets the default namespace');
@@ -91,14 +91,14 @@ $t->is($ph->get('foo', null, 'foonamespace'), 'bar', '->setDefaultNamespace() do
 // ->getAll()
 $t->diag('->getAll()');
 $parameters = array('foo' => 'bar', 'myfoo' => 'bar');
-$ph = new sfParameterHolder();
+$ph = new sfNamespacedParameterHolder();
 $ph->add($parameters);
 $ph->set('myfoo', 'bar', 'symfony/mynamespace');
 $t->is($ph->getAll(), $parameters, '->getAll() returns all parameters from the default namespace');
 
 // ->has()
 $t->diag('->has()');
-$ph = new sfParameterHolder();
+$ph = new sfNamespacedParameterHolder();
 $ph->set('foo', 'bar');
 $ph->set('myfoo', 'bar', 'symfony/mynamespace');
 $t->is($ph->has('foo'), true, '->has() returns true if the key exists');
@@ -106,7 +106,7 @@ $t->is($ph->has('bar'), false, '->has() returns false if the key does not exist'
 $t->is($ph->has('myfoo'), false, '->has() returns false if the key exists but in another namespace');
 $t->is($ph->has('myfoo', 'symfony/mynamespace'), true, '->has() returns true if the key exists in the namespace given as its second argument');
 
-$ph = new sfParameterHolder();
+$ph = new sfNamespacedParameterHolder();
 $ph->add(array('foo' => array(
   'bar' => array(
     'baz' => 'foo bar',
@@ -121,7 +121,7 @@ $t->is($ph->get('foo[bars][]'), $ph->has('foo[bars]'), '->has() returns true for
 
 // ->hasNamespace()
 $t->diag('->hasNamespace()');
-$ph = new sfParameterHolder();
+$ph = new sfNamespacedParameterHolder();
 $ph->set('foo', 'bar');
 $ph->set('myfoo', 'bar', 'symfony/mynamespace');
 $t->is($ph->hasNamespace($ph->getDefaultNamespace()), true, '->hasNamespace() returns true for the default namespace');
@@ -130,7 +130,7 @@ $t->is($ph->hasNamespace('symfony/nonexistant'), false, '->hasNamespace() return
 
 // ->remove()
 $t->diag('->remove()');
-$ph = new sfParameterHolder();
+$ph = new sfNamespacedParameterHolder();
 $ph->set('foo', 'bar');
 $ph->set('myfoo', 'bar');
 $ph->set('myfoo', 'bar', 'symfony/mynamespace');
@@ -149,7 +149,7 @@ $t->is($ph->getAll(), null, '->remove() removes the key from parameters');
 
 // ->removeNamespace()
 $t->diag('->removeNamespace()');
-$ph = new sfParameterHolder();
+$ph = new sfNamespacedParameterHolder();
 $ph->set('foo', 'bar');
 $ph->set('myfoo', 'bar');
 $ph->set('myfoo', 'bar', 'symfony/mynamespace');
@@ -177,7 +177,7 @@ $t->is(null, $ph->getAll(), '->removeNamespace() removes all the keys from param
 $t->diag('->set()');
 $foo = 'bar';
 
-$ph = new sfParameterHolder();
+$ph = new sfNamespacedParameterHolder();
 $ph->set('foo', $foo);
 $t->is($ph->get('foo'), $foo, '->set() sets the value for a key');
 
@@ -191,7 +191,7 @@ $t->is($ph->get('myfoo', null, 'symfony/mynamespace'), 'bar', '->set() takes a n
 $t->diag('->setByRef()');
 $foo = 'bar';
 
-$ph = new sfParameterHolder();
+$ph = new sfNamespacedParameterHolder();
 $ph->setByRef('foo', $foo);
 $t->is($ph->get('foo'), $foo, '->setByRef() sets the value for a key');
 
@@ -208,7 +208,7 @@ $foo = 'bar';
 $parameters = array('foo' => $foo, 'bar' => 'bar');
 $myparameters = array('myfoo' => 'bar', 'mybar' => 'bar');
 
-$ph = new sfParameterHolder();
+$ph = new sfNamespacedParameterHolder();
 $ph->add($parameters);
 $ph->add($myparameters, 'symfony/mynamespace');
 
@@ -224,7 +224,7 @@ $foo = 'bar';
 $parameters = array('foo' => &$foo, 'bar' => 'bar');
 $myparameters = array('myfoo' => 'bar', 'mybar' => 'bar');
 
-$ph = new sfParameterHolder();
+$ph = new sfNamespacedParameterHolder();
 $ph->addByRef($parameters);
 $ph->addByRef($myparameters, 'symfony/mynamespace');
 
@@ -236,4 +236,4 @@ $t->is($parameters, $ph->getAll(), '->add() adds a reference of an array of para
 
 // ->serialize() ->unserialize()
 $t->diag('->serialize() ->unserialize()');
-$t->ok($ph == unserialize(serialize($ph)), 'sfParameterHolder implements the Serializable interface');
+$t->ok($ph == unserialize(serialize($ph)), 'sfNamespacedParameterHolder implements the Serializable interface');

@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(14, new lime_output_color());
+$t = new lime_test(11, new lime_output_color());
 
 class myValidator extends sfValidator
 {

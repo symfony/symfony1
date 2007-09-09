@@ -168,23 +168,24 @@ $response1->setContentType('text/plain');
 $response1->setTitle('My title');
 
 $response2->mergeProperties($response1);
-$t->is($response1->getHttpHeader('symfony'), $response2->getHttpHeader('symfony'), '->mergerProperties() merges http headers');
-$t->is($response1->getContentType(), $response2->getContentType(), '->mergerProperties() merges content type');
-$t->is($response1->getTitle(), $response2->getTitle(), '->mergerProperties() merges titles');
+$t->is($response1->getHttpHeader('symfony'), $response2->getHttpHeader('symfony'), '->mergeProperties() merges http headers');
+$t->is($response1->getContentType(), $response2->getContentType(), '->mergeProperties() merges content type');
+$t->is($response1->getTitle(), $response2->getTitle(), '->mergeProperties() merges titles');
 
 // ->addStylesheet()
 $t->diag('->addStylesheet()');
 $response = new myWebResponse($dispatcher);
 $response->addStylesheet('test');
-$t->ok($response->getParameterHolder()->has('test', 'helper/asset/auto/stylesheet'), '->addStylesheet() adds a new stylesheet for the response');
+$t->ok(array_key_exists('test', $response->getStylesheets()), '->addStylesheet() adds a new stylesheet for the response');
 $response->addStylesheet('foo', '');
-$t->ok($response->getParameterHolder()->has('foo', 'helper/asset/auto/stylesheet'), '->addStylesheet() adds a new stylesheet for the response');
+$t->ok(array_key_exists('foo', $response->getStylesheets()), '->addStylesheet() adds a new stylesheet for the response');
 $response->addStylesheet('first', 'first');
-$t->ok($response->getParameterHolder()->has('first', 'helper/asset/auto/stylesheet/first'), '->addStylesheet() takes a position as its second argument');
+$t->ok(array_key_exists('first', $response->getStylesheets('first')), '->addStylesheet() takes a position as its second argument');
 $response->addStylesheet('last', 'last');
-$t->ok($response->getParameterHolder()->has('last', 'helper/asset/auto/stylesheet/last'), '->addStylesheet() takes a position as its second argument');
+$t->ok(array_key_exists('last', $response->getStylesheets('last')), '->addStylesheet() takes a position as its second argument');
 $response->addStylesheet('bar', '', array('media' => 'print'));
-$t->is($response->getParameterHolder()->get('bar', null, 'helper/asset/auto/stylesheet'), array('media' => 'print'), '->addStylesheet() takes an array of parameters as its third argument');
+$stylesheets = $response->getStylesheets();
+$t->is($stylesheets['bar'], array('media' => 'print'), '->addStylesheet() takes an array of parameters as its third argument');
 
 // ->getStylesheets()
 $t->diag('->getStylesheets()');
@@ -196,13 +197,13 @@ $t->is($response->getStylesheets('last'), array('last' => array()), '->getStyles
 $t->diag('->addJavascript()');
 $response = new myWebResponse($dispatcher);
 $response->addJavascript('test');
-$t->ok($response->getParameterHolder()->has('test', 'helper/asset/auto/javascript'), '->addJavascript() adds a new javascript for the response');
+$t->ok(array_key_exists('test', $response->getJavascripts()), '->addJavascript() adds a new javascript for the response');
 $response->addJavascript('foo', '', array('raw_name' => true));
-$t->ok($response->getParameterHolder()->has('foo', 'helper/asset/auto/javascript'), '->addJavascript() adds a new javascript for the response');
+$t->ok(array_key_exists('foo', $response->getJavascripts()), '->addJavascript() adds a new javascript for the response');
 $response->addJavascript('first_js', 'first');
-$t->ok($response->getParameterHolder()->has('first_js', 'helper/asset/auto/javascript/first'), '->addJavascript() takes a position as its second argument');
+$t->ok(array_key_exists('first_js', $response->getJavascripts('first')), '->addJavascript() takes a position as its second argument');
 $response->addJavascript('last_js', 'last');
-$t->ok($response->getParameterHolder()->has('last_js', 'helper/asset/auto/javascript/last'), '->addJavascript() takes a position as its second argument');
+$t->ok(array_key_exists('last_js', $response->getJavascripts('last')), '->addJavascript() takes a position as its second argument');
 
 // ->getJavascripts()
 $t->diag('->getJavascripts()');

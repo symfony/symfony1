@@ -10,10 +10,10 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(39, new lime_output_color());
+$t = new lime_test(36, new lime_output_color());
 
 $_SERVER['session_id'] = 'test';
-sfConfig::set('sf_test_cache_dir', sfToolkit::getTmpDir());
+sfToolkit::clearDirectory(sfConfig::get('sf_test_cache_dir').'/sessions');
 
 $dispatcher = new sfEventDispatcher();
 $storage = new sfSessionTestStorage(array('session_path' => sfConfig::get('sf_test_cache_dir').'/sessions'));

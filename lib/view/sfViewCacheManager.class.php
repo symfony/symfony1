@@ -357,7 +357,7 @@ class sfViewCacheManager
   protected function ignore()
   {
     // ignore cache parameter? (only available in debug mode)
-    if (sfConfig::get('sf_debug') && $this->context->getRequest()->getParameter('_sf_ignore_cache', false, 'symfony/request/sfWebRequest') == true)
+    if (sfConfig::get('sf_debug') && $this->context->getRequest()->getAttribute('_sf_ignore_cache'))
     {
       if (sfConfig::get('sf_logging_enabled'))
       {

@@ -72,7 +72,7 @@ class sfUser
     $this->parameterHolder = new sfParameterHolder();
     $this->parameterHolder->add($parameters);
 
-    $this->attributeHolder = new sfParameterHolder(self::ATTRIBUTE_NAMESPACE);
+    $this->attributeHolder = new sfNamespacedParameterHolder(self::ATTRIBUTE_NAMESPACE);
 
     // read attributes from storage
     $attributes = $storage->read(self::ATTRIBUTE_NAMESPACE);
@@ -217,19 +217,19 @@ class sfUser
     return $this->attributeHolder->set($name, $value, $ns);
   }
 
-  public function getParameter($name, $default = null, $ns = null)
+  public function getParameter($name, $default = null)
   {
-    return $this->parameterHolder->get($name, $default, $ns);
+    return $this->parameterHolder->get($name, $default);
   }
 
-  public function hasParameter($name, $ns = null)
+  public function hasParameter($name)
   {
-    return $this->parameterHolder->has($name, $ns);
+    return $this->parameterHolder->has($name);
   }
 
-  public function setParameter($name, $value, $ns = null)
+  public function setParameter($name, $value)
   {
-    return $this->parameterHolder->set($name, $value, $ns);
+    return $this->parameterHolder->set($name, $value);
   }
 
   /**

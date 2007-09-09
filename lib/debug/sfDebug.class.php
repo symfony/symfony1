@@ -151,14 +151,24 @@ class sfDebug
   public static function flattenParameterHolder($parameterHolder)
   {
     $values = array();
-    foreach ($parameterHolder->getNamespaces() as $ns)
+    if ($parameterHolder instanceof sfNamespacedParameterHolder)
     {
-      $values[$ns] = array();
-      foreach ($parameterHolder->getAll($ns) as $key => $value)
+      foreach ($parameterHolder->getNamespaces() as $ns)
       {
-        $values[$ns][$key] = $value;
+        $values[$ns] = array();
+        foreach ($parameterHolder->getAll($ns) as $key => $value)
+        {
+          $values[$ns][$key] = $value;
+        }
+        ksort($values[$ns]);
       }
-      ksort($values[$ns]);
+    }
+    else
+    {
+      foreach ($parameterHolder->getAll() as $key => $value)
+      {
+        $values[$key] = $value;
+      }
     }
 
     ksort($values);

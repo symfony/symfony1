@@ -25,15 +25,20 @@ class sfWebResponse extends sfResponse
     $statusCode  = 200,
     $statusText  = 'OK',
     $statusTexts = array(),
-    $headerOnly  = false;
+    $headerOnly  = false,
+    $headers     = array(),
+    $metas       = array(),
+    $httpMetas   = array(),
+    $stylesheets = array(),
+    $javascripts = array();
 
   /**
    * Initializes this sfWebResponse.
    *
    * @param  sfEventDispatcher  A sfEventDispatcher instance
-   * @param  array         An array of parameters
+   * @param  array              An array of parameters
    *
-   * @return Boolean       true, if initialization completes successfully, otherwise false
+   * @return Boolean            true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfResponse
    */
@@ -187,7 +192,7 @@ class sfWebResponse extends sfResponse
 
     if (is_null($value))
     {
-      $this->getParameterHolder()->remove($name, 'symfony/response/http/headers');
+      unset($this->headers[$name]);
 
       return;
     }
@@ -204,11 +209,11 @@ class sfWebResponse extends sfResponse
 
     if (!$replace)
     {
-      $current = $this->getParameter($name, '', 'symfony/response/http/headers');
+      $current = isset($this->headers[$name]) ? $this->headers[$name] : '';
       $value = ($current ? $current.', ' : '').$value;
     }
 
-    $this->setParameter($name, $value, 'symfony/response/http/headers');
+    $this->headers[$name] = $value;
   }
 
   /**
@@ -218,7 +223,9 @@ class sfWebResponse extends sfResponse
    */
   public function getHttpHeader($name, $default = null)
   {
-    return $this->getParameter($this->normalizeHeaderName($name), $default, 'symfony/response/http/headers');
+    $name = $this->normalizeHeaderName($name);
+
+    return isset($this->headers[$name]) ? $this->headers[$name] : $default;
   }
 
   /**
@@ -228,7 +235,7 @@ class sfWebResponse extends sfResponse
    */
   public function hasHttpHeader($name)
   {
-    return $this->hasParameter($this->normalizeHeaderName($name), 'symfony/response/http/headers');
+    return array_key_exists($this->normalizeHeaderName($name), $this->headers);
   }
 
   /**
@@ -245,7 +252,7 @@ class sfWebResponse extends sfResponse
       $value .= '; charset='.sfConfig::get('sf_charset');
     }
 
-    $this->setParameter('Content-Type', $value, 'symfony/response/http/headers');
+    $this->headers['Content-Type'] = $value;
   }
 
   /**
@@ -274,7 +281,7 @@ class sfWebResponse extends sfResponse
     }
 
     // headers
-    foreach ($this->getParameterHolder()->getAll('symfony/response/http/headers') as $name => $value)
+    foreach ($this->headers as $name => $value)
     {
       header($name.': '.$value);
 
@@ -424,7 +431,7 @@ class sfWebResponse extends sfResponse
    */
   public function getHttpMetas()
   {
-    return $this->getParameterHolder()->getAll('helper/asset/auto/httpmeta');
+    return $this->httpMetas;
   }
 
   /**
@@ -443,7 +450,7 @@ class sfWebResponse extends sfResponse
 
     if (is_null($value))
     {
-      $this->getParameterHolder()->remove($key, 'helper/asset/auto/httpmeta');
+      unset($this->httpMetas[$key]);
 
       return;
     }
@@ -455,11 +462,11 @@ class sfWebResponse extends sfResponse
 
     if (!$replace)
     {
-      $current = $this->getParameter($key, '', 'helper/asset/auto/httpmeta');
+      $current = isset($this->httpMetas[$key]) ? $this->httpMetas[$key] : '';
       $value = ($current ? $current.', ' : '').$value;
     }
 
-    $this->setParameter($key, $value, 'helper/asset/auto/httpmeta');
+    $this->httpMetas[$key] = $value;
   }
 
   /**
@@ -469,7 +476,7 @@ class sfWebResponse extends sfResponse
    */
   public function getMetas()
   {
-    return $this->getParameterHolder()->getAll('helper/asset/auto/meta');
+    return $this->metas;
   }
 
   /**
@@ -486,7 +493,7 @@ class sfWebResponse extends sfResponse
 
     if (is_null($value))
     {
-      $this->getParameterHolder()->remove($key, 'helper/asset/auto/meta');
+      unset($this->metas[$key]);
 
       return;
     }
@@ -498,9 +505,10 @@ class sfWebResponse extends sfResponse
       $value = htmlentities($value, ENT_QUOTES, sfConfig::get('sf_charset'));
     }
 
-    if ($replace || !$this->getParameter($key, null, 'helper/asset/auto/meta'))
+    $current = isset($this->metas[$key]) ? $this->metas[$key] : null;
+    if ($replace || !$current)
     {
-      $this->setParameter($key, $value, 'helper/asset/auto/meta');
+      $this->metas[$key] = $value;
     }
   }
 
@@ -511,7 +519,7 @@ class sfWebResponse extends sfResponse
    */
   public function getTitle()
   {
-    return $this->getParameter('title', '', 'helper/asset/auto/meta');
+    return isset($this->metas['title']) ? $this->metas['title'] : '';
   }
 
   /**
@@ -528,25 +536,35 @@ class sfWebResponse extends sfResponse
   /**
    * Retrieves stylesheets for the current web response.
    *
-   * @param string Direcotry delimiter
+   * @param string  Position
    *
    * @return string Stylesheets
    */
   public function getStylesheets($position = '')
   {
-    return $this->getParameterHolder()->getAll('helper/asset/auto/stylesheet'.($position ? '/'.$position : ''));
+    if ($position == 'ALL')
+    {
+      return $this->stylesheets;
+    }
+
+    return isset($this->stylesheets[$position]) ? $this->stylesheets[$position] : array();
   }
 
   /**
    * Adds an stylesheet to the current web response.
    *
    * @param string Stylesheet
-   * @param string Direcotry delimiter
+   * @param string Position
    * @param string Stylesheet options
    */
   public function addStylesheet($css, $position = '', $options = array())
   {
-    $this->setParameter($css, $options, 'helper/asset/auto/stylesheet'.($position ? '/'.$position : ''));
+    if (!isset($this->stylesheets[$position]))
+    {
+      $this->stylesheets[$position] = array();
+    }
+
+    $this->stylesheets[$position][$css] = $options;
   }
 
   /**
@@ -558,7 +576,12 @@ class sfWebResponse extends sfResponse
    */
   public function getJavascripts($position = '')
   {
-    return $this->getParameterHolder()->getAll('helper/asset/auto/javascript'.($position ? '/'.$position : ''));
+    if ($position == 'ALL')
+    {
+      return $this->javascripts;
+    }
+
+    return isset($this->javascript[$position]) ? $this->javascript[$position] : array();
   }
 
   /**
@@ -570,7 +593,12 @@ class sfWebResponse extends sfResponse
    */
   public function addJavascript($js, $position = '', $options = array())
   {
-    $this->setParameter($js, $options, 'helper/asset/auto/javascript'.($position ? '/'.$position : ''));
+    if (!isset($this->javascript[$position]))
+    {
+      $this->javascript[$position] = array();
+    }
+
+    $this->javascript[$position][$js] = $options;
   }
 
   /**
@@ -596,7 +624,7 @@ class sfWebResponse extends sfResponse
    */
   public function getHttpHeaders()
   {
-    return $this->getParameterHolder()->getAll('symfony/response/http/headers');
+    return $this->headers;
   }
 
   /**
@@ -604,17 +632,22 @@ class sfWebResponse extends sfResponse
    */
   public function clearHttpHeaders()
   {
-    $this->getParameterHolder()->removeNamespace('symfony/response/http/headers');
+    $this->headers = array();
   }
 
   /**
-   * Copies a propertie to a new one.
+   * Copies all properties from a given sfWebResponse object to the current one.
    *
-   * @param sfResponse Response instance
+   * @param sfWebResponse A sfWebResponse instance
    */
-  public function mergeProperties($response)
+  public function mergeProperties(sfWebResponse $response)
   {
     $this->parameterHolder = clone $response->getParameterHolder();
+    $this->headers         = $response->getHttpHeaders();
+    $this->metas           = $response->getMetas();
+    $this->httpMetas       = $response->getHttpMetas();
+    $this->stylesheets     = $response->getStylesheets('ALL');
+    $this->javascripts     = $response->getJavascripts('ALL');
   }
 
   /**
@@ -624,7 +657,7 @@ class sfWebResponse extends sfResponse
    */
   public function serialize()
   {
-    return serialize(array($this->content, $this->statusCode, $this->statusText, $this->parameterHolder, $this->cookies, $this->headerOnly));
+    return serialize(array($this->content, $this->statusCode, $this->statusText, $this->parameterHolder, $this->cookies, $this->headerOnly, $this->headers, $this->metas, $this->httpMetas, $this->stylesheets, $this->javascripts));
   }
 
   /**
@@ -636,12 +669,7 @@ class sfWebResponse extends sfResponse
 
     $this->initialize(sfContext::hasInstance() ? sfContext::getInstance()->getEventDispatcher() : new sfEventDispatcher());
 
-    $this->content         = $data[0];
-    $this->statusCode      = $data[1];
-    $this->statusText      = $data[2];
-    $this->parameterHolder = $data[3];
-    $this->cookies         = $data[4];
-    $this->headerOnly      = $data[5];
+    list($this->content, $this->statusCode, $this->statusText, $this->parameterHolder, $this->cookies, $this->headerOnly, $this->headers, $this->metas, $this->httpMetas, $this->stylesheets, $this->javascripts) = $data;
   }
 
   /**

@@ -209,26 +209,24 @@ abstract class sfView
    *
    * @param string Name of the attribute
    * @param string Value of the attribute
-   * @param string The current namespace
    *
    * @return mixed Attribute
    */
-  public function getAttribute($name, $default = null, $ns = null)
+  public function getAttribute($name, $default = null)
   {
-    return $this->attributeHolder->get($name, $default, $ns);
+    return $this->attributeHolder->get($name, $default);
   }
 
   /**
    * Returns true if the view have attributes.
    *
    * @param string Name of the attribute
-   * @param string Namespace for the current view
    *
    * @return mixed Attribute of the view
    */
-  public function hasAttribute($name, $ns = null)
+  public function hasAttribute($name)
   {
-    return $this->attributeHolder->has($name, $ns);
+    return $this->attributeHolder->has($name);
   }
 
   /**
@@ -236,11 +234,10 @@ abstract class sfView
    *
    * @param string Attribute name
    * @param string Value for the attribute
-   * @param string Namespace for the current
    */
-  public function setAttribute($name, $value, $ns = null)
+  public function setAttribute($name, $value)
   {
-    $this->attributeHolder->set($name, $value, $ns);
+    $this->attributeHolder->set($name, $value);
   }
 
   /**
@@ -258,26 +255,24 @@ abstract class sfView
    *
    * @param string Parameter name
    * @param string Default parameter value
-   * @param string Namespace for the current view
    *
    * @return mixed A parameter value
    */
-  public function getParameter($name, $default = null, $ns = null)
+  public function getParameter($name, $default = null)
   {
-    return $this->parameterHolder->get($name, $default, $ns);
+    return $this->parameterHolder->get($name, $default);
   }
 
   /**
    * Indicates whether or not a parameter exist for the current view.
    *
    * @param string Name of the paramater
-   * @param string Namespace for the current view
    *
    * @return boolean true, if the parameter exists otherwise false
    */
-  public function hasParameter($name, $ns = null)
+  public function hasParameter($name)
   {
-    return $this->parameterHolder->has($name, $ns);
+    return $this->parameterHolder->has($name);
   }
 
   /**
@@ -285,11 +280,10 @@ abstract class sfView
    *
    * @param string Name of the parameter
    * @param string The parameter value
-   * @param string Namespace for the current view
    */
-  public function setParameter($name, $value, $ns = null)
+  public function setParameter($name, $value)
   {
-    $this->parameterHolder->set($name, $value, $ns);
+    $this->parameterHolder->set($name, $value);
   }
 
   /**

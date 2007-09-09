@@ -822,13 +822,13 @@ class sfWebRequest extends sfRequest
     $this->postParameters = get_magic_quotes_gpc() ? sfToolkit::stripslashesDeep($_POST) : $_POST;
     $this->parameterHolder->add($this->postParameters);
 
-    // move symfony parameters in a protected namespace (parameters prefixed with _sf_)
+    // move symfony parameters to attributes (parameters prefixed with _sf_)
     foreach ($this->parameterHolder->getAll() as $key => $value)
     {
       if (0 === stripos($key, '_sf_'))
       {
         $this->parameterHolder->remove($key);
-        $this->setParameter($key, $value, 'symfony/request/sfWebRequest');
+        $this->setAttribute($key, $value);
       }
     }
 

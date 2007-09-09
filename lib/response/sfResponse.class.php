@@ -38,9 +38,9 @@ abstract class sfResponse implements Serializable
    * Initializes this sfResponse.
    *
    * @param  sfEventDispatcher  A sfEventDispatcher instance
-   * @param  array         An array of parameters
+   * @param  array              An array of parameters
    *
-   * @return Boolean       true, if initialization completes successfully, otherwise false
+   * @return Boolean            true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfResponse
    */
@@ -100,26 +100,24 @@ abstract class sfResponse implements Serializable
    *
    * @param string A parameter name
    * @param string A default paramter value
-   * @param string Namespace for the current response
    *
    * @return mixed A parameter value
    */
-  public function getParameter($name, $default = null, $ns = null)
+  public function getParameter($name, $default = null)
   {
-    return $this->parameterHolder->get($name, $default, $ns);
+    return $this->parameterHolder->get($name, $default);
   }
 
   /**
    * Indicates whether or not a parameter exist for the current response.
    *
    * @param string A parameter name
-   * @param string Namespace for the current response
    *
    * @return boolean true, if the parameter exists otherwise false
    */
-  public function hasParameter($name, $ns = null)
+  public function hasParameter($name)
   {
-    return $this->parameterHolder->has($name, $ns);
+    return $this->parameterHolder->has($name);
   }
 
   /**
@@ -127,11 +125,10 @@ abstract class sfResponse implements Serializable
    *
    * @param string A parameter name
    * @param string The parameter value to be set
-   * @param string Namespace for the current response
    */
-  public function setParameter($name, $value, $ns = null)
+  public function setParameter($name, $value)
   {
-    $this->parameterHolder->set($name, $value, $ns);
+    $this->parameterHolder->set($name, $value);
   }
 
   /**

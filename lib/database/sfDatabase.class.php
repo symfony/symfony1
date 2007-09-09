@@ -114,15 +114,14 @@ abstract class sfDatabase
    *
    * @param string The key name
    * @param string The default value
-   * @param string The namespace to use
    *
    * @return string The value associated with the key
    *
    * @see sfParameterHolder
    */
-  public function getParameter($name, $default = null, $ns = null)
+  public function getParameter($name, $default = null)
   {
-    return $this->parameterHolder->get($name, $default, $ns);
+    return $this->parameterHolder->get($name, $default);
   }
 
   /**
@@ -133,15 +132,14 @@ abstract class sfDatabase
    * <code>$this->getParameterHolder()->has()</code>
    *
    * @param string The key name
-   * @param string The namespace to use
    *
    * @return boolean true if the given key exists, false otherwise
    *
    * @see sfParameterHolder
    */
-  public function hasParameter($name, $ns = null)
+  public function hasParameter($name)
   {
-    return $this->parameterHolder->has($name, $ns);
+    return $this->parameterHolder->has($name);
   }
 
   /**
@@ -153,13 +151,12 @@ abstract class sfDatabase
    *
    * @param string The key name
    * @param string The value
-   * @param string The namespace to use
    *
    * @see sfParameterHolder
    */
-  public function setParameter($name, $value, $ns = null)
+  public function setParameter($name, $value)
   {
-    $this->parameterHolder->set($name, $value, $ns);
+    $this->parameterHolder->set($name, $value);
   }
 
   /**

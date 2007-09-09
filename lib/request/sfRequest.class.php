@@ -296,26 +296,24 @@ abstract class sfRequest
    *
    * @param string Attribute name
    * @param string Default attribute value
-   * @param string Namespace for the current request
    *
    * @return mixed An attribute value
    */
-  public function getAttribute($name, $default = null, $ns = null)
+  public function getAttribute($name, $default = null)
   {
-    return $this->attributeHolder->get($name, $default, $ns);
+    return $this->attributeHolder->get($name, $default);
   }
 
   /**
    * Indicates whether or not an attribute exist for the current request.
    *
    * @param string Attribute name
-   * @param string Namespace for the current request
    *
    * @return boolean true, if the attribute exists otherwise false
    */
-  public function hasAttribute($name, $ns = null)
+  public function hasAttribute($name)
   {
-    return $this->attributeHolder->has($name, $ns);
+    return $this->attributeHolder->has($name);
   }
 
   /**
@@ -323,12 +321,11 @@ abstract class sfRequest
    *
    * @param string Attribute name
    * @param string Value for the attribute
-   * @param string Namespace for the current request
    *
    */
-  public function setAttribute($name, $value, $ns = null)
+  public function setAttribute($name, $value)
   {
-    $this->attributeHolder->set($name, $value, $ns);
+    $this->attributeHolder->set($name, $value);
   }
 
   /**
@@ -336,25 +333,23 @@ abstract class sfRequest
    *
    * @param string Parameter name
    * @param string Parameter default value
-   * @param string Namespace for the current request
    *
    */
-  public function getParameter($name, $default = null, $ns = null)
+  public function getParameter($name, $default = null)
   {
-    return $this->parameterHolder->get($name, $default, $ns);
+    return $this->parameterHolder->get($name, $default);
   }
 
   /**
    * Indicates whether or not a parameter exist for the current request.
    *
    * @param string Parameter name
-   * @param string Namespace for the current request
    *
    * @return boolean true, if the paramater exists otherwise false
    */
-  public function hasParameter($name, $ns = null)
+  public function hasParameter($name)
   {
-    return $this->parameterHolder->has($name, $ns);
+    return $this->parameterHolder->has($name);
   }
 
   /**
@@ -362,12 +357,11 @@ abstract class sfRequest
    *
    * @param string Parameter name
    * @param string Parameter value
-   * @param string Namespace for the current request
    *
    */
-  public function setParameter($name, $value, $ns = null)
+  public function setParameter($name, $value)
   {
-    $this->parameterHolder->set($name, $value, $ns);
+    $this->parameterHolder->set($name, $value);
   }
 
   /**
