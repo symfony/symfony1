@@ -325,7 +325,7 @@ class sfWebResponse extends sfResponse
   /**
    * Sends the HTTP headers and the content.
    */
-  final public function send()
+  public function send()
   {
     $this->sendHttpHeaders();
     $this->sendContent();

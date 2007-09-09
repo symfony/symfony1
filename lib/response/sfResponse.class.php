@@ -88,7 +88,7 @@ abstract class sfResponse implements Serializable
   /**
    * Sends the content.
    */
-  final public function send()
+  public function send()
   {
     $this->sendContent();
   }
