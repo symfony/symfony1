@@ -380,8 +380,8 @@ abstract class sfController
     else
     {
       // view class (as configured in module.yml or defined in action)
-      $viewClassName = $this->context->getRequest()->getAttribute($moduleName.'_'.$actionName.'_view_name', sfConfig::get('mod_'.strtolower($moduleName).'_view_class'), 'symfony/action/view');
-      $class    = sfAutoload::getClassPath($viewClassName.'View') ? $viewClassName.'View' : 'sfPHPView';
+      $viewClassName = sfConfig::get('mod_'.strtolower($moduleName).'_view_class');
+      $class = sfAutoload::getClassPath($viewClassName.'View') ? $viewClassName.'View' : 'sfPHPView';
     }
 
     return new $class($this->context, $moduleName, $actionName, $viewName);
@@ -435,7 +435,8 @@ abstract class sfController
     // set viewName if needed
     if ($viewName)
     {
-      $this->context->getRequest()->setAttribute($module.'_'.$action.'_view_name', $viewName, 'symfony/action/view');
+      $currentViewName = sfConfig::get('mod_'.strtolower($moduleName).'_view_class');
+      sfConfig::set('mod_'.strtolower($moduleName).'_view_class', $viewName);
     }
 
     // forward to the mail action
@@ -469,7 +470,7 @@ abstract class sfController
     // remove viewName
     if ($viewName)
     {
-      $this->context->getRequest()->getAttributeHolder()->remove($module.'_'.$action.'_view_name', 'symfony/action/view');
+      sfConfig::set('mod_'.strtolower($moduleName).'_view_class', $currentViewName);
     }
 
     return $presentation;
