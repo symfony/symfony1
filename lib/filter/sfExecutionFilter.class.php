@@ -188,16 +188,13 @@ class sfExecutionFilter extends sfFilter
    */
   protected function handleView($filterChain, $actionInstance, $viewName)
   {
-    if (sfView::HEADER_ONLY == $viewName)
+    switch ($viewName)
     {
-      $this->context->getResponse()->setHeaderOnly(true);
-
-      return;
-    }
-
-    if (sfView::NONE == $viewName)
-    {
-      return;
+      case sfView::HEADER_ONLY:
+        $this->context->getResponse()->setHeaderOnly(true);
+        return;
+      case sfView::NONE:
+        return;
     }
 
     $this->executeView($actionInstance->getModuleName(), $actionInstance->getActionName(), $viewName, $actionInstance->getVarHolder()->getAll());
