@@ -86,6 +86,14 @@ abstract class sfResponse implements Serializable
   }
 
   /**
+   * Sends the content.
+   */
+  final public function send()
+  {
+    $this->sendContent();
+  }
+
+  /**
    * Retrieves the parameters from the current response.
    *
    * @return sfParameterHolder List of parameters
