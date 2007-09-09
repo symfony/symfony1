@@ -19,7 +19,7 @@
 class sfEvent
 {
   protected
-    $returnValue     = null,
+    $value           = null,
     $processed       = false,
     $subject         = null,
     $name            = '',
