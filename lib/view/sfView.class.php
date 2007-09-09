@@ -119,9 +119,9 @@ abstract class sfView
     }
 
     $this->attributeHolder = false === sfConfig::get('sf_escaping_method') ? new sfViewParameterHolder() : new sfEscapedViewParameterHolder();
-    $this->attributeHolder->initialize($context, array(), array(
+    $this->attributeHolder->initialize($this->dispatcher, array(), array(
       'escaping_method'   => sfConfig::get('sf_escaping_method'),
-      'escaping_strategy' => sfConfig::get('sf_escaping_strategy')
+      'escaping_strategy' => sfConfig::get('sf_escaping_strategy'),
     ));
 
     $this->parameterHolder = new sfParameterHolder();

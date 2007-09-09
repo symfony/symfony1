@@ -19,24 +19,26 @@
 class sfViewParameterHolder extends sfParameterHolder
 {
   protected
-    $context = null;
+    $dispatcher = null;
 
   /**
    * Initializes this view parameter holder.
    *
-   * @param sfContext A sfContext instance.
-   * @param array     An associative array of initialization parameters.
-   * @param array     An associative array of options.
+   * @param  sfEventDispatcher A sfEventDispatcher instance.
+   * @param  array             An associative array of initialization parameters.
+   * @param  array             An associative array of options.
    *
    * @return Boolean  true, if initialization completes successfully, otherwise false.
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this view parameter holder.
    */
-  public function initialize($context, $parameters = array(), $options = array())
+  public function initialize(sfEventDispatcher $dispatcher, $parameters = array(), $options = array())
   {
-    $this->context = $context;
+    $this->dispatcher = $dispatcher;
 
-    $this->add($this->getGlobalAttributes());
+    $event = $dispatcher->filter(new sfEvent($this, 'template.filter_parameters'), $parameters);
+    $parameters = $event->getReturnValue();
+
     $this->add($parameters);
   }
 
@@ -48,24 +50,6 @@ class sfViewParameterHolder extends sfParameterHolder
   public function toArray()
   {
     return $this->getAll();
-  }
-
-  /**
-   * Returns view attributes accessible for every view.
-   *
-   * @return array An array of view attributes
-   */
-  protected function getGlobalAttributes()
-  {
-    $attributes = array(
-      'sf_context'  => $this->context,
-      'sf_params'   => $this->context->getRequest()->getParameterHolder(),
-      'sf_request'  => $this->context->getRequest(),
-      'sf_response' => $this->context->getResponse(),
-      'sf_user'     => $this->context->getUser(),
-    );
-
-    return $attributes;
   }
 
   /**
@@ -83,9 +67,9 @@ class sfViewParameterHolder extends sfParameterHolder
         $tmp->remove($key);
       }
     }
-    $tmp->context = null;
+    $tmp->dispatcher = null;
 
-    return serialize($tmp->parameters);
+    return serialize($tmp->getAll());
   }
 
   /**
@@ -95,7 +79,6 @@ class sfViewParameterHolder extends sfParameterHolder
   {
     parent::unserialize($serialized);
 
-    $this->context = sfContext::getInstance();
-    $this->add($this->getGlobalAttributes());
+    $this->initialize(sfContext::hasInstance() ? sfContext::getInstance()->getEventDispatcher() : new sfEventDispatcher());
   }
 }

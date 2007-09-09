@@ -54,6 +54,8 @@ class sfContext
       $this->factories['logger']->info('{sfContext} initialization');
     }
 
+    $this->dispatcher->connect('template.filter_parameters', array($this, 'filterTemplateParameters'));
+
     // register our shutdown function
     register_shutdown_function(array($this, 'shutdown'));
   }
@@ -354,6 +356,25 @@ class sfContext
   public function has($name)
   {
     return isset($this->factories[$name]);
+  }
+
+  /**
+   * Listens to the template.filter_parameters event.
+   *
+   * @param  sfEvent An sfEvent instance
+   * @param  array   An array of template parameters to filter
+   *
+   * @return array   The filtered parameters array
+   */
+  public function filterTemplateParameters(sfEvent $event, $parameters)
+  {
+    $parameters['sf_context']  = $this;
+    $parameters['sf_request']  = $this->factories['request'];
+    $parameters['sf_params']   = $this->factories['request']->getParameterHolder();
+    $parameters['sf_response'] = $this->factories['response'];
+    $parameters['sf_user']     = $this->factories['user'];
+
+    return $parameters;
   }
 
   /**

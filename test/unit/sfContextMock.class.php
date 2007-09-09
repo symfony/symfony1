@@ -40,6 +40,11 @@ class sfContext
     return self::$instance;
   }
 
+  static public function hasInstance()
+  {
+    return true;
+  }
+
   public function getEventDispatcher()
   {
     return self::$instance->dispatcher;

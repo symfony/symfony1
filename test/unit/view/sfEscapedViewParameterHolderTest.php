@@ -25,14 +25,6 @@ function esc_raw($value)
   return $value;
 }
 
-class myUser
-{
-  public function getAttributeHolder()
-  {
-    return new sfParameterHolder();
-  }
-}
-
 class myRequest
 {
   public function getParameterHolder()
@@ -41,29 +33,44 @@ class myRequest
   }
 }
 
+class FilterParameters
+{
+  static public $context = null;
+
+  static function filter($event, $parameters)
+  {
+    $parameters['sf_request'] = self::$context->request;
+
+    return $parameters;
+  }
+}
+
 $context = sfContext::getInstance(array(
-  'user'    => 'myUser',
   'request' => 'myRequest',
 ));
+$dispatcher = $context->dispatcher;
+
+FilterParameters::$context = $context;
+$dispatcher->connect('template.filter_parameters', array('FilterParameters', 'filter'));
 
 // ->initialize()
 $t->diag('->initialize()');
 $p = new sfEscapedViewParameterHolder();
-$p->initialize($context);
+$p->initialize($dispatcher);
 $t->is($p->get('sf_user'), $context->user, '->initialize() add some symfony shortcuts as parameters');
 $t->is($p->get('sf_request'), $context->request, '->initialize() add some symfony shortcuts as parameters');
 $t->is($p->get('sf_response'), $context->response, '->initialize() add some symfony shortcuts as parameters');
 
-$p->initialize($context, array('foo' => 'bar'));
+$p->initialize($dispatcher, array('foo' => 'bar'));
 $t->is($p->get('foo'), 'bar', '->initialize() takes an array of default parameters as its second argument');
 
-$p->initialize($context, array(), array('escaping_strategy' => 'on', 'escaping_method' => 'ESC_RAW'));
+$p->initialize($dispatcher, array(), array('escaping_strategy' => 'on', 'escaping_method' => 'ESC_RAW'));
 $t->is($p->getEscaping(), 'on', '->initialize() takes an array of options as its third argument');
 $t->is($p->getEscapingMethod(), ESC_RAW, '->initialize() takes an array of options as its third argument');
 
 // ->getEscaping() ->setEscaping()
 $t->diag('->getEscaping() ->setEscaping()');
-$p->initialize($context);
+$p->initialize($dispatcher);
 $p->setEscaping('on');
 $t->is($p->getEscaping(), 'on', '->setEscaping() changes the escaping strategy');
 
@@ -74,12 +81,12 @@ $t->is($p->getEscapingMethod(), ESC_RAW, '->setEscapingMethod() changes the esca
 
 // ->toArray()
 $t->diag('->toArray()');
-$p->initialize($context, array('foo' => 'bar'));
+$p->initialize($dispatcher, array('foo' => 'bar'));
 $a = $p->toArray();
 $t->is($a['foo'], 'bar', '->toArray() returns an array representation of the parameter holder');
 
 // ->serialize() / ->unserialize()
 $t->diag('->serialize() / ->unserialize()');
-$p->initialize($context, array('foo' => 'bar'));
+$p->initialize($dispatcher, array('foo' => 'bar'));
 $unserialized = unserialize(serialize($p));
 $t->is($p->toArray(), $unserialized->toArray(), 'sfEscapedViewParameterHolder implements the Serializable interface');

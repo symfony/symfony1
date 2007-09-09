@@ -27,9 +27,9 @@ class sfEscapedViewParameterHolder extends sfViewParameterHolder
   /**
    * Initializes this view parameter holder.
    *
-   * @param  sfContext A sfContext instance.
-   * @param  array     An associative array of initialization parameters.
-   * @param  array     An associative array of options.
+   * @param  sfEventDispatcher A sfEventDispatcher instance.
+   * @param  array             An associative array of initialization parameters.
+   * @param  array             An associative array of options.
    *
    * <b>Options:</b>
    *
@@ -40,9 +40,9 @@ class sfEscapedViewParameterHolder extends sfViewParameterHolder
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this view parameter holder.
    */
-  public function initialize($context, $parameters = array(), $options = array())
+  public function initialize(sfEventDispatcher $dispatcher, $parameters = array(), $options = array())
   {
-    parent::initialize($context, $parameters, $options);
+    parent::initialize($dispatcher, $parameters, $options);
 
     $this->setEscaping(isset($options['escaping_strategy']) ? $options['escaping_strategy'] : 'bc');
     $this->setEscapingMethod(isset($options['escaping_method']) ? $options['escaping_method'] : 'ESC_ENTITIES');
