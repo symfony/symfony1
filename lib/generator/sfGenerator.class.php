@@ -61,32 +61,11 @@ abstract class sfGenerator
    * @param array  A list of template files to generate
    * @param array  A list of configuration files to generate
    */
-  protected function generatePhpFiles($generatedModuleName, $templateFiles = array(), $configFiles = array())
+  protected function generatePhpFiles($generatedModuleName, $files = array())
   {
-    // eval actions file
-    $retval = $this->evalTemplate('actions/actions.class.php');
-
-    // save actions class
-    $this->getGeneratorManager()->save($generatedModuleName.'/actions/actions.class.php', $retval);
-
-    // generate template files
-    foreach ($templateFiles as $template)
+    foreach ($files as $file)
     {
-      // eval template file
-      $retval = $this->evalTemplate('templates/'.$template);
-
-      // save template file
-      $this->getGeneratorManager()->save($generatedModuleName.'/templates/'.$template, $retval);
-    }
-
-    // generate config files
-    foreach ($configFiles as $config)
-    {
-      // eval config file
-      $retval = $this->evalTemplate('config/'.$config);
-
-      // save config file
-      $this->getGeneratorManager()->save($generatedModuleName.'/config/'.$config, $retval);
+      $this->getGeneratorManager()->save($generatedModuleName.'/'.$file, $this->evalTemplate($file));
     }
   }
 
