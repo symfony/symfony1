@@ -57,30 +57,30 @@ class sfCompileConfigHandler extends sfYamlConfigHandler
 
       $contents = file_get_contents($file);
 
+      // strip comments (not in debug mode)
+      if (!sfConfig::get('sf_debug'))
+      {
+        $contents = sfToolkit::stripComments($contents);
+      }
+
+      // insert configuration files
+      $contents = preg_replace_callback(array('#(require|include)(_once)?\((sfConfigCache::getInstance\(\)|\$configCache)->checkConfig\([^_]+sf_app_config_dir_name[^\.]*\.\'/([^\']+)\'\)\);#m',
+                                          '#()()(sfConfigCache::getInstance\(\)|\$configCache)->import\(.sf_app_config_dir_name\.\'/([^\']+)\'(, false)?\);#m'),
+                                        array($this, 'insertConfigFileCallback'), $contents);
+
+      // strip php tags
+      $contents = sfToolkit::pregtr($contents, array('/^\s*<\?(php)?/m' => '',
+                                                     '/^\s*\?>/m'       => ''));
+
+      // replace windows and mac format with unix format
+      $contents = str_replace("\r",  "\n", $contents);
+
+      // replace multiple new lines with a single newline
+      $contents = preg_replace(array('/\s+$/Sm', '/\n+/S'), "\n", $contents);
+
       // append file data
       $data .= "\n".$contents;
     }
-
-    // insert configuration files
-    $data = preg_replace_callback(array('#(require|include)(_once)?\((sfConfigCache::getInstance\(\)|\$configCache)->checkConfig\([^_]+sf_app_config_dir_name[^\.]*\.\'/([^\']+)\'\)\);#m',
-                                        '#()()(sfConfigCache::getInstance\(\)|\$configCache)->import\(.sf_app_config_dir_name\.\'/([^\']+)\'(, false)?\);#m'),
-                                  array($this, 'insertConfigFileCallback'), $data);
-
-    // strip comments (not in debug mode)
-    if (!sfConfig::get('sf_debug'))
-    {
-      $data = sfToolkit::stripComments($data);
-    }
-
-    // strip php tags
-    $data = sfToolkit::pregtr($data, array('/^\s*<\?(php)?/m' => '',
-                                           '/^\s*\?>/m'       => ''));
-
-    // replace windows and mac format with unix format
-    $data = str_replace("\r",  "\n", $data);
-
-    // replace multiple new lines with a single newline
-    $data = preg_replace(array('/\s+$/Sm', '/\n+/S'), "\n", $data);
 
     // compile data
     $retval = sprintf("<?php\n".
