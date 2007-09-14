@@ -30,7 +30,7 @@
  *
  * @param  string slot name
  * @param  array variables to be made accessible to the component
- * @return void
+ *
  * @see    get_component_slot, include_partial, include_component
  */
 function include_component_slot($name, $vars = array())
@@ -81,7 +81,7 @@ function get_component_slot($name, $vars = array())
  * @param  string module name
  * @param  string component name
  * @param  array variables to be made accessible to the component
- * @return void
+ *
  * @see    get_component, include_partial, include_component_slot
  */
 function include_component($moduleName, $componentName, $vars = array())
@@ -200,7 +200,7 @@ function get_component($moduleName, $componentName, $vars = array())
  *
  * @param  string partial name
  * @param  array variables to be made accessible to the partial
- * @return void
+ *
  * @see    get_partial, include_component
  */
 function include_partial($templateName, $vars = array())
@@ -289,7 +289,7 @@ function _set_cache($cacheManager, $uri, $retval)
  * Begins the capturing of the slot.
  *
  * @param  string slot name
- * @return void
+ *
  * @see    end_slot
  */
 function slot($name)
@@ -297,18 +297,16 @@ function slot($name)
   $context = sfContext::getInstance();
   $response = $context->getResponse();
 
-  $slots = $response->getParameter('slots', array(), 'symfony/view/sfView/slot');
-  $slot_names = $response->getParameter('slot_names', array(), 'symfony/view/sfView/slot');
+  $slot_names = sfConfig::get('symfony.view.slot_names', array());
   if (in_array($name, $slot_names))
   {
     throw new sfCacheException(sprintf('A slot named "%s" is already started.', $name));
   }
 
   $slot_names[] = $name;
-  $slots[$name] = '';
 
-  $response->setParameter('slots', $slots, 'symfony/view/sfView/slot');
-  $response->setParameter('slot_names', $slot_names, 'symfony/view/sfView/slot');
+  $response->setSlot($name, '');
+  sfConfig::set('symfony.view.slot_names', $slot_names);
 
   if (sfConfig::get('sf_logging_enabled'))
   {
@@ -322,7 +320,6 @@ function slot($name)
 /**
  * Stops the content capture and save the content in the slot.
  *
- * @return void
  * @see    slot
  */
 function end_slot()
@@ -330,18 +327,16 @@ function end_slot()
   $content = ob_get_clean();
 
   $response = sfContext::getInstance()->getResponse();
-  $slots = $response->getParameter('slots', array(), 'symfony/view/sfView/slot');
-  $slot_names = $response->getParameter('slot_names', array(), 'symfony/view/sfView/slot');
+  $slot_names = sfConfig::get('symfony.view.slot_names', array());
   if (!$slot_names)
   {
     throw new sfCacheException('No slot started.');
   }
 
   $name = array_pop($slot_names);
-  $slots[$name] = $content;
 
-  $response->setParameter('slots', $slots, 'symfony/view/sfView/slot');
-  $response->setParameter('slot_names', $slot_names, 'symfony/view/sfView/slot');
+  $response->setSlot($name, $content);
+  sfConfig::set('symfony.view.slot_names', $slot_names);
 }
 
 /**
@@ -353,10 +348,7 @@ function end_slot()
  */
 function has_slot($name)
 {
-  $response = sfContext::getInstance()->getResponse();
-  $slots = $response->getParameter('slots', array(), 'symfony/view/sfView/slot');
-
-  return array_key_exists($name, $slots);
+  return array_key_exists($name, sfContext::getInstance()->getResponse()->getSlots());
 }
 
 /**
@@ -368,13 +360,13 @@ function has_slot($name)
  * </code>
  *
  * @param  string slot name
- * @return void
+ *
  * @see    has_slot, get_slot
  */
 function include_slot($name)
 {
   $context = sfContext::getInstance();
-  $slots = $context->getResponse()->getParameter('slots', array(), 'symfony/view/sfView/slot');
+  $slots = $context->getResponse()->getSlots();
 
   if (sfConfig::get('sf_logging_enabled'))
   {
@@ -408,7 +400,7 @@ function include_slot($name)
 function get_slot($name)
 {
   $context = sfContext::getInstance();
-  $slots = $context->getResponse()->getParameter('slots', array(), 'symfony/view/sfView/slot');
+  $slots = $context->getResponse()->getSlots();
 
   if (sfConfig::get('sf_logging_enabled'))
   {
