@@ -133,7 +133,7 @@ class sfExecutionFilter extends sfFilter
     $validated = ($manualValidated && $validated) || ($manualValidated && !$validated && !$this->context->getRequest()->hasErrors());
 
     // register fill-in filter
-    if (null !== ($parameters = $this->context->getRequest()->getAttribute('fillin', null, 'symfony/filter')))
+    if (null !== ($parameters = $this->context->getRequest()->getAttribute('symfony.fillin')))
     {
       $this->registerFillInFilter($filterChain, $parameters);
     }
