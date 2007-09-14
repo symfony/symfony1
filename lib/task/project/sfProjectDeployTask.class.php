@@ -120,7 +120,7 @@ EOF;
       $ssh = '"ssh -p'.$port.'"';
     }
 
-    if (!isset($properties['parameters']))
+    if (isset($properties['parameters']))
     {
       $parameters = $properties['parameters'];
     }
