@@ -122,6 +122,7 @@ class sfSymfonyCommandApplication extends sfCommandApplication
     $dirs = array(
       sfConfig::get('sf_lib_dir').DIRECTORY_SEPARATOR.'tasks',        // project tasks
       sfConfig::get('sf_symfony_lib_dir').DIRECTORY_SEPARATOR.'task', // symfony tasks
+      sfConfig::get('sf_symfony_lib_dir').'/plugins/*/lib/tasks',     // bundled plugin tasks
       sfConfig::get('sf_root_dir').'/plugins/*/lib/tasks',            // plugin tasks
     );
     $finder = sfFinder::type('file')->name('*Task.class.php');

@@ -20,7 +20,7 @@ autoload:
   propel_addon:
     name:           propel addon
     files:
-      Propel:       %SF_SYMFONY_LIB_DIR%/addon/propel/sfPropelAutoload.php
+      Propel:       %SF_SYMFONY_LIB_DIR%/plugins/sfPropelPlugin/lib/propel/sfPropelAutoload.php
 
   # plugins
   plugins_lib:
