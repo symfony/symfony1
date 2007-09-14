@@ -94,20 +94,20 @@ check_stylesheets_included($t, $selector);
 
 // test disabling javascript and stylesheet automatic inclusion
 
-$response->setParameter('stylesheets_included', true, 'symfony/view/asset');
-$response->setParameter('javascripts_included', true, 'symfony/view/asset');
+sfConfig::set('symfony.asset.javascripts_included', true);
+sfConfig::set('symfony.asset.stylesheets_included', true);
 $selector = execute_filter_chain($context, $t);
 $t->is($selector->getElements('head script'), array(), '->execute() does not add javascripts if you used get_javascripts() helper');
 $t->is($selector->getElements('head link'), array(), '->execute() does not add stylesheets if you used get_stylesheets() helper');
 
-$response->setParameter('stylesheets_included', true, 'symfony/view/asset');
-$response->setParameter('javascripts_included', false, 'symfony/view/asset');
+sfConfig::set('symfony.asset.javascripts_included', false);
+sfConfig::set('symfony.asset.stylesheets_included', true);
 $selector = execute_filter_chain($context, $t);
 check_javascripts_included($t, $selector);
 $t->is($selector->getElements('head link'), array(), '->execute() does not add javascripts if you used get_javascripts() helper');
 
-$response->setParameter('stylesheets_included', false, 'symfony/view/asset');
-$response->setParameter('javascripts_included', true, 'symfony/view/asset');
+sfConfig::set('symfony.asset.javascripts_included', true);
+sfConfig::set('symfony.asset.stylesheets_included', false);
 $selector = execute_filter_chain($context, $t);
 $t->is($selector->getElements('head script'), array(), '->execute() does not add javascripts if you used get_javascripts() helper');
 check_stylesheets_included($t, $selector);
@@ -140,18 +140,15 @@ function execute_filter_chain($context, $t)
 {
   $filterChain = new sfFilterChain();
 
-  $filter = new lastTestFilter();
+  $filter = new lastTestFilter($context);
   $filter->response = $context->response;
-  $filter->initialize($context);
   $filterChain->register($filter);
 
-  $filter = new sfCommonFilter();
-  $filter->initialize($context);
+  $filter = new sfCommonFilter($context);
   $filterChain->register($filter);
 
-  $filter = new firstTestFilter();
+  $filter = new firstTestFilter($context);
   $filter->response = $context->response;
-  $filter->initialize($context);
   $filterChain->register($filter);
 
   $filterChain->execute();
