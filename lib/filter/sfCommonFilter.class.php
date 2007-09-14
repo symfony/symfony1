@@ -37,11 +37,11 @@ class sfCommonFilter extends sfFilter
     {
       sfLoader::loadHelpers(array('Tag', 'Asset'));
       $html = '';
-      if (!$response->getParameter('javascripts_included', false, 'symfony/view/asset'))
+      if (!sfConfig::get('symfony.asset.javascripts_included', false))
       {
         $html .= get_javascripts($response);
       }
-      if (!$response->getParameter('stylesheets_included', false, 'symfony/view/asset'))
+      if (!sfConfig::get('symfony.asset.stylesheets_included', false))
       {
         $html .= get_stylesheets($response);
       }
@@ -52,7 +52,7 @@ class sfCommonFilter extends sfFilter
       }
     }
 
-    $response->setParameter('javascripts_included', false, 'symfony/view/asset');
-    $response->setParameter('stylesheets_included', false, 'symfony/view/asset');
+    sfConfig::set('symfony.asset.javascripts_included', false);
+    sfConfig::set('symfony.asset.stylesheets_included', false);
   }
 }
