@@ -29,6 +29,10 @@ class sfPropelInitCrudTask extends sfPropelBaseTask
       new sfCommandArgument('model', sfCommandArgument::REQUIRED, 'The model class name'),
     ));
 
+    $this->addOptions(array(
+      new sfCommandOption('theme', null, sfCommandOption::PARAMETER_REQUIRED, 'The theme name', 'default'),
+    ));
+
     $this->aliases = array('propel-init-crud');
     $this->namespace = 'propel';
     $this->name = 'init-crud';
@@ -47,6 +51,10 @@ a runtime generated module in [%sf_cache_dir%/modules/auto%module%|COMMENT].
 
 Most of the time, you want to generate a CRUD module as a starting point for your
 development. In this case, you will want use the [propel:generate-crud|COMMENT] task.
+
+The generator can use a customized theme by using the [--theme|COMMENT] option:
+
+  [./symfony propel:init-crud --theme="custom" frontend article Article|INFO]
 EOF;
   }
 
@@ -69,7 +77,15 @@ EOF;
 
     // create basic application structure
     $finder = sfFinder::type('any')->ignore_version_control()->discard('.sf');
-    $this->filesystem->mirror(sfConfig::get('sf_symfony_data_dir').'/generator/sfPropelCrud/default/skeleton', $moduleDir, $finder);
+    $dirs = sfLoader::getGeneratorSkeletonDirs('sfPropelCrud', $options['theme']);
+    foreach ($dirs as $dir)
+    {
+      if (is_dir($dir))
+      {
+        $this->filesystem->mirror($dir, $moduleDir, $finder);
+        break;
+      }
+    }
 
     // create basic test
     $this->filesystem->copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/module/test/actionsTest.php', sfConfig::get('sf_root_dir').'/test/functional/'.$arguments['application'].'/'.$arguments['module'].'ActionsTest.php');

@@ -226,7 +226,10 @@ class sfLoader
       $dirs = array_merge($dirs, $pluginDirs);                                                                // plugin
     }
 
-    $dirs[] = sfConfig::get('sf_symfony_data_dir').'/generator/'.$class.'/default/template';                  // default theme
+    if ($pluginDirs = glob(sfConfig::get('sf_symfony_lib_dir').'/plugins/*/data/generator/'.$class.'/'.$theme.'/template'))
+    {
+      $dirs = array_merge($dirs, $pluginDirs);                                                                // bundled plugin
+    }
 
     return $dirs;
   }
@@ -248,7 +251,10 @@ class sfLoader
       $dirs = array_merge($dirs, $pluginDirs);                                                                // plugin
     }
 
-    $dirs[] = sfConfig::get('sf_symfony_data_dir').'/generator/'.$class.'/default/skeleton';                  // default theme
+    if ($pluginDirs = glob(sfConfig::get('sf_symfony_lib_dir').'/plugins/*/data/generator/'.$class.'/'.$theme.'/skeleton'))
+    {
+      $dirs = array_merge($dirs, $pluginDirs);                                                                // bundled plugin
+    }
 
     return $dirs;
   }
