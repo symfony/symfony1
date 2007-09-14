@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
+require_once(dirname(__FILE__).'/../../../../../../test/bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
-require_once($_test_dir.'/unit/helper/TestObject.php');
+require_once(dirname(__FILE__).'/TestObject.php');
 
 sfLoader::loadHelpers(array('Helper', 'Tag', 'Form', 'Object'));
 

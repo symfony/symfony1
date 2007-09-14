@@ -226,9 +226,9 @@ class sfLoader
       $dirs = array_merge($dirs, $pluginDirs);                                                                // plugin
     }
 
-    if ($pluginDirs = glob(sfConfig::get('sf_symfony_lib_dir').'/plugins/*/data/generator/'.$class.'/'.$theme.'/template'))
+    if ($bundledPluginDirs = glob(sfConfig::get('sf_symfony_lib_dir').'/plugins/*/data/generator/'.$class.'/'.$theme.'/template'))
     {
-      $dirs = array_merge($dirs, $pluginDirs);                                                                // bundled plugin
+      $dirs = array_merge($dirs, $bundledPluginDirs);                                                         // bundled plugin
     }
 
     return $dirs;
@@ -251,9 +251,9 @@ class sfLoader
       $dirs = array_merge($dirs, $pluginDirs);                                                                // plugin
     }
 
-    if ($pluginDirs = glob(sfConfig::get('sf_symfony_lib_dir').'/plugins/*/data/generator/'.$class.'/'.$theme.'/skeleton'))
+    if ($bundledPluginDirs = glob(sfConfig::get('sf_symfony_lib_dir').'/plugins/*/data/generator/'.$class.'/'.$theme.'/skeleton'))
     {
-      $dirs = array_merge($dirs, $pluginDirs);                                                                // bundled plugin
+      $dirs = array_merge($dirs, $bundledPluginDirs);                                                         // bundled plugin
     }
 
     return $dirs;
@@ -361,7 +361,10 @@ class sfLoader
       $dirs = array_merge($dirs, $pluginDirs);                                                                                // plugins
     }
 
-    $dirs[] = sfConfig::get('sf_symfony_lib_dir').'/helper';                                                                  // global
+    if ($bundledPluginDirs = glob(sfConfig::get('sf_symfony_lib_dir').'/plugins/*/lib/helper'))
+    {
+      $dirs = array_merge($dirs, $bundledPluginDirs);                                                                         // bundled plugins
+    }
 
     return $dirs;
   }
@@ -421,6 +424,14 @@ class sfLoader
 
   static public function loadPluginConfig()
   {
+    if ($pluginConfigs = glob(sfConfig::get('sf_symfony_lib_dir').'/plugins/*/config/config.php'))
+    {
+      foreach ($pluginConfigs as $config)
+      {
+        include($config);
+      }
+    }
+
     if ($pluginConfigs = glob(sfConfig::get('sf_plugins_dir').'/*/config/config.php'))
     {
       foreach ($pluginConfigs as $config)
