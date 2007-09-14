@@ -54,7 +54,7 @@ class sfEventDispatcher
 
     foreach ($this->listeners[$name] as $i => $callable)
     {
-      if ($listener == $callable)
+      if ($listener === $callable)
       {
         unset($this->listeners[$name][$i]);
       }
