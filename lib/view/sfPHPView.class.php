@@ -99,7 +99,7 @@ class sfPHPView extends sfView
     require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$viewConfigFile));
 
     // decorator configuration
-    $this->setDecoratorTemplate(sfConfig::get($this->moduleName.'_'.$this->actionName.'_layout'));
+    $this->setDecoratorTemplate(sfConfig::get('symfony.view.'.$this->moduleName.'_'.$this->actionName.'_layout'));
 
     // set template directory
     if (!$this->directory)
