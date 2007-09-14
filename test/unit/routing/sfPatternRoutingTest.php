@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(64, new lime_output_color());
+$t = new lime_test(65, new lime_output_color());
 
 class sfPatternRoutingTest extends sfPatternRouting
 {
@@ -21,7 +21,7 @@ class sfPatternRoutingTest extends sfPatternRouting
 }
 
 // public methods
-$r = new sfPatternRoutingTest(new sfEventDispatcher());
+$r = new sfPatternRoutingTest(new sfEventDispatcher(), array('default_module' => 'default', 'default_action' => 'index'));
 foreach (array('clearRoutes', 'connect', 'generate', 'getCurrentInternalUri', 'getCurrentRouteName', 'getRoutes', 'hasRoutes', 'parse', 'setRoutes') as $method)
 {
   $t->can_ok($r, $method, sprintf('"%s" is a method of sfRouting', $method));
@@ -238,6 +238,13 @@ $params = array('module' => 'default', 'action' => 'index', 'id' => 12);
 $url = '/test/bar/12';
 $t->is($r->generate('', $params), $url, '->generate() merge parameters with defaults parameters');
 $r->setDefaultParameters(array());
+
+// empty string as a default parameter
+$r->clearRoutes();
+$r->connect('test', '/test/:foo', array('module' => 'default', 'action' => 'index', 'foo' => ''));
+$params = array('module' => 'default', 'action' => 'index', 'foo' => '');
+$url = '/test';
+$t->is($r->parse($url), $params, '->parse() routes can take empty string as default parameters');
 
 // ->appendRoute()
 $t->diag('->appendRoute()');

@@ -84,8 +84,8 @@ class sfPatternRouting extends sfRouting
       }
       else
       {
-        $module = isset($parameters['module']) ? $parameters['module'] : $this->parameterHolder->get('default_module');
-        $action = isset($parameters['action']) ? $parameters['action'] : $this->parameterHolder->get('default_action');
+        $module = isset($parameters['module']) && $parameters['module'] ? $parameters['module'] : $this->parameterHolder->get('default_module');
+        $action = isset($parameters['action']) && $parameters['action'] ? $parameters['action'] : $this->parameterHolder->get('default_action');
 
         $internalUri = $module.'/'.$action;
       }
@@ -545,7 +545,10 @@ class sfPatternRouting extends sfRouting
             $found = '';
             for ($i = 0, $max = count($pass); $i < $max; $i += 2)
             {
-              if (!isset($pass[$i + 1])) continue;
+              if (!isset($pass[$i + 1]))
+              {
+                continue;
+              }
 
               $found .= $pass[$i].'='.$pass[$i + 1].'&';
             }
@@ -565,7 +568,7 @@ class sfPatternRouting extends sfRouting
         // we must have found all :var stuffs in url? except if default values exists
         foreach ($names as $name)
         {
-          if ($out[$name] == null)
+          if (is_null($out[$name]))
           {
             $break = false;
           }
