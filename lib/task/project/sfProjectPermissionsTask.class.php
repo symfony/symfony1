@@ -23,7 +23,7 @@ class sfProjectPermissionsTask extends sfBaseTask
    */
   protected function configure()
   {
-    $this->aliases = array('permissions');
+    $this->aliases = array('permissions', 'fix-perms');
     $this->namespace = 'project';
     $this->name = 'permissions';
     $this->briefDescription = 'Fixes symfony directory permissions';
