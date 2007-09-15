@@ -43,9 +43,53 @@ abstract class sfUpgrade
    *
    * @return sfFinder A sfFinder instance
    */
-  public function getFinder($type)
+  protected function getFinder($type)
   {
     return sfFinder::type($type)->prune('upgrade1.1');
+  }
+
+  /**
+   * Returns all project directories where you can put PHP classes.
+   */
+  protected function getProjectClassDirectories()
+  {
+    return array_merge(
+      $this->getProjectLibDirectories(),
+      $this->getProjectActionDirectories()
+    );
+  }
+
+  /**
+   * Returns all project directories where you can put templates.
+   */
+  protected function getProjectTemplateDirectories()
+  {
+    return array_merge(
+      glob(sfConfig::get('sf_root_dir').'/apps/*/modules/*/templates'),
+      glob(sfConfig::get('sf_root_dir').'/apps/*/templates')
+    );
+  }
+
+  /**
+   * Returns all project directories where you can put actions and components.
+   */
+  protected function getProjectActionDirectories()
+  {
+    return glob(sfConfig::get('sf_root_dir').'/apps/*/modules/*/actions');
+  }
+
+  /**
+   * Returns all project lib directories.
+   */
+  protected function getProjectLibDirectories()
+  {
+    return array_merge(
+      glob(sfConfig::get('sf_root_dir').'/apps/*/modules/*/lib'),
+      array(
+        sfConfig::get('sf_root_dir').'/apps/lib',
+        sfConfig::get('sf_root_dir').'/lib',
+      )
+    );
   }
 
   /**
