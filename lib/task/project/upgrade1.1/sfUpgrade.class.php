@@ -93,6 +93,18 @@ abstract class sfUpgrade
   }
 
   /**
+   * Returns all project config directories.
+   */
+  protected function getProjectConfigDirectories()
+  {
+    return array_merge(
+      glob(sfConfig::get('sf_root_dir').'/apps/*/modules/*/config'),
+      glob(sfConfig::get('sf_root_dir').'/apps/*/config'),
+      glob(sfConfig::get('sf_root_dir').'/config')
+    );
+  }
+
+  /**
    * Forward all non existing methods to the task.
    *
    * @param  string The method name

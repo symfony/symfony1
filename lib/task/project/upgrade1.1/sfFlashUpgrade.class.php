@@ -66,13 +66,7 @@ class sfFlashUpgrade extends sfUpgrade
   protected function upgradeFilters()
   {
     $filtersFinder = $this->getFinder('file')->name('filters.yml');
-    $dirs = array_merge(
-      glob(sfConfig::get('sf_root_dir').'/apps/*/modules/*/config'),
-      glob(sfConfig::get('sf_root_dir').'/apps/*/config'),
-      glob(sfConfig::get('sf_root_dir').'/config')
-    );
-
-    foreach ($filtersFinder->in($dirs) as $file)
+    foreach ($filtersFinder->in($this->getProjectConfigDirectories()) as $file)
     {
       $content = file_get_contents($file);
       $content = preg_replace("#flash\:\s+~\s*\n#s", '', $content, -1, $count);
