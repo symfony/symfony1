@@ -9,12 +9,12 @@ autoload:
 
   propel:
     name:           propel
-    path:           %SF_SYMFONY_LIB_DIR%/vendor/propel
+    path:           %SF_SYMFONY_LIB_DIR%/plugins/sfPropelPlugin/lib/vendor/propel
     recursive:      on
 
   creole:
     name:           creole
-    path:           %SF_SYMFONY_LIB_DIR%/vendor/creole
+    path:           %SF_SYMFONY_LIB_DIR%/plugins/sfPropelPlugin/lib/vendor/creole
     recursive:      on
 
   propel_addon:

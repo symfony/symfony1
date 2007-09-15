@@ -27,6 +27,16 @@ abstract class sfPropelBaseTask extends sfBaseTask
   const CHECK_SCHEMA = true;
   const DO_NOT_CHECK_SCHEMA = false;
 
+  public function initialize(sfCommandApplication $commandApplication = null, sfLogger $logger = null)
+  {
+    parent::initialize($commandApplication, $logger);
+
+    set_include_path(get_include_path().PATH_SEPARATOR.dirname(__FILE__).'/../vendor');
+
+    $commandApplication->getAutoloader()->addDirectory(dirname(__FILE__).'/../vendor');
+    $commandApplication->getAutoloader()->addDirectory(sfConfig::get('sf_root_dir').'/lib/model');
+  }
+
   protected function schemaToYML($checkSchema = self::CHECK_SCHEMA, $prefix = '')
   {
     $finder = sfFinder::type('file')->name('*schema.xml');
@@ -169,7 +179,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
 
     // Build file
     $args[] = '-f';
-    $args[] = realpath(sfConfig::get('sf_symfony_lib_dir').'/vendor/propel-generator/build.xml');
+    $args[] = realpath(sfConfig::get('sf_symfony_lib_dir').'/plugins/sfPropelPlugin/lib/vendor/propel-generator/build.xml');
 
     if (is_null($this->commandApplication) || !$this->commandApplication->isVerbose())
     {

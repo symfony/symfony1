@@ -74,7 +74,6 @@ class sfSymfonyCommandApplication extends sfCommandApplication
       sfConfig::get('sf_lib_dir').PATH_SEPARATOR.
       sfConfig::get('sf_app_lib_dir').PATH_SEPARATOR.
       sfConfig::get('sf_model_dir').PATH_SEPARATOR.
-      sfConfig::get('sf_symfony_lib_dir').DIRECTORY_SEPARATOR.'vendor'.PATH_SEPARATOR.
       get_include_path()
     );
   }
@@ -104,11 +103,10 @@ class sfSymfonyCommandApplication extends sfCommandApplication
     }
 
     $this->autoloader = new sfSimpleAutoload($cache);
-    $this->autoloader->addDirectory(sfConfig::get('sf_symfony_lib_dir'));
-    $this->autoloader->addDirectory(sfConfig::get('sf_symfony_lib_dir').'/vendor/propel');
-    $this->autoloader->addDirectory(sfConfig::get('sf_symfony_lib_dir').'/vendor/creole');
-    $this->autoloader->addDirectory('lib/model');
-    $this->autoloader->addDirectory('plugins');
+    require_once(sfConfig::get('sf_symfony_lib_dir').'/util/sfFinder.class.php');
+    $finder = sfFinder::type('file')->ignore_version_control()->prune('test')->name('*.php');
+    $this->autoloader->addFiles($finder->in(sfConfig::get('sf_symfony_lib_dir')));
+    $this->autoloader->addDirectory(sfConfig::get('sf_root_dir').'/plugins');
     $this->autoloader->register();
   }
 
@@ -120,10 +118,10 @@ class sfSymfonyCommandApplication extends sfCommandApplication
   protected function initializeTasks()
   {
     $dirs = array(
-      sfConfig::get('sf_lib_dir').DIRECTORY_SEPARATOR.'tasks',        // project tasks
       sfConfig::get('sf_symfony_lib_dir').DIRECTORY_SEPARATOR.'task', // symfony tasks
       sfConfig::get('sf_symfony_lib_dir').'/plugins/*/lib/tasks',     // bundled plugin tasks
       sfConfig::get('sf_root_dir').'/plugins/*/lib/tasks',            // plugin tasks
+      sfConfig::get('sf_lib_dir').DIRECTORY_SEPARATOR.'tasks',        // project tasks
     );
     $finder = sfFinder::type('file')->name('*Task.class.php');
     foreach ($dirs as $globDir)

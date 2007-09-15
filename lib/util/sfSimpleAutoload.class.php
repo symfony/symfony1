@@ -136,11 +136,16 @@ class sfSimpleAutoload
       $files = $finder->in($dir);
       if (is_array($files))
       {
-        foreach ($files as $file)
-        {
-          $this->addFile($file, false);
-        }
+        $this->addFiles($files, false);
       }
+    }
+  }
+
+  public function addFiles($files, $register = true)
+  {
+    foreach ($files as $file)
+    {
+      $this->addFile($file, false);
     }
   }
 
