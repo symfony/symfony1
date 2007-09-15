@@ -198,6 +198,10 @@ The following helpers (in sfCompat10Plugin) still return internationalized data:
   form_error()
   include_metas()
 
+The `getGlobalMessageSource()` and `getGlobalMessageFormat()` methods has been removed
+from the sfI18N class. They are now equivalent to `getMessageSource()` 
+and `getMessageFormat()`.
+
 Logger
 ------
 
