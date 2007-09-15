@@ -21,7 +21,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelAdminGenerator.class.php 2625 2006-11-07 10:36:14Z fabien $
+ * @version    SVN: $Id$
  */
 abstract class sfAdminGenerator extends sfCrudGenerator
 {
@@ -692,12 +692,12 @@ EOF;
 }
 
 /**
- * Propel admin generator column.
+ * Admin generator column.
  *
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelAdminGenerator.class.php 2625 2006-11-07 10:36:14Z fabien $
+ * @version    SVN: $Id$
  */
 class sfAdminColumn
 {
