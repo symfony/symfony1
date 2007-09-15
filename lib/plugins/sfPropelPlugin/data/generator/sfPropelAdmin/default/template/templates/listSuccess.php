@@ -23,6 +23,7 @@
 [?php else: ?]
 [?php include_partial('<?php echo $this->getModuleName() ?>/list', array('pager' => $pager)) ?]
 [?php endif; ?]
+[?php include_partial('list_batch_actions') ?]
 [?php include_partial('list_actions') ?]
 </div>
 

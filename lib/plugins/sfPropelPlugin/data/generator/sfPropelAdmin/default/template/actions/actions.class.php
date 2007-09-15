@@ -52,6 +52,55 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     return $this->forward('<?php echo $this->getModuleName() ?>', 'edit');
   }
 
+<?php $listActions = $this->getParameterValue('list.batch_actions') ?>
+<?php if (null !== $listActions): ?>
+  public function executeBatchAction()
+  {
+    $action = $this->getRequestParameter('sf_admin_batch_action');
+    switch($action)
+    {
+<?php foreach ((array) $listActions as $actionName => $params): ?>
+<?php
+// default values
+if ($actionName[0] == '_')
+{
+  $actionName = substr($actionName, 1);
+  $name       = $actionName;
+  $action     = $actionName;
+}
+else
+{
+  $name   = $actionName;
+  $action = isset($params['action']) ? $params['action'] : sfInflector::camelize($actionName);
+}
+?>
+      case "<?php echo $name ?>":
+        $this->forward('<?php echo $this->getModuleName() ?>', '<?php echo $action ?>');
+        break;
+<?php endforeach; ?>
+    }
+
+    return $this->redirect('<?php echo $this->getModuleName() ?>/list');
+  }
+<?php endif; ?>
+
+  public function executeDeleteSelected()
+  {
+    $this->selectedItems = $this->getRequestParameter('sf_admin_batch_selection', array());
+
+    try
+    {
+      <?php echo $this->getClassName() ?>Peer::doDelete($this->selectedItems);
+    }
+    catch (PropelException $e)
+    {
+      $this->getRequest()->setError('delete', 'Could not delete the selected <?php echo sfInflector::humanize($this->getPluralName()) ?>. Make sure they do not have any associated items.');
+      return $this->forward('<?php echo $this->getModuleName() ?>', 'list');
+    }
+
+    return $this->redirect('<?php echo $this->getModuleName() ?>/list');
+  }
+
   public function executeEdit()
   {
     $this-><?php echo $this->getSingularName() ?> = $this->get<?php echo $this->getClassName() ?>OrCreate();

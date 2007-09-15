@@ -65,6 +65,13 @@ $b->
   checkResponseElement('body input[class="sf_admin_action_create"][onclick*="/article/create"]', false)->
   checkResponseElement('body input[class="myButtonClass"][onclick*="/article/myAction"][value="my button"]', true)->
 
+  checkListCustomization('add object action button', array('object_actions' => array('_edit' => null, '_delete' => null, 'custom' => array('name' => 'my button', 'action' => 'myAction'))))->
+  checkResponseElement('table.sf_admin_list tr.sf_admin_row_0 td ul[class="sf_admin_td_actions"]', true)->
+  checkResponseElement('table.sf_admin_list tr.sf_admin_row_0 td ul[class="sf_admin_td_actions"] li a', 3)->
+  checkResponseElement('table.sf_admin_list tr.sf_admin_row_0 td ul[class="sf_admin_td_actions"] li a img[title="edit"]', true)->
+  checkResponseElement('table.sf_admin_list tr.sf_admin_row_0 td ul[class="sf_admin_td_actions"] li a img[title="delete"]', true)->
+  checkResponseElement('table.sf_admin_list tr.sf_admin_row_0 td ul[class="sf_admin_td_actions"] li a[href*="/article/myAction"] img[title="my button"]', true)->
+
   // edit
   checkEditCustomization('edit title customization', array('title' => 'edit test title'))->
   checkResponseElement('body h1', 'edit test title')->
