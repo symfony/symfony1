@@ -92,21 +92,25 @@ class sfFinder
   public static function type($name)
   {
     $finder = new sfFinder();
+    return $finder->setType($name);
+  }
 
+  public function setType($name)
+  {
     if (strtolower(substr($name, 0, 3)) == 'dir')
     {
-      $finder->type = 'directory';
+      $this->type = 'directory';
     }
     else if (strtolower($name) == 'any')
     {
-      $finder->type = 'any';
+      $this->type = 'any';
     }
     else
     {
-      $finder->type = 'file';
+      $this->type = 'file';
     }
 
-    return $finder;
+    return $this;
   }
 
   /*
