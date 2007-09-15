@@ -23,8 +23,8 @@ class sfMail
 
   public function __construct()
   {
-    require_once(sfConfig::get('sf_symfony_lib_dir').'/vendor/phpmailer/class.phpmailer.php');
-    require_once(sfConfig::get('sf_symfony_lib_dir').'/vendor/phpmailer/class.smtp.php');
+    require_once(dirname(__FILE__).'/vendor/phpmailer/class.phpmailer.php');
+    require_once(dirname(__FILE__).'/vendor/phpmailer/class.smtp.php');
 
     $this->mailer = new PHPMailer();
   }

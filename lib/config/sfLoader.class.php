@@ -300,6 +300,11 @@ class sfLoader
       sfConfig::get('sf_symfony_data_dir').'/'.$configPath,                          // core modules
     );
 
+    if ($bundledPluginDirs = glob(sfConfig::get('sf_symfony_lib_dir').'/plugins/*/'.$globalConfigPath))
+    {
+      $files = array_merge($files, $bundledPluginDirs);                              // bundled plugins
+    }
+
     if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/'.$globalConfigPath))
     {
       $files = array_merge($files, $pluginDirs);                                     // plugins

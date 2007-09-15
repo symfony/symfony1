@@ -63,15 +63,6 @@ Url:       http://www.pradosoft.com/
 Copyright: 2004-2006, The PRADO Group
 License:   BSD - see licenses/LICENSE.prado file
 
-PHPMailer
----------
-
-symfony contains the PHPMailer software
-
-Url:       http://phpmailer.sourceforge.net/
-Copyright: Chris Ryan
-License:   LGPL - see licenses/LICENSE.PHPMailer file
-
 Spyc
 ----
 

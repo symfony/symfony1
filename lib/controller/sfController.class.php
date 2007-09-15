@@ -388,7 +388,7 @@ abstract class sfController
   }
 
   /**
-   * Sends and email.
+   * [DEPRECATED] Sends and email.
    *
    * This methods calls a module/action with the sfMailView class.
    *
@@ -401,6 +401,11 @@ abstract class sfController
    */
   public function sendEmail($module, $action)
   {
+    if (sfConfig::get('sf_logging_enabled'))
+    {
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array('sendEmail method is deprecated', 'priority' => 'err')));
+    }
+
     return $this->getPresentationFor($module, $action, 'sfMail');
   }
 
