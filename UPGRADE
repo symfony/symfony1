@@ -56,3 +56,24 @@ They are accessible from `sfController`:
   $this->getController()->getPresentationFor(...);
 
 The `project:upgrade1.1` task makes all those changes for you.
+
+Singletons
+----------
+
+The sfI18N, sfRouting, and sfLogger objects are not singletons anymore.
+If you want to get one of those objects in your code, they are still
+available from sfContext:
+
+  [php]
+  sfContext::getInstance()->getI18N()
+  sfContext::getInstance()->getRouting()
+  sfContext::getInstance()->getLogger()
+
+The `project:upgrade1.1` task makes all those changes for you.
+
+sfFunctionCache
+---------------
+
+The sfFunctionCache object does not extend sfFileCache anymore.
+You must now pass a cache object to the constructor.
+The first argument to ->call() must now be a PHP callable.
