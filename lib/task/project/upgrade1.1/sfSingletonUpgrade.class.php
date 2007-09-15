@@ -20,6 +20,13 @@ class sfSingletonUpgrade extends sfUpgrade
 {
   public function upgrade()
   {
+    $this->upgradeFactoryCalls();
+    $this->upgradeFactoryConfiguration();
+    $this->upgradeSettingConfiguration();
+  }
+
+  public function upgradeFactoryCalls()
+  {
     $phpFinder = $this->getFinder('file')->name('*.php');
     foreach ($phpFinder->in($this->getProjectClassDirectories()) as $file)
     {
@@ -36,8 +43,10 @@ class sfSingletonUpgrade extends sfUpgrade
         file_put_contents($file, $content);
       }
     }
+  }
 
-    // update factories.yml
+  public function upgradeFactoryConfiguration()
+  {
     $phpFinder = $this->getFinder('file')->name('factories.yml');
     foreach ($phpFinder->in($this->getProjectConfigDirectories()) as $file)
     {
@@ -55,10 +64,29 @@ prod:
     param:
       level:   err
       loggers: ~
+
 EOF
       .$content;
 
       $this->log($this->formatSection('factories.yml', sprintf('Migrating %s', $file)));
+      file_put_contents($file, $content);
+    }
+  }
+
+  public function upgradeSettingConfiguration()
+  {
+    $phpFinder = $this->getFinder('file')->name('settings.yml');
+    foreach ($phpFinder->in($this->getProjectConfigDirectories()) as $file)
+    {
+      $content = file_get_contents($file);
+      if (false !== strpos($content, 'logging_enabled'))
+      {
+        continue;
+      }
+
+      $content = preg_replace('/(prod\:\s+\.settings\:)/s', "$1\n    logging_enabled: off", $content);
+
+      $this->log($this->formatSection('settings.yml', sprintf('Migrating %s', $file)));
       file_put_contents($file, $content);
     }
   }

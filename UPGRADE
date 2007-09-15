@@ -62,9 +62,18 @@ The `project:upgrade1.1` task makes all those changes for you.
 Singletons
 ----------
 
-The sfI18N, sfRouting, and sfLogger objects are not singletons anymore.
+The sfI18N, sfRouting, and sfLogger objects are now factories and
+not singletons.
 
-They are now factories. Here is the default configuration in `factories.yml`:
+If you want to get one of those objects in your code, they are still
+available from `sfContext`:
+
+  [php]
+  sfContext::getInstance()->getI18N()
+  sfContext::getInstance()->getRouting()
+  sfContext::getInstance()->getLogger()
+
+Here is their default configuration in `factories.yml`:
 
   i18n:
     class: sfI18N
@@ -108,13 +117,12 @@ your application `factories.yml`:
         level:   err
         loggers: ~
 
-If you want to get one of those objects in your code, they are still
-available from sfContext:
+There is also a new `logging_enabled` setting in `settings.yml`.
+This can be used to prevent logging in the production environment altogether:
 
-  [php]
-  sfContext::getInstance()->getI18N()
-  sfContext::getInstance()->getRouting()
-  sfContext::getInstance()->getLogger()
+  prod:
+    .settings:
+      logging_enabled: off
 
 The `project:upgrade1.1` task makes all those changes for you.
 
