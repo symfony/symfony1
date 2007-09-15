@@ -162,3 +162,48 @@ cache when you add or move classes in your project. This method will automatical
 find the changes and flush the autoloading cache.
 
 The `project:upgrade1.1` task makes all those changes for you.
+
+VERSION
+-------
+
+The lib/VERSION file has been removed. If you want to get the current symfony version,
+you can use the `sfCore::VERSION` constant.
+
+Routing
+-------
+
+To inject default route parameters, you can now use the `->setDefaultParameter()` method
+instead of using the `sf_routing_defaults` setting:
+
+  [php]
+  $this->context->getRouting()->setDefaultParameter($key, $value);
+
+I18N
+----
+
+symfony core classes don't return internationalized strings anymore:
+
+  [php]
+  <?php echo __($sf_request->getError('foo')) ?>
+
+This behavior has changed for the following methods and functions:
+
+  [php]
+  sfWebRequest::getError()
+  sfWebResponse::addMeta()
+
+The following helpers (in sfCompat10Plugin) still return internationalized data:
+
+  [php]
+  form_error()
+  include_metas()
+
+Logger
+------
+
+Logger priorities are now constants:
+
+  [php]
+  sfLogger::INFO
+
+The `project:upgrade1.1` task makes all those changes for you.

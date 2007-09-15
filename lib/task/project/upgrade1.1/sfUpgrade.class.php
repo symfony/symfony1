@@ -85,6 +85,7 @@ abstract class sfUpgrade
   {
     return array_merge(
       glob(sfConfig::get('sf_root_dir').'/apps/*/modules/*/lib'),
+      glob(sfConfig::get('sf_root_dir').'/apps/*/lib'),
       array(
         sfConfig::get('sf_root_dir').'/apps/lib',
         sfConfig::get('sf_root_dir').'/lib',
