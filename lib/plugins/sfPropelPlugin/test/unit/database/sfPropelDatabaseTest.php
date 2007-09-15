@@ -8,8 +8,8 @@
  * file that was distributed with this source code.
  */
 
-require_once(dirname(__FILE__).'/../../../../bootstrap/unit.php');
-set_include_path(sfConfig::get('sf_symfony_lib_dir').'/vendor'.PATH_SEPARATOR.get_include_path());
+require_once(dirname(__FILE__).'/../../../../../../test/bootstrap/unit.php');
+set_include_path(sfConfig::get('sf_symfony_lib_dir').'/plugins/sfPropelPlugin/lib/vendor'.PATH_SEPARATOR.get_include_path());
 
 $t = new lime_test(4, new lime_output_color());
 
