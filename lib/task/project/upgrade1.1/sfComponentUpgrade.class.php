@@ -20,7 +20,7 @@ class sfComponentUpgrade extends sfUpgrade
 {
   public function upgrade()
   {
-    $phpFinder = sfFinder::type('file')->name('*.php');
+    $phpFinder = $this->getFinder('file')->name('*.php');
     $dirs = glob(sfConfig::get('sf_root_dir').'/apps/*/modules/*/actions');
     foreach ($phpFinder->in($dirs) as $file)
     {

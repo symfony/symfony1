@@ -27,7 +27,7 @@ class sfFlashUpgrade extends sfUpgrade
 
   protected function upgradeActions()
   {
-    $phpFinder = sfFinder::type('file')->prune('model')->name('*.php');
+    $phpFinder = $this->getFinder('file')->prune('model')->name('*.php');
     $dirs = array_merge(
       glob(sfConfig::get('sf_root_dir').'/apps/*/modules/*/lib'),
       glob(sfConfig::get('sf_root_dir').'/apps/*/modules/*/actions'),
@@ -55,7 +55,7 @@ class sfFlashUpgrade extends sfUpgrade
 
   protected function upgradeTemplates()
   {
-    $phpFinder = sfFinder::type('file')->name('*.php');
+    $phpFinder = $this->getFinder('file')->name('*.php');
     $dirs = array_merge(
       glob(sfConfig::get('sf_root_dir').'/apps/*/modules/*/templates'),
       glob(sfConfig::get('sf_root_dir').'/apps/*/templates')
@@ -79,7 +79,7 @@ class sfFlashUpgrade extends sfUpgrade
 
   protected function upgradeFilters()
   {
-    $filtersFinder = sfFinder::type('file')->name('filters.yml');
+    $filtersFinder = $this->getFinder('file')->name('filters.yml');
     $dirs = array_merge(
       glob(sfConfig::get('sf_root_dir').'/apps/*/modules/*/config'),
       glob(sfConfig::get('sf_root_dir').'/apps/*/config'),
