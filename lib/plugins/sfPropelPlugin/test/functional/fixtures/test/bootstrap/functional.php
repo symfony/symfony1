@@ -8,19 +8,22 @@
  * file that was distributed with this source code.
  */
 
-if (!isset($root_dir))
+// guess current application
+if (!isset($app))
 {
-  $root_dir = realpath(dirname(__FILE__).sprintf('/../%s/fixtures/project', isset($type) ? $type : 'functional'));
+  $traces = debug_backtrace();
+  $caller = $traces[0];
+  $app = array_pop(explode(DIRECTORY_SEPARATOR, dirname($caller['file'])));
 }
-define('SF_ROOT_DIR',    $root_dir);
+
+// define symfony constant
+define('SF_ROOT_DIR',    realpath(dirname(__FILE__).'/../..'));
 define('SF_APP',         $app);
 define('SF_ENVIRONMENT', 'test');
-define('SF_DEBUG',       isset($debug) ? $debug : true);
+define('SF_DEBUG',       true);
 
 // initialize symfony
 require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
 
 // remove all cache
 sfToolkit::clearDirectory(sfConfig::get('sf_cache_dir'));
-
-return true;
