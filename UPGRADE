@@ -95,6 +95,19 @@ They are now factories. Here is the default configuration in `factories.yml`:
           param:
             file: %SF_LOG_DIR%/%SF_APP%_%SF_ENVIRONMENT%.log
 
+The `logging.yml` configuration file is not used anymore.
+Instead, you can configure logging in `factories.yml`.
+
+To disable logging in the production environment, you will have to change
+your application `factories.yml`:
+
+  prod:
+    logger:
+      class:   sfNoLogger
+      param:
+        level:   err
+        loggers: ~
+
 If you want to get one of those objects in your code, they are still
 available from sfContext:
 

@@ -36,5 +36,30 @@ class sfSingletonUpgrade extends sfUpgrade
         file_put_contents($file, $content);
       }
     }
+
+    // update factories.yml
+    $phpFinder = $this->getFinder('file')->name('factories.yml');
+    foreach ($phpFinder->in($this->getProjectConfigDirectories()) as $file)
+    {
+      $content = file_get_contents($file);
+      if (false !== strpos($content, 'sfNoLogger'))
+      {
+        continue;
+      }
+
+      $content =
+<<<EOF
+prod:
+  logger:
+    class:   sfNoLogger
+    param:
+      level:   err
+      loggers: ~
+EOF
+      .$content;
+
+      $this->log($this->formatSection('factories.yml', sprintf('Migrating %s', $file)));
+      file_put_contents($file, $content);
+    }
   }
 }

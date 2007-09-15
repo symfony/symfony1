@@ -24,9 +24,11 @@ class sfAutoloadingUpgrade extends sfUpgrade
     foreach ($phpFinder->in(glob(sfConfig::get('sf_root_dir').'/apps/*/config')) as $file)
     {
       $content = file_get_contents($file);
-      if (false === strpos($content, 'spl_autoload_register'))
+      if (false !== strpos($content, 'spl_autoload_register'))
       {
-        $content .= <<<EOF
+        continue;
+      }
+      $content .= <<<EOF
 
 // insert your own autoloading callables here
 
@@ -36,9 +38,8 @@ if (sfConfig::get('sf_debug'))
 }
 EOF;
 
-        $this->log($this->formatSection('config.php', sprintf('Migrating %s', $file)));
-        file_put_contents($file, $content);
-      }
+      $this->log($this->formatSection('config.php', sprintf('Migrating %s', $file)));
+      file_put_contents($file, $content);
     }
   }
 }
