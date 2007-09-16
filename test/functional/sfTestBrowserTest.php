@@ -30,7 +30,7 @@ $b->
   isRequestParameter('module', 'exception')->
   isRequestParameter('action', 'throwsException')->
   throwsException('Exception')->
-  throwsException('Exception', 'Exception message')->
+  throwsException('Exception', '/Exception message/')->
   throwsException('Exception', '/message/')->
   throwsException(null, '!/sfException/')->
 

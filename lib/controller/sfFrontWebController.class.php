@@ -49,29 +49,11 @@ class sfFrontWebController extends sfWebController
     }
     catch (sfException $e)
     {
-      if (sfConfig::get('sf_test'))
-      {
-        throw $e;
-      }
-
       $e->printStackTrace();
     }
     catch (Exception $e)
     {
-      if (sfConfig::get('sf_test'))
-      {
-        throw $e;
-      }
-
-      try
-      {
-        // wrap non symfony exceptions
-        sfException::createFromException($e)->printStackTrace($e);
-      }
-      catch (Exception $e)
-      {
-        header('HTTP/1.0 500 Internal Server Error');
-      }
+      sfException::createFromException($e)->printStackTrace();
     }
   }
 }

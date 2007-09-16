@@ -147,6 +147,7 @@ class sfBrowser
     // recycle our context object
     $this->context = sfContext::getInstance();
     $this->context->initialize();
+    $this->context->getEventDispatcher()->connect('application.throw_exception', array($this, 'ListenToException'));
 
     // launch request via controller
     $controller = $this->context->getController();
@@ -160,29 +161,8 @@ class sfBrowser
 
     // dispatch our request
     ob_start();
-    try
-    {
-      $controller->dispatch();
-    }
-    catch (sfException $e)
-    {
-      $this->currentException = $e;
-
-      $e->printStackTrace();
-    }
-    catch (Exception $e)
-    {
-      $this->currentException = $e;
-
-      $sfException = new sfException();
-      $sfException->printStackTrace($e);
-    }
+    $controller->dispatch();
     $retval = ob_get_clean();
-
-    if ($this->currentException instanceof sfStopException)
-    {
-      $this->currentException = null;
-    }
 
     // append retval to the response content
     $response->setContent($retval);
@@ -528,6 +508,11 @@ class sfBrowser
   protected function newSession()
   {
     $_SERVER['session_id'] = md5(uniqid(rand(), true));
+  }
+
+  public function listenToException($event)
+  {
+    $this->currentException = $event->getSubject();
   }
 }
 

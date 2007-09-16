@@ -22,9 +22,6 @@
  */
 class sfException extends Exception
 {
-  protected
-    $name = null;
-
   /**
    * Wraps an Exception.
    *
@@ -39,78 +36,68 @@ class sfException extends Exception
 
   /**
    * Prints the stack trace for this exception.
-   *
-   * @param Exception An Exception implementation instance
    */
-  public function printStackTrace($exception = null)
+  public function printStackTrace()
   {
-    if (!$exception)
+    if (!sfConfig::get('sf_test'))
     {
-      $exception = $this;
+      // clean current output buffer
+      while (@ob_end_clean());
+
+      ob_start(sfConfig::get('sf_compressed') ? 'ob_gzhandler' : '');
+
+      header('HTTP/1.0 500 Internal Server Error');
     }
 
-    // don't print message if it is an sfStopException exception
-    if (get_class($exception) == 'sfStopException')
+    try
     {
-      if (!sfConfig::get('sf_test'))
-      {
-        exit(1);
-      }
-
-      return;
+      $this->outputStackTrace();
+    }
+    catch (Exception $e)
+    {
     }
 
-    if (sfContext::hasInstance())
+    if (!sfConfig::get('sf_test'))
+    {
+      exit(1);
+    }
+  }
+
+  /**
+   * Gets the stack trace for this exception.
+   */
+  protected function outputStackTrace()
+  {
+    if (class_exists('sfContext', false) && sfContext::hasInstance())
     {
       $dispatcher = sfContext::getInstance()->getEventDispatcher();
 
       if (sfConfig::get('sf_logging_enabled'))
       {
-        $dispatcher->notify(new sfEvent($this, 'application.log', array($exception->getMessage(), 'priority' => sfLogger::ERR)));
+        $dispatcher->notify(new sfEvent($this, 'application.log', array($this->getMessage(), 'priority' => sfLogger::ERR)));
       }
 
-      $event = $dispatcher->notifyUntil(new sfEvent($this, 'application.throw_exception', array('exception' => $exception)));
+      $event = $dispatcher->notifyUntil(new sfEvent($this, 'application.throw_exception', array('exception' => $this)));
       if ($event->isProcessed())
       {
-        if (!sfConfig::get('sf_test'))
-        {
-          exit(1);
-        }
-
         return;
       }
-    }
-
-    if (!sfConfig::get('sf_test'))
-    {
-      header('HTTP/1.0 500 Internal Server Error');
-
-      // clean current output buffer
-      while (@ob_end_clean());
-
-      ob_start(sfConfig::get('sf_compressed') ? 'ob_gzhandler' : '');
     }
 
     // send an error 500 if not in debug mode
     if (!sfConfig::get('sf_debug'))
     {
-      error_log($exception->getMessage());
-
       $file = sfConfig::get('sf_web_dir').'/errors/error500.php';
-      include(is_readable($file) ? $file : sfConfig::get('sf_symfony_data_dir').'/web/errors/error500.php');
 
-      if (!sfConfig::get('sf_test'))
-      {
-        exit(1);
-      }
+      include is_readable($file) ? $file : sfConfig::get('sf_symfony_data_dir').'/web/errors/error500.php';
 
       return;
     }
 
-    $message = null !== $exception->getMessage() ? $exception->getMessage() : 'n/a';
-    $name    = get_class($exception);
+    $message = null !== $this->getMessage() ? $this->getMessage() : 'n/a';
+    $name    = get_class($this);
     $format  = 0 == strncasecmp(PHP_SAPI, 'cli', 3) ? 'plain' : 'html';
-    $traces  = $this->getTraces($exception, $format);
+    $traces  = self::getTraces($this, $format);
 
     // dump main objects values
     $sf_settings = '';
@@ -118,19 +105,13 @@ class sfException extends Exception
     if (class_exists('sfContext', false) && sfContext::hasInstance())
     {
       $context = sfContext::getInstance();
-      $settingsTable = $this->formatArrayAsHtml(sfDebug::settingsAsArray());
-      $requestTable  = $this->formatArrayAsHtml(sfDebug::requestAsArray($context->getRequest()));
-      $responseTable = $this->formatArrayAsHtml(sfDebug::responseAsArray($context->getResponse()));
-      $globalsTable  = $this->formatArrayAsHtml(sfDebug::globalsAsArray());
+      $settingsTable = self::formatArrayAsHtml(sfDebug::settingsAsArray());
+      $requestTable  = self::formatArrayAsHtml(sfDebug::requestAsArray($context->getRequest()));
+      $responseTable = self::formatArrayAsHtml(sfDebug::responseAsArray($context->getResponse()));
+      $globalsTable  = self::formatArrayAsHtml(sfDebug::globalsAsArray());
     }
 
-    include(sfConfig::get('sf_symfony_data_dir').'/data/exception.'.($format == 'html' ? 'php' : 'txt'));
-
-    // if test, do not exit
-    if (!sfConfig::get('sf_test'))
-    {
-      exit(1);
-    }
+    include sfConfig::get('sf_symfony_data_dir').'/data/exception.'.($format == 'html' ? 'php' : 'txt');
   }
 
   /**
@@ -141,7 +122,7 @@ class sfException extends Exception
    *
    * @return array An array of traces
    */
-  public function getTraces($exception, $format = 'plain')
+  static public function getTraces($exception, $format = 'plain')
   {
     $traceData = $exception->getTrace();
     array_unshift($traceData, array(
@@ -170,13 +151,13 @@ class sfException extends Exception
         (isset($traceData[$i]['class']) ? $traceData[$i]['class'] : ''),
         (isset($traceData[$i]['type']) ? $traceData[$i]['type'] : ''),
         $traceData[$i]['function'],
-        $this->formatArgs($args, false, $format),
+        self::formatArgs($args, false, $format),
         $shortFile,
         $line,
         'trace_'.$i,
         'trace_'.$i,
         $i == 0 ? 'block' : 'none',
-        $this->fileExcerpt($file, $line)
+        self::fileExcerpt($file, $line)
       );
     }
 
@@ -190,7 +171,7 @@ class sfException extends Exception
    *
    * @return string An HTML string
    */
-  protected function formatArrayAsHtml($values)
+  static protected function formatArrayAsHtml($values)
   {
     return '<pre>'.@sfYaml::Dump($values).'</pre>';
   }
@@ -203,7 +184,7 @@ class sfException extends Exception
    *
    * @return string An HTML string
    */
-  protected function fileExcerpt($file, $line)
+  static protected function fileExcerpt($file, $line)
   {
     if (is_readable($file))
     {
@@ -228,7 +209,7 @@ class sfException extends Exception
    *
    * @return string
    */
-  protected function formatArgs($args, $single = false, $format = 'html')
+  static protected function formatArgs($args, $single = false, $format = 'html')
   {
     $result = array();
 
@@ -259,15 +240,5 @@ class sfException extends Exception
     }
 
     return implode(', ', $result);
-  }
-
-  /**
-   * Sets the name of this exception.
-   *
-   * @param string An exception name
-   */
-  protected function setName($name)
-  {
-    $this->name = $name;
   }
 }

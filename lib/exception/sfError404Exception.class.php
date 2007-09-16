@@ -20,16 +20,14 @@ class sfError404Exception extends sfException
 {
   /**
    * Forwards to the 404 action.
-   *
-   * @param Exception An Exception implementation instance
    */
-  public function printStackTrace($exception = null)
+  public function printStackTrace()
   {
     if (sfConfig::get('sf_debug'))
     {
       sfContext::getInstance()->getResponse()->setStatusCode(404);
 
-      return parent::printStackTrace($exception);
+      return parent::printStackTrace();
     }
     else
     {

@@ -39,8 +39,7 @@ class sfConsoleController extends sfController
     }
     catch (Exception $e)
     {
-      // wrap non symfony exceptions
-      sfException::createFromException($e)->printStackTrace($e);
+      sfException::createFromException($e)->printStackTrace();
     }
   }
 }
