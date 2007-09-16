@@ -143,7 +143,7 @@ abstract class sfPluginBaseTask extends sfBaseTask
       'channel'       => 'pear.symfony-project.com',
       'date'          => date('Y-m-d'),
       'time'          => date('H:i:s'),
-      'version'       => array('release' => $sf_version, 'api' => '1.0.0'),
+      'version'       => array('release' => $sf_version, 'api' => '1.1.0'),
       'stability'     => array('release' => 'stable', 'api' => 'stable'),
       'xsdversion'    => '2.0',
       '_lastmodified' => time(),

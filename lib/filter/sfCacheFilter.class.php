@@ -138,7 +138,7 @@ class sfCacheFilter extends sfFilter
     if (sfConfig::get('sf_etag'))
     {
       $etag = md5($this->response->getContent());
-      $this->response->setHttpHeader('ETag', $etag);
+      $this->response->setHttpHeader('ETag', '"'.$etag.'"');
 
       if ($this->request->getHttpHeader('IF_NONE_MATCH') == $etag)
       {

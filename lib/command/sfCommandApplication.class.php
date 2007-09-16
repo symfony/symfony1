@@ -31,6 +31,7 @@ class sfCommandApplication
     $version        = 'UNKNOWN',
     $tasks          = array(),
     $currentTask    = null,
+    $dispatcher     = null,
     $logger         = null;
 
   /**
@@ -38,9 +39,13 @@ class sfCommandApplication
    *
    * @param object A logger that extends sfLogger
    */
-  public function __construct(sfLogger $logger = null)
+  public function __construct(sfLogger $logger = null, sfEventDispatcher $dispatcher = null)
   {
     $this->logger = $logger;
+    require dirname(__FILE__).'/../event/sfEvent.class.php';
+    require dirname(__FILE__).'/../event/sfEventDispatcher.class.php';
+    $this->dispatcher = is_null($dispatcher) ? new sfEventDispatcher() : $dispatcher;
+
     $this->fixCgi();
   }
 
@@ -486,7 +491,7 @@ class sfCommandApplication
     ini_set('magic_quotes_runtime', false);
 
     // define stream constants
-    define('STDIN', fopen('php://stdin', 'r'));
+    define('STDIN',  fopen('php://stdin',  'r'));
     define('STDOUT', fopen('php://stdout', 'w'));
     define('STDERR', fopen('php://stderr', 'w'));
 

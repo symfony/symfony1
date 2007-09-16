@@ -43,7 +43,6 @@ test:
 #    use_flash:              on        # Enable flash parameter feature. Set to off if you never use the set_flash() method in actions.
 #    i18n:                   off       # Enable interface translation. Set to off if your application should not be translated.
 #    check_symfony_version:  off       # Enable check of symfony version for every request. Set to on to have symfony clear the cache automatically when the framework is upgraded. Set to off if you always clear the cache after an upgrade.
-#    use_process_cache:      on        # Enable symfony optimizations based on PHP accelerators. Set to off for tests or when you have enabled a PHP accelerator in your server but don't want symfony to use it internally.
 #    compressed:             off       # Enable PHP response compression. Set to on to compress the outgoing HTML via the PHP handler.
 #    check_lock:             off       # Enable the application lock system triggered by the clear-cache and disable tasks. Set to on to have all requests to disabled applications redirected to the $sf_symfony_data_dir/web/arrors/unavailable.php page.
 #
@@ -97,3 +96,6 @@ test:
 #
 #    # Logging
 #    logging_enabled:        on
+#
+#    # enable 1.0 compatibility
+#    compat_10:              off

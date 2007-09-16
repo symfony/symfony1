@@ -188,7 +188,7 @@ class sfConfigCache
       $this->callHandler($configPath, $files, $cache);
 
       // clear process cache
-      if ('config/config_handlers.yml' != $configPath && sfConfig::has('sf_use_process_cache') && !$process_cache_cleared)
+      if ('config/config_handlers.yml' != $configPath && !$process_cache_cleared)
       {
         sfProcessCache::clear();
         $process_cache_cleared = true;

@@ -118,10 +118,10 @@ class sfSymfonyCommandApplication extends sfCommandApplication
   protected function initializeTasks()
   {
     $dirs = array(
-      sfConfig::get('sf_symfony_lib_dir').DIRECTORY_SEPARATOR.'task', // symfony tasks
-      sfConfig::get('sf_symfony_lib_dir').'/plugins/*/lib/tasks',     // bundled plugin tasks
-      sfConfig::get('sf_root_dir').'/plugins/*/lib/tasks',            // plugin tasks
-      sfConfig::get('sf_lib_dir').DIRECTORY_SEPARATOR.'tasks',        // project tasks
+      sfConfig::get('sf_symfony_lib_dir').'/task',                // symfony tasks
+      sfConfig::get('sf_symfony_lib_dir').'/plugins/*/lib/tasks', // bundled plugin tasks
+      sfConfig::get('sf_root_dir').'/plugins/*/lib/tasks',        // plugin tasks
+      sfConfig::get('sf_lib_dir').'/tasks',                       // project tasks
     );
     $finder = sfFinder::type('file')->name('*Task.class.php');
     foreach ($dirs as $globDir)
@@ -133,7 +133,7 @@ class sfSymfonyCommandApplication extends sfCommandApplication
 
       foreach ($finder->in($dirs) as $task)
       {
-        require_once($task);
+        require_once $task;
       }
     }
 
