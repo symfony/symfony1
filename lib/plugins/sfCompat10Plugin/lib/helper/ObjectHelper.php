@@ -152,23 +152,29 @@ function _get_options_from_objects($objects, $text_method = null)
 
   if ($objects)
   {
-    // multi primary keys handling
-    $multi_primary_keys = is_array($objects[0]->getPrimaryKey()) ? true : false;
-
-    // which method to call?
-    $methodToCall = '';
-    foreach (array($text_method, '__toString', 'toString', 'getPrimaryKey') as $method)
-    {
-      if (is_callable(array($objects[0], $method)))
-      {
-        $methodToCall = $method;
-        break;
-      }
-    }
-
     // construct select option list
+    $first = true;
     foreach ($objects as $tmp_object)
     {
+      if ($first)
+      {
+        // multi primary keys handling
+        $multi_primary_keys = is_array($tmp_object->getPrimaryKey()) ? true : false;
+
+        // which method to call?
+        $methodToCall = '';
+        foreach (array($text_method, '__toString', 'toString', 'getPrimaryKey') as $method)
+        {
+          if (is_callable(array($tmp_object, $method)))
+          {
+            $methodToCall = $method;
+            break;
+          }
+        }
+
+        $first = false;
+      }
+
       $key   = $multi_primary_keys ? implode('/', $tmp_object->getPrimaryKey()) : $tmp_object->getPrimaryKey();
       $value = $tmp_object->$methodToCall();
 
