@@ -159,4 +159,26 @@ abstract class sfResponse implements Serializable
 
     return $event->getReturnValue();
   }
+
+  /**
+   * Serializes the current instance.
+   *
+   * @return array Objects instance
+   */
+  public function serialize()
+  {
+    return serialize(array($this->content, $this->parameterHolder));
+  }
+
+  /**
+   * Unserializes a sfResponse instance.
+   */
+  public function unserialize($serialized)
+  {
+    $data = unserialize($serialized);
+
+    $this->initialize(sfContext::hasInstance() ? sfContext::getInstance()->getEventDispatcher() : new sfEventDispatcher());
+
+    list($this->content, $this->parameterHolder) = $data;
+  }
 }
