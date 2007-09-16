@@ -243,7 +243,6 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
       }
 
       $this->setTimedOut();
-      $this->clearCredentials();
       $this->setAuthenticated(false);
     }
 
