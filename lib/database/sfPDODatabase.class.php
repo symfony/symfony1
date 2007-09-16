@@ -50,8 +50,9 @@ class sfPDODatabase extends sfDatabase
     {
       $pdo_username = $this->getParameter('username');
       $pdo_password = $this->getParameter('password');
+      $pdo_class    = $this->getParameter('class', 'PDO');
 
-      $this->connection = new PDO($dsn, $pdo_username, $pdo_password);
+      $this->connection = new $pdo_class($dsn, $pdo_username, $pdo_password);
     }
     catch (PDOException $e)
     {
