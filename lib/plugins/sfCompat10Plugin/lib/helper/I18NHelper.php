@@ -32,6 +32,11 @@ function __($text, $args = array(), $catalogue = 'messages')
   }
   else
   {
+    if (empty($args))
+    {
+      $args = array();
+    }
+
     // replace object with strings
     foreach ($args as $key => $value)
     {
