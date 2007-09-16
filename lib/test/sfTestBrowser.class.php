@@ -42,7 +42,7 @@ class sfTestBrowser extends sfBrowser
   /**
    * Retrieves the lime_test instance.
    *
-   * @return sfTestBrowser The lime_test instance
+   * @return lime_test The lime_test instance
    */
   public function test()
   {
@@ -57,7 +57,7 @@ class sfTestBrowser extends sfBrowser
    * @param string Url
    * @param string The expected return status code
    *
-   * @return sfBrowser The current sfBrowser instance
+   * @return sfTestBrowser The current sfTestBrowser instance
    */
   public function getAndCheck($module, $action, $url = null, $code = 200)
   {
@@ -72,7 +72,7 @@ class sfTestBrowser extends sfBrowser
   /**
    * Calls a request.
    *
-   * @return sfBrowser The current sfBrowser instance
+   * @return sfTestBrowser The current sfTestBrowser instance
    */
   public function call($uri, $method = 'get', $parameters = array(), $changeStack = true)
   {
@@ -86,7 +86,7 @@ class sfTestBrowser extends sfBrowser
   /**
    * Simulates the browser back button.
    *
-   * @return sfBrowser The current sfBrowser instance
+   * @return sfTestBrowser The current sfTestBrowser instance
    */
   public function back()
   {
@@ -98,7 +98,7 @@ class sfTestBrowser extends sfBrowser
   /**
    * Simulates the browser forward button.
    *
-   * @return sfBrowser The current sfBrowser instance
+   * @return sfTestBrowser The current sfTestBrowser instance
    */
   public function forward()
   {
@@ -112,7 +112,7 @@ class sfTestBrowser extends sfBrowser
    *
    * @param boolean Flag for redirection mode
    *
-   * @return sfBrowser The current sfBrowser instance
+   * @return sfTestBrowser The current sfTestBrowser instance
    */
   public function isRedirected($boolean = true)
   {
@@ -134,7 +134,7 @@ class sfTestBrowser extends sfBrowser
    * @param string Uniform resource identifier
    * @param string Text in the response
    *
-   * @return sfBrowser The current sfBrowser instance
+   * @return sfTestBrowser The current sfTestBrowser instance
    */
   public function check($uri, $text = null)
   {
@@ -153,7 +153,7 @@ class sfTestBrowser extends sfBrowser
    *
    * @param string Status code to check, default 200
    *
-   * @return sfBrowser The current sfBrowser instance
+   * @return sfTestBrowser The current sfTestBrowser instance
    */
   public function isStatusCode($statusCode = 200)
   {
@@ -167,7 +167,7 @@ class sfTestBrowser extends sfBrowser
    *
    * @param string Text to check
    *
-   * @return sfBrowser The current sfBrowser instance
+   * @return sfTestBrowser The current sfTestBrowser instance
    */
   public function responseContains($text)
   {
@@ -182,7 +182,7 @@ class sfTestBrowser extends sfBrowser
    * @param string Key
    * @param string Value
    *
-   * @return sfBrowser The current sfBrowser instance
+   * @return sfTestBrowser The current sfTestBrowser instance
    */
   public function isRequestParameter($key, $value)
   {
@@ -198,7 +198,7 @@ class sfTestBrowser extends sfBrowser
    * @param string The action name
    * @param mixed  The position in the action stack (default to the last entry)
    *
-   * @return object this
+   * @return sfTestBrowser The current sfTestBrowser instance
    */
   public function isForwardedTo($moduleName, $actionName, $position = 'last')
   {
@@ -228,7 +228,7 @@ class sfTestBrowser extends sfBrowser
    * @param string Key
    * @param string Value
    *
-   * @return sfBrowser The current sfBrowser instance
+   * @return sfTestBrowser The current sfTestBrowser instance
    */
   public function isResponseHeader($key, $value)
   {
@@ -257,7 +257,7 @@ class sfTestBrowser extends sfBrowser
    * @param string Flag for the selector
    * @param array Options for the current test
    *
-   * @return sfBrowser The current sfBrowser instance
+   * @return sfTestBrowser The current sfTestBrowser instance
    */
   public function checkResponseElement($selector, $value = true, $options = array())
   {
@@ -314,7 +314,7 @@ class sfTestBrowser extends sfBrowser
    * @param string Class name
    * @param string Message name
    *
-   * @return sfBrowser The current sfBrowser instance
+   * @return sfTestBrowser The current sfTestBrowser instance
    */
   public function throwsException($class = null, $message = null)
   {
@@ -357,7 +357,7 @@ class sfTestBrowser extends sfBrowser
    * @param boolean Flag for checking the cache
    * @param boolean If have or not layout
    *
-   * @return sfBrowser The current sfBrowser instance
+   * @return sfTestBrowser The current sfTestBrowser instance
    */
   public function isCached($boolean, $with_layout = false)
   {
@@ -371,7 +371,7 @@ class sfTestBrowser extends sfBrowser
    * @param boolean Flag for checking the cache
    * @param boolean If have or not layout
    *
-   * @param sfTestBrowser Test browser instance
+   * @return sfTestBrowser The current sfTestBrowser instance
    */
   public function isUriCached($uri, $boolean, $with_layout = false)
   {
