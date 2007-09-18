@@ -24,7 +24,7 @@ class sfPluginUpgradeTask extends sfPluginBaseTask
   protected function configure()
   {
     $this->addArguments(array(
-      new sfCommandArgument('name', sfCommandArgument::OPTIONAL, 'The plugin name'),
+      new sfCommandArgument('name', sfCommandArgument::REQUIRED, 'The plugin name'),
     ));
 
     $this->aliases = array('plugin-upgrade');
@@ -48,19 +48,16 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $config = $this->pearInit();
-
     $packages = array($arguments['name']);
     $this->log($this->formatSection('plugin', sprintf('upgrading plugin "%s"', $arguments['name'])));
-    list($ret, $error) = $this->pearRunCommand($config, 'upgrade', array('loose' => true, 'nodeps' => true), $packages);
+    list($ret, $error) = $this->pearRunCommand('upgrade', array('loose' => true, 'nodeps' => true), $packages);
 
     if ($error)
     {
       throw new sfCommandException($error);
     }
 
-    $name = $this->getPluginName($arguments['name']);
-    $this->uninstallWebContent($name);
-    $this->installWebContent($name);
+    $this->uninstallWebContent($arguments['name']);
+    $this->installWebContent($arguments['name']);
   }
 }

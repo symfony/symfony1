@@ -8,6 +8,20 @@
  * file that was distributed with this source code.
  */
 
+// Remove E_STRICT from error_reporting
+error_reporting(error_reporting() ^ E_STRICT);
+date_default_timezone_set('UTC');
+
+require_once 'PEAR.php';
+require_once 'PEAR/Frontend.php';
+require_once 'PEAR/Config.php';
+require_once 'PEAR/Registry.php';
+require_once 'PEAR/Command.php';
+require_once 'PEAR/Remote.php';
+require_once 'PEAR/Downloader.php';
+require_once 'PEAR/Frontend/CLI.php';
+require_once 'PEAR/PackageFile/v2/rw.php';
+
 /**
  * Base class for all symfony plugin tasks.
  *
@@ -18,167 +32,155 @@
  */
 abstract class sfPluginBaseTask extends sfBaseTask
 {
-  protected function pearRunCommand($config, $command, $opts, $params)
+  protected
+   $config   = null,
+   $registry = null,
+   $frontend = null;
+
+  /**
+   * @see sfTask
+   */
+  protected function doRun(sfCommandManager $commandManager, $options)
   {
-    ob_start(array($this, 'pearEchoMessage'), 2);
-    $cmd = PEAR_Command::factory($command, $config);
-    $ret = ob_get_clean();
-    if (PEAR::isError($cmd))
-    {
-      throw new Exception($cmd->getMessage());
-    }
+    // initialize some PEAR objects
+    $this->initConfig();
+    $this->initRegistry();
+    $this->initFrontend();
 
-    ob_start(array($this, 'pearEchoMessage'), 2);
-    $ok   = $cmd->run($command, $opts, $params);
-    $ret .= ob_get_clean();
-
-    $ret = trim($ret);
-
-    return PEAR::isError($ok) ? array($ret, $ok->getMessage()) : array($ret, null);
-  }
-
-  public function pearEchoMessage($message)
-  {
-    $t = '';
-    foreach (explode("\n", $message) as $longline)
-    {
-      foreach (explode("\n", wordwrap($longline, 62)) as $line)
-      {
-        if ($line = trim($line))
-        {
-          $t .= $this->formatSection('pear', $line);
-        }
-      }
-    }
-
-    return $t;
-  }
-
-  protected function pearInit()
-  {
-    // Remove E_STRICT from error_reporting
-    error_reporting(error_reporting() &~ E_STRICT);
-
-    require_once 'PEAR.php';
-    require_once 'PEAR/Frontend.php';
-    require_once 'PEAR/Config.php';
-    require_once 'PEAR/Registry.php';
-    require_once 'PEAR/Command.php';
-    require_once 'PEAR/Remote.php';
-
-    // current symfony release
-    $sf_version = preg_replace('/\-\w+$/', '', sfCore::VERSION);
-
-    // PEAR
-    PEAR_Command::setFrontendType('CLI');
-    $ui = &PEAR_Command::getFrontendObject();
-
-    // read user/system configuration (don't use the singleton)
-    $config = new PEAR_Config();
-    $configFile = sfConfig::get('sf_plugins_dir').DIRECTORY_SEPARATOR.'.pearrc';
-
-    // change the configuration for symfony use
-    $config->set('php_dir',  sfConfig::get('sf_plugins_dir'));
-    $config->set('data_dir', sfConfig::get('sf_plugins_dir'));
-    $config->set('test_dir', sfConfig::get('sf_plugins_dir'));
-    $config->set('doc_dir',  sfConfig::get('sf_plugins_dir'));
-    $config->set('bin_dir',  sfConfig::get('sf_plugins_dir'));
-
-    // change the PEAR temp dir
-    $config->set('cache_dir',    sfConfig::get('sf_cache_dir'));
-    $config->set('download_dir', sfConfig::get('sf_cache_dir'));
-    $config->set('tmp_dir',      sfConfig::get('sf_cache_dir'));
-
-    // save out configuration file
-    $config->writeConfigFile($configFile, 'user');
-
-    // use our configuration file
-    $config = &PEAR_Config::singleton($configFile);
-
-    $config->set('verbose', 1);
-    $ui->setConfig($config);
-
-    date_default_timezone_set('UTC');
-
-    // register our channel
-    $channel = array(
-      'attribs' => array(
-        'version' => '1.0',
-        'xmlns' => 'http://pear.php.net/channel-1.0',
-        'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
-        'xsi:schemaLocation' => 'http://pear.php.net/dtd/channel-1.0 http://pear.php.net/dtd/channel-1.0.xsd',
-      ),
-
-      'name' => 'pear.symfony-project.com',
-      'summary' => 'symfony project PEAR channel',
-      'suggestedalias' => 'symfony',
-      'servers' => array(
-        'primary' => array(
-          'rest' => array(
-            'baseurl' => array(
-              array(
-                'attribs' => array('type' => 'REST1.0'),
-                '_content' => 'http://pear.symfony-project.com/Chiara_PEAR_Server_REST/',
-              ),
-              array(
-                'attribs' => array('type' => 'REST1.1'),
-                '_content' => 'http://pear.symfony-project.com/Chiara_PEAR_Server_REST/',
-              ),
-            ),
-          ),
-        ),
-      ),
-      '_lastmodified' => array(
-        'ETag' => "113845-297-dc93f000", 
-        'Last-Modified' => date('r'),
-      ),
-    );
-    $this->filesystem->mkdirs(sfConfig::get('sf_plugins_dir').'/.channels/.alias');
-    file_put_contents(sfConfig::get('sf_plugins_dir').'/.channels/pear.symfony-project.com.reg', serialize($channel));
-    file_put_contents(sfConfig::get('sf_plugins_dir').'/.channels/.alias/symfony.txt', 'pear.symfony-project.com');
+    // change default channel
+    $this->registerChannel('pear.symfony-project.com');
+    $this->config->set('default_channel', 'symfony');
 
     // register symfony for dependencies
-    $symfony = array(
-      'name'          => 'symfony',
-      'channel'       => 'pear.symfony-project.com',
-      'date'          => date('Y-m-d'),
-      'time'          => date('H:i:s'),
-      'version'       => array('release' => $sf_version, 'api' => '1.1.0'),
-      'stability'     => array('release' => 'stable', 'api' => 'stable'),
-      'xsdversion'    => '2.0',
-      '_lastmodified' => time(),
-      'old'           => array('version' => $sf_version, 'release_state' => 'stable'),
-    );
-    $dir = sfConfig::get('sf_plugins_dir').DIRECTORY_SEPARATOR.'.registry'.DIRECTORY_SEPARATOR.'.channel.pear.symfony-project.com';
-    $this->filesystem->mkdirs($dir);
-    file_put_contents($dir.DIRECTORY_SEPARATOR.'symfony.reg', serialize($symfony));
+    $this->registerSymfonyPackage();
 
-    return $config;
+    return parent::doRun($commandManager, $options);
   }
 
-  protected function getPluginName($arg)
+  protected function pearRunCommand($command, $opts, $params)
   {
-    $pluginName = (false !== $pos = strrpos($arg, '/')) ? substr($arg, $pos + 1) : $arg;
+    $cmd = PEAR_Command::factory($command, $this->config);
+    if (PEAR::isError($cmd))
+    {
+      throw new sfException('PEAR Error: '.$cmd->getMessage());
+    }
+
+    $ok = $cmd->run($command, $opts, $params);
+    if (PEAR::isError($ok))
+    {
+      throw new sfException('PEAR Error: '.$ok->getMessage());
+    }
+  }
+
+  protected function registerChannel($channel)
+  {
+    $this->config->set('auto_discover', true);
+
+    if (!$this->registry->channelExists($channel, true))
+    {
+      $downloader = new PEAR_Downloader($this->frontend, array(), $this->config);
+      if (!$downloader->discover($channel))
+      {
+        throw new sfException(sprintf('Unable to register channel "%s"', $channel));
+      }
+    }
+  }
+
+  protected function initFrontend()
+  {
+    $this->frontend = PEAR_Frontend::singleton('PEAR_Frontend_symfony');
+    if (PEAR::isError($this->frontend))
+    {
+      throw new sfException('PEAR Error: '.$this->frontend->getMessage());
+    }
+
+    $this->frontend->setTask($this);
+  }
+
+  protected function initRegistry()
+  {
+    $this->registry = $this->config->getRegistry();
+    if (PEAR::isError($this->registry))
+    {
+      throw new sfException(sprintf('PEAR Error: Unable to initialize PEAR registry "%s"', $this->registry->getMessage()));
+    }
+  }
+
+  protected function registerSymfonyPackage()
+  {
+    $symfony = new PEAR_PackageFile_v2_rw();
+    $symfony->setPackage('symfony');
+    $symfony->setChannel('pear.symfony-project.com');
+    $symfony->setConfig($this->config);
+    $symfony->setPackageType('php');
+    $symfony->setAPIVersion('1.0.0');
+    $symfony->setAPIStability('stable');
+    $symfony->setReleaseVersion(preg_replace('/\-\w+$/', '', sfCore::VERSION));
+    $symfony->setReleaseStability('stable');
+    $symfony->setDate(date('Y-m-d'));
+    $symfony->setDescription('symfony');
+    $symfony->setSummary('symfony');
+    $symfony->setLicense('MIT License');
+    $symfony->clearContents();
+    $symfony->addFile('', 'foo.php', array('role' => 'php'));
+    $symfony->resetFilelist();
+    $symfony->installedFile('foo.php', array('attribs' => array('role' => 'php')));
+    $symfony->setInstalledAs('foo.php', 'foo.php');
+    $symfony->addMaintainer('lead', 'fabpot', 'Fabien Potencier', 'fabien.potencier@symfony-project.com');
+    $symfony->setNotes('-');
+    $symfony->setPearinstallerDep('1.4.3');
+    $symfony->setPhpDep('5.1.0');
+
+    $this->registry->deletePackage('symfony', 'pear.symfony-project.com');
+    $this->registry->addPackage2($symfony);
+  }
+
+  protected function initConfig()
+  {
+    $this->config = PEAR_Config::singleton();
+
+    // change the configuration for symfony use
+    $this->config->set('php_dir',  sfConfig::get('sf_plugins_dir'));
+    $this->config->set('data_dir', sfConfig::get('sf_plugins_dir'));
+    $this->config->set('test_dir', sfConfig::get('sf_plugins_dir'));
+    $this->config->set('doc_dir',  sfConfig::get('sf_plugins_dir'));
+    $this->config->set('bin_dir',  sfConfig::get('sf_plugins_dir'));
+
+    // change the PEAR temp dir
+    $this->config->set('cache_dir',    sfConfig::get('sf_cache_dir'));
+    $this->config->set('download_dir', sfConfig::get('sf_cache_dir'));
+    $this->config->set('tmp_dir',      sfConfig::get('sf_cache_dir'));
+
+    $this->config->set('verbose', 1);
+  }
+
+  protected function getPluginName($package)
+  {
+    $pluginName = (false !== $pos = strrpos($package, '/')) ? substr($package, $pos + 1) : $package;
     $pluginName = (false !== $pos = strrpos($pluginName, '-')) ? substr($pluginName, 0, $pos) : $pluginName;
 
     return $pluginName;
   }
 
-  protected function installWebContent($pluginName)
+  protected function installWebContent($package)
   {
+    $pluginName = $this->getPluginName($package);
+
     $webDir = sfConfig::get('sf_plugins_dir').DIRECTORY_SEPARATOR.$pluginName.DIRECTORY_SEPARATOR.'web';
     if (is_dir($webDir))
     {
       $this->log($this->formatSection('plugin', 'installing web data for plugin'));
-      $this->filesystem->symlink(sfConfig::get('sf_web_dir').DIRECTORY_SEPARATOR.$pluginName.DIRECTORY_SEPARATOR.$webDir, true);
+
+      $this->filesystem->symlink($webDir, sfConfig::get('sf_web_dir').DIRECTORY_SEPARATOR.$pluginName, true);
     }
   }
 
-  protected function uninstallWebContent($pluginName)
+  protected function uninstallWebContent($package)
   {
-    $webDir = sfConfig::get('sf_plugins_dir').DIRECTORY_SEPARATOR.$pluginName.DIRECTORY_SEPARATOR.'web';
+    $pluginName = $this->getPluginName($package);
+
     $targetDir = sfConfig::get('sf_web_dir').DIRECTORY_SEPARATOR.$pluginName;
-    if (is_dir($webDir) && is_dir($targetDir))
+    if (is_dir($targetDir))
     {
       $this->log($this->formatSection('plugin', 'uninstalling web data for plugin'));
       if (is_link($targetDir))
@@ -191,5 +193,43 @@ abstract class sfPluginBaseTask extends sfBaseTask
         $this->filesystem->remove($targetDir);
       }
     }
+  }
+}
+
+class PEAR_Frontend_symfony extends PEAR_Frontend_CLI
+{
+  protected
+    $task = null;
+
+  public function setTask($task)
+  {
+    $this->task = $task;
+  }
+
+  public function _displayLine($text)
+  {
+    $this->_display($text);
+  }
+
+  public function _display($text)
+  {
+    $this->task->log($this->splitLongLine($text));
+  }
+
+  protected function splitLongLine($text)
+  {
+    $t = '';
+    foreach (explode("\n", $text) as $longline)
+    {
+      foreach (explode("\n", wordwrap($longline, 62)) as $line)
+      {
+        if ($line = trim($line))
+        {
+          $t .= $this->task->formatSection('pear', $line);
+        }
+      }
+    }
+
+    return $t;
   }
 }

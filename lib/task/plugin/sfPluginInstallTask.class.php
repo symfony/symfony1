@@ -24,7 +24,7 @@ class sfPluginInstallTask extends sfPluginBaseTask
   protected function configure()
   {
     $this->addArguments(array(
-      new sfCommandArgument('name', sfCommandArgument::OPTIONAL, 'The plugin name'),
+      new sfCommandArgument('name', sfCommandArgument::REQUIRED, 'The plugin name'),
     ));
 
     $this->aliases = array('plugin-install');
@@ -54,17 +54,15 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $config = $this->pearInit();
-
     $packages = array($arguments['name']);
     $this->log($this->formatSection('plugin', sprintf('installing plugin "%s"', $arguments['name'])));
-    list($ret, $error) = $this->pearRunCommand($config, 'install', array(), $packages);
+    list($ret, $error) = $this->pearRunCommand('install', array(), $packages);
 
     if ($error)
     {
       throw new sfCommandException($error);
     }
 
-    $this->installWebContent($this->getPluginName($arguments['name']));
+    $this->installWebContent($arguments['name']);
   }
 }

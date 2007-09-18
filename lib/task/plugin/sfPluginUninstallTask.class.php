@@ -24,7 +24,7 @@ class sfPluginUninstallTask extends sfPluginBaseTask
   protected function configure()
   {
     $this->addArguments(array(
-      new sfCommandArgument('name', sfCommandArgument::OPTIONAL, 'The plugin name'),
+      new sfCommandArgument('name', sfCommandArgument::REQUIRED, 'The plugin name'),
     ));
 
     $this->aliases = array('plugin-uninstall');
@@ -49,13 +49,11 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $this->uninstallWebContent($this->getPluginName($arguments['name']));
-
-    $config = $this->pearInit();
+    $this->uninstallWebContent($arguments['name']);
 
     $packages = array($arguments['name']);
     $this->log($this->formatSection('plugin', sprintf('uninstalling plugin "%s"', $arguments['name'])));
-    list($ret, $error) = $this->pearRunCommand($config, 'uninstall', array(), $packages);
+    list($ret, $error) = $this->pearRunCommand('uninstall', array(), $packages);
 
     if ($error)
     {
