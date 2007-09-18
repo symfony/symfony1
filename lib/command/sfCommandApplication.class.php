@@ -323,10 +323,13 @@ class sfCommandApplication
       $lines[] = sprintf('  %s  ', $line);
       $len = max($this->strlen($line) + 4, $len);
     }
-    $messages = array(
-      str_repeat(' ', $len),
-      $title.str_repeat(' ', $len - $this->strlen($title)),
-    );
+
+    $messages = array(str_repeat(' ', $len));
+
+    if ($this->trace)
+    {
+      $messages[] = $title.str_repeat(' ', $len - $this->strlen($title));
+    }
 
     foreach ($lines as $line)
     {
@@ -342,7 +345,7 @@ class sfCommandApplication
     }
     fwrite(STDERR, "\n");
 
-    if (!is_null($this->currentTask))
+    if (!is_null($this->currentTask) && $e instanceof sfCommandArgumentsException)
     {
       fwrite(STDERR, $this->logger->format(sprintf($this->currentTask->getSynopsis(), $this->getName()), 'INFO', STDERR)."\n");
       fwrite(STDERR, "\n");

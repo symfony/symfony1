@@ -342,7 +342,7 @@ abstract class sfTask
     $commandManager->process($options);
     if (!$commandManager->isValid())
     {
-      throw new sfCommandException(sprintf("The execution of task \"%s\" failed.\n- %s", $this->getFullName(), implode("\n- ", $commandManager->getErrors())));
+      throw new sfCommandArgumentsException(sprintf("The execution of task \"%s\" failed.\n- %s", $this->getFullName(), implode("\n- ", $commandManager->getErrors())));
     }
   }
 
