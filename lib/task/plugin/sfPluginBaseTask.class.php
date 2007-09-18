@@ -47,7 +47,7 @@ abstract class sfPluginBaseTask extends sfBaseTask
     $this->initRegistry();
     $this->initFrontend();
 
-    // change default channel
+    // register channels
     $this->registerChannel('pear.symfony-project.com');
     $this->config->set('default_channel', 'symfony');
 
@@ -113,7 +113,7 @@ abstract class sfPluginBaseTask extends sfBaseTask
     $symfony->setChannel('pear.symfony-project.com');
     $symfony->setConfig($this->config);
     $symfony->setPackageType('php');
-    $symfony->setAPIVersion('1.0.0');
+    $symfony->setAPIVersion('1.1.0');
     $symfony->setAPIStability('stable');
     $symfony->setReleaseVersion(preg_replace('/\-\w+$/', '', sfCore::VERSION));
     $symfony->setReleaseStability('stable');
@@ -122,10 +122,7 @@ abstract class sfPluginBaseTask extends sfBaseTask
     $symfony->setSummary('symfony');
     $symfony->setLicense('MIT License');
     $symfony->clearContents();
-    $symfony->addFile('', 'foo.php', array('role' => 'php'));
     $symfony->resetFilelist();
-    $symfony->installedFile('foo.php', array('attribs' => array('role' => 'php')));
-    $symfony->setInstalledAs('foo.php', 'foo.php');
     $symfony->addMaintainer('lead', 'fabpot', 'Fabien Potencier', 'fabien.potencier@symfony-project.com');
     $symfony->setNotes('-');
     $symfony->setPearinstallerDep('1.4.3');
@@ -147,9 +144,11 @@ abstract class sfPluginBaseTask extends sfBaseTask
     $this->config->set('bin_dir',  sfConfig::get('sf_plugins_dir'));
 
     // change the PEAR temp dir
-    $this->config->set('cache_dir',    sfConfig::get('sf_cache_dir'));
-    $this->config->set('download_dir', sfConfig::get('sf_cache_dir'));
-    $this->config->set('tmp_dir',      sfConfig::get('sf_cache_dir'));
+    $cacheDir = sfConfig::get('sf_root_cache_dir').'/.pear';
+    $this->filesystem->mkdirs($cacheDir, 0777);
+    $this->config->set('cache_dir',    $cacheDir);
+    $this->config->set('download_dir', $cacheDir);
+    $this->config->set('tmp_dir',      $cacheDir);
 
     $this->config->set('verbose', 1);
   }
