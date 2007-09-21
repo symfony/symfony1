@@ -348,22 +348,9 @@ abstract class sfTask
 
   protected function doRun(sfCommandManager $commandManager, $options)
   {
-    $this->dispatcher->filter(new sfEvent($this, 'command.filter_options', array('command_manager' => $commandManager)), $options);
-
     $this->process($commandManager, $options);
 
-    $event = new sfEvent($this, 'command.pre_command', array('arguments' => $commandManager->getArgumentValues(), 'options' => $commandManager->getOptionValues()));
-    $this->dispatcher->notifyUntil($event);
-    if ($event->isProcessed())
-    {
-      return $this->getReturnValue();
-    }
-
-    $ret = $this->execute($commandManager->getArgumentValues(), $commandManager->getOptionValues());
-
-    $this->dispatcher->notify(new sfEvent($this, 'command.post_command'));
-
-    return $ret;
+    return $this->execute($commandManager->getArgumentValues(), $commandManager->getOptionValues());
   }
 
   /**
