@@ -8,6 +8,8 @@
  * file that was distributed with this source code.
  */
 
+set_include_path(get_include_path().PATH_SEPARATOR.dirname(__FILE__).'/../vendor');
+
 require_once('phing/Phing.php');
 if (!class_exists('Phing'))
 {
@@ -30,8 +32,6 @@ abstract class sfPropelBaseTask extends sfBaseTask
   public function initialize(sfCommandApplication $commandApplication = null, sfLogger $logger = null)
   {
     parent::initialize($commandApplication, $logger);
-
-    set_include_path(get_include_path().PATH_SEPARATOR.dirname(__FILE__).'/../vendor');
 
     $commandApplication->getAutoloader()->addDirectory(dirname(__FILE__).'/../vendor');
     $commandApplication->getAutoloader()->addDirectory(sfConfig::get('sf_root_dir').'/lib/model');
