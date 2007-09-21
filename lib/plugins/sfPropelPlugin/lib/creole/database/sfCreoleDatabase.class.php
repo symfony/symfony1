@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+set_include_path(get_include_path().PATH_SEPARATOR.dirname(__FILE__).'/../../vendor');
+
 /**
  * sfCreoleDatabase provides connectivity for the Creole database abstraction
  * layer.

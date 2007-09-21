@@ -154,7 +154,7 @@ class sfContext
    {
      if (!isset($this->factories['logger']))
      {
-       $this->factories['logger'] = new sfNoLogger();
+       $this->factories['logger'] = new sfNoLogger($this->dispatcher);
      }
 
      return $this->factories['logger'];
