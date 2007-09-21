@@ -1,26 +1,10 @@
 autoload:
-
   # symfony core
   symfony:
     name:           symfony
     path:           %SF_SYMFONY_LIB_DIR%
     recursive:      on
     exclude:        [vendor]
-
-  propel:
-    name:           propel
-    path:           %SF_SYMFONY_LIB_DIR%/plugins/sfPropelPlugin/lib/vendor/propel
-    recursive:      on
-
-  creole:
-    name:           creole
-    path:           %SF_SYMFONY_LIB_DIR%/plugins/sfPropelPlugin/lib/vendor/creole
-    recursive:      on
-
-  propel_addon:
-    name:           propel addon
-    files:
-      Propel:       %SF_SYMFONY_LIB_DIR%/plugins/sfPropelPlugin/lib/propel/sfPropelAutoload.php
 
   # plugins
   plugins_lib:
