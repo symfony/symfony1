@@ -27,6 +27,16 @@ class sfMemcacheCache extends sfCache
    *
    * Available parameters:
    *
+   * Available parameters:
+   *
+   * * memcache: A memcache object (optional)
+   *
+   * * host:       The default host (default to localhost)
+   * * port:       The port for the default server (default to 11211)
+   * * persistent: true if the connection must be persistent, false otherwise (true by default)
+   *
+   * * servers:    An array of additional servers (keys: host, port, persistent)
+   *
    * * see sfCache for default parameters available for all drivers
    *
    * @see sfCache
@@ -42,11 +52,30 @@ class sfMemcacheCache extends sfCache
 
     $this->prefix = md5(sfConfig::get('sf_app_dir')).self::SEPARATOR;
 
-    $this->memcache = new Memcache();
-    $method = $this->getParameter('persistent', false) ? 'pconnect' : 'connect';
-    if (!$this->memcache->$method($this->getParameter('host', 'localhost'), $this->getParameter('port', 11211), $this->getParameter('timeout', 1)))
+    if ($this->getParameter('memcache'))
     {
-      throw new sfInitializationException(sprintf('Unable to connect to the memcache server (%s:%s).', $this->getParameter('host', 'localhost'), $this->getParameter('port', 11211)));
+      $this->memcache = $this->getParameter('memcache');
+    }
+    else
+    {
+      $this->memcache = new Memcache();
+      $method = $this->getParameter('persistent', true) ? 'pconnect' : 'connect';
+      if (!$this->memcache->$method($this->getParameter('host', 'localhost'), $this->getParameter('port', 11211), $this->getParameter('timeout', 1)))
+      {
+        throw new sfInitializationException(sprintf('Unable to connect to the memcache server (%s:%s).', $this->getParameter('host', 'localhost'), $this->getParameter('port', 11211)));
+      }
+
+      if ($this->getParameter('servers'))
+      {
+        foreach ($this->getParameter('servers') as $server)
+        {
+          $port = isset($server['port']) ? $server['port'] : 11211;
+          if (!$this->memcache->addServer($server['host'], $port, isset($server['persistent']) ? $server['persistent'] : true))
+          {
+            throw new sfInitializationException(sprintf('Unable to connect to the memcache server (%s:%s).', $server['host'], $port));
+          }
+        }
+      }
     }
   }
 

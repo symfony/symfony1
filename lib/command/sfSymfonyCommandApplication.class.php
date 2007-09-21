@@ -83,7 +83,7 @@ class sfSymfonyCommandApplication extends sfCommandApplication
    */
   protected function initializeLogger()
   {
-    $logger = new sfCommandLogger(new sfEventDispatcher(), array('output' => new sfConsoleColorizer()));
+    $logger = new sfCommandLogger($this->dispatcher, array('output' => new sfConsoleColorizer()));
     $this->setLogger($logger);
   }
 
