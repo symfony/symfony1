@@ -55,7 +55,7 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     $packages = array($arguments['name']);
-    $this->log($this->formatSection('plugin', sprintf('installing plugin "%s"', $arguments['name'])));
+    $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('plugin', sprintf('installing plugin "%s"', $arguments['name'])))));
     list($ret, $error) = $this->pearRunCommand('install', array(), $packages);
 
     if ($error)

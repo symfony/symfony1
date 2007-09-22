@@ -53,14 +53,14 @@ EOF;
     {
       $this->filesystem->remove($lockFile);
 
-      $clearCache = new sfCacheClearTask(is_null($this->commandApplication) ? null : $this->commandApplication);
+      $clearCache = new sfCacheClearTask($this->dispatcher, $this->formatter);
       $clearCache->run();
 
-      $this->log($this->formatSection('enable', "$app [$env] has been ENABLED"));
+      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('enable', "$app [$env] has been ENABLED"))));
     }
     else
     {
-      $this->log($this->formatSection('enable', "$app [$env] is currently ENABLED"));
+      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('enable', "$app [$env] is currently ENABLED"))));
     }
   }
 }

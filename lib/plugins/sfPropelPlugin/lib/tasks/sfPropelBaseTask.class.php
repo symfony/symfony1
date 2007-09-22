@@ -9,12 +9,7 @@
  */
 
 set_include_path(get_include_path().PATH_SEPARATOR.dirname(__FILE__).'/../vendor');
-
 require_once('phing/Phing.php');
-if (!class_exists('Phing'))
-{
-  throw new sfCommandException('You must install Phing to use this task. (pear install http://phing.info/pear/phing-current.tgz)');
-}
 
 /**
  * Base class for all symfony Propel tasks.
@@ -29,9 +24,9 @@ abstract class sfPropelBaseTask extends sfBaseTask
   const CHECK_SCHEMA = true;
   const DO_NOT_CHECK_SCHEMA = false;
 
-  public function initialize(sfCommandApplication $commandApplication = null, sfLogger $logger = null)
+  public function initialize(sfEventDispatcher $dispatcher, sfFormatter $formatter)
   {
-    parent::initialize($commandApplication, $logger);
+    parent::initialize($dispatcher, $formatter);
 
     $autoloader = sfSimpleAutoload::getInstance();
     $autoloader->addDirectory(dirname(__FILE__).'/../vendor');
@@ -54,7 +49,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
     {
       $dbSchema->loadXML($schema);
 
-      $this->log($this->formatSection('schema', sprintf('converting "%s" to YML', $schema)));
+      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('schema', sprintf('converting "%s" to YML', $schema)))));
 
       $localprefix = $prefix;
 
@@ -68,7 +63,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
       $yml_file_name = str_replace('.xml', '.yml', basename($schema));
 
       $file = str_replace(basename($schema), $prefix.$yml_file_name,  $schema);
-      $this->log($this->formatSection('schema', 'putting '.$file));
+      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('schema', 'putting '.$file))));
       file_put_contents($file, $dbSchema->asYAML());
     }
   }
@@ -92,7 +87,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
     {
       $dbSchema->loadYAML($schema);
 
-      $this->log($this->formatSection('schema', sprintf('converting "%s" to XML', $schema)));
+      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('schema', sprintf('converting "%s" to XML', $schema)))));
 
       $localprefix = $prefix;
 
@@ -106,7 +101,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
       $xml_file_name = str_replace('.yml', '.xml', basename($schema));
 
       $file = str_replace(basename($schema), $localprefix.$xml_file_name,  $schema);
-      $this->log($this->formatSection('schema', 'putting '.$file));
+      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('schema', 'putting '.$file))));
       file_put_contents($file, $dbSchema->asXML());
     }
   }
@@ -182,12 +177,12 @@ abstract class sfPropelBaseTask extends sfBaseTask
     // Build file
     $args[] = '-f';
     $args[] = realpath(sfConfig::get('sf_symfony_lib_dir').'/plugins/sfPropelPlugin/lib/vendor/propel-generator/build.xml');
-
+/*
     if (is_null($this->commandApplication) || !$this->commandApplication->isVerbose())
     {
       $args[] = '-q';
     }
-
+*/
     // Logger
     if (DIRECTORY_SEPARATOR != '\\' && (function_exists('posix_isatty') && @posix_isatty(STDOUT)))
     {

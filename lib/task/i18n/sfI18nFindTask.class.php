@@ -44,7 +44,7 @@ EOF;
    */
   public function execute($arguments = array(), $options = array())
   {
-    $this->log($this->formatSection('i18n', sprintf('find non "i18n ready" strings in the "%s" application', $arguments['application'])));
+    $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('i18n', sprintf('find non "i18n ready" strings in the "%s" application', $arguments['application'])))));
 
     sfCore::initDirectoryLayout(sfConfig::get('sf_root_dir'), $arguments['application'], $options['env']);
 
@@ -97,10 +97,10 @@ EOF;
     {
       foreach ($templateStrings as $template => $messages)
       {
-        $this->log($this->formatSection('i18n', sprintf('strings in "%s:%s"', $moduleName, $template)));
+        $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('i18n', sprintf('strings in "%s:%s"', $moduleName, $template)))));
         foreach ($messages as $message)
         {
-          $this->log("  $message\n");
+          $this->dispatcher->notify(new sfEvent($this, 'command.log', array("  $message\n")));
         }
       }
     }

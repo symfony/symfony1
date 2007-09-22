@@ -15,11 +15,21 @@ if (!isset($sf_symfony_lib_dir))
 
 require_once($sf_symfony_lib_dir.'/command/sfCommandApplication.class.php');
 require_once($sf_symfony_lib_dir.'/command/sfSymfonyCommandApplication.class.php');
+require_once($sf_symfony_lib_dir.'/log/sfLogger.class.php');
+require_once($sf_symfony_lib_dir.'/log/sfConsoleLogger.class.php');
+require_once($sf_symfony_lib_dir.'/command/sfCommandLogger.class.php');
+require_once($sf_symfony_lib_dir.'/command/sfFormatter.class.php');
+require_once($sf_symfony_lib_dir.'/command/sfAnsiColorFormatter.class.php');
+require_once($sf_symfony_lib_dir.'/event/sfEvent.class.php');
+require_once($sf_symfony_lib_dir.'/event/sfEventDispatcher.class.php');
 
 try
 {
-  $application = new sfSymfonyCommandApplication();
-  $application->initialize($sf_symfony_lib_dir, $sf_symfony_data_dir);
+  $dispatcher = new sfEventDispatcher();
+
+  $logger = new sfCommandLogger($dispatcher);
+
+  $application = new sfSymfonyCommandApplication($dispatcher, new sfAnsiColorFormatter(), array('symfony_lib_dir' => $sf_symfony_lib_dir, 'symfony_data_dir' => $sf_symfony_data_dir));
   $application->run();
 }
 catch (Exception $e)

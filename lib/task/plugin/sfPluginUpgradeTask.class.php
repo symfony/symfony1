@@ -49,7 +49,7 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     $packages = array($arguments['name']);
-    $this->log($this->formatSection('plugin', sprintf('upgrading plugin "%s"', $arguments['name'])));
+    $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('plugin', sprintf('upgrading plugin "%s"', $arguments['name'])))));
     list($ret, $error) = $this->pearRunCommand('upgrade', array('loose' => true, 'nodeps' => true), $packages);
 
     if ($error)

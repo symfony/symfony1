@@ -16,7 +16,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfListTask extends sfTask
+class sfListTask extends sfCommandApplicationTask
 {
   /**
    * @see sfTask
@@ -72,15 +72,16 @@ EOF;
     {
       $width = strlen($task->getName()) > $width ? strlen($task->getName()) : $width;
     }
-    $width += strlen($this->format('  ', 'INFO'));
+    $width += strlen($this->formatter->format('  ', 'INFO'));
 
+    $messages = array();
     if ($arguments['namespace'])
     {
-      $this->log($this->format(sprintf("Available tasks for the \"%s\" namespace:\n", $arguments['namespace']), 'COMMENT'));
+      $messages[] = $this->formatter->format(sprintf("Available tasks for the \"%s\" namespace:\n", $arguments['namespace']), 'COMMENT');
     }
     else
     {
-      $this->log($this->format("Available tasks:\n", 'COMMENT'));
+      $messages[] = $this->formatter->format("Available tasks:\n", 'COMMENT');
     }
 
     // display tasks
@@ -91,12 +92,14 @@ EOF;
       if (!$arguments['namespace'] && $currentNamespace != $task->getNamespace())
       {
         $currentNamespace = $task->getNamespace();
-        $this->log(sprintf("%s\n", $this->format($task->getNamespace(), 'COMMENT')));
+        $messages[] = sprintf("%s\n", $this->formatter->format($task->getNamespace(), 'COMMENT'));
       }
 
-      $aliases = $task->getAliases() ? $this->format(' ('.implode(', ', $task->getAliases()).')', 'COMMENT') : '';
+      $aliases = $task->getAliases() ? $this->formatter->format(' ('.implode(', ', $task->getAliases()).')', 'COMMENT') : '';
 
-      $this->log(sprintf("  %-${width}s %s%s\n", $this->format(':'.$task->getName(), 'INFO'), $task->getBriefDescription(), $aliases));
+      $messages[] = sprintf("  %-${width}s %s%s\n", $this->formatter->format(':'.$task->getName(), 'INFO'), $task->getBriefDescription(), $aliases);
     }
+
+    $this->dispatcher->notify(new sfEvent($this, 'command.log', $messages));
   }
 }

@@ -101,7 +101,7 @@ EOF;
     $finder = sfFinder::type('file')->name($indexName.'.php', $app.'_dev.php');
     $this->filesystem->replaceTokens($finder->in(sfConfig::get('sf_web_dir')), '##', '##', array('APP_NAME' => $app));
 
-    $fixPerms = new sfProjectPermissionsTask(is_null($this->commandApplication) ? null : $this->commandApplication);
+    $fixPerms = new sfProjectPermissionsTask($this->dispatcher, $this->formatter);
     $fixPerms->run();
 
     // Create test dir

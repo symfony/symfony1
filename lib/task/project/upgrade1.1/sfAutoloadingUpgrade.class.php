@@ -46,7 +46,7 @@ if (sfConfig::get('sf_debug'))
 }
 EOF;
 
-      $this->log($this->formatSection('config.php', sprintf('Migrating %s', $file)));
+      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('config.php', sprintf('Migrating %s', $file)))));
       file_put_contents($file, $content);
     }
   }

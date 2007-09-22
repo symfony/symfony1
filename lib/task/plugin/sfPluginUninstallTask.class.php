@@ -52,7 +52,7 @@ EOF;
     $this->uninstallWebContent($arguments['name']);
 
     $packages = array($arguments['name']);
-    $this->log($this->formatSection('plugin', sprintf('uninstalling plugin "%s"', $arguments['name'])));
+    $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('plugin', sprintf('uninstalling plugin "%s"', $arguments['name'])))));
     list($ret, $error) = $this->pearRunCommand('uninstall', array(), $packages);
 
     if ($error)

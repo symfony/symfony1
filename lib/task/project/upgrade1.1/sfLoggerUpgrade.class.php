@@ -28,7 +28,7 @@ class sfLoggerUpgrade extends sfUpgrade
 
       if ($count)
       {
-        $this->log($this->formatSection('logger', sprintf('Migrating %s', $file)));
+        $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('logger', sprintf('Migrating %s', $file)))));
         file_put_contents($file, $content);
       }
     }

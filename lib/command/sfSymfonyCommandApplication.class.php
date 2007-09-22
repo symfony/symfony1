@@ -9,7 +9,7 @@
  */
 
 /**
- * .
+ * sfSymfonyCommandApplication manages the symfony CLI.
  *
  * @package    symfony
  * @subpackage command
@@ -22,25 +22,64 @@ class sfSymfonyCommandApplication extends sfCommandApplication
     $autoloader = null;
 
   /**
-   * Initializes the current symfony command application.
+   * Configures the current symfony command application.
    *
    * @param string The symfony lib directory
    * @param string The symfony data directory
    */
-  public function initialize($symfonyLibDir, $symfonyDataDir)
+  public function configure()
   {
-    require_once($symfonyLibDir.'/util/sfCore.class.php');
-    require_once($symfonyLibDir.'/config/sfConfig.class.php');
-    require_once($symfonyLibDir.'/util/sfSimpleAutoload.class.php');
+    if (!isset($this->options['symfony_lib_dir']))
+    {
+      throw new sfInitializationException('You must pass a "symfony_lib_dir" option.');
+    }
+
+    if (!isset($this->options['symfony_data_dir']))
+    {
+      throw new sfInitializationException('You must pass a "symfony_data_dir" option.');
+    }
+
+    require_once($this->options['symfony_lib_dir'].'/util/sfCore.class.php');
+    require_once($this->options['symfony_lib_dir'].'/config/sfConfig.class.php');
+    require_once($this->options['symfony_lib_dir'].'/util/sfSimpleAutoload.class.php');
 
     // application
     $this->setName('symfony');
     $this->setVersion(sfCore::VERSION);
 
-    $this->initializeEnvironment($symfonyLibDir, $symfonyDataDir);
+    $this->initializeEnvironment($this->options['symfony_lib_dir'], $this->options['symfony_data_dir']);
     $this->initializeAutoloader();
-    $this->initializeLogger();
     $this->initializeTasks();
+  }
+
+  /**
+   * Runs the current application.
+   *
+   * @param mixed The command line options
+   */
+  public function run($options = null)
+  {
+    $this->handleOptions($options);
+    $arguments = $this->commandManager->getArgumentValues();
+
+    if (!isset($arguments['task']))
+    {
+      $arguments['task'] = 'list';
+      $this->commandOptions .= $arguments['task'];
+    }
+
+    $this->currentTask = $this->getTaskToExecute($arguments['task']);
+
+    if ($this->currentTask instanceof sfCommandApplicationTask)
+    {
+      $this->currentTask->setCommandApplication($this);
+    }
+
+    $ret = $this->currentTask->runFromCLI($this->commandManager, $this->commandOptions);
+
+    $this->currentTask = null;
+
+    return $ret;
   }
 
   /**
@@ -76,15 +115,6 @@ class sfSymfonyCommandApplication extends sfCommandApplication
       sfConfig::get('sf_model_dir').PATH_SEPARATOR.
       get_include_path()
     );
-  }
-
-  /**
-   * Initializes the logger object.
-   */
-  protected function initializeLogger()
-  {
-    $logger = new sfCommandLogger($this->dispatcher, array('output' => new sfConsoleColorizer()));
-    $this->setLogger($logger);
   }
 
   /**
@@ -142,7 +172,7 @@ class sfSymfonyCommandApplication extends sfCommandApplication
       $r = new Reflectionclass($class);
       if ($r->isSubclassOf('sfTask') && !$r->isAbstract())
       {
-        $this->registerTask(new $class($this, $this->getLogger()));
+        $this->registerTask(new $class($this->dispatcher, $this->formatter));
       }
     }
   }

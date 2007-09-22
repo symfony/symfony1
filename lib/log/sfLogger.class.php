@@ -76,7 +76,7 @@ abstract class sfLogger
       $this->setLogLevel($options['level']);
     }
 
-    $dispatcher->connect('application.log',   array($this, 'listenToLogEvent'));
+    $dispatcher->connect('application.log', array($this, 'listenToLogEvent'));
   }
 
   /**
@@ -216,13 +216,9 @@ abstract class sfLogger
    */
   public function listenToLogEvent(sfEvent $event)
   {
-    $priority = $event->getParameterHolder()->remove('priority');
-    if (!$priority)
-    {
-      $priority = self::INFO;
-    }
-    $subject = $event->getSubject();
-    $subject = is_object($subject) ? get_class($subject) : (is_string($subject) ? $subject : 'main');
+    $priority = $event->getParameterHolder()->remove('priority', self::INFO);
+    $subject  = $event->getSubject();
+    $subject  = is_object($subject) ? get_class($subject) : (is_string($subject) ? $subject : 'main');
     foreach ($event->getParameterHolder()->getAll() as $message)
     {
       $this->log(sprintf('{%s} %s', $subject, $message), $priority);

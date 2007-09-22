@@ -19,13 +19,34 @@
 class sfFilesystem
 {
   protected
-    $logger = null;
+    $dispatcher = null,
+    $formatter  = null;
 
-  public function __construct(sfLogger $logger = null)
+  /**
+   * Constructor.
+   *
+   * @param sfEventDispatcher A sfEventDispatcher instance
+   * @param sfFormatter       A sfFormatter instance
+   */
+  public function __construct(sfEventDispatcher $dispatcher = null, sfFormatter $formatter = null)
   {
-    $this->logger = $logger;
+    $this->dispatcher = $dispatcher;
+    $this->formatter = $formatter;
   }
 
+  /**
+   * Copies a file.
+   *
+   * This method only copies the file if the origin file is newer than the target file.
+   *
+   * By default, if the target already exists, it is not overriden.
+   *
+   * To override existing files, pass the "override" option.
+   *
+   * @param string The original filename
+   * @param string The target filename
+   * @param array  An array of options
+   */
   public function copy($originFile, $targetFile, $options = array())
   {
     if (!array_key_exists('override', $options))
@@ -54,6 +75,14 @@ class sfFilesystem
     }
   }
 
+  /**
+   * Creates a directory recursively.
+   *
+   * @param  string  The directory path
+   * @param  integer The directory mode
+   *
+   * @return true if the directory has been created, false otherwise
+   */
   public function mkdirs($path, $mode = 0777)
   {
     if (is_dir($path))
@@ -66,6 +95,11 @@ class sfFilesystem
     return @mkdir($path, $mode, true);
   }
 
+  /**
+   * Creates an empty file.
+   *
+   * @param string The filename
+   */
   public function touch($files)
   {
     if (!is_array($files))
@@ -79,10 +113,13 @@ class sfFilesystem
 
       touch($file);
     }
-
-    return $this;
   }
 
+  /**
+   * Removes files or directories.
+   *
+   * @param array An array of files to remove
+   */
   public function remove($files)
   {
     if (!is_array($files))
@@ -106,10 +143,15 @@ class sfFilesystem
         unlink($file);
       }
     }
-
-    return $this;
   }
 
+  /**
+   * Change mode for an array of files or directories.
+   *
+   * @param array   An array of files or directories
+   * @param integer The new mode
+   * @param integer The mode mask
+   */
   public function chmod($files, $mode, $umask = 0000)
   {
     $currentUmask = umask();
@@ -127,11 +169,15 @@ class sfFilesystem
     }
 
     umask($currentUmask);
-
-    return $this;
   }
 
-  public function rename($origin, $target, $options = array())
+  /**
+   * Renames a file.
+   *
+   * @param string The origin filename
+   * @param string The new filename
+   */
+  public function rename($origin, $target)
   {
     // we check that target does not exist
     if (is_readable($target))
@@ -143,6 +189,13 @@ class sfFilesystem
     rename($origin, $target);
   }
 
+  /**
+   * Creates a symbolic link or copy a directory.
+   *
+   * @param string  The origin directory path
+   * @param string  The symbolic link name
+   * @param Boolean Whether to copy files if on windows
+   */
   public function symlink($originDir, $targetDir, $copyOnWindows = false)
   {
     if (!function_exists('symlink') && $copyOnWindows)
@@ -172,6 +225,14 @@ class sfFilesystem
     }
   }
 
+  /**
+   * Mirrors a directory to another.
+   *
+   * @param string   The origin directory
+   * @param string   The target directory
+   * @param sfFinder A sfFinder instance
+   * @param array    An array of options (see copy())
+   */
   public function mirror($originDir, $targetDir, $finder, $options = array())
   {
     foreach ($finder->relative()->in($originDir) as $file)
@@ -195,6 +256,11 @@ class sfFilesystem
     }
   }
 
+  /**
+   * Executes a shell command.
+   *
+   * @param string The command to execute on the shell
+   */
   public function sh($cmd)
   {
     $this->log('exec ', $cmd);
@@ -212,6 +278,14 @@ class sfFilesystem
     return $content;
   }
 
+  /**
+   * Replaces tokens in an array of files.
+   *
+   * @param array  An array of filenames
+   * @param string The begin token delimiter
+   * @param string The end token delimiter
+   * @param array  An array of token/value pairs
+   */
   public function replaceTokens($files, $beginToken, $endToken, $tokens)
   {
     if (!is_array($files))
@@ -233,20 +307,22 @@ class sfFilesystem
     }
   }
 
-  public function log($section, $text, $size = null)
+  /**
+   * Logs a message.
+   *
+   * @param string  The section name
+   * @param string  The message
+   * @param integer The maximum size of a line
+   */
+  protected function log($section, $text, $size = null)
   {
-    if (is_null($this->logger))
+    if (!$this->dispatcher)
     {
       return;
     }
 
-    if ($this->logger instanceof sfCommandLogger)
-    {
-      $this->logger->log($this->logger->formatSection($section, $text, $size));
-    }
-    else
-    {
-      $this->logger->log($section.' '.$text."\n");
-    }
+    $message = $this->formatter ? $this->formatter->formatSection($section, $text, $size) : $section.' '.$text."\n";
+
+    $this->dispatcher->notify(new sfEvent($this, 'application.log', array($message)));
   }
 }

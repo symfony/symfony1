@@ -98,7 +98,7 @@ EOF;
         continue;
       }
 
-      $this->log($this->formatSection('propel', sprintf('load data from "%s"', $fixturesDir)));
+      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('propel', sprintf('load data from "%s"', $fixturesDir)))));
       $data->loadData($fixturesDir, $options['connection']);
     }
   }

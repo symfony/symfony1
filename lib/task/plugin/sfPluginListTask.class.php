@@ -43,7 +43,7 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $this->log($this->format("Installed plugins:\n", 'COMMENT'));
+    $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->format("Installed plugins:\n", 'COMMENT'))));
 
     $installed = $this->registry->packageInfo(null, null, null);
     foreach ($installed as $channel => $packages)
@@ -51,7 +51,7 @@ EOF;
       foreach ($packages as $package)
       {
         $pobj = $this->registry->getPackage(isset($package['package']) ? $package['package'] : $package['name'], $channel);
-        $this->log(sprintf(" %-40s %10s-%-6s %s\n", $this->format($pobj->getPackage(), 'INFO'), $pobj->getVersion(), $pobj->getState() ? $pobj->getState() : null, $this->format(sprintf('# %s (%s)', $channel, $this->registry->getChannel($channel)->getAlias()), 'COMMENT')));
+        $this->dispatcher->notify(new sfEvent($this, 'command.log', array(sprintf(" %-40s %10s-%-6s %s\n", $this->formatter->format($pobj->getPackage(), 'INFO'), $pobj->getVersion(), $pobj->getState() ? $pobj->getState() : null, $this->formatter->format(sprintf('# %s (%s)', $channel, $this->registry->getChannel($channel)->getAlias()), 'COMMENT')))));
       }
     }
   }

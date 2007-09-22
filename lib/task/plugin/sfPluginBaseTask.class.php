@@ -94,7 +94,8 @@ abstract class sfPluginBaseTask extends sfBaseTask
       throw new sfException('PEAR Error: '.$this->frontend->getMessage());
     }
 
-    $this->frontend->setTask($this);
+    $this->frontend->setEventDispatcher($this->dispatcher);
+    $this->frontend->setFormatter($this->formatter);
   }
 
   protected function initRegistry()
@@ -168,7 +169,7 @@ abstract class sfPluginBaseTask extends sfBaseTask
     $webDir = sfConfig::get('sf_plugins_dir').DIRECTORY_SEPARATOR.$pluginName.DIRECTORY_SEPARATOR.'web';
     if (is_dir($webDir))
     {
-      $this->log($this->formatSection('plugin', 'installing web data for plugin'));
+      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('plugin', 'installing web data for plugin'))));
 
       $this->filesystem->symlink($webDir, sfConfig::get('sf_web_dir').DIRECTORY_SEPARATOR.$pluginName, true);
     }
@@ -181,7 +182,7 @@ abstract class sfPluginBaseTask extends sfBaseTask
     $targetDir = sfConfig::get('sf_web_dir').DIRECTORY_SEPARATOR.$pluginName;
     if (is_dir($targetDir))
     {
-      $this->log($this->formatSection('plugin', 'uninstalling web data for plugin'));
+      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('plugin', 'uninstalling web data for plugin'))));
       if (is_link($targetDir))
       {
         $this->filesystem->remove($targetDir);
@@ -198,11 +199,17 @@ abstract class sfPluginBaseTask extends sfBaseTask
 class PEAR_Frontend_symfony extends PEAR_Frontend_CLI
 {
   protected
-    $task = null;
+    $dispatcher = null,
+    $formatter  = null;
 
-  public function setTask($task)
+  public function setEventDispatcher(sfEventDispatcher $dispatcher)
   {
-    $this->task = $task;
+    $this->dispatcher = $dispatcher;
+  }
+
+  public function setFormatter(sfFormatter $formatter)
+  {
+    $this->formatter  = $formatter;
   }
 
   public function _displayLine($text)
@@ -212,7 +219,7 @@ class PEAR_Frontend_symfony extends PEAR_Frontend_CLI
 
   public function _display($text)
   {
-    $this->task->log($this->splitLongLine($text));
+    $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->splitLongLine($text))));
   }
 
   protected function splitLongLine($text)
@@ -224,7 +231,7 @@ class PEAR_Frontend_symfony extends PEAR_Frontend_CLI
       {
         if ($line = trim($line))
         {
-          $t .= $this->task->formatSection('pear', $line);
+          $t .= $this->formatter->formatSection('pear', $line);
         }
       }
     }

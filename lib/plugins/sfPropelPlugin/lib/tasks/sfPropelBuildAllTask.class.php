@@ -48,15 +48,13 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $commandApplication = is_null($this->commandApplication) ? null : $this->commandApplication;
-
-    $buildModel = new sfPropelBuildModelTask($commandApplication);
+    $buildModel = new sfPropelBuildModelTask($this->dispatcher, $this->formatter);
     $buildModel->run();
 
-    $buildSql = new sfPropelBuildSqlTask($commandApplication);
+    $buildSql = new sfPropelBuildSqlTask($this->dispatcher, $this->formatter);
     $buildSql->run();
 
-    $insertSql = new sfPropelInsertSqlTask($commandApplication);
+    $insertSql = new sfPropelInsertSqlTask($this->dispatcher, $this->formatter);
     $insertSql->run();
   }
 }

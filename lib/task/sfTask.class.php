@@ -19,23 +19,25 @@
 abstract class sfTask
 {
   protected
-    $namespace            = '',
-    $name                 = null,
-    $aliases              = array(),
-    $briefDescription     = '',
-    $detailedDescription  = '',
-    $arguments            = array(),
-    $options              = array(),
-    $commandApplication   = null;
+    $namespace           = '',
+    $name                = null,
+    $aliases             = array(),
+    $briefDescription    = '',
+    $detailedDescription = '',
+    $arguments           = array(),
+    $options             = array(),
+    $dispatcher          = null,
+    $formatter           = null;
 
   /**
    * Constructor.
    *
-   * @param sfCommandApplication A sfCommandApplication object
+   * @param sfEventDispatcher A sfEventDispatcher instance
+   * @param sfFormatter       A sfFormatter instance
    */
-  public function __construct(sfCommandApplication $commandApplication = null, sfLogger $logger = null)
+  public function __construct(sfEventDispatcher $dispatcher, sfFormatter $formatter)
   {
-    $this->initialize($commandApplication, $logger);
+    $this->initialize($dispatcher, $formatter);
 
     $this->configure();
   }
@@ -43,15 +45,13 @@ abstract class sfTask
   /**
    * Initializes the sfTask instance.
    *
-   * @param sfCommandApplication A sfCommandApplication instance
-   * @param sfLogger             A sfLogger instance
-   *
-   * @throws <b>sfFactoryException</b> If a task implementation instance cannot
+   * @param sfEventDispatcher A sfEventDispatcher instance
+   * @param sfFormatter       A sfFormatter instance
    */
-  public function initialize(sfCommandApplication $commandApplication = null, sfLogger $logger = null)
+  public function initialize(sfEventDispatcher $dispatcher, sfFormatter $formatter)
   {
-    $this->commandApplication = $commandApplication;
-    $this->setLogger($logger);
+    $this->dispatcher = $dispatcher;
+    $this->formatter  = $formatter;
   }
 
   /**
@@ -189,13 +189,13 @@ abstract class sfTask
    * Returns the detailed description for the task.
    *
    * It also formats special string like [...|COMMENT]
-   * depending on the current logger.
+   * depending on the current formatter.
    *
    * @return string The detailed description for the task
    */
   public function getDetailedDescription()
   {
-    return preg_replace('/\[(.+?)\|(\w+)\]/se', '$this->format("$1", "$2")', $this->detailedDescription);
+    return preg_replace('/\[(.+?)\|(\w+)\]/se', '$this->formatter->format("$1", "$2")', $this->detailedDescription);
   }
 
   /**
@@ -236,107 +236,6 @@ abstract class sfTask
     return sprintf('%%s %s %s %s', $this->getFullName(), implode(' ', $options), implode(' ', $arguments));
   }
 
-  /**
-   * Sets the logger.
-   *
-   * @param sfLogger The logger object
-   */
-  public function setLogger(sfLogger $logger = null)
-  {
-    $this->logger = $logger;
-  }
-
-  /**
-   * Gets the logger.
-   *
-   * @return sfLogger The logger object
-   */
-  public function getLogger()
-  {
-    return $this->logger;
-  }
-
-  /**
-   * Logs a message.
-   *
-   * @param string  The message to log
-   * @param integer The priority
-   */
-  public function log($message, $priority = sfLogger::INFO)
-  {
-    if (is_null($this->logger))
-    {
-      return;
-    }
-
-    $this->logger->log($message, $priority);
-  }
-
-  /**
-   * Formats a string for a given type.
-   *
-   * @param  string The text message
-   * @param  mixed  The message type (COMMENT, INFO, ERROR)
-   *
-   * @return string The formatted string
-   */
-  public function format($message, $type = 'INFO')
-  {
-    if (is_null($this->logger))
-    {
-      return;
-    }
-
-    if ($this->logger instanceof sfCommandLogger)
-    {
-      return $this->logger->format($message, $type);
-    }
-    else
-    {
-      return $message;
-    }
-  }
-
-  /**
-   * Formats a message within a section.
-   *
-   * @param string  The section name
-   * @param string  The text message
-   * @param integer The maximum size allowed for a line
-   */
-  public function formatSection($section, $text, $size = null)
-  {
-    if (is_null($this->logger))
-    {
-      return;
-    }
-
-    if ($this->logger instanceof sfCommandLogger)
-    {
-      return $this->logger->formatSection($section, $text, $size);
-    }
-    else
-    {
-      return $section.' '.$text;
-    }
-  }
-
-  public function __get($key)
-  {
-    switch ($key)
-    {
-      case 'logger':
-        if (!isset($this->logger))
-        {
-          $this->logger = is_null($this->commandApplication) ? null : $this->commandApplication->getLogger();
-        }
-
-        return $this->logger;
-      default:
-        trigger_error(sprintf('Undefined property: %s::$%s', get_class($this), $key), E_USER_NOTICE);
-    }
-  }
-
   protected function process(sfCommandManager $commandManager, $options)
   {
     $commandManager->process($options);
@@ -348,9 +247,22 @@ abstract class sfTask
 
   protected function doRun(sfCommandManager $commandManager, $options)
   {
+    $this->dispatcher->filter(new sfEvent($this, 'command.filter_options', array('command_manager' => $commandManager)), $options);
+
     $this->process($commandManager, $options);
 
-    return $this->execute($commandManager->getArgumentValues(), $commandManager->getOptionValues());
+    $event = new sfEvent($this, 'command.pre_command', array('arguments' => $commandManager->getArgumentValues(), 'options' => $commandManager->getOptionValues()));
+    $this->dispatcher->notifyUntil($event);
+    if ($event->isProcessed())
+    {
+      return $this->getReturnValue();
+    }
+
+    $ret = $this->execute($commandManager->getArgumentValues(), $commandManager->getOptionValues());
+
+    $this->dispatcher->notify(new sfEvent($this, 'command.post_command'));
+
+    return $ret;
   }
 
   /**

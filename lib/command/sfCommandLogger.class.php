@@ -17,76 +17,31 @@
  */
 class sfCommandLogger extends sfConsoleLogger
 {
-  protected
-    $output = null,
-    $size   = 65;
-
   /**
    * Initializes this logger.
    *
    * @param  sfEventDispatcher A sfEventDispatcher instance
-   * @param  array        An array of options.
+   * @param  array             An array of options.
    */
   public function initialize(sfEventDispatcher $dispatcher, $options = array())
   {
-    if (!isset($options['output']))
-    {
-      throw new sfConfigurationException('The "output" option is mandatory for a command logger.');
-    }
+    $dispatcher->connect('command.log', array($this, 'listenToLogEvent'));
 
-    $this->output = $options['output'];
-    $this->size = isset($options['size']) ? $options['size'] : 65;
+    return parent::initialize($dispatcher, $options);
   }
 
   /**
-   * Formats a message for a given type.
+   * Listens to command.log events.
    *
-   * @param  string The text message
-   * @param  mixed  The message type (COMMENT, INFO, ERROR)
+   * @param sfEvent An sfEvent instance
    *
-   * @return string The formatted string
    */
-  public function format($text, $type)
+  public function listenToLogEvent(sfEvent $event)
   {
-    return $this->output->format($text, $type);
-  }
-
-  /**
-   * Formats a message within a section.
-   *
-   * @param string  The section name
-   * @param string  The text message
-   * @param integer The maximum size allowed for a line
-   */
-  public function formatSection($section, $text, $size = null)
-  {
-    $width = 9 + strlen($this->output->format('', 'INFO'));
-
-    return sprintf(">> %-${width}s %s\n", $this->output->format($section, 'INFO'), $this->excerpt($text, $size));
-  }
-
-  /**
-   * Truncates a line.
-   *
-   * @param string  The text
-   * @param integer The maximum size of the returned string
-   *
-   * @return string The truncated string
-   */
-  public function excerpt($text, $size = null)
-  {
-    if (!$size)
+    $priority = $event->getParameterHolder()->remove('priority', self::INFO);
+    foreach ($event->getParameterHolder()->getAll() as $message)
     {
-      $size = $this->size;
+      $this->log(sprintf('%s', $message), $priority);
     }
-
-    if (strlen($text) < $size)
-    {
-      return $text;
-    }
-
-    $subsize = floor(($size - 3) / 2);
-
-    return substr($text, 0, $subsize).$this->output->format('...', 'INFO').substr($text, -$subsize);
   }
 }

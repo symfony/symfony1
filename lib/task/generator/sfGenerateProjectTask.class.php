@@ -79,7 +79,7 @@ EOF;
       'SYMFONY_DATA_DIR' => sfConfig::get('sf_symfony_data_dir'),
     ));
 
-    $fixPerms = new sfProjectPermissionsTask(is_null($this->commandApplication) ? null : $this->commandApplication);
+    $fixPerms = new sfProjectPermissionsTask($this->dispatcher, $this->formatter);
     $fixPerms->run();
   }
 }

@@ -53,11 +53,11 @@ EOF;
     {
       $this->filesystem->touch($lockFile);
 
-      $this->log($this->formatSection('enable', "$app [$env] has been DISABLED"));
+      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('enable', "$app [$env] has been DISABLED"))));
     }
     else
     {
-      $this->log($this->formatSection('enable', "$app [$env] is currently DISABLED"));
+      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('enable', "$app [$env] is currently DISABLED"))));
     }
   }
 }

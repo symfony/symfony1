@@ -9,20 +9,17 @@
  */
 
 /**
- * .
+ * sfCommandApplication manages the lifecycle of a CLI application.
  *
  * @package    symfony
  * @subpackage command
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfCommandApplication
+abstract class sfCommandApplication
 {
-  protected static $OPTIONS;
-
   protected
     $commandManager = null,
-    $options        = null,
     $trace          = false,
     $verbose        = true,
     $dryrun         = false,
@@ -32,41 +29,40 @@ class sfCommandApplication
     $tasks          = array(),
     $currentTask    = null,
     $dispatcher     = null,
-    $logger         = null;
+    $options        = array(),
+    $formatter      = null;
 
   /**
    * Constructor.
    *
-   * @param object A logger that extends sfLogger
+   * @param sfEventDispatcher A sfEventDispatcher instance
+   * @param sfFormatter       A sfFormatter instance
+   * @param array             An array of options
    */
-  public function __construct(sfLogger $logger = null, sfEventDispatcher $dispatcher = null)
+  public function __construct(sfEventDispatcher $dispatcher, sfFormatter $formatter, $options = array())
   {
-    $this->logger = $logger;
-    require dirname(__FILE__).'/../event/sfEvent.class.php';
-    require dirname(__FILE__).'/../event/sfEventDispatcher.class.php';
-    $this->dispatcher = is_null($dispatcher) ? new sfEventDispatcher() : $dispatcher;
+    $this->dispatcher = $dispatcher;
+    $this->formatter  = $formatter;
+    $this->options    = $options;
 
     $this->fixCgi();
+
+    $this->configure();
   }
 
   /**
-   * Sets the logger.
-   *
-   * @param object A logger that extends sfLogger
+   * Configures the current command application.
    */
-  public function setLogger(sfLogger $logger = null)
-  {
-    $this->logger = $logger;
-  }
+  abstract public function configure();
 
   /**
-   * Gets the current logger object.
+   * Returns the formatter instance.
    *
-   * @return object The logger object
+   * @return object The formatter instance
    */
-  public function getLogger()
+  public function getFormatter()
   {
-    return $this->logger;
+    return $this->formatter;
   }
 
   /**
@@ -143,17 +139,6 @@ class sfCommandApplication
   {
     $this->handleOptions($options);
     $arguments = $this->commandManager->getArgumentValues();
-
-    if (!$this->isVerbose())
-    {
-      $this->setLogger(null);
-    }
-
-    if (!isset($arguments['task']))
-    {
-      $arguments['task'] = 'list';
-      $this->commandOptions .= $arguments['task'];
-    }
 
     $this->currentTask = $this->getTaskToExecute($arguments['task']);
 
@@ -239,19 +224,17 @@ class sfCommandApplication
    */
   public function help()
   {
-    if (is_null($this->getLogger()))
-    {
-      return;
-    }
-
-    $this->logger->log(sprintf("%s [options] task_name [arguments]\n", $this->getName()));
-
-    $this->logger->log("\nAvailable options:\n");
+    $messages = array(
+      sprintf("%s [options] task_name [arguments]\n", $this->getName()),
+      "\nAvailable options:\n",
+    );
 
     foreach ($this->commandManager->getOptionSet()->getOptions() as $option)
     {
-      $this->logger->log(sprintf("  %-10s (%s) %s\n", $option->getName(), $option->getShortcut(), $option->getHelp()));
+      $messages[] = sprintf("  %-10s (%s) %s\n", $option->getName(), $option->getShortcut(), $option->getHelp());
     }
+
+    $this->dispatcher->notify(new sfEvent($this, 'command.log', $messages));
   }
 
   /**
@@ -299,7 +282,7 @@ class sfCommandApplication
           $this->verbose = true;
           break;
         case 'version':
-          echo sprintf('%s version %s', $this->getName(), $this->logger->format($this->getVersion(), 'INFO'))."\n";
+          echo sprintf('%s version %s', $this->getName(), $this->formatter->format($this->getVersion(), 'INFO'))."\n";
           exit(0);
       }
     }
@@ -341,19 +324,19 @@ class sfCommandApplication
     fwrite(STDERR, "\n");
     foreach ($messages as $message)
     {
-      fwrite(STDERR, $this->logger->format($message, 'ERROR', STDERR)."\n");
+      fwrite(STDERR, $this->formatter->format($message, 'ERROR', STDERR)."\n");
     }
     fwrite(STDERR, "\n");
 
     if (!is_null($this->currentTask) && $e instanceof sfCommandArgumentsException)
     {
-      fwrite(STDERR, $this->logger->format(sprintf($this->currentTask->getSynopsis(), $this->getName()), 'INFO', STDERR)."\n");
+      fwrite(STDERR, $this->formatter->format(sprintf($this->currentTask->getSynopsis(), $this->getName()), 'INFO', STDERR)."\n");
       fwrite(STDERR, "\n");
     }
 
     if ($this->trace)
     {
-      fwrite(STDERR, $this->logger->format("Exception trace:\n", 'COMMENT'));
+      fwrite(STDERR, $this->formatter->format("Exception trace:\n", 'COMMENT'));
 
       // exception related properties
       $trace = $e->getTrace();
@@ -372,7 +355,7 @@ class sfCommandApplication
         $file = isset($trace[$i]['file']) ? $trace[$i]['file'] : 'n/a';
         $line = isset($trace[$i]['line']) ? $trace[$i]['line'] : 'n/a';
 
-        fwrite(STDERR, sprintf(" %s%s%s at %s:%s\n", $class, $type, $function, $this->logger->format($file, 'INFO', STDERR), $this->logger->format($line, 'INFO', STDERR)));
+        fwrite(STDERR, sprintf(" %s%s%s at %s:%s\n", $class, $type, $function, $this->formatter->format($file, 'INFO', STDERR), $this->formatter->format($line, 'INFO', STDERR)));
       }
 
       fwrite(STDERR, "\n");

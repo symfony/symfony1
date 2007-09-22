@@ -39,7 +39,7 @@ class sfSingletonUpgrade extends sfUpgrade
 
       if ($count)
       {
-        $this->log($this->formatSection('singleton', sprintf('Migrating %s', $file)));
+        $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('singleton', sprintf('Migrating %s', $file)))));
         file_put_contents($file, $content);
       }
     }
@@ -68,7 +68,7 @@ prod:
 EOF
       .$content;
 
-      $this->log($this->formatSection('factories.yml', sprintf('Migrating %s', $file)));
+      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('factories.yml', sprintf('Migrating %s', $file)))));
       file_put_contents($file, $content);
     }
   }
@@ -86,7 +86,7 @@ EOF
 
       $content = preg_replace('/(prod\:\s+\.settings\:)/s', "$1\n    logging_enabled: off", $content);
 
-      $this->log($this->formatSection('settings.yml', sprintf('Migrating %s', $file)));
+      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('settings.yml', sprintf('Migrating %s', $file)))));
       file_put_contents($file, $content);
     }
   }

@@ -48,7 +48,7 @@ abstract class sfBaseTask extends sfTask
       case 'filesystem':
         if (!isset($this->filesystem))
         {
-          $this->filesystem = new sfFilesystem($this->getLogger());
+          $this->filesystem = new sfFilesystem($this->dispatcher, $this->formatter);
         }
 
         return $this->filesystem;

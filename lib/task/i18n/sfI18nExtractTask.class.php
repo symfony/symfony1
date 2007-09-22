@@ -83,43 +83,43 @@ EOF;
   {
     $this->bootstrapSymfony($arguments['application'], 'dev', true);
 
-    $this->log($this->formatSection('i18n', sprintf('extracting i18n strings for the "%s" application', $arguments['application'])));
+    $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('i18n', sprintf('extracting i18n strings for the "%s" application', $arguments['application'])))));
 
     $extract = new sfI18nApplicationExtract();
     $extract->initialize($arguments['culture']);
     $extract->extract();
 
-    $this->log($this->formatSection('i18n', sprintf('found "%d" new i18n strings', count($extract->getNewMessages()))));
-    $this->log($this->formatSection('i18n', sprintf('found "%d" old i18n strings', count($extract->getOldMessages()))));
+    $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('i18n', sprintf('found "%d" new i18n strings', count($extract->getNewMessages()))))));
+    $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('i18n', sprintf('found "%d" old i18n strings', count($extract->getOldMessages()))))));
 
     if ($options['display-new'])
     {
-      $this->log($this->formatSection('i18n', sprintf('display new i18n strings', count($extract->getOldMessages()))));
+      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('i18n', sprintf('display new i18n strings', count($extract->getOldMessages()))))));
       foreach ($extract->getNewMessages() as $message)
       {
-        $this->log('               '.$message."\n");
+        $this->dispatcher->notify(new sfEvent($this, 'command.log', array('               '.$message."\n")));
       }
     }
 
     if ($options['auto-save'])
     {
-      $this->log($this->formatSection('i18n', 'saving new i18n strings'));
+      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('i18n', 'saving new i18n strings'))));
 
       $extract->saveNewMessages();
     }
 
     if ($options['display-old'])
     {
-      $this->log($this->formatSection('i18n', sprintf('display old i18n strings', count($extract->getOldMessages()))));
+      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('i18n', sprintf('display old i18n strings', count($extract->getOldMessages()))))));
       foreach ($extract->getOldMessages() as $message)
       {
-        $this->log('               '.$message."\n");
+        $this->dispatcher->notify(new sfEvent($this, 'command.log', array('               '.$message."\n")));
       }
     }
 
     if ($options['auto-delete'])
     {
-      $this->log($this->formatSection('i18n', 'deleting old i18n strings'));
+      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('i18n', 'deleting old i18n strings'))));
 
       $extract->deleteOldMessages();
     }

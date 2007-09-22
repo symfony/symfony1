@@ -38,7 +38,7 @@ class sfFlashUpgrade extends sfUpgrade
       );
       if ($count)
       {
-        $this->log($this->formatSection('flash', sprintf('Migrating %s', $file)));
+        $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('flash', sprintf('Migrating %s', $file)))));
         file_put_contents($file, $content);
       }
     }
@@ -57,7 +57,7 @@ class sfFlashUpgrade extends sfUpgrade
       );
       if ($count)
       {
-        $this->log($this->formatSection('flash', sprintf('Migrating %s', $file)));
+        $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('flash', sprintf('Migrating %s', $file)))));
         file_put_contents($file, $content);
       }
     }
@@ -72,7 +72,7 @@ class sfFlashUpgrade extends sfUpgrade
       $content = preg_replace("#flash\:\s+~\s*\n#s", '', $content, -1, $count);
       if ($count)
       {
-        $this->log($this->formatSection('flash', sprintf('Migrating %s', $file)));
+        $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('flash', sprintf('Migrating %s', $file)))));
         file_put_contents($file, $content);
       }
     }

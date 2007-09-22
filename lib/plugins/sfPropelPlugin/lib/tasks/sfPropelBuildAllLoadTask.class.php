@@ -54,12 +54,10 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $commandApplication = is_null($this->commandApplication) ? null : $this->commandApplication;
-
-    $buildAll = new sfPropelBuildAllTask($commandApplication);
+    $buildAll = new sfPropelBuildAllTask($this->dispatcher, $this->formatter);
     $buildAll->run();
 
-    $loadData = new sfPropelLoadDataTask($commandApplication);
+    $loadData = new sfPropelLoadDataTask($this->dispatcher, $this->formatter);
     $loadData->run(array('application' => $arguments['application']));
   }
 }
