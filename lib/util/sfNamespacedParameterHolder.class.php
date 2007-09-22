@@ -44,8 +44,8 @@ class sfNamespacedParameterHolder implements Serializable
   /**
    * Sets the default namespace value.
    *
-   * @param string  Default namespace.
-   * @param Boolean Move all values of the old default namespace to the new one or not.
+   * @param string  Default namespace
+   * @param Boolean Move all values of the old default namespace to the new one or not
    */
   public function setDefaultNamespace($namespace, $move = true)
   {
@@ -63,7 +63,7 @@ class sfNamespacedParameterHolder implements Serializable
    *
    * The $default_namespace is defined as 'symfony/default'.
    *
-   * @return string The default namespace.
+   * @return string The default namespace
    */
   public function getDefaultNamespace()
   {
@@ -72,8 +72,6 @@ class sfNamespacedParameterHolder implements Serializable
 
   /**
    * Clear all parameters associated with this request.
-   *
-   * @return void
    */
   public function clear()
   {
@@ -88,11 +86,11 @@ class sfNamespacedParameterHolder implements Serializable
    * argument.  If not specified, the default namespace 'symfony/default' is
    * used.
    *
-   * @param string A parameter name.
-   * @param mixed  A default parameter value.
-   * @param string A parameter namespace.
+   * @param string A parameter name
+   * @param mixed  A default parameter value
+   * @param string A parameter namespace
    *
-   * @return mixed A parameter value, if the parameter exists, otherwise null.
+   * @return mixed A parameter value, if the parameter exists, otherwise null
    */
   public function & get($name, $default = null, $ns = null)
   {
@@ -122,7 +120,7 @@ class sfNamespacedParameterHolder implements Serializable
    *
    * @param string A parameter namespace.
    *
-   * @return array An indexed array of parameter names, if the namespace exists, otherwise null.
+   * @return array An indexed array of parameter names, if the namespace exists, otherwise null
    */
   public function getNames($ns = null)
   {
@@ -142,7 +140,7 @@ class sfNamespacedParameterHolder implements Serializable
   /**
    * Retrieve an array of parameter namespaces.
    *
-   * @return array An indexed array of parameter namespaces.
+   * @return array An indexed array of parameter namespaces
    */
   public function getNamespaces()
   {
@@ -157,9 +155,9 @@ class sfNamespacedParameterHolder implements Serializable
    * namespace is passed as an argument, only the parameters of the
    * specified namespace are returned.
    *
-   * @param string A parameter namespace.
+   * @param string A parameter namespace
    *
-   * @return array An associative array of parameters.
+   * @return array An associative array of parameters
    */
   public function & getAll($ns = null)
   {
@@ -181,10 +179,10 @@ class sfNamespacedParameterHolder implements Serializable
   /**
    * Indicates whether or not a parameter exists.
    *
-   * @param string A parameter name.
-   * @param string A parameter namespace.
+   * @param string A parameter name
+   * @param string A parameter namespace
    *
-   * @return bool true, if the parameter exists, otherwise false.
+   * @return bool true, if the parameter exists, otherwise false
    */
   public function has($name, $ns = null)
   {
@@ -229,9 +227,9 @@ class sfNamespacedParameterHolder implements Serializable
   /**
    * Indicates whether or not A parameter namespace exists.
    *
-   * @param string A parameter namespace.
+   * @param string A parameter namespace
    *
-   * @return bool true, if the namespace exists, otherwise false.
+   * @return bool true, if the namespace exists, otherwise false
    */
   public function hasNamespace($ns)
   {
@@ -241,19 +239,20 @@ class sfNamespacedParameterHolder implements Serializable
   /**
    * Remove a parameter.
    *
-   * @param string A parameter name.
-   * @param string A parameter namespace.
+   * @param string A parameter name
+   * @param mixed  A default parameter value
+   * @param string A parameter namespace
    *
-   * @return string A parameter value, if the parameter was removed, otherwise null.
+   * @return string A parameter value, if the parameter was removed, otherwise null
    */
-  public function remove($name, $ns = null)
+  public function remove($name, $default = null, $ns = null)
   {
     if (!$ns)
     {
       $ns = $this->default_namespace;
     }
 
-    $retval = null;
+    $retval = $default;
 
     if (isset($this->parameters[$ns]) && array_key_exists($name, $this->parameters[$ns]))
     {
@@ -268,8 +267,6 @@ class sfNamespacedParameterHolder implements Serializable
    * Remove A parameter namespace and all of its associated parameters.
    *
    * @param string A parameter namespace.
-   *
-   * @return void
    */
   public function & removeNamespace($ns = null)
   {
@@ -294,11 +291,9 @@ class sfNamespacedParameterHolder implements Serializable
    *
    * If a parameter with the name already exists the value will be overridden.
    *
-   * @param string A parameter name.
-   * @param mixed  A parameter value.
-   * @param string A parameter namespace.
-   *
-   * @return void
+   * @param string A parameter name
+   * @param mixed  A parameter value
+   * @param string A parameter namespace
    */
   public function set($name, $value, $ns = null)
   {
@@ -320,11 +315,9 @@ class sfNamespacedParameterHolder implements Serializable
    *
    * If a parameter with the name already exists the value will be overridden.
    *
-   * @param string A parameter name.
-   * @param mixed  A reference to a parameter value.
-   * @param string A parameter namespace.
-   *
-   * @return void
+   * @param string A parameter name
+   * @param mixed  A reference to a parameter value
+   * @param string A parameter namespace
    */
   public function setByRef($name, & $value, $ns = null)
   {
@@ -347,10 +340,8 @@ class sfNamespacedParameterHolder implements Serializable
    * If an existing parameter name matches any of the keys in the supplied
    * array, the associated value will be overridden.
    *
-   * @param array An associative array of parameters and their associated values.
-   * @param string A parameter namespace.
-   *
-   * @return void
+   * @param array An associative array of parameters and their associated values
+   * @param string A parameter namespace
    */
   public function add($parameters, $ns = null)
   {
@@ -378,10 +369,8 @@ class sfNamespacedParameterHolder implements Serializable
    * If an existing parameter name matches any of the keys in the supplied
    * array, the associated value will be overridden.
    *
-   * @param array An associative array of parameters and references to their associated values.
-   * @param string A parameter namespace.
-   *
-   * @return void
+   * @param array An associative array of parameters and references to their associated values
+   * @param string A parameter namespace
    */
   public function addByRef(& $parameters, $ns = null)
   {

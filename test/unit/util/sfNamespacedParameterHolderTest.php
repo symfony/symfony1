@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(59, new lime_output_color());
+$t = new lime_test(60, new lime_output_color());
 
 // ->clear()
 $t->diag('->clear()');
@@ -142,8 +142,10 @@ $ph->remove('myfoo');
 $t->is($ph->has('myfoo'), false, '->remove() removes the key from parameters');
 $t->is($ph->has('myfoo', 'symfony/mynamespace'), true, '->remove() removes the key from parameters for a given namespace');
 
-$ph->remove('myfoo', 'symfony/mynamespace');
-$t->is($ph->has('myfoo', 'symfony/mynamespace'), false, '->remove() takes a namespace as its second argument');
+$ph->remove('myfoo', null, 'symfony/mynamespace');
+$t->is($ph->has('myfoo', 'symfony/mynamespace'), false, '->remove() takes a namespace as its third argument');
+
+$t->is($ph->remove('nonexistant', 'foobar', 'symfony/mynamespace'), 'foobar', '->remove() takes a default value as its second argument');
 
 $t->is($ph->getAll(), null, '->remove() removes the key from parameters');
 

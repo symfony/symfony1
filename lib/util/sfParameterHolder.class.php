@@ -43,10 +43,10 @@ class sfParameterHolder implements Serializable
   /**
    * Retrieves a parameter.
    *
-   * @param string A parameter name.
-   * @param mixed  A default parameter value.
+   * @param string A parameter name
+   * @param mixed  A default parameter value
    *
-   * @return mixed A parameter value, if the parameter exists, otherwise null.
+   * @return mixed A parameter value, if the parameter exists, otherwise null
    */
   public function & get($name, $default = null)
   {
@@ -65,7 +65,7 @@ class sfParameterHolder implements Serializable
   /**
    * Retrieves an array of parameter names.
    *
-   * @return array An indexed array of parameter names.
+   * @return array An indexed array of parameter names
    */
   public function getNames()
   {
@@ -75,7 +75,7 @@ class sfParameterHolder implements Serializable
   /**
    * Retrieves an array of parameters.
    *
-   * @return array An associative array of parameters.
+   * @return array An associative array of parameters
    */
   public function & getAll()
   {
@@ -85,9 +85,9 @@ class sfParameterHolder implements Serializable
   /**
    * Indicates whether or not a parameter exists.
    *
-   * @param string A parameter name.
+   * @param string A parameter name
    *
-   * @return bool true, if the parameter exists, otherwise false.
+   * @return bool true, if the parameter exists, otherwise false
    */
   public function has($name)
   {
@@ -127,13 +127,14 @@ class sfParameterHolder implements Serializable
   /**
    * Remove a parameter.
    *
-   * @param string A parameter name.
+   * @param string A parameter name
+   * @param mixed  A default parameter value
    *
-   * @return string A parameter value, if the parameter was removed, otherwise null.
+   * @return string A parameter value, if the parameter was removed, otherwise null
    */
-  public function remove($name)
+  public function remove($name, $default = null)
   {
-    $retval = null;
+    $retval = $default;
 
     if (array_key_exists($name, $this->parameters))
     {
@@ -149,8 +150,8 @@ class sfParameterHolder implements Serializable
    *
    * If a parameter with the name already exists the value will be overridden.
    *
-   * @param string A parameter name.
-   * @param mixed  A parameter value.
+   * @param string A parameter name
+   * @param mixed  A parameter value
    */
   public function set($name, $value)
   {
@@ -162,8 +163,8 @@ class sfParameterHolder implements Serializable
    *
    * If a parameter with the name already exists the value will be overridden.
    *
-   * @param string A parameter name.
-   * @param mixed  A reference to a parameter value.
+   * @param string A parameter name
+   * @param mixed  A reference to a parameter value
    */
   public function setByRef($name, & $value)
   {
@@ -176,7 +177,7 @@ class sfParameterHolder implements Serializable
    * If an existing parameter name matches any of the keys in the supplied
    * array, the associated value will be overridden.
    *
-   * @param array An associative array of parameters and their associated values.
+   * @param array An associative array of parameters and their associated values
    */
   public function add($parameters)
   {
@@ -197,7 +198,7 @@ class sfParameterHolder implements Serializable
    * If an existing parameter name matches any of the keys in the supplied
    * array, the associated value will be overridden.
    *
-   * @param array An associative array of parameters and references to their associated values.
+   * @param array An associative array of parameters and references to their associated values
    */
   public function addByRef(& $parameters)
   {
