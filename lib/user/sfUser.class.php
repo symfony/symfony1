@@ -249,8 +249,8 @@ class sfUser
 
       foreach ($names as $name)
       {
-        $this->attributeHolder->remove($name, 'symfony/user/sfUser/flash');
-        $this->attributeHolder->remove($name, 'symfony/user/sfUser/flash/remove');
+        $this->attributeHolder->remove($name, null, 'symfony/user/sfUser/flash');
+        $this->attributeHolder->remove($name, null, 'symfony/user/sfUser/flash/remove');
       }
     }
 
