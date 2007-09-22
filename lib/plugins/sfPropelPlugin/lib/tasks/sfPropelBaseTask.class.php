@@ -33,8 +33,10 @@ abstract class sfPropelBaseTask extends sfBaseTask
   {
     parent::initialize($commandApplication, $logger);
 
-    $commandApplication->getAutoloader()->addDirectory(dirname(__FILE__).'/../vendor');
-    $commandApplication->getAutoloader()->addDirectory(sfConfig::get('sf_root_dir').'/lib/model');
+    $autoloader = sfSimpleAutoload::getInstance();
+    $autoloader->addDirectory(dirname(__FILE__).'/../vendor');
+    $autoloader->addDirectory(sfConfig::get('sf_root_dir').'/lib/model');
+    $autoloader->register();
   }
 
   protected function schemaToYML($checkSchema = self::CHECK_SCHEMA, $prefix = '')

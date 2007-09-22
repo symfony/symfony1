@@ -16,7 +16,7 @@ sfConfig::set('sf_symfony_data_dir', realpath($_test_dir.'/../data'));
 
 require_once(dirname(__FILE__).'/../../lib/util/sfSimpleAutoload.class.php');
 require_once(dirname(__FILE__).'/../../lib/util/sfToolkit.class.php');
-$autoload = new sfSimpleAutoload(sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.sprintf('sf_autoload_unit_%s.data', md5(__FILE__)));
+$autoload = sfSimpleAutoload::getInstance(sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.sprintf('sf_autoload_unit_%s.data', md5(__FILE__)));
 $autoload->addDirectory(realpath(dirname(__FILE__).'/../../lib'));
 $autoload->register();
 

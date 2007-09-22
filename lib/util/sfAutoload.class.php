@@ -11,6 +11,9 @@
 /**
  * sfAutoload class.
  *
+ * This class is a singleton as PHP seems to be unable to register 2 autoloaders that are instances
+ * of the same class (why?).
+ *
  * @package    symfony
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
@@ -18,26 +21,43 @@
 class sfAutoload
 {
   static protected
+    $instance = null;
+
+  protected
     $classes = array();
 
-  static public function register()
+  protected function __construct()
+  {
+  }
+
+  static public function getInstance()
+  {
+    if (!isset(self::$instance))
+    {
+      self::$instance = new sfAutoload();
+    }
+
+    return self::$instance;
+  }
+
+  public function register()
   {
     ini_set('unserialize_callback_func', 'spl_autoload_call');
 
-    spl_autoload_register(array('sfAutoload', 'autoload'));
+    spl_autoload_register(array($this, 'autoload'));
   }
 
-  static public function unregister()
+  public function unregister()
   {
-    spl_autoload_unregister(array('sfAutoload', 'autoload'));
+    spl_autoload_unregister(array($this, 'autoload'));
   }
 
-  static public function getClassPath($class)
+  public function getClassPath($class)
   {
-    return isset(self::$classes[$class]) ? self::$classes[$class] : null;
+    return isset($this->classes[$class]) ? $this->classes[$class] : null;
   }
 
-  static public function reloadClasses($force = false)
+  public function reloadClasses($force = false)
   {
     if ($force)
     {
@@ -46,7 +66,7 @@ class sfAutoload
 
     $file = sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/autoload.yml');
 
-    self::$classes = include($file);
+    $this->classes = include($file);
   }
 
   /**
@@ -56,10 +76,10 @@ class sfAutoload
    *
    * @return boolean Returns true if the class has been loaded
    */
-  static public function autoload($class)
+  public function autoload($class)
   {
     // load the list of autoload classes
-    if (!self::$classes)
+    if (!$this->classes)
     {
       self::reloadClasses();
     }
@@ -72,7 +92,7 @@ class sfAutoload
     return false;
   }
 
-  static function autoloadAgain($class)
+  function autoloadAgain($class)
   {
     self::reloadClasses(true);
 
@@ -86,7 +106,7 @@ class sfAutoload
    *
    * @return boolean Returns true if the class has been loaded
    */
-  static public function loadClass($class)
+  public function loadClass($class)
   {
     // class already exists
     if (class_exists($class, false) || interface_exists($class, false))
@@ -95,18 +115,18 @@ class sfAutoload
     }
 
     // we have a class path, let's include it
-    if (isset(self::$classes[$class]))
+    if (isset($this->classes[$class]))
     {
-      require(self::$classes[$class]);
+      require($this->classes[$class]);
 
       return true;
     }
 
     // see if the file exists in the current module lib directory
     // must be in a module context
-    if (sfContext::hasInstance() && ($module = sfContext::getInstance()->getModuleName()) && isset(self::$classes[$module.'/'.$class]))
+    if (sfContext::hasInstance() && ($module = sfContext::getInstance()->getModuleName()) && isset($this->classes[$module.'/'.$class]))
     {
-      require(self::$classes[$module.'/'.$class]);
+      require($this->classes[$module.'/'.$class]);
 
       return true;
     }

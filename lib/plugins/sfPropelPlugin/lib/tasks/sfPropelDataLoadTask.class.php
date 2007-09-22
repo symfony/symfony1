@@ -70,11 +70,8 @@ EOF;
   {
     $this->bootstrapSymfony($arguments['application'], $options['env'], true);
 
-    if (!is_null($this->commandApplication))
-    {
-      $this->commandApplication->getAutoloader()->unregister();
-      $this->commandApplication->getAutoloader()->register();
-    }
+    sfSimpleAutoload::getInstance()->unregister();
+    sfSimpleAutoload::getInstance()->register();
 
     if (count($options['dir']))
     {

@@ -134,7 +134,7 @@ class sfCore
       'sf_test'             => $test,
     ));
 
-    sfAutoload::register();
+    sfAutoload::getInstance()->register();
 
     // directory layout
     self::initDirectoryLayout(SF_ROOT_DIR, SF_APP, SF_ENVIRONMENT);

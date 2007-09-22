@@ -11,5 +11,5 @@ sfCore::bootstrap($sf_symfony_lib_dir, $sf_symfony_data_dir);
 
 if (sfConfig::get('sf_debug'))
 {
-  spl_autoload_register(array('sfAutoload', 'autoloadAgain'));
+  spl_autoload_register(array(sfAutoload::getInstance(), 'autoloadAgain'));
 }

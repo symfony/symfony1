@@ -189,7 +189,7 @@ class sfPropelData extends sfData
 
         $peer_class = $class.'Peer';
 
-        if (!$classPath = sfAutoload::getClassPath($peer_class))
+        if (!$classPath = sfAutoload::getInstance()->getClassPath($peer_class))
         {
           throw new sfException(sprintf('Unable to find path for class "%s".', $peer_class));
         }
@@ -215,7 +215,7 @@ class sfPropelData extends sfData
     $mapBuilderClass = $class.'MapBuilder';
     if (!isset($this->maps[$class]))
     {
-      if (!$classPath = sfAutoload::getClassPath($mapBuilderClass))
+      if (!$classPath = sfAutoload::getInstance()->getClassPath($mapBuilderClass))
       {
         throw new sfException(sprintf('Unable to find path for class "%s".', $mapBuilderClass));
       }

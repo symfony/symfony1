@@ -102,7 +102,7 @@ class sfSymfonyCommandApplication extends sfCommandApplication
       $cache = sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.sprintf('sf_autoload_cmd_%s.data', md5(__FILE__));
     }
 
-    $this->autoloader = new sfSimpleAutoload($cache);
+    $this->autoloader = sfSimpleAutoload::getInstance($cache);
     require_once(sfConfig::get('sf_symfony_lib_dir').'/util/sfFinder.class.php');
     $finder = sfFinder::type('file')->ignore_version_control()->prune('test')->name('*.php');
     $this->autoloader->addFiles($finder->in(sfConfig::get('sf_symfony_lib_dir')));

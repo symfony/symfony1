@@ -26,6 +26,14 @@ class sfAutoloadingUpgrade extends sfUpgrade
       $content = file_get_contents($file);
       if (false !== strpos($content, 'spl_autoload_register'))
       {
+        if (false !== strpos($content, "'sfAutoload'"))
+        {
+          $content = str_replace("'sfAutoload'", 'sfAutoload::getInstance()', $content);
+
+          $this->log($this->formatSection('config.php', sprintf('Migrating %s', $file)));
+          file_put_contents($file, $content);
+        }
+
         continue;
       }
       $content .= <<<EOF

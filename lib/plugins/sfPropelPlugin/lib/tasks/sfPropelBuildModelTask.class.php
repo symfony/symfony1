@@ -56,9 +56,6 @@ EOF;
     $this->callPhing('om', self::CHECK_SCHEMA);
     $this->cleanup();
 
-    if (!is_null($this->commandApplication))
-    {
-      $this->commandApplication->getAutoloader()->reload();
-    }
+    sfSimpleAutoload::getInstance()->reload();
   }
 }

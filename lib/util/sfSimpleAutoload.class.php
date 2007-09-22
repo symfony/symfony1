@@ -11,12 +11,18 @@
 /**
  * sfSimpleAutoload class.
  *
+ * This class is a singleton as PHP seems to be unable to register 2 autoloaders that are instances
+ * of the same class (why?).
+ *
  * @package    symfony
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
 class sfSimpleAutoload
 {
+  static protected
+    $instance = null;
+
   protected
     $cacheFile    = null,
     $cacheLoaded  = false,
@@ -25,7 +31,7 @@ class sfSimpleAutoload
     $files        = array(),
     $classes      = array();
 
-  public function __construct($cacheFile = null)
+  protected function __construct($cacheFile = null)
   {
     if (!is_null($cacheFile))
     {
@@ -35,10 +41,23 @@ class sfSimpleAutoload
     $this->loadCache();
   }
 
+  static public function getInstance($cacheFile = null)
+  {
+    if (!isset(self::$instance))
+    {
+      self::$instance = new sfSimpleAutoload($cacheFile);
+    }
+
+    return self::$instance;
+  }
+
   public function register()
   {
     ini_set('unserialize_callback_func', 'spl_autoload_call');
-    spl_autoload_register(array($this, 'autoload'));
+    if (!spl_autoload_register(array($this, 'autoload')))
+    {
+      throw new sfException(sprintf('Unable to register %s::autoload as an autoloading method.', get_class($this)));
+    }
 
     if ($this->cacheFile)
     {
