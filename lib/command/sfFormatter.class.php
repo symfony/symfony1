@@ -49,9 +49,7 @@ class sfFormatter
    */
   public function formatSection($section, $text, $size = null)
   {
-    $width = 9;
-
-    return sprintf(">> %-${width}s %s\n", $section, $this->excerpt($text, $size));
+    return sprintf(">> %-$9s %s", $section, $this->excerpt($text, $size));
   }
 
   /**

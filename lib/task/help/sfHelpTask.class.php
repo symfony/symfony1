@@ -46,8 +46,8 @@ class sfHelpTask extends sfCommandApplicationTask
 
     $messages = array();
 
-    $messages[] = $this->formatter->format("Usage:\n", 'COMMENT');
-    $messages[] = $this->formatter->format(sprintf(' '.$task->getSynopsis(), is_null($this->commandApplication) ? '' : $this->commandApplication->getName()))."\n\n";
+    $messages[] = $this->formatter->format('Usage:', 'COMMENT');
+    $messages[] = $this->formatter->format(sprintf(' '.$task->getSynopsis(), is_null($this->commandApplication) ? '' : $this->commandApplication->getName()))."\n";
 
     // find the largest option or argument name
     $max = 0;
@@ -63,38 +63,38 @@ class sfHelpTask extends sfCommandApplicationTask
 
     if ($task->getAliases())
     {
-      $messages[] = $this->formatter->format("Aliases:\n", 'COMMENT').' '.$this->formatter->format(implode(', ', $task->getAliases()), 'INFO')."\n\n";
+      $messages[] = $this->formatter->format('Aliases:', 'COMMENT').' '.$this->formatter->format(implode(', ', $task->getAliases()), 'INFO')."\n";
     }
 
     if ($task->getArguments())
     {
-      $messages[] = $this->formatter->format("Arguments:\n", 'COMMENT');
+      $messages[] = $this->formatter->format('Arguments:', 'COMMENT');
       foreach ($task->getArguments() as $argument)
       {
         $default = !is_null($argument->getDefault()) && (!is_array($argument->getDefault()) || count($argument->getDefault())) ? $this->formatter->format(sprintf(' (default: %s)', is_array($argument->getDefault()) ? str_replace("\n", '', print_r($argument->getDefault(), true)): $argument->getDefault()), 'COMMENT') : '';
-        $messages[] = sprintf(" %-${max}s %s%s\n", $this->formatter->format($argument->getName(), 'INFO'), $argument->getHelp(), $default);
+        $messages[] = sprintf(" %-${max}s %s%s", $this->formatter->format($argument->getName(), 'INFO'), $argument->getHelp(), $default);
       }
 
-      $messages[] = "\n";
+      $messages[] = '';
     }
 
     if ($task->getOptions())
     {
-      $messages[] = $this->formatter->format("Options:\n", 'COMMENT');
+      $messages[] = $this->formatter->format('Options:', 'COMMENT');
 
       foreach ($task->getOptions() as $option)
       {
         $default = $option->acceptParameter() && !is_null($option->getDefault()) && (!is_array($option->getDefault()) || count($option->getDefault())) ? $this->formatter->format(sprintf(' (default: %s)', is_array($option->getDefault()) ? str_replace("\n", '', print_r($option->getDefault(), true)): $option->getDefault()), 'COMMENT') : '';
         $multiple = $option->isArray() ? $this->formatter->format(' (multiple values allowed)', 'COMMENT') : '';
-        $messages[] = sprintf(' %-'.$max.'s %s%s%s%s', $this->formatter->format('--'.$option->getName(), 'INFO'), $option->getShortcut() ? sprintf('(-%s) ', $option->getShortcut()) : '', $option->getHelp(), $default, $multiple)."\n";
+        $messages[] = sprintf(' %-'.$max.'s %s%s%s%s', $this->formatter->format('--'.$option->getName(), 'INFO'), $option->getShortcut() ? sprintf('(-%s) ', $option->getShortcut()) : '', $option->getHelp(), $default, $multiple);
       }
 
-      $messages[] = "\n";
+      $messages[] = '';
     }
 
     if ($detailedDescription = $task->getDetailedDescription())
     {
-      $messages[] = $this->formatter->format("Description:\n", 'COMMENT');
+      $messages[] = $this->formatter->format('Description:', 'COMMENT');
 
       $messages[] = ' '.implode("\n ", explode("\n", $detailedDescription))."\n";
     }

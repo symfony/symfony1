@@ -29,12 +29,23 @@ try
 
   $logger = new sfCommandLogger($dispatcher);
 
-  $application = new sfSymfonyCommandApplication($dispatcher, new sfAnsiColorFormatter(), array('symfony_lib_dir' => $sf_symfony_lib_dir, 'symfony_data_dir' => $sf_symfony_data_dir));
+  $options = array(
+    'symfony_lib_dir' => $sf_symfony_lib_dir,
+    'symfony_data_dir' => $sf_symfony_data_dir,
+  );
+
+  $application = new sfSymfonyCommandApplication($dispatcher, new sfAnsiColorFormatter(), $options);
   $application->run();
 }
 catch (Exception $e)
 {
+  if (!isset($application))
+  {
+    throw $e;
+  }
+
   $application->renderException($e);
+
   exit(1);
 }
 

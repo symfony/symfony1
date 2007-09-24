@@ -27,6 +27,13 @@ class sfPluginInstallTask extends sfPluginBaseTask
       new sfCommandArgument('name', sfCommandArgument::REQUIRED, 'The plugin name'),
     ));
 
+    $this->addOptions(array(
+      new sfCommandOption('stability', 's', sfCommandOption::PARAMETER_REQUIRED, 'The preferred stability (stable, beta, alpha)', null),
+      new sfCommandOption('release', 'r', sfCommandOption::PARAMETER_REQUIRED, 'The preferred version', null),
+      new sfCommandOption('channel', 'c', sfCommandOption::PARAMETER_REQUIRED, 'The PEAR channel name', null),
+      new sfCommandOption('install_deps', 'd', sfCommandOption::PARAMETER_NONE, 'Whether to force installation of required dependencies', null),
+    ));
+
     $this->aliases = array('plugin-install');
     $this->namespace = 'plugin';
     $this->name = 'install';
@@ -36,12 +43,41 @@ class sfPluginInstallTask extends sfPluginBaseTask
     $this->detailedDescription = <<<EOF
 The [plugin:install|INFO] task installs a plugin:
 
-  [./symfony plugin:install http://plugins.symfony-project.com/sfGuargPlugin|INFO]
+  [./symfony plugin:install sfGuargPlugin|INFO]
 
-You can also install a local plugin archive by giving the path instead of
-an URL:
+By default, it installs the latest [stable|COMMENT] release.
 
-  [./symfony plugin:install /Users/fabien/plugins/sfGuargPlugin-1.0.0.tgz|INFO]
+If you want to install a plugin that is not stable yet,
+use the [stability|COMMENT] option:
+
+  [./symfony plugin:install --stability=beta sfGuargPlugin|INFO]
+  [./symfony plugin:install -s beta sfGuargPlugin|INFO]
+
+You can also force the installation of a specific version:
+
+  [./symfony plugin:install --release=1.0.0 sfGuargPlugin|INFO]
+  [./symfony plugin:install -r 1.0.0 sfGuargPlugin|INFO]
+
+To force installation of all required dependencies, use the [install_deps|INFO] flag:
+
+  [./symfony plugin:install --install-deps sfGuargPlugin|INFO]
+  [./symfony plugin:install -d sfGuargPlugin|INFO]
+
+By default, the PEAR channel used is [symfony-plugins|INFO]
+(plugins.symfony-project.org).
+
+You can specify another channel with the [channel|COMMENT] option:
+
+  [./symfony plugin:install --channel=mypearchannel sfGuargPlugin|INFO]
+  [./symfony plugin:install -c mypearchannel sfGuargPlugin|INFO]
+
+You can also install PEAR packages hosted on a website:
+
+  [./symfony plugin:install http://somewhere.example.com/sfGuargPlugin-1.0.0.tgz|INFO]
+
+Or local PEAR packages:
+
+  [./symfony plugin:install /home/fabien/plugins/sfGuargPlugin-1.0.0.tgz|INFO]
 
 If the plugin contains some web content (images, stylesheets or javascripts),
 the task creates a [%name%|COMMENT] symbolic link for those assets under [web/|COMMENT].
@@ -54,15 +90,8 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $packages = array($arguments['name']);
     $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('plugin', sprintf('installing plugin "%s"', $arguments['name'])))));
-    list($ret, $error) = $this->pearRunCommand('install', array(), $packages);
 
-    if ($error)
-    {
-      throw new sfCommandException($error);
-    }
-
-    $this->installWebContent($arguments['name']);
+    $this->getPuginManager()->installPlugin($arguments['name'], $options);
   }
 }

@@ -27,6 +27,12 @@ class sfPluginUpgradeTask extends sfPluginBaseTask
       new sfCommandArgument('name', sfCommandArgument::REQUIRED, 'The plugin name'),
     ));
 
+    $this->addOptions(array(
+      new sfCommandOption('stability', 's', sfCommandOption::PARAMETER_REQUIRED, 'The preferred stability (stable, beta, alpha)', null),
+      new sfCommandOption('release', 'r', sfCommandOption::PARAMETER_REQUIRED, 'The preferred version', null),
+      new sfCommandOption('channel', 'c', sfCommandOption::PARAMETER_REQUIRED, 'The PEAR channel name', null),
+    ));
+
     $this->aliases = array('plugin-upgrade');
     $this->namespace = 'plugin';
     $this->name = 'upgrade';
@@ -36,10 +42,14 @@ class sfPluginUpgradeTask extends sfPluginBaseTask
     $this->detailedDescription = <<<EOF
 The [plugin:upgrade|INFO] task tries to upgrade a plugin:
 
-  [./symfony plugin:upgrade symfony/sfGuargPlugin|INFO]
+  [./symfony plugin:upgrade sfGuargPlugin|INFO]
+
+The default channel is [symfony|INFO].
 
 If the plugin contains some web content (images, stylesheets or javascripts),
 the task also updates the [web/%name%|COMMENT] directory content on Windows.
+
+See [plugin:install|INFO] for more information about the format of the plugin name and options.
 EOF;
   }
 
@@ -48,16 +58,8 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $packages = array($arguments['name']);
     $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('plugin', sprintf('upgrading plugin "%s"', $arguments['name'])))));
-    list($ret, $error) = $this->pearRunCommand('upgrade', array('loose' => true, 'nodeps' => true), $packages);
 
-    if ($error)
-    {
-      throw new sfCommandException($error);
-    }
-
-    $this->uninstallWebContent($arguments['name']);
-    $this->installWebContent($arguments['name']);
+    $this->getPuginManager()->installPlugin($arguments['name'], $options);
   }
 }

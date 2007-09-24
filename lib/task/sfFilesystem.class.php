@@ -323,6 +323,6 @@ class sfFilesystem
 
     $message = $this->formatter ? $this->formatter->formatSection($section, $text, $size) : $section.' '.$text."\n";
 
-    $this->dispatcher->notify(new sfEvent($this, 'application.log', array($message)));
+    $this->dispatcher->notify(new sfEvent($this, 'command.log', array($message)));
   }
 }

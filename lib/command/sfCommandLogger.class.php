@@ -39,9 +39,19 @@ class sfCommandLogger extends sfConsoleLogger
   public function listenToLogEvent(sfEvent $event)
   {
     $priority = $event->getParameterHolder()->remove('priority', self::INFO);
+
+    $prefix = '';
+    if ('application.log' == $event->getName())
+    {
+      $subject  = $event->getSubject();
+      $subject  = is_object($subject) ? get_class($subject) : (is_string($subject) ? $subject : 'main');
+
+      $prefix = '>> '.$subject.' ';
+    }
+
     foreach ($event->getParameterHolder()->getAll() as $message)
     {
-      $this->log(sprintf('%s', $message), $priority);
+      $this->log(sprintf('%s%s', $prefix, $message), $priority);
     }
   }
 }

@@ -77,11 +77,11 @@ EOF;
     $messages = array();
     if ($arguments['namespace'])
     {
-      $messages[] = $this->formatter->format(sprintf("Available tasks for the \"%s\" namespace:\n", $arguments['namespace']), 'COMMENT');
+      $messages[] = $this->formatter->format(sprintf("Available tasks for the \"%s\" namespace:", $arguments['namespace']), 'COMMENT');
     }
     else
     {
-      $messages[] = $this->formatter->format("Available tasks:\n", 'COMMENT');
+      $messages[] = $this->formatter->format('Available tasks:', 'COMMENT');
     }
 
     // display tasks
@@ -92,12 +92,12 @@ EOF;
       if (!$arguments['namespace'] && $currentNamespace != $task->getNamespace())
       {
         $currentNamespace = $task->getNamespace();
-        $messages[] = sprintf("%s\n", $this->formatter->format($task->getNamespace(), 'COMMENT'));
+        $messages[] = $this->formatter->format($task->getNamespace(), 'COMMENT');
       }
 
       $aliases = $task->getAliases() ? $this->formatter->format(' ('.implode(', ', $task->getAliases()).')', 'COMMENT') : '';
 
-      $messages[] = sprintf("  %-${width}s %s%s\n", $this->formatter->format(':'.$task->getName(), 'INFO'), $task->getBriefDescription(), $aliases);
+      $messages[] = sprintf("  %-${width}s %s%s", $this->formatter->format(':'.$task->getName(), 'INFO'), $task->getBriefDescription(), $aliases);
     }
 
     $this->dispatcher->notify(new sfEvent($this, 'command.log', $messages));

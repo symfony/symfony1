@@ -95,7 +95,7 @@ class sfAnsiColorFormatter extends sfFormatter
   {
     $width = 9 + strlen($this->format('', 'INFO'));
 
-    return sprintf(">> %-${width}s %s\n", $this->format($section, 'INFO'), $this->excerpt($text, $size));
+    return sprintf(">> %-${width}s %s", $this->format($section, 'INFO'), $this->excerpt($text, $size));
   }
 
   /**

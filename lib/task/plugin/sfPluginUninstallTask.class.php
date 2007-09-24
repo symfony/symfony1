@@ -27,6 +27,11 @@ class sfPluginUninstallTask extends sfPluginBaseTask
       new sfCommandArgument('name', sfCommandArgument::REQUIRED, 'The plugin name'),
     ));
 
+    $this->addOptions(array(
+      new sfCommandOption('channel', 'c', sfCommandOption::PARAMETER_REQUIRED, 'The PEAR channel name', null),
+      new sfCommandOption('install_deps', 'd', sfCommandOption::PARAMETER_NONE, 'Whether to force installation of dependencies', null),
+    ));
+
     $this->aliases = array('plugin-uninstall');
     $this->namespace = 'plugin';
     $this->name = 'uninstall';
@@ -36,7 +41,18 @@ class sfPluginUninstallTask extends sfPluginBaseTask
     $this->detailedDescription = <<<EOF
 The [plugin:uninstall|INFO] task uninstalls a plugin:
 
-  [./symfony plugin:uninstall symfony/sfGuargPlugin|INFO]
+  [./symfony plugin:uninstall sfGuargPlugin|INFO]
+
+The default channel is [symfony|INFO].
+
+You can also uninstall a plugin which has a different channel:
+
+  [./symfony plugin:uninstall --channel=mypearchannel sfGuargPlugin|INFO]
+
+  [./symfony plugin:uninstall -c mypearchannel sfGuargPlugin|INFO]
+
+You can get the PEAR channel name of a plugin by launching the
+[plugin:list] task.
 
 If the plugin contains some web content (images, stylesheets or javascripts),
 the task also removes the [web/%name%|COMMENT] symbolic link (on *nix)
@@ -49,15 +65,8 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $this->uninstallWebContent($arguments['name']);
-
-    $packages = array($arguments['name']);
     $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('plugin', sprintf('uninstalling plugin "%s"', $arguments['name'])))));
-    list($ret, $error) = $this->pearRunCommand('uninstall', array(), $packages);
 
-    if ($error)
-    {
-      throw new sfCommandException($error);
-    }
+    $this->getPuginManager()->uninstallPlugin($arguments['name'], $options);
   }
 }
