@@ -130,7 +130,7 @@ class myTestBrowser extends sfTestBrowser
     ;
 
     // remove all cache
-    sfToolkit::clearDirectory(sfConfig::get('sf_cache_dir'));
+    sfToolkit::clearDirectory(sfConfig::get('sf_app_cache_dir'));
 
     $b->
       getMultiAction()->
@@ -145,7 +145,7 @@ class myTestBrowser extends sfTestBrowser
     ;
 
     // remove all cache
-    sfToolkit::clearDirectory(sfConfig::get('sf_cache_dir'));
+    sfToolkit::clearDirectory(sfConfig::get('sf_app_cache_dir'));
 
     $b->
       getMultiAction('requestParam')->
@@ -204,7 +204,7 @@ class myTestBrowser extends sfTestBrowser
     ;
 
     // remove all cache
-    sfToolkit::clearDirectory(sfConfig::get('sf_cache_dir'));
+    sfToolkit::clearDirectory(sfConfig::get('sf_app_cache_dir'));
 
     // check user supplied cache key for partials and components
     $b->
@@ -230,7 +230,7 @@ class myTestBrowser extends sfTestBrowser
     // check cache content for actions
 
     // remove all cache
-    sfToolkit::clearDirectory(sfConfig::get('sf_cache_dir'));
+    sfToolkit::clearDirectory(sfConfig::get('sf_app_cache_dir'));
 
     $b->
       get('/cache/action')->

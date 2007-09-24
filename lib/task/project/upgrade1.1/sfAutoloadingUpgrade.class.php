@@ -30,7 +30,7 @@ class sfAutoloadingUpgrade extends sfUpgrade
         {
           $content = str_replace("'sfAutoload'", 'sfAutoload::getInstance()', $content);
 
-          $this->log($this->formatSection('config.php', sprintf('Migrating %s', $file)));
+          $this->log($this->formatter->formatSection('config.php', sprintf('Migrating %s', $file)));
           file_put_contents($file, $content);
         }
 

@@ -47,7 +47,7 @@ The task creates a [%module%|COMMENT] module in the [%application%|COMMENT] appl
 for the model class [%model%|COMMENT].
 
 The created module is an empty one that inherit its actions and templates from
-a runtime generated module in [%sf_cache_dir%/modules/auto%module%|COMMENT].
+a runtime generated module in [%sf_app_cache_dir%/modules/auto%module%|COMMENT].
 
 Most of the time, you want to generate a CRUD module as a starting point for your
 development. In this case, you will want use the [propel:generate-crud|COMMENT] task.

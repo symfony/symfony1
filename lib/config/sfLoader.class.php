@@ -314,7 +314,7 @@ class sfLoader
       sfConfig::get('sf_root_dir').'/'.$globalConfigPath,                            // project
       sfConfig::get('sf_root_dir').'/'.$configPath,                                  // project
       sfConfig::get('sf_app_dir').'/'.$globalConfigPath,                             // application
-      sfConfig::get('sf_cache_dir').'/'.$configPath,                                 // generated modules
+      sfConfig::get('sf_app_cache_dir').'/'.$configPath,                             // generated modules
     ));
 
     if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/'.$configPath))

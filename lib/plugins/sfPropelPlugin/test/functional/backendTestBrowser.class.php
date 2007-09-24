@@ -44,7 +44,7 @@ class backendTestBrowser extends sfTestBrowser
   {
     $params['model_class'] = 'Article';
     $params['moduleName']  = $this->moduleName;
-    sfToolkit::clearDirectory(sfConfig::get('sf_cache_dir'));
+    sfToolkit::clearDirectory(sfConfig::get('sf_app_cache_dir'));
     $generatorManager = new sfGeneratorManager();
     $generatorManager->initialize();
     mkdir(sfConfig::get('sf_config_cache_dir'), 0777);

@@ -21,6 +21,6 @@ define('SF_DEBUG',       isset($debug) ? $debug : true);
 require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
 
 // remove all cache
-sfToolkit::clearDirectory(sfConfig::get('sf_cache_dir'));
+sfToolkit::clearDirectory(sfConfig::get('sf_app_cache_dir'));
 
 return true;

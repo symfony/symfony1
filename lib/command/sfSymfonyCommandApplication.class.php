@@ -122,9 +122,9 @@ class sfSymfonyCommandApplication extends sfCommandApplication
    */
   protected function initializeAutoloader()
   {
-    if (is_dir(sfConfig::get('sf_base_cache_dir')))
+    if (is_dir(sfConfig::get('sf_app_base_cache_dir')))
     {
-      $cache = sfConfig::get('sf_base_cache_dir').DIRECTORY_SEPARATOR.'autoload_cmd.data';
+      $cache = sfConfig::get('sf_app_base_cache_dir').DIRECTORY_SEPARATOR.'autoload_cmd.data';
     }
     else
     {

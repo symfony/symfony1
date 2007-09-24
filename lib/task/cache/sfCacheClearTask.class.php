@@ -62,7 +62,7 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $cacheDir = sfConfig::get('sf_cache_dir_name');
+    $cacheDir = sfConfig::get('sf_cache_dir');
     if (!$cacheDir || !is_dir($cacheDir))
     {
       throw new sfException(sprintf('Cache directory "%s" does not exist.', $cacheDir));
@@ -94,9 +94,8 @@ EOF;
     // clear global cache
     if (!$mainApp)
     {
-      $this->filesystem->remove($finder->in(sfConfig::get('sf_base_cache_dir')));
+      $this->filesystem->remove($finder->in(sfConfig::get('sf_cache_dir')));
     }
-
 
     // iterate through applications
     $apps = array();

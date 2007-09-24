@@ -199,14 +199,13 @@ class sfCore
       'sf_bin_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_bin_dir_name,
       'sf_web_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_web_dir_name,
       'sf_upload_dir'     => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_web_dir_name.DIRECTORY_SEPARATOR.$sf_upload_dir_name,
-      'sf_root_cache_dir' => $sf_root_cache_dir = $sf_root_dir.DIRECTORY_SEPARATOR.$sf_cache_dir_name,
       'sf_log_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_log_dir_name,
       'sf_data_dir'       => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_data_dir_name,
       'sf_config_dir'     => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_config_dir_name,
       'sf_test_dir'       => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_test_dir_name,
       'sf_doc_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.$sf_doc_dir_name,
       'sf_plugins_dir'    => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_plugins_dir_name,
-      'sf_base_cache_dir' => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_cache_dir_name,
+      'sf_cache_dir'      => $sf_cache_dir = $sf_root_dir.DIRECTORY_SEPARATOR.$sf_cache_dir_name,
 
       // lib directory names
       'sf_model_dir_name' => $sf_model_dir_name = 'model',
@@ -235,26 +234,26 @@ class sfCore
     if (!is_null($sf_app))
     {
       sfConfig::add(array(
-        'sf_app'              => $sf_app,
-        'sf_environment'      => $sf_environment,
+        'sf_app'                => $sf_app,
+        'sf_environment'        => $sf_environment,
 
-        'sf_app_dir'        => $sf_app_dir = $sf_root_dir.DIRECTORY_SEPARATOR.$sf_apps_dir_name.DIRECTORY_SEPARATOR.$sf_app,
-        'sf_base_cache_dir' => $sf_root_cache_dir.DIRECTORY_SEPARATOR.$sf_app,
-        'sf_cache_dir'      => $sf_cache_dir = $sf_root_cache_dir.DIRECTORY_SEPARATOR.$sf_app.DIRECTORY_SEPARATOR.$sf_environment,
+        'sf_app_dir'            => $sf_app_dir = $sf_root_dir.DIRECTORY_SEPARATOR.$sf_apps_dir_name.DIRECTORY_SEPARATOR.$sf_app,
+        'sf_app_base_cache_dir' => $sf_cache_dir.DIRECTORY_SEPARATOR.$sf_app,
+        'sf_app_cache_dir'      => $sf_app_cache_dir = $sf_cache_dir.DIRECTORY_SEPARATOR.$sf_app.DIRECTORY_SEPARATOR.$sf_environment,
 
         // SF_APP_DIR directory structure
-        'sf_app_config_dir'   => $sf_app_dir.DIRECTORY_SEPARATOR.$sf_app_config_dir_name,
-        'sf_app_lib_dir'      => $sf_app_dir.DIRECTORY_SEPARATOR.$sf_app_lib_dir_name,
-        'sf_app_module_dir'   => $sf_app_dir.DIRECTORY_SEPARATOR.$sf_app_module_dir_name,
-        'sf_app_template_dir' => $sf_app_dir.DIRECTORY_SEPARATOR.$sf_app_template_dir_name,
-        'sf_app_i18n_dir'     => $sf_app_dir.DIRECTORY_SEPARATOR.$sf_app_i18n_dir_name,
+        'sf_app_config_dir'     => $sf_app_dir.DIRECTORY_SEPARATOR.$sf_app_config_dir_name,
+        'sf_app_lib_dir'        => $sf_app_dir.DIRECTORY_SEPARATOR.$sf_app_lib_dir_name,
+        'sf_app_module_dir'     => $sf_app_dir.DIRECTORY_SEPARATOR.$sf_app_module_dir_name,
+        'sf_app_template_dir'   => $sf_app_dir.DIRECTORY_SEPARATOR.$sf_app_template_dir_name,
+        'sf_app_i18n_dir'       => $sf_app_dir.DIRECTORY_SEPARATOR.$sf_app_i18n_dir_name,
 
         // SF_CACHE_DIR directory structure
-        'sf_template_cache_dir' => $sf_cache_dir.DIRECTORY_SEPARATOR.'template',
-        'sf_i18n_cache_dir'     => $sf_cache_dir.DIRECTORY_SEPARATOR.'i18n',
-        'sf_config_cache_dir'   => $sf_cache_dir.DIRECTORY_SEPARATOR.$sf_config_dir_name,
-        'sf_test_cache_dir'     => $sf_cache_dir.DIRECTORY_SEPARATOR.'test',
-        'sf_module_cache_dir'   => $sf_cache_dir.DIRECTORY_SEPARATOR.'modules',
+        'sf_template_cache_dir' => $sf_app_cache_dir.DIRECTORY_SEPARATOR.'template',
+        'sf_i18n_cache_dir'     => $sf_app_cache_dir.DIRECTORY_SEPARATOR.'i18n',
+        'sf_config_cache_dir'   => $sf_app_cache_dir.DIRECTORY_SEPARATOR.$sf_config_dir_name,
+        'sf_test_cache_dir'     => $sf_app_cache_dir.DIRECTORY_SEPARATOR.'test',
+        'sf_module_cache_dir'   => $sf_app_cache_dir.DIRECTORY_SEPARATOR.'modules',
       ));
     }
   }
