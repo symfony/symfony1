@@ -15,4 +15,4 @@ $t = new lime_test(1, new lime_output_color());
 $logger = new sfConsoleLogger(new sfEventDispatcher());
 ob_start();
 $logger->log('foo');
-$t->is(ob_get_clean(), 'foo', 'sfConsoleLogger logs messages to the console');
+$t->is(ob_get_clean(), "foo\n", 'sfConsoleLogger logs messages to the console');

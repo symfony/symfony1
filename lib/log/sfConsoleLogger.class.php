@@ -26,6 +26,6 @@ class sfConsoleLogger extends sfLogger
    */
   protected function doLog($message, $priority)
   {
-    echo $message;
+    echo $message.(DIRECTORY_SEPARATOR == '\\' ? "\r\n" : "\n");
   }
 }

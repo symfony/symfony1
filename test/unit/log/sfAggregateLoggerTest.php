@@ -38,7 +38,7 @@ $logger->log('foo');
 $content = ob_get_clean();
 $lines = explode("\n", file_get_contents($file));
 $t->like($lines[0], '/foo/', '->log() logs a message to all loggers');
-$t->is($content, 'foo', '->log() logs a message to all loggers');
+$t->is($content, "foo\n", '->log() logs a message to all loggers');
 
 // ->getLoggers() ->addLoggers() ->addLogger()
 $logger = new sfAggregateLogger($dispatcher);
