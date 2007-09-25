@@ -44,7 +44,7 @@ EOF;
   {
     foreach ($this->getUpgradeClasses() as $class)
     {
-      $upgrader = new $class($this);
+      $upgrader = new $class($this->dispatcher, $this->formatter);
       $upgrader->upgrade();
     }
   }

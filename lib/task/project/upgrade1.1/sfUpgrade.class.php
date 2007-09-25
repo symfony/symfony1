@@ -16,25 +16,20 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-abstract class sfUpgrade
+abstract class sfUpgrade extends sfTask
 {
   protected
     $task = null;
 
   /**
-   * Constructs a new sfUpgrade instance.
-   *
-   * @param sfTask A sfTask instance
-   */
-  public function __construct(sfTask $task)
-  {
-    $this->task = $task;
-  }
-
-  /**
    * Upgrades the current project from 1.0 to 1.1.
    */
   abstract public function upgrade();
+
+  public function execute($arguments = array(), $options = array())
+  {
+    throw new sfException('You can\'t execute this task.');
+  }
 
   /**
    * Returns a finder that exclude upgrade scripts from being upgraded!
