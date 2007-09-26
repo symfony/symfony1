@@ -22,6 +22,9 @@
  */
 class sfException extends Exception
 {
+  protected
+    $wrappedException = null;
+
   /**
    * Wraps an Exception.
    *
@@ -31,7 +34,15 @@ class sfException extends Exception
    */
   static public function createFromException(Exception $e)
   {
-    return new sfException(sprintf('Wrapped %s: %s', get_class($e), $e->getMessage()));
+    $exception = new sfException(sprintf('Wrapped %s: %s', get_class($e), $e->getMessage()));
+    $exception->setWrappedException($e);
+
+    return $exception;
+  }
+
+  public function setWrappedException($e)
+  {
+    $this->wrappedException = $e;
   }
 
   /**
@@ -97,7 +108,7 @@ class sfException extends Exception
     $message = null !== $this->getMessage() ? $this->getMessage() : 'n/a';
     $name    = get_class($this);
     $format  = 0 == strncasecmp(PHP_SAPI, 'cli', 3) ? 'plain' : 'html';
-    $traces  = self::getTraces($this, $format);
+    $traces  = self::getTraces(is_null($this->wrappedException) ? $this : $this->wrappedException, $format);
 
     // dump main objects values
     $sf_settings = '';
