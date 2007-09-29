@@ -137,7 +137,7 @@ class sfFileCache extends sfCache
   {
     if (!is_dir($this->getParameter('cacheDir')))
     {
-      throw new sfCacheException(sprintf('Unable to open cache directory "%s"', $this->getParameter('cacheDir')));
+      return true;
     }
 
     $result = true;
