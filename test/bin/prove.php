@@ -10,7 +10,21 @@
 
 require_once(dirname(__FILE__).'/../../lib/vendor/lime/lime.php');
 
-$h = new lime_harness(new lime_output_color());
+class lime_symfony extends lime_harness
+{
+  protected function get_relative_file($file)
+  {
+    $file = str_replace(DIRECTORY_SEPARATOR, '/', str_replace(array(
+      realpath($this->base_dir).DIRECTORY_SEPARATOR,
+      realpath($this->base_dir.'/../lib/plugins').DIRECTORY_SEPARATOR,
+      $this->extension,
+    ), '', $file));
+
+    return preg_replace('#^(.*?)Plugin/test/(unit|functional)/#', '[$1] $2/', $file);
+  }
+}
+
+$h = new lime_symfony(new lime_output_color());
 
 $h->base_dir = realpath(dirname(__FILE__).'/..');
 require_once(dirname(__FILE__).'/../../lib/util/sfSimpleAutoload.class.php');
