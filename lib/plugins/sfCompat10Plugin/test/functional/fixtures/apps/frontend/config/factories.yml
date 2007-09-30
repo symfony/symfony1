@@ -1,0 +1,35 @@
+cli:
+  controller:
+    class: sfConsoleController
+  request:
+    class: sfConsoleRequest
+
+test:
+  storage:
+    class: sfSessionTestStorage
+    param:
+      session_path: %SF_TEST_CACHE_DIR%/sessions
+
+all:
+#  controller:
+#    class: sfFrontWebController
+#
+#  request:
+#    class: sfWebRequest
+#
+#  user:
+#    class: myUser
+#
+#  storage:
+#    class: sfSessionStorage
+#    param:
+#      session_name: symfony
+#
+#  execution_filter:
+#    class: sfExecutionFilter
+#
+#  security_filter:
+#    class: sfBasicSecurityFilter
+#
+#  view_cache:
+#    class: sfFileCache

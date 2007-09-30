@@ -18,7 +18,7 @@
 - %SF_SYMFONY_LIB_DIR%/storage/sfStorage.class.php
 - %SF_SYMFONY_LIB_DIR%/user/sfUser.class.php
 #- %SF_SYMFONY_LIB_DIR%/util/sfContext.class.php
-- %SF_SYMFONY_LIB_DIR%/validator/sfValidatorManager.class.php
+#- %SF_SYMFONY_LIB_DIR%/validator/sfValidatorManager.class.php
 #- %SF_SYMFONY_LIB_DIR%/util/sfParameterHolder.class.php
 - %SF_SYMFONY_LIB_DIR%/view/sfView.class.php
 
