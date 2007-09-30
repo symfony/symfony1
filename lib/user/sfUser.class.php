@@ -140,7 +140,7 @@ class sfUser
     if ($persist)
     {
       // clear removal flag
-      $this->attributeHolder->remove($name, 'symfony/user/sfUser/flash/remove');
+      $this->attributeHolder->remove($name, null, 'symfony/user/sfUser/flash/remove');
     }
     else
     {
