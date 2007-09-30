@@ -1,5 +1,5 @@
 <?php
 
 // symfony directories
-$sf_symfony_lib_dir  = '/Users/fabien/work/symfony/trunk/lib';
-$sf_symfony_data_dir = '/Users/fabien/work/symfony/trunk/data';
+$sf_symfony_lib_dir  = realpath(dirname(__FILE__).'/../../../../../../');
+$sf_symfony_data_dir = realpath(dirname(__FILE__).'/../../../../../../../data');
