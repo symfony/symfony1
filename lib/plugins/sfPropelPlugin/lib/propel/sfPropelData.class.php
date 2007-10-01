@@ -100,7 +100,7 @@ class sfPropelData extends sfData
 
         if (!is_array($data))
         {
-          throw new Exception('You must give a name for each fixture data entry');
+          throw new Exception(sprintf('You must give a name for each fixture data entry (class %s)'), $class);
         }
 
         foreach ($data as $name => $value)
