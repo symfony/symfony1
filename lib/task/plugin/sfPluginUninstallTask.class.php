@@ -67,6 +67,6 @@ EOF;
   {
     $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('plugin', sprintf('uninstalling plugin "%s"', $arguments['name'])))));
 
-    $this->getPuginManager()->uninstallPlugin($arguments['name'], $options);
+    $this->getPluginManager()->uninstallPlugin($arguments['name'], $options);
   }
 }

@@ -60,6 +60,6 @@ EOF;
   {
     $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('plugin', sprintf('upgrading plugin "%s"', $arguments['name'])))));
 
-    $this->getPuginManager()->installPlugin($arguments['name'], $options);
+    $this->getPluginManager()->installPlugin($arguments['name'], $options);
   }
 }

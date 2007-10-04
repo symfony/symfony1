@@ -45,9 +45,9 @@ EOF;
   {
     $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->format('Installed plugins:', 'COMMENT'))));
 
-    foreach ($this->getPuginManager()->getInstalledPlugins() as $package)
+    foreach ($this->getPluginManager()->getInstalledPlugins() as $package)
     {
-      $alias = $this->getPuginManager()->getRegistry()->getChannel($package->getChannel())->getAlias();
+      $alias = $this->getPluginManager()->getRegistry()->getChannel($package->getChannel())->getAlias();
       $this->dispatcher->notify(new sfEvent($this, 'command.log', array(sprintf(' %-40s %10s-%-6s %s', $this->formatter->format($package->getPackage(), 'INFO'), $package->getVersion(), $package->getState() ? $package->getState() : null, $this->formatter->format(sprintf('# %s (%s)', $package->getChannel(), $alias), 'COMMENT')))));
     }
   }
