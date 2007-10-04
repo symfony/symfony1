@@ -10,12 +10,12 @@
 
 $sf_ez_lib_dir = sfConfig::get('sf_ez_lib_dir') ? sfConfig::get('sf_ez_lib_dir').'/' : '';
 
-if(file_exists($sf_ez_lib_dir.'Base/src/base.php'))
+if (file_exists($sf_ez_lib_dir.'Base/src/base.php'))
 {
   // svn installation
   require_once($sf_ez_lib_dir.'Base/src/base.php');
 } 
-else if(file_exists($sf_ez_lib_dir.'Base/base.php'))
+elseif (file_exists($sf_ez_lib_dir.'Base/base.php'))
 {
   // pear installation
   require_once($sf_ez_lib_dir.'Base/base.php');
