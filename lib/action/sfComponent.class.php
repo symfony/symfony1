@@ -222,7 +222,7 @@ abstract class sfComponent
    *
    * This is a proxy method equivalent to:
    *
-   * <code>$this->getContext()->getController()</code>
+   * <code>$this->getContext()->getUser()</code>
    *
    * @return sfUser The current sfUser implementation instance
    */
