@@ -52,9 +52,6 @@ modules/*/config/security.yml:
 modules/*/config/cache.yml:
   class:    sfCacheConfigHandler
 
-modules/*/validate/*.yml:
-  class:    sfValidatorConfigHandler
-
 modules/*/config/module.yml:
   class:    sfDefineEnvironmentConfigHandler
   param:

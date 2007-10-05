@@ -24,6 +24,7 @@ class sfAutoload
     $instance = null;
 
   protected
+    $overriden = array(),
     $classes = array();
 
   protected function __construct()
@@ -52,6 +53,13 @@ class sfAutoload
     spl_autoload_unregister(array($this, 'autoload'));
   }
 
+  public function setClassPath($class, $path)
+  {
+    $this->overriden[$class] = $path;
+
+    $this->classes[$class] = $path;
+  }
+
   public function getClassPath($class)
   {
     return isset($this->classes[$class]) ? $this->classes[$class] : null;
@@ -67,6 +75,11 @@ class sfAutoload
     $file = sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/autoload.yml');
 
     $this->classes = include($file);
+
+    foreach ($this->overriden as $class => $path)
+    {
+      $this->classes[$class] = $path;
+    }
   }
 
   /**

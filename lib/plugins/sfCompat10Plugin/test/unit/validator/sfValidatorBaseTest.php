@@ -8,19 +8,18 @@
  * file that was distributed with this source code.
  */
 
-require_once(dirname(__FILE__).'/../../../../../../test/bootstrap/unit.php');
-require_once($_test_dir.'/unit/sfContextMock.class.php');
+require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
+require_once($_test_dir.'/../../../../test/unit/sfContextMock.class.php');
 
 $t = new lime_test(11, new lime_output_color());
 
-class myValidator extends sfValidator
+class myValidator extends sfValidatorBase
 {
   function execute (&$value, &$error) {}
 }
 
 $context = sfContext::getInstance();
-$validator = new myValidator();
-$validator->initialize($context);
+$validator = new myValidator($context);
 
 // ->getContext()
 $t->diag('->getContext()');
@@ -28,6 +27,6 @@ $validator->initialize($context);
 $t->is($validator->getContext(), $context, '->getContext() returns the current context');
 
 // parameter holder proxy
-require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');
+require_once($_test_dir.'/../../../../test/unit/sfParameterHolderTest.class.php');
 $pht = new sfParameterHolderProxyTest($t);
 $pht->launchTests($validator, 'parameter');

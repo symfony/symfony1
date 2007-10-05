@@ -10,7 +10,7 @@
  */
 
 /**
- * sfValidator allows you to apply constraints to user entered parameters.
+ * sfValidatorBase allows you to apply constraints to user entered parameters.
  *
  * @package    symfony
  * @subpackage validator
@@ -18,7 +18,7 @@
  * @author     Sean Kerr <skerr@mojavi.org>
  * @version    SVN: $Id$
  */
-abstract class sfValidator
+abstract class sfValidatorBase
 {
   protected
     $parameterHolder = null,

@@ -21,6 +21,9 @@ test:
     etag:                   off
 
 all:
+  .settings:
+    compat_10: on
+
 #  .actions:
 #    default_module:         default
 #    default_action:         index

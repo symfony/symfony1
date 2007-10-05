@@ -19,7 +19,7 @@
  * @author     Sean Kerr <skerr@mojavi.org>
  * @version    SVN: $Id$
  */
-class sfDateValidator extends sfValidator
+class sfDateValidator extends sfValidatorBase
 {
   /**
    * Execute this validator.

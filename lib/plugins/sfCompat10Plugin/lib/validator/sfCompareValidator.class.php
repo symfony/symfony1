@@ -34,7 +34,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfCompareValidator extends sfValidator
+class sfCompareValidator extends sfValidatorBase
 {
   /**
    * Executes this validator.

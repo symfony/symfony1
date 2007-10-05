@@ -33,7 +33,7 @@
  * @author     Sean Kerr <skerr@mojavi.org>
  * @version    SVN: $Id$
  */
-class sfNumberValidator extends sfValidator
+class sfNumberValidator extends sfValidatorBase
 {
   /**
    * Executes this validator.

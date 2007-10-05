@@ -1,6 +1,5 @@
-all:
-  propel:
-    class:          sfPropelDatabase
-    param:
-      phptype:      sqlite
-      database:     %SF_DATA_DIR%/database.sqlite
+#all:
+#  propel:
+#    class:          sfPropelDatabase
+#    param:
+#      dsn:          mysql://root:@localhost/dbname

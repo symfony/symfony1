@@ -19,7 +19,7 @@
  * @author     Sean Kerr <skerr@mojavi.org>
  * @version    SVN: $Id$
  */
-class sfEmailValidator extends sfValidator
+class sfEmailValidator extends sfValidatorBase
 {
   /**
    * Executes this validator.

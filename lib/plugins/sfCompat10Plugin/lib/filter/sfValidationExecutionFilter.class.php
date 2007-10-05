@@ -10,7 +10,7 @@
  */
 
 /**
- * sfValidationExecutionFilter is the last filter registered for each filter chain. This
+ * sfExecutionFilter is the last filter registered for each filter chain. This
  * filter does all action and view execution.
  *
  * @package    symfony
@@ -19,7 +19,7 @@
  * @author     Sean Kerr <skerr@mojavi.org>
  * @version    SVN: $Id$
  */
-class sfExecutionFilter extends sfFilter
+class sfValidationExecutionFilter extends sfFilter
 {
   /**
    * Executes this filter.
@@ -34,7 +34,7 @@ class sfExecutionFilter extends sfFilter
     // get the current action instance
     $actionInstance = $this->context->getController()->getActionStack()->getLastEntry()->getActionInstance();
 
-    // execute the action
+    // validate and execute the action
     if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
     {
       $timer = sfTimerManager::getTimer(sprintf('Action "%s/%s"', $actionInstance->getModuleName(), $actionInstance->getActionName()));
@@ -59,6 +59,9 @@ class sfExecutionFilter extends sfFilter
     {
       $timer->addTime();
     }
+
+    // execute the filter chain (needed if fill-in filter is activated by the validation system)
+    $filterChain->execute();
   }
 
   /*
@@ -81,12 +84,66 @@ class sfExecutionFilter extends sfFilter
     $method = $this->context->getRequest()->getMethod();
     if (($actionInstance->getRequestMethods() & $method) != $method)
     {
-      // this action will skip execution for this method
+      // this action will skip validation/execution for this method
       // get the default view
       return $actionInstance->getDefaultView();
     }
 
-    return $this->executeAction($actionInstance);
+    return $this->validateAction($filterChain, $actionInstance) ? $this->executeAction($actionInstance) : $this->handleErrorAction($actionInstance);
+  }
+
+  /**
+   * Validates an sfAction instance.
+   *
+   * @param  sfAction An sfAction instance
+   *
+   * @return boolean  True if the action is validated, false otherwise
+   */
+  protected function validateAction($filterChain, $actionInstance)
+  {
+    $moduleName = $actionInstance->getModuleName();
+    $actionName = $actionInstance->getActionName();
+
+    // set default validated status
+    $validated = true;
+
+    // get the current action validation configuration
+    $validationConfig = $moduleName.'/'.sfConfig::get('sf_app_module_validate_dir_name').'/'.$actionName.'.yml';
+
+    // load validation configuration
+    // do NOT use require_once
+    if (null !== $validateFile = sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$validationConfig, true))
+    {
+      // create validator manager
+      $validatorManager = new sfValidatorManager($this->context);
+
+      require($validateFile);
+
+      // process validators
+      $validated = $validatorManager->execute();
+    }
+
+    // process manual validation
+    $validateToRun = 'validate'.ucfirst($actionName);
+    $manualValidated = method_exists($actionInstance, $validateToRun) ? $actionInstance->$validateToRun() : $actionInstance->validate();
+
+    // action is validated if:
+    // - all validation methods (manual and automatic) return true
+    // - or automatic validation returns false but errors have been 'removed' by manual validation
+    $validated = ($manualValidated && $validated) || ($manualValidated && !$validated && !$this->context->getRequest()->hasErrors());
+
+    // register fill-in filter
+    if (null !== ($parameters = $this->context->getRequest()->getAttribute('symfony.fillin')))
+    {
+      $this->registerFillInFilter($filterChain, $parameters);
+    }
+
+    if (!$validated && sfConfig::get('sf_logging_enabled'))
+    {
+      $this->context->getEventDispatcher()->notify(new sfEvent($this, 'application.log', array('Action validation failed')));
+    }
+
+    return $validated;
   }
 
   /**
@@ -104,6 +161,22 @@ class sfExecutionFilter extends sfFilter
     $actionInstance->postExecute();
 
     return $viewName ? $viewName : sfView::SUCCESS;
+  }
+
+  /**
+   * Executes the handleError method of an action.
+   *
+   * @param  sfAction An sfAction instance
+   *
+   * @return string   The view type
+   */
+  protected function handleErrorAction($actionInstance)
+  {
+    // validation failed
+    $handleErrorToRun = 'handleError'.ucfirst($actionInstance->getActionName());
+    $viewName = method_exists($actionInstance, $handleErrorToRun) ? $actionInstance->$handleErrorToRun() : $actionInstance->handleError();
+
+    return $viewName ? $viewName : sfView::ERROR;
   }
 
   /**
@@ -171,6 +244,23 @@ class sfExecutionFilter extends sfFilter
         $viewData = $view->render();
         $controller->getActionStack()->getLastEntry()->setPresentation($viewData);
         break;
+    }
+  }
+
+  /**
+   * Registers the fill in filter in the filter chain.
+   *
+   * @param sfFilterChain A sfFilterChain implementation instance
+   * @param array         An array of parameters to pass to the fill in filter.
+   */
+  protected function registerFillInFilter($filterChain, $parameters)
+  {
+    // automatically register the fill in filter if it is not already loaded in the chain
+    if (isset($parameters['enabled']) && $parameters['enabled'] && !$filterChain->hasFilter('sfFillInFormFilter'))
+    {
+      // register the fill in form filter
+      $fillInFormFilter = new sfFillInFormFilter($this->context, isset($parameters['param']) ? $parameters['param'] : array());
+      $filterChain->register($fillInFormFilter);
     }
   }
 }

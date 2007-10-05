@@ -28,6 +28,6 @@ common:
 
 # execution filter must be the last registered filter
 execution:
-  class: sfExecutionFilter
+  class:  sfExecutionFilter
   param:
     type: execution
