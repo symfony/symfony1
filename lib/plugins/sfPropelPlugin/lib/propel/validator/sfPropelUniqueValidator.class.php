@@ -29,7 +29,7 @@
  * @author     Fédéric Coelho <frederic.coelho@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfPropelUniqueValidator extends sfValidator
+class sfPropelUniqueValidator extends sfValidatorBase
 {
   public function execute(&$value, &$error)
   {
