@@ -19,6 +19,7 @@ require_once(dirname(__FILE__).'/../../../../util/sfToolkit.class.php');
 $autoload = sfSimpleAutoload::getInstance(sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.sprintf('sf_autoload_unit_%s.data', md5(__FILE__)));
 $autoload->addDirectory(realpath(dirname(__FILE__).'/../../../..'));
 $autoload->addDirectory(realpath(dirname(__FILE__).'/../../lib'));
+$autoload->addFile(dirname(__FILE__).'/../../../../exception/sfValidatorException.class.php');
 $autoload->register();
 
 sfConfig::set('sf_test_cache_dir', sfToolkit::getTmpDir());
