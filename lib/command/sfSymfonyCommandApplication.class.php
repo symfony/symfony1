@@ -133,7 +133,6 @@ class sfSymfonyCommandApplication extends sfCommandApplication
     {
       require_once(sfConfig::get('sf_symfony_lib_dir').'/util/sfToolkit.class.php');
       $cache = sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.sprintf('sf_autoload_cmd_%s.data', md5(__FILE__));
-      die($cache);
     }
 
     $this->autoloader = sfSimpleAutoload::getInstance($cache);
