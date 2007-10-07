@@ -109,6 +109,7 @@ class sfCore
     // exceptions
     require_once($sf_symfony_lib_dir.'/exception/sfException.class.php');
     require_once($sf_symfony_lib_dir.'/exception/sfConfigurationException.class.php');
+    require_once($sf_symfony_lib_dir.'/exception/sfCacheException.class.php');
     require_once($sf_symfony_lib_dir.'/exception/sfParseException.class.php');
 
     // utils
