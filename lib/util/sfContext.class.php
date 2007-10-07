@@ -89,6 +89,14 @@ class sfContext
     return self::$instances[$name];
   }
 
+  /**
+   * Checks to see if there has been a context created
+   *
+   * @param  string    The name of the sfContext to check for
+   *
+   * @return boolean  True is instanced, otherwise false
+   */
+
   public static function hasInstance($name = null)
   {
     if (is_null($name))
@@ -99,6 +107,13 @@ class sfContext
     return isset(self::$instances[$name]);
   }
 
+  /**
+   *
+   * Sets the current context to something else
+   *
+   * @param  string    The name of the context to switch to
+   *
+   */
   public static function switchTo($name)
   {
     self::$current = $name;
