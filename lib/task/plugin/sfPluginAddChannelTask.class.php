@@ -46,6 +46,6 @@ EOF;
   {
     $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('plugin', sprintf('add channel "%s"', $arguments['name'])))));
 
-    $this->pluginManager->registerChannel($arguments['name']);
+    $this->getPluginManager()->registerChannel($arguments['name']);
   }
 }
