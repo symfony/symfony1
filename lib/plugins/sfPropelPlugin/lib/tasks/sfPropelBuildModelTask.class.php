@@ -56,6 +56,8 @@ EOF;
     $this->callPhing('om', self::CHECK_SCHEMA);
     $this->cleanup();
 
+    $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('autoload', 'reloading autoloading'))));
+
     sfSimpleAutoload::getInstance()->reload();
   }
 }

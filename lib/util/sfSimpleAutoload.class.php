@@ -135,28 +135,25 @@ class sfSimpleAutoload
 
   public function addDirectory($dir, $ext = '.php')
   {
-    if (!is_dir($dir))
-    {
-      return;
-    }
-
     require_once(dirname(__FILE__).'/sfFinder.class.php');
 
-    $finder = sfFinder::type('file')->ignore_version_control()->name('*'.$ext);
+    $finder = sfFinder::type('file')->ignore_version_control()->follow_link()->name('*'.$ext);
     foreach (glob($dir) as $dir)
     {
-      if (in_array($dir, $this->dirs) && $this->cacheLoaded)
+      if (in_array($dir, $this->dirs))
       {
-        continue;
+        if ($this->cacheLoaded)
+        {
+          continue;
+        }
+      }
+      else
+      {
+        $this->dirs[] = $dir;
       }
 
-      $this->dirs[] = $dir;
       $this->cacheChanged = true;
-      $files = $finder->in($dir);
-      if (is_array($files))
-      {
-        $this->addFiles($files, false);
-      }
+      $this->addFiles($finder->in($dir), false);
     }
   }
 
@@ -175,14 +172,23 @@ class sfSimpleAutoload
       return;
     }
 
-    if (in_array($file, $this->files) && $this->cacheLoaded)
+    if (in_array($file, $this->files))
     {
-      return;
+      if ($this->cacheLoaded)
+      {
+        return;
+      }
+    }
+    else
+    {
+      if ($register)
+      {
+        $this->files[] = $file;
+      }
     }
 
     if ($register)
     {
-      $this->files[] = $file;
       $this->cacheChanged = true;
     }
 
