@@ -230,3 +230,33 @@ Logger priorities are now constants:
   sfLogger::INFO
 
 The `project:upgrade1.1` task makes all those changes for you.
+
+Deprecated methods in sfAction
+------------------------------
+
+The following methods of `sfAction` have been deprecated and throw
+a `sfConfigurationException` if `sf_compat_10` is set to `false`:
+
+  * `->validate()`
+  * `->handleError()`
+
+Deprecated methods in sfRequest
+-------------------------------
+
+The following methods of `sfRequest` have been deprecated and throw
+a `sfConfigurationException` if `sf_compat_10` is set to `false`:
+
+  * `->getError()`
+  * `->getErrors()`
+  * `->getErrorNames()`
+  * `->hasError()`
+  * `->hasErrors()`
+  * `->setError()`
+  * `->setErrors()`
+  * `->removeError()`
+
+sfValidator class
+-----------------
+
+If you use the symfony 1.0 interface for validation, your custom validators must
+now extend the `sfValidatorBase` class.

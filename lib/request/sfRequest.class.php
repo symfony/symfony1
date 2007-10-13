@@ -133,6 +133,11 @@ abstract class sfRequest
    */
   public function getError($name)
   {
+    if (!sfConfig::get('sf_compat_10'))
+    {
+      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
+    }
+
     return isset($this->errors[$name]) ? $this->errors[$name] : null;
   }
 
@@ -143,6 +148,11 @@ abstract class sfRequest
    */
   public function getErrorNames()
   {
+    if (!sfConfig::get('sf_compat_10'))
+    {
+      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
+    }
+
     return array_keys($this->errors);
   }
 
@@ -153,6 +163,11 @@ abstract class sfRequest
    */
   public function getErrors()
   {
+    if (!sfConfig::get('sf_compat_10'))
+    {
+      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
+    }
+
     return $this->errors;
   }
 
@@ -177,6 +192,11 @@ abstract class sfRequest
    */
   public function hasError($name)
   {
+    if (!sfConfig::get('sf_compat_10'))
+    {
+      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
+    }
+
     return array_key_exists($name, $this->errors);
   }
 
@@ -187,6 +207,11 @@ abstract class sfRequest
    */
   public function hasErrors()
   {
+    if (!sfConfig::get('sf_compat_10'))
+    {
+      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
+    }
+
     return count($this->errors) > 0;
   }
 
@@ -199,6 +224,11 @@ abstract class sfRequest
    */
   public function removeError($name)
   {
+    if (!sfConfig::get('sf_compat_10'))
+    {
+      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
+    }
+
     $retval = null;
 
     if (isset($this->errors[$name]))
@@ -220,6 +250,11 @@ abstract class sfRequest
    */
   public function setError($name, $message)
   {
+    if (!sfConfig::get('sf_compat_10'))
+    {
+      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
+    }
+
     if (sfConfig::get('sf_logging_enabled'))
     {
       $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Error in form for parameter "%s" (with message "%s")', $name, $message))));
@@ -239,6 +274,11 @@ abstract class sfRequest
    */
   public function setErrors($errors)
   {
+    if (!sfConfig::get('sf_compat_10'))
+    {
+      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
+    }
+
     $this->errors = array_merge($this->errors, $errors);
   }
 

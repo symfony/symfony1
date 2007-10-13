@@ -6,8 +6,6 @@ class sfCompatAutoload extends sfSimpleAutoload
 
 if (sfConfig::get('sf_compat_10'))
 {
-  sfAutoload::getInstance()->setClassPath('sfValidatorException', dirname(__FILE__).'/../../../exception/sfValidatorException.class.php');
-
   // autoload classes
   $autoload = sfCompatAutoload::getInstance(sfConfig::get('sf_app_cache_dir').'/sf_compat_autoloader.txt');
   $autoload->addDirectory(dirname(__FILE__).'/../lib');
