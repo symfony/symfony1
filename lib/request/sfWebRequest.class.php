@@ -529,6 +529,20 @@ class sfWebRequest extends sfRequest
   }
 
   /**
+   * Checks if the request method is the given one.
+   *
+   * @param  string  The method name
+   *
+   * @return Boolean true if the current method is the given one, false otherwise
+   */
+  public function isMethod($method)
+  {
+    $pathArray = $this->getPathInfoArray();
+
+    return strtolower($method) == strtolower($this->getMethodName());
+  }
+
+  /**
    * Returns request method.
    *
    * @return  string
