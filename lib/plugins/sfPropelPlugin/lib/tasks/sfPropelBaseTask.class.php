@@ -155,7 +155,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
     // Call phing targets
     if (false === strpos('propel-generator', get_include_path()))
     {
-      set_include_path(sfConfig::get('sf_symfony_lib_dir').'/vendor/propel-generator/classes'.PATH_SEPARATOR.get_include_path());
+      set_include_path(sfConfig::get('sf_symfony_lib_dir').'/plugins/sfPropelPlugin/lib/vendor/propel-generator/classes'.PATH_SEPARATOR.get_include_path()); 
     }
     set_include_path(sfConfig::get('sf_root_dir').PATH_SEPARATOR.get_include_path());
 
