@@ -96,9 +96,10 @@ class sfSimpleAutoload
       return;
     }
 
-    $this->cacheLoaded = true;
-
     list($this->classes, $this->dirs, $this->files) = unserialize(file_get_contents($this->cacheFile));
+
+    $this->cacheLoaded = true;
+    $this->cacheChanged = false;
   }
 
   public function saveCache()
@@ -106,6 +107,7 @@ class sfSimpleAutoload
     if ($this->cacheChanged)
     {
       file_put_contents($this->cacheFile, serialize(array($this->classes, $this->dirs, $this->files)));
+
       $this->cacheChanged = false;
     }
   }
@@ -126,6 +128,7 @@ class sfSimpleAutoload
     }
 
     $this->cacheLoaded = true;
+    $this->cacheChanged = true;
   }
 
   public function removeCache()
@@ -161,7 +164,7 @@ class sfSimpleAutoload
   {
     foreach ($files as $file)
     {
-      $this->addFile($file, false);
+      $this->addFile($file, $register);
     }
   }
 

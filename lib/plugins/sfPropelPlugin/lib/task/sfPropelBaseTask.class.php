@@ -24,14 +24,20 @@ abstract class sfPropelBaseTask extends sfBaseTask
   const CHECK_SCHEMA = true;
   const DO_NOT_CHECK_SCHEMA = false;
 
+  static protected $done = false;
+
   public function initialize(sfEventDispatcher $dispatcher, sfFormatter $formatter)
   {
     parent::initialize($dispatcher, $formatter);
 
-    $autoloader = sfSimpleAutoload::getInstance();
-    $autoloader->addDirectory(dirname(__FILE__).'/../vendor');
-    $autoloader->addDirectory(sfConfig::get('sf_root_dir').'/lib/model');
-    $autoloader->register();
+    if (!self::$done)
+    {
+      $autoloader = sfSimpleAutoload::getInstance();
+      $autoloader->addDirectory(dirname(__FILE__).'/../vendor');
+      $autoloader->addDirectory(sfConfig::get('sf_root_dir').'/lib/model');
+
+      self::$done = true;
+    }
   }
 
   protected function schemaToYML($checkSchema = self::CHECK_SCHEMA, $prefix = '')

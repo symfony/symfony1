@@ -136,11 +136,12 @@ class sfSymfonyCommandApplication extends sfCommandApplication
     }
 
     $this->autoloader = sfSimpleAutoload::getInstance($cache);
+    $this->autoloader->register();
+
     require_once(sfConfig::get('sf_symfony_lib_dir').'/util/sfFinder.class.php');
     $finder = sfFinder::type('file')->ignore_version_control()->prune('test')->name('*.php');
     $this->autoloader->addFiles($finder->in(sfConfig::get('sf_symfony_lib_dir')));
     $this->autoloader->addDirectory(sfConfig::get('sf_root_dir').'/plugins');
-    $this->autoloader->register();
   }
 
   /**
