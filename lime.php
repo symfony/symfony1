@@ -646,7 +646,7 @@ class lime_coverage extends lime_registration
     {
       $tmp = <<<EOF
 <?php
-xdebug_start_code_coverage();
+xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
 ob_start();
 include('$file');
 ob_end_clean();
@@ -667,16 +667,16 @@ EOF;
         {
           if (!isset($coverage[$file]))
           {
-            $coverage[$file] = array();
+            $coverage[$file] = $lines;
+            continue;
           }
 
           foreach ($lines as $line => $count)
           {
-            if (!isset($coverage[$file][$line]))
+            if ($count == 1)
             {
-              $coverage[$file][$line] = 0;
+              $coverage[$file][$line] = 1;
             }
-            $coverage[$file][$line] = $coverage[$file][$line] + $count;
           }
         }
       }
@@ -688,193 +688,40 @@ EOF;
     $total_covered_lines = 0;
     foreach ($this->files as $file)
     {
+      $is_covered = isset($coverage[$file]);
       $cov = isset($coverage[$file]) ? $coverage[$file] : array();
+      $covered_lines = array();
+      $missing_lines = array();
 
-      list($cov, $php_lines) = $this->compute(file_get_contents($file), $cov);
+      foreach ($cov as $line => $flag)
+      {
+        switch ($flag)
+        {
+          case 1:
+            $covered_lines[] = $line;
+            break;
+          case -1:
+            $missing_lines[] = $line;
+            break;
+        }
+      }
+      $total_lines = count($covered_lines) + count($missing_lines);
 
       $output = $this->harness->output;
-      $percent = count($php_lines) ? count($cov) * 100 / count($php_lines) : 100;
+      $percent = $total_lines ? count($covered_lines) * 100 / $total_lines : 0;
 
-      $total_php_lines += count($php_lines);
-      $total_covered_lines += count($cov);
+      $total_php_lines += $total_lines;
+      $total_covered_lines += count($covered_lines);
 
       $relative_file = $this->get_relative_file($file);
       $output->echoln(sprintf("%-70s %3.0f%%", substr($relative_file, -min(70, strlen($relative_file))), $percent), $percent == 100 ? 'INFO' : ($percent > 90 ? 'PARAMETER' : ($percent < 20 ? 'ERROR' : '')));
-      if ($this->verbose && $percent != 100)
+      if ($this->verbose && $is_covered && $percent != 100)
       {
-        $output->comment(sprintf("missing: %s", $this->format_range(array_keys(array_diff_key($php_lines, $cov)))));
+        $output->comment(sprintf("missing: %s", $this->format_range($missing_lines)));
       }
     }
 
     $output->echoln(sprintf("TOTAL COVERAGE: %3.0f%%", $total_covered_lines * 100 / $total_php_lines));
-  }
-
-  static function get_php_lines($content)
-  {
-    if (is_file($content))
-    {
-      $content = file_get_contents($content);
-    }
-
-    $tokens = token_get_all($content);
-    $php_lines = array();
-    $current_line = 1;
-    $in_class = false;
-    $in_function = false;
-    $in_function_declaration = false;
-    $end_of_current_expr = true;
-    $open_braces = 0;
-    foreach ($tokens as $token)
-    {
-      if (is_string($token))
-      {
-        switch ($token)
-        {
-          case '=':
-            if (false === $in_class || (false !== $in_function && !$in_function_declaration))
-            {
-              $php_lines[$current_line] = true;
-            }
-            break;
-          case '{':
-            ++$open_braces;
-            $in_function_declaration = false;
-            break;
-          case ';':
-            $in_function_declaration = false;
-            $end_of_current_expr = true;
-            break;
-          case '}':
-            $end_of_current_expr = true;
-            --$open_braces;
-            if ($open_braces == $in_class)
-            {
-              $in_class = false;
-            }
-            if ($open_braces == $in_function)
-            {
-              $in_function = false;
-            }
-            break;
-        }
-
-        continue;
-      }
-
-      list($id, $text) = $token;
-
-      switch ($id)
-      {
-        case T_CURLY_OPEN:
-        case T_DOLLAR_OPEN_CURLY_BRACES:
-          ++$open_braces;
-          break;
-        case T_WHITESPACE:
-        case T_OPEN_TAG:
-        case T_CLOSE_TAG:
-          $end_of_current_expr = true;
-          $current_line += count(explode("\n", $text)) - 1;
-          break;
-        case T_COMMENT:
-        case T_DOC_COMMENT:
-          $current_line += count(explode("\n", $text)) - 1;
-          break;
-        case T_CLASS:
-          $in_class = $open_braces;
-          break;
-        case T_FUNCTION:
-          $in_function = $open_braces;
-          $in_function_declaration = true;
-          break;
-        case T_AND_EQUAL:
-        case T_CASE:
-        case T_CATCH:
-        case T_CLONE:
-        case T_CONCAT_EQUAL:
-        case T_CONTINUE:
-        case T_DEC:
-        case T_DECLARE:
-        case T_DEFAULT:
-        case T_DIV_EQUAL:
-        case T_DO:
-        case T_ECHO:
-        case T_ELSEIF:
-        case T_EMPTY:
-        case T_ENDDECLARE:
-        case T_ENDFOR:
-        case T_ENDFOREACH:
-        case T_ENDIF:
-        case T_ENDSWITCH:
-        case T_ENDWHILE:
-        case T_EVAL:
-        case T_EXIT:
-        case T_FOR:
-        case T_FOREACH:
-        case T_GLOBAL:
-        case T_IF:
-        case T_INC:
-        case T_INCLUDE:
-        case T_INCLUDE_ONCE:
-        case T_INSTANCEOF:
-        case T_ISSET:
-        case T_IS_EQUAL:
-        case T_IS_GREATER_OR_EQUAL:
-        case T_IS_IDENTICAL:
-        case T_IS_NOT_EQUAL:
-        case T_IS_NOT_IDENTICAL:
-        case T_IS_SMALLER_OR_EQUAL:
-        case T_LIST:
-        case T_LOGICAL_AND:
-        case T_LOGICAL_OR:
-        case T_LOGICAL_XOR:
-        case T_MINUS_EQUAL:
-        case T_MOD_EQUAL:
-        case T_MUL_EQUAL:
-        case T_NEW:
-        case T_OBJECT_OPERATOR:
-        case T_OR_EQUAL:
-        case T_PLUS_EQUAL:
-        case T_PRINT:
-        case T_REQUIRE:
-        case T_REQUIRE_ONCE:
-        case T_RETURN:
-        case T_SL:
-        case T_SL_EQUAL:
-        case T_SR:
-        case T_SR_EQUAL:
-        case T_THROW:
-        case T_TRY:
-        case T_UNSET:
-        case T_UNSET_CAST:
-        case T_USE:
-        case T_WHILE:
-        case T_XOR_EQUAL:
-          $php_lines[$current_line] = true;
-          $end_of_current_expr = false;
-          break;
-        default:
-          if (false === $end_of_current_expr)
-          {
-            $php_lines[$current_line] = true;
-          }
-          //print "$current_line: ".token_name($id)."\n";
-      }
-    }
-
-    return $php_lines;
-  }
-
-  function compute($content, $cov)
-  {
-    $php_lines = self::get_php_lines($content);
-
-    // we remove from $cov non php lines
-    foreach (array_diff_key($cov, $php_lines) as $line => $tmp)
-    {
-      unset($cov[$line]);
-    }
-
-    return array($cov, $php_lines);
   }
 
   function format_range($lines)
