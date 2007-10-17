@@ -47,6 +47,7 @@ class sfFinder
   protected $maxdepth    = 1000000;
   protected $relative    = false;
   protected $follow_link = false;
+  protected $sort        = false;
 
   /**
    * Sets maximum directory depth.
@@ -249,6 +250,30 @@ class sfFinder
   }
 
   /**
+   * Returns files and directories ordered by name
+   *
+   * @return object current sfFinder object
+   */
+  public function sort_by_name()
+  {
+    $this->sort = 'name';
+
+    return $this;
+  }
+
+  /**
+   * Returns files and directories ordered by type (directories before files), then by name
+   *
+   * @return object current sfFinder object
+   */
+  public function sort_by_type()
+  {
+    $this->sort = 'type';
+
+    return $this;
+  }
+
+  /**
    * Executes function or method for each element.
    *
    * Element match if functino or method returns true.
@@ -351,6 +376,11 @@ class sfFinder
       }
     }
 
+    if ($this->sort == 'name')
+    {
+      sort($files);
+    }
+
     return array_unique($files);
   }
 
@@ -367,7 +397,8 @@ class sfFinder
     }
 
     $files = array();
-
+    $temp_files = array();
+    $temp_folders = array();
     if (is_dir($dir))
     {
       $current_dir = opendir($dir);
@@ -383,6 +414,44 @@ class sfFinder
 
         if (is_dir($current_entry))
         {
+          if ($this->sort == 'type')
+          {
+            $temp_folders[$entryname] = $current_entry;
+          }
+          else
+          {
+            if (($this->type == 'directory' || $this->type == 'any') && ($depth >= $this->mindepth) && !$this->is_discarded($dir, $entryname) && $this->match_names($dir, $entryname) && $this->exec_ok($dir, $entryname))
+            {
+              $files[] = realpath($current_entry);
+            }
+
+            if (!$this->is_pruned($dir, $entryname))
+            {
+              $files = array_merge($files, $this->search_in($current_entry, $depth + 1));
+            }
+          }
+        }
+        else
+        {
+          if (($this->type != 'directory' || $this->type == 'any') && ($depth >= $this->mindepth) && !$this->is_discarded($dir, $entryname) && $this->match_names($dir, $entryname) && $this->size_ok($dir, $entryname) && $this->exec_ok($dir, $entryname))
+          {
+            if ($this->sort == 'type')
+            {
+              $temp_files[] = realpath($current_entry);
+            }
+            else
+            {
+              $files[] = realpath($current_entry);
+            }
+          }
+        }
+      }
+
+      if ($this->sort == 'type')
+      {
+        ksort($temp_folders);
+        foreach($temp_folders as $entryname => $current_entry)
+        {
           if (($this->type == 'directory' || $this->type == 'any') && ($depth >= $this->mindepth) && !$this->is_discarded($dir, $entryname) && $this->match_names($dir, $entryname) && $this->exec_ok($dir, $entryname))
           {
             $files[] = realpath($current_entry);
@@ -393,14 +462,11 @@ class sfFinder
             $files = array_merge($files, $this->search_in($current_entry, $depth + 1));
           }
         }
-        else
-        {
-          if (($this->type != 'directory' || $this->type == 'any') && ($depth >= $this->mindepth) && !$this->is_discarded($dir, $entryname) && $this->match_names($dir, $entryname) && $this->size_ok($dir, $entryname) && $this->exec_ok($dir, $entryname))
-          {
-            $files[] = realpath($current_entry);
-          }
-        }
+
+        sort($temp_files);
+        $files = array_merge($files, $temp_files);
       }
+
       closedir($current_dir);
     }
 
