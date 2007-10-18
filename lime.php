@@ -647,9 +647,7 @@ class lime_coverage extends lime_registration
       $tmp = <<<EOF
 <?php
 xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
-ob_start();
 include('$file');
-ob_end_clean();
 echo '<PHP_SER>'.serialize(xdebug_get_code_coverage()).'</PHP_SER>';
 EOF;
       file_put_contents($tmp_file, $tmp);
@@ -665,15 +663,20 @@ EOF;
 
         foreach ($cov as $file => $lines)
         {
+          if (!in_array($file, $this->files))
+          {
+            continue;
+          }
+
           if (!isset($coverage[$file]))
           {
             $coverage[$file] = $lines;
             continue;
           }
 
-          foreach ($lines as $line => $count)
+          foreach ($lines as $line => $flag)
           {
-            if ($count == 1)
+            if ($flag == 1)
             {
               $coverage[$file][$line] = 1;
             }
@@ -721,7 +724,7 @@ EOF;
       }
     }
 
-    $output->echoln(sprintf("TOTAL COVERAGE: %3.0f%%", $total_covered_lines * 100 / $total_php_lines));
+    $output->echoln(sprintf("TOTAL COVERAGE: %3.0f%%", $total_php_lines ? $total_covered_lines * 100 / $total_php_lines : 0));
   }
 
   function format_range($lines)
