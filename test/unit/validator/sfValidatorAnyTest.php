@@ -1,0 +1,65 @@
+<?php
+
+/*
+ * This file is part of the symfony package.
+ * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
+
+$t = new lime_test(9, new lime_output_color());
+
+$v1 = new sfValidatorString(array('max_length' => 3));
+$v2 = new sfValidatorString(array('min_length' => 3));
+
+$v = new sfValidatorAny(array($v1, $v2));
+
+// __construct()
+$t->diag('__construct()');
+$v = new sfValidatorAny();
+$t->is($v->getValidators(), array(), '->__construct() can take no argument');
+$v = new sfValidatorAny($v1);
+$t->is($v->getValidators(), array($v1), '->__construct() can take a validator as its first argument');
+$v = new sfValidatorAny(array($v1, $v2));
+$t->is($v->getValidators(), array($v1, $v2), '->__construct() can take an array of validators as its first argument');
+try
+{
+  $v = new sfValidatorAny('string');
+  $t->fail('_construct() throws an exception when passing a non supported first argument');
+}
+catch (sfException $e)
+{
+  $t->pass('_construct() throws an exception when passing a non supported first argument');
+}
+
+// ->addValidator()
+$t->diag('->addValidator()');
+$v = new sfValidatorAny();
+$v->addValidator($v1);
+$v->addValidator($v2);
+$t->is($v->getValidators(), array($v1, $v2), '->addValidator() adds a validator');
+
+// ->clean()
+$t->diag('->clean()');
+$t->is($v->clean('foo'), 'foo', '->clean() returns the string unmodified');
+
+$v1->setOption('max_length', 1);
+$v2->setOption('min_length', 5);
+try
+{
+  $v->clean('foo');
+  $t->fail('->clean() throws an sfValidatorError exception if all the validators fails');
+  $t->fail();
+}
+catch (sfValidatorError $e)
+{
+  $t->pass('->clean() throws an sfValidatorError exception if all the validators fails');
+  $t->is(count($e), 2, '->clean() throws an exception with all error messages');
+}
+
+$v1->setOption('max_length', 3);
+$v2->setOption('min_length', 1);
+$t->is($v->clean('foo'), 'foo', '->clean() returns the string unmodified');
