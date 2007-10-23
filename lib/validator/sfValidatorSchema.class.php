@@ -72,7 +72,7 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
     $this->options['allow_extra_fields']  = false;
     $this->options['filter_extra_fields'] = true;
 
-    $this->messages['extra_fields'] = 'Extra field(s) %fields%.';
+    $this->messages['extra_fields'] = 'Extra field %field%.';
   }
 
   /**
