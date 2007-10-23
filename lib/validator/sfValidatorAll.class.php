@@ -54,6 +54,11 @@ class sfValidatorAll extends sfValidator
       throw new sfException('sfValidatorAll constructor takes a sfValidator object, or a sfValidator array.');
     }
 
+    if (!isset($messages['invalid']))
+    {
+      $messages['invalid'] = null;
+    }
+
     parent::__construct($options, $messages);
   }
 
@@ -106,6 +111,11 @@ class sfValidatorAll extends sfValidator
 
     if (count($errors))
     {
+      if ($this->getMessage('invalid'))
+      {
+        throw new sfValidatorError($this, 'invalid', array('value' => $value));
+      }
+
       throw new sfValidatorErrorSchema($this, $errors);
     }
 

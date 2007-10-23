@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(7, new lime_output_color());
+$t = new lime_test(12, new lime_output_color());
 
 $v1 = new sfValidatorString(array('max_length' => 3));
 $v2 = new sfValidatorString(array('min_length' => 3));
@@ -51,9 +51,25 @@ try
 {
   $v->clean('foo');
   $t->fail('->clean() throws an sfValidatorError exception if one of the validators fails');
+  $t->skip('', 2);
 }
 catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws an sfValidatorError exception if one of the validators fails');
+  $t->is($e[0]->getCode(), 'max_length', '->clean() throws a sfValidatorSchemaError');
+  $t->is($e instanceof sfValidatorErrorSchema, 'max_length', '->clean() throws a sfValidatorSchemaError');
 }
 
+try
+{
+  $v->setMessage('invalid', 'Invalid.');
+  $v->clean('foo');
+  $t->fail('->clean() throws an sfValidatorError exception if one of the validators fails');
+  $t->skip('', 2);
+}
+catch (sfValidatorError $e)
+{
+  $t->pass('->clean() throws an sfValidatorError exception if one of the validators fails');
+  $t->is($e->getCode(), 'invalid', '->clean() throws a sfValidatorError if invalid message is not empty');
+  $t->is(!$e instanceof sfValidatorErrorSchema, 'max_length', '->clean() throws a sfValidatorError if invalid message is not empty');
+}
