@@ -51,13 +51,15 @@ abstract class sfValidator
   }
 
   /**
-   * Returns an array of current error messages.
+   * Returns an error message given an error code.
    *
-   * @return array An array of messages
+   * @param  string The error code
+   *
+   * @return string The error message, or the empty string if the error code does not exist
    */
-  public function getMessages()
+  public function getMessage($name)
   {
-    return $this->messages;
+    return isset($this->messages[$name]) ? $this->messages[$name] : '';
   }
 
   /**
@@ -72,26 +74,23 @@ abstract class sfValidator
   }
 
   /**
-   * Returns an error message given an error code.
+   * Returns an array of current error messages.
    *
-   * @param  string The error code
-   *
-   * @return string The error message, or the empty string if the error code does not exist
+   * @return array An array of messages
    */
-  public function getMessage($name)
+  public function getMessages()
   {
-    return isset($this->messages[$name]) ? $this->messages[$name] : '';
+    return $this->messages;
   }
 
   /**
-   * Changes an option value.
+   * Changes all error messages.
    *
-   * @param string The option name
-   * @param mixed  The value
+   * @param array An array of error messages
    */
-  public function setOption($name, $value)
+  public function setMessages($values)
   {
-    $this->options[$name] = $value;
+    $this->messages = $values;
   }
 
   /**
@@ -107,6 +106,17 @@ abstract class sfValidator
   }
 
   /**
+   * Changes an option value.
+   *
+   * @param string The option name
+   * @param mixed  The value
+   */
+  public function setOption($name, $value)
+  {
+    $this->options[$name] = $value;
+  }
+
+  /**
    * Returns true if the option exists.
    *
    * @param  string  The option name
@@ -116,6 +126,26 @@ abstract class sfValidator
   public function hasOption($name)
   {
     return isset($this->options[$name]);
+  }
+
+  /**
+   * Returns all options.
+   *
+   * @return array An array if options
+   */
+  public function getOptions()
+  {
+    return $this->options;
+  }
+
+  /**
+   * Changes all options.
+   *
+   * @param array An array if options
+   */
+  public function setOptions($values)
+  {
+    $this->options = $values;
   }
 
   /**

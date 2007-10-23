@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(21, new lime_output_color());
+$t = new lime_test(23, new lime_output_color());
 
 class ValidatorIdentity extends sfValidator
 {
@@ -79,6 +79,11 @@ $t->diag('->getOption()');
 $t->is($v->getOption('required'), false, '->getOption() returns the value of an option');
 $t->is($v->getOption('nonexistant'), null, '->getOption() returns null if the option does not exist');
 
+// ->getOptions() ->setOptions()
+$t->diag('->getOptions() ->setOptions()');
+$v->setOptions(array('required' => true, 'trim' => false));
+$t->is($v->getOptions(), array('required' => true, 'trim' => false), '->setOptions() changes all options');
+
 // ->getMessages()
 $t->diag('->getMessages()');
 $t->is($v->getMessages(), array('required' => 'Required.', 'invalid' => 'Invalid.', 'foo' => 'bar'), '->getMessages() returns an array of all error messages');
@@ -100,6 +105,11 @@ catch (sfValidatorError $e)
 {
   $t->is($e->getMessage(), 'The field is required.', '->setMessage() changes the default error message string');
 }
+
+// ->setMessages()
+$t->diag('->setMessages()');
+$v->setMessages(array('required' => 'This is required.'));
+$t->is($v->getMessages(), array('required' => 'This is required.'), '->setMessages() changes all error messages');
 
 // ->getErrorCodes()
 $t->diag('->getErrorCodes()');
