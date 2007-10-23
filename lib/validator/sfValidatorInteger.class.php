@@ -30,8 +30,8 @@ class sfValidatorInteger extends sfValidator
    */
   protected function configure($options = array(), $messages = array())
   {
-    $this->setMessage('max', '"%value%" is too long (largest allowed is %max%).');
-    $this->setMessage('min', '"%value%" is too short (smallest allowed is %min%).');
+    $this->setMessage('max', '"%value%" must be less than %max%.');
+    $this->setMessage('min', '"%value%" must be greater than %min%.');
     $this->setMessage('invalid', '"%value%" is not an integer.');
   }
 
