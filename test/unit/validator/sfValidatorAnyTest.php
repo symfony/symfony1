@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(14, new lime_output_color());
+$t = new lime_test(16, new lime_output_color());
 
 $v1 = new sfValidatorString(array('max_length' => 3));
 $v2 = new sfValidatorString(array('min_length' => 3));
@@ -45,6 +45,18 @@ $t->is($v->getValidators(), array($v1, $v2), '->addValidator() adds a validator'
 // ->clean()
 $t->diag('->clean()');
 $t->is($v->clean('foo'), 'foo', '->clean() returns the string unmodified');
+
+try
+{
+  $v->clean(null);
+  $t->fail('->clean() throws an sfValidatorError exception if the input value is required');
+  $t->skip('', 1);
+}
+catch (sfValidatorError $e)
+{
+  $t->pass('->clean() throws an sfValidatorError exception if the input value is required');
+  $t->is($e->getCode(), 'required', '->clean() throws a sfValidatorError');
+}
 
 $v1->setOption('max_length', 1);
 $v2->setOption('min_length', 5);

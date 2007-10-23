@@ -85,14 +85,6 @@ class sfValidatorAll extends sfValidator
   /**
    * @see sfValidator
    */
-  public function clean($value)
-  {
-    return $this->doClean($value);
-  }
-
-  /**
-   * @see sfValidator
-   */
   protected function doClean($value)
   {
     $clean = $value;
