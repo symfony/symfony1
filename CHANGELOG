@@ -5,6 +5,7 @@ WARNING: See the UPGRADE file for more information about upgrading your projects
 
 * r3742: added sfAction::renderPartial() method
 * All bug fixes from 1.0.0 -> 1.0.X
+* r5707: web responses now served as HTTP 1.1, not 1.0.
 
 Version 1.0.0
 -------------
