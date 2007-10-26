@@ -278,7 +278,7 @@ class sfWebResponse extends sfResponse
     }
 
     // status
-    $status = 'HTTP/1.0 '.$this->statusCode.' '.$this->statusText;
+    $status = 'HTTP/1.1 '.$this->statusCode.' '.$this->statusText;
     header($status);
 
     if (sfConfig::get('sf_logging_enabled'))
