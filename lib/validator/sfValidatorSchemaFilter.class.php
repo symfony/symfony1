@@ -65,4 +65,12 @@ class sfValidatorSchemaFilter extends sfValidatorSchema
 
     return $values;
   }
+
+  /**
+   * @see sfValidator
+   */
+  public function asString($indent = 0)
+  {
+    return sprintf('%s%s:%s', str_repeat(' ', $indent), $this->getOption('field'), $this->getOption('validator')->asString(0));
+  }
 }

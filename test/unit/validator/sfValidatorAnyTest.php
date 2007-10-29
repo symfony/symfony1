@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(16, new lime_output_color());
+$t = new lime_test(18, new lime_output_color());
 
 $v1 = new sfValidatorString(array('max_length' => 3));
 $v2 = new sfValidatorString(array('min_length' => 3));
@@ -91,3 +91,27 @@ catch (sfValidatorError $e)
 $v1->setOption('max_length', 3);
 $v2->setOption('min_length', 1);
 $t->is($v->clean('foo'), 'foo', '->clean() returns the string unmodified');
+
+// ->asString()
+$t->diag('->asString()');
+$v1 = new sfValidatorString(array('max_length' => 3));
+$v2 = new sfValidatorString(array('min_length' => 3));
+$v = new sfValidatorAny(array($v1, $v2));
+$t->is($v->asString(), <<<EOF
+(
+  String({ max_length: 3 })
+  or
+  String({ min_length: 3 })
+)
+EOF
+, '->asString() returns a string representation of the validator');
+
+$v = new sfValidatorAny(array($v1, $v2), array(), array('required' => 'This is required.'));
+$t->is($v->asString(), <<<EOF
+(
+  String({ max_length: 3 })
+  or({}, { required: 'This is required.' })
+  String({ min_length: 3 })
+)
+EOF
+, '->asString() returns a string representation of the validator');

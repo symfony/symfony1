@@ -104,9 +104,40 @@ class sfValidatorSchemaCompare extends sfValidatorSchema
 
     if (!$valid)
     {
-      throw new sfValidatorError($this, 'invalid', array('value' => $values));
+      throw new sfValidatorError($this, 'invalid', array(
+        'left_field'  => $leftValue,
+        'right_field' => $rightValue,
+        'operator'    => $this->getOption('operator'),
+      ));
     }
 
     return $values;
+  }
+
+  /**
+   * @see sfValidator
+   */
+  public function asString($indent = 0)
+  {
+    $options = $this->getOptionsWithoutDefaults('--fake--', '--', '--fake--');
+    $messages = $this->getMessagesWithoutDefaults('--fake--', '--', '--fake--');
+    unset($options['leftField'], $options['operator'], $options['rightField']);
+
+    $arguments = '';
+    if ($options || $messages)
+    {
+      $arguments = sprintf('(%s%s)',
+        $options ? sfYamlInline::dump($options) : ($messages ? '{}' : ''),
+        $messages ? ', '.sfYamlInline::dump($messages) : ''
+      );
+    }
+
+    return sprintf('%s%s %s%s %s',
+      str_repeat(' ', $indent),
+      $this->getOption('leftField'),
+      $this->getOption('operator'),
+      $arguments,
+      $this->getOption('rightField')
+    );
   }
 }

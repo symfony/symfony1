@@ -12,7 +12,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 $t = new lime_test(5, new lime_output_color());
 
-$v = new sfValidatorChoiceMany(array('foo', 'bar'));
+$v = new sfValidatorChoiceMany(array('expected' => array('foo', 'bar')));
 
 // ->clean()
 $t->diag('->clean()');

@@ -21,15 +21,18 @@ class sfValidatorChoice extends sfValidator
   /**
    * Constructor.
    *
-   * @param array  An array of expected values
-   * @param array  An array of options
-   * @param array  An array of error messages
+   * Available options:
+   *
+   *  * expected:  An array of expected values
    *
    * @see sfValidator
    */
-  public function __construct($expected, $options = array(), $messages = array())
+  public function __construct($options = array(), $messages = array())
   {
-    $options['expected'] = $expected;
+    if (!isset($options['expected']))
+    {
+      throw new sfException('The "expected" option is mandatory.');
+    }
 
     parent::__construct($options, $messages);
   }
@@ -45,5 +48,21 @@ class sfValidatorChoice extends sfValidator
     }
 
     return $value;
+  }
+
+  /**
+   * @see sfValidator
+   */
+  protected function getOptionsWithoutDefaults()
+  {
+    return parent::getOptionsWithoutDefaults(array('expected' => array('--fake--')));
+  }
+
+  /**
+   * @see sfValidator
+   */
+  protected function getMessagesWithoutDefaults()
+  {
+    return parent::getMessagesWithoutDefaults(array('expected' => array('--fake--')));
   }
 }

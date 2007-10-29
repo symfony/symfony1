@@ -10,9 +10,21 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(3, new lime_output_color());
+$t = new lime_test(5, new lime_output_color());
 
-$v = new sfValidatorChoice(array('foo', 'bar'));
+// __construct()
+$t->diag('__construct()');
+try
+{
+  new sfValidatorChoice();
+  $t->fail('__construct() throws an sfException if you don\'t pass an expected option');
+}
+catch (sfException $e)
+{
+  $t->pass('__construct() throws an sfException if you don\'t pass an expected option');
+}
+
+$v = new sfValidatorChoice(array('expected' => array('foo', 'bar')));
 
 // ->clean()
 $t->diag('->clean()');
@@ -28,3 +40,7 @@ catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws an sfValidatorError if the value is not an expected value');
 }
+
+// ->asString()
+$t->diag('->asString()');
+$t->is($v->asString(), 'Choice({ expected: [foo, bar] })', '->asString() returns a string representation of the validator');

@@ -21,15 +21,18 @@ class sfValidatorRegex extends sfValidator
   /**
    * Constructor.
    *
-   * @param string A regex pattern compatible with PCRE
-   * @param array  An array of options
-   * @param array  An array of error messages
+   * Available options:
+   *
+   *  * pattern: A regex pattern compatible with PCRE
    *
    * @see sfValidator
    */
-  public function __construct($pattern, $options = array(), $messages = array())
+  public function __construct($options = array(), $messages = array())
   {
-    $options['pattern'] = $pattern;
+    if (!isset($options['pattern']))
+    {
+      throw new sfException('The "pattern" option is mandatory.');
+    }
 
     parent::__construct($options, $messages);
   }
@@ -47,5 +50,21 @@ class sfValidatorRegex extends sfValidator
     }
 
     return $clean;
+  }
+
+  /**
+   * @see sfValidator
+   */
+  protected function getOptionsWithoutDefaults()
+  {
+    return parent::getOptionsWithoutDefaults(array('pattern' => array('--fake--')));
+  }
+
+  /**
+   * @see sfValidator
+   */
+  protected function getMessagesWithoutDefaults()
+  {
+    return parent::getMessagesWithoutDefaults(array('pattern' => array('--fake--')));
   }
 }

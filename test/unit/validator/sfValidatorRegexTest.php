@@ -10,9 +10,21 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(3, new lime_output_color());
+$t = new lime_test(5, new lime_output_color());
 
-$v = new sfValidatorRegex('/^[0-9]+$/');
+// __construct()
+$t->diag('__construct()');
+try
+{
+  new sfValidatorRegex();
+  $t->fail('__construct() throws an sfException if you don\'t pass a pattern option');
+}
+catch (sfException $e)
+{
+  $t->pass('__construct() throws an sfException if you don\'t pass a pattern option');
+}
+
+$v = new sfValidatorRegex(array('pattern' => '/^[0-9]+$/'));
 
 // ->getErrorCodes()
 $t->diag('->getErrorCodes()');
@@ -31,3 +43,7 @@ catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws an sfValidatorError if the value does not match the pattern');
 }
+
+// ->asString()
+$t->diag('->asString()');
+$t->is($v->asString(), 'Regex({ pattern: \'/^[0-9]+$/\' })', '->asString() returns a string representation of the validator');

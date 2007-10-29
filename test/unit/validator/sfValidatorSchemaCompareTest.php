@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(17, new lime_output_color());
+$t = new lime_test(19, new lime_output_color());
 
 $v = new sfValidatorSchemaCompare('left', sfValidatorSchemaCompare::EQUAL, 'right');
 
@@ -64,3 +64,11 @@ catch (sfException $e)
 {
   $t->pass('->clean() throws an sfException exception if the first argument is not an array of value');
 }
+
+// ->asString()
+$t->diag('->asString()');
+$v = new sfValidatorSchemaCompare('left', '==', 'right');
+$t->is($v->asString(), 'left == right', '->asString() returns a string representation of the validator');
+
+$v = new sfValidatorSchemaCompare('left', '==', 'right', array(), array('required' => 'This is required.'));
+$t->is($v->asString(), 'left ==({}, { required: \'This is required.\' }) right', '->asString() returns a string representation of the validator');

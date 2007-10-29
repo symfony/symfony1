@@ -23,6 +23,8 @@ class sfValidatorEmail extends sfValidatorRegex
    */
   public function __construct($options = array(), $messages = array())
   {
-    parent::__construct('/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i', $options, $messages);
+    $options['pattern'] = '/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i';
+
+    parent::__construct($options, $messages);
   }
 }

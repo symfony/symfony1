@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(3, new lime_output_color());
+$t = new lime_test(5, new lime_output_color());
 
 function clean_test($validator, $value)
 {
@@ -22,7 +22,19 @@ function clean_test($validator, $value)
   return "*$value*";
 }
 
-$v = new sfValidatorCallback('clean_test');
+// __construct()
+$t->diag('__construct()');
+try
+{
+  new sfValidatorCallback();
+  $t->fail('__construct() throws an sfException if you don\'t pass a callback option');
+}
+catch (sfException $e)
+{
+  $t->pass('__construct() throws an sfException if you don\'t pass a callback option');
+}
+
+$v = new sfValidatorCallback(array('callback' => 'clean_test'));
 
 // ->clean()
 $t->diag('->clean()');
@@ -40,3 +52,7 @@ catch (sfValidatorError $e)
 // ->configure()
 $t->diag('->configure()');
 $t->is($v->clean(''), null, '->configure() switch required to false by default');
+
+// ->asString()
+$t->diag('->asString()');
+$t->is($v->asString(), 'Callback({ callback: clean_test })', '->asString() returns a string representation of the validator');

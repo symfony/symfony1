@@ -272,4 +272,70 @@ abstract class sfValidator
   protected function configure($options = array(), $messages = array())
   {
   }
+
+  /**
+   * Returns a string representation of this validator.
+   *
+   * @param  integer Indentation (number of spaces before each line)
+   *
+   * @return string  The string representation of the validator
+   */
+  public function asString($indent = 0)
+  {
+    $options = $this->getOptionsWithoutDefaults();
+    $messages = $this->getMessagesWithoutDefaults();
+
+    return sprintf('%s%s(%s%s)',
+      str_repeat(' ', $indent),
+      str_replace('sfValidator', '', get_class($this)),
+      $options ? sfYamlInline::dump($options) : ($messages ? '{}' : ''),
+      $messages ? ', '.sfYamlInline::dump($messages) : ''
+    );
+  }
+
+  /**
+   * Returns all options with non default values.
+   *
+   * @return string  A string representation of the options
+   */
+  protected function getOptionsWithoutDefaults()
+  {
+    $options = $this->options;
+
+    // remove default option values
+    $reflection = new ReflectionClass(get_class($this));
+    $default = $reflection->newInstanceArgs(func_get_args());
+    foreach ($default->getOptions() as $key => $value)
+    {
+      if (array_key_exists($key, $options) && $options[$key] === $value)
+      {
+        unset($options[$key]);
+      }
+    }
+
+    return $options;
+  }
+
+  /**
+   * Returns all error messages with non default values.
+   *
+   * @return string A string representation of the error messages
+   */
+  protected function getMessagesWithoutDefaults()
+  {
+    $messages = $this->messages;
+
+    // remove default option values
+    $reflection = new ReflectionClass(get_class($this));
+    $default = $reflection->newInstanceArgs(func_get_args());
+    foreach ($default->getMessages() as $key => $value)
+    {
+      if (array_key_exists($key, $messages) && $messages[$key] === $value)
+      {
+        unset($messages[$key]);
+      }
+    }
+
+    return $messages;
+  }
 }

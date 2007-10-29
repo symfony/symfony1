@@ -23,7 +23,7 @@ class sfValidatorUrl extends sfValidatorRegex
    */
   public function __construct($options = array(), $messages = array())
   {
-    $pattern = '~^
+    $options['pattern'] = '~^
       https?://                               # http or https
       (
         ([a-z0-9-]+\.)+[a-z]{2,6}             # a domain name
@@ -34,6 +34,6 @@ class sfValidatorUrl extends sfValidatorRegex
       (/?|/\S+)                               # a /, nothing or a / with something
     $~ix';
 
-    parent::__construct($pattern, $options, $messages);
+    parent::__construct($options, $messages);
   }
 }

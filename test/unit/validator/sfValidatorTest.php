@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(23, new lime_output_color());
+$t = new lime_test(27, new lime_output_color());
 
 class ValidatorIdentity extends sfValidator
 {
@@ -120,3 +120,18 @@ $t->diag('::getCharset() ::setCharset()');
 $t->is(sfValidator::getCharset(), 'UTF-8', '::getCharset() returns the charset to use for validators');
 sfValidator::setCharset('ISO-8859-1');
 $t->is(sfValidator::getCharset(), 'ISO-8859-1', '::setCharset() changes the charset to use for validators');
+
+// ->asString()
+$t->diag('->asString()');
+$v = new ValidatorIdentity();
+$t->is($v->asString(), 'ValidatorIdentity()', '->asString() returns a string representation of the validator');
+$v->setOption('required', false);
+$v->setOption('foo', 'foo');
+$t->is($v->asString(), 'ValidatorIdentity({ required: false, foo: foo })', '->asString() returns a string representation of the validator');
+
+$v->setMessage('required', 'This is required.');
+$t->is($v->asString(), 'ValidatorIdentity({ required: false, foo: foo }, { required: \'This is required.\' })', '->asString() returns a string representation of the validator');
+
+$v = new ValidatorIdentity();
+$v->setMessage('required', 'This is required.');
+$t->is($v->asString(), 'ValidatorIdentity({}, { required: \'This is required.\' })', '->asString() returns a string representation of the validator');

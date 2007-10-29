@@ -255,4 +255,12 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
   {
     return $this->fields;
   }
+
+  /**
+   * @see sfValidator
+   */
+  public function asString($indent = 0)
+  {
+    throw new sfException('Unable to convert a sfValidatorSchema to string.');
+  }
 }

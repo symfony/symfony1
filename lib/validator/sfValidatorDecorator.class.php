@@ -152,4 +152,12 @@ abstract class sfValidatorDecorator extends sfValidator
   {
     return $this->getValidator()->getErrorCodes();
   }
+
+  /**
+   * @see sfValidator
+   */
+  public function asString($indent = 0)
+  {
+    return $this->getValidator()->asString($indent);
+  }
 }
