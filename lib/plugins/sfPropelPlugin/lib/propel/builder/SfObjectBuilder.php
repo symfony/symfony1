@@ -172,23 +172,33 @@ require_once \''.$this->getFilePath($this->getStubObjectBuilder()->getPackage().
 $script .= '
   protected $current_i18n = array();
 
-  public function getCurrent'.$className.'()
+  public function getCurrent'.$className.'($culture = null)
   {
-    if (!isset($this->current_i18n[$this->culture]))
+    if (is_null($culture))
     {
-      $obj = '.$className.'Peer::retrieveByPK($this->get'.$pk.'(), $this->culture);
+      if (is_null($this->culture))
+      {
+        throw new PropelException(sprintf(\'No culture is set for this "%s" object.\', get_class($this)));
+      }
+
+      $culture = $this->culture;
+    }
+
+    if (!isset($this->current_i18n[$culture]))
+    {
+      $obj = '.$className.'Peer::retrieveByPK($this->get'.$pk.'(), $culture);
       if ($obj)
       {
-        $this->set'.$className.'ForCulture($obj, $this->culture);
+        $this->set'.$className.'ForCulture($obj, $culture);
       }
       else
       {
-        $this->set'.$className.'ForCulture(new '.$className.'(), $this->culture);
-        $this->current_i18n[$this->culture]->set'.$culture.'($this->culture);
+        $this->set'.$className.'ForCulture(new '.$className.'(), $culture);
+        $this->current_i18n[$culture]->set'.$culture.'($culture);
       }
     }
 
-    return $this->current_i18n[$this->culture];
+    return $this->current_i18n[$culture];
   }
 
   public function set'.$className.'ForCulture($object, $culture)
@@ -230,7 +240,7 @@ $script .= '
     if ($foreign_table->getAttribute('isI18N'))
     {
       $foreign_tables_i18n_table = $this->getDatabase()->getTable($foreign_table->getAttribute('i18nTable'));
-      $value .= ' || $this->'.$matches[2].'->getCurrent'.$foreign_tables_i18n_table->getPhpName().'()->isModified()';
+      $value .= ' || ($this->'.$matches[2].'->getCulture() && $this->'.$matches[2].'->getCurrent'.$foreign_tables_i18n_table->getPhpName().'()->isModified())';
     }
 
     return $value;
