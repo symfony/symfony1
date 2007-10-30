@@ -45,7 +45,35 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
     if ($this->getTable()->getAttribute('isI18N'))
     {
       $this->addDoSelectWithI18n($script);
+      $this->addI18nMethods($script);
     }
+  }
+
+  protected function addI18nMethods(&$script)
+  {
+    $table = $this->getTable();
+    foreach ($table->getReferrers() as $fk)
+    {
+      $tblFK = $fk->getTable();
+      if ($tblFK->getName() == $table->getAttribute('i18nTable'))
+      {
+        $i18nClassName = $tblFK->getPhpName();
+        break;
+      }
+    }
+
+    $script .= "
+
+  /**
+   * Returns the i18n model class name.
+   *
+   * @return string The i18n model class name
+   */
+  public static function getI18nModel()
+  {
+    return '$i18nClassName';
+  }
+";
   }
 
   protected function addDoSelectWithI18n(&$script)
