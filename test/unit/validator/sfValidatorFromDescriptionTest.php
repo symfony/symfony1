@@ -104,7 +104,7 @@ $tests = array(
 
   'email:Email and (age:Integer({min: 18}) or (age:Integer({max: 18}) and is_young:Boolean({required: true})))',
   '(password == password_bis) and begin_date <= end_date and password:String({min: 4, max: 18})',
-  'countries:Choice({expected: [France, USA, Italy, Spain]}) and password ==({invalid: "Passwords must be the same (%left_field% != %right_field%)"}) password_bis and begin_date <= end_date and password:String({min: 4, max: 18})',
+  'countries:Choice({choices: [France, USA, Italy, Spain]}) and password ==({invalid: "Passwords must be the same (%left_field% != %right_field%)"}) password_bis and begin_date <= end_date and password:String({min: 4, max: 18})',
 );
 
 foreach ($tests as $test)

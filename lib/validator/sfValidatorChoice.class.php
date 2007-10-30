@@ -23,15 +23,15 @@ class sfValidatorChoice extends sfValidator
    *
    * Available options:
    *
-   *  * expected:  An array of expected values
+   *  * choices: An array of expected values
    *
    * @see sfValidator
    */
   public function __construct($options = array(), $messages = array())
   {
-    if (!isset($options['expected']))
+    if (!isset($options['choices']))
     {
-      throw new sfException('The "expected" option is mandatory.');
+      throw new sfException('The "choices" option is mandatory.');
     }
 
     parent::__construct($options, $messages);
@@ -42,7 +42,7 @@ class sfValidatorChoice extends sfValidator
    */
   protected function doClean($value)
   {
-    if (!in_array($value, $this->getOption('expected')))
+    if (!in_array($value, $this->getOption('choices')))
     {
       throw new sfValidatorError($this, 'invalid', array('value' => $value));
     }
@@ -55,7 +55,7 @@ class sfValidatorChoice extends sfValidator
    */
   protected function getOptionsWithoutDefaults()
   {
-    return parent::getOptionsWithoutDefaults(array('expected' => array('--fake--')));
+    return parent::getOptionsWithoutDefaults(array('choices' => array('--fake--')));
   }
 
   /**
@@ -63,6 +63,6 @@ class sfValidatorChoice extends sfValidator
    */
   protected function getMessagesWithoutDefaults()
   {
-    return parent::getMessagesWithoutDefaults(array('expected' => array('--fake--')));
+    return parent::getMessagesWithoutDefaults(array('choices' => array('--fake--')));
   }
 }

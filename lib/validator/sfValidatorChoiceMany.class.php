@@ -30,7 +30,7 @@ class sfValidatorChoiceMany extends sfValidatorChoice
 
     foreach ($values as $value)
     {
-      if (!in_array($value, $this->getOption('expected')))
+      if (!in_array($value, $this->getOption('choices')))
       {
         throw new sfValidatorError($this, 'invalid', array('value' => $value));
       }

@@ -24,7 +24,7 @@ catch (sfException $e)
   $t->pass('__construct() throws an sfException if you don\'t pass an expected option');
 }
 
-$v = new sfValidatorChoice(array('expected' => array('foo', 'bar')));
+$v = new sfValidatorChoice(array('choices' => array('foo', 'bar')));
 
 // ->clean()
 $t->diag('->clean()');
@@ -43,4 +43,4 @@ catch (sfValidatorError $e)
 
 // ->asString()
 $t->diag('->asString()');
-$t->is($v->asString(), 'Choice({ expected: [foo, bar] })', '->asString() returns a string representation of the validator');
+$t->is($v->asString(), 'Choice({ choices: [foo, bar] })', '->asString() returns a string representation of the validator');
