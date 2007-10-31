@@ -159,7 +159,7 @@ class sfNumberFormatInfo
    *
    * @return sfNumberFormatInfo default sfNumberFormatInfo. 
    */
-  public function getInvariantInfo($type = sfNumberFormatInfo::DECIMAL)
+  static public function getInvariantInfo($type = sfNumberFormatInfo::DECIMAL)
   {
     static $invariant;
     if (is_null($invariant))

@@ -158,10 +158,10 @@ class sfDateTimeFormatInfo
   static function getInvariantInfo()
   {
     static $invariant;
+
     if (is_null($invariant))
     {
-      $culture = sfCultureInfo::getInvariantCulture();
-      $invariant = $culture->DateTimeFormat;
+      $invariant = sfCultureInfo::getInvariantCulture()->DateTimeFormat;
     }
 
     return $invariant;
@@ -182,15 +182,11 @@ class sfDateTimeFormatInfo
     }
     else if (is_string($culture))
     {
-      $cultureInfo = new sfCultureInfo($culture);
-
-      return $cultureInfo->DateTimeFormat;
+      return sfCultureInfo::getInstance($culture)->DateTimeFormat;
     }
     else
     {
-      $cultureInfo = sfCultureInfo::getInvariantCulture();
-
-      return $cultureInfo->DateTimeFormat;
+      return sfCultureInfo::getInvariantCulture()->DateTimeFormat;
     }
   }
 

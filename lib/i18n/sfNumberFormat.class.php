@@ -210,7 +210,7 @@ class sfNumberFormat
         }
         else if ($multiGroup && $count >= 1)
         {
-          if ($i != 0 && ($i-$groupSize[0])%$groupSize[1] == 0)
+          if ($i != 0 && ($i - $groupSize[0]) % $groupSize[1] == 0)
           {
             $integer = $groupSeparator.$integer;
             $count++;
