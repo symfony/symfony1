@@ -21,9 +21,9 @@ class sfValidatorUrl extends sfValidatorRegex
   /**
    * @see sfValidatorRegex
    */
-  public function __construct($options = array(), $messages = array())
+  public function configure($options = array(), $messages = array())
   {
-    $options['pattern'] = '~^
+    $this->setOption('pattern', '~^
       https?://                               # http or https
       (
         ([a-z0-9-]+\.)+[a-z]{2,6}             # a domain name
@@ -32,8 +32,6 @@ class sfValidatorUrl extends sfValidatorRegex
       )
       (:[0-9]+)?                              # a port (optional)
       (/?|/\S+)                               # a /, nothing or a / with something
-    $~ix';
-
-    parent::__construct($options, $messages);
+    $~ix');
   }
 }

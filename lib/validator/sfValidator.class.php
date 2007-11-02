@@ -24,8 +24,11 @@ abstract class sfValidator
     $charset  = 'UTF-8';
 
   protected
-    $messages = array(),
-    $options  = array();
+    $requiredOptions = array(),
+    $defaultMessages = array(),
+    $defaultOptions  = array(),
+    $messages        = array(),
+    $options         = array();
 
   /**
    * Constructor.
@@ -41,13 +44,53 @@ abstract class sfValidator
    */
   public function __construct($options = array(), $messages = array())
   {
-    $this->messages = array('required' => 'Required.', 'invalid' => 'Invalid.');
-    $this->options  = array('required' => true, 'trim' => false, 'empty_value' => null);
+    $this->options  = array_merge(array('required' => true, 'trim' => false, 'empty_value' => null), $this->options);
+    $this->messages = array_merge(array('required' => 'Required.', 'invalid' => 'Invalid.'), $this->messages);
 
     $this->configure($options, $messages);
 
+    $this->setDefaultOptions($this->getOptions());
+    $this->setDefaultMessages($this->getMessages());
+
+    // check option names
+    if ($diff = array_diff(array_keys($options), array_merge(array_keys($this->options), $this->requiredOptions)))
+    {
+      throw new sfException(sprintf('%s does not support the following options: \'%s\'.', get_class($this), implode('\', \'', $diff)));
+    }
+
+    // check error code names
+    if ($diff = array_diff(array_keys($messages), array_keys($this->messages)))
+    {
+      throw new sfException(sprintf('%s does not support the following error codes: \'%s\'.', get_class($this), implode('\', \'', $diff)));
+    }
+
+    // check required options
+    if ($diff = array_diff($this->requiredOptions, array_keys($options)))
+    {
+      throw new sfException(sprintf('%s requires the following options: \'%s\'.', get_class($this), implode('\', \'', $diff)));
+    }
+
     $this->options  = array_merge($this->options, $options);
     $this->messages = array_merge($this->messages, $messages);
+  }
+
+  /**
+   * Configures the current validator.
+   *
+   * This method allows each validator to add options and error messages
+   * during validator creation.
+   *
+   * If some options and messages are given in the sfValidator constructor
+   * they will take precedence over the options and messages you configure
+   * in this method.
+   *
+   * @param array An array of options
+   * @param array An array of error messages
+   *
+   * @see __construct()
+   */
+  protected function configure($options = array(), $messages = array())
+  {
   }
 
   /**
@@ -198,21 +241,6 @@ abstract class sfValidator
    abstract protected function doClean($value);
 
   /**
-   * Returns an array of all error codes for this validator.
-   *
-   * Subclasses of sfValidator may override this method to register
-   * their own error codes.
-   *
-   * By default this method return required and invalid as errors codes.
-   *
-   * @return array An array of possible error codes
-   */
-  public function getErrorCodes()
-  {
-    return array('required', 'invalid');
-  }
-
-  /**
    * Sets the charset to use when validating strings.
    *
    * @param string The charset
@@ -255,22 +283,75 @@ abstract class sfValidator
   }
 
   /**
-   * Configures the current validator.
+   * Returns an array of all error codes for this validator.
    *
-   * This method allows each validator to add options and error messages
-   * during validator creation.
+   * @return array An array of possible error codes
    *
-   * If some options and messages are given in the sfValidator constructor
-   * they will take precedence over the options and messages you configure
-   * in this method.
-   *
-   * @param array An array of options
-   * @param array An array of error messages
-   *
-   * @see __construct()
+   * @see getDefaultMessages()
    */
-  protected function configure($options = array(), $messages = array())
+  final public function getErrorCodes()
   {
+    return array_keys($this->getDefaultMessages());
+  }
+
+  /**
+   * Returns default messages for all possible error codes.
+   *
+   * @return array An array of default error codes and messages
+   */
+  public function getDefaultMessages()
+  {
+    return $this->defaultMessages;
+  }
+
+  /**
+   * Sets default messages for all possible error codes.
+   *
+   * @param array An array of default error codes and messages
+   */
+  protected function setDefaultMessages($messages)
+  {
+    $this->defaultMessages = $messages;
+  }
+
+  /**
+   * Returns default option values.
+   *
+   * @return array An array of default option values
+   */
+  public function getDefaultOptions()
+  {
+    return $this->defaultOptions;
+  }
+
+  /**
+   * Sets default option values.
+   *
+   * @param array An array of default option values
+   */
+  protected function setDefaultOptions($options)
+  {
+    $this->defaultOptions = $options;
+  }
+
+  /**
+   * Adds a required option.
+   *
+   * @param string The option name
+   */
+  public function addRequiredOption($name)
+  {
+    $this->requiredOptions[] = $name;
+  }
+
+  /**
+   * Returns all required option names.
+   *
+   * @param array An array of required option names
+   */
+  public function getRequiredOptions()
+  {
+    return $this->requiredOptions;
   }
 
   /**
@@ -294,29 +375,6 @@ abstract class sfValidator
   }
 
   /**
-   * Returns all options with non default values.
-   *
-   * @return string  A string representation of the options
-   */
-  protected function getOptionsWithoutDefaults()
-  {
-    $options = $this->options;
-
-    // remove default option values
-    $reflection = new ReflectionClass(get_class($this));
-    $default = $reflection->newInstanceArgs(func_get_args());
-    foreach ($default->getOptions() as $key => $value)
-    {
-      if (array_key_exists($key, $options) && $options[$key] === $value)
-      {
-        unset($options[$key]);
-      }
-    }
-
-    return $options;
-  }
-
-  /**
    * Returns all error messages with non default values.
    *
    * @return string A string representation of the error messages
@@ -326,9 +384,7 @@ abstract class sfValidator
     $messages = $this->messages;
 
     // remove default option values
-    $reflection = new ReflectionClass(get_class($this));
-    $default = $reflection->newInstanceArgs(func_get_args());
-    foreach ($default->getMessages() as $key => $value)
+    foreach ($this->getDefaultMessages() as $key => $value)
     {
       if (array_key_exists($key, $messages) && $messages[$key] === $value)
       {
@@ -337,5 +393,26 @@ abstract class sfValidator
     }
 
     return $messages;
+  }
+
+  /**
+   * Returns all options with non default values.
+   *
+   * @return string  A string representation of the options
+   */
+  protected function getOptionsWithoutDefaults()
+  {
+    $options = $this->options;
+
+    // remove default option values
+    foreach ($this->getDefaultOptions() as $key => $value)
+    {
+      if (array_key_exists($key, $options) && $options[$key] === $value)
+      {
+        unset($options[$key]);
+      }
+    }
+
+    return $options;
   }
 }

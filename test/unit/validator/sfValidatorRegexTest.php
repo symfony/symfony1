@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(5, new lime_output_color());
+$t = new lime_test(4, new lime_output_color());
 
 // __construct()
 $t->diag('__construct()');
@@ -25,10 +25,6 @@ catch (sfException $e)
 }
 
 $v = new sfValidatorRegex(array('pattern' => '/^[0-9]+$/'));
-
-// ->getErrorCodes()
-$t->diag('->getErrorCodes()');
-$t->is($v->getErrorCodes(), array('required', 'invalid'), '->getErrorCodes() returns all possible error codes');
 
 // ->clean()
 $t->diag('->clean()');

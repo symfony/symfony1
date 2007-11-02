@@ -34,6 +34,7 @@ class sfValidatorDate extends sfValidator
   {
     $this->setMessage('bad_format', '"%value%" does not match the date format (%date_format%).');
 
+    $this->setOption('date_format', null);
     $this->setOption('with_time', false);
     $this->setOption('date_output', 'Y-m-d');
     $this->setOption('datetime_output', 'Y-m-d H:i:s');
@@ -44,26 +45,23 @@ class sfValidatorDate extends sfValidator
    */
   protected function doClean($value)
   {
-    if ($regex = $this->getOption('date_format'))
+    if (is_array($value))
+    {
+      $clean = $this->convertDateArrayToTimestamp($value);
+    }
+    else if ($regex = $this->getOption('date_format'))
     {
       if (!preg_match($regex, $value, $match))
       {
         throw new sfValidatorError($this, 'bad_format', array('value' => $value, 'date_format' => $this->getOption('date_format_error') ? $this->getOption('date_format_error') : $this->getOption('date_format')));
       }
 
-      if ($this->getOption('with_time'))
-      {
-        $clean = mktime(isset($match['hour']) ? $match['hour'] : 0, isset($match['minute']) ? $match['minute'] : 0, isset($match['second']) ? $match['second'] : 0, $match['month'], $match['day'], $match['year']);
-      }
-      else
-      {
-        $clean = mktime(0, 0, 0, $match['month'], $match['day'], $match['year']);
-      }
+      $clean = $this->convertDateArrayToTimestamp($match);
     }
     else if (!ctype_digit($value))
     {
       $clean = strtotime($value);
-      if ($clean === -1 || $clean === false)
+      if (false === $clean)
       {
         throw new sfValidatorError($this, 'invalid', array('value' => $value));
       }
@@ -77,10 +75,30 @@ class sfValidatorDate extends sfValidator
   }
 
   /**
-   * @see sfValidator
+   * Converts an array representing a date to a timestamp.
+   *
+   * The array can contains the following keys: year, month, day, hour, minute, second
+   *
+   * @param  array   An array of date elements
+   *
+   * @return integer A timestamp
    */
-  public function getErrorCodes()
+  protected function convertDateArrayToTimestamp($value)
   {
-    return array_merge(parent::getErrorCodes(), array('date_format'));
+    if ($this->getOption('with_time'))
+    {
+      $clean = mktime(isset($value['hour']) ? $value['hour'] : 0, isset($value['minute']) ? $value['minute'] : 0, isset($value['second']) ? $value['second'] : 0, $value['month'], $value['day'], $value['year']);
+    }
+    else
+    {
+      $clean = mktime(0, 0, 0, $value['month'], $value['day'], $value['year']);
+    }
+
+    if (false === $clean)
+    {
+      throw new sfValidatorError($this, 'invalid', array('value' => var_export($value, true)));
+    }
+
+    return $clean;
   }
 }

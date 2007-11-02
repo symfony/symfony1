@@ -10,13 +10,9 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(12, new lime_output_color());
+$t = new lime_test(11, new lime_output_color());
 
 $v = new sfValidatorInteger();
-
-// ->getErrorCodes()
-$t->diag('->getErrorCodes()');
-$t->is($v->getErrorCodes(), array('required', 'invalid', 'max', 'min'), '->getErrorCodes() returns all possible error codes');
 
 // ->clean()
 $t->diag('->clean()');

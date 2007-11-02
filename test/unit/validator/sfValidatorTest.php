@@ -10,16 +10,27 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(27, new lime_output_color());
+$t = new lime_test(33, new lime_output_color());
 
 class ValidatorIdentity extends sfValidator
 {
   protected function configure($options = array(), $messages = array())
   {
-    parent::configure($options, $messages);
-
     $this->setOption('foo', 'bar');
     $this->setMessage('foo', 'bar');
+  }
+
+  protected function doClean($value)
+  {
+    return $value;
+  }
+}
+
+class ValidatorIdentityWithRequired extends sfValidator
+{
+  protected function configure($options = array(), $messages = array())
+  {
+    $this->addRequiredOption('foo');
   }
 
   protected function doClean($value)
@@ -38,6 +49,44 @@ $v = new ValidatorIdentity();
 $t->is($v->getMessage('foo'), 'bar', '->configure() can add some message');
 $v = new ValidatorIdentity(array(), array('foo' => 'foobar'));
 $t->is($v->getMessage('foo'), 'foobar', '->configure() takes a messages array as its second argument and values override default message values');
+
+try
+{
+  new ValidatorIdentity(array('nonexistant' => false, 'foo' => 'foobar', 'anothernonexistant' => 'bar', 'required' => true));
+  $t->fail('__construct() throws an sfException if you pass some non existant options');
+  $t->skip();
+}
+catch (sfException $e)
+{
+  $t->pass('__construct() throws an sfException if you pass some non existant options');
+  $t->like($e->getMessage(), '/ \'nonexistant\', \'anothernonexistant\'/', 'The exception contains the non existant option names');
+}
+
+try
+{
+  new ValidatorIdentity(array(), array('required' => 'This is required.', 'nonexistant' => 'foo', 'anothernonexistant' => false));
+  $t->fail('__construct() throws an sfException if you pass some non existant error codes');
+  $t->skip();
+}
+catch (sfException $e)
+{
+  $t->pass('__construct() throws an sfException if you pass some non existant error codes');
+  $t->like($e->getMessage(), '/ \'nonexistant\', \'anothernonexistant\'/', 'The exception contains the non existant error codes');
+}
+
+$t->diag('getRequiredOptions');
+$v = new ValidatorIdentityWithRequired(array('foo' => 'bar'));
+$t->is($v->getRequiredOptions(), array('foo'), '->getRequiredOptions() returns an array of required option names');
+
+try
+{
+  new ValidatorIdentityWithRequired();
+  $t->fail('__construct() throws an sfException if you don\'t pass a required option');
+}
+catch (sfException $e)
+{
+  $t->pass('__construct() throws an sfException if you don\'t pass a required option');
+}
 
 $v = new ValidatorIdentity();
 
@@ -113,7 +162,7 @@ $t->is($v->getMessages(), array('required' => 'This is required.'), '->setMessag
 
 // ->getErrorCodes()
 $t->diag('->getErrorCodes()');
-$t->is($v->getErrorCodes(), array('required', 'invalid'), '->getErrorCodes() returns an array of error codes the validator can use');
+$t->is($v->getErrorCodes(), array('required', 'invalid', 'foo'), '->getErrorCodes() returns an array of error codes the validator can use');
 
 // ::getCharset() ::setCharset()
 $t->diag('::getCharset() ::setCharset()');

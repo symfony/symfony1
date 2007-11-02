@@ -30,18 +30,10 @@ class sfValidatorSchemaFilter extends sfValidatorSchema
    */
   public function __construct($field, sfValidator $validator, $options = array(), $messages = array())
   {
-    $options['field']     = $field;
-    $options['validator'] = $validator;
+    $this->setOption('field', $field);
+    $this->setOption('validator', $validator);
 
     parent::__construct(null, $options, $messages);
-  }
-
-  /**
-   * @see sfValidator
-   */
-  public function clean($value)
-  {
-    return $this->doClean($value);
   }
 
   /**

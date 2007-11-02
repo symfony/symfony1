@@ -10,11 +10,11 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(15, new lime_output_color());
+$t = new lime_test(18, new lime_output_color());
 
 class MyValidator extends sfValidatorDecorator
 {
-  protected function getValidator()
+  public function getValidator()
   {
     return new sfValidatorString(array('min_length' => 2, 'trim' => true), array('required' => 'This string is required.'));
   }
@@ -37,9 +37,23 @@ catch (sfValidatorError $e)
   $t->is($e->getMessage(), 'This is required.', '__construct() messages override the embedded validator messages');
 }
 
+$v = new MyValidator();
+
 // ->getErrorCodes()
 $t->diag('->getErrorCodes()');
-$t->is($v->getErrorCodes(), array('required', 'invalid', 'max_length', 'min_length'), '->getErrorCodes() returns error codes form the embedded validator');
+$t->is($v->getErrorCodes(), $v->getValidator()->getErrorCodes(), '->getErrorCodes() is a proxy to the embedded validator method');
+
+// ->asString()
+$t->diag('->asString()');
+$t->is($v->asString(), $v->getValidator()->asString(), '->asString() is a proxy to the embedded validator method');
+
+// ->getDefaultMessages()
+$t->diag('->getDefaultMessages()');
+$t->is($v->getDefaultMessages(), $v->getValidator()->getDefaultMessages(), '->getDefaultMessages() is a proxy to the embedded validator method');
+
+// ->getDefaultOptions()
+$t->diag('->getDefaultOptions()');
+$t->is($v->getDefaultOptions(), $v->getValidator()->getDefaultOptions(), '->getDefaultOptions() is a proxy to the embedded validator method');
 
 // ->getMessage() ->getMessages() ->setMessage() ->setMessages()
 $t->diag('->getMessage() ->getMessages() ->setMessage() ->setMessages()');
@@ -54,7 +68,7 @@ $t->is($v->getMessages(), array('required' => 'Required...'), '->setMessages() s
 $v = new MyValidator();
 $t->is($v->getOption('trim'), true, '->getOption() returns an option from the embedded validator');
 $v->setOption('trim', false);
-$t->is($v->getOptions(), array('required' => true, 'trim' => false, 'empty_value' => '', 'min_length' => 2), '->getOptions() returns an array of options from the embedded validator');
+$t->is($v->getOptions(), array('required' => true, 'trim' => false, 'empty_value' => '', 'min_length' => 2, 'max_length' => null), '->getOptions() returns an array of options from the embedded validator');
 $t->is($v->hasOption('min_length'), true, '->hasOption() returns true if the embedded validator has a given option');
 $v->setOptions(array('min_length' => 10));
 $t->is($v->getOptions(), array('min_length' => 10), '->setOptions() sets all options for the embedded validator');

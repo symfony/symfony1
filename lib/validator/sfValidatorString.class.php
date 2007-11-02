@@ -33,6 +33,8 @@ class sfValidatorString extends sfValidator
     $this->setMessage('max_length', '"%value%" is too long (%max_length% characters max).');
     $this->setMessage('min_length', '"%value%" is too short (%min_length% characters min).');
 
+    $this->setOption('max_length', null);
+    $this->setOption('min_length', null);
     $this->setOption('empty_value', '');
   }
 
@@ -56,13 +58,5 @@ class sfValidatorString extends sfValidator
     }
 
     return $clean;
-  }
-
-  /**
-   * @see sfValidator
-   */
-  public function getErrorCodes()
-  {
-    return array_merge(parent::getErrorCodes(), array('max_length', 'min_length'));
   }
 }

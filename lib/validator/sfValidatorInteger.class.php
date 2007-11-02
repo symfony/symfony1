@@ -33,6 +33,9 @@ class sfValidatorInteger extends sfValidator
     $this->setMessage('max', '"%value%" must be less than %max%.');
     $this->setMessage('min', '"%value%" must be greater than %min%.');
     $this->setMessage('invalid', '"%value%" is not an integer.');
+
+    $this->setOption('min', null);
+    $this->setOption('max', null);
   }
 
   /**
@@ -58,13 +61,5 @@ class sfValidatorInteger extends sfValidator
     }
 
     return $clean;
-  }
-
-  /**
-   * @see sfValidator
-   */
-  public function getErrorCodes()
-  {
-    return array_merge(parent::getErrorCodes(), array('max', 'min'));
   }
 }

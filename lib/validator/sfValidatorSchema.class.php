@@ -69,10 +69,10 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
    */
   public function configure($options = array(), $messages = array())
   {
-    $this->options['allow_extra_fields']  = false;
-    $this->options['filter_extra_fields'] = true;
+    $this->setOption('allow_extra_fields', false);
+    $this->setOption('filter_extra_fields', true);
 
-    $this->messages['extra_fields'] = 'Extra field %field%.';
+    $this->setMessage('extra_fields', 'Extra field %field%.');
   }
 
   /**
@@ -186,14 +186,6 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
     }
 
     return $clean;
-  }
-
-  /**
-   * @see sfValidator
-   */
-  public function getErrorCodes()
-  {
-    return array_merge(parent::getErrorCodes(), array('extra_fields'));
   }
 
   /**

@@ -54,12 +54,15 @@ class sfValidatorAny extends sfValidator
       throw new sfException('sfValidatorAny constructor takes a sfValidator object, or a sfValidator array.');
     }
 
-    if (!isset($messages['invalid']))
-    {
-      $messages['invalid'] = null;
-    }
-
     parent::__construct($options, $messages);
+  }
+
+  /**
+   * @see sfValidator
+   */
+  public function configure($options = array(), $messages = array())
+  {
+    $this->setMessage('invalid', null);
   }
 
   /**
@@ -138,10 +141,6 @@ class sfValidatorAny extends sfValidator
       }
     }
 
-    return sprintf("%s(%s%s)",
-      str_repeat(' ', $indent),
-      $validators,
-      str_repeat(' ', $indent)
-    );
+    return sprintf("%s(%s%s)", str_repeat(' ', $indent), $validators, str_repeat(' ', $indent));
   }
 }

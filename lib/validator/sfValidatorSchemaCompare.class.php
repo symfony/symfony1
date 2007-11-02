@@ -47,19 +47,11 @@ class sfValidatorSchemaCompare extends sfValidatorSchema
    */
   public function __construct($leftField, $operator, $rightField, $options = array(), $messages = array())
   {
-    $options['leftField']  = $leftField;
-    $options['operator']   = $operator;
-    $options['rightField'] = $rightField;
+    $this->setOption('left_field', $leftField);
+    $this->setOption('operator', $operator);
+    $this->setOption('right_field', $rightField);
 
     parent::__construct(null, $options, $messages);
-  }
-
-  /**
-   * @see sfValidator
-   */
-  public function clean($value)
-  {
-    return $this->doClean($value);
   }
 
   /**
@@ -77,8 +69,8 @@ class sfValidatorSchemaCompare extends sfValidatorSchema
       throw new sfException('You must pass an array parameter to the clean() method');
     }
 
-    $leftValue  = isset($values[$this->getOption('leftField')]) ? $values[$this->getOption('leftField')] : null;
-    $rightValue = isset($values[$this->getOption('rightField')]) ? $values[$this->getOption('rightField')] : null;
+    $leftValue  = isset($values[$this->getOption('left_field')]) ? $values[$this->getOption('left_field')] : null;
+    $rightValue = isset($values[$this->getOption('right_field')]) ? $values[$this->getOption('right_field')] : null;
 
     switch ($this->getOption('operator'))
     {
@@ -119,9 +111,9 @@ class sfValidatorSchemaCompare extends sfValidatorSchema
    */
   public function asString($indent = 0)
   {
-    $options = $this->getOptionsWithoutDefaults('--fake--', '--', '--fake--');
-    $messages = $this->getMessagesWithoutDefaults('--fake--', '--', '--fake--');
-    unset($options['leftField'], $options['operator'], $options['rightField']);
+    $options = $this->getOptionsWithoutDefaults();
+    $messages = $this->getMessagesWithoutDefaults();
+    unset($options['left_field'], $options['operator'], $options['right_field']);
 
     $arguments = '';
     if ($options || $messages)
@@ -134,10 +126,10 @@ class sfValidatorSchemaCompare extends sfValidatorSchema
 
     return sprintf('%s%s %s%s %s',
       str_repeat(' ', $indent),
-      $this->getOption('leftField'),
+      $this->getOption('left_field'),
       $this->getOption('operator'),
       $arguments,
-      $this->getOption('rightField')
+      $this->getOption('right_field')
     );
   }
 }

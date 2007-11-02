@@ -19,30 +19,18 @@
 class sfValidatorCallback extends sfValidator
 {
   /**
-   * Constructor.
+   * Configures the current validator.
    *
    * Available options:
    *
-   *  * callback: A valid PHP callback
+   *  * callback: A valid PHP callback (required)
    *
-   * @see sfValidator
-   */
-  public function __construct($options = array(), $messages = array())
-  {
-    if (!isset($options['callback']))
-    {
-      throw new sfException('The "callback" option is mandatory.');
-    }
-
-    parent::__construct($options, $messages);
-  }
-
-  /**
    * @see sfValidator
    */
   protected function configure($options = array(), $messages = array())
   {
-    $this->options['required'] = false;
+    $this->addRequiredOption('callback');
+    $this->setOption('required', false);
   }
 
   /**
@@ -51,21 +39,5 @@ class sfValidatorCallback extends sfValidator
   protected function doClean($value)
   {
     return call_user_func($this->getOption('callback'), $this, $value);
-  }
-
-  /**
-   * @see sfValidator
-   */
-  protected function getOptionsWithoutDefaults()
-  {
-    return parent::getOptionsWithoutDefaults(array('callback' => array('--fake--')));
-  }
-
-  /**
-   * @see sfValidator
-   */
-  protected function getMessagesWithoutDefaults()
-  {
-    return parent::getMessagesWithoutDefaults(array('callback' => array('--fake--')));
   }
 }

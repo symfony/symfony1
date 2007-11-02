@@ -10,13 +10,9 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(16, new lime_output_color());
+$t = new lime_test(18, new lime_output_color());
 
 $v = new sfValidatorDate();
-
-// ->getErrorCodes()
-$t->diag('->getErrorCodes()');
-$t->is($v->getErrorCodes(), array('required', 'invalid', 'date_format'), '->getErrorCodes() returns all possible error codes');
 
 // ->clean()
 $t->diag('->clean()');
@@ -42,6 +38,20 @@ catch (sfValidatorError $e)
 // validate timestamp
 $t->diag('validate timestamp');
 $t->is($v->clean(time()), date('Y-m-d', time()), '->clean() accepts timestamps as input');
+
+// validate date array
+$t->diag('validate date array');
+$t->is($v->clean(array('year' => 2005, 'month' => 10, 'day' => 15)), '2005-10-15', '->clean() accepts an array as an input');
+
+try
+{
+  $v->clean(array('year' => -2, 'month' => 1, 'day' => 15));
+  $t->fail('->clean() throws a sfValidatorError if the date is not valid');
+}
+catch (sfValidatorError $e)
+{
+  $t->pass('->clean() throws a sfValidatorError if the date is not valid');
+}
 
 // validate regex
 $t->diag('validate regex');
@@ -76,6 +86,7 @@ $v->setOption('date_format', null);
 // option with_time
 $t->diag('option with_time');
 $v->setOption('with_time', true);
+$t->is($v->clean(array('year' => 2005, 'month' => 10, 'day' => 15, 'hour' => 12, 'minute' => 10, 'second' => 15)), '2005-10-15 12:10:15', '->clean() accepts an array as an input');
 $t->is($v->clean('18 october 2005 12:30'), '2005-10-18 12:30:00', '->clean() can accept date time with the with_time option');
 $t->is($v->clean(time()), date('Y-m-d H:i:s', time()), '->clean() can accept date time with the with_time option');
 $v->setOption('date_format', '~(?P<day>\d{2})/(?P<month>\d{2})/(?P<year>\d{4})~');

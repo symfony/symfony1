@@ -21,10 +21,8 @@ class sfValidatorEmail extends sfValidatorRegex
   /**
    * @see sfValidatorRegex
    */
-  public function __construct($options = array(), $messages = array())
+  protected function configure($options = array(), $messages = array())
   {
-    $options['pattern'] = '/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i';
-
-    parent::__construct($options, $messages);
+    $this->setOption('pattern', '/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i');
   }
 }

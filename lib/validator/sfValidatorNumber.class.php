@@ -33,6 +33,9 @@ class sfValidatorNumber extends sfValidator
     $this->setMessage('max', '"%value%" is too long (largest allowed is %max%).');
     $this->setMessage('min', '"%value%" is too short (smallest allowed is %min%).');
     $this->setMessage('invalid', '"%value%" is not a number.');
+
+    $this->setOption('min', null);
+    $this->setOption('max', null);
   }
 
   /**
@@ -58,13 +61,5 @@ class sfValidatorNumber extends sfValidator
     }
 
     return $clean;
-  }
-
-  /**
-   * @see sfValidator
-   */
-  public function getErrorCodes()
-  {
-    return array_merge(parent::getErrorCodes(), array('max', 'min'));
   }
 }

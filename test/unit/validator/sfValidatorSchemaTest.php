@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(44, new lime_output_color());
+$t = new lime_test(43, new lime_output_color());
 
 class PreValidator extends sfValidator
 {
@@ -106,10 +106,6 @@ $t->is($v->getOption('allow_extra_fields'), true, '->__construct() can override 
 $t->is($v->getOption('filter_extra_fields'), false, '->__construct() can override the default value for the "filter_extra_fields" option');
 
 $t->is($v->getMessage('extra_fields'), 'Extra fields', '->__construct() can override the default message for the "extra_fields" error message');
-
-// ->getErrorCodes()
-$t->diag('->getErrorCodes()');
-$t->is($v->getErrorCodes(), array('required', 'invalid', 'extra_fields'), '->getErrorCodes() returns all possible error codes');
 
 // ->clean()
 $t->diag('->clean()');
