@@ -239,8 +239,9 @@ class sfPropelDatabaseSchema
             {
               $this->database[$table][$column] = array(
                 'type'             => 'integer',
+                'required'         => true,
                 'foreignTable'     => $foreign_table,
-                'foreignReference' => 'id'
+                'foreignReference' => 'id',
               );
             }
             else
@@ -248,7 +249,6 @@ class sfPropelDatabaseSchema
               throw new sfException(sprintf('Unable to resolve foreign table for column "%s"', $column));
             }
           }
-          
         }
         else
         {
