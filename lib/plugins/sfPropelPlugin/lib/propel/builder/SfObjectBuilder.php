@@ -176,12 +176,7 @@ $script .= '
   {
     if (is_null($culture))
     {
-      if (is_null($this->culture))
-      {
-        throw new PropelException(sprintf(\'No culture is set for this "%s" object.\', get_class($this)));
-      }
-
-      $culture = $this->culture;
+      $culture = is_null($this->culture) ? sfPropel::getDefaultCulture() : $this->culture;
     }
 
     if (!isset($this->current_i18n[$culture]))

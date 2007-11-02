@@ -16,6 +16,8 @@
  */
 require_once 'propel/Propel.php';
 
+$dispatcher = sfContext::getInstance()->getEventDispatcher();
+
 if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
 {
   // register debug driver
@@ -24,9 +26,11 @@ if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
 
   // register our logger
   require_once(sfConfig::get('sf_symfony_lib_dir').'/plugins/sfPropelPlugin/lib/creole/drivers/sfDebugConnection.php');
-  sfDebugConnection::setDispatcher(sfContext::getInstance()->getEventDispatcher());
+  sfDebugConnection::setDispatcher($dispatcher);
 }
 
 // propel initialization
 Propel::setConfiguration(sfPropelDatabase::getConfiguration());
 Propel::initialize();
+
+sfPropel::initialize($dispatcher, sfContext::getInstance()->getUser()->getCulture());
