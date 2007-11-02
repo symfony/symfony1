@@ -408,11 +408,16 @@ abstract class sfAction extends sfComponent
    *
    * @param string Template name
    */
-  public function setTemplate($name)
+  public function setTemplate($name, $module = null)
   {
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Change template to "%s"', $name))));
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Change template to "%s/%s"', is_null($module) ? 'CURRENT' : $module, $name))));
+    }
+
+    if (!is_null($module))
+    {
+      $name = sfConfig::get('sf_app_dir').'/modules/'.$module.'/templates/'.$name;
     }
 
     sfConfig::set('symfony.view.'.$this->getModuleName().'_'.$this->getActionName().'_template', $name);
