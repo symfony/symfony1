@@ -68,9 +68,11 @@ abstract class sfComponent
    * user account, a shopping cart, or even a something as simple as a
    * single product.
    *
-   * @return mixed A string containing the view name associated with this action
+   * @param  sfRequest The current sfRequest object
+   *
+   * @return mixed     A string containing the view name associated with this action
    */
-  abstract function execute();
+  abstract function execute($request);
 
   /**
    * Gets the module name associated with this component.
