@@ -37,7 +37,13 @@ class sfValidatorChoice extends sfValidator
    */
   protected function doClean($value)
   {
-    if (!in_array($value, $this->getOption('choices')))
+    $choices = $this->getOption('choices');
+    if ($choices instanceof sfCallable)
+    {
+      $choices = $choices->call();
+    }
+
+    if (!in_array($value, $choices))
     {
       throw new sfValidatorError($this, 'invalid', array('value' => $value));
     }

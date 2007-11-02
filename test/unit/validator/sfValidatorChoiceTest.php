@@ -10,7 +10,12 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(5, new lime_output_color());
+$t = new lime_test(6, new lime_output_color());
+
+function choice_callable()
+{
+  return array(1, 2, 3);
+}
 
 // __construct()
 $t->diag('__construct()');
@@ -44,3 +49,8 @@ catch (sfValidatorError $e)
 // ->asString()
 $t->diag('->asString()');
 $t->is($v->asString(), 'Choice({ choices: [foo, bar] })', '->asString() returns a string representation of the validator');
+
+// choices as a callable
+$t->diag('choices as a callable');
+$v = new sfValidatorChoice(array('choices' => new sfCallable('choice_callable')));
+$t->is($v->clean('2'), '2', '__construct() can take a sfCallable object as a choices option');
