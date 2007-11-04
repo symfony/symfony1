@@ -418,7 +418,7 @@ class sfPatternRouting extends sfRouting
 
       if (!$found)
       {
-        throw new sfConfigurationException(sprintf('Unable to find a matching routing rule to generate url for params "%s".', var_export($params)));
+        throw new sfConfigurationException(sprintf('Unable to find a matching routing rule to generate url for params "%s".', var_export($params, true)));
       }
     }
 
