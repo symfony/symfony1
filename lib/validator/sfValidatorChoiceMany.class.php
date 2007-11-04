@@ -28,9 +28,15 @@ class sfValidatorChoiceMany extends sfValidatorChoice
       $values = array($values);
     }
 
+    $choices = $this->getOption('choices');
+    if ($choices instanceof sfCallable)
+    {
+      $choices = $choices->call();
+    }
+
     foreach ($values as $value)
     {
-      if (!in_array($value, $this->getOption('choices')))
+      if (!in_array($value, $choices))
       {
         throw new sfValidatorError($this, 'invalid', array('value' => $value));
       }
