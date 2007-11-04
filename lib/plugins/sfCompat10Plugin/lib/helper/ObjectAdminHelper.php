@@ -72,6 +72,8 @@ function object_admin_double_list($object, $method, $options = array(), $callbac
     }
   }
 
+  // remove non html option
+  unset($options['through_class']);
   // override field name
   unset($options['control_name']);
   $name  = _convert_method_to_name($method, $options);
@@ -126,6 +128,8 @@ function object_admin_select_list($object, $method, $options = array(), $callbac
 
   // get the lists of objects
   list($objects, $objects_associated, $ids) = _get_object_list($object, $method, $options, $callback);
+  // remove non html option
+  unset($options['through_class']);
   // override field name
   unset($options['control_name']);
   $name = 'associated_'._convert_method_to_name($method, $options);
