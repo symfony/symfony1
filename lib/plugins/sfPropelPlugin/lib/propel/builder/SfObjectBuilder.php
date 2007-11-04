@@ -155,16 +155,14 @@ require_once \''.$this->getFilePath($this->getStubObjectBuilder()->getPackage().
           if ($col->isPrimaryKey()) continue;
 
           $script .= '
-  public function get'.$col->getPhpName().'()
+  public function get'.$col->getPhpName().'($culture = null)
   {
-    $obj = $this->getCurrent'.$className.'();
-
-    return ($obj ? $obj->get'.$col->getPhpName().'() : null);
+    return $this->getCurrent'.$className.'($culture)->get'.$col->getPhpName().'();
   }
 
-  public function set'.$col->getPhpName().'($value)
+  public function set'.$col->getPhpName().'($value, $culture = null)
   {
-    $this->getCurrent'.$className.'()->set'.$col->getPhpName().'($value);
+    $this->getCurrent'.$className.'($culture)->set'.$col->getPhpName().'($value);
   }
 ';
         }
