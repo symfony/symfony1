@@ -19,9 +19,10 @@
 class sfWebDebugLogger extends sfLogger
 {
   protected
-    $context  = null,
-    $buffer   = array(),
-    $webDebug = null;
+    $context       = null,
+    $buffer        = array(),
+    $webDebug      = null,
+    $xdebugLogging = false;
 
   /**
    * Initializes this logger.
@@ -41,6 +42,11 @@ class sfWebDebugLogger extends sfLogger
     $this->buffer  = array();
     $this->context = sfContext::getInstance();
 
+    if (isset($options['xdebug_logging']))
+    {
+      $this->xdebugLogging = $options['xdebug_logging'];
+    }
+
     return parent::initialize($dispatcher, $options);
   }
 
@@ -57,9 +63,9 @@ class sfWebDebugLogger extends sfLogger
       return;
     }
 
-    // if we have xdebug, add some stack information
+    // if we have xdebug and dev has not disabled the feature, add some stack information
     $debugStack = array();
-    if (function_exists('xdebug_get_function_stack'))
+    if (function_exists('xdebug_get_function_stack') && $this->xdebugLogging)
     {
       foreach (xdebug_get_function_stack() as $i => $stack)
       {

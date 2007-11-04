@@ -46,7 +46,8 @@ default:
         sf_web_debug:
           class: sfWebDebugLogger
           param:
-            condition: %SF_WEB_DEBUG%
+            condition:      %SF_WEB_DEBUG%
+            xdebug_logging: true
         sf_file_debug:
           class: sfFileLogger
           param:
