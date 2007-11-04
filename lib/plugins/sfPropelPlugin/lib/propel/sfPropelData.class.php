@@ -98,9 +98,14 @@ class sfPropelData extends sfData
         // create a new entry in the database
         $obj = new $class();
 
+        if (!$obj instanceof BaseObject)
+        {
+          throw new Exception(sprintf('The class "%s" is not a Propel class. This probably means there is already a class named "%s" somewhere in symfony or in your project.', $class, $class));
+        }
+
         if (!is_array($data))
         {
-          throw new Exception(sprintf('You must give a name for each fixture data entry (class %s)'), $class);
+          throw new Exception(sprintf('You must give a name for each fixture data entry (class %s)', $class));
         }
 
         foreach ($data as $name => $value)
@@ -123,13 +128,11 @@ class sfPropelData extends sfData
           {
           }
 
-          $pos = array_search($name, $column_names);
-          $method = 'set'.sfInflector::camelize($name);
-          if ($pos)
+          if (false !== $pos = array_search($name, $column_names))
           {
             $obj->setByPosition($pos, $value);
           }
-          else if (is_callable(array($obj, $method)))
+          else if (is_callable(array($obj, $method = 'set'.sfInflector::camelize($name))))
           {
             $obj->$method($value);
           }
