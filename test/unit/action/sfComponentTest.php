@@ -15,7 +15,7 @@ $t = new lime_test(8, new lime_output_color());
 
 class myComponent extends sfComponent
 {
-  function execute() {}
+  function execute($request) {}
 }
 
 $context = sfContext::getInstance(array(
