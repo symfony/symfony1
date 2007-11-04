@@ -24,10 +24,15 @@ class sfException extends Exception
 
 sfConfig::set('sf_charset', 'UTF-8');
 
-$t = new lime_test(2, new lime_output_color());
+$t = new lime_test(3, new lime_output_color());
 
 class OutputEscaperTest
 {
+  public function __toString()
+  {
+    return $this->getTitle();
+  }
+
   public function getTitle()
   {
     return '<strong>escaped!</strong>';
@@ -46,3 +51,8 @@ $t->is($escaped->getTitle(), '&lt;strong&gt;escaped!&lt;/strong&gt;', 'The escap
 
 $array = $escaped->getTitles();
 $t->is($array[2], '&lt;strong&gt;escaped!&lt;/strong&gt;', 'The escaped object behaves like the real object');
+
+// __toString()
+$t->diag('__toString()');
+
+$t->is($escaped->__toString(), '&lt;strong&gt;escaped!&lt;/strong&gt;', 'The escaped object behaves like the real object');

@@ -99,7 +99,7 @@ class sfOutputEscaperObjectDecorator extends sfOutputEscaperGetterDecorator
   {
     if (method_exists($this->value, '__toString'))
     {
-      return $this->value->__toString();
+      return $this->escape($this->escapingMethod, $this->value->__toString());
     }
     else
     {
