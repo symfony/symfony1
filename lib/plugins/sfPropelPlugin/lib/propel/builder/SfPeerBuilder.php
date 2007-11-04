@@ -220,7 +220,7 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
     }
 
 ";
-      $tmp = preg_replace('/{/', '{'.$mixer_script, $tmp, 1);
+      $tmp = preg_replace('/public static function doSelectJoin.*\(Criteria \$c, \$con = null\)\n\s*{/', '\0'.$mixer_script, $tmp);
     }
 
     $script .= $tmp;
@@ -262,7 +262,7 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
     }
 
 ";
-      $tmp = preg_replace('/{/', '{'.$mixer_script, $tmp, 1);
+      $tmp = preg_replace('/public static function doSelectJoinAllExcept.*\(Criteria \$c, \$con = null\)\n\s*{/', '\0'.$mixer_script, $tmp);
     }
 
     $script .= $tmp;
