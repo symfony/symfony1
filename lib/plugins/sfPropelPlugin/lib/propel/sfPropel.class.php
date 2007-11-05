@@ -26,11 +26,14 @@ class sfPropel
   static protected
     $defaultCulture = 'en';
 
-  static public function initialize(sfEventDispatcher $dispatcher, $culture)
+  static public function initialize(sfEventDispatcher $dispatcher, $culture = null)
   {
     $dispatcher->connect('user.change_culture', array('sfPropel', 'listenToChangeCultureEvent'));
 
-    self::setDefaultCulture($culture);
+    if (!is_null($culture))
+    {
+      self::setDefaultCulture($culture);
+    }
   }
 
   static public function setDefaultCulture($culture)
