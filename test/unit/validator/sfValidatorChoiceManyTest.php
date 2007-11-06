@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(5, new lime_output_color());
+$t = new lime_test(6, new lime_output_color());
 
 $v = new sfValidatorChoiceMany(array('choices' => array('foo', 'bar')));
 
@@ -39,3 +39,13 @@ catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws an sfValidatorError if the value is not an expected value');
 }
+
+function choice_callable()
+{
+  return array(1, 2, 3);
+}
+
+// choices as a callable
+$t->diag('choices as a callable');
+$v = new sfValidatorChoiceMany(array('choices' => new sfCallable('choice_callable')));
+$t->is($v->clean(array('2')), array('2'), '__construct() can take a sfCallable object as a choices option');

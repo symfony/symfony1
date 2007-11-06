@@ -26,16 +26,22 @@ class sfValidatorNumber extends sfValidator
    *  * max: The maximum value allowed
    *  * min: The minimum value allowed
    *
+   * Available error codes:
+   *
+   *  * max
+   *  * min
+   *
    * @see sfValidator
    */
   protected function configure($options = array(), $messages = array())
   {
-    $this->setMessage('max', '"%value%" is too long (largest allowed is %max%).');
-    $this->setMessage('min', '"%value%" is too short (smallest allowed is %min%).');
-    $this->setMessage('invalid', '"%value%" is not a number.');
+    $this->addMessage('max', '"%value%" is too long (largest allowed is %max%).');
+    $this->addMessage('min', '"%value%" is too short (smallest allowed is %min%).');
 
-    $this->setOption('min', null);
-    $this->setOption('max', null);
+    $this->addOption('min');
+    $this->addOption('max');
+
+    $this->setMessage('invalid', '"%value%" is not a number.');
   }
 
   /**

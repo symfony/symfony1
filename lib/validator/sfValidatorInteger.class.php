@@ -26,16 +26,22 @@ class sfValidatorInteger extends sfValidator
    *  * max: The maximum value allowed
    *  * min: The minimum value allowed
    *
+   * Available error codes:
+   *
+   *  * max
+   *  * min
+   *
    * @see sfValidator
    */
   protected function configure($options = array(), $messages = array())
   {
-    $this->setMessage('max', '"%value%" must be less than %max%.');
-    $this->setMessage('min', '"%value%" must be greater than %min%.');
-    $this->setMessage('invalid', '"%value%" is not an integer.');
+    $this->addMessage('max', '"%value%" must be less than %max%.');
+    $this->addMessage('min', '"%value%" must be greater than %min%.');
 
-    $this->setOption('min', null);
-    $this->setOption('max', null);
+    $this->addOption('min');
+    $this->addOption('max');
+
+    $this->setMessage('invalid', '"%value%" is not an integer.');
   }
 
   /**

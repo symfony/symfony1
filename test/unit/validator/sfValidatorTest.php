@@ -10,14 +10,14 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(33, new lime_output_color());
+$t = new lime_test(37, new lime_output_color());
 
 class ValidatorIdentity extends sfValidator
 {
   protected function configure($options = array(), $messages = array())
   {
-    $this->setOption('foo', 'bar');
-    $this->setMessage('foo', 'bar');
+    $this->addOption('foo', 'bar');
+    $this->addMessage('foo', 'bar');
   }
 
   protected function doClean($value)
@@ -74,6 +74,7 @@ catch (sfException $e)
   $t->like($e->getMessage(), '/ \'nonexistant\', \'anothernonexistant\'/', 'The exception contains the non existant error codes');
 }
 
+// ->getRequiredOptions()
 $t->diag('getRequiredOptions');
 $v = new ValidatorIdentityWithRequired(array('foo' => 'bar'));
 $t->is($v->getRequiredOptions(), array('foo'), '->getRequiredOptions() returns an array of required option names');
@@ -117,6 +118,15 @@ $v->setOption('required', false);
 $t->is($v->clean(''), null, '->setOption() changes options (required for example)');
 $v->setOption('trim', true);
 $t->is($v->clean('  foo  '), 'foo', '->setOption() can turn on whitespace trimming');
+try
+{
+  $v->setOption('foobar', 'foo');
+  $t->fail('->setOption() throws an sfException if the option is not registered');
+}
+catch (sfException $e)
+{
+  $t->pass('->setOption() throws an sfException if the option is not registered');
+}
 
 // ->hasOption()
 $t->diag('->hasOption()');
@@ -127,6 +137,12 @@ $t->ok(!$v->hasOption('nonexistant'), '->hasOption() returns false if the valida
 $t->diag('->getOption()');
 $t->is($v->getOption('required'), false, '->getOption() returns the value of an option');
 $t->is($v->getOption('nonexistant'), null, '->getOption() returns null if the option does not exist');
+
+// ->addOption()
+$t->diag('->addOption()');
+$v->addOption('foobar');
+$v->setOption('foobar', 'foo');
+$t->is($v->getOption('foobar'), 'foo', '->addOption() adds a new option to a validator');
 
 // ->getOptions() ->setOptions()
 $t->diag('->getOptions() ->setOptions()');
@@ -155,10 +171,26 @@ catch (sfValidatorError $e)
   $t->is($e->getMessage(), 'The field is required.', '->setMessage() changes the default error message string');
 }
 
+try
+{
+  $v->setMessage('foobar', 'foo');
+  $t->fail('->setMessage() throws an sfException if the message is not registered');
+}
+catch (sfException $e)
+{
+  $t->pass('->setMessage() throws an sfException if the message is not registered');
+}
+
 // ->setMessages()
 $t->diag('->setMessages()');
 $v->setMessages(array('required' => 'This is required.'));
 $t->is($v->getMessages(), array('required' => 'This is required.'), '->setMessages() changes all error messages');
+
+// ->addMessage()
+$t->diag('->addMessage()');
+$v->addMessage('foobar', 'foo');
+$v->setMessage('foobar', 'bar');
+$t->is($v->getMessage('foobar'), 'bar', '->addMessage() adds a new error code');
 
 // ->getErrorCodes()
 $t->diag('->getErrorCodes()');

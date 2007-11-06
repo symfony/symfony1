@@ -23,21 +23,27 @@ class sfValidatorDate extends sfValidator
    *
    * Available options:
    *
-   *  * date_format:     A regular expression that dates must match
-   *  * with_time:       true if the validator must return a time, false otherwise
-   *  * date_output:     The format to use when returning a date (default to Y-m-d)
-   *  * datetime_output: The format to use when returning a date with time (default to Y-m-d H:i:s)
+   *  * date_format:       A regular expression that dates must match
+   *  * with_time:         true if the validator must return a time, false otherwise
+   *  * date_output:       The format to use when returning a date (default to Y-m-d)
+   *  * datetime_output:   The format to use when returning a date with time (default to Y-m-d H:i:s)
+   *  * date_format_error: The date format to use when displaying an error for a bad_format error
+   *
+   * Available error codes:
+   *
+   *  * bad_format
    *
    * @see sfValidator
    */
   protected function configure($options = array(), $messages = array())
   {
-    $this->setMessage('bad_format', '"%value%" does not match the date format (%date_format%).');
+    $this->addMessage('bad_format', '"%value%" does not match the date format (%date_format%).');
 
-    $this->setOption('date_format', null);
-    $this->setOption('with_time', false);
-    $this->setOption('date_output', 'Y-m-d');
-    $this->setOption('datetime_output', 'Y-m-d H:i:s');
+    $this->addOption('date_format', null);
+    $this->addOption('with_time', false);
+    $this->addOption('date_output', 'Y-m-d');
+    $this->addOption('datetime_output', 'Y-m-d H:i:s');
+    $this->addOption('date_format_error');
   }
 
   /**

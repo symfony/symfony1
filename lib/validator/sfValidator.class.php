@@ -39,6 +39,11 @@ abstract class sfValidator
    *  * trim:        true if the value must be trimmed, false otherwise (default to false)
    *  * empty_value: empty value when value is not required
    *
+   * Available error codes:
+   *
+   *  * required
+   *  * invalid
+   *
    * @param array An array of options
    * @param array An array of error messages
    */
@@ -65,7 +70,7 @@ abstract class sfValidator
     }
 
     // check required options
-    if ($diff = array_diff($this->requiredOptions, array_keys($options)))
+    if ($diff = array_diff($this->requiredOptions, array_merge(array_keys($this->options), array_keys($options))))
     {
       throw new sfException(sprintf('%s requires the following options: \'%s\'.', get_class($this), implode('\', \'', $diff)));
     }
@@ -106,6 +111,17 @@ abstract class sfValidator
   }
 
   /**
+   * Adds a new error code with a default error message.
+   *
+   * @param string The error code
+   * @param string The error message
+   */
+  public function addMessage($name, $value)
+  {
+    $this->messages[$name] = $value;
+  }
+
+  /**
    * Changes an error message given the error code.
    *
    * @param string The error code
@@ -113,6 +129,11 @@ abstract class sfValidator
    */
   public function setMessage($name, $value)
   {
+    if (!in_array($name, array_keys($this->messages)))
+    {
+      throw new sfException(sprintf('%s does not support the following error code: \'%s\'.', get_class($this), $name));
+    }
+
     $this->messages[$name] = $value;
   }
 
@@ -149,6 +170,17 @@ abstract class sfValidator
   }
 
   /**
+   * Adds a new option value with a default value.
+   *
+   * @param string The option name
+   * @param mixed  The default value
+   */
+  public function addOption($name, $value = null)
+  {
+    $this->options[$name] = $value;
+  }
+
+  /**
    * Changes an option value.
    *
    * @param string The option name
@@ -156,6 +188,11 @@ abstract class sfValidator
    */
   public function setOption($name, $value)
   {
+    if (!in_array($name, array_merge(array_keys($this->options), $this->requiredOptions)))
+    {
+      throw new sfException(sprintf('%s does not support the following option: \'%s\'.', get_class($this), $name));
+    }
+
     $this->options[$name] = $value;
   }
 
@@ -189,6 +226,26 @@ abstract class sfValidator
   public function setOptions($values)
   {
     $this->options = $values;
+  }
+
+  /**
+   * Adds a required option.
+   *
+   * @param string The option name
+   */
+  public function addRequiredOption($name)
+  {
+    $this->requiredOptions[] = $name;
+  }
+
+  /**
+   * Returns all required option names.
+   *
+   * @param array An array of required option names
+   */
+  public function getRequiredOptions()
+  {
+    return $this->requiredOptions;
   }
 
   /**
@@ -332,26 +389,6 @@ abstract class sfValidator
   protected function setDefaultOptions($options)
   {
     $this->defaultOptions = $options;
-  }
-
-  /**
-   * Adds a required option.
-   *
-   * @param string The option name
-   */
-  public function addRequiredOption($name)
-  {
-    $this->requiredOptions[] = $name;
-  }
-
-  /**
-   * Returns all required option names.
-   *
-   * @param array An array of required option names
-   */
-  public function getRequiredOptions()
-  {
-    return $this->requiredOptions;
   }
 
   /**

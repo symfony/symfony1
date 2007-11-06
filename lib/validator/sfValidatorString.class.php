@@ -26,15 +26,21 @@ class sfValidatorString extends sfValidator
    *  * max_length: The maximum length of the string
    *  * min_length: The minimum length of the string
    *
+   * Available error codes:
+   *
+   *  * max_length
+   *  * min_length
+   *
    * @see sfValidator
    */
   protected function configure($options = array(), $messages = array())
   {
-    $this->setMessage('max_length', '"%value%" is too long (%max_length% characters max).');
-    $this->setMessage('min_length', '"%value%" is too short (%min_length% characters min).');
+    $this->addMessage('max_length', '"%value%" is too long (%max_length% characters max).');
+    $this->addMessage('min_length', '"%value%" is too short (%min_length% characters min).');
 
-    $this->setOption('max_length', null);
-    $this->setOption('min_length', null);
+    $this->addOption('max_length');
+    $this->addOption('min_length');
+
     $this->setOption('empty_value', '');
   }
 

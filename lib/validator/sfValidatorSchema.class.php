@@ -62,6 +62,10 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
    *  * allow_extra_fields:  if false, the validator adds an error if extra fields are given in the input array of values (default to false)
    *  * filter_extra_fields: if true, the validator filters extra fields from the returned array of cleaned values (default to true)
    *
+   * Available error codes:
+   *
+   *  * extra_fields
+   *
    * @param array An array of options
    * @param array An array of error messages
    *
@@ -69,10 +73,10 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
    */
   public function configure($options = array(), $messages = array())
   {
-    $this->setOption('allow_extra_fields', false);
-    $this->setOption('filter_extra_fields', true);
+    $this->addOption('allow_extra_fields', false);
+    $this->addOption('filter_extra_fields', true);
 
-    $this->setMessage('extra_fields', 'Extra field %field%.');
+    $this->addMessage('extra_fields', 'Extra field %field%.');
   }
 
   /**

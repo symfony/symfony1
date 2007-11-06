@@ -47,9 +47,9 @@ class sfValidatorSchemaCompare extends sfValidatorSchema
    */
   public function __construct($leftField, $operator, $rightField, $options = array(), $messages = array())
   {
-    $this->setOption('left_field', $leftField);
-    $this->setOption('operator', $operator);
-    $this->setOption('right_field', $rightField);
+    $this->addOption('left_field', $leftField);
+    $this->addOption('operator', $operator);
+    $this->addOption('right_field', $rightField);
 
     parent::__construct(null, $options, $messages);
   }

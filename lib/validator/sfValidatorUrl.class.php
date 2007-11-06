@@ -23,6 +23,8 @@ class sfValidatorUrl extends sfValidatorRegex
    */
   public function configure($options = array(), $messages = array())
   {
+    parent::configure($options, $messages);
+
     $this->setOption('pattern', '~^
       https?://                               # http or https
       (
