@@ -35,6 +35,16 @@ class sfDomCssSelector
     $this->nodes = $nodes;
   }
 
+  public function getNodes()
+  {
+    return $this->nodes;
+  }
+
+  public function getNode()
+  {
+    return $this->nodes ? $this->nodes[0] : null;
+  }
+
   public function getValue()
   {
     return $this->nodes[0]->nodeValue;
@@ -55,14 +65,14 @@ class sfDomCssSelector
   {
     $nodes = $this->getElements($selector);
 
-    return new sfDomCssSelector($nodes[0]);
+    return $nodes ? new sfDomCssSelector($nodes[0]) : null;
   }
 
   public function matchAll($selector)
   {
     $nodes = $this->getElements($selector);
 
-    return new sfDomCssSelector($nodes);
+    return $nodes ? new sfDomCssSelector($nodes) : null;
   }
 
   /* DEPRECATED */
