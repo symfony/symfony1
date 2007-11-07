@@ -137,8 +137,6 @@ class sfConfigCache
    */
   public function checkConfig($configPath, $optional = false)
   {
-    static $process_cache_cleared = false;
-
     if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
     {
       $timer = sfTimerManager::getTimer('Configuration');
