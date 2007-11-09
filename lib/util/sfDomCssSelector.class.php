@@ -65,14 +65,14 @@ class sfDomCssSelector
   {
     $nodes = $this->getElements($selector);
 
-    return $nodes ? new sfDomCssSelector($nodes[0]) : null;
+    return $nodes ? new sfDomCssSelector($nodes[0]) : new sfDomCssSelector(array());
   }
 
   public function matchAll($selector)
   {
     $nodes = $this->getElements($selector);
 
-    return $nodes ? new sfDomCssSelector($nodes) : null;
+    return $nodes ? new sfDomCssSelector($nodes) : new sfDomCssSelector(array());
   }
 
   /* DEPRECATED */

@@ -72,7 +72,7 @@ $t->diag('with_time option');
 $w = new sfWidgetFormDateTime(array('with_time' => false));
 $dom->loadHTML($w->render('foo', '2005-10-15 12:30:35'));
 $css = new sfDomCssSelector($dom);
-$t->is($css->matchAll('#foo_hour'), null, '->render() does not render the time if the with_time option is disabled');
+$t->is(count($css->matchAll('#foo_hour')->getNodes()), 0, '->render() does not render the time if the with_time option is disabled');
 
 // date and time options as array
 $t->diag('date and time options as array');

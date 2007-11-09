@@ -69,4 +69,4 @@ $t->diag('with_seconds option');
 $w->setOption('with_seconds', false);
 $dom->loadHTML($w->render('foo', '12:30:35'));
 $css = new sfDomCssSelector($dom);
-$t->is(count($css->matchAll('#foo_second option')), 0, '__construct() can enable or disable the seconds select box with the with_seconds option');
+$t->is(count($css->matchAll('#foo_second option')->getNodes()), 0, '__construct() can enable or disable the seconds select box with the with_seconds option');
