@@ -46,7 +46,14 @@ class sfWidgetFormTime extends sfWidgetForm
   function render($name, $value = null, $attributes = array(), $errors = array())
   {
     // convert value to a timestamp
-    $value = ctype_digit($value) ? (integer) $value : strtotime($value);
+    if (is_array($value))
+    {
+      $value = $this->convertDateArrayToTimestamp($value);
+    }
+    else
+    {
+      $value = ctype_digit($value) ? (integer) $value : strtotime($value);
+    }
 
     $time = array();
 
@@ -66,5 +73,21 @@ class sfWidgetFormTime extends sfWidgetForm
     }
 
     return implode($this->getOption('separator'), $time);
+  }
+
+  /**
+   * Converts an array representing a date to a timestamp.
+   *
+   * The array can contains the following keys: hour, minute, second
+   *
+   * @param  array   An array of date elements
+   *
+   * @return integer A timestamp
+   */
+  protected function convertDateArrayToTimestamp($value)
+  {
+    $clean = mktime(isset($value['hour']) ? $value['hour'] : 0, isset($value['minute']) ? $value['minute'] : 0, isset($value['second']) ? $value['second'] : 0);
+
+    return false === $clean ? null : $clean;
   }
 }

@@ -48,9 +48,6 @@ class sfWidgetFormDateTime extends sfWidgetForm
    */
   function render($name, $value = null, $attributes = array(), $errors = array())
   {
-    // convert value to a timestamp
-    $value = ctype_digit($value) ? (integer) $value : strtotime($value);
-
     // date
     $options = $this->getOptionsFor('date');
     $attributes = $this->getAttributesFor($options, $attributes);
