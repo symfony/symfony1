@@ -37,7 +37,7 @@ class sfWidgetFormSelect extends sfWidgetForm
   /**
    * @see sfWidgetForm
    */
-  function render($name, $value = null, $attributes = array(), $errors = array())
+  public function render($name, $value = null, $attributes = array(), $errors = array())
   {
     if ($this->getOption('multiple'))
     {

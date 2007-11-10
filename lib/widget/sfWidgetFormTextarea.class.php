@@ -21,7 +21,7 @@ class sfWidgetFormTextarea extends sfWidgetForm
   /**
    * @see sfWidgetForm
    */
-  function render($name, $value = null, $attributes = array(), $errors = array())
+  public function render($name, $value = null, $attributes = array(), $errors = array())
   {
     return $this->renderContentTag('textarea', self::escapeOnce($value), array_merge(array('name' => $name, 'cols' => 30, 'rows' => 4), $attributes));
   }

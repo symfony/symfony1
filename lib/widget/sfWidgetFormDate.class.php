@@ -42,7 +42,7 @@ class sfWidgetFormDate extends sfWidgetForm
   /**
    * @see sfWidgetForm
    */
-  function render($name, $value = null, $attributes = array(), $errors = array())
+  public function render($name, $value = null, $attributes = array(), $errors = array())
   {
     // convert value to a timestamp
     if (is_array($value))
