@@ -18,39 +18,47 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.com>.
  */
+
 /**
  * Doctrine_View
  *
  * this class represents a database view
  *
- * @author      Konsta Vesterinen
- * @package     Doctrine ORM
- * @url         www.phpdoctrine.com
- * @license     LGPL
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
+ * @package     Doctrine
+ * @subpackage  View
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.phpdoctrine.com
+ * @since       1.0
+ * @version     $Revision$
  */
-class Doctrine_View {
+class Doctrine_View
+{
     /**
      * SQL DROP constant
      */
     const DROP   = 'DROP VIEW %s';
+
     /**
      * SQL CREATE constant
      */
     const CREATE = 'CREATE VIEW %s AS %s';
+
     /**
      * SQL SELECT constant
      */
     const SELECT = 'SELECT * FROM %s';
 
-
     /**
      * @var string $name                the name of the view
      */
     protected $name;
+
     /**
      * @var Doctrine_Query $query       the DQL query object this view is hooked into
      */
     protected $query;
+
     /**
      * @var Doctrine_Connection $conn   the connection object
      */
@@ -61,39 +69,47 @@ class Doctrine_View {
      *
      * @param Doctrine_Query $query
      */
-    public function __construct(Doctrine_Query $query, $viewName) {
+    public function __construct(Doctrine_Query $query, $viewName)
+    {
         $this->name  = $viewName;
         $this->query = $query;
         $this->query->setView($this);
         $this->conn   = $query->getConnection();
     }
+
     /**
      * getQuery
      * returns the associated query object
      *
      * @return Doctrine_Query
      */
-    public function getQuery() {
+    public function getQuery()
+    {
         return $this->query;
     }
+
     /**
      * getName
      * returns the name of this view
      *
      * @return string
      */
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
+
     /**
      * getConnection
      * returns the connection object
      *
      * @return Doctrine_Connection
      */
-    public function getConnection() {
+    public function getConnection()
+    {
         return $this->conn;
     }
+
     /**
      * create
      * creates this view
@@ -101,14 +117,16 @@ class Doctrine_View {
      * @throws Doctrine_View_Exception
      * @return void
      */
-    public function create() {
+    public function create()
+    {
         $sql = sprintf(self::CREATE, $this->name, $this->query->getQuery());
         try {
-            $this->conn->getDBH()->query($sql);
-        } catch(Exception $e) {
+            $this->conn->execute($sql);
+        } catch(Doctrine_Exception $e) {
             throw new Doctrine_View_Exception($e->__toString());
         }
     }
+
     /**
      * drop
      * drops this view from the database
@@ -116,13 +134,15 @@ class Doctrine_View {
      * @throws Doctrine_View_Exception
      * @return void
      */
-    public function drop() {
+    public function drop()
+    {
         try {
-            $this->conn->getDBH()->query(sprintf(self::DROP, $this->name));
-        } catch(Exception $e) {
+            $this->conn->execute(sprintf(self::DROP, $this->name));
+        } catch(Doctrine_Exception $e) {
             throw new Doctrine_View_Exception($e->__toString());
         }
     }
+
     /**
      * execute
      * executes the view
@@ -130,17 +150,19 @@ class Doctrine_View {
      *
      * @return Doctrine_Collection
      */
-    public function execute() {
+    public function execute()
+    {
         return $this->query->execute();
     }
+
     /**
      * getSelectSql
      * returns the select sql for this view
      *
      * @return string
      */
-    public function getSelectSql() {
+    public function getSelectSql()
+    {
         return sprintf(self::SELECT, $this->name);
     }
 }
-

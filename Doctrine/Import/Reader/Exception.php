@@ -20,17 +20,15 @@
  */
 
 /**
- * @package     Doctrine
- * @url         http://www.phpdoctrine.com
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @author      Jukka Hassinen <Jukka.Hassinen@BrainAlliance.com>
- * @version     $Id$
- */
-
-
-
-/**
  * class Doctrine_Import_Reader_Exception
+ *
+ * @package     Doctrine
+ * @subpackage  Import
+ * @link        www.phpdoctrine.com
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @since       1.0
+ * @version     $Revision$
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Import_Reader_Exception
 {
@@ -41,10 +39,4 @@ class Doctrine_Import_Reader_Exception
 
      /*** Attributes: ***/
 
-
-
-
-
-
-} // end of Doctrine_Import_Reader_Exception
-
+}

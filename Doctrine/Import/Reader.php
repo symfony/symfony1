@@ -20,19 +20,17 @@
  */
 
 /**
- * @package     Doctrine
- * @url         http://www.phpdoctrine.com
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @author      Jukka Hassinen <Jukka.Hassinen@BrainAlliance.com>
- * @version     $Id$
- */
-
-
-
-/**
  * class Doctrine_Import_Reader
  * Is responsible of reading a database definitions from a source and costructing a
  * database schema
+ *
+ * @package     Doctrine
+ * @subpackage  Import
+ * @link        www.phpdoctrine.com
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @since       1.0
+ * @version     $Revision$
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 abstract class Doctrine_Import_Reader
 {
@@ -43,7 +41,6 @@ abstract class Doctrine_Import_Reader
 
      /*** Attributes: ***/
 
-
     /**
      *
      * @return Doctrine_Schema
@@ -52,9 +49,4 @@ abstract class Doctrine_Import_Reader
      */
     abstract public function read( );
 
-
-
-
-
-} // end of Doctrine_Import_Reader
-
+}

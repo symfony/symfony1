@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  *  $Id$
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -20,207 +20,551 @@
  */
 
 /**
- * @package     Doctrine ORM
- * @url         www.phpdoctrine.com
- * @license     LGPL
- * 
- * Doctrine_Manager is the base component of all doctrine based projects. 
+ *
+ * Doctrine_Manager is the base component of all doctrine based projects.
  * It opens and keeps track of all connections (database connections).
+ *
+ * @package     Doctrine
+ * @subpackage  Manager
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.phpdoctrine.com
+ * @since       1.0
+ * @version     $Revision$
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
-class Doctrine_Manager extends Doctrine_Configurable implements Countable, IteratorAggregate {
+class Doctrine_Manager extends Doctrine_Configurable implements Countable, IteratorAggregate
+{
     /**
-     * @var array $connections      an array containing all the opened connections
+     * @var array $connections          an array containing all the opened connections
      */
-    private $connections   = array();
+    protected $_connections   = array();
+
     /**
-     * @var array $dataSourceNames an array containing all available data source names
+     * @var array $bound                an array containing all components that have a bound connection
      */
-    private $dataSourceNames = array();
+    protected $_bound         = array();
+
     /**
-     * @var integer $index          the incremented index
+     * @var integer $index              the incremented index
      */
-    private $index      = 0;
+    protected $_index         = 0;
+
     /**
-     * @var integer $currIndex      the current connection index
+     * @var integer $currIndex          the current connection index
      */
-    private $currIndex  = 0;
+    protected $_currIndex     = 0;
+
     /**
-     * @var string $root            root directory
+     * @var string $root                root directory
      */
-    private $root; 
+    protected $_root;
+
     /**
-     * @var Doctrine_Null $null     Doctrine_Null object, used for extremely fast null value checking
+     * @var Doctrine_Query_Registry     the query registry
      */
-    private $null;
+    protected $_queryRegistry;
+    
+    protected static $driverMap = array('oci' => 'oracle');
 
     /**
      * constructor
+     *
+     * this is private constructor (use getInstance to get an instance of this class)
      */
-    private function __construct() {
-        $this->root = dirname(__FILE__);
-        $this->null = new Doctrine_Null;
+    private function __construct()
+    {
+        $this->_root = dirname(__FILE__);
 
-        Doctrine_Record::initNullObject($this->null);
-        Doctrine_Collection::initNullObject($this->null);
-        Doctrine_Record_Iterator::initNullObject($this->null);
-        Doctrine_Validator::initNullObject($this->null);
+        Doctrine_Locator_Injectable::initNullObject(new Doctrine_Null);
     }
-    /**
-     * @return Doctrine_Null
-     */
-    final public function getNullObject() {
-        return $this->null;
-    }
+
     /**
      * setDefaultAttributes
      * sets default attributes
      *
      * @return boolean
      */
-    final public function setDefaultAttributes() {
+    public function setDefaultAttributes()
+    {
         static $init = false;
-        if( ! $init) {
+        if ( ! $init) {
             $init = true;
             $attributes = array(
-                        Doctrine::ATTR_FETCHMODE        => Doctrine::FETCH_IMMEDIATE,
-                        Doctrine::ATTR_BATCH_SIZE       => 5,
-                        Doctrine::ATTR_COLL_LIMIT       => 5,
-                        Doctrine::ATTR_LISTENER         => new Doctrine_EventListener_Empty(),
-                        Doctrine::ATTR_LOCKMODE         => 1,
-                        Doctrine::ATTR_VLD              => false,
-                        Doctrine::ATTR_CREATE_TABLES    => true,
-                        Doctrine::ATTR_QUERY_LIMIT      => Doctrine::LIMIT_RECORDS
+                        Doctrine::ATTR_CACHE                    => null,
+                        Doctrine::ATTR_LOAD_REFERENCES          => true,
+                        Doctrine::ATTR_LISTENER                 => new Doctrine_EventListener(),
+                        Doctrine::ATTR_RECORD_LISTENER          => new Doctrine_Record_Listener(),
+                        Doctrine::ATTR_THROW_EXCEPTIONS         => true,
+                        Doctrine::ATTR_VALIDATE                 => Doctrine::VALIDATE_NONE,
+                        Doctrine::ATTR_QUERY_LIMIT              => Doctrine::LIMIT_RECORDS,
+                        Doctrine::ATTR_IDXNAME_FORMAT           => "%s_idx",
+                        Doctrine::ATTR_SEQNAME_FORMAT           => "%s_seq",
+                        Doctrine::ATTR_TBLNAME_FORMAT           => "%s",
+                        Doctrine::ATTR_QUOTE_IDENTIFIER         => false,
+                        Doctrine::ATTR_SEQCOL_NAME              => 'id',
+                        Doctrine::ATTR_PORTABILITY              => Doctrine::PORTABILITY_ALL,
+                        Doctrine::ATTR_EXPORT                   => Doctrine::EXPORT_ALL,
+                        Doctrine::ATTR_DECIMAL_PLACES           => 2,
+                        Doctrine::ATTR_DEFAULT_PARAM_NAMESPACE  => 'doctrine',
                         );
-            foreach($attributes as $attribute => $value) {
+            foreach ($attributes as $attribute => $value) {
                 $old = $this->getAttribute($attribute);
-                if($old === null)
+                if ($old === null) {
                     $this->setAttribute($attribute,$value);
+                }
             }
             return true;
         }
         return false;
     }
+
     /**
      * returns the root directory of Doctrine
      *
      * @return string
      */
-    final public function getRoot() {
-        return $this->root;
+    final public function getRoot()
+    {
+        return $this->_root;
     }
+
     /**
-     * getInstance                  
+     * getInstance
      * returns an instance of this class
      * (this class uses the singleton pattern)
      *
      * @return Doctrine_Manager
      */
-    final public static function getInstance() {
+    public static function getInstance()
+    {
         static $instance;
-        if( ! isset($instance))
+        if ( ! isset($instance)) {
             $instance = new self();
-
+        }
         return $instance;
     }
+
     /**
-     * install
-     * 
-     * @return void
+     * getQueryRegistry
+     * lazy-initializes the query registry object and returns it
+     *
+     * @return Doctrine_Query_Registry
      */
-    final public function install() {
-        $parent = new ReflectionClass('Doctrine_Record');
-        $old    = $this->getAttribute(Doctrine::ATTR_CREATE_TABLES);
-
-        $this->attributes[Doctrine::ATTR_CREATE_TABLES] = true;
-        foreach(get_declared_classes() as $name) {
-            $class = new ReflectionClass($name);
-
-            if($class->isSubclassOf($parent))
-                $obj = new $class();
-        }
-        $this->attributes[Doctrine::ATTR_CREATE_TABLES] = $old;
+    public function getQueryRegistry()
+    {
+    	if ( ! isset($this->_queryRegistry)) {
+    	   $this->_queryRegistry = new Doctrine_Query_Registry;
+    	}
+        return $this->_queryRegistry;
     }
+
+    /**
+     * setQueryRegistry
+     * sets the query registry
+     *
+     * @return Doctrine_Manager     this object
+     */
+    public function setQueryRegistry(Doctrine_Query_Registry $registry)
+    {
+        $this->_queryRegistry = $registry;
+        
+        return $this;
+    }
+
+    /**
+     * fetch
+     * fetches data using the provided queryKey and 
+     * the associated query in the query registry
+     *
+     * if no query for given queryKey is being found a 
+     * Doctrine_Query_Registry exception is being thrown
+     *
+     * @param string $queryKey      the query key
+     * @param array $params         prepared statement params (if any)
+     * @return mixed                the fetched data
+     */
+    public function find($queryKey, $params = array(), $hydrationMode = Doctrine::HYDRATE_RECORD)
+    {
+        return Doctrine_Manager::getInstance()
+                            ->getQueryRegistry()
+                            ->get($queryKey)
+                            ->execute($params, $hydrationMode);
+    }
+
+    /**
+     * fetchOne
+     * fetches data using the provided queryKey and 
+     * the associated query in the query registry
+     *
+     * if no query for given queryKey is being found a 
+     * Doctrine_Query_Registry exception is being thrown
+     *
+     * @param string $queryKey      the query key
+     * @param array $params         prepared statement params (if any)
+     * @return mixed                the fetched data
+     */
+    public function findOne($queryKey, $params = array(), $hydrationMode = Doctrine::HYDRATE_RECORD)
+    {
+        return Doctrine_Manager::getInstance()
+                            ->getQueryRegistry()
+                            ->get($queryKey)
+                            ->fetchOne($params, $hydrationMode);
+    }
+
+    /**
+     * connection
+     *
+     * if the adapter parameter is set this method acts as
+     * a short cut for Doctrine_Manager::getInstance()->openConnection($adapter, $name);
+     *
+     * if the adapter paramater is not set this method acts as
+     * a short cut for Doctrine_Manager::getInstance()->getCurrentConnection()
+     *
+     * @param PDO|Doctrine_Adapter_Interface $adapter   database driver
+     * @param string $name                              name of the connection, if empty numeric key is used
+     * @throws Doctrine_Manager_Exception               if trying to bind a connection with an existing name
+     * @return Doctrine_Connection
+     */
+    public static function connection($adapter = null, $name = null)
+    {
+        if ($adapter == null) {
+            return Doctrine_Manager::getInstance()->getCurrentConnection();
+        } else {
+            return Doctrine_Manager::getInstance()->openConnection($adapter, $name);
+        }
+    }
+
     /**
      * openConnection
      * opens a new connection and saves it to Doctrine_Manager->connections
      *
-     * @param PDO $pdo                      PDO database driver
-     * @param string $name                  name of the connection, if empty numeric key is used
+     * @param PDO|Doctrine_Adapter_Interface $adapter   database driver
+     * @param string $name                              name of the connection, if empty numeric key is used
+     * @throws Doctrine_Manager_Exception               if trying to bind a connection with an existing name
+     * @throws Doctrine_Manager_Exception               if trying to open connection for unknown driver
      * @return Doctrine_Connection
      */
-    public function openConnection(PDO $pdo, $name = null) {
+    public function openConnection($adapter, $name = null, $setCurrent = true)
+    {
+        if (is_object($adapter)) {
+            if ( ! ($adapter instanceof PDO) && ! in_array('Doctrine_Adapter_Interface', class_implements($adapter))) {
+                throw new Doctrine_Manager_Exception("First argument should be an instance of PDO or implement Doctrine_Adapter_Interface");
+            }
+
+            $driverName = $adapter->getAttribute(Doctrine::ATTR_DRIVER_NAME);
+        } elseif (is_array($adapter)) {
+            if ( ! isset($adapter[0])) {
+                throw new Doctrine_Manager_Exception('Empty data source name given.');
+            }
+            $e = explode(':', $adapter[0]);
+
+            if ($e[0] == 'uri') {
+                $e[0] = 'odbc';
+            }
+
+            $parts['dsn']    = $adapter[0];
+            $parts['scheme'] = $e[0];
+            $parts['user']   = (isset($adapter[1])) ? $adapter[1] : null;
+            $parts['pass']   = (isset($adapter[2])) ? $adapter[2] : null;
+            
+            $driverName = $e[0];
+            $adapter = $parts;
+        } else {
+            $parts = $this->parseDsn($adapter);
+            
+            $driverName = $parts['scheme'];
+            
+            $adapter = $parts;
+        }
+
         // initialize the default attributes
         $this->setDefaultAttributes();
 
-        if($name !== null) {
+        if ($name !== null) {
             $name = (string) $name;
-            if(isset($this->connections[$name]))
-                throw new Doctrine_Exception("Connection with $name already exists!");
-        
+            if (isset($this->_connections[$name])) {
+                return $this->_connections[$name];
+            }
         } else {
-            $name = $this->index;
-            $this->index++;
+            $name = $this->_index;
+            $this->_index++;
         }
-        switch($pdo->getAttribute(PDO::ATTR_DRIVER_NAME)):
-            case "mysql":
-                $this->connections[$name] = new Doctrine_Connection_Mysql($this,$pdo);
-            break;
-            case "sqlite":
-                $this->connections[$name] = new Doctrine_Connection_Sqlite($this,$pdo);
-            break;
-            case "pgsql":
-                $this->connections[$name] = new Doctrine_Connection_Pgsql($this,$pdo);
-            break;
-            case "oci":
-                $this->connections[$name] = new Doctrine_Connection_Oracle($this,$pdo);
-            break;
-            case "mssql":
-                $this->connections[$name] = new Doctrine_Connection_Mssql($this,$pdo);
-            break;
-            case "firebird":
-                $this->connections[$name] = new Doctrine_Connection_Firebird($this,$pdo);
-            break;
-            case "informix":
-                $this->connections[$name] = new Doctrine_Connection_Informix($this,$pdo);
-            break;
-        endswitch;
 
 
-        $this->currIndex = $name;
-        return $this->connections[$name];
+        $drivers = array('mysql'    => 'Doctrine_Connection_Mysql',
+                         'sqlite'   => 'Doctrine_Connection_Sqlite',
+                         'pgsql'    => 'Doctrine_Connection_Pgsql',
+                         'oci'      => 'Doctrine_Connection_Oracle',
+                         'oci8'     => 'Doctrine_Connection_Oracle',
+                         'oracle'   => 'Doctrine_Connection_Oracle',
+                         'mssql'    => 'Doctrine_Connection_Mssql',
+                         'dblib'    => 'Doctrine_Connection_Mssql',
+                         'firebird' => 'Doctrine_Connection_Firebird',
+                         'informix' => 'Doctrine_Connection_Informix',
+                         'mock'     => 'Doctrine_Connection_Mock');
+        if ( ! isset($drivers[$driverName])) {
+            throw new Doctrine_Manager_Exception('Unknown driver ' . $driverName);
+        }
+        
+        $className = $drivers[$driverName];
+        $conn = new $className($this, $adapter);
+
+        $this->_connections[$name] = $conn;
+
+        if ($setCurrent) {
+            $this->_currIndex = $name;
+        }
+        return $this->_connections[$name];
     }
-    public function openSession(PDO $pdo, $name = null) {
-        return $this->openConnection($pdo, $name);
+    
+    public function parsePdoDsn($dsn)
+    {
+        $parts = array();
+        
+        $names = array('dsn', 'scheme', 'host', 'port', 'user', 'pass', 'path', 'query', 'fragment');
+
+        foreach ($names as $name) {
+            if ( ! isset($parts[$name])) {
+                $parts[$name] = null;
+            }
+        }
+        
+        $e = explode(':', $dsn);
+        $parts['scheme'] = $e[0];
+        $parts['dsn'] = $dsn;
+        
+        $e = explode(';', $e[1]);
+        foreach ($e as $string) {
+            list($key, $value) = explode('=', $string);
+            $parts[$key] = $value;
+        }
+        
+        return $parts;
     }
+
+    /**
+     * parseDsn
+     *
+     * @param string $dsn
+     * @return array Parsed contents of DSN
+     */
+    public function parseDsn($dsn)
+    {
+
+
+        //fix linux sqlite dsn so that it will parse correctly
+        $dsn = str_replace("///", "/", $dsn);
+
+        // silence any warnings
+        $parts = @parse_url($dsn);
+
+        $names = array('dsn', 'scheme', 'host', 'port', 'user', 'pass', 'path', 'query', 'fragment');
+
+        foreach ($names as $name) {
+            if ( ! isset($parts[$name])) {
+                $parts[$name] = null;
+            }
+        }
+
+        if (count($parts) == 0 || ! isset($parts['scheme'])) {
+            throw new Doctrine_Manager_Exception('Empty data source name');
+        }
+
+        switch ($parts['scheme']) {
+            case 'sqlite':
+            case 'sqlite2':
+            case 'sqlite3':
+                if (isset($parts['host']) && $parts['host'] == ':memory') {
+                    $parts['database'] = ':memory:';
+                    $parts['dsn']      = 'sqlite::memory:';
+                } else {
+                    //fix windows dsn we have to add host: to path and set host to null
+                    if (isset($parts['host'])) {
+                        $parts['path'] = $parts['host'] . ":" . $parts["path"];
+                        $parts["host"] = null;
+                    }
+                    $parts['database'] = $parts['path'];
+                    $parts['dsn'] = $parts['scheme'] . ':' . $parts['path'];
+                }
+
+                break;
+            
+            case 'mssql':
+            case 'dblib':
+                if ( ! isset($parts['path']) || $parts['path'] == '/') {
+                    throw new Doctrine_Manager_Exception('No database available in data source name');
+                }
+                if (isset($parts['path'])) {
+                    $parts['database'] = substr($parts['path'], 1);
+                }
+                if ( ! isset($parts['host'])) {
+                    throw new Doctrine_Manager_Exception('No hostname set in data source name');
+                }
+                
+                if (isset(self::$driverMap[$parts['scheme']])) {
+                    $parts['scheme'] = self::$driverMap[$parts['scheme']];
+                }
+
+                $parts['dsn'] = $parts['scheme'] . ':host='
+                              . $parts['host'] . (isset($parts['port']) ? ':' . $parts['port']:null) . ';dbname='
+                              . $parts['database'];
+                
+                break;
+
+            case 'mysql':
+            case 'informix':
+            case 'oci8':
+            case 'oci':
+            case 'firebird':
+            case 'pgsql':
+            case 'odbc':
+            case 'mock':
+            case 'oracle':
+                if ( ! isset($parts['path']) || $parts['path'] == '/') {
+                    throw new Doctrine_Manager_Exception('No database available in data source name');
+                }
+                if (isset($parts['path'])) {
+                    $parts['database'] = substr($parts['path'], 1);
+                }
+                if ( ! isset($parts['host'])) {
+                    throw new Doctrine_Manager_Exception('No hostname set in data source name');
+                }
+                
+                if (isset(self::$driverMap[$parts['scheme']])) {
+                    $parts['scheme'] = self::$driverMap[$parts['scheme']];
+                }
+
+                $parts['dsn'] = $parts['scheme'] . ':host='
+                              . $parts['host'] . (isset($parts['port']) ? ';port=' . $parts['port']:null) . ';dbname='
+                              . $parts['database'];
+                
+                break;
+            default:
+                throw new Doctrine_Manager_Exception('Unknown driver '.$parts['scheme']);
+        }
+
+
+        return $parts;
+    }
+
     /**
      * getConnection
      * @param integer $index
      * @return object Doctrine_Connection
-     * @throws InvalidKeyException
+     * @throws Doctrine_Manager_Exception   if trying to get a non-existent connection
      */
-    public function getConnection($name) {   
-        if (!isset($this->connections[$name])) {
-            if (isset($this->dataSourceNames[$name])) {
-                $conn = Doctrine_DB::getConnection($this->dataSourceNames[$name]); // Establishes the connection
-                $this->openConnection($conn, $name);
-            } else {
-                throw new Doctrine_Manager_Exception("Unknown connection: $name");
-            }
+    public function getConnection($name)
+    {
+        if ( ! isset($this->_connections[$name])) {
+            throw new Doctrine_Manager_Exception('Unknown connection: ' . $name);
         }
-        $this->currIndex = $name;
-        return $this->connections[$name];
+
+        return $this->_connections[$name];
     }
-    
+
     /**
-     * Adds the dsn of a connection to the list of available data source names.
+     * getComponentAlias
+     * retrieves the alias for given component name
+     * if the alias couldn't be found, this method returns the given
+     * component name
      *
-     * @param string $dsn
-     * @param string $name
+     * @param string $componentName
+     * @return string                   the component alias
      */
-    public function addDSN($dsn, $name) {
-        $this->dataSourceNames[$name] = $dsn;
+    public function getComponentAlias($componentName)
+    {
+        if (isset($this->componentAliases[$componentName])) {
+            return $this->componentAliases[$componentName];
+        }
+
+        return $componentName;
     }
-    public function getSession($index) { return $this->getConnection($index); }
+
+    /**
+     * sets an alias for given component name
+     * very useful when building a large framework with a possibility
+     * to override any given class
+     *
+     * @param string $componentName         the name of the component
+     * @param string $alias
+     * @return Doctrine_Manager
+     */
+    public function setComponentAlias($componentName, $alias)
+    {
+        $this->componentAliases[$componentName] = $alias;
+
+        return $this;
+    }
+
+    /**
+     * getConnectionName
+     *
+     * @param Doctrine_Connection $conn     connection object to be searched for
+     * @return string                       the name of the connection
+     */
+    public function getConnectionName(Doctrine_Connection $conn)
+    {
+        return array_search($conn, $this->_connections, true);
+    }
+
+    /**
+     * bindComponent
+     * binds given component to given connection
+     * this means that when ever the given component uses a connection
+     * it will be using the bound connection instead of the current connection
+     *
+     * @param string $componentName
+     * @param string $connectionName
+     * @return boolean
+     */
+    public function bindComponent($componentName, $connectionName)
+    {
+        $this->_bound[$componentName] = $connectionName;
+    }
+
+    /**
+     * getConnectionForComponent
+     *
+     * @param string $componentName
+     * @return Doctrine_Connection
+     */
+    public function getConnectionForComponent($componentName = null)
+    {
+        if (isset($this->_bound[$componentName])) {
+            return $this->getConnection($this->_bound[$componentName]);
+        }
+        return $this->getCurrentConnection();
+    }
+
+    /**
+     * getTable
+     * this is the same as Doctrine_Connection::getTable() except
+     * that it works seamlessly in multi-server/connection environment
+     *
+     * @see Doctrine_Connection::getTable()
+     * @param string $componentName
+     * @return Doctrine_Table
+     */
+    public function getTable($componentName)
+    {
+        return $this->getConnectionForComponent($componentName)->getTable($componentName);
+    }
+
+    /**
+     * table
+     * this is the same as Doctrine_Connection::getTable() except
+     * that it works seamlessly in multi-server/connection environment
+     *
+     * @see Doctrine_Connection::getTable()
+     * @param string $componentName
+     * @return Doctrine_Table
+     */
+    public static function table($componentName)
+    {
+        return Doctrine_Manager::getInstance()
+               ->getConnectionForComponent($componentName)
+               ->getTable($componentName);
+    }
 
     /**
      * closes the connection
@@ -228,23 +572,31 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
      * @param Doctrine_Connection $connection
      * @return void
      */
-    public function closeConnection(Doctrine_Connection $connection) {
+    public function closeConnection(Doctrine_Connection $connection)
+    {
         $connection->close();
+
+        $key = array_search($connection, $this->_connections, true);
+
+        if ($key !== false) {
+            unset($this->_connections[$key]);
+        }
+        $this->_currIndex = key($this->_connections);
+
         unset($connection);
     }
-    public function closeSession(Doctrine_Connection $connection) { $this->closeConnection($connection); }
+
     /**
      * getConnections
      * returns all opened connections
      *
      * @return array
      */
-    public function getConnections() {
-        return $this->connections;
+    public function getConnections()
+    {
+        return $this->_connections;
     }
-    public function getSessions() {
-        return $this->connections;
-    }
+
     /**
      * setCurrentConnection
      * sets the current connection to $key
@@ -253,34 +605,49 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
      * @throws InvalidKeyException
      * @return void
      */
-    public function setCurrentConnection($key) {
+    public function setCurrentConnection($key)
+    {
         $key = (string) $key;
-        if( ! isset($this->connections[$key]))
+        if ( ! isset($this->_connections[$key])) {
             throw new InvalidKeyException();
-        
-        $this->currIndex = $key;
+        }
+        $this->_currIndex = $key;
     }
-    public function setCurrentSession($key) {
-        $this->setCurrentConnection($key);
+
+    /**
+     * contains
+     * whether or not the manager contains specified connection
+     *
+     * @param mixed $key                        the connection key
+     * @return boolean
+     */
+    public function contains($key)
+    {
+        return isset($this->_connections[$key]);
     }
+
     /**
      * count
      * returns the number of opened connections
      *
      * @return integer
      */
-    public function count() {
-        return count($this->connections);
+    public function count()
+    {
+        return count($this->_connections);
     }
+
     /**
      * getIterator
      * returns an ArrayIterator that iterates through all connections
      *
      * @return ArrayIterator
      */
-    public function getIterator() {
-        return new ArrayIterator($this->connections);
+    public function getIterator()
+    {
+        return new ArrayIterator($this->_connections);
     }
+
     /**
      * getCurrentConnection
      * returns the current connection
@@ -288,26 +655,27 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
      * @throws Doctrine_Connection_Exception       if there are no open connections
      * @return Doctrine_Connection
      */
-    public function getCurrentConnection() {
-        $i = $this->currIndex;
-        if( ! isset($this->connections[$i]))
+    public function getCurrentConnection()
+    {
+        $i = $this->_currIndex;
+        if ( ! isset($this->_connections[$i])) {
             throw new Doctrine_Connection_Exception();
-
-        return $this->connections[$i];
+        }
+        return $this->_connections[$i];
     }
-    public function getCurrentSession() { return $this->getCurrentConnection(); }
+
     /**
      * __toString
      * returns a string representation of this object
      *
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         $r[] = "<pre>";
         $r[] = "Doctrine_Manager";
-        $r[] = "Connections : ".count($this->connections);
+        $r[] = "Connections : ".count($this->_connections);
         $r[] = "</pre>";
         return implode("\n",$r);
     }
 }
-

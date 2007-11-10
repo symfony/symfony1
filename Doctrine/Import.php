@@ -18,73 +18,210 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.com>.
  */
-
-/**
- * @package     Doctrine
- * @url         http://www.phpdoctrine.com
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @author      Jukka Hassinen <Jukka.Hassinen@BrainAlliance.com>
- * @version     $Id$
- */
-
-
-
+Doctrine::autoload('Doctrine_Connection_Module');
 /**
  * class Doctrine_Import
  * Main responsible of performing import operation. Delegates database schema
  * reading to a reader object and passes the result to a builder object which
  * builds a Doctrine data model.
+ *
+ * @package     Doctrine
+ * @subpackage  Import
+ * @link        www.phpdoctrine.com
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @since       1.0
+ * @version     $Revision$
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
+ * @author      Jukka Hassinen <Jukka.Hassinen@BrainAlliance.com>
  */
-class Doctrine_Import
+class Doctrine_Import extends Doctrine_Connection_Module
 {
-
-    /** Aggregations: */
-
-    /** Compositions: */
-
-     /*** Attributes: ***/
+    protected $sql = array();
 
     /**
-     * @access private
-     */
-    private $reader;
-
-    /**
-     * @access private
-     */
-    private $builder;
-
-
-    /**
+     * lists all databases
      *
-     * @return 
-     * @access public
+     * @return array
      */
-    public function import( ) {
-        
-    } // end of member function import
+    public function listDatabases()
+    {
+        if ( ! isset($this->sql['listDatabases'])) {
+            throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+        }
+
+        return $this->conn->fetchColumn($this->sql['listDatabases']);
+    }
 
     /**
+     * lists all availible database functions
      *
-     * @param Doctrine_Import_Reader reader      * @return 
-     * @access public
+     * @return array
      */
-    public function setReader( $reader ) {
-        
-    } // end of member function setReader
+    public function listFunctions()
+    {
+        if ( ! isset($this->sql['listFunctions'])) {
+            throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+        }
+
+        return $this->conn->fetchColumn($this->sql['listFunctions']);
+    }
 
     /**
+     * lists all database triggers
      *
-     * @param Doctrine_Import_Builder builder      * @return 
-     * @access public
+     * @param string|null $database
+     * @return array
      */
-    public function setBuilder( $builder ) {
+    public function listTriggers($database = null)
+    {
+        throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+    }
+
+    /**
+     * lists all database sequences
+     *
+     * @param string|null $database
+     * @return array
+     */
+    public function listSequences($database = null)
+    {
+        if ( ! isset($this->sql['listSequences'])) {
+            throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+        }
+
+        return $this->conn->fetchColumn($this->sql['listSequences']);
+    }
+
+    /**
+     * lists table constraints
+     *
+     * @param string $table     database table name
+     * @return array
+     */
+    public function listTableConstraints($table)
+    {
+        throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+    }
+
+    /**
+     * lists table constraints
+     *
+     * @param string $table     database table name
+     * @return array
+     */
+    public function listTableColumns($table)
+    {
+        throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+    }
+
+    /**
+     * lists table constraints
+     *
+     * @param string $table     database table name
+     * @return array
+     */
+    public function listTableIndexes($table)
+    {
+        throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+    }
+
+    /**
+     * lists tables
+     *
+     * @param string|null $database
+     * @return array
+     */
+    public function listTables($database = null)
+    {
+        throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+    }
+
+    /**
+     * lists table triggers
+     *
+     * @param string $table     database table name
+     * @return array
+     */
+    public function listTableTriggers($table)
+    {
+        throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+    }
+
+    /**
+     * lists table views
+     *
+     * @param string $table     database table name
+     * @return array
+     */
+    public function listTableViews($table)
+    {
+        throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+    }
+
+    /**
+     * lists database users
+     *
+     * @return array
+     */
+    public function listUsers()
+    {
+        if ( ! isset($this->sql['listUsers'])) {
+            throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+        }
+
+        return $this->conn->fetchColumn($this->sql['listUsers']);
+    }
+
+    /**
+     * lists database views
+     *
+     * @param string|null $database
+     * @return array
+     */
+    public function listViews($database = null)
+    {
+        if ( ! isset($this->sql['listViews'])) {
+            throw new Doctrine_Import_Exception(__FUNCTION__ . ' not supported by this driver.');
+        }
+
+        return $this->conn->fetchColumn($this->sql['listViews']);
+    }
+
+    /**
+     * importSchema
+     *
+     * method for importing existing schema to Doctrine_Record classes
+     *
+     * @param string $directory
+     * @param array $databases
+     * @return array                the names of the imported classes
+     */
+    public function importSchema($directory, array $databases = array(), array $options = array())
+    {
+        $connections = Doctrine_Manager::getInstance()->getConnections();
         
-    } // end of member function setBuilder
+        foreach ($connections as $name => $connection) {
+          // Limit the databases to the ones specified by $databases.
+          // Check only happens if array is not empty
+          if ( ! empty($databases) && !in_array($name, $databases)) {
+            continue;
+          }
+          
+          $builder = new Doctrine_Import_Builder();
+          $builder->setTargetPath($directory);
+          $builder->setOptions($options);
 
-
-
-
-
-} // end of Doctrine_Import
-
+          $classes = array();
+          foreach ($connection->import->listTables() as $table) {
+              $builder->buildRecord(array('tableName' => $table,
+                                          'className' => Doctrine::classify($table)),
+                                          $connection->import->listTableColumns($table),
+                                          array());
+        
+              $classes[] = Doctrine::classify($table);
+          }
+        }
+        
+        return $classes;
+    }
+}

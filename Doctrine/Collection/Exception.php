@@ -18,11 +18,17 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.com>.
  */
+
 /**
  * Doctrine_Collection_Exception
  *
- * @package     Doctrine ORM
- * @url         www.phpdoctrine.com
- * @license     LGPL
+ * @package     Doctrine
+ * @subpackage  Collection
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.phpdoctrine.com
+ * @since       1.0
+ * @version     $Revision$
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
-class Doctrine_Collection_Exception extends Doctrine_Exception { }
+class Doctrine_Collection_Exception extends Doctrine_Exception
+{ }

@@ -1,169 +1,209 @@
 <?php
-require_once("Common.php");
-/**
- * mysql driver
+/*
+ *  $Id$
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the LGPL. For more information, see
+ * <http://www.phpdoctrine.com>.
  */
-class Doctrine_Connection_Mysql extends Doctrine_Connection_Common {
+Doctrine::autoload('Doctrine_Connection_Common');
+/**
+ * Doctrine_Connection_Mysql
+ *
+ * @package     Doctrine
+ * @subpackage  Connection
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
+ * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
+ * @version     $Revision$
+ * @link        www.phpdoctrine.com
+ * @since       1.0
+ */
+class Doctrine_Connection_Mysql extends Doctrine_Connection_Common
+{
+    /**
+     * @var string $driverName                  the name of this connection driver
+     */
+    protected $driverName = 'Mysql';
 
     /**
      * the constructor
-     * @param PDO $pdo  -- database handle
-     */
-    public function __construct(Doctrine_Manager $manager,PDO $pdo) {
-        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
-        $this->setAttribute(Doctrine::ATTR_QUERY_LIMIT, Doctrine::LIMIT_ROWS);
-        parent::__construct($manager,$pdo);
-    }    
-    /**
-     * returns the regular expression operator 
-     * (implemented by the connection drivers)
      *
-     * @return string
+     * @param Doctrine_Manager $manager
+     * @param PDO|Doctrine_Adapter $adapter     database handler
      */
-    public function getRegexpOperator() {
-        return 'RLIKE';
+    public function __construct(Doctrine_Manager $manager, $adapter)
+    {
+        $this->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+        $this->setAttribute(Doctrine::ATTR_DEFAULT_TABLE_TYPE, 'INNODB');
+
+        $this->supported = array(
+                          'sequences'            => 'emulated',
+                          'indexes'              => true,
+                          'affected_rows'        => true,
+                          'transactions'         => true,
+                          'savepoints'           => false,
+                          'summary_functions'    => true,
+                          'order_by_text'        => true,
+                          'current_id'           => 'emulated',
+                          'limit_queries'        => true,
+                          'LOBs'                 => true,
+                          'replace'              => true,
+                          'sub_selects'          => true,
+                          'auto_increment'       => true,
+                          'primary_key'          => true,
+                          'result_introspection' => true,
+                          'prepared_statements'  => 'emulated',
+                          'identifier_quoting'   => true,
+                          'pattern_escaping'     => true
+                          );
+
+        $this->properties['string_quoting'] = array('start' => "'",
+                                                    'end' => "'",
+                                                    'escape' => '\\',
+                                                    'escape_pattern' => '\\');
+
+        $this->properties['identifier_quoting'] = array('start' => '`',
+                                                        'end' => '`',
+                                                        'escape' => '`');
+
+        $this->properties['sql_comments'] = array(
+                                            array('start' => '-- ', 'end' => "\n", 'escape' => false),
+                                            array('start' => '#', 'end' => "\n", 'escape' => false),
+                                            array('start' => '/*', 'end' => '*/', 'escape' => false),
+                                            );
+
+        $this->properties['varchar_max_length'] = 255;
+
+        parent::__construct($manager, $adapter);
     }
+
     /**
-     * deletes all data access object from the collection
-     * @param Doctrine_Collection $coll
-     */
-
-     /**
-    public function deleteCollection(Doctrine_Collection $coll) {
-
-        $a   = $coll->getTable()->getCompositePaths();
-        $a   = array_merge(array($coll->getTable()->getComponentName()),$a);
-
-        $graph = new Doctrine_Query();
-        foreach($coll as $k=>$record) {
-            switch($record->getState()):
-                case Doctrine_Record::STATE_DIRTY:
-                case Doctrine_Record::STATE_CLEAN:
-                    $ids[] = $record->getID();
-                break;
-            endswitch;
-        }
-        if(empty($ids))
-            return array();
-
-        $graph->parseQuery("FROM ".implode(", ",$a)." WHERE ".$coll->getTable()->getTableName().".id IN(".implode(", ",$ids).")");
-
-        $query = $graph->buildDelete();
-
-        $this->getDBH()->query($query);
-        return $ids;
-    }
-    */
-    /**
-     * returns maximum identifier values
+     * Set the charset on the current connection
      *
-     * @param array $names          an array of component names
-     * @return array
+     * @param string    charset
      */
-    public function getMaximumValues2(array $names) { 
-        $values = array();
-        foreach($names as $name) {
-            $table     = $this->tables[$name];
-            $keys      = $table->getPrimaryKeys();
-            $tablename = $table->getTableName();
+    public function setCharset($charset)
+    {
+        $query = 'SET NAMES ' . $this->quote($charset);
 
-            if(count($keys) == 1 && $keys[0] == $table->getIdentifier()) {
-                // record uses auto_increment column
-
-                $sql[]    = "SELECT MAX(".$tablename.".".$table->getIdentifier().") as $tablename FROM ".$tablename;
-                $values[$tablename] = 0;
-                $array[] = $tablename;
-            }
-        }
-        $sql    = implode(" UNION ",$sql);
-        $stmt   = $this->getDBH()->query($sql);
-        $data   = $stmt->fetchAll(PDO::FETCH_NUM);
-
-        foreach($data as $k => $v) {
-            $values[$array[$k]] = $v[0];
-        }
-        return $values;
+        $this->exec($query);
     }
+
     /**
-     * bulkInsert
-     * inserts all the objects in the pending insert list into database
-     * TODO: THIS IS NOT WORKING YET AS THERE ARE BUGS IN COMPONENTS USING SELF-REFERENCENCING
+     * Execute a SQL REPLACE query. A REPLACE query is identical to a INSERT
+     * query, except that if there is already a row in the table with the same
+     * key field values, the REPLACE query just updates its values instead of
+     * inserting a new row.
      *
-     * @return boolean
+     * The REPLACE type of query does not make part of the SQL standards. Since
+     * practically only MySQL implements it natively, this type of query is
+     * emulated through this method for other DBMS using standard types of
+     * queries inside a transaction to assure the atomicity of the operation.
+     *
+     * @access public
+     *
+     * @param string $table name of the table on which the REPLACE query will
+     *  be executed.
+     * @param array $fields associative array that describes the fields and the
+     *  values that will be inserted or updated in the specified table. The
+     *  indexes of the array are the names of all the fields of the table. The
+     *  values of the array are also associative arrays that describe the
+     *  values and other properties of the table fields.
+     *
+     *  Here follows a list of field properties that need to be specified:
+     *
+     *    value:
+     *          Value to be assigned to the specified field. This value may be
+     *          of specified in database independent type format as this
+     *          function can perform the necessary datatype conversions.
+     *
+     *    Default:
+     *          this property is required unless the Null property
+     *          is set to 1.
+     *
+     *    type
+     *          Name of the type of the field. Currently, all types Metabase
+     *          are supported except for clob and blob.
+     *
+     *    Default: no type conversion
+     *
+     *    null
+     *          Boolean property that indicates that the value for this field
+     *          should be set to null.
+     *
+     *          The default value for fields missing in INSERT queries may be
+     *          specified the definition of a table. Often, the default value
+     *          is already null, but since the REPLACE may be emulated using
+     *          an UPDATE query, make sure that all fields of the table are
+     *          listed in this function argument array.
+     *
+     *    Default: 0
+     *
+     *    key
+     *          Boolean property that indicates that this field should be
+     *          handled as a primary key or at least as part of the compound
+     *          unique index of the table that will determine the row that will
+     *          updated if it exists or inserted a new row otherwise.
+     *
+     *          This function will fail if no key field is specified or if the
+     *          value of a key field is set to null because fields that are
+     *          part of unique index they may not be null.
+     *
+     *    Default: 0
+     *
+     * @return integer      the number of affected rows
      */
-     
-     /**
-    public function bulkInsert() {
-        if(empty($this->insert))
-            return false;
+    public function replace($table, array $fields, array $keys)
+    {
+        $count = count($fields);
+        $query = $values = '';
+        $keys = $colnum = 0;
 
-        foreach($this->insert as $name => $inserts) {
-            if( ! isset($inserts[0]))
-                continue;
+        for (reset($fields); $colnum < $count; next($fields), $colnum++) {
+            $name = key($fields);
 
-            $record    = $inserts[0];
-            $table     = $record->getTable();
-            $seq       = $table->getSequenceName();
-            $keys      = $table->getPrimaryKeys();
-
-            $marks = array();
-            $params = array();
-            foreach($inserts as $k => $record) {
-                $record->getTable()->getAttribute(Doctrine::ATTR_LISTENER)->onPreSave($record);
-                // listen the onPreInsert event
-                $record->getTable()->getAttribute(Doctrine::ATTR_LISTENER)->onPreInsert($record);
-
-                $array = $record->getPrepared();
-
-                if(isset($this->validator)) {
-                    if( ! $this->validator->validateRecord($record)) {
-                        continue;
-                    }
-                }
-
-                $key = implode(", ",array_keys($array));
-                if( ! isset($params[$key]))
-                    $params[$key] = array();
-
-                $marks[$key][] = "(".substr(str_repeat("?, ",count($array)),0,-2).")";
-                $params[$key] = array_merge($params[$key], array_values($array));
-
-
-                // listen the onInsert event
-                $record->getTable()->getAttribute(Doctrine::ATTR_LISTENER)->onInsert($record);
-
-                $record->getTable()->getAttribute(Doctrine::ATTR_LISTENER)->onSave($record);
+            if ($colnum > 0) {
+                $query .= ',';
+                $values.= ',';
             }
 
-            if( ! empty($marks)) {
-                foreach($marks as $key => $list) {
-                    $query = "INSERT INTO ".$table->getTableName()." (".$key.") VALUES ".implode(", ", $list);
-                    $stmt  = $this->getDBH()->prepare($query);
-                    $stmt->execute($params[$key]);
-                }
+            $query .= $name;
+
+            if (isset($fields[$name]['null']) && $fields[$name]['null']) {
+                $value = 'NULL';
+            } else {
+                $type = isset($fields[$name]['type']) ? $fields[$name]['type'] : null;
+                $value = $this->quote($fields[$name]['value'], $type);
             }
-            if(count($keys) == 1 && $keys[0] == $table->getIdentifier()) {
 
-                // record uses auto_increment column
+            $values .= $value;
 
-                $sql  = "SELECT MAX(".$table->getIdentifier().") FROM ".$record->getTable()->getTableName();
-                $stmt = $this->getDBH()->query($sql);
-                $data = $stmt->fetch(PDO::FETCH_NUM);
-                $id   = $data[0];
-                $stmt->closeCursor();
-                
-                foreach(array_reverse($inserts) as $record) {
-
-                    $record->setID((int) $id);
-                    $id--;
+            if (isset($fields[$name]['key']) && $fields[$name]['key']) {
+                if ($value === 'NULL') {
+                    throw new Doctrine_Connection_Mysql_Exception('key value '.$name.' may not be NULL');
                 }
+                $keys++;
             }
         }
 
-        $this->insert = array();
-        return true;
-    }
-    */
+        if ($keys == 0) {
+            throw new Doctrine_Connection_Mysql_Exception('not specified which fields are keys');
+        }
+        $query = 'REPLACE INTO ' . $table . ' (' . $query . ') VALUES (' . $values . ')';
 
+        return $this->exec($query);
+    }
 }
-

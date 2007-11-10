@@ -18,54 +18,75 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.com>.
  */
+
 /**
- * Class for handling the pessimistic offline locking of {@link Doctrine_Record}s.
  * Offline locking of records comes in handy where you need to make sure that
  * a time-consuming task on a record or many records, which is spread over several
- * page requests can't be interfered by other users. 
- * 
- * @author  Roman Borschel <roman@code-factory.org>
- * @license LGPL
- * @since   1.0
+ * page requests can't be interfered by other users.
+ *
+ * @package     Doctrine
+ * @subpackage  Locking
+ * @link        www.phpdoctrine.com
+ * @author      Roman Borschel <roman@code-factory.org>
+ * @author      Pierre Minnieur <pm@pierre-minnieur.de>
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @since       1.0
+ * @version     $Revision$
  */
 class Doctrine_Locking_Manager_Pessimistic
 {
     /**
-     * The datasource that is used by the locking manager
+     * The conn that is used by the locking manager
      *
      * @var Doctrine_Connection object
      */
-    private $_dataSource;
+    private $conn;
+
     /**
      * The database table name for the lock tracking
      */
     private $_lockTable = 'doctrine_lock_tracking';
 
-
     /**
      * Constructs a new locking manager object
-     * 
+     *
      * When the CREATE_TABLES attribute of the connection on which the manager
      * is supposed to work on is set to true, the locking table is created.
      *
-     * @param Doctrine_Connection $dataSource The database connection to use
+     * @param Doctrine_Connection $conn The database connection to use
      */
-    public function __construct(Doctrine_Connection $dataSource)
+    public function __construct(Doctrine_Connection $conn)
     {
-        $this->_dataSource = $dataSource;
-        
-        if($this->_dataSource->getAttribute(Doctrine::ATTR_CREATE_TABLES) === true)
-        {
+        $this->conn = $conn;
+
+        if ($this->conn->getAttribute(Doctrine::ATTR_EXPORT) & Doctrine::EXPORT_TABLES) {
             $columns = array();
-            $columns['object_type']        = array('string',  50, array('notnull' => true, 'primary' => true));
-            $columns['object_key']         = array('string', 250, array('notnull' => true, 'primary' => true));
-            $columns['user_ident']         = array('string',  50, array('notnull' => true));
-            $columns['timestamp_obtained'] = array('integer', 10, array('notnull' => true));
-            
-            $dataDict = new Doctrine_DataDict($this->_dataSource->getDBH());
-            $dataDict->createTable($this->_lockTable, $columns);
+            $columns['object_type']        = array('type'    => 'string',
+                                                   'length'  => 50,
+                                                   'notnull' => true,
+                                                   'primary' => true);
+
+            $columns['object_key']         = array('type'    => 'string',
+                                                   'length'  => 250,
+                                                   'notnull' => true,
+                                                   'primary' => true);
+
+            $columns['user_ident']         = array('type'    => 'string',
+                                                   'length'  => 50,
+                                                   'notnull' => true);
+
+            $columns['timestamp_obtained'] = array('type'    => 'integer',
+                                                   'length'  => 10,
+                                                   'notnull' => true);
+
+            $options = array('primary' => array('object_type', 'object_key'));
+            try {
+                $this->conn->export->createTable($this->_lockTable, $columns, $options);
+            } catch(Exception $e) {
+
+            }
         }
-               
     }
 
     /**
@@ -81,65 +102,60 @@ class Doctrine_Locking_Manager_Pessimistic
     {
         $objectType = $record->getTable()->getComponentName();
         $key        = $record->obtainIdentifier();
-        
+
         $gotLock = false;
-        
-        if(is_array($key))
-        {
+        $time = time();
+
+        if (is_array($key)) {
             // Composite key
             $key = implode('|', $key);
         }
-        
-        try
-        {
-            $dbh = $this->_dataSource->getDBH();
+
+        try {
+            $dbh = $this->conn->getDbh();
             $dbh->beginTransaction();
-            
-            $stmt = $dbh->prepare("INSERT INTO $this->_lockTable
-                                          (object_type, object_key, user_ident, timestamp_obtained)
-                                   VALUES (:object_type, :object_key, :user_ident, :ts_obtained)");
+
+            $stmt = $dbh->prepare('INSERT INTO ' . $this->_lockTable
+                                  . ' (object_type, object_key, user_ident, timestamp_obtained)'
+                                  . ' VALUES (:object_type, :object_key, :user_ident, :ts_obtained)');
+
             $stmt->bindParam(':object_type', $objectType);
             $stmt->bindParam(':object_key', $key);
             $stmt->bindParam(':user_ident', $userIdent);
-            $stmt->bindParam(':ts_obtained', time());
-            
+            $stmt->bindParam(':ts_obtained', $time);
+
             try {
                 $stmt->execute();
                 $gotLock = true;
-            
+
             // we catch an Exception here instead of PDOException since we might also be catching Doctrine_Exception
             } catch(Exception $pkviolation) {
                 // PK violation occured => existing lock!
             }
-            
-            if(!$gotLock)
-            {
+
+            if ( ! $gotLock) {
                 $lockingUserIdent = $this->_getLockingUserIdent($objectType, $key);
-                if($lockingUserIdent !== null && $lockingUserIdent == $userIdent)
-                {
+                if ($lockingUserIdent !== null && $lockingUserIdent == $userIdent) {
                     $gotLock = true; // The requesting user already has a lock
                     // Update timestamp
-                    $stmt = $dbh->prepare("UPDATE $this->_lockTable SET timestamp_obtained = :ts
-                                           WHERE object_type = :object_type AND
-                                                 object_key  = :object_key  AND
-                                                 user_ident  = :user_ident");
-                    $stmt->bindParam(':ts', time());
+                    $stmt = $dbh->prepare('UPDATE ' . $this->_lockTable 
+                                          . ' SET timestamp_obtained = :ts'
+                                          . ' WHERE object_type = :object_type AND'
+                                          . ' object_key  = :object_key  AND'
+                                          . ' user_ident  = :user_ident');
+                    $stmt->bindParam(':ts', $time);
                     $stmt->bindParam(':object_type', $objectType);
                     $stmt->bindParam(':object_key', $key);
                     $stmt->bindParam(':user_ident', $lockingUserIdent);
                     $stmt->execute();
                 }
             }
-
             $dbh->commit();
-                       
-        }
-        catch(Exception $pdoe)
-        {
+        } catch (Exception $pdoe) {
             $dbh->rollback();
             throw new Doctrine_Locking_Exception($pdoe->getMessage());
         }
-        
+
         return $gotLock;
     }
 
@@ -155,16 +171,14 @@ class Doctrine_Locking_Manager_Pessimistic
     {
         $objectType = $record->getTable()->getComponentName();
         $key        = $record->obtainIdentifier();
-        
-        if(is_array($key))
-        {
+
+        if (is_array($key)) {
             // Composite key
             $key = implode('|', $key);
         }
-        
-        try
-        {
-            $dbh = $this->_dataSource->getDBH();
+
+        try {
+            $dbh = $this->conn->getDbh();
             $stmt = $dbh->prepare("DELETE FROM $this->_lockTable WHERE
                                         object_type = :object_type AND
                                         object_key  = :object_key  AND
@@ -173,14 +187,11 @@ class Doctrine_Locking_Manager_Pessimistic
             $stmt->bindParam(':object_key', $key);
             $stmt->bindParam(':user_ident', $userIdent);
             $stmt->execute();
-            
+
             $count = $stmt->rowCount();
-            
+
             return ($count > 0);
-                        
-        }
-        catch(PDOException $pdoe)
-        {
+        } catch (PDOException $pdoe) {
             throw new Doctrine_Locking_Exception($pdoe->getMessage());
         }
     }
@@ -195,68 +206,87 @@ class Doctrine_Locking_Manager_Pessimistic
      */
     private function _getLockingUserIdent($objectType, $key)
     {
-        if(is_array($key))
-        {
+        if (is_array($key)) {
             // Composite key
             $key = implode('|', $key);
         }
-        
-        try
-        {
-            $dbh = $this->_dataSource->getDBH();
-            $stmt = $dbh->prepare("SELECT user_ident
-                                   FROM $this->_lockTable
-                                   WHERE object_type = :object_type AND object_key = :object_key");
+
+        try {
+            $dbh = $this->conn->getDbh();
+            $stmt = $dbh->prepare('SELECT user_ident FROM ' . $this->_lockTable
+                                  . ' WHERE object_type = :object_type AND object_key = :object_key');
             $stmt->bindParam(':object_type', $objectType);
             $stmt->bindParam(':object_key', $key);
             $success = $stmt->execute();
-            
-            if(!$success)
-            {
+
+            if ( ! $success) {
                 throw new Doctrine_Locking_Exception("Failed to determine locking user");
             }
-            
-            $user_ident = $stmt->fetchColumn();
-        }
-        catch(PDOException $pdoe)
-        {
+
+            $userIdent = $stmt->fetchColumn();
+        } catch (PDOException $pdoe) {
             throw new Doctrine_Locking_Exception($pdoe->getMessage());
         }
-        
-        return $user_ident;
+
+        return $userIdent;
+    }
+
+    /**
+     * Gets the identifier that identifies the owner of the lock on the given
+     * record.
+     *
+     * @param Doctrine_Record $lockedRecord  The record.
+     * @return mixed The unique user identifier that identifies the owner of the lock.
+     */
+    public function getLockOwner($lockedRecord)
+    {
+        $objectType = $lockedRecord->getTable()->getComponentName();
+        $key        = $lockedRecord->obtainIdentifier();
+        return $this->_getLockingUserIdent($objectType, $key);
     }
 
     /**
      * Releases locks older than a defined amount of seconds
-     * 
+     *
      * When called without parameters all locks older than 15 minutes are released.
      *
      * @param  integer $age  The maximum valid age of locks in seconds
+     * @param  string  $objectType  The type of the object (component name)
+     * @param  mixed   $userIdent The unique identifier of the locking user
      * @return integer The number of locks that have been released
      * @throws Doctrine_Locking_Exception If the release process failed due to database errors
      */
-    public function releaseAgedLocks($age = 900)
+    public function releaseAgedLocks($age = 900, $objectType = null, $userIdent = null)
     {
         $age = time() - $age;
-        
-        try
-        {
-            $dbh = $this->_dataSource->getDBH();
-            $stmt = $dbh->prepare("DELETE FROM $this->_lockTable WHERE timestamp_obtained < :age");
+
+        try {
+            $dbh = $this->conn->getDbh();
+            $stmt = $dbh->prepare('DELETE FROM ' . $this->_lockTable . ' WHERE timestamp_obtained < :age');
             $stmt->bindParam(':age', $age);
+            $query = 'DELETE FROM ' . $this->_lockTable . ' WHERE timestamp_obtained < :age';
+            if ($objectType) {
+                $query .= ' AND object_type = :object_type';
+            }
+            if ($userIdent) {
+                $query .= ' AND user_ident = :user_ident';
+            }
+            $stmt = $dbh->prepare($query);
+            $stmt->bindParam(':age', $age);
+            if ($objectType) {
+                $stmt->bindParam(':object_type', $objectType);
+            }
+            if ($userIdent) {
+                $stmt->bindParam(':user_ident', $userIdent);
+            }
             $stmt->execute();
-            
+
             $count = $stmt->rowCount();
-            
+
             return $count;
-        }
-        catch(PDOException $pdoe)
-        {
+        } catch (PDOException $pdoe) {
             throw new Doctrine_Locking_Exception($pdoe->getMessage());
         }
     }
 
 }
-
-
-

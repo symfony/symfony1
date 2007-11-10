@@ -18,25 +18,22 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.com>.
  */
-
-/**
- * @package     Doctrine
- * @url         http://www.phpdoctrine.com
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @author      Jukka Hassinen <Jukka.Hassinen@BrainAlliance.com>
- * @version     $Id$
- */
-
-
-
+Doctrine::autoload('Doctrine_Import_Reader');
 /**
  * class Doctrine_Import_Reader_Db
  * Reads a database using the given PDO connection and constructs a database
  * schema
+ *
+ * @package     Doctrine
+ * @subpackage  Import
+ * @link        www.phpdoctrine.com
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @since       1.0
+ * @version     $Revision$
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Import_Reader_Db extends Doctrine_Import_Reader
 {
-
     /** Aggregations: */
 
     /** Compositions: */
@@ -48,28 +45,50 @@ class Doctrine_Import_Reader_Db extends Doctrine_Import_Reader
      */
     private $pdo;
 
-
     /**
      *
-     * @param object pdo      * @return 
+     * @param object pdo      * @return
      * @access public
      */
-    public function setPdo( $pdo ) {
-        
-    } // end of member function setPdo
+    public function setPdo( $pdo )
+    {
 
+    } // end of member function setPdo
 
     /**
      *
      * @return Doctrine_Schema
      * @access public
      */
-    public function read( )
+    public function read()
     {
-    	return new Doctrine_Schema(); /* @todo FIXME i am incomplete*/
+        $dataDict = Doctrine_Manager::getInstance()->getCurrentConnection()->getDataDict();
+
+        $schema = new Doctrine_Schema(); /* @todo FIXME i am incomplete*/
+        $db = new Doctrine_Schema_Database();
+        $schema->addDatabase($db);
+
+        $dbName = 'XXtest'; // @todo FIXME where should we get
+
+        $this->conn->set("name",$dbName);
+        $tableNames = $dataDict->listTables();
+        foreach ($tableNames as $tableName) {
+            $table = new Doctrine_Schema_Table();
+            $table->set("name",$tableName);
+            $tableColumns = $dataDict->listTableColumns($tableName);
+            foreach ($tableColumns as $tableColumn) {
+                $table->addColumn($tableColumn);
+            }
+            $this->conn->addTable($table);
+            if ($fks = $dataDict->listTableConstraints($tableName)) {
+                foreach ($fks as $fk) {
+                    $relation = new Doctrine_Schema_Relation();
+                    $relation->setRelationBetween($fk['referencingColumn'],$fk['referencedTable'],$fk['referencedColumn']);
+                    $table->setRelation($relation);
+                }
+            }
+        }
+
+        return $schema;
     }
-
-
-
-} // end of Doctrine_Import_Reader_Db
-
+}

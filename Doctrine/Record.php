@@ -18,17 +18,21 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.com>.
  */
-Doctrine::autoload('Doctrine_Access');
+Doctrine::autoload('Doctrine_Record_Abstract');
 /**
  * Doctrine_Record
  * All record classes should inherit this super class
  *
- * @author      Konsta Vesterinen
- * @license     LGPL
  * @package     Doctrine
+ * @subpackage  Record
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.phpdoctrine.com
+ * @since       1.0
+ * @version     $Revision$
  */
-
-abstract class Doctrine_Record extends Doctrine_Access implements Countable, IteratorAggregate, Serializable {
+abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Countable, IteratorAggregate, Serializable
+{
     /**
      * STATE CONSTANTS
      */
@@ -38,193 +42,175 @@ abstract class Doctrine_Record extends Doctrine_Access implements Countable, Ite
      * a Doctrine_Record is in dirty state when its properties are changed
      */
     const STATE_DIRTY       = 1;
+
     /**
      * TDIRTY STATE
-     * a Doctrine_Record is in transient dirty state when it is created and some of its fields are modified
-     * but it is NOT yet persisted into database
+     * a Doctrine_Record is in transient dirty state when it is created 
+     * and some of its fields are modified but it is NOT yet persisted into database
      */
     const STATE_TDIRTY      = 2;
+
     /**
      * CLEAN STATE
      * a Doctrine_Record is in clean state when all of its properties are loaded from the database
      * and none of its properties are changed
      */
     const STATE_CLEAN       = 3;
+
     /**
      * PROXY STATE
      * a Doctrine_Record is in proxy state when its properties are not fully loaded
      */
     const STATE_PROXY       = 4;
+
     /**
      * NEW TCLEAN
      * a Doctrine_Record is in transient clean state when it is created and none of its fields are modified
      */
     const STATE_TCLEAN      = 5;
-    /**
-     * DELETED STATE
-     * a Doctrine_Record turns into deleted state when it is deleted
-     */
-    const STATE_DELETED     = 6;
 
     /**
-     * CALLBACK CONSTANTS
-     */
-
-    /**
-     * RAW CALLBACK
+     * LOCKED STATE
+     * a Doctrine_Record is temporarily locked during deletes and saves
      *
-     * when using a raw callback and the property if a record is changed using this callback the
-     * record state remains untouched
+     * This state is used internally to ensure that circular deletes
+     * and saves will not cause infinite loops
      */
-    const CALLBACK_RAW       = 1;
-    /**
-     * STATE-WISE CALLBACK
-     *
-     * state-wise callback means that when callback is used and the property is changed the
-     * record state is also updated
-     */
-    const CALLBACK_STATEWISE = 2;
+    const STATE_LOCKED     = 6;
 
     /**
-     * @var object Doctrine_Table $table    the factory that created this data access object
+     * @var Doctrine_Node_<TreeImpl>        node object
      */
-    protected $table;
+    protected $_node;
+
     /**
-     * @var integer $id                     the primary keys of this object
+     * @var integer $_id                    the primary keys of this object
      */
-    protected $id           = array();
+    protected $_id           = array();
+
     /**
-     * @var array $data                     the record data
+     * @var array $_data                    the record data
      */
-    protected $data         = array();
+    protected $_data         = array();
+
     /**
-     * @var integer $state                  the state of this record
+     * @var array $_values                  the values array, aggregate values and such are mapped into this array
+     */
+    protected $_values       = array();
+
+    /**
+     * @var integer $_state                 the state of this record
      * @see STATE_* constants
      */
-    protected $state;
+    protected $_state;
+
     /**
-     * @var array $modified                 an array containing properties that have been modified
+     * @var array $_modified                an array containing properties that have been modified
      */
-    protected $modified     = array();
+    protected $_modified     = array();
+
     /**
-     * @var array $collections              the collections this record is in
+     * @var Doctrine_Validator_ErrorStack   error stack object
      */
-    private $collections    = array();
+    protected $_errorStack;
+
     /**
-     * @var array $references               an array containing all the references
+     * @var array $_references              an array containing all the references
      */
-    private $references     = array();
-    /**
-     * @var array $originals                an array containing all the original references
-     */
-    private $originals      = array();
-    /**
-     * @var array $filters
-     */
-    private $filters        = array();
+    protected $_references     = array();
+
     /**
      * @var integer $index                  this index is used for creating object identifiers
      */
-    private static $index   = 1;
+    private static $_index = 1;
+
     /**
-     * @var Doctrine_Null $null             a Doctrine_Null object used for extremely fast
-     *                                      null value testing
+     * @var integer $oid                    object identifier, each Record object has a unique object identifier
      */
-    private static $null;
-    /**
-     * @var integer $oid                    object identifier
-     */
-    private $oid;
+    private $_oid;
 
     /**
      * constructor
-     * @param Doctrine_Table $table         a Doctrine_Table object
+     * @param Doctrine_Table|null $table       a Doctrine_Table object or null,
+     *                                         if null the table object is retrieved from current connection
+     *
+     * @param boolean $isNewEntry              whether or not this record is transient
+     *
      * @throws Doctrine_Connection_Exception   if object is created using the new operator and there are no
-     *                                      open connections
+     *                                         open connections
+     * @throws Doctrine_Record_Exception       if the cleanData operation fails somehow
      */
-    public function __construct($table = null) {
-        if(isset($table) && $table instanceof Doctrine_Table) {
-            $this->table = $table;
-            $exists  = ( ! $this->table->isNewEntry());
+    public function __construct($table = null, $isNewEntry = false)
+    {
+        if (isset($table) && $table instanceof Doctrine_Table) {
+            $this->_table = $table;
+            $exists = ( ! $isNewEntry);
         } else {
-            $this->table = Doctrine_Manager::getInstance()->getCurrentConnection()->getTable(get_class($this));
-            $exists  = false;
+            $class  = get_class($this);
+            // get the table of this class
+            $this->_table = Doctrine_Manager::getInstance()
+                            ->getTable($class);
+            $exists = false;
         }
 
         // Check if the current connection has the records table in its registry
-        // If not this is record is only used for creating table definition and setting up
+        // If not this record is only used for creating table definition and setting up
         // relations.
 
-        if($this->table->getConnection()->hasTable($this->table->getComponentName())) {
+        if ($this->_table->getConnection()->hasTable($this->_table->getComponentName())) {
+            $this->_oid = self::$_index;
 
-            $this->oid = self::$index;
+            self::$_index++;
 
-            self::$index++;
+            $keys = (array) $this->_table->getIdentifier();
 
-            $keys = $this->table->getPrimaryKeys();
-
-            if( ! $exists) {
-                // listen the onPreCreate event
-                $this->table->getAttribute(Doctrine::ATTR_LISTENER)->onPreCreate($this);
-            } else {
-
-                // listen the onPreLoad event
-                $this->table->getAttribute(Doctrine::ATTR_LISTENER)->onPreLoad($this);
-            }
             // get the data array
-            $this->data = $this->table->getData();
-
+            $this->_data = $this->_table->getData();
 
             // get the column count
-            $count = count($this->data);
+            $count = count($this->_data);
 
-            // clean data array
-            $this->cleanData();
+            $this->_values = $this->cleanData($this->_data);
 
             $this->prepareIdentifiers($exists);
 
-            if( ! $exists) {
-
-                if($count > 0)
-                    $this->state = Doctrine_Record::STATE_TDIRTY;
-                else
-                    $this->state = Doctrine_Record::STATE_TCLEAN;
-
-                // set the default values for this record
-                $this->setDefaultValues();
-
-                // listen the onCreate event
-                $this->table->getAttribute(Doctrine::ATTR_LISTENER)->onCreate($this);
-
-            } else {
-                $this->state      = Doctrine_Record::STATE_CLEAN;
-
-                if($count < $this->table->getColumnCount()) {
-                    $this->state  = Doctrine_Record::STATE_PROXY;
+            if ( ! $exists) {
+                if ($count > count($this->_values)) {
+                    $this->_state = Doctrine_Record::STATE_TDIRTY;
+                } else {
+                    $this->_state = Doctrine_Record::STATE_TCLEAN;
                 }
 
-                // listen the onLoad event
-                $this->table->getAttribute(Doctrine::ATTR_LISTENER)->onLoad($this);
+                // set the default values for this record
+                $this->assignDefaultValues();
+            } else {
+                $this->_state      = Doctrine_Record::STATE_CLEAN;
+
+                if ($count < $this->_table->getColumnCount()) {
+                    $this->_state  = Doctrine_Record::STATE_PROXY;
+                }
             }
 
-            $repository = $this->table->getRepository();
+            $this->_errorStack = new Doctrine_Validator_ErrorStack(get_class($this));
+
+            $repository = $this->_table->getRepository();
             $repository->add($this);
+            
+            $this->construct();
         }
+        
     }
+
     /**
-     * initNullObject
+     * _index
      *
-     * @param Doctrine_Null $null
+     * @return integer
      */
-    public static function initNullObject(Doctrine_Null $null) {
-        self::$null = $null;
+    public static function _index()
+    {
+        return self::$_index;
     }
-    /**
-     * @return Doctrine_Null
-     */
-    public static function getNullObject() {
-        return self::$null;
-    }
+
     /**
      * setUp
      * this method is used for setting up relations and attributes
@@ -232,831 +218,1046 @@ abstract class Doctrine_Record extends Doctrine_Access implements Countable, Ite
      *
      * @return void
      */
-    public function setUp() { }
+    public function setUp()
+    { }
     /**
-     * getOID
-     * return the object identifier
+     * construct
+     * Empty template method to provide concrete Record classes with the possibility
+     * to hook into the constructor procedure
+     *
+     * @return void
+     */
+    public function construct()
+    { }
+    /**
+     * getOid
+     * returns the object identifier
      *
      * @return integer
      */
-    public function getOID() {
-        return $this->oid;
+    public function getOid()
+    {
+        return $this->_oid;
     }
+
+    /**
+     * isValid
+     *
+     * @return boolean                          whether or not this record passes all column validations
+     */
+    public function isValid()
+    {
+        if ( ! $this->_table->getAttribute(Doctrine::ATTR_VALIDATE)) {
+            return true;
+        }
+        // Clear the stack from any previous errors.
+        $this->_errorStack->clear();
+
+        // Run validation process
+        $validator = new Doctrine_Validator();
+        $validator->validateRecord($this);
+        $this->validate();
+        if ($this->_state == self::STATE_TDIRTY || $this->_state == self::STATE_TCLEAN) {
+            $this->validateOnInsert();
+        } else {
+            $this->validateOnUpdate();
+        }
+
+        return $this->_errorStack->count() == 0 ? true : false;
+    }
+
+    /**
+     * Empty template method to provide concrete Record classes with the possibility
+     * to hook into the validation procedure, doing any custom / specialized
+     * validations that are neccessary.
+     */
+    protected function validate()
+    { }
+    /**
+     * Empty template method to provide concrete Record classes with the possibility
+     * to hook into the validation procedure only when the record is going to be
+     * updated.
+     */
+    protected function validateOnUpdate()
+    { }
+    /**
+     * Empty template method to provide concrete Record classes with the possibility
+     * to hook into the validation procedure only when the record is going to be
+     * inserted into the data store the first time.
+     */
+    protected function validateOnInsert()
+    { }
+    /**
+     * Empty template method to provide concrete Record classes with the possibility
+     * to hook into the serializing procedure.
+     */
+    public function preSerialize($event)
+    { }
+    /**
+     * Empty template method to provide concrete Record classes with the possibility
+     * to hook into the serializing procedure.
+     */
+    public function postSerialize($event)
+    { }
+    /**
+     * Empty template method to provide concrete Record classes with the possibility
+     * to hook into the serializing procedure.
+     */
+    public function preUnserialize($event)
+    { }
+    /**
+     * Empty template method to provide concrete Record classes with the possibility
+     * to hook into the serializing procedure.
+     */
+    public function postUnserialize($event)
+    { }
+    /**
+     * Empty template method to provide concrete Record classes with the possibility
+     * to hook into the saving procedure.
+     */
+    public function preSave($event)
+    { }
+    /**
+     * Empty template method to provide concrete Record classes with the possibility
+     * to hook into the saving procedure.
+     */
+    public function postSave($event)
+    { }
+    /**
+     * Empty template method to provide concrete Record classes with the possibility
+     * to hook into the deletion procedure.
+     */
+    public function preDelete($event)
+    { }
+    /**
+     * Empty template method to provide concrete Record classes with the possibility
+     * to hook into the deletion procedure.
+     */
+    public function postDelete($event)
+    { }
+    /**
+     * Empty template method to provide concrete Record classes with the possibility
+     * to hook into the saving procedure only when the record is going to be
+     * updated.
+     */
+    public function preUpdate($event)
+    { }
+    /**
+     * Empty template method to provide concrete Record classes with the possibility
+     * to hook into the saving procedure only when the record is going to be
+     * updated.
+     */
+    public function postUpdate($event)
+    { }
+    /**
+     * Empty template method to provide concrete Record classes with the possibility
+     * to hook into the saving procedure only when the record is going to be
+     * inserted into the data store the first time.
+     */
+    public function preInsert($event)
+    { }
+    /**
+     * Empty template method to provide concrete Record classes with the possibility
+     * to hook into the saving procedure only when the record is going to be
+     * inserted into the data store the first time.
+     */
+    public function postInsert($event)
+    { }
+    /**
+     * getErrorStack
+     *
+     * @return Doctrine_Validator_ErrorStack    returns the errorStack associated with this record
+     */
+    public function getErrorStack()
+    {
+        return $this->_errorStack;
+    }
+
+    /**
+     * errorStack
+     * assigns / returns record errorStack
+     *
+     * @param Doctrine_Validator_ErrorStack          errorStack to be assigned for this record
+     * @return void|Doctrine_Validator_ErrorStack    returns the errorStack associated with this record
+     */
+    public function errorStack($stack = null)
+    {
+        if ($stack !== null) {
+            if ( ! ($stack instanceof Doctrine_Validator_ErrorStack)) {
+               throw new Doctrine_Record_Exception('Argument should be an instance of Doctrine_Validator_ErrorStack.');
+            }
+            $this->_errorStack = $stack;
+        } else {
+            return $this->_errorStack;
+        }
+    }
+
     /**
      * setDefaultValues
-     * sets the default values
+     * sets the default values for records internal data
      *
-     * @param boolean $overwrite        whether or not to overwrite the already set values
+     * @param boolean $overwrite                whether or not to overwrite the already set values
      * @return boolean
      */
-    public function setDefaultValues($overwrite = false) {
-        if( ! $this->table->hasDefaultValues())
+    public function assignDefaultValues($overwrite = false)
+    {
+        if ( ! $this->_table->hasDefaultValues()) {
             return false;
+        }
+        foreach ($this->_data as $column => $value) {
+            $default = $this->_table->getDefaultValueOf($column);
+
+            if ($default === null) {
+                continue;
+            }
             
-        foreach($this->data as $column => $value) {
-            $default = $this->table->getDefaultValueOf($column);
-
-            if($default === null)
-                $default = self::$null;
-
-            if($value === self::$null || $overwrite) {
-                $this->data[$column] = $default;
-                $this->modified[]    = $column;
-                $this->state = Doctrine_Record::STATE_TDIRTY;
+            if ($value === self::$_null || $overwrite) {
+                $this->_data[$column] = $default;
+                $this->_modified[]    = $column;
+                $this->_state = Doctrine_Record::STATE_TDIRTY;
             }
         }
     }
+
     /**
      * cleanData
-     * modifies data array
-     * example:
      *
-     * $data = array("name"=>"John","lastname"=> null, "id" => 1,"unknown" => "unknown");
-     * $names = array("name", "lastname", "id");
-     * $data after operation:
-     * $data = array("name"=>"John","lastname" => Object(Doctrine_Null));
-     *
-     * here column 'id' is removed since its auto-incremented primary key (protected)
-     *
+     * @param array $data       data array to be cleaned
      * @return integer
      */
-    private function cleanData($debug = false) {
-        $tmp = $this->data;
+    public function cleanData(&$data)
+    {
+        $tmp = $data;
+        $data = array();
 
-        $this->data = array();
-
-        $count = 0;
-
-        foreach($this->table->getColumnNames() as $name) {
-            $type = $this->table->getTypeOf($name);
-
-            if( ! isset($tmp[$name])) {
-                $this->data[$name] = self::$null;
+        foreach ($this->getTable()->getColumnNames() as $name) {
+            if ( ! isset($tmp[$name])) {
+                $data[$name] = self::$_null;
             } else {
-                switch($type):
-                    case "array":
-                    case "object":
-
-                        if($tmp[$name] !== self::$null) {
-                            if(is_string($tmp[$name])) {
-                                $value = unserialize($tmp[$name]);
-
-                                if($value === false)
-                                    throw new Doctrine_Record_Exception("Unserialization of $name failed. ".var_dump($tmp[$lower],true));
-                            } else
-                                $value = $tmp[$name];
-
-                            $this->data[$name] = $value;
-                        }
-                    break;
-                    case "gzip":
-
-                        if($tmp[$name] !== self::$null) {
-                            $value = gzuncompress($tmp[$name]);
-                            
-
-                            if($value === false)
-                                throw new Doctrine_Record_Exception("Uncompressing of $name failed.");
-
-                            $this->data[$name] = $value;
-                        }
-                    break;
-                    case "enum":
-                        $this->data[$name] = $this->table->enumValue($name, $tmp[$name]);
-                    break;
-                    default:
-                        $this->data[$name] = $tmp[$name];
-                endswitch;
-                $count++;
+                $data[$name] = $tmp[$name];
             }
+            unset($tmp[$name]);
         }
 
-
-        return $count;
+        return $tmp;
     }
+
     /**
+     * hydrate
+     * hydrates this object from given array
+     *
+     * @param array $data
+     * @return boolean
+     */
+    public function hydrate(array $data)
+    {
+        $this->_values = array_merge($this->_values, $this->cleanData($data));
+        $this->_data   = array_merge($this->_data, $data);
+
+        $this->prepareIdentifiers(true);
+    }
+
+    /**
+     * prepareIdentifiers
      * prepares identifiers for later use
      *
      * @param boolean $exists               whether or not this record exists in persistent data store
      * @return void
      */
-    private function prepareIdentifiers($exists = true) {
-        switch($this->table->getIdentifierType()):
-            case Doctrine_Identifier::AUTO_INCREMENT:
-            case Doctrine_Identifier::SEQUENCE:
-                $name = $this->table->getIdentifier();
+    private function prepareIdentifiers($exists = true)
+    {
+        switch ($this->_table->getIdentifierType()) {
+            case Doctrine::IDENTIFIER_AUTOINC:
+            case Doctrine::IDENTIFIER_SEQUENCE:
+            case Doctrine::IDENTIFIER_NATURAL:
+                $name = $this->_table->getIdentifier();
 
-                if($exists) {
-                    if(isset($this->data[$name]) && $this->data[$name] !== self::$null)
-                        $this->id[$name] = $this->data[$name];
+                if ($exists) {
+                    if (isset($this->_data[$name]) && $this->_data[$name] !== self::$_null) {
+                        $this->_id[$name] = $this->_data[$name];
+                    }
                 }
+                break;
+            case Doctrine::IDENTIFIER_COMPOSITE:
+                $names = $this->_table->getIdentifier();
 
-                unset($this->data[$name]);
-
-            break;
-            case Doctrine_Identifier::NORMAL:
-                 $this->id   = array();
-                 $name       = $this->table->getIdentifier();
-
-                 if(isset($this->data[$name]) && $this->data[$name] !== self::$null)
-                    $this->id[$name] = $this->data[$name];
-            break;
-            case Doctrine_Identifier::COMPOSITE:
-                $names      = $this->table->getIdentifier();
-
-
-                foreach($names as $name) {
-                    if($this->data[$name] === self::$null)
-                        $this->id[$name] = null;
-                    else
-                        $this->id[$name] = $this->data[$name];
+                foreach ($names as $name) {
+                    if ($this->_data[$name] === self::$_null) {
+                        $this->_id[$name] = null;
+                    } else {
+                        $this->_id[$name] = $this->_data[$name];
+                    }
                 }
-            break;
-        endswitch;
+                break;
+        }
     }
+
     /**
+     * serialize
      * this method is automatically called when this Doctrine_Record is serialized
      *
      * @return array
      */
-    public function serialize() {
-        $this->table->getAttribute(Doctrine::ATTR_LISTENER)->onSleep($this);
+    public function serialize()
+    {
+        $event = new Doctrine_Event($this, Doctrine_Event::RECORD_SERIALIZE);
+
+        $this->preSerialize($event);
 
         $vars = get_object_vars($this);
 
-        unset($vars['references']);
-        unset($vars['collections']);
-        unset($vars['originals']);
-        unset($vars['table']);
+        unset($vars['_references']);
+        unset($vars['_table']);
+        unset($vars['_errorStack']);
+        unset($vars['_filter']);
+        unset($vars['_node']);
 
+        $name = $this->_table->getIdentifier();
+        $this->_data = array_merge($this->_data, $this->_id);
 
-        $name = $this->table->getIdentifier();
-        $this->data = array_merge($this->data, $this->id);
-
-        foreach($this->data as $k => $v) {
-            if($v instanceof Doctrine_Record)
-                unset($vars['data'][$k]);
-            elseif($v === self::$null) {
-                unset($vars['data'][$k]);
+        foreach ($this->_data as $k => $v) {
+            if ($v instanceof Doctrine_Record && $this->_table->getTypeOf($k) != 'object') {
+                unset($vars['_data'][$k]);
+            } elseif ($v === self::$_null) {
+                unset($vars['_data'][$k]);
             } else {
-                switch($this->table->getTypeOf($k)):
-                    case "array":
-                    case "object":
-                        $vars['data'][$k] = serialize($vars['data'][$k]);
-                    break;
-                endswitch;
+                switch ($this->_table->getTypeOf($k)) {
+                    case 'array':
+                    case 'object':
+                        $vars['_data'][$k] = serialize($vars['_data'][$k]);
+                        break;
+                    case 'gzip':
+                        $vars['_data'][$k] = gzcompress($vars['_data'][$k]);
+                        break;
+                    case 'enum':
+                        $vars['_data'][$k] = $this->_table->enumIndex($k, $vars['_data'][$k]);
+                        break;
+                }
             }
         }
 
-        return serialize($vars);
+        $str = serialize($vars);
+        
+        $this->postSerialize($event);
+
+        return $str;
     }
+
     /**
      * unseralize
      * this method is automatically called everytime a Doctrine_Record object is unserialized
      *
+     * @param string $serialized                Doctrine_Record as serialized string
+     * @throws Doctrine_Record_Exception        if the cleanData operation fails somehow
      * @return void
      */
-    public function unserialize($serialized) {
+    public function unserialize($serialized)
+    {
+        $event = new Doctrine_Event($this, Doctrine_Event::RECORD_UNSERIALIZE);
+
+        $this->preUnserialize($event);
+
         $manager    = Doctrine_Manager::getInstance();
-        $connection    = $manager->getCurrentConnection();
+        $connection = $manager->getConnectionForComponent(get_class($this));
 
-        $this->oid  = self::$index;
-        self::$index++;
+        $this->_oid = self::$_index;
+        self::$_index++;
 
-        $this->table = $connection->getTable(get_class($this));
-
+        $this->_table = $connection->getTable(get_class($this));
 
         $array = unserialize($serialized);
 
-        foreach($array as $name => $values) {
-            $this->$name = $values;
+        foreach($array as $k => $v) {
+            $this->$k = $v;
         }
 
-        $this->table->getRepository()->add($this);
+        foreach ($this->_data as $k => $v) {
 
-        $this->cleanData();
-
-        $exists = true;
-
-        if($this->state == Doctrine_Record::STATE_TDIRTY ||
-           $this->state == Doctrine_Record::STATE_TCLEAN)
-            $exists = false;
-
-        $this->prepareIdentifiers($exists);
-
-        $this->table->getAttribute(Doctrine::ATTR_LISTENER)->onWakeUp($this);
-    }
-
-
-    /**
-     * addCollection
-     * @param Doctrine_Collection $collection
-     * @param mixed $key
-     */
-    final public function addCollection(Doctrine_Collection $collection,$key = null) {
-        if($key !== null) {
-            if(isset($this->collections[$key]))
-                throw InvalidKeyException();
-
-            $this->collections[$key] = $collection;
-        } else {
-            $this->collections[] = $collection;
+            switch ($this->_table->getTypeOf($k)) {
+                case 'array':
+                case 'object':
+                    $this->_data[$k] = unserialize($this->_data[$k]);
+                    break;
+                case 'gzip':
+                   $this->_data[$k] = gzuncompress($this->_data[$k]);
+                    break;
+                case 'enum':
+                    $this->_data[$k] = $this->_table->enumValue($k, $this->_data[$k]);
+                    break;
+                
+            }
         }
+        
+        $this->_table->getRepository()->add($this);
+
+        $this->cleanData($this->_data);
+
+        $this->prepareIdentifiers($this->exists());
+        
+        $this->postUnserialize($event);
     }
+
     /**
-     * getCollection
-     * @param integer $key
-     * @return Doctrine_Collection
-     */
-    final public function getCollection($key) {
-        return $this->collections[$key];
-    }
-    /**
-     * hasCollections
-     * whether or not this record is part of a collection
+     * state
+     * returns / assigns the state of this record
      *
-     * @return boolean
-     */
-    final public function hasCollections() {
-        return (! empty($this->collections));
-    }
-    /**
-     * getState
-     * returns the current state of the object
-     *
+     * @param integer|string $state                 if set, this method tries to set the record state to $state
      * @see Doctrine_Record::STATE_* constants
-     * @return integer
+     *
+     * @throws Doctrine_Record_State_Exception      if trying to set an unknown state
+     * @return null|integer
      */
-    final public function getState() {
-        return $this->state;
+    public function state($state = null)
+    {
+        if ($state == null) {
+            return $this->_state;
+        }
+        $err = false;
+        if (is_integer($state)) {
+            if ($state >= 1 && $state <= 6) {
+                $this->_state = $state;
+            } else {
+                $err = true;
+            }
+        } elseif (is_string($state)) {
+            $upper = strtoupper($state);
+            
+            $const = 'Doctrine_Record::STATE_' . $upper;
+            if (defined($const)) {
+                $this->_state = constant($const);  
+            } else {
+                $err = true;
+            }
+        }
+
+        if ($this->_state === Doctrine_Record::STATE_TCLEAN ||
+            $this->_state === Doctrine_Record::STATE_CLEAN) {
+
+            $this->_modified = array();
+        }
+
+        if ($err) {
+            throw new Doctrine_Record_State_Exception('Unknown record state ' . $state);
+        }
     }
+
     /**
      * refresh
      * refresh internal data from the database
      *
+     * @throws Doctrine_Record_Exception        When the refresh operation fails (when the database row
+     *                                          this record represents does not exist anymore)
      * @return boolean
      */
-    final public function refresh() {
-        $id = $this->obtainIdentifier();
-        if( ! is_array($id))
+    public function refresh()
+    {
+        $id = $this->identifier();
+        if ( ! is_array($id)) {
             $id = array($id);
-
-        if(empty($id))
+        }
+        if (empty($id)) {
             return false;
-
+        }
         $id = array_values($id);
 
-        $query          = $this->table->getQuery()." WHERE ".implode(" = ? AND ",$this->table->getPrimaryKeys())." = ?";
-        $stmt           = $this->table->getConnection()->execute($query,$id);
+        // Use FETCH_ARRAY to avoid clearing object relations
+        $record = $this->getTable()->find($id, Doctrine::FETCH_ARRAY);
 
-        $this->data     = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($record === false) {
+            throw new Doctrine_Record_Exception('Failed to refresh. Record does not exist.');
+        }
 
+        $this->hydrate($record);
 
-        if( ! $this->data)
-            throw new Doctrine_Record_Exception('Failed to refresh. Record does not exist anymore');
-
-        $this->data     = array_change_key_case($this->data, CASE_LOWER);
-
-        $this->modified = array();
-        $this->cleanData(true);
+        $this->_modified = array();
 
         $this->prepareIdentifiers();
 
-        $this->state    = Doctrine_Record::STATE_CLEAN;
+        $this->_state    = Doctrine_Record::STATE_CLEAN;
 
-        $this->table->getAttribute(Doctrine::ATTR_LISTENER)->onLoad($this);
-
-        return true;
+        return $this;
     }
+
     /**
-     * factoryRefresh
-     * refreshes the data from outer source (Doctrine_Table)
+     * refresh
+     * refres data of related objects from the database
      *
-     * @throws Doctrine_Exception
-     * @return void
+     * @param string $name              name of a related component.
+     *                                  if set, this method only refreshes the specified related component
+     *
+     * @return Doctrine_Record          this object
      */
-    final public function factoryRefresh() {
-        $this->data = $this->table->getData();
-        $old  = $this->id;
-
-        $this->cleanData();
-
-        $this->prepareIdentifiers();
-
-        if($this->id != $old)
-            throw new Doctrine_Record_Exception("The refreshed primary key doesn't match the one in the record memory.", Doctrine::ERR_REFRESH);
-
-        $this->state    = Doctrine_Record::STATE_CLEAN;
-        $this->modified = array();
-
-        $this->table->getAttribute(Doctrine::ATTR_LISTENER)->onLoad($this);
+    public function refreshRelated($name = null)
+    {
+        if (is_null($name)) {
+            foreach ($this->_table->getRelations() as $rel) {
+                $this->_references[$rel->getAlias()] = $rel->fetchRelatedFor($this);
+            }
+        } else {
+            $rel = $this->_table->getRelation($name);
+            $this->_references[$name] = $rel->fetchRelatedFor($this);
+        }
     }
+
     /**
-     * return the factory that created this data access object
-     * @return object Doctrine_Table        a Doctrine_Table object
+     * clearRelated
+     * unsets all the relationships this object has
+     *
+     * (references to related objects still remain on Table objects)
      */
-    final public function getTable() {
-        return $this->table;
+    public function clearRelated()
+    {
+        $this->_references = array();
     }
+
     /**
+     * getTable
+     * returns the table object for this record
+     *
+     * @return Doctrine_Table        a Doctrine_Table object
+     */
+    public function getTable()
+    {
+        return $this->_table;
+    }
+
+    /**
+     * getData
      * return all the internal data
-     * @return array                    an array containing all the properties
+     *
+     * @return array                        an array containing all the properties
      */
-    final public function getData() {
-        return $this->data;
+    public function getData()
+    {
+        return $this->_data;
     }
+
     /**
      * rawGet
      * returns the value of a property, if the property is not yet loaded
      * this method does NOT load it
      *
-     * @param $name                     name of the property
+     * @param $name                         name of the property
+     * @throws Doctrine_Record_Exception    if trying to get an unknown property
      * @return mixed
      */
-    public function rawGet($name) {
-        if( ! isset($this->data[$name]))
-            throw new InvalidKeyException();
-
-        if($this->data[$name] === self::$null)
+    public function rawGet($name)
+    {
+        if ( ! isset($this->_data[$name])) {
+            throw new Doctrine_Record_Exception('Unknown property '. $name);
+        }
+        if ($this->_data[$name] === self::$_null)
             return null;
 
-        return $this->data[$name];
+        return $this->_data[$name];
     }
+
     /**
      * load
      * loads all the unitialized properties from the database
      *
      * @return boolean
      */
-    public function load() {
+    public function load()
+    {
         // only load the data from database if the Doctrine_Record is in proxy state
-        if($this->state == Doctrine_Record::STATE_PROXY) {
-            if( ! empty($this->collections)) {
-                // delegate the loading operation to collections in which this record resides
-                foreach($this->collections as $collection) {
-                    $collection->load($this);
+        if ($this->_state == Doctrine_Record::STATE_PROXY) {
+            $this->refresh();
 
-                }
-            } else {
-
-                $this->refresh();
-            }
-            $this->state = Doctrine_Record::STATE_CLEAN;
+            $this->_state = Doctrine_Record::STATE_CLEAN;
 
             return true;
         }
         return false;
     }
+
     /**
      * get
      * returns a value of a property or a related component
      *
      * @param mixed $name                       name of the property or related component
-     * @param boolean $invoke                   whether or not to invoke the onGetProperty listener
-     * @throws Doctrine_Exception
+     * @param boolean $load                     whether or not to invoke the loading procedure
+     * @throws Doctrine_Record_Exception        if trying to get a value of unknown property / related component
      * @return mixed
      */
-    public function get($name, $invoke = true) {
-        $listener = $this->table->getAttribute(Doctrine::ATTR_LISTENER);
-        $value    = self::$null;
-        $lower    = strtolower($name);
+    public function get($name, $load = true)
+    {
+        $value = self::$_null;
+        $lower = strtolower($name);
 
-        if(isset($this->data[$lower])) {
+        $lower = $this->_table->getColumnName($lower);
 
-            // check if the property is null (= it is the Doctrine_Null object located in self::$null)
-            if($this->data[$lower] === self::$null) {
+        if (isset($this->_data[$lower])) {
+            // check if the property is null (= it is the Doctrine_Null object located in self::$_null)
+            if ($this->_data[$lower] === self::$_null && $load) {
                 $this->load();
             }
-            
-            if($this->data[$lower] === self::$null)
+
+            if ($this->_data[$lower] === self::$_null) {
                 $value = null;
-            else
-                $value = $this->data[$lower];
-
+            } else {
+                $value = $this->_data[$lower];
+            }
+            return $value;
         }
 
-
-        if($value !== self::$null) {
-            if($invoke && $name !== $this->table->getIdentifier()) {
-                return $this->table->getAttribute(Doctrine::ATTR_LISTENER)->onGetProperty($this, $name, $value);
-            } else
-                return $value;
+        if (isset($this->_values[$lower])) {
+            return $this->_values[$lower];
         }
 
+        try {
 
-        if(isset($this->id[$lower]))
-            return $this->id[$lower];
+            if ( ! isset($this->_references[$name]) && $load) {
 
-        if($name === $this->table->getIdentifier())
-            return null;
+                $rel = $this->_table->getRelation($name);
 
-        if( ! isset($this->references[$name]))
-            $this->loadReference($name);
+                $this->_references[$name] = $rel->fetchRelatedFor($this);
+            }
+            return $this->_references[$name];
 
+        } catch(Doctrine_Table_Exception $e) { 
 
-        return $this->references[$name];
-    }
-    /**
-     * internalSet
-     *
-     * @param mixed $name
-     * @param mixed $value
-     */
-    final public function internalSet($name, $value) {
-        if($value === null)
-            $value = self::$null;
-
-        $this->data[$name] = $value;
-    }
-    /**
-     * rawSet
-     * doctrine uses this function internally, not recommended for developers
-     *
-     * rawSet() works in very same same way as set() with an exception that
-     * 1. it cannot be used for setting references
-     * 2. it cannot load uninitialized fields
-     *
-     * @param mixed $name               name of the property or reference
-     * @param mixed $value              value of the property or reference
-     */
-    final public function rawSet($name,$value) {
-        if($value instanceof Doctrine_Record)
-            $id = $value->getIncremented();
-
-        if(isset($id))
-            $value = $id;
-
-        if(isset($this->data[$name])) {
-            if($this->data[$name] === self::$null) {
-                if($this->data[$name] !== $value) {
-                    switch($this->state):
-                        case Doctrine_Record::STATE_CLEAN:
-                            $this->state = Doctrine_Record::STATE_DIRTY;
-                        break;
-                        case Doctrine_Record::STATE_TCLEAN:
-                            $this->state = Doctrine_Record::STATE_TDIRTY;
-                    endswitch;
+            foreach ($this->_table->getFilters() as $filter) {
+                if (($value = $filter->filterGet($this, $name, $value)) !== null) {
+                    return $value;
                 }
             }
-
-            if($this->state == Doctrine_Record::STATE_TCLEAN)
-                $this->state = Doctrine_Record::STATE_TDIRTY;
-
-            if($value === null)
-                $value = self::$null;
-
-            $this->data[$name] = $value;
-            $this->modified[]  = $name;
         }
+    }
+
+    /**
+     * mapValue
+     * This simple method is used for mapping values to $values property.
+     * Usually this method is used internally by Doctrine for the mapping of
+     * aggregate values.
+     *
+     * @param string $name                  the name of the mapped value
+     * @param mixed $value                  mixed value to be mapped
+     * @return void
+     */
+    public function mapValue($name, $value)
+    {
+        $name = strtolower($name);
+        $this->_values[$name] = $value;
     }
 
     /**
      * set
      * method for altering properties and Doctrine_Record references
+     * if the load parameter is set to false this method will not try to load uninitialized record data
      *
-     * @param mixed $name               name of the property or reference
-     * @param mixed $value              value of the property or reference
-     * @throws InvalidKeyException
-     * @throws InvalidTypeException
-     * @return void
+     * @param mixed $name                   name of the property or reference
+     * @param mixed $value                  value of the property or reference
+     * @param boolean $load                 whether or not to refresh / load the uninitialized record data
+     *
+     * @throws Doctrine_Record_Exception    if trying to set a value for unknown property / related component
+     * @throws Doctrine_Record_Exception    if trying to set a value of wrong type for related component
+     *
+     * @return Doctrine_Record
      */
-    public function set($name,$value) {
+    public function set($name, $value, $load = true)
+    {
         $lower = strtolower($name);
 
-        if(isset($this->data[$lower])) {
+        $lower = $this->_table->getColumnName($lower);
 
-            if($value instanceof Doctrine_Record) {
+        if (isset($this->_data[$lower])) {
+            if ($value instanceof Doctrine_Record) {
+                $type = $this->_table->getTypeOf($name);
+
                 $id = $value->getIncremented();
 
-                if($id !== null)
+                if ($id !== null && $type !== 'object') {
                     $value = $id;
+                }
             }
 
-            $old = $this->get($lower, false);
+            if ($load) {
+                $old = $this->get($lower, $load);
+            } else {
+                $old = $this->_data[$lower];
+            }
 
-            if($old !== $value) {
-                
-                // invoke the onPreSetProperty listener
-                $value = $this->table->getAttribute(Doctrine::ATTR_LISTENER)->onSetProperty($this, $name, $value);
+            if ($old !== $value) {
+                if ($value === null) {
+                    $value = self::$_null;
+                }
 
-                if($value === null)
-                    $value = self::$null;
-
-                $this->data[$lower] = $value;
-                $this->modified[]   = $lower;
-                switch($this->state):
+                $this->_data[$lower] = $value;
+                $this->_modified[]   = $lower;
+                switch ($this->_state) {
                     case Doctrine_Record::STATE_CLEAN:
-                    case Doctrine_Record::STATE_PROXY:
-                        $this->state = Doctrine_Record::STATE_DIRTY;
-                    break;
+                        $this->_state = Doctrine_Record::STATE_DIRTY;
+                        break;
                     case Doctrine_Record::STATE_TCLEAN:
-                        $this->state = Doctrine_Record::STATE_TDIRTY;
-                    break;
-                endswitch;
+                        $this->_state = Doctrine_Record::STATE_TDIRTY;
+                        break;
+                }
             }
         } else {
-            // if not found, throws InvalidKeyException
-
-            $fk = $this->table->getRelation($name);
-
-            // one-to-many or one-to-one relation
-            if($fk instanceof Doctrine_ForeignKey ||
-               $fk instanceof Doctrine_LocalKey) {
-                switch($fk->getType()):
-                    case Doctrine_Relation::MANY_COMPOSITE:
-                    case Doctrine_Relation::MANY_AGGREGATE:
-                        // one-to-many relation found
-                        if( ! ($value instanceof Doctrine_Collection))
-                            throw new Doctrine_Record_Exception("Couldn't call Doctrine::set(), second argument should be an instance of Doctrine_Collection when setting one-to-many references.");
-
-                        $value->setReference($this,$fk);
-                    break;
-                    case Doctrine_Relation::ONE_COMPOSITE:
-                    case Doctrine_Relation::ONE_AGGREGATE:
-                        // one-to-one relation found
-                        if( ! ($value instanceof Doctrine_Record))
-                            throw new Doctrine_Record_Exception("Couldn't call Doctrine::set(), second argument should be an instance of Doctrine_Record when setting one-to-one references.");
-
-                        if($fk->getLocal() == $this->table->getIdentifier()) {
-                            $this->references[$name]->set($fk->getForeign(),$this);
-                        } else {
-                            $this->set($fk->getLocal(),$value);
-                        }
-                    break;
-                endswitch;
-
-            } elseif($fk instanceof Doctrine_Association) {
-                // join table relation found
-                if( ! ($value instanceof Doctrine_Collection))
-                    throw new Doctrine_Record_Exception("Couldn't call Doctrine::set(), second argument should be an instance of Doctrine_Collection when setting one-to-many references.");
+            try {
+                $this->coreSetRelated($name, $value);
+            } catch(Doctrine_Table_Exception $e) {
+                foreach ($this->_table->getFilters() as $filter) {
+                    if (($value = $filter->filterSet($this, $name, $value)) !== null) {
+                        return $value;
+                    }
+                }
             }
-
-            $this->references[$name] = $value;
         }
     }
+
+    public function coreSetRelated($name, $value)
+    {
+        $rel = $this->_table->getRelation($name);
+
+        // one-to-many or one-to-one relation
+        if ($rel instanceof Doctrine_Relation_ForeignKey ||
+            $rel instanceof Doctrine_Relation_LocalKey) {
+            if ( ! $rel->isOneToOne()) {
+                // one-to-many relation found
+                if ( ! ($value instanceof Doctrine_Collection)) {
+                    throw new Doctrine_Record_Exception("Couldn't call Doctrine::set(), second argument should be an instance of Doctrine_Collection when setting one-to-many references.");
+                }
+                if (isset($this->_references[$name])) {
+                    $this->_references[$name]->setData($value->getData());
+                    return $this;
+                }
+            } else {
+                if ($value !== self::$_null) {
+                    // one-to-one relation found
+                    if ( ! ($value instanceof Doctrine_Record)) {
+                        throw new Doctrine_Record_Exception("Couldn't call Doctrine::set(), second argument should be an instance of Doctrine_Record or Doctrine_Null when setting one-to-one references.");
+                    }
+                    if ($rel instanceof Doctrine_Relation_LocalKey) {
+                        $foreign = $rel->getForeign();
+                        if ( ! empty($foreign) && $foreign != $value->getTable()->getIdentifier())
+                          $this->set($rel->getLocal(), $value->rawGet($foreign), false);
+                        else
+                          $this->set($rel->getLocal(), $value, false);                          
+                    } else {
+                        $value->set($rel->getForeign(), $this, false);
+                    }                            
+                }
+            }
+
+        } elseif ($rel instanceof Doctrine_Relation_Association) {
+            // join table relation found
+            if ( ! ($value instanceof Doctrine_Collection)) {
+                throw new Doctrine_Record_Exception("Couldn't call Doctrine::set(), second argument should be an instance of Doctrine_Collection when setting many-to-many references.");
+            }
+        }
+
+        $this->_references[$name] = $value;
+    }
+
     /**
      * contains
      *
      * @param string $name
      * @return boolean
      */
-    public function contains($name) {
-        if(isset($this->data[$name]))
-            return true;
+    public function contains($name)
+    {
+        $lower = strtolower($name);
 
-        if(isset($this->references[$name]))
+        if (isset($this->_data[$lower])) {
             return true;
+        }
+        if (isset($this->_id[$lower])) {
+            return true;
+        }
+        if (isset($this->_values[$lower])) {
+            return true;                                      
+        }
+        if (isset($this->_references[$name]) && 
+            $this->_references[$name] !== self::$_null) {
 
+            return true;
+        }
         return false;
     }
+
     /**
      * @param string $name
      * @return void
      */
-    public function __unset($name) {
-        if(isset($this->data[$name]))
-            $this->data[$name] = array();
-
+    public function __unset($name)
+    {
+        if (isset($this->_data[$name])) {
+            $this->_data[$name] = array();
+        }
         // todo: what to do with references ?
     }
+
     /**
      * applies the changes made to this object into database
      * this method is smart enough to know if any changes are made
      * and whether to use INSERT or UPDATE statement
      *
-     * this method also saves the related composites
+     * this method also saves the related components
      *
+     * @param Doctrine_Connection $conn                 optional connection parameter
      * @return void
      */
-    final public function save(Doctrine_Connection $conn = null) {
-        if ($conn == null) {
-            $conn = $this->table->getConnection();
+    public function save(Doctrine_Connection $conn = null)
+    {
+        if ($conn === null) {
+            $conn = $this->_table->getConnection();
         }
-        $conn->beginTransaction();
-
-        $saveLater = $conn->saveRelated($this);
-
-       $conn->save($this);
-
-        foreach($saveLater as $fk) {
-            $table   = $fk->getTable();
-            $alias   = $this->table->getAlias($table->getComponentName());
-
-            if(isset($this->references[$alias])) {
-                $obj = $this->references[$alias];
-                $obj->save();
-            }
-        }
-
-        // save the MANY-TO-MANY associations
-
-        $this->saveAssociations();
-
-        $conn->commit();
+        $conn->unitOfWork->saveGraph($this);
     }
+
+    /**
+     * Tries to save the object and all its related components.
+     * In contrast to Doctrine_Record::save(), this method does not
+     * throw an exception when validation fails but returns TRUE on
+     * success or FALSE on failure.
+     * 
+     * @param Doctrine_Connection $conn                 optional connection parameter
+     * @return TRUE if the record was saved sucessfully without errors, FALSE otherwise.
+     */
+    public function trySave(Doctrine_Connection $conn = null) {
+        try {
+            $this->save($conn);
+            return true;
+        } catch (Doctrine_Validator_Exception $ignored) {
+            return false;
+        }
+    }
+
+    /**
+     * replace
+     * Execute a SQL REPLACE query. A REPLACE query is identical to a INSERT
+     * query, except that if there is already a row in the table with the same
+     * key field values, the REPLACE query just updates its values instead of
+     * inserting a new row.
+     *
+     * The REPLACE type of query does not make part of the SQL standards. Since
+     * practically only MySQL and SQLIte implement it natively, this type of
+     * query isemulated through this method for other DBMS using standard types
+     * of queries inside a transaction to assure the atomicity of the operation.
+     *
+     * @param Doctrine_Connection $conn             optional connection parameter
+     * @throws Doctrine_Connection_Exception        if some of the key values was null
+     * @throws Doctrine_Connection_Exception        if there were no key fields
+     * @throws PDOException                         if something fails at PDO level
+     * @return integer                              number of rows affected
+     */
+    public function replace(Doctrine_Connection $conn = null)
+    {
+        if ($conn === null) {
+            $conn = $this->_table->getConnection();
+        }
+
+        return $conn->replace($this->_table->getTableName(), $this->getPrepared(), $this->_id);
+    }
+
     /**
      * returns an array of modified fields and associated values
      * @return array
      */
-    final public function getModified() {
+    public function getModified()
+    {
         $a = array();
 
-        foreach($this->modified as $k => $v) {
-            $a[$v] = $this->data[$v];
+        foreach ($this->_modified as $k => $v) {
+            $a[$v] = $this->_data[$v];
         }
         return $a;
     }
+
     /**
+     * getPrepared
+     *
      * returns an array of modified fields and values with data preparation
      * adds column aggregation inheritance and converts Records into primary key values
      *
+     * @param array $array
      * @return array
      */
-    final public function getPrepared(array $array = array()) {
+    public function getPrepared(array $array = array()) 
+    {
         $a = array();
 
-        if(empty($array))
-            $array = $this->modified;
+        if (empty($array)) {
+            $array = $this->_modified;
+        }
 
-        foreach($array as $k => $v) {
-            $type = $this->table->getTypeOf($v);
+        foreach ($array as $k => $v) {
+            $type = $this->_table->getTypeOf($v);
 
-            switch($type) {
+            if ($this->_data[$v] === self::$_null) {
+                $a[$v] = null;
+                continue;
+            }
+
+            switch ($type) {
                 case 'array':
                 case 'object':
-                    $a[$v] = serialize($this->data[$v]);
-                break;
+                    $a[$v] = serialize($this->_data[$v]);
+                    break;
                 case 'gzip':
-                    $a[$v] = gzcompress($this->data[$v],5);
+                    $a[$v] = gzcompress($this->_data[$v],5);
+                    break;
+                case 'boolean':
+                    $a[$v] = $this->getTable()->getConnection()->convertBooleans($this->_data[$v]);
                 break;
                 case 'enum':
-                    $a[$v] = $this->table->enumIndex($v,$this->data[$v]);
-                break;
+                    $a[$v] = $this->_table->enumIndex($v, $this->_data[$v]);
+                    break;
                 default:
-                    if($this->data[$v] instanceof Doctrine_Record)
-                        $this->data[$v] = $this->data[$v]->getIncremented();
+                    if ($this->_data[$v] instanceof Doctrine_Record) {
+                        $this->_data[$v] = $this->_data[$v]->getIncremented();
+                    }
+                    /** TODO:
+                    if ($this->_data[$v] === null) {
+                        throw new Doctrine_Record_Exception('Unexpected null value.');
+                    }
+                    */
 
-
-                    if($this->data[$v] === self::$null)
-                        $a[$v] = null;
-                    else
-                        $a[$v] = $this->data[$v];
+                    $a[$v] = $this->_data[$v];
             }
         }
+        $map = $this->_table->inheritanceMap;
+        foreach ($map as $k => $v) {
+            $old = $this->get($k, false);
 
-        foreach($this->table->getInheritanceMap() as $k => $v) {
-            $old = $this->get($k);
-
-            if((string) $old !== (string) $v || $old === null) {
+            if ((string) $old !== (string) $v || $old === null) {
                 $a[$k] = $v;
-                $this->data[$k] = $v;
+                $this->_data[$k] = $v;
             }
         }
 
         return $a;
     }
+
     /**
+     * count
      * this class implements countable interface
-     * @return integer                      the number of columns
+     *
+     * @return integer          the number of columns in this record
      */
-    public function count() {
-        return count($this->data);
+    public function count()
+    {
+        return count($this->_data);
     }
+
     /**
      * alias for count()
+     *
+     * @return integer          the number of columns in this record
      */
-    public function getColumnCount() {
+    public function columnCount()
+    {
         return $this->count();
     }
+
     /**
      * toArray
-     * returns record as an array
-     * 
+     * returns the record as an array
+     *
+     * @param boolean $deep - Return also the relations
      * @return array
      */
-    public function toArray() {
+    public function toArray($deep = false, $prefixKey = false)
+    {
         $a = array();
 
-        foreach($this as $column => $value) {
+        foreach ($this as $column => $value) {
+            if ($value === self::$_null || is_object($value)) {
+                $value = null;
+            }
             $a[$column] = $value;
         }
-        if($this->table->getIdentifierType() == Doctrine_Identifier::AUTO_INCREMENT) {
-            $i      = $this->table->getIdentifier();
+        if ($this->_table->getIdentifierType() ==  Doctrine::IDENTIFIER_AUTOINC) {
+            $i      = $this->_table->getIdentifier();
             $a[$i]  = $this->getIncremented();
         }
-        return $a;
+        if ($deep) {
+            foreach ($this->_references as $key => $relation) {
+                if ( ! $relation instanceof Doctrine_Null) {
+                    $a[$key] = $relation->toArray($deep, $prefixKey);
+                }
+            }
+        }
+        return array_merge($a, $this->_values);
     }
+    public function fromArray($array)
+    {
+        if (is_array($array)) {
+            foreach ($array as $key => $value) {
+                if ($this->getTable()->hasRelation($key)) {
+                    $this->$key->fromArray($value);
+                } else if($this->getTable()->hasColumn($key)) {
+                    $this->set($key, $value);
+                }
+            }
+        }
+    }
+    public function exportTo($type, $deep = false)
+    {
+        if ($type == 'array') {
+            return $this->toArray($deep);
+        } else {
+            return Doctrine_Parser::dump($this->toArray($deep, true), $type);
+        }
+    }
+    public function importFrom($type, $data)
+    {
+        if ($type == 'array') {
+            return $this->fromArray($data);
+        } else {
+            return $this->fromArray(Doctrine_Parser::load($data, $type));
+        }
+    }
+
     /**
-     * checks if record has data
+     * exists
+     * returns true if this record is persistent, otherwise false
+     *
      * @return boolean
      */
-    public function exists() {
-        return ($this->state !== Doctrine_Record::STATE_TCLEAN &&
-                $this->state !== Doctrine_Record::STATE_TDIRTY);
+    public function exists()
+    {
+        return ($this->_state !== Doctrine_Record::STATE_TCLEAN &&
+                $this->_state !== Doctrine_Record::STATE_TDIRTY);
     }
+
+    /**
+     * isModified
+     * returns true if this record was modified, otherwise false
+     *
+     * @return boolean
+     */
+    public function isModified()
+    {
+        return ($this->_state === Doctrine_Record::STATE_DIRTY ||
+                $this->_state === Doctrine_Record::STATE_TDIRTY);
+    }
+
     /**
      * method for checking existence of properties and Doctrine_Record references
      * @param mixed $name               name of the property or reference
      * @return boolean
      */
-    public function hasRelation($name) {
-        if(isset($this->data[$name]) || isset($this->id[$name]))
+    public function hasRelation($name)
+    {
+        if (isset($this->_data[$name]) || isset($this->_id[$name])) {
             return true;
-        return $this->table->hasRelation($name);
+        }
+        return $this->_table->hasRelation($name);
     }
+
     /**
      * getIterator
      * @return Doctrine_Record_Iterator     a Doctrine_Record_Iterator that iterates through the data
      */
-    public function getIterator() {
+    public function getIterator()
+    {
         return new Doctrine_Record_Iterator($this);
     }
-    /**
-     * saveAssociations
-     * save the associations of many-to-many relations
-     * this method also deletes associations that do not exist anymore
-     * @return void
-     */
-    final public function saveAssociations() {
-        foreach($this->table->getRelations() as $fk):
-            $table   = $fk->getTable();
-            $name    = $table->getComponentName();
-            $alias   = $this->table->getAlias($name);
 
-            if($fk instanceof Doctrine_Association) {
-                switch($fk->getType()):
-                    case Doctrine_Relation::MANY_COMPOSITE:
-
-                    break;
-                    case Doctrine_Relation::MANY_AGGREGATE:
-                        $asf     = $fk->getAssociationFactory();
-
-                        if(isset($this->references[$alias])) {
-
-                            $new = $this->references[$alias];
-
-                            if( ! isset($this->originals[$alias])) {
-                                $this->loadReference($alias);
-                            }
-
-                            $r = Doctrine_Relation::getDeleteOperations($this->originals[$alias],$new);
-
-                            foreach($r as $record) {
-                                $query = "DELETE FROM ".$asf->getTableName()." WHERE ".$fk->getForeign()." = ?"
-                                                                            ." AND ".$fk->getLocal()." = ?";
-                                $this->table->getConnection()->execute($query, array($record->getIncremented(),$this->getIncremented()));
-                            }
-
-                            $r = Doctrine_Relation::getInsertOperations($this->originals[$alias],$new);
-                            foreach($r as $record) {
-                                $reldao = $asf->create();
-                                $reldao->set($fk->getForeign(),$record);
-                                $reldao->set($fk->getLocal(),$this);
-                                $reldao->save();
-
-                            }
-                            $this->originals[$alias] = clone $this->references[$alias];
-                        }
-                    break;
-                endswitch;
-            } elseif($fk instanceof Doctrine_ForeignKey ||
-                     $fk instanceof Doctrine_LocalKey) {
-
-                switch($fk->getType()):
-                    case Doctrine_Relation::ONE_COMPOSITE:
-                        if(isset($this->originals[$alias]) && $this->originals[$alias]->obtainIdentifier() != $this->references[$alias]->obtainIdentifier())
-                            $this->originals[$alias]->delete();
-
-                    break;
-                    case Doctrine_Relation::MANY_COMPOSITE:
-                        if(isset($this->references[$alias])) {
-                            $new = $this->references[$alias];
-
-                            if( ! isset($this->originals[$alias]))
-                                $this->loadReference($alias);
-
-                            $r = Doctrine_Relation::getDeleteOperations($this->originals[$alias], $new);
-
-                            foreach($r as $record) {
-                                $record->delete();
-                            }
-
-                            $this->originals[$alias] = clone $this->references[$alias];
-                        }
-                    break;
-                endswitch;
-            }
-        endforeach;
-    }
-    /**
-     * getOriginals
-     */
-    final public function getOriginals($name) {
-        if( ! isset($this->originals[$name]))
-            throw new InvalidKeyException();
-
-        return $this->originals[$name];
-    }
     /**
      * deletes this data access object and all the related composites
      * this operation is isolated by a transaction
@@ -1065,61 +1266,115 @@ abstract class Doctrine_Record extends Doctrine_Access implements Countable, Ite
      *
      * @return boolean      true on success, false on failure
      */
-    public function delete(Doctrine_Connection $conn = null) {
+    public function delete(Doctrine_Connection $conn = null)
+    {
         if ($conn == null) {
-            $conn = $this->table->getConnection();
+            $conn = $this->_table->getConnection();
         }
-        return $conn->delete($this);
+        return $conn->unitOfWork->delete($this);
     }
+
     /**
+     * copy
      * returns a copy of this object
-     * @return DAO
+     *
+     * @return Doctrine_Record
      */
-    public function copy() {
-        return $this->table->create($this->data);
+    public function copy()
+    {
+        $data = $this->_data;
+
+        if ($this->_table->getIdentifierType() === Doctrine::IDENTIFIER_AUTOINC) {
+            $id = $this->_table->getIdentifier();
+
+            unset($data[$id]);
+        }
+
+        $ret = $this->_table->create($data);
+        $modified = array();
+
+        foreach ($data as $key => $val) {
+            if ( ! ($val instanceof Doctrine_Null)) {
+                $ret->_modified[] = $key;
+            }
+        }
+        
+
+        return $ret;
     }
+
     /**
+     * copyDeep
+     * returns a copy of this object and all its related objects
+     *
+     * @return Doctrine_Record
+     */
+    public function copyDeep() {
+        $copy = $this->copy();
+
+        foreach ($this->_references as $key => $value) {
+            if ($value instanceof Doctrine_Collection) {
+                foreach ($value as $record) {
+                    $copy->{$key}[] = $record->copyDeep();
+                }
+            } else {
+                $copy->set($key, $value->copyDeep());
+            }
+        }
+        return $copy;
+    }
+
+    /**
+     * assignIdentifier
+     *
      * @param integer $id
      * @return void
      */
-    final public function assignIdentifier($id = false) {
-        if($id === false) {
-            $this->id       = array();
-            $this->cleanData();
-            $this->state    = Doctrine_Record::STATE_TCLEAN;
-            $this->modified = array();
-        } elseif($id === true) {
-            $this->prepareIdentifiers(false);
-            $this->state    = Doctrine_Record::STATE_CLEAN;
-            $this->modified = array();
+    public function assignIdentifier($id = false)
+    {
+        if ($id === false) {
+            $this->_id       = array();
+            $this->_data     = $this->cleanData($this->_data);
+            $this->_state    = Doctrine_Record::STATE_TCLEAN;
+            $this->_modified = array();
+        } elseif ($id === true) {
+            $this->prepareIdentifiers(true);
+            $this->_state    = Doctrine_Record::STATE_CLEAN;
+            $this->_modified = array();
         } else {
-            $name            = $this->table->getIdentifier();
-
-            $this->id[$name] = $id;
-            $this->state     = Doctrine_Record::STATE_CLEAN;
-            $this->modified  = array();
+            $name             = $this->_table->getIdentifier();   
+            $this->_id[$name] = $id;
+            $this->_data[$name] = $id;
+            $this->_state     = Doctrine_Record::STATE_CLEAN;
+            $this->_modified  = array();
         }
     }
+
     /**
      * returns the primary keys of this object
      *
      * @return array
      */
-    final public function obtainIdentifier() {
-        return $this->id;
+    public function identifier()
+    {
+        return $this->_id;
     }
+
     /**
      * returns the value of autoincremented primary key of this object (if any)
      *
      * @return integer
      */
-    final public function getIncremented() {
-        $id = current($this->id);
-        if($id === false)
+    final public function getIncremented()
+    {
+        $id = current($this->_id);
+        if ($id === false) {
             return null;
+        }
 
         return $id;
     }
+
     /**
      * getLast
      * this method is used internally be Doctrine_Query
@@ -1128,348 +1383,276 @@ abstract class Doctrine_Record extends Doctrine_Access implements Countable, Ite
      *
      * @return Doctrine_Record
      */
-    public function getLast() {
+    public function getLast()
+    {
         return $this;
     }
+
     /**
      * hasRefence
      * @param string $name
      * @return boolean
      */
-    public function hasReference($name) {
-        return isset($this->references[$name]);
+    public function hasReference($name)
+    {
+        return isset($this->_references[$name]);
     }
+
     /**
-     * obtainReference
-     * 
+     * reference
+     *
      * @param string $name
      */
-    public function obtainReference($name) {
-        if(isset($this->references[$name]))
-            return $this->references[$name];
-    
+    public function reference($name)
+    {
+        if (isset($this->_references[$name])) {
+            return $this->_references[$name];
+        }
+    }
+
+    /**
+     * obtainReference
+     *
+     * @param string $name
+     * @throws Doctrine_Record_Exception        if trying to get an unknown related component
+     */
+    public function obtainReference($name)
+    {
+        if (isset($this->_references[$name])) {
+            return $this->_references[$name];
+        }
         throw new Doctrine_Record_Exception("Unknown reference $name");
     }
-    /**
-     * initalizes a one-to-one relation
-     *
-     * @param Doctrine_Record $record
-     * @param Doctrine_Relation $connector
-     * @return void
-     */
-    public function initSingleReference(Doctrine_Record $record, Doctrine_Relation $connector) {
-        $alias = $connector->getAlias();
 
-        $this->references[$alias] = $record;
-    }
-    /**
-     * initalizes a one-to-many / many-to-many relation
-     *
-     * @param Doctrine_Collection $coll
-     * @param Doctrine_Relation $connector
-     * @return void
-     */
-    public function initReference(Doctrine_Collection $coll, Doctrine_Relation $connector) {
-        $alias = $connector->getAlias();
-
-        if( ! ($connector instanceof Doctrine_Association))
-            $coll->setReference($this, $connector);
-
-        $this->references[$alias] = $coll;
-        $this->originals[$alias]  = clone $coll;
-    }
-    /**
-     * addReference
-     * @param Doctrine_Record $record
-     * @param mixed $key
-     * @return void
-     */
-    public function addReference(Doctrine_Record $record, Doctrine_Relation $connector, $key = null) {
-        $alias = $connector->getAlias();
-
-        $this->references[$alias]->internalAdd($record, $key);
-        $this->originals[$alias]->internalAdd($record, $key);
-    }
     /**
      * getReferences
      * @return array    all references
      */
-    public function getReferences() {
-        return $this->references;
+    public function getReferences()
+    {
+        return $this->_references;
     }
+
     /**
      * setRelated
      *
      * @param string $alias
      * @param Doctrine_Access $coll
      */
-    final public function setRelated($alias, Doctrine_Access $coll) {
-        $this->references[$alias] = $coll;
-        $this->originals[$alias]  = $coll;
+    final public function setRelated($alias, Doctrine_Access $coll)
+    {
+        $this->_references[$alias] = $coll;
     }
+
     /**
      * loadReference
      * loads a related component
      *
-     * @throws InvalidKeyException
+     * @throws Doctrine_Table_Exception             if trying to load an unknown related component
      * @param string $name
      * @return void
      */
-    final public function loadReference($name) {
-
-        $fk      = $this->table->getRelation($name);
-        $table   = $fk->getTable();
-
-        $local   = $fk->getLocal();
-        $foreign = $fk->getForeign();
-        $graph   = $table->getQueryObject();
-        $type    = $fk->getType();
-
-        switch($this->getState()):
-            case Doctrine_Record::STATE_TDIRTY:
-            case Doctrine_Record::STATE_TCLEAN:
-
-                if($type == Doctrine_Relation::ONE_COMPOSITE ||
-                   $type == Doctrine_Relation::ONE_AGGREGATE) {
-
-                    // ONE-TO-ONE
-                    $this->references[$name] = $table->create();
-
-                    if($fk instanceof Doctrine_ForeignKey) {
-                        $this->references[$name]->set($fk->getForeign(),$this);
-                    } else {
-                        $this->set($fk->getLocal(),$this->references[$name]);
-                    }
-                } else {
-                    $this->references[$name] = new Doctrine_Collection($table);
-                    if($fk instanceof Doctrine_ForeignKey) {
-                        // ONE-TO-MANY
-                        $this->references[$name]->setReference($this,$fk);
-                    }
-                    $this->originals[$name]  = new Doctrine_Collection($table);
-                }
-            break;
-            case Doctrine_Record::STATE_DIRTY:
-            case Doctrine_Record::STATE_CLEAN:
-            case Doctrine_Record::STATE_PROXY:
-
-                 switch($fk->getType()):
-                    case Doctrine_Relation::ONE_COMPOSITE:
-                    case Doctrine_Relation::ONE_AGGREGATE:
-
-                        // ONE-TO-ONE
-                        $id      = $this->get($local);
-
-                        if($fk instanceof Doctrine_LocalKey) {
-
-                            if(empty($id)) {
-                                $this->references[$name] = $table->create();
-                                $this->set($fk->getLocal(),$this->references[$name]);
-                            } else {
-
-                                $record = $table->find($id);
-
-                                if($record !== false)
-                                    $this->references[$name] = $record;
-                                else
-                                    $this->references[$name] = $table->create();
-
-                                    //$this->set($fk->getLocal(),$this->references[$name]);
-
-                            }
-
-                        } elseif ($fk instanceof Doctrine_ForeignKey) {
-
-                            if(empty($id)) {
-                                $this->references[$name] = $table->create();
-                                $this->references[$name]->set($fk->getForeign(), $this);
-                            } else {
-                                $dql  = "FROM ".$table->getComponentName()." WHERE ".$table->getComponentName().".".$fk->getForeign()." = ?";
-                                $coll = $graph->query($dql, array($id));
-                                $this->references[$name] = $coll[0];
-                                $this->references[$name]->set($fk->getForeign(), $this);
-                            }
-                        }
-                    break;
-                    default:
-                        $query   = $fk->getRelationDql(1);
-
-                        // ONE-TO-MANY
-                        if($fk instanceof Doctrine_ForeignKey) {
-                            $id      = $this->get($local);
-                            $coll    = $graph->query($query,array($id));
-                            $coll->setReference($this, $fk);
-                        } elseif($fk instanceof Doctrine_Association_Self) {
-                            $id      = $this->getIncremented();
-
-                            $q = new Doctrine_RawSql();
-
-                            $assocTable = $fk->getAssociationFactory()->getTableName();
-                            $tableName  = $this->getTable()->getTableName();
-                            $identifier = $this->getTable()->getIdentifier();
-
-                            $sub     = "SELECT ".$fk->getForeign().
-                                           " FROM ".$assocTable.
-                                           " WHERE ".$fk->getLocal().
-                                           " = ?";
-
-                            $sub2   = "SELECT ".$fk->getLocal().
-                                          " FROM ".$assocTable.
-                                          " WHERE ".$fk->getForeign().
-                                          " = ?";
-
-                            $q->select('{'.$tableName.'.*}, {'.$assocTable.'.*}')
-                                ->from($tableName.' INNER JOIN '.$assocTable.' ON '.
-                                         $tableName.'.'.$identifier.' = '.$assocTable.'.'.$fk->getLocal().' OR '.
-                                         $tableName.'.'.$identifier.' = '.$assocTable.'.'.$fk->getForeign()
-                                         )
-                                ->where($tableName.'.'.$identifier.' IN ('.$sub.') OR '.
-                                          $tableName.'.'.$identifier.' IN ('.$sub2.')'
-                                         );
-                            $q->addComponent($tableName, $this->table->getComponentName());
-                            $q->addComponent($assocTable, $this->table->getComponentName().'.'.$fk->getAssociationFactory()->getComponentName());
-
-                            $coll    = $q->execute(array($id, $id));
-                        } elseif($fk instanceof Doctrine_Association) {
-                            $id      = $this->getIncremented();
-                            $coll    = $graph->query($query, array($id));
-                        }
-                        $this->references[$name] = $coll;
-                        $this->originals[$name]  = clone $coll;
-                 endswitch;
-            break;
-        endswitch;
+    public function loadReference($name)
+    {
+        $rel = $this->_table->getRelation($name);
+        $this->_references[$name] = $rel->fetchRelatedFor($this);
     }
-    /**
-     * filterRelated
-     * lazy initializes a new filter instance for given related component
-     *
-     * @param $componentAlias        alias of the related component
-     * @return Doctrine_Filter
-     */
-    final public function filterRelated($componentAlias) {
-        if( ! isset($this->filters[$componentAlias])) {
-            $this->filters[$componentAlias] = new Doctrine_Filter($componentAlias);
-        }
 
-        return $this->filters[$componentAlias];
-    }
-    /**
-     * binds One-to-One composite relation
-     *
-     * @param string $objTableName
-     * @param string $fkField
-     * @return void
-     */
-    final public function ownsOne($componentName,$foreignKey, $localKey = null) {
-        $this->table->bind($componentName,$foreignKey,Doctrine_Relation::ONE_COMPOSITE, $localKey);
-    }
-    /**
-     * binds One-to-Many composite relation
-     *
-     * @param string $objTableName
-     * @param string $fkField
-     * @return void
-     */
-    final public function ownsMany($componentName,$foreignKey, $localKey = null) {
-        $this->table->bind($componentName,$foreignKey,Doctrine_Relation::MANY_COMPOSITE, $localKey);
-    }
-    /**
-     * binds One-to-One aggregate relation
-     *
-     * @param string $objTableName
-     * @param string $fkField
-     * @return void
-     */
-    final public function hasOne($componentName,$foreignKey, $localKey = null) {
-        $this->table->bind($componentName,$foreignKey,Doctrine_Relation::ONE_AGGREGATE, $localKey);
-    }
-    /**
-     * binds One-to-Many aggregate relation
-     *
-     * @param string $objTableName
-     * @param string $fkField
-     * @return void
-     */
-    final public function hasMany($componentName,$foreignKey, $localKey = null) {
-        $this->table->bind($componentName,$foreignKey,Doctrine_Relation::MANY_AGGREGATE, $localKey);
-    }
-    /**
-     * setPrimaryKey
-     * @param mixed $key
-     */
-    final public function setPrimaryKey($key) {
-        $this->table->setPrimaryKey($key);
-    }
-    /**
-     * hasColumn
-     * sets a column definition
-     *
-     * @param string $name
-     * @param string $type
-     * @param integer $length
-     * @param mixed $options
-     * @return void
-     */
-    final public function hasColumn($name, $type, $length = 2147483647, $options = "") {
-        $this->table->setColumn($name, $type, $length, $options);
-    }
-    /**
-     * countRelated
-     *
-     * @param string $name      the name of the related component
-     * @return integer
-     */
-    public function countRelated($name) {
-        $rel            = $this->table->getRelation($name);
-        $componentName  = $rel->getTable()->getComponentName();
-        $alias          = $rel->getTable()->getAlias(get_class($this));
-        $query          = new Doctrine_Query();
-        $query->from($componentName. '(' . 'COUNT(1)' . ')')->where($componentName. '.' .$alias. '.' . $this->getTable()->getIdentifier(). ' = ?');
-        $array = $query->execute(array($this->getIncremented()));
-        return $array[0]['COUNT(1)'];
-    }
     /**
      * merge
      * merges this record with an array of values
      *
      * @param array $values
+     * @return void
      */
-    public function merge(array $values) {
-        foreach($this->table->getColumnNames() as $value) {
+    public function merge(array $values)
+    {
+        foreach ($this->_table->getColumnNames() as $value) {
             try {
-                if(isset($values[$value]))
+                if (isset($values[$value])) {
                     $this->set($value, $values[$value]);
-            } catch(Exception $e) { }
+                }
+            } catch(Exception $e) {
+                // silence all exceptions
+            }
         }
     }
+
     /**
-     * __call
-     * @param string $m
-     * @param array $a
+     * call
+     *
+     * @param string|array $callback    valid callback
+     * @param string $column            column name
+     * @param mixed arg1 ... argN       optional callback arguments
+     * @return Doctrine_Record
      */
-    public function __call($m,$a) {
-        if(method_exists($this->table, $m))
-            return call_user_func_array(array($this->table, $m), $a);
+    public function call($callback, $column)
+    {
+        $args = func_get_args();
+        array_shift($args);
 
-        if( ! function_exists($m))
-            throw new Doctrine_Record_Exception("unknown callback '$m'");
+        if (isset($args[0])) {
+            $column = $args[0];
+            $args[0] = $this->get($column);
 
-        if(isset($a[0])) {
-            $column = $a[0];
-            $a[0] = $this->get($column);
+            $newvalue = call_user_func_array($callback, $args);
 
-            $newvalue = call_user_func_array($m, $a);
-
-            $this->data[$column] = $newvalue;
+            $this->_data[$column] = $newvalue;
         }
         return $this;
     }
+
+    /**
+     * getter for node assciated with this record
+     *
+     * @return mixed if tree returns Doctrine_Node otherwise returns false
+     */    
+    public function getNode() 
+    {
+        if ( ! $this->_table->isTree()) {
+            return false;
+        }
+
+        if ( ! isset($this->_node)) {
+            $this->_node = Doctrine_Node::factory($this,
+                                              $this->getTable()->getOption('treeImpl'),
+                                              $this->getTable()->getOption('treeOptions')
+                                              );
+        }
+        
+        return $this->_node;
+    }
+
+    public function unshiftFilter(Doctrine_Record_Filter $filter)
+    {
+        return $this->_table->unshiftFilter($filter);
+    }
+
+    /**
+     * revert
+     * reverts this record to given version, this method only works if versioning plugin
+     * is enabled
+     *
+     * @throws Doctrine_Record_Exception    if given version does not exist
+     * @param integer $version      an integer > 1
+     * @return Doctrine_Record      this object
+     */
+    public function revert($version)
+    {
+        $data = $this->_table
+                ->getTemplate('Doctrine_Template_Versionable')
+                ->getAuditLog()
+                ->getVersion($this, $version);
+
+        if ( ! isset($data[0])) {
+            throw new Doctrine_Record_Exception('Version ' . $version . ' does not exist!');
+        }
+
+        $this->_data = $data[0];
+
+        return $this;
+    }
+
+    /**
+     * unlink
+     * removes links from this record to given records
+     * if no ids are given, it removes all links
+     *
+     * @param string $alias     related component alias
+     * @param array $ids        the identifiers of the related records
+     * @return Doctrine_Record  this object
+     */
+    public function unlink($alias, $ids = array())
+    {
+        $ids = (array) $ids;
+        
+        $q = new Doctrine_Query();
+
+        $rel = $this->getTable()->getRelation($alias);
+
+        if ($rel instanceof Doctrine_Relation_Association) {
+            $q->delete()
+              ->from($rel->getAssociationTable()->getComponentName())
+              ->where($rel->getLocal() . ' = ?', array_values($this->identifier()));
+
+            if (count($ids) > 0) {
+                $q->whereIn($rel->getForeign(), $ids);
+            }
+
+            $q->execute();
+
+
+        } elseif ($rel instanceof Doctrine_Relation_ForeignKey) {
+            $q->update($rel->getTable()->getComponentName())
+              ->set($rel->getForeign(), '?', array(null))
+              ->addWhere($rel->getForeign() . ' = ?', array_values($this->identifier()));
+
+            if (count($ids) > 0) {
+                $q->whereIn($rel->getTable()->getIdentifier(), $ids);
+            }
+
+            $q->execute();
+        }
+        if (isset($this->_references[$alias])) {
+            foreach ($this->_references[$alias] as $k => $record) {
+                if (in_array(current($record->identifier()), $ids)) {
+                    $this->_references[$alias]->remove($k);
+                }
+            }
+            $this->_references[$alias]->takeSnapshot();
+        }
+        return $this;
+    }
+
+    /**
+     * __call
+     * this method is a magic method that is being used for method overloading
+     *
+     * the function of this method is to try to find given method from the templates
+     * this record is using and if it finds given method it will execute it
+     *
+     * So, in sense, this method replicates the usage of mixins (as seen in some programming languages)
+     *
+     * @param string $method        name of the method
+     * @param array $args           method arguments
+     * @return mixed                the return value of the given method
+     */
+    public function __call($method, $args) 
+    {
+        if (($template = $this->_table->getMethodOwner($method)) !== false) {
+            $template->setInvoker($this);
+            return call_user_func_array(array($template, $method), $args);
+        }
+        
+        foreach ($this->_table->getTemplates() as $template) {
+            if (method_exists($template, $method)) {
+                $template->setInvoker($this);
+                $this->_table->setMethodOwner($method, $template);
+                
+                return call_user_func_array(array($template, $method), $args);
+            }
+        }
+        
+        throw new Doctrine_Record_Exception('Unknown method ' . $method);
+    }
+
+    /**
+     * used to delete node from tree - MUST BE USE TO DELETE RECORD IF TABLE ACTS AS TREE
+     *
+     */    
+    public function deleteNode() {
+        $this->getNode()->delete();
+    }
+    public function toString()
+    {
+        return Doctrine::dump(get_object_vars($this));
+    }
+
     /**
      * returns a string representation of this object
      */
-    public function __toString() {
-        return Doctrine_Lib::getRecordAsString($this);
+    public function __toString()
+    {
+        return (string) $this->_oid;
     }
 }
-

@@ -18,19 +18,17 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.com>.
  */
-
-/**
- * @package     Doctrine
- * @url         http://www.phpdoctrine.com
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @author      Jukka Hassinen <Jukka.Hassinen@BrainAlliance.com>
- * @version     $Id$
- */
-
-
-
+Doctrine::autoload('Doctrine_Import_Reader');
 /**
  * class Doctrine_Import_Reader_Xml_Propel
+ *
+ * @package     Doctrine
+ * @subpackage  Import
+ * @link        www.phpdoctrine.com
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @since       1.0
+ * @version     $Revision$
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Import_Reader_Xml_Propel extends Doctrine_Import_Reader
 {
@@ -46,19 +44,16 @@ class Doctrine_Import_Reader_Xml_Propel extends Doctrine_Import_Reader
      */
     private $xml;
 
-
     /**
      *
-     * @param string xml      * @return 
+     * @param string xml      * @return
      * @access public
      */
-    public function setXml( $xml ) {
-        
+    public function setXml( $xml )
+    {
+
     } // end of member function setXml
 
-
-
-
-
-} // end of Doctrine_Import_Reader_Xml_Propel
-
+    public function read()
+    { }
+}

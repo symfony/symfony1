@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  *  $Id$
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -22,155 +22,75 @@
 /**
  * Doctrine_DataDict
  *
- * @package     Doctrine ORM
- * @url         www.phpdoctrine.com
- * @license     LGPL
+ * @package     Doctrine
+ * @subpackage  DataDict
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.phpdoctrine.com
+ * @since       1.0
+ * @version     $Revision$
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
+ * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
  */
-class Doctrine_DataDict {
-
-    protected $dbh;
-
-    public function __construct(PDO $dbh) {
-        $file = Doctrine::getPath().DIRECTORY_SEPARATOR."Doctrine".DIRECTORY_SEPARATOR."adodb-hack".DIRECTORY_SEPARATOR."adodb.inc.php";
-
-        if( ! file_exists($file))
-            throw new Doctrine_Exception("Couldn't include datadict. File $file does not exist");
-
-        require_once($file);
-
-        $this->dbh  = $dbh;
-        $this->dict = NewDataDictionary($dbh);
-    }
+class Doctrine_DataDict extends Doctrine_Connection_Module
+{
     /**
-     * metaColumns
+     * Obtain an array of changes that may need to applied
      *
-     * @param Doctrine_Table $table
-     * @return array
+     * @param array $current new definition
+     * @param array  $previous old definition
+     * @return array  containing all changes that will need to be applied
      */
-    public function metaColumns(Doctrine_Table $table) {
-        return $this->dict->metaColumns($table->getTableName());
-    }
-    /**
-     * createTable
-     *
-     * @param string $tablename
-     * @param array $columns
-     * @return boolean
-     */
-    public function createTable($tablename, array $columns) {
-        foreach($columns as $name => $args) {
-            if( ! is_array($args[2]))
-                $args[2] = array();
-
-            unset($args[2]['default']);
-
-            $constraints = array_keys($args[2]);
-
-            $r[] = $name." ".$this->getADOType($args[0],$args[1])." ".implode(' ', $constraints);
-        }
-
-
-        $r = implode(", ",$r);
-        $a = $this->dict->createTableSQL($tablename,$r);
-
-        $return = true;
-        foreach($a as $sql) {
-            try {
-                $this->dbh->query($sql);
-            } catch(Exception $e) {
-                $return = $e;
-            }
-        }
-
-        return $return;
-    }
-    /**
-     * converts doctrine type to adodb type
-     *
-     * @param string $type              column type
-     * @param integer $length           column length
-     */
-    public function getADOType($type,$length) {
-        switch($type):
-            case "array":
-            case "object":
-            case "string":
-            case "gzip":
-                if($length <= 255)
-                    return "C($length)";
-                elseif($length <= 4000)
-                    return "X";
-                else
-                    return "X2";
-            break;
-            case "mbstring":
-                if($length <= 255)
-                    return "C2($length)";
-
-                return "X2";
-            case "clob":
-                return "XL";
-            break;
-            case "blob":
-                return "B";
-            break;
-            case "date":
-                return "D";
-            break;
-            case "float":
-            case "double":
-                return "F";
-            break;
-            case "timestamp":
-                return "T";
-            break;
-            case "boolean":
-                return "L";
-            break;
-            case "enum":
-            case "integer":
-                if(empty($length))
-                    return "I8";
-                elseif($length < 4)
-                    return "I1";
-                elseif($length < 6)
-                    return "I2";
-                elseif($length < 10)
-                    return "I4";
-                else
-                    return "I8";
-            break;
-            default:
-                throw new Doctrine_Exception("Unknown column type $type");
-        endswitch;
-    }
-    
-    /**
-     * Converts native database column type to doctrine data type     
-     * 
-     * @param string $column            column type
-     * @param integer $length           column length
-     * @param string $dbType            Database driver name as returned by PDO::getAttribute(PDO::ATTR_DRIVER_NAME)
-     * @param string $dbVersion         Database server version as return by PDO::getAttribute(PDO::ATTR_SERVER_VERSION)
-     * @return array of doctrine column type and column length. In future may also return a validator name.
-     * @throws Doctrine_Exception on unknown column type
-     * @author Jukka Hassinen <Jukka.Hassinen@BrainAlliance.com>
-     */
-    public static function getDoctrineType($colType,$colLength, $dbType = null, $dbVersion = null) 
+    public function compareDefinition($current, $previous)
     {
-    	return array($colType, $colLength); /* @todo FIXME i am incomplete*/
-    }    
-    
+        $type = !empty($current['type']) ? $current['type'] : null;
+
+        if ( ! method_exists($this, "_compare{$type}Definition")) {
+            throw new Doctrine_DataDict_Exception('type "'.$current['type'].'" is not yet supported');
+        }
+
+        if (empty($previous['type']) || $previous['type'] != $type) {
+            return $current;
+        }
+
+        $change = $this->{"_compare{$type}Definition"}($current, $previous);
+
+        if ($previous['type'] != $type) {
+            $change['type'] = true;
+        }
+
+        $previous_notnull = !empty($previous['notnull']) ? $previous['notnull'] : false;
+        $notnull = !empty($current['notnull']) ? $current['notnull'] : false;
+        if ($previous_notnull != $notnull) {
+            $change['notnull'] = true;
+        }
+
+        $previous_default = array_key_exists('default', $previous) ? $previous['default'] :
+            ($previous_notnull ? '' : null);
+        $default = array_key_exists('default', $current) ? $current['default'] :
+            ($notnull ? '' : null);
+        if ($previous_default !== $default) {
+            $change['default'] = true;
+        }
+
+        return $change;
+    }
+
     /**
-     * checks for valid class name (uses camel case and underscores)
+     * parseBoolean
+     * parses a literal boolean value and returns 
+     * proper sql equivalent
      *
-     * @param string $classname
-     * @return boolean
+     * @param string $value     boolean value to be parsed
+     * @return string           parsed boolean value
      */
-    public static function isValidClassname($classname) {
-        if(preg_match('~(^[a-z])|(_[a-z])|([\W])|(_{2})~', $classname))
-            throw new Doctrine_Exception("Class name is not valid. Use camel case and underscores (i.e My_PerfectClass).");
-        return true;
+    public function parseBoolean($value)
+    {
+        // parse booleans
+        if ($value == 'true') {
+            $value = 1;
+        } elseif ($value == 'false') {
+            $value = 0;
+        }
+        return $value;
     }
 }
-

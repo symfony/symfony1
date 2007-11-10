@@ -18,140 +18,283 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.com>.
  */
-
+Doctrine::autoload('Doctrine_DataDict');
 /**
  * @package     Doctrine
- * @url         http://www.phpdoctrine.com
+ * @subpackage  DataDict
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @author      Konsta Vesterinen
- * @version     $Id$
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
+ * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
+ * @version     $Revision$
+ * @link        www.phpdoctrine.com
+ * @since       1.0
  */
- 
-class Doctrine_DataDict_Sqlite extends Doctrine_DataDict {
+class Doctrine_DataDict_Sqlite extends Doctrine_DataDict
+{
     /**
-     * lists all databases
+     * Obtain DBMS specific SQL code portion needed to declare an text type
+     * field to be used in statements like CREATE TABLE.
      *
-     * @return array
-     */
-    public function listDatabases() {
-
-    }
-    /**
-     * lists all availible database functions
+     * @param array $field  associative array with the name of the properties
+     *      of the field being declared as array indexes. Currently, the types
+     *      of supported field properties are as follows:
      *
-     * @return array
-     */
-    public function listFunctions() {
-    
-    }
-    /**
-     * lists all database triggers
+     *      length
+     *          Integer value that determines the maximum length of the text
+     *          field. If this argument is missing the field should be
+     *          declared to have the longest length allowed by the DBMS.
      *
-     * @param string|null $database
-     * @return array
-     */
-    public function listTriggers($database = null) {
-
-    }
-    /**
-     * lists all database sequences
+     *      default
+     *          Text value to be used as default for this field.
      *
-     * @param string|null $database
-     * @return array
+     *      notnull
+     *          Boolean flag that indicates whether this field is constrained
+     *          to not be set to null.
+     * @author Lukas Smith (PEAR MDB2 library)
+     * @return string  DBMS specific SQL code portion that should be used to
+     *      declare the specified field.
      */
-    public function listSequences($database = null) { 
-    
-    }
-    /**
-     * lists table constraints
-     *
-     * @param string $table     database table name
-     * @return array
-     */
-    public function listTableConstraints($table) {
-    
-    }
-    /**
-     * lists table constraints
-     *
-     * @param string $table     database table name
-     * @return array
-     */
-    public function listTableColumns($table) { 
-
-        $sql = "PRAGMA table_info($table)";
-        $result = $this->dbh->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-
-        $description = array();
-        $columns     = array();
-        foreach ($result as $key => $val) {
-            $description = array(
-                    'name'    => $val['name'],
-                    'type'    => $val['type'],
-                    'notnull' => (bool) $val['notnull'],
-                    'default' => $val['dflt_value'],
-                    'primary' => (bool) $val['pk'],
-                    );
-            $columns[$val['name']] = new Doctrine_Schema_Column($description);
+    public function getNativeDeclaration(array $field)
+    {
+        if ( ! isset($field['type'])) {
+            throw new Doctrine_DataDict_Exception('Missing column type.');
         }
-        return $columns;
+        switch ($field['type']) {
+            case 'text':
+            case 'object':
+            case 'array':
+            case 'string':
+            case 'char':
+            case 'gzip':
+            case 'varchar':
+                $length = (isset($field['length']) && $field['length']) ? $field['length'] : null;
+
+                $fixed  = ((isset($field['fixed']) && $field['fixed']) || $field['type'] == 'char') ? true : false;
+
+                return $fixed ? ($length ? 'CHAR('.$length.')' : 'CHAR('.$this->conn->getAttribute(Doctrine::ATTR_DEFAULT_TEXTFLD_LENGTH).')')
+                    : ($length ? 'VARCHAR('.$length.')' : 'TEXT');
+            case 'clob':
+                if ( ! empty($field['length'])) {
+                    $length = $field['length'];
+                    if ($length <= 255) {
+                        return 'TINYTEXT';
+                    } elseif ($length <= 65535) {
+                        return 'TEXT';
+                    } elseif ($length <= 16777215) {
+                        return 'MEDIUMTEXT';
+                    }
+                }
+                return 'LONGTEXT';
+            case 'blob':
+                if ( ! empty($field['length'])) {
+                    $length = $field['length'];
+                    if ($length <= 255) {
+                        return 'TINYBLOB';
+                    } elseif ($length <= 65535) {
+                        return 'BLOB';
+                    } elseif ($length <= 16777215) {
+                        return 'MEDIUMBLOB';
+                    }
+                }
+                return 'LONGBLOB';
+            case 'enum':
+            case 'integer':
+            case 'boolean':
+            case 'int':
+                return 'INTEGER';
+            case 'date':
+                return 'DATE';
+            case 'time':
+                return 'TIME';
+            case 'timestamp':
+                return 'DATETIME';
+            case 'float':
+            case 'double':
+                return 'DOUBLE';//($this->conn->options['fixed_float'] ? '('.
+                    //($this->conn->options['fixed_float']+2).','.$this->conn->options['fixed_float'].')' : '');
+            case 'decimal':
+                $length = !empty($field['length']) ? $field['length'] : 18;
+                $scale = !empty($field['scale']) ? $field['scale'] : $this->conn->getAttribute(Doctrine::ATTR_DECIMAL_PLACES);
+                return 'DECIMAL('.$length.','.$scale.')';
+        }
+        throw new Doctrine_DataDict_Exception('Unknown field type \'' . $field['type'] .  '\'.');
     }
+
     /**
-     * lists table constraints
+     * Maps a native array description of a field to Doctrine datatype and length
      *
-     * @param string $table     database table name
-     * @return array
+     * @param array  $field native field description
+     * @return array containing the various possible types, length, sign, fixed
      */
-    public function listTableIndexes($table) {
-    
+    public function getPortableDeclaration(array $field)
+    {
+        $dbType = strtolower($field['type']);
+        $length = (isset($field['length'])) ? $field['length'] : null;
+        $unsigned = (isset($field['unsigned'])) ? $field['unsigned'] : null;
+        $fixed = null;
+        $type = array();
+
+        if ( ! isset($field['name'])) {
+            $field['name'] = '';
+        }
+
+        switch ($dbType) {
+            case 'boolean':
+                $type[] = 'boolean';
+                break;
+            case 'tinyint':
+                $type[] = 'integer';
+                $type[] = 'boolean';
+                if (preg_match('/^(is|has)/', $field['name'])) {
+                    $type = array_reverse($type);
+                }
+                $unsigned = preg_match('/ unsigned/i', $field['type']);
+                $length = 1;
+                break;
+            case 'smallint':
+                $type[] = 'integer';
+                $unsigned = preg_match('/ unsigned/i', $field['type']);
+                $length = 2;
+                break;
+            case 'mediumint':
+                $type[] = 'integer';
+                $unsigned = preg_match('/ unsigned/i', $field['type']);
+                $length = 3;
+                break;
+            case 'int':
+            case 'integer':
+            case 'serial':
+                $type[] = 'integer';
+                $unsigned = preg_match('/ unsigned/i', $field['type']);
+                $length = 4;
+                break;
+            case 'bigint':
+            case 'bigserial':
+                $type[] = 'integer';
+                $unsigned = preg_match('/ unsigned/i', $field['type']);
+                $length = 8;
+                break;
+            case 'clob':
+            case 'tinytext':
+            case 'mediumtext':
+            case 'longtext':
+            case 'text':
+            case 'varchar':
+            case 'varchar2':
+                $fixed = false;
+            case 'char':
+                $type[] = 'text';
+                if ($length == '1') {
+                    $type[] = 'boolean';
+                    if (preg_match('/^(is|has)/', $field['name'])) {
+                        $type = array_reverse($type);
+                    }
+                } elseif (strstr($dbType, 'text')) {
+                    $type[] = 'clob';
+                }
+                if ($fixed !== false) {
+                    $fixed = true;
+                }
+                break;
+            case 'date':
+                $type[] = 'date';
+                $length = null;
+                break;
+            case 'datetime':
+            case 'timestamp':
+                $type[] = 'timestamp';
+                $length = null;
+                break;
+            case 'time':
+                $type[] = 'time';
+                $length = null;
+                break;
+            case 'float':
+            case 'double':
+            case 'real':
+                $type[] = 'float';
+                $length = null;
+                break;
+            case 'decimal':
+            case 'numeric':
+                $type[] = 'decimal';
+                $length = null;
+                break;
+            case 'tinyblob':
+            case 'mediumblob':
+            case 'longblob':
+            case 'blob':
+                $type[] = 'blob';
+                $length = null;
+                break;
+            case 'year':
+                $type[] = 'integer';
+                $type[] = 'date';
+                $length = null;
+                break;
+            default:
+                throw new Doctrine_DataDict_Exception('unknown database attribute type: '.$dbType);
+        }
+
+        return array('type'     => $type,
+                     'length'   => $length,
+                     'unsigned' => $unsigned,
+                     'fixed'    => $fixed);
     }
+
     /**
-     * lists tables
+     * Obtain DBMS specific SQL code portion needed to declare an integer type
+     * field to be used in statements like CREATE TABLE.
      *
-     * @param string|null $database
-     * @return array
-     */
-    public function listTables($database = null) {
-        $sql = "SELECT name FROM sqlite_master WHERE type='table' "
-                . "UNION ALL SELECT name FROM sqlite_temp_master "
-                . "WHERE type='table' ORDER BY name";
-        
-        return $this->dbh->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-    }
-    /**
-     * lists table triggers
+     * @param string  $name   name the field to be declared.
+     * @param array  $field   associative array with the name of the properties
+     *                        of the field being declared as array indexes.
+     *                        Currently, the types of supported field
+     *                        properties are as follows:
      *
-     * @param string $table     database table name
-     * @return array
-     */
-    public function listTableTriggers($table) { 
-    
-    }
-    /**
-     * lists table views
+     *                       unsigned
+     *                        Boolean flag that indicates whether the field
+     *                        should be declared as unsigned integer if
+     *                        possible.
      *
-     * @param string $table     database table name
-     * @return array
-     */
-    public function listTableViews($table) { 
-    
-    }
-    /**
-     * lists database users
+     *                       default
+     *                        Integer value to be used as default for this
+     *                        field.
      *
-     * @return array
+     *                       notnull
+     *                        Boolean flag that indicates whether this field is
+     *                        constrained to not be set to null.
+     * @return string  DBMS specific SQL code portion that should be used to
+     *                 declare the specified field.
+     * @access protected
      */
-    public function listUsers() { 
-    
-    }
-    /**
-     * lists database views
-     *
-     * @param string|null $database
-     * @return array
-     */
-    public function listViews($database = null) { 
-    
+    public function getIntegerDeclaration($name, array $field)
+    {
+        $default = $autoinc = '';
+        $type    = $this->getNativeDeclaration($field);
+
+        $autoincrement = isset($field['autoincrement']) && $field['autoincrement'];
+
+        if ($autoincrement) {
+            $autoinc = ' PRIMARY KEY AUTOINCREMENT';
+            $type    = 'INTEGER';
+        } elseif (array_key_exists('default', $field)) {
+            if ($field['default'] === '') {
+                $field['default'] = empty($field['notnull']) ? null : 0;
+            }
+            $default = ' DEFAULT ' . $this->conn->quote($field['default'], $field['type']);
+        }/**
+        elseif (empty($field['notnull'])) {
+            $default = ' DEFAULT NULL';
+        }
+        */
+
+        $notnull  = (isset($field['notnull']) && $field['notnull']) ? ' NOT NULL' : '';
+
+        // sqlite does not support unsigned attribute for autoinremented fields
+        $unsigned = (isset($field['unsigned']) && $field['unsigned'] && !$autoincrement) ? ' UNSIGNED' : '';
+
+        $name = $this->conn->quoteIdentifier($name, true);
+        return $name . ' ' . $type . $unsigned . $default . $notnull . $autoinc;
     }
 }
-

@@ -20,128 +20,115 @@
  */
 
 /**
- * Doctrine
- * the base class of Doctrine framework
+ * Doctrine_Compiler
+ * This class can be used for compiling the entire Doctrine framework into a single file
  *
  * @package     Doctrine
- * @author      Konsta Vesterinen
- * @license     LGPL
+ * @subpackage  Compiler
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.phpdoctrine.com
+ * @since       1.0
+ * @version     $Revision$
  */
-class Doctrine_Compiler {
-    /**
-     * @var array $classes          an array containing all runtime classes of Doctrine framework
-     */
-    private static $classes = array(
-                         "Doctrine",
-                         "Configurable",
-                         "Manager",
-                         "Session",
-                         "Table",
-                         "Iterator",
-                         "Exception",
-                         "Access",
-                         "Null",
-                         "Identifier",
-                         "Repository",
-                         "Record",
-                         "Record_Iterator",
-                         "Collection",
-                         "Collection_Immediate",
-                         "Validator",
-                         "Hydrate",
-                         "Query",
-                         "Query_Part",
-                         "Query_From",
-                         "Query_Orderby",
-                         "Query_Groupby",
-                         "Query_Condition",
-                         "Query_Where",
-                         "Query_Having",
-                         "RawSql",
-                         "EventListener_Interface",
-                         "EventListener",
-                         "EventListener_Empty",
-                         "Relation",
-                         "ForeignKey",
-                         "LocalKey",
-                         "Association",
-                         "DB",
-                         "DBStatement",
-                         "Connection",
-                         "Connection_UnitOfWork",
-                         "Connection_Transaction");
-
-    /**
-     * getRuntimeClasses
-     * returns an array containing all runtime classes of Doctrine framework
-     *
-     * @return array
-     */
-    public static function getRuntimeClasses() {
-        return self::$classes;
-    }
+class Doctrine_Compiler
+{
     /**
      * method for making a single file of most used doctrine runtime components
      * including the compiled file instead of multiple files (in worst
      * cases dozens of files) can improve performance by an order of magnitude
      *
-     * @throws Doctrine_Exception
+     * @throws Doctrine_Compiler_Exception      if something went wrong during the compile operation
      * @return void
      */
-    public static function compile($target = null) {
+    public static function compile($target = null, $includedDrivers = array())
+    {
+        if ( ! is_array($includedDrivers)) {
+            $includedDrivers = array($includedDrivers);
+        }
+        
+        $excludedDrivers = array();
+        
+        // If we have an array of specified drivers then lets determine which drivers we should exclude
+        if ( ! empty($includedDrivers)) {
+            $drivers = array('db2',
+                             'firebird',
+                             'informix',
+                             'mssql',
+                             'mysql',
+                             'oracle',
+                             'pgsql',
+                             'sqlite');
+            
+            $excludedDrivers = array_diff($drivers, $includedDrivers);
+        }
+        
         $path = Doctrine::getPath();
+        $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), RecursiveIteratorIterator::LEAVES_ONLY);
 
-        $classes = self::$classes;
+        foreach ($it as $file) {
+            $e = explode('.', $file->getFileName());
+            
+            // we don't want to require versioning files
+            if (end($e) === 'php' && strpos($file->getFileName(), '.inc') === false) {
+                require_once $file->getPathName();
+            }
+        }
+
+        $classes = array_merge(get_declared_classes(), get_declared_interfaces());
 
         $ret     = array();
 
-        foreach($classes as $class) {
-            if($class !== 'Doctrine')
-                $class = 'Doctrine_'.$class;
+        foreach ($classes as $class) {
+            $e = explode('_', $class);
 
-            $file  = $path.DIRECTORY_SEPARATOR.str_replace("_",DIRECTORY_SEPARATOR,$class).".php";
+            if ($e[0] !== 'Doctrine') {
+                continue;
+            }
             
-            echo "Adding $file" . PHP_EOL;
+            // Exclude drivers
+            if ( ! empty($excludedDrivers)) {
+                foreach ($excludedDrivers as $excludedDriver) {
+                    $excludedDriver = ucfirst($excludedDriver);
+                    
+                    if (in_array($excludedDriver, $e)) {
+                        continue(2);
+                    }
+                }
+            }
+            
+            $refl  = new ReflectionClass($class);
+            $file  = $refl->getFileName();
+            
+            $lines = file($file);
 
-            if( ! file_exists($file))
-                throw new Doctrine_Exception("Couldn't compile $file. File $file does not exists.");
+            $start = $refl->getStartLine() - 1;
+            $end   = $refl->getEndLine();
 
-            Doctrine::autoload($class);
-            $refl  = new ReflectionClass ( $class );
-            $lines = file( $file );
-
-            $start = $refl -> getStartLine() - 1;
-            $end   = $refl -> getEndLine();
-
-            $ret = array_merge($ret,
-                               array_slice($lines,
-                               $start,
-                              ($end - $start)));
-
+            $ret = array_merge($ret, array_slice($lines, $start, ($end - $start)));
         }
 
         if ($target == null) {
-            $target = $path.DIRECTORY_SEPARATOR.'Doctrine.compiled.php';
-        }            
+            $target = $path . DIRECTORY_SEPARATOR . 'Doctrine.compiled.php';
+        }
 
         // first write the 'compiled' data to a text file, so
         // that we can use php_strip_whitespace (which only works on files)
         $fp = @fopen($target, 'w');
+
+        if ($fp === false) {
+            throw new Doctrine_Compiler_Exception("Couldn't write compiled data. Failed to open $target");
+        }
         
-        if ($fp === false)
-            throw new Doctrine_Exception("Couldn't write compiled data. Failed to open $target");
-            
-        fwrite($fp, "<?php".
-                    " class InvalidKeyException extends Exception { }".
-                    " class DQLException extends Exception { }".
-                    implode('', $ret)
-              );
+        fwrite($fp, "<?php ". implode('', $ret));
         fclose($fp);
 
         $stripped = php_strip_whitespace($target);
         $fp = @fopen($target, 'w');
-        if ($fp === false)
-            throw new Doctrine_Exception("Couldn't write compiled data. Failed to open $file");
+        if ($fp === false) {
+            throw new Doctrine_Compiler_Exception("Couldn't write compiled data. Failed to open $file");
+        }
+        
         fwrite($fp, $stripped);
         fclose($fp);
     }

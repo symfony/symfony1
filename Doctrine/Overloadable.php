@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  *  $Id$
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -21,11 +21,24 @@
 
 /**
  * Doctrine_Overloadable
+ * a very generic overloading interface
  *
- * @package     Doctrine ORM
- * @url         www.phpdoctrine.com
- * @license     LGPL
+ * @package     Doctrine
+ * @subpackage  Overloadable
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.phpdoctrine.com
+ * @since       1.0
+ * @version     $Revision$
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 interface Doctrine_Overloadable {
+    /**
+     * __call
+     * method overloader
+     *
+     * @param string $m     the name of the method
+     * @param array $a      method arguments
+     * @return mixed        anything
+     */
     public function __call($m, $a);
 }

@@ -18,7 +18,7 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.com>.
  */
-
+Doctrine::autoload('Doctrine_Import_Builder');
 /**
  * @package     Doctrine
  * @url         http://www.phpdoctrine.com
@@ -27,57 +27,18 @@
  * @version     $Id$
  */
 
-
-
 /**
  * class Doctrine_Import_Builder_BaseClass
  * Builds a Doctrine_Record base class definition based on a schema.
+ *
+ * @package     Doctrine
+ * @subpackage  Import
+ * @link        www.phpdoctrine.com
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @since       1.0
+ * @version     $Revision$
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Import_Builder_BaseClass extends Doctrine_Import_Builder
 {
-
-    /** Aggregations: */
-
-    /** Compositions: */
-
-     /*** Attributes: ***/
-
-    private $path = '';
-    private $suffix = '.php';
-
-
-    /**
-     *
-     * @param string path      
-     * @return 
-     * @access public
-     */
-    public function setOutputPath( $path ) {
-        $this->path = $path;
-    } // end of member function setOuputPath
-
-    /**
-     *
-     * @param string path      
-     * @return 
-     * @access public
-     */
-    public function setFileSuffix( $suffix ) {
-        $this->suffix = $suffix;
-    } // end of member function setOuputPath
-
-
-    /**
-     *
-     * @param Doctrine_Schema schema      
-     * @return 
-     * @access public
-     * @throws Doctrine_Import_Exception
-     */
-    public function build(Doctrine_Schema $schema )
-    {
-    	/* @todo FIXME i am incomplete*/
-    }
-
-} // end of Doctrine_Import_Builder_BaseClass
-
+}

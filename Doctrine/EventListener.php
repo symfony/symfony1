@@ -21,62 +21,100 @@
 Doctrine::autoload('Doctrine_EventListener_Interface');
 /**
  * Doctrine_EventListener     all event listeners extend this base class
- *                      the empty methods allow child classes to only implement the methods they need to implement
+ *                            the empty methods allow child classes to only implement the methods they need to implement
  *
  *
- * @author      Konsta Vesterinen
- * @package     Doctrine ORM
- * @url         www.phpdoctrine.com
- * @license     LGPL
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
+ * @package     Doctrine
+ * @subpackage  EventListener
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.phpdoctrine.com
+ * @since       1.0
+ * @version     $Revision$
  */
-class Doctrine_EventListener implements Doctrine_EventListener_Interface {
+class Doctrine_EventListener implements Doctrine_EventListener_Interface
+{
+    public function preClose(Doctrine_Event $event)
+    { }
+    public function postClose(Doctrine_Event $event)
+    { }
 
-    public function onLoad(Doctrine_Record $record) { }
-    public function onPreLoad(Doctrine_Record $record) { }
+    public function onCollectionDelete(Doctrine_Collection $collection)
+    { }
+    public function onPreCollectionDelete(Doctrine_Collection $collection)
+    { }
 
-    public function onSleep(Doctrine_Record $record) { }
+    public function onOpen(Doctrine_Connection $connection)
+    { }
 
-    public function onWakeUp(Doctrine_Record $record) { }
+    public function preTransactionCommit(Doctrine_Event $event)
+    { }
+    public function postTransactionCommit(Doctrine_Event $event)
+    { }
 
-    public function onUpdate(Doctrine_Record $record) { }
-    public function onPreUpdate(Doctrine_Record $record) { }
+    public function preTransactionRollback(Doctrine_Event $event)
+    { }
+    public function postTransactionRollback(Doctrine_Event $event)
+    { }
 
-    public function onCreate(Doctrine_Record $record) { }
-    public function onPreCreate(Doctrine_Record $record) { }
+    public function preTransactionBegin(Doctrine_Event $event)
+    { }
+    public function postTransactionBegin(Doctrine_Event $event)
+    { }
 
-    public function onSave(Doctrine_Record $record) { }
-    public function onPreSave(Doctrine_Record $record) { }
 
-    public function onGetProperty(Doctrine_Record $record, $property, $value) {
-        return $value;
-    }
-    public function onSetProperty(Doctrine_Record $record, $property, $value) {
-        return $value;
-    }
+    public function preSavepointCommit(Doctrine_Event $event)
+    { }
+    public function postSavepointCommit(Doctrine_Event $event)
+    { }
 
-    public function onInsert(Doctrine_Record $record) { }
-    public function onPreInsert(Doctrine_Record $record) { }
+    public function preSavepointRollback(Doctrine_Event $event)
+    { }
+    public function postSavepointRollback(Doctrine_Event $event)
+    { }
 
-    public function onDelete(Doctrine_Record $record) { }
-    public function onPreDelete(Doctrine_Record $record) { }
+    public function preSavepointCreate(Doctrine_Event $event)
+    { }
+    public function postSavepointCreate(Doctrine_Event $event)
+    { }
 
-    public function onEvict(Doctrine_Record $record) { }
-    public function onPreEvict(Doctrine_Record $record) { }
+    public function postConnect(Doctrine_Event $event)
+    { }
+    public function preConnect(Doctrine_Event $event)
+    { }
 
-    public function onClose(Doctrine_Connection $connection) { }
-    public function onPreClose(Doctrine_Connection $connection) { }
+    public function preQuery(Doctrine_Event $event)
+    { }
+    public function postQuery(Doctrine_Event $event)
+    { }
 
-    public function onOpen(Doctrine_Connection $connection) { }
+    public function prePrepare(Doctrine_Event $event)
+    { }
+    public function postPrepare(Doctrine_Event $event)
+    { }
 
-    public function onTransactionCommit(Doctrine_Connection $connection) { }
-    public function onPreTransactionCommit(Doctrine_Connection $connection) { }
+    public function preExec(Doctrine_Event $event)
+    { }
+    public function postExec(Doctrine_Event $event)
+    { }
 
-    public function onTransactionRollback(Doctrine_Connection $connection) { }
-    public function onPreTransactionRollback(Doctrine_Connection $connection) { }
+    public function preError(Doctrine_Event $event)
+    { }
+    public function postError(Doctrine_Event $event)
+    { }
 
-    public function onTransactionBegin(Doctrine_Connection $connection) { }
-    public function onPreTransactionBegin(Doctrine_Connection $connection) { }
-    
-    public function onCollectionDelete(Doctrine_Collection $collection) { }
-    public function onPreCollectionDelete(Doctrine_Collection $collection) { }
+    public function preFetch(Doctrine_Event $event)
+    { }
+    public function postFetch(Doctrine_Event $event)
+    { }
+
+    public function preFetchAll(Doctrine_Event $event)
+    { }
+    public function postFetchAll(Doctrine_Event $event)
+    { }
+
+    public function preStmtExecute(Doctrine_Event $event)
+    { }
+    public function postStmtExecute(Doctrine_Event $event)
+    { }
 }

@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  *  $Id$
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -18,14 +18,29 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.com>.
  */
+
 /**
  * Doctrine_Null
  *
  * Simple empty class representing a null value
  * used for extra fast null value testing with isset() rather than array_key_exists()
- * 
- * @package     Doctrine ORM
- * @url         www.phpdoctrine.com
- * @license     LGPL
+ *
+ * @package     Doctrine
+ * @subpackage  Null
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.phpdoctrine.com
+ * @since       1.0
+ * @version     $Revision$
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
-final class Doctrine_Null { }
+final class Doctrine_Null
+{ 
+    public function exists()
+    {
+        return false;    
+    }
+    public function __toString()
+    {
+        return '';
+    }
+}

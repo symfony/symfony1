@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  *  $Id$
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -18,173 +18,222 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.com>.
  */
-
+Doctrine::autoload('Doctrine_Query_Abstract');
 /**
  * Doctrine_RawSql
  *
- * @package     Doctrine ORM
- * @url         www.phpdoctrine.com
- * @license     LGPL
+ * @package     Doctrine
+ * @subpackage  RawSql
+ * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @link        www.phpdoctrine.com
+ * @since       1.0
+ * @version     $Revision$
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
-class Doctrine_RawSql extends Doctrine_Hydrate {
+class Doctrine_RawSql extends Doctrine_Query_Abstract
+{
     /**
      * @var array $fields
      */
-    private $fields;
+    private $fields = array();
+
     /**
-     * __call
-     * method overloader
+     * parseQueryPart
+     * parses given query part
      *
-     * @param string $name
-     * @param array $args
-     * @return Doctrine_RawSql
+     * @param string $queryPartName     the name of the query part
+     * @param string $queryPart         query part to be parsed
+     * @param boolean $append           whether or not to append the query part to its stack
+     *                                  if false is given, this method will overwrite 
+     *                                  the given query part stack with $queryPart
+     * @return Doctrine_Query           this object
      */
-    public function __call($name, $args) {
-        if( ! isset($this->parts[$name]))
-            throw new Doctrine_Exception("Unknown overload method");
+    public function parseQueryPart($queryPartName, $queryPart, $append = false) 
+    {
+        if ($queryPartName == 'select') {
+            $this->parseSelectFields($queryPart);
+            return $this;
+        }
+        if( ! isset($this->parts[$queryPartName])) {
+            $this->parts[$queryPartName] = array();
+        }
 
-        if($name == 'select') {
-            preg_match_all('/{([^}{]*)}/U', $args[0], $m);
-
-            $this->fields = $m[1];
-            $this->parts["select"] = array();
-        } else
-            $this->parts[$name][] = $args[0];
-
+        if (! $append) {
+            $this->parts[$queryPartName] = array($queryPart);
+        }else {
+            $this->parts[$queryPartName][] = $queryPart;
+        }
         return $this;
     }
+
     /**
-     * get
+     * Add select parts to fields
+     *
+     * @param $queryPart sting The name of the querypart
      */
-    public function get($name) {
-        if( ! isset($this->parts[$name])) 
-            throw new Doctrine_Exception('Unknown query part '.$name);
-            
-        return $this->parts[$name];
+    private function parseSelectFields($queryPart){
+        preg_match_all('/{([^}{]*)}/U', $queryPart, $m);
+        $this->fields = $m[1];
+        $this->parts['select'] = array();
     }
     /**
      * parseQuery
+     * parses an sql query and adds the parts to internal array
      *
-     * @param string $query
-     * @return Doctrine_RawSql
+     * @param string $query         query to be parsed
+     * @return Doctrine_RawSql      this object
      */
-    public function parseQuery($query) {
-        preg_match_all('/{([^}{]*)}/U', $query, $m);
-
-        $this->fields = $m[1];
+    public function parseQuery($query)
+    {
+        $this->parseSelectFields($query);
         $this->clear();
 
-        $e = Doctrine_Query::sqlExplode($query,' ');
+        $tokens = Doctrine_Tokenizer::sqlExplode($query,' ');
 
-        foreach($e as $k => $part):
-            $low = strtolower($part);
-            switch(strtolower($part)):
-                case "select":
-                case "from":
-                case "where":
-                case "limit":
-                case "offset":
-                case "having":
-                    $p = $low;
-                    if( ! isset($parts[$low]))
-                        $parts[$low] = array();
-
-                break;
-                case "order":
-                case "group":
-                    $i = ($k + 1);
-                    if(isset($e[$i]) && strtolower($e[$i]) === "by") {
-                        $p = $low;
-                        $p .= "by";
-                        $parts[$low."by"] = array();
-
-                    } else
-                        $parts[$p][] = $part;
-                break;
-                case "by":
+        $parts = array();
+        foreach ($tokens as $key => $part) {
+            $partLowerCase = strtolower($part);
+            switch ($partLowerCase) {
+                case 'select':
+                case 'from':
+                case 'where':
+                case 'limit':
+                case 'offset':
+                case 'having':
+                    $type = $partLowerCase;
+                    if ( ! isset($parts[$partLowerCase])) {
+                        $parts[$partLowerCase] = array();
+                    }
+                    break;
+                case 'order':
+                case 'group':
+                    $i = $key + 1;
+                    if (isset($tokens[$i]) && strtolower($tokens[$i]) === 'by') {
+                        $type = $partLowerCase . 'by';
+                        $parts[$type] = array();
+                    } else {
+                        //not a keyword so we add it to the previous type
+                        $parts[$type][] = $part;
+                    }
+                    break;
+                case 'by':
                     continue;
                 default:
-                    if( ! isset($parts[$p][0])) 
-                        $parts[$p][0] = $part;
-                    else
-                        $parts[$p][0] .= ' '.$part;
-            endswitch;
-        endforeach;
+                    //not a keyword so we add it to the previous type.
+                    if ( ! isset($parts[$type][0])) {
+                        $parts[$type][0] = $part;
+                    } else {
+                        // why does this add to index 0 and not append to the 
+                        // array. If it had done that one could have used 
+                        // parseQueryPart.
+                        $parts[$type][0] .= ' '.$part;
+                    }
+            }
+        }
 
         $this->parts = $parts;
-        $this->parts["select"] = array();
-        
+        $this->parts['select'] = array();
+
         return $this;
     }
+
     /**
      * getQuery
+     * builds the sql query from the given query parts
      *
-     *
-     * @return string
+     * @return string       the built sql query
      */
-    public function getQuery() {
-        foreach($this->fields as $field) {
-            $e = explode(".", $field);
-            if( ! isset($e[1]))
-                throw new Doctrine_Exception("All selected fields in Sql query must be in format tableAlias.fieldName");
+    public function getQuery()
+    {
+        $select = array();
 
-            if( ! isset($this->tables[$e[0]])) {
+        foreach ($this->fields as $field) {
+            $e = explode('.', $field);
+            if ( ! isset($e[1])) {
+                throw new Doctrine_RawSql_Exception('All selected fields in Sql query must be in format tableAlias.fieldName');
+            }
+            // try to auto-add component
+            if ( ! $this->hasTableAlias($e[0])) {
                 try {
                     $this->addComponent($e[0], ucwords($e[0]));
                 } catch(Doctrine_Exception $exception) {
-                    throw new Doctrine_Exception("The associated component for table alias $e[0] couldn't be found.");
+                    throw new Doctrine_RawSql_Exception('The associated component for table alias ' . $e[0] . ' couldn\'t be found.');
                 }
             }
 
-            if($e[1] == '*') {
-                foreach($this->tables[$e[0]]->getColumnNames() as $name) {
-                    $field = $e[0].".".$name;
-                    $this->parts["select"][$field] = $field." AS ".$e[0]."__".$name;
+            $componentAlias = $this->getComponentAlias($e[0]);
+            
+            if ($e[1] == '*') {
+                foreach ($this->_aliasMap[$componentAlias]['table']->getColumnNames() as $name) {
+                    $field = $e[0] . '.' . $name;
+
+                    $select[$componentAlias][$field] = $field . ' AS ' . $e[0] . '__' . $name;
                 }
             } else {
-                $field = $e[0].".".$e[1];
-                $this->parts["select"][$field] = $field." AS ".$e[0]."__".$e[1];
+                $field = $e[0] . '.' . $e[1];
+                $select[$componentAlias][$field] = $field . ' AS ' . $e[0] . '__' . $e[1];
             }
         }
 
         // force-add all primary key fields
 
-        foreach($this->tableAliases as $alias) {
-            foreach($this->tables[$alias]->getPrimaryKeys() as $key) {
-                $field = $alias.".".$key;
-                if( ! isset($this->parts["select"][$field]))
-                    $this->parts["select"][$field] = $field." AS ".$alias."__".$key;
+        foreach ($this->getTableAliases() as $tableAlias => $componentAlias) {
+            $map = $this->_aliasMap[$componentAlias];
+
+            foreach ((array) $map['table']->getIdentifier() as $key) {
+                $field = $tableAlias . '.' . $key;
+
+                if ( ! isset($this->parts['select'][$field])) {
+                    $select[$componentAlias][$field] = $field . ' AS ' . $tableAlias . '__' . $key;
+                }
+            }
+        }
+        
+        // first add the fields of the root component
+        reset($this->_aliasMap);
+        $componentAlias = key($this->_aliasMap);
+
+        $q = 'SELECT ' . implode(', ', $select[$componentAlias]);
+        unset($select[$componentAlias]);
+
+        foreach ($select as $component => $fields) {
+            if ( ! empty($fields)) {
+                $q .= ', ' . implode(', ', $fields);
             }
         }
 
-        $q = "SELECT ".implode(', ', $this->parts['select']);
-
         $string = $this->applyInheritance();
-        if( ! empty($string))
-            $this->parts["where"][] = $string;
-
+        if ( ! empty($string)) {
+            $this->parts['where'][] = $string;
+        }
         $copy = $this->parts;
         unset($copy['select']);
 
-        $q .= ( ! empty($this->parts['from']))?" FROM ".implode(" ",$this->parts["from"]):'';
-        $q .= ( ! empty($this->parts['where']))?" WHERE ".implode(" AND ",$this->parts["where"]):'';
-        $q .= ( ! empty($this->parts['groupby']))?" GROUP BY ".implode(", ",$this->parts["groupby"]):'';
-        $q .= ( ! empty($this->parts['having']))?" HAVING ".implode(" ",$this->parts["having"]):'';
-        $q .= ( ! empty($this->parts['orderby']))?" ORDER BY ".implode(" ",$this->parts["orderby"]):'';
+        $q .= ( ! empty($this->parts['from']))?    ' FROM '     . implode(' ', $this->parts['from']) : '';
+        $q .= ( ! empty($this->parts['where']))?   ' WHERE '    . implode(' AND ', $this->parts['where']) : '';
+        $q .= ( ! empty($this->parts['groupby']))? ' GROUP BY ' . implode(', ', $this->parts['groupby']) : '';
+        $q .= ( ! empty($this->parts['having']))?  ' HAVING '   . implode(' AND ', $this->parts['having']) : '';
+        $q .= ( ! empty($this->parts['orderby']))? ' ORDER BY ' . implode(', ', $this->parts['orderby']) : '';
+        $q .= ( ! empty($this->parts['limit']))?   ' LIMIT ' . implode(' ', $this->parts['limit']) : '';
+        $q .= ( ! empty($this->parts['offset']))?  ' OFFSET ' . implode(' ', $this->parts['offset']) : '';
 
-        if( ! empty($string))
+        if ( ! empty($string)) {
             array_pop($this->parts['where']);
-
+        }
         return $q;
     }
+
     /**
      * getFields
+     * returns the fields associated with this parser
      *
-     * @return array
+     * @return array    all the fields associated with this parser
      */
-    public function getFields() {
+    public function getFields()
+    {
         return $this->fields;
     }
+
     /**
      * addComponent
      *
@@ -192,35 +241,59 @@ class Doctrine_RawSql extends Doctrine_Hydrate {
      * @param string $componentName
      * @return Doctrine_RawSql
      */
-    public function addComponent($tableAlias, $componentName) {
-        $e = explode(".", $componentName);
+    public function addComponent($tableAlias, $path)
+    {
+        $tmp           = explode(' ', $path);
+        $originalAlias = (count($tmp) > 1) ? end($tmp) : null;
+
+        $e = explode('.', $tmp[0]);
+
+        $fullPath = $tmp[0];
+        $fullLength = strlen($fullPath);
+
+        $table = null;
 
         $currPath = '';
 
-        foreach($e as $k => $component) {
-            $currPath .= '.'.$component;
-            if($k == 0)
-                $currPath = substr($currPath,1);
+        if (isset($this->_aliasMap[$e[0]])) {
+            $table = $this->_aliasMap[$e[0]]['table'];
 
-            if(isset($this->tableAliases[$currPath]))
-                $alias = $this->tableAliases[$currPath];
-            else
-                $alias = $tableAlias;
-
-            $table = $this->connection->getTable($component);
-            $this->tables[$alias]           = $table;
-            $this->fetchModes[$alias]       = Doctrine::FETCH_IMMEDIATE;
-            $this->tableAliases[$currPath]  = $alias;
-
-            if($k !== 0)
-                $this->joins[$alias]        = $prevAlias;
-
-            $prevAlias = $alias;
-            $prevPath  = $currPath;
+            $currPath = $parent = array_shift($e);
         }
-        
+
+        foreach ($e as $k => $component) {
+            // get length of the previous path
+            $length = strlen($currPath);
+
+            // build the current component path
+            $currPath = ($currPath) ? $currPath . '.' . $component : $component;
+
+            $delimeter = substr($fullPath, $length, 1);
+
+            // if an alias is not given use the current path as an alias identifier
+            if (strlen($currPath) === $fullLength && isset($originalAlias)) {
+                $componentAlias = $originalAlias;
+            } else {
+                $componentAlias = $currPath;
+            }
+            if ( ! isset($table)) {
+                $conn = Doctrine_Manager::getInstance()
+                        ->getConnectionForComponent($component);
+                        
+                $table = $conn->getTable($component);
+                $this->_aliasMap[$componentAlias] = array('table' => $table);
+            } else {
+                $relation = $table->getRelation($component);
+
+                $this->_aliasMap[$componentAlias] = array('table'    => $relation->getTable(),
+                                                          'parent'   => $parent,
+                                                          'relation' => $relation);
+            }
+            $this->addTableAlias($tableAlias, $componentAlias);
+
+            $parent = $currPath;
+        }
+
         return $this;
     }
-
 }
-
