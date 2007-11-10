@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(43, new lime_output_color());
+$t = new lime_test(44, new lime_output_color());
 
 class PreValidator extends sfValidator
 {
@@ -190,6 +190,9 @@ catch (sfValidatorErrorSchema $e)
   $t->is(count($e), 1, '->clean() throws an exception with all error messages');
   $t->is($e[0]->getCode(), 's1_not_equal_s2', '->clean() throws an exception with all error messages');
 }
+
+$v = new sfValidatorSchema(array('s1' => $v1, 's2' => $v2));
+$t->is($v->clean(array('s1' => 'foo')), array('s1' => 'foo', 's2' => null), '->clean() returns null values for fields not present in the input array');
 
 $t->diag('extra fields');
 $v = new sfValidatorSchema(array('s1' => $v1, 's2' => $v2));

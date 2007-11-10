@@ -163,7 +163,7 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
       // validate value
       try
       {
-        $this->fields[$name]->clean(null);
+        $clean[$name] = $this->fields[$name]->clean(null);
       }
       catch (sfValidatorError $e)
       {
