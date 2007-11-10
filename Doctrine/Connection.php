@@ -502,13 +502,73 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
     }
 
     /**
+     * deletes table row(s) matching the specified identifier
+     *
+     * @throws Doctrine_Connection_Exception    if something went wrong at the database level
+     * @param string $table         The table to delete data from
+     * @param array $identifier     An associateve array containing identifier column-value pairs.
+     * @return integer              The number of affected rows
+     */
+    public function delete($table, array $identifier)
+    {
+        $tmp = array();
+
+        foreach (array_keys($identifier) as $id) {
+            $tmp[] = $id . ' = ?';
+        }
+
+        $query = 'DELETE FROM '
+               . $this->quoteIdentifier($table)
+               . ' WHERE ' . implode(' AND ', $tmp);
+
+
+        return $this->exec($query, array_values($identifier));
+    }
+
+    /**
+     * Updates table row(s) with specified data
+     *
+     * @throws Doctrine_Connection_Exception    if something went wrong at the database level
+     * @param string $table     The table to insert data into
+     * @param array $values     An associateve array containing column-value pairs.
+     * @return mixed            boolean false if empty value array was given,
+     *                          otherwise returns the number of affected rows
+     */
+    public function update($table, array $values, array $identifier)
+    {
+        if (empty($values)) {
+            return false;
+        }
+
+        $set = array();
+        foreach ($values as $name => $value) {
+            if ($value instanceof Doctrine_Expression) {
+                $set[] = $name . ' = ' . $value->getSql();
+                unset($values[$name]);
+            } else {
+                $set[] = $name . ' = ?';
+            }
+        }
+
+        $params = array_merge(array_values($values), array_values($identifier));
+
+        $sql  = 'UPDATE ' . $this->quoteIdentifier($table)
+              . ' SET ' . implode(', ', $set)
+              . ' WHERE ' . implode(' = ? AND ', array_keys($identifier))
+              . ' = ?';
+
+        return $this->exec($sql, $params);
+    }
+
+    /**
      * Inserts a table row with specified data.
      *
      * @param string $table     The table to insert data into.
      * @param array $values     An associateve array containing column-value pairs.
-     * @return boolean
+     * @return mixed            boolean false if empty value array was given,
+     *                          otherwise returns the number of affected rows
      */
-    public function insert($table, array $values = array()) {
+    public function insert($table, array $values) {
         if (empty($values)) {
             return false;
         }
@@ -535,17 +595,13 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         $query .= implode(', ', $a) . ')';
         // prepare and execute the statement
 
-        $this->exec($query, array_values($values));
-
-        return true;
+        return $this->exec($query, array_values($values));
     }
 
     /**
      * Set the charset on the current connection
      *
      * @param string    charset
-     *
-     * @return void
      */
     public function setCharset($charset)
     {
