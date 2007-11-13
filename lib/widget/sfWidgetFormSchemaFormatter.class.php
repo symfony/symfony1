@@ -9,7 +9,7 @@
  */
 
 /**
- * 
+ * sfWidgetFormSchemaFormatter allows to format a form schema with HTML formats.
  *
  * @package    symfony
  * @subpackage widget
@@ -20,6 +20,7 @@ abstract class sfWidgetFormSchemaFormatter
 {
   protected
     $rowFormat                 = '',
+    $helpFormat                = '%help%',
     $errorRowFormat            = '',
     $errorListFormatInARow     = "  <ul class=\"error_list\">\n%errors%  </ul>\n",
     $errorRowFormatInARow      = "    <li>%error%</li>\n",
@@ -32,9 +33,19 @@ abstract class sfWidgetFormSchemaFormatter
       '%label%'         => $label,
       '%field%'         => $field,
       '%error%'         => $this->formatErrorsForRow($errors),
-      '%help%'          => $help,
+      '%help%'          => $this->formatHelp($help),
       '%hidden_fields%' => is_null($hiddenFields) ? '%hidden_fields%' : $hiddenFields,
     ));
+  }
+
+  public function formatHelp($help)
+  {
+    if (!$help)
+    {
+      return '';
+    }
+
+    return strtr($this->getHelpFormat(), array('%help%' => $help));
   }
 
   public function formatErrorRow($errors)
@@ -148,5 +159,15 @@ abstract class sfWidgetFormSchemaFormatter
   public function getDecoratorFormat()
   {
     return $this->decoratorFormat;
+  }
+
+  public function setHelpFormat($format)
+  {
+    $this->helpFormat = $format;
+  }
+
+  public function getHelpFormat()
+  {
+    return $this->helpFormat;
   }
 }

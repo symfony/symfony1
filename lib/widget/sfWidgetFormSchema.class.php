@@ -31,7 +31,8 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     $options        = array(),
     $labels         = array(),
     $fields         = array(),
-    $positions      = array();
+    $positions      = array(),
+    $helps          = array();
 
   /**
    * Constructor.
@@ -50,10 +51,11 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    * @param array An array of default HTML attributes
    * @param array An array of options
    * @param array An array of HTML labels
+   * @param array An array of help texts
    *
    * @see sfWidgetForm
    */
-  public function __construct($fields = null, $options = array(), $attributes = array(), $labels = array())
+  public function __construct($fields = null, $options = array(), $attributes = array(), $labels = array(), $helps = array())
   {
     if (is_array($fields))
     {
@@ -185,7 +187,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    * Sets a label.
    *
    * @param string The field name
-   * @param strgin The label name
+   * @param string The label name
    */
   public function setLabel($name, $value)
   {
@@ -202,6 +204,49 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   public function getLabel($name)
   {
     return array_key_exists($name, $this->labels) ? $this->labels[$name] : '';
+  }
+
+  /**
+   * Sets the help texts to render for each field.
+   *
+   * @param array An array of help texts
+   */
+  public function setHelps($helps)
+  {
+    $this->helps = $helps;
+  }
+
+  /**
+   * Sets the help texts.
+   *
+   * @return array An array of help texts
+   */
+  public function getHelps()
+  {
+    return $this->helps;
+  }
+
+  /**
+   * Sets a help text.
+   *
+   * @param string The field name
+   * @param string The help text
+   */
+  public function setHelp($name, $help)
+  {
+    $this->helps[$name] = $help;
+  }
+
+  /**
+   * Gets a text help by field name.
+   *
+   * @param  string The field name
+   *
+   * @return string The help text or an empty string if it is not defined
+   */
+  public function getHelp($name)
+  {
+    return array_key_exists($name, $this->helps) ? $this->helps[$name] : '';
   }
 
   /**
@@ -308,7 +353,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
         $label = $widget instanceof sfWidgetFormSchema ? $this->generateLabelName($name) : $this->generateLabel($name);
         $error = $widget instanceof sfWidgetFormSchema ? array() : $error;
 
-        $rows[] = $formFormat->formatRow($label, $field, $error);
+        $rows[] = $formFormat->formatRow($label, $field, $error, $this->getHelp($name));
       }
     }
 
