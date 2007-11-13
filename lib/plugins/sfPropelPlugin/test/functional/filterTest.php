@@ -23,20 +23,20 @@ $b->initialize();
 // filters
 $b->
   checkListCustomization('filters', array('filters' => array('title', 'body', 'online', 'category_id', 'created_at')))->
-  checkResponseElement('div.sf_admin_filters label[for="title"]', 'Title:')->
+  checkResponseElement('div.sf_admin_filters label[for="filters_title"]', 'Title:')->
   checkResponseElement('div.sf_admin_filters input[name="filters[title]"][id="filters_title"]')->
-  checkResponseElement('div.sf_admin_filters label[for="body"]', 'Body:')->
+  checkResponseElement('div.sf_admin_filters label[for="filters_body"]', 'Body:')->
   checkResponseElement('div.sf_admin_filters input[name="filters[body]"][id="filters_body"]')->
-  checkResponseElement('div.sf_admin_filters label[for="online"]', 'Online:')->
+  checkResponseElement('div.sf_admin_filters label[for="filters_online"]', 'Online:')->
   checkResponseElement('div.sf_admin_filters select[name="filters[online]"][id="filters_online"] option', 3)->
-  checkResponseElement('div.sf_admin_filters label[for="category_id"]', 'Category:')->
+  checkResponseElement('div.sf_admin_filters label[for="filters_category_id"]', 'Category:')->
   checkResponseElement('div.sf_admin_filters select[name="filters[category_id]"][id="filters_category_id"] option', 3)->
-  checkResponseElement('div.sf_admin_filters label[for="created_at"]', 'Created at:')->
+  checkResponseElement('div.sf_admin_filters label[for="filters_created_at"]', 'Created at:')->
   checkResponseElement('div.sf_admin_filters input[name="filters[created_at][from]"][id="filters_created_at_from"]')->
   checkResponseElement('div.sf_admin_filters input[name="filters[created_at][to]"][id="filters_created_at_to"]')
 ;
 
 $b->
   checkListCustomization('filters', array('filters' => array('title'), 'fields' => array('title' => array('filter_is_empty' => true))))->
-  checkResponseElement('div.sf_admin_filters label[for="filters[title_is_empty]"]')
+  checkResponseElement('div.sf_admin_filters label[for="filters_title_is_empty"]')
 ;
