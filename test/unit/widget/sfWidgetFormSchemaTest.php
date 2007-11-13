@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(48, new lime_output_color());
+$t = new lime_test(50, new lime_output_color());
 
 $w1 = new sfWidgetFormInput(array(), array('class' => 'foo1'));
 $w2 = new sfWidgetFormInput();
@@ -117,6 +117,14 @@ $t->is($w->generateLabelName('first_name'), 'The first name', '->setLabels() cha
 $w->setLabel('first_name', 'A first name');
 $t->is($w->generateLabelName('first_name'), 'A first name', '->setLabel() sets a label value');
 $t->is($w->getLabels(), array('first_name' => 'A first name'), '->getLabels() returns all current labels');
+
+// ->setHelps() ->getHelps() ->setHelp() ->getHelp()
+$t->diag('->setHelps() ->getHelps() ->setHelp() ->getHelp()');
+$w = new sfWidgetFormSchema();
+$w->setHelps(array('first_name', 'Please, provide your first name'));
+$t->is($w->getHelps(), array('first_name', 'Please, provide your first name'), '->setHelps() changes all help messages');
+$w->setHelp('last_name', 'Please, provide your last name');
+$t->is($w->getHelp('last_name'), 'Please, provide your last name', '->setHelp() changes one help message');
 
 // ->generateLabel()
 $t->diag('->generateLabel()');
