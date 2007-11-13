@@ -21,7 +21,7 @@
 abstract class sfValidator
 {
   protected static
-    $charset  = 'UTF-8';
+    $charset = 'UTF-8';
 
   protected
     $requiredOptions = array(),
