@@ -1,20 +1,22 @@
 <?php decorate_with(sfLoader::getTemplatePath('default', 'defaultLayout.php')) ?>
 
 <div class="sfTMessageContainer sfTLock"> 
-  <?php echo image_tag('/sf/sf_default/images/icons/lock48.png', array('alt' => 'login required', 'class' => 'sfTMessageIcon', 'size' => '48x48')) ?>
+  <?php echo image_tag('/sf/sf_default/images/icons/lock48.png', array('alt' => 'credentials required', 'class' => 'sfTMessageIcon', 'size' => '48x48')) ?>
   <div class="sfTMessageWrap">
-    <h1>Login Required</h1>
-    <h5>This page is not public.</h5>
+    <h1>Credentials Required</h1>
+    <h5>This page is in a restricted area.</h5>
   </div>
 </div>
 <dl class="sfTMessageInfo">
-  <dt>How to access this page</dt>
-  <dd>You must proceed to the login page and enter your id and password.</dd>
+  <dt>You do not have the proper credentials to access this page</dt>
+  <dd>Even though you are already logged in, this page requires special credentials that you currently don't have. </dd>
 
-  <dt>What's Next</dt>
+  <dt>How to access this page</dt>
+  <dd>You must ask a site administrator to grant you some special credentials.</dd>
+
+  <dt>What's next</dt>
   <dd>
     <ul class="sfTIconList">
-      <li class="sfTLinkMessage"><?php echo link_to('Proceed to login', sfConfig::get('sf_login_module').'/'.sfConfig::get('sf_login_action')) ?></li>
       <li class="sfTLinkMessage"><a href="javascript:history.go(-1)">Back to previous page</a></li>
     </ul>
   </dd>
