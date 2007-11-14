@@ -110,10 +110,19 @@ class sfPropelData extends sfData
 
         foreach ($data as $name => $value)
         {
-          // foreign key?
+          $isARealColumn = true;
           try
           {
             $column = $tableMap->getColumn($name);
+          }
+          catch (PropelException $e)
+          {
+            $isARealColumn = false;
+          }
+
+          // foreign key?
+          if ($isARealColumn)
+          {
             if ($column->isForeignKey() && !is_null($value))
             {
               $relatedTable = $this->maps[$class]->getDatabaseMap()->getTable($column->getRelatedTableName());
@@ -123,9 +132,6 @@ class sfPropelData extends sfData
               }
               $value = $this->object_references[$relatedTable->getPhpName().'_'.$value];
             }
-          }
-          catch (PropelException $e)
-          {
           }
 
           if (false !== $pos = array_search($name, $column_names))
@@ -282,43 +288,107 @@ class sfPropelData extends sfData
     array_walk($tables, array($this, 'loadMapBuilder'));
 
     $tables = $this->fixOrderingOfForeignKeyData($tables);
-
     foreach ($tables as $tableName)
     {
       $tableMap = $this->maps[$tableName]->getDatabaseMap()->getTable(constant($tableName.'Peer::TABLE_NAME'));
-
-      // get db info
-      $rs = $this->con->executeQuery('SELECT * FROM '.constant($tableName.'Peer::TABLE_NAME'));
-
-      while ($rs->next())
+      $hasParent = false;
+      $haveParents = false;
+      $fixColumn = null;
+      foreach ($tableMap->getColumns() as $column)
       {
-        $pk = $tableName;
-        $values = array();
-        foreach ($tableMap->getColumns() as $column)
+        $col = strtolower($column->getColumnName());
+        if ($column->isForeignKey())
         {
-          $col = strtolower($column->getColumnName());
-          if ($column->isPrimaryKey())
+          $relatedTable = $this->maps[$tableName]->getDatabaseMap()->getTable($column->getRelatedTableName());
+          if ($tableName === $relatedTable->getPhpName())
           {
-            $pk .= '_'.$rs->get($col);
-          }
-          else if ($column->isForeignKey())
-          {
-            $relatedTable = $this->maps[$tableName]->getDatabaseMap()->getTable($column->getRelatedTableName());
-
-            $values[$col] = $relatedTable->getPhpName().'_'.$rs->get($col);
-          }
-          else
-          {
-            $values[$col] = $rs->get($col);
+            if ($hasParent)
+            {
+              $haveParents = true;
+            }
+            else
+            {
+              $fixColumn = $column;
+              $hasParent = true;
+            }
           }
         }
+      }
 
-        if (!isset($dumpData[$tableName]))
-        {
+      if ($haveParents)
+      {
+        // unable to dump tables having multi-recursive references
+        continue;
+      }
+
+      // get db info
+      $resultsSets = array();
+      if ($hasParent)
+      {
+        $resultsSets = $this->fixOrderingOfForeignKeyDataInSameTable($resultsSets, $tableName, $fixColumn);
+      }
+      else
+      {
+        $resultsSets[] = $this->con->executeQuery('SELECT * FROM '.constant($tableName.'Peer::TABLE_NAME'));
+      }
+
+      foreach ($resultsSets as $rs)
+      {
+        if($rs->getRecordCount() > 0 && !isset($dumpData[$tableName])){
           $dumpData[$tableName] = array();
         }
 
-        $dumpData[$tableName][$pk] = $values;
+        while ($rs->next())
+        {
+          $pk = $tableName;
+          $values = array();
+          $primaryKeys = array();
+          $foreignKeys = array();
+
+          foreach ($tableMap->getColumns() as $column)
+          {
+            $col = strtolower($column->getColumnName());
+            $isPrimaryKey = $column->isPrimaryKey();
+
+            if (is_null($rs->get($col)))
+            {
+              continue;
+            }
+
+            if ($isPrimaryKey)
+            {
+              $value = $rs->get($col);
+              $pk .= '_'.$value;
+              $primaryKeys[$col] = $value;
+            }
+
+            if ($column->isForeignKey())
+            {
+              $relatedTable = $this->maps[$tableName]->getDatabaseMap()->getTable($column->getRelatedTableName());
+              if ($isPrimaryKey)
+              {
+                $foreignKeys[$col] = $rs->get($col);
+                $primaryKeys[$col] = $relatedTable->getPhpName().'_'.$rs->get($col);
+              }
+              else
+              {
+                $values[$col] = $relatedTable->getPhpName().'_'.$rs->get($col);
+              }
+            }
+            elseif (!$isPrimaryKey || ($isPrimaryKey && !$tableMap->isUseIdGenerator()))
+            {
+              // We did not want auto incremented primary keys
+              $values[$col] = $rs->get($col);
+            }
+          }
+
+          if (count($primaryKeys) > 1 || (count($primaryKeys) > 0 && count($foreignKeys) > 0))
+          {
+            $values = array_merge($primaryKeys, $values);
+          }
+
+          $dumpData[$tableName][$pk] = $values;
+        }
       }
     }
 
@@ -380,5 +450,28 @@ class sfPropelData extends sfData
     }
 
     return $classes;
+  }
+  
+  protected function fixOrderingOfForeignKeyDataInSameTable($resultsSets, $tableName, $column, $in = null)
+  {
+    $rs = $this->con->executeQuery(sprintf('SELECT * FROM %s WHERE %s %s',
+      constant($tableName.'Peer::TABLE_NAME'),
+      strtolower($column->getColumnName()),
+      is_null($in) ? 'IS NULL' : 'IN ('.$in.')'
+    ));
+    $in = array();
+    while ($rs->next())
+    {
+      $in[] = "'".$rs->get(strtolower($column->getRelatedColumnName()))."'";
+    }
+
+    if ($in = implode(', ', $in))
+    {
+      $rs->seek(0);
+      $resultsSets[] = $rs;
+      $resultsSets = $this->fixOrderingOfForeignKeyDataInSameTable($resultsSets, $tableName, $column, $in);
+    }
+
+    return $resultsSets;
   }
 }
