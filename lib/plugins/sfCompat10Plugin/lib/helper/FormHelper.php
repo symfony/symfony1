@@ -530,7 +530,7 @@ function checkbox_tag($name, $value = '1', $checked = false, $options = array())
  */
 function radiobutton_tag($name, $value, $checked = false, $options = array())
 {
-  $html_options = array_merge(array('type' => 'radio', 'name' => $name, 'id' => get_id_from_name($name, $value), 'value' => $value), _convert_options($options));
+  $html_options = array_merge(array('type' => 'radio', 'name' => $name, 'id' => get_id_from_name($name.'[]', $value), 'value' => $value), _convert_options($options));
 
   if ($checked)
   {
