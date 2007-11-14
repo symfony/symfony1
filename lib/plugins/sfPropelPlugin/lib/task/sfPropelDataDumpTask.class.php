@@ -64,6 +64,9 @@ EOF;
 
     $this->bootstrapSymfony($arguments['application'], $options['env'], true);
 
+    sfSimpleAutoload::getInstance()->unregister();
+    sfSimpleAutoload::getInstance()->register();
+
     $databaseManager = new sfDatabaseManager();
 
     if (!sfToolkit::isPathAbsolute($filename))
