@@ -32,6 +32,8 @@ include_once 'creole/drivers/mysqli/MySQLiResultSet.php';
  * @package   creole.drivers.mysqli
  */
 class MySQLiConnection extends ConnectionCommon implements Connection {
+    /** Current database (used in mysqli_select_db()). */
+    private $database;
 
     /**
      * Connect to a database and log in as the specified user.
@@ -77,9 +79,9 @@ class MySQLiConnection extends ConnectionCommon implements Connection {
 
 		$conn = mysqli_connect($host, $user, $pw, $database, $port, $socket);
 
-        @ini_restore('track_errors');
+            @ini_restore('track_errors');
 
-        if (!$conn) {
+        if (empty($conn)) {
             if (($err = @mysqli_error()) != '') {
                 throw new SQLException("connect failed", $err);
             } elseif (empty($php_errormsg)) {
@@ -88,7 +90,28 @@ class MySQLiConnection extends ConnectionCommon implements Connection {
                 throw new SQLException("connect failed", $php_errormsg);
             }
         }
-        
+
+        if ($dsninfo['database']) {
+            if (!@mysqli_select_db($conn, $dsninfo['database'])) {
+               switch(mysqli_errno($conn)) {
+                        case 1049:
+                            $exc = new SQLException("no such database", mysqli_error($conn));
+                        break;
+                        case 1044:
+                            $exc = new SQLException("access violation", mysqli_error($conn));
+                        break;
+                        default:
+                           $exc = new SQLException("cannot select database", mysqli_error($conn));
+                }
+
+                throw $exc;
+
+            }
+
+            // fix to allow calls to different databases in the same script
+            $this->database = $dsninfo['database'];
+        }
+
         $this->dblink = $conn;
 
         if ($encoding) {
@@ -168,6 +191,12 @@ class MySQLiConnection extends ConnectionCommon implements Connection {
     {
         $this->lastQuery = $sql;
 
+        if ($this->database) {
+            if (!@mysqli_select_db($this->dblink, $this->database)) {
+                throw new SQLException('No database selected', mysqli_error($this->dblink));
+            }
+        }
+
         $result = @mysqli_query($this->dblink, $sql);
 
         if (!$result) {
@@ -183,6 +212,12 @@ class MySQLiConnection extends ConnectionCommon implements Connection {
     public function executeUpdate($sql)
     {
         $this->lastQuery = $sql;
+
+        if ($this->database) {
+            if (!@mysqli_select_db($this->dblink, $this->database)) {
+                    throw new SQLException('No database selected', mysqli_error($this->dblink));
+            }
+        }
 
         $result = @mysqli_query($this->dblink, $sql);
 
@@ -212,6 +247,12 @@ class MySQLiConnection extends ConnectionCommon implements Connection {
      */
     protected function commitTrans()
     {
+        if ($this->database) {
+            if (!@mysqli_select_db($this->dblink, $this->database)) {
+                 throw new SQLException('No database selected', mysqli_error($this->dblink));
+            }
+        }
+
         if (!mysqli_commit($this->dblink)) {
             throw new SQLException('Can not commit transaction', mysqli_error($this->dblink));                
         }
@@ -226,6 +267,12 @@ class MySQLiConnection extends ConnectionCommon implements Connection {
      */
     protected function rollbackTrans()
     {
+        if ($this->database) {
+            if (!@mysqli_select_db($this->dblink, $this->database)) {
+                throw new SQLException('No database selected', mysqli_error($this->dblink));
+            }
+        }
+
         if (!mysqli_rollback($this->dblink)) {
             throw new SQLException('Could not rollback transaction', mysqli_error($this->dblink));
         }

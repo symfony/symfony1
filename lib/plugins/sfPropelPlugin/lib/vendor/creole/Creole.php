@@ -268,11 +268,11 @@ class Creole {
      *
      * The format of the supplied DSN is in its fullest form:
      *
-     *  phptype://username:password@hostspec/database
+     *  phptype://username:password@protocol+hostspec/database
      *
      * Most variations are allowed:
      *
-     *  phptype://username:password@protocol(hostspec:110)//usr/db_file.db
+     *  phptype://username:password@protocol+hostspec:110//usr/db_file.db
      *  phptype://username:password@hostspec/database_name
      *  phptype://username:password@hostspec
      *  phptype://username@hostspec
@@ -300,61 +300,44 @@ class Creole {
             'database' => null
         );
 
-		$preg_query = "!^(([a-z0-9]+)(\(([^()]+)\))?)(://((((([^@/:]+)(:([^@/]*))?)@)?((([a-z]+)\((([^?():]+)(:([^()?]+))?)\))|((([^/?:]+)(:([^/?]+))?))))/?)?([^?]+)?(\?(.+))?)?$!i";
-		
-		$info = array();
-		
-		if (preg_match($preg_query,$dsn,$info)) { // only if it is matching
-						
-			$parsed['phptype'] = @$info[2]; // Group 2 should always exist.
-			
-			// Don't know what to do with Group 4: phptype(xx) should => check first if available
-			
-			if (isset($info[5])) { // There is more than just the phptype
-				
-				if (strlen($info[10]) > 0) { // There is a username specified
-					$parsed['username'] = @$info[10];
-				}
-				
-				if (strlen($info[12]) > 0) { // There is a password specified
-					$parsed['password'] = @$info[12];
-				}
-				
-				if (strlen($info[15]) > 0) { // There is a protocol specified: protocol(hostspec)
-					$parsed['protocol'] = @$info[15];
-					
-					if ($parsed["protocol"] === "unix") {
-						$parsed['socket'] = @$info[16];
-					} else {
-						$parsed["hostspec"] = @$info[17];
-						if (strlen($info[19]) > 0) {
-							$parsed["port"] = @$info[19];
-						}
-					}
-				} elseif (strlen($info[20]) > 0) {
-					$parsed["hostspec"] = @$info[22];
-					
-					if ((isset($info[24]) && (strlen($info[24]) > 0))) { // There is a port set (not always available) 
-						$parsed["port"] = @$info[24];
-					}
-				}
-				
-				if ((isset($info[25])) && (strlen($info[25]) > 0)) { // There is a database
-					$parsed["database"] = @$info[25];
-				}
-				
-				if ((isset($info[27])) && (strlen($info[27]) >0)) { // There is a query
-					$opts = explode('&', $info[27]);
-					foreach ($opts as $opt) {
-						list($key, $value) = explode('=', $opt);
-						if (!isset($parsed[$key])) { // don't allow params overwrite
-							$parsed[$key] = urldecode($value);
-						}
-					}	
-				}
-				
-			}
-		} 
+        $info = parse_url($dsn);
+
+        if (count($info) === 1) { // if there's only one element in result, then it must be the phptype
+            $parsed['phptype'] = array_pop($info);
+            return $parsed;
+        }
+
+        // some values can be copied directly
+        $parsed['phptype'] = @$info['scheme'];
+        $parsed['username'] = @$info['user'];
+        $parsed['password'] = @$info['pass'];
+        $parsed['port'] = @$info['port'];
+
+        $host = @$info['host'];
+        if (false !== ($pluspos = strpos($host, '+'))) {
+            $parsed['protocol'] = substr($host,0,$pluspos);
+            if ($parsed['protocol'] === 'unix') {
+                $parsed['socket'] = substr($host,$pluspos+1);
+            } else {
+                $parsed['hostspec'] = substr($host,$pluspos+1);
+            }
+        } else {
+            $parsed['hostspec'] = $host;
+        }
+
+        if (isset($info['path'])) {
+            $parsed['database'] = substr($info['path'], 1); // remove first char, which is '/'
+        }
+
+        if (isset($info['query'])) {
+                $opts = explode('&', $info['query']);
+                foreach ($opts as $opt) {
+                    list($key, $value) = explode('=', $opt);
+                    if (!isset($parsed[$key])) { // don't allow params overwrite
+                        $parsed[$key] = urldecode($value);
+                    }
+                }
+        }
 
         return $parsed;
     }

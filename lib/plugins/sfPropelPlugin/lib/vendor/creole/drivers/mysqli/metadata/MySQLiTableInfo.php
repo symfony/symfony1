@@ -35,6 +35,10 @@ class MySQLiTableInfo extends TableInfo {
         require_once 'creole/metadata/ColumnInfo.php';
         require_once 'creole/drivers/mysql/MySQLTypes.php';
 
+        if (!@mysqli_select_db($this->conn->getResource(), $this->dbname)) {
+            throw new SQLException('No database selected');
+        }
+
         // To get all of the attributes we need, we use
         // the MySQL "SHOW COLUMNS FROM $tablename" SQL.
         $res = mysqli_query($this->conn->getResource(), "SHOW COLUMNS FROM " . $this->name);
@@ -86,6 +90,10 @@ class MySQLiTableInfo extends TableInfo {
             $this->initColumns();
         }
 
+        if (!@mysqli_select_db($this->conn->getResource(), $this->dbname)) {
+            throw new SQLException('No database selected');
+        }
+
         // Primary Keys
         $res = mysqli_query($this->conn->getResource(), "SHOW KEYS FROM " . $this->name);
 
@@ -111,7 +119,11 @@ class MySQLiTableInfo extends TableInfo {
         if (!$this->colsLoaded) {
             $this->initColumns();
         }
-        
+
+        if (!@mysqli_select_db($this->conn->getResource(), $this->dbname)) {
+            throw new SQLException('No database selected');
+        }
+
         // Indexes
         $res = mysqli_query($this->conn->getResource(), "SHOW INDEX FROM " . $this->name);
 

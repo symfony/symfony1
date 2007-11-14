@@ -139,6 +139,7 @@ abstract class DatabaseInfo {
    */
   public function hasTable($name)
   {
+    if(!$this->tablesLoaded) $this->initTables();
     return isset($this->tables[strtoupper($name)]);
   }
 
