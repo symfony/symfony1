@@ -121,9 +121,7 @@ abstract class CreoleTypes {
          * @param string $nativeType DB native type (e.g. 'TEXT', 'byetea', etc.).
          * @return int Creole native type (e.g. Types::LONGVARCHAR, Types::BINARY, etc.).
          */
-        public static function getType($nativeType) {
-        	throw new Exception('This method must be overridden in subclasses!'); // abstract static not allowed since PHP 5.2
-        }
+        abstract static function getType($nativeType);
         
         /**
          * This method will return a native type that corresponds to the specified
@@ -132,9 +130,7 @@ abstract class CreoleTypes {
          * native type will be returned.
          * @return string Native type string.
          */
-        public static function getNativeType($creoleType) {
-        	 throw new Exception('This method must be overridden in subclasses!'); // abstract static not allowed since PHP 5.2
-        }
+        abstract static function getNativeType($creoleType);
         
         /**
          * Gets the "affix" to use for ResultSet::get*() and PreparedStatement::set*() methods.

@@ -19,9 +19,7 @@
 	<property name="build.src.dir" value="${build.base.dir}/${pkgname}"/>
 
 	<!-- some default properties -->
-	<property name="notes"><![CDATA[This is the a bugfix release to the 1.2 branch of the Propel Generator.
-See: http://propel.phpdb.org/trac/query?status=closed&milestone=1.2.1&resolution=fixed&order=priority for CHANGELOG.
-	]]></property>
+	<property name="notes">This is the latest snapshot of the Propel Generator.</property>
 	<property name="state" value="devel"/>
 
 	<taskdef
