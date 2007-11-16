@@ -128,7 +128,21 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
     {
       \$culture = sfContext::getInstance()->getUser()->getCulture();
     }
+";
 
+    if (DataModelBuilder::getBuildProperty('builderAddBehaviors'))
+    {
+      $script .= "
+
+    foreach (sfMixer::getCallables('{$this->getClassname()}:doSelectJoin:doSelectJoin') as \$callable)
+    {
+      call_user_func(\$callable, '{$this->getClassname()}', \$c, \$con);
+    }
+
+";
+    }
+
+    $script .= "
     // Set the correct dbName if it has not been overridden
     if (\$c->getDbName() == Propel::getDefaultDB())
     {
@@ -220,7 +234,7 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
     }
 
 ";
-      $tmp = preg_replace('/public static function doSelectJoin.*\(Criteria \$c, \$con = null\)\n\s*{/', '\0'.$mixer_script, $tmp);
+      $tmp = preg_replace('/public static function doSelect(RS|Join.*)\(Criteria \$(c|criteria), \$con = null\)\n\s*{/', '\0'.$mixer_script, $tmp);
     }
 
     $script .= $tmp;
@@ -241,7 +255,7 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
     }
 
 ";
-      $tmp = preg_replace('/{/', '{'.$mixer_script, $tmp, 1);
+      $tmp = preg_replace('/public static function doSelectJoin.*\(Criteria \$c, \$con = null\)\n\s*{/', '\0'.$mixer_script, $tmp);
     }
 
     $script .= $tmp;
@@ -262,7 +276,7 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
     }
 
 ";
-      $tmp = preg_replace('/public static function doSelectJoinAllExcept.*\(Criteria \$c, \$con = null\)\n\s*{/', '\0'.$mixer_script, $tmp);
+      $tmp = preg_replace('/public static function doSelectJoinAll\(Criteria \$c, \$con = null\)\n\s*{/', '\0'.$mixer_script, $tmp);
     }
 
     $script .= $tmp;
@@ -283,7 +297,7 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
     }
 
 ";
-      $tmp = preg_replace('/{/', '{'.$mixer_script, $tmp, 1);
+      $tmp = preg_replace('/public static function doSelectJoinAllExcept.*\(Criteria \$c, \$con = null\)\n\s*{/', '\0'.$mixer_script, $tmp);
     }
 
     $script .= $tmp;
