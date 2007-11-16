@@ -191,8 +191,8 @@ $t->is(checkbox_tag('name', null, false, array('id' => 'foo')), '<input type="ch
 
 // radiobutton_tag()
 $t->diag('radiobutton_tag()');
-$t->is(radiobutton_tag('name', 1), '<input type="radio" name="name" id="name" value="1" />', 'radiobutton_tag() takes a name as its first argument');
-$t->is(radiobutton_tag('name', 2), '<input type="radio" name="name" id="name" value="2" />', 'radiobutton_tag() takes a value as its second argument');
+$t->is(radiobutton_tag('name', 1), '<input type="radio" name="name" id="name_1" value="1" />', 'radiobutton_tag() takes a name as its first argument');
+$t->is(radiobutton_tag('name', 2), '<input type="radio" name="name" id="name_2" value="2" />', 'radiobutton_tag() takes a value as its second argument');
 $t->is(radiobutton_tag('name', null, true), '<input type="radio" name="name" id="name" value="" checked="checked" />', 'radiobutton_tag() takes a boolean as its third argument');
 
 // options
