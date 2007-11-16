@@ -86,7 +86,7 @@ $b->
   get('/configSecurityIsSecure')->
   isStatusCode(200)->
   isForwardedTo('default', 'login')->
-  checkResponseElement('body', '/Credentials Required/i')->
+  checkResponseElement('body', '/Login Required/i')->
   // check that there is no double output caused by the forwarding in a filter
   checkResponseElement('body', 1)->
   checkResponseElement('link[href="/sf/sf_default/css/screen.css"]')
@@ -97,14 +97,14 @@ $b->
   get('/configSecurityIsSecureAction/index')->
   isStatusCode(200)->
   isForwardedTo('default', 'login')->
-  checkResponseElement('body', '/Credentials Required/i')
+  checkResponseElement('body', '/Login Required/i')
 ;
 
 $b->
   get('/configSecurityIsSecureAction/Index')->
   isStatusCode(200)->
   isForwardedTo('default', 'login')->
-  checkResponseElement('body', '/Credentials Required/i')
+  checkResponseElement('body', '/Login Required/i')
 ;
 
 // settings.yml: max_forwards
