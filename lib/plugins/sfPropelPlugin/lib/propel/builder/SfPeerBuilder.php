@@ -126,7 +126,7 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
   {
     if (\$culture === null)
     {
-      \$culture = sfContext::getInstance()->getUser()->getCulture();
+      \$culture = sfPropel::getDefaultCulture();
     }
 ";
 
