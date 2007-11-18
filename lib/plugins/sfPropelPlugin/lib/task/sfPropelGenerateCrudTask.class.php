@@ -76,11 +76,11 @@ EOF;
     $this->filesystem->replaceTokens($moduleDir.'/actions/actions.class.php', '', '', array('auto'.ucfirst($arguments['module']) => $arguments['module']));
 
     $constants = array(
-      'PROJECT_NAME' => isset($properties['name']) ? $properties['name'] : 'symfony',
+      'PROJECT_NAME' => isset($properties['symfony']['name']) ? $properties['symfony']['name'] : 'symfony',
       'APP_NAME'     => $arguments['application'],
       'MODULE_NAME'  => $arguments['module'],
       'MODEL_CLASS'  => $arguments['model'],
-      'AUTHOR_NAME'  => isset($properties['author']) ? $properties['author'] : 'Your name here',
+      'AUTHOR_NAME'  => isset($properties['symfony']['author']) ? $properties['symfony']['author'] : 'Your name here',
     );
 
     // customize php and yml files

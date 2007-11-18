@@ -77,10 +77,10 @@ EOF;
     $properties = parse_ini_file(sfConfig::get('sf_config_dir').'/properties.ini', true);
 
     $constants = array(
-      'PROJECT_NAME' => isset($properties['name']) ? $properties['name'] : 'symfony',
+      'PROJECT_NAME' => isset($properties['symfony']['name']) ? $properties['symfony']['name'] : 'symfony',
       'APP_NAME'     => $app,
       'MODULE_NAME'  => $module,
-      'AUTHOR_NAME'  => isset($properties['author']) ? $properties['author'] : 'Your name here',
+      'AUTHOR_NAME'  => isset($properties['symfony']['author']) ? $properties['symfony']['author'] : 'Your name here',
     );
 
     if (is_readable(sfConfig::get('sf_data_dir').'/skeleton/module'))

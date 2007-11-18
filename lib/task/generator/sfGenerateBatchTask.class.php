@@ -76,7 +76,7 @@ EOF;
     $properties = parse_ini_file(sfConfig::get('sf_config_dir').'/properties.ini', true);
 
     $constants = array(
-      'PROJECT_NAME' => isset($properties['name']) ? $properties['name'] : 'symfony',
+      'PROJECT_NAME' => isset($properties['symfony']['name']) ? $properties['symfony']['name'] : 'symfony',
       'APP_NAME'     => $app,
       'BATCH_NAME'   => $batch,
       'ENV_NAME'     => $options['env'],
