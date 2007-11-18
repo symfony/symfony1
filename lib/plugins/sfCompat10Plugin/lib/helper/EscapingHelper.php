@@ -47,6 +47,21 @@ function esc_entities($value)
 define('ESC_ENTITIES', 'esc_entities');
 
 /**
+ * Runs the PHP function htmlspecialchars on the value passed.
+ *
+ * @param string $value the value to escape
+ * @return string the escaped value
+ */
+function esc_htmlspecialchars($value)
+{
+  // Numbers and boolean values get turned into strings which can cause problems
+  // with type comparisons (e.g. === or is_int() etc).
+  return is_string($value) ? htmlspecialchars($value, ENT_QUOTES, sfConfig::get('sf_charset')) : $value;
+}
+
+define('ESC_HTMLSPECIALCHARS', 'esc_htmlspecialchars');
+
+/**
  * An identity function that merely returns that which it is given, the purpose
  * being to be able to specify that the value is not to be escaped in any way.
  *
