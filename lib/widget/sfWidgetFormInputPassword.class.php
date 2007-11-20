@@ -19,12 +19,28 @@
 class sfWidgetFormInputPassword extends sfWidgetFormInput
 {
   /**
+   * Configures the current widget.
+   *
+   * Available options:
+   *
+   *  * always_render_empty: true if you want the input value to be always empty when rendering (true by default)
+   *
    * @see sfWidgetFormInput
    */
   protected function configure($options = array(), $attributes = array())
   {
     parent::configure($options, $attributes);
 
+    $this->addOption('always_render_empty', true);
+
     $this->setOption('type', 'password');
+  }
+
+  /**
+   * @see sfWidgetForm
+   */
+  public function render($name, $value = null, $attributes = array(), $errors = array())
+  {
+    return parent::render($name, $this->getOption('always_render_empty') ? null : $value, $attributes, $errors);
   }
 }
