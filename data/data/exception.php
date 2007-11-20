@@ -51,7 +51,7 @@
 
   <p id="footer">
     symfony v.<?php echo sfCore::VERSION ?> - php <?php echo PHP_VERSION ?><br />
-    for help resolving this issue, please visit <a href="http://www.symfony-project.com/">http://www.symfony-project.com/</a>.
+    for help resolving this issue, please visit <a href="http://www.symfony-project.org/">http://www.symfony-project.org/</a>.
   </p>
   </div></center>
 </body>
