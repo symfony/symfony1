@@ -422,7 +422,7 @@ class sfPatternRouting extends sfRouting
       }
     }
 
-    $params = array_merge($defaults, $params);
+    $params = sfToolkit::arrayDeepMerge($defaults, $params);
 
     $realUrl = preg_replace('/\:([^\/]+)/e', 'urlencode($params["\\1"])', $url);
 

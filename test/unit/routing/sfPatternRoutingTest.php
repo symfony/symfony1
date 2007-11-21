@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(65, new lime_output_color());
+$t = new lime_test(67, new lime_output_color());
 
 class sfPatternRoutingTest extends sfPatternRouting
 {
@@ -158,6 +158,15 @@ $params = array('module' => 'default', 'action' => 'index', 'test' => 'foo', 'id
 $url = '/default/index/foo';
 $t->is($r->parse($url), $params, '->parse() removes the last parameter if the parameter is default value');
 //$t->is($r->generate('', $params), $url, '->generate() removes the last parameter if the parameter is default value');
+
+// Numerics params
+$r->clearRoutes();
+$r->connect('test', '/:module/:action/*', array('module' => 'default', 'action' => 'index'));
+$params = array('module' => 'default', 'action' => 'index', 15 => 'foo', 32 => 'bar', 'foo' => 'bar');
+$url = '/default/index/15/foo/32/bar/foo/bar';
+$t->is($r->parse($url), $params, '->parse() routes can have numeric parameters');
+$t->is($r->generate('', $params), $url, '->generate() routes can have numeric parameters');
+
 
 $r->clearRoutes();
 $r->connect('test', '/:module/:action/:test/:id', array('module' => 'default', 'action' => 'index', 'test' => 'foo', 'id' => 'bar'));
