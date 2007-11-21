@@ -51,6 +51,7 @@ test:
 #    escaping_method:   ESC_ENTITIES   # Function or helper used for escaping. Accepted values: ESC_RAW, ESC_ENTITIES, ESC_JS, ESC_JS_NO_ENTITIES.
 #
 #    # Routing settings
+#    relative_url_root:                # Default URL prefix. Use this when your symfony project is installed in a sub directory of the apache document root.
 #    suffix:                 .         # Default suffix for generated URLs. If set to a single dot (.), no suffix is added. Possible values: .html, .php, and so on.
 #    no_script_name:         off       # Enable the front controller name in generated URLs
 #
