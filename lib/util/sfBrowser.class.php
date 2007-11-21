@@ -333,7 +333,10 @@ class sfBrowser
     // form
     if (!$form = $xpath->query(sprintf('//input[((@type="submit" or @type="button") and @value="%s") or (@type="image" and @alt="%s")]/ancestor::form', $name, $name))->item(0))
     {
-      throw new sfException(sprintf('Cannot find the "%s" link or button.', $name));
+      if (!$form = $xpath->query(sprintf('//button[.="%s" or @id="%s" or @name="%s"]/ancestor::form', $name, $name, $name))->item(0))
+      {
+        throw new sfException(sprintf('Cannot find the "%s" link or button.', $name));
+      }
     }
 
     // form attributes

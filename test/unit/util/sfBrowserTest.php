@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(42, new lime_output_color());
+$t = new lime_test(43, new lime_output_color());
 
 // ->click()
 $t->diag('->click()');
@@ -92,6 +92,13 @@ $html = <<<EOF
         <input type="image" src="myimage.png" alt="image submit" name="submit_image" value="image" />
       </span></div>
     </form>
+
+    <form action="/myform5">
+      <div><span>
+        <button  id="submit5">Click</button>
+        <input type="image" src="myimage.png" alt="image submit" name="submit_image" value="image" />
+      </span></div>
+    </form>
   </body>
 </html>
 EOF;
@@ -107,6 +114,17 @@ catch (Exception $e)
 {
   $t->pass('->click() throws an error if the name does not exist');
 }
+
+try
+{
+  list($method, $uri, $parameters) = $b->click('submit5');
+  $t->pass('->click() clicks on button links');
+}
+catch(Exception $e)
+{
+  $t->fail('->click() clicks on button links');
+}
+
 
 list($method, $uri, $parameters) = $b->click('test link');
 $t->is($uri, '/mylink', '->click() clicks on links');
