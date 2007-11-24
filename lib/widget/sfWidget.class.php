@@ -44,7 +44,7 @@ abstract class sfWidget
     }
 
     // check required options
-    if ($diff = array_diff($this->requiredOptions, array_keys($options)))
+    if ($diff = array_diff($this->requiredOptions, array_merge(array_keys($this->options), array_keys($options))))
     {
       throw new sfException(sprintf('%s requires the following options: \'%s\'.', get_class($this), implode('\', \'', $diff)));
     }
