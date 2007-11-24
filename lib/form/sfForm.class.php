@@ -40,6 +40,9 @@ class sfForm implements ArrayAccess
 
   /**
    * Constructor.
+   *
+   * @param array  An array of field default values
+   * @param string A CSRF secret (false to disable CSRF protection, null to use the global CSRF secret)
    */
   public function __construct($defaults = array(), $CSRFSecret = null)
   {
