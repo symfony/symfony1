@@ -47,7 +47,7 @@ abstract class sfFormPropel extends sfForm
     }
     else
     {
-      if (!$object instanceof $this->getModelName())
+      if ($this->getModelName() != get_class($object))
       {
         throw new sfException(sprintf('The "%s" form only accepts a "%s" object.', get_class($this), $this->getModelName()));
       }
