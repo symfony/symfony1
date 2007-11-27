@@ -136,16 +136,6 @@ abstract class sfView
   }
 
   /**
-   * Returns true if the current attribute holder automatically escapes attributes.
-   *
-   * @return Boolean true if the attribute holder escapes attributes, false otherwise
-   */
-  public function isAttributeHolderEscaped()
-  {
-    return $this->attributeHolder instanceof sfEscapedViewParameterHolder;
-  }
-
-  /**
    * Executes any presentation logic and set template attributes.
    */
   abstract function execute();

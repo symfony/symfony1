@@ -49,6 +49,16 @@ class sfEscapedViewParameterHolder extends sfViewParameterHolder
   }
 
   /**
+   * Returns true if the current object acts as an escaper.
+   *
+   * @return Boolean true if the current object acts as an escaper, false otherwise
+   */
+  public function isEscaped()
+  {
+    return true;
+  }
+
+  /**
    * Returns an array representation of the view parameters.
    *
    * @return array An array of view parameters
