@@ -39,9 +39,7 @@ The [propel:build-all-load|INFO] task is a shortcut for four other tasks:
 
 The task is equivalent to:
 
-  [./symfony propel:build-model|INFO]
-  [./symfony propel:build-sql|INFO]
-  [./symfony propel:insert-sql|INFO]
+  [./symfony propel:build-all|INFO]
   [./symfony propel:data-load frontend|INFO]
 
 The task takes an application argument because of the [propel:data-load|COMMENT]

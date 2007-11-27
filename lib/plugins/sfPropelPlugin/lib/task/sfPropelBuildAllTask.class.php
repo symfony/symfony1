@@ -37,6 +37,7 @@ The task is equivalent to:
 
   [./symfony propel:build-model|INFO]
   [./symfony propel:build-sql|INFO]
+  [./symfony propel:build-forms|INFO]
   [./symfony propel:insert-sql|INFO]
 
 See those three tasks help page for more information.
@@ -53,6 +54,9 @@ EOF;
 
     $buildSql = new sfPropelBuildSqlTask($this->dispatcher, $this->formatter);
     $buildSql->run();
+
+    $buildForms = new sfPropelBuildFormsTask($this->dispatcher, $this->formatter);
+    $buildForms->run();
 
     $insertSql = new sfPropelInsertSqlTask($this->dispatcher, $this->formatter);
     $insertSql->run();
