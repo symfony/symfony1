@@ -34,30 +34,24 @@ class sfExecutionFilter extends sfFilter
     // get the current action instance
     $actionInstance = $this->context->getController()->getActionStack()->getLastEntry()->getActionInstance();
 
-    // execute the action
+    // execute the action, execute and render the view
     if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
     {
       $timer = sfTimerManager::getTimer(sprintf('Action "%s/%s"', $actionInstance->getModuleName(), $actionInstance->getActionName()));
-    }
 
-    $viewName = $this->handleAction($filterChain, $actionInstance);
+      $viewName = $this->handleAction($filterChain, $actionInstance);
 
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-    {
       $timer->addTime();
-    }
-
-    // execute and render the view
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-    {
       $timer = sfTimerManager::getTimer(sprintf('View "%s" for "%s/%s"', $viewName, $actionInstance->getModuleName(), $actionInstance->getActionName()));
-    }
 
-    $this->handleView($filterChain, $actionInstance, $viewName);
+      $this->handleView($filterChain, $actionInstance, $viewName);
 
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-    {
       $timer->addTime();
+    }
+    else
+    {
+      $viewName = $this->handleAction($filterChain, $actionInstance);
+      $this->handleView($filterChain, $actionInstance, $viewName);
     }
   }
 
@@ -75,15 +69,6 @@ class sfExecutionFilter extends sfFilter
     {
       // action in cache, so go to the view
       return sfView::SUCCESS;
-    }
-
-    // get the request method
-    $method = $this->context->getRequest()->getMethod();
-    if (($actionInstance->getRequestMethods() & $method) != $method)
-    {
-      // this action will skip execution for this method
-      // get the default view
-      return $actionInstance->getDefaultView();
     }
 
     return $this->executeAction($actionInstance);
