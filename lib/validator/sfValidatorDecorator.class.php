@@ -34,7 +34,7 @@ abstract class sfValidatorDecorator extends sfValidator
 
     if (!$this->validator instanceof sfValidator)
     {
-      throw new sfException('The getValidator() method must return a sfValidator instance.');
+      throw new RuntimeException('The getValidator() method must return a sfValidator instance.');
     }
 
     foreach ($options as $key => $value)

@@ -46,6 +46,6 @@ class sfValidatorSchemaForEach extends sfValidatorSchema
    */
   public function asString($indent = 0)
   {
-    throw new sfException('Unable to convert a sfValidatorSchemaForEach to string.');
+    throw new Exception('Unable to convert a sfValidatorSchemaForEach to string.');
   }
 }

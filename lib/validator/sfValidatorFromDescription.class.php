@@ -88,7 +88,7 @@ class sfValidatorFromDescription extends sfValidatorDecorator
         // rightField
         if (!preg_match('/\s*([a-z0-9_\-]+)/', substr($string, $i), $match))
         {
-          throw new sfException('Parsing problem.');
+          throw new DomainException('Parsing problem.');
         }
 
         $i += strlen($match[0]);
@@ -137,7 +137,7 @@ class sfValidatorFromDescription extends sfValidatorDecorator
       }
       else
       {
-        throw new sfException(sprintf('Unable to parse string (%s).', $string));
+        throw new DomainException(sprintf('Unable to parse string (%s).', $string));
       }
     }
 
@@ -237,7 +237,7 @@ class sfValidatorFromDescription extends sfValidatorDecorator
       $token = array_pop($operatorStack);
       if ($token instanceof sfValidatorFDTokenLeftBracket || $token instanceof sfValidatorFDTokenRightBracket)
       {
-        throw new sfException(sprintf('Uneven parenthesis in string (%s).', $this->string));
+        throw new DomainException(sprintf('Uneven parenthesis in string (%s).', $this->string));
       }
 
       $outputStack[] = $token;

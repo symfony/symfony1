@@ -51,7 +51,7 @@ class sfValidatorAny extends sfValidator
     }
     else if (!is_null($validators))
     {
-      throw new sfException('sfValidatorAny constructor takes a sfValidator object, or a sfValidator array.');
+      throw new InvalidArgumentException('sfValidatorAny constructor takes a sfValidator object, or a sfValidator array.');
     }
 
     parent::__construct($options, $messages);

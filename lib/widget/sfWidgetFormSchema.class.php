@@ -66,7 +66,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     }
     else if (!is_null($fields))
     {
-      throw new sfException('sfWidgetFormSchema constructor takes an array of sfWidget objects.');
+      throw new InvalidArgumentException('sfWidgetFormSchema constructor takes an array of sfWidget objects.');
     }
 
     $this->labels = $labels;
@@ -123,7 +123,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    *
    * @return sfWidgetFormSchemaFormatter sfWidgetFormSchemaFormatter instance
    *
-   * @throws sfException
+   * @throws InvalidArgumentException
    */
   public function getFormFormatter()
   {
@@ -140,7 +140,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
       return new $class();
     }
 
-    throw new sfException(sprintf('The form formatter "%s" does not exist.', $name));
+    throw new InvalidArgumentException(sprintf('The form formatter "%s" does not exist.', $name));
   }
 
   /**
@@ -279,7 +279,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   {
     if (is_null($widget = $this[$name]))
     {
-      throw new sfException(sprintf('The field named "%s" does not exist.', $name));
+      throw new InvalidArgumentException(sprintf('The field named "%s" does not exist.', $name));
     }
 
     // we clone the widget because we want to change the id format temporarily
@@ -308,7 +308,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
 
     if (!is_array($values) && !$values instanceof ArrayAccess)
     {
-      throw new sfException('You must pass an array of values to render a widget schema');
+      throw new InvalidArgumentException('You must pass an array of values to render a widget schema');
     }
 
     $formFormat = $this->getFormFormatter();
@@ -459,7 +459,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   {
     if (!$widget instanceof sfWidget)
     {
-      throw new sfException('A field must be an instance of sfWidget.');
+      throw new InvalidArgumentException('A field must be an instance of sfWidget.');
     }
 
     if (!isset($this->fields[$name]))
@@ -518,7 +518,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     $positions = array_values($positions);
     if (array_diff($positions, array_keys($this->fields)) || array_diff(array_keys($this->fields), $positions))
     {
-      throw new sfException('Positions must contains all field names.');
+      throw new InvalidArgumentException('Positions must contains all field names.');
     }
 
     $this->positions = $positions;
@@ -542,7 +542,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   {
     if (false === $fieldPosition = array_search($field, $this->positions))
     {
-      throw new sfException(sprintf('Field "%s" does not exist.', $field));
+      throw new InvalidArgumentException(sprintf('Field "%s" does not exist.', $field));
     }
     unset($this->positions[$fieldPosition]);
     $this->positions = array_values($this->positions);
@@ -551,7 +551,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     {
       if (false === $pivotPosition = array_search($pivot, $this->positions))
       {
-        throw new sfException(sprintf('Field "%s" does not exist.', $pivot));
+        throw new InvalidArgumentException(sprintf('Field "%s" does not exist.', $pivot));
       }
     }
 
@@ -566,7 +566,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
       case sfWidgetFormSchema::BEFORE:
         if (is_null($pivot))
         {
-          throw new sfException(sprintf('Unable to move field "%s" without a relative field.', $field));
+          throw new LogicException(sprintf('Unable to move field "%s" without a relative field.', $field));
         }
         $this->positions = array_merge(
           array_slice($this->positions, 0, $pivotPosition),
@@ -577,7 +577,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
       case sfWidgetFormSchema::AFTER:
         if (is_null($pivot))
         {
-          throw new sfException(sprintf('Unable to move field "%s" without a relative field.', $field));
+          throw new LogicException(sprintf('Unable to move field "%s" without a relative field.', $field));
         }
         $this->positions = array_merge(
           array_slice($this->positions, 0, $pivotPosition + 1),
@@ -586,7 +586,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
         );
         break;
       default:
-        throw new sfException(sprintf('Unknown move operation for field "%s".', $field));
+        throw new LogicException(sprintf('Unknown move operation for field "%s".', $field));
     }
   }
 }

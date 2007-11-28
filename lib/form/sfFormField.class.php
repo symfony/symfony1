@@ -81,7 +81,7 @@ class sfFormField implements ArrayAccess
   {
     if ($this->widget instanceof sfWidgetFormSchema)
     {
-      throw new sfException('Unable to format a row on a sfWidgetFormSchema.');
+      throw new LogicException('Unable to format a row on a sfWidgetFormSchema.');
     }
 
     $field = $this->parent->getWidget()->renderField($this->name, $this->value, $this->error);
@@ -102,7 +102,7 @@ class sfFormField implements ArrayAccess
   {
     if ($this->widget instanceof sfWidgetFormSchema)
     {
-      throw new sfException('Unable to format an error list on a sfWidgetFormSchema.');
+      throw new LogicException('Unable to format an error list on a sfWidgetFormSchema.');
     }
 
     return $this->parent->getWidget()->getFormFormatter()->formatErrorsForRow($this->error);
@@ -117,7 +117,7 @@ class sfFormField implements ArrayAccess
   {
     if ($this->widget instanceof sfWidgetFormSchema)
     {
-      throw new sfException('Unable to render a label on a sfWidgetFormSchema.');
+      throw new LogicException('Unable to render a label on a sfWidgetFormSchema.');
     }
 
     return $this->parent->getWidget()->generateLabel($this->name);
@@ -132,7 +132,7 @@ class sfFormField implements ArrayAccess
   {
     if ($this->widget instanceof sfWidgetFormSchema)
     {
-      throw new sfException('Unable to render a label name on a sfWidgetFormSchema.');
+      throw new LogicException('Unable to render a label name on a sfWidgetFormSchema.');
     }
 
     return $this->parent->getWidget()->generateLabelName($this->name);
@@ -223,12 +223,12 @@ class sfFormField implements ArrayAccess
     {
       if (!$this->widget instanceof sfWidgetFormSchema)
       {
-        throw new sfException(sprintf('Cannot get a form field on a non widget schema (%s given).', get_class($this->widget)));
+        throw new LogicException(sprintf('Cannot get a form field on a non widget schema (%s given).', get_class($this->widget)));
       }
 
       if (is_null($widget = $this->widget[$name]))
       {
-        throw new sfException(sprintf('Widget "%s" does not exist.', $name));
+        throw new InvalidArgumentException(sprintf('Widget "%s" does not exist.', $name));
       }
 
       $this->fields[$name] = new sfFormField($widget, $this, $name, isset($this->value[$name]) ? $this->value[$name] : null, isset($this->error[$name]) ? $this->error[$name] : null);
@@ -243,11 +243,11 @@ class sfFormField implements ArrayAccess
    * @param string (ignored)
    * @param string (ignored)
    *
-   * @throws <b>sfException</b>
+   * @throws <b>LogicException</b>
    */
   public function offsetSet($offset, $value)
   {
-    throw new sfException('Cannot update form fields (read-only).');
+    throw new LogicException('Cannot update form fields (read-only).');
   }
 
   /**
@@ -255,10 +255,10 @@ class sfFormField implements ArrayAccess
    *
    * @param string (ignored)
    *
-   * @throws sfException
+   * @throws LogicException
    */
   public function offsetUnset($offset)
   {
-    throw new sfException('Cannot remove form fields (read-only).');
+    throw new LogicException('Cannot remove form fields (read-only).');
   }
 }

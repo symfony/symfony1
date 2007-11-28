@@ -499,7 +499,7 @@ class sfForm implements ArrayAccess
     {
       if (!$widget = $this->widgetSchema[$name])
       {
-        throw new sfException(sprintf('Widget "%s" does not exist.', $name));
+        throw new InvalidArgumentException(sprintf('Widget "%s" does not exist.', $name));
       }
 
       $values = $this->isBound ? $this->taintedValues : $this->defaults;
@@ -516,11 +516,11 @@ class sfForm implements ArrayAccess
    * @param string (ignored)
    * @param string (ignored)
    *
-   * @throws <b>sfException</b>
+   * @throws <b>LogicException</b>
    */
   public function offsetSet($offset, $value)
   {
-    throw new sfException('Cannot update form fields.');
+    throw new LogicException('Cannot update form fields.');
   }
 
   /**

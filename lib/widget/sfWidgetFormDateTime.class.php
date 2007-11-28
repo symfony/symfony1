@@ -74,7 +74,7 @@ class sfWidgetFormDateTime extends sfWidgetForm
     $options = $this->getOption($type);
     if (!is_array($options))
     {
-      throw new sfException(sprintf('You must pass an array for the %s option.', $type));
+      throw new InvalidArgumentException(sprintf('You must pass an array for the %s option.', $type));
     }
 
     return $options;

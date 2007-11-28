@@ -48,7 +48,7 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
     }
     else if (!is_null($fields))
     {
-      throw new sfException('sfValidatorSchema constructor takes an array of sfValidator objects.');
+      throw new InvalidArgumentException('sfValidatorSchema constructor takes an array of sfValidator objects.');
     }
 
     parent::__construct($options, $messages);
@@ -99,7 +99,7 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
 
     if (!is_array($values))
     {
-      throw new sfException('You must pass an array parameter to the clean() method');
+      throw new InvalidArgumentException('You must pass an array parameter to the clean() method');
     }
 
     $clean = array();
@@ -226,7 +226,7 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
   {
     if (!$validator instanceof sfValidator)
     {
-      throw new sfException('A field must be an instance of sfValidator.');
+      throw new InvalidArgumentException('A field must be an instance of sfValidator.');
     }
 
     $this->fields[$name] = $validator;
@@ -257,6 +257,6 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
    */
   public function asString($indent = 0)
   {
-    throw new sfException('Unable to convert a sfValidatorSchema to string.');
+    throw new Exception('Unable to convert a sfValidatorSchema to string.');
   }
 }
