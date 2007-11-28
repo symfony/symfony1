@@ -27,11 +27,11 @@ $t->diag('__construct()');
 try
 {
   new sfValidatorCallback();
-  $t->fail('__construct() throws an sfException if you don\'t pass a callback option');
+  $t->fail('__construct() throws an RuntimeException if you don\'t pass a callback option');
 }
-catch (sfException $e)
+catch (RuntimeException $e)
 {
-  $t->pass('__construct() throws an sfException if you don\'t pass a callback option');
+  $t->pass('__construct() throws an RuntimeException if you don\'t pass a callback option');
 }
 
 $v = new sfValidatorCallback(array('callback' => 'clean_test'));

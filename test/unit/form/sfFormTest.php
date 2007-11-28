@@ -114,7 +114,7 @@ try
   $f['first_name'] = 'first_name';
   $t->fail('sfForm ArrayAccess implementation does not permit to set a form field');
 }
-catch (sfException $e)
+catch (LogicException $e)
 {
   $t->pass('sfForm ArrayAccess implementation does not permit to set a form field');
 }
@@ -128,11 +128,11 @@ $t->ok(!isset($w['first_name']), 'sfForm ArrayAccess implementation removes the 
 try
 {
   $f['nonexistant'];
-  $t->fail('sfForm ArrayAccess implementation throws a sfException if the form field does not exist');
+  $t->fail('sfForm ArrayAccess implementation throws a LogicException if the form field does not exist');
 }
-catch (sfException $e)
+catch (LogicException $e)
 {
-  $t->pass('sfForm ArrayAccess implementation throws a sfException if the form field does not exist');
+  $t->pass('sfForm ArrayAccess implementation throws a LogicException if the form field does not exist');
 }
 
 // ->bind() ->isValid() ->getValues() ->isBound() ->getErrorSchema()

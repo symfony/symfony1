@@ -23,11 +23,11 @@ $t->is($v->clean(array('first_name' => '  foo  ')), array('first_name' => 'foo')
 try
 {
   $v->clean('string');
-  $t->fail('->clean() throws a sfException if the input value is not an array');
+  $t->fail('->clean() throws a InvalidArgumentException if the input value is not an array');
 }
-catch (sfException $e)
+catch (InvalidArgumentException $e)
 {
-  $t->pass('->clean() throws a sfException if the input value is not an array');
+  $t->pass('->clean() throws a InvalidArgumentException if the input value is not an array');
 }
 
 try

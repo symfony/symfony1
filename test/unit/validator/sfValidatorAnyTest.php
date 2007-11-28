@@ -30,7 +30,7 @@ try
   $v = new sfValidatorAny('string');
   $t->fail('_construct() throws an exception when passing a non supported first argument');
 }
-catch (sfException $e)
+catch (InvalidArgumentException $e)
 {
   $t->pass('_construct() throws an exception when passing a non supported first argument');
 }

@@ -110,9 +110,9 @@ class FakeValidator extends sfValidatorDecorator
 try
 {
   $v = new FakeValidator();
-  $t->fail('->clean() throws a sfValidatorError if getValidator() does not return a sfValidator instance');
+  $t->fail('->clean() throws a RuntimeException if getValidator() does not return a sfValidator instance');
 }
-catch (sfException $e)
+catch (RuntimeException $e)
 {
-  $t->pass('->clean() throws a sfValidatorError if getValidator() does not return a sfValidator instance');
+  $t->pass('->clean() throws a RuntimeException if getValidator() does not return a sfValidator instance');
 }

@@ -58,11 +58,11 @@ foreach (array(
 try
 {
   $v->clean('foo');
-  $t->fail('->clean() throws an sfException exception if the first argument is not an array of value');
+  $t->fail('->clean() throws an InvalidArgumentException exception if the first argument is not an array of value');
 }
-catch (sfException $e)
+catch (InvalidArgumentException $e)
 {
-  $t->pass('->clean() throws an sfException exception if the first argument is not an array of value');
+  $t->pass('->clean() throws an InvalidArgumentException exception if the first argument is not an array of value');
 }
 
 // ->asString()

@@ -43,12 +43,12 @@ $t->is($w->getAttributes(), array('class' => 'foo'), '->__construct() can take a
 try
 {
   new MyWidget(array('nonexistant' => false));
-  $t->fail('__construct() throws an sfException if you pass some non existant options');
+  $t->fail('__construct() throws an InvalidArgumentException if you pass some non existant options');
   $t->skip();
 }
-catch (sfException $e)
+catch (InvalidArgumentException $e)
 {
-  $t->pass('__construct() throws an sfException if you pass some non existant options');
+  $t->pass('__construct() throws an InvalidArgumentException if you pass some non existant options');
   $t->like($e->getMessage(), '/ \'nonexistant\'/', 'The exception contains the non existant option names');
 }
 
@@ -59,11 +59,11 @@ $t->is($w->getRequiredOptions(), array('foo'), '->getRequiredOptions() returns a
 try
 {
   new MyWidgetWithRequired();
-  $t->fail('__construct() throws an sfException if you don\'t pass a required option');
+  $t->fail('__construct() throws an RuntimeException if you don\'t pass a required option');
 }
-catch (sfException $e)
+catch (RuntimeException $e)
 {
-  $t->pass('__construct() throws an sfException if you don\'t pass a required option');
+  $t->pass('__construct() throws an RuntimeException if you don\'t pass a required option');
 }
 
 $w = new MyWidget();
@@ -78,11 +78,11 @@ $t->is($w->hasOption('nonexistant'), false, '->hasOption() returns false if the 
 try
 {
   $w->setOption('foobar', 'foo');
-  $t->fail('->setOption() throws an sfException if the option is not registered');
+  $t->fail('->setOption() throws an InvalidArgumentException if the option is not registered');
 }
-catch (sfException $e)
+catch (InvalidArgumentException $e)
 {
-  $t->pass('->setOption() throws an sfException if the option is not registered');
+  $t->pass('->setOption() throws an InvalidArgumentException if the option is not registered');
 }
 
 // ->addOption()

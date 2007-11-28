@@ -26,7 +26,7 @@ try
   $w = new sfWidgetFormSchema('string');
   $t->fail('__construct() throws a exception when passing a non supported first argument');
 }
-catch (sfException $e)
+catch (InvalidArgumentException $e)
 {
   $t->pass('__construct() throws an exception when passing a non supported first argument');
 }
@@ -51,7 +51,7 @@ try
   $w['w1'] = 'string';
   $t->fail('sfWidgetFormSchema implements the ArrayAccess interface for the fields');
 }
-catch (sfException $e)
+catch (LogicException $e)
 {
   $t->pass('sfWidgetFormSchema implements the ArrayAccess interface for the fields');
 }
@@ -85,11 +85,11 @@ $w->setFormFormatterName('nonexistant');
 try
 {
   $w->getFormFormatter();
-  $t->fail('->setFormFormatterName() throws a sfException when the form format name is not associated with a formatter');
+  $t->fail('->setFormFormatterName() throws a InvalidArgumentException when the form format name is not associated with a formatter');
 }
-catch (sfException $e)
+catch (InvalidArgumentException $e)
 {
-  $t->pass('->setFormFormatterName() throws a sfException when the form format name is not associated with a formatter');
+  $t->pass('->setFormFormatterName() throws a InvalidArgumentException when the form format name is not associated with a formatter');
 }
 
 $t->is($w->getFormFormatters(), array('custom' => $customFormatter), '->getFormFormatters() returns an array of all formatter for this widget schema');
@@ -150,11 +150,11 @@ $t->is($w->renderField('first_name', 'Fabien'), '<input class="foo1" type="text"
 try
 {
   $w->renderField('last_name', 'Potencier');
-  $t->fail('->renderField() throws an sfException if the field does not exist');
+  $t->fail('->renderField() throws an InvalidArgumentException if the field does not exist');
 }
-catch (sfException $e)
+catch (InvalidArgumentException $e)
 {
-  $t->pass('->renderField() throws an sfException if the field does not exist');
+  $t->pass('->renderField() throws an InvalidArgumentException if the field does not exist');
 }
 
 // ->setPositions() ->getPositions()
@@ -176,21 +176,21 @@ $t->is($w->getPositions(), array('w1', 'w2'), '->setPositions() changes all fiel
 try
 {
   $w->setPositions(array('w1', 'w2', 'w3'));
-  $t->fail('->setPositions() throws an exception if you give it a non existant field name');
+  $t->fail('->setPositions() throws an InvalidArgumentException if you give it a non existant field name');
 }
-catch (sfException $e)
+catch (InvalidArgumentException $e)
 {
-  $t->pass('->setPositions() throws an exception if you give it a non existant field name');
+  $t->pass('->setPositions() throws an InvalidArgumentException if you give it a non existant field name');
 }
 
 try
 {
   $w->setPositions(array('w1'));
-  $t->fail('->setPositions() throws an exception if you miss a field name');
+  $t->fail('->setPositions() throws an InvalidArgumentException if you miss a field name');
 }
-catch (sfException $e)
+catch (InvalidArgumentException $e)
 {
-  $t->pass('->setPositions() throws an exception if you miss a field name');
+  $t->pass('->setPositions() throws an InvalidArgumentException if you miss a field name');
 }
 
 // ->moveField()
@@ -211,20 +211,20 @@ $t->is($w->getPositions(), array('w2', 'w3', 'w1', 'w4'), '->moveField() can mov
 try
 {
   $w->moveField('w1', sfWidgetFormSchema::AFTER);
-  $t->fail('->moveField() throws an exception if you don\'t pass a relative field name with AFTER');
+  $t->fail('->moveField() throws an LogicException if you don\'t pass a relative field name with AFTER');
 }
-catch (sfException $e)
+catch (LogicException $e)
 {
-  $t->pass('->moveField() throws an exception if you don\'t pass a relative field name with AFTER');
+  $t->pass('->moveField() throws an LogicException if you don\'t pass a relative field name with AFTER');
 }
 try
 {
   $w->moveField('w1', sfWidgetFormSchema::BEFORE);
-  $t->fail('->moveField() throws an exception if you don\'t pass a relative field name with BEFORE');
+  $t->fail('->moveField() throws an LogicException if you don\'t pass a relative field name with BEFORE');
 }
-catch (sfException $e)
+catch (LogicException $e)
 {
-  $t->pass('->moveField() throws an exception if you don\'t pass a relative field name with BEFORE');
+  $t->pass('->moveField() throws an LogicException if you don\'t pass a relative field name with BEFORE');
 }
 
 // ->render()
@@ -234,11 +234,11 @@ $w = new sfWidgetFormSchema();
 try
 {
   $w->render(null, 'string');
-  $t->fail('->render() throws an sfException if the second argument is not an array');
+  $t->fail('->render() throws an InvalidArgumentException if the second argument is not an array');
 }
-catch (sfException $e)
+catch (InvalidArgumentException $e)
 {
-  $t->pass('->render() throws an sfException if the second argument is not an array');
+  $t->pass('->render() throws an InvalidArgumentException if the second argument is not an array');
 }
 
 $w['first_name'] = $w1;

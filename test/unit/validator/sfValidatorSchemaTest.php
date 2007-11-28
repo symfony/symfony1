@@ -58,11 +58,11 @@ $t->is($v->getFields(), array('s1' => $v1, 's2' => $v2), '->__construct() can ta
 try
 {
   $v = new sfValidatorSchema('string');
-  $t->fail('__construct() throws an exception when passing a non supported first argument');
+  $t->fail('__construct() throws an InvalidArgumentException when passing a non supported first argument');
 }
-catch (sfException $e)
+catch (InvalidArgumentException $e)
 {
-  $t->pass('__construct() throws an exception when passing a non supported first argument');
+  $t->pass('__construct() throws an InvalidArgumentException when passing a non supported first argument');
 }
 
 // implements ArrayAccess
@@ -77,7 +77,7 @@ try
   $v['v1'] = 'string';
   $t->fail('sfValidatorSchema implements the ArrayAccess interface for the fields');
 }
-catch (sfException $e)
+catch (InvalidArgumentException $e)
 {
   $t->pass('sfValidatorSchema implements the ArrayAccess interface for the fields');
 }
@@ -118,11 +118,11 @@ $v = new sfValidatorSchema(array('s1' => $v1, 's2' => $v2));
 try
 {
   $v->clean('foo');
-  $t->fail('->clean() throws an sfException exception if the first argument is not an array of value');
+  $t->fail('->clean() throws an InvalidArgumentException exception if the first argument is not an array of value');
 }
-catch (sfException $e)
+catch (InvalidArgumentException $e)
 {
-  $t->pass('->clean() throws an sfException exception if the first argument is not an array of value');
+  $t->pass('->clean() throws an InvalidArgumentException exception if the first argument is not an array of value');
 }
 
 $t->is($v->clean(array('s1' => 'foo', 's2' => 'bar')), array('s1' => 'foo', 's2' => 'bar'), '->clean() returns the string unmodified');

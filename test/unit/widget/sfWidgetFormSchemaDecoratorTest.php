@@ -41,7 +41,7 @@ try
   $w['w1'] = 'string';
   $t->fail('sfWidgetFormSchemaDecorator implements the ArrayAccess interface for the fields');
 }
-catch (sfException $e)
+catch (LogicException $e)
 {
   $t->pass('sfWidgetFormSchemaDecorator implements the ArrayAccess interface for the fields');
 }

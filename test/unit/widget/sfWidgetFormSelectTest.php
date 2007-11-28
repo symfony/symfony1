@@ -49,11 +49,11 @@ $t->is(count($css->matchAll('#foo optgroup[label="foo"] option')->getNodes()), 2
 try
 {
   $w = new sfWidgetFormSelect();
-  $t->fail('__construct() throws an sfException if you don\'t pass a choices option');
+  $t->fail('__construct() throws an RuntimeException if you don\'t pass a choices option');
 }
-catch (sfException $e)
+catch (RuntimeException $e)
 {
-  $t->pass('__construct() throws an sfException if you don\'t pass a choices option');
+  $t->pass('__construct() throws an RuntimeException if you don\'t pass a choices option');
 }
 
 // choices as a callable

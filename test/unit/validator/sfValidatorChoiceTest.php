@@ -22,11 +22,11 @@ $t->diag('__construct()');
 try
 {
   new sfValidatorChoice();
-  $t->fail('__construct() throws an sfException if you don\'t pass an expected option');
+  $t->fail('__construct() throws an RuntimeException if you don\'t pass an expected option');
 }
-catch (sfException $e)
+catch (RuntimeException $e)
 {
-  $t->pass('__construct() throws an sfException if you don\'t pass an expected option');
+  $t->pass('__construct() throws an RuntimeException if you don\'t pass an expected option');
 }
 
 $v = new sfValidatorChoice(array('choices' => array('foo', 'bar')));

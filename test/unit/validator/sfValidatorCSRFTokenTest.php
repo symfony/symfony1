@@ -17,11 +17,11 @@ $t->diag('__construct()');
 try
 {
   new sfValidatorCSRFToken();
-  $t->fail('__construct() throws an sfException if you don\'t pass a token option');
+  $t->fail('__construct() throws an RuntimeException if you don\'t pass a token option');
 }
-catch (sfException $e)
+catch (RuntimeException $e)
 {
-  $t->pass('__construct() throws an sfException if you don\'t pass a token option');
+  $t->pass('__construct() throws an RuntimeException if you don\'t pass a token option');
 }
 
 $v = new sfValidatorCSRFToken(array('token' => 'symfony'));

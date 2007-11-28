@@ -17,11 +17,11 @@ $t->diag('__construct()');
 try
 {
   new sfValidatorRegex();
-  $t->fail('__construct() throws an sfException if you don\'t pass a pattern option');
+  $t->fail('__construct() throws an RuntimeException if you don\'t pass a pattern option');
 }
-catch (sfException $e)
+catch (RuntimeException $e)
 {
-  $t->pass('__construct() throws an sfException if you don\'t pass a pattern option');
+  $t->pass('__construct() throws an RuntimeException if you don\'t pass a pattern option');
 }
 
 $v = new sfValidatorRegex(array('pattern' => '/^[0-9]+$/'));

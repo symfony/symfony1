@@ -53,24 +53,24 @@ $t->is($v->getMessage('foo'), 'foobar', '->configure() takes a messages array as
 try
 {
   new ValidatorIdentity(array('nonexistant' => false, 'foo' => 'foobar', 'anothernonexistant' => 'bar', 'required' => true));
-  $t->fail('__construct() throws an sfException if you pass some non existant options');
+  $t->fail('__construct() throws an InvalidArgumentException if you pass some non existant options');
   $t->skip();
 }
-catch (sfException $e)
+catch (InvalidArgumentException $e)
 {
-  $t->pass('__construct() throws an sfException if you pass some non existant options');
+  $t->pass('__construct() throws an InvalidArgumentException if you pass some non existant options');
   $t->like($e->getMessage(), '/ \'nonexistant\', \'anothernonexistant\'/', 'The exception contains the non existant option names');
 }
 
 try
 {
   new ValidatorIdentity(array(), array('required' => 'This is required.', 'nonexistant' => 'foo', 'anothernonexistant' => false));
-  $t->fail('__construct() throws an sfException if you pass some non existant error codes');
+  $t->fail('__construct() throws an InvalidArgumentException if you pass some non existant error codes');
   $t->skip();
 }
-catch (sfException $e)
+catch (InvalidArgumentException $e)
 {
-  $t->pass('__construct() throws an sfException if you pass some non existant error codes');
+  $t->pass('__construct() throws an InvalidArgumentException if you pass some non existant error codes');
   $t->like($e->getMessage(), '/ \'nonexistant\', \'anothernonexistant\'/', 'The exception contains the non existant error codes');
 }
 
@@ -82,11 +82,11 @@ $t->is($v->getRequiredOptions(), array('foo'), '->getRequiredOptions() returns a
 try
 {
   new ValidatorIdentityWithRequired();
-  $t->fail('__construct() throws an sfException if you don\'t pass a required option');
+  $t->fail('__construct() throws an RuntimeException if you don\'t pass a required option');
 }
-catch (sfException $e)
+catch (RuntimeException $e)
 {
-  $t->pass('__construct() throws an sfException if you don\'t pass a required option');
+  $t->pass('__construct() throws an RuntimeException if you don\'t pass a required option');
 }
 
 $v = new ValidatorIdentity();
@@ -121,11 +121,11 @@ $t->is($v->clean('  foo  '), 'foo', '->setOption() can turn on whitespace trimmi
 try
 {
   $v->setOption('foobar', 'foo');
-  $t->fail('->setOption() throws an sfException if the option is not registered');
+  $t->fail('->setOption() throws an InvalidArgumentException if the option is not registered');
 }
-catch (sfException $e)
+catch (InvalidArgumentException $e)
 {
-  $t->pass('->setOption() throws an sfException if the option is not registered');
+  $t->pass('->setOption() throws an InvalidArgumentException if the option is not registered');
 }
 
 // ->hasOption()
@@ -174,11 +174,11 @@ catch (sfValidatorError $e)
 try
 {
   $v->setMessage('foobar', 'foo');
-  $t->fail('->setMessage() throws an sfException if the message is not registered');
+  $t->fail('->setMessage() throws an InvalidArgumentException if the message is not registered');
 }
-catch (sfException $e)
+catch (InvalidArgumentException $e)
 {
-  $t->pass('->setMessage() throws an sfException if the message is not registered');
+  $t->pass('->setMessage() throws an InvalidArgumentException if the message is not registered');
 }
 
 // ->setMessages()

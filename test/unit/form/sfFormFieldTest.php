@@ -32,7 +32,7 @@ try
   unset($parent['title']);
   $t->fail('sfFormField implements the ArrayAccess interface but in read-only mode');
 }
-catch (sfException $e)
+catch (LogicException $e)
 {
   $t->pass('sfFormField implements the ArrayAccess interface but in read-only mode');
 }
@@ -42,7 +42,7 @@ try
   $parent['title'] = null;
   $t->fail('sfFormField implements the ArrayAccess interface but in read-only mode');
 }
-catch (sfException $e)
+catch (LogicException $e)
 {
   $t->pass('sfFormField implements the ArrayAccess interface but in read-only mode');
 }
@@ -52,7 +52,7 @@ try
   $f['title'];
   $t->fail('sfFormField implements the ArrayAccess interface but in read-only mode');
 }
-catch (sfException $e)
+catch (LogicException $e)
 {
   $t->pass('sfFormField implements the ArrayAccess interface but in read-only mode');
 }
@@ -62,7 +62,7 @@ try
   $parent['title1'];
   $t->fail('sfFormField implements the ArrayAccess interface but in read-only mode');
 }
-catch (sfException $e)
+catch (LogicException $e)
 {
   $t->pass('sfFormField implements the ArrayAccess interface but in read-only mode');
 }
@@ -116,11 +116,11 @@ $t->is($f->renderRow('help'), $output, '->renderRow() can take a help message');
 try
 {
   $parent->renderRow();
-  $t->fail('->renderRow() throws an sfException if the form field is a schema');
+  $t->fail('->renderRow() throws an LogicException if the form field is a schema');
 }
-catch (sfException $e)
+catch (LogicException $e)
 {
-  $t->pass('->renderRow() throws an sfException if the form field is a schema');
+  $t->pass('->renderRow() throws an LogicException if the form field is a schema');
 }
 
 // ->renderError();
@@ -135,11 +135,11 @@ $t->is($f->renderError(), $output, '->renderError() renders errors as HTML');
 try
 {
   $parent->renderError();
-  $t->fail('->renderError() throws an sfException if the form field is a schema');
+  $t->fail('->renderError() throws an LogicException if the form field is a schema');
 }
-catch (sfException $e)
+catch (LogicException $e)
 {
-  $t->pass('->renderError() throws an sfException if the form field is a schema');
+  $t->pass('->renderError() throws an LogicException if the form field is a schema');
 }
 
 // ->renderLabel()
@@ -148,11 +148,11 @@ $t->is($f->renderLabel(), '<label for="article_title">Title</label>', '->renderL
 try
 {
   $parent->renderLabel();
-  $t->fail('->renderLabel() throws an sfException if the form field is a schema');
+  $t->fail('->renderLabel() throws an LogicException if the form field is a schema');
 }
-catch (sfException $e)
+catch (LogicException $e)
 {
-  $t->pass('->renderLabel() throws an sfException if the form field is a schema');
+  $t->pass('->renderLabel() throws an LogicException if the form field is a schema');
 }
 
 // ->renderLabelName()
@@ -161,11 +161,11 @@ $t->is($f->renderLabelName(), 'Title', '->renderLabelName() renders the label na
 try
 {
   $parent->renderLabelName();
-  $t->fail('->renderLabelName() throws an sfException if the form field is a schema');
+  $t->fail('->renderLabelName() throws an LogicException if the form field is a schema');
 }
-catch (sfException $e)
+catch (LogicException $e)
 {
-  $t->pass('->renderLabelName() throws an sfException if the form field is a schema');
+  $t->pass('->renderLabelName() throws an LogicException if the form field is a schema');
 }
 
 // ->isHidden()

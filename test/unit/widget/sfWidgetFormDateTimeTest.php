@@ -92,9 +92,9 @@ $w = new sfWidgetFormDateTime(array('date' => 'a string'));
 try
 {
   $w->render('foo');
-  $t->fail('__construct() throws a sfException if the date/time options is not an array');
+  $t->fail('__construct() throws a InvalidArgumentException if the date/time options is not an array');
 }
-catch (sfException $e)
+catch (InvalidArgumentException $e)
 {
-  $t->pass('__construct() throws a sfException if the date/time options is not an array');
+  $t->pass('__construct() throws a InvalidArgumentException if the date/time options is not an array');
 }
