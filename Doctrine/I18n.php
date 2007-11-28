@@ -38,6 +38,7 @@ class Doctrine_I18n extends Doctrine_Plugin
                             'generateFiles' => false,
                             'table'         => false,
                             'pluginTable'   => false,
+                            'children'      => array(),
                             );
 
     /**
@@ -51,78 +52,40 @@ class Doctrine_I18n extends Doctrine_Plugin
         $this->_options = array_merge($this->_options, $options);
     }
 
+    public function buildRelation()
+    {
+    	$this->buildForeignRelation('Translation');
+        $this->buildLocalRelation();
+    }
+
     /**
      * buildDefinition
      *
-     * @param object $Doctrine_Table 
+     * @param object $Doctrine_Table
      * @return void
      */
-    public function buildDefinition(Doctrine_Table $table)
+    public function setTableDefinition()
     {
       	if (empty($this->_options['fields'])) {
       	    throw new Doctrine_I18n_Exception('Fields not set.');
       	}
 
-        $this->_options['className'] = str_replace('%CLASS%',
-                                                   $this->_options['table']->getComponentName(),
-                                                   $this->_options['className']);
-
-        $name = $table->getComponentName();
-
-        if (class_exists($this->_options['className'])) {
-            return false;
-        }
-
-        $columns = array();
-
-        $id = $table->getIdentifier();
-
         $options = array('className' => $this->_options['className']);
 
-        $fk = array();
-        foreach ((array) $id as $column) {
-            $def = $table->getDefinitionOf($column);
-
-            unset($def['autoincrement']);
-            unset($def['sequence']);
-            unset($def['unique']);
-
-            $fk[$column] = $def;
-        }
-
-        $cols = $table->getColumns();
+        $cols = $this->_options['table']->getColumns();
 
         foreach ($cols as $column => $definition) {
             if (in_array($column, $this->_options['fields'])) {
                 $columns[$column] = $definition;
-                $table->removeColumn($column);
+                $this->_options['table']->removeColumn($column);
             }
         }
-        
-        $columns['lang'] = array('type'    => 'string',
-                                 'length'  => 2,
-                                 'fixed'   => true,
-                                 'primary' => true);
 
-        $local = (count($fk) > 1) ? array_keys($fk) : key($fk);
+        $this->hasColumns($columns);
 
-        $relations = array($name => array('local' => $local,
-                                          'foreign' => $id,
-                                          'onDelete' => 'CASCADE',
-                                          'onUpdate' => 'CASCADE'));
-
-
-        $columns += $fk;
-
-        $options = array('className' => $this->_options['className'],
-                         'queryParts' => array('indexBy' => 'lang'));
-
-        $this->generateClass($options, $columns, $relations);
-
-        $this->_options['pluginTable'] = $table->getConnection()->getTable($this->_options['className']);
-        
-        $this->_options['pluginTable']->bindQueryPart('indexBy', 'lang');
-
-        return true;
+        $this->hasColumn('lang', 'string', 2, array('fixed'   => true,
+                                                    'primary' => true));
+                                                    
+        $this->bindQueryParts(array('indexBy' => 'lang'));
     }
 }

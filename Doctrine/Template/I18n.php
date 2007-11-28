@@ -32,33 +32,16 @@
  */
 class Doctrine_Template_I18n extends Doctrine_Template
 {
-    protected $_translation;
-
     /**
      * __construct
      *
      * @param string $array 
      * @return void
      */
-    public function __construct(array $options)
+    public function __construct(array $options = array())
     {
         $this->_plugin = new Doctrine_I18n($options);
     }
-
-    /**
-     * translation
-     *
-     * sets or retrieves the current translation language
-     *
-     * @return Doctrine_Record      this object
-     */
-    public function translation($language = null)
-    {
-        $this->_translation = $language;
-        
-        return $this->_translation;
-    }
-
     /**
      * setUp
      *
@@ -66,22 +49,9 @@ class Doctrine_Template_I18n extends Doctrine_Template
      */
     public function setUp()
     {
-        $this->_plugin->setOption('table', $this->_table);
-        $name = $this->_table->getComponentName();
-        $className = $this->_plugin->getOption('className');
-
-        if (strpos($className, '%CLASS%') !== false) {
-            $this->_plugin->setOption('className', str_replace('%CLASS%', $name, $className));
-            $className = $this->_plugin->getOption('className');
-        }
-
-        $this->_plugin->buildDefinition($this->_table);
-        
-        $id = $this->_table->getIdentifier();
-
-        $this->hasMany($className . ' as Translation', array('local' => $id[0], 'foreign' => $id[0]));
+        $this->_plugin->initialize($this->_table); 
     }
-    
+
     /**
      * getI18n
      *

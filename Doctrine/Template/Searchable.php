@@ -34,30 +34,12 @@ class Doctrine_Template_Searchable extends Doctrine_Template
 {     
     public function __construct(array $options)
     {
-        $this->_plugin = new Doctrine_Search($options);
-        
-
+        $this->_plugin = new Doctrine_Search($options); 
     }
     
-    public function getPlugin()
-    {
-        return $this->_plugin;
-    }
-
     public function setUp()
     {
-        $id = $this->_table->getIdentifier();
-        $name = $this->_table->getComponentName();
-        $className = $this->_plugin->getOption('className');
-
-        if (strpos($className, '%CLASS%') !== false) {
-            $this->_plugin->setOption('className', str_replace('%CLASS%', $name, $className));
-            $className = $this->_plugin->getOption('className');
-        }
-        $this->_plugin->setOption('resource', $this->_table);
-        $this->_plugin->buildDefinition();
-
-        $this->hasMany($className, array('local' => $id, 'foreign' => $id));
+        $this->_plugin->initialize($this->_table);
 
         $this->addListener(new Doctrine_Search_Listener($this->_plugin));
     }

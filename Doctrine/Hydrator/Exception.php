@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id$
+ *  $Id: Exception.php 1080 2007-02-10 18:17:08Z romanb $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -18,17 +18,17 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.com>.
  */
-
+Doctrine::autoload('Doctrine_Exception');
 /**
- * Doctrine_Resource_Access
+ * Doctrine_Hydrator_Exception
  *
  * @package     Doctrine
- * @subpackage  Resource
- * @author      Jonathan H. Wage <jwage@mac.com>
+ * @subpackage  Hydrate
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version     $Revision$
  * @link        www.phpdoctrine.com
  * @since       1.0
+ * @version     $Revision: 1080 $
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
-class Doctrine_Resource_Access extends Doctrine_Access
+class Doctrine_Hydrator_Exception extends Doctrine_Exception
 { }

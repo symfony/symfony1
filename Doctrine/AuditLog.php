@@ -38,13 +38,27 @@ class Doctrine_AuditLog extends Doctrine_Plugin
                             'generateFiles' => false,
                             'table'         => false,
                             'pluginTable'   => false,
+                            'children'      => array(),
                             );
 
-    public function __construct($options)
+    /**
+     * Create a new auditlog_ 
+     * 
+     * @param array $options An array of options
+     * @return void
+     */
+    public function __construct(array $options = array())
     {
-        $this->_options = array_merge($this->_options, $options);
+        $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $options);
     }
 
+    /**
+     * Get the version 
+     * 
+     * @param Doctrine_Record $record 
+     * @param mixed $version 
+     * @return array An array with version information
+     */
     public function getVersion(Doctrine_Record $record, $version)
     {           
         $className = $this->_options['className'];
@@ -65,22 +79,18 @@ class Doctrine_AuditLog extends Doctrine_Plugin
 
         return $q->execute($values, Doctrine::HYDRATE_ARRAY);
     }
-    public function buildDefinition(Doctrine_Table $table)
+
+    /**
+     * buildDefinition for a table 
+     * 
+     * @param Doctrine_Table $table 
+     * @return boolean true on success otherwise false.
+     */
+    public function setTableDefinition()
     {
-        $this->_options['className'] = str_replace('%CLASS%', 
-                                                   $this->_options['table']->getComponentName(),
-                                                   $this->_options['className']);
+        $name = $this->_options['table']->getComponentName();
 
-        $name = $table->getComponentName();
-
-        $className = $name . 'Version';
-
-        // check that class doesn't exist (otherwise we cannot create it)
-        if (class_exists($className)) {
-            return false;
-        }
-
-        $columns = $table->getColumns();
+        $columns = $this->_options['table']->getColumns();
 
         // remove all sequence, autoincrement and unique constraint definitions
         foreach ($columns as $column => $definition) {
@@ -89,24 +99,9 @@ class Doctrine_AuditLog extends Doctrine_Plugin
             unset($columns[$column]['unique']);
         }
 
+        $this->hasColumns($columns);
+
         // the version column should be part of the primary key definition
-        $columns[$this->_options['versionColumn']] = array('type' => 'integer',
-                                                           'length' => 8,
-                                                           'primary' => true);
-
-        $id = $table->getIdentifier();
-
-        $options = array('className' => $className);
-        
-        $relations = array($name => array('local' => $id,
-                                          'foreign' => $id, 
-                                          'onDelete' => 'CASCADE',
-                                          'onUpdate' => 'CASCADE'));
-
-        $this->generateClass($options, $columns, array());
-        
-        $this->_options['pluginTable'] = $table->getConnection()->getTable($this->_options['className']);
-
-        return true;
+        $this->hasColumn($this->_options['versionColumn'], 'integer', 8, array('primary' => true));
     }
 }

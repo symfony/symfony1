@@ -1124,7 +1124,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
      */
     public function exportClassesSql(array $classes)
     {
-        $models = Doctrine::getLoadedModels($classes);
+        $models = Doctrine::filterInvalidModels($classes);
         
         $sql = array();
         
@@ -1165,6 +1165,33 @@ class Doctrine_Export extends Doctrine_Connection_Module
     }
 
     /**
+     * fetches all plugins recursively for given table
+     *
+     * @param Doctrine_Table $table     table object to retrieve the plugins from
+     * @return array                    an array of Doctrine_Plugin objects
+     */
+    public function getAllPlugins(Doctrine_Table $table)
+    {
+        $plugins = array();
+
+        foreach ($table->getPlugins() as $name => $plugin) {
+            if ($plugin === null) {
+                continue;                     	
+            }
+
+            $plugins[] = $plugin;
+
+            $pluginTable = $plugin->getTable();
+            
+            if ($pluginTable instanceof Doctrine_Table) {
+                $plugins = array_merge($plugins, $this->getAllPlugins($pluginTable));
+            }
+        }
+
+        return $plugins;
+    }
+
+    /**
      * exportPluginsSql
      * exports plugin tables for given table
      *
@@ -1175,14 +1202,8 @@ class Doctrine_Export extends Doctrine_Connection_Module
     {
     	$sql = array();
 
-        foreach ($table->getTemplates() as $name => $template) {
-            $plugin = $template->getPlugin();
-
-            if ($plugin === null) {
-                continue;                     	
-            }
-
-            $table = $plugin->getOption('pluginTable');
+        foreach ($this->getAllPlugins($table) as $name => $plugin) {
+            $table = $plugin->getTable();
             
             // Make sure plugin has a valid table
             if ($table instanceof Doctrine_Table) {

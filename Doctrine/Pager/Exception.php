@@ -1,4 +1,5 @@
 <?php
+
 /*
  *  $Id$
  *
@@ -19,55 +20,18 @@
  * <http://www.phpdoctrine.com>.
  */
 
+Doctrine::autoload('Doctrine_Exception');
+
 /**
- * Doctrine_Hydrate_Array
- * defines an array fetching strategy for Doctrine_Hydrate
+ * Doctrine_Pager_Exception
  *
+ * @author      Guilherme Blanco <guilhermeblanco@hotmail.com>
  * @package     Doctrine
- * @subpackage  Hydrate
+ * @subpackage  Pager
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
+ * @version     $Revision$
  * @link        www.phpdoctrine.com
  * @since       1.0
- * @version     $Revision$
- * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
-class Doctrine_Hydrate_Array
-{
-    public function getElementCollection($component)
-    {
-        return array();
-    }
-    public function getElement(array $data, $component)
-    {
-        return $data;
-    }
-    public function isIdentifiable(array $data, Doctrine_Table $table)
-    {
-        return ( ! empty($data));
-    }
-    public function registerCollection($coll)
-    {
-
-    }
-    public function initRelated(array &$data, $name)
-    {
-        if ( ! isset($data[$name])) {
-            $data[$name] = array();
-        }
-        return true;
-    }
-    public function getNullPointer() 
-    {
-        return null;    
-    }
-    public function getLastKey(&$data)
-    {
-        end($data);
-        return key($data);
-    }
-
-    public function flush()
-    {
-        
-    }
-}
+class Doctrine_Pager_Exception extends Doctrine_Exception
+{ }

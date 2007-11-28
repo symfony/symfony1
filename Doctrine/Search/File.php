@@ -32,25 +32,37 @@
  */
 class Doctrine_Search_File extends Doctrine_Search
 {
+    /**
+     * constructor
+     *
+     * @param array $options    an array of plugin options
+     */
     public function __construct(array $options = array())
     {
         parent::__construct($options);
 
         if ( ! isset($this->_options['resource'])) {
             $table = new Doctrine_Table('File', Doctrine_Manager::connection());
-            
-            $table->setColumn('url', 'string', 255, array('primary' => true));
 
-            $this->_options['resource'] = $table;
+            $table->setColumn('url', 'string', 255, array('primary' => true));
         }
-        
+
         if (empty($this->_options['fields'])) {
             $this->_options['fields'] = array('url', 'content');
         }
-        
-        $this->buildDefinition();
+
+        $this->initialize($table);
     }
-    
+    public function buildRelation()
+    {
+    	
+    }	
+    /**
+     * indexes given directory
+     *
+     * @param string $dir   the name of the directory to index
+     * @return void
+     */
     public function indexDirectory($dir)
     {
         $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
@@ -58,7 +70,7 @@ class Doctrine_Search_File extends Doctrine_Search
                                                 
         foreach ($it as $file) {
             if (strpos($file, DIRECTORY_SEPARATOR . '.svn') !== false) {
-                continue;                                                          	
+                continue;
             }
 
             $this->updateIndex(array('url' => $file->getPathName(),

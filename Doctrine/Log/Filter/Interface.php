@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id$
+ *  $Id: Interface.php 3155 2007-11-14 13:13:23Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -20,15 +20,22 @@
  */
 
 /**
- * Doctrine_Resource_Config
- *
  * @package     Doctrine
- * @subpackage  Resource
+ * @subpackage  Log
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Jonathan H. Wage <jwage@mac.com>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version     $Revision$
  * @link        www.phpdoctrine.com
  * @since       1.0
+ * @version     $Revision: 3155 $
  */
-class Doctrine_Resource_Config extends Doctrine_Resource_Params
-{ }
+interface Doctrine_Log_Filter_Interface
+{
+    /**
+     * Returns TRUE to accept the message, FALSE to block it.
+     *
+     * @param  array    $event    event data
+     * @return boolean            accepted?
+     */
+    public function accept($event);
+}

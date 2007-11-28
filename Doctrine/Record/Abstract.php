@@ -37,6 +37,27 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
      */
     protected $_table;
 
+    public function setTableDefinition()
+    {
+    	
+    }
+    public function setUp()
+    {
+    	
+    }	
+
+
+    /**
+     * getTable
+     * returns the associated table object
+     *
+     * @return Doctrine_Table               the associated table object
+     */
+    public function getTable()
+    {
+        return $this->_table;
+    }
+
     /**
      * addListener
      *
@@ -273,16 +294,23 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
         return $this;
     }
 
+    public function loadPlugin(Doctrine_Plugin $plugin)
+    {
+    	$plugin->initialize($this->_table);
+
+        $this->_table->addPlugin($plugin, get_class($plugin));
+    }
+
+
     /**
      * actAs
-     * loads a given plugin 
+     * loads the given plugin
      *
      * @param mixed $tpl
      * @param array $options
      */
     public function actAs($tpl, array $options = array())
     {
-
         if ( ! is_object($tpl)) {
             if (class_exists($tpl, true)) {
                 $tpl = new $tpl($options);
@@ -301,8 +329,9 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
         if ( ! ($tpl instanceof Doctrine_Template)) {
             throw new Doctrine_Record_Exception('Loaded plugin class is not an istance of Doctrine_Template.');
         }
+
         $className = get_class($tpl);
-        
+
         $this->_table->addTemplate($className, $tpl);
 
         $tpl->setTable($this->_table);

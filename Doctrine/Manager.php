@@ -82,6 +82,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
      * setDefaultAttributes
      * sets default attributes
      *
+     * @todo I do not understand the flow here. Explain or refactor?
      * @return boolean
      */
     public function setDefaultAttributes()
@@ -91,6 +92,8 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
             $init = true;
             $attributes = array(
                         Doctrine::ATTR_CACHE                    => null,
+                        Doctrine::ATTR_RESULT_CACHE             => null,
+                        Doctrine::ATTR_QUERY_CACHE              => null,
                         Doctrine::ATTR_LOAD_REFERENCES          => true,
                         Doctrine::ATTR_LISTENER                 => new Doctrine_EventListener(),
                         Doctrine::ATTR_RECORD_LISTENER          => new Doctrine_Record_Listener(),
@@ -106,7 +109,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
                         Doctrine::ATTR_EXPORT                   => Doctrine::EXPORT_ALL,
                         Doctrine::ATTR_DECIMAL_PLACES           => 2,
                         Doctrine::ATTR_DEFAULT_PARAM_NAMESPACE  => 'doctrine',
-                        );
+                        ); 
             foreach ($attributes as $attribute => $value) {
                 $old = $this->getAttribute($attribute);
                 if ($old === null) {
@@ -317,6 +320,12 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
         return $this->_connections[$name];
     }
     
+    /**
+     * parsePdoDsn 
+     * 
+     * @param array $dsn An array of dsn information 
+     * @return array The array parsed
+     */
     public function parsePdoDsn($dsn)
     {
         $parts = array();

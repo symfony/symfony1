@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id$
+ *  $Id: Suppress.php 3155 2007-11-14 13:13:23Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -20,45 +20,44 @@
  */
 
 /**
- * Doctrine_Resource
- *
  * @package     Doctrine
- * @subpackage  Resource
+ * @subpackage  Log
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Jonathan H. Wage <jwage@mac.com>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version     $Revision$
  * @link        www.phpdoctrine.com
  * @since       1.0
+ * @version     $Revision: 3155 $
  */
-class Doctrine_Resource
+class Doctrine_Log_Filter_Suppress implements Doctrine_Log_Filter_Interface
 {
-    protected $_config = null;
-    const FORMAT = 'json';
-    
-    public function __construct($config)
+    /**
+     * @var boolean
+     */
+    protected $_accept = true;
+
+    /**
+     * This is a simple boolean filter.
+     *
+     * Call suppress(true) to suppress all log events.
+     * Call suppress(false) to accept all log events.
+     *
+     * @param  boolean  $suppress  Should all log events be suppressed?
+     * @return  void
+     */
+    public function suppress($suppress)
     {
-        foreach ($config as $key => $value) {
-            $this->getConfig()->set($key, $value);
-        }
-        
-        $loadDoctrine = false;
-        foreach ($this->getConfig()->getAll() as $key => $value) {
-            if ($key == 'url') {
-                $this->loadDoctrine = true;
-            }
-        }
+        $this->_accept = (! $suppress);
     }
-    
-    public function getConfig($key = null)
+
+    /**
+     * Returns TRUE to accept the message, FALSE to block it.
+     *
+     * @param  array    $event    event data
+     * @return boolean            accepted?
+     */
+    public function accept($event)
     {
-        if ($this->_config === null) {
-            $this->_config = new Doctrine_Resource_Config();
-        }
-        
-        if ($key === null) {
-            return $this->_config;
-        } else {
-            return $this->_config->get($key);
-        }
+        return $this->_accept;
     }
 }

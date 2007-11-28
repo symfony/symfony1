@@ -114,6 +114,15 @@ class Doctrine_Data_Import extends Doctrine_Data
         }
     }
     
+    protected function _getImportedObject($rowKey)
+    {
+        if (isset($this->_importedObjects[$rowKey])) {
+            return $this->_importedObjects[$rowKey];
+        } else {
+            throw new Doctrine_Data_Exception('Invalid row key specified: ' . $rowKey);
+        }
+    }
+    
     protected function _processRow($rowKey, $row)
     {
         $obj = $this->_importedObjects[$rowKey];
@@ -130,18 +139,18 @@ class Doctrine_Data_Import extends Doctrine_Data
                         foreach ($value as $link) {
                             
                             if ($obj->getTable()->getRelation($key)->getType() === Doctrine_Relation::ONE) {
-                                $obj->set($key, $this->_importedObjects[$link]);
+                                $obj->set($key, $this->_getImportedObject($link));
                             } else if ($obj->getTable()->getRelation($key)->getType() === Doctrine_Relation::MANY) {
                                 $relation = $obj->$key;
                                 
-                                $relation[] = $this->_importedObjects[$link];
+                                $relation[] = $this->_getImportedObject($link);
                             }
                         }
                     } else {
                         $obj->$key->fromArray($value);
                     }
-                } else if (isset($this->_importedObjects[$value])) {
-                    $obj->set($key, $this->_importedObjects[$value]);
+                } else {
+                    $obj->set($key, $this->_getImportedObject($value));
                 }
             }
         }
@@ -191,13 +200,14 @@ class Doctrine_Data_Import extends Doctrine_Data
             $this->_processRow($rowKey, $row);
         }
 
+        $objects = array();
+        foreach ($this->_importedObjects as $object) {
+            $className = get_class($object);
+            $objects[$className] = $className;
+        }
+
         $manager = Doctrine_Manager::getInstance();
-        foreach ($manager as $connection) {
-            $objects = array();
-            foreach ($this->_importedObjects as $object) {
-              $objects[] = get_class($object);
-            }
-            
+        foreach ($manager as $connection) {            
             $tree = $connection->unitOfWork->buildFlushTree($objects);
             
             foreach ($tree as $model) {
@@ -230,6 +240,7 @@ class Doctrine_Data_Import extends Doctrine_Data
             if( array_key_exists('children', $nestedSet) )
             {
                 $children = $nestedSet['children'];
+                $children = array_reverse($children, true);
                 unset($nestedSet['children']);
             }
 

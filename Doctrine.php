@@ -37,7 +37,7 @@ final class Doctrine
      * VERSION
      */
     const VERSION                   = '0.1.0';
-    
+
     /**
      * ERROR CONSTANTS
      */
@@ -182,11 +182,15 @@ final class Doctrine
     const ATTR_COLL_LIMIT               = 123;
 
     const ATTR_CACHE                    = 150;
+    const ATTR_RESULT_CACHE             = 150;
     const ATTR_CACHE_LIFESPAN           = 151;
+    const ATTR_RESULT_CACHE_LIFESPAN    = 151;
     const ATTR_LOAD_REFERENCES          = 153;
     const ATTR_RECORD_LISTENER          = 154;
     const ATTR_THROW_EXCEPTIONS         = 155;
     const ATTR_DEFAULT_PARAM_NAMESPACE  = 156;
+    const ATTR_QUERY_CACHE              = 157;
+    const ATTR_QUERY_CACHE_LIFESPAN     = 158;
 
     /**
      * LIMIT CONSTANTS
@@ -361,7 +365,7 @@ final class Doctrine
      * HYDRATE_ARRAY
      */
     const HYDRATE_ARRAY             = 3;
-    
+
     /**
      * HYDRATE_NONE
      */
@@ -435,16 +439,16 @@ final class Doctrine
      * @var boolean $_debug
      */
     private static $_debug = false;
-    
+
     /**
-     * _loadedModels
-     * 
+     * _loadedModelFiles
+     *
      * Array of all the loaded models and the path to each one for autoloading
      *
      * @var array
      */
-    private static $_loadedModels = array();
-    
+    private static $_loadedModelFiles = array();
+
     /**
      * _validators
      *
@@ -467,7 +471,7 @@ final class Doctrine
     /**
      * debug
      *
-     * @param string $bool 
+     * @param string $bool
      * @return void
      */
     public static function debug($bool = null)
@@ -475,7 +479,7 @@ final class Doctrine
         if ($bool !== null) {
             self::$_debug = (bool) $bool;
         }
-        
+
         return self::$_debug;
     }
 
@@ -490,7 +494,7 @@ final class Doctrine
         if ( ! self::$_path) {
             self::$_path = dirname(__FILE__);
         }
-        
+
         return self::$_path;
     }
 
@@ -498,93 +502,157 @@ final class Doctrine
      * loadModels
      *
      * Recursively load all models from a directory or array of directories
-     * 
-     * @param string $directory Path to directory of models or array of directory paths
+     *
+     * @param string $directory    Path to directory of models or array of directory paths
      * @return array $loadedModels
      */
     public static function loadModels($directory)
     {
         if ($directory !== null) {
             $manager = Doctrine_Manager::getInstance();
-            
+
             foreach ((array) $directory as $dir) {
                 $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
                                                         RecursiveIteratorIterator::LEAVES_ONLY);
-
                 foreach ($it as $file) {
                     $e = explode('.', $file->getFileName());
                     if (end($e) === 'php' && strpos($file->getFileName(), '.inc') === false) {
-                        self::$_loadedModels[$e[0]] = $file->getPathName();
+                        self::$_loadedModelFiles[$e[0]] = $file->getPathName();
+                    }
+                }
+            }
+
+            $loadedModels = array();
+
+            $modelFiles = array_keys(self::$_loadedModelFiles);
+
+            foreach ($modelFiles as $name) {
+                $declaredBefore = get_declared_classes();
+                if (class_exists($name)) {
+                    if (self::isValidModelClass($name) && !in_array($name, $loadedModels)) {
+                        $loadedModels[] = $name;
+                    }
+                } else {
+                    // Determine class names by the actual inclusion of the model file
+                    // The possibility exists that the class name(s) contained in the model
+                    // file is not the same as the actual model file name itself
+                    if (isset(self::$_loadedModelFiles[$name])) {
+                        require_once self::$_loadedModelFiles[$name];
+                        $declaredAfter = get_declared_classes();
+                        // Using array_slice since array_diff is broken is some versions
+                        $foundClasses = array_slice($declaredAfter, count($declaredBefore) - 1);
+                        if ($foundClasses) {
+                            foreach ($foundClasses as $name) {
+                                if (self::isValidModelClass($name) && !in_array($name, $loadedModels)) {
+                                    $loadedModels[] = $name;
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
 
-        return self::getLoadedModels(array_keys(self::$_loadedModels));
+        return self::filterInvalidModels($loadedModels);
     }
 
     /**
      * getLoadedModels
      *
      * Get all the loaded models, you can provide an array of classes or it will use get_declared_classes()
-     * 
+     *
      * Will filter through an array of classes and return the Doctrine_Records out of them.
      * If you do not specify $classes it will return all of the currently loaded Doctrine_Records
      *
-     * @param $classes Array of classes to filter through, otherwise uses get_declared_classes()
-     * @return array $loadedModels
+     * @param classes  Array of classes to filter through, otherwise uses get_declared_classes()
+     * @return array   $loadedModels
      */
     public static function getLoadedModels($classes = null)
     {
         if ($classes === null) {
             $classes = get_declared_classes();
-            $classes = array_merge($classes, array_keys(self::$_loadedModels));
+            $classes = array_merge($classes, array_keys(self::$_loadedModelFiles));
         }
-        
-        $parent = new ReflectionClass('Doctrine_Record');
-        
-        $loadedModels = array();
-        
+
+        return self::filterInvalidModels($classes);
+    }
+
+    /**
+     * filterInvalidModels
+     *
+     * Filter through an array of classes and return all the classes that are valid models
+     *
+     * @param classes  Array of classes to filter through, otherwise uses get_declared_classes()
+     * @return array   $loadedModels
+     */
+    public static function filterInvalidModels($classes)
+    {
+        $validModels = array();
+
         foreach ((array) $classes as $name) {
-            $class = new ReflectionClass($name);
-            
+            if (self::isValidModelClass($name) && !in_array($name, $validModels)) {
+                $validModels[] = $name;
+            }
+        }
+
+        return $validModels;
+    }
+
+    /**
+     * isValidModelClass
+     *
+     * Checks if what is passed is a valid Doctrine_Record
+     *
+     * @param   mixed   $class Can be a string named after the class, an instance of the class, or an instance of the class reflected
+     * @return  boolean
+     */
+    public static function isValidModelClass($class)
+    {
+        if ($class instanceof Doctrine_Record) {
+            $class = get_class($class);
+        }
+
+        if (is_string($class) && class_exists($class)) {
+            $class = new ReflectionClass($class);
+        }
+
+        if ($class instanceof ReflectionClass) {
             // Skip the following classes
             // - abstract classes
-            // - not a subclass of Doctrine_Record 
+            // - not a subclass of Doctrine_Record
             // - don't have a setTableDefinition method
-            if ($class->isAbstract() || 
-                !$class->isSubClassOf($parent) || 
-                !$class->hasMethod('setTableDefinition')) {
-                continue;
+            if (!$class->isAbstract() &&
+                $class->isSubClassOf('Doctrine_Record') &&
+                $class->hasMethod('setTableDefinition')) {
+
+                return true;
             }
-            
-            $loadedModels[] = $name;
         }
-        
-        return $loadedModels;
+
+        return false;
     }
 
     /**
      * getConnectionByTableName
      *
      * Get the connection object for a table by the actual table name
-     * 
-     * @param string $tableName 
+     *
+     * @param string $tableName
      * @return object Doctrine_Connection
      */
     public static function getConnectionByTableName($tableName)
     {
         $loadedModels = self::getLoadedModels();
-        
+
         foreach ($loadedModels as $name) {
             $model = new $name();
             $table = $model->getTable();
-            
+
             if ($table->getTableName() == $tableName) {
-               return $table->getConnection(); 
+               return $table->getConnection();
             }
         }
-        
+
         return Doctrine_Manager::connection();
     }
 
@@ -619,11 +687,11 @@ final class Doctrine
         Doctrine::generateModelsFromDb($directory);
 
         $export = new Doctrine_Export_Schema();
-        
+
         $result = $export->exportSchema($yamlPath, 'yml', $directory);
-        
+
         exec('rm -rf ' . $directory);
-        
+
         return $result;
     }
 
@@ -641,7 +709,7 @@ final class Doctrine
     {
         $import = new Doctrine_Import_Schema();
         $import->setOptions($options);
-        
+
         return $import->importSchema($yamlPath, 'yml', $directory);
     }
 
@@ -674,18 +742,18 @@ final class Doctrine
     /**
      * generateSqlFromModels
      *
-     * @param string $directory 
+     * @param string $directory
      * @return string $build  String of sql queries. One query per line
      */
     public static function generateSqlFromModels($directory = null)
     {
         $sql = Doctrine_Manager::connection()->export->exportSql($directory);
-        
+
         $build = '';
         foreach ($sql as $query) {
             $build .= $query.";\n";
         }
-        
+
         return $build;
     }
 
@@ -701,7 +769,7 @@ final class Doctrine
     public static function generateYamlFromModels($yamlPath, $directory)
     {
         $export = new Doctrine_Export_Schema();
-        
+
         return $export->exportSchema($yamlPath, 'yml', $directory);
     }
 
@@ -718,43 +786,43 @@ final class Doctrine
         if ( ! is_array($specifiedConnections)) {
             $specifiedConnections = (array) $specifiedConnections;
         }
-        
+
         $manager = Doctrine_Manager::getInstance();
         $connections = $manager->getConnections();
-        
+
         $results = array();
-        
+
         foreach ($connections as $name => $connection) {
             if ( ! empty($specifiedConnections) && !in_array($name, $specifiedConnections)) {
                 continue;
             }
-            
+
             $info = $manager->parsePdoDsn($connection->getOption('dsn'));
             $username = $connection->getOption('username');
             $password = $connection->getOption('password');
-            
+
             // Make connection without database specified so we can create it
             $connect = $manager->openConnection(new PDO($info['scheme'] . ':host=' . $info['host'], $username, $password), 'tmp_connection', false);
-            
+
             try {
                 // Create database
                 $connect->export->createDatabase($name);
-                
+
                 // Close the tmp connection with no database
                 $manager->closeConnection($connect);
-                
+
                 // Close original connection
                 $manager->closeConnection($connection);
-                
+
                 // Reopen original connection with newly created database
                 $manager->openConnection(new PDO($info['dsn'], $username, $password), $name, true);
-                
+
                 $results[$name] = true;
             } catch (Exception $e) {
                 $results[$name] = false;
             }
         }
-        
+
         return $results;
     }
 
@@ -771,27 +839,27 @@ final class Doctrine
         if ( ! is_array($specifiedConnections)) {
             $specifiedConnections = (array) $specifiedConnections;
         }
-        
+
         $manager = Doctrine_Manager::getInstance();
-        
+
         $connections = $manager->getConnections();
-        
+
         $results = array();
-        
+
         foreach ($connections as $name => $connection) {
             if ( ! empty($specifiedConnections) && !in_array($name, $specifiedConnections)) {
                 continue;
             }
-            
+
             try {
                 $connection->export->dropDatabase($name);
-                
+
                 $results[$name] = true;
             } catch (Exception $e) {
                 $results[$name] = false;
             }
         }
-        
+
         return $results;
     }
 
@@ -807,7 +875,7 @@ final class Doctrine
     public static function dumpData($yamlPath, $individualFiles = false)
     {
         $data = new Doctrine_Data();
-        
+
         return $data->exportData($yamlPath, 'yml', array(), $individualFiles);
     }
 
@@ -824,17 +892,17 @@ final class Doctrine
     public static function loadData($yamlPath, $append = false)
     {
         $data = new Doctrine_Data();
-        
+
         if ( ! $append) {
             $data->purge();
         }
-        
+
         return $data->importData($yamlPath, 'yml');
     }
 
     /**
      * migrate
-     * 
+     *
      * Migrate database to specified $to version. Migrates from current to latest if you do not specify.
      *
      * @param string $migrationsPath Path to migrations directory which contains your migration classes
@@ -845,7 +913,7 @@ final class Doctrine
     public static function migrate($migrationsPath, $to = null)
     {
         $migration = new Doctrine_Migration($migrationsPath);
-        
+
         return $migration->migrate($to);
     }
 
@@ -860,42 +928,42 @@ final class Doctrine
     public static function generateMigrationClass($className, $migrationsPath)
     {
         $builder = new Doctrine_Migration_Builder($migrationsPath);
-        
+
         return $builder->generateMigrationClass($className);
     }
 
     /**
      * generateMigrationsFromDb
      *
-     * @param string $migrationsPath 
+     * @param string $migrationsPath
      * @return void
      * @throws new Doctrine_Migration_Exception
      */
     public static function generateMigrationsFromDb($migrationsPath)
     {
         $builder = new Doctrine_Migration_Builder($migrationsPath);
-        
+
         return $builder->generateMigrationsFromDb();
     }
 
     /**
      * generateMigrationsFromModels
      *
-     * @param string $migrationsPath 
-     * @param string $modelsPath 
+     * @param string $migrationsPath
+     * @param string $modelsPath
      * @return void
      */
     public static function generateMigrationsFromModels($migrationsPath, $modelsPath = null)
     {
         $builder = new Doctrine_Migration_Builder($migrationsPath);
-        
+
         return $builder->generateMigrationsFromModels($modelsPath);
     }
 
     /**
      * getTable
      *
-     * @param string $tableName 
+     * @param string $tableName
      * @return void
      */
     public static function getTable($tableName)
@@ -906,7 +974,7 @@ final class Doctrine
     /**
      * fileFinder
      *
-     * @param string $type 
+     * @param string $type
      * @return void
      */
     public static function fileFinder($type)
@@ -945,24 +1013,24 @@ final class Doctrine
         if (class_exists($className, false)) {
             return false;
         }
-        
+
         if ( ! self::$_path) {
             self::$_path = dirname(__FILE__);
         }
-        
+
         $class = self::$_path . DIRECTORY_SEPARATOR . str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
 
         if (file_exists($class)) {
             require_once($class);
-            
+
             return true;
         }
-        
-        $loadedModels = self::$_loadedModels;
-        
+
+        $loadedModels = self::$_loadedModelFiles;
+
         if (isset($loadedModels[$className]) && file_exists($loadedModels[$className])) {
             require_once($loadedModels[$className]);
-            
+
             return true;
         }
 
@@ -976,18 +1044,22 @@ final class Doctrine
      *
      * @param mixed $var        a variable of any type
      * @param boolean $output   whether to output the content
+     * @param string $indent    indention string
      * @return void|string
      */
-    public static function dump($var, $output = true)
+    public static function dump($var, $output = true, $indent = "")
     {
         $ret = array();
         switch (gettype($var)) {
             case 'array':
                 $ret[] = 'Array(';
+                $indent .= "    ";
                 foreach ($var as $k => $v) {
-                    $ret[] = $k . ' : ' . self::dump($v, false);
+
+                    $ret[] = $indent . $k . ' : ' . self::dump($v, false, $indent);
                 }
-                $ret[] = ")";
+                $indent = substr($indent,0, -4);
+                $ret[] = $indent . ")";
                 break;
             case 'object':
                 $ret[] = 'Object(' . get_class($var) . ')';
@@ -995,9 +1067,11 @@ final class Doctrine
             default:
                 $ret[] = var_export($var, true);
         }
+
         if ($output) {
             print implode("\n", $ret);
         }
+
         return implode("\n", $ret);
     }
 
@@ -1009,9 +1083,9 @@ final class Doctrine
      * @param string $classname
      * @return string
      */
-    public static function tableize($classname)
+    public static function tableize($className)
     {
-         return strtolower(preg_replace('~(?<=\\w)([A-Z])~', '_$1', $classname));
+         return Doctrine_Inflector::tableize($className);
     }
 
     /**
@@ -1022,22 +1096,9 @@ final class Doctrine
      * @param string $tablename
      * @return string
      */
-    public static function classify($tablename)
+    public static function classify($tableName)
     {
-        return preg_replace_callback('~(_?)(_)([\w])~', array("Doctrine", "classifyCallback"), ucfirst($tablename));
-    }
-
-    /**
-     * classifyCallback
-     *
-     * Callback function to classify a classname properly. 
-     *
-     * @param array $matches An array of matches from a pcre_replace call
-     * @return string A string with matches 1 and mathces 3 in upper case. 
-     */
-    public static function classifyCallback($matches)
-    {
-        return $matches[1] . strtoupper($matches[3]);
+        return Doctrine_Inflector::classify($tableName);
     }
 
     /**
@@ -1048,90 +1109,8 @@ final class Doctrine
      * @param string $classname
      * @return boolean
      */
-    public static function isValidClassname($classname)
+    public static function isValidClassname($className)
     {
-        if (preg_match('~(^[a-z])|(_[a-z])|([\W])|(_{2})~', $classname)) {
-            return false;
-        }
-
-        return true;
-    }
-    
-    /**
-     * makeDirectories
-     * 
-     * Makes the directories for a path recursively
-     *
-     * @param string $path 
-     * @return void
-     */
-    public static function makeDirectories($path, $mode = 0777)
-    {
-        if (!$path) {
-          return false;
-        }
-        
-        if (is_dir($path) || is_file($path)) {
-          return true;
-        }
-
-        return mkdir($path, $mode, true); 
-    }
-    
-    /**
-     * removeDirectories
-     *
-     * @param string $folderPath 
-     * @return void
-     */
-    public static function removeDirectories($folderPath)
-    {
-        if (is_dir($folderPath))
-        {
-            foreach (scandir($folderPath) as $value)
-            {
-                if ($value != '.' && $value != '..')
-                {
-                    $value = $folderPath . "/" . $value;
-
-                    if (is_dir($value)) {
-                        self::removeDirectories($value);
-                    } else if (is_file($value)) {
-                        @unlink($value);
-                    }
-                }
-            }
-
-            return rmdir ( $folderPath );
-        } else {
-            return false;
-        }
-    }
-    
-    /**
-     * getValidators
-     *
-     * Get available doctrine validators
-     *
-     * @return array $validators
-     */
-    public static function getValidators()
-    {
-        if (empty(self::$_validators)) {
-            $dir = Doctrine::getPath() . DIRECTORY_SEPARATOR . 'Doctrine' . DIRECTORY_SEPARATOR . 'Validator';
-        
-            $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir), RecursiveIteratorIterator::LEAVES_ONLY);
-            foreach ($files as $file) {
-                $e = explode('.', $file->getFileName());
-                
-                if (end($e) == 'php') {
-                    $name = strtolower($e[0]);
-                    
-                    self::$_validators[$name] = $name;
-                }
-            }
-        }
-        
-        return self::$_validators;
+        return Doctrine_Lib::isValidClassName($className);
     }
 }

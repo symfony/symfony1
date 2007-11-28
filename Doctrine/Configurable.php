@@ -102,6 +102,8 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
                 }
                 break;
             case Doctrine::ATTR_CACHE:
+            case Doctrine::ATTR_RESULT_CACHE:
+            case Doctrine::ATTR_QUERY_CACHE:
                 if ($value !== null) {
                     if ( ! ($value instanceof Doctrine_Cache_Interface)) {
                         throw new Doctrine_Exception('Cache driver should implement Doctrine_Cache_Interface');
@@ -224,20 +226,6 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
             return null;
         }
         return $this->_impl[$template];
-    }
-
-    /**
-     * getCacheDriver
-     *
-     * @return Doctrine_Cache_Interface
-     */
-    public function getCacheDriver()
-    {
-        if ( ! isset($this->attributes[Doctrine::ATTR_CACHE])) {
-            throw new Doctrine_Exception('Cache driver not initialized.');
-        }
-
-        return $this->attributes[Doctrine::ATTR_CACHE];
     }
 
     /**
@@ -367,13 +355,14 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
             throw new Doctrine_Exception('Unknown attribute.');
         }
 
-        if ( ! isset($this->attributes[$attribute])) {
-            if (isset($this->parent)) {
-                return $this->parent->getAttribute($attribute);
-            }
-            return null;
+        if (isset($this->attributes[$attribute])) {
+            return $this->attributes[$attribute];
         }
-        return $this->attributes[$attribute];
+        
+        if (isset($this->parent)) {
+            return $this->parent->getAttribute($attribute);
+        }
+        return null;
     }
 
     /**

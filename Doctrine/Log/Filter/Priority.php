@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id$
+ *  $Id: Priority.php 3155 2007-11-14 13:13:23Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -20,51 +20,53 @@
  */
 
 /**
- * Doctrine_Resource_Params
- *
  * @package     Doctrine
- * @subpackage  Resource
+ * @subpackage  Log
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Jonathan H. Wage <jwage@mac.com>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version     $Revision$
  * @link        www.phpdoctrine.com
  * @since       1.0
+ * @version     $Revision: 3155 $
  */
-class Doctrine_Resource_Params
+class Doctrine_Log_Filter_Priority implements Doctrine_Log_Filter_Interface
 {
-    protected $_data = array();
-    
-    public function __construct($array = null)
+    /**
+     * @var integer
+     */
+    protected $_priority;
+
+    /**
+     * @var string
+     */
+    protected $_operator;
+
+    /**
+     * Filter logging by $priority.  By default, it will accept any log
+     * event whose priority value is less than or equal to $priority.
+     *
+     * @param  integer  $priority  Priority
+     * @param  string   $operator  Comparison operator
+     * @throws Doctrine_Log_Exception
+     */
+    public function __construct($priority, $operator = '<=')
     {
-        if ($array !== null) {
-            foreach ($array as $key => $value) {
-                $this->set($key, $value);
-            }
+        if (! is_integer($priority)) {
+            throw new Doctrine_Log_Exception('Priority must be an integer');
         }
+
+        $this->_priority = $priority;
+        $this->_operator = $operator;
     }
-    
-    public function set($key, $value)
+
+    /**
+     * Returns TRUE to accept the message, FALSE to block it.
+     *
+     * @param  array    $event    event data
+     * @return boolean            accepted?
+     */
+    public function accept($event)
     {
-        $this->_data[$key] = $value;
-    }
-    
-    public function get($key)
-    {
-        return isset($this->_data[$key]) ? $this->_data[$key]:null;
-    }
-    
-    public function has($key)
-    {
-        return isset($this->_data[$key]) ? true:false;
-    }
-    
-    public function remove($key)
-    {
-        unset($this->_data[$key]);
-    }
-    
-    public function getAll()
-    {
-        return $this->_data;
+        return version_compare($event['priority'], $this->_priority, $this->_operator);
     }
 }

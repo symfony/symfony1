@@ -42,6 +42,9 @@ class Doctrine_Search_Query
     
     protected $_params = array();
     
+    protected $_words = array();
+    
+    protected $_tokenizer;
 
     protected $_condition;
 
@@ -58,6 +61,7 @@ class Doctrine_Search_Query
             }
         }
 
+        $this->_tokenizer = new Doctrine_Query_Tokenizer();
         $this->_table = $table;
 
         $foreignId = current(array_diff($this->_table->getColumnNames(), array('keyword', 'field', 'position')));
@@ -88,14 +92,14 @@ class Doctrine_Search_Query
         $where .= $this->parseClause($text);
 
         $groupby = 'GROUP BY ' . $foreignId;
-        $orderby = 'ORDER BY relevance';
+        $orderby = 'ORDER BY relevance DESC';
 
         $this->_sql = $select . ' ' . $from . ' ' . $where . ' ' . $groupby . ' ' . $orderby;
     }
 
     public function parseClause($originalClause, $recursive = false)
     {
-        $clause = Doctrine_Tokenizer::bracketTrim($originalClause);
+        $clause = $this->_tokenizer->bracketTrim($originalClause);
         
         $brackets = false;
 
@@ -105,7 +109,7 @@ class Doctrine_Search_Query
 
         $foreignId = current(array_diff($this->_table->getColumnNames(), array('keyword', 'field', 'position')));
         
-        $terms = Doctrine_Tokenizer::sqlExplode($clause, ' OR ', '(', ')');
+        $terms = $this->_tokenizer->sqlExplode($clause, ' OR ', '(', ')');
 
         $ret = array();
 
@@ -128,7 +132,7 @@ class Doctrine_Search_Query
                 $brackets = false;
             }
         } else {
-            $terms = Doctrine_Tokenizer::sqlExplode($clause, ' ', '(', ')');
+            $terms = $this->_tokenizer->sqlExplode($clause, ' ', '(', ')');
             
             if (count($terms) === 1 && ! $recursive) {
                 $return = $this->parseTerm($clause);
@@ -168,7 +172,7 @@ class Doctrine_Search_Query
         if (strpos($term, '(') !== false) {
             return true;
         } else {
-            $terms = Doctrine_Tokenizer::quoteExplode($term);
+            $terms = $this->_tokenizer->quoteExplode($term);
             
             return (count($terms) > 1);
         }
@@ -183,7 +187,7 @@ class Doctrine_Search_Query
         } else {
             $term = trim($term, "' ");
 
-            $terms = Doctrine_Tokenizer::quoteExplode($term);
+            $terms = $this->_tokenizer->quoteExplode($term);
             $where = $this->parseWord($terms[0]);
 
             foreach ($terms as $k => $word) {
@@ -195,23 +199,30 @@ class Doctrine_Search_Query
         }
         return $where;
     }
-    public function parseWord($word) 
+    public function parseWord($word)
     {
+        $this->_words[] = str_replace('*', '', $word);
+
         if (strpos($word, '?') !== false ||
             strpos($word, '*') !== false) {
-            
+
             $word = str_replace('*', '%', $word);
 
             $where = 'keyword LIKE ?';
-            
+
             $params = array($word);
         } else {
             $where = 'keyword = ?';
         }
-        
+
         $this->_params[] = $word;
 
         return $where;
+    }
+
+    public function getWords()
+    {
+        return $this->_words;
     }
     public function getParams()
     {

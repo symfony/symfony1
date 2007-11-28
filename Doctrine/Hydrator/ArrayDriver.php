@@ -20,15 +20,54 @@
  */
 
 /**
- * Doctrine_Resource_Exception
+ * Doctrine_Hydrate_Array
+ * defines an array fetching strategy for Doctrine_Hydrate
  *
  * @package     Doctrine
- * @subpackage  Resource
- * @author      Jonathan H. Wage <jwage@mac.com>
+ * @subpackage  Hydrate
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version     $Revision$
  * @link        www.phpdoctrine.com
  * @since       1.0
+ * @version     $Revision$
+ * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
-class Doctrine_Resource_Exception extends Doctrine_Exception
-{ }
+class Doctrine_Hydrator_ArrayDriver
+{
+    public function getElementCollection($component)
+    {
+        return array();
+    }
+    public function getElement(array $data, $component)
+    {
+        return $data;
+    }
+    public function isIdentifiable(array $data, Doctrine_Table $table)
+    {
+        return ( ! empty($data));
+    }
+    public function registerCollection($coll)
+    {
+
+    }
+    public function initRelated(array &$data, $name)
+    {
+        if ( ! isset($data[$name])) {
+            $data[$name] = array();
+        }
+        return true;
+    }
+    public function getNullPointer() 
+    {
+        return null;    
+    }
+    public function getLastKey(&$data)
+    {
+        end($data);
+        return key($data);
+    }
+
+    public function flush()
+    {
+        
+    }
+}

@@ -56,6 +56,7 @@ class Doctrine_Transaction extends Doctrine_Connection_Module
 
     /**
      * @var array $invalid                  an array containing all invalid records within this transaction
+     * @todo What about a more verbose name? $invalidRecords?
      */
     protected $invalid          = array();
 
@@ -247,18 +248,14 @@ class Doctrine_Transaction extends Doctrine_Connection_Module
             }
 
             $listener->postSavepointCommit($event);
-        } else {
-
-            if ($this->transactionLevel == 1) {  
+        } else {            
+            if ($this->transactionLevel == 1) {
                 if ( ! empty($this->invalid)) {
                     $this->rollback();
-
                     $tmp = $this->invalid;
                     $this->invalid = array();
-
                     throw new Doctrine_Validator_Exception($tmp);
                 }
-
                 // take snapshots of all collections used within this transaction
                 foreach ($this->_collections as $coll) {
                     $coll->takeSnapshot();
@@ -294,12 +291,19 @@ class Doctrine_Transaction extends Doctrine_Connection_Module
      * @param string $savepoint                 name of a savepoint to rollback to   
      * @throws Doctrine_Transaction_Exception   if the rollback operation fails at database level
      * @return boolean                          false if rollback couldn't be performed, true otherwise
+     * @todo Shouldnt this method only commit a rollback if the transactionLevel is 1
+     *       (STATE_ACTIVE)? Explanation: Otherwise a rollback that is triggered from inside doctrine
+     *       in an (emulated) nested transaction would lead to a complete database level
+     *       rollback even though the client code did not yet want to do that.
+     *       In other words: if the user starts a transaction doctrine shouldnt roll it back.
+     *       Doctrine should only roll back transactions started by doctrine. Thoughts?
      */
     public function rollback($savepoint = null)
     {
         $this->conn->connect();
-
-        if ($this->transactionLevel == 0) {
+        $currentState = $this->getState();
+        
+        if ($currentState != self::STATE_ACTIVE && $currentState != self::STATE_BUSY) {
             return false;
         }
 
