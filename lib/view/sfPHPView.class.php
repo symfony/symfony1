@@ -27,7 +27,7 @@ class sfPHPView extends sfView
   }
 
   /**
-   * Load core and standard helpers to be use in the template.
+   * Loads core and standard helpers to be use in the template.
    */
   protected function loadCoreAndStandardHelpers()
   {
@@ -43,6 +43,13 @@ class sfPHPView extends sfView
     $standard_helpers = sfConfig::get('sf_standard_helpers');
 
     $helpers = array_unique(array_merge($core_helpers, $standard_helpers));
+
+    // remove default Form helper if compat_10 is false
+    if (!sfConfig::get('sf_compat_10') && false !== $i = array_search('Form', $helpers))
+    {
+      unset($helpers[$i]);
+    }
+
     sfLoader::loadHelpers($helpers);
   }
 
