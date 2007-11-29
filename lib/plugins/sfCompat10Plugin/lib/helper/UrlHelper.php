@@ -364,7 +364,7 @@ function _convert_options_to_javascript($html_options, $internal_uri = '')
   {
     if ($onclick)
     {
-      $html_options['onclick'] = 'if ('._confirm_javascript_function($confirm).') {'.$onclick.'}';
+      $html_options['onclick'] = 'if ('._confirm_javascript_function($confirm).') { return '.$onclick.'} else return false;';
     }
     else
     {
