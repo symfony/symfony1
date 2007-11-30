@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -44,6 +44,7 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
     $this->attributes = $widget->getAttributes();
     $this->options    = $widget->getOptions();
     $this->labels     = $widget->getLabels();
+    $this->helps      = $widget->getHelps();
   }
 
   /**
@@ -61,6 +62,7 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
     $this->widget->setAttributes($this->attributes);
     $this->widget->setOptions($this->options);
     $this->widget->setLabels($this->labels);
+    $this->widget->setHelps($this->helps);
 
     return strtr($this->decorator, array('%content%' => $this->widget->render($name, $values, $attributes, $errors)));
   }
