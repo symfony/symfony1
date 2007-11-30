@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -117,6 +117,18 @@ class sfPearEnvironment
   public function getOption($name)
   {
     return isset($this->options[$name]) ? $this->options[$name] : null;
+  }
+
+  /**
+   * Returns whether configuration name exists.
+   *
+   * @param  string The configuration name
+   *
+   * @return boolean True if configuration name exists
+   */
+  public function hasOption($name)
+  {
+    return isset($this->options[$name]);
   }
 
   /**
@@ -239,6 +251,11 @@ class sfPearEnvironment
     $this->config->set('test_dir', $pluginDir);
     $this->config->set('doc_dir',  $pluginDir);
     $this->config->set('bin_dir',  $pluginDir);
+
+    if($this->hasOption('preferred_state'))
+    {
+      $this->config->set('preferred_state', $this->getOption('preferred_state'));
+    }
 
     // change the PEAR temp dirs
     $this->config->set('cache_dir',    $cacheDir);
