@@ -63,7 +63,7 @@ $t->is(count($css->matchAll('#foo_second option')->getNodes()), 60, '->render() 
 
 // date and time separator option
 $t->diag('date and time separator option');
-$t->is($css->matchSingle('#foo_day')->getNode()->nextSibling->firstChild->nodeValue, '/', '->render() renders 3 selects with a default / as a separator');
+$t->is($css->matchSingle('#foo_day')->getNode()->nextSibling->nodeValue, '/', '->render() renders 3 selects with a default / as a separator');
 $t->is($css->matchSingle('#foo_month')->getNode()->nextSibling->nodeValue, '/', '->render() renders 3 selects with a default / as a separator');
 $t->is($css->matchSingle('#foo_hour')->getNode()->nextSibling->nodeValue, ':', '->render() renders 3 selects with a default : as a separator');
 $t->is($css->matchSingle('#foo_minute')->getNode()->nextSibling->nodeValue, ':', '->render() renders 3 selects with a default : as a separator');
@@ -73,7 +73,7 @@ $w->setOption('date', array('separator' => '-'));
 $w->setOption('time', array('separator' => '!', 'with_seconds' => true));
 $dom->loadHTML($w->render('foo', '2005-10-15 12:30:35'));
 $css = new sfDomCssSelector($dom);
-$t->is($css->matchSingle('#foo_day')->getNode()->nextSibling->firstChild->nodeValue, '-', '__construct() can change the default separator');
+$t->is($css->matchSingle('#foo_day')->getNode()->nextSibling->nodeValue, '-', '__construct() can change the default separator');
 $t->is($css->matchSingle('#foo_month')->getNode()->nextSibling->nodeValue, '-', '__construct() can change the default separator');
 $t->is($css->matchSingle('#foo_hour')->getNode()->nextSibling->nodeValue, '!', '__construct() can change the default separator');
 $t->is($css->matchSingle('#foo_minute')->getNode()->nextSibling->nodeValue, '!', '__construct() can change the default separator');

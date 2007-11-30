@@ -54,13 +54,13 @@ $t->is(count($css->matchAll('#foo_day option')->getNodes()), 31, '->render() ren
 
 // separator option
 $t->diag('separator option');
-$t->is($css->matchSingle('#foo_day')->getNode()->nextSibling->firstChild->nodeValue, '/', '->render() renders 3 selects with a default / as a separator');
+$t->is($css->matchSingle('#foo_day')->getNode()->nextSibling->nodeValue, '/', '->render() renders 3 selects with a default / as a separator');
 $t->is($css->matchSingle('#foo_month')->getNode()->nextSibling->nodeValue, '/', '->render() renders 3 selects with a default / as a separator');
 
 $w->setOption('separator', '#');
 $dom->loadHTML($w->render('foo', '2005-10-15'));
 $css = new sfDomCssSelector($dom);
-$t->is($css->matchSingle('#foo_day')->getNode()->nextSibling->firstChild->nodeValue, '#', '__construct() can change the default separator');
+$t->is($css->matchSingle('#foo_day')->getNode()->nextSibling->nodeValue, '#', '__construct() can change the default separator');
 $t->is($css->matchSingle('#foo_month')->getNode()->nextSibling->nodeValue, '#', '__construct() can change the default separator');
 
 // days / months / years options

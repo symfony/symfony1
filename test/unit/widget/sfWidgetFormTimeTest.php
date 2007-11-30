@@ -53,13 +53,13 @@ $t->is(count($css->matchAll('#foo_second option')->getNodes()), 60, '->render() 
 
 // separator option
 $t->diag('separator option');
-$t->is($css->matchSingle('#foo_hour')->getNode()->nextSibling->firstChild->nodeValue, ':', '->render() renders 3 selects with a default : as a separator');
+$t->is($css->matchSingle('#foo_hour')->getNode()->nextSibling->nodeValue, ':', '->render() renders 3 selects with a default : as a separator');
 $t->is($css->matchSingle('#foo_minute')->getNode()->nextSibling->nodeValue, ':', '->render() renders 3 selects with a default : as a separator');
 
 $w->setOption('separator', '#');
 $dom->loadHTML($w->render('foo', '12:30:35'));
 $css = new sfDomCssSelector($dom);
-$t->is($css->matchSingle('#foo_hour')->getNode()->nextSibling->firstChild->nodeValue, '#', '__construct() can change the default separator');
+$t->is($css->matchSingle('#foo_hour')->getNode()->nextSibling->nodeValue, '#', '__construct() can change the default separator');
 $t->is($css->matchSingle('#foo_minute')->getNode()->nextSibling->nodeValue, '#', '__construct() can change the default separator');
 
 // hours / minutes / seconds options
