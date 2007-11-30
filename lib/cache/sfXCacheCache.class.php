@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -62,7 +62,8 @@ class sfXCacheCache extends sfCache
    */
   public function set($key, $data, $lifetime = null)
   {
-    return xcache_set($this->prefix.$key, str_pad(time() + $lifetime, 12, 0, STR_PAD_LEFT).$data, $this->getLifetime($lifetime));
+    $lifetime = $this->getLifetime($lifetime);
+    return xcache_set($this->prefix.$key, str_pad(time() + $lifetime, 12, 0, STR_PAD_LEFT).$data, $lifetime);
   }
 
   /**
@@ -78,7 +79,7 @@ class sfXCacheCache extends sfCache
    */
   public function clean($mode = sfCache::ALL)
   {
-    if (!sfCache::ALL)
+    if ($mode != sfCache::ALL)
     {
       return true;
     }
