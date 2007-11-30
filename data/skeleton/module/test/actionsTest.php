@@ -11,5 +11,4 @@ $browser->
   isStatusCode(200)->
   isRequestParameter('module', '##MODULE_NAME##')->
   isRequestParameter('action', 'index')->
-  checkResponseElement('body', '!/This is a temporary page/')
-;
+  checkResponseElement('body', '!/This is a temporary page/');
