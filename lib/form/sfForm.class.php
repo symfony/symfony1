@@ -36,17 +36,20 @@ class sfForm implements ArrayAccess
     $isBound         = false,
     $taintedValues   = array(),
     $values          = null,
-    $defaults        = array();
+    $defaults        = array(),
+    $options         = array();
 
   /**
    * Constructor.
    *
    * @param array  An array of field default values
+   * @param array  An array of options
    * @param string A CSRF secret (false to disable CSRF protection, null to use the global CSRF secret)
    */
-  public function __construct($defaults = array(), $CSRFSecret = null)
+  public function __construct($defaults = array(), $options = array(), $CSRFSecret = null)
   {
     $this->setDefaults($defaults);
+    $this->options = $options;
 
     $this->validatorSchema = new sfValidatorSchema();
     $this->widgetSchema    = new sfWidgetFormSchema();
@@ -296,6 +299,30 @@ class sfForm implements ArrayAccess
   public function getWidgetSchema()
   {
     return $this->widgetSchema;
+  }
+
+  /**
+   * Sets an option value.
+   *
+   * @param string The option name
+   * @param mixed  The default value
+   */
+  public function setOption($name, $value)
+  {
+    $this->options[$name] = $value;
+  }
+
+  /**
+   * Gets an option value.
+   *
+   * @param string The option name
+   * @param mixed  The default value (null by default)
+   *
+   * @param mixed  The default value
+   */
+  public function getOption($name, $default = null)
+  {
+    return isset($this->options[$name]) ? $this->options[$name] : $default;
   }
 
   /**

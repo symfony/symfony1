@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(56, new lime_output_color());
+$t = new lime_test(58, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -36,17 +36,24 @@ $t->ok($f->getWidgetSchema() instanceof sfWidgetFormSchema, '__construct() creat
 $f = new sfForm(array('first_name' => 'Fabien'));
 $t->is($f->getDefaults(), array('first_name' => 'Fabien'), '__construct() can take an array of default values as its first argument');
 
-$f = new FormTest(array(), 'secret');
+$f = new FormTest(array(), array(), 'secret');
 $v = $f->getValidatorSchema();
 $t->ok($f->isCSRFProtected(), '__construct() takes a CSRF secret as its second argument');
 $t->is($v[sfForm::getCSRFFieldName()]->getOption('token'), '*secret*', '__construct() takes a CSRF secret as its second argument');
 
 sfForm::enableCSRFProtection();
-$f = new FormTest(array(), false);
+$f = new FormTest(array(), array(), false);
 $t->ok(!$f->isCSRFProtected(), '__construct() can disable the CSRF protection by passing false as the second argument');
 
 $f = new FormTest();
 $t->ok($f->isCSRFProtected(), '__construct() uses CSRF protection if null is passed as the second argument and it\'s enabled globally');
+
+// ->getOption() ->setOption()
+$t->diag('->getOption() ->setOption()');
+$f = new FormTest(array(), array('foo' => 'bar'));
+$t->is($f->getOption('foo'), 'bar', '__construct takes an option array as its second argument');
+$f->setOption('bar', 'foo');
+$t->is($f->getOption('bar'), 'foo', '->setOption() changes the value of an option');
 
 sfForm::disableCSRFProtection();
 
@@ -74,7 +81,7 @@ $t->ok($f1->isCSRFProtected(),'::enableCSRFProtection() enabled CSRF protection 
 sfForm::enableCSRFProtection();
 $t->ok(!$f2->isCSRFProtected(),'::disableCSRFProtection() disables CSRF protection for all future forms');
 
-$f = new FormTest(array(), false);
+$f = new FormTest(array(), array(), false);
 $t->ok(!$f->isCSRFProtected(),'->isCSRFProtected() returns true if the form is CSRF protected');
 
 sfForm::enableCSRFProtection('mygreatsecret');
