@@ -52,16 +52,21 @@ $t->is(count($css->matchAll('#foo_year option')->getNodes()), 11, '->render() re
 $t->is(count($css->matchAll('#foo_month option')->getNodes()), 12, '->render() renders a select tag for the 12 months in a year');
 $t->is(count($css->matchAll('#foo_day option')->getNodes()), 31, '->render() renders a select tag for the 31 days in a month');
 
-// separator option
-$t->diag('separator option');
+// format option
+$t->diag('format option');
 $t->is($css->matchSingle('#foo_day')->getNode()->nextSibling->nodeValue, '/', '->render() renders 3 selects with a default / as a separator');
 $t->is($css->matchSingle('#foo_month')->getNode()->nextSibling->nodeValue, '/', '->render() renders 3 selects with a default / as a separator');
 
-$w->setOption('separator', '#');
+$w->setOption('format', '%month%#%day%#%year%');
 $dom->loadHTML($w->render('foo', '2005-10-15'));
 $css = new sfDomCssSelector($dom);
-$t->is($css->matchSingle('#foo_day')->getNode()->nextSibling->nodeValue, '#', '__construct() can change the default separator');
-$t->is($css->matchSingle('#foo_month')->getNode()->nextSibling->nodeValue, '#', '__construct() can change the default separator');
+$t->is($css->matchSingle('#foo_day')->getNode()->nextSibling->nodeValue, '#', '__construct() can change the default date format');
+$t->is($css->matchSingle('#foo_month')->getNode()->nextSibling->nodeValue, '#', '__construct() can change the default date format');
+
+$w->setOption('format', '%day%/%month%/%year%');
+$dom->loadHTML($w->render('foo', '2005-10-15'));
+$css = new sfDomCssSelector($dom);
+$t->is($css->matchSingle('select')->getNode()->getAttribute('name'), 'foo[day]', '__construct() can change the default date format');
 
 // days / months / years options
 $t->diag('days / months / years options');

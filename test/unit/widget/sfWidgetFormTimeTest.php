@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(20, new lime_output_color());
+$t = new lime_test(23, new lime_output_color());
 
 $w = new sfWidgetFormTime(array('with_seconds' => true));
 
@@ -51,16 +51,21 @@ $t->is(count($css->matchAll('#foo_hour option')->getNodes()), 24, '->render() re
 $t->is(count($css->matchAll('#foo_minute option')->getNodes()), 60, '->render() renders a select tag for the 60 minutes in an hour');
 $t->is(count($css->matchAll('#foo_second option')->getNodes()), 60, '->render() renders a select tag for the 60 seconds in a minute');
 
-// separator option
-$t->diag('separator option');
+// format option
+$t->diag('format option');
 $t->is($css->matchSingle('#foo_hour')->getNode()->nextSibling->nodeValue, ':', '->render() renders 3 selects with a default : as a separator');
 $t->is($css->matchSingle('#foo_minute')->getNode()->nextSibling->nodeValue, ':', '->render() renders 3 selects with a default : as a separator');
 
-$w->setOption('separator', '#');
+$w->setOption('format', '%hour%#%minute%#%second%');
 $dom->loadHTML($w->render('foo', '12:30:35'));
 $css = new sfDomCssSelector($dom);
-$t->is($css->matchSingle('#foo_hour')->getNode()->nextSibling->nodeValue, '#', '__construct() can change the default separator');
-$t->is($css->matchSingle('#foo_minute')->getNode()->nextSibling->nodeValue, '#', '__construct() can change the default separator');
+$t->is($css->matchSingle('#foo_hour')->getNode()->nextSibling->nodeValue, '#', '__construct() can change the default format');
+$t->is($css->matchSingle('#foo_minute')->getNode()->nextSibling->nodeValue, '#', '__construct() can change the default format');
+
+$w->setOption('format', '%minute%#%hour%#%second%');
+$dom->loadHTML($w->render('foo', '12:30:35'));
+$css = new sfDomCssSelector($dom);
+$t->is($css->matchSingle('select')->getNode()->getAttribute('name'), 'foo[minute]', '__construct() can change the default time format');
 
 // hours / minutes / seconds options
 $t->diag('hours / minutes / seconds options');
@@ -79,3 +84,9 @@ $w->setOption('with_seconds', false);
 $dom->loadHTML($w->render('foo', '12:30:35'));
 $css = new sfDomCssSelector($dom);
 $t->is(count($css->matchAll('#foo_second option')->getNodes()), 0, '__construct() can enable or disable the seconds select box with the with_seconds option');
+
+$w->setOption('format_without_seconds', '%hour%#%minute%');
+$dom->loadHTML($w->render('foo', '12:30:35'));
+$css = new sfDomCssSelector($dom);
+$t->is($css->matchSingle('#foo_hour')->getNode()->nextSibling->nodeValue, '#', '__construct() can change the default format');
+$t->ok(!count($css->matchSingle('#foo_second')->getNodes()), '__construct() can change the default format');

@@ -23,21 +23,28 @@ class sfWidgetFormTime extends sfWidgetForm
    *
    * Available options:
    *
-   *  * with_second: Whether to include a select for seconds (false by default)
-   *  * separator:   Time separator (: by default)
-   *  * hours:       An array of hours for the hour select tag (optional)
-   *  * minutes:     An array of minutes for the minute select tag (optional)
-   *  * seconds:     An array of seconds for the second select tag (optional)
+   *  * format:                 The time format string (%hour%:%minute%:%second%)
+   *  * format_without_seconds: The time format string without seconds (%hour%:%minute%)
+   *  * with_second:            Whether to include a select for seconds (false by default)
+   *  * hours:                  An array of hours for the hour select tag (optional)
+   *  * minutes:                An array of minutes for the minute select tag (optional)
+   *  * seconds:                An array of seconds for the second select tag (optional)
+   *  * can_be_empty:           Whether the widget accept an empty value (true by default)
+   *  * empty_values:           An array of values to use for the empty value (empty string for year, month, and date by default)
    *
    * @see sfWidgetForm
    */
   protected function configure($options = array(), $attributes = array())
   {
+    $this->addOption('format', '%hour%:%minute%:%second%');
+    $this->addOption('format_without_seconds', '%hour%:%minute%');
     $this->addOption('with_seconds', false);
-    $this->addOption('separator', ':');
     $this->addOption('hours', array_combine(range(0, 23), range(0, 23)));
     $this->addOption('minutes', array_combine(range(0, 59), range(0, 59)));
     $this->addOption('seconds', array_combine(range(0, 59), range(0, 59)));
+
+    $this->addOption('can_be_empty', true);
+    $this->addOption('empty_values', array('hour' => '', 'minute' => '', 'second' => ''));
   }
 
   /**
@@ -56,23 +63,24 @@ class sfWidgetFormTime extends sfWidgetForm
     }
 
     $time = array();
+    $emptyValues = $this->getOption('empty_values');
 
     // hours
-    $widget = new sfWidgetFormSelect(array('choices' => $this->getOption('hours')));
-    $time[] = $widget->render($name.'[hour]', $value ? date('G', $value) : '');
+    $widget = new sfWidgetFormSelect(array('choices' => $this->getOption('can_be_empty') ? array('' => $emptyValues['hour']) + $this->getOption('hours') : $this->getOption('hours')));
+    $time['%hour%'] = $widget->render($name.'[hour]', $value ? date('G', $value) : '');
 
     // minutes
-    $widget = new sfWidgetFormSelect(array('choices' => $this->getOption('minutes')));
-    $time[] = $widget->render($name.'[minute]', $value ? date('i', $value) : '');
+    $widget = new sfWidgetFormSelect(array('choices' => $this->getOption('can_be_empty') ? array('' => $emptyValues['minute']) + $this->getOption('minutes') : $this->getOption('minutes')));
+    $time['%minute%'] = $widget->render($name.'[minute]', $value ? date('i', $value) : '');
 
     if ($this->getOption('with_seconds'))
     {
       // seconds
-      $widget = new sfWidgetFormSelect(array('choices' => $this->getOption('seconds')));
-      $time[] = $widget->render($name.'[second]', $value ? date('s', $value) : '');
+      $widget = new sfWidgetFormSelect(array('choices' => $this->getOption('can_be_empty') ? array('' => $emptyValues['second']) + $this->getOption('seconds') : $this->getOption('seconds')));
+      $time['%second%'] = $widget->render($name.'[second]', $value ? date('s', $value) : '');
     }
 
-    return implode($this->getOption('separator'), $time);
+    return strtr($this->getOption('with_seconds') ? $this->getOption('format') : $this->getOption('format_without_seconds'), $time);
   }
 
   /**

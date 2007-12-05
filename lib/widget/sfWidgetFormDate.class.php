@@ -23,20 +23,25 @@ class sfWidgetFormDate extends sfWidgetForm
    *
    * Available options:
    *
-   *  * separator: Date separator (/ by default)
-   *  * years:     An array of years for the year select tag (optional)
-   *  * months:    An array of months for the month select tag (optional)
-   *  * days:      An array of days for the day select tag (optional)
+   *  * format:       The date format string (%month%/%day%/%year% by default)
+   *  * years:        An array of years for the year select tag (optional)
+   *  * months:       An array of months for the month select tag (optional)
+   *  * days:         An array of days for the day select tag (optional)
+   *  * can_be_empty: Whether the widget accept an empty value (true by default)
+   *  * empty_values: An array of values to use for the empty value (empty string for year, month, and date by default)
    *
    * @see sfWidgetForm
    */
   protected function configure($options = array(), $attributes = array())
   {
-    $this->addOption('separator', '/');
+    $this->addOption('format', '%month%/%day%/%year%');
     $this->addOption('days', array_combine(range(1, 31), range(1, 31)));
     $this->addOption('months', array_combine(range(1, 12), range(1, 12)));
     $years = range(date('Y') - 5, date('Y') + 5);
     $this->addOption('years', array_combine($years, $years));
+
+    $this->addOption('can_be_empty', true);
+    $this->addOption('empty_values', array('year' => '', 'month' => '', 'day' => ''));
   }
 
   /**
@@ -55,20 +60,21 @@ class sfWidgetFormDate extends sfWidgetForm
     }
 
     $date = array();
+    $emptyValues = $this->getOption('empty_values');
 
     // days
-    $widget = new sfWidgetFormSelect(array('choices' => $this->getOption('days')));
-    $date[] = $widget->render($name.'[day]', $value ? date('j', $value) : '');
+    $widget = new sfWidgetFormSelect(array('choices' => $this->getOption('can_be_empty') ? array('' => $emptyValues['day']) + $this->getOption('days') : $this->getOption('days')));
+    $date['%day%'] = $widget->render($name.'[day]', $value ? date('j', $value) : '');
 
     // months
-    $widget = new sfWidgetFormSelect(array('choices' => $this->getOption('months')));
-    $date[] = $widget->render($name.'[month]', $value ? date('n', $value) : '');
+    $widget = new sfWidgetFormSelect(array('choices' => $this->getOption('can_be_empty') ? array('' => $emptyValues['month']) + $this->getOption('months') : $this->getOption('months')));
+    $date['%month%'] = $widget->render($name.'[month]', $value ? date('n', $value) : '');
 
     // years
-    $widget = new sfWidgetFormSelect(array('choices' => $this->getOption('years')));
-    $date[] = $widget->render($name.'[year]', $value ? date('Y', $value) : '');
+    $widget = new sfWidgetFormSelect(array('choices' => $this->getOption('can_be_empty') ? array('' => $emptyValues['year']) + $this->getOption('years') : $this->getOption('years')));
+    $date['%year%'] = $widget->render($name.'[year]', $value ? date('Y', $value) : '');
 
-    return implode($this->getOption('separator'), $date);
+    return strtr($this->getOption('format'), $date);
   }
 
   /**
