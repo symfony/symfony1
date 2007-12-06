@@ -30,5 +30,20 @@ class sfPropelUpgrade extends sfUpgrade
       $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('propel', sprintf('Migrating %s', $file)))));
       file_put_contents($file, $content);
     }
+
+    // add default date and time format
+    $content = file_get_contents($file);
+    if (false === strpos($content, 'propel.defaultDateFormat'))
+    {
+      $content .= <<<EOF
+
+propel.defaultTimeStampFormat = Y-m-d H:i:s
+propel.defaultTimeFormat = H:i:s
+propel.defaultDateFormat = Y-m-d
+
+EOF;
+      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('propel', sprintf('Migrating %s', $file)))));
+      file_put_contents($file, $content);
+    }
   }
 }
