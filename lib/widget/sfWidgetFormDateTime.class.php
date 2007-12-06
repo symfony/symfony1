@@ -64,23 +64,46 @@ class sfWidgetFormDateTime extends sfWidgetForm
   function render($name, $value = null, $attributes = array(), $errors = array())
   {
     // date
-    $date = new sfWidgetFormDate($this->getOptionsFor('date'), $this->getAttributesFor('date'));
+    $date = $this->getDateWidget()->render($name, $value);
 
     if (!$this->getOption('with_time'))
     {
-      return $date->render($name, $value);
+      return $date;
     }
 
-    $dateTime = array('%date%' => $date->render($name, $value));
-
-    // time
-    $time = new sfWidgetFormTime($this->getOptionsFor('time'), $this->getAttributesFor('time'));
-
-    $dateTime['%time%'] = $time->render($name, $value);
-
-    return strtr($this->getOption('format'), $dateTime);
+    return strtr($this->getOption('format'), array(
+      '%date%' => $date,
+      '%time%' => $this->getTimeWidget()->render($name, $value),
+    ));
   }
 
+  /**
+   * Returns the date widget
+   *
+   * @return sfWidgetForm A Widget representing the date
+   */
+  protected function getDateWidget()
+  {
+    return new sfWidgetFormDate($this->getOptionsFor('date'), $this->getAttributesFor('date'));
+  }
+
+  /**
+   * Returns the time widget
+   *
+   * @return sfWidgetForm A Widget representing the time
+   */
+  protected function getTimeWidget()
+  {
+    return new sfWidgetFormTime($this->getOptionsFor('time'), $this->getAttributesFor('time'));
+  }
+
+  /**
+   * Returns an array of options for the given type
+   *
+   * @param  string The type (date or time)
+   *
+   * @return array  An array of options
+   */
   protected function getOptionsFor($type)
   {
     $options = $this->getOption($type);
@@ -92,6 +115,13 @@ class sfWidgetFormDateTime extends sfWidgetForm
     return $options;
   }
 
+  /**
+   * Returns an array of HTML attributes for the given type
+   *
+   * @param  string The type (date or time)
+   *
+   * @return array  An array of HTML attributes
+   */
   protected function getAttributesFor($type)
   {
     return isset($attributes[$type]) ? array_merge($this->defaultAttributes[$type], $attributes[$type]) : $this->defaultAttributes[$type];
