@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(52, new lime_output_color());
+$t = new lime_test(56, new lime_output_color());
 
 // __construct()
 $t->diag('__construct()');
@@ -188,3 +188,25 @@ $c->setNumberFormat('.');
 $t->is($c->getNumberFormat(), '.', '->setNumberFormat() sets the sfNumberFormatInfo instance');
 $c->NumberFormat = '#';
 $t->is($c->getNumberFormat(), '#', '->setNumberFormat() is equivalent to ->NumberFormat = ');
+
+// ->simplify()
+$t->diag('->simplify()');
+
+class myCultureInfo extends sfCultureInfo
+{
+  static public function simplify($array)
+  {
+    return parent::simplify($array);
+  }
+}
+
+$array1 = array(0 => 'hello', 1 => 'world');
+$array2 = array(0 => array('hello'), 1 => 'world');
+$array3 = array(0 => array('hello', 'hi'), 1 => 'world');
+
+$ci = new myCultureInfo();
+
+$t->isa_ok($ci->simplify($array1), 'array', '::simplify() returns an array');
+$t->is_deeply($ci->simplify($array1), $array1, '::simplify() leaves 1D-arrays unchanged');
+$t->is_deeply($ci->simplify($array2), $array1, '::simplify() simplifies arrays');
+$t->is_deeply($ci->simplify($array3), $array3, '::simplify() leaves not-simplifiable arrays unchanged');

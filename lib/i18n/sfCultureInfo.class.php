@@ -637,16 +637,14 @@ class sfCultureInfo
    * @param array with single elements arrays
    * @return array simplified array.
    */
-  protected function simplify($array)
+  static protected function simplify($array)
   {
-    for ($i = 0, $max = count($array); $i < $max; $i++)
+    foreach ($array as &$item)
     {
-      $key = key($array);
-      if (is_array($array[$key]) && count($array[$key]) == 1)
+      if (is_array($item) && count($item) == 1)
       {
-        $array[$key] = $array[$key][0];
+        $item = $item[0];
       }
-      next($array);
     }
 
     return $array;
