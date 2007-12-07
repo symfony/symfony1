@@ -68,7 +68,7 @@ class sfPropelDatabase extends sfCreoleDatabase
       require_once('creole/Creole.php');
       $params = Creole::parseDSN($dsn);
 
-      $options = array('phptype', 'hostspec', 'database', 'username', 'password', 'port', 'protocol', 'encoding', 'persistent');
+      $options = array('phptype', 'hostspec', 'database', 'username', 'password', 'port', 'protocol', 'encoding', 'persistent', 'socket');
       foreach ($options as $option)
       {
         if (!$this->getParameter($option) && isset($params[$option]))
@@ -92,6 +92,7 @@ class sfPropelDatabase extends sfCreoleDatabase
           'encoding'   => $this->getParameter('encoding'),
           'persistent' => $this->getParameter('persistent'),
           'protocol'   => $this->getParameter('protocol'),
+          'socket'     => $this->getParameter('socket'),
         ),
       );
   }
