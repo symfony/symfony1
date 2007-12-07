@@ -78,7 +78,7 @@ class sfDebugConnection implements Connection
   {
     if (!($driver = Creole::getDriver($dsninfo['phptype'])))
     {
-      throw new SQLException(sprintf('No driver has been registered to handle connection type: %s.', $type));
+      throw new SQLException(sprintf('No driver has been registered to handle connection type: %s.', $dsninfo['phptype']));
     }
     $connectionClass = Creole::import($driver);
     $this->childConnection = new $connectionClass();
