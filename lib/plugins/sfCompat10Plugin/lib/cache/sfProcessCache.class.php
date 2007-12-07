@@ -163,7 +163,21 @@ class sfProcessCache
         }
         return true;
       case 'eaccelerator':
-        eaccelerator_clean();
+        $infos = eaccelerator_list_keys();
+        if (is_array($infos))
+        {
+          foreach ($infos as $info)
+          {
+            // eaccelerator bug (http://eaccelerator.net/ticket/287)
+            $key = 0 === strpos($info['name'], ':') ? substr($info['name'], 1) : $info['name'];
+            if (!eaccelerator_rm($key))
+            {
+              return false;
+            }
+          }
+        }
+
+        return true;
     }
 
     return false;
