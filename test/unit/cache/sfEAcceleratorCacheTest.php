@@ -13,10 +13,13 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 $plan = 60;
 $t = new lime_test($plan, new lime_output_color());
 
-if (!function_exists('eaccelerator_put') || !ini_get('eaccelerator.enable'))
+try
 {
-  $t->skip('EAccelerator needed to run these tests', $plan);
-  return;
+  $cache = new sfEAcceleratorCache();
+}
+catch (sfInitializationException $e)
+{
+  $t->skip($e->getMessage(), $plan);
 }
 
 require_once(dirname(__FILE__).'/sfCacheDriverTests.class.php');
