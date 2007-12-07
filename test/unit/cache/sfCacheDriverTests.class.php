@@ -63,11 +63,11 @@ class sfCacheDriverTests
     $t->is($cache->has('bar'), false, '->clean() cleans all cache key if given no argument');
 
     $cache->clean();
-    $cache->setParameter('automaticCleaningFactor', 1);
+    $cache->setOption('automaticCleaningFactor', 1);
     $cache->set('foo', $data);
     $cache->set('foo', $data);
     $cache->set('foo', $data);
-    $cache->setParameter('automaticCleaningFactor', 1000);
+    $cache->setOption('automaticCleaningFactor', 1000);
 
     // ->remove()
     $t->diag('->remove()');
@@ -127,7 +127,7 @@ class sfCacheDriverTests
 
     foreach (array(86400, 10) as $lifetime)
     {
-      $cache->getParameterHolder()->set('lifetime', $lifetime);
+      $cache->setOption('lifetime', $lifetime);
       $cache->set('foo', 'bar');
 
       $delta = $cache->getTimeout('foo') - time();
@@ -151,7 +151,7 @@ class sfCacheDriverTests
 
     foreach (array(86400, 10) as $lifetime)
     {
-      $cache->getParameterHolder()->set('lifetime', $lifetime);
+      $cache->setOption('lifetime', $lifetime);
       $cache->set('bar', 'foo');
 
       $now = time();

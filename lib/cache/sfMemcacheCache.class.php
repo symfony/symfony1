@@ -25,9 +25,7 @@ class sfMemcacheCache extends sfCache
   /**
    * Initializes this sfCache instance.
    *
-   * Available parameters:
-   *
-   * Available parameters:
+   * Available options:
    *
    * * memcache: A memcache object (optional)
    *
@@ -37,13 +35,13 @@ class sfMemcacheCache extends sfCache
    *
    * * servers:    An array of additional servers (keys: host, port, persistent)
    *
-   * * see sfCache for default parameters available for all drivers
+   * * see sfCache for options available for all drivers
    *
    * @see sfCache
    */
-  public function initialize($parameters = array())
+  public function initialize($options = array())
   {
-    parent::initialize($parameters);
+    parent::initialize($options);
 
     if (!class_exists('Memcache'))
     {
@@ -52,22 +50,22 @@ class sfMemcacheCache extends sfCache
 
     $this->prefix = md5(sfConfig::get('sf_app_dir')).self::SEPARATOR;
 
-    if ($this->getParameter('memcache'))
+    if ($this->getOption('memcache'))
     {
-      $this->memcache = $this->getParameter('memcache');
+      $this->memcache = $this->getOption('memcache');
     }
     else
     {
       $this->memcache = new Memcache();
-      $method = $this->getParameter('persistent', true) ? 'pconnect' : 'connect';
-      if (!$this->memcache->$method($this->getParameter('host', 'localhost'), $this->getParameter('port', 11211), $this->getParameter('timeout', 1)))
+      $method = $this->getOption('persistent', true) ? 'pconnect' : 'connect';
+      if (!$this->memcache->$method($this->getOption('host', 'localhost'), $this->getOption('port', 11211), $this->getOption('timeout', 1)))
       {
-        throw new sfInitializationException(sprintf('Unable to connect to the memcache server (%s:%s).', $this->getParameter('host', 'localhost'), $this->getParameter('port', 11211)));
+        throw new sfInitializationException(sprintf('Unable to connect to the memcache server (%s:%s).', $this->getOption('host', 'localhost'), $this->getOption('port', 11211)));
       }
 
-      if ($this->getParameter('servers'))
+      if ($this->getOption('servers'))
       {
-        foreach ($this->getParameter('servers') as $server)
+        foreach ($this->getOption('servers') as $server)
         {
           $port = isset($server['port']) ? $server['port'] : 11211;
           if (!$this->memcache->addServer($server['host'], $port, isset($server['persistent']) ? $server['persistent'] : true))
@@ -110,13 +108,13 @@ class sfMemcacheCache extends sfCache
    */
   public function set($key, $data, $lifetime = null)
   {
-    $lifetime = is_null($lifetime) ? $this->getParameter('lifetime') : $lifetime;
+    $lifetime = is_null($lifetime) ? $this->getOption('lifetime') : $lifetime;
 
     // save metadata
     $this->setMetadata($key, $lifetime);
 
     // save key for removePattern()
-    if ($this->getParameter('storeCacheInfo', false))
+    if ($this->getOption('storeCacheInfo', false))
     {
       $this->setCacheInfo($key);
     }
@@ -176,9 +174,9 @@ class sfMemcacheCache extends sfCache
    */
   public function removePattern($pattern)
   {
-    if (!$this->getParameter('storeCacheInfo', false))
+    if (!$this->getOption('storeCacheInfo', false))
     {
-      throw new sfCacheException('To use the "removePattern" method, you must set the "storeCacheInfo" parameter to "true".');
+      throw new sfCacheException('To use the "removePattern" method, you must set the "storeCacheInfo" option to "true".');
     }
 
     $regexp = self::patternToRegexp($this->prefix.$pattern);

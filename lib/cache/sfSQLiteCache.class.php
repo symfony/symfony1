@@ -25,29 +25,29 @@ class sfSQLiteCache extends sfCache
   /**
    * Initializes this sfCache instance.
    *
-   * Available parameters:
+   * Available options:
    *
    * * database: File where to put the cache database (or :memory: to store cache in memory)
    *
-   * * see sfCache for default parameters available for all drivers
+   * * see sfCache for options available for all drivers
    *
    * @see sfCache
    */
-  public function initialize($parameters = array())
+  public function initialize($options = array())
   {
     if (!extension_loaded('sqlite'))
     {
       throw new sfConfigurationException('sfSQLiteCache class needs "sqlite" extension to be loaded.');
     }
 
-    parent::initialize($parameters);
+    parent::initialize($options);
 
-    if (!$this->getParameter('database'))
+    if (!$this->getOption('database'))
     {
-      throw new sfInitializationException('You must pass a "database" parameter to initialize a sfSQLiteCache object.');
+      throw new sfInitializationException('You must pass a "database" option to initialize a sfSQLiteCache object.');
     }
 
-    $this->setDatabase($this->getParameter('database'));
+    $this->setDatabase($this->getOption('database'));
   }
 
   /**
@@ -81,7 +81,7 @@ class sfSQLiteCache extends sfCache
    */
   public function set($key, $data, $lifetime = null)
   {
-    if ($this->getParameter('automaticCleaningFactor') > 0 && rand(1, $this->getParameter('automaticCleaningFactor')) == 1)
+    if ($this->getOption('automaticCleaningFactor') > 0 && rand(1, $this->getOption('automaticCleaningFactor')) == 1)
     {
       $this->clean(sfCache::OLD);
     }

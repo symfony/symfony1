@@ -23,15 +23,15 @@ class sfAPCCache extends sfCache
   /**
    * Initializes this sfCache instance.
    *
-   * Available parameters:
+   * Available options:
    *
-   * * see sfCache for default parameters available for all drivers
+   * * see sfCache for options available for all drivers
    *
    * @see sfCache
    */
-  public function initialize($parameters = array())
+  public function initialize($options = array())
   {
-    parent::initialize($parameters);
+    parent::initialize($options);
 
     if (!function_exists('apc_store') || !ini_get('apc.enabled'))
     {

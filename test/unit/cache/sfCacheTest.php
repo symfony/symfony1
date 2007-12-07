@@ -32,4 +32,4 @@ $t = new lime_test(1, new lime_output_color());
 $t->diag('->initialize()');
 $cache = new myCache();
 $cache->initialize(array('foo' => 'bar'));
-$t->is($cache->getParameterHolder()->get('foo'), 'bar', '->initialize() takes an array of parameters as its first argument');
+$t->is($cache->getOption('foo'), 'bar', '->initialize() takes an array of options as its first argument');

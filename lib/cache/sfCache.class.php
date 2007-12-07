@@ -23,24 +23,24 @@ abstract class sfCache
   const SEPARATOR = ':';
 
   protected
-    $parameterHolder = null;
+    $options = array();
 
   /**
    * Class constructor.
    *
    * @see initialize()
    */
-  public function __construct($parameters = array())
+  public function __construct($options = array())
   {
-    $this->initialize($parameters);
+    $this->initialize($options);
   }
 
   /**
    * Initializes this sfCache instance.
    *
-   * @param  array An associative array of initialization parameters.
+   * @param  array An array of options.
    *
-   * Available parameters:
+   * Available options:
    *
    * * automaticCleaningFactor (optional): The automatic cleaning process destroy too old (for the given life time) (default value: 1000)
    *   cache files when a new cache file is written.
@@ -50,24 +50,11 @@ abstract class sfCache
    *
    * * lifetime (optional): The default life time (default value: 86400)
    *
-   * @return bool true, if initialization completes successfully, otherwise false.
-   *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfCache instance.
    */
-  public function initialize($parameters = array())
+  public function initialize($options = array())
   {
-    $this->parameterHolder = new sfParameterHolder();
-    $this->parameterHolder->add($parameters);
-
-    if (!$this->hasParameter('automaticCleaningFactor'))
-    {
-      $this->setParameter('automaticCleaningFactor', 1000);
-    }
-
-    if (!$this->hasParameter('lifetime'))
-    {
-      $this->setParameter('lifetime', 86400);
-    }
+    $this->options = array_merge(array('automaticCleaningFactor' => 1000, 'lifetime' => 86400), $options);
   }
 
   /**
@@ -176,7 +163,7 @@ abstract class sfCache
    */
   public function getLifetime($lifetime)
   {
-    return is_null($lifetime) ? $this->getParameter('lifetime') : $lifetime;
+    return is_null($lifetime) ? $this->getOption('lifetime') : $lifetime;
   }
 
   /**
@@ -190,28 +177,26 @@ abstract class sfCache
   }
 
   /**
-   * Retrieves the parameters for the current request.
+   * Gets an option value.
    *
-   * @return sfParameterHolder The parameter holder
+   * @param  string The option name
+   *
+   * @return mixed  The option value
    */
-  public function getParameterHolder()
+  public function getOption($name, $default = null)
   {
-    return $this->parameterHolder;
+    return isset($this->options[$name]) ? $this->options[$name] : $default;
   }
 
-  public function getParameter($name, $default = null)
+  /**
+   * Sets an option value.
+   *
+   * @param string The option name
+   * @param mixed  The option value
+   */
+  public function setOption($name, $value)
   {
-    return $this->parameterHolder->get($name, $default);
-  }
-
-  public function hasParameter($name)
-  {
-    return $this->parameterHolder->has($name);
-  }
-
-  public function setParameter($name, $value)
-  {
-    return $this->parameterHolder->set($name, $value);
+    return $this->options[$name] = $value;
   }
 
   /**

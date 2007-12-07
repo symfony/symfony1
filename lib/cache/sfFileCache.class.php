@@ -27,28 +27,24 @@ class sfFileCache extends sfCache
  /**
   * Initializes this sfCache instance.
   *
-  * Available parameters:
+  * Available options:
   *
   * * cacheDir: The directory where to put cache files
   *
-  * * see sfCache for default parameters available for all drivers
+  * * see sfCache for options available for all drivers
   *
-  * @param  array An associative array of initialization parameters.
-  *
-  * @return bool  true, if initialization completes successfully, otherwise false.
-  *
-  * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfCache.
+  * @see sfCache
   */
-  public function initialize($parameters = array())
+  public function initialize($options = array())
   {
-    parent::initialize($parameters);
+    parent::initialize($options);
 
-    if (!$this->getParameter('cacheDir'))
+    if (!$this->getOption('cacheDir'))
     {
-      throw new sfInitializationException('You must pass a "cacheDir" parameter to initialize a sfFileCache object.');
+      throw new sfInitializationException('You must pass a "cacheDir" option to initialize a sfFileCache object.');
     }
 
-    $this->setCacheDir($this->getParameter('cacheDir'));
+    $this->setCacheDir($this->getOption('cacheDir'));
   }
 
   /**
@@ -77,7 +73,7 @@ class sfFileCache extends sfCache
    */
   public function set($key, $data, $lifetime = null)
   {
-    if ($this->getParameter('automaticCleaningFactor') > 0 && rand(1, $this->getParameter('automaticCleaningFactor')) == 1)
+    if ($this->getOption('automaticCleaningFactor') > 0 && rand(1, $this->getOption('automaticCleaningFactor')) == 1)
     {
       $this->clean(sfCache::OLD);
     }
@@ -104,9 +100,9 @@ class sfFileCache extends sfCache
 
       $regexp = self::patternToRegexp($pattern);
       $paths = array();
-      foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->getParameter('cacheDir'))) as $path)
+      foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->getOption('cacheDir'))) as $path)
       {
-        if (preg_match($regexp, str_replace($this->getParameter('cacheDir').DIRECTORY_SEPARATOR, '', $path)))
+        if (preg_match($regexp, str_replace($this->getOption('cacheDir').DIRECTORY_SEPARATOR, '', $path)))
         {
           $paths[] = $path;
         }
@@ -114,7 +110,7 @@ class sfFileCache extends sfCache
     }
     else
     {
-      $paths = glob($this->getParameter('cacheDir').DIRECTORY_SEPARATOR.str_replace(sfCache::SEPARATOR, DIRECTORY_SEPARATOR, $pattern).self::EXTENSION);
+      $paths = glob($this->getOption('cacheDir').DIRECTORY_SEPARATOR.str_replace(sfCache::SEPARATOR, DIRECTORY_SEPARATOR, $pattern).self::EXTENSION);
     }
 
     foreach ($paths as $path)
@@ -135,13 +131,13 @@ class sfFileCache extends sfCache
    */
   public function clean($mode = sfCache::ALL)
   {
-    if (!is_dir($this->getParameter('cacheDir')))
+    if (!is_dir($this->getOption('cacheDir')))
     {
       return true;
     }
 
     $result = true;
-    foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->getParameter('cacheDir'))) as $file)
+    foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->getOption('cacheDir'))) as $file)
     {
       if (sfCache::ALL == $mode || time() > $this->read($file, self::READ_TIMEOUT))
       {
@@ -193,7 +189,7 @@ class sfFileCache extends sfCache
   */
   protected function getFilePath($key)
   {
-    return $this->getParameter('cacheDir').DIRECTORY_SEPARATOR.str_replace(sfCache::SEPARATOR, DIRECTORY_SEPARATOR, $key).self::EXTENSION;
+    return $this->getOption('cacheDir').DIRECTORY_SEPARATOR.str_replace(sfCache::SEPARATOR, DIRECTORY_SEPARATOR, $key).self::EXTENSION;
   }
 
  /**
