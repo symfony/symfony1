@@ -25,9 +25,9 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
   /**
    * Parses an array of YAMLs files and merges them in one configuration array.
    *
-   * @param array An array of configuration file paths
+   * @param  array An array of configuration file paths
    *
-   * @param array A merged configuration array
+   * @return array A merged configuration array
    */
   protected function parseYamls($configFiles)
   {
