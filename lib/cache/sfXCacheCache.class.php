@@ -63,6 +63,7 @@ class sfXCacheCache extends sfCache
   public function set($key, $data, $lifetime = null)
   {
     $lifetime = $this->getLifetime($lifetime);
+
     return xcache_set($this->prefix.$key, str_pad(time() + $lifetime, 12, 0, STR_PAD_LEFT).$data, $lifetime);
   }
 
@@ -79,7 +80,7 @@ class sfXCacheCache extends sfCache
    */
   public function clean($mode = sfCache::ALL)
   {
-    if ($mode != sfCache::ALL)
+    if ($mode !== sfCache::ALL)
     {
       return true;
     }

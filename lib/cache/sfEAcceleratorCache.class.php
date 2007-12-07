@@ -56,7 +56,7 @@ class sfEAcceleratorCache extends sfCache
    */
   public function has($key)
   {
-    return null === eaccelerator_get($this->prefix.$key) ? false : true;
+    return !is_null(eaccelerator_get($this->prefix.$key));
   }
 
   /**
@@ -101,7 +101,7 @@ class sfEAcceleratorCache extends sfCache
    */
   public function clean($mode = sfCache::ALL)
   {
-    if (sfCache::OLD == $mode)
+    if (sfCache::OLD === $mode)
     {
       return eaccelerator_gc();
     }

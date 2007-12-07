@@ -56,7 +56,7 @@ class sfAPCCache extends sfCache
    */
   public function has($key)
   {
-    return false === apc_fetch($this->prefix.$key) ? false : true;
+    return !(false === apc_fetch($this->prefix.$key));
   }
 
   /**

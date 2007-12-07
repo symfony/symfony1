@@ -102,7 +102,7 @@ class sfMemcacheCache extends sfCache
    */
   public function has($key)
   {
-    return false === $this->memcache->get($this->prefix.$key) ? false : true;
+    return !(false === $this->memcache->get($this->prefix.$key));
   }
 
   /**

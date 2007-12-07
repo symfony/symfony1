@@ -13,9 +13,13 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 $plan = 60;
 $t = new lime_test($plan, new lime_output_color());
 
-if (!function_exists('xcache_set'))
+try
 {
-  $t->skip('XCache needed to run these tests', $plan);
+  new sfXCacheCache();
+}
+catch (sfInitializationException $e)
+{
+  $t->skip($e->getMessage(), $plan);
   return;
 }
 

@@ -14,9 +14,13 @@ require_once(dirname(__FILE__).'/sfCacheDriverTests.class.php');
 $plan = 121;
 $t = new lime_test($plan, new lime_output_color());
 
-if (!extension_loaded('SQLite'))
+try
 {
-  $t->skip('APC needed to run these tests', $plan);
+  new sfSQLiteCache(array('database' => ':memory:'));
+}
+catch (sfInitializationException $e)
+{
+  $t->skip($e->getMessage(), $plan);
   return;
 }
 

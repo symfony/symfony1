@@ -15,11 +15,12 @@ $t = new lime_test($plan, new lime_output_color());
 
 try
 {
-  $cache = new sfEAcceleratorCache();
+  new sfEAcceleratorCache();
 }
 catch (sfInitializationException $e)
 {
   $t->skip($e->getMessage(), $plan);
+  return;
 }
 
 require_once(dirname(__FILE__).'/sfCacheDriverTests.class.php');
