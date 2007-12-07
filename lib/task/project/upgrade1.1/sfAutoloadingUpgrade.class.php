@@ -30,7 +30,7 @@ class sfAutoloadingUpgrade extends sfUpgrade
         {
           $content = str_replace("'sfAutoload'", 'sfAutoload::getInstance()', $content);
 
-          $this->log($this->formatter->formatSection('config.php', sprintf('Migrating %s', $file)));
+          $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('config.php', sprintf('Migrating %s', $file)))));
           file_put_contents($file, $content);
         }
 
@@ -42,7 +42,7 @@ class sfAutoloadingUpgrade extends sfUpgrade
 
 if (sfConfig::get('sf_debug'))
 {
-  spl_autoload_register(array('sfAutoload', 'autoloadAgain'));
+  spl_autoload_register(array('sfAutoload::getInstance()', 'autoloadAgain'));
 }
 EOF;
 

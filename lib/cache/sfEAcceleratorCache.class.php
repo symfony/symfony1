@@ -18,8 +18,6 @@
  */
 class sfEAcceleratorCache extends sfCache
 {
-  protected $prefix = '';
-
   /**
    * Initializes this sfCache instance.
    *
@@ -37,8 +35,6 @@ class sfEAcceleratorCache extends sfCache
     {
       throw new sfInitializationException('You must have EAccelerator installed and enabled to use sfEAcceleratorCache class (or perhaps you forgot to add --with-eaccelerator-shared-memory when installing).');
     }
-
-    $this->prefix = md5(sfConfig::get('sf_app_dir')).self::SEPARATOR;
   }
 
  /**
@@ -46,7 +42,7 @@ class sfEAcceleratorCache extends sfCache
   */
   public function get($key, $default = null)
   {
-    $value = eaccelerator_get($this->prefix.$key);
+    $value = eaccelerator_get($this->getOption('prefix').$key);
 
     return is_null($value) ? $default : $value;
   }
@@ -56,7 +52,7 @@ class sfEAcceleratorCache extends sfCache
    */
   public function has($key)
   {
-    return !is_null(eaccelerator_get($this->prefix.$key));
+    return !is_null(eaccelerator_get($this->getOption('prefix').$key));
   }
 
   /**
@@ -64,7 +60,7 @@ class sfEAcceleratorCache extends sfCache
    */
   public function set($key, $data, $lifetime = null)
   {
-    return eaccelerator_put($this->prefix.$key, $data, $this->getLifetime($lifetime));
+    return eaccelerator_put($this->getOption('prefix').$key, $data, $this->getLifetime($lifetime));
   }
 
   /**
@@ -72,7 +68,7 @@ class sfEAcceleratorCache extends sfCache
    */
   public function remove($key)
   {
-    return eaccelerator_rm($this->prefix.$key);
+    return eaccelerator_rm($this->getOption('prefix').$key);
   }
 
   /**
@@ -84,13 +80,13 @@ class sfEAcceleratorCache extends sfCache
 
     if (is_array($infos))
     {
-      $regexp = self::patternToRegexp($this->prefix.$pattern);
+      $regexp = self::patternToRegexp($this->getOption('prefix').$pattern);
 
       foreach ($infos as $info)
       {
         if (preg_match($regexp, $info['name']))
         {
-          eaccelerator_rm($this->prefix.$key);
+          eaccelerator_rm($this->getOption('prefix').$key);
         }
       }
     }
@@ -111,7 +107,7 @@ class sfEAcceleratorCache extends sfCache
     {
       foreach ($infos as $info)
       {
-        if (false !== strpos($info['name'], $this->prefix))
+        if (false !== strpos($info['name'], $this->getOption('prefix')))
         {
           // eaccelerator bug (http://eaccelerator.net/ticket/287)
           $key = 0 === strpos($info['name'], ':') ? substr($info['name'], 1) : $info['name'];
@@ -160,7 +156,7 @@ class sfEAcceleratorCache extends sfCache
     {
       foreach ($infos as $info)
       {
-        if ($this->prefix.$key == $info['name'])
+        if ($this->getOption('prefix').$key == $info['name'])
         {
           return $info;
         }

@@ -18,9 +18,9 @@
  */
 class sfSQLiteCache extends sfCache
 {
-  protected $dbh = null;
-
-  protected $database = '';
+  protected
+    $dbh      = null,
+    $database = '';
 
   /**
    * Initializes this sfCache instance.
@@ -81,7 +81,7 @@ class sfSQLiteCache extends sfCache
    */
   public function set($key, $data, $lifetime = null)
   {
-    if ($this->getOption('automaticCleaningFactor') > 0 && rand(1, $this->getOption('automaticCleaningFactor')) == 1)
+    if ($this->getOption('automatic_cleaning_factor') > 0 && rand(1, $this->getOption('automatic_cleaning_factor')) == 1)
     {
       $this->clean(sfCache::OLD);
     }

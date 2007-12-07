@@ -100,9 +100,10 @@ Here is their default configuration in `factories.yml`:
       cache:
         class: sfFileCache
         param:
-          automaticCleaningFactor: 0
-          cacheDir:                %SF_I18N_CACHE_DIR%
-          lifetime:                86400
+          automatic_cleaning_factor: 0
+          cache_dir:                 %SF_I18N_CACHE_DIR%
+          lifetime:                  86400
+          prefix:                    %SF_APP_DIR%
 
   routing:
     class: sfPatternRouting
@@ -145,12 +146,19 @@ This can be used to prevent logging in the production environment altogether:
 
 The `project:upgrade1.1` task makes all those changes for you.
 
-sfFunctionCache
+Cache Framework
 ---------------
 
-The sfFunctionCache object does not extend sfFileCache anymore.
+The `sfFunctionCache` class does not extend `sfFileCache` anymore.
 You must now pass a cache object to the constructor.
 The first argument to ->call() must now be a PHP callable.
+
+Some `sfCache` configuration parameter have changed their named to underscore names:
+
+  * automaticCleaningFactor -> automatic_cleaning_factor
+  * cacheDir -> cache_dir
+
+The `project:upgrade1.1` task makes all those changes for you.
 
 Autoloading
 -----------
@@ -260,3 +268,4 @@ sfValidator class
 
 If you use the symfony 1.0 interface for validation, your custom validators must
 now extend the `sfValidatorBase` class.
+

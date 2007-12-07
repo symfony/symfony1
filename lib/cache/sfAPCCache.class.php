@@ -18,8 +18,6 @@
  */
 class sfAPCCache extends sfCache
 {
-  protected $prefix = '';
-
   /**
    * Initializes this sfCache instance.
    *
@@ -37,8 +35,6 @@ class sfAPCCache extends sfCache
     {
       throw new sfInitializationException('You must have APC installed and enabled to use sfAPCCache class.');
     }
-
-    $this->prefix = md5(sfConfig::get('sf_app_dir')).self::SEPARATOR;
   }
 
  /**
@@ -46,7 +42,7 @@ class sfAPCCache extends sfCache
   */
   public function get($key, $default = null)
   {
-    $value = apc_fetch($this->prefix.$key);
+    $value = apc_fetch($this->getOption('prefix').$key);
 
     return false === $value ? $default : $value;
   }
@@ -56,7 +52,7 @@ class sfAPCCache extends sfCache
    */
   public function has($key)
   {
-    return !(false === apc_fetch($this->prefix.$key));
+    return !(false === apc_fetch($this->getOption('prefix').$key));
   }
 
   /**
@@ -64,7 +60,7 @@ class sfAPCCache extends sfCache
    */
   public function set($key, $data, $lifetime = null)
   {
-    return apc_store($this->prefix.$key, $data, $this->getLifetime($lifetime));
+    return apc_store($this->getOption('prefix').$key, $data, $this->getLifetime($lifetime));
   }
 
   /**
@@ -72,7 +68,7 @@ class sfAPCCache extends sfCache
    */
   public function remove($key)
   {
-    return apc_delete($this->prefix.$key);
+    return apc_delete($this->getOption('prefix').$key);
   }
 
   /**
@@ -123,7 +119,7 @@ class sfAPCCache extends sfCache
       return;
     }
 
-    $regexp = self::patternToRegexp($this->prefix.$pattern);
+    $regexp = self::patternToRegexp($this->getOption('prefix').$pattern);
 
     foreach ($infos['cache_list'] as $info)
     {
@@ -142,7 +138,7 @@ class sfAPCCache extends sfCache
     {
       foreach ($infos['cache_list'] as $info)
       {
-        if ($this->prefix.$key == $info['info'])
+        if ($this->getOption('prefix').$key == $info['info'])
         {
           return $info;
         }

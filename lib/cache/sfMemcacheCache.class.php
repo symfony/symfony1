@@ -19,7 +19,6 @@
 class sfMemcacheCache extends sfCache
 {
   protected
-    $prefix   = '',
     $memcache = null;
 
   /**
@@ -47,8 +46,6 @@ class sfMemcacheCache extends sfCache
     {
       throw new sfInitializationException('You must have memcache installed and enabled to use sfMemcacheCache class.');
     }
-
-    $this->prefix = md5(sfConfig::get('sf_app_dir')).self::SEPARATOR;
 
     if ($this->getOption('memcache'))
     {
@@ -90,7 +87,7 @@ class sfMemcacheCache extends sfCache
   */
   public function get($key, $default = null)
   {
-    $value = $this->memcache->get($this->prefix.$key);
+    $value = $this->memcache->get($this->getOption('prefix').$key);
 
     return false === $value ? $default : $value;
   }
@@ -100,7 +97,7 @@ class sfMemcacheCache extends sfCache
    */
   public function has($key)
   {
-    return !(false === $this->memcache->get($this->prefix.$key));
+    return !(false === $this->memcache->get($this->getOption('prefix').$key));
   }
 
   /**
@@ -119,7 +116,7 @@ class sfMemcacheCache extends sfCache
       $this->setCacheInfo($key);
     }
 
-    return $this->memcache->set($this->prefix.$key, $data, false, $lifetime);
+    return $this->memcache->set($this->getOption('prefix').$key, $data, false, $lifetime);
   }
 
   /**
@@ -127,9 +124,9 @@ class sfMemcacheCache extends sfCache
    */
   public function remove($key)
   {
-    $this->memcache->delete($this->prefix.'_metadata'.self::SEPARATOR.$key);
+    $this->memcache->delete($this->getOption('prefix').'_metadata'.self::SEPARATOR.$key);
 
-    return $this->memcache->delete($this->prefix.$key);
+    return $this->memcache->delete($this->getOption('prefix').$key);
   }
 
   /**
@@ -179,7 +176,7 @@ class sfMemcacheCache extends sfCache
       throw new sfCacheException('To use the "removePattern" method, you must set the "storeCacheInfo" option to "true".');
     }
 
-    $regexp = self::patternToRegexp($this->prefix.$pattern);
+    $regexp = self::patternToRegexp($this->getOption('prefix').$pattern);
 
     foreach ($this->getCacheInfo() as $key)
     {
@@ -196,9 +193,9 @@ class sfMemcacheCache extends sfCache
   public function getMany($keys)
   {
     $values = array();
-    foreach ($this->memcache->get(array_map(create_function('$k', 'return "'.$this->prefix.'".$k;'), $keys)) as $key => $value)
+    foreach ($this->memcache->get(array_map(create_function('$k', 'return "'.$this->getOption('prefix').'".$k;'), $keys)) as $key => $value)
     {
-      $values[str_replace($this->prefix, '', $key)] = $value;
+      $values[str_replace($this->getOption('prefix'), '', $key)] = $value;
     }
 
     return $values;
@@ -213,7 +210,7 @@ class sfMemcacheCache extends sfCache
    */
   protected function getMetadata($key)
   {
-    return $this->memcache->get($this->prefix.'_metadata'.self::SEPARATOR.$key);
+    return $this->memcache->get($this->getOption('prefix').'_metadata'.self::SEPARATOR.$key);
   }
 
   /**
@@ -224,7 +221,7 @@ class sfMemcacheCache extends sfCache
    */
   protected function setMetadata($key, $lifetime)
   {
-    $this->memcache->set($this->prefix.'_metadata'.self::SEPARATOR.$key, array('lastModified' => time(), 'timeout' => time() + $lifetime), false, $lifetime);
+    $this->memcache->set($this->getOption('prefix').'_metadata'.self::SEPARATOR.$key, array('lastModified' => time(), 'timeout' => time() + $lifetime), false, $lifetime);
   }
 
   /**
@@ -234,13 +231,13 @@ class sfMemcacheCache extends sfCache
    */
   protected function setCacheInfo($key)
   {
-    $keys = $this->memcache->get($this->prefix.'_metadata');
+    $keys = $this->memcache->get($this->getOption('prefix').'_metadata');
     if (!is_array($keys))
     {
       $keys = array();
     }
-    $keys[] = $this->prefix.$key;
-    $this->memcache->set($this->prefix.'_metadata', $keys, 0);
+    $keys[] = $this->getOption('prefix').$key;
+    $this->memcache->set($this->getOption('prefix').'_metadata', $keys, 0);
   }
 
   /**
@@ -250,7 +247,7 @@ class sfMemcacheCache extends sfCache
    */
   protected function getCacheInfo()
   {
-    $keys = $this->memcache->get($this->prefix.'_metadata');
+    $keys = $this->memcache->get($this->getOption('prefix').'_metadata');
     if (!is_array($keys))
     {
       return array();

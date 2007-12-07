@@ -63,11 +63,11 @@ class sfCacheDriverTests
     $t->is($cache->has('bar'), false, '->clean() cleans all cache key if given no argument');
 
     $cache->clean();
-    $cache->setOption('automaticCleaningFactor', 1);
+    $cache->setOption('automatic_cleaning_factor', 1);
     $cache->set('foo', $data);
     $cache->set('foo', $data);
     $cache->set('foo', $data);
-    $cache->setOption('automaticCleaningFactor', 1000);
+    $cache->setOption('automatic_cleaning_factor', 1000);
 
     // ->remove()
     $t->diag('->remove()');

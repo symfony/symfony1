@@ -23,7 +23,8 @@ abstract class sfCache
   const SEPARATOR = ':';
 
   protected
-    $options = array();
+    $options = array(),
+    $prefix  = '';
 
   /**
    * Class constructor.
@@ -42,7 +43,7 @@ abstract class sfCache
    *
    * Available options:
    *
-   * * automaticCleaningFactor (optional): The automatic cleaning process destroy too old (for the given life time) (default value: 1000)
+   * * automatic_cleaning_factor: The automatic cleaning process destroy too old (for the given life time) (default value: 1000)
    *   cache files when a new cache file is written.
    *     0               => no automatic cache cleaning
    *     1               => systematic cache cleaning
@@ -54,7 +55,13 @@ abstract class sfCache
    */
   public function initialize($options = array())
   {
-    $this->options = array_merge(array('automaticCleaningFactor' => 1000, 'lifetime' => 86400), $options);
+    $this->options = array_merge(array(
+      'automatic_cleaning_factor' => 1000,
+      'lifetime'                  => 86400,
+      'prefix'                    => md5(dirname(__FILE__)),
+    ), $options);
+
+    $this->options['prefix'] .= self::SEPARATOR;
   }
 
   /**

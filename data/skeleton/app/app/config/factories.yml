@@ -40,9 +40,10 @@ test:
 #  view_cache:
 #    class: sfFileCache
 #    param:
-#      automaticCleaningFactor: 0
-#      cacheDir:                %SF_TEMPLATE_CACHE_DIR%
-#      lifetime:                86400
+#      automatic_cleaning_factor: 0
+#      cache_dir:                 %SF_TEMPLATE_CACHE_DIR%
+#      lifetime:                  86400
+#      prefix:                    %SF_APP_DIR%
 #
 #  i18n:
 #    class: sfI18N
@@ -50,9 +51,10 @@ test:
 #      cache:
 #        class: sfFileCache
 #        param:
-#          automaticCleaningFactor: 0
-#          cacheDir:                %SF_I18N_CACHE_DIR%
-#          lifetime:                86400
+#          automatic_cleaning_factor: 0
+#          cache_dir:                 %SF_I18N_CACHE_DIR%
+#          lifetime:                  86400
+#          prefix:                    %SF_APP_DIR%
 #
 #  routing:
 #    class: sfPatternRouting

@@ -18,8 +18,6 @@
  */
 class sfXCacheCache extends sfCache
 {
-  protected $prefix = '';
-
   /**
    * Initializes this sfCache instance.
    *
@@ -37,8 +35,6 @@ class sfXCacheCache extends sfCache
     {
       throw new sfInitializationException('You must have XCache installed and enabled to use sfXCacheCache class.');
     }
-
-    $this->prefix = md5(sfConfig::get('sf_app_dir')).self::SEPARATOR;
   }
 
  /**
@@ -46,7 +42,7 @@ class sfXCacheCache extends sfCache
   */
   public function get($key, $default = null)
   {
-    return xcache_isset($this->prefix.$key) ? substr(xcache_get($this->prefix.$key), 12) : $default;
+    return xcache_isset($this->getOption('prefix').$key) ? substr(xcache_get($this->getOption('prefix').$key), 12) : $default;
   }
 
   /**
@@ -54,7 +50,7 @@ class sfXCacheCache extends sfCache
    */
   public function has($key)
   {
-    return xcache_isset($this->prefix.$key);
+    return xcache_isset($this->getOption('prefix').$key);
   }
 
   /**
@@ -64,7 +60,7 @@ class sfXCacheCache extends sfCache
   {
     $lifetime = $this->getLifetime($lifetime);
 
-    return xcache_set($this->prefix.$key, str_pad(time() + $lifetime, 12, 0, STR_PAD_LEFT).$data, $lifetime);
+    return xcache_set($this->getOption('prefix').$key, str_pad(time() + $lifetime, 12, 0, STR_PAD_LEFT).$data, $lifetime);
   }
 
   /**
@@ -72,7 +68,7 @@ class sfXCacheCache extends sfCache
    */
   public function remove($key)
   {
-    return xcache_unset($this->prefix.$key);
+    return xcache_unset($this->getOption('prefix').$key);
   }
 
   /**
@@ -103,7 +99,7 @@ class sfXCacheCache extends sfCache
    */
   public function getLastModified($key)
   {
-    if (!xcache_isset($this->prefix.$key))
+    if (!xcache_isset($this->getOption('prefix').$key))
     {
       return 0;
     }
@@ -121,7 +117,7 @@ class sfXCacheCache extends sfCache
    */
   public function getTimeout($key)
   {
-    return xcache_isset($this->prefix.$key) ? intval(substr(xcache_get($this->prefix.$key), 0, 12)) : 0;
+    return xcache_isset($this->getOption('prefix').$key) ? intval(substr(xcache_get($this->getOption('prefix').$key), 0, 12)) : 0;
   }
 
   /**
@@ -131,7 +127,7 @@ class sfXCacheCache extends sfCache
   {
     $this->checkAuth();
 
-    $regexp = self::patternToRegexp($this->prefix.$pattern);
+    $regexp = self::patternToRegexp($this->getOption('prefix').$pattern);
 
     for ($i = 0, $max = xcache_count(XC_TYPE_VAR); $i < $max; $i++)
     {
@@ -163,7 +159,7 @@ class sfXCacheCache extends sfCache
       {
         foreach ($infos['cache_list'] as $info)
         {
-          if ($this->prefix.$key == $info['name'])
+          if ($this->getOption('prefix').$key == $info['name'])
           {
             return $info;
           }

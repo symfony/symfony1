@@ -15,7 +15,7 @@ $t = new lime_test(61, new lime_output_color());
 
 // setup
 sfConfig::set('sf_logging_enabled', false);
-$temp = tempnam('/tmp/cachedir', 'tmp');
+$temp = tempnam('/tmp/cache_dir', 'tmp');
 unlink($temp);
 mkdir($temp);
 
@@ -24,14 +24,14 @@ $t->diag('->initialize()');
 try
 {
   $cache = new sfFileCache();
-  $t->fail('->initialize() throws an sfInitializationException exception if you don\'t pass a "cacheDir" parameter');
+  $t->fail('->initialize() throws an sfInitializationException exception if you don\'t pass a "cache_dir" parameter');
 }
 catch (sfInitializationException $e)
 {
-  $t->pass('->initialize() throws an sfInitializationException exception if you don\'t pass a "cacheDir" parameter');
+  $t->pass('->initialize() throws an sfInitializationException exception if you don\'t pass a "cache_dir" parameter');
 }
 
-$cache = new sfFileCache(array('cacheDir' => $temp));
+$cache = new sfFileCache(array('cache_dir' => $temp));
 
 sfCacheDriverTests::launch($t, $cache);
 
