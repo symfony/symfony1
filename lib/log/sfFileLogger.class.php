@@ -49,7 +49,8 @@ class sfFileLogger extends sfLogger
       mkdir($dir, isset($options['dir_mode']) ? $options['dir_mode'] : 0777, true);
     }
 
-    if (!is_writable($dir) || ($fileExists = file_exists($options['file']) && !is_writable($options['file'])))
+    $fileExists = file_exists($options['file']);
+    if (!is_writable($dir) || ($fileExists && !is_writable($options['file'])))
     {
       throw new sfFileException(sprintf('Unable to open the log file "%s" for writing.', $options['file']));
     }
