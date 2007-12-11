@@ -10,7 +10,7 @@
 
 /**
  * sfYamlConfigHandler is a base class for YAML (.yml) configuration handlers. This class
- * provides a central location for parsing YAML files and detecting required categories.
+ * provides a central location for parsing YAML files.
  *
  * @package    symfony
  * @subpackage config
@@ -65,16 +65,6 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
     {
       // configuration couldn't be parsed
       throw new sfParseException(sprintf('Configuration file "%s" could not be parsed', $configFile));
-    }
-
-    // get a list of the required categories
-    $categories = $this->getParameterHolder()->get('required_categories', array());
-    foreach ($categories as $category)
-    {
-      if (!isset($config[$category]))
-      {
-        throw new sfParseException(sprintf('Configuration file "%s" is missing "%s" category.', $configFile, $category));
-      }
     }
 
     return $config;
