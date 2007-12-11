@@ -21,13 +21,17 @@ class sfContext
     $user       = null,
     $storage    = null;
 
+  protected
+    $sessionPath = '';
+
   static public function getInstance($factories = array())
   {
     if (!isset(self::$instance))
     {
       self::$instance = new sfContext();
 
-      self::$instance->storage = new sfSessionTestStorage(array('session_path' => sfConfig::get('sf_test_cache_dir').'/sessions'));
+      self::$instance->sessionPath = sfToolkit::getTmpDir().'/sessions_'.rand(11111, 99999);
+      self::$instance->storage = new sfSessionTestStorage(array('session_path' => self::$instance->sessionPath));
 
       self::$instance->dispatcher = new sfEventDispatcher();
 
@@ -38,6 +42,11 @@ class sfContext
     }
 
     return self::$instance;
+  }
+
+  public function __destruct()
+  {
+    sfToolkit::clearDirectory($this->sessionPath);
   }
 
   static public function hasInstance()
