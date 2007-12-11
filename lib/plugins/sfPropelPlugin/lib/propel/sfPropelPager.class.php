@@ -101,7 +101,7 @@ class sfPropelPager extends sfPager
 
     $results = call_user_func(array($this->getClassPeer(), $this->getPeerMethod()), $cForRetrieve);
 
-    return $results[0];
+    return is_array($results) && isset($results[0]) ? $results[0] : null;
   }
 
   public function getResults()
