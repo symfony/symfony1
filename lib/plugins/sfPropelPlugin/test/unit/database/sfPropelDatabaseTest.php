@@ -30,6 +30,7 @@ $configuration = array(
           'encoding'   => 'utf8',
           'persistent' => '1',
           'protocol'   => null,
+          'socket'     => null,
         ),
       ),
       'default' => 'propel',
