@@ -31,6 +31,11 @@ class sfBrowser
     $defaultServerArray = array(),
     $currentException   = null;
 
+  public function __construct($hostname = null, $remote = null, $options = array())
+  {
+    $this->initialize($hostname, $remote, $options);
+  }
+
   public function initialize($hostname = null, $remote = null, $options = array())
   {
     unset($_SERVER['argv']);
