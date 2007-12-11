@@ -1255,7 +1255,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             foreach ($array as $key => $value) {
                 if ($this->getTable()->hasRelation($key) && $deep) {
                     $this->$key->fromArray($value, $deep);
-                } else if($this->getTable()->hasColumn($key)) {
+                } else if ($this->getTable()->hasField($key)) {
                     $this->set($key, $value);
                 }
             }
@@ -1278,7 +1278,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         foreach ($array as $key => $value) {
             if ($this->getTable()->hasRelation($key)) {
                 $this->get($key)->synchronizeWithArray($value);
-            } else if ($this->getTable()->hasColumn($key)) {
+            } else if ($this->getTable()->hasField($key)) {
                 $this->set($key, $value);
             }
         }
