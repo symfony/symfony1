@@ -34,10 +34,6 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
    */
   public function execute($configFiles)
   {
-    // set our required categories list and initialize our handler
-    $categories = array('required_categories' => array());
-    $this->initialize($categories);
-
     // parse the yaml
     $myConfig = $this->parseYamls($configFiles);
 
