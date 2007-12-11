@@ -92,18 +92,9 @@ class sfOutputEscaperObjectDecorator extends sfOutputEscaperGetterDecorator
    * Try to call decorated object __toString() method if exists.
    *
    * @return string
-   *
-   * @throws <b>sfException</b>
    */
   public function __toString()
   {
-    if (method_exists($this->value, '__toString'))
-    {
-      return $this->escape($this->escapingMethod, $this->value->__toString());
-    }
-    else
-    {
-      throw new sfException(sprintf('Object of class "%s" cannot be converted to string (Please create a __toString() method).', get_class($this->value)));
-    }
+    return $this->escape($this->escapingMethod, $this->value->__toString());
   }
 }
