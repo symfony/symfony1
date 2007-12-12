@@ -13,7 +13,8 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 $t = new lime_test(39, new lime_output_color());
 
 $dispatcher = new sfEventDispatcher();
-$storage = new sfSessionTestStorage(array('session_path' => sfConfig::get('sf_test_cache_dir').'/sessions'));
+$sessionPath = sfToolkit::getTmpDir().'/sessions_'.rand(11111, 99999);
+$storage = new sfSessionTestStorage(array('session_path' => $sessionPath));
 
 $user = new sfBasicSecurityUser($dispatcher, $storage);
 
@@ -137,3 +138,5 @@ $t->diag('->clearCredentials()');
 $user->clearCredentials();
 $t->is($user->hasCredential('subscriber'), false);
 $t->is($user->hasCredential('superadmin'), false);
+
+sfToolkit::clearDirectory($sessionPath);

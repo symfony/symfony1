@@ -13,10 +13,10 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 $t = new lime_test(36, new lime_output_color());
 
 $_SERVER['session_id'] = 'test';
-sfToolkit::clearDirectory(sfConfig::get('sf_test_cache_dir').'/sessions');
 
 $dispatcher = new sfEventDispatcher();
-$storage = new sfSessionTestStorage(array('session_path' => sfConfig::get('sf_test_cache_dir').'/sessions'));
+$sessionPath = sfToolkit::getTmpDir().'/sessions_'.rand(11111, 99999);
+$storage = new sfSessionTestStorage(array('session_path' => $sessionPath));
 
 $user = new sfUser($dispatcher, $storage);
 
@@ -85,3 +85,5 @@ function user_flush($dispatcher, $user, $storage, $parameters = array())
   $storage->shutdown();
   $storage->initialize($parameters);
 }
+
+sfToolkit::clearDirectory($sessionPath);
