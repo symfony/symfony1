@@ -18,7 +18,6 @@ if (!include(dirname(__FILE__).'/../bootstrap/functional.php'))
 include(dirname(__FILE__).'/backendTestBrowser.class.php');
 
 $b = new backendTestBrowser();
-$b->initialize();
 
 $b->
   post('/article/edit/id/1', array('article' => array('end_date' => 'not a date')))->

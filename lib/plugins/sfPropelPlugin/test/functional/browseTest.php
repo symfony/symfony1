@@ -16,7 +16,6 @@ if (!include(dirname(__FILE__).'/../bootstrap/functional.php'))
 }
 
 $b = new sfTestBrowser();
-$b->initialize();
 
 // check symfony throws an exception if model class does not exist
 $b->

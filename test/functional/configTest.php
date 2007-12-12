@@ -15,7 +15,6 @@ if (!include(dirname(__FILE__).'/../bootstrap/functional.php'))
 }
 
 $b = new sfTestBrowser();
-$b->initialize();
 $b->get('/');
 
 $t = $b->test();

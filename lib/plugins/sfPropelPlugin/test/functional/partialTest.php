@@ -18,7 +18,6 @@ if (!include(dirname(__FILE__).'/../bootstrap/functional.php'))
 include(dirname(__FILE__).'/backendTestBrowser.class.php');
 
 $b = new backendTestBrowser();
-$b->initialize();
 
 // partial in a tabular list
 // we add a filters parameter because the action class won't be reloaded after the first time!

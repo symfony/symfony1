@@ -46,7 +46,6 @@ class myTestBrowser extends sfTestBrowser
 }
 
 $b = new myTestBrowser();
-$b->initialize();
 
 // default culture (en)
 $b->

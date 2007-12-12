@@ -18,7 +18,6 @@ if (!include(dirname(__FILE__).'/../bootstrap/functional.php'))
 include(dirname(__FILE__).'/backendTestBrowser.class.php');
 
 $b = new backendTestBrowser();
-$b->initialize();
 
 launch_tests($b);
 

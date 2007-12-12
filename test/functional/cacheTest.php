@@ -270,7 +270,6 @@ class myTestBrowser extends sfTestBrowser
 }
 
 $b = new myTestBrowser();
-$b->initialize();
 
 // non HTML cache
 $image = file_get_contents($sf_symfony_data_dir.'/web/sf/sf_default/images/icons/ok48.png');

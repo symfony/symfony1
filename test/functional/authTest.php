@@ -44,7 +44,6 @@ class sfAuthTestBrowser extends sfTestBrowser
 }
 
 $b = new sfAuthTestBrowser();
-$b->initialize();
 
 // default main page
 $b->
