@@ -12,7 +12,10 @@ require_once(dirname(__FILE__).'/../../../../../../test/bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 require_once(dirname(__FILE__).'/TestObject.php');
 
-sfLoader::loadHelpers(array('Helper', 'Tag', 'Form', 'Object'));
+require_once(dirname(__FILE__).'/../../../lib/helper/HelperHelper.php');
+require_once(dirname(__FILE__).'/../../../lib/helper/TagHelper.php');
+require_once(dirname(__FILE__).'/../../../lib/helper/FormHelper.php');
+require_once(dirname(__FILE__).'/../../../lib/helper/ObjectHelper.php');
 
 $t = new lime_test(10, new lime_output_color());
 

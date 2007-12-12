@@ -39,7 +39,11 @@ $t = new lime_test(81, new lime_output_color());
 
 $context = sfContext::getInstance(array('user' => 'myUser', 'request' => 'myRequest', 'controller' => 'myController'));
 
-sfLoader::loadHelpers(array('Helper', 'Asset', 'Url', 'Tag', 'DateForm'));
+require_once(dirname(__FILE__).'/../../../lib/helper/HelperHelper.php');
+require_once(dirname(__FILE__).'/../../../lib/helper/TagHelper.php');
+require_once(dirname(__FILE__).'/../../../lib/helper/AssetHelper.php');
+require_once(dirname(__FILE__).'/../../../lib/helper/UrlHelper.php');
+require_once(dirname(__FILE__).'/../../../lib/helper/DateFormHelper.php');
 
 // select_day_tag()
 $t->diag('select_day_tag()');

@@ -15,7 +15,7 @@ $t = new lime_test(20, new lime_output_color());
 
 $context = sfContext::getInstance();
 
-sfLoader::loadHelpers(array('Helper', 'Tag'));
+require_once(dirname(__FILE__).'/../../../lib/helper/TagHelper.php');
 
 // tag()
 $t->diag('tag()');

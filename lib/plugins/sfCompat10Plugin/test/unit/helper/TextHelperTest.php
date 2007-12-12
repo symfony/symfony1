@@ -9,8 +9,8 @@
  */
 
 require_once(dirname(__FILE__).'/../../../../../../test/bootstrap/unit.php');
-
-sfLoader::loadHelpers(array('Helper', 'Tag', 'Text'));
+require_once(dirname(__FILE__).'/../../../lib/helper/TagHelper.php');
+require_once(dirname(__FILE__).'/../../../lib/helper/TextHelper.php');
 
 $t = new lime_test(43, new lime_output_color());
 

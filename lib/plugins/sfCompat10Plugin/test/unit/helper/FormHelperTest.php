@@ -51,7 +51,11 @@ $context = sfContext::getInstance(array(
   'response' => 'myResponse',
 ));
 
-sfLoader::loadHelpers(array('Helper', 'Asset', 'Url', 'Tag', 'Form'));
+require_once(dirname(__FILE__).'/../../../lib/helper/HelperHelper.php');
+require_once(dirname(__FILE__).'/../../../lib/helper/UrlHelper.php');
+require_once(dirname(__FILE__).'/../../../lib/helper/TagHelper.php');
+require_once(dirname(__FILE__).'/../../../lib/helper/FormHelper.php');
+require_once(dirname(__FILE__).'/../../../lib/helper/AssetHelper.php');
 
 // options_for_select()
 $t->diag('options_for_select()');

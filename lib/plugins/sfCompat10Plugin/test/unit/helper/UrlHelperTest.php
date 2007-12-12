@@ -23,7 +23,9 @@ $t = new lime_test(24, new lime_output_color());
 
 $context = sfContext::getInstance(array('controller' => 'myController'));
 
-sfLoader::loadHelpers(array('Helper', 'Asset', 'Url', 'Tag'));
+require_once(dirname(__FILE__).'/../../../lib/helper/AssetHelper.php');
+require_once(dirname(__FILE__).'/../../../lib/helper/UrlHelper.php');
+require_once(dirname(__FILE__).'/../../../lib/helper/TagHelper.php');
 
 // url_for()
 $t->diag('url_for()');

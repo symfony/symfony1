@@ -27,7 +27,9 @@ sfConfig::set('sf_charset', 'utf-8');
 
 $context = sfContext::getInstance(array('user' => 'sfUser'));
 
-sfLoader::loadHelpers(array('Helper', 'Asset', 'Url', 'Tag', 'Date'));
+require_once(dirname(__FILE__).'/../../../lib/helper/UrlHelper.php');
+require_once(dirname(__FILE__).'/../../../lib/helper/TagHelper.php');
+require_once(dirname(__FILE__).'/../../../lib/helper/DateHelper.php');
 
 // distance_of_time_in_words()
 $t->diag('distance_of_time_in_words()');
