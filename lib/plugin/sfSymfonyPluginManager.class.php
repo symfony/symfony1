@@ -109,7 +109,7 @@ class sfSymfonyPluginManager extends sfPluginManager
    */
   public function ListenToPluginPostInstall($event)
   {
-    $this->installWebContent($event->getParameter('plugin'));
+    $this->installWebContent($event['plugin']);
   }
 
   /**
@@ -119,7 +119,7 @@ class sfSymfonyPluginManager extends sfPluginManager
    */
   public function ListenToPluginPostUninstall($event)
   {
-    $this->uninstallWebContent($event->getParameter('plugin'));
+    $this->uninstallWebContent($event['plugin']);
   }
 
   /**

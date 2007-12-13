@@ -16,14 +16,14 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfEvent
+class sfEvent implements ArrayAccess
 {
   protected
-    $value           = null,
-    $processed       = false,
-    $subject         = null,
-    $name            = '',
-    $parameterHolder = null;
+    $value      = null,
+    $processed  = false,
+    $subject    = null,
+    $name       = '',
+    $parameters = null;
 
   /**
    * Constructs a new sfEvent.
@@ -37,8 +37,7 @@ class sfEvent
     $this->subject = $subject;
     $this->name = $name;
 
-    $this->parameterHolder = new sfParameterHolder();
-    $this->parameterHolder->add($parameters);
+    $this->parameters = $parameters;
   }
 
   /**
@@ -101,23 +100,53 @@ class sfEvent
     return $this->processed;
   }
 
-  public function getParameterHolder()
+  public function getParameters()
   {
-    return $this->parameterHolder;
+    return $this->parameters;
   }
 
-  public function getParameter($name, $default = null)
+  /**
+   * Returns true if the parameter exists (implements the ArrayAccess interface).
+   *
+   * @param  string  The parameter name
+   *
+   * @return Boolean true if the parameter exists, false otherwise
+   */
+  public function offsetExists($name)
   {
-    return $this->parameterHolder->get($name, $default);
+    return isset($this->parameters[$name]);
   }
 
-  public function hasParameter($name)
+  /**
+   * Returns a parameter value (implements the ArrayAccess interface).
+   *
+   * @param  string The parameter name
+   *
+   * @return mixed  The parameter value
+   */
+  public function offsetGet($name)
   {
-    return $this->parameterHolder->has($name);
+    return isset($this->parameters[$name]) ? $this->parameters[$name] : null;
   }
 
-  public function setParameter($name, $value)
+  /**
+   * Sets a parameter (implements the ArrayAccess interface).
+   *
+   * @param string The parameter name
+   * @param mixed  
+   */
+  public function offsetSet($name, $value)
   {
-    return $this->parameterHolder->set($name, $value);
+    $this->parameters[$name] = $value;
+  }
+
+  /**
+   * Removes a parameter (implements the ArrayAccess interface).
+   *
+   * @param string The parameter name
+   */
+  public function offsetUnset($name)
+  {
+    unset($this->parameters[$name]);
   }
 }

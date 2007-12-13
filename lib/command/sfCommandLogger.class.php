@@ -38,7 +38,7 @@ class sfCommandLogger extends sfConsoleLogger
    */
   public function listenToLogEvent(sfEvent $event)
   {
-    $priority = $event->getParameterHolder()->remove('priority', self::INFO);
+    $priority = isset($event['priority']) ? $event['priority'] : self::INFO;
 
     $prefix = '';
     if ('application.log' == $event->getName())
@@ -49,7 +49,7 @@ class sfCommandLogger extends sfConsoleLogger
       $prefix = '>> '.$subject.' ';
     }
 
-    foreach ($event->getParameterHolder()->getAll() as $message)
+    foreach ($event->getParameters() as $message)
     {
       $this->log(sprintf('%s%s', $prefix, $message), $priority);
     }

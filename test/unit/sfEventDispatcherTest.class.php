@@ -40,9 +40,9 @@ class myEventDispatcherTest
 {
   static public function newMethod(sfEvent $event)
   {
-    if ($event->getParameter('method') == 'newMethod')
+    if ($event['method'] == 'newMethod')
     {
-      $arguments = $event->getParameter('arguments');
+      $arguments = $event['arguments'];
       $event->setReturnValue($arguments[0]);
 
       return true;

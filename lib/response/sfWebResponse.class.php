@@ -708,8 +708,8 @@ class sfWebResponse extends sfResponse
    */
   public function listenToChangeActionEvent(sfEvent $event)
   {
-    $moduleName = $event->getParameter('module');
-    $actionName = $event->getParameter('action');
+    $moduleName = $event['module'];
+    $actionName = $event['action'];
 
     if ($moduleName == sfConfig::get('sf_error_404_module') && $actionName == sfConfig::get('sf_error_404_action'))
     {

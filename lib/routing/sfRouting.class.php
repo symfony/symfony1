@@ -161,7 +161,7 @@ abstract class sfRouting
   public function listenToChangeCultureEvent(sfEvent $event)
   {
     // change the culture in the routing default parameters
-    $this->setDefaultParameter('sf_culture', $event->getParameter('culture'));
+    $this->setDefaultParameter('sf_culture', $event['culture']);
   }
 
   /**
@@ -172,7 +172,7 @@ abstract class sfRouting
    */
   public function listenToLoadParametersInfoEvent(sfEvent $event, $parameters)
   {
-    return array_merge($parameters, $this->parse($event->getParameter('path_info')));
+    return array_merge($parameters, $this->parse($event['path_info']));
   }
 
   /**

@@ -212,14 +212,13 @@ abstract class sfLogger
    * Listens to application.log events.
    *
    * @param sfEvent An sfEvent instance
-   *
    */
   public function listenToLogEvent(sfEvent $event)
   {
-    $priority = $event->getParameterHolder()->remove('priority', self::INFO);
+    $priority = isset($event['priority']) ? $event['priority'] : self::INFO;
     $subject  = $event->getSubject();
     $subject  = is_object($subject) ? get_class($subject) : (is_string($subject) ? $subject : 'main');
-    foreach ($event->getParameterHolder()->getAll() as $message)
+    foreach ($event->getParameters() as $message)
     {
       $this->log(sprintf('{%s} %s', $subject, $message), $priority);
     }
