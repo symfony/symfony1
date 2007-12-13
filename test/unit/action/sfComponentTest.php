@@ -25,24 +25,24 @@ $context = sfContext::getInstance(array(
 
 // ->initialize()
 $t->diag('->initialize()');
-$component = new myComponent($context);
+$component = new myComponent($context, 'module', 'action');
 $t->is($component->getContext(), $context, '->initialize() takes a sfContext object as its first argument');
-$component->initialize($context);
+$component->initialize($context, 'module', 'action');
 $t->is($component->getContext(), $context, '->initialize() takes a sfContext object as its first argument');
 
 // ->getContext()
 $t->diag('->getContext()');
-$component->initialize($context);
+$component->initialize($context, 'module', 'action');
 $t->is($component->getContext(), $context, '->getContext() returns the current context');
 
 // ->getRequest()
 $t->diag('->getRequest()');
-$component->initialize($context);
+$component->initialize($context, 'module', 'action');
 $t->is($component->getRequest(), $context->getRequest(), '->getRequest() returns the current request');
 
 // ->getResponse()
 $t->diag('->getResponse()');
-$component->initialize($context);
+$component->initialize($context, 'module', 'action');
 $t->is($component->getResponse(), $context->getResponse(), '->getResponse() returns the current response');
 
 // __set()
