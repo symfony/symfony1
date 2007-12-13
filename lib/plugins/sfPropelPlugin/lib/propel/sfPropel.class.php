@@ -54,6 +54,6 @@ class sfPropel
    */
   static public function listenToChangeCultureEvent(sfEvent $event)
   {
-    self::setDefaultCulture($event->getParameter('culture'));
+    self::setDefaultCulture($event['culture']);
   }
 }
