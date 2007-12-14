@@ -148,10 +148,17 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           {
             $cache = "    \$cache = null;\n";
           }
+
+          $configuration = '';
+          if (isset($parameters['load_configuration']) && $parameters['load_configuration'])
+          {
+            $configuration = "  \$this->factories['i18n']->loadConfiguration();\n";
+          }
           $instances[] = sprintf("\n  if (sfConfig::get('sf_i18n'))\n  {\n".
                      "    \$class = sfConfig::get('sf_factory_i18n', '%s');\n".
                      "%s".
                      "    \$this->factories['i18n'] = new \$class(\$this, \$cache);\n".
+                     $configuration.
                      "  }\n"
                      , $class, $cache
                      );

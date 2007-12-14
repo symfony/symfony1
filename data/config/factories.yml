@@ -27,6 +27,7 @@ default:
   i18n:
     class: sfI18N
     param:
+      load_configuration: true
       cache:
         class: sfFileCache
         param:

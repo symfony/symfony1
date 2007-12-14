@@ -45,10 +45,16 @@ class sfI18N
     $this->context = $context;
     $this->cache   = $cache;
 
-    include(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/i18n.yml'));
-
     $context->getEventDispatcher()->connect('user.change_culture', array($this, 'listenToChangeCultureEvent'));
     $context->getEventDispatcher()->connect('controller.change_action', array($this, 'listenToChangeActionEvent'));
+  }
+
+  /**
+   * Loads i18n configuration.
+   */
+  public function loadConfiguration()
+  {
+    include(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/i18n.yml'));
   }
 
   /**
