@@ -63,7 +63,7 @@ $c->initialize($t);
 
 $t->is($c->execute_command('-T'), $c->execute_command(''), '"symfony" is an alias for "symfony -T"');
 
-// sfPakeGenerator
+// generate:*
 $content = $c->execute_command('generate:project myproject');
 $t->ok(file_exists($c->tmp_dir.DS.'symfony'), '"generate:project" installs the symfony CLI in root project directory');
 
@@ -73,7 +73,7 @@ $t->ok(is_dir($c->tmp_dir.DS.'apps'.DS.'frontend'), '"generate:app" creates a "f
 $content = $c->execute_command('generate:module frontend foo');
 $t->ok(is_dir($c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'modules'.DS.'foo'), '"generate:module" creates a "foo" directory under "modules" directory');
 
-// sfPakePropel
+// propel:*
 copy(dirname(__FILE__).'/fixtures/propel/schema.yml', $c->tmp_dir.DS.'config'.DS.'schema.yml');
 
 $content = $c->execute_command('propel:build-sql');
@@ -82,18 +82,16 @@ $t->ok(file_exists($c->tmp_dir.DS.'data'.DS.'sql'.DS.'lib.model.schema.sql'), '"
 $content = $c->execute_command('propel:build-model');
 $t->ok(file_exists($c->tmp_dir.DS.'lib'.DS.'model'.DS.'Article.php'), '"propel:build-model" creates model classes under "lib/model" directory');
 
-// sfPakePropelCrudGenerator
 $content = $c->execute_command('propel:init-crud frontend articleInitCrud Article');
 $t->ok(file_exists($c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'modules'.DS.'articleInitCrud'.DS.'config'.DS.'generator.yml'), '"propel:init-crud" initializes a CRUD module');
 
 $content = $c->execute_command('propel:generate-crud frontend articleGenCrud Article');
 $t->ok(is_dir($c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'modules'.DS.'articleGenCrud'), '"propel:generate-crud" generates a CRUD module');
 
-// sfPakePropelAdminGenerator
 $content = $c->execute_command('propel:init-admin frontend articleInitAdmin Article');
 $t->ok(file_exists($c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'modules'.DS.'articleInitAdmin'.DS.'config'.DS.'generator.yml'), '"propel:init-admin" initializes an admin generator module');
 
-// sfPakeTest
+// test:*
 $content = $c->execute_command('test:functional frontend articleInitCrudActions');
 $t->is($content, str_replace("\r\n", "\n", file_get_contents(dirname(__FILE__).'/fixtures/test/functional/result.txt')), '"test:functional" can launch a particular functional test');
 
