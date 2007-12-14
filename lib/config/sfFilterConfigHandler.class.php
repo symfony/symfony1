@@ -163,8 +163,8 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
   protected function addFilter($category, $class, $parameters)
   {
     return sprintf("\nlist(\$class, \$parameters) = (array) sfConfig::get('sf_%s_filter', array('%s', %s));\n".
-                      "\$filter = new \$class(\$this->context, \$parameters);\n".
-                      "\$filterChain->register(\$filter);",
+                      "\$filter = new \$class(sfContext::getInstance(), \$parameters);\n".
+                      "\$this->register(\$filter);",
                       $category, $class, $parameters);
   }
 
