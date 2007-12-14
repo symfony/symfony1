@@ -269,3 +269,48 @@ sfValidator class
 If you use the symfony 1.0 interface for validation, your custom validators must
 now extend the `sfValidatorBase` class.
 
+`->initialize()` methods
+------------------------
+
+Most symfony core classes are initialized thanks to a `->initialize()` method. As of symfony 1.1,
+this method is automatically called by `__construct()`, so, there is no need to call it by yourself.
+
+Configuration files loading
+---------------------------
+
+Some core classes can be configured with a `.yml` file:
+
+|| '''Class'''          || '''Configuration file'''         ||
+||                      ||                                  ||
+|| `sfAction`           || `security.yml`                   ||
+|| `sfAutoload`         || `autoload.yml`                   ||
+|| `sfConfigCache`      || `config_handlers.yml`            ||
+|| `sfContext`          || `factories.yml`                  ||
+|| `sfController`       || `generator.yml` and `module.yml` ||
+|| `sfDatabaseManager`  || `databases.yml`                  ||
+|| `sfFilterChain`      || `filters.yml`                    ||
+|| `sfI18N`             || `i18n.yml`                       ||
+|| `sfPatternRouting`   || `routing.yml`                    ||
+|| `sfPHPView`          || `view.yml`                       ||
+|| `sfViewCacheManager` || `cache.yml`                      ||
+
+In symfony 1.1, the loading of the configuration file for ''independant'' sub-frameworks has been
+moved to a `loadConfiguration()` method to ease decoupling and reuse them without needing the whole framework:
+
+  * `sfDatabaseManager`
+  * `sfI18N`
+  * `sfPatternRouting`
+
+So, for example, if you need a database manager in your batch script, you will have to change from:
+
+    [php]
+    $databaseManager = new sfDatabaseManager();
+    $databaseManager->initialize();
+
+to:
+
+    [php]
+    $databaseManager = new sfDatabaseManager();
+    $databaseManager->loadConfiguration();
+
+The `initialize()` call is not needed anymore (see the point above).
