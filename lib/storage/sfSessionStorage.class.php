@@ -25,6 +25,9 @@
  */
 class sfSessionStorage extends sfStorage
 {
+  static protected
+    $sessionStarted = false;
+
   /**
    * Initializes this Storage instance.
    *
@@ -67,10 +70,10 @@ class sfSessionStorage extends sfStorage
       session_set_cookie_params($lifetime, $path, $domain, $secure);
     }
 
-    if ($this->getParameter('auto_start', true))
+    if ($this->getParameter('auto_start', true) && !self::$sessionStarted)
     {
-      // start our session
       session_start();
+      self::$sessionStarted = true;
     }
   }
 
