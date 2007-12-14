@@ -246,8 +246,7 @@ abstract class sfController
 
       // create a new filter chain
       $filterChain = new sfFilterChain();
-
-      require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/filters.yml'));
+      $filterChain->loadConfiguration($actionInstance);
 
       $this->context->getEventDispatcher()->notify(new sfEvent($this, 'controller.change_action', array('module' => $moduleName, 'action' => $actionName)));
 

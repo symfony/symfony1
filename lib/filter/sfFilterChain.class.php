@@ -25,6 +25,16 @@ class sfFilterChain
     $index = -1;
 
   /**
+   * Loads filters configuration for a given action instance.
+   *
+   * @param sfComponent A sfComponent instance
+   */
+  public function loadConfiguration($actionInstance)
+  {
+    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$actionInstance->getModuleName().'/'.sfConfig::get('sf_app_module_config_dir_name').'/filters.yml'));
+  }
+
+  /**
    * Executes the next filter in this chain.
    */
   public function execute()
