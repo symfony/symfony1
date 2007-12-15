@@ -79,6 +79,8 @@ class sfException extends Exception
    */
   protected function outputStackTrace()
   {
+    $exception = is_null($this->wrappedException) ? $this : $this->wrappedException;
+
     if (class_exists('sfContext', false) && sfContext::hasInstance())
     {
       $dispatcher = sfContext::getInstance()->getEventDispatcher();
@@ -88,7 +90,7 @@ class sfException extends Exception
         $dispatcher->notify(new sfEvent($this, 'application.log', array($this->getMessage(), 'priority' => sfLogger::ERR)));
       }
 
-      $event = $dispatcher->notifyUntil(new sfEvent($this, 'application.throw_exception', array('exception' => $this)));
+      $event = $dispatcher->notifyUntil(new sfEvent($this, 'application.throw_exception', array('exception' => $exception)));
       if ($event->isProcessed())
       {
         return;
@@ -108,7 +110,7 @@ class sfException extends Exception
     $message = null !== $this->getMessage() ? $this->getMessage() : 'n/a';
     $name    = get_class($this);
     $format  = 0 == strncasecmp(PHP_SAPI, 'cli', 3) ? 'plain' : 'html';
-    $traces  = self::getTraces(is_null($this->wrappedException) ? $this : $this->wrappedException, $format);
+    $traces  = self::getTraces($exception, $format);
 
     // dump main objects values
     $sf_settings = '';
