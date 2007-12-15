@@ -797,7 +797,7 @@ class sfWebRequest extends sfRequest
 
     try
     {
-      $parameters = $this->dispatcher->filter(new sfEvent($this, 'request.load_parameters', array('path_info' => $this->getPathInfo())), $parameters)->getReturnValue();
+      $parameters = $this->dispatcher->filter(new sfEvent($this, 'request.filter_parameters', array('path_info' => $this->getPathInfo())), $parameters)->getReturnValue();
     }
     catch (sfError404Exception $e)
     {

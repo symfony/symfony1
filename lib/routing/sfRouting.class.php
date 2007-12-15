@@ -66,7 +66,7 @@ abstract class sfRouting
     $this->parameterHolder->add($parameters);
 
     $this->dispatcher->connect('user.change_culture', array($this, 'listenToChangeCultureEvent'));
-    $this->dispatcher->connect('request.load_parameters', array($this, 'listenToLoadParametersInfoEvent'));
+    $this->dispatcher->connect('request.filter_parameters', array($this, 'filterParametersEvent'));
   }
 
   /**
@@ -165,12 +165,12 @@ abstract class sfRouting
   }
 
   /**
-   * Listens to the request.load_parameters event.
+   * Listens to the request.filter_parameters event.
    *
    * @param sfEvent An sfEvent instance
    *
    */
-  public function listenToLoadParametersInfoEvent(sfEvent $event, $parameters)
+  public function filterParametersEvent(sfEvent $event, $parameters)
   {
     return array_merge($parameters, $this->parse($event['path_info']));
   }
