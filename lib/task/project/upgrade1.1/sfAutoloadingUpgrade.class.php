@@ -42,7 +42,7 @@ class sfAutoloadingUpgrade extends sfUpgrade
 
 if (sfConfig::get('sf_debug'))
 {
-  spl_autoload_register(array('sfAutoload::getInstance()', 'autoloadAgain'));
+  spl_autoload_register(array(sfAutoload::getInstance(), 'autoloadAgain'));
 }
 EOF;
 
