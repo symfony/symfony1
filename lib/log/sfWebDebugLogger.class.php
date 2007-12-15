@@ -20,7 +20,7 @@ class sfWebDebugLogger extends sfLogger
 {
   protected
     $context       = null,
-    $buffer        = array(),
+    $dispatcher    = null,
     $webDebug      = null,
     $xdebugLogging = false;
 
@@ -34,13 +34,11 @@ class sfWebDebugLogger extends sfLogger
    */
   public function initialize(sfEventDispatcher $dispatcher, $options = array())
   {
-    if (!sfConfig::get('sf_web_debug'))
-    {
-      return;
-    }
+    $this->webDebug   = new sfWebDebug();
+    $this->context    = sfContext::getInstance();
+    $this->dispatcher = $dispatcher;
 
-    $this->buffer  = array();
-    $this->context = sfContext::getInstance();
+    $dispatcher->connect('response.filter_content', array($this, 'filterResponseContent'));
 
     if (isset($options['xdebug_logging']))
     {
@@ -51,6 +49,67 @@ class sfWebDebugLogger extends sfLogger
   }
 
   /**
+   * Listens to the response.filter_content event.
+   *
+   * @param  sfEvent The sfEvent instance
+   * @param  string  The response content
+   *
+   * @return string  The filtered response content
+   */
+  public function filterResponseContent(sfEvent $event, $content)
+  {
+    if (!sfConfig::get('sf_web_debug'))
+    {
+      return $content;
+    }
+
+    // log timers information
+    $messages = array();
+    foreach (sfTimerManager::getTimers() as $name => $timer)
+    {
+      $messages[] = sprintf('%s %.2f ms (%d)', $name, $timer->getElapsedTime() * 1000, $timer->getCalls());
+    }
+    $this->dispatcher->notify(new sfEvent($this, 'application.log', $messages));
+
+    // don't add debug toolbar:
+    // * for XHR requests
+    // * if 304
+    // * if not rendering to the client
+    // * if HTTP headers only
+    $response = $event->getSubject();
+    if (
+      $this->context->getRequest()->isXmlHttpRequest() ||
+      strpos($response->getContentType(), 'html') === false ||
+      $response->getStatusCode() == 304 ||
+      $this->context->getController()->getRenderMode() != sfView::RENDER_CLIENT ||
+      $response->isHeaderOnly()
+    )
+    {
+      return $content;
+    }
+
+    // add needed assets for the web debug toolbar
+    $assets = sprintf('
+      <script type="text/javascript" src="%s"></script>
+      <link rel="stylesheet" type="text/css" media="screen" href="%s" />',
+      sfConfig::get('sf_web_debug_web_dir').'/js/main.js',
+      sfConfig::get('sf_web_debug_web_dir').'/css/main.css'
+    );
+    $content = str_ireplace('</head>', $assets.'</head>', $content);
+
+    // add web debug information to response content
+    $webDebugContent = $this->webDebug->getResults();
+    $count = 0;
+    $content = str_ireplace('</body>', $webDebugContent.'</body>', $content, $count);
+    if (!$count)
+    {
+      $content .= $webDebugContent;
+    }
+
+    return $content;
+  }
+
+  /**
    * Logs a message.
    *
    * @param string Message
@@ -58,11 +117,6 @@ class sfWebDebugLogger extends sfLogger
    */
   protected function doLog($message, $priority)
   {
-    if (!sfConfig::get('sf_web_debug'))
-    {
-      return;
-    }
-
     // if we have xdebug and dev has not disabled the feature, add some stack information
     $debugStack = array();
     if (function_exists('xdebug_get_function_stack') && $this->xdebugLogging)
@@ -77,9 +131,9 @@ class sfWebDebugLogger extends sfLogger
           $tmp = '';
           if (isset($stack['function']))
           {
-            $tmp .= 'in "'.$stack['function'].'" ';
+            $tmp .= sprintf('in "%s" ', $stack['function']);
           }
-          $tmp .= 'from "'.$stack['file'].'" line '.$stack['line'];
+          $tmp .= sprintf('from "%s" line %s', $stack['file'], $stack['line']);
           $debugStack[] = $tmp;
         }
       }
@@ -93,32 +147,13 @@ class sfWebDebugLogger extends sfLogger
       $message = $matches[2];
     }
 
-    // build the object containing the complete log information
-    $logEntry = array(
+    // send the log object containing the complete log information
+    $this->webDebug->log(array(
       'priority'   => $priority,
       'time'       => time(),
       'message'    => $message,
       'type'       => $type,
       'debugStack' => $debugStack,
-    );
-
-    // send the log object
-    if (is_null($this->webDebug))
-    {
-      $this->buffer[] = $logEntry;
-
-      if ($this->context->has('sf_web_debug'))
-      {
-        $this->webDebug = $this->context->get('sf_web_debug');
-        while ($buffer = array_shift($this->buffer))
-        {
-          $this->webDebug->log($buffer);
-        }
-      }
-    }
-    else
-    {
-      $this->webDebug->log($logEntry);
-    }
+    ));
   }
 }

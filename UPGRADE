@@ -57,7 +57,7 @@ Flash attributes are now managed directly by `sfUser`. New usage:
     <?php echo $sf_user->getFlash('notice') ?>
   <?php endif; ?>
 
-The flash entry in `filters.yml` must be removed too as the `sfFlashFilter`
+The `flash` entry in `filters.yml` must be removed too as the `sfFlashFilter`
 was removed.
 
 The `project:upgrade1.1` task makes all those changes for you.
@@ -314,3 +314,11 @@ to:
     $databaseManager->loadConfiguration();
 
 The `initialize()` call is not needed anymore (see the point above).
+
+Web Debug
+---------
+
+The `web_debug` entry in `filters.yml` must be removed as the `sfWebDebugFilter`
+has been removed. The web debug toolbar is now injected in the response thanks to a listener.
+
+The `project:upgrade1.1` task makes all those changes for you.

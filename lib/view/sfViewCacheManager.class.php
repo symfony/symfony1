@@ -559,7 +559,7 @@ class sfViewCacheManager
 
     if (sfConfig::get('sf_web_debug'))
     {
-      $content = $this->context->get('sf_web_debug')->decorateContentWithDebug($uri, $content, false);
+      $content = sfWebDebug::decorateContentWithDebug($uri, $content, false);
     }
 
     return array($content, $cache['attributeHolder'], $cache['decoratorTemplate']);
@@ -585,7 +585,7 @@ class sfViewCacheManager
 
     if ($saved && sfConfig::get('sf_web_debug'))
     {
-      $content = $this->context->get('sf_web_debug')->decorateContentWithDebug($uri, $content, true);
+      $content = sfWebDebug::decorateContentWithDebug($uri, $content, true);
     }
 
     return $content;
@@ -608,7 +608,7 @@ class sfViewCacheManager
 
     if ($saved && sfConfig::get('sf_web_debug'))
     {
-      $content = $this->context->get('sf_web_debug')->decorateContentWithDebug($uri, $this->context->getResponse()->getContent(), true);
+      $content = sfWebDebug::decorateContentWithDebug($uri, $this->context->getResponse()->getContent(), true);
       $this->context->getResponse()->setContent($content);
     }
   }
@@ -642,7 +642,7 @@ class sfViewCacheManager
 
       if (sfConfig::get('sf_web_debug'))
       {
-        $content = $this->context->get('sf_web_debug')->decorateContentWithDebug($uri, $this->context->getResponse()->getContent(), false);
+        $content = sfWebDebug::decorateContentWithDebug($uri, $this->context->getResponse()->getContent(), false);
         $this->context->getResponse()->setContent($content);
       }
     }

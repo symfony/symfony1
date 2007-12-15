@@ -42,17 +42,5 @@ class sfRenderingFilter extends sfFilter
 
     // send headers + content
     $response->send();
-
-    // log timers information
-    if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
-    {
-      $messages = array();
-      foreach (sfTimerManager::getTimers() as $name => $timer)
-      {
-        $messages[] = sprintf('%s %.2f ms (%d)', $name, $timer->getElapsedTime() * 1000, $timer->getCalls());
-      }
-
-      $this->context->getEventDispatcher()->notify(new sfEvent($this, 'application.log', $messages));
-    }
   }
 }

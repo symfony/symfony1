@@ -20,32 +20,9 @@ class sfWebDebug
 {
   protected
     $log         = array(),
-    $shortLog    = array(),
     $maxPriority = 1000,
     $types       = array(),
     $lastTimeLog = -1;
-
-  /**
-   * Registers javascripts and stylesheets needed for the web debug toolbar.
-   */
-  public function registerAssets()
-  {
-    $response = sfContext::getInstance()->getResponse();
-
-    // register our css and js
-    $response->addJavascript(sfConfig::get('sf_web_debug_web_dir').'/js/main');
-    $response->addStylesheet(sfConfig::get('sf_web_debug_web_dir').'/css/main');
-  }
-
-  /**
-   * Logs a short message to be displayed in the web debug toolbar.
-   *
-   * @param string The message string
-   */
-  public function logShortMessage($message)
-  {
-    $this->shortLog[] = $message;
-  }
 
   /**
    * Logs a message to the web debug toolbar.
@@ -273,18 +250,11 @@ class sfWebDebug
     }
     $timeInfoDetails .= '</table>';
 
-    // short log messages
-    $shortMessages = '';
-    if ($this->shortLog)
-    {
-      $shortMessages = '<ul id="sfWebDebugShortMessages"><li>&raquo;&nbsp;'.implode('</li><li>&raquo&nbsp;', $this->shortLog).'</li></ul>';
-    }
-
     // logs
     $logInfo = '';
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $logInfo .= $shortMessages.'
+      $logInfo .= '
         <ul id="sfWebDebugLogMenu">
           <li><a href="#" onclick="sfWebDebugToggleAllLogLines(true, \'sfWebDebugLogLine\'); return false;">[all]</a></li>
           <li><a href="#" onclick="sfWebDebugToggleAllLogLines(false, \'sfWebDebugLogLine\'); return false;">[none]</a></li>
@@ -388,7 +358,7 @@ class sfWebDebug
    *
    * @return string The decorated HTML string
    */
-  public function decorateContentWithDebug($internalUri, $content, $new = false)
+  static public function decorateContentWithDebug($internalUri, $content, $new = false)
   {
     $context = sfContext::getInstance();
 
@@ -399,7 +369,7 @@ class sfWebDebug
     }
 
     $cache = $context->getViewCacheManager();
-    $this->loadHelpers();
+    sfLoader::loadHelpers(array('Helper', 'Url', 'Asset', 'Tag'));
 
     $bgColor      = $new ? '#9ff' : '#ff9';
     $lastModified = $cache->getLastModified($internalUri);

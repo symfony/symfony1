@@ -400,7 +400,7 @@ class sfLoader
         $included = false;
         if (is_readable($dir.'/'.$fileName))
         {
-          include($dir.'/'.$fileName);
+          include_once($dir.'/'.$fileName);
           $included = true;
           break;
         }
@@ -409,7 +409,7 @@ class sfLoader
       if (!$included)
       {
         // search in the include path
-        if ((@include('helper/'.$fileName)) != 1)
+        if ((@include_once('helper/'.$fileName)) != 1)
         {
           $dirs = array_merge($dirs, explode(PATH_SEPARATOR, get_include_path()));
 

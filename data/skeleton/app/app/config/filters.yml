@@ -1,6 +1,4 @@
 rendering: ~
-
-web_debug: ~
 security:  ~
 
 # insert your own filters here

@@ -4,11 +4,6 @@ rendering:
   param:
     type: rendering
 
-web_debug:
-  class: sfWebDebugFilter
-  param:
-    condition: %SF_WEB_DEBUG%
-
 # security filter must have a type of security
 security:
   class: sfBasicSecurityFilter
