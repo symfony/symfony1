@@ -57,7 +57,7 @@ class symfony_cmd
   }
 }
 
-$t = new lime_test(33, new lime_output_color());
+$t = new lime_test(35, new lime_output_color());
 $c = new symfony_cmd();
 $c->initialize($t);
 
@@ -73,14 +73,21 @@ $t->ok(is_dir($c->tmp_dir.DS.'apps'.DS.'frontend'), '"generate:app" creates a "f
 $content = $c->execute_command('generate:module frontend foo');
 $t->ok(is_dir($c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'modules'.DS.'foo'), '"generate:module" creates a "foo" directory under "modules" directory');
 
-// propel:*
 copy(dirname(__FILE__).'/fixtures/propel/schema.yml', $c->tmp_dir.DS.'config'.DS.'schema.yml');
+copy(dirname(__FILE__).'/fixtures/propel/databases.yml', $c->tmp_dir.DS.'config'.DS.'databases.yml');
+copy(dirname(__FILE__).'/fixtures/propel/propel.ini', $c->tmp_dir.DS.'config'.DS.'propel.ini');
 
+// propel:*
 $content = $c->execute_command('propel:build-sql');
 $t->ok(file_exists($c->tmp_dir.DS.'data'.DS.'sql'.DS.'lib.model.schema.sql'), '"propel:build-sql" creates a "schema.sql" file under "data/sql" directory');
 
 $content = $c->execute_command('propel:build-model');
 $t->ok(file_exists($c->tmp_dir.DS.'lib'.DS.'model'.DS.'Article.php'), '"propel:build-model" creates model classes under "lib/model" directory');
+
+$c->execute_command('propel:insert-sql');
+$file = dirname(__FILE__).DS.'..'.DS.'..'.DS.'lib'.DS.'plugins'.DS.'sfPropelPlugin'.DS.'lib'.DS.'vendor'.DS.'propel-generator'.DS.'database.sqlite';
+$t->ok(file_exists($file), '"propel:insert-sql" creates tables in the database');
+rename($file, $c->tmp_dir.'/data/database.sqlite');
 
 $content = $c->execute_command('propel:init-crud frontend articleInitCrud Article');
 $t->ok(file_exists($c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'modules'.DS.'articleInitCrud'.DS.'config'.DS.'generator.yml'), '"propel:init-crud" initializes a CRUD module');

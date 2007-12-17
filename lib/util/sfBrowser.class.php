@@ -518,7 +518,7 @@ class sfBrowser
     $_SERVER['session_id'] = md5(uniqid(rand(), true));
   }
 
-  public function listenToException($event)
+  public function listenToException(sfEvent $event)
   {
     $this->currentException = $event->getSubject();
   }

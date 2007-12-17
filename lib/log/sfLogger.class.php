@@ -216,6 +216,7 @@ abstract class sfLogger
   public function listenToLogEvent(sfEvent $event)
   {
     $priority = isset($event['priority']) ? $event['priority'] : self::INFO;
+    unset($event['priority']);
     $subject  = $event->getSubject();
     $subject  = is_object($subject) ? get_class($subject) : (is_string($subject) ? $subject : 'main');
     foreach ($event->getParameters() as $message)

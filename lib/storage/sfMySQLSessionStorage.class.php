@@ -135,7 +135,7 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
    *
    * @throws <b>sfDatabaseException</b> If the session data cannot be written
    */
-  public function sessionWrite($id, &$data)
+  public function sessionWrite($id, $data)
   {
     // get table/column
     $db_table    = $this->getParameter('db_table');

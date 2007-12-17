@@ -23,6 +23,10 @@ class sfError404Exception extends sfException
    */
   public function printStackTrace()
   {
+    // log all exceptions in php log
+    $exception = is_null($this->wrappedException) ? $this : $this->wrappedException;
+    error_log($exception->getMessage());
+
     if (sfConfig::get('sf_debug'))
     {
       sfContext::getInstance()->getResponse()->setStatusCode(404);
@@ -31,6 +35,12 @@ class sfError404Exception extends sfException
     }
     else
     {
+      // log all exceptions in php log
+      if (!sfConfig::get('sf_test'))
+      {
+        error_log($this->getMessage());
+      }
+
       sfContext::getInstance()->getController()->forward(sfConfig::get('sf_error_404_module'), sfConfig::get('sf_error_404_action'));
     }
   }

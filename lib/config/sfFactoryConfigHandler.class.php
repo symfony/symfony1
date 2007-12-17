@@ -116,6 +116,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           if (is_subclass_of($class, 'sfDatabaseSessionStorage'))
           {
             $defaultParameters[] = sprintf("'database' => \$this->getDatabaseManager()->getDatabase('%s'),", isset($parameters['database']) ? $parameters['database'] : 'default');
+            unset($parameters['database']);
           }
 
           $instances[] = sprintf("  \$class = sfConfig::get('sf_factory_storage', '%s');\n  \$this->factories['storage'] = new \$class(array_merge(array(\n%s\n), sfConfig::get('sf_factory_storage_parameters', %s)));", $class, implode("\n", $defaultParameters), var_export($parameters, true));

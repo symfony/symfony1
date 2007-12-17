@@ -40,7 +40,12 @@ class sfException extends Exception
     return $exception;
   }
 
-  public function setWrappedException($e)
+  /**
+   * Changes the wrapped exception.
+   *
+   * @param Exception An Exception instance
+   */
+  public function setWrappedException(Exception $e)
   {
     $this->wrappedException = $e;
   }
@@ -50,8 +55,13 @@ class sfException extends Exception
    */
   public function printStackTrace()
   {
+    $exception = is_null($this->wrappedException) ? $this : $this->wrappedException;
+
     if (!sfConfig::get('sf_test'))
     {
+      // log all exceptions in php log
+      error_log($exception->getMessage());
+
       // clean current output buffer
       while (@ob_end_clean());
 
@@ -62,7 +72,7 @@ class sfException extends Exception
 
     try
     {
-      $this->outputStackTrace();
+      $this->outputStackTrace($exception);
     }
     catch (Exception $e)
     {
@@ -77,20 +87,18 @@ class sfException extends Exception
   /**
    * Gets the stack trace for this exception.
    */
-  protected function outputStackTrace()
+  static protected function outputStackTrace($exception)
   {
-    $exception = is_null($this->wrappedException) ? $this : $this->wrappedException;
-
     if (class_exists('sfContext', false) && sfContext::hasInstance())
     {
       $dispatcher = sfContext::getInstance()->getEventDispatcher();
 
       if (sfConfig::get('sf_logging_enabled'))
       {
-        $dispatcher->notify(new sfEvent($this, 'application.log', array($this->getMessage(), 'priority' => sfLogger::ERR)));
+        $dispatcher->notify(new sfEvent($exception, 'application.log', array($exception->getMessage(), 'priority' => sfLogger::ERR)));
       }
 
-      $event = $dispatcher->notifyUntil(new sfEvent($this, 'application.throw_exception', array('exception' => $exception)));
+      $event = $dispatcher->notifyUntil(new sfEvent($exception, 'application.throw_exception'));
       if ($event->isProcessed())
       {
         return;
@@ -107,8 +115,8 @@ class sfException extends Exception
       return;
     }
 
-    $message = null !== $this->getMessage() ? $this->getMessage() : 'n/a';
-    $name    = get_class($this);
+    $message = null !== $exception->getMessage() ? $exception->getMessage() : 'n/a';
+    $name    = get_class($exception);
     $format  = 0 == strncasecmp(PHP_SAPI, 'cli', 3) ? 'plain' : 'html';
     $traces  = self::getTraces($exception, $format);
 

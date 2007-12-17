@@ -64,9 +64,9 @@ abstract class sfAction extends sfComponent
    * @throws sfError404Exception
    *
    */
-  public function forward404($message = '')
+  public function forward404($message = null)
   {
-    throw new sfError404Exception($message);
+    throw new sfError404Exception($this->get404Message($message));
   }
 
   /**
@@ -77,11 +77,11 @@ abstract class sfAction extends sfComponent
    *
    * @throws sfError404Exception
    */
-  public function forward404Unless($condition, $message = '')
+  public function forward404Unless($condition, $message = null)
   {
     if (!$condition)
     {
-      throw new sfError404Exception($message);
+      throw new sfError404Exception($this->get404Message($message));
     }
   }
 
@@ -93,11 +93,11 @@ abstract class sfAction extends sfComponent
    *
    * @throws sfError404Exception
    */
-  public function forward404If($condition, $message = '')
+  public function forward404If($condition, $message = null)
   {
     if ($condition)
     {
-      throw new sfError404Exception($message);
+      throw new sfError404Exception($this->get404Message($message));
     }
   }
 
@@ -509,5 +509,17 @@ abstract class sfAction extends sfComponent
   public function setViewClass($class)
   {
     sfConfig::set('mod_'.strtolower($this->getModuleName()).'_view_class', $class);
+  }
+
+  /**
+   * Returns a formatted message for a 404 error.
+   *
+   * @param  string An error message (null by default)
+   *
+   * @return string The error message or a default one if null
+   */
+  protected function get404Message($message = null)
+  {
+    return is_null($message) ? sprintf('This request has been forwarded to a 404 error page by the action "%s/%s".', $this->getModuleName(), $this->getActionName()) : $message;
   }
 }

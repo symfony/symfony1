@@ -39,6 +39,7 @@ class sfCommandLogger extends sfConsoleLogger
   public function listenToLogEvent(sfEvent $event)
   {
     $priority = isset($event['priority']) ? $event['priority'] : self::INFO;
+    unset($event['priority']);
 
     $prefix = '';
     if ('application.log' == $event->getName())
