@@ -1,0 +1,408 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/2000/REC-xhtml1-200000126/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>symfony admin generator reference card</title>
+<link rel="stylesheet" type="text/css" href="refcard.css" />
+<style>
+body
+{
+  width: 1275px;
+}
+
+pre
+{
+  font-size: 10px;
+}
+.subcol
+{
+  width: 420px;
+}
+h1
+{
+  background-color: #673A00;
+}
+.subcol h2
+{
+  background-color: #747A89;
+}
+.subcol h3
+{
+  background-color: #C6CDDE;
+  color: #000;
+}
+body
+{
+  background-color: #fff;
+}
+</style>
+</head>
+<body>
+
+<h1>&raquo;&nbsp;symfony admin generator reference card 1.0&nbsp;&laquo;</h1>
+
+
+<div class="col">
+<!-- column start -->
+
+
+<div class="subcol">
+<h2>Command Line</h2>
+<div class="content">
+
+  <h3>Options in this order: &lt;APP&gt; &lt;MODULE&gt; &lt;OBJECT&gt;</h3>
+  <span class="method">$ symfony propel-init-admin backend post Post</span><br /> 
+  <span class="method">$ symfony propel-init-admin backend comment Comment</span><br />
+
+</div>
+</div>
+
+
+<div class="subcol">
+<h2>Generated code (can be overridden per module)</h2>
+<div class="content">
+  
+  accessible in cache/backend/&lt;ENV&gt;/modules/&lt;MODULE&gt;
+  <div style="float:left;width:59%;margin-right:2%;">
+    <h3>Actions</h3>
+    <span class="method">create -> edit</span><br /> 
+    <span class="method">delete</span><br /> 
+    <span class="method">edit</span><br /> 
+    <span class="method">index -> list</span><br /> 
+    <span class="method">list</span><br /> 
+    <span class="method">save -> edit</span><br /> 
+    <h3>Methods</h3>
+    <span class="method">public handleErrorEdit()</span><br /> 
+    <span class="method">protected save&lt;OBJECT&gt;()</span><br /> 
+    <span class="method">protected delete&lt;OBJECT&gt;()</span><br /> 
+    <span class="method">protected update&lt;OBJECT&gt;FromRequest()</span><br /> 
+    <span class="method">protected get&lt;OBJECT&gt;OrCreate()</span><br /> 
+    <span class="method">protected processFilters()</span><br /> 
+    <span class="method">protected processSort()</span><br /> 
+    <span class="method">protected addFiltersCriteria()</span><br /> 
+    <span class="method">protected addSortCriteria()</span><br /> 
+  </div>
+  <div style="float:left;width:39%">
+    <h3>Templates</h3>
+    <span class="method">_edit_actions.php   </span><br />                                
+    <span class="method">_edit_footer.php    </span><br />                              
+    <span class="method">_edit_header.php    </span><br />                              
+    <span class="method">_filters.php        </span><br />                              
+    <span class="method">_list_actions.php   </span><br />                              
+    <span class="method">_list_footer.php    </span><br />                              
+    <span class="method">_list_header.php    </span><br />                              
+    <span class="method">_list_td_actions.php</span><br />                              
+    <span class="method">_list_td_stacked.php</span><br />                              
+    <span class="method">_list_td_tabular.php</span><br />                              
+    <span class="method">_list_th_tabular.php</span><br />                              
+    <span class="method">_list_th_stacked.php</span><br />                              
+    <span class="method">editSuccess.php     </span><br />                              
+    <span class="method">listSuccess.php     </span><br /> 
+  </div>
+  <br style="clear:both" />
+    
+</div>
+</div>
+
+<div class="subcol">
+<h2>generator.yml</h2>
+<div class="content">
+
+<pre>
+generator:
+  class:              sfPropelAdminGenerator
+  param:
+    model_class:      Post
+    theme:            default
+
+    fields:
+      author_id:      { name: Post author }
+    
+    list:
+      title:          symfony blog posts
+      display:        [title, author_id, category_id]
+      fields:
+        published_on: { params: date_format='dd/MM/yy' }
+      layout:         stacked
+      params: |
+        %%is_published%%&lt;strong&gt;%%=title%%&lt;/strong&gt;&lt;br /&gt;
+        &lt;em&gt;by %%author%% in %%category%% 
+        (%%published_on%%)&lt;/em&gt;&lt;p&gt;%%content_summary%%&lt;/p&gt;
+      filters:        [title, category_id, is_published]
+      max_per_page:   2
+      
+    edit:
+      title:          Editing post "%%title%%"
+      display:
+        "Post":       [title, category_id, content]
+        "Workflow":   [author_id, is_published, created_on]
+      fields:
+        category_id:  { params: disabled=true }
+        content:
+          params:     rich=true tinymce_options=height:150
+        author_id:
+          params:     size=5 include_custom=Choose an author
+        is_published: { credentials: [[admin, superdamin]] }
+        created_on:   { type: plain, params: date_format='dd/MM' }
+</pre>
+
+</div>
+</div>
+
+<div class="subcol">
+<h2>Validation & Repopulation</h2>
+<div class="content">
+
+<div style="float:right;">apps/backend/modules/post/validate/edit.yml</div>
+<pre>
+methods:
+    post:
+      - "post{title}"
+      - "post{body}"
+names:
+  post{title}:
+    required:     Yes
+    required_msg: You must provide a title
+  post{body}:
+    required:     No
+    validators:   [antiSpamValidator, MyStringValidator]
+fillin:
+  activate:       on
+</pre>
+</div>
+
+</div>
+
+<!-- column end -->
+</div>
+
+
+<div class="col">
+<!-- column start -->
+
+<div class="subcol">
+<h2>Presentation</h2>
+<div class="content">
+<pre>
+generator:
+  class:          sfPropelAdminGenerator
+  param:
+    model_class:  Post
+    theme:        mytheme              ## custom theme      
+    css:          admin/mystylesheet   ## custom css
+</pre>
+</div>
+</div>
+
+<div class="subcol">
+<h2>Display (ordering and grouping)</h2>
+<div class="content">
+<h3>list view</h3>
+The equal sign (=) selects the field holding the hyperlink to the edit view
+<pre>
+    list:
+      ## tabular layout
+      display: [=title, author_id, created_at]
+      
+      ## stacked layout
+      layout:  stacked
+      display: [title, author_id, created_at] 
+      params: |
+        &lt;strong&gt;%%=title%%&lt;/strong&gt;
+        by %%author%% (issued on %%created_at%%)
+</pre>
+Stacked layout uses display setting for the column headers (and sorting)
+
+<h3>edit view</h3>
+<pre>
+    edit:
+      ## ungrouped 
+      display:    [title, author_id, created_at]
+      
+      ## grouped
+      display:
+        "NONE":   [id]
+        "Group1": [title, body]
+        "Group2": [created_at]
+</pre>
+Groups with label <span class="method">"NONE"</span> have no label
+
+</div>
+</div>
+
+<div class="subcol">
+<h2>Additional list settings</h2>
+<div class="content">
+<h3>Filters</h3>
+<pre>
+  filters:
+    - title         ## text filter, accepts * as wildcard
+    - author        ## foreign_key filter, displays select
+    - created_at    ## date filter from... to...
+    - is_admin      ## boolean filter, yes/no/yes or no
+</pre>
+<h3>Pagination</h3>
+<pre>
+  max_per_page: 10  ## maximum number of records per page
+</pre>
+<h3>Sorting</h3>
+<pre>
+  sort: created_at  ## sort column (ascending order by default)
+  sort: [created_at, desc]  ## desc sort order
+</pre>
+</div>
+</div>
+
+<div class="subcol">
+<h2>Interactions</h2>
+<div class="content">
+
+<h3>Default actions</h3>
+<pre>
+list:
+  object_actions:
+    _edit:    -
+    _delete:  -          
+  actions:
+    _create:  -
+edit:
+  actions:        
+    _list:         -
+    _save:         -
+    _save_and_add: -
+    _delete:       -
+</pre>
+<h3>Parameters</h3>
+<pre>
+  actions:
+    my_action:
+      name:        Add a comment
+      action:      addComment
+      icon:        backend/addcomment.png
+      only_for:    edit        ## Restrict to edit or create
+      params:      class=foobar confirm=Are you sure?
+      credentials: [[admin, superuser], owner]
+</pre>
+
+</div>
+</div>
+
+<!-- column end -->
+</div>
+
+
+<div class="col">
+<!-- column start -->
+
+<div class="subcol">
+<h2>Fields</h2>
+<div class="content">
+<h3>Parameters</h3>
+<pre>
+fields:
+  my_field:
+    name:        ## Field label/header
+    help:        ## Tooltip, displays when requested
+    type:        ## for edit view only, see below
+    credentials: ## Classic AND/OR credentials array
+    params:      ## html options, depending on the tag
+</pre>
+<h3>Cascade</h3>
+First declaration covers the whole module<br />
+can be specialized for each view
+<pre>
+fields:
+  author:   { name: Author }
+list:
+  fields:
+    author: { help: This is the author of the comment } 
+edit:
+  fields:
+    author: { name: Author of the comment }
+</pre>
+<h3>Input types</h3>
+<pre>
+fields:
+  my_field:
+    type:
+      plain          ## No input
+      input_tag      ## Default for text, numeric
+      textarea_tag   ## Default for longvarchar
+      input_date_tag ## Default for date and timestamp
+      select_tag     ## Default for foreign keys
+                     ## And for booleans
+      checkbox_tag
+      radiobutton_tag
+      admin_input_upload_tag
+</pre>
+
+<h3>Usual params</h3>
+<pre>
+fields:
+  my_field:
+    params:
+      disabled=true             
+      date_format='MM/dd/yy' ## For dates
+      include_blank=true     ## For select tags
+      include_custom=Choose from the list
+      size=45x5              ## For textareas
+      rich=true
+      tinymce_options=height:150
+</pre>
+
+</div>
+</div>
+
+<div class="subcol">
+<h2>Special fields</h2>
+<div class="content">
+
+<h3>Custom fields</h3>
+Fields not defined in the <span class="method">schema.xml</span> but for which a custom getter and/or setter were defined in the model.
+<div style="float:right;">modules/post/config/generator.yml</div>
+<pre>
+list:
+  display:        [nb_comments]
+  fields:
+    nb_comments:  { name: Number of comments }
+</pre>
+<br />
+<div style="float:right;">apps/lib/model/Post.php</div>
+<pre>
+public function getNbComments()
+{
+  return count($this->getComments());
+}
+</pre>
+
+<h3>Partial fields</h3>
+Fields declared with a <span class="method">_</span> prefix in the <span class="method">display:</span> key refer to a partial in the module's <span class="method">template/</span> dir.<br />
+Use the name without prefix under the <span class="method">fields:</span> key.
+<div style="float:right;">modules/comment/config/generator.yml</div>
+<pre>
+list:
+  display:        [_post_link]
+  fields:
+    post_link:    { name: Related Post }
+</pre>
+<br />
+<div style="float:right;">modules/comment/templates/_post_link.php</div>
+<pre>
+&lt;php echo link_to(
+  $comment->getPost()->getTitle(),
+  'post/edit?id='.$comment->getPostId()
+) ?&gt;
+</pre>
+Partials gain automatic access to the current object $&lt;object&gt;.
+</div>
+</div>
+
+<!-- column end -->
+</div>
+
+<div style="clear: both"></div>
+
+<div class="footnote"></div>
+
+</body>
+</html>
