@@ -89,11 +89,12 @@ class sfWebDebugLogger extends sfLogger
     }
 
     // add needed assets for the web debug toolbar
+    $root = $this->context->getRequest()->getRelativeUrlRoot(); 
     $assets = sprintf('
       <script type="text/javascript" src="%s"></script>
       <link rel="stylesheet" type="text/css" media="screen" href="%s" />',
-      sfConfig::get('sf_web_debug_web_dir').'/js/main.js',
-      sfConfig::get('sf_web_debug_web_dir').'/css/main.css'
+      $root.sfConfig::get('sf_web_debug_web_dir').'/js/main.js',
+      $root.sfConfig::get('sf_web_debug_web_dir').'/css/main.css'
     );
     $content = str_ireplace('</head>', $assets.'</head>', $content);
 
