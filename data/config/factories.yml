@@ -10,6 +10,8 @@ default:
 
   user:
     class: myUser
+    param:
+      timeout:  1800
 
   storage:
     class: sfSessionStorage

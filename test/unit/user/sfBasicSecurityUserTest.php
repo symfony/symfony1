@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(39, new lime_output_color());
+$t = new lime_test(40, new lime_output_color());
 
 $dispatcher = new sfEventDispatcher();
 $sessionPath = sfToolkit::getTmpDir().'/sessions_'.rand(11111, 99999);
@@ -21,11 +21,6 @@ $user = new sfBasicSecurityUser($dispatcher, $storage);
 // ->initialize()
 $t->diag('->initialize()');
 $t->todo('->initialize() times out the user if no request made for a long time');
-/*
-sfConfig::set('sf_timeout', 0);
-$user = new sfBasicSecurityUser($context);
-$t->is($user->isTimedOut(), true, '->initialize() times out the user if no request made for a long time');
-*/
 
 // ->listCredentials()
 $t->diag('->listCredentials()');
@@ -42,7 +37,6 @@ $user->setAuthenticated(false);
 $t->is($user->isAuthenticated(), false, '->setAuthenticated() accepts a boolean as its first parameter');
 
 // ->setTimedOut() ->getTimedOut()
-sfConfig::set('sf_timeout', 86400);
 $user = new sfBasicSecurityUser($dispatcher, $storage);
 $t->diag('->setTimedOut() ->isTimedOut()');
 $t->is($user->isTimedOut(), false, '->isTimedOut() returns false if the session is not timed out');
@@ -138,5 +132,11 @@ $t->diag('->clearCredentials()');
 $user->clearCredentials();
 $t->is($user->hasCredential('subscriber'), false);
 $t->is($user->hasCredential('superadmin'), false);
+
+// timeout
+$user->setAuthenticated(true);
+$user->shutdown();
+$user = new sfBasicSecurityUser($dispatcher, $storage, array('timeout' => 0));
+$t->is($user->isTimedOut(), true, '->initialize() times out the user if no request made for a long time');
 
 sfToolkit::clearDirectory($sessionPath);

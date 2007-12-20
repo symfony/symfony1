@@ -57,8 +57,6 @@ all:
 #
     i18n:                   on
 #
-#    timeout:                1800
-#
 #    suffix:                 .
 #
 #    standard_helpers:       [Partial, Cache, Form]
