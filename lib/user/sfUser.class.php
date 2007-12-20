@@ -89,10 +89,10 @@ class sfUser
     //  - use the culture defined in the user session
     //  - use the default culture set in i18n.yml
     $currentCulture = $storage->read(self::CULTURE_NAMESPACE);
-    $this->setCulture($this->parameterHolder->get('culture', !is_null($currentCulture) ? $currentCulture : $this->parameterHolder->get('default_culture', 'en')));
+    $this->setCulture($this->getParameter('culture', !is_null($currentCulture) ? $currentCulture : $this->getParameter('default_culture', 'en')));
 
     // flag current flash to be removed at shutdown
-    if ($this->parameterHolder->get('use_flash', false) && $names = $this->attributeHolder->getNames('symfony/user/sfUser/flash'))
+    if ($this->getParameter('use_flash', false) && $names = $this->attributeHolder->getNames('symfony/user/sfUser/flash'))
     {
       if (sfConfig::get('sf_logging_enabled'))
       {
@@ -130,7 +130,7 @@ class sfUser
    */
   public function setFlash($name, $value, $persist = true)
   {
-    if (!$this->parameterHolder->get('use_flash', false))
+    if (!$this->getParameter('use_flash', false))
     {
       return;
     }
@@ -157,7 +157,7 @@ class sfUser
    */
   public function getFlash($name, $default = null)
   {
-    if (!$this->parameterHolder->get('use_flash', false))
+    if (!$this->getParameter('use_flash', false))
     {
       return $default;
     }
@@ -174,7 +174,7 @@ class sfUser
    */
   public function hasFlash($name)
   {
-    if (!$this->parameterHolder->get('use_flash', false))
+    if (!$this->getParameter('use_flash', false))
     {
       return false;
     }
@@ -240,7 +240,7 @@ class sfUser
   public function shutdown()
   {
     // remove flash that are tagged to be removed
-    if ($this->parameterHolder->get('use_flash', false) && $names = $this->attributeHolder->getNames('symfony/user/sfUser/flash/remove'))
+    if ($this->getParameter('use_flash', false) && $names = $this->attributeHolder->getNames('symfony/user/sfUser/flash/remove'))
     {
       if (sfConfig::get('sf_logging_enabled'))
       {
