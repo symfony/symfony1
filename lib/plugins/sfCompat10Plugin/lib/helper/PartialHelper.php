@@ -160,7 +160,7 @@ function get_component($moduleName, $componentName, $vars = array())
     $timer = sfTimerManager::getTimer(sprintf('Component "%s/%s"', $moduleName, $componentName));
   }
 
-  $retval = $componentInstance->$componentToRun();
+  $retval = $componentInstance->$componentToRun($context->getRequest());
 
   if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
   {
