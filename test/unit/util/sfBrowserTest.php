@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(43, new lime_output_color());
+$t = new lime_test(50, new lime_output_color());
 
 // ->click()
 $t->diag('->click()');
@@ -21,6 +21,14 @@ class myClickBrowser extends sfBrowser
     $this->dom = new DomDocument('1.0', 'UTF-8');
     $this->dom->validateOnParse = true;
     $this->dom->loadHTML($html);
+  }
+
+  public function getFiles()
+  {
+    $f = $this->files;
+    $this->files = array();
+
+    return $f;
   }
 
   public function call($uri, $method = 'get', $parameters = array(), $changeStack = true)
@@ -67,6 +75,7 @@ $html = <<<EOF
       <input name="myarray[]" value="value1" />
       <input name="myarray[]" value="value2" />
       <input name="myarray[]" value="value3" />
+      <input type="file" name="myfile" />
       <input type="button" name="mybutton" value="mybuttonvalue" />
       <input type="submit" name="submit" value="submit" />
     </form>
@@ -99,6 +108,7 @@ $html = <<<EOF
         <input type="image" src="myimage.png" alt="image submit" name="submit_image" value="image" />
       </span></div>
     </form>
+
   </body>
 </html>
 EOF;
@@ -217,3 +227,25 @@ $t->is($b->getDefaultServerArray('HTTPS'), 'on', '->call() detects secure reques
 $t->is($b->getDefaultServerArray('HTTPS'), 'on', '->call() preserves SSL information between requests');
 $b->call('http://app-test/index.phpmain/index');
 $t->is($b->getDefaultServerArray('HTTPS'), null, '->call() preserve non-secure requests');
+
+// file uploads
+$t->diag('file uploads');
+
+$unexistentFilename = sfConfig::get('sf_test_cache_dir') . DIRECTORY_SEPARATOR . 'unexistent-file-'.md5(getmypid().'-'.microtime());
+$existentFilename =  sfConfig::get('sf_test_cache_dir') . DIRECTORY_SEPARATOR . 'existent-file-'.md5(getmypid().'-'.microtime());
+file_put_contents($existentFilename, 'test');
+
+list($method, $uri, $parameters) = $b->click('submit', array('myfile'=>$unexistentFilename));
+$files = $b->getFiles();
+$t->is($method, 'post', 'file upload is using right method');
+$t->is($parameters['myfile'], $unexistentFilename, 'file upload kept _REQUEST variable available @todo check');
+$t->is(isset($files['myfile'])&&is_array($files['myfile']), true, 'file upload set up a _FILE entry for our test file');
+$t->is(array_keys($files['myfile']), array('name','type','tmp_name','error','size'), 'file upload returns correctly formatted array');
+$t->is($files['myfile']['error'], UPLOAD_ERR_NO_FILE, 'unexistent file does not exists (UPLOAD_ERR_NO_FILE)');
+
+list($method, $uri, $parameters) = $b->click('submit', array('myfile'=>$existentFilename));
+$files = $b->getFiles();
+
+$t->is($files['myfile']['error'], UPLOAD_ERR_OK, 'existent file exists (UPLOAD_ERR_OK)');
+$t->is($files['myfile']['name'], basename($existentFilename), 'name key ok');
+

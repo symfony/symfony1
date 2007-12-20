@@ -27,6 +27,7 @@ class sfBrowser
     $stackPosition      = -1,
     $cookieJar          = array(),
     $fields             = array(),
+    $files              = array(),
     $vars               = array(),
     $defaultServerArray = array(),
     $currentException   = null;
@@ -136,6 +137,14 @@ class sfBrowser
     {
       $_GET  = $parameters;
     }
+
+    // handle input type="file" fields
+    if (count($this->files))
+    {
+      $_FILES = $this->files;
+    }
+    $this->files = array();
+
     parse_str($query_string, $qs);
     if (is_array($qs))
     {
@@ -350,17 +359,37 @@ class sfBrowser
 
     // merge form default values and arguments
     $defaults = array();
+    $arguments = sfToolkit::arrayDeepMerge($this->fields, $arguments);
+
     foreach ($xpath->query('descendant::input | descendant::textarea | descendant::select', $form) as $element)
     {
       $elementName = $element->getAttribute('name');
       $nodeName    = $element->nodeName;
       $value       = null;
+
       if ($nodeName == 'input' && ($element->getAttribute('type') == 'checkbox' || $element->getAttribute('type') == 'radio'))
       {
         if ($element->getAttribute('checked'))
         {
           $value = $element->getAttribute('value');
         }
+      }
+      else if ($nodeName == 'input' && $element->getAttribute('type') == 'file')
+      {
+        $filename = isset($arguments[$elementName]) ? $arguments[$elementName] : '';
+
+        if (is_readable($filename))
+        {
+          $fileError = UPLOAD_ERR_OK;
+          $fileSize = filesize($filename);
+        }
+        else
+        {
+          $fileError = UPLOAD_ERR_NO_FILE;
+          $fileSize = 0;
+        }
+
+        $this->files[$elementName] = array('name' => basename($filename), 'type' => '', 'tmp_name' => $filename, 'error' => $fileError, 'size' => $fileSize);
       }
       else if (
         $nodeName == 'input'
@@ -423,7 +452,7 @@ class sfBrowser
     }
 
     // create request parameters
-    $arguments = sfToolkit::arrayDeepMerge($defaults, $this->fields, $arguments);
+    $arguments = sfToolkit::arrayDeepMerge($defaults, $arguments);
     if ('post' == $method)
     {
       return $this->post($url, $arguments);
