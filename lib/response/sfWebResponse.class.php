@@ -465,8 +465,7 @@ class sfWebResponse extends sfResponse
     {
       $value = $this->getContentType();
     }
-
-    if (!$replace)
+    elseif (!$replace)
     {
       $current = isset($this->httpMetas[$key]) ? $this->httpMetas[$key] : '';
       $value = ($current ? $current.', ' : '').$value;
