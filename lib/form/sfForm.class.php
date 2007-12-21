@@ -181,7 +181,7 @@ class sfForm implements ArrayAccess
    */
   public function getValue($field)
   {
-    return $this->isBound ? $this->values[$field] : null;
+    return ($this->isBound && isset($this->values[$field])) ? $this->values[$field] : null;
   }
 
   /**

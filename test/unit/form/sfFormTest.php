@@ -163,6 +163,7 @@ $t->ok($f->isBound(), '->isBound() returns true if the form is bound');
 $t->is($f->getValues(), array('first_name' => 'Fabien', 'last_name' => 'Potencier'), '->getValues() returns an array of cleaned values if the form is bound');
 $t->ok($f->isValid(), '->isValid() returns true if the form passes the validation');
 $t->is($f->getValue('first_name'), 'Fabien', '->getValue() returns the cleaned value for a field name if the form is bound');
+$t->is($f->getValue('nonsense'), null, '->getValue() returns null when non-existant param is requested');
 
 $f->bind(array());
 $t->ok(!$f->isValid(), '->isValid() returns false if the form does not pass the validation');
