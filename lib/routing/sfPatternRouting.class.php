@@ -33,17 +33,17 @@ class sfPatternRouting extends sfRouting
    * Initialize this Routing.
    *
    * @param  sfEventDispatcher A sfEventDispatcher instance
-   * @param  array        An associative array of initialization parameters.
+   * @param  array        An associative array of initialization options.
    *
    * @return Boolean      true, if initialization completes successfully, otherwise false.
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfRouting.
    */
-  public function initialize(sfEventDispatcher $dispatcher, $parameters = array())
+  public function initialize(sfEventDispatcher $dispatcher, $options = array())
   {
-    parent::initialize($dispatcher, $parameters);
+    parent::initialize($dispatcher, $options);
 
-    $this->setDefaultSuffix($this->parameterHolder->get('suffix'));
+    $this->setDefaultSuffix(isset($options['suffix']) ? $options['suffix'] : '');
   }
 
   /**
@@ -84,8 +84,8 @@ class sfPatternRouting extends sfRouting
       }
       else
       {
-        $module = isset($parameters['module']) && $parameters['module'] ? $parameters['module'] : $this->parameterHolder->get('default_module');
-        $action = isset($parameters['action']) && $parameters['action'] ? $parameters['action'] : $this->parameterHolder->get('default_action');
+        $module = isset($parameters['module']) && $parameters['module'] ? $parameters['module'] : $this->options['default_module'];
+        $action = isset($parameters['action']) && $parameters['action'] ? $parameters['action'] : $this->options['default_action'];
 
         $internalUri = $module.'/'.$action;
       }
@@ -168,7 +168,7 @@ class sfPatternRouting extends sfRouting
    */
   public function clearRoutes()
   {
-    if ($this->parameterHolder->get('logging'))
+    if ($this->options['logging'])
     {
       $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Clear all current routes')));
     }
@@ -329,7 +329,7 @@ class sfPatternRouting extends sfRouting
       $this->routes[$name] = array($route, $regexp, $names, $namesHash, $default, $requirements, $suffix);
     }
 
-    if ($this->parameterHolder->get('logging'))
+    if ($this->options['logging'])
     {
       $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Connect "%s"%s', $route, $suffix ? ' ("'.$suffix.'" suffix)' : ''))));
     }
@@ -580,7 +580,7 @@ class sfPatternRouting extends sfRouting
           $this->currentRouteName = $routeName;
           $this->currentInternalUri = null;
 
-          if ($this->parameterHolder->get('logging'))
+          if ($this->options['logging'])
           {
             $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Match route [%s] "%s"', $routeName, $route))));
           }
@@ -593,7 +593,7 @@ class sfPatternRouting extends sfRouting
     // no route found
     if (!$break)
     {
-      if ($this->parameterHolder->get('logging'))
+      if ($this->options['logging'])
       {
         $this->dispatcher->notify(new sfEvent($this, 'application.log', array('No matching route found')));
       }

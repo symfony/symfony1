@@ -32,8 +32,8 @@ class sfPathInfoRouting extends sfRouting
   public function getCurrentInternalUri($with_route_name = false)
   {
     $parameters = $this->currentRouteParameters;
-    $module = isset($parameters['module']) ? $parameters['module'] : $this->parameterHolder->get('default_module');
-    $action = isset($parameters['action']) ? $parameters['action'] : $this->parameterHolder->get('default_action');
+    $module = isset($parameters['module']) ? $parameters['module'] : $this->options['default_module'];
+    $action = isset($parameters['action']) ? $parameters['action'] : $this->options['default_action'];
 
     // other parameters
     unset($parameters['module'], $parameters['action']);

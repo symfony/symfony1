@@ -21,18 +21,18 @@ abstract class sfRouting
   protected
     $dispatcher        = null,
     $defaultParameters = array(),
-    $parameterHolder   = null;
+    $options           = array();
 
   /**
    * Class constructor.
    *
    * @see initialize()
    */
-  public function __construct(sfEventDispatcher $dispatcher, $parameters = array())
+  public function __construct(sfEventDispatcher $dispatcher, $options = array())
   {
-    $this->initialize($dispatcher, $parameters);
+    $this->initialize($dispatcher, $options);
 
-    if ($this->parameterHolder->get('auto_shutdown', true))
+    if (isset($this->options['auto_shutdown']) && $this->options['auto_shutdown'])
     {
       register_shutdown_function(array($this, 'shutdown'));
     }
@@ -42,28 +42,32 @@ abstract class sfRouting
    * Initializes this sfRouting instance.
    *
    * @param  sfEventDispatcher A sfEventDispatcher instance
-   * @param  array        An associative array of initialization parameters.
+   * @param  array        An associative array of initialization options.
    *
    * @return Boolean     true, if initialization completes successfully, otherwise false.
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfRouting.
    */
-  public function initialize(sfEventDispatcher $dispatcher, $parameters = array())
+  public function initialize(sfEventDispatcher $dispatcher, $options = array())
   {
     $this->dispatcher = $dispatcher;
 
-    if (!isset($parameters['default_module']))
+    if (!isset($options['default_module']))
     {
-      $parameters['default_module'] = 'default';
+      $options['default_module'] = 'default';
     }
 
-    if (!isset($parameters['default_action']))
+    if (!isset($options['default_action']))
     {
-      $parameters['default_action'] = 'index';
+      $options['default_action'] = 'index';
     }
 
-    $this->parameterHolder = new sfParameterHolder();
-    $this->parameterHolder->add($parameters);
+    if (!isset($options['logging']))
+    {
+      $options['logging'] = false;
+    }
+
+    $this->options = $options;
 
     $this->dispatcher->connect('user.change_culture', array($this, 'listenToChangeCultureEvent'));
     $this->dispatcher->connect('request.filter_parameters', array($this, 'filterParametersEvent'));
