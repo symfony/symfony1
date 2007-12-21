@@ -322,3 +322,15 @@ The `web_debug` entry in `filters.yml` must be removed as the `sfWebDebugFilter`
 has been removed. The web debug toolbar is now injected in the response thanks to a listener.
 
 The `project:upgrade1.1` task makes all those changes for you.
+
+Session timeout
+---------------
+
+The `sf_timeout` setting is not used anymore. To change the session timeout, you now have to edit the `factories.yml` instead if the `settings.yml`, and change the parameters of the `user` factory:
+
+    all:
+      user:
+        class: myUser
+        param:
+          timeout:     1800     # session timeout in seconds
+
