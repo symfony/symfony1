@@ -235,8 +235,9 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     }
     else
     {
-      // Automatic logout logged in user if no request within timeout parameter
-      if (!is_null($this->lastRequest) && time() - $this->lastRequest >= $this->getParameter('timeout', 1800))
+      // Automatic logout logged in user if no request within timeout parameter seconds
+      $timeout = $this->getParameter('timeout', 1800);
+      if (false !== $timeout && !is_null($this->lastRequest) && time() - $this->lastRequest >= $timeout)
       {
         if (sfConfig::get('sf_logging_enabled'))
         {

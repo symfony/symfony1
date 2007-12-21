@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(40, new lime_output_color());
+$t = new lime_test(41, new lime_output_color());
 
 $dispatcher = new sfEventDispatcher();
 $sessionPath = sfToolkit::getTmpDir().'/sessions_'.rand(11111, 99999);
@@ -138,5 +138,8 @@ $user->setAuthenticated(true);
 $user->shutdown();
 $user = new sfBasicSecurityUser($dispatcher, $storage, array('timeout' => 0));
 $t->is($user->isTimedOut(), true, '->initialize() times out the user if no request made for a long time');
+
+$user = new sfBasicSecurityUser($dispatcher, $storage, array('timeout' => false));
+$t->is($user->isTimedOut(), false, '->initialize() takes a timeout parameter which can be false to disable session timeout');
 
 sfToolkit::clearDirectory($sessionPath);
