@@ -80,7 +80,7 @@ abstract class sfResponse implements Serializable
     $event = $this->dispatcher->filter(new sfEvent($this, 'response.filter_content'), $this->getContent());
     $content = $event->getReturnValue();
 
-    if (sfConfig::get('sf_logging_enabled'))
+    if ($this->getParameter('logging'))
     {
       $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Send content (%s o)', strlen($content)))));
     }

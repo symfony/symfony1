@@ -250,6 +250,14 @@ abstract class sfController
 
       $this->context->getEventDispatcher()->notify(new sfEvent($this, 'controller.change_action', array('module' => $moduleName, 'action' => $actionName)));
 
+      if ($moduleName == sfConfig::get('sf_error_404_module') && $actionName == sfConfig::get('sf_error_404_action'))
+      {
+        $this->context->getResponse()->setStatusCode(404);
+        $this->context->getResponse()->setHttpHeader('Status', '404 Not Found');
+
+        $this->dispatcher->notify(new sfEvent($this, 'controller.page_not_found', array('module' => $moduleName, 'action' => $actionName)));
+      }
+
       // process the filter chain
       $filterChain->execute();
     }
