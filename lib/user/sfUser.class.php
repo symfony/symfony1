@@ -94,7 +94,7 @@ class sfUser
     // flag current flash to be removed at shutdown
     if ($this->getParameter('use_flash', false) && $names = $this->attributeHolder->getNames('symfony/user/sfUser/flash'))
     {
-      if (sfConfig::get('sf_logging_enabled'))
+      if ($this->getParameter('logging'))
       {
         $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Flag old flash messages ("%s")', implode('", "', $names)))));
       }
@@ -242,7 +242,7 @@ class sfUser
     // remove flash that are tagged to be removed
     if ($this->getParameter('use_flash', false) && $names = $this->attributeHolder->getNames('symfony/user/sfUser/flash/remove'))
     {
-      if (sfConfig::get('sf_logging_enabled'))
+      if ($this->getParameter('logging'))
       {
         $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Remove old flash messages ("%s")', implode('", "', $names)))));
       }

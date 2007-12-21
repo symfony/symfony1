@@ -62,7 +62,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
       {
         if ($credential == $value)
         {
-          if (sfConfig::get('sf_logging_enabled'))
+          if ($this->getParameter('logging'))
           {
             $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Remove credential "%s"', $credential))));
           }
@@ -96,7 +96,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     // Add all credentials
     $credentials = (is_array(func_get_arg(0))) ? func_get_arg(0) : func_get_args();
 
-    if (sfConfig::get('sf_logging_enabled'))
+    if ($this->getParameter('logging'))
     {
       $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Add credential(s) "%s"', implode(', ', $credentials)))));
     }
@@ -171,7 +171,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
    */
   public function setAuthenticated($authenticated)
   {
-    if (sfConfig::get('sf_logging_enabled'))
+    if ($this->getParameter('logging'))
     {
       $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('User is %sauthenticated', $authenticated === true ? '' : 'not '))));
     }
@@ -239,7 +239,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
       $timeout = $this->getParameter('timeout', 1800);
       if (false !== $timeout && !is_null($this->lastRequest) && time() - $this->lastRequest >= $timeout)
       {
-        if (sfConfig::get('sf_logging_enabled'))
+        if ($this->getParameter('logging'))
         {
           $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Automatic user logout due to timeout')));
         }

@@ -123,7 +123,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           break;
 
         case 'user':
-          $instances[] = sprintf("  \$class = sfConfig::get('sf_factory_user', '%s');\n  \$this->factories['user'] = new \$class(\$this->dispatcher, \$this->factories['storage'], array_merge(array('auto_shutdown' => false, 'culture' => \$this->factories['request']->getParameter('sf_culture'), 'default_culture' => sfConfig::get('sf_i18n_default_culture'), 'use_flash' => sfConfig::get('sf_use_flash')), sfConfig::get('sf_factory_user_parameters', %s)));", $class, var_export(is_array($parameters) ? $parameters : array(), true));
+          $instances[] = sprintf("  \$class = sfConfig::get('sf_factory_user', '%s');\n  \$this->factories['user'] = new \$class(\$this->dispatcher, \$this->factories['storage'], array_merge(array('auto_shutdown' => false, 'culture' => \$this->factories['request']->getParameter('sf_culture'), 'default_culture' => sfConfig::get('sf_i18n_default_culture'), 'use_flash' => sfConfig::get('sf_use_flash'), 'logging' => sfConfig::get('sf_logging_enabled')), sfConfig::get('sf_factory_user_parameters', %s)));", $class, var_export(is_array($parameters) ? $parameters : array(), true));
           break;
 
         case 'view_cache':
