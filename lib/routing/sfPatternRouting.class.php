@@ -168,7 +168,7 @@ class sfPatternRouting extends sfRouting
    */
   public function clearRoutes()
   {
-    if (sfConfig::get('sf_logging_enabled'))
+    if ($this->parameterHolder->get('logging'))
     {
       $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Clear all current routes')));
     }
@@ -329,7 +329,7 @@ class sfPatternRouting extends sfRouting
       $this->routes[$name] = array($route, $regexp, $names, $namesHash, $default, $requirements, $suffix);
     }
 
-    if (sfConfig::get('sf_logging_enabled'))
+    if ($this->parameterHolder->get('logging'))
     {
       $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Connect "%s"%s', $route, $suffix ? ' ("'.$suffix.'" suffix)' : ''))));
     }
@@ -580,7 +580,7 @@ class sfPatternRouting extends sfRouting
           $this->currentRouteName = $routeName;
           $this->currentInternalUri = null;
 
-          if (sfConfig::get('sf_logging_enabled'))
+          if ($this->parameterHolder->get('logging'))
           {
             $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Match route [%s] "%s"', $routeName, $route))));
           }
@@ -593,7 +593,7 @@ class sfPatternRouting extends sfRouting
     // no route found
     if (!$break)
     {
-      if (sfConfig::get('sf_logging_enabled'))
+      if ($this->parameterHolder->get('logging'))
       {
         $this->dispatcher->notify(new sfEvent($this, 'application.log', array('No matching route found')));
       }
