@@ -97,7 +97,7 @@ foreach (array(
 // ->getContentType() ->setContentType()
 $t->diag('->getContentType() ->setContentType()');
 
-sfConfig::set('sf_charset', 'UTF-8');
+$response->setParameter('charset', 'UTF-8');
 
 $t->is($response->getContentType(), 'text/html; charset=UTF-8', '->getContentType() returns a sensible default value');
 
