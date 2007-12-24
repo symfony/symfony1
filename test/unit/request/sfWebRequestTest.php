@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(13, new lime_output_color());
+$t = new lime_test(16, new lime_output_color());
 
 class myRequest extends sfWebRequest
 {
@@ -34,6 +34,20 @@ $t->is($request->getLanguages(), array(), '->getLanguages() returns an empty arr
 $request->languages = null;
 $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en-us,en;q=0.5,fr;q=0.3';
 $t->is($request->getLanguages(), array('en_US', 'en', 'fr'), '->getLanguages() returns an array with all accepted languages');
+
+// ->getPreferredCulture()
+$t->diag('->getPreferredCulture()');
+$request->languages = null;
+$_SERVER['HTTP_ACCEPT_LANGUAGE'] = '';
+$t->is($request->getPreferredCulture(array('fr', 'en')), 'fr', '->getPreferredCulture() returns the first given culture if the client do not send an ACCEPT_LANGUAGE header');
+
+$request->languages = null;
+$_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en-us,en;q=0.5,fr;q=0.3';
+$t->is($request->getPreferredCulture(array('fr', 'en')), 'en', '->getPreferredCulture() returns the preferred culture');
+
+$request->languages = null;
+$_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en-us,en;q=0.5,fr';
+$t->is($request->getPreferredCulture(array('fr', 'en')), 'fr', '->getPreferredCulture() returns the preferred culture');
 
 // ->getCharsets()
 $t->diag('->getCharsets()');

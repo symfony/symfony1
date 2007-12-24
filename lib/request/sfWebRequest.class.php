@@ -555,6 +555,32 @@ class sfWebRequest extends sfRequest
   }
 
   /**
+   * Returns the preferred culture for the current request.
+   *
+   * @param  array  An array of ordered cultures available
+   *
+   * @return string The preferred culture
+   */
+  public function getPreferredCulture(array $cultures = null)
+  {
+    $preferredCultures = $this->getLanguages();
+
+    if (is_null($cultures))
+    {
+      return isset($preferredCultures[0]) ? $preferredCultures[0] : null;
+    }
+
+    if (!$preferredCultures)
+    {
+      return $cultures[0];
+    }
+
+    $preferredCultures = array_values(array_intersect($preferredCultures, $cultures));
+
+    return isset($preferredCultures[0]) ? $preferredCultures[0] : null;
+  }
+
+  /**
    * Gets a list of languages acceptable by the client browser
    *
    * @return array Languages ordered in the user browser preferences
