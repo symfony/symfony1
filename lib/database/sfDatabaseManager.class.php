@@ -81,6 +81,16 @@ class sfDatabaseManager
   }
 
   /**
+   * Returns the names of all database connections.
+   *
+   * @return array An array containing all database connection names
+   */
+  public function getNames()
+  {
+    return array_keys($this->databases);
+  }
+
+  /**
    * Executes the shutdown procedure
    *
    * @return void
