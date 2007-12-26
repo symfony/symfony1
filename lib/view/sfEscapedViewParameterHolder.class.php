@@ -67,22 +67,29 @@ class sfEscapedViewParameterHolder extends sfViewParameterHolder
   {
     $attributes = array();
 
-    $escapedData = sfOutputEscaper::escape($this->getEscapingMethod(), $this->getAll());
-
     switch ($this->getEscaping())
     {
+      case 'on':
+        $escapedData = sfOutputEscaper::escape($this->getEscapingMethod(), $this->getAll());
+        $attributes['sf_data'] = $escapedData;
+        break;
       case 'bc':
+        $escapedData = sfOutputEscaper::escape($this->getEscapingMethod(), $this->getAll());
         $attributes = $this->getAll();
+        $attributes['sf_data'] = $escapedData;
         break;
       case 'both':
+        $escapedData = sfOutputEscaper::escape($this->getEscapingMethod(), $this->getAll());
         foreach ($escapedData as $key => $value)
         {
           $attributes[$key] = $value;
         }
+        $attributes['sf_data'] = $escapedData;
+        break;
+      case 'off':
+        $attributes = $this->getAll();
         break;
     }
-
-    $attributes['sf_data'] = $escapedData;
 
     return $attributes;
   }
