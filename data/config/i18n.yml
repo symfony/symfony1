@@ -1,6 +1,0 @@
-default:
-  default_culture:     en
-  source:              XLIFF
-  debug:               off
-  untranslated_prefix: "[T]"
-  untranslated_suffix: "[/T]"

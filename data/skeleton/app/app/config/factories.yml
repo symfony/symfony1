@@ -48,6 +48,10 @@ test:
 #  i18n:
 #    class: sfI18N
 #    param:
+#      source:              XLIFF
+#      debug:               off
+#      untranslated_prefix: "[T]"
+#      untranslated_suffix: "[/T]"
 #      cache:
 #        class: sfFileCache
 #        param:

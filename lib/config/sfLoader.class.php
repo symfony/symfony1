@@ -133,17 +133,10 @@ class sfLoader
   /**
    * Gets the i18n directories to use globally.
    *
-   * Returns null if the current i18n source is not a file based i18n backend (XLIFF or gettext).
-   *
    * @return array An array of i18n directories
    */
   static public function getI18NGlobalDirs()
   {
-    if (!in_array(sfConfig::get('sf_i18n_source'), array('XLIFF', 'gettext')))
-    {
-      return null;
-    }
-
     $dirs = array();
 
     // application
@@ -165,19 +158,12 @@ class sfLoader
   /**
    * Gets the i18n directories to use for a given module.
    *
-   * Returns null if the current i18n source is not a file based i18n backend (XLIFF or gettext).
-   *
    * @param string The module name
    *
    * @return array An array of i18n directories
    */
   static public function getI18NDirs($moduleName)
   {
-    if (!in_array(sfConfig::get('sf_i18n_source'), array('XLIFF', 'gettext')))
-    {
-      return null;
-    }
-
     $dirs = array();
 
     // module

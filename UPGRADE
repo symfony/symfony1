@@ -84,7 +84,7 @@ Singletons
 The sfI18N, sfRouting, and sfLogger objects are now factories and
 not singletons.
 
-If you want to get one of those objects in your code, they are still
+If you want to get one of those objects in your code, they are
 available from `sfContext`:
 
   [php]
@@ -92,23 +92,22 @@ available from `sfContext`:
   sfContext::getInstance()->getRouting()
   sfContext::getInstance()->getLogger()
 
-Here is their default configuration in `factories.yml`:
+Routing
+~~~~~~~
 
-  i18n:
-    class: sfI18N
-    param:
-      cache:
-        class: sfFileCache
-        param:
-          automatic_cleaning_factor: 0
-          cache_dir:                 %SF_I18N_CACHE_DIR%
-          lifetime:                  86400
-          prefix:                    %SF_APP_DIR%
+Here is the default configuration for the routing in `factories.yml`:
 
   routing:
     class: sfPatternRouting
     param:
       load_configuration: true
+
+The `project:upgrade1.1` task makes all the changes for you.
+
+Logging
+~~~~~~~
+
+Here is the default configuration for logging in `factories.yml`:
 
   logger:
     class: sfAggregateLogger
@@ -119,6 +118,7 @@ Here is their default configuration in `factories.yml`:
           class: sfWebDebugLogger
           param:
             condition: %SF_WEB_DEBUG%
+            xdebug_logging: true
         sf_file_debug:
           class: sfFileLogger
           param:
@@ -145,6 +145,37 @@ This can be used to prevent logging in the production environment altogether:
       logging_enabled: off
 
 The `project:upgrade1.1` task makes all those changes for you.
+
+i18n
+~~~~
+
+Here is the default configuration for i18n in `factories.yml`:
+
+  i18n:
+    class: sfI18N
+    param:
+      source:              XLIFF
+      debug:               off
+      untranslated_prefix: "[T]"
+      untranslated_suffix: "[/T]"
+      cache:
+        class: sfFileCache
+        param:
+          automatic_cleaning_factor: 0
+          cache_dir:                 %SF_I18N_CACHE_DIR%
+          lifetime:                  86400
+          prefix:                    %SF_APP_DIR%
+
+The `i18n.yml` configuration file is not used anymore.
+Instead, you can configure i18n in `factories.yml`.
+
+The only exception is the `default_culture` setting which is now configurable in `settings.yml`
+and do not depend on the i18n framework anymore:
+
+  default_culture: en
+
+If your project has some specific settings, you must move your current configuration from the `i18n.yml` to
+the `factories.yml` and add the default culture in `settings.yml` as shown above.
 
 Cache Framework
 ---------------

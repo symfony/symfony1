@@ -54,7 +54,7 @@ class sfI18N
       unset($options['culture']);
     }
 
-    $this->options    = array_merge(array(
+    $this->options = array_merge(array(
       'source'              => 'XLIFF',
       'debug'               => false,
       'database'            => 'default',
@@ -64,22 +64,6 @@ class sfI18N
 
     $dispatcher->connect('user.change_culture', array($this, 'listenToChangeCultureEvent'));
     $dispatcher->connect('controller.change_action', array($this, 'listenToChangeActionEvent'));
-  }
-
-  /**
-   * Loads i18n configuration.
-   */
-  public function loadConfiguration()
-  {
-    include(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/i18n.yml'));
-
-    $this->options = array_merge($this->options, array(
-      'source'              => sfConfig::get('sf_i18n_source'),
-      'database'            => sfConfig::get('sf_i18n_database'),
-      'debug'               => sfConfig::get('sf_debug') && sfConfig::get('sf_i18n_debug'),
-      'untranslated_prefix' => sfConfig::get('sf_i18n_untranslated_prefix'),
-      'untranslated_suffix' => sfConfig::get('sf_i18n_untranslated_suffix'),
-    ));
   }
 
   /**
@@ -125,10 +109,7 @@ class sfI18N
    */
   public function createMessageSource($dir = null)
   {
-    $class = 'sfMessageSource_'.$this->options['source'];
-    $source = class_exists($class) && is_subclass_of($class, 'sfMessageSource_Database') ? $this->options['database'] : $dir;
-
-    return sfMessageSource::factory($this->options['source'], $source);
+    return sfMessageSource::factory($this->options['source'], self::isMessageSourceFileBased($this->options['source']) ? $dir : $this->options['database']);
   }
 
   /**
@@ -295,6 +276,20 @@ class sfI18N
     {
       return null;
     }
+  }
+
+  /**
+   * Returns true if messages are stored in a file.
+   *
+   * @param  string  The source name
+   *
+   * @return Boolean true if messages are stored in a file, false otherwise
+   */
+  static public function isMessageSourceFileBased($source)
+  {
+    $class = 'sfMessageSource_'.$source;
+
+    return class_exists($class) && is_subclass_of($class, 'sfMessageSource_File');
   }
 
   /**

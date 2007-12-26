@@ -31,7 +31,6 @@ user_flush($dispatcher, $user, $storage);
 
 $t->is($user->getCulture(), 'de', '->initialize() sets the culture to the value of default_culture if available');
 
-sfConfig::set('sf_i18n_default_culture', 'fr');
 user_flush($dispatcher, $user, $storage);
 $t->is($user->getCulture(), 'de', '->initialize() reads the culture from the session data if available');
 

@@ -29,7 +29,10 @@ default:
   i18n:
     class: sfI18N
     param:
-      load_configuration: true
+      source:               XLIFF
+      debug:                off
+      untranslated_prefix:  "[T]"
+      untranslated_suffix:  "[/T]"
       cache:
         class: sfFileCache
         param:
