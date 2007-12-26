@@ -201,7 +201,7 @@ abstract class sfController
       // the requested action doesn't exist
       if (sfConfig::get('sf_logging_enabled'))
       {
-        $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Action does not exist')));
+        $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Action "%s/%s" does not exist', $moduleName, $actionName))));
       }
 
       // track the requested module so we have access to the data in the error 404 page
