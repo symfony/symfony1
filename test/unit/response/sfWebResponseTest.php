@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(64, new lime_output_color());
+$t = new lime_test(65, new lime_output_color());
 
 class myWebResponse extends sfWebResponse
 {
@@ -109,6 +109,9 @@ $t->is($response->getContentType(), 'text/xml; charset=ISO-8859-1', '->setConten
 
 $response->setContentType('text/xml;charset = ISO-8859-1');
 $t->is($response->getContentType(), 'text/xml;charset = ISO-8859-1', '->setContentType() does nothing if a charset is given');
+
+$response->setContentType('image/jpg');
+$t->is($response->getContentType(), 'image/jpg', '->setContentType() does not add a charset if the content-type is not text/*');
 
 $t->is($response->getContentType(), $response->getHttpHeader('content-type'), '->getContentType() is an alias for ->getHttpHeader(\'content-type\')');
 
