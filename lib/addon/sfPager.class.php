@@ -93,7 +93,7 @@ abstract class sfPager
 
   public function haveToPaginate()
   {
-    return (($this->getPage() != 0) && ($this->getNbResults() > $this->getMaxPerPage()));
+    return (($this->getMaxPerPage() != 0) && ($this->getNbResults() > $this->getMaxPerPage()));
   }
 
   public function getCursor()
