@@ -35,6 +35,7 @@ class sfForm implements ArrayAccess
     $formFields      = array(),
     $isBound         = false,
     $taintedValues   = array(),
+    $taintedFiles    = array(),
     $values          = null,
     $defaults        = array(),
     $options         = array();
@@ -110,16 +111,18 @@ class sfForm implements ArrayAccess
    * It triggers the validator schema validation.
    *
    * @param array An array of input values
+   * @param array An array of uploaded files (in the $_FILES or $_GET format)
    */
-  public function bind($taintedValues)
+  public function bind($taintedValues, $taintedFiles = array())
   {
     $this->taintedValues = $taintedValues;
+    $this->taintedFiles  = $taintedFiles;
     $this->isBound = true;
     $this->resetFormFields();
 
     try
     {
-      $this->values = $this->validatorSchema->clean($this->taintedValues);
+      $this->values = $this->validatorSchema->clean(array_merge($this->taintedValues, self::convertFileInformation($this->taintedFiles)));
       $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
 
       // remove CSRF token
@@ -615,5 +618,93 @@ class sfForm implements ArrayAccess
     {
       return sprintf('%s[%%s]', $name);
     }
+  }
+
+  /**
+   * Converts uploaded file array to a format following the $_GET and $POST naming convention.
+   *
+   * It's safe to pass an already converted array, in which case this method just returns the original array unmodified.
+   *
+   * @param  array An array representing uploaded file information
+   *
+   * @return array An array of re-ordered uploaded file information
+   */
+  static public function convertFileInformation($taintedFiles)
+  {
+    return self::pathsToArray(preg_replace('#^(/[^/]+)?(/name|/type|/tmp_name|/error|/size)([^\s]*)( = [^\n]*)#m', '$1$3$2$4', self::arrayToPaths($taintedFiles)));
+  }
+
+  /**
+   * Converts a string of paths separated by newlines into an array.
+   *
+   * Code adapted from http://www.shauninman.com/archive/2006/11/30/fixing_the_files_superglobal
+   * @author Shaun Inman (www.shauninman.com)
+   *
+   * @param  string A string representing an array
+   *
+   * @return Array  An array
+   */
+  static public function pathsToArray($str)
+  {
+    $array = array();
+    $lines = explode("\n", trim($str));
+
+    if (!empty($lines[0]))
+    {
+      foreach ($lines as $line)
+      {
+        list($path, $value) = explode(' = ', $line);
+
+        $steps = explode('/', $path);
+        array_shift($steps);
+
+        $insertion =& $array;
+
+        foreach ($steps as $step)
+        {
+          if (!isset($insertion[$step]))
+          {
+            $insertion[$step] = array();
+          }
+          $insertion =& $insertion[$step];
+        }
+        $insertion = ctype_digit($value) ? (int) $value : $value;
+      }
+    }
+
+    return $array;
+  }
+
+  /**
+   * Converts an array into a string containing the path to each of its values separated by a newline.
+   *
+   * Code adapted from http://www.shauninman.com/archive/2006/11/30/fixing_the_files_superglobal
+   * @author Shaun Inman (www.shauninman.com)
+   *
+   * @param  Array  An array
+   *
+   * @return string A string representing the array
+   */
+  static public function arrayToPaths($array = array(), $prefix = '')
+  {
+    $str = '';
+    $freshPrefix = $prefix;
+
+    foreach ($array as $key => $value)
+    {
+      $freshPrefix .= "/{$key}";
+
+      if (is_array($value))
+      {
+        $str .= self::arrayToPaths($value, $freshPrefix);
+        $freshPrefix = $prefix;
+      }
+      else
+      {
+        $str .= "{$prefix}/{$key} = {$value}\n";
+      }
+    }
+
+    return $str;
   }
 }

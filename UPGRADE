@@ -294,6 +294,28 @@ a `sfConfigurationException` if `sf_compat_10` is set to `false`:
   * `->setErrors()`
   * `->removeError()`
 
+Deprecated methods in sfWebRequest
+----------------------------------
+
+The following methods of `sfWebRequest` have been deprecated and throw
+a `sfConfigurationException` if `sf_compat_10` is set to `false`:
+
+  * `->getFile()`
+  * `->getFileError()`
+  * `->getFileName()`
+  * `->getFileNames()`
+  * `->getFilePath()`
+  * `->getFileSize()`
+  * `->getFileType()`
+  * `->hasFile()`
+  * `->hasFileError()`
+  * `->hasFileErrors()`
+  * `->hasFiles()`
+  * `->getFileValue()`
+  * `->getFileValues()`
+  * `->getFileExtension()`
+  * `->moveFile()`
+
 sfValidator class
 -----------------
 
@@ -357,11 +379,11 @@ The `project:upgrade1.1` task makes all those changes for you.
 Session timeout
 ---------------
 
-The `sf_timeout` setting is not used anymore. To change the session timeout, you now have to edit the `factories.yml` instead if the `settings.yml`, and change the parameters of the `user` factory:
+The `sf_timeout` setting is not used anymore. To change the session timeout, you now have to edit the
+`factories.yml` instead if the `settings.yml`, and change the parameters of the `user` factory:
 
     all:
       user:
         class: myUser
         param:
           timeout:     1800     # session timeout in seconds
-

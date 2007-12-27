@@ -94,6 +94,11 @@ class sfWebRequest extends sfRequest
    */
   public function getFile($name)
   {
+    if (!sfConfig::get('sf_compat_10'))
+    {
+      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
+    }
+
     return $this->hasFile($name) ? $this->getFileValues($name) : null;
   }
 
@@ -117,6 +122,11 @@ class sfWebRequest extends sfRequest
    */
   public function getFileError($name)
   {
+    if (!sfConfig::get('sf_compat_10'))
+    {
+      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
+    }
+
     return $this->hasFile($name) ? $this->getFileValue($name, 'error') : UPLOAD_ERR_NO_FILE;
   }
 
@@ -129,6 +139,11 @@ class sfWebRequest extends sfRequest
    */
   public function getFileName($name)
   {
+    if (!sfConfig::get('sf_compat_10'))
+    {
+      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
+    }
+
     return $this->hasFile($name) ? $this->getFileValue($name, 'name') : null;
   }
 
@@ -139,17 +154,23 @@ class sfWebRequest extends sfRequest
    */
   public function getFileNames()
   {
+    if (!sfConfig::get('sf_compat_10'))
+    {
+      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
+    }
+
     return array_keys($_FILES);
   }
 
   /**
    * Retrieves an array of files.
    *
-   * @return array An associative array of files
+   * @param  string A key
+   * @return array  An associative array of files
    */
-  public function getFiles()
+  public function getFiles($key = null)
   {
-    return $_FILES;
+    return is_null($key) ? $_FILES : (isset($_FILES[$key]) ? $_FILES[$key] : array());
   }
 
   /**
@@ -161,6 +182,11 @@ class sfWebRequest extends sfRequest
    */
   public function getFilePath($name)
   {
+    if (!sfConfig::get('sf_compat_10'))
+    {
+      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
+    }
+
     return $this->hasFile($name) ? $this->getFileValue($name, 'tmp_name') : null;
   }
 
@@ -173,6 +199,11 @@ class sfWebRequest extends sfRequest
    */
   public function getFileSize($name)
   {
+    if (!sfConfig::get('sf_compat_10'))
+    {
+      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
+    }
+
     return $this->hasFile($name) ? $this->getFileValue($name, 'size') : null;
   }
 
@@ -188,6 +219,11 @@ class sfWebRequest extends sfRequest
    */
   public function getFileType($name)
   {
+    if (!sfConfig::get('sf_compat_10'))
+    {
+      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
+    }
+
     return $this->hasFile($name) ? $this->getFileValue($name, 'type') : null;
   }
 
@@ -200,6 +236,11 @@ class sfWebRequest extends sfRequest
    */
   public function hasFile($name)
   {
+    if (!sfConfig::get('sf_compat_10'))
+    {
+      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
+    }
+
     if (preg_match('/^(.+?)\[(.+?)\]$/', $name, $match))
     {
       return isset($_FILES[$match[1]]['name'][$match[2]]);
@@ -219,6 +260,11 @@ class sfWebRequest extends sfRequest
    */
   public function hasFileError($name)
   {
+    if (!sfConfig::get('sf_compat_10'))
+    {
+      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
+    }
+
     return $this->hasFile($name) ? ($this->getFileValue($name, 'error') != UPLOAD_ERR_OK) : false;
   }
 
@@ -229,6 +275,11 @@ class sfWebRequest extends sfRequest
    */
   public function hasFileErrors()
   {
+    if (!sfConfig::get('sf_compat_10'))
+    {
+      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
+    }
+
     foreach ($this->getFileNames() as $name)
     {
       if ($this->hasFileError($name) === true)
@@ -247,6 +298,11 @@ class sfWebRequest extends sfRequest
    */
   public function hasFiles()
   {
+    if (!sfConfig::get('sf_compat_10'))
+    {
+      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
+    }
+
     return (count($_FILES) > 0);
   }
 
@@ -260,6 +316,11 @@ class sfWebRequest extends sfRequest
    */
   public function getFileValue($name, $key)
   {
+    if (!sfConfig::get('sf_compat_10'))
+    {
+      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
+    }
+
     if (preg_match('/^(.+?)\[(.+?)\]$/', $name, $match))
     {
       return $_FILES[$match[1]][$key][$match[2]];
@@ -279,6 +340,11 @@ class sfWebRequest extends sfRequest
    */
   public function getFileValues($name)
   {
+    if (!sfConfig::get('sf_compat_10'))
+    {
+      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
+    }
+
     if (preg_match('/^(.+?)\[(.+?)\]$/', $name, $match))
     {
       return array(
@@ -304,6 +370,11 @@ class sfWebRequest extends sfRequest
    */
   public function getFileExtension($name)
   {
+    if (!sfConfig::get('sf_compat_10'))
+    {
+      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
+    }
+
     $fileType = $this->getFileType($name);
 
     if (!$fileType)
@@ -311,7 +382,7 @@ class sfWebRequest extends sfRequest
       return '.bin';
     }
 
-    $mimeTypes = unserialize(file_get_contents(sfConfig::get('sf_symfony_data_dir').'/data/mime_types.dat'));
+    $mimeTypes = unserialize(file_get_contents(sfConfig::get('sf_symfony_lib_dir').'/plugins/sfCompat10Plugin/data/mime_types.dat'));
 
     return isset($mimeTypes[$fileType]) ? '.'.$mimeTypes[$fileType] : '.bin';
   }
@@ -450,6 +521,11 @@ class sfWebRequest extends sfRequest
    */
   public function moveFile($name, $file, $fileMode = 0666, $create = true, $dirMode = 0777)
   {
+    if (!sfConfig::get('sf_compat_10'))
+    {
+      throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
+    }
+
     if ($this->hasFile($name) && $this->getFileValue($name, 'error') == UPLOAD_ERR_OK && $this->getFileValue($name, 'size') > 0)
     {
       // get our directory path from the destination filename

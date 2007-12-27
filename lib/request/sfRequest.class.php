@@ -11,7 +11,7 @@
 
 /**
  * sfRequest provides methods for manipulating client request information such
- * as attributes, errors and parameters. It is also possible to manipulate the
+ * as attributes, and parameters. It is also possible to manipulate the
  * request method originally sent by the user.
  *
  * @package    symfony
