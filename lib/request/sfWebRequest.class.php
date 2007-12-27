@@ -375,6 +375,8 @@ class sfWebRequest extends sfRequest
       throw new sfConfigurationException('You must set "compat_10" to true if you want to use this method which is deprecated.');
     }
 
+    static $mimeTypes = null;
+
     $fileType = $this->getFileType($name);
 
     if (!$fileType)
@@ -382,7 +384,10 @@ class sfWebRequest extends sfRequest
       return '.bin';
     }
 
-    $mimeTypes = unserialize(file_get_contents(sfConfig::get('sf_symfony_lib_dir').'/plugins/sfCompat10Plugin/data/mime_types.dat'));
+    if (is_null($mimeTypes))
+    {
+      $mimeTypes = unserialize(file_get_contents(sfConfig::get('sf_symfony_lib_dir').'/plugins/sfCompat10Plugin/data/mime_types.dat'));
+    }
 
     return isset($mimeTypes[$fileType]) ? '.'.$mimeTypes[$fileType] : '.bin';
   }
