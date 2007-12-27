@@ -52,7 +52,7 @@ class sfContext
 
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->factories['logger']->info('{sfContext} initialization');
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Initilization')));
     }
 
     $this->dispatcher->connect('template.filter_parameters', array($this, 'filterTemplateParameters'));

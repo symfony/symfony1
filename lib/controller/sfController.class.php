@@ -164,7 +164,7 @@ abstract class sfController
         $dir = str_replace(sfConfig::get('sf_root_dir'), '%SF_ROOT_DIR%', $dir);
       }
 
-      throw new sfControllerException(sprintf('{sfController} controller "%s/%s" does not exist in: %s.', $moduleName, $controllerName, implode(', ', $dirs)));
+      throw new sfControllerException(sprintf('Controller "%s/%s" does not exist in: %s.', $moduleName, $controllerName, implode(', ', $dirs)));
     }
 
     return false;
