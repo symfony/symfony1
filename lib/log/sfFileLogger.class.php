@@ -73,7 +73,7 @@ class sfFileLogger extends sfLogger
   protected function doLog($message, $priority)
   {
     flock($this->fp, LOCK_EX);
-    fwrite($this->fp, sprintf("%s %s [%s] %s%s", strftime('%b %d %H:%M:%S'), 'symfony', sfLogger::getPriorityName($priority), $message, DIRECTORY_SEPARATOR == '\\' ? "\r\n" : "\n"));
+    fwrite($this->fp, sprintf("%s %s [%s] %s%s", strftime('%b %d %H:%M:%S'), 'symfony', sfLogger::getPriorityName($priority), $message, PHP_EOL));
     flock($this->fp, LOCK_UN);
   }
 
