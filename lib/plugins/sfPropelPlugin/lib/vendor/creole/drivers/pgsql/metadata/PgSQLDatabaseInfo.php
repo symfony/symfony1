@@ -93,7 +93,7 @@ class PgSQLDatabaseInfo extends DatabaseInfo {
 														  AND n.nspname NOT IN ('information_schema','pg_catalog')
 														  AND n.nspname NOT LIKE 'pg_temp%'
 														  AND n.nspname NOT LIKE 'pg_toast%'
-														ORDER BY name");
+														ORDER BY relname");
 														
         if (!$result) {
             throw new SQLException("Could not list sequences", pg_last_error($this->dblink));
