@@ -12,6 +12,7 @@
  * sfCallable represents a PHP callable.
  *
  * @package    symfony
+ * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */

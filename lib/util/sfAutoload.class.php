@@ -15,6 +15,7 @@
  * of the same class (why?).
  *
  * @package    symfony
+ * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */

@@ -12,7 +12,7 @@
  * sfYamlInline implements a YAML parser/dumper for the YAML inline syntax.
  *
  * @package    symfony
- * @subpackage validator
+ * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */

@@ -31,7 +31,8 @@
  * 
  * @author Xiang Wei Zhuo <weizhuo[at]gmail[dot]com>
  * @version v1.0, last update on Fri Dec 24 16:18:44 EST 2004
- * @package System.I18N.core
+ * @package    symfony
+ * @subpackage i18n
  */
 class sfMessageSource_XLIFF extends sfMessageSource_File
 {

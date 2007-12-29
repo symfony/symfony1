@@ -272,6 +272,14 @@ class sfValidatorFile extends sfValidator
   }
 }
 
+/**
+ * sfValidatedFile represents a validated uploaded file.
+ *
+ * @package    symfony
+ * @subpackage validator
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @version    SVN: $Id$
+ */
 class sfValidatedFile
 {
   protected

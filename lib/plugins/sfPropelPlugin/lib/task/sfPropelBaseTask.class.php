@@ -211,6 +211,12 @@ abstract class sfPropelBaseTask extends sfBaseTask
   }
 }
 
+/**
+ * @package    symfony
+ * @subpackage command
+ * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @version    SVN: $Id$
+ */
 class sfPhing extends Phing
 {
   function getPhingVersion()
