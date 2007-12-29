@@ -31,13 +31,13 @@ class sfPropelDatabase extends sfCreoleDatabase
   static protected
     $config = array();
 
-  public function initialize($parameters = null, $name = 'propel')
+  public function initialize($parameters = null)
   {
     parent::initialize($parameters);
 
     if (!$this->hasParameter('datasource'))
     {
-      $this->setParameter('datasource', $name);
+      $this->setParameter('datasource', $this->getParameter('name', 'propel'));
     }
 
     $this->addConfig();
