@@ -37,7 +37,7 @@ class sfNoRouting extends sfRouting
     // other parameters
     unset($parameters['module'], $parameters['action']);
     ksort($parameters);
-    $parameters = count($parameters) ? '?'.http_build_query($parameters) : '';
+    $parameters = count($parameters) ? '?'.http_build_query($parameters, null, '&') : '';
 
     return sprintf('%s/%s%s', $module, $action, $parameters);
   }
@@ -53,7 +53,7 @@ class sfNoRouting extends sfRouting
   */
   public function generate($name, $params, $querydiv = '/', $divider = '/', $equals = '/')
   {
-    $parameters = http_build_query(array_merge($this->defaultParameters, $params));
+    $parameters = http_build_query(array_merge($this->defaultParameters, $params), null, '&');
 
     return '/'.($parameters ? '?'.$parameters : '');
   }

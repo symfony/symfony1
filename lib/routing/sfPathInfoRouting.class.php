@@ -38,7 +38,7 @@ class sfPathInfoRouting extends sfRouting
     // other parameters
     unset($parameters['module'], $parameters['action']);
     ksort($parameters);
-    $parameters = count($parameters) ? '?'.http_build_query($parameters) : '';
+    $parameters = count($parameters) ? '?'.http_build_query($parameters, null, '&') : '';
 
     return sprintf('%s/%s%s', $module, $action, $parameters);
   }
