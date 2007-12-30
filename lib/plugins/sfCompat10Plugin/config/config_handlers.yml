@@ -1,0 +1,5 @@
+modules/*/config/mailer.yml:
+  class:    sfDefineEnvironmentConfigHandler
+  param:
+    prefix: sf_mailer_
+    module: yes
