@@ -1,9 +1,6 @@
 config/autoload.yml:
   class:    sfAutoloadConfigHandler
 
-config/php.yml:
-  class:    sfPhpConfigHandler
-
 config/databases.yml:
   class:    sfDatabaseConfigHandler
 

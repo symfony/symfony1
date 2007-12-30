@@ -84,7 +84,7 @@ class sfCore
     ini_set('display_errors', SF_DEBUG ? 'on' : 'off');
     error_reporting(sfConfig::get('sf_error_reporting'));
 
-    $configCache->import(sfConfig::get('sf_app_config_dir_name').'/php.yml', false);
+    ini_set('magic_quotes_runtime', 'off');
 
     // include all config.php from plugins
     sfLoader::loadPluginConfig();
