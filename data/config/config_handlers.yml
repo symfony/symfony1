@@ -29,11 +29,6 @@ config/filters.yml:
 config/routing.yml:
   class:    sfRoutingConfigHandler
 
-config/i18n.yml:
-  class:    sfDefineEnvironmentConfigHandler
-  param:
-    prefix: sf_i18n_
-
 modules/*/config/generator.yml:
   class:    sfGeneratorConfigHandler
 
