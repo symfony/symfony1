@@ -37,6 +37,7 @@ require_once($h->base_dir.'/bootstrap/unit.php');
 
 // unit tests
 $h->register_glob($h->base_dir.'/unit/*/*Test.php');
+$h->register_glob($h->base_dir.'/unit/*/*/*Test.php');
 $h->register_glob($h->base_dir.'/../lib/plugins/*/test/unit/*Test.php');
 $h->register_glob($h->base_dir.'/../lib/plugins/*/test/unit/*/*Test.php');
 

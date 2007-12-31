@@ -13,20 +13,14 @@ require_once(dirname(__FILE__).'/unit.php');
 require_once(sfConfig::get('sf_symfony_lib_dir').'/command/sfCommandApplication.class.php');
 require_once(sfConfig::get('sf_symfony_lib_dir').'/command/sfSymfonyCommandApplication.class.php');
 
-class sfSymfonyCommandApplicationTest extends sfSymfonyCommandApplication
-{
-  public function initialize($symfonyLibDir, $symfonyDataDir)
-  {
-    $this->initializeEnvironment(sfConfig::get('sf_symfony_lib_dir'), sfConfig::get('sf_symfony_data_dir'));
-  }
-}
-
 $tmpDir = sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.'sf_'.rand(11111, 99999);
 mkdir($tmpDir, 0777, true);
 chdir($tmpDir);
 
-$application = new sfSymfonyCommandApplicationTest();
-$application->initialize(sfConfig::get('sf_symfony_lib_dir'), sfConfig::get('sf_symfony_data_dir'));
+$application = new sfSymfonyCommandApplication(new sfEventDispatcher(), new sfFormatter(), array(
+  'symfony_lib_dir' => sfConfig::get('sf_symfony_lib_dir'),
+  'symfony_data_dir' => sfConfig::get('sf_symfony_data_dir'),
+));
 
 register_shutdown_function('sf_shutdown_task_test');
 
