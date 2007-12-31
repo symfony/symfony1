@@ -490,7 +490,7 @@ class lime_harness extends lime_registration
       $relative_file = $this->get_relative_file($file);
 
       ob_start(array($this, 'process_test_output'));
-      passthru(sprintf('%s -d html_errors=off -d open_basedir= -q "%s" 2>&1', $this->php_cli, $file), $return);
+      passthru(sprintf('%s "%s" 2>&1', $this->php_cli, $file), $return);
       ob_end_clean();
 
       if ($return > 0)
@@ -652,7 +652,7 @@ echo '<PHP_SER>'.serialize(xdebug_get_code_coverage()).'</PHP_SER>';
 EOF;
       file_put_contents($tmp_file, $tmp);
       ob_start();
-      passthru(sprintf('%s -d html_errors=off -d open_basedir= -q "%s" 2>&1', $this->harness->php_cli, $tmp_file), $return);
+      passthru(sprintf('%s "%s" 2>&1', $this->harness->php_cli, $tmp_file), $return);
       $retval = ob_get_clean();
       if (0 == $return)
       {
