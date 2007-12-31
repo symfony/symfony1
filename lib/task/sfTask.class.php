@@ -85,7 +85,16 @@ abstract class sfTask
   {
     $commandManager = new sfCommandManager(new sfCommandArgumentSet($this->getArguments()), new sfCommandOptionSet($this->getOptions()));
 
-    return $this->doRun($commandManager, array_merge($arguments, $options));
+    // add -- before each option if needed
+    foreach ($options as &$option)
+    {
+      if (0 !== strpos($option, '--'))
+      {
+        $option = '--'.$option;
+      }
+    }
+
+    return $this->doRun($commandManager, implode(' ', array_merge($arguments, $options)));
   }
 
   /**
