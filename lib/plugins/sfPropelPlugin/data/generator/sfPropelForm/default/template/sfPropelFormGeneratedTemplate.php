@@ -54,7 +54,7 @@ class Base<?php echo $this->table->getPhpName() ?>Form extends BaseFormPropel
   }
 <?php endif; ?>
 
-<?php foreach ($this->getForeignKeyNames() as $name): ?>
+<?php foreach ($this->getForeignKeyNames() as $info): $name = $info[0] ?>
   public function get<?php echo $name ?>IdentifierChoices()
   {
     return array_keys($this->get<?php echo $name ?>Choices());
@@ -64,7 +64,7 @@ class Base<?php echo $this->table->getPhpName() ?>Form extends BaseFormPropel
   {
     if (!isset($this-><?php echo $name ?>Choices))
     {
-      $this-><?php echo $name ?>Choices = array();
+      $this-><?php echo $name ?>Choices = array(<?php !$info[1] and print "'' => ''" ?>);
       foreach (<?php echo $name ?>Peer::doSelect(new Criteria(), $this->getConnection()) as $object)
       {
         $this-><?php echo $name ?>Choices[$object->get<?php echo $this->getPrimaryKey()->getPhpName() ?>()] = $object->__toString();
