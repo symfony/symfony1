@@ -28,7 +28,6 @@ class sfCore
    *
    * @param  string The path to the project directory.
    * @param  mixed  The application name or null.
-   * @param  mixed  The dimension name or null.
    *
    * @return void
    */
@@ -113,7 +112,6 @@ class sfCore
    * @param  string  The path to the project directory.
    * @param  mixed   The application name or null.
    * @param  boolean In a test?
-   * @param  mixed   The dimension name or null.
    *
    * @return void
    */
@@ -220,7 +218,6 @@ class sfCore
    * @param  string The path to the project directory.
    * @param  mixed  The application name or null.
    * @param  mixed  The environment name or null.
-   * @param  mixed  The dimension name or null.
    *
    * @return void
    */
