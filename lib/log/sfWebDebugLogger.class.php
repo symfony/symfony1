@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -34,11 +34,17 @@ class sfWebDebugLogger extends sfLogger
    */
   public function initialize(sfEventDispatcher $dispatcher, $options = array())
   {
-    $this->webDebug   = new sfWebDebug();
     $this->context    = sfContext::getInstance();
     $this->dispatcher = $dispatcher;
 
     $dispatcher->connect('response.filter_content', array($this, 'filterResponseContent'));
+
+    if(is_null($this->webDebug))
+    {
+      $this->webDebug = $this->context->has('sf_web_debug') ? $this->context->get('sf_web_debug') : new sfWebDebug();
+    }
+
+    $this->context->set('sf_web_debug', $this->webDebug);
 
     if (isset($options['xdebug_logging']))
     {
@@ -89,7 +95,7 @@ class sfWebDebugLogger extends sfLogger
     }
 
     // add needed assets for the web debug toolbar
-    $root = $this->context->getRequest()->getRelativeUrlRoot(); 
+    $root = $this->context->getRequest()->getRelativeUrlRoot();
     $assets = sprintf('
       <script type="text/javascript" src="%s"></script>
       <link rel="stylesheet" type="text/css" media="screen" href="%s" />',
@@ -120,7 +126,7 @@ class sfWebDebugLogger extends sfLogger
   {
     // if we have xdebug and dev has not disabled the feature, add some stack information
     $debugStack = array();
-    if (function_exists('xdebug_get_function_stack') && $this->xdebugLogging)
+    if ($this->xdebugLogging && function_exists('xdebug_get_function_stack'))
     {
       foreach (xdebug_get_function_stack() as $i => $stack)
       {
