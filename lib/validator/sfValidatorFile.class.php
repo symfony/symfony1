@@ -169,7 +169,9 @@ class sfValidatorFile extends sfValidator
   {
     foreach ($this->getOption('mime_type_guessers') as $method)
     {
-      if (!is_null($type = call_user_func($method, $file)))
+      $type = call_user_func($method, $file);
+
+      if (!is_null($type) && $type !== false)
       {
         return $type;
       }

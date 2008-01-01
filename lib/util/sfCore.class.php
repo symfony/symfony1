@@ -98,6 +98,7 @@ class sfCore
     error_reporting(sfConfig::get('sf_error_reporting'));
 
     ini_set('magic_quotes_runtime', 'off');
+    ini_set('register_globals', 'off');
 
     // include all config.php from plugins
     sfLoader::loadPluginConfig();
