@@ -77,7 +77,7 @@ class sfValidatorDate extends sfValidator
       $clean = (integer) $value;
     }
 
-    return date($this->getOption('with_time') ? $this->getOption('datetime_output') : $this->getOption('date_output'), $clean);
+    return $clean === $this->getEmptyValue() ? $clean : date($this->getOption('with_time') ? $this->getOption('datetime_output') : $this->getOption('date_output'), $clean);
   }
 
   /**
@@ -91,13 +91,64 @@ class sfValidatorDate extends sfValidator
    */
   protected function convertDateArrayToTimestamp($value)
   {
+    // all elements must be empty or a number
+    foreach (array('year', 'month', 'day', 'hour', 'minute', 'second') as $key)
+    {
+      if (isset($value[$key]) && !preg_match('#^\d+$#', $value[$key]) && !empty($value[$key]))
+      {
+        throw new sfValidatorError($this, 'invalid', array('value' => $value));
+      }
+    }
+
+    // if one date value is empty, all others must be empty too
+    $empties =
+      (!isset($value['year']) || !$value['year'] ? 1 : 0) +
+      (!isset($value['month']) || !$value['month'] ? 1 : 0) +
+      (!isset($value['day']) || !$value['day'] ? 1 : 0)
+    ;
+    if ($empties > 0 && $empties < 3)
+    {
+      throw new sfValidatorError($this, 'invalid', array('value' => $value));
+    }
+    else if (3 == $empties)
+    {
+      return $this->getEmptyValue();
+    }
+
     if ($this->getOption('with_time'))
     {
-      $clean = mktime(isset($value['hour']) ? $value['hour'] : 0, isset($value['minute']) ? $value['minute'] : 0, isset($value['second']) ? $value['second'] : 0, $value['month'], $value['day'], $value['year']);
+      // if one time value is empty, all others must be empty too
+      // but second can be empty
+      $empties =
+        (!isset($value['hour']) || !$value['hour'] ? 1 : 0) +
+        (!isset($value['minute']) || !$value['minute'] ? 1 : 0) +
+        (!isset($value['second']) || !$value['second'] ? 1 : 0)
+      ;
+      if ($empties > 0 && $empties < 3)
+      {
+        if (1 == $empties && !isset($value['second']) || empty($value['second']))
+        {
+          // OK
+        }
+        else
+        {
+          throw new sfValidatorError($this, 'invalid', array('value' => $value));
+        }
+      }
+
+      // if minute is not empty, hour cannot be empty
+      $clean = mktime(
+        isset($value['hour']) ? intval($value['hour']) : 0,
+        isset($value['minute']) ? intval($value['minute']) : 0,
+        isset($value['second']) ? intval($value['second']) : 0,
+        intval($value['month']),
+        intval($value['day']),
+        intval($value['year'])
+      );
     }
     else
     {
-      $clean = mktime(0, 0, 0, $value['month'], $value['day'], $value['year']);
+      $clean = mktime(0, 0, 0, intval($value['month']), intval($value['day']), intval($value['year']));
     }
 
     if (false === $clean)
