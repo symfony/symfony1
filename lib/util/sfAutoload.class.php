@@ -28,10 +28,11 @@ class sfAutoload
     $overriden = array(),
     $classes = array();
 
-  protected function __construct()
-  {
-  }
-
+  /**
+   * Retrieves the singleton instance of this class.
+   *
+   * @return sfAutoload A sfAutoload implementation instance.
+   */
   static public function getInstance()
   {
     if (!isset(self::$instance))
@@ -42,6 +43,11 @@ class sfAutoload
     return self::$instance;
   }
 
+  /**
+   * Register sfAutoload in spl autoloader.
+   *
+   * @return void
+   */
   public function register()
   {
     ini_set('unserialize_callback_func', 'spl_autoload_call');
@@ -49,11 +55,24 @@ class sfAutoload
     spl_autoload_register(array($this, 'autoload'));
   }
 
+  /**
+   * Unregister sfAutoload from spl autoloader.
+   *
+   * @return void
+   */
   public function unregister()
   {
     spl_autoload_unregister(array($this, 'autoload'));
   }
 
+  /**
+   * Sets path to class.
+   *
+   * @param  string  A class name.
+   * @param  string  Path to class.
+   *
+   * @return void
+   */
   public function setClassPath($class, $path)
   {
     $this->overriden[$class] = $path;
@@ -61,11 +80,25 @@ class sfAutoload
     $this->classes[$class] = $path;
   }
 
+  /**
+   * Get path to class.
+   *
+   * @param  string  A class name.
+   *
+   * @return void
+   */
   public function getClassPath($class)
   {
     return isset($this->classes[$class]) ? $this->classes[$class] : null;
   }
 
+  /**
+   * Reloads all registered classes.
+   *
+   * @param  boolean Force delete of autoload cache?
+   *
+   * @return void
+   */
   public function reloadClasses($force = false)
   {
     if ($force)
@@ -106,7 +139,14 @@ class sfAutoload
     return false;
   }
 
-  function autoloadAgain($class)
+  /**
+   * Reloads a class.
+   *
+   * @param  string  A class name.
+   *
+   * @return boolean Returns true if the class has been loaded
+   */
+  public function autoloadAgain($class)
   {
     self::reloadClasses(true);
 

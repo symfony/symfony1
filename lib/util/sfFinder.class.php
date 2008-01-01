@@ -3,18 +3,11 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-/**
- *
- * @package    symfony
- * @subpackage util
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
- */
 
 /**
  *
@@ -338,7 +331,7 @@ class sfFinder
     $files    = array();
     $here_dir = getcwd();
     $numargs  = func_num_args();
-    $arg_list = func_get_args(); 
+    $arg_list = func_get_args();
 
     // first argument is an array?
     if ($numargs == 1 && is_array($arg_list[0]))

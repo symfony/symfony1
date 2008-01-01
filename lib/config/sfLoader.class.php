@@ -413,13 +413,18 @@ class sfLoader
     }
   }
 
+  /**
+   * Loads config.php files from plugins
+   *
+   * @return void
+   */
   static public function loadPluginConfig()
   {
     if ($pluginConfigs = glob(sfConfig::get('sf_symfony_lib_dir').'/plugins/*/config/config.php'))
     {
-      foreach ($pluginConfigs as $config)
+      foreach($pluginConfigs as $config)
       {
-        include($config);
+        require_once($config);
       }
     }
 
@@ -427,7 +432,7 @@ class sfLoader
     {
       foreach ($pluginConfigs as $config)
       {
-        include($config);
+        require_once($config);
       }
     }
   }

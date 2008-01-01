@@ -30,8 +30,9 @@ class sfYaml
    *   print_r($array);
    *  </code>
    *
-   * @return array
    * @param string $input Path of YAML file or string containing YAML
+   *
+   * @return array
    */
   public static function load($input)
   {
@@ -66,8 +67,9 @@ class sfYaml
    * The dump method, when supplied with an array, will do its best
    * to convert the array into friendly YAML.
    *
-   * @return string
    * @param array $array PHP array
+   *
+   * @return string
    */
   public static function dump($array)
   {
@@ -85,6 +87,13 @@ class sfYaml
     }
   }
 
+  /**
+   * Get contents of input.
+   *
+   * @param string $input
+   *
+   * @return string
+   */
   protected static function getIncludeContents($input)
   {
     // if input is a file, process it
@@ -104,7 +113,9 @@ class sfYaml
 }
 
 /**
- * Wraps echo to automatically provide a newline
+ * Wraps echo to automatically provide a newline.
+ *
+ * @param string The string to echo with new line
  */
 function echoln($string)
 {

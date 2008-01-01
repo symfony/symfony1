@@ -174,6 +174,13 @@ class sfToolkit
     return $isLocked;
   }
 
+  /**
+   * Strips comments from php source code
+   *
+   * @param  string  PHP source code.
+   *
+   * @return string  Comment free source code.
+   */
   public static function stripComments($source)
   {
     if (!sfConfig::get('sf_strip_comments', true))
@@ -222,6 +229,13 @@ class sfToolkit
     return $output;
   }
 
+  /**
+   * Strip slashes recursively from array
+   *
+   * @param array  the value to strip
+   *
+   * @return array clean value with slashes stripped
+   */
   public static function stripslashesDeep($value)
   {
     return is_array($value) ? array_map(array('sfToolkit', 'stripslashesDeep'), $value) : stripslashes($value);
@@ -295,6 +309,13 @@ class sfToolkit
     }
   }
 
+  /**
+   * Converts string to array
+   *
+   * @param string the value to convert to array
+   *
+   * @return array
+   */
   public static function stringToArray($string)
   {
     preg_match_all('/
@@ -321,6 +342,8 @@ class sfToolkit
    * Finds the type of the passed value, returns the value as the new type.
    *
    * @param  string
+   * @param  boolean Quote?
+   *
    * @return mixed
    */
   public static function literalize($value, $quoted = false)
@@ -365,6 +388,7 @@ class sfToolkit
    * Replaces constant identifiers in a scalar value.
    *
    * @param string the value to perform the replacement on
+   *
    * @return string the value with substitutions made
    */
   public static function replaceConstants($value)
@@ -383,6 +407,12 @@ class sfToolkit
     return preg_replace(array_keys($replacePairs), array_values($replacePairs), $search);
   }
 
+  /**
+   * Checks if array values are empty
+   *
+   * @param array the array to check
+   * @return boolean true if empty, otherwise false
+   */
   public static function isArrayValuesEmpty($array)
   {
     static $isEmpty = true;
@@ -455,6 +485,15 @@ class sfToolkit
     return true;
   }
 
+  /**
+   * Returns an array value for a path.
+   *
+   * @param array  The values to search
+   * @param string The token name
+   * @param array  Default if not found
+   *
+   * @return array
+   */
   public static function getArrayValueForPath($values, $name, $default = null)
   {
     if (false !== ($offset = strpos($name, '[')))
@@ -486,6 +525,12 @@ class sfToolkit
     return $default;
   }
 
+  /**
+   * Get path to php cli.
+   *
+   * @throws sfException If no php cli found
+   * @return string
+   */
   public static function getPhpCli()
   {
     $path = getenv('PATH') ? getenv('PATH') : getenv('Path');

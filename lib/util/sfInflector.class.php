@@ -112,7 +112,10 @@ class sfInflector
   public static function humanize($lower_case_and_underscored_word)
   {
     if (substr($lower_case_and_underscored_word, -3) === '_id')
-        $lower_case_and_underscored_word = substr($lower_case_and_underscored_word, 0, -3);
+    {
+      $lower_case_and_underscored_word = substr($lower_case_and_underscored_word, 0, -3);
+    }
+
     return ucfirst(str_replace('_', ' ', $lower_case_and_underscored_word));
   }
 }

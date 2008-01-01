@@ -18,6 +18,13 @@
  */
 class sfYamlInline
 {
+  /**
+   * Load YAML into a PHP array.
+   *
+   * @param string YAML
+   *
+   * @return array PHP array
+   */
   static public function load($value)
   {
     if (!$value)
@@ -38,6 +45,13 @@ class sfYamlInline
     }
   }
 
+  /**
+   * Dumps PHP array to YAML.
+   *
+   * @param mixed PHP
+   *
+   * @return string YAML
+   */
   static public function dump($value)
   {
     switch (true)
@@ -63,6 +77,13 @@ class sfYamlInline
     }
   }
 
+  /**
+   * Dumps PHP array to YAML
+   *
+   * @param array   The array to dump
+   *
+   * @return string YAML
+   */
   static protected function dumpArray($value)
   {
     // array
@@ -91,6 +112,17 @@ class sfYamlInline
     return sprintf('{ %s }', implode(', ', $output));
   }
 
+  /**
+   * Parses scalar to yaml
+   *
+   * @param scalar $scalar
+   * @param string $delimiters
+   * @param array  String delimiter
+   * @param integer $i
+   * @param boolean $evaluate
+   *
+   * @return string YAML
+   */
   static protected function parseScalar($scalar, $delimiters = null, $stringDelimiters = array('"', "'"), &$i = 0, $evaluate = true)
   {
     if (in_array($scalar[$i], $stringDelimiters))
@@ -125,6 +157,14 @@ class sfYamlInline
     return $output;
   }
 
+  /**
+   * Parses quotes scalar
+   *
+   * @param string $scalar
+   * @param integer $i
+   *
+   * @return string YAML
+   */
   static protected function parseQuotedScalar($scalar, &$i)
   {
     $delimiter = $scalar[$i];
@@ -153,6 +193,14 @@ class sfYamlInline
     return $buffer;
   }
 
+  /**
+   * Parse sequence to yaml
+   *
+   * @param string $sequence
+   * @param integer $i
+   *
+   * @return string YAML
+   */
   static protected function parseSequence($sequence, &$i = 0)
   {
     $output = array();
@@ -188,6 +236,14 @@ class sfYamlInline
     throw new sfException(sprintf('Malformed inline YAML string %s', $sequence));
   }
 
+  /**
+   * Parses mapping.
+   *
+   * @param string $mapping
+   * @param integer $i
+   *
+   * @return string YAML
+   */
   static protected function parseMapping($mapping, &$i = 0)
   {
     $output = array();
@@ -247,6 +303,13 @@ class sfYamlInline
     throw new sfException(sprintf('Malformed inline YAML string %s', $mapping));
   }
 
+  /**
+   * Evaluates scalars and replaces magic values.
+   *
+   * @param string $scalar
+   *
+   * @return string YAML
+   */
   static protected function evaluateScalar($scalar)
   {
     $scalar = trim($scalar);
