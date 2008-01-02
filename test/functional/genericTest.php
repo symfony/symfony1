@@ -100,7 +100,7 @@ $b->
 ;
 
 $b->
-  get('/configSecurityIsSecureAction/Index')->
+  get('/configSecurityIsSecureAction/index')->
   isStatusCode(200)->
   isForwardedTo('default', 'login')->
   checkResponseElement('body', '/Login Required/i')
