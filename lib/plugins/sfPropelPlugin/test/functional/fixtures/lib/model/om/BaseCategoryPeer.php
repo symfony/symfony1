@@ -48,7 +48,6 @@ abstract class BaseCategoryPeer {
 	
 	public static function getMapBuilder()
 	{
-		include_once 'lib/model/map/CategoryMapBuilder.php';
 		return BasePeer::getMapBuilder('lib.model.map.CategoryMapBuilder');
 	}
 	
@@ -363,6 +362,5 @@ if (Propel::isInit()) {
 		Propel::log('Could not initialize Peer: ' . $e->getMessage(), Propel::LOG_ERR);
 	}
 } else {
-			require_once 'lib/model/map/CategoryMapBuilder.php';
-	Propel::registerMapBuilder('lib.model.map.CategoryMapBuilder');
+			Propel::registerMapBuilder('lib.model.map.CategoryMapBuilder');
 }

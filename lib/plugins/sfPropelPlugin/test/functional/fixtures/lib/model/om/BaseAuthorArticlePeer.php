@@ -51,7 +51,6 @@ abstract class BaseAuthorArticlePeer {
 	
 	public static function getMapBuilder()
 	{
-		include_once 'lib/model/map/AuthorArticleMapBuilder.php';
 		return BasePeer::getMapBuilder('lib.model.map.AuthorArticleMapBuilder');
 	}
 	
@@ -804,6 +803,5 @@ if (Propel::isInit()) {
 		Propel::log('Could not initialize Peer: ' . $e->getMessage(), Propel::LOG_ERR);
 	}
 } else {
-			require_once 'lib/model/map/AuthorArticleMapBuilder.php';
-	Propel::registerMapBuilder('lib.model.map.AuthorArticleMapBuilder');
+			Propel::registerMapBuilder('lib.model.map.AuthorArticleMapBuilder');
 }

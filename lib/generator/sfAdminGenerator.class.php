@@ -708,6 +708,59 @@ EOF;
     }
   }
 
+  public function getFormObject()
+  {
+    $class = $this->getClassName().'Form';
+
+    return new $class();
+  }
+
+  public function getHiddenFields()
+  {
+    $form = $this->getFormObject();
+    $hiddenFields = array();
+    foreach ($form->getWidgetSchema()->getPositions() as $name)
+    {
+      if ($form[$name]->isHidden())
+      {
+        $hiddenFields[] = $name;
+      }
+    }
+
+    return $hiddenFields;
+  }
+
+  public function getHiddenFieldsAsString()
+  {
+    $hiddenFields = '';
+    foreach ($this->getHiddenFields() as $name)
+    {
+      $hiddenFields .= '        [?php echo $form[\''.$name.'\'] ?]'."\n";
+    }
+
+    return "\n".$hiddenFields;
+  }
+
+  public function getLastNonHiddenField()
+  {
+    $form = $this->getFormObject();
+    $positions = $form->getWidgetSchema()->getPositions();
+    $last = count($positions) - 1;
+    for ($i = count($positions) - 1; $i >= 0; $i--)
+    {
+      if ($form[$positions[$i]]->isHidden())
+      {
+        $last = $i - 1;
+      }
+      else
+      {
+        break;
+      }
+    }
+
+    return $last;
+  }
+
   /**
    * Escapes a string.
    *

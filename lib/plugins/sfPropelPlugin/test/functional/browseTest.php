@@ -65,19 +65,19 @@ $b->
   checkResponseElement('body table thead tr th[id="sf_admin_list_th_created_at"] a[href*="/sort/"]', 'Created at')->
 
   // first line
-  checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td', '1', array('position' => 0))->
-  checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td', 'foo title', array('position' => 1))->
-  checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td', 'bar body', array('position' => 2))->
-  checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td img', true, array('position' => 3))->
-  checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td', '1', array('position' => 4))->
+  checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td:nth(0)', '1')->
+  checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td:nth(1)', 'foo title')->
+  checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td:nth(2)', 'bar body')->
+  checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td:nth(3) img', true)->
+  checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td:nth(4)', '1')->
   checkResponseElement('body table tbody tr[class="sf_admin_row_0"] td a[href$="/article/edit/id/1"]', '1')-> // clickable
 
   // second line
-  checkResponseElement('body table tbody tr[class="sf_admin_row_1"] td', '2', array('position' => 0))->
-  checkResponseElement('body table tbody tr[class="sf_admin_row_1"] td', 'foo foo title', array('position' => 1))->
-  checkResponseElement('body table tbody tr[class="sf_admin_row_1"] td', 'bar bar body', array('position' => 2))->
-  checkResponseElement('body table tbody tr[class="sf_admin_row_1"] td img', false, array('position' => 3))->
-  checkResponseElement('body table tbody tr[class="sf_admin_row_1"] td', '2', array('position' => 4))->
+  checkResponseElement('body table tbody tr[class="sf_admin_row_1"] td:nth(0)', '2')->
+  checkResponseElement('body table tbody tr[class="sf_admin_row_1"] td:nth(1)', 'foo foo title')->
+  checkResponseElement('body table tbody tr[class="sf_admin_row_1"] td:nth(2)', 'bar bar body')->
+  checkResponseElement('body table tbody tr[class="sf_admin_row_1"] td:nth(3) img', false)->
+  checkResponseElement('body table tbody tr[class="sf_admin_row_1"] td:nth(4)', '2')->
   checkResponseElement('body table tbody tr[class="sf_admin_row_1"] td a[href$="/article/edit/id/2"]', '2')->
 
   // nb lines
@@ -157,8 +157,8 @@ $b->
   checkResponseElement('body form#sf_admin_edit_form textarea[name="article[body]"][id="article_body"]', 'bar body')->
   checkResponseElement('body form#sf_admin_edit_form input[name="article[online]"][id="article_online"][type="checkbox"][checked="checked"]', true)->
   checkResponseElement('body form#sf_admin_edit_form select[name="article[category_id]"][id="article_category_id"]', true)->
-  checkResponseElement('body form#sf_admin_edit_form select[name="article[category_id]"][id="article_category_id"] option[value="1"]', '1')->
-  checkResponseElement('body form#sf_admin_edit_form select[name="article[category_id]"][id="article_category_id"] option[value="2"]', '2')->
+  checkResponseElement('body form#sf_admin_edit_form select[name="article[category_id]"][id="article_category_id"] option[value="1"]', 'Category 1')->
+  checkResponseElement('body form#sf_admin_edit_form select[name="article[category_id]"][id="article_category_id"] option[value="2"]', 'Category 2')->
   checkResponseElement('body form#sf_admin_edit_form input[name="article[created_at]"][id="article_created_at"][value*="-"]')->
 
   // buttons
@@ -186,7 +186,7 @@ $b->
   checkResponseElement('input[id="article_title"][value="my title"]')->
   checkResponseElement('#article_body', 'my body')->
   checkResponseElement('input[id="article_online"][checked="checked"]', true)->
-  checkResponseElement('#article_category_id option[selected="selected"]', '2')
+  checkResponseElement('#article_category_id option[selected="selected"]', 'Category 2')
 ;
 
 // save and add
@@ -228,11 +228,11 @@ $b->
   // check values
   checkResponseElement('input[id="article_title"][value="new title"]')->
   checkResponseElement('#article_body', 'new body')->
-  checkResponseElement('#article_category_id option[selected="selected"]', '2')->
+  checkResponseElement('#article_category_id option[selected="selected"]', 'Category 2')->
 
   // check list
   getAndCheck('article', 'list')->
-  checkResponseElement('body table tbody tr[class="sf_admin_row_1"] td', '', array('position' => 7))->
+  checkResponseElement('body table tbody tr[class="sf_admin_row_1"] td:nth(7)', '')->
 
   // nb lines
   checkResponseElement('body table tfoot tr th', '/^\s*3 results\s*$/')

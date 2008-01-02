@@ -45,6 +45,7 @@ $h->register_glob($h->base_dir.'/../lib/plugins/*/test/unit/*/*Test.php');
 $h->register_glob($h->base_dir.'/functional/*Test.php');
 $h->register_glob($h->base_dir.'/functional/*/*Test.php');
 $h->register_glob($h->base_dir.'/../lib/plugins/*/test/functional/*Test.php');
+$h->register_glob($h->base_dir.'/../lib/plugins/*/test/functional/*/*Test.php');
 
 // other tests
 $h->register_glob($h->base_dir.'/other/*Test.php');

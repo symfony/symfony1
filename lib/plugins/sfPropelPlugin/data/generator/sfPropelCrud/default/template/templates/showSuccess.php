@@ -1,13 +1,16 @@
 <table>
-<tbody>
+  <tbody>
 <?php foreach ($this->getTableMap()->getColumns() as $column): ?>
-<tr>
-<th><?php echo sfInflector::humanize(sfInflector::underscore($column->getPhpName())) ?>: </th>
-<td>[?= $<?php echo $this->getSingularName() ?>->get<?php echo $column->getPhpName() ?>() ?]</td>
-</tr>
+    <tr>
+      <th><?php echo sfInflector::humanize(sfInflector::underscore($column->getPhpName())) ?>:</th>
+      <td>[?= $<?php echo $this->getSingularName() ?>->get<?php echo $column->getPhpName() ?>() ?]</td>
+    </tr>
 <?php endforeach; ?>
-</tbody>
+  </tbody>
 </table>
+
 <hr />
-[?php echo link_to('edit', '<?php echo $this->getModuleName() ?>/edit?<?php echo $this->getPrimaryKeyUrlParams() ?>) ?]
-&nbsp;[?php echo link_to('list', '<?php echo $this->getModuleName() ?>/list') ?]
+
+<a href="[?php echo url_for('<?php echo $this->getModuleName() ?>/edit?<?php echo $this->getPrimaryKeyUrlParams() ?>) ?]">Edit</a>
+&nbsp;
+<a href="[?php echo url_for('<?php echo $this->getModuleName() ?>/index') ?]">List</a>

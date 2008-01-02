@@ -417,11 +417,8 @@ abstract class BaseAuthorArticle extends BaseObject  implements Persistent {
 	
 	public function getAuthor($con = null)
 	{
-				include_once 'lib/model/om/BaseAuthorPeer.php';
-
 		if ($this->aAuthor === null && ($this->author_id !== null)) {
-
-			$this->aAuthor = AuthorPeer::retrieveByPK($this->author_id, $con);
+						$this->aAuthor = AuthorPeer::retrieveByPK($this->author_id, $con);
 
 			
 		}
@@ -447,11 +444,8 @@ abstract class BaseAuthorArticle extends BaseObject  implements Persistent {
 	
 	public function getArticle($con = null)
 	{
-				include_once 'lib/model/om/BaseArticlePeer.php';
-
 		if ($this->aArticle === null && ($this->article_id !== null)) {
-
-			$this->aArticle = ArticlePeer::retrieveByPK($this->article_id, $con);
+						$this->aArticle = ArticlePeer::retrieveByPK($this->article_id, $con);
 
 			
 		}

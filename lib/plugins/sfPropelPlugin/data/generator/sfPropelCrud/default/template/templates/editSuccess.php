@@ -1,29 +1,37 @@
-[?php use_helper('Object') ?]
+<?php $form = $this->getFormObject() ?>
+[?php $<?php echo $this->getSingularName() ?> = $form->getObject() ?]
+<h1>[?php echo $<?php echo $this->getSingularName() ?>->isNew() ? 'New' : 'Edit' ?] <?php echo sfInflector::humanize($this->getModuleName()) ?></h1>
 
-[?php echo form_tag('<?php echo $this->getModuleName() ?>/update') ?]
+<form action="[?php echo url_for('<?php echo $this->getModuleName() ?>/<?php echo isset($this->params['non_atomic_actions']) && $this->params['non_atomic_actions'] ? 'edit' : 'update' ?>'.(!$<?php echo $this->getSingularName() ?>->isNew() ? '?<?php echo $this->getPrimaryKeyUrlParams() ?> : '')) ?]" method="post" [?php $form->isMultipart() and print 'enctype="multipart/form-data" ' ?]>
+  <table>
+    <tfoot>
+      <tr>
+        <td colspan="2">
+          &nbsp;<a href="[?php echo url_for('<?php echo $this->getModuleName() ?>/index') ?]">Cancel</a>
+          [?php if (!$<?php echo $this->getSingularName() ?>->isNew()): ?]
+            &nbsp;[?php echo link_to('Delete', '<?php echo $this->getModuleName() ?>/delete?<?php echo $this->getPrimaryKeyUrlParams() ?>, array('post' => true, 'confirm' => 'Are you sure?')) ?]
+          [?php endif; ?]
+          <input type="submit" value="Save" />
+        </td>
+      </tr>
+    </tfoot>
+    <tbody>
+<?php if (isset($this->params['non_verbose_templates']) && $this->params['non_verbose_templates']): ?>
+      [?php echo $this->getAttributeHolder()->isEscaped() ? $form->render(ESC_RAW) : $form ?]
+<?php else: ?>
 
-<?php foreach ($this->getPrimaryKey() as $pk): ?>
-[?php echo object_input_hidden_tag($<?php echo $this->getSingularName() ?>, 'get<?php echo $pk->getPhpName() ?>') ?]
+<?php foreach ($form->getWidgetSchema()->getPositions() as $i => $name): ?>
+<?php if ($form[$name]->isHidden()) continue ?>
+      <tr>
+        <th><?php echo $form[$name]->renderLabel() ?></th>
+        <td>
+          [?php echo $form['<?php echo $name ?>']->renderError() ?]
+          [?php echo $form['<?php echo $name ?>'] ?]
+<?php $i == $this->getLastNonHiddenField() and print $this->getHiddenFieldsAsString() ?>
+        </td>
+      </tr>
 <?php endforeach; ?>
-
-<table>
-<tbody>
-<?php foreach ($this->getTableMap()->getColumns() as $name => $column): ?>
-<?php if ($column->isPrimaryKey()) continue ?>
-<?php if ($name == 'CREATED_AT' || $name == 'UPDATED_AT') continue ?>
-<tr>
-  <th><?php echo sfInflector::humanize(sfInflector::underscore($column->getPhpName())) ?><?php if ($column->isNotNull()): ?>*<?php endif; ?>:</th>
-  <td>[?php echo <?php echo $this->getCrudColumnEditTag($column) ?> ?]</td>
-</tr>
-<?php endforeach; ?>
-</tbody>
-</table>
-<hr />
-[?php echo submit_tag('save') ?]
-[?php if (<?php echo $this->getPrimaryKeyIsSet() ?>): ?]
-  &nbsp;[?php echo link_to('delete', '<?php echo $this->getModuleName() ?>/delete?<?php echo $this->getPrimaryKeyUrlParams() ?>, 'post=true&confirm=Are you sure?') ?]
-  &nbsp;[?php echo link_to('cancel', '<?php echo $this->getModuleName() ?>/show?<?php echo $this->getPrimaryKeyUrlParams() ?>) ?]
-[?php else: ?]
-  &nbsp;[?php echo link_to('cancel', '<?php echo $this->getModuleName() ?>/list') ?]
-[?php endif; ?]
+<?php endif; ?>
+    </tbody>
+  </table>
 </form>

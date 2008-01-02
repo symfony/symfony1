@@ -55,13 +55,16 @@ class symfony_cmd
 
     return $content;
   }
+
+  public function get_fixture_content($file)
+  {
+    return str_replace("\r\n", "\n", file_get_contents(dirname(__FILE__).'/fixtures/'.$file));
+  }
 }
 
-$t = new lime_test(35, new lime_output_color());
+$t = new lime_test(32, new lime_output_color());
 $c = new symfony_cmd();
 $c->initialize($t);
-
-$t->is($c->execute_command('-T'), $c->execute_command(''), '"symfony" is an alias for "symfony -T"');
 
 // generate:*
 $content = $c->execute_command('generate:project myproject');
@@ -84,37 +87,37 @@ $t->ok(file_exists($c->tmp_dir.DS.'data'.DS.'sql'.DS.'lib.model.schema.sql'), '"
 $content = $c->execute_command('propel:build-model');
 $t->ok(file_exists($c->tmp_dir.DS.'lib'.DS.'model'.DS.'Article.php'), '"propel:build-model" creates model classes under "lib/model" directory');
 
+$content = $c->execute_command('propel:build-form');
+$t->ok(file_exists($c->tmp_dir.DS.'lib'.DS.'form'.DS.'BaseFormPropel.class.php'), '"propel:build-form" creates form classes under "lib/form" directory');
+
 $c->execute_command('propel:insert-sql');
 $file = dirname(__FILE__).DS.'..'.DS.'..'.DS.'lib'.DS.'plugins'.DS.'sfPropelPlugin'.DS.'lib'.DS.'vendor'.DS.'propel-generator'.DS.'database.sqlite';
 $t->ok(file_exists($file), '"propel:insert-sql" creates tables in the database');
 rename($file, $c->tmp_dir.'/data/database.sqlite');
 
-$content = $c->execute_command('propel:init-crud frontend articleInitCrud Article');
-$t->ok(file_exists($c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'modules'.DS.'articleInitCrud'.DS.'config'.DS.'generator.yml'), '"propel:init-crud" initializes a CRUD module');
-
-$content = $c->execute_command('propel:generate-crud frontend articleGenCrud Article');
-$t->ok(is_dir($c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'modules'.DS.'articleGenCrud'), '"propel:generate-crud" generates a CRUD module');
+$content = $c->execute_command('propel:generate-crud --generate-in-cache frontend articleInitCrud Article');
+$t->ok(file_exists($c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'modules'.DS.'articleInitCrud'.DS.'config'.DS.'generator.yml'), '"propel:generate-crud" initializes a CRUD module');
 
 $content = $c->execute_command('propel:init-admin frontend articleInitAdmin Article');
 $t->ok(file_exists($c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'modules'.DS.'articleInitAdmin'.DS.'config'.DS.'generator.yml'), '"propel:init-admin" initializes an admin generator module');
 
 // test:*
 $content = $c->execute_command('test:functional frontend articleInitCrudActions');
-$t->is($content, str_replace("\r\n", "\n", file_get_contents(dirname(__FILE__).'/fixtures/test/functional/result.txt')), '"test:functional" can launch a particular functional test');
+$t->is($content, $c->get_fixture_content('test/functional/result.txt'), '"test:functional" can launch a particular functional test');
 
 $content = $c->execute_command('test:functional frontend');
-$t->is($content, str_replace("\r\n", "\n", file_get_contents(dirname(__FILE__).'/fixtures/test/functional/result-harness.txt')), '"test:functional" can launch all functional tests');
+$t->is($content, $c->get_fixture_content('test/functional/result-harness.txt'), '"test:functional" can launch all functional tests');
 
 copy(dirname(__FILE__).'/fixtures/test/unit/testTest.php', $c->tmp_dir.DS.'test'.DS.'unit'.DS.'testTest.php');
 
 $content = $c->execute_command('test:unit test');
-$t->is($content, str_replace("\r\n", "\n", file_get_contents(dirname(__FILE__).'/fixtures/test/unit/result.txt')), '"test:unit" can launch a particular unit test');
+$t->is($content, $c->get_fixture_content('/test/unit/result.txt'), '"test:unit" can launch a particular unit test');
 
 $content = $c->execute_command('test:unit');
-$t->is($content, str_replace("\r\n", "\n", file_get_contents(dirname(__FILE__).'/fixtures/test/unit/result-harness.txt')), '"test:unit" can launch all unit tests');
+$t->is($content, $c->get_fixture_content('test/unit/result-harness.txt'), '"test:unit" can launch all unit tests');
 
 $content = $c->execute_command('test:all');
-$t->is($content, str_replace("\r\n", "\n", file_get_contents(dirname(__FILE__).'/fixtures/test/result-harness.txt')), '"test:all" launches all unit and functional tests');
+$t->is($content, $c->get_fixture_content('test/result-harness.txt'), '"test:all" launches all unit and functional tests');
 
 $content = $c->execute_command('project:freeze');
 $t->like(file_get_contents($c->tmp_dir.DS.'config'.DS.'config.php'), '/dirname\(__FILE__\)/', '"project:freeze" freezes symfony lib and data dir into the project directory');

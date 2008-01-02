@@ -358,8 +358,7 @@ abstract class BaseBook extends BaseObject  implements Persistent {
 	
 	public function getArticles($criteria = null, $con = null)
 	{
-				include_once 'lib/model/om/BaseArticlePeer.php';
-		if ($criteria === null) {
+				if ($criteria === null) {
 			$criteria = new Criteria();
 		}
 		elseif ($criteria instanceof Criteria)
@@ -396,8 +395,7 @@ abstract class BaseBook extends BaseObject  implements Persistent {
 	
 	public function countArticles($criteria = null, $distinct = false, $con = null)
 	{
-				include_once 'lib/model/om/BaseArticlePeer.php';
-		if ($criteria === null) {
+				if ($criteria === null) {
 			$criteria = new Criteria();
 		}
 		elseif ($criteria instanceof Criteria)
@@ -421,8 +419,7 @@ abstract class BaseBook extends BaseObject  implements Persistent {
 	
 	public function getArticlesJoinCategory($criteria = null, $con = null)
 	{
-				include_once 'lib/model/om/BaseArticlePeer.php';
-		if ($criteria === null) {
+				if ($criteria === null) {
 			$criteria = new Criteria();
 		}
 		elseif ($criteria instanceof Criteria)

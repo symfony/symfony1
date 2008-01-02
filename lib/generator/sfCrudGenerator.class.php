@@ -95,12 +95,32 @@ abstract class sfCrudGenerator extends sfGenerator
    *
    * @return string The PHP code
    */
-  public function getRetrieveByPkParamsForAction($indent)
+  public function getRetrieveByPkParamsForAction($indent, $callee = '$this->getRequestParameter')
   {
     $params = array();
     foreach ($this->getPrimaryKey() as $pk)
     {
-      $params[] = "\$this->getRequestParameter('".sfInflector::underscore($pk->getPhpName())."')";
+      $params[] = "$callee('".sfInflector::underscore($pk->getPhpName())."')";
+    }
+
+    return implode(",\n".str_repeat(' ', max(0, $indent - strlen($this->singularName.$this->className))), $params);
+  }
+
+  /**
+   * Returns PHP code for primary keys parameters.
+   *
+   * @param integer The indentation value
+   *
+   * @return string The PHP code
+   */
+  public function getRetrieveByPkParamsForEdit($indent, $prefix)
+  {
+    $params = array();
+    foreach ($this->getPrimaryKey() as $pk)
+    {
+      $name = sfInflector::underscore($pk->getPhpName());
+//      $params[] = sprintf("\$request->getParameter('%s', \$request->getParameter('%s'))", sprintf('%s[%s]', $prefix, $name), $name);
+      $params[] = sprintf("\$request->getParameter('%s')", $name);
     }
 
     return implode(",\n".str_repeat(' ', max(0, $indent - strlen($this->singularName.$this->className))), $params);

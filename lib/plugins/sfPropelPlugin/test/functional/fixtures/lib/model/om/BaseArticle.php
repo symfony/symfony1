@@ -675,11 +675,8 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 	
 	public function getCategory($con = null)
 	{
-				include_once 'lib/model/om/BaseCategoryPeer.php';
-
 		if ($this->aCategory === null && ($this->category_id !== null)) {
-
-			$this->aCategory = CategoryPeer::retrieveByPK($this->category_id, $con);
+						$this->aCategory = CategoryPeer::retrieveByPK($this->category_id, $con);
 
 			
 		}
@@ -705,11 +702,8 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 	
 	public function getBook($con = null)
 	{
-				include_once 'lib/model/om/BaseBookPeer.php';
-
 		if ($this->aBook === null && ($this->book_id !== null)) {
-
-			$this->aBook = BookPeer::retrieveByPK($this->book_id, $con);
+						$this->aBook = BookPeer::retrieveByPK($this->book_id, $con);
 
 			
 		}
@@ -727,8 +721,7 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 	
 	public function getAuthorArticles($criteria = null, $con = null)
 	{
-				include_once 'lib/model/om/BaseAuthorArticlePeer.php';
-		if ($criteria === null) {
+				if ($criteria === null) {
 			$criteria = new Criteria();
 		}
 		elseif ($criteria instanceof Criteria)
@@ -765,8 +758,7 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 	
 	public function countAuthorArticles($criteria = null, $distinct = false, $con = null)
 	{
-				include_once 'lib/model/om/BaseAuthorArticlePeer.php';
-		if ($criteria === null) {
+				if ($criteria === null) {
 			$criteria = new Criteria();
 		}
 		elseif ($criteria instanceof Criteria)
@@ -790,8 +782,7 @@ abstract class BaseArticle extends BaseObject  implements Persistent {
 	
 	public function getAuthorArticlesJoinAuthor($criteria = null, $con = null)
 	{
-				include_once 'lib/model/om/BaseAuthorArticlePeer.php';
-		if ($criteria === null) {
+				if ($criteria === null) {
 			$criteria = new Criteria();
 		}
 		elseif ($criteria instanceof Criteria)

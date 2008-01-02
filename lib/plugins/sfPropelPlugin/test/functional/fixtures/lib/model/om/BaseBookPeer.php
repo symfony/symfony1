@@ -48,7 +48,6 @@ abstract class BaseBookPeer {
 	
 	public static function getMapBuilder()
 	{
-		include_once 'lib/model/map/BookMapBuilder.php';
 		return BasePeer::getMapBuilder('lib.model.map.BookMapBuilder');
 	}
 	
@@ -363,6 +362,5 @@ if (Propel::isInit()) {
 		Propel::log('Could not initialize Peer: ' . $e->getMessage(), Propel::LOG_ERR);
 	}
 } else {
-			require_once 'lib/model/map/BookMapBuilder.php';
-	Propel::registerMapBuilder('lib.model.map.BookMapBuilder');
+			Propel::registerMapBuilder('lib.model.map.BookMapBuilder');
 }

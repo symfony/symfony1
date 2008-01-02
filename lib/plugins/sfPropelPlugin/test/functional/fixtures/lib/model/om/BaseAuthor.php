@@ -358,8 +358,7 @@ abstract class BaseAuthor extends BaseObject  implements Persistent {
 	
 	public function getAuthorArticles($criteria = null, $con = null)
 	{
-				include_once 'lib/model/om/BaseAuthorArticlePeer.php';
-		if ($criteria === null) {
+				if ($criteria === null) {
 			$criteria = new Criteria();
 		}
 		elseif ($criteria instanceof Criteria)
@@ -396,8 +395,7 @@ abstract class BaseAuthor extends BaseObject  implements Persistent {
 	
 	public function countAuthorArticles($criteria = null, $distinct = false, $con = null)
 	{
-				include_once 'lib/model/om/BaseAuthorArticlePeer.php';
-		if ($criteria === null) {
+				if ($criteria === null) {
 			$criteria = new Criteria();
 		}
 		elseif ($criteria instanceof Criteria)
@@ -421,8 +419,7 @@ abstract class BaseAuthor extends BaseObject  implements Persistent {
 	
 	public function getAuthorArticlesJoinArticle($criteria = null, $con = null)
 	{
-				include_once 'lib/model/om/BaseAuthorArticlePeer.php';
-		if ($criteria === null) {
+				if ($criteria === null) {
 			$criteria = new Criteria();
 		}
 		elseif ($criteria instanceof Criteria)
