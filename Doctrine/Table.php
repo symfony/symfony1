@@ -267,7 +267,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         } while ($class = get_parent_class($class));
 
         if ($class === false) {
-            throw new Doctrine_Table_Exception('Unknown component.');
+            throw new Doctrine_Table_Exception('Unknown component: ' . $name);
         }
 
         // reverse names
