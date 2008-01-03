@@ -105,7 +105,7 @@ else
   {
     $this-><?php echo $this->getSingularName() ?> = $this->get<?php echo $this->getClassName() ?>OrCreate();
 
-    if ($this->getRequest()->getMethod() == sfRequest::POST)
+    if ($this->getRequest()->isMethod('post'))
     {
       $this->update<?php echo $this->getClassName() ?>FromRequest();
 
