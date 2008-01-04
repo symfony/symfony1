@@ -12,7 +12,7 @@
  * Abstract class for upgrade classes.
  *
  * @package    symfony
- * @subpackage command
+ * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */

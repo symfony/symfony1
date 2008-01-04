@@ -12,7 +12,7 @@
  * Clears all non production environment controllers.
  *
  * @package    symfony
- * @subpackage command
+ * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */

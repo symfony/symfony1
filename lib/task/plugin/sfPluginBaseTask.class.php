@@ -12,7 +12,7 @@
  * Base class for all symfony plugin tasks.
  *
  * @package    symfony
- * @subpackage command
+ * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */

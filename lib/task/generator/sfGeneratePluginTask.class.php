@@ -12,7 +12,7 @@
  * Generates a new plugin.
  *
  * @package    symfony
- * @subpackage command
+ * @subpackage task
  * @author     Romain Dorgueil <romain.dorgueil@dakrazy.net>
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$

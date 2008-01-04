@@ -12,7 +12,7 @@
  * Installs a plugin.
  *
  * @package    symfony
- * @subpackage command
+ * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
