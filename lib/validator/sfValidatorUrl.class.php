@@ -21,7 +21,7 @@ class sfValidatorUrl extends sfValidatorRegex
   /**
    * @see sfValidatorRegex
    */
-  public function configure($options = array(), $messages = array())
+  protected function configure($options = array(), $messages = array())
   {
     parent::configure($options, $messages);
 

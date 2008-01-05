@@ -60,7 +60,7 @@ class sfValidatorAnd extends sfValidator
   /**
    * @see sfValidator
    */
-  public function configure($options = array(), $messages = array())
+  protected function configure($options = array(), $messages = array())
   {
     $this->setMessage('invalid', null);
   }
