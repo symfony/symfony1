@@ -50,14 +50,22 @@ class sfWidgetFormDate extends sfWidgetForm
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
     // convert value to an array
+    $default = array('year' => null, 'month' => null, 'day' => null);
     if (is_array($value))
     {
-      $value = array_merge(array('year' => null, 'month' => null, 'day' => null), $value);
+      $value = array_merge($default, $value);
     }
     else
     {
       $value = ctype_digit($value) ? (integer) $value : strtotime($value);
-      $value = array('year' => date('Y', $value), 'month' => date('n', $value), 'day' => date('j', $value));
+      if (false === $value)
+      {
+        $value = $default;
+      }
+      else
+      {
+        $value = array('year' => date('Y', $value), 'month' => date('n', $value), 'day' => date('j', $value));
+      }
     }
 
     $date = array();

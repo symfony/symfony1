@@ -53,14 +53,22 @@ class sfWidgetFormTime extends sfWidgetForm
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
     // convert value to an array
+    $default = array('hour' => null, 'minute' => null, 'second' => null);
     if (is_array($value))
     {
-      $value = array_merge(array('hour' => null, 'minute' => null, 'second' => null), $value);
+      $value = array_merge($default, $value);
     }
     else
     {
       $value = ctype_digit($value) ? (integer) $value : strtotime($value);
-      $value = array('hour' => date('G', $value), 'minute' => date('i', $value), 'second' => date('s', $value));
+      if (false === $value)
+      {
+        $value = $default;
+      }
+      else
+      {
+        $value = array('hour' => date('G', $value), 'minute' => date('i', $value), 'second' => date('s', $value));
+      }
     }
 
     $time = array();

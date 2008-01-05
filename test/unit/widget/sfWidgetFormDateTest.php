@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(32, new lime_output_color());
+$t = new lime_test(35, new lime_output_color());
 
 $w = new sfWidgetFormDate();
 
@@ -48,9 +48,15 @@ $t->is($css->matchSingle('#foo_day option[value="'.$values['day'].'"][selected="
 $t->diag('invalid date');
 $dom->loadHTML($w->render('foo', array('year' => null, 'month' => 10)));
 $css = new sfDomCssSelector($dom);
-$t->is($css->matchAll('#foo_year option[value="'.$values['year'].'"][selected="selected"]')->getNodes(), array(), '->render() renders a select tag for the year');
-$t->is($css->matchSingle('#foo_month option[value="'.$values['month'].'"][selected="selected"]')->getValue(), 10, '->render() renders a select tag for the month');
-$t->is($css->matchAll('#foo_day option[value="'.$values['day'].'"][selected="selected"]')->getNodes(), array(), '->render() renders a select tag for the day');
+$t->is($css->matchSingle('#foo_year option[selected="selected"]')->getValue(), '', '->render() renders a select tag for the year');
+$t->is($css->matchSingle('#foo_month option[selected="selected"]')->getValue(), 10, '->render() renders a select tag for the month');
+$t->is($css->matchSingle('#foo_day option[selected="selected"]')->getValue(), '', '->render() renders a select tag for the day');
+
+$dom->loadHTML($w->render('foo', 'invaliddate'));
+$css = new sfDomCssSelector($dom);
+$t->is($css->matchSingle('#foo_year option[selected="selected"]')->getValue(), '', '->render() renders a select tag for the year');
+$t->is($css->matchSingle('#foo_month option[selected="selected"]')->getValue(), '', '->render() renders a select tag for the month');
+$t->is($css->matchSingle('#foo_day option[selected="selected"]')->getValue(), '', '->render() renders a select tag for the day');
 
 // number of options in each select
 $t->diag('number of options in each select');
