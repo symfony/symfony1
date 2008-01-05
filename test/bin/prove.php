@@ -35,19 +35,17 @@ $autoload->removeCache();
 // cache autoload files
 require_once($h->base_dir.'/bootstrap/unit.php');
 
-// unit tests
-$h->register_glob($h->base_dir.'/unit/*/*Test.php');
-$h->register_glob($h->base_dir.'/unit/*/*/*Test.php');
-$h->register_glob($h->base_dir.'/../lib/plugins/*/test/unit/*Test.php');
-$h->register_glob($h->base_dir.'/../lib/plugins/*/test/unit/*/*Test.php');
+$h->register(sfFinder::type('file')->name('*Test.php')->in(array_merge(
+  // unit tests
+  array($h->base_dir.'/unit'),
+  glob($h->base_dir.'/../lib/plugins/*/test/unit'),
 
-// functional tests
-$h->register_glob($h->base_dir.'/functional/*Test.php');
-$h->register_glob($h->base_dir.'/functional/*/*Test.php');
-$h->register_glob($h->base_dir.'/../lib/plugins/*/test/functional/*Test.php');
-$h->register_glob($h->base_dir.'/../lib/plugins/*/test/functional/*/*Test.php');
+  // functional tests
+  array($h->base_dir.'/functional'),
+  glob($h->base_dir.'/../lib/plugins/*/test/functional'),
 
-// other tests
-$h->register_glob($h->base_dir.'/other/*Test.php');
+  // other tests
+  array($h->base_dir.'/other')
+)));
 
 $h->run();
