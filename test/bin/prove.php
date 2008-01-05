@@ -35,7 +35,7 @@ $autoload->removeCache();
 // cache autoload files
 require_once($h->base_dir.'/bootstrap/unit.php');
 
-$h->register(sfFinder::type('file')->name('*Test.php')->in(array_merge(
+$h->register(sfFinder::type('file')->prune('fixtures')->name('*Test.php')->in(array_merge(
   // unit tests
   array($h->base_dir.'/unit'),
   glob($h->base_dir.'/../lib/plugins/*/test/unit'),
