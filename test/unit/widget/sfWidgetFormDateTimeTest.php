@@ -64,7 +64,7 @@ $t->is(count($css->matchAll('#foo_second option')->getNodes()), 61, '->render() 
 // date and time format option
 $t->diag('date and time format option');
 $t->is($css->matchSingle('#foo_day')->getNode()->nextSibling->nodeValue, '/', '->render() renders 3 selects with a default / as a format');
-$t->is($css->matchSingle('#foo_month')->getNode()->nextSibling->nodeValue, '/', '->render() renders 3 selects with a default / as a format');
+$t->like($css->matchSingle('#foo_month')->getNode()->nextSibling->nodeValue, '#^/#', '->render() renders 3 selects with a default / as a format');
 $t->is($css->matchSingle('#foo_hour')->getNode()->nextSibling->nodeValue, ':', '->render() renders 3 selects with a default : as a format');
 $t->is($css->matchSingle('#foo_minute')->getNode()->nextSibling->nodeValue, ':', '->render() renders 3 selects with a default : as a format');
 
@@ -74,7 +74,7 @@ $w->setOption('time', array('format' => '%hour%!%minute%!%second%', 'with_second
 $dom->loadHTML($w->render('foo', '2005-10-15 12:30:35'));
 $css = new sfDomCssSelector($dom);
 $t->is($css->matchSingle('#foo_day')->getNode()->nextSibling->nodeValue, '-', '__construct() can change the default format');
-$t->is($css->matchSingle('#foo_month')->getNode()->nextSibling->nodeValue, '-', '__construct() can change the default format');
+$t->like($css->matchSingle('#foo_month')->getNode()->nextSibling->nodeValue, '/^-/', '__construct() can change the default format');
 $t->is($css->matchSingle('#foo_hour')->getNode()->nextSibling->nodeValue, '!', '__construct() can change the default format');
 $t->is($css->matchSingle('#foo_minute')->getNode()->nextSibling->nodeValue, '!', '__construct() can change the default format');
 

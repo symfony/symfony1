@@ -82,13 +82,13 @@ $w->setOption('empty_values', array('hour' => '', 'minute' => '', 'second' => ''
 
 // format option
 $t->diag('format option');
-$t->is($css->matchSingle('#foo_hour')->getNode()->nextSibling->nodeValue, ':', '->render() renders 3 selects with a default : as a separator');
+$t->like($css->matchSingle('#foo_hour')->getNode()->nextSibling->nodeValue, '/^:/', '->render() renders 3 selects with a default : as a separator');
 $t->is($css->matchSingle('#foo_minute')->getNode()->nextSibling->nodeValue, ':', '->render() renders 3 selects with a default : as a separator');
 
 $w->setOption('format', '%hour%#%minute%#%second%');
 $dom->loadHTML($w->render('foo', '12:30:35'));
 $css = new sfDomCssSelector($dom);
-$t->is($css->matchSingle('#foo_hour')->getNode()->nextSibling->nodeValue, '#', '__construct() can change the default format');
+$t->like($css->matchSingle('#foo_hour')->getNode()->nextSibling->nodeValue, '/^#/', '__construct() can change the default format');
 $t->is($css->matchSingle('#foo_minute')->getNode()->nextSibling->nodeValue, '#', '__construct() can change the default format');
 
 $w->setOption('format', '%minute%#%hour%#%second%');
@@ -117,5 +117,5 @@ $t->is(count($css->matchAll('#foo_second option')->getNodes()), 0, '__construct(
 $w->setOption('format_without_seconds', '%hour%#%minute%');
 $dom->loadHTML($w->render('foo', '12:30:35'));
 $css = new sfDomCssSelector($dom);
-$t->is($css->matchSingle('#foo_hour')->getNode()->nextSibling->nodeValue, '#', '__construct() can change the default format');
+$t->like($css->matchSingle('#foo_hour')->getNode()->nextSibling->nodeValue, '/^#/', '__construct() can change the default format');
 $t->ok(!count($css->matchSingle('#foo_second')->getNodes()), '__construct() can change the default format');
