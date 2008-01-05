@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(40, new lime_output_color());
+$t = new lime_test(52, new lime_output_color());
 
 $dom = new DomDocument('1.0', 'utf-8');
 $dom->validateOnParse = true;
@@ -38,11 +38,11 @@ foreach (array(
   $t->is($css->matchSingle('#foo_second option[value="'.$values['second'].'"][selected="selected"]')->getValue(), $values['second'], '->render() renders a select tag for the second');
 }
 
+// selected date / time
+$t->diag('selected date / time');
 $values = array('year' => 2005, 'month' => 10, 'day' => 15, 'hour' => 12, 'minute' => 30, 'second' => 35);
 $dom->loadHTML($w->render('foo', $values));
 $css = new sfDomCssSelector($dom);
-
-// selected date / time
 $t->is($css->matchSingle('#foo_year option[value="'.$values['year'].'"][selected="selected"]')->getValue(), $values['year'], '->render() renders a select tag for the year');
 $t->is($css->matchSingle('#foo_month option[value="'.$values['month'].'"][selected="selected"]')->getValue(), $values['month'], '->render() renders a select tag for the month');
 $t->is($css->matchSingle('#foo_day option[value="'.$values['day'].'"][selected="selected"]')->getValue(), $values['day'], '->render() renders a select tag for the day');
@@ -50,10 +50,31 @@ $t->is($css->matchSingle('#foo_hour option[value="'.$values['hour'].'"][selected
 $t->is($css->matchSingle('#foo_minute option[value="'.$values['minute'].'"][selected="selected"]')->getValue(), $values['minute'], '->render() renders a select tag for the minute');
 $t->is($css->matchSingle('#foo_second option[value="'.$values['second'].'"][selected="selected"]')->getValue(), $values['second'], '->render() renders a select tag for the second');
 
-$dom->loadHTML($w->render('foo', '2005-10-15 12:30:35'));
+// invalid date / time
+$t->diag('invalid date / time');
+$values = array('year' => null, 'month' => 10, 'hour' => null, 'minute' => 30);
+$dom->loadHTML($w->render('foo', $values));
 $css = new sfDomCssSelector($dom);
+$t->is($css->matchSingle('#foo_year option[selected="selected"]')->getValue(), '', '->render() renders a select tag for the year');
+$t->is($css->matchSingle('#foo_month option[value="'.$values['month'].'"][selected="selected"]')->getValue(), $values['month'], '->render() renders a select tag for the month');
+$t->is($css->matchSingle('#foo_day option[selected="selected"]')->getValue(), '', '->render() renders a select tag for the day');
+$t->is($css->matchSingle('#foo_hour option[selected="selected"]')->getValue(), '', '->render() renders a select tag for the hour');
+$t->is($css->matchSingle('#foo_minute option[value="'.$values['minute'].'"][selected="selected"]')->getValue(), $values['minute'], '->render() renders a select tag for the minute');
+$t->is($css->matchSingle('#foo_second option[selected="selected"]')->getValue(), '', '->render() renders a select tag for the second');
+
+$dom->loadHTML($w->render('foo', 'invaliddatetime'));
+$css = new sfDomCssSelector($dom);
+$t->is($css->matchSingle('#foo_year option[selected="selected"]')->getValue(), '', '->render() renders a select tag for the year');
+$t->is($css->matchSingle('#foo_month option[selected="selected"]')->getValue(), '', '->render() renders a select tag for the month');
+$t->is($css->matchSingle('#foo_day option[selected="selected"]')->getValue(), '', '->render() renders a select tag for the day');
+$t->is($css->matchSingle('#foo_hour option[selected="selected"]')->getValue(), '', '->render() renders a select tag for the hour');
+$t->is($css->matchSingle('#foo_minute option[selected="selected"]')->getValue(), '', '->render() renders a select tag for the minute');
+$t->is($css->matchSingle('#foo_second option[selected="selected"]')->getValue(), '', '->render() renders a select tag for the second');
 
 // number of options in each select
+$t->diag('number of options in each select');
+$dom->loadHTML($w->render('foo', '2005-10-15 12:30:35'));
+$css = new sfDomCssSelector($dom);
 $t->is(count($css->matchAll('#foo_year option')->getNodes()), 12, '->render() renders a select tag for the 10 years around the current one');
 $t->is(count($css->matchAll('#foo_month option')->getNodes()), 13, '->render() renders a select tag for the 12 months in a year');
 $t->is(count($css->matchAll('#foo_day option')->getNodes()), 32, '->render() renders a select tag for the 31 days in a month');
