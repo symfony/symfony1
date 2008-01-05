@@ -52,14 +52,15 @@ class sfWidgetFormTime extends sfWidgetForm
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
-    // convert value to a timestamp
+    // convert value to an array
     if (is_array($value))
     {
-      $value = $this->convertDateArrayToTimestamp($value);
+      $value = array_merge(array('hour' => null, 'minute' => null, 'second' => null), $value);
     }
     else
     {
       $value = ctype_digit($value) ? (integer) $value : strtotime($value);
+      $value = array('hour' => date('G', $value), 'minute' => date('i', $value), 'second' => date('s', $value));
     }
 
     $time = array();
@@ -67,35 +68,19 @@ class sfWidgetFormTime extends sfWidgetForm
 
     // hours
     $widget = new sfWidgetFormSelect(array('choices' => $this->getOption('can_be_empty') ? array('' => $emptyValues['hour']) + $this->getOption('hours') : $this->getOption('hours')));
-    $time['%hour%'] = $widget->render($name.'[hour]', $value ? date('G', $value) : '');
+    $time['%hour%'] = $widget->render($name.'[hour]', $value['hour']);
 
     // minutes
     $widget = new sfWidgetFormSelect(array('choices' => $this->getOption('can_be_empty') ? array('' => $emptyValues['minute']) + $this->getOption('minutes') : $this->getOption('minutes')));
-    $time['%minute%'] = $widget->render($name.'[minute]', $value ? date('i', $value) : '');
+    $time['%minute%'] = $widget->render($name.'[minute]', $value['minute']);
 
     if ($this->getOption('with_seconds'))
     {
       // seconds
       $widget = new sfWidgetFormSelect(array('choices' => $this->getOption('can_be_empty') ? array('' => $emptyValues['second']) + $this->getOption('seconds') : $this->getOption('seconds')));
-      $time['%second%'] = $widget->render($name.'[second]', $value ? date('s', $value) : '');
+      $time['%second%'] = $widget->render($name.'[second]', $value['second']);
     }
 
     return strtr($this->getOption('with_seconds') ? $this->getOption('format') : $this->getOption('format_without_seconds'), $time);
-  }
-
-  /**
-   * Converts an array representing a date to a timestamp.
-   *
-   * The array can contains the following keys: hour, minute, second
-   *
-   * @param  array   An array of date elements
-   *
-   * @return integer A timestamp
-   */
-  protected function convertDateArrayToTimestamp($value)
-  {
-    $clean = mktime(isset($value['hour']) ? $value['hour'] : 0, isset($value['minute']) ? $value['minute'] : 0, isset($value['second']) ? $value['second'] : 0);
-
-    return false === $clean ? null : $clean;
   }
 }

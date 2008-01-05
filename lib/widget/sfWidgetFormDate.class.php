@@ -49,14 +49,15 @@ class sfWidgetFormDate extends sfWidgetForm
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
-    // convert value to a timestamp
+    // convert value to an array
     if (is_array($value))
     {
-      $value = $this->convertDateArrayToTimestamp($value);
+      $value = array_merge(array('year' => null, 'month' => null, 'day' => null), $value);
     }
     else
     {
       $value = ctype_digit($value) ? (integer) $value : strtotime($value);
+      $value = array('year' => date('Y', $value), 'month' => date('n', $value), 'day' => date('j', $value));
     }
 
     $date = array();
@@ -64,32 +65,16 @@ class sfWidgetFormDate extends sfWidgetForm
 
     // days
     $widget = new sfWidgetFormSelect(array('choices' => $this->getOption('can_be_empty') ? array('' => $emptyValues['day']) + $this->getOption('days') : $this->getOption('days')));
-    $date['%day%'] = $widget->render($name.'[day]', $value ? date('j', $value) : '');
+    $date['%day%'] = $widget->render($name.'[day]', $value['day']);
 
     // months
     $widget = new sfWidgetFormSelect(array('choices' => $this->getOption('can_be_empty') ? array('' => $emptyValues['month']) + $this->getOption('months') : $this->getOption('months')));
-    $date['%month%'] = $widget->render($name.'[month]', $value ? date('n', $value) : '');
+    $date['%month%'] = $widget->render($name.'[month]', $value['month']);
 
     // years
     $widget = new sfWidgetFormSelect(array('choices' => $this->getOption('can_be_empty') ? array('' => $emptyValues['year']) + $this->getOption('years') : $this->getOption('years')));
-    $date['%year%'] = $widget->render($name.'[year]', $value ? date('Y', $value) : '');
+    $date['%year%'] = $widget->render($name.'[year]', $value['year']);
 
     return strtr($this->getOption('format'), $date);
-  }
-
-  /**
-   * Converts an array representing a date to a timestamp.
-   *
-   * The array can contains the following keys: year, month, day, hour, minute, second
-   *
-   * @param  array   An array of date elements
-   *
-   * @return integer A timestamp
-   */
-  protected function convertDateArrayToTimestamp($value)
-  {
-    $clean = mktime(isset($value['hour']) ? $value['hour'] : 0, isset($value['minute']) ? $value['minute'] : 0, isset($value['second']) ? $value['second'] : 0, $value['month'], $value['day'], $value['year']);
-
-    return false === $clean ? null : $clean;
   }
 }

@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(29, new lime_output_color());
+$t = new lime_test(32, new lime_output_color());
 
 $w = new sfWidgetFormTime(array('with_seconds' => true));
 
@@ -34,19 +34,28 @@ foreach (array(
   $t->is($css->matchSingle('#foo_second option[value="35"][selected="selected"]')->getValue(), 35, '->render() renders a select tag for the second');
 }
 
+// time as an array
+$t->diag('time as an array');
 $values = array('hour' => 12, 'minute' => '30', 'second' => 35);
 $dom->loadHTML($w->render('foo', $values));
 $css = new sfDomCssSelector($dom);
-
-// selected date
 $t->is($css->matchSingle('#foo_hour option[value="12"][selected="selected"]')->getValue(), 12, '->render() renders a select tag for the hour');
 $t->is($css->matchSingle('#foo_minute option[value="30"][selected="selected"]')->getValue(), 30, '->render() renders a select tag for the minute');
 $t->is($css->matchSingle('#foo_second option[value="35"][selected="selected"]')->getValue(), 35, '->render() renders a select tag for the second');
 
-$dom->loadHTML($w->render('foo', '12:30:35'));
+// invalid time
+$t->diag('time as an array');
+$values = array('hour' => null, 'minute' => 30);
+$dom->loadHTML($w->render('foo', $values));
 $css = new sfDomCssSelector($dom);
+$t->is($css->matchAll('#foo_hour option[value="12"][selected="selected"]')->getNodes(), array(), '->render() renders a select tag for the hour');
+$t->is($css->matchSingle('#foo_minute option[value="30"][selected="selected"]')->getValue(), 30, '->render() renders a select tag for the minute');
+$t->is($css->matchAll('#foo_second option[value="35"][selected="selected"]')->getNodes(), array(), '->render() renders a select tag for the second');
 
 // number of options in each select
+$t->diag('number of options in each select');
+$dom->loadHTML($w->render('foo', '12:30:35'));
+$css = new sfDomCssSelector($dom);
 $t->is(count($css->matchAll('#foo_hour option')->getNodes()), 25, '->render() renders a select tag for the 24 hours in a day');
 $t->is(count($css->matchAll('#foo_minute option')->getNodes()), 61, '->render() renders a select tag for the 60 minutes in an hour');
 $t->is(count($css->matchAll('#foo_second option')->getNodes()), 61, '->render() renders a select tag for the 60 seconds in a minute');
