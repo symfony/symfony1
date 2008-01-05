@@ -274,6 +274,16 @@ class sfForm implements ArrayAccess
   }
 
   /**
+   * Sets the validators associated with this form.
+   *
+   * @param array An array of named validators
+   */
+  public function setValidators(array $validators)
+  {
+    $this->setValidatorSchema(new sfValidatorSchema($validators));
+  }
+
+  /**
    * Sets the validator schema associated with this form.
    *
    * @param sfValidatorSchema A sfValidatorSchema instance
@@ -293,6 +303,16 @@ class sfForm implements ArrayAccess
   public function getValidatorSchema()
   {
     return $this->validatorSchema;
+  }
+
+  /**
+   * Sets the widgets associated with this form.
+   *
+   * @param array An array of named widgets
+   */
+  public function setWidgets(array $widgets)
+  {
+    $this->setWidgetSchema(new sfWidgetFormSchema($widgets));
   }
 
   /**

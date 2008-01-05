@@ -11,15 +11,15 @@ class BaseAuthorForm extends BaseFormPropel
 {
   public function setup()
   {
-    $this->setWidgetSchema(new sfWidgetFormSchema(array(
+    $this->setWidgets(array(
       'id'   => new sfWidgetFormInputHidden(),
       'name' => new sfWidgetFormInput(),
-    )));
+    ));
 
-    $this->setValidatorSchema(new sfValidatorSchema(array(
+    $this->setValidators(array(
       'id'   => new sfValidatorInteger(array('required' => false)),
       'name' => new sfValidatorString(array('required' => false)),
-    )));
+    ));
 
     $this->widgetSchema->setNameFormat('author[%s]');
 

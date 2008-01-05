@@ -11,17 +11,17 @@ class BaseAuthorArticleForm extends BaseFormPropel
 {
   public function setup()
   {
-    $this->setWidgetSchema(new sfWidgetFormSchema(array(
+    $this->setWidgets(array(
       'author_id'  => new sfWidgetFormSelect(array('choices' => new sfCallable(array($this, 'getAuthorChoices')))),
       'article_id' => new sfWidgetFormSelect(array('choices' => new sfCallable(array($this, 'getArticleChoices')))),
       'id'         => new sfWidgetFormInputHidden(),
-    )));
+    ));
 
-    $this->setValidatorSchema(new sfValidatorSchema(array(
+    $this->setValidators(array(
       'author_id'  => new sfValidatorChoice(array('choices' => new sfCallable(array($this, 'getAuthorIdentifierChoices')), 'required' => false)),
       'article_id' => new sfValidatorChoice(array('choices' => new sfCallable(array($this, 'getArticleIdentifierChoices')), 'required' => false)),
       'id'         => new sfValidatorInteger(array('required' => false)),
-    )));
+    ));
 
     $this->widgetSchema->setNameFormat('author_article[%s]');
 

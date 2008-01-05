@@ -11,7 +11,7 @@ class BaseArticleForm extends BaseFormPropel
 {
   public function setup()
   {
-    $this->setWidgetSchema(new sfWidgetFormSchema(array(
+    $this->setWidgets(array(
       'id'          => new sfWidgetFormInputHidden(),
       'title'       => new sfWidgetFormInput(),
       'body'        => new sfWidgetFormTextarea(),
@@ -20,9 +20,9 @@ class BaseArticleForm extends BaseFormPropel
       'created_at'  => new sfWidgetFormDateTime(),
       'end_date'    => new sfWidgetFormDateTime(),
       'book_id'     => new sfWidgetFormSelect(array('choices' => new sfCallable(array($this, 'getBookChoices')))),
-    )));
+    ));
 
-    $this->setValidatorSchema(new sfValidatorSchema(array(
+    $this->setValidators(array(
       'id'          => new sfValidatorInteger(array('required' => false)),
       'title'       => new sfValidatorString(),
       'body'        => new sfValidatorString(array('required' => false)),
@@ -31,7 +31,7 @@ class BaseArticleForm extends BaseFormPropel
       'created_at'  => new sfValidatorDateTime(array('required' => false)),
       'end_date'    => new sfValidatorDateTime(array('required' => false)),
       'book_id'     => new sfValidatorChoice(array('choices' => new sfCallable(array($this, 'getBookIdentifierChoices')), 'required' => false)),
-    )));
+    ));
 
     $this->widgetSchema->setNameFormat('article[%s]');
 

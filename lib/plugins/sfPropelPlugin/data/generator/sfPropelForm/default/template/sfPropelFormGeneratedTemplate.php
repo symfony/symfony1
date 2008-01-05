@@ -12,23 +12,23 @@ class Base<?php echo $this->table->getPhpName() ?>Form extends BaseFormPropel
 {
   public function setup()
   {
-    $this->setWidgetSchema(new sfWidgetFormSchema(array(
+    $this->setWidgets(array(
 <?php foreach ($this->table->getColumns() as $column): ?>
       '<?php echo strtolower($column->getColumnName()) ?>'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($column->getColumnName())) ?> => new <?php echo $this->getWidgetClassForColumn($column) ?>(<?php echo $this->getWidgetOptionsForColumn($column) ?>),
 <?php endforeach; ?>
 <?php foreach ($this->getManyToManyTables() as $tables): ?>
       '<?php echo $tables['relatedTable']->getName() ?>_list'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($tables['relatedTable']->getName().'_list')) ?> => new sfWidgetFormSelectMany(array('choices' => new sfCallable(array($this, 'get<?php echo $tables['relatedTable']->getPhpName() ?>Choices')))),
 <?php endforeach; ?>
-    )));
+    ));
 
-    $this->setValidatorSchema(new sfValidatorSchema(array(
+    $this->setValidators(array(
 <?php foreach ($this->table->getColumns() as $column): ?>
       '<?php echo strtolower($column->getColumnName()) ?>'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($column->getColumnName())) ?> => new <?php echo $this->getValidatorClassForColumn($column) ?>(<?php echo $this->getValidatorOptionsForColumn($column) ?>),
 <?php endforeach; ?>
 <?php foreach ($this->getManyToManyTables() as $tables): ?>
       '<?php echo $tables['relatedTable']->getName() ?>_list'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($tables['relatedTable']->getName().'_list')) ?> => new sfValidatorChoiceMany(array('choices' => new sfCallable(array($this, 'get<?php echo $tables['relatedTable']->getPhpName() ?>IdentifierChoices')))),
 <?php endforeach; ?>
-    )));
+    ));
 
     $this->widgetSchema->setNameFormat('<?php echo $this->table->getName() ?>[%s]');
 
