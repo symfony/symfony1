@@ -21,7 +21,9 @@
 class sfValidatorSchema extends sfValidator implements ArrayAccess
 {
   protected
-    $fields = array();
+    $fields        = array(),
+    $preValidator  = null,
+    $postValidator = null;
 
   /**
    * Constructor.
@@ -102,21 +104,18 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
       throw new InvalidArgumentException('You must pass an array parameter to the clean() method');
     }
 
-    $clean = array();
+    $clean  = array();
     $unused = array_keys($this->fields);
     $errors = array();
 
     // pre validator
-    if (isset($this->fields['_pre_validator']))
+    try
     {
-      try
-      {
-        $this->fields['_pre_validator']->clean($values);
-      }
-      catch (sfValidatorError $e)
-      {
-        $errors[] = $e;
-      }
+      $this->preClean($values);
+    }
+    catch (sfValidatorError $e)
+    {
+      $errors[] = $e;
     }
 
     // validate given values
@@ -155,11 +154,6 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
     // are non given values required?
     foreach ($unused as $name)
     {
-      if (in_array($name, array('_pre_validator', '_post_validator')))
-      {
-        continue;
-      }
-
       // validate value
       try
       {
@@ -172,16 +166,13 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
     }
 
     // post validator
-    if (isset($this->fields['_post_validator']))
+    try
     {
-      try
-      {
-        $clean = $this->fields['_post_validator']->clean($clean);
-      }
-      catch (sfValidatorError $e)
-      {
-        $errors[] = $e;
-      }
+      $clean = $this->postClean($clean);
+    }
+    catch (sfValidatorError $e)
+    {
+      $errors[] = $e;
     }
 
     if (count($errors))
@@ -190,6 +181,90 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
     }
 
     return $clean;
+  }
+
+  /**
+   * Cleans the input values.
+   *
+   * This method is the first validator executed by doClean().
+   *
+   * It executes the validator returned by getPreValidator()
+   * on the global array of values.
+   *
+   * @param  array The input values
+   *
+   * @throws sfValidatorError
+   */
+  public function preClean($values)
+  {
+    if (is_null($validator = $this->getPreValidator()))
+    {
+      return;
+    }
+
+    $validator->clean($values);
+  }
+
+  /**
+   * Cleans the input values.
+   *
+   * This method is the last validator executed by doClean().
+   *
+   * It executes the validator returned by getPostValidator()
+   * on the global array of cleaned values.
+   *
+   * @param  array The input values
+   *
+   * @throws sfValidatorError
+   */
+  public function postClean($values)
+  {
+    if (is_null($validator = $this->getPostValidator()))
+    {
+      return $values;
+    }
+
+    return $validator->clean($values);
+  }
+
+  /**
+   * Sets the pre validator.
+   *
+   * @param sfValidator A sfValidator instance
+   */
+  public function setPreValidator(sfValidator $validator)
+  {
+    $this->preValidator = $validator;
+  }
+
+  /**
+   * Returns the pre validator.
+   *
+   * @return sfValidator A sfValidator instance
+   */
+  public function getPreValidator()
+  {
+    return $this->preValidator;
+  }
+
+  /**
+   * Sets the post validator.
+   *
+   * @param sfValidator A sfValidator instance
+   */
+  public function setPostValidator(sfValidator $validator)
+  {
+    $this->postValidator = $validator;
+  }
+
+  /**
+   * Returns the post validator.
+   *
+   * @return sfValidator A sfValidator instance
+   */
+  public function getPostValidator()
+  {
+    return $this->postValidator;
   }
 
   /**

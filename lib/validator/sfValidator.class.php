@@ -295,7 +295,7 @@ abstract class sfValidator
    *
    * @throws sfValidatorError
    */
-   abstract protected function doClean($value);
+  abstract protected function doClean($value);
 
   /**
    * Sets the charset to use when validating strings.
