@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(4, new lime_output_color());
+$t = new lime_test(6, new lime_output_color());
 
 $v1 = new sfValidatorString(array('min_length' => 2, 'trim' => true));
 
@@ -34,18 +34,22 @@ try
 {
   $v->clean(null);
   $t->fail('->clean() throws a sfValidatorError if the embedded validator failed');
+  $t->skip('', 1);
 }
 catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws a sfValidatorError if the embedded validator failed');
+  $t->is($e->getCode(), 'required', '->clean() throws a sfValidatorError');
 }
 
 try
 {
   $v->clean(array('first_name' => 'f'));
   $t->fail('->clean() throws a sfValidatorError if the embedded validator failed');
+  $t->skip('', 1);
 }
 catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws a sfValidatorError if the embedded validator failed');
+  $t->is($e->getCode(), 'min_length', '->clean() throws a sfValidatorError');
 }

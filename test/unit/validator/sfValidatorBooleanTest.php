@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(16, new lime_output_color());
+$t = new lime_test(17, new lime_output_color());
 
 $v = new sfValidatorBoolean();
 
@@ -38,10 +38,12 @@ try
 {
   $v->clean('astring');
   $t->fail('->clean() throws an error if the input value is not a true or a false value');
+  $t->skip('', 1);
 }
 catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws an error if the input value is not a true or a false value');
+  $t->is($e->getCode(), 'invalid', '->clean() throws a sfValidatorError');
 }
 
 // empty

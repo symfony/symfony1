@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(37, new lime_output_color());
+$t = new lime_test(38, new lime_output_color());
 
 class ValidatorIdentity extends sfValidator
 {
@@ -98,10 +98,12 @@ try
 {
   $t->is($v->clean(''), '');
   $t->fail('->clean() throws a sfValidatorError exception if the data does not validate');
+  $t->skip('', 1);
 }
 catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws a sfValidatorError exception if the data does not validate');
+  $t->is($e->getCode(), 'required', '->clean() throws a sfValidatorError');
 }
 $t->is($v->clean('  foo  '), '  foo  ', '->clean() does not trim whitespaces by default');
 

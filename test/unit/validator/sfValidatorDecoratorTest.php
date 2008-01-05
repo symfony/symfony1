@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(18, new lime_output_color());
+$t = new lime_test(20, new lime_output_color());
 
 class MyValidator extends sfValidatorDecorator
 {
@@ -29,7 +29,7 @@ try
 {
   $v->clean(null);
   $t->fail('->clean() throws a sfValidatorError if the value is required');
-  $t->skip();
+  $t->skip('', 1);
 }
 catch (sfValidatorError $e)
 {
@@ -81,20 +81,24 @@ try
 {
   $v->clean(null);
   $t->fail('->clean() throws a sfValidatorError if the value is required');
+  $t->skip('', 1);
 }
 catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws a sfValidatorError if the value is required');
+  $t->is($e->getCode(), 'required', '->clean() throws a sfValidatorError');
 }
 
 try
 {
   $v->clean('f');
   $t->fail('->clean() throws a sfValidatorError if the wrapped validator failed');
+  $t->skip('', 1);
 }
 catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws a sfValidatorError if the wrapped validator failed');
+  $t->is($e->getCode(), 'min_length', '->clean() throws a sfValidatorError');
 }
 
 $t->is($v->clean('  foo  '), 'foo', '->clean() cleans the value by executing the clean() method from the wrapped validator');

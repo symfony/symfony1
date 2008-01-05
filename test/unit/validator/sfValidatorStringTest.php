@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(10, new lime_output_color());
+$t = new lime_test(12, new lime_output_color());
 
 $v = new sfValidatorString();
 
@@ -28,10 +28,12 @@ try
 {
   $v->clean('foo');
   $t->fail('"max_length" option set the maximum length of the string');
+  $t->skip('', 1);
 }
 catch (sfValidatorError $e)
 {
   $t->pass('"max_length" option set the maximum length of the string');
+  $t->is($e->getCode(), 'max_length', '->clean() throws a sfValidatorError');
 }
 
 $v->setMessage('max_length', 'Too long');
@@ -53,10 +55,12 @@ try
 {
   $v->clean('fo');
   $t->fail('"min_length" option set the minimum length of the string');
+  $t->skip('', 1);
 }
 catch (sfValidatorError $e)
 {
   $t->pass('"min_length" option set the minimum length of the string');
+  $t->is($e->getCode(), 'min_length', '->clean() throws a sfValidatorError');
 }
 
 $v->setMessage('min_length', 'Too short');

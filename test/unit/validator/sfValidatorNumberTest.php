@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(10, new lime_output_color());
+$t = new lime_test(11, new lime_output_color());
 
 $v = new sfValidatorNumber();
 
@@ -63,10 +63,12 @@ try
 {
   $v->clean('1');
   $t->fail('"min" option set the minimum number allowed');
+  $t->skip('', 1);
 }
 catch (sfValidatorError $e)
 {
-  $t->pass('"min_length" option set the minimum number allowed');
+  $t->pass('"min" option set the minimum number allowed');
+  $t->is($e->getCode(), 'min', '->clean() throws a sfValidatorError');
 }
 
 $v->setMessage('min', 'Too small');

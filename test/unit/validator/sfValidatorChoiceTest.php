@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(6, new lime_output_color());
+$t = new lime_test(7, new lime_output_color());
 
 function choice_callable()
 {
@@ -40,10 +40,12 @@ try
 {
   $v->clean('foobar');
   $t->fail('->clean() throws an sfValidatorError if the value is not an expected value');
+  $t->skip('', 1);
 }
 catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws an sfValidatorError if the value is not an expected value');
+  $t->is($e->getCode(), 'invalid', '->clean() throws a sfValidatorError');
 }
 
 // ->asString()

@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(19, new lime_output_color());
+$t = new lime_test(27, new lime_output_color());
 
 $v = new sfValidatorSchemaCompare('left', sfValidatorSchemaCompare::EQUAL, 'right');
 
@@ -48,10 +48,12 @@ foreach (array(
   {
     $v->clean($values[0]);
     $t->fail('->clean() throws an sfValidatorError if the value is the comparison failed');
+    $t->skip('', 1);
   }
   catch (sfValidatorError $e)
   {
     $t->pass('->clean() throws an sfValidatorError if the value is the comparison failed');
+    $t->is($e->getCode(), 'invalid', '->clean() throws a sfValidatorError');
   }
 }
 

@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(5, new lime_output_color());
+$t = new lime_test(6, new lime_output_color());
 
 function clean_test($validator, $value)
 {
@@ -42,11 +42,13 @@ $t->is($v->clean('foo'), '*foo*', '->clean() calls our validator callback');
 try
 {
   $v->clean('bar');
-  $t->fail('->clean() calls our validator callback');
+  $t->fail('->clean() throws a sfValidatorError');
+  $t->skip('', 1);
 }
 catch (sfValidatorError $e)
 {
-  $t->pass('->clean() calls our validator callback');
+  $t->pass('->clean() throws a sfValidatorError');
+  $t->is($e->getCode(), 'must_be_foo', '->clean() throws a sfValidatorError');
 }
 
 // ->configure()

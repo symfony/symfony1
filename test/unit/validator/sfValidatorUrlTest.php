@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(9, new lime_output_color());
+$t = new lime_test(12, new lime_output_color());
 
 $v = new sfValidatorUrl();
 
@@ -38,9 +38,11 @@ foreach (array(
   {
     $v->clean($nonUrl);
     $t->fail('->clean() throws an sfValidatorError if the value is not a valid URL');
+    $t->skip('', 1);
   }
   catch (sfValidatorError $e)
   {
     $t->pass('->clean() throws an sfValidatorError if the value is not a valid URL');
+    $t->is($e->getCode(), 'invalid', '->clean() throws a sfValidatorError');
   }
 }

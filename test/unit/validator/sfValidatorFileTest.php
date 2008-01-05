@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(57, new lime_output_color());
+$t = new lime_test(58, new lime_output_color());
 
 $tmpDir = sfToolkit::getTmpDir();
 $content = 'This is an ASCII file.';
@@ -115,10 +115,12 @@ try
 {
   $v->clean(array('test' => true));
   $t->fail('->clean() throws an sfValidatorError if the given value is not well formatted');
+  $t->skip('', 1);
 }
 catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws an sfValidatorError if the given value is not well formatted');
+  $t->is($e->getCode(), 'invalid', '->clean() throws a sfValidatorError');
 }
 $f = $v->clean(array('tmp_name' => $tmpDir.'/test.txt'));
 $t->ok($f instanceof sfValidatedFile, '->clean() returns a sfValidatedFile instance');
@@ -132,7 +134,7 @@ foreach (array(UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE, UPLOAD_ERR_PARTIAL, UP
   {
     $v->clean(array('tmp_name' => $tmpDir.'/test.txt', 'error' => $error));
     $t->fail('->clean() throws an sfValidatorError if the error code is not UPLOAD_ERR_OK (0)');
-    $t->skip();
+    $t->skip('', 1);
   }
   catch (sfValidatorError $e)
   {

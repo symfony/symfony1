@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(4, new lime_output_color());
+$t = new lime_test(5, new lime_output_color());
 
 // __construct()
 $t->diag('__construct()');
@@ -34,10 +34,12 @@ try
 {
   $v->clean('another');
   $t->fail('->clean() throws an sfValidatorError if the token is not valid');
+  $t->skip('', 1);
 }
 catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws an sfValidatorError if the token is not valid');
+  $t->is($e->getCode(), 'csrf_attack', '->clean() throws a sfValidatorError');
 }
 
 // ->asString()

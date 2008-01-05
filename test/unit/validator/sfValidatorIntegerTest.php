@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(11, new lime_output_color());
+$t = new lime_test(15, new lime_output_color());
 
 $v = new sfValidatorInteger();
 
@@ -23,20 +23,24 @@ try
 {
   $v->clean('not an integer');
   $t->fail('->clean() throws a sfValidatorError if the value is not an integer');
+  $t->skip('', 1);
 }
 catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws a sfValidatorError if the value is not an integer');
+  $t->is($e->getCode(), 'invalid', '->clean() throws a sfValidatorError');
 }
 
 try
 {
   $v->clean(12.3);
   $t->fail('->clean() throws a sfValidatorError if the value is not an integer');
+  $t->skip('', 1);
 }
 catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws a sfValidatorError if the value is not an integer');
+  $t->is($e->getCode(), 'invalid', '->clean() throws a sfValidatorError');
 }
 
 $v->setOption('required', false);
@@ -48,10 +52,12 @@ try
 {
   $v->clean(3);
   $t->fail('"max" option set the maximum number allowed');
+  $t->skip('', 1);
 }
 catch (sfValidatorError $e)
 {
   $t->pass('"max" option set the maximum number allowed');
+  $t->is($e->getCode(), 'max', '->clean() throws a sfValidatorError');
 }
 
 $v->setMessage('max', 'Too large');
@@ -73,10 +79,12 @@ try
 {
   $v->clean('1');
   $t->fail('"min" option set the minimum number allowed');
+  $t->skip('', 1);
 }
 catch (sfValidatorError $e)
 {
-  $t->pass('"min_length" option set the minimum number allowed');
+  $t->pass('"min" option set the minimum number allowed');
+  $t->is($e->getCode(), 'min', '->clean() throws a sfValidatorError');
 }
 
 $v->setMessage('min', 'Too small');

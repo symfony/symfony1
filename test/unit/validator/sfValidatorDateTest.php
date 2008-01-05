@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(26, new lime_output_color());
+$t = new lime_test(29, new lime_output_color());
 
 $v = new sfValidatorDate();
 
@@ -29,10 +29,12 @@ try
 {
   $v->clean('This is not a date');
   $t->fail('->clean() throws a sfValidatorError if the date is a string and is not parsable by strtotime');
+  $t->skip('', 1);
 }
 catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws a sfValidatorError if the date is a string and is not parsable by strtotime');
+  $t->is($e->getCode(), 'invalid', '->clean() throws a sfValidatorError');
 }
 
 // validate timestamp
@@ -52,11 +54,13 @@ try
 catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws a sfValidatorError if the date is not valid');
+  $t->skip('', 1);
 }
 try
 {
   $v->clean(array('year' => -2, 'month' => 1, 'day' => 15));
   $t->fail('->clean() throws a sfValidatorError if the date is not valid');
+  $t->is($e->getCode(), 'invalid', '->clean() throws a sfValidatorError');
 }
 catch (sfValidatorError $e)
 {
@@ -78,6 +82,7 @@ catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws a sfValidatorError if the date does not match the regex');
   $t->like($e->getMessage(), '/'.preg_quote($v->getOption('date_format'), '/').'/', '->clean() returns the expected date format in the error message');
+  $t->is($e->getCode(), 'bad_format', '->clean() throws a sfValidatorError');
 }
 
 $v->setOption('date_format_error', 'dd/mm/YYYY');
@@ -105,6 +110,7 @@ try
 {
   $v->clean(array('year' => 2005, 'month' => 1, 'day' => 15, 'hour' => 12, 'minute' => '', 'second' => 12));
   $t->fail('->clean() throws a sfValidatorError if the time is not valid');
+  $t->skip('', 1);
 }
 catch (sfValidatorError $e)
 {

@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(4, new lime_output_color());
+$t = new lime_test(5, new lime_output_color());
 
 // __construct()
 $t->diag('__construct()');
@@ -34,10 +34,12 @@ try
 {
   $v->clean('symfony');
   $t->fail('->clean() throws an sfValidatorError if the value does not match the pattern');
+  $t->skip('', 1);
 }
 catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws an sfValidatorError if the value does not match the pattern');
+  $t->is($e->getCode(), 'invalid', '->clean() throws a sfValidatorError');
 }
 
 // ->asString()

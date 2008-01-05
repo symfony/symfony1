@@ -9,7 +9,7 @@
  */
 
 /**
- * 
+ * sfValidatorSchemaForEach wraps a validator multiple times in a single validator.
  *
  * @package    symfony
  * @subpackage validator
