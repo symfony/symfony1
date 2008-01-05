@@ -37,15 +37,15 @@ require_once($h->base_dir.'/bootstrap/unit.php');
 
 $h->register(sfFinder::type('file')->name('*Test.php')->in(array_merge(
   // unit tests
-  array($h->base_dir.'/unit'),
-  glob($h->base_dir.'/../lib/plugins/*/test/unit'),
+  array($h->base_dir.'/unit/validator'),
+//  glob($h->base_dir.'/../lib/plugins/*/test/unit'),
 
   // functional tests
-  array($h->base_dir.'/functional'),
-  glob($h->base_dir.'/../lib/plugins/*/test/functional'),
+//  array($h->base_dir.'/functional'),
+//  glob($h->base_dir.'/../lib/plugins/*/test/functional'),
 
   // other tests
-  array($h->base_dir.'/other')
+//  array($h->base_dir.'/other')
 )));
 
 $h->run();
