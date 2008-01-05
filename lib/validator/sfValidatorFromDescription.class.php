@@ -339,7 +339,7 @@ class sfValidatorFDTokenOperator
   {
     $this->operator = $operator;
     $this->arguments = $arguments;
-    $this->class = 'or' == $operator ? 'sfValidatorAny' : 'sfValidatorAll';
+    $this->class = 'or' == $operator ? 'sfValidatorOr' : 'sfValidatorAnd';
   }
 
   public function __toString()

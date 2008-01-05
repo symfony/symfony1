@@ -9,14 +9,14 @@
  */
 
 /**
- * sfValidatorAny validates an input value if at least one validator passes.
+ * sfValidatorOr validates an input value if at least one validator passes.
  *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfValidatorAny extends sfValidator
+class sfValidatorOr extends sfValidator
 {
   protected
     $validators = array();
@@ -51,7 +51,7 @@ class sfValidatorAny extends sfValidator
     }
     else if (!is_null($validators))
     {
-      throw new InvalidArgumentException('sfValidatorAny constructor takes a sfValidator object, or a sfValidator array.');
+      throw new InvalidArgumentException('sfValidatorOr constructor takes a sfValidator object, or a sfValidator array.');
     }
 
     parent::__construct($options, $messages);

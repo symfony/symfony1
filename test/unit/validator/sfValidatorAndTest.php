@@ -15,19 +15,19 @@ $t = new lime_test(16, new lime_output_color());
 $v1 = new sfValidatorString(array('max_length' => 3));
 $v2 = new sfValidatorString(array('min_length' => 3));
 
-$v = new sfValidatorAll(array($v1, $v2));
+$v = new sfValidatorAnd(array($v1, $v2));
 
 // __construct()
 $t->diag('__construct()');
-$v = new sfValidatorAll();
+$v = new sfValidatorAnd();
 $t->is($v->getValidators(), array(), '->__construct() can take no argument');
-$v = new sfValidatorAll($v1);
+$v = new sfValidatorAnd($v1);
 $t->is($v->getValidators(), array($v1), '->__construct() can take a validator as its first argument');
-$v = new sfValidatorAll(array($v1, $v2));
+$v = new sfValidatorAnd(array($v1, $v2));
 $t->is($v->getValidators(), array($v1, $v2), '->__construct() can take an array of validators as its first argument');
 try
 {
-  $v = new sfValidatorAll('string');
+  $v = new sfValidatorAnd('string');
   $t->fail('__construct() throws an exception when passing a non supported first argument');
 }
 catch (InvalidArgumentException $e)
@@ -37,7 +37,7 @@ catch (InvalidArgumentException $e)
 
 // ->addValidator()
 $t->diag('->addValidator()');
-$v = new sfValidatorAll();
+$v = new sfValidatorAnd();
 $v->addValidator($v1);
 $v->addValidator($v2);
 $t->is($v->getValidators(), array($v1, $v2), '->addValidator() adds a validator');
@@ -90,7 +90,7 @@ catch (sfValidatorError $e)
 $t->diag('->asString()');
 $v1 = new sfValidatorString(array('max_length' => 3));
 $v2 = new sfValidatorString(array('min_length' => 3));
-$v = new sfValidatorAll(array($v1, $v2));
+$v = new sfValidatorAnd(array($v1, $v2));
 $t->is($v->asString(), <<<EOF
 (
   String({ max_length: 3 })
@@ -100,7 +100,7 @@ $t->is($v->asString(), <<<EOF
 EOF
 , '->asString() returns a string representation of the validator');
 
-$v = new sfValidatorAll(array($v1, $v2), array(), array('required' => 'This is required.'));
+$v = new sfValidatorAnd(array($v1, $v2), array(), array('required' => 'This is required.'));
 $t->is($v->asString(), <<<EOF
 (
   String({ max_length: 3 })

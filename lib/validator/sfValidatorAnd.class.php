@@ -9,14 +9,14 @@
  */
 
 /**
- * sfValidatorAll validates an input value if all validators passes.
+ * sfValidatorAnd validates an input value if all validators passes.
  *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfValidatorAll extends sfValidator
+class sfValidatorAnd extends sfValidator
 {
   protected
     $validators = array();
@@ -51,7 +51,7 @@ class sfValidatorAll extends sfValidator
     }
     else if (!is_null($validators))
     {
-      throw new InvalidArgumentException('sfValidatorAll constructor takes a sfValidator object, or a sfValidator array.');
+      throw new InvalidArgumentException('sfValidatorAnd constructor takes a sfValidator object, or a sfValidator array.');
     }
 
     parent::__construct($options, $messages);
