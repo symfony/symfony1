@@ -28,14 +28,18 @@ class sfValidatorSchemaCompare extends sfValidatorSchema
   /**
    * Constructor.
    *
-   * Available operator:
+   * Available options:
    *
-   *  * self::EQUAL
-   *  * self::NOT_EQUAL
-   *  * self::LESS_THAN
-   *  * self::LESS_THAN_EQUAL
-   *  * self::GREATER_THAN
-   *  * self::GREATER_THAN_EQUAL
+   *  * left_field:         The left field name
+   *  * operator:           The comparison operator
+   *                          * self::EQUAL
+   *                          * self::NOT_EQUAL
+   *                          * self::LESS_THAN
+   *                          * self::LESS_THAN_EQUAL
+   *                          * self::GREATER_THAN
+   *                          * self::GREATER_THAN_EQUAL
+   *  * right_field:        The right field name
+   *  * throw_global_error: Whether to throw a global error (false by default) or an error tied to the left field
    *
    * @param string The left field name
    * @param string The operator to apply
@@ -50,6 +54,8 @@ class sfValidatorSchemaCompare extends sfValidatorSchema
     $this->addOption('left_field', $leftField);
     $this->addOption('operator', $operator);
     $this->addOption('right_field', $rightField);
+
+    $this->addOption('throw_global_error', false);
 
     parent::__construct(null, $options, $messages);
   }
@@ -96,11 +102,17 @@ class sfValidatorSchemaCompare extends sfValidatorSchema
 
     if (!$valid)
     {
-      throw new sfValidatorError($this, 'invalid', array(
+      $error = new sfValidatorError($this, 'invalid', array(
         'left_field'  => $leftValue,
         'right_field' => $rightValue,
         'operator'    => $this->getOption('operator'),
       ));
+      if ($this->getOption('throw_global_error'))
+      {
+        throw $error;
+      }
+
+      throw new sfValidatorErrorSchema($this, array($this->getOption('left_field') => $error));
     }
 
     return $values;

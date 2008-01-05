@@ -106,16 +106,20 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
 
     $clean  = array();
     $unused = array_keys($this->fields);
-    $errors = array();
+    $errorSchema = new sfValidatorErrorSchema($this);
 
     // pre validator
     try
     {
       $this->preClean($values);
     }
+    catch (sfValidatorErrorSchema $e)
+    {
+      $errorSchema->addErrors($e);
+    }
     catch (sfValidatorError $e)
     {
-      $errors[] = $e;
+      $errorSchema->addError($e);
     }
 
     // validate given values
@@ -126,7 +130,7 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
       {
         if (!$this->options['allow_extra_fields'])
         {
-          $errors[] = new sfValidatorError($this, 'extra_fields', array('field' => $name));
+          $errorSchema->addError(new sfValidatorError($this, 'extra_fields', array('field' => $name)));
         }
         else if (!$this->options['filter_extra_fields'])
         {
@@ -147,7 +151,7 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
       {
         $clean[$name] = null;
 
-        $errors[$name] = $e;
+        $errorSchema->addError($e, (string) $name);
       }
     }
 
@@ -161,7 +165,7 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
       }
       catch (sfValidatorError $e)
       {
-        $errors[$name] = $e;
+        $errorSchema->addError($e, (string) $name);
       }
     }
 
@@ -170,14 +174,18 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
     {
       $clean = $this->postClean($clean);
     }
+    catch (sfValidatorErrorSchema $e)
+    {
+      $errorSchema->addErrors($e);
+    }
     catch (sfValidatorError $e)
     {
-      $errors[] = $e;
+      $errorSchema->addError($e);
     }
 
-    if (count($errors))
+    if (count($errorSchema))
     {
-      throw new sfValidatorErrorSchema($this, $errors);
+      throw $errorSchema;
     }
 
     return $clean;
