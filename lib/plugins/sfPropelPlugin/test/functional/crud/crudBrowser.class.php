@@ -44,6 +44,7 @@ class CrudBrowser extends sfTestBrowser
     $this->setup($options);
 
     // list page
+    $this->test()->diag('list page');
     $this->
       get('/article')->
       isStatusCode(200)->
@@ -75,6 +76,7 @@ class CrudBrowser extends sfTestBrowser
     ;
 
     // create page
+    $this->test()->diag('create page');
     $this->
       click('Create')->
       isStatusCode(200)->
@@ -95,6 +97,7 @@ class CrudBrowser extends sfTestBrowser
     ;
 
     // save
+    $this->test()->diag('save');
     $this->saveValues($options, array(
       'title'       => 'my real title',
       'body'        => 'my real body',
@@ -105,6 +108,7 @@ class CrudBrowser extends sfTestBrowser
     ), 3);
 
     // go back to the list
+    $this->test()->diag('go back to the list');
     $this->
       click('Cancel')->
       isStatusCode(200)->
@@ -113,6 +117,7 @@ class CrudBrowser extends sfTestBrowser
     ;
 
     // edit page
+    $this->test()->diag('edit page');
     $this->
       click('3')->
       isStatusCode(200)->
@@ -141,6 +146,7 @@ class CrudBrowser extends sfTestBrowser
     ;
 
     // save / validation
+    $this->test()->diag('save / validation');
     $values = array(
       'title'       => '',
       'body'        => 'my body',
@@ -155,13 +161,14 @@ class CrudBrowser extends sfTestBrowser
       isRequestParameter('module', 'article')->
       isRequestParameter('action', in_array('non-atomic-actions', $options) ? 'edit' : 'update')->
       checkFormValues(array_merge($values, array(
-        'end_date' => array('year' => null, 'month' => 12, 'day' => 15, 'hour' => '10', 'minute' => '20')))
+        'end_date' => array('year' => null, 'month' => null, 'day' => 15, 'hour' => '10', 'minute' => '20')))
       )->
       checkResponseElement('ul[class="error_list"] li:contains("Required.")', 2)->
       checkResponseElement('ul[class="error_list"] li:contains("Invalid.")', 2)
     ;
 
     // save
+    $this->test()->diag('save');
     $this->saveValues($options, array(
       'title'       => 'my title',
       'body'        => 'my body',
@@ -172,6 +179,7 @@ class CrudBrowser extends sfTestBrowser
     ), 3);
 
     // go back to the list
+    $this->test()->diag('go back to the list');
     $this->
       click('Cancel')->
       isStatusCode(200)->
@@ -180,6 +188,7 @@ class CrudBrowser extends sfTestBrowser
     ;
 
     // delete
+    $this->test()->diag('delete');
     $this->
       get('/article/edit/id/3')->
 
@@ -203,6 +212,7 @@ class CrudBrowser extends sfTestBrowser
     if (in_array('with-show', $options))
     {
       // show page
+      $this->test()->diag('show page');
       $this->
         get('/article/show/id/2')->
         isStatusCode(200)->
