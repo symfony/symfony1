@@ -122,7 +122,7 @@ class sfForm implements ArrayAccess
 
     try
     {
-      $this->values = $this->validatorSchema->clean(array_merge($this->taintedValues, self::convertFileInformation($this->taintedFiles)));
+      $this->values = $this->validatorSchema->clean($this->taintedValues + self::convertFileInformation($this->taintedFiles));
       $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
 
       // remove CSRF token

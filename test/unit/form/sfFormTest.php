@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(74, new lime_output_color());
+$t = new lime_test(76, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -175,10 +175,6 @@ catch (LogicException $e)
 // ->bind() ->isValid() ->getValues() ->getValue() ->isBound() ->getErrorSchema()
 $t->diag('->bind() ->isValid() ->getValues() ->isBound() ->getErrorSchema()');
 $f = new FormTest();
-$f->setWidgetSchema(new sfWidgetFormSchema(array(
-  'first_name' => new sfWidgetFormInput(),
-  'last_name'  => new sfWidgetFormInput(),
-)));
 $f->setValidatorSchema(new sfValidatorSchema(array(
   'first_name' => new sfValidatorString(array('min_length' => 2)),
   'last_name' => new sfValidatorString(array('min_length' => 2)),
@@ -199,6 +195,29 @@ $f->bind(array());
 $t->ok(!$f->isValid(), '->isValid() returns false if the form does not pass the validation');
 $t->is($f->getValues(), array(), '->getValues() returns an empty array if the form does not pass the validation');
 $t->is($f->getErrorSchema()->getMessage(), 'first_name [Required.] last_name [Required.]', '->getErrorSchema() returns an error schema object with all errors');
+
+$t->diag('bind when field names are numeric');
+$f = new FormTest();
+$f->setValidatorSchema(new sfValidatorSchema(array(
+  1 => new sfValidatorString(array('min_length' => 2)),
+  2 => new sfValidatorString(array('min_length' => 2)),
+)));
+$f->bind(array(1 => 'fabien', 2 => 'potencier'));
+$t->ok($f->isValid(), '->bind() behaves correctly when field names are numeric');
+
+$t->diag('bind with files');
+$f = new FormTest();
+$f->setValidatorSchema(new sfValidatorSchema(array(
+  1 => new sfValidatorString(array('min_length' => 2)),
+  2 => new sfValidatorString(array('min_length' => 2)),
+  'file' => new sfValidatorFile(array('max_size' => 2)),
+)));
+$f->bind(array(
+  1 => 'f',
+  2 => 'potencier',
+  'file' => array('name' => 'test1.txt', 'type' => 'text/plain', 'tmp_name' => '/tmp/test1.txt', 'error' => 0, 'size' => 100))
+);
+$t->is($f->getErrorSchema()->getCode(), '1 [min_length] file [max_size]', '->bind() behaves correctly with files');
 
 // ->generateNameFormatForEmbedded()
 $t->diag('->generateNameFormatForEmbedded()');
