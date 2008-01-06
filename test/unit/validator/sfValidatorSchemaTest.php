@@ -131,7 +131,7 @@ try
 {
   $v->clean(array('s1' => 'foo', 's2' => 'bar', 'foo' => 'bar'));
   $t->fail('->clean() throws an sfValidatorErrorSchema exception if a you give a non existant field');
-  $t->skip('', 3);
+  $t->skip('', 2);
 }
 catch (sfValidatorErrorSchema $e)
 {
@@ -145,7 +145,7 @@ try
 {
   $v->clean(array('s1' => 'foo'));
   $t->fail('->clean() throws an sfValidatorErrorSchema exception if a required field is not provided');
-  $t->skip('', 3);
+  $t->skip('', 2);
 }
 catch (sfValidatorErrorSchema $e)
 {
