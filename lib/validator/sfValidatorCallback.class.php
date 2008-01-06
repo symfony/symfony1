@@ -23,13 +23,15 @@ class sfValidatorCallback extends sfValidator
    *
    * Available options:
    *
-   *  * callback: A valid PHP callback (required)
+   *  * callback:  A valid PHP callback (required)
+   *  * arguments: An array of arguments to pass to the callback
    *
    * @see sfValidator
    */
   protected function configure($options = array(), $messages = array())
   {
     $this->addRequiredOption('callback');
+    $this->addOption('arguments', array());
 
     $this->setOption('required', false);
   }
@@ -39,6 +41,6 @@ class sfValidatorCallback extends sfValidator
    */
   protected function doClean($value)
   {
-    return call_user_func($this->getOption('callback'), $this, $value);
+    return call_user_func($this->getOption('callback'), $this, $value, $this->getOption('arguments'));
   }
 }
