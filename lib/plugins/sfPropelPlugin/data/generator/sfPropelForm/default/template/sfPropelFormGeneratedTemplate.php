@@ -26,7 +26,7 @@ class Base<?php echo $this->table->getPhpName() ?>Form extends BaseFormPropel
       '<?php echo strtolower($column->getColumnName()) ?>'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($column->getColumnName())) ?> => new <?php echo $this->getValidatorClassForColumn($column) ?>(<?php echo $this->getValidatorOptionsForColumn($column) ?>),
 <?php endforeach; ?>
 <?php foreach ($this->getManyToManyTables() as $tables): ?>
-      '<?php echo $tables['relatedTable']->getName() ?>_list'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($tables['relatedTable']->getName().'_list')) ?> => new sfValidatorChoiceMany(array('choices' => new sfCallable(array($this, 'get<?php echo $tables['middleTable']->getPhpName() ?>IdentifierChoices')))),
+      '<?php echo $tables['relatedTable']->getName() ?>_list'<?php echo str_repeat(' ', $this->getColumnNameMaxLength() - strlen($tables['relatedTable']->getName().'_list')) ?> => new sfValidatorChoiceMany(array('choices' => new sfCallable(array($this, 'get<?php echo $tables['middleTable']->getPhpName() ?>IdentifierChoices')), 'required' => false)),
 <?php endforeach; ?>
     ));
 
