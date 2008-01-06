@@ -21,11 +21,9 @@
 class sfPropelData extends sfData
 {
   protected
-    $maps           = array(),
     $deletedClasses = array(),
     $con            = null;
 
-  // symfony load-data (file|dir)
   /**
    * Loads data from a file or directory into a Propel data source
    *
@@ -37,6 +35,10 @@ class sfPropelData extends sfData
   public function loadData($directory_or_file = null, $connectionName = 'propel')
   {
     $fixture_files = $this->getFiles($directory_or_file);
+
+    // load map classes
+    $this->loadMapBuilders();
+    $this->dbMap = Propel::getDatabaseMap($connectionName);
 
     // wrap all database operations in a single transaction
     $this->con = Propel::getConnection($connectionName);
@@ -80,10 +82,7 @@ class sfPropelData extends sfData
 
       $peer_class = $class.'Peer';
 
-      // load map class
-      $this->loadMapBuilder($class);
-
-      $tableMap = $this->maps[$class]->getDatabaseMap()->getTable(constant($peer_class.'::TABLE_NAME'));
+      $tableMap = $this->dbMap->getTable(constant($peer_class.'::TABLE_NAME'));
 
       $column_names = call_user_func_array(array($peer_class, 'getFieldNames'), array(BasePeer::TYPE_FIELDNAME));
 
@@ -111,6 +110,15 @@ class sfPropelData extends sfData
 
         foreach ($data as $name => $value)
         {
+          // will need to be updated for Propel 1.3
+          if (is_array($value) && 's' == substr($name, -1))
+          {
+            // many to many relationship
+            $this->loadMany2Many($obj, substr($name, 0, -1), $value);
+
+            continue;
+          }
+
           $isARealColumn = true;
           try
           {
@@ -126,12 +134,12 @@ class sfPropelData extends sfData
           {
             if ($column->isForeignKey() && !is_null($value))
             {
-              $relatedTable = $this->maps[$class]->getDatabaseMap()->getTable($column->getRelatedTableName());
+              $relatedTable = $this->dbMap->getTable($column->getRelatedTableName());
               if (!isset($this->object_references[$relatedTable->getPhpName().'_'.$value]))
               {
                 throw new sfException(sprintf('The object "%s" from class "%s" is not defined in your data file.', $value, $relatedTable->getPhpName()));
               }
-              $value = $this->object_references[$relatedTable->getPhpName().'_'.$value];
+              $value = $this->object_references[$relatedTable->getPhpName().'_'.$value]->getPrimaryKey();
             }
           }
 
@@ -150,12 +158,54 @@ class sfPropelData extends sfData
         }
         $obj->save($this->con);
 
-        // save the id for future reference
+        // save the object for future reference
         if (method_exists($obj, 'getPrimaryKey'))
         {
-          $this->object_references[$class.'_'.$key] = $obj->getPrimaryKey();
+          $this->object_references[$class.'_'.$key] = $obj;
         }
       }
+    }
+  }
+
+  /**
+   * Loads many to many objects.
+   *
+   * @param BaseObject A Propel object
+   * @param string     The middle table name
+   * @param array      An array of values
+   */
+  protected function loadMany2Many($obj, $middleTableName, $values)
+  {
+    $middleTable = $this->dbMap->getTable($middleTableName);
+    $middleClass = $middleTable->getPhpName();
+    foreach ($middleTable->getColumns()  as $column)
+    {
+      if ($column->isPrimaryKey() && $column->isForeignKey() && constant(get_class($obj).'Peer::TABLE_NAME') != $column->getRelatedTableName())
+      {
+        $relatedClass = $this->dbMap->getTable($column->getRelatedTableName())->getPhpName();
+        break;
+      }
+    }
+
+    if (!isset($relatedClass))
+    {
+      throw new sfException(sprintf('Unable to find the many-to-many relationship for object "%s"', get_class($obj)));
+    }
+
+    $setter = 'set'.get_class($obj);
+    $relatedSetter = 'set'.$relatedClass;
+
+    foreach ($values as $value)
+    {
+      if (!isset($this->object_references[$relatedClass.'_'.$value]))
+      {
+        throw new sfException(sprintf('The object "%s" from class "%s" is not defined in your data file.', $value, $relatedClass));
+      }
+
+      $middle = new $middleClass();
+      $middle->$setter($obj);
+      $middle->$relatedSetter($this->object_references[$relatedClass.'_'.$value]);
+      $middle->save();
     }
   }
 
@@ -214,25 +264,18 @@ class sfPropelData extends sfData
   }
 
   /**
-   * Loads the mappings for the classes
-   *
-   * @param string The model class name
+   * Loads all map builders.
    *
    * @throws sfException If the class cannot be found
    */
-  protected function loadMapBuilder($class)
+  protected function loadMapBuilders()
   {
-    $mapBuilderClass = $class.'MapBuilder';
-    if (!isset($this->maps[$class]))
+    $files = sfFinder::type('file')->name('*MapBuilder.php')->in(sfLoader::getModelDirs());
+    foreach ($files as $file)
     {
-      if (!$classPath = sfAutoload::getInstance()->getClassPath($mapBuilderClass))
-      {
-        throw new sfException(sprintf('Unable to find path for class "%s".', $mapBuilderClass));
-      }
-
-      require_once($classPath);
-      $this->maps[$class] = new $mapBuilderClass();
-      $this->maps[$class]->doBuild();
+      $mapBuilderClass = basename($file, '.php');
+      $map = new $mapBuilderClass();
+      $map->doBuild();
     }
   }
 
@@ -257,23 +300,15 @@ class sfPropelData extends sfData
       // delete file
     }
 
+    $this->loadMapBuilders();
     $this->con = Propel::getConnection($connectionName);
+    $this->dbMap = Propel::getDatabaseMap($connectionName);
 
     // get tables
     if ('all' === $tables || is_null($tables))
     {
-      // load all map builder classes
-      $files = sfFinder::type('file')->name('*MapBuilder.php')->in(sfLoader::getModelDirs());
-      foreach ($files as $file)
-      {
-        $mapBuilderClass = basename($file, '.php');
-        $map = new $mapBuilderClass();
-        $map->doBuild();
-      }
-
-      $dbMap = Propel::getDatabaseMap($connectionName);
       $tables = array();
-      foreach ($dbMap->getTables() as $table)
+      foreach ($this->dbMap->getTables() as $table)
       {
         $tables[] = $table->getPhpName();
       }
@@ -285,13 +320,10 @@ class sfPropelData extends sfData
 
     $dumpData = array();
 
-    // load map classes
-    array_walk($tables, array($this, 'loadMapBuilder'));
-
     $tables = $this->fixOrderingOfForeignKeyData($tables);
     foreach ($tables as $tableName)
     {
-      $tableMap = $this->maps[$tableName]->getDatabaseMap()->getTable(constant($tableName.'Peer::TABLE_NAME'));
+      $tableMap = $this->dbMap->getTable(constant($tableName.'Peer::TABLE_NAME'));
       $hasParent = false;
       $haveParents = false;
       $fixColumn = null;
@@ -300,7 +332,7 @@ class sfPropelData extends sfData
         $col = strtolower($column->getColumnName());
         if ($column->isForeignKey())
         {
-          $relatedTable = $this->maps[$tableName]->getDatabaseMap()->getTable($column->getRelatedTableName());
+          $relatedTable = $this->dbMap->getTable($column->getRelatedTableName());
           if ($tableName === $relatedTable->getPhpName())
           {
             if ($hasParent)
@@ -365,7 +397,7 @@ class sfPropelData extends sfData
 
             if ($column->isForeignKey())
             {
-              $relatedTable = $this->maps[$tableName]->getDatabaseMap()->getTable($column->getRelatedTableName());
+              $relatedTable = $this->dbMap->getTable($column->getRelatedTableName());
               if ($isPrimaryKey)
               {
                 $foreignKeys[$col] = $rs->get($col);
@@ -424,12 +456,12 @@ class sfPropelData extends sfData
     for ($i = 0, $count = count($classes); $i < $count; $i++)
     {
       $class = $classes[$i];
-      $tableMap = $this->maps[$class]->getDatabaseMap()->getTable(constant($class.'Peer::TABLE_NAME'));
+      $tableMap = $this->dbMap->getTable(constant($class.'Peer::TABLE_NAME'));
       foreach ($tableMap->getColumns() as $column)
       {
         if ($column->isForeignKey())
         {
-          $relatedTable = $this->maps[$class]->getDatabaseMap()->getTable($column->getRelatedTableName());
+          $relatedTable = $this->dbMap->getTable($column->getRelatedTableName());
           $relatedTablePos = array_search($relatedTable->getPhpName(), $classes);
 
           // check if relatedTable is after the current table
