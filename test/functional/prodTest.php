@@ -37,3 +37,29 @@ $b->
   isRequestParameter('action', 'index')->
   checkResponseElement('body', '/congratulations/i')
 ;
+
+// 404
+$b->
+  get('/nonexistant')->
+  isStatusCode(404)->
+  isForwardedTo('default', 'error404')->
+  checkResponseElement('body', '!/congratulations/i')->
+  checkResponseElement('link[href="/sf/sf_default/css/screen.css"]')
+;
+
+$b->
+  get('/nonexistant/')->
+  isStatusCode(404)->
+  isForwardedTo('default', 'error404')->
+  checkResponseElement('body', '!/congratulations/i')->
+  checkResponseElement('link[href="/sf/sf_default/css/screen.css"]')
+;
+
+// unexistant action
+$b->
+  get('/default/nonexistantaction')->
+  isStatusCode(404)->
+  isForwardedTo('default', 'error404')->
+  checkResponseElement('body', '!/congratulations/i')->
+  checkResponseElement('link[href="/sf/sf_default/css/screen.css"]')
+;

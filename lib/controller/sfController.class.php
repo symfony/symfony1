@@ -204,19 +204,7 @@ abstract class sfController
         $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Action "%s/%s" does not exist', $moduleName, $actionName))));
       }
 
-      // track the requested module so we have access to the data in the error 404 page
-      $this->context->getRequest()->setAttribute('requested_action', $actionName);
-      $this->context->getRequest()->setAttribute('requested_module', $moduleName);
-
-      // switch to error 404 action
-      $moduleName = sfConfig::get('sf_error_404_module');
-      $actionName = sfConfig::get('sf_error_404_action');
-
-      if (!$this->actionExists($moduleName, $actionName))
-      {
-        // cannot find unavailable module/action
-        throw new sfConfigurationException(sprintf('Invalid configuration settings: [sf_error_404_module] "%s", [sf_error_404_action] "%s".', $moduleName, $actionName));
-      }
+      throw new sfError404Exception(sprintf('Action "%s/%s" does not exist.', $moduleName, $actionName));
     }
 
     // create an instance of the action

@@ -47,12 +47,23 @@ class sfContext
     // create a new action stack
     $this->factories['actionStack'] = new sfActionStack();
 
-    // include the factories configuration
-    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/factories.yml'));
+    try
+    {
+      // include the factories configuration
+      require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/factories.yml'));
+    }
+    catch (sfException $e)
+    {
+      $e->printStackTrace();
+    }
+    catch (Exception $e)
+    {
+      sfException::createFromException($e)->printStackTrace();
+    }
 
     if (sfConfig::get('sf_logging_enabled'))
     {
-      $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Initilization')));
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Initialization')));
     }
 
     $this->dispatcher->connect('template.filter_parameters', array($this, 'filterTemplateParameters'));
@@ -163,7 +174,7 @@ class sfContext
    */
    public function getController()
    {
-     return $this->factories['controller'];
+     return isset($this->factories['controller']) ? $this->factories['controller'] : null;
    }
 
    public function getLogger()
@@ -214,7 +225,7 @@ class sfContext
    */
   public function getDatabaseManager()
   {
-    return $this->factories['databaseManager'];
+    return isset($this->factories['databaseManager']) ? $this->factories['databaseManager'] : null;
   }
 
   /**
@@ -254,7 +265,7 @@ class sfContext
    */
   public function getRequest()
   {
-    return $this->factories['request'];
+    return isset($this->factories['request']) ? $this->factories['request'] : null;
   }
 
   /**
@@ -264,7 +275,7 @@ class sfContext
    */
   public function getResponse()
   {
-    return $this->factories['response'];
+    return isset($this->factories['response']) ? $this->factories['response'] : null;
   }
 
   /**
@@ -286,7 +297,7 @@ class sfContext
    */
   public function getStorage()
   {
-    return $this->factories['storage'];
+    return isset($this->factories['storage']) ? $this->factories['storage'] : null;
   }
 
   /**
@@ -296,7 +307,7 @@ class sfContext
    */
   public function getViewCacheManager()
   {
-    return $this->factories['viewCacheManager'];
+    return isset($this->factories['viewCacheManager']) ? $this->factories['viewCacheManager'] : null;
   }
 
   /**
@@ -321,7 +332,7 @@ class sfContext
    */
   public function getRouting()
   {
-    return $this->factories['routing'];
+    return isset($this->factories['routing']) ? $this->factories['routing'] : null;
   }
 
   /**
@@ -331,7 +342,7 @@ class sfContext
    */
   public function getUser()
   {
-    return $this->factories['user'];
+    return isset($this->factories['user']) ? $this->factories['user'] : null;
   }
 
   /**

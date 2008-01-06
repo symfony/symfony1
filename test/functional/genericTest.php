@@ -30,11 +30,15 @@ $b->
 $b->
   get('/nonexistant')->
   isStatusCode(404)->
-  isForwardedTo('default', 'error404')->
-  checkResponseElement('body', '!/congratulations/i')->
-  checkResponseElement('link[href="/sf/sf_default/css/screen.css"]')
+  throwsException('sfError404Exception', 'Action "nonexistant/index" does not exist.')
 ;
-
+/*
+$b->
+  get('/nonexistant/')->
+  isStatusCode(404)->
+  throwsException('sfError404Exception', 'Empty module and/or action after parsing the URL "/nonexistant/" (nonexistant/).')
+;
+*/
 // 404 with ETag enabled must returns 404, not 304
 sfConfig::set('sf_cache', true);
 sfConfig::set('sf_etag', true);
@@ -58,8 +62,7 @@ sfConfig::set('sf_etag', false);
 $b->
   get('/default/nonexistantaction')->
   isStatusCode(404)->
-  isForwardedTo('default', 'error404')->
-  checkResponseElement('link[href="/sf/sf_default/css/screen.css"]')
+  throwsException('sfError404Exception', 'Action "default/nonexistantaction" does not exist.')
 ;
 
 // module.yml: enabled

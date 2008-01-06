@@ -898,19 +898,17 @@ class sfWebRequest extends sfRequest
     return $this->pathInfoArray;
   }
 
+  /**
+   * Parses the request parameters.
+   *
+   * This method notifies the request.filter_parameters event.
+   *
+   * @return array An array of request parameters.
+   */
   protected function parseRequestParameters()
   {
     $parameters = array();
-
-    try
-    {
-      $parameters = $this->dispatcher->filter(new sfEvent($this, 'request.filter_parameters', array('path_info' => $this->getPathInfo())), $parameters)->getReturnValue();
-    }
-    catch (sfError404Exception $e)
-    {
-      $parameters['module'] = sfConfig::get('sf_error_404_module', 'default');
-      $parameters['action'] = sfConfig::get('sf_error_404_action', 'error404');
-    }
+    $parameters = $this->dispatcher->filter(new sfEvent($this, 'request.filter_parameters', array('path_info' => $this->getPathInfo())), $parameters)->getReturnValue();
 
     if (!isset($parameters['module']))
     {
@@ -922,7 +920,12 @@ class sfWebRequest extends sfRequest
       $parameters['action'] = sfConfig::get('sf_default_action', 'index');
     }
 
-    $this->requestParameters = $parameters;
+    if (empty($parameters['module']) || empty($parameters['action']))
+    {
+      throw new sfError404Exception(sprintf('Empty module and/or action after parsing the URL "%s" (%s/%s).', $this->getPathInfo(), $parameters['module'], $parameters['action']));
+    }
+
+    return $parameters;
   }
 
   /**
@@ -936,7 +939,7 @@ class sfWebRequest extends sfRequest
     $this->parameterHolder->add($this->getParameters);
 
     // additional parameters
-    $this->parseRequestParameters();
+    $this->requestParameters = $this->parseRequestParameters();
     $this->parameterHolder->add($this->requestParameters);
 
     // POST parameters
