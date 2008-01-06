@@ -9,11 +9,12 @@
  */
 
 /**
- * This class is the Propel implementation of sfData.  It interacts with the data source
- * and loads data.
+ * This class is the Propel implementation of sfData.
+ *
+ * It interacts with the data source and loads data.
  *
  * @package    symfony
- * @subpackage addon
+ * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */

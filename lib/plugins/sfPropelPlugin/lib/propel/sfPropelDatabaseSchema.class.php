@@ -11,7 +11,7 @@
 /**
  *
  * @package    symfony
- * @subpackage addon
+ * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     François Zaninotto <francois.zaninotto@symfony-project.com>
  * @version    SVN: $Id$

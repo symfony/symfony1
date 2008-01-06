@@ -10,7 +10,7 @@
 
 /**
  * @package    symfony
- * @subpackage addon
+ * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */

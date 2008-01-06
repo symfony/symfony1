@@ -12,7 +12,7 @@ require_once 'propel/engine/builder/om/php5/PHP5ExtensionObjectBuilder.php';
 
 /**
  * @package    symfony
- * @subpackage addon
+ * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
