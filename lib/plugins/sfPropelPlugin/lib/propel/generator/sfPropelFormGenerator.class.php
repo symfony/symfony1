@@ -326,7 +326,7 @@ class sfPropelFormGenerator extends sfGenerator
 
     if (!$column->isPrimaryKey() && $column->isForeignKey())
     {
-      $options[] = sprintf('\'choices\' => new sfCallable(array($this, \'get%sIdentifierChoices\'))', $this->dbMap->getTable($column->getRelatedTableName())->getPhpName());
+      $options[] = sprintf('\'choices\' => new sfCallable(array($this, \'get%sIdentifierChoices\'))', $column->getPhpName());
     }
 
     if (!$column->isNotNull() || $column->isPrimaryKey())
