@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(60, new lime_output_color());
+$t = new lime_test(73, new lime_output_color());
 
 class PreValidator extends sfValidator
 {
@@ -301,4 +301,69 @@ catch (sfValidatorErrorSchema $e)
   $t->is(isset($e['left']) ? $e['left']->getCode() : '', 'required invalid', '->clean() throws an exception with all error messages');
   $t->is(isset($e['embedded']['left']) ? $e['embedded']['left']->getCode() : '', 'invalid', '->clean() throws an exception with all error messages');
   $t->is($e->getCode(), 'test [min_length] embedded [test [min_length] left [invalid]] left [required invalid]', '->clean() throws an exception with all error messages');
+}
+
+$t->diag('complex postValidator');
+$comparator1 = new sfValidatorSchemaCompare('password', sfValidatorSchemaCompare::EQUAL, 'password_bis');
+$v = new sfValidatorSchema(array(
+  'left'         => new sfValidatorString(array('min_length' => 2)),
+  'right'        => new sfValidatorString(array('min_length' => 2)),
+  'password'     => new sfValidatorString(array('min_length' => 2)),
+  'password_bis' => new sfValidatorString(array('min_length' => 2)),
+));
+$v->setPostValidator(new sfValidatorAnd(array($comparator, $comparator1)));
+try
+{
+  $v->clean(array('left' => 'foo', 'right' => 'bar', 'password' => 'oof', 'password_bis' => 'rab'));
+  $t->skip('', 3);
+}
+catch (sfValidatorErrorSchema $e)
+{
+  $t->is(count($e->getNamedErrors()), 2, '->clean() throws an exception with all error messages');
+  $t->is(count($e->getGlobalErrors()), 0, '->clean() throws an exception with all error messages');
+  $t->is($e->getCode(), 'left [invalid] password [invalid]', '->clean() throws an exception with all error messages');
+}
+
+$comparator->setOption('throw_global_error', true);
+try
+{
+  $v->clean(array('left' => 'foo', 'right' => 'bar', 'password' => 'oof', 'password_bis' => 'rab'));
+  $t->skip('', 3);
+}
+catch (sfValidatorErrorSchema $e)
+{
+  $t->is(count($e->getNamedErrors()), 1, '->clean() throws an exception with all error messages');
+  $t->is(count($e->getGlobalErrors()), 1, '->clean() throws an exception with all error messages');
+  $t->is($e->getCode(), 'invalid password [invalid]', '->clean() throws an exception with all error messages');
+}
+
+$userValidator = new sfValidatorSchema(array(
+  'left'         => new sfValidatorString(array('min_length' => 2)),
+  'right'        => new sfValidatorString(array('min_length' => 2)),
+  'password'     => new sfValidatorString(array('min_length' => 2)),
+  'password_bis' => new sfValidatorString(array('min_length' => 2)),
+));
+$userValidator->setPostValidator(new sfValidatorAnd(array($comparator, $comparator1)));
+$v = new sfValidatorSchema(array(
+  'left'         => new sfValidatorString(array('min_length' => 2)),
+  'right'        => new sfValidatorString(array('min_length' => 2)),
+  'password'     => new sfValidatorString(array('min_length' => 2)),
+  'password_bis' => new sfValidatorString(array('min_length' => 2)),
+  'user'         => $userValidator,
+));
+$v->setPostValidator(new sfValidatorAnd(array($comparator, $comparator1)));
+try
+{
+  $v->clean(array('left' => 'foo', 'right' => 'bar', 'password' => 'oof', 'password_bis' => 'rab', 'user' => array('left' => 'foo', 'right' => 'bar', 'password' => 'oof', 'password_bis' => 'rab')));
+  $t->skip('', 7);
+}
+catch (sfValidatorErrorSchema $e)
+{
+  $t->is(count($e->getNamedErrors()), 2, '->clean() throws an exception with all error messages');
+  $t->is(count($e->getGlobalErrors()), 1, '->clean() throws an exception with all error messages');
+  $t->is(count($e['user']->getNamedErrors()), 1, '->clean() throws an exception with all error messages');
+  $t->is(count($e['user']->getGlobalErrors()), 1, '->clean() throws an exception with all error messages');
+  $t->is(isset($e['user']) ? $e['user']->getCode() : '', 'invalid password [invalid]', '->clean() throws an exception with all error messages');
+  $t->is(isset($e['user']['password']) ? $e['user']['password']->getCode() : '', 'invalid', '->clean() throws an exception with all error messages');
+  $t->is($e->getCode(), 'invalid user [invalid password [invalid]] password [invalid]', '->clean() throws an exception with all error messages');
 }

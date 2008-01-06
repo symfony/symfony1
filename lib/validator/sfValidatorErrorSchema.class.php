@@ -56,11 +56,13 @@ class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, It
     {
       if ($error instanceof sfValidatorErrorSchema)
       {
-        throw new LogicException('Unable to merge a sfValidatorErrorSchema to global errors.');
+        $this->addErrors($error);
       }
-
-      $this->globalErrors[] = $error;
-      $this->errors[] = $error;
+      else
+      {
+        $this->globalErrors[] = $error;
+        $this->errors[] = $error;
+      }
     }
     else
     {
