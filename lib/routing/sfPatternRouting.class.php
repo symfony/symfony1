@@ -600,7 +600,7 @@ class sfPatternRouting extends sfRouting
 
       $this->currentRouteParameters = null;
 
-      throw new sfError404Exception('No matching route found');
+      throw new sfError404Exception(sprintf('No matching route found for "%s"', $url));
     }
 
     $this->currentRouteParameters = $out;
