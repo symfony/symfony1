@@ -145,13 +145,13 @@ class sfPropelFormGenerator extends sfGenerator
     {
       if (!$column->isPrimaryKey() && $column->isForeignKey())
       {
-        $names[] = array($this->getForeignTable($column)->getPhpName(), $column->isNotNull());
+        $names[] = array($this->getForeignTable($column)->getPhpName(), $column->getPhpName(), $column->isNotNull());
       }
     }
 
     foreach ($this->getManyToManyTables() as $tables)
     {
-      $names[] = array($tables['relatedTable']->getPhpName(), false);
+      $names[] = array($tables['relatedTable']->getPhpName(), $tables['middleTable']->getPhpName(), false);
     }
 
     return $names;
@@ -240,7 +240,7 @@ class sfPropelFormGenerator extends sfGenerator
 
     if (!$column->isPrimaryKey() && $column->isForeignKey())
     {
-      $options[] = sprintf('\'choices\' => new sfCallable(array($this, \'get%sChoices\'))', $this->getForeignTable($column)->getPhpName());
+      $options[] = sprintf('\'choices\' => new sfCallable(array($this, \'get%sChoices\'))', $column->getPhpName());
     }
 
     return count($options) ? sprintf('array(%s)', implode(', ', $options)) : '';
