@@ -140,7 +140,7 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
         continue;
       }
 
-      unset($unused[array_search($name, $unused)]);
+      unset($unused[array_search($name, $unused, true)]);
 
       // validate value
       try
@@ -165,6 +165,8 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
       }
       catch (sfValidatorError $e)
       {
+        $clean[$name] = null;
+
         $errorSchema->addError($e, (string) $name);
       }
     }
