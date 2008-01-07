@@ -113,12 +113,17 @@ class sfForm implements ArrayAccess
    * @param array An array of input values
    * @param array An array of uploaded files (in the $_FILES or $_GET format)
    */
-  public function bind($taintedValues, $taintedFiles = array())
+  public function bind(array $taintedValues = null, array $taintedFiles = array())
   {
     $this->taintedValues = $taintedValues;
     $this->taintedFiles  = $taintedFiles;
     $this->isBound = true;
     $this->resetFormFields();
+
+    if (is_null($this->taintedValues))
+    {
+      $this->taintedValues = array();
+    }
 
     try
     {
@@ -649,7 +654,7 @@ class sfForm implements ArrayAccess
    *
    * @return array An array of re-ordered uploaded file information
    */
-  static public function convertFileInformation($taintedFiles)
+  static public function convertFileInformation(array $taintedFiles)
   {
     return self::pathsToArray(preg_replace('#^(/[^/]+)?(/name|/type|/tmp_name|/error|/size)([^\s]*)( = [^\n]*)#m', '$1$3$2$4', self::arrayToPaths($taintedFiles)));
   }
