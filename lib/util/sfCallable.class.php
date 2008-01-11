@@ -54,7 +54,7 @@ class sfCallable
   {
     if (!is_callable($this->callable))
     {
-      throw new sfException(sprintf('"%s" is not a valid callable.', is_array($this->callable) ? sprintf('%s:%s', is_object($this->callable[0]) ? get_class($this->callable[0]) : $this->callable[0], $this->callable[1]) : $this->callable));
+      throw new sfException(sprintf('"%s" is not a valid callable.', is_array($this->callable) ? sprintf('%s:%s', is_object($this->callable[0]) ? get_class($this->callable[0]) : $this->callable[0], $this->callable[1]) : var_export($this->callable, true)));
     }
 
     $arguments = func_get_args();
