@@ -25,8 +25,6 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
   /**
    * Constructor.
    *
-   * The decorated widget is cloned.
-   *
    * @param sfWidgetFormSchema A sfWidgetFormSchema instance
    * @param string             A decorator string
    *
@@ -34,17 +32,20 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
    */
   public function __construct(sfWidgetFormSchema $widget, $decorator)
   {
-    $this->widget    = clone $widget;
+    $this->widget    = $widget;
     $this->decorator = $decorator;
 
-    $this->nameFormat     = $widget->getNameFormat();
-    $this->formFormatters = $widget->getFormFormatters();
-    $this->formFormatter  = $widget->getFormFormatterName();
+    parent::__construct();
+  }
 
-    $this->attributes = $widget->getAttributes();
-    $this->options    = $widget->getOptions();
-    $this->labels     = $widget->getLabels();
-    $this->helps      = $widget->getHelps();
+  /**
+   * Returns the decorated widget.
+   *
+   * @param sfWidget The decorated widget
+   */
+  public function getWidget()
+  {
+    return $this->widget;
   }
 
   /**
@@ -52,19 +53,215 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
    */
   public function render($name, $values = array(), $attributes = array(), $errors = array())
   {
-    $this->widget->setNameFormat($this->nameFormat);
-    foreach ($this->formFormatters as $name => $formFormatter)
-    {
-      $this->widget->addFormFormatter($name, $formFormatter);
-    }
-    $this->widget->setFormFormatterName($this->formFormatter);
-
-    $this->widget->setAttributes($this->attributes);
-    $this->widget->setOptions($this->options);
-    $this->widget->setLabels($this->labels);
-    $this->widget->setHelps($this->helps);
-
     return strtr($this->decorator, array('%content%' => $this->widget->render($name, $values, $attributes, $errors)));
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function addFormFormatter($name, sfWidgetFormSchemaFormatter $formatter)
+  {
+    return $this->widget->addFormFormatter($name, $formatter);
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function getFormFormatters()
+  {
+    return $this->widget->getFormFormatters();
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function setFormFormatterName($name)
+  {
+    $this->widget->setFormFormatterName($name);
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function getFormFormatterName()
+  {
+    return $this->widget->getFormFormatterName();
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function getFormFormatter()
+  {
+    return $this->widget->getFormFormatter();
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function setNameFormat($format)
+  {
+    $this->widget->setNameFormat($format);
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function getNameFormat()
+  {
+    return $this->widget->getNameFormat();
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function setLabels($labels)
+  {
+    $this->widget->setLabels($labels);
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function getLabels()
+  {
+    return $this->widget->getLabels();
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function setLabel($name, $value)
+  {
+    $this->widget->setLabel($name, $value);
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function getLabel($name)
+  {
+    return $this->widget->getLabel($name);
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function setHelps($helps)
+  {
+    $this->widget->setHelps($helps);
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function getHelps()
+  {
+    return $this->widget->getHelps();
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function setHelp($name, $help)
+  {
+    $this->widget->setHelp($name, $help);
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function getHelp($name)
+  {
+    return $this->widget->getHelp($name);
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function needsMultipartForm()
+  {
+    return $this->widget->needsMultipartForm();
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function renderField($name, $value = null, $errors = array())
+  {
+    return $this->widget->renderField($name, $value, $errors);
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function generateLabel($name)
+  {
+    return $this->widget->generateLabel($name);
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function generateLabelName($name)
+  {
+    return $this->widget->generateLabelName($name);
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function generateName($name)
+  {
+    return $this->widget->generateName($name);
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function getParent()
+  {
+    return $this->widget->getParent();
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function setParent(sfWidgetFormSchema $parent)
+  {
+    $this->widget->setParent($parent);
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function getFields()
+  {
+    return $this->widget->getFields();
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function getPositions()
+  {
+    return $this->widget->getPositions();
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function setPositions($positions)
+  {
+    $this->widget->setPositions($positions);
+  }
+
+  /**
+   * @see sfWidgetFormSchema
+   */
+  public function moveField($field, $action, $pivot = null)
+  {
+    return $this->widget->moveField($field, $action, $pivot);
   }
 
   /**
@@ -99,11 +296,8 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
     unset($this->widget[$name]);
   }
 
-  /**
-   * @see sfWidgetFormSchema
-   */
-  public function getFields()
+  public function __clone()
   {
-    return $this->widget->getFields();
+    $this->widget = clone $this->widget;
   }
 }

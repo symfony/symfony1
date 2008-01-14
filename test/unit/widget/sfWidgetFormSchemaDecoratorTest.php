@@ -10,13 +10,17 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(9, new lime_output_color());
+$t = new lime_test(15, new lime_output_color());
 
 $w1 = new sfWidgetFormInput();
 $w2 = new sfWidgetFormInput();
 $ws = new sfWidgetFormSchema(array('w1' => $w1));
 
 $w = new sfWidgetFormSchemaDecorator($ws, "<table>\n%content%</table>");
+
+// ->getWidget()
+$t->diag('->getWidget()');
+$t->is($w->getWidget(), $ws, '->getWidget() returns the decorated widget');
 
 // ->render()
 $t->diag('->render()');
@@ -34,7 +38,7 @@ $t->is($w->render(null), $output, '->render() decorates the widget');
 $t->diag('implements ArrayAccess');
 $w['w2'] = $w2;
 $t->is($w->getFields(), array('w1' => $w1, 'w2' => $w2), 'sfWidgetFormSchemaDecorator implements the ArrayAccess interface for the fields');
-$t->is($ws->getFields(), array('w1' => $w1), 'sfWidgetFormSchemaDecorator implements the ArrayAccess interface for the fields');
+$t->is($ws->getFields(), array('w1' => $w1, 'w2' => $w2), 'sfWidgetFormSchemaDecorator implements the ArrayAccess interface for the fields');
 
 try
 {
@@ -48,12 +52,17 @@ catch (LogicException $e)
 
 $w = new sfWidgetFormSchemaDecorator($ws, "<table>\n%content%</table>");
 $t->is(isset($w['w1']), true, 'sfWidgetFormSchemaDecorator implements the ArrayAccess interface for the fields');
-$t->is(isset($w['w2']), false, 'sfWidgetFormSchemaDecorator implements the ArrayAccess interface for the fields');
+$t->is(isset($w['w2']), true, 'sfWidgetFormSchemaDecorator implements the ArrayAccess interface for the fields');
+$t->is(isset($ws['w1']), true, 'sfWidgetFormSchemaDecorator implements the ArrayAccess interface for the fields');
+$t->is(isset($ws['w2']), true, 'sfWidgetFormSchemaDecorator implements the ArrayAccess interface for the fields');
 
 $w = new sfWidgetFormSchemaDecorator($ws, "<table>\n%content%</table>");
 $t->is($w['w1'], $w1, 'sfWidgetFormSchemaDecorator implements the ArrayAccess interface for the fields');
-$t->is($w['w2'], null, 'sfWidgetFormSchemaDecorator implements the ArrayAccess interface for the fields');
+$t->is($w['w2'], $w2, 'sfWidgetFormSchemaDecorator implements the ArrayAccess interface for the fields');
+$t->is($ws['w1'], $w1, 'sfWidgetFormSchemaDecorator implements the ArrayAccess interface for the fields');
+$t->is($ws['w2'], $w2, 'sfWidgetFormSchemaDecorator implements the ArrayAccess interface for the fields');
 
 $w = new sfWidgetFormSchemaDecorator($ws, "<table>\n%content%</table>");
 unset($w['w1']);
 $t->is($w['w1'], null, 'sfWidgetFormSchemaDecorator implements the ArrayAccess interface for the fields');
+$t->is($ws['w1'], null, 'sfWidgetFormSchemaDecorator implements the ArrayAccess interface for the fields');
