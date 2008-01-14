@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(76, new lime_output_color());
+$t = new lime_test(82, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -239,8 +239,8 @@ $v = $article->getValidatorSchema();
 $w = $article->getWidgetSchema();
 $d = $article->getDefaults();
 
-$t->is($v['author']['first_name'], $author_validator_schema['first_name'], '->embedForm() embeds the validator schema');
-$t->is($w['author']['first_name'], $author_widget_schema['first_name'], '->embedForm() embeds the widget schema');
+$t->ok($v['author']['first_name'] == $author_validator_schema['first_name'], '->embedForm() embeds the validator schema');
+$t->ok($w['author']['first_name'] == $author_widget_schema['first_name'], '->embedForm() embeds the widget schema');
 $t->is($d['author']['first_name'], 'Fabien', '->embedForm() merges default values from the embedded form');
 $t->is($v['author'][sfForm::getCSRFFieldName()], null, '->embedForm() removes the CSRF token for the embedded form');
 $t->is($w['author'][sfForm::getCSRFFieldName()], null, '->embedForm() removes the CSRF token for the embedded form');
@@ -254,8 +254,8 @@ $d = $article->getDefaults();
 
 for ($i = 0; $i < 2; $i++)
 {
-  $t->is($v['authors'][$i]['first_name'], $author_validator_schema['first_name'], '->embedFormForEach() embeds the validator schema');
-  $t->is($w['authors'][$i]['first_name'], $author_widget_schema['first_name'], '->embedFormForEach() embeds the widget schema');
+  $t->ok($v['authors'][$i]['first_name'] == $author_validator_schema['first_name'], '->embedFormForEach() embeds the validator schema');
+  $t->ok($w['authors'][$i]['first_name'] == $author_widget_schema['first_name'], '->embedFormForEach() embeds the widget schema');
   $t->is($d['authors'][$i]['first_name'], 'Fabien', '->embedFormForEach() merges default values from the embedded forms');
   $t->is($v['authors'][$i][sfForm::getCSRFFieldName()], null, '->embedFormForEach() removes the CSRF token for the embedded forms');
   $t->is($w['authors'][$i][sfForm::getCSRFFieldName()], null, '->embedFormForEach() removes the CSRF token for the embedded forms');
@@ -423,3 +423,21 @@ $expected = array(
 );
 $t->is_deeply(sfForm::convertFileInformation($input), $expected, '::convertFileInformation() converts $_FILES to be coherent with $_GET and $_POST naming convention');
 $t->is_deeply(sfForm::convertFileInformation($expected), $expected, '::convertFileInformation() converts $_FILES to be coherent with $_GET and $_POST naming convention');
+
+// __clone()
+$t->diag('__clone()');
+$a = new FormTest();
+$a->setValidatorSchema(new sfValidatorSchema(array(
+  'first_name' => new sfValidatorString(array('min_length' => 2)),
+)));
+$a->bind(array('first_name' => 'F'));
+$a1 = clone $a;
+
+$t->ok($a1->getValidatorSchema() !== $a->getValidatorSchema(), '__clone() clones the validator schema');
+$t->ok($a1->getValidatorSchema() == $a->getValidatorSchema(), '__clone() clones the validator schema');
+
+$t->ok($a1->getWidgetSchema() !== $a->getWidgetSchema(), '__clone() clones the widget schema');
+$t->ok($a1->getWidgetSchema() == $a->getWidgetSchema(), '__clone() clones the widget schema');
+
+$t->ok($a1->getErrorSchema() !== $a->getErrorSchema(), '__clone() clones the error schema');
+$t->ok($a1->getErrorSchema()->getMessage() == $a->getErrorSchema()->getMessage(), '__clone() clones the error schema');

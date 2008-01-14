@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(50, new lime_output_color());
+$t = new lime_test(55, new lime_output_color());
 
 $w1 = new sfWidgetFormInput(array(), array('class' => 'foo1'));
 $w2 = new sfWidgetFormInput();
@@ -269,3 +269,16 @@ $expected = <<<EOF
 EOF;
 $rendered = $w->render(null, array('w1' => 'Fabien', 'w2' => 'Potencier'), array(), array('first_name' => 'Too short', 'Global error message', 'id' => 'Required'));
 $t->is($rendered, $expected, '->render() renders a schema to HTML');
+
+// __clone()
+$t->diag('__clone()');
+$w = new sfWidgetFormSchema(array('w1' => $w1, 'w2' => $w2));
+$w1 = clone $w;
+$f1 = $w1->getFields();
+$f = $w->getFields();
+$t->is(array_keys($f1), array_keys($f), '__clone() clones embedded widgets');
+foreach ($f1 as $name => $widget)
+{
+  $t->ok($widget !== $f[$name], '__clone() clones embedded widgets');
+  $t->ok($widget == $f[$name], '__clone() clones embedded widgets');
+}

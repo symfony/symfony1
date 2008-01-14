@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(73, new lime_output_color());
+$t = new lime_test(78, new lime_output_color());
 
 class PreValidator extends sfValidator
 {
@@ -366,4 +366,17 @@ catch (sfValidatorErrorSchema $e)
   $t->is(isset($e['user']) ? $e['user']->getCode() : '', 'invalid password [invalid]', '->clean() throws an exception with all error messages');
   $t->is(isset($e['user']['password']) ? $e['user']['password']->getCode() : '', 'invalid', '->clean() throws an exception with all error messages');
   $t->is($e->getCode(), 'invalid user [invalid password [invalid]] password [invalid]', '->clean() throws an exception with all error messages');
+}
+
+// __clone()
+$t->diag('__clone()');
+$v = new sfValidatorSchema(array('v1' => $v1, 'v2' => $v2));
+$v1 = clone $v;
+$f1 = $v1->getFields();
+$f = $v->getFields();
+$t->is(array_keys($f1), array_keys($f), '__clone() clones embedded validators');
+foreach ($f1 as $name => $validator)
+{
+  $t->ok($validator !== $f[$name], '__clone() clones embedded validators');
+  $t->ok($validator == $f[$name], '__clone() clones embedded validators');
 }

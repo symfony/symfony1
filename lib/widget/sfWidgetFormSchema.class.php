@@ -590,4 +590,12 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
         throw new LogicException(sprintf('Unknown move operation for field "%s".', $field));
     }
   }
+
+  public function __clone()
+  {
+    foreach ($this->fields as $name => $field)
+    {
+      $this->fields[$name] = clone $field;
+    }
+  }
 }

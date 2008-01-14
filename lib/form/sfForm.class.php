@@ -734,4 +734,13 @@ class sfForm implements ArrayAccess
 
     return $str;
   }
+
+  public function __clone()
+  {
+    $this->widgetSchema    = clone $this->widgetSchema;
+    $this->validatorSchema = clone $this->validatorSchema;
+
+    // we rebind the cloned form because Exceptions are not clonable
+    $this->bind($this->taintedValues, $this->taintedFiles);
+  }
 }
