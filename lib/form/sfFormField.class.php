@@ -95,8 +95,6 @@ class sfFormField
    *
    * The formatted list will use the parent widget schema formatter.
    *
-   * @param  string The widget name
-   *
    * @return string The formatted error list
    */
   public function renderError()
