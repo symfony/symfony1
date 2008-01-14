@@ -64,7 +64,7 @@ class Base<?php echo $this->table->getPhpName() ?>Form extends BaseFormPropel
   {
     if (!isset($this-><?php echo $name ?>Choices))
     {
-      $this-><?php echo $name ?>Choices = array(<?php !$info[2] and print "'' => ''" ?>);
+      $this-><?php echo $name ?>Choices = array(<?php !$info[2] && !$info[3] and print "'' => ''" ?>);
       foreach (<?php echo $info[0] ?>Peer::doSelect(new Criteria(), $this->getConnection()) as $object)
       {
         $this-><?php echo $name ?>Choices[$object->get<?php echo $this->getPrimaryKey()->getPhpName() ?>()] = $object->__toString();

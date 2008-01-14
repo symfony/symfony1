@@ -136,7 +136,11 @@ class sfPropelFormGenerator extends sfGenerator
    *
    * This method does not returns foreign keys that are also primary keys.
    *
-   * @return array An array composed of: an array of foreign key PHP names, A Boolean to indicate whether the column is required or not
+   * @return array An array composed of: 
+   *                 * The foreign table PHP name
+   *                 * The foreign key PHP name
+   *                 * A Boolean to indicate whether the column is required or not
+   *                 * A Boolean to indicate whether the column is a many to many relationship or not
    */
   public function getForeignKeyNames()
   {
@@ -145,13 +149,13 @@ class sfPropelFormGenerator extends sfGenerator
     {
       if (!$column->isPrimaryKey() && $column->isForeignKey())
       {
-        $names[] = array($this->getForeignTable($column)->getPhpName(), $column->getPhpName(), $column->isNotNull());
+        $names[] = array($this->getForeignTable($column)->getPhpName(), $column->getPhpName(), $column->isNotNull(), false);
       }
     }
 
     foreach ($this->getManyToManyTables() as $tables)
     {
-      $names[] = array($tables['relatedTable']->getPhpName(), $tables['middleTable']->getPhpName(), false);
+      $names[] = array($tables['relatedTable']->getPhpName(), $tables['middleTable']->getPhpName(), false, true);
     }
 
     return $names;
