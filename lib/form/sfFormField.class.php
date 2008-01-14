@@ -79,14 +79,16 @@ class sfFormField implements ArrayAccess
    */
   public function renderRow($help = '')
   {
-    if ($this->widget instanceof sfWidgetFormSchema)
+    if (is_null($this->parent))
     {
-      throw new LogicException('Unable to format a row on a sfWidgetFormSchema.');
+      throw new LogicException(sprintf('Unable to render the row for "%s".', $this->name));
     }
 
     $field = $this->parent->getWidget()->renderField($this->name, $this->value, $this->error);
 
-    return strtr($this->parent->getWidget()->getFormFormatter()->formatRow($this->renderLabel(), $field, $this->error, $help), array('%hidden_fields%' => ''));
+    $error = $this->error instanceof sfValidatorErrorSchema ? $this->error->getGlobalErrors() : $this->error;
+
+    return strtr($this->parent->getWidget()->getFormFormatter()->formatRow($this->renderLabel(), $field, $error, $help), array('%hidden_fields%' => ''));
   }
 
   /**
@@ -100,12 +102,14 @@ class sfFormField implements ArrayAccess
    */
   public function renderError()
   {
-    if ($this->widget instanceof sfWidgetFormSchema)
+    if (is_null($this->parent))
     {
-      throw new LogicException('Unable to format an error list on a sfWidgetFormSchema.');
+      throw new LogicException(sprintf('Unable to render the error for "%s".', $this->name));
     }
 
-    return $this->parent->getWidget()->getFormFormatter()->formatErrorsForRow($this->error);
+    $error = $this->error instanceof sfValidatorErrorSchema ? $this->error->getGlobalErrors() : $this->error;
+
+    return $this->parent->getWidget()->getFormFormatter()->formatErrorsForRow($error);
   }
 
   /**
@@ -115,9 +119,9 @@ class sfFormField implements ArrayAccess
    */
   public function renderLabel()
   {
-    if ($this->widget instanceof sfWidgetFormSchema)
+    if (is_null($this->parent))
     {
-      throw new LogicException('Unable to render a label on a sfWidgetFormSchema.');
+      throw new LogicException(sprintf('Unable to render the label for "%s".', $this->name));
     }
 
     return $this->parent->getWidget()->generateLabel($this->name);
@@ -130,9 +134,9 @@ class sfFormField implements ArrayAccess
    */
   public function renderLabelName()
   {
-    if ($this->widget instanceof sfWidgetFormSchema)
+    if (is_null($this->parent))
     {
-      throw new LogicException('Unable to render a label name on a sfWidgetFormSchema.');
+      throw new LogicException(sprintf('Unable to render the label name for "%s".', $this->name));
     }
 
     return $this->parent->getWidget()->generateLabelName($this->name);
