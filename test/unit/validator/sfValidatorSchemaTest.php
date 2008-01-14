@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(78, new lime_output_color());
+$t = new lime_test(84, new lime_output_color());
 
 class PreValidator extends sfValidator
 {
@@ -380,3 +380,13 @@ foreach ($f1 as $name => $validator)
   $t->ok($validator !== $f[$name], '__clone() clones embedded validators');
   $t->ok($validator == $f[$name], '__clone() clones embedded validators');
 }
+$t->is($v1->getPreValidator(), null, '__clone() clones the pre validator');
+$t->is($v1->getPostValidator(), null, '__clone() clones the post validator');
+
+$v->setPreValidator(new sfValidatorString(array('min_length' => 4)));
+$v->setPostValidator(new sfValidatorString(array('min_length' => 4)));
+$v1 = clone $v;
+$t->ok($v1->getPreValidator() !== $v->getPreValidator(), '__clone() clones the pre validator');
+$t->ok($v1->getPreValidator() == $v->getPreValidator(), '__clone() clones the pre validator');
+$t->ok($v1->getPostValidator() !== $v->getPostValidator(), '__clone() clones the post validator');
+$t->ok($v1->getPostValidator() == $v->getPostValidator(), '__clone() clones the post validator');

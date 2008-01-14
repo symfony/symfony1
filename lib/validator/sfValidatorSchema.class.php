@@ -351,5 +351,15 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
     {
       $this->fields[$name] = clone $field;
     }
+
+    if (!is_null($this->preValidator))
+    {
+      $this->preValidator = clone $this->preValidator;
+    }
+
+    if (!is_null($this->postValidator))
+    {
+      $this->postValidator = clone $this->postValidator;
+    }
   }
 }
