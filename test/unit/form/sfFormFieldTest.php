@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(28, new lime_output_color());
+$t = new lime_test(21, new lime_output_color());
 
 // widgets
 $authorSchema = new sfWidgetFormSchema(array(
@@ -32,54 +32,9 @@ $articleErrorSchema = new sfValidatorErrorSchema(new sfValidatorString());
 $articleErrorSchema->addError($titleError = new sfValidatorError(new sfValidatorString(), 'title error'), 'title');
 $articleErrorSchema->addError($authorErrorSchema, 'author');
 
-$parent = new sfFormField($schema, null, 'article', array('title' => 'symfony', 'author' => array('name' => 'Fabien')), $articleErrorSchema);
+$parent = new sfFormFieldSchema($schema, null, 'article', array('title' => 'symfony', 'author' => array('name' => 'Fabien')), $articleErrorSchema);
 $f = $parent['title'];
 $child = $parent['author'];
-
-// ArrayAccess interface
-$t->diag('ArrayAccess interface');
-$t->is(isset($parent['title']), true, 'sfFormField implements the ArrayAccess interface');
-$t->is(isset($parent['title1']), false, 'sfFormField implements the ArrayAccess interface');
-$t->is($parent['title'], $f, 'sfFormField implements the ArrayAccess interface');
-try
-{
-  unset($parent['title']);
-  $t->fail('sfFormField implements the ArrayAccess interface but in read-only mode');
-}
-catch (LogicException $e)
-{
-  $t->pass('sfFormField implements the ArrayAccess interface but in read-only mode');
-}
-
-try
-{
-  $parent['title'] = null;
-  $t->fail('sfFormField implements the ArrayAccess interface but in read-only mode');
-}
-catch (LogicException $e)
-{
-  $t->pass('sfFormField implements the ArrayAccess interface but in read-only mode');
-}
-
-try
-{
-  $f['title'];
-  $t->fail('sfFormField implements the ArrayAccess interface but in read-only mode');
-}
-catch (LogicException $e)
-{
-  $t->pass('sfFormField implements the ArrayAccess interface but in read-only mode');
-}
-
-try
-{
-  $parent['title1'];
-  $t->fail('sfFormField implements the ArrayAccess interface but in read-only mode');
-}
-catch (LogicException $e)
-{
-  $t->pass('sfFormField implements the ArrayAccess interface but in read-only mode');
-}
 
 // ->getValue() ->getWidget() ->getParent() ->getError() ->hasError()
 $t->diag('->getValue() ->getWidget() ->getParent() ->getError() ->hasError()');
@@ -91,7 +46,7 @@ $t->is($f->hasError(), true, '->hasError() returns true if the form field has so
 
 $errorSchema1 = new sfValidatorErrorSchema(new sfValidatorString());
 $errorSchema1->addError(new sfValidatorError(new sfValidatorString(), 'error'), 'title1');
-$parent1 = new sfFormField($schema, null, 'article', array('title' => 'symfony'), $errorSchema1);
+$parent1 = new sfFormFieldSchema($schema, null, 'article', array('title' => 'symfony'), $errorSchema1);
 $f1 = $parent1['title'];
 $t->is($f1->hasError(), false, '->hasError() returns false if the form field has no error');
 

@@ -572,7 +572,9 @@ class sfForm implements ArrayAccess
 
       $values = $this->isBound ? $this->taintedValues : $this->defaults;
 
-      $this->formFields[$name] = new sfFormField($widget, $this->getFormField(), $name, isset($values[$name]) ? $values[$name] : null, $this->errorSchema[$name]);
+      $class = $widget instanceof sfWidgetFormSchema ? 'sfFormFieldSchema' : 'sfFormField';
+
+      $this->formFields[$name] = new $class($widget, $this->getFormField(), $name, isset($values[$name]) ? $values[$name] : null, $this->errorSchema[$name]);
     }
 
     return $this->formFields[$name];
@@ -608,13 +610,13 @@ class sfForm implements ArrayAccess
   /**
    * Returns a form field for the main widget schema.
    *
-   * @return sfFormField A sfFormField instance
+   * @return sfFormFieldSchema A sfFormFieldSchema instance
    */
   protected function getFormField()
   {
     if (is_null($this->formField))
     {
-      $this->formField = new sfFormField($this->widgetSchema, null, null, $this->isBound ? $this->taintedValues : $this->defaults, $this->errorSchema);
+      $this->formField = new sfFormFieldSchema($this->widgetSchema, null, null, $this->isBound ? $this->taintedValues : $this->defaults, $this->errorSchema);
     }
 
     return $this->formField;

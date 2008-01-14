@@ -16,26 +16,25 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfFormField implements ArrayAccess
+class sfFormField
 {
   protected
     $widget = null,
     $parent = null,
     $name   = '',
     $value  = null,
-    $error  = null,
-    $fields = array();
+    $error  = null;
 
   /**
    * Constructor.
    *
-   * @param sfWidget         A sfWidget instance
+   * @param sfWidgetForm     A sfWidget instance
    * @param sfFormField      The sfFormField parent instance (null for the root widget)
    * @param string           The field name
    * @param string           The field value
    * @param sfValidatorError A sfValidatorError instance
    */
-  public function __construct(sfWidget $widget, sfFormField $parent = null, $name, $value, sfValidatorError $error = null)
+  public function __construct(sfWidgetForm $widget, sfFormField $parent = null, $name, $value, sfValidatorError $error = null)
   {
     $this->widget = $widget;
     $this->parent = $parent;
@@ -200,69 +199,5 @@ class sfFormField implements ArrayAccess
   public function hasError()
   {
     return !is_null($this->error) && count($this->error);
-  }
-
-  /**
-   * Returns true if the bound field exists (implements the ArrayAccess interface).
-   *
-   * @param  string  The name of the bound field
-   *
-   * @return Boolean true if the widget exists, false otherwise
-   */
-  public function offsetExists($name)
-  {
-    return $this->widget instanceof sfWidgetFormSchema ? isset($this->widget[$name]) : false;
-  }
-
-  /**
-   * Returns the form field associated with the name (implements the ArrayAccess interface).
-   *
-   * @param  string      The offset of the value to get
-   *
-   * @return sfFormField A form field instance
-   */
-  public function offsetGet($name)
-  {
-    if (!isset($this->fields[$name]))
-    {
-      if (!$this->widget instanceof sfWidgetFormSchema)
-      {
-        throw new LogicException(sprintf('Cannot get a form field on a non widget schema (%s given).', get_class($this->widget)));
-      }
-
-      if (is_null($widget = $this->widget[$name]))
-      {
-        throw new InvalidArgumentException(sprintf('Widget "%s" does not exist.', $name));
-      }
-
-      $this->fields[$name] = new sfFormField($widget, $this, $name, isset($this->value[$name]) ? $this->value[$name] : null, isset($this->error[$name]) ? $this->error[$name] : null);
-    }
-
-    return $this->fields[$name];
-  }
-
-  /**
-   * Throws an exception saying that values cannot be set (implements the ArrayAccess interface).
-   *
-   * @param string (ignored)
-   * @param string (ignored)
-   *
-   * @throws <b>LogicException</b>
-   */
-  public function offsetSet($offset, $value)
-  {
-    throw new LogicException('Cannot update form fields (read-only).');
-  }
-
-  /**
-   * Throws an exception saying that values cannot be unset (implements the ArrayAccess interface).
-   *
-   * @param string (ignored)
-   *
-   * @throws LogicException
-   */
-  public function offsetUnset($offset)
-  {
-    throw new LogicException('Cannot remove form fields (read-only).');
   }
 }
