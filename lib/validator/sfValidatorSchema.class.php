@@ -244,7 +244,7 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
    */
   public function setPreValidator(sfValidator $validator)
   {
-    $this->preValidator = $validator;
+    $this->preValidator = clone $validator;
   }
 
   /**
@@ -264,7 +264,7 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
    */
   public function setPostValidator(sfValidator $validator)
   {
-    $this->postValidator = $validator;
+    $this->postValidator = clone $validator;
   }
 
   /**
@@ -314,7 +314,7 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
       throw new InvalidArgumentException('A field must be an instance of sfValidator.');
     }
 
-    $this->fields[$name] = $validator;
+    $this->fields[$name] = clone $validator;
   }
 
   /**

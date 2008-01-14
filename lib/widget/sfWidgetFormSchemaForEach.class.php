@@ -9,7 +9,7 @@
  */
 
 /**
- * 
+ * sfWidgetFormSchemaForEach duplicates a given widget multiple times in a widget schema.
  *
  * @package    symfony
  * @subpackage widget
@@ -21,26 +21,16 @@ class sfWidgetFormSchemaForEach extends sfWidgetFormSchema
   /**
    * Constructor.
    *
-   * @param string             The name format string
    * @param sfWidgetFormSchema A sfWidgetFormSchema instance
-   * @param integer            The number of times to replicate the widget
+   * @param integer            The number of times to duplicate the widget
    * @param array              An array of options
    * @param array              An array of default HTML attributes
    * @param array              An array of HTML labels
    *
    * @see sfWidgetFormSchema
    */
-  public function __construct($nameFormat, sfWidgetFormSchema $widget, $count, $options = array(), $attributes = array(), $labels = array())
+  public function __construct(sfWidgetFormSchema $widget, $count, $options = array(), $attributes = array(), $labels = array())
   {
-    $fields = array();
-    for ($i = 0; $i < $count; $i++)
-    {
-      $clone = clone $widget;
-      $clone->setNameFormat(sprintf($nameFormat, $i).'[%s]');
-
-      $fields[$i] = $clone;
-    }
-
-    parent::__construct($fields, $options, $attributes, $labels);
+    parent::__construct(array_fill(0, $count, $widget), $options, $attributes, $labels);
   }
 }

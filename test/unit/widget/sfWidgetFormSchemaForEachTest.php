@@ -10,16 +10,15 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(1, new lime_output_color());
+$t = new lime_test(4, new lime_output_color());
 
 $w1 = new sfWidgetFormInput();
 $w = new sfWidgetFormSchema(array('w1' => $w1));
 
 // __construct()
 $t->diag('__construct()');
-$wf = new sfWidgetFormSchemaForEach('article[%s]', $w, 2);
-$wc1 = clone $w;
-$wc1->setNameFormat('article[0][%s]');
-$wc2 = clone $w;
-$wc2->setNameFormat('article[1][%s]');
-$t->is($wf->getFields(), array($wc1, $wc2), '__construct() takes a sfWidgetFormSchema as its second argument');
+$wf = new sfWidgetFormSchemaForEach($w, 2);
+$t->ok($wf[0]['w1'] !== $w1, '__construct() takes a sfWidgetFormSchema as its first argument');
+$t->ok($wf[0]['w1'] == $w1, '__construct() takes a sfWidgetFormSchema as its first argument');
+$t->ok($wf[1]['w1'] !== $w1, '__construct() takes a sfWidgetFormSchema as its first argument');
+$t->ok($wf[1]['w1'] == $w1, '__construct() takes a sfWidgetFormSchema as its first argument');

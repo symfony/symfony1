@@ -87,7 +87,7 @@ $t->is(isset($v['s1']), true, 'sfValidatorSchema implements the ArrayAccess inte
 $t->is(isset($v['s2']), false, 'sfValidatorSchema implements the ArrayAccess interface for the fields');
 
 $v = new sfValidatorSchema(array('s1' => $v1));
-$t->is($v['s1'], $v1, 'sfValidatorSchema implements the ArrayAccess interface for the fields');
+$t->ok($v['s1'] == $v1, 'sfValidatorSchema implements the ArrayAccess interface for the fields');
 $t->is($v['s2'], null, 'sfValidatorSchema implements the ArrayAccess interface for the fields');
 
 $v = new sfValidatorSchema(array('v1' => $v1));
@@ -160,7 +160,7 @@ $v1 = new sfValidatorString(array('max_length' => 3, 'required' => false));
 $v2 = new sfValidatorString(array('min_length' => 3, 'required' => false));
 $v = new sfValidatorSchema(array('s1' => $v1, 's2' => $v2));
 $v->setPreValidator($preValidator = new PreValidator());
-$t->is($v->getPreValidator(), $preValidator, '->getPreValidator() returns the current pre validator');
+$t->ok($v->getPreValidator() == $preValidator, '->getPreValidator() returns the current pre validator');
 try
 {
   $v->clean(array('s1' => 'foo', 's2' => 'bar'));
@@ -180,7 +180,7 @@ $v1 = new sfValidatorString(array('max_length' => 3, 'required' => false));
 $v2 = new sfValidatorString(array('min_length' => 3, 'required' => false));
 $v = new sfValidatorSchema(array('s1' => $v1, 's2' => $v2));
 $v->setPostValidator($postValidator = new PostValidator());
-$t->is($v->getPostValidator(), $postValidator, '->getPostValidator() returns the current post validator');
+$t->ok($v->getPostValidator() == $postValidator, '->getPostValidator() returns the current post validator');
 $t->is($v->clean(array('s1' => 'foo', 's2' => 'bar')), array('s1' => '*foo*', 's2' => '*bar*'), '->clean() executes post validators');
 
 $v = new sfValidatorSchema(array('s1' => $v1, 's2' => $v2));
@@ -220,7 +220,7 @@ $ret = $v->clean(array('s1' => 'foo', 's2' => 'bar', 'foo' => 'bar'));
 $t->is($ret, array('s1' => 'foo', 's2' => 'bar', 'foo' => 'bar'), '->clean() do not filter non existant fields if "filter_extra_fields" is false');
 
 $t->diag('one validator fails');
-$v2->setOption('max_length', 2);
+$v['s2']->setOption('max_length', 2);
 try
 {
   $v->clean(array('s1' => 'foo', 's2' => 'bar'));
@@ -235,8 +235,8 @@ catch (sfValidatorErrorSchema $e)
 }
 
 $t->diag('several validators fail');
-$v1->setOption('max_length', 2);
-$v2->setOption('max_length', 2);
+$v['s1']->setOption('max_length', 2);
+$v['s2']->setOption('max_length', 2);
 try
 {
   $v->clean(array('s1' => 'foo', 's2' => 'bar'));
@@ -268,7 +268,10 @@ $v = new sfValidatorSchema(array(
 $v->setPostValidator($comparator);
 
 $t->diag('postValidator throws global errors');
-$comparator->setOption('throw_global_error', true);
+foreach (array($userValidator->getPostValidator(), $v->getPostValidator(), $v['embedded']->getPostValidator()) as $validator)
+{
+  $validator->setOption('throw_global_error', true);
+}
 try
 {
   $v->clean(array('test' => 'fabien', 'right' => 'bar', 'embedded' => array('test' => 'fabien', 'left' => 'oof', 'right' => 'rab')));
@@ -286,7 +289,10 @@ catch (sfValidatorErrorSchema $e)
 }
 
 $t->diag('postValidator throws named errors');
-$comparator->setOption('throw_global_error', false);
+foreach (array($userValidator->getPostValidator(), $v->getPostValidator(), $v['embedded']->getPostValidator()) as $validator)
+{
+  $validator->setOption('throw_global_error', false);
+}
 try
 {
   $v->clean(array('test' => 'fabien', 'right' => 'bar', 'embedded' => array('test' => 'fabien', 'left' => 'oof', 'right' => 'rab')));

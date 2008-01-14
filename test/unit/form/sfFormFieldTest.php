@@ -38,7 +38,7 @@ $child = $parent['author'];
 
 // ->getValue() ->getWidget() ->getParent() ->getError() ->hasError()
 $t->diag('->getValue() ->getWidget() ->getParent() ->getError() ->hasError()');
-$t->is($f->getWidget(), $titleWidget, '->getWidget() returns the form field widget');
+$t->ok($f->getWidget() == $titleWidget, '->getWidget() returns the form field widget');
 $t->is($f->getValue(), 'symfony', '->getValue() returns the form field value');
 $t->is($f->getParent(), $parent, '->getParent() returns the form field parent');
 $t->is($f->getError(), $titleError, '->getError() returns the form field error');

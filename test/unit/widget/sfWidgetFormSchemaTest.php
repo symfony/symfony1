@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(55, new lime_output_color());
+$t = new lime_test(59, new lime_output_color());
 
 $w1 = new sfWidgetFormInput(array(), array('class' => 'foo1'));
 $w2 = new sfWidgetFormInput();
@@ -61,7 +61,7 @@ $t->is(isset($w['w1']), true, 'sfWidgetFormSchema implements the ArrayAccess int
 $t->is(isset($w['w2']), false, 'sfWidgetFormSchema implements the ArrayAccess interface for the fields');
 
 $w = new sfWidgetFormSchema(array('w1' => $w1));
-$t->is($w['w1'], $w1, 'sfWidgetFormSchema implements the ArrayAccess interface for the fields');
+$t->ok($w['w1'] == $w1, 'sfWidgetFormSchema implements the ArrayAccess interface for the fields');
 $t->is($w['w2'], null, 'sfWidgetFormSchema implements the ArrayAccess interface for the fields');
 
 $w = new sfWidgetFormSchema(array('w1' => $w1));
@@ -102,11 +102,38 @@ $w->setNameFormat('article[%s]');
 $t->is($w->generateName('foo'), 'article[foo]', '->setNameFormat() changes the name format');
 $t->is($w->getNameFormat(), 'article[%s]', '->getNameFormat() returns the name format');
 
-$w->setNameFormat('foo');
-$t->is($w->generateName('foo'), 'foo', '->generateName() returns the name unchanged if the format does not contain %s');
-
 $w->setNameFormat(false);
 $t->is($w->generateName('foo'), 'foo', '->generateName() returns the name unchanged if the format is false');
+
+try
+{
+  $w->setNameFormat('foo');
+  $t->fail('->setNameFormat() throws an InvalidArgumentException if the format does not contain %s');
+}
+catch (InvalidArgumentException $e)
+{
+  $t->pass('->setNameFormat() throws an InvalidArgumentException if the format does not contain %s');
+}
+
+$w = new sfWidgetFormSchema(array(
+  'author' => new sfWidgetFormSchema(array(
+    'first_name' => new sfWidgetFormInput(),
+    'company'    => new sfWidgetFormSchema(array(
+      'name' => new sfWidgetFormInput(),
+    )),
+  )),
+));
+$w->setNameFormat('article[%s]');
+$t->is($w['author']->generateName('first_name'), 'article[author][first_name]', '->generateName() returns a HTML name attribute value for a given field name');
+$t->is($w['author']['company']->generateName('name'), 'article[author][company][name]', '->generateName() returns a HTML name attribute value for a given field name');
+
+// ->getParent() ->setParent()
+$t->diag('->getParent() ->setParent()');
+$author = new sfWidgetFormSchema(array('first_name' => new sfWidgetFormInput()));
+$company = new sfWidgetFormSchema(array('name' => new sfWidgetFormInput()));
+$t->is($company->getParent(), null, '->getParent() returns null if there is no parent widget schema');
+$company->setParent($author);
+$t->is($company->getParent(), $author, '->getParent() returns the parent widget schema');
 
 // ->setLabels() ->setLabel() ->getLabels() ->getLabel() ->generateLabelName()
 $t->diag('->setLabels() ->setLabel() ->getLabels() ->getLabel() ->generateLabelName()');

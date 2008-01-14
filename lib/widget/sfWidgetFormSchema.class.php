@@ -27,6 +27,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     AFTER  = 'after';
 
   protected
+    $parent         = null,
     $formFormatters = array(),
     $options        = array(),
     $labels         = array(),
@@ -57,6 +58,14 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    */
   public function __construct($fields = null, $options = array(), $attributes = array(), $labels = array(), $helps = array())
   {
+    $this->labels = $labels;
+    $this->helps  = $helps;
+
+    $this->addOption('name_format', '%s');
+    $this->addOption('form_formatter', 'table');
+
+    parent::__construct($options, $attributes);
+
     if (is_array($fields))
     {
       foreach ($fields as $name => $widget)
@@ -68,14 +77,6 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     {
       throw new InvalidArgumentException('sfWidgetFormSchema constructor takes an array of sfWidget objects.');
     }
-
-    $this->labels = $labels;
-    $this->helps  = $helps;
-
-    $this->addOption('name_format', '%s');
-    $this->addOption('form_formatter', 'table');
-
-    parent::__construct($options, $attributes);
   }
 
   /**
@@ -151,6 +152,11 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    */
   public function setNameFormat($format)
   {
+    if (false !== $format && false === strpos($format, '%s'))
+    {
+      throw new InvalidArgumentException(sprintf('The name format must contain %%s ("%s" given)', $format));
+    }
+
     $this->options['name_format'] = $format;
   }
 
@@ -413,17 +419,50 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    */
   public function generateName($name)
   {
-    if (false === $this->options['name_format'])
+    $format = $this->getNameFormat();
+
+    if ('[%s]' == substr($format, -4))
     {
-      return $name;
+      if (preg_match('/^(.+?)\[(.+)\]$/', $name, $match))
+      {
+        $name = sprintf('%s[%s][%s]', substr($format, 0, -4), $match[1], $match[2]);
+      }
+      else
+      {
+        $name = sprintf('%s[%s]', substr($format, 0, -4), $name);
+      }
+    }
+    else if (false !== $format)
+    {
+      $name = sprintf($format, $name);
     }
 
-    if (false !== strpos($this->options['name_format'], '%s'))
+    if ($parent = $this->getParent())
     {
-      return sprintf($this->options['name_format'], $name);
+      $name = $parent->generateName($name);
     }
 
     return $name;
+  }
+
+  /**
+   * Gets the parent widget schema.
+   *
+   * @return sfWidgetFormSchema The parent widget schema
+   */
+  public function getParent()
+  {
+    return $this->parent;
+  }
+
+  /**
+   * Sets the parent widget schema.
+   *
+   * @parent sfWidgetFormSchema The parent widget schema
+   */
+  public function setParent(sfWidgetFormSchema $parent = null)
+  {
+    $this->parent = $parent;
   }
 
   /**
@@ -468,7 +507,13 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
       $this->positions[] = $name;
     }
 
-    $this->fields[$name] = $widget;
+    $this->fields[$name] = clone $widget;
+
+    if ($widget instanceof sfWidgetFormSchema)
+    {
+      $this->fields[$name]->setParent($this);
+      $this->fields[$name]->setNameFormat($name.'[%s]');
+    }
   }
 
   /**
@@ -595,7 +640,8 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   {
     foreach ($this->fields as $name => $field)
     {
-      $this->fields[$name] = clone $field;
+      // offsetSet will clone the field and change the parent
+      $this[$name] = $field;
     }
   }
 }
