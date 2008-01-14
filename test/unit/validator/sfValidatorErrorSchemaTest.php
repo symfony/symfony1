@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(24, new lime_output_color());
+$t = new lime_test(26, new lime_output_color());
 
 $v1 = new sfValidatorString();
 $v2 = new sfValidatorString();
@@ -50,6 +50,16 @@ $es = new sfValidatorErrorSchema($v1, array($e1, 'e1' => $e1, 'e2' => $es1));
 $es2 = new sfValidatorErrorSchema($v1, array($e1, 'e1' => $e1, 'e2' => $es1));
 $es->addError($es2, 'e2');
 $t->is($es->getCode(), 'max_length e1 [max_length] e2 [max_length max_length e1 [max_length max_length] e2 [min_length max_length e1 [max_length] e2 [min_length]]]', '->addError() adds an error to the error schema');
+
+// ->addErrors()
+$t->diag('->addErrors()');
+$es1 = new sfValidatorErrorSchema($v1);
+$es1->addError($e1);
+$es1->addError($e2, '1');
+$es = new sfValidatorErrorSchema($v1);
+$es->addErrors($es1);
+$t->is($es->getGlobalErrors(), array($e1), '->addErrors() adds an array of errors to the current error');
+$t->is($es->getNamedErrors(), array('1' => $e2), '->addErrors() merges a sfValidatorErrorSchema to the current error');
 
 // ->getGlobalErrors()
 $t->diag('->getGlobalErrors()');

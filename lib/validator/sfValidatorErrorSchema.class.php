@@ -106,9 +106,24 @@ class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, It
    */
   public function addErrors($errors)
   {
-    foreach ($errors as $name => $error)
+    if ($errors instanceof sfValidatorErrorSchema)
     {
-      $this->addError($error, $name);
+      foreach ($errors->getGlobalErrors() as $error)
+      {
+        $this->addError($error);
+      }
+
+      foreach ($errors->getNamedErrors() as $name => $error)
+      {
+        $this->addError($error, (string) $name);
+      }
+    }
+    else
+    {
+      foreach ($errors as $name => $error)
+      {
+        $this->addError($error, $name);
+      }
     }
   }
 
