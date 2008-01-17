@@ -158,4 +158,19 @@ class sfValidatorDate extends sfValidator
 
     return $clean;
   }
+
+  /**
+   * @see sfValidator
+   */
+  protected function isEmpty($value)
+  {
+    if (is_array($value))
+    {
+      $filtered = array_filter($value);
+
+      return empty($filtered);
+    }
+
+    return parent::isEmpty($value);
+  }
 }

@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(29, new lime_output_color());
+$t = new lime_test(33, new lime_output_color());
 
 $v = new sfValidatorDate();
 
@@ -132,3 +132,23 @@ $t->is($v->clean(time()), time(), '->clean() output format can be change with th
 $v->setOption('datetime_output', 'U');
 $v->setOption('with_time', true);
 $t->is($v->clean(time()), time(), '->clean() output format can be change with the date_output option');
+
+// required
+$v = new sfValidatorDate();
+foreach (array(
+  array('year' => '', 'month' => '', 'day' => ''),
+  array('year' => null, 'month' => null, 'day' => null),
+  '',
+  null,
+) as $input)
+{
+  try
+  {
+    $v->clean($input);
+    $t->fail('->clean() throws an exception if the date is empty and required is true');
+  }
+  catch (sfValidatorError $e)
+  {
+    $t->pass('->clean() throws an exception if the date is empty and required is true');
+  }
+}
