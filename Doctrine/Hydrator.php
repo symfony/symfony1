@@ -60,16 +60,14 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
      */
     public function hydrateResultSet($stmt, $tableAliases, $hydrationMode = null)
     {
-        //$s = microtime(true);
+        if ($hydrationMode === null) {
+            $hydrationMode = $this->_hydrationMode;
+        }
         
         $this->_tableAliases = $tableAliases;
         
         if ($hydrationMode == Doctrine::HYDRATE_NONE) {
             return $stmt->fetchAll(PDO::FETCH_NUM);
-        }
-        
-        if ($hydrationMode === null) {
-            $hydrationMode = $this->_hydrationMode;
         }
 
         if ($hydrationMode === Doctrine::HYDRATE_ARRAY) {
