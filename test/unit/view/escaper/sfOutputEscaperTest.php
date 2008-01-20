@@ -20,33 +20,70 @@ require_once(dirname(__FILE__).'/../../../../lib/config/sfConfig.class.php');
 
 sfConfig::set('sf_charset', 'UTF-8');
 
-$t = new lime_test(10, new lime_output_color());
-
-// ::escape()
-$t->diag('::escape()');
-$t->is(sfOutputEscaper::escape('esc_entities', null), null, '::escape() returns null if the value to escape is null');
-$t->is(sfOutputEscaper::escape('esc_entities', false), false, '::escape() returns false if the value to escape is false');
-$t->is(sfOutputEscaper::escape('esc_entities', true), true, '::escape() returns true if the value to escape is true');
-
-$t->is(sfOutputEscaper::escape('esc_raw', '<strong>escaped!</strong>'), '<strong>escaped!</strong>', '::escape() takes an escaping strategy function name as its first argument');
-
-$t->is(sfOutputEscaper::escape('esc_entities', '<strong>escaped!</strong>'), '&lt;strong&gt;escaped!&lt;/strong&gt;', '::escape() returns an escaped string if the value to escape is a string');
-$t->is(sfOutputEscaper::escape('esc_entities', '<strong>échappé</strong>'), '&lt;strong&gt;&eacute;chapp&eacute;&lt;/strong&gt;', '::escape() returns an escaped string if the value to escape is a string');
-
-$t->isa_ok(sfOutputEscaper::escape('esc_entities', array(1, 2)), 'sfOutputEscaperArrayDecorator', '::escape() returns a sfOutputEscaperArrayDecorator object if the value to escape is an array');
-
-$t->isa_ok(sfOutputEscaper::escape('esc_entities', new stdClass()), 'sfOutputEscaperObjectDecorator', '::escape() returns a sfOutputEscaperObjectDecorator object if the value to escape is an object');
+$t = new lime_test(18, new lime_output_color());
 
 class OutputEscaperTestClass
 {
+  public $title = '<strong>escaped!</strong>';
+
   public function getTitle()
   {
-    return '<strong>escaped!</strong>';
+    return $this->title;
+  }
+
+  public function getTitleTitle()
+  {
+    $o = new self;
+
+    return $o->getTitle();
   }
 }
 
-$object = new OutputEscaperTestClass();
-$escaped_object = sfOutputEscaper::escape('esc_entities', $object);
-$t->is(sfOutputEscaper::escape('esc_entities', $escaped_object)->getTitle(), '&lt;strong&gt;escaped!&lt;/strong&gt;', '::escape() does not double escape an object');
+// ::escape()
+$t->diag('::escape()');
+$t->diag('::escape() does not escape special values');
+$t->ok(sfOutputEscaper::escape('esc_entities', null) === null, '::escape() returns null if the value to escape is null');
+$t->ok(sfOutputEscaper::escape('esc_entities', false) === false, '::escape() returns false if the value to escape is false');
+$t->ok(sfOutputEscaper::escape('esc_entities', true) === true, '::escape() returns true if the value to escape is true');
 
+$t->diag('::escape() does not escape a value when escaping method is ESC_RAW');
+$t->is(sfOutputEscaper::escape('esc_raw', '<strong>escaped!</strong>'), '<strong>escaped!</strong>', '::escape() takes an escaping strategy function name as its first argument');
+
+$t->diag('::escape() escapes strings');
+$t->is(sfOutputEscaper::escape('esc_entities', '<strong>escaped!</strong>'), '&lt;strong&gt;escaped!&lt;/strong&gt;', '::escape() returns an escaped string if the value to escape is a string');
+$t->is(sfOutputEscaper::escape('esc_entities', '<strong>échappé</strong>'), '&lt;strong&gt;&eacute;chapp&eacute;&lt;/strong&gt;', '::escape() returns an escaped string if the value to escape is a string');
+
+$t->diag('::escape() escapes arrays');
+$input = array(
+  'foo' => '<strong>escaped!</strong>',
+  'bar' => array('foo' => '<strong>escaped!</strong>'),
+);
+$output = sfOutputEscaper::escape('esc_entities', $input);
+$t->isa_ok($output, 'sfOutputEscaperArrayDecorator', '::escape() returns a sfOutputEscaperArrayDecorator object if the value to escape is an array');
+$t->is($output['foo'], '&lt;strong&gt;escaped!&lt;/strong&gt;', '::escape() escapes all elements of the original array');
+$t->is($output['bar']['foo'], '&lt;strong&gt;escaped!&lt;/strong&gt;', '::escape() is recursive');
+$t->is($output->getRawValue(), $input, '->getRawValue() returns the unescaped value');
+
+$t->diag('::escape() escapes objects');
+$input = new OutputEscaperTestClass();
+$output = sfOutputEscaper::escape('esc_entities', $input);
+$t->isa_ok($output, 'sfOutputEscaperObjectDecorator', '::escape() returns a sfOutputEscaperObjectDecorator object if the value to escape is an object');
+$t->is($output->getTitle(), '&lt;strong&gt;escaped!&lt;/strong&gt;', '::escape() escapes all methods of the original object');
+$t->is($output->title, '&lt;strong&gt;escaped!&lt;/strong&gt;', '::escape() escapes all properties of the original object');
+$t->is($output->getTitleTitle(), '&lt;strong&gt;escaped!&lt;/strong&gt;', '::escape() is recursive');
+$t->is($output->getRawValue(), $input, '->getRawValue() returns the unescaped value');
+
+$t->is(sfOutputEscaper::escape('esc_entities', $output)->getTitle(), '&lt;strong&gt;escaped!&lt;/strong&gt;', '::escape() does not double escape an object');
 $t->isa_ok(sfOutputEscaper::escape('esc_entities', new DirectoryIterator('.')), 'sfOutputEscaperIteratorDecorator', '::escape() returns a sfOutputEscaperIteratorDecorator object if the value to escape is an object that implements the ArrayAccess interface');
+
+$t->diag('::escape() cannot escape resources');
+$fh = fopen(__FILE__, 'r');
+try
+{
+  sfOutputEscaper::escape('esc_entities', $fh);
+  $t->fail('::escape() throws an InvalidArgumentException if the value cannot be escaped');
+}
+catch (InvalidArgumentException $e)
+{
+  $t->pass('::escape() throws an InvalidArgumentException if the value cannot be escaped');
+}

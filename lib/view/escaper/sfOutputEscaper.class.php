@@ -27,7 +27,7 @@ abstract class sfOutputEscaper
 
   /**
    * The escaping method that is going to be applied to the value and its
-   * children. This is actually the name of a PHP function.
+   * children. This is actually the name of a PHP callable.
    *
    * @var string
    */
@@ -70,17 +70,17 @@ abstract class sfOutputEscaper
    * of standard escaping methods listed in the escaping helper
    * (EscapingHelper.php).
    *
-   * @param string $escapingMethod the escaping method (a PHP function) to apply to the value
+   * @param string $escapingMethod the escaping method (a PHP callable) to apply to the value
    * @param mixed $value the value to escape
    * @param mixed the escaped value
    *
    * @return mixed Escaping value
    *
-   * @throws <b>sfException</b> If the escaping fails
+   * @throws InvalidArgumentException If the escaping fails
    */
   public static function escape($escapingMethod, $value)
   {
-    if (is_null($value) || ($value === false) || ($escapingMethod === 'esc_raw'))
+    if (is_null($value) || 'esc_raw' == $escapingMethod)
     {
       return $value;
     }
@@ -118,7 +118,7 @@ abstract class sfOutputEscaper
     }
 
     // it must be a resource; cannot escape that.
-    throw new sfException(sprintf('Unable to escape value "%s".', print_r($value, true)));
+    throw new InvalidArgumentException(sprintf('Unable to escape value "%s".', var_export($value, true)));
   }
 
   /**
