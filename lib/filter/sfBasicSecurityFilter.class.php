@@ -29,15 +29,7 @@ class sfBasicSecurityFilter extends sfFilter
    */
   public function execute($filterChain)
   {
-    // get the cool stuff
-    $controller = $this->context->getController();
-    $user       = $this->context->getUser();
-
-    // get the current action instance
-    $actionEntry    = $controller->getActionStack()->getLastEntry();
-    $actionInstance = $actionEntry->getActionInstance();
-
-    // disable security on [sf_login_module] / [sf_login_action]
+    // disable security on login and secure actions
     if (
       (sfConfig::get('sf_login_module') == $this->context->getModuleName()) && (sfConfig::get('sf_login_action') == $this->context->getActionName())
       ||
@@ -49,38 +41,58 @@ class sfBasicSecurityFilter extends sfFilter
       return;
     }
 
-    // get the credential required for this action
-    $credential = $actionInstance->getCredential();
-
-    // for this filter, the credentials are a simple privilege array
-    // where the first index is the privilege name and the second index
-    // is the privilege namespace
-    //
     // NOTE: the nice thing about the Action class is that getCredential()
     //       is vague enough to describe any level of security and can be
     //       used to retrieve such data and should never have to be altered
-    if ($user->isAuthenticated())
-    {
-      // the user is authenticated
-      if ($credential === null || $user->hasCredential($credential))
-      {
-        // the user has access, continue
-        $filterChain->execute();
-      }
-      else
-      {
-        // the user doesn't have access, exit stage left
-        $controller->forward(sfConfig::get('sf_secure_module'), sfConfig::get('sf_secure_action'));
-
-        throw new sfStopException();
-      }
-    }
-    else
+    if (!$this->context->getUser()->isAuthenticated())
     {
       // the user is not authenticated
-      $controller->forward(sfConfig::get('sf_login_module'), sfConfig::get('sf_login_action'));
-
-      throw new sfStopException();
+      $this->forwardToLoginAction();
     }
+
+    // the user is authenticated
+    $credential = $this->getUserCredential();
+    if (!is_null($credential) && !$this->context->getUser()->hasCredential($credential))
+    {
+      // the user doesn't have access
+      $this->forwardToSecureAction();
+    }
+
+    // the user has access, continue
+    $filterChain->execute();
+  }
+
+  /**
+   * Forwards the current request to the secure action.
+   *
+   * @throws sfStopException
+   */
+  protected function forwardToSecureAction()
+  {
+    $this->context->getController()->forward(sfConfig::get('sf_secure_module'), sfConfig::get('sf_secure_action'));
+
+    throw new sfStopException();
+  }
+
+  /**
+   * Forwards the current request to the login action.
+   *
+   * @throws sfStopException
+   */
+  protected function forwardToLoginAction()
+  {
+    $this->context->getController()->forward(sfConfig::get('sf_login_module'), sfConfig::get('sf_login_action'));
+
+    throw new sfStopException();
+  }
+
+  /**
+   * Returns the credential required for this action.
+   *
+   * @return mixed The credential required for this action
+   */
+  protected function getUserCredential()
+  {
+    return $this->context->getController()->getActionStack()->getLastEntry()->getActionInstance()->getCredential();
   }
 }
