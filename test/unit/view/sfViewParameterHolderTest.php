@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(4, new lime_output_color());
+$t = new lime_test(5, new lime_output_color());
 
 class myRequest
 {
@@ -44,6 +44,10 @@ $t->diag('->initialize()');
 $p = new sfViewParameterHolder();
 $p->initialize($dispatcher, array('foo' => 'bar'));
 $t->is($p->get('foo'), 'bar', '->initialize() takes an array of default parameters as its second argument');
+
+// ->isEscaped()
+$t->diag('->isEscaped()');
+$t->is($p->isEscaped(), false, '->isEscaped() always returns false');
 
 // ->toArray()
 $t->diag('->toArray()');

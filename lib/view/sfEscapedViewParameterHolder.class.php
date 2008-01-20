@@ -62,6 +62,8 @@ class sfEscapedViewParameterHolder extends sfViewParameterHolder
    * Returns an array representation of the view parameters.
    *
    * @return array An array of view parameters
+   *
+   * @throws InvalidArgumentException
    */
   public function toArray()
   {
@@ -70,25 +72,24 @@ class sfEscapedViewParameterHolder extends sfViewParameterHolder
     switch ($this->getEscaping())
     {
       case 'on':
-        $escapedData = sfOutputEscaper::escape($this->getEscapingMethod(), $this->getAll());
-        $attributes['sf_data'] = $escapedData;
+        $attributes['sf_data'] = sfOutputEscaper::escape($this->getEscapingMethod(), $this->getAll());
         break;
       case 'bc':
-        $escapedData = sfOutputEscaper::escape($this->getEscapingMethod(), $this->getAll());
         $attributes = $this->getAll();
-        $attributes['sf_data'] = $escapedData;
+        $attributes['sf_data'] = sfOutputEscaper::escape($this->getEscapingMethod(), $this->getAll());
         break;
       case 'both':
-        $escapedData = sfOutputEscaper::escape($this->getEscapingMethod(), $this->getAll());
-        foreach ($escapedData as $key => $value)
+        $attributes['sf_data'] = sfOutputEscaper::escape($this->getEscapingMethod(), $this->getAll());
+        foreach ($attributes['sf_data'] as $key => $value)
         {
           $attributes[$key] = $value;
         }
-        $attributes['sf_data'] = $escapedData;
         break;
       case 'off':
         $attributes = $this->getAll();
         break;
+      default:
+        throw new InvalidArgumentException(sprintf('Unknown strategy "%s".', $this->getEscaping()));
     }
 
     return $attributes;
@@ -107,7 +108,7 @@ class sfEscapedViewParameterHolder extends sfViewParameterHolder
   }
 
   /**
-   * Sets the escape caracter mode.
+   * Sets the escape character strategy.
    *
    * @param string Escape code
    */
@@ -121,12 +122,12 @@ class sfEscapedViewParameterHolder extends sfViewParameterHolder
    *
    * If the escaping method is empty, then that is returned. The default value
    * specified by the sub-class will be used. If the method does not exist (in
-   * the sense there is no define associated with the method) and exception is
+   * the sense there is no define associated with the method), an exception is
    * thrown.
    *
    * @return string The escaping method as the name of the function to use
    *
-   * @throws <b>sfConfigurationException</b> If the method does not exist
+   * @throws InvalidArgumentException If the method does not exist
    */
   public function getEscapingMethod()
   {
@@ -137,7 +138,7 @@ class sfEscapedViewParameterHolder extends sfViewParameterHolder
 
     if (!defined($this->escapingMethod))
     {
-      throw new sfConfigurationException(sprintf('The escaping method "%s" is not available.', $this->escapingMethod));
+      throw new InvalidArgumentException(sprintf('The escaping method "%s" is not available.', $this->escapingMethod));
     }
 
     return constant($this->escapingMethod);
