@@ -33,6 +33,8 @@ abstract class sfOutputEscaper
    */
   protected $escapingMethod;
 
+  static protected $safeClasses = array();
+
   /**
    * Constructor stores the escaping method and value.
    *
@@ -100,16 +102,28 @@ abstract class sfOutputEscaper
     {
       if ($value instanceof sfOutputEscaper)
       {
-        // avoid double decoration when passing values from action template to component/partial
+        // avoid double decoration
         $copy = clone $value;
 
         $copy->escapingMethod = $escapingMethod;
 
         return $copy;
       }
-      elseif ($value instanceof Traversable)
+      else if ($value instanceof Traversable)
       {
         return new sfOutputEscaperIteratorDecorator($escapingMethod, $value);
+      }
+      else if ($value instanceof sfOutputEscaperSafe)
+      {
+        // do not escape objects marked as safe
+        // return the original object
+        return $value->getValue();
+      }
+      else if (self::isClassMarkedAsSafe(get_class($value)))
+      {
+        // the class or one of its children is marked as safe
+        // return the unescaped object
+        return $value;
       }
       else
       {
@@ -119,6 +133,51 @@ abstract class sfOutputEscaper
 
     // it must be a resource; cannot escape that.
     throw new InvalidArgumentException(sprintf('Unable to escape value "%s".', var_export($value, true)));
+  }
+
+  /**
+   * Returns true if the class if marked as safe.
+   *
+   * @param  string  A class name
+   *
+   * @return Boolean true if the class if safe, false otherwise
+   */
+  static public function isClassMarkedAsSafe($class)
+  {
+    if (in_array($class, self::$safeClasses))
+    {
+      return true;
+    }
+
+    foreach (self::$safeClasses as $safeClass)
+    {
+      if (is_subclass_of($class, $safeClass))
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Marks an array of classes (and all its children) as being safe for output.
+   *
+   * @param array An array of class names
+   */
+  static public function markClassesAsSafe(array $classes)
+  {
+    self::$safeClasses = array_unique(array_merge(self::$safeClasses, $classes));
+  }
+
+  /**
+   * Marks a class (and all its children) as being safe for output.
+   *
+   * @param string A class name
+   */
+  static public function markClassAsSafe($class)
+  {
+    self::markClassesAsSafe(array($class));
   }
 
   /**

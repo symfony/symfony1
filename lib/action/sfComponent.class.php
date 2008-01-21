@@ -236,12 +236,17 @@ abstract class sfComponent
   /**
    * Sets a variable for the template.
    *
-   * @param  string The variable name
-   * @param  mixed  The variable value
+   * If you add a safe value, the variable won't be output escaped
+   * by symfony, so this is your responsability to ensure that the
+   * value is escaped properly.
+   *
+   * @param string  The variable name
+   * @param mixed   The variable value
+   * @param Boolean true if the value is safe for output (false by default)
    */
-  public function setVar($name, $value)
+  public function setVar($name, $value, $safe = false)
   {
-    $this->varHolder->set($name, $value);
+    $this->varHolder->set($name, $safe ? new sfOutputEscaperSafe($value) : $value);
   }
 
   /**

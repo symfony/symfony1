@@ -17,7 +17,7 @@
     </tfoot>
     <tbody>
 <?php if (isset($this->params['non_verbose_templates']) && $this->params['non_verbose_templates']): ?>
-      [?php echo $this->getAttributeHolder()->isEscaped() ? $form->render(ESC_RAW) : $form ?]
+      [?php echo $form ?]
 <?php else: ?>
 
 <?php foreach ($form->getWidgetSchema()->getPositions() as $i => $name): ?>

@@ -118,6 +118,8 @@ abstract class sfView
       $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Initialize view for "%s/%s"', $moduleName, $actionName))));
     }
 
+    sfOutputEscaper::markClassAsSafe('sfForm');
+
     $this->attributeHolder = false === sfConfig::get('sf_escaping_method') ? new sfViewParameterHolder() : new sfEscapedViewParameterHolder();
     $this->attributeHolder->initialize($this->dispatcher, array(), array(
       'escaping_method'   => sfConfig::get('sf_escaping_method'),

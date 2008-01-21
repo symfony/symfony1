@@ -14,13 +14,14 @@ require_once(dirname(__FILE__).'/../../../../lib/view/escaper/sfOutputEscaperGet
 require_once(dirname(__FILE__).'/../../../../lib/view/escaper/sfOutputEscaperArrayDecorator.class.php');
 require_once(dirname(__FILE__).'/../../../../lib/view/escaper/sfOutputEscaperObjectDecorator.class.php');
 require_once(dirname(__FILE__).'/../../../../lib/view/escaper/sfOutputEscaperIteratorDecorator.class.php');
+require_once(dirname(__FILE__).'/../../../../lib/view/escaper/sfOutputEscaperSafe.class.php');
 
 require_once(dirname(__FILE__).'/../../../../lib/plugins/sfCompat10Plugin/lib/helper/EscapingHelper.php');
 require_once(dirname(__FILE__).'/../../../../lib/config/sfConfig.class.php');
 
 sfConfig::set('sf_charset', 'UTF-8');
 
-$t = new lime_test(18, new lime_output_color());
+$t = new lime_test(21, new lime_output_color());
 
 class OutputEscaperTestClass
 {
@@ -37,6 +38,10 @@ class OutputEscaperTestClass
 
     return $o->getTitle();
   }
+}
+
+class OutputEscaperTestClassChild extends OutputEscaperTestClass
+{
 }
 
 // ::escape()
@@ -75,6 +80,13 @@ $t->is($output->getRawValue(), $input, '->getRawValue() returns the unescaped va
 
 $t->is(sfOutputEscaper::escape('esc_entities', $output)->getTitle(), '&lt;strong&gt;escaped!&lt;/strong&gt;', '::escape() does not double escape an object');
 $t->isa_ok(sfOutputEscaper::escape('esc_entities', new DirectoryIterator('.')), 'sfOutputEscaperIteratorDecorator', '::escape() returns a sfOutputEscaperIteratorDecorator object if the value to escape is an object that implements the ArrayAccess interface');
+
+$t->diag('::escape() does not escape object marked as being safe');
+$t->isa_ok(sfOutputEscaper::escape('esc_entities', new sfOutputEscaperSafe(new OutputEscaperTestClass())), 'OutputEscaperTestClass', '::escape() returns the original value if it is marked as being safe');
+
+sfOutputEscaper::markClassAsSafe('OutputEscaperTestClass');
+$t->isa_ok(sfOutputEscaper::escape('esc_entities', new OutputEscaperTestClass()), 'OutputEscaperTestClass', '::escape() returns the original value if the object class is marked as being safe');
+$t->isa_ok(sfOutputEscaper::escape('esc_entities', new OutputEscaperTestClassChild()), 'OutputEscaperTestClassChild', '::escape() returns the original value if one of the object parent class is marked as being safe');
 
 $t->diag('::escape() cannot escape resources');
 $fh = fopen(__FILE__, 'r');
