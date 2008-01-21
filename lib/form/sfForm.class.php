@@ -401,6 +401,11 @@ class sfForm implements ArrayAccess
   {
     $this->defaults = $defaults;
 
+    if (self::$CSRFProtection)
+    {
+      $this->setDefault(self::$CSRFFieldName, $this->getCSRFToken(self::$CSRFSecret));
+    }
+
     $this->resetFormFields();
   }
 

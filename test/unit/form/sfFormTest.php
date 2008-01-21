@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(83, new lime_output_color());
+$t = new lime_test(84, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -64,6 +64,12 @@ $t->is($f->hasDefault('name'), false, 'hasDefault() returns false if the form do
 $t->is($f->getDefault('first_name'), 'Fabien', 'getDefault() returns a default value for a given field');
 $t->is($f->getDefault('name'), null, 'getDefault() returns null if the form does not have a default value for a given field');
 
+sfForm::enableCSRFProtection('*mygreatsecret*');
+$f = new FormTest();
+$f->setDefaults(array('first_name' => 'Fabien'));
+$t->is($f->getDefault('_csrf_token'), $f->getCSRFToken('*mygreatsecret*'), '->getDefaults() keeps the CSRF token default value');
+sfForm::disableCSRFProtection();
+
 // ::enableCSRFProtection() ::disableCSRFProtection() ->isCSRFProtected()
 $t->diag('::enableCSRFProtection() ::disableCSRFProtection()');
 sfForm::enableCSRFProtection();
@@ -77,7 +83,7 @@ sfForm::enableCSRFProtection();
 $t->ok(!$f2->isCSRFProtected(),'::disableCSRFProtection() disables CSRF protection for all future forms');
 
 $f = new FormTest(array(), array(), false);
-$t->ok(!$f->isCSRFProtected(),'->isCSRFProtected() returns true if the form is CSRF protected');
+$t->ok(!$f->isCSRFProtected(), '->isCSRFProtected() returns true if the form is CSRF protected');
 
 sfForm::enableCSRFProtection('mygreatsecret');
 $f = new FormTest();
