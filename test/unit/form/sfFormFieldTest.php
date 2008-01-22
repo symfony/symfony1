@@ -10,10 +10,11 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(21, new lime_output_color());
+$t = new lime_test(22, new lime_output_color());
 
 // widgets
 $authorSchema = new sfWidgetFormSchema(array(
+  'id'   => new sfWidgetFormInputHidden(),
   'name' => $nameWidget = new sfWidgetFormInput(),
 ));
 $authorSchema->setNameFormat('article[author][%s]');
@@ -90,7 +91,7 @@ $output = <<<EOF
   <td>  <ul class="error_list">
     <li>name error</li>
   </ul>
-<input type="text" name="article[author][name]" value="Fabien" id="article_author_name" /></td>
+<input type="text" name="article[author][name]" value="Fabien" id="article_author_name" /><input type="hidden" name="article[author][id]" id="article_author_id" /></td>
 </tr>
 </td>
 </tr>
@@ -105,34 +106,6 @@ try
 catch (LogicException $e)
 {
   $t->pass('->renderRow() throws an LogicException if the form field has no parent');
-}
-
-// ->renderError();
-$t->diag('->renderError()');
-$output = <<<EOF
-  <ul class="error_list">
-    <li>title error</li>
-  </ul>
-
-EOF;
-$t->is($f->renderError(), $output, '->renderError() renders errors as HTML');
-$t->is($child->renderError(), '', '->renderRow() renders errors as HTML when the widget has a parent');
-$output = <<<EOF
-  <ul class="error_list">
-    <li>name error</li>
-  </ul>
-
-EOF;
-$t->is($child['name']->renderError(), $output, '->renderRow() renders errors as HTML when the widget has a parent');
-
-try
-{
-  $parent->renderError();
-  $t->fail('->renderError() throws an LogicException if the form field has no parent');
-}
-catch (LogicException $e)
-{
-  $t->pass('->renderError() throws an LogicException if the form field has no parent');
 }
 
 // ->renderLabel()
@@ -164,3 +137,53 @@ catch (LogicException $e)
 // ->isHidden()
 $t->diag('->isHidden()');
 $t->is($f->isHidden(), false, '->isHidden() is a proxy method to the isHidden() method of the widget');
+
+// ->renderError();
+$t->diag('->renderError()');
+$output = <<<EOF
+  <ul class="error_list">
+    <li>title error</li>
+  </ul>
+
+EOF;
+$t->is($f->renderError(), $output, '->renderError() renders errors as HTML');
+$t->is($child->renderError(), '', '->renderRow() renders errors as HTML when the widget has a parent');
+$output = <<<EOF
+  <ul class="error_list">
+    <li>name error</li>
+  </ul>
+
+EOF;
+$t->is($child['name']->renderError(), $output, '->renderRow() renders errors as HTML when the widget has a parent');
+
+try
+{
+  $parent->renderError();
+  $t->fail('->renderError() throws an LogicException if the form field has no parent');
+}
+catch (LogicException $e)
+{
+  $t->pass('->renderError() throws an LogicException if the form field has no parent');
+}
+
+// global errors
+$authorErrorSchema = new sfValidatorErrorSchema(new sfValidatorString());
+$authorErrorSchema->addError(new sfValidatorError(new sfValidatorString(), 'name error'), 'name');
+$authorErrorSchema->addError(new sfValidatorError(new sfValidatorString(), 'non existent field error'), 'non_existent_field');
+$authorErrorSchema->addError(new sfValidatorError(new sfValidatorString(), 'hidden field error'), 'id');
+
+$articleErrorSchema = new sfValidatorErrorSchema(new sfValidatorString());
+$articleErrorSchema->addError($titleError = new sfValidatorError(new sfValidatorString(), 'title error'), 'title');
+$articleErrorSchema->addError($authorErrorSchema, 'author');
+
+$parent = new sfFormFieldSchema($schema, null, 'article', array('title' => 'symfony', 'author' => array('name' => 'Fabien')), $articleErrorSchema);
+$child = $parent['author'];
+$output = <<<EOF
+  <ul class="error_list">
+    <li>non existent field error</li>
+    <li>Id: hidden field error</li>
+  </ul>
+
+EOF;
+$t->is($child->renderError(), $output, '->renderError() renders global errors as expected (global errors, hidden field errors, non existent field errors)');
+

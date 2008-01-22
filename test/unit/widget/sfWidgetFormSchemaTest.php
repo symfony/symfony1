@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(59, new lime_output_color());
+$t = new lime_test(60, new lime_output_color());
 
 $w1 = new sfWidgetFormInput(array(), array('class' => 'foo1'));
 $w2 = new sfWidgetFormInput();
@@ -253,6 +253,27 @@ catch (LogicException $e)
 {
   $t->pass('->moveField() throws an LogicException if you don\'t pass a relative field name with BEFORE');
 }
+
+// ->getGlobalErrors()
+$t->diag('->getGlobalErrors()');
+$w = new sfWidgetFormSchema();
+$w['w1'] = $w1;
+$w['w2'] = new sfWidgetFormInputHidden();
+$w['w3'] = new sfWidgetFormSchema();
+$w['w3']['w1'] = $w1;
+$w['w3']['w2'] = new sfWidgetFormInputHidden();
+$errors = array(
+  'global error',
+  'w1' => 'error for w1',
+  'w2' => 'error for w2',
+  'w4' => array(
+    'w1' => 'error for w4/w1',
+    'w2' => 'error for w4/w2',
+    'w3' => 'error for w4/w3',
+  ),
+  'w4' => 'error for w4',
+);
+$t->is($w->getGlobalErrors($errors), array('global error', 'error for w4', 'W2' => 'error for w2'), '->getGlobalErrors() returns an array of global errors, errors for hidden fields, and errors for non existent fields');
 
 // ->render()
 $t->diag('->render()');

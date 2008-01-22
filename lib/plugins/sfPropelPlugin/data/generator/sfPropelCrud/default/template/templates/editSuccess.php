@@ -19,7 +19,7 @@
 <?php if (isset($this->params['non_verbose_templates']) && $this->params['non_verbose_templates']): ?>
       [?php echo $form ?]
 <?php else: ?>
-
+      [?php echo $form->renderGlobalErrors() ?]
 <?php foreach ($form->getWidgetSchema()->getPositions() as $i => $name): ?>
 <?php if ($form[$name]->isHidden()) continue ?>
       <tr>

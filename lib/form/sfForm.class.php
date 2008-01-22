@@ -106,6 +106,16 @@ class sfForm implements ArrayAccess
   }
 
   /**
+   * Renders global errors associated with this form.
+   *
+   * @return string The rendered global errors
+   */
+  public function renderGlobalErrors()
+  {
+    return $this->widgetSchema->getFormFormatter()->formatErrorRow($this->widgetSchema->getGlobalErrors($this->getErrorSchema()));
+  }
+
+  /**
    * Binds the form with input values.
    *
    * It triggers the validator schema validation.

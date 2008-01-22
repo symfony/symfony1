@@ -324,19 +324,6 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     $hiddenRows = array();
     $errorRows = array();
 
-    // global errors
-    $globalErrors = array();
-    if (!is_null($errors))
-    {
-      foreach ($errors as $name => $error)
-      {
-        if (!isset($this->fields[$name]))
-        {
-          $globalErrors[] = $error;
-        }
-      }
-    }
-
     // render each field
     foreach ($this->positions as $name)
     {
@@ -346,10 +333,6 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
       if ($widget instanceof sfWidgetForm && $widget->isHidden())
       {
         $hiddenRows[] = $widget->render($this->generateName($name), $value);
-        if (isset($errors[$name]))
-        {
-          $globalErrors[$this->generateLabelName($name)] = $errors[$name];
-        }
       }
       else
       {
@@ -370,7 +353,45 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
       $rows[$i] = strtr($rows[$i], array('%hidden_fields%' => $i == $max - 1 ? implode("\n", $hiddenRows) : ''));
     }
 
-    return $formFormat->formatErrorRow($globalErrors).implode('', $rows);
+    return $this->getFormFormatter()->formatErrorRow($this->getGlobalErrors($errors)).implode('', $rows);
+  }
+
+  /**
+   * Gets errors that need to be included in global errors.
+   *
+   * @param  array  An array of errors
+   *
+   * @return string A HTML representation of global errors for the widget
+   */
+  public function getGlobalErrors($errors)
+  {
+    $globalErrors = array();
+
+    // global errors and errors for non existent fields
+    if (!is_null($errors))
+    {
+      foreach ($errors as $name => $error)
+      {
+        if (!isset($this->fields[$name]))
+        {
+          $globalErrors[] = $error;
+        }
+      }
+    }
+
+    // errors for hidden fields
+    foreach ($this->positions as $name)
+    {
+      if ($this[$name] instanceof sfWidgetForm && $this[$name]->isHidden())
+      {
+        if (isset($errors[$name]))
+        {
+          $globalErrors[$this->generateLabelName($name)] = $errors[$name];
+        }
+      }
+    }
+
+    return $globalErrors;
   }
 
   /**
