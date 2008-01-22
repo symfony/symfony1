@@ -13,7 +13,7 @@ abstract class BaseAuthorArticlePeer {
 	const CLASS_DEFAULT = 'lib.model.AuthorArticle';
 
 	
-	const NUM_COLUMNS = 3;
+	const NUM_COLUMNS = 2;
 
 	
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -26,26 +26,23 @@ abstract class BaseAuthorArticlePeer {
 	const ARTICLE_ID = 'author_article.ARTICLE_ID';
 
 	
-	const ID = 'author_article.ID';
-
-	
 	private static $phpNameMap = null;
 
 
 	
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('AuthorId', 'ArticleId', 'Id', ),
-		BasePeer::TYPE_COLNAME => array (AuthorArticlePeer::AUTHOR_ID, AuthorArticlePeer::ARTICLE_ID, AuthorArticlePeer::ID, ),
-		BasePeer::TYPE_FIELDNAME => array ('author_id', 'article_id', 'id', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, )
+		BasePeer::TYPE_PHPNAME => array ('AuthorId', 'ArticleId', ),
+		BasePeer::TYPE_COLNAME => array (AuthorArticlePeer::AUTHOR_ID, AuthorArticlePeer::ARTICLE_ID, ),
+		BasePeer::TYPE_FIELDNAME => array ('author_id', 'article_id', ),
+		BasePeer::TYPE_NUM => array (0, 1, )
 	);
 
 	
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('AuthorId' => 0, 'ArticleId' => 1, 'Id' => 2, ),
-		BasePeer::TYPE_COLNAME => array (AuthorArticlePeer::AUTHOR_ID => 0, AuthorArticlePeer::ARTICLE_ID => 1, AuthorArticlePeer::ID => 2, ),
-		BasePeer::TYPE_FIELDNAME => array ('author_id' => 0, 'article_id' => 1, 'id' => 2, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, )
+		BasePeer::TYPE_PHPNAME => array ('AuthorId' => 0, 'ArticleId' => 1, ),
+		BasePeer::TYPE_COLNAME => array (AuthorArticlePeer::AUTHOR_ID => 0, AuthorArticlePeer::ARTICLE_ID => 1, ),
+		BasePeer::TYPE_FIELDNAME => array ('author_id' => 0, 'article_id' => 1, ),
+		BasePeer::TYPE_NUM => array (0, 1, )
 	);
 
 	
@@ -102,12 +99,10 @@ abstract class BaseAuthorArticlePeer {
 
 		$criteria->addSelectColumn(AuthorArticlePeer::ARTICLE_ID);
 
-		$criteria->addSelectColumn(AuthorArticlePeer::ID);
-
 	}
 
-	const COUNT = 'COUNT(author_article.ID)';
-	const COUNT_DISTINCT = 'COUNT(DISTINCT author_article.ID)';
+	const COUNT = 'COUNT(author_article.AUTHOR_ID)';
+	const COUNT_DISTINCT = 'COUNT(DISTINCT author_article.AUTHOR_ID)';
 
 	
 	public static function doCount(Criteria $criteria, $distinct = false, $con = null)
@@ -640,7 +635,6 @@ abstract class BaseAuthorArticlePeer {
 			$criteria = clone $values; 		} else {
 			$criteria = $values->buildCriteria(); 		}
 
-		$criteria->remove(AuthorArticlePeer::ID); 
 
 				$criteria->setDbName(self::DATABASE_NAME);
 
@@ -667,8 +661,11 @@ abstract class BaseAuthorArticlePeer {
 
 		if ($values instanceof Criteria) {
 			$criteria = clone $values; 
-			$comparison = $criteria->getComparison(AuthorArticlePeer::ID);
-			$selectCriteria->add(AuthorArticlePeer::ID, $criteria->remove(AuthorArticlePeer::ID), $comparison);
+			$comparison = $criteria->getComparison(AuthorArticlePeer::AUTHOR_ID);
+			$selectCriteria->add(AuthorArticlePeer::AUTHOR_ID, $criteria->remove(AuthorArticlePeer::AUTHOR_ID), $comparison);
+
+			$comparison = $criteria->getComparison(AuthorArticlePeer::ARTICLE_ID);
+			$selectCriteria->add(AuthorArticlePeer::ARTICLE_ID, $criteria->remove(AuthorArticlePeer::ARTICLE_ID), $comparison);
 
 		} else { 			$criteria = $values->buildCriteria(); 			$selectCriteria = $values->buildPkeyCriteria(); 		}
 
@@ -707,7 +704,20 @@ abstract class BaseAuthorArticlePeer {
 			$criteria = $values->buildPkeyCriteria();
 		} else {
 						$criteria = new Criteria(self::DATABASE_NAME);
-			$criteria->add(AuthorArticlePeer::ID, (array) $values, Criteria::IN);
+												if(count($values) == count($values, COUNT_RECURSIVE))
+			{
+								$values = array($values);
+			}
+			$vals = array();
+			foreach($values as $value)
+			{
+
+				$vals[0][] = $value[0];
+				$vals[1][] = $value[1];
+			}
+
+			$criteria->add(AuthorArticlePeer::AUTHOR_ID, $vals[0], Criteria::IN);
+			$criteria->add(AuthorArticlePeer::ARTICLE_ID, $vals[1], Criteria::IN);
 		}
 
 				$criteria->setDbName(self::DATABASE_NAME);
@@ -761,40 +771,17 @@ abstract class BaseAuthorArticlePeer {
 	}
 
 	
-	public static function retrieveByPK($pk, $con = null)
-	{
+	public static function retrieveByPK( $author_id, $article_id, $con = null) {
 		if ($con === null) {
 			$con = Propel::getConnection(self::DATABASE_NAME);
 		}
-
-		$criteria = new Criteria(AuthorArticlePeer::DATABASE_NAME);
-
-		$criteria->add(AuthorArticlePeer::ID, $pk);
-
-
+		$criteria = new Criteria();
+		$criteria->add(AuthorArticlePeer::AUTHOR_ID, $author_id);
+		$criteria->add(AuthorArticlePeer::ARTICLE_ID, $article_id);
 		$v = AuthorArticlePeer::doSelect($criteria, $con);
 
-		return !empty($v) > 0 ? $v[0] : null;
+		return !empty($v) ? $v[0] : null;
 	}
-
-	
-	public static function retrieveByPKs($pks, $con = null)
-	{
-		if ($con === null) {
-			$con = Propel::getConnection(self::DATABASE_NAME);
-		}
-
-		$objs = null;
-		if (empty($pks)) {
-			$objs = array();
-		} else {
-			$criteria = new Criteria();
-			$criteria->add(AuthorArticlePeer::ID, $pks, Criteria::IN);
-			$objs = AuthorArticlePeer::doSelect($criteria, $con);
-		}
-		return $objs;
-	}
-
 } 
 if (Propel::isInit()) {
 			try {

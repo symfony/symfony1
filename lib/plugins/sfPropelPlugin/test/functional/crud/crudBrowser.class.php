@@ -93,6 +93,7 @@ class CrudBrowser extends sfTestBrowser
         'category_id' => 0,
         'end_date'    => array('year' => '', 'month' => '', 'day' => '', 'hour' => '', 'minute' => ''),
         'book_id'     => 0,
+        'author_list' => array(),
       ))
     ;
 
@@ -105,6 +106,7 @@ class CrudBrowser extends sfTestBrowser
       'category_id' => 2,
       'end_date'    => array('year' => '', 'month' => '', 'day' => '', 'hour' => '', 'minute' => ''),
       'book_id'     => null,
+      'author_list' => array(1, 2),
     ), 3);
 
     // go back to the list
@@ -138,9 +140,10 @@ class CrudBrowser extends sfTestBrowser
       checkResponseElement('table tbody th:nth(4)', 'Created at')->
       checkResponseElement('table tbody th:nth(5)', 'End date')->
       checkResponseElement('table tbody th:nth(6)', 'Book id')->
-      checkResponseElement('table tbody th', 7)->
+      checkResponseElement('table tbody th:nth(7)', 'Author list')->
+      checkResponseElement('table tbody th', 8)->
 
-      checkResponseElement('table tbody td', 7)->
+      checkResponseElement('table tbody td', 8)->
       checkResponseElement('table tbody td select[id="article_category_id"][name="article[category_id]"] option', 2)->
       checkResponseElement('table tbody td select[id="article_book_id"][name="article[book_id]"] option', 2)
     ;
@@ -154,6 +157,7 @@ class CrudBrowser extends sfTestBrowser
       'category_id' => null,
       'end_date'    => array('year' => 0, 'month' => 0, 'day' => 15, 'hour' => '10', 'minute' => '20'),
       'book_id'     => 14,
+      'author_list' => array(0, 5),
     );
     $this->
       click('Save', array('article' => $values))->
@@ -164,7 +168,7 @@ class CrudBrowser extends sfTestBrowser
         'end_date' => array('year' => null, 'month' => null, 'day' => 15, 'hour' => '10', 'minute' => '20')))
       )->
       checkResponseElement('ul[class="error_list"] li:contains("Required.")', 2)->
-      checkResponseElement('ul[class="error_list"] li:contains("Invalid.")', 2)
+      checkResponseElement('ul[class="error_list"] li:contains("Invalid.")', 3)
     ;
 
     // save
@@ -176,6 +180,7 @@ class CrudBrowser extends sfTestBrowser
       'category_id' => 1,
       'end_date'    => array('year' => 2005, 'month' => 10, 'day' => 15, 'hour' => '10', 'minute' => '20'),
       'book_id'     => 1,
+      'author_list' => array(1, 3),
     ), 3);
 
     // go back to the list
@@ -276,6 +281,10 @@ class CrudBrowser extends sfTestBrowser
 
       checkResponseElement(sprintf('table tbody td select[id="article_book_id"][name="article[book_id]"] option[value=""]%s', $values['book_id'] == '' ? '[selected="selected"]' : ''), '')->
       checkResponseElement(sprintf('table tbody td select[id="article_book_id"][name="article[book_id]"] option[value="1"]%s', $values['book_id'] == 1 ? '[selected="selected"]' : ''), 'The definitive guide to symfony')->
+
+      checkResponseElement(sprintf('table tbody td select[id="article_author_list"][name="article[author_list][]"] option[value="1"]%s', in_array(1, $values['author_list']) ? '[selected="selected"]' : ''), 'Fabien')->
+      checkResponseElement(sprintf('table tbody td select[id="article_author_list"][name="article[author_list][]"] option[value="2"]%s', in_array(2, $values['author_list']) ? '[selected="selected"]' : ''), 'Thomas')->
+      checkResponseElement(sprintf('table tbody td select[id="article_author_list"][name="article[author_list][]"] option[value="3"]%s', in_array(3, $values['author_list']) ? '[selected="selected"]' : ''), 'Hélène')->
 
       checkResponseElement('table tbody td select[id="article_end_date_year"][name="article[end_date][year]"] option[selected="selected"]', (string) $values['end_date']['year'])->
       checkResponseElement('table tbody td select[id="article_end_date_month"][name="article[end_date][month]"] option[selected="selected"]', (string) $values['end_date']['month'])->

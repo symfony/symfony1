@@ -34,5 +34,4 @@ class BaseBookForm extends BaseFormPropel
   }
 
 
-
 }

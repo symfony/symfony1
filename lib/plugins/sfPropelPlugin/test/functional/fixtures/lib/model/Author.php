@@ -9,4 +9,8 @@
  */ 
 class Author extends BaseAuthor
 {
+  public function __toString()
+  {
+    return $this->getName();
+  }
 }

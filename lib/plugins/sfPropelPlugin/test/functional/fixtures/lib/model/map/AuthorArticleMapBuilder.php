@@ -30,13 +30,11 @@ class AuthorArticleMapBuilder {
 		$tMap = $this->dbMap->addTable('author_article');
 		$tMap->setPhpName('AuthorArticle');
 
-		$tMap->setUseIdGenerator(true);
+		$tMap->setUseIdGenerator(false);
 
-		$tMap->addForeignKey('AUTHOR_ID', 'AuthorId', 'int', CreoleTypes::INTEGER, 'author', 'ID', false, null);
+		$tMap->addForeignPrimaryKey('AUTHOR_ID', 'AuthorId', 'int' , CreoleTypes::INTEGER, 'author', 'ID', true, null);
 
-		$tMap->addForeignKey('ARTICLE_ID', 'ArticleId', 'int', CreoleTypes::INTEGER, 'article', 'ID', false, null);
-
-		$tMap->addPrimaryKey('ID', 'Id', 'int', CreoleTypes::INTEGER, true, null);
+		$tMap->addForeignPrimaryKey('ARTICLE_ID', 'ArticleId', 'int' , CreoleTypes::INTEGER, 'article', 'ID', true, null);
 
 	} 
 } 

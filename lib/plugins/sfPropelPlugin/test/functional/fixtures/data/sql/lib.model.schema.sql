@@ -9,7 +9,7 @@ DROP TABLE [article];
 CREATE TABLE [article]
 (
 	[id] INTEGER  NOT NULL PRIMARY KEY,
-	[title] VARCHAR(255),
+	[title] VARCHAR(255)  NOT NULL,
 	[body] MEDIUMTEXT,
 	[online] INTEGER,
 	[category_id] INTEGER  NOT NULL,
@@ -72,9 +72,8 @@ DROP TABLE [author_article];
 
 CREATE TABLE [author_article]
 (
-	[author_id] INTEGER,
-	[article_id] INTEGER,
-	[id] INTEGER  NOT NULL PRIMARY KEY
+	[author_id] INTEGER  NOT NULL,
+	[article_id] INTEGER  NOT NULL
 );
 
 -- SQLite does not support foreign keys; this is just for reference

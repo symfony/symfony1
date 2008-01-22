@@ -34,15 +34,14 @@
   </table>
 
   <table name="author_article">
-    <column name="author_id" type="integer" />
+    <column name="author_id" type="integer" primaryKey="true" />
     <foreign-key foreignTable="author">
       <reference local="author_id" foreign="id" />
     </foreign-key>
-    <column name="article_id" type="integer" />
+    <column name="article_id" type="integer" primaryKey="true" />
     <foreign-key foreignTable="article">
       <reference local="article_id" foreign="id" />
     </foreign-key>
-    <column name="id" type="integer" required="true" primaryKey="true" autoincrement="true" />
   </table>
 
 </database>

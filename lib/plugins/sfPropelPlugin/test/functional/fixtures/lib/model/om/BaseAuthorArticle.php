@@ -15,10 +15,6 @@ abstract class BaseAuthorArticle extends BaseObject  implements Persistent {
 	
 	protected $article_id;
 
-
-	
-	protected $id;
-
 	
 	protected $aAuthor;
 
@@ -43,13 +39,6 @@ abstract class BaseAuthorArticle extends BaseObject  implements Persistent {
 	{
 
 		return $this->article_id;
-	}
-
-	
-	public function getId()
-	{
-
-		return $this->id;
 	}
 
 	
@@ -89,20 +78,6 @@ abstract class BaseAuthorArticle extends BaseObject  implements Persistent {
 
 	} 
 	
-	public function setId($v)
-	{
-
-						if ($v !== null && !is_int($v) && is_numeric($v)) {
-			$v = (int) $v;
-		}
-
-		if ($this->id !== $v) {
-			$this->id = $v;
-			$this->modifiedColumns[] = AuthorArticlePeer::ID;
-		}
-
-	} 
-	
 	public function hydrate(ResultSet $rs, $startcol = 1)
 	{
 		try {
@@ -111,13 +86,11 @@ abstract class BaseAuthorArticle extends BaseObject  implements Persistent {
 
 			$this->article_id = $rs->getInt($startcol + 1);
 
-			$this->id = $rs->getInt($startcol + 2);
-
 			$this->resetModified();
 
 			$this->setNew(false);
 
-						return $startcol + 3; 
+						return $startcol + 2; 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating AuthorArticle object", $e);
 		}
@@ -194,7 +167,6 @@ abstract class BaseAuthorArticle extends BaseObject  implements Persistent {
 				if ($this->isNew()) {
 					$pk = AuthorArticlePeer::doInsert($this, $con);
 					$affectedRows += 1; 										 										 
-					$this->setId($pk);  
 					$this->setNew(false);
 				} else {
 					$affectedRows += AuthorArticlePeer::doUpdate($this, $con);
@@ -280,9 +252,6 @@ abstract class BaseAuthorArticle extends BaseObject  implements Persistent {
 			case 1:
 				return $this->getArticleId();
 				break;
-			case 2:
-				return $this->getId();
-				break;
 			default:
 				return null;
 				break;
@@ -295,7 +264,6 @@ abstract class BaseAuthorArticle extends BaseObject  implements Persistent {
 		$result = array(
 			$keys[0] => $this->getAuthorId(),
 			$keys[1] => $this->getArticleId(),
-			$keys[2] => $this->getId(),
 		);
 		return $result;
 	}
@@ -317,9 +285,6 @@ abstract class BaseAuthorArticle extends BaseObject  implements Persistent {
 			case 1:
 				$this->setArticleId($value);
 				break;
-			case 2:
-				$this->setId($value);
-				break;
 		} 	}
 
 	
@@ -329,7 +294,6 @@ abstract class BaseAuthorArticle extends BaseObject  implements Persistent {
 
 		if (array_key_exists($keys[0], $arr)) $this->setAuthorId($arr[$keys[0]]);
 		if (array_key_exists($keys[1], $arr)) $this->setArticleId($arr[$keys[1]]);
-		if (array_key_exists($keys[2], $arr)) $this->setId($arr[$keys[2]]);
 	}
 
 	
@@ -339,7 +303,6 @@ abstract class BaseAuthorArticle extends BaseObject  implements Persistent {
 
 		if ($this->isColumnModified(AuthorArticlePeer::AUTHOR_ID)) $criteria->add(AuthorArticlePeer::AUTHOR_ID, $this->author_id);
 		if ($this->isColumnModified(AuthorArticlePeer::ARTICLE_ID)) $criteria->add(AuthorArticlePeer::ARTICLE_ID, $this->article_id);
-		if ($this->isColumnModified(AuthorArticlePeer::ID)) $criteria->add(AuthorArticlePeer::ID, $this->id);
 
 		return $criteria;
 	}
@@ -349,7 +312,8 @@ abstract class BaseAuthorArticle extends BaseObject  implements Persistent {
 	{
 		$criteria = new Criteria(AuthorArticlePeer::DATABASE_NAME);
 
-		$criteria->add(AuthorArticlePeer::ID, $this->id);
+		$criteria->add(AuthorArticlePeer::AUTHOR_ID, $this->author_id);
+		$criteria->add(AuthorArticlePeer::ARTICLE_ID, $this->article_id);
 
 		return $criteria;
 	}
@@ -357,27 +321,34 @@ abstract class BaseAuthorArticle extends BaseObject  implements Persistent {
 	
 	public function getPrimaryKey()
 	{
-		return $this->getId();
+		$pks = array();
+
+		$pks[0] = $this->getAuthorId();
+
+		$pks[1] = $this->getArticleId();
+
+		return $pks;
 	}
 
 	
-	public function setPrimaryKey($key)
+	public function setPrimaryKey($keys)
 	{
-		$this->setId($key);
+
+		$this->setAuthorId($keys[0]);
+
+		$this->setArticleId($keys[1]);
+
 	}
 
 	
 	public function copyInto($copyObj, $deepCopy = false)
 	{
 
-		$copyObj->setAuthorId($this->author_id);
-
-		$copyObj->setArticleId($this->article_id);
-
 
 		$copyObj->setNew(true);
 
-		$copyObj->setId(NULL); 
+		$copyObj->setAuthorId(NULL); 
+		$copyObj->setArticleId(NULL); 
 	}
 
 	

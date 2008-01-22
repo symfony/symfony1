@@ -225,7 +225,7 @@ class sfPropelFormGenerator extends sfGenerator
     }
     else if ($column->isForeignKey())
     {
-      $name = 'Select';
+      $name = 'PropelSelect';
     }
 
     return sprintf('sfWidgetForm%s', $name);
@@ -244,7 +244,7 @@ class sfPropelFormGenerator extends sfGenerator
 
     if (!$column->isPrimaryKey() && $column->isForeignKey())
     {
-      $options[] = sprintf('\'choices\' => new sfCallable(array($this, \'get%sChoices\'))', $column->getPhpName());
+      $options[] = sprintf('\'model\' => \'%s\', \'add_empty\' => %s', $this->getForeignTable($column)->getPhpName(), $column->isNotNull() ? 'false' : 'true');
     }
 
     return count($options) ? sprintf('array(%s)', implode(', ', $options)) : '';
@@ -298,7 +298,7 @@ class sfPropelFormGenerator extends sfGenerator
 
     if (!$column->isPrimaryKey() && $column->isForeignKey())
     {
-      $name = 'Choice';
+      $name = 'PropelChoice';
     }
 
     return sprintf('sfValidator%s', $name);
@@ -330,7 +330,7 @@ class sfPropelFormGenerator extends sfGenerator
 
     if (!$column->isPrimaryKey() && $column->isForeignKey())
     {
-      $options[] = sprintf('\'choices\' => new sfCallable(array($this, \'get%sIdentifierChoices\'))', $column->getPhpName());
+      $options[] = sprintf('\'model\' => \'%s\'', $this->getForeignTable($column)->getPhpName());
     }
 
     if (!$column->isNotNull() || $column->isPrimaryKey())
