@@ -17,7 +17,7 @@ class BaseCategoryForm extends BaseFormPropel
     ));
 
     $this->setValidators(array(
-      'id'   => new sfValidatorInteger(array('required' => false)),
+      'id'   => new sfValidatorPropelChoice(array('model' => 'Category', 'column' => 'Id', 'required' => false)),
       'name' => new sfValidatorString(array('required' => false)),
     ));
 

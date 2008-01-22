@@ -151,12 +151,13 @@ class CrudBrowser extends sfTestBrowser
     // save / validation
     $this->test()->diag('save / validation');
     $values = array(
+      'id'          => 1009299,
       'title'       => '',
       'body'        => 'my body',
       'online'      => true,
       'category_id' => null,
       'end_date'    => array('year' => 0, 'month' => 0, 'day' => 15, 'hour' => '10', 'minute' => '20'),
-      'book_id'     => 14,
+      'book_id'     => 149999,
       'author_list' => array(0, 5),
     );
     $this->
@@ -168,12 +169,13 @@ class CrudBrowser extends sfTestBrowser
         'end_date' => array('year' => null, 'month' => null, 'day' => 15, 'hour' => '10', 'minute' => '20')))
       )->
       checkResponseElement('ul[class="error_list"] li:contains("Required.")', 2)->
-      checkResponseElement('ul[class="error_list"] li:contains("Invalid.")', 3)
+      checkResponseElement('ul[class="error_list"] li:contains("Invalid.")', 4)
     ;
 
     // save
     $this->test()->diag('save');
     $this->saveValues($options, array(
+      'id'          => 3,
       'title'       => 'my title',
       'body'        => 'my body',
       'online'      => false,

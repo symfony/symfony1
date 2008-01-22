@@ -17,8 +17,8 @@ class BaseAuthorArticleForm extends BaseFormPropel
     ));
 
     $this->setValidators(array(
-      'author_id'  => new sfValidatorInteger(array('required' => false)),
-      'article_id' => new sfValidatorInteger(array('required' => false)),
+      'author_id'  => new sfValidatorPropelChoice(array('model' => 'Author', 'required' => false)),
+      'article_id' => new sfValidatorPropelChoice(array('model' => 'Article', 'required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('author_article[%s]');

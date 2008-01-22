@@ -296,7 +296,7 @@ class sfPropelFormGenerator extends sfGenerator
         $name = 'Pass';
     }
 
-    if (!$column->isPrimaryKey() && $column->isForeignKey())
+    if ($column->isPrimaryKey() || $column->isForeignKey())
     {
       $name = 'PropelChoice';
     }
@@ -328,9 +328,13 @@ class sfPropelFormGenerator extends sfGenerator
       default:
     }
 
-    if (!$column->isPrimaryKey() && $column->isForeignKey())
+    if ($column->isForeignKey())
     {
       $options[] = sprintf('\'model\' => \'%s\'', $this->getForeignTable($column)->getPhpName());
+    }
+    else if ($column->isPrimaryKey())
+    {
+      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $column->getTable()->getPhpName(), $column->getPhpName());
     }
 
     if (!$column->isNotNull() || $column->isPrimaryKey())

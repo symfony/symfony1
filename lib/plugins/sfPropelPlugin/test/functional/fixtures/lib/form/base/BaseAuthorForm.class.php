@@ -18,7 +18,7 @@ class BaseAuthorForm extends BaseFormPropel
     ));
 
     $this->setValidators(array(
-      'id'           => new sfValidatorInteger(array('required' => false)),
+      'id'           => new sfValidatorPropelChoice(array('model' => 'Author', 'column' => 'Id', 'required' => false)),
       'name'         => new sfValidatorString(array('required' => false)),
       'article_list' => new sfValidatorPropelChoiceMany(array('model' => 'Article', 'required' => false)),
     ));

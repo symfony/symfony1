@@ -17,7 +17,7 @@ class BaseBookForm extends BaseFormPropel
     ));
 
     $this->setValidators(array(
-      'id'   => new sfValidatorInteger(array('required' => false)),
+      'id'   => new sfValidatorPropelChoice(array('model' => 'Book', 'column' => 'Id', 'required' => false)),
       'name' => new sfValidatorString(array('required' => false)),
     ));
 
