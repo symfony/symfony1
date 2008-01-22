@@ -70,14 +70,16 @@ class sfValidatorPropelChoice extends sfValidator
     {
       $phpName = $this->getOption('column');
     }
-
-    $map = call_user_func(array($this->getOption('model').'Peer', 'getTableMap'));
-    foreach ($map->getColumns() as $column)
+    else
     {
-      if ($column->isPrimaryKey())
+      $map = call_user_func(array($this->getOption('model').'Peer', 'getTableMap'));
+      foreach ($map->getColumns() as $column)
       {
-        $phpName = $column->getPhpName();
-        break;
+        if ($column->isPrimaryKey())
+        {
+          $phpName = $column->getPhpName();
+          break;
+        }
       }
     }
 
