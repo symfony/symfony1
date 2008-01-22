@@ -156,7 +156,9 @@ abstract class sfCrudGenerator extends sfGenerator
     foreach ($this->getPrimaryKey() as $pk)
     {
       $fieldName  = sfInflector::underscore($pk->getPhpName());
-      $test_pks[] = sprintf("!\$this->getRequestParameter(%s)", $fieldNameAsArgument ? "\$$fieldName" : "'".$fieldName."'");
+      // 2 checks needed here, as '0' is a vaild PK.
+      $test_pks[] = sprintf("\$this->getRequestParameter(%s) === ''", $fieldNameAsArgument ? "\$$fieldName" : "'".$fieldName."'");
+      $test_pks[] = sprintf("\$this->getRequestParameter(%s) === null", $fieldNameAsArgument ? "\$$fieldName" : "'".$fieldName."'");
     }
 
     return implode("\n     || ", $test_pks);
