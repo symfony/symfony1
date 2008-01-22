@@ -112,7 +112,7 @@ class sfForm implements ArrayAccess
    */
   public function renderGlobalErrors()
   {
-    return $this->widgetSchema->getFormFormatter()->formatErrorRow($this->widgetSchema->getGlobalErrors($this->getErrorSchema()));
+    return $this->widgetSchema->getFormFormatter()->formatErrorsForRow($this->widgetSchema->getGlobalErrors($this->getErrorSchema()));
   }
 
   /**

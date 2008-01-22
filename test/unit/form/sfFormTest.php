@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(84, new lime_output_color());
+$t = new lime_test(85, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -219,6 +219,32 @@ $f->bind(array(
   'file' => array('name' => 'test1.txt', 'type' => 'text/plain', 'tmp_name' => '/tmp/test1.txt', 'error' => 0, 'size' => 100))
 );
 $t->is($f->getErrorSchema()->getCode(), '1 [min_length] file [max_size]', '->bind() behaves correctly with files');
+
+// ->renderGlobalErrors()
+$t->diag('->renderGlobalErrors()');
+$f = new FormTest();
+$f->setValidatorSchema(new sfValidatorSchema(array(
+  'id'         => new sfValidatorInteger(),
+  'first_name' => new sfValidatorString(array('min_length' => 2)),
+  'last_name'  => new sfValidatorString(array('min_length' => 2)),
+)));
+$f->setWidgetSchema(new sfWidgetFormSchema(array(
+  'id'         => new sfWidgetFormInputHidden(),
+  'first_name' => new sfWidgetFormInput(),
+  'last_name'  => new sfWidgetFormInput(),
+)));
+$f->bind(array(
+  'id'         => 'dddd',
+  'first_name' => 'f',
+  'last_name'  => 'potencier',
+));
+$output = <<<EOF
+  <ul class="error_list">
+    <li>Id: "dddd" is not an integer.</li>
+  </ul>
+
+EOF;
+$t->is($f->renderGlobalErrors(), $output, '->renderGlobalErrors() renders global errors as an HTML list');
 
 // ->embedForm()
 $t->diag('->embedForm()');
