@@ -197,7 +197,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
       $args[] = '-logger';
       $args[] = 'phing.listener.AnsiColorLogger';
     }
-    
+
     $args[] = $taskName;
 
     Phing::startup();
@@ -222,5 +222,12 @@ class sfPhing extends Phing
   function getPhingVersion()
   {
     return 'sfPhing';
+  }
+
+  public static function shutdown($exitcode = 0)
+  {
+    self::getTimer()->stop();
+
+    throw new Exception(sprintf('Problem executing Phing task (%s).', $exitcode));
   }
 }
