@@ -29,11 +29,39 @@ require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.D
 // remove all cache
 sfToolkit::clearDirectory(sfConfig::get('sf_app_cache_dir'));
 
+// build Propel om/map/sql/forms
+$files = glob(sfConfig::get('sf_lib_dir').'/model/om/*.php');
+if (false === $files || !count($files))
+{
+  chdir(sfConfig::get('sf_root_dir'));
+  $task = new sfPropelBuildModelTask(new sfEventDispatcher(), new sfFormatter());
+  ob_start();
+  $task->run();
+  $output = ob_get_clean();
+}
+
+$files = glob(sfConfig::get('sf_data_dir').'/sql/*.php');
+if (false === $files || !count($files))
+{
+  chdir(sfConfig::get('sf_root_dir'));
+  $task = new sfPropelBuildSqlTask(new sfEventDispatcher(), new sfFormatter());
+  ob_start();
+  $task->run();
+  $output = ob_get_clean();
+}
+
+$files = glob(sfConfig::get('sf_lib_dir').'/form/base/*.php');
+if (false === $files || !count($files))
+{
+  chdir(sfConfig::get('sf_root_dir'));
+  $task = new sfPropelBuildFormsTask(new sfEventDispatcher(), new sfFormatter());
+  $task->run();
+}
+
 if (isset($fixtures))
 {
   // initialize database manager
   $databaseManager = new sfDatabaseManager();
-  $databaseManager->initialize();
 
   // cleanup database
   $db = sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.'/database.sqlite';
