@@ -1104,7 +1104,7 @@ abstract class Doctrine_Query_Abstract
 
         // if there's no params, return (else we'll get a WHERE IN (), invalid SQL)
         if (!count($params))
-          return;
+          return $this;
 
         $a = array();
         foreach ($params as $k => $value) {
