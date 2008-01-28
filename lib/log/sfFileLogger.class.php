@@ -19,17 +19,22 @@
 class sfFileLogger extends sfLogger
 {
   protected
-    $fp = null;
+    $type       = 'symfony',
+    $format     = '%time% %type% [%priority%] %message%%EOL%',
+    $timeFormat = '%b %d %H:%M:%S',
+    $fp         = null;
 
   /**
    * Initializes this logger.
    *
    * Available options:
    *
-   * - file:      The file path or a php wrapper to log messages
-   *              You can use any support php wrapper. To write logs to the Apache error log, use php://stderr
-   * - dir_mode:  The mode to use when creating a directory (default to 0777)
-   * - file_mode: The mode to use when creating a file (default to 0666)
+   * - file:        The file path or a php wrapper to log messages
+   *                You can use any support php wrapper. To write logs to the Apache error log, use php://stderr
+   * - format:      The log line format (default to %time% %type% [%priority%] %message%%EOL%)
+   * - time_format: The log time strftime format (default to %b %d %H:%M:%S)
+   * - dir_mode:    The mode to use when creating a directory (default to 0777)
+   * - file_mode:   The mode to use when creating a file (default to 0666)
    *
    * @param  sfEventDispatcher A sfEventDispatcher instance
    * @param  array        An array of options.
@@ -41,6 +46,21 @@ class sfFileLogger extends sfLogger
     if (!isset($options['file']))
     {
       throw new sfConfigurationException('You must provide a "file" parameter for this logger.');
+    }
+
+    if (isset($options['format']))
+    {
+      $this->format = $options['format'];
+    }
+
+    if (isset($options['time_format']))
+    {
+      $this->timeFormat = $options['time_format'];
+    }
+
+    if (isset($options['type']))
+    {
+      $this->type = $options['type'];
     }
 
     $dir = dirname($options['file']);
@@ -73,8 +93,26 @@ class sfFileLogger extends sfLogger
   protected function doLog($message, $priority)
   {
     flock($this->fp, LOCK_EX);
-    fwrite($this->fp, sprintf("%s %s [%s] %s%s", strftime('%b %d %H:%M:%S'), 'symfony', sfLogger::getPriorityName($priority), $message, PHP_EOL));
+    fwrite($this->fp, strtr($this->format, array(
+      '%type%'     => $this->type,
+      '%message%'  => $message,
+      '%time%'     => strftime($this->timeFormat),
+      '%priority%' => $this->getPriority($priority),
+      '%EOL%'      => PHP_EOL,
+    )));
     flock($this->fp, LOCK_UN);
+  }
+
+  /**
+   * Returns the priority string to use in log messages.
+   *
+   * @param  string The priority constant
+   *
+   * @return string The priority to use in log messages
+   */
+  protected function getPriority($priority)
+  {
+    return sfLogger::getPriorityName($priority);
   }
 
   /**
