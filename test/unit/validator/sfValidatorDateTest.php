@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(33, new lime_output_color());
+$t = new lime_test(36, new lime_output_color());
 
 $v = new sfValidatorDate();
 
@@ -46,6 +46,7 @@ $t->diag('validate date array');
 $t->is($v->clean(array('year' => 2005, 'month' => 10, 'day' => 15)), '2005-10-15', '->clean() accepts an array as an input');
 $t->is($v->clean(array('year' => '2005', 'month' => '10', 'day' => '15')), '2005-10-15', '->clean() accepts an array as an input');
 $t->is($v->clean(array('year' => '', 'month' => '', 'day' => '')), null, '->clean() accepts an array as an input');
+$t->is($v->clean(array('year' => 2008, 'month' => 02, 'day' => 29)), '2008-02-29', '->clean() recognises a leapyear');
 try
 {
   $v->clean(array('year' => '', 'month' => 1, 'day' => 15));
@@ -66,6 +67,17 @@ catch (sfValidatorError $e)
 {
   $t->pass('->clean() throws a sfValidatorError if the date is not valid');
 }
+try
+{
+  $v->clean(array('year' => 2008, 'month' => 2, 'day' => 30));
+  $t->fail('->clean() throws a sfValidatorError if the date is not valid');
+  $t->is($e->getCode(), 'invalid', '->clean() throws a sfValidatorError');
+}
+catch (sfValidatorError $e)
+{
+  $t->pass('->clean() throws a sfValidatorError if the date is not valid');
+}
+
 
 // validate regex
 $t->diag('validate regex');
