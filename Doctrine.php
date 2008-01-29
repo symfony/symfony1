@@ -468,6 +468,8 @@ final class Doctrine
      */
     private static $_loadedModelFiles = array();
 
+    private static $_pathModels = array();
+
     /**
      * _validators
      *
@@ -485,6 +487,16 @@ final class Doctrine
     public function __construct()
     {
         throw new Doctrine_Exception('Doctrine is static class. No instances can be created.');
+    }
+
+    public static function getLoadedModelFiles()
+    {
+        return self::$_loadedModelFiles;
+    }
+    
+    public static function getPathModels()
+    {
+        return self::$_pathModels;
     }
 
     /**
@@ -528,24 +540,26 @@ final class Doctrine
     public static function loadModels($directory)
     {
         $loadedModels = array();
-        
+
         if ($directory !== null) {
             $manager = Doctrine_Manager::getInstance();
-            
+
             foreach ((array) $directory as $dir) {
                 $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
                                                         RecursiveIteratorIterator::LEAVES_ONLY);
                 foreach ($it as $file) {
                     $e = explode('.', $file->getFileName());
                     if (end($e) === 'php' && strpos($file->getFileName(), '.inc') === false) {
-                        
+
                         if ($manager->getAttribute(Doctrine::ATTR_MODEL_LOADING) == Doctrine::MODEL_LOADING_CONSERVATIVE) {
                             self::$_loadedModelFiles[$e[0]] = $file->getPathName();
+                            self::$_pathModels[$file->getPathName()][$e[0]] = $e[0];
+
                             $loadedModels[] = $e[0];
                         } else {
                             $declaredBefore = get_declared_classes();
                             require_once($file->getPathName());
-                            
+
                             $declaredAfter = get_declared_classes();
                             // Using array_slice because array_diff is broken is some PHP versions
                             $foundClasses = array_slice($declaredAfter, count($declaredBefore) - 1);
@@ -553,6 +567,8 @@ final class Doctrine
                                 foreach ($foundClasses as $className) {
                                     if (self::isValidModelClass($className) && !in_array($className, $loadedModels)) {
                                         $loadedModels[] = $className;
+
+                                        self::$_pathModels[$file->getPathName()][$className] = $className;
                                     }
                                 }
                             }
