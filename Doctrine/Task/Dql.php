@@ -36,35 +36,37 @@ class Doctrine_Task_Dql extends Doctrine_Task
            $requiredArguments    =   array('models_path'    =>  'Specify path to your Doctrine_Record definitions.',
                                            'dql_query' => 'Specify the complete dql query to execute.'),
            $optionalArguments    =   array();
-    
+
     public function execute()
     {
         Doctrine::loadModels($this->getArgument('models_path'));
-        
+
         $dql = $this->getArgument('dql_query');
-        
+
         $query = new Doctrine_Query();
-        
-        $this->notify('executing: "' . $dql . '"');
-        
-        $results = $query->query($dql);
-        
+
+        $params = explode(',', $this->getArgument('params'));
+
+        $this->notify('executing: "' . $dql . '" (' . implode(', ', $params) . ')');
+
+        $results = $query->query($dql, $params);
+
         $this->_printResults($results);
     }
-    
+
     protected function _printResults($data)
     {
         $array = $data->toArray(true);
-        
+
         $yaml = Doctrine_Parser::dump($array, 'yml');
         $lines = explode("\n", $yaml);
-        
+
         unset($lines[0]);
         $lines[1] = $data->getTable()->getOption('name') . ':';
-        
+
         foreach ($lines as $yamlLine) {
             $line = trim($yamlLine);
-            
+
             if ($line) {
                 $this->notify($yamlLine);
             }
