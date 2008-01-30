@@ -709,6 +709,11 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
         }
     }
 
+    // Method was wrong named. Fixing by creating an alias, since we cannot change API (remove methods)
+    public function synchronizeFromArray(array $array) {
+        return $this->synchronizeWithArray($array);
+    }
+
     /**
      * exportTo
      *
