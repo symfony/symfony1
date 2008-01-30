@@ -39,18 +39,20 @@ class Doctrine_Template_Timestampable extends Doctrine_Template
      *
      * @var string
      */
-    protected $_options = array('created' =>  array('name'    =>  'created_at',
-                                                    'type'    =>  'timestamp',
-                                                    'format'  =>  'Y-m-d H:i:s',
-                                                    'disabled' => false,
-                                                    'options' =>  array()),
-                                'updated' =>  array('name'    =>  'updated_at',
-                                                    'type'    =>  'timestamp',
-                                                    'format'  =>  'Y-m-d H:i:s',
-                                                    'disabled' => false,
-                                                    'onInsert' => true,
-                                                    'options' =>  array()));
-    
+    protected $_options = array('created' =>  array('name'          =>  'created_at',
+                                                    'type'          =>  'timestamp',
+                                                    'format'        =>  'Y-m-d H:i:s',
+                                                    'disabled'      => false,
+                                                    'expression'    => false,
+                                                    'options'       =>  array()),
+                                'updated' =>  array('name'          =>  'updated_at',
+                                                    'type'          =>  'timestamp',
+                                                    'format'        =>  'Y-m-d H:i:s',
+                                                    'disabled'      => false,
+                                                    'expression'    => false,
+                                                    'onInsert'      => true,
+                                                    'options'       =>  array()));
+
     /**
      * __construct
      *
@@ -61,7 +63,7 @@ class Doctrine_Template_Timestampable extends Doctrine_Template
     {
         $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $options);
     }
-    
+
     /**
      * setTableDefinition
      *
