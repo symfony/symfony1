@@ -1,11 +1,4 @@
 autoload:
-  # symfony core
-  symfony:
-    name:           symfony
-    path:           %SF_SYMFONY_LIB_DIR%
-    recursive:      on
-    exclude:        [vendor, plugins]
-
   # plugins
   plugins_lib:
     name:           plugins lib

@@ -32,6 +32,10 @@ require_once(dirname(__FILE__).'/../../lib/util/sfToolkit.class.php');
 $autoload = sfSimpleAutoload::getInstance(sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.sprintf('sf_autoload_unit_%s.data', md5(__FILE__)));
 $autoload->removeCache();
 
+// update sfCoreAutoload
+require_once(dirname(__FILE__).'/../../lib/util/sfCoreAutoload.class.php');
+sfCoreAutoload::make();
+
 // cache autoload files
 require_once($h->base_dir.'/bootstrap/unit.php');
 
