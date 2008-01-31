@@ -118,7 +118,7 @@ class sfCore
    */
   static public function initConfiguration($sf_symfony_lib_dir, $sf_symfony_data_dir, $test = false)
   {
-    require_once($sf_symfony_lib_dir.'/util/sfCoreAutoload.class.php');
+    require_once($sf_symfony_lib_dir.'/autoload/sfCoreAutoload.class.php');
     sfCoreAutoload::getInstance()->register();
 
     // in debug mode, load timer classes and start global timer

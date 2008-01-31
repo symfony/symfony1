@@ -15,7 +15,7 @@
  * of the same class (why?).
  *
  * @package    symfony
- * @subpackage util
+ * @subpackage autoload
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
@@ -42,6 +42,13 @@ class sfSimpleAutoload
     $this->loadCache();
   }
 
+  /**
+   * Retrieves the singleton instance of this class.
+   *
+   * @param  string         The file path to save the cache
+   *
+   * @return sfCoreAutoload A sfCoreAutoload implementation instance.
+   */
   static public function getInstance($cacheFile = null)
   {
     if (!isset(self::$instance))
@@ -52,25 +59,42 @@ class sfSimpleAutoload
     return self::$instance;
   }
 
-  public function register()
+  /**
+   * Register sfSimpleAutoload in spl autoloader.
+   *
+   * @return void
+   */
+  static public function register()
   {
     ini_set('unserialize_callback_func', 'spl_autoload_call');
-    if (!spl_autoload_register(array($this, 'autoload')))
+    if (!spl_autoload_register(array(self::getInstance(), 'autoload')))
     {
-      throw new sfException(sprintf('Unable to register %s::autoload as an autoloading method.', get_class($this)));
+      throw new sfException(sprintf('Unable to register %s::autoload as an autoloading method.', get_class(self::getInstance())));
     }
 
-    if ($this->cacheFile)
+    if (self::getInstance()->cacheFile)
     {
-      register_shutdown_function(array($this, 'saveCache'));
+      register_shutdown_function(array(self::getInstance(), 'saveCache'));
     }
   }
 
-  public function unregister()
+  /**
+   * Unregister sfSimpleAutoload from spl autoloader.
+   *
+   * @return void
+   */
+  static public function unregister()
   {
-    spl_autoload_unregister(array($this, 'autoload'));
+    spl_autoload_unregister(array(self::getInstance(), 'autoload'));
   }
 
+  /**
+   * Handles autoloading of classes.
+   *
+   * @param  string  A class name.
+   *
+   * @return boolean Returns true if the class has been loaded
+   */
   public function autoload($class)
   {
     // class already exists
@@ -90,6 +114,9 @@ class sfSimpleAutoload
     return false;
   }
 
+  /**
+   * Loads the cache.
+   */
   public function loadCache()
   {
     if (!$this->cacheFile || !is_readable($this->cacheFile))
@@ -103,6 +130,9 @@ class sfSimpleAutoload
     $this->cacheChanged = false;
   }
 
+  /**
+   * Saves the cache.
+   */
   public function saveCache()
   {
     if ($this->cacheChanged)
@@ -113,6 +143,9 @@ class sfSimpleAutoload
     }
   }
 
+  /**
+   * Reloads cache.
+   */
   public function reload()
   {
     $this->classes = array();
@@ -132,14 +165,23 @@ class sfSimpleAutoload
     $this->cacheChanged = true;
   }
 
+  /**
+   * Removes the cache.
+   */
   public function removeCache()
   {
     @unlink($this->cacheFile);
   }
 
+  /**
+   * Adds a directory to the autoloading system.
+   *
+   * @param string The directory to look for classes
+   * @param string The extension to look for
+   */
   public function addDirectory($dir, $ext = '.php')
   {
-    require_once(dirname(__FILE__).'/sfFinder.class.php');
+    require_once(dirname(__FILE__).'/../util/sfFinder.class.php');
 
     $finder = sfFinder::type('file')->ignore_version_control()->follow_link()->name('*'.$ext);
     foreach (glob($dir) as $dir)
@@ -161,7 +203,13 @@ class sfSimpleAutoload
     }
   }
 
-  public function addFiles($files, $register = true)
+  /**
+   * Adds files to the autoloading system.
+   *
+   * @param array   An array of files
+   * @param Boolean Whether to register those files as single entities (used when reloading)
+   */
+  public function addFiles(array $files, $register = true)
   {
     foreach ($files as $file)
     {
@@ -169,6 +217,12 @@ class sfSimpleAutoload
     }
   }
 
+  /**
+   * Adds a file to the autoloading system.
+   *
+   * @param string  A file path
+   * @param Boolean Whether to register those files as single entities (used when reloading)
+   */
   public function addFile($file, $register = true)
   {
     if (!is_file($file))

@@ -15,7 +15,7 @@
  * of the same class (why?).
  *
  * @package    symfony
- * @subpackage util
+ * @subpackage autoload
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
@@ -28,10 +28,14 @@ class sfAutoload
     $overriden = array(),
     $classes = array();
 
+  protected function __construct()
+  {
+  }
+
   /**
    * Retrieves the singleton instance of this class.
    *
-   * @return sfAutoload A sfAutoload implementation instance.
+   * @return sfCoreAutoload A sfCoreAutoload implementation instance.
    */
   static public function getInstance()
   {
@@ -48,11 +52,14 @@ class sfAutoload
    *
    * @return void
    */
-  public function register()
+  static public function register()
   {
     ini_set('unserialize_callback_func', 'spl_autoload_call');
 
-    spl_autoload_register(array($this, 'autoload'));
+    if (!spl_autoload_register(array(self::getInstance(), 'autoload')))
+    {
+      throw new sfException(sprintf('Unable to register %s::autoload as an autoloading method.', get_class(self::getInstance())));
+    }
   }
 
   /**
@@ -60,19 +67,11 @@ class sfAutoload
    *
    * @return void
    */
-  public function unregister()
+  static public function unregister()
   {
-    spl_autoload_unregister(array($this, 'autoload'));
+    spl_autoload_unregister(array(self::getInstance(), 'autoload'));
   }
 
-  /**
-   * Sets path to class.
-   *
-   * @param  string  A class name.
-   * @param  string  Path to class.
-   *
-   * @return void
-   */
   public function setClassPath($class, $path)
   {
     $this->overriden[$class] = $path;
@@ -80,25 +79,11 @@ class sfAutoload
     $this->classes[$class] = $path;
   }
 
-  /**
-   * Get path to class.
-   *
-   * @param  string  A class name.
-   *
-   * @return void
-   */
   public function getClassPath($class)
   {
     return isset($this->classes[$class]) ? $this->classes[$class] : null;
   }
 
-  /**
-   * Reloads all registered classes.
-   *
-   * @param  boolean Force delete of autoload cache?
-   *
-   * @return void
-   */
   public function reloadClasses($force = false)
   {
     if ($force)
@@ -139,14 +124,7 @@ class sfAutoload
     return false;
   }
 
-  /**
-   * Reloads a class.
-   *
-   * @param  string  A class name.
-   *
-   * @return boolean Returns true if the class has been loaded
-   */
-  public function autoloadAgain($class)
+  function autoloadAgain($class)
   {
     self::reloadClasses(true);
 

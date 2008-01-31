@@ -18,9 +18,6 @@
  */
 class sfSymfonyCommandApplication extends sfCommandApplication
 {
-  protected
-    $autoloader = null;
-
   /**
    * Configures the current symfony command application.
    *
@@ -39,9 +36,9 @@ class sfSymfonyCommandApplication extends sfCommandApplication
       throw new sfInitializationException('You must pass a "symfony_data_dir" option.');
     }
 
-    require_once($this->options['symfony_lib_dir'].'/util/sfCore.class.php');
-    require_once($this->options['symfony_lib_dir'].'/config/sfConfig.class.php');
-    require_once($this->options['symfony_lib_dir'].'/util/sfSimpleAutoload.class.php');
+    // initialize symfony core autoloading
+    require_once($this->options['symfony_lib_dir'].'/autoload/sfCoreAutoload.class.php');
+    sfCoreAutoload::getInstance()->register();
 
     // application
     $this->setName('symfony');
@@ -83,16 +80,6 @@ class sfSymfonyCommandApplication extends sfCommandApplication
   }
 
   /**
-   * Returns the autoloader object.
-   *
-   * @param object The autoloader object
-   */
-  public function getAutoloader()
-  {
-    return $this->autoloader;
-  }
-
-  /**
    * Initializes the environment variables and include path.
    *
    * @param string The symfony lib directory
@@ -131,16 +118,11 @@ class sfSymfonyCommandApplication extends sfCommandApplication
     }
     else
     {
-      require_once(sfConfig::get('sf_symfony_lib_dir').'/util/sfToolkit.class.php');
       $cache = sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.sprintf('sf_autoload_cmd_%s.data', md5(__FILE__));
     }
 
     $this->autoloader = sfSimpleAutoload::getInstance($cache);
     $this->autoloader->register();
-
-    require_once(sfConfig::get('sf_symfony_lib_dir').'/util/sfFinder.class.php');
-    $finder = sfFinder::type('file')->ignore_version_control()->prune('test')->prune('vendor')->name('*.php');
-    $this->autoloader->addFiles($finder->in(sfConfig::get('sf_symfony_lib_dir')));
     $this->autoloader->addDirectory(sfConfig::get('sf_root_dir').'/plugins');
   }
 

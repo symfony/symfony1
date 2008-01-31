@@ -24,6 +24,10 @@ class sfCoreAutoload
   static protected
     $instance = null;
 
+  protected function __construct()
+  {
+  }
+
   /**
    * Retrieves the singleton instance of this class.
    *
@@ -44,11 +48,13 @@ class sfCoreAutoload
    *
    * @return void
    */
-  public function register()
+  static public function register()
   {
     ini_set('unserialize_callback_func', 'spl_autoload_call');
-
-    spl_autoload_register(array($this, 'autoload'));
+    if (!spl_autoload_register(array(self::getInstance(), 'autoload')))
+    {
+      throw new sfException(sprintf('Unable to register %s::autoload as an autoloading method.', get_class(self::getInstance())));
+    }
   }
 
   /**
@@ -56,13 +62,13 @@ class sfCoreAutoload
    *
    * @return void
    */
-  public function unregister()
+  static public function unregister()
   {
-    spl_autoload_unregister(array($this, 'autoload'));
+    spl_autoload_unregister(array(self::getInstance(), 'autoload'));
   }
 
   /**
-   * Handles autoloading of classes that have been specified in autoload.php.
+   * Handles autoloading of classes.
    *
    * @param  string  A class name.
    *
@@ -80,6 +86,11 @@ class sfCoreAutoload
     return true;
   }
 
+  /**
+   * Rebuilds the association array between class names and paths.
+   *
+   * This method overrides this file (__FILE__)
+   */
   static public function make()
   {
     $libDir = realpath(dirname(__FILE__).'/..');
@@ -98,6 +109,8 @@ class sfCoreAutoload
     file_put_contents(__FILE__, $content);
   }
 
+  // Don't edit this property by hand.
+  // To update it, use sfCoreAutoload::make()
   protected $classes = array (
   'sfAction' => 'action',
   'sfActions' => 'action',
@@ -107,6 +120,9 @@ class sfCoreAutoload
   'sfComponents' => 'action',
   'sfData' => 'addon',
   'sfPager' => 'addon',
+  'sfAutoload' => 'autoload',
+  'sfCoreAutoload' => 'autoload',
+  'sfSimpleAutoload' => 'autoload',
   'sfAPCCache' => 'cache',
   'sfCache' => 'cache',
   'sfEAcceleratorCache' => 'cache',
@@ -306,21 +322,17 @@ class sfCoreAutoload
   'sfBasicSecurityUser' => 'user',
   'sfSecurityUser' => 'user',
   'sfUser' => 'user',
-  'sfAutoload' => 'util',
   'sfBrowser' => 'util',
   'sfCallable' => 'util',
   'sfContext' => 'util',
   'sfCore' => 'util',
-  'sfCoreAutoload' => 'util',
   'sfDomCssSelector' => 'util',
   'sfFinder' => 'util',
   'sfInflector' => 'util',
   'sfNamespacedParameterHolder' => 'util',
   'sfParameterHolder' => 'util',
-  'sfSimpleAutoload' => 'util',
   'sfToolkit' => 'util',
   'sfYaml' => 'util',
-  'sfYamlAlternative' => 'util',
   'sfYamlInline' => 'util',
   'Spyc' => 'util',
   'sfValidatorI18nChoiceCountry' => 'validator/i18n',
