@@ -34,7 +34,6 @@ class sfCoreAutoload
     if (!isset(self::$instance))
     {
       self::$instance = new sfCoreAutoload();
-      self::$instance->classes = include(dirname(__FILE__).'/autoload.php');
     }
 
     return self::$instance;
