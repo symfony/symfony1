@@ -220,7 +220,7 @@ class sfCultureInfo
    */
   protected static function dataDir()
   {
-    return sfConfig::get('sf_symfony_data_dir').'/i18n/';
+    return dirname(__FILE__).'/data/';
   }
 
   /**
