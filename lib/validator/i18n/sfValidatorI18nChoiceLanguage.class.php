@@ -23,8 +23,8 @@ class sfValidatorI18nChoiceLanguage extends sfValidatorChoice
    *
    * Available options:
    *
-   *  * culture:  The culture to use for internationalized strings (required)
-   *  * language: An array of language codes to use (ISO 639-1)
+   *  * culture:   The culture to use for internationalized strings (required)
+   *  * languages: An array of language codes to use (ISO 639-1)
    *
    * @see sfValidatorChoice
    */
