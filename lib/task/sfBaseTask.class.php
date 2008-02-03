@@ -16,7 +16,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-abstract class sfBaseTask extends sfTask
+abstract class sfBaseTask extends sfCommandApplicationTask
 {
   /**
    * @see sfTask
