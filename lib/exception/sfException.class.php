@@ -110,7 +110,7 @@ class sfException extends Exception
     {
       $file = sfConfig::get('sf_web_dir').'/errors/error500.php';
 
-      include is_readable($file) ? $file : sfConfig::get('sf_symfony_data_dir').'/web/errors/error500.php';
+      include is_readable($file) ? $file : dirname(__FILE__).'/data/error500.php';
 
       return;
     }
