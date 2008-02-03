@@ -13,22 +13,13 @@ if (!isset($sf_symfony_lib_dir))
   die("You must launch symfony command line with the symfony script\n");
 }
 
-require_once($sf_symfony_lib_dir.'/command/sfCommandApplication.class.php');
-require_once($sf_symfony_lib_dir.'/command/sfSymfonyCommandApplication.class.php');
-require_once($sf_symfony_lib_dir.'/log/sfLogger.class.php');
-require_once($sf_symfony_lib_dir.'/log/sfConsoleLogger.class.php');
-require_once($sf_symfony_lib_dir.'/command/sfCommandLogger.class.php');
-require_once($sf_symfony_lib_dir.'/command/sfFormatter.class.php');
-require_once($sf_symfony_lib_dir.'/command/sfAnsiColorFormatter.class.php');
-require_once($sf_symfony_lib_dir.'/event/sfEvent.class.php');
-require_once($sf_symfony_lib_dir.'/event/sfEventDispatcher.class.php');
+require_once($sf_symfony_lib_dir.'/autoload/sfCoreAutoload.class.php');
+sfCoreAutoload::register();
 
 try
 {
   $dispatcher = new sfEventDispatcher();
-
   $logger = new sfCommandLogger($dispatcher);
-
   $options = array(
     'symfony_lib_dir' => $sf_symfony_lib_dir,
     'symfony_data_dir' => $sf_symfony_data_dir,
