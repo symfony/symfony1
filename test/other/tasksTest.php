@@ -107,6 +107,7 @@ $t->is($content, $c->get_fixture_content('test/functional/result.txt'), '"test:f
 
 $content = $c->execute_command('test:functional frontend');
 $t->is($content, $c->get_fixture_content('test/functional/result-harness.txt'), '"test:functional" can launch all functional tests');
+exit();
 
 copy(dirname(__FILE__).'/fixtures/test/unit/testTest.php', $c->tmp_dir.DS.'test'.DS.'unit'.DS.'testTest.php');
 

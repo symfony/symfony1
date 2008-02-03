@@ -132,7 +132,7 @@ class sfException extends Exception
       $globalsTable  = self::formatArrayAsHtml(sfDebug::globalsAsArray());
     }
 
-    include sfConfig::get('sf_symfony_data_dir').'/data/exception.'.($format == 'html' ? 'php' : 'txt');
+    include dirname(__FILE__).'/data/exception.'.($format == 'html' ? 'php' : 'txt');
   }
 
   /**
