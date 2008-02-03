@@ -101,6 +101,7 @@ class sfCoreAutoload
       ->prune('plugins')
       ->prune('vendor')
       ->prune('skeleton')
+      ->prune('default')
       ->name('*\.class\.php')
       ->in($libDir)
     ;

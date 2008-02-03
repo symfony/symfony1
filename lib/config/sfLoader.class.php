@@ -58,7 +58,7 @@ class sfLoader
       $dirs = array_merge($dirs, array_combine($pluginDirs, array_fill(0, count($pluginDirs), true))); // plugins
     }
 
-    $dirs[sfConfig::get('sf_symfony_data_dir').'/modules/'.$suffix] = true;                            // core modules
+    $dirs[sfConfig::get('sf_symfony_lib_dir').'/controller/'.$suffix] = true;                          // core modules
 
     return $dirs;
   }
@@ -87,7 +87,7 @@ class sfLoader
       $dirs = array_merge($dirs, $pluginDirs);                                       // plugins
     }
 
-    $dirs[] = sfConfig::get('sf_symfony_data_dir').'/modules/'.$suffix;              // core modules
+    $dirs[] = sfConfig::get('sf_symfony_lib_dir').'/controller/'.$suffix;            // core modules
     $dirs[] = sfConfig::get('sf_module_cache_dir').'/auto'.ucfirst($suffix);         // generated templates in cache
 
     return $dirs;
