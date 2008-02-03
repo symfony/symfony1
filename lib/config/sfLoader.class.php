@@ -282,8 +282,7 @@ class sfLoader
     $globalConfigPath = basename(dirname($configPath)).'/'.basename($configPath);
 
     $files = array(
-      sfConfig::get('sf_symfony_data_dir').'/'.$globalConfigPath,                    // symfony
-      sfConfig::get('sf_symfony_data_dir').'/'.$configPath,                          // core modules
+      sfConfig::get('sf_symfony_lib_dir').'/config/'.$globalConfigPath,              // symfony
     );
 
     if ($bundledPluginDirs = glob(sfConfig::get('sf_symfony_lib_dir').'/plugins/*/'.$globalConfigPath))
