@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -13,7 +13,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 $t = new lime_test(90, new lime_output_color());
 
 $t->diag('i18n data');
-$en = unserialize(file_get_contents(dirname(__FILE__).'/../../../data/i18n/en.dat'));
+$en = unserialize(file_get_contents(dirname(__FILE__).'/../../../lib/i18n/data/en.dat'));
 
 // check main keys
 foreach (array('Countries', 'Currencies', 'Keys', 'Languages', 'LocaleScript', 'NumberPatterns', 'Scripts', 'Types', 'Variants', 'Version', 'calendar', 'zoneStrings') as $entry)
