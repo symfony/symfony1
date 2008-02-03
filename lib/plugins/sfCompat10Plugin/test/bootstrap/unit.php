@@ -12,7 +12,6 @@ $_test_dir = realpath(dirname(__FILE__).'/..');
 require_once($_test_dir.'/../../../vendor/lime/lime.php');
 require_once($_test_dir.'/../../../config/sfConfig.class.php');
 sfConfig::set('sf_symfony_lib_dir', realpath($_test_dir.'/../lib'));
-sfConfig::set('sf_symfony_data_dir', realpath($_test_dir.'/../data'));
 
 require_once(dirname(__FILE__).'/../../../../autoload/sfSimpleAutoload.class.php');
 require_once(dirname(__FILE__).'/../../../../util/sfToolkit.class.php');
