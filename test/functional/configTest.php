@@ -62,7 +62,7 @@ function get_config_dirs($configPath)
 function strip_paths($f)
 {
   $f = str_replace(
-    array(sfConfig::get('sf_symfony_data_dir'), sfConfig::get('sf_root_dir'), DIRECTORY_SEPARATOR),
+    array(sfConfig::get('sf_symfony_lib_dir').'/config', sfConfig::get('sf_root_dir'), DIRECTORY_SEPARATOR),
     array('SYMFONY', 'PROJECT', '/'),
     $f);
 
