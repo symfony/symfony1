@@ -281,6 +281,8 @@ class sfCoreAutoload
   'sfGenerateModuleTask' => 'task/generator',
   'sfGenerateProjectTask' => 'task/generator',
   'sfGeneratorBaseTask' => 'task/generator',
+  'myUser' => 'task/generator/skeleton/app/app/lib',
+  'actions' => 'task/generator/skeleton/module/module/actions',
   'sfCommandApplicationTask' => 'task/help',
   'sfHelpTask' => 'task/help',
   'sfListTask' => 'task/help',

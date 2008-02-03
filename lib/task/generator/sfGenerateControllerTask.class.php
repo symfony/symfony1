@@ -78,7 +78,7 @@ EOF;
       'DEBUG'           => (boolean) $options['debug'],
     );
 
-    $this->filesystem->copy(sfConfig::get('sf_symfony_data_dir').'/skeleton/controller/controller.php', sfConfig::get('sf_web_dir').'/'.$controller.'.php');
+    $this->filesystem->copy(dirname(__FILE__).'/skeleton/controller/controller.php', sfConfig::get('sf_web_dir').'/'.$controller.'.php');
     $this->filesystem->replaceTokens(sfConfig::get('sf_web_dir').DIRECTORY_SEPARATOR.$controller.'.php', '##', '##', $constants);
   }
 }
