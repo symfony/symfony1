@@ -168,7 +168,7 @@ class sfCore
     {
       // application is not available
       $file = sfConfig::get('sf_web_dir').'/errors/unavailable.php';
-      include(is_readable($file) ? $file : sfConfig::get('sf_symfony_data_dir').'/web/errors/unavailable.php');
+      include(is_readable($file) ? $file : sfConfig::get('sf_symfony_lib_dir').'/exception/data/unavailable.php');
 
       die(1);
     }
