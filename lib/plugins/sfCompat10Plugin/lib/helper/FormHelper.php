@@ -662,7 +662,8 @@ function input_date_tag($name, $value = null, $options = array())
   $langFile = sfConfig::get('sf_calendar_web_dir').'/lang/calendar-'.strtolower(substr($culture, 0, 2));
   $jss = array(
     sfConfig::get('sf_calendar_web_dir').'/calendar',
-    is_readable(sfConfig::get('sf_symfony_data_dir').'/web/'.$langFile.'.js') || is_readable(sfConfig::get('sf_web_dir').'/'.$langFile.'.js') ? $langFile : sfConfig::get('sf_calendar_web_dir').'/lang/calendar-en',
+    sfConfig::get('sf_calendar_web_dir').'/lang/calendar-en',
+    $langFile,
     sfConfig::get('sf_calendar_web_dir').'/calendar-setup',
   );
   foreach ($jss as $js)
