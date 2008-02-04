@@ -16,7 +16,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfProjectUnfreezeTask extends sfCommandApplicationTask
+class sfProjectUnfreezeTask extends sfBaseTask
 {
   /**
    * @see sfTask
@@ -57,7 +57,6 @@ EOF;
     $this->filesystem->remove(sfConfig::get('sf_lib_dir').'/symfony');
     $this->filesystem->remove($finder->in(sfConfig::get('sf_data_dir').'/symfony'));
     $this->filesystem->remove(sfConfig::get('sf_data_dir').'/symfony');
-    $this->filesystem->remove('symfony.php');
     $this->filesystem->remove($finder->in(sfConfig::get('sf_web_dir').'/sf'));
     $this->filesystem->remove(sfConfig::get('sf_web_dir').'/sf');
    }

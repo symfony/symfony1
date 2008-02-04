@@ -16,7 +16,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfProjectFreezeTask extends sfCommandApplicationTask
+class sfProjectFreezeTask extends sfBaseTask
 {
   /**
    * @see sfTask
@@ -87,9 +87,6 @@ EOF;
     // change symfony paths in config/config.php
     file_put_contents('config/config.php.bak', $symfony_lib_dir);
     $this->changeSymfonyDirs("dirname(__FILE__).'/../lib/symfony'");
-
-    // install the command line
-    $this->filesystem->copy($symfony_data_dir.'/bin/symfony.php', 'symfony.php');
   }
 
   protected function changeSymfonyDirs($symfony_lib_dir)
