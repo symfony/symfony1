@@ -282,46 +282,45 @@ class sfConfigCache
 
     // module level configuration handlers
 
-    // make sure our modules directory exists
-    if (is_readable($sf_app_module_dir = sfConfig::get('sf_app_module_dir')))
+    // checks modules directory exists
+    if (!is_readable($sf_app_modules_dir = sfConfig::get('sf_app_modules_dir')))
     {
-      // ignore names
-      $ignore = array('.', '..', 'CVS', '.svn');
+      return;
+    }
 
-      // create a file pointer to the module dir
-      $fp = opendir($sf_app_module_dir);
+    // ignore names
+    $ignore = array('.', '..', 'CVS', '.svn');
 
-      // loop through the directory and grab the modules
-      while (($directory = readdir($fp)) !== false)
+    // create a file pointer to the module dir
+    $fp = opendir($sf_app_modules_dir);
+
+    // loop through the directory and grab the modules
+    while (($directory = readdir($fp)) !== false)
+    {
+      if (in_array($directory, $ignore))
       {
-        if (!in_array($directory, $ignore))
-        {
-          $configPath = $sf_app_module_dir.'/'.$directory.'/'.sfConfig::get('sf_app_module_config_dir_name').'/config_handlers.yml';
-
-          if (is_readable($configPath))
-          {
-            // initialize the root configuration handler with this module name
-            $params = array('module_level' => true, 'module_name' => $directory);
-
-            $this->handlers['config_handlers.yml']->initialize($params);
-
-            // replace module dir path with a special keyword that
-            // checkConfig knows how to use
-            $configPath = sfConfig::get('sf_app_module_dir_name').'/'.$directory.'/'.sfConfig::get('sf_app_module_config_dir_name').'/config_handlers.yml';
-
-            require_once($this->checkConfig($configPath));
-          }
-        }
+        continue;
       }
 
-      // close file pointer
-      fclose($fp);
+      $configPath = $sf_app_modules_dir.'/'.$directory.'/'.sfConfig::get('sf_app_module_config_dir_name').'/config_handlers.yml';
+
+      if (is_readable($configPath))
+      {
+        // initialize the root configuration handler with this module name
+        $params = array('module_level' => true, 'module_name' => $directory);
+
+        $this->handlers['config_handlers.yml']->initialize($params);
+
+        // replace module dir path with a special keyword that
+        // checkConfig knows how to use
+        $configPath = sfConfig::get('sf_app_modules_dir_name').'/'.$directory.'/'.sfConfig::get('sf_app_module_config_dir_name').'/config_handlers.yml';
+
+        require_once($this->checkConfig($configPath));
+      }
     }
-    else
-    {
-      // module directory doesn't exist or isn't readable
-      throw new sfConfigurationException(sprintf('Module directory "%s" does not exist or is not readable.', sfConfig::get('sf_app_module_dir')));
-    }
+
+    // close file pointer
+    fclose($fp);
   }
 
   /**
