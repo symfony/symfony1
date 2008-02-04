@@ -162,15 +162,15 @@ EOF;
   protected function safeCacheRemove($finder, $subDir, $lockName)
   {
     // create a lock file
-    $this->filesystem->touch(sfConfig::get('sf_root_dir').'/'.$lockName.'.lck');
+    $this->filesystem->touch(sfConfig::get('sf_cache_dir').'/'.$lockName.'.lck');
 
     // change mode so the web user can remove it if we die
-    $this->filesystem->chmod(sfConfig::get('sf_root_dir').'/'.$lockName.'.lck', 0777);
+    $this->filesystem->chmod(sfConfig::get('sf_cache_dir').'/'.$lockName.'.lck', 0777);
 
     // remove cache files
     $this->filesystem->remove($finder->in(sfConfig::get('sf_root_dir').'/'.$subDir));
 
     // release lock
-    $this->filesystem->remove(sfConfig::get('sf_root_dir').'/'.$lockName.'.lck');
+    $this->filesystem->remove(sfConfig::get('sf_cache_dir').'/'.$lockName.'.lck');
   }
 }

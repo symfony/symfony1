@@ -119,7 +119,7 @@ EOF;
     if (!$rotateOn || ($rotateOn == $today) || $override)
     {
       // create a lock file
-      touch(sfConfig::get('sf_root_dir').'/'.$app.'_'.$env.'.lck');
+      touch(sfConfig::get('sf_cache_dir').'/'.$app.'_'.$env.'.lck');
 
       // if log file exists rotate it
       if (file_exists($srcLog))

@@ -162,7 +162,7 @@ class sfCore
    */
   static public function checkLock()
   {
-    if (sfToolkit::hasLockFile(SF_ROOT_DIR.DIRECTORY_SEPARATOR.SF_APP.'_'.SF_ENVIRONMENT.'.lck', 5))
+    if (sfToolkit::hasLockFile(sfConfig::get('sf_cache_dir').DIRECTORY_SEPARATOR.SF_APP.'_'.SF_ENVIRONMENT.'.lck', 5))
     {
       // application is not available
       $file = sfConfig::get('sf_web_dir').'/errors/unavailable.php';
