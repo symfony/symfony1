@@ -78,7 +78,6 @@ EOF;
     // Update config/config.php
     $this->filesystem->replaceTokens(sfConfig::get('sf_config_dir').'/config.php', '##', '##', array(
       'SYMFONY_LIB_DIR'  => sfConfig::get('sf_symfony_lib_dir'),
-      'SYMFONY_DATA_DIR' => sfConfig::get('sf_symfony_data_dir'),
     ));
 
     $fixPerms = new sfProjectPermissionsTask($this->dispatcher, $this->formatter);

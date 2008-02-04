@@ -16,13 +16,17 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfProjectFreezeTask extends sfBaseTask
+class sfProjectFreezeTask extends sfCommandApplicationTask
 {
   /**
    * @see sfTask
    */
   protected function configure()
   {
+    $this->addArguments(array(
+      new sfCommandArgument('symfony_data_dir', sfCommandArgument::REQUIRED, 'The symfony data directory'),
+    ));
+
     $this->aliases = array('freeze');
     $this->namespace = 'project';
     $this->name = 'freeze';
@@ -44,7 +48,7 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    // Check that the symfony librairies are not already freeze for this project
+    // check that the symfony librairies are not already freeze for this project
     if (is_readable(sfConfig::get('sf_lib_dir').'/symfony'))
     {
       throw new sfCommandException('You can only freeze when lib/symfony is empty.');
@@ -66,7 +70,7 @@ EOF;
     }
 
     $symfony_lib_dir  = sfConfig::get('sf_symfony_lib_dir');
-    $symfony_data_dir = sfConfig::get('sf_symfony_data_dir');
+    $symfony_data_dir = $arguments['symfony_data_dir'];
 
     $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('freeze', 'freezing lib found in "'.$symfony_lib_dir.'"'))));
     $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('freeze', 'freezing data found in "'.$symfony_data_dir.'"'))));
@@ -80,19 +84,18 @@ EOF;
 
     $this->filesystem->rename(sfConfig::get('sf_data_dir').'/symfony/web/sf', sfConfig::get('sf_web_dir').'/sf');
 
-    // Change symfony paths in config/config.php
-    file_put_contents('config/config.php.bak', "$symfony_lib_dir#$symfony_data_dir");
-    $this->changeSymfonyDirs("dirname(__FILE__).'/../lib/symfony'", "dirname(__FILE__).'/../data/symfony'");
+    // change symfony paths in config/config.php
+    file_put_contents('config/config.php.bak', $symfony_lib_dir);
+    $this->changeSymfonyDirs("dirname(__FILE__).'/../lib/symfony'");
 
-    // Install the command line
+    // install the command line
     $this->filesystem->copy($symfony_data_dir.'/bin/symfony.php', 'symfony.php');
   }
 
-  protected function changeSymfonyDirs($symfony_lib_dir, $symfony_data_dir)
+  protected function changeSymfonyDirs($symfony_lib_dir)
   {
     $content = file_get_contents('config/config.php');
     $content = preg_replace("/^(\s*.sf_symfony_lib_dir\s*=\s*).+?;/m", "$1$symfony_lib_dir;", $content);
-    $content = preg_replace("/^(\s*.sf_symfony_data_dir\s*=\s*).+?;/m", "$1$symfony_data_dir;", $content);
     file_put_contents('config/config.php', $content);
   }
 }

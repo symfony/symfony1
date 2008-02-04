@@ -3,7 +3,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -17,17 +17,15 @@ if (file_exists('config/config.php'))
 
 if (!isset($sf_symfony_lib_dir))
 {
-  if (is_readable(dirname(__FILE__).'/../../lib/util/sfCore.class.php'))
+  if (is_readable(dirname(__FILE__).'/../../lib/autoload/sfCoreAutoload.class.php'))
   {
     // SVN
     $sf_symfony_lib_dir  = realpath(dirname(__FILE__).'/../../lib');
-    $sf_symfony_data_dir = realpath(dirname(__FILE__).'/..');
   }
   else
   {
     // PEAR
     $sf_symfony_lib_dir  = '@PEAR-DIR@/symfony';
-    $sf_symfony_data_dir = '@DATA-DIR@/symfony';
 
     if (!is_dir($sf_symfony_lib_dir))
     {
@@ -36,4 +34,4 @@ if (!isset($sf_symfony_lib_dir))
   }
 }
 
-include($sf_symfony_data_dir.'/bin/symfony.php');
+include($sf_symfony_lib_dir.'/command/cli.php');

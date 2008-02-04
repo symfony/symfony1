@@ -9,36 +9,47 @@ WARNING: symfony 1.1 is only compatible with PHP > 5.1.
 How to upgrade?
 ---------------
 
-To upgrade a project, you first need to upgrade symfony via PEAR or
-change your `config/config.php` to update the symfony directory.
+To upgrade a project:
 
-Then, you can launch the following task from your project directory to
-perform an automatic upgrade:
+  * Upgrade symfony via PEAR or change your `config/config.php`
+    to update the symfony directory.
 
-  ./symfony project:upgrade1.1
+  * Update the `symfony` file located in the project root directory
+    by changing the line:
 
-This task can be launched several times without any side effect. Each time
-you upgrade to a new symfony 1.1 beta / RC or the final symfony 1.1, you
-need to launch this task.
+        include($sf_symfony_data_dir.'/bin/symfony.php');
 
-If you don't plan to upgrade the validation system or all your helpers to
-the new system, you must enable the compatibility mode in `settings.yml`:
+    to
 
-  [yml]
-  all:
-    .settings:
-      compat_10: on
+        include($sf_symfony_lib_dir.'/command/cli.php');
 
-Here is a list of the things that will be enabled when switching to the
-compatibility mode (see the bundled `sfCompat10Plugin` plugin for
-more information):
+  * Launch the `project:upgrade1.1` task from your project directory
+    to perform an automatic upgrade:
 
-  * Zend Framework and ezComponents bridges
-  * sfProcessCache
-  * validation system (validate.yml, validator classes, ...)
-  * fill in filter
-  * helpers
-  * sfMail with phpmailer
+        $ ./symfony project:upgrade1.1
+
+    This task can be launched several times without any side effect. Each time
+    you upgrade to a new symfony 1.1 beta / RC or the final symfony 1.1, you
+    need to launch this task.
+
+  * If you don't plan to upgrade the validation system or all your helpers to
+    the new system, you must enable the compatibility mode in `settings.yml`:
+
+        [yml]
+        all:
+          .settings:
+            compat_10: on
+
+    Here is a list of the things that will be enabled when switching to the
+    compatibility mode (see the bundled `sfCompat10Plugin` plugin for
+    more information):
+
+      * Zend Framework and ezComponents bridges
+      * sfProcessCache
+      * validation system (validate.yml, validator classes, ...)
+      * fill in filter
+      * helpers
+      * sfMail with phpmailer
 
 The remaining sections explains backward incompatible changes.
 
@@ -47,15 +58,15 @@ Flash attributes
 
 Flash attributes are now managed directly by `sfUser`. New usage:
 
-  [php]
-  // action
-  $this->getUser()->setFlash('notice', 'foo');
-  $notice = $this->getUser()->getFlash('notice');
+    [php]
+    // action
+    $this->getUser()->setFlash('notice', 'foo');
+    $notice = $this->getUser()->getFlash('notice');
 
-  // template
-  <?php $sf_user->hasFlash('notice'): ?>
-    <?php echo $sf_user->getFlash('notice') ?>
-  <?php endif; ?>
+    // template
+    <?php $sf_user->hasFlash('notice'): ?>
+      <?php echo $sf_user->getFlash('notice') ?>
+    <?php endif; ?>
 
 The `flash` entry in `filters.yml` must be removed too as the `sfFlashFilter`
 was removed.
@@ -72,9 +83,9 @@ The following methods of `sfComponent` have been removed:
 
 They are accessible from `sfController`:
 
-  [php]
-  // action
-  $this->getController()->getPresentationFor(...);
+    [php]
+    // action
+    $this->getController()->getPresentationFor(...);
 
 The `project:upgrade1.1` task makes all those changes for you.
 
@@ -87,20 +98,21 @@ not singletons.
 If you want to get one of those objects in your code, they are
 available from `sfContext`:
 
-  [php]
-  sfContext::getInstance()->getI18N()
-  sfContext::getInstance()->getRouting()
-  sfContext::getInstance()->getLogger()
+    [php]
+    sfContext::getInstance()->getI18N()
+    sfContext::getInstance()->getRouting()
+    sfContext::getInstance()->getLogger()
 
 Routing
 ~~~~~~~
 
 Here is the default configuration for the routing in `factories.yml`:
 
-  routing:
-    class: sfPatternRouting
-    param:
-      load_configuration: true
+    [yml]
+    routing:
+      class: sfPatternRouting
+      param:
+        load_configuration: true
 
 The `project:upgrade1.1` task makes all the changes for you.
 
@@ -109,20 +121,21 @@ Logging
 
 Here is the default configuration for logging in `factories.yml`:
 
-  logger:
-    class: sfAggregateLogger
-    param:
-      level: debug
-      loggers:
-        sf_web_debug:
-          class: sfWebDebugLogger
-          param:
-            condition: %SF_WEB_DEBUG%
-            xdebug_logging: true
-        sf_file_debug:
-          class: sfFileLogger
-          param:
-            file: %SF_LOG_DIR%/%SF_APP%_%SF_ENVIRONMENT%.log
+    [yml]
+    logger:
+      class: sfAggregateLogger
+      param:
+        level: debug
+        loggers:
+          sf_web_debug:
+            class: sfWebDebugLogger
+            param:
+              condition: %SF_WEB_DEBUG%
+              xdebug_logging: true
+          sf_file_debug:
+            class: sfFileLogger
+            param:
+              file: %SF_LOG_DIR%/%SF_APP%_%SF_ENVIRONMENT%.log
 
 The `logging.yml` configuration file is not used anymore.
 Instead, you can configure logging in `factories.yml`.
@@ -130,19 +143,21 @@ Instead, you can configure logging in `factories.yml`.
 To disable logging in the production environment, you will have to change
 your application `factories.yml`:
 
-  prod:
-    logger:
-      class:   sfNoLogger
-      param:
-        level:   err
-        loggers: ~
+    [yml]
+    prod:
+      logger:
+        class:   sfNoLogger
+        param:
+          level:   err
+          loggers: ~
 
 There is also a new `logging_enabled` setting in `settings.yml`.
 This can be used to prevent logging in the production environment altogether:
 
-  prod:
-    .settings:
-      logging_enabled: off
+    [yml]
+    prod:
+      .settings:
+        logging_enabled: off
 
 The `project:upgrade1.1` task makes all those changes for you.
 
@@ -151,31 +166,33 @@ i18n
 
 Here is the default configuration for i18n in `factories.yml`:
 
-  i18n:
-    class: sfI18N
-    param:
-      source:              XLIFF
-      debug:               off
-      untranslated_prefix: "[T]"
-      untranslated_suffix: "[/T]"
-      cache:
-        class: sfFileCache
-        param:
-          automatic_cleaning_factor: 0
-          cache_dir:                 %SF_I18N_CACHE_DIR%
-          lifetime:                  86400
-          prefix:                    %SF_APP_DIR%
+    [yml]
+    i18n:
+      class: sfI18N
+      param:
+        source:              XLIFF
+        debug:               off
+        untranslated_prefix: "[T]"
+        untranslated_suffix: "[/T]"
+        cache:
+          class: sfFileCache
+          param:
+            automatic_cleaning_factor: 0
+            cache_dir:                 %SF_I18N_CACHE_DIR%
+            lifetime:                  86400
+            prefix:                    %SF_APP_DIR%
 
 The `i18n.yml` configuration file is not used anymore.
 Instead, you can configure i18n in `factories.yml`.
 
-The only exception is the `default_culture` setting which is now configurable in `settings.yml`
-and do not depend on the i18n framework anymore:
+The only exception is the `default_culture` setting which is now configurable
+in `settings.yml` and do not depend on the i18n framework anymore:
 
   default_culture: en
 
-If your project has some specific settings, you must move your current configuration from the `i18n.yml` to
-the `factories.yml` and add the default culture in `settings.yml` as shown above.
+If your project has some specific settings, you must move your current
+configuration from the `i18n.yml` to the `factories.yml` and add the default
+culture in `settings.yml` as shown above.
 
 Cache Framework
 ---------------
@@ -198,66 +215,66 @@ The `autoloading_function` setting in `settings.yml` is not used anymore.
 You can register autoloading callables in the application `config.php`.
 Here is the new default `config.php`:
 
-  [php]
-  <?php
+    [php]
+    <?php
+    
+    // include project configuration
+    include(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
+    
+    // symfony bootstraping
+    require_once($sf_symfony_lib_dir.'/util/sfCore.class.php');
+    sfCore::bootstrap($sf_symfony_lib_dir, $sf_symfony_data_dir);
+    
+    // insert your own autoloading callables here
+    
+    if (sfConfig::get('sf_debug'))
+    {
+      spl_autoload_register(array('sfAutoload', 'autoloadAgain'));
+    }
 
-  // include project configuration
-  include(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
-
-  // symfony bootstraping
-  require_once($sf_symfony_lib_dir.'/util/sfCore.class.php');
-  sfCore::bootstrap($sf_symfony_lib_dir, $sf_symfony_data_dir);
-
-  // insert your own autoloading callables here
-
-  if (sfConfig::get('sf_debug'))
-  {
-    spl_autoload_register(array('sfAutoload', 'autoloadAgain'));
-  }
-
-Thanks to the new `sfAutoload::autoloadAgain()` method, you won't need to clear the
-cache when you add or move classes in your project. This method will automatically
-find the changes and flush the autoloading cache.
+Thanks to the new `sfAutoload::autoloadAgain()` method, you won't need to clear
+the cache when you add or move classes in your project. This method will
+automatically find the changes and flush the autoloading cache.
 
 The `project:upgrade1.1` task makes all those changes for you.
 
 VERSION
 -------
 
-The lib/VERSION file has been removed. If you want to get the current symfony version,
-you can use the `sfCore::VERSION` constant.
+The lib/VERSION file has been removed. If you want to get the current symfony
+version, you can use the `sfCore::VERSION` constant.
 
 Routing
 -------
 
-To inject default route parameters, you can now use the `->setDefaultParameter()` method
-instead of using the `sf_routing_defaults` setting:
+To inject default route parameters, you can now use the `->setDefaultParameter()`
+method instead of using the `sf_routing_defaults` setting:
 
-  [php]
-  $this->context->getRouting()->setDefaultParameter($key, $value);
+    [php]
+    $this->context->getRouting()->setDefaultParameter($key, $value);
 
 I18N
 ----
 
 symfony core classes don't return internationalized strings anymore:
 
-  [php]
-  <?php echo __($sf_request->getError('foo')) ?>
+    [php]
+    <?php echo __($sf_request->getError('foo')) ?>
 
 This behavior has changed for the following methods and functions:
 
-  [php]
-  sfWebRequest::getError()
-  sfWebResponse::addMeta()
+    [php]
+    sfWebRequest::getError()
+    sfWebResponse::addMeta()
 
 The following helpers (in sfCompat10Plugin) still return internationalized data:
 
-  [php]
-  form_error()
-  include_metas()
+    [php]
+    form_error()
+    include_metas()
 
-The `getGlobalMessageSource()` and `getGlobalMessageFormat()` methods has been removed
-from the sfI18N class. They are now equivalent to `getMessageSource()` 
+The `getGlobalMessageSource()` and `getGlobalMessageFormat()` methods has been
+removed from the sfI18N class. They are now equivalent to `getMessageSource()` 
 and `getMessageFormat()`.
 
 Logger
@@ -265,8 +282,8 @@ Logger
 
 Logger priorities are now constants:
 
-  [php]
-  sfLogger::INFO
+    [php]
+    sfLogger::INFO
 
 The `project:upgrade1.1` task makes all those changes for you.
 
@@ -325,36 +342,39 @@ now extend the `sfValidatorBase` class.
 `->initialize()` methods
 ------------------------
 
-Most symfony core classes are initialized thanks to a `->initialize()` method. As of symfony 1.1,
-this method is automatically called by `__construct()`, so, there is no need to call it by yourself.
+Most symfony core classes are initialized thanks to a `->initialize()` method.
+As of symfony 1.1, this method is automatically called by `__construct()`,
+so, there is no need to call it by yourself.
 
 Configuration files loading
 ---------------------------
 
 Some core classes can be configured with a `.yml` file:
 
-|| '''Class'''          || '''Configuration file'''         ||
-||                      ||                                  ||
-|| `sfAction`           || `security.yml`                   ||
-|| `sfAutoload`         || `autoload.yml`                   ||
-|| `sfConfigCache`      || `config_handlers.yml`            ||
-|| `sfContext`          || `factories.yml`                  ||
-|| `sfController`       || `generator.yml` and `module.yml` ||
-|| `sfDatabaseManager`  || `databases.yml`                  ||
-|| `sfFilterChain`      || `filters.yml`                    ||
-|| `sfI18N`             || `i18n.yml`                       ||
-|| `sfPatternRouting`   || `routing.yml`                    ||
-|| `sfPHPView`          || `view.yml`                       ||
-|| `sfViewCacheManager` || `cache.yml`                      ||
+ *Class*              | *Configuration file*
+ -------------------- | --------------------------------
+ `sfAction`           | `security.yml`
+ `sfAutoload`         | `autoload.yml`
+ `sfConfigCache`      | `config_handlers.yml`
+ `sfContext`          | `factories.yml`
+ `sfController`       | `generator.yml` and `module.yml`
+ `sfDatabaseManager`  | `databases.yml`
+ `sfFilterChain`      | `filters.yml`
+ `sfI18N`             | `i18n.yml`
+ `sfPatternRouting`   | `routing.yml`
+ `sfPHPView`          | `view.yml`
+ `sfViewCacheManager` | `cache.yml`
 
-In symfony 1.1, the loading of the configuration file for ''independant'' sub-frameworks has been
-moved to a `loadConfiguration()` method to ease decoupling and reuse them without needing the whole framework:
+In symfony 1.1, the loading of the configuration file for ''independant''
+sub-frameworks has been moved to a `loadConfiguration()` method to ease
+decoupling and reuse them without needing the whole framework:
 
   * `sfDatabaseManager`
   * `sfI18N`
   * `sfPatternRouting`
 
-So, for example, if you need a database manager in your batch script, you will have to change from:
+So, for example, if you need a database manager in your batch script,
+you will have to change from:
 
     [php]
     $databaseManager = new sfDatabaseManager();
@@ -372,16 +392,19 @@ Web Debug
 ---------
 
 The `web_debug` entry in `filters.yml` must be removed as the `sfWebDebugFilter`
-has been removed. The web debug toolbar is now injected in the response thanks to a listener.
+has been removed. The web debug toolbar is now injected in the response thanks
+to a listener.
 
 The `project:upgrade1.1` task makes all those changes for you.
 
 Session timeout
 ---------------
 
-The `sf_timeout` setting is not used anymore. To change the session timeout, you now have to edit the
-`factories.yml` instead if the `settings.yml`, and change the parameters of the `user` factory:
+The `sf_timeout` setting is not used anymore. To change the session timeout,
+you now have to edit the `factories.yml` instead if the `settings.yml`,
+and change the parameters of the `user` factory:
 
+    [yml]
     all:
       user:
         class: myUser
@@ -393,13 +416,33 @@ The `sf_timeout` setting is not used anymore. To change the session timeout, you
 
 The `php.yml` configuration file has been removed.
 
-The only setting you will have to check by hand is `log_errors`, which was set to `on` by `php.yml`.
+The only setting you will have to check by hand is `log_errors`, which was set
+to `on` by `php.yml`.
 
-`php.yml` is replaced by the `check_configuration.php` utility you can find in `data/bin`.
-It checks your environment against symfony requirements. You can launch it from anywhere:
+`php.yml` is replaced by the `check_configuration.php` utility you can find
+in `data/bin`. It checks your environment against symfony requirements.
+You can launch it from anywhere:
 
-   $ php /path/to/symfony/data/bin/check_configuration.php
+    $ php /path/to/symfony/data/bin/check_configuration.php
 
-Even if you can use this utility from the command line, it's strongly recommended to launch it
-from the web by copying it under your web root directory as PHP can use different php.ini configuration
-files for the CLI and the web.
+Even if you can use this utility from the command line, it's strongly recommended
+to launch it from the web by copying it under your web root directory as PHP can
+use different php.ini configuration files for the CLI and the web.
+
+`$sf_symfony_data_dir` removal
+------------------------------
+
+In symfony 1.1, `$sf_symfony_data_dir` has been removed. All relevant files and
+directories from the symfony `data` directory have been moved to the `lib`
+directory:
+
+ *Old Location*         | *New Location*
+ ---------------------- | -----------------------------
+ `data/config`          | `lib/config/config`
+ `data/i18n`            | `lib/i18n/data`
+ `data/skeleton`        | `lib/task/generator/skeleton`
+ `data/modules/default` | `lib/controller/default`
+ `data/web/errors`      | `lib/exception/data`
+ `data/exception.*`     | `lib/exception/data`
+
+The symfony core has been upgraded to take these changes into account.

@@ -27,15 +27,14 @@ class sfCore
    * Bootstraps the symfony environment.
    *
    * @param  string The path to the project directory.
-   * @param  mixed  The application name or null.
    *
    * @return void
    */
-  static public function bootstrap($sf_symfony_lib_dir, $sf_symfony_data_dir)
+  static public function bootstrap($sf_symfony_lib_dir)
   {
     try
     {
-      sfCore::initConfiguration($sf_symfony_lib_dir, $sf_symfony_data_dir);
+      sfCore::initConfiguration($sf_symfony_lib_dir);
 
       sfCore::initIncludePath();
 
@@ -116,7 +115,7 @@ class sfCore
    *
    * @return void
    */
-  static public function initConfiguration($sf_symfony_lib_dir, $sf_symfony_data_dir, $test = false)
+  static public function initConfiguration($sf_symfony_lib_dir, $test = false)
   {
     require_once($sf_symfony_lib_dir.'/autoload/sfCoreAutoload.class.php');
     sfCoreAutoload::getInstance()->register();
@@ -131,7 +130,6 @@ class sfCore
     sfConfig::add(array(
       'sf_debug'            => SF_DEBUG,
       'sf_symfony_lib_dir'  => $sf_symfony_lib_dir,
-      'sf_symfony_data_dir' => $sf_symfony_data_dir,
       'sf_test'             => $test,
     ));
 

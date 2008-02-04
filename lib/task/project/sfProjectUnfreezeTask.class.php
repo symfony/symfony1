@@ -16,7 +16,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfProjectUnfreezeTask extends sfBaseTask
+class sfProjectUnfreezeTask extends sfCommandApplicationTask
 {
   /**
    * @see sfTask
@@ -44,14 +44,13 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    // Remove lib/symfony and data/symfony directories
+    // remove lib/symfony and data/symfony directories
     if (!is_dir('lib/symfony'))
     {
       throw new sfCommandException('You can unfreeze only if you froze the symfony libraries before.');
     }
 
-    $dirs = explode('#', file_get_contents('config/config.php.bak'));
-    $this->changeSymfonyDirs('\''.$dirs[0].'\'', '\''.$dirs[1].'\'');
+    $this->changeSymfonyDirs("'".file_get_contents('config/config.php.bak')."'");
 
     $finder = sfFinder::type('any');
     $this->filesystem->remove($finder->in(sfConfig::get('sf_lib_dir').'/symfony'));
@@ -63,11 +62,10 @@ EOF;
     $this->filesystem->remove(sfConfig::get('sf_web_dir').'/sf');
    }
 
-  protected function changeSymfonyDirs($symfony_lib_dir, $symfony_data_dir)
+  protected function changeSymfonyDirs($symfony_lib_dir)
   {
     $content = file_get_contents('config/config.php');
     $content = preg_replace("/^(\s*.sf_symfony_lib_dir\s*=\s*).+?;/m", "$1$symfony_lib_dir;", $content);
-    $content = preg_replace("/^(\s*.sf_symfony_data_dir\s*=\s*).+?;/m", "$1$symfony_data_dir;", $content);
     file_put_contents('config/config.php', $content);
   }
 }
