@@ -67,8 +67,8 @@ class sfConfigCache
       $this->mergeUserConfigHandlers();
     }
 
-    // handler to call for this configuration file
-    $handlerToCall = null;
+    // handler key to call for this configuration file
+    $handlerKey = null;
 
     $handler = str_replace(DIRECTORY_SEPARATOR, '/', $handler);
 
@@ -77,45 +77,59 @@ class sfConfigCache
     if (isset($this->handlers[$handler]))
     {
       // we have a handler associated with the full configuration path
-      $handlerToCall = $this->handlers[$handler];
+      $handlerKey = $handler;
     }
     else if (isset($this->handlers[$basename]))
     {
       // we have a handler associated with the configuration base name
-      $handlerToCall = $this->handlers[$basename];
+      $handlerKey = $basename;
     }
     else
     {
-      // let's see if we have any wildcard handlers registered that match
-      // this basename
-      foreach ($this->handlers as $key => $handlerInstance)
+      // let's see if we have any wildcard handlers registered that match this basename
+      foreach (array_keys($this->handlers) as $key)
       {
         // replace wildcard chars in the configuration
         $pattern = strtr($key, array('.' => '\.', '*' => '.*?'));
 
         // create pattern from config
-        if (preg_match('#'.$pattern.'#', $handler))
+        if (preg_match('#'.$pattern.'$#', $handler))
         {
-          // we found a match!
-          $handlerToCall = $this->handlers[$key];
+          $handlerKey = $key;
 
           break;
         }
       }
     }
 
-    if ($handlerToCall)
-    {
-      // call the handler and retrieve the cache data
-      $data = $handlerToCall->execute($configs);
-
-      $this->writeCacheFile($handler, $cache, $data);
-    }
-    else
+    if (!$handlerKey)
     {
       // we do not have a registered handler for this file
       throw new sfConfigurationException(sprintf('Configuration file "%s" does not have a registered handler.', implode(', ', $configs)));
     }
+
+    // call the handler and retrieve the cache data
+    $data = $this->getHandler($handlerKey)->execute($configs);
+
+    $this->writeCacheFile($handler, $cache, $data);
+  }
+
+  /**
+   * Returns the config handler configured for the given name
+   *
+   * @param  string The config handler name
+   *
+   * @return sfConfigHandler A sfConfigHandler instance
+   */
+  protected function getHandler($name)
+  {
+    if (is_array($this->handlers[$name]))
+    {
+      $class = $this->handlers[$name][0];
+      $this->handlers[$name] = new $class($this->handlers[$name][1]);
+    }
+
+    return $this->handlers[$name];
   }
 
   /**
