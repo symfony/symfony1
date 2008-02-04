@@ -40,12 +40,12 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $this->filesystem->chmod(sfConfig::get('sf_root_dir').DIRECTORY_SEPARATOR.sfConfig::get('sf_cache_dir_name'), 0777);
-    $this->filesystem->chmod(sfConfig::get('sf_root_dir').DIRECTORY_SEPARATOR.sfConfig::get('sf_log_dir_name'), 0777);
-    $this->filesystem->chmod(sfConfig::get('sf_root_dir').DIRECTORY_SEPARATOR.sfConfig::get('sf_web_dir_name').DIRECTORY_SEPARATOR.sfConfig::get('sf_upload_dir_name'), 0777);
+    $this->filesystem->chmod(sfConfig::get('sf_cache_dir'), 0777);
+    $this->filesystem->chmod(sfConfig::get('sf_log_dir'), 0777);
+    $this->filesystem->chmod(sfConfig::get('sf_upload_dir'), 0777);
     $this->filesystem->chmod(sfConfig::get('sf_root_dir').DIRECTORY_SEPARATOR.'symfony', 0777);
 
-    $dirs = array(sfConfig::get('sf_cache_dir_name'), sfConfig::get('sf_web_dir_name').DIRECTORY_SEPARATOR.sfConfig::get('sf_upload_dir_name'), sfConfig::get('sf_log_dir_name'));
+    $dirs = array(sfConfig::get('sf_cache_dir'), sfConfig::get('sf_upload_dir'), sfConfig::get('sf_log_dir'));
     $dirFinder = sfFinder::type('dir')->ignore_version_control();
     $fileFinder = sfFinder::type('file')->ignore_version_control();
     foreach ($dirs as $dir)
