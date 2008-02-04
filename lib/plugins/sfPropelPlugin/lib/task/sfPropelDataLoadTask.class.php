@@ -81,7 +81,7 @@ EOF;
     }
     else
     {
-      if (!$pluginDirs = glob(sfConfig::get('sf_root_dir').'/plugins/*/data'))
+      if (!$pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/data'))
       {
         $pluginDirs = array();
       }

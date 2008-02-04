@@ -113,7 +113,7 @@ class sfSymfonyCommandApplication extends sfCommandApplication
 
     $this->autoloader = sfSimpleAutoload::getInstance($cache);
     $this->autoloader->register();
-    $this->autoloader->addDirectory(sfConfig::get('sf_root_dir').'/plugins');
+    $this->autoloader->addDirectory(sfConfig::get('sf_plugins_dir'));
   }
 
   /**
@@ -126,7 +126,7 @@ class sfSymfonyCommandApplication extends sfCommandApplication
     $dirs = array(
       sfConfig::get('sf_symfony_lib_dir').'/task',                // symfony tasks
       sfConfig::get('sf_symfony_lib_dir').'/plugins/*/lib/task',  // bundled plugin tasks
-      sfConfig::get('sf_root_dir').'/plugins/*/lib/task',         // plugin tasks
+      sfConfig::get('sf_plugins_dir').'/*/lib/task',              // plugin tasks
       sfConfig::get('sf_lib_dir').'/task',                        // project tasks
     );
     $finder = sfFinder::type('file')->name('*Task.class.php');

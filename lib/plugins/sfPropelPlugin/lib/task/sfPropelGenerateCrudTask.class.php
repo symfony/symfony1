@@ -97,7 +97,7 @@ EOF;
     $databaseManager = new sfDatabaseManager();
 
     // generate module
-    $tmpDir = sfConfig::get('sf_root_dir').DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.md5(uniqid(rand(), true));
+    $tmpDir = sfConfig::get('sf_cache_dir').DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.md5(uniqid(rand(), true));
     sfConfig::set('sf_module_cache_dir', $tmpDir);
     $generatorManager = new sfGeneratorManager();
     $generatorManager->generate('sfPropelCrudGenerator', array(
@@ -109,7 +109,7 @@ EOF;
       'with_show'             => $options['with-show'],
     ));
 
-    $moduleDir = sfConfig::get('sf_root_dir').'/'.sfConfig::get('sf_apps_dir_name').'/'.$arguments['application'].'/'.sfConfig::get('sf_app_module_dir_name').'/'.$arguments['module'];
+    $moduleDir = sfConfig::get('sf_apps_dir').'/'.$arguments['application'].'/'.sfConfig::get('sf_app_module_dir_name').'/'.$arguments['module'];
 
     // copy our generated module
     $this->filesystem->mirror($tmpDir.'/auto'.ucfirst($arguments['module']), $moduleDir, sfFinder::type('any'));
@@ -138,7 +138,7 @@ EOF;
 
   protected function executeInit($arguments = array(), $options = array())
   {
-    $moduleDir = sfConfig::get('sf_root_dir').'/'.sfConfig::get('sf_apps_dir_name').'/'.$arguments['application'].'/'.sfConfig::get('sf_app_module_dir_name').'/'.$arguments['module'];
+    $moduleDir = sfConfig::get('sf_apps_dir').'/'.$arguments['application'].'/'.sfConfig::get('sf_app_module_dir_name').'/'.$arguments['module'];
 
     // create basic application structure
     $finder = sfFinder::type('any')->ignore_version_control()->discard('.sf');

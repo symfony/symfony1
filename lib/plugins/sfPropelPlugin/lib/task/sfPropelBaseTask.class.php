@@ -40,8 +40,8 @@ abstract class sfPropelBaseTask extends sfBaseTask
       $autoloader->addDirectory($libDir.'/creole');
       $autoloader->addDirectory($libDir.'/propel');
       $autoloader->addDirectory($libDir.'/task');
-      $autoloader->addDirectory(sfConfig::get('sf_root_dir').'/lib/model');
-      $autoloader->addDirectory(sfConfig::get('sf_root_dir').'/lib/form');
+      $autoloader->addDirectory(sfConfig::get('sf_model_lib_dir'));
+      $autoloader->addDirectory(sfConfig::get('sf_lib_dir').'/form');
       $autoloader->register();
 
       self::$done = true;
@@ -52,7 +52,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
   {
     $finder = sfFinder::type('file')->name('*schema.xml');
 
-    $schemas = array_merge($finder->in('config'), $finder->in(glob(sfConfig::get('sf_root_dir').'/plugins/*/config')));
+    $schemas = array_merge($finder->in('config'), $finder->in(glob(sfConfig::get('sf_plugins_dir').'/*/config')));
     if (self::CHECK_SCHEMA === $checkSchema && !count($schemas))
     {
       throw new sfCommandException('You must create a schema.xml file.');
@@ -86,7 +86,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
   {
     $finder = sfFinder::type('file')->name('*schema.yml');
     $dirs = array('config');
-    if ($pluginDirs = glob(sfConfig::get('sf_root_dir').'/plugins/*/config'))
+    if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/config'))
     {
       $dirs = array_merge($dirs, $pluginDirs);
     }
@@ -122,7 +122,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
 
   protected function copyXmlSchemaFromPlugins($prefix = '')
   {
-    $schemas = sfFinder::type('file')->name('*schema.xml')->in(glob(sfConfig::get('sf_root_dir').'/plugins/*/config'));
+    $schemas = sfFinder::type('file')->name('*schema.xml')->in(glob(sfConfig::get('sf_plugins_dir').'/*/config'));
     foreach ($schemas as $schema)
     {
       // reset local prefix
@@ -179,7 +179,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
     set_include_path(sfConfig::get('sf_symfony_lib_dir').PATH_SEPARATOR.get_include_path());
 
     $options = array(
-      'project.dir'       => sfConfig::get('sf_root_dir').'/config',
+      'project.dir'       => sfConfig::get('sf_config_dir'),
       'build.properties'  => 'propel.ini',
       'propel.output.dir' => sfConfig::get('sf_root_dir'),
     );

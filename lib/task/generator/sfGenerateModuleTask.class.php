@@ -69,7 +69,7 @@ EOF;
     $app       = $arguments['application'];
     $module    = $arguments['module'];
 
-    $moduleDir = sfConfig::get('sf_root_dir').'/'.sfConfig::get('sf_apps_dir_name').'/'.$app.'/'.sfConfig::get('sf_app_module_dir_name').'/'.$module;
+    $moduleDir = sfConfig::get('sf_apps_dir').'/'.$app.'/'.sfConfig::get('sf_app_module_dir_name').'/'.$module;
 
     if (is_dir($moduleDir))
     {

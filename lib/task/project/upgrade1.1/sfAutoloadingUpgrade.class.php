@@ -21,7 +21,7 @@ class sfAutoloadingUpgrade extends sfUpgrade
   public function upgrade()
   {
     $phpFinder = $this->getFinder('file')->name('config.php');
-    foreach ($phpFinder->in(glob(sfConfig::get('sf_root_dir').'/apps/*/config')) as $file)
+    foreach ($phpFinder->in(glob(sfConfig::get('sf_apps_dir').'/*/config')) as $file)
     {
       $content = file_get_contents($file);
       if (false !== strpos($content, 'spl_autoload_register'))

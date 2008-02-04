@@ -74,7 +74,7 @@ EOF;
   {
     $app = $arguments['application'];
 
-    $appDir = sfConfig::get('sf_root_dir').'/'.sfConfig::get('sf_apps_dir_name').'/'.$app;
+    $appDir = sfConfig::get('sf_apps_dir').'/'.$app;
 
     if (is_dir($appDir))
     {
