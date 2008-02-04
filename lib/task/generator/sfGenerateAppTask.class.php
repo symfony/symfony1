@@ -107,6 +107,6 @@ EOF;
     $fixPerms->run();
 
     // Create test dir
-    $this->filesystem->mkdirs(sfConfig::get('sf_root_dir').'/test/functional/'.$app);
+    $this->filesystem->mkdirs(sfConfig::get('sf_test_dir').'/functional/'.$app);
   }
 }

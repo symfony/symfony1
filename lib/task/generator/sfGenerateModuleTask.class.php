@@ -99,10 +99,10 @@ EOF;
     $this->filesystem->mirror($skeletonDir.'/module', $moduleDir, $finder);
 
     // create basic test
-    $this->filesystem->copy($skeletonDir.'/test/actionsTest.php', sfConfig::get('sf_root_dir').'/test/functional/'.$app.'/'.$module.'ActionsTest.php');
+    $this->filesystem->copy($skeletonDir.'/test/actionsTest.php', sfConfig::get('sf_test_dir').'/functional/'.$app.'/'.$module.'ActionsTest.php');
 
     // customize test file
-    $this->filesystem->replaceTokens(sfConfig::get('sf_root_dir').'/test/functional/'.$app.DIRECTORY_SEPARATOR.$module.'ActionsTest.php', '##', '##', $constants);
+    $this->filesystem->replaceTokens(sfConfig::get('sf_test_dir').'/functional/'.$app.DIRECTORY_SEPARATOR.$module.'ActionsTest.php', '##', '##', $constants);
 
     // customize php and yml files
     $finder = sfFinder::type('file')->name('*.php', '*.yml');
