@@ -56,6 +56,18 @@ abstract class sfCommandApplication
   abstract public function configure();
 
   /**
+   * Returns the value of a given option.
+   *
+   * @param  string The option name
+   *
+   * @return mixed  The option value
+   */
+  public function getOption($name)
+  {
+    return isset($this->options[$name]) ? $this->options[$name] : null;
+  }
+
+  /**
    * Returns the formatter instance.
    *
    * @return object The formatter instance
