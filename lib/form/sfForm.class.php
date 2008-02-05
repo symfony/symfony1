@@ -445,7 +445,7 @@ class sfForm implements ArrayAccess
     {
       if (is_null(self::$CSRFSecret))
       {
-        self::$CSRFSecret = md5(__FILE__.php_uname().session_id());
+        self::$CSRFSecret = md5(__FILE__.php_uname());
       }
 
       $secret = self::$CSRFSecret;
