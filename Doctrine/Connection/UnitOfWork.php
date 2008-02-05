@@ -649,8 +649,16 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         $array = $record->getPrepared();
     
         foreach ($table->getColumns() as $columnName => $definition) {
+            if ( ! isset($dataSet[$component])) {
+                $dataSet[$component] = array();
+            }
+            
             $fieldName = $table->getFieldName($columnName);
             if (isset($definition['primary']) && $definition['primary']) {
+                continue;
+            }
+    
+            if ( ! array_key_exists($fieldName, $array)) {
                 continue;
             }
     
@@ -659,7 +667,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
             } else {
                 $dataSet[$component][$fieldName] = $array[$fieldName];
             }
-        }    
+        }
         
         return $dataSet;
     }
