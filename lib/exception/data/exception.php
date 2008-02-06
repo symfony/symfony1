@@ -50,7 +50,7 @@
   <div id="sf_globals" style="display: none"><?php echo $globalsTable ?></div>
 
   <p id="footer">
-    symfony v.<?php echo sfCore::VERSION ?> - php <?php echo PHP_VERSION ?><br />
+    symfony v.<?php echo SYMFONY_VERSION ?> - php <?php echo PHP_VERSION ?><br />
     for help resolving this issue, please visit <a href="http://www.symfony-project.org/">http://www.symfony-project.org/</a>.
   </p>
   </div></center>

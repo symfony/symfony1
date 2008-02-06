@@ -272,7 +272,7 @@ class sfWebDebug
       <div id="sfWebDebugBar" class="sfWebDebug'.ucfirst($maxPriority).'">
         <a href="#" onclick="sfWebDebugToggleMenu(); return false;">'.image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/sf.png').'</a>
         <ul id="sfWebDebugDetails" class="menu">
-          <li>'.sfCore::VERSION.'</li>
+          <li>'.SYMFONY_VERSION.'</li>
           <li><a href="#" onclick="sfWebDebugShowDetailsFor(\'sfWebDebugConfig\'); return false;">'.image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/config.png').' vars &amp; config</a></li>
           '.$cacheLink.'
           '.$logLink.'

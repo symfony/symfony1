@@ -9,6 +9,11 @@
  */
 
 /**
+ * The current symfony version.
+ */
+define('SYMFONY_VERSION', '1.1.0-DEV');
+
+/**
  * sfCoreAutoload class.
  *
  * This class is a singleton as PHP seems to be unable to register 2 autoloaders that are instances

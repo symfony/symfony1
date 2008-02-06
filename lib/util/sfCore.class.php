@@ -19,11 +19,6 @@
 class sfCore
 {
   /**
-   * The current symfony version.
-   */
-  const VERSION = '1.1.0-DEV';
-
-  /**
    * Bootstraps the symfony environment.
    *
    * @param  string The path to the project directory.

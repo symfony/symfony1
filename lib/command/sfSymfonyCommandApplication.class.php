@@ -36,7 +36,7 @@ class sfSymfonyCommandApplication extends sfCommandApplication
 
     // application
     $this->setName('symfony');
-    $this->setVersion(sfCore::VERSION);
+    $this->setVersion(SYMFONY_VERSION);
 
     $this->initializeEnvironment($this->options['symfony_lib_dir']);
     $this->initializeAutoloader();
