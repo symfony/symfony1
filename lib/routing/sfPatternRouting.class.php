@@ -24,7 +24,7 @@ class sfPatternRouting extends sfRouting
 {
   protected
     $currentRouteName       = null,
-    $currentInternalUri     = null,
+    $currentInternalUri     = array(),
     $currentRouteParameters = null,
     $defaultSuffix          = '',
     $routes                 = array();
@@ -65,6 +65,7 @@ class sfPatternRouting extends sfRouting
    *
    * @return string The current internal URI
    */
+
   public function getCurrentInternalUri($withRouteName = false)
   {
     if (is_null($this->currentRouteName))
@@ -72,7 +73,9 @@ class sfPatternRouting extends sfRouting
       return null;
     }
 
-    if (is_null($this->currentInternalUri))
+    $typeId = ($withRouteName) ? 0 : 1;
+
+    if (!isset($this->currentInternalUri[$typeId]))
     {
       $parameters = $this->currentRouteParameters;
 
@@ -120,10 +123,10 @@ class sfPatternRouting extends sfRouting
       // sort to guaranty unicity
       sort($params);
 
-      $this->currentInternalUri = $internalUri.($params ? '?'.implode('&', $params) : '');
+      $this->currentInternalUri[$typeId] = $internalUri.($params ? '?'.implode('&', $params) : '');
     }
 
-    return $this->currentInternalUri;
+    return $this->currentInternalUri[$typeId];
   }
 
   public function setDefaultSuffix($suffix)
@@ -578,7 +581,7 @@ class sfPatternRouting extends sfRouting
         {
           // we store route name
           $this->currentRouteName = $routeName;
-          $this->currentInternalUri = null;
+          $this->currentInternalUri = array();
 
           if ($this->options['logging'])
           {
