@@ -346,4 +346,17 @@ EOF;
     // update current script
     $script .= $tmp;
   }
+  
+  protected function addClassClose(&$script)
+  {
+    parent::addClassClose($script);
+    
+    $behaviors = $this->getTable()->getAttribute('behaviors');
+    if($behaviors)
+    {
+      $behavior_file_name = 'Base'.$this->getTable()->getPhpName().'Behaviors';
+      $behavior_file_path = $this->getFilePath($this->getStubObjectBuilder()->getPackage().'.om.'.$behavior_file_name);
+      $script .= sprintf("\n\ninclude_once '%s';\n", $behavior_file_path);
+    }
+  }
 }

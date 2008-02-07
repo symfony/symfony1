@@ -1,4 +1,48 @@
 propel:
-  some_table:
-    _attributes:    { phpName: SomeTable }
-    somechar:       { type: VARCHAR, size: 255, default: "This & That" }
+  _attributes:      { noXsd: false, defaultIdMethod: none, package: lib.model }
+  ab_group:
+    _attributes:    { phpName: Group, package: foo.bar.lib.model }
+    id:
+    name:           varchar(50)
+    
+  cd_user:
+    _attributes:    { phpName: User, isI18N: true, i18nTable: cd_user_i18n }
+    first_name:     { type: varchar, size: 255, default: "Anonymous" }
+    last_name:      varchar(50)
+    age:            { type: integer, required: true, index: true }
+    ab_group_id:
+    created_at:
+  
+  cd_user_i18n:
+    description:    longvarchar
+    
+  ef_article:
+    title:          { type: longvarchar, required: true, index: unique }
+    stripped_title: { type: longvarchar, required: true, primaryKey: true, sequence: my_custom_sequence_name }
+    user_id:
+    my_group:       { type: integer, foreignTable: ab_group, foreignReference: id, onDelete: setnull }
+    my_other_group: { type: integer, foreignTable: ab_group, foreignReference: id, onDelete: setnull }
+    created_at:     timestamp
+    updated_at:
+
+  ij_article:
+    _attributes:    { phpName: Article }
+    title:          varchar(50)
+    user_id:        { type: integer }
+    _foreignKeys:
+      -
+        foreignTable: cd_user
+        onDelete:     cascade
+        references:
+          - { local: user_id, foreign: id }
+    created_at:
+    _indexes:
+      my_index:       [title, user_id]
+    _uniques:
+      my_other_index: [created_at]
+    _behaviors:
+      paranoid: { column: deleted_at }
+      act_as_nested_set:
+  
+  ab_group_i18n:
+    motto:            longvarchar

@@ -97,9 +97,34 @@ abstract class sfPropelBaseTask extends sfBaseTask
     }
 
     $dbSchema = new sfPropelDatabaseSchema();
+    
     foreach ($schemas as $schema)
     {
-      $dbSchema->loadYAML($schema);
+      $schemaArray = sfYaml::load($schema);
+      
+      if (!isset($schema_array['classes']))
+      {
+        // Old schema syntax: we convert it 
+        $schemaArray = $dbSchema->convertOldToNewYaml($schemaArray);
+      }
+
+      $customSchemaFilename = str_replace(array(sfConfig::get('sf_root_dir').DIRECTORY_SEPARATOR, 'plugins'.DIRECTORY_SEPARATOR, 'config'.DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, 'schema.yml'), array('', '', '', '_', 'schema.custom.yml'), $schema);
+      $customSchemas = sfFinder::type('file')->name($customSchemaFilename)->in($dirs);
+      
+      foreach ($customSchemas as $customSchema)
+      {
+        $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('schema', sprintf('found custom schema %s', $customSchema)))));
+        
+        $customSchemaArray = sfYaml::load($customSchema);
+        if (!isset($customSchemaArray['classes']))
+        {
+          // Old schema syntax: we convert it 
+          $customSchemaArray = $dbSchema->convertOldToNewYaml($customSchemaArray);
+        }
+        $schemaArray = sfToolkit::arrayDeepMerge($schemaArray, $customSchemaArray);
+      }
+
+      $dbSchema->loadArray($schemaArray);
 
       $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('schema', sprintf('converting "%s" to XML', $schema)))));
 

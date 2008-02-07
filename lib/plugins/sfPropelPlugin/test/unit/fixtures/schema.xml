@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="propel" noXsd="false" defaultIdMethod="none" package="lib.model">
+
+  <table name="ab_group" phpName="Group" package="foo.bar.lib.model" isI18N="true" i18nTable="ab_group_i18n">
+    <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+    <column name="name" type="varchar" size="50" />
+  </table>
+
+  <table name="cd_user" phpName="User" isI18N="true" i18nTable="cd_user_i18n">
+    <column name="first_name" type="varchar" size="255" default="Anonymous" />
+    <column name="last_name" type="varchar" size="50" />
+    <column name="age" type="integer" required="true" />
+    <index name="cd_user_age_index">
+      <index-column name="age" />
+    </index>
+    <column name="ab_group_id" type="integer" />
+    <foreign-key foreignTable="ab_group">
+      <reference local="ab_group_id" foreign="id" />
+    </foreign-key>
+    <column name="created_at" type="timestamp" />
+    <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+  </table>
+  
+  <table name="cd_user_i18n">
+    <column name="description" type="longvarchar" />
+    <column name="id" type="integer" required="true" primaryKey="true" />
+    <foreign-key foreignTable="cd_user" onDelete="cascade">
+      <reference local="id" foreign="id" />
+    </foreign-key>
+    <column name="culture" isCulture="true" type="varchar" size="7" required="true" primaryKey="true" />
+  </table>
+
+  <table name="ef_article">
+    <column name="title" type="longvarchar" required="true" />
+    <unique name="ef_article_title_unique">
+      <unique-column name="title" />
+    </unique>
+    <column name="stripped_title" type="longvarchar" required="true" primaryKey="true" />
+    <id-method-parameter value="my_custom_sequence_name" />
+    <column name="user_id" type="integer" />
+    <foreign-key foreignTable="cd_user">
+      <reference local="user_id" foreign="id" />
+    </foreign-key>
+    <column name="my_group" type="integer" />
+    <foreign-key foreignTable="ab_group" onDelete="setnull">
+      <reference local="my_group" foreign="id" />
+    </foreign-key>
+    <column name="my_other_group" type="integer" />
+    <foreign-key foreignTable="ab_group" onDelete="setnull">
+      <reference local="my_other_group" foreign="id" />
+    </foreign-key>
+    <column name="created_at" type="timestamp" />
+    <column name="updated_at" type="timestamp" />
+  </table>
+
+  <table name="ij_article" phpName="Article" behaviors="a:2:{s:8:&quot;paranoid&quot;;a:1:{s:6:&quot;column&quot;;s:10:&quot;deleted_at&quot;;}s:17:&quot;act_as_nested_set&quot;;N;}">
+    <column name="title" type="varchar" size="50" />
+    <column name="user_id" type="integer" />
+    <column name="created_at" type="timestamp" />
+    <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+    <index name="my_index">
+      <index-column name="title" />
+      <index-column name="user_id" />
+    </index>
+    <unique name="my_other_index">
+      <unique-column name="created_at" />
+    </unique>
+    <foreign-key foreignTable="cd_user" onDelete="cascade">
+      <reference local="user_id" foreign="id" />
+    </foreign-key>
+  </table>
+
+  <table name="ab_group_i18n">
+    <column name="motto" type="longvarchar" />
+    <column name="id" type="integer" required="true" primaryKey="true" />
+    <foreign-key foreignTable="ab_group" onDelete="cascade">
+      <reference local="id" foreign="id" />
+    </foreign-key>
+    <column name="culture" isCulture="true" type="varchar" size="7" required="true" primaryKey="true" />
+  </table>
+
+</database>
