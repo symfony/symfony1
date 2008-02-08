@@ -100,7 +100,7 @@ EOF;
         continue;
       }
 
-      $this->log('propel', sprintf('load data from "%s"', $fixturesDir));
+      $this->logSection('propel', sprintf('load data from "%s"', $fixturesDir));
       $data->loadData($fixturesDir, $options['connection']);
     }
   }

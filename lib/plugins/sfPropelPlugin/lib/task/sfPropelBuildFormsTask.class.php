@@ -58,7 +58,7 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $this->log('propel', 'generating form classes');
+    $this->logSection('propel', 'generating form classes');
 
     $generatorManager = new sfGeneratorManager();
 

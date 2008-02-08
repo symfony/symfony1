@@ -63,7 +63,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
     {
       $dbSchema->loadXML($schema);
 
-      $this->log('schema', sprintf('converting "%s" to YML', $schema));
+      $this->logSection('schema', sprintf('converting "%s" to YML', $schema));
 
       $localprefix = $prefix;
 
@@ -77,7 +77,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
       $yml_file_name = str_replace('.xml', '.yml', basename($schema));
 
       $file = str_replace(basename($schema), $prefix.$yml_file_name,  $schema);
-      $this->log('schema', sprintf('putting %s', $file));
+      $this->logSection('schema', sprintf('putting %s', $file));
       file_put_contents($file, $dbSchema->asYAML());
     }
   }
@@ -113,7 +113,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
       
       foreach ($customSchemas as $customSchema)
       {
-        $this->log('schema', sprintf('found custom schema %s', $customSchema));
+        $this->logSection('schema', sprintf('found custom schema %s', $customSchema));
         
         $customSchemaArray = sfYaml::load($customSchema);
         if (!isset($customSchemaArray['classes']))
@@ -126,7 +126,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
 
       $dbSchema->loadArray($schemaArray);
 
-      $this->log('schema', sprintf('converting "%s" to XML', $schema));
+      $this->logSection('schema', sprintf('converting "%s" to XML', $schema));
 
       $localprefix = $prefix;
 
@@ -140,7 +140,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
       $xml_file_name = str_replace('.yml', '.xml', basename($schema));
 
       $file = str_replace(basename($schema), $localprefix.$xml_file_name,  $schema);
-      $this->log('schema', sprintf('putting %s', $file));
+      $this->logSection('schema', sprintf('putting %s', $file));
       file_put_contents($file, $dbSchema->asXML());
     }
   }
