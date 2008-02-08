@@ -9,6 +9,7 @@
  */
 
 /**
+ * A View to render partials.
  *
  * @package    symfony
  * @subpackage view

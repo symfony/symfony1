@@ -10,6 +10,7 @@
  */
 
 /**
+ * A view that uses PHP as the templating engine.
  *
  * @package    symfony
  * @subpackage view

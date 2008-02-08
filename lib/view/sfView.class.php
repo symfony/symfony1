@@ -10,7 +10,6 @@
  */
 
 /**
- *
  * A view represents the presentation layer of an action. Output can be
  * customized by supplying attributes, which a template can manipulate and
  * display.
