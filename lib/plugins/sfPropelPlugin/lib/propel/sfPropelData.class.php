@@ -282,24 +282,45 @@ class sfPropelData extends sfData
   /**
    * Dumps data to fixture from one or more tables.
    *
-   * @param string directory or file to dump to
-   * @param mixed  name or names of tables to dump (or all to dump all tables)
-   * @param string connection name
+   * @param string The directory or file to dump to
+   * @param mixed  The name or names of tables to dump (or all to dump all tables)
+   * @param string The connection name (default to propel)
    */
-  public function dumpData($directory_or_file = null, $tables = 'all', $connectionName = 'propel')
+  public function dumpData($directory_or_file, $tables = 'all', $connectionName = 'propel')
   {
-    $sameFile = true;
-    if (is_dir($directory_or_file))
+    $dumpData = $this->getData($tables, $connectionName);
+
+    // save to file(s)
+    if (!is_dir($directory_or_file))
     {
-      // multi files
-      $sameFile = false;
+      file_put_contents($directory_or_file, sfYaml::dump($dumpData));
     }
     else
     {
-      // same file
-      // delete file
-    }
+      $i = 0;
+      foreach ($tables as $tableName)
+      {
+        if (!isset($dumpData[$tableName]))
+        {
+          continue;
+        }
 
+        file_put_contents(sprintf("%s/%03d-%s.yml", $directory_or_file, ++$i, $tableName), sfYaml::dump(array($tableName => $dumpData[$tableName])));
+      }
+    }
+  }
+
+  /**
+   * Returns data from one or more tables.
+   *
+   * @param  string directory or file to dump to
+   * @param  mixed  name or names of tables to dump (or all to dump all tables)
+   * @param  string connection name
+   *
+   * @return array  An array of database data
+   */
+  public function getData($tables = 'all', $connectionName = 'propel')
+  {
     $this->loadMapBuilders();
     $this->con = Propel::getConnection($connectionName);
     $this->dbMap = Propel::getDatabaseMap($connectionName);
@@ -425,24 +446,7 @@ class sfPropelData extends sfData
       }
     }
 
-    // save to file(s)
-    if ($sameFile)
-    {
-      file_put_contents($directory_or_file, Spyc::YAMLDump($dumpData));
-    }
-    else
-    {
-      $i = 0;
-      foreach ($tables as $tableName)
-      {
-        if (!isset($dumpData[$tableName]))
-        {
-          continue;
-        }
-
-        file_put_contents(sprintf("%s/%03d-%s.yml", $directory_or_file, ++$i, $tableName), Spyc::YAMLDump(array($tableName => $dumpData[$tableName])));
-      }
-    }
+    return $dumpData;
   }
 
   /**

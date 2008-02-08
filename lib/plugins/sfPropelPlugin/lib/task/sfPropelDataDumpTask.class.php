@@ -27,7 +27,7 @@ class sfPropelDumpDataTask extends sfPropelBaseTask
   {
     $this->addArguments(array(
       new sfCommandArgument('application', sfCommandArgument::REQUIRED, 'The application name'),
-      new sfCommandArgument('target', sfCommandArgument::REQUIRED, 'The target filename'),
+      new sfCommandArgument('target', sfCommandArgument::OPTIONAL, 'The target filename'),
     ));
 
     $this->addOptions(array(
@@ -43,11 +43,17 @@ class sfPropelDumpDataTask extends sfPropelBaseTask
     $this->detailedDescription = <<<EOF
 The [propel:data-dump|INFO] task dumps database data:
 
-  [./symfony propel:data-dump frontend dump|INFO]
+  [./symfony propel:data-dump frontend > data/fixtures/dump.yml|INFO]
 
-The task dumps the database data in [data/fixtures/%target%|COMMENT].
+By default, the task outputs the data to the standard output,
+but you can also pass a filename as a second argument:
 
-The dump file is in the YML format and can be reimported by using
+  [./symfony propel:data-dump frontend dump.yml|INFO]
+
+The task will dump data in [data/fixtures/%target%|COMMENT]
+(data/fixtures/dump.yml in the example).
+
+The dump file is in the YML format and can be re-imported by using
 the [propel:data-load|INFO] task.
 
 By default, the task use the [propel|COMMENT] connection as defined in [config/databases.yml|COMMENT].
@@ -71,16 +77,24 @@ EOF;
 
     $databaseManager = new sfDatabaseManager();
 
-    if (!sfToolkit::isPathAbsolute($filename))
+    if (!is_null($filename) && !sfToolkit::isPathAbsolute($filename))
     {
       $dir = sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.'fixtures';
       $this->filesystem->mkdirs($dir);
       $filename = $dir.DIRECTORY_SEPARATOR.$filename;
+
+      $this->logSection('propel', sprintf('dumping data to "%s"', $filename));
     }
 
-    $this->log('propel', sprintf('dumping data to "%s"', $filename));
-
     $data = new sfPropelData();
-    $data->dumpData($filename, 'all', $options['connection']);
+
+    if (!is_null($filename))
+    {
+      $data->dumpData($filename, 'all', $options['connection']);
+    }
+    else
+    {
+      fwrite(STDOUT, sfYaml::dump($data->getData('all', $options['connection'])));
+    }
   }
 }
