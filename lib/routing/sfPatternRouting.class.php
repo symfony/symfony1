@@ -556,6 +556,12 @@ class sfPatternRouting extends sfRouting
               $found .= $pass[$i].'='.$pass[$i + 1].'&';
             }
             parse_str($found, $pass);
+
+            if (get_magic_quotes_gpc())
+            {
+              $pass = sfToolkit::stripslashesDeep((array) $pass);
+            }
+
             foreach ($pass as $key => $value)
             {
               // we add this parameters if not in conflict with named url element (i.e. ':action')
