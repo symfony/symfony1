@@ -145,6 +145,6 @@ EOF;
 
     $dryRun = $options['go'] ? '' : '--dry-run';
 
-    $this->log($this->filesystem->sh("rsync --progress $dryRun $parameters -e $ssh ./ $user$host:$dir"));
+    $this->log($this->getFilesystem()->sh("rsync --progress $dryRun $parameters -e $ssh ./ $user$host:$dir"));
   }
 }

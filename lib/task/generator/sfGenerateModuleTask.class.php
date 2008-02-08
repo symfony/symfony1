@@ -96,16 +96,16 @@ EOF;
 
     // create basic application structure
     $finder = sfFinder::type('any')->ignore_version_control()->discard('.sf');
-    $this->filesystem->mirror($skeletonDir.'/module', $moduleDir, $finder);
+    $this->getFilesystem()->mirror($skeletonDir.'/module', $moduleDir, $finder);
 
     // create basic test
-    $this->filesystem->copy($skeletonDir.'/test/actionsTest.php', sfConfig::get('sf_test_dir').'/functional/'.$app.'/'.$module.'ActionsTest.php');
+    $this->getFilesystem()->copy($skeletonDir.'/test/actionsTest.php', sfConfig::get('sf_test_dir').'/functional/'.$app.'/'.$module.'ActionsTest.php');
 
     // customize test file
-    $this->filesystem->replaceTokens(sfConfig::get('sf_test_dir').'/functional/'.$app.DIRECTORY_SEPARATOR.$module.'ActionsTest.php', '##', '##', $constants);
+    $this->getFilesystem()->replaceTokens(sfConfig::get('sf_test_dir').'/functional/'.$app.DIRECTORY_SEPARATOR.$module.'ActionsTest.php', '##', '##', $constants);
 
     // customize php and yml files
     $finder = sfFinder::type('file')->name('*.php', '*.yml');
-    $this->filesystem->replaceTokens($finder->in($moduleDir), '##', '##', $constants);
+    $this->getFilesystem()->replaceTokens($finder->in($moduleDir), '##', '##', $constants);
   }
 }

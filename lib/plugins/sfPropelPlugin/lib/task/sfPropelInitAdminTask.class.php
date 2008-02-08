@@ -82,13 +82,13 @@ EOF;
     {
       if (is_dir($dir))
       {
-        $this->filesystem->mirror($dir, $moduleDir, $finder);
+        $this->getFilesystem()->mirror($dir, $moduleDir, $finder);
         break;
       }
     }
 
     // customize php and yml files
     $finder = sfFinder::type('file')->name('*.php', '*.yml');
-    $this->filesystem->replaceTokens($finder->in($moduleDir), '##', '##', $constants);
+    $this->getFilesystem()->replaceTokens($finder->in($moduleDir), '##', '##', $constants);
   }
 }

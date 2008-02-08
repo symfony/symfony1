@@ -80,7 +80,7 @@ EOF;
     if (!is_null($filename) && !sfToolkit::isPathAbsolute($filename))
     {
       $dir = sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.'fixtures';
-      $this->filesystem->mkdirs($dir);
+      $this->getFilesystem()->mkdirs($dir);
       $filename = $dir.DIRECTORY_SEPARATOR.$filename;
 
       $this->logSection('propel', sprintf('dumping data to "%s"', $filename));

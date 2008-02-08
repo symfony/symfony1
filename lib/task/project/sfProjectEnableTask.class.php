@@ -54,7 +54,7 @@ EOF;
       $this->logSection('enable', sprintf('%s [%s] is currently ENABLED', $app, $env));
     }
 
-    $this->filesystem->remove($lockFile);
+    $this->getFilesystem()->remove($lockFile);
 
     $clearCache = new sfCacheClearTask($this->dispatcher, $this->formatter);
     $clearCache->setCommandApplication($this->commandApplication);

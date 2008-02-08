@@ -66,7 +66,7 @@ EOF;
 
     if (is_link(sfConfig::get('sf_web_dir').'/sf'))
     {
-      $this->filesystem->remove(sfConfig::get('sf_web_dir').'/sf');
+      $this->getFilesystem()->remove(sfConfig::get('sf_web_dir').'/sf');
     }
 
     $symfony_lib_dir  = sfConfig::get('sf_symfony_lib_dir');
@@ -75,14 +75,14 @@ EOF;
     $this->logSection('freeze', sprintf('freezing lib found in "%s', $symfony_lib_dir));
     $this->logSection('freeze', sprintf('freezing data found in "%s"', $symfony_data_dir));
 
-    $this->filesystem->mkdirs('lib'.DIRECTORY_SEPARATOR.'symfony');
-    $this->filesystem->mkdirs('data'.DIRECTORY_SEPARATOR.'symfony');
+    $this->getFilesystem()->mkdirs('lib'.DIRECTORY_SEPARATOR.'symfony');
+    $this->getFilesystem()->mkdirs('data'.DIRECTORY_SEPARATOR.'symfony');
 
     $finder = sfFinder::type('any')->ignore_version_control();
-    $this->filesystem->mirror($symfony_lib_dir, sfConfig::get('sf_lib_dir').'/symfony', $finder);
-    $this->filesystem->mirror($symfony_data_dir, sfConfig::get('sf_data_dir').'/symfony', $finder);
+    $this->getFilesystem()->mirror($symfony_lib_dir, sfConfig::get('sf_lib_dir').'/symfony', $finder);
+    $this->getFilesystem()->mirror($symfony_data_dir, sfConfig::get('sf_data_dir').'/symfony', $finder);
 
-    $this->filesystem->rename(sfConfig::get('sf_data_dir').'/symfony/web/sf', sfConfig::get('sf_web_dir').'/sf');
+    $this->getFilesystem()->rename(sfConfig::get('sf_data_dir').'/symfony/web/sf', sfConfig::get('sf_web_dir').'/sf');
 
     // change symfony paths in config/config.php
     file_put_contents('config/config.php.bak', $symfony_lib_dir);

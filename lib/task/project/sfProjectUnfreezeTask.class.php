@@ -53,12 +53,12 @@ EOF;
     $this->changeSymfonyDirs("'".file_get_contents('config/config.php.bak')."'");
 
     $finder = sfFinder::type('any');
-    $this->filesystem->remove($finder->in(sfConfig::get('sf_lib_dir').'/symfony'));
-    $this->filesystem->remove(sfConfig::get('sf_lib_dir').'/symfony');
-    $this->filesystem->remove($finder->in(sfConfig::get('sf_data_dir').'/symfony'));
-    $this->filesystem->remove(sfConfig::get('sf_data_dir').'/symfony');
-    $this->filesystem->remove($finder->in(sfConfig::get('sf_web_dir').'/sf'));
-    $this->filesystem->remove(sfConfig::get('sf_web_dir').'/sf');
+    $this->getFilesystem()->remove($finder->in(sfConfig::get('sf_lib_dir').'/symfony'));
+    $this->getFilesystem()->remove(sfConfig::get('sf_lib_dir').'/symfony');
+    $this->getFilesystem()->remove($finder->in(sfConfig::get('sf_data_dir').'/symfony'));
+    $this->getFilesystem()->remove(sfConfig::get('sf_data_dir').'/symfony');
+    $this->getFilesystem()->remove($finder->in(sfConfig::get('sf_web_dir').'/sf'));
+    $this->getFilesystem()->remove(sfConfig::get('sf_web_dir').'/sf');
    }
 
   protected function changeSymfonyDirs($symfony_lib_dir)

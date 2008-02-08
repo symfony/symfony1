@@ -112,28 +112,28 @@ EOF;
     $moduleDir = sfConfig::get('sf_apps_dir').'/'.$arguments['application'].'/'.sfConfig::get('sf_app_module_dir_name').'/'.$arguments['module'];
 
     // copy our generated module
-    $this->filesystem->mirror($tmpDir.'/auto'.ucfirst($arguments['module']), $moduleDir, sfFinder::type('any'));
+    $this->getFilesystem()->mirror($tmpDir.'/auto'.ucfirst($arguments['module']), $moduleDir, sfFinder::type('any'));
 
     if (!$options['with-show'])
     {
-      $this->filesystem->remove($moduleDir.'/templates/showSuccess.php');
+      $this->getFilesystem()->remove($moduleDir.'/templates/showSuccess.php');
     }
 
     // change module name
-    $this->filesystem->replaceTokens($moduleDir.'/actions/actions.class.php', '', '', array('auto'.ucfirst($arguments['module']) => $arguments['module']));
+    $this->getFilesystem()->replaceTokens($moduleDir.'/actions/actions.class.php', '', '', array('auto'.ucfirst($arguments['module']) => $arguments['module']));
 
     // customize php and yml files
     $finder = sfFinder::type('file')->name('*.php', '*.yml');
-    $this->filesystem->replaceTokens($finder->in($moduleDir), '##', '##', $this->constants);
+    $this->getFilesystem()->replaceTokens($finder->in($moduleDir), '##', '##', $this->constants);
 
     // create basic test
-    $this->filesystem->copy(sfConfig::get('sf_symfony_lib_dir').'/task/generator/skeleton/module/test/actionsTest.php', sfConfig::get('sf_test_dir').'/functional/'.$arguments['application'].'/'.$arguments['module'].'ActionsTest.php');
+    $this->getFilesystem()->copy(sfConfig::get('sf_symfony_lib_dir').'/task/generator/skeleton/module/test/actionsTest.php', sfConfig::get('sf_test_dir').'/functional/'.$arguments['application'].'/'.$arguments['module'].'ActionsTest.php');
 
     // customize test file
-    $this->filesystem->replaceTokens(sfConfig::get('sf_test_dir').'/functional/'.$arguments['application'].DIRECTORY_SEPARATOR.$arguments['module'].'ActionsTest.php', '##', '##', $this->constants);
+    $this->getFilesystem()->replaceTokens(sfConfig::get('sf_test_dir').'/functional/'.$arguments['application'].DIRECTORY_SEPARATOR.$arguments['module'].'ActionsTest.php', '##', '##', $this->constants);
 
     // delete temp files
-    $this->filesystem->remove(sfFinder::type('any')->in($tmpDir));
+    $this->getFilesystem()->remove(sfFinder::type('any')->in($tmpDir));
   }
 
   protected function executeInit($arguments = array(), $options = array())
@@ -147,16 +147,16 @@ EOF;
     {
       if (is_dir($dir))
       {
-        $this->filesystem->mirror($dir, $moduleDir, $finder);
+        $this->getFilesystem()->mirror($dir, $moduleDir, $finder);
         break;
       }
     }
 
     // create basic test
-    $this->filesystem->copy(sfConfig::get('sf_symfony_lib_dir').'/task/generator/skeleton/module/test/actionsTest.php', sfConfig::get('sf_test_dir').'/functional/'.$arguments['application'].'/'.$arguments['module'].'ActionsTest.php');
+    $this->getFilesystem()->copy(sfConfig::get('sf_symfony_lib_dir').'/task/generator/skeleton/module/test/actionsTest.php', sfConfig::get('sf_test_dir').'/functional/'.$arguments['application'].'/'.$arguments['module'].'ActionsTest.php');
 
     // customize test file
-    $this->filesystem->replaceTokens(sfConfig::get('sf_test_dir').'/functional/'.$arguments['application'].DIRECTORY_SEPARATOR.$arguments['module'].'ActionsTest.php', '##', '##', $this->constants);
+    $this->getFilesystem()->replaceTokens(sfConfig::get('sf_test_dir').'/functional/'.$arguments['application'].DIRECTORY_SEPARATOR.$arguments['module'].'ActionsTest.php', '##', '##', $this->constants);
 
     // customize php and yml files
     $finder = sfFinder::type('file')->name('*.php', '*.yml');
@@ -165,6 +165,6 @@ EOF;
       $options['non-verbose-templates'] ? 'true' : 'false',
       $options['with-show'] ? 'true' : 'false'
     );
-    $this->filesystem->replaceTokens($finder->in($moduleDir), '##', '##', $this->constants);
+    $this->getFilesystem()->replaceTokens($finder->in($moduleDir), '##', '##', $this->constants);
   }
 }

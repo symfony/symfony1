@@ -71,7 +71,7 @@ EOF;
       // Remove file if it has found an application and the environment is not production
       if (isset($foundApp[1]) && isset($env[1]) && $env[1] != 'prod')
       {
-        $this->filesystem->remove($controller);
+        $this->getFilesystem()->remove($controller);
       }
     }
   }

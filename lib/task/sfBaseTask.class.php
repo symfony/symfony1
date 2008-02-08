@@ -41,27 +41,26 @@ abstract class sfBaseTask extends sfCommandApplicationTask
     return $this->execute($commandManager->getArgumentValues(), $commandManager->getOptionValues());
   }
 
-  public function __get($key)
+  /**
+   * Returns the filesystem instance.
+   *
+   * @return sfFilesystem A sfFilesystem instance
+   */
+  public function getFilesystem()
   {
-    switch ($key)
+    if (!isset($this->filesystem))
     {
-      case 'filesystem':
-        if (!isset($this->filesystem))
-        {
-          if (is_null($this->commandApplication) || $this->commandApplication->isVerbose())
-          {
-            $this->filesystem = new sfFilesystem($this->dispatcher, $this->formatter);
-          }
-          else
-          {
-            $this->filesystem = new sfFilesystem();
-          }
-        }
-
-        return $this->filesystem;
-      default:
-        trigger_error(sprintf('Undefined property: %s::$%s', get_class($this), $key), E_USER_NOTICE);
+      if (is_null($this->commandApplication) || $this->commandApplication->isVerbose())
+      {
+        $this->filesystem = new sfFilesystem($this->dispatcher, $this->formatter);
+      }
+      else
+      {
+        $this->filesystem = new sfFilesystem();
+      }
     }
+
+    return $this->filesystem;
   }
 
   /**

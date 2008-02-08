@@ -169,10 +169,10 @@ abstract class sfPropelBaseTask extends sfBaseTask
         $localprefix = $prefix.$localprefix;
       }
 
-      $this->filesystem->copy($schema, 'config'.DIRECTORY_SEPARATOR.$localprefix.basename($schema));
+      $this->getFilesystem()->copy($schema, 'config'.DIRECTORY_SEPARATOR.$localprefix.basename($schema));
       if ('' === $localprefix)
       {
-        $this->filesystem->remove($schema);
+        $this->getFilesystem()->remove($schema);
       }
     }
   }
@@ -180,7 +180,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
   protected function cleanup()
   {
     $finder = sfFinder::type('file')->name('generated-*schema.xml');
-    $this->filesystem->remove($finder->in(array('config', 'plugins')));
+    $this->getFilesystem()->remove($finder->in(array('config', 'plugins')));
   }
 
   protected function callPhing($taskName, $checkSchema)

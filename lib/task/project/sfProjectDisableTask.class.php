@@ -54,7 +54,7 @@ EOF;
       $this->logSection('enable', sprintf('%s [%s] is currently DISABLED', $app, $env));
     }
 
-    $this->filesystem->touch($lockFile);
+    $this->getFilesystem()->touch($lockFile);
 
     $this->logSection('enable', sprintf('%s [%s] has been DISABLED', $app, $env));
   }
