@@ -32,7 +32,7 @@ class sfComponentUpgrade extends sfUpgrade
       );
       if ($count)
       {
-        $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('component', sprintf('Migrating %s', $file)))));
+        $this->logSection('component', sprintf('Migrating %s', $file));
         file_put_contents($file, $content);
       }
     }

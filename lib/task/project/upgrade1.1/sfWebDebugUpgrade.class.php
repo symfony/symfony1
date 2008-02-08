@@ -27,7 +27,7 @@ class sfWebDebugUpgrade extends sfUpgrade
       $content = preg_replace("#web_debug\:\s+~\s*\n#s", '', $content, -1, $count);
       if ($count)
       {
-        $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('web_debug', sprintf('Migrating %s', $file)))));
+        $this->logSection('web_debug', sprintf('Migrating %s', $file));
         file_put_contents($file, $content);
       }
     }

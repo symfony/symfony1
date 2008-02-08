@@ -27,7 +27,7 @@ class sfConfigUpgrade extends sfUpgrade
       $content = str_replace('sfCore::bootstrap($sf_symfony_lib_dir, $sf_symfony_data_dir)', 'sfCore::bootstrap($sf_symfony_lib_dir)', $content, $count);
       if ($count)
       {
-        $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('config', sprintf('Migrating %s', $file)))));
+        $this->logSection('config', sprintf('Migrating %s', $file));
         file_put_contents($file, $content);
       }
     }

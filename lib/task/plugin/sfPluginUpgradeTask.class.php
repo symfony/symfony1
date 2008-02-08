@@ -60,7 +60,7 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('plugin', sprintf('upgrading plugin "%s"', $arguments['name'])))));
+    $this->logSection('plugin', sprintf('upgrading plugin "%s"', $arguments['name']));
 
     $this->getPluginManager()->installPlugin($arguments['name'], $options);
   }

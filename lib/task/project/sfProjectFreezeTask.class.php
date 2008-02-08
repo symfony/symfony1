@@ -72,8 +72,8 @@ EOF;
     $symfony_lib_dir  = sfConfig::get('sf_symfony_lib_dir');
     $symfony_data_dir = $arguments['symfony_data_dir'];
 
-    $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('freeze', 'freezing lib found in "'.$symfony_lib_dir.'"'))));
-    $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('freeze', 'freezing data found in "'.$symfony_data_dir.'"'))));
+    $this->logSection('freeze', sprintf('freezing lib found in "%s', $symfony_lib_dir));
+    $this->logSection('freeze', sprintf('freezing data found in "%s"', $symfony_data_dir));
 
     $this->filesystem->mkdirs('lib'.DIRECTORY_SEPARATOR.'symfony');
     $this->filesystem->mkdirs('data'.DIRECTORY_SEPARATOR.'symfony');

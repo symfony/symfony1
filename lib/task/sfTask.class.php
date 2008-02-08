@@ -275,6 +275,33 @@ abstract class sfTask
   }
 
   /**
+   * Logs a message.
+   *
+   * @param mixed The message as an array of lines of a single string
+   */
+  protected function log($messages)
+  {
+    if (!is_array($messages))
+    {
+      $messages = array($messages);
+    }
+
+    $this->dispatcher->notify(new sfEvent($this, 'command.log', $messages));
+  }
+
+  /**
+   * Logs a message in a section.
+   *
+   * @param string  The section name
+   * @param string  The message
+   * @param integer The maximum size of a line
+   */
+  protected function logSection($section, $message, $size = null)
+  {
+    $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection($section, $message, $size))));
+  }
+
+  /**
    * Executes the current task.
    *
    * @param array An array of arguments

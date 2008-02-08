@@ -38,7 +38,7 @@ class sfEnvironmentUpgrade extends sfUpgrade
 
       if ($count)
       {
-        $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('environment', sprintf('Migrating %s', $file)))));
+        $this->logSection('environment', sprintf('Migrating %s', $file));
         file_put_contents($file, $content);
       }
     }

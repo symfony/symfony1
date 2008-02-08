@@ -31,7 +31,7 @@ class sfFactoriesUpgrade extends sfUpgrade
       {
         $content = preg_replace('/^((.+)automatic_cleaning_factor:(\s+)(.+?))$/m', "$1\n$2prefix:$3                   %SF_APP_DIR%", $content);
 
-        $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('factories.yml', sprintf('Migrating %s', $file)))));
+        $this->logSection('factories.yml', sprintf('Migrating %s', $file));
         file_put_contents($file, $content);
       }
     }

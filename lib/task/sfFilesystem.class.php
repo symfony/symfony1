@@ -70,7 +70,7 @@ class sfFilesystem
 
     if ($options['override'] || !file_exists($targetFile) || $mostRecent)
     {
-      $this->log('file+', $targetFile);
+      $this->logSection('file+', $targetFile);
       copy($originFile, $targetFile);
     }
   }
@@ -90,7 +90,7 @@ class sfFilesystem
       return true;
     }
 
-    $this->log('dir+', $path);
+    $this->logSection('dir+', $path);
 
     return @mkdir($path, $mode, true);
   }
@@ -109,7 +109,7 @@ class sfFilesystem
 
     foreach ($files as $file)
     {
-      $this->log('file+', $file);
+      $this->logSection('file+', $file);
 
       touch($file);
     }
@@ -132,13 +132,13 @@ class sfFilesystem
     {
       if (is_dir($file) && !is_link($file))
       {
-        $this->log('dir-', $file);
+        $this->logSection('dir-', $file);
 
         rmdir($file);
       }
       else
       {
-        $this->log(is_link($file) ? 'link-' : 'file-', $file);
+        $this->logSection(is_link($file) ? 'link-' : 'file-', $file);
 
         unlink($file);
       }
@@ -164,7 +164,7 @@ class sfFilesystem
 
     foreach ($files as $file)
     {
-      $this->log(sprintf('chmod %o', $mode), $file);
+      $this->logSection(sprintf('chmod %o', $mode), $file);
       chmod($file, $mode);
     }
 
@@ -185,7 +185,7 @@ class sfFilesystem
       throw new sfException(sprintf('Cannot rename because the target "%" already exist.', $target));
     }
 
-    $this->log('rename', $origin.' > '.$target);
+    $this->logSection('rename', $origin.' > '.$target);
     rename($origin, $target);
   }
 
@@ -220,7 +220,7 @@ class sfFilesystem
 
     if (!$ok)
     {
-      $this->log('link+', $targetDir);
+      $this->logSection('link+', $targetDir);
       symlink($originDir, $targetDir);
     }
   }
@@ -263,7 +263,7 @@ class sfFilesystem
    */
   public function sh($cmd)
   {
-    $this->log('exec ', $cmd);
+    $this->logSection('exec ', $cmd);
 
     ob_start();
     passthru($cmd.' 2>&1', $return);
@@ -301,27 +301,27 @@ class sfFilesystem
         $content = str_replace($beginToken.$key.$endToken, $value, $content, $count);
       }
 
-      $this->log('tokens', $file);
+      $this->logSection('tokens', $file);
 
       file_put_contents($file, $content);
     }
   }
 
   /**
-   * Logs a message.
+   * Logs a message in a section.
    *
    * @param string  The section name
    * @param string  The message
    * @param integer The maximum size of a line
    */
-  protected function log($section, $text, $size = null)
+  protected function logSection($section, $message, $size = null)
   {
     if (!$this->dispatcher)
     {
       return;
     }
 
-    $message = $this->formatter ? $this->formatter->formatSection($section, $text, $size) : $section.' '.$text."\n";
+    $message = $this->formatter ? $this->formatter->formatSection($section, $message, $size) : $section.' '.$message."\n";
 
     $this->dispatcher->notify(new sfEvent($this, 'command.log', array($message)));
   }

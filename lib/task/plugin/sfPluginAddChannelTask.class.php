@@ -46,7 +46,7 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('plugin', sprintf('add channel "%s"', $arguments['name'])))));
+    $this->logSection('plugin', sprintf('add channel "%s"', $arguments['name']));
 
     $this->getPluginManager()->registerChannel($arguments['name']);
   }

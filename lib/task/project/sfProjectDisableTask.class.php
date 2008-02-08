@@ -49,15 +49,13 @@ EOF;
     $env = $arguments['env'];
 
     $lockFile = $app.'_'.$env.'.lck';
-    if (!file_exists(sfConfig::get('sf_cache_dir').'/'.$lockFile))
+    if (file_exists(sfConfig::get('sf_cache_dir').'/'.$lockFile))
     {
-      $this->filesystem->touch($lockFile);
+      $this->logSection('enable', sprintf('%s [%s] is currently DISABLED', $app, $env));
+    }
 
-      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('enable', "$app [$env] has been DISABLED"))));
-    }
-    else
-    {
-      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('enable', "$app [$env] is currently DISABLED"))));
-    }
+    $this->filesystem->touch($lockFile);
+
+    $this->logSection('enable', sprintf('%s [%s] has been DISABLED', $app, $env));
   }
 }

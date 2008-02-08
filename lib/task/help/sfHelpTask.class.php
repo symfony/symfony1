@@ -99,6 +99,6 @@ class sfHelpTask extends sfCommandApplicationTask
       $messages[] = ' '.implode("\n ", explode("\n", $detailedDescription))."\n";
     }
 
-    $this->dispatcher->notify(new sfEvent($this, 'command.log', $messages));
+    $this->log($messages);
   }
 }

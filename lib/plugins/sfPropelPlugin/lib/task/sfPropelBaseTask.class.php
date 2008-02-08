@@ -63,7 +63,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
     {
       $dbSchema->loadXML($schema);
 
-      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('schema', sprintf('converting "%s" to YML', $schema)))));
+      $this->log('schema', sprintf('converting "%s" to YML', $schema));
 
       $localprefix = $prefix;
 
@@ -77,7 +77,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
       $yml_file_name = str_replace('.xml', '.yml', basename($schema));
 
       $file = str_replace(basename($schema), $prefix.$yml_file_name,  $schema);
-      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('schema', 'putting '.$file))));
+      $this->log('schema', sprintf('putting %s', $file));
       file_put_contents($file, $dbSchema->asYAML());
     }
   }
@@ -113,7 +113,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
       
       foreach ($customSchemas as $customSchema)
       {
-        $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('schema', sprintf('found custom schema %s', $customSchema)))));
+        $this->log('schema', sprintf('found custom schema %s', $customSchema));
         
         $customSchemaArray = sfYaml::load($customSchema);
         if (!isset($customSchemaArray['classes']))
@@ -126,7 +126,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
 
       $dbSchema->loadArray($schemaArray);
 
-      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('schema', sprintf('converting "%s" to XML', $schema)))));
+      $this->log('schema', sprintf('converting "%s" to XML', $schema));
 
       $localprefix = $prefix;
 
@@ -140,7 +140,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
       $xml_file_name = str_replace('.yml', '.xml', basename($schema));
 
       $file = str_replace(basename($schema), $localprefix.$xml_file_name,  $schema);
-      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('schema', 'putting '.$file))));
+      $this->log('schema', sprintf('putting %s', $file));
       file_put_contents($file, $dbSchema->asXML());
     }
   }

@@ -27,7 +27,7 @@ class sfPropelUpgrade extends sfUpgrade
 
     if ($count)
     {
-      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('propel', sprintf('Migrating %s', $file)))));
+      $this->logSection('propel', sprintf('Migrating %s', $file));
       file_put_contents($file, $content);
     }
 
@@ -42,7 +42,7 @@ propel.defaultTimeFormat = H:i:s
 propel.defaultDateFormat = Y-m-d
 
 EOF;
-      $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('propel', sprintf('Migrating %s', $file)))));
+      $this->logSection('propel', sprintf('Migrating %s', $file));
       file_put_contents($file, $content);
     }
   }

@@ -78,7 +78,7 @@ EOF;
       $filename = $dir.DIRECTORY_SEPARATOR.$filename;
     }
 
-    $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('propel', sprintf('dumping data to "%s"', $filename)))));
+    $this->log('propel', sprintf('dumping data to "%s"', $filename));
 
     $data = new sfPropelData();
     $data->dumpData($filename, 'all', $options['connection']);

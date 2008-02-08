@@ -100,6 +100,6 @@ EOF;
       $messages[] = sprintf("  %-${width}s %s%s", $this->formatter->format(':'.$task->getName(), 'INFO'), $task->getBriefDescription(), $aliases);
     }
 
-    $this->dispatcher->notify(new sfEvent($this, 'command.log', $messages));
+    $this->log($messages);
   }
 }

@@ -58,7 +58,7 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection('propel', 'generating form classes'))));
+    $this->log('propel', 'generating form classes');
 
     $generatorManager = new sfGeneratorManager();
 
