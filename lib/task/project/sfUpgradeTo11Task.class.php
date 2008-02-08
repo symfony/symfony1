@@ -45,6 +45,7 @@ EOF;
     foreach ($this->getUpgradeClasses() as $class)
     {
       $upgrader = new $class($this->dispatcher, $this->formatter);
+      $upgrader->setCommandApplication($this->commandApplication);
       $upgrader->upgrade();
     }
   }

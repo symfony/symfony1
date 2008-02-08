@@ -21,8 +21,30 @@ abstract class sfCommandApplicationTask extends sfTask
   protected
     $commandApplication = null;
 
-  public function setCommandApplication(sfCommandApplication $commandApplication)
+  public function setCommandApplication(sfCommandApplication $commandApplication = null)
   {
     $this->commandApplication = $commandApplication;
+  }
+
+  /**
+   * @see sfTask
+   */
+  protected function log($messages)
+  {
+    if (is_null($this->commandApplication) || $this->commandApplication->isVerbose())
+    {
+      parent::log($messages);
+    }
+  }
+
+  /**
+   * @see sfTask
+   */
+  protected function logSection($section, $message, $size = null)
+  {
+    if (is_null($this->commandApplication) || $this->commandApplication->isVerbose())
+    {
+      parent::logSection($section, $message, $size);
+    }
   }
 }

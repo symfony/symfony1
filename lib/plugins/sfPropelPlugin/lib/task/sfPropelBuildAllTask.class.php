@@ -52,15 +52,19 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     $buildModel = new sfPropelBuildModelTask($this->dispatcher, $this->formatter);
+    $buildModel->setCommandApplication($this->commandApplication);
     $buildModel->run();
 
     $buildSql = new sfPropelBuildSqlTask($this->dispatcher, $this->formatter);
+    $buildSql->setCommandApplication($this->commandApplication);
     $buildSql->run();
 
     $buildForms = new sfPropelBuildFormsTask($this->dispatcher, $this->formatter);
+    $buildForms->setCommandApplication($this->commandApplication);
     $buildForms->run();
 
     $insertSql = new sfPropelInsertSqlTask($this->dispatcher, $this->formatter);
+    $insertSql->setCommandApplication($this->commandApplication);
     $insertSql->run();
   }
 }

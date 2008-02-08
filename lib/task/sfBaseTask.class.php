@@ -48,7 +48,14 @@ abstract class sfBaseTask extends sfCommandApplicationTask
       case 'filesystem':
         if (!isset($this->filesystem))
         {
-          $this->filesystem = new sfFilesystem($this->dispatcher, $this->formatter);
+          if (is_null($this->commandApplication) || $this->commandApplication->isVerbose())
+          {
+            $this->filesystem = new sfFilesystem($this->dispatcher, $this->formatter);
+          }
+          else
+          {
+            $this->filesystem = new sfFilesystem();
+          }
         }
 
         return $this->filesystem;
