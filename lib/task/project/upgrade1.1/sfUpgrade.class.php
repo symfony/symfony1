@@ -16,7 +16,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-abstract class sfUpgrade extends sfTask
+abstract class sfUpgrade extends sfBaseTask
 {
   protected
     $task = null;
@@ -98,18 +98,5 @@ abstract class sfUpgrade extends sfTask
       glob(sfConfig::get('sf_apps_dir').'/*/config'),
       glob(sfConfig::get('sf_config_dir'))
     );
-  }
-
-  /**
-   * Forward all non existing methods to the task.
-   *
-   * @param  string The method name
-   * @param  array  An array of arguments
-   *
-   * @return mixed  The return value of the task method call
-   */
-  public function __call($method, $arguments)
-  {
-    return call_user_func_array(array($this->task, $method), $arguments);
   }
 }
