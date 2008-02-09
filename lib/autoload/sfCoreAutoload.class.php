@@ -315,6 +315,7 @@ class sfCoreAutoload
   'sfUpgradeTo11Task' => 'task/project',
   'sfAutoloadingUpgrade' => 'task/project/upgrade1.1',
   'sfComponentUpgrade' => 'task/project/upgrade1.1',
+  'sfConfigFileUpgrade' => 'task/project/upgrade1.1',
   'sfConfigUpgrade' => 'task/project/upgrade1.1',
   'sfEnvironmentUpgrade' => 'task/project/upgrade1.1',
   'sfFactoriesUpgrade' => 'task/project/upgrade1.1',
