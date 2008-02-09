@@ -278,7 +278,7 @@ class sfConfigCache
 
     // application configuration handlers
 
-    require_once($this->checkConfig(sfConfig::get('sf_app_config_dir_name').'/config_handlers.yml'));
+    require $this->checkConfig(sfConfig::get('sf_app_config_dir_name').'/config_handlers.yml');
 
     // module level configuration handlers
 
@@ -315,7 +315,7 @@ class sfConfigCache
         // checkConfig knows how to use
         $configPath = sfConfig::get('sf_app_modules_dir_name').'/'.$directory.'/'.sfConfig::get('sf_app_module_config_dir_name').'/config_handlers.yml';
 
-        require_once($this->checkConfig($configPath));
+        require $this->checkConfig($configPath);
       }
     }
 
