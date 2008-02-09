@@ -8,10 +8,9 @@
  * file that was distributed with this source code.
  */
 
-require_once(dirname(__FILE__).'/../../../../../test/bootstrap/unit.php');
+require_once(dirname(__FILE__).'/../bootstrap/unit.php');
 
-$o = new lime_output_color();
-$t = new lime_test(10, $o);
+$t = new lime_test(10, new lime_output_color());
 
 class myClass
 {

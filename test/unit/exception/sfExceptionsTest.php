@@ -10,12 +10,12 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(17, new lime_output_color());
+$t = new lime_test(16, new lime_output_color());
 
 foreach (array(
   'cache', 'configuration', 'controller', 'database', 
   'error404', 'factory', 'file', 'filter', 'forward', 'initialization', 'parse', 'render', 'security',
-  'stop', 'storage', 'validator', 'view'
+  'stop', 'storage', 'view'
 ) as $class)
 {
   $class = sprintf('sf%sException', ucfirst($class));

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-require_once(dirname(__FILE__).'/../../../../../test/bootstrap/unit.php');
+require_once(dirname(__FILE__).'/../bootstrap/unit.php');
 
 class my_lime_test extends lime_test
 {
