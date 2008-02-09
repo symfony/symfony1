@@ -39,7 +39,6 @@ class sfSymfonyCommandApplication extends sfCommandApplication
     $this->setVersion(SYMFONY_VERSION);
 
     $this->initializeEnvironment($this->options['symfony_lib_dir']);
-    $this->initializeAutoloader();
     $this->initializeTasks();
   }
 
@@ -92,28 +91,6 @@ class sfSymfonyCommandApplication extends sfCommandApplication
       sfConfig::get('sf_model_dir').PATH_SEPARATOR.
       get_include_path()
     );
-  }
-
-  /**
-   * Initializes the autoloader object.
-   *
-   * If we are not using the symfony CLI in the context of a specific application,
-   * then the system temp directory will be used for the autoloader cache instead.
-   */
-  protected function initializeAutoloader()
-  {
-    if (is_dir(sfConfig::get('sf_app_base_cache_dir')))
-    {
-      $cache = sfConfig::get('sf_app_base_cache_dir').DIRECTORY_SEPARATOR.'autoload_cmd.data';
-    }
-    else
-    {
-      $cache = sfToolkit::getTmpDir().DIRECTORY_SEPARATOR.sprintf('sf_autoload_cmd_%s.data', md5(__FILE__));
-    }
-
-    $this->autoloader = sfSimpleAutoload::getInstance($cache);
-    $this->autoloader->register();
-    $this->autoloader->addDirectory(sfConfig::get('sf_plugins_dir'));
   }
 
   /**
