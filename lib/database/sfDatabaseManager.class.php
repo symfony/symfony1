@@ -61,6 +61,17 @@ class sfDatabaseManager
   }
 
   /**
+   * Sets a database connection.
+   *
+   * @param string     The database name
+   * @param sfDatabase A sfDatabase instance
+   */
+  public function setDatabase($name, sfDatabase $database)
+  {
+    $this->databases[$name] = $database;
+  }
+
+  /**
    * Retrieves the database connection associated with this sfDatabase implementation.
    *
    * @param string A database name
