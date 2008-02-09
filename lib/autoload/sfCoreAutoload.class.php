@@ -290,7 +290,6 @@ class sfCoreAutoload
   'sfConfigureAuthorTask' => 'task/configure',
   'sfConfigureDatabaseTask' => 'task/configure',
   'sfGenerateAppTask' => 'task/generator',
-  'sfGenerateControllerTask' => 'task/generator',
   'sfGenerateModuleTask' => 'task/generator',
   'sfGenerateProjectTask' => 'task/generator',
   'sfGeneratorBaseTask' => 'task/generator',

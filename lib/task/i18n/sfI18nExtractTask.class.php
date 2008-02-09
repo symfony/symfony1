@@ -85,8 +85,7 @@ EOF;
 
     $this->logSection('i18n', sprintf('extracting i18n strings for the "%s" application', $arguments['application']));
 
-    $extract = new sfI18nApplicationExtract();
-    $extract->initialize($arguments['culture']);
+    $extract = new sfI18nApplicationExtract(sfContext::getInstance()->getI18N(), $arguments['culture']);
     $extract->extract();
 
     $this->logSection('i18n', sprintf('found "%d" new i18n strings', count($extract->getNewMessages())));

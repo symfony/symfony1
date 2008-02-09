@@ -18,35 +18,31 @@ abstract class sfI18nExtract
 {
   protected
     $currentMessages = array(),
-    $newMessages = array(),
+    $newMessages     = array(),
     $allSeenMessages = array(),
-    $culture = null,
-    $parameters = array(),
-    $i18n = null;
+    $culture         = null,
+    $parameters      = array(),
+    $i18n            = null;
 
   /**
    * Class constructor.
    *
    * @see initialize()
    */
-  public function __construct($culture, $parameters = array())
+  public function __construct(sfI18N $i18n, $culture, $parameters = array())
   {
-    $this->initialize($culture, $parameters);
+    $this->initialize($i18n, $culture, $parameters);
   }
 
   /**
    * Initializes the current extract object.
    *
+   * @param sfI18N A sfI18N instance
    * @param string The culture
    * @param array  An array of parameters
    */
-  function initialize($culture, $parameters = array())
+  function initialize(sfI18N $i18n, $culture, $parameters = array())
   {
-    if (!sfConfig::get('sf_i18n'))
-    {
-      throw new sfConfigurationException('You must enable "i18n" in your settings.yml configuration file.');
-    }
-
     $this->allSeenMessages = array();
     $this->newMessages = array();
     $this->currentMessages = array();
@@ -54,7 +50,7 @@ abstract class sfI18nExtract
     $this->culture = $culture;
     $this->parameters = $parameters;
 
-    $this->i18n = sfContext::getInstance()->getI18N();
+    $this->i18n = $i18n;
 
     $this->configure();
 

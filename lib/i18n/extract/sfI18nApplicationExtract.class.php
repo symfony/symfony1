@@ -29,10 +29,7 @@ class sfI18nApplicationExtract extends sfI18nExtract
     $moduleNames = sfFinder::type('dir')->maxdepth(0)->ignore_version_control()->relative()->in(sfConfig::get('sf_app_dir').'/modules');
     foreach ($moduleNames as $moduleName)
     {
-      $moduleExtract = new sfI18nModuleExtract();
-      $moduleExtract->initialize('en', array('module' => $moduleName));
-
-      $this->extractObjects[] = $moduleExtract;
+      $this->extractObjects[] = new sfI18nModuleExtract($this->i18n, 'en', array('module' => $moduleName));
     }
   }
 
