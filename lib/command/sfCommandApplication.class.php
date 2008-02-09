@@ -473,11 +473,6 @@ abstract class sfCommandApplication
    */
   protected function fixCgi()
   {
-    if (false === strpos(PHP_SAPI, 'cgi'))
-    {
-      return;
-    }
-
     // handle output buffering
     @ob_end_flush();
     ob_implicit_flush(true);
@@ -487,6 +482,11 @@ abstract class sfCommandApplication
     ini_set('track_errors', true);
     ini_set('html_errors', false);
     ini_set('magic_quotes_runtime', false);
+
+    if (false === strpos(PHP_SAPI, 'cgi'))
+    {
+      return;
+    }
 
     // define stream constants
     define('STDIN',  fopen('php://stdin',  'r'));
