@@ -98,10 +98,19 @@ EOF;
     $this->getFilesystem()->replaceTokens($finder->in($appDir.'/'.sfConfig::get('sf_app_config_dir_name')), '##', '##', array('NO_SCRIPT_NAME' => ($firstApp ? 'on' : 'off')));
 
     $this->getFilesystem()->copy(dirname(__FILE__).'/skeleton/app/web/index.php', sfConfig::get('sf_web_dir').'/'.$indexName.'.php');
-    $this->getFilesystem()->copy(dirname(__FILE__).'/skeleton/app/web/index_dev.php', sfConfig::get('sf_web_dir').'/'.$app.'_dev.php');
+    $this->getFilesystem()->copy(dirname(__FILE__).'/skeleton/app/web/index.php', sfConfig::get('sf_web_dir').'/'.$app.'_dev.php');
 
-    $finder = sfFinder::type('file')->name($indexName.'.php', $app.'_dev.php');
-    $this->getFilesystem()->replaceTokens($finder->in(sfConfig::get('sf_web_dir')), '##', '##', array('APP_NAME' => $app));
+    $this->getFilesystem()->replaceTokens(sfConfig::get('sf_web_dir').'/'.$indexName.'.php', '##', '##', array(
+      'APP_NAME'    => $app,
+      'ENVIRONMENT' => 'prod',
+      'IS_DEBUG'    => 'true',
+    ));
+
+    $this->getFilesystem()->replaceTokens(sfConfig::get('sf_web_dir').'/'.$app.'_dev.php', '##', '##', array(
+      'APP_NAME'    => $app,
+      'ENVIRONMENT' => 'dev',
+      'IS_DEBUG'    => 'false',
+    ));
 
     $fixPerms = new sfProjectPermissionsTask($this->dispatcher, $this->formatter);
     $fixPerms->setCommandApplication($this->commandApplication);
