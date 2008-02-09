@@ -256,4 +256,11 @@ class sfSimpleAutoload
       $this->classes[$class] = $file;
     }
   }
+
+  public function setClassPath($class, $path)
+  {
+    $this->overriden[$class] = $path;
+
+    $this->classes[$class] = $path;
+  }
 }

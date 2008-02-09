@@ -39,7 +39,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
       $autoloader->addDirectory($libDir.'/vendor/propel');
       $autoloader->addDirectory($libDir.'/creole');
       $autoloader->addDirectory($libDir.'/propel');
-      $autoloader->addDirectory($libDir.'/task');
+      $autoloader->setClassPath('Propel', $libDir.'/propel/sfPropelAutoload.php');
       $autoloader->addDirectory(sfConfig::get('sf_model_lib_dir'));
       $autoloader->addDirectory(sfConfig::get('sf_lib_dir').'/form');
       $autoloader->register();

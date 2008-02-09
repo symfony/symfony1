@@ -72,9 +72,6 @@ EOF;
   {
     $this->bootstrapSymfony($arguments['application'], $options['env'], true);
 
-    sfSimpleAutoload::getInstance()->unregister();
-    sfSimpleAutoload::getInstance()->register();
-
     if (count($options['dir']))
     {
       $fixturesDirs = $options['dir'];
