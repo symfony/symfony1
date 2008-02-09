@@ -115,6 +115,11 @@ class sfValidatorDate extends sfValidator
       return $this->getEmptyValue();
     }
 
+    if (!checkdate(intval($value['month']), intval($value['day']), intval($value['year'])))
+    {
+      throw new sfValidatorError($this, 'invalid', array('value' => $value));
+    }
+
     if ($this->getOption('with_time'))
     {
       // if one time value is empty, all others must be empty too
