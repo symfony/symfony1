@@ -89,13 +89,6 @@ EOF;
 
   protected function executeGenerate($arguments = array(), $options = array())
   {
-    $this->bootstrapSymfony($arguments['application'], $options['env'], true);
-
-    sfSimpleAutoload::getInstance()->unregister();
-    sfSimpleAutoload::getInstance()->register();
-
-    $databaseManager = new sfDatabaseManager();
-
     // generate module
     $tmpDir = sfConfig::get('sf_cache_dir').DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.md5(uniqid(rand(), true));
     sfConfig::set('sf_module_cache_dir', $tmpDir);
