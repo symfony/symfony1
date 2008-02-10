@@ -254,6 +254,7 @@ class sfCoreAutoload
   'sfLoggerInterface' => 'log',
   'sfLoggerWrapper' => 'log',
   'sfNoLogger' => 'log',
+  'sfStreamLogger' => 'log',
   'sfWebDebugLogger' => 'log',
   'sfPearDownloader' => 'plugin',
   'sfPearEnvironment' => 'plugin',

@@ -21,21 +21,22 @@ if (file_exists($file))
   unlink($file);
 }
 $fileLogger = new sfFileLogger($dispatcher, array('file' => $file));
-$consoleLogger = new sfConsoleLogger($dispatcher);
+$buffer = fopen('php://memory', 'rw');
+$streamLogger = new sfStreamLogger($dispatcher, array('stream' => $buffer));
 
 // ->initialize()
 $t->diag('->initialize()');
 $logger = new sfAggregateLogger($dispatcher, array('loggers' => $fileLogger));
 $t->is($logger->getLoggers(), array($fileLogger), '->initialize() can take a "loggers" parameter');
 
-$logger = new sfAggregateLogger($dispatcher, array('loggers' => array($fileLogger, $consoleLogger)));
-$t->is($logger->getLoggers(), array($fileLogger, $consoleLogger), '->initialize() can take a "loggers" parameter');
+$logger = new sfAggregateLogger($dispatcher, array('loggers' => array($fileLogger, $streamLogger)));
+$t->is($logger->getLoggers(), array($fileLogger, $streamLogger), '->initialize() can take a "loggers" parameter');
 
 // ->log()
 $t->diag('->log()');
-ob_start();
 $logger->log('foo');
-$content = ob_get_clean();
+rewind($buffer);
+$content = stream_get_contents($buffer);
 $lines = explode("\n", file_get_contents($file));
 $t->like($lines[0], '/foo/', '->log() logs a message to all loggers');
 $t->is($content, 'foo'.PHP_EOL, '->log() logs a message to all loggers');
@@ -46,8 +47,8 @@ $logger->addLogger($fileLogger);
 $t->is($logger->getLoggers(), array($fileLogger), '->addLogger() adds a new sfLogger instance');
 
 $logger = new sfAggregateLogger($dispatcher);
-$logger->addLoggers(array($fileLogger, $consoleLogger));
-$t->is($logger->getLoggers(), array($fileLogger, $consoleLogger), '->addLoggers() adds an array of sfLogger instances');
+$logger->addLoggers(array($fileLogger, $streamLogger));
+$t->is($logger->getLoggers(), array($fileLogger, $streamLogger), '->addLoggers() adds an array of sfLogger instances');
 
 // ->shutdown()
 $t->diag('->shutdown()');
