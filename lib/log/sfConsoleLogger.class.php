@@ -26,6 +26,7 @@ class sfConsoleLogger extends sfLogger
    */
   protected function doLog($message, $priority)
   {
-    echo $message.PHP_EOL;
+    fwrite(STDOUT, $message.PHP_EOL);
+    flush();
   }
 }
