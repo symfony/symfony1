@@ -47,7 +47,7 @@ class sfPatternRouting extends sfRouting
   }
 
   /**
-   * Loads routing configuration.
+   * @see sfRouting
    */
   public function loadConfiguration()
   {
@@ -55,6 +55,8 @@ class sfPatternRouting extends sfRouting
     {
       include($config);
     }
+
+    parent::loadConfiguration();
   }
 
   /**

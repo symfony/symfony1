@@ -74,6 +74,16 @@ abstract class sfRouting
   }
 
   /**
+   * Loads routing configuration.
+   *
+   * This methods notifies a routing.load_configuration event.
+   */
+  public function loadConfiguration()
+  {
+    $this->dispatcher->notify(new sfEvent($this, 'routing.load_configuration'));
+  }
+
+  /**
    * Gets the internal URI for the current request.
    *
    * @param boolean Whether to give an internal URI with the route name (@route)
