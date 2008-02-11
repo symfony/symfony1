@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -103,13 +103,13 @@ EOF;
     $this->getFilesystem()->replaceTokens(sfConfig::get('sf_web_dir').'/'.$indexName.'.php', '##', '##', array(
       'APP_NAME'    => $app,
       'ENVIRONMENT' => 'prod',
-      'IS_DEBUG'    => 'true',
+      'IS_DEBUG'    => 'false',
     ));
 
     $this->getFilesystem()->replaceTokens(sfConfig::get('sf_web_dir').'/'.$app.'_dev.php', '##', '##', array(
       'APP_NAME'    => $app,
       'ENVIRONMENT' => 'dev',
-      'IS_DEBUG'    => 'false',
+      'IS_DEBUG'    => 'true',
     ));
 
     $fixPerms = new sfProjectPermissionsTask($this->dispatcher, $this->formatter);

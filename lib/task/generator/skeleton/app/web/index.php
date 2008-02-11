@@ -2,8 +2,8 @@
 
 define('SF_ROOT_DIR',    realpath(dirname(__FILE__).'/..'));
 define('SF_APP',         '##APP_NAME##');
-define('SF_ENVIRONMENT', 'prod');
-define('SF_DEBUG',       false);
+define('SF_ENVIRONMENT', '##ENVIRONMENT##');
+define('SF_DEBUG',       ##IS_DEBUG##);
 
 require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
 
