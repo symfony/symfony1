@@ -392,7 +392,7 @@ class sfWebDebug
   }
 
   /**
-   * Converts a proprity value to a string.
+   * Converts a priority value to a string.
    *
    * @param integer The priority value
    *
