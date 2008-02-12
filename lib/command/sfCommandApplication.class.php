@@ -202,6 +202,16 @@ abstract class sfCommandApplication
   }
 
   /**
+   * Returns the long version of the application.
+   *
+   * @param string The long version
+   */
+  public function getLongVersion()
+  {
+    return sprintf('%s version %s', $this->getName(), $this->formatter->format($this->getVersion(), 'INFO'))."\n";
+  }
+
+  /**
    * Returns whether the application must be verbose.
    *
    * @return Boolean true if the application must be verbose, false otherwise
@@ -294,7 +304,7 @@ abstract class sfCommandApplication
           $this->verbose = true;
           break;
         case 'version':
-          echo sprintf('%s version %s', $this->getName(), $this->formatter->format($this->getVersion(), 'INFO'))."\n";
+          echo $this->getLongVersion();
           exit(0);
       }
     }

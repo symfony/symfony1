@@ -129,4 +129,12 @@ class sfSymfonyCommandApplication extends sfCommandApplication
       }
     }
   }
+
+  /**
+   * @see sfCommandApplication
+   */
+  public function getLongVersion()
+  {
+    return sprintf('%s version %s (%s)', $this->getName(), $this->formatter->format($this->getVersion(), 'INFO'), sfConfig::get('sf_symfony_lib_dir'))."\n";
+  }
 }
