@@ -102,7 +102,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
     {
       $schemaArray = sfYaml::load($schema);
       
-      if (!isset($schema_array['classes']))
+      if (!isset($schemaArray['classes']))
       {
         // Old schema syntax: we convert it 
         $schemaArray = $dbSchema->convertOldToNewYaml($schemaArray);
