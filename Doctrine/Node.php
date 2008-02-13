@@ -76,7 +76,7 @@ class Doctrine_Node implements IteratorAggregate
         $table = $record->getTable();
         if ($table->getOption('inheritanceMap')) {
             $subclasses = $table->getOption('subclasses');
-            while (in_array($class, $subclasses)) {
+            while (in_array($class, (array) $subclasses)) {
                 $class = get_parent_class($class);
             }
         }
