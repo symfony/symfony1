@@ -54,7 +54,7 @@ abstract class sfCrudGenerator extends sfGenerator
 
     if (!class_exists($modelClass))
     {
-      throw new sfInitializationException(sprintf('Unable to scaffold unexistant model "%s".', $modelClass));
+      throw new sfInitializationException(sprintf('Unable to scaffold nonexistent model "%s".', $modelClass));
     }
 
     $this->setScaffoldingClassName($modelClass);
