@@ -183,7 +183,6 @@ class Doctrine_Import_Schema
                           'options'             =>  array(),
                           'package'             =>  null,
                           'inheritance'         =>  array(),
-                          'subclasses'          =>  array(),
                           'detect_relations'    =>  false,
                           'generate_accessors'  =>  false);
         

@@ -277,11 +277,6 @@ END;
      */
     public function buildTableDefinition(array $definition)
     {
-        // If the inheritance type if simple or column aggregation then we do not need a table definition
-        if (isset($definition['inheritance']['type']) && ($definition['inheritance']['type'] == 'simple' || $definition['inheritance']['type'] == 'aggregation')) {
-            return;
-        }
-        
         $ret = array();
         
         $i = 0;
@@ -314,11 +309,6 @@ END;
         
         if (isset($definition['options']) && is_array($definition['options']) && !empty($definition['options'])) {
             $ret[$i] = $this->buildOptions($definition['options']);
-            $i++;
-        }
-        
-        if (isset($definition['subclasses']) && is_array($definition['subclasses']) && !empty($definition['subclasses'])) {
-            $ret[$i] = '    $this->setSubclasses(' . var_export($definition['subclasses'], true) . ');';
             $i++;
         }
         
@@ -403,6 +393,11 @@ END;
                 $ret[$i] .= ');'."\n";
                 $i++;
             }
+        }
+
+        if (isset($definition['inheritance']['keyField']) && isset($definition['inheritance']['keyValue'])) {
+            $i++;
+            $ret[$i] = "    ".'$this->setInheritanceMap(array(\''.$definition['inheritance']['keyField'].'\' => \''.$definition['inheritance']['keyValue'].'\'));';
         }
 
         if (isset($definition['templates']) && is_array($definition['templates']) && !empty($definition['templates'])) {
