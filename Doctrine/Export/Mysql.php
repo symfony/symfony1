@@ -380,7 +380,7 @@ class Doctrine_Export_Mysql extends Doctrine_Export
      */
     public function createSequence($sequenceName, $start = 1, array $options = array())
     {
-        $sequenceName   = $this->conn->quoteIdentifier($this->conn->getSequenceName($sequenceName), true);
+        $sequenceName   = $this->conn->quoteIdentifier($sequenceName, true);
         $seqcolName     = $this->conn->quoteIdentifier($this->conn->getAttribute(Doctrine::ATTR_SEQCOL_NAME), true);
 
         $optionsStrings = array();
@@ -393,7 +393,7 @@ class Doctrine_Export_Mysql extends Doctrine_Export
             $optionsStrings['charset'] = 'DEFAULT CHARACTER SET ' . $options['charset'];
 
             if (isset($options['collate'])) {
-                $optionsStrings['collate'] .= ' COLLATE ' . $options['collate'];
+                $optionsStrings['charset'] .= ' COLLATE ' . $options['collate'];
             }
         }
 
@@ -402,7 +402,7 @@ class Doctrine_Export_Mysql extends Doctrine_Export
         if (isset($options['type'])) {
             $type = $options['type'];
         } else {
-            $type = $this->conn->default_table_type;
+            $type = $this->conn->getAttribute(Doctrine::ATTR_DEFAULT_TABLE_TYPE);
         }
         if ($type) {
             $optionsStrings[] = 'ENGINE = ' . $type;
@@ -411,23 +411,24 @@ class Doctrine_Export_Mysql extends Doctrine_Export
 
         try {
             $query  = 'CREATE TABLE ' . $sequenceName
-                    . ' (' . $seqcolName . ' INT NOT NULL AUTO_INCREMENT, PRIMARY KEY ('
-                    . $seqcolName . '))'
-                    . strlen($this->conn->default_table_type) ? ' TYPE = '
-                    . $this->conn->default_table_type : '';
+                    . ' (' . $seqcolName . ' BIGINT NOT NULL AUTO_INCREMENT, PRIMARY KEY ('
+                    . $seqcolName . ')) ' . implode($optionsStrings, ' ');
 
             $res    = $this->conn->exec($query);
         } catch(Doctrine_Connection_Exception $e) {
             throw new Doctrine_Export_Exception('could not create sequence table');
         }
 
-        if ($start == 1)
+        if ($start == 1 && $res == 1)
             return true;
 
         $query  = 'INSERT INTO ' . $sequenceName
                 . ' (' . $seqcolName . ') VALUES (' . ($start - 1) . ')';
 
         $res    = $this->conn->exec($query);
+
+        if ($res == 1)
+            return true;
 
         // Handle error
         try {

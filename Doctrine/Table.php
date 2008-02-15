@@ -420,13 +420,13 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                                 $this->_identifierType = Doctrine::IDENTIFIER_SEQUENCE;
                                 $found = true;
 
-                                if ($value) {
+                                if (is_string($value)) {
                                     $this->_options['sequenceName'] = $value;
                                 } else {
                                     if (($sequence = $this->getAttribute(Doctrine::ATTR_DEFAULT_SEQUENCE)) !== null) {
                                         $this->_options['sequenceName'] = $sequence;
                                     } else {
-                                        $this->_options['sequenceName'] = $this->_conn->getSequenceName($this->_options['tableName']);
+                                        $this->_options['sequenceName'] = $this->_conn->formatter->getSequenceName($this->_options['tableName']);
                                     }
                                 }
                                 break;
