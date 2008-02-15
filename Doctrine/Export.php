@@ -1058,60 +1058,69 @@ class Doctrine_Export extends Doctrine_Connection_Module
      * @param array $classes
      * @return void
      */
-    public function exportClasses(array $classes)
-    {
-        $connections = array();
-        foreach ($classes as $class) {
-            $record = new $class();
-            $connection = $record->getTable()->getConnection();
-            $connectionName = Doctrine_Manager::getInstance()->getConnectionName($connection);
-            
-            if ( ! isset($connections[$connectionName])) {
-                $connections[$connectionName] = array();
-                $connections[$connectionName]['creates'] = array();
-                $connections[$connectionName]['alters'] = array();
-            }
-            
-            $sql = $this->exportClassesSql(array($class));
-            // Build array of all the creates
-            // We need these to happen first
-            foreach ($sql as $key => $query) {
-                if (strstr($query, 'CREATE')) {
-                    $connections[$connectionName]['creates'][] = $query;
-                    // Unset the create from sql so we can have an array of everything else but creates
-                    unset($sql[$key]);
-                }
-            }
-            
-            $connections[$connectionName]['alters'] = array_merge($connections[$connectionName]['alters'], $sql);
-        }
+     public function exportClasses(array $classes)
+     { 
+         $connections = array();
+         foreach ($classes as $class) {
+             $record = new $class();
+             $connection = $record->getTable()->getConnection();
+             $connectionName = Doctrine_Manager::getInstance()->getConnectionName($connection);
 
-        // Loop over all the sql again to merge the creates and alters in to the same array, but so that the alters are at the bottom
-        $build = array();
-        foreach ($connections as $connectionName => $sql) {
-            $build[$connectionName] = array_merge($sql['creates'], $sql['alters']);
-        }
+             if ( ! isset($connections[$connectionName])) {
+                 $connections[$connectionName] = array(
+                     'create_tables' => array(),
+                     'create_sequences' => array(),
+                     'alters' => array()
+                 );
+             }
 
-        foreach ($build as $connectionName => $sql) {
-            $connection = Doctrine_Manager::getInstance()->getConnection($connectionName);
-            
-            $connection->beginTransaction();
-            
-            foreach ($sql as $query) {
-                try {
-                    $connection->exec($query);
-                } catch (Doctrine_Connection_Exception $e) {
-                    // we only want to silence table already exists errors
-                    if ($e->getPortableCode() !== Doctrine::ERR_ALREADY_EXISTS) {
-                        $connection->rollback();
-                        throw new Doctrine_Export_Exception($e->getMessage() . '. Failing Query: ' . $query);
-                    }
-                }
-            }
-            
-            $connection->commit();
-        }
-    }
+             $sql = $this->exportClassesSql(array($class));
+
+             // Build array of all the creates
+             // We need these to happen first
+             foreach ($sql as $key => $query) {
+                 if (strstr($query, 'CREATE TABLE')) {
+                     $connections[$connectionName]['create_tables'][] = $query;
+
+                     unset($sql[$key]);
+                 }
+
+                 if (strstr($query, 'CREATE SEQUENCE')) {
+                     $connections[$connectionName]['create_sequences'][] = $query;
+
+                     unset($sql[$key]);
+                 }
+             }
+
+             $connections[$connectionName]['alters'] = array_merge($connections[$connectionName]['alters'], $sql);
+         }
+
+         // Loop over all the sql again to merge the creates and alters in to the same array, but so that the alters are at the bottom
+         $build = array();
+         foreach ($connections as $connectionName => $sql) {
+             $build[$connectionName] = array_merge($sql['create_tables'], $sql['create_sequences'], $sql['alters']);
+         }
+
+         foreach ($build as $connectionName => $sql) {
+             $connection = Doctrine_Manager::getInstance()->getConnection($connectionName);
+
+             $connection->beginTransaction();
+
+             foreach ($sql as $query) {
+                 try {
+                     $connection->exec($query);
+                 } catch (Doctrine_Connection_Exception $e) {
+                     // we only want to silence table already exists errors
+                     if ($e->getPortableCode() !== Doctrine::ERR_ALREADY_EXISTS) {
+                         $connection->rollback();
+                         throw new Doctrine_Export_Exception($e->getMessage() . '. Failing Query: ' . $query);
+                     }
+                 }
+             }
+
+             $connection->commit();
+         }
+     }
 
     /**
      * exportClassesSql

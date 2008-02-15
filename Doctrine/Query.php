@@ -1174,7 +1174,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                 $subquery = $this->getLimitSubquery();
                 // what about composite keys?
                 $idColumnName = $table->getColumnName($table->getIdentifier());
-                switch (strtolower($this->_conn->getName())) {
+                switch (strtolower($this->_conn->getDriverName())) {
                     case 'mysql':
                         // mysql doesn't support LIMIT in subqueries
                         $list     = $this->_conn->execute($subquery, $params)->fetchAll(Doctrine::FETCH_COLUMN);
