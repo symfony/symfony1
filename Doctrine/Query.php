@@ -1101,6 +1101,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
             $this->_queryComponents = array();
             $this->_pendingAggregates = array();
             $this->_aggregateAliasMap = array();
+            $this->_enumParams = array();
         }
         $this->reset();
 
@@ -1113,12 +1114,11 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
             $this->_processDqlQueryPart($queryPartName, $queryParts);
         }
         $this->_state = self::STATE_CLEAN;
-        
-        $params = $this->convertEnums($params);        
 
+        $params = $this->convertEnums($params);
 
         // Proceed with the generated SQL
-        
+
         if (empty($this->_sqlParts['from'])) {
             return false;
         }
