@@ -97,5 +97,8 @@ test:
 #    # Logging
 #    logging_enabled:        on
 #
+#    # i18n
+#    default_culture:        en        # Default user culture
+#
 #    # enable 1.0 compatibility
 #    compat_10:              off
