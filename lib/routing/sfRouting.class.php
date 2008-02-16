@@ -42,11 +42,7 @@ abstract class sfRouting
    * Initializes this sfRouting instance.
    *
    * @param  sfEventDispatcher A sfEventDispatcher instance
-   * @param  array        An associative array of initialization options.
-   *
-   * @return Boolean     true, if initialization completes successfully, otherwise false.
-   *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfRouting.
+   * @param  array             An associative array of initialization options.
    */
   public function initialize(sfEventDispatcher $dispatcher, $options = array())
   {

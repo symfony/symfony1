@@ -30,14 +30,7 @@ class sfPatternRouting extends sfRouting
     $routes                 = array();
 
   /**
-   * Initialize this Routing.
-   *
-   * @param  sfEventDispatcher A sfEventDispatcher instance
-   * @param  array        An associative array of initialization options.
-   *
-   * @return Boolean      true, if initialization completes successfully, otherwise false.
-   *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfRouting.
+   * @see sfRouting
    */
   public function initialize(sfEventDispatcher $dispatcher, $options = array())
   {
@@ -131,6 +124,11 @@ class sfPatternRouting extends sfRouting
     return $this->currentInternalUri[$typeId];
   }
 
+  /**
+   * Sets the default suffix
+   *
+   * @param string The default suffix
+   */
   public function setDefaultSuffix($suffix)
   {
     $this->defaultSuffix = '.' == $suffix ? '' : $suffix;
@@ -220,26 +218,26 @@ class sfPatternRouting extends sfRouting
     return $this->connect($name, $route, $default, $requirements);
   }
 
- /**
-  * Adds a new route at the end of the current list of routes.
-  *
-  * A route string is a string with 2 special constructions:
-  * - :string: :string denotes a named paramater (available later as $request->getParameter('string'))
-  * - *: * match an indefinite number of parameters in a route
-  *
-  * Here is a very common rule in a symfony project:
-  *
-  * <code>
-  * $r->connect('/:module/:action/*');
-  * </code>
-  *
-  * @param  string The route name
-  * @param  string The route string
-  * @param  array  The default parameter values
-  * @param  array  The regexps parameters must match
-  *
-  * @return array  current routes
-  */
+  /**
+   * Adds a new route at the end of the current list of routes.
+   *
+   * A route string is a string with 2 special constructions:
+   * - :string: :string denotes a named paramater (available later as $request->getParameter('string'))
+   * - *: * match an indefinite number of parameters in a route
+   *
+   * Here is a very common rule in a symfony project:
+   *
+   * <code>
+   * $r->connect('/:module/:action/*');
+   * </code>
+   *
+   * @param  string The route name
+   * @param  string The route string
+   * @param  array  The default parameter values
+   * @param  array  The regexps parameters must match
+   *
+   * @return array  current routes
+   */
   public function connect($name, $route, $default = array(), $requirements = array())
   {
     // route already exists?
@@ -346,15 +344,15 @@ class sfPatternRouting extends sfRouting
     return $this->routes;
   }
 
- /**
-  * Generates a valid URLs for parameters.
-  *
-  * @param  array  The parameter values
-  * @param  string The divider between key/value pairs
-  * @param  string The equal sign to use between key and value
-  *
-  * @return string The generated URL
-  */
+  /**
+   * Generates a valid URLs for parameters.
+   *
+   * @param  array  The parameter values
+   * @param  string The divider between key/value pairs
+   * @param  string The equal sign to use between key and value
+   *
+   * @return string The generated URL
+   */
   public function generate($name, $params, $querydiv = '/', $divider = '/', $equals = '/')
   {
     // named route?
@@ -477,15 +475,15 @@ class sfPatternRouting extends sfRouting
     return $realUrl;
   }
 
- /**
-  * Parses a URL to find a matching route.
-  *
-  * Returns null if no route match the URL.
-  *
-  * @param  string URL to be parsed
-  *
-  * @return array  An array of parameters
-  */
+  /**
+   * Parses a URL to find a matching route.
+   *
+   * Returns null if no route match the URL.
+   *
+   * @param  string URL to be parsed
+   *
+   * @return array  An array of parameters
+   */
   public function parse($url)
   {
     // an URL should start with a '/', mod_rewrite doesn't respect that, but no-mod_rewrite version does.
