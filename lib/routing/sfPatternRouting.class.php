@@ -252,17 +252,21 @@ class sfPatternRouting extends sfRouting
     $names  = array();
     $suffix = $this->defaultSuffix;
 
-    // used for performance reasons
-    $namesHash = array();
-
-    $r = null;
-    if (($route == '') || ($route == '/'))
+    // a route must start by a slash. If there is none, add it automatically
+    if ('/' != $route[0])
     {
-      $regexp = '/^[\/]*$/';
-      $this->routes[$name] = array($route, $regexp, array(), array(), $default, $requirements, $suffix);
+      $route = '/'.$route; 
+    }
+
+    if ($route == '/')
+    {
+      $this->routes[$name] = array($route, '/^[\/]*$/', array(), array(), $default, $requirements, $suffix);
     }
     else
     {
+      // used for performance reasons
+      $namesHash = array();
+      $r = null;
       $elements = array();
       foreach (explode('/', $route) as $element)
       {
@@ -457,15 +461,15 @@ class sfPatternRouting extends sfRouting
         $tmp = $querydiv.$tmp;
       }
       $realUrl = preg_replace('/\/\*(\/|$)/', "$tmp$1", $realUrl);
+
+      // strip off last divider character
+      if (strlen($realUrl) > 1)
+      {
+        $realUrl = rtrim($realUrl, $divider);
+      }
     }
 
-    // strip off last divider character
-    if (strlen($realUrl) > 1)
-    {
-      $realUrl = rtrim($realUrl, $divider);
-    }
-
-    if ($realUrl != '/')
+    if ('/' != $realUrl && '/' != substr($realUrl, -1))
     {
       $realUrl .= $suffix;
     }
