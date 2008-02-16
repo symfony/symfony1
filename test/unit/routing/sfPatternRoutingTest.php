@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(70, new lime_output_color());
+$t = new lime_test(73, new lime_output_color());
 
 class sfPatternRoutingTest extends sfPatternRouting
 {
@@ -159,7 +159,7 @@ $url = '/default/index/foo';
 $t->is($r->parse($url), $params, '->parse() removes the last parameter if the parameter is default value');
 //$t->is($r->generate('', $params), $url, '->generate() removes the last parameter if the parameter is default value');
 
-// Numerics params
+// numerics params
 $r->clearRoutes();
 $r->connect('test', '/:module/:action/*', array('module' => 'default', 'action' => 'index'));
 $params = array('module' => 'default', 'action' => 'index', 15 => 'foo', 32 => 'bar', 'foo' => 'bar');
@@ -291,7 +291,28 @@ $r->parse('/foo/bar/bar/foo/a/b');
 $t->is($r->getCurrentInternalUri(), 'foo/bar?a=b&bar=foo', '->getCurrentInternalUri() returns the internal URI for last parsed URL');
 $r->parse('/module/action/2');
 $t->is($r->getCurrentInternalUri(true), '@test2?id=2', '->getCurrentInternalUri() returns the internal URI for last parsed URL');
+
 // these tests are against r7363
 $t->is($r->getCurrentInternalUri(false), 'foo/bar?id=2', '->getCurrentInternalUri() returns the internal URI for last parsed URL');
 $t->is($r->getCurrentInternalUri(true), '@test2?id=2', '->getCurrentInternalUri() returns the internal URI for last parsed URL');
 $t->is($r->getCurrentInternalUri(false), 'foo/bar?id=2', '->getCurrentInternalUri() returns the internal URI for last parsed URL');
+
+// defaults
+$t->diag('defaults');
+$r->clearRoutes();
+$r->connect('test', '/test', array('module' => 'default', 'action' => 'index', 'bar' => 'foo'));
+$params = array('module' => 'default', 'action' => 'index');
+$url = '/test';
+$t->is($r->generate('', $params), $url, '->generate() routes takes default values into account when matching a route');
+$params = array('module' => 'default', 'action' => 'index', 'bar' => 'foo');
+$t->is($r->generate('', $params), $url, '->generate() routes takes default values into account when matching a route');
+$params = array('module' => 'default', 'action' => 'index', 'bar' => 'bar');
+try
+{
+  $r->generate('', $params);
+  $t->fail('->generate() throws a sfConfigurationException if no route matches the params');
+}
+catch (sfConfigurationException $e)
+{
+  $t->pass('->generate() throws a sfConfigurationException if no route matches the params');
+}
