@@ -45,6 +45,7 @@ default:
     class: sfPatternRouting
     param:
       load_configuration: true
+      suffix:             .
 
   logger:
     class: sfAggregateLogger

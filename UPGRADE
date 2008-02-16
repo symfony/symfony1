@@ -402,7 +402,7 @@ Session timeout
 ---------------
 
 The `sf_timeout` setting is not used anymore. To change the session timeout,
-you now have to edit the `factories.yml` instead if the `settings.yml`,
+you now have to edit `factories.yml` instead of the `settings.yml`,
 and change the parameters of the `user` factory:
 
     [yml]
@@ -411,6 +411,21 @@ and change the parameters of the `user` factory:
         class: myUser
         param:
           timeout:     1800     # session timeout in seconds
+
+Routing default suffix
+----------------------
+
+The `sf_suffix` setting is not used anymore. To change the default suffix,
+you now have to edit `factories.yml` instead of `settings.yml`,
+and change the parameters of the `routing` factory:
+
+    [yml]
+    all:
+      routing:
+        class: sfPatternRouting
+        param:
+          load_configuration: true
+          suffix:             .     # Default suffix for generated URLs. If set to a single dot (.), no suffix is added. Possible values: .html, .php, and so on.
 
 `php.yml` configuration file
 ----------------------------

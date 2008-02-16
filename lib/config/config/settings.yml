@@ -30,7 +30,6 @@ default:
     escaping_method:   ESC_ENTITIES   # Function or helper used for escaping. Accepted values: ESC_RAW, ESC_ENTITIES, ESC_JS, ESC_JS_NO_ENTITIES.
 
     # Routing settings
-    suffix:                 .         # Default suffix for generated URLs. If set to a single dot (.), no suffix is added. Possible values: .html, .php, and so on.
     no_script_name:         off       # Enable the front controller name in generated URLs
 
     # Validation settings, used for error generation by the Validation helper
