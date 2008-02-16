@@ -907,25 +907,7 @@ class sfWebRequest extends sfRequest
    */
   protected function parseRequestParameters()
   {
-    $parameters = array();
-    $parameters = $this->dispatcher->filter(new sfEvent($this, 'request.filter_parameters', array('path_info' => $this->getPathInfo())), $parameters)->getReturnValue();
-
-    if (!isset($parameters['module']))
-    {
-      $parameters['module'] = sfConfig::get('sf_default_module', 'default');
-    }
-
-    if (!isset($parameters['action']))
-    {
-      $parameters['action'] = sfConfig::get('sf_default_action', 'index');
-    }
-
-    if (empty($parameters['module']) || empty($parameters['action']))
-    {
-      throw new sfError404Exception(sprintf('Empty module and/or action after parsing the URL "%s" (%s/%s).', $this->getPathInfo(), $parameters['module'], $parameters['action']));
-    }
-
-    return $parameters;
+    return $this->dispatcher->filter(new sfEvent($this, 'request.filter_parameters', array('path_info' => $this->getPathInfo())), array())->getReturnValue();
   }
 
   /**

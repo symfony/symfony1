@@ -21,9 +21,6 @@ test:
 
 #all:
 #  .actions:
-#    default_module:         default   # Default module and action to be called when
-#    default_action:         index     # A routing rule doesn't set it
-#
 #    error_404_module:       default   # To be called when a 404 error is raised
 #    error_404_action:       error404  # Or when the requested URL doesn't match any route
 #

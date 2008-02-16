@@ -81,18 +81,6 @@ abstract class sfWebController extends sfController
       $querydiv = '?';
     }
 
-    // default module
-    if (!isset($parameters['module']))
-    {
-      $parameters['module'] = sfConfig::get('sf_default_module');
-    }
-
-    // default action
-    if (!isset($parameters['action']))
-    {
-      $parameters['action'] = sfConfig::get('sf_default_action');
-    }
-
     // routing to generate path
     $url .= $this->context->getRouting()->generate($route_name, $parameters, $querydiv, $divider, $equals);
 
@@ -154,10 +142,7 @@ abstract class sfWebController extends sfController
     }
     else
     {
-      $tmp = explode('/', $url);
-
-      $params['module'] = $tmp[0];
-      $params['action'] = isset($tmp[1]) ? $tmp[1] : sfConfig::get('sf_default_action');
+      list($params['module'], $params['action']) = explode('/', $url);
     }
 
     // split the query string
@@ -168,7 +153,7 @@ abstract class sfWebController extends sfController
         =                   # =
         (.*?)               # value
         (?:
-          (?=&[^&=]+=) | $   # followed by another key= or the end of the string
+          (?=&[^&=]+=) | $  # followed by another key= or the end of the string
         )
       /x', $query_string, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
       foreach ($matches as $match)

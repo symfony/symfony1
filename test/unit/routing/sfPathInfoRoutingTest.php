@@ -31,8 +31,8 @@ $t->is($routing->getCurrentInternalUri(), 'foo/bar?foo=bar', '->getCurrentIntern
 
 // ->parse()
 $t->diag('parse');
-$t->is($routing->parse(''), array(), '->parse() parses a URL');
-$t->is($routing->parse('/foo/bar'), array('foo' => 'bar'), '->parse() parses a URL');
+$t->is($routing->parse(''), array('module' => 'default', 'action' => 'index'), '->parse() parses a URL');
+$t->is($routing->parse('/foo/bar'), array('module' => 'default', 'action' => 'index', 'foo' => 'bar'), '->parse() parses a URL');
 $t->is($routing->parse('/module/foo/action/bar'), array('module' => 'foo', 'action' => 'bar'), '->parse() parses a URL');
 $t->is($routing->parse('/module/foo/action/bar/foo/bar'), array('foo' => 'bar', 'module' => 'foo', 'action' => 'bar'), '->parse() parses a URL');
 

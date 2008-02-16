@@ -412,12 +412,13 @@ and change the parameters of the `user` factory:
         param:
           timeout:     1800     # session timeout in seconds
 
-Routing default suffix
-----------------------
+Routing configuration
+---------------------
 
-The `sf_suffix` setting is not used anymore. To change the default suffix,
-you now have to edit `factories.yml` instead of `settings.yml`,
-and change the parameters of the `routing` factory:
+The `sf_suffix`, `sf_default_module`, and `sf_default_action` settings are not
+used anymore. To change the default suffix, module, or action, you now have
+to edit `factories.yml` instead of `settings.yml`, and change the parameters
+of the `routing` factory:
 
     [yml]
     all:
@@ -425,7 +426,9 @@ and change the parameters of the `routing` factory:
         class: sfPatternRouting
         param:
           load_configuration: true
-          suffix:             .     # Default suffix for generated URLs. If set to a single dot (.), no suffix is added. Possible values: .html, .php, and so on.
+          suffix:             .       # Default suffix for generated URLs. If set to a single dot (.), no suffix is added. Possible values: .html, .php, and so on.
+          default_module:     default # Default module and action to be called when
+          default_action:     index   # A routing rule doesn't set it
 
 `php.yml` configuration file
 ----------------------------

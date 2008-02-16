@@ -19,37 +19,23 @@
 class sfNoRouting extends sfRouting
 {
   /**
-   * Gets the internal URI for the current request.
-   *
-   * @param boolean Whether to give an internal URI with the route name (@route)
-   *                or with the module/action pair
-   *
-   * @return string The current internal URI
+   * @see sfRouting
    */
   public function getCurrentInternalUri($with_route_name = false)
   {
-    $parameters = $_GET;
-
-    // module/action
-    $module = isset($parameters['module']) ? $parameters['module'] : $this->options['default_module'];
-    $action = isset($parameters['action']) ? $parameters['action'] : $this->options['default_action'];
+    $parameters = $this->fixDefaults(array_merge($this->defaultParameters, $_GET));
+    $action = sprintf('%s/%s', $parameters['module'], $parameters['action']);
 
     // other parameters
     unset($parameters['module'], $parameters['action']);
     ksort($parameters);
     $parameters = count($parameters) ? '?'.http_build_query($parameters, null, '&') : '';
 
-    return sprintf('%s/%s%s', $module, $action, $parameters);
+    return sprintf('%s%s', $action, $parameters);
   }
 
  /**
-  * Generates a valid URLs for parameters.
-  *
-  * @param  array  The parameter values
-  * @param  string The divider between key/value pairs
-  * @param  string The equal sign to use between key and value
-  *
-  * @return string The generated URL
+  * @see sfRouting
   */
   public function generate($name, $params, $querydiv = '/', $divider = '/', $equals = '/')
   {
@@ -59,13 +45,7 @@ class sfNoRouting extends sfRouting
   }
 
  /**
-  * Parses a URL to find a matching route.
-  *
-  * Returns null if no route match the URL.
-  *
-  * @param  string URL to be parsed
-  *
-  * @return array  An array of parameters
+  * @see sfRouting
   */
   public function parse($url)
   {
@@ -73,9 +53,7 @@ class sfNoRouting extends sfRouting
   }
 
   /**
-   * Gets the current compiled route array.
-   *
-   * @return array The route array
+   * @see sfRouting
    */
   public function getRoutes()
   {
@@ -83,11 +61,7 @@ class sfNoRouting extends sfRouting
   }
 
   /**
-   * Sets the compiled route array.
-   *
-   * @param array The route array
-   *
-   * @return array The route array
+   * @see sfRouting
    */
   public function setRoutes($routes)
   {
@@ -95,9 +69,7 @@ class sfNoRouting extends sfRouting
   }
 
   /**
-   * Returns true if this instance has some routes.
-   *
-   * @return  boolean
+   * @see sfRouting
    */
   public function hasRoutes()
   {
@@ -105,7 +77,7 @@ class sfNoRouting extends sfRouting
   }
 
   /**
-   * Clears all current routes.
+   * @see sfRouting
    */
   public function clearRoutes()
   {

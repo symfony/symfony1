@@ -157,11 +157,11 @@ sfConfig::set('sf_charset', 'utf-8');
 ob_start();
 $controller->redirect('module/action?id=1#photos');
 $content = ob_get_clean();
-$t->like($content, '~http\://localhost/index.php/\?module=module&amp;action=action&amp;id=1#photos~', '->redirect() adds a refresh meta in the content');
-$t->like($context->getResponse()->getHttpHeader('Location'), '~http\://localhost/index.php/\?module=module&action=action&id=1#photos~', '->redirect() adds a Location HTTP header');
+$t->like($content, '~http\://localhost/index.php/\?action=action&amp;module=module&amp;id=1#photos~', '->redirect() adds a refresh meta in the content');
+$t->like($context->getResponse()->getHttpHeader('Location'), '~http\://localhost/index.php/\?action=action&module=module&id=1#photos~', '->redirect() adds a Location HTTP header');
 
 // ->genUrl()
 $t->diag('->genUrl()');
 
 $r = $context->getRouting();
-$t->is($controller->genUrl('module/action?id=4'), $controller->genUrl(array('module' => 'module', 'action' => 'action', 'id' => 4)), '->genUrl() accepts a string or an array as its first argument');
+$t->is($controller->genUrl('module/action?id=4'), $controller->genUrl(array('action' => 'action', 'module' => 'module', 'id' => 4)), '->genUrl() accepts a string or an array as its first argument');

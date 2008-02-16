@@ -53,14 +53,8 @@ class sfPatternRouting extends sfRouting
   }
 
   /**
-   * Gets the internal URI for the current request.
-   *
-   * @param boolean Whether to give an internal URI with the route name (@route)
-   *                or with the module/action pair
-   *
-   * @return string The current internal URI
+   * @see sfRouting
    */
-
   public function getCurrentInternalUri($withRouteName = false)
   {
     if (is_null($this->currentRouteName))
@@ -68,7 +62,7 @@ class sfPatternRouting extends sfRouting
       return null;
     }
 
-    $typeId = ($withRouteName) ? 0 : 1;
+    $typeId = $withRouteName ? 0 : 1;
 
     if (!isset($this->currentInternalUri[$typeId]))
     {
@@ -76,17 +70,7 @@ class sfPatternRouting extends sfRouting
 
       list($url, $regexp, $names, $namesHash, $defaults, $requirements, $suffix) = $this->routes[$this->currentRouteName];
 
-      if ($withRouteName)
-      {
-        $internalUri = '@'.$this->currentRouteName;
-      }
-      else
-      {
-        $module = isset($parameters['module']) && $parameters['module'] ? $parameters['module'] : $this->options['default_module'];
-        $action = isset($parameters['action']) && $parameters['action'] ? $parameters['action'] : $this->options['default_action'];
-
-        $internalUri = $module.'/'.$action;
-      }
+      $internalUri = $withRouteName ? '@'.$this->currentRouteName : $parameters['module'].'/'.$parameters['action'];
 
       $params = array();
 
@@ -135,9 +119,7 @@ class sfPatternRouting extends sfRouting
   }
 
   /**
-   * Gets the current compiled route array.
-   *
-   * @return array The route array
+   * @see sfRouting
    */
   public function getRoutes()
   {
@@ -145,11 +127,7 @@ class sfPatternRouting extends sfRouting
   }
 
   /**
-   * Sets the compiled route array.
-   *
-   * @param array The route array
-   *
-   * @return array The route array
+   * @see sfRouting
    */
   public function setRoutes($routes)
   {
@@ -157,9 +135,7 @@ class sfPatternRouting extends sfRouting
   }
 
   /**
-   * Returns true if this instance has some routes.
-   *
-   * @return  boolean
+   * @see sfRouting
    */
   public function hasRoutes()
   {
@@ -167,7 +143,7 @@ class sfPatternRouting extends sfRouting
   }
 
   /**
-   * Clears all current routes.
+   * @see sfRouting
    */
   public function clearRoutes()
   {
@@ -345,16 +321,12 @@ class sfPatternRouting extends sfRouting
   }
 
   /**
-   * Generates a valid URLs for parameters.
-   *
-   * @param  array  The parameter values
-   * @param  string The divider between key/value pairs
-   * @param  string The equal sign to use between key and value
-   *
-   * @return string The generated URL
+   * @see sfRouting
    */
   public function generate($name, $params, $querydiv = '/', $divider = '/', $equals = '/')
   {
+    $params = $this->fixDefaults($params);
+
     // named route?
     if ($name)
     {
@@ -476,13 +448,7 @@ class sfPatternRouting extends sfRouting
   }
 
   /**
-   * Parses a URL to find a matching route.
-   *
-   * Returns null if no route match the URL.
-   *
-   * @param  string URL to be parsed
-   *
-   * @return array  An array of parameters
+   * @see sfRouting
    */
   public function parse($url)
   {
@@ -508,6 +474,7 @@ class sfPatternRouting extends sfRouting
       $r = null;
 
       list($route, $regexp, $names, $namesHash, $defaults, $requirements, $suffix) = $route;
+      $defaults = array_merge($defaults, $this->defaultParameters);
 
       $break = false;
 
@@ -616,7 +583,7 @@ class sfPatternRouting extends sfRouting
       throw new sfError404Exception(sprintf('No matching route found for "%s"', $url));
     }
 
-    $this->currentRouteParameters = $out;
+    $this->currentRouteParameters = $this->fixDefaults($out);
 
     return $this->currentRouteParameters;
   }

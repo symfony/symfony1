@@ -44,6 +44,11 @@ class sfFrontWebController extends sfWebController
       $moduleName = $request->getParameter('module');
       $actionName = $request->getParameter('action');
 
+      if (empty($moduleName) || empty($actionName))
+      {
+        throw new sfError404Exception(sprintf('Empty module and/or action after parsing the URL "%s" (%s/%s).', $request->getPathInfo(), $moduleName, $actionName));
+      }
+
       // make the first request
       $this->forward($moduleName, $actionName);
     }

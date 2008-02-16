@@ -46,6 +46,8 @@ default:
     param:
       load_configuration: true
       suffix:             .
+      default_module:     default
+      default_action:     index
 
   logger:
     class: sfAggregateLogger
