@@ -88,7 +88,7 @@ class sfExecutionFilter extends sfFilter
     $viewName = $actionInstance->execute($this->context->getRequest());
     $actionInstance->postExecute();
 
-    return $viewName ? $viewName : sfView::SUCCESS;
+    return is_null($viewName) ? sfView::SUCCESS : $viewName;
   }
 
   /**
