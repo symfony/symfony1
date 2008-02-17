@@ -23,7 +23,7 @@ class sfNoRouting extends sfRouting
    */
   public function getCurrentInternalUri($with_route_name = false)
   {
-    $parameters = $this->fixDefaults(array_merge($this->defaultParameters, $_GET));
+    $parameters = $this->fixDefaults($this->mergeArrays($this->defaultParameters, $_GET));
     $action = sprintf('%s/%s', $parameters['module'], $parameters['action']);
 
     // other parameters
@@ -39,7 +39,7 @@ class sfNoRouting extends sfRouting
   */
   public function generate($name, $params, $querydiv = '/', $divider = '/', $equals = '/')
   {
-    $parameters = http_build_query(array_merge($this->defaultParameters, $params), null, '&');
+    $parameters = http_build_query($this->mergeArrays($this->defaultParameters, $params), null, '&');
 
     return '/'.($parameters ? '?'.$parameters : '');
   }

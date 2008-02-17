@@ -42,7 +42,7 @@ class sfPathInfoRouting extends sfRouting
   public function generate($name, $params, $querydiv = '/', $divider = '/', $equals = '/')
   {
     $url = '';
-    foreach (array_merge($this->defaultParameters, $params) as $key => $value)
+    foreach ($this->mergeArrays($this->defaultParameters, $params) as $key => $value)
     {
       $url .= '/'.$key.'/'.$value;
     }
