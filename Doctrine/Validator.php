@@ -112,6 +112,7 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
                     || $name == 'values'
                     || $name == 'sequence'
                     || $name == 'zerofill'
+                    || $name == 'owner'
                     || $name == 'scale') {
                     continue;
                 }
