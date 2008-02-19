@@ -122,7 +122,10 @@ class Doctrine_Migration
      * $param array An array of classes
      * @return void
      */
-    public function loadMigrationClassesFromDirectory($classes){
+    public function loadMigrationClassesFromDirectory()
+    {
+        $classes = get_declared_classes();
+        
         foreach ((array) $this->_migrationClassesDirectory as $dir) {
             $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
                 RecursiveIteratorIterator::LEAVES_ONLY);
@@ -154,16 +157,9 @@ class Doctrine_Migration
      */
     protected function loadMigrationClasses()
     {
-        if ($this->_migrationClasses) {
-            return $this->_migrationClasses;
-        }
-        
-        $classes = get_declared_classes();
-        
         if ($this->_migrationClassesDirectory !== null) {
-            $this->loadMigrationClassesFromDirectory($classes);
+            $this->loadMigrationClassesFromDirectory();
         }
-
         
         $parent = new ReflectionClass('Doctrine_Migration');
         

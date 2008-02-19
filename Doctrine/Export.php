@@ -1041,11 +1041,11 @@ class Doctrine_Export extends Doctrine_Connection_Module
     public function exportSchema($directory = null)
     {
         if ($directory !== null) {
-            $models = Doctrine::loadModels($directory);
+            $models = Doctrine::filterInvalidModels(Doctrine::loadModels($directory));
         } else {
             $models = Doctrine::getLoadedModels();
         }
-        
+
         $this->exportClasses($models);
     }
 
@@ -1059,12 +1059,11 @@ class Doctrine_Export extends Doctrine_Connection_Module
      * @return void
      */
      public function exportClasses(array $classes)
-     { 
+     {
          $connections = array();
          foreach ($classes as $class) {
-             $record = new $class();
-             $connection = $record->getTable()->getConnection();
-             $connectionName = Doctrine_Manager::getInstance()->getConnectionName($connection);
+             $connection = Doctrine_Manager::getInstance()->getConnectionForComponent($class);
+             $connectionName = $connection->getName();
 
              if ( ! isset($connections[$connectionName])) {
                  $connections[$connectionName] = array(
@@ -1245,7 +1244,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
     public function exportSql($directory = null)
     {
         if ($directory !== null) {
-            $models = Doctrine::loadModels($directory);
+            $models = Doctrine::filterInvalidModels(Doctrine::loadModels($directory));
         } else {
             $models = Doctrine::getLoadedModels();
         }

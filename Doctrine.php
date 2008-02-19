@@ -565,9 +565,10 @@ final class Doctrine
                             $foundClasses = array_slice($declaredAfter, count($declaredBefore) - 1);
                             if ($foundClasses) {
                                 foreach ($foundClasses as $className) {
-                                    if (self::isValidModelClass($className) && !in_array($className, $loadedModels)) {
+                                    if (self::isValidModelClass($className)) {
                                         $loadedModels[] = $className;
 
+                                        self::$_loadedModelFiles[$className] = $file->getPathName();
                                         self::$_pathModels[$file->getPathName()][$className] = $className;
                                     }
                                 }
@@ -578,14 +579,7 @@ final class Doctrine
             }
         }
 
-        // We do not want to filter invalid models when using conservative model loading
-        // The filtering requires that the class be loaded and inflected in order to determine if it is 
-        // a valid class.
-        if ($manager->getAttribute(Doctrine::ATTR_MODEL_LOADING) == Doctrine::MODEL_LOADING_CONSERVATIVE) {
-            return $loadedModels;
-        } else {
-            return self::filterInvalidModels($loadedModels);
-        }
+        return $loadedModels;
     }
 
     /**

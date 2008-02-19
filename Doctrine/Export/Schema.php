@@ -44,12 +44,12 @@ class Doctrine_Export_Schema
      */
     public function buildSchema($directory = null, $models = array())
     {
-        if ($directory) {
-            $loadedModels = Doctrine::loadModels($directory);
+        if ($directory !== null) {
+            $loadedModels = Doctrine::filterInvalidModels(Doctrine::loadModels($directory));
         } else {
             $loadedModels = Doctrine::getLoadedModels();
         }
-
+        
         $array = array();
         
         $parent = new ReflectionClass('Doctrine_Record');
@@ -64,8 +64,7 @@ class Doctrine_Export_Schema
                 continue;
             }
 
-            $record = new $className();
-            $recordTable  = $record->getTable();
+            $recordTable = Doctrine::getTable($className);
             
             $data = $recordTable->getExportableFormat();
             
