@@ -155,12 +155,12 @@ END;
      */
     public function generateMigrationsFromModels($modelsPath = null)
     {
-        if ($modelsPath) {
-            $models = Doctrine::loadModels($modelsPath);
-        } else {
-            $models = Doctrine::getLoadedModels();
+        if ($modelsPath !== null) {
+            Doctrine::loadModels($modelsPath);
         }
-        
+
+        $models = Doctrine::getLoadedModels();
+
         $foreignKeys = array();
         
         foreach ($models as $model) {
