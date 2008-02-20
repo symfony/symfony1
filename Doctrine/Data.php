@@ -272,7 +272,7 @@ class Doctrine_Data
      * @param string $models 
      * @return void
      */
-    public function purge($models = array())
+    public function purge($models = null)
     {
         $models = Doctrine::filterInvalidModels($models);
 
