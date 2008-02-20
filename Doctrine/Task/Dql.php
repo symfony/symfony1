@@ -46,24 +46,21 @@ class Doctrine_Task_Dql extends Doctrine_Task
         $query = new Doctrine_Query();
 
         $params = $this->getArgument('params');
-        $params = $params ? explode(',', $params):null;
+        $params = $params ? explode(',', $params):array();
 
         $this->notify('executing: "' . $dql . '" (' . implode(', ', $params) . ')');
 
-        $results = $query->query($dql);
+        $results = $query->query($dql, $params, Doctrine::HYDRATE_ARRAY);
 
         $this->_printResults($results);
     }
 
-    protected function _printResults($data)
+    protected function _printResults($array)
     {
-        $array = $data->toArray(true);
-
         $yaml = Doctrine_Parser::dump($array, 'yml');
         $lines = explode("\n", $yaml);
 
         unset($lines[0]);
-        $lines[1] = $data->getTable()->getOption('name') . ':';
 
         foreach ($lines as $yamlLine) {
             $line = trim($yamlLine);
