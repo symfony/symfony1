@@ -397,8 +397,8 @@ class Doctrine_Relation_Parser
                     $def['localKey'] = true;
                 }
             } else {
-                if ($def['local'] !== $localIdColumnName && 
-                    $def['type'] == Doctrine_Relation::ONE) {
+                if (count($localIdentifierColumnNames) > 0 || ($def['local'] !== $localIdColumnName && 
+                    $def['type'] == Doctrine_Relation::ONE)) {
                     $def['localKey'] = true;
                 }
             }
