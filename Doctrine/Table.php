@@ -1638,16 +1638,19 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      * @throws Doctrine_Table_Exception     if uncompression of gzip typed column fails         *
      * @param string $field     the name of the field
      * @param string $value     field value
+     * @param string $typeHint  Type hint used to pass in the type of the value to prepare
+     *                          if it is already known. This enables the method to skip
+     *                          the type determination. Used i.e. during hydration.
      * @return mixed            prepared value
      */
-    public function prepareValue($fieldName, $value)
+    public function prepareValue($fieldName, $value, $typeHint = null)
     {
         if ($value === self::$_null) {
             return self::$_null;
         } else if ($value === null) {
             return null;
         } else {
-            $type = $this->getTypeOf($fieldName);
+            $type = is_null($typeHint) ? $this->getTypeOf($fieldName) : $typeHint;
 
             switch ($type) {
                 case 'integer':

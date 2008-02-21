@@ -299,6 +299,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                 if ($type == 'integer' || $type == 'string') {
                     $cache[$key]['isSimpleType'] = true;
                 } else {
+                    $cache[$key]['type'] = $type;
                     $cache[$key]['isSimpleType'] = false;
                 }
             }
@@ -319,7 +320,8 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
             if ($cache[$key]['isSimpleType']) {
                 $rowData[$dqlAlias][$fieldName] = $value;
             } else {
-                $rowData[$dqlAlias][$fieldName] = $table->prepareValue($fieldName, $value);
+                $rowData[$dqlAlias][$fieldName] = $table->prepareValue(
+                        $fieldName, $value, $cache[$key]['type']);
             }
 
             if ( ! isset($nonemptyComponents[$dqlAlias]) && $value !== null) {

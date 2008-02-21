@@ -1815,6 +1815,23 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     public function deleteNode() {
         $this->getNode()->delete();
     }
+    
+    /**
+     * Helps freeing the memory occupied by the entity.
+     * Cuts all references the entity has to other entities and removes the entity
+     * from the instance pool.
+     * Note: The entity is no longer useable after free() has been called. Any operations
+     * done with the entity afterwards can lead to unpredictable results.
+     */
+    public function free()
+    {
+        $this->_table->getRepository()->evict($this->_oid);
+        $this->_table->removeRecord($this);
+        $this->_data = array();
+        $this->_id = array();
+        $this->_references = array();
+    }
+    
     public function toString()
     {
         return Doctrine::dump(get_object_vars($this));
