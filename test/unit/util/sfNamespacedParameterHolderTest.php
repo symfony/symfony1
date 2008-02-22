@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(60, new lime_output_color());
+$t = new lime_test(52, new lime_output_color());
 
 // ->clear()
 $t->diag('->clear()');
@@ -36,19 +36,6 @@ $ph = new sfNamespacedParameterHolder();
 $ph->set('myfoo', 'bar', 'symfony/mynamespace');
 $t->is('bar', $ph->get('myfoo', null, 'symfony/mynamespace'), '->get() takes an optional namespace as its third argument');
 $t->is(null, $ph->get('myfoo'), '->get() can have the same key for several namespaces');
-
-$ph = new sfNamespacedParameterHolder();
-$ph->add(array('foo' => array(
-  'bar' => array(
-    'baz' => 'foo bar',
-  ),
-  'bars' => array('foo', 'bar'),
-)));
-$t->is($ph->get('foo[bar][baz]'), 'foo bar', '->get() can take a multi-array key');
-$t->is($ph->get('foo[bars][1]'), 'bar', '->get() can take a multi-array key');
-$t->is($ph->get('foo[bars][2]'), null, '->get() returns null if the key does not exist');
-$t->is($ph->get('foo[bars][]'), array('foo', 'bar'), '->get() returns an array');
-$t->is($ph->get('foo[bars][]'), $ph->get('foo[bars]'), '->get() returns an array even if you omit the []');
 
 // ->getNames()
 $t->diag('->getNames()');
@@ -105,19 +92,6 @@ $t->is($ph->has('foo'), true, '->has() returns true if the key exists');
 $t->is($ph->has('bar'), false, '->has() returns false if the key does not exist');
 $t->is($ph->has('myfoo'), false, '->has() returns false if the key exists but in another namespace');
 $t->is($ph->has('myfoo', 'symfony/mynamespace'), true, '->has() returns true if the key exists in the namespace given as its second argument');
-
-$ph = new sfNamespacedParameterHolder();
-$ph->add(array('foo' => array(
-  'bar' => array(
-    'baz' => 'foo bar',
-  ),
-  'bars' => array('foo', 'bar'),
-)));
-$t->is($ph->has('foo[bar][baz]'), true, '->has() can takes a multi-array key');
-$t->is($ph->get('foo[bars][1]'), true, '->has() can takes a multi-array key');
-$t->is($ph->get('foo[bars][2]'), false, '->has() returns null is the key does not exist');
-$t->is($ph->has('foo[bars][]'), true, '->has() returns true if an array exists');
-$t->is($ph->get('foo[bars][]'), $ph->has('foo[bars]'), '->has() returns true for an array even if you omit the []');
 
 // ->hasNamespace()
 $t->diag('->hasNamespace()');
@@ -239,3 +213,10 @@ $t->is($parameters, $ph->getAll(), '->add() adds a reference of an array of para
 // ->serialize() ->unserialize()
 $t->diag('->serialize() ->unserialize()');
 $t->ok($ph == unserialize(serialize($ph)), 'sfNamespacedParameterHolder implements the Serializable interface');
+
+// Array path as a key
+$t->diag('Array path as a key');
+$ph = new sfNamespacedParameterHolder();
+$ph->add(array('foo' => array('bar' => 'foo')));
+$t->is($ph->has('foo[bar]'), true, '->has() can takes a multi-array key');
+$t->is($ph->get('foo[bar]'), 'foo', '->has() can takes a multi-array key');

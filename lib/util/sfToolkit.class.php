@@ -496,33 +496,79 @@ class sfToolkit
    */
   public static function getArrayValueForPath($values, $name, $default = null)
   {
-    if (false !== ($offset = strpos($name, '[')))
+    if (false === $offset = strpos($name, '['))
     {
-      if (isset($values[substr($name, 0, $offset)]))
-      {
-        $array = $values[substr($name, 0, $offset)];
-
-        while ($pos = strpos($name, '[', $offset))
-        {
-          $end = strpos($name, ']', $pos);
-          if ($end == $pos + 1)
-          {
-            // reached a []
-            break;
-          }
-          else if (!isset($array[substr($name, $pos + 1, $end - $pos - 1)]))
-          {
-            return $default;
-          }
-          $array = $array[substr($name, $pos + 1, $end - $pos - 1)];
-          $offset = $end;
-        }
-
-        return $array;
-      }
+      return isset($values[$name]) ? $values[$name] : $default;
     }
 
-    return $default;
+    if (!isset($values[substr($name, 0, $offset)]))
+    {
+      return $default;
+    }
+
+    $array = $values[substr($name, 0, $offset)];
+
+    while (false !== $pos = strpos($name, '[', $offset))
+    {
+      $end = strpos($name, ']', $pos);
+      if ($end == $pos + 1)
+      {
+        // reached a []
+        if (!is_array($array))
+        {
+          return $default;
+        }
+        break;
+      }
+      else if (!isset($array[substr($name, $pos + 1, $end - $pos - 1)]))
+      {
+        return $default;
+      }
+      $array = $array[substr($name, $pos + 1, $end - $pos - 1)];
+      $offset = $end;
+    }
+
+    return $array;
+  }
+
+  /**
+   * Returns true if the a path exists for the given array.
+   *
+   * @param array  The values to search
+   * @param string The token name
+   *
+   * @return Boolean
+   */
+  public static function hasArrayValueForPath($values, $name)
+  {
+    if (false === $offset = strpos($name, '['))
+    {
+      return array_key_exists($name, $values);
+    }
+
+    if (!isset($values[substr($name, 0, $offset)]))
+    {
+      return false;
+    }
+
+    $array = $values[substr($name, 0, $offset)];
+    while (false !== $pos = strpos($name, '[', $offset))
+    {
+      $end = strpos($name, ']', $pos);
+      if ($end == $pos + 1)
+      {
+        // reached a []
+        return is_array($array);
+      }
+      else if (!isset($array[substr($name, $pos + 1, $end - $pos - 1)]))
+      {
+        return false;
+      }
+      $array = $array[substr($name, $pos + 1, $end - $pos - 1)];
+      $offset = $end;
+    }
+
+    return true;
   }
 
   /**

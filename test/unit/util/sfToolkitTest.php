@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(70, new lime_output_color());
+$t = new lime_test(92, new lime_output_color());
 
 // ::stringToArray()
 $t->diag('::stringToArray()');
@@ -172,3 +172,52 @@ $t->is(
   array(2 => array('bis', 'bes'), 3 => 'tre', 4 => 'quattro'),
   '::arrayDeepMerge() recursively merges arrays preserving numerical keys'
 );
+
+$arr = array(
+  'foobar' => 'foo',
+  'foo' => array(
+    'bar' => array(
+      'baz' => 'foo bar',
+    ),
+  ),
+  'bar' => array(
+    'foo',
+    'bar',
+  ),
+);
+
+// ::hasArrayValueForPath()
+$t->diag('::hasArrayValueForPath()');
+
+$t->is(sfToolkit::hasArrayValueForPath($arr, 'foobar'), true, '::hasArrayValueForPath() returns true if the path exists');
+$t->is(sfToolkit::hasArrayValueForPath($arr, 'barfoo'), false, '::hasArrayValueForPath() returns false if the path does not exist');
+
+$t->is(sfToolkit::hasArrayValueForPath($arr, 'foo[bar][baz]'), true, '::hasArrayValueForPath() works with deep paths');
+$t->is(sfToolkit::hasArrayValueForPath($arr, 'foo[bar][bar]'), false, '::hasArrayValueForPath() works with deep paths');
+
+$t->is(sfToolkit::hasArrayValueForPath($arr, 'foo[]'), true, '::hasArrayValueForPath() accepts a [] at the end to check for an array');
+$t->is(sfToolkit::hasArrayValueForPath($arr, 'foobar[]'), false, '::hasArrayValueForPath() accepts a [] at the end to check for an array');
+$t->is(sfToolkit::hasArrayValueForPath($arr, 'barfoo[]'), false, '::hasArrayValueForPath() accepts a [] at the end to check for an array');
+
+$t->is(sfToolkit::hasArrayValueForPath($arr, 'bar[1]'), true, '::hasArrayValueForPath() can take an array indexed by integer');
+$t->is(sfToolkit::hasArrayValueForPath($arr, 'bar[2]'), false, '::hasArrayValueForPath() can take an array indexed by integer');
+
+// ::getArrayValueForPath()
+$t->diag('::getArrayValueForPath()');
+
+$t->is(sfToolkit::getArrayValueForPath($arr, 'foobar'), 'foo', '::getArrayValueForPath() returns the value of the path if it exists');
+$t->is(sfToolkit::getArrayValueForPath($arr, 'barfoo'), null, '::getArrayValueForPath() returns null if the path does not exist');
+$t->is(sfToolkit::getArrayValueForPath($arr, 'barfoo', 'bar'), 'bar', '::getArrayValueForPath() takes a default value as its third argument');
+
+$t->is(sfToolkit::getArrayValueForPath($arr, 'foo[bar][baz]'), 'foo bar', '::getArrayValueForPath() works with deep paths');
+$t->is(sfToolkit::getArrayValueForPath($arr, 'foo[bar][bar]'), false, '::getArrayValueForPath() works with deep paths');
+$t->is(sfToolkit::getArrayValueForPath($arr, 'foo[bar][bar]', 'bar'), 'bar', '::getArrayValueForPath() works with deep paths');
+
+$t->is(sfToolkit::getArrayValueForPath($arr, 'foo[]'), array('bar' => array('baz' => 'foo bar')), '::getArrayValueForPath() accepts a [] at the end to check for an array');
+$t->is(sfToolkit::getArrayValueForPath($arr, 'foobar[]'), null, '::getArrayValueForPath() accepts a [] at the end to check for an array');
+$t->is(sfToolkit::getArrayValueForPath($arr, 'barfoo[]'), null, '::getArrayValueForPath() accepts a [] at the end to check for an array');
+$t->is(sfToolkit::getArrayValueForPath($arr, 'foobar[]', 'foo'), 'foo', '::getArrayValueForPath() accepts a [] at the end to check for an array');
+
+$t->is(sfToolkit::getArrayValueForPath($arr, 'bar[1]'), 'bar', '::getArrayValueForPath() can take an array indexed by integer');
+$t->is(sfToolkit::getArrayValueForPath($arr, 'bar[2]'), null, '::getArrayValueForPath() can take an array indexed by integer');
+$t->is(sfToolkit::getArrayValueForPath($arr, 'bar[2]', 'foo'), 'foo', '::getArrayValueForPath() can take an array indexed by integer');
