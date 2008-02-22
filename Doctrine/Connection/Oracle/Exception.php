@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 Doctrine::autoload('Doctrine_Connection_Exception');
 /**
@@ -29,7 +29,7 @@ Doctrine::autoload('Doctrine_Connection_Exception');
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
  * @since       1.0
  * @version     $Revision$
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  */
 class Doctrine_Connection_Oracle_Exception extends Doctrine_Connection_Exception
 {

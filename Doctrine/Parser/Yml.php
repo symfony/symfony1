@@ -18,7 +18,7 @@ require_once('spyc.php');
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.com>.
+ * <http://www.phpdoctrine.org>.
  */
 
 /**
@@ -27,7 +27,7 @@ require_once('spyc.php');
  * @package     Doctrine
  * @subpackage  Parser
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.com
+ * @link        www.phpdoctrine.org
  * @since       1.0
  * @version     $Revision: 1080 $
  * @author      Jonathan H. Wage <jwage@mac.com>
