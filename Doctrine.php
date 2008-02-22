@@ -534,16 +534,20 @@ final class Doctrine
      *
      * Recursively load all models from a directory or array of directories
      *
-     * @param string $directory    Path to directory of models or array of directory paths
-     * @return array $loadedModels
+     * @param  string   $directory      Path to directory of models or array of directory paths
+     * @param  integer  $forceStyle     Pass value of Doctrine::ATTR_MODEL_LOADING to force a certain style of model loading
+     *                                  Allowed Doctrine::MODEL_LOADING_AGGRESSIVE(default) or Doctrine::MODEL_LOADING_CONSERVATIVE
+     * @return array    $modelLoading   Array of the models loaded by the operation
      */
-    public static function loadModels($directory)
+    public static function loadModels($directory, $modelLoading = null)
     {
+        $manager = Doctrine_Manager::getInstance();
+
+        $modelLoading = $modelLoading === null ? $manager->getAttribute(Doctrine::ATTR_MODEL_LOADING):$modelLoading;
+
         $loadedModels = array();
 
-        if ($directory !== null) {
-            $manager = Doctrine_Manager::getInstance();
-
+        if ($directory !== null && is_dir($directory)) {
             foreach ((array) $directory as $dir) {
                 $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
                                                         RecursiveIteratorIterator::LEAVES_ONLY);
@@ -551,7 +555,7 @@ final class Doctrine
                     $e = explode('.', $file->getFileName());
                     if (end($e) === 'php' && strpos($file->getFileName(), '.inc') === false) {
 
-                        if ($manager->getAttribute(Doctrine::ATTR_MODEL_LOADING) == Doctrine::MODEL_LOADING_CONSERVATIVE) {
+                        if ($modelLoading == Doctrine::MODEL_LOADING_CONSERVATIVE) {
                             self::$_loadedModelFiles[$e[0]] = $file->getPathName();
                             self::$_pathModels[$file->getPathName()][$e[0]] = $e[0];
 
@@ -577,6 +581,8 @@ final class Doctrine
                     }
                 }
             }
+        } else {
+          throw new Doctrine_Exception('You must pass a valid path to a directory containing Doctrine models');
         }
 
         return $loadedModels;
@@ -913,15 +919,16 @@ final class Doctrine
     /**
      * generateMigrationsFromModels
      *
-     * @param string $migrationsPath
-     * @param string $modelsPath
+     * @param string  $migrationsPath Path to your Doctrine migration classes
+     * @param string  $modelsPath     Path to your Doctrine model classes
+     * @param integer $modelLoading   Style of model loading to use for loading the models in order to generate migrations
      * @return void
      */
-    public static function generateMigrationsFromModels($migrationsPath, $modelsPath = null)
+    public static function generateMigrationsFromModels($migrationsPath, $modelsPath = null, $modelLoading = null)
     {
         $builder = new Doctrine_Migration_Builder($migrationsPath);
 
-        return $builder->generateMigrationsFromModels($modelsPath);
+        return $builder->generateMigrationsFromModels($modelsPath, $modelLoading);
     }
 
     /**

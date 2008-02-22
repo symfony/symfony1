@@ -140,7 +140,7 @@ END;
 
         Doctrine::generateModelsFromDb($directory);
         
-        $result = $this->generateMigrationsFromModels($directory);
+        $result = $this->generateMigrationsFromModels($directory, Doctrine::MODEL_LOADING_CONSERVATIVE);
         
         Doctrine_Lib::removeDirectories($directory);
         
@@ -153,10 +153,10 @@ END;
      * @param string $modelsPath 
      * @return void
      */
-    public function generateMigrationsFromModels($modelsPath = null)
+    public function generateMigrationsFromModels($modelsPath = null, $modelLoading = null)
     {
         if ($modelsPath !== null) {
-            $models = Doctrine::filterInvalidModels(Doctrine::loadModels($modelsPath));
+            $models = Doctrine::filterInvalidModels(Doctrine::loadModels($modelsPath, $modelLoading));
         } else {
             $models = Doctrine::getLoadedModels();
         }

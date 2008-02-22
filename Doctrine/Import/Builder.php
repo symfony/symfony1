@@ -789,7 +789,7 @@ END;
         $code .= PHP_EOL . $definitionCode;
 
         if (isset($definition['generate_once']) && $definition['generate_once'] === true) {
-            if (!file_exists($writePath)) {
+            if ( ! file_exists($writePath)) {
                 $bytes = file_put_contents($writePath, $code);
             }
         } else {
