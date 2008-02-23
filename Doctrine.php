@@ -468,8 +468,6 @@ final class Doctrine
      */
     private static $_loadedModelFiles = array();
 
-    private static $_pathModels = array();
-
     /**
      * _validators
      *
@@ -489,14 +487,16 @@ final class Doctrine
         throw new Doctrine_Exception('Doctrine is static class. No instances can be created.');
     }
 
+    /**
+     * getLoadedModelFiles
+     *
+     * Returns an array of all the loaded models and the path where each of them exists
+     *
+     * @return array
+     */
     public static function getLoadedModelFiles()
     {
         return self::$_loadedModelFiles;
-    }
-    
-    public static function getPathModels()
-    {
-        return self::$_pathModels;
     }
 
     /**
@@ -554,12 +554,12 @@ final class Doctrine
                 foreach ($it as $file) {
                     $e = explode('.', $file->getFileName());
                     if (end($e) === 'php' && strpos($file->getFileName(), '.inc') === false) {
+                        $className = $e[0];
 
                         if ($modelLoading == Doctrine::MODEL_LOADING_CONSERVATIVE) {
-                            self::$_loadedModelFiles[$e[0]] = $file->getPathName();
-                            self::$_pathModels[$file->getPathName()][$e[0]] = $e[0];
+                            self::$_loadedModelFiles[$className] = $file->getPathName();
 
-                            $loadedModels[] = $e[0];
+                            $loadedModels[$className] = $className;
                         } else {
                             $declaredBefore = get_declared_classes();
                             require_once($file->getPathName());
@@ -570,10 +570,9 @@ final class Doctrine
                             if ($foundClasses) {
                                 foreach ($foundClasses as $className) {
                                     if (self::isValidModelClass($className)) {
-                                        $loadedModels[] = $className;
+                                        $loadedModels[$className] = $className;
 
                                         self::$_loadedModelFiles[$className] = $file->getPathName();
-                                        self::$_pathModels[$file->getPathName()][$className] = $className;
                                     }
                                 }
                             }
@@ -623,7 +622,7 @@ final class Doctrine
         $validModels = array();
 
         foreach ((array) $classes as $name) {
-            if (self::isValidModelClass($name) && !in_array($name, $validModels)) {
+            if (self::isValidModelClass($name) && ! in_array($name, $validModels)) {
                 $validModels[] = $name;
             }
         }
@@ -654,10 +653,7 @@ final class Doctrine
             // Skip the following classes
             // - abstract classes
             // - not a subclass of Doctrine_Record
-            // - don't have a setTableDefinition method
-            if (!$class->isAbstract() &&
-                $class->isSubClassOf('Doctrine_Record') &&
-                $class->hasMethod('setTableDefinition')) {
+            if ( ! $class->isAbstract() && $class->isSubClassOf('Doctrine_Record')) {
 
                 return true;
             }
@@ -679,8 +675,7 @@ final class Doctrine
         $loadedModels = self::getLoadedModels();
 
         foreach ($loadedModels as $name) {
-            $model = new $name();
-            $table = $model->getTable();
+            $table = Doctrine::getTable($name);
 
             if ($table->getTableName() == $tableName) {
                return $table->getConnection();
