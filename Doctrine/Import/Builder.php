@@ -39,7 +39,7 @@
 class Doctrine_Import_Builder
 {
     /**
-     * Path
+     * _path
      * 
      * the path where imported files are being generated
      *
@@ -48,21 +48,21 @@ class Doctrine_Import_Builder
     protected $_path = '';
     
     /**
-     * packagesPrefix
+     * _packagesPrefix
      *
      * @var string
      */
     protected $_packagesPrefix = 'Package';
 
     /**
-     * packagesPath
+     * _packagesPath
      *
      * @var string
      */
     protected $_packagesPath = '';
     
     /**
-     * suffix
+     * _suffix
      * 
      * File suffix to use when writing class definitions
      *
@@ -71,7 +71,7 @@ class Doctrine_Import_Builder
     protected $_suffix = '.php';
 
     /**
-     * generateBaseClasses
+     * _generateBaseClasses
      * 
      * Bool true/false for whether or not to generate base classes
      *
@@ -80,7 +80,16 @@ class Doctrine_Import_Builder
     protected $_generateBaseClasses = true;
 
     /**
-     * baseClassesDirectory
+     * _base
+     *
+     * Prefix to use for generated base classes
+     *
+     * @var string
+     */
+    protected $_baseClassPrefix = 'Base';
+
+    /**
+     * _baseClassesDirectory
      * 
      * Directory to put the generate base classes in
      *
@@ -89,14 +98,14 @@ class Doctrine_Import_Builder
     protected $_baseClassesDirectory = 'generated';
     
     /**
-     * baseClassName
+     * _baseClassName
      *
      * @var string
      */
     protected $_baseClassName = 'Doctrine_Record';
     
     /**
-     * tpl
+     * _tpl
      *
      * Class template used for writing classes
      *
@@ -122,11 +131,13 @@ class Doctrine_Import_Builder
      */
     public function setTargetPath($path)
     {
-        if ( ! $this->_packagesPath) {
-            $this->setPackagesPath($path . DIRECTORY_SEPARATOR . 'packages');
-        }
+        if ($path) {
+            if ( ! $this->_packagesPath) {
+                $this->setPackagesPath($path . DIRECTORY_SEPARATOR . 'packages');
+            }
 
-        $this->_path = $path;
+            $this->_path = $path;
+        }
     }
     
     /**
@@ -148,7 +159,9 @@ class Doctrine_Import_Builder
      */
     public function setPackagesPath($packagesPath)
     {
-        $this->_packagesPath = $packagesPath;
+        if ($packagesPath) {
+            $this->_packagesPath = $packagesPath;
+        }
     }
     
     /**
@@ -167,7 +180,28 @@ class Doctrine_Import_Builder
 
         return $this->_generateBaseClasses;
     }
-
+    
+    /**
+     * setBaseClassPrefix
+     *
+     * @param string $prefix 
+     * @return void
+     */
+    public function setBaseClassPrefix($prefix)
+    {
+        $this->_baseClassPrefix = $prefix;
+    }
+    
+    /**
+     * getBaseClassPrefix
+     *
+     * @return void
+     */
+    public function getBaseClassPrefix()
+    {
+        return $this->_baseClassPrefix;
+    }
+    
     /**
      * setBaseClassesDirectory
      *
@@ -357,31 +391,31 @@ END;
                 $a = array();
 
                 if (isset($relation['refClass'])) {
-                    $a[] = '\'refClass\' => ' . var_export($relation['refClass'], true);
+                    $a[] = '\'refClass\' => ' . $this->varExport($relation['refClass']);
                 }
             
                 if (isset($relation['deferred']) && $relation['deferred']) {
-                    $a[] = '\'default\' => ' . var_export($relation['deferred'], true);
+                    $a[] = '\'default\' => ' . $this->varExport($relation['deferred']);
                 }
             
                 if (isset($relation['local']) && $relation['local']) {
-                    $a[] = '\'local\' => ' . var_export($relation['local'], true);
+                    $a[] = '\'local\' => ' . $this->varExport($relation['local']);
                 }
             
                 if (isset($relation['foreign']) && $relation['foreign']) {
-                    $a[] = '\'foreign\' => ' . var_export($relation['foreign'], true);
+                    $a[] = '\'foreign\' => ' . $this->varExport($relation['foreign']);
                 }
             
                 if (isset($relation['onDelete']) && $relation['onDelete']) {
-                    $a[] = '\'onDelete\' => ' . var_export($relation['onDelete'], true);
+                    $a[] = '\'onDelete\' => ' . $this->varExport($relation['onDelete']);
                 }
             
                 if (isset($relation['onUpdate']) && $relation['onUpdate']) {
-                    $a[] = '\'onUpdate\' => ' . var_export($relation['onUpdate'], true);
+                    $a[] = '\'onUpdate\' => ' . $this->varExport($relation['onUpdate']);
                 }
             
                 if (isset($relation['equal']) && $relation['equal']) { 
-                    $a[] = '\'equal\' => ' . var_export($relation['equal'], true); 
+                    $a[] = '\'equal\' => ' . $this->varExport($relation['equal']); 
                 }
             
                 if ( ! empty($a)) {
@@ -445,13 +479,33 @@ END;
             }
             
             if (is_array($options) && !empty($options)) {
-                $build .= ', ' . var_export($options, true);
+                $build .= ', ' . $this->varExport($options);
             }
     
             $build .= ");\n";
         }
         
         return $build;
+    }
+
+    /**
+     * varExport
+     *
+     * Special function for var_export()
+     * The normal code which is returned is malformed and does not follow Doctrine standards
+     * So we do some string replacing to clean it up
+     *
+     * @param string $var 
+     * @return void
+     */
+    public function varExport($var)
+    {
+        $export = var_export($var, true);
+        $export = str_replace("\n ", '', $export);
+        $export = str_replace('array ( ', 'array(', $export);
+        $export = str_replace(",\n", "", $export);
+        
+        return $export;
     }
 
     /*
@@ -501,7 +555,7 @@ END;
         foreach ($templates as $name => $options) {
             
             if (is_array($options) && !empty($options)) {
-                $optionsPhp = var_export($options, true);
+                $optionsPhp = $this->varExport($options);
             
                 $build .= "    \$this->loadTemplate('" . $name . "', " . $optionsPhp . ");\n";
             } else {
@@ -527,7 +581,7 @@ END;
         $build = '';
         foreach ($actAs as $name => $options) {
             if (is_array($options) && !empty($options)) {
-                $optionsPhp = var_export($options, true);
+                $optionsPhp = $this->varExport($options);
                 
                 $build .= "    \$this->actAs('" . $name . "', " . $optionsPhp . ");\n";
             } else {
@@ -586,7 +640,7 @@ END;
     {
         $build = '';
         foreach ($options as $name => $value) {
-            $build .= "    \$this->option('$name', " . var_export($value, true) . ");\n";
+            $build .= "    \$this->option('$name', " . $this->varExport($value) . ");\n";
         }
         
         return $build;
@@ -604,7 +658,7 @@ END;
 
       foreach ($indexes as $indexName => $definitions) {
           $build .= "\n    \$this->index('" . $indexName . "'";
-          $build .= ', ' . var_export($definitions, true);
+          $build .= ', ' . $this->varExport($definitions);
           $build .= ');';
       }
 
@@ -664,7 +718,9 @@ END;
         if ( !isset($definition['className'])) {
             throw new Doctrine_Import_Builder_Exception('Missing class name.');
         }
-
+        
+        $definition['topLevelClassName'] = $definition['className'];
+        
         if ($this->generateBaseClasses()) {
             $definition['is_package'] = (isset($definition['package']) && $definition['package']) ? true:false;
             
@@ -673,7 +729,7 @@ END;
                 $definition['package_name'] = $e[0];
                 unset($e[0]);
                 
-                $definition['package_path'] = implode(DIRECTORY_SEPARATOR, $e);
+                $definition['package_path'] = ! empty($e) ? implode(DIRECTORY_SEPARATOR, $e):$definition['package_name'];
             }
             
             // Top level definition that extends from all the others
@@ -700,6 +756,15 @@ END;
                 $packageLevel['generate_once'] = true;
                 $packageLevel['is_package_class'] = true;
                 unset($packageLevel['connection']);
+                
+                $packageLevel['tableClassName'] = $packageLevel['className'] . 'Table';
+                $packageLevel['inheritance']['tableExtends'] = isset($definition['inheritance']['extends']) ? $definition['inheritance']['extends'] . 'Table':'Doctrine_Table';
+                
+                $topLevel['tableClassName'] = $topLevel['topLevelClassName'] . 'Table';
+                $topLevel['inheritance']['tableExtends'] = $packageLevel['className'] . 'Table';
+            } else {
+                $topLevel['tableClassName'] = $topLevel['className'] . 'Table';
+                $topLevel['inheritance']['tableExtends'] = isset($definition['inheritance']['extends']) ? $definition['inheritance']['extends'] . 'Table':'Doctrine_Table';
             }
 
             $baseClass = $definition;
@@ -710,13 +775,38 @@ END;
 
             $this->writeDefinition($baseClass);
             
-            if (!empty($packageLevel)) {
+            if ( ! empty($packageLevel)) {
                 $this->writeDefinition($packageLevel);
             }
             
             $this->writeDefinition($topLevel);
         } else {
             $this->writeDefinition($definition);
+        }
+    }
+
+    /**
+     * writeTableDefinition
+     *
+     * @return void
+     */
+    public function writeTableDefinition($className, $path, $options = array())
+    {
+        $content  = '<?php' . PHP_EOL;
+        $content .= sprintf(self::$_tpl, false,
+                                       $className,
+                                       isset($options['extends']) ? $options['extends']:'Doctrine_Table',
+                                       null,
+                                       null,
+                                       null
+                                       );
+
+        Doctrine_Lib::makeDirectories($path);
+
+        $writePath = $path . DIRECTORY_SEPARATOR . $className . $this->_suffix;
+
+        if ( ! file_exists($writePath)) {
+            file_put_contents($writePath, $content);
         }
     }
 
@@ -749,33 +839,36 @@ END;
             } else {
                 $writePath = $this->_path;
             }
-        }
 
-        // If is the package class then we need to make the path to the complete package
-        if (isset($definition['is_package_class']) && $definition['is_package_class']) {
-            $path = str_replace('.', DIRECTORY_SEPARATOR, trim($definition['package']));
-            
-            $writePath = $packagesPath . DIRECTORY_SEPARATOR . $path;
+            $this->writeTableDefinition($definition['tableClassName'], $writePath, array('extends' => $definition['inheritance']['tableExtends']));
         }
-        
+        // If is the package class then we need to make the path to the complete package
+        else if (isset($definition['is_package_class']) && $definition['is_package_class']) {
+            $writePath = $packagesPath . DIRECTORY_SEPARATOR . $definition['package_path'];
+
+            $this->writeTableDefinition($definition['tableClassName'], $writePath, array('extends' => $definition['inheritance']['tableExtends']));
+        }
         // If it is the base class of the doctrine record definition
-        if (isset($definition['is_base_class']) && $definition['is_base_class']) {
+        else if (isset($definition['is_base_class']) && $definition['is_base_class']) {
             // If it is a part of a package then we need to put it in a package subfolder
             if (isset($definition['is_package']) && $definition['is_package']) {
-                $writePath  = $this->_path . DIRECTORY_SEPARATOR . $definition['package_name'] . DIRECTORY_SEPARATOR . $this->_baseClassesDirectory;
+                $basePath = $this->_path . DIRECTORY_SEPARATOR . $definition['package_name'];
+                $writePath = $basePath . DIRECTORY_SEPARATOR . $this->_baseClassesDirectory;
             // Otherwise lets just put it in the root generated folder
             } else {
                 $writePath = $this->_path . DIRECTORY_SEPARATOR . $this->_baseClassesDirectory;
             }
         }
 
+        // If we have a writePath from the if else conditionals above then use it
         if (isset($writePath)) {
             Doctrine_Lib::makeDirectories($writePath);
-            
+
             $writePath .= DIRECTORY_SEPARATOR . $fileName;
+        // Otherwise none of the conditions were met and we aren't generating base classes
         } else {
             Doctrine_Lib::makeDirectories($this->_path);
-            
+
             $writePath = $this->_path . DIRECTORY_SEPARATOR . $fileName;
         }
 
@@ -788,6 +881,9 @@ END;
 
         $code .= PHP_EOL . $definitionCode;
 
+        $bytes = file_put_contents($writePath, $code);
+        return;
+        
         if (isset($definition['generate_once']) && $definition['generate_once'] === true) {
             if ( ! file_exists($writePath)) {
                 $bytes = file_put_contents($writePath, $code);
