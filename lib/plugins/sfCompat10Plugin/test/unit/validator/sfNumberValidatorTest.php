@@ -12,7 +12,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/../../../../test/unit/sfContextMock.class.php');
 require_once(dirname(__FILE__).'/sfValidatorTestHelper.class.php');
 
-$t = new lime_test(49, new lime_output_color());
+$t = new lime_test(51, new lime_output_color());
 
 $context = sfContext::getInstance();
 $v = new sfNumberValidator($context);
@@ -23,10 +23,12 @@ $number = 12;
 $error = null;
 $t->ok($v->execute($number, $error), '->execute() returns true if you don\'t define any parameter');
 
-$number = 'not a number';
-$error = null;
-$t->ok(!$v->execute($number, $error), '->execute() returns "nan_error" if value is not a number');
-$t->is($error, 'Input is not a number', '->execute() changes "$error" with a default message if it returns false');
+foreach (array('not a number', '0xFE') as $number)
+{
+  $error = null;
+  $t->ok(!$v->execute($number, $error), '->execute() returns "nan_error" if value is not a number');
+  $t->is($error, 'Input is not a number', '->execute() changes "$error" with a default message if it returns false');
+}
 
 foreach (array('any', 'decimal', 'float', 'int', 'integer') as $type)
 {
