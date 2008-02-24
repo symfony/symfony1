@@ -561,6 +561,10 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                 foreach ($classes as $class) {
                     $parentTable = $this->conn->getTable($class);
 
+                    if (!array_key_exists($class, $dataSet)) {
+                        continue;
+                    }
+
                     $this->conn->update($this->conn->getTable($class), $dataSet[$class], $identifier);
                 }
             } else {
