@@ -71,14 +71,6 @@ class sfSQLiteCache extends sfCache
   /**
    * @see sfCache
    */
-  public function has($key)
-  {
-    return (boolean) $this->dbh->query(sprintf("SELECT key FROM cache WHERE key = '%s' AND timeout > %d", sqlite_escape_string($key), time()))->numRows();
-  }
-
-  /**
-   * @see sfCache
-   */
   public function set($key, $data, $lifetime = null)
   {
     if ($this->getOption('automatic_cleaning_factor') > 0 && rand(1, $this->getOption('automatic_cleaning_factor')) == 1)

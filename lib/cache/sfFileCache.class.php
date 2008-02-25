@@ -63,14 +63,6 @@ class sfFileCache extends sfCache
   /**
    * @see sfCache
    */
-  public function has($key)
-  {
-    return file_exists($this->getFilePath($key)) && time() < $this->read($this->getFilePath($key), self::READ_TIMEOUT);
-  }
-
-  /**
-   * @see sfCache
-   */
   public function set($key, $data, $lifetime = null)
   {
     if ($this->getOption('automatic_cleaning_factor') > 0 && rand(1, $this->getOption('automatic_cleaning_factor')) == 1)

@@ -81,7 +81,10 @@ abstract class sfCache
    *
    * @return Boolean true if the cache exists, false otherwise
    */
-  abstract public function has($key);
+  public function has($key)
+  {
+    return $this->getTimeout($key) > time();
+  }
 
   /**
    * Saves some data in the cache.
