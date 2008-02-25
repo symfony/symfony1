@@ -48,6 +48,14 @@ class sfXCacheCache extends sfCache
   /**
    * @see sfCache
    */
+  public function has($key)
+  {
+    return xcache_isset($this->getOption('prefix').$key);
+  }
+
+  /**
+   * @see sfCache
+   */
   public function set($key, $data, $lifetime = null)
   {
     $lifetime = $this->getLifetime($lifetime);

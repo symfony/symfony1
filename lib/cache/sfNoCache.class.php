@@ -29,6 +29,14 @@ class sfNoCache extends sfCache
   /**
    * @see sfCache
    */
+  public function has($key)
+  {
+    return false;
+  }
+
+  /**
+   * @see sfCache
+   */
   public function set($key, $data, $lifetime = null)
   {
     return true;

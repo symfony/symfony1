@@ -50,6 +50,14 @@ class sfAPCCache extends sfCache
   /**
    * @see sfCache
    */
+  public function has($key)
+  {
+    return !(false === apc_fetch($this->getOption('prefix').$key));
+  }
+
+  /**
+   * @see sfCache
+   */
   public function set($key, $data, $lifetime = null)
   {
     return apc_store($this->getOption('prefix').$key, $data, $this->getLifetime($lifetime));

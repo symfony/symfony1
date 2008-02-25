@@ -95,6 +95,14 @@ class sfMemcacheCache extends sfCache
   /**
    * @see sfCache
    */
+  public function has($key)
+  {
+    return !(false === $this->memcache->get($this->getOption('prefix').$key));
+  }
+
+  /**
+   * @see sfCache
+   */
   public function set($key, $data, $lifetime = null)
   {
     $lifetime = is_null($lifetime) ? $this->getOption('lifetime') : $lifetime;
