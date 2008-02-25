@@ -199,6 +199,7 @@ class sfFileCache extends sfCache
   * @param mixed  The type of data you want to be returned
   *               sfFileCache::READ_DATA: The cache content
   *               sfFileCache::READ_TIMEOUT: The timeout
+  *               sfFileCache::READ_LAST_MODIFIED: The last modification timestamp
   *
   * @return string The content of the cache file.
   *
