@@ -220,14 +220,12 @@ abstract class sfCache
    */
   protected function patternToRegexp($pattern)
   {
-    $regexp = '#^'.str_replace('#', '\\#', preg_quote($pattern)).'$#';
+    $regexp = str_replace(
+      array('\\*\\*', '\\*'),
+      array('.+?',    '[^'.preg_quote(sfCache::SEPARATOR, '#').']+'),
+      preg_quote($pattern, '#')
+    );
 
-    // **
-    $regexp = str_replace('\\*\\*', '.+?', $regexp);
-
-    // *
-    $regexp = str_replace('\\*', '[^'.preg_quote(sfCache::SEPARATOR).']+', $regexp);
-
-    return $regexp;
+    return '#^'.$regexp.'$#';
   }
 }
