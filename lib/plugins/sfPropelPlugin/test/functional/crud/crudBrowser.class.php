@@ -13,13 +13,10 @@ class CrudBrowser extends sfTestBrowser
   protected
     $projectDir = '';
 
-  public function setProjectDir($dir)
-  {
-    $this->projectDir = $dir;
-  }
-
   public function setup($options)
   {
+    $this->projectDir = dirname(__FILE__).'/../fixtures';
+
     $this->clearDirectory($this->projectDir.'/apps/crud/modules/article');
     $this->clearDirectory($this->projectDir.'/cache/crud/test/modules/autoArticle');
 
