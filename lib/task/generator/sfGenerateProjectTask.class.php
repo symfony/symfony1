@@ -66,19 +66,16 @@ EOF;
       throw new sfCommandException(sprintf('A project named "%s" already exists in this directory.', $arguments['name']));
     }
 
-    // Create basic project structure
+    // create basic project structure
     $finder = sfFinder::type('any')->ignore_version_control()->discard('.sf');
     $this->getFilesystem()->mirror(dirname(__FILE__).'/skeleton/project', sfConfig::get('sf_root_dir'), $finder);
 
-    // Update project name and directory
+    // update project name and directory
     $finder = sfFinder::type('file')->name('properties.ini', 'apache.conf', 'propel.ini');
-    $this->getFilesystem()->replaceTokens($finder->in(sfConfig::get('sf_config_dir')), '##', '##', array('PROJECT_NAME' => $arguments['name'],
-                                                                                                    'PROJECT_DIR' => sfConfig::get('sf_root_dir')));
+    $this->getFileSystem()->replaceTokens($finder->in(sfConfig::get('sf_config_dir')), '##', '##', array('PROJECT_NAME' => $arguments['name'], 'PROJECT_DIR' => sfConfig::get('sf_root_dir')));
 
-    // Update config/config.php
-    $this->getFilesystem()->replaceTokens(sfConfig::get('sf_config_dir').'/config.php', '##', '##', array(
-      'SYMFONY_LIB_DIR'  => sfConfig::get('sf_symfony_lib_dir'),
-    ));
+    // update ProjectConfiguration class
+    $this->getFileSystem()->replaceTokens(sfConfig::get('sf_lib_dir').'/ProjectConfiguration.class.php', '##', '##', array('SYMFONY_LIB_DIR'  => sfConfig::get('sf_symfony_lib_dir')));
 
     $fixPerms = new sfProjectPermissionsTask($this->dispatcher, $this->formatter);
     $fixPerms->setCommandApplication($this->commandApplication);

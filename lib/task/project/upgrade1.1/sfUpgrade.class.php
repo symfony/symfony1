@@ -99,4 +99,14 @@ abstract class sfUpgrade extends sfBaseTask
       glob(sfConfig::get('sf_config_dir'))
     );
   }
+
+  /**
+   * Returns all application names.
+   *
+   * @return array An array of application names
+   */
+  protected function getApplications()
+  {
+    return sfFinder::type('dir')->maxdepth(0)->ignore_version_control()->relative()->in(sfConfig::get('sf_apps_dir'));
+  }
 }

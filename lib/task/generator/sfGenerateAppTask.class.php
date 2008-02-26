@@ -112,6 +112,10 @@ EOF;
       'IS_DEBUG'    => 'true',
     ));
 
+    $this->getFilesystem()->copy(dirname(__FILE__).'/skeleton/app/lib/ApplicationConfiguration.class.php', sfConfig::get('sf_lib_dir').'/'.$app.'Configuration.class.php');
+
+    $this->getFilesystem()->replaceTokens(sfConfig::get('sf_lib_dir').'/'.$app.'Configuration.class.php', '##', '##', array('APP_NAME' => $app));
+
     $fixPerms = new sfProjectPermissionsTask($this->dispatcher, $this->formatter);
     $fixPerms->setCommandApplication($this->commandApplication);
     $fixPerms->run();

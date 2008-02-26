@@ -77,7 +77,7 @@ abstract class sfGenerator
    */
   protected function evalTemplate($templateFile)
   {
-    $templateFile = sfLoader::getGeneratorTemplate($this->getGeneratorClass(), $this->getTheme(), $templateFile);
+    $templateFile = $this->generatorManager->getConfiguration()->getGeneratorTemplate($this->getGeneratorClass(), $this->getTheme(), $templateFile);
 
     // eval template file
     ob_start();

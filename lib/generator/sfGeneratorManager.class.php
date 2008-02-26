@@ -18,21 +18,39 @@
  */
 class sfGeneratorManager
 {
+  protected
+    $configuration = null;
+
   /**
    * Class constructor.
    *
+   * @param sfProjectConfiguration A sfProjectConfiguration instance
+   *
    * @see initialize()
    */
-  public function __construct()
+  public function __construct(sfProjectConfiguration $configuration)
   {
-    $this->initialize();
+    $this->initialize($configuration);
   }
 
   /**
    * Initializes the sfGeneratorManager instance.
+   *
+   * @param sfProjectConfiguration A sfProjectConfiguration instance
    */
-  public function initialize()
+  public function initialize(sfProjectConfiguration $configuration)
   {
+    $this->configuration = $configuration;
+  }
+
+  /**
+   * Returns the current configuration instance.
+   *
+   * @return sfProjectConfiguration A sfProjectConfiguration instance
+   */
+  public function getConfiguration()
+  {
+    return $this->configuration;
   }
 
   public function save($path, $content)

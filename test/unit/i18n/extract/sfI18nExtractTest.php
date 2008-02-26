@@ -12,17 +12,21 @@ require_once(dirname(__FILE__).'/../../../bootstrap/unit.php');
 
 $t = new lime_test(3, new lime_output_color());
 
-class sfLoader
+class ProjectConfiguration extends sfProjectConfiguration
 {
-  static public function getI18NGlobalDirs()
+}
+
+class TestConfiguration extends sfApplicationConfiguration
+{
+  public function getI18NGlobalDirs()
   {
     return array(dirname(__FILE__).'/../fixtures');
   }
 }
 
-$dispatcher = new sfEventDispatcher();
+$configuration = new TestConfiguration('test', true);
 $cache = new sfNoCache();
-$i18n = new sfI18N($dispatcher, $cache);
+$i18n = new sfI18N($configuration, $cache);
 
 class sfI18nExtractTest extends sfI18nExtract
 {

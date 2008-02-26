@@ -71,7 +71,7 @@ abstract class sfCrudGenerator extends sfGenerator
 
     // theme exists?
     $theme = isset($this->params['theme']) ? $this->params['theme'] : 'default';
-    $themeDir = sfLoader::getGeneratorTemplate($this->getGeneratorClass(), $theme, '');
+    $themeDir = $this->generatorManager->getConfiguration()->getGeneratorTemplate($this->getGeneratorClass(), $theme, '');
     if (!is_dir($themeDir))
     {
       throw new sfConfigurationException(sprintf('The theme "%s" does not exist.', $theme));

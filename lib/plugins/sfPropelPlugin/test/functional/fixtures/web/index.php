@@ -1,10 +1,6 @@
 <?php
 
-define('SF_ROOT_DIR',    realpath(dirname(__FILE__).'/..'));
-define('SF_APP',         'backend');
-define('SF_ENVIRONMENT', 'prod');
-define('SF_DEBUG',       false);
+require_once(dirname(__FILE__).'/../lib/backendConfiguration.class.php');
 
-require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
-
-sfContext::getInstance()->getController()->dispatch();
+$configuration = new backendConfiguration('prod', false);
+sfContext::createInstance($configuration)->dispatch();

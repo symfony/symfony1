@@ -69,30 +69,30 @@ EOF;
       $this->getFilesystem()->remove(sfConfig::get('sf_web_dir').'/sf');
     }
 
-    $symfony_lib_dir  = sfConfig::get('sf_symfony_lib_dir');
-    $symfony_data_dir = $arguments['symfony_data_dir'];
+    $symfonyLibDir  = sfConfig::get('sf_symfony_lib_dir');
+    $symfonyDataDir = $arguments['symfony_data_dir'];
 
-    $this->logSection('freeze', sprintf('freezing lib found in "%s', $symfony_lib_dir));
-    $this->logSection('freeze', sprintf('freezing data found in "%s"', $symfony_data_dir));
+    $this->logSection('freeze', sprintf('freezing lib found in "%s', $symfonyLibDir));
+    $this->logSection('freeze', sprintf('freezing data found in "%s"', $symfonyDataDir));
 
     $this->getFilesystem()->mkdirs('lib'.DIRECTORY_SEPARATOR.'symfony');
     $this->getFilesystem()->mkdirs('data'.DIRECTORY_SEPARATOR.'symfony');
 
-    $finder = sfFinder::type('any')->ignore_version_control();
-    $this->getFilesystem()->mirror($symfony_lib_dir, sfConfig::get('sf_lib_dir').'/symfony', $finder);
-    $this->getFilesystem()->mirror($symfony_data_dir, sfConfig::get('sf_data_dir').'/symfony', $finder);
-
+    $finder = sfFinder::type('any')->ignore_version_control()->exec(array($this, 'excludeTests'));
+    $this->getFilesystem()->mirror($symfonyLibDir, sfConfig::get('sf_lib_dir').'/symfony', $finder);
+    $this->getFilesystem()->mirror($symfonyDataDir, sfConfig::get('sf_data_dir').'/symfony', $finder);
     $this->getFilesystem()->rename(sfConfig::get('sf_data_dir').'/symfony/web/sf', sfConfig::get('sf_web_dir').'/sf');
 
-    // change symfony paths in config/config.php
-    file_put_contents('config/config.php.bak', $symfony_lib_dir);
-    $this->changeSymfonyDirs("dirname(__FILE__).'/../lib/symfony'");
+    // change symfony path in ProjectConfiguration.class.php
+    $config = sfConfig::get('sf_lib_dir').'/ProjectConfiguration.class.php';
+    $content = file_get_contents($config);
+    $content = str_replace('<?php', "<?php\n\n# FROZEN_SF_LIB_DIR: $symfonyLibDir", $content);
+    $content = preg_replace('#(\'|")'.preg_quote($symfonyLibDir, '#').'#', "dirname(__FILE__).$1/../lib/symfony", $content);
+    file_put_contents($config, $content);
   }
 
-  protected function changeSymfonyDirs($symfony_lib_dir)
+  public function excludeTests($dir, $entry)
   {
-    $content = file_get_contents('config/config.php');
-    $content = preg_replace("/^(\s*.sf_symfony_lib_dir\s*=\s*).+?;/m", "$1$symfony_lib_dir;", $content);
-    file_put_contents('config/config.php', $content);
+    return false === strpos($dir.'/'.$entry, 'Plugin/test/');
   }
 }

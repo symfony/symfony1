@@ -81,11 +81,9 @@ EOF;
    */
   public function execute($arguments = array(), $options = array())
   {
-    $this->bootstrapSymfony($arguments['application'], 'dev', true);
-
     $this->logSection('i18n', sprintf('extracting i18n strings for the "%s" application', $arguments['application']));
 
-    $extract = new sfI18nApplicationExtract(sfContext::getInstance()->getI18N(), $arguments['culture']);
+    $extract = new sfI18nApplicationExtract(new sfI18N($this->configuration, new sfNoCache()), $arguments['culture']);
     $extract->extract();
 
     $this->logSection('i18n', sprintf('found "%d" new i18n strings', count($extract->getNewMessages())));

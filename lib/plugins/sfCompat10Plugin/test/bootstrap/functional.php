@@ -12,13 +12,11 @@ if (!isset($root_dir))
 {
   $root_dir = realpath(dirname(__FILE__).sprintf('/../%s/fixtures', isset($type) ? $type : 'functional'));
 }
-define('SF_ROOT_DIR',    $root_dir);
-define('SF_APP',         $app);
-define('SF_ENVIRONMENT', 'test');
-define('SF_DEBUG',       isset($debug) ? $debug : true);
 
-// initialize symfony
-require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
+$class = $app.'Configuration';
+require $root_dir.'/lib/'.$class.'.class.php';
+$configuration = new $class('test', isset($debug) ? $debug : true);
+sfContext::createInstance($configuration);
 
 // remove all cache
 sfToolkit::clearDirectory(sfConfig::get('sf_app_cache_dir'));

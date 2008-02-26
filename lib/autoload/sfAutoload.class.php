@@ -86,12 +86,18 @@ class sfAutoload
 
   public function reloadClasses($force = false)
   {
-    if ($force)
+    $configuration = sfProjectConfiguration::getActive();
+    if (!$configuration || !$configuration instanceof sfApplicationConfiguration)
     {
-      @unlink(sfConfigCache::getInstance()->getCacheName(sfConfig::get('sf_app_config_dir_name').'/autoload.yml'));
+      return;
     }
 
-    $file = sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/autoload.yml');
+    if ($force && file_exists($configuration->getConfigCache()->getCacheName('config/autoload.yml')))
+    {
+      unlink($configuration->getConfigCache()->getCacheName('config/autoload.yml'));
+    }
+
+    $file = $configuration->getConfigCache()->checkConfig('config/autoload.yml');
 
     $this->classes = include($file);
 
@@ -124,7 +130,7 @@ class sfAutoload
     return false;
   }
 
-  function autoloadAgain($class)
+  public function autoloadAgain($class)
   {
     self::reloadClasses(true);
 

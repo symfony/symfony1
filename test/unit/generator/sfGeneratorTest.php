@@ -17,5 +17,9 @@ class myGenerator extends sfGenerator
   public function generate($params = array()) {}
 }
 
-$manager = new sfGeneratorManager();
+class ProjectConfiguration extends sfProjectConfiguration
+{
+}
+
+$manager = new sfGeneratorManager(new ProjectConfiguration());
 $generator = new myGenerator($manager);

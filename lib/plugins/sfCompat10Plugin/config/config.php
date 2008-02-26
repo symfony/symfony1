@@ -12,7 +12,7 @@ if (sfConfig::get('sf_compat_10') && !class_exists('sfCompatAutoload', false))
   $autoload->register();
 
   // register config handler for validate/*.yml files
-  sfConfigCache::getInstance()->registerConfigHandler('modules/*/validate/*.yml', 'sfValidatorConfigHandler');
+  sfProjectConfiguration::getActive()->getConfigCache()->registerConfigHandler('modules/*/validate/*.yml', 'sfValidatorConfigHandler');
 
   // register the validation execution filter
   sfConfig::set('sf_execution_filter', array('sfValidationExecutionFilter', array()));

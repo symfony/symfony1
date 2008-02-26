@@ -270,7 +270,7 @@ class sfPropelData extends sfData
    */
   protected function loadMapBuilders()
   {
-    $files = sfFinder::type('file')->name('*MapBuilder.php')->in(sfLoader::getModelDirs());
+    $files = sfFinder::type('file')->name('*MapBuilder.php')->in(sfProjectConfiguration::getActive()->getModelDirs());
     foreach ($files as $file)
     {
       $mapBuilderClass = basename($file, '.php');

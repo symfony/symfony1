@@ -23,16 +23,17 @@
 class sfDatabaseManager
 {
   protected
-    $databases = array();
+    $configuration = null,
+    $databases     = array();
 
   /**
    * Class constructor.
    *
    * @see initialize()
    */
-  public function __construct($options = array())
+  public function __construct(sfApplicationConfiguration $configuration, $options = array())
   {
-    $this->initialize();
+    $this->initialize($configuration);
 
     if (isset($options['auto_shutdown']) && $options['auto_shutdown'])
     {
@@ -43,12 +44,16 @@ class sfDatabaseManager
   /**
    * Initializes this sfDatabaseManager object
    *
+   * @param  sfApplicationConfiguration A sfApplicationConfiguration instance
+   *
    * @return bool true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfDatabaseManager object
    */
-  public function initialize()
+  public function initialize(sfApplicationConfiguration $configuration)
   {
+    $this->configuration = $configuration;
+
     $this->loadConfiguration();
   }
 
@@ -57,7 +62,7 @@ class sfDatabaseManager
    */
   public function loadConfiguration()
   {
-    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/databases.yml'));
+    require($this->configuration->getConfigCache()->checkConfig('config/databases.yml'));
   }
 
   /**

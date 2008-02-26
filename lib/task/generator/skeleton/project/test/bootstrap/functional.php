@@ -18,14 +18,11 @@ if (!isset($app))
   $app = array_pop($dirPieces);
 }
 
-// define symfony constant
-define('SF_ROOT_DIR',    realpath(dirname(__FILE__).'/../..'));
-define('SF_APP',         $app);
-define('SF_ENVIRONMENT', 'test');
-define('SF_DEBUG',       true);
+$class = $app.'Configuration';
+require_once(dirname(__FILE__).'/../../lib/'.$class.'.class.php');
 
-// initialize symfony
-require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
+$configuration = new $class('test', true);
+sfContext::createInstance($configuration);
 
 // remove all cache
 sfToolkit::clearDirectory(sfConfig::get('sf_app_cache_dir'));

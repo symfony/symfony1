@@ -64,14 +64,15 @@ EOF;
     $finder = sfFinder::type('file')->ignore_version_control()->maxdepth(1)->name('*.php');
     foreach ($finder->in(sfConfig::get('sf_web_dir')) as $controller)
     {
-      $contents = file_get_contents($controller);
-      preg_match('/\'SF_APP\',[\s]*\'(.*)\'\)/', $contents, $foundApp);
-      preg_match('/\'SF_ENVIRONMENT\',[\s]*\'(.*)\'\)/', $contents, $env);
+      $content = file_get_contents($controller);
 
-      // Remove file if it has found an application and the environment is not production
-      if (isset($foundApp[1]) && isset($env[1]) && $env[1] != 'prod')
+      if (preg_match('/new (.*?)Configuration\(\'(.*?)\'/', $content, $match))
       {
-        $this->getFilesystem()->remove($controller);
+        // Remove file if it has found an application and the environment is not production
+        if ($match[2] != 'prod')
+        {
+          $this->getFilesystem()->remove($controller);
+        }
       }
     }
   }

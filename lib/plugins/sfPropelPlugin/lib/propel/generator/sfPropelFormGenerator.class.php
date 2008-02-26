@@ -428,7 +428,7 @@ class sfPropelFormGenerator extends sfGenerator
    */
   protected function loadBuilders()
   {
-    $classes = sfFinder::type('file')->name('*MapBuilder.php')->in(sfLoader::getModelDirs());
+    $classes = sfFinder::type('file')->name('*MapBuilder.php')->in($this->generatorManager->getConfiguration()->getModelDirs());
     foreach ($classes as $class)
     {
       $class = basename($class, '.php');

@@ -11,17 +11,53 @@ How to upgrade?
 
 To upgrade a project:
 
-  * Upgrade symfony via PEAR or change your `config/config.php`
-    to update the symfony directory.
+  * If you don't use a SCM tool, please make a backup of your project.
+    As symfony replaces some files during the upgrade
+    (front controllers for example), you need a way to merge your
+    customizations after the upgrade.
 
   * Update the `symfony` file located in the project root directory
-    by changing the line:
+    by changing those three lines:
 
+        [php]
+        chdir(dirname(__FILE__));
+        include('config/config.php');
         include($sf_symfony_data_dir.'/bin/symfony.php');
 
     to
 
-        include($sf_symfony_lib_dir.'/command/cli.php');
+        [php]
+        chdir(dirname(__FILE__));
+        require_once(dirname(__FILE__).'/lib/ProjectConfiguration.class.php');
+        $configuration = new ProjectConfiguration();
+        include($configuration->getSymfonyLibDir().'/command/cli.php');
+
+    You can also copy the skeleton file from the symfony project skeleton directly:
+
+        $ cp /path/to/symfony/lib/task/generator/skeleton/project/symfony symfony
+
+  * Create a `lib/ProjectConfiguration.class.php` file with the following content:
+
+        [php]
+        <?php
+
+        require_once '##SYMFONY_LIB_DIR##/autoload/sfCoreAutoload.class.php';
+        sfCoreAutoload::register();
+
+        class ProjectConfiguration extends sfProjectConfiguration
+        {
+          public function setup()
+          {
+          }
+        }
+
+    Then, replace `##SYMFONY_LIB_DIR##` with the path to the symfony 1.1
+    `lib/` directory. This is the new way to change the symfony version used
+    for your project.
+
+    You can also copy the skeleton file from the symfony project skeleton directly:
+
+        $ cp /path/to/symfony/lib/task/generator/skeleton/project/lib/ProjectConfiguration.class.php lib/ProjectConfiguration.class.php
 
   * Launch the `project:upgrade1.1` task from your project directory
     to perform an automatic upgrade:
@@ -212,31 +248,11 @@ Autoloading
 -----------
 
 The `autoloading_function` setting in `settings.yml` is not used anymore.
-You can register autoloading callables in the application `config.php`.
-Here is the new default `config.php`:
-
-    [php]
-    <?php
-    
-    // include project configuration
-    include(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
-    
-    // symfony bootstraping
-    require_once($sf_symfony_lib_dir.'/util/sfCore.class.php');
-    sfCore::bootstrap($sf_symfony_lib_dir, $sf_symfony_data_dir);
-    
-    // insert your own autoloading callables here
-    
-    if (sfConfig::get('sf_debug'))
-    {
-      spl_autoload_register(array('sfAutoload', 'autoloadAgain'));
-    }
+You can register autoloading callables in your application configuration class.
 
 Thanks to the new `sfAutoload::autoloadAgain()` method, you won't need to clear
 the cache when you add or move classes in your project. This method will
 automatically find the changes and flush the autoloading cache.
-
-The `project:upgrade1.1` task makes all those changes for you.
 
 VERSION
 -------
@@ -465,3 +481,59 @@ directory:
  `data/exception.*`     | `lib/exception/data`
 
 The symfony core has been upgraded to take these changes into account.
+
+sfLoader
+--------
+
+All `sfLoader` static methods (except `::getHelperDirs()` and `::loadHelpers()`)
+have been moved to the `sfProjectConfiguration` and `sfApplicationConfiguration`
+classes:
+
+  * `sfProjectConfiguration`:
+      * `->getGeneratorSkeletonDirs()`
+      * `->getGeneratorTemplate()`
+      * `->getGeneratorTemplateDirs()`
+      * `->getModelDirs()`
+
+  * `sfApplicationConfiguration`:
+      * `->getControllerDirs()`
+      * `->getTemplateDirs()`
+      * `->getTemplateDir()`
+      * `->getTemplatePath()`
+      * `->getI18NGlobalDirs()`
+      * `->getI18NDirs()`
+      * `->getConfigPaths()`
+
+sfCore
+------
+
+The `sfCore` has been removed. The code has been moved to `sfProjectConfiguration`,
+`sfApplicationConfiguration`, and `sfContext` classes.
+
+Front Controllers
+-----------------
+
+All front controllers have to be upgraded. The SF_DEBUG, SF_APP, SF_ENVIRONMENT,
+and SF_ROOT_DIR constants are gone. If you use some of these constants in your
+project, please use their sfConfig::get('') counterparts:
+
+ *Old*             | *New*
+ ----------------- | ---------------------------------
+ `SF_ROOT_DIR`     | `sfConfig::get('sf_root_dir')`
+ `SF_ENVIRONMENT`  | `sfConfig::get('sf_environment')`
+ `SF_APP`          | `sfConfig::get('sf_app')`
+ `SF_DEBUG`        | `sfConfig::get('sf_debug')`
+
+The `project:upgrade1.1` task upgrades all front controllers for you.
+If you made some customizations, symfony will issue a warning and won't
+upgrade them automatically. You can then copy the default skeleton from
+symfony: /path/to/symfony/lib/task/generator/skeleton/app/web/index.php
+
+config.php
+----------
+
+All `config.php` files have been removed. The are replaced by the `ProjectConfiguration`
+class and the application configuration classes.
+
+If you've added some cutomizations in `config.php` files, you will have to migrate them
+to those new classes.

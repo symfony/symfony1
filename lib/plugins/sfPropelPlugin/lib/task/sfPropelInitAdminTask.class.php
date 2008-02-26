@@ -77,7 +77,7 @@ EOF;
 
     // create module structure
     $finder = sfFinder::type('any')->ignore_version_control()->discard('.sf');
-    $dirs = sfLoader::getGeneratorSkeletonDirs('sfPropelAdmin', $options['theme']);
+    $dirs = $this->configuration->getGeneratorSkeletonDirs('sfPropelAdmin', $options['theme']);
     foreach ($dirs as $dir)
     {
       if (is_dir($dir))

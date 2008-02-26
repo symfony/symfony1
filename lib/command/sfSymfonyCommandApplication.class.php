@@ -30,15 +30,12 @@ class sfSymfonyCommandApplication extends sfCommandApplication
       throw new sfInitializationException('You must pass a "symfony_lib_dir" option.');
     }
 
-    // initialize symfony core autoloading
-    require_once($this->options['symfony_lib_dir'].'/autoload/sfCoreAutoload.class.php');
-    sfCoreAutoload::getInstance()->register();
+    $configuration = new sfProjectConfiguration(getcwd());
 
     // application
     $this->setName('symfony');
     $this->setVersion(SYMFONY_VERSION);
 
-    $this->initializeEnvironment($this->options['symfony_lib_dir']);
     $this->initializeTasks();
   }
 
@@ -73,27 +70,6 @@ class sfSymfonyCommandApplication extends sfCommandApplication
   }
 
   /**
-   * Initializes the environment variables and include path.
-   *
-   * @param string The symfony lib directory
-   */
-  protected function initializeEnvironment($symfonyLibDir)
-  {
-    sfConfig::set('sf_symfony_lib_dir', $symfonyLibDir);
-
-    // directory layout
-    sfCore::initDirectoryLayout(getcwd());
-
-    // include path
-    set_include_path(
-      sfConfig::get('sf_lib_dir').PATH_SEPARATOR.
-      sfConfig::get('sf_app_lib_dir').PATH_SEPARATOR.
-      sfConfig::get('sf_model_dir').PATH_SEPARATOR.
-      get_include_path()
-    );
-  }
-
-  /**
    * Loads all available tasks.
    *
    * Looks for tasks in the symfony core, the current project and all project plugins.
@@ -101,12 +77,13 @@ class sfSymfonyCommandApplication extends sfCommandApplication
   protected function initializeTasks()
   {
     $dirs = array(
-      sfConfig::get('sf_symfony_lib_dir').'/task',                // symfony tasks
-      sfConfig::get('sf_symfony_lib_dir').'/plugins/*/lib/task',  // bundled plugin tasks
-      sfConfig::get('sf_plugins_dir').'/*/lib/task',              // plugin tasks
-      sfConfig::get('sf_lib_dir').'/task',                        // project tasks
+      sfConfig::get('sf_symfony_lib_dir').'/task',               // symfony tasks
+      sfConfig::get('sf_symfony_lib_dir').'/plugins/*/lib/task', // bundled plugin tasks
+      sfConfig::get('sf_plugins_dir').'/*/lib/task',             // plugin tasks
+      sfConfig::get('sf_lib_dir').'/task',                       // project tasks
     );
     $finder = sfFinder::type('file')->name('*Task.class.php');
+
     foreach ($dirs as $globDir)
     {
       if (!$dirs = glob($globDir))

@@ -14,7 +14,7 @@
   <dt>What's next</dt>
   <dd>
     <ul class="sfTIconList">
-      <li class="sfTDirectoryMessage">Browse to the <code>apps/<?php echo SF_APP ?>/modules/<?php echo $sf_params->get('module') ?>/</code> directory</li>
+      <li class="sfTDirectoryMessage">Browse to the <code>apps/<?php echo sfContext::getInstance()->getConfiguration()->getApplication() ?>/modules/<?php echo $sf_params->get('module') ?>/</code> directory</li>
       <li class="sfTEditMessage">In <code>actions/actions.class.php</code>, edit the <code>executeIndex()</code> method and remove the final <code>forward</code></li>
       <li class="sfTColorMessage">Customize the <code>templates/indexSuccess.php</code> template</li>
       <li class="sfTLinkMessage"><?php echo link_to('Learn more from the online documentation', 'http://www.symfony-project.org/doc') ?></li>

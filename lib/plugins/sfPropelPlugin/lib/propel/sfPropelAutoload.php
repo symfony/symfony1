@@ -16,7 +16,7 @@
  */
 require_once 'propel/Propel.php';
 
-$dispatcher = sfContext::getInstance()->getEventDispatcher();
+$dispatcher = sfProjectConfiguration::getActive()->getEventDispatcher();
 
 if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
 {

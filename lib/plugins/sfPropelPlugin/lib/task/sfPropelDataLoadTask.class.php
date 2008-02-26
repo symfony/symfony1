@@ -70,8 +70,6 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $this->bootstrapSymfony($arguments['application'], $options['env'], true);
-
     if (count($options['dir']))
     {
       $fixturesDirs = $options['dir'];
@@ -85,7 +83,9 @@ EOF;
       $fixturesDirs = sfFinder::type('dir')->name('fixtures')->in(array_merge($pluginDirs, array(sfConfig::get('sf_data_dir'))));
     }
 
-    $databaseManager = new sfDatabaseManager();
+    $configuration = sfApplicationConfiguration::getForApplication($arguments['application'], $options['env'], true);
+
+    $databaseManager = new sfDatabaseManager($configuration);
 
     $data = new sfPropelData();
     $data->setDeleteCurrentData(isset($options['append']) ? ($options['append'] ? false : true) : true);

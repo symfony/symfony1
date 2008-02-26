@@ -12,6 +12,15 @@ require_once(dirname(__FILE__).'/../../../bootstrap/task.php');
 
 $t = new lime_test(2, new lime_output_color());
 
+class ProjectConfiguration extends sfProjectConfiguration
+{
+}
+
+class TestConfiguration extends sfApplicationConfiguration
+{
+}
+
+$configuration = new TestConfiguration('test', true, sfConfig::get('sf_root_dir'));
 $dispatcher = new sfEventDispatcher();
 $formatter = new sfFormatter();
 
@@ -19,8 +28,6 @@ $task = new sfGenerateProjectTask($dispatcher, $formatter);
 $task->run(array('test'));
 $task = new sfGenerateAppTask($dispatcher, $formatter);
 $task->run(array('frontend'));
-
-sfCore::initDirectoryLayout(sfConfig::get('sf_root_dir'), 'frontend', 'dev');
 
 // Put something in the cache
 $file = sfConfig::get('sf_config_cache_dir').DIRECTORY_SEPARATOR.'test';

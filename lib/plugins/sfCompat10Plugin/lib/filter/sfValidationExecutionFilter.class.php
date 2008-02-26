@@ -112,7 +112,7 @@ class sfValidationExecutionFilter extends sfFilter
 
     // load validation configuration
     // do NOT use require_once
-    if (null !== $validateFile = sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$validationConfig, true))
+    if (null !== $validateFile = $this->context->getConfigCache()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$validationConfig, true))
     {
       // create validator manager
       $validatorManager = new sfValidatorManager($this->context);

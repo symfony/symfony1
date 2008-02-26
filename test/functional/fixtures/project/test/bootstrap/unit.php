@@ -9,9 +9,7 @@
  */
 
 $_test_dir = realpath(dirname(__FILE__).'/..');
-define('SF_ROOT_DIR', realpath($_test_dir.'/..'));
 
-// symfony directories
-include(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
-
-require_once($sf_symfony_lib_dir.'/vendor/lime/lime.php');
+require_once(dirname(__FILE__).'/../../lib/ProjectConfiguration.class.php');
+$configuration = new ProjectConfiguration(realpath($_test_dir.'/..'));
+include($configuration->getSymfonyLibDir().'/vendor/lime/lime.php');

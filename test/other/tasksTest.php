@@ -120,9 +120,9 @@ $content = $c->execute_command('test:all');
 $t->is($content, $c->get_fixture_content('test/result-harness.txt'), '"test:all" launches all unit and functional tests');
 
 $content = $c->execute_command(sprintf('project:freeze %s', realpath(dirname(__FILE__).'/../../data')));
-$t->like(file_get_contents($c->tmp_dir.DS.'config'.DS.'config.php'), '/dirname\(__FILE__\)/', '"project:freeze" freezes symfony lib and data dir into the project directory');
+$t->like(file_get_contents($c->tmp_dir.DS.'lib'.DS.'ProjectConfiguration.class.php'), '/dirname\(__FILE__\)/', '"project:freeze" freezes symfony lib and data dir into the project directory');
 
 $content = $c->execute_command('project:unfreeze');
-$t->unlike(file_get_contents($c->tmp_dir.DS.'config'.DS.'config.php'), '/dirname\(__FILE__\)/', '"project:unfreeze" unfreezes symfony lib and data dir');
+$t->unlike(file_get_contents($c->tmp_dir.DS.'lib'.DS.'ProjectConfiguration.class.php'), '/dirname\(__FILE__\)/', '"project:unfreeze" unfreezes symfony lib and data dir');
 
 $c->shutdown();

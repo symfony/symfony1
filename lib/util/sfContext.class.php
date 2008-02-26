@@ -23,33 +23,60 @@
 class sfContext
 {
   protected
-    $dispatcher = null,
-    $factories  = array();
+    $dispatcher    = null,
+    $configuration = null,
+    $factories     = array();
 
   protected static
     $instances = array(),
     $current   = 'default';
 
   /**
-   * Initializes the current sfContext instance.
+   * Creates a new context instance.
+   *
+   * @param  sfApplicationConfiguration A sfApplicationConfiguration instance
+   * @param  string                     A name for this context (application name by default)
+   * @param  string                     The context class to use (sfContext by default)
+   *
+   * @return sfContext                  A sfContext instance
    */
-  public function initialize()
+  static public function createInstance(sfApplicationConfiguration $configuration, $name = null, $class = __CLASS__)
   {
-    $this->dispatcher = new sfEventDispatcher();
-
-    if (sfConfig::get('sf_use_database'))
+    if (is_null($name))
     {
-      // setup our database connections
-      $this->factories['databaseManager'] = new sfDatabaseManager(array('auto_shutdown' => false));
+      $name = $configuration->getApplication();
     }
 
-    // create a new action stack
-    $this->factories['actionStack'] = new sfActionStack();
+    self::$current = $name;
+
+    if (!isset(self::$instances[$name]))
+    {
+      self::$instances[$name] = new $class();
+
+      if (!self::$instances[$name] instanceof sfContext)
+      {
+        throw new sfFactoryException(sprintf('Class "%s" is not of the type sfContext.', $class));
+      }
+
+      self::$instances[$name]->initialize($configuration);
+    }
+
+    return self::$instances[$name];
+  }
+
+  /**
+   * Initializes the current sfContext instance.
+   *
+   * @param sfApplicationConfiguration A sfApplicationConfiguration instance
+   */
+  public function initialize(sfApplicationConfiguration $configuration)
+  {
+    $this->configuration = $configuration;
+    $this->dispatcher    = $configuration->getEventDispatcher();
 
     try
     {
-      // include the factories configuration
-      require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/factories.yml'));
+      $this->loadFactories();
     }
     catch (sfException $e)
     {
@@ -78,7 +105,7 @@ class sfContext
    *
    * @return sfContext A sfContext implementation instance.
    */
-  public static function getInstance($name = null, $class = __CLASS__)
+  static public function getInstance($name = null, $class = __CLASS__)
   {
     if (is_null($name))
     {
@@ -87,14 +114,7 @@ class sfContext
 
     if (!isset(self::$instances[$name]))
     {
-      self::$instances[$name] = new $class();
-
-      if (!self::$instances[$name] instanceof sfContext)
-      {
-        throw new sfFactoryException(sprintf('Class "%s" is not of the type sfContext.', $class));
-      }
-
-      self::$instances[$name]->initialize();
+      throw new sfException(sprintf('The "%s" context does not exist.', $name));
     }
 
     return self::$instances[$name];
@@ -103,7 +123,7 @@ class sfContext
   /**
    * Checks to see if there has been a context created
    *
-   * @param  string    The name of the sfContext to check for
+   * @param  string   The name of the sfContext to check for
    *
    * @return boolean  True is instanced, otherwise false
    */
@@ -119,7 +139,34 @@ class sfContext
   }
 
   /**
-   *
+   * Loads the symfony factories.
+   */
+  public function loadFactories()
+  {
+    if (sfConfig::get('sf_use_database'))
+    {
+      // setup our database connections
+      $this->factories['databaseManager'] = new sfDatabaseManager($this->configuration, array('auto_shutdown' => false));
+    }
+
+    // create a new action stack
+    $this->factories['actionStack'] = new sfActionStack();
+
+    // include the factories configuration
+    require($this->configuration->getConfigCache()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/factories.yml'));
+
+    $this->dispatcher->notify(new sfEvent($this, 'context.load_factories'));
+  }
+
+  /**
+   * Dispatches the current request.
+   */
+  public function dispatch()
+  {
+    $this->getController()->dispatch();
+  }
+
+  /**
    * Sets the current context to something else
    *
    * @param  string    The name of the context to switch to
@@ -128,6 +175,16 @@ class sfContext
   public static function switchTo($name)
   {
     self::$current = $name;
+  }
+
+  /**
+   * Returns the configuration instance.
+   *
+   * @return sfConfiguration The sfConfiguration instance
+   */
+  public function getConfiguration()
+  {
+    return $this->configuration;
   }
 
   /**
@@ -342,6 +399,16 @@ class sfContext
   public function getUser()
   {
     return isset($this->factories['user']) ? $this->factories['user'] : null;
+  }
+
+  /**
+   * Returns the configuration cache.
+   *
+   * @return sfConfigCache A sfConfigCache instance
+   */
+  public function getConfigCache()
+  {
+    return $this->configuration->getConfigCache();
   }
 
   /**

@@ -132,7 +132,7 @@ function get_component($moduleName, $componentName, $vars = array())
   $componentInstance = $controller->getComponent($moduleName, $componentName);
 
   // load component's module config file
-  require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/module.yml'));
+  require(sfContext::getInstance()->getConfigCache()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/module.yml'));
 
   $componentInstance->getVarHolder()->add($vars);
 

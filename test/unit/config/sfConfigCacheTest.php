@@ -9,10 +9,3 @@
  */
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
-
-$t = new lime_test(2, new lime_output_color());
-
-// ->getInstance()
-$t->diag('->getInstance()');
-$t->isa_ok(sfConfigCache::getInstance(), 'sfConfigCache', '::getInstance() returns a sfConfigCache instance');
-$t->is(sfConfigCache::getInstance(), sfConfigCache::getInstance(), '::getInstance() is a singleton');

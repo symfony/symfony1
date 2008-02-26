@@ -68,12 +68,11 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
+    $configuration = sfApplicationConfiguration::getForApplication($arguments['application'], $options['env'], true);
+
+    $databaseManager = new sfDatabaseManager($configuration);
+
     $filename = $arguments['target'];
-
-    $this->bootstrapSymfony($arguments['application'], $options['env'], true);
-
-    $databaseManager = new sfDatabaseManager();
-
     if (!is_null($filename) && !sfToolkit::isPathAbsolute($filename))
     {
       $dir = sfConfig::get('sf_data_dir').DIRECTORY_SEPARATOR.'fixtures';

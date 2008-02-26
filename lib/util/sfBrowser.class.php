@@ -218,10 +218,10 @@ class sfBrowser
       $_COOKIE[$name] = $cookie['value'];
     }
 
+    ob_start();
+
     // recycle our context object
-    $this->context = sfContext::getInstance();
-    $this->context->initialize();
-    $this->context->getEventDispatcher()->connect('application.throw_exception', array($this, 'ListenToException'));
+    $this->context = $this->getContext(true);
 
     // launch request via controller
     $controller = $this->context->getController();
@@ -234,8 +234,8 @@ class sfBrowser
     $this->currentException = null;
 
     // dispatch our request
-    ob_start();
     $controller->dispatch();
+
     $retval = ob_get_clean();
 
     // append retval to the response content
@@ -368,12 +368,21 @@ class sfBrowser
   }
 
   /**
-   * Gets context.
+   * Returns the current application context.
+   *
+   * @param  Boolean true to force context reload, false otherwise
    *
    * @return sfContext
    */
-  public function getContext()
+  public function getContext($forceReload = false)
   {
+    if (is_null($this->context) || $forceReload)
+    {
+      $this->context = sfContext::getInstance();
+      $this->context->initialize($this->context->getConfiguration());
+      $this->context->getEventDispatcher()->connect('application.throw_exception', array($this, 'ListenToException'));
+    }
+
     return $this->context;
   }
 

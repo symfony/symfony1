@@ -92,7 +92,7 @@ EOF;
     // generate module
     $tmpDir = sfConfig::get('sf_cache_dir').DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.md5(uniqid(rand(), true));
     sfConfig::set('sf_module_cache_dir', $tmpDir);
-    $generatorManager = new sfGeneratorManager();
+    $generatorManager = new sfGeneratorManager($this->configuration);
     $generatorManager->generate('sfPropelCrudGenerator', array(
       'model_class'           => $arguments['model'],
       'moduleName'            => $arguments['module'],
@@ -135,7 +135,7 @@ EOF;
 
     // create basic application structure
     $finder = sfFinder::type('any')->ignore_version_control()->discard('.sf');
-    $dirs = sfLoader::getGeneratorSkeletonDirs('sfPropelCrud', $options['theme']);
+    $dirs = $this->configuration->getGeneratorSkeletonDirs('sfPropelCrud', $options['theme']);
     foreach ($dirs as $dir)
     {
       if (is_dir($dir))

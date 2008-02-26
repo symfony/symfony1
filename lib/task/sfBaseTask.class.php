@@ -18,6 +18,9 @@
  */
 abstract class sfBaseTask extends sfCommandApplicationTask
 {
+  protected
+    $configuration = null;
+
   /**
    * @see sfTask
    */
@@ -27,15 +30,15 @@ abstract class sfBaseTask extends sfCommandApplicationTask
 
     $this->checkProjectExists();
 
-    try
+    $this->configuration = new sfProjectConfiguration(getcwd());
+
+    $application = $commandManager->getArgumentSet()->hasArgument('application') ? $commandManager->getArgumentValue('application') : null;
+    if (!is_null($application))
     {
-      if (!is_null($commandManager->getArgumentValue('application')))
-      {
-        $this->checkAppExists($commandManager->getArgumentValue('application'));
-      }
-    }
-    catch (sfCommandException $e)
-    {
+      $this->checkAppExists($application);
+      $class = $application.'Configuration';
+      require_once sfConfig::get('sf_lib_dir').'/'.$class.'.class.php';
+      $this->configuration = new $class('test', true);
     }
 
     return $this->execute($commandManager->getArgumentValues(), $commandManager->getOptionValues());
@@ -61,30 +64,6 @@ abstract class sfBaseTask extends sfCommandApplicationTask
     }
 
     return $this->filesystem;
-  }
-
-  /**
-   * Bootstraps a symfony application.
-   *
-   * @param string  The application name
-   * @param string  The environment name
-   * @param Boolean Whether to bootstrap the symfony application in debug mode
-   */
-  public function bootstrapSymfony($app, $env = 'dev', $debug = true)
-  {
-    if (defined('SF_ROOT_DIR'))
-    {
-      return;
-    }
-
-    define('SF_ROOT_DIR',    sfConfig::get('sf_root_dir'));
-    define('SF_APP',         $app);
-    define('SF_ENVIRONMENT', $env);
-    define('SF_DEBUG',       $debug);
-
-    require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
-
-    sfContext::getInstance();
   }
 
   /**

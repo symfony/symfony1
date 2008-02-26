@@ -98,7 +98,7 @@ abstract class sfController
    */
   protected function controllerExists($moduleName, $controllerName, $extension, $throwExceptions)
   {
-    $dirs = sfLoader::getControllerDirs($moduleName);
+    $dirs = $this->context->getConfiguration()->getControllerDirs($moduleName);
     foreach ($dirs as $dir => $checkEnabled)
     {
       // plugin module enabled?
@@ -194,7 +194,7 @@ abstract class sfController
     }
 
     // check for a module generator config file
-    sfConfigCache::getInstance()->import(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/generator.yml', true, true);
+    $this->context->getConfigCache()->import(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/generator.yml', true, true);
 
     if (!$this->actionExists($moduleName, $actionName))
     {
@@ -214,7 +214,7 @@ abstract class sfController
     $this->getActionStack()->addEntry($moduleName, $actionName, $actionInstance);
 
     // include module configuration
-    require(sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/module.yml'));
+    require($this->context->getConfigCache()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/module.yml'));
 
     // check if this module is internal
     if ($this->getActionStack()->getSize() == 1 && sfConfig::get('mod_'.strtolower($moduleName).'_is_internal') && !sfConfig::get('sf_test'))

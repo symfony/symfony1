@@ -23,25 +23,18 @@
 class sfConfigCache
 {
   protected
-    $handlers = array(),
-    $userHandlers = array();
-
-  protected static
-    $instance = null;
+    $configuration = null,
+    $handlers      = array(),
+    $userHandlers  = array();
 
   /**
-   * Retrieves the singleton instance of this class.
+   * Constructor
    *
-   * @return sfConfigCache A sfConfigCache instance
+   * @param sfApplicationConfiguration A sfApplicationConfiguration instance
    */
-  public static function getInstance()
+  public function __construct(sfApplicationConfiguration $configuration)
   {
-    if (!self::$instance)
-    {
-      self::$instance = new sfConfigCache();
-    }
-
-    return self::$instance;
+    $this->configuration = $configuration;
   }
 
   /**
@@ -139,7 +132,7 @@ class sfConfigCache
    * The recompilation only occurs in a non debug environment.
    *
    * If the configuration file path is relative, symfony will look in directories 
-   * defined in the sfLoader::getConfigPaths() method.
+   * defined in the sfConfiguration::getConfigPaths() method.
    *
    * @param string A filesystem path to a configuration file
    *
@@ -147,7 +140,7 @@ class sfConfigCache
    *
    * @throws <b>sfConfigurationException</b> If a requested configuration file does not exist
    *
-   * @see sfLoader::getConfigPaths()
+   * @see sfConfiguration::getConfigPaths()
    */
   public function checkConfig($configPath, $optional = false)
   {
@@ -166,7 +159,7 @@ class sfConfigCache
 
     if (!sfToolkit::isPathAbsolute($configPath))
     {
-      $files = sfLoader::getConfigPaths($configPath);
+      $files = $this->configuration->getConfigPaths($configPath);
     }
     else
     {

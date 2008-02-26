@@ -70,7 +70,7 @@ class sfPatternRouting extends sfRouting
    */
   public function loadConfiguration()
   {
-    if ($config = sfConfigCache::getInstance()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/routing.yml', true))
+    if ($config = sfContext::getInstance()->getConfigCache()->checkConfig('config/routing.yml', true))
     {
       include($config);
     }
