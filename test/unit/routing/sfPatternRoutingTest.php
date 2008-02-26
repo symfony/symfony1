@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(122, new lime_output_color());
+$t = new lime_test(123, new lime_output_color());
 
 class sfPatternRoutingTest extends sfPatternRouting
 {
@@ -461,6 +461,12 @@ catch (InvalidArgumentException $e)
 {
   $t->pass('->generate() throws a InvalidArgumentException if some mandatory parameters are not provided');
 }
+
+// parameters can be empty
+$t->diag('parameters can be empty');
+$r->clearRoutes();
+$r->connect('test', '/test/:foo/:bar');
+$t->is($r->generate('test', array('foo' => 'bar', 'bar' => '')), '/test/bar/', '->generate() can take empty parameters');
 
 // default module/action overriding
 $t->diag('module/action overriding');
