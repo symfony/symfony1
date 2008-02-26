@@ -25,7 +25,9 @@ class sfPatternRouting extends sfRouting
     $currentInternalUri     = array(),
     $currentRouteParameters = null,
     $defaultSuffix          = '',
-    $routes                 = array();
+    $routes                 = array(),
+    $cacheData              = array(),
+    $cacheChanged           = false;
 
   /**
    * Initializes this Routing.
@@ -63,6 +65,11 @@ class sfPatternRouting extends sfRouting
     parent::initialize($dispatcher, $cache, $options);
 
     $this->setDefaultSuffix(isset($options['suffix']) ? $options['suffix'] : '');
+
+    if (!is_null($this->cache) && $cacheData = $this->cache->get('data'))
+    {
+      $this->cacheData = unserialize($cacheData);
+    }
   }
 
   /**
@@ -70,7 +77,7 @@ class sfPatternRouting extends sfRouting
    */
   public function loadConfiguration()
   {
-    if ($routes = $this->cache->get('configuration'))
+    if (!is_null($this->cache) && $routes = $this->cache->get('configuration'))
     {
       $this->routes = unserialize($routes);
     }
@@ -83,7 +90,10 @@ class sfPatternRouting extends sfRouting
 
       parent::loadConfiguration();
 
-      $this->cache->set('configuration', serialize($this->routes));
+      if (!is_null($this->cache))
+      {
+        $this->cache->set('configuration', serialize($this->routes));
+      }
     }
   }
 
@@ -417,6 +427,15 @@ class sfPatternRouting extends sfRouting
   {
     $params = $this->fixDefaults($params);
 
+    if (!is_null($this->cache))
+    {
+      $cacheKey = 'generate_'.$name.serialize($params);
+      if (isset($this->cacheData[$cacheKey]))
+      {
+        return $this->cacheData[$cacheKey];
+      }
+    }
+
     // named route?
     if ($name)
     {
@@ -520,6 +539,12 @@ class sfPatternRouting extends sfRouting
       $realUrl = preg_replace('#'.$this->options['segment_separators_regex'].'\*('.$this->options['segment_separators_regex'].'|$)#', "$tmp$1", $realUrl);
     }
 
+    if (!is_null($this->cache))
+    {
+      $this->cacheChanged = true;
+      $this->cacheData[$cacheKey] = $realUrl;
+    }
+
     return $realUrl;
   }
 
@@ -542,6 +567,15 @@ class sfPatternRouting extends sfRouting
 
     // remove multiple /
     $url = preg_replace('#/+#', '/', $url);
+
+    if (!is_null($this->cache))
+    {
+      $cacheKey = 'parse_'.$url;
+      if (isset($this->cacheData[$cacheKey]))
+      {
+        return $this->cacheData[$cacheKey];
+      }
+    }
 
     $found = false;
     foreach ($this->routes as $routeName => $route)
@@ -593,7 +627,15 @@ class sfPatternRouting extends sfRouting
       throw new sfError404Exception(sprintf('No matching route found for "%s"', $url));
     }
 
-    return $this->currentRouteParameters = $this->fixDefaults($out);
+    $this->currentRouteParameters = $this->fixDefaults($out);
+
+    if (!is_null($this->cache))
+    {
+      $this->cacheChanged = true;
+      $this->cacheData[$cacheKey] = $this->currentRouteParameters;
+    }
+
+    return $this->currentRouteParameters;
   }
 
   protected function parseStarParameter($star)
@@ -606,5 +648,17 @@ class sfPatternRouting extends sfRouting
     }
 
     return $parameters;
+  }
+
+  /**
+   * @see sfRouting
+   */
+  public function shutdown()
+  {
+    if (!is_null($this->cache) && $this->cacheChanged)
+    {
+      $this->cacheChanged = false;
+      $this->cache->set('data', serialize($this->cacheData));
+    }
   }
 }
