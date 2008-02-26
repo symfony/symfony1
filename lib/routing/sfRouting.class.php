@@ -20,6 +20,7 @@ abstract class sfRouting
 {
   protected
     $dispatcher        = null,
+    $cache             = null,
     $defaultParameters = array(),
     $defaultModule     = 'default',
     $defaultAction     = 'index',
@@ -30,9 +31,9 @@ abstract class sfRouting
    *
    * @see initialize()
    */
-  public function __construct(sfEventDispatcher $dispatcher, $options = array())
+  public function __construct(sfEventDispatcher $dispatcher, sfCache $cache = null, $options = array())
   {
-    $this->initialize($dispatcher, $options);
+    $this->initialize($dispatcher, $cache, $options);
 
     if (isset($this->options['auto_shutdown']) && $this->options['auto_shutdown'])
     {
@@ -43,12 +44,14 @@ abstract class sfRouting
   /**
    * Initializes this sfRouting instance.
    *
-   * @param  sfEventDispatcher A sfEventDispatcher instance
-   * @param  array             An associative array of initialization options.
+   * @param sfEventDispatcher A sfEventDispatcher instance
+   * @param sfCache           A sfCache instance
+   * @param array             An associative array of initialization options.
    */
-  public function initialize(sfEventDispatcher $dispatcher, $options = array())
+  public function initialize(sfEventDispatcher $dispatcher, sfCache $cache = null, $options = array())
   {
     $this->dispatcher = $dispatcher;
+    $this->cache      = $cache;
 
     if (isset($options['default_module']))
     {

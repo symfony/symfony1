@@ -48,6 +48,13 @@ default:
       suffix:             .
       default_module:     default
       default_action:     index
+      cache:
+        class: sfFileCache
+        param:
+          automatic_cleaning_factor: 0
+          cache_dir:                 %SF_CONFIG_CACHE_DIR%/routing
+          lifetime:                  31556926
+          prefix:                    %SF_APP_DIR%
 
   logger:
     class: sfAggregateLogger

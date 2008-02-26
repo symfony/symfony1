@@ -39,7 +39,7 @@ class sfPatternRouting extends sfRouting
    *
    * @see sfRouting
    */
-  public function initialize(sfEventDispatcher $dispatcher, $options = array())
+  public function initialize(sfEventDispatcher $dispatcher, sfCache $cache = null, $options = array())
   {
     if (!isset($options['variable_prefixes']))
     {
@@ -60,7 +60,7 @@ class sfPatternRouting extends sfRouting
     $options['segment_separators_regex'] = '(?:'.implode('|', array_map(create_function('$a', 'return preg_quote($a, \'#\');'), $options['segment_separators'])).')';
     $options['variable_content_regex']   = '[^'.implode('', array_map(create_function('$a', 'return str_replace(\'-\', \'\-\', preg_quote($a, \'#\'));'), $options['segment_separators'])).']+';
 
-    parent::initialize($dispatcher, $options);
+    parent::initialize($dispatcher, $cache, $options);
 
     $this->setDefaultSuffix(isset($options['suffix']) ? $options['suffix'] : '');
   }
@@ -70,12 +70,21 @@ class sfPatternRouting extends sfRouting
    */
   public function loadConfiguration()
   {
-    if ($config = sfContext::getInstance()->getConfigCache()->checkConfig('config/routing.yml', true))
+    if ($routes = $this->cache->get('configuration'))
     {
-      include($config);
+      $this->routes = unserialize($routes);
     }
+    else
+    {
+      if ($config = sfContext::getInstance()->getConfigCache()->checkConfig('config/routing.yml', true))
+      {
+        include($config);
+      }
 
-    parent::loadConfiguration();
+      parent::loadConfiguration();
+
+      $this->cache->set('configuration', serialize($this->routes));
+    }
   }
 
   /**

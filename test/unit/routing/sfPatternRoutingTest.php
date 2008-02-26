@@ -302,7 +302,7 @@ $t->is($r->generate('', $params), $url, '->generate() creates URL for route when
 
 // separators
 $t->diag('separators');
-$r = new sfPatternRoutingTest(new sfEventDispatcher(), array('segment_separators' => array('/', ';', ':', '|', '.', '-', '+')));
+$r = new sfPatternRoutingTest(new sfEventDispatcher(), null, array('segment_separators' => array('/', ';', ':', '|', '.', '-', '+')));
 $r->clearRoutes();
 $r->connect('test', '/:module/:action;:foo::baz+static+:toto|:hip-:zozo.:format', array());
 $r->connect('test0', '/:module/:action0', array());
@@ -344,7 +344,7 @@ $params = array('module' => 'default', 'action' => 'index', 'action' => 'foobar'
 $url = '/default/foobar;bar:baz+static+titi|hop-zaza.xml';
 $t->is($r->parse($url), $params, '->parse()    recognizes parameters separated by mixed separators');
 $t->is($r->generate('', $params), $url, '->generate() creates routes with mixed separators');
-$r = new sfPatternRoutingTest(new sfEventDispatcher(), array('variable_prefixes' => array(':', '$')));
+$r = new sfPatternRoutingTest(new sfEventDispatcher(), null, array('variable_prefixes' => array(':', '$')));
 
 // token names
 $t->diag('token names');

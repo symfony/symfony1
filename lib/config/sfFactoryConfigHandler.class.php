@@ -161,7 +161,17 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           break;
 
         case 'routing':
-          $instances[] = sprintf("  \$class = sfConfig::get('sf_factory_routing', '%s');\n  \$this->factories['routing'] = new \$class(\$this->dispatcher, array_merge(array('auto_shutdown' => false, 'logging' => sfConfig::get('sf_logging_enabled')), sfConfig::get('sf_factory_routing_parameters', %s)));", $class, var_export(is_array($parameters) ? $parameters : array(), true));
+          if (isset($parameters['cache']))
+          {
+            $cache = sprintf("    \$cache = new %s(%s);\n", $parameters['cache']['class'], var_export($parameters['cache']['param'], true));
+            unset($parameters['cache']);
+          }
+          else
+          {
+            $cache = "    \$cache = null;\n";
+          }
+
+          $instances[] = sprintf("  \$class = sfConfig::get('sf_factory_routing', '%s');\n  %s\n\$this->factories['routing'] = new \$class(\$this->dispatcher, \$cache, array_merge(array('auto_shutdown' => false, 'logging' => sfConfig::get('sf_logging_enabled')), sfConfig::get('sf_factory_routing_parameters', %s)));", $class, $cache, var_export(is_array($parameters) ? $parameters : array(), true));
           if (isset($parameters['load_configuration']) && $parameters['load_configuration'])
           {
             $instances[] = "  \$this->factories['routing']->loadConfiguration();\n";
