@@ -240,6 +240,33 @@ class sfPatternRouting extends sfRouting
   }
 
   /**
+   * Adds a new route before a given one in the current list of routes.
+   *
+   * @see connect
+   */
+  public function insertRouteBefore($pivot, $name, $route, $default = array(), $requirements = array())
+  {
+    if (!isset($this->routes[$pivot]))
+    {
+      throw new sfConfigurationException(sprintf('Unable to insert route "%s" before inexistent route "%s".', $name, $pivot));
+    }
+
+    $routes = $this->routes;
+    $this->routes = array();
+    $newroutes = array();
+    foreach ($routes as $key => $value)
+    {
+      if ($key == $pivot)
+      {
+        $newroutes = array_merge($newroutes, $this->connect($name, $route, $default, $requirements));
+      }
+      $newroutes[$key] = $value;
+    }
+
+    return $this->routes = $newroutes;
+  }
+
+  /**
    * Adds a new route at the end of the current list of routes.
    *
    * A route string is a string with 2 special constructions:

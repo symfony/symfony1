@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(123, new lime_output_color());
+$t = new lime_test(125, new lime_output_color());
 
 class sfPatternRoutingTest extends sfPatternRouting
 {
@@ -407,6 +407,31 @@ $r->prependRoute('test',  '/:module', array('action' => 'index'));
 $r->prependRoute('test1', '/:module/:action/*', array());
 $p_route_names = array_keys($r->getRoutes());
 $t->is(implode('-', $p_route_names), implode('-', array_reverse($route_names)), '->prependRoute() adds new routes at the beginning of the existings ones');
+
+// ->addRouteBefore()
+$t->diag('->insertRouteBefore()');
+$r->clearRoutes();
+$r->connect('test1', '/:module', array('action' => 'index'));
+$r->connect('test3', '/:module/:action/*', array());
+$r->insertRouteBefore('test3', 'test2', '/:module/:action', array('module' => 'default'));
+$route_names = array_keys($r->getRoutes());
+$r->clearRoutes();
+$r->connect('test1', '/:module', array('action' => 'index'));
+$r->connect('test2', '/:module/:action', array('module' => 'default'));
+$r->connect('test3', '/:module/:action/*', array());
+$test_route_names = array_keys($r->getRoutes());
+$t->is(implode('-', $test_route_names), implode('-', $route_names), '->insertRouteBefore() adds a new route before another existings one');
+$r->clearRoutes();
+$msg = '->insertRouteBefore() throws an sfConfigurationException when trying to insert a route before a non existent one';
+try
+{
+  $r->insertRouteBefore('test2', 'test', '/index.php/:module/:action', array('module' => 'default', 'action' => 'index'));
+  $t->fail($msg);
+}
+catch (sfConfigurationException $e)
+{
+  $t->pass($msg);
+}
 
 // ->getCurrentInternalUri()
 $t->diag('->getCurrentInternalUri()');
