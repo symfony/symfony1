@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -24,7 +24,7 @@ class TestConfiguration extends sfApplicationConfiguration
   }
 }
 
-$configuration = new TestConfiguration('test', true);
+$configuration = new TestConfiguration('test', true, sfConfig::get('sf_test_cache_dir', sfToolkit::getTmpDir()));
 $cache = new sfNoCache();
 $i18n = new sfI18N($configuration, $cache);
 
