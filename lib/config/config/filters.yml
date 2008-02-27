@@ -8,8 +8,7 @@ rendering:
 security:
   class: sfBasicSecurityFilter
   param:
-    type:      security
-    condition: %SF_USE_SECURITY%
+    type: security
 
 # generally, you will want to insert your own filters here
 

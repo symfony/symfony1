@@ -36,8 +36,6 @@ test:
 #  .settings:
 #    # Optional features. Deactivating unused features boots performance a bit.
 #    use_database:           on        # Enable database manager. Set to off if you don't use a database.
-#    use_security:           on        # Enable security features (login and credentials). Set to off for public applications.
-#    use_flash:              on        # Enable flash parameter feature. Set to off if you never use the set_flash() method in actions.
 #    i18n:                   off       # Enable interface translation. Set to off if your application should not be translated.
 #    check_symfony_version:  off       # Enable check of symfony version for every request. Set to on to have symfony clear the cache automatically when the framework is upgraded. Set to off if you always clear the cache after an upgrade.
 #    compressed:             off       # Enable PHP response compression. Set to on to compress the outgoing HTML via the PHP handler.
@@ -63,13 +61,14 @@ test:
 #
 #    # Logging and debugging settings
 #    web_debug:              off       # Enable the web debug toolbar
-#    error_reporting:        <?php echo E_PARSE | E_COMPILE_ERROR | E_ERROR | E_CORE_ERROR | E_USER_ERROR ?> # Determines which events are logged.
+#    error_reporting:        <?php echo (E_PARSE | E_COMPILE_ERROR | E_ERROR | E_CORE_ERROR | E_USER_ERROR)."\n" ?> # Determines which events are logged.
 #
 #    # Assets paths
 #    rich_text_js_dir:       js/tiny_mce
 #    prototype_web_dir:      /sf/prototype
 #    admin_web_dir:          /sf/sf_admin
 #    web_debug_web_dir:      /sf/sf_web_debug
+#    calendar_web_dir:       /sf/calendar
 #
 #    # Helpers included in all templates by default
 #    standard_helpers:       [Partial, Cache, Form]

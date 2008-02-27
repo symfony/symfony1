@@ -16,7 +16,7 @@ default:
     param:
       timeout:         1800
       logging:         %SF_LOGGING_ENABLED%
-      use_flash:       %SF_USE_FLASH%
+      use_flash:       true
       default_culture: %SF_DEFAULT_CULTURE%
 
   storage:
