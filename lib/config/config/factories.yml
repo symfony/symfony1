@@ -7,11 +7,17 @@ default:
 
   response:
     class: sfWebResponse
+    param:
+      logging: %SF_LOGGING_ENABLED%
+      charset: %SF_CHARSET%
 
   user:
     class: myUser
     param:
-      timeout:  1800
+      timeout:         1800
+      logging:         %SF_LOGGING_ENABLED%
+      use_flash:       %SF_USE_FLASH%
+      default_culture: %SF_DEFAULT_CULTURE%
 
   storage:
     class: sfSessionStorage
@@ -48,6 +54,7 @@ default:
       suffix:             .
       default_module:     default
       default_action:     index
+      logging:            %SF_LOGGING_ENABLED%
       cache:
         class: sfFileCache
         param:
