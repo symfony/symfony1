@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -78,7 +78,7 @@ class sfProcessCache
    *
    * @param string The key name
    * @param string The content to put in cache
-   * @param int The life time to keep the content in the cache
+   * @param int The life time to keep the content in the cache in seconds
    *
    * @return boolean true if ok
    */
