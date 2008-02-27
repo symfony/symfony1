@@ -93,20 +93,14 @@ abstract class sfDatabaseSessionStorage extends sfSessionStorage
    */
   public function sessionOpen($path, $name)
   {
-    $databaseClass = str_replace('SessionStorage', 'Database', get_class($this));
-
     // what database are we using?
     $database = $this->getParameter('database');
-    if (!$database instanceof $databaseClass)
-    {
-      throw new sfDatabaseException(sprintf('You need to pass a "%s" to the "%s".', $databaseClass, get_class($this)));
-    }
 
     // get the database resource
     $this->db = $database->getConnection();
     if (is_null($this->db))
     {
-      throw new sfDatabaseException(sprintf('%s connection doesn\'t exist. Unable to open session.', $databaseClass));
+      throw new sfDatabaseException('Database connection doesn\'t exist. Unable to open session.');
     }
 
     return true;
