@@ -54,6 +54,7 @@ default:
       suffix:             .
       default_module:     default
       default_action:     index
+      debug:              %SF_DEBUG%
       logging:            %SF_LOGGING_ENABLED%
       cache:
         class: sfFileCache

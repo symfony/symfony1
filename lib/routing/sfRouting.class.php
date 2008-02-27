@@ -44,6 +44,13 @@ abstract class sfRouting
   /**
    * Initializes this sfRouting instance.
    *
+   * Available options:
+   *
+   *  * default_module: The default module name
+   *  * default_action: The default action name
+   *  * logging:        Whether to log or not (false by default)
+   *  * debug:          Whether to cache or not (false by default)
+   *
    * @param sfEventDispatcher A sfEventDispatcher instance
    * @param sfCache           A sfCache instance
    * @param array             An associative array of initialization options.
@@ -51,7 +58,11 @@ abstract class sfRouting
   public function initialize(sfEventDispatcher $dispatcher, sfCache $cache = null, $options = array())
   {
     $this->dispatcher = $dispatcher;
-    $this->cache      = $cache;
+
+    $options['debug'] = isset($options['debug']) ? (boolean) $options['debug'] : false;
+
+    // disable caching when in debug mode
+    $this->cache = $options['debug'] ? null : $cache;
 
     if (isset($options['default_module']))
     {
