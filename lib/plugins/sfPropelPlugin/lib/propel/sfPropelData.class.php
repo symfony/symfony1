@@ -80,11 +80,9 @@ class sfPropelData extends sfData
     {
       $class = trim($class);
 
-      $peer_class = $class.'Peer';
+      $tableMap = $this->dbMap->getTable(constant($class.'Peer::TABLE_NAME'));
 
-      $tableMap = $this->dbMap->getTable(constant($peer_class.'::TABLE_NAME'));
-
-      $column_names = call_user_func_array(array($peer_class, 'getFieldNames'), array(BasePeer::TYPE_FIELDNAME));
+      $column_names = call_user_func_array(array($class.'Peer', 'getFieldNames'), array(BasePeer::TYPE_FIELDNAME));
 
       // iterate through datas for this class
       // might have been empty just for force a table to be emptied on import
@@ -247,16 +245,7 @@ class sfPropelData extends sfData
           continue;
         }
 
-        $peer_class = $class.'Peer';
-
-        if (!$classPath = sfAutoload::getInstance()->getClassPath($peer_class))
-        {
-          throw new sfException(sprintf('Unable to find path for class "%s".', $peer_class));
-        }
-
-        require_once($classPath);
-
-        call_user_func(array($peer_class, 'doDeleteAll'), $this->con);
+        call_user_func(array($class.'Peer', 'doDeleteAll'), $this->con);
 
         $this->deletedClasses[] = $class;
       }

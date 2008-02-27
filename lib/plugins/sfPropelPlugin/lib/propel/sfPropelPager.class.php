@@ -42,12 +42,6 @@ class sfPropelPager extends sfPager
     $cForCount->setLimit(0);
     $cForCount->clearGroupByColumns();
 
-    // require the model class (because autoloading can crash under some conditions)
-    if (!$classPath = sfAutoload::getInstance()->getClassPath($this->getClassPeer()))
-    {
-      throw new sfException(sprintf('Unable to find path for class "%s".', $this->getClassPeer()));
-    }
-    require_once($classPath);
     $count = call_user_func(array($this->getClassPeer(), $this->getPeerCountMethod()), $cForCount);
 
     $this->setNbResults($hasMaxRecordLimit ? min($count, $maxRecordLimit) : $count);
