@@ -80,17 +80,18 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
       }
 
       // parse parameters
+      $parameters = array();
       if (isset($keys['param']))
       {
-        $parameters = array();
+        if (!is_array($keys['param']))
+        {
+          throw new InvalidArgumentException(sprintf('The "param" key for the "%s" factory must be an array (in %s).', $class, $configFiles[0]));
+        }
+
         foreach ($keys['param'] as $key => $value)
         {
           $parameters[$key] = $this->replaceConstants($value);
         }
-      }
-      else
-      {
-        $parameters = null;
       }
 
       // append new data
@@ -105,7 +106,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           break;
 
         case 'response':
-          $instances[] = sprintf("  \$class = sfConfig::get('sf_factory_response', '%s');\n  \$this->factories['response'] = new \$class(\$this->dispatcher, sfConfig::get('sf_factory_response_parameters', %s));", $class, is_array($parameters) ? var_export($parameters, true) : 'array()');
+          $instances[] = sprintf("  \$class = sfConfig::get('sf_factory_response', '%s');\n  \$this->factories['response'] = new \$class(\$this->dispatcher, sfConfig::get('sf_factory_response_parameters', %s));", $class, var_export($parameters, true));
           $instances[] = sprintf("  if ('HEAD' == \$this->factories['request']->getMethodName())\n  {  \n    \$this->factories['response']->setHeaderOnly(true);\n  }\n");
           break;
 
@@ -122,7 +123,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           break;
 
         case 'user':
-          $instances[] = sprintf("  \$class = sfConfig::get('sf_factory_user', '%s');\n  \$this->factories['user'] = new \$class(\$this->dispatcher, \$this->factories['storage'], array_merge(array('auto_shutdown' => false, 'culture' => \$this->factories['request']->getParameter('sf_culture')), sfConfig::get('sf_factory_user_parameters', %s)));", $class, var_export(is_array($parameters) ? $parameters : array(), true));
+          $instances[] = sprintf("  \$class = sfConfig::get('sf_factory_user', '%s');\n  \$this->factories['user'] = new \$class(\$this->dispatcher, \$this->factories['storage'], array_merge(array('auto_shutdown' => false, 'culture' => \$this->factories['request']->getParameter('sf_culture')), sfConfig::get('sf_factory_user_parameters', %s)));", $class, var_export($parameters, true));
           break;
 
         case 'view_cache':
@@ -169,7 +170,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
             $cache = "    \$cache = null;\n";
           }
 
-          $instances[] = sprintf("  \$class = sfConfig::get('sf_factory_routing', '%s');\n  %s\n\$this->factories['routing'] = new \$class(\$this->dispatcher, \$cache, array_merge(array('auto_shutdown' => false), sfConfig::get('sf_factory_routing_parameters', %s)));", $class, $cache, var_export(is_array($parameters) ? $parameters : array(), true));
+          $instances[] = sprintf("  \$class = sfConfig::get('sf_factory_routing', '%s');\n  %s\n\$this->factories['routing'] = new \$class(\$this->dispatcher, \$cache, array_merge(array('auto_shutdown' => false), sfConfig::get('sf_factory_routing_parameters', %s)));", $class, $cache, var_export($parameters, true));
           if (isset($parameters['load_configuration']) && $parameters['load_configuration'])
           {
             $instances[] = "  \$this->factories['routing']->loadConfiguration();\n";
@@ -216,7 +217,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           $instances[] = sprintf(
                          "  \$class = sfConfig::get('sf_factory_logger', '%s');\n  \$this->factories['logger'] = new \$class(\$this->dispatcher, array_merge(array('auto_shutdown' => false), sfConfig::get('sf_factory_logger_parameters', %s)));\n".
                          "  %s"
-                         , $class, var_export(is_array($parameters) ? $parameters : array(), true), $loggers);
+                         , $class, var_export($parameters, true), $loggers);
           break;
       }
     }
