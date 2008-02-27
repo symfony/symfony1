@@ -28,9 +28,17 @@ test:
 #
 #  response:
 #    class: sfWebResponse
+#    param:
+#      logging: %SF_LOGGING_ENABLED%
+#      charset: %SF_CHARSET%
 #
 #  user:
 #    class: myUser
+#    param:
+#      timeout:         1800
+#      logging:         %SF_LOGGING_ENABLED%
+#      use_flash:       true
+#      default_culture: %SF_DEFAULT_CULTURE%
 #
 #  storage:
 #    class: sfSessionStorage
@@ -48,10 +56,10 @@ test:
 #  i18n:
 #    class: sfI18N
 #    param:
-#      source:              XLIFF
-#      debug:               off
-#      untranslated_prefix: "[T]"
-#      untranslated_suffix: "[/T]"
+#      source:               XLIFF
+#      debug:                off
+#      untranslated_prefix:  "[T]"
+#      untranslated_suffix:  "[/T]"
 #      cache:
 #        class: sfFileCache
 #        param:
@@ -65,3 +73,29 @@ test:
 #    param:
 #      load_configuration: true
 #      suffix:             .
+#      default_module:     default
+#      default_action:     index
+#      debug:              %SF_DEBUG%
+#      logging:            %SF_LOGGING_ENABLED%
+#      cache:
+#        class: sfFileCache
+#        param:
+#          automatic_cleaning_factor: 0
+#          cache_dir:                 %SF_CONFIG_CACHE_DIR%/routing
+#          lifetime:                  31556926
+#          prefix:                    %SF_APP_DIR%
+#
+#  logger:
+#    class: sfAggregateLogger
+#    param:
+#      level: debug
+#      loggers:
+#        sf_web_debug:
+#          class: sfWebDebugLogger
+#          param:
+#            condition:      %SF_WEB_DEBUG%
+#            xdebug_logging: true
+#        sf_file_debug:
+#          class: sfFileLogger
+#          param:
+#            file: %SF_LOG_DIR%/%SF_APP%_%SF_ENVIRONMENT%.log
