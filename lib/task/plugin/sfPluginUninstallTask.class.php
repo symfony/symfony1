@@ -69,6 +69,6 @@ EOF;
   {
     $this->logSection('plugin', sprintf('uninstalling plugin "%s"', $arguments['name']));
 
-    $this->getPluginManager()->uninstallPlugin($arguments['name'], $options);
+    $this->getPluginManager()->uninstallPlugin($arguments['name'], $options['channel']);
   }
 }
