@@ -29,6 +29,11 @@ class sfPropelBuildAllLoadTask extends sfPropelBaseTask
       new sfCommandArgument('application', sfCommandArgument::REQUIRED, 'The application name'),
     ));
 
+    $this->addOptions(array(
+      new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
+      new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'propel'),
+    ));
+
     $this->aliases = array('propel-build-all-load');
     $this->namespace = 'propel';
     $this->name = 'build-all-load';
@@ -54,12 +59,18 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
+    // load Propel configuration before Phing
+    $configuration = sfApplicationConfiguration::getForApplication($arguments['application'], $options['env'], true);
+    $databaseManager = new sfDatabaseManager($configuration);
+    require_once sfConfig::get('sf_symfony_lib_dir').'/plugins/sfPropelPlugin/lib/propel/sfPropelAutoload.php';
+
     $buildAll = new sfPropelBuildAllTask($this->dispatcher, $this->formatter);
     $buildAll->setCommandApplication($this->commandApplication);
     $buildAll->run();
 
     $loadData = new sfPropelLoadDataTask($this->dispatcher, $this->formatter);
     $loadData->setCommandApplication($this->commandApplication);
-    $loadData->run(array('application' => $arguments['application']));
+
+    $loadData->run(array('application' => $arguments['application']), array('--env='.$options['env'], '--connection='.$options['connection']));
   }
 }
