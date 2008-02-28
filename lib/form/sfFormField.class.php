@@ -104,7 +104,7 @@ class sfFormField
       throw new LogicException(sprintf('Unable to render the error for "%s".', $this->name));
     }
 
-    $error = $this->error instanceof sfValidatorErrorSchema ? $this->getWidget()->getGlobalErrors($this->error) : $this->error;
+    $error = $this->getWidget() instanceof sfWidgetFormSchema ? $this->getWidget()->getGlobalErrors($this->error) : $this->error;
 
     return $this->parent->getWidget()->getFormFormatter()->formatErrorsForRow($error);
   }
