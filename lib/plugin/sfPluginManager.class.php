@@ -117,11 +117,6 @@ class sfPluginManager
    */
   protected function doInstallPlugin($plugin, $options = array())
   {
-    if (false !== strpos($plugin, '/'))
-    {
-      list($options['channel'], $plugin) = explode('/', $plugin);
-    }
-
     $channel   = isset($options['channel']) ? $options['channel'] : $this->environment->getConfig()->get('default_channel');
     $stability = isset($options['stability']) ? $options['stability'] : $this->environment->getConfig()->get('preferred_state', null, $channel);
     $version   = isset($options['version']) ? $options['version'] : null;
@@ -131,6 +126,10 @@ class sfPluginManager
     {
       $download  = $plugin;
       $isPackage = false;
+    }
+    else if (false !== strpos($plugin, '/'))
+    {
+      list($channel, $plugin) = explode('/', $plugin);
     }
 
     $this->dispatcher->notify(new sfEvent($this, 'plugin.pre_install', array('channel' => $channel, 'plugin' => $plugin, 'is_package' => $isPackage)));
