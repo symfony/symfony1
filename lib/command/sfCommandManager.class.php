@@ -168,7 +168,7 @@ class sfCommandManager
     }
     else if (count($this->parsedArgumentValues) > $this->argumentSet->getArgumentCount())
     {
-      $this->errors[] = 'Too many arguments.';
+      $this->errors[] = sprintf('Too many arguments ("%s" given).', implode(' ', $this->parsedArgumentValues));
     }
   }
 
