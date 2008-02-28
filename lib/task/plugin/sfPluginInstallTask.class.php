@@ -94,6 +94,9 @@ EOF;
   {
     $this->logSection('plugin', sprintf('installing plugin "%s"', $arguments['name']));
 
+    $options['version'] = $options['release'];
+    unset($options['release']);
+
     $this->getPluginManager()->installPlugin($arguments['name'], $options);
   }
 }
