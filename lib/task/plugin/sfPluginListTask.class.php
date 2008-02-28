@@ -49,7 +49,7 @@ EOF;
 
     foreach ($this->getPluginManager()->getInstalledPlugins() as $package)
     {
-      $alias = $this->getPluginManager()->getRegistry()->getChannel($package->getChannel())->getAlias();
+      $alias = $this->getPluginManager()->getEnvironment()->getRegistry()->getChannel($package->getChannel())->getAlias();
       $this->log(sprintf(' %-40s %10s-%-6s %s', $this->formatter->format($package->getPackage(), 'INFO'), $package->getVersion(), $package->getState() ? $package->getState() : null, $this->formatter->format(sprintf('# %s (%s)', $package->getChannel(), $alias), 'COMMENT')));
     }
   }
