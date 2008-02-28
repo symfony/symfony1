@@ -117,6 +117,11 @@ class sfPluginManager
    */
   protected function doInstallPlugin($plugin, $options = array())
   {
+    if (false !== strpos($plugin, '/'))
+    {
+      list($options['channel'], $plugin) = explode('/', $plugin);
+    }
+
     $channel   = isset($options['channel']) ? $options['channel'] : $this->environment->getConfig()->get('default_channel');
     $stability = isset($options['stability']) ? $options['stability'] : $this->environment->getConfig()->get('preferred_state', null, $channel);
     $version   = isset($options['version']) ? $options['version'] : null;
@@ -139,7 +144,7 @@ class sfPluginManager
         throw new sfPluginException(sprintf('Plugin name "%s" is not a valid package name', $plugin));
       }
 
-      if (is_null($version))
+      if (!$version)
       {
         $version = $this->getPluginVersion($plugin, $stability);
       }
@@ -255,6 +260,11 @@ class sfPluginManager
    */
   public function uninstallPlugin($plugin, $channel = null)
   {
+    if (false !== strpos($plugin, '/'))
+    {
+      list($channel, $plugin) = explode('/', $plugin);
+    }
+
     $channel = is_null($channel) ? $this->environment->getConfig()->get('default_channel') : $channel;
 
     $existing = $this->environment->getRegistry()->packageInfo($plugin, 'version', $channel);
