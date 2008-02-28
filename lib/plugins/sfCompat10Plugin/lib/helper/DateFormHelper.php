@@ -328,7 +328,14 @@ function select_date_tag($name, $value = null, $options = array(), $html_options
   foreach ($tags as $k => $v)
   {
     // $tags['m|d|y'] = $m|$d|$y
-    $tags[$k] = $$v;
+    if (strlen($$v))
+    {
+      $tags[$k] = $$v;
+    }
+    else
+    {
+      unset($tags[$k]);
+    }
   }
 
   return implode($date_seperator, $tags);
