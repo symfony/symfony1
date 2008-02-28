@@ -53,6 +53,10 @@ You can also uninstall a plugin which has a different channel:
 
   [./symfony plugin:uninstall -c mypearchannel sfGuargPlugin|INFO]
 
+Or you can use the [channel/package|INFO] notation:
+
+  [./symfony plugin:uninstall mypearchannel/sfGuargPlugin|INFO]
+
 You can get the PEAR channel name of a plugin by launching the
 [plugin:list] task.
 

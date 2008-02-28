@@ -73,6 +73,10 @@ You can specify another channel with the [channel|COMMENT] option:
   [./symfony plugin:install --channel=mypearchannel sfGuargPlugin|INFO]
   [./symfony plugin:install -c mypearchannel sfGuargPlugin|INFO]
 
+Or you can use the [channel/package|INFO] notation:
+
+  [./symfony plugin:install mypearchannel/sfGuargPlugin|INFO]
+
 You can also install PEAR packages hosted on a website:
 
   [./symfony plugin:install http://somewhere.example.com/sfGuargPlugin-1.0.0.tgz|INFO]
