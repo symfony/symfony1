@@ -293,7 +293,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
    */
   public function getTemplateDir($moduleName, $templateFile)
   {
-    $dirs = self::getTemplateDirs($moduleName);
+    $dirs = $this->getTemplateDirs($moduleName);
     foreach ($dirs as $dir)
     {
       if (is_readable($dir.'/'.$templateFile))
@@ -315,7 +315,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
    */
   public function getTemplatePath($moduleName, $templateFile)
   {
-    $dir = self::getTemplateDir($moduleName, $templateFile);
+    $dir = $this->getTemplateDir($moduleName, $templateFile);
 
     return $dir ? $dir.'/'.$templateFile : null;
   }

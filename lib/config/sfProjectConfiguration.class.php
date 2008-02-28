@@ -209,7 +209,7 @@ class sfProjectConfiguration
    */
   public function getGeneratorTemplate($class, $theme, $path)
   {
-    $dirs = self::getGeneratorTemplateDirs($class, $theme);
+    $dirs = $this->getGeneratorTemplateDirs($class, $theme);
     foreach ($dirs as $dir)
     {
       if (is_readable($dir.'/'.$path))
