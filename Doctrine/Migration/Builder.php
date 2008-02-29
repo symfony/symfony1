@@ -52,6 +52,13 @@ class Doctrine_Migration_Builder
     private $suffix = '.class.php';
 
     /**
+     * migration
+     *
+     * @var string
+     */
+    private $migration;
+
+    /**
      * tpl
      *
      * Class template used for writing classes
@@ -69,6 +76,7 @@ class Doctrine_Migration_Builder
     {
         if ($migrationsPath) {
             $this->setMigrationsPath($migrationsPath);
+            $this->migration = new Doctrine_Migration($migrationsPath);
         }
         
         $this->loadTemplate();
@@ -259,15 +267,14 @@ END;
      */
     public function generateMigrationClass($className, $options = array(), $up = null, $down = null, $return = false)
     {
-        if ($return || !$this->getMigrationsPath()) {
+        if ($return || ! $this->getMigrationsPath()) {
             return $this->buildMigrationClass($className, null, $options, $up, $down);
         } else {
             if ( ! $this->getMigrationsPath()) {
                 throw new Doctrine_Migration_Exception('You must specify the path to your migrations.');
             }
             
-            $migration = new Doctrine_Migration($this->getMigrationsPath());
-            $next = (string) $migration->getNextVersion();
+            $next = (string) $this->migration->getNextVersion();
             
             $fileName = str_repeat('0', (3 - strlen($next))) . $next . '_' . Doctrine::tableize($className) . $this->suffix;
             
@@ -275,11 +282,13 @@ END;
             
             $path = $this->getMigrationsPath() . DIRECTORY_SEPARATOR . $fileName;
             
-            if ( class_exists($className)) {
-                throw new Doctrine_Exception('Migration class with the name "' . $className . '" already exists.');
+            if ( class_exists($className) || file_exists($path)) {
+                return false;
             }
             
             file_put_contents($path, $class);
+
+            return true;
         }
     }
 
