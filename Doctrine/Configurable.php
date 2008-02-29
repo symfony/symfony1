@@ -57,6 +57,54 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
     protected $_params = array();
 
     /**
+     * getAttributeFromString
+     *
+     * Will accept the name of an attribute and return the attribute value
+     * Example: ->getAttributeFromString('portability') will be converted to Doctrine::ATTR_PORTABILITY
+     * and returned
+     *
+     * @param string $stringAttributeName 
+     * @return void
+     */
+    public function getAttributeFromString($stringAttributeName)
+    {
+      if (is_string($stringAttributeName)) {
+          $upper = strtoupper($stringAttributeName);
+
+          $const = 'Doctrine::ATTR_' . $upper; 
+
+          if (defined($const)) {
+              return constant($const);
+          } else {
+              throw new Doctrine_Exception('Unknown attribute: "' . $stringAttributeName . '"');
+          }
+      } else {
+        return false;
+      }
+    }
+
+    /**
+     * getAttributeValueFromString
+     *
+     * Will get the value for an attribute by the string name
+     * Example: ->getAttributeFromString('portability', 'all') will return Doctrine::PORTABILITY_ALL
+     *
+     * @param string $stringAttributeName 
+     * @param string $stringAttributeValueName 
+     * @return void
+     */
+    public function getAttributeValueFromString($stringAttributeName, $stringAttributeValueName)
+    {
+        $const = 'Doctrine::' . strtoupper($stringAttributeName) . '_' . strtoupper($stringAttributeValueName);
+
+        if (defined($const)) {
+            return constant($const);
+        } else {
+            throw new Doctrine_Exception('Unknown attribute value: "' . $value . '"');
+        }
+    }
+
+    /**
      * setAttribute
      * sets a given attribute
      *
@@ -82,26 +130,13 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
     public function setAttribute($attribute, $value)
     {
         if (is_string($attribute)) {
-            $upper = strtoupper($attribute);
-
-            $const = 'Doctrine::ATTR_' . $upper; 
-
-            if (defined($const)) {
-                $attribute = constant($const);
-                $this->_state = $attribute;
-            } else {
-                throw new Doctrine_Exception('Unknown attribute: "' . $attribute . '"');
-            }
+            $stringAttribute = $attribute;
+            $attribute = $this->getAttributeFromString($attribute);
+            $this->_state = $attribute;
         }
 
-        if (is_string($value) && isset($upper)) {
-            $const = 'Doctrine::' . $upper . '_' . strtoupper($value);
-
-            if (defined($const)) {
-                $value = constant($const);
-            } else {
-                throw new Doctrine_Exception('Unknown attribute value: "' . $value . '"');
-            }
+        if (is_string($value) && isset($stringAttribute)) {
+            $value = $this->getAttributeValueFromString($stringAttribute, $value);
         }
 
         switch ($attribute) {
@@ -167,7 +202,6 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
         }
 
         $this->attributes[$attribute] = $value;
-
     }
 
     public function getParams($namespace = null)

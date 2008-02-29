@@ -298,12 +298,22 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         if ($attribute >= 100) {
             parent::setAttribute($attribute, $value);
         } else {
+            if (is_string($attribute)) {
+                $attributeString = $attribute;
+                $attribute = parent::getAttributeFromString($attribute);
+            }
+
+            if (is_string($value) && isset($attributeString)) {
+                $value = parent::getAttributeValueFromString($attributeString, $value);
+            }
+
             if ($this->isConnected) {
                 $this->dbh->setAttribute($attribute, $value);
             } else {
                 $this->pendingAttributes[$attribute] = $value;
             }
         }
+
         return $this;
     }
 
