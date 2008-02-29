@@ -30,7 +30,7 @@ default:
       automatic_cleaning_factor: 0
       cache_dir:                 %SF_TEMPLATE_CACHE_DIR%
       lifetime:                  86400
-      prefix:                    %SF_APP_DIR%
+      prefix:                    %SF_APP_DIR%/template
 
   i18n:
     class: sfI18N
@@ -45,7 +45,7 @@ default:
           automatic_cleaning_factor: 0
           cache_dir:                 %SF_I18N_CACHE_DIR%
           lifetime:                  86400
-          prefix:                    %SF_APP_DIR%
+          prefix:                    %SF_APP_DIR%/i18n
 
   routing:
     class: sfPatternRouting
@@ -62,7 +62,7 @@ default:
           automatic_cleaning_factor: 0
           cache_dir:                 %SF_CONFIG_CACHE_DIR%/routing
           lifetime:                  31556926
-          prefix:                    %SF_APP_DIR%
+          prefix:                    %SF_APP_DIR%/routing
 
   logger:
     class: sfAggregateLogger
