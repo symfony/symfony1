@@ -120,7 +120,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     include($configCache->checkConfig('config/settings.yml'));
     if ($file = $configCache->checkConfig('config/app.yml', true))
     {
-      include($configCache->checkConfig('config/app.yml'));
+      include($file);
     }
 
     // required core classes for the framework
