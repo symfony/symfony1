@@ -1404,7 +1404,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      *
      * @return Doctrine_Record
      */
-    public function copy($deep = true)
+    public function copy($deep = false)
     {
         $data = $this->_data;
 
