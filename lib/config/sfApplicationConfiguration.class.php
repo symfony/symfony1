@@ -33,11 +33,15 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
    */
   public function __construct($environment, $debug, $rootDir = null)
   {
-    $this->initialize($environment, $debug);
+    $this->environment = $environment;
+    $this->debug       = (boolean) $debug;
+    $this->application = str_replace('Configuration', '', get_class($this));
 
     parent::__construct($rootDir);
 
     $this->configure();
+
+    $this->initConfiguration();
 
     if (sfConfig::get('sf_check_lock'))
     {
@@ -48,19 +52,8 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     {
       $this->checkSymfonyVersion();
     }
-  }
 
-  /**
-   * Initializes the current configuration.
-   *
-   * @param string  The environment name
-   * @param Boolean true to enable debug mode
-   */
-  public function initialize($environment, $debug)
-  {
-    $this->environment = $environment;
-    $this->debug       = (boolean) $debug;
-    $this->application = str_replace('Configuration', '', get_class($this));
+    $this->initialize();
   }
 
   /**
@@ -69,6 +62,15 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
    * Override this method if you want to customize your application configuration.
    */
   public function configure()
+  {
+  }
+
+  /**
+   * Initialized the current configuration.
+   *
+   * Override this method if you want to customize your application initialization.
+   */
+  public function initialize()
   {
   }
 
@@ -94,8 +96,6 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
    */
   public function initConfiguration()
   {
-    parent::initConfiguration();
-
     // in debug mode, start global timer
     if ($this->isDebug())
     {

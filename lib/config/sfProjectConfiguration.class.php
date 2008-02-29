@@ -51,7 +51,12 @@ class sfProjectConfiguration
 
     $this->dispatcher = new sfEventDispatcher();
 
-    $this->initConfiguration();
+    ini_set('magic_quotes_runtime', 'off');
+    ini_set('register_globals', 'off');
+
+    sfConfig::set('sf_symfony_lib_dir', $this->symfonyLibDir);
+
+    $this->setRootDir($this->rootDir);
 
     $this->setup();
   }
@@ -63,16 +68,6 @@ class sfProjectConfiguration
    */
   public function setup()
   {
-  }
-
-  public function initConfiguration()
-  {
-    ini_set('magic_quotes_runtime', 'off');
-    ini_set('register_globals', 'off');
-
-    sfConfig::set('sf_symfony_lib_dir', $this->symfonyLibDir);
-
-    $this->setRootDir($this->rootDir);
   }
 
   /**
