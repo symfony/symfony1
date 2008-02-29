@@ -40,7 +40,15 @@ abstract class sfBaseTask extends sfCommandApplicationTask
     }
     else
     {
-      $this->configuration = new sfProjectConfiguration(getcwd());
+      if (file_exists(sfConfig::get('sf_lib_dir').'/ProjectConfiguration.class.php'))
+      {
+        require_once sfConfig::get('sf_lib_dir').'/ProjectConfiguration.class.php';
+        $this->configuration = new ProjectConfiguration();
+      }
+      else
+      {
+        $this->configuration = new sfProjectConfiguration(getcwd());
+      }
     }
 
     return $this->execute($commandManager->getArgumentValues(), $commandManager->getOptionValues());
