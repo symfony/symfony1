@@ -200,6 +200,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
 
     }
 
+
     /**
      * _index
      *
@@ -1823,13 +1824,27 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      * Note: The entity is no longer useable after free() has been called. Any operations
      * done with the entity afterwards can lead to unpredictable results.
      */
-    public function free()
+    public function free($deep = false)
     {
-        $this->_table->getRepository()->evict($this->_oid);
-        $this->_table->removeRecord($this);
-        $this->_data = array();
-        $this->_id = array();
-        $this->_references = array();
+        if ($this->_state != self::STATE_LOCKED) {
+            $this->_state = self::STATE_LOCKED;
+
+            $this->_table->getRepository()->evict($this->_oid);
+            $this->_table->removeRecord($this);
+            $this->_data = array();
+            $this->_id = array();
+
+            if ($deep) {
+                foreach ($this->_references as $name => $reference) {
+                    //echo '<pre>'.print_r($reference->toArray(true), true).'</pre>';
+                    if ( ! ($reference instanceof Doctrine_Null)) {
+                        $reference->free($deep);
+                    }
+                }
+            }
+
+            $this->_references = array();
+        }
     }
     
     public function toString()
