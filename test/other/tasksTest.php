@@ -48,8 +48,10 @@ class symfony_cmd
 
   public function execute_command($cmd)
   {
+    $symfony = file_exists('symfony') ? 'symfony' : dirname(__FILE__).'/../../data/bin/symfony';
+
     ob_start();
-    passthru(sprintf('%s -d html_errors=off -d open_basedir= -q "%s" %s 2>&1', $this->php_cli, dirname(__FILE__).'/../../data/bin/symfony', $cmd), $return);
+    passthru(sprintf('%s -d html_errors=off -d open_basedir= -q "%s" %s 2>&1', $this->php_cli, $symfony, $cmd), $return);
     $content = ob_get_clean();
     $this->t->cmp_ok($return, '<=', 0, sprintf('"symfony %s" returns ok', $cmd));
 
