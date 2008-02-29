@@ -1429,7 +1429,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                     foreach ($value as $record) {
                         $ret->{$key}[] = $record->copy($deep);
                     }
-                } else {
+                } else if($value instanceof Doctrine_Record) {
                     $ret->set($key, $value->copy($deep));
                 }
             }
