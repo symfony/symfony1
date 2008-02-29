@@ -83,7 +83,7 @@ EOF;
     }
 
     // declare type that must be cleaned safely (with a lock file during cleaning)
-    $safeTypes = array(sfConfig::get('sf_app_config_dir_name'), sfConfig::get('sf_app_i18n_dir_name'));
+    $safeTypes = array('config', 'i18n');
 
     // finder to remove all files in a cache directory
     $finder = sfFinder::type('file')->ignore_version_control()->discard('.sf');

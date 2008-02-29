@@ -102,7 +102,7 @@ EOF;
       'with_show'             => $options['with-show'],
     ));
 
-    $moduleDir = sfConfig::get('sf_apps_dir').'/'.$arguments['application'].'/'.sfConfig::get('sf_app_module_dir_name').'/'.$arguments['module'];
+    $moduleDir = sfConfig::get('sf_app_module_dir').'/'.$arguments['module'];
 
     // copy our generated module
     $this->getFilesystem()->mirror($tmpDir.'/auto'.ucfirst($arguments['module']), $moduleDir, sfFinder::type('any'));
@@ -131,7 +131,7 @@ EOF;
 
   protected function executeInit($arguments = array(), $options = array())
   {
-    $moduleDir = sfConfig::get('sf_apps_dir').'/'.$arguments['application'].'/'.sfConfig::get('sf_app_module_dir_name').'/'.$arguments['module'];
+    $moduleDir = sfConfig::get('sf_app_module_dir').'/'.$arguments['module'];
 
     // create basic application structure
     $finder = sfFinder::type('any')->ignore_version_control()->discard('.sf');

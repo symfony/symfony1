@@ -73,7 +73,7 @@ EOF;
       'THEME'        => $options['theme'],
     );
 
-    $moduleDir = sfConfig::get('sf_apps_dir').'/'.$arguments['application'].'/'.sfConfig::get('sf_app_module_dir_name').'/'.$arguments['module'];
+    $moduleDir = sfConfig::get('sf_app_module_dir').'/'.$arguments['module'];
 
     // create module structure
     $finder = sfFinder::type('any')->ignore_version_control()->discard('.sf');

@@ -47,11 +47,11 @@ EOF;
     $this->logSection('i18n', sprintf('find non "i18n ready" strings in the "%s" application', $arguments['application']));
 
     // Look in templates
-    $moduleNames = sfFinder::type('dir')->maxdepth(0)->ignore_version_control()->relative()->in(sfConfig::get('sf_app_dir').'/modules');
+    $moduleNames = sfFinder::type('dir')->maxdepth(0)->ignore_version_control()->relative()->in(sfConfig::get('sf_app_module_dir'));
     $strings = array();
     foreach ($moduleNames as $moduleName)
     {
-      $dir = sfConfig::get('sf_app_dir').'/modules/'.$moduleName.'/templates';
+      $dir = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/templates';
       $templates = sfFinder::type('file')->name('*.php')->relative()->in($dir);
       foreach ($templates as $template)
       {

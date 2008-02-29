@@ -108,11 +108,11 @@ class sfValidationExecutionFilter extends sfFilter
     $validated = true;
 
     // get the current action validation configuration
-    $validationConfig = $moduleName.'/'.sfConfig::get('sf_app_module_validate_dir_name').'/'.$actionName.'.yml';
+    $validationConfig = $moduleName.'/validate/'.$actionName.'.yml';
 
     // load validation configuration
     // do NOT use require_once
-    if (null !== $validateFile = $this->context->getConfigCache()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$validationConfig, true))
+    if (null !== $validateFile = $this->context->getConfigCache()->checkConfig('modules/'.$validationConfig, true))
     {
       // create validator manager
       $validatorManager = new sfValidatorManager($this->context);

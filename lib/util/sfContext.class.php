@@ -153,7 +153,7 @@ class sfContext
     $this->factories['actionStack'] = new sfActionStack();
 
     // include the factories configuration
-    require($this->configuration->getConfigCache()->checkConfig(sfConfig::get('sf_app_config_dir_name').'/factories.yml'));
+    require($this->configuration->getConfigCache()->checkConfig('config/factories.yml'));
 
     $this->dispatcher->notify(new sfEvent($this, 'context.load_factories'));
   }

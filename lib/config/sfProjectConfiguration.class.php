@@ -19,9 +19,8 @@
 class sfProjectConfiguration
 {
   protected
-    $rootDir        = null,
-    $symfonyLibDir  = null,
-    $config         = array();
+    $rootDir       = null,
+    $symfonyLibDir = null;
 
   static protected
     $active = null;
@@ -33,9 +32,17 @@ class sfProjectConfiguration
   {
     sfProjectConfiguration::$active = $this;
 
-    $this->setRootDir($rootDir);
+    if (is_null($rootDir))
+    {
+      $r = new ReflectionObject($this);
 
-    $this->rootDir       = realpath($this->getRootDir());
+      $this->rootDir = realpath(dirname($r->getFileName()).'/..');
+    }
+    else
+    {
+      $this->rootDir = realpath($rootDir);
+    }
+
     $this->symfonyLibDir = realpath(dirname(__FILE__).'/..');
 
     // initializes autoloading for symfony core classes
@@ -60,74 +67,83 @@ class sfProjectConfiguration
 
   public function initConfiguration()
   {
-    // directory layout
-    sfConfig::add($this->getDirectoryStructure());
-
     ini_set('magic_quotes_runtime', 'off');
     ini_set('register_globals', 'off');
+
+    sfConfig::set('sf_symfony_lib_dir', $this->symfonyLibDir);
+
+    $this->setRootDir($this->rootDir);
   }
 
   /**
-   * Returns the directory structure for the current configuration.
+   * Sets the project root directory.
    *
-   * @return array An array containing the basic directory structure of the current configuration
+   * @param string The project root directory
    */
-  public function getDirectoryStructure()
+  public function setRootDir($rootDir)
   {
-    return array(
-      'sf_symfony_lib_dir' => $this->getSymfonyLibDir(),
-      'sf_root_dir'        => $sf_root_dir = $this->getRootDir(),
+    $this->rootDir = $rootDir;
 
-      // root directory names
-      'sf_bin_dir_name'     => $sf_bin_dir_name     = 'batch',
-      'sf_cache_dir_name'   => $sf_cache_dir_name   = 'cache',
-      'sf_log_dir_name'     => $sf_log_dir_name     = 'log',
-      'sf_lib_dir_name'     => $sf_lib_dir_name     = 'lib',
-      'sf_web_dir_name'     => $sf_web_dir_name     = 'web',
-      'sf_upload_dir_name'  => $sf_upload_dir_name  = 'uploads',
-      'sf_data_dir_name'    => $sf_data_dir_name    = 'data',
-      'sf_config_dir_name'  => $sf_config_dir_name  = 'config',
-      'sf_apps_dir_name'    => $sf_apps_dir_name    = 'apps',
-      'sf_test_dir_name'    => $sf_test_dir_name    = 'test',
-      'sf_doc_dir_name'     => $sf_doc_dir_name     = 'doc',
-      'sf_plugins_dir_name' => $sf_plugins_dir_name = 'plugins',
+    sfConfig::add(array(
+      'sf_root_dir' => $rootDir,
 
       // global directory structure
-      'sf_apps_dir'       => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_apps_dir_name,
-      'sf_lib_dir'        => $sf_lib_dir = $sf_root_dir.DIRECTORY_SEPARATOR.$sf_lib_dir_name,
-      'sf_bin_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_bin_dir_name,
-      'sf_web_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_web_dir_name,
-      'sf_upload_dir'     => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_web_dir_name.DIRECTORY_SEPARATOR.$sf_upload_dir_name,
-      'sf_log_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_log_dir_name,
-      'sf_data_dir'       => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_data_dir_name,
-      'sf_config_dir'     => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_config_dir_name,
-      'sf_test_dir'       => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_test_dir_name,
-      'sf_doc_dir'        => $sf_root_dir.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.$sf_doc_dir_name,
-      'sf_plugins_dir'    => $sf_root_dir.DIRECTORY_SEPARATOR.$sf_plugins_dir_name,
-      'sf_cache_dir'      => $sf_cache_dir = $sf_root_dir.DIRECTORY_SEPARATOR.$sf_cache_dir_name,
+      'sf_apps_dir'    => $rootDir.DIRECTORY_SEPARATOR.'apps',
+      'sf_lib_dir'     => $rootDir.DIRECTORY_SEPARATOR.'lib',
+      'sf_bin_dir'     => $rootDir.DIRECTORY_SEPARATOR.'batch',
+      'sf_log_dir'     => $rootDir.DIRECTORY_SEPARATOR.'log',
+      'sf_data_dir'    => $rootDir.DIRECTORY_SEPARATOR.'data',
+      'sf_config_dir'  => $rootDir.DIRECTORY_SEPARATOR.'config',
+      'sf_test_dir'    => $rootDir.DIRECTORY_SEPARATOR.'test',
+      'sf_doc_dir'     => $rootDir.DIRECTORY_SEPARATOR.'doc',
+      'sf_plugins_dir' => $rootDir.DIRECTORY_SEPARATOR.'plugins',
+    ));
 
-      // lib directory names
-      'sf_model_dir_name' => $sf_model_dir_name = 'model',
+    $this->setWebDir($rootDir.DIRECTORY_SEPARATOR.'web');
+    $this->setCacheDir($rootDir.DIRECTORY_SEPARATOR.'cache');
+  }
 
-      // lib directory structure
-      'sf_model_lib_dir'  => $sf_lib_dir.DIRECTORY_SEPARATOR.$sf_model_dir_name,
+  /**
+   * Returns the project root directory.
+   *
+   * @return string The project root directory
+   */
+  public function getRootDir()
+  {
+    return $this->rootDir;
+  }
 
-      // SF_APP_DIR sub-directories names
-      'sf_app_i18n_dir_name'     => $sf_app_i18n_dir_name     = 'i18n',
-      'sf_app_config_dir_name'   => $sf_app_config_dir_name   = 'config',
-      'sf_app_lib_dir_name'      => $sf_app_lib_dir_name      = 'lib',
-      'sf_app_module_dir_name'   => $sf_app_module_dir_name   = 'modules',
-      'sf_app_template_dir_name' => $sf_app_template_dir_name = 'templates',
+  /**
+   * Sets the cache root directory.
+   *
+   * @param string The absolute path to the cache dir.
+   */
+  public function setCacheDir($cacheDir)
+  {
+    sfConfig::set('sf_cache_dir', $cacheDir);
+  }
 
-      // SF_APP_MODULE_DIR sub-directories names
-      'sf_app_module_action_dir_name'   => 'actions',
-      'sf_app_module_template_dir_name' => 'templates',
-      'sf_app_module_lib_dir_name'      => 'lib',
-      'sf_app_module_view_dir_name'     => 'views',
-      'sf_app_module_validate_dir_name' => 'validate',
-      'sf_app_module_config_dir_name'   => 'config',
-      'sf_app_module_i18n_dir_name'     => 'i18n',
-    );
+  /**
+   * Sets the log directory.
+   *
+   * @param string The absolute path to the log dir.
+   */
+  public function setLogDir($logDir)
+  {
+    sfConfig::set('sf_log_dir', $logDir);
+  }
+
+  /**
+   * Sets the web root directory.
+   *
+   * @param string The absolute path to the web dir.
+   */
+  public function setWebDir($webDir)
+  {
+    sfConfig::add(array(
+      'sf_web_dir'    => $webDir,
+      'sf_upload_dir' => $webDir.DIRECTORY_SEPARATOR.'uploads',
+    ));
   }
 
   /**
@@ -137,10 +153,10 @@ class sfProjectConfiguration
    */
   public function getModelDirs()
   {
-    $dirs = array(sfConfig::get('sf_lib_dir').'/model' ? sfConfig::get('sf_lib_dir').'/model' : 'lib/model'); // project
+    $dirs = array(sfConfig::get('sf_lib_dir').'/model');                     // project
     if ($pluginDirs = glob(sfConfig::get('sf_plugins_dir').'/*/lib/model'))
     {
-      $dirs = array_merge($dirs, $pluginDirs);                                                                // plugins
+      $dirs = array_merge($dirs, $pluginDirs);                               // plugins
     }
 
     return $dirs;
@@ -239,33 +255,6 @@ class sfProjectConfiguration
   public function getSymfonyLibDir()
   {
     return $this->symfonyLibDir;
-  }
-
-  /**
-   * Sets the project root directory.
-   *
-   * @param string The project root directory
-   */
-  public function setRootDir($rootDir)
-  {
-    $this->rootDir = $rootDir;
-  }
-
-  /**
-   * Returns the project root directory.
-   *
-   * @return string The project root directory
-   */
-  public function getRootDir()
-  {
-    if (is_null($this->rootDir))
-    {
-      $r = new ReflectionObject($this);
-
-      $this->rootDir = realpath(dirname($r->getFileName()).'/..');
-    }
-
-    return $this->rootDir;
   }
 
   /**

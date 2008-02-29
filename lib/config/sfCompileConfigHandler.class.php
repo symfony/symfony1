@@ -100,7 +100,7 @@ class sfCompileConfigHandler extends sfYamlConfigHandler
    */
   protected function insertConfigFileCallback($matches)
   {
-    $configFile = sfConfig::get('sf_app_config_dir_name').'/'.$matches[4];
+    $configFile = 'config/'.$matches[4];
 
     $configCache = sfContext::getInstance()->getConfigCache();
     $configCache->checkConfig($configFile);

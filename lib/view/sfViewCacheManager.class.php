@@ -193,7 +193,7 @@ class sfViewCacheManager
   {
     if (!isset($this->loaded[$moduleName]))
     {
-      require($this->context->getConfigCache()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/cache.yml'));
+      require($this->context->getConfigCache()->checkConfig('modules/'.$moduleName.'/config/cache.yml'));
       $this->loaded[$moduleName] = true;
     }
   }

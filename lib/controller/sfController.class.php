@@ -194,7 +194,7 @@ abstract class sfController
     }
 
     // check for a module generator config file
-    $this->context->getConfigCache()->import(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/generator.yml', true, true);
+    $this->context->getConfigCache()->import('modules/'.$moduleName.'/config/generator.yml', true, true);
 
     if (!$this->actionExists($moduleName, $actionName))
     {
@@ -214,7 +214,7 @@ abstract class sfController
     $this->getActionStack()->addEntry($moduleName, $actionName, $actionInstance);
 
     // include module configuration
-    require($this->context->getConfigCache()->checkConfig(sfConfig::get('sf_app_module_dir_name').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/module.yml'));
+    require($this->context->getConfigCache()->checkConfig('modules/'.$moduleName.'/config/module.yml'));
 
     // check if this module is internal
     if ($this->getActionStack()->getSize() == 1 && sfConfig::get('mod_'.strtolower($moduleName).'_is_internal') && !sfConfig::get('sf_test'))
@@ -226,7 +226,7 @@ abstract class sfController
     if (sfConfig::get('mod_'.strtolower($moduleName).'_enabled'))
     {
       // check for a module config.php
-      $moduleConfig = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_config_dir_name').'/config.php';
+      $moduleConfig = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/config/config.php';
       if (is_readable($moduleConfig))
       {
         require_once($moduleConfig);
@@ -356,7 +356,7 @@ abstract class sfController
   public function getView($moduleName, $actionName, $viewName)
   {
     // user view exists?
-    $file = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/'.sfConfig::get('sf_app_module_view_dir_name').'/'.$actionName.$viewName.'View.class.php';
+    $file = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/view/'.$actionName.$viewName.'View.class.php';
 
     if (is_readable($file))
     {

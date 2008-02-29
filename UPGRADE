@@ -537,3 +537,8 @@ class and the application configuration classes.
 
 If you've added some cutomizations in `config.php` files, you will have to migrate them
 to those new classes.
+
+Directory structure
+-------------------
+
+All `sfConfig` constants ending with `_dir_name` have been removed.

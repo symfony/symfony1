@@ -20,7 +20,7 @@ autoload:
 
   project_model:
     name:           project model
-    path:           %SF_MODEL_LIB_DIR%
+    path:           %SF_LIB_DIR%/model
     recursive:      on
 
   # application
