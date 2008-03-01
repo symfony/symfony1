@@ -261,7 +261,7 @@ class Doctrine_Pager
 
 
     /**
-     * getLastPage
+     * getNextPage
      *
      * Returns the next page
      *
@@ -280,7 +280,7 @@ class Doctrine_Pager
 
 
     /**
-     * getLastPage
+     * getPreviousPage
      *
      * Returns the previous page
      *
