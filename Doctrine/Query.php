@@ -1841,10 +1841,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
             $query = $this;
         }
 
-        $new = new Doctrine_Query();
-        $new->_dqlParts = $query->_dqlParts;
-        $new->_params = $query->_params;
-        $new->_hydrator = $query->_hydrator;
+        $new = clone $query;
 
         return $new;
     }
