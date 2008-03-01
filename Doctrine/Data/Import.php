@@ -193,6 +193,7 @@ class Doctrine_Data_Import extends Doctrine_Data
             foreach ($classRows as $rowKey => $row) {
                 $buildRows[$rowKey] = $row;
                 $this->_importedObjects[$rowKey] = new $className();
+                $this->_importedObjects[$rowKey]->state('TDIRTY');
             }
         }
 
