@@ -135,9 +135,10 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
         }
 
         $conn = $this->_options['table']->getConnection();
+        $conn->getManager()->bindComponent($this->_options['className'], $conn->getName());
 
         $this->_table = new Doctrine_Table($this->_options['className'], $conn);
-        
+
         $conn->addTable($this->_table);
 
         $fk = $this->buildForeignKeys($this->_options['table']);
@@ -149,11 +150,11 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
         $this->setTableDefinition();
         $this->setUp();
 
-        $this->generateClass($this->_table->getColumns());
+        $this->generateClass(array('columns' => $this->_table->getColumns()));
 
         $this->buildChildDefinitions();
-
     }
+
     /** 
      * empty template method for providing the concrete plugins the ability
      * to initialize options before the actual definition is being built
@@ -164,6 +165,7 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
     {
         
     }
+
     public function buildChildDefinitions()
     {
         if ( ! isset($this->_options['children'])) {
@@ -262,9 +264,9 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
      *                          and values as option values
      * @return void
      */
-    public function generateClass(array $columns = array(), array $relations = array(), array $options = array())
+    public function generateClass(array $definition = array())
     {
-        $options['className'] = $this->_options['className'];
+        $definition['className'] = $this->_options['className'];
 
         $builder = new Doctrine_Import_Builder();
 
@@ -272,12 +274,12 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
             if (isset($this->_options['generatePath']) && $this->_options['generatePath']) {
                 $builder->setTargetPath($this->_options['generatePath']);
 
-                $builder->buildRecord($options, $columns, $relations);
+                $builder->buildRecord($definition);
             } else {
                 throw new Doctrine_Record_Exception('If you wish to generate files then you must specify the path to generate the files in.');
             }
         } else {
-            $def = $builder->buildDefinition($options, $columns, $relations);
+            $def = $builder->buildDefinition($definition);
 
             eval($def);
         }

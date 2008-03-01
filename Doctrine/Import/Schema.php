@@ -318,9 +318,11 @@ class Doctrine_Import_Schema
         foreach ($array as $className => $properties) {
             if (isset($properties['columns']) && !empty($properties['columns']) && isset($properties['detect_relations']) && $properties['detect_relations']) {
                 foreach ($properties['columns'] as $column) {
-                    $columnClassName = Doctrine_Inflector::classify(str_replace('_id', '', $column['name']));
-                    if (isset($array[$columnClassName]) && !isset($array[$className]['relations'][$columnClassName])) {
-                        $array[$className]['relations'][$columnClassName] = array();
+                    if (strpos($column['name'], '_id')) {
+                        $columnClassName = Doctrine_Inflector::classify(str_replace('_id', '', $column['name']));
+                        if (isset($array[$columnClassName]) && !isset($array[$className]['relations'][$columnClassName])) {
+                            $array[$className]['relations'][$columnClassName] = array();
+                        }
                     }
                 }
             }

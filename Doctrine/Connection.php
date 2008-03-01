@@ -993,7 +993,8 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      *
      * @return PDOStatement|Doctrine_Adapter_Statement
      */
-    public function exec($query, array $params = array()) {
+    public function exec($query, array $params = array())
+    {
         $this->connect();
 
         try {

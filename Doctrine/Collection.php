@@ -82,9 +82,9 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
     public function __construct($table, $keyColumn = null)
     {
         if ( ! ($table instanceof Doctrine_Table)) {
-            $table = Doctrine_Manager::getInstance()
-                        ->getTable($table);
+            $table = Doctrine::getTable($table);
         }
+
         $this->_table = $table;
 
         if ($keyColumn === null) {
@@ -324,6 +324,13 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
     {
         return isset($this->data[$key]);
     }
+
+    /**
+     * search
+     *
+     * @param string $Doctrine_Record 
+     * @return void
+     */
     public function search(Doctrine_Record $record)
     {
         return array_search($record, $this->data, true);
@@ -367,7 +374,6 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
             }
 
             if (isset($this->keyColumn)) {
-
                 $record->set($this->keyColumn, $key);
             }
 
@@ -476,6 +482,7 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
         } else {
             $this->data[] = $record;
         }
+
         return true;
     }
 
