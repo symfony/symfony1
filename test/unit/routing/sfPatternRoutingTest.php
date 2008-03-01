@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(125, new lime_output_color());
+$t = new lime_test(127, new lime_output_color());
 
 class sfPatternRoutingTest extends sfPatternRouting
 {
@@ -500,3 +500,11 @@ $r->connect('test', '/', array('module' => 'default1', 'action' => 'default1'));
 $params = array('module' => 'default1', 'action' => 'default1');
 $t->is($r->parse('/'), $params, '->parse()    overrides the default module/action if provided in the defaults');
 $t->is($r->generate('', $params), '/', '->generate() overrides the default module/action if provided in the defaults');
+
+// parameter values decoding
+$t->diag('parameter values decoding');
+$r->clearRoutes();
+$r->connect('test', '/test/:value', array('module' => 'default', 'action' => 'index'));
+$r->connect('test1', '/test1/*', array('module' => 'default', 'action' => 'index'));
+$t->is($r->parse('/test/test%26foo%3Dbar%2Bfoo'), array('module' => 'default', 'action' => 'index', 'value' => 'test&foo=bar+foo'), '->parse() decodes parameter values');
+$t->is($r->parse('/test1/value/test%26foo%3Dbar%2Bfoo'), array('module' => 'default', 'action' => 'index', 'value' => 'test&foo=bar+foo'), '->parse() decodes parameter values');

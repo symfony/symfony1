@@ -632,7 +632,7 @@ class sfPatternRouting extends sfRouting
       {
         if (!is_int($key))
         {
-          $out[$key] = $value;
+          $out[$key] = urldecode($value);
         }
       }
 
