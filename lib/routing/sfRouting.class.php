@@ -147,7 +147,7 @@ abstract class sfRouting
  /**
   * Parses a URL to find a matching route.
   *
-  * Returns null if no route match the URL.
+  * Throws a sfError404Exception if no route match the URL.
   *
   * @param  string URL to be parsed
   *
