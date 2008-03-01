@@ -233,7 +233,7 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
     	return $this;
     }
     
-    public function getParam($name, $value, $namespace) 
+    public function getParam($name, $namespace = null) 
     {
     	if ($namespace == null) {
     	    $namespace = $this->getAttribute(Doctrine::ATTR_DEFAULT_PARAM_NAMESPACE);
@@ -241,11 +241,12 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
     	
         if ( ! isset($this->_params[$name])) {
             if (isset($this->parent)) {
-                return $this->parent->getParam($name);
+                return $this->parent->getParam($name, $namespace);
             }
             return null;
         }
-        return $this->_params[$name];
+        
+        return $this->_params[$namespace][$name];
     }
     /**
      * setImpl
