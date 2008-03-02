@@ -519,6 +519,87 @@ class sfViewCacheManager
     return $data;
   }
 
+  public function computeCacheKey($parameters)
+  {
+    return isset($parameters['sf_cache_key']) ? $parameters['sf_cache_key'] : md5(serialize($parameters));
+  }
+
+  public function getPartialUri($module, $action, $parameters)
+  {
+    return sprintf('@sf_cache_partial?module=%s&action=%s&sf_cache_key=%s', $module, $action, $this->computeCacheKey($parameters));
+  }
+
+  /**
+   * Returns whether a partial template is in the cache.
+   *
+   * @param  string  The internal URI
+   *
+   * @return Boolean true if a partial is in the cache, false otherwise
+   */
+  public function hasPartialCache($module, $action, $parameters)
+  {
+    return $this->has($this->getPartialUri($module, $action, $parameters));
+  }
+
+  /**
+   * Gets a partial template from the cache.
+   *
+   * @param  string The internal URI
+   *
+   * @return string The cache content
+   */
+  public function getPartialCache($module, $action, $parameters)
+  {
+    $uri = $this->getPartialUri($module, $action, $parameters);
+
+    if (!$this->isCacheable($uri))
+    {
+      return null;
+    }
+
+    // retrieve content from cache
+    $content = $this->get($uri);
+
+    if (is_null($content))
+    {
+      return null;
+    }
+
+    if (sfConfig::get('sf_web_debug'))
+    {
+      $content = sfWebDebug::decorateContentWithDebug($uri, $content, true);
+    }
+
+    return $content;
+  }
+
+  /**
+   * Sets an action template in the cache.
+   *
+   * @param  string The internal URI
+   * @param  string The content to cache
+   * @param  string The view attribute holder to cache
+   *
+   * @return string The cached content
+   */
+  public function setPartialCache($module, $action, $parameters, $content)
+  {
+    $uri = $this->getPartialUri($module, $action, $parameters);
+    if (!$this->isCacheable($uri))
+    {
+      return $content;
+    }
+
+    $saved = $this->set($content, $uri);
+
+    if ($saved && sfConfig::get('sf_web_debug'))
+    {
+      $content = sfWebDebug::decorateContentWithDebug($uri, $content, true);
+    }
+
+    return $content;
+  }
+
   /**
    * Returns whether an action template is in the cache.
    *
