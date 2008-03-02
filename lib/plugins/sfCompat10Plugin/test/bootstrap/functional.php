@@ -19,6 +19,14 @@ $configuration = new $class('test', isset($debug) ? $debug : true);
 sfContext::createInstance($configuration);
 
 // remove all cache
-sfToolkit::clearDirectory(sfConfig::get('sf_app_cache_dir'));
+sf_functional_test_shutdown();
+
+register_shutdown_function('sf_functional_test_shutdown');
+
+function sf_functional_test_shutdown()
+{
+  sfToolkit::clearDirectory(sfConfig::get('sf_cache_dir'));
+  sfToolkit::clearDirectory(sfConfig::get('sf_log_dir'));
+}
 
 return true;
