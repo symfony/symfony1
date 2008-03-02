@@ -485,6 +485,36 @@ abstract class sfView
   }
 
   /**
+   * Gets the module name associated with this view.
+   *
+   * @return string A module name
+   */
+  public function getModuleName()
+  {
+    return $this->moduleName;
+  }
+
+  /**
+   * Gets the action name associated with this view.
+   *
+   * @return string An action name
+   */
+  public function getActionName()
+  {
+    return $this->actionName;
+  }
+
+  /**
+   * Gets the view name associated with this view.
+   *
+   * @return string An action name
+   */
+  public function getViewName()
+  {
+    return $this->viewName;
+  }
+
+  /**
    * Calls methods defined via sfEventDispatcher.
    *
    * @param string The method name
