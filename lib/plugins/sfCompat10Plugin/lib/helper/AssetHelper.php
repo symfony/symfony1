@@ -455,7 +455,7 @@ function get_javascripts()
   $already_seen = array();
   $html = '';
 
-  foreach (array('first', '', 'last') as $position)
+  foreach ($response->getPositions() as $position)
   {
     foreach ($response->getJavascripts($position) as $files => $options)
     {
@@ -504,7 +504,7 @@ function get_stylesheets()
   $already_seen = array();
   $html = '';
 
-  foreach (array('first', '', 'last') as $position)
+  foreach ($response->getPositions() as $position)
   {
     foreach ($response->getStylesheets($position) as $files => $options)
     {

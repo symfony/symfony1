@@ -29,6 +29,7 @@ class sfWebResponse extends sfResponse
     $headers     = array(),
     $metas       = array(),
     $httpMetas   = array(),
+    $positions   = array('first', '', 'last'),
     $stylesheets = array(),
     $javascripts = array(),
     $slots       = array();
@@ -46,6 +47,9 @@ class sfWebResponse extends sfResponse
   public function initialize(sfEventDispatcher $dispatcher, $parameters = array())
   {
     parent::initialize($dispatcher, $parameters);
+
+    $this->javascripts = array_combine($this->positions, array_fill(0, count($this->positions), array()));
+    $this->stylesheets = array_combine($this->positions, array_fill(0, count($this->positions), array()));
 
     $this->statusTexts = array(
       '100' => 'Continue',
@@ -537,6 +541,16 @@ class sfWebResponse extends sfResponse
   }
 
   /**
+   * Returns the available position names for stylesheets and javascripts in order.
+   *
+   * @return array An array of position names
+   */
+  public function getPositions()
+  {
+    return $this->positions;
+  }
+
+  /**
    * Retrieves stylesheets for the current web response.
    *
    * @param string  Position
@@ -550,6 +564,8 @@ class sfWebResponse extends sfResponse
       return $this->stylesheets;
     }
 
+    $this->validatePosition($position);
+
     return isset($this->stylesheets[$position]) ? $this->stylesheets[$position] : array();
   }
 
@@ -562,10 +578,7 @@ class sfWebResponse extends sfResponse
    */
   public function addStylesheet($css, $position = '', $options = array())
   {
-    if (!isset($this->stylesheets[$position]))
-    {
-      $this->stylesheets[$position] = array();
-    }
+    $this->validatePosition($position);
 
     $this->stylesheets[$position][$css] = $options;
   }
@@ -584,6 +597,8 @@ class sfWebResponse extends sfResponse
       return $this->javascripts;
     }
 
+    $this->validatePosition($position);
+
     return isset($this->javascripts[$position]) ? $this->javascripts[$position] : array();
   }
 
@@ -596,10 +611,7 @@ class sfWebResponse extends sfResponse
    */
   public function addJavascript($js, $position = '', $options = array())
   {
-    if (!isset($this->javascripts[$position]))
-    {
-      $this->javascripts[$position] = array();
-    }
+    $this->validatePosition($position);
 
     $this->javascripts[$position][$js] = $options;
   }
@@ -695,5 +707,18 @@ class sfWebResponse extends sfResponse
     $this->initialize(sfContext::hasInstance() ? sfContext::getInstance()->getEventDispatcher() : new sfEventDispatcher());
 
     list($this->content, $this->statusCode, $this->statusText, $this->parameterHolder, $this->cookies, $this->headerOnly, $this->headers, $this->metas, $this->httpMetas, $this->stylesheets, $this->javascripts, $this->slots) = $data;
+  }
+
+  /**
+   * Validate a position name.
+   *
+   * @throws InvalidArgumentException if the position is not available
+   */
+  protected function validatePosition($position)
+  {
+    if (!in_array($position, $this->positions, true))
+    {
+      throw new InvalidArgumentException(sprintf('The position "%s" does not exist (available positions: %s).', $position, implode(', ', $this->positions)));
+    }
   }
 }

@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(66, new lime_output_color());
+$t = new lime_test(68, new lime_output_color());
 
 class myWebResponse extends sfWebResponse
 {
@@ -193,6 +193,16 @@ $response->addStylesheet('bar', '', array('media' => 'print'));
 $stylesheets = $response->getStylesheets();
 $t->is($stylesheets['bar'], array('media' => 'print'), '->addStylesheet() takes an array of parameters as its third argument');
 
+try
+{
+  $response->addStylesheet('last', 'none');
+  $t->fail('->addStylesheet() throws an InvalidArgumentException if the position is not first, the empty string, or last');
+}
+catch (InvalidArgumentException $e)
+{
+  $t->pass('->addStylesheet() throws an InvalidArgumentException if the position is not first, the empty string, or last');
+}
+
 // ->getStylesheets()
 $t->diag('->getStylesheets()');
 $t->is($response->getStylesheets(), array('test' => array(), 'foo' => array(), 'bar' => array('media' => 'print')), '->getStylesheets() returns all current registered stylesheets');
@@ -210,6 +220,16 @@ $response->addJavascript('first_js', 'first');
 $t->ok(array_key_exists('first_js', $response->getJavascripts('first')), '->addJavascript() takes a position as its second argument');
 $response->addJavascript('last_js', 'last');
 $t->ok(array_key_exists('last_js', $response->getJavascripts('last')), '->addJavascript() takes a position as its second argument');
+
+try
+{
+  $response->addJavascript('last_js', 'none');
+  $t->fail('->addJavascript() throws an InvalidArgumentException if the position is not first, the empty string, or last');
+}
+catch (InvalidArgumentException $e)
+{
+  $t->pass('->addJavascript() throws an InvalidArgumentException if the position is not first, the empty string, or last');
+}
 
 // ->getJavascripts()
 $t->diag('->getJavascripts()');
