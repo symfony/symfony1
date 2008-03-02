@@ -20,14 +20,15 @@ class fakeResponse
 {
 }
 
-$t = new lime_test(17, new lime_output_color());
+$t = new lime_test(7, new lime_output_color());
 
 $dispatcher = new sfEventDispatcher();
 
 // ->initialize()
 $t->diag('->initialize()');
 $response = new myResponse($dispatcher, array('foo' => 'bar'));
-$t->is($response->getParameter('foo'), 'bar', '->initialize() takes an array of parameters as its second argument');
+$options = $response->getOptions();
+$t->is($options['foo'], 'bar', '->initialize() takes an array of options as its second argument');
 
 // ->getContent() ->setContent()
 $t->diag('->getContent() ->setContent()');
@@ -45,12 +46,6 @@ $t->is($content, 'test', '->sendContent() output the current response content');
 // ->serialize() ->unserialize()
 $t->diag('->serialize() ->unserialize()');
 $t->ok(new myResponse($dispatcher) instanceof Serializable, 'sfResponse implements the Serializable interface');
-
-// parameter holder proxy
-require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');
-$response = new myResponse($dispatcher);
-$pht = new sfParameterHolderProxyTest($t);
-$pht->launchTests($response, 'parameter');
 
 // new methods via sfEventDispatcher
 require_once($_test_dir.'/unit/sfEventDispatcherTest.class.php');

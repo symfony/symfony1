@@ -20,36 +20,39 @@
 abstract class sfResponse implements Serializable
 {
   protected
-    $parameterHolder = null,
-    $dispatcher      = null,
-    $content         = '';
+    $options    = array(),
+    $dispatcher = null,
+    $content    = '';
 
   /**
    * Class constructor.
    *
    * @see initialize()
    */
-  public function __construct(sfEventDispatcher $dispatcher, $parameters = array())
+  public function __construct(sfEventDispatcher $dispatcher, $options = array())
   {
-    $this->initialize($dispatcher, $parameters);
+    $this->initialize($dispatcher, $options);
   }
 
   /**
    * Initializes this sfResponse.
    *
    * @param  sfEventDispatcher  A sfEventDispatcher instance
-   * @param  array              An array of parameters
+   * @param  array              An array of options
    *
    * @return Boolean            true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfResponse
    */
-  public function initialize(sfEventDispatcher $dispatcher, $parameters = array())
+  public function initialize(sfEventDispatcher $dispatcher, $options = array())
   {
     $this->dispatcher = $dispatcher;
+    $this->options = $options;
 
-    $this->parameterHolder = new sfParameterHolder();
-    $this->parameterHolder->add($parameters);
+    if (!isset($this->options['logging']))
+    {
+      $this->options['logging'] = false;
+    }
   }
 
   /**
@@ -80,7 +83,7 @@ abstract class sfResponse implements Serializable
     $event = $this->dispatcher->filter(new sfEvent($this, 'response.filter_content'), $this->getContent());
     $content = $event->getReturnValue();
 
-    if ($this->getParameter('logging'))
+    if ($this->options['logging'])
     {
       $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Send content (%s o)', strlen($content)))));
     }
@@ -96,50 +99,9 @@ abstract class sfResponse implements Serializable
     $this->sendContent();
   }
 
-  /**
-   * Retrieves the parameters from the current response.
-   *
-   * @return sfParameterHolder List of parameters
-   */
-  public function getParameterHolder()
+  public function getOptions()
   {
-    return $this->parameterHolder;
-  }
-
-  /**
-   * Retrieves a parameter from the current response.
-   *
-   * @param string A parameter name
-   * @param string A default paramter value
-   *
-   * @return mixed A parameter value
-   */
-  public function getParameter($name, $default = null)
-  {
-    return $this->parameterHolder->get($name, $default);
-  }
-
-  /**
-   * Indicates whether or not a parameter exist for the current response.
-   *
-   * @param string A parameter name
-   *
-   * @return boolean true, if the parameter exists otherwise false
-   */
-  public function hasParameter($name)
-  {
-    return $this->parameterHolder->has($name);
-  }
-
-  /**
-   * Sets a parameter for the current response.
-   *
-   * @param string A parameter name
-   * @param string The parameter value to be set
-   */
-  public function setParameter($name, $value)
-  {
-    $this->parameterHolder->set($name, $value);
+    return $this->options;
   }
 
   /**
@@ -170,7 +132,7 @@ abstract class sfResponse implements Serializable
    */
   public function serialize()
   {
-    return serialize(array($this->content, $this->parameterHolder));
+    return serialize($this->content);
   }
 
   /**
@@ -182,6 +144,6 @@ abstract class sfResponse implements Serializable
 
     $this->initialize(sfContext::hasInstance() ? sfContext::getInstance()->getEventDispatcher() : new sfEventDispatcher());
 
-    list($this->content, $this->parameterHolder) = $data;
+    $this->content = $data;
   }
 }

@@ -94,19 +94,15 @@ class sfDebug
    */
   public static function requestAsArray($request)
   {
-    if ($request)
+    if (!$request)
     {
-      $values = array(
-        'parameterHolder' => self::flattenParameterHolder($request->getParameterHolder()),
-        'attributeHolder' => self::flattenParameterHolder($request->getAttributeHolder()),
-      );
-    }
-    else
-    {
-      $values = array('parameterHolder' => array(), 'attributeHolder' => array());
+      return array();
     }
 
-    return $values;
+    return array(
+      'parameterHolder' => self::flattenParameterHolder($request->getParameterHolder()),
+      'attributeHolder' => self::flattenParameterHolder($request->getAttributeHolder()),
+    );
   }
 
   /**
@@ -118,36 +114,20 @@ class sfDebug
    */
   public static function responseAsArray($response)
   {
-    if ($response)
+    if (!$response)
     {
-      $values = array(
-        'cookies'         => array(),
-        'httpHeaders'     => array(),
-        'parameterHolder' => self::flattenParameterHolder($response->getParameterHolder()),
-      );
-      if (method_exists($response, 'getHttpHeaders'))
-      {
-        foreach ($response->getHttpHeaders() as $key => $value)
-        {
-          $values['httpHeaders'][$key] = $value;
-        }
-      }
-
-      if (method_exists($response, 'getCookies'))
-      {
-        $cookies = array();
-        foreach ($response->getCookies() as $key => $value)
-        {
-          $values['cookies'][$key] = $value;
-        }
-      }
-    }
-    else
-    {
-      $values = array('cookies' => array(), 'httpHeaders' => array(), 'parameterHolder' => array());
+      return array();
     }
 
-    return $values;
+    return array(
+      'options'     => $response->getOptions(),
+      'cookies'     => method_exists($response, 'getCookies')     ? $response->getCookies() : array(),
+      'httpHeaders' => method_exists($response, 'getHttpHeaders') ? $response->getHttpHeaders() : array(),
+      'javascripts' => method_exists($response, 'getJavascripts') ? $response->getJavascripts('ALL') : array(),
+      'stylesheets' => method_exists($response, 'getStylesheets') ? $response->getStylesheets('ALL') : array(),
+      'metas'       => method_exists($response, 'getMetas')       ? $response->getMetas() : array(),
+      'httpMetas'   => method_exists($response, 'getHttpMetas')   ? $response->getHttpMetas() : array(),
+    );
   }
 
   /**

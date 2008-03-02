@@ -38,18 +38,23 @@ class sfWebResponse extends sfResponse
    * Initializes this sfWebResponse.
    *
    * @param  sfEventDispatcher  A sfEventDispatcher instance
-   * @param  array              An array of parameters
+   * @param  array              An array of options
    *
    * @return Boolean            true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfResponse
    */
-  public function initialize(sfEventDispatcher $dispatcher, $parameters = array())
+  public function initialize(sfEventDispatcher $dispatcher, $options = array())
   {
-    parent::initialize($dispatcher, $parameters);
+    parent::initialize($dispatcher, $options);
 
     $this->javascripts = array_combine($this->positions, array_fill(0, count($this->positions), array()));
     $this->stylesheets = array_combine($this->positions, array_fill(0, count($this->positions), array()));
+
+    if (!isset($this->options['charset']))
+    {
+      $this->options['charset'] = 'utf-8';
+    }
 
     $this->statusTexts = array(
       '100' => 'Continue',
@@ -252,7 +257,7 @@ class sfWebResponse extends sfResponse
     // add charset if needed (only on text content)
     if (false === stripos($value, 'charset') && (0 === stripos($value, 'text/') || strlen($value) - 3 === strripos($value, 'xml')))
     {
-      $value .= '; charset='.$this->getParameter('charset');
+      $value .= '; charset='.$this->options['charset'];
     }
 
     $this->headers['Content-Type'] = $value;
@@ -265,7 +270,7 @@ class sfWebResponse extends sfResponse
    */
   public function getContentType()
   {
-    return $this->getHttpHeader('Content-Type', 'text/html; charset='.$this->getParameter('charset'));
+    return $this->getHttpHeader('Content-Type', 'text/html; charset='.$this->options['charset']);
   }
 
   /**
@@ -283,7 +288,7 @@ class sfWebResponse extends sfResponse
     $status = 'HTTP/1.1 '.$this->statusCode.' '.$this->statusText;
     header($status);
 
-    if ($this->getParameter('logging'))
+    if ($this->options['logging'])
     {
       $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Send status "%s"', $status))));
     }
@@ -293,7 +298,7 @@ class sfWebResponse extends sfResponse
     {
       header($name.': '.$value);
 
-      if ($value != '' && $this->getParameter('logging'))
+      if ($value != '' && $this->options['logging'])
       {
         $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Send header "%s": "%s"', $name, $value))));
       }
@@ -311,7 +316,7 @@ class sfWebResponse extends sfResponse
         setrawcookie($cookie['name'], $cookie['value'], $cookie['expire'], $cookie['path'], $cookie['domain'], $cookie['secure']);
       }
 
-      if ($this->getParameter('logging'))
+      if ($this->options['logging'])
       {
         $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Send cookie "%s": "%s"', $cookie['name'], $cookie['value']))));
       }
@@ -377,7 +382,7 @@ class sfWebResponse extends sfResponse
     }
     else
     {
-      throw new sfParameterException('The second getDate() method parameter must be one of: rfc1123, rfc1036 or asctime.');
+      throw new InvalidArgumentException('The second getDate() method parameter must be one of: rfc1123, rfc1036 or asctime.');
     }
   }
 
@@ -509,7 +514,7 @@ class sfWebResponse extends sfResponse
     // see include_metas() in AssetHelper
     if ($escape)
     {
-      $value = htmlentities($value, ENT_QUOTES, $this->getParameter('charset'));
+      $value = htmlentities($value, ENT_QUOTES, $this->options['charset']);
     }
 
     $current = isset($this->metas[$key]) ? $this->metas[$key] : null;
@@ -678,13 +683,13 @@ class sfWebResponse extends sfResponse
    */
   public function mergeProperties(sfWebResponse $response)
   {
-    $this->parameterHolder = clone $response->getParameterHolder();
-    $this->headers         = $response->getHttpHeaders();
-    $this->metas           = $response->getMetas();
-    $this->httpMetas       = $response->getHttpMetas();
-    $this->stylesheets     = $response->getStylesheets('ALL');
-    $this->javascripts     = $response->getJavascripts('ALL');
-    $this->slots           = $response->getSlots();
+    $this->options      = $response->getOptions();
+    $this->headers      = $response->getHttpHeaders();
+    $this->metas        = $response->getMetas();
+    $this->httpMetas    = $response->getHttpMetas();
+    $this->stylesheets  = $response->getStylesheets('ALL');
+    $this->javascripts  = $response->getJavascripts('ALL');
+    $this->slots        = $response->getSlots();
   }
 
   /**
@@ -694,7 +699,7 @@ class sfWebResponse extends sfResponse
    */
   public function serialize()
   {
-    return serialize(array($this->content, $this->statusCode, $this->statusText, $this->parameterHolder, $this->cookies, $this->headerOnly, $this->headers, $this->metas, $this->httpMetas, $this->stylesheets, $this->javascripts, $this->slots));
+    return serialize(array($this->content, $this->statusCode, $this->statusText, $this->options, $this->cookies, $this->headerOnly, $this->headers, $this->metas, $this->httpMetas, $this->stylesheets, $this->javascripts, $this->slots));
   }
 
   /**
@@ -706,7 +711,7 @@ class sfWebResponse extends sfResponse
 
     $this->initialize(sfContext::hasInstance() ? sfContext::getInstance()->getEventDispatcher() : new sfEventDispatcher());
 
-    list($this->content, $this->statusCode, $this->statusText, $this->parameterHolder, $this->cookies, $this->headerOnly, $this->headers, $this->metas, $this->httpMetas, $this->stylesheets, $this->javascripts, $this->slots) = $data;
+    list($this->content, $this->statusCode, $this->statusText, $this->options, $this->cookies, $this->headerOnly, $this->headers, $this->metas, $this->httpMetas, $this->stylesheets, $this->javascripts, $this->slots) = $data;
   }
 
   /**

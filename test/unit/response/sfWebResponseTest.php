@@ -97,15 +97,13 @@ foreach (array(
 // ->getContentType() ->setContentType()
 $t->diag('->getContentType() ->setContentType()');
 
-$response->setParameter('charset', 'UTF-8');
-
-$t->is($response->getContentType(), 'text/html; charset=UTF-8', '->getContentType() returns a sensible default value');
+$t->is($response->getContentType(), 'text/html; charset=utf-8', '->getContentType() returns a sensible default value');
 
 $response->setContentType('text/xml');
-$t->is($response->getContentType(), 'text/xml; charset=UTF-8', '->setContentType() adds a charset if none is given');
+$t->is($response->getContentType(), 'text/xml; charset=utf-8', '->setContentType() adds a charset if none is given');
 
 $response->setContentType('application/vnd.mozilla.xul+xml');
-$t->is($response->getContentType(), 'application/vnd.mozilla.xul+xml; charset=UTF-8', '->setContentType() adds a charset if none is given');
+$t->is($response->getContentType(), 'application/vnd.mozilla.xul+xml; charset=utf-8', '->setContentType() adds a charset if none is given');
 
 $response->setContentType('image/jpg');
 $t->is($response->getContentType(), 'image/jpg', '->setContentType() does not add a charset if the content-type is not text/*');
