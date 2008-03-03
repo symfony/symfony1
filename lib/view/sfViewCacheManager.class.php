@@ -636,6 +636,7 @@ class sfViewCacheManager
 
     $cache = unserialize($cache);
     $content = $cache['content'];
+    $cache['response']->setEventDispatcher($this->dispatcher);
     $this->context->getResponse()->mergeProperties($cache['response']);
 
     if (sfConfig::get('sf_web_debug'))
@@ -711,6 +712,7 @@ class sfViewCacheManager
     }
 
     $cachedResponse = unserialize($retval);
+    $cachedResponse->setEventDispatcher($this->dispatcher);
 
     if (sfView::RENDER_VAR == $this->controller->getRenderMode())
     {

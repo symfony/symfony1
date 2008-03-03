@@ -56,6 +56,16 @@ abstract class sfResponse implements Serializable
   }
 
   /**
+   * Sets the event dispatcher.
+   *
+   * @param sfEventDispatcher A sfEventDispatcher instance
+   */
+  public function setEventDispatcher(sfEventDispatcher $dispatcher)
+  {
+    $this->dispatcher = $dispatcher;
+  }
+
+  /**
    * Sets the response content
    *
    * @param string Content
@@ -137,13 +147,11 @@ abstract class sfResponse implements Serializable
 
   /**
    * Unserializes a sfResponse instance.
+   *
+   * You need to inject a dispatcher after unserializing a sfWebResponse instance.
    */
   public function unserialize($serialized)
   {
-    $data = unserialize($serialized);
-
-    $this->initialize(sfContext::hasInstance() ? sfContext::getInstance()->getEventDispatcher() : new sfEventDispatcher());
-
-    $this->content = $data;
+    $this->content = unserialize($serialized);
   }
 }

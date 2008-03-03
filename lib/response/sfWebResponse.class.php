@@ -24,7 +24,6 @@ class sfWebResponse extends sfResponse
     $cookies     = array(),
     $statusCode  = 200,
     $statusText  = 'OK',
-    $statusTexts = array(),
     $headerOnly  = false,
     $headers     = array(),
     $metas       = array(),
@@ -33,6 +32,50 @@ class sfWebResponse extends sfResponse
     $stylesheets = array(),
     $javascripts = array(),
     $slots       = array();
+
+  static protected $statusTexts = array(
+    '100' => 'Continue',
+    '101' => 'Switching Protocols',
+    '200' => 'OK',
+    '201' => 'Created',
+    '202' => 'Accepted',
+    '203' => 'Non-Authoritative Information',
+    '204' => 'No Content',
+    '205' => 'Reset Content',
+    '206' => 'Partial Content',
+    '300' => 'Multiple Choices',
+    '301' => 'Moved Permanently',
+    '302' => 'Found',
+    '303' => 'See Other',
+    '304' => 'Not Modified',
+    '305' => 'Use Proxy',
+    '306' => '(Unused)',
+    '307' => 'Temporary Redirect',
+    '400' => 'Bad Request',
+    '401' => 'Unauthorized',
+    '402' => 'Payment Required',
+    '403' => 'Forbidden',
+    '404' => 'Not Found',
+    '405' => 'Method Not Allowed',
+    '406' => 'Not Acceptable',
+    '407' => 'Proxy Authentication Required',
+    '408' => 'Request Timeout',
+    '409' => 'Conflict',
+    '410' => 'Gone',
+    '411' => 'Length Required',
+    '412' => 'Precondition Failed',
+    '413' => 'Request Entity Too Large',
+    '414' => 'Request-URI Too Long',
+    '415' => 'Unsupported Media Type',
+    '416' => 'Requested Range Not Satisfiable',
+    '417' => 'Expectation Failed',
+    '500' => 'Internal Server Error',
+    '501' => 'Not Implemented',
+    '502' => 'Bad Gateway',
+    '503' => 'Service Unavailable',
+    '504' => 'Gateway Timeout',
+    '505' => 'HTTP Version Not Supported',
+  );
 
   /**
    * Initializes this sfWebResponse.
@@ -55,50 +98,6 @@ class sfWebResponse extends sfResponse
     {
       $this->options['charset'] = 'utf-8';
     }
-
-    $this->statusTexts = array(
-      '100' => 'Continue',
-      '101' => 'Switching Protocols',
-      '200' => 'OK',
-      '201' => 'Created',
-      '202' => 'Accepted',
-      '203' => 'Non-Authoritative Information',
-      '204' => 'No Content',
-      '205' => 'Reset Content',
-      '206' => 'Partial Content',
-      '300' => 'Multiple Choices',
-      '301' => 'Moved Permanently',
-      '302' => 'Found',
-      '303' => 'See Other',
-      '304' => 'Not Modified',
-      '305' => 'Use Proxy',
-      '306' => '(Unused)',
-      '307' => 'Temporary Redirect',
-      '400' => 'Bad Request',
-      '401' => 'Unauthorized',
-      '402' => 'Payment Required',
-      '403' => 'Forbidden',
-      '404' => 'Not Found',
-      '405' => 'Method Not Allowed',
-      '406' => 'Not Acceptable',
-      '407' => 'Proxy Authentication Required',
-      '408' => 'Request Timeout',
-      '409' => 'Conflict',
-      '410' => 'Gone',
-      '411' => 'Length Required',
-      '412' => 'Precondition Failed',
-      '413' => 'Request Entity Too Large',
-      '414' => 'Request-URI Too Long',
-      '415' => 'Unsupported Media Type',
-      '416' => 'Requested Range Not Satisfiable',
-      '417' => 'Expectation Failed',
-      '500' => 'Internal Server Error',
-      '501' => 'Not Implemented',
-      '502' => 'Bad Gateway',
-      '503' => 'Service Unavailable',
-      '504' => 'Gateway Timeout',
-      '505' => 'HTTP Version Not Supported',
-    );
   }
 
   /**
@@ -173,7 +172,7 @@ class sfWebResponse extends sfResponse
   public function setStatusCode($code, $name = null)
   {
     $this->statusCode = $code;
-    $this->statusText = null !== $name ? $name : $this->statusTexts[$code];
+    $this->statusText = null !== $name ? $name : self::$statusTexts[$code];
   }
 
   /**
@@ -693,9 +692,7 @@ class sfWebResponse extends sfResponse
   }
 
   /**
-   * Serializes the current instance.
-   *
-   * @return array Objects instance
+   * @see sfResponse
    */
   public function serialize()
   {
@@ -703,15 +700,11 @@ class sfWebResponse extends sfResponse
   }
 
   /**
-   * Unserializes a sfWebResponse instance.
+   * @see sfResponse
    */
   public function unserialize($serialized)
   {
-    $data = unserialize($serialized);
-
-    $this->initialize(sfContext::hasInstance() ? sfContext::getInstance()->getEventDispatcher() : new sfEventDispatcher());
-
-    list($this->content, $this->statusCode, $this->statusText, $this->options, $this->cookies, $this->headerOnly, $this->headers, $this->metas, $this->httpMetas, $this->stylesheets, $this->javascripts, $this->slots) = $data;
+    list($this->content, $this->statusCode, $this->statusText, $this->options, $this->cookies, $this->headerOnly, $this->headers, $this->metas, $this->httpMetas, $this->stylesheets, $this->javascripts, $this->slots) = unserialize($serialized);
   }
 
   /**
