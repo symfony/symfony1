@@ -113,7 +113,7 @@ function get_component($moduleName, $componentName, $vars = array())
   if ($cacheManager = $context->getViewCacheManager())
   {
     $cacheManager->registerConfiguration($moduleName);
-    if ($retval = $cacheManager->getPartialCache($moduleName, $actionName, $vars))
+    if ($retval = $cacheManager->getPartialCache($moduleName, $actionName, $cacheManager->computeCacheKey($vars)))
     {
       return $retval;
     }
@@ -176,7 +176,7 @@ function get_component($moduleName, $componentName, $vars = array())
 
     if ($cacheManager)
     {
-      $retval = $cacheManager->setPartialCache($moduleName, $actionName, $vars, $retval);
+      $retval = $cacheManager->setPartialCache($moduleName, $actionName, $cacheManager->computeCacheKey($vars), $retval);
     }
 
     return $retval;
@@ -241,7 +241,7 @@ function get_partial($templateName, $vars = array())
   {
     $cacheManager->registerConfiguration($moduleName);
     $uri = '@sf_cache_partial?module='.$moduleName.'&action='.$actionName.'&sf_cache_key='.(isset($vars['sf_cache_key']) ? $vars['sf_cache_key'] : md5(serialize($vars)));
-    if ($retval = $cacheManager->getPartialCache($moduleName, $actionName, $vars))
+    if ($retval = $cacheManager->getPartialCache($moduleName, $actionName, $cacheManager->computeCacheKey($vars)))
     {
       return $retval;
     }
@@ -254,7 +254,7 @@ function get_partial($templateName, $vars = array())
 
   if ($cacheManager)
   {
-    $retval = $cacheManager->setPartialCache($moduleName, $actionName, $vars, $retval);
+    $retval = $cacheManager->setPartialCache($moduleName, $actionName, $cacheManager->computeCacheKey($vars), $retval);
   }
 
   return $retval;
