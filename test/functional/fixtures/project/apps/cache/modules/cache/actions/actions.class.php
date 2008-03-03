@@ -31,6 +31,18 @@ class cacheActions extends sfActions
   {
   }
 
+  public function executePartial()
+  {
+  }
+
+  public function executeAnotherPartial()
+  {
+  }
+
+  public function executeComponent()
+  {
+  }
+
   public function executeSpecificCacheKey()
   {
   }
