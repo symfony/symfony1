@@ -63,12 +63,13 @@ class sfPartialView extends sfPHPView
       $timer = sfTimerManager::getTimer(sprintf('Partial "%s/%s"', $this->moduleName, $this->actionName));
     }
 
-    if ($cacheManager = $this->context->getViewCacheManager())
+    if (sfConfig::get('sf_cache'))
     {
-      $cacheManager->registerConfiguration($this->moduleName);
+      $viewCache = $this->context->getViewCacheManager();
+      $viewCache->registerConfiguration($this->moduleName);
 
-      $cacheKey = $cacheManager->computeCacheKey($this->partialVars);
-      if ($retval = $cacheManager->getPartialCache($this->moduleName, $this->actionName, $cacheKey))
+      $cacheKey = $viewCache->computeCacheKey($this->partialVars);
+      if ($retval = $viewCache->getPartialCache($this->moduleName, $this->actionName, $cacheKey))
       {
         return $retval;
       }
@@ -88,9 +89,9 @@ class sfPartialView extends sfPHPView
     // render template
     $retval = $this->renderFile($this->getDirectory().'/'.$this->getTemplate());
 
-    if ($cacheManager)
+    if (sfConfig::get('sf_cache'))
     {
-      $retval = $cacheManager->setPartialCache($this->moduleName, $this->actionName, $cacheKey, $retval);
+      $retval = $viewCache->setPartialCache($this->moduleName, $this->actionName, $cacheKey, $retval);
       $this->context->setResponse($mainResponse);
       $mainResponse->merge($response);
     }
