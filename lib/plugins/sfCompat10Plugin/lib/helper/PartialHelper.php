@@ -109,41 +109,16 @@ function get_component($moduleName, $componentName, $vars = array())
   $context = sfContext::getInstance();
   $actionName = '_'.$componentName;
 
-  // check cache
-  if ($cacheManager = $context->getViewCacheManager())
-  {
-    $cacheManager->registerConfiguration($moduleName);
-    if ($retval = $cacheManager->getPartialCache($moduleName, $actionName, $cacheManager->computeCacheKey($vars)))
-    {
-      return $retval;
-    }
-    else
-    {
-      $mainResponse = $context->getResponse();
-      $responseClass = get_class($mainResponse);
-      $context->setResponse($response = new $responseClass($context->getEventDispatcher(), $mainResponse->getOptions()));
-    }
-  }
-
   $allVars = _call_component($moduleName, $componentName, $vars);
 
   if (!is_null($allVars))
   {
     // render
     $view = new sfPartialView($context, $moduleName, $actionName, '');
+    $view->setPartialVars($vars);
     $view->getAttributeHolder()->add($allVars);
 
-    $retval = $view->render();
-
-    if ($cacheManager)
-    {
-      $retval = $cacheManager->setPartialCache($moduleName, $actionName, $cacheManager->computeCacheKey($vars), $retval);
-
-      $context->setResponse($mainResponse);
-      $mainResponse->merge($response);
-    }
-
-    return $retval;
+    return $view->render();
   }
 }
 
@@ -201,36 +176,10 @@ function get_partial($templateName, $vars = array())
   }
   $actionName = '_'.$templateName;
 
-  if ($cacheManager = $context->getViewCacheManager())
-  {
-    $cacheManager->registerConfiguration($moduleName);
-
-    $cacheKey = $cacheManager->computeCacheKey($vars);
-    if ($retval = $cacheManager->getPartialCache($moduleName, $actionName, $cacheKey))
-    {
-      return $retval;
-    }
-    else
-    {
-      $mainResponse = $context->getResponse();
-      $responseClass = get_class($mainResponse);
-      $context->setResponse($response = new $responseClass($context->getEventDispatcher(), $mainResponse->getOptions()));
-    }
-  }
-
   $view = new sfPartialView($context, $moduleName, $actionName, '');
-  $view->getAttributeHolder()->add($vars);
+  $view->setPartialVars($vars);
 
-  $retval = $view->render();
-
-  if ($cacheManager)
-  {
-    $retval = $cacheManager->setPartialCache($moduleName, $actionName, $cacheKey, $retval);
-    $context->setResponse($mainResponse);
-    $mainResponse->merge($response);
-  }
-
-  return $retval;
+  return $view->render();
 }
 
 /**

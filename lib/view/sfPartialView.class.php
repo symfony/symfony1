@@ -18,11 +18,19 @@
  */
 class sfPartialView extends sfPHPView
 {
+  protected
+    $partialVars = array();
+
   /**
    * Executes any presentation logic for this view.
    */
   public function execute()
   {
+  }
+
+  public function setPartialVars(array $partialVars)
+  {
+    $this->partialVars = $partialVars;
   }
 
   /**
@@ -55,11 +63,37 @@ class sfPartialView extends sfPHPView
       $timer = sfTimerManager::getTimer(sprintf('Partial "%s/%s"', $this->moduleName, $this->actionName));
     }
 
+    if ($cacheManager = $this->context->getViewCacheManager())
+    {
+      $cacheManager->registerConfiguration($this->moduleName);
+
+      $cacheKey = $cacheManager->computeCacheKey($this->partialVars);
+      if ($retval = $cacheManager->getPartialCache($this->moduleName, $this->actionName, $cacheKey))
+      {
+        return $retval;
+      }
+      else
+      {
+        $mainResponse = $this->context->getResponse();
+        $responseClass = get_class($mainResponse);
+        $this->context->setResponse($response = new $responseClass($this->context->getEventDispatcher(), $mainResponse->getOptions()));
+      }
+    }
+
+    $this->getAttributeHolder()->add($this->partialVars);
+
     // execute pre-render check
     $this->preRenderCheck();
 
     // render template
     $retval = $this->renderFile($this->getDirectory().'/'.$this->getTemplate());
+
+    if ($cacheManager)
+    {
+      $retval = $cacheManager->setPartialCache($this->moduleName, $this->actionName, $cacheKey, $retval);
+      $this->context->setResponse($mainResponse);
+      $mainResponse->merge($response);
+    }
 
     if (sfConfig::get('sf_debug') && sfConfig::get('sf_logging_enabled'))
     {
