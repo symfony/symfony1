@@ -14,5 +14,9 @@
 
 <?php echo $sf_data->getRaw('sf_content') ?>
 
+<div id="component_slot_content"><?php echo get_slot('component') ?></div>
+<div id="partial_slot_content"><?php echo get_slot('partial') ?></div>
+<div id="another_partial_slot_content"><?php echo get_slot('another_partial') ?></div>
+
 </body>
 </html>

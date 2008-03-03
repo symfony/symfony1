@@ -320,6 +320,10 @@ $b->
   checkResponseElement('link[href*="/component_css"]')->
   checkResponseElement('script[src*="/component_js"]')->
 
+  checkResponseElement('#partial_slot_content', 'Partial')->
+  checkResponseElement('#another_partial_slot_content', 'Another Partial')->
+  checkResponseElement('#component_slot_content', 'Component')->
+
   get('/cache/multiBis')->
 
   // when in cache
@@ -330,7 +334,11 @@ $b->
   checkResponseElement('link[href*="/another_partial_css"]')->
   checkResponseElement('script[src*="/another_partial_js"]')->
   checkResponseElement('link[href*="/component_css"]')->
-  checkResponseElement('script[src*="/component_js"]')
+  checkResponseElement('script[src*="/component_js"]')->
+
+  checkResponseElement('#partial_slot_content', 'Partial')->
+  checkResponseElement('#another_partial_slot_content', 'Another Partial')->
+  checkResponseElement('#component_slot_content', 'Component')
 ;
 
 $b->
@@ -349,6 +357,10 @@ $b->
   checkResponseElement('link[href*="/component_css"]', false)->
   checkResponseElement('script[src*="/component_js"]', false)->
 
+  checkResponseElement('#partial_slot_content', 'Partial')->
+  checkResponseElement('#another_partial_slot_content', 'Another Partial')->
+  checkResponseElement('#component_slot_content', '')->
+
   get('/cache/anotherPartial')->
   isStatusCode(200)->
   isRequestParameter('module', 'cache')->
@@ -364,6 +376,10 @@ $b->
   checkResponseElement('link[href*="/component_css"]', false)->
   checkResponseElement('script[src*="/component_js"]', false)->
 
+  checkResponseElement('#partial_slot_content', '')->
+  checkResponseElement('#another_partial_slot_content', 'Another Partial')->
+  checkResponseElement('#component_slot_content', '')->
+
   get('/cache/component')->
   isStatusCode(200)->
   isRequestParameter('module', 'cache')->
@@ -377,7 +393,11 @@ $b->
   checkResponseElement('link[href*="/another_partial_css"]', false)->
   checkResponseElement('script[src*="/another_partial_js"]', false)->
   checkResponseElement('link[href*="/component_css"]')->
-  checkResponseElement('script[src*="/component_js"]')
+  checkResponseElement('script[src*="/component_js"]')->
+
+  checkResponseElement('#partial_slot_content', '')->
+  checkResponseElement('#another_partial_slot_content', '')->
+  checkResponseElement('#component_slot_content', 'Component')
 ;
 
 // test with sfFileCache class (default)
