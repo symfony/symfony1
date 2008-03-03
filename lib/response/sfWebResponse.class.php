@@ -680,15 +680,31 @@ class sfWebResponse extends sfResponse
    *
    * @param sfWebResponse A sfWebResponse instance
    */
-  public function mergeProperties(sfWebResponse $response)
+  public function copyProperties(sfWebResponse $response)
   {
-    $this->options      = $response->getOptions();
-    $this->headers      = $response->getHttpHeaders();
-    $this->metas        = $response->getMetas();
-    $this->httpMetas    = $response->getHttpMetas();
-    $this->stylesheets  = $response->getStylesheets('ALL');
-    $this->javascripts  = $response->getJavascripts('ALL');
-    $this->slots        = $response->getSlots();
+    $this->options     = $response->getOptions();
+    $this->headers     = $response->getHttpHeaders();
+    $this->metas       = $response->getMetas();
+    $this->httpMetas   = $response->getHttpMetas();
+    $this->stylesheets = $response->getStylesheets('ALL');
+    $this->javascripts = $response->getJavascripts('ALL');
+    $this->slots       = $response->getSlots();
+  }
+
+  /**
+   * Merges all properties from a given sfWebResponse object to the current one.
+   *
+   * @param sfWebResponse A sfWebResponse instance
+   */
+  public function merge(sfWebResponse $response)
+  {
+    foreach ($this->getPositions() as $position)
+    {
+      $this->javascripts[$position] = array_merge($this->getJavascripts($position), $response->getJavascripts($position));
+      $this->stylesheets[$position] = array_merge($this->getStylesheets($position), $response->getStylesheets($position));
+    }
+
+    $this->slots = array_merge($this->getSlots(), $response->getSlots());
   }
 
   /**

@@ -427,15 +427,10 @@ class sfTestBrowser extends sfBrowser
           $content = $response->getContent();
           $this->test->ok($content == $this->getResponse()->getContent(), 'content in cache is ok');
         }
-        else if (true === $main)
+        else
         {
           $ret = unserialize($cacheManager->get($uri));
           $content = $ret['content'];
-          $this->test->ok(false !== strpos($this->getResponse()->getContent(), $content), 'content in cache is ok');
-        }
-        else
-        {
-          $content = $cacheManager->get($uri);
           $this->test->ok(false !== strpos($this->getResponse()->getContent(), $content), 'content in cache is ok');
         }
       }

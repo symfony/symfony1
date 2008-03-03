@@ -558,12 +558,16 @@ class sfViewCacheManager
     }
 
     // retrieve content from cache
-    $content = $this->get($uri);
+    $cache = $this->get($uri);
 
-    if (is_null($content))
+    if (is_null($cache))
     {
       return null;
     }
+
+    $cache = unserialize($cache);
+    $content = $cache['content'];
+    $this->context->getResponse()->merge($cache['response']);
 
     if (sfConfig::get('sf_web_debug'))
     {
@@ -590,7 +594,7 @@ class sfViewCacheManager
       return $content;
     }
 
-    $saved = $this->set($content, $uri);
+    $saved = $this->set(serialize(array('content' => $content, 'response' => $this->context->getResponse())), $uri);
 
     if ($saved && sfConfig::get('sf_web_debug'))
     {
@@ -637,7 +641,7 @@ class sfViewCacheManager
     $cache = unserialize($cache);
     $content = $cache['content'];
     $cache['response']->setEventDispatcher($this->dispatcher);
-    $this->context->getResponse()->mergeProperties($cache['response']);
+    $this->context->getResponse()->copyProperties($cache['response']);
 
     if (sfConfig::get('sf_web_debug'))
     {

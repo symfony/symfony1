@@ -162,8 +162,8 @@ $t->is($response->getHttpHeader('Cache-Control'), 'max-age=12', '->addCacheContr
 $response->addCacheControlHttpHeader('no-cache');
 $t->is($response->getHttpHeader('Cache-Control'), 'max-age=12, no-cache', '->addCacheControlHttpHeader() respects ordering');
 
-// ->mergeProperties()
-$t->diag('->mergeProperties()');
+// ->copyProperties()
+$t->diag('->copyProperties()');
 $response1 = new myWebResponse($dispatcher);
 $response2 = new myWebResponse($dispatcher);
 
@@ -171,10 +171,10 @@ $response1->setHttpHeader('symfony', 'foo');
 $response1->setContentType('text/plain');
 $response1->setTitle('My title');
 
-$response2->mergeProperties($response1);
-$t->is($response1->getHttpHeader('symfony'), $response2->getHttpHeader('symfony'), '->mergeProperties() merges http headers');
-$t->is($response1->getContentType(), $response2->getContentType(), '->mergeProperties() merges content type');
-$t->is($response1->getTitle(), $response2->getTitle(), '->mergeProperties() merges titles');
+$response2->copyProperties($response1);
+$t->is($response1->getHttpHeader('symfony'), $response2->getHttpHeader('symfony'), '->copyProperties() merges http headers');
+$t->is($response1->getContentType(), $response2->getContentType(), '->copyProperties() merges content type');
+$t->is($response1->getTitle(), $response2->getTitle(), '->copyProperties() merges titles');
 
 // ->addStylesheet()
 $t->diag('->addStylesheet()');
