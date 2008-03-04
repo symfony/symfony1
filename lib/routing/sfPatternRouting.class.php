@@ -456,7 +456,7 @@ class sfPatternRouting extends sfRouting
 
     if (!is_null($this->cache))
     {
-      $cacheKey = 'generate_'.$name.serialize($params);
+      $cacheKey = 'generate_'.$name.serialize(array_merge($this->defaultParameters, $params));
       if (isset($this->cacheData[$cacheKey]))
       {
         return $this->cacheData[$cacheKey];
