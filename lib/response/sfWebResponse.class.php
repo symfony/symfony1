@@ -574,7 +574,7 @@ class sfWebResponse extends sfResponse
   }
 
   /**
-   * Adds an stylesheet to the current web response.
+   * Adds a stylesheet to the current web response.
    *
    * @param string Stylesheet
    * @param string Position
@@ -585,6 +585,19 @@ class sfWebResponse extends sfResponse
     $this->validatePosition($position);
 
     $this->stylesheets[$position][$css] = $options;
+  }
+
+  /**
+   * Removes a stylesheet from the current web response.
+   *
+   * @param string Stylesheet
+   * @param string Position
+   */
+  public function removeStylesheet($css, $position = '')
+  {
+    $this->validatePosition($position);
+
+    unset($this->stylesheets[$position][$css]);
   }
 
   /**
@@ -618,6 +631,19 @@ class sfWebResponse extends sfResponse
     $this->validatePosition($position);
 
     $this->javascripts[$position][$js] = $options;
+  }
+
+  /**
+   * Removes javascript code from the current web response.
+   *
+   * @param string Javascript code
+   * @param string Position
+   */
+  public function removeJavascript($js, $position = '')
+  {
+    $this->validatePosition($position);
+
+    unset($this->javascripts[$position][$js]);
   }
 
   /**

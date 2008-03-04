@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(68, new lime_output_color());
+$t = new lime_test(70, new lime_output_color());
 
 class myWebResponse extends sfWebResponse
 {
@@ -207,6 +207,10 @@ $t->is($response->getStylesheets(), array('test' => array(), 'foo' => array(), '
 $t->is($response->getStylesheets('first'), array('first' => array()), '->getStylesheets() takes a position as its first argument');
 $t->is($response->getStylesheets('last'), array('last' => array()), '->getStylesheets() takes a position as its first argument');
 
+$t->diag('->removeStylesheet()');
+$response->removeStylesheet('foo');
+$t->is($response->getStylesheets(), array('test' => array(), 'bar' => array('media' => 'print')), '->getStylesheets() does no longer contain removed stylesheets');
+
 // ->addJavascript()
 $t->diag('->addJavascript()');
 $response = new myWebResponse($dispatcher);
@@ -234,6 +238,10 @@ $t->diag('->getJavascripts()');
 $t->is($response->getJavascripts(), array('test' => array(), 'foo' => array('raw_name' => true)), '->getJavascripts() returns all current registered javascripts');
 $t->is($response->getJavascripts('first'), array('first_js' => array()), '->getJavascripts() takes a position as its first argument');
 $t->is($response->getJavascripts('last'), array('last_js' => array()), '->getJavascripts() takes a position as its first argument');
+
+$t->diag('->removeJavascript()');
+$response->removeJavascript('test');
+$t->is($response->getJavascripts(), array('foo' => array('raw_name' => true)), '->getJavascripts() does no longer contain removed javascripts');
 
 // ->setCookie() ->getCookies()
 $t->diag('->setCookie() ->getCookies()');
