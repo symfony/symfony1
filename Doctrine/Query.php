@@ -1764,11 +1764,13 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         $groupby = $this->_sqlParts['groupby'];
         $map = reset($this->_queryComponents);
         $componentAlias = key($this->_queryComponents);
+        $tableAlias = $this->getTableAlias($componentAlias);
         $table = $map['table'];
+        $idColumnNames = $table->getIdentifierColumnNames();
 
         // build the query base
-        $q  = 'SELECT COUNT(DISTINCT ' . $this->getTableAlias($componentAlias)
-              . '.' . implode(',', $table->getIdentifierColumnNames())
+        $q  = 'SELECT COUNT(DISTINCT ' . $tableAlias
+              . '.' . implode(', ' . $tableAlias . '.', $idColumnNames)
               . ') AS num_results';
 
         foreach ($this->_sqlParts['select'] as $field) {
@@ -1785,14 +1787,26 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         if ( ! empty($string)) {
             $where[] = $string;
         }
+
         // append conditions
         $q .= ( ! empty($where)) ?  ' WHERE '  . implode(' AND ', $where) : '';
-        $q .= ( ! empty($groupby)) ?  ' GROUP BY '  . implode(', ', $groupby) : '';
+
+        if ( ! empty($groupby)) {
+          // Maintain existing groupby
+          $q .= ' GROUP BY '  . implode(', ', $groupby);
+        } else {
+          // Default groupby to primary identifier. Database defaults to this internally
+          // This is required for situations where the user has aggregate functions in the select part
+          // Without the groupby it fails
+          $q .= ' GROUP BY ' . $tableAlias . '.' . implode(', ' . $tableAlias . '.', $idColumnNames);
+        }
+
         $q .= ( ! empty($having)) ? ' HAVING ' . implode(' AND ', $having): '';
 
         if ( ! is_array($params)) {
             $params = array($params);
         }
+  
         // append parameters
         $params = array_merge($this->_params['where'], $this->_params['having'], $this->_params['join'], $params);
 
