@@ -36,7 +36,7 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
                           'ANALYZE', 'AND', 'AS',
                           'ASC', 'ASENSITIVE', 'BEFORE',
                           'BETWEEN', 'BIGINT', 'BINARY',
-                          'BLOB', 'BOTH', 'BY',
+                          'BLOB', 'BOTH', 'BY', 'BIT',
                           'CALL', 'CASCADE', 'CASE',
                           'CHANGE', 'CHAR', 'CHARACTER',
                           'CHECK', 'COLLATE', 'COLUMN',
@@ -225,6 +225,8 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
                 $length = !empty($field['length']) ? $field['length'] : 18;
                 $scale = !empty($field['scale']) ? $field['scale'] : $this->conn->getAttribute(Doctrine::ATTR_DECIMAL_PLACES);
                 return 'DECIMAL('.$length.','.$scale.')';
+            case 'bit':
+                return 'BIT';
         }
         throw new Doctrine_DataDict_Exception('Unknown field type \'' . $field['type'] .  '\'.');
     }
@@ -376,6 +378,9 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
                 $type[] = 'integer';
                 $type[] = 'date';
                 $length = null;
+            break;
+            case 'bit':
+                $type[] = 'bit';
             break;
             default:
                 throw new Doctrine_DataDict_Exception('unknown database attribute type: ' . $dbType);
