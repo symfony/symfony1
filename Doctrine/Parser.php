@@ -126,7 +126,7 @@ abstract class Doctrine_Parser
         }
 
         include($path);
-        $contents = ob_get_clean();
+        $contents = iconv("UTF-8", "UTF-8", ob_get_clean());
 
         return $contents;
     }
