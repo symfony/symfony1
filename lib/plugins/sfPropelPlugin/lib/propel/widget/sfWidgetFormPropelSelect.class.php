@@ -90,4 +90,9 @@ class sfWidgetFormPropelSelect extends sfWidgetFormSelect
 
     return $choices;
   }
+
+  public function __clone()
+  {
+    $this->setOption('choices', new sfCallable(array($this, 'getChoices')));
+  }
 }
