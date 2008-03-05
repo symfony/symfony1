@@ -678,6 +678,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 $query->leftJoin(get_class($this) . '.' . $name);
             }
             $query->where(implode(' = ? AND ', $this->getTable()->getIdentifierColumnNames()) . ' = ?');
+            $this->clearRelated();
             $record = $query->fetchOne($id);
         } else {
             // Use FETCH_ARRAY to avoid clearing object relations

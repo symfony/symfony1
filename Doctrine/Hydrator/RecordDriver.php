@@ -20,8 +20,8 @@
  */
 
 /**
- * Doctrine_Hydrate_Record 
- * defines a record fetching strategy for Doctrine_Hydrate
+ * Doctrine_Hydrate_RecordDriver
+ * Hydration strategy used for creating collections of entity objects.
  *
  * @package     Doctrine
  * @subpackage  Hydrate
@@ -30,13 +30,11 @@
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
+ * @author      Roman Borschel <roman@code-factory.org>
  */
 class Doctrine_Hydrator_RecordDriver extends Doctrine_Locator_Injectable
 {
     protected $_collections = array();
-    
-    protected $_records = array();
-    
     protected $_tables = array();
 
     public function getElementCollection($component)
@@ -80,7 +78,7 @@ class Doctrine_Hydrator_RecordDriver extends Doctrine_Locator_Injectable
      * @param Doctrine_Table $table
      * @return boolean
      */
-    public function isIdentifiable(array $row, Doctrine_Table $table)
+    /*public function isIdentifiable(array $row, Doctrine_Table $table)
     {
         $primaryKeys = $table->getIdentifierColumnNames();
 
@@ -96,7 +94,7 @@ class Doctrine_Hydrator_RecordDriver extends Doctrine_Locator_Injectable
             }
         }
         return true;
-    }
+    }*/
     
     public function getNullPointer() 
     {
@@ -112,11 +110,6 @@ class Doctrine_Hydrator_RecordDriver extends Doctrine_Locator_Injectable
         
         $this->_tables[$component]->setData($data);
         $record = $this->_tables[$component]->getRecord();
-
-        if ( ! isset($this->_records[$record->getOid()]) ) {
-            $record->clearRelated();
-            $this->_records[$record->getOid()] = $record;
-        }
 
         return $record;
     }
