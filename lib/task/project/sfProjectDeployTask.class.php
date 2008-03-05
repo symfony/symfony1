@@ -39,7 +39,7 @@ class sfProjectDeployTask extends sfBaseTask
     $this->detailedDescription = <<<EOF
 The [project:deploy|INFO] task deploys a project on a server:
 
-  [./symfony deploy production|INFO]
+  [./symfony project:deploy production|INFO]
 
 The server must be configured in [config/properties.ini|COMMENT]:
 
@@ -57,7 +57,7 @@ in [config/properties.ini|COMMENT].
 By default, the task is in dry-mode. To do a real deployment, you
 must pass the [--go|COMMENT] option:
 
-  [./symfony deploy --go production|INFO]
+  [./symfony project:deploy --go production|INFO]
 
 Files and directories configured in [config/rsync_exclude.txt|COMMENT] are
 not deployed:
