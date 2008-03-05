@@ -66,13 +66,13 @@ class sfFunctionCache
     {
       $data = array();
 
-      ob_start();
-      ob_implicit_flush(false);
-
       if (!is_callable($callable))
       {
         throw new sfException('The first argument to call() must be a valid callable.');
       }
+
+      ob_start();
+      ob_implicit_flush(false);
 
       try
       {
