@@ -63,8 +63,6 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
      * @var Doctrine_Query_Registry     the query registry
      */
     protected $_queryRegistry;
-    
-    protected static $driverMap = array('oci' => 'oracle');
 
     /**
      * constructor
@@ -420,10 +418,6 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
                     throw new Doctrine_Manager_Exception('No hostname set in data source name');
                 }
 
-                if (isset(self::$driverMap[$parts['scheme']])) {
-                    $parts['scheme'] = self::$driverMap[$parts['scheme']];
-                }
-
                 $parts['dsn'] = $parts['scheme'] . ':host='
                               . $parts['host'] . (isset($parts['port']) ? ':' . $parts['port']:null) . ';dbname='
                               . $parts['database'];
@@ -447,10 +441,6 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
                 }
                 if ( ! isset($parts['host'])) {
                     throw new Doctrine_Manager_Exception('No hostname set in data source name');
-                }
-
-                if (isset(self::$driverMap[$parts['scheme']])) {
-                    $parts['scheme'] = self::$driverMap[$parts['scheme']];
                 }
 
                 $parts['dsn'] = $parts['scheme'] . ':host='
