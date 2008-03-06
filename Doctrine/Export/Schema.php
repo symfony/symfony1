@@ -57,7 +57,7 @@ class Doctrine_Export_Schema
         $sql = array();
         $fks = array();
 
-        // we iterate trhough the diff of previously declared classes
+        // we iterate through the diff of previously declared classes
         // and currently declared classes
         foreach ($loadedModels as $className) {
             if ( ! empty($models) && !in_array($className, $models)) {
@@ -69,10 +69,26 @@ class Doctrine_Export_Schema
             $data = $recordTable->getExportableFormat();
             
             $table = array();
-            
+            $remove = array('ptype', 'ntype', 'alltypes');
+            // Fix explicit length in schema, concat it to type in this format: type(length)
             foreach ($data['columns'] AS $name => $column) {
                 $data['columns'][$name]['type'] = $column['type'] . '(' . $column['length'] . ')';
                 unset($data['columns'][$name]['length']);
+
+                // Strip out schema information which is not necessary to be dumped to the yaml schema file
+                foreach ($remove as $value) {
+                    if (isset($data['columns'][$name][$value])) {
+                        unset($data['columns'][$name][$value]);
+                    }
+                }
+                
+                // If type is the only property of the column then lets abbreviate the syntax
+                // columns: { name: string(255) }
+                if (count($data['columns'][$name]) === 1 && isset($data['columns'][$name]['type'])) {
+                    $type = $data['columns'][$name]['type'];
+                    unset($data['columns'][$name]);
+                    $data['columns'][$name] = $type;
+                }
             }
             
             $table['columns'] = $data['columns'];

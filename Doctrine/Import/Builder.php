@@ -470,14 +470,23 @@ END;
                 $build .= ', null';
             }
 
+            // The column definition is one array, everthing but name, type and length are an array of
+            // possible options. This removes the name, type and length and creates the options array for
+            // the column definition
             $options = $column;
-            $unset = array('name', 'type', 'length', 'ptype');
+            $unset = array('name', 'type', 'length');
             foreach ($options as $key => $value) {
-                if (in_array($key, $unset) || $value === null) {
+                if (in_array($key, $unset) || empty($value)) {
                     unset($options[$key]);
                 }
             }
-            
+
+            // Unset notnull if the column is primary and if notnull === true
+            // It defaults to true so no need to have it in definition
+            if (isset($options['primary']) && $options['primary'] && isset($options['notnull']) && $options['notnull'] === true) {
+                unset($options['notnull']);
+            }
+
             if (is_array($options) && !empty($options)) {
                 $build .= ', ' . $this->varExport($options);
             }
@@ -715,7 +724,7 @@ END;
      */
     public function buildRecord(array $definition)
     {
-        if ( !isset($definition['className'])) {
+        if ( ! isset($definition['className'])) {
             throw new Doctrine_Import_Builder_Exception('Missing class name.');
         }
         

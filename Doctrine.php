@@ -535,9 +535,8 @@ final class Doctrine
      * Recursively load all models from a directory or array of directories
      *
      * @param  string   $directory      Path to directory of models or array of directory paths
-     * @param  integer  $forceStyle     Pass value of Doctrine::ATTR_MODEL_LOADING to force a certain style of model loading
+     * @param  integer  $modelLoading   Pass value of Doctrine::ATTR_MODEL_LOADING to force a certain style of model loading
      *                                  Allowed Doctrine::MODEL_LOADING_AGGRESSIVE(default) or Doctrine::MODEL_LOADING_CONSERVATIVE
-     * @return array    $modelLoading   Array of the models loaded by the operation
      */
     public static function loadModels($directory, $modelLoading = null)
     {
@@ -692,12 +691,13 @@ final class Doctrine
      *
      * @param string $directory Directory to write your models to
      * @param array $databases Array of databases to generate models for
+     * @param array $options Array of options
      * @return boolean
      * @throws Exception
      */
-    public static function generateModelsFromDb($directory, array $databases = array())
+    public static function generateModelsFromDb($directory, array $databases = array(), array $options = array())
     {
-        return Doctrine_Manager::connection()->import->importSchema($directory, $databases);
+        return Doctrine_Manager::connection()->import->importSchema($directory, $databases, $options);
     }
 
     /**
@@ -707,13 +707,15 @@ final class Doctrine
      * This should probably be fixed. We should write something to generate a yaml schema file directly from the database.
      *
      * @param string $yamlPath Path to write oyur yaml schema file to
+     * @param array  $options Array of options
      * @return void
      */
-    public static function generateYamlFromDb($yamlPath)
+    public static function generateYamlFromDb($yamlPath, array $databases = array(), array $options = array())
     {
         $directory = '/tmp/tmp_doctrine_models';
 
-        Doctrine::generateModelsFromDb($directory);
+        $options['generateBaseClasses'] = isset($options['generateBaseClasses']) ? $options['generateBaseClasses']:false;
+        Doctrine::generateModelsFromDb($directory, $databases, $options);
 
         $export = new Doctrine_Export_Schema();
 
