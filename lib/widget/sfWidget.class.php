@@ -335,7 +335,7 @@ abstract class sfWidget
     return implode('', array_map(array($this, 'attributesToHtmlCallback'), array_keys($attributes), array_values($attributes)));
   }
 
-  protected protected function attributesToHtmlCallback($k, $v)
+  protected function attributesToHtmlCallback($k, $v)
   {
     return is_null($v) || '' === $v ? '' : sprintf(' %s="%s"', $k, $this->escapeOnce($v));
   }
