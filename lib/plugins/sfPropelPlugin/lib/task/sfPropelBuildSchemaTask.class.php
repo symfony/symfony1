@@ -61,7 +61,7 @@ EOF;
     if (file_exists($xmlSchemaPath))
     {
       $schema = file_get_contents($xmlSchemaPath);
-      $schema = preg_replace('/<database\s+name="[^"]+"/s', '<database name="propel"', $schema);
+      $schema = preg_replace('/<database\s+name="[^"]+"/s', '<database name="propel" package="lib.model"', $schema);
       file_put_contents($xmlSchemaPath, $schema);
     }
 
