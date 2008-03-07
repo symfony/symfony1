@@ -48,10 +48,7 @@ class sfLoader
       $dirs = array_merge($dirs, $pluginDirs);                                    // plugins
     }
 
-    if ($bundledPluginDirs = glob(sfConfig::get('sf_symfony_lib_dir').'/plugins/*/lib/helper'))
-    {
-      $dirs = array_merge($dirs, $bundledPluginDirs);                                                                         // bundled plugins
-    }
+    $dirs[] = sfConfig::get('sf_symfony_lib_dir').'/helper';                      // symfony
 
     return $dirs;
   }

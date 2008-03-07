@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-require_once(dirname(__FILE__).'/../../../../../../test/bootstrap/unit.php');
+require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
 class myController
@@ -152,8 +152,8 @@ $t->is(textarea_tag('name', null, array('class' => 'foo')), '<textarea name="nam
 $t->is(textarea_tag('name', null, array('id' => 'foo')), '<textarea name="name" id="foo"></textarea>', 'textarea_tag() can override the "id" attribute');
 $t->is(textarea_tag('name', null, array('size' => '5x20')), '<textarea name="name" id="name" rows="20" cols="5"></textarea>', 'textarea_tag() can take a "size" attribute');
 
-require_once(sfConfig::get('sf_symfony_lib_dir').'/plugins/sfCompat10Plugin/lib/helper/sfRichTextEditor.class.php');
-require_once(sfConfig::get('sf_symfony_lib_dir').'/plugins/sfCompat10Plugin/lib/helper/sfRichTextEditorTinyMCE.class.php');
+require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/sfRichTextEditor.class.php');
+require_once(sfConfig::get('sf_symfony_lib_dir').'/helper/sfRichTextEditorTinyMCE.class.php');
 sfConfig::set('sf_web_dir', dirname(__FILE__));
 sfConfig::set('sf_rich_text_js_dir', 'fixtures');
 $t->like(textarea_tag('name', 'content', array('rich' => 'TinyMCE')), '/tinyMCE\.init/', 'textarea_tag() can create a rich textarea tag based on tinyMCE');
