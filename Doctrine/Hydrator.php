@@ -177,7 +177,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                 $path = $parent . '.' . $dqlAlias;
 
                 if ( ! isset($prev[$parent])) {
-                    break;
+                    continue;
                 }
                 
                 // check the type of the relation
