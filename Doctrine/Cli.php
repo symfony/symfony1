@@ -286,29 +286,40 @@ class Doctrine_Cli
         
         $tasks = array();
         
-        foreach ((array) $directory as $dir) {
-            $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
-                                                    RecursiveIteratorIterator::LEAVES_ONLY);
+        if (is_dir($directory)) {
+            foreach ((array) $directory as $dir) {
+                $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
+                                                        RecursiveIteratorIterator::LEAVES_ONLY);
 
-            foreach ($it as $file) {
-                $e = explode('.', $file->getFileName());
-                if (end($e) === 'php' && strpos($file->getFileName(), '.inc') === false) {
+                foreach ($it as $file) {
+                    $e = explode('.', $file->getFileName());
+                    if (end($e) === 'php' && strpos($file->getFileName(), '.inc') === false) {
                     
-                    $className = 'Doctrine_Task_' . $e[0];
+                        $className = 'Doctrine_Task_' . $e[0];
                     
-                    if ( ! class_exists($className)) {
-                        require_once($file->getPathName());
+                        if ( ! class_exists($className)) {
+                            require_once($file->getPathName());
                     
-                        $class = new ReflectionClass($className);
+                            $class = new ReflectionClass($className);
                     
-                        if ($class->isSubClassOf($parent)) {
-                            $tasks[$e[0]] = $e[0];
+                            if ($class->isSubClassOf($parent)) {
+                                $tasks[$e[0]] = $e[0];
+                            }
                         }
                     }
                 }
             }
         }
-        
+
+        $classes = get_declared_classes();
+        foreach ($classes as $className) {
+            $class = new Reflectionclass($className);
+            if ($class->isSubClassOf($parent)) {
+                $task = str_replace('Doctrine_Task_', '', $className);
+                $tasks[$task] = $task;
+            }
+        }
+
         $this->_tasks = array_merge($this->_tasks, $tasks);
         
         return $this->_tasks;
