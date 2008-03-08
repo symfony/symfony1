@@ -35,7 +35,7 @@ class sfDatabaseManager
   {
     $this->initialize($configuration);
 
-    if (isset($options['auto_shutdown']) && $options['auto_shutdown'])
+    if (!isset($options['auto_shutdown']) || $options['auto_shutdown'])
     {
       register_shutdown_function(array($this, 'shutdown'));
     }

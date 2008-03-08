@@ -62,9 +62,14 @@ class sfPatternRouting extends sfRouting
     $options['segment_separators_regex'] = '(?:'.implode('|', array_map(create_function('$a', 'return preg_quote($a, \'#\');'), $options['segment_separators'])).')';
     $options['variable_content_regex']   = '[^'.implode('', array_map(create_function('$a', 'return str_replace(\'-\', \'\-\', preg_quote($a, \'#\'));'), $options['segment_separators'])).']+';
 
-    parent::initialize($dispatcher, $cache, $options);
+    if (!isset($options['load_configuration']))
+    {
+      $options['load_configuration'] = false;
+    }
 
     $this->setDefaultSuffix(isset($options['suffix']) ? $options['suffix'] : '');
+
+    parent::initialize($dispatcher, $cache, $options);
 
     if (!is_null($this->cache) && $cacheData = $this->cache->get('data'))
     {
@@ -83,7 +88,7 @@ class sfPatternRouting extends sfRouting
     }
     else
     {
-      if ($config = sfContext::getInstance()->getConfigCache()->checkConfig('config/routing.yml', true))
+      if ($this->options['load_configuration'] && $config = sfContext::getInstance()->getConfigCache()->checkConfig('config/routing.yml', true))
       {
         include($config);
       }
@@ -92,7 +97,7 @@ class sfPatternRouting extends sfRouting
 
       if (!is_null($this->cache))
       {
-        $this->cache->set('configuration', serialize($this->routes));
+        $this->cache->set('symfony.routing.configuration', serialize($this->routes));
       }
     }
   }
@@ -685,7 +690,7 @@ class sfPatternRouting extends sfRouting
     if (!is_null($this->cache) && $this->cacheChanged)
     {
       $this->cacheChanged = false;
-      $this->cache->set('data', serialize($this->cacheData));
+      $this->cache->set('symfony.routing.data', serialize($this->cacheData));
     }
   }
 }

@@ -35,7 +35,7 @@ abstract class sfRouting
   {
     $this->initialize($dispatcher, $cache, $options);
 
-    if (isset($this->options['auto_shutdown']) && $this->options['auto_shutdown'])
+    if (!isset($this->options['auto_shutdown']) || $this->options['auto_shutdown'])
     {
       register_shutdown_function(array($this, 'shutdown'));
     }
@@ -83,6 +83,8 @@ abstract class sfRouting
 
     $this->dispatcher->connect('user.change_culture', array($this, 'listenToChangeCultureEvent'));
     $this->dispatcher->connect('request.filter_parameters', array($this, 'filterParametersEvent'));
+
+    $this->loadConfiguration();
   }
 
   /**
