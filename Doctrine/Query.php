@@ -505,7 +505,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
 
         // check for wildcards
         if (in_array('*', $fields)) {
-            //echo "<br />";Doctrine::dump($table->getColumnNames()); echo "<br />";
             $fields = $table->getFieldNames();
         } else {
             // only auto-add the primary key fields if this query object is not
@@ -536,8 +535,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         }
 
         $this->_neededTables[] = $tableAlias;
-        //Doctrine::dump(implode(', ', $sql));
-        //echo "<br /><br />";
+        
         return implode(', ', $sql);
     }
 
@@ -1846,8 +1844,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
     /**
      * Copies a Doctrine_Query object.
      *
-     * @param Doctrine_Query   Doctrine query instance.
-     *                         If ommited the instance itself will be used as source.
      * @return Doctrine_Query  Copy of the Doctrine_Query instance.
      */
     public function copy(Doctrine_Query $query = null)
@@ -1859,6 +1855,16 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         $new = clone $query;
 
         return $new;
+    }
+
+    /**
+     * __clone
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        $this->_parsers = array();
     }
 
     /**

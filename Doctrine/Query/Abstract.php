@@ -455,17 +455,16 @@ abstract class Doctrine_Query_Abstract
      */
     public function removeSqlQueryPart($name)
     {
-        try {
         if ( ! isset($this->_sqlParts[$name])) {
             throw new Doctrine_Query_Exception('Unknown query part ' . $name);
-        }}
-        catch (Exception $e) {echo $e->getTraceAsString(); echo "<br /><br /><br />";}
-
-        if ($name == 'limit' || $name == 'offset') {
-                $this->_sqlParts[$name] = false;
-        } else {
-                $this->_sqlParts[$name] = array();
         }
+        
+        if ($name == 'limit' || $name == 'offset') {
+            $this->_sqlParts[$name] = false;
+        } else {
+            $this->_sqlParts[$name] = array();
+        }
+        
         return $this;
     }
     
