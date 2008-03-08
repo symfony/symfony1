@@ -982,11 +982,7 @@ final class Doctrine
             return false;
         }
 
-        if ( ! self::$_path) {
-            self::$_path = dirname(__FILE__);
-        }
-
-        $class = self::$_path . DIRECTORY_SEPARATOR . str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
+        $class = self::getPath() . DIRECTORY_SEPARATOR . str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
 
         if (file_exists($class)) {
             require $class;
@@ -997,7 +993,7 @@ final class Doctrine
         $loadedModels = self::$_loadedModelFiles;
 
         if (isset($loadedModels[$className]) && file_exists($loadedModels[$className])) {
-            require_once $loadedModels[$className];
+            require $loadedModels[$className];
 
             return true;
         }
