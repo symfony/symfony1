@@ -37,7 +37,7 @@ class sfNoRouting extends sfRouting
  /**
   * @see sfRouting
   */
-  public function generate($name, $params, $querydiv = '/', $divider = '/', $equals = '/')
+  public function generate($name, $params = array(), $querydiv = '/', $divider = '/', $equals = '/')
   {
     $parameters = http_build_query($this->mergeArrays($this->defaultParameters, $params), null, '&');
 

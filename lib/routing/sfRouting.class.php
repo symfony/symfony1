@@ -144,7 +144,7 @@ abstract class sfRouting
   *
   * @return string The generated URL
   */
-  abstract public function generate($name, $params, $querydiv = '/', $divider = '/', $equals = '/');
+  abstract public function generate($name, $params = array(), $querydiv = '/', $divider = '/', $equals = '/');
 
  /**
   * Parses a URL to find a matching route.

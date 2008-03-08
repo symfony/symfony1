@@ -455,7 +455,7 @@ class sfPatternRouting extends sfRouting
   /**
    * @see sfRouting
    */
-  public function generate($name, $params, $querydiv = '/', $divider = '/', $equals = '/')
+  public function generate($name, $params = array(), $querydiv = '/', $divider = '/', $equals = '/')
   {
     $params = $this->fixDefaults($params);
 
