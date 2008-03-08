@@ -944,13 +944,29 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         }
         
         // extract column name & field name
-        $parts = explode(' as ', $name);
-        if (count($parts) > 1) {
-            $fieldName = $parts[1];
+        if (stripos($name, ' as '))
+        {
+            if (strpos($name, ' as')) {
+                $parts = explode(' as ', $name);
+            } else {
+                $parts = explode(' AS ', $name);
+            }
+            
+            if (count($parts) > 1) {
+                $fieldName = $parts[1];
+            } else {
+                $fieldName = $parts[0];
+            }
+            
+            $name = strtolower($parts[0]);
         } else {
-            $fieldName = $parts[0];
+            $fieldName = $name;
+            $name = strtolower($name);
         }
-        $name = strtolower($parts[0]);
+        
+        $name = trim($name);
+        $fieldName = trim($fieldName);
+        
         if ($prepend) {
             $this->_columnNames = array_merge(array($fieldName => $name), $this->_columnNames);
             $this->_fieldNames = array_merge(array($name => $fieldName), $this->_fieldNames);
