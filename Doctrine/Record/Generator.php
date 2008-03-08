@@ -142,7 +142,7 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
         $conn->addTable($this->_table);
 
         $fk = $this->buildForeignKeys($this->_options['table']);
-        
+
         $this->_table->setColumns($fk);
 
         $this->buildRelation();
@@ -153,6 +153,8 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
         $this->generateClass(array('columns' => $this->_table->getColumns()));
 
         $this->buildChildDefinitions();
+
+        $this->_table->initIdentifier();
     }
 
     /** 
