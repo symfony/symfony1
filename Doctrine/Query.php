@@ -396,7 +396,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
 
             return $this->getSqlAggregateAlias($dqlAlias);
         } else {
-             throw new Doctrine_Query_Exception('Unknown aggregate alias: ' . $dqlAlias);
+            throw new Doctrine_Query_Exception('Unknown aggregate alias: ' . $dqlAlias);
         }
     }
 
@@ -1434,9 +1434,10 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
      */
     public function load($path, $loadFields = true)
     {
-    	if (isset($this->_queryComponents[$path])) {
-    	   return $this->_queryComponents[$path];
-    	}
+        if (isset($this->_queryComponents[$path])) {
+            return $this->_queryComponents[$path];
+        }
+
         $e = $this->_tokenizer->quoteExplode($path, ' INDEXBY ');
 
         $mapWith = null;

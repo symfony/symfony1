@@ -245,7 +245,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      * @param string $name
      */
     public function initDefinition()
-    {        
+    {
         $name = $this->_options['name'];
         if ( ! class_exists($name) || empty($name)) {
             throw new Doctrine_Exception("Couldn't find class " . $name);
