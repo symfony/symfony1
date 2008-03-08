@@ -32,14 +32,30 @@ Doctrine::autoload('Doctrine_Record_Listener');
  */
 class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
 {
-    
+    /**
+     * _auditLog
+     *
+     * @var string
+     */
     protected $_auditLog;
 
+    /**
+     * __construct()
+     *
+     * @param string $Doctrine_AuditLog 
+     * @return void
+     */
     public function __construct(Doctrine_AuditLog $auditLog) 
     {
         $this->_auditLog = $auditLog;
     }
 
+    /**
+     * preInsert
+     *
+     * @param string $Doctrine_Event 
+     * @return void
+     */
     public function preInsert(Doctrine_Event $event)
     {
         $versionColumn = $this->_auditLog->getOption('versionColumn');
@@ -47,6 +63,12 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
         $event->getInvoker()->set($versionColumn, 1);
     }
 
+    /**
+     * postInsert
+     *
+     * @param string $Doctrine_Event 
+     * @return void
+     */
     public function postInsert(Doctrine_Event $event) 
     {
         $class = $this->_auditLog->getOption('className');
@@ -57,6 +79,12 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
         $version->save();
     }
 
+    /**
+     * preDelete
+     *
+     * @param string $Doctrine_Event 
+     * @return void
+     */
     public function preDelete(Doctrine_Event $event)
     {
         $class = $this->_auditLog->getOption('className');
@@ -73,6 +101,12 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
         $version->save();
     }
 
+    /**
+     * preUpdate
+     *
+     * @param string $Doctrine_Event 
+     * @return void
+     */
     public function preUpdate(Doctrine_Event $event)
     {
         $class  = $this->_auditLog->getOption('className');

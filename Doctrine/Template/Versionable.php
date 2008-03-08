@@ -32,10 +32,22 @@
  */
 class Doctrine_Template_Versionable extends Doctrine_Template
 {
+    /**
+     * __construct
+     *
+     * @param string $array 
+     * @return void
+     */
     public function __construct(array $options)
     {
         $this->_plugin = new Doctrine_AuditLog($options);
     }
+
+    /**
+     * setUp
+     *
+     * @return void
+     */
     public function setUp()
     {
         $this->_plugin->initialize($this->_table);
@@ -44,9 +56,14 @@ class Doctrine_Template_Versionable extends Doctrine_Template
 
         $this->addListener(new Doctrine_AuditLog_Listener($this->_plugin));
     }
+
+    /**
+     * getAuditLog
+     *
+     * @return void
+     */
     public function getAuditLog()
     {
         return $this->_plugin;
     }
-
 }

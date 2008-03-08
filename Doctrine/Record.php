@@ -197,9 +197,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         $repository->add($this);
 
         $this->construct();
-
     }
-
 
     /**
      * _index
@@ -1837,7 +1835,6 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
 
             if ($deep) {
                 foreach ($this->_references as $name => $reference) {
-                    //echo '<pre>'.print_r($reference->toArray(true), true).'</pre>';
                     if ( ! ($reference instanceof Doctrine_Null)) {
                         $reference->free($deep);
                     }
