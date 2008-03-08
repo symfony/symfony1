@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(70, new lime_output_color());
+$t = new lime_test(72, new lime_output_color());
 
 class myWebResponse extends sfWebResponse
 {
@@ -26,6 +26,13 @@ class myWebResponse extends sfWebResponse
 }
 
 $dispatcher = new sfEventDispatcher();
+
+// ->initialize()
+$t->diag('->initialize()');
+$response = new myWebResponse($dispatcher, array('charset' => 'ISO-8859-1'));
+$t->is($response->getContentType(), 'text/html; charset=ISO-8859-1', '->initialize() takes a "charset" option');
+$response = new myWebResponse($dispatcher, array('content_type' => 'text/plain'));
+$t->is($response->getContentType(), 'text/plain; charset=utf-8', '->initialize() takes a "content_type" option');
 
 $response = new myWebResponse($dispatcher);
 
@@ -97,6 +104,7 @@ foreach (array(
 // ->getContentType() ->setContentType()
 $t->diag('->getContentType() ->setContentType()');
 
+$response = new myWebResponse($dispatcher);
 $t->is($response->getContentType(), 'text/html; charset=utf-8', '->getContentType() returns a sensible default value');
 
 $response->setContentType('text/xml');
