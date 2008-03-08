@@ -536,11 +536,14 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
      * @param string $componentName
      * @return Doctrine_Connection
      */
-    public function getConnectionForComponent($componentName = null)
+    public function getConnectionForComponent($componentName)
     {
+        Doctrine::autoload($componentName);
+
         if (isset($this->_bound[$componentName])) {
             return $this->getConnection($this->_bound[$componentName]);
         }
+
         return $this->getCurrentConnection();
     }
     
@@ -580,9 +583,8 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
      */
     public static function table($componentName)
     {
-        return Doctrine_Manager::getInstance()
-               ->getConnectionForComponent($componentName)
-               ->getTable($componentName);
+        $manager = Doctrine_Manager::getInstance();
+        return $manager->getConnectionForComponent($componentName)->getTable($componentName);
     }
 
     /**
