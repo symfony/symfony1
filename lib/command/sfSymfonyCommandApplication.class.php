@@ -36,7 +36,7 @@ class sfSymfonyCommandApplication extends sfCommandApplication
     $this->setName('symfony');
     $this->setVersion(SYMFONY_VERSION);
 
-    $this->initializeTasks();
+    $this->loadTasks();
   }
 
   /**
@@ -74,7 +74,7 @@ class sfSymfonyCommandApplication extends sfCommandApplication
    *
    * Looks for tasks in the symfony core, the current project and all project plugins.
    */
-  protected function initializeTasks()
+  protected function loadTasks()
   {
     $dirs = array(
       sfConfig::get('sf_symfony_lib_dir').'/task',               // symfony tasks
@@ -94,15 +94,6 @@ class sfSymfonyCommandApplication extends sfCommandApplication
       foreach ($finder->in($dirs) as $task)
       {
         require_once $task;
-      }
-    }
-
-    foreach (get_declared_classes() as $class)
-    {
-      $r = new Reflectionclass($class);
-      if ($r->isSubclassOf('sfTask') && !$r->isAbstract())
-      {
-        $this->registerTask(new $class($this->dispatcher, $this->formatter));
       }
     }
   }

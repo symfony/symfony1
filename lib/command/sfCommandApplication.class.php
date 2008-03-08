@@ -48,6 +48,8 @@ abstract class sfCommandApplication
     $this->fixCgi();
 
     $this->configure();
+
+    $this->registerTasks();
   }
 
   /**
@@ -80,10 +82,25 @@ abstract class sfCommandApplication
   /**
    * Registers an array of task objects.
    *
+   * If you pass null, this method will register all available tasks.
+   *
    * @param array An array of tasks
    */
-  public function registerTasks($tasks)
+  public function registerTasks($tasks = null)
   {
+    if (is_null($tasks))
+    {
+      $tasks = array();
+      foreach (get_declared_classes() as $class)
+      {
+        $r = new Reflectionclass($class);
+        if ($r->isSubclassOf('sfTask') && !$r->isAbstract())
+        {
+          $tasks[] = new $class($this->dispatcher, $this->formatter);
+        }
+      }
+    }
+
     foreach ($tasks as $task)
     {
       $this->registerTask($task);
