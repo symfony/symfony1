@@ -209,7 +209,7 @@ class Doctrine_Import_Builder
      */
     public function setBaseClassesDirectory($baseClassesDirectory)
     {
-        $this->_baseClassesDirectory;
+        $this->_baseClassesDirectory = $baseClassesDirectory;
     }
     
     /**
