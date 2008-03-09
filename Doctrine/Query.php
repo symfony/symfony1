@@ -502,7 +502,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
 
         $fields = $this->_pendingFields[$componentAlias];
 
-
         // check for wildcards
         if (in_array('*', $fields)) {
             $fields = $table->getFieldNames();
