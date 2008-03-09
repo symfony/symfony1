@@ -542,3 +542,24 @@ Directory structure
 -------------------
 
 All `sfConfig` constants ending with `_dir_name` have been removed.
+
+Cache keys
+----------
+
+The `sfViewCacheManager::removePattern()` and `sfToolkit::clearGlob()` don't work anymore for removing several cache parts at once. But the `sfViewCacheManager::remove()` now accepts internal URIs with wildcards. So you can replace:
+
+    $cacheManager->removePattern('*/all/user/show/id/*');
+    
+By:
+
+    $cacheManager->remove('user/show?id=*', '*', 'all');
+
+This also works for partials and contextual partials. You can then replace:
+
+    $cacheManager->removePattern('/sf_cache_partial/user/_my_partial/sf_cache_key/*');
+
+By:
+
+    $cacheManager->remove('@sf_cache_partial?module=user&action=_my_partial&sf_cache_key=*');
+
+And the biggets benefit is that it allows you to clear 'glob' URIs in *any* cache factory, noy only the `sfFileCache`.
