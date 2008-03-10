@@ -129,6 +129,7 @@ class Doctrine_Import_Schema
         }
 
         $array = $this->_buildRelationships($array);
+        $array = $this->_processInheritance($array);
 
         return $array;
     }
@@ -224,10 +225,14 @@ class Doctrine_Import_Schema
 
             $className = isset($table['className']) ? (string) $table['className']:(string) $className;
 
+            if (isset($table['inheritance']['keyField']) || isset($table['inheritance']['keyValue'])) {
+                $table['inheritance']['type'] = 'column_aggregation';
+            }
+
             if (isset($table['tableName']) && $table['tableName']) {
                 $tableName = $table['tableName'];
             } else {
-                if (isset($table['inheritance']['extends'])) {
+                if (isset($table['inheritance']['type']) && ($table['inheritance']['type'] == 'column_aggregation')) {
                     $tableName = null;
                 } else {
                     $tableName = Doctrine::tableize($className);
@@ -281,17 +286,17 @@ class Doctrine_Import_Schema
 
             // Apply the default values
             foreach ($defaults as $key => $defaultValue) {
-                if (isset($table[$key]) && !isset($build[$className][$key])) {
+                if (isset($table[$key]) && ! isset($build[$className][$key])) {
                     $build[$className][$key] = $table[$key];
                 } else {
                     $build[$className][$key] = isset($build[$className][$key]) ? $build[$className][$key]:$defaultValue;
                 }
             }
-
+            
             $build[$className]['className'] = $className;
             $build[$className]['tableName'] = $tableName;
             $build[$className]['columns'] = $columns;
-
+            
             // Make sure that anything else that is specified in the schema makes it to the final array
             $build[$className] = Doctrine_Lib::arrayDeepMerge($table, $build[$className]);
             
@@ -300,6 +305,69 @@ class Doctrine_Import_Schema
         }
 
         return $build;
+    }
+
+    /**
+     * _processInheritance
+     * 
+     * Perform some processing on inheritance.
+     *
+     * @param string $array 
+     * @return void
+     */
+    protected function _processInheritance($array)
+    {
+        // Apply default inheritance configuration
+        foreach ($array as $className => $definition) {
+            if ( ! empty($array[$className]['inheritance'])) {
+                // Default inheritance to concrete inheritance                
+                if ( ! isset($array[$className]['inheritance']['type'])) {
+                    $array[$className]['inheritance']['type'] = 'class_table';
+                }
+
+                // Some magic for setting up the keyField and keyValue column aggregation options
+                // Adds keyField to the parent class automatically
+                if ($array[$className]['inheritance']['type'] == 'column_aggregation') {
+                    // Set the keyField to 'type' by default
+                    if ( ! isset($array[$className]['inheritance']['keyField'])) {
+                        $array[$className]['inheritance']['keyField'] = 'type';                        
+                    }
+                    
+                    // Set the keyValue to the name of the child class if it does not exist
+                    if ( ! isset($array[$className]['inheritance']['keyValue'])) {
+                        $array[$className]['inheritance']['keyValue'] = $className;
+                    }
+                    
+                    // Add the keyType column to the parent if a definition does not already exist
+                    if ( ! isset($array[$array[$className]['inheritance']['extends']]['columns']['type'])) {
+                        $array[$definition['inheritance']['extends']]['columns']['type'] = array('name' => 'type', 'type' => 'string', 'length' => 255);
+                    }
+                }
+            }
+        }
+
+        // Array of the array keys to move to the parent, and the value to default the child definition to
+        // after moving it
+        $moves = array('columns' => array(), 'relations' => array());
+        
+        foreach ($array as $className => $definition) {    
+            // Move any definitions on the schema to the parent
+            // Currently only columns and relations are moved. What else should we move?
+            if (isset($definition['inheritance']['extends']) && isset($definition['inheritance']['type']) && ($definition['inheritance']['type'] == 'simple' || $definition['inheritance']['type'] == 'column_aggregation')) {
+                $extends = $definition['inheritance']['extends'];
+
+                foreach ($moves as $move => $resetValue) {
+                    $array[$extends][$move] = Doctrine_Lib::arrayDeepMerge($array[$extends][$move], $definition[$move]);
+                    $array[$definition['className']][$move] = $resetValue;
+                }
+
+                if ($definition['inheritance']['type'] == 'column_aggregation') {
+                    $array[$extends]['inheritance']['subclasses'][$definition['className']] = array($definition['inheritance']['keyField'] => $definition['inheritance']['keyValue']);
+                }
+            }
+        }
+
+        return $array;
     }
 
     /**
@@ -316,7 +384,7 @@ class Doctrine_Import_Schema
         // Handle auto detecting relations by the names of columns
         // User.contact_id will automatically create User hasOne Contact local => contact_id, foreign => id
         foreach ($array as $className => $properties) {
-            if (isset($properties['columns']) && !empty($properties['columns']) && isset($properties['detect_relations']) && $properties['detect_relations']) {
+            if (isset($properties['columns']) && ! empty($properties['columns']) && isset($properties['detect_relations']) && $properties['detect_relations']) {
                 foreach ($properties['columns'] as $column) {
                     if (strpos($column['name'], '_id')) {
                         $columnClassName = Doctrine_Inflector::classify(str_replace('_id', '', $column['name']));

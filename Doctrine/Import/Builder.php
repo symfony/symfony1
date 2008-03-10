@@ -311,18 +311,21 @@ END;
      */
     public function buildTableDefinition(array $definition)
     {
+        if (isset($definition['inheritance']['type']) && $definition['inheritance']['type'] == 'simple') {
+            return;
+        }
+        
         $ret = array();
         
         $i = 0;
         
-        if (isset($definition['inheritance']['extends']) && ! (isset($definition['override_parent']) && $definition['override_parent'] == true)) {
+        if (isset($definition['inheritance']['type']) && $definition['inheritance']['type'] == 'concrete') {
             $ret[$i] = "    parent::setTableDefinition();";
             $i++;
         }
         
         if (isset($definition['tableName']) && !empty($definition['tableName'])) {
             $ret[$i] = "    ".'$this->setTableName(\''. $definition['tableName'].'\');';
-            
             $i++;
         }
         
@@ -346,6 +349,11 @@ END;
             $i++;
         }
         
+        if (isset($definition['inheritance']['subclasses']) && ! empty($definition['inheritance']['subclasses'])) {
+            $ret[$i] = "    ".'$this->setSubClasses('. $this->varExport($definition['inheritance']['subclasses']).');';
+            $i++;
+        }
+        
         $code = implode("\n", $ret);
         $code = trim($code);
         
@@ -363,11 +371,15 @@ END;
      * @return string
      */
     public function buildSetUp(array $definition)
-    {   
+    {
+        if (isset($definition['inheritance']['type']) && ($definition['inheritance']['type'] == 'simple' || $definition['inheritance']['type'] == 'column_aggregation')) {
+            return;
+        }
+
         $ret = array();
         $i = 0;
         
-        if (isset($definition['inheritance']['extends']) && ! (isset($definition['override_parent']) && $definition['override_parent'] == true)) {
+        if (isset($definition['inheritance']['type']) && $definition['inheritance']['type'] == 'concrete') {
             $ret[$i] = "    parent::setUp();";
             $i++;
         }
@@ -427,11 +439,6 @@ END;
                 $ret[$i] .= ');'."\n";
                 $i++;
             }
-        }
-
-        if (isset($definition['inheritance']['keyField']) && isset($definition['inheritance']['keyValue'])) {
-            $i++;
-            $ret[$i] = "    ".'$this->setInheritanceMap(array(\''.$definition['inheritance']['keyField'].'\' => \''.$definition['inheritance']['keyValue'].'\'));';
         }
 
         if (isset($definition['templates']) && is_array($definition['templates']) && !empty($definition['templates'])) {
