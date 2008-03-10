@@ -771,6 +771,17 @@ final class Doctrine
     }
 
     /**
+     * generateSqlFromArray
+     *
+     * @param string $array 
+     * @return void
+     */
+    public static function generateSqlFromArray($array)
+    {
+        return Doctrine_Manager::connection()->export->exportClassesSql($array);
+    }
+
+    /**
      * generateSqlFromModels
      *
      * @param string $directory
@@ -1076,5 +1087,29 @@ final class Doctrine
     public static function isValidClassname($className)
     {
         return Doctrine_Lib::isValidClassName($className);
+    }
+
+    /**
+     * makeDirectories
+     *
+     * Makes the directories for a path recursively
+     *
+     * @param string $path
+     * @return void
+     */
+    public static function makeDirectories($path, $mode = 0777)
+    {
+        return Doctrine_Lib::makeDirectories($path, $mode);
+    }
+
+    /**
+     * removeDirectories
+     *
+     * @param string $folderPath
+     * @return void
+     */
+    public static function removeDirectories($folderPath)
+    {
+        return Doctrine_Lib::removeDirectories($folderPath);
     }
 }
