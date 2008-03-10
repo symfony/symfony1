@@ -876,15 +876,22 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      */
     public function getColumnName($fieldName)
     {
+        // FIX ME: This is being used in places where an array is passed, but it should not be an array
+        // For example in places where Doctrine should support composite foreign/primary keys
+        $fieldName = is_array($fieldName) ? $fieldName[0]:$fieldName;
+
         if (isset($this->_columnNames[$fieldName])) {
             return $this->_columnNames[$fieldName];
         }
+
         return $fieldName;
     }
     
     /**
+     * getColumnDefinition
      *
-     *
+     * @param string $columnName 
+     * @return void
      */
     public function getColumnDefinition($columnName)
     {
