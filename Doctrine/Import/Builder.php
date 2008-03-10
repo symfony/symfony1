@@ -60,7 +60,14 @@ class Doctrine_Import_Builder
      * @var string
      */
     protected $_packagesPath = '';
-    
+
+    /**
+     * _packagesFolderName
+     *
+     * @var string
+     */
+    protected $_packagesFolderName = 'packages';
+
     /**
      * _suffix
      * 
@@ -103,7 +110,7 @@ class Doctrine_Import_Builder
      * @var string
      */
     protected $_baseClassName = 'Doctrine_Record';
-    
+
     /**
      * _tpl
      *
@@ -133,7 +140,7 @@ class Doctrine_Import_Builder
     {
         if ($path) {
             if ( ! $this->_packagesPath) {
-                $this->setPackagesPath($path . DIRECTORY_SEPARATOR . 'packages');
+                $this->setPackagesPath($path . DIRECTORY_SEPARATOR . $this->_packagesFolderName);
             }
 
             $this->_path = $path;
@@ -251,7 +258,7 @@ class Doctrine_Import_Builder
      */
     public function setOptions($options)
     {
-        if (!empty($options)) {
+        if ( ! empty($options)) {
             foreach ($options as $key => $value) {
                 $this->setOption($key, $value);
             }
