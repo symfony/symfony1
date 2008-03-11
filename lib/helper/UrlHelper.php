@@ -164,7 +164,10 @@ function link_to_if($condition, $name = '', $internal_uri = '', $options = array
 {
   if ($condition)
   {
-    unset($options['tag']);
+    if (isset($options['tag']))
+    {
+      unset($options['tag']);
+    }
     return link_to($name, $internal_uri, $options);
   }
   else
