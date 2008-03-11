@@ -33,11 +33,11 @@ Doctrine::autoload('Doctrine_Export');
  */
 class Doctrine_Export_Mysql extends Doctrine_Export
 {
-   /**
-     * create a new database
+    /**
+     * createDatabaseSql
      *
-     * @param string $name name of the database that should be created
-     * @return string
+     * @param string $name 
+     * @return void
      */
     public function createDatabaseSql($name)
     {

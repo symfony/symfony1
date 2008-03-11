@@ -33,11 +33,12 @@ Doctrine::autoload('Doctrine_Export');
  */
 class Doctrine_Export_Pgsql extends Doctrine_Export
 {
-   /**
-     * create a new database
+    public $tmpConnectionDatabase = 'postgres';
+
+    /**
+     * createDatabaseSql
      *
-     * @param string $name name of the database that should be created
-     * @throws PDOException
+     * @param string $name 
      * @return void
      */
     public function createDatabaseSql($name)

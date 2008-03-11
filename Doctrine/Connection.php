@@ -1379,31 +1379,28 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
 
     public function createDatabase()
     {
+        if ( ! $dsn = $this->getOption('dsn')) {
+            throw new Doctrine_Connection_Exception('You must create your Doctrine_Connection by using a valid Doctrine style dsn in order to use the create/drop database functionality');
+        }
+
         try {
-            if ( ! $dsn = $this->getOption('dsn')) {
-                throw new Doctrine_Connection_Exception('You must create your Doctrine_Connection by using a valid Doctrine style dsn in order to use the create/drop database functionality');
-            }
+            // Parse pdo dsn so we are aware of the connection information parts
+            $info = $this->getManager()->parsePdoDsn($dsn);
 
-            $manager = $this->getManager();
+            // Get the temporary connection to issue the drop database command
+            $connect = $this->getTmpConnection($info);
 
-            $info = $manager->parsePdoDsn($dsn);
-            $username = $this->getOption('username');
-            $password = $this->getOption('password');
-
-            // Make connection without database specified so we can create it
-            $connect = $manager->openConnection(new PDO($info['scheme'] . ':host=' . $info['host'], $username, $password), 'tmp_connection', false);
-
-            // Create database
+            // Issue create database command
             $connect->export->createDatabase($info['dbname']);
 
-            // Close the tmp connection with no database
-            $manager->closeConnection($connect);
+            // Close the temporary connection used to issue the drop database command
+            $this->getManager()->closeConnection($connect);
 
-            // Close original connection
-            $manager->closeConnection($this);
+            // Close original
+            $this->getManager()->closeConnection($this);
 
-            // Reopen original connection with newly created database
-            $manager->openConnection(new PDO($info['dsn'], $username, $password), $this->getName(), true);
+            // Re-open connection with the newly created database
+            $this->getManager()->openConnection(new PDO($dsn, $this->getOption('username'), $this->getOption('password')), $this->getName(), true);
 
             return 'Successfully created database for connection "' . $this->getName() . '" named "' . $info['dbname'] . '"';
         } catch (Exception $e) {
@@ -1420,19 +1417,47 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      */
     public function dropDatabase()
     {
-      try {
-          if ( ! $dsn = $this->getOption('dsn')) {
-              throw new Doctrine_Connection_Exception('You must create your Doctrine_Connection by using a valid Doctrine style dsn in order to use the create/drop database functionality');
-          }
+        if ( ! $dsn = $this->getOption('dsn')) {
+            throw new Doctrine_Connection_Exception('You must create your Doctrine_Connection by using a valid Doctrine style dsn in order to use the create/drop database functionality');
+        }
 
-          $info = $this->getManager()->parsePdoDsn($dsn);
+        try {
+            // Parse pdo dsn so we are aware of the connection information parts
+            $info = $this->getManager()->parsePdoDsn($dsn);
 
-          $this->export->dropDatabase($info['dbname']);
+            // Get the temporary connection to issue the drop database command
+            $connect = $this->getTmpConnection($info);
 
-          return 'Successfully dropped database for connection "' . $this->getName() . '" named "' . $info['dbname'] . '"';
-      } catch (Exception $e) {
-          return $e;
-      }
+            // Issue drop database command
+            $connect->export->dropDatabase($info['dbname']);
+
+            // Close the temporary connection used to issue the drop database command
+            $this->getManager()->closeConnection($connect);
+
+            return 'Successfully dropped database for connection "' . $this->getName() . '" named "' . $info['dbname'] . '"';
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+
+    /**
+     * getTmpConnection
+     *
+     * @param string $info 
+     * @return void
+     */
+    public function getTmpConnection($info)
+    {
+        $pdoDsn = $info['scheme'] . ':host=' . $info['host'];
+
+        if (isset($this->export->tmpConnectionDatabase) && $this->export->tmpConnectionDatabase) {
+            $pdoDsn .= ';dbname=' . $this->export->tmpConnectionDatabase;
+        }
+
+        $username = $this->getOption('username');
+        $password = $this->getOption('password');
+
+        return $this->getManager()->openConnection(new PDO($pdoDsn, $username, $password), 'doctrine_tmp_connection', false);
     }
 
     /**

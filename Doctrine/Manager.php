@@ -18,7 +18,7 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.org>.
  */
-
+Doctrine::autoload('Doctrine_Configurable');
 /**
  *
  * Doctrine_Manager is the base component of all doctrine based projects.
@@ -703,7 +703,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
         $results = array();
 
         foreach ($this as $name => $connection) {
-            if ( ! empty($specifiedConnections) && !in_array($name, $specifiedConnections)) {
+            if ( ! empty($specifiedConnections) && ! in_array($name, $specifiedConnections)) {
                 continue;
             }
 
@@ -731,7 +731,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
         $results = array();
 
         foreach ($this as $name => $connection) {
-            if ( ! empty($specifiedConnections) && !in_array($name, $specifiedConnections)) {
+            if ( ! empty($specifiedConnections) && ! in_array($name, $specifiedConnections)) {
                 continue;
             }
 

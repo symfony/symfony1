@@ -88,7 +88,6 @@ class Doctrine_Export_Sqlite extends Doctrine_Export
      *                                Not all DBMS support index sorting direction configuration. The DBMS
      *                                 drivers of those that do not support it ignore this property. Use the
      *                                 function support() to determine whether the DBMS driver can manage indexes.
-
      *                                 Example
      *                                    array(
      *                                        'fields' => array(
@@ -219,47 +218,8 @@ class Doctrine_Export_Sqlite extends Doctrine_Export
                 $query[] = $this->createIndexSql($name, $index, $definition);
             }
         }
+
         return $query;
-        
-        
-        /**
-        try {
-
-            if ( ! empty($fk)) {
-                $this->conn->beginTransaction();
-            }
-
-            $ret   = $this->conn->exec($query);
-
-            if ( ! empty($fk)) {
-                foreach ($fk as $definition) {
-
-                    $query = 'CREATE TRIGGER doctrine_' . $name . '_cscd_delete '
-                           . 'AFTER DELETE ON ' . $name . ' FOR EACH ROW '
-                           . 'BEGIN '
-                           . 'DELETE FROM ' . $definition['foreignTable'] . ' WHERE ';
-
-                    $local = (array) $definition['local'];
-                    foreach((array) $definition['foreign'] as $k => $field) {
-                        $query .= $field . ' = old.' . $local[$k] . ';';
-                    }
-
-                    $query .= 'END;';
-
-                    $this->conn->exec($query);
-                }
-
-                $this->conn->commit();
-            }
-
-
-        } catch(Doctrine_Exception $e) {
-
-            $this->conn->rollback();
-
-            throw $e;
-        }
-        */
     }
 
     /**
