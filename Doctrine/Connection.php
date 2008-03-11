@@ -1403,9 +1403,6 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         // Re-open connection with the newly created database
         $this->getManager()->openConnection($dsn, $this->getName(), true);
 
-        // Close original
-        $this->getManager()->closeConnection($this);
-
         if (isset($e)) {
             return $e;
         } else {
