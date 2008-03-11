@@ -1388,23 +1388,28 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
             $info = $this->getManager()->parsePdoDsn($dsn);
 
             // Get the temporary connection to issue the drop database command
-            $connect = $this->getTmpConnection($info);
+            $tmpConnection = $this->getTmpConnection($info);
 
             // Issue create database command
-            $connect->export->createDatabase($info['dbname']);
+            $tmpConnection->export->createDatabase($info['dbname']);
+        } catch (Exception $e) {}
 
-            // Close the temporary connection used to issue the drop database command
-            $this->getManager()->closeConnection($connect);
+        // Close the temporary connection used to issue the drop database command
+        $this->getManager()->closeConnection($tmpConnection);
 
-            // Close original
-            $this->getManager()->closeConnection($this);
+        // Re-create Doctrine style dsn
+        $dsn = $info['scheme'] . '://' . $this->getOption('username') . ':' . $this->getOption('password') . '@' . $info['host'] . '/' . $info['dbname'];
 
-            // Re-open connection with the newly created database
-            $this->getManager()->openConnection(new PDO($dsn, $this->getOption('username'), $this->getOption('password')), $this->getName(), true);
+        // Re-open connection with the newly created database
+        $this->getManager()->openConnection($dsn, $this->getName(), true);
 
-            return 'Successfully created database for connection "' . $this->getName() . '" named "' . $info['dbname'] . '"';
-        } catch (Exception $e) {
+        // Close original
+        $this->getManager()->closeConnection($this);
+
+        if (isset($e)) {
             return $e;
+        } else {
+            return 'Successfully created database for connection "' . $this->getName() . '" named "' . $info['dbname'] . '"';
         }
     }
 
@@ -1426,17 +1431,25 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
             $info = $this->getManager()->parsePdoDsn($dsn);
 
             // Get the temporary connection to issue the drop database command
-            $connect = $this->getTmpConnection($info);
+            $tmpConnection = $this->getTmpConnection($info);
 
             // Issue drop database command
-            $connect->export->dropDatabase($info['dbname']);
+            $tmpConnection->export->dropDatabase($info['dbname']);
+        } catch (Exception $e) {}
 
-            // Close the temporary connection used to issue the drop database command
-            $this->getManager()->closeConnection($connect);
+        // Close the temporary connection used to issue the drop database command
+        $this->getManager()->closeConnection($tmpConnection);
 
-            return 'Successfully dropped database for connection "' . $this->getName() . '" named "' . $info['dbname'] . '"';
-        } catch (Exception $e) {
+        // Re-create Doctrine style dsn
+        $dsn = $info['scheme'] . '://' . $this->getOption('username') . ':' . $this->getOption('password') . '@' . $info['host'] . '/' . $info['dbname'];
+
+        // Re-open connection with the newly created database
+        $this->getManager()->openConnection($dsn, $this->getName(), true);
+
+        if (isset($e)) {
             return $e;
+        } else {
+            return 'Successfully dropped database for connection "' . $this->getName() . '" named "' . $info['dbname'] . '"';
         }
     }
 
