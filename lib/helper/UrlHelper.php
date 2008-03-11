@@ -162,18 +162,14 @@ function link_to($name = '', $internal_uri = '', $options = array())
  */
 function link_to_if($condition, $name = '', $internal_uri = '', $options = array())
 {
+  $html_options = _parse_attributes($options);
   if ($condition)
   {
-    if (isset($options['tag']))
-    {
-      unset($options['tag']);
-    }
-    return link_to($name, $internal_uri, $options);
+    unset($html_options['tag']);
+    return link_to($name, $internal_uri, $html_options);
   }
   else
   {
-    $html_options = _parse_attributes($options);
-
     unset($html_options['query_string']);
     unset($html_options['absolute_url']);
     unset($html_options['absolute']);
