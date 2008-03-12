@@ -20,15 +20,15 @@
 
 /**
  * sfMessageSource_XLIFF class.
- * 
+ *
  * Using XML XLIFF format as the message source for translation.
  * Details and example of XLIFF can be found in the following URLs.
  *
  * # http://www.opentag.com/xliff.htm
  * # http://www-106.ibm.com/developerworks/xml/library/x-localis2/
- * 
+ *
  * See the MessageSource::factory() method to instantiate this class.
- * 
+ *
  * @author Xiang Wei Zhuo <weizhuo[at]gmail[dot]com>
  * @version v1.0, last update on Fri Dec 24 16:18:44 EST 2004
  * @package    symfony
@@ -38,7 +38,7 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
 {
   /**
    * Message data filename extension.
-   * @var string 
+   * @var string
    */
   protected $dataExt = '.xml';
 
@@ -73,10 +73,23 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
   }
 
   /**
+   * Creates and returns a new DOMDocument instance
+   *
+   * @return DOMDocument
+   */
+  protected static function createDOMDocument()
+  {
+    $dom = new DOMDocument();
+    $dom->formatOutput = true;
+    $dom->preserveWhiteSpace = false;
+    return $dom;
+  }
+
+  /**
    * Gets the variant for a catalogue depending on the current culture.
    *
    * @param string catalogue
-   * @return string the variant. 
+   * @return string the variant.
    * @see save()
    * @see update()
    * @see delete()
@@ -101,7 +114,7 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
   }
 
   /**
-   * Saves the list of untranslated blocks to the translation source. 
+   * Saves the list of untranslated blocks to the translation source.
    * If the translation was not found, you should add those
    * strings to the translation source via the <b>append()</b> method.
    *
@@ -132,7 +145,7 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
     }
 
     // create a new dom, import the existing xml
-    $dom = new DOMDocument();
+    $dom = self::createDOMDocument();
     $dom->load($filename);
 
     // find the body element
@@ -210,7 +223,7 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
     }
 
     // create a new dom, import the existing xml
-    $dom = new DOMDocument();
+    $dom = self::createDOMDocument();
     $dom->load($filename);
 
     // find the body element
@@ -293,7 +306,7 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
    *
    * @param string the source message to delete.
    * @param string the catalogue to delete from.
-   * @return boolean true if deleted, false otherwise. 
+   * @return boolean true if deleted, false otherwise.
    */
   public function delete($message, $catalogue='messages')
   {
@@ -313,7 +326,7 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
     }
 
     // create a new dom, import the existing xml
-    $dom = new DOMDocument();
+    $dom = self::createDOMDocument();
     $dom->load($filename);
 
     // find the body element
