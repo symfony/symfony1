@@ -4,7 +4,6 @@
 - %SF_SYMFONY_LIB_DIR%/action/sfActions.class.php
 - %SF_SYMFONY_LIB_DIR%/action/sfActionStack.class.php
 - %SF_SYMFONY_LIB_DIR%/action/sfActionStackEntry.class.php
-- %SF_SYMFONY_LIB_DIR%/cache/sfCache.class.php
 - %SF_SYMFONY_LIB_DIR%/config/sfLoader.class.php
 - %SF_SYMFONY_LIB_DIR%/controller/sfController.class.php
 - %SF_SYMFONY_LIB_DIR%/database/sfDatabaseManager.class.php
@@ -21,7 +20,6 @@
 - %SF_SYMFONY_LIB_DIR%/routing/sfRouting.class.php
 - %SF_SYMFONY_LIB_DIR%/storage/sfStorage.class.php
 - %SF_SYMFONY_LIB_DIR%/user/sfUser.class.php
-- %SF_SYMFONY_LIB_DIR%/util/sfContext.class.php
 - %SF_SYMFONY_LIB_DIR%/util/sfNamespacedParameterHolder.class.php
 - %SF_SYMFONY_LIB_DIR%/view/sfView.class.php
 - %SF_SYMFONY_LIB_DIR%/view/sfViewParameterHolder.class.php
