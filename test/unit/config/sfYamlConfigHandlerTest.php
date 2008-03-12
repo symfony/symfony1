@@ -18,12 +18,12 @@ class myConfigHandler extends sfYamlConfigHandler
 
   public function execute($configFiles) {}
 
-  public function parseYamls($configFiles)
+  static public function parseYamls($configFiles)
   {
     return parent::parseYamls($configFiles);
   }
 
-  public function parseYaml($configFile)
+  static public function parseYaml($configFile)
   {
     return parent::parseYaml($configFile);
   }
