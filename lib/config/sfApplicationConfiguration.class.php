@@ -102,7 +102,22 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
       sfConfig::set('sf_timer_start', microtime(true));
     }
 
+    $configCache = $this->getConfigCache();
+
+    // required core classes for the framework
+    if (!sfConfig::get('sf_debug') && !sfConfig::get('sf_test'))
+    {
+      $configCache->import('config/core_compile.yml', false);
+    }
+
     sfAutoload::getInstance()->register();
+
+    // load base settings
+    include($configCache->checkConfig('config/settings.yml'));
+    if ($file = $configCache->checkConfig('config/app.yml', true))
+    {
+      include($file);
+    }
 
     // force setting default timezone if not set
     if ($default_timezone = sfConfig::get('sf_default_timezone'))
@@ -112,21 +127,6 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     else if (sfConfig::get('sf_force_default_timezone', true))
     {
       date_default_timezone_set(@date_default_timezone_get());
-    }
-
-    $configCache = $this->getConfigCache();
-
-    // load base settings
-    include($configCache->checkConfig('config/settings.yml'));
-    if ($file = $configCache->checkConfig('config/app.yml', true))
-    {
-      include($file);
-    }
-
-    // required core classes for the framework
-    if (!sfConfig::get('sf_debug') && !sfConfig::get('sf_test'))
-    {
-      $configCache->import('config/core_compile.yml', false);
     }
 
     // error settings
