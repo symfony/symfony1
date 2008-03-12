@@ -29,7 +29,7 @@ abstract class sfCommandApplicationTask extends sfTask
   /**
    * @see sfTask
    */
-  protected function log($messages)
+  public function log($messages)
   {
     if (is_null($this->commandApplication) || $this->commandApplication->isVerbose())
     {
@@ -40,7 +40,7 @@ abstract class sfCommandApplicationTask extends sfTask
   /**
    * @see sfTask
    */
-  protected function logSection($section, $message, $size = null)
+  public function logSection($section, $message, $size = null)
   {
     if (is_null($this->commandApplication) || $this->commandApplication->isVerbose())
     {

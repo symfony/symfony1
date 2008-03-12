@@ -279,7 +279,7 @@ abstract class sfTask
    *
    * @param mixed The message as an array of lines of a single string
    */
-  protected function log($messages)
+  public function log($messages)
   {
     if (!is_array($messages))
     {
@@ -296,7 +296,7 @@ abstract class sfTask
    * @param string  The message
    * @param integer The maximum size of a line
    */
-  protected function logSection($section, $message, $size = null)
+  public function logSection($section, $message, $size = null)
   {
     $this->dispatcher->notify(new sfEvent($this, 'command.log', array($this->formatter->formatSection($section, $message, $size))));
   }
