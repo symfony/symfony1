@@ -41,10 +41,18 @@ class sfSessionTestStorage extends sfStorage
       throw new sfInitializationException('Factory configuration file is missing required "session_path" parameter for the "storage" category.');
     }
 
-    if (array_key_exists('session_id', $_SERVER))
+    $this->sessionId = null;
+    if ($this->getParameter('session_id'))
+    {
+      $this->sessionId = $this->getParameter('session_id');
+    }
+    else if (array_key_exists('session_id', $_SERVER))
     {
       $this->sessionId = $_SERVER['session_id'];
+    }
 
+    if ($this->sessionId)
+    {
       // we read session data from temp file
       $file = $this->getParameter('session_path').DIRECTORY_SEPARATOR.$this->sessionId.'.session';
       $this->sessionData = file_exists($file) ? unserialize(file_get_contents($file)) : array();
