@@ -94,10 +94,17 @@ abstract class sfConfigHandler
    */
   public static function replacePath($path)
   {
-    if (!sfToolkit::isPathAbsolute($path))
+    if (is_array($path))
     {
-      // not an absolute path so we'll prepend to it
-      $path = sfConfig::get('sf_app_dir').'/'.$path;
+      array_walk_recursive($path, create_function('&$path', '$path = sfConfigHandler::replacePath($path);'));
+    }
+    else
+    {
+      if (!sfToolkit::isPathAbsolute($path))
+      {
+        // not an absolute path so we'll prepend to it
+        $path = sfConfig::get('sf_app_dir').'/'.$path;
+      }
     }
 
     return $path;
