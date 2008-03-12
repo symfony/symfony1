@@ -35,16 +35,7 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
   public function execute($configFiles)
   {
     // parse the yaml
-    $myConfig = $this->parseYamls($configFiles);
-
-    $myConfig['all'] = sfToolkit::arrayDeepMerge(
-      isset($myConfig['default']) && is_array($myConfig['default']) ? $myConfig['default'] : array(),
-      isset($myConfig['all']) && is_array($myConfig['all']) ? $myConfig['all'] : array()
-    );
-
-    unset($myConfig['default']);
-
-    $this->yamlConfig = $myConfig;
+    $this->yamlConfig = self::getConfiguration($configFiles);
 
     // iterate through all action names
     $data  = array();
@@ -111,5 +102,13 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
                       $actionName, $withLayout, $lifeTime, $clientLifetime, $contextual, str_replace("\n", '', var_export($vary, true)));
 
     return implode("\n", $data);
+  }
+
+  /**
+   * @see sfConfigHandler
+   */
+  static public function getConfiguration(array $configFiles)
+  {
+    return self::flattenConfiguration(self::parseYamls($configFiles));
   }
 }

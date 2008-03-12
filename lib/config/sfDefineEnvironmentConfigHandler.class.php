@@ -39,10 +39,10 @@ class sfDefineEnvironmentConfigHandler extends sfYamlConfigHandler
     }
 
     // parse the yaml
-    $myConfig = $this->mergeEnvironment($this->parseYamls($configFiles));
+    $config = self::getConfiguration($configFiles);
 
     $values = array();
-    foreach ($myConfig as $category => $keys)
+    foreach ($config as $category => $keys)
     {
       $values = array_merge($values, $this->getValues($prefix, $category, $keys));
     }
@@ -109,13 +109,7 @@ class sfDefineEnvironmentConfigHandler extends sfYamlConfigHandler
    */
   protected function fixCategoryValue($category, $key, $value)
   {
-    // prefix the key
-    $key = $category.$key;
-
-    // replace constant values
-    $value = $this->replaceConstants($value);
-
-    return array($key, $value);
+    return array($category.$key, $value);
   }
 
   /**
@@ -142,18 +136,10 @@ class sfDefineEnvironmentConfigHandler extends sfYamlConfigHandler
   }
 
   /**
-   * Merges default, all and current environment configurations.
-   *
-   * @param array The main configuratino array
-   *
-   * @param array The merged configuration
+   * @see sfConfigHandler
    */
-  protected function mergeEnvironment($config)
+  static public function getConfiguration(array $configFiles)
   {
-    return sfToolkit::arrayDeepMerge(
-      isset($config['default']) && is_array($config['default']) ? $config['default'] : array(),
-      isset($config['all']) && is_array($config['all']) ? $config['all'] : array(),
-      isset($config[sfConfig::get('sf_environment')]) && is_array($config[sfConfig::get('sf_environment')]) ? $config[sfConfig::get('sf_environment')] : array()
-    );
+    return self::replaceConstants(self::flattenConfigurationWithEnvironment(self::parseYamls($configFiles)));
   }
 }

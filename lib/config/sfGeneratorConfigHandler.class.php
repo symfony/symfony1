@@ -32,7 +32,7 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler
   public function execute($configFiles)
   {
     // parse the yaml
-    $config = $this->parseYamls($configFiles);
+    $config = self::getConfiguration($configFiles);
     if (!$config)
     {
       return '';
@@ -77,5 +77,13 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler
     $retval = sprintf($retval, date('Y/m/d H:i:s'), $data);
 
     return $retval;
+  }
+
+  /**
+   * @see sfConfigHandler
+   */
+  static public function getConfiguration(array $configFiles)
+  {
+    return self::parseYamls($configFiles);
   }
 }

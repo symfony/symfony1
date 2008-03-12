@@ -71,7 +71,7 @@ abstract class sfConfigHandler
    *
    * @return string The new value
    */
-  public static function replaceConstants($value)
+  static public function replaceConstants($value)
   {
     if (is_array($value))
     {
@@ -111,5 +111,17 @@ abstract class sfConfigHandler
   public function getParameterHolder()
   {
     return $this->parameterHolder;
+  }
+
+  /**
+   * Returns the configuration for the current config handler.
+   *
+   * @param array An array of ordered configuration files
+   *
+   * @param array A configuration array
+   */
+  static public function getConfiguration(array $configFiles)
+  {
+    throw new LogicException('You must call the ::getConfiguration() method on a concrete config handler class');
   }
 }

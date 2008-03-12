@@ -29,12 +29,12 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
    *
    * @return array A merged configuration array
    */
-  protected function parseYamls($configFiles)
+  static public function parseYamls($configFiles)
   {
     $config = array();
     foreach ($configFiles as $configFile)
     {
-      $config = sfToolkit::arrayDeepMerge($config, $this->parseYaml($configFile));
+      $config = sfToolkit::arrayDeepMerge($config, self::parseYaml($configFile));
     }
 
     return $config;
@@ -50,7 +50,7 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
    * @throws sfConfigurationException If a requested configuration file does not exist or is not readable
    * @throws sfParseException If a requested configuration file is improperly formatted
    */
-  protected function parseYaml($configFile)
+  static public function parseYaml($configFile)
   {
     if (!is_readable($configFile))
     {
@@ -116,5 +116,33 @@ abstract class sfYamlConfigHandler extends sfConfigHandler
     }
 
     return $defaultValue;
+  }
+
+  static public function flattenConfiguration($config)
+  {
+    $config['all'] = sfToolkit::arrayDeepMerge(
+      isset($config['default']) && is_array($config['default']) ? $config['default'] : array(),
+      isset($config['all']) && is_array($config['all']) ? $config['all'] : array()
+    );
+
+    unset($config['default']);
+
+    return $config;
+  }
+
+  /**
+   * Merges default, all and current environment configurations.
+   *
+   * @param array The main configuratino array
+   *
+   * @param array The merged configuration
+   */
+  static public function flattenConfigurationWithEnvironment($config)
+  {
+    return sfToolkit::arrayDeepMerge(
+      isset($config['default']) && is_array($config['default']) ? $config['default'] : array(),
+      isset($config['all']) && is_array($config['all']) ? $config['all'] : array(),
+      isset($config[sfConfig::get('sf_environment')]) && is_array($config[sfConfig::get('sf_environment')]) ? $config[sfConfig::get('sf_environment')] : array()
+    );
   }
 }

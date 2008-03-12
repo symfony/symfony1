@@ -34,13 +34,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
   public function execute($configFiles)
   {
     // parse the yaml
-    $myConfig = $this->parseYamls($configFiles);
-
-    $myConfig = sfToolkit::arrayDeepMerge(
-      isset($myConfig['default']) && is_array($myConfig['default']) ? $myConfig['default'] : array(),
-      isset($myConfig['all']) && is_array($myConfig['all']) ? $myConfig['all'] : array(),
-      isset($myConfig[sfConfig::get('sf_environment')]) && is_array($myConfig[sfConfig::get('sf_environment')]) ? $myConfig[sfConfig::get('sf_environment')] : array()
-    );
+    $config = self::getConfiguration($configFiles);
 
     // init our data and includes arrays
     $includes  = array();
@@ -53,7 +47,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
     foreach ($factories as $factory)
     {
       // see if the factory exists for this controller
-      $keys = $myConfig[$factory];
+      $keys = $config[$factory];
 
       if (!isset($keys['class']))
       {
@@ -66,17 +60,14 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
       if (isset($keys['file']))
       {
         // we have a file to include
-        $file = $this->replaceConstants($keys['file']);
-        $file = $this->replacePath($file);
-
-        if (!is_readable($file))
+        if (!is_readable($keys['file']))
         {
           // factory file doesn't exist
-          throw new sfParseException(sprintf('Configuration file "%s" specifies class "%s" with nonexistent or unreadable file "%s".', $configFiles[0], $class, $file));
+          throw new sfParseException(sprintf('Configuration file "%s" specifies class "%s" with nonexistent or unreadable file "%s".', $configFiles[0], $class, $keys['file']));
         }
 
         // append our data
-        $includes[] = sprintf("require_once('%s');", $file);
+        $includes[] = sprintf("require_once('%s');", $keys['file']);
       }
 
       // parse parameters
@@ -88,10 +79,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           throw new InvalidArgumentException(sprintf('The "param" key for the "%s" factory must be an array (in %s).', $class, $configFiles[0]));
         }
 
-        foreach ($keys['param'] as $key => $value)
-        {
-          $parameters[$key] = $this->replaceConstants($value);
-        }
+        $parameters = $keys['param'];
       }
 
       // append new data
@@ -179,7 +167,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
           {
             foreach ($parameters['loggers'] as $name => $keys)
             {
-              if (isset($keys['enabled']) && !$this->replaceConstants($keys['enabled']))
+              if (isset($keys['enabled']) && !$keys['enabled'])
               {
                 continue;
               }
@@ -193,7 +181,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
               $condition = true;
               if (isset($keys['param']['condition']))
               {
-                $condition = $this->replaceConstants($keys['param']['condition']);
+                $condition = $keys['param']['condition'];
                 unset($keys['param']['condition']);
               }
 
@@ -226,5 +214,23 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
                       implode("\n", $instances));
 
     return $retval;
+  }
+
+  /**
+   * @see sfConfigHandler
+   */
+  static public function getConfiguration(array $configFiles)
+  {
+    $config = self::replaceConstants(self::flattenConfigurationWithEnvironment(self::parseYamls($configFiles)));
+
+    foreach ($config as $factory => $values)
+    {
+      if (isset($values['file']))
+      {
+        $config[$factory]['file'] = $this->replacePath($values['file']);
+      }
+    }
+
+    return $config;
   }
 }
