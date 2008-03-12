@@ -79,24 +79,18 @@ EOF;
     // finder to find directories (1 level) in a directory
     $dirFinder = sfFinder::type('dir')->ignore_version_control()->discard('.sf')->maxdepth(0)->relative();
 
-    // clear global cache
-    if (is_null($options['app']))
-    {
-      $this->getFilesystem()->remove(sfFinder::type('file')->ignore_version_control()->discard('.sf')->in(sfConfig::get('sf_cache_dir')));
-    }
-
     // iterate through applications
     $apps = is_null($options['app']) ? $dirFinder->in(sfConfig::get('sf_apps_dir')) : array($options['app']);
     foreach ($apps as $app)
     {
+      $class = $app.'Configuration';
+      require_once sfConfig::get('sf_lib_dir').'/'.$class.'.class.php';
+      $appConfiguration = new $class('cli', true);
+
       if (!is_dir(sfConfig::get('sf_cache_dir').'/'.$app))
       {
         continue;
       }
-
-      $class = $app.'Configuration';
-      require_once sfConfig::get('sf_lib_dir').'/'.$class.'.class.php';
-      $appConfiguration = new $class('dev', true);
 
       // iterate through environments
       $envs = is_null($options['env']) ? $dirFinder->in(sfConfig::get('sf_cache_dir').'/'.$app) : array($options['env']);
@@ -118,13 +112,19 @@ EOF;
           $method = $this->getClearCacheMethod($options['type']);
           if (!method_exists($this, $method))
           {
-            throw new InvalidArgumentException(sprintf('Don\'t know how to remove the cache for type "%s".', $options['type']));
+            throw new InvalidArgumentException(sprintf('Do not know how to remove cache for type "%s".', $options['type']));
           }
           $this->$method($appConfiguration, $env);
         }
 
         $this->unlock($app, $env);
       }
+    }
+
+    // clear global cache
+    if (is_null($options['app']))
+    {
+      $this->getFilesystem()->remove(sfFinder::type('file')->ignore_version_control()->discard('.sf')->in(sfConfig::get('sf_cache_dir')));
     }
   }
 
