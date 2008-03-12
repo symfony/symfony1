@@ -371,6 +371,11 @@ abstract class sfView
       return;
     }
 
+    if (!strpos($template, '.'))
+    {
+      $template .= $this->getExtension();
+    }
+
     if (sfToolkit::isPathAbsolute($template))
     {
       $this->decoratorDirectory = dirname($template);
@@ -378,12 +383,8 @@ abstract class sfView
     }
     else
     {
+      $this->decoratorDirectory = $this->context->getConfiguration()->getDecoratorDir($template);
       $this->decoratorTemplate = $template;
-    }
-
-    if (!strpos($this->decoratorTemplate, '.'))
-    {
-      $this->decoratorTemplate .= $this->getExtension();
     }
 
     // set decorator status

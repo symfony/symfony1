@@ -341,6 +341,37 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   }
 
   /**
+   * Gets the decorator directories.
+   *
+   * @param  string The template file
+   *
+   * @return array  An array of the decorator directories
+   *
+   */
+  public function getDecoratorDirs()
+  {
+    return array(sfConfig::get('sf_app_template_dir'));
+  }
+
+  /**
+   * Gets the decorator directory for a given template.
+   *
+   * @param  string The template file
+   *
+   * @return string A template directory
+   */
+  public function getDecoratorDir($template)
+  {
+    foreach ($this->getDecoratorDirs() as $dir)
+    {
+      if (is_readable($dir.'/'.$template))
+      {
+        return $dir;
+      }
+    }
+  }
+
+  /**
    * Gets the i18n directories to use globally.
    *
    * @return array An array of i18n directories
