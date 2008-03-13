@@ -235,6 +235,7 @@ abstract class Doctrine_Query_Abstract
      */
     protected $_isLimitSubqueryUsed = false;
     
+    protected $_pendingSetParams = array();
     
     /**
      * Constructor.
@@ -510,6 +511,16 @@ abstract class Doctrine_Query_Abstract
      */
     public function convertEnums($params)
     {
+        $table = $this->getRoot();
+        foreach ($this->_pendingSetParams as $fieldName => $value) {
+            $e = explode('.', $fieldName);
+            $fieldName = isset($e[1]) ? $e[1]:$e[0];
+            $columnName = $table->getColumnName($fieldName);
+            if ($table->getTypeOf($columnName) == 'enum') {
+                $this->addEnumParam($value, $table, $columnName);
+            }
+        }
+
         foreach ($this->_enumParams as $key => $values) {
             if (isset($params[$key])) {
                 if ( ! empty($values)) {
@@ -1263,6 +1274,9 @@ abstract class Doctrine_Query_Abstract
                     $this->_params['set'][] = $params;
                 }
             }
+
+            $this->_pendingSetParams[$key] = $value;
+
             return $this->_addDqlQueryPart('set', $key . ' = ' . $value, true);
         }
     }

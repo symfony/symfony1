@@ -18,7 +18,7 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.org>.
  */
-
+Doctrine::autoload('Doctrine_Configurable');
 /**
  * Doctrine_Table   represents a database table
  *                  each Doctrine_Table holds the information of foreignKeys and associations

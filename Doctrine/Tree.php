@@ -17,7 +17,8 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.org>.
- */                   
+ */
+                 
 /**
  * Doctrine_Tree
  *

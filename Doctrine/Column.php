@@ -18,7 +18,7 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.org>.
  */
-
+Doctrine::autoload('Doctrine_Access');
 /**
  * Doctrine_Column
  * This class represents a database column

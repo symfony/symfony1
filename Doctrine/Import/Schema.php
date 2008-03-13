@@ -483,7 +483,7 @@ class Doctrine_Import_Schema
     {
         foreach($this->_relations as $className => $relations) {
             foreach ($relations AS $alias => $relation) {
-                if ((isset($relation['equal']) && $relation['equal']) || (isset($relation['auto_complete']) && $relation['auto_complete'] === false)) {
+                if ((isset($relation['equal']) && $relation['equal']) || (isset($relation['autoComplete']) && $relation['autoComplete'] === false)) {
                     continue;
                 }
                 

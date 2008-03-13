@@ -121,6 +121,13 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     protected $_references     = array();
 
     /**
+     * Doctrine_Collection of objects needing to be deleted on save
+     *
+     * @var string
+     */
+    protected $_pendingDeletes = array();
+
+    /**
      * @var integer $index                  this index is used for creating object identifiers
      */
     private static $_index = 1;
@@ -910,11 +917,13 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             } catch (Doctrine_Table_Exception $e) {
                 foreach ($this->_table->getFilters() as $filter) {
                     if (($value = $filter->filterSet($this, $fieldName, $value)) !== null) {
-                        return $value;
+                        break;
                     }
                 }
             }
         }
+
+        return $this;
     }
 
     /**
@@ -998,18 +1007,29 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      * @param string $name
      * @return void
      */
-    public function __unset($fieldName)
+    public function __unset($name)
     {
-        if (isset($this->_data[$fieldName])) {
-            $this->_data[$fieldName] = array();
-        } else if (isset($this->_references[$fieldName])) {
-            if ($this->_references[$fieldName] instanceof Doctrine_Record) {
-                // todo: delete related record when saving $this
-                $this->_references[$fieldName] = self::$_null;
-            } elseif ($this->_references[$fieldName] instanceof Doctrine_Collection) {
-                $this->_references[$fieldName]->setData(array());
+        if (isset($this->_data[$name])) {
+            $this->_data[$name] = array();
+        } else if (isset($this->_references[$name])) {
+            if ($this->_references[$name] instanceof Doctrine_Record) {
+                $this->_pendingDeletes[] = $this->$name;
+                $this->_references[$name] = self::$_null;
+            } elseif ($this->_references[$name] instanceof Doctrine_Collection) {
+                $this->_pendingDeletes[] = $this->$name;
+                $this->_references[$name]->setData(array());
             }
         }
+    }
+
+    /**
+     * getPendingDeletes
+     *
+     * @return array Array of Doctrine_Records instances which need to be deleted on save
+     */
+    public function getPendingDeletes()
+    {
+        return $this->_pendingDeletes;
     }
 
     /**

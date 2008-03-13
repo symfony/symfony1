@@ -1377,6 +1377,13 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         $this->transaction->rollback($savepoint);
     }
 
+    /**
+     * createDatabase
+     *
+     * Issue create database command for this instance of Doctrine_Connection
+     *
+     * @return mixed Returns Doctrine_Exception or success string
+     */
     public function createDatabase()
     {
         if ( ! $dsn = $this->getOption('dsn')) {
@@ -1394,18 +1401,18 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
             $tmpConnection->export->createDatabase($info['dbname']);
         } catch (Exception $e) {}
 
-        // Close the temporary connection used to issue the drop database command
-        $this->getManager()->closeConnection($tmpConnection);
-
-        // Re-create Doctrine style dsn
-        $dsn = $info['scheme'] . '://' . $this->getOption('username') . ':' . $this->getOption('password') . '@' . $info['host'] . '/' . $info['dbname'];
-
-        // Re-open connection with the newly created database
-        $this->getManager()->openConnection($dsn, $this->getName(), true);
-
         if (isset($e)) {
             return $e;
         } else {
+            // Close the temporary connection used to issue the drop database command
+            $this->getManager()->closeConnection($tmpConnection);
+
+            // Re-create Doctrine style dsn
+            $dsn = $info['scheme'] . '://' . $this->getOption('username') . ':' . $this->getOption('password') . '@' . $info['host'] . '/' . $info['dbname'];
+
+            // Re-open connection with the newly created database
+            $this->getManager()->openConnection($dsn, $this->getName(), true);
+
             return 'Successfully created database for connection "' . $this->getName() . '" named "' . $info['dbname'] . '"';
         }
     }
@@ -1413,9 +1420,9 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
     /**
      * dropDatabase
      *
-     * Method for dropping the database for the connection instance
+     * Issue drop database command for this instance of Doctrine_Connection
      *
-     * @return mixed Will return an instance of the exception thrown if the drop database fails, otherwise it returns a string detailing the success
+     * @return mixed Returns Doctrine_Exception or success string
      */
     public function dropDatabase()
     {
@@ -1434,24 +1441,30 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
             $tmpConnection->export->dropDatabase($info['dbname']);
         } catch (Exception $e) {}
 
-        // Close the temporary connection used to issue the drop database command
-        $this->getManager()->closeConnection($tmpConnection);
-
-        // Re-create Doctrine style dsn
-        $dsn = $info['scheme'] . '://' . $this->getOption('username') . ':' . $this->getOption('password') . '@' . $info['host'] . '/' . $info['dbname'];
-
-        // Re-open connection with the newly created database
-        $this->getManager()->openConnection($dsn, $this->getName(), true);
-
         if (isset($e)) {
             return $e;
         } else {
+            // Close the temporary connection used to issue the drop database command
+            $this->getManager()->closeConnection($tmpConnection);
+
+            // Re-create Doctrine style dsn
+            $dsn = $info['scheme'] . '://' . $this->getOption('username') . ':' . $this->getOption('password') . '@' . $info['host'] . '/' . $info['dbname'];
+
+            // Re-open connection with the newly created database
+            $this->getManager()->openConnection($dsn, $this->getName(), true);
+
             return 'Successfully dropped database for connection "' . $this->getName() . '" named "' . $info['dbname'] . '"';
         }
     }
 
     /**
      * getTmpConnection
+     *
+     * Create a temporary connection to the database with the user credentials.
+     * This is so the user can make a connection to a db server. Some dbms allow
+     * connections with no database, but some do not. In that case we have a table
+     * which is always guaranteed to exist. Mysql: 'mysql', PostgreSQL: 'postgres', etc.
+     * This value is set in the Doctrine_Export_{DRIVER} classes if required
      *
      * @param string $info 
      * @return void

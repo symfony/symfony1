@@ -21,6 +21,7 @@
 
 /**
  * Doctrine_Validator
+ *
  * Doctrine_Validator performs validations in record properties
  *
  * @package     Doctrine

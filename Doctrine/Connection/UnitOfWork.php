@@ -178,6 +178,10 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                 }
             }
 
+            foreach ($record->getPendingDeletes() as $pendingDelete) {
+                $pendingDelete->delete();
+            }
+
             $record->getTable()->getRecordListener()->postSave($event);
              
             $record->postSave($event);
