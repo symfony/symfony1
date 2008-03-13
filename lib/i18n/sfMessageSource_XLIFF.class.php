@@ -75,13 +75,21 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
   /**
    * Creates and returns a new DOMDocument instance
    *
+   * @param  string  $xml_source  XML string
+   *
    * @return DOMDocument
    */
-  protected static function createDOMDocument()
+  protected function createDOMDocument($xml = null)
   {
     $dom = new DOMDocument();
     $dom->formatOutput = true;
     $dom->preserveWhiteSpace = false;
+
+    if (!is_null($xml) && is_string($xml))
+    {
+      $dom->loadXML($xml);
+    }
+
     return $dom;
   }
 
@@ -145,7 +153,7 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
     }
 
     // create a new dom, import the existing xml
-    $dom = self::createDOMDocument();
+    $dom = $this->createDOMDocument();
     $dom->load($filename);
 
     // find the body element
@@ -186,6 +194,8 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
     $fileNode = $xpath->query('//file')->item(0);
     $fileNode->setAttribute('date', @date('Y-m-d\TH:i:s\Z'));
 
+    $dom = $this->createDOMDocument($dom->saveXML());
+
     // save it and clear the cache for this variant
     $dom->save($filename);
     if ($this->cache)
@@ -223,7 +233,7 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
     }
 
     // create a new dom, import the existing xml
-    $dom = self::createDOMDocument();
+    $dom = $this->createDOMDocument();
     $dom->load($filename);
 
     // find the body element
@@ -326,7 +336,7 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
     }
 
     // create a new dom, import the existing xml
-    $dom = self::createDOMDocument();
+    $dom = $this->createDOMDocument();
     $dom->load($filename);
 
     // find the body element
@@ -391,7 +401,8 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
       throw new sfException(sprintf("Unable to create directory %s.", $dir));
     }
 
-    file_put_contents($file, $this->getTemplate($catalogue));
+    $dom = $this->createDOMDocument($this->getTemplate($catalogue));
+    file_put_contents($file, $dom->saveXML());
     chmod($file, 0777);
 
     return array($variant, $file);
