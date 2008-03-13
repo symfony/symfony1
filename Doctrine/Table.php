@@ -397,7 +397,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                 break;
             case 1:
                 foreach ($this->_identifier as $pk) {
-                    $e = $this->getColumnDefinition($this->getColumnName($pk));
+                    $e = $this->getDefinitionOf($pk);
 
                     $found = false;
 
@@ -1963,7 +1963,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
             $fieldName = Doctrine::tableize($by);
             $hydrationMode = isset($arguments[1]) ? $arguments[1]:null;
             
-            if ($this->hasColumn($fieldName)) {
+            if ($this->hasColumn($this->getColumnName($fieldName))) {
                 return $this->$method($fieldName, $arguments[0], $hydrationMode);
             } else if ($this->hasRelation($by)) {
                 $relation = $this->getRelation($by);
