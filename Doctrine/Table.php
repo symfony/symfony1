@@ -397,8 +397,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                 break;
             case 1:
                 foreach ($this->_identifier as $pk) {
-                    $columnName = $this->getColumnName($pk);
-                    $e = $this->_columns[$columnName];
+                    $e = $this->getColumnDefinition($this->getColumnName($pk));
 
                     $found = false;
 
@@ -1085,7 +1084,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      */
     public function hasColumn($columnName)
     {
-        return isset($this->_columns[$columnName]);
+        return isset($this->_columns[strtolower($columnName)]);
     }
     
     /**
@@ -1534,7 +1533,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      */
     public function removeColumn($fieldName)
     {
-    	$columnName = array_search($fieldName, $this->_fieldNames);
+    	$columnName = $this->getColumnName($fieldName);
 
         unset($this->_fieldNames[$columnName]);
 
