@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(127, new lime_output_color());
+$t = new lime_test(129, new lime_output_color());
 
 class sfPatternRoutingTest extends sfPatternRouting
 {
