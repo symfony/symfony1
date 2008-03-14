@@ -19,6 +19,31 @@
 class sfDebug
 {
   /**
+   * Returns symfony information as an array.
+   *
+   * @return array An array of symfony information
+   */
+  public static function symfonyInfoAsArray()
+  {
+    $values = array(
+      'version' => SYMFONY_VERSION,
+      'path'    => sfConfig::get('sf_symfony_lib_dir'),
+      ),
+    );
+
+    // assign extension version
+    if ($values['extensions'])
+    {
+      foreach($values['extensions'] as $key => $extension)
+      {
+        $values['extensions'][$key] = phpversion($extension) ? sprintf('%s (%s)', $extension, phpversion($extension)) : $extension;
+      }
+    }
+
+    return $values;
+  }
+
+  /**
    * Returns PHP information as an array.
    *
    * @return array An array of php information
