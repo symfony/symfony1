@@ -83,7 +83,7 @@ class sfYaml
 
       $spyc = new Spyc();
 
-      return $spyc->dump($array);
+      return $spyc->dump($array, false, 0);
     }
   }
 
