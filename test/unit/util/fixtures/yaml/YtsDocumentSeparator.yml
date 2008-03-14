@@ -1,5 +1,6 @@
 --- %YAML:1.0 
 test: Trailing Document Separator 
+todo: true
 brief: > 
     You can separate YAML documents 
     with a string of three dashes. 
@@ -18,6 +19,7 @@ ruby: |
 
 --- 
 test: Leading Document Separator 
+todo: true
 brief: >
     You can explicity give an opening 
     document separator to your YAML stream. 
@@ -37,6 +39,7 @@ ruby: |
 
 --- 
 test: YAML Header 
+todo: true
 brief: > 
     The opening separator can contain directives 
     to the YAML parser, such as the version 
@@ -45,13 +48,8 @@ yaml: |
     --- %YAML:1.0 
     foo: 1 
     bar: 2 
-python: | 
-    [ 
-        { 'foo': 1, 'bar': 2 } 
-    ] 
-ruby: | 
-    y = YAML::Stream.new 
-    y.add( { 'foo' => 1, 'bar' => 2 } ) 
+php: | 
+    array('foo' => 1, 'bar' => 2)
 documents: 1 
  
 --- 
@@ -64,12 +62,8 @@ brief: >
 yaml: | 
     foo: |
         ---
-python: | 
-    [ 
-        { 'foo': "---\n" } 
-    ] 
-ruby: | 
-    { 'foo' => "---\n" } 
+php: | 
+    array('foo' => "---\n")
  
 --- 
 test: Multiple Document Separators in Block 
@@ -84,19 +78,8 @@ yaml: |
         yo: baz
     bar: | 
         fooness
-python: | 
-    [ 
-        {  'foo': flushLeft(""" 
-            --- 
-            foo: bar 
-            --- 
-            yo: baz 
-            """), 
-           'bar': "fooness\n" 
-        } 
-    ] 
-ruby: | 
-    { 
+php: | 
+    array( 
        'foo' => "---\nfoo: bar\n---\nyo: baz\n", 
        'bar' => "fooness\n" 
-    } 
+    )

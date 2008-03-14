@@ -5,24 +5,8 @@ yaml: |
   - Mark McGwire 
   - Sammy Sosa 
   - Ken Griffey 
-perl: | 
-  [ 'Mark McGwire', 'Sammy Sosa', 'Ken Griffey' ] 
-python: | 
-  [ ['Mark McGwire', 'Sammy Sosa', 'Ken Griffey'] ] 
-ruby: | 
-  [ 'Mark McGwire', 'Sammy Sosa', 'Ken Griffey' ] 
-syck: |
-  struct test_node seq[] = {
-      { T_STR, 0, "Mark McGwire" },
-      { T_STR, 0, "Sammy Sosa" },
-      { T_STR, 0, "Ken Griffey" },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_SEQ, 0, 0, seq },
-      end_node
-  };
- 
+php: | 
+  array('Mark McGwire', 'Sammy Sosa', 'Ken Griffey')
 --- 
 test: Mapping of scalars to scalars 
 spec: 2.2
@@ -30,27 +14,8 @@ yaml: |
   hr:  65 
   avg: 0.278 
   rbi: 147 
-perl: | 
-  { hr => 65, avg => 0.278, rbi => 147 } 
-python: | 
-  [ {'hr': 65, 'avg': .278, 'rbi': 147} ] 
-ruby: | 
-  { 'hr' => 65, 'avg' => 0.278, 'rbi' => 147 } 
-syck: |
-  struct test_node map[] = {
-      { T_STR, 0, "hr" },
-          { T_STR, 0, "65" },
-      { T_STR, 0, "avg" },
-          { T_STR, 0, "0.278" },
-      { T_STR, 0, "rbi" },
-          { T_STR, 0, "147" },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, 0, 0, map },
-      end_node
-  };
- 
+php: | 
+  array('hr' => 65, 'avg' => 0.278, 'rbi' => 147)
 --- 
 test: Mapping of scalars to sequences 
 spec: 2.3
@@ -63,58 +28,14 @@ yaml: |
        - New York Mets 
        - Chicago Cubs 
        - Atlanta Braves 
-perl: | 
-    { american =>  
-        [ 'Boston Red Sox', 'Detroit Tigers',  
-          'New York Yankees' ], 
-      national => 
-        [ 'New York Mets', 'Chicago Cubs',  
-          'Atlanta Braves' ]  
-    } 
-python: | 
-    [ 
-    { 
-    'american':  
-        ['Boston Red Sox', 'Detroit Tigers',  
-        'New York Yankees'], 
-    'national': 
-        ['New York Mets', 'Chicago Cubs', 
-        'Atlanta Braves'] 
-    } 
-    ] 
-ruby: | 
-    { 'american' =>  
-        [ 'Boston Red Sox', 'Detroit Tigers',  
-          'New York Yankees' ], 
+php: | 
+    array('american' =>  
+        array( 'Boston Red Sox', 'Detroit Tigers',  
+          'New York Yankees' ), 
       'national' => 
-        [ 'New York Mets', 'Chicago Cubs',  
-          'Atlanta Braves' ]  
-    } 
-syck: |
-  struct test_node seq1[] = {
-      { T_STR, 0, "Boston Red Sox" },
-      { T_STR, 0, "Detroit Tigers" },
-      { T_STR, 0, "New York Yankees" },
-      end_node
-  };
-  struct test_node seq2[] = {
-      { T_STR, 0, "New York Mets" },
-      { T_STR, 0, "Chicago Cubs" },
-      { T_STR, 0, "Atlanta Braves" },
-      end_node
-  };
-  struct test_node map[] = {
-      { T_STR, 0, "american" },
-          { T_SEQ, 0, 0, seq1 },
-      { T_STR, 0, "national" },
-          { T_SEQ, 0, 0, seq2 },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, 0, 0, map },
-      end_node
-  };
- 
+        array( 'New York Mets', 'Chicago Cubs',  
+          'Atlanta Braves' )
+    ) 
 --- 
 test: Sequence of mappings 
 spec: 2.4
@@ -127,60 +48,14 @@ yaml: |
       name: Sammy Sosa 
       hr:   63 
       avg:  0.288 
-perl: | 
-    [ 
-      {name => 'Mark McGwire', hr => 65, avg => 0.278}, 
-      {name => 'Sammy Sosa',   hr => 63, avg => 0.288} 
-    ] 
-python: | 
-    [[  
-        { 
-        'name': 'Mark McGwire', 
-        'hr': 65, 
-        'avg': 0.278
-        }, 
-        { 
-        'name': 'Sammy Sosa', 
-        'hr': 63, 
-        'avg': 0.288
-        } 
-    ]] 
-ruby: | 
-    [ 
-      {'name' => 'Mark McGwire', 'hr' => 65, 'avg' => 0.278}, 
-      {'name' => 'Sammy Sosa', 'hr' => 63, 'avg' => 0.288} 
-    ] 
-syck: |
-  struct test_node map1[] = {
-      { T_STR, 0, "name" },
-          { T_STR, 0, "Mark McGwire" },
-      { T_STR, 0, "hr" },
-          { T_STR, 0, "65" },
-      { T_STR, 0, "avg" },
-          { T_STR, 0, "0.278" },
-      end_node
-  };
-  struct test_node map2[] = {
-      { T_STR, 0, "name" },
-          { T_STR, 0, "Sammy Sosa" },
-      { T_STR, 0, "hr" },
-          { T_STR, 0, "63" },
-      { T_STR, 0, "avg" },
-          { T_STR, 0, "0.288" },
-      end_node
-  };
-  struct test_node seq[] = {
-      { T_MAP, 0, 0, map1 },
-      { T_MAP, 0, 0, map2 },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_SEQ, 0, 0, seq },
-      end_node
-  };
- 
+php: | 
+    array( 
+      array('name' => 'Mark McGwire', 'hr' => 65, 'avg' => 0.278), 
+      array('name' => 'Sammy Sosa', 'hr' => 63, 'avg' => 0.288) 
+    )
 --- 
 test: Legacy A5 
+todo: true
 spec: legacy_A5 
 yaml: | 
     ? 
@@ -253,6 +128,7 @@ syck: |
  
 --- 
 test: Sequence of sequences 
+todo: true
 spec: 2.5
 yaml: | 
   - [ name         , hr , avg   ] 
@@ -308,6 +184,7 @@ syck: |
  
 --- 
 test: Mapping of mappings 
+todo: true
 spec: 2.6
 yaml: | 
   Mark McGwire: {hr: 65, avg: 0.278}
@@ -364,6 +241,7 @@ syck: |
 --- 
 test: Two documents in a stream each with a
       leading comment
+todo: true
 spec: 2.7 
 yaml: | 
   # Ranking of 1998 home runs
@@ -409,6 +287,7 @@ documents: 2
  
 --- 
 test: Play by play feed from a game
+todo: true
 spec: 2.8
 yaml: | 
   ---
@@ -457,6 +336,7 @@ documents: 2
  
 --- 
 test: Single document with two comments 
+todo: true
 spec: 2.9
 yaml: | 
   hr: # 1998 hr ranking 
@@ -506,6 +386,7 @@ syck: |
  
 --- 
 test: Node for Sammy Sosa appears twice in this document 
+todo: true
 spec: 2.10 
 yaml: | 
    ---
@@ -558,6 +439,7 @@ syck: |
  
 --- 
 test: Mapping between sequences 
+todo: true
 spec: 2.11
 yaml: | 
    ? # PLAY SCHEDULE 
@@ -610,6 +492,7 @@ syck: |
  
 --- 
 test: Sequence key shortcut 
+todo: true
 spec: 2.12
 yaml: | 
   ---
@@ -675,6 +558,7 @@ syck: |
  
 --- 
 test: Literal perserves newlines 
+todo: true
 spec: 2.13
 yaml: | 
   # ASCII Art
@@ -702,6 +586,7 @@ syck: |
  
 --- 
 test: Folded treats newlines as a space 
+todo: true
 spec: 2.14
 yaml: | 
   ---
@@ -722,6 +607,7 @@ syck: |
  
 --- 
 test: Newlines preserved for indented and blank lines 
+todo: true
 spec: 2.15
 yaml: | 
   --- > 

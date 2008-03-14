@@ -1,6 +1,5 @@
 --- %YAML:1.0 
 test: Strings 
-todo: true
 brief: > 
     Any group of characters beginning with an 
     alphabetic or numeric character is a string, 
@@ -36,7 +35,6 @@ php: |
     )
 --- 
 test: Indicators in Strings 
-todo: true
 brief: > 
     Be careful using indicators in strings.  In particular, 
     the comma, colon, and pound sign must be used carefully. 
@@ -52,7 +50,6 @@ php: |
     )
 --- 
 test: Forcing Strings 
-todo: true
 brief: > 
     Any YAML type can be forced into a string using the 
     explicit !str method. 
@@ -66,7 +63,6 @@ php: |
     )
 --- 
 test: Single-quoted Strings 
-todo: true
 brief: > 
     You can also enclose your strings within single quotes, 
     which allows use of slashes, colons, and other indicators 
@@ -85,7 +81,6 @@ php: |
     )
 --- 
 test: Double-quoted Strings 
-todo: true
 brief: > 
     Enclosing strings in double quotes allows you 
     to use escapings to represent ASCII and 
@@ -171,7 +166,6 @@ php: |
     )
 --- 
 test: Integers 
-todo: true
 brief: > 
     An integer is a series of numbers, optionally 
     starting with a positive or negative sign.  Integers 
@@ -204,7 +198,6 @@ php: |
     )
 --- 
 test: Floats 
-todo: true
 brief: > 
      Floats are represented by numbers with decimals, 
      allowing for scientific notation, as well as 
@@ -232,8 +225,8 @@ yaml: |
     space seperated: 2001-12-14 21:59:43.10 -05:00 
 php: | 
     array(
-      'iso8601' => YAML::mktime( 2001, 12, 14, 21, 59, 43, 0.10, "-05:00" ), 
-      'space seperated' => YAML::mktime( 2001, 12, 14, 21, 59, 43, 0.10, "-05:00" ) 
+      'iso8601' => mktime( 2001, 12, 14, 21, 59, 43, 0.10, "-05:00" ), 
+      'space seperated' => mktime( 2001, 12, 14, 21, 59, 43, 0.10, "-05:00" ) 
     )
 --- 
 test: Date 
@@ -244,4 +237,4 @@ brief: >
 yaml: |
     1976-07-31
 php: | 
-    Date.new( 1976, 7, 31 ) 
+    date( 1976, 7, 31 ) 

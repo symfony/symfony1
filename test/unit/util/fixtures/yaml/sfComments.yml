@@ -8,3 +8,16 @@ yaml: |
     ex3: 'foo # bar' # comment
 php: | 
     array('ex1' => 'foo # bar', 'ex2' => 'foo # bar', 'ex3' => 'foo # bar')
+---
+test: Comments in the middle
+brief: >
+  Comments in the middle
+yaml: |
+    foo:
+    # some comment
+    # some comment
+      bar: foo
+    # some comment
+    # some comment
+php: |
+    array('foo' => array('bar' => 'foo'))

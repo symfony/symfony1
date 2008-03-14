@@ -90,7 +90,7 @@ EOF;
     }
     else
     {
-      fwrite(STDOUT, sfYaml::dump($data->getData('all', $options['connection'])));
+      fwrite(STDOUT, sfYaml::dump($data->getData('all', $options['connection']), 3));
     }
   }
 }

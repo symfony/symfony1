@@ -282,7 +282,7 @@ class sfPropelData extends sfData
     // save to file(s)
     if (!is_dir($directory_or_file))
     {
-      file_put_contents($directory_or_file, sfYaml::dump($dumpData));
+      file_put_contents($directory_or_file, sfYaml::dump($dumpData, 3));
     }
     else
     {
@@ -294,7 +294,7 @@ class sfPropelData extends sfData
           continue;
         }
 
-        file_put_contents(sprintf("%s/%03d-%s.yml", $directory_or_file, ++$i, $tableName), sfYaml::dump(array($tableName => $dumpData[$tableName])));
+        file_put_contents(sprintf("%s/%03d-%s.yml", $directory_or_file, ++$i, $tableName), sfYaml::dump(array($tableName => $dumpData[$tableName]), 3));
       }
     }
   }

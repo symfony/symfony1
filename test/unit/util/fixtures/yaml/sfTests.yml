@@ -6,13 +6,13 @@ yaml: |
     stripped_title: { name: "foo bar", help: "bar foo" }
 php: | 
     array('stripped_title' => array('name' => 'foo bar', 'help' => 'bar foo'))
-
+---
 test: Empty sequence
 yaml: | 
     foo: [ ]
 php: |
     array('foo' => array())
-
+---
 test: Inline string parsing
 brief: >
     Inline string parsing
@@ -20,3 +20,43 @@ yaml: |
     test: ['complex: string', 'another [string]']
 php: |
     array('test' => array('complex: string', 'another [string]'))
+---
+test: Boolean
+brief: >
+    Boolean
+yaml: |
+    - false
+    - -
+    - off
+    - no
+    - true
+    - +
+    - on
+    - yes
+    - 'false'
+    - '-'
+    - 'off'
+    - 'no'
+    - 'true'
+    - '+'
+    - 'on'
+    - 'yes'
+php: |
+    array(
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      'false',
+      '-',
+      'off',
+      'no',
+      'true',
+      '+',
+      'on',
+      'yes',
+    )

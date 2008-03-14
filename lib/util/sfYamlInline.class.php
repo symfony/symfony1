@@ -80,6 +80,10 @@ class sfYamlInline
         return "''";
       case preg_match(self::getTimestampRegex(), $value):
         return "'$value'";
+      case in_array(strtolower($value), array('true', 'on', '+', 'yes', 'y')):
+        return "'$value'";
+      case in_array(strtolower($value), array('false', 'off', '-', 'no', 'n')):
+        return "'$value'";
       default:
         return $value;
     }

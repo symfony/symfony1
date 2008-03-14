@@ -48,7 +48,7 @@ php: |
       )
     )
 --- 
-test: Commas in Values 
+test: Commas in Values (not in the spec!)
 todo: true
 brief: > 
     List items in collections are delimited by commas, but  

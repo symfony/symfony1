@@ -85,7 +85,7 @@ $testsForDump = array(
   '[\'foo,bar\', \'foo bar\']' => array('foo,bar', 'foo bar'),
 
   // mappings
-  '{ foo: bar, bar: foo, false: false, null: null, integer: 12 }' => array('foo' => 'bar', 'bar' => 'foo', 'false' => false, 'null' => null, 'integer' => 12),
+  '{ foo: bar, bar: foo, \'false\': false, null: null, integer: 12 }' => array('foo' => 'bar', 'bar' => 'foo', 'false' => false, 'null' => null, 'integer' => 12),
   '{ foo: bar, bar: \'foo: bar\' }' => array('foo' => 'bar', 'bar' => 'foo: bar'),
 
   // nested sequences and mappings

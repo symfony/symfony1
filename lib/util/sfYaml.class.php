@@ -44,7 +44,7 @@ class sfYaml
       return $input;
     }
 
-    // syck is prefered over spyc
+    // syck is prefered over sfYamlParser
     if (function_exists('syck_load'))
     {
       $retval = syck_load($input);
@@ -53,11 +53,10 @@ class sfYaml
     }
     else
     {
-      require_once(dirname(__FILE__).'/Spyc.class.php');
+      require_once dirname(__FILE__).'/sfYamlParser.class.php';
+      $yaml = new sfYamlParser();
 
-      $spyc = new Spyc();
-
-      return $spyc->load($input);
+      return $yaml->parse($input);
     }
   }
 
@@ -71,7 +70,7 @@ class sfYaml
    *
    * @return string
    */
-  public static function dump($array)
+  public static function dump($array, $inline = 2)
   {
     if (function_exists('syck_dump'))
     {
@@ -79,11 +78,10 @@ class sfYaml
     }
     else
     {
-      require_once(dirname(__FILE__).'/Spyc.class.php');
+      require_once dirname(__FILE__).'/sfYamlDumper.class.php';
+      $yaml = new sfYamlDumper();
 
-      $spyc = new Spyc();
-
-      return $spyc->dump($array, false, 0);
+      return $yaml->dump($array, $inline);
     }
   }
 

@@ -2,18 +2,21 @@
 
 /*
  * This file is part of the symfony package.
- * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
+require_once(dirname(__FILE__).'/../../../lib/util/sfYamlParser.class.php');
 
-$t = new lime_test(46, new lime_output_color());
+$t = new lime_test(64, new lime_output_color());
 
-$path = dirname(__FILE__).'/fixtures/Spyc';
-$files = Spyc::YAMLLoad($path.'/index.yml');
+$parser = new sfYamlParser();
+
+$path = dirname(__FILE__).'/fixtures/yaml';
+$files = $parser->parse(file_get_contents($path.'/index.yml'));
 foreach ($files as $file)
 {
   $t->diag($file);
@@ -28,15 +31,16 @@ foreach ($files as $file)
       continue;
     }
 
-    $test = Spyc::YAMLLoad($yaml);
-
+    $test = $parser->parse($yaml);
     if (isset($test['todo']) && $test['todo'])
     {
       $t->todo($test['test']);
     }
     else
     {
-      $t->is(var_export(Spyc::YAMLLoad($test['yaml']), true), var_export(eval('return '.trim($test['php']).';'), true), $test['test']);
+      $expected = var_export(eval('return '.trim($test['php']).';'), true);
+
+      $t->is(var_export($parser->parse($test['yaml']), true), $expected, $test['test'].' (parser)');
     }
   }
 }
@@ -53,10 +57,10 @@ foreach ($yamls as $yaml)
 {
   try
   {
-    $content = Spyc::YAMLLoad($yaml);
+    $content = $parser->parse($yaml);
     $t->fail('YAML files must not contain tabs');
   }
-  catch (Exception $e)
+  catch (InvalidArgumentException $e)
   {
     $t->pass('YAML files must not contain tabs');
   }

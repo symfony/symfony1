@@ -85,7 +85,7 @@ EOF;
       'param' => array_merge(isset($config[$options['env']][$options['name']]['param']) ? $config[$options['env']][$options['name']]['param'] : array(), array('dsn' => $arguments['dsn'])),
     );
 
-    file_put_contents($file, sfYaml::dump($config));
+    file_put_contents($file, sfYaml::dump($config, 4));
 
     // update propel.ini
     if (

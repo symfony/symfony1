@@ -11,13 +11,8 @@ yaml: |
     this: |
         Foo
         Bar
-
-ruby: | 
-    { 'this' => "Foo\nBar\n" } 
-python: | 
-    [  
-        { 'this': "Foo\nBar\n" } 
-    ] 
+php: | 
+    array('this' => "Foo\nBar\n")
 --- 
 test: The '+' indicator 
 brief: > 
@@ -32,18 +27,12 @@ yaml: |
 
 
     dummy: value
-ruby: | 
-    { 
+php: | 
+    array( 
         'normal' => "extra new lines not kept\n", 
         'preserving' => "extra new lines are kept\n\n\n", 
         'dummy' => 'value' 
-    } 
-python: | 
-    [ { 
-        'normal': "extra new lines not kept\n", 
-        'preserving': "extra new lines are kept\n\n\n", 
-        'dummy': 'value' 
-    } ] 
+    ) 
 --- 
 test: Three trailing newlines in literals 
 brief: > 
@@ -74,29 +63,18 @@ yaml: |
 
 
     same as "kept" above: "This has four newlines.\n\n\n\n"
-ruby: |
-    {  
+php: |
+    array(  
       'clipped' => "This has one newline.\n", 
       'same as "clipped" above' => "This has one newline.\n", 
       'stripped' => 'This has no newline.', 
       'same as "stripped" above' => 'This has no newline.', 
       'kept' => "This has four newlines.\n\n\n\n", 
       'same as "kept" above' => "This has four newlines.\n\n\n\n" 
-    } 
-not_yet_in_python: | 
-    [ 
-    {  
-      'clipped': "This has one newline.\n", 
-      'same as "clipped" above': "This has one newline.\n", 
-      'stripped': 'This has no newline.', 
-      'same as "stripped" above': 'This has no newline.', 
-      'kept': "This has four newlines.\n\n\n\n", 
-      'same as "kept" above': "This has four newlines.\n\n\n\n" 
-    } 
-    ] 
- 
+    )
 --- 
 test: Extra trailing newlines with spaces
+todo: true
 brief: >
     Normally, only a single newline is kept 
     from the end of a literal block, unless the 
@@ -116,9 +94,9 @@ yaml: |
         Foo
 
           
-ruby: | 
-    { 'this' => "Foo\n\n  \n",  
-      'kept' => "Foo\n\n  \n" } 
+php: | 
+    array('this' => "Foo\n\n  \n",  
+      'kept' => "Foo\n\n  \n" )
  
 --- 
 test: Folded Block in a Sequence 
@@ -136,22 +114,13 @@ yaml: |
         the beauty of yaml?
         hmm
     - dog
-python: | 
-    [ 
-        [ 
-            'apple',  
-            'banana',  
-            "can't you see the beauty of yaml? hmm\n", 
-            'dog' 
-        ] 
-    ] 
-ruby: | 
-    [ 
+php: | 
+    array( 
         'apple',  
         'banana',  
         "can't you see the beauty of yaml? hmm\n", 
         'dog' 
-    ] 
+    )
 --- 
 test: Folded Block as a Mapping Value 
 brief: > 
@@ -165,19 +134,11 @@ yaml: |
         year was crippled
         by a knee injury.
     source: espn
-python: |
-    [ 
-        {  
-            'quote': "Mark McGwire's year was crippled by a knee injury.\n", 
-            'source': 'espn' 
-        } 
-    ] 
-ruby: | 
-    {  
+php: |
+    array( 
         'quote' => "Mark McGwire's year was crippled by a knee injury.\n", 
         'source' => 'espn' 
-    } 
- 
+    ) 
 --- 
 test: Three trailing newlines in folded blocks 
 brief: > 
@@ -204,12 +165,12 @@ yaml: |
 
 
     same as "kept" above: "This has four newlines.\n\n\n\n"
-ruby: |
-    {  
+php: |
+    array(  
       'clipped' => "This has one newline.\n", 
       'same as "clipped" above' => "This has one newline.\n", 
       'stripped' => 'This has no newline.', 
       'same as "stripped" above' => 'This has no newline.', 
       'kept' => "This has four newlines.\n\n\n\n", 
       'same as "kept" above' => "This has four newlines.\n\n\n\n" 
-    } 
+    )

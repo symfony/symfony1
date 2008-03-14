@@ -1,5 +1,6 @@
 --- 
 test: Missing value for hash item 
+todo: true
 brief: | 
     Third item in this hash doesn't have a value 
 yaml: | 
@@ -20,4 +21,6 @@ yaml: |
     foo: 
     firstline: 1 
     secondline: 2 
-python-error: Inadequate indentation 
+php: |
+  array('foo' => null, 'firstline' => 1, 'secondline' => 2)
+
