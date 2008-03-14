@@ -36,7 +36,20 @@ class sfYaml
    */
   public static function load($input)
   {
-    $input = self::getIncludeContents($input);
+    $file = '';
+
+    // if input is a file, process it
+    if (strpos($input, "\n") === false && is_file($input))
+    {
+      $file = $input;
+
+      ob_start();
+      $retval = include($input);
+      $content = ob_get_clean();
+
+      // if an array is returned by the config file assume it's in plain php form else in yaml
+      $input = is_array($retval) ? $retval : $content;
+    }
 
     // if an array is returned by the config file assume it's in plain php form else in yaml
     if (is_array($input))
@@ -56,7 +69,16 @@ class sfYaml
       require_once dirname(__FILE__).'/sfYamlParser.class.php';
       $yaml = new sfYamlParser();
 
-      return $yaml->parse($input);
+      try
+      {
+        $ret = $yaml->parse($input);
+      }
+      catch (Exception $e)
+      {
+        throw new InvalidArgumentException(sprintf('Unable to parse %s: %s', $file ? sprintf('file "%s"', $file) : 'string', $e->getMessage()));
+      }
+
+      return $ret;
     }
   }
 
@@ -83,30 +105,6 @@ class sfYaml
 
       return $yaml->dump($array, $inline);
     }
-  }
-
-  /**
-   * Get contents of input.
-   *
-   * @param string $input
-   *
-   * @return string
-   */
-  protected static function getIncludeContents($input)
-  {
-    // if input is a file, process it
-    if (strpos($input, "\n") === false && is_file($input))
-    {
-      ob_start();
-      $retval = include($input);
-      $contents = ob_get_clean();
-
-      // if an array is returned by the config file assume it's in plain php form else in yaml
-      return is_array($retval) ? $retval : $contents;
-    }
-
-    // else return original input
-    return $input;
   }
 }
 
