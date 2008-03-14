@@ -25,21 +25,10 @@ class sfDebug
    */
   public static function symfonyInfoAsArray()
   {
-    $values = array(
+    return array(
       'version' => SYMFONY_VERSION,
       'path'    => sfConfig::get('sf_symfony_lib_dir'),
     );
-
-    // assign extension version
-    if ($values['extensions'])
-    {
-      foreach($values['extensions'] as $key => $extension)
-      {
-        $values['extensions'][$key] = phpversion($extension) ? sprintf('%s (%s)', $extension, phpversion($extension)) : $extension;
-      }
-    }
-
-    return $values;
   }
 
   /**
