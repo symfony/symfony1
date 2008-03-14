@@ -61,6 +61,7 @@ class Doctrine_Connection_Mysql_Exception extends Doctrine_Connection_Exception
                                       1146 => Doctrine::ERR_NOSUCHTABLE,
                                       1216 => Doctrine::ERR_CONSTRAINT,
                                       1217 => Doctrine::ERR_CONSTRAINT,
+                                      1451 => Doctrine::ERR_CONSTRAINT,
                                       );
 
     /**
