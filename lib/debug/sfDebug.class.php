@@ -28,7 +28,6 @@ class sfDebug
     $values = array(
       'version' => SYMFONY_VERSION,
       'path'    => sfConfig::get('sf_symfony_lib_dir'),
-      ),
     );
 
     // assign extension version
