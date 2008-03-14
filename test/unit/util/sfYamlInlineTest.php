@@ -33,8 +33,8 @@ $testsForLoad = array(
   '2007-10-30T02:59:43Z' => gmmktime(2, 59, 43, 10, 30, 2007),
   '2007-10-30 02:59:43 Z' => gmmktime(2, 59, 43, 10, 30, 2007),
 
-  '"a \"string\" with \'quoted strings inside\'"' => 'a "string" with \'quoted strings inside\'',
-  "'a \"string\" with \'quoted strings inside\''" => 'a "string" with \'quoted strings inside\'',
+  '"a \\"string\\" with \'quoted strings inside\'"' => 'a "string" with \'quoted strings inside\'',
+  "'a \"string\" with ''quoted strings inside'''" => 'a "string" with \'quoted strings inside\'',
 
   // sequences
   '[foo, bar, false, null, 12]' => array('foo', 'bar', false, null, 12),
@@ -78,8 +78,7 @@ $testsForDump = array(
   '.Inf' => -log(0),
   '-.Inf' => log(0),
 
-  "'a \"string\" with \'quoted strings inside\''" => 'a "string" with \'quoted strings inside\'',
-  "'a \"string\" with \'quoted strings inside\''" => 'a "string" with \'quoted strings inside\'',
+  "'a \"string\" with ''quoted strings inside'''" => 'a "string" with \'quoted strings inside\'',
 
   // sequences
   '[foo, bar, false, null, 12]' => array('foo', 'bar', false, null, 12),
