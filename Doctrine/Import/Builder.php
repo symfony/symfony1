@@ -750,7 +750,6 @@ END;
             if ($definition['is_package']) {
                 $e = explode('.', $definition['package']);
                 $definition['package_name'] = $e[0];
-                unset($e[0]);
                 
                 $definition['package_path'] = ! empty($e) ? implode(DIRECTORY_SEPARATOR, $e):$definition['package_name'];
             }
