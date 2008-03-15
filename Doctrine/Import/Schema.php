@@ -419,21 +419,7 @@ class Doctrine_Import_Schema
                     $relation['local'] = isset($relation['local']) ? $relation['local']:Doctrine::tableize($name) . '_id';
                     $relation['foreign'] = isset($relation['foreign']) ? $relation['foreign']:Doctrine::tableize($class) . '_id';
                 } else {
-                    if ( ! isset($relation['local'])) {
-                        $classColumnName = Doctrine::tableize($relation['class']) . '_id';
-                        $aliasColumnName = Doctrine::tableize($relation['alias']) . '_id';
-                        
-                        if (isset($properties['columns'][$classColumnName])) {
-                            $local = $classColumnName;
-                        } else if (isset($properties['columns'][$aliasColumnName])) {
-                            $local = $aliasColumnName;
-                        } else {
-                            throw new Doctrine_Import_Exception('Could not guess local column name for relation: ' . $name);
-                        }
-                        
-                        $relation['local'] = $local;
-                    }
-                    
+                    $relation['local'] = isset($relation['local']) ? $relation['local']:Doctrine::tableize($relation['alias']) . '_id';
                     $relation['foreign'] = isset($relation['foreign']) ? $relation['foreign']:'id';
                 }
                 
