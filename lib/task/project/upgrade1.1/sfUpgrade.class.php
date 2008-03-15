@@ -40,7 +40,7 @@ abstract class sfUpgrade extends sfBaseTask
    */
   protected function getFinder($type)
   {
-    return sfFinder::type($type)->prune('upgrade1.1');
+    return sfFinder::type($type)->prune('symfony')->discard('symfony');
   }
 
   /**
