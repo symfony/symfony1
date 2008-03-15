@@ -715,7 +715,11 @@ final class Doctrine
         $directory = '/tmp/tmp_doctrine_models';
 
         $options['generateBaseClasses'] = isset($options['generateBaseClasses']) ? $options['generateBaseClasses']:false;
-        Doctrine::generateModelsFromDb($directory, $databases, $options);
+        $result = Doctrine::generateModelsFromDb($directory, $databases, $options);
+
+        if ( empty($result) && ! is_dir($directory)) {
+            throw new Doctrine_Exception('No models generated from your databases');
+        }
 
         $export = new Doctrine_Export_Schema();
 
