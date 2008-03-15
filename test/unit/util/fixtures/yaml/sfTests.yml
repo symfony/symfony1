@@ -60,3 +60,17 @@ php: |
       'on',
       'yes',
     )
+---
+test: Empty lines in folded blocks
+brief: > 
+  Empty lines in folded blocks
+yaml: |
+  foo:
+    bar: |
+      foo
+      
+
+        
+      bar
+php: |
+  array('foo' => array('bar' => "foo\n\n\n  \nbar\n"))

@@ -160,6 +160,11 @@ class sfYamlParser
     {
       if ($this->isCurrentLineEmpty())
       {
+        if (!$this->isCurrentLineComment())
+        {
+          $data[] = substr($this->currentLine, $newIndent);
+        }
+
         continue;
       }
 
@@ -270,7 +275,7 @@ class sfYamlParser
       }
       else if (preg_match('#^(?P<text> *)$#', $this->currentLine, $matches))
       {
-        $text .= $matches['text']."\n";
+        $text .= preg_replace('#^ {1,'.strlen($textIndent).'}#', '', $matches['text'])."\n";
       }
       else
       {
@@ -339,7 +344,17 @@ class sfYamlParser
    */
   protected function isCurrentLineEmpty()
   {
-    return  '' == trim($this->currentLine, ' ') || 0 === strpos(ltrim($this->currentLine, ' '), '#');
+    return '' == trim($this->currentLine, ' ') || $this->isCurrentLineComment();
+  }
+
+  /**
+   * Returns true if the current line is a comment line.
+   *
+   * @return Boolean Returns true if the current line is a comment line, false otherwise
+   */
+  protected function isCurrentLineComment()
+  {
+    return 0 === strpos(ltrim($this->currentLine, ' '), '#');
   }
 
   /**
