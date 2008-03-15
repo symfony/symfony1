@@ -1401,18 +1401,18 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
             $tmpConnection->export->createDatabase($info['dbname']);
         } catch (Exception $e) {}
 
+        // Close the temporary connection used to issue the drop database command
+        $this->getManager()->closeConnection($tmpConnection);
+
+        // Re-create Doctrine style dsn
+        $dsn = $info['scheme'] . '://' . $this->getOption('username') . ':' . $this->getOption('password') . '@' . $info['host'] . '/' . $info['dbname'];
+
+        // Re-open connection with the newly created database
+        $this->getManager()->openConnection($dsn, $this->getName(), true);
+
         if (isset($e)) {
             return $e;
         } else {
-            // Close the temporary connection used to issue the drop database command
-            $this->getManager()->closeConnection($tmpConnection);
-
-            // Re-create Doctrine style dsn
-            $dsn = $info['scheme'] . '://' . $this->getOption('username') . ':' . $this->getOption('password') . '@' . $info['host'] . '/' . $info['dbname'];
-
-            // Re-open connection with the newly created database
-            $this->getManager()->openConnection($dsn, $this->getName(), true);
-
             return 'Successfully created database for connection "' . $this->getName() . '" named "' . $info['dbname'] . '"';
         }
     }
@@ -1441,18 +1441,18 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
             $tmpConnection->export->dropDatabase($info['dbname']);
         } catch (Exception $e) {}
 
+        // Close the temporary connection used to issue the drop database command
+        $this->getManager()->closeConnection($tmpConnection);
+
+        // Re-create Doctrine style dsn
+        $dsn = $info['scheme'] . '://' . $this->getOption('username') . ':' . $this->getOption('password') . '@' . $info['host'] . '/' . $info['dbname'];
+
+        // Re-open connection with the newly created database
+        $this->getManager()->openConnection($dsn, $this->getName(), true);
+
         if (isset($e)) {
             return $e;
         } else {
-            // Close the temporary connection used to issue the drop database command
-            $this->getManager()->closeConnection($tmpConnection);
-
-            // Re-create Doctrine style dsn
-            $dsn = $info['scheme'] . '://' . $this->getOption('username') . ':' . $this->getOption('password') . '@' . $info['host'] . '/' . $info['dbname'];
-
-            // Re-open connection with the newly created database
-            $this->getManager()->openConnection($dsn, $this->getName(), true);
-
             return 'Successfully dropped database for connection "' . $this->getName() . '" named "' . $info['dbname'] . '"';
         }
     }
