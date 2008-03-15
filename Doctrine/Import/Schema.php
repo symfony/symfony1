@@ -69,7 +69,56 @@ class Doctrine_Import_Schema
                                 'baseClassesPrefix'     =>  'Base',
                                 'baseClassesDirectory'  =>  'generated',
                                 'baseClassName'         =>  'Doctrine_Record');
-    
+
+    /**
+     * _validation
+     *
+     * Array used to validate schema element.
+     * See: _validateSchemaElement
+     *
+     * @var array
+     */
+    protected $_validation = array('root'       =>  array('connection',
+                                                          'className',
+                                                          'tableName',
+                                                          'connection',
+                                                          'relations',
+                                                          'columns',
+                                                          'indexes',
+                                                          'attributes',
+                                                          'templates',
+                                                          'actAs',
+                                                          'options',
+                                                          'package',
+                                                          'inheritance',
+                                                          'detect_relations',
+                                                          'generate_accessors'),
+
+                                   'column'     =>  array('name',
+                                                          'fixed',
+                                                          'primary',
+                                                          'autoincrement',
+                                                          'type',
+                                                          'length',
+                                                          'default',
+                                                          'scale',
+                                                          'values'),
+
+                                   'relation'   =>  array('key',
+                                                          'class',
+                                                          'alias',
+                                                          'type',
+                                                          'refClass',
+                                                          'local',
+                                                          'foreign',
+                                                          'foreignAlias',
+                                                          'foreignType',
+                                                          'auto_complete'),
+
+                                   'inheritance'=>  array('type',
+                                                          'extends',
+                                                          'keyField',
+                                                          'keyValue'));
     /**
      * getOption
      *
@@ -246,6 +295,8 @@ class Doctrine_Import_Schema
         $build = array();
 
         foreach ($array as $className => $table) {
+            $this->_validateSchemaElement('root', array_keys($table));
+
             $columns = array();
 
             $className = isset($table['className']) ? (string) $table['className']:(string) $className;
@@ -276,12 +327,15 @@ class Doctrine_Import_Schema
 
             if ( ! empty($columns)) {
                 foreach ($columns as $columnName => $field) {
+
                     // Support short syntax: my_column: integer(4)
-                    if (!is_array($field)) {
+                    if ( ! is_array($field)) {
                         $original = $field;
                         $field = array();
                         $field['type'] = $original;
                     }
+
+                    $this->_validateSchemaElement('column', array_keys($field));
 
                     $colDesc = array();
                     $colDesc['name'] = $columnName;
@@ -354,6 +408,8 @@ class Doctrine_Import_Schema
         // Apply default inheritance configuration
         foreach ($array as $className => $definition) {
             if ( ! empty($array[$className]['inheritance'])) {
+                $this->_validateSchemaElement('inheritance', array_keys($definition['inheritance']));
+
                 // Default inheritance to concrete inheritance                
                 if ( ! isset($array[$className]['inheritance']['type'])) {
                     $array[$className]['inheritance']['type'] = 'class_table';
@@ -384,7 +440,7 @@ class Doctrine_Import_Schema
         // after moving it. Will also populate the subclasses array for the inheritance parent
         $moves = array('columns' => array());
         
-        foreach ($array as $className => $definition) {    
+        foreach ($array as $className => $definition) {
             // Move any definitions on the schema to the parent
             if (isset($definition['inheritance']['extends']) && isset($definition['inheritance']['type']) && ($definition['inheritance']['type'] == 'simple' || $definition['inheritance']['type'] == 'column_aggregation')) {
                 $extends = $definition['inheritance']['extends'];
@@ -471,6 +527,8 @@ class Doctrine_Import_Schema
                 }
                 
                 $relation['key'] = $this->_buildUniqueRelationKey($relation);
+                
+                $this->_validateSchemaElement('relation', array_keys($relation));
                 
                 $this->_relations[$className][$alias] = $relation;
             }
@@ -570,5 +628,33 @@ class Doctrine_Import_Schema
     protected function _buildUniqueRelationKey($relation)
     {
         return md5($relation['local'].$relation['foreign'].$relation['class'].(isset($relation['refClass']) ? $relation['refClass']:null));
+    }
+
+    /**
+     * _validateSchemaElement
+     *
+     * @param string $name 
+     * @param string $value 
+     * @return void
+     */
+    protected function _validateSchemaElement($name, $element)
+    {
+        $element = (array) $element;
+
+        $validation = $this->_validation[$name];
+
+        // Validators are a part of the column validation
+        // This should be fixed, made cleaner
+        if ($name == 'column') {
+            $validators = Doctrine_Lib::getValidators();
+            $validation = array_merge($validation, $validators);
+        }
+
+        $validation = array_flip($validation);
+        foreach ($element as $key => $value) {
+            if ( ! isset($validation[$value])) {
+                throw new Doctrine_Import_Exception('Invalid schema element named "' . $value . '"');
+            }
+        }
     }
 }
