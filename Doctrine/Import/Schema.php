@@ -382,11 +382,10 @@ class Doctrine_Import_Schema
 
         // Array of the array keys to move to the parent, and the value to default the child definition to
         // after moving it. Will also populate the subclasses array for the inheritance parent
-        $moves = array('columns' => array(), 'relations' => array());
+        $moves = array('columns' => array());
         
         foreach ($array as $className => $definition) {    
             // Move any definitions on the schema to the parent
-            // Currently only columns and relations are moved. What else should we move?
             if (isset($definition['inheritance']['extends']) && isset($definition['inheritance']['type']) && ($definition['inheritance']['type'] == 'simple' || $definition['inheritance']['type'] == 'column_aggregation')) {
                 $extends = $definition['inheritance']['extends'];
 

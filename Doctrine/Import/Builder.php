@@ -386,12 +386,12 @@ END;
         $ret = array();
         $i = 0;
         
-        if (isset($definition['inheritance']['type']) && $definition['inheritance']['type'] == 'concrete') {
+        if (isset($definition['inheritance']['type']) && ($definition['inheritance']['type'] == 'concrete' || $definition['inheritance']['type'] == 'column_aggregation')) {
             $ret[$i] = "    parent::setUp();";
             $i++;
         }
         
-        if (isset($definition['relations']) && is_array($definition['relations']) && !empty($definition['relations'])) {
+        if (isset($definition['relations']) && is_array($definition['relations']) && ! empty($definition['relations'])) {
             foreach ($definition['relations'] as $name => $relation) {
                 $class = isset($relation['class']) ? $relation['class']:$name;
                 $alias = (isset($relation['alias']) && $relation['alias'] !== $relation['class']) ? ' as ' . $relation['alias'] : '';
@@ -915,8 +915,8 @@ END;
 
         if (isset($bytes) && $bytes === false) {
             throw new Doctrine_Import_Builder_Exception("Couldn't write file " . $writePath);
-        } else {
-            Doctrine::loadModel($definition['className'], $writePath);
         }
+
+        Doctrine::loadModel($definition['className'], $writePath);
     }
 }
