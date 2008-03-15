@@ -156,7 +156,7 @@ class sfYamlInline
         // remove comments
         if (false !== $strpos = strpos($output, ' #'))
         {
-          $output = rtrim(substr($output, 0, $strpos - 1));
+          $output = rtrim(substr($output, 0, $strpos));
         }
       }
       else if (preg_match('/^(.+?)('.implode('|', $delimiters).')/', substr($scalar, $i), $match))
