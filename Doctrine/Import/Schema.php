@@ -34,7 +34,33 @@
  */
 class Doctrine_Import_Schema
 {
+    /**
+     * _relations
+     *
+     * Array of all relationships parsed from all schema files
+     *
+     * @var array
+     */
     protected $_relations = array();
+
+    /**
+     * _connectionTables
+     *
+     * Array of connections and the tables which exist in each one
+     * Used to ensure duplicate tables names do not exist for a single connection
+     *
+     * @var array
+     */
+    protected $_connectionTables = array();
+
+    /**
+     * _options
+     *
+     * Array of options used to configure the model generation from the parsed schema files
+     * This array is forwarded to Doctrine_Import_Builder
+     *
+     * @var array
+     */
     protected $_options = array('packagesPrefix'        =>  'Package',
                                 'packagesPath'          =>  '',
                                 'packagesFolderName'    =>  'packages',
@@ -238,6 +264,14 @@ class Doctrine_Import_Schema
                 }
             }
 
+            $connection = isset($table['connection']) ? $table['connection']:'current';
+            
+            if ( ! isset($this->_connectionTables[$connection][$tableName])) {
+                $this->_connectionTables[$connection][$tableName] = $tableName;
+            } else {
+                throw new Doctrine_Import_Exception('Table named "' . $tableName . '" exists for the "' . $connection . '" Doctrine connection multiple times');
+            }
+            
             $columns = isset($table['columns']) ? $table['columns']:array();
 
             if ( ! empty($columns)) {

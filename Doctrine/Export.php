@@ -1053,6 +1053,8 @@ class Doctrine_Export extends Doctrine_Connection_Module
      * exportClasses
      * method for exporting Doctrine_Record classes to a schema
      *
+     * FIXME: This function has ugly hacks in it to make sure sql is inserted in the correct order.
+     *
      * @throws Doctrine_Connection_Exception    if some error other than Doctrine::ERR_ALREADY_EXISTS
      *                                          occurred during the create table operation
      * @param array $classes
