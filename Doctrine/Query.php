@@ -1318,7 +1318,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                 continue;
             }
 
-            $part = trim($part, "\"'`");
+            $part = str_replace(array('"', "'", '`'), "", $part);
 
             if ($this->hasSqlTableAlias($part)) {
                 $parts[$k] = $this->_conn->quoteIdentifier($this->generateNewSqlTableAlias($part));
@@ -1328,12 +1328,28 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
             if (strpos($part, '.') === false) {
                 continue;
             }
+
             preg_match_all("/[a-zA-Z0-9_]+\.[a-z0-9_]+/i", $part, $m);
 
             foreach ($m[0] as $match) {
                 $e = explode('.', $match);
+
+                // Rebuild the original part without the newly generate alias and with quoting reapplied
+                $e2 = array();
+                foreach ($e as $k2 => $v2) {
+                  $e2[$k2] = $this->_conn->quoteIdentifier($v2);
+                }
+                $match = implode('.', $e2);
+
+                // Generate new table alias
                 $e[0] = $this->generateNewSqlTableAlias($e[0]);
 
+                // Requote the part with the newly generated alias
+                foreach ($e as $k2 => $v2) {
+                  $e[$k2] = $this->_conn->quoteIdentifier($v2);
+                }
+
+                // Replace the original part with the new part with new sql table alias
                 $parts[$k] = str_replace($match, implode('.', $e), $parts[$k]);
             }
         }
@@ -1380,8 +1396,8 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         }
 
         $query = trim($query);
+        $query = str_replace("\r", "\n", str_replace("\r\n", "\n", $query));
         $query = str_replace("\n", ' ', $query);
-        $query = str_replace("\r", ' ', $query);
 
         $parts = $this->_tokenizer->tokenizeQuery($query);
 
