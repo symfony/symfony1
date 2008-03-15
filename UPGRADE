@@ -68,7 +68,7 @@ To upgrade a project:
     you upgrade to a new symfony 1.1 beta / RC or the final symfony 1.1, you
     need to launch this task.
 
-  * If you don't plan to upgrade the validation system or all your helpers to
+  * If you don't plan to upgrade the validation or mailing system to
     the new system, you must enable the compatibility mode in `settings.yml`:
 
         [yml]
@@ -84,7 +84,6 @@ To upgrade a project:
       * sfProcessCache
       * validation system (validate.yml, validator classes, ...)
       * fill in filter
-      * helpers
       * sfMail with phpmailer
 
 The remaining sections explains backward incompatible changes.
