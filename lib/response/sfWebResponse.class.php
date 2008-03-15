@@ -515,7 +515,7 @@ class sfWebResponse extends sfResponse
     // see include_metas() in AssetHelper
     if ($escape)
     {
-      $value = htmlentities($value, ENT_QUOTES, $this->options['charset']);
+      $value = htmlspecialchars($value, ENT_QUOTES, $this->options['charset']);
     }
 
     $current = isset($this->metas[$key]) ? $this->metas[$key] : null;

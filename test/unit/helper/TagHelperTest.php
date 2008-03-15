@@ -61,4 +61,4 @@ $t->is(escape_once('This a &gt; text to "escape"'), 'This a &gt; text to &quot;e
 
 // fix_double_escape()
 $t->diag('fix_double_escape()');
-$t->is(fix_double_escape(htmlspecialchars(htmlspecialchars('This a > text to "escape"'))), 'This a &gt; text to &quot;escape&quot;', 'fix_double_escape() fixes double escaped strings');
+$t->is(fix_double_escape(htmlspecialchars(htmlspecialchars('This a > text to "escape"'), ENT_QUOTES, 'UTF-8'), ENT_QUOTES, 'UTF-8'), 'This a &gt; text to &quot;escape&quot;', 'fix_double_escape() fixes double escaped strings');

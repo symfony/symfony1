@@ -145,7 +145,7 @@ $t->is(sfWidget::escapeOnce(new MyClass()), 'mycontent', '::escapeOnce() convert
 
 // ::fixDoubleEscape()
 $t->diag('::fixDoubleEscape()');
-$t->is(sfWidget::fixDoubleEscape(htmlspecialchars(htmlspecialchars('This a > text to "escape"'))), 'This a &gt; text to &quot;escape&quot;', '::fixDoubleEscape() fixes double escaped strings');
+$t->is(sfWidget::fixDoubleEscape(htmlspecialchars(htmlspecialchars('This a > text to "escape"'), ENT_QUOTES, sfWidget::getCharset()), ENT_QUOTES, sfWidget::getCharset()), 'This a &gt; text to &quot;escape&quot;', '::fixDoubleEscape() fixes double escaped strings');
 
 // ::getCharset() ::setCharset()
 $t->diag('::getCharset() ::setCharset()');

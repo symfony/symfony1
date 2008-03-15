@@ -13,8 +13,8 @@ require_once($_test_dir.'/unit/sfContextMock.class.php');
 
 $t = new lime_test(27, new lime_output_color());
 
-define('ESC_ENTITIES', 'esc_entities');
-function esc_entities($value)
+define('ESC_SPECIALCHARS', 'esc_specialchars');
+function esc_specialchars($value)
 {
   return "-ESCAPED-$value-ESCAPED-";
 }

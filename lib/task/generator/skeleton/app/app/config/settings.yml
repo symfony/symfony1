@@ -43,7 +43,7 @@ test:
 #
 #    # Output escaping settings
 #    escaping_strategy:      bc        # Determines how variables are made available to templates. Accepted values: bc, both, on, off. The value off deactivates escaping completely and gives a slight boost.
-#    escaping_method:   ESC_ENTITIES   # Function or helper used for escaping. Accepted values: ESC_RAW, ESC_ENTITIES, ESC_JS, ESC_JS_NO_ENTITIES.
+#    escaping_method:        ESC_SPECIALCHARS # Function or helper used for escaping. Accepted values: ESC_RAW, ESC_ENTITIES, ESC_JS, ESC_JS_NO_ENTITIES, and ESC_SPECIALCHARS.
 #
 #    # Routing settings
 #    relative_url_root:                # Default URL prefix. Use this when your symfony project is installed in a sub directory of the apache document root.

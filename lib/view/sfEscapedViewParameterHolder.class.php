@@ -33,8 +33,8 @@ class sfEscapedViewParameterHolder extends sfViewParameterHolder
    *
    * <b>Options:</b>
    *
-   * # <b>escaping_strategy</b> - [bc]           - The escaping strategy (bc, both, on or off)
-   * # <b>escaping_method</b>   - [ESC_ENTITIES] - The escaping method (ESC_RAW, ESC_ENTITIES, ESC_JS or ESC_JS_NO_ENTITIES)
+   * # <b>escaping_strategy</b> - [bc]               - The escaping strategy (bc, both, on or off)
+   * # <b>escaping_method</b>   - [ESC_SPECIALCHARS] - The escaping method (ESC_RAW, ESC_ENTITIES, ESC_JS, ESC_JS_NO_ENTITIES, or ESC_SPECIALCHARS)
    *
    * @return Boolean   true, if initialization completes successfully, otherwise false.
    *
@@ -45,7 +45,7 @@ class sfEscapedViewParameterHolder extends sfViewParameterHolder
     parent::initialize($dispatcher, $parameters, $options);
 
     $this->setEscaping(isset($options['escaping_strategy']) ? $options['escaping_strategy'] : 'bc');
-    $this->setEscapingMethod(isset($options['escaping_method']) ? $options['escaping_method'] : 'ESC_ENTITIES');
+    $this->setEscapingMethod(isset($options['escaping_method']) ? $options['escaping_method'] : 'ESC_SPECIALCHARS');
   }
 
   /**
