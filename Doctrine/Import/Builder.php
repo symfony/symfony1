@@ -379,7 +379,7 @@ END;
      */
     public function buildSetUp(array $definition)
     {
-        if (isset($definition['inheritance']['type']) && ($definition['inheritance']['type'] == 'simple' || $definition['inheritance']['type'] == 'column_aggregation')) {
+        if (isset($definition['inheritance']['type']) && ($definition['inheritance']['type'] == 'simple')) {
             return;
         }
 
@@ -827,6 +827,8 @@ END;
 
         $writePath = $path . DIRECTORY_SEPARATOR . $className . $this->_suffix;
 
+        Doctrine::loadModel($className, $writePath);
+
         if ( ! file_exists($writePath)) {
             file_put_contents($writePath, $content);
         }
@@ -913,6 +915,8 @@ END;
 
         if (isset($bytes) && $bytes === false) {
             throw new Doctrine_Import_Builder_Exception("Couldn't write file " . $writePath);
+        } else {
+            Doctrine::loadModel($definition['className'], $writePath);
         }
     }
 }

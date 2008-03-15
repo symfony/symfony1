@@ -530,6 +530,16 @@ final class Doctrine
     }
 
     /**
+     * loadModel
+     *
+     * @package default
+     */
+    public static function loadModel($className, $path)
+    {
+      self::$_loadedModelFiles[$className] = $path;
+    }
+
+    /**
      * loadModels
      *
      * Recursively load all models from a directory or array of directories
@@ -556,7 +566,7 @@ final class Doctrine
                         $className = $e[0];
 
                         if ($modelLoading == Doctrine::MODEL_LOADING_CONSERVATIVE) {
-                            self::$_loadedModelFiles[$className] = $file->getPathName();
+                            self::loadModel($className, $file->getPathName());
 
                             $loadedModels[$className] = $className;
                         } else {
@@ -571,7 +581,7 @@ final class Doctrine
                                     if (self::isValidModelClass($className)) {
                                         $loadedModels[$className] = $className;
 
-                                        self::$_loadedModelFiles[$className] = $file->getPathName();
+                                        self::loadModel($className, $file->getPathName());
                                     }
                                 }
                             }
