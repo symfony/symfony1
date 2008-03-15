@@ -113,7 +113,7 @@ class Doctrine_Import_Schema
                                                           'foreign',
                                                           'foreignAlias',
                                                           'foreignType',
-                                                          'auto_complete'),
+                                                          'autoComplete'),
 
                                    'inheritance'=>  array('type',
                                                           'extends',
