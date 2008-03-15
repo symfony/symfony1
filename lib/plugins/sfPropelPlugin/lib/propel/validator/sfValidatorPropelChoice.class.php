@@ -16,7 +16,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfValidatorPropelChoice extends sfValidator
+class sfValidatorPropelChoice extends sfValidatorBase
 {
   /**
    * Configures the current validator.
@@ -29,7 +29,7 @@ class sfValidatorPropelChoice extends sfValidator
    *                must be in PhpName format
    *  * connection: The Propel connection to use (null by default)
    *
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   protected function configure($options = array(), $messages = array())
   {
@@ -40,7 +40,7 @@ class sfValidatorPropelChoice extends sfValidator
   }
 
   /**
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   protected function doClean($value)
   {

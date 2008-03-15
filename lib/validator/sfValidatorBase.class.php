@@ -9,7 +9,7 @@
  */
 
 /**
- * sfValidator is the base class for all validators.
+ * sfValidatorBase is the base class for all validators.
  *
  * It also implements the required option for all validators.
  *
@@ -18,7 +18,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-abstract class sfValidator
+abstract class sfValidatorBase
 {
   protected static
     $charset = 'UTF-8';
@@ -85,7 +85,7 @@ abstract class sfValidator
    * This method allows each validator to add options and error messages
    * during validator creation.
    *
-   * If some options and messages are given in the sfValidator constructor
+   * If some options and messages are given in the sfValidatorBase constructor
    * they will take precedence over the options and messages you configure
    * in this method.
    *

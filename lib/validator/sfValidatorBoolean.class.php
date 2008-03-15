@@ -16,7 +16,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfValidatorBoolean extends sfValidator
+class sfValidatorBoolean extends sfValidatorBase
 {
   /**
    * Configures the current validator.
@@ -26,7 +26,7 @@ class sfValidatorBoolean extends sfValidator
    *  * true_values:  The list of true values
    *  * false_values: The list of false values
    *
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   protected function configure($options = array(), $messages = array())
   {
@@ -37,7 +37,7 @@ class sfValidatorBoolean extends sfValidator
   }
 
   /**
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   protected function doClean($value)
   {

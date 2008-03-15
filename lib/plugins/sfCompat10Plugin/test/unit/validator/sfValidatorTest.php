@@ -13,7 +13,7 @@ require_once($_test_dir.'/../../../../test/unit/sfContextMock.class.php');
 
 $t = new lime_test(11, new lime_output_color());
 
-class myValidator extends sfValidatorBase
+class myValidator extends sfValidator
 {
   function execute (&$value, &$error) {}
 }

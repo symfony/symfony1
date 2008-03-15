@@ -19,7 +19,7 @@
  * @author     Sean Kerr <sean@code-box.org>
  * @version    SVN: $Id$
  */
-class sfEmailValidator extends sfValidatorBase
+class sfEmailValidator extends sfValidator
 {
   /**
    * Executes this validator.

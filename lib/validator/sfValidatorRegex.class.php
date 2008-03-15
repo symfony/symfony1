@@ -16,7 +16,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfValidatorRegex extends sfValidator
+class sfValidatorRegex extends sfValidatorBase
 {
   /**
    * Configures the current validator.
@@ -25,7 +25,7 @@ class sfValidatorRegex extends sfValidator
    *
    *  * pattern: A regex pattern compatible with PCRE (required)
    *
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   protected function configure($options = array(), $messages = array())
   {
@@ -33,7 +33,7 @@ class sfValidatorRegex extends sfValidator
   }
 
   /**
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   protected function doClean($value)
   {

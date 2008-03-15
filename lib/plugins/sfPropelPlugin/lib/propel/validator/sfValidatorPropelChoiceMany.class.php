@@ -19,7 +19,7 @@
 class sfValidatorPropelChoiceMany extends sfValidatorPropelChoice
 {
   /**
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   protected function doClean($values)
   {

@@ -16,10 +16,10 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfValidatorCSRFToken extends sfValidator
+class sfValidatorCSRFToken extends sfValidatorBase
 {
   /**
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   protected function configure($options = array(), $messages = array())
   {
@@ -31,7 +31,7 @@ class sfValidatorCSRFToken extends sfValidator
   }
 
   /**
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   protected function doClean($value)
   {

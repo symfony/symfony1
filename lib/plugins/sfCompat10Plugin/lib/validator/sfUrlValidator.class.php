@@ -16,7 +16,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfUrlValidator extends sfValidatorBase
+class sfUrlValidator extends sfValidator
 {
   /**
    * Executes this validator.

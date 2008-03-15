@@ -18,7 +18,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfValidatorSchema extends sfValidator implements ArrayAccess
+class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
 {
   protected
     $fields        = array(),
@@ -31,13 +31,13 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
    * The first argument can be:
    *
    *  * null
-   *  * an array of named sfValidator instances
+   *  * an array of named sfValidatorBase instances
    *
    * @param mixed Initial fields
    * @param array An array of options
    * @param array An array of error messages
    *
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   public function __construct($fields = null, $options = array(), $messages = array())
   {
@@ -50,7 +50,7 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
     }
     else if (!is_null($fields))
     {
-      throw new InvalidArgumentException('sfValidatorSchema constructor takes an array of sfValidator objects.');
+      throw new InvalidArgumentException('sfValidatorSchema constructor takes an array of sfValidatorBase objects.');
     }
 
     parent::__construct($options, $messages);
@@ -71,7 +71,7 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
    * @param array An array of options
    * @param array An array of error messages
    *
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   protected function configure($options = array(), $messages = array())
   {
@@ -82,7 +82,7 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
   }
 
   /**
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   public function clean($values)
   {
@@ -90,7 +90,7 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
   }
 
   /**
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   protected function doClean($values)
   {
@@ -240,9 +240,9 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
   /**
    * Sets the pre validator.
    *
-   * @param sfValidator A sfValidator instance
+   * @param sfValidatorBase A sfValidatorBase instance
    */
-  public function setPreValidator(sfValidator $validator)
+  public function setPreValidator(sfValidatorBase $validator)
   {
     $this->preValidator = clone $validator;
   }
@@ -250,7 +250,7 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
   /**
    * Returns the pre validator.
    *
-   * @return sfValidator A sfValidator instance
+   * @return sfValidatorBase A sfValidatorBase instance
    */
   public function getPreValidator()
   {
@@ -260,9 +260,9 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
   /**
    * Sets the post validator.
    *
-   * @param sfValidator A sfValidator instance
+   * @param sfValidatorBase A sfValidatorBase instance
    */
-  public function setPostValidator(sfValidator $validator)
+  public function setPostValidator(sfValidatorBase $validator)
   {
     $this->postValidator = clone $validator;
   }
@@ -270,7 +270,7 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
   /**
    * Returns the post validator.
    *
-   * @return sfValidator A sfValidator instance
+   * @return sfValidatorBase A sfValidatorBase instance
    */
   public function getPostValidator()
   {
@@ -294,7 +294,7 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
    *
    * @param  string   The field name
    *
-   * @return sfValidator The sfValidator instance associated with the given name, null if it does not exist
+   * @return sfValidatorBase The sfValidatorBase instance associated with the given name, null if it does not exist
    */
   public function offsetGet($name)
   {
@@ -304,14 +304,14 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
   /**
    * Sets a field (implements the ArrayAccess interface).
    *
-   * @param string      The field name
-   * @param sfValidator A sfValidator instance
+   * @param string          The field name
+   * @param sfValidatorBase A sfValidatorBase instance
    */
   public function offsetSet($name, $validator)
   {
-    if (!$validator instanceof sfValidator)
+    if (!$validator instanceof sfValidatorBase)
     {
-      throw new InvalidArgumentException('A field must be an instance of sfValidator.');
+      throw new InvalidArgumentException('A field must be an instance of sfValidatorBase.');
     }
 
     $this->fields[$name] = clone $validator;
@@ -330,7 +330,7 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
   /**
    * Returns an array of fields.
    *
-   * @return sfValidator An array of sfValidator instance
+   * @return sfValidatorBase An array of sfValidatorBase instances
    */
   public function getFields()
   {
@@ -338,7 +338,7 @@ class sfValidatorSchema extends sfValidator implements ArrayAccess
   }
 
   /**
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   public function asString($indent = 0)
   {

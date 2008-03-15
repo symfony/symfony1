@@ -12,7 +12,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 $t = new lime_test(38, new lime_output_color());
 
-class ValidatorIdentity extends sfValidator
+class ValidatorIdentity extends sfValidatorBase
 {
   protected function configure($options = array(), $messages = array())
   {
@@ -26,7 +26,7 @@ class ValidatorIdentity extends sfValidator
   }
 }
 
-class ValidatorIdentityWithRequired extends sfValidator
+class ValidatorIdentityWithRequired extends sfValidatorBase
 {
   protected function configure($options = array(), $messages = array())
   {
@@ -200,9 +200,9 @@ $t->is($v->getErrorCodes(), array('required', 'invalid', 'foo'), '->getErrorCode
 
 // ::getCharset() ::setCharset()
 $t->diag('::getCharset() ::setCharset()');
-$t->is(sfValidator::getCharset(), 'UTF-8', '::getCharset() returns the charset to use for validators');
-sfValidator::setCharset('ISO-8859-1');
-$t->is(sfValidator::getCharset(), 'ISO-8859-1', '::setCharset() changes the charset to use for validators');
+$t->is(sfValidatorBase::getCharset(), 'UTF-8', '::getCharset() returns the charset to use for validators');
+sfValidatorBase::setCharset('ISO-8859-1');
+$t->is(sfValidatorBase::getCharset(), 'ISO-8859-1', '::setCharset() changes the charset to use for validators');
 
 // ->asString()
 $t->diag('->asString()');

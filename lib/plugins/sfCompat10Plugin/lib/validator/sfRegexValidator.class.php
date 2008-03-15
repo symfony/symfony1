@@ -32,7 +32,7 @@
  * @author     Sean Kerr <sean@code-box.org>
  * @version    SVN: $Id$
  */
-class sfRegexValidator extends sfValidatorBase
+class sfRegexValidator extends sfValidator
 {
   /**
    * Executes this validator.

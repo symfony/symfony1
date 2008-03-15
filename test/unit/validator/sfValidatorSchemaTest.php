@@ -12,7 +12,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
 $t = new lime_test(84, new lime_output_color());
 
-class PreValidator extends sfValidator
+class PreValidator extends sfValidatorBase
 {
   protected function doClean($values)
   {
@@ -23,7 +23,7 @@ class PreValidator extends sfValidator
   }
 }
 
-class PostValidator extends sfValidator
+class PostValidator extends sfValidatorBase
 {
   protected function doClean($values)
   {
@@ -36,7 +36,7 @@ class PostValidator extends sfValidator
   }
 }
 
-class Post1Validator extends sfValidator
+class Post1Validator extends sfValidatorBase
 {
   protected function doClean($values)
   {

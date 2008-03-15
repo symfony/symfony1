@@ -27,10 +27,10 @@ class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, It
   /**
    * Constructor.
    *
-   * @param sfValidator A sfValidator instance
-   * @param array       An array of errors
+   * @param sfValidatorBase A sfValidatorBase instance
+   * @param array           An array of errors
    */
-  public function __construct(sfValidator $validator, $errors = array())
+  public function __construct(sfValidatorBase $validator, $errors = array())
   {
     $this->validator = $validator;
     $this->arguments = array();

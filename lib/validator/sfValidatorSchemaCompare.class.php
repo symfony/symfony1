@@ -47,7 +47,7 @@ class sfValidatorSchemaCompare extends sfValidatorSchema
    * @param array  An array of options
    * @param array  An array of error messages
    *
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   public function __construct($leftField, $operator, $rightField, $options = array(), $messages = array())
   {
@@ -61,7 +61,7 @@ class sfValidatorSchemaCompare extends sfValidatorSchema
   }
 
   /**
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   protected function doClean($values)
   {
@@ -119,7 +119,7 @@ class sfValidatorSchemaCompare extends sfValidatorSchema
   }
 
   /**
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   public function asString($indent = 0)
   {

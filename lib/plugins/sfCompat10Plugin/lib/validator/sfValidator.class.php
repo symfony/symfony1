@@ -18,7 +18,7 @@
  * @author     Sean Kerr <sean@code-box.org>
  * @version    SVN: $Id$
  */
-abstract class sfValidatorBase
+abstract class sfValidator
 {
   protected
     $parameterHolder = null,

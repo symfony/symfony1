@@ -33,7 +33,7 @@
  * @author     Sean Kerr <sean@code-box.org>
  * @version    SVN: $Id$
  */
-class sfNumberValidator extends sfValidatorBase
+class sfNumberValidator extends sfValidator
 {
   /**
    * Executes this validator.

@@ -22,7 +22,7 @@ if (!defined('UPLOAD_ERR_EXTENSION'))
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfValidatorFile extends sfValidator
+class sfValidatorFile extends sfValidatorBase
 {
   /**
    * Configures the current validator.
@@ -49,7 +49,7 @@ class sfValidatorFile extends sfValidator
    *  * cant_write
    *  * extension
    *
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   protected function configure($options = array(), $messages = array())
   {
@@ -88,7 +88,7 @@ class sfValidatorFile extends sfValidator
    *  * error:    The error code (optional)
    *  * size:     The file size in bytes (optional)
    *
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   protected function doClean($value)
   {
@@ -261,7 +261,7 @@ class sfValidatorFile extends sfValidator
   }
 
   /**
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   protected function isEmpty($value)
   {

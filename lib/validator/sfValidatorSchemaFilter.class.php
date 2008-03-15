@@ -21,14 +21,14 @@ class sfValidatorSchemaFilter extends sfValidatorSchema
   /**
    * Constructor.
    *
-   * @param string      The field name
-   * @param sfValidator The validator
-   * @param array       An array of options
-   * @param array       An array of error messages
+   * @param string          The field name
+   * @param sfValidatorBase The validator
+   * @param array           An array of options
+   * @param array           An array of error messages
    *
-   * @see sfValidator
+   * @see sfValidatorBase
    */
-  public function __construct($field, sfValidator $validator, $options = array(), $messages = array())
+  public function __construct($field, sfValidatorBase $validator, $options = array(), $messages = array())
   {
     $this->addOption('field', $field);
     $this->addOption('validator', $validator);
@@ -37,7 +37,7 @@ class sfValidatorSchemaFilter extends sfValidatorSchema
   }
 
   /**
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   protected function doClean($values)
   {
@@ -59,7 +59,7 @@ class sfValidatorSchemaFilter extends sfValidatorSchema
   }
 
   /**
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   public function asString($indent = 0)
   {

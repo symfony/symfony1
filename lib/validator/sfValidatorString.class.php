@@ -16,7 +16,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfValidatorString extends sfValidator
+class sfValidatorString extends sfValidatorBase
 {
   /**
    * Configures the current validator.
@@ -31,7 +31,7 @@ class sfValidatorString extends sfValidator
    *  * max_length
    *  * min_length
    *
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   protected function configure($options = array(), $messages = array())
   {
@@ -45,7 +45,7 @@ class sfValidatorString extends sfValidator
   }
 
   /**
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   protected function doClean($value)
   {

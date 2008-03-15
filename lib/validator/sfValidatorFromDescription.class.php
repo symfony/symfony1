@@ -23,7 +23,7 @@ class sfValidatorFromDescription extends sfValidatorDecorator
     $string = '';
 
   /**
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   public function __construct($string, $options = array(), $messages = array())
   {

@@ -16,7 +16,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfValidatorCallback extends sfValidator
+class sfValidatorCallback extends sfValidatorBase
 {
   /**
    * Configures the current validator.
@@ -26,7 +26,7 @@ class sfValidatorCallback extends sfValidator
    *  * callback:  A valid PHP callback (required)
    *  * arguments: An array of arguments to pass to the callback
    *
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   protected function configure($options = array(), $messages = array())
   {
@@ -37,7 +37,7 @@ class sfValidatorCallback extends sfValidator
   }
 
   /**
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   protected function doClean($value)
   {

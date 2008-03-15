@@ -350,12 +350,6 @@ a `sfConfigurationException` if `sf_compat_10` is set to `false`:
   * `->getFileExtension()`
   * `->moveFile()`
 
-sfValidator class
------------------
-
-If you use the symfony 1.0 interface for validation, your custom validators must
-now extend the `sfValidatorBase` class.
-
 `->initialize()` methods
 ------------------------
 

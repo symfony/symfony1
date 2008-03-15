@@ -16,7 +16,7 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-class sfValidatorAnd extends sfValidator
+class sfValidatorAnd extends sfValidatorBase
 {
   protected
     $validators = array();
@@ -27,18 +27,18 @@ class sfValidatorAnd extends sfValidator
    * The first argument can be:
    *
    *  * null
-   *  * a sfValidator instance
-   *  * an array of sfValidator instances
+   *  * a sfValidatorBase instance
+   *  * an array of sfValidatorBase instances
    *
    * @param mixed Initial validators
    * @param array An array of options
    * @param array An array of error messages
    *
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   public function __construct($validators = null, $options = array(), $messages = array())
   {
-    if ($validators instanceof sfValidator)
+    if ($validators instanceof sfValidatorBase)
     {
       $this->addValidator($validators);
     }
@@ -51,14 +51,14 @@ class sfValidatorAnd extends sfValidator
     }
     else if (!is_null($validators))
     {
-      throw new InvalidArgumentException('sfValidatorAnd constructor takes a sfValidator object, or a sfValidator array.');
+      throw new InvalidArgumentException('sfValidatorAnd constructor takes a sfValidatorBase object, or a sfValidatorBase array.');
     }
 
     parent::__construct($options, $messages);
   }
 
   /**
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   protected function configure($options = array(), $messages = array())
   {
@@ -68,9 +68,9 @@ class sfValidatorAnd extends sfValidator
   /**
    * Adds a validator.
    *
-   * @param sfValidator A sfValidator instance
+   * @param sfValidatorBase A sfValidatorBase instance
    */
-  public function addValidator(sfValidator $validator)
+  public function addValidator(sfValidatorBase $validator)
   {
     $this->validators[] = $validator;
   }
@@ -78,7 +78,7 @@ class sfValidatorAnd extends sfValidator
   /**
    * Returns an array of the validators.
    *
-   * @return array An array of sfValidator instances
+   * @return array An array of sfValidatorBase instances
    */
   public function getValidators()
   {
@@ -86,7 +86,7 @@ class sfValidatorAnd extends sfValidator
   }
 
   /**
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   protected function doClean($value)
   {
@@ -118,7 +118,7 @@ class sfValidatorAnd extends sfValidator
   }
 
   /**
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   public function asString($indent = 0)
   {

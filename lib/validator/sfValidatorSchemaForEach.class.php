@@ -21,14 +21,14 @@ class sfValidatorSchemaForEach extends sfValidatorSchema
   /**
    * Constructor.
    *
-   * @param sfValidator Initial validators
-   * @param integer     The number of times to replicate the validator
-   * @param array       An array of options
-   * @param array       An array of error messages
+   * @param sfValidatorBase Initial validator
+   * @param integer         The number of times to replicate the validator
+   * @param array           An array of options
+   * @param array           An array of error messages
    *
-   * @see sfValidator
+   * @see sfValidatorBase
    */
-  public function __construct($validator, $count, $options = array(), $messages = array())
+  public function __construct(sfValidatorBase $validator, $count, $options = array(), $messages = array())
   {
     $fields = array();
     for ($i = 0; $i < $count; $i++)
@@ -40,7 +40,7 @@ class sfValidatorSchemaForEach extends sfValidatorSchema
   }
 
   /**
-   * @see sfValidator
+   * @see sfValidatorBase
    */
   public function asString($indent = 0)
   {
