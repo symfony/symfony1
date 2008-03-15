@@ -118,7 +118,7 @@ $t->is($r->generate('', $params), $url, '->generate() takes the first matching r
 $r->clearRoutes();
 $r->connect('test', '/:module/:action/test/:id/:test', array('module' => 'default', 'action' => 'index'));
 $r->connect('test1', '/:module/:action/test/:id', array('module' => 'default', 'action' => 'index', 'id' => 'foo'));
-$params = array('module' => 'default', 'action' => 'index', 'id' => 'foo', 'test' => null);
+$params = array('module' => 'default', 'action' => 'index', 'id' => 'foo');
 $url = '/default/index/test/foo';
 $t->is($r->parse($url), $params, '->parse()    takes the first matching route');
 $t->is($r->generate('', $params), $url, '->generate() takes the first matching route');
@@ -508,7 +508,6 @@ $r->connect('test', '/test/:value', array('module' => 'default', 'action' => 'in
 $r->connect('test1', '/test1/*', array('module' => 'default', 'action' => 'index'));
 $t->is($r->parse('/test/test%26foo%3Dbar%2Bfoo'), array('module' => 'default', 'action' => 'index', 'value' => 'test&foo=bar+foo'), '->parse() decodes parameter values');
 $t->is($r->parse('/test1/value/test%26foo%3Dbar%2Bfoo'), array('module' => 'default', 'action' => 'index', 'value' => 'test&foo=bar+foo'), '->parse() decodes parameter values');
-
 
 // feature change bug from sf1.0 - ticket #3090
 $r->clearRoutes();
