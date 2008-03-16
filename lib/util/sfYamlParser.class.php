@@ -68,7 +68,7 @@ class sfYamlParser
       if (preg_match('#^\-(\s+(?P<value>.+?))?\s*$#', $this->currentLine, $values))
       {
         // array
-        if (!isset($values['value']) || '' == trim($values['value'], ' '))
+        if (!isset($values['value']) || '' == trim($values['value'], ' ') || 0 === strpos(ltrim($values['value'], ' '), '#'))
         {
           $c = $this->getRealCurrentLineNb() + 1;
           $parser = new sfYamlParser($c);
@@ -84,7 +84,7 @@ class sfYamlParser
         $key = sfYamlInline::parseScalar($values['key']);
 
         // hash
-        if (!isset($values['value']) || '' == trim($values['value'], ' '))
+        if (!isset($values['value']) || '' == trim($values['value'], ' ') || 0 === strpos(ltrim($values['value'], ' '), '#'))
         {
           // if next line is less indented or equal, then it means that the current value is null
           if ($this->isNextLineIndented())

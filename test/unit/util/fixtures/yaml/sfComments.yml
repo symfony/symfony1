@@ -22,3 +22,12 @@ yaml: |
     # some comment
 php: |
     array('foo' => array('bar' => 'foo'))
+---
+test: Comments on a hash line
+brief: >
+  Comments on a hash line
+yaml: |
+    foo:   # a comment
+      foo: bar # a comment
+php: |
+    array('foo' => array('foo' => 'bar'))

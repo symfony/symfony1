@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once(dirname(__FILE__).'/../../../lib/util/sfYamlParser.class.php');
 
-$t = new lime_test(65, new lime_output_color());
+$t = new lime_test(66, new lime_output_color());
 
 $parser = new sfYamlParser();
 
