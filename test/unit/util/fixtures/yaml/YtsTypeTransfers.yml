@@ -166,6 +166,7 @@ php: |
     )
 --- 
 test: Integers 
+dump_skip: true
 brief: > 
     An integer is a series of numbers, optionally 
     starting with a positive or negative sign.  Integers 
@@ -198,6 +199,7 @@ php: |
     )
 --- 
 test: Floats 
+dump_skip: true
 brief: > 
      Floats are represented by numbers with decimals, 
      allowing for scientific notation, as well as 

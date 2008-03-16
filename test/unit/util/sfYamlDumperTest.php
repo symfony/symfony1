@@ -12,7 +12,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once(dirname(__FILE__).'/../../../lib/util/sfYamlParser.class.php');
 require_once(dirname(__FILE__).'/../../../lib/util/sfYamlDumper.class.php');
 
-$t = new lime_test(69, new lime_output_color());
+$t = new lime_test(134, new lime_output_color());
 
 $parser = new sfYamlParser();
 $dumper = new sfYamlDumper();
@@ -34,7 +34,11 @@ foreach ($files as $file)
     }
 
     $test = $parser->parse($yaml);
-    if (isset($test['todo']) && $test['todo'])
+    if (isset($test['dump_skip']) && $test['dump_skip'])
+    {
+      continue;
+    }
+    else if (isset($test['todo']) && $test['todo'])
     {
       $t->todo($test['test']);
     }
@@ -42,7 +46,7 @@ foreach ($files as $file)
     {
       $expected = eval('return '.trim($test['php']).';');
 
-      $t->is($parser->parse($dumper->dump($expected, 10)), $expected, $test['test'].' (dumper)');
+      $t->is_deeply($parser->parse($dumper->dump($expected, 10)), $expected, $test['test']);
     }
   }
 }

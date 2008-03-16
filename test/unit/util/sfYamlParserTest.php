@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once(dirname(__FILE__).'/../../../lib/util/sfYamlParser.class.php');
 
-$t = new lime_test(66, new lime_output_color());
+$t = new lime_test(133, new lime_output_color());
 
 $parser = new sfYamlParser();
 
@@ -40,7 +40,7 @@ foreach ($files as $file)
     {
       $expected = var_export(eval('return '.trim($test['php']).';'), true);
 
-      $t->is(var_export($parser->parse($test['yaml']), true), $expected, $test['test'].' (parser)');
+      $t->is(var_export($parser->parse($test['yaml']), true), $expected, $test['test']);
     }
   }
 }

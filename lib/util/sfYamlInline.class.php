@@ -69,9 +69,9 @@ class sfYamlInline
       case false === $value:
         return 'false';
       case ctype_digit($value):
-        return (int) $value;
+        return is_string($value) ? "'$value'" : (int) $value;
       case is_numeric($value):
-        return is_infinite($value) ? str_ireplace('INF', '.Inf', strval($value)) : $value;
+        return is_infinite($value) ? str_ireplace('INF', '.Inf', strval($value)) : (is_string($value) ? "'$value'" : $value);
       case false !== strpos($value, "\n"):
         return sprintf('"%s"', str_replace(array('"', "\n"), array('\\"', '\n'), $value));
       case preg_match('/[ \s \' " \: \{ \} \[ \] , ]/x', $value):

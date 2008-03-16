@@ -160,7 +160,7 @@ class sfYamlParser
     {
       if ($this->isCurrentLineEmpty())
       {
-        if (!$this->isCurrentLineComment())
+        if ($this->isCurrentLineBlank())
         {
           $data[] = substr($this->currentLine, $newIndent);
         }
@@ -226,52 +226,70 @@ class sfYamlParser
    */
   protected function parseValue($value)
   {
-    switch ($value)
+    if (preg_match('/^(?P<separator>\||>)(?P<modifiers>\+|\-|\d+|\+\d+|\-\d+|\d+\+|\d+\-)?(?P<comments> +#.*)?$/', $value, $matches))
     {
-      case '|':
-        return $this->parseFoldedScalar("\n", '');
-      case '>':
-        return $this->parseFoldedScalar(' ', '');
-      case '|+':
-        return $this->parseFoldedScalar("\n", '+');
-      case '>+':
-        return $this->parseFoldedScalar(' ', '+');
-      case '|-':
-        return $this->parseFoldedScalar("\n", '-');
-      case '>-':
-        return $this->parseFoldedScalar(' ', '-');
-      default:
-        return sfYamlInline::load($value);
+      $modifiers = isset($matches['modifiers']) ? $matches['modifiers'] : '';
+
+      return $this->parseFoldedScalar($matches['separator'], preg_replace('#\d+#', '', $modifiers), intval(abs($modifiers)));
+    }
+    else
+    {
+      return sfYamlInline::load($value);
     }
   }
 
   /**
    * Parses a folded scalar.
    *
-   * @param  string The separator that was used to begin this folded scalar
-   * @param  string The indicator that was used to begin this folded scalar
+   * @param  string  The separator that was used to begin this folded scalar (| or >)
+   * @param  string  The indicator that was used to begin this folded scalar (+ or -)
+   * @param  integer The indentation that was used to begin this folded scalar
    *
-   * @return string The text value
+   * @return string  The text value
    */
-  protected function parseFoldedScalar($separator, $indicator = '')
+  protected function parseFoldedScalar($separator, $indicator = '', $indentation = 0)
   {
-    $this->moveToNextLine();
+    $separator = '|' == $separator ? "\n" : ' ';
+    $text = '';
 
-    if (!preg_match('#^(?P<indent> +)(?P<text>.*)$#', $this->currentLine, $matches))
+    $notEOF = $this->moveToNextLine();
+
+    while ($notEOF && $this->isCurrentLineBlank())
     {
-      throw new InvalidArgumentException(sprintf('Wrong indentation at line %d (%s)', $this->getRealCurrentLineNb(), $this->currentLine));
+      $text .= "\n";
+
+      $notEOF = $this->moveToNextLine();
+    }
+
+    if (!$notEOF)
+    {
+      return '';
+    }
+
+    if (!preg_match('#^(?P<indent>'.($indentation ? str_repeat(' ', $indentation) : ' +').')(?P<text>.*)$#', $this->currentLine, $matches))
+    {
+      $this->moveToPreviousLine();
+
+      return '';
     }
 
     $textIndent = $matches['indent'];
+    $previousIndent = 0;
 
-    $text = $matches['text'].$separator;
+    $text .= $matches['text'].$separator;
     while ($this->currentLineNb + 1 < count($this->lines))
     {
       $this->moveToNextLine();
 
-      if (preg_match('#^'.$textIndent.'(?P<text>.+)$#', $this->currentLine, $matches))
+      if (preg_match('#^(?<indent> {'.strlen($textIndent).',})(?P<text>.+)$#', $this->currentLine, $matches))
       {
-        $text .= $matches['text'].$separator;
+        if (' ' == $separator && $previousIndent != $matches['indent'])
+        {
+          $text = substr($text, 0, -1)."\n";
+        }
+        $previousIndent = $matches['indent'];
+
+        $text .= str_repeat(' ', $diff = strlen($matches['indent']) - strlen($textIndent)).$matches['text'].($diff ? "\n" : $separator);
       }
       else if (preg_match('#^(?P<text> *)$#', $this->currentLine, $matches))
       {
@@ -316,7 +334,7 @@ class sfYamlParser
     $currentIndentation = $this->getCurrentLineIndentation();
     $notEOF = $this->moveToNextLine();
 
-    while ($this->isCurrentLineEmpty() && $notEOF)
+    while ($notEOF && $this->isCurrentLineEmpty())
     {
       $notEOF = $this->moveToNextLine();
     }
@@ -338,13 +356,23 @@ class sfYamlParser
   }
 
   /**
-   * Returns true if the current line is empty or if it is a comment line.
+   * Returns true if the current line is blank or if it is a comment line.
    *
    * @return Boolean Returns true if the current line is empty or if it is a comment line, false otherwise
    */
   protected function isCurrentLineEmpty()
   {
-    return '' == trim($this->currentLine, ' ') || $this->isCurrentLineComment();
+    return $this->isCurrentLineBlank() || $this->isCurrentLineComment();
+  }
+
+  /**
+   * Returns true if the current line is blank.
+   *
+   * @return Boolean Returns true if the current line is blank, false otherwise
+   */
+  protected function isCurrentLineBlank()
+  {
+    return '' == trim($this->currentLine, ' ');
   }
 
   /**

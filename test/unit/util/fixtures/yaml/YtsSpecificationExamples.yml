@@ -128,60 +128,17 @@ syck: |
  
 --- 
 test: Sequence of sequences 
-todo: true
 spec: 2.5
 yaml: | 
   - [ name         , hr , avg   ] 
   - [ Mark McGwire , 65 , 0.278 ] 
   - [ Sammy Sosa   , 63 , 0.288 ] 
-perl: | 
-  [ 
-    [ 'name', 'hr', 'avg' ], 
-    [ 'Mark McGwire', 65, 0.278 ], 
-    [ 'Sammy Sosa', 63, 0.288 ], 
-  ] 
-python: | 
-  [[ 
-    [ 'name', 'hr', 'avg' ], 
-    [ 'Mark McGwire', 65, 0.278 ], 
-    [ 'Sammy Sosa', 63, 0.288 ] 
-  ]] 
-ruby: | 
-  [ 
-    [ 'name', 'hr', 'avg' ], 
-    [ 'Mark McGwire', 65, 0.278 ], 
-    [ 'Sammy Sosa', 63, 0.288 ] 
-  ] 
-syck: |
-  struct test_node seq1[] = {
-      { T_STR, 0, "name" },
-      { T_STR, 0, "hr" },
-      { T_STR, 0, "avg" },
-      end_node
-  };
-  struct test_node seq2[] = {
-      { T_STR, 0, "Mark McGwire" },
-      { T_STR, 0, "65" },
-      { T_STR, 0, "0.278" },
-      end_node
-  };
-  struct test_node seq3[] = {
-      { T_STR, 0, "Sammy Sosa" },
-      { T_STR, 0, "63" },
-      { T_STR, 0, "0.288" },
-      end_node
-  };
-  struct test_node seq[] = {
-      { T_SEQ, 0, 0, seq1 },
-      { T_SEQ, 0, 0, seq2 },
-      { T_SEQ, 0, 0, seq3 },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_SEQ, 0, 0, seq },
-      end_node
-  };
- 
+php: | 
+  array( 
+    array( 'name', 'hr', 'avg' ), 
+    array( 'Mark McGwire', 65, 0.278 ), 
+    array( 'Sammy Sosa', 63, 0.288 ) 
+  )
 --- 
 test: Mapping of mappings 
 todo: true
@@ -192,55 +149,15 @@ yaml: |
       hr: 63,
       avg: 0.288
     }
-perl-xxx: | 
-  {  
-    'Mark McGwire' => { 'hr' => 65, 'avg' => 0.278 }, 
-    'Sammy Sosa' => { 'hr' => 63, 'avg' => 0.288 }, 
-  } 
-not_yet_in_python: | 
-  [{  
-    'Mark McGwire':  
-      { 'hr': 65, 'avg': 0.278 }, 
-    'Sammy Sosa': 
-      { 'hr': 63, 'avg': 0.288 } 
-  }] 
 ruby: | 
-  {  
+  array(  
     'Mark McGwire' => 
-      { 'hr' => 65, 'avg' => 0.278 }, 
+      array( 'hr' => 65, 'avg' => 0.278 ), 
     'Sammy Sosa' => 
-      { 'hr' => 63, 'avg' => 0.288 } 
-  } 
-syck: |
-  struct test_node map1[] = {
-      { T_STR, 0, "hr" },
-          { T_STR, 0, "65" },
-      { T_STR, 0, "avg" },
-          { T_STR, 0, "0.278" },
-      end_node
-  };
-  struct test_node map2[] = {
-      { T_STR, 0, "hr" },
-          { T_STR, 0, "63" },
-      { T_STR, 0, "avg" },
-          { T_STR, 0, "0.288" },
-      end_node
-  };
-  struct test_node map[] = {
-      { T_STR, 0, "Mark McGwire" },
-          { T_MAP, 0, 0, map1 },
-      { T_STR, 0, "Sammy Sosa" },
-          { T_MAP, 0, 0, map2 },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, 0, 0, map },
-      end_node
-  };
- 
+      array( 'hr' => 63, 'avg' => 0.288 ) 
+  )
 --- 
-test: Two documents in a stream each with a
-      leading comment
+test: Two documents in a stream each with a leading comment
 todo: true
 spec: 2.7 
 yaml: | 
@@ -254,35 +171,10 @@ yaml: |
   ---
   - Chicago Cubs
   - St Louis Cardinals
-perl: | 
-  { name => 'Mark McGwire', 'hr' => 65, 'avg' => 0.278 }, 
-  { name => 'Sammy Sosa', 'hr' => 63, 'avg' => 0.288 } 
-python: | 
-  [ 
-    { 'name': 'Mark McGwire', 'hr': 65, 'avg': 0.278 }, 
-    { 'name': 'Sammy Sosa', 'hr': 63, 'avg': 0.288 } 
-  ] 
 ruby: | 
   y = YAML::Stream.new 
   y.add( [ 'Mark McGwire', 'Sammy Sosa', 'Ken Griffey' ] ) 
   y.add( [ 'Chicago Cubs', 'St Louis Cardinals' ] ) 
-syck: |
-  struct test_node seq1[] = {
-      { T_STR, 0, "Mark McGwire" },
-      { T_STR, 0, "Sammy Sosa" },
-      { T_STR, 0, "Ken Griffey" },
-      end_node
-  };
-  struct test_node seq2[] = {
-      { T_STR, 0, "Chicago Cubs" },
-      { T_STR, 0, "St Louis Cardinals" },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_SEQ, 0, 0, seq1 },
-      { T_SEQ, 0, 0, seq2 },
-      end_node
-  };
 documents: 2 
  
 --- 
@@ -302,41 +194,10 @@ yaml: |
   ...
 perl: | 
   [ 'Mark McGwire', 'Sammy Sosa', 'Ken Griffey' ] 
-python: | 
-  [[ 'Mark McGwire', 'Sammy Sosa', 'Ken Griffey' ]] 
-ruby: | 
-  y = YAML::Stream.new 
-  y.add( {"player"=>"Sammy Sosa", "time"=>72200, "action"=>"strike (miss)"} )
-  y.add( {"player"=>"Sammy Sosa", "time"=>72227, "action"=>"grand slam"} )
-syck: |
-  struct test_node map1[] = {
-      { T_STR, 0, "time" },
-          { T_STR, 0, "20:03:20" },
-      { T_STR, 0, "player" },
-          { T_STR, 0, "Sammy Sosa" },
-      { T_STR, 0, "action" },
-          { T_STR, 0, "strike (miss)" },
-      end_node
-  };
-  struct test_node map2[] = {
-      { T_STR, 0, "time" },
-          { T_STR, 0, "20:03:47" },
-      { T_STR, 0, "player" },
-          { T_STR, 0, "Sammy Sosa" },
-      { T_STR, 0, "action" },
-          { T_STR, 0, "grand slam" },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, 0, 0, map1 },
-      { T_MAP, 0, 0, map2 },
-      end_node
-  };
 documents: 2 
  
 --- 
 test: Single document with two comments 
-todo: true
 spec: 2.9
 yaml: | 
   hr: # 1998 hr ranking 
@@ -346,44 +207,11 @@ yaml: |
     # 1998 rbi ranking 
     - Sammy Sosa 
     - Ken Griffey 
-perl-xxx: | 
-  {  
-    'hr' => [ 'Mark McGwire', 'Sammy Sosa' ], 
-    'rbi' => [ 'Sammy Sosa', 'Ken Griffey' ]  
-  } 
-python: | 
-  [{  
-    'hr': [ 'Mark McGwire', 'Sammy Sosa' ], 
-    'rbi': [ 'Sammy Sosa', 'Ken Griffey' ]  
-  }] 
-ruby: | 
-  {  
-    'hr' => [ 'Mark McGwire', 'Sammy Sosa' ], 
-    'rbi' => [ 'Sammy Sosa', 'Ken Griffey' ]  
-  } 
-syck: |
-  struct test_node seq1[] = {
-      { T_STR, 0, "Mark McGwire" },
-      { T_STR, 0, "Sammy Sosa" },
-      end_node
-  };
-  struct test_node seq2[] = {
-      { T_STR, 0, "Sammy Sosa" },
-      { T_STR, 0, "Ken Griffey" },
-      end_node
-  };
-  struct test_node map[] = {
-      { T_STR, 0, "hr" },
-          { T_SEQ, 0, 0, seq1 },
-      { T_STR, 0, "rbi" },
-          { T_SEQ, 0, 0, seq2 },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, 0, 0, map },
-      end_node
-  };
- 
+php: | 
+  array(  
+    'hr' => array( 'Mark McGwire', 'Sammy Sosa' ), 
+    'rbi' => array( 'Sammy Sosa', 'Ken Griffey' )  
+  )
 --- 
 test: Node for Sammy Sosa appears twice in this document 
 todo: true
@@ -653,43 +481,15 @@ yaml: |
   stats: | 
      65 Home Runs
      0.278 Batting Average
-perl: | 
-  {  
-    name           => 'Mark McGwire',  
-    accomplishment => "Mark set a major league home run record in 1998.\n", 
-    stats          => "65 Home Runs\n0.278 Batting Average\n" 
-  } 
-ruby: | 
-  {  
-    'name' => 'Mark McGwire', 'accomplishment' => "Mark set a major league home run record in 1998.\n", 
-    'stats' => "65 Home Runs\n0.278 Batting Average\n" 
-  } 
-python: | 
-    [ 
-        { 
-        'name': 'Mark McGwire', 
-        'accomplishment':  
-            'Mark set a major league home run record in 1998.\n', 
-        'stats': "65 Home Runs\n0.278 Batting Average\n" 
-        } 
-    ] 
-syck: |
-  struct test_node map[] = {
-      { T_STR, 0, "name" },
-          { T_STR, 0, "Mark McGwire" },
-      { T_STR, 0, "accomplishment" },
-          { T_STR, 0, "Mark set a major league home run record in 1998.\n" },
-      { T_STR, 0, "stats" },
-          { T_STR, 0, "65 Home Runs\n0.278 Batting Average\n" },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, 0, 0, map },
-      end_node
-  };
- 
+php: | 
+  array(  
+    'name'           => 'Mark McGwire',  
+    'accomplishment' => "Mark set a major league home run record in 1998.\n", 
+    'stats'          => "65 Home Runs\n0.278 Batting Average\n" 
+  ) 
 --- 
 test: Quoted scalars 
+todo: true
 spec: 2.17
 yaml: | 
   unicode: "Sosa did fine.\u263A" 
@@ -699,15 +499,6 @@ yaml: |
   single: '"Howdy!" he cried.' 
   quoted: ' # not a ''comment''.' 
   tie-fighter: '|\-*-/|' 
-perl-not-working: | 
-    { 
-        unicode => "Sosa did fine.\x{263A}", 
-        control => "\x081998\t1999\t2000\n",  
-        hexesc  => "\r\n is \r\n", 
-        single  => '"Howdy!" he cried.', 
-        quoted   => " # not a 'comment'.", 
-        "tie-fighter" => '|\\-*-/|', 
-    } 
 ruby: | 
   { 
     "tie-fighter" => "|\\-*-/|", 
@@ -717,19 +508,9 @@ ruby: |
     "single"=>"\"Howdy!\" he cried.", 
     "hexesc"=>"\r\n is \r\n" 
   } 
-python: | 
-    [ { 
-        'unicode': u"Sosa did fine.\u263A", 
-        'control': "\b1998\t1999\t2000\n",  
-        'hexesc':  "\x0D\x0A is \r\n", 
-        'single': '"Howdy!" he cried.', 
-        'quoted': ' # not a \'comment\'.', 
-        'tie-fighter': '|\-*-/|', 
-    } ] 
-
-
 --- 
 test: Multiline flow scalars 
+todo: true
 spec: 2.18 
 yaml: |
   plain:
@@ -738,85 +519,26 @@ yaml: |
   
   quoted: "So does this
     quoted scalar.\n"
-perl-not-working: | 
-  {  
-    plain  => 'This unquoted scalar spans many lines.', 
-    quoted => "So does this quoted scalar.\n" 
-  } 
 ruby: | 
   {  
     'plain' => 'This unquoted scalar spans many lines.', 
     'quoted' => "So does this quoted scalar.\n" 
   } 
-python: | 
-    [ { 
-        'plain': 'This unquoted scalar spans many lines.', 
-        'quoted': 'So does this quoted scalar.\n' 
-      } 
-    ] 
-syck: |
-  struct test_node map[] = {
-      { T_STR, 0, "plain" },
-          { T_STR, 0, "This unquoted scalar spans many lines." },
-      { T_STR, 0, "quoted" },
-          { T_STR, 0, "So does this quoted scalar.\n" },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, 0, 0, map },
-      end_node
-  };
- 
 --- 
 test: Integers 
 spec: 2.19
 yaml: | 
   canonical: 12345 
   decimal: +12,345 
-  sexagecimal: 3:25:45
   octal: 014 
   hexadecimal: 0xC 
-perl: | 
-  {  
-    canonical   => 12345,  
-    decimal     => 12345,  
-    octal       => oct("014"), 
-    hexadecimal => hex("0xC"), 
-  } 
-ruby: | 
-  {  
+php: | 
+  array(  
     'canonical' => 12345,  
     'decimal' => 12345,  
-    'sexagecimal' => 12345,
-    'octal' => '014'.oct,  
-    'hexadecimal' => '0xC'.hex  
-  } 
-python: | 
-    [ { 
-        'canonical': 12345, 
-        'decimal': 12345, 
-        'octal': 014, 
-        'hexadecimal': 0xC 
-    } ] 
-syck: |
-  struct test_node map[] = {
-      { T_STR, 0, "canonical" },
-          { T_STR, 0, "12345" },
-      { T_STR, 0, "decimal" },
-          { T_STR, 0, "+12,345" },
-      { T_STR, 0, "sexagecimal" },
-          { T_STR, 0, "3:25:45" },
-      { T_STR, 0, "octal" },
-          { T_STR, 0, "014" },
-      { T_STR, 0, "hexadecimal" },
-          { T_STR, 0, "0xC" },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, 0, 0, map },
-      end_node
-  };
- 
+    'octal' => 014,  
+    'hexadecimal' => 0xC
+  )
 --- 
 # FIX: spec shows parens around -inf and NaN
 test: Floating point 
@@ -824,59 +546,17 @@ spec: 2.20
 yaml: | 
   canonical: 1.23015e+3 
   exponential: 12.3015e+02 
-  sexagecimal: 20:30.15
   fixed: 1,230.15 
   negative infinity: -.inf
   not a number: .NaN 
-perl: | 
-  {  
+php: | 
+  array( 
     'canonical' => 1230.15,  
     'exponential' => 1230.15,  
     'fixed' => 1230.15, 
-    'negative infinity' => "-.inf", 
-    'not a number' => ".NaN", 
-  } 
-ruby: | 
-  {  
-    'canonical' => 1230.15,  
-    'exponential' => 1230.15,  
-    'sexagecimal' => 1230.15,  
-    'fixed' => 1230.15, 
-    'negative infinity' => -1.0/0.0, 
-    'not a number' => 0.0/0.0 
-  } 
-  if obj_y['not a number'].nan?   # NaN comparison doesn't work right against 0.0/0.0 
-    obj_r['not a number'] = obj_y['not a number'] 
-  end 
-python: | 
-    [ { 
-        'canonical': 1.23015e+3, 
-        'exponential': 1.23015e+3, 
-        'fixed': 1230.15, 
-        'negative infinity': '-.inf', 
-        'not a number': '.NaN', 
-    } ] 
-syck: |
-  struct test_node map[] = {
-      { T_STR, 0, "canonical" },
-          { T_STR, 0, "1.23015e+3" },
-      { T_STR, 0, "exponential" },
-          { T_STR, 0, "12.3015e+02" },
-      { T_STR, 0, "sexagecimal" },
-          { T_STR, 0, "20:30.15" },
-      { T_STR, 0, "fixed" },
-          { T_STR, 0, "1,230.15" },
-      { T_STR, 0, "negative infinity" },
-          { T_STR, 0, "-.inf" },
-      { T_STR, 0, "not a number" },
-          { T_STR, 0, ".NaN" },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, 0, 0, map },
-      end_node
-  };
- 
+    'negative infinity' => log(0), 
+    'not a number' => -log(0), 
+  )
 --- 
 test: Miscellaneous 
 spec: 2.21
@@ -885,124 +565,48 @@ yaml: |
   true: y
   false: n 
   string: '12345' 
-perl: | 
-  { 
-    null   => undef, 
-    true   => 1, 
-    false  => 0, 
-    string => "12345" 
-  } 
-ruby: |  
-  {  
-    nil => nil,  
-    true => true,  
-    false => false,  
+php: |  
+  array(  
+    '' => null,  
+    1 => true,  
+    0 => false,  
     'string' => '12345'  
-  } 
-python: | 
-    [ { 
-        'null': None, 
-        'true': 1, 
-        'false': 0, 
-        'string': '12345', 
-    } ] 
-syck: |
-  struct test_node map[] = {
-      { T_STR, 0, "null" },
-          { T_STR, 0, "~" },
-      { T_STR, 0, "true" },
-          { T_STR, 0, "y" },
-      { T_STR, 0, "false" },
-          { T_STR, 0, "n" },
-      { T_STR, 0, "string" },
-          { T_STR, 0, "12345" },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, 0, 0, map },
-      end_node
-  };
- 
+  ) 
 ---
 test: Timestamps
+todo: true
 spec: 2.22
 yaml: |
   canonical: 2001-12-15T02:59:43.1Z
   iso8601:  2001-12-14t21:59:43.10-05:00
   spaced:  2001-12-14 21:59:43.10 -05:00
   date:   2002-12-14 # Time is noon UTC
-perl: |
-  {
-    canonical => "2001-12-15T02:59:43.1Z",
-    iso8601   => "2001-12-14t21:59:43.10-05:00",
-    spaced    => "2001-12-14 21:59:43.10 -05:00",
-    date      => "2002-12-14",
-  }
-ruby: |
-  {
+php: |
+  array(
     'canonical' => YAML::mktime( 2001, 12, 15, 2, 59, 43, 0.10 ),
     'iso8601' => YAML::mktime( 2001, 12, 14, 21, 59, 43, 0.10, "-05:00" ),
     'spaced' => YAML::mktime( 2001, 12, 14, 21, 59, 43, 0.10, "-05:00" ),
     'date' => Date.new( 2002, 12, 14 )
-  }
-syck: |
-  struct test_node map[] = {
-      { T_STR, 0, "canonical" },
-          { T_STR, 0, "2001-12-15T02:59:43.1Z" },
-      { T_STR, 0, "iso8601" },
-          { T_STR, 0, "2001-12-14t21:59:43.10-05:00" },
-      { T_STR, 0, "spaced" },
-          { T_STR, 0, "2001-12-14 21:59:43.10 -05:00" },
-      { T_STR, 0, "date" },
-          { T_STR, 0, "2002-12-14" },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, 0, 0, map },
-      end_node
-  };
-
+  )
 ---
 test: legacy Timestamps test
+todo: true
 spec: legacy D4
 yaml: |
     canonical: 2001-12-15T02:59:43.00Z
     iso8601:  2001-02-28t21:59:43.00-05:00
     spaced:  2001-12-14 21:59:43.00 -05:00
     date:   2002-12-14
-python: |
-    [ {
-        'canonical': yaml.timestamp('2001-12-15T02:59:43.00Z'),
-        'iso8601':   yaml.timestamp('2001-03-01T02:59:43.00Z'),
-        'spaced':    yaml.timestamp('2001-12-15T02:59:43.00Z'),
-        'date':      yaml.timestamp('2002-12-14T00:00:00.00Z')
-    } ]
-ruby: |
-   {
+php: |
+   array(
      'canonical' => Time::utc( 2001, 12, 15, 2, 59, 43, 0 ),
      'iso8601' => YAML::mktime( 2001, 2, 28, 21, 59, 43, 0, "-05:00" ),
      'spaced' => YAML::mktime( 2001, 12, 14, 21, 59, 43, 0, "-05:00" ),
      'date' => Date.new( 2002, 12, 14 )
-   }
-syck: |
-  struct test_node map[] = {
-      { T_STR, 0, "canonical" },
-          { T_STR, 0, "2001-12-15T02:59:43.00Z" },
-      { T_STR, 0, "iso8601" },
-          { T_STR, 0, "2001-02-28t21:59:43.00-05:00" },
-      { T_STR, 0, "spaced" },
-          { T_STR, 0, "2001-12-14 21:59:43.00 -05:00" },
-      { T_STR, 0, "date" },
-          { T_STR, 0, "2002-12-14" },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, 0, 0, map },
-      end_node
-  };
-
+   )
 ---
 test: Various explicit families
+todo: true
 spec: 2.23
 yaml: |
   not-date: !str 2002-04-28
@@ -1027,23 +631,9 @@ ruby: |
     'picture' => "GIF89a\f\000\f\000\204\000\000\377\377\367\365\365\356\351\351\345fff\000\000\000\347\347\347^^^\363\363\355\216\216\216\340\340\340\237\237\237\223\223\223\247\247\247\236\236\236i^\020' \202\n\001\000;",
     'application specific tag' => "SOMETHING: The semantics of the tag\nabove may be different for\ndifferent documents.\n"
   }
-syck: |
-  struct test_node map[] = {
-      { T_STR, 0, "not-date" },
-          { T_STR, "tag:yaml.org,2002:str", "2002-04-28" },
-      { T_STR, 0, "picture" },
-          { T_STR, "tag:yaml.org,2002:binary", "R0lGODlhDAAMAIQAAP//9/X\n17unp5WZmZgAAAOfn515eXv\nPz7Y6OjuDg4J+fn5OTk6enp\n56enmleECcgggoBADs=\n" },
-      { T_STR, 0, "application specific tag" },
-          { T_STR, "x-private:something", "The semantics of the tag\nabove may be different for\ndifferent documents.\n" },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, 0, 0, map },
-      end_node
-  };
-
 ---
 test: Application specific family
+todo: true
 spec: 2.24
 yaml: |
   # Establish a tag prefix
@@ -1115,55 +705,6 @@ ruby: |
     },
     "Shape Container"
   ]
-syck: |
-  struct test_node point1[] = {
-      { T_STR, 0, "x" },
-          { T_STR, 0, "73" },
-      { T_STR, 0, "y" },
-          { T_STR, 0, "129" },
-      end_node
-  };
-  struct test_node point2[] = {
-      { T_STR, 0, "x" },
-          { T_STR, 0, "89" },
-      { T_STR, 0, "y" },
-          { T_STR, 0, "102" },
-      end_node
-  };
-  struct test_node map1[] = {
-      { T_STR, 0, "center" },
-          { T_MAP, 0, 0, point1 },
-      { T_STR, 0, "radius" },
-          { T_STR, 0, "7" },
-      end_node
-  };
-  struct test_node map2[] = {
-      { T_STR, 0, "start" },
-          { T_MAP, 0, 0, point1 },
-      { T_STR, 0, "finish" },
-          { T_MAP, 0, 0, point2 },
-      end_node
-  };
-  struct test_node map3[] = {
-      { T_STR, 0, "start" },
-          { T_MAP, 0, 0, point1 },
-      { T_STR, 0, "color" },
-          { T_STR, 0, "0xFFEEBB" },
-      { T_STR, 0, "value" },
-          { T_STR, 0, "Pretty vector drawing." },
-      end_node
-  };
-  struct test_node seq[] = {
-      { T_MAP, "tag:clarkevans.com,2002:graph/circle", 0, map1 },
-      { T_MAP, "tag:clarkevans.com,2002:graph/line", 0, map2 },
-      { T_MAP, "tag:clarkevans.com,2002:graph/label", 0, map3 },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_SEQ, "tag:clarkevans.com,2002:graph/shape", 0, seq },
-      end_node
-  };
-
 # ---
 # test: Unordered set
 # spec: 2.25
@@ -1177,6 +718,7 @@ syck: |
 #   ? Ken Griff
 ---
 test: Ordered mappings
+todo: true
 spec: 2.26
 yaml: |
   # ordered maps are represented as
@@ -1192,35 +734,9 @@ ruby: |
     'Sammy Sosa', 63,
     'Ken Griffy', 58
   ]
-syck: |
-  struct test_node map1[] = {
-      { T_STR, 0, "Mark McGwire" },
-          { T_STR, 0, "65" },
-      end_node
-  };
-  struct test_node map2[] = {
-      { T_STR, 0, "Sammy Sosa" },
-          { T_STR, 0, "63" },
-      end_node
-  };
-  struct test_node map3[] = {
-      { T_STR, 0, "Ken Griffy" },
-          { T_STR, 0, "58" },
-      end_node
-  };
-  struct test_node seq[] = {
-      { T_MAP, 0, 0, map1 },
-      { T_MAP, 0, 0, map2 },
-      { T_MAP, 0, 0, map3 },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_SEQ, "tag:yaml.org,2002:omap", 0, seq },
-      end_node
-  };
-
 ---
 test: Invoice
+todo: true
 spec: 2.27
 yaml: |
   --- !clarkevans.com,2002/^invoice
@@ -1267,80 +783,9 @@ ruby: |
            'description' => 'Super Hoop', 'price' => 2392.00 } ],
      'tax' => 251.42, 'total' => 4443.52,
      'comments' => "Late afternoon is best. Backup contact is Nancy Billsmer @ 338-4338.\n" }
-syck: |
-  struct test_node prod1[] = {
-      { T_STR, 0, "sku" },
-          { T_STR, 0, "BL394D" },
-      { T_STR, 0, "quantity" },
-          { T_STR, 0, "4" },
-      { T_STR, 0, "description" },
-          { T_STR, 0, "Basketball" },
-      { T_STR, 0, "price" },
-          { T_STR, 0, "450.00" },
-      end_node
-  };
-  struct test_node prod2[] = {
-      { T_STR, 0, "sku" },
-          { T_STR, 0, "BL4438H" },
-      { T_STR, 0, "quantity" },
-          { T_STR, 0, "1" },
-      { T_STR, 0, "description" },
-          { T_STR, 0, "Super Hoop" },
-      { T_STR, 0, "price" },
-          { T_STR, 0, "2392.00" },
-      end_node
-  };
-  struct test_node products[] = {
-      { T_MAP, 0, 0, prod1 },
-      { T_MAP, 0, 0, prod2 },
-      end_node
-  };
-  struct test_node address[] = {
-      { T_STR, 0, "lines" },
-          { T_STR, 0, "458 Walkman Dr.\nSuite #292\n" },
-      { T_STR, 0, "city" },
-          { T_STR, 0, "Royal Oak" },
-      { T_STR, 0, "state" },
-          { T_STR, 0, "MI" },
-      { T_STR, 0, "postal" },
-          { T_STR, 0, "48046" },
-      end_node
-  };
-  struct test_node id001[] = {
-      { T_STR, 0, "given" },
-          { T_STR, 0, "Chris" },
-      { T_STR, 0, "family" },
-          { T_STR, 0, "Dumars" },
-      { T_STR, 0, "address" },
-          { T_MAP, 0, 0, address },
-      end_node
-  };
-  struct test_node map[] = {
-      { T_STR, 0, "invoice" },
-          { T_STR, 0, "34843" },
-      { T_STR, 0, "date" },
-          { T_STR, 0, "2001-01-23" },
-      { T_STR, 0, "bill-to" },
-          { T_MAP, 0, 0, id001 },
-      { T_STR, 0, "ship-to" },
-          { T_MAP, 0, 0, id001 },
-      { T_STR, 0, "product" },
-          { T_SEQ, 0, 0, products },
-      { T_STR, 0, "tax" },
-          { T_STR, 0, "251.42" }, 
-      { T_STR, 0, "total" },
-          { T_STR, 0, "4443.52" },
-      { T_STR, 0, "comments" },
-          { T_STR, 0, "Late afternoon is best. Backup contact is Nancy Billsmer @ 338-4338.\n" },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, "tag:clarkevans.com,2002:invoice", 0, map },
-      end_node
-  };
-
 ---
 test: Log file
+todo: true
 spec: 2.28
 yaml: |
   ---
@@ -1380,65 +825,6 @@ ruby: |
            'Stack' => [ 
            { 'file' => 'TopClass.py', 'line' => 23, 'code' => "x = MoreObject(\"345\\n\")\n" }, 
            { 'file' => 'MoreClass.py', 'line' => 58, 'code' => "foo = bar" } ] } ) 
-syck: |
-  struct test_node map1[] = {
-      { T_STR, 0, "Time" }, 
-          { T_STR, 0, "2001-11-23 15:01:42 -05:00" },
-      { T_STR, 0, "User" }, 
-          { T_STR, 0, "ed" },
-      { T_STR, 0, "Warning" }, 
-          { T_STR, 0, "This is an error message for the log file\n" },
-      end_node
-  };
-  struct test_node map2[] = {
-      { T_STR, 0, "Time" }, 
-          { T_STR, 0, "2001-11-23 15:02:31 -05:00" },
-      { T_STR, 0, "User" }, 
-          { T_STR, 0, "ed" },
-      { T_STR, 0, "Warning" }, 
-          { T_STR, 0, "A slightly different error message.\n" },
-      end_node
-  };
-  struct test_node file1[] = {
-      { T_STR, 0, "file" }, 
-          { T_STR, 0, "TopClass.py" },
-      { T_STR, 0, "line" }, 
-          { T_STR, 0, "23" },
-      { T_STR, 0, "code" }, 
-          { T_STR, 0, "x = MoreObject(\"345\\n\")\n" },
-      end_node
-  };
-  struct test_node file2[] = {
-      { T_STR, 0, "file" }, 
-          { T_STR, 0, "MoreClass.py" },
-      { T_STR, 0, "line" }, 
-          { T_STR, 0, "58" },
-      { T_STR, 0, "code" }, 
-          { T_STR, 0, "foo = bar" },
-      end_node
-  };
-  struct test_node stack[] = {
-      { T_MAP, 0, 0, file1 },
-      { T_MAP, 0, 0, file2 },
-      end_node
-  };
-  struct test_node map3[] = {
-      { T_STR, 0, "Date" }, 
-          { T_STR, 0, "2001-11-23 15:03:17 -05:00" },
-      { T_STR, 0, "User" }, 
-          { T_STR, 0, "ed" },
-      { T_STR, 0, "Fatal" }, 
-          { T_STR, 0, "Unknown variable \"bar\"\n" },
-      { T_STR, 0, "Stack" }, 
-          { T_SEQ, 0, 0, stack },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, 0, 0, map1 },
-      { T_MAP, 0, 0, map2 },
-      { T_MAP, 0, 0, map3 },
-      end_node
-  };
 documents: 3 
  
 --- 
@@ -1454,23 +840,13 @@ yaml: |
    
    # These are three throwaway comment
    # lines (the first line is empty).
-ruby: | 
-   { 
+php: | 
+   array( 
      'this' => "contains three lines of text.\nThe third one starts with a\n# character. This isn't a comment.\n" 
-   } 
-syck: |
-  struct test_node map[] = {
-      { T_STR, 0, "this" },
-          { T_STR, 0, "contains three lines of text.\nThe third one starts with a\n# character. This isn't a comment.\n" },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, 0, 0, map },
-      end_node
-  };
- 
+   )
 --- 
 test: Document with a single value 
+todo: true
 yaml: | 
    --- > 
    This YAML stream contains a single text value.
@@ -1479,14 +855,9 @@ yaml: |
    simple matter of appending it at the end.
 ruby: | 
    "This YAML stream contains a single text value. The next stream is a log file - a sequence of log entries. Adding an entry to the log is a simple matter of appending it at the end.\n" 
-syck: |
-  struct test_node stream[] = {
-      { T_STR, 0, "This YAML stream contains a single text value. The next stream is a log file - a sequence of log entries. Adding an entry to the log is a simple matter of appending it at the end.\n" },
-      end_node
-  };
- 
 --- 
 test: Document stream 
+todo: true
 yaml: | 
    --- 
    at: 2001-08-12 09:25:00.00 Z 
@@ -1512,34 +883,6 @@ ruby: |
       'HTTP' => '1.0', 
       'url' => '/toc.html' 
    } ) 
-syck: |
-  struct test_node map1[] = {
-      { T_STR, 0, "at" }, 
-          { T_STR, 0, "2001-08-12 09:25:00.00 Z" },
-      { T_STR, 0, "type" }, 
-          { T_STR, 0, "GET" },
-      { T_STR, 0, "HTTP" }, 
-          { T_STR, 0, "1.0" },
-      { T_STR, 0, "url" }, 
-          { T_STR, 0, "/index.html" },
-      end_node
-  };
-  struct test_node map2[] = {
-      { T_STR, 0, "at" }, 
-          { T_STR, 0, "2001-08-12 09:25:10.00 Z" },
-      { T_STR, 0, "type" }, 
-          { T_STR, 0, "GET" },
-      { T_STR, 0, "HTTP" }, 
-          { T_STR, 0, "1.0" },
-      { T_STR, 0, "url" }, 
-          { T_STR, 0, "/toc.html" },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, 0, 0, map1 },
-      { T_MAP, 0, 0, map2 },
-      end_node
-  };
 documents: 2 
  
 --- 
@@ -1549,29 +892,15 @@ yaml: |
    invoice : 34843 
    date    : 2001-01-23 
    total   : 4443.52 
-ruby: | 
-   { 
-      'invoice' => 34843, 
-      'date' => Date.new( 2001, 1, 23 ), 
+php: | 
+   array( 
+      'invoice' => 34843,
+      'date' => mktime(0, 0, 0, 1, 23, 2001), 
       'total' => 4443.52 
-   } 
-syck: |
-  struct test_node map[] = {
-      { T_STR, 0, "invoice" }, 
-          { T_STR, 0, "34843" },
-      { T_STR, 0, "date" }, 
-          { T_STR, 0, "2001-01-23" },
-      { T_STR, 0, "total" }, 
-          { T_STR, 0, "4443.52" },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, 0, 0, map },
-      end_node
-  };
- 
+   )
 --- 
 test: Single-line documents 
+todo: true
 yaml: | 
   # The following is a sequence of three documents. 
   # The first contains an empty mapping, the second 
@@ -1584,23 +913,11 @@ ruby: |
   y.add( {} ) 
   y.add( [] ) 
   y.add( '' ) 
-syck: |
-  struct test_node map[] = {
-      end_node
-  };
-  struct test_node seq[] = {
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, 0, 0, map },
-      { T_SEQ, 0, 0, seq },
-      { T_STR, 0, "" },
-      end_node
-  };
 documents: 3 
  
 --- 
 test: Document with pause 
+todo: true
 yaml: | 
   # A communication channel based on a YAML stream. 
   --- 
@@ -1622,26 +939,6 @@ ruby: |
   y.add(  
     { "payload" => "Whatever", "sent at" => YAML::mktime( 2002, 6, 6, 12, 5, 53, 0.47 ) } 
   ) 
-syck: |
-  struct test_node map1[] = {
-      { T_STR, 0, "sent at" },
-          { T_STR, 0, "2002-06-06 11:46:25.10 Z" },
-      { T_STR, 0, "payload" },
-          { T_STR, 0, "Whatever" },
-      end_node
-  };
-  struct test_node map2[] = {
-      { T_STR, 0, "sent at" },
-          { T_STR, 0, "2002-06-06 12:05:53.47 Z" },
-      { T_STR, 0, "payload" },
-          { T_STR, 0, "Whatever" },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, 0, 0, map1 },
-      { T_MAP, 0, 0, map2 },
-      end_node
-  };
 documents: 2 
  
 --- 
@@ -1650,25 +947,11 @@ yaml: |
    integer: 12 
    also int: ! "12" 
    string: !str 12 
-ruby: | 
-   { 'integer' => 12, 'also int' => 12, 'string' => '12' } 
-syck: |
-  struct test_node map[] = {
-      { T_STR, 0, "integer" },
-          { T_STR, "tag:yaml.org,2002:int", "12" },
-      { T_STR, 0, "also int" },
-          { T_STR, "tag:yaml.org,2002:int", "12" },
-      { T_STR, 0, "string" },
-          { T_STR, "tag:yaml.org,2002:str", "12" },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, 0, 0, map },
-      end_node
-  };
- 
+php: | 
+   array( 'integer' => 12, 'also int' => 12, 'string' => '12' )
 --- 
 test: Private types 
+todo: true
 yaml: | 
   # Both examples below make use of the 'x-private:ball' 
   # type family URI, but with different semantics. 
@@ -1689,34 +972,6 @@ ruby: |
     YAML::PrivateType.new( 'ball', 
       { 'material' => 'steel' } ) } 
   ) 
-syck: |
-  struct test_node pool[] = {
-      { T_STR, 0, "number" },
-          { T_STR, 0, "8" },
-      { T_STR, 0, "color" },
-          { T_STR, 0, "black" },
-      end_node
-  };
-  struct test_node map1[] = {
-      { T_STR, 0, "pool" },
-          { T_MAP, "x-private:ball", 0, pool },
-      end_node
-  };
-  struct test_node bearing[] = {
-      { T_STR, 0, "material" },
-          { T_STR, 0, "steel" },
-      end_node
-  };
-  struct test_node map2[] = {
-      { T_STR, 0, "bearing" },
-          { T_MAP, "x-private:ball", 0, bearing },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, 0, 0, map1 },
-      { T_MAP, 0, 0, map2 },
-      end_node
-  };
 documents: 2 
  
 --- 
@@ -1724,62 +979,27 @@ test: Type family under yaml.org
 yaml: | 
   # The URI is 'tag:yaml.org,2002:str' 
   - !str a Unicode string 
-python: | 
-  [ [ 'a Unicode string' ] ] 
-ruby: | 
-  [ 'a Unicode string' ] 
-syck: |
-  struct test_node seq[] = {
-      { T_STR, "tag:yaml.org,2002:str", "a Unicode string" },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_SEQ, 0, 0, seq },
-      end_node
-  };
- 
+php: | 
+  array( 'a Unicode string' )
 --- 
 test: Type family under perl.yaml.org 
+todo: true
 yaml: | 
   # The URI is 'tag:perl.yaml.org,2002:Text::Tabs' 
   - !perl/Text::Tabs {} 
 ruby: | 
   [ YAML::DomainType.new( 'perl.yaml.org,2002', 'Text::Tabs', {} ) ]
-syck: |
-  struct test_node map[] = {
-      end_node
-  };
-  struct test_node seq[] = {
-      { T_MAP, "tag:perl.yaml.org,2002:Text::Tabs", 0, map },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_SEQ, 0, 0, seq },
-      end_node
-  };
- 
 --- 
 test: Type family under clarkevans.com 
+todo: true
 yaml: | 
   # The URI is 'tag:clarkevans.com,2003-02:timesheet' 
   - !clarkevans.com,2003-02/timesheet {}
 ruby: | 
   [ YAML::DomainType.new( 'clarkevans.com,2003-02', 'timesheet', {} ) ]
-syck: |
-  struct test_node map[] = {
-      end_node
-  };
-  struct test_node seq[] = {
-      { T_MAP, "tag:clarkevans.com,2003-02:timesheet", 0, map },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_SEQ, 0, 0, seq },
-      end_node
-  };
- 
 --- 
 test: URI Escaping 
+todo: true
 yaml: | 
   same: 
     - !domain.tld,2002/type\x30 value
@@ -1796,31 +1016,9 @@ ruby-setup: |
   } 
 ruby: | 
   { 'same' => [ 'ONE: value', 'ONE: value' ], 'different' => [ 'TWO: value', 'ONE: value' ] } 
-syck: |
-  struct test_node same[] = {
-      { T_STR, "tag:domain.tld,2002:type0", "value" },
-      { T_STR, "tag:domain.tld,2002:type0", "value" },
-      end_node
-  };
-  struct test_node diff[] = {
-      { T_STR, "tag:domain.tld,2002:type%30", "value" },
-      { T_STR, "tag:domain.tld,2002:type0", "value" },
-      end_node
-  };
-  struct test_node map[] = {
-      { T_STR, 0, "same" },
-          { T_SEQ, 0, 0, same },
-      { T_STR, 0, "different" },
-          { T_SEQ, 0, 0, diff },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, 0, 0, map },
-      end_node
-  };
- 
 --- 
 test: URI Prefixing 
+todo: true
 yaml: | 
   # 'tag:domain.tld,2002:invoice' is some type family. 
   invoice: !domain.tld,2002/^invoice 
@@ -1848,6 +1046,7 @@ ruby: |
  
 --- 
 test: Overriding anchors 
+todo: true
 yaml: | 
   anchor : &A001 This scalar has an anchor. 
   override : &A001 >
@@ -1875,6 +1074,7 @@ syck: |
  
 --- 
 test: Flow and block formatting 
+todo: true
 yaml: | 
   empty: [] 
   flow: [ one, two, three # May span lines, 
@@ -1891,45 +1091,9 @@ ruby: |
   { 'empty' => [], 'flow' => [ 'one', 'two', 'three', 'four', 'five' ], 
     'block' => [ 'First item in top sequence', [ 'Subordinate sequence entry' ], 
     "A folded sequence entry\n", 'Sixth item in top sequence' ] } 
-syck: |
-  struct test_node empty[] = {
-      end_node
-  };
-  struct test_node flow[] = {
-      { T_STR, 0, "one" },
-      { T_STR, 0, "two" },
-      { T_STR, 0, "three" },
-      { T_STR, 0, "four" },
-      { T_STR, 0, "five" },
-      end_node
-  };
-  struct test_node inblock[] = {
-      { T_STR, 0, "Subordinate sequence entry" },
-      end_node
-  };
-  struct test_node block[] = {
-      { T_STR, 0, "First item in top sequence" },
-      { T_SEQ, 0, 0, inblock },
-      { T_STR, 0, "A folded sequence entry\n" },
-      { T_STR, 0, "Sixth item in top sequence" },
-      end_node
-  };
-  struct test_node map[] = {
-      { T_STR, 0, "empty" },
-          { T_SEQ, 0, 0, empty },
-      { T_STR, 0, "flow" },
-          { T_SEQ, 0, 0, flow },
-      { T_STR, 0, "block" },
-          { T_SEQ, 0, 0, block },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, 0, 0, map },
-      end_node
-  };
- 
 --- 
 test: Complete mapping test 
+todo: true
 yaml: |
  empty: {} 
  flow: { one: 1, two: 2 }
@@ -1995,7 +1159,6 @@ ruby: |
       end 
     end 
   } 
- 
 --- 
 test: Literal explicit indentation
 yaml: |
@@ -2018,14 +1181,13 @@ yaml: |
    # not required.
    redundant: |2
      This value is indented 2 spaces.
-ruby: |
-   { 
+php: |
+   array( 
       'leading spaces' => "    This value starts with four spaces.\n", 
       'leading line break' => "\nThis value starts with a line break.\n", 
       'leading comment indicator' => "# first line starts with a\n# character.\n", 
       'redundant' => "This value is indented 2 spaces.\n" 
-   } 
-
+   )
 ---
 test: Chomping and keep modifiers
 yaml: |
@@ -2043,18 +1205,18 @@ yaml: |
         This has two newlines.
     
     same as "kept" above: "This has two newlines.\n\n"
-ruby: | 
-    {  
+php: | 
+    array(  
       'clipped' => "This has one newline.\n", 
       'same as "clipped" above' => "This has one newline.\n", 
       'stripped' => 'This has no newline.', 
       'same as "stripped" above' => 'This has no newline.', 
       'kept' => "This has two newlines.\n\n", 
       'same as "kept" above' => "This has two newlines.\n\n" 
-    } 
- 
+    )
 --- 
 test: Literal combinations 
+todo: true
 yaml: | 
    empty: |
    
@@ -2088,8 +1250,8 @@ yaml: |
        This has no newline.
    
    both are equal to: "  This has no newline."
-ruby: | 
-   { 
+php: | 
+   array( 
      'empty' => '', 
      'literal' => "The \\ ' \" characters may be\nfreely used. Leading white\n   space " + 
        "is significant.\n\nLine breaks are significant.\nThus this value contains one\n" + 
@@ -2100,10 +1262,10 @@ ruby: |
      'indented and chomped' => '  This has no newline.', 
      'also written as' => '  This has no newline.', 
      'both are equal to' => '  This has no newline.' 
-   } 
- 
+   )
 --- 
 test: Folded combinations 
+todo: true
 yaml: | 
    empty: > 
    
@@ -2155,23 +1317,23 @@ yaml: |
    
    # Explicit comments may follow 
    # but must be less indented. 
-ruby: | 
-   { 
+php: | 
+   array( 
      'empty' => '', 
-     'one paragraph' => 'Line feeds are converted to spaces, so this value' + 
+     'one paragraph' => 'Line feeds are converted to spaces, so this value'.
        " contains no line breaks except for the final one.\n", 
-     'multiple paragraphs' => "\nAn empty line, either at the start or in the value:\n" + 
+     'multiple paragraphs' => "\nAn empty line, either at the start or in the value:\n".
        "Is interpreted as a line break. Thus this value contains three line breaks.\n", 
-     'indented text' => "This is a folded paragraph followed by a list:\n" + 
-       " * first entry\n * second entry\nFollowed by another folded paragraph, " + 
+     'indented text' => "This is a folded paragraph followed by a list:\n".
+       " * first entry\n * second entry\nFollowed by another folded paragraph, ".
        "another list:\n\n * first entry\n\n * second entry\n\nAnd a final folded paragraph.\n", 
-     'above is equal to' => "This is a folded paragraph followed by a list:\n" + 
-       " * first entry\n * second entry\nFollowed by another folded paragraph, " + 
+     'above is equal to' => "This is a folded paragraph followed by a list:\n".
+       " * first entry\n * second entry\nFollowed by another folded paragraph, ".
        "another list:\n\n * first entry\n\n * second entry\n\nAnd a final folded paragraph.\n" 
-   } 
- 
+   )
 --- 
 test: Single quotes 
+todo: true
 yaml: | 
    empty: ''
    second: '! : \ etc. can be used freely.'
@@ -2182,17 +1344,17 @@ yaml: |
          and one
          line break'
    is same as: "this contains six spaces\nand one line break" 
-ruby: | 
-   { 
+php: | 
+   array( 
      'empty' => '', 
      'second' => '! : \\ etc. can be used freely.', 
      'third' => "a single quote ' must be escaped.", 
      'span' => "this contains six spaces\nand one line break", 
      'is same as' => "this contains six spaces\nand one line break" 
-   } 
- 
+   )
 --- 
 test: Double quotes
+todo: true
 yaml: |
    empty: ""
    second: "! : etc. can be used freely."
@@ -2202,18 +1364,18 @@ yaml: |
      four  \
          spaces" 
    is equal to: "this contains four  spaces"
-ruby: | 
-   { 
+php: | 
+   array( 
      'empty' => '', 
      'second' => '! : etc. can be used freely.', 
      'third' => 'a " or a \\ must be escaped.', 
      'fourth' => "this value ends with an LF.\n", 
      'span' => "this contains four  spaces", 
      'is equal to' => "this contains four  spaces" 
-   } 
- 
+   )
 --- 
 test: Unquoted strings 
+todo: true
 yaml: | 
    first: There is no unquoted empty string.
  
@@ -2238,8 +1400,8 @@ yaml: |
 
    note: { one-line keys: but multi-line values } 
 
-ruby: | 
-   { 
+php: | 
+   array( 
      'first' => 'There is no unquoted empty string.', 
      'second' => 12, 
      'third' => '12', 
@@ -2247,10 +1409,10 @@ ruby: |
      'indicators' => "this has no comments. #:foo and bar# are both text.", 
      'flow' => [ 'can span lines', 'like this' ], 
      'note' => { 'one-line keys' => 'but multi-line values' } 
-   } 
- 
+   )
 --- 
 test: Spanning sequences 
+todo: true
 yaml: | 
    # The following are equal seqs 
    # with different identities. 
@@ -2260,13 +1422,12 @@ yaml: |
    block: 
      - one 
      - two 
-ruby: | 
-   { 
+php: | 
+   array( 
      'flow' => [ 'one', 'two' ], 
      'spanning' => [ 'one', 'two' ], 
      'block' => [ 'one', 'two' ] 
-   } 
- 
+   )
 --- 
 test: Flow mappings 
 yaml: | 
@@ -2276,14 +1437,14 @@ yaml: |
    block: 
        one: 1 
        two: 2 
-ruby: | 
-   { 
-     'flow' => { 'one' => 1, 'two' => 2 }, 
-     'block' => { 'one' => 1, 'two' => 2 } 
-   } 
-
+php: | 
+   array( 
+     'flow' => array( 'one' => 1, 'two' => 2 ), 
+     'block' => array( 'one' => 1, 'two' => 2 )
+   )
 ---
 test: Representations of 12
+todo: true
 yaml: |
    - 12 # An integer 
    # The following scalars 
@@ -2301,11 +1462,11 @@ yaml: |
    - d:/foo/bar
    - foo/bar
    - /a.*b/
-ruby: |
-   [ 12, '12', '12', '12', '12', '/foo/bar', 'd:/foo/bar', 'foo/bar', '/a.*b/' ]
-
+php: |
+   array( 12, '12', '12', '12', '12', '/foo/bar', 'd:/foo/bar', 'foo/bar', '/a.*b/' )
 ---
 test: "Null"
+todo: true
 yaml: |
    canonical: ~
 
@@ -2323,16 +1484,16 @@ yaml: |
    four: This mapping has five keys,
          only two with values.
 
-ruby: |
-   { 
-     'canonical' => nil, 
-     'english' => nil, 
-     'sparse' => [ nil, '2nd entry', nil, '4th entry', nil ], 
+php: |
+   array (
+     'canonical' => null, 
+     'english' => null, 
+     'sparse' => array( null, '2nd entry', null, '4th entry', null ]), 
      'four' => 'This mapping has five keys, only two with values.'
-   } 
-
+   ) 
 ---
 test: Omap
+todo: true
 yaml: |
    # Explicitly typed dictionary.
    Bestiary: !omap
@@ -2351,6 +1512,7 @@ ruby: |
 
 ---
 test: Pairs
+todo: true
 yaml: |
   # Explicitly typed pairs.
   tasks: !pairs
@@ -2370,6 +1532,7 @@ ruby: |
 
 ---
 test: Set
+todo: true
 yaml: |
   # Explicitly typed set.
   baseball players: !set
@@ -2391,13 +1554,12 @@ yaml: |
    false: used as key
    logical:  true 
    answer: no 
-ruby: | 
-   { 
+php: | 
+   array( 
      false => 'used as key', 
      'logical' => true, 
      'answer' => false 
-   } 
-
+   )
 --- 
 test: Integer 
 yaml: | 
@@ -2405,14 +1567,13 @@ yaml: |
    decimal: +12,345 
    octal: 014 
    hexadecimal: 0xC 
-ruby: | 
-   { 
+php: | 
+   array( 
      'canonical' => 12345, 
      'decimal' => 12345, 
      'octal' => 12, 
      'hexadecimal' => 12  
-   } 
- 
+   )
 --- 
 test: Float 
 yaml: | 
@@ -2421,52 +1582,32 @@ yaml: |
    fixed: 1,230.15 
    negative infinity: -.inf
    not a number: .NaN 
-ruby: | 
-  {  
+php: | 
+  array(  
     'canonical' => 1230.15,  
     'exponential' => 1230.15,  
     'fixed' => 1230.15, 
-    'negative infinity' => -1.0/0.0, 
-    'not a number' => 0.0/0.0 
-  } 
-  if obj_y['not a number'].nan?   # NaN comparison doesn't work right against 0.0/0.0 
-    obj_r['not a number'] = obj_y['not a number'] 
-  end 
- 
+    'negative infinity' => log(0), 
+    'not a number' => -log(0) 
+  )
 --- 
 test: Timestamp 
+todo: true
 yaml: | 
    canonical:       2001-12-15T02:59:43.1Z 
    valid iso8601:   2001-12-14t21:59:43.10-05:00 
    space separated: 2001-12-14 21:59:43.10 -05:00 
    date (noon UTC): 2002-12-14 
 ruby: | 
-   { 
+   array( 
      'canonical' => YAML::mktime( 2001, 12, 15, 2, 59, 43, 0.10 ), 
      'valid iso8601' => YAML::mktime( 2001, 12, 14, 21, 59, 43, 0.10, "-05:00" ), 
      'space separated' => YAML::mktime( 2001, 12, 14, 21, 59, 43, 0.10, "-05:00" ), 
      'date (noon UTC)' => Date.new( 2002, 12, 14 ) 
-   } 
-syck: |
-  struct test_node map[] = {
-      { T_STR, 0, "canonical" },
-          { T_STR, 0, "2001-12-15T02:59:43.1Z" },
-      { T_STR, 0, "valid iso8601" },
-          { T_STR, 0, "2001-12-14t21:59:43.10-05:00" },
-      { T_STR, 0, "space separated" },
-          { T_STR, 0, "2001-12-14 21:59:43.10 -05:00" },
-      { T_STR, 0, "date (noon UTC)" },
-          { T_STR, 0, "2002-12-14" },
-      end_node
-  };
-  struct test_node stream[] = {
-      { T_MAP, 0, 0, map },
-      end_node
-  };
-
- 
+   )
 --- 
 test: Binary 
+todo: true
 yaml: | 
    canonical: !binary "\
     R0lGODlhDAAMAIQAAP//9/X17unp5WZmZgAAAOfn515eXvPz7Y6OjuDg4J+fn5\
@@ -2492,6 +1633,7 @@ ruby: |
  
 ---
 test: Merge key
+todo: true
 yaml: |
   ---
   - &CENTER { x: 1, y: 2 }
@@ -2544,6 +1686,7 @@ ruby: |
 
 --- 
 test: Default key 
+todo: true
 yaml: | 
    ---     # Old schema 
    link with:  
@@ -2567,6 +1710,7 @@ documents: 2
  
 --- 
 test: Special keys 
+todo: true
 yaml: | 
    "!": These three keys 
    "&": had to be quoted 
