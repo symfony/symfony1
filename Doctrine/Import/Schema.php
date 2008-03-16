@@ -113,7 +113,9 @@ class Doctrine_Import_Schema
                                                           'foreign',
                                                           'foreignAlias',
                                                           'foreignType',
-                                                          'autoComplete'),
+                                                          'autoComplete',
+                                                          'onDelete',
+                                                          'onUpdate'),
 
                                    'inheritance'=>  array('type',
                                                           'extends',
