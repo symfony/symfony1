@@ -51,7 +51,7 @@ class Doctrine_Import_Firebird extends Doctrine_Import
      * @return mixed data array on success, a MDB2 error on failure
      * @access public
      */
-    public function listTableFields($table)
+    public function listTableColumns($table)
     {
         $table = $this->conn->quote(strtoupper($table), 'text');
         $query = 'SELECT RDB$FIELD_NAME FROM RDB$RELATION_FIELDS WHERE UPPER(RDB$RELATION_NAME) = ' . $table;
