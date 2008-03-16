@@ -318,7 +318,7 @@ END;
      */
     public function buildTableDefinition(array $definition)
     {
-        if (isset($definition['inheritance']['type']) && $definition['inheritance']['type'] == 'simple') {
+        if (isset($definition['inheritance']['type']) && ($definition['inheritance']['type'] == 'simple' || $definition['inheritance']['type'] == 'column_aggregation')) {
             return;
         }
         
@@ -364,9 +364,7 @@ END;
         $code = implode("\n", $ret);
         $code = trim($code);
         
-        if ($code) {
-          return "\n  public function setTableDefinition()"."\n  {\n    ".$code."\n  }";
-        }
+        return "\n  public function setTableDefinition()"."\n  {\n    ".$code."\n  }";
     }
 
     /**
@@ -460,10 +458,8 @@ END;
 
         $code = implode("\n", $ret);
         $code = trim($code);
-
-        if ($code) {
-          return "\n  public function setUp()\n  {\n    ".$code."\n  }";
-        }
+        
+        return "\n  public function setUp()\n  {\n    ".$code."\n  }";
     }
 
     /**
