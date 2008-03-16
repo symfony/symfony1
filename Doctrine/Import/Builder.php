@@ -383,12 +383,10 @@ END;
 
         $ret = array();
         $i = 0;
-        
-        if (isset($definition['inheritance']['type']) && ($definition['inheritance']['type'] == 'concrete' || $definition['inheritance']['type'] == 'column_aggregation')) {
-            $ret[$i] = "    parent::setUp();";
-            $i++;
-        }
-        
+
+        $ret[$i] = "    parent::setUp();";
+        $i++;
+
         if (isset($definition['relations']) && is_array($definition['relations']) && ! empty($definition['relations'])) {
             foreach ($definition['relations'] as $name => $relation) {
                 $class = isset($relation['class']) ? $relation['class']:$name;
