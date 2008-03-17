@@ -123,7 +123,7 @@ $php = <<<EOF
 
 EOF;
 
-$t->is(sfToolkit::stripComments($php), $php);
+$t->is(sfToolkit::stripComments($php), $php, '::stripComments() correctly handles comments within strings');
 
 
 // ::stripslashesDeep()
