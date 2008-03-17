@@ -1390,13 +1390,13 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
             throw new Doctrine_Connection_Exception('You must create your Doctrine_Connection by using a valid Doctrine style dsn in order to use the create/drop database functionality');
         }
 
+        // Parse pdo dsn so we are aware of the connection information parts
+        $info = $this->getManager()->parsePdoDsn($dsn);
+
+        // Get the temporary connection to issue the drop database command
+        $tmpConnection = $this->getTmpConnection($info);
+
         try {
-            // Parse pdo dsn so we are aware of the connection information parts
-            $info = $this->getManager()->parsePdoDsn($dsn);
-
-            // Get the temporary connection to issue the drop database command
-            $tmpConnection = $this->getTmpConnection($info);
-
             // Issue create database command
             $tmpConnection->export->createDatabase($info['dbname']);
         } catch (Exception $e) {}
@@ -1430,13 +1430,13 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
             throw new Doctrine_Connection_Exception('You must create your Doctrine_Connection by using a valid Doctrine style dsn in order to use the create/drop database functionality');
         }
 
+        // Parse pdo dsn so we are aware of the connection information parts
+        $info = $this->getManager()->parsePdoDsn($dsn);
+
+        // Get the temporary connection to issue the drop database command
+        $tmpConnection = $this->getTmpConnection($info);
+
         try {
-            // Parse pdo dsn so we are aware of the connection information parts
-            $info = $this->getManager()->parsePdoDsn($dsn);
-
-            // Get the temporary connection to issue the drop database command
-            $tmpConnection = $this->getTmpConnection($info);
-
             // Issue drop database command
             $tmpConnection->export->dropDatabase($info['dbname']);
         } catch (Exception $e) {}
