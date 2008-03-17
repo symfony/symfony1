@@ -914,7 +914,16 @@ class sfPropelDatabaseSchema
     $attributes = array();
     foreach ($hash as $attribute => $value)
     {
-      $attributes[$attribute] = (string) $value;
+      $value = (string) $value;
+      if (in_array($value, array('true', 'on')))
+      {
+        $value = true;
+      }
+      elseif (in_array($value, array('false', 'off')))
+      {
+        $value = false;
+      }
+      $attributes[$attribute] = $value;
     }
 
     return array($name, $attributes);
