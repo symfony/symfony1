@@ -412,7 +412,7 @@ class Doctrine_Import_Schema
             if ( ! empty($array[$className]['inheritance'])) {
                 $this->_validateSchemaElement('inheritance', array_keys($definition['inheritance']));
 
-                // Default inheritance to concrete inheritance                
+                // Default inheritance to class table inheritance
                 if ( ! isset($array[$className]['inheritance']['type'])) {
                     $array[$className]['inheritance']['type'] = 'class_table';
                 }

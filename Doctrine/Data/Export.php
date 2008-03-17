@@ -64,7 +64,7 @@ class Doctrine_Data_Export extends Doctrine_Data
         
         foreach ($models AS $name) {
             
-            if ( ! empty($specifiedModels) AND !in_array($name, $specifiedModels)) {
+            if ( ! empty($specifiedModels) AND ! in_array($name, $specifiedModels)) {
                 continue;
             }
             
