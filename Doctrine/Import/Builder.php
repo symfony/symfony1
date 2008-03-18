@@ -484,7 +484,8 @@ END;
             $options = $column;
             $unset = array('name', 'type', 'length');
             foreach ($options as $key => $value) {
-                if (in_array($key, $unset) || empty($value)) {
+                // Remove column elements which are specified above or are null
+                if (in_array($key, $unset) || is_null($value)) {
                     unset($options[$key]);
                 }
             }
