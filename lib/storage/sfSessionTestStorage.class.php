@@ -38,7 +38,7 @@ class sfSessionTestStorage extends sfStorage
 
     if (!$this->getParameter('session_path'))
     {
-      throw new sfInitializationException('Factory configuration file is missing required "session_path" parameter for the "storage" category.');
+      $this->setParameter('session_path', sfConfig::get('sf_test_cache_dir').'/sessions');
     }
 
     $this->sessionId = null;
