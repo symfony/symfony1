@@ -1278,8 +1278,10 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     /**
      * fromArray
      *
-     * @param   string $array
-     * @param   bool  $deep Bool value for whether or not to merge the data deep
+     * Import data from a php array
+     *
+     * @param   string $array Php array of data
+     * @param   bool   $deep  Bool value for whether or not to merge the data deep
      * @return  void
      */
     public function fromArray($array, $deep = true)
@@ -1315,9 +1317,10 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 $this->set($key, $value);
             }
         }
+
         // eliminate relationships missing in the $array
         foreach ($this->_references as $name => $obj) {
-            if (!isset($array[$name])) {
+            if ( ! isset($array[$name])) {
                 unset($this->$name);
             }
         }
@@ -1326,8 +1329,8 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     /**
      * exportTo
      *
-     * @param string $type
-     * @param string $deep
+     * @param string $type Format type: xml, yml, json
+     * @param string $deep Whether or not to export deep in to all relationships
      * @return void
      */
     public function exportTo($type, $deep = true)
@@ -1342,10 +1345,11 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     /**
      * importFrom
      *
-     * @param string $type
-     * @param string $data
+     * Import data from an external data source
+     *
+     * @param string $type  Format type: xml, yml, json
+     * @param string $data  Data to be parsed and imported
      * @return void
-     * @author Jonathan H. Wage
      */
     public function importFrom($type, $data)
     {
