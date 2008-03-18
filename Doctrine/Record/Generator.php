@@ -113,9 +113,9 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
 
     public function initialize(Doctrine_Table $table)
     {
-    	if ($this->_initialized) {
-    	    return false;
-    	}
+      	if ($this->_initialized) {
+      	    return false;
+      	}
         
         $this->_initialized = true;
 
