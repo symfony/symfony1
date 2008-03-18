@@ -23,6 +23,7 @@
  * Doctrine_Template_Taggable
  *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
+ * @author      Jonathan H. Wage <jonwage@gmail.com
  * @package     Doctrine
  * @subpackage  Template
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
@@ -31,4 +32,25 @@
  * @since       1.0
  */
 class Doctrine_Template_Taggable extends Doctrine_Template
-{ }
+{
+    /**
+     * __construct
+     *
+     * @param string $array 
+     * @return void
+     */
+    public function __construct(array $options)
+    {
+        $this->_plugin = new Doctrine_Behavior_Taggable($options);
+    }
+
+    /**
+     * setUp
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        $this->_plugin->initialize($this->_table);
+    }
+}
