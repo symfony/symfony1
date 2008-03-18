@@ -90,6 +90,7 @@ class Doctrine_Import_Schema
                                                           'autoincrement',
                                                           'type',
                                                           'length',
+                                                          'size',
                                                           'default',
                                                           'scale',
                                                           'values'),
