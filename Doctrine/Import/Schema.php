@@ -580,7 +580,15 @@ class Doctrine_Import_Schema
             }
         }
     }
-    
+
+    /**
+     * _fixDuplicateRelations
+     *
+     * Ensure the relations for each class are unique and that no duplicated relations exist from the auto generated relations
+     * and the user explicitely defining the opposite end
+     *
+     * @return void
+     */
     protected function _fixDuplicateRelations()
     {
         foreach($this->_relations as $className => $relations) {
