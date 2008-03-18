@@ -27,6 +27,7 @@ class sfTestUnitTask extends sfBaseTask
       new sfCommandArgument('name', sfCommandArgument::OPTIONAL | sfCommandArgument::IS_ARRAY, 'The test name'),
     ));
 
+    $this->aliases = array('test-unit');
     $this->namespace = 'test';
     $this->name = 'unit';
     $this->briefDescription = 'Launches unit tests';

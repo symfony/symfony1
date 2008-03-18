@@ -28,6 +28,7 @@ class sfTestFunctionalTask extends sfBaseTask
       new sfCommandArgument('controller', sfCommandArgument::OPTIONAL | sfCommandArgument::IS_ARRAY, 'The controller name'),
     ));
 
+    $this->aliases = array('test-functional');
     $this->namespace = 'test';
     $this->name = 'functional';
     $this->briefDescription = 'Launches functional tests';

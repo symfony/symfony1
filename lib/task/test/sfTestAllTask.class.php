@@ -23,6 +23,7 @@ class sfTestAllTask extends sfBaseTask
    */
   protected function configure()
   {
+    $this->aliases = array('test-all');
     $this->namespace = 'test';
     $this->name = 'all';
     $this->briefDescription = 'Launches all tests';
