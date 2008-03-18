@@ -495,7 +495,7 @@ class Doctrine_Import_Schema
                     $relation['local'] = isset($relation['local']) ? $relation['local']:Doctrine::tableize($name) . '_id';
                     $relation['foreign'] = isset($relation['foreign']) ? $relation['foreign']:Doctrine::tableize($class) . '_id';
                 } else {
-                    $relation['local'] = isset($relation['local']) ? $relation['local']:Doctrine::tableize($relation['alias']) . '_id';
+                    $relation['local'] = isset($relation['local']) ? $relation['local']:Doctrine::tableize($relation['class']) . '_id';
                     $relation['foreign'] = isset($relation['foreign']) ? $relation['foreign']:'id';
                 }
                 
