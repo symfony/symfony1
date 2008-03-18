@@ -70,8 +70,6 @@ class sfPHPView extends sfView
 
     $this->loadCoreAndStandardHelpers();
 
-    unset($_sfFile);
-
     extract($this->attributeHolder->toArray(), EXTR_REFS);
 
     // render
