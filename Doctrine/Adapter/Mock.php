@@ -21,6 +21,7 @@
 
 /**
  * Doctrine_Adapter_Mock
+ *
  * This class is used for special testing purposes.
  *
  * @package     Doctrine
@@ -33,29 +34,29 @@
  */
 class Doctrine_Adapter_Mock implements Doctrine_Adapter_Interface, Countable
 {
-    private $name;
+    private $_name;
     
-    private $queries = array();
+    private $_queries = array();
     
-    private $exception = array();
+    private $_exception = array();
     
-    private $lastInsertIdFail = false;
+    private $_lastInsertIdFail = false;
 
     public function __construct($name = null) 
     {
-        $this->name = $name;
+        $this->_name = $name;
     }
     public function getName() 
     {
-        return $this->name;
+        return $this->_name;
     }
     public function pop() 
     {
-        return array_pop($this->queries);
+        return array_pop($this->_queries);
     }
     public function forceException($name, $message = '', $code = 0) 
     {
-        $this->exception = array($name, $message, $code);
+        $this->_exception = array($name, $message, $code);
     }
     public function prepare($query)
     {
@@ -66,18 +67,18 @@ class Doctrine_Adapter_Mock implements Doctrine_Adapter_Interface, Countable
     }
     public function addQuery($query)
     {
-        $this->queries[] = $query;
+        $this->_queries[] = $query;
     }
     public function query($query) 
     {
-        $this->queries[] = $query;
+        $this->_queries[] = $query;
 
-        $e    = $this->exception;
+        $e    = $this->_exception;
 
         if ( ! empty($e)) {
             $name = $e[0];
 
-            $this->exception = array();
+            $this->_exception = array();
 
             throw new $name($e[1], $e[2]);
         }
@@ -89,7 +90,7 @@ class Doctrine_Adapter_Mock implements Doctrine_Adapter_Interface, Countable
     }
     public function getAll() 
     {
-        return $this->queries;
+        return $this->_queries;
     }
     public function quote($input) 
     {
@@ -97,14 +98,14 @@ class Doctrine_Adapter_Mock implements Doctrine_Adapter_Interface, Countable
     }
     public function exec($statement) 
     {
-        $this->queries[] = $statement;
+        $this->_queries[] = $statement;
 
-        $e    = $this->exception;
+        $e    = $this->_exception;
 
         if ( ! empty($e)) {
             $name = $e[0];
 
-            $this->exception = array();
+            $this->_exception = array();
 
             throw new $name($e[1], $e[2]);
         }
@@ -114,15 +115,15 @@ class Doctrine_Adapter_Mock implements Doctrine_Adapter_Interface, Countable
     public function forceLastInsertIdFail($fail = true) 
     {
         if ($fail) {
-            $this->lastInsertIdFail = true;
+            $this->_lastInsertIdFail = true;
         } else {
-            $this->lastInsertIdFail = false;
+            $this->_lastInsertIdFail = false;
         }
     }
     public function lastInsertId()
     {
-        $this->queries[] = 'LAST_INSERT_ID()';
-        if ($this->lastInsertIdFail) {
+        $this->_queries[] = 'LAST_INSERT_ID()';
+        if ($this->_lastInsertIdFail) {
             return null;
         } else {
             return 1;
@@ -130,19 +131,19 @@ class Doctrine_Adapter_Mock implements Doctrine_Adapter_Interface, Countable
     }
     public function count() 
     {
-        return count($this->queries);    
+        return count($this->_queries);    
     }
     public function beginTransaction()
     {
-        $this->queries[] = 'BEGIN TRANSACTION';
+        $this->_queries[] = 'BEGIN TRANSACTION';
     }
     public function commit()
     {
-        $this->queries[] = 'COMMIT';
+        $this->_queries[] = 'COMMIT';
     }
     public function rollBack() 
     {
-        $this->queries[] = 'ROLLBACK';
+        $this->_queries[] = 'ROLLBACK';
     }
     public function errorCode() 
     { }
@@ -150,8 +151,9 @@ class Doctrine_Adapter_Mock implements Doctrine_Adapter_Interface, Countable
     { }
     public function getAttribute($attribute) 
     {
-        if ($attribute == Doctrine::ATTR_DRIVER_NAME)
-            return strtolower($this->name);
+        if ($attribute == Doctrine::ATTR_DRIVER_NAME) {
+            return strtolower($this->_name);
+        }
     }
     public function setAttribute($attribute, $value) 
     {

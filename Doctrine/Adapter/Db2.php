@@ -34,6 +34,8 @@ Doctrine::autoload('Doctrine_Adapter');
 class Doctrine_Adapter_Db2 extends Doctrine_Adapter
 {
     /**
+     * _config
+     *
      * User-provided configuration.
      *
      * Basic keys are:
@@ -59,14 +61,18 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     );
 
     /**
+     * _executeMode
+     *
      * Execution mode
      *
      * @var int execution flag (DB2_AUTOCOMMIT_ON or DB2_AUTOCOMMIT_OFF)
      * @access protected
      */
-    protected $_execute_mode = DB2_AUTOCOMMIT_ON;
+    protected $_executeMode = DB2_AUTOCOMMIT_ON;
 
     /**
+     * _lastInsertTable
+     *
      * Table name of the last accessed table for an insert operation
      * This is a DB2-Adapter-specific member variable with the utmost
      * probability you might not find it in other adapters...
@@ -77,7 +83,7 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     protected $_lastInsertTable = null;
 
      /**
-     * Constructor.
+     * __construct
      *
      * $config is an array of key/value pairs containing configuration
      * options.  These options are common to most adapters:
@@ -96,31 +102,24 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     public function __construct(array $config)
     {
         if ( ! isset($config['password'])) {
-            throw new Doctrine_Adapter_Db2_Exception("Configuration array must have a key for 'password' for login credentials.");
+            throw new Doctrine_Adapter_Exception("Configuration array must have a key for 'password' for login credentials.");
         }
 
         if ( ! isset($config['username'])) {
-            throw new Doctrine_Adapter_Db2_Exception("Configuration array must have a key for 'username' for login credentials.");
+            throw new Doctrine_Adapter_Exception("Configuration array must have a key for 'username' for login credentials.");
         }
 
         if ( ! isset($config['dbname'])) {
-            throw new Doctrine_Adapter_Db2_Exception("Configuration array must have a key for 'dbname' that names the database instance.");
+            throw new Doctrine_Adapter_Exception("Configuration array must have a key for 'dbname' that names the database instance.");
         }
 
         // keep the config
         $this->_config = array_merge($this->_config, (array) $config);
-
-        // create a profiler object
-        $enabled = false;
-        if (array_key_exists('profiler', $this->_config)) {
-            $enabled = (bool) $this->_config['profiler'];
-            unset($this->_config['profiler']);
-        }
-
-        $this->_profiler = new Doctrine_Profiler($enabled);
     }
 
     /**
+     * _connect
+     *
      * Creates a connection resource.
      *
      * @return void
@@ -133,7 +132,7 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
         }
 
         if ( ! extension_loaded('ibm_db2')) {
-            throw new Doctrine_Adapter_Db2_Exception('The IBM DB2 extension is required for this adapter but not loaded');
+            throw new Doctrine_Adapter_Exception('The IBM DB2 extension is required for this adapter but not loaded');
         }
 
         if ($this->_config['persistent']) {
@@ -151,7 +150,7 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
 
         if ( ! isset($this->_config['options']['autocommit'])) {
             // set execution mode
-            $this->_config['options']['autocommit'] = &$this->_execute_mode;
+            $this->_config['options']['autocommit'] = &$this->_executeMode;
         }
 
         if ($this->_config['host'] !== 'localhost') {
@@ -181,11 +180,13 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
 
         // check the connection
         if ( ! $this->_connection) {
-            throw new Doctrine_Adapter_Db2_Exception(db2_conn_errormsg(), db2_conn_error());
+            throw new Doctrine_Adapter_Exception(db2_conn_errormsg(), db2_conn_error());
         }
     }
 
     /**
+     * closeConnection
+     *
      * Force the connection to close.
      *
      * @return void
@@ -197,6 +198,8 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     }
 
     /**
+     * prepare
+     *
      * Returns an SQL statement for preparation.
      *
      * @param string $sql The SQL statement with placeholders.
@@ -211,16 +214,20 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     }
 
     /**
+     * _getExecuteMode
+     *
      * Gets the execution mode
      *
      * @return int the execution mode (DB2_AUTOCOMMIT_ON or DB2_AUTOCOMMIT_OFF)
      */
     public function _getExecuteMode()
     {
-        return $this->_execute_mode;
+        return $this->_executeMode;
     }
 
     /**
+     * _setExecuteMode
+     *
      * @param integer $mode
      * @return void
      */
@@ -229,16 +236,18 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
         switch ($mode) {
             case DB2_AUTOCOMMIT_OFF:
             case DB2_AUTOCOMMIT_ON:
-                $this->_execute_mode = $mode;
+                $this->_executeMode = $mode;
                 db2_autocommit($this->_connection, $mode);
                 break;
             default:
-                throw new Doctrine_Adapter_Db2_Exception("execution mode not supported");
+                throw new Doctrine_Adapter_Exception("execution mode not supported");
                 break;
         }
     }
 
     /**
+     * _quote
+     *
      * Quote a raw string.
      *
      * @param string $value     Raw string
@@ -260,6 +269,8 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     }
 
     /**
+     * getQuoteIdentifierSymbol
+     *
      * @return string
      */
     public function getQuoteIdentifierSymbol()
@@ -270,6 +281,8 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     }
 
     /**
+     * _beginTransaction
+     *
      * Begin a transaction.
      *
      * @return void
@@ -280,6 +293,8 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     }
 
     /**
+     * _commit
+     *
      * Commit a transaction.
      *
      * @return void
@@ -287,7 +302,7 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     protected function _commit()
     {
         if ( ! db2_commit($this->_connection)) {
-            throw new Doctrine_Adapter_Db2_Exception(
+            throw new Doctrine_Adapter_Exception(
                 db2_conn_errormsg($this->_connection),
                 db2_conn_error($this->_connection));
         }
@@ -296,6 +311,8 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     }
 
     /**
+     * _rollBack
+     *
      * Rollback a transaction.
      *
      * @return void
@@ -303,7 +320,7 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     protected function _rollBack()
     {
         if ( ! db2_rollback($this->_connection)) {
-            throw new Doctrine_Adapter_Db2_Exception(
+            throw new Doctrine_Adapter_Exception(
                 db2_conn_errormsg($this->_connection),
                 db2_conn_error($this->_connection));
         }
@@ -311,6 +328,8 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     }
 
     /**
+     * setFetchMode
+     *
      * Set the fetch mode.
      *
      * @param integer $mode
@@ -326,7 +345,7 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
                 $this->_fetchMode = $mode;
                 break;
             default:
-                throw new Doctrine_Adapter_Db2_Exception('Invalid fetch mode specified');
+                throw new Doctrine_Adapter_Exception('Invalid fetch mode specified');
                 break;
         }
     }

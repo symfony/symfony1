@@ -32,6 +32,13 @@
  */
 abstract class Doctrine_Adapter_Statement
 {
+    /**
+     * bindValue
+     *
+     * @param string $no 
+     * @param string $value 
+     * @return void
+     */
     public function bindValue($no, $value)
     {
     }
@@ -66,24 +73,67 @@ abstract class Doctrine_Adapter_Statement
     public function fetch()
     {
     }
+
+    /**
+     * nextRowSet
+     *
+     * @return void
+     */
     public function nextRowset()
     {
     }
+
+    /**
+     * execute()
+     *
+     * @return void
+     */
     public function execute()
     {
     }
+
+    /**
+     * errorCode
+     *
+     * @return void
+     */
     public function errorCode()
     {
     }
+
+    /**
+     * errorInfo
+     *
+     * @return void
+     */
     public function errorInfo()
     {
     }
+
+    /**
+     * rowCount
+     *
+     * @return void
+     */
     public function rowCount()
     {
     }
+
+    /**
+     * setFetchMode
+     *
+     * @param string $mode 
+     * @return void
+     */
     public function setFetchMode($mode)
     {
     }
+
+    /**
+     * columnCount
+     *
+     * @return void
+     */
     public function columnCount()
     {
     }

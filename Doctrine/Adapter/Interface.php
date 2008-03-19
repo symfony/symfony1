@@ -31,7 +31,8 @@
  * @since       1.0
  * @version     $Revision$
  */
-interface Doctrine_Adapter_Interface {
+interface Doctrine_Adapter_Interface
+{
     public function prepare($prepareString);
     public function query($queryString);
     public function quote($input);

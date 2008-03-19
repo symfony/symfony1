@@ -42,8 +42,7 @@ class Doctrine_Connection_Profiler implements Doctrine_Overloadable, IteratorAgg
                                 'connect',
                                 'begintransaction',
                                 'exec',
-                                'execute',
-                                );
+                                'execute');
 
     /**
      * @param array $events         an array containing all listened events

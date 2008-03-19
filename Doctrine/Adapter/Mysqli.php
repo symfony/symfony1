@@ -34,10 +34,12 @@
 class Doctrine_Adapter_Mysqli extends Doctrine_Adapter
 {
     /**
+     * _connect
+     *
      * Creates a connection to the database.
      *
      * @return void
-     * @throws Doctrine_Adapter_Mysqli_Exception
+     * @throws Doctrine_Adapter_Exception
      */
     protected function _connect()
     {
@@ -53,11 +55,13 @@ class Doctrine_Adapter_Mysqli extends Doctrine_Adapter
             $this->_config['dbname']
         );
         if ($this->_connection === false || mysqli_connect_errno()) {
-            throw new Doctrine_Adapter_Mysqli_Exception(mysqli_connect_error());
+            throw new Doctrine_Adapter_Exception(mysqli_connect_error());
         }
     }
 
     /**
+     * closeConnection
+     *
      * Force the connection to close.
      *
      * @return void
@@ -69,6 +73,8 @@ class Doctrine_Adapter_Mysqli extends Doctrine_Adapter
     }
 
     /**
+     * prepare
+     *
      * Prepare a statement and return a PDOStatement-like object.
      *
      * @param  string  $sql  SQL query
@@ -83,6 +89,8 @@ class Doctrine_Adapter_Mysqli extends Doctrine_Adapter
     }
 
     /**
+     * lastInsertId
+     *
      * Gets the last ID generated automatically by an IDENTITY/AUTOINCREMENT column.
      *
      * As a convention, on RDBMS brands that support sequences
@@ -105,6 +113,8 @@ class Doctrine_Adapter_Mysqli extends Doctrine_Adapter
     }
 
     /**
+     * _beginTransaction
+     *
      * Begin a transaction.
      *
      * @return void
@@ -116,6 +126,8 @@ class Doctrine_Adapter_Mysqli extends Doctrine_Adapter
     }
 
     /**
+     * _commit
+     *
      * Commit a transaction.
      *
      * @return void
@@ -128,6 +140,8 @@ class Doctrine_Adapter_Mysqli extends Doctrine_Adapter
     }
 
     /**
+     * _rollBack
+     *
      * Roll-back a transaction.
      *
      * @return void

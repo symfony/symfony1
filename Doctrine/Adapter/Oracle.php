@@ -34,6 +34,8 @@ Doctrine::autoload('Doctrine_Adapter');
 class Doctrine_Adapter_Oracle extends Doctrine_Adapter
 {
     /**
+     * _config
+     *
      * User-provided configuration.
      *
      * Basic keys are:
@@ -52,12 +54,14 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
     );
 
     /**
+     * _executeMode
+     *
      * @var integer
      */
-    protected $_execute_mode = OCI_COMMIT_ON_SUCCESS;
+    protected $_executeMode = OCI_COMMIT_ON_SUCCESS;
 
     /**
-     * Constructor.
+     * __construct
      *
      * $config is an array of key/value pairs containing configuration
      * options.  These options are common to most adapters:
@@ -76,31 +80,17 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
             throw new Doctrine_Adapter_Exception('config array must have at least a username and a password');
         }
 
-        // @todo Let this protect backward-compatibility for one release, then remove
-        if ( ! isset($config['database']) || ! isset($config['dbname'])) {
-            $config['dbname'] = $config['database'];
-            unset($config['database']);
-            trigger_error("Deprecated config key 'database', use 'dbname' instead.", E_USER_NOTICE);
-        }
-
         // keep the config
         $this->_config = array_merge($this->_config, (array) $config);
-
-        // create a profiler object
-        $enabled = false;
-        if (array_key_exists('profiler', $this->_config)) {
-            $enabled = (bool) $this->_config['profiler'];
-            unset($this->_config['profiler']);
-        }
-
-        $this->_profiler = new Doctrine_Profiler($enabled);
     }
 
     /**
+     * _connect
+     *
      * Creates a connection resource.
      *
      * @return void
-     * @throws Doctrine_Adapter_Oracle_Exception
+     * @throws Doctrine_Adapter_Exception
      */
     protected function _connect()
     {
@@ -110,7 +100,7 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
         }
 
         if ( ! extension_loaded('oci8')) {
-            throw new Doctrine_Adapter_Oracle_Exception('The OCI8 extension is required for this adapter but not loaded');
+            throw new Doctrine_Adapter_Exception('The OCI8 extension is required for this adapter but not loaded');
         }
 
         if (isset($this->_config['dbname'])) {
@@ -126,11 +116,13 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
 
         // check the connection
         if ( ! $this->_connection) {
-            throw new Doctrine_Adapter_Oracle_Exception(oci_error());
+            throw new Doctrine_Adapter_Exception(oci_error());
         }
     }
 
     /**
+     * closeConnection
+     *
      * Force the connection to close.
      *
      * @return void
@@ -144,6 +136,8 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
     }
 
     /**
+     * prepare
+     *
      * Returns an SQL statement for preparation.
      *
      * @param string $sql The SQL statement with placeholders.
@@ -158,6 +152,8 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
     }
 
     /**
+     * _quote
+     *
      * Quote a raw string.
      *
      * @param string $value     Raw string
@@ -170,6 +166,8 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
     }
 
     /**
+     * quoteTableAs
+     *
      * Quote a table identifier and alias.
      *
      * @param string|array|Doctrine_Expr $ident The identifier or expression.
@@ -183,6 +181,8 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
     }
 
     /**
+     * _beginTransaction
+     *
      * Leave autocommit mode and begin a transaction.
      *
      * @return void
@@ -193,34 +193,40 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
     }
 
     /**
+     * _commit
+     *
      * Commit a transaction and return to autocommit mode.
      *
      * @return void
-     * @throws Doctrine_Adapter_Oracle_Exception
+     * @throws Doctrine_Adapter_Exception
      */
     protected function _commit()
     {
         if ( ! oci_commit($this->_connection)) {
-            throw new Doctrine_Adapter_Oracle_Exception(oci_error($this->_connection));
+            throw new Doctrine_Adapter_Exception(oci_error($this->_connection));
         }
         $this->_setExecuteMode(OCI_COMMIT_ON_SUCCESS);
     }
 
     /**
+     * _rollBack
+     *
      * Roll back a transaction and return to autocommit mode.
      *
      * @return void
-     * @throws Doctrine_Adapter_Oracle_Exception
+     * @throws Doctrine_Adapter_Exception
      */
     protected function _rollBack()
     {
         if ( ! oci_rollback($this->_connection)) {
-            throw new Doctrine_Adapter_Oracle_Exception(oci_error($this->_connection));
+            throw new Doctrine_Adapter_Exception(oci_error($this->_connection));
         }
         $this->_setExecuteMode(OCI_COMMIT_ON_SUCCESS);
     }
 
     /**
+     * setFetchMode
+     *
      * Set the fetch mode.
      *
      * @todo Support FETCH_CLASS and FETCH_INTO.
@@ -245,6 +251,8 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
     }
 
     /**
+     * _setExecuteMode
+     *
      * @param integer $mode
      * @throws Doctrine_Adapter_Exception
      */
@@ -254,7 +262,7 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
             case OCI_COMMIT_ON_SUCCESS:
             case OCI_DEFAULT:
             case OCI_DESCRIBE_ONLY:
-                $this->_execute_mode = $mode;
+                $this->_executeMode = $mode;
                 break;
             default:
                 throw new Doctrine_Adapter_Exception('wrong execution mode specified');
@@ -263,10 +271,12 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
     }
 
     /**
-     * @return
+     * _getExecuteMode
+     *
+     * @return integer $mode
      */
     public function _getExecuteMode()
     {
-        return $this->_execute_mode;
+        return $this->_executeMode;
     }
 }

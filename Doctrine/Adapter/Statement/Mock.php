@@ -33,17 +33,28 @@
  */
 class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Interface
 {
-    private $mock;
-    
+    /**
+     * $mock
+     *
+     * @var string
+     */
+    private $_mock;
+
+    /**
+     * queryString
+     *
+     * @var string
+     */
     public $queryString;
 
     public function __construct($mock)
     {
-        $this->mock  = $mock;
+        $this->_mock  = $mock;
     }
 
     /**
      * bindColumn
+     *
      * Bind a column to a PHP variable
      *
      * @param mixed $column         Number of the column (1-indexed) or name of the column in the result set.
@@ -60,6 +71,7 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
 
     /**
      * bindValue
+     *
      * Binds a value to a corresponding named or question mark 
      * placeholder in the SQL statement that was use to prepare the statement.
      *
@@ -79,6 +91,7 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
 
     /**
      * bindParam
+     *
      * Binds a PHP variable to a corresponding named or question mark placeholder in the 
      * SQL statement that was use to prepare the statement. Unlike Doctrine_Adapter_Statement_Interface->bindValue(),
      * the variable is bound as a reference and will only be evaluated at the time 
@@ -111,6 +124,7 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
 
     /**
      * closeCursor
+     *
      * Closes the cursor, enabling the statement to be executed again.
      *
      * @return boolean              Returns TRUE on success or FALSE on failure.
@@ -122,6 +136,7 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
 
     /** 
      * columnCount
+     *
      * Returns the number of columns in the result set 
      *
      * @return integer              Returns the number of columns in the result set represented
@@ -135,6 +150,7 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
 
     /**
      * errorCode
+     *
      * Fetch the SQLSTATE associated with the last operation on the statement handle 
      *
      * @see Doctrine_Adapter_Interface::errorCode()
@@ -147,6 +163,7 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
 
     /**
      * errorInfo
+     *
      * Fetch extended error information associated with the last operation on the statement handle
      *
      * @see Doctrine_Adapter_Interface::errorInfo()
@@ -193,6 +210,7 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
 
     /**
      * fetchAll
+     *
      * Returns an array containing all of the result set rows
      *
      * @param integer $fetchStyle           Controls how the next row will be returned to the caller.
@@ -211,6 +229,7 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
 
     /**
      * execute
+     *
      * Executes a prepared statement
      *
      * If the prepared statement included parameter markers, you must either:
@@ -226,14 +245,15 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
      */
     public function execute($params = null)
     {
-        if (is_object($this->mock)) {
-            $this->mock->addQuery($this->queryString);
+        if (is_object($this->_mock)) {
+            $this->_mock->addQuery($this->queryString);
         }
         return true;
     }
 
     /**
      * fetchColumn
+     *
      * Returns a single column from the next row of a
      * result set or FALSE if there are no more rows.
      *
@@ -250,6 +270,7 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
 
     /**
      * fetchObject
+     *
      * Fetches the next row and returns it as an object.
      *
      * Fetches the next row and returns it as an object. This function is an alternative to 
@@ -268,6 +289,7 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
 
     /**
      * nextRowset
+     *
      * Advances to the next rowset in a multi-rowset statement handle
      * 
      * Some database servers support stored procedures that return more than one rowset 
@@ -284,6 +306,7 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
 
     /**
      * rowCount
+     *
      * rowCount() returns the number of rows affected by the last DELETE, INSERT, or UPDATE statement 
      * executed by the corresponding object.
      *
@@ -301,6 +324,7 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
 
     /**
      * getColumnMeta
+     *
      * Returns metadata for a column in a result set
      *
      * @param integer $column               The 0-indexed column in the result set.
@@ -317,8 +341,10 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
      */
     public function getColumnMeta($column)
     { }
+
     /**
      * getAttribute
+     *
      * Retrieve a statement attribute 
      *
      * @param integer $attribute
@@ -327,8 +353,10 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
      */
     public function getAttribute($attribute)
     { }
+
     /**
      * setAttribute
+     *
      * Set a statement attribute
      *
      * @param integer $attribute
@@ -337,8 +365,10 @@ class Doctrine_Adapter_Statement_Mock implements Doctrine_Adapter_Statement_Inte
      */
     public function setAttribute($attribute, $value)
     { }
+
     /**
      * setFetchMode
+     *
      * Set the default fetch mode for this statement
      *
      * @param integer $mode                 The fetch mode must be one of the Doctrine::FETCH_* constants.
