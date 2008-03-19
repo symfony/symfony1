@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(36, new lime_output_color());
+$t = new lime_test(26, new lime_output_color());
 
 $_SERVER['session_id'] = 'test';
 
@@ -59,11 +59,6 @@ $userBis = new sfUser($dispatcher, $storage, array('use_flash' => true));
 $t->is($userBis->getFlash('foo'), null, 'Flashes are automatically removed after the next request');
 $t->is($userBis->hasFlash('foo'), false, '->hasFlash() returns true if the flash variable exists');
 
-// parameter holder proxy
-require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');
-$pht = new sfParameterHolderProxyTest($t);
-$pht->launchTests($user, 'parameter');
-
 // attribute holder proxy
 require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');
 $pht = new sfParameterHolderProxyTest($t);
@@ -76,10 +71,10 @@ $dispatcherTest->launchTests($dispatcher, $user, 'user');
 
 $storage->clear();
 
-function user_flush($dispatcher, $user, $storage, $parameters = array())
+function user_flush($dispatcher, $user, $storage, $options = array())
 {
   $user->shutdown();
-  $user->initialize($dispatcher, $storage, $parameters);
+  $user->initialize($dispatcher, $storage, $options);
   $parameters = $storage->getParameterHolder()->getAll();
   $storage->shutdown();
   $storage->initialize($parameters);
