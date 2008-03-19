@@ -183,17 +183,8 @@ class sfToolkit
    */
   public static function stripComments($source)
   {
-    if (!sfConfig::get('sf_strip_comments', true))
+    if (!sfConfig::get('sf_strip_comments', true) || !function_exists('token_get_all'))
     {
-      return $source;
-    }
-
-    // tokenizer available?
-    if (!function_exists('token_get_all'))
-    {
-      $source = sfToolkit::pregtr($source, array('#/\*((?!\*/)[\d\D\s])*\*/#' => '',   // remove /* ... */
-                                                 '#^\s*//.*$#m'               => '')); // remove // ...
-
       return $source;
     }
 
