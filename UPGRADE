@@ -572,6 +572,8 @@ Here is how:
 
   * Move `lib/ProjectConfiguration.class.php` to `config/ProjectConfiguration.class.php`
 
+  * Change the path to symfony in `config/ProjectConfiguration.class.php` if needed.
+
   * Move all your application configuration classes (`lib/$APP_NAME$Configuration.class.php`)
     to their respective `apps/$APP_NAME$/config/` directory.
 
