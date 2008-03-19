@@ -834,9 +834,9 @@ abstract class Doctrine_Query_Abstract
      */
     public function generateSqlTableAlias($componentAlias, $tableName)
     {
-        $char   = strtolower(substr($tableName, 0, 1));
+        $char = strtolower(substr($tableName, 0, 1));
 
-        $alias  = $char;
+        $alias = $char;
 
         if ( ! isset($this->_tableAliasSeeds[$alias])) {
             $this->_tableAliasSeeds[$alias] = 1;
