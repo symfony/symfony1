@@ -32,7 +32,7 @@ class sfUser
   const CULTURE_NAMESPACE = 'symfony/user/sfUser/culture';
 
   protected
-    $parameterHolder = null,
+    $options         = array(),
     $attributeHolder = null,
     $culture         = null,
     $storage         = null,
@@ -43,11 +43,11 @@ class sfUser
    *
    * @see initialize()
    */
-  public function __construct(sfEventDispatcher $dispatcher, sfStorage $storage, $parameters = array())
+  public function __construct(sfEventDispatcher $dispatcher, sfStorage $storage, $options = array())
   {
-    $this->initialize($dispatcher, $storage, $parameters);
+    $this->initialize($dispatcher, $storage, $options);
 
-    if ($this->getParameter('auto_shutdown', true))
+    if ($this->options['auto_shutdown'])
     {
       register_shutdown_function(array($this, 'shutdown'));
     }
@@ -56,21 +56,32 @@ class sfUser
   /**
    * Initializes this sfUser.
    *
+   * Available options:
+   *
+   *  * auto_shutdown:   Whether to automatically save the changes to the session (true by default)
+   *  * culture:         The user culture
+   *  * default_culture: The default user culture (en by default)
+   *  * use_flash:       Whether to enable flash usage (false by default)
+   *  * logging:         Whether to enable logging (false by default)
+   *
    * @param sfEventDispatcher A sfEventDispatcher instance.
-   * @param sfStorage    A sfStorage instance.
-   * @param array        An associative array of initialization parameters.
+   * @param sfStorage         A sfStorage instance.
+   * @param array             An associative array of options.
    *
-   * @return Boolean     true, if initialization completes successfully, otherwise false.
-   *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfUser.
+   * @return Boolean          true, if initialization completes successfully, otherwise false.
    */
-  public function initialize(sfEventDispatcher $dispatcher, sfStorage $storage, $parameters = array())
+  public function initialize(sfEventDispatcher $dispatcher, sfStorage $storage, $options = array())
   {
     $this->dispatcher = $dispatcher;
     $this->storage    = $storage;
 
-    $this->parameterHolder = new sfParameterHolder();
-    $this->parameterHolder->add($parameters);
+    $this->options = array_merge(array(
+      'auto_shutdown'   => true,
+      'culture'         => null,
+      'default_culture' => 'en',
+      'use_flash'       => false,
+      'logging'         => false,
+    ), $options);
 
     $this->attributeHolder = new sfNamespacedParameterHolder(self::ATTRIBUTE_NAMESPACE);
 
@@ -89,12 +100,12 @@ class sfUser
     //  - use the culture defined in the user session
     //  - use the default culture set in settings.yml
     $currentCulture = $storage->read(self::CULTURE_NAMESPACE);
-    $this->setCulture($this->getParameter('culture', !is_null($currentCulture) ? $currentCulture : $this->getParameter('default_culture', 'en')));
+    $this->setCulture(!is_null($this->options['culture']) ? $this->options['culture'] : (!is_null($currentCulture) ? $currentCulture : $this->options['default_culture']));
 
     // flag current flash to be removed at shutdown
-    if ($this->getParameter('use_flash', false) && $names = $this->attributeHolder->getNames('symfony/user/sfUser/flash'))
+    if ($this->options['use_flash'] && $names = $this->attributeHolder->getNames('symfony/user/sfUser/flash'))
     {
-      if ($this->getParameter('logging'))
+      if ($this->options['logging'])
       {
         $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Flag old flash messages ("%s")', implode('", "', $names)))));
       }
@@ -130,7 +141,7 @@ class sfUser
    */
   public function setFlash($name, $value, $persist = true)
   {
-    if (!$this->getParameter('use_flash', false))
+    if (!$this->options['use_flash'])
     {
       return;
     }
@@ -157,7 +168,7 @@ class sfUser
    */
   public function getFlash($name, $default = null)
   {
-    if (!$this->getParameter('use_flash', false))
+    if (!$this->options['use_flash'])
     {
       return $default;
     }
@@ -174,7 +185,7 @@ class sfUser
    */
   public function hasFlash($name)
   {
-    if (!$this->getParameter('use_flash', false))
+    if (!$this->options['use_flash'])
     {
       return false;
     }
@@ -190,11 +201,6 @@ class sfUser
   public function getCulture()
   {
     return $this->culture;
-  }
-
-  public function getParameterHolder()
-  {
-    return $this->parameterHolder;
   }
 
   public function getAttributeHolder()
@@ -217,21 +223,6 @@ class sfUser
     return $this->attributeHolder->set($name, $value, $ns);
   }
 
-  public function getParameter($name, $default = null)
-  {
-    return $this->parameterHolder->get($name, $default);
-  }
-
-  public function hasParameter($name)
-  {
-    return $this->parameterHolder->has($name);
-  }
-
-  public function setParameter($name, $value)
-  {
-    return $this->parameterHolder->set($name, $value);
-  }
-
   /**
    * Executes the shutdown procedure.
    *
@@ -240,9 +231,9 @@ class sfUser
   public function shutdown()
   {
     // remove flash that are tagged to be removed
-    if ($this->getParameter('use_flash', false) && $names = $this->attributeHolder->getNames('symfony/user/sfUser/flash/remove'))
+    if ($this->options['use_flash'] && $names = $this->attributeHolder->getNames('symfony/user/sfUser/flash/remove'))
     {
-      if ($this->getParameter('logging'))
+      if ($this->options['logging'])
       {
         $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Remove old flash messages ("%s")', implode('", "', $names)))));
       }
