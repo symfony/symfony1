@@ -32,16 +32,7 @@ class sfProjectConfiguration
   {
     sfProjectConfiguration::$active = $this;
 
-    if (is_null($rootDir))
-    {
-      $r = new ReflectionObject($this);
-
-      $this->rootDir = realpath(dirname($r->getFileName()).'/..');
-    }
-    else
-    {
-      $this->rootDir = realpath($rootDir);
-    }
+    $this->rootDir = is_null($rootDir) ? self::guessRootDir() : realpath($rootDir);
 
     $this->symfonyLibDir = realpath(dirname(__FILE__).'/..');
 
@@ -260,5 +251,42 @@ class sfProjectConfiguration
   static public function getActive()
   {
     return sfProjectConfiguration::$active;
+  }
+
+  static public function guessRootDir()
+  {
+    $r = new ReflectionClass('ProjectConfiguration');
+
+    return realpath(dirname($r->getFileName()).'/..');
+  }
+
+  /**
+   * Returns a sfApplicationConfiguration configuration for a given application.
+   *
+   * @param string  An application name
+   * @param string  The environment name
+   * @param Boolean true to enable debug mode
+   * @param string  The project root directory
+   *
+   * @return sfApplicationConfiguration A sfApplicationConfiguration instance
+   */
+  static public function getApplicationConfiguration($application, $environment, $debug, $rootDir = null)
+  {
+    $class = $application.'Configuration';
+
+    if (is_null(sfProjectConfiguration::$active))
+    {
+      // force initialization of sf_apps_dir config setting
+      new ProjectConfiguration();
+    }
+
+    require_once sfConfig::get('sf_apps_dir').'/'.$application.'/config/'.$class.'.class.php';
+
+    if (is_null($rootDir))
+    {
+      $rootDir = self::guessRootDir();
+    }
+
+    return new $class($environment, $debug, $rootDir);
   }
 }

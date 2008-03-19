@@ -83,9 +83,7 @@ EOF;
     $apps = is_null($options['app']) ? $dirFinder->in(sfConfig::get('sf_apps_dir')) : array($options['app']);
     foreach ($apps as $app)
     {
-      $class = $app.'Configuration';
-      require_once sfConfig::get('sf_lib_dir').'/'.$class.'.class.php';
-      $appConfiguration = new $class('cli', true);
+      $appConfiguration = ProjectConfiguration::getApplicationConfiguration($app, 'cli', true);
 
       if (!is_dir(sfConfig::get('sf_cache_dir').'/'.$app))
       {

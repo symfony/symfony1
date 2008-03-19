@@ -25,7 +25,7 @@ class sfTestUpgrade extends sfUpgrade
     if (file_exists($unit))
     {
       $content = file_get_contents($unit);
-      if (false !== strpos($content, 'SF_ROOT_DIR'))
+      if (false !== strpos($content, 'SF_ROOT_DIR') || false !== strpos($content, 'lib/ProjectConfiguration'))
       {
         $this->logSection('test', sprintf('Migrating %s', $unit));
         file_put_contents($unit, file_get_contents(dirname(__FILE__).'/../../generator/skeleton/project/test/bootstrap/unit.php'));
@@ -36,7 +36,7 @@ class sfTestUpgrade extends sfUpgrade
     if (file_exists($functional))
     {
       $content = file_get_contents($functional);
-      if (false !== strpos($content, 'SF_ROOT_DIR'))
+      if (false !== strpos($content, 'SF_ROOT_DIR') || false !== strpos($content, 'new $class'))
       {
         $this->logSection('test', sprintf('Migrating %s', $functional));
         file_put_contents($functional, file_get_contents(dirname(__FILE__).'/../../generator/skeleton/project/test/bootstrap/functional.php'));

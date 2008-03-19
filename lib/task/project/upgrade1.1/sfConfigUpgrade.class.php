@@ -20,6 +20,11 @@ class sfConfigUpgrade extends sfUpgrade
 {
   public function upgrade()
   {
+    if (file_exists(sfConfig::get('sf_lib_dir').'/ProjectConfiguration.class.php'))
+    {
+      throw new sfCommandException('Unable to upgrade your project automatically. Read the "NOTE to early adopters" at the end in the symfony UPGRADE file to upgrade your project manually.');
+    }
+
     $this->checkConfigFiles();
     $this->upgradeFrontControllers();
     $this->upgradeConfigurationClasses();
@@ -114,14 +119,16 @@ EOF;
   {
     foreach ($this->getApplications() as $application)
     {
-      if (file_exists(sfConfig::get('sf_lib_dir').'/'.$application.'Configuration.class.php'))
+      $configPath = sfConfig::get('sf_apps_dir').'/'.$application.'/config/'.$application.'Configuration.class.php';
+
+      if (file_exists($configPath))
       {
         continue;
       }
 
-      $this->getFilesystem()->copy(dirname(__FILE__).'/../../generator/skeleton/app/lib/ApplicationConfiguration.class.php', sfConfig::get('sf_lib_dir').'/'.$application.'Configuration.class.php');
+      $this->getFilesystem()->copy(dirname(__FILE__).'/../../generator/skeleton/app/app/config/ApplicationConfiguration.class.php', $configPath);
 
-      $this->getFilesystem()->replaceTokens(sfConfig::get('sf_lib_dir').'/'.$application.'Configuration.class.php', '##', '##', array('APP_NAME' => $application));
+      $this->getFilesystem()->replaceTokens($configPath, '##', '##', array('APP_NAME' => $application));
     }
   }
 }

@@ -20,8 +20,8 @@ $task->run(array('test'));
 $task = new sfGenerateAppTask($dispatcher, $formatter);
 $task->run(array('frontend'));
 
-require_once sfConfig::get('sf_root_dir').'/lib/frontendConfiguration.class.php';
-$configuration = new frontendConfiguration('test', true);
+require_once sfConfig::get('sf_root_dir').'/config/ProjectConfiguration.class.php';
+$configuration = ProjectConfiguration::getApplicationConfiguration('frontend', 'test', true);
 
 // Put something in the cache
 $file = sfConfig::get('sf_config_cache_dir').DIRECTORY_SEPARATOR.'test';

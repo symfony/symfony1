@@ -28,7 +28,7 @@ To upgrade a project:
 
         [php]
         chdir(dirname(__FILE__));
-        require_once(dirname(__FILE__).'/lib/ProjectConfiguration.class.php');
+        require_once(dirname(__FILE__).'/config/ProjectConfiguration.class.php');
         $configuration = new ProjectConfiguration();
         include($configuration->getSymfonyLibDir().'/command/cli.php');
 
@@ -36,7 +36,7 @@ To upgrade a project:
 
         $ cp /path/to/symfony/lib/task/generator/skeleton/project/symfony symfony
 
-  * Create a `lib/ProjectConfiguration.class.php` file with the following content:
+  * Create a `config/ProjectConfiguration.class.php` file with the following content:
 
         [php]
         <?php
@@ -57,7 +57,7 @@ To upgrade a project:
 
     You can also copy the skeleton file from the symfony project skeleton directly:
 
-        $ cp /path/to/symfony/lib/task/generator/skeleton/project/lib/ProjectConfiguration.class.php lib/ProjectConfiguration.class.php
+        $ cp /path/to/symfony/lib/task/generator/skeleton/project/config/ProjectConfiguration.class.php config/ProjectConfiguration.class.php
 
   * Launch the `project:upgrade1.1` task from your project directory
     to perform an automatic upgrade:
@@ -393,7 +393,8 @@ you will have to change from:
 to:
 
     [php]
-    $databaseManager = new sfDatabaseManager();
+    $configuration = ProjectConfiguration::getApplicationConfiguration($application, $env, true);
+    $databaseManager = new sfDatabaseManager($configuration);
     $databaseManager->loadConfiguration();
 
 The `initialize()` call is not needed anymore (see the point above).
@@ -539,10 +540,12 @@ All `sfConfig` constants ending with `_dir_name` have been removed.
 Cache keys
 ----------
 
-The `sfViewCacheManager::removePattern()` and `sfToolkit::clearGlob()` don't work anymore for removing several cache parts at once. But the `sfViewCacheManager::remove()` now accepts internal URIs with wildcards. So you can replace:
+The `sfViewCacheManager::removePattern()` and `sfToolkit::clearGlob()` don't work anymore
+for removing several cache parts at once. But the `sfViewCacheManager::remove()` now
+accepts internal URIs with wildcards. So you can replace:
 
     $cacheManager->removePattern('*/all/user/show/id/*');
-    
+
 By:
 
     $cacheManager->remove('user/show?id=*', '*', 'all');
@@ -555,4 +558,37 @@ By:
 
     $cacheManager->remove('@sf_cache_partial?module=user&action=_my_partial&sf_cache_key=*');
 
-And the biggets benefit is that it allows you to clear 'glob' URIs in *any* cache factory, noy only the `sfFileCache`.
+And the biggets benefit is that it allows you to clear 'glob' URIs in *any* cache
+factory, not only the `sfFileCache`.
+
+NOTE to early adopters
+----------------------
+
+If you have upgraded your project and have a `lib/Projectconfiguratioun.class.php` file,
+then you need to upgrade your project manually before being able to launch the
+`project:upgrade1.1` task.
+
+Here is how:
+
+  * Move `lib/ProjectConfiguration.class.php` to `config/ProjectConfiguration.class.php`
+
+  * Move all your application configuration classes (`lib/$APP_NAME$Configuration.class.php`)
+    to their respective `apps/$APP_NAME$/config/` directory.
+
+  * Remove the `require_once dirname(__FILE__).'/ProjectConfiguration.class.php';` in all
+    the application configuration classes.
+
+  * Change the location of `ProjectConfiguration.class.php` in the main `symfony` script to `config/`
+
+  * Change your front controllers so they look like this:
+
+      {{{
+        <?php
+
+        require_once(dirname(__FILE__).'/../config/ProjectConfiguration.class.php');
+
+        $configuration = ProjectConfiguration::getApplicationConfiguration('frontend', 'dev', true);
+        sfContext::createInstance($configuration)->dispatch();
+      }}}
+
+You can now launch the `project:upgrade1.1` script to finish the upgrade.

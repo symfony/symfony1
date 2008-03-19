@@ -1,6 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__).'/../lib/crudConfiguration.class.php');
+require_once(dirname(__FILE__).'/../config/ProjectConfiguration.class.php');
 
-$configuration = new crudConfiguration('prod', false);
+$configuration = ProjectConfiguration::getApplicationConfiguration('crud', 'prod', false);
 sfContext::createInstance($configuration)->dispatch();

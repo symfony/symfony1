@@ -75,23 +75,6 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   }
 
   /**
-   * Returns a sfApplicationConfiguration configuration for a given application.
-   *
-   * @param string  An application name
-   * @param string  The environment name
-   * @param Boolean true to enable debug mode
-   * @param string  The project root directory
-   *
-   * @return sfApplicationConfiguration A sfApplicationConfiguration instance
-   */
-  static public function getForApplication($application, $environment, $debug, $rootDir = null)
-  {
-    $class = $application.'Configuration';
-
-    return new $class($environment, $debug, $rootDir);
-  }
-
-  /**
    * @see sfProjectConfiguration
    */
   public function initConfiguration()

@@ -51,7 +51,7 @@ EOF;
     }
 
     // change symfony path in ProjectConfiguration.class.php
-    $config = sfConfig::get('sf_lib_dir').'/ProjectConfiguration.class.php';
+    $config = sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php';
     $content = file_get_contents($config);
     if (preg_match('/^# FROZEN_SF_LIB_DIR\: (.+?)$/m', $content, $match))
     {

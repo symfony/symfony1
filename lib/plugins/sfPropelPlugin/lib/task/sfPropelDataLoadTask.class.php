@@ -83,7 +83,7 @@ EOF;
       $fixturesDirs = sfFinder::type('dir')->name('fixtures')->in(array_merge($pluginDirs, array(sfConfig::get('sf_data_dir'))));
     }
 
-    $configuration = sfApplicationConfiguration::getForApplication($arguments['application'], $options['env'], true);
+    $configuration = ProjectConfiguration::getApplicationConfiguration($arguments['application'], $options['env'], true);
 
     $databaseManager = new sfDatabaseManager($configuration);
 

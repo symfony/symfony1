@@ -18,10 +18,8 @@ if (!isset($app))
   $app = array_pop($dirPieces);
 }
 
-$class = $app.'Configuration';
-require_once(dirname(__FILE__).'/../../lib/'.$class.'.class.php');
-
-$configuration = new $class('test', true);
+require_once dirname(__FILE__).'/../../config/ProjectConfiguration.class.php';
+$configuration = ProjectConfiguration::getApplicationConfiguration($app, 'test', isset($debug) ? $debug : true);
 sfContext::createInstance($configuration);
 
 // remove all cache
