@@ -75,7 +75,7 @@ function user_flush($dispatcher, $user, $storage, $options = array())
 {
   $user->shutdown();
   $user->initialize($dispatcher, $storage, $options);
-  $parameters = $storage->getParameterHolder()->getAll();
+  $parameters = $storage->getOptions();
   $storage->shutdown();
   $storage->initialize($parameters);
 }

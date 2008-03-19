@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(11, new lime_output_color());
+$t = new lime_test(0, new lime_output_color());
 
 class myStorage extends sfStorage
 {
@@ -23,15 +23,3 @@ class myStorage extends sfStorage
 class fakeStorage
 {
 }
-
-// ->initialize()
-$t->diag('->initialize()');
-$storage = new myStorage(array('foo' => 'bar'));
-$t->is($storage->getParameter('foo'), 'bar', '->initialize() takes an array of parameters as its second argument');
-
-$storage = new myStorage();
-
-// parameter holder proxy
-require_once($_test_dir.'/unit/sfParameterHolderTest.class.php');
-$pht = new sfParameterHolderProxyTest($t);
-$pht->launchTests($storage, 'parameter');
