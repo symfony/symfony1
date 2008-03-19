@@ -10,7 +10,8 @@
  */
 
 /**
- * sfParameterHolder provides a base class for managing parameters.
+ * sfNamespacedParameterHolder provides a class for managing parameters
+ * with support for namespaces.
  *
  * Parameters, in this case, are used to extend classes with additional data
  * that requires no additional logic to manage.
@@ -21,18 +22,18 @@
  * @author     Sean Kerr <sean@code-box.org>
  * @version    SVN: $Id$
  */
-class sfNamespacedParameterHolder implements Serializable
+class sfNamespacedParameterHolder extends sfParameterHolder
 {
   protected $default_namespace = null;
   protected $parameters = array();
 
   /**
-   * The constructor for sfParameterHolder.
-   * 
+   * The constructor for sfNamespacedParameterHolder.
+   *
    * The default namespace may be overridden at initialization as follows:
    * <code>
    * <?php
-   * $mySpecialPH = new sfParameterHolder('symfony/special');
+   * $mySpecialPH = new sfNamespacedParameterHolder('symfony/special');
    * ?>
    * </code>
    */
@@ -380,7 +381,7 @@ class sfNamespacedParameterHolder implements Serializable
   }
 
   /**
-   * Unserializes a sfParameterHolder instance.
+   * Unserializes a sfNamespacedParameterHolder instance.
    */
   public function unserialize($serialized)
   {
