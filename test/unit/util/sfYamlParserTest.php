@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once(dirname(__FILE__).'/../../../lib/util/sfYamlParser.class.php');
 
-$t = new lime_test(133, new lime_output_color());
+$t = new lime_test(135, new lime_output_color());
 
 $parser = new sfYamlParser();
 
@@ -65,3 +65,16 @@ foreach ($yamls as $yaml)
     $t->pass('YAML files must not contain tabs');
   }
 }
+
+// objects
+$t->diag('Objects support');
+class A
+{
+  public $a = 'foo';
+}
+$a = array('foo' => new A(), 'bar' => 1);
+$t->is(sfYaml::load(<<<EOF
+foo: !!php/object:O:1:"A":1:{s:1:"a";s:3:"foo";}
+bar: 1
+EOF
+), $a, '::dump() is able to dump objects');

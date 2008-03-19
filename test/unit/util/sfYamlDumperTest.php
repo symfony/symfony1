@@ -12,7 +12,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once(dirname(__FILE__).'/../../../lib/util/sfYamlParser.class.php');
 require_once(dirname(__FILE__).'/../../../lib/util/sfYamlDumper.class.php');
 
-$t = new lime_test(134, new lime_output_color());
+$t = new lime_test(136, new lime_output_color());
 
 $parser = new sfYamlParser();
 $dumper = new sfYamlDumper();
@@ -133,3 +133,17 @@ foobar:
 EOF;
 $t->is(sfYaml::dump($array, 4), $expected, '::dump() takes an inline level argument');
 $t->is(sfYaml::dump($array, 10), $expected, '::dump() takes an inline level argument');
+
+// objects
+$t->diag('Objects support');
+class A
+{
+  public $a = 'foo';
+}
+$a = array('foo' => new A(), 'bar' => 1);
+$t->is(sfYaml::dump($a), <<<EOF
+foo: !!php/object:O:1:"A":1:{s:1:"a";s:3:"foo";}
+bar: 1
+
+EOF
+, '::dump() is able to dump objects');

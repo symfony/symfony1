@@ -48,7 +48,7 @@ class sfYamlInline
   /**
    * Dumps PHP array to YAML.
    *
-   * @param mixed PHP
+   * @param mixed   PHP
    *
    * @return string YAML
    */
@@ -59,7 +59,7 @@ class sfYamlInline
       case is_resource($value):
         throw new InvalidArgumentException('Unable to dump PHP resources in a YAML file.');
       case is_object($value):
-        throw new InvalidArgumentException('Unable to dump objects to a YAML string.');
+        return '!!php/object:'.serialize($value);
       case is_array($value):
         return self::dumpArray($value);
       case is_null($value):
@@ -367,6 +367,8 @@ class sfYamlInline
         return (string) substr($scalar, 5);
       case 0 === strpos($scalar, '! '):
         return intval(self::parseScalar(substr($scalar, 2)));
+      case 0 === strpos($scalar, '!!php/object:'):
+        return unserialize(substr($scalar, 13));
       case ctype_digit($scalar):
         return '0' == $scalar[0] ? octdec($scalar) : intval($scalar);
       case in_array(strtolower($scalar), array('true', 'on', '+', 'yes', 'y')):

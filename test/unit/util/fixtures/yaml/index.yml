@@ -1,5 +1,6 @@
 - sfComments
 - sfTests
+- sfObjects
 #- YtsAnchorAlias
 - YtsBasicTests
 - YtsBlockMapping
