@@ -101,7 +101,7 @@ class Doctrine_Locking_Manager_Pessimistic
     public function getLock(Doctrine_Record $record, $userIdent)
     {
         $objectType = $record->getTable()->getComponentName();
-        $key        = $record->obtainIdentifier();
+        $key        = $record->getTable()->getIdentifier();
 
         $gotLock = false;
         $time = time();
@@ -170,7 +170,7 @@ class Doctrine_Locking_Manager_Pessimistic
     public function releaseLock(Doctrine_Record $record, $userIdent)
     {
         $objectType = $record->getTable()->getComponentName();
-        $key        = $record->obtainIdentifier();
+        $key        = $record->getTable()->getIdentifier();
 
         if (is_array($key)) {
             // Composite key
@@ -241,7 +241,7 @@ class Doctrine_Locking_Manager_Pessimistic
     public function getLockOwner($lockedRecord)
     {
         $objectType = $lockedRecord->getTable()->getComponentName();
-        $key        = $lockedRecord->obtainIdentifier();
+        $key        = $lockedRecord->getTable()->getIdentifier();
         return $this->_getLockingUserIdent($objectType, $key);
     }
 
