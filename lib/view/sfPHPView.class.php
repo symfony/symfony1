@@ -40,10 +40,8 @@ class sfPHPView extends sfView
     }
 
     $coreHelpersLoaded = 1;
-    $core_helpers = array('Helper', 'Url', 'Asset', 'Tag', 'Escaping');
-    $standard_helpers = sfConfig::get('sf_standard_helpers');
 
-    $helpers = array_unique(array_merge($core_helpers, $standard_helpers));
+    $helpers = array_unique(array_merge(array('Helper', 'Url', 'Asset', 'Tag', 'Escaping'), sfConfig::get('sf_standard_helpers')));
 
     // remove default Form helper if compat_10 is false
     if (!sfConfig::get('sf_compat_10') && false !== $i = array_search('Form', $helpers))
