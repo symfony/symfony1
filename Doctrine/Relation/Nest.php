@@ -108,7 +108,7 @@ class Doctrine_Relation_Nest extends Doctrine_Relation_Association
         if (empty($id) || ! $this->definition['table']->getAttribute(Doctrine::ATTR_LOAD_REFERENCES)) {
             return new Doctrine_Collection($this->getTable());
         } else {
-            $q = new Doctrine_RawSql();
+            $q = new Doctrine_RawSql($this->getTable()->getConnection());
 
             $assocTable = $this->getAssociationFactory()->getTableName();
             $tableName  = $record->getTable()->getTableName();
