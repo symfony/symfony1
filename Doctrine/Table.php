@@ -1857,6 +1857,50 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
     
     /**
+     * Gets the names of all validators that are applied on a field.
+     *
+     * @param string  The field name.
+     * @return array  The names of all validators that are applied on the specified field.
+     */
+    public function getFieldValidators($fieldName)
+    {
+        $validators = array();
+        $columnName = $this->getColumnName($fieldName);
+        // this loop is a dirty workaround to get the validators filtered out of
+        // the options, since everything is squeezed together currently
+        foreach ($this->_columns[$columnName] as $name => $args) {
+             if (empty($name)
+                    || $name == 'primary'
+                    || $name == 'protected'
+                    || $name == 'autoincrement'
+                    || $name == 'default'
+                    || $name == 'values'
+                    || $name == 'sequence'
+                    || $name == 'zerofill'
+                    || $name == 'owner'
+                    || $name == 'scale'
+                    || $name == 'type'
+                    || $name == 'length') {
+                continue;
+            }
+            if (strtolower($name) === 'notnull' && isset($this->_columns[$columnName]['autoincrement'])) {
+                continue;
+            }
+            $validators[$name] = $args;
+        }
+        
+        return $validators;
+    }
+    
+    /**
+     * Gets the (maximum) length of a field.
+     */
+    public function getFieldLength($fieldName)
+    {
+        return $this->_columns[$this->getColumnName($fieldName)]['length'];
+    }
+    
+    /**
      * getBoundQueryPart
      *
      * @param string $queryPart 
