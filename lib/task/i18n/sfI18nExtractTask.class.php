@@ -83,7 +83,14 @@ EOF;
   {
     $this->logSection('i18n', sprintf('extracting i18n strings for the "%s" application', $arguments['application']));
 
-    $extract = new sfI18nApplicationExtract(new sfI18N($this->configuration, new sfNoCache()), $arguments['culture']);
+    // get i18n configuration from factories.yml
+    $config = sfFactoryConfigHandler::getConfiguration($this->configuration->getConfigPaths('config/factories.yml'));
+
+    $class = $config['i18n']['class'];
+    $params = $config['i18n']['param'];
+    unset($params['cache']);
+
+    $extract = new sfI18nApplicationExtract(new $class($this->configuration, new sfNoCache(), $params), $arguments['culture']);
     $extract->extract();
 
     $this->logSection('i18n', sprintf('found "%d" new i18n strings', count($extract->getNewMessages())));
