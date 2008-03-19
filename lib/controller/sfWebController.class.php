@@ -107,6 +107,8 @@ abstract class sfWebController extends sfController
    */
   public function convertUrlStringToParameters($url)
   {
+    $givenUrl = $url;
+
     $params       = array();
     $query_string = '';
     $route_name   = '';
@@ -140,9 +142,13 @@ abstract class sfWebController extends sfController
     {
       $route_name = substr($url, 1);
     }
-    else
+    else if (false !== strpos($url, '/'))
     {
       list($params['module'], $params['action']) = explode('/', $url);
+    }
+    else
+    {
+      throw new InvalidArgumentException(sprintf('An internal URI must contain a module and an action (module/action) ("%s" given).', $givenUrl));
     }
 
     // split the query string
