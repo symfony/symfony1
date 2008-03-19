@@ -45,8 +45,18 @@ class Doctrine_Connection_Informix extends Doctrine_Connection
      */
     public function __construct(Doctrine_Manager $manager, $adapter)
     {
-        // initialize all driver options
-
         parent::__construct($manager, $adapter);
+    }
+
+    /**
+     * quoteIdentifier
+     *
+     * @param string $identifier 
+     * @param string $checkOption 
+     * @return void
+     */
+    public function quoteIdentifier($identifier, $checkOption = false)
+    {
+        return $identifier;
     }
 }
