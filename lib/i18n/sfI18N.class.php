@@ -40,6 +40,15 @@ class sfI18N
   /**
    * Initializes this class.
    *
+   * Available options:
+   *
+   *  * culture:             The culture
+   *  * source:              The i18n source (XLIFF by default)
+   *  * debug:               Whether to enable debug or not (false by default)
+   *  * database:            The database name (default by default)
+   *  * untranslated_prefix: The prefix to use when a message is not translated
+   *  * untranslated_suffix: The suffix to use when a message is not translated
+   *
    * @param sfApplicationConfiguration A sfApplicationConfiguration instance
    * @param sfCache                    A sfCache instance
    * @param array                      An array of options
