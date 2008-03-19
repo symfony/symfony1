@@ -1484,6 +1484,17 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
     }
 
     /**
+     * modifyLimitQuery
+     *
+     * Some dbms require specific functionality for this. Check the other connection adapters for examples
+     *
+     * @return void
+     */
+    public function modifyLimitQuery($query, $limit = false, $offset = false, $isManip = false)
+    {
+    }
+
+    /**
      * returns a string representation of this object
      * @return string
      */

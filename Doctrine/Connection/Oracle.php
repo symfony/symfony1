@@ -59,15 +59,7 @@ class Doctrine_Connection_Oracle extends Doctrine_Connection
                           'identifier_quoting'   => true,
                           'pattern_escaping'     => true,
                           );
-        /**
-        $this->options['DBA_username'] = false;
-        $this->options['DBA_password'] = false;
-        $this->options['database_name_prefix'] = false;
-        $this->options['emulate_database'] = true;
-        $this->options['default_tablespace'] = false;
-        $this->options['default_text_field_length'] = 2000;
-        $this->options['result_prefetching'] = false;
-        */
+
         parent::__construct($manager, $adapter);
     }
 
@@ -88,13 +80,8 @@ class Doctrine_Connection_Oracle extends Doctrine_Connection
      * @param integer $offset       start reading from given offset
      * @return string               the modified query
      */
-    public function modifyLimitQuery($query, $limit, $offset)
+    public function modifyLimitQuery($query, $limit = false, $offset = false, $isManip = false)
     {
-        /**
-        $e      = explode("select ",strtolower($query));
-        $e2     = explode(" from ",$e[1]);
-        $fields = $e2[0];
-        */
         $limit = (int) $limit;
         $offset = (int) $offset;
         if (preg_match('/^\s*SELECT/i', $query)) {

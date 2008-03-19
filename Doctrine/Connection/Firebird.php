@@ -100,7 +100,7 @@ class Doctrine_Connection_Firebird extends Doctrine_Connection
      * @param integer $offset   start reading from given offset
      * @return string modified  query
      */
-    public function modifyLimitQuery($query, $limit, $offset)
+    public function modifyLimitQuery($query, $limit = false, $offset = false, $isManip = false)
     {
         if ($limit > 0) {
             $query = preg_replace('/^([\s(])*SELECT(?!\s*FIRST\s*\d+)/i',
