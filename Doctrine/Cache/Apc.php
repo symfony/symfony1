@@ -90,8 +90,6 @@ class Doctrine_Cache_Apc extends Doctrine_Cache_Driver
      */
     public function save($id, $data, $lifeTime = false)
     {
-        $lifeTime = $this->getLifeTime($lifeTime);
-
         return (bool) apc_store($id, array($data, time()), $lifeTime);
     }
 
