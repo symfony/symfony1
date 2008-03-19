@@ -29,38 +29,54 @@ class sfSessionStorage extends sfStorage
     $sessionStarted = false;
 
   /**
-   * Initializes this Storage instance.
+   * Available options:
    *
-   * @param array   An associative array of initialization parameters
+   *  * session_name:            The cookie name (symfony by default)
+   *  * session_id:              The session id (null by default)
+   *  * auto_start:              Whether to start the session (true by default)
+   *  * session_cookie_lifetime: Cookie lifetime
+   *  * session_cookie_path:     Cookie path
+   *  * session_cookie_domain:   Cookie domain
+   *  * session_cookie_secure:   Cookie secure
+   *  * session_cookie_httponly: Cookie http only (only for PHP >= 5.2)
    *
-   * @return boolean true, if initialization completes successfully, otherwise false
+   * The default values for all 'session_cookie_*' options are those returned by the session_get_cookie_params() function
    *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Storage
+   * @see sfStorage
    */
-  public function initialize($parameters = null)
+  public function initialize($options = null)
   {
+    $cookieDefaults = session_get_cookie_params();
+
+    $options = array_merge(array(
+      'session_name' => 'symfony',
+      'session_id'   => null,
+      'auto_start' => true,
+      'session_cookie_lifetime' => $cookieDefaults['lifetime'],
+      'session_cookie_path' => $cookieDefaults['path'],
+      'session_cookie_domain' => $cookieDefaults['domain'],
+      'session_cookie_secure' => $cookieDefaults['secure'],
+      'session_cookie_httponly' => isset($cookieDefaults['httponly']) ? $cookieDefaults['httponly'] : false,
+    ), $options);
+
     // initialize parent
-    parent::initialize($parameters);
+    parent::initialize($options);
 
     // set session name
-    $sessionName = $this->getParameter('session_name', 'symfony');
+    $sessionName = $this->options['session_name'];
 
     session_name($sessionName);
 
-    if (!(boolean) ini_get('session.use_cookies'))
+    if (!(boolean) ini_get('session.use_cookies') && $sessionId = $this->options['session_id'])
     {
-      if ($sessionId = $this->getParameter('session_id'))
-      {
-        session_id($sessionId);
-      }
+      session_id($sessionId);
     }
 
-    $cookieDefaults = session_get_cookie_params();
-    $lifetime = $this->getParameter('session_cookie_lifetime', $cookieDefaults['lifetime']);
-    $path     = $this->getParameter('session_cookie_path',     $cookieDefaults['path']);
-    $domain   = $this->getParameter('session_cookie_domain',   $cookieDefaults['domain']);
-    $secure   = $this->getParameter('session_cookie_secure',   $cookieDefaults['secure']);
-    $httpOnly = $this->getParameter('session_cookie_httponly', isset($cookieDefaults['httponly']) ? $cookieDefaults['httponly'] : false);
+    $lifetime = $this->options['session_cookie_lifetime'];
+    $path     = $this->options['session_cookie_path'];
+    $domain   = $this->options['session_cookie_domain'];
+    $secure   = $this->options['session_cookie_secure'];
+    $httpOnly = $this->options['session_cookie_httponly'];
     if (version_compare(phpversion(), '5.2', '>='))
     {
       session_set_cookie_params($lifetime, $path, $domain, $secure, $httpOnly);
@@ -70,7 +86,7 @@ class sfSessionStorage extends sfStorage
       session_set_cookie_params($lifetime, $path, $domain, $secure);
     }
 
-    if ($this->getParameter('auto_start', true) && !self::$sessionStarted)
+    if ($this->options['auto_start'] && !self::$sessionStarted)
     {
       session_start();
       self::$sessionStarted = true;

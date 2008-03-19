@@ -23,38 +23,29 @@ class sfSessionTestStorage extends sfStorage
     $sessionData = array();
 
   /**
-   * Initializes this Storage instance.
+   * Available options:
    *
-   * @param array   An associative array of initialization parameters
+   *  * session_path: The path to store the session files (%SF_TEST_CACHE_DIR%/sessions by default)
+   *  * session_id:   The session identifier
    *
-   * @return boolean true, if initialization completes successfully, otherwise false
-   *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Storage
+   * @see sfStorage
    */
-  public function initialize($parameters = null)
+  public function initialize($options = null)
   {
+    $options = array_merge(array(
+      'session_path' => sfConfig::get('sf_test_cache_dir').'/sessions',
+      'session_id'   => null,
+    ), $options);
+
     // initialize parent
-    parent::initialize($parameters);
+    parent::initialize($options);
 
-    if (!$this->getParameter('session_path'))
-    {
-      $this->setParameter('session_path', sfConfig::get('sf_test_cache_dir').'/sessions');
-    }
-
-    $this->sessionId = null;
-    if ($this->getParameter('session_id'))
-    {
-      $this->sessionId = $this->getParameter('session_id');
-    }
-    else if (array_key_exists('session_id', $_SERVER))
-    {
-      $this->sessionId = $_SERVER['session_id'];
-    }
+    $this->sessionId = !is_null($this->options['session_id']) ? $this->options['session_id'] : (array_key_exists('session_id', $_SERVER) ? $_SERVER['session_id'] : null);
 
     if ($this->sessionId)
     {
       // we read session data from temp file
-      $file = $this->getParameter('session_path').DIRECTORY_SEPARATOR.$this->sessionId.'.session';
+      $file = $this->options['session_path'].DIRECTORY_SEPARATOR.$this->sessionId.'.session';
       $this->sessionData = file_exists($file) ? unserialize(file_get_contents($file)) : array();
     }
     else
@@ -136,7 +127,7 @@ class sfSessionTestStorage extends sfStorage
    */
   public function clear()
   {
-    sfToolkit::clearDirectory($this->getParameter('session_path'));
+    sfToolkit::clearDirectory($this->options['session_path']);
   }
 
   /**
@@ -148,12 +139,12 @@ class sfSessionTestStorage extends sfStorage
     if ($this->sessionId)
     {
       $current_umask = umask(0000);
-      if (!is_dir($this->getParameter('session_path')))
+      if (!is_dir($this->options['session_path']))
       {
-        mkdir($this->getParameter('session_path'), 0777, true);
+        mkdir($this->options['session_path'], 0777, true);
       }
       umask($current_umask);
-      file_put_contents($this->getParameter('session_path').DIRECTORY_SEPARATOR.$this->sessionId.'.session', serialize($this->sessionData));
+      file_put_contents($this->options['session_path'].DIRECTORY_SEPARATOR.$this->sessionId.'.session', serialize($this->sessionData));
       $this->sessionId   = '';
       $this->sessionData = array();
     }

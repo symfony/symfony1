@@ -34,8 +34,8 @@ class sfPostgreSQLSessionStorage extends sfDatabaseSessionStorage
   public function sessionDestroy($id)
   {
     // get table/column
-    $db_table  = $this->getParameter('db_table');
-    $db_id_col = $this->getParameter('db_id_col', 'sess_id');
+    $db_table  = $this->options['db_table'];
+    $db_id_col = $this->options['db_id_col'];
 
     // cleanup the session id, just in case
     $id = addslashes($id);
@@ -64,8 +64,8 @@ class sfPostgreSQLSessionStorage extends sfDatabaseSessionStorage
   public function sessionGC($lifetime)
   {
     // get table/column
-    $db_table    = $this->getParameter('db_table');
-    $db_time_col = $this->getParameter('db_time_col', 'sess_time');
+    $db_table    = $this->options['db_table'];
+    $db_time_col = $this->options['db_time_col'];
 
     // delete the record associated with this id
     $sql = 'DELETE FROM '.$db_table.' WHERE '.$db_time_col.' < '.(time() - $lifetime);
@@ -90,10 +90,10 @@ class sfPostgreSQLSessionStorage extends sfDatabaseSessionStorage
   public function sessionRead($id)
   {
     // get table/column
-    $db_table    = $this->getParameter('db_table');
-    $db_data_col = $this->getParameter('db_data_col', 'sess_data');
-    $db_id_col   = $this->getParameter('db_id_col', 'sess_id');
-    $db_time_col = $this->getParameter('db_time_col', 'sess_time');
+    $db_table    = $this->options['db_table'];
+    $db_data_col = $this->options['db_data_col'];
+    $db_id_col   = $this->options['db_id_col'];
+    $db_time_col = $this->options['db_time_col'];
 
     // cleanup the session id, just in case
     $id = addslashes($id);
@@ -138,10 +138,10 @@ class sfPostgreSQLSessionStorage extends sfDatabaseSessionStorage
   public function sessionWrite($id, $data)
   {
     // get table/column
-    $db_table    = $this->getParameter('db_table');
-    $db_data_col = $this->getParameter('db_data_col', 'sess_data');
-    $db_id_col   = $this->getParameter('db_id_col', 'sess_id');
-    $db_time_col = $this->getParameter('db_time_col', 'sess_time');
+    $db_table    = $this->options['db_table'];
+    $db_data_col = $this->options['db_data_col'];
+    $db_id_col   = $this->options['db_id_col'];
+    $db_time_col = $this->options['db_time_col'];
 
     // cleanup the session id and data, just in case
     $id   = addslashes($id);

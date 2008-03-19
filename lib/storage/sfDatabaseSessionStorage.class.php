@@ -12,18 +12,6 @@
 /**
  * Base class for all sfStorage that uses a sfDatabase object as a storage.
  *
- * <b>Required parameters:</b>
- *
- * # <b>db_table</b> - [none] - The database table in which session data will be stored.
- * # <b>database</b> - [none] - The sfDatabase object to use (see databases.yml).
- *
- * <b>Optional parameters:</b>
- *
- * # <b>db_id_col</b>    - [sess_id]   - The database column in which the session id will be stored.
- * # <b>db_data_col</b>  - [sess_data] - The database column in which the session data will be stored.
- * # <b>db_time_col</b>  - [sess_time] - The database column in which the session timestamp will be stored.
- * # <b>session_name</b> - [symfony]   - The name of the session.
- *
  * @package    symfony
  * @subpackage storage
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
@@ -36,26 +24,38 @@ abstract class sfDatabaseSessionStorage extends sfSessionStorage
     $db = null;
 
   /**
-   * Initializes this sfStorage instance.
+   * Available options:
    *
-   * @param array   An associative array of initialization parameters
+   *   * db_table:    The database table in which session data will be stored
+   *   * database:    The sfDatabase object to use
+   *   * db_id_col:   The database column in which the session id will be stored (sess_id by default)
+   *   * db_data_col: The database column in which the session data will be stored (sess_data by default)
+   *   * db_time_col: The database column in which the session timestamp will be stored (sess_time by default)
    *
-   * @return boolean true, if initialization completes successfully, otherwise false
-   *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this Storage
+   * @see sfSessionStorage
    */
-  public function initialize($parameters = null)
+  public function initialize($options = array())
   {
+    $options = array_merge(array(
+      'db_id_col'   => 'sess_id',
+      'db_data_col' => 'sess_data',
+      'db_time_col' => 'sess_time',
+    ), $options);
+
     // disable auto_start
-    $parameters['auto_start'] = false;
+    $options['auto_start'] = false;
 
     // initialize the parent
-    parent::initialize($parameters);
+    parent::initialize($options);
 
-    if (!$this->hasParameter('db_table'))
+    if (!isset($this->options['db_table']))
     {
-      // missing required 'db_table' parameter
-      throw new sfInitializationException('Factory configuration file is missing required "db_table" parameter for the "storage" category.');
+      throw new sfInitializationException('You must provide a "db_table" option to sfDatabaseSessionStorage.');
+    }
+
+    if (!isset($this->options['database']))
+    {
+      throw new sfInitializationException('You must provide a "database" option to sfDatabaseSessionStorage.');
     }
 
     // use this object as the session handler
@@ -94,7 +94,7 @@ abstract class sfDatabaseSessionStorage extends sfSessionStorage
   public function sessionOpen($path, $name)
   {
     // what database are we using?
-    $database = $this->getParameter('database');
+    $database = $this->options['database'];
 
     // get the database resource
     $this->db = $database->getConnection();

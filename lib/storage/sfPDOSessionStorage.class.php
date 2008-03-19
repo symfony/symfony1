@@ -35,8 +35,8 @@ class sfPDOSessionStorage extends sfDatabaseSessionStorage
   public function sessionDestroy($id)
   {
     // get table/column
-    $db_table  = $this->getParameter('db_table');
-    $db_id_col = $this->getParameter('db_id_col', 'sess_id');
+    $db_table  = $this->options['db_table'];
+    $db_id_col = $this->options['db_id_col'];
 
     // delete the record associated with this id
     $sql = 'DELETE FROM '.$db_table.' WHERE '.$db_id_col.'= ?';
@@ -65,8 +65,8 @@ class sfPDOSessionStorage extends sfDatabaseSessionStorage
   public function sessionGC($lifetime)
   {
     // get table/column
-    $db_table    = $this->getParameter('db_table');
-    $db_time_col = $this->getParameter('db_time_col', 'sess_time');
+    $db_table    = $this->options['db_table'];
+    $db_time_col = $this->options['db_time_col'];
 
     // delete the record associated with this id
     $sql = 'DELETE FROM '.$db_table.' WHERE '.$db_time_col.' < '.(time() - $lifetime);
@@ -95,10 +95,10 @@ class sfPDOSessionStorage extends sfDatabaseSessionStorage
   public function sessionRead($id)
   {
     // get table/columns
-    $db_table    = $this->getParameter('db_table');
-    $db_data_col = $this->getParameter('db_data_col', 'sess_data');
-    $db_id_col   = $this->getParameter('db_id_col', 'sess_id');
-    $db_time_col = $this->getParameter('db_time_col', 'sess_time');
+    $db_table    = $this->options['db_table'];
+    $db_data_col = $this->options['db_data_col'];
+    $db_id_col   = $this->options['db_id_col'];
+    $db_time_col = $this->options['db_time_col'];
 
     try
     {
@@ -145,10 +145,10 @@ class sfPDOSessionStorage extends sfDatabaseSessionStorage
   public function sessionWrite($id, $data)
   {
     // get table/column
-    $db_table    = $this->getParameter('db_table');
-    $db_data_col = $this->getParameter('db_data_col', 'sess_data');
-    $db_id_col   = $this->getParameter('db_id_col', 'sess_id');
-    $db_time_col = $this->getParameter('db_time_col', 'sess_time');
+    $db_table    = $this->options['db_table'];
+    $db_data_col = $this->options['db_data_col'];
+    $db_id_col   = $this->options['db_id_col'];
+    $db_time_col = $this->options['db_time_col'];
 
     $sql = 'UPDATE '.$db_table.' SET '.$db_data_col.' = ?, '.$db_time_col.' = '.time().' WHERE '.$db_id_col.'= ?';
 

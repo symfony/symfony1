@@ -21,18 +21,18 @@
 abstract class sfStorage
 {
   protected
-    $parameterHolder = null;
+    $options = array();
 
   /**
    * Class constructor.
    *
    * @see initialize()
    */
-  public function __construct($parameters = array())
+  public function __construct($options = array())
   {
-    $this->initialize($parameters);
+    $this->initialize($options);
 
-    if ($this->getParameter('auto_shutdown', true))
+    if ($this->options['auto_shutdown'])
     {
       register_shutdown_function(array($this, 'shutdown'));
     }
@@ -41,16 +41,31 @@ abstract class sfStorage
   /**
    * Initializes this Storage instance.
    *
-   * @param array   An associative array of initialization parameters
+   * Available options:
+   *
+   *  * auto_shutdown: Whether to automatically save the changes to the session (true by default)
+   *
+   * @param array   An associative array of options
    *
    * @return boolean true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfStorage
    */
-  public function initialize($parameters = array())
+  public function initialize($options = array())
   {
-    $this->parameterHolder = new sfParameterHolder();
-    $this->parameterHolder->add($parameters);
+    $this->options = array_merge(array(
+      'auto_shutdown' => true,
+    ), $options);
+  }
+
+  /**
+   * Returns the option array.
+   *
+   * @return array The array of options
+   */
+  public function getOptions()
+  {
+    return $this->options;
   }
 
   /**
@@ -97,50 +112,4 @@ abstract class sfStorage
    * @throws <b>sfStorageException</b> If an error occurs while writing to this storage
    */
   abstract public function write($key, $data);
-
-  /**
-   * Retrieves the parameters from the storage.
-   *
-   * @return sfParameterHolder List of parameters
-   */
-  public function getParameterHolder()
-  {
-    return $this->parameterHolder;
-  }
-
-  /**
-   * Retrieves a parameter from the validator.
-   *
-   * @param string Parameter name
-   * @param mixed A default parameter
-   *
-   * @return mixed A parameter value
-   */
-  public function getParameter($name, $default = null)
-  {
-    return $this->parameterHolder->get($name, $default);
-  }
-
-  /**
-   * Indicates whether or not a parameter exist for the storage instance.
-   *
-   * @param string A parameter name
-   *
-   * @return boolean true, if parameter exists, otherwise false
-   */
-  public function hasParameter($name)
-  {
-    return $this->parameterHolder->has($name);
-  }
-
-  /**
-   * Sets a parameter for the current storage instance.
-   *
-   * @param string A parameter name
-   * @param mixed A parameter value
-   */
-  public function setParameter($name, $value)
-  {
-    return $this->parameterHolder->set($name, $value);
-  }
 }
