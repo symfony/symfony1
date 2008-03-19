@@ -37,6 +37,10 @@ abstract class sfResponse implements Serializable
   /**
    * Initializes this sfResponse.
    *
+   * Available options:
+   *
+   *  * logging: Whether to enable logging or not (false by default)
+   *
    * @param  sfEventDispatcher  A sfEventDispatcher instance
    * @param  array              An array of options
    *

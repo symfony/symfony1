@@ -80,12 +80,19 @@ class sfWebResponse extends sfResponse
   /**
    * Initializes this sfWebResponse.
    *
+   * Available options:
+   *
+   *  * charset:      The charset to use (utf-8 by default)
+   *  * content_type: The content type (text/html by default)
+   *
    * @param  sfEventDispatcher  A sfEventDispatcher instance
    * @param  array              An array of options
    *
    * @return Boolean            true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfResponse
+   *
+   * @see sfResponse
    */
   public function initialize(sfEventDispatcher $dispatcher, $options = array())
   {
