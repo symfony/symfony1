@@ -111,10 +111,12 @@ class sfCacheFilter extends sfFilter
     if (isset($this->cache[$uri]))
     {
       // set some headers that deals with cache
-      $lifetime = $this->cacheManager->getClientLifeTime($uri, 'page');
-      $this->response->setHttpHeader('Last-Modified', $this->response->getDate(time()), false);
-      $this->response->setHttpHeader('Expires', $this->response->getDate(time() + $lifetime), false);
-      $this->response->addCacheControlHttpHeader('max-age', $lifetime);
+      if ($lifetime = $this->cacheManager->getClientLifeTime($uri, 'page'))
+      {
+        $this->response->setHttpHeader('Last-Modified', $this->response->getDate(time()), false);
+        $this->response->setHttpHeader('Expires', $this->response->getDate(time() + $lifetime), false);
+        $this->response->addCacheControlHttpHeader('max-age', $lifetime);
+      }
 
       // set Vary headers
       foreach ($this->cacheManager->getVary($uri, 'page') as $vary)

@@ -241,7 +241,7 @@ class sfViewCacheManager
     $this->cacheConfig[$moduleName][$actionName] = array(
       'withLayout'     => isset($options['withLayout']) ? $options['withLayout'] : false,
       'lifeTime'       => $options['lifeTime'],
-      'clientLifeTime' => isset($options['clientLifeTime']) && $options['clientLifeTime'] ? $options['clientLifeTime'] : $options['lifeTime'],
+      'clientLifeTime' => isset($options['clientLifeTime']) ? $options['clientLifeTime'] : $options['lifeTime'],
       'contextual'     => isset($options['contextual']) ? $options['contextual'] : false,
       'vary'           => isset($options['vary']) ? $options['vary'] : array(),
     );
