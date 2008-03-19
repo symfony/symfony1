@@ -117,6 +117,11 @@ class sfUser
     }
   }
 
+  public function getOptions()
+  {
+    return $this->options;
+  }
+
   /**
    * Sets the user culture.
    *

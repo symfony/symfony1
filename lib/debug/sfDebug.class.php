@@ -105,7 +105,7 @@ class sfDebug
    *
    * @return array The request parameter holders
    */
-  public static function requestAsArray($request)
+  public static function requestAsArray(sfRequest $request)
   {
     if (!$request)
     {
@@ -125,7 +125,7 @@ class sfDebug
    *
    * @return array The response parameters
    */
-  public static function responseAsArray($response)
+  public static function responseAsArray(sfResponse $response)
   {
     if (!$response)
     {
@@ -140,6 +140,27 @@ class sfDebug
       'stylesheets' => method_exists($response, 'getStylesheets') ? $response->getStylesheets('ALL') : array(),
       'metas'       => method_exists($response, 'getMetas')       ? $response->getMetas() : array(),
       'httpMetas'   => method_exists($response, 'getHttpMetas')   ? $response->getHttpMetas() : array(),
+    );
+  }
+
+  /**
+   * Returns user parameters as an array.
+   *
+   * @param sfUser A sfUser instance
+   *
+   * @return array The user parameters
+   */
+  public static function userAsArray(sfUser $user)
+  {
+    if (!$user)
+    {
+      return array();
+    }
+
+    return array(
+      'options'         => $user->getOptions(),
+      'attributeHolder' => self::flattenParameterHolder($user->getAttributeHolder()),
+      'culture'         => $user->getCulture(),
     );
   }
 
