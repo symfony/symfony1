@@ -762,10 +762,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                                 $tableAlias = $this->getTableAlias($componentAlias);
 
                                 // build sql expression
-                                if ($this->_conn instanceof Doctrine_Connection_Oracle) {
-                                    $tableAlias = $this->_queryComponents[$componentAlias]['table']
-                                            ->getTableName();
-                                }
                                 $term[0] = $this->_conn->quoteIdentifier($tableAlias)
                                          . '.'
                                          . $this->_conn->quoteIdentifier($field);
@@ -806,10 +802,6 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
 
                                     if ($this->getType() === Doctrine_Query::SELECT) {
                                         // build sql expression
-                                        if ($this->_conn instanceof Doctrine_Connection_Oracle) {
-                                            $tableAlias = $this->_queryComponents[$componentAlias]['table']
-                                                    ->getTableName();
-                                        }
                                         $term[0] = $this->_conn->quoteIdentifier($tableAlias)
                                                  . '.'
                                                  . $this->_conn->quoteIdentifier($term[0]);
