@@ -128,8 +128,6 @@ abstract class sfView
     $this->parameterHolder = new sfParameterHolder();
     $this->parameterHolder->add(sfConfig::get('mod_'.strtolower($moduleName).'_view_param', array()));
 
-    $this->decoratorDirectory = sfConfig::get('sf_app_template_dir');
-
     // include view configuration
     $this->configure();
 

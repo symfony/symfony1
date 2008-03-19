@@ -161,16 +161,16 @@ class sfViewConfigHandler extends sfYamlConfigHandler
   protected function addLayout($viewName = '')
   {
     $data = '';
-
     if ($this->getConfigValue('has_layout', $viewName) && false !== $layout = $this->getConfigValue('layout', $viewName))
     {
-      $data = "  \$this->setDecoratorTemplate('$layout'.\$this->getExtension());\n";
+      // decorator configuration
+      $data .= "  \$this->setDecoratorTemplate(sfConfig::get('symfony.view.'.\$this->moduleName.'_'.\$this->actionName.'_layout', '$layout'.\$this->getExtension()));\n";
     }
 
     // For XMLHttpRequest, we want no layout by default
     // So, we check if the user requested has_layout: true or if he gave a layout: name for this particular action
     $localLayout = isset($this->yamlConfig[$viewName]['layout']) || isset($this->yamlConfig[$viewName]['has_layout']);
-    if (!$localLayout && $data)
+    if (!$localLayout && isset($data))
     {
       $data = "  if (!\$this->context->getRequest()->isXmlHttpRequest())\n  {\n  $data  }\n";
     }
