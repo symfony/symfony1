@@ -330,6 +330,7 @@ class sfCoreAutoload
   'sfSingletonUpgrade' => 'task/project/upgrade1.1',
   'sfTestUpgrade' => 'task/project/upgrade1.1',
   'sfUpgrade' => 'task/project/upgrade1.1',
+  'sfViewCacheManagerUpgrade' => 'task/project/upgrade1.1',
   'sfWebDebugUpgrade' => 'task/project/upgrade1.1',
   'sfBaseTask' => 'task',
   'sfCommandApplicationTask' => 'task',
