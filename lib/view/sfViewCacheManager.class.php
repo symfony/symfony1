@@ -58,7 +58,7 @@ class sfViewCacheManager
 
     // cache instance
     $this->cache = $cache;
-    
+
     // routing instance
     $this->routing = $context->getRouting();
   }
@@ -117,14 +117,14 @@ class sfViewCacheManager
 
       return call_user_func($callable, $internalUri, $hostName, $vary);
     }
-    
+
     if (strpos($internalUri, '@') === 0 && strpos($internalUri, '@sf_cache_partial') === false)
     {
       throw new sfException('A cache key cannot be generated for an internal URI using the @rule syntax');
     }
-    
+
     $cacheKey = '';
-    
+
     if ($this->isContextual($internalUri))
     {
       // Contextual partial
@@ -150,7 +150,7 @@ class sfViewCacheManager
       }
       $cacheKey .= $this->convertParametersToKey($params);
     }
-    
+
     // prefix with vary headers
     if (!$vary)
     {
@@ -190,7 +190,7 @@ class sfViewCacheManager
 
     return $cacheKey;
   }
-  
+
   /**
    * Transforms an associative array of parameters from an URI into a unique key
    *
@@ -210,14 +210,14 @@ class sfViewCacheManager
     unset($params['action']);
     ksort($params);
     $cacheKey = sprintf('%s/%s', $module, $action);
-    foreach ($params as $key => $value) 
+    foreach ($params as $key => $value)
     {
       $cacheKey .= sprintf('/%s/%s', $key, $value);
     }
-    
+
     return $cacheKey;
   }
-  
+
   /**
    * Adds a cache to the manager.
    *
@@ -228,9 +228,12 @@ class sfViewCacheManager
   public function addCache($moduleName, $actionName, $options = array())
   {
     // normalize vary headers
-    foreach ($options['vary'] as $key => $name)
+    if (isset($options['vary']))
     {
-      $options['vary'][$key] = strtr(strtolower($name), '_', '-');
+      foreach ($options['vary'] as $key => $name)
+      {
+        $options['vary'][$key] = strtr(strtolower($name), '_', '-');
+      }
     }
 
     $options['lifeTime'] = isset($options['lifeTime']) ? $options['lifeTime'] : 0;
@@ -481,9 +484,9 @@ class sfViewCacheManager
     {
       $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Remove cache for "%s"', $internalUri))));
     }
-    
+
     $cacheKey = $this->generateCacheKey($internalUri, $hostName, $vary, $contextualPrefix);
-    
+
     if(strpos($cacheKey, '*'))
     {
       return $this->cache->removePattern($cacheKey);
