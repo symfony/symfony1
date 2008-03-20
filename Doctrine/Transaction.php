@@ -202,7 +202,7 @@ class Doctrine_Transaction extends Doctrine_Connection_Module
 
                 if ( ! $event->skipOperation) {
                     try {
-                        $this->conn->getDbh()->beginTransaction();
+                        $this->_doBeginTransaction();
                     } catch (Exception $e) {
                         throw new Doctrine_Transaction_Exception($e->getMessage());
                     }
@@ -275,7 +275,7 @@ class Doctrine_Transaction extends Doctrine_Connection_Module
 
                     $listener->preTransactionCommit($event);
                     if ( ! $event->skipOperation) {
-                        $this->conn->getDbh()->commit();
+                        $this->_doCommit();
                     }
                     $listener->postTransactionCommit($event);
                 }
@@ -349,7 +349,7 @@ class Doctrine_Transaction extends Doctrine_Connection_Module
                 $this->_nestingLevel = 0;
                 $this->_internalNestingLevel = 0;
                 try {
-                    $this->conn->getDbh()->rollback();
+                    $this->_doRollback();
                 } catch (Exception $e) {
                     throw new Doctrine_Transaction_Exception($e->getMessage());
                 }
@@ -395,6 +395,30 @@ class Doctrine_Transaction extends Doctrine_Connection_Module
     protected function rollbackSavePoint($savepoint)
     {
         throw new Doctrine_Transaction_Exception('Savepoints not supported by this driver.');
+    }
+    
+    /**
+     * Performs the rollback.
+     */
+    protected function _doRollback()
+    {
+        $this->conn->getDbh()->rollback();
+    }
+    
+    /**
+     * Performs the commit.
+     */
+    protected function _doCommit()
+    {
+        $this->conn->getDbh()->commit();
+    }
+    
+    /**
+     * Begins a database transaction.
+     */
+    protected function _doBeginTransaction()
+    {
+        $this->conn->getDbh()->beginTransaction();
     }
 
     /**
