@@ -106,7 +106,8 @@ class Doctrine_Import_Schema
                                                           'foreignType',
                                                           'autoComplete',
                                                           'onDelete',
-                                                          'onUpdate'),
+                                                          'onUpdate',
+                                                          'equal'),
 
                                    'inheritance'=>  array('type',
                                                           'extends',
