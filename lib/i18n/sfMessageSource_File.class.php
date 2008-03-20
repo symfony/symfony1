@@ -32,7 +32,7 @@ abstract class sfMessageSource_File extends sfMessageSource
 {
   /**
    * Separator between culture name and source.
-   * @var string 
+   * @var string
    */
   protected $dataSeparator = '.';
 
@@ -85,7 +85,7 @@ abstract class sfMessageSource_File extends sfMessageSource
    * Gets all the variants of a particular catalogue.
    *
    * @param string catalogue name
-   * @return array list of all variants for this catalogue. 
+   * @return array list of all variants for this catalogue.
    */
   public function getCatalogueList($catalogue)
   {
@@ -116,7 +116,7 @@ abstract class sfMessageSource_File extends sfMessageSource
    * This should only be called by getCatalogueList()
    *
    * @param string a particular catalogue.
-   * @return array a list of catalogues. 
+   * @return array a list of catalogues.
    * @see getCatalogueList()
    */
   protected function getCatalogueByDir($catalogue)
@@ -142,7 +142,7 @@ abstract class sfMessageSource_File extends sfMessageSource
    * Returns a list of catalogue and its culture ID.
    * E.g. array('messages', 'en_AU')
    *
-   * @return array list of catalogues 
+   * @return array list of catalogues
    * @see getCatalogues()
    */
   public function catalogues()
@@ -155,11 +155,11 @@ abstract class sfMessageSource_File extends sfMessageSource
    * of directory structures.
    * E.g. array('messages', 'en_AU')
    *
-   * @return array list of catalogues 
+   * @return array list of catalogues
    */
   protected function getCatalogues($dir = null, $variant = null)
   {
-    $dir = $dir ? $dir : $this->source;
+    $dir = $dir ? $dir : $this->getSource($variant);
     $files = scandir($dir);
 
     $catalogue = array();
