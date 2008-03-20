@@ -438,8 +438,24 @@ abstract class sfController
       sfConfig::set('mod_'.strtolower($module).'_view_class', $viewName);
     }
 
-    // forward to the mail action
-    $this->forward($module, $action);
+    try
+    {
+      // forward to the mail action
+      $this->forward($module, $action);
+    }
+    catch (Exception $e)
+    {
+      // put render mode back
+      $this->setRenderMode($renderMode);
+
+      // remove viewName
+      if ($viewName)
+      {
+        sfConfig::set('mod_'.strtolower($module).'_view_class', $currentViewName);
+      }
+
+      throw $e;
+    }
 
     // grab the action entry from this forward
     $actionEntry = $actionStack->getEntry($index);
