@@ -52,28 +52,121 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
         $this->_options = $options;
     }
 
+    /**
+     * preInsert
+     *
+     * @param Doctrine_Event $event 
+     * @return void
+     */
     public function preInsert(Doctrine_Event $event)
     {
         $name = $this->_options['name'];
 
         $record = $event->getInvoker();
 
-        if ( ! $record->$name) {
-            $record->$name = $this->buildSlug($record);
+        $record->$name = $this->buildSlug($record);
+    }
+
+    /**
+     * preUpdate
+     *
+     * @param Doctrine_Event $event 
+     * @return void
+     */
+    public function preUpdate(Doctrine_Event $event)
+    {
+        if (false !== $this->_options['unique']) {
+            $name = $this->_options['name'];
+    
+            $record = $event->getInvoker();
+    
+            $record->$name = $this->buildSlug($record);        
         }
     }
 
+    /**
+     * buildSlug
+     *
+     * Generate the slug for a given Doctrine_Record
+     *
+     * @param Doctrine_Record $record 
+     * @return string $slug
+     */
     protected function buildSlug($record)
     {
         if (empty($this->_options['fields'])) {
-            $value = (string) $record;
+            if (method_exists($record, 'getUniqueSlug')) {
+                $value = $record->getUniqueSlug($record);
+            } else {
+                $value = (string) $record;
+            }
         } else {
-            $value = '';
-            foreach ($this->_options['fields'] as $field) {
-                $value .= $record->$field . ' ';
+            if ($this->_options['unique'] === true) {   
+                $value = $this->getUniqueSlug($record);
+            } else {  
+                $value = '';
+                foreach ($this->_options['fields'] as $field) {
+                    $value .= $record->$field . ' ';
+                } 
+            }
+
+            $value =  Doctrine_Inflector::urlize($value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * getUniqueSlug
+     *
+     * Creates a unique slug for a given Doctrine_Record. This function enforces the uniqueness by incrementing
+     * the values with a postfix if the slug is not unique
+     *
+     * @param Doctrine_Record $record 
+     * @return string $slug
+     */
+    public function getUniqueSlug($record)
+    {
+        $name = $this->_options['name'];
+        $slugFromFields = '';
+        foreach ($this->_options['fields'] as $field) {
+            $slugFromFields .= $record->$field . ' ';
+        }
+
+        $proposal = $record->$name ? $record->$name : $slugFromFields;
+        $proposal =  Doctrine_Inflector::urlize($proposal);
+        $slug = $proposal;
+        $record_id = $record->id ? $record->id : 0;
+
+        $whereString = 'r.'.$name.' LIKE ? AND r.id <> ?';
+        $whereParams = array($proposal.'%', $record_id);
+        foreach ($this->_options['uniqueBy'] as $uniqueBy) {
+            if (is_null($record->$uniqueBy)) {
+                $whereString .= ' AND r.'.$uniqueBy.' IS NULL';
+            } else {
+                $whereString .= ' AND r.'.$uniqueBy.' = ?';
+                $whereParams[] =  $record->$uniqueBy;
             }
         }
 
-        return Doctrine_Inflector::urlize($value);
+        $similarSlugResult = Doctrine_Query::create()
+        ->select('r.'.$name)
+        ->from(get_class($record).' r')
+        ->where($whereString , $whereParams)
+        ->setHydrationMode(Doctrine::HYDRATE_ARRAY)
+        ->execute();
+
+        $similarSlugs = array();
+        foreach ($similarSlugResult as $key => $value) {
+            $similarSlugs[$key] = $value[$name];
+        }
+
+        $i = 1;
+        while (in_array($slug, $similarSlugs)) {
+            $slug = $proposal.'-'.$i;
+            $i++;
+        }
+
+        return  $slug;
     }
 }
