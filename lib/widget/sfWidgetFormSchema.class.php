@@ -277,10 +277,11 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Renders a field by name.
    *
-   * @param string       The field name
-   * @param string       The field value
+   * @param  string  The field name
+   * @param  string  The field value
+   * @param  array   An array of errors for the field
    *
-   * @param string       A HTML string representing the rendered widget
+   * @return string  A HTML string representing the rendered widget
    */
   public function renderField($name, $value = null, $errors = array())
   {
@@ -293,7 +294,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     $clone = clone $widget;
     $clone->setIdFormat($this->options['id_format']);
 
-    return $clone->render($this->generateName($name), $value, array(), $errors);
+    return $clone->render($this->generateName($name), $value, $clone->getAttributes(), $errors);
   }
 
   /**

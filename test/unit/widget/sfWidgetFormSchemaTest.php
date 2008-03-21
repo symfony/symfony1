@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(60, new lime_output_color());
+$t = new lime_test(61, new lime_output_color());
 
 $w1 = new sfWidgetFormInput(array(), array('class' => 'foo1'));
 $w2 = new sfWidgetFormInput();
@@ -173,6 +173,12 @@ $t->is($w->needsMultipartForm(), true, '->needsMultipartForm() returns true if t
 $t->diag('->renderField()');
 $w = new sfWidgetFormSchema(array('first_name' => $w1));
 $t->is($w->renderField('first_name', 'Fabien'), '<input class="foo1" type="text" name="first_name" value="Fabien" id="first_name" />', '->renderField() renders a field to HTML');
+
+$ww = clone $w1;
+$ww->setAttribute('id', 'foo');
+$ww->setAttribute('style', 'color: blue');
+$w = new sfWidgetFormSchema(array('first_name' => $ww));
+$t->is($w->renderField('first_name', 'Fabien'), '<input class="foo1" id="foo" style="color: blue" type="text" name="first_name" value="Fabien" />', '->renderField() renders a field to HTML');
 
 try
 {
