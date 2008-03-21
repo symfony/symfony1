@@ -148,15 +148,16 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
 
     /**
      * getQueryRegistry
+     *
      * lazy-initializes the query registry object and returns it
      *
      * @return Doctrine_Query_Registry
      */
     public function getQueryRegistry()
     {
-    	if ( ! isset($this->_queryRegistry)) {
-    	   $this->_queryRegistry = new Doctrine_Query_Registry;
-    	}
+      	if ( ! isset($this->_queryRegistry)) {
+      	   $this->_queryRegistry = new Doctrine_Query_Registry;
+      	}
         return $this->_queryRegistry;
     }
 
@@ -275,6 +276,14 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
             $parts = $this->parseDsn($adapter);
             $driverName = $parts['scheme'];
             $adapter = $parts;
+        }
+
+        if ( ! is_object($adapter)) {
+            $adapter['user']  = urldecode($adapter['user']);
+            $adapter['pass']  = urldecode($adapter['pass']);
+            $adapter['query'] = urldecode($adapter['query']);
+            $adapter['database'] = urldecode($adapter['database']);
+            $adapter['dsn'] = urldecode($adapter['dsn']);
         }
 
         // initialize the default attributes

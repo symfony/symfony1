@@ -214,6 +214,18 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
     }
 
     /**
+     * getOptions
+     *
+     * Get array of all options
+     *
+     * @return void
+     */
+    public function getOptions()
+    {
+      return $this->options;
+    }
+
+    /**
      * getOption
      * 
      * Retrieves option
