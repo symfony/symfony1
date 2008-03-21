@@ -1883,7 +1883,11 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                     || $name == 'length') {
                 continue;
             }
-            if (strtolower($name) === 'notnull' && isset($this->_columns[$columnName]['autoincrement'])) {
+            if ($name == 'notnull' && isset($this->_columns[$columnName]['autoincrement'])) {
+                continue;
+            }
+            // skip it if it's explicitly set to FALSE (i.e. notnull => false)
+            if ($args === false) {
                 continue;
             }
             $validators[$name] = $args;
