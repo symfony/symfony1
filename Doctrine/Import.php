@@ -216,6 +216,11 @@ class Doctrine_Import extends Doctrine_Connection_Module
               $definition = array();
               $definition['tableName'] = $table;
               $definition['className'] = Doctrine_Inflector::classify($table);
+
+              if( ! isset($options['singularize']) || $options['singularize'] !== false) {
+                  $definition['className'] = Doctrine_Inflector::singularize($definition['className']);
+              }
+
               $definition['columns'] = $connection->import->listTableColumns($table);
               
               $builder->buildRecord($definition);
