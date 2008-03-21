@@ -44,20 +44,20 @@ class Doctrine_Validator_Timestamp
             return true;
         }
 
-        if (!preg_match('/^ *[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} *$/', $value)) {
+        if ( ! preg_match('/^ *[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} *$/', $value)) {
             return false;
         }
-        
+
         list($date, $time) = explode(' ', trim($value));
-        
+
         $dateValidator = Doctrine_Validator::getValidator('date');
         $timeValidator = Doctrine_Validator::getValidator('time');
-        
-        if (!$dateValidator->validate($date)) {
+
+        if ( ! $dateValidator->validate($date)) {
             return false;
         }
-        
-        if (!$timeValidator->validate($time)) {
+
+        if ( ! $timeValidator->validate($time)) {
             return false;
         } 
 
