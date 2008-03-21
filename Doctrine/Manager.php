@@ -278,12 +278,11 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
             $adapter = $parts;
         }
 
-        if ( ! is_object($adapter)) {
-            $adapter['user']  = urldecode($adapter['user']);
-            $adapter['pass']  = urldecode($adapter['pass']);
-            $adapter['query'] = urldecode($adapter['query']);
-            $adapter['database'] = urldecode($adapter['database']);
-            $adapter['dsn'] = urldecode($adapter['dsn']);
+        // Decode adapter information
+        if (is_array($adapter)) {
+            foreach ($adapter as $key => $value) {
+                $adapter[$key]  = urldecode($value);  
+            }
         }
 
         // initialize the default attributes
