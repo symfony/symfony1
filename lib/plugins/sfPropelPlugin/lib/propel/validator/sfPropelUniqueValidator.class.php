@@ -23,6 +23,10 @@
  *                                                the value for this column already
  *                                                exists in the database.
  *
+ * Warning: sfPropelUniqueValidator is susceptible to race conditions.  Although
+ * unlikely, in multiuser environments, the result may change the instant it
+ * returns.  You should still be ready to handle a duplicate INSERT error.  
+ *
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
