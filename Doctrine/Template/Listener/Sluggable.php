@@ -136,10 +136,16 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
         $proposal = $record->$name ? $record->$name : $slugFromFields;
         $proposal =  Doctrine_Inflector::urlize($proposal);
         $slug = $proposal;
-        $record_id = $record->id ? $record->id : 0;
 
-        $whereString = 'r.'.$name.' LIKE ? AND r.id <> ?';
-        $whereParams = array($proposal.'%', $record_id);
+        $whereString = 'r.' . $name . ' LIKE ?';
+        $whereParams = array($proposal.'%');
+        
+        if ($record->exists()) {
+            $identifier = $record->identifier();
+            $whereString .= ' AND r.' . implode(' != ? AND r.', $record->getTable()->getIdentifierColumnNames()) . ' != ?';
+            $whereParams = array_merge($whereParams, array_values($identifier));
+        }
+
         foreach ($this->_options['uniqueBy'] as $uniqueBy) {
             if (is_null($record->$uniqueBy)) {
                 $whereString .= ' AND r.'.$uniqueBy.' IS NULL';
@@ -149,12 +155,13 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
             }
         }
 
-        $similarSlugResult = Doctrine_Query::create()
+        $query = Doctrine_Query::create()
         ->select('r.'.$name)
         ->from(get_class($record).' r')
         ->where($whereString , $whereParams)
-        ->setHydrationMode(Doctrine::HYDRATE_ARRAY)
-        ->execute();
+        ->setHydrationMode(Doctrine::HYDRATE_ARRAY);
+
+        $similarSlugResult = $query->execute();
 
         $similarSlugs = array();
         foreach ($similarSlugResult as $key => $value) {
