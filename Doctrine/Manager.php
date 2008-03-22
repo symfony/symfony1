@@ -368,20 +368,20 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
 
     /**
-     * parseDsn
+     * buildDsnPartsArray
      *
-     * @param string $dsn
-     * @return array Parsed contents of DSN
-     * @todo package:dbal
+     * @param string $dsn 
+     * @return array $parts
      */
-    public function parseDsn($dsn)
+    public function buildDsnPartsArray($dsn)
     {
         // fix sqlite dsn so that it will parse correctly
         $dsn = str_replace("////", "/", $dsn);
-        $dsn = str_replace("///c:/", "//c:/", $dsn);
+        $dsn = str_replace("\\", "/", $dsn);
+        $dsn = preg_replace("/\/\/\/(.*):\//", "//$1:/", $dsn);
 
         // silence any warnings
-        $parts = @parse_url($dsn);
+        $parts = parse_url($dsn);
 
         $names = array('dsn', 'scheme', 'host', 'port', 'user', 'pass', 'path', 'query', 'fragment');
 
@@ -392,8 +392,22 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
         }
 
         if (count($parts) == 0 || ! isset($parts['scheme'])) {
-            throw new Doctrine_Manager_Exception('Empty data source name');
+            throw new Doctrine_Manager_Exception('Could not parse dsn');
         }
+
+        return $parts;
+    }
+
+    /**
+     * parseDsn
+     *
+     * @param string $dsn
+     * @return array Parsed contents of DSN
+     * @todo package:dbal
+     */
+    public function parseDsn($dsn)
+    {
+        $parts = $this->buildDsnPartsArray($dsn);
 
         switch ($parts['scheme']) {
             case 'sqlite':
@@ -406,7 +420,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
                     //fix windows dsn we have to add host: to path and set host to null
                     if (isset($parts['host'])) {
                         $parts['path'] = $parts['host'] . ":" . $parts["path"];
-                        $parts["host"] = null;
+                        $parts['host'] = null;
                     }
                     $parts['database'] = $parts['path'];
                     $parts['dsn'] = $parts['scheme'] . ':' . $parts['path'];
