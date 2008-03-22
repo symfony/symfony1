@@ -154,8 +154,8 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             $this->_table = $table;
             $exists = ( ! $isNewEntry);
         } else {
-            $class = get_class($this);
             // get the table of this class
+            $class = get_class($this);
             $this->_table = Doctrine_Manager::getInstance()->getTable($class);
             $exists = false;
         }
@@ -831,13 +831,10 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
 
         try {
             if ( ! isset($this->_references[$fieldName]) && $load) {
-
                 $rel = $this->_table->getRelation($fieldName);
-
                 $this->_references[$fieldName] = $rel->fetchRelatedFor($this);
             }
             return $this->_references[$fieldName];
-
         } catch (Doctrine_Table_Exception $e) {
             foreach ($this->_table->getFilters() as $filter) {
                 if (($value = $filter->filterGet($this, $fieldName, $value)) !== null) {
@@ -1219,6 +1216,13 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     public function toArray($deep = true, $prefixKey = false)
     {
+        if ($this->_state == self::STATE_LOCKED) {
+            return false;
+        }
+        
+        $stateBeforeLock = $this->_state;
+        $this->_state = self::STATE_LOCKED;
+        
         $a = array();
 
         foreach ($this as $column => $value) {
@@ -1233,7 +1237,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             $i      = $this->_table->getIdentifier();
             $a[$i]  = $this->getIncremented();
         }
-
+        
         if ($deep) {
             foreach ($this->_references as $key => $relation) {
                 if (! $relation instanceof Doctrine_Null) {
@@ -1250,6 +1254,8 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                 $a[$key] = $value;
             }
         }
+        
+        $this->_state = $stateBeforeLock;
 
         return $a;
     }

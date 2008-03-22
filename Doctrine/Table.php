@@ -1308,7 +1308,6 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     public function getRecord()
     {
         if ( ! empty($this->_data)) {
-
             $identifierFieldNames = $this->getIdentifier();
 
             if ( ! is_array($identifierFieldNames)) {
@@ -1326,7 +1325,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
             }
 
             if ($found) {
-                $recordName = $this->getClassnameToReturn();
+                $recordName = $this->getComponentName();
                 $record = new $recordName($this, true);
                 $this->_data = array();
                 return $record;
@@ -1339,13 +1338,13 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                 $record = $this->_identityMap[$id];
                 $record->hydrate($this->_data);
             } else {
-                $recordName = $this->getClassnameToReturn();
+                $recordName = $this->getComponentName();
                 $record = new $recordName($this);
                 $this->_identityMap[$id] = $record;
             }
             $this->_data = array();
         } else {
-            $recordName = $this->getClassnameToReturn();
+            $recordName = $this->getComponentName();
             $record = new $recordName($this, true);
         }
 
@@ -1364,7 +1363,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      * if the subclassing option is not set.
      *
      * @return string The name of the class to create
-     *
+     * @deprecated
      */
     public function getClassnameToReturn()
     {

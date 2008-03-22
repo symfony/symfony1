@@ -103,11 +103,12 @@ class Doctrine_Hydrator_RecordDriver extends Doctrine_Locator_Injectable
     
     public function getElement(array $data, $component)
     {
+        $component = $this->_getClassNameToReturn($data, $component);
         if ( ! isset($this->_tables[$component])) {
             $this->_tables[$component] = Doctrine_Manager::getInstance()->getTable($component);
             $this->_tables[$component]->setAttribute(Doctrine::ATTR_LOAD_REFERENCES, false);
         }
-        
+
         $this->_tables[$component]->setData($data);
         $record = $this->_tables[$component]->getRecord();
 
@@ -123,5 +124,43 @@ class Doctrine_Hydrator_RecordDriver extends Doctrine_Locator_Injectable
         foreach ($this->_tables as $table) {
             $table->setAttribute(Doctrine::ATTR_LOAD_REFERENCES, true);
         }
+    }
+    
+    /**
+     * Get the classname to return. Most often this is just the options['name']
+     *
+     * Check the subclasses option and the inheritanceMap for each subclass to see
+     * if all the maps in a subclass is met. If this is the case return that
+     * subclass name. If no subclasses match or if there are no subclasses defined
+     * return the name of the class for this tables record.
+     *
+     * @todo this function could use reflection to check the first time it runs
+     * if the subclassing option is not set.
+     *
+     * @return string The name of the class to create
+     *
+     */
+    protected function _getClassnameToReturn(array &$data, $component)
+    {
+        if ( ! isset($this->_tables[$component])) {
+            $this->_tables[$component] = Doctrine_Manager::getInstance()->getTable($component);
+            $this->_tables[$component]->setAttribute(Doctrine::ATTR_LOAD_REFERENCES, false);
+        }
+        
+        if ( ! ($subclasses = $this->_tables[$component]->getOption('subclasses'))) {
+            return $component;
+        }
+        
+        foreach ($subclasses as $subclass) {
+            $table = Doctrine_Manager::getInstance()->getTable($subclass);
+            $inheritanceMap = $table->getOption('inheritanceMap');
+            list($key, $value) = each($inheritanceMap);
+            if ( ! isset($data[$key]) || $data[$key] != $value) {
+                continue;
+            } else {
+                return $table->getComponentName();
+            }
+        }
+        return $component;
     }
 }
