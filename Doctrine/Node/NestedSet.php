@@ -759,6 +759,16 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
           return false;
         }
     }
+    
+    /**
+     * Detaches the node from the tree by invalidating it's lft & rgt values
+     * (they're set to 0).
+     */
+    public function detach()
+    {
+        $this->setLeftValue(0);
+        $this->setRightValue(0);
+    }
 
     /**
      * deletes node and it's descendants
