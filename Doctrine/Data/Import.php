@@ -32,9 +32,20 @@
  */
 class Doctrine_Data_Import extends Doctrine_Data
 {
+    /**
+     * Array of imported objects for processing and saving
+     *
+     * @var array
+     */
     protected $_importedObjects = array();
+
+    /**
+     * Array of the raw data parsed from yaml
+     *
+     * @var array
+     */
     protected $_rows = array();
-    
+
     /**
      * constructor
      *
@@ -56,13 +67,13 @@ class Doctrine_Data_Import extends Doctrine_Data
     public function doImport()
     {
         $directory = $this->getDirectory();
-        
+
         $array = array();
-        
+
         if ($directory !== null) {
             foreach ((array) $directory as $dir) {
                 $e = explode('.', $dir);
-                
+
                 // If they specified a specific yml file
                 if (end($e) == 'yml') {
                     $array = array_merge($array, Doctrine_Parser::load($dir, $this->getFormat()));
@@ -76,44 +87,61 @@ class Doctrine_Data_Import extends Doctrine_Data
                         if (in_array(end($e), $this->getFormats())) {
                             $array = array_merge($array, Doctrine_Parser::load($file->getPathName(), $this->getFormat()));
                         }
-                    }   
+                    }
                 }
             }
         }
-        
+
         $this->_loadData($array);
     }
-    
+
+    /**
+     * _buildRows
+     *
+     * @return void
+     */
     protected function _buildRows($className, $data)
     {
         foreach ($data as $rowKey => $row) {
             // do the same for the row information
             $this->_rows[$className][$rowKey] = $row;
-            
+
             foreach ($row as $key => $value) {
                 if (Doctrine::getTable($className)->hasRelation($key) && is_array($value)) {
                     $keys = array_keys($value);
-                    
+
                     // Skip associative arrays defining keys to relationships
-                    if (!isset($keys[0])) {
+                    if ( ! isset($keys[0])) {
                         $this->_buildRows(Doctrine::getTable($className)->getRelation($key)->getTable()->getOption('name'), $value);
                     }
                 }
             }
         }
     }
-    
+
+    /**
+     * _buildNestedSetRows
+     *
+     * @return void
+     */
     protected function _buildNestedSetRows($className, $data)
     {
         foreach ($data as $rowKey => $row) {
             $children = isset($row['children']) ? $row['children']:array();
             unset($row['children']);
             $this->_rows[$className][$rowKey] = $row;
-            
+
             $this->_buildNestedSetRows($className, $children);
         }
     }
-    
+
+    /**
+     * _getImportedObject
+     *
+     * @param string $rowKey 
+     * @return Doctrine_Record
+     * @throws Doctrine_Data_Exception
+     */
     protected function _getImportedObject($rowKey)
     {
         if (isset($this->_importedObjects[$rowKey])) {
@@ -122,11 +150,18 @@ class Doctrine_Data_Import extends Doctrine_Data
             throw new Doctrine_Data_Exception('Invalid row key specified: ' . $rowKey);
         }
     }
-    
+
+    /**
+     * _processRow
+     *
+     * @param string $rowKey 
+     * @param string $row 
+     * @return void
+     */    
     protected function _processRow($rowKey, $row)
     {
         $obj = $this->_importedObjects[$rowKey];
-        
+
         foreach ($row as $key => $value) {
             if ($obj->getTable()->hasField($key)) {
                 $obj->set($key, $value);
@@ -137,12 +172,11 @@ class Doctrine_Data_Import extends Doctrine_Data
                 if (is_array($value)) {
                     if (isset($value[0])) {
                         foreach ($value as $link) {
-                            
                             if ($obj->getTable()->getRelation($key)->getType() === Doctrine_Relation::ONE) {
                                 $obj->set($key, $this->_getImportedObject($link));
                             } else if ($obj->getTable()->getRelation($key)->getType() === Doctrine_Relation::MANY) {
                                 $relation = $obj->$key;
-                                
+
                                 $relation[] = $this->_getImportedObject($link);
                             }
                         }
@@ -155,9 +189,9 @@ class Doctrine_Data_Import extends Doctrine_Data
             }
         }
     }
-    
+
     /**
-     * loadData
+     * _loadData
      *
      * @param string $array 
      * @return void
@@ -165,21 +199,17 @@ class Doctrine_Data_Import extends Doctrine_Data
     protected function _loadData(array $array)
     {
         $nestedSets = array();
-        
+
         $specifiedModels = $this->getModels();
         $rows = array();
-        
+
         foreach ($array as $className => $data) {
-            
             if ( ! empty($specifiedModels) && !in_array($className, $specifiedModels)) {
                 continue;
             }
-            
-            // This is simple here to get the templates present for this model
-            // better way?
-            $obj = new $className(null, true);
-            $templates = array_keys($obj->getTable()->getTemplates());
-            
+
+            $templates = array_keys(Doctrine::getTable($className)->getTemplates());
+
             if (in_array('Doctrine_Template_NestedSet', $templates)) {
                 $nestedSets[$className][] = $data;
                 $this->_buildNestedSetRows($className, $data);
@@ -187,7 +217,7 @@ class Doctrine_Data_Import extends Doctrine_Data
                 $this->_buildRows($className, $data);
             }
         }
-        
+
         $buildRows = array();
         foreach ($this->_rows as $className => $classRows) {
             foreach ($classRows as $rowKey => $row) {
@@ -210,54 +240,61 @@ class Doctrine_Data_Import extends Doctrine_Data
         $manager = Doctrine_Manager::getInstance();
         foreach ($manager as $connection) {            
             $tree = $connection->unitOfWork->buildFlushTree($objects);
-            
+
             foreach ($tree as $model) {
                 foreach ($this->_importedObjects as $obj) {
                     $templates = array_keys($obj->getTable()->getTemplates());
                     
-                    if ($obj instanceof $model && !in_array('Doctrine_Template_NestedSet', $templates)) {
+                    if ($obj instanceof $model && ! in_array('Doctrine_Template_NestedSet', $templates)) {
                         $obj->save();
+                        $obj->free();
                     }
                 }
             }
         }
-        
+
         foreach ($nestedSets as $className => $sets) {
             foreach ($sets as $data) {
                 $this->_loadNestedSetData($className, $data);
             }
         }
     }
-    
+
+    /**
+     * _loadNestedSetData
+     *
+     * @param string $model 
+     * @param string $nestedSetData 
+     * @param string $parent 
+     * @return void
+     */
     protected function _loadNestedSetData($model, $nestedSetData, $parent = null)
     {
         $manager = Doctrine_Manager::getInstance();
 
-        foreach($nestedSetData AS $rowKey => $nestedSet)
-        {
+        foreach($nestedSetData AS $rowKey => $nestedSet) {
             $children = array();
             $data  = array();
-            
-            if( array_key_exists('children', $nestedSet) )
-            {
+
+            if (array_key_exists('children', $nestedSet)) {
                 $children = $nestedSet['children'];
                 $children = array_reverse($children, true);
                 unset($nestedSet['children']);
             }
 
             $record = $this->_importedObjects[$rowKey];
-            
-            if( !$parent )
-            {
+
+            if( ! $parent) {
                 $manager->getTable($model)->getTree()->createRoot($record);
             } else {
                 $parent->getNode()->addChild($record);
             }
 
-            if( is_array($children) AND !empty($children) )
-            {
+            if (is_array($children) AND !empty($children)) {
                 $this->_loadNestedSetData($model, $children, $record);
             }
+
+            $record->free();
         }
     }
 
@@ -270,26 +307,33 @@ class Doctrine_Data_Import extends Doctrine_Data
     public function doImportDummyData($num = 3)
     {
         $models = Doctrine::getLoadedModels();
-        
         $specifiedModels = $this->getModels();
-        
+
         foreach ($models as $name) {
             if ( ! empty($specifiedModels) && !in_array($name, $specifiedModels)) {
                 continue;
             }
-            
+
             for ($i = 0; $i < $num; $i++) {
                 $obj = new $name();
-                
+
                 $this->populateDummyRecord($obj);
-                
+
                 $obj->save();
-                
+
                 $ids[get_class($obj)][] = $obj->identifier();
+
+                $obj->free();
             }
         }
     }
-    
+
+    /**
+     * populateDummyRecord
+     *
+     * @param Doctrine_Record $record 
+     * @return Doctrine_Record $record
+     */
     public function populateDummyRecord(Doctrine_Record $record)
     {
         $lorem = explode(' ', "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem 
@@ -299,79 +343,76 @@ class Doctrine_Data_Import extends Doctrine_Data
                                typesetting, remaining essentially unchanged. It was popularised in the 1960s with 
                                the release of Letraset sheets containing Lorem Ipsum passages, and more recently 
                                with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.");
-        
+
         $columns = array_keys($record->toArray());
         $pks = $record->getTable()->getIdentifier();
-        
+
         if ( ! is_array($pks)) {
           $pks = array($pks);
         }
-        
+
         foreach ($columns as $column) {
-            
             if ( ! in_array($column, $pks)) {
                 if ($relation = $this->isRelation($record, $column)) {
                     $alias = $relation['alias'];
                     $relationObj = $record->$alias;
-                    
+
                     $this->populateDummyRecord($relationObj);
-                    
                 } else {
-                    
                     $definition = $record->getTable()->getDefinitionOf($column);
-                    
+
                     switch($definition['type'])
                     {
                         case 'string';     
                             shuffle($lorem);
-                    
+
                             $record->$column = substr(implode(' ', $lorem), 0, $definition['length']);
                         break;
-                        
+
                         case 'integer':
                             $record->$column = rand();
                         break;
-                        
+
                         case 'boolean':
                             $record->$column = true;
                         break;
-                        
+
                         case 'float':
                             $record->$column = number_format(rand($definition['length'], $definition['length']), 2, '.', null);
                         break;
-                        
+
                         case 'array':
                             $record->$column = array('test' => 'test');
                         break;
-                        
+
                         case 'object':
                             $record->$column = new stdObject();
                         break;
-                        
+
                         case 'blob':
                             $record->$column = '';
                         break;
-                        
+
                         case 'clob':
                             $record->$column = '';
                         break;
-                        
+
                         case 'timestamp':
                             $record->$column = date('Y-m-d h:i:s', time());
                         break;
-                        
+
                         case 'time':
                             $record->$column = date('h:i:s', time());
                         break;
-                        
+
                         case 'date':
                             $record->$column = date('Y-m-d', time());
                         break;
-                        
+
                         case 'enum':
                             $record->$column = 'test';
                         break;
-                        
+
                         case 'gzip':
                             $record->$column = 'test';
                         break;
@@ -379,7 +420,7 @@ class Doctrine_Data_Import extends Doctrine_Data
                 }
             }
         }
-        
+
         return $record;
     }
 }

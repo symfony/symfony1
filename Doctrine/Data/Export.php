@@ -52,33 +52,28 @@ class Doctrine_Data_Export extends Doctrine_Data
     {
         $models = Doctrine::getLoadedModels();
         $specifiedModels = $this->getModels();
-        
+
         $data = array();
-        
-        $outputAll = true;
-        
+
 		// for situation when the $models array is empty, but the $specifiedModels array isn't
         if (empty($models)) {
           $models = $specifiedModels;
         }
-        
+
         foreach ($models AS $name) {
-            
             if ( ! empty($specifiedModels) AND ! in_array($name, $specifiedModels)) {
                 continue;
             }
-            
-            $class = new $name();
-            $table = $class->getTable();
-            $result = $table->findAll();
-            
-            if ( ! empty($result)) {
-                $data[$name] = $result;
+
+            $results = Doctrine::getTable($name)->findAll();
+
+            if ($results->count() > 0) {
+                $data[$name] = $results;
             }
         }
-        
+
         $data = $this->prepareData($data);
-        
+
         return $this->dumpData($data);
     }
 
@@ -94,15 +89,14 @@ class Doctrine_Data_Export extends Doctrine_Data
     {
         $directory = $this->getDirectory();
         $format = $this->getFormat();
-        
+
         if ($this->exportIndividualFiles()) {
-            
             if (is_array($directory)) {
                 throw new Doctrine_Data_Exception('You must specify a single path to a folder in order to export individual files.');
             } else if ( ! is_dir($directory) && is_file($directory)) {
                 $directory = dirname($directory);
             }
-            
+
             foreach ($data as $className => $classData) {
                 if ( ! empty($classData)) {
                     Doctrine_Parser::dump(array($className => $classData), $format, $directory.DIRECTORY_SEPARATOR.$className.'.'.$format);
@@ -112,7 +106,7 @@ class Doctrine_Data_Export extends Doctrine_Data
             if (is_dir($directory)) {
                 $directory .= DIRECTORY_SEPARATOR . 'data.' . $format;
             }
-            
+
             if ( ! empty($data)) {
                 return Doctrine_Parser::dump($data, $format, $directory);
             }
@@ -130,55 +124,56 @@ class Doctrine_Data_Export extends Doctrine_Data
     public function prepareData($data)
     {
         $preparedData = array();
-        
+
         foreach ($data AS $className => $classData) {
-            
             foreach ($classData as $record) {
                 $className = get_class($record);
                 $recordKey = $className . '_' . implode('_', $record->identifier());
-                
-                $recordData = $record->toArray();
-                
+
+                $recordData = $record->toArray(false);
+
                 foreach ($recordData as $key => $value) {
                     if ( ! $value) {
                         continue;
                     }
-                    
+
                     // skip single primary keys, we need to maintain composite primary keys
                     $keys = $record->getTable()->getIdentifier();
-                    
+
                     if ( ! is_array($keys)) {
                       $keys = array($keys);
                     }
-                    
+
                     if (count($keys) <= 1 && in_array($key, $keys)) {
                         continue;
                     }
-                    
+
                     if ($relation = $this->isRelation($record, $key)) {
                         $relationAlias = $relation['alias'];
                         $relationRecord = $record->$relationAlias;
-                        
+
                         // If collection then get first so we have an instance of the related record
                         if ($relationRecord instanceof Doctrine_Collection) {
                             $relationRecord = $relationRecord->getFirst();
                         }
-                        
+
                         // If relation is null or does not exist then continue
                         if ($relationRecord instanceof Doctrine_Null || !$relationRecord) {
                             continue;
                         }
-                        
+
                         // Get class name for relation
                         $relationClassName = get_class($relationRecord);
-                        
+
                         $relationValue = $relationClassName . '_' . $value;
-                        
+
                         $preparedData[$className][$recordKey][$relationAlias] = $relationValue;
                     } else {                        
                         $preparedData[$className][$recordKey][$key] = $value;
                     }
                 }
+
+                $record->free();
             }
         }
         
