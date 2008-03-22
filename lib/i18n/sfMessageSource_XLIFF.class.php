@@ -363,7 +363,7 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
           {
             if (!empty($this->cache))
             {
-              $this->cache->clean($variant, $this->culture);
+              $this->cache->remove($variant.':'.$this->culture);
             }
 
             return true;
