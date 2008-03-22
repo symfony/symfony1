@@ -267,6 +267,10 @@ END;
      */
     public function generateMigrationClass($className, $options = array(), $up = null, $down = null, $return = false)
     {
+        $className = Doctrine_Inflector::urlize($className);
+        $className = str_replace('-', '_', $className);
+        $className = Doctrine_Inflector::classify($className);
+
         if ($return || ! $this->getMigrationsPath()) {
             return $this->buildMigrationClass($className, null, $options, $up, $down);
         } else {
