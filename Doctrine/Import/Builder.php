@@ -490,12 +490,6 @@ END;
                 }
             }
 
-            // Unset notnull if the column is primary and if notnull === true
-            // It defaults to true so no need to have it in definition
-            if (isset($options['primary']) && $options['primary'] && isset($options['notnull']) && $options['notnull'] === true) {
-                unset($options['notnull']);
-            }
-
             if (is_array($options) && !empty($options)) {
                 $build .= ', ' . $this->varExport($options);
             }
