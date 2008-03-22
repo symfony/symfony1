@@ -146,6 +146,7 @@ class Doctrine_DataDict_Mssql extends Doctrine_DataDict
                 }
             break;
             case 'datetime':
+            case 'timestamp':
                 $type[0] = 'timestamp';
             break;
             case 'float':
