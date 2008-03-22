@@ -989,10 +989,10 @@ abstract class Doctrine_Query_Abstract
                 $queryComponents[$alias]['relation'] = $queryComponents[$e[0]]['table']->getRelation($e[1]);
                 $queryComponents[$alias]['table'] = $queryComponents[$alias]['relation']->getTable();
             }
-            if (isset($v[1])) {
+            if (isset($components[1])) {
                 $queryComponents[$alias]['agg'] = $components[1];
             }
-            if (isset($v[2])) {
+            if (isset($components[2])) {
                 $queryComponents[$alias]['map'] = $components[2];
             }
         }
