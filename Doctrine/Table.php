@@ -306,7 +306,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
             $parentColumns = $parentTable->getColumns();
 
             foreach ($parentColumns as $columnName => $definition) {
-                if ( ! isset($definition['primary'])) {
+                if ( ! isset($definition['primary']) || $definition['primary'] === false) {
                     if (isset($this->_columns[$columnName])) {
                         $found = true;
                         break;
@@ -1018,7 +1018,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
             $this->_columns[$name] = $options;
         }
 
-        if (!empty($options['primary'])) {
+        if (isset($options['primary']) && $options['primary']) {
             if (isset($this->_identifier)) {
                 $this->_identifier = (array) $this->_identifier; 
             }
