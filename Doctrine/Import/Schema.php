@@ -85,6 +85,7 @@ class Doctrine_Import_Schema
                                                           'generate_accessors'),
 
                                    'column'     =>  array('name',
+                                                          'format',
                                                           'fixed',
                                                           'primary',
                                                           'autoincrement',
