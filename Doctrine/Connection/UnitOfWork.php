@@ -594,7 +594,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
      */
     public function insert(Doctrine_Record $record)
     {
-         // listen the onPreInsert event
+        // listen the onPreInsert event
         $event = new Doctrine_Event($record, Doctrine_Event::RECORD_INSERT);
 
         $record->preInsert($event);
