@@ -45,7 +45,7 @@ class sfNumberValidator extends sfValidator
    */
   public function execute(&$value, &$error)
   {
-    if (!preg_match('/^\d+(\.\d+)?$/', $value))
+    if (!preg_match('/^-?\d+(\.\d+)?$/', $value))
     {
       // it's NaN, what nerve!
       $error = $this->getParameterHolder()->get('nan_error');
