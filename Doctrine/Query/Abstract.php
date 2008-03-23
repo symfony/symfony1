@@ -834,7 +834,8 @@ abstract class Doctrine_Query_Abstract
      */
     public function generateSqlTableAlias($componentAlias, $tableName)
     {
-        $char = strtolower(substr($tableName, 0, 1));
+        preg_match('/([^_])/', $tableName, $matches);
+        $char = strtolower($matches[0]);
 
         $alias = $char;
 
