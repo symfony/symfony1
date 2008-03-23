@@ -60,6 +60,8 @@ class Doctrine_Data_Export extends Doctrine_Data
           $models = $specifiedModels;
         }
 
+        $models = Doctrine::initializeModels($models);
+
         foreach ($models AS $name) {
             if ( ! empty($specifiedModels) AND ! in_array($name, $specifiedModels)) {
                 continue;

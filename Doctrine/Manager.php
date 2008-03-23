@@ -381,7 +381,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
         $dsn = preg_replace("/\/\/\/(.*):\//", "//$1:/", $dsn);
 
         // silence any warnings
-        $parts = parse_url($dsn);
+        $parts = @parse_url($dsn);
 
         $names = array('dsn', 'scheme', 'host', 'port', 'user', 'pass', 'path', 'query', 'fragment');
 
