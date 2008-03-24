@@ -1349,8 +1349,10 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                   $e[$k2] = $this->_conn->quoteIdentifier($v2);
                 }
 
+                $replace = implode('.' , $e);
+
                 // Replace the original part with the new part with new sql table alias
-                $parts[$k] = str_replace($match, implode('.', $e), $parts[$k]);
+                $parts[$k] = str_replace($match, $replace, $parts[$k]);
             }
         }
 
