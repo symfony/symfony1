@@ -247,7 +247,6 @@ class Doctrine_Data_Import extends Doctrine_Data
                     
                     if ($obj instanceof $model && ! in_array('Doctrine_Template_NestedSet', $templates)) {
                         $obj->save();
-                        $obj->free();
                     }
                 }
             }
@@ -293,8 +292,6 @@ class Doctrine_Data_Import extends Doctrine_Data
             if (is_array($children) AND !empty($children)) {
                 $this->_loadNestedSetData($model, $children, $record);
             }
-
-            $record->free();
         }
     }
 
@@ -322,8 +319,6 @@ class Doctrine_Data_Import extends Doctrine_Data
                 $obj->save();
 
                 $ids[get_class($obj)][] = $obj->identifier();
-
-                $obj->free();
             }
         }
     }
