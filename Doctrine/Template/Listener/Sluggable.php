@@ -113,9 +113,9 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
                     $value .= $record->$field . ' ';
                 } 
             }
-
-            $value =  Doctrine_Inflector::urlize($value);
         }
+
+        $value =  Doctrine_Inflector::urlize($value);
 
         return $value;
     }
