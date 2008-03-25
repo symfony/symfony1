@@ -21,14 +21,13 @@ echo ">>> add LICENSE"
 cp ${DIR}/../../LICENSE LICENSE
 
 echo ">>> add README"
-cp ${DIR}/../../data/data/SANDBOX_README README
+cp ${DIR}/../../data/bin/SANDBOX_README README
 
 echo ">>> add symfony command line for windows users"
 cp ${DIR}/../../data/bin/symfony.bat symfony.bat
 
 echo ">>> freeze symfony"
-${PHP} symfony project:freeze
-rm config/config.php.bak
+${PHP} symfony project:freeze ${DIR}/..
 
 echo ">>> default to sqlite (propel.ini)"
 sed -i '' -e "s#\(propel.database *= *\)mysql#\1sqlite#" config/propel.ini
@@ -46,11 +45,9 @@ echo "all:
 
 echo ">>> add some empty files in empty directories"
 touch apps/${APP_NAME}/modules/.sf apps/${APP_NAME}/i18n/.sf doc/.sf web/images/.sf
-touch log/.sf cache/.sf batch/.sf data/sql/.sf data/model/.sf
-touch data/symfony/generator/sfPropelAdmin/default/skeleton/templates/.sf
-touch data/symfony/generator/sfPropelAdmin/default/skeleton/validate/.sf
-touch data/symfony/modules/default/config/.sf
-touch lib/model/.sf plugins/.sf web/js/.sf
+touch log/.sf cache/.sf batch/.sf
+touch lib/symfony/plugins/sfPropelPlugin/data/generator/sfPropelAdmin/default/skeleton/templates/.sf
+touch plugins/.sf web/js/.sf
 touch test/unit/.sf test/functional/.sf test/functional/${APP_NAME}/.sf
 touch web/uploads/assets/.sf
 
