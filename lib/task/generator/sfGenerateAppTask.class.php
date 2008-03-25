@@ -112,7 +112,7 @@ EOF;
       'IS_DEBUG'    => 'true',
     ));
 
-    $this->getFilesystem()->copy(dirname(__FILE__).'/skeleton/app/app/config/ApplicationConfiguration.class.php', $appDir.'/config/'.$app.'Configuration.class.php');
+    $this->getFilesystem()->rename($appDir.'/config/ApplicationConfiguration.class.php', $appDir.'/config/'.$app.'Configuration.class.php');
 
     $this->getFilesystem()->replaceTokens($appDir.'/config/'.$app.'Configuration.class.php', '##', '##', array('APP_NAME' => $app));
 
