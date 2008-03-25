@@ -459,6 +459,7 @@ abstract class sfView
     }
     else
     {
+      $this->directory = $this->context->getConfiguration()->getTemplateDir($this->moduleName, $template);
       $this->template = $template;
     }
   }

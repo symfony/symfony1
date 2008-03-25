@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -39,11 +39,10 @@ class sfPartialView extends sfPHPView
   public function configure()
   {
     $this->setDecorator(false);
-
     $this->setTemplate($this->actionName.$this->getExtension());
     if ('global' == $this->moduleName)
     {
-      $this->setDirectory(sfConfig::get('sf_app_template_dir'));
+      $this->setDirectory($this->context->getConfiguration()->getDecoratorDir($this->getTemplate()));
     }
     else
     {
