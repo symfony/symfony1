@@ -40,7 +40,7 @@ class Doctrine_Connection_Db2 extends Doctrine_Connection
      * @param integer $offset       start reading from given offset
      * @return string               the modified query
      */
-    public function modifyLimitQuery($query, $limit, $offset)
+    public function modifyLimitQuery($query, $limit = false, $offset = false, $isManip = false)
     {
         if ($limit <= 0)
             return $query;

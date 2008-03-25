@@ -1,6 +1,4 @@
 <?php
-require_once('spyc.php');
-
 /*
  *  $Id: Yml.php 1080 2007-02-10 18:17:08Z jwage $
  *
@@ -46,7 +44,7 @@ class Doctrine_Parser_Yml extends Doctrine_Parser
      */
     public function dumpData($array, $path = null)
     {
-        $spyc = new Doctrine_Spyc();
+        $spyc = new Doctrine_Parser_Spyc();
         
         $data = $spyc->dump($array, false, false);
         
@@ -65,7 +63,7 @@ class Doctrine_Parser_Yml extends Doctrine_Parser
     {
         $contents = $this->doLoad($path);
 
-        $spyc = new Doctrine_Spyc();
+        $spyc = new Doctrine_Parser_Spyc();
         
         $array = $spyc->load($contents);
         
