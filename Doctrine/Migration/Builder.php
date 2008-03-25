@@ -147,11 +147,11 @@ END;
         $directory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'tmp_doctrine_models';
 
         Doctrine::generateModelsFromDb($directory);
-        
+
         $result = $this->generateMigrationsFromModels($directory, Doctrine::MODEL_LOADING_CONSERVATIVE);
-        
+
         Doctrine_Lib::removeDirectories($directory);
-        
+
         return $result;
     }
 

@@ -753,7 +753,7 @@ final class Doctrine
      */
     public static function generateYamlFromDb($yamlPath, array $databases = array(), array $options = array())
     {
-        $directory = '/tmp/tmp_doctrine_models';
+        $directory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'tmp_doctrine_models';
 
         $options['generateBaseClasses'] = isset($options['generateBaseClasses']) ? $options['generateBaseClasses']:false;
         $result = Doctrine::generateModelsFromDb($directory, $databases, $options);
