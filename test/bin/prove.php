@@ -50,4 +50,4 @@ $h->register(sfFinder::type('file')->prune('fixtures')->name('*Test.php')->in(ar
   array($h->base_dir.'/other')
 )));
 
-$h->run();
+exit($h->run() ? 0 : 1);

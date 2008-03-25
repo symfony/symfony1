@@ -11,12 +11,13 @@
 /**
  * Release script.
  *
- * Usage: php data/bin/release.php 1.0.0 stable
+ * Usage: php data/bin/release.php 1.1.0 stable
  *
  * @package    symfony
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
+require_once(dirname(__FILE__).'/../../lib/exception/sfException.class.php');
 require_once(dirname(__FILE__).'/../../lib/task/sfFilesystem.class.php');
 require_once(dirname(__FILE__).'/../../lib/util/sfFinder.class.php');
 require_once(dirname(__FILE__).'/../../lib/vendor/lime/lime.php');
@@ -47,7 +48,7 @@ if (($stability == 'beta' || $stability == 'alpha') && count(explode('.', $argv[
 
   if (!isset($version))
   {
-    throw new Exception('unable to find last svn revision');
+    throw new Exception('Unable to find last SVN revision.');
   }
 
   // make a PEAR compatible version
@@ -58,23 +59,12 @@ else
   $version = $argv[1];
 }
 
-print 'releasing symfony version "'.$version."\"\n";
+print sprintf("Releasing symfony version \"%s\".\n", $version);
 
-// Test
-$h = new lime_harness(new lime_output_color());
+// tests
+$result = $filesystem->sh('php test/bin/prove.php');
 
-$h->base_dir = realpath(dirname(__FILE__).'/../../test');
-
-// unit tests
-$h->register_glob($h->base_dir.'/unit/*/*Test.php');
-
-// functional tests
-$h->register_glob($h->base_dir.'/functional/*Test.php');
-$h->register_glob($h->base_dir.'/functional/*/*Test.php');
-
-$ret = $h->run();
-
-if (!$ret)
+if (0 != $result)
 {
   throw new Exception('Some tests failed. Release process aborted!');
 }
@@ -111,8 +101,5 @@ $results = $filesystem->sh('pear package');
 echo $results;
 
 $filesystem->remove(getcwd().DIRECTORY_SEPARATOR.'package.xml');
-
-// copy .tgz as symfony-latest.tgz
-$filesystem->copy(getcwd().'/symfony-'.$version.'.tgz', getcwd().'/symfony-latest.tgz');
 
 exit(0);
