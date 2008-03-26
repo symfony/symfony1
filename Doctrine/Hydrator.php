@@ -159,7 +159,6 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
             // $prev[$rootAlias] now points to the last element in $result.
             // now hydrate the rest of the data found in the current row, that belongs to other
             // (related) components.
-            $oneToOne = false;
             foreach ($rowData as $dqlAlias => $data) {
                 $index = false;
                 $map   = $this->_queryComponents[$dqlAlias];
@@ -182,6 +181,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                 
                 // check the type of the relation
                 if ( ! $relation->isOneToOne() && $driver->initRelated($prev[$parent], $relationAlias)) {
+                    $oneToOne = false;
                     // append element
                     if (isset($nonemptyComponents[$dqlAlias])) {
                         if ($isSimpleQuery || ! isset($identifierMap[$path][$id[$parent]][$id[$dqlAlias]])) {
