@@ -105,7 +105,7 @@ class sfDebug
    *
    * @return array The request parameter holders
    */
-  public static function requestAsArray(sfRequest $request)
+  public static function requestAsArray(sfRequest $request = null)
   {
     if (!$request)
     {
