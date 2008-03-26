@@ -556,8 +556,12 @@ final class Doctrine
 
         $loadedModels = array();
 
-        if ($directory !== null && is_dir($directory)) {
+        if ($directory !== null) {
             foreach ((array) $directory as $dir) {
+                if (!is_dir($dir)) {
+                    throw new Doctrine_Exception('You must pass a valid path to a directory containing Doctrine models');
+                }
+                
                 $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
                                                         RecursiveIteratorIterator::LEAVES_ONLY);
                 foreach ($it as $file) {
@@ -589,8 +593,6 @@ final class Doctrine
                     }
                 }
             }
-        } else {
-          throw new Doctrine_Exception('You must pass a valid path to a directory containing Doctrine models');
         }
 
         return $loadedModels;
