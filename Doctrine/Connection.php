@@ -659,7 +659,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
 
         // build the statement
         $query = 'INSERT INTO ' . $this->quoteIdentifier($tableName)
-                . ' (' . implode(', ', $cols) . ') '
+                . ' (' . implode(', ', $cols) . ')'
                 . ' VALUES (' . implode(', ', $a) . ')';
 
         return $this->exec($query, array_values($fields));
