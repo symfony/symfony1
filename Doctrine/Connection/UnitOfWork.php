@@ -688,12 +688,16 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
     public function processSingleInsert(Doctrine_Record $record)
     {
         $fields = $record->getPrepared();
+        $table = $record->getTable();
 
         if (empty($fields)) {
-            return false;
+            foreach ($table->getFieldNames() as $field) {
+                if ( ! $table->isIdentifier($field)) {
+                    $fields[$field] = null;
+                }
+            }
         }
         
-        $table = $record->getTable();
         $identifier = (array) $table->getIdentifier();
 
         $seq = $record->getTable()->sequenceName;

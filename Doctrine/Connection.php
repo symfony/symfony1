@@ -640,9 +640,6 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      *                          otherwise returns the number of affected rows
      */
     public function insert(Doctrine_Table $table, array $fields) {
-        if (empty($fields)) {
-            return false;
-        }
 
         $tableName = $table->getTableName();
 
@@ -661,12 +658,9 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         }
 
         // build the statement
-        $query = 'INSERT INTO ' . $this->quoteIdentifier($tableName) 
-               . ' (' . implode(', ', $cols) . ') '
-               . 'VALUES (';
-
-        $query .= implode(', ', $a) . ')';
-        // prepare and execute the statement
+        $query = 'INSERT INTO ' . $this->quoteIdentifier($tableName)
+                . ' (' . implode(', ', $cols) . ') '
+                . ' VALUES (' . implode(', ', $a) . ')';
 
         return $this->exec($query, array_values($fields));
     }
