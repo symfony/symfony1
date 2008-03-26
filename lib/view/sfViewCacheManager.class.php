@@ -663,7 +663,7 @@ class sfViewCacheManager
 
     if (sfConfig::get('sf_web_debug'))
     {
-      $content = sfWebDebug::decorateContentWithDebug($uri, $content, true);
+      $content = sfWebDebug::decorateContentWithDebug($uri, $content, false);
     }
 
     return $content;
