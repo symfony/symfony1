@@ -354,7 +354,7 @@ class sfPatternRouting extends sfRouting
       {
         // route ends by . (no suffix)
         $suffix = '';
-        $route = substr($route, 0, strlen($route) -1); 
+        $route = substr($route, 0, strlen($route) -1);
       }
       else if (preg_match('#\.(?:'.$this->options['variable_prefix_regex'].$this->options['variable_regex'].'|'.$this->options['variable_content_regex'].')$#i', $route))
       {
@@ -455,7 +455,7 @@ class sfPatternRouting extends sfRouting
 
     if ($this->options['logging'])
     {
-      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Connect "%s"%s', $route, $suffix ? ' ("'.$suffix.'" suffix)' : ''))));
+      $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Connect "/%s"%s', $route, $suffix ? ' ("'.$suffix.'" suffix)' : ''))));
     }
 
     return $this->routes;
