@@ -359,6 +359,11 @@ class sfViewCacheManager
    */
   public function isCacheable($internalUri)
   {
+    if (count($_GET) || count($_POST))
+    {
+      return false;
+    }
+
     list($route_name, $params) = $this->controller->convertUrlStringToParameters($internalUri);
 
     if (isset($this->cacheConfig[$params['module']][$params['action']]))

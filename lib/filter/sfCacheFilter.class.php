@@ -53,7 +53,7 @@ class sfCacheFilter extends sfFilter
   public function execute($filterChain)
   {
     // execute this filter only once, if cache is set and no GET or POST parameters
-    if (!sfConfig::get('sf_cache') || count($_GET) || count($_POST))
+    if (!sfConfig::get('sf_cache'))
     {
       $filterChain->execute();
 
