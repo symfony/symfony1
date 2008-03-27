@@ -96,7 +96,10 @@ class Doctrine_Import_Schema
                                                           'scale',
                                                           'values',
                                                           'comment',
-                                                          'sequence'),
+                                                          'sequence',
+                                                          'protected',
+                                                          'zerofill',
+                                                          'owner'),
 
                                    'relation'   =>  array('key',
                                                           'class',
