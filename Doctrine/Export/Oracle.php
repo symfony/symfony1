@@ -292,6 +292,10 @@ END;
         $sql = parent::createTableSql($name, $fields, $options);
 
         foreach ($fields as $fieldName => $field) {
+            if (isset($field['sequence'])) {
+              $sql[] = $this->createSequenceSql($field['sequence'], 1);
+            }
+
             if (isset($field['autoincrement']) && $field['autoincrement'] ||
                (isset($field['autoinc']) && $fields['autoinc'])) {           
                 $sql = array_merge($sql, $this->_makeAutoincrement($fieldName, $name));
