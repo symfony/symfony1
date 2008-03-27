@@ -148,7 +148,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         }
 
         $record->state(Doctrine_Record::STATE_LOCKED);
-        
+
         $conn->beginInternalTransaction();
         $saveLater = $this->saveRelated($record);
 
@@ -183,7 +183,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
             }
 
             $record->getTable()->getRecordListener()->postSave($event);
-             
+
             $record->postSave($event);
         } else {
             $conn->transaction->addInvalid($record);
@@ -198,7 +198,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
 
             if ($record->hasReference($alias)) {
                 $obj = $record->$alias;
-            
+
                 // check that the related object is not an instance of Doctrine_Null
                 if ( ! ($obj instanceof Doctrine_Null)) {
                     $obj->save($conn);
@@ -210,7 +210,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         $this->saveAssociations($record);
 
         $record->state($state);
-        
+
         $conn->commit();
 
         return true;
@@ -247,7 +247,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         }
 
         $record->getTable()->getRecordListener()->postSave($event);
-        
+
         $record->postSave($event);
     }
 
@@ -269,7 +269,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         $event = new Doctrine_Event($record, Doctrine_Event::RECORD_DELETE);
 
         $record->preDelete($event);
-        
+
         $table = $record->getTable();
 
         $table->getRecordListener()->preDelete($event);
@@ -286,7 +286,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
 
                 foreach ($table->getOption('joinedParents') as $parent) {
                     $parentTable = $table->getConnection()->getTable($parent);
-                    
+
                     $this->conn->delete($parentTable, $record->identifier());
                 }
             }
@@ -294,21 +294,21 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
 
             $record->state(Doctrine_Record::STATE_TCLEAN);
         } else {
-            // return to original state   
+            // return to original state
             $record->state($state);
         }
 
         $table->getRecordListener()->postDelete($event);
 
         $record->postDelete($event);
-        
+
         $table->removeRecord($record);
 
         $this->conn->commit();
 
         return true;
     }
-    
+
     /**
      * @todo Description. See also the todo for deleteMultiple().
      */
@@ -316,11 +316,11 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
     {
         $ids = $record->identifier();
         $tmp = array();
-        
+
         foreach (array_keys($ids) as $id) {
             $tmp[] = $id . ' = ? ';
         }
-        
+
         $params = array_values($ids);
 
         $query = 'DELETE FROM '
@@ -341,12 +341,12 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
      *       This should be changed.
      */
     public function deleteMultiple(array $records)
-    {        
+    {
         foreach ($this->delete as $name => $deletes) {
             $record = false;
             $ids = array();
-            
-            // Note: Why is the last element's table identifier checked here and then 
+
+            // Note: Why is the last element's table identifier checked here and then
             // the table object from $deletes[0] used???
             if (is_array($deletes[count($deletes)-1]->getTable()->getIdentifier()) &&
                     count($deletes) > 0) {
@@ -379,13 +379,13 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                 $table = $record->getTable();
                 if ($record instanceof Doctrine_Record) {
                     $params = substr(str_repeat('?, ', count($ids)), 0, -2);
-    
+
                     $query = 'DELETE FROM '
                            . $this->conn->quoteIdentifier($record->getTable()->getTableName())
                            . ' WHERE '
                            . $table->getColumnName($table->getIdentifier())
                            . ' IN(' . $params . ')';
-        
+
                     $this->conn->execute($query, $ids);
                 }
             }
@@ -417,7 +417,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                 // Protection against infinite function recursion before attempting to save
                 if ($obj instanceof Doctrine_Record && $obj->isModified()) {
                     $obj->save($this->conn);
-                    
+
                     /** Can this be removed?
                     $id = array_values($obj->identifier());
 
@@ -451,8 +451,8 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
     {
         foreach ($record->getReferences() as $k => $v) {
             $rel = $record->getTable()->getRelation($k);
-            
-            if ($rel instanceof Doctrine_Relation_Association) {   
+
+            if ($rel instanceof Doctrine_Relation_Association) {
                 $v->save($this->conn);
 
                 $assocTable = $rel->getAssociationTable();
@@ -488,7 +488,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
             if ($fk->isComposite()) {
                 //echo "deleting composites<br/>";
                 $obj = $record->get($fk->getAlias());
-                if ($obj instanceof Doctrine_Record && 
+                if ($obj instanceof Doctrine_Record &&
                         $obj->state() != Doctrine_Record::STATE_LOCKED)  {
                     //echo "deleting object..."  . $obj->getOid() .  "<br/>";
                     $obj->delete($this->conn);
@@ -549,7 +549,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
 
             if ($table->getOption('joinedParents')) {
                 $dataSet = $this->formatDataSet($record);
-                
+
                 $component = $table->getComponentName();
 
                 $classes = $table->getOption('joinedParents');
@@ -575,19 +575,19 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                 }
             } else {
                 $array = $record->getPrepared();
-                
+
                 $this->conn->update($table, $array, $identifier);
             }
             $record->assignIdentifier(true);
         }
-        
+
         $table->getRecordListener()->postUpdate($event);
 
         $record->postUpdate($event);
 
         return true;
     }
-    
+
     /**
      * inserts a record into database
      *
@@ -600,7 +600,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         $event = new Doctrine_Event($record, Doctrine_Event::RECORD_INSERT);
 
         $record->preInsert($event);
-        
+
         $table = $record->getTable();
 
         $table->getRecordListener()->preInsert($event);
@@ -608,7 +608,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         if ( ! $event->skipOperation) {
             if ($table->getOption('joinedParents')) {
                 $dataSet = $this->formatDataSet($record);
-                
+
                 $component = $table->getComponentName();
 
                 $classes = $table->getOption('joinedParents');
@@ -644,7 +644,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
 
         return true;
     }
-    
+
     /**
      * @todo DESCRIBE WHAT THIS METHOD DOES, PLEASE!
      */
@@ -653,35 +653,35 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
     	$table = $record->getTable();
 
         $dataSet = array();
-    
+
         $component = $table->getComponentName();
-    
+
         $array = $record->getPrepared();
-    
+
         foreach ($table->getColumns() as $columnName => $definition) {
             if ( ! isset($dataSet[$component])) {
                 $dataSet[$component] = array();
             }
-            
+
             $fieldName = $table->getFieldName($columnName);
             if (isset($definition['primary']) && $definition['primary']) {
                 continue;
             }
-    
+
             if ( ! array_key_exists($fieldName, $array)) {
                 continue;
             }
-    
+
             if (isset($definition['owner'])) {
                 $dataSet[$definition['owner']][$fieldName] = $array[$fieldName];
             } else {
                 $dataSet[$component][$fieldName] = $array[$fieldName];
             }
         }
-        
+
         return $dataSet;
     }
-    
+
     /**
      * @todo DESCRIBE WHAT THIS METHOD DOES, PLEASE!
      */
@@ -696,7 +696,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                 $fields[$field] = null;
             }
         }
-        
+
         $identifier = (array) $table->getIdentifier();
 
         $seq = $record->getTable()->sequenceName;
@@ -727,6 +727,6 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
             $record->assignIdentifier($id);
         } else {
             $record->assignIdentifier(true);
-        }    	
+        }
     }
 }
