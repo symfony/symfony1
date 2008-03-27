@@ -1808,13 +1808,13 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         $q .= ( ! empty($where)) ?  ' WHERE '  . implode(' AND ', $where) : '';
 
         if ( ! empty($groupby)) {
-          // Maintain existing groupby
-          $q .= ' GROUP BY '  . implode(', ', $groupby);
+            // Maintain existing groupby
+            $q .= ' GROUP BY '  . implode(', ', $groupby);
         } else {
-          // Default groupby to primary identifier. Database defaults to this internally
-          // This is required for situations where the user has aggregate functions in the select part
-          // Without the groupby it fails
-          $q .= ' GROUP BY ' . $tableAlias . '.' . implode(', ' . $tableAlias . '.', $idColumnNames);
+            // Default groupby to primary identifier. Database defaults to this internally
+            // This is required for situations where the user has aggregate functions in the select part
+            // Without the groupby it fails
+            $q .= ' GROUP BY ' . $tableAlias . '.' . implode(', ' . $tableAlias . '.', $idColumnNames);
         }
 
         $q .= ( ! empty($having)) ? ' HAVING ' . implode(' AND ', $having): '';
@@ -1822,21 +1822,27 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         if ( ! is_array($params)) {
             $params = array($params);
         }
-  
+
         // append parameters
         $params = array_merge($this->_params['where'], $this->_params['having'], $this->_params['join'], $params);
 
         $params = $this->convertEnums($params);
 
         $results = $this->getConnection()->fetchAll($q, $params);
-
+        
         if (count($results) > 1) {
             $count = 0;
             foreach ($results as $result) {
+                $result = array_change_key_case($result, CASE_LOWER);
                 $count += $result['num_results'];
             }
         } else {
-            $count = isset($results[0]) ? $results[0]['num_results']:0;
+            if (isset($results[0])) {
+                $results[0] = array_change_key_case($results[0], CASE_LOWER);
+                $count = $results[0]['num_results'];
+            } else {
+                $count = 0;
+            }
         }
 
         return (int) $count;
