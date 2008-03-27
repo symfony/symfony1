@@ -94,7 +94,9 @@ class Doctrine_Import_Schema
                                                           'size',
                                                           'default',
                                                           'scale',
-                                                          'values'),
+                                                          'values',
+                                                          'comment',
+                                                          'sequence'),
 
                                    'relation'   =>  array('key',
                                                           'class',
