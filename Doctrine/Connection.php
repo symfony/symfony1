@@ -639,8 +639,8 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      * @return mixed            boolean false if empty value array was given,
      *                          otherwise returns the number of affected rows
      */
-    public function insert(Doctrine_Table $table, array $fields) {
-
+    public function insert(Doctrine_Table $table, array $fields)
+    {
         $tableName = $table->getTableName();
 
         // column names are specified as array keys
