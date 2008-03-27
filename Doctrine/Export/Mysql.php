@@ -146,7 +146,7 @@ class Doctrine_Export_Mysql extends Doctrine_Export
         $optionStrings = array();
 
         if (isset($options['comment'])) {
-            $optionStrings['comment'] = 'COMMENT = ' . $this->dbh->quote($options['comment'], 'text');
+            $optionStrings['comment'] = 'COMMENT = ' . $this->conn->quote($options['comment'], 'text');
         }
         if (isset($options['charset'])) {
             $optionStrings['charset'] = 'DEFAULT CHARACTER SET ' . $options['charset'];
