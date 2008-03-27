@@ -161,7 +161,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                                      'charset'        => null,
                                      'collation'      => null,
                                      'treeImpl'       => null,
-                                     'treeOptions'    => null,
+                                     'treeOptions'    => array(),
                                      'indexes'        => array(),
                                      'parents'        => array(),
                                      'joinedParents'  => array(),
@@ -656,6 +656,19 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
+     * setOptions
+     *
+     * @param string $options 
+     * @return void
+     */
+    public function setOptions($options)
+    {
+        foreach ($options as $key => $value) {
+            $this->setOption($key, $value);
+        }
+    }
+
+    /**
      * addForeignKey
      *
      * adds a foreignKey to this table
@@ -833,17 +846,17 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     public function setOption($name, $value)
     {
         switch ($name) {
-        case 'name':
-        case 'tableName':
-            break;
-        case 'enumMap':
-        case 'inheritanceMap':
-        case 'index':
-        case 'treeOptions':
-            if ( ! is_array($value)) {
+            case 'name':
+            case 'tableName':
+                break;
+            case 'enumMap':
+            case 'inheritanceMap':
+            case 'index':
+            case 'treeOptions':
+                if ( ! is_array($value)) {
                 throw new Doctrine_Table_Exception($name . ' should be an array.');
-            }
-            break;
+                }
+                break;
         }
         $this->_options[$name] = $value;
     }

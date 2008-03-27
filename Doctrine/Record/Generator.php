@@ -161,12 +161,7 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
             return false;
         }
 
-        $conn = $this->_options['table']->getConnection();
-        $conn->getManager()->bindComponent($this->_options['className'], $conn->getName());
-
-        $this->_table = new Doctrine_Table($this->_options['className'], $conn);
-
-        $conn->addTable($this->_table);
+        $this->buildTable();
 
         $fk = $this->buildForeignKeys($this->_options['table']);
 
@@ -182,6 +177,31 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
         $this->buildChildDefinitions();
 
         $this->_table->initIdentifier();
+    }
+
+    public function buildTable()
+    {
+        // Bind model 
+        $conn = $this->_options['table']->getConnection();
+        $conn->getManager()->bindComponent($this->_options['className'], $conn->getName());
+
+        // Create table
+        $this->_table = new Doctrine_Table($this->_options['className'], $conn);
+
+        // Maintain some options from the parent table
+        $options = $this->_options['table']->getOptions();
+
+        $newOptions = array();
+        $maintain = array('type', 'collate', 'charset'); // This list may need updating
+        foreach ($maintain as $key) {
+            if (isset($options[$key])) {
+                $newOptions[$key] = $options[$key];
+            }
+        }
+
+        $this->_table->setOptions($newOptions);
+
+        $conn->addTable($this->_table);
     }
 
     /** 
