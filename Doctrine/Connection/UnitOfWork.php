@@ -690,11 +690,10 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         $fields = $record->getPrepared();
         $table = $record->getTable();
 
+        // Populate fields with a blank array so that a blank records can be inserted
         if (empty($fields)) {
             foreach ($table->getFieldNames() as $field) {
-                if ( ! $table->isIdentifier($field)) {
-                    $fields[$field] = null;
-                }
+                $fields[$field] = null;
             }
         }
         
