@@ -1879,7 +1879,8 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                     || $name == 'owner'
                     || $name == 'scale'
                     || $name == 'type'
-                    || $name == 'length') {
+                    || $name == 'length'
+                    || $name == 'fixed') {
                 continue;
             }
             if ($name == 'notnull' && isset($this->_columns[$columnName]['autoincrement'])) {
