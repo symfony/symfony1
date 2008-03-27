@@ -25,7 +25,8 @@ class sfYamlParser
     $offset        = 0,
     $lines         = array(),
     $currentLineNb = -1,
-    $currentLine   = '';
+    $currentLine   = '',
+    $refs          = array();
 
   /**
    * Constructor
@@ -65,13 +66,21 @@ class sfYamlParser
         throw new InvalidArgumentException(sprintf('A YAML file cannot contain tabs as indentation at line %d (%s).', $this->getRealCurrentLineNb(), $this->currentLine));
       }
 
+      $isRef = $isInPlace = false;
       if (preg_match('#^\-(\s+(?P<value>.+?))?\s*$#', $this->currentLine, $values))
       {
+        if (isset($values['value']) && preg_match('#^&(?P<ref>\w+) *(?P<value>.*)#', $values['value'], $matches))
+        {
+          $isRef = $matches['ref'];
+          $values['value'] = $matches['value'];
+        }
+
         // array
         if (!isset($values['value']) || '' == trim($values['value'], ' ') || 0 === strpos(ltrim($values['value'], ' '), '#'))
         {
           $c = $this->getRealCurrentLineNb() + 1;
           $parser = new sfYamlParser($c);
+          $parser->refs =& $this->refs;
           $data[] = $parser->parse($this->getNextEmbedBlock());
         }
         else
@@ -82,6 +91,27 @@ class sfYamlParser
       else if (preg_match('#^(?P<key>[^ ].*?) *\:(\s+(?P<value>.+?))?\s*$#', $this->currentLine, $values))
       {
         $key = sfYamlInline::parseScalar($values['key']);
+
+        if ('<<' === $key)
+        {
+          if (isset($values['value']) && '*' === substr($values['value'], 0, 1))
+          {
+            $isInPlace = substr($values['value'], 1);
+            if (!array_key_exists($isInPlace, $this->refs))
+            {
+              throw new InvalidArgumentException(sprintf('Reference "%s" does not exist on line %s.', $isInPlace, $this->currentLine));
+            }
+          }
+          else
+          {
+            throw new InvalidArgumentException(sprintf('In place substitution must point to a reference on line %s.', $this->currentLine));
+          }
+        }
+        else if (isset($values['value']) && preg_match('#^&(?P<ref>\w+) *(?P<value>.*)#', $values['value'], $matches))
+        {
+          $isRef = $matches['ref'];
+          $values['value'] = $matches['value'];
+        }
 
         // hash
         if (!isset($values['value']) || '' == trim($values['value'], ' ') || 0 === strpos(ltrim($values['value'], ' '), '#'))
@@ -95,12 +125,20 @@ class sfYamlParser
           {
             $c = $this->getRealCurrentLineNb() + 1;
             $parser = new sfYamlParser($c);
+            $parser->refs =& $this->refs;
             $data[$key] = $parser->parse($this->getNextEmbedBlock());
           }
         }
         else
         {
-          $data[$key] = $this->parseValue($values['value']);
+          if ($isInPlace)
+          {
+            $data = $this->refs[$isInPlace];
+          }
+          else
+          {
+            $data[$key] = $this->parseValue($values['value']);
+          }
         }
       }
       else
@@ -112,6 +150,11 @@ class sfYamlParser
         }
 
         throw new InvalidArgumentException(sprintf('Unable to parse line %d (%s).', $this->getRealCurrentLineNb(), $this->currentLine));
+      }
+
+      if ($isRef)
+      {
+        $this->refs[$isRef] = end($data);
       }
     }
 
@@ -226,6 +269,24 @@ class sfYamlParser
    */
   protected function parseValue($value)
   {
+    if ('*' === substr($value, 0, 1))
+    {
+      if (false !== $pos = strpos($value, '#'))
+      {
+        $value = substr($value, 1, $pos - 2);
+      }
+      else
+      {
+        $value = substr($value, 1);
+      }
+
+      if (!array_key_exists($value, $this->refs))
+      {
+        throw new InvalidArgumentException(sprintf('Reference "%s" does not exist (%s).', $value, $this->currentLine));
+      }
+      return $this->refs[$value];
+    }
+
     if (preg_match('/^(?P<separator>\||>)(?P<modifiers>\+|\-|\d+|\+\d+|\-\d+|\d+\+|\d+\-)?(?P<comments> +#.*)?$/', $value, $matches))
     {
       $modifiers = isset($matches['modifiers']) ? $matches['modifiers'] : '';
