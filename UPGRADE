@@ -561,6 +561,17 @@ By:
 And the biggets benefit is that it allows you to clear 'glob' URIs in *any* cache
 factory, not only the `sfFileCache`.
 
+Layout
+------
+
+The action template variables are not available anymore in the layout. This means that the layout
+only has access to **global** variables (all `sf_` variables) and variables registered via the
+`template.filter_parameters` event.
+
+Refer to this wiki page for more information on how to upgrade:
+
+    http://trac.symfony-project.com/wiki/Symfony11LayoutUpgrade
+
 NOTE to early adopters
 ----------------------
 

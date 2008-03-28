@@ -119,11 +119,7 @@ abstract class sfView
 
     sfOutputEscaper::markClassAsSafe('sfForm');
 
-    $this->attributeHolder = false === sfConfig::get('sf_escaping_method') ? new sfViewParameterHolder() : new sfEscapedViewParameterHolder();
-    $this->attributeHolder->initialize($this->dispatcher, array(), array(
-      'escaping_method'   => sfConfig::get('sf_escaping_method'),
-      'escaping_strategy' => sfConfig::get('sf_escaping_strategy'),
-    ));
+    $this->attributeHolder = $this->initializeAttributeHolder();
 
     $this->parameterHolder = new sfParameterHolder();
     $this->parameterHolder->add(sfConfig::get('mod_'.strtolower($moduleName).'_view_param', array()));
@@ -132,6 +128,17 @@ abstract class sfView
     $this->configure();
 
     return true;
+  }
+
+  protected function initializeAttributeHolder($attributes = array())
+  {
+    $attributeHolder = false === sfConfig::get('sf_escaping_method') ? new sfViewParameterHolder() : new sfEscapedViewParameterHolder();
+    $attributeHolder->initialize($this->dispatcher, $attributes, array(
+      'escaping_method'   => sfConfig::get('sf_escaping_method'),
+      'escaping_strategy' => sfConfig::get('sf_escaping_strategy'),
+    ));
+
+    return $attributeHolder;
   }
 
   /**

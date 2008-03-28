@@ -746,7 +746,7 @@ class sfViewCacheManager
       $content = sfWebDebug::decorateContentWithDebug($uri, $content, false);
     }
 
-    return array($content, $cache['attributeHolder'], $cache['decoratorTemplate']);
+    return array($content, $cache['decoratorTemplate']);
   }
 
   /**
@@ -758,14 +758,14 @@ class sfViewCacheManager
    *
    * @return string The cached content
    */
-  public function setActionCache($uri, $content, $attributeHolder, $decoratorTemplate)
+  public function setActionCache($uri, $content, $decoratorTemplate)
   {
     if (!$this->isCacheable($uri) || $this->withLayout($uri))
     {
       return $content;
     }
 
-    $saved = $this->set(serialize(array('content' => $content, 'attributeHolder' => $attributeHolder, 'decoratorTemplate' => $decoratorTemplate, 'response' => $this->context->getResponse())), $uri);
+    $saved = $this->set(serialize(array('content' => $content, 'decoratorTemplate' => $decoratorTemplate, 'response' => $this->context->getResponse())), $uri);
 
     if ($saved && sfConfig::get('sf_web_debug'))
     {

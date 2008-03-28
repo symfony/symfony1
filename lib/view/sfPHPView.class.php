@@ -111,10 +111,9 @@ class sfPHPView extends sfView
   }
 
   /**
-   * Loop through all template slots and fill them in with the results of
-   * presentation data.
+   * Loop through all template slots and fill them in with the results of presentation data.
    *
-   * @param string A chunk of decorator content
+   * @param  string A chunk of decorator content
    *
    * @return string A decorated template
    */
@@ -126,10 +125,16 @@ class sfPHPView extends sfView
     }
 
     // set the decorator content as an attribute
-    $this->attributeHolder->set('sf_content', $content);
+    $attributeHolder = $this->attributeHolder;
+
+    $this->attributeHolder = $this->initializeAttributeHolder(array('sf_content' => $content));
 
     // render the decorator template and return the result
-    return $this->renderFile($this->getDecoratorDirectory().'/'.$this->getDecoratorTemplate());
+    $ret = $this->renderFile($this->getDecoratorDirectory().'/'.$this->getDecoratorTemplate());
+
+    $this->attributeHolder = $attributeHolder;
+
+    return $ret;
   }
 
   /**
@@ -145,10 +150,9 @@ class sfPHPView extends sfView
       $viewCache = $this->context->getViewCacheManager();
       $uri = $this->context->getRouting()->getCurrentInternalUri();
 
-      list($content, $attributeHolder, $decoratorTemplate) = $viewCache->getActionCache($uri);
+      list($content, $decoratorTemplate) = $viewCache->getActionCache($uri);
       if (!is_null($content))
       {
-        $this->attributeHolder = $attributeHolder;
         $this->setDecoratorTemplate($decoratorTemplate);
       }
     }
@@ -164,7 +168,7 @@ class sfPHPView extends sfView
 
       if (sfConfig::get('sf_cache'))
       {
-        $content = $viewCache->setActionCache($uri, $content, $this->attributeHolder, $this->isDecorator() ? $this->getDecoratorDirectory().'/'.$this->getDecoratorTemplate() : false);
+        $content = $viewCache->setActionCache($uri, $content, $this->isDecorator() ? $this->getDecoratorDirectory().'/'.$this->getDecoratorTemplate() : false);
       }
     }
 
