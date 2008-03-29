@@ -26,8 +26,8 @@ class sfEventDispatcher
   /**
    * Connects a listener to a given event name.
    *
-   * @param string An event name
-   * @param mixed  A PHP callable
+   * @param string  $name      An event name
+   * @param mixed   $listener  A PHP callable
    */
   public function connect($name, $listener)
   {
@@ -42,8 +42,10 @@ class sfEventDispatcher
   /**
    * Disconnects a listener for a given event name.
    *
-   * @param string An event name
-   * @param mixed  A PHP callable
+   * @param string   $name      An event name
+   * @param mixed    $listener  A PHP callable
+   *
+   * @return mixed false if listener does not exist, null otherwise
    */
   public function disconnect($name, $listener)
   {
@@ -64,7 +66,7 @@ class sfEventDispatcher
   /**
    * Notifies all listeners of a given event.
    *
-   * @param sfEvent A sfEvent instance
+   * @param sfEvent $event A sfEvent instance
    *
    * @return sfEvent The sfEvent instance
    */
@@ -81,7 +83,7 @@ class sfEventDispatcher
   /**
    * Notifies all listeners of a given event until one returns a non null value.
    *
-   * @param  sfEvent A sfEvent instance
+   * @param  sfEvent $event A sfEvent instance
    *
    * @return sfEvent The sfEvent instance
    */
@@ -102,8 +104,8 @@ class sfEventDispatcher
   /**
    * Filters a value by calling all listeners of a given event.
    *
-   * @param  sfEvent A sfEvent instance
-   * @param  mixed   The value to be filtered
+   * @param  sfEvent  $event   A sfEvent instance
+   * @param  mixed    $value   The value to be filtered
    *
    * @return sfEvent The sfEvent instance
    */
@@ -122,7 +124,7 @@ class sfEventDispatcher
   /**
    * Returns true if the given event name has some listeners.
    *
-   * @param  string  The event name
+   * @param  string   $name    The event name
    *
    * @return Boolean true if some listeners are connected, false otherwise
    */
@@ -139,7 +141,7 @@ class sfEventDispatcher
   /**
    * Returns all listeners associated with a given event name.
    *
-   * @param  string The event name
+   * @param  string   $name    The event name
    *
    * @return array  An array of listeners
    */

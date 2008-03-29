@@ -28,9 +28,9 @@ class sfEvent implements ArrayAccess
   /**
    * Constructs a new sfEvent.
    *
-   * @param mixed  The subject
-   * @param string The event name
-   * @param array  An array of parameters
+   * @param mixed   $subject      The subject
+   * @param string  $name         The event name
+   * @param array   $parameters   An array of parameters
    */
   public function __construct($subject, $name, $parameters = array())
   {
@@ -43,7 +43,7 @@ class sfEvent implements ArrayAccess
   /**
    * Returns the subject.
    *
-   * @param mixed The subject
+   * @return mixed The subject
    */
   public function getSubject()
   {
@@ -53,7 +53,7 @@ class sfEvent implements ArrayAccess
   /**
    * Returns the event name.
    *
-   * @param string The event name
+   * @return string The event name
    */
   public function getName()
   {
@@ -63,7 +63,7 @@ class sfEvent implements ArrayAccess
   /**
    * Sets the return value for this event.
    *
-   * @param mixed The return value
+   * @param mixed $value The return value
    */
   public function setReturnValue($value)
   {
@@ -83,7 +83,7 @@ class sfEvent implements ArrayAccess
   /**
    * Sets the processed flag.
    *
-   * @param Boolean The processed flag value
+   * @param Boolean $processed The processed flag value
    */
   public function setProcessed($processed)
   {
@@ -93,13 +93,18 @@ class sfEvent implements ArrayAccess
   /**
    * Returns whether the event has been processed by a listener or not.
    *
-   * @param Boolean true if the event has been processed, false otherwise
+   * @return Boolean true if the event has been processed, false otherwise
    */
   public function isProcessed()
   {
     return $this->processed;
   }
 
+  /**
+   * Returns the event parameters.
+   *
+   * @return array The event parameters
+   */
   public function getParameters()
   {
     return $this->parameters;
@@ -108,7 +113,7 @@ class sfEvent implements ArrayAccess
   /**
    * Returns true if the parameter exists (implements the ArrayAccess interface).
    *
-   * @param  string  The parameter name
+   * @param  string  $name  The parameter name
    *
    * @return Boolean true if the parameter exists, false otherwise
    */
@@ -120,7 +125,7 @@ class sfEvent implements ArrayAccess
   /**
    * Returns a parameter value (implements the ArrayAccess interface).
    *
-   * @param  string The parameter name
+   * @param  string  $name  The parameter name
    *
    * @return mixed  The parameter value
    */
@@ -132,8 +137,8 @@ class sfEvent implements ArrayAccess
   /**
    * Sets a parameter (implements the ArrayAccess interface).
    *
-   * @param string The parameter name
-   * @param mixed  
+   * @param string  $name   The parameter name
+   * @param mixed   $value  The parameter value 
    */
   public function offsetSet($name, $value)
   {
@@ -143,7 +148,7 @@ class sfEvent implements ArrayAccess
   /**
    * Removes a parameter (implements the ArrayAccess interface).
    *
-   * @param string The parameter name
+   * @param string $name    The parameter name
    */
   public function offsetUnset($name)
   {
