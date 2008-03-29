@@ -63,7 +63,7 @@ EOF;
     {
       foreach ($arguments['controller'] as $controller)
       {
-        $files = sfFinder::type('file')->ignore_version_control()->follow_link()->name(basename($controller).'Test.php')->in(sfConfig::get('sf_test_dir').DIRECTORY_SEPARATOR.'functional'.DIRECTORY_SEPARATOR.$app.DIRECTORY_SEPARATOR.dirname($controller));
+        $files = sfFinder::type('file')->follow_link()->name(basename($controller).'Test.php')->in(sfConfig::get('sf_test_dir').DIRECTORY_SEPARATOR.'functional'.DIRECTORY_SEPARATOR.$app.DIRECTORY_SEPARATOR.dirname($controller));
         foreach ($files as $file)
         {
           include($file);
@@ -78,7 +78,7 @@ EOF;
       $h->base_dir = sfConfig::get('sf_test_dir').'/functional/'.$app;
 
       // register functional tests
-      $finder = sfFinder::type('file')->ignore_version_control()->follow_link()->name('*Test.php');
+      $finder = sfFinder::type('file')->follow_link()->name('*Test.php');
       $h->register($finder->in($h->base_dir));
 
       $h->run();

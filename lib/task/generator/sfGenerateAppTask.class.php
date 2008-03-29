@@ -82,7 +82,7 @@ EOF;
     }
 
     // Create basic application structure
-    $finder = sfFinder::type('any')->ignore_version_control()->discard('.sf');
+    $finder = sfFinder::type('any')->discard('.sf');
     $this->getFilesystem()->mirror(dirname(__FILE__).'/skeleton/app/app', $appDir, $finder);
 
     // Create $app.php or index.php if it is our first app

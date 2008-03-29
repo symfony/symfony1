@@ -181,7 +181,7 @@ class sfSimpleAutoload
    */
   public function addDirectory($dir, $ext = '.php')
   {
-    $finder = sfFinder::type('file')->ignore_version_control()->follow_link()->name('*'.$ext);
+    $finder = sfFinder::type('file')->follow_link()->name('*'.$ext);
     foreach (glob($dir) as $dir)
     {
       if (in_array($dir, $this->dirs))

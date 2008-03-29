@@ -134,7 +134,7 @@ EOF;
     $moduleDir = sfConfig::get('sf_app_module_dir').'/'.$arguments['module'];
 
     // create basic application structure
-    $finder = sfFinder::type('any')->ignore_version_control()->discard('.sf');
+    $finder = sfFinder::type('any')->discard('.sf');
     $dirs = $this->configuration->getGeneratorSkeletonDirs('sfPropelCrud', $options['theme']);
     foreach ($dirs as $dir)
     {

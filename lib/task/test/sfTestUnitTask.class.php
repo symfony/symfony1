@@ -58,7 +58,7 @@ EOF;
     {
       foreach ($arguments['name'] as $name)
       {
-        $files = sfFinder::type('file')->ignore_version_control()->follow_link()->name(basename($name).'Test.php')->in(sfConfig::get('sf_test_dir').DIRECTORY_SEPARATOR.'unit'.DIRECTORY_SEPARATOR.dirname($name));
+        $files = sfFinder::type('file')->follow_link()->name(basename($name).'Test.php')->in(sfConfig::get('sf_test_dir').DIRECTORY_SEPARATOR.'unit'.DIRECTORY_SEPARATOR.dirname($name));
         foreach ($files as $file)
         {
           include($file);
@@ -73,7 +73,7 @@ EOF;
       $h->base_dir = sfConfig::get('sf_test_dir').'/unit';
 
       // register unit tests
-      $finder = sfFinder::type('file')->ignore_version_control()->follow_link()->name('*Test.php');
+      $finder = sfFinder::type('file')->follow_link()->name('*Test.php');
       $h->register($finder->in($h->base_dir));
 
       $h->run();

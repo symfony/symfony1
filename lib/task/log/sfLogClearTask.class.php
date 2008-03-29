@@ -40,7 +40,7 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $logs = sfFinder::type('file')->ignore_version_control()->in(sfConfig::get('sf_log_dir'));
+    $logs = sfFinder::type('file')->in(sfConfig::get('sf_log_dir'));
     $this->getFilesystem()->remove($logs);
   }
 }

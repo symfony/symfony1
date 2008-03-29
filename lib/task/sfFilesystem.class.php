@@ -200,7 +200,7 @@ class sfFilesystem
   {
     if (!function_exists('symlink') && $copyOnWindows)
     {
-      $finder = sfFinder::type('any')->ignore_version_control();
+      $finder = sfFinder::type('any');
       $this->mirror($originDir, $targetDir, $finder);
       return;
     }

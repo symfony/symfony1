@@ -61,7 +61,7 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $finder = sfFinder::type('file')->ignore_version_control()->maxdepth(1)->name('*.php');
+    $finder = sfFinder::type('file')->maxdepth(1)->name('*.php');
     foreach ($finder->in(sfConfig::get('sf_web_dir')) as $controller)
     {
       $content = file_get_contents($controller);

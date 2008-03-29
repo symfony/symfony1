@@ -30,17 +30,18 @@
  */
 class sfFinder
 {
-  protected $type        = 'file';
-  protected $names       = array();
-  protected $prunes      = array();
-  protected $discards    = array();
-  protected $execs       = array();
-  protected $mindepth    = 0;
-  protected $sizes       = array();
-  protected $maxdepth    = 1000000;
-  protected $relative    = false;
-  protected $follow_link = false;
-  protected $sort        = false;
+  protected $type                   = 'file';
+  protected $names                  = array();
+  protected $prunes                 = array();
+  protected $discards               = array();
+  protected $execs                  = array();
+  protected $mindepth               = 0;
+  protected $sizes                  = array();
+  protected $maxdepth               = 1000000;
+  protected $relative               = false;
+  protected $follow_link            = false;
+  protected $sort                   = false;
+  protected $ignore_version_control = true;
 
   /**
    * Sets maximum directory depth.
@@ -235,11 +236,11 @@ class sfFinder
    *
    * @return object current sfFinder object
    */
-  public function ignore_version_control()
+  public function ignore_version_control($ignore = true)
   {
-    $ignores = array('.svn', '_svn', 'CVS', '_darcs', '.arch-params', '.monotone', '.bzr', '.git', '.hg');
+    $this->ignore_version_control = $ignore;
 
-    return $this->discard($ignores)->prune($ignores);
+    return $this;
   }
 
   /**
@@ -333,6 +334,15 @@ class sfFinder
     $numargs  = func_num_args();
     $arg_list = func_get_args();
 
+    $finder = clone $this;
+
+    if ($this->ignore_version_control)
+    {
+      $ignores = array('.svn', '_svn', 'CVS', '_darcs', '.arch-params', '.monotone', '.bzr', '.git', '.hg');
+
+      $finder->discard($ignores)->prune($ignores);
+    }
+
     // first argument is an array?
     if ($numargs == 1 && is_array($arg_list[0]))
     {
@@ -361,11 +371,11 @@ class sfFinder
 
       if ($this->relative)
       {
-        $files = array_merge($files, str_replace($dir.DIRECTORY_SEPARATOR, '', $this->search_in($dir)));
+        $files = array_merge($files, str_replace($dir.DIRECTORY_SEPARATOR, '', $finder->search_in($dir)));
       }
       else
       {
-        $files = array_merge($files, $this->search_in($dir));
+        $files = array_merge($files, $finder->search_in($dir));
       }
     }
 

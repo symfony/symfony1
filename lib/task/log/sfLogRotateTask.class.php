@@ -97,7 +97,7 @@ EOF;
     }
 
     // determine date of last rotation
-    $logs = sfFinder::type('file')->ignore_version_control()->maxdepth(1)->name($logfile.'_*.log')->in($logdir.'/history/');
+    $logs = sfFinder::type('file')->maxdepth(1)->name($logfile.'_*.log')->in($logdir.'/history/');
     $recentlog = is_array($logs) ? array_pop($logs) : null;
 
     if ($recentlog)
@@ -142,7 +142,7 @@ EOF;
         unlink($srcLog);
 
         // get all log history files for this application and environment
-        $newLogs = sfFinder::type('file')->ignore_version_control()->maxdepth(1)->name($logfile.'_*.log')->in($logdir.'/history/');
+        $newLogs = sfFinder::type('file')->maxdepth(1)->name($logfile.'_*.log')->in($logdir.'/history/');
 
         // if the number of logs in history exceeds history then remove the oldest log
         if (count($newLogs) > $history)

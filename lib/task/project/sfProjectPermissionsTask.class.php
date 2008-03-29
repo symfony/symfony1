@@ -46,8 +46,8 @@ EOF;
     $this->getFilesystem()->chmod(sfConfig::get('sf_root_dir').DIRECTORY_SEPARATOR.'symfony', 0777);
 
     $dirs = array(sfConfig::get('sf_cache_dir'), sfConfig::get('sf_upload_dir'), sfConfig::get('sf_log_dir'));
-    $dirFinder = sfFinder::type('dir')->ignore_version_control();
-    $fileFinder = sfFinder::type('file')->ignore_version_control();
+    $dirFinder = sfFinder::type('dir');
+    $fileFinder = sfFinder::type('file');
     foreach ($dirs as $dir)
     {
       $this->getFilesystem()->chmod($dirFinder->in($dir), 0777);

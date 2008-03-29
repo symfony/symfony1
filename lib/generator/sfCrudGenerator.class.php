@@ -78,7 +78,7 @@ abstract class sfCrudGenerator extends sfGenerator
     }
 
     $this->setTheme($theme);
-    $files = sfFinder::type('file')->ignore_version_control()->relative()->in($themeDir);
+    $files = sfFinder::type('file')->relative()->in($themeDir);
 
     $this->generatePhpFiles($this->generatedModuleName, $files);
 

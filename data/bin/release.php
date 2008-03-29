@@ -77,7 +77,7 @@ if (is_file('package.xml'))
 $filesystem->copy(getcwd().'/package.xml.tmpl', getcwd().'/package.xml');
 
 // add class files
-$finder = sfFinder::type('file')->ignore_version_control()->relative();
+$finder = sfFinder::type('file')->relative();
 $xml_classes = '';
 $dirs = array('lib' => 'php', 'data' => 'data');
 foreach ($dirs as $dir => $role)

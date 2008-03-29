@@ -102,7 +102,6 @@ class sfCoreAutoload
     require_once $libDir.'/util/sfFinder.class.php';
 
     $files = sfFinder::type('file')
-      ->ignore_version_control()
       ->prune('plugins')
       ->prune('vendor')
       ->prune('skeleton')

@@ -51,7 +51,7 @@ EOF;
     $h->base_dir = sfConfig::get('sf_test_dir');
 
     // register all tests
-    $finder = sfFinder::type('file')->ignore_version_control()->follow_link()->name('*Test.php');
+    $finder = sfFinder::type('file')->follow_link()->name('*Test.php');
     $h->register($finder->in($h->base_dir));
 
     $h->run();

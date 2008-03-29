@@ -78,7 +78,7 @@ EOF;
     $this->getFilesystem()->mkdirs('lib'.DIRECTORY_SEPARATOR.'symfony');
     $this->getFilesystem()->mkdirs('data'.DIRECTORY_SEPARATOR.'symfony');
 
-    $finder = sfFinder::type('any')->ignore_version_control()->exec(array($this, 'excludeTests'));
+    $finder = sfFinder::type('any')->exec(array($this, 'excludeTests'));
     $this->getFilesystem()->mirror($symfonyLibDir, sfConfig::get('sf_lib_dir').'/symfony', $finder);
     $this->getFilesystem()->mirror($symfonyDataDir, sfConfig::get('sf_data_dir').'/symfony', $finder);
     $this->getFilesystem()->rename(sfConfig::get('sf_data_dir').'/symfony/web/sf', sfConfig::get('sf_web_dir').'/sf');

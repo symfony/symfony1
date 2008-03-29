@@ -107,6 +107,6 @@ abstract class sfUpgrade extends sfBaseTask
    */
   protected function getApplications()
   {
-    return sfFinder::type('dir')->maxdepth(0)->ignore_version_control()->relative()->in(sfConfig::get('sf_apps_dir'));
+    return sfFinder::type('dir')->maxdepth(0)->relative()->in(sfConfig::get('sf_apps_dir'));
   }
 }
