@@ -33,6 +33,7 @@ class sfPropelDumpDataTask extends sfPropelBaseTask
     $this->addOptions(array(
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environement', 'dev'),
       new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'propel'),
+      new sfCommandOption('classes', null, sfCommandOption::PARAMETER_REQUIRED, 'The class names to dump (separated by a colon)', null),
     ));
 
     $this->aliases = array('propel-dump-data');
@@ -60,6 +61,10 @@ By default, the task use the [propel|COMMENT] connection as defined in [config/d
 You can use another connection by using the [connection|COMMENT] option:
 
   [./symfony propel:data-load --connection="name" frontend|INFO]
+
+If you only want to dump some classes, use the [classes|COMMENT] option:
+
+  [./symfony propel:data-load --classes="Article,Category" frontend|INFO]
 EOF;
   }
 
@@ -84,13 +89,15 @@ EOF;
 
     $data = new sfPropelData();
 
+    $classes = is_null($options['classes']) ? 'all' : explode(',', $options['classes']);
+
     if (!is_null($filename))
     {
-      $data->dumpData($filename, 'all', $options['connection']);
+      $data->dumpData($filename, $classes, $options['connection']);
     }
     else
     {
-      fwrite(STDOUT, sfYaml::dump($data->getData('all', $options['connection']), 3));
+      fwrite(STDOUT, sfYaml::dump($data->getData($classes, $options['connection']), 3));
     }
   }
 }

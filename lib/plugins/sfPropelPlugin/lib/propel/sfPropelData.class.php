@@ -313,7 +313,6 @@ class sfPropelData extends sfData
   /**
    * Returns data from one or more tables.
    *
-   * @param  string directory or file to dump to
    * @param  mixed  name or names of tables to dump (or all to dump all tables)
    * @param  string connection name
    *
