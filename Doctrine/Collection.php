@@ -485,6 +485,25 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
 
         return true;
     }
+    
+    /**
+     * merge
+     * 
+     * @param Doctrine_Collection $coll
+     * @return boolean
+     */
+    public function merge(Doctrine_Collection $coll)
+    {
+        if($this->getTable() !== $coll->getTable()) {
+            throw new Doctrine_Collection_Exception("Can't merge collections with records from different tables");
+        }
+        
+        foreach($coll->getData() as $record) {
+            $this->add($record);
+        }
+        
+        return true;
+    }
 
     /**
      * loadRelated
