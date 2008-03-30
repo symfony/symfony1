@@ -102,6 +102,11 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
       include($file);
     }
 
+    if (false !== sfConfig::get('sf_form_csrf_secret'))
+    {
+      sfForm::enableCSRFProtection(sfConfig::get('sf_form_csrf_secret'));
+    }
+
     // force setting default timezone if not set
     if ($default_timezone = sfConfig::get('sf_default_timezone'))
     {

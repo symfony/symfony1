@@ -23,7 +23,7 @@
 class sfForm implements ArrayAccess
 {
   protected static
-    $CSRFProtection = true,
+    $CSRFProtection = false,
     $CSRFSecret     = null,
     $CSRFFieldName  = '_csrf_token';
 
@@ -512,6 +512,11 @@ class sfForm implements ArrayAccess
    */
   static public function enableCSRFProtection($secret = null)
   {
+    if (false === $secret)
+    {
+      return self::disableCSRFProtection();
+    }
+
     self::$CSRFProtection = true;
 
     if (!is_null($secret))
