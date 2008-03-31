@@ -125,7 +125,7 @@ class sfDebug
    *
    * @return array The response parameters
    */
-  public static function responseAsArray(sfResponse $response)
+  public static function responseAsArray(sfResponse $response = null)
   {
     if (!$response)
     {
