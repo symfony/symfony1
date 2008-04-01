@@ -342,7 +342,7 @@ class sfYamlParser
     {
       $this->moveToNextLine();
 
-      if (preg_match('#^(?<indent> {'.strlen($textIndent).',})(?P<text>.+)$#', $this->currentLine, $matches))
+      if (preg_match('#^(?P<indent> {'.strlen($textIndent).',})(?P<text>.+)$#', $this->currentLine, $matches))
       {
         if (' ' == $separator && $previousIndent != $matches['indent'])
         {
