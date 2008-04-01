@@ -330,7 +330,10 @@ class sfConfigCache
     if (!is_dir(dirname($cache)))
     {
       $current_umask = umask(0000);
-      @mkdir(dirname($cache), 0777, true);
+      if (false === @mkdir(dirname($cache), 0777, true))
+      {
+        throw new sfCacheException(sprintf('Failed to make cache directory "%s" while generating cache for configuration file "%s".', dirname($cache), $config));
+      }
       umask($current_umask);
     }
 
