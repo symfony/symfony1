@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(20, new lime_output_color());
+$t = new lime_test(21, new lime_output_color());
 
 $context = sfContext::getInstance();
 
@@ -58,6 +58,7 @@ $t->diag('escape_once()');
 $t->is(escape_once('This a > text to "escape"'), 'This a &gt; text to &quot;escape&quot;', 'escape_once() escapes an HTML strings');
 $t->is(escape_once(escape_once('This a > text to "escape"')), 'This a &gt; text to &quot;escape&quot;', 'escape_once() does not escape an already escaped string');
 $t->is(escape_once('This a &gt; text to "escape"'), 'This a &gt; text to &quot;escape&quot;', 'escape_once() does not escape an already escaped string');
+$t->is(escape_once("This a &gt; \"text\" to 'escape'"), "This a &gt; &quot;text&quot; to 'escape'", 'escape_once() does not escape simple quotes but escape double quotes');
 
 // fix_double_escape()
 $t->diag('fix_double_escape()');
