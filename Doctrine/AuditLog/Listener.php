@@ -33,17 +33,17 @@ Doctrine::autoload('Doctrine_Record_Listener');
 class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
 {
     /**
-     * _auditLog
+     * Instance of Doctrine_Auditlog
      *
      * @var string
      */
     protected $_auditLog;
 
     /**
-     * __construct()
+     * Istantiate AuditLog listener and set the Doctrine_AuditLog instance to the class
      *
-     * @param string $Doctrine_AuditLog 
-     * @return void
+     * @param   Doctrine_AuditLog $auditLog 
+     * @return  void
      */
     public function __construct(Doctrine_AuditLog $auditLog) 
     {
@@ -51,10 +51,10 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
     }
 
     /**
-     * preInsert
+     * Pre insert event hook for incrementing version number
      *
-     * @param string $Doctrine_Event 
-     * @return void
+     * @param   Doctrine_Event $event
+     * @return  void
      */
     public function preInsert(Doctrine_Event $event)
     {
@@ -64,10 +64,10 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
     }
 
     /**
-     * postInsert
+     * Post insert event hook which creates the new version record
      *
-     * @param string $Doctrine_Event 
-     * @return void
+     * @param   Doctrine_Event $event 
+     * @return  void
      */
     public function postInsert(Doctrine_Event $event) 
     {
@@ -80,10 +80,10 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
     }
 
     /**
-     * preDelete
+     * Pre delete event hook deletes all related versions
      *
-     * @param string $Doctrine_Event 
-     * @return void
+     * @param   Doctrine_Event $event
+     * @return  void
      */
     public function preDelete(Doctrine_Event $event)
     {
@@ -102,9 +102,9 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
     }
 
     /**
-     * preUpdate
+     * Pre update event hook for inserting new version record
      *
-     * @param string $Doctrine_Event 
+     * @param  Doctrine_Event $event 
      * @return void
      */
     public function preUpdate(Doctrine_Event $event)

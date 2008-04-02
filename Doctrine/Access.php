@@ -20,10 +20,7 @@
  */
 Doctrine::autoload('Doctrine_Locator_Injectable');
 /**
- * Doctrine_Access
- *
- * the purpose of Doctrine_Access is to provice array access
- * and property overload interface for subclasses
+ * Provides array access and property overload interface for Doctrine subclasses
  *
  * @package     Doctrine
  * @subpackage  Access
@@ -36,42 +33,39 @@ Doctrine::autoload('Doctrine_Locator_Injectable');
 abstract class Doctrine_Access extends Doctrine_Locator_Injectable implements ArrayAccess
 {
     /**
-     * setArray
+     * Set an entire aray to the data
      *
-     * @param array $array          an array of key => value pairs
-     * @since 1.0
-     * @return Doctrine_Access
+     * @param   array $array An array of key => value pairs
+     * @return  Doctrine_Access
      */
     public function setArray(array $array)
     {
-        foreach ($array as $k=>$v) {
-            $this->set($k,$v);
+        foreach ($array as $k => $v) {
+            $this->set($k, $v);
         }
 
         return $this;
     }
 
     /**
-     * __set        an alias of set()
+     * Set key and value to data
      *
-     * @see set, offsetSet
-     * @param $name
-     * @param $value
-     * @since 1.0
-     * @return void
+     * @see     set, offsetSet
+     * @param   $name
+     * @param   $value
+     * @return  void
      */
-    public function __set($name,$value)
+    public function __set($name, $value)
     {
-        $this->set($name,$value);
+        $this->set($name, $value);
     }
 
     /**
-     * __get -- an alias of get()
+     * Get key from data
      *
-     * @see get,  offsetGet
-     * @param mixed $name
-     * @since 1.0
-     * @return mixed
+     * @see     get, offsetGet
+     * @param   mixed $name
+     * @return  mixed
      */
     public function __get($name)
     {
@@ -79,11 +73,10 @@ abstract class Doctrine_Access extends Doctrine_Locator_Injectable implements Ar
     }
 
     /**
-     * __isset()
+     * Check if key exists in data
      *
-     * @param string $name
-     * @since 1.0
-     * @return boolean          whether or not this object contains $name
+     * @param   string $name
+     * @return  boolean whether or not this object contains $name
      */
     public function __isset($name)
     {
@@ -91,11 +84,10 @@ abstract class Doctrine_Access extends Doctrine_Locator_Injectable implements Ar
     }
 
     /**
-     * __unset()
+     * Remove key from data
      *
-     * @param string $name
-     * @since 1.0
-     * @return void
+     * @param   string $name
+     * @return  void
      */
     public function __unset($name)
     {
@@ -103,10 +95,10 @@ abstract class Doctrine_Access extends Doctrine_Locator_Injectable implements Ar
     }
 
     /**
-     * Check if an offsetExists. Alias for contains.
+     * Check if an offset axists
      *
-     * @param mixed $offset
-     * @return boolean          whether or not this object contains $offset
+     * @param   mixed $offset
+     * @return  boolean Whether or not this object contains $offset
      */
     public function offsetExists($offset)
     {
@@ -114,11 +106,11 @@ abstract class Doctrine_Access extends Doctrine_Locator_Injectable implements Ar
     }
 
     /**
-     * offsetGet    an alias of get()
+     * An alias of get()
      *
-     * @see get,  __get
-     * @param mixed $offset
-     * @return mixed
+     * @see     get, __get
+     * @param   mixed $offset
+     * @return  mixed
      */
     public function offsetGet($offset)
     {
@@ -126,11 +118,12 @@ abstract class Doctrine_Access extends Doctrine_Locator_Injectable implements Ar
     }
 
     /**
-     * sets $offset to $value
-     * @see set,  __set
-     * @param mixed $offset
-     * @param mixed $value
-     * @return void
+     * Sets $offset to $value
+     *
+     * @see     set, __set
+     * @param   mixed $offset
+     * @param   mixed $value
+     * @return  void
      */
     public function offsetSet($offset, $value)
     {
@@ -142,8 +135,9 @@ abstract class Doctrine_Access extends Doctrine_Locator_Injectable implements Ar
     }
 
     /**
-     * unset a given offset
-     * @see set, offsetSet, __set
+     * Unset a given offset
+     *
+     * @see   set, offsetSet, __set
      * @param mixed $offset
      */
     public function offsetUnset($offset)

@@ -34,8 +34,6 @@ Doctrine::autoload('Doctrine_Adapter');
 class Doctrine_Adapter_Oracle extends Doctrine_Adapter
 {
     /**
-     * _config
-     *
      * User-provided configuration.
      *
      * Basic keys are:
@@ -54,15 +52,13 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
     );
 
     /**
-     * _executeMode
+     * Current execute mode
      *
      * @var integer
      */
     protected $_executeMode = OCI_COMMIT_ON_SUCCESS;
 
     /**
-     * __construct
-     *
      * $config is an array of key/value pairs containing configuration
      * options.  These options are common to most adapters:
      *
@@ -85,8 +81,6 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
     }
 
     /**
-     * _connect
-     *
      * Creates a connection resource.
      *
      * @return void
@@ -121,8 +115,6 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
     }
 
     /**
-     * closeConnection
-     *
      * Force the connection to close.
      *
      * @return void
@@ -136,8 +128,6 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
     }
 
     /**
-     * prepare
-     *
      * Returns an SQL statement for preparation.
      *
      * @param string $sql The SQL statement with placeholders.
@@ -152,8 +142,6 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
     }
 
     /**
-     * _quote
-     *
      * Quote a raw string.
      *
      * @param string $value     Raw string
@@ -166,8 +154,6 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
     }
 
     /**
-     * quoteTableAs
-     *
      * Quote a table identifier and alias.
      *
      * @param string|array|Doctrine_Expr $ident The identifier or expression.
@@ -181,8 +167,6 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
     }
 
     /**
-     * _beginTransaction
-     *
      * Leave autocommit mode and begin a transaction.
      *
      * @return void
@@ -193,8 +177,6 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
     }
 
     /**
-     * _commit
-     *
      * Commit a transaction and return to autocommit mode.
      *
      * @return void
@@ -209,8 +191,6 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
     }
 
     /**
-     * _rollBack
-     *
      * Roll back a transaction and return to autocommit mode.
      *
      * @return void
@@ -225,8 +205,6 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
     }
 
     /**
-     * setFetchMode
-     *
      * Set the fetch mode.
      *
      * @todo Support FETCH_CLASS and FETCH_INTO.
@@ -251,8 +229,6 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
     }
 
     /**
-     * _setExecuteMode
-     *
      * @param integer $mode
      * @throws Doctrine_Adapter_Exception
      */
@@ -271,7 +247,7 @@ class Doctrine_Adapter_Oracle extends Doctrine_Adapter
     }
 
     /**
-     * _getExecuteMode
+     * Get the current execute mode
      *
      * @return integer $mode
      */

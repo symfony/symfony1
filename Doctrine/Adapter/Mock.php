@@ -35,41 +35,47 @@
 class Doctrine_Adapter_Mock implements Doctrine_Adapter_Interface, Countable
 {
     private $_name;
-    
+
     private $_queries = array();
-    
+
     private $_exception = array();
-    
+
     private $_lastInsertIdFail = false;
 
-    public function __construct($name = null) 
+    public function __construct($name = null)
     {
         $this->_name = $name;
     }
-    public function getName() 
+
+    public function getName()
     {
         return $this->_name;
     }
-    public function pop() 
+
+    public function pop()
     {
         return array_pop($this->_queries);
     }
-    public function forceException($name, $message = '', $code = 0) 
+
+    public function forceException($name, $message = '', $code = 0)
     {
         $this->_exception = array($name, $message, $code);
     }
+
     public function prepare($query)
     {
         $mock = new Doctrine_Adapter_Statement_Mock($this, $query);
         $mock->queryString = $query;
-        
+
         return $mock;
     }
+
     public function addQuery($query)
     {
         $this->_queries[] = $query;
     }
-    public function query($query) 
+
+    public function query($query)
     {
         $this->_queries[] = $query;
 
@@ -85,18 +91,21 @@ class Doctrine_Adapter_Mock implements Doctrine_Adapter_Interface, Countable
 
         $stmt = new Doctrine_Adapter_Statement_Mock($this, $query);
         $stmt->queryString = $query;
-        
+
         return $stmt;
     }
-    public function getAll() 
+
+    public function getAll()
     {
         return $this->_queries;
     }
-    public function quote($input) 
+
+    public function quote($input)
     {
         return "'" . addslashes($input) . "'";
     }
-    public function exec($statement) 
+
+    public function exec($statement)
     {
         $this->_queries[] = $statement;
 
@@ -112,7 +121,8 @@ class Doctrine_Adapter_Mock implements Doctrine_Adapter_Interface, Countable
 
         return 0;
     }
-    public function forceLastInsertIdFail($fail = true) 
+
+    public function forceLastInsertIdFail($fail = true)
     {
         if ($fail) {
             $this->_lastInsertIdFail = true;
@@ -120,6 +130,7 @@ class Doctrine_Adapter_Mock implements Doctrine_Adapter_Interface, Countable
             $this->_lastInsertIdFail = false;
         }
     }
+
     public function lastInsertId()
     {
         $this->_queries[] = 'LAST_INSERT_ID()';
@@ -129,36 +140,43 @@ class Doctrine_Adapter_Mock implements Doctrine_Adapter_Interface, Countable
             return 1;
         }
     }
-    public function count() 
+
+    public function count()
     {
-        return count($this->_queries);    
+        return count($this->_queries);
     }
+
     public function beginTransaction()
     {
         $this->_queries[] = 'BEGIN TRANSACTION';
     }
+
     public function commit()
     {
         $this->_queries[] = 'COMMIT';
     }
-    public function rollBack() 
+
+    public function rollBack()
     {
         $this->_queries[] = 'ROLLBACK';
     }
-    public function errorCode() 
+
+    public function errorCode()
     { }
+
     public function errorInfo()
     { }
-    public function getAttribute($attribute) 
+
+    public function getAttribute($attribute)
     {
         if ($attribute == Doctrine::ATTR_DRIVER_NAME) {
             return strtolower($this->_name);
         }
     }
-    public function setAttribute($attribute, $value) 
-    {
-                                       
-    }
+
+    public function setAttribute($attribute, $value)
+    { }
+
     public function sqliteCreateFunction()
     { }
 }

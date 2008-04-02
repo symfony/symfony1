@@ -32,6 +32,11 @@ Doctrine::autoload('Doctrine_Record_Generator');
  */
 class Doctrine_AuditLog extends Doctrine_Record_Generator
 {
+    /**
+     * Array of AuditLog Options
+     *
+     * @var string
+     */
     protected $_options = array(
                             'className'     => '%CLASS%Version',
                             'versionColumn' => 'version',
@@ -42,10 +47,10 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
                             );
 
     /**
-     * Create a new auditlog_ 
+     * Accepts array of options to configure the AuditLog
      * 
-     * @param array $options An array of options
-     * @return void
+     * @param   array $options An array of options
+     * @return  void
      */
     public function __construct(array $options = array())
     {
@@ -53,11 +58,11 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
     }
 
     /**
-     * Get the version 
+     * Get array of information for the passed record and the specified version
      * 
-     * @param Doctrine_Record $record 
-     * @param mixed $version 
-     * @return array An array with version information
+     * @param   Doctrine_Record $record 
+     * @param   mixed           $version 
+     * @return  array           An array with version information
      */
     public function getVersion(Doctrine_Record $record, $version)
     {           
@@ -70,6 +75,7 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
             $conditions[] = $className . '.' . $id . ' = ?';
             $values[] = $record->get($id);
         }
+
         $where = implode(' AND ', $conditions) . ' AND ' . $className . '.' . $this->_options['versionColumn'] . ' = ?';
         
         $values[] = $version;
@@ -81,10 +87,10 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
     }
 
     /**
-     * buildDefinition for a table 
+     * Build definition for audit log table
      * 
-     * @param Doctrine_Table $table 
-     * @return boolean true on success otherwise false.
+     * @param   Doctrine_Table  $table 
+     * @return  boolean         true on success otherwise false.
      */
     public function setTableDefinition()
     {

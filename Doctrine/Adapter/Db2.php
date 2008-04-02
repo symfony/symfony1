@@ -20,8 +20,7 @@
  */
 Doctrine::autoload('Doctrine_Adapter');
 /**
- * Doctrine_Adapter_Db2
- * IBM DB2 Adapter  [BORROWED FROM ZEND FRAMEWORK]
+ * IBM DB2 Adapter. This class was ported from the Zend Framework
  *
  * @package     Doctrine
  * @subpackage  Adapter
@@ -34,8 +33,6 @@ Doctrine::autoload('Doctrine_Adapter');
 class Doctrine_Adapter_Db2 extends Doctrine_Adapter
 {
     /**
-     * _config
-     *
      * User-provided configuration.
      *
      * Basic keys are:
@@ -61,30 +58,24 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     );
 
     /**
-     * _executeMode
+     * Stores the execution mode
      *
-     * Execution mode
+     * Possible values DB2_AUTOCOMMIT_ON or DB2_AUTOCOMMIT_OFF
      *
      * @var int execution flag (DB2_AUTOCOMMIT_ON or DB2_AUTOCOMMIT_OFF)
-     * @access protected
      */
     protected $_executeMode = DB2_AUTOCOMMIT_ON;
 
     /**
-     * _lastInsertTable
-     *
      * Table name of the last accessed table for an insert operation
      * This is a DB2-Adapter-specific member variable with the utmost
      * probability you might not find it in other adapters...
      *
      * @var string
-     * @access protected
      */
     protected $_lastInsertTable = null;
 
      /**
-     * __construct
-     *
      * $config is an array of key/value pairs containing configuration
      * options.  These options are common to most adapters:
      *
@@ -118,9 +109,7 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     }
 
     /**
-     * _connect
-     *
-     * Creates a connection resource.
+     * Creates the connection resource
      *
      * @return void
      */
@@ -185,9 +174,7 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     }
 
     /**
-     * closeConnection
-     *
-     * Force the connection to close.
+     * Close the connection resource
      *
      * @return void
      */
@@ -198,12 +185,10 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     }
 
     /**
-     * prepare
+     * Prepare a sql statement and return it
      *
-     * Returns an SQL statement for preparation.
-     *
-     * @param string $sql The SQL statement with placeholders.
-     * @return Doctrine_Statement_Db2
+     * @param   string $sql The SQL statement with placeholders.
+     * @return  Doctrine_Statement_Db2
      */
     public function prepare($sql)
     {
@@ -214,9 +199,7 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     }
 
     /**
-     * _getExecuteMode
-     *
-     * Gets the execution mode
+     * Get the current execution mode
      *
      * @return int the execution mode (DB2_AUTOCOMMIT_ON or DB2_AUTOCOMMIT_OFF)
      */
@@ -226,10 +209,10 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     }
 
     /**
-     * _setExecuteMode
+     * Set the current execution mode
      *
-     * @param integer $mode
-     * @return void
+     * @param   integer $mode
+     * @return  void
      */
     public function _setExecuteMode($mode)
     {
@@ -246,12 +229,10 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     }
 
     /**
-     * _quote
-     *
      * Quote a raw string.
      *
-     * @param string $value     Raw string
-     * @return string           Quoted string
+     * @param   string $value Raw string
+     * @return  string Quoted string
      */
     protected function _quote($value)
     {
@@ -269,7 +250,7 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     }
 
     /**
-     * getQuoteIdentifierSymbol
+     * Get the symbol used for identifier quoting
      *
      * @return string
      */
@@ -281,8 +262,6 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     }
 
     /**
-     * _beginTransaction
-     *
      * Begin a transaction.
      *
      * @return void
@@ -293,8 +272,6 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     }
 
     /**
-     * _commit
-     *
      * Commit a transaction.
      *
      * @return void
@@ -311,8 +288,6 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     }
 
     /**
-     * _rollBack
-     *
      * Rollback a transaction.
      *
      * @return void
@@ -328,11 +303,9 @@ class Doctrine_Adapter_Db2 extends Doctrine_Adapter
     }
 
     /**
-     * setFetchMode
-     *
      * Set the fetch mode.
      *
-     * @param integer $mode
+     * @param  integer $mode
      * @return void
      */
     public function setFetchMode($mode)

@@ -31,9 +31,8 @@
  * @version     $Revision$
  */
 interface Doctrine_Adapter_Statement_Interface
-{    
+{
     /**
-     * bindColumn
      * Bind a column to a PHP variable
      *
      * @param mixed $column         Number of the column (1-indexed) or name of the column in the result set.
@@ -46,7 +45,6 @@ interface Doctrine_Adapter_Statement_Interface
     public function bindColumn($column, $param, $type = null);
 
     /**
-     * bindValue
      * Binds a value to a corresponding named or question mark 
      * placeholder in the SQL statement that was use to prepare the statement.
      *
@@ -62,7 +60,6 @@ interface Doctrine_Adapter_Statement_Interface
     public function bindValue($param, $value, $type = null);
 
     /**
-     * bindParam
      * Binds a PHP variable to a corresponding named or question mark placeholder in the 
      * SQL statement that was use to prepare the statement. Unlike Doctrine_Adapter_Statement_Interface->bindValue(),
      * the variable is bound as a reference and will only be evaluated at the time 
@@ -91,7 +88,6 @@ interface Doctrine_Adapter_Statement_Interface
     public function bindParam($column, &$variable, $type = null, $length = null, $driverOptions = array());
 
     /**
-     * closeCursor
      * Closes the cursor, enabling the statement to be executed again.
      *
      * @return boolean              Returns TRUE on success or FALSE on failure.
@@ -99,7 +95,6 @@ interface Doctrine_Adapter_Statement_Interface
     public function closeCursor();
 
     /** 
-     * columnCount
      * Returns the number of columns in the result set 
      *
      * @return integer              Returns the number of columns in the result set represented
@@ -109,7 +104,6 @@ interface Doctrine_Adapter_Statement_Interface
     public function columnCount();
 
     /**
-     * errorCode
      * Fetch the SQLSTATE associated with the last operation on the statement handle 
      *
      * @see Doctrine_Adapter_Interface::errorCode()
@@ -118,7 +112,6 @@ interface Doctrine_Adapter_Statement_Interface
     public function errorCode();
 
     /**
-     * errorInfo
      * Fetch extended error information associated with the last operation on the statement handle
      *
      * @see Doctrine_Adapter_Interface::errorInfo()
@@ -127,7 +120,6 @@ interface Doctrine_Adapter_Statement_Interface
     public function errorInfo();
 
     /**
-     * execute
      * Executes a prepared statement
      *
      * If the prepared statement included parameter markers, you must either:
@@ -175,7 +167,6 @@ interface Doctrine_Adapter_Statement_Interface
                           $cursorOffset = null);
 
     /**
-     * fetchAll
      * Returns an array containing all of the result set rows
      *
      * @param integer $fetchStyle           Controls how the next row will be returned to the caller.
@@ -190,7 +181,6 @@ interface Doctrine_Adapter_Statement_Interface
     public function fetchAll($fetchStyle = Doctrine::FETCH_BOTH);
 
     /**
-     * fetchColumn
      * Returns a single column from the next row of a
      * result set or FALSE if there are no more rows.
      *
@@ -203,7 +193,6 @@ interface Doctrine_Adapter_Statement_Interface
     public function fetchColumn($columnIndex = 0);
 
     /**
-     * fetchObject
      * Fetches the next row and returns it as an object.
      *
      * Fetches the next row and returns it as an object. This function is an alternative to 
@@ -218,7 +207,6 @@ interface Doctrine_Adapter_Statement_Interface
     public function fetchObject($className = 'stdClass', $args = array());
 
     /**
-     * getAttribute
      * Retrieve a statement attribute 
      *
      * @param integer $attribute
@@ -228,7 +216,6 @@ interface Doctrine_Adapter_Statement_Interface
     public function getAttribute($attribute);
 
     /**
-     * getColumnMeta
      * Returns metadata for a column in a result set
      *
      * @param integer $column               The 0-indexed column in the result set.
@@ -246,7 +233,6 @@ interface Doctrine_Adapter_Statement_Interface
     public function getColumnMeta($column);
 
     /**
-     * nextRowset
      * Advances to the next rowset in a multi-rowset statement handle
      * 
      * Some database servers support stored procedures that return more than one rowset 
@@ -259,7 +245,6 @@ interface Doctrine_Adapter_Statement_Interface
     public function nextRowset();
 
     /**
-     * rowCount
      * rowCount() returns the number of rows affected by the last DELETE, INSERT, or UPDATE statement 
      * executed by the corresponding object.
      *
@@ -273,7 +258,6 @@ interface Doctrine_Adapter_Statement_Interface
     public function rowCount();
 
     /**
-     * setAttribute
      * Set a statement attribute
      *
      * @param integer $attribute
@@ -283,7 +267,6 @@ interface Doctrine_Adapter_Statement_Interface
     public function setAttribute($attribute, $value);
 
     /**
-     * setFetchMode
      * Set the default fetch mode for this statement 
      *
      * @param integer $mode                 The fetch mode must be one of the Doctrine::FETCH_* constants.

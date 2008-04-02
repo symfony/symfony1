@@ -18,7 +18,7 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.org>.
  */
-
+Doctrine::autoload('Doctrine_Adapter');
 /**
  * Doctrine_Adapter_Mysqli
  * This class is used for special testing purposes.
@@ -34,8 +34,6 @@
 class Doctrine_Adapter_Mysqli extends Doctrine_Adapter
 {
     /**
-     * _connect
-     *
      * Creates a connection to the database.
      *
      * @return void
@@ -60,8 +58,6 @@ class Doctrine_Adapter_Mysqli extends Doctrine_Adapter
     }
 
     /**
-     * closeConnection
-     *
      * Force the connection to close.
      *
      * @return void
@@ -73,8 +69,6 @@ class Doctrine_Adapter_Mysqli extends Doctrine_Adapter
     }
 
     /**
-     * prepare
-     *
      * Prepare a statement and return a PDOStatement-like object.
      *
      * @param  string  $sql  SQL query
@@ -113,8 +107,6 @@ class Doctrine_Adapter_Mysqli extends Doctrine_Adapter
     }
 
     /**
-     * _beginTransaction
-     *
      * Begin a transaction.
      *
      * @return void
@@ -126,8 +118,6 @@ class Doctrine_Adapter_Mysqli extends Doctrine_Adapter
     }
 
     /**
-     * _commit
-     *
      * Commit a transaction.
      *
      * @return void
@@ -140,8 +130,6 @@ class Doctrine_Adapter_Mysqli extends Doctrine_Adapter
     }
 
     /**
-     * _rollBack
-     *
      * Roll-back a transaction.
      *
      * @return void

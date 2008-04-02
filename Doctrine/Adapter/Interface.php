@@ -20,7 +20,6 @@
  */
 
 /**
- * Doctrine_Adapter_Interface
  * This adapter interface should be implemented by all custom adapters
  *
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>

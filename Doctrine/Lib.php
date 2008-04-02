@@ -385,12 +385,12 @@ class Doctrine_Lib
                     if (is_dir($value)) {
                         self::removeDirectories($value);
                     } else if (is_file($value)) {
-                        @unlink($value);
+                        unlink($value);
                     }
                 }
             }
 
-            return rmdir ( $folderPath );
+            return rmdir($folderPath);
         } else {
             return false;
         }
