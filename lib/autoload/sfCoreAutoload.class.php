@@ -326,6 +326,7 @@ class sfCoreAutoload
   'sfEnvironmentUpgrade' => 'task/project/upgrade1.1',
   'sfFactoriesUpgrade' => 'task/project/upgrade1.1',
   'sfFlashUpgrade' => 'task/project/upgrade1.1',
+  'sfLayoutUpgrade' => 'task/project/upgrade1.1',
   'sfLoggerUpgrade' => 'task/project/upgrade1.1',
   'sfPropelUpgrade' => 'task/project/upgrade1.1',
   'sfSingletonUpgrade' => 'task/project/upgrade1.1',
