@@ -35,15 +35,6 @@ $b->
 ;
 
 $b->
-  get('/escaping/bc')->
-  isStatusCode(200)->
-  isRequestParameter('module', 'escaping')->
-  isRequestParameter('action', 'bc')->
-  responseContains('<h1>Lorem <strong>ipsum</strong> dolor sit amet.</h1>')->
-  responseContains('<h2>Lorem &lt;strong&gt;ipsum&lt;/strong&gt; dolor sit amet.</h2>');
-;
-
-$b->
   get('/escaping/off')->
   isStatusCode(200)->
   isRequestParameter('module', 'escaping')->

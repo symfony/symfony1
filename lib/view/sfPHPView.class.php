@@ -127,7 +127,7 @@ class sfPHPView extends sfView
     // set the decorator content as an attribute
     $attributeHolder = $this->attributeHolder;
 
-    $this->attributeHolder = $this->initializeAttributeHolder(array('sf_content' => $content));
+    $this->attributeHolder = $this->initializeAttributeHolder(array('sf_content' => new sfOutputEscaperSafe($content)));
 
     // render the decorator template and return the result
     $ret = $this->renderFile($this->getDecoratorDirectory().'/'.$this->getDecoratorTemplate());

@@ -41,6 +41,11 @@ class sfGenerateAppTask extends sfGeneratorBaseTask
       new sfCommandArgument('application', sfCommandArgument::REQUIRED, 'The application name'),
     ));
 
+    $this->addOptions(array(
+      new sfCommandOption('escaping-strategy', null, sfCommandOption::PARAMETER_REQUIRED, 'Output escaping strategy', false),
+      new sfCommandOption('csrf-secret', null, sfCommandOption::PARAMETER_REQUIRED, 'Secret to use for CSRF protection', false),
+    ));
+
     $this->aliases = array('init-app');
     $this->namespace = 'generate';
     $this->name = 'app';
@@ -64,6 +69,16 @@ For the first application, the production environment script is named
 
 If an application with the same name already exists,
 it throws a [sfCommandException|COMMENT].
+
+You can enable output escaping (to prevent XSS) by using the [escaping-strategy|COMMENT] option:
+
+  [./symfony generate:app frontend --escaping-strategy=both|INFO]
+
+You can enable session token in forms (to prevent CSRF) by defining
+a secret with the [csrf-secret|COMMENT] option:
+
+  [./symfony generate:app frontend --csrf-secret=Big\$ecret|INFO]
+
 EOF;
   }
 
@@ -95,7 +110,11 @@ EOF;
 
     // Set no_script_name value in settings.yml for production environment
     $finder = sfFinder::type('file')->name('settings.yml');
-    $this->getFilesystem()->replaceTokens($finder->in($appDir.'/config'), '##', '##', array('NO_SCRIPT_NAME' => ($firstApp ? 'on' : 'off')));
+    $this->getFilesystem()->replaceTokens($finder->in($appDir.'/config'), '##', '##', array(
+      'NO_SCRIPT_NAME'    => $firstApp ? 'on' : 'off',
+      'CSRF_SECRET'       => sfYamlInline::dump($options['csrf-secret']),
+      'ESCAPING_STRATEGY' => sfYamlInline::dump($options['escaping-strategy']),
+    ));
 
     $this->getFilesystem()->copy(dirname(__FILE__).'/skeleton/app/web/index.php', sfConfig::get('sf_web_dir').'/'.$indexName.'.php');
     $this->getFilesystem()->copy(dirname(__FILE__).'/skeleton/app/web/index.php', sfConfig::get('sf_web_dir').'/'.$app.'_dev.php');

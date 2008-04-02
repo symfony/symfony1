@@ -12,7 +12,7 @@
 </head>
 <body>
 
-<?php echo $sf_data->getRaw('sf_content') ?>
+<?php echo $sf_content ?>
 
 <div id="component_slot_content"><?php echo get_slot('component') ?></div>
 <div id="partial_slot_content"><?php echo get_slot('partial') ?></div>

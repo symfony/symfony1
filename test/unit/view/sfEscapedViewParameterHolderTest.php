@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(27, new lime_output_color());
+$t = new lime_test(23, new lime_output_color());
 
 define('ESC_SPECIALCHARS', 'esc_specialchars');
 function esc_specialchars($value)
@@ -124,14 +124,6 @@ catch (InvalidArgumentException $e)
 {
   $t->pass('->toArray() throws an InvalidArgumentException if the escaping strategy does not exist');
 }
-
-$t->diag('Escaping strategy to bc');
-$p->setEscaping('bc');
-$values = $p->toArray();
-$t->is(count($values), 2, '->toArray() knows about the "bc" strategy');
-$t->is(count($values['sf_data']), 1, '->toArray() knows about the "bc" strategy');
-$t->is($values['foo'], 'bar', '->toArray() knows about the "bc" strategy');
-$t->is($values['sf_data']['foo'], '-ESCAPED-bar-ESCAPED-', '->toArray() knows about the "bc" strategy');
 
 $t->diag('Escaping strategy to both');
 $p->setEscaping('both');

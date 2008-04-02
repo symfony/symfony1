@@ -109,9 +109,11 @@ abstract class sfOutputEscaper
 
         return $copy;
       }
-      else if ($value instanceof Traversable)
+      else if (self::isClassMarkedAsSafe(get_class($value)))
       {
-        return new sfOutputEscaperIteratorDecorator($escapingMethod, $value);
+        // the class or one of its children is marked as safe
+        // return the unescaped object
+        return $value;
       }
       else if ($value instanceof sfOutputEscaperSafe)
       {
@@ -119,11 +121,9 @@ abstract class sfOutputEscaper
         // return the original object
         return $value->getValue();
       }
-      else if (self::isClassMarkedAsSafe(get_class($value)))
+      else if ($value instanceof Traversable)
       {
-        // the class or one of its children is marked as safe
-        // return the unescaped object
-        return $value;
+        return new sfOutputEscaperIteratorDecorator($escapingMethod, $value);
       }
       else
       {

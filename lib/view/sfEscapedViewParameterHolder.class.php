@@ -33,7 +33,7 @@ class sfEscapedViewParameterHolder extends sfViewParameterHolder
    *
    * <b>Options:</b>
    *
-   * # <b>escaping_strategy</b> - [bc]               - The escaping strategy (bc, both, on or off)
+   * # <b>escaping_strategy</b> - [off]              - The escaping strategy (both, on or off)
    * # <b>escaping_method</b>   - [ESC_SPECIALCHARS] - The escaping method (ESC_RAW, ESC_ENTITIES, ESC_JS, ESC_JS_NO_ENTITIES, or ESC_SPECIALCHARS)
    *
    * @return Boolean   true, if initialization completes successfully, otherwise false.
@@ -44,7 +44,7 @@ class sfEscapedViewParameterHolder extends sfViewParameterHolder
   {
     parent::initialize($dispatcher, $parameters, $options);
 
-    $this->setEscaping(isset($options['escaping_strategy']) ? $options['escaping_strategy'] : 'bc');
+    $this->setEscaping(isset($options['escaping_strategy']) ? $options['escaping_strategy'] : false);
     $this->setEscapingMethod(isset($options['escaping_method']) ? $options['escaping_method'] : 'ESC_SPECIALCHARS');
   }
 
@@ -69,24 +69,24 @@ class sfEscapedViewParameterHolder extends sfViewParameterHolder
   {
     $attributes = array();
 
-    switch ($this->getEscaping())
+    switch (true)
     {
-      case 'on':
-        $attributes['sf_data'] = sfOutputEscaper::escape($this->getEscapingMethod(), $this->getAll());
-        break;
-      case 'bc':
-        $attributes = $this->getAll();
-        $attributes['sf_data'] = sfOutputEscaper::escape($this->getEscapingMethod(), $this->getAll());
-        break;
-      case 'both':
+      case 'bc' === $this->getEscaping():
+        throw new InvalidArgumentException(sprintf('Escaping strategy "bc" is deprecated.'));
+      case 'both' === $this->getEscaping():
         $attributes['sf_data'] = sfOutputEscaper::escape($this->getEscapingMethod(), $this->getAll());
         foreach ($attributes['sf_data'] as $key => $value)
         {
           $attributes[$key] = $value;
         }
         break;
-      case 'off':
+      case 'off' === $this->getEscaping():
+      case false === $this->getEscaping():
         $attributes = $this->getAll();
+        break;
+      case 'on' === $this->getEscaping():
+      case true === $this->getEscaping():
+        $attributes['sf_data'] = sfOutputEscaper::escape($this->getEscapingMethod(), $this->getAll());
         break;
       default:
         throw new InvalidArgumentException(sprintf('Unknown strategy "%s".', $this->getEscaping()));

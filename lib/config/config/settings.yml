@@ -24,7 +24,7 @@ default:
     form_csrf_secret:       false     # Unique secret to enable CSRF protection or false to disable
 
     # Output escaping settings
-    escaping_strategy:      bc        # Determines how variables are made available to templates. Accepted values: bc, both, on, off. The value off deactivates escaping completely and gives a slight boost.
+    escaping_strategy:      off              # Determines how variables are made available to templates. Accepted values: both, on, off. The value off deactivates escaping completely and gives a slight boost.
     escaping_method:        ESC_SPECIALCHARS # Function or helper used for escaping. Accepted values: ESC_RAW, ESC_ENTITIES, ESC_JS, ESC_JS_NO_ENTITIES, and ESC_SPECIALCHARS.
 
     # Routing settings

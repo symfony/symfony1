@@ -31,6 +31,11 @@ class sfOutputEscaperSafe
     $this->value = $value;
   }
 
+  public function __toString()
+  {
+    return $this->value;
+  }
+
   /**
    * Returns the embedded value.
    *

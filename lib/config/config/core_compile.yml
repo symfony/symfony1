@@ -35,8 +35,9 @@
 - %SF_SYMFONY_LIB_DIR%/view/sfPHPView.class.php
 
 # output escaper
-- %SF_SYMFONY_LIB_DIR%/view/escaper/sfOutputEscaper.class.php
-- %SF_SYMFONY_LIB_DIR%/view/escaper/sfOutputEscaperArrayDecorator.class.php
-- %SF_SYMFONY_LIB_DIR%/view/escaper/sfOutputEscaperGetterDecorator.class.php
-- %SF_SYMFONY_LIB_DIR%/view/escaper/sfOutputEscaperIteratorDecorator.class.php
-- %SF_SYMFONY_LIB_DIR%/view/escaper/sfOutputEscaperObjectDecorator.class.php
+- %SF_SYMFONY_LIB_DIR%/view/escaper/sfOutputEscaperSafe.class.php
+#- %SF_SYMFONY_LIB_DIR%/view/escaper/sfOutputEscaper.class.php
+#- %SF_SYMFONY_LIB_DIR%/view/escaper/sfOutputEscaperArrayDecorator.class.php
+#- %SF_SYMFONY_LIB_DIR%/view/escaper/sfOutputEscaperGetterDecorator.class.php
+#- %SF_SYMFONY_LIB_DIR%/view/escaper/sfOutputEscaperIteratorDecorator.class.php
+#- %SF_SYMFONY_LIB_DIR%/view/escaper/sfOutputEscaperObjectDecorator.class.php
