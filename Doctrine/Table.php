@@ -411,8 +411,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                         switch (strtolower($e2[0])) {
                             case 'autoincrement':
                             case 'autoinc':
-                                $this->_identifierType = Doctrine::IDENTIFIER_AUTOINC;
-                                $found = true;
+                                if ($value !== false) {
+                                    $this->_identifierType = Doctrine::IDENTIFIER_AUTOINC;
+                                    $found = true;
+                                }
                                 break;
                             case 'seq':
                             case 'sequence':
