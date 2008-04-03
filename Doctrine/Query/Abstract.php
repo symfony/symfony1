@@ -510,16 +510,24 @@ abstract class Doctrine_Query_Abstract
      * @return array    converted parameter array
      */
     public function convertEnums($params)
-    {
-        $table = $this->getRoot();
+    {        
+        $table = $this->getRoot();        
+        
+        // $position tracks the position of the parameter, to ensure we're converting
+        // the right parameter value when simple ? placeholders are used.
+        // This only works because SET is only allowed in update statements and it's
+        // the first place where parameters can occur.. see issue #935
+        $position = 0; 
         foreach ($this->_pendingSetParams as $fieldName => $value) {
             $e = explode('.', $fieldName);
             $fieldName = isset($e[1]) ? $e[1]:$e[0];
-            $columnName = $table->getColumnName($fieldName);
-            if ($table->getTypeOf($columnName) == 'enum') {
-                $this->addEnumParam($value, $table, $columnName);
+            if ($table->getTypeOf($fieldName) == 'enum') {
+                $value = $value === '?' ? $position : $value;
+                $this->addEnumParam($value, $table, $fieldName);
             }
+            ++$position;
         }
+        $this->_pendingSetParams = array();
 
         foreach ($this->_enumParams as $key => $values) {
             if (isset($params[$key])) {
@@ -528,6 +536,7 @@ abstract class Doctrine_Query_Abstract
                 }
             }
         }
+        
         return $params;
     }
     
@@ -900,14 +909,14 @@ abstract class Doctrine_Query_Abstract
         } else {
             $query = $this->_view->getSelectSql();
         }
-
+        
         $params = $this->convertEnums($params);
 
         if ($this->isLimitSubqueryUsed() &&
                 $this->_conn->getAttribute(Doctrine::ATTR_DRIVER_NAME) !== 'mysql') {
             $params = array_merge($params, $params);
         }
-
+        
         if ($this->_type !== self::SELECT) {
             return $this->_conn->exec($query, $params);
         }
@@ -924,7 +933,7 @@ abstract class Doctrine_Query_Abstract
      * @return Doctrine_Collection            the root collection
      */
     public function execute($params = array(), $hydrationMode = null)
-    {
+    {        
         $params = array_merge($this->_params['join'],
                               $this->_params['set'], 
                               $this->_params['where'],
@@ -1351,7 +1360,7 @@ abstract class Doctrine_Query_Abstract
      * @return Doctrine_Query
      */
     public function where($where, $params = array())
-    {
+    {        
         $this->_params['where'] = array();
         if (is_array($params)) {
             $this->_params['where'] = $params;
