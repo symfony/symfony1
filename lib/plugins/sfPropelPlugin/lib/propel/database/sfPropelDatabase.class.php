@@ -65,6 +65,8 @@ class sfPropelDatabase extends sfCreoleDatabase
 
     if ($dsn = $this->getParameter('dsn'))
     {
+      set_include_path(get_include_path().PATH_SEPARATOR.dirname(__FILE__).'/../../../lib/vendor/');
+
       require_once('creole/Creole.php');
       $params = Creole::parseDSN($dsn);
 
