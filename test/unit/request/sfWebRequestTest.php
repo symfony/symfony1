@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(16, new lime_output_color());
+$t = new lime_test(25, new lime_output_color());
 
 class myRequest extends sfWebRequest
 {
@@ -82,3 +82,33 @@ $t->is($request->splitHttpAcceptHeader(''), array(), '->splitHttpAcceptHeader() 
 $t->is($request->splitHttpAcceptHeader('a,b,c'), array('c', 'b', 'a'), '->splitHttpAcceptHeader() returns an array of values');
 $t->is($request->splitHttpAcceptHeader('a,b;q=0.7,c;q=0.3'), array('a', 'b', 'c'), '->splitHttpAcceptHeader() strips the q value');
 $t->is($request->splitHttpAcceptHeader('a;q=0.1,b,c;q=0.3'), array('b', 'c', 'a'), '->splitHttpAcceptHeader() sorts values by the q value');
+
+// ->getRequestFormat() ->setRequestFormat()
+$t->diag('->getRequestFormat() ->setRequestFormat()');
+
+$t->ok(is_null($request->getRequestFormat()), '->getRequestFormat() returns null if the format is not defined in the request');
+$request->setParameter('sf_format', 'js');
+$t->is($request->getRequestFormat(), 'js', '->getRequestFormat() returns the request format');
+
+$request->setRequestFormat('css');
+$t->is($request->getRequestFormat(), 'css', '->setRequestFormat() sets the request format');
+
+$request->acceptableContentTypes = null;
+$_SERVER['HTTP_ACCEPT'] = 'application/json';
+$request->setFormat('json', 'application/json');
+$request->setParameter('sf_format', null);
+$request->setRequestFormat(null);
+$t->is($request->getRequestFormat(), 'json', '->getRequestFormat() uses the Accept HTTP header to guess the format');
+
+// ->getFormat() ->setFormat()
+$t->diag('->getFormat() ->setFormat()');
+$request->setFormat('js', 'application/x-javascript');
+$t->is($request->getFormat('application/x-javascript'), 'js', '->getFormat() returns the format for the given mime type');
+$request->setFormat('js', array('application/x-javascript', 'text/js'));
+$t->is($request->getFormat('text/js'), 'js', '->setFormat() can take an array of mime types');
+$t->is($request->getFormat('foo/bar'), null, '->getFormat() returns null if the mime type does not exist');
+
+// ->getMimeType()
+$t->diag('->getMimeType()');
+$t->is($request->getMimeType('js'), 'application/x-javascript', '->getMimeType() returns the first mime type for the given format');
+$t->is($request->getMimeType('foo'), null, '->getMimeType() returns null if the format does not exist');

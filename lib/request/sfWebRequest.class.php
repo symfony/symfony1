@@ -30,7 +30,9 @@ class sfWebRequest extends sfRequest
     $relativeUrlRoot        = null,
     $getParameters          = null,
     $postParameters         = null,
-    $requestParameters      = null;
+    $requestParameters      = null,
+    $formats                = array(),
+    $format                 = null;
 
   /**
    * Initializes this sfRequest.
@@ -79,6 +81,11 @@ class sfWebRequest extends sfRequest
     {
       // set the default method
       $this->setMethod(self::GET);
+    }
+
+    foreach ($this->getAttribute('formats', array()) as $format => $mimeTypes)
+    {
+      $this->setFormat($format, $mimeTypes);
     }
 
     // load parameters from GET/PATH_INFO/POST
@@ -896,6 +903,89 @@ class sfWebRequest extends sfRequest
     }
 
     return $this->pathInfoArray;
+  }
+
+  /**
+   * Gets the mime type associated with the format.
+   *
+   * @param  string The format
+   *
+   * @return string The associated mime type (null if not found)
+   */
+  public function getMimeType($format)
+  {
+    return isset($this->formats[$format]) ? $this->formats[$format][0] : null;
+  }
+
+  /**
+   * Gets the format associated with the mime type.
+   *
+   * @param  string The associated mime type
+   *
+   * @return string The format (null if not found)
+   */
+  public function getFormat($mimeType)
+  {
+    foreach ($this->formats as $format => $mimeTypes)
+    {
+      if (in_array($mimeType, $mimeTypes))
+      {
+        return $format;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Associates a format with mime types.
+   *
+   * @param string       The format
+   * @param string|array The associated mime types (the preferred one must be the first as it will be used as the content type)
+   */
+  public function setFormat($format, $mimeTypes)
+  {
+    $this->formats[$format] = is_array($mimeTypes) ? $mimeTypes : array($mimeTypes);
+  }
+
+  /**
+   * Sets the request format.
+   *
+   * @param string The request format
+   */
+  public function setRequestFormat($format)
+  {
+    $this->format = $format;
+  }
+
+  /**
+   * Gets the request format.
+   *
+   * If no format is defined by the user, it defaults to the sf_format request parameter if available.
+   *
+   * @return string The request format
+   */
+  public function getRequestFormat()
+  {
+    if (is_null($this->format))
+    {
+      if ($this->getParameter('sf_format'))
+      {
+        $this->setRequestFormat($this->getParameter('sf_format'));
+      }
+      else
+      {
+        $acceptableContentTypes = $this->getAcceptableContentTypes();
+
+        // skip if no acceptable content types or browsers
+        if (isset($acceptableContentTypes[0]) && 'text/xml' != $acceptableContentTypes[0])
+        {
+          $this->setRequestFormat($this->getFormat($acceptableContentTypes[0]));
+        }
+      }
+    }
+
+    return $this->format;
   }
 
   /**

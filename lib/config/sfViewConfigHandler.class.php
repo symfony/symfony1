@@ -152,27 +152,54 @@ class sfViewConfigHandler extends sfYamlConfigHandler
   }
 
   /**
-   * Adds a layour statement statement to the data.
+   * Adds a layout statement statement to the data.
    *
-   * @param string The view name
+   * @param  string The view name
    *
    * @return string The PHP statement
    */
   protected function addLayout($viewName = '')
   {
-    $data = '';
-    if ($this->getConfigValue('has_layout', $viewName) && false !== $layout = $this->getConfigValue('layout', $viewName))
-    {
-      // decorator configuration
-      $data .= "  \$this->setDecoratorTemplate(sfConfig::get('symfony.view.'.\$this->moduleName.'_'.\$this->actionName.'_layout', '$layout'.\$this->getExtension()));\n";
-    }
+    // true if the user set 'has_layout' to true or set a 'layout' name for this specific action
+    $hasLocalLayout = isset($this->yamlConfig[$viewName]['layout']) || (isset($this->yamlConfig[$viewName]) && array_key_exists('has_layout', $this->yamlConfig[$viewName]));
 
-    // For XMLHttpRequest, we want no layout by default
-    // So, we check if the user requested has_layout: true or if he gave a layout: name for this particular action
-    $localLayout = isset($this->yamlConfig[$viewName]['layout']) || isset($this->yamlConfig[$viewName]['has_layout']);
-    if (!$localLayout && isset($data))
+    // the layout value
+    $layout = $this->getConfigValue('has_layout', $viewName) ? $this->getConfigValue('layout', $viewName) : false;
+
+    // the user set a decorator in the action
+    $data = <<<EOF
+  if (!is_null(\$layout = sfConfig::get('symfony.view.'.\$this->moduleName.'_'.\$this->actionName.'_layout')))
+  {
+    \$this->setDecoratorTemplate(false === \$layout ? false : \$layout.\$this->getExtension());
+  }
+EOF;
+
+    if ($hasLocalLayout)
     {
-      $data = "  if (!\$this->context->getRequest()->isXmlHttpRequest())\n  {\n  $data  }\n";
+      // the user set a decorator in view.yml for this action
+      $data .= <<<EOF
+
+  else
+  {
+    \$this->setDecoratorTemplate('' == '$layout' ? false : '$layout'.\$this->getExtension());
+  }
+
+EOF;
+    }
+    else
+    {
+      // no specific configuration
+      // set the layout to the 'all' view.yml value except if:
+      //   * the decorator template has already been set by "someone" (via view.configure_format for example)
+      //   * the request is an XMLHttpRequest request
+      $data .= <<<EOF
+
+  else if (is_null(\$this->getDecoratorTemplate()) && !\$this->context->getRequest()->isXmlHttpRequest())
+  {
+    \$this->setDecoratorTemplate('' == '$layout' ? false : '$layout'.\$this->getExtension());
+  }
+
+EOF;
     }
 
     return $data;

@@ -1,3 +1,7 @@
+format:
+  url:   /format_test.:sf_format
+  param: { module: format, action: index, sf_format: html }
+
 # default rules
 homepage:
   url:   /

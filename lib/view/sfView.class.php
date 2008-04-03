@@ -124,6 +124,23 @@ abstract class sfView
     $this->parameterHolder = new sfParameterHolder();
     $this->parameterHolder->add(sfConfig::get('mod_'.strtolower($moduleName).'_view_param', array()));
 
+    $request = $context->getRequest();
+    if (!is_null($format = $request->getRequestFormat()))
+    {
+      if ('html' != $format)
+      {
+        $this->setExtension('.'.$format.$this->getExtension());
+      }
+
+      if ($mimeType = $request->getMimeType($format))
+      {
+        $this->context->getResponse()->setContentType($mimeType);
+        $this->setDecorator(false);
+      }
+
+      $this->dispatcher->notify(new sfEvent($this, 'view.configure_format', array('format' => $format, 'response' => $context->getResponse(), 'request' => $context->getRequest())));
+    }
+
     // include view configuration
     $this->configure();
 
@@ -310,6 +327,11 @@ abstract class sfView
   public function setDecorator($boolean)
   {
     $this->decorator = (boolean) $boolean;
+
+    if (false === $boolean)
+    {
+      $this->decoratorTemplate = false;
+    }
   }
 
   /**
@@ -367,7 +389,7 @@ abstract class sfView
   {
     if (false === $template)
     {
-      $this->decorator = false;
+      $this->setDecorator(false);
 
       return;
     }
