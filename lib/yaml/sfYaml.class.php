@@ -60,7 +60,14 @@ class sfYaml
     // syck is prefered over sfYamlParser
     if (function_exists('syck_load'))
     {
-      $retval = syck_load($input);
+      try
+      {
+        $retval = syck_load($input);
+      }
+      catch (Exception $e)
+      {
+        throw new InvalidArgumentException(sprintf('Syck failed to parse %s, error was: "%s"', $file ? sprintf('file "%s"', $file) : 'string', $e->getMessage()));
+      }
 
       return is_array($retval) ? $retval : array();
     }
