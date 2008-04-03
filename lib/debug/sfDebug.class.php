@@ -150,7 +150,7 @@ class sfDebug
    *
    * @return array The user parameters
    */
-  public static function userAsArray(sfUser $user)
+  public static function userAsArray(sfUser $user = null)
   {
     if (!$user)
     {
