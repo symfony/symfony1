@@ -30,6 +30,7 @@ class sfBrowser
     $files              = array(),
     $vars               = array(),
     $defaultServerArray = array(),
+    $headers            = array(),
     $currentException   = null;
 
   /**
@@ -88,6 +89,19 @@ class sfBrowser
   public function setVar($name, $value)
   {
     $this->vars[$name] = $value;
+
+    return $this;
+  }
+
+  /**
+   * Sets a HTTP header for the very next request.
+   *
+   * @param string The header name
+   * @param string The header value
+   */
+  public function setHttpHeader($header, $value)
+  {
+    $this->headers[$header] = $value;
 
     return $this;
   }
@@ -186,6 +200,12 @@ class sfBrowser
     {
       $_SERVER[strtoupper($key)] = $value;
     }
+
+    foreach ($this->headers as $header => $value)
+    {
+      $_SERVER['HTTP_'.strtoupper(str_replace('-', '_', $header))] = $value;
+    }
+    $this->headers = array();
 
     // request parameters
     $_GET = $_POST = array();
