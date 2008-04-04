@@ -648,7 +648,14 @@
       $options['only'] = _array_or_string_for_javascript($options['only']);
     }
 
-    return javascript_tag("Sortable.create('$element_id', "._options_for_javascript($options).")");
+    $scrollPosition = "";
+    if (isset($options['scroll']))
+    {
+      $options['scroll'] = _array_or_string_for_javascript($options['scroll']);
+      $scrollPosition = "Position.includeScrollOffsets = true;";
+    }
+
+    return javascript_tag($scrollPosition."Sortable.create('$element_id', "._options_for_javascript($options).")");
   }
 
   /**
