@@ -75,6 +75,9 @@ test:
 #      suffix:             .
 #      default_module:     default
 #      default_action:     index
+#      variable_prefixes:  [':']
+#      segment_separators: ['/', '.']
+#      variable_regex:     '[\w\d_]+'
 #      debug:              %SF_DEBUG%
 #      logging:            %SF_LOGGING_ENABLED%
 #      cache:
