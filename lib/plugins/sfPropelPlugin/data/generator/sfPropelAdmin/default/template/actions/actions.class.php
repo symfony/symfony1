@@ -109,7 +109,15 @@ else
     {
       $this->update<?php echo $this->getClassName() ?>FromRequest();
 
-      $this->save<?php echo $this->getClassName() ?>($this-><?php echo $this->getSingularName() ?>);
+      try
+      {
+        $this->save<?php echo $this->getClassName() ?>($this-><?php echo $this->getSingularName() ?>);
+      }
+      catch (PropelException $e)
+      {
+        $this->getRequest()->setError('edit', 'Could not save the edited <?php echo sfInflector::humanize($this->getPluralName()) ?>.');
+        return $this->forward('<?php echo $this->getModuleName() ?>', 'list');
+      }
 
       $this->getUser()->setFlash('notice', 'Your modifications have been saved');
 
