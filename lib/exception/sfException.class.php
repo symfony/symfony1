@@ -108,11 +108,27 @@ class sfException extends Exception
     // send an error 500 if not in debug mode
     if (!sfConfig::get('sf_debug'))
     {
-      $file = sfConfig::get('sf_web_dir').'/errors/error500.php';
+      $files = array();
 
-      include is_readable($file) ? $file : dirname(__FILE__).'/data/error500.php';
+      // first check for app/project specific error page, can only do this if we have a context
+      if (class_exists('sfContext', false) && sfContext::hasInstance())
+      {
+        $appname = sfContext::getInstance()->getConfiguration()->getApplication();
+        $files[] = sfConfig::get('sf_apps_dir').'/'.$appname.'/config/error_500.php';
+        $files[] = sfConfig::get('sf_root_dir').'/config/error_500.php';
+      }
+      $files[] = sfConfig::get('sf_web_dir').'/errors/error500.php';
+      $files[] = dirname(__FILE__).'/data/error500.php';
 
-      return;
+      foreach($files as &$file)
+      {
+        if (is_readable($file))
+        {
+          include $file;
+          return;
+        }
+      }
+
     }
 
     $message = null !== $exception->getMessage() ? $exception->getMessage() : 'n/a';
