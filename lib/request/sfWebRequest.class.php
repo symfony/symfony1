@@ -665,7 +665,7 @@ class sfWebRequest extends sfRequest
 
     $preferredCultures = array_values(array_intersect($preferredCultures, $cultures));
 
-    return isset($preferredCultures[0]) ? $preferredCultures[0] : null;
+    return isset($preferredCultures[0]) ? $preferredCultures[0] : $cultures[0];
   }
 
   /**
