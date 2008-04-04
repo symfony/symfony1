@@ -262,7 +262,7 @@ function has_slot($name)
  */
 function include_slot($name)
 {
-  return ($v = get_slot($name) ? print $v : false);
+  return $v = get_slot($name) ? print $v : false;
 }
 
 /**
