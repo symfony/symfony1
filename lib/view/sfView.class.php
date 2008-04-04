@@ -149,12 +149,12 @@ abstract class sfView
 
   protected function initializeAttributeHolder($attributes = array())
   {
-    if ('both' == sfConfig::get('sf_escaping_strategy'))
+    if ('both' === sfConfig::get('sf_escaping_strategy'))
     {
       $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Escaping strategy "both" is deprecated, please use "on".', 'priority' => sfLogger::ERR)));
       sfConfig::set('sf_escaping_strategy', 'on');
     }
-    else if ('bc' == sfConfig::get('sf_escaping_strategy'))
+    else if ('bc' === sfConfig::get('sf_escaping_strategy'))
     {
       $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Escaping strategy "bc" is deprecated, please use "off".', 'priority' => sfLogger::ERR)));
       sfConfig::set('sf_escaping_strategy', 'off');
