@@ -27,18 +27,9 @@ Article:
 Author:
   fabien:
     name: Fabien
+    author_articles: [article_1, article_2]
   thomas:
     name: Thomas
+    author_articles: [article_1]
   helene:
     name: Hélène
-
-AuthorArticle:
-  article_1_fabien:
-    author_id:  fabien
-    article_id: article_1
-  article_1_thomas:
-    author_id:  thomas
-    article_id: article_1
-  article_2_fabien:
-    author_id:  fabien
-    article_id: article_2
