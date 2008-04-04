@@ -17,20 +17,11 @@ if (!include(dirname(__FILE__).'/../bootstrap/functional.php'))
 $b = new sfTestBrowser();
 
 $b->
-  get('/escaping/both')->
-  isStatusCode(200)->
-  isRequestParameter('module', 'escaping')->
-  isRequestParameter('action', 'both')->
-  responseContains('<h1>Lorem &lt;strong&gt;ipsum&lt;/strong&gt; dolor sit amet.</h1>')->
-  responseContains('<h2>Lorem &lt;strong&gt;ipsum&lt;/strong&gt; dolor sit amet.</h2>');
-;
-
-$b->
   get('/escaping/on')->
   isStatusCode(200)->
   isRequestParameter('module', 'escaping')->
   isRequestParameter('action', 'on')->
-  responseContains('<h1>-</h1>')->
+  responseContains('<h1>Lorem &lt;strong&gt;ipsum&lt;/strong&gt; dolor sit amet.</h1>')->
   responseContains('<h2>Lorem &lt;strong&gt;ipsum&lt;/strong&gt; dolor sit amet.</h2>');
 ;
 
@@ -40,5 +31,5 @@ $b->
   isRequestParameter('module', 'escaping')->
   isRequestParameter('action', 'off')->
   responseContains('<h1>Lorem <strong>ipsum</strong> dolor sit amet.</h1>')->
-  responseContains('<h2>-</h2>');
+  responseContains('<h2>Lorem <strong>ipsum</strong> dolor sit amet.</h2>');
 ;

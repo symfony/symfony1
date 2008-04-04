@@ -19,9 +19,10 @@ include(dirname(__FILE__).'/backendTestBrowser.class.php');
 
 $b = new backendTestBrowser();
 
+sfConfig::set('sf_escaping_strategy', 'off');
 launch_tests($b);
 
-sfConfig::set('sf_escaping_strategy', 'both');
+sfConfig::set('sf_escaping_strategy', 'on');
 launch_tests($b);
 
 function launch_tests($b)

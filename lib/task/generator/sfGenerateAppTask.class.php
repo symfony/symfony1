@@ -72,7 +72,7 @@ it throws a [sfCommandException|COMMENT].
 
 You can enable output escaping (to prevent XSS) by using the [escaping-strategy|COMMENT] option:
 
-  [./symfony generate:app frontend --escaping-strategy=both|INFO]
+  [./symfony generate:app frontend --escaping-strategy=on|INFO]
 
 You can enable session token in forms (to prevent CSRF) by defining
 a secret with the [csrf-secret|COMMENT] option:

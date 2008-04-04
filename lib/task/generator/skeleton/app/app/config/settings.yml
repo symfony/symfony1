@@ -25,7 +25,7 @@ all:
     csrf_secret:       ##CSRF_SECRET##     # Unique secret to enable CSRF protection or false to disable
 
     # Output escaping settings
-    escaping_strategy:      ##ESCAPING_STRATEGY##            # Determines how variables are made available to templates. Accepted values: both, on, off. The value off deactivates escaping completely and gives a slight boost.
+    escaping_strategy:      ##ESCAPING_STRATEGY##            # Determines how variables are made available to templates. Accepted values: on, off.
     escaping_method:        ESC_SPECIALCHARS # Function or helper used for escaping. Accepted values: ESC_RAW, ESC_ENTITIES, ESC_JS, ESC_JS_NO_ENTITIES, and ESC_SPECIALCHARS.
 
 #all:

@@ -74,7 +74,6 @@ abstract class sfOutputEscaper
    *
    * @param string $escapingMethod the escaping method (a PHP callable) to apply to the value
    * @param mixed $value the value to escape
-   * @param mixed the escaped value
    *
    * @return mixed Escaping value
    *
@@ -82,7 +81,7 @@ abstract class sfOutputEscaper
    */
   public static function escape($escapingMethod, $value)
   {
-    if (is_null($value) || 'esc_raw' == $escapingMethod)
+    if (is_null($value))
     {
       return $value;
     }

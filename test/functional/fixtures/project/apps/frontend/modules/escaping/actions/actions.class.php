@@ -17,11 +17,6 @@ class escapingActions extends sfActions
     $this->setTemplate('index');
   }
 
-  public function executeBoth()
-  {
-    sfConfig::set('sf_escaping_strategy', 'both');
-  }
-
   public function executeOn()
   {
     sfConfig::set('sf_escaping_strategy', 'on');

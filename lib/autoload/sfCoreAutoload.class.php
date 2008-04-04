@@ -395,7 +395,6 @@ class sfCoreAutoload
   'sfOutputEscaperIteratorDecorator' => 'view/escaper',
   'sfOutputEscaperObjectDecorator' => 'view/escaper',
   'sfOutputEscaperSafe' => 'view/escaper',
-  'sfEscapedViewParameterHolder' => 'view',
   'sfPHPView' => 'view',
   'sfPartialView' => 'view',
   'sfView' => 'view',
