@@ -111,16 +111,15 @@ class sfException extends Exception
       $files = array();
 
       // first check for app/project specific error page, can only do this if we have a context
-      if (class_exists('sfContext', false) && sfContext::hasInstance())
+      if (sfConfig::get('sf_app_config_dir'))
       {
-        $appname = sfContext::getInstance()->getConfiguration()->getApplication();
-        $files[] = sfConfig::get('sf_apps_dir').'/'.$appname.'/config/error_500.php';
-        $files[] = sfConfig::get('sf_root_dir').'/config/error_500.php';
+        $files[] = sfConfig::get('sf_app_config_dir').'/error_500.php';
       }
+      $files[] = sfConfig::get('sf_config_dir').'/error_500.php';
       $files[] = sfConfig::get('sf_web_dir').'/errors/error500.php';
       $files[] = dirname(__FILE__).'/data/error500.php';
 
-      foreach($files as &$file)
+      foreach ($files as $file)
       {
         if (is_readable($file))
         {
@@ -128,7 +127,6 @@ class sfException extends Exception
           return;
         }
       }
-
     }
 
     $message = null !== $exception->getMessage() ? $exception->getMessage() : 'n/a';
