@@ -92,7 +92,9 @@ catch (InvalidArgumentException $e)
   $t->pass('->setFormFormatterName() throws a InvalidArgumentException when the form format name is not associated with a formatter');
 }
 
-$t->is($w->getFormFormatters(), array('custom' => $customFormatter), '->getFormFormatters() returns an array of all formatter for this widget schema');
+$formatterNames = array_keys($w->getFormFormatters());
+sort($formatterNames);
+$t->is($formatterNames, array('custom', 'list', 'table'), '->getFormFormatters() returns an array of all formatter for this widget schema');
 
 // ->setNameFormat() ->getNameFormat() ->generateName()
 $t->diag('->setNameFormat() ->getNameFormat() ->generateName()');

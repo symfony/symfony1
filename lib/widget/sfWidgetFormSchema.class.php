@@ -131,18 +131,19 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   {
     $name = $this->getFormFormatterName();
 
-    if (isset($this->formFormatters[$name]))
+    if (!isset($this->formFormatters[$name]))
     {
-      return $this->formFormatters[$name];
+      $class = 'sfWidgetFormSchemaFormatter'.ucfirst($name);
+      
+      if (!class_exists($class))
+      {
+        throw new InvalidArgumentException(sprintf('The form formatter "%s" does not exist.', $name));
+      }
+      
+      $this->formFormatters[$name] = new $class();
     }
-
-    $class = 'sfWidgetFormSchemaFormatter'.ucfirst($name);
-    if (class_exists($class))
-    {
-      return new $class();
-    }
-
-    throw new InvalidArgumentException(sprintf('The form formatter "%s" does not exist.', $name));
+    
+    return $this->formFormatters[$name];
   }
 
   /**
@@ -301,7 +302,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    * Renders the widget.
    *
    * @param  string The name of the HTML widget
-   * @param  mixed  The value of the widget
+   * @param  mixed  The values of the widget
    * @param  array  An array of HTML attributes
    * @param  array  An array of errors
    *
