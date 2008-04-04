@@ -157,9 +157,21 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   {
     if (sfToolkit::hasLockFile(sfConfig::get('sf_cache_dir').DIRECTORY_SEPARATOR.$this->getApplication().'_'.$this->getEnvironment().'.lck', 5))
     {
-      // application is not available
-      $file = sfConfig::get('sf_web_dir').'/errors/unavailable.php';
-      include(is_readable($file) ? $file : sfConfig::get('sf_symfony_lib_dir').'/exception/data/unavailable.php');
+      // application is not available - we'll find the most specific unavailable page...
+      $files[] = sfConfig::get('sf_apps_dir').'/'.$this->getApplication().'/config/unavailable.php';
+      $files[] = sfConfig::get('sf_root_dir').'/config/unavailable.php';
+      $files[] = sfConfig::get('sf_web_dir').'/errors/unavailable.php';
+
+      // symfony default
+      $files[] = sfConfig::get('sf_symfony_lib_dir').'/exception/data/unavailable.php';
+
+      foreach($files as &$file)
+      {
+        if (is_readable($file))
+        {
+          include $file;
+        }
+      }
 
       die(1);
     }
