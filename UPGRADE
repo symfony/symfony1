@@ -575,7 +575,7 @@ Refer to this wiki page for more information on how to upgrade:
 Tasks
 -----
 
-The symfony command line task names have changed. They now use a pseudo-namespace syntax. The old task names still work--they are just aliases for the new task names. Here is a table showing the name changes:
+The symfony command line task names have changed. They now use a namespace syntax. The old task names still work--they are just aliases for the new task names. Here is a table showing the name changes:
 
     Old task name             |  New task name
     --------------------------|-----------------
@@ -593,10 +593,10 @@ The symfony command line task names have changed. They now use a pseudo-namespac
     init-project              | generate:project
     log-purge                 | log:clear
     log-rotate                | log:rotate
-    plugin-install            | plugin-install
-    plugin-list               | plugin-list
-    plugin-uninstall          | plugin-uninstall
-    plugin-upgrade            | plugin-upgrade
+    plugin-install            | plugin:install
+    plugin-list               | plugin:list
+    plugin-uninstall          | plugin:uninstall
+    plugin-upgrade            | plugin:upgrade
     propel-build-all          | propel:build-all
     propel-build-all-load     | propel:build-all-load
     propel-build-db           | propel:build-db
