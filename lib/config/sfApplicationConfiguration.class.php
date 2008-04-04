@@ -27,17 +27,18 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   /**
    * Constructor.
    *
-   * @param string  The environment name
-   * @param Boolean true to enable debug mode
-   * @param string  The project root directory
+   * @param string            The environment name
+   * @param Boolean           true to enable debug mode
+   * @param string            The project root directory
+   * @param sfEventDispatcher An event dispatcher
    */
-  public function __construct($environment, $debug, $rootDir = null)
+  public function __construct($environment, $debug, $rootDir = null, sfEventDispatcher $dispatcher = null)
   {
     $this->environment = $environment;
     $this->debug       = (boolean) $debug;
     $this->application = str_replace('Configuration', '', get_class($this));
 
-    parent::__construct($rootDir);
+    parent::__construct($rootDir, $dispatcher);
 
     $this->configure();
 

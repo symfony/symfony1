@@ -28,10 +28,9 @@ class sfProjectConfiguration
   /**
    * Constructor.
    */
-  public function __construct($rootDir = null)
+  public function __construct($rootDir = null, sfEventDispatcher $dispatcher = null)
   {
     sfProjectConfiguration::$active = $this;
-
     $this->rootDir = is_null($rootDir) ? self::guessRootDir() : realpath($rootDir);
 
     $this->symfonyLibDir = realpath(dirname(__FILE__).'/..');
@@ -40,7 +39,7 @@ class sfProjectConfiguration
     require_once $this->symfonyLibDir.'/autoload/sfCoreAutoload.class.php';
     sfCoreAutoload::register();
 
-    $this->dispatcher = new sfEventDispatcher();
+    $this->dispatcher = is_null($dispatcher) ? new sfEventDispatcher() : $dispatcher;
 
     ini_set('magic_quotes_runtime', 'off');
     ini_set('register_globals', 'off');
@@ -263,21 +262,22 @@ class sfProjectConfiguration
   /**
    * Returns a sfApplicationConfiguration configuration for a given application.
    *
-   * @param string  An application name
-   * @param string  The environment name
-   * @param Boolean true to enable debug mode
-   * @param string  The project root directory
+   * @param string            An application name
+   * @param string            The environment name
+   * @param Boolean           true to enable debug mode
+   * @param string            The project root directory
+   * @param sfEventDispatcher An event dispatcher
    *
    * @return sfApplicationConfiguration A sfApplicationConfiguration instance
    */
-  static public function getApplicationConfiguration($application, $environment, $debug, $rootDir = null)
+  static public function getApplicationConfiguration($application, $environment, $debug, $rootDir = null, sfEventDispatcher $dispatcher = null)
   {
     $class = $application.'Configuration';
 
     if (is_null(sfProjectConfiguration::$active))
     {
       // force initialization of sf_apps_dir config setting
-      new ProjectConfiguration();
+      new ProjectConfiguration(null, $dispatcher);
     }
 
     require_once sfConfig::get('sf_apps_dir').'/'.$application.'/config/'.$class.'.class.php';
@@ -287,6 +287,6 @@ class sfProjectConfiguration
       $rootDir = self::guessRootDir();
     }
 
-    return new $class($environment, $debug, $rootDir);
+    return new $class($environment, $debug, $rootDir, $dispatcher);
   }
 }

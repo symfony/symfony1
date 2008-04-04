@@ -22,6 +22,7 @@ if (!isset($root_dir))
 require_once $root_dir.'/config/ProjectConfiguration.class.php';
 $configuration = ProjectConfiguration::getApplicationConfiguration($app, 'test', isset($debug) ? $debug : true);
 sfContext::createInstance($configuration);
+$dispatcher = $configuration->getEventDispatcher();
 
 // remove all cache
 sf_functional_test_shutdown();
@@ -39,7 +40,7 @@ $files = glob(sfConfig::get('sf_lib_dir').'/model/om/*.php');
 if (false === $files || !count($files))
 {
   chdir(sfConfig::get('sf_root_dir'));
-  $task = new sfPropelBuildModelTask(new sfEventDispatcher(), new sfFormatter());
+  $task = new sfPropelBuildModelTask($dispatcher, new sfFormatter());
   ob_start();
   $task->run();
   $output = ob_get_clean();
@@ -49,7 +50,7 @@ $files = glob(sfConfig::get('sf_data_dir').'/sql/*.php');
 if (false === $files || !count($files))
 {
   chdir(sfConfig::get('sf_root_dir'));
-  $task = new sfPropelBuildSqlTask(new sfEventDispatcher(), new sfFormatter());
+  $task = new sfPropelBuildSqlTask($dispatcher, new sfFormatter());
   ob_start();
   $task->run();
   $output = ob_get_clean();
@@ -59,7 +60,7 @@ $files = glob(sfConfig::get('sf_lib_dir').'/form/base/*.php');
 if (false === $files || !count($files))
 {
   chdir(sfConfig::get('sf_root_dir'));
-  $task = new sfPropelBuildFormsTask(new sfEventDispatcher(), new sfFormatter());
+  $task = new sfPropelBuildFormsTask($dispatcher, new sfFormatter());
   $task->run();
 }
 
