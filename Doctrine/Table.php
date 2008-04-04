@@ -2063,5 +2063,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                 throw new Doctrine_Table_Exception('Cannot find by: ' . $by . '. Invalid column or relationship alias.');
             }
         }
+
+        throw new Doctrine_Table_Exception(sprintf('Unknown method %s::%s', get_class($this), $method));
     }
 }
