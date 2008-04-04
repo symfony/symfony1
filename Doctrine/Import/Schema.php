@@ -431,9 +431,9 @@ class Doctrine_Import_Schema
             if ( ! empty($array[$className]['inheritance'])) {
                 $this->_validateSchemaElement('inheritance', array_keys($definition['inheritance']));
 
-                // Default inheritance to class table inheritance
+                // Default inheritance to concrete inheritance
                 if ( ! isset($array[$className]['inheritance']['type'])) {
-                    $array[$className]['inheritance']['type'] = 'class_table';
+                    $array[$className]['inheritance']['type'] = 'concrete';
                 }
 
                 // Some magic for setting up the keyField and keyValue column aggregation options
