@@ -369,9 +369,12 @@ class sfFinder
         continue;
       }
 
+      $dir = str_replace(array('/', '\\'), '/', $dir);
+
       if ($this->relative)
       {
-        $files = array_merge($files, str_replace($dir.DIRECTORY_SEPARATOR, '', $finder->search_in($dir)));
+        $dir   = rtrim($dir, '/');
+        $files = array_merge($files, str_replace($dir.'/', '', str_replace(array('/', '\\'), '/', $finder->search_in($dir))));
       }
       else
       {
