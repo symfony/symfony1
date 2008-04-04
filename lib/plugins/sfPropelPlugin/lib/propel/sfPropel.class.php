@@ -14,13 +14,6 @@
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @version    SVN: $Id$
  */
-
-/**
- * @package    symfony
- * @subpackage propel
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
- */
 class sfPropel
 {
   static protected
@@ -33,6 +26,10 @@ class sfPropel
     if (!is_null($culture))
     {
       self::setDefaultCulture($culture);
+    }
+    else if (class_exists('sfContext', false) && sfContext::hasInstance())
+    {
+      self::setDefaultCulture(sfContext::getInstance()->getUser()->getCulture());
     }
   }
 

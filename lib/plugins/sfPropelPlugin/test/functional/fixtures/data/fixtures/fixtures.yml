@@ -33,3 +33,17 @@ Author:
     author_articles: [article_1]
   helene:
     name: Hélène
+
+Movie:
+  la_vita_e_bella:
+    director: Roberto Benigni
+
+MovieI18n:
+  la_vita_e_bella_it:
+    id:      la_vita_e_bella
+    culture: it
+    title:   La Vita è bella
+  la_vita_e_bella_fr:
+    id:      la_vita_e_bella
+    culture: fr
+    title:   La Vie est belle
