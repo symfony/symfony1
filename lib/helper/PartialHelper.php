@@ -20,7 +20,7 @@
 /**
  * Evaluates and echoes a component slot.
  * The component name is deduced from the definition of the view.yml
- * For a variable to be accessible to the component and its partial, 
+ * For a variable to be accessible to the component and its partial,
  * it has to be passed in the second argument.
  *
  * <b>Example:</b>
@@ -70,7 +70,7 @@ function get_component_slot($name, $vars = array())
 
 /**
  * Evaluates and echoes a component.
- * For a variable to be accessible to the component and its partial, 
+ * For a variable to be accessible to the component and its partial,
  * it has to be passed in the third argument.
  *
  * <b>Example:</b>
@@ -262,24 +262,7 @@ function has_slot($name)
  */
 function include_slot($name)
 {
-  $context = sfContext::getInstance();
-  $slots = $context->getResponse()->getSlots();
-
-  if (sfConfig::get('sf_logging_enabled'))
-  {
-    $context->getEventDispatcher()->notify(new sfEvent(null, 'application.log', array(sprintf('Get slot "%s"', $name))));
-  }
-
-  if (isset($slots[$name]))
-  {
-    echo $slots[$name];
-
-    return true;
-  }
-  else
-  {
-    return false;
-  }
+  return ($v = get_slot($name) ? print $v : false);
 }
 
 /**
