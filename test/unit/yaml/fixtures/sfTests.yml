@@ -74,3 +74,11 @@ yaml: |
       bar
 php: |
   array('foo' => array('bar' => "foo\n\n\n  \nbar\n"))
+---
+test: IP addresses
+brief: > 
+  IP addresses
+yaml: |
+  foo: 10.0.0.2
+php: |
+  array('foo' => '10.0.0.2')
