@@ -232,6 +232,8 @@ abstract class sfPropelBaseTask extends sfBaseTask
 
     $args[] = $taskName;
 
+    require_once dirname(__FILE__).'/sfPhing.class.php';
+
     Phing::startup();
     Phing::setProperty('phing.home', getenv('PHING_HOME'));
 
