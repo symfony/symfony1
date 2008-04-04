@@ -88,6 +88,39 @@ To upgrade a project:
 
 The remaining sections explains backward incompatible changes.
 
+Batch scripts
+-------------
+
+The use of batch scripts is deprecated, in favor of custom CLI tasks. The new CLI system makes it easy to add a new symfony command to a project, so refer to the Chapter 16 of the symfony book for a detailed how-to on CLI tasks.
+
+If you just want your old batch scripts to work, you need to change the first lines of the every batch scripts--the lines that look like a front controller's initialization. So change the following:
+
+    [php]
+    <?php
+    define('SF_ROOT_DIR',    realpath(dirname(__FILE__).'/..')); 
+    define('SF_APP',         'frontend'); 
+    define('SF_ENVIRONMENT', 'prod'); 
+    define('SF_DEBUG',       false); 
+    
+      require_once(SF_ROOT_DIR.DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.SF_APP.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'config.php');
+    // your batch code here
+
+To:
+
+    [php]
+    <?php
+    require_once(dirname(__FILE__).'/../config/ProjectConfiguration.class.php');
+    $configuration = ProjectConfiguration::getApplicationConfiguration('frontend', 'prod', false);
+    sfContext::createInstance($configuration);
+
+    // your batch code here
+
+If you need to initialize the database connection, just add the following lines:
+
+    [php]
+    $databaseManager = new sfDatabaseManager($configuration);
+    $databaseManager->loadConfiguration();
+
 Flash attributes
 ----------------
 
