@@ -25,6 +25,15 @@ test:
 #
 #  request:
 #    class: sfWebRequest
+#    param:
+#      formats:
+#        txt:  text/plain
+#        js:   [application/javascript, application/x-javascript, text/javascript]
+#        css:  text/css
+#        json: [application/json, application/x-json]
+#        xml:  [text/xml, application/xml, application/x-xml]
+#        rdf:  application/rdf+xml
+#        atom: application/atom+xml
 #
 #  response:
 #    class: sfWebResponse
