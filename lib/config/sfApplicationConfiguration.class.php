@@ -159,10 +159,9 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     {
       // application is not available - we'll find the most specific unavailable page...
       $files = array(
-        sfConfig::get('sf_apps_dir').'/'.$this->getApplication().'/config/unavailable.php',
-        sfConfig::get('sf_root_dir').'/config/unavailable.php',
+        sfConfig::get('sf_app_config_dir').'/unavailable.php',
+        sfConfig::get('sf_config_dir').'/unavailable.php',
         sfConfig::get('sf_web_dir').'/errors/unavailable.php',
-        // symfony default
         sfConfig::get('sf_symfony_lib_dir').'/exception/data/unavailable.php',
       );
 
