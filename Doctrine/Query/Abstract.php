@@ -29,7 +29,7 @@
  * @since       1.0
  * @version     $Revision: 1393 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
- * @todo        See {@link Doctrine_Query} 
+ * @todo        See {@link Doctrine_Query}
  */
 abstract class Doctrine_Query_Abstract
 {
@@ -61,39 +61,39 @@ abstract class Doctrine_Query_Abstract
      * constant for CREATE queries
      */
     const CREATE = 4;
-    
+
     /** @todo document the query states (and the transitions between them). */
     /**
      * A query object is in CLEAN state when it has NO unparsed/unprocessed DQL parts.
      */
     const STATE_CLEAN  = 1;
-    
+
     /**
-     * A query object is in state DIRTY when it has DQL parts that have not yet been 
+     * A query object is in state DIRTY when it has DQL parts that have not yet been
      * parsed/processed.
      */
     const STATE_DIRTY  = 2;
-    
+
     /**
      * A query is in DIRECT state when ... ?
      */
     const STATE_DIRECT = 3;
-    
+
     /**
      * A query object is on LOCKED state when ... ?
      */
     const STATE_LOCKED = 4;
-    
+
     /**
-     * @var array  Table alias map. Keys are SQL aliases and values DQL aliases. 
+     * @var array  Table alias map. Keys are SQL aliases and values DQL aliases.
      */
     protected $_tableAliasMap = array();
-    
+
     /**
      * @var Doctrine_View  The view object used by this query, if any.
      */
     protected $_view;
-    
+
     /**
      * @var integer $_state   The current state of this query.
      */
@@ -106,33 +106,33 @@ abstract class Doctrine_Query_Abstract
                                'where' => array(),
                                'set' => array(),
                                'having' => array());
-    
+
     /* Caching properties */
-    /** 
+    /**
      * @var Doctrine_Cache_Interface  The cache driver used for caching result sets.
      */
-    protected $_resultCache; 
+    protected $_resultCache;
     /**
      * @var boolean $_expireResultCache  A boolean value that indicates whether or not
      *                                   expire the result cache.
      */
     protected $_expireResultCache = false;
     protected $_resultCacheTTL;
-    
-    /** 
+
+    /**
      * @var Doctrine_Cache_Interface  The cache driver used for caching queries.
      */
     protected $_queryCache;
     protected $_expireQueryCache = false;
     protected $_queryCacheTTL;
-    
-    
+
+
     /**
      * @var Doctrine_Connection  The connection used by this query object.
      */
     protected $_conn;
-    
-    
+
+
     /**
      * @var array $_sqlParts  The SQL query string parts. Filled during the DQL parsing process.
      */
@@ -150,7 +150,7 @@ abstract class Doctrine_Query_Abstract
             'limit'     => false,
             'offset'    => false,
             );
-            
+
     /**
      * @var array $_dqlParts                an array containing all DQL query parts
      */
@@ -167,8 +167,8 @@ abstract class Doctrine_Query_Abstract
                             'limit'     => array(),
                             'offset'    => array(),
                             );
-            
-    
+
+
     /**
      * @var array $_queryComponents   Two dimensional array containing the components of this query,
      *                                informations about their relations and other related information.
@@ -188,55 +188,55 @@ abstract class Doctrine_Query_Abstract
      *                              component is mapped to a collection
      */
     protected $_queryComponents = array();
-    
+
     /**
      * @var integer $type                   the query type
      *
      * @see Doctrine_Query::* constants
      */
     protected $_type = self::SELECT;
-    
+
     /**
      * @var Doctrine_Hydrator   The hydrator object used to hydrate query results.
      */
     protected $_hydrator;
-    
+
     /**
      * @var Doctrine_Query_Tokenizer  The tokenizer that is used during the query parsing process.
      */
     protected $_tokenizer;
-    
+
     /**
      * @var Doctrine_Query_Parser  The parser that is used for query parsing.
      */
     protected $_parser;
-    
+
     /**
      * @var array $_tableAliasSeeds         A simple array keys representing table aliases and values
      *                                      table alias seeds. The seeds are used for generating short table
      *                                      aliases.
      */
     protected $_tableAliasSeeds = array();
-    
+
     /**
      * @var array $_options                 an array of options
      */
     protected $_options    = array(
                             'fetchMode'      => Doctrine::FETCH_RECORD
                             );
-    
+
     /**
      * @var array $_enumParams              an array containing the keys of the parameters that should be enumerated
      */
     protected $_enumParams = array();
-    
+
     /**
      * @var boolean
      */
     protected $_isLimitSubqueryUsed = false;
-    
+
     protected $_pendingSetParams = array();
-    
+
     /**
      * Constructor.
      *
@@ -256,7 +256,7 @@ abstract class Doctrine_Query_Abstract
         $this->_hydrator = $hydrator;
         $this->_tokenizer = new Doctrine_Query_Tokenizer();
     }
-    
+
     /**
      * setOption
      *
@@ -271,7 +271,7 @@ abstract class Doctrine_Query_Abstract
         }
         $this->_options[$name] = $value;
     }
-    
+
     /**
      * hasTableAlias
      * whether or not this object has given tableAlias
@@ -284,7 +284,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->hasSqlTableAlias($sqlTableAlias);
     }
-    
+
     /**
      * hasSqlTableAlias
      * whether or not this object has given tableAlias
@@ -296,7 +296,7 @@ abstract class Doctrine_Query_Abstract
     {
         return (isset($this->_tableAliasMap[$sqlTableAlias]));
     }
-    
+
     /**
      * getTableAliases
      * returns all table aliases
@@ -308,7 +308,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->getTableAliasMap();
     }
-    
+
     /**
      * getTableAliasMap
      * returns all table aliases
@@ -319,7 +319,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->_tableAliasMap;
     }
-    
+
     /**
      * getQueryPart
      * gets a query part from the query part array
@@ -334,7 +334,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->getSqlQueryPart($part);
     }
-    
+
     /**
      * getSqlQueryPart
      * gets an SQL query part from the SQL query part array
@@ -351,7 +351,7 @@ abstract class Doctrine_Query_Abstract
         }
         return $this->_sqlParts[$part];
     }
-    
+
     /**
      * setQueryPart
      * sets a query part in the query part array
@@ -366,7 +366,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->setSqlQueryPart($name, $part);
     }
-    
+
     /**
      * setSqlQueryPart
      * sets an SQL query part in the SQL query part array
@@ -394,7 +394,7 @@ abstract class Doctrine_Query_Abstract
 
         return $this;
     }
-    
+
     /**
      * addQueryPart
      * adds a query part in the query part array
@@ -409,7 +409,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->addSqlQueryPart($name, $part);
     }
-    
+
     /**
      * addSqlQueryPart
      * adds an SQL query part to the SQL query part array
@@ -431,7 +431,7 @@ abstract class Doctrine_Query_Abstract
         }
         return $this;
     }
-    
+
     /**
      * removeQueryPart
      * removes a query part from the query part array
@@ -445,7 +445,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->removeSqlQueryPart($name);
     }
-    
+
     /**
      * removeSqlQueryPart
      * removes a query part from the query part array
@@ -459,16 +459,39 @@ abstract class Doctrine_Query_Abstract
         if ( ! isset($this->_sqlParts[$name])) {
             throw new Doctrine_Query_Exception('Unknown query part ' . $name);
         }
-        
+
         if ($name == 'limit' || $name == 'offset') {
             $this->_sqlParts[$name] = false;
         } else {
             $this->_sqlParts[$name] = array();
         }
-        
+
         return $this;
     }
-    
+
+    /**
+     * removeDqlQueryPart
+     * removes a dql query part from the dql query part array
+     *
+     * @param string $name          the name of the query part to be removed
+     * @throws Doctrine_Query_Exception   if trying to remove unknown query part
+     * @return Doctrine_Hydrate     this object
+     */
+    public function removeDqlQueryPart($name)
+    {
+        if ( ! isset($this->_dqlParts[$name])) {
+            throw new Doctrine_Query_Exception('Unknown query part ' . $name);
+        }
+
+        if ($name == 'limit' || $name == 'offset') {
+            $this->_dqlParts[$name] = false;
+        } else {
+            $this->_dqlParts[$name] = array();
+        }
+
+        return $this;
+    }
+
     /**
      * setView
      * sets a database view this query object uses
@@ -481,7 +504,7 @@ abstract class Doctrine_Query_Abstract
     {
         $this->_view = $view;
     }
-    
+
     /**
      * getView
      * returns the view associated with this query object (if any)
@@ -492,7 +515,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->_view;
     }
-    
+
     /**
      * limitSubqueryUsed
      *
@@ -502,7 +525,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->_isLimitSubqueryUsed;
     }
-    
+
     /**
      * convertEnums
      * convert enum parameters to their integer equivalents
@@ -510,14 +533,14 @@ abstract class Doctrine_Query_Abstract
      * @return array    converted parameter array
      */
     public function convertEnums($params)
-    {        
-        $table = $this->getRoot();        
-        
+    {
+        $table = $this->getRoot();
+
         // $position tracks the position of the parameter, to ensure we're converting
         // the right parameter value when simple ? placeholders are used.
         // This only works because SET is only allowed in update statements and it's
         // the first place where parameters can occur.. see issue #935
-        $position = 0; 
+        $position = 0;
         foreach ($this->_pendingSetParams as $fieldName => $value) {
             $e = explode('.', $fieldName);
             $fieldName = isset($e[1]) ? $e[1]:$e[0];
@@ -536,10 +559,10 @@ abstract class Doctrine_Query_Abstract
                 }
             }
         }
-        
+
         return $params;
     }
-    
+
     /**
      * applyInheritance
      * applies column aggregation inheritance to DQL / SQL query
@@ -599,7 +622,7 @@ abstract class Doctrine_Query_Abstract
 
         return $str;
     }
-    
+
     /**
      * getTableAlias
      * some database such as Oracle need the identifier lengths to be < ~30 chars
@@ -617,7 +640,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->getSqlTableAlias($componentAlias, $tableName);
     }
-    
+
     /**
      * getSqlTableAlias
      * some database such as Oracle need the identifier lengths to be < ~30 chars
@@ -644,7 +667,7 @@ abstract class Doctrine_Query_Abstract
 
         return $this->generateTableAlias($componentAlias, $tableName);
     }
-    
+
     /**
      * generateNewTableAlias
      * generates a new alias from given table alias
@@ -657,7 +680,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->generateNewSqlTableAlias($oldAlias);
     }
-    
+
     /**
      * generateNewSqlTableAlias
      * generates a new alias from given table alias
@@ -683,7 +706,7 @@ abstract class Doctrine_Query_Abstract
 
         return $oldAlias;
     }
-    
+
     /**
      * getTableAliasSeed
      * returns the alias seed for given table alias
@@ -696,7 +719,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->getSqlTableAliasSeed($sqlTableAlias);
     }
-    
+
     /**
      * getSqlTableAliasSeed
      * returns the alias seed for given table alias
@@ -711,7 +734,7 @@ abstract class Doctrine_Query_Abstract
         }
         return $this->_tableAliasSeeds[$sqlTableAlias];
     }
-    
+
     /**
      * hasAliasDeclaration
      * whether or not this object has a declaration for given component alias
@@ -723,7 +746,7 @@ abstract class Doctrine_Query_Abstract
     {
         return isset($this->_queryComponents[$componentAlias]);
     }
-    
+
     /**
      * getAliasDeclaration
      * get the declaration for given component alias
@@ -736,7 +759,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->getQueryComponent($componentAlias);
     }
-    
+
     /**
      * getQueryComponent
      * get the declaration for given component alias
@@ -752,7 +775,7 @@ abstract class Doctrine_Query_Abstract
 
         return $this->_queryComponents[$componentAlias];
     }
-    
+
     /**
      * copyAliases
      * copy aliases from another Hydrate object
@@ -771,7 +794,7 @@ abstract class Doctrine_Query_Abstract
         $this->_tableAliasSeeds = $query->_tableAliasSeeds;
         return $this;
     }
-    
+
     /**
      * getRootAlias
      * returns the alias of the the root component
@@ -787,7 +810,7 @@ abstract class Doctrine_Query_Abstract
 
         return key($this->_queryComponents);
     }
-    
+
     /**
      * getRootDeclaration
      * returns the root declaration
@@ -799,7 +822,7 @@ abstract class Doctrine_Query_Abstract
         $map = reset($this->_queryComponents);
         return $map;
     }
-    
+
     /**
      * getRoot
      * returns the root component for this object
@@ -816,10 +839,10 @@ abstract class Doctrine_Query_Abstract
 
         return $map['table'];
     }
-    
+
     /**
      * generateTableAlias
-     * generates a table alias from given table name and associates 
+     * generates a table alias from given table name and associates
      * it with given component alias
      *
      * @param string $componentAlias    the component alias to be associated with generated table alias
@@ -831,10 +854,10 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->generateSqlTableAlias($componentAlias, $tableName);
     }
-    
+
     /**
      * generateSqlTableAlias
-     * generates a table alias from given table name and associates 
+     * generates a table alias from given table name and associates
      * it with given component alias
      *
      * @param string $componentAlias    the component alias to be associated with generated table alias
@@ -863,7 +886,7 @@ abstract class Doctrine_Query_Abstract
 
         return $alias;
     }
-    
+
     /**
      * getComponentAlias
      * get component alias associated with given table alias
@@ -878,11 +901,11 @@ abstract class Doctrine_Query_Abstract
         }
         return $this->_tableAliasMap[$sqlTableAlias];
     }
-    
+
     /**
-     * _execute 
-     * 
-     * @param array $params 
+     * _execute
+     *
+     * @param array $params
      * @return PDOStatement  The executed PDOStatement.
      */
     protected function _execute($params)
@@ -893,7 +916,7 @@ abstract class Doctrine_Query_Abstract
             if ($this->_queryCache || $this->_conn->getAttribute(Doctrine::ATTR_QUERY_CACHE)) {
                 $queryCacheDriver = $this->getQueryCacheDriver();
                 // calculate hash for dql query
-                $dql = $this->getDql(); 
+                $dql = $this->getDql();
                 $hash = md5($dql . 'DOCTRINE_QUERY_CACHE_SALT');
                 $cached = $queryCacheDriver->fetch($hash);
                 if ($cached) {
@@ -909,14 +932,14 @@ abstract class Doctrine_Query_Abstract
         } else {
             $query = $this->_view->getSelectSql();
         }
-        
+
         $params = $this->convertEnums($params);
 
         if ($this->isLimitSubqueryUsed() &&
                 $this->_conn->getAttribute(Doctrine::ATTR_DRIVER_NAME) !== 'mysql') {
             $params = array_merge($params, $params);
         }
-        
+
         if ($this->_type !== self::SELECT) {
             return $this->_conn->exec($query, $params);
         }
@@ -933,13 +956,13 @@ abstract class Doctrine_Query_Abstract
      * @return Doctrine_Collection            the root collection
      */
     public function execute($params = array(), $hydrationMode = null)
-    {        
+    {
         $params = array_merge($this->_params['join'],
-                              $this->_params['set'], 
+                              $this->_params['set'],
                               $this->_params['where'],
-                              $this->_params['having'], 
+                              $this->_params['having'],
                               $params);
-        
+
         if ($this->_resultCache) {
             $cacheDriver = $this->getResultCacheDriver();
 
@@ -968,15 +991,15 @@ abstract class Doctrine_Query_Abstract
             if (is_integer($stmt)) {
                 return $stmt;
             }
-            
+
             $this->_hydrator->setQueryComponents($this->_queryComponents);
             return $this->_hydrator->hydrateResultSet($stmt, $this->_tableAliasMap, $hydrationMode);
         }
     }
-    
+
     /**
      * Constructs the query from the cached form.
-     * 
+     *
      * @param string  The cached query, in a serialized form.
      * @return array  The custom component that was cached together with the essential
      *                query data. This can be either a result set (result caching)
@@ -1007,10 +1030,10 @@ abstract class Doctrine_Query_Abstract
             }
         }
         $this->_queryComponents = $queryComponents;
-        
+
         return $customComponent;
     }
-    
+
     /**
      * getCachedForm
      * returns the cached form of this query for given resultSet
@@ -1035,10 +1058,10 @@ abstract class Doctrine_Query_Abstract
                 $componentInfo[$alias][] = $components['map'];
             }
         }
-        
+
         return serialize(array($customComponent, $componentInfo, $this->getTableAliasMap()));
     }
-    
+
     /**
      * addSelect
      * adds fields to the SELECT part of the query
@@ -1050,8 +1073,8 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->_addDqlQueryPart('select', $select, true);
     }
-    
-    /** 
+
+    /**
      * addTableAlias
      * adds an alias for table and associates it with given component alias
      *
@@ -1064,8 +1087,8 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->addSqlTableAlias($tableAlias, $componentAlias);
     }
-    
-    /** 
+
+    /**
      * addSqlTableAlias
      * adds an SQL table alias and associates it a component alias
      *
@@ -1155,7 +1178,7 @@ abstract class Doctrine_Query_Abstract
     public function whereNotIn($expr, $params = array())
     {
         return $this->whereIn($expr, $params, true);
-    } 
+    }
 
     /**
      * addGroupBy
@@ -1219,7 +1242,7 @@ abstract class Doctrine_Query_Abstract
      * @return Doctrine_Query
      */
     public function distinct($flag = true)
-    {   
+    {
         $this->_sqlParts['distinct'] = (bool) $flag;
         return $this;
     }
@@ -1273,7 +1296,7 @@ abstract class Doctrine_Query_Abstract
     {
         if (is_array($key)) {
             foreach ($key as $k => $v) {
-                $this->set($k, '?', array($v));                               
+                $this->set($k, '?', array($v));
             }
             return $this;
         } else {
@@ -1360,7 +1383,7 @@ abstract class Doctrine_Query_Abstract
      * @return Doctrine_Query
      */
     public function where($where, $params = array())
-    {        
+    {
         $this->_params['where'] = array();
         if (is_array($params)) {
             $this->_params['where'] = $params;
@@ -1387,7 +1410,7 @@ abstract class Doctrine_Query_Abstract
         } else {
             $this->_params['having'][] = $params;
         }
-        
+
         return $this->_addDqlQueryPart('having', $having);
     }
 
@@ -1426,7 +1449,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->_addDqlQueryPart('offset', $offset);
     }
-    
+
     /**
      * getSql
      * shortcut for {@link getSqlQuery()}.
@@ -1437,7 +1460,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->getSqlQuery();
     }
-    
+
     /**
      * clear
      * resets all the variables
@@ -1461,13 +1484,13 @@ abstract class Doctrine_Query_Abstract
                     'offset'    => false,
                     );
     }
-    
+
     public function setHydrationMode($hydrationMode)
     {
         $this->_hydrator->setHydrationMode($hydrationMode);
         return $this;
     }
-    
+
     /**
      * @deprecated
      */
@@ -1475,7 +1498,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->_queryComponents;
     }
-    
+
     /**
      * Gets the components of this query.
      */
@@ -1483,7 +1506,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->_queryComponents;
     }
-    
+
     /**
      * Return the SQL parts.
      *
@@ -1494,7 +1517,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->getSqlParts();
     }
-    
+
     /**
      * Return the SQL parts.
      *
@@ -1504,7 +1527,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->_sqlParts;
     }
-    
+
     /**
      * getType
      *
@@ -1523,7 +1546,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->_type;
     }
-    
+
     /**
      * useCache
      *
@@ -1536,7 +1559,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->useResultCache($driver, $timeToLive);
     }
-    
+
     /**
      * useResultCache
      *
@@ -1554,7 +1577,7 @@ abstract class Doctrine_Query_Abstract
 
         return $this->setResultCacheLifeSpan($timeToLive);
     }
-    
+
     /**
      * useQueryCache
      *
@@ -1567,7 +1590,7 @@ abstract class Doctrine_Query_Abstract
         $this->_queryCache = $driver;
         return $this->setQueryCacheLifeSpan($timeToLive);
     }
-    
+
     /**
      * expireCache
      *
@@ -1579,7 +1602,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->expireResultCache($expire);
     }
-    
+
     /**
      * expireCache
      *
@@ -1591,7 +1614,7 @@ abstract class Doctrine_Query_Abstract
         $this->_expireResultCache = true;
         return $this;
     }
-    
+
     /**
      * expireQueryCache
      *
@@ -1603,7 +1626,7 @@ abstract class Doctrine_Query_Abstract
         $this->_expireQueryCache = true;
         return $this;
     }
-    
+
     /**
      * setCacheLifeSpan
      *
@@ -1615,7 +1638,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->setResultCacheLifeSpan($timeToLive);
     }
-    
+
     /**
      * setResultCacheLifeSpan
      *
@@ -1631,7 +1654,7 @@ abstract class Doctrine_Query_Abstract
 
         return $this;
     }
-    
+
     /**
      * setQueryCacheLifeSpan
      *
@@ -1647,7 +1670,7 @@ abstract class Doctrine_Query_Abstract
 
         return $this;
     }
-    
+
     /**
      * getCacheDriver
      * returns the cache driver associated with this object
@@ -1659,7 +1682,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->getResultCacheDriver();
     }
-    
+
     /**
      * getResultCacheDriver
      * returns the cache driver used for caching result sets
@@ -1674,7 +1697,7 @@ abstract class Doctrine_Query_Abstract
             return $this->_conn->getResultCacheDriver();
         }
     }
-    
+
     /**
      * getQueryCacheDriver
      * returns the cache driver used for caching queries
@@ -1689,7 +1712,7 @@ abstract class Doctrine_Query_Abstract
             return $this->_conn->getQueryCacheDriver();
         }
     }
-    
+
     /**
      * getConnection
      *
@@ -1699,10 +1722,10 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->_conn;
     }
-    
-    /** 
+
+    /**
      * Adds a DQL part to the internal parts collection.
-     * 
+     *
      * @param string $queryPartName  The name of the query part.
      * @param string $queryPart      The actual query part to add.
      * @param boolean $append        Whether to append $queryPart to already existing
@@ -1716,11 +1739,11 @@ abstract class Doctrine_Query_Abstract
         } else {
             $this->_dqlParts[$queryPartName] = array($queryPart);
         }
-        
+
         $this->_state = Doctrine_Query::STATE_DIRTY;
-        return $this;     
+        return $this;
     }
-    
+
     /**
      * _processDqlQueryPart
      * parses given query part
@@ -1749,7 +1772,7 @@ abstract class Doctrine_Query_Abstract
             }
         }
     }
-    
+
     /**
      * _getParser
      * parser lazy-loader
@@ -1774,16 +1797,16 @@ abstract class Doctrine_Query_Abstract
 
         return $this->_parsers[$name];
     }
-    
+
     /**
      * Gets the SQL query that corresponds to this query object.
-     * The returned SQL syntax depends on the connection driver that is used 
+     * The returned SQL syntax depends on the connection driver that is used
      * by this query object at the time of this method call.
      *
      * @param array $params
      */
     abstract public function getSqlQuery($params = array());
-    
+
     /**
      * parseDqlQuery
      * parses a dql query
@@ -1792,7 +1815,7 @@ abstract class Doctrine_Query_Abstract
      * @return Doctrine_Query_Abstract  this object
      */
     abstract public function parseDqlQuery($query);
-    
+
     /**
      * @deprecated
      */
@@ -1800,7 +1823,7 @@ abstract class Doctrine_Query_Abstract
     {
         return $this->parseDqlQuery($query);
     }
-    
+
     /**
      * @deprecated
      */
