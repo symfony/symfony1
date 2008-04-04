@@ -9,7 +9,6 @@
  */
 
 set_include_path(get_include_path().PATH_SEPARATOR.dirname(__FILE__).'/../vendor');
-require_once('phing/Phing.php');
 
 /**
  * Base class for all symfony Propel tasks.
@@ -241,26 +240,5 @@ abstract class sfPropelBaseTask extends sfBaseTask
     $m->runBuild();
 
     chdir(sfConfig::get('sf_root_dir'));
-  }
-}
-
-/**
- * @package    symfony
- * @subpackage command
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id$
- */
-class sfPhing extends Phing
-{
-  function getPhingVersion()
-  {
-    return 'sfPhing';
-  }
-
-  public static function shutdown($exitcode = 0)
-  {
-    self::getTimer()->stop();
-
-    throw new Exception(sprintf('Problem executing Phing task (%s).', $exitcode));
   }
 }
