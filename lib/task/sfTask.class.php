@@ -118,6 +118,18 @@ abstract class sfTask
   }
 
   /**
+   * Add an argument.
+   *
+   * This method always use the sfCommandArgument class to create an option.
+   *
+   * @see sfCommandArgument::__construct()
+   */
+  public function addArgument($name, $mode = null, $help = '', $default = null)
+  {
+    $this->arguments[] = new sfCommandArgument($name, $mode, $help, $default);
+  }
+
+  /**
    * Returns the options objects.
    *
    * @return sfCommandOption An array of sfCommandOption objects.
@@ -135,6 +147,18 @@ abstract class sfTask
   public function addOptions($options)
   {
     $this->options = array_merge($this->options, $options);
+  }
+
+  /**
+   * Add an option.
+   *
+   * This method always use the sfCommandOption class to create an option.
+   *
+   * @see sfCommandOption::__construct()
+   */
+  public function addOption($name, $shortcut = null, $mode = null, $help = '', $default = null)
+  {
+    $this->options[] = new sfCommandOption($name, $shortcut, $mode, $help, $default);
   }
 
   /**
