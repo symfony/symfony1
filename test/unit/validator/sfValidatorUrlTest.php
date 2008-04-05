@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(13, new lime_output_color());
+$t = new lime_test(14, new lime_output_color());
 
 $v = new sfValidatorUrl();
 
@@ -24,6 +24,7 @@ foreach (array(
   'http://127.0.0.1/',
   'http://127.0.0.1:80/',
   'ftp://google.com/foo.tgz', 
+  'ftps://google.com/foo.tgz', 
 ) as $url)
 {
   $t->is($v->clean($url), $url, '->clean() checks that the value is a valid URL');

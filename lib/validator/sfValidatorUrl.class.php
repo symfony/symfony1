@@ -26,7 +26,7 @@ class sfValidatorUrl extends sfValidatorRegex
     parent::configure($options, $messages);
 
     $this->setOption('pattern', '~^
-      (https?|ftp)://                        # http or https or ftp 
+      (https?|ftps?)://                       # http or ftp (+SSL)
       (
         ([a-z0-9-]+\.)+[a-z]{2,6}             # a domain name
           |                                   #  or
