@@ -5,7 +5,7 @@ use_helper('Form', 'Javascript', 'Helper');
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -63,7 +63,7 @@ function object_admin_double_list($object, $method, $options = array(), $callbac
 
   // get the lists of objects
   list($all_objects, $objects_associated, $associated_ids) = _get_object_list($object, $method, $options, $callback);
-  
+
   $objects_unassociated = array();
   foreach ($all_objects as $object)
   {
@@ -102,15 +102,13 @@ function object_admin_double_list($object, $method, $options = array(), $callbac
 </div>
 ';
 
-  $response = sfContext::getInstance()->getResponse();
-  $response->addJavascript(sfConfig::get('sf_prototype_web_dir').'/js/prototype');
-  $response->addJavascript(sfConfig::get('sf_admin_web_dir').'/js/double_list');
+  sfContext::getInstance()->getResponse()->addJavascript(sfConfig::get('sf_admin_web_dir').'/js/double_list.js');
 
   return sprintf($html,
     $label_all,
     $select1,
-    submit_image_tag(sfConfig::get('sf_admin_web_dir').'/images/next.png', "style=\"border: 0\" onclick=\"double_list_move(\$('{$name1}'), \$('{$name2}')); return false;\""),
-    submit_image_tag(sfConfig::get('sf_admin_web_dir').'/images/previous.png', "style=\"border: 0\" onclick=\"double_list_move(\$('{$name2}'), \$('{$name1}')); return false;\""),
+    submit_image_tag(sfConfig::get('sf_admin_web_dir').'/images/next.png', "style=\"border: 0\" onclick=\"double_list_move('{$name1}), '{$name2}'); return false;\""),
+    submit_image_tag(sfConfig::get('sf_admin_web_dir').'/images/previous.png', "style=\"border: 0\" onclick=\"double_list_move('{$name2}', '{$name1}'); return false;\""),
     $label_assoc,
     $select2
   );

@@ -1,6 +1,8 @@
 
-function double_list_move(src, dest)
+function double_list_move(srcId, destId)
 {
+  var src=document.getElementById(srcId);
+  var dest=document.getElementById(destId);
   for (var i = 0; i < src.options.length; i++)
   {
     if (src.options[i].selected)
@@ -12,14 +14,9 @@ function double_list_move(src, dest)
   }
 }
 
-function double_list_submit(form_name)
+function double_list_submit()
 {
-  // default id to allow using a custom form id
-  if( ! form_name ) {
-    var form_name = 'sf_admin_edit_form';
-  }
-
-  var form = $(form_name);
+  var form = document.getElementById('sf_admin_edit_form');
   var element;
 
   // find multiple selects with name beginning 'associated_' and select all their options
