@@ -16,7 +16,7 @@ Calendar._SMN = new Array('led','úno','bře','dub','kvě','črn','čvc','srp','
 
 // First day of the week. "0" means display Sunday first, "1" means display
 // Monday first, etc.
-Calendar._FD = 0;
+Calendar._FD = 1;
 
 // tooltips
 Calendar._TT = {};
