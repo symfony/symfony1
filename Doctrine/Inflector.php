@@ -142,7 +142,8 @@ class Doctrine_Inflector
                              'series',
                              'fish',
                              'sheep',
-                             'sms');
+                             'sms',
+                             'status');
 
         $irregular = array('person' => 'people',
                            'man'    => 'men',

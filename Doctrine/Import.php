@@ -199,14 +199,14 @@ class Doctrine_Import extends Doctrine_Connection_Module
     public function importSchema($directory, array $databases = array(), array $options = array())
     {
         $connections = Doctrine_Manager::getInstance()->getConnections();
-        
+
         foreach ($connections as $name => $connection) {
           // Limit the databases to the ones specified by $databases.
           // Check only happens if array is not empty
           if ( ! empty($databases) && ! in_array($name, $databases)) {
             continue;
           }
-          
+
           $builder = new Doctrine_Import_Builder();
           $builder->setTargetPath($directory);
           $builder->setOptions($options);
@@ -215,20 +215,27 @@ class Doctrine_Import extends Doctrine_Connection_Module
           foreach ($connection->import->listTables() as $table) {
               $definition = array();
               $definition['tableName'] = $table;
-              $definition['className'] = Doctrine_Inflector::classify($table);
 
               if( ! isset($options['singularize']) || $options['singularize'] !== false) {
-                  $definition['className'] = Doctrine_Inflector::singularize($definition['className']);
+                  $e = explode('_', Doctrine_Inflector::tableize($table));
+                  foreach ($e as $k => $v) {
+                      $e[$k] = Doctrine_Inflector::singularize($v);
+                  }
+                  $classTable = implode('_', $e);
+              } else {
+                  $classTable = Doctrine_Inflector::tableize($table);
               }
 
+              $definition['className'] = Doctrine_Inflector::classify($classTable);
+
               $definition['columns'] = $connection->import->listTableColumns($table);
-              
+
               $builder->buildRecord($definition);
-        
+
               $classes[] = $definition['className'];
           }
         }
-        
+
         return $classes;
     }
 }

@@ -90,7 +90,7 @@ class Doctrine_Export_Schema
                     $data['columns'][$name] = $type;
                 }
             }
-            
+            $table['tableName'] = $data['tableName'];
             $table['columns'] = $data['columns'];
             
             $relations = $recordTable->getRelations();
