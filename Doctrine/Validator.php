@@ -71,65 +71,24 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
     public function validateRecord(Doctrine_Record $record)
     {
         $table = $record->getTable();
-        $columns   = $table->getColumns();
-        $component = $table->getComponentName();
-
-        $errorStack = $record->getErrorStack();
 
         // if record is transient all fields will be validated
         // if record is persistent only the modified fields will be validated
-        $fields = ($record->exists()) ? $record->getModified() : $record->getData();
-        $err = array();
+        $fields = $record->exists() ? $record->getModified():$record->getData();
         foreach ($fields as $fieldName => $value) {
-            if ($value === self::$_null) {
-                $value = null;
-            } else if ($value instanceof Doctrine_Record) {
-                $value = $value->getIncremented();
-            }
-            
-            $dataType = $table->getTypeOf($fieldName);
-
-            // Validate field type, if type validation is enabled
-            if ($table->getAttribute(Doctrine::ATTR_VALIDATE) & Doctrine::VALIDATE_TYPES) {
-                if ( ! self::isValidType($value, $dataType)) {
-                    $errorStack->add($fieldName, 'type');
-                }
-                if ($dataType == 'enum') {
-                    $enumIndex = $table->enumIndex($fieldName, $value);
-                    if ($enumIndex === false) {
-                        $errorStack->add($fieldName, 'enum');
-                    }
-                }
-            }
-            
-            // Validate field length, if length validation is enabled
-            if ($table->getAttribute(Doctrine::ATTR_VALIDATE) & Doctrine::VALIDATE_LENGTHS) {
-                if ( ! $this->validateLength($value, $dataType, $table->getFieldLength($fieldName))) {
-                    $errorStack->add($fieldName, 'length');
-                }
-            }
-
-            // Run all custom validators
-            foreach ($table->getFieldValidators($fieldName) as $validatorName => $args) {
-                if ( ! is_string($validatorName)) {
-                    $validatorName = $args;
-                    $args = array();
-                }
-                $validator = self::getValidator($validatorName);
-                $validator->invoker = $record;
-                $validator->field = $fieldName;
-                $validator->args = $args;
-                if ( ! $validator->validate($value)) {
-                    $errorStack->add($fieldName, $validatorName);
-                }
-            }
+            $table->validateField($fieldName, $value, $record);
         }
     }
 
     /**
      * Validates the length of a field.
+     *
+     * @param string $value
+     * @param string $type
+     * @param string $maximumLength
+     * @return boolean $success
      */
-    private function validateLength($value, $type, $maximumLength)
+    public static function validateLength($value, $type, $maximumLength)
     {
         if ($type == 'timestamp' || $type == 'integer' || $type == 'enum') {
             return true;
@@ -152,8 +111,8 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
     public function hasErrors()
     {
         return (count($this->stack) > 0);
-    }    
-    
+    }
+
     /**
      * returns whether or not the given variable is
      * valid type
@@ -169,7 +128,7 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
          } else if (is_object($var)) {
              return $type == 'object';
          }
-     
+
          switch ($type) {
              case 'float':
              case 'double':

@@ -1543,6 +1543,73 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
+     * validateField
+     *
+     * @param string $name
+     * @param string $value
+     * @param Doctrine_Record $record
+     * @return Doctrine_Validator_ErrorStack $errorStack
+     */
+    public function validateField($fieldName, $value, Doctrine_Record $record = null)
+    {
+        if ($record instanceof Doctrine_Record) {
+            $errorStack = $record->getErrorStack();
+        } else {
+            $errorStack = new Doctrine_Validator_ErrorStack($this->getOption('name'));
+        }
+
+        if ($value === self::$_null) {
+            $value = null;
+        } else if ($value instanceof Doctrine_Record) {
+            $value = $value->getIncremented();
+        }
+
+        $dataType = $this->getTypeOf($fieldName);
+
+        // Validate field type, if type validation is enabled
+        if ($this->getAttribute(Doctrine::ATTR_VALIDATE) & Doctrine::VALIDATE_TYPES) {
+            if ( ! Doctrine_Validator::isValidType($value, $dataType)) {
+                $errorStack->add($fieldName, 'type');
+            }
+            if ($dataType == 'enum') {
+                $enumIndex = $this->enumIndex($fieldName, $value);
+                if ($enumIndex === false) {
+                    $errorStack->add($fieldName, 'enum');
+                }
+            }
+        }
+
+        // Validate field length, if length validation is enabled
+        if ($this->getAttribute(Doctrine::ATTR_VALIDATE) & Doctrine::VALIDATE_LENGTHS) {
+            if ( ! Doctrine_Validator::validateLength($value, $dataType, $this->getFieldLength($fieldName))) {
+                $errorStack->add($fieldName, 'length');
+            }
+        }
+
+        // Run all custom validators
+        foreach ($this->getFieldValidators($fieldName) as $validatorName => $args) {
+            if ( ! is_string($validatorName)) {
+                $validatorName = $args;
+                $args = array();
+            }
+
+            $validator = Doctrine_Validator::getValidator($validatorName);
+
+            if ($record instanceof Doctrine_Record) {
+                $validator->invoker = $record;
+            }
+
+            $validator->field = $fieldName;
+            $validator->args = $args;
+            if ( ! $validator->validate($value)) {
+                $errorStack->add($fieldName, $validator);
+            }
+        }
+
+        return $errorStack;
+    }
+
+    /**
      * getColumnCount
      *
      * @return integer      the number of columns in this table
@@ -1570,7 +1637,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      */
     public function removeColumn($fieldName)
     {
-    	$columnName = $this->getColumnName($fieldName);
+        $columnName = $this->getColumnName($fieldName);
 
         unset($this->_fieldNames[$columnName]);
 
@@ -1857,7 +1924,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
 
     public function addGenerator(Doctrine_Record_Generator $generator, $name = null)
     {
-    	if ($name === null) {
+        if ($name === null) {
             $this->_generators[] = $generator;
         } else {
             $this->_generators[$name] = $generator;
@@ -1873,7 +1940,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      */
     public function bindQueryParts(array $queryParts)
     {
-    	$this->_options['queryParts'] = $queryParts;
+        $this->_options['queryParts'] = $queryParts;
 
         return $this;
     }
@@ -1888,7 +1955,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      */
     public function bindQueryPart($queryPart, $value)
     {
-    	$this->_options['queryParts'][$queryPart] = $value;
+        $this->_options['queryParts'][$queryPart] = $value;
 
         return $this;
     }
