@@ -46,9 +46,7 @@ class Doctrine_Connection_Mysql extends Doctrine_Connection_Common
      */
     public function __construct(Doctrine_Manager $manager, $adapter)
     {
-        $this->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
         $this->setAttribute(Doctrine::ATTR_DEFAULT_TABLE_TYPE, 'INNODB');
-
         $this->supported = array(
                           'sequences'            => 'emulated',
                           'indexes'              => true,
@@ -90,6 +88,23 @@ class Doctrine_Connection_Mysql extends Doctrine_Connection_Common
         parent::__construct($manager, $adapter);
     }
 
+    /**
+     * Overrides connect Method, to add specific attributes
+     * PDO emulate prepares is required to avoid bugs on mysql < 5.1
+     * when trying to prepare DROP DATABASE or CREATE DATABASE statements
+     *
+     * @see Doctrine_Connection :: connect();
+     * @return boolean connected
+     */
+     public function connect()
+     {
+         $connected = parent::connect();
+         $this->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+
+         return $connected;
+     }
+    
+    
     /**
      * returns the name of the connected database
      *
