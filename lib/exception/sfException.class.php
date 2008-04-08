@@ -143,6 +143,7 @@ class sfException extends Exception
       $settingsTable = self::formatArrayAsHtml(sfDebug::settingsAsArray());
       $requestTable  = self::formatArrayAsHtml(sfDebug::requestAsArray($context->getRequest()));
       $responseTable = self::formatArrayAsHtml(sfDebug::responseAsArray($context->getResponse()));
+      $userTable     = self::formatArrayAsHtml(sfDebug::userAsArray($context->getUser()));
       $globalsTable  = self::formatArrayAsHtml(sfDebug::globalsAsArray());
     }
 

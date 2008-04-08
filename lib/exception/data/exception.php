@@ -46,6 +46,9 @@
   <h2>response <a href="#" onclick="toggle('sf_response'); return false;">...</a></h2>
   <div id="sf_response" style="display: none"><?php echo $responseTable ?></div>
 
+  <h2>user <a href="#" onclick="toggle('sf_user'); return false;">...</a></h2>
+  <div id="sf_user" style="display: none"><?php echo $userTable ?></div>
+
   <h2>global vars <a href="#" onclick="toggle('sf_globals'); return false;">...</a></h2>
   <div id="sf_globals" style="display: none"><?php echo $globalsTable ?></div>
 
