@@ -47,7 +47,7 @@ class sfSimpleAutoload
    *
    * @param  string         The file path to save the cache
    *
-   * @return sfCoreAutoload A sfCoreAutoload implementation instance.
+   * @return sfSimpleAutoload A sfSimpleAutoload implementation instance.
    */
   static public function getInstance($cacheFile = null)
   {
