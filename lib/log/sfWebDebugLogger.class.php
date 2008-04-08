@@ -89,7 +89,7 @@ class sfWebDebugLogger extends sfLogger
     // * if not rendering to the client
     // * if HTTP headers only
     $response = $event->getSubject();
-    if (
+    if (!$this->context->has('request') || !$this->context->has('response') || !$this->context->has('controller') ||
       $this->context->getRequest()->isXmlHttpRequest() ||
       strpos($response->getContentType(), 'html') === false ||
       $response->getStatusCode() == 304 ||

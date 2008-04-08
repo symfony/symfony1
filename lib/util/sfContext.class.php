@@ -478,9 +478,16 @@ class sfContext
   public function shutdown()
   {
     // shutdown all factories
-    $this->getUser()->shutdown();
-    $this->getStorage()->shutdown();
-    $this->getRouting()->shutdown();
+    if($this->has('user'))
+    {
+      $this->getUser()->shutdown();
+      $this->getStorage()->shutdown();
+    }
+
+    if ($this->has('routing'))
+    {
+    	$this->getRouting()->shutdown();
+    }
 
     if (sfConfig::get('sf_use_database'))
     {
