@@ -614,8 +614,8 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
      */
     public function buildFlushTree(array $tables)
     {
-        // determine classes to order. only necessary because we the $tables param
-        // can contains strings or table objects...
+        // determine classes to order. only necessary because the $tables param
+        // can contain strings or table objects...
         $classesToOrder = array();
         foreach ($tables as $table) {
             if ( ! ($table instanceof Doctrine_Table)) {
@@ -624,6 +624,10 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
             $classesToOrder[] = $table->getComponentName();
         }
         $classesToOrder = array_unique($classesToOrder);
+        
+        if (count($classesToOrder) < 2) {
+            return $classesToOrder;
+        }
         
         // build the correct order
         $flushList = array();
