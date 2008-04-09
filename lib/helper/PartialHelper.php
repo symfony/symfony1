@@ -186,10 +186,11 @@ function get_partial($templateName, $vars = array())
  * Begins the capturing of the slot.
  *
  * @param  string slot name
+ * @param  string The slot content
  *
  * @see    end_slot
  */
-function slot($name)
+function slot($name, $value = null)
 {
   $context = sfContext::getInstance();
   $response = $context->getResponse();
@@ -200,15 +201,22 @@ function slot($name)
     throw new sfCacheException(sprintf('A slot named "%s" is already started.', $name));
   }
 
-  $slot_names[] = $name;
-
-  $response->setSlot($name, '');
-  sfConfig::set('symfony.view.slot_names', $slot_names);
-
   if (sfConfig::get('sf_logging_enabled'))
   {
     $context->getEventDispatcher()->notify(new sfEvent(null, 'application.log', array(sprintf('Set slot "%s"', $name))));
   }
+
+  if (!is_null($value))
+  {
+    $response->setSlot($name, $value);
+
+    return;
+  }
+
+  $slot_names[] = $name;
+
+  $response->setSlot($name, '');
+  sfConfig::set('symfony.view.slot_names', $slot_names);
 
   ob_start();
   ob_implicit_flush(0);
