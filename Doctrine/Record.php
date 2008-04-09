@@ -627,6 +627,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         if ($state == null) {
             return $this->_state;
         }
+        
         $err = false;
         if (is_integer($state)) {
             if ($state >= 1 && $state <= 6) {

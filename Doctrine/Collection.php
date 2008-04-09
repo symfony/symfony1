@@ -845,9 +845,7 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
 
     /**
      * delete
-     * single shot delete
      * deletes all records from this collection
-     * and uses only one database query to perform this operation
      *
      * @return Doctrine_Collection
      */

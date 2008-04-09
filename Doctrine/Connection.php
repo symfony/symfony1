@@ -591,8 +591,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         $query = 'DELETE FROM '
                . $this->quoteIdentifier($table->getTableName())
                . ' WHERE ' . implode(' AND ', $tmp);
-
-
+        
         return $this->exec($query, array_values($identifier));
     }
 
@@ -627,7 +626,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
               . ' SET ' . implode(', ', $set)
               . ' WHERE ' . implode(' = ? AND ', $table->getIdentifierColumnNames())
               . ' = ?';
-
+          
         return $this->exec($sql, $params);
     }
 
@@ -1006,6 +1005,8 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         try {
             if ( ! empty($params)) {
                 $stmt = $this->prepare($query);
+                //var_dump($params);
+                //echo $query."<br/>";
                 $stmt->execute($params);
 
                 return $stmt->rowCount();

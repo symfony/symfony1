@@ -60,6 +60,7 @@ abstract class Doctrine_Relation implements ArrayAccess
     const ONE   = 0;
     const MANY  = 2;
     
+    
     protected $definition = array('alias'       => true,
                                   'foreign'     => true,
                                   'local'       => true,
@@ -67,14 +68,15 @@ abstract class Doctrine_Relation implements ArrayAccess
                                   'type'        => true,
                                   'table'       => true,
                                   'localTable'  => true,
-                                  'name'        => false,
-                                  'refTable'    => false,
-                                  'onDelete'    => false,
-                                  'onUpdate'    => false,
-                                  'deferred'    => false,
-                                  'deferrable'  => false,
-                                  'constraint'  => false,
+                                  'name'        => null,
+                                  'refTable'    => null,
+                                  'onDelete'    => null,
+                                  'onUpdate'    => null,
+                                  'deferred'    => null,
+                                  'deferrable'  => null,
+                                  'constraint'  => null,
                                   'equal'       => false,
+                                  'cascade'     => array() // application-level cascades
                                   );
 
     /**
@@ -134,7 +136,7 @@ abstract class Doctrine_Relation implements ArrayAccess
             if (isset($definition[$key])) {
                 $def[$key] = $definition[$key];
             } else {
-                $def[$key] = null;          
+                $def[$key] = $this->definition[$key];          
             }
         }
 
@@ -224,6 +226,17 @@ abstract class Doctrine_Relation implements ArrayAccess
     final public function getType()
     {
         return $this->definition['type'];
+    }
+    
+    /**
+     * Checks whether this relation cascades deletions to the related objects
+     * on the application level.
+     *
+     * @return boolean
+     */
+    public function isCascadeDelete()
+    {
+        return in_array('delete', $this->definition['cascade']);
     }
 
     /**

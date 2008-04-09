@@ -159,6 +159,11 @@ class Doctrine_Transaction extends Doctrine_Connection_Module
     {
         return $this->_nestingLevel;
     }
+    
+    public function getInternalTransactionLevel()
+    {
+        return $this->_internalNestingLevel;
+    }
 
     /**
      * beginTransaction

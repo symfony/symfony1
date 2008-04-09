@@ -490,12 +490,23 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     /**
      * Checks whether a field identifier is of type autoincrement
      *
-     * @return boolean TRUE  if the field is autoincrement
+     * @return boolean TRUE  if the identifier is autoincrement
      *                 FALSE otherwise
      */
     public function isIdentifierAutoincrement()
     {
         return $this->getIdentifierType() === Doctrine::IDENTIFIER_AUTOINC;
+    }
+    
+    /**
+     * Checks whether a field identifier is a composite key.
+     *
+     * @return boolean TRUE  if the identifier is a composite key,
+     *                 FALSE otherwise
+     */
+    public function isIdentifierComposite()
+    {
+        return $this->getIdentifierType() === Doctrine::IDENTIFIER_COMPOSITE;
     }
 
     /**
