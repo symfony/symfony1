@@ -27,9 +27,9 @@ class sfPropel
     {
       self::setDefaultCulture($culture);
     }
-    else if (class_exists('sfContext', false) && sfContext::hasInstance())
+    else if (class_exists('sfContext', false) && sfContext::hasInstance() && $user = sfContext::getInstance()->getUser())
     {
-      self::setDefaultCulture(sfContext::getInstance()->getUser()->getCulture());
+      self::setDefaultCulture($user->getCulture());
     }
   }
 
