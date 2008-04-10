@@ -363,7 +363,7 @@ class sfPropelFormGenerator extends sfGenerator
 
     foreach ($this->getManyToManyTables() as $tables)
     {
-      if (($m = strlen($tables['relatedTable']->getName().'_list')) > $max)
+      if (($m = strlen($tables['middleTable']->getName().'_list')) > $max)
       {
         $max = $m;
       }
