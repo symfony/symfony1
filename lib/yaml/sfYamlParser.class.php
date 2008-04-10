@@ -107,7 +107,7 @@ class sfYamlParser
             throw new InvalidArgumentException(sprintf('In place substitution must point to a reference on line %s.', $this->currentLine));
           }
         }
-        else if (isset($values['value']) && preg_match('#^&(?P<ref>\.+) *(?P<value>.*)#', $values['value'], $matches))
+        else if (isset($values['value']) && preg_match('#^&(?P<ref>[^ ]+) *(?P<value>.*)#', $values['value'], $matches))
         {
           $isRef = $matches['ref'];
           $values['value'] = $matches['value'];
