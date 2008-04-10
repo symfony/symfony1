@@ -334,6 +334,7 @@ class sfCoreAutoload
   'sfUpgrade' => 'task/project/upgrade1.1',
   'sfViewCacheManagerUpgrade' => 'task/project/upgrade1.1',
   'sfWebDebugUpgrade' => 'task/project/upgrade1.1',
+  'sfTaskInitTask' => 'task/task',
   'sfBaseTask' => 'task',
   'sfCommandApplicationTask' => 'task',
   'sfFilesystem' => 'task',
