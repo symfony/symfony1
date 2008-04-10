@@ -71,8 +71,11 @@ function highlight_text($text, $phrase, $highlighter = '<strong class="highlight
  * Extracts an excerpt from the +text+ surrounding the +phrase+ with a number of characters on each side determined
  * by +radius+. If the phrase isn't found, nil is returned. Ex:
  *   excerpt("hello my world", "my", 3) => "...lo my wo..."
+ * If +excerpt_space+ is true the text will only be truncated on whitespace, never inbetween words.
+ * This might return a smaller radius than specified.
+ *   excerpt("hello my world", "my", 3, "...", true) => "... my ..."
  */
-function excerpt_text($text, $phrase, $radius = 100, $excerpt_string = '...')
+function excerpt_text($text, $phrase, $radius = 100, $excerpt_string = '...', $excerpt_space = false)
 {
   if ($text == '' || $phrase == '')
   {
@@ -84,11 +87,26 @@ function excerpt_text($text, $phrase, $radius = 100, $excerpt_string = '...')
   {
     $start_pos = max($found_pos - $radius, 0);
     $end_pos = min($found_pos + strlen($phrase) + $radius, strlen($text));
+    $excerpt = substr($text, $start_pos, $end_pos - $start_pos);
 
     $prefix = ($start_pos > 0) ? $excerpt_string : '';
     $postfix = $end_pos < strlen($text) ? $excerpt_string : '';
 
-    return $prefix.substr($text, $start_pos, $end_pos - $start_pos).$postfix;
+    if ($excerpt_space)
+    {
+      //only cut off at ends where $exceprt_string is added
+      if($prefix)
+      {
+        $excerpt = preg_replace('/^(\S+)?\s+?/', ' ', $excerpt);
+      }
+      if($postfix)
+      {
+        $excerpt = preg_replace('/\s+?(\S+)?$/', ' ', $excerpt);
+      }
+
+    }
+
+    return $prefix.$excerpt.$postfix;
   }
 }
 

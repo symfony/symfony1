@@ -12,7 +12,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/TagHelper.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/TextHelper.php');
 
-$t = new lime_test(43, new lime_output_color());
+$t = new lime_test(45, new lime_output_color());
 
 // truncate_text()
 $t->diag('truncate_text()');
@@ -73,7 +73,9 @@ $t->is(excerpt_text('foo', '', 5), '', 'text_excerpt() return an empty string if
 $t->is(excerpt_text("This is a beautiful morning", "beautiful", 5), "...is a beautiful morn...", 'text_excerpt() creates an excerpt of a text');
 $t->is(excerpt_text("This is a beautiful morning", "this", 5), "This is a...", 'text_excerpt() creates an excerpt of a text');
 $t->is(excerpt_text("This is a beautiful morning", "morning", 5), "...iful morning", 'text_excerpt() creates an excerpt of a text');
-$t->is(excerpt_text("This is a beautiful morning", "morning", 5), "...iful morning", 'text_excerpt() creates an excerpt of a text');
+$t->is(excerpt_text("This is a beautiful morning", "morning", 5, '...', true), "... morning", 'text_excerpt() takes a fifth argument allowing excerpt on whitespace');
+$t->is(excerpt_text("This is a beautiful morning", "beautiful", 5, '...', true), "... a beautiful ...", 'text_excerpt() takes a fifth argument allowing excerpt on whitespace');
+$t->is(excerpt_text("This is a beautiful morning", "This", 5, '...', true), "This is ...", 'text_excerpt() takes a fifth argument allowing excerpt on whitespace');
 $t->is(excerpt_text("This is a beautiful morning", "day"), '', 'text_excerpt() does nothing if the search string is not in input');
 
 // wrap_text()
