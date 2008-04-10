@@ -331,8 +331,6 @@ class sfFinder
   {
     $files    = array();
     $here_dir = getcwd();
-    $numargs  = func_num_args();
-    $arg_list = func_get_args();
 
     $finder = clone $this;
 
@@ -344,6 +342,8 @@ class sfFinder
     }
 
     // first argument is an array?
+    $numargs  = func_num_args();
+    $arg_list = func_get_args();
     if ($numargs == 1 && is_array($arg_list[0]))
     {
       $arg_list = $arg_list[0];
@@ -352,34 +352,29 @@ class sfFinder
 
     for ($i = 0; $i < $numargs; $i++)
     {
-      $real_dir = realpath($arg_list[$i]);
+      $dir = realpath($arg_list[$i]);
 
-      // absolute path?
-      if (!self::isPathAbsolute($real_dir))
-      {
-        $dir = $here_dir.DIRECTORY_SEPARATOR.$real_dir;
-      }
-      else
-      {
-        $dir = $real_dir;
-      }
-
-      if (!is_dir($real_dir))
+      if (!is_dir($dir))
       {
         continue;
       }
 
-      $dir = str_replace(array('/', '\\'), '/', $dir);
+      $dir = str_replace('\\', '/', $dir);
+
+      // absolute path?
+      if (!self::isPathAbsolute($dir))
+      {
+        $dir = $here_dir.'/'.$dir;
+      }
+
+      $new_files = str_replace('\\', '/', $finder->search_in($dir));
 
       if ($this->relative)
       {
-        $dir   = rtrim($dir, '/');
-        $files = array_merge($files, str_replace($dir.'/', '', str_replace(array('/', '\\'), '/', $finder->search_in($dir))));
+        $new_files = str_replace(rtrim($dir, '/').'/', '', $new_files);
       }
-      else
-      {
-        $files = array_merge($files, $finder->search_in($dir));
-      }
+
+      $files = array_merge($files, $new_files);
     }
 
     if ($this->sort == 'name')
