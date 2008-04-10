@@ -106,10 +106,10 @@ class Base<?php echo $this->table->getPhpName() ?>Form extends BaseFormPropel
     $c->add(<?php echo $tables['middleTable']->getPhpName() ?>Peer::<?php echo strtoupper($tables['column']->getColumnName()) ?>, $this->object->getPrimaryKey());
     <?php echo $tables['middleTable']->getPhpName() ?>Peer::doDelete($c, $con);
 
-    $values = $this->getValues();
-    if (is_array($values['<?php echo $tables['middleTable']->getName() ?>_list']))
+    $values = $this->getValue('<?php echo $tables['middleTable']->getName() ?>_list');
+    if (is_array($values))
     {
-      foreach ($values['<?php echo $tables['middleTable']->getName() ?>_list'] as $value)
+      foreach ($values as $value)
       {
         $obj = new <?php echo $tables['middleTable']->getPhpName() ?>();
         $obj->set<?php echo $tables['column']->getPhpName() ?>($this->object->getPrimaryKey());
