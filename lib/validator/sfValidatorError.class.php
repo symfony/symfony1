@@ -104,11 +104,20 @@ class sfValidatorError extends Exception
    * error messages:
    *
    * $i18n->__($error->getMessageFormat(), $error->getArguments());
+   * 
+   * If no message format has been set in the validator, the exception standard
+   * message is returned.
    *
    * @return string The message format
    */
   public function getMessageFormat()
   {
-    return $this->validator->getMessage($this->code);
+    $messageFormat = $this->validator->getMessage($this->code);
+    if (!$messageFormat)
+    {
+      $messageFormat = $this->getMessage();
+    }
+    
+    return $messageFormat;
   }
 }

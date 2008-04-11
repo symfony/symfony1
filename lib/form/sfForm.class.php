@@ -258,7 +258,7 @@ class sfForm implements ArrayAccess
     {
       if (!isset($labels[$i]))
       {
-        $labels[$i] = sprintf('%s (%s)', $widgetSchema->generateLabelName($name), $i);
+        $labels[$i] = sprintf('%s (%s)', $widgetSchema->getFormFormatter()->generateLabelName($name), $i);
       }
 
       $defaults[$i] = $form->getDefaults();

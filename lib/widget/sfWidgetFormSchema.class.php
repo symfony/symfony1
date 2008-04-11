@@ -140,7 +140,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
         throw new InvalidArgumentException(sprintf('The form formatter "%s" does not exist.', $name));
       }
       
-      $this->formFormatters[$name] = new $class();
+      $this->formFormatters[$name] = new $class($this);
     }
     
     return $this->formFormatters[$name];
@@ -342,7 +342,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
         $field = $this->renderField($name, $value, $error);
 
         // don't add a label tag and errors if we embed a form schema
-        $label = $widget instanceof sfWidgetFormSchema ? $this->generateLabelName($name) : $this->generateLabel($name);
+        $label = $widget instanceof sfWidgetFormSchema ? $this->getFormFormatter()->generateLabelName($name) : $this->getFormFormatter()->generateLabel($name);
         $error = $widget instanceof sfWidgetFormSchema ? array() : $error;
 
         $rows[] = $formFormat->formatRow($label, $field, $error, $this->getHelp($name));
@@ -388,49 +388,12 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
       {
         if (isset($errors[$name]))
         {
-          $globalErrors[$this->generateLabelName($name)] = $errors[$name];
+          $globalErrors[$this->getFormFormatter()->generateLabelName($name)] = $errors[$name];
         }
       }
     }
 
     return $globalErrors;
-  }
-
-  /**
-   * Generates a label for the given field name.
-   *
-   * @param  string The field name
-   *
-   * @return string The label tag
-   */
-  public function generateLabel($name)
-  {
-    $labelName = $this->generateLabelName($name);
-
-    if (false === $labelName)
-    {
-      return '';
-    }
-
-    return $this->renderContentTag('label', $labelName, array('for' => $this->generateId($this->generateName($name))));
-  }
-
-  /**
-   * Generates the label name for the given field name.
-   *
-   * @param  string The field name
-   *
-   * @return string The label name
-   */
-  public function generateLabelName($name)
-  {
-    $label = $this->getLabel($name);
-    if (!$label && false !== $label)
-    {
-      $label = str_replace('_', ' ', ucfirst($name));
-    }
-
-    return $label;
   }
 
   /**

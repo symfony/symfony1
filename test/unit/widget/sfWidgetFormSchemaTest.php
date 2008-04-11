@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(61, new lime_output_color());
+$t = new lime_test(57, new lime_output_color());
 
 $w1 = new sfWidgetFormInput(array(), array('class' => 'foo1'));
 $w2 = new sfWidgetFormInput();
@@ -74,7 +74,7 @@ $w = new sfWidgetFormSchema(array('w1' => $w1));
 
 $t->is(get_class($w->getFormFormatter()), 'sfWidgetFormSchemaFormatterTable', '->getFormFormatter() returns a sfWidgetSchemaFormatter object');
 
-$w->addFormFormatter('custom', $customFormatter = new sfWidgetFormSchemaFormatterList());
+$w->addFormFormatter('custom', $customFormatter = new sfWidgetFormSchemaFormatterList($w));
 $w->setFormFormatterName('custom');
 $t->is(get_class($w->getFormFormatter()), 'sfWidgetFormSchemaFormatterList', '->addFormFormatter() associates a name with a sfWidgetSchemaFormatter object');
 
@@ -140,12 +140,14 @@ $t->is($company->getParent(), $author, '->getParent() returns the parent widget 
 // ->setLabels() ->setLabel() ->getLabels() ->getLabel() ->generateLabelName()
 $t->diag('->setLabels() ->setLabel() ->getLabels() ->getLabel() ->generateLabelName()');
 $w = new sfWidgetFormSchema();
-$t->is($w->generateLabelName('first_name'), 'First name', '->generateLabelName() generates a label value from a label name');
-$w->setLabels(array('first_name' => 'The first name'));
-$t->is($w->generateLabelName('first_name'), 'The first name', '->setLabels() changes all current labels');
 $w->setLabel('first_name', 'A first name');
-$t->is($w->generateLabelName('first_name'), 'A first name', '->setLabel() sets a label value');
 $t->is($w->getLabels(), array('first_name' => 'A first name'), '->getLabels() returns all current labels');
+
+$w->setLabels(array('first_name' => 'The first name'));
+$t->is($w->getFormFormatter()->generateLabelName('first_name'), 'The first name', '->setLabels() changes all current labels');
+
+$w->setLabel('first_name', 'A first name');
+$t->is($w->getFormFormatter()->generateLabelName('first_name'), 'A first name', '->setLabel() sets a label value');
 
 // ->setHelps() ->getHelps() ->setHelp() ->getHelp()
 $t->diag('->setHelps() ->getHelps() ->setHelp() ->getHelp()');
@@ -154,15 +156,6 @@ $w->setHelps(array('first_name', 'Please, provide your first name'));
 $t->is($w->getHelps(), array('first_name', 'Please, provide your first name'), '->setHelps() changes all help messages');
 $w->setHelp('last_name', 'Please, provide your last name');
 $t->is($w->getHelp('last_name'), 'Please, provide your last name', '->setHelp() changes one help message');
-
-// ->generateLabel()
-$t->diag('->generateLabel()');
-$w = new sfWidgetFormSchema();
-$w->setLabel('first_name', false);
-$t->is($w->generateLabel('first_name'), '', '->generateLabelName() returns an empty string if the label is false');
-$w->setLabel('first_name', 'The First Name');
-$t->is($w->generateLabel('first_name'), '<label for="first_name">The First Name</label>', '->generateLabelName() returns a label tag');
-$t->is($w->generateLabel('last_name'), '<label for="last_name">Last name</label>', '->generateLabelName() returns a label tag');
 
 // ->needsMultipartForm()
 $t->diag('->needsMultipartForm()');

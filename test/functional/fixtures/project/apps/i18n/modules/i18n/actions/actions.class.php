@@ -29,4 +29,13 @@ class i18nActions extends sfActions
 
     $this->forward('i18n', 'index');
   }
+  
+  public function executeI18nForm(sfWebRequest $request)
+  {
+    $this->form = new I18nForm();
+    if ($request->isMethod('post'))
+    {
+      $this->form->bind($request->getParameter('i18n'));
+    }
+  }
 }

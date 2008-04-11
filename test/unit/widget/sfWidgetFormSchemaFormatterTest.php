@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(10, new lime_output_color());
+$t = new lime_test(22, new lime_output_color());
 
 class MyFormatter extends sfWidgetFormSchemaFormatter
 {
@@ -23,20 +23,28 @@ class MyFormatter extends sfWidgetFormSchemaFormatter
   {
     return parent::unnestErrors($errors, $prefix);
   }
+  
+  static public function dropTranslationCallable()
+  {
+    self::$translationCallable = null;
+  }
 }
 
-$f = new MyFormatter();
+$w1 = new sfWidgetFormInput();
+$w2 = new sfWidgetFormInput();
+$w = new sfWidgetFormSchema(array('w1' => $w1, 'w2' => $w2));
+$f = new MyFormatter($w);
 
 // ->formatRow()
 $t->diag('->formatRow()');
 $output = <<<EOF
 <li>
-  label
-  <input />help
+  <label>label</label>
+  <input /><p>help</p>
 </li>
 
 EOF;
-$t->is($f->formatRow('label', '<input />', array(), 'help', ''), $output, '->formatRow() formats a field in a row');
+$t->is($f->formatRow('<label>label</label>', '<input />', array(), '<p>help</p>', ''), $output, '->formatRow() formats a field in a row');
 
 // ->formatErrorRow()
 $t->diag('->formatErrorRow()');
@@ -69,3 +77,69 @@ foreach (array('RowFormat', 'ErrorRowFormat', 'ErrorListFormatInARow', 'ErrorRow
   $f->$setter($value = rand(1, 99999));
   $t->is($f->$getter(), $value, sprintf('->%s() ->%s()', $getter, $setter));
 }
+
+$t->diag('::setTranslationCallable() ::getTranslationCallable()');
+function my__($string)
+{
+  return sprintf('[%s]', $string);
+}
+
+class myI18n
+{
+  static public function __($string)
+  {
+    return my__($string);
+  }
+}
+MyFormatter::setTranslationCallable('my__');
+
+$t->is(MyFormatter::getTranslationCallable(), 'my__', 'get18nCallable() retrieves i18n callable correctly');
+
+MyFormatter::setTranslationCallable(new sfCallable('my__'));
+$t->isa_ok(MyFormatter::getTranslationCallable(), 'sfCallable', 'get18nCallable() retrieves i18n sfCallable correctly');
+
+try
+{
+  $f->setTranslationCallable('foo');
+  $t->fail('setTranslationCallable() does not throw InvalidException when i18n callable is invalid');
+}
+catch (InvalidArgumentException $e)
+{
+  $t->pass('setTranslationCallable() throws InvalidException if i18n callable is not a valid callable');
+}
+catch (Exception $e)
+{
+  $t->fail('setTranslationCallable() throws unexpected exception');
+}
+
+$t->diag('->translate()');
+$t->is(MyFormatter::translate('label'), '[label]', 'translate() call i18n sfCallable as expected');
+
+MyFormatter::setTranslationCallable(array('myI18n', '__'));
+$t->is(MyFormatter::translate('label'), '[label]', 'translate() call i18n callable as expected');
+
+$t->diag('->generateLabel() ->generateLabelName() ->setLabel() ->setLabels()');
+MyFormatter::dropTranslationCallable();
+$w = new sfWidgetFormSchema(array(
+  'first_name' => new sfWidgetFormInput(),
+  'last_name'  => new sfWidgetFormInput(),
+));
+$f = new MyFormatter($w);
+$t->is($f->generateLabelName('first_name'), 'First name', '->generateLabelName() generates a label value from a label name');
+
+$w->setLabels(array('first_name' => 'The first name'));
+$t->is($f->generateLabelName('first_name'), 'The first name', '->setLabels() changes all current labels');
+
+$w->setLabel('first_name', 'A first name');
+$t->is($f->generateLabelName('first_name'), 'A first name', '->setLabel() sets a label value');
+
+$w->setLabel('first_name', false);
+$t->is($f->generateLabel('first_name'), '', '->generateLabel() returns an empty string if the label is false');
+
+$w->setLabel('first_name', 'Your First Name');
+$t->is($f->generateLabel('first_name'), '<label for="first_name">Your First Name</label>', '->generateLabelName() returns a label tag');
+
+$w->setLabel('last_name', 'Your Last Name');
+$t->is($f->generateLabel('last_name'), '<label for="last_name">Your Last Name</label>', '->generateLabelName() returns a label tag');
+MyFormatter::setTranslationCallable('my__');
+$t->is($f->generateLabel('last_name'), '<label for="last_name">[Your Last Name]</label>', '->generateLabelName() returns a i18ned label tag');

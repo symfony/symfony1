@@ -121,7 +121,7 @@ class sfFormField
       throw new LogicException(sprintf('Unable to render the label for "%s".', $this->name));
     }
 
-    return $this->parent->getWidget()->generateLabel($this->name);
+    return $this->parent->getWidget()->getFormFormatter()->generateLabel($this->name);
   }
 
   /**
@@ -136,7 +136,7 @@ class sfFormField
       throw new LogicException(sprintf('Unable to render the label name for "%s".', $this->name));
     }
 
-    return $this->parent->getWidget()->generateLabelName($this->name);
+    return $this->parent->getWidget()->getFormFormatter()->generateLabelName($this->name);
   }
 
   /**

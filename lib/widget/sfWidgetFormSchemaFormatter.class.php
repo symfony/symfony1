@@ -18,6 +18,9 @@
  */
 abstract class sfWidgetFormSchemaFormatter
 {
+  protected static 
+    $translationCallable       = null;
+  
   protected
     $rowFormat                 = '',
     $helpFormat                = '%help%',
@@ -25,8 +28,19 @@ abstract class sfWidgetFormSchemaFormatter
     $errorListFormatInARow     = "  <ul class=\"error_list\">\n%errors%  </ul>\n",
     $errorRowFormatInARow      = "    <li>%error%</li>\n",
     $namedErrorRowFormatInARow = "    <li>%name%: %error%</li>\n",
-    $decoratorFormat           = '';
+    $decoratorFormat           = '',
+    $widgetSchema              = null;
 
+  /**
+   * Constructor
+   *
+   * @param sfWidgetFormSchema $widgetSchema
+   */
+  public function __construct(sfWidgetFormSchema $widgetSchema)
+  {
+    $this->widgetSchema = $widgetSchema;
+  }
+    
   public function formatRow($label, $field, $errors = array(), $help = '', $hiddenFields = null)
   {
     return strtr($this->getRowFormat(), array(
@@ -37,7 +51,62 @@ abstract class sfWidgetFormSchemaFormatter
       '%hidden_fields%' => is_null($hiddenFields) ? '%hidden_fields%' : $hiddenFields,
     ));
   }
+  
+  /**
+   * Translates a string using an i18n callable, if it has been provided
+   *
+   * @param  mixed  $subject     The subject to translate
+   * @param  array  $parameters  Additional parameters to pass back to the callable
+   * 
+   * @return string
+   */
+  static public function translate($subject, $parameters = array())
+  {
+    if (false === $subject)
+    {
+      return false;  
+    }
+    
+    if (is_null(self::$translationCallable))
+    {
+      return strtr($subject, $parameters);
+    }
+    
+    if (self::$translationCallable instanceof sfCallable)
+    {
+      return self::$translationCallable->call($subject, $parameters);
+    }
 
+    return call_user_func(self::$translationCallable, $subject, $parameters);
+  }
+  
+  /**
+   * Returns the current i18n callable
+   *
+   * @return mixed
+   */
+  static public function getTranslationCallable()
+  {
+    return self::$translationCallable;
+  }
+  
+  /**
+   * Sets a callable which aims to translate form labels, errors and help messages 
+   *
+   * @param  mixed  $callable
+   * 
+   * @throws InvalidArgumentException if an invalid php callable or sfCallable has been provided
+   */
+  static public function setTranslationCallable($callable)
+  {
+    if (!$callable instanceof sfCallable && !is_callable($callable))
+    {
+      throw new InvalidArgumentException('Provided i18n callable should be either an instance of sfCallable or a valid PHP callable');
+    }
+    
+    self::$translationCallable = $callable;
+  }
+  
   public function formatHelp($help)
   {
     if (!$help)
@@ -45,7 +114,7 @@ abstract class sfWidgetFormSchemaFormatter
       return '';
     }
 
-    return strtr($this->getHelpFormat(), array('%help%' => $help));
+    return strtr($this->getHelpFormat(), array('%help%' => self::translate($help)));
   }
 
   public function formatErrorRow($errors)
@@ -72,6 +141,45 @@ abstract class sfWidgetFormSchemaFormatter
 
     return strtr($this->getErrorListFormatInARow(), array('%errors%' => implode('', $this->unnestErrors($errors))));
   }
+  
+  /**
+   * Generates a label for the given field name.
+   *
+   * @param  string The field name
+   *
+   * @return string The label tag
+   */
+  public function generateLabel($name)
+  {
+    $labelName = $this->generateLabelName($name);
+
+    if (false === $labelName)
+    {
+      return '';
+    }
+
+    $widgetId = $this->widgetSchema->generateId($this->widgetSchema->generateName($name));
+    return $this->widgetSchema->renderContentTag('label', $labelName, array('for' => $widgetId));
+  }
+
+  /**
+   * Generates the label name for the given field name.
+   *
+   * @param  string The field name
+   *
+   * @return string The label name
+   */
+  public function generateLabelName($name)
+  {
+    $label = $this->widgetSchema->getLabel($name);
+    
+    if (!$label && false !== $label)
+    {
+      $label = str_replace('_', ' ', ucfirst($name));
+    }
+
+    return self::translate($label);
+  }
 
   protected function unnestErrors($errors, $prefix = '')
   {
@@ -85,7 +193,14 @@ abstract class sfWidgetFormSchemaFormatter
       }
       else
       {
-        $err = is_object($error) ? $error->__toString() : $error;
+        if ($error instanceof sfValidatorError)
+        {
+          $err = self::translate($error->getMessageFormat(), $error->getArguments());
+        }
+        else
+        {
+          $err = self::translate($error);
+        }
 
         if (!is_integer($name))
         {
@@ -100,7 +215,7 @@ abstract class sfWidgetFormSchemaFormatter
 
     return $newErrors;
   }
-
+  
   public function setRowFormat($format)
   {
     $this->rowFormat = $format;

@@ -193,19 +193,19 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
   }
 
   /**
-   * @see sfWidgetFormSchema
+   * @see sfWidgetFormSchemaFormatter
    */
   public function generateLabel($name)
   {
-    return $this->widget->generateLabel($name);
+    return $this->widget->getFormFormatter()->generateLabel($name);
   }
 
   /**
-   * @see sfWidgetFormSchema
+   * @see sfWidgetFormSchemaFormatter
    */
   public function generateLabelName($name)
   {
-    return $this->widget->generateLabelName($name);
+    return $this->widget->getFormFormatter()->generateLabelName($name);
   }
 
   /**

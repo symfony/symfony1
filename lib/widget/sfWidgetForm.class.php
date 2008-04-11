@@ -159,7 +159,7 @@ abstract class sfWidgetForm extends sfWidget
    *
    * @return string The field id or null.
    */
-  protected function generateId($name, $value = null)
+  public function generateId($name, $value = null)
   {
     if (false === $this->getOption('id_format'))
     {
