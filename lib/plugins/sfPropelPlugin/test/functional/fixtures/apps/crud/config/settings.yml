@@ -21,9 +21,7 @@ test:
     no_script_name:         off
     etag:                   off
 
-all:
-  .settings:
-    compat_10: on
+#all:
 #  .actions:
 #    default_module:         default
 #    default_action:         index

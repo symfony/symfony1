@@ -30,7 +30,11 @@ class sfProjectConfiguration
    */
   public function __construct($rootDir = null, sfEventDispatcher $dispatcher = null)
   {
-    sfProjectConfiguration::$active = $this;
+    if (is_null(sfProjectConfiguration::$active) || $this instanceof sfApplicationConfiguration)
+    {
+      sfProjectConfiguration::$active = $this;
+    }
+
     $this->rootDir = is_null($rootDir) ? self::guessRootDir() : realpath($rootDir);
 
     $this->symfonyLibDir = realpath(dirname(__FILE__).'/..');

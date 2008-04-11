@@ -50,7 +50,7 @@ class backendTestBrowser extends sfTestBrowser
     {
       mkdir(sfConfig::get('sf_config_cache_dir'), 0777);
     }
-    file_put_contents(sprintf('%s/modules_%s_config_generator.yml.php', sfConfig::get('sf_config_cache_dir'), $this->moduleName), '<?php '.$generatorManager->generate('sfPropelAdminGenerator', $params));
+    file_put_contents(sprintf('%s/modules_%s_config_generator.yml.php', sfConfig::get('sf_config_cache_dir'), $this->moduleName), '<?php '.sfGeneratorConfigHandler::getContent($generatorManager, 'sfPropelAdminGenerator', $params));
 
     return $this;
   }
