@@ -69,7 +69,7 @@ class sfYamlParser
       $isRef = $isInPlace = false;
       if (preg_match('#^\-(\s+(?P<value>.+?))?\s*$#', $this->currentLine, $values))
       {
-        if (isset($values['value']) && preg_match('#^&(?P<ref>\w+) *(?P<value>.*)#', $values['value'], $matches))
+        if (isset($values['value']) && preg_match('#^&(?P<ref>[^ ]+) *(?P<value>.*)#', $values['value'], $matches))
         {
           $isRef = $matches['ref'];
           $values['value'] = $matches['value'];
