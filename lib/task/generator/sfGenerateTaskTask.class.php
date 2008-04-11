@@ -15,36 +15,40 @@
  * @subpackage task
  * @author     Francois Zaninotto <francois.zaninotto@symfony-project.com>
  */
-class sfTaskInitTask extends sfBaseTask
+class sfGenerateTaskTask extends sfBaseTask
 {
   /**
    * @see sfTask
    */
   protected function configure()
   {
-    $this->addArgument('task_name', sfCommandArgument::REQUIRED, 'The task name (can contain namespace)');
-    $this->addOption('dir', null, sfCommandOption::PARAMETER_OPTIONAL, 'The directory to create the task in', 'lib/task');
-    $this->addOption('use_database', 'db', sfCommandOption::PARAMETER_OPTIONAL, 'Whether the task needs model initialization to access database', 'true');
-    $this->addOption('brief_description', 'bd', sfCommandOption::PARAMETER_OPTIONAL, 'A brief task description (appears in task list)', '');
-    $this->addOption('detailed_description', 'dd', sfCommandOption::PARAMETER_OPTIONAL, 'A usage description (shown in help)', '');
+    $this->addArguments(array(
+      new sfCommandArgument('task_name', sfCommandArgument::REQUIRED, 'The task name (can contain namespace)'),
+    ));
 
-    $this->namespace = 'task';
-    $this->name = 'init';
+    $this->addOptions(array(
+      new sfCommandOption('dir', null, sfCommandOption::PARAMETER_OPTIONAL, 'The directory to create the task in', 'lib/task'),
+      new sfCommandOption('use_database', 'db', sfCommandOption::PARAMETER_OPTIONAL, 'Whether the task needs model initialization to access database', 'true'),
+      new sfCommandOption('brief_description', 'bd', sfCommandOption::PARAMETER_OPTIONAL, 'A brief task description (appears in task list)', ''),
+    ));
+
+    $this->namespace = 'generate';
+    $this->name = 'task';
     $this->briefDescription = 'Creates a skeleton class for a new task';
 
     $this->detailedDescription = <<<EOF
-The [task:init|INFO] creates a new Task class based on the name passed as argument:
-  [./symfony task:init namespace:name|INFO]
+The [generate:task|INFO] creates a new Task class based on the name passed as argument:
+  [./symfony generate:task namespace:name|INFO]
 
 The `fooBarTask.class.php` skeleton task is created under the `lib/task/` directory. Note that the namespace is optional.
 If you want to create the file in another directory (relative to the project root folder), pass it in the [dir|INFO] option:
-  [./symfony task:init namespace:name --dir=plugins/myPlugin/lib/task|INFO]
+  [./symfony generate:task namespace:name --dir=plugins/myPlugin/lib/task|INFO]
 
 If the task doesn't need database access, you can remove the database initialization code with the [use_database|INFO] option:
-  [./symfony task:init namespace:name --use_database=false|INFO]
+  [./symfony generate:task namespace:name --use_database=false|INFO]
 
 You can also specify a description:
-  [./symfony task:init namespace:name --briefDescription='Does interesting things' --detailedDescription='Usage tutorial'|INFO]
+  [./symfony generate:task namespace:name --briefDescription='Does interesting things' --detailedDescription='Usage tutorial'|INFO]
 EOF;
   }
 
@@ -59,7 +63,7 @@ EOF;
     $name = isset($taskNameComponents[1]) ? $taskNameComponents[1] : $taskNameComponents[0];
     $taskClassName = ($namespace ? $namespace.ucfirst($name) : $name) . 'Task';
     $briefDescription = $options['brief_description'];
-    $detailedDescription = $options['detailed_description'] ? $options['detailed_description'] : <<<HED
+    $detailedDescription = <<<HED
 The [$taskName|INFO] task does things.
 Call it with:
 
@@ -124,7 +128,6 @@ EOF;
   protected function execute(\$arguments = array(), \$options = array())
   {
     // add code here
-
   }
 }
 HED;
@@ -135,14 +138,14 @@ HED;
     {
       $this->getFilesystem()->mkdirs(str_replace('/', DIRECTORY_SEPARATOR, $options['dir']));
     }
+
     $taskFile = sfConfig::get('sf_root_dir').'/'.$options['dir'].'/'.$taskClassName.'.class.php';
     if (is_readable($taskFile))
     {
-      throw new sfCommandException(sprintf('A "%s" task already exists in %s', $taskName, $taskFile));
+      throw new sfCommandException(sprintf('A "%s" task already exists in "%s".', $taskName, $taskFile));
     }
-    
-    $this->logSection('init', sprintf('Creating "%s" task file', $taskFile));
+
+    $this->logSection('task', sprintf('Creating "%s" task file', $taskFile));
     file_put_contents($taskFile, $content);
   }
-
 }
