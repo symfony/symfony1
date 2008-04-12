@@ -125,11 +125,12 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
             $componentName = $table->getComponentName();
             $event->set('data', $rowData[$rootAlias]);
             $listeners[$componentName]->preHydrate($event);
-            $element = $driver->getElement($rowData[$rootAlias], $componentName);
+            
             $index = false;
             
             // Check for an existing element
             if ($isSimpleQuery || ! isset($identifierMap[$rootAlias][$id[$rootAlias]])) {
+                $element = $driver->getElement($rowData[$rootAlias], $componentName);
                 $event->set('data', $element);
                 $listeners[$componentName]->postHydrate($event);
 
@@ -184,7 +185,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                     $oneToOne = false;
                     // append element
                     if (isset($nonemptyComponents[$dqlAlias])) {
-                        if ($isSimpleQuery || ! isset($identifierMap[$path][$id[$parent]][$id[$dqlAlias]])) {
+                        if ( ! isset($identifierMap[$path][$id[$parent]][$id[$dqlAlias]])) {
                             $event->set('data', $element);
                             $listeners[$componentName]->postHydrate($event);
 
