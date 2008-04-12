@@ -23,8 +23,7 @@ abstract class sfCache
   const SEPARATOR = ':';
 
   protected
-    $options = array(),
-    $prefix  = '';
+    $options = array();
 
   /**
    * Class constructor.
