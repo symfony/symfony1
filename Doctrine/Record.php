@@ -587,7 +587,6 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         }
 
         foreach ($this->_data as $k => $v) {
-
             switch ($this->_table->getTypeOf($k)) {
                 case 'array':
                 case 'object':

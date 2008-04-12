@@ -255,6 +255,8 @@ abstract class Doctrine_Query_Abstract
         $this->_conn = $connection;
         $this->_hydrator = $hydrator;
         $this->_tokenizer = new Doctrine_Query_Tokenizer();
+        $this->_resultCacheTTL = $this->_conn->getAttribute(Doctrine::ATTR_RESULT_CACHE_LIFESPAN);
+        $this->_queryCacheTTL = $this->_conn->getAttribute(Doctrine::ATTR_QUERY_CACHE_LIFESPAN);
     }
 
     /**
@@ -924,7 +926,7 @@ abstract class Doctrine_Query_Abstract
                 } else {
                     $query = $this->getSqlQuery($params);
                     $serializedQuery = $this->getCachedForm($query);
-                    $queryCacheDriver->save($hash, $serializedQuery, $this->_queryCacheTTL);
+                    $queryCacheDriver->save($hash, $serializedQuery, $this->getQueryCacheLifeSpan());
                 }
             } else {
                 $query = $this->getSqlQuery($params);
@@ -977,10 +979,10 @@ abstract class Doctrine_Query_Abstract
                 $stmt = $this->_execute($params);
                 $this->_hydrator->setQueryComponents($this->_queryComponents);
                 $result = $this->_hydrator->hydrateResultSet($stmt, $this->_tableAliasMap,
-                        Doctrine::HYDRATE_ARRAY);
+                        $hydrationMode);
 
                 $cached = $this->getCachedForm($result);
-                $cacheDriver->save($hash, $cached, $this->_resultCacheTTL);
+                $cacheDriver->save($hash, $cached, $this->getResultCacheLifeSpan());
                 return $result;
             } else {
                 return $this->_constructQueryFromCache($cached);
@@ -1569,7 +1571,7 @@ abstract class Doctrine_Query_Abstract
      */
     public function useResultCache($driver = true, $timeToLive = null)
     {
-        if ($driver !== null && $driver !== true && ! ($driver instanceOf Doctrine_Cache_Interface)){
+        if ($driver !== null && $driver !== true && ! ($driver instanceOf Doctrine_Cache_Interface)) {
             $msg = 'First argument should be instance of Doctrine_Cache_Interface or null.';
             throw new Doctrine_Query_Exception($msg);
         }
@@ -1642,7 +1644,7 @@ abstract class Doctrine_Query_Abstract
     /**
      * setResultCacheLifeSpan
      *
-     * @param integer $timeToLive   how long the cache entry is valid
+     * @param integer $timeToLive   how long the cache entry is valid (in seconds)
      * @return Doctrine_Hydrate     this object
      */
     public function setResultCacheLifeSpan($timeToLive)
@@ -1653,6 +1655,16 @@ abstract class Doctrine_Query_Abstract
         $this->_resultCacheTTL = $timeToLive;
 
         return $this;
+    }
+    
+    /**
+     * Gets the life span of the result cache in seconds.
+     *
+     * @return integer
+     */
+    public function getResultCacheLifeSpan()
+    {
+        return $this->_resultCacheTTL;
     }
 
     /**
@@ -1669,6 +1681,16 @@ abstract class Doctrine_Query_Abstract
         $this->_queryCacheTTL = $timeToLive;
 
         return $this;
+    }
+    
+    /**
+     * Gets the life span of the query cache the Query object is using.
+     *
+     * @return integer  The life span in seconds.
+     */
+    public function getQueryCacheLifeSpan()
+    {
+        return $this->_queryCacheTTL;
     }
 
     /**

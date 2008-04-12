@@ -262,7 +262,6 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      */
     public function getAttribute($attribute)
     {
-
         if ($attribute >= 100) {
             if ( ! isset($this->attributes[$attribute])) {
                 return parent::getAttribute($attribute);

@@ -46,21 +46,15 @@ class Doctrine_Cache_Apc extends Doctrine_Cache_Driver
     }
 
     /**
-     * Test if a cache is available for the given id and (if yes) return it (false else)
-     * 
-     * Note : return value is always "string" (unserialization is done by the core not by the backend)
+     * Test if a cache is available for the given id and (if yes) return it (false else).
      * 
      * @param string $id cache id
      * @param boolean $testCacheValidity        if set to false, the cache validity won't be tested
-     * @return string cached datas (or false)
+     * @return mixed The stored variable on success. FALSE on failure.
      */
     public function fetch($id, $testCacheValidity = true) 
     {
-        $tmp = apc_fetch($id);
-        if (is_array($tmp)) {
-            return $tmp[0];
-        }
-        return false;
+        return apc_fetch($id);
     }
 
     /**

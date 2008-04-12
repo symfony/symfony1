@@ -150,7 +150,7 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
                     throw new Doctrine_Exception("This attribute can only be set at table level.");
                 }
                 if ($value !== null && ! $this->hasField($value)) {
-                    throw new Doctrine_Exception("Couldn't set collection key attribute. No such field '$value'");
+                    throw new Doctrine_Exception("Couldn't set collection key attribute. No such field '$value'.");
                 }
                 break;
             case Doctrine::ATTR_CACHE:
@@ -178,6 +178,8 @@ abstract class Doctrine_Configurable extends Doctrine_Locator_Injectable
             case Doctrine::ATTR_DEFAULT_PARAM_NAMESPACE:
             case Doctrine::ATTR_AUTOLOAD_TABLE_CLASSES:
             case Doctrine::ATTR_MODEL_LOADING:
+            case Doctrine::ATTR_RESULT_CACHE_LIFESPAN:
+            case Doctrine::ATTR_QUERY_CACHE_LIFESPAN:
 
                 break;
             case Doctrine::ATTR_SEQCOL_NAME:
