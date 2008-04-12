@@ -168,8 +168,6 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                 $event->set('data', $data);
                 $listeners[$componentName]->preHydrate($event);
 
-                $element = $driver->getElement($data, $componentName);
-
                 $parent   = $map['parent'];
                 $relation = $map['relation'];
                 $relationAlias = $map['relation']->getAlias();
@@ -186,6 +184,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                     // append element
                     if (isset($nonemptyComponents[$dqlAlias])) {
                         if ( ! isset($identifierMap[$path][$id[$parent]][$id[$dqlAlias]])) {
+                            $element = $driver->getElement($data, $componentName);
                             $event->set('data', $element);
                             $listeners[$componentName]->postHydrate($event);
 
@@ -213,6 +212,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                     if ( ! isset($nonemptyComponents[$dqlAlias])) {
                         $prev[$parent][$relationAlias] = $driver->getNullPointer();
                     } else {
+                        $element = $driver->getElement($data, $componentName);
                         $prev[$parent][$relationAlias] = $element;
                     }
                 }
