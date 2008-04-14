@@ -93,34 +93,3 @@ $b->
   checkResponseElement('#content', 'This is an HTML file for the iPhone')->
   checkResponseElement('link[href*="iphone.css"]')
 ;
-
-function filter_parameters(sfEvent $event, $parameters)
-{
-  if (false !== stripos($event->getSubject()->getHttpHeader('user-agent'), 'iPhone'))
-  {
-    $event->getSubject()->setRequestFormat('iphone');
-  }
-
-  return $parameters;
-}
-
-function configure_iphone_format(sfEvent $event)
-{
-  if ('iphone' == $event['format'])
-  {
-    $event['response']->addStylesheet('iphone.css');
-
-    $event->getSubject()->setDecorator(true);
-  }
-}
-
-function configure_format_foo(sfEvent $event)
-{
-  if ('foo' != $event['format'])
-  {
-    return;
-  }
-
-  $event['response']->setHttpHeader('x-foo', 'true');
-  $event->getSubject()->setExtension('.php');
-}
