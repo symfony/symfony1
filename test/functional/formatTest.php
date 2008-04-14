@@ -83,8 +83,6 @@ $b->
 ;
 $b->test()->is($b->getResponse()->getContent(), 'A js file', 'response content is ok');
 
-$b->getContext()->getEventDispatcher()->connect('request.filter_parameters', 'filter_parameters');
-$b->getContext()->getEventDispatcher()->connect('view.configure_format', 'configure_iphone_format');
 $b->
   setHttpHeader('User-Agent', 'Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A543a Safari/419.3')->
   get('/format/forTheIPhone')->
@@ -114,4 +112,15 @@ function configure_iphone_format(sfEvent $event)
 
     $event->getSubject()->setDecorator(true);
   }
+}
+
+function configure_format_foo(sfEvent $event)
+{
+  if ('foo' != $event['format'])
+  {
+    return;
+  }
+
+  $event['response']->setHttpHeader('x-foo', 'true');
+  $event->getSubject()->setExtension('.php');
 }
