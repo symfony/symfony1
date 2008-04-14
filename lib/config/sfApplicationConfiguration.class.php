@@ -500,7 +500,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     {
       foreach ($pluginConfigs as $config)
       {
-        require_once($config);
+        require $config;
       }
     }
 
@@ -508,7 +508,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     {
       foreach ($pluginConfigs as $config)
       {
-        require_once($config);
+        require $config;
       }
     }
   }
