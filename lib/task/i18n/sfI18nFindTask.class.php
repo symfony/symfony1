@@ -36,6 +36,17 @@ class sfI18nFindTask extends sfBaseTask
     $this->briefDescription = 'Finds non "i18n ready" strings in an application';
 
     $this->detailedDescription = <<<EOF
+The [i18n:find|INFO] task finds non internationalized strings embedded in templates:
+
+  [./symfony i18n:find frontend|INFO]
+
+This task has a very limited understanding of templates and can only find simple strings like this one:
+
+  <p>Non i18n text</p>
+
+But it can't find strings embedded in PHP code like this one:
+
+  <p><?php echo 'Test' ?></p>
 EOF;
   }
 
@@ -47,16 +58,27 @@ EOF;
     $this->logSection('i18n', sprintf('find non "i18n ready" strings in the "%s" application', $arguments['application']));
 
     // Look in templates
+    $dirs = array();
     $moduleNames = sfFinder::type('dir')->maxdepth(0)->relative()->in(sfConfig::get('sf_app_module_dir'));
-    $strings = array();
     foreach ($moduleNames as $moduleName)
     {
-      $dir = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/templates';
-      $templates = sfFinder::type('file')->name('*.php')->relative()->in($dir);
+      $dirs[] = sfConfig::get('sf_app_module_dir').'/'.$moduleName.'/templates';
+    }
+    $dirs[] = sfConfig::get('sf_app_dir').'/templates';
+
+    $strings = array();
+    foreach ($dirs as $dir)
+    {
+      $templates = sfFinder::type('file')->name('*.php')->in($dir);
       foreach ($templates as $template)
       {
         $dom = new DomDocument('1.0', sfConfig::get('sf_charset', 'UTF-8'));
-        @$dom->loadXML('<doc>'.file_get_contents($dir.'/'.$template).'</doc>');
+        $content = file_get_contents($template);
+
+        // remove doctype
+        $content = preg_replace('/<!DOCTYPE.*?>/', '', $content);
+
+        @$dom->loadXML('<doc>'.$content.'</doc>');
 
         $nodes = array($dom);
         while ($nodes)
@@ -67,17 +89,12 @@ EOF;
           {
             if (!$node->isWhitespaceInElementContent())
             {
-              if (!isset($strings[$moduleName][$template]))
+              if (!isset($strings[$template]))
               {
-                if (!isset($strings[$moduleName]))
-                {
-                  $strings[$moduleName] = array();
-                }
-
-                $strings[$moduleName][$template] = array();
+                $strings[$template] = array();
               }
 
-              $strings[$moduleName][$template][] = $node->nodeValue;
+              $strings[$template][] = $node->nodeValue;
             }
           }
           else if ($node->childNodes)
@@ -91,15 +108,12 @@ EOF;
       }
     }
 
-    foreach ($strings as $moduleName => $templateStrings)
+    foreach ($strings as $template => $messages)
     {
-      foreach ($templateStrings as $template => $messages)
+      $this->logSection('i18n', sprintf('strings in "%s"', str_replace(sfConfig::get('sf_root_dir'), '', $template)), 1000);
+      foreach ($messages as $message)
       {
-        $this->logSection('i18n', sprintf('strings in "%s:%s"', $moduleName, $template));
-        foreach ($messages as $message)
-        {
-          $this->log("  $message\n");
-        }
+        $this->log("  $message\n");
       }
     }
   }
