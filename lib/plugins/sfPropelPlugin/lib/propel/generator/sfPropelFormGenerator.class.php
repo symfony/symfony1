@@ -315,7 +315,7 @@ class sfPropelFormGenerator extends sfGenerator
   {
     $options = array();
 
-    switch ($column->getType())
+    switch ($column->getCreoleType())
     {
       case CreoleTypes::CHAR:
       case CreoleTypes::VARCHAR:
