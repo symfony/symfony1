@@ -48,8 +48,8 @@ EOF;
     $app = $arguments['application'];
     $env = $arguments['env'];
 
-    $lockFile = $app.'_'.$env.'.lck';
-    if (file_exists(sfConfig::get('sf_cache_dir').'/'.$lockFile))
+    $lockFile = sfConfig::get('sf_cache_dir').'/'.$app.'_'.$env.'.lck';
+    if (file_exists($lockFile))
     {
       $this->logSection('enable', sprintf('%s [%s] is currently DISABLED', $app, $env));
     }
