@@ -66,12 +66,21 @@ abstract class sfWidgetFormSchemaFormatter
     {
       return false;  
     }
-    
+
     if (is_null(self::$translationCallable))
     {
+      // replace object with strings
+      foreach ($parameters as $key => $value)
+      {
+        if (is_object($value) && method_exists($value, '__toString'))
+        {
+          $parameters[$key] = $value->__toString();
+        }
+      }
+
       return strtr($subject, $parameters);
     }
-    
+
     if (self::$translationCallable instanceof sfCallable)
     {
       return self::$translationCallable->call($subject, $parameters);
@@ -79,7 +88,7 @@ abstract class sfWidgetFormSchemaFormatter
 
     return call_user_func(self::$translationCallable, $subject, $parameters);
   }
-  
+
   /**
    * Returns the current i18n callable
    *
