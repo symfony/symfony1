@@ -449,7 +449,7 @@ class sfBrowser
 
   public function checkCurrentExceptionIsEmpty()
   {
-    if (is_null($this->getCurrentException()))
+    if (is_null($this->getCurrentException()) || $this->getCurrentException() instanceof sfError404Exception)
     {
       return;
     }

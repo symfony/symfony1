@@ -113,7 +113,7 @@ $b->
 $b->
   get('/configSettingsMaxForwards/selfForward')->
   isStatusCode(200)->
-  checkResponseElement('body', '/Too many forwards have been detected for this request/i')
+  throwsException(null, '/Too many forwards have been detected for this request/i')
 ;
 
 // filters.yml: add a filter
