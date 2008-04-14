@@ -40,13 +40,13 @@ The [i18n:find|INFO] task finds non internationalized strings embedded in templa
 
   [./symfony i18n:find frontend|INFO]
 
-This task has a very limited understanding of templates and can only find simple strings like this one:
+This task is able to find non internationalized strings in pure HTML and in PHP code:
 
   <p>Non i18n text</p>
-
-But it can't find strings embedded in PHP code like this one:
-
   <p><?php echo 'Test' ?></p>
+
+As the task returns all strings embedded in PHP, you can have some false positive (especially
+if you use the string syntax for helper arguments).
 EOF;
   }
 
@@ -72,6 +72,11 @@ EOF;
       $templates = sfFinder::type('file')->name('*.php')->in($dir);
       foreach ($templates as $template)
       {
+        if (!isset($strings[$template]))
+        {
+          $strings[$template] = array();
+        }
+
         $dom = new DomDocument('1.0', sfConfig::get('sf_charset', 'UTF-8'));
         $content = file_get_contents($template);
 
@@ -89,11 +94,6 @@ EOF;
           {
             if (!$node->isWhitespaceInElementContent())
             {
-              if (!isset($strings[$template]))
-              {
-                $strings[$template] = array();
-              }
-
               $strings[$template][] = $node->nodeValue;
             }
           }
@@ -104,12 +104,34 @@ EOF;
               $nodes[] = $node->childNodes->item($i);
             }
           }
+          else if ('DOMProcessingInstruction' == get_class($node) && 'php' == $node->target)
+          {
+            // processing instruction node
+            $tokens = token_get_all('<?php '.$node->nodeValue);
+            foreach ($tokens as $token)
+            {
+              if (is_array($token))
+              {
+                list($id, $text) = $token;
+
+                if (T_CONSTANT_ENCAPSED_STRING === $id)
+                {
+                  $strings[$template][] = substr($text, 1, -1);
+                }
+              }
+            }
+          }
         }
       }
     }
 
     foreach ($strings as $template => $messages)
     {
+      if (!$messages)
+      {
+        continue;
+      }
+
       $this->logSection('i18n', sprintf('strings in "%s"', str_replace(sfConfig::get('sf_root_dir'), '', $template)), 1000);
       foreach ($messages as $message)
       {
