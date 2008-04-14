@@ -251,6 +251,34 @@ class sfTestBrowser extends sfBrowser
   }
 
   /**
+   * Tests for the user culture.
+   *
+   * @param string The user culture
+   *
+   * @return sfTestBrowser The current sfTestBrowser instance
+   */
+  public function isUserCulture($culture)
+  {
+    $this->test->is($this->getContext()->getUser()->getCulture(), $culture, sprintf('user culture is "%s"', $culture));
+
+    return $this;
+  }
+
+  /**
+   * Tests for the request is in the given format.
+   *
+   * @param string The user culture
+   *
+   * @return sfTestBrowser The current sfTestBrowser instance
+   */
+  public function isRequestFormat($format)
+  {
+    $this->test->is($this->getContext()->getRequest()->getRequestFormat(), $format, sprintf('request format is "%s"', $format));
+
+    return $this;
+  }
+
+  /**
    * Tests that the current response matches a given CSS selector.
    *
    * @param string The response selector or a sfDomCssSelector object

@@ -21,6 +21,7 @@ $b->
   isStatusCode(200)->
   isRequestParameter('module', 'format')->
   isRequestParameter('action', 'index')->
+  isRequestFormat('js')->
   isResponseHeader('content-type', 'application/javascript')
 ;
 $b->test()->unlike($b->getResponse()->getContent(), '/<body>/', 'response content is ok');
@@ -32,6 +33,7 @@ $b->
   isStatusCode(200)->
   isRequestParameter('module', 'format')->
   isRequestParameter('action', 'index')->
+  isRequestFormat('css')->
   isResponseHeader('content-type', 'text/css; charset=utf-8')
 ;
 $b->test()->is($b->getResponse()->getContent(), 'This is a css file', 'response content is ok');
@@ -41,6 +43,7 @@ $b->
   isStatusCode(200)->
   isRequestParameter('module', 'format')->
   isRequestParameter('action', 'index')->
+  isRequestFormat('html')->
   isResponseHeader('content-type', 'text/html; charset=utf-8')->
   checkResponseElement('body #content', 'This is an HTML file')
 ;
@@ -50,6 +53,7 @@ $b->
   isStatusCode(200)->
   isRequestParameter('module', 'format')->
   isRequestParameter('action', 'index')->
+  isRequestFormat('xml')->
   isResponseHeader('content-type', 'text/xml; charset=utf-8')->
   checkResponseElement('sentences sentence:first', 'This is a XML file')
 ;
@@ -59,6 +63,7 @@ $b->
   isStatusCode(200)->
   isRequestParameter('module', 'format')->
   isRequestParameter('action', 'index')->
+  isRequestFormat('foo')->
   isResponseHeader('content-type', 'text/html; charset=utf-8')->
   isResponseHeader('x-foo', 'true')->
   checkResponseElement('body #content', 'This is an HTML file')
@@ -70,6 +75,7 @@ $b->
   isStatusCode(200)->
   isRequestParameter('module', 'format')->
   isRequestParameter('action', 'jsWithAccept')->
+  isRequestFormat('js')->
   isResponseHeader('content-type', 'application/javascript')
 ;
 $b->test()->like($b->getResponse()->getContent(), '/This is a js file/', 'response content is ok');
@@ -79,6 +85,7 @@ $b->
   isStatusCode(200)->
   isRequestParameter('module', 'format')->
   isRequestParameter('action', 'js')->
+  isRequestFormat('js')->
   isResponseHeader('content-type', 'application/javascript')
 ;
 $b->test()->is($b->getResponse()->getContent(), 'A js file', 'response content is ok');
@@ -89,6 +96,7 @@ $b->
   isStatusCode(200)->
   isRequestParameter('module', 'format')->
   isRequestParameter('action', 'forTheIPhone')->
+  isRequestFormat('iphone')->
   isResponseHeader('content-type', 'text/html; charset=utf-8')->
   checkResponseElement('#content', 'This is an HTML file for the iPhone')->
   checkResponseElement('link[href*="iphone.css"]')
