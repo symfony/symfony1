@@ -160,6 +160,9 @@ class sfBrowser
    */
   public function call($uri, $method = 'get', $parameters = array(), $changeStack = true)
   {
+    // check that the previous call() hasn't returned an uncatched exception
+    $this->checkCurrentExceptionIsEmpty();
+
     $uri = $this->fixUri($uri);
 
     // add uri to the stack
@@ -427,13 +430,31 @@ class sfBrowser
   }
 
   /**
-   * Gets current exception
+   * Gets current exception.
    *
    * @return sfException
    */
   public function getCurrentException()
   {
     return $this->currentException;
+  }
+
+  /**
+   * Resets the current exception.
+   */
+  public function resetCurrentException()
+  {
+    $this->currentException = null;
+  }
+
+  public function checkCurrentExceptionIsEmpty()
+  {
+    if (is_null($this->getCurrentException()))
+    {
+      return;
+    }
+
+    $this->test->fail(sprintf('last request threw an uncatched exception "%s: %s"', get_class($this->getCurrentException()), $this->getCurrentException()->getMessage()));
   }
 
   /**
@@ -683,6 +704,8 @@ class sfBrowser
    */
   public function shutdown()
   {
+    $this->checkCurrentExceptionIsEmpty();
+
     // we remove all session data
     sfToolkit::clearDirectory(sfConfig::get('sf_test_cache_dir').'/sessions');
   }

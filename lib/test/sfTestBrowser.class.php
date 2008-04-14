@@ -348,6 +348,8 @@ class sfTestBrowser extends sfBrowser
       }
     }
 
+    $this->resetCurrentException();
+
     return $this;
   }
 
