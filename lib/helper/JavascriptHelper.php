@@ -81,14 +81,22 @@
    *
    * Examples:
    *   <?php echo link_to_function('Greeting', "alert('Hello world!')") ?>
-   *   <?php echo link_to_function(image_tag('delete'), "if confirm('Really?'){ do_delete(); }") ?>
+   *   <?php echo link_to_function(image_tag('delete'), "do_delete()", array('confirm' => 'Really?')) ?>
    */
   function link_to_function($name, $function, $html_options = array())
   {
     $html_options = _parse_attributes($html_options);
 
     $html_options['href'] = isset($html_options['href']) ? $html_options['href'] : '#';
-    $html_options['onclick'] = $function.'; return false;';
+    if ( isset($html_options['confirm']) )
+    {
+      $confirm = escape_javascript($html_options['confirm']);
+      $html_options['onclick'] = "if(confirm('$confirm')){ $function;}; return false;";
+    }
+    else
+    {
+      $html_options['onclick'] = $function.'; return false;';
+    }
 
     return content_tag('a', $name, $html_options);
   }
