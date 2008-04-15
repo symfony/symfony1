@@ -225,7 +225,14 @@ abstract class sfRouting
    */
   public function filterParametersEvent(sfEvent $event, $parameters)
   {
-    return array_merge($parameters, $this->parse($event['path_info']));
+    try
+    {
+      return array_merge($parameters, $this->parse($event['path_info']));
+    }
+    catch (sfError404Exception $e)
+    {
+      return $parameters;
+    }
   }
 
   /**
