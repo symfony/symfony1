@@ -194,7 +194,7 @@ abstract class sfController
     }
 
     // check for a module generator config file
-    $this->context->getConfigCache()->import('modules/'.$moduleName.'/config/generator.yml', true, true);
+    $this->context->getConfigCache()->import('modules/'.$moduleName.'/config/generator.yml', false, true);
 
     if (!$this->actionExists($moduleName, $actionName))
     {

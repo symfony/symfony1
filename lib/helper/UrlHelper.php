@@ -38,14 +38,7 @@
  */
 function url_for($internal_uri, $absolute = false)
 {
-  static $controller;
-
-  if (!isset($controller))
-  {
-    $controller = sfContext::getInstance()->getController();
-  }
-
-  return $controller->genUrl($internal_uri, $absolute);
+  return sfContext::getInstance()->getController()->genUrl($internal_uri, $absolute);
 }
 
 /**

@@ -49,17 +49,14 @@ class sfContext
 
     self::$current = $name;
 
-    if (!isset(self::$instances[$name]))
+    self::$instances[$name] = new $class();
+
+    if (!self::$instances[$name] instanceof sfContext)
     {
-      self::$instances[$name] = new $class();
-
-      if (!self::$instances[$name] instanceof sfContext)
-      {
-        throw new sfFactoryException(sprintf('Class "%s" is not of the type sfContext.', $class));
-      }
-
-      self::$instances[$name]->initialize($configuration);
+      throw new sfFactoryException(sprintf('Class "%s" is not of the type sfContext.', $class));
     }
+
+    self::$instances[$name]->initialize($configuration);
 
     return self::$instances[$name];
   }

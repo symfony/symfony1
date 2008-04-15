@@ -401,9 +401,20 @@ class sfBrowser
   {
     if (is_null($this->context) || $forceReload)
     {
-      $this->context = sfContext::getInstance();
-      $this->context->initialize($this->context->getConfiguration());
+      if (!is_null($this->context))
+      {
+        $currentConfiguration = $this->context->getConfiguration();
+        $configuration = ProjectConfiguration::getApplicationConfiguration($currentConfiguration->getApplication(), $currentConfiguration->getEnvironment(), $currentConfiguration->isDebug());
+        $this->context = sfContext::createInstance($configuration);
+      }
+      else
+      {
+        $this->context = sfContext::getInstance();
+        $this->context->initialize($this->context->getConfiguration());
+      }
+
       $this->context->getEventDispatcher()->connect('application.throw_exception', array($this, 'ListenToException'));
+      unset($currentConfiguration);
     }
 
     return $this->context;

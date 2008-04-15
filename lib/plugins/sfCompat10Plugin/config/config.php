@@ -1,15 +1,18 @@
 <?php
 
-if (sfConfig::get('sf_compat_10') && !class_exists('sfCompatAutoload', false))
+if (sfConfig::get('sf_compat_10'))
 {
-  class sfCompatAutoload extends sfSimpleAutoload
+  if (!class_exists('sfCompatAutoload', false))
   {
-  }
+    class sfCompatAutoload extends sfSimpleAutoload
+    {
+    }
 
-  // autoload classes
-  $autoload = sfCompatAutoload::getInstance(sfConfig::get('sf_app_cache_dir').'/sf_compat_autoloader.txt');
-  $autoload->addDirectory(dirname(__FILE__).'/../lib');
-  $autoload->register();
+    // autoload classes
+    $autoload = sfCompatAutoload::getInstance(sfConfig::get('sf_app_cache_dir').'/sf_compat_autoloader.txt');
+    $autoload->addDirectory(dirname(__FILE__).'/../lib');
+    $autoload->register();
+  }
 
   // register config handler for validate/*.yml files
   sfProjectConfiguration::getActive()->getConfigCache()->registerConfigHandler('modules/*/validate/*.yml', 'sfValidatorConfigHandler');
