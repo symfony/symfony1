@@ -45,45 +45,45 @@ class sfPluginInstallTask extends sfPluginBaseTask
     $this->detailedDescription = <<<EOF
 The [plugin:install|INFO] task installs a plugin:
 
-  [./symfony plugin:install sfGuargPlugin|INFO]
+  [./symfony plugin:install sfGuardPlugin|INFO]
 
 By default, it installs the latest [stable|COMMENT] release.
 
 If you want to install a plugin that is not stable yet,
 use the [stability|COMMENT] option:
 
-  [./symfony plugin:install --stability=beta sfGuargPlugin|INFO]
-  [./symfony plugin:install -s beta sfGuargPlugin|INFO]
+  [./symfony plugin:install --stability=beta sfGuardPlugin|INFO]
+  [./symfony plugin:install -s beta sfGuardPlugin|INFO]
 
 You can also force the installation of a specific version:
 
-  [./symfony plugin:install --release=1.0.0 sfGuargPlugin|INFO]
-  [./symfony plugin:install -r 1.0.0 sfGuargPlugin|INFO]
+  [./symfony plugin:install --release=1.0.0 sfGuardPlugin|INFO]
+  [./symfony plugin:install -r 1.0.0 sfGuardPlugin|INFO]
 
 To force installation of all required dependencies, use the [install_deps|INFO] flag:
 
-  [./symfony plugin:install --install-deps sfGuargPlugin|INFO]
-  [./symfony plugin:install -d sfGuargPlugin|INFO]
+  [./symfony plugin:install --install-deps sfGuardPlugin|INFO]
+  [./symfony plugin:install -d sfGuardPlugin|INFO]
 
 By default, the PEAR channel used is [symfony-plugins|INFO]
 (plugins.symfony-project.org).
 
 You can specify another channel with the [channel|COMMENT] option:
 
-  [./symfony plugin:install --channel=mypearchannel sfGuargPlugin|INFO]
-  [./symfony plugin:install -c mypearchannel sfGuargPlugin|INFO]
+  [./symfony plugin:install --channel=mypearchannel sfGuardPlugin|INFO]
+  [./symfony plugin:install -c mypearchannel sfGuardPlugin|INFO]
 
 Or you can use the [channel/package|INFO] notation:
 
-  [./symfony plugin:install mypearchannel/sfGuargPlugin|INFO]
+  [./symfony plugin:install mypearchannel/sfGuardPlugin|INFO]
 
 You can also install PEAR packages hosted on a website:
 
-  [./symfony plugin:install http://somewhere.example.com/sfGuargPlugin-1.0.0.tgz|INFO]
+  [./symfony plugin:install http://somewhere.example.com/sfGuardPlugin-1.0.0.tgz|INFO]
 
 Or local PEAR packages:
 
-  [./symfony plugin:install /home/fabien/plugins/sfGuargPlugin-1.0.0.tgz|INFO]
+  [./symfony plugin:install /home/fabien/plugins/sfGuardPlugin-1.0.0.tgz|INFO]
 
 If the plugin contains some web content (images, stylesheets or javascripts),
 the task creates a [%name%|COMMENT] symbolic link for those assets under [web/|COMMENT].

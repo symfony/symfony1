@@ -43,19 +43,19 @@ class sfPluginUninstallTask extends sfPluginBaseTask
     $this->detailedDescription = <<<EOF
 The [plugin:uninstall|INFO] task uninstalls a plugin:
 
-  [./symfony plugin:uninstall sfGuargPlugin|INFO]
+  [./symfony plugin:uninstall sfGuardPlugin|INFO]
 
 The default channel is [symfony|INFO].
 
 You can also uninstall a plugin which has a different channel:
 
-  [./symfony plugin:uninstall --channel=mypearchannel sfGuargPlugin|INFO]
+  [./symfony plugin:uninstall --channel=mypearchannel sfGuardPlugin|INFO]
 
-  [./symfony plugin:uninstall -c mypearchannel sfGuargPlugin|INFO]
+  [./symfony plugin:uninstall -c mypearchannel sfGuardPlugin|INFO]
 
 Or you can use the [channel/package|INFO] notation:
 
-  [./symfony plugin:uninstall mypearchannel/sfGuargPlugin|INFO]
+  [./symfony plugin:uninstall mypearchannel/sfGuardPlugin|INFO]
 
 You can get the PEAR channel name of a plugin by launching the
 [plugin:list] task.

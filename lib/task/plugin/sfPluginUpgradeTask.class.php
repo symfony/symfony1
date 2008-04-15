@@ -44,7 +44,7 @@ class sfPluginUpgradeTask extends sfPluginBaseTask
     $this->detailedDescription = <<<EOF
 The [plugin:upgrade|INFO] task tries to upgrade a plugin:
 
-  [./symfony plugin:upgrade sfGuargPlugin|INFO]
+  [./symfony plugin:upgrade sfGuardPlugin|INFO]
 
 The default channel is [symfony|INFO].
 
