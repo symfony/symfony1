@@ -46,14 +46,14 @@ class symfony_cmd
     sfToolkit::clearDirectory($this->tmp_dir);
   }
 
-  public function execute_command($cmd)
+  public function execute_command($cmd, $awaited_return=0)
   {
     $symfony = file_exists('symfony') ? 'symfony' : dirname(__FILE__).'/../../data/bin/symfony';
 
     ob_start();
     passthru(sprintf('%s -d html_errors=off -d open_basedir= -q "%s" %s 2>&1', $this->php_cli, $symfony, $cmd), $return);
     $content = ob_get_clean();
-    $this->t->cmp_ok($return, '<=', 0, sprintf('"symfony %s" returns ok', $cmd));
+    $this->t->cmp_ok($return, '==', $awaited_return, sprintf('"symfony %s" returns awaited value (%d)', $cmd, $awaited_return));
 
     return $content;
   }
@@ -64,7 +64,7 @@ class symfony_cmd
   }
 }
 
-$t = new lime_test(32, new lime_output_color());
+$t = new lime_test(33, new lime_output_color());
 $c = new symfony_cmd();
 $c->initialize($t);
 
@@ -74,6 +74,9 @@ $t->ok(file_exists($c->tmp_dir.DS.'symfony'), '"generate:project" installs the s
 
 $content = $c->execute_command('generate:app frontend');
 $t->ok(is_dir($c->tmp_dir.DS.'apps'.DS.'frontend'), '"generate:app" creates a "frontend" directory under "apps" directory');
+
+// failing
+$content = $c->execute_command('generate:module wrongapp foo', 1);
 
 $content = $c->execute_command('generate:module frontend foo');
 $t->ok(is_dir($c->tmp_dir.DS.'apps'.DS.'frontend'.DS.'modules'.DS.'foo'), '"generate:module" creates a "foo" directory under "modules" directory');

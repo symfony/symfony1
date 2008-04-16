@@ -17,7 +17,7 @@ try
   $logger = new sfCommandLogger($dispatcher);
 
   $application = new sfSymfonyCommandApplication($dispatcher, new sfAnsiColorFormatter(), array('symfony_lib_dir' => realpath(dirname(__FILE__).'/..')));
-  $application->run();
+  $statusCode = $application->run();
 }
 catch (Exception $e)
 {
@@ -27,8 +27,9 @@ catch (Exception $e)
   }
 
   $application->renderException($e);
+  $statusCode = $e->getCode();
 
-  exit(1);
+  exit(is_numeric($statusCode) && $statusCode ? $statusCode : 1);
 }
 
-exit(0);
+exit(is_numeric($statusCode) ? $statusCode : 0);
