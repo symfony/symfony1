@@ -25,6 +25,7 @@ class sfYamlDumper
    *
    * @param  mixed   The PHP value
    * @param  integer The level where you switch to inline YAML
+   * @param  integer The level o indentation indentation (used internally)
    *
    * @return string  The YAML representation of the PHP value
    */
