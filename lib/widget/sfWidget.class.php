@@ -283,7 +283,7 @@ abstract class sfWidget
    *
    * @param string The tag name
    * @param string The content of the tag
-   * @param An array of HTML attributes to be merged with the default HTML attributes
+   * @param array  An array of HTML attributes to be merged with the default HTML attributes
    *
    * @param string A HTML tag string
    */
