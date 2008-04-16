@@ -82,3 +82,12 @@ yaml: |
   foo: 10.0.0.2
 php: |
   array('foo' => '10.0.0.2')
+---
+test: A sequence with an embedded mapping
+brief: > 
+  A sequence with an embedded mapping
+yaml: |
+  - foo
+  - bar: { bar: foo }
+php: |
+  array('foo', 'bar' => array('bar' => 'foo'))

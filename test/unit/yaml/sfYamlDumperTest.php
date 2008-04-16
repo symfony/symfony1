@@ -12,7 +12,7 @@ require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once(dirname(__FILE__).'/../../../lib/yaml/sfYamlParser.class.php');
 require_once(dirname(__FILE__).'/../../../lib/yaml/sfYamlDumper.class.php');
 
-$t = new lime_test(139, new lime_output_color());
+$t = new lime_test(140, new lime_output_color());
 
 $parser = new sfYamlParser();
 $dumper = new sfYamlDumper();

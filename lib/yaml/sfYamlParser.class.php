@@ -85,7 +85,14 @@ class sfYamlParser
         }
         else
         {
-          $data[] = $this->parseValue($values['value']);
+          if (preg_match('/^([^ ]+)\: +({.*?)$/', $values['value'], $matches))
+          {
+            $data[$matches[1]] = sfYamlInline::load($matches[2]);
+          }
+          else
+          {
+            $data[] = $this->parseValue($values['value']);
+          }
         }
       }
       else if (preg_match('#^(?P<key>[^ ].*?) *\:(\s+(?P<value>.+?))?\s*$#', $this->currentLine, $values))
