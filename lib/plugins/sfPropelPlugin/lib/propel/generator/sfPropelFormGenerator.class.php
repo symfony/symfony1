@@ -315,19 +315,6 @@ class sfPropelFormGenerator extends sfGenerator
   {
     $options = array();
 
-    switch ($column->getCreoleType())
-    {
-      case CreoleTypes::CHAR:
-      case CreoleTypes::VARCHAR:
-      case CreoleTypes::LONGVARCHAR:
-        if ($column->getSize())
-        {
-          $options[] = sprintf('\'max_length\' => %s', $column->getSize());
-        }
-        break;
-      default:
-    }
-
     if ($column->isForeignKey())
     {
       $options[] = sprintf('\'model\' => \'%s\'', $this->getForeignTable($column)->getPhpName());
@@ -335,6 +322,20 @@ class sfPropelFormGenerator extends sfGenerator
     else if ($column->isPrimaryKey())
     {
       $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $column->getTable()->getPhpName(), $column->getPhpName());
+    }
+    else
+    {
+      switch ($column->getCreoleType())
+      {
+        case CreoleTypes::CHAR:
+        case CreoleTypes::VARCHAR:
+        case CreoleTypes::LONGVARCHAR:
+          if ($column->getSize())
+          {
+            $options[] = sprintf('\'max_length\' => %s', $column->getSize());
+          }
+          break;
+      }
     }
 
     if (!$column->isNotNull() || $column->isPrimaryKey())
