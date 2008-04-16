@@ -15,7 +15,7 @@ require_once(dirname(__FILE__).'/../../../lib/helper/TagHelper.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/UrlHelper.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/AssetHelper.php');
 
-$t = new lime_test(45, new lime_output_color());
+$t = new lime_test(53, new lime_output_color());
 
 class myRequest
 {
@@ -37,7 +37,15 @@ class myRequest
   }
 }
 
-$context = sfContext::getInstance(array('request' => 'myRequest', 'response' => 'sfWebResponse'));
+class myController
+{
+  public function genUrl($parameters = array(), $absolute = false)
+  {
+    return ($absolute ? '/' : '').$parameters;
+  }
+}
+
+$context = sfContext::getInstance(array('request' => 'myRequest', 'response' => 'sfWebResponse', 'controller' => 'myController'));
 
 // _compute_public_path()
 $t->diag('_compute_public_path');
@@ -158,3 +166,33 @@ use_stylesheet('style2');
 $t->is(get_stylesheets(),
   '<link rel="stylesheet" type="text/css" media="screen" href="/css/style.css" />'."\n".'<link rel="stylesheet" type="text/css" media="screen" href="/css/style2.css" />'."\n",
   'get_stylesheets() returns all the stylesheets previously added by use_stylesheet()');
+
+// _dynamic_path()
+$t->diag('_dynamic_path()');
+$t->is(_dynamic_path('module/action', 'js'), 'module/action?sf_format=js', '_dynamic_path() converts an internal URI to a URL');
+$t->is(_dynamic_path('module/action?key=value', 'js'), 'module/action?key=value&sf_format=js', '_dynamic_path() converts an internal URI to a URL');
+$t->is(_dynamic_path('module/action', 'js', true), '/module/action?sf_format=js', '_dynamic_path() converts an internal URI to a URL');
+
+// dynamic_javascript_include_tag()
+$t->diag('dynamic_javascript_include_tag()');
+$t->is(dynamic_javascript_include_tag('module/action'), '<script type="text/javascript" src="module/action?sf_format=js"></script>'."\n", 'dynamic_javascript_include_tag() returns a tag relative to the given action');
+$t->is(dynamic_javascript_include_tag('module/action', true), '<script type="text/javascript" src="/module/action?sf_format=js"></script>'."\n", 'dynamic_javascript_include_tag() takes an absolute boolean as its second argument');
+$t->is(dynamic_javascript_include_tag('module/action', true, array('class' => 'foo')), '<script type="text/javascript" src="/module/action?sf_format=js" class="foo"></script>'."\n", 'dynamic_javascript_include_tag() takes an array of HTML attributes as its third argument');
+
+$context->response = new sfWebResponse($context->getEventDispatcher());
+
+// use_dynamic_javascript()
+$t->diag('use_dynamic_javascript()');
+use_dynamic_javascript('module/action');
+$t->is(get_javascripts(),
+  '<script type="text/javascript" src="module/action?sf_format=js"></script>'."\n",
+  'use_dynamic_javascript() register a dynamic javascript in the response'
+);
+
+// use_dynamic_stylesheet()
+$t->diag('use_dynamic_stylesheet()');
+use_dynamic_stylesheet('module/action');
+$t->is(get_stylesheets(),
+  '<link rel="stylesheet" type="text/css" media="screen" href="module/action?sf_format=css" />'."\n", 
+  'use_dynamic_stylesheet() register a dynamic stylesheet in the response'
+);

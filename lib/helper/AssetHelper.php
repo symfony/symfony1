@@ -535,3 +535,57 @@ function include_stylesheets()
 {
   echo get_stylesheets();
 }
+
+/**
+ * Returns a <script> include tag for the given internal URI.
+ *
+ * The helper automatically adds the sf_format to the internal URI, so you don't have to.
+ *
+ * @param  string  The internal URI for the dynamic javascript
+ * @param  Boolean Whether to generate an absolute URL
+ * @param  array   An array of options (absolute)
+ *
+ * @return string  XHTML compliant <script> tag(s)
+ * @see    javascript_include_tag 
+ */
+function dynamic_javascript_include_tag($uri, $absolute = false, $options = array())
+{
+  $options['raw_name'] = true;
+
+  return javascript_include_tag(_dynamic_path($uri, 'js', $absolute), $options);
+}
+
+/**
+ * Adds a dynamic javascript to the response object.
+ *
+ * The first argument is an internal URI.
+ * The helper automatically adds the sf_format to the internal URI, so you don't have to.
+ *
+ * @see sfResponse->addJavascript()
+ */
+function use_dynamic_javascript($js, $position = '', $options = array())
+{
+  $options['raw_name'] = true;
+
+  return use_javascript(_dynamic_path($js, 'js'), $position, $options);
+}
+
+/**
+ * Adds a dynamic stylesheet to the response object.
+ *
+ * The first argument is an internal URI.
+ * The helper automatically adds the sf_format to the internal URI, so you don't have to.
+ *
+ * @see sfResponse->addStylesheet()
+ */
+function use_dynamic_stylesheet($css, $position = '', $options = array())
+{
+  $options['raw_name'] = true;
+
+  return use_stylesheet(_dynamic_path($css, 'css'), $position, $options);
+}
+
+function _dynamic_path($uri, $format, $absolute = false)
+{
+  return url_for($uri.(false === strpos($uri, '?') ? '?' : '&').'sf_format='.$format, $absolute);
+}
