@@ -187,9 +187,9 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
   /**
    * @see sfWidgetFormSchema
    */
-  public function renderField($name, $value = null, $errors = array())
+  public function renderField($name, $value = null, $attributes = array(), $errors = array())
   {
-    return $this->widget->renderField($name, $value, $errors);
+    return $this->widget->renderField($name, $value, $attributes, $errors);
   }
 
   /**

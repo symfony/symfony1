@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(22, new lime_output_color());
+$t = new lime_test(24, new lime_output_color());
 
 // widgets
 $authorSchema = new sfWidgetFormSchema(array(
@@ -72,6 +72,31 @@ $output = <<<EOF
 
 EOF;
 $t->is($f->renderRow(), $output, '->renderRow() renders a row');
+
+$output = <<<EOF
+<tr>
+  <th><label for="article_title">Title</label></th>
+  <td>  <ul class="error_list">
+    <li>title error</li>
+  </ul>
+<input type="password" name="article[title]" value="symfony" class="foo" id="title" /></td>
+</tr>
+
+EOF;
+$t->is($f->renderRow(array('class' => 'foo', 'type' => 'password', 'id' => 'title')), $output, '->renderRow() can take an array of HTML attributes as its first argument');
+
+$output = <<<EOF
+<tr>
+  <th><label for="article_title">My title</label></th>
+  <td>  <ul class="error_list">
+    <li>title error</li>
+  </ul>
+<input type="text" name="article[title]" value="symfony" id="article_title" /></td>
+</tr>
+
+EOF;
+$t->is($f->renderRow(array(), 'My title'), $output, '->renderRow() can take a label name as its second argument');
+
 $output = <<<EOF
 <tr>
   <th><label for="article_title">Title</label></th>
@@ -82,7 +107,8 @@ $output = <<<EOF
 </tr>
 
 EOF;
-$t->is($f->renderRow('help'), $output, '->renderRow() can take a help message');
+$t->is($f->renderRow(array(), null, 'help'), $output, '->renderRow() can take a help message as its third argument');
+
 $output = <<<EOF
 <tr>
   <th><label for="article_author">Author</label></th>
@@ -98,6 +124,7 @@ $output = <<<EOF
 
 EOF;
 $t->is($child->renderRow(), $output, '->renderRow() renders a row when the widget has a parent');
+
 try
 {
   $parent->renderRow();

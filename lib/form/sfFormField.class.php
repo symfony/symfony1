@@ -70,24 +70,28 @@ class sfFormField
    *
    * The formatted row will use the parent widget schema formatter.
    * The formatted row contains the label, the field, the error and
-   * the help message if given.
+   * the help message.
    *
-   * @param  string The help text
+   * @param  array  An array of HTML attributes to merge with the current attributes
+   * @param  string The label name (not null to override the current value)
+   * @param  string The help text (not null to override the current value)
    *
    * @return string The formatted row
    */
-  public function renderRow($help = '')
+  public function renderRow($attributes = array(), $label = null, $help = null)
   {
     if (is_null($this->parent))
     {
       throw new LogicException(sprintf('Unable to render the row for "%s".', $this->name));
     }
 
-    $field = $this->parent->getWidget()->renderField($this->name, $this->value, $this->error);
+    $field = $this->parent->getWidget()->renderField($this->name, $this->value, !is_array($attributes) ? array() : $attributes, $this->error);
 
     $error = $this->error instanceof sfValidatorErrorSchema ? $this->error->getGlobalErrors() : $this->error;
 
-    return strtr($this->parent->getWidget()->getFormFormatter()->formatRow($this->renderLabel(), $field, $error, $help), array('%hidden_fields%' => ''));
+    $help = is_null($help) ? $this->parent->getWidget()->getHelp($this->name) : $help;
+
+    return strtr($this->parent->getWidget()->getFormFormatter()->formatRow($this->renderLabel($label), $field, $error, $help), array('%hidden_fields%' => ''));
   }
 
   /**
@@ -112,16 +116,31 @@ class sfFormField
   /**
    * Returns the label tag.
    *
+   * @param  string The label name (not null to override the current value)
+   *
    * @return string The label tag
    */
-  public function renderLabel()
+  public function renderLabel($label = null)
   {
     if (is_null($this->parent))
     {
       throw new LogicException(sprintf('Unable to render the label for "%s".', $this->name));
     }
 
-    return $this->parent->getWidget()->getFormFormatter()->generateLabel($this->name);
+    if (!is_null($label))
+    {
+      $currentLabel = $this->parent->getWidget()->getLabel($this->name);
+      $this->parent->getWidget()->setLabel($this->name, $label);
+    }
+
+    $html = $this->parent->getWidget()->getFormFormatter()->generateLabel($this->name);
+
+    if (!is_null($label))
+    {
+      $this->parent->getWidget()->setLabel($this->name, $currentLabel);
+    }
+
+    return $html;
   }
 
   /**

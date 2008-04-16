@@ -280,11 +280,12 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    *
    * @param  string  The field name
    * @param  string  The field value
+   * @param  array   An array of HTML attributes to be merged with the current HTML attributes
    * @param  array   An array of errors for the field
    *
    * @return string  A HTML string representing the rendered widget
    */
-  public function renderField($name, $value = null, $errors = array())
+  public function renderField($name, $value = null, $attributes = array(), $errors = array())
   {
     if (is_null($widget = $this[$name]))
     {
@@ -295,7 +296,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     $clone = clone $widget;
     $clone->setIdFormat($this->options['id_format']);
 
-    return $clone->render($this->generateName($name), $value, $clone->getAttributes(), $errors);
+    return $clone->render($this->generateName($name), $value, array_merge($clone->getAttributes(), $attributes), $errors);
   }
 
   /**
@@ -339,7 +340,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
       else
       {
         $error = isset($errors[$name]) ? $errors[$name] : array();
-        $field = $this->renderField($name, $value, $error);
+        $field = $this->renderField($name, $value, array(), $error);
 
         // don't add a label tag and errors if we embed a form schema
         $label = $widget instanceof sfWidgetFormSchema ? $this->getFormFormatter()->generateLabelName($name) : $this->getFormFormatter()->generateLabel($name);
