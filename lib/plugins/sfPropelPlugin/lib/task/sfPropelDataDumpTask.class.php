@@ -73,9 +73,7 @@ EOF;
    */
   protected function execute($arguments = array(), $options = array())
   {
-    $configuration = ProjectConfiguration::getApplicationConfiguration($arguments['application'], $options['env'], true);
-
-    $databaseManager = new sfDatabaseManager($configuration);
+    $databaseManager = new sfDatabaseManager($this->configuration);
 
     $filename = $arguments['target'];
     if (!is_null($filename) && !sfToolkit::isPathAbsolute($filename))

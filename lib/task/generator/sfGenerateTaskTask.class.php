@@ -95,8 +95,7 @@ EOF;
   protected function execute(\$arguments = array(), \$options = array())
   {
     // Database initialization
-    \$configuration = ProjectConfiguration::getApplicationConfiguration(\$arguments['application'], \$options['env'], true);
-    \$databaseManager = new sfDatabaseManager(\$configuration);
+    \$databaseManager = new sfDatabaseManager(\$this->configuration);
     \$connection = Propel::getConnection(\$options['connection'] ? \$options['connection'] : '');
     // add code here
 

@@ -60,8 +60,7 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     // load Propel configuration before Phing
-    $configuration = ProjectConfiguration::getApplicationConfiguration($arguments['application'], $options['env'], true);
-    $databaseManager = new sfDatabaseManager($configuration);
+    $databaseManager = new sfDatabaseManager($this->configuration);
     require_once sfConfig::get('sf_symfony_lib_dir').'/plugins/sfPropelPlugin/lib/propel/sfPropelAutoload.php';
 
     $buildAll = new sfPropelBuildAllTask($this->dispatcher, $this->formatter);

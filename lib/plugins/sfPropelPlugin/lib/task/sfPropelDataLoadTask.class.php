@@ -83,9 +83,7 @@ EOF;
       $fixturesDirs = sfFinder::type('dir')->name('fixtures')->in(array_merge($pluginDirs, array(sfConfig::get('sf_data_dir'))));
     }
 
-    $configuration = ProjectConfiguration::getApplicationConfiguration($arguments['application'], $options['env'], true);
-
-    $databaseManager = new sfDatabaseManager($configuration);
+    $databaseManager = new sfDatabaseManager($this->configuration);
 
     $data = new sfPropelData();
     $data->setDeleteCurrentData(isset($options['append']) ? ($options['append'] ? false : true) : true);
