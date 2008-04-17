@@ -278,18 +278,12 @@ class sfProjectConfiguration
   {
     $class = $application.'Configuration';
 
-    if (is_null(sfProjectConfiguration::$active))
-    {
-      // force initialization of sf_apps_dir config setting
-      new ProjectConfiguration(null, $dispatcher);
-    }
-
-    require_once sfConfig::get('sf_apps_dir').'/'.$application.'/config/'.$class.'.class.php';
-
     if (is_null($rootDir))
     {
       $rootDir = self::guessRootDir();
     }
+
+    require_once $rootDir.'/apps/'.$application.'/config/'.$class.'.class.php';
 
     return new $class($environment, $debug, $rootDir, $dispatcher);
   }
