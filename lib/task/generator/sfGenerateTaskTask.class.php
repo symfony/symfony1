@@ -28,8 +28,8 @@ class sfGenerateTaskTask extends sfBaseTask
 
     $this->addOptions(array(
       new sfCommandOption('dir', null, sfCommandOption::PARAMETER_OPTIONAL, 'The directory to create the task in', 'lib/task'),
-      new sfCommandOption('use_database', 'db', sfCommandOption::PARAMETER_OPTIONAL, 'Whether the task needs model initialization to access database', 'true'),
-      new sfCommandOption('brief_description', 'bd', sfCommandOption::PARAMETER_OPTIONAL, 'A brief task description (appears in task list)', ''),
+      new sfCommandOption('use-database', 'db', sfCommandOption::PARAMETER_OPTIONAL, 'Whether the task needs model initialization to access database', 'true'),
+      new sfCommandOption('brief-description', 'bd', sfCommandOption::PARAMETER_OPTIONAL, 'A brief task description (appears in task list)', ''),
     ));
 
     $this->namespace = 'generate';
@@ -44,8 +44,8 @@ The `fooBarTask.class.php` skeleton task is created under the `lib/task/` direct
 If you want to create the file in another directory (relative to the project root folder), pass it in the [dir|INFO] option:
   [./symfony generate:task namespace:name --dir=plugins/myPlugin/lib/task|INFO]
 
-If the task doesn't need database access, you can remove the database initialization code with the [use_database|INFO] option:
-  [./symfony generate:task namespace:name --use_database=false|INFO]
+If the task doesn't need database access, you can remove the database initialization code with the [use-database|INFO] option:
+  [./symfony generate:task namespace:name --use-database=false|INFO]
 
 You can also specify a description:
   [./symfony generate:task namespace:name --briefDescription='Does interesting things' --detailedDescription='Usage tutorial'|INFO]
@@ -62,7 +62,7 @@ EOF;
     $namespace = isset($taskNameComponents[1]) ? $taskNameComponents[0] : '';
     $name = isset($taskNameComponents[1]) ? $taskNameComponents[1] : $taskNameComponents[0];
     $taskClassName = str_replace('-', '', ($namespace ? $namespace.ucfirst($name) : $name)).'Task';
-    $briefDescription = $options['brief_description'];
+    $briefDescription = $options['brief-description'];
     $detailedDescription = <<<HED
 The [$taskName|INFO] task does things.
 Call it with:
@@ -70,7 +70,7 @@ Call it with:
   [php symfony $taskName|INFO]
 HED;
     
-    if($options['use_database'] != 'true')
+    if($options['use-database'] != 'true')
     {
       $content = <<<HED
 <?php
