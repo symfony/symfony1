@@ -211,10 +211,10 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                     }
                 } else {
                     // 1-1 relation
-                    $oneToOne = true; 
+                    $oneToOne = true;
                     if ( ! isset($nonemptyComponents[$dqlAlias])) {
                         $prev[$parent][$relationAlias] = $driver->getNullPointer();
-                    } else {
+                    } else if ( ! isset($prev[$parent][$relationAlias])) {
                         $element = $driver->getElement($data, $componentName);
                         $prev[$parent][$relationAlias] = $element;
                     }
