@@ -89,6 +89,12 @@ EOF;
   {
     $app = $arguments['application'];
 
+    // Validate the application name
+    if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $app))
+    {
+      throw new sfCommandException(sprintf('The application name "%s" is invalid.', $app));
+    }
+
     $appDir = sfConfig::get('sf_apps_dir').'/'.$app;
 
     if (is_dir($appDir))

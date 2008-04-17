@@ -62,6 +62,13 @@ EOF;
     $namespace = isset($taskNameComponents[1]) ? $taskNameComponents[0] : '';
     $name = isset($taskNameComponents[1]) ? $taskNameComponents[1] : $taskNameComponents[0];
     $taskClassName = str_replace('-', '', ($namespace ? $namespace.ucfirst($name) : $name)).'Task';
+
+    // Validate the class name
+    if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $app))
+    {
+      throw new sfCommandException(sprintf('The task class name "%s" is invalid.', $app));
+    }
+
     $briefDescription = $options['brief-description'];
     $detailedDescription = <<<HED
 The [$taskName|INFO] task does things.
