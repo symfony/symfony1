@@ -21,7 +21,7 @@ default:
     check_lock:             off       # Enable the application lock system triggered by the clear-cache and disable tasks. Set to on to have all requests to disabled applications redirected to the $sf_symfony_data_dir/web/errors/unavailable.php page.
 
     # Form security secret (CSRF protection)
-    form_csrf_secret:       false     # Unique secret to enable CSRF protection or false to disable
+    csrf_secret:            false     # Unique secret to enable CSRF protection or false to disable
 
     # Output escaping settings
     escaping_strategy:      off              # Determines how variables are made available to templates. Accepted values: on, off.
