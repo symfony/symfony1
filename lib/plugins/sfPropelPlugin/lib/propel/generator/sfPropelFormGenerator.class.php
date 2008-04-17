@@ -364,7 +364,7 @@ class sfPropelFormGenerator extends sfGenerator
 
     foreach ($this->getManyToManyTables() as $tables)
     {
-      if (($m = strlen($tables['middleTable']->getName().'_list')) > $max)
+      if (($m = strlen($this->underscore($tables['middleTable']->getPhpName()).'_list')) > $max)
       {
         $max = $m;
       }
@@ -422,6 +422,11 @@ class sfPropelFormGenerator extends sfGenerator
   public function getI18nModel()
   {
     return call_user_func(array($this->table->getPhpName().'Peer', 'getI18nModel'));
+  }
+
+  public function underscore($name)
+  {
+    return strtolower(preg_replace(array('/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'), '\\1_\\2', $name));
   }
 
   /**
