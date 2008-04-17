@@ -51,6 +51,16 @@ class sfPropelFormGenerator extends sfGenerator
       throw new sfParseException('You must specify a "connection" parameter.');
     }
 
+    if (!isset($this->params['model_dir_name']))
+    {
+      $this->params['model_dir_name'] = 'model';
+    }
+
+    if (!isset($this->params['form_dir_name']))
+    {
+      $this->params['form_dir_name'] = 'form';
+    }
+
     $this->loadBuilders();
 
     $this->dbMap = Propel::getDatabaseMap($this->params['connection']);
@@ -74,7 +84,13 @@ class sfPropelFormGenerator extends sfGenerator
 
       // find the package to store forms in the same directory as the model classes
       $packages = explode('.', constant($table->getPhpName().'Peer::CLASS_DEFAULT'));
-      $baseDir = sfConfig::get('sf_root_dir').'/'.implode(DIRECTORY_SEPARATOR, array_slice($packages, 0, count($packages) - 2)).'/form';
+      array_pop($packages);
+      if (false === $pos = array_search($this->params['model_dir_name'], $packages))
+      {
+        throw new InvalidArgumentException(sprintf('Unable to find the model dir name (%s) in the package %s.', $this->params['model_dir_name'], constant($table->getPhpName().'Peer::CLASS_DEFAULT')));
+      }
+      $packages[$pos] = $this->params['form_dir_name'];
+      $baseDir = sfConfig::get('sf_root_dir').'/'.implode(DIRECTORY_SEPARATOR, $packages);
 
       if (!is_dir($baseDir.'/base'))
       {
