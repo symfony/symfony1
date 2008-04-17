@@ -20,7 +20,7 @@ require_once(dirname(__FILE__).'/../vendor/lime/lime.php');
  */
 class sfTestBrowser extends sfBrowser
 {
-  protected
+  protected static
     $test = null;
 
   /**
@@ -36,7 +36,10 @@ class sfTestBrowser extends sfBrowser
 
     $output = isset($options['output']) ? $options['output'] : new lime_output_color();
 
-    $this->test = new lime_test(null, $output);
+    if (is_null(self::$test))
+    {
+      self::$test = new lime_test(null, $output);
+    }
   }
 
   /**
@@ -46,7 +49,7 @@ class sfTestBrowser extends sfBrowser
    */
   public function test()
   {
-    return $this->test;
+    return self::$test;
   }
 
   /**
@@ -78,7 +81,7 @@ class sfTestBrowser extends sfBrowser
   {
     $uri = $this->fixUri($uri);
 
-    $this->test->comment(sprintf('%s %s', strtolower($method), $uri));
+    $this->test()->comment(sprintf('%s %s', strtolower($method), $uri));
 
     return parent::call($uri, $method, $parameters, $changeStack);
   }
@@ -90,7 +93,7 @@ class sfTestBrowser extends sfBrowser
    */
   public function back()
   {
-    $this->test->comment('back');
+    $this->test()->comment('back');
 
     return parent::back();
   }
@@ -102,7 +105,7 @@ class sfTestBrowser extends sfBrowser
    */
   public function forward()
   {
-    $this->test->comment('forward');
+    $this->test()->comment('forward');
 
     return parent::forward();
   }
@@ -118,11 +121,11 @@ class sfTestBrowser extends sfBrowser
   {
     if ($location = $this->context->getResponse()->getHttpHeader('location'))
     {
-      $boolean ? $this->test->pass(sprintf('page redirected to "%s"', $location)) : $this->test->fail(sprintf('page redirected to "%s"', $location));
+      $boolean ? $this->test()->pass(sprintf('page redirected to "%s"', $location)) : $this->test()->fail(sprintf('page redirected to "%s"', $location));
     }
     else
     {
-      $boolean ? $this->test->fail('page redirected') : $this->test->pass('page not redirected');
+      $boolean ? $this->test()->fail('page redirected') : $this->test()->pass('page not redirected');
     }
 
     return $this;
@@ -157,7 +160,7 @@ class sfTestBrowser extends sfBrowser
    */
   public function isStatusCode($statusCode = 200)
   {
-    $this->test->is($this->getResponse()->getStatusCode(), $statusCode, sprintf('status code is "%s"', $statusCode));
+    $this->test()->is($this->getResponse()->getStatusCode(), $statusCode, sprintf('status code is "%s"', $statusCode));
 
     return $this;
   }
@@ -171,7 +174,7 @@ class sfTestBrowser extends sfBrowser
    */
   public function responseContains($text)
   {
-    $this->test->like($this->getResponse()->getContent(), '/'.preg_quote($text, '/').'/', sprintf('response contains "%s"', substr($text, 0, 40)));
+    $this->test()->like($this->getResponse()->getContent(), '/'.preg_quote($text, '/').'/', sprintf('response contains "%s"', substr($text, 0, 40)));
 
     return $this;
   }
@@ -186,7 +189,7 @@ class sfTestBrowser extends sfBrowser
    */
   public function isRequestParameter($key, $value)
   {
-    $this->test->is($this->getRequest()->getParameter($key), $value, sprintf('request parameter "%s" is "%s"', $key, $value));
+    $this->test()->is($this->getRequest()->getParameter($key), $value, sprintf('request parameter "%s" is "%s"', $key, $value));
 
     return $this;
   }
@@ -216,8 +219,8 @@ class sfTestBrowser extends sfBrowser
         $entry = $actionStack->getEntry($position);
     }
 
-    $this->test->is($entry->getModuleName(), $moduleName, sprintf('request is forwarded to the "%s" module (%s)', $moduleName, $position));
-    $this->test->is($entry->getActionName(), $actionName, sprintf('request is forwarded to the "%s" action (%s)', $actionName, $position));
+    $this->test()->is($entry->getModuleName(), $moduleName, sprintf('request is forwarded to the "%s" module (%s)', $moduleName, $position));
+    $this->test()->is($entry->getActionName(), $actionName, sprintf('request is forwarded to the "%s" action (%s)', $actionName, $position));
 
     return $this;
   }
@@ -245,7 +248,7 @@ class sfTestBrowser extends sfBrowser
       }
     }
 
-    $this->test->ok($ok, sprintf('response header "%s" is "%s" (%s)', $key, $value, $this->getResponse()->getHttpHeader($key)));
+    $this->test()->ok($ok, sprintf('response header "%s" is "%s" (%s)', $key, $value, $this->getResponse()->getHttpHeader($key)));
 
     return $this;
   }
@@ -259,7 +262,7 @@ class sfTestBrowser extends sfBrowser
    */
   public function isUserCulture($culture)
   {
-    $this->test->is($this->getContext()->getUser()->getCulture(), $culture, sprintf('user culture is "%s"', $culture));
+    $this->test()->is($this->getContext()->getUser()->getCulture(), $culture, sprintf('user culture is "%s"', $culture));
 
     return $this;
   }
@@ -273,7 +276,7 @@ class sfTestBrowser extends sfBrowser
    */
   public function isRequestFormat($format)
   {
-    $this->test->is($this->getContext()->getRequest()->getRequestFormat(), $format, sprintf('request format is "%s"', $format));
+    $this->test()->is($this->getContext()->getRequest()->getRequestFormat(), $format, sprintf('request format is "%s"', $format));
 
     return $this;
   }
@@ -300,37 +303,37 @@ class sfTestBrowser extends sfBrowser
 
     if (false === $value)
     {
-      $this->test->is(count($values), 0, sprintf('response selector "%s" does not exist', $selector));
+      $this->test()->is(count($values), 0, sprintf('response selector "%s" does not exist', $selector));
     }
     else if (true === $value)
     {
-      $this->test->cmp_ok(count($values), '>', 0, sprintf('response selector "%s" exists', $selector));
+      $this->test()->cmp_ok(count($values), '>', 0, sprintf('response selector "%s" exists', $selector));
     }
     else if (is_int($value))
     {
-      $this->test->is(count($values), $value, sprintf('response selector "%s" matches "%s" times', $selector, $value));
+      $this->test()->is(count($values), $value, sprintf('response selector "%s" matches "%s" times', $selector, $value));
     }
     else if (preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $value, $match))
     {
       $position = isset($options['position']) ? $options['position'] : 0;
       if ($match[1] == '!')
       {
-        $this->test->unlike(@$values[$position], substr($value, 1), sprintf('response selector "%s" does not match regex "%s"', $selector, substr($value, 1)));
+        $this->test()->unlike(@$values[$position], substr($value, 1), sprintf('response selector "%s" does not match regex "%s"', $selector, substr($value, 1)));
       }
       else
       {
-        $this->test->like(@$values[$position], $value, sprintf('response selector "%s" matches regex "%s"', $selector, $value));
+        $this->test()->like(@$values[$position], $value, sprintf('response selector "%s" matches regex "%s"', $selector, $value));
       }
     }
     else
     {
       $position = isset($options['position']) ? $options['position'] : 0;
-      $this->test->is(@$values[$position], $value, sprintf('response selector "%s" matches "%s"', $selector, $value));
+      $this->test()->is(@$values[$position], $value, sprintf('response selector "%s" matches "%s"', $selector, $value));
     }
 
     if (isset($options['count']))
     {
-      $this->test->is(count($values), $options['count'], sprintf('response selector "%s" matches "%s" times', $selector, $options['count']));
+      $this->test()->is(count($values), $options['count'], sprintf('response selector "%s" matches "%s" times', $selector, $options['count']));
     }
 
     return $this;
@@ -350,29 +353,29 @@ class sfTestBrowser extends sfBrowser
 
     if (null === $e)
     {
-      $this->test->fail('response returns an exception');
+      $this->test()->fail('response returns an exception');
     }
     else
     {
       if (null !== $class)
       {
-        $this->test->ok($e instanceof $class, sprintf('response returns an exception of class "%s"', $class));
+        $this->test()->ok($e instanceof $class, sprintf('response returns an exception of class "%s"', $class));
       }
 
       if (null !== $message && preg_match('/^(!)?([^a-zA-Z0-9\\\\]).+?\\2[ims]?$/', $message, $match))
       {
         if ($match[1] == '!')
         {
-          $this->test->unlike($e->getMessage(), substr($message, 1), sprintf('response exception message does not match regex "%s"', $message));
+          $this->test()->unlike($e->getMessage(), substr($message, 1), sprintf('response exception message does not match regex "%s"', $message));
         }
         else
         {
-          $this->test->like($e->getMessage(), $message, sprintf('response exception message matches regex "%s"', $message));
+          $this->test()->like($e->getMessage(), $message, sprintf('response exception message matches regex "%s"', $message));
         }
       }
       else if (null !== $message)
       {
-        $this->test->is($e->getMessage(), $message, sprintf('response exception message matches regex "%s"', $message));
+        $this->test()->is($e->getMessage(), $message, sprintf('response exception message matches regex "%s"', $message));
       }
     }
 
@@ -410,7 +413,7 @@ class sfTestBrowser extends sfBrowser
     // check that cache is enabled
     if (!$cacheManager)
     {
-      $this->test->ok(!$boolean, 'cache is disabled');
+      $this->test()->ok(!$boolean, 'cache is disabled');
 
       return $this;
     }
@@ -429,39 +432,39 @@ class sfTestBrowser extends sfBrowser
     // check layout configuration
     if ($cacheManager->withLayout($uri) && !$with_layout)
     {
-      $this->test->fail('cache without layout');
-      $this->test->skip('cache is not configured properly', 2);
+      $this->test()->fail('cache without layout');
+      $this->test()->skip('cache is not configured properly', 2);
     }
     else if (!$cacheManager->withLayout($uri) && $with_layout)
     {
-      $this->test->fail('cache with layout');
-      $this->test->skip('cache is not configured properly', 2);
+      $this->test()->fail('cache with layout');
+      $this->test()->skip('cache is not configured properly', 2);
     }
     else
     {
-      $this->test->pass('cache is configured properly');
+      $this->test()->pass('cache is configured properly');
 
       // check page is cached
-      $ret = $this->test->is($cacheManager->has($uri), $boolean, sprintf('"%s" %s in cache', $type, $boolean ? 'is' : 'is not'));
+      $ret = $this->test()->is($cacheManager->has($uri), $boolean, sprintf('"%s" %s in cache', $type, $boolean ? 'is' : 'is not'));
 
       // check that the content is ok in cache
       if ($boolean)
       {
         if (!$ret)
         {
-          $this->test->fail('content in cache is ok');
+          $this->test()->fail('content in cache is ok');
         }
         else if ($with_layout)
         {
           $response = unserialize($cacheManager->get($uri));
           $content = $response->getContent();
-          $this->test->ok($content == $this->getResponse()->getContent(), 'content in cache is ok');
+          $this->test()->ok($content == $this->getResponse()->getContent(), 'content in cache is ok');
         }
         else
         {
           $ret = unserialize($cacheManager->get($uri));
           $content = $ret['content'];
-          $this->test->ok(false !== strpos($this->getResponse()->getContent(), $content), 'content in cache is ok');
+          $this->test()->ok(false !== strpos($this->getResponse()->getContent(), $content), 'content in cache is ok');
         }
       }
     }
