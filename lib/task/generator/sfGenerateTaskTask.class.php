@@ -61,7 +61,7 @@ EOF;
     $taskNameComponents = split(':', $taskName);
     $namespace = isset($taskNameComponents[1]) ? $taskNameComponents[0] : '';
     $name = isset($taskNameComponents[1]) ? $taskNameComponents[1] : $taskNameComponents[0];
-    $taskClassName = ($namespace ? $namespace.ucfirst($name) : $name) . 'Task';
+    $taskClassName = str_replace('-', '', ($namespace ? $namespace.ucfirst($name) : $name)).'Task';
     $briefDescription = $options['brief_description'];
     $detailedDescription = <<<HED
 The [$taskName|INFO] task does things.
