@@ -16,13 +16,6 @@ if (!include(dirname(__FILE__).'/../bootstrap/functional.php'))
 
 class myTestBrowser extends sfTestBrowser
 {
-  public function isUserCulture($culture)
-  {
-    $this->test->is($this->getContext()->getUser()->getCulture(), $culture, sprintf('user culture is "%s"', $culture));
-
-    return $this;
-  }
-
   public function checkResponseForCulture($culture = 'fr')
   {
     return $this->
