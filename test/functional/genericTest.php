@@ -162,7 +162,25 @@ $b->
 $b->
   get('/view')->
   isStatusCode(200)->
+  isResponseHeader('Content-Type', 'text/html; charset=utf-8')->
   checkResponseElement('head title', 'foo title')
+;
+
+// view.yml with other than default content-type
+$b->
+  get('/view/plain')->
+  isStatusCode(200)->
+  isResponseHeader('Content-Type', 'text/plain; charset=utf-8')->
+  responseContains('<head>')->
+  responseContains('plaintext')
+;
+
+// view.yml with other than default content-type and no layout
+$b->
+  get('/view/image')->
+  isStatusCode(200)->
+  isResponseHeader('Content-Type', 'image/jpg')->
+  responseContains('image')
 ;
 
 // getPresentationFor()

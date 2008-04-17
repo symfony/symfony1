@@ -106,7 +106,7 @@ class sfWebResponse extends sfResponse
       $this->options['charset'] = 'utf-8';
     }
 
-    $this->setContentType(isset($this->options['content_type']) ? $this->options['content_type'] : 'text/html');
+    $this->options['content_type'] = $this->fixContentType(isset($this->options['content_type']) ? $this->options['content_type'] : 'text/html');
   }
 
   /**
@@ -262,13 +262,7 @@ class sfWebResponse extends sfResponse
    */
   public function setContentType($value)
   {
-    // add charset if needed (only on text content)
-    if (false === stripos($value, 'charset') && (0 === stripos($value, 'text/') || strlen($value) - 3 === strripos($value, 'xml')))
-    {
-      $value .= '; charset='.$this->options['charset'];
-    }
-
-    $this->headers['Content-Type'] = $value;
+    $this->headers['Content-Type'] = $this->fixContentType($value);
   }
 
   /**
@@ -278,11 +272,11 @@ class sfWebResponse extends sfResponse
    */
   public function getContentType()
   {
-    return $this->getHttpHeader('Content-Type');
+    return $this->getHttpHeader('Content-Type', $this->options['content_type']);
   }
 
   /**
-   * Send HTTP headers and cookies.
+   * Sends HTTP headers and cookies.
    *
    */
   public function sendHttpHeaders()
@@ -302,6 +296,10 @@ class sfWebResponse extends sfResponse
     }
 
     // headers
+    if (!$this->getHttpHeader('Content-Type'))
+    {
+      $this->setContentType($this->options['content_type']);
+    }
     foreach ($this->headers as $name => $value)
     {
       header($name.': '.$value);
@@ -769,5 +767,23 @@ class sfWebResponse extends sfResponse
     {
       throw new InvalidArgumentException(sprintf('The position "%s" does not exist (available positions: %s).', $position, implode(', ', $this->positions)));
     }
+  }
+
+  /**
+   * Fixes the content type by adding the charset for text content types.
+   *
+   * @param string The content type
+   *
+   * @param string The content type with the charset if needed
+   */
+  protected function fixContentType($contentType)
+  {
+    // add charset if needed (only on text content)
+    if (false === stripos($contentType, 'charset') && (0 === stripos($contentType, 'text/') || strlen($contentType) - 3 === strripos($contentType, 'xml')))
+    {
+      $contentType .= '; charset='.$this->options['charset'];
+    }
+
+    return $contentType;
   }
 }

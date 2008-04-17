@@ -14,4 +14,12 @@ class viewActions extends sfActions
   {
     $this->setTemplate('foo');
   }
+
+  public function executePlain()
+  {
+  }
+
+  public function executeImage()
+  {
+  }
 }
