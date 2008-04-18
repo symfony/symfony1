@@ -63,7 +63,7 @@ class sfException extends Exception
       error_log($exception->getMessage());
 
       // clean current output buffer
-      while (@ob_end_clean());
+//      while (@ob_end_clean());
 
       ob_start(sfConfig::get('sf_compressed') ? 'ob_gzhandler' : '');
 
@@ -136,7 +136,7 @@ class sfException extends Exception
 
     // dump main objects values
     $sf_settings = '';
-    $settingsTable = $requestTable = $responseTable = $globalsTable = '';
+    $settingsTable = $requestTable = $responseTable = $globalsTable = $userTable = '';
     if (class_exists('sfContext', false) && sfContext::hasInstance())
     {
       $context = sfContext::getInstance();
