@@ -59,13 +59,10 @@ class Doctrine_Data_Import extends Doctrine_Data
         }
     }
 
-    /**
-     * doImport
-     *
-     * @return void
-     */
-    public function doImport()
+    public function doParsing()
     {
+        $recursiveMerge = Doctrine_Manager::getInstance()->getAttribute('recursive_merge_fixtures');
+        $mergeFunction = $recursiveMerge === true ? 'array_merge_recursive':'array_merge';
         $directory = $this->getDirectory();
 
         $array = array();
@@ -76,7 +73,7 @@ class Doctrine_Data_Import extends Doctrine_Data
 
                 // If they specified a specific yml file
                 if (end($e) == 'yml') {
-                    $array = array_merge($array, Doctrine_Parser::load($dir, $this->getFormat()));
+                    $array = $mergeFunction($array, Doctrine_Parser::load($dir, $this->getFormat()));
                 // If they specified a directory
                 } else if(is_dir($dir)) {
                     $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
@@ -85,13 +82,24 @@ class Doctrine_Data_Import extends Doctrine_Data
                     foreach ($it as $file) {
                         $e = explode('.', $file->getFileName());
                         if (in_array(end($e), $this->getFormats())) {
-                            $array = array_merge($array, Doctrine_Parser::load($file->getPathName(), $this->getFormat()));
+                            $array = $mergeFunction($array, Doctrine_Parser::load($file->getPathName(), $this->getFormat()));
                         }
                     }
                 }
             }
         }
 
+        return $array;
+    }
+
+    /**
+     * doImport
+     *
+     * @return void
+     */
+    public function doImport()
+    {
+        $array = $this->doParsing();
         $this->_loadData($array);
     }
 

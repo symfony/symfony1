@@ -193,6 +193,7 @@ final class Doctrine
     const ATTR_QUERY_CACHE_LIFESPAN     = 158;
     const ATTR_AUTOLOAD_TABLE_CLASSES   = 160;
     const ATTR_MODEL_LOADING            = 161;
+    const ATTR_RECURSIVE_MERGE_FIXTURES = 162;
 
     /**
      * LIMIT CONSTANTS
