@@ -58,4 +58,10 @@
     <column name="title" type="varchar" />
   </table>
 
+  <table name="attachment">
+    <column name="id" type="integer" required="true" primaryKey="true" autoincrement="true" />
+    <column name="name" type="varchar" size="255" />
+    <column name="file" type="varchar" size="255" />
+  </table>
+
 </database>

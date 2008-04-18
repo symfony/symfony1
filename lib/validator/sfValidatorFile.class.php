@@ -311,6 +311,14 @@ class sfValidatedFile
   }
 
   /**
+   * Returns the name of the saved file.
+   */
+  public function __toString()
+  {
+    return $this->savedName;
+  }
+
+  /**
    * Saves the uploaded file.
    *
    * This method can throw exceptions if there is a problem when saving the file.
@@ -385,7 +393,7 @@ class sfValidatedFile
    */
   public function getOriginalExtension($default = '')
   {
-    return (false === $pos = strpos($this->getOriginalName(), '.')) ? $default : substr($this->getOriginalName(), $pos);
+    return (false === $pos = strrpos($this->getOriginalName(), '.')) ? $default : substr($this->getOriginalName(), $pos);
   }
 
   /**
