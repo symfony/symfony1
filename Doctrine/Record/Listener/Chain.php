@@ -84,7 +84,7 @@ class Doctrine_Record_Listener_Chain extends Doctrine_Access implements Doctrine
      * @param Doctrine_Record_Listener $listener    listener to be added
      * @return Doctrine_Record_Listener_Chain       this object
      */
-    public function set($key, Doctrine_EventListener $listener)
+    public function set($key, $listener)
     {
         $this->_listeners[$key] = $listener;
     }

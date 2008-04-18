@@ -84,7 +84,7 @@ class Doctrine_EventListener_Chain extends Doctrine_Access implements Doctrine_E
      * @param Doctrine_EventListener $listener
      * @return void
      */
-    public function set($key, Doctrine_EventListener $listener)
+    public function set($key, $listener)
     {
         $this->_listeners[$key] = $listener;
     }
