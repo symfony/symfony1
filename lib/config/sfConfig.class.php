@@ -87,7 +87,6 @@ class sfConfig
    */
   public static function clear()
   {
-    self::$config = null;
     self::$config = array();
   }
 }
