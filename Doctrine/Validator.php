@@ -147,7 +147,7 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
              case 'object':
                  return is_object($var);
              case 'boolean':
-                 return is_bool($var);
+                 return is_bool($var) || (is_numeric($var) && ($var == 0 || $var == 1));
              case 'timestamp':
                  $validator = self::getValidator('timestamp');
                  return $validator->validate($var);
