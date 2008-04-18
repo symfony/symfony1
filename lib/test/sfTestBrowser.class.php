@@ -473,6 +473,11 @@ class sfTestBrowser extends sfBrowser
   }
 }
 
+if (!defined('E_RECOVERABLE_ERROR'))
+{
+  define('E_RECOVERABLE_ERROR', 4096);
+}
+
 /**
  * Error handler for the current test browser instance.
  *
@@ -488,7 +493,7 @@ function sfTestBrowserErrorHandler($errno, $errstr, $errfile, $errline)
     return;
   }
 
-  $msg = sprintf('PHP send a "%s" error at %s line %s (%s)', '%s', $errfile, $errline, $errstr);
+  $msg = sprintf('PHP send a "%%s" error at %s line %s (%s)', $errfile, $errline, $errstr);
   switch ($errno)
   {
     case E_WARNING:
@@ -499,6 +504,9 @@ function sfTestBrowserErrorHandler($errno, $errstr, $errfile, $errline)
       break;
     case E_STRICT:
       throw new Exception(sprintf($msg, 'strict'));
+      break;
+    case E_RECOVERABLE_ERROR:
+      throw new Exception(sprintf($msg, 'catchable'));
       break;
   }
 }
