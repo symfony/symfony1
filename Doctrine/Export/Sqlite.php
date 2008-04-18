@@ -389,4 +389,19 @@ class Doctrine_Export_Sqlite extends Doctrine_Export
         
         return 'ALTER TABLE ' . $name . ' ' . $query;
     }
+
+    /**
+     * createForeignKey
+     *
+     * Sqlite does not support foreign keys so we are not even going to do anything if this function is called
+     * to avoid any sql errors if a user tries to use this on sqlite
+     *
+     * @param string    $table         name of the table on which the foreign key is to be created
+     * @param array     $definition    associative array that defines properties of the foreign key to be created.
+     * @return string
+     */
+    public function createForeignKey($table, array $definition)
+    {
+        return false;
+    }
 }
