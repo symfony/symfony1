@@ -68,6 +68,7 @@ class sfValidatorFile extends sfValidatorBase
         'image/x-png',
         'image/gif',
     )));
+    $this->addOption('validated_file_class', 'sfValidatedFile');
 
     $this->addMessage('max_size', 'File is too large (maximum is %max_size% bytes).');
     $this->addMessage('mime_types', 'Invalid mime type (%mime_type%).');
@@ -151,7 +152,9 @@ class sfValidatorFile extends sfValidatorBase
       }
     }
 
-    return new sfValidatedFile($value['name'], $mimeType, $value['tmp_name'], $value['size']);
+    $class = $this->getOption('validated_file_class');
+
+    return new $class($value['name'], $mimeType, $value['tmp_name'], $value['size']);
   }
 
   /**

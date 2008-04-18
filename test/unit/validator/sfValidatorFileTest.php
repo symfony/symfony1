@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(58, new lime_output_color());
+$t = new lime_test(59, new lime_output_color());
 
 $tmpDir = sfToolkit::getTmpDir();
 $content = 'This is an ASCII file.';
@@ -127,6 +127,14 @@ $t->ok($f instanceof sfValidatedFile, '->clean() returns a sfValidatedFile insta
 $t->is($f->getOriginalName(), '', '->clean() returns a sfValidatedFile with an empty original name if the name is not passed in the initial value');
 $t->is($f->getSize(), strlen($content), '->clean() returns a sfValidatedFile with a computed file size if the size is not passed in the initial value');
 $t->is($f->getType(), 'text/plain', '->clean() returns a sfValidatedFile with a guessed content type');
+
+class myValidatedFile extends sfValidatedFile
+{
+}
+
+$v->setOption('validated_file_class', 'myValidatedFile');
+$f = $v->clean(array('tmp_name' => $tmpDir.'/test.txt'));
+$t->ok($f instanceof myValidatedFile, '->clean() can take a "validated_file_class" option');
 
 foreach (array(UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE, UPLOAD_ERR_PARTIAL, UPLOAD_ERR_NO_TMP_DIR, UPLOAD_ERR_CANT_WRITE, UPLOAD_ERR_EXTENSION) as $error)
 {
