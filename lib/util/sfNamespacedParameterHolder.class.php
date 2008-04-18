@@ -239,6 +239,10 @@ class sfNamespacedParameterHolder extends sfParameterHolder
       $retval = $this->parameters[$ns][$name];
       unset($this->parameters[$ns][$name]);
     }
+    else
+    {
+      $retval = sfToolkit::removeArrayValueForPath($this->parameters[$ns], $name, $default);
+    }
 
     return $retval;
   }

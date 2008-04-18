@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(52, new lime_output_color());
+$t = new lime_test(54, new lime_output_color());
 
 // ->clear()
 $t->diag('->clear()');
@@ -220,3 +220,5 @@ $ph = new sfNamespacedParameterHolder();
 $ph->add(array('foo' => array('bar' => 'foo')));
 $t->is($ph->has('foo[bar]'), true, '->has() can takes a multi-array key');
 $t->is($ph->get('foo[bar]'), 'foo', '->has() can takes a multi-array key');
+$t->is($ph->remove('foo[bar]'), 'foo', '->remove() can takes a multi-array key');
+$t->is($ph->getAll(), array('foo' => array()), '->remove() can takes a multi-array key');

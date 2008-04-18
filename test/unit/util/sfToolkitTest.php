@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(93, new lime_output_color());
+$t = new lime_test(99, new lime_output_color());
 
 // ::stringToArray()
 $t->diag('::stringToArray()');
@@ -233,3 +233,32 @@ $t->is(sfToolkit::getArrayValueForPath($arr, 'foobar[]', 'foo'), 'foo', '::getAr
 $t->is(sfToolkit::getArrayValueForPath($arr, 'bar[1]'), 'bar', '::getArrayValueForPath() can take an array indexed by integer');
 $t->is(sfToolkit::getArrayValueForPath($arr, 'bar[2]'), null, '::getArrayValueForPath() can take an array indexed by integer');
 $t->is(sfToolkit::getArrayValueForPath($arr, 'bar[2]', 'foo'), 'foo', '::getArrayValueForPath() can take an array indexed by integer');
+
+// ::removeArrayValueForPath()
+$t->diag('::removeArrayValueForPath()');
+$t->is(sfToolkit::removeArrayValueForPath($arr, 'foobar'), 'foo', '::removeArrayValueForPath() returns the removed value');
+$t->is($arr, array(
+  'foo' => array(
+    'bar' => array(
+      'baz' => 'foo bar',
+    ),
+  ),
+  'bar' => array(
+    'foo',
+    'bar',
+  ),
+), '::removeArrayValueForPath() removes a key');
+$t->is(sfToolkit::removeArrayValueForPath($arr, 'barfoo'), null, '::removeArrayValueForPath() returns null if the key does not exist');
+$t->is(sfToolkit::removeArrayValueForPath($arr, 'barfoo', 'bar'), 'bar', '::removeArrayValueForPath() takes the default value as a third argument');
+
+$t->is(sfToolkit::removeArrayValueForPath($arr, 'foo[bar][baz]'), 'foo bar', '::removeArrayValueForPath() works with deep paths');
+$t->is($arr, array(
+  'foo' => array(
+    'bar' => array(
+    ),
+  ),
+  'bar' => array(
+    'foo',
+    'bar',
+  ),
+), '::removeArrayValueForPath() works with deep paths');

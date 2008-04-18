@@ -563,6 +563,68 @@ class sfToolkit
   }
 
   /**
+   * Removes a path for the given array.
+   *
+   * @param array  The values to search
+   * @param string The token name
+   * @param mixed  The default value to return if the name does not exist
+   */
+  public static function removeArrayValueForPath(&$values, $name, $default = null)
+  {
+    if (false === $offset = strpos($name, '['))
+    {
+      if (isset($values[$name]))
+      {
+        $value = $values[$name];
+        unset($values[$name]);
+
+        return $value;
+      }
+      else
+      {
+        return $default;
+      }
+    }
+
+    if (!isset($values[substr($name, 0, $offset)]))
+    {
+      return $default;
+    }
+
+    $value = &$values[substr($name, 0, $offset)];
+
+    while (false !== $pos = strpos($name, '[', $offset))
+    {
+      $end = strpos($name, ']', $pos);
+      if ($end == $pos + 1)
+      {
+        // reached a []
+        if (!is_array($value))
+        {
+          return $default;
+        }
+        break;
+      }
+      else if (!isset($value[substr($name, $pos + 1, $end - $pos - 1)]))
+      {
+        return $default;
+      }
+
+      $parent = &$value;
+      $key = substr($name, $pos + 1, $end - $pos - 1);
+      $value = &$value[$key];
+      $offset = $end;
+    }
+
+    if ($key)
+    {
+      unset($parent[$key]);
+    }
+
+    return $value;
+  }
+
+  /**
    * Get path to php cli.
    *
    * @throws sfException If no php cli found

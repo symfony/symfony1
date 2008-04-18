@@ -120,6 +120,10 @@ class sfParameterHolder implements Serializable
       $retval = $this->parameters[$name];
       unset($this->parameters[$name]);
     }
+    else
+    {
+      $retval = sfToolkit::removeArrayValueForPath($this->parameters, $name, $default);
+    }
 
     return $retval;
   }
