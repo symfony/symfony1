@@ -44,6 +44,7 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
                             'table'         => false,
                             'pluginTable'   => false,
                             'children'      => array(),
+                            'auditLog'      => true,
                             );
 
     /**
@@ -65,7 +66,11 @@ class Doctrine_AuditLog extends Doctrine_Record_Generator
      * @return  array           An array with version information
      */
     public function getVersion(Doctrine_Record $record, $version)
-    {           
+    {
+        if ( ! $this->_options['auditLog']) {
+            throw new Doctrine_Exception('Audit log is turned off, no version history is recorded.');
+        }
+
         $className = $this->_options['className'];
 
         $q = new Doctrine_Query();

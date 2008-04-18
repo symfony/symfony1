@@ -50,7 +50,9 @@ class Doctrine_Template_Versionable extends Doctrine_Template
      */
     public function setUp()
     {
-        $this->_plugin->initialize($this->_table);
+        if ($this->_plugin->getOption('auditLog')) {
+            $this->_plugin->initialize($this->_table);
+        }
 
         $this->hasColumn('version', 'integer', 8);
 

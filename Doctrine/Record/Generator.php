@@ -84,7 +84,7 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
     public function getOption($name)
     {
         if ( ! isset($this->_options[$name])) {
-            throw new Doctrine_Plugin_Exception('Unknown option ' . $name);
+            throw new Doctrine_Exception('Unknown option ' . $name);
         }
         
         return $this->_options[$name];

@@ -1667,10 +1667,13 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     public function revert($version)
     {
-        $data = $this->_table
-                ->getTemplate('Doctrine_Template_Versionable')
-                ->getAuditLog()
-                ->getVersion($this, $version);
+        $auditLog = $this->_table->getTemplate('Doctrine_Template_Versionable')->getAuditLog();
+
+        if ( ! $auditLog->getOption('auditLog')) {
+            throw new Doctrine_Record_Exception('Audit log is turned off, no version history is recorded.');
+        }
+
+        $data = $auditLog->getVersion($this, $version);
 
         if ( ! isset($data[0])) {
             throw new Doctrine_Record_Exception('Version ' . $version . ' does not exist!');
@@ -1680,10 +1683,12 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
 
         return $this;
     }
+
     public function unshiftFilter(Doctrine_Record_Filter $filter)
     {
         return $this->_table->unshiftFilter($filter);
     }
+
     /**
      * unlink
      * removes links from this record to given records

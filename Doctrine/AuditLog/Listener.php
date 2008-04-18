@@ -71,12 +71,14 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
      */
     public function postInsert(Doctrine_Event $event) 
     {
-        $class = $this->_auditLog->getOption('className');
+        if ($this->_auditLog->getOption('auditLog')) {
+            $class = $this->_auditLog->getOption('className');
 
-        $record  = $event->getInvoker();
-        $version = new $class();
-        $version->merge($record->toArray());
-        $version->save();
+            $record  = $event->getInvoker();
+            $version = new $class();
+            $version->merge($record->toArray());
+            $version->save();
+        }
     }
 
     /**
@@ -87,18 +89,20 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
      */
     public function preDelete(Doctrine_Event $event)
     {
-        $class = $this->_auditLog->getOption('className');
+        if ($this->_auditLog->getOption('auditLog')) {
+            $class = $this->_auditLog->getOption('className');
 
-        $record  = $event->getInvoker();
+            $record  = $event->getInvoker();
 
-        $versionColumn = $this->_auditLog->getOption('versionColumn');
-        $version = $record->get($versionColumn);
+            $versionColumn = $this->_auditLog->getOption('versionColumn');
+            $version = $record->get($versionColumn);
 
-        $record->set($versionColumn, ++$version);
+            $record->set($versionColumn, ++$version);
 
-        $version = new $class();
-        $version->merge($record->toArray());
-        $version->save();
+            $version = new $class();
+            $version->merge($record->toArray());
+            $version->save();
+        }
     }
 
     /**
@@ -109,17 +113,19 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
      */
     public function preUpdate(Doctrine_Event $event)
     {
-        $class  = $this->_auditLog->getOption('className');
-        $record = $event->getInvoker(); 
+        if ($this->_auditLog->getOption('auditLog')) {
+            $class  = $this->_auditLog->getOption('className');
+            $record = $event->getInvoker(); 
 
-        $versionColumn = $this->_auditLog->getOption('versionColumn');
+            $versionColumn = $this->_auditLog->getOption('versionColumn');
 
-        $version = $record->get($versionColumn);
+            $version = $record->get($versionColumn);
 
-        $record->set($versionColumn, ++$version);
+            $record->set($versionColumn, ++$version);
         
-        $version = new $class();
-        $version->merge($record->toArray());
-        $version->save();
+            $version = new $class();
+            $version->merge($record->toArray());
+            $version->save();
+        }
     }
 }
