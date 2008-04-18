@@ -33,7 +33,7 @@ Doctrine::autoload('Doctrine_Hydrator_Abstract');
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
-{    
+{
     /**
      * hydrateResultSet
      * parses the data returned by statement object
@@ -58,14 +58,12 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
      *                         )
      * @return array
      */
-    public function hydrateResultSet($stmt, $tableAliases, $hydrationMode = null)
+    public function hydrateResultSet($stmt, $tableAliases)
     {
-        if ($hydrationMode === null) {
-            $hydrationMode = $this->_hydrationMode;
-        }
-        
+        $hydrationMode = $this->_hydrationMode;
+
         $this->_tableAliases = $tableAliases;
-        
+
         if ($hydrationMode == Doctrine::HYDRATE_NONE) {
             return $stmt->fetchAll(PDO::FETCH_NUM);
         }
@@ -88,7 +86,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
         $result = array();
         // Holds hydration listeners that get called during hydration
         $listeners = array();
-        // Lookup map to quickly discover/lookup existing records in the result 
+        // Lookup map to quickly discover/lookup existing records in the result
         $identifierMap = array();
         // Holds for each component the last previously seen element in the result set
         $prev = array();
@@ -98,7 +96,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
         // starting to process a row.
         $id = array();
         $idTemplate = array();
-        
+
         $result = $driver->getElementCollection($rootComponentName);
 
         if ($stmt === false || $stmt === 0) {
@@ -113,7 +111,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
             $prev[$dqlAlias] = array();
             $idTemplate[$dqlAlias] = '';
         }
-        
+
         // Process result set
         $cache = array();
         while ($data = $stmt->fetch(Doctrine::FETCH_ASSOC)) {
@@ -128,9 +126,9 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
             $componentName = $table->getComponentName();
             $event->set('data', $rowData[$rootAlias]);
             $listeners[$componentName]->preHydrate($event);
-            
+
             $index = false;
-            
+
             // Check for an existing element
             if ($isSimpleQuery || ! isset($identifierMap[$rootAlias][$id[$rootAlias]])) {
                 $element = $driver->getElement($rowData[$rootAlias], $componentName);
@@ -156,10 +154,10 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
 
             $this->_setLastElement($prev, $result, $index, $rootAlias, false);
             unset($rowData[$rootAlias]);
-            
+
             // end hydrate data of the root component for the current row
-            
-            
+
+
             // $prev[$rootAlias] now points to the last element in $result.
             // now hydrate the rest of the data found in the current row, that belongs to other
             // (related) components.
@@ -180,7 +178,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                 if ( ! isset($prev[$parent])) {
                     continue;
                 }
-                
+
                 // check the type of the relation
                 if ( ! $relation->isOneToOne() && $driver->initRelated($prev[$parent], $relationAlias)) {
                     $oneToOne = false;
@@ -221,13 +219,13 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                 }
                 $coll =& $prev[$parent][$relationAlias];
                 $this->_setLastElement($prev, $coll, $index, $dqlAlias, $oneToOne);
-            }        
+            }
         }
-        
+
         $stmt->closeCursor();
-        
+
         $driver->flush();
-        
+
         //$e = microtime(true);
         //echo 'Hydration took: ' . ($e - $s) . ' for '.count($result).' records<br />';
 
@@ -249,14 +247,14 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
         if ($coll === self::$_null) {
             return false;
         }
-        
+
         if ($index !== false) {
-            // Link element at $index to previous element for the component 
+            // Link element at $index to previous element for the component
             // identified by the DQL alias $alias
             $prev[$dqlAlias] =& $coll[$index];
             return;
         }
-        
+
         if (is_array($coll) && $coll) {
             if ($oneToOne) {
                 $prev[$dqlAlias] =& $coll;
@@ -270,13 +268,13 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
             unset($prev[$dqlAlias]);
         }
     }
-    
+
     /**
      * Puts the fields of a data row into a new array, grouped by the component
-     * they belong to. The column names in the result set are mapped to their 
+     * they belong to. The column names in the result set are mapped to their
      * field names during this procedure.
-     * 
-     * @return array  An array with all the fields (name => value) of the data row, 
+     *
+     * @return array  An array with all the fields (name => value) of the data row,
      *                grouped by their component (alias).
      */
     protected function _gatherRowData(&$data, &$cache, &$id, &$nonemptyComponents)
@@ -330,13 +328,13 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                 $nonemptyComponents[$dqlAlias] = true;
             }
         }
-        
+
         return $rowData;
     }
-    
-    /** 
+
+    /**
      * Gets the custom field used for indexing for the specified component alias.
-     * 
+     *
      * @return string  The field name of the field used for indexing or NULL
      *                 if the component does not use any custom field indices.
      */
@@ -344,5 +342,4 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
     {
         return isset($this->_queryComponents[$alias]['map']) ? $this->_queryComponents[$alias]['map'] : null;
     }
-    
 }

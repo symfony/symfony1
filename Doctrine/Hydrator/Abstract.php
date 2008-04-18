@@ -72,6 +72,16 @@ abstract class Doctrine_Hydrator_Abstract extends Doctrine_Locator_Injectable
     }
 
     /**
+     * Get the fetchmode
+     *
+     * @return integer $fetchMode One of the Doctrine::HYDRATE_* constants
+     */
+    public function getHydrationMode()
+    {
+        return $this->_hydrationMode;
+    }
+
+    /**
      * setAliasMap
      * sets the whole component alias map
      *
@@ -110,6 +120,5 @@ abstract class Doctrine_Hydrator_Abstract extends Doctrine_Locator_Injectable
      * @param mixed $stmt
      * @return array
      */
-    abstract public function hydrateResultSet($stmt, $tableAliases, $hydrationMode = null);
-    
+    abstract public function hydrateResultSet($stmt, $tableAliases);
 }

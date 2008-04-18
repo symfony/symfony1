@@ -959,6 +959,10 @@ abstract class Doctrine_Query_Abstract
      */
     public function execute($params = array(), $hydrationMode = null)
     {
+        if ($hydrationMode !== null) {
+            $this->_hydrator->setHydrationMode($hydrationMode);
+        }
+
         $params = array_merge($this->_params['join'],
                               $this->_params['set'],
                               $this->_params['where'],
@@ -978,8 +982,7 @@ abstract class Doctrine_Query_Abstract
                 // cache miss
                 $stmt = $this->_execute($params);
                 $this->_hydrator->setQueryComponents($this->_queryComponents);
-                $result = $this->_hydrator->hydrateResultSet($stmt, $this->_tableAliasMap,
-                        $hydrationMode);
+                $result = $this->_hydrator->hydrateResultSet($stmt, $this->_tableAliasMap);
 
                 $cached = $this->getCachedForm($result);
                 $cacheDriver->save($hash, $cached, $this->getResultCacheLifeSpan());
@@ -995,7 +998,7 @@ abstract class Doctrine_Query_Abstract
             }
 
             $this->_hydrator->setQueryComponents($this->_queryComponents);
-            return $this->_hydrator->hydrateResultSet($stmt, $this->_tableAliasMap, $hydrationMode);
+            return $this->_hydrator->hydrateResultSet($stmt, $this->_tableAliasMap);
         }
     }
 
