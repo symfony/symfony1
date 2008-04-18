@@ -989,6 +989,66 @@ class sfWebRequest extends sfRequest
   }
 
   /**
+   * Returns the value of a GET parameter.
+   *
+   * @param  string The GET parameter name
+   * @param  string The default value
+   *
+   * @return string The GET parameter value
+   */
+  public function getGetParameter($name, $default = null)
+  {
+    if (isset($this->getParameters[$name]))
+    {
+      return $this->getParameters[$name];
+    }
+    else
+    {
+      return sfToolkit::getArrayValueForPath($this->getParameters, $name, $default);
+    }
+  }
+
+  /**
+   * Returns the value of a POST parameter.
+   *
+   * @param  string The POST parameter name
+   * @param  string The default value
+   *
+   * @return string The POST parameter value
+   */
+  public function getPostParameter($name, $default = null)
+  {
+    if (isset($this->postParameters[$name]))
+    {
+      return $this->postParameters[$name];
+    }
+    else
+    {
+      return sfToolkit::getArrayValueForPath($this->postParameters, $name, $default);
+    }
+  }
+
+  /**
+   * Returns the value of a parameter passed as a URL segment.
+   *
+   * @param  string The parameter name
+   * @param  string The default value
+   *
+   * @return string The parameter value
+   */
+  public function getUrlParameter($name, $default = null)
+  {
+    if (isset($this->requestParameters[$name]))
+    {
+      return $this->requestParameters[$name];
+    }
+    else
+    {
+      return sfToolkit::getArrayValueForPath($this->requestParameters, $name, $default);
+    }
+  }
+
+  /**
    * Parses the request parameters.
    *
    * This method notifies the request.filter_parameters event.
