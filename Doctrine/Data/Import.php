@@ -59,6 +59,11 @@ class Doctrine_Data_Import extends Doctrine_Data
         }
     }
 
+    /**
+     * Do the parsing of the yaml files and return the final parsed array
+     *
+     * @return array $array
+     */
     public function doParsing()
     {
         $recursiveMerge = Doctrine_Manager::getInstance()->getAttribute('recursive_merge_fixtures');
