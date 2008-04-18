@@ -1641,24 +1641,20 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     }
 
     /**
-     * removeColumn
-     * removes given column
+     * Removes the passed field name from the table schema information
      *
      * @return boolean
      */
     public function removeColumn($fieldName)
     {
-        $columnName = $this->getColumnName($fieldName);
-
-        unset($this->_fieldNames[$columnName]);
-
-        if (isset($this->_columns[$columnName])) {
-            unset($this->_columns[$columnName]);
-            return true;
+        if ( ! $this->hasField($fieldName)) {
+          return false;
         }
-        $this->columnCount--;
 
-        return false;
+        $columnName = $this->getColumnName($fieldName);
+        unset($this->_columnNames[$fieldName], $this->_fieldNames[$columnName], $this->_columns[$columnName]);
+        $this->columnCount = count($this->_columns);
+        return true;
     }
 
     /**
