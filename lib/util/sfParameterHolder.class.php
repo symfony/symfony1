@@ -97,7 +97,7 @@ class sfParameterHolder implements Serializable
     }
     else
     {
-      return sfToolkit::getArrayValueForPath($this->parameters, $name);
+      return sfToolkit::hasArrayValueForPath($this->parameters, $name);
     }
 
     return false;
