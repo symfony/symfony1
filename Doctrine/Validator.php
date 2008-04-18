@@ -123,7 +123,9 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
      */
      public static function isValidType($var, $type)
      {
-         if ($var === null) {
+         if ($var instanceof Doctrine_Expression) {
+             return true;
+         } else if ($var === null) {
              return true;
          } else if (is_object($var)) {
              return $type == 'object';
