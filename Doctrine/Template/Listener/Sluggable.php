@@ -82,8 +82,10 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
     
             $record = $event->getInvoker();
 
-            if ( ! $record->$name) {
-                $record->$name = $this->buildSlug($record);        
+            if ( ! $record->$name ||
+            (false !== $this->_options['canUpdate'] &&
+            array_key_exists($name, $record->getModified()))) {
+                $record->$name = $this->buildSlug($record);
             }
         }
     }

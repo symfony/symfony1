@@ -39,14 +39,15 @@ class Doctrine_Template_Sluggable extends Doctrine_Template
      *
      * @var string
      */
-    protected $_options = array('name'       =>  'slug',
-                                'type'       =>  'string',
-                                'length'     =>  255,
-                                'unique'     =>  true,
-                                'options'    =>  array(),
-                                'fields'     =>  array(),
-                                'uniqueBy'   =>  array(),
-                                'uniqueIndex'=>  true
+    protected $_options = array('name'          =>  'slug',
+                                'type'          =>  'string',
+                                'length'        =>  255,
+                                'unique'        =>  true,
+                                'options'       =>  array(),
+                                'fields'        =>  array(),
+                                'uniqueBy'      =>  array(),
+                                'uniqueIndex'   =>  true,
+                                'canUpdate'     =>  false
     );
 
     /**
