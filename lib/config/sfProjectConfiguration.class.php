@@ -283,7 +283,12 @@ class sfProjectConfiguration
       $rootDir = self::guessRootDir();
     }
 
-    require_once $rootDir.'/apps/'.$application.'/config/'.$class.'.class.php';
+    if (!file_exists($file = $rootDir.'/apps/'.$application.'/config/'.$class.'.class.php'))
+    {
+      throw new InvalidArgumentException(sprintf('The application "%s" does not exist.', $application));
+    }
+
+    require_once $file;
 
     return new $class($environment, $debug, $rootDir, $dispatcher);
   }
