@@ -193,42 +193,21 @@ class Doctrine_Connection_Mysql extends Doctrine_Connection_Common
      */
     public function replace(Doctrine_Table $table, array $fields, array $keys)
     {
-        $count = count($fields);
-        $query = $values = '';
-        $keys = $colnum = 0;
-
-        for (reset($fields); $colnum < $count; next($fields), $colnum++) {
-            $name = key($fields);
-
-            if ($colnum > 0) {
-                $query .= ',';
-                $values.= ',';
-            }
-
-            $query .= $table->getColumnName($name);
-
-            if (isset($fields[$name]['null']) && $fields[$name]['null']) {
-                $value = 'NULL';
-            } else {
-                $type = isset($fields[$name]['type']) ? $fields[$name]['type'] : null;
-                $value = $this->quote($fields[$name]['value'], $type);
-            }
-
-            $values .= $value;
-
-            if (isset($fields[$name]['key']) && $fields[$name]['key']) {
-                if ($value === 'NULL') {
-                    throw new Doctrine_Connection_Mysql_Exception('key value '.$name.' may not be NULL');
-                }
-                $keys++;
-            }
+        if (empty($keys)) {
+            throw new Doctrine_Connection_Exception('Not specified which fields are keys');
         }
 
-        if ($keys == 0) {
-            throw new Doctrine_Connection_Mysql_Exception('not specified which fields are keys');
+        $columns = array();
+        $values = array();
+        $params = array();
+        foreach ($fields as $fieldName => $value) {
+            $columns[] = $table->getColumnName($fieldName);
+            $values[] = '?';
+            $params[] = $value;
         }
-        $query = 'REPLACE INTO ' . $table->getTableName() . ' (' . $query . ') VALUES (' . $values . ')';
 
-        return $this->exec($query);
+        $query = 'REPLACE INTO ' . $table->getTableName() . ' (' . implode(',', $columns) . ') VALUES (' . implode(',', $values) . ')';
+
+        return $this->exec($query, $params);
     }
 }

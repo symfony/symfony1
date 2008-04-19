@@ -546,25 +546,27 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         if (empty($keys)) {
             throw new Doctrine_Connection_Exception('Not specified which fields are keys');
         }
-        $condition = $values = array();
+        $identifier = (array) $table->getIdentifier();
+        $condition = array();
 
         foreach ($fields as $fieldName => $value) {
-            $values[$fieldName] = $value;
-
             if (in_array($fieldName, $keys)) {
-                if ($value === null)
-                    throw new Doctrine_Connection_Exception('key value '.$fieldName.' may not be null');
-
-                $condition[] = $table->getColumnName($fieldName) . ' = ?';
-                $conditionValues[] = $value;
+                if ($value !== null) {
+                    $condition[] = $table->getColumnName($fieldName) . ' = ?';
+                    $conditionValues[] = $value;
+                }
             }
         }
 
-        $query = 'DELETE FROM ' . $this->quoteIdentifier($table->getTableName())
-                . ' WHERE ' . implode(' AND ', $condition);
-        $affectedRows = $this->exec($query, $conditionValues);
+        $affectedRows = 0;
+        if ( ! empty($condition) && ! empty($conditionValues)) {
+            $query = 'DELETE FROM ' . $this->quoteIdentifier($table->getTableName())
+                    . ' WHERE ' . implode(' AND ', $condition);
 
-        $this->insert($table, $values);
+            $affectedRows = $this->exec($query, $conditionValues);
+        }
+
+        $this->insert($table, $fields);
 
         $affectedRows++;
 

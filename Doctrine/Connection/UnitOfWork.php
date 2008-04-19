@@ -38,7 +38,7 @@
  * @author      Roman Borschel <roman@code-factory.org>
  */
 class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
-{    
+{
     /**
      * Saves the given record and all associated records.
      * (The save() operation is always cascaded in 0.10/1.0).
@@ -82,7 +82,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                         break;
                 }
             }
-            
+
             // NOTE: what about referential integrity issues?
             foreach ($record->getPendingDeletes() as $pendingDelete) {
                 $pendingDelete->delete();
@@ -170,7 +170,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         $this->_collectDeletions($record, $deletions);
         $this->_executeDeletions($deletions);
     }
-    
+
     /**
      * Collects all records that need to be deleted by applying defined
      * application-level delete cascades.
@@ -182,11 +182,11 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         if ( ! $record->exists()) {
             throw new Doctrine_Connection_Exception("Transient records can't be deleted.");
         }
-        
+
         $deletions[$record->getOid()] = $record;
         $this->_cascadeDelete($record, $deletions);
     }
-    
+
     /**
      * Executes the deletions for all collected records during a delete operation
      * (usually triggered through $record->delete()).
@@ -201,18 +201,18 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
             $classNames[] = $record->getTable()->getComponentName();
         }
         $classNames = array_unique($classNames);
-        
+
         // order deletes
         $executionOrder = $this->buildFlushTree($classNames);
 
         // execute
         try {
             $this->conn->beginInternalTransaction();
-            
+
             for ($i = count($executionOrder) - 1; $i >= 0; $i--) {
                 $className = $executionOrder[$i];
                 $table = $this->conn->getTable($className);
-                
+
                 // collect identifiers
                 $identifierMaps = array();
                 $deletedRecords = array();
@@ -226,7 +226,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                         }
                     }
                 }
-                
+
                 if (count($deletedRecords) < 1) {
                     continue;
                 }
@@ -245,44 +245,44 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                 // delete
                 $tableName = $table->getTableName();
                 $sql = "DELETE FROM " . $this->conn->quoteIdentifier($tableName) . " WHERE ";
-                
+
                 if ($table->isIdentifierComposite()) {
-                    $sql.= $this->_buildSqlCompositeKeyCondition($columnNames, count($identifierMaps));
+                    $sql .= $this->_buildSqlCompositeKeyCondition($columnNames, count($identifierMaps));
                     $this->conn->exec($sql, $params);
                 } else {
-                    $sql.= $this->_buildSqlSingleKeyCondition($columnNames, count($params));
+                    $sql .= $this->_buildSqlSingleKeyCondition($columnNames, count($params));
                     $this->conn->exec($sql, $params);
                 }
 
                 // adjust state, remove from identity map and inform postDelete listeners
                 foreach ($deletedRecords as $record) {
                     // currently just for bc!
-                     $this->_deleteCTIParents($table, $record);
-                     //--
+                    $this->_deleteCTIParents($table, $record);
+                    //--
                     $record->state(Doctrine_Record::STATE_TCLEAN);
                     $record->getTable()->removeRecord($record);
                     $this->_postDelete($record);
                 }
             }
-            
+
             $this->conn->commit();
             // trigger postDelete for records skipped during the deletion (veto!)
             foreach ($deletions as $skippedRecord) {
                 $this->_postDelete($skippedRecord);
             }
-            
+
         } catch (Exception $e) {
             $this->conn->rollback();
             throw $e;
         }
     }
-    
+
     /**
      * Builds the SQL condition to target multiple records who have a single-column
      * primary key.
      *
      * @param Doctrine_Table $table  The table from which the records are going to be deleted.
-     * @param integer $numRecords  The number of records that are going to be deleted.  
+     * @param integer $numRecords  The number of records that are going to be deleted.
      * @return string  The SQL condition "pk = ? OR pk = ? OR pk = ? ..."
      */
     private function _buildSqlSingleKeyCondition($columnNames, $numRecords)
@@ -290,7 +290,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         $idColumn = $this->conn->quoteIdentifier($columnNames[0]);
         return implode(' OR ', array_fill(0, $numRecords, "$idColumn = ?"));
     }
-    
+
     /**
      * Builds the SQL condition to target multiple records who have a composite primary key.
      *
@@ -304,17 +304,17 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         foreach ($columnNames as $columnName) {
             $columnName = $this->conn->quoteIdentifier($columnName);
             if ($singleCondition === "") {
-                $singleCondition.= "($columnName = ?";
+                $singleCondition .= "($columnName = ?";
             } else {
-                $singleCondition.= " AND $columnName = ?";
+                $singleCondition .= " AND $columnName = ?";
             }
         }
-        $singleCondition.= ")";
+        $singleCondition .= ")";
         $fullCondition = implode(' OR ', array_fill(0, $numRecords, $singleCondition));
-        
+
         return $fullCondition;
     }
-    
+
     /**
      * Cascades an ongoing delete operation to related objects. Applies only on relations
      * that have 'delete' in their cascade options.
@@ -434,7 +434,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
             }
         }
     }
-    
+
     /**
      * Invokes preDelete event listeners.
      *
@@ -445,10 +445,10 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         $event = new Doctrine_Event($record, Doctrine_Event::RECORD_DELETE);
         $record->preDelete($event);
         $record->getTable()->getRecordListener()->preDelete($event);
-        
+
         return $event->skipOperation;
     }
-    
+
     /**
      * Invokes postDelete event listeners.
      */
@@ -600,7 +600,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
             $record->assignIdentifier(true);
         }
     }
-    
+
     /**
      * buildFlushTree
      * builds a flush tree that is used in transactions
@@ -624,11 +624,11 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
             $classesToOrder[] = $table->getComponentName();
         }
         $classesToOrder = array_unique($classesToOrder);
-        
+
         if (count($classesToOrder) < 2) {
             return $classesToOrder;
         }
-        
+
         // build the correct order
         $flushList = array();
         foreach ($classesToOrder as $class) {
@@ -655,11 +655,11 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
 
             foreach ($rels as $rel) {
                 $relatedClassName = $rel->getTable()->getComponentName();
-                
+
                 if ( ! in_array($relatedClassName, $classesToOrder)) {
                     continue;
                 }
-                
+
                 $relatedCompIndex = array_search($relatedClassName, $flushList);
                 $type = $rel->getType();
 
@@ -671,13 +671,13 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                 if ($rel instanceof Doctrine_Relation_ForeignKey) {
                     // the related component needs to come after this component in
                     // the list (since it holds the fk)
-                    
+
                     if ($relatedCompIndex !== false) {
                         // the component is already in the list
                         if ($relatedCompIndex >= $index) {
                             // it's already in the right place
                             continue;
-                        }   
+                        }
 
                         unset($flushList[$index]);
                         // the related comp has the fk. so put "this" comp immediately
@@ -691,7 +691,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                 } else if ($rel instanceof Doctrine_Relation_LocalKey) {
                     // the related component needs to come before the current component
                     // in the list (since this component holds the fk).
-                    
+
                     if ($relatedCompIndex !== false) {
                         // already in flush list
                         if ($relatedCompIndex <= $index) {
@@ -701,7 +701,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
 
                         unset($flushList[$relatedCompIndex]);
                         // "this" comp has the fk. so put the related comp before it
-                        // in the list 
+                        // in the list
                         array_splice($flushList, $index, 0, $relatedClassName);
                     } else {
                         array_unshift($flushList, $relatedClassName);
@@ -711,13 +711,13 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                     // the association class needs to come after both classes
                     // that are connected through it in the list (since it holds
                     // both fks)
-                    
+
                     $assocTable = $rel->getAssociationFactory();
                     $assocClassName = $assocTable->getComponentName();
 
                     if ($relatedCompIndex !== false) {
                         unset($flushList[$relatedCompIndex]);
-                    }    
+                    }
 
                     array_splice($flushList, $index, 0, $relatedClassName);
                     $index++;
@@ -738,14 +738,14 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                 }
             }
         }
-        
+
         return array_values($flushList);
     }
-    
-    
+
+
     /* The following is all the Class Table Inheritance specific code. Support dropped
        for 0.10/1.0. */
-    
+
     /**
      * Class Table Inheritance code.
      * Support dropped for 0.10/1.0.
@@ -761,7 +761,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
             }
         }
     }
-    
+
     /**
      * Class Table Inheritance code.
      * Support dropped for 0.10/1.0.
@@ -789,7 +789,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
             }
         }
     }
-    
+
     /**
      * Class Table Inheritance code.
      * Support dropped for 0.10/1.0.
@@ -823,14 +823,14 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
             $this->conn->update($this->conn->getTable($class), $dataSet[$class], $identifier);
         }
     }
-    
+
     /**
      * Class Table Inheritance code.
      * Support dropped for 0.10/1.0.
      */
     private function _formatDataSet(Doctrine_Record $record)
     {
-    	$table = $record->getTable();
+        $table = $record->getTable();
         $dataSet = array();
         $component = $table->getComponentName();
         $array = $record->getPrepared();
@@ -858,5 +858,4 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
 
         return $dataSet;
     }
-    
 }
