@@ -188,6 +188,147 @@ class Doctrine_Import extends Doctrine_Connection_Module
     }
 
     /**
+     * checks if a database exists
+     *
+     * @param string $database
+     * @return boolean
+     */
+    public function databaseExists($database)
+    {
+        return in_array($database, $this->listDatabases());
+    }
+
+    /**
+     * checks if a function exists
+     *
+     * @param string $function
+     * @return boolean
+     */
+    public function functionExists($function)
+    {
+        return in_array($function, $this->listFunctions());
+    }
+
+    /**
+     * checks if a trigger exists
+     *
+     * @param string $trigger
+     * @param string|null $database
+     * @return boolean
+     */
+    public function triggerExists($trigger, $database = null)
+    {
+        return in_array($trigger, $this->listTriggers($database));
+    }
+
+    /**
+     * checks if a sequence exists
+     *
+     * @param string $sequence
+     * @param string|null $database
+     * @return boolean
+     */
+    public function sequenceExists($sequence, $database = null)
+    {
+        return in_array($sequence, $this->listSequences($database));
+    }
+
+    /**
+     * checks if a table constraint exists
+     *
+     * @param string $constraint
+     * @param string $table     database table name
+     * @return boolean
+     */
+    public function tableConstraintExists($constraint, $table)
+    {
+        return in_array($constraint, $this->listTableConstraints($table));
+    }
+
+    /**
+     * checks if a table column exists
+     *
+     * @param string $column
+     * @param string $table     database table name
+     * @return boolean
+     */
+    public function tableColumnExists($column, $table)
+    {
+        return in_array($column, $this->listTableColumns($table));
+    }
+
+    /**
+     * checks if a table index exists
+     *
+     * @param string $index
+     * @param string $table     database table name
+     * @return boolean
+     */
+    public function tableIndexExists($index, $table)
+    {
+        return in_array($index, $this->listTableIndexes($table));
+    }
+
+    /**
+     * checks if a table exists
+     *
+     * @param string $table
+     * @param string|null $database
+     * @return boolean
+     */
+    public function tableExists($table, $database = null)
+    {
+        return in_array($table, $this->listTables($database));
+    }
+
+    /**
+     * checks if a table trigger exists
+     *
+     * @param string $trigger
+     * @param string $table     database table name
+     * @return boolean
+     */
+    public function tableTriggerExists($trigger, $table)
+    {
+        return in_array($trigger, $this->listTableTriggers($table));
+    }
+
+    /**
+     * checks if a table view exists
+     *
+     * @param string $view
+     * @param string $table     database table name
+     * @return boolean
+     */
+    public function tableViewExists($view, $table)
+    {
+        return in_array($view, $this->listTableViews($table));
+    }
+
+    /**
+     * checks if a user exists
+     *
+     * @param string $user
+     * @return boolean
+     */
+    public function userExists($user)
+    {
+        return in_array($user, $this->listUsers());
+    }
+
+    /**
+     * checks if a view exists
+     *
+     * @param string $view
+     * @param string|null $database
+     * @return boolean
+     */
+    public function viewExists($view, $database = null)
+    {
+         return in_array($view, $this->listViews($database));
+    }
+
+    /**
      * importSchema
      *
      * method for importing existing schema to Doctrine_Record classes
