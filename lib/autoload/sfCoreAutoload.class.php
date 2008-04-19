@@ -34,7 +34,7 @@ class sfCoreAutoload
 
   protected function __construct()
   {
-    $this->baseDir = dirname(__FILE__).'/../';
+    $this->baseDir = realpath(dirname(__FILE__).'/..').'/';
   }
 
   /**
