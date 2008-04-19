@@ -1230,7 +1230,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      * @todo This actually takes DQL, not SQL, but it requires column names
      *       instead of field names. This should be fixed to use raw SQL instead.
      */
-    public function findBySql($dql, array $params = array(), $hydrationMode = null)
+    public function findBySql($dql, $params = array(), $hydrationMode = null)
     {
         return $this->createQuery()->where($dql)->execute($params, $hydrationMode);
     }
@@ -1245,7 +1245,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      * @param int $hydrationMode        Doctrine::FETCH_ARRAY or Doctrine::FETCH_RECORD
      * @return Doctrine_Collection
      */
-    public function findByDql($dql, array $params = array(), $hydrationMode = null)
+    public function findByDql($dql, $params = array(), $hydrationMode = null)
     {
         $parser = new Doctrine_Query($this->_conn);
         $component = $this->getComponentName();
