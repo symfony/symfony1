@@ -18,7 +18,7 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Connection_Module');
+
 /**
  * Doctrine_Expression_Mock
  * Mock driver that is used for testing purposes

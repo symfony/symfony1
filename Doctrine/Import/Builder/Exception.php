@@ -18,18 +18,10 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Import_Exception');
-/**
- * @package     Doctrine
- * @subpackage  Import
- * @url         http://www.phpdoctrine.org
- * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @author      Jukka Hassinen <Jukka.Hassinen@BrainAlliance.com>
- * @version     $Id$
- */
 
 /**
- * class Doctrine_Import_Builder_Exception
+ * Doctrine_Import_Builder_Exception
+ *
  * @package     Doctrine
  * @subpackage  Import
  * @link        www.phpdoctrine.org

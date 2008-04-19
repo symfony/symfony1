@@ -18,7 +18,7 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Adapter_Statement_Interface');
+
 /**
  * Doctrine_Adapter_Statement_Mock
  * This class is used for special testing purposes.

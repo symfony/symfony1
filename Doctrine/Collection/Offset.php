@@ -18,6 +18,7 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.org>.
  */
+
 /**
  * Doctrine_Collection_Offset
  * Collection of Doctrine_Record objects.

@@ -18,7 +18,7 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Transaction');
+
 /**
  * Doctrine_Transaction_Mock
  * This class is used for testing purposes

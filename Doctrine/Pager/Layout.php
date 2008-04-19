@@ -1,5 +1,4 @@
 <?php
-
 /*
  *  $Id$
  *
@@ -19,8 +18,6 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.org>.
  */
-
-Doctrine::autoload('Doctrine_Pager_Range');
 
 /**
  * Doctrine_Pager_Layout

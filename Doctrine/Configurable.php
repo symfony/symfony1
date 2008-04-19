@@ -23,7 +23,6 @@
  * Doctrine_Configurable
  * the base for Doctrine_Table, Doctrine_Manager and Doctrine_Connection
  *
- *
  * @package     Doctrine
  * @subpackage  Configurable
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL

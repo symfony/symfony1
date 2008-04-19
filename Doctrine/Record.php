@@ -18,7 +18,7 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Record_Abstract');
+
 /**
  * Doctrine_Record
  * All record classes should inherit this super class
@@ -282,6 +282,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     protected function validate()
     { }
+
     /**
      * Empty template method to provide concrete Record classes with the possibility
      * to hook into the validation procedure only when the record is going to be
@@ -289,6 +290,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     protected function validateOnUpdate()
     { }
+
     /**
      * Empty template method to provide concrete Record classes with the possibility
      * to hook into the validation procedure only when the record is going to be
@@ -296,54 +298,63 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     protected function validateOnInsert()
     { }
+
     /**
      * Empty template method to provide concrete Record classes with the possibility
      * to hook into the serializing procedure.
      */
     public function preSerialize($event)
     { }
+
     /**
      * Empty template method to provide concrete Record classes with the possibility
      * to hook into the serializing procedure.
      */
     public function postSerialize($event)
     { }
+
     /**
      * Empty template method to provide concrete Record classes with the possibility
      * to hook into the serializing procedure.
      */
     public function preUnserialize($event)
     { }
+
     /**
      * Empty template method to provide concrete Record classes with the possibility
      * to hook into the serializing procedure.
      */
     public function postUnserialize($event)
     { }
+
     /**
      * Empty template method to provide concrete Record classes with the possibility
      * to hook into the saving procedure.
      */
     public function preSave($event)
     { }
+
     /**
      * Empty template method to provide concrete Record classes with the possibility
      * to hook into the saving procedure.
      */
     public function postSave($event)
     { }
+
     /**
      * Empty template method to provide concrete Record classes with the possibility
      * to hook into the deletion procedure.
      */
     public function preDelete($event)
     { }
+
     /**
      * Empty template method to provide concrete Record classes with the possibility
      * to hook into the deletion procedure.
      */
     public function postDelete($event)
     { }
+
     /**
      * Empty template method to provide concrete Record classes with the possibility
      * to hook into the saving procedure only when the record is going to be
@@ -351,6 +362,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     public function preUpdate($event)
     { }
+
     /**
      * Empty template method to provide concrete Record classes with the possibility
      * to hook into the saving procedure only when the record is going to be
@@ -358,6 +370,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     public function postUpdate($event)
     { }
+
     /**
      * Empty template method to provide concrete Record classes with the possibility
      * to hook into the saving procedure only when the record is going to be
@@ -365,6 +378,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     public function preInsert($event)
     { }
+
     /**
      * Empty template method to provide concrete Record classes with the possibility
      * to hook into the saving procedure only when the record is going to be
@@ -372,6 +386,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     public function postInsert($event)
     { }
+
     /**
      * getErrorStack
      *

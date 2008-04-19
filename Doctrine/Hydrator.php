@@ -18,7 +18,7 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Hydrator_Abstract');
+
 /**
  * Doctrine_Hydrate is a base class for Doctrine_RawSql and Doctrine_Query.
  * Its purpose is to populate object graphs.

@@ -29,6 +29,4 @@
  * @version     $Revision: 3155 $
  */
 class Doctrine_Log_Exception extends Doctrine_Exception
-{
-
-}
+{}

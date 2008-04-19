@@ -18,7 +18,7 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Adapter');
+
 /**
  * Doctrine_Adapter_Oracle
  * [BORROWED FROM ZEND FRAMEWORK]

@@ -18,7 +18,7 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Connection_Module');
+
 /**
  * class Doctrine_Import
  * Main responsible of performing import operation. Delegates database schema

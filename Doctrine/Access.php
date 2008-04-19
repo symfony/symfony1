@@ -18,7 +18,7 @@
  * and is licensed under the LGPL. For more information, see
  * <http://www.phpdoctrine.org>.
  */
-Doctrine::autoload('Doctrine_Locator_Injectable');
+
 /**
  * Provides array access and property overload interface for Doctrine subclasses
  *

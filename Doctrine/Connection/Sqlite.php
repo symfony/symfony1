@@ -19,8 +19,6 @@
  * <http://www.phpdoctrine.org>.
  */
 
-Doctrine::autoload("Doctrine_Connection_Common");
-
 /**
  * Doctrine_Connection_Sqlite
  *
