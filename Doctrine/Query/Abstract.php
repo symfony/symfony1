@@ -969,7 +969,7 @@ abstract class Doctrine_Query_Abstract
                               $this->_params['having'],
                               $params);
 
-        if ($this->_resultCache) {
+        if ($this->_resultCache && $this->_type == self::SELECT) {
             $cacheDriver = $this->getResultCacheDriver();
 
             $dql = $this->getDql();
