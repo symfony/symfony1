@@ -2091,9 +2091,18 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      */
     protected function findOneBy($fieldName, $value, $hydrationMode = null)
     {
-        $results = $this->createQuery()->where($fieldName . ' = ?')->limit(1)->execute(array($value), $hydrationMode);
+        $results = $this->createQuery()
+                        ->where($fieldName . ' = ?')
+                        ->limit(1)
+                        ->execute(array($value), $hydrationMode);
 
-        return $hydrationMode === Doctrine::FETCH_ARRAY ? $results[0] : $results->getFirst();
+        if (is_array($results) && isset($results[0])) {
+            return $results[0];
+        } else if ($results instanceof Doctrine_Collection && $results->count() > 0) {
+            return $results->getFirst();
+        } else {
+            return false;
+        }
     }
 
     /**
