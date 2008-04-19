@@ -114,4 +114,17 @@ class Doctrine_Connection_Exception extends Doctrine_Exception
         return isset(self::$errorMessages[$value]) ?
            self::$errorMessages[$value] : self::$errorMessages[Doctrine::ERR];
     }
+
+    /**
+     * This method checks if native error code/message can be
+     * converted into a portable code and then adds this
+     * portable error code to $portableCode field
+     *
+     * @param array $errorInfo      error info array
+     * @since 1.0
+     * @return boolean              whether or not the error info processing was successfull
+     *                              (the process is successfull if portable error code was found)
+     */
+    public function processErrorInfo(array $errorInfo)
+    { }
 }
