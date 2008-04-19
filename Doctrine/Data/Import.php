@@ -151,17 +151,26 @@ class Doctrine_Data_Import extends Doctrine_Data
     /**
      * _getImportedObject
      *
-     * @param string $rowKey 
+     * @param  string $rowKey
+     * @param  Doctrine_Record $record
+     * @param  string $relationName
      * @return Doctrine_Record
      * @throws Doctrine_Data_Exception
      */
-    protected function _getImportedObject($rowKey)
+    protected function _getImportedObject($rowKey, Doctrine_Record $record, $relationName)
     {
-        if (isset($this->_importedObjects[$rowKey])) {
-            return $this->_importedObjects[$rowKey];
-        } else {
+        if ( ! isset($this->_importedObjects[$rowKey])) {
             throw new Doctrine_Data_Exception('Invalid row key specified: ' . $rowKey);
         }
+
+        $relatedRowKeyObject = $this->_importedObjects[$rowKey];
+
+        $relation = $record->getTable()->getRelation($relationName);
+        if ($relation->getClass() !== get_class($relatedRowKeyObject)) {
+            throw new Doctrine_Data_Exception('Class referred to is expected to be "' . get_class($relatedRowKeyObject) . '" and "' . $relation->getClass() .'" was given');
+        }
+
+        return $relatedRowKeyObject;
     }
 
     /**
@@ -186,18 +195,18 @@ class Doctrine_Data_Import extends Doctrine_Data
                     if (isset($value[0])) {
                         foreach ($value as $link) {
                             if ($obj->getTable()->getRelation($key)->getType() === Doctrine_Relation::ONE) {
-                                $obj->set($key, $this->_getImportedObject($link));
+                                $obj->set($key, $this->_getImportedObject($link, $obj, $key));
                             } else if ($obj->getTable()->getRelation($key)->getType() === Doctrine_Relation::MANY) {
                                 $relation = $obj->$key;
-
-                                $relation[] = $this->_getImportedObject($link);
+                                
+                                $relation[] = $this->_getImportedObject($link, $obj, $key);
                             }
                         }
                     } else {
                         $obj->$key->fromArray($value);
                     }
                 } else {
-                    $obj->set($key, $this->_getImportedObject($value));
+                    $obj->set($key, $this->_getImportedObject($value, $obj, $key));
                 }
             } else {
                 throw new Doctrine_Data_Exception('Invalid fixture element "'. $key . '" under "' . $rowKey . '"');

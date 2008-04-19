@@ -253,6 +253,17 @@ abstract class Doctrine_Relation implements ArrayAccess
     }
 
     /**
+     * getClass
+     * returns the name of the related class
+     *
+     * @return object Doctrine_Record
+     */
+    final public function getClass()
+    {
+        return $this->definition['class'];
+    }
+
+    /**
      * getLocal
      * returns the name of the local column
      *
