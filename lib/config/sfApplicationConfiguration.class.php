@@ -22,7 +22,8 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     $configCache = null,
     $application = null,
     $environment = null,
-    $debug       = false;
+    $debug       = false,
+    $config      = array();
 
   /**
    * Constructor.
@@ -55,6 +56,9 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     }
 
     $this->initialize();
+
+    // store current sfConfig values
+    $this->config = sfConfig::getAll();
   }
 
   /**
@@ -75,13 +79,19 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   {
   }
 
+  public function activate()
+  {
+    sfConfig::clear();
+    sfConfig::add($this->config);
+  }
+
   /**
    * @see sfProjectConfiguration
    */
   public function initConfiguration()
   {
     // in debug mode, start global timer
-    if ($this->isDebug())
+    if ($this->isDebug() && !sfConfig::get('sf_timer_start'))
     {
       sfConfig::set('sf_timer_start', microtime(true));
     }

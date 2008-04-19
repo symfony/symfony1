@@ -171,7 +171,15 @@ class sfContext
    */
   public static function switchTo($name)
   {
+    if (!isset(self::$instances[$name]))
+    {
+      $currentConfiguration = sfContext::getInstance()->getConfiguration();
+      sfContext::createInstance(ProjectConfiguration::getApplicationConfiguration($name, $currentConfiguration->getEnvironment(), $currentConfiguration->isDebug()));
+    }
+
     self::$current = $name;
+
+    sfContext::getInstance()->getConfiguration()->activate();
   }
 
   /**
