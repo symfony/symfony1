@@ -656,11 +656,19 @@ class Doctrine_Export_Mysql extends Doctrine_Export
         $table  = $this->conn->quoteIdentifier($table, true);
         return 'DROP TABLE ' . $table;
     }
-    
+
+    /**
+     * drop existing foreign key
+     *
+     * @param string    $table        name of table that should be used in method
+     * @param string    $name         name of the foreign key to be dropped
+     * @return void
+     */
     public function dropForeignKey($table, $name)
     {
         $table = $this->conn->quoteIdentifier($table);
         $name  = $this->conn->quoteIdentifier($name);
+
         return $this->conn->exec('ALTER TABLE ' . $table . ' DROP FOREIGN KEY ' . $name);
     }
 }
