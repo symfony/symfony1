@@ -20,7 +20,6 @@
  */
 
 /**
- * Doctrine_Hydrate is a base class for Doctrine_RawSql and Doctrine_Query.
  * Its purpose is to populate object graphs.
  *
  *

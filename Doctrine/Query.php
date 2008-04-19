@@ -497,7 +497,27 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         $table      = $this->_queryComponents[$componentAlias]['table'];
 
         if ( ! isset($this->_pendingFields[$componentAlias])) {
+            if ($this->_hydrator->getHydrationMode() != Doctrine::HYDRATE_NONE) {
+                if ( ! $this->_isSubquery && $componentAlias == $this->getRootAlias()) {
+                    throw new Doctrine_Query_Exception("The root class of the query (alias $componentAlias) "
+                            . " must have at least one field selected.");
+                }
+            }
             return;
+        }
+        
+        // At this point we know the component is FETCHED (either it's the base class of
+        // the query (FROM xyz) or its a "fetch join").
+        
+        // Check that the parent join (if there is one), is a "fetch join", too.
+        if (isset($this->_queryComponents[$componentAlias]['parent'])) {
+            $parentAlias = $this->_queryComponents[$componentAlias]['parent'];
+            if (is_string($parentAlias) && ! isset($this->_pendingFields[$parentAlias])
+                    && $this->_hydrator->getHydrationMode() != Doctrine::HYDRATE_NONE) {
+                throw new Doctrine_Query_Exception("The left side of the join between "
+                        . "the aliases '$parentAlias' and '$componentAlias' must have at least"
+                        . " the primary key field(s) selected.");
+            }
         }
 
         $fields = $this->_pendingFields[$componentAlias];
@@ -1145,10 +1165,12 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         }
 
         $sql = array();
-        foreach ($this->_queryComponents as $alias => $map) {
-            $fieldSql = $this->processPendingFields($alias);
-            if ( ! empty($fieldSql)) {
-                $sql[] = $fieldSql;
+        if ( ! empty($this->_pendingFields)) {
+            foreach ($this->_queryComponents as $alias => $map) {
+                $fieldSql = $this->processPendingFields($alias);
+                if ( ! empty($fieldSql)) {
+                    $sql[] = $fieldSql;
+                }
             }
         }
         if ( ! empty($sql)) {

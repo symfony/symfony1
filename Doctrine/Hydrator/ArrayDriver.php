@@ -41,10 +41,12 @@ class Doctrine_Hydrator_ArrayDriver
     {
         return $data;
     }
+    /*
     public function isIdentifiable(array $data, Doctrine_Table $table)
     {
         return ( ! empty($data));
     }
+    */
     public function registerCollection($coll)
     {
 
