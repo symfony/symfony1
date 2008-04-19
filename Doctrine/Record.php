@@ -1754,7 +1754,6 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         return $this;
     }
 
-
     /**
      * link
      * creates links from this record to given records
@@ -1864,7 +1863,8 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      * used to delete node from tree - MUST BE USE TO DELETE RECORD IF TABLE ACTS AS TREE
      *
      */
-    public function deleteNode() {
+    public function deleteNode()
+    {
         $this->getNode()->delete();
     }
     
@@ -1896,7 +1896,22 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             $this->_references = array();
         }
     }
-    
+
+    /**
+     * returns the size of the serialized record
+     *
+     * @return integer $size
+     */
+    public function getSize()
+    {
+        return strlen(serialize($this));
+    }
+
+    /**
+     * __toString alias
+     *
+     * @return string $dump
+     */
     public function toString()
     {
         return Doctrine::dump(get_object_vars($this));
