@@ -29,8 +29,12 @@ class sfCoreAutoload
   static protected
     $instance = null;
 
+  protected
+    $baseDir = '';
+
   protected function __construct()
   {
+    $this->baseDir = dirname(__FILE__).'/../';
   }
 
   /**
@@ -86,7 +90,7 @@ class sfCoreAutoload
       return false;
     }
 
-    require dirname(__FILE__).'/../'.$this->classes[$class].'/'.$class.'.class.php';
+    require $this->baseDir.$this->classes[$class].'/'.$class.'.class.php';
 
     return true;
   }
