@@ -482,10 +482,10 @@ END;
             // possible options. This removes the name, type and length and creates the options array for
             // the column definition
             $options = $column;
-            $unset = array('name', 'type', 'length');
+            $unset = array('name', 'type', 'length', 'alltypes', 'ntype');
             foreach ($options as $key => $value) {
                 // Remove column elements which are specified above or are null
-                if (in_array($key, $unset) || is_null($value)) {
+                if (in_array($key, $unset) || is_null($value) || (is_array($value) && empty($value))) {
                     unset($options[$key]);
                 }
             }
@@ -513,10 +513,11 @@ END;
     public function varExport($var)
     {
         $export = var_export($var, true);
-        $export = str_replace("\n ", '', $export);
+        $export = str_replace("\n", '', $export);
+        $export = str_replace('  ', ' ', $export);
         $export = str_replace('array ( ', 'array(', $export);
-        $export = str_replace(",\n", "", $export);
-        
+        $export = str_replace(',)', ')', $export);
+
         return $export;
     }
 
