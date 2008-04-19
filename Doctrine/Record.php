@@ -1762,8 +1762,10 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      * @param array $ids        the identifiers of the related records
      * @return Doctrine_Record  this object
      */
-    public function link($alias, array $ids)
+    public function link($alias, $ids)
     {
+        $ids = (array) $ids;
+
         if ( ! count($ids)) {
             return $this;
         }
