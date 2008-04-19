@@ -1566,6 +1566,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         if ($record instanceof Doctrine_Record) {
             $errorStack = $record->getErrorStack();
         } else {
+            $record  = $this->create();
             $errorStack = new Doctrine_Validator_ErrorStack($this->getOption('name'));
         }
 
@@ -1605,11 +1606,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
             }
 
             $validator = Doctrine_Validator::getValidator($validatorName);
-
-            if ($record instanceof Doctrine_Record) {
-                $validator->invoker = $record;
-            }
-
+            $validator->invoker = $record;
             $validator->field = $fieldName;
             $validator->args = $args;
             if ( ! $validator->validate($value)) {
