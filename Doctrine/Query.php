@@ -1853,11 +1853,7 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         $results = $this->getConnection()->fetchAll($q, $params);
         
         if (count($results) > 1) {
-            $count = 0;
-            foreach ($results as $result) {
-                $result = array_change_key_case($result, CASE_LOWER);
-                $count += $result['num_results'];
-            }
+            $count = count($results);
         } else {
             if (isset($results[0])) {
                 $results[0] = array_change_key_case($results[0], CASE_LOWER);
