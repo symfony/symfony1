@@ -82,9 +82,18 @@ class Doctrine_Import_Builder
      * 
      * Bool true/false for whether or not to generate base classes
      *
-     * @var string $suffix
+     * @var boolean $generateBaseClasses
      */
     protected $_generateBaseClasses = true;
+
+    /**
+     * _generateTableClasses
+     *
+     * Bool true/false for whether or not to generate child table classes
+     *
+     * @var boolean $generateTableClasses
+     */
+    protected $_generateTableClasses = false;
 
     /**
      * _base
@@ -176,8 +185,8 @@ class Doctrine_Import_Builder
      *
      * Specify whether or not to generate classes which extend from generated base classes
      *
-     * @param string $bool
-     * @return void
+     * @param  boolean $bool
+     * @return boolean $bool
      */
     public function generateBaseClasses($bool = null)
     {
@@ -187,7 +196,24 @@ class Doctrine_Import_Builder
 
         return $this->_generateBaseClasses;
     }
-    
+
+    /**
+     * generateTableClasses
+     *
+     * Specify whether or not to generate children table classes
+     *
+     * @param  boolean $bool
+     * @return boolean $bool
+     */
+    public function generateTableClasses($bool = null)
+    {
+        if ($bool !== null) {
+            $this->_generateTableClasses = $bool;
+        }
+
+        return $this->_generateTableClasses;
+    }
+
     /**
      * setBaseClassPrefix
      *
@@ -854,13 +880,17 @@ END;
                 $writePath = $this->_path;
             }
 
-            $this->writeTableDefinition($definition['tableClassName'], $writePath, array('extends' => $definition['inheritance']['tableExtends']));
+            if ($this->generateTableClasses()) {
+                $this->writeTableDefinition($definition['tableClassName'], $writePath, array('extends' => $definition['inheritance']['tableExtends']));
+            }
         }
         // If is the package class then we need to make the path to the complete package
         else if (isset($definition['is_package_class']) && $definition['is_package_class']) {
             $writePath = $packagesPath . DIRECTORY_SEPARATOR . $definition['package_path'];
 
-            $this->writeTableDefinition($definition['tableClassName'], $writePath, array('extends' => $definition['inheritance']['tableExtends']));
+            if ($this->generateTableClasses()) {
+                $this->writeTableDefinition($definition['tableClassName'], $writePath, array('extends' => $definition['inheritance']['tableExtends']));
+            }
         }
         // If it is the base class of the doctrine record definition
         else if (isset($definition['is_base_class']) && $definition['is_base_class']) {
