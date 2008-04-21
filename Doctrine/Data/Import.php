@@ -155,10 +155,11 @@ class Doctrine_Data_Import extends Doctrine_Data
      * @param  string $rowKey
      * @param  Doctrine_Record $record
      * @param  string $relationName
+     * @param  string $referringRowKey
      * @return Doctrine_Record
      * @throws Doctrine_Data_Exception
      */
-    protected function _getImportedObject($rowKey, Doctrine_Record $record, $relationName)
+    protected function _getImportedObject($rowKey, Doctrine_Record $record, $relationName, $referringRowKey)
     {
         if ( ! isset($this->_importedObjects[$rowKey])) {
             throw new Doctrine_Data_Exception('Invalid row key specified: ' . $rowKey);
@@ -170,8 +171,8 @@ class Doctrine_Data_Import extends Doctrine_Data
         if ($relation->getClass() !== get_class($relatedRowKeyObject)) {
             if ( ! is_subclass_of($relatedRowKeyObject, $relation->getClass())) {
                 throw new Doctrine_Data_Exception(sprintf(
-                    'Class referred to is expected to be "%s" and "%s" was given',
-                    get_class($relatedRowKeyObject), $relation->getClass()));
+                    'Class referred to in "%s" is expected to be "%s" and "%s" was given',
+                    $referringRowKey, $relation->getClass(), get_class($relatedRowKeyObject)));
             }
         }
 
@@ -200,18 +201,18 @@ class Doctrine_Data_Import extends Doctrine_Data
                     if (isset($value[0])) {
                         foreach ($value as $link) {
                             if ($obj->getTable()->getRelation($key)->getType() === Doctrine_Relation::ONE) {
-                                $obj->set($key, $this->_getImportedObject($link, $obj, $key));
+                                $obj->set($key, $this->_getImportedObject($link, $obj, $key, $rowKey));
                             } else if ($obj->getTable()->getRelation($key)->getType() === Doctrine_Relation::MANY) {
                                 $relation = $obj->$key;
                                 
-                                $relation[] = $this->_getImportedObject($link, $obj, $key);
+                                $relation[] = $this->_getImportedObject($link, $obj, $key, $rowKey);
                             }
                         }
                     } else {
                         $obj->$key->fromArray($value);
                     }
                 } else {
-                    $obj->set($key, $this->_getImportedObject($value, $obj, $key));
+                    $obj->set($key, $this->_getImportedObject($value, $obj, $key, $rowKey));
                 }
             } else {
                 throw new Doctrine_Data_Exception('Invalid fixture element "'. $key . '" under "' . $rowKey . '"');
