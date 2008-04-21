@@ -47,7 +47,7 @@ class Doctrine_Data_Import extends Doctrine_Data
     protected $_rows = array();
 
     /**
-     * constructor
+     * Optionally pass the directory/path to the yaml for importing
      *
      * @param string $directory 
      * @return void
@@ -98,7 +98,7 @@ class Doctrine_Data_Import extends Doctrine_Data
     }
 
     /**
-     * doImport
+     * Do the importing of the data parsed from the fixtures
      *
      * @return void
      */
@@ -109,7 +109,7 @@ class Doctrine_Data_Import extends Doctrine_Data
     }
 
     /**
-     * _buildRows
+     * Recursively loop over all data fixtures and build the array of className rows
      *
      * @return void
      */
@@ -133,7 +133,7 @@ class Doctrine_Data_Import extends Doctrine_Data
     }
 
     /**
-     * _buildNestedSetRows
+     * Build the rows for nested set models
      *
      * @return void
      */
@@ -149,7 +149,8 @@ class Doctrine_Data_Import extends Doctrine_Data
     }
 
     /**
-     * _getImportedObject
+     * Get the unsaved object for a specified row key and validate that it is the valid object class
+     * for the passed record and relation name
      *
      * @param  string $rowKey
      * @param  Doctrine_Record $record
@@ -178,7 +179,7 @@ class Doctrine_Data_Import extends Doctrine_Data
     }
 
     /**
-     * _processRow
+     * Process a row and make all the appropriate relations between the imported data
      *
      * @param string $rowKey 
      * @param string $row 
@@ -219,7 +220,7 @@ class Doctrine_Data_Import extends Doctrine_Data
     }
 
     /**
-     * _loadData
+     * Perform the loading of the data from the passed array
      *
      * @param string $array 
      * @return void
@@ -288,7 +289,7 @@ class Doctrine_Data_Import extends Doctrine_Data
     }
 
     /**
-     * _loadNestedSetData
+     * Load nested set data for models with nested set enabled
      *
      * @param string $model 
      * @param string $nestedSetData 
@@ -324,7 +325,7 @@ class Doctrine_Data_Import extends Doctrine_Data
     }
 
     /**
-     * doImportDummyData
+     * Import dummy data in to the loaded models.
      *
      * @param string $num 
      * @return void
@@ -352,7 +353,7 @@ class Doctrine_Data_Import extends Doctrine_Data
     }
 
     /**
-     * populateDummyRecord
+     * Populate the passed record with a set of dummy data
      *
      * @param Doctrine_Record $record 
      * @return Doctrine_Record $record
