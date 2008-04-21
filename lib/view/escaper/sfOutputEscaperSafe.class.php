@@ -19,7 +19,7 @@
 class sfOutputEscaperSafe
 {
   protected
-    $values = null;
+    $value = null;
 
   /**
    * Constructor.
