@@ -167,7 +167,11 @@ class Doctrine_Data_Import extends Doctrine_Data
 
         $relation = $record->getTable()->getRelation($relationName);
         if ($relation->getClass() !== get_class($relatedRowKeyObject)) {
-            throw new Doctrine_Data_Exception('Class referred to is expected to be "' . get_class($relatedRowKeyObject) . '" and "' . $relation->getClass() .'" was given');
+            if ( ! is_subclass_of($relatedRowKeyObject, $relation->getClass())) {
+                throw new Doctrine_Data_Exception(sprintf(
+                    'Class referred to is expected to be "%s" and "%s" was given',
+                    get_class($relatedRowKeyObject), $relation->getClass()));
+            }
         }
 
         return $relatedRowKeyObject;
