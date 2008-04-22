@@ -168,7 +168,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
     {
         $deletions = array();
         $this->_collectDeletions($record, $deletions);
-        $this->_executeDeletions($deletions);
+        return $this->_executeDeletions($deletions);
     }
 
     /**
@@ -271,6 +271,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                 $this->_postDelete($skippedRecord);
             }
 
+            return true;
         } catch (Exception $e) {
             $this->conn->rollback();
             throw $e;
