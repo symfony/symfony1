@@ -451,7 +451,7 @@ class Doctrine_Import_Schema
                     }
                     
                     // Add the keyType column to the parent if a definition does not already exist
-                    if ( ! isset($array[$array[$className]['inheritance']['extends']]['columns']['type'])) {
+                    if ( ! isset($array[$array[$className]['inheritance']['extends']]['columns'][$array[$className]['inheritance']['keyField']])) {
                         $array[$definition['inheritance']['extends']]['columns'][$array[$className]['inheritance']['keyField']] = array('name' => $array[$className]['inheritance']['keyField'], 'type' => 'string', 'length' => 255);
                     }
                 }
