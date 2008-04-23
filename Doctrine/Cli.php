@@ -124,7 +124,7 @@ class Doctrine_Cli
             return;
         }
         
-        if (isset($args[1]) && isset($args[2]) && $args[2] == 'help') {
+        if (isset($args[1]) && isset($args[2]) && $args[2] === 'help') {
             echo $this->printTasks($args[1], true);
             return;
         }
