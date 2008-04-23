@@ -50,3 +50,14 @@ $b->
   checkResponseElement('ul li', 'foo/bar est une adresse email invalide', array('position' => 2))
 ;
 
+// forms label custoim catalogue test
+$b->
+  get('/fr/i18n/i18nCustomCatalogueForm')->
+  isStatusCode(200)->
+  isRequestParameter('module', 'i18n')->
+  isRequestParameter('action', 'i18nCustomCatalogueForm')->
+  isUserCulture('fr')->
+  checkResponseElement('label', 'Prénom!!!', array('position' => 0))->
+  checkResponseElement('label', 'Nom!!!', array('position' => 1))->
+  checkResponseElement('label', 'Adresse email!!!', array('position' => 2))
+;

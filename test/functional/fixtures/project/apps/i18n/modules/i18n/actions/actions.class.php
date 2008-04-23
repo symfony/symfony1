@@ -38,4 +38,10 @@ class i18nActions extends sfActions
       $this->form->bind($request->getParameter('i18n'));
     }
   }
+  
+  public function executeI18nCustomCatalogueForm(sfWebRequest $request)
+  {
+    $this->form = new I18nCustomCatalogueForm();
+    $this->setTemplate('I18nForm');
+  }
 }

@@ -29,7 +29,8 @@ abstract class sfWidgetFormSchemaFormatter
     $errorRowFormatInARow      = "    <li>%error%</li>\n",
     $namedErrorRowFormatInARow = "    <li>%name%: %error%</li>\n",
     $decoratorFormat           = '',
-    $widgetSchema              = null;
+    $widgetSchema              = null,
+    $translationCatalogue      = null;
 
   /**
    * Constructor
@@ -57,10 +58,9 @@ abstract class sfWidgetFormSchemaFormatter
    *
    * @param  mixed  $subject     The subject to translate
    * @param  array  $parameters  Additional parameters to pass back to the callable
-   * 
    * @return string
    */
-  static public function translate($subject, $parameters = array())
+  public function translate($subject, $parameters = array())
   {
     if (false === $subject)
     {
@@ -80,13 +80,15 @@ abstract class sfWidgetFormSchemaFormatter
 
       return strtr($subject, $parameters);
     }
+    
+    $catalogue = $this->getTranslationCatalogue();
 
     if (self::$translationCallable instanceof sfCallable)
     {
-      return self::$translationCallable->call($subject, $parameters);
+      return self::$translationCallable->call($subject, $parameters, $catalogue);
     }
 
-    return call_user_func(self::$translationCallable, $subject, $parameters);
+    return call_user_func(self::$translationCallable, $subject, $parameters, $catalogue);
   }
 
   /**
@@ -123,7 +125,7 @@ abstract class sfWidgetFormSchemaFormatter
       return '';
     }
 
-    return strtr($this->getHelpFormat(), array('%help%' => self::translate($help)));
+    return strtr($this->getHelpFormat(), array('%help%' => $this->translate($help)));
   }
 
   public function formatErrorRow($errors)
@@ -187,9 +189,35 @@ abstract class sfWidgetFormSchemaFormatter
       $label = str_replace('_', ' ', ucfirst($name));
     }
 
-    return self::translate($label);
+    return $this->translate($label);
   }
-
+  
+  /**
+   * Get i18n catalogue name
+   *
+   * @return string
+   */
+  public function getTranslationCatalogue()
+  {
+    return $this->translationCatalogue;
+  }
+  
+  /**
+   * Set an i18n catalogue name
+   *
+   * @param  string  $catalogue
+   * @throws InvalidArgumentException
+   */
+  public function setTranslationCatalogue($catalogue)
+  {
+    if (!is_string($catalogue))
+    {
+      throw new InvalidArgumentException('Catalogue name must be a string');
+    }
+    
+    $this->translationCatalogue = $catalogue;
+  }
+  
   protected function unnestErrors($errors, $prefix = '')
   {
     $newErrors = array();
@@ -204,11 +232,11 @@ abstract class sfWidgetFormSchemaFormatter
       {
         if ($error instanceof sfValidatorError)
         {
-          $err = self::translate($error->getMessageFormat(), $error->getArguments());
+          $err = $this->translate($error->getMessageFormat(), $error->getArguments());
         }
         else
         {
-          $err = self::translate($error);
+          $err = $this->translate($error);
         }
 
         if (!is_integer($name))

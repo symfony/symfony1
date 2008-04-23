@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(22, new lime_output_color());
+$t = new lime_test(25, new lime_output_color());
 
 class MyFormatter extends sfWidgetFormSchemaFormatter
 {
@@ -113,10 +113,11 @@ catch (Exception $e)
 }
 
 $t->diag('->translate()');
-$t->is(MyFormatter::translate('label'), '[label]', 'translate() call i18n sfCallable as expected');
+$f = new MyFormatter(new sfWidgetFormSchema());
+$t->is($f->translate('label'), '[label]', 'translate() call i18n sfCallable as expected');
 
 MyFormatter::setTranslationCallable(array('myI18n', '__'));
-$t->is(MyFormatter::translate('label'), '[label]', 'translate() call i18n callable as expected');
+$t->is($f->translate('label'), '[label]', 'translate() call i18n callable as expected');
 
 $t->diag('->generateLabel() ->generateLabelName() ->setLabel() ->setLabels()');
 MyFormatter::dropTranslationCallable();
@@ -143,3 +144,33 @@ $w->setLabel('last_name', 'Your Last Name');
 $t->is($f->generateLabel('last_name'), '<label for="last_name">Your Last Name</label>', '->generateLabelName() returns a label tag');
 MyFormatter::setTranslationCallable('my__');
 $t->is($f->generateLabel('last_name'), '<label for="last_name">[Your Last Name]</label>', '->generateLabelName() returns a i18ned label tag');
+
+// ->setTranslationCatalogue() ->getTranslationCatalogue()
+class MyFormatter2 extends sfWidgetFormSchemaFormatter
+{
+  
+}
+
+$f = new MyFormatter2(new sfWidgetFormSchema(array()));
+$f->setTranslationCatalogue('foo');
+$t->is($f->getTranslationCatalogue(), 'foo', 'setTranslationCatalogue() has set the i18n catalogue correctly');
+$t->diag('->setTranslationCatalogue() ->getTranslationCatalogue()');
+try
+{
+  $f->setTranslationCatalogue(array('foo'));
+  $t->fail('setTranslationCatalogue() does not throw an exception when catalogue name is incorrectly typed');
+}
+catch (InvalidArgumentException $e)
+{
+  $t->pass('setTranslationCatalogue() throws an exception when catalogue name is incorrectly typed');
+}
+
+function ___my($s, $p, $c)
+{
+  return $c;
+}
+
+$f = new MyFormatter2(new sfWidgetFormSchema());
+$f->setTranslationCallable('___my');
+$f->setTranslationCatalogue('bar');
+$t->is($f->translate('foo', array()), 'bar', 'translate() passes back the catalogue to the translation callable');
