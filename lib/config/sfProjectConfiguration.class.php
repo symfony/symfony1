@@ -227,6 +227,28 @@ class sfProjectConfiguration
   }
 
   /**
+   * Gets the paths to plugins root directories, minding overloaded plugins.
+   *
+   * @return array The plugin root paths.
+   */
+  public function getPluginPaths()
+  {
+    $plugins = sfFinder::type('dir')->discard('.*')->prune('.*')->maxdepth(0)->in(sfConfig::get('sf_plugins_dir'));
+
+    $bundledPluginDir = sfConfig::get('sf_symfony_lib_dir').'/plugins';
+    $bundledPlugins = sfFinder::type('dir')->maxdepth(0)->relative()->in($bundledPluginDir);
+    foreach ($bundledPlugins as $bundledPlugin)
+    {
+      if (!is_dir(sfConfig::get('sf_plugins_dir').'/'.$bundledPlugin))
+      {
+        $plugins[] = $bundledPluginDir.'/'.$bundledPlugin;
+      }
+    }
+
+    return $plugins;
+  }
+
+  /**
    * Returns the event dispatcher.
    *
    * @return sfEventDispatcher A sfEventDispatcher instance

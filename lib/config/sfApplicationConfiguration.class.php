@@ -506,17 +506,10 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
    */
   public function loadPluginConfig()
   {
-    if ($pluginConfigs = glob(sfConfig::get('sf_symfony_lib_dir').'/plugins/*/config/config.php'))
+    foreach ($this->getPluginPaths() as $path)
     {
-      foreach ($pluginConfigs as $config)
-      {
-        require $config;
-      }
-    }
-
-    if ($pluginConfigs = glob(sfConfig::get('sf_plugins_dir').'/*/config/config.php'))
-    {
-      foreach ($pluginConfigs as $config)
+      $config = $path.'/config/config.php';
+      if (is_readable($config))
       {
         require $config;
       }

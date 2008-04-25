@@ -36,7 +36,7 @@ class sfSymfonyCommandApplication extends sfCommandApplication
     $this->setName('symfony');
     $this->setVersion(SYMFONY_VERSION);
 
-    $this->loadTasks();
+    $this->loadTasks($configuration);
   }
 
   /**
@@ -73,27 +73,31 @@ class sfSymfonyCommandApplication extends sfCommandApplication
    * Loads all available tasks.
    *
    * Looks for tasks in the symfony core, the current project and all project plugins.
+   *
+   * @param sfProjectConfiguration The project configuration
    */
-  protected function loadTasks()
+  protected function loadTasks(sfProjectConfiguration $configuration)
   {
     $dirs = array(
       sfConfig::get('sf_symfony_lib_dir').'/task',               // symfony tasks
-      sfConfig::get('sf_symfony_lib_dir').'/plugins/*/lib/task', // bundled plugin tasks
-      sfConfig::get('sf_plugins_dir').'/*/lib/task',             // plugin tasks
       sfConfig::get('sf_lib_dir').'/task',                       // project tasks
     );
     $finder = sfFinder::type('file')->name('*Task.class.php');
 
-    foreach ($dirs as $globDir)
+    foreach ($finder->in($dirs) as $task)
     {
-      if (!$dirs = glob($globDir))
-      {
-        continue;
-      }
+      require_once $task;
+    }
 
-      foreach ($finder->in($dirs) as $task)
+    foreach ($configuration->getPluginPaths() as $path)
+    {
+      $taskPath = $path.'/lib/task';
+      if (is_dir($taskPath))
       {
-        require_once $task;
+        foreach ($finder->in($taskPath) as $task)
+        {
+          require_once $task;
+        }
       }
     }
   }
