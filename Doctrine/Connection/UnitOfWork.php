@@ -180,7 +180,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
     private function _collectDeletions(Doctrine_Record $record, array &$deletions)
     {
         if ( ! $record->exists()) {
-            throw new Doctrine_Connection_Exception("Transient records can't be deleted.");
+            return;
         }
 
         $deletions[$record->getOid()] = $record;
@@ -339,8 +339,6 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                      $record->refreshRelated($relation->getAlias());
                  }
                  $relatedObjects = $record->get($relation->getAlias());
-                 // note: The exists() check is needed because a related object is created
-                 // on-the-fly on access and we need to make sure it's not such an object.
                  if ($relatedObjects instanceof Doctrine_Record && $relatedObjects->exists()
                         && ! isset($deletions[$relatedObjects->getOid()])) {
                      $this->_collectDeletions($relatedObjects, $deletions);
