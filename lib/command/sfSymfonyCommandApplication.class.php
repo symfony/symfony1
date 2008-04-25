@@ -78,27 +78,26 @@ class sfSymfonyCommandApplication extends sfCommandApplication
    */
   protected function loadTasks(sfProjectConfiguration $configuration)
   {
-    $dirs = array(
-      sfConfig::get('sf_symfony_lib_dir').'/task',               // symfony tasks
-      sfConfig::get('sf_lib_dir').'/task',                       // project tasks
-    );
-    $finder = sfFinder::type('file')->name('*Task.class.php');
+    // Symfony core tasks
+    $dirs = array(sfConfig::get('sf_symfony_lib_dir').'/task');
 
+    // Plugin tasks
+    foreach ($configuration->getPluginPaths() as $path)
+    {
+      if (is_dir($taskPath = $path.'/lib/task'))
+      {
+        $dirs[] = $taskPath;
+      }
+    }
+
+    // project tasks
+    $dirs[] = sfConfig::get('sf_lib_dir').'/task';
+
+    // require tasks
+    $finder = sfFinder::type('file')->name('*Task.class.php');
     foreach ($finder->in($dirs) as $task)
     {
       require_once $task;
-    }
-
-    foreach ($configuration->getPluginPaths() as $path)
-    {
-      $taskPath = $path.'/lib/task';
-      if (is_dir($taskPath))
-      {
-        foreach ($finder->in($taskPath) as $task)
-        {
-          require_once $task;
-        }
-      }
     }
   }
 
