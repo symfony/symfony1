@@ -24,7 +24,6 @@ if (!isset($sf_symfony_lib_dir))
   }
   else
   {
-    die('pear');
     // PEAR
     $sf_symfony_lib_dir  = '@PEAR-DIR@/symfony';
 
