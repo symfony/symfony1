@@ -339,8 +339,10 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
                      $record->refreshRelated($relation->getAlias());
                  }
                  $relatedObjects = $record->get($relation->getAlias());
-                 if ($relatedObjects instanceof Doctrine_Record &&
-                        ! isset($deletions[$relatedObjects->getOid()])) {
+                 // note: The exists() check is needed because a related object is created
+                 // on-the-fly on access and we need to make sure it's not such an object.
+                 if ($relatedObjects instanceof Doctrine_Record && $relatedObjects->exists()
+                        && ! isset($deletions[$relatedObjects->getOid()])) {
                      $this->_collectDeletions($relatedObjects, $deletions);
                  } else if ($relatedObjects instanceof Doctrine_Collection && count($relatedObjects) > 0) {
                      // cascade the delete to the other objects
