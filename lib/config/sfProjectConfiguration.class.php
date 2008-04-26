@@ -9,7 +9,7 @@
  */
 
 /**
- * sfConfiguration represents a configuration for a symfony project.
+ * sfProjectConfiguration represents a configuration for a symfony project.
  *
  * @package    symfony
  * @subpackage config
@@ -233,10 +233,10 @@ class sfProjectConfiguration
    */
   public function getPluginPaths()
   {
-    $plugins = sfFinder::type('dir')->discard('.*')->prune('.*')->maxdepth(0)->in(sfConfig::get('sf_plugins_dir'));
+    $plugins = sfFinder::type('dir')->discard('.*')->prune('.*')->follow_link()->maxdepth(0)->in(sfConfig::get('sf_plugins_dir'));
 
     $bundledPluginDir = sfConfig::get('sf_symfony_lib_dir').'/plugins';
-    $bundledPlugins = sfFinder::type('dir')->maxdepth(0)->relative()->in($bundledPluginDir);
+    $bundledPlugins = sfFinder::type('dir')->maxdepth(0)->follow_link()->relative()->in($bundledPluginDir);
     foreach ($bundledPlugins as $bundledPlugin)
     {
       if (!is_dir(sfConfig::get('sf_plugins_dir').'/'.$bundledPlugin))
@@ -244,7 +244,7 @@ class sfProjectConfiguration
         $plugins[] = $bundledPluginDir.'/'.$bundledPlugin;
       }
     }
-
+    
     return $plugins;
   }
 
