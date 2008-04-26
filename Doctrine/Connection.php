@@ -972,6 +972,7 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
             if ( ! empty($params)) {
                 $stmt = $this->prepare($query);
                 $stmt->execute($params);
+
                 return $stmt;
             } else {
                 $event = new Doctrine_Event($this, Doctrine_Event::CONN_QUERY, $query, $params);
@@ -1006,8 +1007,6 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         try {
             if ( ! empty($params)) {
                 $stmt = $this->prepare($query);
-                //var_dump($params);
-                //echo $query."<br/>";
                 $stmt->execute($params);
 
                 return $stmt->rowCount();
@@ -1015,7 +1014,6 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
                 $event = new Doctrine_Event($this, Doctrine_Event::CONN_EXEC, $query, $params);
 
                 $this->getAttribute(Doctrine::ATTR_LISTENER)->preExec($event);
-
                 if ( ! $event->skipOperation) {
                     $count = $this->dbh->exec($query);
 
