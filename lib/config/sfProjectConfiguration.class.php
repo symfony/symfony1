@@ -233,19 +233,35 @@ class sfProjectConfiguration
    */
   public function getPluginPaths()
   {
-    $plugins = sfFinder::type('dir')->discard('.*')->prune('.*')->follow_link()->maxdepth(0)->in(sfConfig::get('sf_plugins_dir'));
+    $pluginPaths = array();
 
-    $bundledPluginDir = sfConfig::get('sf_symfony_lib_dir').'/plugins';
-    $bundledPlugins = sfFinder::type('dir')->maxdepth(0)->follow_link()->relative()->in($bundledPluginDir);
-    foreach ($bundledPlugins as $bundledPlugin)
+    $finder = sfFinder::type('dir')->maxdepth(0)->follow_link()->relative();
+
+    $bundledPlugins = $finder->in(sfConfig::get('sf_symfony_lib_dir').'/plugins');
+    $projectPlugins = $finder->in(sfConfig::get('sf_plugins_dir'));
+
+    // bundled plugins
+    foreach ($bundledPlugins as $plugin)
     {
-      if (!is_dir(sfConfig::get('sf_plugins_dir').'/'.$bundledPlugin))
+      // plugins can override bundle plugins
+      if (false !== $pos = array_search($plugin, $projectPlugins))
       {
-        $plugins[] = $bundledPluginDir.'/'.$bundledPlugin;
+        $pluginPaths[] = sfConfig::get('sf_plugins_dir').'/'.$plugin;
+        unset($projectPlugins[$pos]);
+      }
+      else
+      {
+        $pluginPaths[] = sfConfig::get('sf_symfony_lib_dir').'/plugins/'.$plugin;
       }
     }
-    
-    return $plugins;
+
+    // project plugins
+    foreach ($projectPlugins as $plugin)
+    {
+      $pluginPaths[] = sfConfig::get('sf_plugins_dir').'/'.$plugin;
+    }
+
+    return $pluginPaths;
   }
 
   /**
