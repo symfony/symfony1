@@ -1,3 +1,13 @@
+Version 1.1.0 beta4
+-------------------
+
+* The new forms framework now handles field names based on Propel phpName since r8508. You'll need to regenerate your base forms using the `symfony propel:build-forms` command after having upgraded your project
+* You can now define an i18n translations catalogue for each of your forms
+* Components are now rendered correctly (beta3 broked them)
+* File upload used with a Propel form now works as expected
+* You can now generate task classes using the `generate:task` command
+* The checkbox widget now works correctly when the checkbox value is 0
+
 Version 1.1.0 beta3
 -------------------
 
