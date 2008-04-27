@@ -383,6 +383,21 @@ class sfTestBrowser extends sfBrowser
 
     return $this;
   }
+  
+  /**
+   * Trigger a test failure if an uncaught exception is present.
+   * 
+   * @return  boolean
+   */
+  public function checkCurrentExceptionIsEmpty()
+  {
+    if (false === ($empty = parent::checkCurrentExceptionIsEmpty()))
+    {
+      $this->test()->fail(sprintf('last request threw an uncatched exception "%s: %s"', get_class($this->getCurrentException()), $this->getCurrentException()->getMessage()));
+    }
+    
+    return $empty;
+  }
 
   /**
    * Tests if the given uri is cached.

@@ -458,14 +458,14 @@ class sfBrowser
     $this->currentException = null;
   }
 
+  /**
+   * Test for an uncaught exception.
+   * 
+   * @return  boolean
+   */
   public function checkCurrentExceptionIsEmpty()
   {
-    if (is_null($this->getCurrentException()) || $this->getCurrentException() instanceof sfError404Exception)
-    {
-      return;
-    }
-
-    $this->test->fail(sprintf('last request threw an uncatched exception "%s: %s"', get_class($this->getCurrentException()), $this->getCurrentException()->getMessage()));
+    return is_null($this->getCurrentException()) || $this->getCurrentException() instanceof sfError404Exception;
   }
 
   /**
