@@ -182,7 +182,11 @@ $t->is($pluginManager->getPluginVersion('sfTestPlugin', 'alpha'), '1.1.4', '->ge
 $t->diag('->getInstalledPlugins()');
 $pluginManager->installPlugin('sfTestPlugin');
 $installed = $pluginManager->getInstalledPlugins();
-$t->is($installed[1]->getName(), 'sfTestPlugin', '->getInstalledPlugin() returns an array of installed packages');
+$a = array($installed[0]->getName(), $installed[1]->getName());
+$b = array('sfTestPlugin', 'sfMainPackage');
+sort($a);
+sort($b);
+$t->is($a, $b, '->getInstalledPlugin() returns an array of installed packages');
 $t->is(count($installed), 2, '->getInstalledPlugin() returns an array of installed packages');
 $pluginManager->uninstallPlugin('sfTestPlugin');
 

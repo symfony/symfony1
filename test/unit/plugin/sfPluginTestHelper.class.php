@@ -4,7 +4,7 @@ class sfPluginTestHelper
 {
   static public function convertUrlToFixture($url)
   {
-    $file = preg_replace(array('/_+/', '#/+#', '#_/#'), array('_', '/', '/'), preg_replace('#[^a-zA-Z0-9\-/\.]#', '_', strtolower($url)));
+    $file = preg_replace(array('/_+/', '#/+#', '#_/#'), array('_', '/', '/'), preg_replace('#[^a-zA-Z0-9\-/\.]#', '_', $url));
 
     $dir  = dirname($file);
     $file = basename($file);

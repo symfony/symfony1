@@ -42,6 +42,6 @@ class i18nActions extends sfActions
   public function executeI18nCustomCatalogueForm(sfWebRequest $request)
   {
     $this->form = new I18nCustomCatalogueForm();
-    $this->setTemplate('I18nForm');
+    $this->setTemplate('i18nForm');
   }
 }
