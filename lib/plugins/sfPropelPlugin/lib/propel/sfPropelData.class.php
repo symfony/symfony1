@@ -425,7 +425,7 @@ class sfPropelData extends sfData
               }
               else
               {
-                $values[$col] = $relatedTable->getPhpName().'_'.$rs->get($col);
+                $values[$col] = strlen($rs->get($col)) ? $relatedTable->getPhpName().'_'.$rs->get($col) : '';
               }
             }
             elseif (!$isPrimaryKey || ($isPrimaryKey && !$tableMap->isUseIdGenerator()))
