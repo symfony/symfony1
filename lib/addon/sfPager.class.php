@@ -44,7 +44,6 @@ abstract class sfPager
   {
     $this->setClass($class);
     $this->setMaxPerPage($maxPerPage);
-    $this->setPage(1);
     $this->parameterHolder = new sfParameterHolder();
   }
 
@@ -242,7 +241,7 @@ abstract class sfPager
   {
     $page = intval($page);
 
-    $this->page = ($page <= 0) ? 1 : $page;
+    $this->page = ($page < 0) ? 1 : $page;
   }
 
   public function getMaxPerPage()
