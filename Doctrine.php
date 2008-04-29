@@ -635,15 +635,16 @@ final class Doctrine
     {
         foreach ($models as $model) {
             $declaredBefore = get_declared_classes();
+            if (self::isValidModelClass($model)) {
+                Doctrine::getTable($model);
 
-            Doctrine::getTable($model);
-
-            $declaredAfter = get_declared_classes();
-            // Using array_slice because array_diff is broken is some PHP versions
-            $foundClasses = array_slice($declaredAfter, count($declaredBefore) - 1);
-            foreach ($foundClasses as $class) {
-                if (self::isValidModelClass($class)) {
-                    $models[] = $class;
+                $declaredAfter = get_declared_classes();
+                // Using array_slice because array_diff is broken is some PHP versions
+                $foundClasses = array_slice($declaredAfter, count($declaredBefore) - 1);
+                foreach ($foundClasses as $class) {
+                    if (self::isValidModelClass($class)) {
+                        $models[] = $class;
+                    }
                 }
             }
         }
