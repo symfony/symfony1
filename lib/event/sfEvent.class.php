@@ -119,7 +119,7 @@ class sfEvent implements ArrayAccess
    */
   public function offsetExists($name)
   {
-    return isset($this->parameters[$name]);
+    return array_key_exists($name, $this->parameters);
   }
 
   /**
@@ -131,7 +131,12 @@ class sfEvent implements ArrayAccess
    */
   public function offsetGet($name)
   {
-    return isset($this->parameters[$name]) ? $this->parameters[$name] : null;
+    if (!array_key_exists($name, $this->parameters))
+    {
+      throw new InvalidArgumentException(sprintf('The event "%s" has no "%s" parameter.', $this->name, $name));
+    }
+
+    return $this->parameters[$name];
   }
 
   /**

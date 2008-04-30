@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(10, new lime_output_color());
+$t = new lime_test(11, new lime_output_color());
 
 $subject = new stdClass();
 $parameters = array('foo' => 'bar');
@@ -45,6 +45,16 @@ $t->diag('ArrayAccess interface');
 $t->is($event['foo'], 'bar', 'sfEvent implements the ArrayAccess interface');
 $event['foo'] = 'foo';
 $t->is($event['foo'], 'foo', 'sfEvent implements the ArrayAccess interface');
+
+try
+{
+  $event['foobar'];
+  $t->fail('::offsetGet() throws an InvalidArgumentException exception when the parameter does not exist');
+}
+catch (InvalidArgumentException $e)
+{
+  $t->pass('::offsetGet() throws an InvalidArgumentException exception when the parameter does not exist');
+}
 
 $t->ok(isset($event['foo']), 'sfEvent implements the ArrayAccess interface');
 unset($event['foo']);
