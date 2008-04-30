@@ -339,6 +339,9 @@ class Doctrine_Import extends Doctrine_Connection_Module
      */
     public function importSchema($directory, array $databases = array(), array $options = array())
     {
+        $options['singularize'] = ! isset($options['singularize']) ? 
+                $this->conn->getAttribute('singularize_import'):$options['singularize'];
+
         $connections = Doctrine_Manager::getInstance()->getConnections();
 
         foreach ($connections as $name => $connection) {

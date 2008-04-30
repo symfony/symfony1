@@ -194,6 +194,7 @@ final class Doctrine
     const ATTR_AUTOLOAD_TABLE_CLASSES   = 160;
     const ATTR_MODEL_LOADING            = 161;
     const ATTR_RECURSIVE_MERGE_FIXTURES = 162;
+    const ATTR_SINGULARIZE_IMPORT       = 163;
 
     /**
      * LIMIT CONSTANTS
