@@ -312,22 +312,19 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
     public function actAs($tpl, array $options = array())
     {
         if ( ! is_object($tpl)) {
-            if (class_exists($tpl, true)) {
+            $className = 'Doctrine_Template_' . $tpl;
+
+            if (class_exists($className, true)) {
+                $tpl = new $className($options);
+            } else if (class_exists($tpl, true)) {
                 $tpl = new $tpl($options);
             } else {
-                $className = 'Doctrine_Template_' . $tpl;
-
-                if ( ! class_exists($className, true)) {
-                    throw new Doctrine_Record_Exception("Couldn't load plugin.");
-                }
-
-
-                $tpl = new $className($options);
+                throw new Doctrine_Record_Exception('Could not load behavior named: "' . $tpl . '"');
             }
         }
 
         if ( ! ($tpl instanceof Doctrine_Template)) {
-            throw new Doctrine_Record_Exception('Loaded plugin class is not an istance of Doctrine_Template.');
+            throw new Doctrine_Record_Exception('Loaded behavior class is not an istance of Doctrine_Template.');
         }
 
         $className = get_class($tpl);
