@@ -300,7 +300,7 @@ class Doctrine_Import_Builder
      */
     public function setOption($key, $value)
     {
-        $name = 'set' . Doctrine::classify($key);
+        $name = 'set' . Doctrine_Inflector::classify($key);
         
         if (method_exists($this, $name)) {
             $this->$name($value);

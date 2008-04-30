@@ -179,7 +179,7 @@ END;
             $up = $this->buildCreateTable($export);
             $down = $this->buildDropTable($export);
             
-            $className = 'Add' . Doctrine::classify($export['tableName']);
+            $className = 'Add' . Doctrine_Inflector::classify($export['tableName']);
 
             $this->generateMigrationClass($className, array(), $up, $down);
         }
@@ -280,7 +280,7 @@ END;
             
             $next = (string) $this->migration->getNextVersion();
             
-            $fileName = str_repeat('0', (3 - strlen($next))) . $next . '_' . Doctrine::tableize($className) . $this->suffix;
+            $fileName = str_repeat('0', (3 - strlen($next))) . $next . '_' . Doctrine_Inflector::tableize($className) . $this->suffix;
             
             $class = $this->buildMigrationClass($className, $fileName, $options, $up, $down);
             

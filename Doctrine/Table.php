@@ -232,7 +232,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
             }
         } else {
             if ( ! isset($this->_options['tableName'])) {
-                $this->_options['tableName'] = Doctrine::tableize($this->_options['name']);
+                $this->_options['tableName'] = Doctrine_Inflector::tableize($this->_options['name']);
             }
         }
         $this->_filters[]  = new Doctrine_Record_Filter_Standard();
@@ -346,7 +346,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         $this->columnCount = count($this->_columns);
 
         if ( ! isset($this->_options['tableName'])) {
-            $this->_options['tableName'] = Doctrine::tableize($class->getName());
+            $this->_options['tableName'] = Doctrine_Inflector::tableize($class->getName());
         }
 
         return $record;
@@ -2125,7 +2125,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                 throw new Doctrine_Table_Exception('You must specify the value to findBy');
             }
 
-            $fieldName = Doctrine::tableize($by);
+            $fieldName = Doctrine_Inflector::tableize($by);
             $hydrationMode = isset($arguments[1]) ? $arguments[1]:null;
 
             if ($this->hasColumn($this->getColumnName($fieldName))) {

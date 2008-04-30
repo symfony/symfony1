@@ -53,7 +53,7 @@ abstract class Doctrine_Task
     {
         $this->dispatcher = $dispatcher;
         
-        $this->taskName = str_replace('_', '-', Doctrine::tableize(str_replace('Doctrine_Task_', '', get_class($this))));
+        $this->taskName = str_replace('_', '-', Doctrine_Inflector::tableize(str_replace('Doctrine_Task_', '', get_class($this))));
     }
 
     /**

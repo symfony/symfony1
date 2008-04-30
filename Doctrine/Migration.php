@@ -334,7 +334,7 @@ class Doctrine_Migration
 
             foreach ($this->_changes as $type => $changes) {
                 $process = new Doctrine_Migration_Process();
-                $funcName = 'process' . Doctrine::classify($type);
+                $funcName = 'process' . Doctrine_Inflector::classify($type);
 
                 if ( ! empty($changes)) {
                     $process->$funcName($changes); 

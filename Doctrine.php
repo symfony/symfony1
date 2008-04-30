@@ -1000,17 +1000,6 @@ final class Doctrine
     }
 
     /**
-     * fileFinder
-     *
-     * @param string $type
-     * @return void
-     */
-    public static function fileFinder($type)
-    {
-        return Doctrine_FileFinder::type($type);
-    }
-
-    /**
      * compile
      *
      * method for making a single file of most used doctrine runtime components
@@ -1097,68 +1086,5 @@ final class Doctrine
         }
 
         return implode("\n", $ret);
-    }
-
-    /**
-     * tableize
-     *
-     * returns table name from class name
-     *
-     * @param string $classname
-     * @return string
-     */
-    public static function tableize($className)
-    {
-         return Doctrine_Inflector::tableize($className);
-    }
-
-    /**
-     * classify
-     *
-     * returns class name from table name
-     *
-     * @param string $tablename
-     * @return string
-     */
-    public static function classify($tableName)
-    {
-        return Doctrine_Inflector::classify($tableName);
-    }
-
-    /**
-     * isValidClassName
-     *
-     * checks for valid class name (uses camel case and underscores)
-     *
-     * @param string $classname
-     * @return boolean
-     */
-    public static function isValidClassname($className)
-    {
-        return Doctrine_Lib::isValidClassName($className);
-    }
-
-    /**
-     * makeDirectories
-     *
-     * Makes the directories for a path recursively
-     *
-     * @param string $path
-     * @return void
-     */
-    public static function makeDirectories($path, $mode = 0777)
-    {
-        return Doctrine_Lib::makeDirectories($path, $mode);
-    }
-
-    /**
-     * removeDirectories
-     *
-     * @param string $folderPath
-     * @return void
-     */
-    public static function removeDirectories($folderPath)
-    {
-        return Doctrine_Lib::removeDirectories($folderPath);
     }
 }

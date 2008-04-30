@@ -102,7 +102,7 @@ class Doctrine_Cli
     protected function _getTaskClassFromArgs($args)
     {
         $taskName = str_replace('-', '_', $args[1]);
-        $taskClass = 'Doctrine_Task_' . Doctrine::classify($taskName);
+        $taskClass = 'Doctrine_Task_' . Doctrine_Inflector::classify($taskName);
         
         return $taskClass;
     }
@@ -212,7 +212,7 @@ class Doctrine_Cli
      */
     public function printTasks($task = null, $full = false)
     {
-        $task = Doctrine::classify(str_replace('-', '_', $task));
+        $task = Doctrine_Inflector::classify(str_replace('-', '_', $task));
         
         $tasks = $this->getLoadedTasks();
         
@@ -226,7 +226,7 @@ class Doctrine_Cli
             
             $className = 'Doctrine_Task_' . $taskName;
             $taskInstance = new $className();
-            $taskInstance->taskName = str_replace('_', '-', Doctrine::tableize($taskName));         
+            $taskInstance->taskName = str_replace('_', '-', Doctrine_Inflector::tableize($taskName));         
             
             $syntax = $this->_scriptName . ' ' . $taskInstance->getTaskName();
             

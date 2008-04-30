@@ -339,7 +339,7 @@ class Doctrine_Import_Schema
                 if (isset($table['inheritance']['type']) && ($table['inheritance']['type'] == 'column_aggregation')) {
                     $tableName = null;
                 } else {
-                    $tableName = Doctrine::tableize($className);
+                    $tableName = Doctrine_Inflector::tableize($className);
                 }
             }
 
@@ -527,10 +527,10 @@ class Doctrine_Import_Schema
                 
                 // Attempt to guess the local and foreign
                 if (isset($relation['refClass'])) {
-                    $relation['local'] = isset($relation['local']) ? $relation['local']:Doctrine::tableize($name) . '_id';
-                    $relation['foreign'] = isset($relation['foreign']) ? $relation['foreign']:Doctrine::tableize($class) . '_id';
+                    $relation['local'] = isset($relation['local']) ? $relation['local']:Doctrine_Inflector::tableize($name) . '_id';
+                    $relation['foreign'] = isset($relation['foreign']) ? $relation['foreign']:Doctrine_Inflector::tableize($class) . '_id';
                 } else {
-                    $relation['local'] = isset($relation['local']) ? $relation['local']:Doctrine::tableize($relation['class']) . '_id';
+                    $relation['local'] = isset($relation['local']) ? $relation['local']:Doctrine_Inflector::tableize($relation['class']) . '_id';
                     $relation['foreign'] = isset($relation['foreign']) ? $relation['foreign']:'id';
                 }
                 
