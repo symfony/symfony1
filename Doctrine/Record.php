@@ -1907,16 +1907,6 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
     }
 
     /**
-     * returns the size of the serialized record
-     *
-     * @return integer $size
-     */
-    public function getSize()
-    {
-        return strlen(serialize($this));
-    }
-
-    /**
      * __toString alias
      *
      * @return string $dump
