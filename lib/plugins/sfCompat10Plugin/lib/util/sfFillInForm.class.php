@@ -125,7 +125,14 @@ class sfFillInForm
         {
           // checkbox and radio
           $element->removeAttribute('checked');
-          if ($this->hasValue($values, $name) && ($this->getValue($values, $name) == $value || !$element->hasAttribute('value')))
+          if (is_array($this->getValue($values, $name)) && ($this->hasValue($values, $name) || !$element->hasAttribute('value')))
+          {
+            if (in_array($value, $this->getValue($values, $name)))
+            {
+              $element->setAttribute('checked', 'checked');
+            }
+          }
+          else if ($this->hasValue($values, $name) && ($this->getValue($values, $name) == $value || !$element->hasAttribute('value')))
           {
             $element->setAttribute('checked', 'checked');
           }

@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../../../../../test/bootstrap/unit.php');
 require_once(dirname(__FILE__).'/../../../lib/util/sfFillInForm.class.php');
 
-$t = new lime_test(50, new lime_output_color());
+$t = new lime_test(53, new lime_output_color());
 
 $html = <<<EOF
 <html>
@@ -22,6 +22,9 @@ $html = <<<EOF
     <input type="text" name="input_text" value="default_value" />
     <input type="checkbox" name="input_checkbox" value="1" checked="checked" />
     <input type="checkbox" name="input_checkbox_not_checked" value="1" />
+    <input type="checkbox" name="input_checkbox_multiple[]" value="1" checked="checked" />
+    <input type="checkbox" name="input_checkbox_multiple[]" value="2" />
+    <input type="radio" name="input_radio" value="1" checked="checked" />
     <input type="password" name="password" value="" />
     <textarea name="textarea">content</textarea>
     <select name="select">
@@ -70,6 +73,8 @@ $t->is(get_input_value($xml, 'empty_input_text'), '', '->fillInDom() preserves d
 $t->is(get_input_value($xml, 'password'), '', '->fillInDom() preserves default values for password input');
 $t->is(get_input_value($xml, 'input_checkbox', 'checked'), 'checked', '->fillInDom() preserves default values for checkbox');
 $t->is(get_input_value($xml, 'input_checkbox_not_checked', 'checked'), '', '->fillInDom() preserves default values for checkbox');
+$t->is(get_input_value($xml, 'input_radio', 'checked'), 'checked', '->fillInDom() preserves default values for radio');
+$t->is(get_input_value($xml, 'input_checkbox_multiple[]', 'checked'), array('checked', null), '->fillInDom() preserves default values for multiple checkboxes');
 $t->is($xml->xpath('//form[@name="form1"]/textarea'), array('content'), '->fillInDom() preserves default values for textarea');
 $t->is($xml->xpath('//form[@name="form1"]/select[@name="select"]/option[@selected="selected"]'), array('selected'), '->fillInDom() preserves default values for select');
 $t->is($xml->xpath('//form[@name="form1"]/select[@name="select_multiple"]/option[@selected="selected"]'), array('selected', 'last'), '->fillInDom() preserves default values for multiple select');
@@ -122,6 +127,7 @@ $values = array(
   'input_text' => 'my input text',
   'input_checkbox' => false,
   'input_checkbox_not_checked' => true,
+  'input_checkbox_multiple[]' => array(2),
   'password' => 'mypassword',
   'select' => 'first',
   'select_multiple' => array('first', 'last'),
@@ -138,6 +144,7 @@ $t->is(get_input_value($xml, 'empty_input_text'), 'input text', '->fillInDom() f
 $t->is(get_input_value($xml, 'password'), 'mypassword', '->fillInDom() fills in values for password input');
 $t->is(get_input_value($xml, 'input_checkbox', 'checked'), '', '->fillInDom() fills in values for checkbox');
 $t->is(get_input_value($xml, 'input_checkbox_not_checked', 'checked'), 'checked', '->fillInDom() fills in values for checkbox');
+$t->is(get_input_value($xml, 'input_checkbox_multiple[]', 'checked'), array(null, 'checked'), '->fillInDom() fills in values for multiple checkboxes');
 $t->is($xml->xpath('//form[@name="form1"]/textarea'), array('my content'), '->fillInDom() fills in values for textarea');
 $t->is($xml->xpath('//form[@name="form1"]/select[@name="select"]/option[@selected="selected"]'), array('first'), '->fillInDom() fills in values for select');
 $t->is($xml->xpath('//form[@name="form1"]/select[@name="select_multiple"]/option[@selected="selected"]'), array('first', 'last'), '->fillInDom() fills in values for multiple select');
@@ -182,11 +189,25 @@ $t->is($xml->xpath('//form[@name="form1"]/textarea'), array(str_rot13('my conten
 
 function get_input_value($xml, $name, $attribute = 'value', $form = null)
 {
+  $value = "";
+
   $xpath = ($form ? '//form[@name="'.$form.'"]' : '//form').sprintf('/input[@name="%s"]', $name);
 
   $values = $xml->xpath($xpath);
 
-  return (string) $values[0][$attribute];
+  if (count($values) > 1)
+  {
+    foreach($values as $val)
+    {
+      $value[] = $val[$attribute];
+    }
+  }
+  else
+  {
+    $value = (string) $values[0][$attribute];
+  }
+
+  return $value;
 }
 
 // ->fillInXml()
