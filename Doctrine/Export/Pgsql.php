@@ -297,8 +297,8 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
     public function createSequenceSql($sequenceName, $start = 1, array $options = array())
     {
         $sequenceName = $this->conn->quoteIdentifier($this->conn->formatter->getSequenceName($sequenceName), true);
-        return $this->conn->exec('CREATE SEQUENCE ' . $sequenceName . ' INCREMENT 1' .
-                    ($start < 1 ? ' MINVALUE ' . $start : '') . ' START ' . $start);
+        return 'CREATE SEQUENCE ' . $sequenceName . ' INCREMENT 1' .
+                    ($start < 1 ? ' MINVALUE ' . $start : '') . ' START ' . $start;
     }
 
     /**
