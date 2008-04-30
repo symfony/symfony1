@@ -84,7 +84,7 @@ class Doctrine_Validator_Driver
     public function getArg($arg)
     {
         if ( ! isset($this->_args[$arg])) {
-            throw new Doctrine_Plugin_Exception('Unknown option ' . $arg);
+            throw new Doctrine_Validator_Exception('Unknown option ' . $arg);
         }
         
         return $this->_args[$arg];

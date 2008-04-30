@@ -239,7 +239,7 @@ class Doctrine_Search extends Doctrine_Record_Generator
     public function setTableDefinition()
     {
     	if ( ! isset($this->_options['table'])) {
-    	    throw new Doctrine_Plugin_Exception("Unknown option 'table'.");
+    	    throw new Doctrine_Record_Exception("Unknown option 'table'.");
     	}
 
         $componentName = $this->_options['table']->getComponentName();

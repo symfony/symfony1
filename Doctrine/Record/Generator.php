@@ -223,7 +223,7 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
     public function buildChildDefinitions()
     {
         if ( ! isset($this->_options['children'])) {
-            throw new Doctrine_Plugin_Exception("Unknown option 'children'.");
+            throw new Doctrine_Record_Exception("Unknown option 'children'.");
         }
 
         foreach ($this->_options['children'] as $child) {
