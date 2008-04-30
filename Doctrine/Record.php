@@ -198,8 +198,6 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             }
         }
 
-        $this->_errorStack = new Doctrine_Validator_ErrorStack(get_class($this));
-
         $repository = $this->_table->getRepository();
         $repository->add($this);
 
@@ -260,7 +258,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             return true;
         }
         // Clear the stack from any previous errors.
-        $this->_errorStack->clear();
+        $this->getErrorStack()->clear();
 
         // Run validation process
         $validator = new Doctrine_Validator();
@@ -272,7 +270,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             $this->validateOnUpdate();
         }
 
-        return $this->_errorStack->count() == 0 ? true : false;
+        return $this->getErrorStack()->count() == 0 ? true : false;
     }
 
     /**
@@ -394,6 +392,10 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
      */
     public function getErrorStack()
     {
+        if ( ! $this->_errorStack) {
+            $this->_errorStack = new Doctrine_Validator_ErrorStack(get_class($this));
+        }
+        
         return $this->_errorStack;
     }
 
@@ -412,7 +414,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             }
             $this->_errorStack = $stack;
         } else {
-            return $this->_errorStack;
+            return $this->getErrorStack();
         }
     }
 
