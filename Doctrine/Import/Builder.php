@@ -496,7 +496,8 @@ END;
     {
         $build = null;
         foreach ($columns as $name => $column) {
-            $build .= "    ".'$this->hasColumn(\'' . $name . '\', \'' . $column['type'] . '\'';
+            $columnName = isset($column['name']) ? $column['name']:$name;
+            $build .= "    ".'$this->hasColumn(\'' . $columnName . '\', \'' . $column['type'] . '\'';
     
             if ($column['length']) {
                 $build .= ', ' . $column['length'];

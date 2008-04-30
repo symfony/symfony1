@@ -360,7 +360,11 @@ class Doctrine_Import_Schema
                     $this->_validateSchemaElement('column', array_keys($field));
 
                     $colDesc = array();
-                    $colDesc['name'] = $columnName;
+                    if (isset($field['name'])) {
+                        $colDesc['name'] = $field['name'];
+                    } else {
+                        $colDesc['name'] = $columnName;
+                    }
 
                     // Support short type(length) syntax: my_column: { type: integer(4) }
                     $e = explode('(', $field['type']);
@@ -389,7 +393,7 @@ class Doctrine_Import_Schema
                         }
                     }
 
-                    $columns[(string) $colDesc['name']] = $colDesc;
+                    $columns[(string) $columnName] = $colDesc;
                 }
             }
 
