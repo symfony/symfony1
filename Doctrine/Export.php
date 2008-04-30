@@ -1069,9 +1069,10 @@ class Doctrine_Export extends Doctrine_Connection_Module
 
              if ( ! isset($connections[$connectionName])) {
                  $connections[$connectionName] = array(
-                     'create_tables' => array(),
+                     'create_tables'    => array(),
                      'create_sequences' => array(),
-                     'alters' => array()
+                     'create_indexes'   => array(),
+                     'alters'           => array()
                  );
              }
 
@@ -1080,26 +1081,44 @@ class Doctrine_Export extends Doctrine_Connection_Module
              // Build array of all the creates
              // We need these to happen first
              foreach ($sql as $key => $query) {
-                 if (strstr($query, 'CREATE TABLE')) {
+                 // If create table statement
+                 if (substr($query, 0, strlen('CREATE TABLE')) == 'CREATE TABLE') {
                      $connections[$connectionName]['create_tables'][] = $query;
 
                      unset($sql[$key]);
+                     continue;
                  }
 
-                 if (strstr($query, 'CREATE SEQUENCE')) {
+                 // If create sequence statement
+                 if (substr($query, 0, strlen('CREATE SEQUENCE')) == 'CREATE SEQUENCE') {
                      $connections[$connectionName]['create_sequences'][] = $query;
 
                      unset($sql[$key]);
+                     continue;
+                 }
+
+                 // If create index statement
+                 if (preg_grep("/CREATE .* INDEX/", array($query))) {
+                     $connections[$connectionName]['create_indexes'][] =  $query;
+
+                     unset($sql[$key]);
+                     continue;
+                 }
+
+                 // If alter table statement
+                 if (substr($query, 0, strlen('ALTER TABLE')) == 'ALTER TABLE') {
+                     $connections[$connectionName]['alters'][] = $query;
+
+                     unset($sql[$key]);
+                     continue;
                  }
              }
-
-             $connections[$connectionName]['alters'] = array_merge($connections[$connectionName]['alters'], $sql);
          }
 
-         // Loop over all the sql again to merge the creates and alters in to the same array, but so that the alters are at the bottom
+         // Loop over all the sql again to merge everything together so it is in the correct order
          $build = array();
          foreach ($connections as $connectionName => $sql) {
-             $build[$connectionName] = array_merge($sql['create_tables'], $sql['create_sequences'], $sql['alters']);
+             $build[$connectionName] = array_merge($sql['create_tables'], $sql['create_sequences'], $sql['create_indexes'], $sql['alters']);
          }
 
          foreach ($build as $connectionName => $sql) {
