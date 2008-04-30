@@ -593,8 +593,9 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                 $primary[] = $name;
             }
         }
-        $options['foreignKeys'] = array();
-
+        
+        $options['foreignKeys'] = isset($this->_options['foreignKeys']) ?
+                $this->_options['foreignKeys'] : array();
 
         if ($parseForeignKeys && $this->getAttribute(Doctrine::ATTR_EXPORT)
                 & Doctrine::EXPORT_CONSTRAINTS) {
@@ -633,7 +634,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                     }
                 }
             }
-
+            
             foreach ($constraints as $k => $def) {
                 $options['foreignKeys'][$k] = array_merge($options['foreignKeys'][$k], $def);
             }

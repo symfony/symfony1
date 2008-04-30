@@ -60,7 +60,8 @@ abstract class Doctrine_Relation implements ArrayAccess
     const ONE   = 0;
     const MANY  = 2;
     
-    
+    // TRUE => mandatory, everything else is just a default value. this should be refactored
+    // since TRUE can bot be used as a default value this way. All values should be default values.
     protected $definition = array('alias'       => true,
                                   'foreign'     => true,
                                   'local'       => true,
@@ -76,7 +77,8 @@ abstract class Doctrine_Relation implements ArrayAccess
                                   'deferrable'  => null,
                                   'constraint'  => null,
                                   'equal'       => false,
-                                  'cascade'     => array() // application-level cascades
+                                  'cascade'     => array(), // application-level cascades
+                                  'owningSide'  => false // whether this is the owning side
                                   );
 
     /**
@@ -139,7 +141,6 @@ abstract class Doctrine_Relation implements ArrayAccess
                 $def[$key] = $this->definition[$key];          
             }
         }
-
         $this->definition = $def;
     }
 

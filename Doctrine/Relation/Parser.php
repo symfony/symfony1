@@ -113,7 +113,7 @@ class Doctrine_Relation_Parser
         }
 
         $this->_pending[$alias] = array_merge($options, array('class' => $name, 'alias' => $alias));
-
+        
         return $this->_pending[$alias];
     }
 
@@ -362,6 +362,7 @@ class Doctrine_Relation_Parser
         $localClasses   = array_merge($this->_table->getOption('parents'), array($this->_table->getComponentName()));
 
         $localIdentifierColumnNames = $this->_table->getIdentifierColumnNames();
+        $localIdentifierCount = count($localIdentifierColumnNames);
         $localIdColumnName = array_pop($localIdentifierColumnNames);
         $foreignIdentifierColumnNames = $def['table']->getIdentifierColumnNames();
         $foreignIdColumnName = array_pop($foreignIdentifierColumnNames);
@@ -380,8 +381,16 @@ class Doctrine_Relation_Parser
                     $def['localKey'] = true;
                 }
             } else {
-                if (count($localIdentifierColumnNames) > 0 || ($def['local'] !== $localIdColumnName && 
-                        $def['type'] == Doctrine_Relation::ONE)) {
+                if ($localIdentifierCount == 1) {
+                    if ($def['local'] == $localIdColumnName && isset($def['owningSide'])
+                            && $def['owningSide'] === true) {
+                        $def['localKey'] = true;
+                    } else if (($def['local'] !== $localIdColumnName && $def['type'] == Doctrine_Relation::ONE)) {
+                        $def['localKey'] = true;
+                    }
+                } else if ($localIdentifierCount > 1) {
+                    // It's a composite key and since 'foreign' can not point to a composite
+                    // key currently, we know that 'local' must be the foreign key.
                     $def['localKey'] = true;
                 }
             }

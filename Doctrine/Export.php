@@ -252,7 +252,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
         }
 
         $query = 'CREATE TABLE ' . $this->conn->quoteIdentifier($name, true) . ' (' . $queryFields;
-
+        
         $check = $this->getCheckDeclaration($fields);
 
         if ( ! empty($check)) {
@@ -260,8 +260,6 @@ class Doctrine_Export extends Doctrine_Connection_Module
         }
 
         $query .= ')';
-
-
 
         $sql[] = $query;
 
