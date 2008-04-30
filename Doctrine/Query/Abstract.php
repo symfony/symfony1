@@ -931,11 +931,10 @@ abstract class Doctrine_Query_Abstract
             } else {
                 $query = $this->getSqlQuery($params);
             }
+            $params = $this->convertEnums($params);
         } else {
             $query = $this->_view->getSelectSql();
         }
-
-        $params = $this->convertEnums($params);
 
         if ($this->isLimitSubqueryUsed() &&
                 $this->_conn->getAttribute(Doctrine::ATTR_DRIVER_NAME) !== 'mysql') {
