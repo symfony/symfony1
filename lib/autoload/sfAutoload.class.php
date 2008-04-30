@@ -22,11 +22,12 @@
 class sfAutoload
 {
   static protected
-    $instance = null;
+    $freshCache = false,
+    $instance   = null;
 
   protected
     $overriden = array(),
-    $classes = array();
+    $classes   = array();
 
   protected function __construct()
   {
@@ -86,6 +87,12 @@ class sfAutoload
 
   public function reloadClasses($force = false)
   {
+    // only (re)load the autoloading cache once per request
+    if (self::$freshCache)
+    {
+      return;
+    }
+
     $configuration = sfProjectConfiguration::getActive();
     if (!$configuration || !$configuration instanceof sfApplicationConfiguration)
     {
@@ -105,6 +112,8 @@ class sfAutoload
     {
       $this->classes[$class] = $path;
     }
+
+    self::$freshCache = true;
   }
 
   /**
@@ -122,12 +131,7 @@ class sfAutoload
       self::reloadClasses();
     }
 
-    if (self::loadClass($class))
-    {
-      return true;
-    }
-
-    return false;
+    return self::loadClass($class);
   }
 
   public function autoloadAgain($class)
