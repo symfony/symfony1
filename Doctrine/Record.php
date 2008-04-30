@@ -723,7 +723,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
 
     /**
      * refresh
-     * refres data of related objects from the database
+     * refresh data of related objects from the database
      *
      * @param string $name              name of a related component.
      *                                  if set, this method only refreshes the specified related component

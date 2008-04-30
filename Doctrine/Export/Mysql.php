@@ -98,7 +98,7 @@ class Doctrine_Export_Mysql extends Doctrine_Export
             throw new Doctrine_Export_Exception('no fields specified for table "'.$name.'"');
         }
         $queryFields = $this->getFieldDeclarationList($fields);
-        
+
         // build indexes for all foreign key fields (needed in MySQL!!)
         if (isset($options['foreignKeys'])) {
             foreach ($options['foreignKeys'] as $fk) {

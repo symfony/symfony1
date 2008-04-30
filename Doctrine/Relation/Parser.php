@@ -104,13 +104,6 @@ class Doctrine_Relation_Parser
             unset($this->relations[$name]);
         }
 
-        /* looks like old code?
-        $lower = strtolower($name);
-        if ($this->_table->hasColumn($lower)) {
-            throw new Doctrine_Relation_Exception("Couldn't bind relation. Column with name " . $lower . ' already exists!');
-        }
-        */
-
         $e    = explode(' as ', $name);
         $name = $e[0];
         $alias = isset($e[1]) ? $e[1] : $name;
@@ -120,16 +113,6 @@ class Doctrine_Relation_Parser
         }
 
         $this->_pending[$alias] = array_merge($options, array('class' => $name, 'alias' => $alias));
-        /**
-        $m = Doctrine_Manager::getInstance();
-
-        if (isset($options['onDelete'])) {
-            $m->addDeleteAction($name, $this->_table->getComponentName(), $options['onDelete']);
-        }
-        if (isset($options['onUpdate'])) {
-            $m->addUpdateAction($name, $this->_table->getComponentName(), $options['onUpdate']);
-        }
-        */
 
         return $this->_pending[$alias];
     }

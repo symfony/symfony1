@@ -785,7 +785,6 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
 
             $classes = array_merge($this->_options['parents'], array($this->getComponentName()));
 
-
             $e = explode('.', $args[1]);
             if (in_array($e[0], $classes)) {
                 if ($options['type'] >= Doctrine_Relation::MANY) {
@@ -803,12 +802,11 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
             }
 
             $options = array_merge($args[2], $options);
-
-            $this->_parser->bind($args[0], $options);
         } else {
             $options = array_merge($args[1], $options);
-            $this->_parser->bind($args[0], $options);
         }
+
+        $this->_parser->bind($args[0], $options);
     }
 
     /**
