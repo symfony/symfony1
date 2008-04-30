@@ -98,11 +98,13 @@ class sfForm implements ArrayAccess
   /**
    * Renders the widget schema associated with this form.
    *
+   * @param  array  An array of HTML attributes
+   *
    * @return string The rendered widget schema
    */
-  public function render()
+  public function render($attributes = array())
   {
-    return $this->getFormField()->render();
+    return $this->getFormField()->render($attributes);
   }
 
   /**
