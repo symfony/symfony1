@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../../../../../test/bootstrap/unit.php');
 require_once(dirname(__FILE__).'/../../../lib/util/sfFillInForm.class.php');
 
-$t = new lime_test(53, new lime_output_color());
+$t = new lime_test(61, new lime_output_color());
 
 $html = <<<EOF
 <html>
@@ -44,6 +44,20 @@ $html = <<<EOF
       <option value="3" selected="selected">3</option>
     </select>
     <input name="article[or][much][longer]" value="very long!"/>
+    <input name="multiple_text[]" value="text1"/>
+    <input name="multiple_text[]" value="text2"/>
+    <textarea name="multiple_textarea[]">area1</textarea>
+    <textarea name="multiple_textarea[]">area2</textarea>
+    <select name="articles[]" multiple="multiple">
+      <option value="1">1</option>
+      <option value="2" selected="selected">2</option>
+      <option value="3" selected="selected">3</option>
+    </select>
+    <select name="articles[]" multiple="multiple">
+      <option value="1" selected="selected">1</option>
+      <option value="2">2</option>
+      <option value="3" selected="selected">3</option>
+    </select>
     <input type="submit" name="submit" value="submit" />
   </form>
 
@@ -75,11 +89,15 @@ $t->is(get_input_value($xml, 'input_checkbox', 'checked'), 'checked', '->fillInD
 $t->is(get_input_value($xml, 'input_checkbox_not_checked', 'checked'), '', '->fillInDom() preserves default values for checkbox');
 $t->is(get_input_value($xml, 'input_radio', 'checked'), 'checked', '->fillInDom() preserves default values for radio');
 $t->is(get_input_value($xml, 'input_checkbox_multiple[]', 'checked'), array('checked', null), '->fillInDom() preserves default values for multiple checkboxes');
-$t->is($xml->xpath('//form[@name="form1"]/textarea'), array('content'), '->fillInDom() preserves default values for textarea');
+$t->is($xml->xpath('//form[@name="form1"]/textarea[@name="textarea"]'), array('content'), '->fillInDom() preserves default values for textarea');
 $t->is($xml->xpath('//form[@name="form1"]/select[@name="select"]/option[@selected="selected"]'), array('selected'), '->fillInDom() preserves default values for select');
 $t->is($xml->xpath('//form[@name="form1"]/select[@name="select_multiple"]/option[@selected="selected"]'), array('selected', 'last'), '->fillInDom() preserves default values for multiple select');
 $t->is(get_input_value($xml, 'article[title]'), 'title', '->fillInDom() preserves default values for text input');
 $t->is($xml->xpath('//form[@name="form1"]/select[@name="article[category]"]/option[@selected="selected"]'), array(2, 3), '->fillInDom() preserves default values for select');
+$t->is(get_input_value($xml, 'multiple_text[]'), array('text1', 'text2'), '->fillInDom() preserves default values for multiple text inputs');
+$t->is($xml->xpath('//form[@name="form1"]/textarea[@name="multiple_textarea[]"]'), array('area1', 'area2'), '->fillInDom() preserves default values for multiple textareas');
+$t->is($xml->xpath('//form[@name="form1"]/select[@name="articles[]"][1]/option[@selected="selected"]'), array(2, 3), '->fillInDom() preserves default values for multiple select');
+$t->is($xml->xpath('//form[@name="form1"]/select[@name="articles[]"][2]/option[@selected="selected"]'), array(1, 3), '->fillInDom() preserves default values for multiple select');
 
 // check form selection by name
 $xml = simplexml_import_dom($f->fillInDom(clone $dom, 'foo', null, array()));
@@ -134,6 +152,9 @@ $values = array(
   'textarea' => 'my content',
   'article[title]' => 'my article title',
   'article[category]' => array(1, 2),
+  'multiple_text[]' => array('m1', 'm2'),
+  'multiple_textarea[]' => array('a1', 'a2'),
+  'articles[]' => array(array(1, 2),array(2, 3)),
 );
 
 $f = new sfFillInForm();
@@ -145,11 +166,15 @@ $t->is(get_input_value($xml, 'password'), 'mypassword', '->fillInDom() fills in 
 $t->is(get_input_value($xml, 'input_checkbox', 'checked'), '', '->fillInDom() fills in values for checkbox');
 $t->is(get_input_value($xml, 'input_checkbox_not_checked', 'checked'), 'checked', '->fillInDom() fills in values for checkbox');
 $t->is(get_input_value($xml, 'input_checkbox_multiple[]', 'checked'), array(null, 'checked'), '->fillInDom() fills in values for multiple checkboxes');
-$t->is($xml->xpath('//form[@name="form1"]/textarea'), array('my content'), '->fillInDom() fills in values for textarea');
+$t->is($xml->xpath('//form[@name="form1"]/textarea[@name="textarea"]'), array('my content'), '->fillInDom() fills in values for textarea');
 $t->is($xml->xpath('//form[@name="form1"]/select[@name="select"]/option[@selected="selected"]'), array('first'), '->fillInDom() fills in values for select');
 $t->is($xml->xpath('//form[@name="form1"]/select[@name="select_multiple"]/option[@selected="selected"]'), array('first', 'last'), '->fillInDom() fills in values for multiple select');
 $t->is(get_input_value($xml, 'article[title]'), 'my article title', '->fillInDom() fills in values for text input');
 $t->is($xml->xpath('//form[@name="form1"]/select[@name="article[category]"]/option[@selected="selected"]'), array(1, 2), '->fillInDom() fills in values for select');
+$t->is(get_input_value($xml, 'multiple_text[]'), array('m1', 'm2'), '->fillInDom() fills in values for multiple text inputs');
+$t->is($xml->xpath('//form[@name="form1"]/textarea[@name="multiple_textarea[]"]'), array('a1', 'a2'), '->fillInDom() fills in values for multiple textareas');
+$t->is($xml->xpath('//form[@name="form1"]/select[@name="articles[]"][1]/option[@selected="selected"]'), array(1, 2), '->fillInDom() fills in values for multiple select');
+$t->is($xml->xpath('//form[@name="form1"]/select[@name="articles[]"][2]/option[@selected="selected"]'), array(2, 3), '->fillInDom() fills in values for multiple select');
 
 // ->setTypes()
 $t->diag('->setTypes()');
@@ -171,7 +196,7 @@ $t->is(get_input_value($xml, 'empty_input_text'), 'input text', '->setSkipFields
 $t->is(get_input_value($xml, 'password'), 'mypassword', '->setSkipFields() allows to prevent some fields to be filled');
 $t->is(get_input_value($xml, 'input_checkbox', 'checked'), 'checked', '->setSkipFields() allows to prevent some fields to be filled');
 $t->is(get_input_value($xml, 'input_checkbox_not_checked', 'checked'), 'checked', '->setSkipFields() allows to prevent some fields to be filled');
-$t->is($xml->xpath('//form[@name="form1"]/textarea'), array('content'), '->setSkipFields() allows to prevent some fields to be filled');
+$t->is($xml->xpath('//form[@name="form1"]/textarea[@name="textarea"]'), array('content'), '->setSkipFields() allows to prevent some fields to be filled');
 $t->is($xml->xpath('//form[@name="form1"]/select[@name="select"]/option[@selected="selected"]'), array('first'), '->setSkipFields() allows to prevent some fields to be filled');
 $t->is($xml->xpath('//form[@name="form1"]/select[@name="select_multiple"]/option[@selected="selected"]'), array('selected', 'last'), '->setSkipFields() allows to prevent some fields to be filled');
 $t->is(get_input_value($xml, 'article[title]'), 'title', '->setSkipFields() allows to prevent some fields to be filled');
@@ -185,7 +210,7 @@ $xml = simplexml_import_dom($f->fillInDom(clone $dom, null, null, $values));
 $t->is(get_input_value($xml, 'input_text'), str_rot13('my input text'), '->addConverter() register a callable to be called for each value');
 $t->is(get_input_value($xml, 'empty_input_text'), 'input text', '->addConverter() register a callable to be called for each value');
 $t->is(get_input_value($xml, 'input_checkbox', 'checked'), '', '->addConverter() register a callable to be called for each value');
-$t->is($xml->xpath('//form[@name="form1"]/textarea'), array(str_rot13('my content')), '->addConverter() register a callable to be called for each value');
+$t->is($xml->xpath('//form[@name="form1"]/textarea[@name="textarea"]'), array(str_rot13('my content')), '->addConverter() register a callable to be called for each value');
 
 function get_input_value($xml, $name, $attribute = 'value', $form = null)
 {

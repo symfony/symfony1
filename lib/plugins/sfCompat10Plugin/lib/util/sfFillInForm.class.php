@@ -147,22 +147,19 @@ class sfFillInForm
         {
           // text input
           $element->removeAttribute('value');
-          if ($this->hasValue($values, $name))
-          {
-            $element->setAttribute('value', $this->escapeValue($this->getValue($values, $name), $name));
-          }
+          $element->setAttribute('value', $this->escapeValue($this->getValue($values, $name, true), $name));
         }
       }
       else if ($element->nodeName == 'textarea')
       {
         $el = $element->cloneNode(false);
-        $el->appendChild($dom->createTextNode($this->escapeValue($this->getValue($values, $name), $name)));
+        $el->appendChild($dom->createTextNode($this->escapeValue($this->getValue($values, $name, true), $name)));
         $element->parentNode->replaceChild($el, $element);
       }
       else if ($element->nodeName == 'select')
       {
-        // select
-        $value    = $this->getValue($values, $name);
+        //if the name contains [] it is part of an array that needs to be shifted
+        $value    = $this->getValue($values, $name, strpos($name,'[]') !== false);
         $multiple = $element->hasAttribute('multiple');
         foreach ($xpath->query('descendant::'.$ns.'option', $element) as $option)
         {
@@ -195,11 +192,19 @@ class sfFillInForm
     return null !== sfToolkit::getArrayValueForPath($values, $name);
   }
 
-  protected function getValue($values, $name)
+  //use reference to values so that arrays can be shifted.
+  protected function getValue(&$values, $name, $shiftArray = false)
   {
     if (array_key_exists($name, $values))
     {
-      return $values[$name];
+      $return = $values[$name];
+      if ($shiftArray && is_array($return))
+      {
+        //we need to remove the first element from the array. Therefore we need a reference
+        $arrayRef = &$values[$name];
+        $return = array_shift($arrayRef);
+      }
+      return $return;
     }
 
     return sfToolkit::getArrayValueForPath($values, $name);
