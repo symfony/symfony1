@@ -54,11 +54,7 @@ class Doctrine_Expression_Pgsql extends Doctrine_Expression_Driver
     {
         $column = $this->getIdentifier($column);
 
-        if ($this->version > 7) {
-            return 'MD5(' . $column . ')';
-        } else {
-            return 'encode(digest(' . $column .', md5), hex)';
-        }
+        return 'MD5(' . $column . ')';
     }
 
     /**
