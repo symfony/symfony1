@@ -53,6 +53,12 @@ class sfFillInForm
   public function fillInXml($xml, $formName, $formId, $values)
   {
     $dom = new DomDocument('1.0', sfConfig::get('sf_charset', 'UTF-8'));
+    if (strpos($xml,'<!DOCTYPE') === false)
+    {
+      $xml = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" '.
+             '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'.
+             $xml;
+    }
     @$dom->loadXML($xml);
 
     $dom = $this->fillInDom($dom, $formName, $formId, $values);
@@ -72,13 +78,6 @@ class sfFillInForm
     {
       $ns = '';
     }
-
-    $query = 'descendant::'.$ns.'input[@name and (not(@type)';
-    foreach ($this->types as $type)
-    {
-      $query .= ' or @type="'.$type.'"';
-    }
-    $query .= ')] | descendant::'.$ns.'textarea[@name] | descendant::'.$ns.'select[@name]';
 
     // find our form
     if ($formName)
@@ -106,6 +105,13 @@ class sfFillInForm
         throw new sfException(sprintf('The form "%s" cannot be found.', $formName ? $formName : $formId));
       }
     }
+
+    $query = 'descendant::'.$ns.'input[@name and (not(@type)';
+    foreach ($this->types as $type)
+    {
+      $query .= ' or @type="'.$type.'"';
+    }
+    $query .= ')] | descendant::'.$ns.'textarea[@name] | descendant::'.$ns.'select[@name]';
 
     foreach ($xpath->query($query, $form) as $element)
     {
