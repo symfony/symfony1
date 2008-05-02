@@ -43,10 +43,24 @@ class sfFillInForm
   public function fillInHtml($html, $formName, $formId, $values)
   {
     $dom = new DomDocument('1.0', sfConfig::get('sf_charset', 'UTF-8'));
-    @$dom->loadHTML($html);
 
+    $noHead = strpos($html,'<head>') === false;
+    if ($noHead){
+      //loadHTML needs the conent-type meta for the charset
+      $html = '<meta http-equiv="Content-Type" content="text/html; charset='.sfConfig::get('sf_charset').'"/>'.$html;
+    }
+
+    @$dom->loadHTML($html);
     $dom = $this->fillInDom($dom, $formName, $formId, $values);
 
+    if($noHead){
+      //remove the head element that was created by adding the meta tag.
+      $headElement = $dom->getElementsByTagName('head')->item(0);
+      if ($headElement)
+      {
+        $dom->getElementsByTagName('html')->item(0)->removeChild($headElement);
+      }
+    }
     return $dom->saveHTML();
   }
 
