@@ -973,6 +973,10 @@
     {
       $js_options['afterUpdateElement'] = $options['after_update_element'];
     }
+    if (isset($options['param_name'])) 
+    {
+      $js_options['paramName'] = "'".$options['param_name']."'";
+    }
 
     $javascript .= ', '._options_for_javascript($js_options).');';
 
