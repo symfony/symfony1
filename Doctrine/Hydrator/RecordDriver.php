@@ -105,7 +105,7 @@ class Doctrine_Hydrator_RecordDriver extends Doctrine_Locator_Injectable
     {
         $component = $this->_getClassNameToReturn($data, $component);
         if ( ! isset($this->_tables[$component])) {
-            $this->_tables[$component] = Doctrine_Manager::getInstance()->getTable($component);
+            $this->_tables[$component] = Doctrine::getTable($component);
             $this->_tables[$component]->setAttribute(Doctrine::ATTR_LOAD_REFERENCES, false);
         }
 
@@ -143,7 +143,7 @@ class Doctrine_Hydrator_RecordDriver extends Doctrine_Locator_Injectable
     protected function _getClassnameToReturn(array &$data, $component)
     {
         if ( ! isset($this->_tables[$component])) {
-            $this->_tables[$component] = Doctrine_Manager::getInstance()->getTable($component);
+            $this->_tables[$component] = Doctrine::getTable($component);
             $this->_tables[$component]->setAttribute(Doctrine::ATTR_LOAD_REFERENCES, false);
         }
         
@@ -152,7 +152,7 @@ class Doctrine_Hydrator_RecordDriver extends Doctrine_Locator_Injectable
         }
         
         foreach ($subclasses as $subclass) {
-            $table = Doctrine_Manager::getInstance()->getTable($subclass);
+            $table = Doctrine::getTable($subclass);
             $inheritanceMap = $table->getOption('inheritanceMap');
             list($key, $value) = each($inheritanceMap);
             if ( ! isset($data[$key]) || $data[$key] != $value) {

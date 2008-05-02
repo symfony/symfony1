@@ -55,11 +55,6 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     protected $_currIndex     = 0;
 
     /**
-     * @var string $root                root directory
-     */
-    protected $_root;
-
-    /**
      * @var Doctrine_Query_Registry     the query registry
      */
     protected $_queryRegistry;
@@ -71,8 +66,6 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
      */
     private function __construct()
     {
-        $this->_root = dirname(__FILE__);
-
         Doctrine_Locator_Injectable::initNullObject(new Doctrine_Null);
     }
 
@@ -121,18 +114,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
 
     /**
-     * returns the root directory of Doctrine
-     *
-     * @return string
-     */
-    final public function getRoot()
-    {
-        return $this->_root;
-    }
-
-    /**
-     * getInstance
-     * returns an instance of this class
+     * Returns an instance of this class
      * (this class uses the singleton pattern)
      *
      * @return Doctrine_Manager
@@ -147,9 +129,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
 
     /**
-     * getQueryRegistry
-     *
-     * lazy-initializes the query registry object and returns it
+     * Lazy-initializes the query registry object and returns it
      *
      * @return Doctrine_Query_Registry
      */
@@ -162,8 +142,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
 
     /**
-     * setQueryRegistry
-     * sets the query registry
+     * Sets the query registry
      *
      * @return Doctrine_Manager     this object
      */
@@ -175,49 +154,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
 
     /**
-     * fetch
-     * fetches data using the provided queryKey and 
-     * the associated query in the query registry
-     *
-     * if no query for given queryKey is being found a 
-     * Doctrine_Query_Registry exception is being thrown
-     *
-     * @param string $queryKey      the query key
-     * @param array $params         prepared statement params (if any)
-     * @return mixed                the fetched data
-     */
-    public function find($queryKey, $params = array(), $hydrationMode = Doctrine::HYDRATE_RECORD)
-    {
-        return Doctrine_Manager::getInstance()
-                            ->getQueryRegistry()
-                            ->get($queryKey)
-                            ->execute($params, $hydrationMode);
-    }
-
-    /**
-     * fetchOne
-     * fetches data using the provided queryKey and 
-     * the associated query in the query registry
-     *
-     * if no query for given queryKey is being found a 
-     * Doctrine_Query_Registry exception is being thrown
-     *
-     * @param string $queryKey      the query key
-     * @param array $params         prepared statement params (if any)
-     * @return mixed                the fetched data
-     */
-    public function findOne($queryKey, $params = array(), $hydrationMode = Doctrine::HYDRATE_RECORD)
-    {
-        return Doctrine_Manager::getInstance()
-                            ->getQueryRegistry()
-                            ->get($queryKey)
-                            ->fetchOne($params, $hydrationMode);
-    }
-
-    /**
-     * connection
-     *
-     * if the adapter parameter is set this method acts as
+     * Open a new connection. If the adapter parameter is set this method acts as
      * a short cut for Doctrine_Manager::getInstance()->openConnection($adapter, $name);
      *
      * if the adapter paramater is not set this method acts as
@@ -238,8 +175,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
 
     /**
-     * openConnection
-     * opens a new connection and saves it to Doctrine_Manager->connections
+     * Opens a new connection and saves it to Doctrine_Manager->connections
      *
      * @param PDO|Doctrine_Adapter_Interface $adapter   database driver
      * @param string $name                              name of the connection, if empty numeric key is used
@@ -330,7 +266,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
     
     /**
-     * parsePdoDsn
+     * Parse a pdo style dsn in to an array of parts
      *
      * @param array $dsn An array of dsn information
      * @return array The array parsed
@@ -368,12 +304,13 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
 
     /**
-     * buildDsnPartsArray
+     * Build the blank dsn parts array used with parseDsn()
      *
+     * @see parseDsn()
      * @param string $dsn 
      * @return array $parts
      */
-    public function buildDsnPartsArray($dsn)
+    protected function _buildDsnPartsArray($dsn)
     {
         // fix sqlite dsn so that it will parse correctly
         $dsn = str_replace("////", "/", $dsn);
@@ -399,7 +336,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
 
     /**
-     * parseDsn
+     * Parse a Doctrine style dsn string in to an array of parts
      *
      * @param string $dsn
      * @return array Parsed contents of DSN
@@ -407,7 +344,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
      */
     public function parseDsn($dsn)
     {
-        $parts = $this->buildDsnPartsArray($dsn);
+        $parts = $this->_buildDsnPartsArray($dsn);
 
         switch ($parts['scheme']) {
             case 'sqlite':
@@ -478,7 +415,8 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
 
     /**
-     * getConnection
+     * Get the connection instance for the passed name
+     *
      * @param integer $index
      * @return object Doctrine_Connection
      * @throws Doctrine_Manager_Exception   if trying to get a non-existent connection
@@ -493,7 +431,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
 
     /**
-     * getConnectionName
+     * Get the name of the passed connection instance
      *
      * @param Doctrine_Connection $conn     connection object to be searched for
      * @return string                       the name of the connection
@@ -504,8 +442,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
 
     /**
-     * bindComponent
-     * binds given component to given connection
+     * Binds given component to given connection
      * this means that when ever the given component uses a connection
      * it will be using the bound connection instead of the current connection
      *
@@ -519,7 +456,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
 
     /**
-     * getConnectionForComponent
+     * Get the connection instance for the specified component
      *
      * @param string $componentName
      * @return Doctrine_Connection
@@ -536,7 +473,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
     
     /**
-     * hasConnectionForComponent
+     * Check if a component is bound to a connection
      *
      * @param string $componentName
      * @return boolean
@@ -547,36 +484,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
 
     /**
-     * getTable
-     * this is the same as Doctrine_Connection::getTable() except
-     * that it works seamlessly in multi-server/connection environment
-     *
-     * @see Doctrine_Connection::getTable()
-     * @param string $componentName
-     * @return Doctrine_Table
-     */
-    public function getTable($componentName)
-    {
-        return $this->getConnectionForComponent($componentName)->getTable($componentName);
-    }
-
-    /**
-     * table
-     * this is the same as Doctrine_Connection::getTable() except
-     * that it works seamlessly in multi-server/connection environment
-     *
-     * @see Doctrine_Connection::getTable()
-     * @param string $componentName
-     * @return Doctrine_Table
-     */
-    public static function table($componentName)
-    {
-        $manager = Doctrine_Manager::getInstance();
-        return $manager->getConnectionForComponent($componentName)->getTable($componentName);
-    }
-
-    /**
-     * closes the connection
+     * Closes the specified connection
      *
      * @param Doctrine_Connection $connection
      * @return void
@@ -596,8 +504,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
 
     /**
-     * getConnections
-     * returns all opened connections
+     * Returns all opened connections
      *
      * @return array
      */
@@ -607,8 +514,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
 
     /**
-     * setCurrentConnection
-     * sets the current connection to $key
+     * Sets the current connection to $key
      *
      * @param mixed $key                        the connection key
      * @throws InvalidKeyException
@@ -624,8 +530,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
 
     /**
-     * contains
-     * whether or not the manager contains specified connection
+     * Whether or not the manager contains specified connection
      *
      * @param mixed $key                        the connection key
      * @return boolean
@@ -636,8 +541,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
 
     /**
-     * count
-     * returns the number of opened connections
+     * Returns the number of opened connections
      *
      * @return integer
      */
@@ -647,8 +551,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
 
     /**
-     * getIterator
-     * returns an ArrayIterator that iterates through all connections
+     * Returns an ArrayIterator that iterates through all connections
      *
      * @return ArrayIterator
      */
@@ -658,8 +561,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
 
     /**
-     * getCurrentConnection
-     * returns the current connection
+     * Get the current connection instance
      *
      * @throws Doctrine_Connection_Exception       if there are no open connections
      * @return Doctrine_Connection
@@ -674,9 +576,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
 
     /**
-     * createDatabases
-     *
-     * Creates databases for connections
+     * Creates databases for all existing connections
      *
      * @param string $specifiedConnections Array of connections you wish to create the database for
      * @return void
@@ -702,9 +602,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
 
     /**
-     * dropDatabases
-     *
-     * Drops databases for connections
+     * Drops databases for all existing connections
      *
      * @param string $specifiedConnections Array of connections you wish to drop the database for
      * @return void
@@ -730,8 +628,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
     }
 
     /**
-     * __toString
-     * returns a string representation of this object
+     * Returns a string representation of this object
      *
      * @return string
      */

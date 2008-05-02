@@ -950,12 +950,12 @@ final class Doctrine
     /**
      * Get the Doctrine_Table object for the passed model
      *
-     * @param string $tableName
+     * @param string $componentName
      * @return void
      */
-    public static function getTable($tableName)
+    public static function getTable($componentName)
     {
-        return Doctrine_Manager::table($tableName);
+        return Doctrine_Manager::getInstance()->getConnectionForComponent($componentName)->getTable($componentName);
     }
 
     /**

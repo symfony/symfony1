@@ -156,7 +156,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         } else {
             // get the table of this class
             $class = get_class($this);
-            $this->_table = Doctrine_Manager::getInstance()->getTable($class);
+            $this->_table = Doctrine::getTable($class);
             $exists = false;
         }
 

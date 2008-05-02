@@ -299,8 +299,6 @@ class Doctrine_Data_Import extends Doctrine_Data
      */
     protected function _loadNestedSetData($model, $nestedSetData, $parent = null)
     {
-        $manager = Doctrine_Manager::getInstance();
-
         foreach($nestedSetData AS $rowKey => $nestedSet) {
             $children = array();
             $data  = array();
@@ -314,7 +312,7 @@ class Doctrine_Data_Import extends Doctrine_Data
             $record = $this->_importedObjects[$rowKey];
 
             if( ! $parent) {
-                $manager->getTable($model)->getTree()->createRoot($record);
+                Doctrine::getTable($model)->getTree()->createRoot($record);
             } else {
                 $parent->getNode()->addChild($record);
             }
