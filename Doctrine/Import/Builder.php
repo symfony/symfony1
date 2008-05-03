@@ -121,6 +121,13 @@ class Doctrine_Import_Builder
     protected $_baseClassName = 'Doctrine_Record';
 
     /**
+     * _generateAccessors
+     *
+     * @var boolean $generateAccessors
+     */
+    protected $_generateAccessors = false;
+
+    /**
      * _tpl
      *
      * Class template used for writing classes
@@ -212,6 +219,21 @@ class Doctrine_Import_Builder
         }
 
         return $this->_generateTableClasses;
+    }
+
+    /**
+     * Generate physical accessors for columns and relationships
+     *
+     * @param boolean $bool 
+     * @return boolean $generateAccessors
+     */
+    public function generateAccessors($bool = null)
+    {
+      if ($bool !== null) {
+          $this->_generateAccessors = $bool;
+      }
+
+      return $this->_generateAccessors;
     }
 
     /**
@@ -728,7 +750,11 @@ END;
             $tableDefinitionCode = null;
             $setUpCode = null;
         }
-        
+
+        if (!isset($definition['generate_accessors']) || !$definition['generate_accessors']) {
+          $definition['generate_accessors'] = $this->generateAccessors();
+        }
+
         $accessorsCode = (isset($definition['generate_accessors']) && $definition['generate_accessors'] === true) ? $this->buildAccessors($definition):null;
         
         $content = sprintf(self::$_tpl, $abstract,
