@@ -103,7 +103,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
 
     if (count($fillin))
     {
-      $data[] = sprintf("  \$context->getRequest()->setAttribute('fillin', %s, 'symfony/filter');", $fillin);
+      $data[] = sprintf("  \$this->context->getRequest()->setAttribute('symfony.fillin', %s);", $fillin);
     }
 
     // generate POST file/parameter data
@@ -116,7 +116,7 @@ class sfValidatorConfigHandler extends sfYamlConfigHandler
 
     if (count($fillin))
     {
-      $data[] = sprintf("  \$context->getRequest()->setAttribute('fillin', %s, 'symfony/filter');", $fillin);
+      $data[] = sprintf("  \$this->context->getRequest()->setAttribute('symfony.fillin', %s);", $fillin);
     }
 
     $data[] = "}";
