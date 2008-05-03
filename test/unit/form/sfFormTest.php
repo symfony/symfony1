@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(85, new lime_output_color());
+$t = new lime_test(87, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -245,6 +245,49 @@ $output = <<<EOF
 
 EOF;
 $t->is($f->renderGlobalErrors(), $output, '->renderGlobalErrors() renders global errors as an HTML list');
+
+// ->render()
+$t->diag('->render()');
+$f = new FormTest();
+$f->setValidators(array(
+  'id'         => new sfValidatorInteger(),
+  'first_name' => new sfValidatorString(array('min_length' => 2)),
+  'last_name'  => new sfValidatorString(array('min_length' => 2)),
+));
+$f->setWidgets(array(
+  'id'         => new sfWidgetFormInputHidden(),
+  'first_name' => new sfWidgetFormInput(),
+  'last_name'  => new sfWidgetFormInput(),
+));
+$f->bind(array(
+  'id'         => '1',
+  'first_name' => 'Fabien',
+  'last_name'  => 'Potencier',
+));
+$output = <<<EOF
+<tr>
+  <th><label for="first_name">First name</label></th>
+  <td><input type="text" name="first_name" value="Fabien" id="first_name" /></td>
+</tr>
+<tr>
+  <th><label for="last_name">Last name</label></th>
+  <td><input type="text" name="last_name" value="Potencier" id="last_name" /><input type="hidden" name="id" value="1" id="id" /></td>
+</tr>
+
+EOF;
+$t->is($f->__toString(), $output, '->__toString() renders the form as HTML');
+$output = <<<EOF
+<tr>
+  <th><label for="first_name">First name</label></th>
+  <td><input type="text" name="first_name" value="Fabien" class="foo" id="first_name" /></td>
+</tr>
+<tr>
+  <th><label for="last_name">Last name</label></th>
+  <td><input type="text" name="last_name" value="Potencier" id="last_name" /><input type="hidden" name="id" value="1" id="id" /></td>
+</tr>
+
+EOF;
+$t->is($f->render(array('first_name' => array('class' => 'foo'))), $output, '->render() renders the form as HTML');
 
 // ->embedForm()
 $t->diag('->embedForm()');

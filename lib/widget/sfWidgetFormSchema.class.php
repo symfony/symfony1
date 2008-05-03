@@ -332,15 +332,16 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     {
       $widget = $this[$name];
       $value = isset($values[$name]) ? $values[$name] : null;
+      $error = isset($errors[$name]) ? $errors[$name] : array();
+      $widgetAttributes = isset($attributes[$name]) ? $attributes[$name] : array();
 
       if ($widget instanceof sfWidgetForm && $widget->isHidden())
       {
-        $hiddenRows[] = $widget->render($this->generateName($name), $value);
+        $hiddenRows[] = $widget->render($this->generateName($name), $value, $widgetAttributes);
       }
       else
       {
-        $error = isset($errors[$name]) ? $errors[$name] : array();
-        $field = $this->renderField($name, $value, array(), $error);
+        $field = $this->renderField($name, $value, $widgetAttributes, $error);
 
         // don't add a label tag and errors if we embed a form schema
         $label = $widget instanceof sfWidgetFormSchema ? $this->getFormFormatter()->generateLabelName($name) : $this->getFormFormatter()->generateLabel($name);

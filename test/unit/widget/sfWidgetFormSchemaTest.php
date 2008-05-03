@@ -308,15 +308,15 @@ $expected = <<<EOF
   <td>  <ul class="error_list">
     <li>Too short</li>
   </ul>
-<input class="foo1" type="text" name="article[first_name]" id="id_article_first_name" /></td>
+<input class="foo" type="text" name="article[first_name]" value="Fabien" id="id_article_first_name" /></td>
 </tr>
 <tr>
   <th><label style="padding: 5px" for="id_article_last_name">Last name</label></th>
-  <td><input type="text" name="article[last_name]" id="id_article_last_name" /><input type="hidden" name="article[id]" id="article_id" /></td>
+  <td><input type="text" name="article[last_name]" value="Potencier" class="bar" id="id_article_last_name" /><input type="hidden" name="article[id]" id="article_id" /></td>
 </tr>
 
 EOF;
-$rendered = $w->render(null, array('w1' => 'Fabien', 'w2' => 'Potencier'), array(), array('first_name' => 'Too short', 'Global error message', 'id' => 'Required'));
+$rendered = $w->render(null, array('first_name' => 'Fabien', 'last_name' => 'Potencier'), array('first_name' => array('class' => 'foo'), 'last_name' => array('class' => 'bar')), array('first_name' => 'Too short', 'Global error message', 'id' => 'Required'));
 $t->is($rendered, $expected, '->render() renders a schema to HTML');
 
 // __clone()
