@@ -240,7 +240,10 @@ class lime_test
     {
       ksort($var1);
       ksort($var2);
-      if (array_diff(array_keys($var1), array_keys($var2)))
+
+      $keys1 = array_keys($var1);
+      $keys2 = array_keys($var2);
+      if (array_diff($keys1, $keys2) || array_diff($keys2, $keys1))
       {
         return false;
       }
