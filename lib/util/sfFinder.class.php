@@ -392,6 +392,8 @@ class sfFinder
       return array();
     }
 
+    $dir = realpath($dir);
+
     if (is_link($dir) && !$this->follow_link)
     {
       return array();
@@ -423,7 +425,7 @@ class sfFinder
           {
             if (($this->type == 'directory' || $this->type == 'any') && ($depth >= $this->mindepth) && !$this->is_discarded($dir, $entryname) && $this->match_names($dir, $entryname) && $this->exec_ok($dir, $entryname))
             {
-              $files[] = realpath($current_entry);
+              $files[] = $current_entry;
             }
 
             if (!$this->is_pruned($dir, $entryname))
@@ -438,11 +440,11 @@ class sfFinder
           {
             if ($this->sort == 'type')
             {
-              $temp_files[] = realpath($current_entry);
+              $temp_files[] = $current_entry;
             }
             else
             {
-              $files[] = realpath($current_entry);
+              $files[] = $current_entry;
             }
           }
         }
@@ -455,7 +457,7 @@ class sfFinder
         {
           if (($this->type == 'directory' || $this->type == 'any') && ($depth >= $this->mindepth) && !$this->is_discarded($dir, $entryname) && $this->match_names($dir, $entryname) && $this->exec_ok($dir, $entryname))
           {
-            $files[] = realpath($current_entry);
+            $files[] = $current_entry;
           }
 
           if (!$this->is_pruned($dir, $entryname))
