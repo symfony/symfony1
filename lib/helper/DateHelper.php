@@ -148,7 +148,7 @@ function distance_of_time_in_words($from_time, $to_time = null, $include_seconds
   else
   {
     $string = 'over %years% years';
-    $parameters['%years%'] = round($distance_in_minutes / 525960);
+    $parameters['%years%'] = floor($distance_in_minutes / 525960);
   }
 
   if (sfConfig::get('sf_i18n'))
