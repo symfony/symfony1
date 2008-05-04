@@ -34,7 +34,7 @@ use_helper('Form');
  *
  * <b>Examples:</b>
  * <code>
- *  echo submit_day_tag('day', 14);
+ *  echo select_day_tag('day', 14);
  * </code>
  *
  * @param  string field name
@@ -82,11 +82,11 @@ function select_day_tag($name, $value = null, $options = array(), $html_options 
  *  
  * <b>Examples:</b>
  * <code>
- *  echo submit_month_tag('month', 5, array('use_short_month' => true));
+ *  echo select_month_tag('month', 5, array('use_short_month' => true));
  * </code>
  *
  * <code>
- *  echo submit_month_tag('month', null, array('use_month_numbers' => true, 'include_blank' => true));
+ *  echo select_month_tag('month', null, array('use_month_numbers' => true, 'include_blank' => true));
  * </code>
  *
  * @param  string field name
@@ -158,13 +158,13 @@ function select_month_tag($name, $value = null, $options = array(), $html_option
  *  
  * <b>Examples:</b>
  * <code>
- *  echo submit_year_tag('year');
+ *  echo select_year_tag('year');
  * </code>
  *
  * <code>
  *  $year_start = date('Y', strtotime('-10 years'));
  *  $year_end = date('Y', strtotime('+10 years'));
- *  echo submit_year_tag('year', null, array('year_start' => $year_start, 'year_end' => $year_end));
+ *  echo select_year_tag('year', null, array('year_start' => $year_start, 'year_end' => $year_end));
  * </code>
  *
  * @param  string field name
@@ -240,7 +240,7 @@ function select_year_tag($name, $value = null, $options = array(), $html_options
  *  
  * <b>Examples:</b>
  * <code>
- *  echo submit_date_tag('date');
+ *  echo select_date_tag('date');
  * </code>
  *
  * <code>
@@ -359,11 +359,11 @@ function select_date_tag($name, $value = null, $options = array(), $html_options
  * 
  * <b>Examples:</b>
  * <code>
- *  echo submit_second_tag('second');
+ *  echo select_second_tag('second');
  * </code>
  *
  * <code>
- *  echo submit_second_tag('second', 15, array('second_step' => 15));
+ *  echo select_second_tag('second', 15, array('second_step' => 15));
  * </code>
  *
  * @param  string field name
@@ -410,11 +410,11 @@ function select_second_tag($name, $value = null, $options = array(), $html_optio
  * 
  * <b>Examples:</b>
  * <code>
- *  echo submit_minute_tag('minute');
+ *  echo select_minute_tag('minute');
  * </code>
  *
  * <code>
- *  echo submit_minute_tag('minute', 15, array('minute_step' => 15));
+ *  echo select_minute_tag('minute', 15, array('minute_step' => 15));
  * </code>
  *
  * @param  string field name
@@ -459,11 +459,11 @@ function select_minute_tag($name, $value = null, $options = array(), $html_optio
  * 
  * <b>Examples:</b>
  * <code>
- *  echo submit_hour_tag('hour');
+ *  echo select_hour_tag('hour');
  * </code>
  *
  * <code>
- *  echo submit_hour_tag('hour', 6, array('12hour_time' => true));
+ *  echo select_hour_tag('hour', 6, array('12hour_time' => true));
  * </code>
  *
  * @param  string field name
@@ -512,11 +512,11 @@ function select_hour_tag($name, $value = null, $options = array(), $html_options
  * 
  * <b>Examples:</b>
  * <code>
- *  echo submit_ampm_tag('ampm');
+ *  echo select_ampm_tag('ampm');
  * </code>
  *
  * <code>
- *  echo submit_ampm_tag('ampm', 'PM', array('include_blank' => true));
+ *  echo select_ampm_tag('ampm', 'PM', array('include_blank' => true));
  * </code>
  *
  * @param  string field name
@@ -569,7 +569,7 @@ function select_ampm_tag($name, $value = null, $options = array(), $html_options
  *  
  * <b>Examples:</b>
  * <code>
- *  echo submit_time_tag('time');
+ *  echo select_time_tag('time');
  * </code>
  *
  * <code>
@@ -689,7 +689,7 @@ function select_time_tag($name, $value = null, $options = array(), $html_options
  *  
  * <b>Examples:</b>
  * <code>
- *  echo submit_datetime_tag('datetime');
+ *  echo select_datetime_tag('datetime');
  * </code>
  *
  * <code>
