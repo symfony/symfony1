@@ -68,7 +68,7 @@ class sfPHPView extends sfView
 
     $this->loadCoreAndStandardHelpers();
 
-    extract($this->attributeHolder->toArray(), EXTR_REFS);
+    extract($this->attributeHolder->toArray(), EXTR_REFS | EXTR_OVERWRITE);
 
     // render
     ob_start();
