@@ -791,12 +791,11 @@ END;
             $definition['is_package'] = (isset($definition['package']) && $definition['package']) ? true:false;
             
             if ($definition['is_package']) {
-                $e = explode('.', $definition['package']);
+                $e = explode('.', trim($definition['package']));
                 $definition['package_name'] = $e[0];
                 
                 $definition['package_path'] = ! empty($e) ? implode(DIRECTORY_SEPARATOR, $e):$definition['package_name'];
             }
-            
             // Top level definition that extends from all the others
             $topLevel = $definition;
             unset($topLevel['tableName']);

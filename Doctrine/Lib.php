@@ -363,7 +363,7 @@ class Doctrine_Lib
           return true;
         }
 
-        return mkdir($path, $mode, true);
+        return mkdir(trim($path), $mode, true);
     }
 
     /**
