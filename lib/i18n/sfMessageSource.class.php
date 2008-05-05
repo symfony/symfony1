@@ -151,7 +151,7 @@ abstract class sfMessageSource implements sfIMessageSource
    *  # [7] Continue with the foreach loop, e.g. goto [2].
    *
    * @param  string  a catalogue to load
-   * @return boolean true if loaded, false otherwise.
+   * @return boolean always true
    * @see    read()
    */
   function load($catalogue = 'messages')
@@ -159,7 +159,6 @@ abstract class sfMessageSource implements sfIMessageSource
     $variants = $this->getCatalogueList($catalogue);
 
     $this->messages = array();
-    $loaded = false;
 
     foreach ($variants as $variant)
     {
@@ -170,7 +169,6 @@ abstract class sfMessageSource implements sfIMessageSource
         continue;
       }
 
-      $loaded = true;
       $loadData = true;
 
       if ($this->cache)
@@ -206,7 +204,7 @@ abstract class sfMessageSource implements sfIMessageSource
       }
     }
 
-    return $loaded;
+    return true;
   }
 
   /**
