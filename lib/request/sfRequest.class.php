@@ -184,6 +184,26 @@ abstract class sfRequest
   }
 
   /**
+   * Check if request method used is GET.
+   *
+   * @return true if method is sfRequest::GET
+   */
+  public function isMethodGet()
+  {
+    return $this->method == self::GET;
+  }
+
+  /**
+   * Check if request method used is POST.
+   *
+   * @return true if method is sfRequest::POST
+   */
+  public function isMethodPost()
+  {
+    return $this->method == self::POST;
+  }  
+
+  /**
    * Indicates whether or not an error exists.
    *
    * @param string An error name
