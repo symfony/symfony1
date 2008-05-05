@@ -22,7 +22,7 @@ class fakeRequest
 {
 }
 
-$t = new lime_test(34, new lime_output_color());
+$t = new lime_test(29, new lime_output_color());
 
 $dispatcher = new sfEventDispatcher();
 
@@ -37,13 +37,6 @@ $t->is($request->getParameter('foo'), 'bar', '->initialize() takes an array of p
 $t->diag('->getMethod() ->setMethod()');
 $request->setMethod(sfRequest::GET);
 $t->is($request->getMethod(), sfRequest::GET, '->getMethod() returns the current request method');
-$t->is($request->isMethodGet(), '->isMethodGet() returns true for GET requests');
-$t->is(!$request->isMethodPost(), '->isMethodPost() returns false for GET requests');
-
-$request->setMethod(sfRequest::POST);
-$t->is($request->getMethod(), sfRequest::POST, '->getMethod() returns the current request method');
-$t->is(!$request->isMethodGet(), '->isMethodGet() returns false for POST requests');
-$t->is($request->isMethodPost(), '->isMethodPost() returns true for POST requests');
 
 try
 {
