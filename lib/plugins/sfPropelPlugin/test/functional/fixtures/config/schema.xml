@@ -16,18 +16,11 @@
     <foreign-key foreignTable="book">
       <reference local="book_id" foreign="id" onDelete="setnull" />
     </foreign-key>
-    <unique name="unique_title_category">
-      <unique-column name="title" />
-      <unique-column name="category_id" />
-    </unique>
   </table>
 
   <table name="category">
     <column name="id" type="integer" required="true" primaryKey="true" autoincrement="true" />
     <column name="name" type="varchar" size="255" />
-    <unique name="unique_name">
-      <unique-column name="name" />
-    </unique>
   </table>
 
   <table name="book">

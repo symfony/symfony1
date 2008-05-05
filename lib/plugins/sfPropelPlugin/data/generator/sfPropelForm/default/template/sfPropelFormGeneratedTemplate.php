@@ -30,21 +30,6 @@ class Base<?php echo $this->table->getPhpName() ?>Form extends BaseFormPropel
 <?php endforeach; ?>
     ));
 
-<?php if ($unices = $this->getUniqueColumnNames()): ?>
-    $this->validatorSchema->setPostValidator(new sfValidatorAnd(array(
-<?php foreach ($unices as $unique): ?>
-<?php
-  $uniqueColums = array();
-  foreach ($unique as $column)
-  {
-    $uniqueColums[] = $this->table->getColumn($column)->getPhpName();
-  }
-?>
-      new sfValidatorPropelUnique(array('model' => '<?php echo $this->table->getPhpName() ?>', 'column' => array('<?php echo implode("', '", $uniqueColums) ?>')));
-<?php endforeach; ?>
-    )));
-
-<?php endif; ?>
     $this->widgetSchema->setNameFormat('<?php echo $this->underscore($this->table->getPhpName()) ?>[%s]');
 
     $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
