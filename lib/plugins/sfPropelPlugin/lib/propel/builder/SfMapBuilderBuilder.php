@@ -37,4 +37,25 @@ class SfMapBuilderBuilder extends PHP5MapBuilderBuilder
 
     parent::addIncludes($script);
   }
+
+  protected function addDoBuild(&$script)
+  {
+    parent::addDoBuild($script);
+
+    $unices = array();
+    foreach ($this->getTable()->getUnices() as $unique)
+    {
+      $unices[] = sprintf("array('%s')", implode("', '", $unique->getColumns()));
+    }
+
+    $unices = implode(', ', $unices);
+    $script .= <<<EOF
+
+
+  static public function getUniqueColumnNames()
+  {
+    return array($unices);
+  }
+EOF;
+  }
 }

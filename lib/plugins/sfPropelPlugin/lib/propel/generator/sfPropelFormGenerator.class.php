@@ -445,6 +445,11 @@ class sfPropelFormGenerator extends sfGenerator
     return strtolower(preg_replace(array('/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'), '\\1_\\2', $name));
   }
 
+  public function getUniqueColumnNames()
+  {
+    return call_user_func(array($this->table->getPhpName().'MapBuilder', 'getUniqueColumnNames'));
+  }
+
   /**
    * Loads all Propel builders.
    */
