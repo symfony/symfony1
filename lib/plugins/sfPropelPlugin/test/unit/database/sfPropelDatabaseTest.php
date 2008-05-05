@@ -1,4 +1,4 @@
-<?php
+§<?php
 
 /*
  * This file is part of the symfony package.
@@ -21,16 +21,18 @@ $configuration = array(
       'propel' => array(
         'adapter' => 'mysql',
         'connection' => array(
-          'phptype'    => 'mysql',
-          'hostspec'   => 'localhost',
-          'database'   => 'testdb',
-          'username'   => 'foo',
-          'password'   => 'bar',
-          'port'       => null,
-          'encoding'   => 'utf8',
-          'persistent' => '1',
-          'protocol'   => null,
-          'socket'     => null,
+          'phptype'             => 'mysql',
+          'hostspec'            => 'localhost',
+          'database'            => 'testdb',
+          'username'            => 'foo',
+          'password'            => 'bar',
+          'port'                => null,
+          'encoding'            => 'utf8',
+          'persistent'          => '1',
+          'protocol'            => null,
+          'socket'              => null,
+          'compat_assoc_lower'  => null,
+          'compat_rtrim_string' => null,
         ),
       ),
       'default' => 'propel',
