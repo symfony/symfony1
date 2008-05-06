@@ -26,7 +26,7 @@ class sfValidatorPropelChoice extends sfValidatorBase
    *  * model:      The model class (required)
    *  * criteria:   A criteria to use when retrieving objects
    *  * column:     The column name (null by default which means we use the primary key)
-   *                must be in PhpName format
+   *                must be in field name format
    *  * connection: The Propel connection to use (null by default)
    *
    * @see sfValidatorBase
@@ -68,7 +68,7 @@ class sfValidatorPropelChoice extends sfValidatorBase
   {
     if ($this->getOption('column'))
     {
-      $phpName = $this->getOption('column');
+      $columnName = $this->getOption('column');
     }
     else
     {
@@ -77,12 +77,12 @@ class sfValidatorPropelChoice extends sfValidatorBase
       {
         if ($column->isPrimaryKey())
         {
-          $phpName = $column->getPhpName();
+          $columnName = strtolower($column->getColumnName());
           break;
         }
       }
     }
 
-    return call_user_func(array($this->getOption('model').'Peer', 'translateFieldName'), $phpName, BasePeer::TYPE_PHPNAME, BasePeer::TYPE_COLNAME);
+    return call_user_func(array($this->getOption('model').'Peer', 'translateFieldName'), $columnName, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_COLNAME);
   }
 }

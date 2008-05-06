@@ -337,7 +337,7 @@ class sfPropelFormGenerator extends sfGenerator
     }
     else if ($column->isPrimaryKey())
     {
-      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $column->getTable()->getPhpName(), $column->getPhpName());
+      $options[] = sprintf('\'model\' => \'%s\', \'column\' => \'%s\'', $column->getTable()->getPhpName(), strtolower($column->getColumnName()));
     }
     else
     {
