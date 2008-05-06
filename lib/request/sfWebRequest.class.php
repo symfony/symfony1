@@ -768,9 +768,12 @@ class sfWebRequest extends sfRequest
   }
 
   /**
-   * Returns true id the request is a XMLHttpRequest (via prototype 'HTTP_X_REQUESTED_WITH' header).
+   * Returns true if the request is a XMLHttpRequest.
    *
-   * @return boolean
+   * It works if your JavaScript library set an X-Requested-With HTTP header.
+   * Works with Prototype, Mootools, jQuery, and perhaps others.
+   *
+   * @return Boolean true if the request is an XMLHttpRequest, false otherwise
    */
   public function isXmlHttpRequest()
   {
