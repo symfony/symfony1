@@ -72,6 +72,11 @@ EOF;
     $symfonyLibDir  = sfConfig::get('sf_symfony_lib_dir');
     $symfonyDataDir = $arguments['symfony_data_dir'];
 
+    if (!is_readable($symfonyDataDir))
+    {
+      throw new sfCommandException(sprintf('The symfony data dir does not seem to be located at "%s".', $symfonyDataDir));
+    }
+
     $this->logSection('freeze', sprintf('freezing lib found in "%s', $symfonyLibDir));
     $this->logSection('freeze', sprintf('freezing data found in "%s"', $symfonyDataDir));
 
