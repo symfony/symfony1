@@ -90,7 +90,10 @@ else
 
     try
     {
-      <?php echo $this->getClassName() ?>Peer::doDelete($this->selectedItems);
+      foreach (<?php echo $this->getClassName() ?>Peer::retrieveByPks($this->selectedItems) as $object)
+      {
+        $object->delete();
+      }
     }
     catch (PropelException $e)
     {
