@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(129, new lime_output_color());
+$t = new lime_test(135, new lime_output_color());
 
 class sfPatternRoutingTest extends sfPatternRouting
 {
@@ -451,6 +451,23 @@ $t->is($r->getCurrentInternalUri(true), '@test2?id=2', '->getCurrentInternalUri(
 $t->is($r->getCurrentInternalUri(false), 'foo/bar?id=2', '->getCurrentInternalUri() returns the internal URI for last parsed URL');
 $t->is($r->getCurrentInternalUri(true), '@test2?id=2', '->getCurrentInternalUri() returns the internal URI for last parsed URL');
 $t->is($r->getCurrentInternalUri(false), 'foo/bar?id=2', '->getCurrentInternalUri() returns the internal URI for last parsed URL');
+
+// regression for ticket #3423  occuring when cache is used. (for the test its enough to have it non null)
+$rCached = new sfPatternRoutingTest(new sfEventDispatcher(),new sfNoCache());
+$rCached->connect('test',  '/:module', array('action' => 'index'));
+$rCached->connect('test2', '/', array());
+$rCached->parse('/');
+$t->is($rCached->getCurrentInternalUri(), 'default/index', '->getCurrentInternalUri() returns the internal URI for last parsed URL using cache');
+$rCached->parse('/test');
+$t->is($rCached->getCurrentInternalUri(), 'test/index', '->getCurrentInternalUri() returns the internal URI for last parsed URL using cache');
+$rCached->parse('/');
+$t->is($rCached->getCurrentInternalUri(), 'default/index', '->getCurrentInternalUri() returns the internal URI for last parsed URL using cache');
+// findRoute was added to be the side effectless version to check an uri
+$t->is($rCached->findRoute('/test'),
+       array('name' => 'test', 'route' => '/:module', 'parameters' => array('action' => 'index', 'module' => 'test')),
+       '->findRoute() returns information about matching route');
+$t->is($rCached->getCurrentInternalUri(), 'default/index', '->findRoute() does not change the internal URI of sfPatternRouting');
+$t->is($rCached->findRoute('/no/match/found'), null, '->findRoute() returns null on non-matching route');
 
 // defaults
 $t->diag('defaults');

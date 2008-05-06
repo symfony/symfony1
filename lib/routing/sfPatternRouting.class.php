@@ -594,6 +594,40 @@ class sfPatternRouting extends sfRouting
    */
   public function parse($url)
   {
+    if (null !== $routeInfo = $this->findRoute($url))
+    {
+      // store the route name
+      $this->currentRouteName = $routeInfo['name'];
+      $this->currentRouteParameters = $routeInfo['parameters'];
+      $this->currentInternalUri = array();
+
+      if ($this->options['logging'])
+      {
+        $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Match route [%s] for "%s"', $routeInfo['name'], $routeInfo['route']))));
+      }
+    }
+    else
+    {
+      throw new sfError404Exception(sprintf('No matching route found for "%s"', $url));
+    }
+
+    return $this->currentRouteParameters;
+  }
+  
+  
+  /**
+  * Finds a matching route for given URL.
+  * Returned array contains:
+  *  - name       : name or alias of the route that matched
+  *  - route      : the actual matching route
+  *  - parameters : array containing key value pairs of the request parameters including defaults
+  *
+  * @param  string URL to be parsed
+  *
+  * @return array  An array with routing information or null if no route matched
+  */
+  public function findRoute($url)
+  {
     // an URL should start with a '/', mod_rewrite doesn't respect that, but no-mod_rewrite version does.
     if ('/' != $url[0])
     {
@@ -618,7 +652,7 @@ class sfPatternRouting extends sfRouting
       }
     }
 
-    $found = false;
+    $routeInfo = null;
     foreach ($this->routes as $routeName => $route)
     {
       list($route, $regex, $variables, $defaults, $requirements) = $route;
@@ -628,7 +662,6 @@ class sfPatternRouting extends sfRouting
       }
 
       $defaults = array_merge($defaults, $this->defaultParameters);
-      $found    = true;
       $out      = array();
 
       // *
@@ -650,33 +683,18 @@ class sfPatternRouting extends sfRouting
         }
       }
 
-      // store the route name
-      $this->currentRouteName = $routeName;
-      $this->currentInternalUri = array();
-
-      if ($this->options['logging'])
+      $routeInfo['name'] = $routeName;
+      $routeInfo['route'] = $route;
+      $routeInfo['parameters'] = $this->fixDefaults($out);
+      if (!is_null($this->cache))
       {
-        $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Match route [%s] for "%s"', $routeName, $route))));
+        $this->cacheChanged = true;
+        $this->cacheData[$cacheKey] = $routeInfo;
       }
-
       break;
     }
 
-    // no route found
-    if (!$found)
-    {
-      throw new sfError404Exception(sprintf('No matching route found for "%s"', $url));
-    }
-
-    $this->currentRouteParameters = $this->fixDefaults($out);
-
-    if (!is_null($this->cache))
-    {
-      $this->cacheChanged = true;
-      $this->cacheData[$cacheKey] = $this->currentRouteParameters;
-    }
-
-    return $this->currentRouteParameters;
+    return $routeInfo;
   }
 
   protected function parseStarParameter($star)

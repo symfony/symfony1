@@ -147,7 +147,7 @@ abstract class sfRouting
   abstract public function generate($name, $params = array(), $querydiv = '/', $divider = '/', $equals = '/');
 
  /**
-  * Parses a URL to find a matching route.
+  * Parses a URL to find a matching route and sets internal state.
   *
   * Throws a sfError404Exception if no route match the URL.
   *
