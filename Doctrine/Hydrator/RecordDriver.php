@@ -36,6 +36,7 @@ class Doctrine_Hydrator_RecordDriver extends Doctrine_Locator_Injectable
 {
     protected $_collections = array();
     protected $_tables = array();
+    private $_initializedRelations = array();
 
     public function getElementCollection($component)
     {
@@ -54,14 +55,14 @@ class Doctrine_Hydrator_RecordDriver extends Doctrine_Locator_Injectable
     
     public function initRelated($record, $name)
     {
-        return true;
-        /*
-        if ( ! is_array($record)) {
-            $record[$name];
-            return true;
+        if ( ! isset($this->_initializedRelations[$record->getOid()][$name])) {
+            $relation = $record->getTable()->getRelation($name);
+            $coll = new Doctrine_Collection($relation->getTable()->getComponentName());
+            $coll->setReference($record, $relation);
+            $record[$name] = $coll;
+            $this->_initializedRelations[$record->getOid()][$name] = true;
         }
-        return false;
-        */
+        return true;
     }
     
     public function registerCollection(Doctrine_Collection $coll)
@@ -124,6 +125,9 @@ class Doctrine_Hydrator_RecordDriver extends Doctrine_Locator_Injectable
         foreach ($this->_tables as $table) {
             $table->setAttribute(Doctrine::ATTR_LOAD_REFERENCES, true);
         }
+        $this->_initializedRelations = null;
+        $this->_collections = null;
+        $this->_tables = null;
     }
     
     /**

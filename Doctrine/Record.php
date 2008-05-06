@@ -949,8 +949,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         $rel = $this->_table->getRelation($name);
 
         // one-to-many or one-to-one relation
-        if ($rel instanceof Doctrine_Relation_ForeignKey ||
-            $rel instanceof Doctrine_Relation_LocalKey) {
+        if ($rel instanceof Doctrine_Relation_ForeignKey || $rel instanceof Doctrine_Relation_LocalKey) {
             if ( ! $rel->isOneToOne()) {
                 // one-to-many relation found
                 if ( ! ($value instanceof Doctrine_Collection)) {

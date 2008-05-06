@@ -107,7 +107,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
             $componentName = $data['table']->getComponentName();
             $listeners[$componentName] = $data['table']->getRecordListener();
             $identifierMap[$dqlAlias] = array();
-            $prev[$dqlAlias] = array();
+            $prev[$dqlAlias] = null;
             $idTemplate[$dqlAlias] = '';
         }
 
