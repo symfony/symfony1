@@ -4,6 +4,12 @@ propel:
     _attributes:    { phpName: Group, package: foo.bar.lib.model }
     id:
     name:           varchar(50)
+    type:           varchar(50)
+    _inheritance:
+      column:       type
+      classes:
+        tight:      Group_Tight
+        loose:      Group_Loose
     
   cd_user:
     _attributes:    { phpName: User, isI18N: true, i18nTable: cd_user_i18n }

@@ -116,6 +116,9 @@ class sfPropelDatabaseSchema
             case '_behaviors':
               $classes[$phpName]['behaviors'] = $column_params;
               break;
+            case '_inheritance':
+              $classes[$phpName]['inheritance'] = $column_params;
+              break;
             case '_foreignKeys':
               $classes[$phpName]['foreignKeys'] = $column_params;
               break;
@@ -191,6 +194,13 @@ class sfPropelDatabaseSchema
           unset($classParams['behaviors']);
         }
         
+        // Inheritance
+        if (isset($classParams['inheritance']))
+        {
+          $tableParams['_inheritance'] = $classParams['inheritance'];
+          unset($classParams['inheritance']);
+        }
+        
         // Table attributes
         $tableAttributes = array();
         if (isset($classParams['tableName']))
@@ -247,6 +257,17 @@ class sfPropelDatabaseSchema
       // columns
       foreach ($this->getChildren($table) as $col_name => $column)
       {
+        // inheritance
+        if (isset($table['_inheritance']) && 
+            isset($table['_inheritance']['column']) && 
+            $col_name == $table['_inheritance']['column'] && 
+            isset($table['_inheritance']['classes']) && 
+            is_array($table['_inheritance']['classes']))
+        {
+          $column['inheritance'] = $table['_inheritance']['classes'];
+          unset($table['_inheritance']);
+        }
+        
         $xml .= "    <column name=\"$col_name\"".$this->getAttributesForColumn($tb_name, $col_name, $column);
       }
 
@@ -523,12 +544,31 @@ class sfPropelDatabaseSchema
     {
       foreach ($column as $key => $value)
       {
-        if (!in_array($key, array('foreignClass', 'foreignTable', 'foreignReference', 'onDelete', 'onUpdate', 'index', 'unique', 'sequence')))
+        if (!in_array($key, array('foreignClass', 'foreignTable', 'foreignReference', 'onDelete', 'onUpdate', 'index', 'unique', 'sequence', 'inheritance')))
         {
           $attributes_string .= " $key=\"".htmlspecialchars($this->getCorrectValueFor($key, $value), ENT_QUOTES, sfConfig::get('sf_charset'))."\"";
         }
       }
-      $attributes_string .= " />\n";
+      if (isset($column['inheritance']))
+      {
+        $attributes_string .= ' inheritance="single">'."\n";
+        
+        $extended_package = isset($this->database[$tb_name]['_attributes']['package']) ?
+          $this->database[$tb_name]['_attributes']['package'] :
+          $this->database['_attributes']['package'];
+        $extended_class = $this->database[$tb_name]['_attributes']['phpName'];
+        
+        foreach ($column['inheritance'] as $key => $class)
+        {
+          $attributes_string .= sprintf('      <inheritance extends="%s.%s" key="%s" class="%s" />%s',
+            $extended_package, $extended_class, $key, $class, "\n");
+        }
+        $attributes_string .= '    </column>'."\n";
+      }
+      else
+      {
+        $attributes_string .= " />\n";
+      }
     }
     else
     {

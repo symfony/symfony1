@@ -4,6 +4,10 @@
   <table name="ab_group" phpName="Group" package="foo.bar.lib.model" isI18N="true" i18nTable="ab_group_i18n">
     <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
     <column name="name" type="varchar" size="50" />
+    <column name="type" type="varchar" size="50" inheritance="single">
+      <inheritance extends="foo.bar.lib.model.Group" key="tight" class="Group_Tight" />
+      <inheritance extends="foo.bar.lib.model.Group" key="loose" class="Group_Loose" />
+    </column>
   </table>
 
   <table name="cd_user" phpName="User" isI18N="true" i18nTable="cd_user_i18n">

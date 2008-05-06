@@ -10,6 +10,12 @@ classes:
     columns:
       id:
       name:           varchar(50)
+      type:           varchar(50)
+    inheritance:
+      column:         type
+      classes:
+        tight:        Group_Tight
+        loose:        Group_Loose
   
   User:
     tableName:        cd_user
