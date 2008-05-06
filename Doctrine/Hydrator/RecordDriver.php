@@ -53,7 +53,7 @@ class Doctrine_Hydrator_RecordDriver extends Doctrine_Locator_Injectable
         return $coll->key();
     }
     
-    public function initRelated($record, $name)
+    public function initRelated(Doctrine_Record $record, $name)
     {
         if ( ! isset($this->_initializedRelations[$record->getOid()][$name])) {
             $relation = $record->getTable()->getRelation($name);
