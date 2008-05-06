@@ -456,7 +456,20 @@ class sfPropelFormGenerator extends sfGenerator
 
   public function getUniqueColumnNames()
   {
-    return call_user_func(array($this->table->getPhpName().'MapBuilder', 'getUniqueColumnNames'));
+    $uniqueColumns = array();
+
+    foreach (call_user_func(array($this->table->getPhpName().'Peer', 'getUniqueColumnNames')) as $unique)
+    {
+      $uniqueColumn = array();
+      foreach ($unique as $column)
+      {
+        $uniqueColumn[] = strtolower($this->table->getColumn($column)->getColumnName());
+      }
+
+      $uniqueColumns[] = $uniqueColumn;
+    }
+
+    return $uniqueColumns;
   }
 
   /**

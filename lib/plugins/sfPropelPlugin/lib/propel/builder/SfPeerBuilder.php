@@ -52,6 +52,8 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
       $this->addDoSelectWithI18n($script);
       $this->addI18nMethods($script);
     }
+
+    $this->addUniqueColumnNamesMethod($script);
   }
 
   protected function addI18nMethods(&$script)
@@ -401,5 +403,24 @@ class SfPeerBuilder extends PHP5ComplexPeerBuilder
       file_put_contents($absolute_behavior_file_path, sprintf("<?php\nsfPropelBehavior::add('%s', %s);\n", $this->getTable()->getPhpName(), var_export(unserialize($behaviors), true)));
       $script .= sprintf("\n\ninclude_once '%s';\n", $behavior_file_path);
     }
+  }
+
+  protected function addUniqueColumnNamesMethod(&$script)
+  {
+    $unices = array();
+    foreach ($this->getTable()->getUnices() as $unique)
+    {
+      $unices[] = sprintf("array('%s')", implode("', '", $unique->getColumns()));
+    }
+
+    $unices = implode(', ', $unices);
+    $script .= <<<EOF
+
+
+  static public function getUniqueColumnNames()
+  {
+    return array($unices);
+  }
+EOF;
   }
 }

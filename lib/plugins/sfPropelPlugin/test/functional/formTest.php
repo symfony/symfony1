@@ -41,3 +41,75 @@ $attachments = AttachmentPeer::doSelect($c);
 
 $b->test()->is(count($attachments), 1, 'the attachment has been saved in the database');
 $b->test()->is($attachments[0]->getFile(), $uploadedFile, 'the attachment filename has been saved in the database');
+
+// sfValidatorPropelUnique
+
+// create a category with a unique name
+$b->
+  get('/unique/category')->
+  isRequestParameter('module', 'unique')->
+  isRequestParameter('action', 'category')->
+  isStatusCode(200)->
+  click('submit', array('category' => array('name' => 'foo')))->
+  isRedirected()->
+  followRedirect()->
+  responseContains('ok')
+;
+
+// create another category with the same name
+// we must have an error
+$b->
+  get('/unique/category')->
+  isRequestParameter('module', 'unique')->
+  isRequestParameter('action', 'category')->
+  isStatusCode(200)->
+  click('submit', array('category' => array('name' => 'foo')))->
+  checkResponseElement('.error_list li', 'An object with the same "name" already exist.')
+;
+
+// updating the same category again with the same name is allowed
+$b->
+  get('/unique/category?category[id]='.CategoryPeer::getByName('foo')->getId())->
+  isRequestParameter('module', 'unique')->
+  isRequestParameter('action', 'category')->
+  isStatusCode(200)->
+  click('submit')->
+  isRedirected()->
+  followRedirect()->
+  responseContains('ok')
+;
+
+// create an article with a unique title-category_id
+$b->
+  get('/unique/article')->
+  isRequestParameter('module', 'unique')->
+  isRequestParameter('action', 'article')->
+  isStatusCode(200)->
+  click('submit', array('article' => array('title' => 'foo', 'category_id' => 1)))->
+  isRedirected()->
+  followRedirect()->
+  responseContains('ok')
+;
+
+// create another article with the same title but a different category_id
+$b->
+  get('/unique/article')->
+  isRequestParameter('module', 'unique')->
+  isRequestParameter('action', 'article')->
+  isStatusCode(200)->
+  click('submit', array('article' => array('title' => 'foo', 'category_id' => 2)))->
+  isRedirected()->
+  followRedirect()->
+  responseContains('ok')
+;
+
+// create another article with the same title and category_id as the first one
+// we must have an error
+$b->
+  get('/unique/article')->
+  isRequestParameter('module', 'unique')->
+  isRequestParameter('action', 'article')->
+  isStatusCode(200)->
+  click('submit', array('article' => array('title' => 'foo', 'category_id' => 1)))->
+  checkResponseElement('.error_list li', 'An object with the same "title, category_id" already exist.')
+;
