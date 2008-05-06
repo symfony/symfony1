@@ -412,6 +412,33 @@ class sfPluginManager
   }
 
   /**
+   * Returns the license for a given plugin.
+   *
+   * @param string The plugin name
+   * @param array  An array of options
+   *
+   * @param string The license
+   *
+   * @see installPlugin() for available options
+   */
+  public function getPluginLicense($plugin, $options = array())
+  {
+    $channel   = isset($options['channel']) ? $options['channel'] : $this->environment->getConfig()->get('default_channel');
+    $stability = isset($options['stability']) ? $options['stability'] : $this->environment->getConfig()->get('preferred_state', null, $channel);
+    $version   = isset($options['version']) ? $options['version'] : null;
+
+    $rest = $this->environment->getRest();
+    $rest->setChannel(is_null($channel) ? $this->environment->getConfig()->get('default_channel') : $channel);
+
+    if (is_null($version))
+    {
+      $version = $this->getPluginVersion($plugin, $stability);
+    }
+
+    return $rest->getPluginLicense($plugin, $version);
+  }
+
+  /**
    * Returns true if the plugin is comptatible with the dependency.
    *
    * @param  array   An dependency array

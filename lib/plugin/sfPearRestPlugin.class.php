@@ -72,6 +72,32 @@ class sfPearRestPlugin extends sfPearRest11
   }
 
   /**
+   * Returns the license for a given plugin and version.
+   *
+   * @param string The plugin name
+   * @param string The version
+   *
+   * @param string The license
+   */
+  public function getPluginLicense($plugin, $version)
+  {
+    $info = $this->packageInfo($this->restBase, $plugin);
+
+    if (is_null($info))
+    {
+      // plugin does not exist
+      return null;
+    }
+
+    if (!isset($info['license']) || is_null($info['license']))
+    {
+      throw new Exception('No license found for this plugin!');
+    }
+
+    return $info['releases'][$version]['license'];
+  }
+
+  /**
    * Gets the all available versions for a given plugin.
    *
    * @param  string The plugin name

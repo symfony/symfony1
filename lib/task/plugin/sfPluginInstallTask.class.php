@@ -34,6 +34,7 @@ class sfPluginInstallTask extends sfPluginBaseTask
       new sfCommandOption('release', 'r', sfCommandOption::PARAMETER_REQUIRED, 'The preferred version', null),
       new sfCommandOption('channel', 'c', sfCommandOption::PARAMETER_REQUIRED, 'The PEAR channel name', null),
       new sfCommandOption('install_deps', 'd', sfCommandOption::PARAMETER_NONE, 'Whether to force installation of required dependencies', null),
+      new sfCommandOption('force-license', null, sfCommandOption::PARAMETER_NONE, 'Whether to force installation even if the license is not MIT like'),
     ));
 
     $this->aliases = array('plugin-install');
@@ -100,6 +101,25 @@ EOF;
 
     $options['version'] = $options['release'];
     unset($options['release']);
+
+    // license compatible?
+    if (!$options['force-license'])
+    {
+      try
+      {
+        $license = $this->getPluginManager()->getPluginLicense($arguments['name'], isset($options['channel']) ? $options['channel'] : null);
+      }
+      catch (Exception $e)
+      {
+        throw new sfCommandException(sprintf('%s (use --force-license to force installation)', $e->getMessage()));
+      }
+
+      $temp = trim(str_replace('license', '', strtolower($license)));
+      if (!is_null($license) && !in_array($temp, array('mit', 'bsd', 'lgpl', 'php', 'apache')))
+      {
+        throw new sfCommandException(sprintf('The license of this plugin "%s" is not MIT like (use --force-license to force installation).', $license));
+      }
+    }
 
     $this->getPluginManager()->installPlugin($arguments['name'], $options);
   }
