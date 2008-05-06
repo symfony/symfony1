@@ -42,7 +42,7 @@ class myResponse
   }
 }
 
-$t = new lime_test(85, new lime_output_color());
+$t = new lime_test(87, new lime_output_color());
 
 $context = sfContext::getInstance(array(
   'controller' => 'myController',
@@ -158,6 +158,9 @@ sfConfig::set('sf_web_dir', dirname(__FILE__));
 sfConfig::set('sf_rich_text_js_dir', 'fixtures');
 $t->like(textarea_tag('name', 'content', array('rich' => 'TinyMCE')), '/tinyMCE\.init/', 'textarea_tag() can create a rich textarea tag based on tinyMCE');
 $t->like(textarea_tag('name', 'content', array('rich' => true)), '/tinyMCE\.init/', 'textarea_tag() can create a rich textarea tag based on tinyMCE');
+//regression for http://trac.symfony-project.com/ticket/3474
+$t->like(textarea_tag('name[]', 'content', array('rich' => true)), '/elements: "name",/', 'textarea_tag() can create a rich textarea tag based on tinyMCE using correct id');
+$t->like(textarea_tag('name[]', 'content', array('rich' => true, 'id' => 'test')), '/elements: "test",/', 'textarea_tag() can create a rich textarea tag based on tinyMCE using correct id');
 
 class sfRichTextEditorSample extends sfRichTextEditor
 {
