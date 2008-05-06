@@ -228,6 +228,7 @@ function select_country_tag($name, $selected = null, $options = array())
   asort($countries);
 
   $option_tags = options_for_select($countries, $selected, $options);
+  unset($options['include_blank'], $options['include_custom']);
 
   return select_tag($name, $option_tags, $options);
 }
@@ -275,6 +276,7 @@ function select_language_tag($name, $selected = null, $options = array())
   asort($languages);
 
   $option_tags = options_for_select($languages, $selected, $options);
+  unset($options['include_blank'], $options['include_custom']);
 
   return select_tag($name, $option_tags, $options);
 }
@@ -662,8 +664,7 @@ function input_date_tag($name, $value = null, $options = array())
   $langFile = sfConfig::get('sf_calendar_web_dir').'/lang/calendar-'.strtolower(substr($culture, 0, 2));
   $jss = array(
     sfConfig::get('sf_calendar_web_dir').'/calendar',
-    sfConfig::get('sf_calendar_web_dir').'/lang/calendar-en',
-    $langFile,
+    is_readable(sfConfig::get('sf_symfony_data_dir').'/web/'.$langFile.'.js') || is_readable(sfConfig::get('sf_web_dir').'/'.$langFile.'.js') ? $langFile : sfConfig::get('sf_calendar_web_dir').'/lang/calendar-en',
     sfConfig::get('sf_calendar_web_dir').'/calendar-setup',
   );
   foreach ($jss as $js)
