@@ -35,6 +35,11 @@ class sfXCacheCache extends sfCache
     {
       throw new sfInitializationException('You must have XCache installed and enabled to use sfXCacheCache class.');
     }
+
+    if (!ini_get('xcache.var_size'))
+    {
+      throw new sfInitializationException('You must set the "xcache.var_size" variable to a value greater than 0 to use sfXCacheCache class.');
+    }
   }
 
  /**
