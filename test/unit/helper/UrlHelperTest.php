@@ -19,7 +19,7 @@ class myController
   }
 }
 
-$t = new lime_test(29, new lime_output_color());
+$t = new lime_test(32, new lime_output_color());
 
 $context = sfContext::getInstance(array('controller' => 'myController'));
 
@@ -46,6 +46,9 @@ $t->diag('button_to()');
 $t->is(button_to('test'), '<input value="test" type="button" onclick="document.location.href=\'module/action\';" />', 'button_to() returns an HTML "input" tag');
 $t->is(button_to('test','', array('query_string' => 'foo=bar')), '<input value="test" type="button" onclick="document.location.href=\'module/action?foo=bar\';" />', 'button_to() returns an HTML "input" tag');
 $t->is(button_to('test','', array('popup' => 'true', 'query_string' => 'foo=bar')), '<input value="test" type="button" onclick="var w=window.open(\'module/action?foo=bar\');w.focus();return false;" />', 'button_to() returns an HTML "input" tag');
+$t->is(button_to('test','', 'popup=true'), '<input value="test" type="button" onclick="var w=window.open(\'module/action\');w.focus();return false;" />', 'button_to() accepts options as string');
+$t->is(button_to('test','', 'confirm=really?'), '<input value="test" type="button" onclick="if (confirm(\'really?\')) { return document.location.href=\'module/action\';} else return false;" />', 'button_to() works with confirm option');
+$t->is(button_to('test','', 'popup=true confirm=really?'), '<input value="test" type="button" onclick="if (confirm(\'really?\')) { var w=window.open(\'module/action\');w.focus(); };return false;" />', 'button_to() works with confirm and popup option');
 
 class testObject
 {
