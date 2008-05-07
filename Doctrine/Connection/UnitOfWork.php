@@ -475,18 +475,8 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
         // save all records
         foreach ($tree as $name) {
             $table = $this->conn->getTable($name);
-
             foreach ($table->getRepository() as $record) {
-                $this->save($record);
-            }
-        }
-
-        // save all associations
-        foreach ($tree as $name) {
-            $table = $this->conn->getTable($name);
-
-            foreach ($table->getRepository() as $record) {
-                $this->saveAssociations($record);
+                $this->saveGraph($record);
             }
         }
     }

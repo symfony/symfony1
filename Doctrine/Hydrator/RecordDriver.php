@@ -69,33 +69,6 @@ class Doctrine_Hydrator_RecordDriver extends Doctrine_Locator_Injectable
     {
         $this->_collections[] = $coll;
     }
-
-    /**
-     * isIdentifiable
-     * returns whether or not a given data row is identifiable (it contains
-     * all primary key fields specified in the second argument)
-     *
-     * @param array $row
-     * @param Doctrine_Table $table
-     * @return boolean
-     */
-    /*public function isIdentifiable(array $row, Doctrine_Table $table)
-    {
-        $primaryKeys = $table->getIdentifierColumnNames();
-
-        if (is_array($primaryKeys)) {
-            foreach ($primaryKeys as $id) {
-                if ( ! isset($row[$id])) {
-                    return false;
-                }
-            }
-        } else {
-            if ( ! isset($row[$primaryKeys])) {
-                return false;
-            }
-        }
-        return true;
-    }*/
     
     public function getNullPointer() 
     {
