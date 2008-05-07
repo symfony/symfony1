@@ -25,6 +25,6 @@ class sfValidatorEmail extends sfValidatorRegex
   {
     parent::configure($options, $messages);
 
-    $this->setOption('pattern', '/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i');
+    $this->setOption('pattern', '/^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/');
   }
 }

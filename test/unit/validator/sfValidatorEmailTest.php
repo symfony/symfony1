@@ -30,6 +30,7 @@ foreach (array(
   'example@',
   'example@localhost',
   'example@example.com@example.com',
+  '<script>alert("t");</script>@toto.fr',
 ) as $nonUrl)
 {
   try
