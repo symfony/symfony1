@@ -45,7 +45,7 @@ echo "all:
 
 echo ">>> add some empty files in empty directories"
 touch apps/${APP_NAME}/modules/.sf apps/${APP_NAME}/i18n/.sf doc/.sf web/images/.sf
-touch log/.sf cache/.sf batch/.sf
+touch log/.sf cache/.sf
 touch lib/symfony/plugins/sfPropelPlugin/data/generator/sfPropelAdmin/default/skeleton/templates/.sf
 touch plugins/.sf web/js/.sf
 touch test/unit/.sf test/functional/.sf test/functional/${APP_NAME}/.sf
