@@ -69,7 +69,6 @@ abstract class sfFormPropel extends sfForm
    */
   public function getConnection()
   {
-    return Propel::getConnection(constant(sprintf('%sPeer::DATABASE_NAME', $this->getModelName())));
     return Propel::getConnection(constant(sprintf('%s::DATABASE_NAME', get_class($this->object->getPeer()))));
   }
 
