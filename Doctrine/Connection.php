@@ -452,10 +452,14 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
         
         if (extension_loaded('pdo')) {
             if (in_array($e[0], PDO::getAvailableDrivers())) {
-                $this->dbh = new PDO($this->options['dsn'], $this->options['username'], 
+            	try {
+                    $this->dbh = new PDO($this->options['dsn'], $this->options['username'], 
                                      $this->options['password'], $this->options['other']);
                                      
-                $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                    $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            	} catch (PDOException $e) {
+            		throw new Doctrine_Connection_Exception('PDO Connection Error: ' . $e->getMessage());
+            	}
                 $found = true;
             }
         }
