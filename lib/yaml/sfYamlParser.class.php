@@ -87,7 +87,7 @@ class sfYamlParser
         {
           if (preg_match('/^([^ ]+)\: +({.*?)$/', $values['value'], $matches))
           {
-            $data[$matches[1]] = sfYamlInline::load($matches[2]);
+            $data[] = array($matches[1] => sfYamlInline::load($matches[2]));
           }
           else
           {
