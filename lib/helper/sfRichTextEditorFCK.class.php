@@ -44,8 +44,7 @@ class sfRichTextEditorFCK extends sfRichTextEditor
 
     // FCKEditor.php class is written with backward compatibility of PHP4.
     // This reportings are to turn off errors with public properties and already declared constructor
-    $error_reporting = ini_get('error_reporting');
-    error_reporting(E_ALL);
+    $error_reporting = error_reporting(E_ALL);
 
     require_once(sfConfig::get('sf_web_dir').DIRECTORY_SEPARATOR.$php_file);
 
