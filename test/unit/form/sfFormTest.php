@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(87, new lime_output_color());
+$t = new lime_test(88, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -213,12 +213,21 @@ $f->setValidatorSchema(new sfValidatorSchema(array(
   2 => new sfValidatorString(array('min_length' => 2)),
   'file' => new sfValidatorFile(array('max_size' => 2)),
 )));
-$f->bind(array(
-  1 => 'f',
-  2 => 'potencier',
-  'file' => array('name' => 'test1.txt', 'type' => 'text/plain', 'tmp_name' => '/tmp/test1.txt', 'error' => 0, 'size' => 100))
-);
+$f->setWidgetSchema(new sfWidgetFormSchema(array('file' => new sfWidgetFormInputFile())));
+$f->bind(array(1 => 'f', 2 => 'potencier'), array(
+  'file' => array('name' => 'test1.txt', 'type' => 'text/plain', 'tmp_name' => '/tmp/test1.txt', 'error' => 0, 'size' => 100)
+));
 $t->is($f->getErrorSchema()->getCode(), '1 [min_length] file [max_size]', '->bind() behaves correctly with files');
+
+try
+{
+  $f->bind(array(1 => 'f', 2 => 'potencier'));
+  $t->fail('->bind() second argument is mandatory if the form is multipart');
+}
+catch (InvalidArgumentException $e)
+{
+  $t->pass('->bind() second argument is mandatory if the form is multipart');
+}
 
 // ->renderGlobalErrors()
 $t->diag('->renderGlobalErrors()');

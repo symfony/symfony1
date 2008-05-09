@@ -125,7 +125,7 @@ class sfForm implements ArrayAccess
    * @param array An array of input values
    * @param array An array of uploaded files (in the $_FILES or $_GET format)
    */
-  public function bind(array $taintedValues = null, array $taintedFiles = array())
+  public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
     $this->taintedValues = $taintedValues;
     $this->taintedFiles  = $taintedFiles;
@@ -135,6 +135,16 @@ class sfForm implements ArrayAccess
     if (is_null($this->taintedValues))
     {
       $this->taintedValues = array();
+    }
+
+    if (is_null($this->taintedFiles))
+    {
+      if ($this->isMultipart())
+      {
+        throw new InvalidArgumentException('This form is multipart, which means you need to supply a files array as the bind() method second argument.');
+      }
+
+      $this->taintedFiles = array();
     }
 
     try
