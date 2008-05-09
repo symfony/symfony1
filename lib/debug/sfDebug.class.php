@@ -44,12 +44,18 @@ class sfDebug
       'extensions' => get_loaded_extensions(),
     );
 
-    // assign extension version
-    if ($values['extensions'])
-    {
-      foreach($values['extensions'] as $key => $extension)
+      natcasesort($values['extensions']);
+
+      // assign extension version
+      if($values['extensions'])
       {
-        $values['extensions'][$key] = phpversion($extension) ? sprintf('%s (%s)', $extension, phpversion($extension)) : $extension;
+        foreach($values['extensions'] as $key => $extension)
+        {
+          if($version = phpversion($extension))
+          {
+            $values['extensions'][$key] = sprintf('%s (%s)', $extension, $version);
+          }
+        }
       }
     }
 
