@@ -432,7 +432,15 @@ class sfPluginManager
 
     if (is_null($version))
     {
-      $version = $this->getPluginVersion($plugin, $stability);
+      try
+      {
+        $version = $this->getPluginVersion($plugin, $stability);
+      }
+      catch (Exception $e)
+      {
+        // no release available
+        return false;
+      }
     }
 
     return $rest->getPluginLicense($plugin, $version);
