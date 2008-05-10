@@ -11,11 +11,18 @@
 error_reporting(error_reporting() & ~E_STRICT);
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
+
+$t = new lime_test(5, new lime_output_color());
+
+if (!class_exists('PEAR'))
+{
+  $t->skip('PEAR must be installed', 5); 
+  exit(0);
+}
+
 require_once dirname(__FILE__).'/sfPearDownloaderTest.class.php';
 require_once dirname(__FILE__).'/sfPearRestTest.class.php';
 require_once dirname(__FILE__).'/sfPluginTestHelper.class.php';
-
-$t = new lime_test(5, new lime_output_color());
 
 // setup
 $temp = tempnam('/tmp/sf_plugin_test', 'tmp');
