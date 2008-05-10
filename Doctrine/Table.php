@@ -1202,6 +1202,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
 
         return $this->createQuery()
             ->where(implode(' = ? AND ', (array) $this->getIdentifier()) . ' = ?')
+            ->limit(1)
             ->fetchOne($id, $hydrationMode);
     }
 
