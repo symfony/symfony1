@@ -1063,7 +1063,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
                  );
              }
 
-             $sql = $this->exportClassesSql(array($class));
+             $sql = $connection->export->exportClassesSql(array($class));
 
              // Build array of all the creates
              // We need these to happen first
