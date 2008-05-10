@@ -38,8 +38,8 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
      * @var array $_options     an array of plugin specific options
      */
     protected $_options = array('generateFiles' => false,
+                                'generatePath'  => false,
                                 'identifier'    => false,
-                                'generateFiles' => false,
                                 'table'         => false,
                                 'pluginTable'   => false,
                                 'children'      => array());
@@ -323,7 +323,7 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
      */
     public function buildRelation()
     {
-    	  $this->buildForeignRelation();
+    	$this->buildForeignRelation();
         $this->buildLocalRelation();
     }
 
