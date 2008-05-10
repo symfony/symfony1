@@ -82,6 +82,17 @@ class sfPropelFormGenerator extends sfGenerator
     {
       $this->table = $table;
 
+      try
+      {
+        // trigger the include_once of any behaviors now, and catch the
+        // exception that is thrown due to no plugin behaviors having been
+        // registered
+        class_exists($table->getPhpName());
+      }
+      catch (sfConfigurationException $e)
+      {
+      }
+
       // find the package to store forms in the same directory as the model classes
       $packages = explode('.', constant($table->getPhpName().'Peer::CLASS_DEFAULT'));
       array_pop($packages);
