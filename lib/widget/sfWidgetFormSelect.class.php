@@ -58,8 +58,19 @@ class sfWidgetFormSelect extends sfWidgetForm
     return $this->renderContentTag('select', "\n".implode("\n", $this->getOptionsForSelect($value, $choices))."\n", array_merge(array('name' => $name), $attributes));
   }
 
+  /**
+   * Returns an array of option tags for the given choices
+   *
+   * @param  string The selected value
+   * @param  array  An array of choices
+   *
+   * @return array  An array of option tags
+   */
   protected function getOptionsForSelect($value, $choices)
   {
+    $mainAttributes = $this->attributes;
+    $this->attributes = array();
+
     $options = array();
     foreach ($choices as $key => $option)
     {
@@ -78,6 +89,8 @@ class sfWidgetFormSelect extends sfWidgetForm
         $options[] = $this->renderContentTag('option', self::escapeOnce($option), $attributes);
       }
     }
+
+    $this->attributes = $mainAttributes;
 
     return $options;
   }

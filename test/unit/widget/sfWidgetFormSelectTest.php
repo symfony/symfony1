@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(10, new lime_output_color());
+$t = new lime_test(14, new lime_output_color());
 
 $dom = new DomDocument('1.0', 'utf-8');
 $dom->validateOnParse = true;
@@ -67,3 +67,17 @@ $w = new sfWidgetFormSelect(array('choices' => new sfCallable('choice_callable')
 $dom->loadHTML($w->render('foo'));
 $css = new sfDomCssSelector($dom);
 $t->is(count($css->matchAll('#foo option')->getNodes()), 3, '->render() accepts a sfCallable as a choices option');
+
+// attributes
+$t->diag('attributes');
+$w = new sfWidgetFormSelect(array('choices' => array(0, 1, 2)));
+$dom->loadHTML($w->render('foo', null, array('disabled' => 'disabled')));
+$css = new sfDomCssSelector($dom);
+$t->is(count($css->matchAll('select[disabled="disabled"]')->getNodes()), 1, '->render() does not pass the select HTML attributes to the option tag');
+$t->is(count($css->matchAll('option[disabled="disabled"]')->getNodes()), 0, '->render() does not pass the select HTML attributes to the option tag');
+
+$w = new sfWidgetFormSelect(array('choices' => array(0, 1, 2)), array('disabled' => 'disabled'));
+$dom->loadHTML($w->render('foo'));
+$css = new sfDomCssSelector($dom);
+$t->is(count($css->matchAll('select[disabled="disabled"]')->getNodes()), 1, '->render() does not pass the select HTML attributes to the option tag');
+$t->is(count($css->matchAll('option[disabled="disabled"]')->getNodes()), 0, '->render() does not pass the select HTML attributes to the option tag');
