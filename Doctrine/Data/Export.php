@@ -46,6 +46,15 @@ class Doctrine_Data_Export extends Doctrine_Data
     /**
      * doExport
      *
+     * FIXME: This function has ugly hacks in it for temporarily disabling INDEXBY query parts of tables 
+     * to export.
+     *
+     * Update from jwage: I am not sure if their is any other better solution for this. It may be the correct
+     * solution to disable the indexBy settings for tables when exporting data fixtures. Maybe a better idea 
+     * would be to extract this functionality to a pair of functions to enable/disable the index by settings 
+     * so simply turn them on and off when they need to query for the translations standalone and don't need 
+     * it to be indexed by the lang.
+     *
      * @return void
      */
     public function doExport()
@@ -62,6 +71,16 @@ class Doctrine_Data_Export extends Doctrine_Data
 
         $models = Doctrine::initializeModels($models);
 
+        // temporarily disable indexBy query parts of selected and related tables
+        $originalIndexBy = array();
+        foreach ($models AS $name) {
+          $table = Doctrine::getTable($name);
+          if (!is_null($indexBy = $table->getBoundQueryPart('indexBy'))) {
+            $originalIndexBy[$name] = $indexBy;
+            $table->bindQueryPart('indexBy', null);
+          }
+        }
+
         foreach ($models AS $name) {
             if ( ! empty($specifiedModels) AND ! in_array($name, $specifiedModels)) {
                 continue;
@@ -72,6 +91,11 @@ class Doctrine_Data_Export extends Doctrine_Data
             if ($results->count() > 0) {
                 $data[$name] = $results;
             }
+        }
+
+        // Restore the temporarily disabled indexBy query parts
+        foreach($originalIndexBy AS $name => $indexBy) {
+            Doctrine::getTable($name)->bindQueryPart('indexBy', $indexBy);
         }
 
         $data = $this->prepareData($data);
