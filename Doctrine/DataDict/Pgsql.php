@@ -404,6 +404,11 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
                     }
                 }
                 return 'INT';
+	    case 'inet':
+		return 'INET';
+            case 'bit':
+            case 'varbit':
+                return 'VARBIT';		
             case 'boolean':
                 return 'BOOLEAN';
             case 'date':
@@ -450,6 +455,13 @@ class Doctrine_DataDict_Pgsql extends Doctrine_DataDict
         $dbType = strtolower($field['type']);
 
         switch ($dbType) {
+	    case 'inet':
+                $type[] = 'inet';
+		break;
+	    case 'bit':
+	    case 'varbit':
+                $type[] = 'bit';
+		break;
             case 'smallint':
             case 'int2':
                 $type[] = 'integer';
