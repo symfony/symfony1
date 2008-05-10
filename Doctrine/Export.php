@@ -1047,19 +1047,8 @@ class Doctrine_Export extends Doctrine_Connection_Module
         $this->exportClasses($models);
     }
 
-    /**
-     * exportClasses
-     * method for exporting Doctrine_Record classes to a schema
-     *
-     * FIXME: This function has ugly hacks in it to make sure sql is inserted in the correct order.
-     *
-     * @throws Doctrine_Connection_Exception    if some error other than Doctrine::ERR_ALREADY_EXISTS
-     *                                          occurred during the create table operation
-     * @param array $classes
-     * @return void
-     */
-     public function exportClasses(array $classes)
-     {
+    public function exportSortedClassesSql($classes, $groupByConnection = true)
+    {
          $connections = array();
          foreach ($classes as $class) {
              $connection = Doctrine_Manager::getInstance()->getConnectionForComponent($class);
@@ -1119,7 +1108,32 @@ class Doctrine_Export extends Doctrine_Connection_Module
              $build[$connectionName] = array_merge($sql['create_tables'], $sql['create_sequences'], $sql['create_indexes'], $sql['alters']);
          }
 
-         foreach ($build as $connectionName => $sql) {
+         if ( ! $groupByConnection) {
+             $new = array();
+             foreach($build as $connectionname => $sql) {
+                 $new = array_merge($new, $sql);
+             }
+             $build = $new;
+         }
+         return $build;
+    }
+
+    /**
+     * exportClasses
+     * method for exporting Doctrine_Record classes to a schema
+     *
+     * FIXME: This function has ugly hacks in it to make sure sql is inserted in the correct order.
+     *
+     * @throws Doctrine_Connection_Exception    if some error other than Doctrine::ERR_ALREADY_EXISTS
+     *                                          occurred during the create table operation
+     * @param array $classes
+     * @return void
+     */
+     public function exportClasses(array $classes)
+     {
+         $queries = $this->exportSortedClassesSql($classes);
+
+         foreach ($queries as $connectionName => $sql) {
              $connection = Doctrine_Manager::getInstance()->getConnection($connectionName);
 
              $connection->beginTransaction();
@@ -1268,7 +1282,7 @@ class Doctrine_Export extends Doctrine_Connection_Module
             $models = Doctrine::getLoadedModels();
         }
         
-        return $this->exportClassesSql($models);
+        return $this->exportSortedClassesSql($models, false);
     }
 
     /**
