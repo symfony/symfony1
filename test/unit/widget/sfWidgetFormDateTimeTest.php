@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(52, new lime_output_color());
+$t = new lime_test(54, new lime_output_color());
 
 $dom = new DomDocument('1.0', 'utf-8');
 $dom->validateOnParse = true;
@@ -119,3 +119,14 @@ catch (InvalidArgumentException $e)
 {
   $t->pass('__construct() throws a InvalidArgumentException if the date/time options is not an array');
 }
+
+// attributes
+$t->diag('attributes');
+$w = new sfWidgetFormDateTime();
+$dom->loadHTML($w->render('foo', '2005-10-15 12:30:35', array('date' => array('disabled' => 'disabled'), 'time' => array('disabled' => 'disabled'))));
+$t->is(count($css->matchAll('select[disabled="disabled"]')->getNodes()), 5, '->render() takes the attributes into account for all the five embedded widgets');
+
+$w->setAttribute('date', array('disabled' => 'disabled'));
+$w->setAttribute('time', array('disabled' => 'disabled'));
+$dom->loadHTML($w->render('foo', '2005-10-15 12:30:35'));
+$t->is(count($css->matchAll('select[disabled="disabled"]')->getNodes()), 5, '->render() takes the attributes into account for all the five embedded widgets');

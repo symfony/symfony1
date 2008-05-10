@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(35, new lime_output_color());
+$t = new lime_test(37, new lime_output_color());
 
 $w = new sfWidgetFormDate();
 
@@ -112,3 +112,12 @@ $css = new sfDomCssSelector($dom);
 $t->is(count($css->matchAll('#foo_year option')->getNodes()), 5, '__construct() can change the default array used for years');
 $t->is(count($css->matchAll('#foo_month option')->getNodes()), 4, '__construct() can change the default array used for months');
 $t->is(count($css->matchAll('#foo_day option')->getNodes()), 3, '__construct() can change the default array used for days');
+
+// attributes
+$t->diag('attributes');
+$dom->loadHTML($w->render('foo', '2005-10-15', array('disabled' => 'disabled')));
+$t->is(count($css->matchAll('select[disabled="disabled"]')->getNodes()), 3, '->render() takes the attributes into account for all the three embedded widgets');
+
+$w->setAttribute('disabled', 'disabled');
+$dom->loadHTML($w->render('foo', '2005-10-15'));
+$t->is(count($css->matchAll('select[disabled="disabled"]')->getNodes()), 3, '->render() takes the attributes into account for all the three embedded widgets');

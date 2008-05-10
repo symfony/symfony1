@@ -18,9 +18,6 @@
  */
 class sfWidgetFormDateTime extends sfWidgetForm
 {
-  protected
-    $defaultAttributes = array('date' => array(), 'time' => array());
-
   /**
    * Configures the current widget.
    *
@@ -44,18 +41,6 @@ class sfWidgetFormDateTime extends sfWidgetForm
     $this->addOption('time', array());
     $this->addOption('with_time', true);
     $this->addOption('format', '%date% %time%');
-
-    if (isset($attributes['date']))
-    {
-      $defaultAttributes['time'] = $attributes['date'];
-      unset($attributes['date']);
-    }
-
-    if (isset($attributes['time']))
-    {
-      $defaultAttributes['time'] = $attributes['time'];
-      unset($attributes['time']);
-    }
   }
 
   /**
@@ -64,7 +49,7 @@ class sfWidgetFormDateTime extends sfWidgetForm
   function render($name, $value = null, $attributes = array(), $errors = array())
   {
     // date
-    $date = $this->getDateWidget()->render($name, $value);
+    $date = $this->getDateWidget($attributes)->render($name, $value);
 
     if (!$this->getOption('with_time'))
     {
@@ -73,32 +58,36 @@ class sfWidgetFormDateTime extends sfWidgetForm
 
     return strtr($this->getOption('format'), array(
       '%date%' => $date,
-      '%time%' => $this->getTimeWidget()->render($name, $value),
+      '%time%' => $this->getTimeWidget($attributes)->render($name, $value),
     ));
   }
 
   /**
-   * Returns the date widget
+   * Returns the date widget.
+   *
+   * @param  array  An array of attributes
    *
    * @return sfWidgetForm A Widget representing the date
    */
-  protected function getDateWidget()
+  protected function getDateWidget($attributes)
   {
-    return new sfWidgetFormDate($this->getOptionsFor('date'), $this->getAttributesFor('date'));
+    return new sfWidgetFormDate($this->getOptionsFor('date'), $this->getAttributesFor('date', $attributes));
   }
 
   /**
-   * Returns the time widget
+   * Returns the time widget.
+   *
+   * @param  array  An array of attributes
    *
    * @return sfWidgetForm A Widget representing the time
    */
-  protected function getTimeWidget()
+  protected function getTimeWidget($attributes)
   {
-    return new sfWidgetFormTime($this->getOptionsFor('time'), $this->getAttributesFor('time'));
+    return new sfWidgetFormTime($this->getOptionsFor('time'), $this->getAttributesFor('time', $attributes));
   }
 
   /**
-   * Returns an array of options for the given type
+   * Returns an array of options for the given type.
    *
    * @param  string The type (date or time)
    *
@@ -116,14 +105,17 @@ class sfWidgetFormDateTime extends sfWidgetForm
   }
 
   /**
-   * Returns an array of HTML attributes for the given type
+   * Returns an array of HTML attributes for the given type.
    *
    * @param  string The type (date or time)
+   * @param  array  An array of attributes
    *
    * @return array  An array of HTML attributes
    */
-  protected function getAttributesFor($type)
+  protected function getAttributesFor($type, $attributes)
   {
-    return isset($attributes[$type]) ? array_merge($this->defaultAttributes[$type], $attributes[$type]) : $this->defaultAttributes[$type];
+    $defaults = isset($this->attributes[$type]) ? $this->attributes[$type] : array();
+
+    return isset($attributes[$type]) ? array_merge($defaults, $attributes[$type]) : $defaults;
   }
 }
