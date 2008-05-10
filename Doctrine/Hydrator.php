@@ -281,52 +281,49 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
         $rowData = array();
 
         foreach ($data as $key => $value) {
-            // Parse each column name only once. Cache the results.
-            $e = explode('__', $key);
-            if(count($e) >= 2) {
-              if ( ! isset($cache[$key])) {
-                  $last = strtolower(array_pop($e));
-                  $cache[$key]['dqlAlias'] = $this->_tableAliases[strtolower(implode('__', $e))];
-                  $table = $this->_queryComponents[$cache[$key]['dqlAlias']]['table'];
-                  $fieldName = $table->getFieldName($last);
-                  $cache[$key]['fieldName'] = $fieldName;
-                  if ($table->isIdentifier($fieldName)) {
-                      $cache[$key]['isIdentifier'] = true;
-                  } else {
-                      $cache[$key]['isIdentifier'] = false;
-                  }
-                  $type = $table->getTypeOfColumn($last);
-                  if ($type == 'integer' || $type == 'string') {
-                      $cache[$key]['isSimpleType'] = true;
-                  } else {
-                      $cache[$key]['type'] = $type;
-                      $cache[$key]['isSimpleType'] = false;
-                  }
-              }
+            // Parse each column name only once. Cache the results. 
+            if ( ! isset($cache[$key])) {
+                $e = explode('__', $key);
+                $last = strtolower(array_pop($e));
+                $cache[$key]['dqlAlias'] = $this->_tableAliases[strtolower(implode('__', $e))];
+                $table = $this->_queryComponents[$cache[$key]['dqlAlias']]['table'];
+                $fieldName = $table->getFieldName($last);
+                $cache[$key]['fieldName'] = $fieldName;
+                if ($table->isIdentifier($fieldName)) {
+                    $cache[$key]['isIdentifier'] = true;
+                } else {
+                  $cache[$key]['isIdentifier'] = false;
+                }
+                $type = $table->getTypeOfColumn($last);
+                if ($type == 'integer' || $type == 'string') {
+                    $cache[$key]['isSimpleType'] = true;
+                } else {
+                    $cache[$key]['type'] = $type;
+                    $cache[$key]['isSimpleType'] = false;
+                }
+            }
 
-              $map   = $this->_queryComponents[$cache[$key]['dqlAlias']];
-              $table = $map['table'];
-              $dqlAlias = $cache[$key]['dqlAlias'];
-              $fieldName = $cache[$key]['fieldName'];
+            $map = $this->_queryComponents[$cache[$key]['dqlAlias']];
+            $table = $map['table'];
+            $dqlAlias = $cache[$key]['dqlAlias'];
+            $fieldName = $cache[$key]['fieldName'];
+            if (isset($this->_queryComponents[$dqlAlias]['agg'][$fieldName])) {
+                $fieldName = $this->_queryComponents[$dqlAlias]['agg'][$fieldName];
+            }
 
-              if (isset($this->_queryComponents[$dqlAlias]['agg'][$fieldName])) {
-                  $fieldName = $this->_queryComponents[$dqlAlias]['agg'][$fieldName];
-              }
+            if ($cache[$key]['isIdentifier']) {
+                $id[$dqlAlias] .= '|' . $value;
+            }
 
-              if ($cache[$key]['isIdentifier']) {
-                  $id[$dqlAlias] .= '|' . $value;
-              }
+            if ($cache[$key]['isSimpleType']) {
+                $rowData[$dqlAlias][$fieldName] = $value;
+            } else {
+                $rowData[$dqlAlias][$fieldName] = $table->prepareValue(
+                        $fieldName, $value, $cache[$key]['type']);
+            }
 
-              if ($cache[$key]['isSimpleType']) {
-                  $rowData[$dqlAlias][$fieldName] = $value;
-              } else {
-                  $rowData[$dqlAlias][$fieldName] = $table->prepareValue(
-                          $fieldName, $value, $cache[$key]['type']);
-              }
-
-              if ( ! isset($nonemptyComponents[$dqlAlias]) && $value !== null) {
-                  $nonemptyComponents[$dqlAlias] = true;
-              }
+            if ( ! isset($nonemptyComponents[$dqlAlias]) && $value !== null) {
+                $nonemptyComponents[$dqlAlias] = true;
             }
         }
 
