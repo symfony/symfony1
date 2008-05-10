@@ -41,23 +41,23 @@ class sfPearFrontendPlugin extends PEAR_Frontend_CLI
 
   public function _display($text)
   {
-    $this->dispatcher->notify(new sfEvent($this, 'application.log', array($this->splitLongLine($text))));
+    $this->dispatcher->notify(new sfEvent($this, 'application.log', $this->splitLongLine($text)));
   }
 
   protected function splitLongLine($text)
   {
-    $t = '';
+    $lines = '';
     foreach (explode("\n", $text) as $longline)
     {
       foreach (explode("\n", wordwrap($longline, 62)) as $line)
       {
         if ($line = trim($line))
         {
-          $t .= $line;
+          $lines[] = $line;
         }
       }
     }
 
-    return $t;
+    return $lines;
   }
 }
