@@ -112,7 +112,7 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
      * @param  Doctrine_Record_Generator $generator 
      * @return void
      */
-    public function addChild(Doctrine_Record_Generator $generator)
+    public function addChild($generator)
     {
         $this->_options['children'][] = $generator;
     }
@@ -227,11 +227,18 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
         }
 
         foreach ($this->_options['children'] as $child) {
-            $this->_table->addGenerator($child, get_class($child));
+            if ($child instanceof Doctrine_Template) {
+                if ($child->getPlugin() !== null) {
+                    $this->_table->addGenerator($child->getPlugin(), get_class($child->getPlugin()));
+                }
 
-            $child->setTable($this->_table);
-
-            $child->setUp();
+                $child->setTable($this->_table);
+                $child->setTableDefinition();
+                $child->setUp();
+            } else {
+                $this->_table->addGenerator($child, get_class($child));
+                $child->initialize($this->_table);
+            }
         }
     }
 
