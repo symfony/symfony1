@@ -205,7 +205,6 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
             $parts['scheme'] = $e[0];
             $parts['user']   = (isset($adapter[1])) ? $adapter[1] : null;
             $parts['pass']   = (isset($adapter[2])) ? $adapter[2] : null;
-
             $driverName = $e[0];
             $adapter = $parts;
         } else {
@@ -217,7 +216,7 @@ class Doctrine_Manager extends Doctrine_Configurable implements Countable, Itera
         // Decode adapter information
         if (is_array($adapter)) {
             foreach ($adapter as $key => $value) {
-                $adapter[$key]  = urldecode($value);  
+                $adapter[$key]  = $value?urldecode($value):null;
             }
         }
 
