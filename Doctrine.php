@@ -204,11 +204,13 @@ final class Doctrine
      * constant for row limiting
      */
     const LIMIT_ROWS       = 1;
+    const QUERY_LIMIT_ROWS = 1;
 
     /**
      * constant for record limiting
      */
-    const LIMIT_RECORDS    = 2;
+    const LIMIT_RECORDS       = 2;
+    const QUERY_LIMIT_RECORDS = 2;
 
     /**
      * FETCHMODE CONSTANTS
