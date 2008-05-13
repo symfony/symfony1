@@ -69,8 +69,8 @@ $array = array(
 $expected = <<<EOF
 { '': bar, 'foo''bar': {  }, bar: [1, foo], foobar: { foo: bar, bar: [1, foo], foobar: { foo: bar, bar: [1, foo] } } }
 EOF;
-$t->is(sfYaml::dump($array, -10), $expected, '::dump() takes an inline level argument');
-$t->is(sfYaml::dump($array, 0), $expected, '::dump() takes an inline level argument');
+$t->is($dumper->dump($array, -10), $expected, '->dump() takes an inline level argument');
+$t->is($dumper->dump($array, 0), $expected, '->dump() takes an inline level argument');
 
 $expected = <<<EOF
 '': bar
@@ -79,7 +79,7 @@ bar: [1, foo]
 foobar: { foo: bar, bar: [1, foo], foobar: { foo: bar, bar: [1, foo] } }
 
 EOF;
-$t->is(sfYaml::dump($array, 1), $expected, '::dump() takes an inline level argument');
+$t->is($dumper->dump($array, 1), $expected, '->dump() takes an inline level argument');
 
 $expected = <<<EOF
 '': bar
@@ -93,7 +93,7 @@ foobar:
   foobar: { foo: bar, bar: [1, foo] }
 
 EOF;
-$t->is(sfYaml::dump($array, 2), $expected, '::dump() takes an inline level argument');
+$t->is($dumper->dump($array, 2), $expected, '->dump() takes an inline level argument');
 
 $expected = <<<EOF
 '': bar
@@ -111,7 +111,7 @@ foobar:
     bar: [1, foo]
 
 EOF;
-$t->is(sfYaml::dump($array, 3), $expected, '::dump() takes an inline level argument');
+$t->is($dumper->dump($array, 3), $expected, '->dump() takes an inline level argument');
 
 $expected = <<<EOF
 '': bar
@@ -131,8 +131,8 @@ foobar:
       - foo
 
 EOF;
-$t->is(sfYaml::dump($array, 4), $expected, '::dump() takes an inline level argument');
-$t->is(sfYaml::dump($array, 10), $expected, '::dump() takes an inline level argument');
+$t->is($dumper->dump($array, 4), $expected, '->dump() takes an inline level argument');
+$t->is($dumper->dump($array, 10), $expected, '->dump() takes an inline level argument');
 
 // objects
 $t->diag('Objects support');
@@ -141,9 +141,9 @@ class A
   public $a = 'foo';
 }
 $a = array('foo' => new A(), 'bar' => 1);
-$t->is(sfYaml::dump($a), <<<EOF
+$t->is($dumper->dump($a), <<<EOF
 foo: !!php/object:O:1:"A":1:{s:1:"a";s:3:"foo";}
 bar: 1
 
 EOF
-, '::dump() is able to dump objects');
+, '->dump() is able to dump objects');

@@ -73,8 +73,8 @@ class A
   public $a = 'foo';
 }
 $a = array('foo' => new A(), 'bar' => 1);
-$t->is(sfYaml::load(<<<EOF
+$t->is($parser->parse(<<<EOF
 foo: !!php/object:O:1:"A":1:{s:1:"a";s:3:"foo";}
 bar: 1
 EOF
-), $a, '::dump() is able to dump objects');
+), $a, '->parse() is able to dump objects');
