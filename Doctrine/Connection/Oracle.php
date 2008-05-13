@@ -69,7 +69,7 @@ class Doctrine_Connection_Oracle extends Doctrine_Connection
      */
     public function setDateFormat($format = 'YYYY-MM-DD HH24:MI:SS')
     {
-      $this->exec('ALTER SESSION SET NLS_DATE_FORMAT = "' . $format . '"');
+        $this->exec('ALTER SESSION SET NLS_DATE_FORMAT = "' . $format . '"');
     }
 
     /**
@@ -93,8 +93,11 @@ class Doctrine_Connection_Oracle extends Doctrine_Connection
                 $max = $offset + $limit;
                 if ($offset > 0) {
                     $min = $offset + 1;
-                    $query = 'SELECT * FROM (SELECT a.*, ROWNUM dctrn_rownum FROM (' . $query
-                           . ') a WHERE ROWNUM <= ' . $max . ') WHERE dctrn_rownum >= ' . $min;
+                    $query = 'SELECT b.* FROM (
+                                 SELECT a.*, ROWNUM AS doctrine_rownum FROM ('
+                                  . $query . ') a
+                              ) b
+                              WHERE b.doctrine_rownum BETWEEN ' . $min .  ' AND ' . $max;
                 } else {
                     $query = 'SELECT a.* FROM (' . $query .') a WHERE ROWNUM <= ' . $max;
                 }
