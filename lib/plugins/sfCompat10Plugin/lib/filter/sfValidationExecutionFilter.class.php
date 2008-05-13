@@ -107,12 +107,26 @@ class sfValidationExecutionFilter extends sfFilter
     // set default validated status
     $validated = true;
 
+    // the case of the first letter of the action is insignificant
     // get the current action validation configuration
-    $validationConfig = $moduleName.'/validate/'.$actionName.'.yml';
+    $validationConfigWithFirstLetterLower = strtolower(substr($actionName, 0, 1)).substr($actionName, 1).'.yml';
+    $validationConfigWithFirstLetterUpper = ucfirst($actionName).'.yml';
+
+    // determine $validateFile by testing both the uppercase and lowercase
+    // types of validation configurations.
+    $validateFile = null;
+    if (!is_null($testValidateFile = $this->context->getConfigCache()->checkConfig('modules/'.$moduleName.'/validate/'.$validationConfigWithFirstLetterLower, true)))
+    {
+      $validateFile = $testValidateFile;
+    }
+    else if (!is_null($testValidateFile = $this->context->getConfigCache()->checkConfig('modules/'.$moduleName.'/validate/'.$validationConfigWithFirstLetterUpper, true)))
+    {
+      $validateFile = $testValidateFile;
+    }
 
     // load validation configuration
     // do NOT use require_once
-    if (null !== $validateFile = $this->context->getConfigCache()->checkConfig('modules/'.$validationConfig, true))
+    if (!is_null($validateFile))
     {
       // create validator manager
       $validatorManager = new sfValidatorManager($this->context);

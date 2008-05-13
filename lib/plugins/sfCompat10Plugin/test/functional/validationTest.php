@@ -136,3 +136,53 @@ $b->
   checkResponseElement('body ul[class="errors"] li[class="input3"]', false)->
   checkResponseElement('body ul[class="errors"] li[class="input4"]', 'Required')
 ;
+
+// check that /validation/index and /validation/Index both uses the index.yml validation file (see #1617)
+// those tests are only relevant on machines where filesystems are case sensitive.
+$b->
+  post('/validation/index')->
+  isStatusCode(200)->
+  isRequestParameter('module', 'validation')->
+  isRequestParameter('action', 'index')->
+  isResponseHeader('X-Validated', 'ko')
+;
+
+$b->
+  post('/validation/Index')->
+  isStatusCode(200)->
+  isRequestParameter('module', 'validation')->
+  isRequestParameter('action', 'Index')->
+  isResponseHeader('X-Validated', 'ko')
+;
+
+// needed to pass tests on case and non case sensitive machines
+if (!file_exists(dirname(__FILE__).'/fixtures/apps/frontend/modules/validation/templates/IndexSuccess.php'))
+{
+  $b->throwsException('sfRenderException');
+}
+
+$b->
+  post('/validation/INdex')->
+  isStatusCode(404)
+;
+
+$b->
+  post('/validation/index2')->
+  isStatusCode(200)->
+  isRequestParameter('module', 'validation')->
+  isRequestParameter('action', 'index2')->
+  isResponseHeader('X-Validated', 'ko')
+;
+
+if (!is_readable(dirname(__FILE__).'/fixtures/apps/frontend/modules/validation/templates/index2Success.php'))
+{
+  $b->throwsException('sfRenderException');
+}
+
+$b->
+  post('/validation/Index2')->
+  isStatusCode(200)->
+  isRequestParameter('module', 'validation')->
+  isRequestParameter('action', 'Index2')->
+  isResponseHeader('X-Validated', 'ko')
+;
