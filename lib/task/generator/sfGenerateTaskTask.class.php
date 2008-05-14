@@ -64,9 +64,9 @@ EOF;
     $taskClassName = str_replace('-', '', ($namespace ? $namespace.ucfirst($name) : $name)).'Task';
 
     // Validate the class name
-    if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $app))
+    if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $taskClassName))
     {
-      throw new sfCommandException(sprintf('The task class name "%s" is invalid.', $app));
+      throw new sfCommandException(sprintf('The task class name "%s" is invalid.', $taskClassName));
     }
 
     $briefDescription = $options['brief-description'];
