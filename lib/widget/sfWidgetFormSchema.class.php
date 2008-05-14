@@ -25,6 +25,9 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     LAST   = 'last',
     BEFORE = 'before',
     AFTER  = 'after';
+  
+  protected static
+    $defaultFormatterName = 'table';
 
   protected
     $parent         = null,
@@ -62,7 +65,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
     $this->helps  = $helps;
 
     $this->addOption('name_format', '%s');
-    $this->addOption('form_formatter', 'table');
+    $this->addOption('form_formatter', self::$defaultFormatterName);
 
     parent::__construct($options, $attributes);
 
@@ -98,6 +101,28 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   public function getFormFormatters()
   {
     return $this->formFormatters;
+  }
+  
+  /**
+   * Sets the generic default formatter name used by the class. If you want all 
+   * of your forms to be generated with the <code>list</code> format, you can 
+   * do it in a project or application configuration class:
+   * 
+   * <pre>
+   * class ProjectConfiguration extends sfProjectConfiguration
+   * {
+   *   public function setup()
+   *   {
+   *     sfWidgetFormSchema::setDefaultFormFormatterName('list');
+   *   }
+   * }
+   * </pre>  
+   *
+   * @param string $name
+   */
+  static public function setDefaultFormFormatterName($name)
+  {
+    self::$defaultFormatterName = $name;
   }
 
   /**

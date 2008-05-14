@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(57, new lime_output_color());
+$t = new lime_test(59, new lime_output_color());
 
 $w1 = new sfWidgetFormInput(array(), array('class' => 'foo1'));
 $w2 = new sfWidgetFormInput();
@@ -331,3 +331,12 @@ foreach ($f1 as $name => $widget)
   $t->ok($widget !== $f[$name], '__clone() clones embedded widgets');
   $t->ok($widget == $f[$name], '__clone() clones embedded widgets');
 }
+
+// setDefaultFormFormatterName()
+$t->diag('setDefaultFormFormatterName()');
+$w = new sfWidgetFormSchema(array('w1' => $w1, 'w2' => $w2));
+$t->isa_ok($w->getFormFormatter(), 'sfWidgetFormSchemaFormatterTable', 'setDefaultFormFormatterName() has the "sfWidgetFormSchemaFormatterTable" form formatter by default');
+
+sfWidgetFormSchema::setDefaultFormFormatterName('list');
+$w = new sfWidgetFormSchema(array('w1' => $w1, 'w2' => $w2));
+$t->isa_ok($w->getFormFormatter(), 'sfWidgetFormSchemaFormatterList', 'setDefaultFormFormatterName() changes the default form formatter name correctly');
