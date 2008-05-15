@@ -30,6 +30,10 @@ class sfPropelBuildAllTask extends sfPropelBaseTask
     $this->name = 'build-all';
     $this->briefDescription = 'Generates Propel model, SQL and initializes the database';
 
+    $this->addOptions(array(
+      new sfCommandOption('skip-forms', 'F', sfCommandOption::PARAMETER_NONE, 'Skip generating forms')
+    ));
+
     $this->detailedDescription = <<<EOF
 The [propel:build-all|INFO] task is a shortcut for three other tasks:
 
@@ -59,9 +63,12 @@ EOF;
     $buildSql->setCommandApplication($this->commandApplication);
     $buildSql->run();
 
-    $buildForms = new sfPropelBuildFormsTask($this->dispatcher, $this->formatter);
-    $buildForms->setCommandApplication($this->commandApplication);
-    $buildForms->run();
+    if (!$options['skip-forms'])
+    {
+      $buildForms = new sfPropelBuildFormsTask($this->dispatcher, $this->formatter);
+      $buildForms->setCommandApplication($this->commandApplication);
+      $buildForms->run();
+    }
 
     $insertSql = new sfPropelInsertSqlTask($this->dispatcher, $this->formatter);
     $insertSql->setCommandApplication($this->commandApplication);

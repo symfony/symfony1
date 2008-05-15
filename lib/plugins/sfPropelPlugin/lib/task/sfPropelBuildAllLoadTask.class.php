@@ -32,6 +32,7 @@ class sfPropelBuildAllLoadTask extends sfPropelBaseTask
     $this->addOptions(array(
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
       new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'propel'),
+      new sfCommandOption('skip-forms', 'F', sfCommandOption::PARAMETER_NONE, 'Skip generating forms')
     ));
 
     $this->aliases = array('propel-build-all-load');
@@ -65,7 +66,7 @@ EOF;
 
     $buildAll = new sfPropelBuildAllTask($this->dispatcher, $this->formatter);
     $buildAll->setCommandApplication($this->commandApplication);
-    $buildAll->run();
+    $buildAll->run(array(), $options['skip-forms'] ? array('--skip-forms') : array());
 
     $loadData = new sfPropelLoadDataTask($this->dispatcher, $this->formatter);
     $loadData->setCommandApplication($this->commandApplication);
