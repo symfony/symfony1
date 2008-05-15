@@ -57,36 +57,20 @@ class sfYaml
       return $input;
     }
 
-    // syck is prefered over sfYamlParser
-    if (function_exists('syck_load'))
+    require_once dirname(__FILE__).'/sfYamlParser.class.php';
+
+    $yaml = new sfYamlParser();
+
+    try
     {
-      try
-      {
-        $retval = syck_load($input);
-      }
-      catch (Exception $e)
-      {
-        throw new InvalidArgumentException(sprintf('Syck failed to parse %s, error was: "%s"', $file ? sprintf('file "%s"', $file) : 'string', $e->getMessage()));
-      }
-
-      return is_array($retval) ? $retval : array();
+      $ret = $yaml->parse($input);
     }
-    else
+    catch (Exception $e)
     {
-      require_once dirname(__FILE__).'/sfYamlParser.class.php';
-      $yaml = new sfYamlParser();
-
-      try
-      {
-        $ret = $yaml->parse($input);
-      }
-      catch (Exception $e)
-      {
-        throw new InvalidArgumentException(sprintf('Unable to parse %s: %s', $file ? sprintf('file "%s"', $file) : 'string', $e->getMessage()));
-      }
-
-      return $ret;
+      throw new InvalidArgumentException(sprintf('Unable to parse %s: %s', $file ? sprintf('file "%s"', $file) : 'string', $e->getMessage()));
     }
+
+    return $ret;
   }
 
   /**
@@ -101,17 +85,11 @@ class sfYaml
    */
   public static function dump($array, $inline = 2)
   {
-    if (function_exists('syck_dump'))
-    {
-      return syck_dump($array);
-    }
-    else
-    {
-      require_once dirname(__FILE__).'/sfYamlDumper.class.php';
-      $yaml = new sfYamlDumper();
+    require_once dirname(__FILE__).'/sfYamlDumper.class.php';
 
-      return $yaml->dump($array, $inline);
-    }
+    $yaml = new sfYamlDumper();
+
+    return $yaml->dump($array, $inline);
   }
 }
 
