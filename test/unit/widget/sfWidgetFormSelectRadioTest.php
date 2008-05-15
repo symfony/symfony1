@@ -17,9 +17,9 @@ $dom->validateOnParse = true;
 
 // ->render()
 $t->diag('->render()');
-$w = new sfWidgetFormSelectRadio(array('choices' => array('foo' => 'bar', 'foobar' => 'foo')));
-$output = '<ul class="radio_list"><li><input name="foo" type="radio" value="foo" id="foo_foo" />&nbsp;<label for="foo_foo">bar</label></li>
-<li><input name="foo" type="radio" value="foobar" id="foo_foobar" checked="checked" />&nbsp;<label for="foo_foobar">foo</label></li></ul>';
+$w = new sfWidgetFormSelectRadio(array('choices' => array('foo' => 'bar', 'foobar' => 'foo'), 'separator' => ''));
+$output = '<ul class="radio_list"><li><input name="foo" type="radio" value="foo" id="foo_foo" />&nbsp;<label for="foo_foo">bar</label></li>'.
+'<li><input name="foo" type="radio" value="foobar" id="foo_foobar" checked="checked" />&nbsp;<label for="foo_foobar">foo</label></li></ul>';
 $t->is($w->render('foo', 'foobar'), $output, '->render() renders a select tag with the value selected');
 
 // choices as a callable
