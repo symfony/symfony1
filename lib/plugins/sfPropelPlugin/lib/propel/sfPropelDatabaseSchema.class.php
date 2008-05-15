@@ -556,8 +556,11 @@ class sfPropelDatabaseSchema
         $extended_package = isset($this->database[$tb_name]['_attributes']['package']) ?
           $this->database[$tb_name]['_attributes']['package'] :
           $this->database['_attributes']['package'];
-        $extended_class = $this->database[$tb_name]['_attributes']['phpName'];
         
+        $extended_class = isset($this->database[$tb_name]['_attributes']['phpName']) ?
+          $this->database[$tb_name]['_attributes']['phpName'] :
+          sfInflector::camelize($tb_name);
+
         foreach ($column['inheritance'] as $key => $class)
         {
           $attributes_string .= sprintf('      <inheritance extends="%s.%s" key="%s" class="%s" />%s',

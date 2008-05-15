@@ -69,3 +69,14 @@ classes:
     tableName:        ab_group_i18n
     columns:
       motto:          longvarchar
+  
+  History:
+    tableName:      history
+    columns:
+      id:
+      type:         { type: varchar(64) }
+    inheritance:
+      column:       type
+      classes:
+        new_user:   History_NewUser
+        new_page:   History_NewPage

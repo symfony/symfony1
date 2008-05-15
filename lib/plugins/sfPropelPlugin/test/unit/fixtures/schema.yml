@@ -52,3 +52,13 @@ propel:
   
   ab_group_i18n:
     motto:            longvarchar
+  
+  history:
+    _attributes:    { phpName: History }
+    id:
+    type:           { type: varchar(64) }
+    _inheritance:
+      column:       type
+      classes:
+        new_user:   History_NewUser
+        new_page:   History_NewPage
