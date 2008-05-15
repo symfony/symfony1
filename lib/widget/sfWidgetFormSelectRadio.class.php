@@ -53,7 +53,7 @@ class sfWidgetFormSelectRadio extends sfWidgetForm
     $inputs = array();
     foreach ($choices as $key => $option)
     {
-      $attributes = array(
+      $baseAttributes = array(
         'name'  => $name,
         'type'  => 'radio',
         'value' => self::escapeOnce($key),
@@ -62,11 +62,11 @@ class sfWidgetFormSelectRadio extends sfWidgetForm
 
       if (strval($key) == strval($value))
       {
-        $attributes['checked'] = 'checked';
+        $baseAttributes['checked'] = 'checked';
       }
 
       $inputs[] = array(
-        'input' => $this->renderTag('input', $attributes),
+        'input' => $this->renderTag('input', array_merge($baseAttributes,$attributes)),
         'label' => $this->renderContentTag('label', $option, array('for' => $id)),
       );
     }

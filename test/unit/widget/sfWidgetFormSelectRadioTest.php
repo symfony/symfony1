@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(2, new lime_output_color());
+$t = new lime_test(3, new lime_output_color());
 
 $dom = new DomDocument('1.0', 'utf-8');
 $dom->validateOnParse = true;
@@ -18,9 +18,20 @@ $dom->validateOnParse = true;
 // ->render()
 $t->diag('->render()');
 $w = new sfWidgetFormSelectRadio(array('choices' => array('foo' => 'bar', 'foobar' => 'foo'), 'separator' => ''));
-$output = '<ul class="radio_list"><li><input name="foo" type="radio" value="foo" id="foo_foo" />&nbsp;<label for="foo_foo">bar</label></li>'.
-'<li><input name="foo" type="radio" value="foobar" id="foo_foobar" checked="checked" />&nbsp;<label for="foo_foobar">foo</label></li></ul>';
-$t->is($w->render('foo', 'foobar'), $output, '->render() renders a select tag with the value selected');
+$output = '<ul class="radio_list">'.
+'<li><input name="foo" type="radio" value="foo" id="foo_foo" />&nbsp;<label for="foo_foo">bar</label></li>'.
+'<li><input name="foo" type="radio" value="foobar" id="foo_foobar" checked="checked" />&nbsp;<label for="foo_foobar">foo</label></li>'.
+'</ul>';
+$t->is($w->render('foo', 'foobar'), $output, '->render() renders a radio tag with the value checked');
+
+//regression for ticket #3528
+$onChange = '<ul class="radio_list">'.
+'<li><input name="foo" type="radio" value="foo" id="foo_foo" onChange="alert(42)" />'.
+'&nbsp;<label for="foo_foo">bar</label></li>'.
+'<li><input name="foo" type="radio" value="foobar" id="foo_foobar" checked="checked" onChange="alert(42)" />'.
+'&nbsp;<label for="foo_foobar">foo</label></li>'.
+'</ul>';
+$t->is($w->render('foo', 'foobar', array('onChange' => 'alert(42)')), $onChange, '->render() renders a radio tag using extra attributes');
 
 // choices as a callable
 $t->diag('choices as a callable');
