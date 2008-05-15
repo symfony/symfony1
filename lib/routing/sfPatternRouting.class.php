@@ -71,7 +71,7 @@ class sfPatternRouting extends sfRouting
 
     parent::initialize($dispatcher, $cache, $options);
 
-    if (!is_null($this->cache) && $cacheData = $this->cache->get('data'))
+    if (!is_null($this->cache) && $cacheData = $this->cache->get('symfony.routing.data'))
     {
       $this->cacheData = unserialize($cacheData);
     }
@@ -467,7 +467,7 @@ class sfPatternRouting extends sfRouting
   public function generate($name, $params = array(), $querydiv = '/', $divider = '/', $equals = '/')
   {
     $params = $this->fixDefaults($params);
-
+    
     if (!is_null($this->cache))
     {
       $cacheKey = 'generate_'.$name.serialize(array_merge($this->defaultParameters, $params));
