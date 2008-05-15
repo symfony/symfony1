@@ -114,7 +114,27 @@ class sfForm implements ArrayAccess
    */
   public function renderGlobalErrors()
   {
-    return $this->widgetSchema->getFormFormatter()->formatErrorsForRow($this->widgetSchema->getGlobalErrors($this->getErrorSchema()));
+    return $this->widgetSchema->getFormFormatter()->formatErrorsForRow($this->getGlobalErrors());
+  }
+
+  /**
+   * Returns true if the form has some global errors.
+   *
+   * @return Boolean true if the form has some global errors, false otherwise
+   */
+  public function hasGlobalErrors()
+  {
+    return (Boolean) count($this->getGlobalErrors());
+  }
+
+  /**
+   * Gets the global errors associated with the form.
+   *
+   * @return array An array of global errors
+   */
+  public function getGlobalErrors()
+  {
+    return $this->widgetSchema->getGlobalErrors($this->getErrorSchema());
   }
 
   /**
