@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(14, new lime_output_color());
+$t = new lime_test(16, new lime_output_color());
 
 $dom = new DomDocument('1.0', 'utf-8');
 $dom->validateOnParse = true;
@@ -23,6 +23,14 @@ $css = new sfDomCssSelector($dom);
 
 $t->is($css->matchSingle('#foo option[value="foobar"][selected="selected"]')->getValue(), 'foo', '->render() renders a select tag with the value selected');
 $t->is(count($css->matchAll('#foo option')->getNodes()), 2, '->render() renders all choices as option tags');
+
+// value attribute is always mandatory
+$w = new sfWidgetFormSelect(array('choices' => array('' => 'bar')));
+$t->like($w->render('foo', 'foobar'), '/<option value="">/', '->render() always generate a value attribute, even for empty keys');
+
+// other attributes are removed is empty
+$w = new sfWidgetFormSelect(array('choices' => array('' => 'bar')));
+$t->like($w->render('foo', 'foobar', array('class' => '', 'style' => null)), '/<option value="">/', '->render() always generate a value attribute, even for empty keys');
 
 // multiple select
 $t->diag('multiple select');
