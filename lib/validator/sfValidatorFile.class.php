@@ -315,7 +315,7 @@ class sfValidatedFile
    */
   public function __toString()
   {
-    return $this->savedName;
+    return is_null($this->savedName) ? '' : $this->savedName;
   }
 
   /**
