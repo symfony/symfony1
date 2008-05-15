@@ -37,14 +37,10 @@ class sfWebDebugLogger extends sfLogger
     $this->context    = sfContext::getInstance();
     $this->dispatcher = $dispatcher;
 
+    $class = isset($options['web_debug_class']) ? $options['web_debug_class'] : 'sfWebDebug';
+    $this->webDebug = new $class($dispatcher);
+
     $dispatcher->connect('response.filter_content', array($this, 'filterResponseContent'));
-
-    if(is_null($this->webDebug))
-    {
-      $this->webDebug = $this->context->has('sf_web_debug') ? $this->context->get('sf_web_debug') : new sfWebDebug();
-    }
-
-    $this->context->set('sf_web_debug', $this->webDebug);
 
     if (isset($options['xdebug_logging']))
     {

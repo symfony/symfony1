@@ -19,10 +19,18 @@
 class sfWebDebug
 {
   protected
+    $dispatcher  = null,
     $log         = array(),
     $maxPriority = 1000,
     $types       = array(),
     $lastTimeLog = -1;
+
+  public function __construct(sfEventDispatcher $dispatcher)
+  {
+    $this->dispatcher = $dispatcher;
+
+    $this->dispatcher->connect('view.cache.filter_content', array($this, 'decorateContentWithDebug'));
+  }
 
   /**
    * Logs a message to the web debug toolbar.
@@ -353,38 +361,35 @@ class sfWebDebug
   }
 
   /**
-   * Decorates a chunk of HTML with cache information.
+   * Listens to the 'view.cache.filter_content' event to decorate a chunk of HTML with cache information.
    *
-   * @param string  The internalUri representing the content
+   * @param sfEvent A sfEvent instance
    * @param string  The HTML content
-   * @param boolean true if the content is new in the cache, false otherwise
    *
    * @return string The decorated HTML string
    */
-  static public function decorateContentWithDebug($internalUri, $content, $new = false)
+  public function decorateContentWithDebug(sfEvent $event, $content)
   {
-    $context = sfContext::getInstance();
-
     // don't decorate if not html or if content is null
-    if (!sfConfig::get('sf_web_debug') || !$content || false === strpos($context->getResponse()->getContentType(), 'html'))
+    if (!sfConfig::get('sf_web_debug') || !$content || false === strpos($event['response']->getContentType(), 'html'))
     {
       return $content;
     }
 
-    $cache = $context->getViewCacheManager();
+    $viewCacheManager = $event->getSubject();
     sfLoader::loadHelpers(array('Helper', 'Url', 'Asset', 'Tag'));
 
-    $bgColor      = $new ? '#9ff' : '#ff9';
-    $lastModified = $cache->getLastModified($internalUri);
-    $id           = md5($internalUri);
+    $bgColor      = $event['new'] ? '#9ff' : '#ff9';
+    $lastModified = $viewCacheManager->getLastModified($event['uri']);
+    $id           = md5($event['uri']);
 
     return '
       <div id="main_'.$id.'" class="sfWebDebugActionCache" style="border: 1px solid #f00">
       <div id="sub_main_'.$id.'" class="sfWebDebugCache" style="background-color: '.$bgColor.'; border-right: 1px solid #f00; border-bottom: 1px solid #f00;">
       <div style="height: 16px; padding: 2px"><a href="#" onclick="sfWebDebugToggle(\'sub_main_info_'.$id.'\'); return false;"><strong>cache information</strong></a>&nbsp;<a href="#" onclick="sfWebDebugToggle(\'sub_main_'.$id.'\'); document.getElementById(\'main_'.$id.'\').style.border = \'none\'; return false;">'.image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/close.png').'</a>&nbsp;</div>
         <div style="padding: 2px; display: none" id="sub_main_info_'.$id.'">
-        [uri]&nbsp;'.htmlspecialchars($internalUri, ENT_QUOTES, sfConfig::get('sf_charset')).'<br />
-        [life&nbsp;time]&nbsp;'.$cache->getLifeTime($internalUri).'&nbsp;seconds<br />
+        [uri]&nbsp;'.htmlspecialchars($event['uri'], ENT_QUOTES, sfConfig::get('sf_charset')).'<br />
+        [life&nbsp;time]&nbsp;'.$viewCacheManager->getLifeTime($event['uri']).'&nbsp;seconds<br />
         [last&nbsp;modified]&nbsp;'.(time() - $lastModified).'&nbsp;seconds<br />
         &nbsp;<br />&nbsp;
         </div>
