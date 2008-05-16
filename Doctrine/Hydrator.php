@@ -283,6 +283,9 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
         foreach ($data as $key => $value) {
             // Parse each column name only once. Cache the results. 
             if ( ! isset($cache[$key])) {
+                // check ignored names. fastest solution for now. if we get more we'll start
+                // to introduce a list.
+                if ($key == 'DOCTRINE_ROWNUM') continue;
                 $e = explode('__', $key);
                 $last = strtolower(array_pop($e));
                 $cache[$key]['dqlAlias'] = $this->_tableAliases[strtolower(implode('__', $e))];

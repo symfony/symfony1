@@ -35,7 +35,7 @@ class Doctrine_Query_JoinCondition extends Doctrine_Query_Condition
     public function load($condition) 
     {
         $condition = trim($condition);
-
+        
         $e = $this->_tokenizer->sqlExplode($condition);
 
         if (count($e) > 2) {
