@@ -39,6 +39,9 @@ class Doctrine_I18n extends Doctrine_Record_Generator
                             'table'         => false,
                             'pluginTable'   => false,
                             'children'      => array(),
+                            'type'          => 'string',
+                            'length'        => 2,
+                            'options'       => array()
                             );
 
     /**
@@ -83,9 +86,12 @@ class Doctrine_I18n extends Doctrine_Record_Generator
 
         $this->hasColumns($columns);
 
-        $this->hasColumn('lang', 'string', 2, array('fixed'   => true,
-                                                    'primary' => true));
-                                                    
+        $options = $this->_options['options'];
+        $options['fixed'] = true;
+        $options['primary'] = true;
+
+        $this->hasColumn('lang', $this->_options['type'], $this->_options['length'], $options);
+
         $this->bindQueryParts(array('indexBy' => 'lang'));
     }
 }
