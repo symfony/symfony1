@@ -1503,11 +1503,23 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
      *
      * Some dbms require specific functionality for this. Check the other connection adapters for examples
      *
-     * @return void
+     * @return string
      */
     public function modifyLimitQuery($query, $limit = false, $offset = false, $isManip = false)
     {
         return $query;
+    }
+    
+    /**
+     * Creates dbms specific LIMIT/OFFSET SQL for the subqueries that are used in the
+     * context of the limit-subquery algorithm.
+     *
+     * @return string
+     */
+    public function modifyLimitSubquery(Doctrine_Table $rootTable, $query, $limit = false,
+            $offset = false, $isManip = false)
+    {
+        return $this->modifyLimitQuery($query, $limit, $offset, $isManip);
     }
 
     /**

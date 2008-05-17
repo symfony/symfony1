@@ -82,6 +82,11 @@ class Doctrine_Connection_Oracle extends Doctrine_Connection
      */
     public function modifyLimitQuery($query, $limit = false, $offset = false, $isManip = false)
     {
+        return $this->_createLimitSubquery($query, $limit, $offset);
+    }
+    
+    private function _createLimitSubquery($query, $limit, $offset, $column = null)
+    {
         $limit = (int) $limit;
         $offset = (int) $offset;
         if (preg_match('/^\s*SELECT/i', $query)) {
@@ -89,20 +94,37 @@ class Doctrine_Connection_Oracle extends Doctrine_Connection
                 $query .= " FROM dual";
             }
             if ($limit > 0) {
-                // taken from http://svn.ez.no/svn/ezcomponents/packages/Database
                 $max = $offset + $limit;
+                $column = $column === null ? '*' : $column;
                 if ($offset > 0) {
                     $min = $offset + 1;
-                    $query = 'SELECT b.* FROM (
-                                 SELECT a.*, ROWNUM AS doctrine_rownum FROM ('
-                                  . $query . ') a
-                              ) b
-                              WHERE b.doctrine_rownum BETWEEN ' . $min .  ' AND ' . $max;
+                    $query = 'SELECT b.'.$column.' FROM ('.
+                                 'SELECT a.*, ROWNUM AS doctrine_rownum FROM ('
+                                   . $query . ') a '.
+                              ') b '.
+                              'WHERE doctrine_rownum BETWEEN ' . $min .  ' AND ' . $max;
                 } else {
-                    $query = 'SELECT a.* FROM (' . $query .') a WHERE ROWNUM <= ' . $max;
+                    $query = 'SELECT a.'.$column.' FROM (' . $query .') a WHERE ROWNUM <= ' . $max;
                 }
             }
         }
         return $query;
+    }
+    
+    /**
+     * Creates the SQL for Oracle that can be used in the subquery for the limit-subquery
+     * algorithm.
+     */
+    public function modifyLimitSubquery(Doctrine_Table $rootTable, $query, $limit = false,
+            $offset = false, $isManip = false)
+    {
+        // NOTE: no composite key support
+        $columnNames = $rootTable->getIdentifierColumnNames();
+        if (count($columnNames) > 1) {
+            throw new Doctrine_Connection_Exception("Composite keys in LIMIT queries are "
+                    . "currently not supported.");
+        }
+        $column = $columnNames[0];
+        return $this->_createLimitSubquery($query, $limit, $offset, $column);
     }
 }
