@@ -1898,35 +1898,75 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         return $this->_templates[$template];
     }
 
+    /**
+     * Check if the table has a template name
+     *
+     * @param string $template 
+     * @return boolean $bool
+     */
     public function hasTemplate($template)
     {
         return isset($this->_templates[$template]);
     }
 
+    /**
+     * Add template to the table
+     *
+     * @param string $template 
+     * @param Doctrine_Template $impl
+     * @return Doctrine_Table
+     */
     public function addTemplate($template, Doctrine_Template $impl)
     {
         $this->_templates[$template] = $impl;
 
         return $this;
     }
+
+    /**
+     * Get all the generators for the table
+     *
+     * @return array $generators
+     */
+    
     public function getGenerators()
     {
         return $this->_generators;
     }
+
+    /**
+     * Get generator instance for a passed name
+     *
+     * @param string $generator 
+     * @return Doctrine_Record_Generator $generator
+     */
     public function getGenerator($generator)
     {
         if ( ! isset($this->_generators[$generator])) {
             throw new Doctrine_Table_Exception('Generator ' . $generator . ' not loaded');
         }
 
-        return $this->_generators[$plugin];
+        return $this->_generators[$generator];
     }
 
+    /**
+     * Check if a generator name exists
+     *
+     * @param string $generator 
+     * @return void
+     */
     public function hasGenerator($generator)
     {
         return isset($this->_generators[$generator]);
     }
 
+    /**
+     * Add a generate to the table instance
+     *
+     * @param Doctrine_Record_Generator $generator 
+     * @param string $name 
+     * @return Doctrine_Table
+     */
     public function addGenerator(Doctrine_Record_Generator $generator, $name = null)
     {
         if ($name === null) {
@@ -1936,6 +1976,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         }
         return $this;
     }
+
     /**
      * bindQueryParts
      * binds query parts to given component
