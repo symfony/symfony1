@@ -324,7 +324,7 @@ class Doctrine_Import_Schema
         $build = array();
 
         foreach ($array as $className => $table) {
-            $this->_validateSchemaElement('root', array_keys($table));
+            $this->_validateSchemaElement('root', array_keys($table), $className);
 
             $columns = array();
 
@@ -358,14 +358,14 @@ class Doctrine_Import_Schema
                         $field['type'] = $original;
                     }
 
-                    $this->_validateSchemaElement('column', array_keys($field));
-
                     $colDesc = array();
                     if (isset($field['name'])) {
                         $colDesc['name'] = $field['name'];
                     } else {
                         $colDesc['name'] = $columnName;
                     }
+
+                    $this->_validateSchemaElement('column', array_keys($field), $className . '->columns->' . $colDesc['name']);
 
                     // Support short type(length) syntax: my_column: { type: integer(4) }
                     $e = explode('(', $field['type']);
@@ -435,7 +435,7 @@ class Doctrine_Import_Schema
         // Apply default inheritance configuration
         foreach ($array as $className => $definition) {
             if ( ! empty($array[$className]['inheritance'])) {
-                $this->_validateSchemaElement('inheritance', array_keys($definition['inheritance']));
+                $this->_validateSchemaElement('inheritance', array_keys($definition['inheritance']), $className . '->inheritance');
 
                 // Default inheritance to concrete inheritance
                 if ( ! isset($array[$className]['inheritance']['type'])) {
@@ -555,7 +555,7 @@ class Doctrine_Import_Schema
                 
                 $relation['key'] = $this->_buildUniqueRelationKey($relation);
                 
-                $this->_validateSchemaElement('relation', array_keys($relation));
+                $this->_validateSchemaElement('relation', array_keys($relation), $className . '->relation->' . $relation['alias']);
                 
                 $this->_relations[$className][$alias] = $relation;
             }
@@ -672,7 +672,7 @@ class Doctrine_Import_Schema
      * @param string $value 
      * @return void
      */
-    protected function _validateSchemaElement($name, $element)
+    protected function _validateSchemaElement($name, $element, $path)
     {
         $element = (array) $element;
 
@@ -688,7 +688,8 @@ class Doctrine_Import_Schema
         $validation = array_flip($validation);
         foreach ($element as $key => $value) {
             if ( ! isset($validation[$value])) {
-                throw new Doctrine_Import_Exception('Invalid schema element named "' . $value . '"');
+                throw new Doctrine_Import_Exception(sprintf('Invalid schema element named "' . $value . '" 
+                                at path "' . $path . '"'));
             }
         }
     }
