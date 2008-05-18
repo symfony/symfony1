@@ -46,7 +46,7 @@ class sfTimer
   /**
    * Stops the timer and add the amount of time since the start to the total time.
    *
-   * @return integer Time spend for the last call
+   * @return float Time spend for the last call
    */
   public function addTime()
   {
@@ -70,7 +70,7 @@ class sfTimer
   /**
    * Gets the total time elapsed for all calls of this timer.
    *
-   * @return integer Time in milliseconds
+   * @return float Time in seconds
    */
   public function getElapsedTime()
   {
