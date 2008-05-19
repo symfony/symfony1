@@ -55,7 +55,7 @@ class sfPHPView extends sfView
   /**
    * Renders the presentation.
    *
-   * @param string Filename
+   * @param  string $_sfFile  Filename
    *
    * @return string File content
    */
@@ -113,7 +113,7 @@ class sfPHPView extends sfView
   /**
    * Loop through all template slots and fill them in with the results of presentation data.
    *
-   * @param  string A chunk of decorator content
+   * @param  string $content  A chunk of decorator content
    *
    * @return string A decorated template
    */

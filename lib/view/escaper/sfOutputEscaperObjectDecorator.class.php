@@ -37,8 +37,8 @@ class sfOutputEscaperObjectDecorator extends sfOutputEscaperGetterDecorator
    *   $o->b('a')             // Escapes the return value of b('a')
    *   $o->b('a', ESC_RAW);   // Uses the escaping method ESC_RAW with b('a')
    *
-   * @param string The method on the object to be called
-   * @param array An array of arguments to be passed to the method
+   * @param  string $method  The method on the object to be called
+   * @param  array  $args    An array of arguments to be passed to the method
    *
    * @return mixed The escaped value returned by the method
    */
@@ -72,11 +72,11 @@ class sfOutputEscaperObjectDecorator extends sfOutputEscaperGetterDecorator
    *
    * If there is not a callable get() method this will throw an exception.
    *
-   * @param string The parameter to be passed to the get() get method
+   * @param  string $key  The parameter to be passed to the get() get method
    *
    * @return mixed The unescaped value returned
    *
-   * @throws <b>sfException</b> if the object does not have a callable get() method
+   * @throws sfException if the object does not have a callable get() method
    */
   public function getRaw($key)
   {

@@ -38,8 +38,8 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator im
   /**
    * Constructs a new escaping iteratoror using the escaping method and value supplied.
    *
-   * @param string The escaping method to use
-   * @param Traversable The iterator to escape
+   * @param string      $escapingMethod  The escaping method to use
+   * @param Traversable $value           The iterator to escape
    */
   public function __construct($escapingMethod, Traversable $value)
   {
@@ -54,7 +54,7 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator im
   /**
    * Resets the iterator (as required by the Iterator interface).
    *
-   * @return boolean true, if the iterator rewinds successfully otherwise false
+   * @return bool true, if the iterator rewinds successfully otherwise false
    */
   public function rewind()
   {
@@ -93,7 +93,7 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator im
    * Returns whether the current element is valid or not (as required by the
    * Iterator interface).
    *
-   * @return boolean true if the current element is valid; false otherwise
+   * @return bool true if the current element is valid; false otherwise
    */
   public function valid()
   {
@@ -104,9 +104,9 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator im
    * Returns true if the supplied offset is set in the array (as required by
    * the ArrayAccess interface).
    *
-   * @param string The offset of the value to check existance of
+   * @param  string $offset  The offset of the value to check existance of
    *
-   * @return boolean true if the offset exists; false otherwise
+   * @return bool true if the offset exists; false otherwise
    */
   public function offsetExists($offset)
   {
@@ -116,7 +116,7 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator im
   /**
    * Returns the element associated with the offset supplied (as required by the ArrayAccess interface).
    *
-   * @param string The offset of the value to get
+   * @param  string $offset  The offset of the value to get
    *
    * @return mixed The escaped value
    */
@@ -132,10 +132,10 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator im
    * This (and the other sfOutputEscaper classes) are designed to be read only
    * so this is an illegal operation.
    *
-   * @param string (ignored)
-   * @param string (ignored)
+   * @param  string $offset  (ignored)
+   * @param  string $value   (ignored)
    *
-   * @throws <b>sfException</b>
+   * @throws sfException
    */
   public function offsetSet($offset, $value)
   {
@@ -149,9 +149,9 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator im
    * This (and the other sfOutputEscaper classes) are designed to be read only
    * so this is an illegal operation.
    *
-   * @param string (ignored)
+   * @param  string $offset  (ignored)
    *
-   * @throws <b>sfException</b>
+   * @throws sfException
    */
   public function offsetUnset($offset)
   {

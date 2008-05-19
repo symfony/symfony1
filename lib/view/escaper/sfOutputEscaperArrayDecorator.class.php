@@ -76,7 +76,7 @@ class sfOutputEscaperArrayDecorator extends sfOutputEscaperGetterDecorator imple
    * end of the array or if there are no elements in the array and {@link
    * rewind()} was called.
    *
-   * @return boolean The validity of the current element; true if it is valid
+   * @return bool The validity of the current element; true if it is valid
    */
   public function valid()
   {
@@ -86,9 +86,9 @@ class sfOutputEscaperArrayDecorator extends sfOutputEscaperGetterDecorator imple
   /**
    * Returns true if the supplied offset is set in the array (as required by the ArrayAccess interface).
    *
-   * @param string The offset of the value to check existance of
+   * @param  string $offset  The offset of the value to check existance of
    *
-   * @return boolean true if the offset exists; false otherwise
+   * @return bool true if the offset exists; false otherwise
    */
   public function offsetExists($offset)
   {
@@ -98,7 +98,7 @@ class sfOutputEscaperArrayDecorator extends sfOutputEscaperGetterDecorator imple
   /**
    * Returns the element associated with the offset supplied (as required by the ArrayAccess interface).
    *
-   * @param string The offset of the value to get
+   * @param  string $offset  The offset of the value to get
    *
    * @return mixed The escaped value
    */
@@ -114,10 +114,10 @@ class sfOutputEscaperArrayDecorator extends sfOutputEscaperGetterDecorator imple
    * This (and the other sfOutputEscaper classes) are designed to be read only
    * so this is an illegal operation.
    *
-   * @param string (ignored)
-   * @param string (ignored)
+   * @param  string $offset  (ignored)
+   * @param  string $value   (ignored)
    *
-   * @throws <b>sfException</b>
+   * @throws sfException<
    */
   public function offsetSet($offset, $value)
   {
@@ -131,7 +131,7 @@ class sfOutputEscaperArrayDecorator extends sfOutputEscaperGetterDecorator imple
    * This (and the other sfOutputEscaper classes) are designed to be read only
    * so this is an illegal operation.
    *
-   * @param string (ignored)
+   * @param  string $offset  (ignored)
    *
    * @throws sfException
    */
@@ -153,7 +153,7 @@ class sfOutputEscaperArrayDecorator extends sfOutputEscaperGetterDecorator imple
   /**
    * Returns the (unescaped) value from the array associated with the key supplied.
    *
-   * @param string The key into the array to use
+   * @param  string $key  The key into the array to use
    *
    * @return mixed The value
    */

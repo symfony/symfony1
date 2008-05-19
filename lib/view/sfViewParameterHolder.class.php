@@ -36,18 +36,18 @@ class sfViewParameterHolder extends sfParameterHolder
   /**
    * Initializes this view parameter holder.
    *
-   * @param  sfEventDispatcher A sfEventDispatcher instance.
-   * @param  array             An associative array of initialization parameters.
-   * @param  array             An associative array of options.
+   * @param  sfEventDispatcher $dispatcher  An sfEventDispatcher instance.
+   * @param  array             $parameters  An associative array of initialization parameters.
+   * @param  array             $options     An associative array of options.
    *
    * <b>Options:</b>
    *
    * # <b>escaping_strategy</b> - [off]              - The escaping strategy (on or off)
    * # <b>escaping_method</b>   - [ESC_SPECIALCHARS] - The escaping method (ESC_RAW, ESC_ENTITIES, ESC_JS, ESC_JS_NO_ENTITIES, or ESC_SPECIALCHARS)
    *
-   * @return Boolean   true, if initialization completes successfully, otherwise false.
+   * @return bool true, if initialization completes successfully, otherwise false.
    *
-   * @throws <b>sfInitializationException</b> If an error occurs while initializing this view parameter holder.
+   * @throws sfInitializationException If an error occurs while initializing this view parameter holder.
    */
   public function initialize(sfEventDispatcher $dispatcher, $parameters = array(), $options = array())
   {
@@ -65,7 +65,7 @@ class sfViewParameterHolder extends sfParameterHolder
   /**
    * Returns true if the current object acts as an escaper.
    *
-   * @return Boolean true if the current object acts as an escaper, false otherwise
+   * @return bool true if the current object acts as an escaper, false otherwise
    */
   public function isEscaped()
   {
@@ -119,7 +119,7 @@ class sfViewParameterHolder extends sfParameterHolder
   /**
    * Sets the escape character strategy.
    *
-   * @param string Escape code
+   * @param string $escaping  Escape code
    */
   public function setEscaping($escaping)
   {
@@ -156,7 +156,7 @@ class sfViewParameterHolder extends sfParameterHolder
   /**
    * Sets the escaping method for the current view.
    *
-   * @param string Method for escaping
+   * @param string $method  Method for escaping
    */
   public function setEscapingMethod($method)
   {
@@ -193,6 +193,8 @@ class sfViewParameterHolder extends sfParameterHolder
 
   /**
    * Unserializes a sfViewParameterHolder instance.
+   *
+   * @param string $serialized The serialized instance data
    */
   public function unserialize($serialized)
   {

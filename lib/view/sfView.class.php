@@ -96,12 +96,12 @@ abstract class sfView
   /**
    * Initializes this view.
    *
-   * @param sfContext The current application context
-   * @param string    The module name for this view
-   * @param string    The action name for this view
-   * @param string    The view name
+   * @param  sfContext $context     The current application context
+   * @param  string    $moduleName  The module name for this view
+   * @param  string    $actionName  The action name for this view
+   * @param  string    $viewName    The view name
    *
-   * @return boolean  true, if initialization completes successfully, otherwise false
+   * @return bool  true, if initialization completes successfully, otherwise false
    */
   public function initialize($context, $moduleName, $actionName, $viewName)
   {
@@ -240,8 +240,8 @@ abstract class sfView
   /**
    * Retrieves an attribute for the current view.
    *
-   * @param string Name of the attribute
-   * @param string Value of the attribute
+   * @param  string $name     Name of the attribute
+   * @param  string $default  Value of the attribute
    *
    * @return mixed Attribute
    */
@@ -253,7 +253,7 @@ abstract class sfView
   /**
    * Returns true if the view have attributes.
    *
-   * @param string Name of the attribute
+   * @param  string $name  Name of the attribute
    *
    * @return mixed Attribute of the view
    */
@@ -265,8 +265,8 @@ abstract class sfView
   /**
    * Sets an attribute of the view.
    *
-   * @param string Attribute name
-   * @param string Value for the attribute
+   * @param string $name   Attribute name
+   * @param string $value  Value for the attribute
    */
   public function setAttribute($name, $value)
   {
@@ -286,8 +286,8 @@ abstract class sfView
   /**
    * Retrieves a parameter from the current view.
    *
-   * @param string Parameter name
-   * @param string Default parameter value
+   * @param  string $name     Parameter name
+   * @param  string $default  Default parameter value
    *
    * @return mixed A parameter value
    */
@@ -299,9 +299,9 @@ abstract class sfView
   /**
    * Indicates whether or not a parameter exist for the current view.
    *
-   * @param string Name of the paramater
+   * @param  string $name  Name of the paramater
    *
-   * @return boolean true, if the parameter exists otherwise false
+   * @return bool true, if the parameter exists otherwise false
    */
   public function hasParameter($name)
   {
@@ -311,8 +311,8 @@ abstract class sfView
   /**
    * Sets a parameter for the view.
    *
-   * @param string Name of the parameter
-   * @param string The parameter value
+   * @param string $name   Name of the parameter
+   * @param string $value  The parameter value
    */
   public function setParameter($name, $value)
   {
@@ -322,7 +322,7 @@ abstract class sfView
   /**
    * Indicates that this view is a decorating view.
    *
-   * @return boolean true, if this view is a decorating view, otherwise false
+   * @return bool true, if this view is a decorating view, otherwise false
    */
   public function isDecorator()
   {
@@ -332,7 +332,7 @@ abstract class sfView
   /**
    * Sets the decorating mode for the current view.
    *
-   * @param boolean Set the decorating mode for the view
+   * @param bool $boolean  Set the decorating mode for the view
    */
   public function setDecorator($boolean)
   {
@@ -348,7 +348,7 @@ abstract class sfView
    * Executes a basic pre-render check to verify all required variables exist
    * and that the template is readable.
    *
-   * @throws <b>sfRenderException</b> If the pre-render check fails
+   * @throws sfRenderException If the pre-render check fails
    */
   protected function preRenderCheck()
   {
@@ -380,7 +380,7 @@ abstract class sfView
   /**
    * Sets the decorator template directory for this view.
    *
-   * @param string An absolute filesystem path to a template directory
+   * @param string $directory  An absolute filesystem path to a template directory
    */
   public function setDecoratorDirectory($directory)
   {
@@ -393,7 +393,7 @@ abstract class sfView
    * If the template path is relative, it will be based on the currently
    * executing module's template sub-directory.
    *
-   * @param string An absolute or relative filesystem path to a template
+   * @param string $template  An absolute or relative filesystem path to a template
    */
   public function setDecoratorTemplate($template)
   {
@@ -431,7 +431,7 @@ abstract class sfView
   /**
    * Sets the template directory for this view.
    *
-   * @param string An absolute filesystem path to a template directory
+   * @param string $directory  An absolute filesystem path to a template directory
    */
   public function setDirectory($directory)
   {
@@ -441,9 +441,9 @@ abstract class sfView
   /**
    * Sets the module and action to be executed in place of a particular template attribute.
    *
-   * @param string A template attribute name
-   * @param string A module name
-   * @param string A component name
+   * @param string $attributeName  A template attribute name
+   * @param string $moduleName     A module name
+   * @param string $componentName  A component name
    */
   public function setComponentSlot($attributeName, $moduleName, $componentName)
   {
@@ -455,9 +455,9 @@ abstract class sfView
   /**
    * Indicates whether or not a component slot exists.
    *
-   * @param  string The component slot name
+   * @param  string $name  The component slot name
    *
-   * @return boolean true, if the component slot exists, otherwise false
+   * @return bool true, if the component slot exists, otherwise false
    */
   public function hasComponentSlot($name)
   {
@@ -467,7 +467,7 @@ abstract class sfView
   /**
    * Gets a component slot
    *
-   * @param  string The component slot name
+   * @param  string $name  The component slot name
    *
    * @return array The component slot
    */
@@ -487,7 +487,7 @@ abstract class sfView
    * If the template path is relative, it will be based on the currently
    * executing module's template sub-directory.
    *
-   * @param string An absolute or relative filesystem path to a template
+   * @param string $template  An absolute or relative filesystem path to a template
    */
   public function setTemplate($template)
   {
@@ -516,7 +516,7 @@ abstract class sfView
   /**
    * Sets an extension for the current view.
    *
-   * @param string The extension name.
+   * @param string $extension  The extension name.
    */
   public function setExtension($extension)
   {
@@ -556,12 +556,12 @@ abstract class sfView
   /**
    * Calls methods defined via sfEventDispatcher.
    *
-   * @param string The method name
-   * @param array  The method arguments
+   * @param  string $method     The method name
+   * @param  array  $arguments  The method arguments
    *
    * @return mixed The returned value of the called method
    *
-   * @throws <b>sfException</b> If the calls fails
+   * @throws sfException< If the calls fails
    */
   public function __call($method, $arguments)
   {

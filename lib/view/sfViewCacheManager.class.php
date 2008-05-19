@@ -44,8 +44,8 @@ class sfViewCacheManager
   /**
    * Initializes the cache manager.
    *
-   * @param sfContext Current application context
-   * @param sfCache   An sfCache instance
+   * @param sfContext $context  Current application context
+   * @param sfCache   $cache    An sfCache instance
    */
   public function initialize($context, sfCache $cache)
   {
@@ -92,16 +92,16 @@ class sfViewCacheManager
    * Looks like:
    *   /localhost/all/module/action/key1/value1/key2/value2
    *
-   * @param  string The internal unified resource identifier
-   *                Accepts rules formatted like 'module/action?key1=value1&key2=value2'
-   *                Does not accept rules starting with a route name, except for '@sf_cache_partial'
-   * @param  string The host name
-   *                Optional - defaults to the current host name bu default
-   * @param  string The vary headers, separated by |, or "all" for all vary headers
-   *                Defaults to 'all'
-   * @param  string The contextual prefix for contextual partials.
-   *                Defaults to 'currentModule/currentAction/currentPAram1/currentvalue1'
-   *                Used only by the sfViewCacheManager::remove() method
+   * @param  string $internalUri       The internal unified resource identifier
+   *                                   Accepts rules formatted like 'module/action?key1=value1&key2=value2'
+   *                                   Does not accept rules starting with a route name, except for '@sf_cache_partial'
+   * @param  string $hostName          The host name
+   *                                   Optional - defaults to the current host name bu default
+   * @param  string $vary              The vary headers, separated by |, or "all" for all vary headers
+   *                                   Defaults to 'all'
+   * @param  string $contextualPrefix  The contextual prefix for contextual partials.
+   *                                   Defaults to 'currentModule/currentAction/currentPAram1/currentvalue1'
+   *                                   Used only by the sfViewCacheManager::remove() method
    *
    * @return string The cache key
    *                If some of the parameters contained wildcards (* or **), the generated key will also have wildcards
@@ -194,9 +194,9 @@ class sfViewCacheManager
   /**
    * Transforms an associative array of parameters from an URI into a unique key
    *
-   * @param Array   Associative array of parameters from the URI (including, at least, module and action)
+   * @param  array $params  Associative array of parameters from the URI (including, at least, module and action)
    *
-   * @return String Unique key
+   * @return string Unique key
    */
   protected function convertParametersToKey($params)
   {
@@ -221,9 +221,9 @@ class sfViewCacheManager
   /**
    * Adds a cache to the manager.
    *
-   * @param string Module name
-   * @param string Action name
-   * @param array Options for the cache
+   * @param string $moduleName  Module name
+   * @param string $actionName  Action name
+   * @param array  $options     Options for the cache
    */
   public function addCache($moduleName, $actionName, $options = array())
   {
@@ -253,7 +253,7 @@ class sfViewCacheManager
   /**
    * Registers configuration options for the cache.
    *
-   * @param string Module name
+   * @param string $moduleName  Module name
    */
   public function registerConfiguration($moduleName)
   {
@@ -267,9 +267,9 @@ class sfViewCacheManager
   /**
    * Retrieves the layout from the cache option list.
    *
-   * @param string Internal uniform resource identifier
+   * @param  string $internalUri  Internal uniform resource identifier
    *
-   * @return boolean true, if have layout otherwise false
+   * @return bool true, if have layout otherwise false
    */
   public function withLayout($internalUri)
   {
@@ -279,7 +279,7 @@ class sfViewCacheManager
   /**
    * Retrieves lifetime from the cache option list.
    *
-   * @param string Internal uniform resource identifier
+   * @param  string $internalUri  Internal uniform resource identifier
    *
    * @return int LifeTime
    */
@@ -291,7 +291,7 @@ class sfViewCacheManager
   /**
    * Retrieves client lifetime from the cache option list
    *
-   * @param string Internal uniform resource identifier
+   * @param  string $internalUri  Internal uniform resource identifier
    *
    * @return int Client lifetime
    */
@@ -303,7 +303,7 @@ class sfViewCacheManager
   /**
    * Retrieves contextual option from the cache option list.
    *
-   * @param string Internal uniform resource identifier
+   * @param  string $internalUri  Internal uniform resource identifier
    *
    * @return boolean true, if is contextual otherwise false
    */
@@ -315,7 +315,7 @@ class sfViewCacheManager
   /**
    * Retrieves vary option from the cache option list.
    *
-   * @param string Internal uniform resource identifier
+   * @param  string $internalUri  Internal uniform resource identifier
    *
    * @return array Vary options for the cache
    */
@@ -327,9 +327,9 @@ class sfViewCacheManager
   /**
    * Gets a config option from the cache.
    *
-   * @param string Internal uniform resource identifier
-   * @param string Option name
-   * @param string Default value of the option
+   * @param string $internalUri   Internal uniform resource identifier
+   * @param string $key           Option name
+   * @param string $defaultValue  Default value of the option
    *
    * @return mixed Value of the option
    */
@@ -353,9 +353,9 @@ class sfViewCacheManager
   /**
    * Returns true if the current content is cacheable.
    *
-   * @param string Internal uniform resource identifier
+   * @param  string $internalUri  Internal uniform resource identifier
    *
-   * @return boolean true, if the content is cacheable otherwise false
+   * @return bool true, if the content is cacheable otherwise false
    */
   public function isCacheable($internalUri)
   {
@@ -381,7 +381,7 @@ class sfViewCacheManager
   /**
    * Retrieves content in the cache.
    *
-   * @param  string Internal uniform resource identifier
+   * @param  string $internalUri  Internal uniform resource identifier
    *
    * @return string The content in the cache
    */
@@ -406,9 +406,9 @@ class sfViewCacheManager
   /**
    * Returns true if there is a cache.
    *
-   * @param string Internal uniform resource identifier
+   * @param  string $internalUri  Internal uniform resource identifier
    *
-   * @return boolean true, if there is a cache otherwise false
+   * @return bool true, if there is a cache otherwise false
    */
   public function has($internalUri)
   {
@@ -423,7 +423,7 @@ class sfViewCacheManager
   /**
    * Ignores the cache functionality.
    *
-   * @return boolean true, if the cache is ignore otherwise false
+   * @return bool true, if the cache is ignore otherwise false
    */
   protected function ignore()
   {
@@ -444,8 +444,8 @@ class sfViewCacheManager
   /**
    * Sets the cache content.
    *
-   * @param string Data to put in the cache
-   * @param string Internal uniform resource identifier
+   * @param  string $data         Data to put in the cache
+   * @param  string $internalUri  Internal uniform resource identifier
    *
    * @return boolean true, if the data get set successfully otherwise false
    */
@@ -476,12 +476,12 @@ class sfViewCacheManager
   /**
    * Removes the content in the cache.
    *
-   * @param string Internal uniform resource identifier
-   * @param string The host name
-   * @param string The vary headers, separated by |, or "all" for all vary headers
-   * @param string The removal prefix for contextual partials. Deauls to '**' (all actions, all params)
+   * @param  string $internalUri       Internal uniform resource identifier
+   * @param  string $hostName          The host name
+   * @param  string $vary              The vary headers, separated by |, or "all" for all vary headers
+   * @param  string $contextualPrefix  The removal prefix for contextual partials. Deauls to '**' (all actions, all params)
    *
-   * @return boolean true, if the remove happened, false otherwise
+   * @return bool true, if the remove happened, false otherwise
    */
   public function remove($internalUri, $hostName = '', $vary = '', $contextualPrefix = '**')
   {
@@ -505,7 +505,7 @@ class sfViewCacheManager
   /**
    * Retrieves the last modified time.
    *
-   * @param  string Internal uniform resource identifier
+   * @param  string $internalUri  Internal uniform resource identifier
    *
    * @return int    The last modified datetime
    */
@@ -522,7 +522,7 @@ class sfViewCacheManager
   /**
    * Retrieves the timeout.
    *
-   * @param  string Internal uniform resource identifier
+   * @param  string $internalUri  Internal uniform resource identifier
    *
    * @return int    The timeout datetime
    */
@@ -539,12 +539,12 @@ class sfViewCacheManager
   /**
    * Starts the fragment cache.
    *
-   * @param string Unique fragment name
-   * @param string Life time for the cache
-   * @param string Client life time for the cache
-   * @param array Vary options for the cache
+   * @param  string $name            Unique fragment name
+   * @param  string $lifeTime        Life time for the cache
+   * @param  string $clientLifeTime  Client life time for the cache
+   * @param  array  $vary            Vary options for the cache
    *
-   * @return boolean true, if success otherwise false
+   * @return bool true, if success otherwise false
    */
   public function start($name, $lifeTime, $clientLifeTime = null, $vary = array())
   {
@@ -577,9 +577,9 @@ class sfViewCacheManager
   /**
    * Stops the fragment cache.
    *
-   * @param string Unique fragment name
+   * @param  string $name Unique fragment name
    *
-   * @return boolean true, if success otherwise false
+   * @return bool true, if success otherwise false
    */
   public function stop($name)
   {
@@ -601,7 +601,7 @@ class sfViewCacheManager
   /**
    * Computes the cache key based on the passed parameters.
    *
-   * @param array An array of parameters
+   * @param array $parameters  An array of parameters
    */
   public function computeCacheKey(array $parameters)
   {
@@ -611,9 +611,9 @@ class sfViewCacheManager
   /**
    * Computes a partial internal URI.
    *
-   * @param  string The module name
-   * @param  string The action name
-   * @param  string The cache key
+   * @param  string $module    The module name
+   * @param  string $action    The action name
+   * @param  string $cacheKey  The cache key
    *
    * @return string The internal URI
    */
@@ -625,11 +625,11 @@ class sfViewCacheManager
   /**
    * Returns whether a partial template is in the cache.
    *
-   * @param  string The module name
-   * @param  string The action name
-   * @param  string The cache key
+   * @param  string $module    The module name
+   * @param  string $action    The action name
+   * @param  string $cacheKey  The cache key
    *
-   * @return Boolean true if a partial is in the cache, false otherwise
+   * @return bool true if a partial is in the cache, false otherwise
    */
   public function hasPartialCache($module, $action, $cacheKey)
   {
@@ -639,9 +639,9 @@ class sfViewCacheManager
   /**
    * Gets a partial template from the cache.
    *
-   * @param  string The module name
-   * @param  string The action name
-   * @param  string The cache key
+   * @param  string $module    The module name
+   * @param  string $action    The action name
+   * @param  string $cacheKey  The cache key
    *
    * @return string The cache content
    */
@@ -677,10 +677,10 @@ class sfViewCacheManager
   /**
    * Sets an action template in the cache.
    *
-   * @param  string The module name
-   * @param  string The action name
-   * @param  string The cache key
-   * @param  string The content to cache
+   * @param  string $module    The module name
+   * @param  string $action    The action name
+   * @param  string $cacheKey  The cache key
+   * @param  string $content   The content to cache
    *
    * @return string The cached content
    */
@@ -705,9 +705,9 @@ class sfViewCacheManager
   /**
    * Returns whether an action template is in the cache.
    *
-   * @param  string  The internal URI
+   * @param  string  $uri  The internal URI
    *
-   * @return Boolean true if an action is in the cache, false otherwise
+   * @return bool true if an action is in the cache, false otherwise
    */
   public function hasActionCache($uri)
   {
@@ -717,7 +717,7 @@ class sfViewCacheManager
   /**
    * Gets an action template from the cache.
    *
-   * @param  string The internal URI
+   * @param  string $uri  The internal URI
    *
    * @return array  An array composed of the cached content and the view attribute holder
    */
@@ -752,9 +752,9 @@ class sfViewCacheManager
   /**
    * Sets an action template in the cache.
    *
-   * @param  string The internal URI
-   * @param  string The content to cache
-   * @param  string The view attribute holder to cache
+   * @param  string $uri                The internal URI
+   * @param  string $content            The content to cache
+   * @param  string $decoratorTemplate  The view attribute holder to cache
    *
    * @return string The cached content
    */
@@ -778,7 +778,7 @@ class sfViewCacheManager
   /**
    * Sets a page in the cache.
    *
-   * @param string The internal URI
+   * @param string $uri  The internal URI
    */
   public function setPageCache($uri)
   {
@@ -801,7 +801,7 @@ class sfViewCacheManager
   /**
    * Gets a page from the cache.
    *
-   * @param  string The internal URI
+   * @param  string $uri  The internal URI
    *
    * @return string The cached page
    */

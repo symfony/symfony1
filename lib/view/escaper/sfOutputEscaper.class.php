@@ -41,8 +41,8 @@ abstract class sfOutputEscaper
    * Since sfOutputEscaper is an abstract class, instances cannot be created
    * directly but the constructor will be inherited by sub-classes.
    *
-   * @param string Escaping method
-   * @param string Escaping value
+   * @param string $escapingMethod  Escaping method
+   * @param string $value           Escaping value
    */
   public function __construct($escapingMethod, $value)
   {
@@ -72,8 +72,8 @@ abstract class sfOutputEscaper
    * of standard escaping methods listed in the escaping helper
    * (EscapingHelper.php).
    *
-   * @param string $escapingMethod the escaping method (a PHP callable) to apply to the value
-   * @param mixed $value the value to escape
+   * @param  string $escapingMethod  The escaping method (a PHP callable) to apply to the value
+   * @param  mixed  $value           The value to escape
    *
    * @return mixed Escaping value
    *
@@ -137,9 +137,9 @@ abstract class sfOutputEscaper
   /**
    * Returns true if the class if marked as safe.
    *
-   * @param  string  A class name
+   * @param  string  $class  A class name
    *
-   * @return Boolean true if the class if safe, false otherwise
+   * @return bool true if the class if safe, false otherwise
    */
   static public function isClassMarkedAsSafe($class)
   {
@@ -162,7 +162,7 @@ abstract class sfOutputEscaper
   /**
    * Marks an array of classes (and all its children) as being safe for output.
    *
-   * @param array An array of class names
+   * @param array $classes  An array of class names
    */
   static public function markClassesAsSafe(array $classes)
   {
@@ -172,7 +172,7 @@ abstract class sfOutputEscaper
   /**
    * Marks a class (and all its children) as being safe for output.
    *
-   * @param string A class name
+   * @param string $class  A class name
    */
   static public function markClassAsSafe($class)
   {
@@ -195,7 +195,7 @@ abstract class sfOutputEscaper
   /**
    * Gets a value from the escaper.
    *
-   * @param string Value to get
+   * @param  string $var  Value to get
    *
    * @return mixed Value
    */

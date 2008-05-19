@@ -24,7 +24,7 @@ class sfOutputEscaperSafe
   /**
    * Constructor.
    *
-   * @param mixed The value to mark as safe
+   * @param mixed $value  The value to mark as safe
    */
   public function __construct($value)
   {

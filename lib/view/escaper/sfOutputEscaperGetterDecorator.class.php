@@ -25,7 +25,7 @@ abstract class sfOutputEscaperGetterDecorator extends sfOutputEscaper
    * The key might be an index into an array or a value to be passed to the 
    * decorated object's get() method.
    *
-   * @param string The key to retrieve
+   * @param  string $key  The key to retrieve
    *
    * @return mixed The value
    */
@@ -37,8 +37,8 @@ abstract class sfOutputEscaperGetterDecorator extends sfOutputEscaper
    * Typically (using this implementation) the raw value is obtained using the
    * {@link getRaw()} method, escaped and the result returned.
    *
-   * @param string The key to retieve
-   * @param string The escaping method (a PHP function) to use
+   * @param  string $key             The key to retieve
+   * @param  string $escapingMethod  The escaping method (a PHP function) to use
    *
    * @return mixed The escaped value
    */
