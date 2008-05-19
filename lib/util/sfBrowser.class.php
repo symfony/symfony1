@@ -404,7 +404,7 @@ class sfBrowser
       if (!is_null($this->context))
       {
         $currentConfiguration = $this->context->getConfiguration();
-        $configuration = ProjectConfiguration::getApplicationConfiguration($currentConfiguration->getApplication(), $currentConfiguration->getEnvironment(), $currentConfiguration->isDebug());
+        $configuration = ProjectConfiguration::getApplicationConfiguration($currentConfiguration->getApplication(), $currentConfiguration->getEnvironment(), $currentConfiguration->isDebug(), $currentConfiguration->getRootDir(), $currentConfiguration->getEventDispatcher());
         $this->context = sfContext::createInstance($configuration);
       }
       else
