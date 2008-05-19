@@ -26,9 +26,9 @@ class sfTestBrowser extends sfBrowser
   /**
    * Initializes the browser tester instance.
    *
-   * @param string Hostname
-   * @param string Remote IP address
-   * @param array  Options
+   * @param string $hostname  Hostname
+   * @param string $remote    Remote IP address
+   * @param array  $options   Options
    */
   public function initialize($hostname = null, $remote = null, $options = array())
   {
@@ -55,10 +55,10 @@ class sfTestBrowser extends sfBrowser
   /**
    * Retrieves and checks an action.
    *
-   * @param string Module name
-   * @param string Action name
-   * @param string Url
-   * @param string The expected return status code
+   * @param  string $module  Module name
+   * @param  string $action  Action name
+   * @param  string $url     Url
+   * @param  string $code    The expected return status code
    *
    * @return sfTestBrowser The current sfTestBrowser instance
    */
@@ -74,6 +74,11 @@ class sfTestBrowser extends sfBrowser
 
   /**
    * Calls a request.
+   *
+   * @param  string $uri          URI to be invoked
+   * @param  string $method       HTTP method used
+   * @param  array  $parameters   Additional paramaters
+   * @param  bool   $changeStack  If set to false ActionStack is not changed
    *
    * @return sfTestBrowser The current sfTestBrowser instance
    */
@@ -113,7 +118,7 @@ class sfTestBrowser extends sfBrowser
   /**
    * Tests if the current request has been redirected.
    *
-   * @param boolean Flag for redirection mode
+   * @param  bool $boolean  Flag for redirection mode
    *
    * @return sfTestBrowser The current sfTestBrowser instance
    */
@@ -134,8 +139,8 @@ class sfTestBrowser extends sfBrowser
   /**
    * Checks that the current response contains a given text.
    *
-   * @param string Uniform resource identifier
-   * @param string Text in the response
+   * @param  string $uri   Uniform resource identifier
+   * @param  string $text  Text in the response
    *
    * @return sfTestBrowser The current sfTestBrowser instance
    */
@@ -182,8 +187,8 @@ class sfTestBrowser extends sfBrowser
   /**
    * Tests whether or not a given key and value exists in the current request.
    *
-   * @param string Key
-   * @param string Value
+   * @param string $key
+   * @param string $value
    *
    * @return sfTestBrowser The current sfTestBrowser instance
    */
@@ -197,9 +202,9 @@ class sfTestBrowser extends sfBrowser
   /**
    * Checks that the request is forwarded to a given module/action.
    *
-   * @param string The module name
-   * @param string The action name
-   * @param mixed  The position in the action stack (default to the last entry)
+   * @param  string $moduleName  The module name
+   * @param  string $actionName  The action name
+   * @param  mixed  $position    The position in the action stack (default to the last entry)
    *
    * @return sfTestBrowser The current sfTestBrowser instance
    */
@@ -228,8 +233,8 @@ class sfTestBrowser extends sfBrowser
   /**
    * Tests for a response header.
    *
-   * @param string Key
-   * @param string Value
+   * @param  string $key
+   * @param  string $value
    *
    * @return sfTestBrowser The current sfTestBrowser instance
    */
@@ -256,7 +261,7 @@ class sfTestBrowser extends sfBrowser
   /**
    * Tests for the user culture.
    *
-   * @param string The user culture
+   * @param  string $culture  The user culture
    *
    * @return sfTestBrowser The current sfTestBrowser instance
    */
@@ -270,7 +275,7 @@ class sfTestBrowser extends sfBrowser
   /**
    * Tests for the request is in the given format.
    *
-   * @param string The user culture
+   * @param  string $format  The request format
    *
    * @return sfTestBrowser The current sfTestBrowser instance
    */
@@ -284,9 +289,9 @@ class sfTestBrowser extends sfBrowser
   /**
    * Tests that the current response matches a given CSS selector.
    *
-   * @param string The response selector or a sfDomCssSelector object
-   * @param string Flag for the selector
-   * @param array Options for the current test
+   * @param  string $selector  The response selector or a sfDomCssSelector object
+   * @param  mixed  $value     Flag for the selector
+   * @param  array  $options   Options for the current test
    *
    * @return sfTestBrowser The current sfTestBrowser instance
    */
@@ -342,8 +347,8 @@ class sfTestBrowser extends sfBrowser
   /**
    * Tests if an exception is thrown by the latest request.
    *
-   * @param string Class name
-   * @param string Message name
+   * @param  string $class    Class name
+   * @param  string $message  Message name
    *
    * @return sfTestBrowser The current sfTestBrowser instance
    */
@@ -387,7 +392,7 @@ class sfTestBrowser extends sfBrowser
   /**
    * Trigger a test failure if an uncaught exception is present.
    * 
-   * @return  boolean
+   * @return  bool
    */
   public function checkCurrentExceptionIsEmpty()
   {
@@ -402,8 +407,8 @@ class sfTestBrowser extends sfBrowser
   /**
    * Tests if the given uri is cached.
    *
-   * @param boolean Flag for checking the cache
-   * @param boolean If have or not layout
+   * @param  boolean $boolean      Flag for checking the cache
+   * @param  boolean $with_layout  If have or not layout
    *
    * @return sfTestBrowser The current sfTestBrowser instance
    */
@@ -415,9 +420,9 @@ class sfTestBrowser extends sfBrowser
   /**
    * Tests if the given uri is cached.
    *
-   * @param string Uniform resource identifier
-   * @param boolean Flag for checking the cache
-   * @param boolean If have or not layout
+   * @param  string  $uri          Uniform resource identifier
+   * @param  boolean $boolean      Flag for checking the cache
+   * @param  boolean $with_layout  If have or not layout
    *
    * @return sfTestBrowser The current sfTestBrowser instance
    */
@@ -496,10 +501,10 @@ if (!defined('E_RECOVERABLE_ERROR'))
 /**
  * Error handler for the current test browser instance.
  *
- * @param mixed Error number
- * @param string Error message
- * @param string Error file
- * @param mixed Error line
+ * @param mixed  $errno    Error number
+ * @param string $errstr   Error message
+ * @param string $errfile  Error file
+ * @param mixed  $errline  Error line
  */
 function sfTestBrowserErrorHandler($errno, $errstr, $errfile, $errline)
 {
