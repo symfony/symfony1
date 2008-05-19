@@ -100,7 +100,7 @@ function excerpt_text($text, $phrase, $radius = 100, $excerpt_string = '...', $e
   $strtolower = ($mbstring) ? 'mb_strtolower' : 'strtolower';
   $substr = ($mbstring) ? 'mb_substr' : 'substr';
 
-  $found_pos = $strpos(mb_strtolower($text), mb_strtolower($phrase));
+  $found_pos = $strpos($strtolower($text), $strtolower($phrase));
   if ($found_pos !== false)
   {
     $start_pos = max($found_pos - $radius, 0);
