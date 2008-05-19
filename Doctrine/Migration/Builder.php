@@ -168,7 +168,9 @@ END;
         } else {
             $models = Doctrine::getLoadedModels();
         }
-        
+
+        $models = Doctrine::initializeModels($models);
+
         $foreignKeys = array();
         
         foreach ($models as $model) {
