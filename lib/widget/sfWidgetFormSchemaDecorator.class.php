@@ -25,8 +25,8 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
   /**
    * Constructor.
    *
-   * @param sfWidgetFormSchema A sfWidgetFormSchema instance
-   * @param string             A decorator string
+   * @param sfWidgetFormSchema $widget     A sfWidgetFormSchema instance
+   * @param string             $decorator  A decorator string
    *
    * @see sfWidgetFormSchema
    */
@@ -49,6 +49,11 @@ class sfWidgetFormSchemaDecorator extends sfWidgetFormSchema
   }
 
   /**
+   * @param  string $name        The element name
+   * @param  string $value       The value displayed in this widget
+   * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes
+   * @param  array  $errors      An array of errors for the field
+   *
    * @see sfWidget
    */
   public function render($name, $values = array(), $attributes = array(), $errors = array())

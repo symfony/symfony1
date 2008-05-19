@@ -19,7 +19,8 @@
 class sfWidgetFormSelectMany extends sfWidgetFormSelect
 {
   /**
-   * Constructor.
+   * @param array $options     An array of options
+   * @param array $attributes  An array of default HTML attributes
    *
    * @see sfWidgetFormSelect
    */

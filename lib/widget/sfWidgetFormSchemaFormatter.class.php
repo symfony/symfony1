@@ -156,7 +156,7 @@ abstract class sfWidgetFormSchemaFormatter
   /**
    * Generates a label for the given field name.
    *
-   * @param  string The field name
+   * @param  string $name  The field name
    *
    * @return string The label tag
    */
@@ -176,7 +176,7 @@ abstract class sfWidgetFormSchemaFormatter
   /**
    * Generates the label name for the given field name.
    *
-   * @param  string The field name
+   * @param  string $name  The field name
    *
    * @return string The label name
    */

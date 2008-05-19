@@ -19,6 +19,9 @@
 class sfWidgetFormInputFile extends sfWidgetFormInput
 {
   /**
+   * @param array $options     An array of options
+   * @param array $attributes  An array of default HTML attributes
+   *
    * @see sfWidgetFormInput
    */
   protected function configure($options = array(), $attributes = array())

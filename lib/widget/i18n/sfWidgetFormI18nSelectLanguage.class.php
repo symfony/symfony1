@@ -26,6 +26,9 @@ class sfWidgetFormI18nSelectLanguage extends sfWidgetFormSelect
    *  * culture:   The culture to use for internationalized strings (required)
    *  * languages: An array of language codes to use (ISO 639-1)
    *
+   * @param array $options     An array of options
+   * @param array $attributes  An array of default HTML attributes
+   *
    * @see sfWidgetFormSelect
    */
   protected function configure($options = array(), $attributes = array())

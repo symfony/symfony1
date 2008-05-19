@@ -32,6 +32,9 @@ class sfWidgetFormTime extends sfWidgetForm
    *  * can_be_empty:           Whether the widget accept an empty value (true by default)
    *  * empty_values:           An array of values to use for the empty value (empty string for year, month, and date by default)
    *
+   * @param array $options     An array of options
+   * @param array $attributes  An array of default HTML attributes
+   *
    * @see sfWidgetForm
    */
   protected function configure($options = array(), $attributes = array())
@@ -48,6 +51,13 @@ class sfWidgetFormTime extends sfWidgetForm
   }
 
   /**
+   * @param  string $name        The element name
+   * @param  string $value       The time displayed in this widget
+   * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes
+   * @param  array  $errors      An array of errors for the field
+   *
+   * @return string An HTML tag string
+   *
    * @see sfWidgetForm
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())

@@ -26,6 +26,9 @@ class sfWidgetFormI18nSelectCountry extends sfWidgetFormSelect
    *  * culture:   The culture to use for internationalized strings (required)
    *  * countries: An array of country codes to use (ISO 3166)
    *
+   * @param array $options     An array of options
+   * @param array $attributes  An array of default HTML attributes
+   *
    * @see sfWidgetFormSelect
    */
   protected function configure($options = array(), $attributes = array())

@@ -26,6 +26,9 @@ class sfWidgetFormSelect extends sfWidgetForm
    *  * choices:  An array of possible choices (required)
    *  * multiple: true if the select tag must allow multiple selections
    *
+   * @param array $options     An array of options
+   * @param array $attributes  An array of default HTML attributes
+   *
    * @see sfWidgetForm
    */
   protected function configure($options = array(), $attributes = array())
@@ -35,6 +38,13 @@ class sfWidgetFormSelect extends sfWidgetForm
   }
 
   /**
+   * @param  string $name        The element name
+   * @param  string $value       The value selected in this widget
+   * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes
+   * @param  array  $errors      An array of errors for the field
+   *
+   * @return string An HTML tag string
+   *
    * @see sfWidgetForm
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
@@ -61,8 +71,8 @@ class sfWidgetFormSelect extends sfWidgetForm
   /**
    * Returns an array of option tags for the given choices
    *
-   * @param  string The selected value
-   * @param  array  An array of choices
+   * @param  string $value    The selected value
+   * @param  array  $choices  An array of choices
    *
    * @return array  An array of option tags
    */

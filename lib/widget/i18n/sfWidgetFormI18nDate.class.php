@@ -26,6 +26,9 @@ class sfWidgetFormI18nDate extends sfWidgetFormDate
    *  * culture:      The culture to use for internationalized strings (required)
    *  * month_format: The month format (name - default, short_name, number)
    *
+   * @param array $options     An array of options
+   * @param array $attributes  An array of default HTML attributes
+   *
    * @see sfWidgetFormDate
    */
   protected function configure($options = array(), $attributes = array())

@@ -51,11 +51,11 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    *  * name_format:    The sprintf pattern to use for input names
    *  * form_formatter: The form formatter name (table and list are bundled)
    *
-   * @param mixed Initial fields
-   * @param array An array of default HTML attributes
-   * @param array An array of options
-   * @param array An array of HTML labels
-   * @param array An array of help texts
+   * @param mixed $fields     Initial fields
+   * @param array $options    An array of options
+   * @param array $attributes An array of default HTML attributes
+   * @param array $labels     An array of HTML labels
+   * @param array $helps      An array of help texts
    *
    * @see sfWidgetForm
    */
@@ -85,8 +85,8 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Adds a form formatter.
    *
-   * @param string                      The formatter name
-   * @param sfWidgetFormSchemaFormatter A sfWidgetFormSchemaFormatter instance
+   * @param string                      $name       The formatter name
+   * @param sfWidgetFormSchemaFormatter $formatter  An sfWidgetFormSchemaFormatter instance
    */
   public function addFormFormatter($name, sfWidgetFormSchemaFormatter $formatter)
   {
@@ -118,7 +118,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
    * }
    * </pre>  
    *
-   * @param string $name
+   * @param string $name  New default formatter name
    */
   static public function setDefaultFormFormatterName($name)
   {
@@ -128,7 +128,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Sets the form formatter name to use when rendering the widget schema.
    *
-   * @param string The form formatter name
+   * @param string $name  The form formatter name
    */
   public function setFormFormatterName($name)
   {
@@ -174,7 +174,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Sets the format string for the name HTML attribute.
    *
-   * @param string The format string (must contain a %s for the name placeholder)
+   * @param string $format  The format string (must contain a %s for the name placeholder)
    */
   public function setNameFormat($format)
   {
@@ -199,7 +199,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Sets the label names to render for each field.
    *
-   * @param array An array of label names
+   * @param array $labels  An array of label names
    */
   public function setLabels($labels)
   {
@@ -219,8 +219,8 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Sets a label.
    *
-   * @param string The field name
-   * @param string The label name
+   * @param string $name   The field name
+   * @param string $value  The label name
    */
   public function setLabel($name, $value)
   {
@@ -230,7 +230,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Gets a label by field name.
    *
-   * @param  string The field name
+   * @param  string $name  The field name
    *
    * @return string The label name or an empty string if it is not defined
    */
@@ -242,7 +242,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Sets the help texts to render for each field.
    *
-   * @param array An array of help texts
+   * @param array $helps  An array of help texts
    */
   public function setHelps($helps)
   {
@@ -262,8 +262,8 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Sets a help text.
    *
-   * @param string The field name
-   * @param string The help text
+   * @param string $name  The field name
+   * @param string $help  The help text
    */
   public function setHelp($name, $help)
   {
@@ -273,7 +273,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Gets a text help by field name.
    *
-   * @param  string The field name
+   * @param  string $name  The field name
    *
    * @return string The help text or an empty string if it is not defined
    */
@@ -285,7 +285,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Returns true if the widget schema needs a multipart form.
    *
-   * @return Boolean true if the widget schema needs a multipart form, false otherwise
+   * @return bool true if the widget schema needs a multipart form, false otherwise
    */
   public function needsMultipartForm()
   {
@@ -303,12 +303,12 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Renders a field by name.
    *
-   * @param  string  The field name
-   * @param  string  The field value
-   * @param  array   An array of HTML attributes to be merged with the current HTML attributes
-   * @param  array   An array of errors for the field
+   * @param  string  $name        The field name
+   * @param  string  $value       The field value
+   * @param  array   $attributes  An array of HTML attributes to be merged with the current HTML attributes
+   * @param  array   $attributes  An array of errors for the field
    *
-   * @return string  A HTML string representing the rendered widget
+   * @return string  An HTML string representing the rendered widget
    */
   public function renderField($name, $value = null, $attributes = array(), $errors = array())
   {
@@ -327,12 +327,12 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Renders the widget.
    *
-   * @param  string The name of the HTML widget
-   * @param  mixed  The values of the widget
-   * @param  array  An array of HTML attributes
-   * @param  array  An array of errors
+   * @param  string $name        The name of the HTML widget
+   * @param  mixed  $values      The values of the widget
+   * @param  array  $attributes  An array of HTML attributes
+   * @param  array  $errors      An array of errors
    *
-   * @return string A HTML representation of the widget
+   * @return string An HTML representation of the widget
    */
   public function render($name, $values = array(), $attributes = array(), $errors = array())
   {
@@ -388,9 +388,9 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Gets errors that need to be included in global errors.
    *
-   * @param  array  An array of errors
+   * @param  array  $errors  An array of errors
    *
-   * @return string A HTML representation of global errors for the widget
+   * @return string An HTML representation of global errors for the widget
    */
   public function getGlobalErrors($errors)
   {
@@ -426,7 +426,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Generates a name.
    *
-   * @param string The name
+   * @param string $name  The name
    *
    * @param string The generated name
    */
@@ -471,7 +471,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Sets the parent widget schema.
    *
-   * @parent sfWidgetFormSchema The parent widget schema
+   * @parent sfWidgetFormSchema $parent  The parent widget schema
    */
   public function setParent(sfWidgetFormSchema $parent = null)
   {
@@ -481,9 +481,9 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Returns true if the schema has a field with the given name (implements the ArrayAccess interface).
    *
-   * @param  string  The field name
+   * @param  string $name  The field name
    *
-   * @return Boolean true if the schema has a field with the given name, false otherwise
+   * @return bool true if the schema has a field with the given name, false otherwise
    */
   public function offsetExists($name)
   {
@@ -493,7 +493,7 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Gets the field associated with the given name (implements the ArrayAccess interface).
    *
-   * @param  string   The field name
+   * @param  string  $name  The field name
    *
    * @return sfWidget The sfWidget instance associated with the given name, null if it does not exist
    */
@@ -505,8 +505,8 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
   /**
    * Sets a field (implements the ArrayAccess interface).
    *
-   * @param string   The field name
-   * @param sfWidget A sfWidget instance
+   * @param string   $name    The field name
+   * @param sfWidget $widget  An sfWidget instance
    */
   public function offsetSet($name, $widget)
   {

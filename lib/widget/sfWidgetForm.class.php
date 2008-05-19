@@ -27,8 +27,8 @@ abstract class sfWidgetForm extends sfWidget
    *  * is_hidden:       true if the form widget must be hidden, false otherwise (false by default)
    *  * needs_multipart: true if the form widget needs a multipart form, false otherwise (false by default)
    *
-   * @param array An array of default HTML attributes
-   * @param array An array of options
+   * @param array $options     An array of options
+   * @param array $attributes  An array of default HTML attributes
    *
    * @see sfWidget
    */
@@ -44,7 +44,7 @@ abstract class sfWidgetForm extends sfWidget
   /**
    * Sets the format for HTML id attributes.
    *
-   * @param string The format string (must contain a %s for the id placeholder)
+   * @param string $format  The format string (must contain a %s for the id placeholder)
    */
   public function setIdFormat($format)
   {
@@ -74,7 +74,7 @@ abstract class sfWidgetForm extends sfWidget
   /**
    * Sets the hidden flag for the widget.
    *
-   * @param Boolean true if the widget must be hidden, false otherwise
+   * @param bool $boolean  true if the widget must be hidden, false otherwise
    */
   public function setHidden($boolean)
   {
@@ -84,7 +84,7 @@ abstract class sfWidgetForm extends sfWidget
   /**
    * Returns true if the widget needs a multipart form.
    *
-   * @return Boolean true if the widget needs a multipart form, false otherwise
+   * @return bool true if the widget needs a multipart form, false otherwise
    */
   public function needsMultipartForm()
   {
@@ -97,10 +97,10 @@ abstract class sfWidgetForm extends sfWidget
    * The id attribute is added automatically to the array of attributes if none is specified.
    * If uses for "id_format" option to generate the id.
    *
-   * @param string The tag name
-   * @param array  An array of HTML attributes to be merged with the default HTML attributes
+   * @param  string The tag name
+   * @param  array  An array of HTML attributes to be merged with the default HTML attributes
    *
-   * @param string A HTML tag string
+   * @return string An HTML tag string
    */
   public function renderTag($tag, $attributes = array())
   {
@@ -113,11 +113,11 @@ abstract class sfWidgetForm extends sfWidget
    * The id attribute is added automatically to the array of attributes if none is specified.
    * If uses for "id_format" option to generate the id.
    *
-   * @param string The tag name
-   * @param string The content of the tag
-   * @param An array of HTML attributes to be merged with the default HTML attributes
+   * @param  string $tag         The tag name
+   * @param  string $content     The content of the tag
+   * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes
    *
-   * @param string A HTML tag string
+   * @return string An HTML tag string
    */
   public function renderContentTag($tag, $content = null, $attributes = array())
   {
@@ -127,9 +127,9 @@ abstract class sfWidgetForm extends sfWidget
   /**
    * Adds an HTML id attributes to the array of attributes if none is given and a name attribute exists.
    *
-   * @param array An array of attributes
+   * @param  array $attributes  An array of attributes
    *
-   * @param array An array of attributes with an id.
+   * @return array An array of attributes with an id.
    */
   protected function fixFormId($attributes)
   {
@@ -154,8 +154,8 @@ abstract class sfWidgetForm extends sfWidget
    *  name[item][total] => name_item_total
    * </samp>
    *
-   * @param  string The field name
-   * @param  string The field value
+   * @param  string $name   The field name
+   * @param  string $value  The field value
    *
    * @return string The field id or null.
    */

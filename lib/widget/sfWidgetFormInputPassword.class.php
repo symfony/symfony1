@@ -25,6 +25,9 @@ class sfWidgetFormInputPassword extends sfWidgetFormInput
    *
    *  * always_render_empty: true if you want the input value to be always empty when rendering (true by default)
    *
+   * @param array $options     An array of options
+   * @param array $attributes  An array of default HTML attributes
+   *
    * @see sfWidgetFormInput
    */
   protected function configure($options = array(), $attributes = array())
@@ -37,6 +40,13 @@ class sfWidgetFormInputPassword extends sfWidgetFormInput
   }
 
   /**
+   * @param  string $name        The element name
+   * @param  string $value       The password stored in this widget, will be masked by the browser.
+   * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes
+   * @param  array  $errors      An array of errors for the field
+   *
+   * @return string An HTML tag string
+   *
    * @see sfWidgetForm
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())

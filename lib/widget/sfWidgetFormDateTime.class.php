@@ -33,6 +33,9 @@ class sfWidgetFormDateTime extends sfWidgetForm
    *  * with_time: Whether to include time (true by default)
    *  * format:    The format string for the date and the time widget (default to %date% %time%)
    *
+   * @param array $options     An array of options
+   * @param array $attributes  An array of default HTML attributes
+   *
    * @see sfWidgetForm
    */
   protected function configure($options = array(), $attributes = array())
@@ -44,6 +47,13 @@ class sfWidgetFormDateTime extends sfWidgetForm
   }
 
   /**
+   * @param  string $name        The element name
+   * @param  string $value       The date and time displayed in this widget
+   * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes
+   * @param  array  $errors      An array of errors for the field
+   *
+   * @return string An HTML tag string
+   *
    * @see sfWidgetForm
    */
   function render($name, $value = null, $attributes = array(), $errors = array())
@@ -65,7 +75,7 @@ class sfWidgetFormDateTime extends sfWidgetForm
   /**
    * Returns the date widget.
    *
-   * @param  array  An array of attributes
+   * @param  array $attributes  An array of attributes
    *
    * @return sfWidgetForm A Widget representing the date
    */
@@ -77,7 +87,7 @@ class sfWidgetFormDateTime extends sfWidgetForm
   /**
    * Returns the time widget.
    *
-   * @param  array  An array of attributes
+   * @param  array $attributes  An array of attributes
    *
    * @return sfWidgetForm A Widget representing the time
    */
@@ -89,7 +99,7 @@ class sfWidgetFormDateTime extends sfWidgetForm
   /**
    * Returns an array of options for the given type.
    *
-   * @param  string The type (date or time)
+   * @param  string $type  The type (date or time)
    *
    * @return array  An array of options
    */
@@ -107,8 +117,8 @@ class sfWidgetFormDateTime extends sfWidgetForm
   /**
    * Returns an array of HTML attributes for the given type.
    *
-   * @param  string The type (date or time)
-   * @param  array  An array of attributes
+   * @param  string $type        The type (date or time)
+   * @param  array  $attributes  An array of attributes
    *
    * @return array  An array of HTML attributes
    */

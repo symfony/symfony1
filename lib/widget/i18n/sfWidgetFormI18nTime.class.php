@@ -25,6 +25,9 @@ class sfWidgetFormI18nTime extends sfWidgetFormTime
    *
    *  * culture: The culture to use for internationalized strings (required)
    *
+   * @param array $options     An array of options
+   * @param array $attributes  An array of default HTML attributes
+   *
    * @see sfWidgetFormTime
    */
   protected function configure($options = array(), $attributes = array())

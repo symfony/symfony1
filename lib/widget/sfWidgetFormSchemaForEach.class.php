@@ -21,11 +21,11 @@ class sfWidgetFormSchemaForEach extends sfWidgetFormSchema
   /**
    * Constructor.
    *
-   * @param sfWidgetFormSchema A sfWidgetFormSchema instance
-   * @param integer            The number of times to duplicate the widget
-   * @param array              An array of options
-   * @param array              An array of default HTML attributes
-   * @param array              An array of HTML labels
+   * @param sfWidgetFormSchema $widget      An sfWidgetFormSchema instance
+   * @param integer            $count       The number of times to duplicate the widget
+   * @param array              $options     An array of options
+   * @param array              $attributes  An array of default HTML attributes
+   * @param array              $labels      An array of HTML labels
    *
    * @see sfWidgetFormSchema
    */
