@@ -198,7 +198,7 @@ class Doctrine_Data_Import extends Doctrine_Data
                 $obj->set($key, $value);
             } else if ($obj->getTable()->hasRelation($key)) {
                 if (is_array($value)) {
-                    if (isset($value[0])) {
+                    if (isset($value[0]) && ! is_array($value[0])) {
                         foreach ($value as $link) {
                             if ($obj->getTable()->getRelation($key)->getType() === Doctrine_Relation::ONE) {
                                 $obj->set($key, $this->_getImportedObject($link, $obj, $key, $rowKey));
