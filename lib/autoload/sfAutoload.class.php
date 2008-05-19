@@ -119,7 +119,7 @@ class sfAutoload
   /**
    * Handles autoloading of classes that have been specified in autoload.yml.
    *
-   * @param  string  A class name.
+   * @param  string  $class  A class name.
    *
    * @return boolean Returns true if the class has been loaded
    */
@@ -144,7 +144,7 @@ class sfAutoload
   /**
    * Tries to load a class that has been specified in autoload.yml.
    *
-   * @param  string  A class name.
+   * @param  string  $class  A class name.
    *
    * @return boolean Returns true if the class has been loaded
    */

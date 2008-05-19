@@ -45,9 +45,9 @@ class sfSimpleAutoload
   /**
    * Retrieves the singleton instance of this class.
    *
-   * @param  string         The file path to save the cache
+   * @param  string $cacheFile  The file path to save the cache
    *
-   * @return sfSimpleAutoload A sfSimpleAutoload implementation instance.
+   * @return sfSimpleAutoload   A sfSimpleAutoload implementation instance.
    */
   static public function getInstance($cacheFile = null)
   {
