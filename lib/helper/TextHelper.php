@@ -33,7 +33,7 @@ function truncate_text($text, $length = 30, $truncate_string = '...', $truncate_
   $mbstring = extension_loaded('mbstring');
   if($mbstring)
   {
-    mb_internal_encoding(mb_detect_encoding($text));
+   @mb_internal_encoding(mb_detect_encoding($text));
   }
   $strlen = ($mbstring) ? 'mb_strlen' : 'strlen';
   $substr = ($mbstring) ? 'mb_substr' : 'substr';
@@ -93,7 +93,7 @@ function excerpt_text($text, $phrase, $radius = 100, $excerpt_string = '...', $e
   $mbstring = extension_loaded('mbstring');
   if($mbstring)
   {
-    mb_internal_encoding(mb_detect_encoding($text));
+    @mb_internal_encoding(mb_detect_encoding($text));
   }
   $strlen = ($mbstring) ? 'mb_strlen' : 'strlen';
   $strpos = ($mbstring) ? 'mb_strpos' : 'strpos';

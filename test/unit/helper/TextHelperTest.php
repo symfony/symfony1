@@ -3,16 +3,17 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
+require_once(dirname(__FILE__).'/../../../test/bootstrap/unit.php');
+
 require_once(dirname(__FILE__).'/../../../lib/helper/TagHelper.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/TextHelper.php');
 
-$t = new lime_test(45, new lime_output_color());
+$t = new lime_test(46, new lime_output_color());
 
 // truncate_text()
 $t->diag('truncate_text()');
@@ -37,6 +38,15 @@ $truncated_true = str_repeat('A', 10).'...';
 $truncated_false = str_repeat('A', 10).str_repeat(' ', 2).'...';
 $t->is(truncate_text($text, 15, '...', false), $truncated_false, 'text_truncate() accepts a truncate lastspace boolean as its fourth argument');
 $t->is(truncate_text($text, 15, '...', true), $truncated_true, 'text_truncate() accepts a truncate lastspace boolean as its fourth argument');
+
+if(extension_loaded('mbstring'))
+{
+  $t->is(truncate_text('P?’li? ?lu?ou?k? k?? œp?l ?‡belskŽ —dy!', 11), 'P?’li? ?...', 'text_truncate() handles unicode characters using mbstring if available');
+}
+else
+{
+  $t->skip('mbstring extension is not enabled');
+}
 
 // highlight_text()
 $t->diag('highlight_text()');
