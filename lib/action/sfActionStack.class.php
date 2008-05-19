@@ -27,9 +27,9 @@ class sfActionStack
   /**
    * Adds an entry to the action stack.
    *
-   * @param string   A module name
-   * @param string   An action name
-   * @param sfAction An sfAction implementation instance
+   * @param string   $moduleName      A module name
+   * @param string   $actionName      An action name
+   * @param sfAction $actionInstance  An sfAction implementation instance
    *
    * @return sfActionStackEntry sfActionStackEntry instance
    */
@@ -46,7 +46,7 @@ class sfActionStack
   /**
    * Retrieves the entry at a specific index.
    *
-   * @param int An entry index
+   * @param int $index An entry index
    *
    * @return sfActionStackEntry An action stack entry implementation.
    */
@@ -64,8 +64,6 @@ class sfActionStack
 
   /**
    * Removes the entry at a specific index.
-   *
-   * @param int An entry index
    *
    * @return sfActionStackEntry An action stack entry implementation.
    */

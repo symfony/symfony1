@@ -26,7 +26,9 @@ abstract class sfAction extends sfComponent
   /**
    * Initializes this action.
    *
-   * @param sfContext The current application context.
+   * @param sfContext $context    The current application context.
+   * @param string    $moduleName The module name.
+   * @param string    $actionName The action name.
    *
    * @return bool true, if initialization completes successfully, otherwise false
    */
@@ -62,7 +64,7 @@ abstract class sfAction extends sfComponent
   /**
    * Forwards current action to the default 404 error action.
    *
-   * @param  string Message of the generated exception
+   * @param string $message Message of the generated exception
    *
    * @throws sfError404Exception
    *
@@ -75,8 +77,8 @@ abstract class sfAction extends sfComponent
   /**
    * Forwards current action to the default 404 error action unless the specified condition is true.
    *
-   * @param bool A condition that evaluates to true or false
-   * @param  string Message of the generated exception
+   * @param bool    $condition  A condition that evaluates to true or false
+   * @param string  $message    Message of the generated exception
    *
    * @throws sfError404Exception
    */
@@ -91,8 +93,8 @@ abstract class sfAction extends sfComponent
   /**
    * Forwards current action to the default 404 error action if the specified condition is true.
    *
-   * @param bool A condition that evaluates to true or false
-   * @param  string Message of the generated exception
+   * @param bool    $condition  A condition that evaluates to true or false
+   * @param string  $message    Message of the generated exception
    *
    * @throws sfError404Exception
    */
@@ -108,7 +110,6 @@ abstract class sfAction extends sfComponent
    * Redirects current action to the default 404 error action (with browser redirection).
    *
    * This method stops the current code flow.
-   *
    */
   public function redirect404()
   {
@@ -120,8 +121,8 @@ abstract class sfAction extends sfComponent
    *
    * This method stops the action. So, no code is executed after a call to this method.
    *
-   * @param  string A module name
-   * @param  string An action name
+   * @param  string  $module  A module name
+   * @param  string  $action  An action name
    *
    * @throws sfStopException
    */
@@ -142,9 +143,9 @@ abstract class sfAction extends sfComponent
    *
    * This method stops the action. So, no code is executed after a call to this method.
    *
-   * @param  bool   A condition that evaluates to true or false
-   * @param  string A module name
-   * @param  string An action name
+   * @param  bool   $condition  A condition that evaluates to true or false
+   * @param  string $module     A module name
+   * @param  string $action     An action name
    *
    * @throws sfStopException
    */
@@ -161,9 +162,9 @@ abstract class sfAction extends sfComponent
    *
    * This method stops the action. So, no code is executed after a call to this method.
    *
-   * @param  bool   A condition that evaluates to true or false
-   * @param  string A module name
-   * @param  string An action name
+   * @param  bool   $condition  A condition that evaluates to true or false
+   * @param  string $module     A module name
+   * @param  string $action     An action name
    *
    * @throws sfStopException
    */
@@ -184,8 +185,8 @@ abstract class sfAction extends sfComponent
    *
    * This method stops the action. So, no code is executed after a call to this method.
    *
-   * @param  string Url
-   * @param  string Status code (default to 302)
+   * @param  string $url         Url
+   * @param  string $statusCode  Status code (default to 302)
    *
    * @throws sfStopException
    */
@@ -201,8 +202,8 @@ abstract class sfAction extends sfComponent
    *
    * This method stops the action. So, no code is executed after a call to this method.
    *
-   * @param  bool   A condition that evaluates to true or false
-   * @param  string url
+   * @param  bool   $condition  A condition that evaluates to true or false
+   * @param  string $url        Url
    *
    * @throws sfStopException
    *
@@ -221,8 +222,8 @@ abstract class sfAction extends sfComponent
    *
    * This method stops the action. So, no code is executed after a call to this method.
    *
-   * @param  bool   A condition that evaluates to true or false
-   * @param  string Url
+   * @param  bool   $condition  A condition that evaluates to true or false
+   * @param  string $url        Url
    *
    * @throws sfStopException
    *
@@ -243,7 +244,7 @@ abstract class sfAction extends sfComponent
    *
    * <code>return $this->renderText('some text')</code>
    *
-   * @param  string Text to append to the response
+   * @param string $text Text to append to the response
    *
    * @return sfView::NONE
    */
@@ -268,8 +269,8 @@ abstract class sfAction extends sfComponent
    *
    * <code>return $this->renderPartial('foo/bar')</code>
    *
-   * @param  string partial name
-   * @param  array vars
+   * @param  string $templateName partial name
+   * @param  array  $vars         vars
    *
    * @return sfView::NONE
    */
@@ -296,9 +297,9 @@ abstract class sfAction extends sfComponent
    *
    * <code>return $this->renderComponent('foo', 'bar')</code>
    *
-   * @param  string module name
-   * @param  string component name
-   * @param  array vars
+   * @param  string  $moduleName    module name
+   * @param  string  $componentNae  component name
+   * @param  array   $vars          vars
    *
    * @return sfView::NONE
    */
@@ -398,7 +399,7 @@ abstract class sfAction extends sfComponent
   /**
    * Overrides the current security configuration for this module.
    *
-   * @param array The new security configuration
+   * @param array $security The new security configuration
    */
   public function setSecurityConfiguration($security)
   {
@@ -457,7 +458,8 @@ abstract class sfAction extends sfComponent
    *
    * See 'Naming Conventions' in the 'Symfony View' documentation.
    *
-   * @param string Template name
+   * @param string $name    Template name
+   * @param string $module  The module (current if null)
    */
   public function setTemplate($name, $module = null)
   {
@@ -496,7 +498,7 @@ abstract class sfAction extends sfComponent
    *
    * To revert the layout to the one configured in the view.yml, set the template name to null.
    *
-   * @param mixed Layout name or false to de-activate the layout
+   * @param mixed $name Layout name or false to de-activate the layout
    */
   public function setLayout($name)
   {
@@ -524,7 +526,7 @@ abstract class sfAction extends sfComponent
   /**
    * Changes the default view class used for rendering the template associated with the current action.
    *
-   * @param string View class name
+   * @param string $class View class name
    */
   public function setViewClass($class)
   {
@@ -534,7 +536,7 @@ abstract class sfAction extends sfComponent
   /**
    * Returns a formatted message for a 404 error.
    *
-   * @param  string An error message (null by default)
+   * @param  string $message An error message (null by default)
    *
    * @return string The error message or a default one if null
    */

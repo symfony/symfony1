@@ -26,7 +26,7 @@ abstract class sfActions extends sfAction
    * This method try to execute the executeXXX() method of the current object where XXX is the
    * defined action name.
    *
-   * @param  sfRequest The current sfRequest object
+   * @param  sfRequest $request The current sfRequest object
    *
    * @return string    A string containing the view name associated with this action
    *

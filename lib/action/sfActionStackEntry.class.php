@@ -29,9 +29,9 @@ class sfActionStackEntry
   /**
    * Class constructor.
    *
-   * @param string A module name
-   * @param string An action name
-   * @param sfAction An sfAction implementation instance
+   * @param string   $moduleName      A module name
+   * @param string   $actionName      An action name
+   * @param sfAction $actionInstance  An sfAction implementation instance
    */
   public function __construct($moduleName, $actionName, $actionInstance)
   {
@@ -85,7 +85,7 @@ class sfActionStackEntry
   /**
    * Sets the rendered presentation for this action.
    *
-   * @param string A rendered presentation.
+   * @param string $presentation A rendered presentation.
    */
   public function setPresentation(&$presentation)
   {
