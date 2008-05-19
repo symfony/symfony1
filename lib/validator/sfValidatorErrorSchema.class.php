@@ -275,7 +275,7 @@ class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, It
    */
   public function offsetSet($offset, $value)
   {
-    throw new sfException('Unable update an error.');
+    throw new LogicException('Unable update an error.');
   }
 
   /**
