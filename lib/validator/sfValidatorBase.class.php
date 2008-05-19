@@ -44,8 +44,8 @@ abstract class sfValidatorBase
    *  * required
    *  * invalid
    *
-   * @param array An array of options
-   * @param array An array of error messages
+   * @param array $options   An array of options
+   * @param array $messages  An array of error messages
    */
   public function __construct($options = array(), $messages = array())
   {
@@ -89,8 +89,8 @@ abstract class sfValidatorBase
    * they will take precedence over the options and messages you configure
    * in this method.
    *
-   * @param array An array of options
-   * @param array An array of error messages
+   * @param array $options   An array of options
+   * @param array $messages  An array of error messages
    *
    * @see __construct()
    */
@@ -101,7 +101,7 @@ abstract class sfValidatorBase
   /**
    * Returns an error message given an error code.
    *
-   * @param  string The error code
+   * @param  string $name  The error code
    *
    * @return string The error message, or the empty string if the error code does not exist
    */
@@ -113,8 +113,8 @@ abstract class sfValidatorBase
   /**
    * Adds a new error code with a default error message.
    *
-   * @param string The error code
-   * @param string The error message
+   * @param string $name   The error code
+   * @param string $value  The error message
    */
   public function addMessage($name, $value)
   {
@@ -124,8 +124,8 @@ abstract class sfValidatorBase
   /**
    * Changes an error message given the error code.
    *
-   * @param string The error code
-   * @param string The error message
+   * @param string $name   The error code
+   * @param string $value  The error message
    */
   public function setMessage($name, $value)
   {
@@ -150,7 +150,7 @@ abstract class sfValidatorBase
   /**
    * Changes all error messages.
    *
-   * @param array An array of error messages
+   * @param array $values  An array of error messages
    */
   public function setMessages($values)
   {
@@ -160,7 +160,7 @@ abstract class sfValidatorBase
   /**
    * Gets an option value.
    *
-   * @param  string The option name
+   * @param  string $name  The option name
    *
    * @return mixed  The option value
    */
@@ -172,8 +172,8 @@ abstract class sfValidatorBase
   /**
    * Adds a new option value with a default value.
    *
-   * @param string The option name
-   * @param mixed  The default value
+   * @param string $name   The option name
+   * @param mixed  $value  The default value
    */
   public function addOption($name, $value = null)
   {
@@ -183,8 +183,8 @@ abstract class sfValidatorBase
   /**
    * Changes an option value.
    *
-   * @param string The option name
-   * @param mixed  The value
+   * @param string $name   The option name
+   * @param mixed  $value  The value
    */
   public function setOption($name, $value)
   {
@@ -199,9 +199,9 @@ abstract class sfValidatorBase
   /**
    * Returns true if the option exists.
    *
-   * @param  string  The option name
+   * @param  string $name  The option name
    *
-   * @return Boolean true if the option exists, false otherwise
+   * @return bool true if the option exists, false otherwise
    */
   public function hasOption($name)
   {
@@ -221,7 +221,7 @@ abstract class sfValidatorBase
   /**
    * Changes all options.
    *
-   * @param array An array if options
+   * @param array $values  An array if options
    */
   public function setOptions($values)
   {
@@ -231,7 +231,7 @@ abstract class sfValidatorBase
   /**
    * Adds a required option.
    *
-   * @param string The option name
+   * @param string $name  The option name
    */
   public function addRequiredOption($name)
   {
@@ -254,7 +254,7 @@ abstract class sfValidatorBase
    * This method is also responsible for trimming the input value
    * and checking the required option.
    *
-   * @param  mixed The input value
+   * @param  mixed $value  The input value
    *
    * @return mixed The cleaned value
    *
@@ -289,7 +289,7 @@ abstract class sfValidatorBase
    *
    * Every subclass must implements this method.
    *
-   * @param  mixed The input value
+   * @param  mixed $value  The input value
    *
    * @return mixed The cleaned value
    *
@@ -300,7 +300,7 @@ abstract class sfValidatorBase
   /**
    * Sets the charset to use when validating strings.
    *
-   * @param string The charset
+   * @param string $charset  The charset
    */
   static public function setCharset($charset)
   {
@@ -320,9 +320,9 @@ abstract class sfValidatorBase
   /**
    * Returns true if the value is empty.
    *
-   * @param  mixed   The input value
+   * @param  mixed $value  The input value
    *
-   * @return Boolean true if the value is empty, false otherwise
+   * @return bool true if the value is empty, false otherwise
    */
   protected function isEmpty($value)
   {
@@ -364,7 +364,7 @@ abstract class sfValidatorBase
   /**
    * Sets default messages for all possible error codes.
    *
-   * @param array An array of default error codes and messages
+   * @param array $messages  An array of default error codes and messages
    */
   protected function setDefaultMessages($messages)
   {
@@ -384,7 +384,7 @@ abstract class sfValidatorBase
   /**
    * Sets default option values.
    *
-   * @param array An array of default option values
+   * @param array $options  An array of default option values
    */
   protected function setDefaultOptions($options)
   {
@@ -394,9 +394,9 @@ abstract class sfValidatorBase
   /**
    * Returns a string representation of this validator.
    *
-   * @param  integer Indentation (number of spaces before each line)
+   * @param  int $indent  Indentation (number of spaces before each line)
    *
-   * @return string  The string representation of the validator
+   * @return string The string representation of the validator
    */
   public function asString($indent = 0)
   {

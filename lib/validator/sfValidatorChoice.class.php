@@ -25,6 +25,9 @@ class sfValidatorChoice extends sfValidatorBase
    *
    *  * choices: An array of expected values (required)
    *
+   * @param array $options    An array of options
+   * @param array $messages   An array of error messages
+   *
    * @see sfValidatorBase
    */
   protected function configure($options = array(), $messages = array())

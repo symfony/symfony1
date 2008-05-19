@@ -33,6 +33,9 @@ class sfValidatorDate extends sfValidatorBase
    *
    *  * bad_format
    *
+   * @param array $options    An array of options
+   * @param array $messages   An array of error messages
+   *
    * @see sfValidatorBase
    */
   protected function configure($options = array(), $messages = array())
@@ -85,9 +88,9 @@ class sfValidatorDate extends sfValidatorBase
    *
    * The array can contains the following keys: year, month, day, hour, minute, second
    *
-   * @param  array   An array of date elements
+   * @param  array $value  An array of date elements
    *
-   * @return integer A timestamp
+   * @return int A timestamp
    */
   protected function convertDateArrayToTimestamp($value)
   {

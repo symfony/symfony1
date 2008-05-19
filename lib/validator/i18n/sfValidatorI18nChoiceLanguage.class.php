@@ -26,6 +26,9 @@ class sfValidatorI18nChoiceLanguage extends sfValidatorChoice
    *  * culture:   The culture to use for internationalized strings (required)
    *  * languages: An array of language codes to use (ISO 639-1)
    *
+   * @param array $options   An array of options
+   * @param array $messages  An array of error messages
+   *
    * @see sfValidatorChoice
    */
   protected function configure($options = array(), $messages = array())

@@ -41,11 +41,11 @@ class sfValidatorSchemaCompare extends sfValidatorSchema
    *  * right_field:        The right field name
    *  * throw_global_error: Whether to throw a global error (false by default) or an error tied to the left field
    *
-   * @param string The left field name
-   * @param string The operator to apply
-   * @param string The right field name
-   * @param array  An array of options
-   * @param array  An array of error messages
+   * @param string $leftField   The left field name
+   * @param string $operator    The operator to apply
+   * @param string $rightField  The right field name
+   * @param array  $options     An array of options
+   * @param array  $messages    An array of error messages
    *
    * @see sfValidatorBase
    */

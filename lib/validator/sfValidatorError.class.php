@@ -25,9 +25,9 @@ class sfValidatorError extends Exception
   /**
    * Constructor.
    *
-   * @param sfValidatorBase A sfValidatorBase instance
-   * @param string          The error code
-   * @param array           An array of named arguments needed to render the error message
+   * @param sfValidatorBase $validator  An sfValidatorBase instance
+   * @param string          $code       The error code
+   * @param array           $arguments  An array of named arguments needed to render the error message
    */
   public function __construct(sfValidatorBase $validator, $code, $arguments = array())
   {
@@ -77,7 +77,7 @@ class sfValidatorError extends Exception
   /**
    * Returns the arguments needed to format the message.
    *
-   * @param Boolean false to use it as arguments for the message format, true otherwise (default to false)
+   * @param bool $raw  false to use it as arguments for the message format, true otherwise (default to false)
    *
    * @see getMessageFormat()
    */

@@ -49,6 +49,9 @@ class sfValidatorFile extends sfValidatorBase
    *  * cant_write
    *  * extension
    *
+   * @param array $options   An array of options
+   * @param array $messages  An array of error messages
+   *
    * @see sfValidatorBase
    */
   protected function configure($options = array(), $messages = array())
@@ -163,8 +166,8 @@ class sfValidatorFile extends sfValidatorBase
    * This methods call each mime_type_guessers option callables to
    * guess the mime type.
    *
-   * @param  string The absolute path of a file
-   * @param  string The default mime type to return if not guessable
+   * @param  string $file      The absolute path of a file
+   * @param  string $fallback  The default mime type to return if not guessable
    *
    * @return string The mime type of the file (fallback is returned if not guessable)
    */
@@ -186,7 +189,7 @@ class sfValidatorFile extends sfValidatorBase
   /**
    * Guess the file mime type with PECL Fileinfo extension
    *
-   * @param  string The absolute path of a file
+   * @param  string $file  The absolute path of a file
    *
    * @return string The mime type of the file (null if not guessable)
    */
@@ -211,7 +214,7 @@ class sfValidatorFile extends sfValidatorBase
   /**
    * Guess the file mime type with mime_content_type function (deprecated)
    *
-   * @param  string The absolute path of a file
+   * @param  string $file  The absolute path of a file
    *
    * @return string The mime type of the file (null if not guessable)
    */
@@ -228,7 +231,7 @@ class sfValidatorFile extends sfValidatorBase
   /**
    * Guess the file mime type with the file binary (only available on *nix)
    *
-   * @param  string The absolute path of a file
+   * @param  string $file  The absolute path of a file
    *
    * @return string The mime type of the file (null if not guessable)
    */
@@ -297,10 +300,10 @@ class sfValidatedFile
   /**
    * Constructor.
    *
-   * @param string The original file name
-   * @param string The file content type
-   * @param string The absolute temporary path to the file
-   * @param int    The file size (in bytes)
+   * @param string $originalName  The original file name
+   * @param string $type          The file content type
+   * @param string $tempName      The absolute temporary path to the file
+   * @param int    $size          The file size (in bytes)
    */
   public function __construct($originalName, $type, $tempName, $size)
   {
@@ -323,12 +326,12 @@ class sfValidatedFile
    *
    * This method can throw exceptions if there is a problem when saving the file.
    *
-   * @param string  The absolute file path to save the file
-   * @param int     The octal mode to use for the new file
-   * @param Boolean Indicates that we should make the directory before moving the file
-   * @param int     The octal mode to use when creating the directory
+   * @param  string $file      The absolute file path to save the file
+   * @param  int    $fileMode  The octal mode to use for the new file
+   * @param  bool   $create    Indicates that we should make the directory before moving the file
+   * @param  int    $dirMode   The octal mode to use when creating the directory
    *
-   * @return boolean true, if the file was saved, otherwise false
+   * @return bool   true, if the file was saved, otherwise false
    *
    * @throws Exception
    */
@@ -375,7 +378,7 @@ class sfValidatedFile
   /**
    * Returns the file extension, based on the content type of the file.
    *
-   * @param  string The default extension to return if none was given
+   * @param  string $default  The default extension to return if none was given
    *
    * @return string The extension (with the dot)
    */
@@ -387,7 +390,7 @@ class sfValidatedFile
   /**
    * Returns the original uploaded file name extension.
    *
-   * @param  string The default extension to return if none was given
+   * @param  string $default  The default extension to return if none was given
    *
    * @return string The extension of the uploaded name (with the dot)
    */
@@ -459,8 +462,8 @@ class sfValidatedFile
   /**
    * Returns the extension associated with the given content type.
    *
-   * @param  string The content type
-   * @param  string The default extension to use
+   * @param  string $type     The content type
+   * @param  string $default  The default extension to use
    *
    * @return string The extension (with the dot)
    */

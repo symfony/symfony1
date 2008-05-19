@@ -19,6 +19,9 @@
 class sfValidatorUrl extends sfValidatorRegex
 {
   /**
+   * @param array $options   An array of options
+   * @param array $messages  An array of error messages
+   *
    * @see sfValidatorRegex
    */
   protected function configure($options = array(), $messages = array())

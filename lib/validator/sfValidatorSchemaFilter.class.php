@@ -21,10 +21,10 @@ class sfValidatorSchemaFilter extends sfValidatorSchema
   /**
    * Constructor.
    *
-   * @param string          The field name
-   * @param sfValidatorBase The validator
-   * @param array           An array of options
-   * @param array           An array of error messages
+   * @param string          $field      The field name
+   * @param sfValidatorBase $validator  The validator
+   * @param array           $options    An array of options
+   * @param array           $messages   An array of error messages
    *
    * @see sfValidatorBase
    */

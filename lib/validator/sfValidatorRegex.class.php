@@ -25,6 +25,9 @@ class sfValidatorRegex extends sfValidatorBase
    *
    *  * pattern: A regex pattern compatible with PCRE (required)
    *
+   * @param array $options   An array of options
+   * @param array $messages  An array of error messages
+   *
    * @see sfValidatorBase
    */
   protected function configure($options = array(), $messages = array())

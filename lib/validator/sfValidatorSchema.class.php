@@ -33,9 +33,9 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
    *  * null
    *  * an array of named sfValidatorBase instances
    *
-   * @param mixed Initial fields
-   * @param array An array of options
-   * @param array An array of error messages
+   * @param mixed $fields    Initial fields
+   * @param array $options   An array of options
+   * @param array $messages  An array of error messages
    *
    * @see sfValidatorBase
    */
@@ -68,8 +68,8 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
    *
    *  * extra_fields
    *
-   * @param array An array of options
-   * @param array An array of error messages
+   * @param array $options   An array of options
+   * @param array $messages  An array of error messages
    *
    * @see sfValidatorBase
    */
@@ -201,7 +201,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
    * It executes the validator returned by getPreValidator()
    * on the global array of values.
    *
-   * @param  array The input values
+   * @param  array $values  The input values
    *
    * @throws sfValidatorError
    */
@@ -223,7 +223,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
    * It executes the validator returned by getPostValidator()
    * on the global array of cleaned values.
    *
-   * @param  array The input values
+   * @param  array $values  The input values
    *
    * @throws sfValidatorError
    */
@@ -240,7 +240,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
   /**
    * Sets the pre validator.
    *
-   * @param sfValidatorBase A sfValidatorBase instance
+   * @param sfValidatorBase $validator  An sfValidatorBase instance
    */
   public function setPreValidator(sfValidatorBase $validator)
   {
@@ -260,7 +260,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
   /**
    * Sets the post validator.
    *
-   * @param sfValidatorBase A sfValidatorBase instance
+   * @param sfValidatorBase $validator  An sfValidatorBase instance
    */
   public function setPostValidator(sfValidatorBase $validator)
   {
@@ -270,7 +270,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
   /**
    * Returns the post validator.
    *
-   * @return sfValidatorBase A sfValidatorBase instance
+   * @return sfValidatorBase An sfValidatorBase instance
    */
   public function getPostValidator()
   {
@@ -280,9 +280,9 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
   /**
    * Returns true if the schema has a field with the given name (implements the ArrayAccess interface).
    *
-   * @param  string  The field name
+   * @param  string  $name  The field name
    *
-   * @return Boolean true if the schema has a field with the given name, false otherwise
+   * @return bool true if the schema has a field with the given name, false otherwise
    */
   public function offsetExists($name)
   {
@@ -292,7 +292,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
   /**
    * Gets the field associated with the given name (implements the ArrayAccess interface).
    *
-   * @param  string   The field name
+   * @param  string $name  The field name
    *
    * @return sfValidatorBase The sfValidatorBase instance associated with the given name, null if it does not exist
    */
@@ -304,8 +304,8 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
   /**
    * Sets a field (implements the ArrayAccess interface).
    *
-   * @param string          The field name
-   * @param sfValidatorBase A sfValidatorBase instance
+   * @param string          $name       The field name
+   * @param sfValidatorBase $validator  An sfValidatorBase instance
    */
   public function offsetSet($name, $validator)
   {
@@ -320,7 +320,7 @@ class sfValidatorSchema extends sfValidatorBase implements ArrayAccess
   /**
    * Removes a field by name (implements the ArrayAccess interface).
    *
-   * @param string
+   * @param string $name
    */
   public function offsetUnset($name)
   {

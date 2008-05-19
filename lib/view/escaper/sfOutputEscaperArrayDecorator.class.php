@@ -117,7 +117,7 @@ class sfOutputEscaperArrayDecorator extends sfOutputEscaperGetterDecorator imple
    * @param  string $offset  (ignored)
    * @param  string $value   (ignored)
    *
-   * @throws sfException<
+   * @throws sfException
    */
   public function offsetSet($offset, $value)
   {

@@ -21,10 +21,10 @@ class sfValidatorSchemaForEach extends sfValidatorSchema
   /**
    * Constructor.
    *
-   * @param sfValidatorBase Initial validator
-   * @param integer         The number of times to replicate the validator
-   * @param array           An array of options
-   * @param array           An array of error messages
+   * @param sfValidatorBase $validator  Initial validator
+   * @param integer         $count      The number of times to replicate the validator
+   * @param array           $options    An array of options
+   * @param array           $messages   An array of error messages
    *
    * @see sfValidatorBase
    */

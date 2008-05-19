@@ -30,9 +30,9 @@ class sfValidatorOr extends sfValidatorBase
    *  * a sfValidatorBase instance
    *  * an array of sfValidatorBase instances
    *
-   * @param mixed Initial validators
-   * @param array An array of options
-   * @param array An array of error messages
+   * @param mixed $validators  Initial validators
+   * @param array $options     An array of options
+   * @param array $messages    An array of error messages
    *
    * @see sfValidatorBase
    */
@@ -68,7 +68,7 @@ class sfValidatorOr extends sfValidatorBase
   /**
    * Adds a validator.
    *
-   * @param sfValidatorBase A sfValidatorBase instance
+   * @param sfValidatorBase $validator  An sfValidatorBase instance
    */
   public function addValidator(sfValidatorBase $validator)
   {

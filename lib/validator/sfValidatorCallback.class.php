@@ -26,6 +26,9 @@ class sfValidatorCallback extends sfValidatorBase
    *  * callback:  A valid PHP callback (required)
    *  * arguments: An array of arguments to pass to the callback
    *
+   * @param array $options    An array of options
+   * @param array $messages   An array of error messages
+   *
    * @see sfValidatorBase
    */
   protected function configure($options = array(), $messages = array())

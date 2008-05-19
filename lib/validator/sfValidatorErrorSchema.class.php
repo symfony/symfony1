@@ -27,8 +27,8 @@ class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, It
   /**
    * Constructor.
    *
-   * @param sfValidatorBase A sfValidatorBase instance
-   * @param array           An array of errors
+   * @param sfValidatorBase $validator  An sfValidatorBase instance
+   * @param array           $errors     An array of errors
    */
   public function __construct(sfValidatorBase $validator, $errors = array())
   {
@@ -47,8 +47,8 @@ class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, It
    *
    * This method merges sfValidatorErrorSchema errors with the current instance.
    *
-   * @param sfValidatorError A sfValidatorError instance
-   * @param string           The error name
+   * @param sfValidatorError $error  An sfValidatorError instance
+   * @param string           $name   The error name
    */
   public function addError(sfValidatorError $error, $name = null)
   {
@@ -102,7 +102,7 @@ class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, It
   /**
    * Adds an array of errors.
    *
-   * @param array An array of sfValidatorError instances
+   * @param array $errors  An array of sfValidatorError instances
    */
   public function addErrors($errors)
   {
@@ -244,9 +244,9 @@ class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, It
   /**
    * Returns true if the error exists (implements the ArrayAccess interface).
    *
-   * @param  string  The name of the error
+   * @param  string $name  The name of the error
    *
-   * @return Boolean true if the error exists, false otherwise
+   * @return bool true if the error exists, false otherwise
    */
   public function offsetExists($name)
   {
@@ -256,7 +256,7 @@ class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, It
   /**
    * Returns the error associated with the name (implements the ArrayAccess interface).
    *
-   * @param  string        The offset of the value to get
+   * @param  string $name  The offset of the value to get
    *
    * @return sfValidatorError A sfValidatorError instance
    */
@@ -268,20 +268,20 @@ class sfValidatorErrorSchema extends sfValidatorError implements ArrayAccess, It
   /**
    * Throws an exception saying that values cannot be set (implements the ArrayAccess interface).
    *
-   * @param string (ignored)
-   * @param string (ignored)
+   * @param string $offset  (ignored)
+   * @param string $value   (ignored)
    *
-   * @throws <b>LogicException</b>
+   * @throws sfException
    */
   public function offsetSet($offset, $value)
   {
-    throw new LogicException('Unable update an error.');
+    throw new sfException('Unable update an error.');
   }
 
   /**
    * Impossible to call because this is an exception!
    *
-   * @param string (ignored)
+   * @param string $offset  (ignored)
    */
   public function offsetUnset($offset)
   {

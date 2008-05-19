@@ -63,7 +63,7 @@ class sfValidatorFromDescription extends sfValidatorDecorator
   /**
    * Tokenizes a validator string to a list of tokens in RPN.
    *
-   * @param  string A validator string
+   * @param  string $string  A validator string
    *
    * @return array  An array of tokens
    */
@@ -147,8 +147,8 @@ class sfValidatorFromDescription extends sfValidatorDecorator
   /**
    * Parses validator arguments.
    *
-   * @param  string  The string to parse
-   * @param  integer The indice to start the parsing
+   * @param  string  $string  The string to parse
+   * @param  integer $i       The indice to start the parsing
    *
    * @return array   An array of parameters
    */
@@ -192,7 +192,7 @@ class sfValidatorFromDescription extends sfValidatorDecorator
   /**
    * Converts a token array from an infix notation to a RPN.
    *
-   * @param  array An array of tokens in infix notation
+   * @param  array $tokens  An array of tokens in infix notation
    *
    * @return array An array of token in RPN
    */
@@ -249,8 +249,8 @@ class sfValidatorFromDescription extends sfValidatorDecorator
   /**
    * Reduces tokens to a single token and convert it with the given method.
    *
-   * @param  array  An array of tokens
-   * @param  string The method name to execute on each token
+   * @param  array  $tokens  An array of tokens
+   * @param  string $method  The method name to execute on each token
    *
    * @return mixed  A single validator representation
    */
