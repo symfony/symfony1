@@ -48,7 +48,7 @@ class sfFinder
    *
    * Finder will descend at most $level levels of directories below the starting point.
    *
-   * @param  integer level
+   * @param  int $level
    * @return object current sfFinder object
    */
   public function maxdepth($level)
@@ -63,7 +63,7 @@ class sfFinder
    *
    * Finder will start applying tests at level $level.
    *
-   * @param  integer level
+   * @param  int $level
    * @return object current sfFinder object
    */
   public function mindepth($level)
@@ -81,7 +81,7 @@ class sfFinder
   /**
    * Sets the type of elements to returns.
    *
-   * @param  string directory or file or any (for both file and directory)
+   * @param  string $name  directory or file or any (for both file and directory)
    * @return object new sfFinder object
    */
   public static function type($name)
@@ -234,7 +234,9 @@ class sfFinder
    *
    * Currently supports Subversion, CVS, DARCS, Gnu Arch, Monotone, Bazaar-NG, GIT, Mercurial
    *
-   * @return object current sfFinder object
+   * @param  bool   $ignore  falase when version control directories shall be included (default is true)
+   *
+   * @return object current  sfFinder object
    */
   public function ignore_version_control($ignore = true)
   {
@@ -640,7 +642,7 @@ class sfGlobToRegex
   /**
    * Returns a compiled regex which is the equiavlent of the globbing pattern.
    *
-   * @param  string glob pattern
+   * @param  string $glob  pattern
    * @return string regex
    */
   public static function glob_to_regex($glob)

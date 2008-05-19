@@ -23,7 +23,7 @@ class sfToolkit
   /**
    * Extract the class or interface name from filename.
    *
-   * @param string A filename.
+   * @param  string $filename  A filename.
    *
    * @return string A class or interface name, if one can be extracted, otherwise null.
    */
@@ -49,9 +49,7 @@ class sfToolkit
   /**
    * Clear all files in a given directory.
    *
-   * @param  string An absolute filesystem path to a directory.
-   *
-   * @return void
+   * @param string $directory  An absolute filesystem path to a directory.
    */
   public static function clearDirectory($directory)
   {
@@ -98,9 +96,7 @@ class sfToolkit
   /**
    * Clear all files and directories corresponding to a glob pattern.
    *
-   * @param  string An absolute filesystem pattern.
-   *
-   * @return void
+   * @param string $pattern  An absolute filesystem pattern.
    */
   public static function clearGlob($pattern)
   {
@@ -127,7 +123,7 @@ class sfToolkit
   /**
    * Determine if a filesystem path is absolute.
    *
-   * @param path A filesystem path.
+   * @param  path $path  A filesystem path.
    *
    * @return bool true, if the path is absolute, otherwise false.
    */
@@ -149,7 +145,8 @@ class sfToolkit
   /**
    * Determine if a lock file is present.
    *
-   * @param integer A max amount of life time for the lock file.
+   * @param  string  $lockFile             Name of the lock file.
+   * @param  integer $maxLockFileLifeTime  A max amount of life time for the lock file.
    *
    * @return bool true, if the lock file is present, otherwise false.
    */
@@ -177,9 +174,9 @@ class sfToolkit
   /**
    * Strips comments from php source code
    *
-   * @param  string  PHP source code.
+   * @param  string $source  PHP source code.
    *
-   * @return string  Comment free source code.
+   * @return string Comment free source code.
    */
   public static function stripComments($source)
   {
@@ -223,7 +220,7 @@ class sfToolkit
   /**
    * Strip slashes recursively from array
    *
-   * @param array  the value to strip
+   * @param  array $value  the value to strip
    *
    * @return array clean value with slashes stripped
    */
@@ -303,7 +300,7 @@ class sfToolkit
   /**
    * Converts string to array
    *
-   * @param string the value to convert to array
+   * @param  string $string  the value to convert to array
    *
    * @return array
    */
@@ -332,8 +329,8 @@ class sfToolkit
   /**
    * Finds the type of the passed value, returns the value as the new type.
    *
-   * @param  string
-   * @param  boolean Quote?
+   * @param  string $value
+   * @param  bool   $quoted  Quote?
    *
    * @return mixed
    */
@@ -378,7 +375,7 @@ class sfToolkit
   /**
    * Replaces constant identifiers in a scalar value.
    *
-   * @param string the value to perform the replacement on
+   * @param  string $value  the value to perform the replacement on
    *
    * @return string the value with substitutions made
    */
@@ -390,8 +387,8 @@ class sfToolkit
   /**
    * Returns subject replaced with regular expression matchs
    *
-   * @param mixed subject to search
-   * @param array array of search => replace pairs
+   * @param mixed $search        subject to search
+   * @param array $replacePairs  array of search => replace pairs
    */
   public static function pregtr($search, $replacePairs)
   {
@@ -401,7 +398,7 @@ class sfToolkit
   /**
    * Checks if array values are empty
    *
-   * @param array the array to check
+   * @param  array $array  the array to check
    * @return boolean true if empty, otherwise false
    */
   public static function isArrayValuesEmpty($array)
@@ -479,9 +476,9 @@ class sfToolkit
   /**
    * Returns an array value for a path.
    *
-   * @param array  The values to search
-   * @param string The token name
-   * @param array  Default if not found
+   * @param array  $values   The values to search
+   * @param string $name     The token name
+   * @param array  $default  Default if not found
    *
    * @return array
    */
@@ -525,10 +522,10 @@ class sfToolkit
   /**
    * Returns true if the a path exists for the given array.
    *
-   * @param array  The values to search
-   * @param string The token name
+   * @param array  $values  The values to search
+   * @param string $name    The token name
    *
-   * @return Boolean
+   * @return bool
    */
   public static function hasArrayValueForPath($values, $name)
   {
@@ -565,9 +562,9 @@ class sfToolkit
   /**
    * Removes a path for the given array.
    *
-   * @param array  The values to search
-   * @param string The token name
-   * @param mixed  The default value to return if the name does not exist
+   * @param array  $values   The values to search
+   * @param string $name     The token name
+   * @param mixed  $default  The default value to return if the name does not exist
    */
   public static function removeArrayValueForPath(&$values, $name, $default = null)
   {
@@ -698,7 +695,9 @@ class sfToolkit
    *
    * This file comes from Prado (BSD License)
    *
-   * @param string string to convert to UTF-8
+   * @param  string $string string to convert to UTF-8
+   * @param  string $from   current encoding
+   *
    * @return string UTF-8 encoded string, original string if iconv failed.
    */
   static public function I18N_toUTF8($string, $from)
@@ -719,7 +718,9 @@ class sfToolkit
    *
    * This file comes from Prado (BSD License)
    *
-   * @param string the UTF-8 string for conversion
+   * @param  string $string  the UTF-8 string for conversion
+   * @param  string $to      new encoding
+   *
    * @return string encoded string.
    */
   static public function I18N_toEncoding($string, $to)

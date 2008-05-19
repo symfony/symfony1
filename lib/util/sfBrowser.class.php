@@ -36,9 +36,9 @@ class sfBrowser
   /**
    * Class constructor.
    *
-   * @param string Hostname to browse
-   * @param string Remote address to spook
-   * @param array  Options for sfBrowser
+   * @param string $hostname  Hostname to browse
+   * @param string $remote    Remote address to spook
+   * @param array  $options   Options for sfBrowser
    *
    * @return void
    */
@@ -50,9 +50,9 @@ class sfBrowser
   /**
    * Initializes sfBrowser - sets up environment
    *
-   * @param string Hostname to browse
-   * @param string Remote address to spook
-   * @param array  Options for sfBrowser
+   * @param string $hostname  Hostname to browse
+   * @param string $remote    Remote address to spook
+   * @param array  $options   Options for sfBrowser
    *
    * @return void
    */
@@ -81,8 +81,8 @@ class sfBrowser
   /**
    * Sets variable name
    *
-   * @param string The variable name
-   * @param mixed  The value
+   * @param string $name   The variable name
+   * @param mixed  $value  The value
    *
    * @return sfBrowser
    */
@@ -96,8 +96,8 @@ class sfBrowser
   /**
    * Sets a HTTP header for the very next request.
    *
-   * @param string The header name
-   * @param string The header value
+   * @param string $header  The header name
+   * @param string $value   The header value
    */
   public function setHttpHeader($header, $value)
   {
@@ -109,8 +109,8 @@ class sfBrowser
   /**
    * Sets username and password for simulating http authentication.
    *
-   * @param string The username
-   * @param string The password
+   * @param string $username  The username
+   * @param string $password  The password
    *
    * @return sfBrowser
    */
@@ -125,8 +125,8 @@ class sfBrowser
   /**
    * Gets a uri.
    *
-   * @param string The URI to fetch
-   * @param array  The Request parameters
+   * @param string $uri         The URI to fetch
+   * @param array  $parameters  The Request parameters
    *
    * @return sfBrowser
    */
@@ -138,8 +138,8 @@ class sfBrowser
   /**
    * Posts a uri.
    *
-   * @param string The URI to fetch
-   * @param array  The Request parameters
+   * @param string $uri         The URI to fetch
+   * @param array  $parameters  The Request parameters
    *
    * @return sfBrowser
    */
@@ -151,10 +151,10 @@ class sfBrowser
   /**
    * Calls a request to a uri.
    *
-   * @param string The URI to fetch
-   * @param string The request method
-   * @param array  The Request parameters
-   * @param boolean Change the browser history stack?
+   * @param string $uri          The URI to fetch
+   * @param string $method       The request method
+   * @param array  $parameters   The Request parameters
+   * @param bool   $changeStack  Change the browser history stack?
    *
    * @return sfBrowser
    */
@@ -393,7 +393,7 @@ class sfBrowser
   /**
    * Returns the current application context.
    *
-   * @param  Boolean true to force context reload, false otherwise
+   * @param  bool $forceReload  true to force context reload, false otherwise
    *
    * @return sfContext
    */
@@ -488,8 +488,8 @@ class sfBrowser
   /**
    * Sets a form field in the browser.
    *
-   * @param string The field name
-   * @param string The field value
+   * @param string $name   The field name
+   * @param string $value  The field value
    *
    * @return sfBrowser
    */
@@ -504,8 +504,8 @@ class sfBrowser
   /**
    * Simulates a click on a link or button.
    *
-   * @param string $name The link or button text
-   * @param array $arguments
+   * @param string $name       The link or button text
+   * @param array  $arguments
    *
    * @return sfBrowser
    */
@@ -663,8 +663,8 @@ class sfBrowser
   /**
    * Parses arguments as array
    *
-   * @param string The argument name
-   * @param string The argument value
+   * @param string $name   The argument name
+   * @param string $value  The argument value
    * @param array  $vars
    */
   protected function parseArgumentAsArray($name, $value, &$vars)
@@ -730,7 +730,7 @@ class sfBrowser
   /**
    * Fixes uri removing # declarations and front controller.
    *
-   * @param string The URI to fix
+   * @param  string $uri  The URI to fix
    * @return string The fixed uri
    */
   protected function fixUri($uri)
@@ -774,7 +774,7 @@ class sfBrowser
   /**
    * Listener for exceptions
    *
-   * @param sfEvent The event to handle
+   * @param  sfEvent $event  The event to handle
    *
    * @return void
    */

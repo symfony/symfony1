@@ -21,7 +21,7 @@ class sfInflector
    * Returns a camelized string from a lower case and underscored string by replaceing slash with
    * double-colol and upper-casing each letter preceded by an underscore.
    *
-   * @param string String to camelize.
+   * @param  string $lower_case_and_underscored_word  String to camelize.
    *
    * @return string Camelized string.
    */
@@ -37,7 +37,7 @@ class sfInflector
   /**
    * Returns an underscore-syntaxed version or the CamelCased string.
    *
-   * @param string String to underscore.
+   * @param  string $camel_cased_word  String to underscore.
    *
    * @return string Underscored string.
    */
@@ -54,7 +54,7 @@ class sfInflector
   /**
    * Returns classname::module with classname:: stripped off.
    *
-   * @param string Classname and module pair.
+   * @param  string $class_name_in_module  Classname and module pair.
    *
    * @return string Module name.
    */
@@ -67,20 +67,20 @@ class sfInflector
    * Returns classname in underscored form, with "_id" tacked on at the end.
    * This is for use in dealing with foreign keys in the database.
    *
-   * @param string Class name.
-   * @param boolean Seperate with underscore.
+   * @param string $class_name                Class name.
+   * @param bool   $separate_with_underscore  Separate with underscore.
    *
    * @return strong Foreign key
    */
-  public static function foreign_key($class_name, $separate_class_name_and_id_with_underscore = true)
+  public static function foreign_key($class_name, $separate_with_underscore = true)
   {
-    return sfInflector::underscore(sfInflector::demodulize($class_name)).($separate_class_name_and_id_with_underscore ? "_id" : "id");
+    return sfInflector::underscore(sfInflector::demodulize($class_name)).($separate_with_underscore ? "_id" : "id");
   }
 
   /**
    * Returns corresponding table name for given classname.
    *
-   * @param string Name of class to get database table name for.
+   * @param  string $class_name  Name of class to get database table name for.
    *
    * @return string Name of the databse table for given class.
    */
@@ -92,7 +92,7 @@ class sfInflector
   /**
    * Returns model class name for given database table.
    *
-   * @param string Table name.
+   * @param  string $table_name  Table name.
    *
    * @return string Classified table name.
    */
@@ -105,7 +105,7 @@ class sfInflector
    * Returns a human-readable string from a lower case and underscored word by replacing underscores
    * with a space, and by upper-casing the initial characters.
    *
-   * @param string String to make more readable.
+   * @param  string $lower_case_and_underscored_word String to make more readable.
    *
    * @return string Human-readable string.
    */

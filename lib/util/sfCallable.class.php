@@ -24,7 +24,7 @@ class sfCallable
   /**
    * Constructor.
    *
-   * @param mixed A valid PHP callable (must be valid when calling the call() method)
+   * @param mixed $callable  A valid PHP callable (must be valid when calling the call() method)
    */
   public function __construct($callable)
   {

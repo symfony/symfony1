@@ -34,11 +34,11 @@ class sfContext
   /**
    * Creates a new context instance.
    *
-   * @param  sfApplicationConfiguration A sfApplicationConfiguration instance
-   * @param  string                     A name for this context (application name by default)
-   * @param  string                     The context class to use (sfContext by default)
+   * @param  sfApplicationConfiguration $configuration  An sfApplicationConfiguration instance
+   * @param  string                     $name           A name for this context (application name by default)
+   * @param  string                     $class          The context class to use (sfContext by default)
    *
-   * @return sfContext                  A sfContext instance
+   * @return sfContext                  An sfContext instance
    */
   static public function createInstance(sfApplicationConfiguration $configuration, $name = null, $class = __CLASS__)
   {
@@ -64,7 +64,7 @@ class sfContext
   /**
    * Initializes the current sfContext instance.
    *
-   * @param sfApplicationConfiguration A sfApplicationConfiguration instance
+   * @param sfApplicationConfiguration $configuration  An sfApplicationConfiguration instance
    */
   public function initialize(sfApplicationConfiguration $configuration)
   {
@@ -98,9 +98,10 @@ class sfContext
   /**
    * Retrieves the singleton instance of this class.
    *
-   * @param  string    The name of the sfContext to retrieve.
+   * @param  string    $name   The name of the sfContext to retrieve.
+   * @param  string    $class  The context class to use (sfContext by default)
    *
-   * @return sfContext A sfContext implementation instance.
+   * @return sfContext An sfContext implementation instance.
    */
   static public function getInstance($name = null, $class = __CLASS__)
   {
@@ -120,9 +121,9 @@ class sfContext
   /**
    * Checks to see if there has been a context created
    *
-   * @param  string   The name of the sfContext to check for
+   * @param  string $name  The name of the sfContext to check for
    *
-   * @return boolean  True is instanced, otherwise false
+   * @return bool true is instanced, otherwise false
    */
 
   public static function hasInstance($name = null)
@@ -166,7 +167,7 @@ class sfContext
   /**
    * Sets the current context to something else
    *
-   * @param  string    The name of the context to switch to
+   * @param string $name  The name of the context to switch to
    *
    */
   public static function switchTo($name)
@@ -195,7 +196,7 @@ class sfContext
   /**
    * Retrieves the current event dispatcher.
    *
-   * @return sfEventDispatcher A sfEventDispatcher instance
+   * @return sfEventDispatcher An sfEventDispatcher instance
    */
   public function getEventDispatcher()
   {
@@ -256,11 +257,11 @@ class sfContext
    *
    * If the [sf_use_database] setting is off, this will return null.
    *
-   * @param name A database name.
+   * @param  name  $name  A database name.
    *
-   * @return mixed A Database instance.
+   * @return mixed A database instance.
    *
-   * @throws <b>sfDatabaseException</b> If the requested database name does not exist.
+   * @throws sfDatabaseException if the requested database name does not exist.
    */
   public function getDatabaseConnection($name = 'default')
   {
@@ -342,9 +343,9 @@ class sfContext
   /**
    * Set the response object.
    *
-   * @param sfResponse A sfResponse instance.
+   * @param sfResponse $response  An sfResponse instance.
    *
-   * @return void.
+   * @return void
    */
   public function setResponse($response)
   {
@@ -419,7 +420,7 @@ class sfContext
   /**
    * Gets an object from the current context.
    *
-   * @param  string The name of the object to retrieve
+   * @param  string $name  The name of the object to retrieve
    *
    * @return object The object associated with the given name
    */
@@ -436,8 +437,8 @@ class sfContext
   /**
    * Puts an object in the current context.
    *
-   * @param string The name of the object to store
-   * @param object The object to store
+   * @param string $name    The name of the object to store
+   * @param object $object  The object to store
    */
   public function set($name, $object)
   {
@@ -447,9 +448,9 @@ class sfContext
   /**
    * Returns true if an object is currently stored in the current context with the given name, false otherwise.
    *
-   * @param  string The object name
+   * @param  string $name  The object name
    *
-   * @return boolean True if the object is not null, false otherwise
+   * @return bool true if the object is not null, false otherwise
    */
   public function has($name)
   {
@@ -459,8 +460,8 @@ class sfContext
   /**
    * Listens to the template.filter_parameters event.
    *
-   * @param  sfEvent An sfEvent instance
-   * @param  array   An array of template parameters to filter
+   * @param  sfEvent $event       An sfEvent instance
+   * @param  array   $parameters  An array of template parameters to filter
    *
    * @return array   The filtered parameters array
    */

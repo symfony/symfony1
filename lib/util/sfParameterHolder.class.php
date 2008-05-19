@@ -43,8 +43,8 @@ class sfParameterHolder implements Serializable
   /**
    * Retrieves a parameter.
    *
-   * @param string A parameter name
-   * @param mixed  A default parameter value
+   * @param  string $name     A parameter name
+   * @param  mixed  $default  A default parameter value
    *
    * @return mixed A parameter value, if the parameter exists, otherwise null
    */
@@ -85,7 +85,7 @@ class sfParameterHolder implements Serializable
   /**
    * Indicates whether or not a parameter exists.
    *
-   * @param string A parameter name
+   * @param  string $name  A parameter name
    *
    * @return bool true, if the parameter exists, otherwise false
    */
@@ -106,8 +106,8 @@ class sfParameterHolder implements Serializable
   /**
    * Remove a parameter.
    *
-   * @param string A parameter name
-   * @param mixed  A default parameter value
+   * @param  string $name     A parameter name
+   * @param  mixed  $default  A default parameter value
    *
    * @return string A parameter value, if the parameter was removed, otherwise null
    */
@@ -133,8 +133,8 @@ class sfParameterHolder implements Serializable
    *
    * If a parameter with the name already exists the value will be overridden.
    *
-   * @param string A parameter name
-   * @param mixed  A parameter value
+   * @param string $name   A parameter name
+   * @param mixed  $value  A parameter value
    */
   public function set($name, $value)
   {
@@ -146,8 +146,8 @@ class sfParameterHolder implements Serializable
    *
    * If a parameter with the name already exists the value will be overridden.
    *
-   * @param string A parameter name
-   * @param mixed  A reference to a parameter value
+   * @param string $name   A parameter name
+   * @param mixed  $value  A reference to a parameter value
    */
   public function setByRef($name, & $value)
   {
@@ -160,7 +160,7 @@ class sfParameterHolder implements Serializable
    * If an existing parameter name matches any of the keys in the supplied
    * array, the associated value will be overridden.
    *
-   * @param array An associative array of parameters and their associated values
+   * @param array $parameters  An associative array of parameters and their associated values
    */
   public function add($parameters)
   {
@@ -181,7 +181,7 @@ class sfParameterHolder implements Serializable
    * If an existing parameter name matches any of the keys in the supplied
    * array, the associated value will be overridden.
    *
-   * @param array An associative array of parameters and references to their associated values
+   * @param array $parameters  An associative array of parameters and references to their associated values
    */
   public function addByRef(& $parameters)
   {
@@ -203,6 +203,8 @@ class sfParameterHolder implements Serializable
 
   /**
    * Unserializes a sfParameterHolder instance.
+   *
+   * @param string $serialized  A serialized sfParameterHolder instance
    */
   public function unserialize($serialized)
   {
