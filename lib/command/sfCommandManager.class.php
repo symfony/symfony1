@@ -30,8 +30,8 @@ class sfCommandManager
   /**
    * Constructor.
    *
-   * @param sfCommandArgumentSet A sfCommandArgumentSet object
-   * @param sfCommandOptionSet   A setOptionSet object
+   * @param sfCommandArgumentSet $argumentSet A sfCommandArgumentSet object
+   * @param sfCommandOptionSet   $optionSet   A setOptionSet object
    */
   public function __construct(sfCommandArgumentSet $argumentSet = null, sfCommandOptionSet $optionSet = null)
   {
@@ -51,7 +51,7 @@ class sfCommandManager
   /**
    * Sets the argument set.
    *
-   * @param sfCommandArgumentSet A sfCommandArgumentSet object
+   * @param sfCommandArgumentSet $argumentSet A sfCommandArgumentSet object
    */
   public function setArgumentSet(sfCommandArgumentSet $argumentSet)
   {
@@ -71,7 +71,7 @@ class sfCommandManager
   /**
    * Sets the option set.
    *
-   * @param sfCommandOptionSet A sfCommandOptionSet object
+   * @param sfCommandOptionSet $optionSet A sfCommandOptionSet object
    */
   public function setOptionSet(sfCommandOptionSet $optionSet)
   {
@@ -91,7 +91,7 @@ class sfCommandManager
   /**
    * Processes command line arguments.
    *
-   * @param mixed A string or an array of command line parameters
+   * @param mixed $arguments A string or an array of command line parameters
    */
   public function process($arguments = null)
   {
@@ -205,7 +205,7 @@ class sfCommandManager
   /**
    * Returns the argument value for a given argument name.
    *
-   * @param  string The argument name
+   * @param  string $name The argument name
    *
    * @return mixed The argument value
    */
@@ -232,7 +232,7 @@ class sfCommandManager
   /**
    * Returns the option value for a given option name.
    *
-   * @param  string The option name
+   * @param  string $name The option name
    *
    * @return mixed The option value
    */
@@ -249,7 +249,7 @@ class sfCommandManager
   /**
    * Parses a short option.
    *
-   * @param string The option argument
+   * @param string $argument The option argument
    */
   protected function parseShortOption($argument)
   {
@@ -322,7 +322,7 @@ class sfCommandManager
   /**
    * Parses a long option.
    *
-   * @param string The option argument
+   * @param string $argument The option argument
    */
   protected function parseLongOption($argument)
   {

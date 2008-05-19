@@ -35,9 +35,9 @@ abstract class sfCommandApplication
   /**
    * Constructor.
    *
-   * @param sfEventDispatcher A sfEventDispatcher instance
-   * @param sfFormatter       A sfFormatter instance
-   * @param array             An array of options
+   * @param sfEventDispatcher $dispatcher   A sfEventDispatcher instance
+   * @param sfFormatter       $formatter    A sfFormatter instance
+   * @param array             $options      An array of options
    */
   public function __construct(sfEventDispatcher $dispatcher, sfFormatter $formatter, $options = array())
   {
@@ -60,7 +60,7 @@ abstract class sfCommandApplication
   /**
    * Returns the value of a given option.
    *
-   * @param  string The option name
+   * @param  string  $name  The option name
    *
    * @return mixed  The option value
    */
@@ -84,7 +84,7 @@ abstract class sfCommandApplication
    *
    * If you pass null, this method will register all available tasks.
    *
-   * @param array An array of tasks
+   * @param array  $tasks  An array of tasks
    */
   public function registerTasks($tasks = null)
   {
@@ -110,7 +110,7 @@ abstract class sfCommandApplication
   /**
    * Registers a task object.
    *
-   * @param sfTask An sfTask object
+   * @param sfTask $task An sfTask object
    */
   public function registerTask(sfTask $task)
   {
@@ -145,7 +145,7 @@ abstract class sfCommandApplication
   /**
    * Returns a registered task by name or alias.
    *
-   * @param string  The task name or alias
+   * @param string $name The task name or alias
    *
    * @return sfTask An sfTask object
    */
@@ -162,7 +162,7 @@ abstract class sfCommandApplication
   /**
    * Runs the current application.
    *
-   * @param mixed The command line options
+   * @param mixed $options The command line options
    */
   public function run($options = null)
   {
@@ -191,7 +191,7 @@ abstract class sfCommandApplication
   /**
    * Sets the application name.
    *
-   * @param string The application name
+   * @param string $name The application name
    */
   public function setName($name)
   {
@@ -211,7 +211,7 @@ abstract class sfCommandApplication
   /**
    * Sets the application version.
    *
-   * @param string The application version
+   * @param string $version The application version
    */
   public function setVersion($version)
   {
@@ -221,7 +221,7 @@ abstract class sfCommandApplication
   /**
    * Returns the long version of the application.
    *
-   * @param string The long version
+   * @return string The long application version
    */
   public function getLongVersion()
   {
@@ -279,7 +279,7 @@ abstract class sfCommandApplication
   /**
    * Parses and handles command line options.
    *
-   * @param mixed The command line options
+   * @param mixed $options The command line options
    */
   protected function handleOptions($options = null)
   {
@@ -332,8 +332,7 @@ abstract class sfCommandApplication
   /**
    * Renders an exception.
    *
-   * @param Exception An exception object
-   * @param sfTask    The current sfTask object
+   * @param Exception $e An exception object
    */
   public function renderException($e)
   {
@@ -404,7 +403,7 @@ abstract class sfCommandApplication
   /**
    * Gets a task from a task name or a shortcut.
    *
-   * @param  string The task name or a task shortcut
+   * @param  string  $name  The task name or a task shortcut
    *
    * @return sfTask A sfTask object
    */

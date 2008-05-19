@@ -25,7 +25,7 @@ class sfCommandOptionSet
   /**
    * Constructor.
    *
-   * @param array An array of sfCommandOption objects
+   * @param array $options An array of sfCommandOption objects
    */
   public function __construct($options = array())
   {
@@ -35,7 +35,7 @@ class sfCommandOptionSet
   /**
    * Sets the sfCommandOption objects.
    *
-   * @param array An array of sfCommandOption objects
+   * @param array $options An array of sfCommandOption objects
    */
   public function setOptions($options = array())
   {
@@ -47,7 +47,7 @@ class sfCommandOptionSet
   /**
    * Add an array of sfCommandOption objects.
    *
-   * @param array An array of sfCommandOption objects
+   * @param array $options An array of sfCommandOption objects
    */
   public function addOptions($options = array())
   {
@@ -60,7 +60,7 @@ class sfCommandOptionSet
   /**
    * Add a sfCommandOption objects.
    *
-   * @param sfCommandOption A sfCommandOption object
+   * @param sfCommandOption $option A sfCommandOption object
    */
   public function addOption(sfCommandOption $option)
   {
@@ -83,7 +83,7 @@ class sfCommandOptionSet
   /**
    * Returns an option by name.
    *
-   * @param  string The option name
+   * @param  string $name The option name
    *
    * @return sfCommandOption A sfCommandOption object
    */
@@ -100,7 +100,7 @@ class sfCommandOptionSet
   /**
    * Returns true if an option object exists by name.
    *
-   * @param  string  The option name
+   * @param  string  $name  The option name
    *
    * @return Boolean true if the option object exists, false otherwise
    */
@@ -122,7 +122,7 @@ class sfCommandOptionSet
   /**
    * Returns true if an option object exists by shortcut.
    *
-   * @param  string  The option shortcut
+   * @param  string  $name  The option shortcut
    *
    * @return Boolean true if the option object exists, false otherwise
    */
@@ -160,7 +160,7 @@ class sfCommandOptionSet
   /**
    * Returns the option name given a shortcut.
    *
-   * @param  string The shortcut
+   * @param  string $shortcut The shortcut
    *
    * @return string The option name
    */

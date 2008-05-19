@@ -20,8 +20,8 @@ class sfCommandLogger extends sfConsoleLogger
   /**
    * Initializes this logger.
    *
-   * @param  sfEventDispatcher A sfEventDispatcher instance
-   * @param  array             An array of options.
+   * @param  sfEventDispatcher $dispatcher  A sfEventDispatcher instance
+   * @param  array             $options     An array of options.
    */
   public function initialize(sfEventDispatcher $dispatcher, $options = array())
   {
@@ -33,8 +33,7 @@ class sfCommandLogger extends sfConsoleLogger
   /**
    * Listens to command.log events.
    *
-   * @param sfEvent An sfEvent instance
-   *
+   * @param sfEvent $event An sfEvent instance
    */
   public function listenToLogEvent(sfEvent $event)
   {

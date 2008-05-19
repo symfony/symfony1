@@ -31,8 +31,8 @@ class sfAnsiColorFormatter extends sfFormatter
   /**
    * Sets a new style.
    *
-   * @param string The style name
-   * @param array  An array of options
+   * @param string $name    The style name
+   * @param array  $options An array of options
    */
   public function setStyle($name, $options = array())
   {
@@ -42,8 +42,9 @@ class sfAnsiColorFormatter extends sfFormatter
   /**
    * Formats a text according to the given style or parameters.
    *
-   * @param  string The test to style
-   * @param  mixed  An array of options or a style name
+   * @param  string   $text       The test to style
+   * @param  mixed    $parameters An array of options or a style name
+   * @param  resource $stream     The stream to format for
    *
    * @return string The styled text
    */
@@ -87,9 +88,9 @@ class sfAnsiColorFormatter extends sfFormatter
   /**
    * Formats a message within a section.
    *
-   * @param string  The section name
-   * @param string  The text message
-   * @param integer The maximum size allowed for a line (65 by default)
+   * @param string  $section  The section name
+   * @param string  $text     The text message
+   * @param integer $size     The maximum size allowed for a line (65 by default)
    */
   public function formatSection($section, $text, $size = null)
   {
@@ -101,8 +102,8 @@ class sfAnsiColorFormatter extends sfFormatter
   /**
    * Truncates a line.
    *
-   * @param string  The text
-   * @param integer The maximum size of the returned string (65 by default)
+   * @param string  $text The text
+   * @param integer $size The maximum size of the returned string (65 by default)
    *
    * @return string The truncated string
    */
@@ -131,7 +132,7 @@ class sfAnsiColorFormatter extends sfFormatter
    *  -  windows
    *  -  non tty consoles
    *
-   * @param  mixed A stream
+   * @param  mixed  $stream  A stream
    *
    * @return Boolean true if the stream supports colorization, false otherwise
    */

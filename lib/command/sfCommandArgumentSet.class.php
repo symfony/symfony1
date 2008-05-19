@@ -27,7 +27,7 @@ class sfCommandArgumentSet
   /**
    * Constructor.
    *
-   * @param array An array of sfCommandArgument objects
+   * @param array $arguments An array of sfCommandArgument objects
    */
   public function __construct($arguments = array())
   {
@@ -37,7 +37,7 @@ class sfCommandArgumentSet
   /**
    * Sets the sfCommandArgument objects.
    *
-   * @param array An array of sfCommandArgument objects
+   * @param array $arguments An array of sfCommandArgument objects
    */
   public function setArguments($arguments = array())
   {
@@ -50,7 +50,7 @@ class sfCommandArgumentSet
   /**
    * Add an array of sfCommandArgument objects.
    *
-   * @param array An array of sfCommandArgument objects
+   * @param array $arguments An array of sfCommandArgument objects
    */
   public function addArguments($arguments = array())
   {
@@ -66,7 +66,7 @@ class sfCommandArgumentSet
   /**
    * Add a sfCommandArgument objects.
    *
-   * @param sfCommandArgument A sfCommandArgument object
+   * @param sfCommandArgument $argument A sfCommandArgument object
    */
   public function addArgument(sfCommandArgument $argument)
   {
@@ -105,7 +105,7 @@ class sfCommandArgumentSet
   /**
    * Returns an argument by name.
    *
-   * @param  string The argument name
+   * @param  string $name The argument name
    *
    * @return sfCommandArgument A sfCommandArgument object
    */
@@ -122,7 +122,7 @@ class sfCommandArgumentSet
   /**
    * Returns true if an argument object exists by name.
    *
-   * @param  string  The argument name
+   * @param  string  $name  The argument name
    *
    * @return Boolean true if the argument object exists, false otherwise
    */

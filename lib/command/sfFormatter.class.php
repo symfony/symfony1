@@ -29,9 +29,9 @@ class sfFormatter
   /**
    * Formats a text according to the given parameters.
    *
-   * @param  string The test to style
-   * @param  mixed  An array of parameters
-   * @param  stream A stream (default to STDOUT)
+   * @param  string $text         The test to style
+   * @param  mixed  $parameters   An array of parameters
+   * @param  stream $stream       A stream (default to STDOUT)
    *
    * @return string The formatted text
    */
@@ -43,9 +43,9 @@ class sfFormatter
   /**
    * Formats a message within a section.
    *
-   * @param string  The section name
-   * @param string  The text message
-   * @param integer The maximum size allowed for a line (65 by default)
+   * @param string  $section  The section name
+   * @param string  $text     The text message
+   * @param integer $size     The maximum size allowed for a line (65 by default)
    */
   public function formatSection($section, $text, $size = null)
   {
@@ -55,8 +55,8 @@ class sfFormatter
   /**
    * Truncates a line.
    *
-   * @param string  The text
-   * @param integer The maximum size of the returned string (65 by default)
+   * @param string  $text The text
+   * @param integer $size The maximum size of the returned string (65 by default)
    *
    * @return string The truncated string
    */
@@ -80,7 +80,7 @@ class sfFormatter
   /**
    * Sets the maximum line size.
    *
-   * @param integer The maximum line size for a message
+   * @param integer $size The maximum line size for a message
    */
   public function setMaxLineSize($size)
   {

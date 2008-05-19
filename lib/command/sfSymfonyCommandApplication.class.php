@@ -20,8 +20,6 @@ class sfSymfonyCommandApplication extends sfCommandApplication
 {
   /**
    * Configures the current symfony command application.
-   *
-   * @param string The symfony lib directory
    */
   public function configure()
   {
@@ -42,7 +40,7 @@ class sfSymfonyCommandApplication extends sfCommandApplication
   /**
    * Runs the current application.
    *
-   * @param mixed The command line options
+   * @param mixed $options The command line options
    */
   public function run($options = null)
   {
@@ -74,7 +72,7 @@ class sfSymfonyCommandApplication extends sfCommandApplication
    *
    * Looks for tasks in the symfony core, the current project and all project plugins.
    *
-   * @param sfProjectConfiguration The project configuration
+   * @param sfProjectConfiguration $configuration The project configuration
    */
   protected function loadTasks(sfProjectConfiguration $configuration)
   {
