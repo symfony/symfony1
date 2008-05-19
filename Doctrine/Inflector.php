@@ -23,8 +23,8 @@
  * Doctrine_Inflector has static methods for inflecting text
  * 
  * The methods in these classes are from several different sources collected
- * across the internet through php development for several years.
- * They have been updated and modified a little bit for Doctrine but are mainly untouched.
+ * across several different php projects and several different authors. The 
+ * original author names and emails are not known
  *
  * @package     Doctrine
  * @subpackage  Inflector
@@ -33,6 +33,7 @@
  * @since       1.0
  * @version     $Revision: 3189 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
+ * @author      Jonathan H. Wage <jonwage@gmail.com>
  */
 class Doctrine_Inflector
 {
@@ -132,6 +133,7 @@ class Doctrine_Inflector
                           '/((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$/i' => '\\1\\2sis',
                           '/([ti])a$/i' => '\\1um',
                           '/(n)ews$/i' => '\\1ews',
+                          '/^(.{2,2})$/i' => '\\1',
                           '/s$/i' => '');
 
         $uncountable = array('equipment',
