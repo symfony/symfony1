@@ -24,22 +24,18 @@ interface sfSecurityUser
    * Add a credential to this user.
    *
    * @param mixed Credential data.
-   *
-   * @return void
    */
   public function addCredential($credential);
 
   /**
    * Clear all credentials associated with this user.
-   *
-   * @return void
    */
   public function clearCredentials();
 
   /**
    * Indicates whether or not this user has a credential.
    *
-   * @param mixed Credential data.
+   * @param mixed $credential  Credential data.
    *
    * @return bool true, if this user has the credential, otherwise false.
    */
@@ -55,18 +51,14 @@ interface sfSecurityUser
   /**
    * Remove a credential from this user.
    *
-   * @param mixed Credential data.
-   *
-   * @return void
+   * @param mixed $credential  Credential data.
    */
   public function removeCredential($credential);
 
   /**
    * Set the authenticated status of this user.
    *
-   * @param bool A flag indicating the authenticated status of this user.
-   *
-   * @return void
+   * @param bool $authenticated  A flag indicating the authenticated status of this user.
    */
   public function setAuthenticated($authenticated);
 }

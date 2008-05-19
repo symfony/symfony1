@@ -64,9 +64,9 @@ class sfUser
    *  * use_flash:       Whether to enable flash usage (false by default)
    *  * logging:         Whether to enable logging (false by default)
    *
-   * @param sfEventDispatcher A sfEventDispatcher instance.
-   * @param sfStorage         A sfStorage instance.
-   * @param array             An associative array of options.
+   * @param sfEventDispatcher $dispatcher  An sfEventDispatcher instance.
+   * @param sfStorage         $storage     An sfStorage instance.
+   * @param array             $options     An associative array of options.
    *
    * @return Boolean          true, if initialization completes successfully, otherwise false.
    */
@@ -130,7 +130,7 @@ class sfUser
   /**
    * Sets the user culture.
    *
-   * @param  string culture
+   * @param string $culture
    */
   public function setCulture($culture)
   {
@@ -145,9 +145,9 @@ class sfUser
   /**
    * Sets a flash variable that will be passed to the very next action.
    *
-   * @param  string  The name of the flash variable
-   * @param  string  The value of the flash variable
-   * @param  Boolean true if the flash have to persist for the following request (true by default)
+   * @param  string $name     The name of the flash variable
+   * @param  string $value    The value of the flash variable
+   * @param  bool   $persist  true if the flash have to persist for the following request (true by default)
    */
   public function setFlash($name, $value, $persist = true)
   {
@@ -172,9 +172,10 @@ class sfUser
   /**
    * Gets a flash variable.
    *
-   * @param  string The name of the flash variable
+   * @param  string $name     The name of the flash variable
+   * @param  string $default  The default value returned when named variable does not exist.
    *
-   * @return mixed  The value of the flash variable
+   * @return mixed The value of the flash variable
    */
   public function getFlash($name, $default = null)
   {
@@ -189,9 +190,9 @@ class sfUser
   /**
    * Returns true if a flash variable of the specified name exists.
    *
-   * @param  string  The name of the flash variable
+   * @param  string $name  The name of the flash variable
    *
-   * @return Boolean true if the variable exists, false otherwise
+   * @return bool true if the variable exists, false otherwise
    */
   public function hasFlash($name)
   {
@@ -235,8 +236,6 @@ class sfUser
 
   /**
    * Executes the shutdown procedure.
-   *
-   * @return void
    */
   public function shutdown()
   {
@@ -273,12 +272,12 @@ class sfUser
   /**
    * Calls methods defined via sfEventDispatcher.
    *
-   * @param string The method name
-   * @param array  The method arguments
+   * @param string $method     The method name
+   * @param array  $arguments  The method arguments
    *
    * @return mixed The returned value of the called method
    *
-   * @throws <b>sfException</b> If the calls fails
+   * @throws sfException If the calls fails
    */
   public function __call($method, $arguments)
   {
