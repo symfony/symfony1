@@ -100,16 +100,16 @@ class Doctrine_Relation_Parser
      */
     public function bind($name, $options = array())
     {
-        if (isset($this->relations[$name])) {
-            unset($this->relations[$name]);
-        }
-
         $e    = explode(' as ', $name);
         $name = $e[0];
         $alias = isset($e[1]) ? $e[1] : $name;
 
         if ( ! isset($options['type'])) {
             throw new Doctrine_Relation_Exception('Relation type not set.');
+        }
+
+        if ($this->hasRelation($alias)) {
+            throw new Doctrine_Relation_Exception('A relationship with the name "' . $alias . '" already exists.');
         }
 
         $this->_pending[$alias] = array_merge($options, array('class' => $name, 'alias' => $alias));
