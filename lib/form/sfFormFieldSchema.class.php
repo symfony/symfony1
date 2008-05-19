@@ -26,11 +26,11 @@ class sfFormFieldSchema extends sfFormField implements ArrayAccess, Iterator, Co
   /**
    * Constructor.
    *
-   * @param sfWidgetFormSchema A sfWidget instance
-   * @param sfFormField        The sfFormField parent instance (null for the root widget)
-   * @param string             The field name
-   * @param string             The field value
-   * @param sfValidatorError   A sfValidatorError instance
+   * @param sfWidgetFormSchema $widget  A sfWidget instance
+   * @param sfFormField        $parent  The sfFormField parent instance (null for the root widget)
+   * @param string             $name    The field name
+   * @param string             $value   The field value
+   * @param sfValidatorError   $error   A sfValidatorError instance
    */
   public function __construct(sfWidgetFormSchema $widget, sfFormField $parent = null, $name, $value, sfValidatorError $error = null)
   {
@@ -42,7 +42,7 @@ class sfFormFieldSchema extends sfFormField implements ArrayAccess, Iterator, Co
   /**
    * Returns true if the bound field exists (implements the ArrayAccess interface).
    *
-   * @param  string  The name of the bound field
+   * @param  string  $name  The name of the bound field
    *
    * @return Boolean true if the widget exists, false otherwise
    */
@@ -54,7 +54,7 @@ class sfFormFieldSchema extends sfFormField implements ArrayAccess, Iterator, Co
   /**
    * Returns the form field associated with the name (implements the ArrayAccess interface).
    *
-   * @param  string      The offset of the value to get
+   * @param  string $name The offset of the value to get
    *
    * @return sfFormField A form field instance
    */
@@ -78,8 +78,8 @@ class sfFormFieldSchema extends sfFormField implements ArrayAccess, Iterator, Co
   /**
    * Throws an exception saying that values cannot be set (implements the ArrayAccess interface).
    *
-   * @param string (ignored)
-   * @param string (ignored)
+   * @param string $offset (ignored)
+   * @param string $value (ignored)
    *
    * @throws LogicException
    */
@@ -91,7 +91,7 @@ class sfFormFieldSchema extends sfFormField implements ArrayAccess, Iterator, Co
   /**
    * Throws an exception saying that values cannot be unset (implements the ArrayAccess interface).
    *
-   * @param string (ignored)
+   * @param string $offset (ignored)
    *
    * @throws LogicException
    */

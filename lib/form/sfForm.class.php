@@ -43,9 +43,9 @@ class sfForm implements ArrayAccess
   /**
    * Constructor.
    *
-   * @param array  An array of field default values
-   * @param array  An array of options
-   * @param string A CSRF secret (false to disable CSRF protection, null to use the global CSRF secret)
+   * @param array  $defaults    An array of field default values
+   * @param array  $options     An array of options
+   * @param string $CRFSSecret  A CSRF secret (false to disable CSRF protection, null to use the global CSRF secret)
    */
   public function __construct($defaults = array(), $options = array(), $CSRFSecret = null)
   {
@@ -98,7 +98,7 @@ class sfForm implements ArrayAccess
   /**
    * Renders the widget schema associated with this form.
    *
-   * @param  array  An array of HTML attributes
+   * @param  array  $attributes  An array of HTML attributes
    *
    * @return string The rendered widget schema
    */
@@ -142,8 +142,8 @@ class sfForm implements ArrayAccess
    *
    * It triggers the validator schema validation.
    *
-   * @param array An array of input values
-   * @param array An array of uploaded files (in the $_FILES or $_GET format)
+   * @param array $taintedValues  An array of input values
+   * @param array $taintedFiles   An array of uploaded files (in the $_FILES or $_GET format)
    */
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
@@ -226,7 +226,7 @@ class sfForm implements ArrayAccess
    *
    * If the form is not bound, it will return null.
    *
-   * @param  string  The name of the value required
+   * @param  string  $field  The name of the value required
    * @return string  The cleaned value
    */
   public function getValue($field)
@@ -247,9 +247,9 @@ class sfForm implements ArrayAccess
   /**
    * Embeds a sfForm into the current form.
    *
-   * @param string The field name
-   * @param sfForm A sfForm instance
-   * @param string A HTML decorator for the embedded form
+   * @param string $name       The field name
+   * @param sfForm $form       A sfForm instance
+   * @param string $decorator  A HTML decorator for the embedded form
    */
   public function embedForm($name, sfForm $form, $decorator = null)
   {
@@ -271,11 +271,14 @@ class sfForm implements ArrayAccess
   /**
    * Embeds a sfForm into the current form n times.
    *
-   * @param string  The field name
-   * @param sfForm  A sfForm instance
-   * @param integer The number of times to embed the form
-   * @param string  A HTML decorator for the main form around embedded forms
-   * @param string  A HTML decorator for each embedded form
+   * @param string  $name             The field name
+   * @param sfForm  $form             A sfForm instance
+   * @param integer $n                The number of times to embed the form
+   * @param string  $decorator        A HTML decorator for the main form around embedded forms
+   * @param string  $innerDecorator   A HTML decorator for each embedded form
+   * @param array   $attributes       Attributes for schema
+   * @param array   $options          Options for schema
+   * @param array   $labels           Labels for schema
    */
   public function embedFormForEach($name, sfForm $form, $n, $decorator = null, $innerDecorator = null, $attributes = array(), $options = array(), $labels = array())
   {
@@ -310,7 +313,7 @@ class sfForm implements ArrayAccess
   /**
    * Sets the validators associated with this form.
    *
-   * @param array An array of named validators
+   * @param array $validators An array of named validators
    */
   public function setValidators(array $validators)
   {
@@ -320,7 +323,7 @@ class sfForm implements ArrayAccess
   /**
    * Sets the validator schema associated with this form.
    *
-   * @param sfValidatorSchema A sfValidatorSchema instance
+   * @param sfValidatorSchema $validatorSchema A sfValidatorSchema instance
    */
   public function setValidatorSchema(sfValidatorSchema $validatorSchema)
   {
@@ -342,7 +345,7 @@ class sfForm implements ArrayAccess
   /**
    * Sets the widgets associated with this form.
    *
-   * @param array An array of named widgets
+   * @param array $widgets An array of named widgets
    */
   public function setWidgets(array $widgets)
   {
@@ -352,7 +355,7 @@ class sfForm implements ArrayAccess
   /**
    * Sets the widget schema associated with this form.
    *
-   * @param sfWidgetFormSchema A sfWidgetFormSchema instance
+   * @param sfWidgetFormSchema $widgetSchema A sfWidgetFormSchema instance
    */
   public function setWidgetSchema(sfWidgetFormSchema $widgetSchema)
   {
@@ -374,8 +377,8 @@ class sfForm implements ArrayAccess
   /**
    * Sets an option value.
    *
-   * @param string The option name
-   * @param mixed  The default value
+   * @param string $name  The option name
+   * @param mixed  $value The default value
    */
   public function setOption($name, $value)
   {
@@ -385,8 +388,8 @@ class sfForm implements ArrayAccess
   /**
    * Gets an option value.
    *
-   * @param string The option name
-   * @param mixed  The default value (null by default)
+   * @param string $name    The option name
+   * @param mixed  $default The default value (null by default)
    *
    * @param mixed  The default value
    */
@@ -398,8 +401,8 @@ class sfForm implements ArrayAccess
   /**
    * Sets a default value for a form field.
    *
-   * @param string The field name
-   * @param mixed  The default value
+   * @param string $name    The field name
+   * @param mixed  $default The default value
    */
   public function setDefault($name, $default)
   {
@@ -411,7 +414,7 @@ class sfForm implements ArrayAccess
   /**
    * Gets a default value for a form field.
    *
-   * @param string The field name
+   * @param string $name The field name
    *
    * @param mixed  The default value
    */
@@ -423,7 +426,7 @@ class sfForm implements ArrayAccess
   /**
    * Returns true if the form has a default value for a form field.
    *
-   * @param string  The field name
+   * @param string $name The field name
    *
    * @param Boolean true if the form has a default value for this field, false otherwise
    */
@@ -437,7 +440,7 @@ class sfForm implements ArrayAccess
    *
    * The default values are only used if the form is not bound.
    *
-   * @param array An array of default values
+   * @param array $defaults An array of default values
    */
   public function setDefaults($defaults)
   {
@@ -464,7 +467,7 @@ class sfForm implements ArrayAccess
   /**
    * Adds CSRF protection to the current form.
    *
-   * @param string The secret to use to compute the CSRF token
+   * @param string $secret The secret to use to compute the CSRF token
    */
   public function addCSRFProtection($secret)
   {
@@ -496,7 +499,7 @@ class sfForm implements ArrayAccess
    * If you want to change the algorithm used to compute the token, you
    * can override this method.
    *
-   * @param  string The secret string to use
+   * @param string $secret The secret string to use
    *
    * @return string A token string
    */
@@ -506,7 +509,7 @@ class sfForm implements ArrayAccess
   }
 
   /**
-   * Returns true if this form is CSRF protected
+   * @return true if this form is CSRF protected
    */
   public function isCSRFProtected()
   {
@@ -516,7 +519,7 @@ class sfForm implements ArrayAccess
   /**
    * Sets the CSRF field name.
    *
-   * @param string The CSRF field name
+   * @param string $name The CSRF field name
    */
   static public function setCSRFFieldName($name)
   {
@@ -540,7 +543,7 @@ class sfForm implements ArrayAccess
    * Even if a secret is automatically generated if you don't provide a secret, you're strongly advised
    * to provide one by yourself.
    *
-   * @param string A secret to use when computing the CSRF token
+   * @param string $secret A secret to use when computing the CSRF token
    */
   static public function enableCSRFProtection($secret = null)
   {
@@ -584,7 +587,7 @@ class sfForm implements ArrayAccess
   /**
    * Returns true if the bound field exists (implements the ArrayAccess interface).
    *
-   * @param  string  The name of the bound field
+   * @param  string $name The name of the bound field
    *
    * @return Boolean true if the widget exists, false otherwise
    */
@@ -596,7 +599,7 @@ class sfForm implements ArrayAccess
   /**
    * Returns the form field associated with the name (implements the ArrayAccess interface).
    *
-   * @param  string        The offset of the value to get
+   * @param  string $name  The offset of the value to get
    *
    * @return sfFormField   A form field instance
    */
@@ -622,8 +625,8 @@ class sfForm implements ArrayAccess
   /**
    * Throws an exception saying that values cannot be set (implements the ArrayAccess interface).
    *
-   * @param string (ignored)
-   * @param string (ignored)
+   * @param string $offset (ignored)
+   * @param string $value (ignored)
    *
    * @throws <b>LogicException</b>
    */
@@ -637,7 +640,7 @@ class sfForm implements ArrayAccess
    *
    * It removes the widget and the validator for the given field.
    *
-   * @param string The field name
+   * @param string $offset The field name
    */
   public function offsetUnset($offset)
   {
@@ -666,7 +669,7 @@ class sfForm implements ArrayAccess
    *
    * It's safe to pass an already converted array, in which case this method just returns the original array unmodified.
    *
-   * @param  array An array representing uploaded file information
+   * @param  array $taintedFiles An array representing uploaded file information
    *
    * @return array An array of re-ordered uploaded file information
    */
@@ -681,7 +684,7 @@ class sfForm implements ArrayAccess
    * Code adapted from http://www.shauninman.com/archive/2006/11/30/fixing_the_files_superglobal
    * @author Shaun Inman (www.shauninman.com)
    *
-   * @param  string A string representing an array
+   * @param  string $str A string representing an array
    *
    * @return Array  An array
    */
@@ -722,7 +725,8 @@ class sfForm implements ArrayAccess
    * Code adapted from http://www.shauninman.com/archive/2006/11/30/fixing_the_files_superglobal
    * @author Shaun Inman (www.shauninman.com)
    *
-   * @param  Array  An array
+   * @param  Array  $array  An array
+   * @param  string $prefix Prefix for internal use
    *
    * @return string A string representing the array
    */
