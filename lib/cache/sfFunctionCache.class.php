@@ -23,7 +23,7 @@ class sfFunctionCache
   /**
    * Constructor.
    *
-   * @param sfCache An sfCache object instance
+   * @param sfCache $cache An sfCache object instance
    */
   public function __construct($cache)
   {
@@ -47,8 +47,8 @@ class sfFunctionCache
    * $cache->call('functionName', array($arg1, $arg2));
    * $cache->call(array($object, 'methodName'), array($arg1, $arg2));
    *
-   * @param mixed  A PHP callable
-   * @param array  An array of arguments to pass to the callable
+   * @param mixed  $callable  A PHP callable
+   * @param array  $arguments An array of arguments to pass to the callable
    *
    * @return mixed The result of the function/method
    */

@@ -183,7 +183,7 @@ class sfFileCache extends sfCache
  /**
   * Converts a cache key to a full path.
   *
-  * @param string  The cache key
+  * @param string  $key  The cache key
   *
   * @return string The full path to the cache file
   */
@@ -195,11 +195,11 @@ class sfFileCache extends sfCache
  /**
   * Reads the cache file and returns the content.
   *
-  * @param string The file path
-  * @param mixed  The type of data you want to be returned
-  *               sfFileCache::READ_DATA: The cache content
-  *               sfFileCache::READ_TIMEOUT: The timeout
-  *               sfFileCache::READ_LAST_MODIFIED: The last modification timestamp
+  * @param string $path The file path
+  * @param mixed  $type The type of data you want to be returned
+  *                     sfFileCache::READ_DATA: The cache content
+  *                     sfFileCache::READ_TIMEOUT: The timeout
+  *                     sfFileCache::READ_LAST_MODIFIED: The last modification timestamp
   *
   * @return string The content of the cache file.
   *
@@ -250,9 +250,9 @@ class sfFileCache extends sfCache
  /**
   * Writes the given data in the cache file.
   *
-  * @param  string  The file path
-  * @param  string  The data to put in cache
-  * @param  integer The timeout timestamp
+  * @param  string  $path     The file path
+  * @param  string  $data     The data to put in cache
+  * @param  integer $timeout  The timeout timestamp
   *
   * @return boolean true if ok, otherwise false
   *
@@ -292,7 +292,7 @@ class sfFileCache extends sfCache
   /**
    * Sets the cache root directory.
    *
-   * @param string The directory where to put the cache files
+   * @param string $cache_dir The directory where to put the cache files
    */
   protected function setcache_dir($cache_dir)
   {

@@ -136,7 +136,7 @@ class sfSQLiteCache extends sfCache
   /**
    * Sets the database name.
    *
-   * @param string The database name where to store the cache
+   * @param string $database The database name where to store the cache
    */
   protected function setDatabase($database)
   {

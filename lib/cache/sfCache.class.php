@@ -38,7 +38,7 @@ abstract class sfCache
   /**
    * Initializes this sfCache instance.
    *
-   * @param  array An array of options.
+   * @param  array $options An array of options.
    *
    * Available options:
    *
@@ -66,8 +66,8 @@ abstract class sfCache
   /**
    * Gets the cache content for a given key.
    *
-   * @param  string The cache key
-   * @param  mixed  The default value is the key does not exist or not valid anymore
+   * @param  string $key      The cache key
+   * @param  mixed  $default  The default value is the key does not exist or not valid anymore
    *
    * @return mixed  The data of the cache
    */
@@ -76,7 +76,7 @@ abstract class sfCache
   /**
    * Returns true if there is a cache for the given key.
    *
-   * @param  string  The cache key
+   * @param  string  $key  The cache key
    *
    * @return Boolean true if the cache exists, false otherwise
    */
@@ -85,9 +85,9 @@ abstract class sfCache
   /**
    * Saves some data in the cache.
    *
-   * @param string The cache key
-   * @param mixed  The data to put in cache
-   * @param int    The lifetime
+   * @param string $key       The cache key
+   * @param mixed  $data      The data to put in cache
+   * @param int    $lifetime  The lifetime
    *
    * @return Boolean true if no problem
    */
@@ -96,7 +96,7 @@ abstract class sfCache
   /**
    * Removes a content from the cache.
    *
-   * @param string The cache key
+   * @param string $key The cache key
    *
    * @return Boolean true if no problem
    */
@@ -105,7 +105,7 @@ abstract class sfCache
   /**
    * Removes content from the cache that matches the given pattern.
    *
-   * @param  string  The cache key pattern
+   * @param  string  $pattern The cache key pattern
    *
    * @return Boolean true if no problem
    *
@@ -116,9 +116,9 @@ abstract class sfCache
   /**
    * Cleans the cache.
    *
-   * @param  string  The clean mode
-   *                 sfCache::ALL: remove all keys (default)
-   *                 sfCache::OLD: remove all expired keys
+   * @param  string  $mode  The clean mode
+   *                        sfCache::ALL: remove all keys (default)
+   *                        sfCache::OLD: remove all expired keys
    *
    * @return Boolean true if no problem
    */
@@ -127,7 +127,7 @@ abstract class sfCache
   /**
    * Returns the timeout for the given key.
    *
-   * @param string The cache key
+   * @param string $key The cache key
    *
    * @return int The timeout time
    */
@@ -136,7 +136,7 @@ abstract class sfCache
   /**
    * Returns the last modification date of the given key.
    *
-   * @param string The cache key
+   * @param string $key The cache key
    *
    * @return int The last modified time
    */
@@ -145,7 +145,7 @@ abstract class sfCache
   /**
    * Gets many keys at once.
    *
-   * @param  array An array of keys
+   * @param  array $keys An array of keys
    *
    * @return array An associative array of data from cache
    */
@@ -163,7 +163,7 @@ abstract class sfCache
   /**
    * Computes lifetime.
    *
-   * @param  integer Lifetime in seconds
+   * @param  integer $lifetime Lifetime in seconds
    *
    * @return integer Lifetime in seconds
    */
@@ -185,7 +185,8 @@ abstract class sfCache
   /**
    * Gets an option value.
    *
-   * @param  string The option name
+   * @param  string $name     The option name
+   * @param  mixed  $default  The default value
    *
    * @return mixed  The option value
    */
@@ -197,8 +198,8 @@ abstract class sfCache
   /**
    * Sets an option value.
    *
-   * @param string The option name
-   * @param mixed  The option value
+   * @param string $name  The option name
+   * @param mixed  $value The option value
    */
   public function setOption($name, $value)
   {
@@ -213,7 +214,7 @@ abstract class sfCache
    *  - * Matches a namespace (foo:*:bar)
    *  - ** Matches one or more namespaces (foo:**:bar)
    *
-   * @param  string A pattern
+   * @param  string $pattern  A pattern
    *
    * @return string A regular expression
    */
