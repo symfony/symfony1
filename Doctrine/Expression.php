@@ -88,7 +88,8 @@ class Doctrine_Expression
     public function parseExpression($expr)
     {
         $pos  = strpos($expr, '(');
-        if ($pos === false) {
+        $quoted = (substr($expr, 0, 1) === "'" && substr($expr, -1) === "'");
+        if ($pos === false || $quoted) {
             return $expr;
         }
 
