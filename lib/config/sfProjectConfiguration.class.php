@@ -27,6 +27,9 @@ class sfProjectConfiguration
 
   /**
    * Constructor.
+   *
+   * @param string              $rootDir    The project root directory
+   * @param sfEventDispatcher   $dispatcher The event dispatcher
    */
   public function __construct($rootDir = null, sfEventDispatcher $dispatcher = null)
   {
@@ -67,7 +70,7 @@ class sfProjectConfiguration
   /**
    * Sets the project root directory.
    *
-   * @param string The project root directory
+   * @param string $rootDir The project root directory
    */
   public function setRootDir($rootDir)
   {
@@ -105,7 +108,7 @@ class sfProjectConfiguration
   /**
    * Sets the cache root directory.
    *
-   * @param string The absolute path to the cache dir.
+   * @param string $cacheDir The absolute path to the cache dir.
    */
   public function setCacheDir($cacheDir)
   {
@@ -115,7 +118,7 @@ class sfProjectConfiguration
   /**
    * Sets the log directory.
    *
-   * @param string The absolute path to the log dir.
+   * @param string $logDir The absolute path to the log dir.
    */
   public function setLogDir($logDir)
   {
@@ -125,7 +128,7 @@ class sfProjectConfiguration
   /**
    * Sets the web root directory.
    *
-   * @param string The absolute path to the web dir.
+   * @param string $webDir The absolute path to the web dir.
    */
   public function setWebDir($webDir)
   {
@@ -154,8 +157,8 @@ class sfProjectConfiguration
   /**
    * Gets directories where template files are stored for a generator class and a specific theme.
    *
-   * @param string The generator class name
-   * @param string The theme name
+   * @param string $class  The generator class name
+   * @param string $theme  The theme name
    *
    * @return array An array of directories
    */
@@ -179,8 +182,8 @@ class sfProjectConfiguration
   /**
    * Gets directories where the skeleton is stored for a generator class and a specific theme.
    *
-   * @param string The generator class name
-   * @param string The theme name
+   * @param string $class   The generator class name
+   * @param string $theme   The theme name
    *
    * @return array An array of directories
    */
@@ -204,9 +207,9 @@ class sfProjectConfiguration
   /**
    * Gets the template to use for a generator class.
    *
-   * @param string The generator class name
-   * @param string The theme name
-   * @param string The template path
+   * @param string $class   The generator class name
+   * @param string $theme   The theme name
+   * @param string $path    The template path
    *
    * @return string A template path
    *
@@ -304,11 +307,11 @@ class sfProjectConfiguration
   /**
    * Returns a sfApplicationConfiguration configuration for a given application.
    *
-   * @param string            An application name
-   * @param string            The environment name
-   * @param Boolean           true to enable debug mode
-   * @param string            The project root directory
-   * @param sfEventDispatcher An event dispatcher
+   * @param string            $application    An application name
+   * @param string            $environment    The environment name
+   * @param Boolean           $debug          true to enable debug mode
+   * @param string            $rootDir        The project root directory
+   * @param sfEventDispatcher $dispatcher     An event dispatcher
    *
    * @return sfApplicationConfiguration A sfApplicationConfiguration instance
    */

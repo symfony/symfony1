@@ -19,7 +19,7 @@ class sfRoutingConfigHandler extends sfYamlConfigHandler
   /**
    * Executes this configuration handler.
    *
-   * @param array An array of absolute filesystem path to a configuration file
+   * @param array $configFiles An array of absolute filesystem path to a configuration file
    *
    * @return string Data to be written to a cache file
    *

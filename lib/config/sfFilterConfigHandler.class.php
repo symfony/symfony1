@@ -23,7 +23,7 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
   /**
    * Executes this configuration handler
    *
-   * @param array An array of absolute filesystem path to a configuration file
+   * @param array $configFiles An array of absolute filesystem path to a configuration file
    *
    * @return string Data to be written to a cache file
    *
@@ -129,9 +129,9 @@ class sfFilterConfigHandler extends sfYamlConfigHandler
   /**
    * Adds a filter statement to the data.
    *
-   * @param string The category name
-   * @param string The filter class name
-   * @param array  Filter default parameters
+   * @param string $category    The category name
+   * @param string $class       The filter class name
+   * @param array  $parameters  Filter default parameters
    *
    * @return string The PHP statement
    */

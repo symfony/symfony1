@@ -24,8 +24,8 @@ class sfConfig
   /**
    * Retrieves a config parameter.
    *
-   * @param string A config parameter name
-   * @param mixed  A default config parameter value
+   * @param string $name    A config parameter name
+   * @param mixed  $default A default config parameter value
    *
    * @return mixed A config parameter value, if the config parameter exists, otherwise null
    */
@@ -37,7 +37,7 @@ class sfConfig
   /**
    * Indicates whether or not a config parameter exists.
    *
-   * @param string A config parameter name
+   * @param string $name A config parameter name
    *
    * @return bool true, if the config parameter exists, otherwise false
    */
@@ -51,8 +51,8 @@ class sfConfig
    *
    * If a config parameter with the name already exists the value will be overridden.
    *
-   * @param string A config parameter name
-   * @param mixed  A config parameter value
+   * @param string $name  A config parameter name
+   * @param mixed  $value A config parameter value
    */
   public static function set($name, $value)
   {
@@ -65,7 +65,7 @@ class sfConfig
    * If an existing config parameter name matches any of the keys in the supplied
    * array, the associated value will be overridden.
    *
-   * @param array An associative array of config parameters and their associated values
+   * @param array $parameters An associative array of config parameters and their associated values
    */
   public static function add($parameters = array())
   {

@@ -30,7 +30,7 @@ class sfConfigCache
   /**
    * Constructor
    *
-   * @param sfApplicationConfiguration A sfApplicationConfiguration instance
+   * @param sfApplicationConfiguration $configuration A sfApplicationConfiguration instance
    */
   public function __construct(sfApplicationConfiguration $configuration)
   {
@@ -40,9 +40,9 @@ class sfConfigCache
   /**
    * Loads a configuration handler.
    *
-   * @param string The handler to use when parsing a configuration file
-   * @param array  An array of absolute filesystem paths to configuration files
-   * @param string An absolute filesystem path to the cache file that will be written
+   * @param string $handler   The handler to use when parsing a configuration file
+   * @param array  $configs   An array of absolute filesystem paths to configuration files
+   * @param string $cache     An absolute filesystem path to the cache file that will be written
    *
    * @throws <b>sfConfigurationException</b> If a requested configuration file does not have an associated configuration handler
    */
@@ -110,7 +110,7 @@ class sfConfigCache
   /**
    * Returns the config handler configured for the given name
    *
-   * @param  string The config handler name
+   * @param  string $name The config handler name
    *
    * @return sfConfigHandler A sfConfigHandler instance
    */
@@ -134,7 +134,8 @@ class sfConfigCache
    * If the configuration file path is relative, symfony will look in directories 
    * defined in the sfConfiguration::getConfigPaths() method.
    *
-   * @param string A filesystem path to a configuration file
+   * @param string  $configPath  A filesystem path to a configuration file
+   * @param boolean $optional    If true, config path does not need to exist
    *
    * @return string An absolute filesystem path to the cache filename associated with this specified configuration file
    *
@@ -212,7 +213,7 @@ class sfConfigCache
   /**
    * Converts a normal filename into a cache filename.
    *
-   * @param string A normal filename
+   * @param string $config A normal filename
    *
    * @return string An absolute filesystem path to a cache filename
    */
@@ -234,8 +235,9 @@ class sfConfigCache
   /**
    * Imports a configuration file.
    *
-   * @param string A filesystem path to a configuration file
-   * @param bool   Only allow this configuration file to be included once per request?
+   * @param string $config    A filesystem path to a configuration file
+   * @param bool   $once      Only allow this configuration file to be included once per request?
+   * @param bool   $optional  Only include if true
    *
    * @see checkConfig()
    */
@@ -319,9 +321,9 @@ class sfConfigCache
   /**
    * Writes a cache file.
    *
-   * @param string An absolute filesystem path to a configuration file
-   * @param string An absolute filesystem path to the cache file that will be written
-   * @param string Data to be written to the cache file
+   * @param string $config  An absolute filesystem path to a configuration file
+   * @param string $cache   An absolute filesystem path to the cache file that will be written
+   * @param string $data    Data to be written to the cache file
    *
    * @throws sfCacheException If the cache file cannot be written
    */
@@ -346,9 +348,9 @@ class sfConfigCache
   /**
    * Registers a configuration handler.
    *
-   * @param string The handler to use when parsing a configuration file
-   * @param class  A configuration handler class
-   * @param string An array of options for the handler class initialization
+   * @param string $handler   The handler to use when parsing a configuration file
+   * @param class  $class     A configuration handler class
+   * @param string $params    An array of options for the handler class initialization
    */
   public function registerConfigHandler($handler, $class, $params = array())
   {

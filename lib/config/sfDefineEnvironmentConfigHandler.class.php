@@ -20,7 +20,7 @@ class sfDefineEnvironmentConfigHandler extends sfYamlConfigHandler
   /**
    * Executes this configuration handler.
    *
-   * @param  string An absolute filesystem path to a configuration file
+   * @param  string $configFiles An absolute filesystem path to a configuration file
    *
    * @return string Data to be written to a cache file
    *
@@ -69,11 +69,11 @@ class sfDefineEnvironmentConfigHandler extends sfYamlConfigHandler
   /**
    * Gets values from the configuration array.
    *
-   * @param string The prefix name
-   * @param string The category name
-   * @param mixed  The key/value array
+   * @param string $prefix    The prefix name
+   * @param string $category  The category name
+   * @param mixed  $keys      The key/value array
    *
-   * @param array The new key/value array
+   * @return array The new key/value array
    */
   protected function getValues($prefix, $category, $keys)
   {
@@ -101,11 +101,11 @@ class sfDefineEnvironmentConfigHandler extends sfYamlConfigHandler
   /**
    * Fixes the category name and replaces constants in the value.
    *
-   * @param string The category name
-   * @param string The key name
-   * @param string The value
+   * @param string $category  The category name
+   * @param string $key       The key name
+   * @param string $value     The value
    *
-   * @param string Return the new key and value
+   * @return string Return the new key and value
    */
   protected function fixCategoryValue($category, $key, $value)
   {
@@ -115,8 +115,8 @@ class sfDefineEnvironmentConfigHandler extends sfYamlConfigHandler
   /**
    * Fixes the category name.
    *
-   * @param string The category name
-   * @param string The prefix
+   * @param string $category  The category name
+   * @param string $prefix    The prefix
    *
    * @return string The fixed category name
    */

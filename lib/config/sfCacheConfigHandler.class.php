@@ -24,7 +24,7 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
   /**
    * Executes this configuration handler.
    *
-   * @param array An array of absolute filesystem path to a configuration file
+   * @param array $configFiles An array of absolute filesystem path to a configuration file
    *
    * @return string Data to be written to a cache file
    *
@@ -67,7 +67,7 @@ class sfCacheConfigHandler extends sfYamlConfigHandler
   /**
    * Returns a single addCache statement.
    *
-   * @param string The action name
+   * @param string $actionName  The action name
    *
    * @return string PHP code for the addCache statement
    */

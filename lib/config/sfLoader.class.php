@@ -21,7 +21,7 @@ class sfLoader
   /**
    * Gets the helper directories for a given module name.
    *
-   * @param string The module name
+   * @param string $moduleName The module name
    *
    * @return array An array of directories
    */
@@ -56,8 +56,8 @@ class sfLoader
   /**
    * Loads helpers.
    *
-   * @param array  An array of helpers to load
-   * @param string A module name (optional)
+   * @param array  $helpers     An array of helpers to load
+   * @param string $moduleName  A module name (optional)
    *
    * @throws sfViewException
    */

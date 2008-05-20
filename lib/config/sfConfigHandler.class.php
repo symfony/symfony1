@@ -38,7 +38,7 @@ abstract class sfConfigHandler
   /**
    * Initializes this configuration handler.
    *
-   * @param array An associative array of initialization parameters
+   * @param array $parameters An associative array of initialization parameters
    *
    * @return bool true, if initialization completes successfully, otherwise false
    *
@@ -53,7 +53,7 @@ abstract class sfConfigHandler
   /**
    * Executes this configuration handler
    *
-   * @param array An array of filesystem path to a configuration file
+   * @param array $configFiles An array of filesystem path to a configuration file
    *
    * @return string Data to be written to a cache file
    *
@@ -67,7 +67,7 @@ abstract class sfConfigHandler
    *
    * If the value is an array replacements are made recursively.
    *
-   * @param mixed The value on which to run the replacement procedure
+   * @param mixed $value The value on which to run the replacement procedure
    *
    * @return string The new value
    */
@@ -88,7 +88,7 @@ abstract class sfConfigHandler
   /**
    * Replaces a relative filesystem path with an absolute one.
    *
-   * @param string A relative filesystem path
+   * @param string $path A relative filesystem path
    *
    * @return string The new path
    */
@@ -123,9 +123,8 @@ abstract class sfConfigHandler
   /**
    * Returns the configuration for the current config handler.
    *
-   * @param array An array of ordered configuration files
-   *
-   * @param array A configuration array
+   * @param array $configFiles An array of ordered configuration files
+   * @throws LogicException no matter what
    */
   static public function getConfiguration(array $configFiles)
   {

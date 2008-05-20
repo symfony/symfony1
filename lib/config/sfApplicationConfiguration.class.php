@@ -28,10 +28,10 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   /**
    * Constructor.
    *
-   * @param string            The environment name
-   * @param Boolean           true to enable debug mode
-   * @param string            The project root directory
-   * @param sfEventDispatcher An event dispatcher
+   * @param string            $environment    The environment name
+   * @param Boolean           $debug          true to enable debug mode
+   * @param string            $rootDir        The project root directory
+   * @param sfEventDispatcher $dispatcher     An event dispatcher
    */
   public function __construct($environment, $debug, $rootDir = null, sfEventDispatcher $dispatcher = null)
   {
@@ -207,7 +207,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   /**
    * Sets the project root directory.
    *
-   * @param string The project root directory
+   * @param string $rootDir The project root directory
    */
   public function setRootDir($rootDir)
   {
@@ -225,7 +225,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   /**
    * Sets the app directory.
    *
-   * @param string The absolute path to the app dir.
+   * @param string $appDir The absolute path to the app dir.
    */
   public function setAppDir($appDir)
   {
@@ -264,7 +264,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   /**
    * Gets directories where controller classes are stored for a given module.
    *
-   * @param string The module name
+   * @param string $moduleName The module name
    *
    * @return array An array of directories
    */
@@ -291,7 +291,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   /**
    * Gets directories where template files are stored for a given module.
    *
-   * @param string The module name
+   * @param string $moduleName The module name
    *
    * @return array An array of directories
    */
@@ -319,8 +319,8 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   /**
    * Gets the template directory to use for a given module and template file.
    *
-   * @param string The module name
-   * @param string The template file
+   * @param string $moduleName    The module name
+   * @param string $templateFile  The template file
    *
    * @return string A template directory
    */
@@ -340,8 +340,8 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   /**
    * Gets the template to use for a given module and template file.
    *
-   * @param string The module name
-   * @param string The template file
+   * @param string $moduleName    The module name
+   * @param string $templateFile  The template file
    *
    * @return string A template path
    */
@@ -355,10 +355,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   /**
    * Gets the decorator directories.
    *
-   * @param  string The template file
-   *
    * @return array  An array of the decorator directories
-   *
    */
   public function getDecoratorDirs()
   {
@@ -368,7 +365,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   /**
    * Gets the decorator directory for a given template.
    *
-   * @param  string The template file
+   * @param  string $template The template file
    *
    * @return string A template directory
    */
@@ -411,7 +408,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   /**
    * Gets the i18n directories to use for a given module.
    *
-   * @param string The module name
+   * @param string $moduleName The module name
    *
    * @return array An array of i18n directories
    */
@@ -451,7 +448,7 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
   /**
    * Gets the configuration file paths for a given relative configuration path.
    *
-   * @param string The configuration path
+   * @param string $configPath The configuration path
    *
    * @return array An array of paths
    */
