@@ -47,9 +47,10 @@
  *  echo select_tag('employee', options_for_select($optgroup_array, null, array('include_blank' => true)), array('class' => 'mystyle'));
  * </code>
  *
- * @param  array dataset to create <option> tags and <optgroup> tags from
- * @param  string selected option value
- * @param  array  additional HTML compliant <option> tag parameters
+ * @param  array  $options       dataset to create <option> tags and <optgroup> tags from
+ * @param  string $selected      selected option value
+ * @param  array  $html_options  additional HTML compliant <option> tag parameters
+ *
  * @return string populated with <option> tags derived from the <i>$options</i> array variable
  * @see select_tag
  */
@@ -113,8 +114,9 @@ function options_for_select($options = array(), $selected = '', $html_options = 
  *   <code><?php echo form_tag('@myroute'); ?></code>
  *   <code><?php echo form_tag('/module/action', array('name' => 'myformname', 'multipart' => true)); ?></code>
  *
- * @param  string valid action, route or URL
- * @param  array optional HTML parameters for the <form> tag
+ * @param  string $url_for_options  valid action, route or URL
+ * @param  array  $options          optional HTML parameters for the <form> tag
+ *
  * @return string opening HTML <form> tag with options
  */
 function form_tag($url_for_options = '', $options = array())
@@ -163,9 +165,10 @@ function form_tag($url_for_options = '', $options = array())
  *  echo select_tag('url', options_for_select($url_list), array('onChange' => 'Javascript:this.form.submit();'));
  * </code>
  *
- * @param  string field name 
- * @param  mixed contains a string of valid <option></option> tags, or an array of options that will be passed to options_for_select
- * @param  array  additional HTML compliant <select> tag parameters
+ * @param  string $name         field name 
+ * @param  mixed  $option_tags  contains a string of valid <option></option> tags, or an array of options that will be passed to options_for_select
+ * @param  array  $options      additional HTML compliant <select> tag parameters
+ *
  * @return string <select> tag optionally comprised of <option> tags.
  * @see options_for_select, content_tag
  */
@@ -203,9 +206,10 @@ function select_tag($name, $option_tags = null, $options = array())
  *  echo select_country_tag('country', 'FR');
  * </code>
  *
- * @param  string field name 
- * @param  string selected field value (two-character country code)
- * @param  array  additional HTML compliant <select> tag parameters
+ * @param  string $name      field name 
+ * @param  string $selected  selected field value (two-character country code)
+ * @param  array  $options   additional HTML compliant <select> tag parameters
+ *
  * @return string <select> tag populated with all the countries in the world.
  * @see select_tag, options_for_select, sfCultureInfo
  */
@@ -251,9 +255,10 @@ function select_country_tag($name, $selected = null, $options = array())
  *  echo select_language_tag('language', 'de');
  * </code>
  *
- * @param  string field name 
- * @param  string selected field value (two or threecharacter language/culture code)
- * @param  array  additional HTML compliant <select> tag parameters
+ * @param  string $name      field name 
+ * @param  string $selected  selected field value (two or threecharacter language/culture code)
+ * @param  array  $options   additional HTML compliant <select> tag parameters
+ *
  * @return string <select> tag populated with all the languages in the world.
  * @see select_tag, options_for_select, sfCultureInfo
  */
@@ -296,9 +301,10 @@ function select_language_tag($name, $selected = null, $options = array())
  *  echo input_tag('amount', $sf_params->get('amount'), array('size' => 8, 'maxlength' => 8));
  * </code>
  *
- * @param  string field name 
- * @param  string selected field value
- * @param  array  additional HTML compliant <input> tag parameters
+ * @param  string $name     field name 
+ * @param  string $value    selected field value
+ * @param  array  $options  additional HTML compliant <input> tag parameters
+ *
  * @return string XHTML compliant <input> tag with type="text"
  */
 function input_tag($name, $value = null, $options = array())
@@ -318,9 +324,10 @@ function input_tag($name, $value = null, $options = array())
  *  echo input_hidden_tag('id', $id);
  * </code>
  *
- * @param  string field name 
- * @param  string populated field value
- * @param  array  additional HTML compliant <input> tag parameters
+ * @param  string $name     field name 
+ * @param  string $value    populated field value
+ * @param  array  $options  additional HTML compliant <input> tag parameters
+ *
  * @return string XHTML compliant <input> tag with type="hidden"
  */
 function input_hidden_tag($name, $value = null, $options = array())
@@ -346,8 +353,9 @@ function input_hidden_tag($name, $value = null, $options = array())
  *  echo input_file_tag('filename', array('size' => 30));
  * </code>
  *
- * @param  string field name 
- * @param  array  additional HTML compliant <input> tag parameters
+ * @param  string $name     field name 
+ * @param  array  $options  additional HTML compliant <input> tag parameters
+ *
  * @return string XHTML compliant <input> tag with type="file"
  * @see input_tag, form_tag
  */
@@ -375,9 +383,10 @@ function input_file_tag($name, $options = array())
  *  echo input_password_tag('password_confirm');
  * </code>
  *
- * @param  string field name
- * @param  string populated field value
- * @param  array  additional HTML compliant <input> tag parameters
+ * @param  string $name     field name
+ * @param  string $value    populated field value
+ * @param  array  $options  additional HTML compliant <input> tag parameters
+ *
  * @return string XHTML compliant <input> tag with type="password"
  * @see input_tag
  */
@@ -409,9 +418,9 @@ function input_password_tag($name = 'password', $value = null, $options = array(
  *  echo textarea_tag('description', 'This is a description', array('rows' => 10, 'cols' => 50));
  * </code> 
  *
- * @param  string field name
- * @param  string populated field value
- * @param  array  additional HTML compliant <textarea> tag parameters
+ * @param  string $name     field name
+ * @param  string $content  populated field value
+ * @param  array  $options  additional HTML compliant <textarea> tag parameters
  *
  * @return string <textarea> tag optionally wrapped with a rich-text WYSIWYG editor
  */
@@ -497,10 +506,11 @@ function textarea_tag($name, $content = null, $options = array())
  *  echo checkbox_tag('show_tos', 1, false, array('onclick' => "Element.toggle('tos'); return false;"));
  * </code>
  *
- * @param  string field name 
- * @param  string checkbox value (if checked)
- * @param  bool   is the checkbox checked? (1 or 0)
- * @param  array  additional HTML compliant <input> tag parameters
+ * @param  string $name     field name 
+ * @param  string $value    checkbox value (if checked)
+ * @param  bool   $checked  is the checkbox checked? (1 or 0)
+ * @param  array  $options  additional HTML compliant <input> tag parameters
+ *
  * @return string XHTML compliant <input> tag with type="checkbox"
  */
 function checkbox_tag($name, $value = '1', $checked = false, $options = array())
@@ -524,10 +534,11 @@ function checkbox_tag($name, $value = '1', $checked = false, $options = array())
  *  echo ' No '.radiobutton_tag('newsletter', 0); 
  * </code>
  *
- * @param  string field name 
- * @param  string radio button value (if selected)
- * @param  bool   is the radio button selected? (1 or 0)
- * @param  array  additional HTML compliant <input> tag parameters
+ * @param  string $name     field name 
+ * @param  string $value    radio button value (if selected)
+ * @param  bool   $checked  is the radio button selected? (1 or 0)
+ * @param  array  $options  additional HTML compliant <input> tag parameters
+ *
  * @return string XHTML compliant <input> tag with type="radio"
  */
 function radiobutton_tag($name, $value, $checked = false, $options = array())
@@ -571,9 +582,10 @@ function radiobutton_tag($name, $value, $checked = false, $options = array())
  *  echo input_date_range_tag('date', null, array('middle' => ' through ', 'rich' => true));
  * </code>
  *
- * @param  string field name 
- * @param  array  dates: $value['from'] and $value['to']
- * @param  array  additional HTML compliant <input> tag parameters
+ * @param  string $name     field name 
+ * @param  array  $value    dates: $value['from'] and $value['to']
+ * @param  array  $options  additional HTML compliant <input> tag parameters
+ *
  * @return string XHTML compliant <input> tag with optional JS calendar integration
  * @see input_date_tag
  */
@@ -610,9 +622,10 @@ function input_date_range_tag($name, $value, $options = array())
  *  echo input_date_tag('date', null, array('rich' => true));
  * </code>
  *
- * @param  string field name 
- * @param  string date
- * @param  array  additional HTML compliant <input> tag parameters
+ * @param  string $name     field name 
+ * @param  string $value    date
+ * @param  array  $options  additional HTML compliant <input> tag parameters
+ *
  * @return string XHTML compliant <input> tag with optional JS calendar integration
  * @see input_date_range_tag
  */
@@ -772,8 +785,9 @@ function input_date_tag($name, $value = null, $options = array())
  *  echo submit_tag('Update Record');
  * </code>
  *
- * @param  string field value (title of submit button)
- * @param  array  additional HTML compliant <input> tag parameters
+ * @param  string $name     field value (title of submit button)
+ * @param  array  $options  additional HTML compliant <input> tag parameters
+ *
  * @return string XHTML compliant <input> tag with type="submit"
  */
 function submit_tag($value = 'Save changes', $options = array())
@@ -797,8 +811,9 @@ function submit_tag($value = 'Save changes', $options = array())
  *  echo reset_tag('Start Over');
  * </code>
  *
- * @param  string field value (title of reset button)
- * @param  array  additional HTML compliant <input> tag parameters
+ * @param  string $name     field value (title of reset button)
+ * @param  array  $options  additional HTML compliant <input> tag parameters
+ *
  * @return string XHTML compliant <input> tag with type="reset"
  */
 function reset_tag($value = 'Reset', $options = array())
@@ -825,8 +840,9 @@ function reset_tag($value = 'Reset', $options = array())
  *  echo submit_image_tag('http://mydomain.com/my_submit_button.gif');
  * </code>
  *
- * @param  string path to image file
- * @param  array  additional HTML compliant <input> tag parameters
+ * @param  string $source   path to image file
+ * @param  array  $options  additional HTML compliant <input> tag parameters
+ *
  * @return string XHTML compliant <input> tag with type="image"
  */
 function submit_image_tag($source, $options = array())
@@ -846,9 +862,10 @@ function submit_image_tag($source, $options = array())
 /**
  * Returns a <label> tag with <i>$label</i> for the specified <i>$id</i> parameter.
  *
- * @param  string id
- * @param  string label or title
- * @param  array  additional HTML compliant <label> tag parameters
+ * @param  string $id       id
+ * @param  string $label    label or title
+ * @param  array  $options  additional HTML compliant <label> tag parameters
+ *
  * @return string <label> tag with <i>$label</i> for the specified <i>$id</i> parameter.
  */
 function label_for($id, $label, $options = array())
@@ -880,8 +897,9 @@ function label_for($id, $label, $options = array())
  *  echo get_id_from_name('status[]', '1');
  * </code>
  *
- * @param  string field name 
- * @param  string field value
+ * @param  string $name   field name 
+ * @param  string $value  field value
+ *
  * @return string <select> tag populated with all the languages in the world.
  */
 function get_id_from_name($name, $value = null)
@@ -899,7 +917,7 @@ function get_id_from_name($name, $value = null)
 /**
  * Converts specific <i>$options</i> to their correct HTML format
  *
- * @param  array options
+ * @param  array $options
  * @return array returns properly formatted options 
  */
 function _convert_options($options)

@@ -32,8 +32,8 @@
  *    => http://myapp.example.com/path/to/my/action
  * </code>
  *
- * @param  string 'module/action' or '@rule' of the action
- * @param  bool return absolute path?
+ * @param  string $internal_uri  'module/action' or '@rule' of the action
+ * @param  bool   $absolute      return absolute path?
  * @return string routed URL
  */
 function url_for($internal_uri, $absolute = false)
@@ -72,9 +72,9 @@ function url_for($internal_uri, $absolute = false)
  *    => <a href="http://myapp.example.com/path/to/my/action" id="myid" onclick="return confirm('Are you sure?');">Delete this page</a>
  * </code>
  *
- * @param  string name of the link, i.e. string to appear between the <a> tags
- * @param  string 'module/action' or '@rule' of the action
- * @param  array additional HTML compliant <a> tag parameters
+ * @param  string $name          name of the link, i.e. string to appear between the <a> tags
+ * @param  string $internal_uri  'module/action' or '@rule' of the action
+ * @param  array  $options       additional HTML compliant <a> tag parameters
  * @return string XHTML compliant <a href> tag
  * @see    url_for
  */
@@ -146,10 +146,10 @@ function link_to($name = '', $internal_uri = '', $options = array())
  *    => <span>Delete this page</span>
  * </code>
  *
- * @param  bool condition
- * @param  string name of the link, i.e. string to appear between the <a> tags
- * @param  string 'module/action' or '@rule' of the action
- * @param  array additional HTML compliant <a> tag parameters
+ * @param  bool   $condition     condition
+ * @param  string $name          name of the link, i.e. string to appear between the <a> tags
+ * @param  string $internal_uri  'module/action' or '@rule' of the action
+ * @param  array  $options       additional HTML compliant <a> tag parameters
  * @return string XHTML compliant <a href> tag or name
  * @see    link_to
  */
@@ -195,16 +195,16 @@ function link_to_if($condition, $name = '', $internal_uri = '', $options = array
  *    => <a href="/path/to/my/action">Delete this page</a>
  * </code>
  *
- * @param  bool condition
- * @param  string name of the link, i.e. string to appear between the <a> tags
- * @param  string 'module/action' or '@rule' of the action
- * @param  array additional HTML compliant <a> tag parameters
+ * @param  bool   $condition     condition
+ * @param  string $name          name of the link, i.e. string to appear between the <a> tags
+ * @param  string $internal_uri  'module/action' or '@rule' of the action
+ * @param  array  $options       additional HTML compliant <a> tag parameters
  * @return string XHTML compliant <a href> tag or name
  * @see    link_to
  */
-function link_to_unless($condition, $name = '', $url = '', $options = array())
+function link_to_unless($condition, $name = '', $internal_uri = '', $options = array())
 {
-  return link_to_if(!$condition, $name, $url, $options);
+  return link_to_if(!$condition, $name, $internal_uri, $options);
 }
 
 /**
@@ -225,9 +225,9 @@ function link_to_unless($condition, $name = '', $url = '', $options = array())
  *    => <input value="Delete this page" type="button" onclick="document.location.href='/path/to/my/action';" />
  * </code>
  *
- * @param  string name of the button
- * @param  string 'module/action' or '@rule' of the action
- * @param  array additional HTML compliant <input> tag parameters
+ * @param  string $name          name of the button
+ * @param  string $internal_uri  'module/action' or '@rule' of the action
+ * @param  array  $options       additional HTML compliant <input> tag parameters
  * @return string XHTML compliant <input> tag
  * @see    url_for, link_to
  */
@@ -291,9 +291,10 @@ function button_to($name, $internal_uri ='', $options = array())
  *    => <a href="&#x6d;a&#x69;&#x6c;&#x74;&#111;&#58;&#x77;&#x65;b&#x6d;as&#116;&#x65;&#114;&#64;&#101;&#x78;&#x61;&#x6d;&#x70;&#108;&#x65;&#46;&#99;&#x6f;&#109;">send us an email</a>
  * </code>
  *
- * @param  string target email
- * @param  string name of the link, i.e. string to appear between the <a> tags
- * @param  array additional HTML compliant <a> tag parameters
+ * @param  string $email          target email
+ * @param  string $name           name of the link, i.e. string to appear between the <a> tags
+ * @param  array  $options        additional HTML compliant <a> tag parameters
+ * @param  array  $default_value
  * @return string XHTML compliant <a href> tag
  * @see    link_to
  */

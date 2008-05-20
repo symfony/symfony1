@@ -22,9 +22,9 @@
 /**
  * Constructs an html tag.
  *
- * @param  $name    string  tag name
- * @param  $options array   tag options
- * @param  $open    boolean true to leave tag open
+ * @param  string $name     tag name
+ * @param  array  $options  tag options
+ * @param  bool   $open     true to leave tag open
  * @return string
  */
 function tag($name, $options = array(), $open = false)
@@ -66,7 +66,7 @@ function escape_javascript($javascript = '')
 /**
  * Escapes an HTML string.
  *
- * @param  string HTML string to escape
+ * @param  string $html HTML string to escape
  * @return string escaped string
  */
 function escape_once($html)
@@ -77,8 +77,8 @@ function escape_once($html)
 /**
  * Fixes double escaped strings.
  *
- * @param  string HTML string to fix
- * @return string escaped string
+ * @param  string $escaped HTML string to fix
+ * @return string fixed escaped string
  */
 function fix_double_escape($escaped)
 {

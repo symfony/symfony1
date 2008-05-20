@@ -37,18 +37,19 @@
  *    => <link rel="alternate" type="application/rss+xml" title="My RSS" href="http://www.curenthost.com/module/feed" />
  * </code>
  *
- * @param  string feed type ('rss', 'atom')
- * @param  string 'module/action' or '@rule' of the feed
- * @param  array additional HTML compliant <link> tag parameters
+ * @param  string $type         feed type ('rss', 'atom')
+ * @param  string $url          'module/action' or '@rule' of the feed
+ * @param  array  $tag_options  additional HTML compliant <link> tag parameters
+ *
  * @return string XHTML compliant <link> tag
  */
-function auto_discovery_link_tag($type = 'rss', $url_options = array(), $tag_options = array())
+function auto_discovery_link_tag($type = 'rss', $url = '', $tag_options = array())
 {
   return tag('link', array(
     'rel'   => isset($tag_options['rel']) ? $tag_options['rel'] : 'alternate',
     'type'  => isset($tag_options['type']) ? $tag_options['type'] : 'application/'.$type.'+xml',
     'title' => isset($tag_options['title']) ? $tag_options['title'] : ucfirst($type),
-    'href'  => url_for($url_options, true)
+    'href'  => url_for($url, true)
   ));
 }
 
@@ -66,8 +67,9 @@ function auto_discovery_link_tag($type = 'rss', $url_options = array(), $tag_opt
  * - file name, like "myscript.js", that gets expanded to "/js/myscript.js"
  * - file name without extension, like "myscript", that gets expanded to "/js/myscript.js"
  *
- * @param  string asset name
- * @param  bool return absolute path ?
+ * @param  string $source    asset name
+ * @param  bool   $absolute  return absolute path ?
+ *
  * @return string file path to the JavaScript file
  * @see    javascript_include_tag
  */
@@ -89,6 +91,8 @@ function javascript_path($source, $absolute = false)
  * </code>
  *
  * @param  string asset names
+ * @param  array additional HTML compliant <link> tag parameters
+ *
  * @return string XHTML compliant <script> tag(s)
  * @see    javascript_path 
  */
@@ -137,8 +141,9 @@ function javascript_include_tag()
  * - file name, like "style.css", that gets expanded to "/css/style.css"
  * - file name without extension, like "style", that gets expanded to "/css/style.css"
  *
- * @param  string asset name
- * @param  bool return absolute path ?
+ * @param  string $source    asset name
+ * @param  bool   $absolute  return absolute path ?
+ *
  * @return string file path to the stylesheet file
  * @see    stylesheet_tag  
  */
@@ -171,6 +176,7 @@ function stylesheet_path($source, $absolute = false)
  *
  * @param  string asset names
  * @param  array additional HTML compliant <link> tag parameters
+ *
  * @return string XHTML compliant <link> tag(s)
  * @see    stylesheet_path 
  */
@@ -227,7 +233,7 @@ function use_javascript($js, $position = '', $options = array())
 /**
  * Decorates the current template with a given layout.
  *
- * @param mixed The layout name or path or false to disable the layout
+ * @param mixed $layout  The layout name or path or false to disable the layout
  */
 function decorate_with($layout)
 {
@@ -255,8 +261,9 @@ function decorate_with($layout)
  * - file name, like "rss.gif", that gets expanded to "/images/rss.gif"
  * - file name without extension, like "logo", that gets expanded to "/images/logo.png"
  * 
- * @param  string asset name
- * @param  bool return absolute path ?
+ * @param  string $source    asset name
+ * @param  bool   $absolute  return absolute path ?
+ *
  * @return string file path to the image file
  * @see    image_tag  
  */
@@ -281,8 +288,9 @@ function image_path($source, $absolute = false)
  *    => <img src="/my_images/image.gif" alt="Alternative text" width="100" height="200" />
  * </code>
  *
- * @param  string image asset name
- * @param  array additional HTML compliant <img> tag parameters
+ * @param  string $source   image asset name
+ * @param  array  $options  additional HTML compliant <img> tag parameters
+ *
  * @return string XHTML compliant <img> tag
  * @see    image_path 
  */
@@ -541,9 +549,9 @@ function include_stylesheets()
  *
  * The helper automatically adds the sf_format to the internal URI, so you don't have to.
  *
- * @param  string  The internal URI for the dynamic javascript
- * @param  Boolean Whether to generate an absolute URL
- * @param  array   An array of options (absolute)
+ * @param  string $uri       The internal URI for the dynamic javascript
+ * @param  bool   $absolute  Whether to generate an absolute URL
+ * @param  array  $options   An array of options
  *
  * @return string  XHTML compliant <script> tag(s)
  * @see    javascript_include_tag 

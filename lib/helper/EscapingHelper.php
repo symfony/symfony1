@@ -34,7 +34,7 @@
 /**
  * Runs the PHP function htmlentities on the value passed.
  *
- * @param string $value the value to escape
+ * @param  string $value  the value to escape
  * @return string the escaped value
  */
 function esc_entities($value)
@@ -49,7 +49,7 @@ define('ESC_ENTITIES', 'esc_entities');
 /**
  * Runs the PHP function htmlspecialchars on the value passed.
  *
- * @param string $value the value to escape
+ * @param  string $value  the value to escape
  * @return string the escaped value
  */
 function esc_specialchars($value)
@@ -65,7 +65,7 @@ define('ESC_SPECIALCHARS', 'esc_specialchars');
  * An identity function that merely returns that which it is given, the purpose
  * being to be able to specify that the value is not to be escaped in any way.
  *
- * @param string $value the value to escape
+ * @param  string $value  the value to escape
  * @return string the escaped value
  */
 function esc_raw($value)
@@ -84,7 +84,7 @@ define('ESC_RAW', 'esc_raw');
  * The {@link esc_js_no_entities()} method should be used to escape a string
  * that is ultimately not going to end up as text in an HTML document.
  *
- * @param string $value the value to escape
+ * @param  string $value  the value to escape
  * @return string the escaped value
  */
 function esc_js($value)
@@ -98,7 +98,7 @@ define('ESC_JS', 'esc_js');
  * A function the c-escapes a string, making it suitable to be placed in a
  * JavaScript string.
  *
- * @param string $value the value to escape
+ * @param  string $value  the value to escape
  * @return string the escaped value
  */
 function esc_js_no_entities($value)

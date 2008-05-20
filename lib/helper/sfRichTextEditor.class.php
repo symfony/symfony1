@@ -26,9 +26,9 @@ abstract class sfRichTextEditor
   /**
    * Initializes this rich text editor.
    *
-   * @param string The tag name
-   * @param string The rich text editor content
-   * @param array  An array of options
+   * @param string $name     The tag name
+   * @param string $content  The rich text editor content
+   * @param array  $options  An array of options
    */
   public function initialize($name, $content, $options = array())
   {

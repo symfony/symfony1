@@ -134,12 +134,12 @@ function wrap_text($text, $line_width = 80)
   return preg_replace('/(.{1,'.$line_width.'})(\s+|$)/s', "\\1\n", preg_replace("/\n/", "\n\n", $text));
 }
 
-/*
-    # Returns +text+ transformed into html using very simple formatting rules
-    # Surrounds paragraphs with <tt>&lt;p&gt;</tt> tags, and converts line breaks into <tt>&lt;br /&gt;</tt>
-    # Two consecutive newlines(<tt>\n\n</tt>) are considered as a paragraph, one newline (<tt>\n</tt>) is
-    # considered a linebreak, three or more consecutive newlines are turned into two newlines
-*/
+/**
+ * Returns +text+ transformed into html using very simple formatting rules
+ * Surrounds paragraphs with <tt>&lt;p&gt;</tt> tags, and converts line breaks into <tt>&lt;br /&gt;</tt>
+ * Two consecutive newlines(<tt>\n\n</tt>) are considered as a paragraph, one newline (<tt>\n</tt>) is
+ * considered a linebreak, three or more consecutive newlines are turned into two newlines
+ */
 function simple_format_text($text, $options = array())
 {
   $css = (isset($options['class'])) ? ' class="'.$options['class'].'"' : '';
@@ -177,7 +177,7 @@ function auto_link_text($text, $link = 'all', $href_options = array())
   }
 }
 
-/*
+/**
  * Turns all links into words, like "<a href="something">else</a>" to "else".
  */
 function strip_links_text($text)
