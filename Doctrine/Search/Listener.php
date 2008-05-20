@@ -45,8 +45,11 @@ class Doctrine_Search_Listener extends Doctrine_Record_Listener
 
     public function postUpdate(Doctrine_Event $event)
     {
+        $record = $event->getInvoker(); 
 
+        $this->_search->updateIndex($record->toArray()); 
     }
+
     public function postInsert(Doctrine_Event $event)
     {
         $record = $event->getInvoker();
