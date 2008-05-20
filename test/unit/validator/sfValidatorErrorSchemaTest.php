@@ -124,7 +124,7 @@ try
   $e['e1'] = $e2;
   $t->fail('sfValidatorErrorSchema implements the ArrayAccess interface');
 }
-catch (sfException $e)
+catch (LogicException $e)
 {
   $t->pass('sfValidatorErrorSchema implements the ArrayAccess interface');
 }
