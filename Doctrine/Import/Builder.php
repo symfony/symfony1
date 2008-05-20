@@ -705,7 +705,7 @@ class Doctrine_Import_Builder
     {
         // rewrite special case of actAs: [Behavior] which gave [0] => Behavior
         if(is_array($actAs) && isset($actAs[0]) && !is_array($actAs[0])) {
-            $actAs = $actAs[0];
+            $actAs = array_flip($actAs);
         }
 
         $build = '';
