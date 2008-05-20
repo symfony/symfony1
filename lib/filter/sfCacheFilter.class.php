@@ -28,8 +28,8 @@ class sfCacheFilter extends sfFilter
   /**
    * Initializes this Filter.
    *
-   * @param sfContext The current application context
-   * @param array   An associative array of initialization parameters
+   * @param sfContext $context      The current application context
+   * @param array     $parameters   An associative array of initialization parameters
    *
    * @return bool true, if initialization completes successfully, otherwise false
    *
@@ -48,7 +48,7 @@ class sfCacheFilter extends sfFilter
   /**
    * Executes this filter.
    *
-   * @param sfFilterChain A sfFilterChain instance
+   * @param sfFilterChain $filterChain A sfFilterChain instance
    */
   public function execute($filterChain)
   {
@@ -94,8 +94,6 @@ class sfCacheFilter extends sfFilter
 
   /**
    * Executes this filter.
-   *
-   * @param sfFilterChain A sfFilterChain instance.
    */
   public function executeBeforeRendering()
   {

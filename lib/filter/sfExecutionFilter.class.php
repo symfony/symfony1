@@ -24,7 +24,7 @@ class sfExecutionFilter extends sfFilter
   /**
    * Executes this filter.
    *
-   * @param sfFilterChain The filter chain
+   * @param sfFilterChain $filterChain The filter chain
    *
    * @throws <b>sfInitializeException</b> If an error occurs during view initialization.
    * @throws <b>sfViewException</b>       If an error occurs while executing the view.
@@ -58,8 +58,8 @@ class sfExecutionFilter extends sfFilter
   /*
    * Handles the action.
    *
-   * @param  sfFilterChain The current filter chain
-   * @param  sfAction      An sfAction instance
+   * @param  sfFilterChain $filterChain     The current filter chain
+   * @param  sfAction      $actionInstance  An sfAction instance
    *
    * @return string        The view type
    */
@@ -77,7 +77,7 @@ class sfExecutionFilter extends sfFilter
   /**
    * Executes the execute method of an action.
    *
-   * @param  sfAction An sfAction instance
+   * @param  sfAction $actionInstance An sfAction instance
    *
    * @return string   The view type
    */
@@ -94,9 +94,9 @@ class sfExecutionFilter extends sfFilter
   /**
    * Handles the view.
    *
-   * @param  sfFilterChain The current filter chain
-   * @param sfAction       An sfAction instance
-   * @param string         The view name
+   * @param sfFilterChain  $filterChain     The current filter chain
+   * @param sfAction       $actionInstance  An sfAction instance
+   * @param string         $viewName        The view name
    */
   protected function handleView($filterChain, $actionInstance, $viewName)
   {
@@ -121,10 +121,10 @@ class sfExecutionFilter extends sfFilter
    *   - sfView::RENDER_CLIENT: View data populates the response content.
    *   - sfView::RENDER_DATA: View data populates the data presentation variable.
    *
-   * @param  string The module name
-   * @param  string The action name
-   * @param  string The view name
-   * @param  array  An array of view attributes
+   * @param  string $moduleName     The module name
+   * @param  string $actionName     The action name
+   * @param  string $viewName       The view name
+   * @param  array  $viewAttributes An array of view attributes
    *
    * @return string The view data
    */

@@ -40,8 +40,8 @@ abstract class sfFilter
   /**
    * Initializes this Filter.
    *
-   * @param sfContext The current application context
-   * @param array   An associative array of initialization parameters
+   * @param sfContext $context    The current application context
+   * @param array     $parameters An associative array of initialization parameters
    *
    * @return boolean true, if initialization completes successfully, otherwise false
    *
@@ -104,8 +104,8 @@ abstract class sfFilter
    *
    * <code>$this->getParameterHolder()->get()</code>
    *
-   * @param string The key name
-   * @param string The default value
+   * @param string $name    The key name
+   * @param string $default The default value
    *
    * @return string The value associated with the key
    *
@@ -123,7 +123,7 @@ abstract class sfFilter
    *
    * <code>$this->getParameterHolder()->has()</code>
    *
-   * @param string The key name
+   * @param string $name  The key name
    *
    * @return boolean true if the given key exists, false otherwise
    *
@@ -141,8 +141,8 @@ abstract class sfFilter
    *
    * <code>$this->getParameterHolder()->set()</code>
    *
-   * @param string The key name
-   * @param string The value
+   * @param string $name  The key name
+   * @param string $value The value
    *
    * @see sfParameterHolder
    */

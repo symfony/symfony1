@@ -27,7 +27,7 @@ class sfFilterChain
   /**
    * Loads filters configuration for a given action instance.
    *
-   * @param sfComponent A sfComponent instance
+   * @param sfComponent $actionInstance A sfComponent instance
    */
   public function loadConfiguration($actionInstance)
   {
@@ -57,7 +57,7 @@ class sfFilterChain
   /**
    * Returns true if the filter chain contains a filter of a given class.
    *
-   * @param string The class name of the filter
+   * @param string $class The class name of the filter
    *
    * @return boolean true if the filter exists, false otherwise
    */
@@ -77,7 +77,7 @@ class sfFilterChain
   /**
    * Registers a filter with this chain.
    *
-   * @param sfFilter A sfFilter implementation instance.
+   * @param sfFilter $filter A sfFilter implementation instance.
    */
   public function register($filter)
   {

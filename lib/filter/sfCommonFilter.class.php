@@ -21,7 +21,7 @@ class sfCommonFilter extends sfFilter
   /**
    * Executes this filter.
    *
-   * @param sfFilterChain A sfFilterChain instance
+   * @param sfFilterChain $filterChain A sfFilterChain instance
    */
   public function execute($filterChain)
   {
