@@ -81,7 +81,34 @@ class Doctrine_Relation_Parser
         
         return $this->_pending[$name];
     }
-    
+
+    /**
+     * getPendingRelations
+     *
+     * @return array            an array containing all the pending relations
+     */
+    public function getPendingRelations() 
+    {
+        return $this->_pending;
+    }
+
+    /**
+     * unsetPendingRelations
+     * Removes a relation. Warning: this only affects pending relations
+     *
+     * @param string            relation to remove
+     */
+    public function unsetPendingRelations($name) 
+    {
+       unset($this->_pending[$name]);
+    }
+
+    /**
+     * Check if a relation alias exists
+     *
+     * @param string $name 
+     * @return boolean $bool
+     */
     public function hasRelation($name)
     {
         if ( ! isset($this->_pending[$name]) && ! isset($this->_relations[$name])) {

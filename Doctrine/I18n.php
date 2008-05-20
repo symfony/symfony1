@@ -93,5 +93,31 @@ class Doctrine_I18n extends Doctrine_Record_Generator
         $this->hasColumn('lang', $this->_options['type'], $this->_options['length'], $options);
 
         $this->bindQueryParts(array('indexBy' => 'lang'));
+ 
+        // Rewrite any relations to our original table
+        $originalName = $this->_options['table']->getClassnameToReturn();
+        $relations = $this->_options['table']->getRelationParser()->getPendingRelations();
+        foreach($relations as $table => $relation) {
+            if ($table != $this->_table->getTableName() ) {
+                // check that the localColumn is part of the moved col
+                if ( in_array($relation['local'], $this->_options['fields'])) {
+                    // found one, let's rewrite it
+                    $this->_options['table']->getRelationParser()->unsetPendingRelations($table);
+        
+                    // and bind the rewritten one
+                    $this->_table->getRelationParser()->bind($table, $relation);
+        
+                    // now try to get the reverse relation, to rewrite it
+                    $rp = Doctrine::getTable($table)->getRelationParser();
+                    $others = $rp->getPendingRelation($originalName);
+                    if (isset($others)) {
+                        $others['class'] = $this->_table->getClassnameToReturn();
+                        $others['alias'] = $this->_table->getClassnameToReturn();
+                        $rp->unsetPendingRelations($originalName);
+                        $rp->bind($this->_table->getClassnameToReturn() ,$others);
+                    }
+                }
+            }
+        }
     }
 }
