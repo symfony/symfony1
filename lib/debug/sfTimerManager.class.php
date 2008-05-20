@@ -25,7 +25,7 @@ class sfTimerManager
    *
    * It returns the timer named $name or create a new one if it does not exist.
    *
-   * @param string The name of the timer
+   * @param string $name The name of the timer
    *
    * @return sfTimer The timer instance
    */

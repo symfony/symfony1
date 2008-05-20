@@ -35,7 +35,7 @@ class sfWebDebug
   /**
    * Logs a message to the web debug toolbar.
    *
-   * @param array An array of parameter
+   * @param array $logEntry An array of parameter
    *
    * @see sfWebDebugLogger
    */
@@ -79,7 +79,7 @@ class sfWebDebug
   /**
    * Formats a log line.
    *
-   * @param string The log line to format
+   * @param string $logLine The log line to format
    *
    * @return string The formatted log lin
    */
@@ -178,7 +178,7 @@ class sfWebDebug
         $log = $this->formatLogLine($log);
 
         // sql queries log
-        if (preg_match('/execute(?:Query|Update).+?\:\s+(.+)$/', $log, $match))
+        if (preg_match('/prepare:(.+)$/', $log, $match))
         {
           $sqlLogs[] .= $match[1];
         }
@@ -343,8 +343,8 @@ class sfWebDebug
   /**
    * Converts an array to HTML.
    *
-   * @param string The identifier to use
-   * @param array  The array of values
+   * @param string $id      The identifier to use
+   * @param array  $values  The array of values
    *
    * @return string An HTML string
    */
@@ -362,8 +362,8 @@ class sfWebDebug
   /**
    * Listens to the 'view.cache.filter_content' event to decorate a chunk of HTML with cache information.
    *
-   * @param sfEvent A sfEvent instance
-   * @param string  The HTML content
+   * @param sfEvent $event   A sfEvent instance
+   * @param string  $content The HTML content
    *
    * @return string The decorated HTML string
    */
@@ -401,7 +401,7 @@ class sfWebDebug
   /**
    * Converts a priority value to a string.
    *
-   * @param integer The priority value
+   * @param integer $value The priority value
    *
    * @return string The priority as a string
    */

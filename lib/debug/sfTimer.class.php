@@ -27,7 +27,7 @@ class sfTimer
   /**
    * Creates a new sfTimer instance.
    *
-   * @param string The name of the timer
+   * @param string $name The name of the timer
    */
   public function __construct($name = '')
   {
