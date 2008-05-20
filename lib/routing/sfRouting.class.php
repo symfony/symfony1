@@ -51,9 +51,9 @@ abstract class sfRouting
    *  * logging:        Whether to log or not (false by default)
    *  * debug:          Whether to cache or not (false by default)
    *
-   * @param sfEventDispatcher A sfEventDispatcher instance
-   * @param sfCache           A sfCache instance
-   * @param array             An associative array of initialization options.
+   * @param sfEventDispatcher $dispatcher  An sfEventDispatcher instance
+   * @param sfCache           $cache       An sfCache instance
+   * @param array             $options     An associative array of initialization options.
    */
   public function initialize(sfEventDispatcher $dispatcher, sfCache $cache = null, $options = array())
   {
@@ -100,8 +100,8 @@ abstract class sfRouting
   /**
    * Gets the internal URI for the current request.
    *
-   * @param boolean Whether to give an internal URI with the route name (@route)
-   *                or with the module/action pair
+   * @param  bool $with_route_name  Whether to give an internal URI with the route name (@route)
+   *                                or with the module/action pair
    *
    * @return string The current internal URI
    */
@@ -117,7 +117,7 @@ abstract class sfRouting
   /**
    * Sets the compiled route array.
    *
-   * @param array The route array
+   * @param  array $routes  The route array
    *
    * @return array The route array
    */
@@ -126,7 +126,7 @@ abstract class sfRouting
   /**
    * Returns true if this instance has some routes.
    *
-   * @return  boolean
+   * @return bool
    */
   abstract public function hasRoutes();
 
@@ -138,9 +138,11 @@ abstract class sfRouting
  /**
   * Generates a valid URLs for parameters.
   *
-  * @param  array  The parameter values
-  * @param  string The divider between key/value pairs
-  * @param  string The equal sign to use between key and value
+  * @param  string $name      The route name
+  * @param  array  $params    The parameter values
+  * @param  string $querydiv  The divider between URI and query string
+  * @param  string $divider   The divider between key/value pairs
+  * @param  string $equals    The equal sign to use between key and value
   *
   * @return string The generated URL
   */
@@ -151,7 +153,7 @@ abstract class sfRouting
   *
   * Throws a sfError404Exception if no route match the URL.
   *
-  * @param  string URL to be parsed
+  * @param  string $url  URL to be parsed
   *
   * @return array  An array of parameters
   *
@@ -162,8 +164,8 @@ abstract class sfRouting
   /**
    * Sets a default parameter.
    *
-   * @param string The key
-   * @param string The value
+   * @param string $key    The key
+   * @param string $value  The value
    */
   public function setDefaultParameter($key, $value)
   {
@@ -173,7 +175,7 @@ abstract class sfRouting
   /**
    * Sets the default parameters for URL generation.
    *
-   * @param array An array of default parameters
+   * @param array $parameters  An array of default parameters
    */
   public function setDefaultParameters($parameters)
   {
@@ -220,7 +222,8 @@ abstract class sfRouting
   /**
    * Listens to the request.filter_parameters event.
    *
-   * @param sfEvent An sfEvent instance
+   * @param sfEvent $event       An sfEvent instance
+   * @param array   $parameters  An array of parameters for the event
    *
    */
   public function filterParametersEvent(sfEvent $event, $parameters)

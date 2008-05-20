@@ -208,9 +208,9 @@ class sfPatternRouting extends sfRouting
   /**
    * Returns true if the route name given is defined.
    *
-   * @param string The route name
+   * @param  string $name  The route name
    *
-   * @return  boolean
+   * @return boolean
    */
   public function hasRouteName($name)
   {
@@ -284,10 +284,10 @@ class sfPatternRouting extends sfRouting
    * $r->connect('default', '/:module/:action/*');
    * </code>
    *
-   * @param  string The route name
-   * @param  string The route string
-   * @param  array  The default parameter values
-   * @param  array  The regexps parameters must match
+   * @param  string $name          The route name
+   * @param  string $route         The route string
+   * @param  array  $defaults      The default parameter values
+   * @param  array  $requirements  The regexps parameters must match
    *
    * @return array  current routes
    */
@@ -622,7 +622,7 @@ class sfPatternRouting extends sfRouting
   *  - route      : the actual matching route
   *  - parameters : array containing key value pairs of the request parameters including defaults
   *
-  * @param  string URL to be parsed
+  * @param  string $url  URL to be parsed
   *
   * @return array  An array with routing information or null if no route matched
   */
