@@ -23,8 +23,8 @@ abstract class sfWebController extends sfController
   /**
    * Generates an URL from an array of parameters.
    *
-   * @param mixed   An associative array of URL parameters or an internal URI as a string.
-   * @param boolean Whether to generate an absolute URL
+   * @param mixed   $parameters An associative array of URL parameters or an internal URI as a string.
+   * @param boolean $absolute   Whether to generate an absolute URL
    *
    * @return string A URL to a symfony resource
    */
@@ -100,7 +100,7 @@ abstract class sfWebController extends sfController
   /**
    * Converts an internal URI string to an array of parameters.
    *
-   * @param string An internal URI
+   * @param string $url An internal URI
    *
    * @return array An array of parameters
    */
@@ -179,10 +179,10 @@ abstract class sfWebController extends sfController
   /**
    * Redirects the request to another URL.
    *
-   * @param string An existing URL
-   * @param int    A delay in seconds before redirecting. This is only needed on
-   *               browsers that do not support HTTP headers
-   * @param int    The status code
+   * @param string $url         An existing URL
+   * @param int    $delay       A delay in seconds before redirecting. This is only needed on
+   *                            browsers that do not support HTTP headers
+   * @param int    $statusCode  The status code
    */
   public function redirect($url, $delay = 0, $statusCode = 302)
   {
