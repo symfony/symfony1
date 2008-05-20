@@ -196,10 +196,9 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                                 }
                                 $prev[$parent][$relationAlias][$element[$field]] = $element;
                             } else {
-                                $prev[$parent][$relationAlias][] = $element;
-                                $identifierMap[$path][$id[$parent]][$id[$dqlAlias]] = $driver->getLastKey($prev[$parent][$relationAlias]);
+                                $prev[$parent][$relationAlias][] = $element; 
                             }
-
+                            $identifierMap[$path][$id[$parent]][$id[$dqlAlias]] = $driver->getLastKey($prev[$parent][$relationAlias]);
                         } else {
                             $index = $identifierMap[$path][$id[$parent]][$id[$dqlAlias]];
                         }
