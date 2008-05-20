@@ -27,8 +27,8 @@ class sfMySQLiSessionStorage extends sfMySQLSessionStorage
   /*!
    * Execute an SQL Query
    *
-   * @param $query (string) The query to execute
-   * @return (mixed) The result of the query
+   * @param  string $query  The query to execute
+   * @return mixed The result of the query
    */
   protected function db_query($query)
   {
@@ -38,8 +38,8 @@ class sfMySQLiSessionStorage extends sfMySQLSessionStorage
   /*!
    * Escape a string before using it in a query statement
    *
-   * @param $string (string) The string to escape
-   * @return (string) The escaped string
+   * @param  string $string  The string to escape
+   * @return string The escaped string
    */
   protected function db_escape($string)
   {
@@ -49,8 +49,8 @@ class sfMySQLiSessionStorage extends sfMySQLSessionStorage
   /*!
    * Count the rows in a query result
    *
-   * @param $result (resource) Result of a query
-   * @return (int) Number of rows
+   * @param  resource $result  Result of a query
+   * @return int Number of rows
    */
   protected function db_num_rows($result)
   {
@@ -60,8 +60,8 @@ class sfMySQLiSessionStorage extends sfMySQLSessionStorage
   /*!
    * Extract a row from a query result set
    *
-   * @param $result (resource) Result of a query
-   * @return (array) Extracted row as an indexed array
+   * @param  resource $result  Result of a query
+   * @return array Extracted row as an indexed array
    */
   protected function db_fetch_row($result)
   {

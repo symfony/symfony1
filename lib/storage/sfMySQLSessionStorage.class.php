@@ -26,9 +26,9 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
   /**
    * Destroys a session.
    *
-   * @param string A session ID
+   * @param  string $id  A session ID
    *
-   * @return boolean true, if the session was destroyed, otherwise an exception is thrown
+   * @return bool true, if the session was destroyed, otherwise an exception is thrown
    *
    * @throws <b>sfDatabaseException</b> If the session cannot be destroyed.
    */
@@ -56,9 +56,9 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
   /**
    * Cleans up old sessions.
    *
-   * @param int The lifetime of a session
+   * @param  int $lifetime  The lifetime of a session
    *
-   * @return boolean true, if old sessions have been cleaned, otherwise an exception is thrown
+   * @return bool true, if old sessions have been cleaned, otherwise an exception is thrown
    *
    * @throws <b>sfDatabaseException</b> If any old sessions cannot be cleaned
    */
@@ -83,9 +83,9 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
   /**
    * Reads a session.
    *
-   * @param string A session ID
+   * @param  string $id  A session ID
    *
-   * @return boolean true, if the session was read, otherwise an exception is thrown
+   * @return bool true, if the session was read, otherwise an exception is thrown
    *
    * @throws <b>sfDatabaseException</b> If the session cannot be read
    */
@@ -130,10 +130,10 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
   /**
    * Writes session data.
    *
-   * @param string A session ID
-   * @param string A serialized chunk of session data
+   * @param  string $id    A session ID
+   * @param  string $data  A serialized chunk of session data
    *
-   * @return boolean true, if the session was written, otherwise an exception is thrown
+   * @return bool true, if the session was written, otherwise an exception is thrown
    *
    * @throws <b>sfDatabaseException</b> If the session data cannot be written
    */
@@ -164,8 +164,8 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
   /*!
    * Execute an SQL Query
    *
-   * @param $query (string) The query to execute
-   * @return (mixed) The result of the query
+   * @param  string $query  The query to execute
+   * @return mixed The result of the query
    */
   protected function db_query($query)
   {
@@ -175,8 +175,8 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
   /*!
    * Escape a string before using it in a query statement
    *
-   * @param $string (string) The string to escape
-   * @return (string) The escaped string
+   * @param  string $string  The string to escape
+   * @return string The escaped string
    */
   protected function db_escape($string)
   {
@@ -186,8 +186,8 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
   /*!
    * Count the rows in a query result
    *
-   * @param $result (resource) Result of a query
-   * @return (int) Number of rows
+   * @param  resource $result  Result of a query
+   * @return int Number of rows
    */
   protected function db_num_rows($result)
   {
@@ -197,8 +197,8 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
   /*!
    * Extract a row from a query result set
    *
-   * @param $result (resource) Result of a query
-   * @return (array) Extracted row as an indexed array
+   * @param  resource $result  Result of a query
+   * @return array Extracted row as an indexed array
    */
   protected function db_fetch_row($result)
   {

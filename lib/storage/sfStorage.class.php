@@ -45,9 +45,9 @@ abstract class sfStorage
    *
    *  * auto_shutdown: Whether to automatically save the changes to the session (true by default)
    *
-   * @param array   An associative array of options
+   * @param  array $options  An associative array of options
    *
-   * @return boolean true, if initialization completes successfully, otherwise false
+   * @return bool true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfStorage
    */
@@ -73,7 +73,7 @@ abstract class sfStorage
    *
    * The preferred format for a key is directory style so naming conflicts can be avoided.
    *
-   * @param string A unique key identifying your data
+   * @param  string $key  A unique key identifying your data
    *
    * @return mixed Data associated with the key
    *
@@ -86,7 +86,7 @@ abstract class sfStorage
    *
    * The preferred format for a key is directory style so naming conflicts can be avoided.
    *
-   * @param string A unique key identifying your data
+   * @param  string $key  A unique key identifying your data
    *
    * @return mixed Data associated with the key
    *
@@ -106,8 +106,8 @@ abstract class sfStorage
    *
    * The preferred format for a key is directory style so naming conflicts can be avoided.
    *
-   * @param string A unique key identifying your data
-   * @param mixed  Data associated with your key
+   * @param  string $key   A unique key identifying your data
+   * @param  mixed  $data  Data associated with your key
    *
    * @throws <b>sfStorageException</b> If an error occurs while writing to this storage
    */

@@ -26,9 +26,9 @@ class sfPDOSessionStorage extends sfDatabaseSessionStorage
   /**
    * Destroys a session.
    *
-   * @param string A session ID
+   * @param  string $id  A session ID
    *
-   * @return boolean true, if the session was destroyed, otherwise an exception is thrown
+   * @return bool true, if the session was destroyed, otherwise an exception is thrown
    *
    * @throws <b>DatabaseException</b> If the session cannot be destroyed
    */
@@ -56,9 +56,9 @@ class sfPDOSessionStorage extends sfDatabaseSessionStorage
   /**
    * Cleans up old sessions.
    *
-   * @param int The lifetime of a session
+   * @param  int $lifetime  The lifetime of a session
    *
-   * @return boolean true, if old sessions have been cleaned, otherwise an exception is thrown
+   * @return bool true, if old sessions have been cleaned, otherwise an exception is thrown
    *
    * @throws <b>DatabaseException</b> If any old sessions cannot be cleaned
    */
@@ -86,9 +86,9 @@ class sfPDOSessionStorage extends sfDatabaseSessionStorage
   /**
    * Reads a session.
    *
-   * @param string A session ID
+   * @param  string $id  A session ID
    *
-   * @return boolean true, if the session was read, otherwise an exception is thrown
+   * @return bool true, if the session was read, otherwise an exception is thrown
    *
    * @throws <b>DatabaseException</b> If the session cannot be read
    */
@@ -135,10 +135,10 @@ class sfPDOSessionStorage extends sfDatabaseSessionStorage
   /**
    * Writes session data.
    *
-   * @param string A session ID
-   * @param string A serialized chunk of session data
+   * @param  string $id    A session ID
+   * @param  string $data  A serialized chunk of session data
    *
-   * @return boolean true, if the session was written, otherwise an exception is thrown
+   * @return bool true, if the session was written, otherwise an exception is thrown
    *
    * @throws <b>DatabaseException</b> If the session data cannot be written
    */

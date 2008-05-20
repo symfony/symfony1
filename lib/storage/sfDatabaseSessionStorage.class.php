@@ -32,6 +32,8 @@ abstract class sfDatabaseSessionStorage extends sfSessionStorage
    *   * db_data_col: The database column in which the session data will be stored (sess_data by default)
    *   * db_time_col: The database column in which the session timestamp will be stored (sess_time by default)
    *
+   * @param  array $options  An associative array of options
+   *
    * @see sfSessionStorage
    */
   public function initialize($options = array())
@@ -84,14 +86,14 @@ abstract class sfDatabaseSessionStorage extends sfSessionStorage
   /**
    * Opens a session.
    *
-   * @param string
-   * @param string
+   * @param  string $path  (ignored)
+   * @param  string $name  (ignored)
    *
    * @return boolean true, if the session was opened, otherwise an exception is thrown
    *
    * @throws <b>DatabaseException</b> If a connection with the database does not exist or cannot be created
    */
-  public function sessionOpen($path, $name)
+  public function sessionOpen($path = null, $name = null)
   {
     // what database are we using?
     $database = $this->options['database'];
@@ -109,9 +111,9 @@ abstract class sfDatabaseSessionStorage extends sfSessionStorage
   /**
    * Destroys a session.
    *
-   * @param string A session ID
+   * @param  string $id  A session ID
    *
-   * @return boolean true, if the session was destroyed, otherwise an exception is thrown
+   * @return bool true, if the session was destroyed, otherwise an exception is thrown
    *
    * @throws <b>DatabaseException</b> If the session cannot be destroyed
    */
@@ -120,9 +122,9 @@ abstract class sfDatabaseSessionStorage extends sfSessionStorage
   /**
    * Cleans up old sessions.
    *
-   * @param int The lifetime of a session
+   * @param  int $lifetime  The lifetime of a session
    *
-   * @return boolean true, if old sessions have been cleaned, otherwise an exception is thrown
+   * @return bool true, if old sessions have been cleaned, otherwise an exception is thrown
    *
    * @throws <b>DatabaseException</b> If any old sessions cannot be cleaned
    */
@@ -131,9 +133,9 @@ abstract class sfDatabaseSessionStorage extends sfSessionStorage
   /**
    * Reads a session.
    *
-   * @param string A session ID
+   * @param  string $id  A session ID
    *
-   * @return boolean true, if the session was read, otherwise an exception is thrown
+   * @return bool true, if the session was read, otherwise an exception is thrown
    *
    * @throws <b>DatabaseException</b> If the session cannot be read
    */
@@ -142,10 +144,10 @@ abstract class sfDatabaseSessionStorage extends sfSessionStorage
   /**
    * Writes session data.
    *
-   * @param string A session ID
-   * @param string A serialized chunk of session data
+   * @param  string $id    A session ID
+   * @param  string $data  A serialized chunk of session data
    *
-   * @return boolean true, if the session was written, otherwise an exception is thrown
+   * @return bool true, if the session was written, otherwise an exception is thrown
    *
    * @throws <b>DatabaseException</b> If the session data cannot be written
    */

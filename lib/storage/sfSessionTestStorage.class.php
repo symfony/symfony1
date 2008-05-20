@@ -28,6 +28,8 @@ class sfSessionTestStorage extends sfStorage
    *  * session_path: The path to store the session files (%SF_TEST_CACHE_DIR%/sessions by default)
    *  * session_id:   The session identifier
    *
+   * @param array $options  An associative array of options
+   *
    * @see sfStorage
    */
   public function initialize($options = null)
@@ -70,7 +72,7 @@ class sfSessionTestStorage extends sfStorage
    *
    * The preferred format for a key is directory style so naming conflicts can be avoided.
    *
-   * @param string A unique key identifying your data
+   * @param  string $key  A unique key identifying your data
    *
    * @return mixed Data associated with the key
    */
@@ -91,7 +93,7 @@ class sfSessionTestStorage extends sfStorage
    *
    * The preferred format for a key is directory style so naming conflicts can be avoided.
    *
-   * @param string A unique key identifying your data
+   * @param  string $key  A unique key identifying your data
    *
    * @return mixed Data associated with the key
    */
@@ -113,8 +115,8 @@ class sfSessionTestStorage extends sfStorage
    *
    * The preferred format for a key is directory style so naming conflicts can be avoided
    *
-   * @param string A unique key identifying your data
-   * @param mixed  Data associated with your key
+   * @param string $key   A unique key identifying your data
+   * @param mixed  $data  Data associated with your key
    *
    */
   public function write($key, $data)
