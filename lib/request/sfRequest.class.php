@@ -79,11 +79,11 @@ abstract class sfRequest
   /**
    * Initializes this sfRequest.
    *
-   * @param  sfEventDispatcher  A sfEventDispatcher instance
-   * @param  array              An associative array of initialization parameters
-   * @param  array              An associative array of initialization attributes
+   * @param  sfEventDispatcher $dispatcher  An sfEventDispatcher instance
+   * @param  array             $parameters  An associative array of initialization parameters
+   * @param  array             $attributes  An associative array of initialization attributes
    *
-   * @return Boolean            true, if initialization completes successfully, otherwise false
+   * @return bool true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfRequest
    */
@@ -102,7 +102,7 @@ abstract class sfRequest
   /**
    * Extracts parameter values from the request.
    *
-   * @param array An indexed array of parameter names to extract
+   * @param  array $names  An indexed array of parameter names to extract
    *
    * @return array An associative array of parameters and their values. If
    *               a specified parameter doesn't exist an empty string will
@@ -127,7 +127,7 @@ abstract class sfRequest
   /**
    * Retrieves an error message.
    *
-   * @param string An error name
+   * @param  string $name  An error name
    *
    * @return string An error message, if the error exists, otherwise null
    */
@@ -186,9 +186,9 @@ abstract class sfRequest
   /**
    * Indicates whether or not an error exists.
    *
-   * @param string An error name
+   * @param  string $name  An error name
    *
-   * @return boolean true, if the error exists, otherwise false
+   * @return bool true, if the error exists, otherwise false
    */
   public function hasError($name)
   {
@@ -203,7 +203,7 @@ abstract class sfRequest
   /**
    * Indicates whether or not any errors exist.
    *
-   * @return boolean true, if any error exist, otherwise false
+   * @return bool true, if any error exist, otherwise false
    */
   public function hasErrors()
   {
@@ -218,7 +218,7 @@ abstract class sfRequest
   /**
    * Removes an error.
    *
-   * @param string An error name
+   * @param  string $name  An error name
    *
    * @return string An error message, if the error was removed, otherwise null
    */
@@ -244,8 +244,8 @@ abstract class sfRequest
   /**
    * Sets an error.
    *
-   * @param string An error name
-   * @param string An error message
+   * @param string $name     An error name
+   * @param string $message  An error message
    *
    */
   public function setError($name, $message)
@@ -269,7 +269,7 @@ abstract class sfRequest
    * If an existing error name matches any of the keys in the supplied
    * array, the associated message will be overridden.
    *
-   * @param array An associative array of errors and their associated messages
+   * @param array $erros An associative array of errors and their associated messages
    *
    */
   public function setErrors($errors)
@@ -285,15 +285,13 @@ abstract class sfRequest
   /**
    * Sets the request method.
    *
-   * @param int One of the following constants:
+   * @param int $methodCode  One of the following constants:
    *
    * - sfRequest::GET
    * - sfRequest::POST
    * - sfRequest::PUT
    * - sfRequest::DELETE
    * - sfRequest::HEAD
-   *
-   * @return void
    *
    * @throws <b>sfException</b> - If the specified request method is invalid
    */
@@ -334,8 +332,8 @@ abstract class sfRequest
   /**
    * Retrieves an attribute from the current request.
    *
-   * @param string Attribute name
-   * @param string Default attribute value
+   * @param  string $name     Attribute name
+   * @param  string $default  Default attribute value
    *
    * @return mixed An attribute value
    */
@@ -347,9 +345,9 @@ abstract class sfRequest
   /**
    * Indicates whether or not an attribute exist for the current request.
    *
-   * @param string Attribute name
+   * @param  string $name  Attribute name
    *
-   * @return boolean true, if the attribute exists otherwise false
+   * @return bool true, if the attribute exists otherwise false
    */
   public function hasAttribute($name)
   {
@@ -359,8 +357,8 @@ abstract class sfRequest
   /**
    * Sets an attribute for the request.
    *
-   * @param string Attribute name
-   * @param string Value for the attribute
+   * @param string $name   Attribute name
+   * @param string $value  Value for the attribute
    *
    */
   public function setAttribute($name, $value)
@@ -371,8 +369,8 @@ abstract class sfRequest
   /**
    * Retrieves a paramater for the current request.
    *
-   * @param string Parameter name
-   * @param string Parameter default value
+   * @param string $name     Parameter name
+   * @param string $default  Parameter default value
    *
    */
   public function getParameter($name, $default = null)
@@ -383,9 +381,9 @@ abstract class sfRequest
   /**
    * Indicates whether or not a parameter exist for the current request.
    *
-   * @param string Parameter name
+   * @param  string $name  Parameter name
    *
-   * @return boolean true, if the paramater exists otherwise false
+   * @return bool true, if the paramater exists otherwise false
    */
   public function hasParameter($name)
   {
@@ -395,8 +393,8 @@ abstract class sfRequest
   /**
    * Sets a parameter for the current request.
    *
-   * @param string Parameter name
-   * @param string Parameter value
+   * @param string $name   Parameter name
+   * @param string $value  Parameter value
    *
    */
   public function setParameter($name, $value)
@@ -407,8 +405,8 @@ abstract class sfRequest
   /**
    * Calls methods defined via sfEventDispatcher.
    *
-   * @param string The method name
-   * @param array  The method arguments
+   * @param  string $method     The method name
+   * @param  array  $arguments  The method arguments
    *
    * @return mixed The returned value of the called method
    *

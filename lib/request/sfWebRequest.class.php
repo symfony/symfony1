@@ -37,11 +37,11 @@ class sfWebRequest extends sfRequest
   /**
    * Initializes this sfRequest.
    *
-   * @param  sfEventDispatcher  A sfEventDispatcher instance
-   * @param  array         An associative array of initialization parameters
-   * @param  array         An associative array of initialization attributes
+   * @param  sfEventDispatcher $dispatcher  An sfEventDispatcher instance
+   * @param  array             $parameters  An associative array of initialization parameters
+   * @param  array             $attributes  An associative array of initialization attributes
    *
-   * @return Boolean       true, if initialization completes successfully, otherwise false
+   * @return bool true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfRequest
    */
@@ -95,7 +95,7 @@ class sfWebRequest extends sfRequest
   /**
    * Retrieves an array of file information.
    *
-   * @param string A file name
+   * @param  string $name  A file name
    *
    * @return array An associative array of file information, if the file exists, otherwise null
    */
@@ -112,7 +112,7 @@ class sfWebRequest extends sfRequest
   /**
    * Retrieves a file error.
    *
-   * @param string A file name
+   * @param  string $name  A file name
    *
    * @return int One of the following error codes:
    *
@@ -140,7 +140,7 @@ class sfWebRequest extends sfRequest
   /**
    * Retrieves a file name.
    *
-   * @param string A file nam.
+   * @param  string $name  A file nam.
    *
    * @return string A file name, if the file exists, otherwise null
    */
@@ -172,7 +172,7 @@ class sfWebRequest extends sfRequest
   /**
    * Retrieves an array of files.
    *
-   * @param  string A key
+   * @param  string $key  A key
    * @return array  An associative array of files
    */
   public function getFiles($key = null)
@@ -183,7 +183,7 @@ class sfWebRequest extends sfRequest
   /**
    * Retrieves a file path.
    *
-   * @param string A file name
+   * @param  string $name  A file name
    *
    * @return string A file path, if the file exists, otherwise null
    */
@@ -200,7 +200,7 @@ class sfWebRequest extends sfRequest
   /**
    * Retrieve a file size.
    *
-   * @param string A file name
+   * @param  string $name  A file name
    *
    * @return int A file size, if the file exists, otherwise null
    */
@@ -220,7 +220,7 @@ class sfWebRequest extends sfRequest
    * This may not be accurate. This is the mime-type sent by the browser
    * during the upload.
    *
-   * @param string A file name
+   * @param  string $name  A file name
    *
    * @return string A file type, if the file exists, otherwise null
    */
@@ -237,9 +237,9 @@ class sfWebRequest extends sfRequest
   /**
    * Indicates whether or not a file exists.
    *
-   * @param string A file name
+   * @param  string $name  A file name
    *
-   * @return boolean true, if the file exists, otherwise false
+   * @return bool true, if the file exists, otherwise false
    */
   public function hasFile($name)
   {
@@ -261,9 +261,9 @@ class sfWebRequest extends sfRequest
   /**
    * Indicates whether or not a file error exists.
    *
-   * @param string A file name
+   * @param  string $name  A file name
    *
-   * @return boolean true, if the file error exists, otherwise false
+   * @return bool true, if the file error exists, otherwise false
    */
   public function hasFileError($name)
   {
@@ -278,7 +278,7 @@ class sfWebRequest extends sfRequest
   /**
    * Indicates whether or not any file errors occured.
    *
-   * @return boolean true, if any file errors occured, otherwise false
+   * @return bool true, if any file errors occured, otherwise false
    */
   public function hasFileErrors()
   {
@@ -316,8 +316,8 @@ class sfWebRequest extends sfRequest
   /**
    * Retrieves a file value.
    *
-   * @param string A file name
-   * @param string Value to search in the file
+   * @param string $name A file name
+   * @param string $key Value to search in the file
    * 
    * @return string File value
    */
@@ -341,7 +341,7 @@ class sfWebRequest extends sfRequest
   /**
    * Retrieves all the values from a file.
    *
-   * @param string A file name
+   * @param  string $name  A file name
    *
    * @return array Associative list of the file values
    */
@@ -371,7 +371,7 @@ class sfWebRequest extends sfRequest
   /**
    * Retrieves an extension for a given file.
    *
-   * @param string A file name
+   * @param  string $name  A file name
    *
    * @return string Extension for the file
    */
@@ -519,15 +519,15 @@ class sfWebRequest extends sfRequest
   /**
    * Moves an uploaded file.
    *
-   * @param string A file name
-   * @param string An absolute filesystem path to where you would like the
-   *               file moved. This includes the new filename as well, since
-   *               uploaded files are stored with random names
-   * @param int    The octal mode to use for the new file
-   * @param boolean   Indicates that we should make the directory before moving the file
-   * @param int    The octal mode to use when creating the directory
+   * @param string $name      A file name
+   * @param string $file      An absolute filesystem path to where you would like the
+   *                          file moved. This includes the new filename as well, since
+   *                          uploaded files are stored with random names
+   * @param int    $fileMode  The octal mode to use for the new file
+   * @param bool   $create    Indicates that we should make the directory before moving the file
+   * @param int    $dirMode   The octal mode to use when creating the directory
    *
-   * @return boolean true, if the file was moved, otherwise false
+   * @return bool true, if the file was moved, otherwise false
    *
    * @throws <b>sfFileException</b> If a major error occurs while attempting to move the file
    */
@@ -583,7 +583,7 @@ class sfWebRequest extends sfRequest
   /**
    * Returns referer.
    *
-   * @return  string
+   * @return string
    */
   public function getReferer()
   {
@@ -595,7 +595,7 @@ class sfWebRequest extends sfRequest
   /**
    * Returns current host name.
    *
-   * @return  string
+   * @return string
    */
   public function getHost()
   {
@@ -607,7 +607,7 @@ class sfWebRequest extends sfRequest
   /**
    * Returns current script name.
    *
-   * @return  string
+   * @return string
    */
   public function getScriptName()
   {
@@ -619,9 +619,9 @@ class sfWebRequest extends sfRequest
   /**
    * Checks if the request method is the given one.
    *
-   * @param  string  The method name
+   * @param  string $method  The method name
    *
-   * @return Boolean true if the current method is the given one, false otherwise
+   * @return bool true if the current method is the given one, false otherwise
    */
   public function isMethod($method)
   {
@@ -633,7 +633,7 @@ class sfWebRequest extends sfRequest
   /**
    * Returns request method.
    *
-   * @return  string
+   * @return string
    */
   public function getMethodName()
   {
@@ -645,7 +645,7 @@ class sfWebRequest extends sfRequest
   /**
    * Returns the preferred culture for the current request.
    *
-   * @param  array  An array of ordered cultures available
+   * @param  array  $cultures  An array of ordered cultures available
    *
    * @return string The preferred culture
    */
@@ -773,7 +773,7 @@ class sfWebRequest extends sfRequest
    * It works if your JavaScript library set an X-Requested-With HTTP header.
    * Works with Prototype, Mootools, jQuery, and perhaps others.
    *
-   * @return Boolean true if the request is an XMLHttpRequest, false otherwise
+   * @return bool true if the request is an XMLHttpRequest, false otherwise
    */
   public function isXmlHttpRequest()
   {
@@ -796,6 +796,9 @@ class sfWebRequest extends sfRequest
 
   /**
    * Gets a cookie value.
+   *
+   * @param  string $name     Cookie name
+   * @param  string $default  Default value returned when no cookie with given name is found
    *
    * @return mixed
    */
@@ -845,7 +848,7 @@ class sfWebRequest extends sfRequest
   /**
    * Sets the relative root url for the current web request.
    *
-   * @param string Value for the url
+   * @param string $value  Value for the url
    */
   public function setRelativeUrlRoot($value)
   {
@@ -855,7 +858,7 @@ class sfWebRequest extends sfRequest
   /**
    * Splits an HTTP header for the current web request.
    *
-   * @param string Header to split
+   * @param string $header  Header to split
    */
   public function splitHttpAcceptHeader($header)
   {
@@ -911,7 +914,7 @@ class sfWebRequest extends sfRequest
   /**
    * Gets the mime type associated with the format.
    *
-   * @param  string The format
+   * @param  string $format  The format
    *
    * @return string The associated mime type (null if not found)
    */
@@ -923,7 +926,7 @@ class sfWebRequest extends sfRequest
   /**
    * Gets the format associated with the mime type.
    *
-   * @param  string The associated mime type
+   * @param  string $mimeType  The associated mime type
    *
    * @return string The format (null if not found)
    */
@@ -943,8 +946,8 @@ class sfWebRequest extends sfRequest
   /**
    * Associates a format with mime types.
    *
-   * @param string       The format
-   * @param string|array The associated mime types (the preferred one must be the first as it will be used as the content type)
+   * @param string       $format     The format
+   * @param string|array $mimeTypes  The associated mime types (the preferred one must be the first as it will be used as the content type)
    */
   public function setFormat($format, $mimeTypes)
   {
@@ -954,7 +957,7 @@ class sfWebRequest extends sfRequest
   /**
    * Sets the request format.
    *
-   * @param string The request format
+   * @param string $format  The request format
    */
   public function setRequestFormat($format)
   {
@@ -994,8 +997,8 @@ class sfWebRequest extends sfRequest
   /**
    * Returns the value of a GET parameter.
    *
-   * @param  string The GET parameter name
-   * @param  string The default value
+   * @param  string $name     The GET parameter name
+   * @param  string $default  The default value
    *
    * @return string The GET parameter value
    */
@@ -1014,8 +1017,8 @@ class sfWebRequest extends sfRequest
   /**
    * Returns the value of a POST parameter.
    *
-   * @param  string The POST parameter name
-   * @param  string The default value
+   * @param  string $name     The POST parameter name
+   * @param  string $default  The default value
    *
    * @return string The POST parameter value
    */
@@ -1034,8 +1037,8 @@ class sfWebRequest extends sfRequest
   /**
    * Returns the value of a parameter passed as a URL segment.
    *
-   * @param  string The parameter name
-   * @param  string The default value
+   * @param  string $name     The parameter name
+   * @param  string $default  The default value
    *
    * @return string The parameter value
    */

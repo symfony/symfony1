@@ -22,11 +22,11 @@ class sfConsoleRequest extends sfRequest
   /**
    * Initializes this sfRequest.
    *
-   * @param sfEventDispatcher  A sfEventDispatcher instance
-   * @param array         An associative array of initialization parameters
-   * @param array         An associative array of initialization attributes
+   * @param  sfEventDispatcher $dispatcher  An sfEventDispatcher instance
+   * @param  array             $parameters  An associative array of initialization parameters
+   * @param  array             $attributes  An associative array of initialization attributes
    *
-   * @return Boolean      true, if initialization completes successfully, otherwise false
+   * @return bool true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfRequest
    */
