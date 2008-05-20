@@ -31,8 +31,8 @@ abstract class sfAdminGenerator extends sfCrudGenerator
   /**
    * Returns HTML code for a help icon.
    *
-   * @param string The column name
-   * @param string The field type (list, edit)
+   * @param string $column  The column name
+   * @param string $type    The field type (list, edit)
    *
    * @return string HTML code
    */
@@ -50,8 +50,8 @@ abstract class sfAdminGenerator extends sfCrudGenerator
   /**
    * Returns HTML code for a help text.
    *
-   * @param string The column name
-   * @param string The field type (list, edit)
+   * @param string $column  The column name
+   * @param string $type    The field type (list, edit)
    *
    * @return string HTML code
    */
@@ -69,9 +69,9 @@ abstract class sfAdminGenerator extends sfCrudGenerator
   /**
    * Returns HTML code for an action button.
    *
-   * @param string  The action name
-   * @param array   The parameters
-   * @param boolean Whether to add a primary key link or not
+   * @param string  $actionName   The action name
+   * @param array   $params       The parameters
+   * @param boolean $pk_link      Whether to add a primary key link or not
    *
    * @return string HTML code
    */
@@ -180,9 +180,9 @@ abstract class sfAdminGenerator extends sfCrudGenerator
   /**
    * Returns HTML code for an action link.
    *
-   * @param string  The action name
-   * @param array   The parameters
-   * @param boolean Whether to add a primary key link or not
+   * @param string  $actionName   The action name
+   * @param array   $params       The parameters
+   * @param boolean $pk_link      Whether to add a primary key link or not
    *
    * @return string HTML code
    */
@@ -227,8 +227,8 @@ abstract class sfAdminGenerator extends sfCrudGenerator
   /**
    * Returns HTML code for an action option in a select tag.
    *
-   * @param string  The action name
-   * @param array   The parameters
+   * @param string  $actionName The action name
+   * @param array   $params     The parameters
    *
    * @return string HTML code
    */
@@ -257,8 +257,8 @@ abstract class sfAdminGenerator extends sfCrudGenerator
   /**
    * Returns HTML code for a column in edit mode.
    *
-   * @param string  The column name
-   * @param array   The parameters
+   * @param string  $column   The column name
+   * @param array   $params   The parameters
    *
    * @return string HTML code
    */
@@ -312,7 +312,7 @@ abstract class sfAdminGenerator extends sfCrudGenerator
   /**
    * Returns all column categories.
    *
-   * @param string  The parameter name
+   * @param string $paramName The parameter name
    *
    * @return array The column categories
    */
@@ -336,8 +336,8 @@ abstract class sfAdminGenerator extends sfCrudGenerator
   /**
    * Wraps content with a credential condition.
    *
-   * @param string  The content
-   * @param array   The parameters
+   * @param string  $content  The content
+   * @param array   $params   The parameters
    *
    * @return string HTML code
    */
@@ -362,7 +362,8 @@ EOF;
   /**
    * Gets sfAdminColumn objects for a given category.
    *
-   * @param string The parameter name
+   * @param string $paramName The parameter name
+   * @param string $category  The category
    *
    * @return array sfAdminColumn array
    */
@@ -405,7 +406,7 @@ EOF;
   /**
    * Gets modifier flags from a column name.
    *
-   * @param string The column name
+   * @param string $text The column name
    *
    * @return array An array of detected flags
    */
@@ -424,8 +425,8 @@ EOF;
   /**
    * Gets a parameter value.
    *
-   * @param string The key name
-   * @param mixed  The default value
+   * @param string $key     The key name
+   * @param mixed  $default The default value
    *
    * @return mixed The parameter value
    */
@@ -444,9 +445,9 @@ EOF;
   /**
    * Gets a field parameter value.
    *
-   * @param string The key name
-   * @param string The type (list, edit)
-   * @param mixed  The default value
+   * @param string $key     The key name
+   * @param string $type    The type (list, edit)
+   * @param mixed  $default The default value
    *
    * @return mixed The parameter value
    */
@@ -478,8 +479,8 @@ EOF;
   /**
    * Gets the value for a given key.
    *
-   * @param string The key name
-   * @param mixed  The default value
+   * @param string $key     The key name
+   * @param mixed  $default The default value
    *
    * @return mixed The key value
    */
@@ -512,8 +513,9 @@ EOF;
   /**
    * Wraps a content for I18N.
    *
-   * @param string The key name
-   * @param string The defaul value
+   * @param string $key       The key name
+   * @param string $default   The defaul value
+   * @param bool   $withEcho  If true, string is wrapped in php echo
    *
    * @return string HTML code
    */
@@ -561,7 +563,7 @@ EOF;
   /**
    * Replaces constants in a string.
    *
-   * @param string
+   * @param string $value
    *
    * @return string
    */
@@ -586,8 +588,8 @@ EOF;
   /**
    * Returns HTML code for a column in list mode.
    *
-   * @param string  The column name
-   * @param array   The parameters
+   * @param string  $column The column name
+   * @param array   $params The parameters
    *
    * @return string HTML code
    */
@@ -627,8 +629,8 @@ EOF;
   /**
    * Returns HTML code for a column in filter mode.
    *
-   * @param string  The column name
-   * @param array   The parameters
+   * @param string  $column The column name
+   * @param array   $params The parameters
    *
    * @return string HTML code
    */
@@ -708,6 +710,11 @@ EOF;
     }
   }
 
+  /**
+   * Gets the form object
+   *
+   * @return sfForm
+   */
   public function getFormObject()
   {
     $class = $this->getClassName().'Form';
@@ -715,6 +722,11 @@ EOF;
     return new $class();
   }
 
+  /**
+   * Retrieves all hidden fields in the widget schema
+   *
+   * @return array
+   */
   public function getHiddenFields()
   {
     $form = $this->getFormObject();
@@ -730,6 +742,11 @@ EOF;
     return $hiddenFields;
   }
 
+  /**
+   * Gets the hidden fields as a string
+   *
+   * @return array
+   */
   public function getHiddenFieldsAsString()
   {
     $hiddenFields = '';
@@ -764,9 +781,7 @@ EOF;
   /**
    * Escapes a string.
    *
-   * @param string
-   *
-   * @param string
+   * @param string $string
    */
   protected function escapeString($string)
   {
@@ -792,9 +807,9 @@ class sfAdminColumn
   /**
    * Constructor.
    *
-   * @param string The column php name
-   * @param string The column name
-   * @param array  The column flags
+   * @param string $phpName The column php name
+   * @param string $column  The column name
+   * @param array  $flags   The column flags
    */
   public function __construct($phpName, $column = null, $flags = array())
   {

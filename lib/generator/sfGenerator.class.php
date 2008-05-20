@@ -38,7 +38,7 @@ abstract class sfGenerator
   /**
    * Initializes the current sfGenerator instance.
    *
-   * @param sfGeneratorManager A sfGeneratorManager instance
+   * @param sfGeneratorManager $generatorManager A sfGeneratorManager instance
    */
   public function initialize(sfGeneratorManager $generatorManager)
   {
@@ -48,7 +48,7 @@ abstract class sfGenerator
   /**
    * Generates classes and templates.
    *
-   * @param array An array of parameters
+   * @param array $params An array of parameters
    *
    * @return string The cache for the configuration file
    */
@@ -57,8 +57,8 @@ abstract class sfGenerator
   /**
    * Generates PHP files for a given module name.
    *
-   * @param string The name of module name to generate
-   * @param array  A list of template files to generate
+   * @param string $generatedModuleName   The name of module name to generate
+   * @param array  $files                 A list of template files to generate
    */
   protected function generatePhpFiles($generatedModuleName, $files = array())
   {
@@ -71,7 +71,7 @@ abstract class sfGenerator
   /**
    * Evaluates a template file.
    *
-   * @param string The template file path
+   * @param string $templateFile  The template file path
    *
    * @return string The evaluated template
    */
@@ -91,7 +91,7 @@ abstract class sfGenerator
   /**
    * Replaces PHP marks by <?php ?>.
    *
-   * @param string The PHP code
+   * @param string $text The PHP code
    *
    * @return string The converted PHP code
    */
@@ -114,11 +114,11 @@ abstract class sfGenerator
   /**
    * Sets the generator class.
    *
-   * @param string The generator class
+   * @param string $generatorClass The generator class
    */
-  public function setGeneratorClass($generator_class)
+  public function setGeneratorClass($generatorClass)
   {
-    $this->generatorClass = $generator_class;
+    $this->generatorClass = $generatorClass;
   }
 
   /**
@@ -144,11 +144,11 @@ abstract class sfGenerator
   /**
    * Sets the module name of the generated module.
    *
-   * @param string The module name
+   * @param string $moduleName The module name
    */
-  public function setGeneratedModuleName($module_name)
+  public function setGeneratedModuleName($moduleName)
   {
-    $this->generatedModuleName = $module_name;
+    $this->generatedModuleName = $moduleName;
   }
 
   /**
@@ -164,11 +164,11 @@ abstract class sfGenerator
   /**
    * Sets the module name.
    *
-   * @param string The module name
+   * @param string $moduleName The module name
    */
-  public function setModuleName($module_name)
+  public function setModuleName($moduleName)
   {
-    $this->moduleName = $module_name;
+    $this->moduleName = $moduleName;
   }
 
   /**
@@ -184,7 +184,7 @@ abstract class sfGenerator
   /**
    * Sets the theme name.
    *
-   * @param string The theme name
+   * @param string $theme The theme name
    */
   public function setTheme($theme)
   {

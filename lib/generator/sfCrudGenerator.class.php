@@ -33,7 +33,7 @@ abstract class sfCrudGenerator extends sfGenerator
   /**
    * Generates classes and templates in cache.
    *
-   * @param array The parameters
+   * @param array $params The parameters
    *
    * @return string The data to put in configuration cache
    */
@@ -91,7 +91,8 @@ abstract class sfCrudGenerator extends sfGenerator
   /**
    * Returns PHP code for primary keys parameters.
    *
-   * @param integer The indentation value
+   * @param integer $indent The indentation value
+   * @param string  $callee The function to call
    *
    * @return string The PHP code
    */
@@ -109,7 +110,8 @@ abstract class sfCrudGenerator extends sfGenerator
   /**
    * Returns PHP code for primary keys parameters.
    *
-   * @param integer The indentation value
+   * @param integer $indent The indentation value
+   * @param string  $prefix No effect at this time
    *
    * @return string The PHP code
    */
@@ -146,7 +148,7 @@ abstract class sfCrudGenerator extends sfGenerator
   /**
    * Returns PHP code for getOrCreate() promary keys condition.
    *
-   * @param boolean true if we pass the field name as an argument, false otherwise
+   * @param boolean $fieldNameAsArgument true if we pass the field name as an argument, false otherwise
    *
    * @return string The PHP code
    */
@@ -194,7 +196,7 @@ abstract class sfCrudGenerator extends sfGenerator
   /**
    * Sets the class name to use for scaffolding
    *
-   * @param  string class name
+   * @param string $className class name
    */
   protected function setScaffoldingClassName($className)
   {
@@ -267,7 +269,7 @@ abstract class sfCrudGenerator extends sfGenerator
   /**
    * Returns PHP code to add to a URL for primary keys.
    *
-   * @param string The prefix value
+   * @param string $prefix The prefix value
    *
    * @return string PHP code
    */
@@ -287,7 +289,7 @@ abstract class sfCrudGenerator extends sfGenerator
   /**
    * Gets PHP code for primary key condition.
    *
-   * @param string The prefix value
+   * @param string $prefix The prefix value
    *
    * @return string PHP code
    */
@@ -305,8 +307,8 @@ abstract class sfCrudGenerator extends sfGenerator
   /**
    * Gets object tag parameters.
    *
-   * @param array An array of parameters
-   * @param array An array of default parameters
+   * @param array $params         An array of parameters
+   * @param array $default_params An array of default parameters
    *
    * @return string PHP code
    */
@@ -318,8 +320,8 @@ abstract class sfCrudGenerator extends sfGenerator
   /**
    * Returns HTML code for a column in list mode.
    *
-   * @param string  The column name
-   * @param array   The parameters
+   * @param string  $column   The column name
+   * @param array   $params   The parameters
    *
    * @return string HTML code
    */
@@ -346,8 +348,8 @@ abstract class sfCrudGenerator extends sfGenerator
   /**
    * Returns HTML code for a column in edit mode.
    *
-   * @param string  The column name
-   * @param array   The parameters
+   * @param string  $column   The column name
+   * @param array   $params   The parameters
    *
    * @return string HTML code
    */
@@ -424,10 +426,10 @@ abstract class sfCrudGenerator extends sfGenerator
    *
    * This method is ORM dependant.
    *
-   * @param string The helper name
-   * @param string The column name
-   * @param array  An array of parameters
-   * @param array  An array of local parameters
+   * @param string $helperName    The helper name
+   * @param string $column        The column name
+   * @param array  $params        An array of parameters
+   * @param array  $localParams   An array of local parameters
    *
    * @return string PHP code
    */
@@ -438,9 +440,9 @@ abstract class sfCrudGenerator extends sfGenerator
    *
    * This method is ORM dependant.
    *
-   * @param string  The column name
-   * @param boolean true if you want developped method names, false otherwise
-   * @param string The prefix value
+   * @param string  $column     The column name
+   * @param boolean $developed  true if you want developped method names, false otherwise
+   * @param string  $prefix     The prefix value
    *
    * @return string PHP code
    */
@@ -453,7 +455,7 @@ abstract class sfCrudGenerator extends sfGenerator
    *
    * This method is ORM dependant.
    *
-   * @param string The column name
+   * @param string $column The column name
    *
    * @return string The PHP name of the related class name
    */
