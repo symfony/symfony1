@@ -85,10 +85,10 @@ class sfWebResponse extends sfResponse
    *  * charset:      The charset to use (utf-8 by default)
    *  * content_type: The content type (text/html by default)
    *
-   * @param  sfEventDispatcher  A sfEventDispatcher instance
-   * @param  array              An array of options
+   * @param  sfEventDispatcher $dispatcher  An sfEventDispatcher instance
+   * @param  array             $options     An array of options
    *
-   * @return Boolean            true, if initialization completes successfully, otherwise false
+   * @return bool true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfResponse
    *
@@ -112,7 +112,7 @@ class sfWebResponse extends sfResponse
   /**
    * Sets if the response consist of just HTTP headers.
    *
-   * @param boolean
+   * @param bool $value
    */
   public function setHeaderOnly($value = true)
   {
@@ -122,7 +122,7 @@ class sfWebResponse extends sfResponse
   /**
    * Returns if the response must only consist of HTTP headers.
    *
-   * @return boolean returns true if, false otherwise
+   * @return bool returns true if, false otherwise
    */
   public function isHeaderOnly()
   {
@@ -132,13 +132,13 @@ class sfWebResponse extends sfResponse
   /**
    * Sets a cookie.
    *
-   * @param string HTTP header name
-   * @param string Value for the cookie
-   * @param string Cookie expiration period
-   * @param string Path
-   * @param string Domain name
-   * @param boolean If secure
-   * @param boolean If uses only HTTP
+   * @param  string  $name      HTTP header name
+   * @param  string  $value     Value for the cookie
+   * @param  string  $expire    Cookie expiration period
+   * @param  string  $path      Path
+   * @param  string  $domain    Domain name
+   * @param  bool    $secure    If secure
+   * @param  bool    $httpOnly  If uses only HTTP
    *
    * @throws <b>sfException</b> If fails to set the cookie
    */
@@ -174,8 +174,8 @@ class sfWebResponse extends sfResponse
   /**
    * Sets response status code.
    *
-   * @param string HTTP status code
-   * @param string HTTP status text
+   * @param string $code  HTTP status code
+   * @param string $name  HTTP status text
    *
    */
   public function setStatusCode($code, $name = null)
@@ -197,9 +197,9 @@ class sfWebResponse extends sfResponse
   /**
    * Sets a HTTP header.
    *
-   * @param string  HTTP header name
-   * @param string  Value (if null, remove the HTTP header)
-   * @param boolean Replace for the value
+   * @param string  $name     HTTP header name
+   * @param string  $value    Value (if null, remove the HTTP header)
+   * @param bool    $replace  Replace for the value
    *
    */
   public function setHttpHeader($name, $value, $replace = true)
@@ -235,6 +235,9 @@ class sfWebResponse extends sfResponse
   /**
    * Gets HTTP header current value.
    *
+   * @param  string $name     HTTP header name
+   * @param  string $default  Default value returned if named HTTP header is not found
+   *
    * @return array
    */
   public function getHttpHeader($name, $default = null)
@@ -245,9 +248,11 @@ class sfWebResponse extends sfResponse
   }
 
   /**
-   * Has a HTTP header.
+   * Checks if response has given HTTP header.
    *
-   * @return boolean
+   * @param  string $name  HTTP header name
+   *
+   * @return bool
    */
   public function hasHttpHeader($name)
   {
@@ -257,7 +262,7 @@ class sfWebResponse extends sfResponse
   /**
    * Sets response content type.
    *
-   * @param string Content type
+   * @param string $value  Content type
    *
    */
   public function setContentType($value)
@@ -353,7 +358,7 @@ class sfWebResponse extends sfResponse
   /**
    * Retrieves a normalized Header.
    *
-   * @param string Header name
+   * @param  string $name  Header name
    *
    * @return string Normalized header
    */
@@ -365,10 +370,10 @@ class sfWebResponse extends sfResponse
   /**
    * Retrieves a formated date.
    *
-   * @param string Timestamp
-   * @param string Format type
+   * @param  string $timetamp  Timestamp
+   * @param  string $type      Format type
    *
-   * @return string Formated date
+   * @return string Formatted date
    */
   public function getDate($timestamp, $type = 'rfc1123')
   {
@@ -395,7 +400,7 @@ class sfWebResponse extends sfResponse
   /**
    * Adds vary to a http header.
    *
-   * @param string HTTP header
+   * @param string $header  HTTP header
    */
   public function addVaryHttpHeader($header)
   {
@@ -417,8 +422,8 @@ class sfWebResponse extends sfResponse
   /**
    * Adds an control cache http header.
    *
-   * @param string HTTP header
-   * @param string Value for the http header
+   * @param string $name   HTTP header
+   * @param string $value  Value for the http header
    */
   public function addCacheControlHttpHeader($name, $value = null)
   {
@@ -456,9 +461,9 @@ class sfWebResponse extends sfResponse
   /**
    * Adds a HTTP meta header.
    *
-   * @param string  Key to replace
-   * @param string  HTTP meta header value (if null, remove the HTTP meta)
-   * @param boolean Replace or not
+   * @param string  $key      Key to replace
+   * @param string  $value    HTTP meta header value (if null, remove the HTTP meta)
+   * @param bool    $replace  Replace or not
    */
   public function addHttpMeta($key, $value, $replace = true)
   {
@@ -500,10 +505,10 @@ class sfWebResponse extends sfResponse
   /**
    * Adds a meta header.
    *
-   * @param string  Name of the header
-   * @param string  Meta header value (if null, remove the meta)
-   * @param boolean true if it's replaceable
-   * @param boolean true for escaping the header
+   * @param string  $name     Name of the header
+   * @param string  $value    Meta header value (if null, remove the meta)
+   * @param bool    $replace  true if it's replaceable
+   * @param bool    $escape   true for escaping the header
    */
   public function addMeta($key, $value, $replace = true, $escape = true)
   {
@@ -543,8 +548,8 @@ class sfWebResponse extends sfResponse
   /**
    * Sets title for the current web response.
    *
-   * @param string Title name
-   * @param boolean true, for escaping the title
+   * @param string  $title   Title name
+   * @param bool    $escape  true, for escaping the title
    */
   public function setTitle($title, $escape = true)
   {
@@ -564,7 +569,7 @@ class sfWebResponse extends sfResponse
   /**
    * Retrieves stylesheets for the current web response.
    *
-   * @param string  Position
+   * @param  string  $position
    *
    * @return string Stylesheets
    */
@@ -583,9 +588,9 @@ class sfWebResponse extends sfResponse
   /**
    * Adds a stylesheet to the current web response.
    *
-   * @param string Stylesheet
-   * @param string Position
-   * @param string Stylesheet options
+   * @param string $css       Stylesheet
+   * @param string $position  Position
+   * @param string $options   Stylesheet options
    */
   public function addStylesheet($css, $position = '', $options = array())
   {
@@ -597,8 +602,8 @@ class sfWebResponse extends sfResponse
   /**
    * Removes a stylesheet from the current web response.
    *
-   * @param string Stylesheet
-   * @param string Position
+   * @param string $css       Stylesheet
+   * @param string $position  Position
    */
   public function removeStylesheet($css, $position = '')
   {
@@ -610,7 +615,7 @@ class sfWebResponse extends sfResponse
   /**
    * Retrieves javascript code from the current web response.
    *
-   * @param string  Position
+   * @param  string $position  Position
    *
    * @return string Javascript code
    */
@@ -629,9 +634,9 @@ class sfWebResponse extends sfResponse
   /**
    * Adds javascript code to the current web response.
    *
-   * @param string Javascript code
-   * @param string Position
-   * @param string Javascript options
+   * @param string $js        Javascript code
+   * @param string $position  Position
+   * @param string $options   Javascript options
    */
   public function addJavascript($js, $position = '', $options = array())
   {
@@ -643,8 +648,8 @@ class sfWebResponse extends sfResponse
   /**
    * Removes javascript code from the current web response.
    *
-   * @param string Javascript code
-   * @param string Position
+   * @param string $js        Javascript code
+   * @param string $position  Position
    */
   public function removeJavascript($js, $position = '')
   {
@@ -666,8 +671,8 @@ class sfWebResponse extends sfResponse
   /**
    * Sets a slot content.
    *
-   * @param string Slot name
-   * @param string Content
+   * @param string $name     Slot name
+   * @param string $content  Content
    */
   public function setSlot($name, $content)
   {
@@ -711,7 +716,7 @@ class sfWebResponse extends sfResponse
   /**
    * Copies all properties from a given sfWebResponse object to the current one.
    *
-   * @param sfWebResponse A sfWebResponse instance
+   * @param sfWebResponse $response  An sfWebResponse instance
    */
   public function copyProperties(sfWebResponse $response)
   {
@@ -727,7 +732,7 @@ class sfWebResponse extends sfResponse
   /**
    * Merges all properties from a given sfWebResponse object to the current one.
    *
-   * @param sfWebResponse A sfWebResponse instance
+   * @param sfWebResponse $response  An sfWebResponse instance
    */
   public function merge(sfWebResponse $response)
   {
@@ -759,6 +764,8 @@ class sfWebResponse extends sfResponse
   /**
    * Validate a position name.
    *
+   * @param  string $position
+   *
    * @throws InvalidArgumentException if the position is not available
    */
   protected function validatePosition($position)
@@ -772,9 +779,9 @@ class sfWebResponse extends sfResponse
   /**
    * Fixes the content type by adding the charset for text content types.
    *
-   * @param string The content type
+   * @param  string $content  The content type
    *
-   * @param string The content type with the charset if needed
+   * @return string The content type with the charset if needed
    */
   protected function fixContentType($contentType)
   {

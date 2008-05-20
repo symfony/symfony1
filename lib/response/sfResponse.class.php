@@ -41,10 +41,10 @@ abstract class sfResponse implements Serializable
    *
    *  * logging: Whether to enable logging or not (false by default)
    *
-   * @param  sfEventDispatcher  A sfEventDispatcher instance
-   * @param  array              An array of options
+   * @param  sfEventDispatcher  $dispatcher  An sfEventDispatcher instance
+   * @param  array              $options     An array of options
    *
-   * @return Boolean            true, if initialization completes successfully, otherwise false
+   * @return bool true, if initialization completes successfully, otherwise false
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this sfResponse
    */
@@ -62,7 +62,7 @@ abstract class sfResponse implements Serializable
   /**
    * Sets the event dispatcher.
    *
-   * @param sfEventDispatcher A sfEventDispatcher instance
+   * @param sfEventDispatcher $dispatcher  An sfEventDispatcher instance
    */
   public function setEventDispatcher(sfEventDispatcher $dispatcher)
   {
@@ -72,7 +72,7 @@ abstract class sfResponse implements Serializable
   /**
    * Sets the response content
    *
-   * @param string Content
+   * @param string $content
    */
   public function setContent($content)
   {
@@ -121,8 +121,8 @@ abstract class sfResponse implements Serializable
   /**
    * Calls methods defined via sfEventDispatcher.
    *
-   * @param string The method name
-   * @param array  The method arguments
+   * @param string $method     The method name
+   * @param array  $arguments  The method arguments
    *
    * @return mixed The returned value of the called method
    *
@@ -152,7 +152,10 @@ abstract class sfResponse implements Serializable
   /**
    * Unserializes a sfResponse instance.
    *
-   * You need to inject a dispatcher after unserializing a sfWebResponse instance.
+   * You need to inject a dispatcher after unserializing a sfResponse instance.
+   *
+   * @param string $serialized  A serialized sfResponse instance
+   *
    */
   public function unserialize($serialized)
   {
