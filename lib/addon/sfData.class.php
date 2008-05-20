@@ -28,7 +28,7 @@ abstract class sfData
    * Sets a flag to indicate if the current data in the database
    * should be deleted before new data is loaded.
    *
-   * @param boolean The flag value
+   * @param boolean $boolean The flag value
    */
   public function setDeleteCurrentData($boolean)
   {
@@ -49,7 +49,7 @@ abstract class sfData
   /**
    * Loads data for the database from a YAML file
    *
-   * @param string The path to the YAML file.
+   * @param string $fixture_file The path to the YAML file.
    */
   protected function doLoadDataFromFile($fixture_file)
   {
@@ -62,7 +62,7 @@ abstract class sfData
   /**
    * Manages the insertion of data into the data source
    *
-   * @param array The data to be inserted into the data source
+   * @param array $data The data to be inserted into the data source
    */
   abstract public function loadDataFromArray($data);
 
@@ -70,7 +70,7 @@ abstract class sfData
    * Manages reading all of the fixture data files and
    * loading them into the data source
    *
-   * @param array The path names of the YAML data files
+   * @param array $fixture_files The path names of the YAML data files
    */
   protected function doLoadData($fixture_files)
   {
@@ -87,7 +87,7 @@ abstract class sfData
   /**
    * Gets a list of one or more *.yml files and returns the list in an array
    *
-   * @param string A directory or file name; if null, then defaults to 'sf_data_dir'/fixtures
+   * @param string $directory_or_file A directory or file name; if null, then defaults to 'sf_data_dir'/fixtures
    *
    * @returns array A list of *.yml files.
    *
