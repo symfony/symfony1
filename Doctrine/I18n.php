@@ -100,7 +100,7 @@ class Doctrine_I18n extends Doctrine_Record_Generator
         foreach($relations as $table => $relation) {
             if ($table != $this->_table->getTableName() ) {
                 // check that the localColumn is part of the moved col
-                if ( in_array($relation['local'], $this->_options['fields'])) {
+                if (in_array($relation['local'], $this->_options['fields'])) {
                     // found one, let's rewrite it
                     $this->_options['table']->getRelationParser()->unsetPendingRelations($table);
         
