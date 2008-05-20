@@ -29,8 +29,8 @@ class sfAggregateLogger extends sfLogger
    *
    * - loggers: Logger objects that extends sfLogger.
    *
-   * @param  sfEventDispatcher A sfEventDispatcher instance
-   * @param  array        An array of options.
+   * @param  sfEventDispatcher $dispatcher  A sfEventDispatcher instance
+   * @param  array             $options     An array of options.
    *
    * @return Boolean      true, if initialization completes successfully, otherwise false.
    */
@@ -64,7 +64,7 @@ class sfAggregateLogger extends sfLogger
   /**
    * Adds an array of loggers.
    *
-   * @param object An array of Logger objects
+   * @param object $loggers An array of Logger objects
    */
   public function addLoggers($loggers)
   {
@@ -77,7 +77,7 @@ class sfAggregateLogger extends sfLogger
   /**
    * Adds a logger.
    *
-   * @param object The Logger object
+   * @param object $logger The Logger object
    */
   public function addLogger(sfLogger $logger)
   {
@@ -89,8 +89,8 @@ class sfAggregateLogger extends sfLogger
   /**
    * Logs a message.
    *
-   * @param string Message
-   * @param string Message priority
+   * @param string $message   Message
+   * @param string $priority  Message priority
    */
   protected function doLog($message, $priority)
   {

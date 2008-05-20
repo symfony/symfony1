@@ -28,8 +28,8 @@ class sfStreamLogger extends sfLogger
    *
    * - stream: A PHP stream
    *
-   * @param  sfEventDispatcher A sfEventDispatcher instance
-   * @param  array        An array of options.
+   * @param  sfEventDispatcher $dispatcher  A sfEventDispatcher instance
+   * @param  array             $options     An array of options.
    *
    * @return Boolean      true, if initialization completes successfully, otherwise false.
    */
@@ -55,7 +55,7 @@ class sfStreamLogger extends sfLogger
   /**
    * Sets the PHP stream to use for this logger.
    *
-   * @param A php stream
+   * @param stream $stream A php stream
    */
   public function setStream($stream)
   {
@@ -65,8 +65,8 @@ class sfStreamLogger extends sfLogger
   /**
    * Logs a message.
    *
-   * @param string Message
-   * @param string Message priority
+   * @param string $message   Message
+   * @param string $priority  Message priority
    */
   protected function doLog($message, $priority)
   {

@@ -36,8 +36,8 @@ class sfFileLogger extends sfLogger
    * - dir_mode:    The mode to use when creating a directory (default to 0777)
    * - file_mode:   The mode to use when creating a file (default to 0666)
    *
-   * @param  sfEventDispatcher A sfEventDispatcher instance
-   * @param  array        An array of options.
+   * @param  sfEventDispatcher $dispatcher  A sfEventDispatcher instance
+   * @param  array             $options     An array of options.
    *
    * @return Boolean      true, if initialization completes successfully, otherwise false.
    */
@@ -87,8 +87,8 @@ class sfFileLogger extends sfLogger
   /**
    * Logs a message.
    *
-   * @param string Message
-   * @param string Message priority
+   * @param string $message   Message
+   * @param string $priority  Message priority
    */
   protected function doLog($message, $priority)
   {
@@ -106,7 +106,7 @@ class sfFileLogger extends sfLogger
   /**
    * Returns the priority string to use in log messages.
    *
-   * @param  string The priority constant
+   * @param  string $priority The priority constant
    *
    * @return string The priority to use in log messages
    */

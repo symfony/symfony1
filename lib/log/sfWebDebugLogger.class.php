@@ -27,8 +27,8 @@ class sfWebDebugLogger extends sfLogger
   /**
    * Initializes this logger.
    *
-   * @param  sfEventDispatcher A sfEventDispatcher instance
-   * @param  array        An array of options.
+   * @param  sfEventDispatcher $dispatcher  A sfEventDispatcher instance
+   * @param  array             $options     An array of options.
    *
    * @return Boolean      true, if initialization completes successfully, otherwise false.
    */
@@ -59,8 +59,8 @@ class sfWebDebugLogger extends sfLogger
   /**
    * Listens to the response.filter_content event.
    *
-   * @param  sfEvent The sfEvent instance
-   * @param  string  The response content
+   * @param  sfEvent $event   The sfEvent instance
+   * @param  string  $context The response content
    *
    * @return string  The filtered response content
    */
@@ -121,8 +121,8 @@ class sfWebDebugLogger extends sfLogger
   /**
    * Logs a message.
    *
-   * @param string Message
-   * @param string Message priority
+   * @param string $message   Message
+   * @param string $priority  Message priority
    */
   protected function doLog($message, $priority)
   {

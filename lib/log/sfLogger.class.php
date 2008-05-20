@@ -62,8 +62,8 @@ abstract class sfLogger
    *
    * - level: The log level.
    *
-   * @param  sfEventDispatcher A sfEventDispatcher instance
-   * @param  array        An array of options.
+   * @param  sfEventDispatcher $dispatcher  A sfEventDispatcher instance
+   * @param  array             $options     An array of options.
    *
    * @return Boolean      true, if initialization completes successfully, otherwise false.
    *
@@ -92,7 +92,7 @@ abstract class sfLogger
   /**
    * Sets a log level for the current logger instance.
    *
-   * @param string Log level
+   * @param string $level Log level
    */
   public function setLogLevel($level)
   {
@@ -107,8 +107,8 @@ abstract class sfLogger
   /**
    * Logs a message.
    *
-   * @param string Message
-   * @param string Message priority
+   * @param string $message   Message
+   * @param string $priority  Message priority
    */
   public function log($message, $priority = self::INFO)
   {
@@ -123,15 +123,15 @@ abstract class sfLogger
   /**
    * Logs a message.
    *
-   * @param string Message
-   * @param string Message priority
+   * @param string $message   Message
+   * @param string $priority  Message priority
    */
   abstract protected function doLog($message, $priority);
 
   /**
    * Logs an emerg message.
    *
-   * @param string Message
+   * @param string $message Message
    */
   public function emerg($message)
   {
@@ -141,7 +141,7 @@ abstract class sfLogger
   /**
    * Logs an alert message.
    *
-   * @param string Message
+   * @param string $message Message
    */
   public function alert($message)
   {
@@ -151,7 +151,7 @@ abstract class sfLogger
   /**
    * Logs a critical message.
    *
-   * @param string Message
+   * @param string $message Message
    */
   public function crit($message)
   {
@@ -161,7 +161,7 @@ abstract class sfLogger
   /**
    * Logs an error message.
    *
-   * @param string Message
+   * @param string $message Message
    */
   public function err($message)
   {
@@ -171,7 +171,7 @@ abstract class sfLogger
   /**
    * Logs a warning message.
    *
-   * @param string Message
+   * @param string $message Message
    */
   public function warning($message)
   {
@@ -181,7 +181,7 @@ abstract class sfLogger
   /**
    * Logs a notice message.
    *
-   * @param string Message
+   * @param string $message Message
    */
   public function notice($message)
   {
@@ -191,7 +191,7 @@ abstract class sfLogger
   /**
    * Logs an info message.
    *
-   * @param string Message
+   * @param string $message Message
    */
   public function info($message)
   {
@@ -201,7 +201,7 @@ abstract class sfLogger
   /**
    * Logs a debug message.
    *
-   * @param string Message
+   * @param string $message Message
    */
   public function debug($message)
   {
@@ -211,7 +211,7 @@ abstract class sfLogger
   /**
    * Listens to application.log events.
    *
-   * @param sfEvent An sfEvent instance
+   * @param sfEvent $event An sfEvent instance
    */
   public function listenToLogEvent(sfEvent $event)
   {
@@ -237,7 +237,7 @@ abstract class sfLogger
   /**
    * Returns the priority name given a priority class constant
    *
-   * @param  integer A priority class constant
+   * @param  integer $priority A priority class constant
    *
    * @return string  The priority name
    *
