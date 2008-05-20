@@ -99,9 +99,9 @@ abstract class sfBaseTask extends sfCommandApplicationTask
   /**
    * Checks if an application exists.
    *
-   * @param string The application name
+   * @param  string $app  The application name
    *
-   * @return true if the application exists, false otherwise
+   * @return bool true if the application exists, false otherwise
    */
   public function checkAppExists($app)
   {
@@ -114,10 +114,10 @@ abstract class sfBaseTask extends sfCommandApplicationTask
   /**
    * Checks if a module exists.
    *
-   * @param string The application name
-   * @param string The module name
+   * @param  string $app     The application name
+   * @param  string $module  The module name
    *
-   * @return true if the module exists, false otherwise
+   * @return bool true if the module exists, false otherwise
    */
   public function checkModuleExists($app, $module)
   {

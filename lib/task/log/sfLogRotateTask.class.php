@@ -70,11 +70,11 @@ EOF;
   /**
    * Rotates log file.
    *
-   * @param string Application name
-   * @param string Enviroment name
-   * @param string Period 
-   * @param string History
-   * @param boolean Override
+   * @param  string $app       Application name
+   * @param  string $env       Enviroment name
+   * @param  string $period    Period 
+   * @param  string $history   History
+   * @param  bool   $override  Override
    *
    * @author Joe Simms
    **/

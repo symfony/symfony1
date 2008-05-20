@@ -32,8 +32,8 @@ abstract class sfTask
   /**
    * Constructor.
    *
-   * @param sfEventDispatcher A sfEventDispatcher instance
-   * @param sfFormatter       A sfFormatter instance
+   * @param sfEventDispatcher $dispatcher  An sfEventDispatcher instance
+   * @param sfFormatter       $formatter   An sfFormatter instance
    */
   public function __construct(sfEventDispatcher $dispatcher, sfFormatter $formatter)
   {
@@ -45,8 +45,8 @@ abstract class sfTask
   /**
    * Initializes the sfTask instance.
    *
-   * @param sfEventDispatcher A sfEventDispatcher instance
-   * @param sfFormatter       A sfFormatter instance
+   * @param sfEventDispatcher $dispatcher  A sfEventDispatcher instance
+   * @param sfFormatter       $formatter   A sfFormatter instance
    */
   public function initialize(sfEventDispatcher $dispatcher, sfFormatter $formatter)
   {
@@ -64,8 +64,8 @@ abstract class sfTask
   /**
    * Runs the task from the CLI.
    *
-   * @param sfCommandManager A sfCommandManager instance
-   * @param mixed            The command line options
+   * @param sfCommandManager $commandManager  An sfCommandManager instance
+   * @param mixed            $options         The command line options
    */
   public function runFromCLI(sfCommandManager $commandManager, $options = null)
   {
@@ -78,8 +78,8 @@ abstract class sfTask
   /**
    * Runs the task.
    *
-   * @param array An array of arguments
-   * @param array An array of options
+   * @param array $arguments  An array of arguments
+   * @param array $options    An array of options
    */
   public function run($arguments = array(), $options = array())
   {
@@ -110,7 +110,7 @@ abstract class sfTask
   /**
    * Adds an array of argument objects.
    *
-   * @return sfCommandArgument An array of sfCommandArgument objects.
+   * @param array $arguments  An array of arguments
    */
   public function addArguments($arguments)
   {
@@ -142,7 +142,7 @@ abstract class sfTask
   /**
    * Adds an array of option objects.
    *
-   * @return sfCommandOption An array of sfCommandOption objects.
+   * @param array $options    An array of options
    */
   public function addOptions($options)
   {
@@ -301,7 +301,7 @@ abstract class sfTask
   /**
    * Logs a message.
    *
-   * @param mixed The message as an array of lines of a single string
+   * @param mixed $messages  The message as an array of lines of a single string
    */
   public function log($messages)
   {
@@ -316,9 +316,9 @@ abstract class sfTask
   /**
    * Logs a message in a section.
    *
-   * @param string  The section name
-   * @param string  The message
-   * @param integer The maximum size of a line
+   * @param string  $section  The section name
+   * @param string  $message  The message
+   * @param int     $size     The maximum size of a line
    */
   public function logSection($section, $message, $size = null)
   {
@@ -328,8 +328,8 @@ abstract class sfTask
   /**
    * Executes the current task.
    *
-   * @param array An array of arguments
-   * @param array An array of options
+   * @param array $arguments  An array of arguments
+   * @param array $options    An array of options
    */
    abstract protected function execute($arguments = array(), $options = array());
 }
