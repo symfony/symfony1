@@ -38,7 +38,7 @@ class Doctrine_Template_Versionable extends Doctrine_Template
      * @param string $array 
      * @return void
      */
-    public function __construct(array $options)
+    public function __construct(array $options = array())
     {
         $this->_plugin = new Doctrine_AuditLog($options);
     }

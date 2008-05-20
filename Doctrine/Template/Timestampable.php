@@ -59,7 +59,7 @@ class Doctrine_Template_Timestampable extends Doctrine_Template
      * @param string $array 
      * @return void
      */
-    public function __construct(array $options)
+    public function __construct(array $options = array())
     {
         $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $options);
     }

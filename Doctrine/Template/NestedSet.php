@@ -34,9 +34,9 @@ class Doctrine_Template_NestedSet extends Doctrine_Template
 {
     private $_options;
     
-    public function __construct(array $options)
+    public function __construct(array $options = array())
     {
-        $this->_options = $options;
+        $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $options);
     }
     
     public function setUp()
