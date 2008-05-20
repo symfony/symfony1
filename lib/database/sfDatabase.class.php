@@ -39,7 +39,7 @@ abstract class sfDatabase
   /**
    * Initializes this sfDatabase object.
    *
-   * @param array An associative array of initialization parameters
+   * @param array $parameters An associative array of initialization parameters
    *
    * @return bool true, if initialization completes successfully, otherwise false
    *
@@ -112,8 +112,8 @@ abstract class sfDatabase
    *
    * <code>$this->getParameterHolder()->get()</code>
    *
-   * @param string The key name
-   * @param string The default value
+   * @param string $name    The key name
+   * @param string $default The default value
    *
    * @return string The value associated with the key
    *
@@ -131,7 +131,7 @@ abstract class sfDatabase
    *
    * <code>$this->getParameterHolder()->has()</code>
    *
-   * @param string The key name
+   * @param string $name The key name
    *
    * @return boolean true if the given key exists, false otherwise
    *
@@ -149,8 +149,8 @@ abstract class sfDatabase
    *
    * <code>$this->getParameterHolder()->set()</code>
    *
-   * @param string The key name
-   * @param string The value
+   * @param string $name  The key name
+   * @param string $value The value
    *
    * @see sfParameterHolder
    */
