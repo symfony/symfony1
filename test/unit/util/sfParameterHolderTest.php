@@ -29,6 +29,14 @@ $ph->set('foo', 'bar');
 $t->is($ph->get('foo'), 'bar', '->get() returns the parameter value for the given key');
 $t->is($ph->get('bar'), null, '->get() returns null if the key does not exist');
 
+// checks that get returnes reference
+$ref = 'foobar';
+$ph->set('ref',$ref);
+$ref2 &= $ph->get('ref'); //obtain the very same reference and modify it
+$ref2 &= 'barfoo';
+$t->is($ref2 , $ref, '->get() returns a reference for the given key');
+
+
 $ph = new sfParameterHolder();
 $t->is('default_value', $ph->get('foo1', 'default_value'), '->get() takes the default value as its second argument');
 
