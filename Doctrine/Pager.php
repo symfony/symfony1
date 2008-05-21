@@ -164,6 +164,24 @@ class Doctrine_Pager
 
 
     /**
+     * getRange
+     *
+     * Builds and return a Doctrine_Pager_Range_* based on arguments
+     *
+     * @param string $rangeStyle Pager Range style
+     * @param array $options     Custom subclass implementation options.
+     *                           Default is a blank array
+     * @return Doctrine_Pager_Range Pager Range
+     */
+    public function getRange($rangeStyle, $options = array())
+    {
+        $class = 'Doctrine_Pager_Range_' . ucfirst($rangeStyle);
+
+        return new $class($options, $this);
+    }
+
+
+    /**
      * getNumResults
      *
      * Returns the number of results found
@@ -294,6 +312,32 @@ class Doctrine_Pager
         throw new Doctrine_Pager_Exception(
             'Cannot retrieve the previous page number of a not yet executed Pager query'
         );
+    }
+
+
+    /**
+     * getFirstIndice
+     *
+     * Return the first indice number for the current page
+     *
+     * @return int First indice number
+     */
+    public function getFirstIndice()
+    {
+        return ($this->getPage() - 1) * $this->getMaxPerPage() + 1;
+    }
+
+
+    /**
+     * getLastIndice
+     *
+     * Return the last indice number for the current page
+     *
+     * @return int Last indice number
+     */
+    public function getLastIndice()
+    {
+        return min($this->getNumResults(), ($this->getPage() * $this->getMaxPerPage()));
     }
 
 
