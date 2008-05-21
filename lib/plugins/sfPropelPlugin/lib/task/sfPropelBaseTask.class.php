@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -53,7 +53,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
   {
     $finder = sfFinder::type('file')->name('*schema.xml');
 
-    $schemas = array_merge($finder->in('config'), $finder->in(glob(sfConfig::get('sf_plugins_dir').'/*/config')));
+    $schemas = array_unique(array_merge($finder->in('config'), $finder->in(glob(sfConfig::get('sf_plugins_dir').DIRECTORY_SEPARATOR.'*'.DIRECTORY_SEPARATOR.'config'))));
     if (self::CHECK_SCHEMA === $checkSchema && !count($schemas))
     {
       throw new sfCommandException('You must create a schema.xml file.');
@@ -98,28 +98,28 @@ abstract class sfPropelBaseTask extends sfBaseTask
     }
 
     $dbSchema = new sfPropelDatabaseSchema();
-    
+
     foreach ($schemas as $schema)
     {
       $schemaArray = sfYaml::load($schema);
-      
+
       if (!isset($schemaArray['classes']))
       {
-        // Old schema syntax: we convert it 
+        // Old schema syntax: we convert it
         $schemaArray = $dbSchema->convertOldToNewYaml($schemaArray);
       }
 
       $customSchemaFilename = str_replace(array(sfConfig::get('sf_root_dir').DIRECTORY_SEPARATOR, 'plugins'.DIRECTORY_SEPARATOR, 'config'.DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, 'schema.yml'), array('', '', '', '_', 'schema.custom.yml'), $schema);
       $customSchemas = sfFinder::type('file')->name($customSchemaFilename)->in($dirs);
-      
+
       foreach ($customSchemas as $customSchema)
       {
         $this->logSection('schema', sprintf('found custom schema %s', $customSchema));
-        
+
         $customSchemaArray = sfYaml::load($customSchema);
         if (!isset($customSchemaArray['classes']))
         {
-          // Old schema syntax: we convert it 
+          // Old schema syntax: we convert it
           $customSchemaArray = $dbSchema->convertOldToNewYaml($customSchemaArray);
         }
         $schemaArray = sfToolkit::arrayDeepMerge($schemaArray, $customSchemaArray);
@@ -148,32 +148,35 @@ abstract class sfPropelBaseTask extends sfBaseTask
 
   protected function copyXmlSchemaFromPlugins($prefix = '')
   {
-    $schemas = sfFinder::type('file')->name('*schema.xml')->in(glob(sfConfig::get('sf_plugins_dir').'/*/config'));
-    foreach ($schemas as $schema)
+    if($dirs = glob(sfConfig::get('sf_plugins_dir').DIRECTORY_SEPARATOR.'*'.DIRECTORY_SEPARATOR.'config'))
     {
-      // reset local prefix
-      $localprefix = '';
-
-      // change prefix for plugins
-      if (preg_match('#plugins[/\\\\]([^/\\\\]+)[/\\\\]#', $schema, $match))
+      $schemas = sfFinder::type('file')->name('*schema.xml')->in($dirs);
+      foreach ($schemas as $schema)
       {
-        // if the plugin name is not in the schema filename, add it
-        if (!strstr(basename($schema), $match[1]))
+        // reset local prefix
+        $localprefix = '';
+
+        // change prefix for plugins
+        if (preg_match('#plugins[/\\\\]([^/\\\\]+)[/\\\\]#', $schema, $match))
         {
-          $localprefix = $match[1].'-';
+          // if the plugin name is not in the schema filename, add it
+          if (!strstr(basename($schema), $match[1]))
+          {
+            $localprefix = $match[1].'-';
+          }
         }
-      }
 
-      // if the prefix is not in the schema filename, add it
-      if (!strstr(basename($schema), $prefix))
-      {
-        $localprefix = $prefix.$localprefix;
-      }
+        // if the prefix is not in the schema filename, add it
+        if (!strstr(basename($schema), $prefix))
+        {
+          $localprefix = $prefix.$localprefix;
+        }
 
-      $this->getFilesystem()->copy($schema, 'config'.DIRECTORY_SEPARATOR.$localprefix.basename($schema));
-      if ('' === $localprefix)
-      {
-        $this->getFilesystem()->remove($schema);
+        $this->getFilesystem()->copy($schema, 'config'.DIRECTORY_SEPARATOR.$localprefix.basename($schema));
+        if ('' === $localprefix)
+        {
+          $this->getFilesystem()->remove($schema);
+        }
       }
     }
   }
@@ -195,7 +198,7 @@ abstract class sfPropelBaseTask extends sfBaseTask
     // Call phing targets
     if (false === strpos('propel-generator', get_include_path()))
     {
-      set_include_path(sfConfig::get('sf_symfony_lib_dir').'/plugins/sfPropelPlugin/lib/vendor/propel-generator/classes'.PATH_SEPARATOR.get_include_path()); 
+      set_include_path(sfConfig::get('sf_symfony_lib_dir').'/plugins/sfPropelPlugin/lib/vendor/propel-generator/classes'.PATH_SEPARATOR.get_include_path());
     }
     set_include_path(sfConfig::get('sf_root_dir').PATH_SEPARATOR.get_include_path());
 
