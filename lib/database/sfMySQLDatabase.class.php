@@ -78,11 +78,9 @@ class sfMySQLDatabase extends sfDatabase
         // who knows what the user wants...
         throw new sfDatabaseException(sprintf('Invalid MySQLDatabase parameter retrieval method "%s".', $method));
     }
-
+    
     // let's see if we need a persistent connection
-    $persistent = $this->getParameter('persistent', false);
-    $connect    = $persistent ? 'mysql_pconnect' : 'mysql_connect';
-
+    $connect = $this->getConnectMethod($this->getParameter('persistent', false));
     if ($password == null)
     {
       if ($username == null)
@@ -107,7 +105,7 @@ class sfMySQLDatabase extends sfDatabase
     }
 
     // select our database
-    if ($database != null && !@mysql_select_db($database, $this->connection))
+    if ($this->selectDatabase($database))
     {
       // can't select the database
       throw new sfDatabaseException(sprintf('Failed to select MySQLDatabase "%s".', $database));
@@ -118,6 +116,29 @@ class sfMySQLDatabase extends sfDatabase
     $this->resource = $this->connection;
   }
 
+  /**
+   * Returns the appropriate connect method.
+   * 
+   * @param  bool $persistent wether persistent connections are use or not
+   * @return string name of connect method.
+   */
+  protected function getConnectMethod($persistent)
+  {
+    return $persistent ? 'mysql_pconnect' : 'mysql_connect';
+  }
+  
+  /**
+   * Selects the database to be used in this connection
+   * 
+   * @param  string $database Name of database to be connected
+   *
+   * @return bool true if this was successful
+   */
+  protected function selectDatabase($database)
+  {
+   return ($database != null && !@mysql_select_db($database, $this->connection));
+  }
+  
   /**
    * Loads connection parameters from an existing array.
    *

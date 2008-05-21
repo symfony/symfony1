@@ -189,6 +189,7 @@ class sfCoreAutoload
   'sfDatabase' => 'database',
   'sfDatabaseManager' => 'database',
   'sfMySQLDatabase' => 'database',
+  'sfMySQLiDatabase' => 'database',
   'sfPDODatabase' => 'database',
   'sfPostgreSQLDatabase' => 'database',
   'sfDebug' => 'debug',

@@ -24,7 +24,7 @@
  */
 class sfMySQLiSessionStorage extends sfMySQLSessionStorage
 {
-  /*!
+  /**
    * Execute an SQL Query
    *
    * @param  string $query  The query to execute
@@ -32,10 +32,10 @@ class sfMySQLiSessionStorage extends sfMySQLSessionStorage
    */
   protected function db_query($query)
   {
-    return $this->db->getResource()->query($query);
+    return $this->db->query($query);
   }
 
-  /*!
+  /**
    * Escape a string before using it in a query statement
    *
    * @param  string $string  The string to escape
@@ -43,10 +43,10 @@ class sfMySQLiSessionStorage extends sfMySQLSessionStorage
    */
   protected function db_escape($string)
   {
-    return $this->db->getResource()->real_escape_string($string);
+    return $this->db->real_escape_string($string);
   }
 
-  /*!
+  /**
    * Count the rows in a query result
    *
    * @param  resource $result  Result of a query
@@ -57,7 +57,7 @@ class sfMySQLiSessionStorage extends sfMySQLSessionStorage
     return $result->num_rows;
   }
 
-  /*!
+  /**
    * Extract a row from a query result set
    *
    * @param  resource $result  Result of a query

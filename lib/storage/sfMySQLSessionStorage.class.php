@@ -169,7 +169,7 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
    */
   protected function db_query($query)
   {
-    return @mysql_query($query, $this->db->getResource());
+    return @mysql_query($query, $this->db);
   }
 
   /*!
@@ -180,7 +180,7 @@ class sfMySQLSessionStorage extends sfDatabaseSessionStorage
    */
   protected function db_escape($string)
   {
-    return mysql_real_escape_string($string, $this->db->getResource());
+    return mysql_real_escape_string($string, $this->db);
   }
 
   /*!
