@@ -190,7 +190,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
               if ($condition)
               {
                 // create logger instance
-                $loggers .= sprintf("\n\$logger = new %s(\$this->dispatcher, array_merge(array('auto_shutdown' => false), %s));\n\$this->factories['logger']->addLogger(\$logger);\n", 
+                $loggers .= sprintf("\n\$logger = new %s(\$this->dispatcher, array_merge(array('auto_shutdown' => false), %s));\n\$this->factories['logger']->addLogger(\$logger);\n",
                               $keys['class'],
                               isset($keys['param']) ? var_export($keys['param'], true) : 'array()'
                             );
@@ -229,7 +229,7 @@ class sfFactoryConfigHandler extends sfYamlConfigHandler
     {
       if (isset($values['file']))
       {
-        $config[$factory]['file'] = $this->replacePath($values['file']);
+        $config[$factory]['file'] = self::replacePath($values['file']);
       }
     }
 
