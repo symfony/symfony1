@@ -18,6 +18,9 @@
  */
 abstract class sfApplicationConfiguration extends ProjectConfiguration
 {
+  static protected
+    $coreLoaded = false;
+
   protected
     $configCache = null,
     $application = null,
@@ -99,9 +102,11 @@ abstract class sfApplicationConfiguration extends ProjectConfiguration
     $configCache = $this->getConfigCache();
 
     // required core classes for the framework
-    if (!sfConfig::get('sf_debug') && !sfConfig::get('sf_test'))
+    if (!sfConfig::get('sf_debug') && !sfConfig::get('sf_test') && !self::$coreLoaded)
     {
       $configCache->import('config/core_compile.yml', false);
+
+      self::$coreLoaded = true;
     }
 
     sfAutoload::getInstance()->register();
