@@ -64,6 +64,11 @@ class sfValidatorPropelUnique extends sfValidatorSchema
    */
   protected function doClean($values)
   {
+    if (!is_array($values))
+    {
+      throw new InvalidArgumentException('You must pass an array parameter to the clean() method (this validator can only be used as a post validator).');
+    }
+
     if (!is_array($this->getOption('column')))
     {
       $this->setOption('column', array($this->getOption('column')));
