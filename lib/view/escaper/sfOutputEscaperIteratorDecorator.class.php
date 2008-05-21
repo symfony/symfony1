@@ -99,18 +99,17 @@ class sfOutputEscaperIteratorDecorator extends sfOutputEscaperObjectDecorator im
   {
     return $this->iterator->valid();
   }
-  
+
   /**
-   * Returns true if the supplied offset is set in the array (as required by
-   * the ArrayAccess interface).
+   * Returns true if the supplied offset isset in the array (as required by the ArrayAccess interface).
    *
    * @param  string $offset  The offset of the value to check existance of
    *
-   * @return bool true if the offset exists; false otherwise
+   * @return bool true if the offset isset; false otherwise
    */
   public function offsetExists($offset)
   {
-    return array_key_exists($offset, $this->value);
+    return isset($this->value[$offset]);
   }
 
   /**

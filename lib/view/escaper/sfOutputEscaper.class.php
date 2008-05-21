@@ -191,7 +191,7 @@ abstract class sfOutputEscaper
   {
     return $this->value;
   }
-  
+
   /**
    * Gets a value from the escaper.
    *
