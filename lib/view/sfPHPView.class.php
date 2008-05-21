@@ -68,7 +68,8 @@ class sfPHPView extends sfView
 
     $this->loadCoreAndStandardHelpers();
 
-    extract($this->attributeHolder->toArray(), EXTR_REFS | EXTR_OVERWRITE);
+    // EXTR_REFS can't be used (see #3595 and #3151)
+    extract($this->attributeHolder->toArray());
 
     // render
     ob_start();
