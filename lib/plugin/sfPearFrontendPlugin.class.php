@@ -27,7 +27,7 @@ class sfPearFrontendPlugin extends PEAR_Frontend_CLI
   /**
    * Sets the sfEventDispatcher object for this frontend.
    *
-   * @param sfEventDispatcher The sfEventDispatcher instance
+   * @param sfEventDispatcher $dispatcher The sfEventDispatcher instance
    */
   public function setEventDispatcher(sfEventDispatcher $dispatcher)
   {

@@ -42,8 +42,8 @@ class sfPearEnvironment
   /**
    * Constructs a new sfPluginManager.
    *
-   * @param sfEventDispatcher An event dispatcher instance
-   * @param array             An array of options
+   * @param sfEventDispatcher $dispatcher   An event dispatcher instance
+   * @param array             $options      An array of options
    */
   public function __construct(sfEventDispatcher $dispatcher, $options)
   {
@@ -62,8 +62,8 @@ class sfPearEnvironment
    * * downloader_base_class: The base class for downloads (default to sfPearDownloader)
    *                          (mainly used for testing)
    *
-   * @param sfEventDispatcher An event dispatcher instance
-   * @param array             An array of options
+   * @param sfEventDispatcher $dispatcher   An event dispatcher instance
+   * @param array             $options      An array of options
    */
   public function initialize(sfEventDispatcher $dispatcher, $options = array())
   {
@@ -110,7 +110,7 @@ class sfPearEnvironment
   /**
    * Returns a configuration value.
    *
-   * @param  string The configuration name
+   * @param  string $name The configuration name
    *
    * @return mixed  The configuration value
    */
@@ -122,7 +122,7 @@ class sfPearEnvironment
   /**
    * Returns whether configuration name exists.
    *
-   * @param  string The configuration name
+   * @param  string $name The configuration name
    *
    * @return boolean True if configuration name exists
    */
@@ -134,8 +134,8 @@ class sfPearEnvironment
   /**
    * Sets a configuration value.
    *
-   * @param string The configuration name
-   * @param mixed  The configuration value
+   * @param string $name  The configuration name
+   * @param mixed  $value The configuration value
    */
   public function setOption($name, $value)
   {
@@ -185,8 +185,8 @@ class sfPearEnvironment
   /**
    * Registers a PEAR channel.
    *
-   * @param string  The channel name
-   * @param Boolean true if this is the default PEAR channel, false otherwise
+   * @param string  $channel    The channel name
+   * @param Boolean $isDefault  true if this is the default PEAR channel, false otherwise
    */
   public function registerChannel($channel, $isDefault = false)
   {
@@ -238,8 +238,8 @@ class sfPearEnvironment
   /**
    * Registers the PEAR Configuration instance.
    *
-   * @param string The plugin path
-   * @param string The cache path
+   * @param string $pluginDir   The plugin path
+   * @param string $cacheDir    The cache path
    */
   public function initializeConfiguration($pluginDir, $cacheDir)
   {

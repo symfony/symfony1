@@ -26,8 +26,8 @@ class sfPluginManager
   /**
    * Constructs a new sfPluginManager.
    *
-   * @param sfEventDispatcher An event dispatcher instance
-   * @param sfPearEnvironment A sfPearEnvironment instance
+   * @param sfEventDispatcher $dispatcher   An event dispatcher instance
+   * @param sfPearEnvironment $environment  A sfPearEnvironment instance
    */
   public function __construct(sfEventDispatcher $dispatcher, sfPearEnvironment $environment)
   {
@@ -39,8 +39,8 @@ class sfPluginManager
    *
    * see sfPearEnvironment for available options.
    *
-   * @param sfEventDispatcher An event dispatcher instance
-   * @param sfPearEnvironment A sfPearEnvironment instance
+   * @param sfEventDispatcher $dispatcher   An event dispatcher instance
+   * @param sfPearEnvironment $environment  A sfPearEnvironment instance
    */
   public function initialize(sfEventDispatcher $dispatcher, $environment)
   {
@@ -100,8 +100,8 @@ class sfPluginManager
    *  * stability:    The stability preference
    *  * install_deps: Whether to automatically install dependencies (default to false)
    *
-   * @param string The plugin name
-   * @param array  An array of options
+   * @param string $plugin  The plugin name
+   * @param array  $options An array of options
    */
   public function installPlugin($plugin, $options = array())
   {
@@ -259,8 +259,8 @@ class sfPluginManager
   /**
    * Uninstalls a plugin.
    *
-   * @param string The plugin name
-   * @param string The channel name
+   * @param string $plugin  The plugin name
+   * @param string $channel The channel name
    */
   public function uninstallPlugin($plugin, $channel = null)
   {
@@ -309,9 +309,9 @@ class sfPluginManager
   /**
    * Checks all plugin dependencies.
    *
-   * @param string  The plugin name
-   * @param string  The plugin version
-   * @param Boolean true if dependencies must be installed, false otherwise
+   * @param string  $plugin   The plugin name
+   * @param string  $version  The plugin version
+   * @param Boolean $install  true if dependencies must be installed, false otherwise
    */
   public function checkPluginDependencies($plugin, $version, $install = false)
   {
@@ -356,8 +356,8 @@ class sfPluginManager
   /**
    * Gets the "best" version available for a given plugin.
    *
-   * @param  string The plugin name
-   * @param  string The stability name
+   * @param  string $plugin     The plugin name
+   * @param  string $stability  The stability name
    *
    * @return string The version
    */
@@ -380,8 +380,8 @@ class sfPluginManager
   /**
    * Returns true if the plugin is comptatible with your environment.
    *
-   * @param  string The plugin name
-   * @param  string The plugin version
+   * @param  string $plugin   The plugin name
+   * @param  string $version  The plugin version
    *
    * @return Boolean true if the plugin is compatible, false otherwise
    */
@@ -414,10 +414,10 @@ class sfPluginManager
   /**
    * Returns the license for a given plugin.
    *
-   * @param string The plugin name
-   * @param array  An array of options
+   * @param string $plugin    The plugin name
+   * @param array  $options   An array of options
    *
-   * @param string The license
+   * @return string The license
    *
    * @see installPlugin() for available options
    */
@@ -449,7 +449,7 @@ class sfPluginManager
   /**
    * Returns true if the plugin is comptatible with the dependency.
    *
-   * @param  array   An dependency array
+   * @param  array   $dependency An dependency array
    *
    * @return Boolean true if the plugin is compatible, false otherwise
    */
@@ -461,7 +461,7 @@ class sfPluginManager
   /**
    * Checks that the dependency is valid.
    *
-   * @param  array   A dependency array
+   * @param  array   $dependency A dependency array
    *
    * @return Boolean true if the dependency is valid, false otherwise
    */

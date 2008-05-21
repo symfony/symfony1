@@ -27,8 +27,8 @@ class sfSymfonyPluginManager extends sfPluginManager
    *
    * See sfPluginManager for other options.
    *
-   * @param sfEventDispatcher An event dispatcher instance
-   * @param sfPearEnvironment A sfPearEnvironment instance
+   * @param sfEventDispatcher $dispatcher   An event dispatcher instance
+   * @param sfPearEnvironment $environment  A sfPearEnvironment instance
    */
   public function initialize(sfEventDispatcher $dispatcher, sfPearEnvironment $environment)
   {
@@ -62,7 +62,7 @@ class sfSymfonyPluginManager extends sfPluginManager
   /**
    * Installs web content for a plugin.
    *
-   * @param string The plugin name
+   * @param string $plugin The plugin name
    */
   public function installWebContent($plugin)
   {
@@ -79,7 +79,7 @@ class sfSymfonyPluginManager extends sfPluginManager
   /**
    * Unnstalls web content for a plugin.
    *
-   * @param string The plugin name
+   * @param string $plugin The plugin name
    */
   public function uninstallWebContent($plugin)
   {
@@ -105,7 +105,7 @@ class sfSymfonyPluginManager extends sfPluginManager
   /**
    * Listens to the plugin.post_install event.
    *
-   * @param sfEvent An sfEvent instance
+   * @param sfEvent $event An sfEvent instance
    */
   public function ListenToPluginPostInstall($event)
   {
@@ -115,7 +115,7 @@ class sfSymfonyPluginManager extends sfPluginManager
   /**
    * Listens to the plugin.post_uninstall event.
    *
-   * @param sfEvent An sfEvent instance
+   * @param sfEvent $event An sfEvent instance
    */
   public function ListenToPluginPostUninstall($event)
   {
@@ -157,7 +157,7 @@ class sfSymfonyPluginManager extends sfPluginManager
   /**
    * Returns true if the plugin is comptatible with the dependency.
    *
-   * @param  array   A dependency array
+   * @param  array   $dependency A dependency array
    *
    * @return Boolean true if the plugin is compatible, false otherwise
    */
