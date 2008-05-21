@@ -75,7 +75,7 @@ class sfNumberFormat
    * a sfCultureInfo or sfNumberFormatInfo instance will instantiated a instance
    * for that particular culture.
    *
-   * @param mixed either null, a sfCultureInfo, a sfNumberFormatInfo, or string
+   * @param mixed $formatInfo either null, a sfCultureInfo, a sfNumberFormatInfo, or string
    * @return sfNumberFormat
    */
   function __construct($formatInfo = null)
@@ -103,12 +103,13 @@ class sfNumberFormat
    * 'c', 'd', 'e', 'p' or a custom pattern, such as "#.000" for
    * 3 decimal places.
    *
-   * @param mixed the number to format.
-   * @param string the format pattern, either, 'c', 'd', 'e', 'p'
+   * @param mixed   $number   the number to format.
+   * @param string  $pattern  the format pattern, either, 'c', 'd', 'e', 'p'
    * or a custom pattern. E.g. "#.000" will format the number to 
    * 3 decimal places.
-   * @param string 3-letter ISO 4217 code. For example, the code 
+   * @param string  $currency 3-letter ISO 4217 code. For example, the code 
    * "USD" represents the US Dollar and "EUR" represents the Euro currency.
+   * @param string  $charset  The charset
    * @return string formatted number string 
    */
   function format($number, $pattern = 'd', $currency = 'USD', $charset = 'UTF-8')
@@ -159,7 +160,7 @@ class sfNumberFormat
   /**
    * Formats the integer, perform groupings and string padding.
    *
-   * @param string the decimal number in string form.
+   * @param string  $string the decimal number in string form.
    * @return string  formatted integer string with grouping
    */
   protected function formatInteger($string)
@@ -240,7 +241,7 @@ class sfNumberFormat
   /**
    * Formats the decimal places.
    *
-   * @param string the decimal number in string form.
+   * @param string $decimal the decimal number in string form.
    * @return string formatted decimal places.
    */
   protected function formatDecimal($string)
@@ -292,7 +293,7 @@ class sfNumberFormat
    * Sets the pattern to format against. The default patterns
    * are retrieved from the sfNumberFormatInfo instance.
    *
-   * @param string the requested patterns.
+   * @param string $pattern the requested patterns.
    * @return string a number format pattern.
    */
   protected function setPattern($pattern)

@@ -126,7 +126,7 @@ class sfDateTimeFormatInfo
    * unless you know what you are doing. Please use use 
    * sfDateTimeFormatInfo::getInstance() to create an instance.
    *
-   * @param array ICU data for date time formatting.
+   * @param array   $data ICU data for date time formatting.
    * @see getInstance()
    */
   function __construct($data = array())
@@ -171,7 +171,7 @@ class sfDateTimeFormatInfo
   /**
    * Returns the sfDateTimeFormatInfo associated with the specified culture.
    *
-   * @param sfCultureInfo the culture that gets the sfDateTimeFormat property.
+   * @param sfCultureInfo   $culture  the culture that gets the sfDateTimeFormat property.
    * @return sfDateTimeFormatInfo sfDateTimeFormatInfo for the specified
    * culture.
    */
@@ -210,7 +210,7 @@ class sfDateTimeFormatInfo
    * For example,
    * <code>array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat");</code>
    *
-   * @param array abbreviated day names.
+   * @param array $value abbreviated day names.
    */
   function setAbbreviatedDayNames($value)
   {
@@ -236,7 +236,7 @@ class sfDateTimeFormatInfo
    * For example,
    * <code>array("S", "M", "T", "W", "T", "F", "S");</code>
    *
-   * @param array narrow day names.
+   * @param array $value narrow day names.
    */
   function setNarrowDayNames($value)
   {
@@ -263,7 +263,7 @@ class sfDateTimeFormatInfo
    * <code>array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
    * "Friday", "Saturday".);</code>
    *
-   * @param array day names.
+   * @param array $value day names.
    */
   function setDayNames($value)
   {
@@ -289,7 +289,7 @@ class sfDateTimeFormatInfo
    * For example,
    * <code>array("J","F","M","A","M","J","J","A","S","O","N","D");</code>
    *
-   * @param array month names.
+   * @param array $value month names.
    */
   function setNarrowMonthNames($value)
   {
@@ -325,7 +325,7 @@ class sfDateTimeFormatInfo
    * <code>array("Jan", "Feb", "Mar", "Apr", "May", "Jun",
    * "Jul", "Aug", "Sep","Oct","Nov","Dec");</code>
    *
-   * @param array month names.
+   * @param array $value month names.
    */
   function setAbbreviatedMonthNames($value)
   {
@@ -353,7 +353,7 @@ class sfDateTimeFormatInfo
    * <code>array("January", "February", "March", "April", "May", "June",
    * "July", "August", "September","October","November","December");</code>
    *
-   * @param array month names.
+   * @param array $value month names.
    */
   function setMonthNames($value)
   {
@@ -363,7 +363,7 @@ class sfDateTimeFormatInfo
   /**
    * A string containing the name of the era.
    *
-   * @param int era The integer representing the era. 
+   * @param int $era era The integer representing the era. 
    * @return string the era name.
    */
   function getEra($era)
@@ -387,7 +387,7 @@ class sfDateTimeFormatInfo
   /**
    * Sets the AM Designator. For example, 'AM'.
    *
-   * @param string AM designator.
+   * @param string $value AM designator.
    */
   function setAMDesignator($value)
   {
@@ -412,7 +412,7 @@ class sfDateTimeFormatInfo
   /**
    * Sets the PM Designator. For example, 'PM'.
    *
-   * @param string PM designator.
+   * @param string $value PM designator.
    */
   function setPMDesignator($value)
   {
@@ -436,7 +436,7 @@ class sfDateTimeFormatInfo
    * Sets the AM and PM markers array.
    * For example <code>array('AM','PM');</code>
    *
-   * @param array AM and PM markers
+   * @param array $value AM and PM markers
    */
   function setAMPMMarkers($value)
   {

@@ -83,8 +83,8 @@ class sfChoiceFormat
   /**
    * Determines if the given number belongs to a given set
    *
-   * @param  float the number to test.
-   * @param  string the set, in set notation.
+   * @param  $number  float the number to test.
+   * @param  $set     string the set, in set notation.
    * @return boolean true if number is in the set, false otherwise.
    */
   public function isValid($number, $set)
@@ -180,7 +180,7 @@ class sfChoiceFormat
   /**
    * Parses a choice string and get a list of sets and a list of strings corresponding to the sets.
    *
-   * @param  string the string containing the choices
+   * @param  $string  string the string containing the choices
    * @return array array($sets, $strings)
    */
   public function parse($string)
@@ -208,8 +208,8 @@ class sfChoiceFormat
   /**
    * For the choice string, and a number, find and return the string that satisfied the set within the choices.
    *
-   * @param  string the choices string.
-   * @param  float the number to test.
+   * @param  string $string   the choices string.
+   * @param  float  $number   the number to test.
    * @return string the choosen string.
    */
   public function format($string, $number)

@@ -110,7 +110,8 @@ class sfNumberFormatInfo
    * class directly unless you know what you are doing. Please use use 
    * sfNumberFormatInfo::getInstance() to create an instance.
    *
-   * @param array ICU data for date time formatting.
+   * @param array $data ICU data for date time formatting.
+   * @param int   $type The sfNumberFormatInfo type
    * @see getInstance()
    */
   function __construct($data = array(), $type = sfNumberFormatInfo::DECIMAL)
@@ -132,7 +133,7 @@ class sfNumberFormatInfo
    * sfNumberFormatInfo::DECIMAL, sfNumberFormatInfo::CURRENCY,
    * sfNumberFormatInfo::PERCENTAGE, or sfNumberFormatInfo::SCIENTIFIC
    *
-   * @param int pattern type.
+   * @param int $type pattern type.
    */
   function setPattern($type = sfNumberFormatInfo::DECIMAL)
   {
@@ -176,8 +177,8 @@ class sfNumberFormatInfo
   /**
    * Returns the sfNumberFormatInfo associated with the specified culture.
    *
-   * @param sfCultureInfo the culture that gets the sfNumberFormat property.
-   * @param int the number formatting type, it should be 
+   * @param sfCultureInfo $culture  the culture that gets the sfNumberFormat property.
+   * @param int           $type     the number formatting type, it should be 
    * sfNumberFormatInfo::DECIMAL, sfNumberFormatInfo::CURRENCY,
    * sfNumberFormatInfo::PERCENTAGE, or sfNumberFormatInfo::SCIENTIFIC
    * @return sfNumberFormatInfo sfNumberFormatInfo for the specified culture.
@@ -215,7 +216,7 @@ class sfNumberFormatInfo
   /**
    * Returns the currency format info associated with the specified culture.
    *
-   * @param sfCultureInfo the culture that gets the NumberFormat property.
+   * @param sfCultureInfo $culture the culture that gets the NumberFormat property.
    * @return sfNumberFormatInfo sfNumberFormatInfo for the specified culture.
    */
   public static function getCurrencyInstance($culture = null)
@@ -226,7 +227,7 @@ class sfNumberFormatInfo
   /**
    * Returns the percentage format info associated with the specified culture.
    *
-   * @param sfCultureInfo the culture that gets the NumberFormat property.
+   * @param sfCultureInfo $culture the culture that gets the NumberFormat property.
    * @return sfNumberFormatInfo sfNumberFormatInfo for the specified culture. 
    */
   public static function getPercentageInstance($culture = null)
@@ -237,7 +238,7 @@ class sfNumberFormatInfo
   /**
    * Returns the scientific format info associated with the specified culture.
    *
-   * @param sfCultureInfo the culture that gets the NumberFormat property.
+   * @param sfCultureInfo $culture the culture that gets the NumberFormat property.
    * @return sfNumberFormatInfo sfNumberFormatInfo for the specified culture. 
    */
   public static function getScientificInstance($culture = null)
@@ -248,7 +249,7 @@ class sfNumberFormatInfo
   /**
    * Parses the given pattern and return a list of known properties.
    *
-   * @param string a number pattern.
+   * @param string $pattern a number pattern.
    * @return array list of pattern properties.
    */
   protected function parsePattern($pattern)
@@ -358,7 +359,7 @@ class sfNumberFormatInfo
   /**
    * Gets the prefix and postfix of a pattern.
    *
-   * @param string pattern
+   * @param string $pattern pattern
    * @return array of prefix and postfix, array(prefix,postfix). 
    */
   protected function getPrePostfix($pattern)
@@ -382,7 +383,7 @@ class sfNumberFormatInfo
   /**
    * Sets the number of decimal places.
    *
-   * @param int number of decimal places.
+   * @param int $value number of decimal places.
    */
   function setDecimalDigits($value)
   {
@@ -402,7 +403,7 @@ class sfNumberFormatInfo
   /**
    * Sets the digit size.
    *
-   * @param int digit size.
+   * @param int $value digit size.
    */
   function setDigitSize($value)
   {
@@ -422,7 +423,7 @@ class sfNumberFormatInfo
   /**
    * Sets the string to use as the decimal separator.
    *
-   * @param string the decimal point
+   * @param string $value the decimal point
    */
   function setDecimalSeparator($value)
   {
@@ -433,7 +434,6 @@ class sfNumberFormatInfo
    * Gets the string that separates groups of digits to the left 
    * of the decimal in currency values.
    *
-   * @param parameter
    * @return string currency group separator. 
    */
   function getGroupSeparator()
@@ -444,7 +444,7 @@ class sfNumberFormatInfo
   /**
    * Sets the string to use as the group separator.
    *
-   * @param string the group separator.
+   * @param string $value the group separator.
    */
   function setGroupSeparator($value)
   {
@@ -473,7 +473,7 @@ class sfNumberFormatInfo
    * be an <b>array(group1, group2)</b>, if there is only 1 grouping size,
    * group2 should be false.
    *
-   * @param array grouping size(s).
+   * @param array $groupSize grouping size(s).
    */
   function setGroupSizes($groupSize)
   {
@@ -501,7 +501,7 @@ class sfNumberFormatInfo
    * The negative pattern is composed of a prefix, and postfix in the form
    * <b>array(prefix, postfix)</b>.
    *
-   * @param arary negative pattern. 
+   * @param arary $pattern negative pattern. 
    */
   function setNegativePattern($pattern)
   {
@@ -529,7 +529,7 @@ class sfNumberFormatInfo
    * The positive pattern is composed of a prefix, and postfix in the form
    * <b>array(prefix, postfix)</b>.
    *
-   * @param arary positive pattern. 
+   * @param arary $pattern positive pattern. 
    */
   function setPositivePattern($pattern)
   {
@@ -540,7 +540,7 @@ class sfNumberFormatInfo
   /**
    * Gets the string to use as the currency symbol.
    *
-   * @return string currency symbol. 
+   * @return string $currency currency symbol. 
    */
   function getCurrencySymbol($currency = 'USD')
   {
@@ -557,7 +557,7 @@ class sfNumberFormatInfo
   /**
    * Sets the string to use as the currency symbol.
    *
-   * @param string currency symbol.
+   * @param string $symbol currency symbol.
    */
   function setCurrencySymbol($symbol)
   {
@@ -577,7 +577,7 @@ class sfNumberFormatInfo
   /**
    * Sets the string that represents negative infinity.
    *
-   * @param string negative infinity. 
+   * @param string $value negative infinity. 
    */
   function setNegativeInfinitySymbol($value)
   {
@@ -597,7 +597,7 @@ class sfNumberFormatInfo
   /**
    * Sets the string that represents positive infinity.
    *
-   * @param string positive infinity. 
+   * @param string $value positive infinity. 
    */
   function setPositiveInfinitySymbol($value)
   {
@@ -617,7 +617,7 @@ class sfNumberFormatInfo
   /**
    * Sets the string that denotes that the associated number is negative.
    *
-   * @param string negative sign. 
+   * @param string $value negative sign. 
    */
   function setNegativeSign($value)
   {
@@ -637,7 +637,7 @@ class sfNumberFormatInfo
   /**
    * Sets the string that denotes that the associated number is positive.
    *
-   * @param string positive sign. 
+   * @param string $value positive sign. 
    */
   function setPositiveSign($value)
   {
@@ -657,7 +657,7 @@ class sfNumberFormatInfo
   /**
    * Sets the string that represents the IEEE NaN (not a number) value.
    *
-   * @param string NaN symbol.
+   * @param string $value NaN symbol.
    */
   function setNaNSymbol($value)
   {
@@ -677,7 +677,7 @@ class sfNumberFormatInfo
   /**
    * Sets the string to use as the percent symbol.
    *
-   * @param string percent symbol.
+   * @param string $value percent symbol.
    */
   function setPercentSymbol($value)
   {
@@ -697,7 +697,7 @@ class sfNumberFormatInfo
   /**
    * Sets the string to use as the per mille symbol.
    *
-   * @param string percent symbol.
+   * @param string $value percent symbol.
    */
   function setPerMilleSymbol($value)
   {

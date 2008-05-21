@@ -92,8 +92,8 @@ class sfMessageFormat
    * Create a new instance of sfMessageFormat using the messages
    * from the supplied message source.
    *
-   * @param sfMessageSource the source of translation messages.
-   * @param string charset for the message output.
+   * @param sfMessageSource $source   the source of translation messages.
+   * @param string charset  $charset  for the message output.
    */
   function __construct(sfIMessageSource $source, $charset = 'UTF-8')
   {
@@ -104,7 +104,7 @@ class sfMessageFormat
   /**
    * Sets the charset for message output.
    *
-   * @param string charset, default is UTF-8
+   * @param string $charset charset, default is UTF-8
    */
   public function setCharset($charset)
   {
@@ -127,7 +127,7 @@ class sfMessageFormat
    * catalogue. The load catalogue messages are stored
    * in the $this->message array.
    *
-   * @param string message catalogue to load.
+   * @param string $catalogue message catalogue to load.
    */
   protected function loadCatalogue($catalogue)
   {
@@ -150,10 +150,10 @@ class sfMessageFormat
    * using the $catalogue parameter.
    * The output charset is determined by $this->getCharset();
    *
-   * @param string the string to translate.
-   * @param array a list of string to substitute.
-   * @param string get the translation from a particular message
-   * @param string charset, the input AND output charset catalogue.
+   * @param string  $string     the string to translate.
+   * @param array   $args       a list of string to substitute.
+   * @param string  $catalogue  get the translation from a particular message
+   * @param string  $charset    charset, the input AND output charset catalogue.
    * @return string translated string.
    */
   public function format($string, $args = array(), $catalogue = null, $charset = null)
@@ -171,9 +171,9 @@ class sfMessageFormat
   /**
    * Do string translation.
    *
-   * @param string the string to translate.
-   * @param array a list of string to substitute.
-   * @param string get the translation from a particular message catalogue.
+   * @param string  $string     the string to translate.
+   * @param array   $args       a list of string to substitute.
+   * @param string  $catalogue  get the translation from a particular message catalogue.
    * @return string translated string.
    */
   protected function formatString($string, $args = array(), $catalogue = null)
@@ -242,7 +242,7 @@ class sfMessageFormat
    * e.g. $postscript=array('[T]','[/T]'); will output 
    * "[T]Hello[/T]" if the translation for "Hello" can not be determined.
    *
-   * @param array first element is the prefix, second element the suffix.
+   * @param array $postscript first element is the prefix, second element the suffix.
    */
   function setUntranslatedPS($postscript)
   {

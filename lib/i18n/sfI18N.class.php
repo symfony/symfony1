@@ -49,9 +49,9 @@ class sfI18N
    *  * untranslated_prefix: The prefix to use when a message is not translated
    *  * untranslated_suffix: The suffix to use when a message is not translated
    *
-   * @param sfApplicationConfiguration A sfApplicationConfiguration instance
-   * @param sfCache                    A sfCache instance
-   * @param array                      An array of options
+   * @param sfApplicationConfiguration $configuration   A sfApplicationConfiguration instance
+   * @param sfCache                    $cache           A sfCache instance
+   * @param array                      $options         An array of options
    */
   public function initialize(sfApplicationConfiguration $configuration, sfCache $cache = null, $options = array())
   {
@@ -105,8 +105,8 @@ class sfI18N
   /**
    * Sets the message source.
    *
-   * @param mixed  An array of i18n directories if message source is a sfMessageSource_File subclass, null otherwise
-   * @param string The culture
+   * @param mixed  $dirs    An array of i18n directories if message source is a sfMessageSource_File subclass, null otherwise
+   * @param string $culture The culture
    */
   public function setMessageSource($dirs, $culture = null)
   {
@@ -139,7 +139,7 @@ class sfI18N
   /**
    * Returns a new message source.
    *
-   * @param  mixed           An array of i18n directories to create a XLIFF or gettext message source, null otherwise
+   * @param  mixed $dir An array of i18n directories to create a XLIFF or gettext message source, null otherwise
    *
    * @return sfMessageSource A sfMessageSource object
    */
@@ -161,7 +161,7 @@ class sfI18N
   /**
    * Sets the current culture for i18n format objects.
    *
-   * @param string The culture
+   * @param string $culture The culture
    */
   public function setCulture($culture)
   {
@@ -216,9 +216,9 @@ class sfI18N
   /**
    * Gets the translation for the given string
    *
-   * @param  string The string to translate
-   * @param  array  An array of arguments for the translation
-   * @param  string The catalogue name
+   * @param  string $string     The string to translate
+   * @param  array  $args       An array of arguments for the translation
+   * @param  string $catalogue  The catalogue name
    *
    * @return string The translated string
    */
@@ -230,8 +230,8 @@ class sfI18N
   /**
    * Gets a country name.
    *
-   * @param  string The ISO code
-   * @param  string The culture for the translation
+   * @param  string $iso      The ISO code
+   * @param  string $culture  The culture for the translation
    *
    * @return string The country name
    */
@@ -246,7 +246,7 @@ class sfI18N
   /**
    * Gets a native culture name.
    *
-   * @param  string The culture
+   * @param  string $culture The culture
    *
    * @return string The culture name
    */
@@ -260,8 +260,8 @@ class sfI18N
   /**
    * Returns a timestamp from a date formatted with a given culture.
    *
-   * @param  string  The formatted date as string
-   * @param  string  The culture
+   * @param  string  $date  The formatted date as string
+   * @param  string  $culture The culture
    *
    * @return integer The timestamp
    */
@@ -275,8 +275,8 @@ class sfI18N
   /**
    * Returns the day, month and year from a date formatted with a given culture.
    *
-   * @param  string  The formatted date as string
-   * @param  string  The culture
+   * @param  string  $date    The formatted date as string
+   * @param  string  $culture The culture
    *
    * @return array   An array with the day, month and year
    */
@@ -321,7 +321,7 @@ class sfI18N
   /**
    * Returns true if messages are stored in a file.
    *
-   * @param  string  The source name
+   * @param  string  $source  The source name
    *
    * @return Boolean true if messages are stored in a file, false otherwise
    */
@@ -335,7 +335,7 @@ class sfI18N
   /**
    * Listens to the user.change_culture event.
    *
-   * @param sfEvent An sfEvent instance
+   * @param sfEvent $event  An sfEvent instance
    *
    */
   public function listenToChangeCultureEvent(sfEvent $event)
@@ -347,7 +347,7 @@ class sfI18N
   /**
    * Listens to the controller.change_action event.
    *
-   * @param sfEvent An sfEvent instance
+   * @param sfEvent $event An sfEvent instance
    *
    */
   public function listenToChangeActionEvent(sfEvent $event)

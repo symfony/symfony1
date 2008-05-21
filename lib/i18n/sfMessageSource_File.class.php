@@ -39,7 +39,7 @@ abstract class sfMessageSource_File extends sfMessageSource
   /**
    * Constructor.
    *
-   * @param string the directory where the messages are stored.
+   * @param string $source the directory where the messages are stored.
    * @see MessageSource::factory();
    */
   function __construct($source)
@@ -51,7 +51,7 @@ abstract class sfMessageSource_File extends sfMessageSource
    * Gets the last modified unix-time for this particular catalogue+variant.
    * Just use the file modified time.
    *
-   * @param string catalogue+variant
+   * @param string $source catalogue+variant
    * @return int last modified in unix-time format.
    */
   public function getLastModified($source)
@@ -62,7 +62,7 @@ abstract class sfMessageSource_File extends sfMessageSource
   /**
    * Gets the message file for a specific message catalogue and cultural variant.
    *
-   * @param string message catalogue
+   * @param string $variant message catalogue
    * @return string full path to the message file.
    */
   public function getSource($variant)
@@ -73,7 +73,7 @@ abstract class sfMessageSource_File extends sfMessageSource
   /**
    * Determines if the message file source is valid.
    *
-   * @param string message file
+   * @param string $source message file
    * @return boolean true if valid, false otherwise.
    */
   public function isValidSource($source)
@@ -84,7 +84,7 @@ abstract class sfMessageSource_File extends sfMessageSource
   /**
    * Gets all the variants of a particular catalogue.
    *
-   * @param string catalogue name
+   * @param string $catalogue catalogue name
    * @return array list of all variants for this catalogue.
    */
   public function getCatalogueList($catalogue)
@@ -115,7 +115,7 @@ abstract class sfMessageSource_File extends sfMessageSource
    * Traverses through the directory structure to find the catalogues.
    * This should only be called by getCatalogueList()
    *
-   * @param string a particular catalogue.
+   * @param string $catalogue a particular catalogue.
    * @return array a list of catalogues.
    * @see getCatalogueList()
    */

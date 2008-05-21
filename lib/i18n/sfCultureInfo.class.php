@@ -124,6 +124,7 @@ class sfCultureInfo
   /**
    * Gets the sfCultureInfo that for this culture string.
    *
+   * @param string  $culture The culture for this instance
    * @return sfCultureInfo Invariant culture info is "en"
    */
   public static function getInstance($culture)
@@ -153,6 +154,7 @@ class sfCultureInfo
    * Allows functions that begins with 'set' to be called directly
    * as an attribute/property to retrieve the value.
    *
+   * @param string $name The property to get
    * @return mixed
    */
   public function __get($name)
@@ -171,6 +173,9 @@ class sfCultureInfo
   /**
    * Allows functions that begins with 'set' to be called directly
    * as an attribute/property to set the value.
+   *
+   * @param string $name  The property to set
+   * @param string $value The property value
    */
   public function __set($name, $value)
   {
@@ -191,7 +196,7 @@ class sfCultureInfo
    * The culture indentifier must be of the form 
    * "<language>_(country/region/variant)".
    *
-   * @param string a culture name, e.g. "en_AU".
+   * @param string $culture a culture name, e.g. "en_AU".
    * @return return new sfCultureInfo.
    */
   public function __construct($culture = 'en')
@@ -237,7 +242,7 @@ class sfCultureInfo
    * Determines if a given culture is valid. Simply checks that the
    * culture data exists.
    *
-   * @param string a culture
+   * @param string $culture a culture
    * @return boolean true if valid, false otherwise.
    */
   static public function validCulture($culture)
@@ -254,7 +259,7 @@ class sfCultureInfo
    * Sets the culture for the current instance. The culture indentifier
    * must be of the form "<language>_(country/region)".
    *
-   * @param string culture identifier, e.g. "fr_FR_EURO".
+   * @param string $culture culture identifier, e.g. "fr_FR_EURO".
    */
   protected function setCulture($culture)
   {
@@ -272,7 +277,7 @@ class sfCultureInfo
   /**
    * Loads the ICU culture data for the specific culture identifier.
    *
-   * @param string the culture identifier.
+   * @param string $culture the culture identifier.
    */
   protected function loadCultureData($culture)
   {
@@ -317,7 +322,7 @@ class sfCultureInfo
    * The data files are cached in a static variable inside
    * this function.
    *
-   * @param string the ICU data filename
+   * @param string $filename the ICU data filename
    * @return array ICU data 
    */
   protected function &getData($filename)
@@ -345,8 +350,8 @@ class sfCultureInfo
    * in the "en" data file. Thus to retrieve all the data regarding 
    * currency for "en_AU", you need to use findInfo("Currencies,true);.
    *
-   * @param string the data you want to find.
-   * @param boolean merge the data from its parents.
+   * @param string  $path   the data you want to find.
+   * @param boolean $merge  merge the data from its parents.
    * @return mixed the specific ICU data.
    */
   protected function findInfo($path = '/', $merge = false)
@@ -377,8 +382,8 @@ class sfCultureInfo
    * slash "/" separated path. e.g to find $info['hello']['world'],
    * the path "hello/world" will return the corresponding value.
    *
-   * @param array the array for search
-   * @param string slash "/" separated array path.
+   * @param array   $info  the array for search
+   * @param string  $path  slash "/" separated array path.
    * @return mixed the value array using the path
    */
   protected function searchArray($info, $path = '/')
@@ -433,7 +438,7 @@ class sfCultureInfo
   /**
    * Sets the date time format information.
    *
-   * @param sfDateTimeFormatInfo the new date time format info.
+   * @param sfDateTimeFormatInfo $dateTimeFormat the new date time format info.
    */
   public function setDateTimeFormat($dateTimeFormat)
   {
@@ -555,7 +560,7 @@ class sfCultureInfo
   /**
    * Sets the number format information.
    *
-   * @param sfNumberFormatInfo the new number format info.
+   * @param sfNumberFormatInfo $numberFormat the new number format info.
    */
   public function setNumberFormat($numberFormat)
   {
@@ -584,7 +589,7 @@ class sfCultureInfo
    * a list of ICU files in the data directory.
    * This function can be called statically.
    *
-   * @param int culture type, sfCultureInfo::ALL, sfCultureInfo::NEUTRAL
+   * @param int $type culture type, sfCultureInfo::ALL, sfCultureInfo::NEUTRAL
    * or sfCultureInfo::SPECIFIC.
    * @return array list of culture information available. 
    */
@@ -635,7 +640,7 @@ class sfCultureInfo
    * E.g. <code>array(0 => array('hello'), 1 => 'world');</code>
    * becomes <code>array(0 => 'hello', 1 => 'world');</code>
    *
-   * @param array with single elements arrays
+   * @param array $array with single elements arrays
    * @return array simplified array.
    */
   static protected function simplify($array)

@@ -70,6 +70,31 @@ function get_component_slot($name, $vars = array())
 }
 
 /**
+ * Returns true if component slot exists.
+ *
+ * @param  string slot name
+ * @return bool true if component slot exists, false otherwise
+ */
+function has_component_slot($name)
+{
+  $viewInstance = sfContext::getInstance()->get('view_instance');
+
+  // check to see if one is defined
+  if (!$viewInstance->hasComponentSlot($name))
+  {
+    return false;
+  }
+  
+  // check to see if component slot is empty (null)
+  if ($viewInstance->getComponentSlot($name))
+  {
+    return true;
+  }
+
+  return false;
+}
+
+/**
  * Evaluates and echoes a component.
  * For a variable to be accessible to the component and its partial,
  * it has to be passed in the third argument.

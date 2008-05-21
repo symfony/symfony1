@@ -78,7 +78,7 @@ class sfDateFormat
   /**
    * Initializes a new sfDateFormat.
    *
-   * @param mixed either, null, a sfCultureInfo instance, a DateTimeFormatInfo instance, or a locale.
+   * @param mixed $forrmatInfo either, null, a sfCultureInfo instance, a DateTimeFormatInfo instance, or a locale.
    * @return sfDateFormat instance
    */
   function __construct($formatInfo = null)
@@ -107,8 +107,8 @@ class sfDateFormat
    * Guesses a date without calling strtotime.
    *
    * @author Olivier Verdier <Olivier.Verdier@gmail.com>
-   * @param mixed the time as integer or string in strtotime format.
-   * @param string the input pattern; default is sql date or timestamp
+   * @param mixed  $time    the time as integer or string in strtotime format.
+   * @param string $pattern the input pattern; default is sql date or timestamp
    * @return array same array as the getdate function
    */
   public function getDate($time, $pattern = null)
@@ -200,7 +200,10 @@ class sfDateFormat
   /**
    * Formats a date according to the pattern.
    *
-   * @param mixed the time as integer or string in strtotime format.
+   * @param mixed   $time           the time as integer or string in strtotime format.
+   * @param string  $pattern        the pattern
+   * @param string  $inputPattern   the input pattern
+   * @param string  $charset        the charset
    * @return string formatted date time. 
    */
   public function format($time, $pattern = 'F', $inputPattern = null, $charset = 'UTF-8')
@@ -250,7 +253,7 @@ class sfDateFormat
   /**
    * For a particular token, get the corresponding function to call.
    *
-   * @param string token
+   * @param string $token token
    * @return mixed the function if good token, null otherwise.
    */
   protected function getFunctionName($token)
@@ -269,7 +272,7 @@ class sfDateFormat
    * DateTimeFormatInfo::formatDateTime
    * See the tutorial documentation for futher details on the patterns.
    *
-   * @param mixed a pattern.
+   * @param mixed $pattern a pattern.
    * @return string a pattern.
    * @see DateTimeFormatInfo::formatDateTime()
    */
@@ -354,7 +357,7 @@ class sfDateFormat
    * Returns an easy to parse input pattern
    * yy is replaced by yyyy and h by H
    *
-   * @param string pattern.
+   * @param string $pattern pattern.
    * @return string input pattern
    */
   public function getInputPattern($pattern)
@@ -373,7 +376,7 @@ class sfDateFormat
    * Any substrings, starting and ending with a single quote (') 
    * will be treated as a single token.
    *
-   * @param string pattern.
+   * @param string $pattern pattern.
    * @return array string tokens in an array.
    */
   protected function getTokens($pattern)
@@ -428,8 +431,8 @@ class sfDateFormat
    * "yy" will return the last two digits of year.
    * "yyyy" will return the full integer year.
    *
-   * @param array getdate format.
-   * @param string a pattern.
+   * @param array  $dat     getdate format.
+   * @param string $pattern a pattern.
    * @return string year
    */
   protected function getYear($date, $pattern = 'yyyy')
@@ -453,8 +456,8 @@ class sfDateFormat
    * "MMM" will return the abrreviated month name, e.g. "Jan"
    * "MMMM" will return the month name, e.g. "January"
    *
-   * @param array getdate format.
-   * @param string a pattern.
+   * @param array   $date     getdate format.
+   * @param string  $pattern  a pattern.
    * @return string month name
    */
   protected function getMon($date, $pattern = 'M')
@@ -484,8 +487,8 @@ class sfDateFormat
    * "EEE" will return the abrreviated day of the week, e.g. "Mon"
    * "EEEE" will return the day of the week, e.g. "Monday"
    *
-   * @param array getdate format.
-   * @param string a pattern.
+   * @param array   $date     getdate format.
+   * @param string  $pattern  a pattern.
    * @return string day of the week.
    */
   protected function getWday($date, $pattern = 'EEEE')
@@ -519,8 +522,8 @@ class sfDateFormat
    * Gets the day of the month.
    * "d" for non-padding, "dd" will always return 2 characters.
    *
-   * @param array getdate format.
-   * @param string a pattern.
+   * @param array   $date     getdate format.
+   * @param string  $pattern  a pattern.
    * @return string day of the month
    */
   protected function getMday($date, $pattern = 'd')
@@ -544,8 +547,8 @@ class sfDateFormat
    * Gets the era. i.e. in gregorian, year > 0 is AD, else BC.
    *
    * @todo How to support multiple Eras?, e.g. Japanese.
-   * @param array getdate format.
-   * @param string a pattern.
+   * @param array   $date     getdate format.
+   * @param string  $pattern  a pattern.
    * @return string era
    */
   protected function getEra($date, $pattern = 'G')
@@ -562,8 +565,8 @@ class sfDateFormat
    * Gets the hours in 24 hour format, i.e. [0-23]. 
    * "H" for non-padding, "HH" will always return 2 characters.
    *
-   * @param array getdate format.
-   * @param string a pattern.
+   * @param array   $date     getdate format.
+   * @param string  $pattern  a pattern.
    * @return string hours in 24 hour format.
    */
   protected function getHours($date, $pattern = 'H')
@@ -584,8 +587,8 @@ class sfDateFormat
   /**
    * Get the AM/PM designator, 12 noon is PM, 12 midnight is AM.
    *
-   * @param array getdate format.
-   * @param string a pattern.
+   * @param array   $date     getdate format.
+   * @param string  $pattern  a pattern.
    * @return string AM or PM designator
    */
   protected function getAMPM($date, $pattern = 'a')
@@ -602,8 +605,8 @@ class sfDateFormat
    * Gets the hours in 12 hour format. 
    * "h" for non-padding, "hh" will always return 2 characters.
    *
-   * @param array getdate format.
-   * @param string a pattern.
+   * @param array   $date     getdate format.
+   * @param string  $pattern  a pattern.
    * @return string hours in 12 hour format.
    */
   protected function getHour12($date, $pattern = 'h')
@@ -626,8 +629,8 @@ class sfDateFormat
    * Gets the minutes.
    * "m" for non-padding, "mm" will always return 2 characters.
    *
-   * @param array getdate format.
-   * @param string a pattern.
+   * @param array   $date     getdate format.
+   * @param string  $pattern  a pattern.
    * @return string minutes.
    */
   protected function getMinutes($date, $pattern = 'm')
@@ -649,8 +652,8 @@ class sfDateFormat
    * Gets the seconds.
    * "s" for non-padding, "ss" will always return 2 characters.
    *
-   * @param array getdate format.
-   * @param string a pattern.
+   * @param array   $date     getdate format.
+   * @param string  $pattern  a pattern.
    * @return string seconds
    */
   protected function getSeconds($date, $pattern = 's')
@@ -672,8 +675,8 @@ class sfDateFormat
    * Gets the timezone from the server machine.
    *
    * @todo How to get the timezone for a different region?
-   * @param array getdate format.
-   * @param string a pattern.
+   * @param array   $date     getdate format.
+   * @param string  $pattern  a pattern.
    * @return string time zone 
    */
   protected function getTimeZone($date, $pattern = 'z')
@@ -689,8 +692,8 @@ class sfDateFormat
   /**
    * Gets the day in the year, e.g. [1-366]
    *
-   * @param array getdate format.
-   * @param string a pattern.
+   * @param array   $date     getdate format.
+   * @param string  $pattern  a pattern.
    * @return int hours in AM/PM format.
    */
   protected function getYday($date, $pattern = 'D')
@@ -706,8 +709,8 @@ class sfDateFormat
   /**
    * Gets day in the month.
    *
-   * @param array getdate format.
-   * @param string a pattern.
+   * @param array   $date     getdate format.
+   * @param string  $pattern  a pattern.
    * @return int day in month
    */
   protected function getDayInMonth($date, $pattern = 'FF')
@@ -728,8 +731,8 @@ class sfDateFormat
   /**
    * Gets the week in the year.
    *
-   * @param array getdate format.
-   * @param string a pattern.
+   * @param array   $date     getdate format.
+   * @param string  $pattern  a pattern.
    * @return int week in year
    */
   protected function getWeekInYear($date, $pattern = 'w')
@@ -745,7 +748,8 @@ class sfDateFormat
   /**
    * Gets week in the month.
    *
-   * @param array getdate format.
+   * @param array   $date     getdate format.
+   * @param string  $pattern  a pattern
    * @return int week in month
    */
   protected function getWeekInMonth($date, $pattern = 'W')
@@ -761,8 +765,8 @@ class sfDateFormat
   /**
    * Gets the hours [1-24].
    *
-   * @param array getdate format.
-   * @param string a pattern.
+   * @param array   $date     getdate format.
+   * @param string  $pattern  a pattern.
    * @return int hours [1-24]
    */
   protected function getHourInDay($date, $pattern = 'k')
@@ -778,8 +782,8 @@ class sfDateFormat
   /**
    * Gets the hours in AM/PM format, e.g [1-12]
    *
-   * @param array getdate format.
-   * @param string a pattern.
+   * @param array   $date     getdate format.
+   * @param string  $pattern  a pattern.
    * @return int hours in AM/PM format.
    */
   protected function getHourInAMPM($date, $pattern = 'K')

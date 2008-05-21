@@ -54,8 +54,6 @@ class sfI18nApplicationExtract extends sfI18nExtract
 
   /**
    * Gets the current i18n strings.
-   *
-   * @param array An array of i18n strings
    */
   public function getCurrentMessages()
   {
@@ -64,8 +62,6 @@ class sfI18nApplicationExtract extends sfI18nExtract
 
   /**
    * Gets all i18n strings seen during the extraction process.
-   *
-   * @param array An array of i18n strings
    */
   public function getAllSeenMessages()
   {

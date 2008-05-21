@@ -44,7 +44,7 @@ interface sfIMessageSource
    *  # [6] store the messages to cache.
    *  # [7] continue with the foreach loop, e.g. goto [2].
    *
-   * @param string a catalogue to load
+   * @param string $catalogue a catalogue to load
    * @return boolean true if loaded, false otherwise.
    */
   function load($catalogue = 'messages');
@@ -70,7 +70,7 @@ interface sfIMessageSource
    * If the translation was not found, you should add those
    * strings to the translation source via the <b>append()</b> method.
    *
-   * @param string the catalogue to add to
+   * @param string $catalogue the catalogue to add to
    * @return boolean true if saved successfuly, false otherwise.
    */
   function save($catalogue = 'messages');
@@ -79,7 +79,7 @@ interface sfIMessageSource
    * Adds a untranslated message to the source. Need to call save()
    * to save the messages to source.
    *
-   * @param string message to add
+   * @param string $message message to add
    * @return void
    */
   function append($message);
@@ -87,8 +87,8 @@ interface sfIMessageSource
   /**
    * Deletes a particular message from the specified catalogue.
    *
-   * @param string the source message to delete.
-   * @param string the catalogue to delete from.
+   * @param string $message   the source message to delete.
+   * @param string $catalogue the catalogue to delete from.
    * @return boolean true if deleted, false otherwise. 
    */
   function delete($message, $catalogue = 'messages');
@@ -96,10 +96,10 @@ interface sfIMessageSource
   /**
    * Updates the translation.
    *
-   * @param string the source string.
-   * @param string the new translation string.
-   * @param string comments
-   * @param string the catalogue of the translation.
+   * @param string $text      the source string.
+   * @param string $target    the new translation string.
+   * @param string $comments  comments
+   * @param string $catalogue the catalogue of the translation.
    * @return boolean true if translation was updated, false otherwise. 
    */
   function update($text, $target, $comments, $catalogue = 'messages');
@@ -114,7 +114,7 @@ interface sfIMessageSource
   /**
    * Set the culture for this particular message source.
    *
-   * @param string the Culture name.
+   * @param string $culture the Culture name.
    */
   function setCulture($culture);
 

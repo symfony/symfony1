@@ -21,7 +21,7 @@ class sfI18nYamlGeneratorExtractor extends sfI18nYamlExtractor
   /**
    * Extract i18n strings for the given content.
    *
-   * @param  string The content
+   * @param  string $content The content
    *
    * @return array An array of i18n strings
    */

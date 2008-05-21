@@ -45,7 +45,7 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
   /**
    * Loads the messages from a XLIFF file.
    *
-   * @param string XLIFF file.
+   * @param string $filename  XLIFF file.
    * @return array of messages.
    */
   public function &loadData($filename)
@@ -75,7 +75,7 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
   /**
    * Creates and returns a new DOMDocument instance
    *
-   * @param  string  $xml_source  XML string
+   * @param  string  $xml  XML string
    *
    * @return DOMDocument
    */
@@ -96,7 +96,7 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
   /**
    * Gets the variant for a catalogue depending on the current culture.
    *
-   * @param string catalogue
+   * @param string $catalogue catalogue
    * @return string the variant.
    * @see save()
    * @see update()
@@ -126,7 +126,7 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
    * If the translation was not found, you should add those
    * strings to the translation source via the <b>append()</b> method.
    *
-   * @param string the catalogue to add to
+   * @param string $catalogue the catalogue to add to
    * @return boolean true if saved successfuly, false otherwise.
    */
   public function save($catalogue = 'messages')
@@ -209,10 +209,10 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
   /**
    * Updates the translation.
    *
-   * @param string the source string.
-   * @param string the new translation string.
-   * @param string comments
-   * @param string the catalogue to save to.
+   * @param string $text      the source string.
+   * @param string $target    the new translation string.
+   * @param string $comments  comments
+   * @param string $catalogue the catalogue to save to.
    * @return boolean true if translation was updated, false otherwise.
    */
   public function update($text, $target, $comments, $catalogue = 'messages')
@@ -314,8 +314,8 @@ class sfMessageSource_XLIFF extends sfMessageSource_File
   /**
    * Deletes a particular message from the specified catalogue.
    *
-   * @param string the source message to delete.
-   * @param string the catalogue to delete from.
+   * @param string $message   the source message to delete.
+   * @param string $catalogue the catalogue to delete from.
    * @return boolean true if deleted, false otherwise.
    */
   public function delete($message, $catalogue='messages')

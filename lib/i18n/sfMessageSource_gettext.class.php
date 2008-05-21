@@ -48,7 +48,7 @@ class sfMessageSource_gettext extends sfMessageSource_File
   /**
    * Loads the messages from a MO file.
    *
-   * @param string MO file.
+   * @param string $filename MO file.
    * @return array of messages.
    */
   public function &loadData($filename)
@@ -72,7 +72,7 @@ class sfMessageSource_gettext extends sfMessageSource_File
   /**
    * Gets the variant for a catalogue depending on the current culture.
    *
-   * @param string catalogue
+   * @param string $catalogue catalogue
    * @return string the variant. 
    * @see save()
    * @see update()
@@ -108,7 +108,7 @@ class sfMessageSource_gettext extends sfMessageSource_File
    * If the translation was not found, you should add those
    * strings to the translation source via the <b>append()</b> method.
    *
-   * @param string the catalogue to add to
+   * @param string $catalogue the catalogue to add to
    * @return boolean true if saved successfuly, false otherwise.   
    */
   function save($catalogue = 'messages')
@@ -187,8 +187,8 @@ class sfMessageSource_gettext extends sfMessageSource_File
   /**
    * Deletes a particular message from the specified catalogue.
    *
-   * @param string the source message to delete.
-   * @param string the catalogue to delete from.
+   * @param string $message   the source message to delete.
+   * @param string $catalogue the catalogue to delete from.
    * @return boolean true if deleted, false otherwise. 
    */
   function delete($message, $catalogue = 'messages')
@@ -248,10 +248,10 @@ class sfMessageSource_gettext extends sfMessageSource_File
   /**
    * Updates the translation.
    *
-   * @param string the source string.
-   * @param string the new translation string.
-   * @param string comments
-   * @param string the catalogue of the translation.
+   * @param string $text      the source string.
+   * @param string $target    the new translation string.
+   * @param string $comments  comments
+   * @param string $catalogue the catalogue of the translation.
    * @return boolean true if translation was updated, false otherwise.
    */
   function update($text, $target, $comments, $catalogue = 'messages')

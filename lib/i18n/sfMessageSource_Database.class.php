@@ -35,7 +35,7 @@ abstract class sfMessageSource_Database extends sfMessageSource
    *
    * This function comes from PEAR's DB package.
    *
-   * @param string DSN format, similar to PEAR's DB
+   * @param string $dns DSN format, similar to PEAR's DB
    * @return array DSN information. 
    */
   protected function parseDSN($dsn)
@@ -189,7 +189,7 @@ abstract class sfMessageSource_Database extends sfMessageSource
   /**
    * Gets all the variants of a particular catalogue.
    *
-   * @param string catalogue name
+   * @param string $catalogue catalogue name
    * @return array list of all variants for this catalogue.
    */
   public function getCatalogueList($catalogue)

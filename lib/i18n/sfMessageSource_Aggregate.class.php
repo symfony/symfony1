@@ -27,7 +27,7 @@ class sfMessageSource_Aggregate extends sfMessageSource
    * The order of the messages sources in the array is important.
    * This class will take the first translation found in the message sources.
    *
-   * @param array An array of message sources.
+   * @param array $messageSources An array of message sources.
    *
    * @see   MessageSource::factory();
    */

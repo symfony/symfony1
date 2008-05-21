@@ -37,9 +37,9 @@ abstract class sfI18nExtract
   /**
    * Initializes the current extract object.
    *
-   * @param sfI18N A sfI18N instance
-   * @param string The culture
-   * @param array  An array of parameters
+   * @param sfI18N $i18n        A sfI18N instance
+   * @param string $culture     The culture
+   * @param array  $parameters  An array of parameters
    */
   function initialize(sfI18N $i18n, $culture, $parameters = array())
   {
@@ -107,7 +107,7 @@ abstract class sfI18nExtract
   /**
    * Gets the new i18n strings.
    *
-   * @param array An array of i18n strings
+   * @return array An array of i18n strings
    */
   final public function getNewMessages()
   {
@@ -117,7 +117,7 @@ abstract class sfI18nExtract
   /**
    * Gets the current i18n strings.
    *
-   * @param array An array of i18n strings
+   * @return array An array of i18n strings
    */
   public function getCurrentMessages()
   {
@@ -127,7 +127,7 @@ abstract class sfI18nExtract
   /**
    * Gets all i18n strings seen during the extraction process.
    *
-   * @param array An array of i18n strings
+   * @return array An array of i18n strings
    */
   public function getAllSeenMessages()
   {
@@ -140,7 +140,7 @@ abstract class sfI18nExtract
    * This returns all strings that weren't seen during the extraction process
    * and are in the current messages.
    *
-   * @param array An array of i18n strings
+   * @return array An array of i18n strings
    */
   final public function getOldMessages()
   {
@@ -174,7 +174,7 @@ abstract class sfI18nExtract
   /**
    * Extracts i18n strings from PHP files.
    *
-   * @param string The PHP full path name
+   * @param string $dir The PHP full path name
    */
   protected function extractFromPhpFiles($dir)
   {
@@ -193,7 +193,7 @@ abstract class sfI18nExtract
   /**
    * Updates the internal arrays with new messages.
    *
-   * @param array An array of new i18n strings
+   * @param array $messages An array of new i18n strings
    */
   protected function updateMessages($messages)
   {
