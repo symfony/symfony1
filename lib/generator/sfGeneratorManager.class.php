@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -70,14 +70,14 @@ class sfGeneratorManager
   /**
    * Generates classes and templates for a given generator class.
    *
-   * @param string $generator_class   The generator class name
+   * @param string $generatorClass    The generator class name
    * @param array  $param             An array of parameters
    *
    * @return string The cache for the configuration file
    */
-  public function generate($generator_class, $param)
+  public function generate($generatorClass, $param)
   {
-    $generator = new $generator_class($this);
+    $generator = new $generatorClass($this);
 
     return $generator->generate($param);
   }
