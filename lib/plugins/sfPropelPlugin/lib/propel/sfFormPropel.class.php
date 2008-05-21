@@ -33,9 +33,9 @@ abstract class sfFormPropel extends sfForm
   /**
    * Constructor.
    *
-   * @param BaseObject A Propel object used to initialize default values
-   * @param array      An array of options
-   * @param string     A CSRF secret (false to disable CSRF protection, null to use the global CSRF secret)
+   * @param BaseObject $object      A Propel object used to initialize default values
+   * @param array      $options     An array of options
+   * @param string     $CSRFSecret  A CSRF secret (false to disable CSRF protection, null to use the global CSRF secret)
    *
    * @see sfForm
    */
@@ -90,9 +90,9 @@ abstract class sfFormPropel extends sfForm
   /**
    * Embeds i18n objects into the current form.
    *
-   * @param array An array of cultures
-   * @param string The format to use for widget name
-   * @param string A HTML decorator for the embedded form
+   * @param array   $cultures   An array of cultures
+   * @param string  $nameFormat The format to use for widget name
+   * @param string  $decorator  A HTML decorator for the embedded form
    */
   public function embedI18n($cultures, $nameFormat = null, $decorator = null)
   {
@@ -124,8 +124,8 @@ abstract class sfFormPropel extends sfForm
   /**
    * Binds the current form and save the to the database in one step.
    *
-   * @param  array      An array of tainted values to use to bind the form
-   * @param  Connection An optional Propel Connection object
+   * @param  array      $taintedValues    An array of tainted values to use to bind the form
+   * @param  Connection $con              An optional Propel Connection object
    *
    * @return Boolean    true if the form is valid, false otherwise
    */
@@ -149,7 +149,7 @@ abstract class sfFormPropel extends sfForm
    *
    * If the form is not valid, it throws an sfValidatorError.
    *
-   * @param Connection An optional Connection object
+   * @param Connection $con An optional Connection object
    *
    * @return BaseObject The current saved object
    *
@@ -210,7 +210,7 @@ abstract class sfFormPropel extends sfForm
   /**
    * Saves the associated i18n objects.
    *
-   * @param Connection An optional Connection object
+   * @param Connection $con An optional Connection object
    */
   public function saveI18n($con = null)
   {
@@ -277,7 +277,7 @@ abstract class sfFormPropel extends sfForm
    * If you want to add some logic before saving or save other associated objects,
    * this is the method to override.
    *
-   * @param Connection An optional Connection object
+   * @param Connection $con An optional Connection object
    */
   protected function doSave($con = null)
   {

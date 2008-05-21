@@ -79,9 +79,9 @@ class sfPropelManyToMany
   /**
    * Gets objects related by a many-to-many relationship, with a middle table.
    *
-   * @param  $object        The object to get related objects for.
-   * @param  $middleClass   The middle class used for the many-to-many relationship.
-   * @param  $criteria      Criteria to apply to the selection.
+   * @param  BaseObject     $object        The object to get related objects for.
+   * @param  string         $middleClass   The middle class used for the many-to-many relationship.
+   * @param  Criteria       $criteria      Criteria to apply to the selection.
    */
   public static function getRelatedObjects($object, $middleClass, $criteria = null)
   {

@@ -71,8 +71,8 @@ class sfPropelUniqueValidator extends sfValidator
   /**
    * Initialize this validator.
    *
-   * @param sfContext The current application context.
-   * @param array   An associative array of initialization parameters.
+   * @param sfContext $context    The current application context.
+   * @param array     $parameters An associative array of initialization parameters.
    *
    * @return bool true, if initialization completes successfully, otherwise false.
    */

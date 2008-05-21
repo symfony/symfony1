@@ -25,8 +25,8 @@ class sfValidatorPropelUnique extends sfValidatorSchema
   /**
    * Constructor.
    *
-   * @param array  An array of options
-   * @param array  An array of error messages
+   * @param array  $options   An array of options
+   * @param array  $messages  An array of error messages
    *
    * @see sfValidatorSchema
    */
@@ -91,10 +91,10 @@ class sfValidatorPropelUnique extends sfValidatorSchema
   /**
    * Returns whether the object is being updated.
    *
-   * @param BaseObject  A Propel object
-   * @param array       An array of values
+   * @param BaseObject  $object   A Propel object
+   * @param array       $values   An array of values
    *
-   * @param Boolean     true if the object is being updated, false otherwise
+   * @return Boolean     true if the object is being updated, false otherwise
    */
   protected function isUpdate(BaseObject $object, $values)
   {

@@ -26,7 +26,7 @@ class sfPropelFormGenerator extends sfGenerator
   /**
    * Initializes the current sfGenerator instance.
    *
-   * @param sfGeneratorManager A sfGeneratorManager instance
+   * @param sfGeneratorManager $generatorManager A sfGeneratorManager instance
    */
   public function initialize(sfGeneratorManager $generatorManager)
   {
@@ -38,7 +38,7 @@ class sfPropelFormGenerator extends sfGenerator
   /**
    * Generates classes and templates in cache.
    *
-   * @param array The parameters
+   * @param array $params The parameters
    *
    * @return string The data to put in configuration cache
    */
@@ -191,7 +191,7 @@ class sfPropelFormGenerator extends sfGenerator
   /**
    * Returns the first primary key column of the current table.
    *
-   * @param ColumnMap A ColumnMap object
+   * @return ColumnMap A ColumnMap object
    */
   public function getPrimaryKey()
   {
@@ -207,7 +207,7 @@ class sfPropelFormGenerator extends sfGenerator
   /**
    * Returns the foreign table associated with a column.
    *
-   * @param  ColumnMap A ColumnMap object
+   * @param  ColumnMap $column A ColumnMap object
    *
    * @return TableMap  A TableMap object
    */
@@ -219,7 +219,7 @@ class sfPropelFormGenerator extends sfGenerator
   /**
    * Returns a sfWidgetForm class name for a given column.
    *
-   * @param  ColumnMap A ColumnMap object
+   * @param  ColumnMap  $column A ColumnMap object
    *
    * @return string    The name of a subclass of sfWidgetForm
    */
@@ -261,7 +261,7 @@ class sfPropelFormGenerator extends sfGenerator
   /**
    * Returns a PHP string representing options to pass to a widget for a given column.
    *
-   * @param  ColumnMap A ColumnMap object
+   * @param  ColumnMap $column  A ColumnMap object
    *
    * @return string    The options to pass to the widget as a PHP string
    */
@@ -280,7 +280,7 @@ class sfPropelFormGenerator extends sfGenerator
   /**
    * Returns a sfValidator class name for a given column.
    *
-   * @param  ColumnMap A ColumnMap object
+   * @param  ColumnMap $column  A ColumnMap object
    *
    * @return string    The name of a subclass of sfValidator
    */
@@ -334,7 +334,7 @@ class sfPropelFormGenerator extends sfGenerator
   /**
    * Returns a PHP string representing options to pass to a validator for a given column.
    *
-   * @param  ColumnMap A ColumnMap object
+   * @param  ColumnMap $column  A ColumnMap object
    *
    * @return string    The options to pass to the validator as a PHP string
    */

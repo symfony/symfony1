@@ -65,7 +65,7 @@ class sfMessageSource_Creole extends sfMessageSource_Database
   /**
    * Constructor.
    * Create a new message source using Creole.
-   * @param string Creole datasource.
+   * @param string $source Creole datasource.
    * @see MessageSource::factory();
    */
   public function __construct($source)
@@ -96,7 +96,7 @@ class sfMessageSource_Creole extends sfMessageSource_Database
   /**
    * Get an array of messages for a particular catalogue and cultural
    * variant.
-   * @param string the catalogue name + variant
+   * @param string $variant the catalogue name + variant
    * @return array translation messages.
    */
   public function &loadData($variant)
@@ -128,7 +128,7 @@ class sfMessageSource_Creole extends sfMessageSource_Database
    * Get the last modified unix-time for this particular catalogue+variant.
    * We need to query the database to get the date_modified.
    *
-   * @param string catalogue+variant
+   * @param string $source catalogue+variant
    * @return int last modified in unix-time format.
    */
   protected function getLastModified($source)
@@ -147,7 +147,7 @@ class sfMessageSource_Creole extends sfMessageSource_Database
   /**
    * Check if a particular catalogue+variant exists in the database.
    *
-   * @param string catalogue+variant
+   * @param string $variant catalogue+variant
    * @return boolean true if the catalogue+variant is in the database, false otherwise.
    */
   public function isValidSource($variant)
@@ -166,7 +166,7 @@ class sfMessageSource_Creole extends sfMessageSource_Database
   /**
    * Retrieve catalogue details, array($catId, $variant, $count).
    *
-   * @param string catalogue
+   * @param string $catalogue catalogue
    * @return array catalogue details, array($catId, $variant, $count).
    */
   protected function getCatalogueDetails($catalogue = 'messages')
@@ -236,7 +236,7 @@ class sfMessageSource_Creole extends sfMessageSource_Database
    * If the translation was not found, you should add those
    * strings to the translation source via the <b>append()</b> method.
    *
-   * @param string the catalogue to add to
+   * @param string $catalogue the catalogue to add to
    * @return boolean true if saved successfuly, false otherwise.
    */
   function save($catalogue='messages')
@@ -318,8 +318,8 @@ class sfMessageSource_Creole extends sfMessageSource_Database
   /**
    * Delete a particular message from the specified catalogue.
    *
-   * @param string the source message to delete.
-   * @param string the catalogue to delete from.
+   * @param string $message   the source message to delete.
+   * @param string $catalogue the catalogue to delete from.
    * @return boolean true if deleted, false otherwise.
    */
   function delete($message, $catalogue='messages')
@@ -354,10 +354,10 @@ class sfMessageSource_Creole extends sfMessageSource_Database
   /**
    * Update the translation.
    *
-   * @param string the source string.
-   * @param string the new translation string.
-   * @param string comments
-   * @param string the catalogue of the translation.
+   * @param string $text      the source string.
+   * @param string $target    the new translation string.
+   * @param string $comments  comments
+   * @param string $catalogue the catalogue of the translation.
    * @return boolean true if translation was updated, false otherwise.
    */
   function update($text, $target, $comments, $catalogue = 'messages')

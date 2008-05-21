@@ -29,7 +29,7 @@ class sfCreoleSessionStorage extends sfDatabaseSessionStorage
   /**
    * Destroy a session.
    *
-   * @param string A session ID.
+   * @param string $id A session ID.
    *
    * @return bool true, if the session was destroyed, otherwise an exception is thrown.
    *
@@ -61,7 +61,7 @@ class sfCreoleSessionStorage extends sfDatabaseSessionStorage
   /**
    * Cleanup old sessions.
    *
-   * @param int The lifetime of a session.
+   * @param int $lifetime The lifetime of a session.
    *
    * @return bool true, if old sessions have been cleaned, otherwise an exception is thrown.
    *
@@ -91,7 +91,7 @@ class sfCreoleSessionStorage extends sfDatabaseSessionStorage
   /**
    * Read a session.
    *
-   * @param string A session ID.
+   * @param string $id A session ID.
    *
    * @return bool true, if the session was read, otherwise an exception is thrown.
    *
@@ -143,8 +143,8 @@ class sfCreoleSessionStorage extends sfDatabaseSessionStorage
   /**
    * Write session data.
    *
-   * @param string A session ID.
-   * @param string A serialized chunk of session data.
+   * @param string $id A session ID.
+   * @param string $data A serialized chunk of session data.
    *
    * @return bool true, if the session was written, otherwise an exception is
    *              thrown.

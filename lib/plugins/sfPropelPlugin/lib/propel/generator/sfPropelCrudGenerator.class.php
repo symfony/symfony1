@@ -24,7 +24,7 @@ class sfPropelCrudGenerator extends sfAdminGenerator
   /**
    * Initializes the current sfGenerator instance.
    *
-   * @param sfGeneratorManager A sfGeneratorManager instance
+   * @param sfGeneratorManager $generatorManager A sfGeneratorManager instance
    */
   public function initialize(sfGeneratorManager $generatorManager)
   {
@@ -92,10 +92,10 @@ class sfPropelCrudGenerator extends sfAdminGenerator
   /**
    * Generates a PHP call to an object helper.
    *
-   * @param string The helper name
-   * @param string The column name
-   * @param array  An array of parameters
-   * @param array  An array of local parameters
+   * @param string $helperName  The helper name
+   * @param string $column      The column name
+   * @param array  $params      An array of parameters
+   * @param array  $localParams An array of local parameters
    *
    * @return string PHP code
    */
@@ -109,9 +109,9 @@ class sfPropelCrudGenerator extends sfAdminGenerator
   /**
    * Returns the getter either non-developped: 'getFoo' or developped: '$class->getFoo()'.
    *
-   * @param string  The column name
-   * @param boolean true if you want developped method names, false otherwise
-   * @param string The prefix value
+   * @param string  $column     The column name
+   * @param boolean $developed  true if you want developped method names, false otherwise
+   * @param string  $prefix     The prefix value
    *
    * @return string PHP code
    */
@@ -131,7 +131,7 @@ class sfPropelCrudGenerator extends sfAdminGenerator
    *
    * Used for foreign keys only; this method should be removed when we use sfAdminColumn instead.
    *
-   * @param string The column name
+   * @param string $column  The column name
    *
    * @return string The PHP name of the related class name
    */
