@@ -46,7 +46,7 @@ class sfFillInForm
 
     $noHead = strpos($html,'<head>') === false;
     if ($noHead){
-      //loadHTML needs the conent-type meta for the charset
+      // loadHTML needs the conent-type meta for the charset
       $html = '<meta http-equiv="Content-Type" content="text/html; charset='.sfConfig::get('sf_charset').'"/>'.$html;
     }
 
@@ -54,7 +54,7 @@ class sfFillInForm
     $dom = $this->fillInDom($dom, $formName, $formId, $values);
 
     if($noHead){
-      //remove the head element that was created by adding the meta tag.
+      // remove the head element that was created by adding the meta tag.
       $headElement = $dom->getElementsByTagName('head')->item(0);
       if ($headElement)
       {
@@ -172,7 +172,7 @@ class sfFillInForm
       }
       else if ($element->nodeName == 'select')
       {
-        //if the name contains [] it is part of an array that needs to be shifted
+        // if the name contains [] it is part of an array that needs to be shifted
         $value    = $this->getValue($values, $name, strpos($name,'[]') !== false);
         $multiple = $element->hasAttribute('multiple');
         foreach ($xpath->query('descendant::'.$ns.'option', $element) as $option)
@@ -206,7 +206,7 @@ class sfFillInForm
     return null !== sfToolkit::getArrayValueForPath($values, $name);
   }
 
-  //use reference to values so that arrays can be shifted.
+  // use reference to values so that arrays can be shifted.
   protected function getValue(&$values, $name, $shiftArray = false)
   {
     if (array_key_exists($name, $values))
@@ -214,7 +214,7 @@ class sfFillInForm
       $return = $values[$name];
       if ($shiftArray && is_array($return))
       {
-        //we need to remove the first element from the array. Therefore we need a reference
+        // we need to remove the first element from the array. Therefore we need a reference
         $arrayRef = &$values[$name];
         $return = array_shift($arrayRef);
       }

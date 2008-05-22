@@ -705,9 +705,9 @@ class sfToolkit
     $from = strtoupper($from);
     if ($from != 'UTF-8')
     {
-      $s = iconv($from,'UTF-8',$string); //to UTF-8
+      $s = iconv($from,'UTF-8',$string);  // to UTF-8
 
-      return $s !== false ? $s : $string; //it could return false
+      return $s !== false ? $s : $string; // it could return false
     }
 
     return $string;

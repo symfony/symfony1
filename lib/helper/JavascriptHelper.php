@@ -866,7 +866,7 @@
       $javascript .= "'$field_id', ";
       $javascript .= _array_or_string_for_javascript(url_for($url));
 
-      //translate symfony option names to InPlaceEditor options
+      // translate symfony option names to InPlaceEditor options
       if (isset($options['cancel_text']))
       {
         $options['cancelText'] = _array_or_string_for_javascript($options['cancel_text']);
