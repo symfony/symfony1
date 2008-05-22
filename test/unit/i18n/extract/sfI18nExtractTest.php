@@ -44,7 +44,7 @@ class sfI18nExtractTest extends sfI18nExtract
 // ->initialize()
 $t->diag('->initialize()');
 $extract = new sfI18nExtractTest($i18n, 'fr');
-$t->is(count($extract->getCurrentMessages()), 3, '->initialize() initializes the current i18n messages');
+$t->is(count($extract->getCurrentMessages()), 4, '->initialize() initializes the current i18n messages');
 $extract->extract();
 
 // ->getOldMessages()
