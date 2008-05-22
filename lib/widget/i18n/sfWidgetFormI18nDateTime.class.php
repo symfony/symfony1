@@ -45,16 +45,16 @@ class sfWidgetFormI18nDateTime extends sfWidgetFormDateTime
   /**
    * @see sfWidgetFormDateTime
    */
-  protected function getDateWidget()
+  protected function getDateWidget($attributes = array())
   {
-    return new sfWidgetFormI18nDate(array_merge(array('culture' => $this->getOption('culture')), $this->getOptionsFor('date')), $this->getAttributesFor('date'));
+    return new sfWidgetFormI18nDate(array_merge(array('culture' => $this->getOption('culture')), $this->getOptionsFor('date')), $this->getAttributesFor('date', $attributes));
   }
 
   /**
    * @see sfWidgetFormDateTime
    */
-  protected function getTimeWidget()
+  protected function getTimeWidget($attributes = array())
   {
-    return new sfWidgetFormI18nTime(array_merge(array('culture' => $this->getOption('culture')), $this->getOptionsFor('time')), $this->getAttributesFor('time'));
+    return new sfWidgetFormI18nTime(array_merge(array('culture' => $this->getOption('culture')), $this->getOptionsFor('time')), $this->getAttributesFor('time', $attributes));
   }
 }

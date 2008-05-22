@@ -79,7 +79,7 @@ class sfWidgetFormDateTime extends sfWidgetForm
    *
    * @return sfWidgetForm A Widget representing the date
    */
-  protected function getDateWidget($attributes)
+  protected function getDateWidget($attributes = array())
   {
     return new sfWidgetFormDate($this->getOptionsFor('date'), $this->getAttributesFor('date', $attributes));
   }
@@ -91,7 +91,7 @@ class sfWidgetFormDateTime extends sfWidgetForm
    *
    * @return sfWidgetForm A Widget representing the time
    */
-  protected function getTimeWidget($attributes)
+  protected function getTimeWidget($attributes = array())
   {
     return new sfWidgetFormTime($this->getOptionsFor('time'), $this->getAttributesFor('time', $attributes));
   }
