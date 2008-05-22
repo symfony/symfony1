@@ -107,3 +107,8 @@ $b->getContext()->getConfiguration()->setRootDir($rootDir);
 $b->getContext()->getEventDispatcher()->connect('my_event', 'a_fake_callable');
 $b->get('/browser');
 $b->test()->ok($b->getContext()->getEventDispatcher()->hasListeners('my_event'), 'event listeners persist across multiple requests');
+
+// check consistency of number of listeners
+$nb = count($b->getContext()->getEventDispatcher()->getListeners('application.throw_exception'));
+$b->get('/browser');
+$b->test()->is(count($b->getContext()->getEventDispatcher()->getListeners('application.throw_exception')), $nb, 'event listeners are not duplicated');
