@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(19, new lime_output_color());
+$t = new lime_test(22, new lime_output_color());
 
 class ProjectConfiguration extends sfProjectConfiguration
 {
@@ -49,6 +49,11 @@ $t->is($i18n->__('an english sentence'), 'une phrase en français', '->__() tran
 $args = array('%timestamp%' => $timestamp = time());
 $t->is($i18n->__('Current timestamp is %timestamp%', $args), strtr('Le timestamp courant est %timestamp%', $args), '->__() takes an array of arguments as its second argument');
 $t->is($i18n->__('an english sentence', array(), 'messages_bis'), 'une phrase en français (bis)', '->__() takes a catalogue as its third argument');
+
+// test for #2161
+$t->is($i18n->__('1 minute'), '1 menit', '->__() "1 minute" translated as "1 menit"');
+$t->is($i18n->__('1'), '1', '->__() "1" translated as "1"');
+$t->is($i18n->__(1), '1', '->__() number 1 translated as "1"');
 
 $i18n->setCulture('fr_BE');
 $t->is($i18n->__('an english sentence'), 'une phrase en belge', '->__() translates a string');
