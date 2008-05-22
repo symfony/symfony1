@@ -81,7 +81,7 @@ class sfConfigUpgrade extends sfUpgrade
       $debug = $matches[1];
 
       // for 0.6.3 compatibility (or manual "fixing" the missing) remove closing at tag end of file
-      $content = preg_replace('/\?>$/','',$content);
+      $content = preg_replace('/\?>\s*$/', '', $content);
 
       $originalContent = <<<EOF
 <?php
