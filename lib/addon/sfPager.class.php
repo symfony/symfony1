@@ -240,10 +240,10 @@ abstract class sfPager
   public function setPage($page)
   {
     $this->page = intval($page);
-    if (is_null($page) || $this->page < 0)
+    if ($this->page <= 0)
     {
       //set first page, which depends on a maximum set
-      $this->page = getMaxPerPage() ? 1 : 0;
+      $this->page = $this->getMaxPerPage() ? 1 : 0;
     }
   }
 
