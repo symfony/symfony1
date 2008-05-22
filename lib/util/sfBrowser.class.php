@@ -404,27 +404,17 @@ class sfBrowser
       if (!is_null($this->context))
       {
         $currentConfiguration = $this->context->getConfiguration();
-        $configuration = ProjectConfiguration::getApplicationConfiguration($currentConfiguration->getApplication(), $currentConfiguration->getEnvironment(), $currentConfiguration->isDebug(), $currentConfiguration->getRootDir());
+        $configuration = ProjectConfiguration::getApplicationConfiguration($currentConfiguration->getApplication(), $currentConfiguration->getEnvironment(), $currentConfiguration->isDebug());
         $this->context = sfContext::createInstance($configuration);
-        
-        // copy in any missing listeners
-        $dispatcher = $configuration->getEventDispatcher();
-        foreach ($currentConfiguration->getEventDispatcher()->getListenerStack() as $name => $listeners)
-        {
-          foreach (array_diff($listeners, $dispatcher->getListeners($name)) as $listener)
-          {
-            $dispatcher->connect($name, $listener);
-          }
-        }
+        unset($currentConfiguration);
       }
       else
       {
         $this->context = sfContext::getInstance();
         $this->context->initialize($this->context->getConfiguration());
-        $this->context->getEventDispatcher()->connect('application.throw_exception', array($this, 'ListenToException'));
       }
 
-      unset($currentConfiguration);
+      $this->context->getEventDispatcher()->connect('application.throw_exception', array($this, 'ListenToException'));
     }
 
     return $this->context;

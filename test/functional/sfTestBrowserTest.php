@@ -88,27 +88,3 @@ $b->
   isResponseHeader('foo', 'bar')->
   isResponseHeader('foo', 'foobar')
 ;
-
-// check persistence of root directory
-$rootDir = $b->getContext()->getConfiguration()->getRootDir();
-$b->getContext()->getConfiguration()->setRootDir('/');
-try
-{
-  $b->get('/browser');
-  $b->test()->fail('root directory persists across multiple calls');
-}
-catch (Exception $e)
-{
-  $b->test()->pass('root directory persists across multiple calls');
-}
-$b->getContext()->getConfiguration()->setRootDir($rootDir);
-
-// check persistence of event listeners
-$b->getContext()->getEventDispatcher()->connect('my_event', 'a_fake_callable');
-$b->get('/browser');
-$b->test()->ok($b->getContext()->getEventDispatcher()->hasListeners('my_event'), 'event listeners persist across multiple requests');
-
-// check consistency of number of listeners
-$nb = count($b->getContext()->getEventDispatcher()->getListeners('application.throw_exception'));
-$b->get('/browser');
-$b->test()->is(count($b->getContext()->getEventDispatcher()->getListeners('application.throw_exception')), $nb, 'event listeners are not duplicated');
