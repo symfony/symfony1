@@ -255,7 +255,7 @@ class sfYamlInline
           $isQuoted = in_array($sequence[$i], array('"', "'"));
           $value = self::parseScalar($sequence, array(',', ']'), array('"', "'"), $i);
 
-          if (!$isQuoted && false !== strpos($value, ':'))
+          if (!$isQuoted && false !== strpos($value, ': '))
           {
             // embedded mapping?
             try
