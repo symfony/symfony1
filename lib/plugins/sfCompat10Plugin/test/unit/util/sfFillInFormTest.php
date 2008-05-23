@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../../../../../test/bootstrap/unit.php');
 require_once(dirname(__FILE__).'/../../../lib/util/sfFillInForm.class.php');
 
-$t = new lime_test(61, new lime_output_color());
+$t = new lime_test(64, new lime_output_color());
 
 $html = <<<EOF
 <html>
@@ -263,6 +263,12 @@ $xml = <<<EOF
 EOF;
 $xml = $f->fillInXml($xml, 'form', null, array('foo' => 'bar'));
 $t->like($xml, '#<input type="text" name="foo" value="bar"\s*/>#', '->fillInXml() outputs valid XML');
+$t->like($xml, '#<\?xml version="1.0"\?>#',  '->fillInXml() outputs XML prolog');
+
+// ->fillInXhtml()
+$xml = $f->fillInXhtml($xml, 'form', null, array('foo' => 'bar'));
+$t->like($xml, '#<input type="text" name="foo" value="bar"\s*/>#', '->fillInXml() outputs valid XML');
+$t->unlike($xml, '#<\?xml version="1.0"\?>#',  '->fillInXhtml() does not output XML prolog');
 
 // ->fillInHtml()
 $t->diag('->fillInHtml()');
