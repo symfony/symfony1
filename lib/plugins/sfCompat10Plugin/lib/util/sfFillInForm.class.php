@@ -49,7 +49,7 @@ class sfFillInForm
   {
     $dom = new DomDocument('1.0', sfConfig::get('sf_charset', 'UTF-8'));
 
-    $noHead = strpos($html,'<head>') === false;
+    $noHead = strpos($html,'<head') === false;
     if ($noHead){
       // loadHTML needs the conent-type meta for the charset
       $html = '<meta http-equiv="Content-Type" content="text/html; charset='.sfConfig::get('sf_charset').'"/>'.$html;
