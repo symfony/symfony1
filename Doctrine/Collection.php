@@ -205,7 +205,7 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
      */
     public function getKeyColumn()
     {
-        return $this->column;
+        return $this->keyColumn;
     }
 
     /**
