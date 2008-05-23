@@ -188,6 +188,11 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
         // Create table
         $this->_table = new Doctrine_Table($this->_options['className'], $conn);
 
+        // If custom table name set then lets use it
+        if (isset($this->_options['tableName']) && $this->_options['tableName']) {
+            $this->_table->setTableName($this->_options['tableName']);
+        }
+
         // Maintain some options from the parent table
         $options = $this->_options['table']->getOptions();
 
