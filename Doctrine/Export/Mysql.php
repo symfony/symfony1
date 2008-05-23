@@ -186,8 +186,72 @@ class Doctrine_Export_Mysql extends Doctrine_Export
                     $sql[] = $this->createForeignKeySql($name, $definition);
                 }
             }
-        }   
+        }
         return $sql;
+    }
+
+    /**
+     * Obtain DBMS specific SQL code portion needed to declare a generic type
+     * field to be used in statements like CREATE TABLE.
+     *
+     * @param string $name   name the field to be declared.
+     * @param array  $field  associative array with the name of the properties
+     *      of the field being declared as array indexes. Currently, the types
+     *      of supported field properties are as follows:
+     *
+     *      length
+     *          Integer value that determines the maximum length of the text
+     *          field. If this argument is missing the field should be
+     *          declared to have the longest length allowed by the DBMS.
+     *
+     *      default
+     *          Text value to be used as default for this field.
+     *
+     *      notnull
+     *          Boolean flag that indicates whether this field is constrained
+     *          to not be set to null.
+     *      charset
+     *          Text value with the default CHARACTER SET for this field.
+     *      collation
+     *          Text value with the default COLLATION for this field.
+     *      unique
+     *          unique constraint
+     *      check
+     *          column check constraint
+     *
+     * @return string  DBMS specific SQL code portion that should be used to
+     *      declare the specified field.
+     */
+    public function getDeclaration($name, array $field)
+    {
+
+        $default   = $this->getDefaultFieldDeclaration($field);
+
+        $charset   = (isset($field['charset']) && $field['charset']) ?
+                    ' ' . $this->getCharsetFieldDeclaration($field['charset']) : '';
+
+        $collation = (isset($field['collation']) && $field['collation']) ?
+                    ' ' . $this->getCollationFieldDeclaration($field['collation']) : '';
+
+        $notnull   = (isset($field['notnull']) && $field['notnull']) ? ' NOT NULL' : '';
+
+        $unique    = (isset($field['unique']) && $field['unique']) ?
+                    ' ' . $this->getUniqueFieldDeclaration() : '';
+
+        $check     = (isset($field['check']) && $field['check']) ?
+                    ' ' . $field['check'] : '';
+
+        $comment   = (isset($field['comment']) && $field['comment']) ?
+                    " COMMENT '" . $field['comment'] . "'" : '';
+
+        $method = 'get' . $field['type'] . 'Declaration';
+
+        if (method_exists($this->conn->dataDict, $method)) {
+            return $this->conn->dataDict->$method($name, $field);
+        } else {
+            $dec = $this->conn->dataDict->getNativeDeclaration($field);
+        }
+        return $this->conn->quoteIdentifier($name, true) . ' ' . $dec . $charset . $default . $notnull . $comment . $unique . $check . $collation;
     }
 
     /**
