@@ -43,26 +43,4 @@ class Doctrine_Template_Listener_SoftDelete extends Doctrine_Record_Listener
         $event->getInvoker()->deleted = true;
         $event->getInvoker()->save();
     }
-
-    public function preDqlDelete(Doctrine_Event $event)
-    {
-        $params = $event->getParams();
-        $field = $params['alias'].'.deleted';
-        $query = $event->getQuery();
-        if (!$query->contains($field)) {
-            $query->from('')->update($params['componentName'].' '.$params['alias']);
-            $query->set($field, '?', array(false));
-            $query->addWhere($field.' = ?', array(true));
-        }
-    }
-
-    public function preDqlSelect(Doctrine_Event $event)
-    {
-        $params = $event->getParams();
-        $field = $params['alias'].'.deleted';
-        $query = $event->getQuery();
-        if (!$query->contains($field)) {
-            $query->addWhere($field.' = ?', array(true));
-        }
-    }
 }

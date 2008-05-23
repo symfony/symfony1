@@ -905,72 +905,6 @@ abstract class Doctrine_Query_Abstract
     }
 
     /**
-     * preQuery
-     *
-     * Empty template method to provide Query subclasses with the possibility
-     * to hook into the query building procedure, doing any custom / specialized
-     * query building procedures that are neccessary.
-     *
-     * @return void
-     */
-    public function preQuery()
-    {
-        if (empty($this->_dqlParts['from'])) {
-            return;
-        }
-        switch ($this->_type) {
-            case self::DELETE:
-                $callback = 'preDqlDelete';
-                $callback_const = DOCTRINE_EVENT::RECORD_DQL_DELETE;
-            break;
-            case self::UPDATE:
-                $callback = 'preDqlUpdate';
-                $callback_const = DOCTRINE_EVENT::RECORD_DQL_UPDATE;
-            break;
-            case self::SELECT:
-                $callback = 'preDqlSelect';
-                $callback_const = DOCTRINE_EVENT::RECORD_DQL_SELECT;
-            break;
-        }
-
-        if (!$callback) {
-            return;
-        }
-
-        $from = new Doctrine_Query_From($this);
-
-        foreach ($this->_dqlParts['from'] as $key => $table) {
-            $from->parse($table);
-        }
-
-        foreach ($this->_queryComponents as $alias => $component) {
-            $componentName = $component['table']->getComponentName();
-            $componentObj = Doctrine::getTable($componentName);
-            $record = $componentObj->getRecordInstance();
-            if (method_exists($record, $callback)) {
-                $record->$callback($this, $componentName, $alias);
-            }
-
-            $params = array('componentName' => $componentName, 'alias' => $alias);
-            $event = new Doctrine_Event($record, $callback_const, $this, $params);
-            $componentObj->getRecordListener()->$callback($event);
-        }
-    }
-
-    /**
-     * postQuery
-     *
-     * Empty template method to provide Query subclasses with the possibility
-     * to hook into the query finishing stage of query execution.
-     *
-     * @return void
-     */
-    public function postQuery()
-    {
-
-    }
-
-    /**
      * _execute
      *
      * @param array $params
@@ -1024,9 +958,6 @@ abstract class Doctrine_Query_Abstract
      */
     public function execute($params = array(), $hydrationMode = null)
     {
-        // invoke the preQuery hook
-        $this->preQuery();
-
         if ($hydrationMode !== null) {
             $this->_hydrator->setHydrationMode($hydrationMode);
         }
@@ -1054,24 +985,20 @@ abstract class Doctrine_Query_Abstract
 
                 $cached = $this->getCachedForm($result);
                 $cacheDriver->save($hash, $cached, $this->getResultCacheLifeSpan());
+                return $result;
             } else {
-                $result = $this->_constructQueryFromCache($cached);
+                return $this->_constructQueryFromCache($cached);
             }
         } else {
             $stmt = $this->_execute($params);
 
             if (is_integer($stmt)) {
-                $result = $stmt;
-            } else {
-                $this->_hydrator->setQueryComponents($this->_queryComponents);
-                $result = $this->_hydrator->hydrateResultSet($stmt, $this->_tableAliasMap);
+                return $stmt;
             }
+
+            $this->_hydrator->setQueryComponents($this->_queryComponents);
+            return $this->_hydrator->hydrateResultSet($stmt, $this->_tableAliasMap);
         }
-
-        // invoke the postQuery hook
-        $this->postQuery();
-
-        return $result;
     }
 
     /**
@@ -1731,7 +1658,7 @@ abstract class Doctrine_Query_Abstract
 
         return $this;
     }
-
+    
     /**
      * Gets the life span of the result cache in seconds.
      *
@@ -1757,7 +1684,7 @@ abstract class Doctrine_Query_Abstract
 
         return $this;
     }
-
+    
     /**
      * Gets the life span of the query cache the Query object is using.
      *
