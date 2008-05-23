@@ -511,11 +511,11 @@ class Doctrine_Parser_Spyc {
     if (preg_match('/^("(.*)"|\'(.*)\')/',$value,$matches)) {
      $value = (string)preg_replace('/(\'\'|\\\\\')/',"'",end($matches));
      $value = preg_replace('/\\\\"/','"',$value);
-    } elseif (preg_match('/^\\[(.+)\\]$/',$value,$matches)) {
+    } elseif (preg_match('/^\\[(.*)\\]$/',$value,$matches)) {
       // Inline Sequence
 
       // Take out strings sequences and mappings
-      $explode = $this->_inlineEscape($matches[1]);
+      $explode = empty($matches[1]) ? array() : $this->_inlineEscape($matches[1]);
 
       // Propogate value array
       $value  = array();
