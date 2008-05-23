@@ -852,7 +852,7 @@ class Doctrine_Import_Builder
             $setUpCode = null;
         }
 
-        if (!isset($definition['generate_accessors']) || !$definition['generate_accessors']) {
+        if ( ! isset($definition['generate_accessors']) || !$definition['generate_accessors']) {
           $definition['generate_accessors'] = $this->generateAccessors();
         }
 

@@ -172,7 +172,11 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
         $this->setTableDefinition();
         $this->setUp();
 
-        $this->generateClass(array('columns' => $this->_table->getColumns()));
+        $definition = array();
+        $definition['columns'] = $this->_table->getColumns();
+        $definition['tableName'] = $this->_table->getTableName();
+
+        $this->generateClass($definition);
 
         $this->buildChildDefinitions();
 
