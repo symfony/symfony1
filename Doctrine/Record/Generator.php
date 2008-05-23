@@ -157,7 +157,7 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
                                                    $this->_options['className']);
 
         // check that class doesn't exist (otherwise we cannot create it)
-        if (class_exists($this->_options['className'])) {
+        if ($this->_options['generateFiles'] === false && class_exists($this->_options['className'])) {
             return false;
         }
 
@@ -337,13 +337,8 @@ abstract class Doctrine_Record_Generator extends Doctrine_Record_Abstract
      *
      * generates the class definition for plugin class
      *
-     * @param array $columns    the plugin class columns, keys representing the column names
-     *                          and values as column definitions
-     *
-     * @param array $relations  the bound relations of the plugin class
-     *
-     * @param array $options    plugin class options, keys representing the option names
-     *                          and values as option values
+     * @param array $definition  Definition array defining columns, relations and options
+     *                           for the model
      * @return void
      */
     public function generateClass(array $definition = array())
