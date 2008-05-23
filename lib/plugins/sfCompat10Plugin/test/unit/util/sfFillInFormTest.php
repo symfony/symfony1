@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../../../../../test/bootstrap/unit.php');
 require_once(dirname(__FILE__).'/../../../lib/util/sfFillInForm.class.php');
 
-$t = new lime_test(64, new lime_output_color());
+$t = new lime_test(69, new lime_output_color());
 
 $html = <<<EOF
 <html>
@@ -298,3 +298,22 @@ $xml = <<<EOF
 EOF;
 $xml = $f->fillInHtml($xml, 'form', null, array('foo' => 'bar'));
 $t->like($xml, '#<input type="text" name="foo" value="bar">#', '->fillInHtml() outputs valid HTML');
+$t->unlike($xml, '#<head.*?>#', '->fillInHtml() outputs valid HTML doesnt add head when not in input');
+$t->unlike($xml, '#<meta http-equiv="Content-Type" content="text/html; charset=utf-8">#', '->fillInHtml() outputs valid HTML doesnt add meta when not in input');
+
+$xml = <<<EOF
+<html>
+  <head profile="http://gmpg.org/xfn/11">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  </head>
+  <body>
+    <form action="#" method="post" name="form">
+      <input type="text" name="foo">
+    </form>
+  </body>
+</html>
+EOF;
+$xml = $f->fillInHtml($xml, 'form', null, array('foo' => 'bar'));
+$t->like($xml, '#<input type="text" name="foo" value="bar">#', '->fillInHtml() outputs valid HTML with head present');
+$t->like($xml, '#<head.*?>#', '->fillInHtml() outputs valid HTML with head present');
+$t->like($xml, '#<meta http-equiv="Content-Type" content="text/html; charset=utf-8">#', '->fillInHtml() outputs valid HTML with meta present');
