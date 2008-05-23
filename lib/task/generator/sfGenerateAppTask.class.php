@@ -77,7 +77,7 @@ You can enable output escaping (to prevent XSS) by using the [escaping-strategy|
 You can enable session token in forms (to prevent CSRF) by defining
 a secret with the [csrf-secret|COMMENT] option:
 
-  [./symfony generate:app frontend --csrf-secret=Big\$ecret|INFO]
+  [./symfony generate:app frontend --csrf-secret=UniqueSecret|INFO]
 
 EOF;
   }
