@@ -1550,19 +1550,16 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                 $localTable = $table;
 
                 $table    = $relation->getTable();
-                $this->_queryComponents[$componentAlias] = array('table'    => $table,
-                                                          'parent'   => $parent,
-                                                          'relation' => $relation,
-                                                          'map'      => null);
+                $this->_queryComponents[$componentAlias] = array('table' => $table,
+                                                                 'parent'   => $parent,
+                                                                 'relation' => $relation,
+                                                                 'map'      => null);
                 if ( ! $relation->isOneToOne()) {
                    $this->_needsSubquery = true;
                 }
 
                 $localAlias   = $this->getTableAlias($parent, $table->getTableName());
                 $foreignAlias = $this->getTableAlias($componentAlias, $relation->getTable()->getTableName());
-                $localSql     = $this->_conn->quoteIdentifier($table->getTableName())
-                              . ' '
-                              . $this->_conn->quoteIdentifier($localAlias);
 
                 $foreignSql   = $this->_conn->quoteIdentifier($relation->getTable()->getTableName())
                               . ' '
@@ -1611,38 +1608,10 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
                     $queryPart = $join . $foreignSql;
 
                     if ( ! $overrideJoin) {
-                        $queryPart .= ' ON ';
-
-                        if ($relation->isEqual()) {
-                            $queryPart .= '(';
-                        }
-                        
-                        $relationTable = $relation->getTable();
-                        $queryPart .= $this->_conn->quoteIdentifier($foreignAlias . '.' . $relationTable->getColumnName($relationTable->getIdentifier()))
-                                    . ' = '
-                                    . $this->_conn->quoteIdentifier($assocAlias . '.' . $relation->getForeign());
-
-                        if ($relation->isEqual()) {
-                            $queryPart .= ' OR '
-                                        . $this->_conn->quoteIdentifier($foreignAlias . '.' . $table->getColumnName($table->getIdentifier()))
-                                        . ' = ' 
-                                        . $this->_conn->quoteIdentifier($assocAlias . '.' . $relation->getLocal())
-                                        . ') AND ' 
-                                        . $this->_conn->quoteIdentifier($foreignAlias . '.' . $table->getColumnName($table->getIdentifier()))
-                                        . ' != '  
-                                        . $this->_conn->quoteIdentifier($localAlias . '.' . $table->getColumnName($table->getIdentifier()));
-                        }
+                        $queryPart .= $this->buildAssociativeRelationSql($relation, $assocAlias, $foreignAlias, $localAlias);
                     }
                 } else {
-
-                    $queryPart = $join . $foreignSql;
-
-                    if ( ! $overrideJoin) {
-                        $queryPart .= ' ON '
-                                   . $this->_conn->quoteIdentifier($localAlias . '.' . $relation->getLocal())
-                                   . ' = ' 
-                                   . $this->_conn->quoteIdentifier($foreignAlias . '.' . $relation->getForeign());
-                    }
+                    $queryPart = $this->buildSimpleRelationSql($relation, $foreignAlias, $localAlias, $overrideJoin, $join);
                 }
 
                 $queryPart .= $this->buildInheritanceJoinSql($table->getComponentName(), $componentAlias);
@@ -1665,13 +1634,36 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
         
         $table = $this->_queryComponents[$componentAlias]['table'];
 
+        return $this->buildIndexBy($componentAlias, $mapWith);
+    }
+
+    protected function buildSimpleRelationSql(Doctrine_Relation $relation, $foreignAlias, $localAlias, $overrideJoin, $join)
+    {
+        $queryPart = $join . $this->_conn->quoteIdentifier($relation->getTable()->getTableName())
+                           . ' '
+                           . $this->_conn->quoteIdentifier($foreignAlias);
+
+        if ( ! $overrideJoin) {
+            $queryPart .= ' ON '
+                       . $this->_conn->quoteIdentifier($localAlias . '.' . $relation->getLocal())
+                       . ' = ' 
+                       . $this->_conn->quoteIdentifier($foreignAlias . '.' . $relation->getForeign());
+        }
+        
+        return $queryPart;
+    }
+
+    protected function buildIndexBy($componentAlias, $mapWith = null)
+    {
+        $table = $this->_queryComponents[$componentAlias]['table'];
+
         $indexBy = null;
 
         if (isset($mapWith)) {
-            $e = explode('.', $mapWith);
+            $terms = explode('.', $mapWith);
 
-            if (isset($e[1])) {
-                $indexBy = $e[1];
+            if (isset($terms[1])) {
+                $indexBy = $terms[1];
             }
         } elseif ($table->getBoundQueryPart('indexBy') !== null) {
             $indexBy = $table->getBoundQueryPart('indexBy');
@@ -1681,12 +1673,43 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
             if ( ! $table->hasColumn($table->getColumnName($indexBy))) {
                 throw new Doctrine_Query_Exception("Couldn't use key mapping. Column " . $indexBy . " does not exist.");
             }
-    
+
             $this->_queryComponents[$componentAlias]['map'] = $indexBy;
         }
+
         return $this->_queryComponents[$componentAlias];
     }
 
+
+    protected function buildAssociativeRelationSql(Doctrine_Relation $relation, $assocAlias, $foreignAlias, $localAlias)
+    {
+        $table = $relation->getTable();
+
+        $queryPart = ' ON ';
+
+        if ($relation->isEqual()) {
+            $queryPart .= '(';
+        }
+
+        $localIdentifier = $table->getColumnName($table->getIdentifier());
+
+        $queryPart .= $this->_conn->quoteIdentifier($foreignAlias . '.' . $localIdentifier)
+                    . ' = '
+                    . $this->_conn->quoteIdentifier($assocAlias . '.' . $relation->getForeign());
+
+        if ($relation->isEqual()) {
+            $queryPart .= ' OR '
+                        . $this->_conn->quoteIdentifier($foreignAlias . '.' . $localIdentifier)
+                        . ' = ' 
+                        . $this->_conn->quoteIdentifier($assocAlias . '.' . $relation->getLocal())
+                        . ') AND ' 
+                        . $this->_conn->quoteIdentifier($foreignAlias . '.' . $localIdentifier)
+                        . ' != '
+                        . $this->_conn->quoteIdentifier($localAlias . '.' . $localIdentifier);
+        } 
+        
+        return $queryPart;
+    }
     /**
      * loadRoot
      *
