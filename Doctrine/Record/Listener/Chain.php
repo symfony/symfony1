@@ -51,7 +51,7 @@ class Doctrine_Record_Listener_Chain extends Doctrine_Access implements Doctrine
     {
         if ( ! ($listener instanceof Doctrine_Record_Listener_Interface) &&
              ! ($listener instanceof Doctrine_Overloadable)) {
-            
+
             throw new Doctrine_EventListener_Exception("Couldn't add eventlistener. Record listeners should implement either Doctrine_EventListener_Interface or Doctrine_Overloadable");
         }
         if ($name === null) {
@@ -89,49 +89,63 @@ class Doctrine_Record_Listener_Chain extends Doctrine_Access implements Doctrine
     }
 
     public function preSerialize(Doctrine_Event $event)
-    { 
+    {
         foreach ($this->_listeners as $listener) {
             $listener->preSerialize($event);
         }
     }
 
     public function postSerialize(Doctrine_Event $event)
-    { 
+    {
         foreach ($this->_listeners as $listener) {
             $listener->preSerialize($event);
         }
     }
 
     public function preUnserialize(Doctrine_Event $event)
-    { 
+    {
         foreach ($this->_listeners as $listener) {
             $listener->preUnserialize($event);
         }
     }
 
     public function postUnserialize(Doctrine_Event $event)
-    { 
+    {
         foreach ($this->_listeners as $listener) {
             $listener->postUnserialize($event);
         }
     }
 
+    public function preDqlSelect(Doctrine_Event $event)
+    {
+        foreach ($this->_listeners as $listener) {
+            $listener->preDqlSelect($event);
+        }
+    }
+
     public function preSave(Doctrine_Event $event)
-    { 
+    {
         foreach ($this->_listeners as $listener) {
             $listener->preSave($event);
         }
     }
 
     public function postSave(Doctrine_Event $event)
-    { 
+    {
         foreach ($this->_listeners as $listener) {
             $listener->postSave($event);
         }
     }
 
+    public function preDqlDelete(Doctrine_Event $event)
+    {
+        foreach ($this->_listeners as $listener) {
+            $listener->preDqlDelete($event);
+        }
+    }
+
     public function preDelete(Doctrine_Event $event)
-    { 
+    {
         foreach ($this->_listeners as $listener) {
             $listener->preDelete($event);
         }
@@ -144,37 +158,43 @@ class Doctrine_Record_Listener_Chain extends Doctrine_Access implements Doctrine
         }
     }
 
+    public function preDqlUpdate(Doctrine_Event $event)
+    {
+        foreach ($this->_listeners as $listener) {
+            $listener->preDqlUpdate($event);
+        }
+    }
+
     public function preUpdate(Doctrine_Event $event)
-    { 
+    {
         foreach ($this->_listeners as $listener) {
             $listener->preUpdate($event);
         }
     }
 
     public function postUpdate(Doctrine_Event $event)
-    { 
+    {
         foreach ($this->_listeners as $listener) {
             $listener->postUpdate($event);
         }
     }
 
     public function preInsert(Doctrine_Event $event)
-    { 
+    {
         foreach ($this->_listeners as $listener) {
             $listener->preInsert($event);
         }
     }
 
     public function postInsert(Doctrine_Event $event)
-    { 
+    {
         foreach ($this->_listeners as $listener) {
             $listener->postInsert($event);
         }
     }
-    
 
     public function preHydrate(Doctrine_Event $event)
-    { 
+    {
         foreach ($this->_listeners as $listener) {
             $listener->preHydrate($event);
         }

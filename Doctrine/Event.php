@@ -64,6 +64,9 @@ class Doctrine_Event
     const RECORD_INSERT      = 24;
     const RECORD_SERIALIZE   = 25;
     const RECORD_UNSERIALIZE = 26;
+    const RECORD_DQL_SELECT  = 28;
+    const RECORD_DQL_DELETE  = 27;
+    const RECORD_DQL_UPDATE  = 29;
 
     /**
      * @var mixed $_invoker             the handler which invoked this event
@@ -133,7 +136,7 @@ class Doctrine_Event
      *
      * @return string       the name of this event
      */
-    public function getName() 
+    public function getName()
     {
         switch ($this->_code) {
             case self::CONN_QUERY:
@@ -155,7 +158,7 @@ class Doctrine_Event
                 return 'fetch';
             case self::STMT_FETCHALL:
                 return 'fetch all';
-            
+
             case self::TX_BEGIN:
                 return 'begin';
             case self::TX_COMMIT:
@@ -169,7 +172,7 @@ class Doctrine_Event
                 return 'rollback savepoint';
             case self::SAVEPOINT_COMMIT:
                 return 'commit savepoint';
- 
+
             case self::RECORD_DELETE:
                 return 'delete record';
             case self::RECORD_SAVE:
@@ -182,6 +185,12 @@ class Doctrine_Event
                 return 'serialize record';
             case self::RECORD_UNSERIALIZE:
                 return 'unserialize record';
+            case self::RECORD_DQL_SELECT:
+                return 'select records';
+            case self::RECORD_DQL_DELETE:
+                return 'delete records';
+            case self::RECORD_DQL_UPDATE:
+                return 'update records';
         }
     }
 
@@ -207,7 +216,7 @@ class Doctrine_Event
         if ( ! isset($this->_options[$option])) {
             return null;
         }
-        
+
         return $this->_options[$option];
     }
 
@@ -221,7 +230,7 @@ class Doctrine_Event
     public function skipOperation()
     {
         $this->_options['skipOperation'] = true;
-    
+
         return $this;
     }
 
@@ -286,7 +295,7 @@ class Doctrine_Event
     public function end()
     {
         $this->_endedMicrotime = microtime(true);
-        
+
         return $this;
     }
 
