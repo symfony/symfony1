@@ -108,7 +108,7 @@ class sfValidatorPropelUnique extends sfValidatorSchema
     {
       $columnPhpName = call_user_func(array($this->getOption('model').'Peer', 'translateFieldName'), $column, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_PHPNAME);
       $method = 'get'.$columnPhpName;
-      if ($object->$method() != $values[$column])
+      if (!isset($values[$column]) or $object->$method() != $values[$column])
       {
         return false;
       }
