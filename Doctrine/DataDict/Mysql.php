@@ -331,9 +331,9 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
                         if (preg_match('/^(is|has)/', $field['name'])) {
                             $type = array_reverse($type);
                         }
-                    } else {
-                        $values = $matches[1];
                     }
+
+                    $values = $matches[1];
                 }
                 $type[] = 'integer';
                 break;
