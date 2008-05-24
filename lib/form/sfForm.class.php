@@ -27,17 +27,9 @@ class sfForm implements ArrayAccess
     $CSRFSecret     = null,
     $CSRFFieldName  = '_csrf_token';
 
-  /**
-   * @var sfWidgetFormSchema
-   */
-  protected $widgetSchema    = null;
-  
-  /**
-   * @var sfValidatorSchema
-   */
-  protected $validatorSchema = null;
-    
   protected
+    $widgetSchema    = null,
+    $validatorSchema = null,
     $errorSchema     = null,
     $formField       = null,
     $formFields      = array(),

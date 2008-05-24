@@ -83,7 +83,7 @@ class sfValidatorPropelUnique extends sfValidatorSchema
     }
 
     $object = call_user_func(array($this->getOption('model').'Peer', 'doSelectOne'), $criteria, $this->getOption('connection'));
-var_dump($values);
+
     // if no object or if we're updating the object, it's ok
     if (is_null($object) || $this->isUpdate($object, $values))
     {
