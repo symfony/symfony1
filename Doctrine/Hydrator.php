@@ -183,13 +183,16 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                     $oneToOne = false;
                     // append element
                     if (isset($nonemptyComponents[$dqlAlias])) {
-                        if ( ! isset($identifierMap[$path][$id[$parent]][$id[$dqlAlias]])) {
+                        $indexExists = isset($identifierMap[$path][$id[$parent]][$id[$dqlAlias]]);
+                        $index = $indexExists ? $identifierMap[$path][$id[$parent]][$id[$dqlAlias]] : false;
+                        $indexIsValid = $index !== false ? isset($prev[$parent][$relationAlias][$index]) : false;
+                        if ( ! $indexExists || ! $indexIsValid) {
                             $element = $driver->getElement($data, $componentName);
                             $event->set('data', $element);
                             $listeners[$componentName]->postHydrate($event);
 
                             if ($field = $this->_getCustomIndexField($dqlAlias)) {
-                                if (isset($prev[$parent][$relationAlias][$field])) {
+                                if (isset($prev[$parent][$relationAlias][$element[$field]])) {
                                     throw new Doctrine_Hydrator_Exception("Couldn't hydrate. Found non-unique key mapping.");
                                 } else if ( ! isset($element[$field])) {
                                     throw new Doctrine_Hydrator_Exception("Couldn't hydrate. Found a non-existent key.");
@@ -198,9 +201,7 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
                             } else {
                                 $prev[$parent][$relationAlias][] = $element; 
                             }
-                            $identifierMap[$path][$id[$parent]][$id[$dqlAlias]] = $driver->getLastKey($prev[$parent][$relationAlias]);
-                        } else {
-                            $index = $identifierMap[$path][$id[$parent]][$id[$dqlAlias]];
+                            $identifierMap[$path][$id[$parent]][$id[$dqlAlias]] = $driver->getLastKey($prev[$parent][$relationAlias]);                            
                         }
                         // register collection for later snapshots
                         $driver->registerCollection($prev[$parent][$relationAlias]);
