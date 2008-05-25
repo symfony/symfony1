@@ -398,7 +398,7 @@ class sfTestBrowser extends sfBrowser
   {
     if (false === ($empty = parent::checkCurrentExceptionIsEmpty()))
     {
-      $this->test()->fail(sprintf('last request threw an uncatched exception "%s: %s"', get_class($this->getCurrentException()), $this->getCurrentException()->getMessage()));
+      $this->test()->fail(sprintf('last request threw an uncaught exception "%s: %s"', get_class($this->getCurrentException()), $this->getCurrentException()->getMessage()));
     }
     
     return $empty;
