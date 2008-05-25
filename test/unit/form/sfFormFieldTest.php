@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(24, new lime_output_color());
+$t = new lime_test(25, new lime_output_color());
 
 // widgets
 $authorSchema = new sfWidgetFormSchema(array(
@@ -138,6 +138,7 @@ catch (LogicException $e)
 // ->renderLabel()
 $t->diag('->renderLabel()');
 $t->is($f->renderLabel(), '<label for="article_title">Title</label>', '->renderLabel() renders the label as HTML');
+$t->is($f->renderLabel(null, array('class' => 'foo')), '<label class="foo" for="article_title">Title</label>', '->renderLabel() renders optional HTML attributes');
 try
 {
   $parent->renderLabel();

@@ -156,11 +156,12 @@ abstract class sfWidgetFormSchemaFormatter
   /**
    * Generates a label for the given field name.
    *
-   * @param  string $name  The field name
+   * @param  string $name        The field name
+   * @param  array  $attributes  Optional html attributes for the label tag
    *
    * @return string The label tag
    */
-  public function generateLabel($name)
+  public function generateLabel($name, $attributes = array())
   {
     $labelName = $this->generateLabelName($name);
 
@@ -168,9 +169,11 @@ abstract class sfWidgetFormSchemaFormatter
     {
       return '';
     }
-
+    
     $widgetId = $this->widgetSchema->generateId($this->widgetSchema->generateName($name));
-    return $this->widgetSchema->renderContentTag('label', $labelName, array('for' => $widgetId));
+    $attributes = array_merge($attributes, array('for' => $widgetId));
+    
+    return $this->widgetSchema->renderContentTag('label', $labelName, $attributes);
   }
 
   /**

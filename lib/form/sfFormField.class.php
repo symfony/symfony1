@@ -116,11 +116,12 @@ class sfFormField
   /**
    * Returns the label tag.
    *
-   * @param  string $label The label name (not null to override the current value)
+   * @param  string $label       The label name (not null to override the current value)
+   * @param  array  $attributes  Optional html attributes
    *
    * @return string The label tag
    */
-  public function renderLabel($label = null)
+  public function renderLabel($label = null, $attributes = array())
   {
     if (is_null($this->parent))
     {
@@ -133,7 +134,7 @@ class sfFormField
       $this->parent->getWidget()->setLabel($this->name, $label);
     }
 
-    $html = $this->parent->getWidget()->getFormFormatter()->generateLabel($this->name);
+    $html = $this->parent->getWidget()->getFormFormatter()->generateLabel($this->name, $attributes);
 
     if (!is_null($label))
     {
