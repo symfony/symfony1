@@ -20,7 +20,9 @@
  */
 
 /**
- * Doctrine_Template_Listener_SoftDelete
+ * Listener for SoftDelete behavior which will allow you to turn on the behavior which
+ * sets a delete flag instead of actually deleting the record and all queries automatically
+ * include a check for the deleted flag to exclude deleted records.
  *
  * @package     Doctrine
  * @subpackage  Template
@@ -33,36 +35,81 @@
  */
 class Doctrine_Template_Listener_SoftDelete extends Doctrine_Record_Listener
 {
+    /**
+     * Array of SoftDelete options
+     *
+     * @var string
+     */
+    protected $_options = array();
+
+    /**
+     * __construct
+     *
+     * @param string $options 
+     * @return void
+     */
+    public function __construct(array $options)
+    {
+        $this->_options = $options;
+    }
+
+    /**
+     * Skip the normal delete options so we can override it with our own
+     *
+     * @param Doctrine_Event $event
+     * @return void
+     */
     public function preDelete(Doctrine_Event $event)
     {
         $event->skipOperation();
     }
 
+    /**
+     * Implement postDelete() hook and set the deleted flag to true
+     *
+     * @param Doctrine_Event $event
+     * @return void
+     */
     public function postDelete(Doctrine_Event $event)
     {
-        $event->getInvoker()->deleted = true;
+        $name = $this->_options['name'];
+        $event->getInvoker()->$name = true;
         $event->getInvoker()->save();
     }
 
+    /**
+     * Implement preDqlDelete() hook and modify a dql delete query so it updates the deleted flag
+     * instead of deleting the record
+     *
+     * @param Doctrine_Event $event
+     * @return void
+     */
     public function preDqlDelete(Doctrine_Event $event)
     {
         $params = $event->getParams();
-        $field = $params['alias'].'.deleted';
+        $field = $params['alias'] . '.' . $this->_options['name'];
         $query = $event->getQuery();
         if ( ! $query->contains($field)) {
-            $query->from('')->update($params['component'].' '.$params['alias']);
+            $query->from('')->update($params['component'] . ' ' . $params['alias']);
             $query->set($field, '?', array(false));
-            $query->addWhere($field.' = ?', array(true));
+            $query->addWhere($field . ' = ?', array(true));
         }
     }
 
+    /**
+     * Implement preDqlDelete() hook and add the deleted flag to all queries for which this model 
+     * is being used in.
+     *
+     * @param Doctrine_Event $event 
+     * @return void
+     */
     public function preDqlSelect(Doctrine_Event $event)
     {
         $params = $event->getParams();
-        $field = $params['alias'].'.deleted';
+        $field = $params['alias'] . '.' . $this->_options['name'];
         $query = $event->getQuery();
         if ( ! $query->contains($field)) {
-            $query->addWhere($field.' = ?', array(false));
+            $query->addWhere($field . ' = ?', array(false));
         }
     }
 }

@@ -35,7 +35,7 @@
 class Doctrine_Template_Sluggable extends Doctrine_Template
 {
     /**
-     * Array of timestampable options
+     * Array of Sluggable options
      *
      * @var string
      */
@@ -62,7 +62,7 @@ class Doctrine_Template_Sluggable extends Doctrine_Template
     }
 
     /**
-     * setTableDefinition
+     * Set table definition for Sluggable behavior
      *
      * @return void
      */

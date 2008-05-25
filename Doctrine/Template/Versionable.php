@@ -22,6 +22,8 @@
 /**
  * Doctrine_Template_Versionable
  *
+ * Add revisioning/audit log to your models
+ *
  * @package     Doctrine
  * @subpackage  Template
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
@@ -44,7 +46,7 @@ class Doctrine_Template_Versionable extends Doctrine_Template
     }
 
     /**
-     * setUp
+     * Setup the Versionable behavior for the template
      *
      * @return void
      */
@@ -60,7 +62,7 @@ class Doctrine_Template_Versionable extends Doctrine_Template
     }
 
     /**
-     * getAuditLog
+     * Get plugin for Versionable template
      *
      * @return void
      */

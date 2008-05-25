@@ -909,27 +909,33 @@ abstract class Doctrine_Query_Abstract
         return $this->_tableAliasMap[$sqlTableAlias];
     }
 
-    private function getDqlCallback($pre_post)
+    /**
+     * Get dql call back for the pre/postQuery() methods
+     *
+     * @param string $prePost 
+     * @return array $callback
+     */
+    private function getDqlCallback($prePost)
     {
         $callback = false;
         if ( ! empty($this->_dqlParts['from'])) {
             switch ($this->_type) {
                 case self::DELETE:
                     $callback = array(
-                        'callback' => $pre_post.'DqlDelete',
-                        'const' => DOCTRINE_EVENT::RECORD_DQL_DELETE
+                        'callback' => $prePost.'DqlDelete',
+                        'const' => Doctrine_Event::RECORD_DQL_DELETE
                     );
                 break;
                 case self::UPDATE:
                     $callback = array(
-                        'callback' => $pre_post.'DqlUpdate',
-                        'const' => DOCTRINE_EVENT::RECORD_DQL_UPDATE
+                        'callback' => $prePost.'DqlUpdate',
+                        'const' => Doctrine_Event::RECORD_DQL_UPDATE
                     );
                 break;
                 case self::SELECT:
                     $callback = array(
-                        'callback' => $pre_post.'DqlSelect',
-                        'const' => DOCTRINE_EVENT::RECORD_DQL_SELECT
+                        'callback' => $prePost.'DqlSelect',
+                        'const' => Doctrine_Event::RECORD_DQL_SELECT
                     );
                 break;
             }
@@ -938,6 +944,12 @@ abstract class Doctrine_Query_Abstract
         return $callback;
     }
 
+    /**
+     * Trigger the DQL listeners if they exist
+     *
+     * @param array $callback 
+     * @return void
+     */
     private function triggerDqlListener($callback)
     {
         // if there is no callback for the query type, then we can return early
@@ -964,11 +976,8 @@ abstract class Doctrine_Query_Abstract
     }
 
     /**
-     * preQuery
-     *
-     * Empty template method to provide Query subclasses with the possibility
-     * to hook into the query building procedure, doing any custom / specialized
-     * query building procedures that are neccessary.
+     * Pre query method which invokes the pre*Query() methods on the model instance or any attached
+     * record listeners
      *
      * @return void
      */
@@ -998,10 +1007,7 @@ abstract class Doctrine_Query_Abstract
     }
 
     /**
-     * postQuery
-     *
-     * Empty template method to provide Query subclasses with the possibility
-     * to hook into the post processing after query execution
+     * Same as preQuery() exist for post
      *
      * @return void
      */

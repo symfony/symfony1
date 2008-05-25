@@ -20,7 +20,8 @@
  */
 
 /**
- * Doctrine_Template_Listener_Timestampable
+ * Listener for the Timestampable behavior which automatically sets the created
+ * and updated columns when a record is inserted and updated.
  *
  * @package     Doctrine
  * @subpackage  Template
@@ -51,9 +52,9 @@ class Doctrine_Template_Listener_Timestampable extends Doctrine_Record_Listener
     }
 
     /**
-     * preInsert
+     * Set the created and updated Timestampable columns when a record is inserted
      *
-     * @param object $Doctrine_Event 
+     * @param Doctrine_Event $event
      * @return void
      */
     public function preInsert(Doctrine_Event $event)
@@ -70,9 +71,9 @@ class Doctrine_Template_Listener_Timestampable extends Doctrine_Record_Listener
     }
 
     /**
-     * preUpdate
+     * Set updated Timestampable column when a record is updated
      *
-     * @param object $Doctrine_Event 
+     * @param Doctrine_Event $evet
      * @return void
      */
     public function preUpdate(Doctrine_Event $event)
@@ -84,9 +85,7 @@ class Doctrine_Template_Listener_Timestampable extends Doctrine_Record_Listener
     }
 
     /**
-     * getTimestamp
-     *
-     * Gets the timestamp in the correct format
+     * Gets the timestamp in the correct format based on the way the behavior is configured
      *
      * @param string $type 
      * @return void

@@ -20,7 +20,7 @@
  */
 
 /**
- * Doctrine_Template_NestedSet
+ * Doctrine template which implements the custom NestedSet implementation
  *
  * @package     Doctrine
  * @subpackage  Template
@@ -32,19 +32,40 @@
  */
 class Doctrine_Template_NestedSet extends Doctrine_Template
 {
+    /**
+     * Array of options for NestedSet implementation
+     *
+     * @var array
+     */
     private $_options;
-    
+
+    /**
+     * __construct
+     *
+     * @param array $array 
+     * @return void
+     */
     public function __construct(array $options = array())
     {
         $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $options);
     }
-    
+
+    /**
+     * Set up NestedSet template
+     *
+     * @return void
+     */
     public function setUp()
     {
         $this->_table->setOption('treeOptions', $this->_options);
         $this->_table->setOption('treeImpl', 'NestedSet');
     }
-    
+
+    /**
+     * Call set table definition for the NestedSet behavior
+     *
+     * @return void
+     */
     public function setTableDefinition()
     {
         $this->_table->getTree()->setTableDefinition();

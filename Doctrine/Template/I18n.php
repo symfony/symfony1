@@ -20,7 +20,7 @@
  */
 
 /**
- * Doctrine_Template_I18n
+ * Add multilingual capabilities to your Doctrine models
  *
  * @package     Doctrine
  * @subpackage  Template
@@ -42,8 +42,9 @@ class Doctrine_Template_I18n extends Doctrine_Template
     {
         $this->_plugin = new Doctrine_I18n($options);
     }
+
     /**
-     * setUp
+     * Initialize the I18n plugin for the template
      *
      * @return void
      */
@@ -53,7 +54,7 @@ class Doctrine_Template_I18n extends Doctrine_Template
     }
 
     /**
-     * getI18n
+     * Get the plugin instance for the I18n template
      *
      * @return void
      */

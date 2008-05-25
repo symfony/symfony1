@@ -20,9 +20,8 @@
  */
 
 /**
- * Doctrine_Template_Geographical
- *
- * Easily add longitude and latitude columns to your records and use inherited functionality for calculating distances
+ * Easily add longitude and latitude columns to your records and use inherited functionality for 
+ * calculating distances
  *
  * @package     Doctrine
  * @subpackage  Template
@@ -61,7 +60,7 @@ class Doctrine_Template_Geographical extends Doctrine_Template
     }
 
     /**
-     * setTableDefinition
+     * Set table definition for Geographical behavior
      *
      * @return void
      */
@@ -72,10 +71,8 @@ class Doctrine_Template_Geographical extends Doctrine_Template
     }
 
     /**
-     * getDistanceQuery
-     *
-     * Initiate a distance query with the select parts for the number of kilometers and miles between this record
-     * and other zipcode records in the database
+     * Initiate and get a distance query with the select parts for the number of kilometers and miles 
+     * between this record and other zipcode records in the database
      *
      * @return Doctrine_Query $query
      */
@@ -102,8 +99,6 @@ class Doctrine_Template_Geographical extends Doctrine_Template
     }
 
     /**
-     * getDistance
-     *
      * Get distance between this record and another
      *
      * @param string $Doctrine_Record 

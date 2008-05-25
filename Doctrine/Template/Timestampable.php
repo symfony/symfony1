@@ -22,7 +22,8 @@
 /**
  * Doctrine_Template_Timestampable
  *
- * Easily add created and updated at timestamps to your doctrine records
+ * Easily add created and updated at timestamps to your doctrine records that are automatically set
+ * when records are saved
  *
  * @package     Doctrine
  * @subpackage  Template
@@ -35,7 +36,7 @@
 class Doctrine_Template_Timestampable extends Doctrine_Template
 {
     /**
-     * Array of timestampable options
+     * Array of Timestampable options
      *
      * @var string
      */
@@ -65,7 +66,7 @@ class Doctrine_Template_Timestampable extends Doctrine_Template
     }
 
     /**
-     * setTableDefinition
+     * Set table definition for Timestampable behavior
      *
      * @return void
      */

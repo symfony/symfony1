@@ -33,10 +33,37 @@
  */
 class Doctrine_Template_SoftDelete extends Doctrine_Template
 {
+    /**
+     * Array of SoftDelete options
+     *
+     * @var string
+     */
+    protected $_options = array('name'          =>  'deleted',
+                                'type'          =>  'boolean',
+                                'length'        =>  1,
+                                'options'       =>  array('default' => false),
+    );
+
+    /**
+     * __construct
+     *
+     * @param string $array 
+     * @return void
+     */
+    public function __construct(array $options = array())
+    {
+        $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $options);
+    }
+
+    /**
+     * Set table definition for SoftDelete behavior
+     *
+     * @return void
+     */
     public function setTableDefinition()
     {
-        $this->hasColumn('deleted', 'boolean', 1, array('default' => false));
+        $this->hasColumn($this->_options['name'], $this->_options['type'], $this->_options['length'], $this->_options['options']);
 
-        $this->addListener(new Doctrine_Template_Listener_SoftDelete());
+        $this->addListener(new Doctrine_Template_Listener_SoftDelete($this->_options));
     }
 }

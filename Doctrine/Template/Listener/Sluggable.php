@@ -20,8 +20,6 @@
  */
 
 /**
- * Doctrine_Template_Listener_Sluggable
- *
  * Easily create a slug for each record based on a specified set of fields
  *
  * @package     Doctrine
@@ -53,7 +51,7 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
     }
 
     /**
-     * preInsert
+     * Set the slug value automatically when a record is inserted
      *
      * @param Doctrine_Event $event 
      * @return void
@@ -70,7 +68,8 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
     }
 
     /**
-     * preUpdate
+     * Set the slug value automatically when a record is updated if the options are configured
+     * to allow it
      *
      * @param Doctrine_Event $event 
      * @return void
@@ -91,9 +90,7 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
     }
 
     /**
-     * buildSlug
-     *
-     * Generate the slug for a given Doctrine_Record
+     * Generate the slug for a given Doctrine_Record based on the configured options
      *
      * @param Doctrine_Record $record 
      * @return string $slug
@@ -123,10 +120,8 @@ class Doctrine_Template_Listener_Sluggable extends Doctrine_Record_Listener
     }
 
     /**
-     * getUniqueSlug
-     *
-     * Creates a unique slug for a given Doctrine_Record. This function enforces the uniqueness by incrementing
-     * the values with a postfix if the slug is not unique
+     * Creates a unique slug for a given Doctrine_Record. This function enforces the uniqueness by 
+     * incrementing the values with a postfix if the slug is not unique
      *
      * @param Doctrine_Record $record 
      * @return string $slug

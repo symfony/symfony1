@@ -31,12 +31,23 @@
  * @since       1.0
  */
 class Doctrine_Template_Searchable extends Doctrine_Template
-{     
+{
+    /**
+     * __construct
+     *
+     * @param array $options 
+     * @return void
+     */
     public function __construct(array $options = array())
     {
         $this->_plugin = new Doctrine_Search($options); 
     }
-    
+
+    /**
+     * Setup the Searchable template behavior
+     *
+     * @return void
+     */
     public function setUp()
     {
         $this->_plugin->initialize($this->_table);
@@ -44,6 +55,14 @@ class Doctrine_Template_Searchable extends Doctrine_Template
         $this->addListener(new Doctrine_Search_Listener($this->_plugin));
     }
 
+    /**
+     * Make the batchUpdateIndex() function available to the template so Doctrine_Record child classes
+     * with the behavior enabled can all the function
+     *
+     * @param integer $limit 
+     * @param integer $offset 
+     * @return void
+     */
     public function batchUpdateIndex($limit = null, $offset = null)
     {
         $this->_plugin->batchUpdateIndex($limit, $offset);
