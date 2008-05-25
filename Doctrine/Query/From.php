@@ -37,12 +37,15 @@ class Doctrine_Query_From extends Doctrine_Query_Part
      * parses the FROM part of the query string
      *
      * @param string $str
+     * @param boolean $return if to return the parsed FROM and skip load()
      * @return void
      */
-    public function parse($str)
+    public function parse($str, $return = false)
     {
         $str = trim($str);
         $parts = $this->_tokenizer->bracketExplode($str, 'JOIN');
+
+        $from = $return ? array() : null;
 
         $operator = false;
 
@@ -79,11 +82,15 @@ class Doctrine_Query_From extends Doctrine_Query_Part
                     $e[0] = array_shift($e2) . $operator . implode('.', $e2);
                 }
 
-                $table = $this->query->load(implode(' ', $e));
+                if ($return) {
+                    $from[] = $e;
+                } else {
+                    $table = $this->query->load(implode(' ', $e));
+                }
             }
 
             $operator = ($last == 'INNER') ? ':' : '.';
         }
-        return null;
+        return $from;
     }
 }

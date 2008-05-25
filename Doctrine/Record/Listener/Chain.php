@@ -116,6 +116,20 @@ class Doctrine_Record_Listener_Chain extends Doctrine_Access implements Doctrine
         }
     }
 
+    public function preDqlSelect(Doctrine_Event $event)
+    {
+        foreach ($this->_listeners as $listener) {
+            $listener->preDqlSelect($event);
+        }
+    }
+
+    public function postDqlSelect(Doctrine_Event $event)
+    {
+        foreach ($this->_listeners as $listener) {
+            $listener->preDqlSelect($event);
+        }
+    }
+
     public function preSave(Doctrine_Event $event)
     {
         foreach ($this->_listeners as $listener) {
@@ -130,6 +144,20 @@ class Doctrine_Record_Listener_Chain extends Doctrine_Access implements Doctrine
         }
     }
 
+    public function preDqlDelete(Doctrine_Event $event)
+    {
+        foreach ($this->_listeners as $listener) {
+            $listener->preDqlDelete($event);
+        }
+    }
+
+    public function postDqlDelete(Doctrine_Event $event)
+    {
+        foreach ($this->_listeners as $listener) {
+            $listener->preDqlDelete($event);
+        }
+    }
+
     public function preDelete(Doctrine_Event $event)
     {
         foreach ($this->_listeners as $listener) {
@@ -141,6 +169,20 @@ class Doctrine_Record_Listener_Chain extends Doctrine_Access implements Doctrine
     {
         foreach ($this->_listeners as $listener) {
             $listener->postDelete($event);
+        }
+    }
+
+    public function preDqlUpdate(Doctrine_Event $event)
+    {
+        foreach ($this->_listeners as $listener) {
+            $listener->preDqlUpdate($event);
+        }
+    }
+
+    public function postDqlUpdate(Doctrine_Event $event)
+    {
+        foreach ($this->_listeners as $listener) {
+            $listener->preDqlUpdate($event);
         }
     }
 
@@ -172,13 +214,13 @@ class Doctrine_Record_Listener_Chain extends Doctrine_Access implements Doctrine
         }
     }
 
-
     public function preHydrate(Doctrine_Event $event)
     {
         foreach ($this->_listeners as $listener) {
             $listener->preHydrate($event);
         }
     }
+
     public function postHydrate(Doctrine_Event $event)
     {
         foreach ($this->_listeners as $listener) {

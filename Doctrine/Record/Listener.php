@@ -44,16 +44,34 @@ class Doctrine_Record_Listener implements Doctrine_Record_Listener_Interface
     public function postUnserialize(Doctrine_Event $event)
     { }
 
+    public function preDqlSelect(Doctrine_Event $event)
+    { }
+
+    public function postDqlSelect(Doctrine_Event $event)
+    { }
+
     public function preSave(Doctrine_Event $event)
     { }
 
     public function postSave(Doctrine_Event $event)
     { }
 
+    public function preDqlDelete(Doctrine_Event $event)
+    { }
+
+    public function postDqlDelete(Doctrine_Event $event)
+    { }
+
     public function preDelete(Doctrine_Event $event)
     { }
 
     public function postDelete(Doctrine_Event $event)
+    { }
+
+    public function preDqlUpdate(Doctrine_Event $event)
+    { }
+
+    public function postDqlUpdate(Doctrine_Event $event)
     { }
 
     public function preUpdate(Doctrine_Event $event)

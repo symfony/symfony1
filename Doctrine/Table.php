@@ -204,6 +204,11 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     protected $_invokedMethods = array();
 
     /**
+     * @var Doctrine_Record $record             empty instance of the given model
+     */
+    protected $record;
+
+    /**
      * the constructor
      *
      * @throws Doctrine_Connection_Exception    if there are no opened connections
@@ -220,11 +225,11 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         $this->_parser = new Doctrine_Relation_Parser($this);
 
         if ($initDefinition) {
-            $record = $this->initDefinition();
+            $this->record = $this->initDefinition();
 
             $this->initIdentifier();
 
-            $record->setUp();
+            $this->record->setUp();
 
             // if tree, set up tree
             if ($this->isTree()) {
@@ -462,6 +467,16 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         } else {
             return $this->getComponentName();
         }
+    }
+
+    /**
+     * Gets the record instance
+     *
+     * @return object  Empty instance of the record
+     */
+    public function getRecordInstance()
+    {
+        return $this->record;
     }
 
     /**

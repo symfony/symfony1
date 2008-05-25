@@ -35,7 +35,7 @@ class Doctrine_Template_SoftDelete extends Doctrine_Template
 {
     public function setTableDefinition()
     {
-        $this->hasColumn('deleted', 'boolean', 1);
+        $this->hasColumn('deleted', 'boolean', 1, array('default' => false));
 
         $this->addListener(new Doctrine_Template_Listener_SoftDelete());
     }

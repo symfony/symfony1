@@ -238,6 +238,11 @@ abstract class Doctrine_Query_Abstract
     protected $_pendingSetParams = array();
 
     /**
+     * @var array components used in the DQL statement
+     */
+    protected $_components;
+
+    /**
      * Constructor.
      *
      * @param Doctrine_Connection  The connection object the query will use.
@@ -904,6 +909,108 @@ abstract class Doctrine_Query_Abstract
         return $this->_tableAliasMap[$sqlTableAlias];
     }
 
+    private function getDqlCallback($pre_post)
+    {
+        $callback = false;
+        if ( ! empty($this->_dqlParts['from'])) {
+            switch ($this->_type) {
+                case self::DELETE:
+                    $callback = array(
+                        'callback' => $pre_post.'DqlDelete',
+                        'const' => DOCTRINE_EVENT::RECORD_DQL_DELETE
+                    );
+                break;
+                case self::UPDATE:
+                    $callback = array(
+                        'callback' => $pre_post.'DqlUpdate',
+                        'const' => DOCTRINE_EVENT::RECORD_DQL_UPDATE
+                    );
+                break;
+                case self::SELECT:
+                    $callback = array(
+                        'callback' => $pre_post.'DqlSelect',
+                        'const' => DOCTRINE_EVENT::RECORD_DQL_SELECT
+                    );
+                break;
+            }
+        }
+
+        return $callback;
+    }
+
+    private function triggerDqlListener($callback)
+    {
+        // if there is no callback for the query type, then we can return early
+        if ( ! $callback) {
+            return;
+        }
+
+        foreach ($this->_components as $component => $alias) {
+            if (class_exists($component)) {
+                $componentObj = Doctrine::getTable($component);
+                $record = $componentObj->getRecordInstance();
+
+                // check (and call) preDql*() callback on the model class
+                if (method_exists($record, $callback['callback'])) {
+                    $record->$callback['callback']($this, $component, $alias);
+                }
+
+                // trigger preDql*() callback event
+                $params = array('component`' => $component, 'alias' => $alias);
+                $event = new Doctrine_Event($record, $callback['const'], $this, $params);
+                $componentObj->getRecordListener()->$callback['callback']($event);
+            }
+        }
+    }
+
+    /**
+     * preQuery
+     *
+     * Empty template method to provide Query subclasses with the possibility
+     * to hook into the query building procedure, doing any custom / specialized
+     * query building procedures that are neccessary.
+     *
+     * @return void
+     */
+    public function preQuery()
+    {
+        $callback = $this->getDqlCallback('pre');
+        // if there is no callback for the query type, then we can return early
+        if ( ! $callback) {
+            return;
+        }
+
+        // parse the FROM clause to find all models used in the DQL
+        $from = new Doctrine_Query_From($this);
+        $this->_components = array();
+        foreach ($this->_dqlParts['from'] as $key => $table) {
+            $componentClause = $from->parse($table, true);
+            foreach ($componentClause as $c) {
+                // remove the prefix if there is one (aka "f.Bar" => "Bar")
+                $component = explode('.', $c[0]);
+                $component = array_pop($component);
+                $alias = isset($c[1]) ? $c[1] : $component;
+                $this->_components[$component] = $alias;
+            }
+        }
+
+        $this->triggerDqlListener($callback);
+    }
+
+    /**
+     * postQuery
+     *
+     * Empty template method to provide Query subclasses with the possibility
+     * to hook into the post processing after query execution
+     *
+     * @return void
+     */
+    public function postQuery()
+    {
+        $callback = $this->getDqlCallback('post');
+        $this->triggerDqlListener($callback);
+    }
+
     /**
      * _execute
      *
@@ -958,6 +1065,9 @@ abstract class Doctrine_Query_Abstract
      */
     public function execute($params = array(), $hydrationMode = null)
     {
+        // invoke the preQuery hook
+        $this->preQuery();
+
         if ($hydrationMode !== null) {
             $this->_hydrator->setHydrationMode($hydrationMode);
         }
@@ -985,20 +1095,24 @@ abstract class Doctrine_Query_Abstract
 
                 $cached = $this->getCachedForm($result);
                 $cacheDriver->save($hash, $cached, $this->getResultCacheLifeSpan());
-                return $result;
             } else {
-                return $this->_constructQueryFromCache($cached);
+                $result = $this->_constructQueryFromCache($cached);
             }
         } else {
             $stmt = $this->_execute($params);
 
             if (is_integer($stmt)) {
-                return $stmt;
+                $result = $stmt;
+            } else {
+                $this->_hydrator->setQueryComponents($this->_queryComponents);
+                $result = $this->_hydrator->hydrateResultSet($stmt, $this->_tableAliasMap);
             }
-
-            $this->_hydrator->setQueryComponents($this->_queryComponents);
-            return $this->_hydrator->hydrateResultSet($stmt, $this->_tableAliasMap);
         }
+
+        // invoke the postQuery hook
+        $this->postQuery();
+
+        return $result;
     }
 
     /**
