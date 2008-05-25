@@ -498,7 +498,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     {
         return $this->getIdentifierType() === Doctrine::IDENTIFIER_AUTOINC;
     }
-    
+
     /**
      * Checks whether a field identifier is a composite key.
      *
@@ -593,7 +593,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                 $primary[] = $name;
             }
         }
-        
+
         $options['foreignKeys'] = isset($this->_options['foreignKeys']) ?
                 $this->_options['foreignKeys'] : array();
 
@@ -634,7 +634,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
                     }
                 }
             }
-            
+
             foreach ($constraints as $k => $def) {
                 $options['foreignKeys'][$k] = array_merge($options['foreignKeys'][$k], $def);
             }
@@ -1901,7 +1901,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     /**
      * Check if the table has a template name
      *
-     * @param string $template 
+     * @param string $template
      * @return boolean $bool
      */
     public function hasTemplate($template)
@@ -1912,7 +1912,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     /**
      * Add template to the table
      *
-     * @param string $template 
+     * @param string $template
      * @param Doctrine_Template $impl
      * @return Doctrine_Table
      */
@@ -1928,7 +1928,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      *
      * @return array $generators
      */
-    
+
     public function getGenerators()
     {
         return $this->_generators;
@@ -1937,7 +1937,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     /**
      * Get generator instance for a passed name
      *
-     * @param string $generator 
+     * @param string $generator
      * @return Doctrine_Record_Generator $generator
      */
     public function getGenerator($generator)
@@ -1952,7 +1952,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     /**
      * Check if a generator name exists
      *
-     * @param string $generator 
+     * @param string $generator
      * @return void
      */
     public function hasGenerator($generator)
@@ -1963,8 +1963,8 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     /**
      * Add a generate to the table instance
      *
-     * @param Doctrine_Record_Generator $generator 
-     * @param string $name 
+     * @param Doctrine_Record_Generator $generator
+     * @param string $name
      * @return Doctrine_Table
      */
     public function addGenerator(Doctrine_Record_Generator $generator, $name = null)

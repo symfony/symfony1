@@ -1658,7 +1658,7 @@ abstract class Doctrine_Query_Abstract
 
         return $this;
     }
-    
+
     /**
      * Gets the life span of the result cache in seconds.
      *
@@ -1684,7 +1684,7 @@ abstract class Doctrine_Query_Abstract
 
         return $this;
     }
-    
+
     /**
      * Gets the life span of the query cache the Query object is using.
      *
