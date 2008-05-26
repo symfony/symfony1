@@ -1216,9 +1216,9 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         $id = is_array($id) ? array_values($id) : array($id);
 
         return $this->createQuery()
-            ->where(implode(' = ? AND ', (array) $this->getIdentifier()) . ' = ?')
+            ->where(implode(' = ? AND ', (array) $this->getIdentifier()) . ' = ?', $id)
             ->limit(1)
-            ->fetchOne($id, $hydrationMode);
+            ->fetchOne(array(), $hydrationMode);
     }
 
     /**
