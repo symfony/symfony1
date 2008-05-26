@@ -52,12 +52,12 @@ class Doctrine_I18n extends Doctrine_Record_Generator
      */
     public function __construct($options)
     {
-        $this->_options = array_merge($this->_options, $options);
+        $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $options);
     }
 
     public function buildRelation()
     {
-    	  $this->buildForeignRelation('Translation');
+    	$this->buildForeignRelation('Translation');
         $this->buildLocalRelation();
     }
 
