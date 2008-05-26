@@ -1066,7 +1066,7 @@ abstract class Doctrine_Query_Abstract
      * execute
      * executes the query and populates the data set
      *
-     * @param string $params
+     * @param array $params
      * @return Doctrine_Collection            the root collection
      */
     public function execute($params = array(), $hydrationMode = null)
