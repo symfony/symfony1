@@ -20,7 +20,8 @@
  */
 
 /**
- * Doctrine_Template
+ * Base abstract class for defining templates which are the base of all behaviors that can be attached
+ * to your Doctrine models
  *
  * @package     Doctrine
  * @subpackage  Template
@@ -30,20 +31,22 @@
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
-class Doctrine_Template extends Doctrine_Record_Abstract
+abstract class Doctrine_Template extends Doctrine_Record_Abstract
 {
     /**
-     * @param Doctrine_Record $_invoker     the record that invoked the last delegated call
+     * @var Doctrine_Record $_invoker     the record that invoked the last delegated call
      */
     protected $_invoker;
-    
-    
+
+    /**
+     * @var Doctrine_Record_Generator $_plugin
+     */
     protected $_plugin;
 
     /**
-     * setTable
+     * Set the table object that this Template belongs to
      *
-     * @param Doctrine_Table $_table        the table object this Template belongs to
+     * @var Doctrine_Table $table        the table object this Template belongs to
      */
     public function setTable(Doctrine_Table $table)
     {
@@ -51,7 +54,6 @@ class Doctrine_Template extends Doctrine_Record_Abstract
     }
 
     /**
-     * getTable
      * returns the associated table object
      *
      * @return Doctrine_Table               the associated table object
@@ -62,8 +64,6 @@ class Doctrine_Template extends Doctrine_Record_Abstract
     }
 
     /**
-     * setInvoker
-     *
      * sets the last used invoker
      *
      * @param Doctrine_Record $invoker      the record that invoked the last delegated call
@@ -75,7 +75,6 @@ class Doctrine_Template extends Doctrine_Record_Abstract
     }
 
     /**
-     * setInvoker
      * returns the last used invoker
      *
      * @return Doctrine_Record              the record that invoked the last delegated call
@@ -86,8 +85,6 @@ class Doctrine_Template extends Doctrine_Record_Abstract
     }
 
     /**
-     * addChild 
-     *
      * Adds a plugin as a child to this plugin
      * 
      * @param Doctrine_Template $template 
@@ -100,9 +97,8 @@ class Doctrine_Template extends Doctrine_Record_Abstract
         return $this;
     }
 
-
     /**
-     * getPlugin 
+     * Get plugin instance 
      * 
      * @return void
      */
@@ -133,8 +129,9 @@ class Doctrine_Template extends Doctrine_Record_Abstract
     {
         throw new Doctrine_Exception("Templates doesn't support accessors.");
     }
+
     /**
-     * setUp 
+     * Blank method for template setup 
      * 
      * @return void
      */
@@ -144,7 +141,7 @@ class Doctrine_Template extends Doctrine_Record_Abstract
     }
 
     /**
-     * setTableDefinition 
+     * Blank method for template table definition
      * 
      * @return void
      */
