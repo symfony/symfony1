@@ -208,6 +208,40 @@ function link_to_unless($condition, $name = '', $internal_uri = '', $options = a
 }
 
 /**
+ * Returns a URL rooted at the web root
+ *
+ * @param   string  $path     The route to append 
+ * @param   bool    $absolute If true, an absolute path is returned (optional)
+ * @return  The web URL root 
+ */
+function public_path($path, $absolute = false)
+{
+  $request = sfContext::getInstance()->getRequest();
+  $root = $request->getRelativeUrlRoot();
+
+  if ($absolute)
+  {
+    $source = 'http';
+    if ($request->isSecure())
+    {
+      $source .= 's';
+    }
+    $source .='://'.$request->getHost().$root;
+  }
+  else
+  {
+    $source = $root;
+  }
+  
+  if (substr($path, 0, 1) != '/')
+  {
+    $path = '/'.$path;
+  }
+
+  return $source.$path;
+}
+
+/**
  * Creates an <input> button tag of the given name pointing to a routed URL
  * based on the module/action passed as argument and the routing configuration.
  * The syntax is similar to the one of link_to.

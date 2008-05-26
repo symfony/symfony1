@@ -19,9 +19,27 @@ class myController
   }
 }
 
-$t = new lime_test(32, new lime_output_color());
+class myRequest
+{
+  public function getRelativeUrlRoot()
+  {
+    return '/public';
+  }
+  
+  public function isSecure()
+  {
+    return true;
+  }
 
-$context = sfContext::getInstance(array('controller' => 'myController'));
+  public function getHost()
+  {
+    return 'example.org';
+  }
+}
+
+$t = new lime_test(35, new lime_output_color());
+
+$context = sfContext::getInstance(array('controller' => 'myController', 'request' => 'myRequest'));
 
 require_once(dirname(__FILE__).'/../../../lib/helper/AssetHelper.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/UrlHelper.php');
@@ -87,6 +105,12 @@ $t->is(link_to_if(false, 'test', '', array('query_string' => 'foo=bar', 'absolut
 $t->diag('link_to_unless()');
 $t->is(link_to_unless(false, 'test', ''), '<a href="module/action">test</a>', 'link_to_unless() returns an HTML "a" tag if the condition is false');
 $t->is(link_to_unless(true, 'test', ''), '<span>test</span>', 'link_to_unless() returns an HTML "span" tag by default if the condition is true');
+
+// public_path()
+$t->diag('public_path()');
+$t->is(public_path('pdf/download.pdf'), '/public/pdf/download.pdf', 'public_path() returns the public path');
+$t->is(public_path('/pdf/download.pdf'), '/public/pdf/download.pdf', 'public_path() returns the public path if starting with slash');
+$t->is(public_path('pdf/download.pdf', true), 'https://example.org/public/pdf/download.pdf', 'public_path() returns the public path');
 
 // mail_to()
 $t->diag('mail_to()');
