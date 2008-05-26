@@ -53,7 +53,7 @@ default:
         param:
           automatic_cleaning_factor: 0
           cache_dir:                 %SF_I18N_CACHE_DIR%
-          lifetime:                  86400
+          lifetime:                  31556926
           prefix:                    %SF_APP_DIR%/i18n
 
   routing:

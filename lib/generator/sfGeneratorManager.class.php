@@ -60,11 +60,19 @@ class sfGeneratorManager
     if (!is_dir(dirname($path)))
     {
       $current_umask = umask(0000);
-      @mkdir(dirname($path), 0777, true);
+      if (false === @mkdir(dirname($path), 0777, true))
+      {
+        throw new sfCacheException(sprintf('Failed to make cache directory "%s".', dirname($cache)));
+      }
       umask($current_umask);
     }
 
-    return file_put_contents($path, $content);
+    if (false === $ret = @file_put_contents($path, $content))
+    {
+      throw new sfCacheException(sprintf('Failed to write cache file "%s".', $path));
+    }
+
+    return $ret;
   }
 
   /**
