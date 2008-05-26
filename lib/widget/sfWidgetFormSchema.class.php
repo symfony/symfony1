@@ -376,10 +376,18 @@ class sfWidgetFormSchema extends sfWidgetForm implements ArrayAccess
       }
     }
 
-    // insert hidden fields in the last row
-    for ($i = 0, $max = count($rows); $i < $max; $i++)
+    if ($rows)
     {
-      $rows[$i] = strtr($rows[$i], array('%hidden_fields%' => $i == $max - 1 ? implode("\n", $hiddenRows) : ''));
+      // insert hidden fields in the last row
+      for ($i = 0, $max = count($rows); $i < $max; $i++)
+      {
+        $rows[$i] = strtr($rows[$i], array('%hidden_fields%' => $i == $max - 1 ? implode("\n", $hiddenRows) : ''));
+      }
+    }
+    else
+    {
+      // only hidden fields
+      $rows[0] = implode("\n", $hiddenRows);
     }
 
     return $this->getFormFormatter()->formatErrorRow($this->getGlobalErrors($errors)).implode('', $rows);

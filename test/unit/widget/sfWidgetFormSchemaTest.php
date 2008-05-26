@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(59, new lime_output_color());
+$t = new lime_test(60, new lime_output_color());
 
 $w1 = new sfWidgetFormInput(array(), array('class' => 'foo1'));
 $w2 = new sfWidgetFormInput();
@@ -318,6 +318,10 @@ $expected = <<<EOF
 EOF;
 $rendered = $w->render(null, array('first_name' => 'Fabien', 'last_name' => 'Potencier'), array('first_name' => array('class' => 'foo'), 'last_name' => array('class' => 'bar')), array('first_name' => 'Too short', 'Global error message', 'id' => 'Required'));
 $t->is($rendered, $expected, '->render() renders a schema to HTML');
+
+$t->diag('Widget schema with only hidden fields');
+$w = new sfWidgetFormSchema(array('w1' => new sfWidgetFormInputHidden()));
+$t->is($w->render(null), '<input type="hidden" name="w1" id="w1" />', '->render() is able to render widget schema that only contains hidden fields');
 
 // __clone()
 $t->diag('__clone()');
