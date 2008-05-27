@@ -69,7 +69,7 @@ class sfPHPView extends sfView
     $this->loadCoreAndStandardHelpers();
 
     // EXTR_REFS can't be used (see #3595 and #3151)
-    extract($this->dispatcher->filter(new sfEvent($this, 'template.filter_parameters'), $this->attributeHolder->toArray())->getReturnValue());
+    extract($this->attributeHolder->toArray());
 
     // render
     ob_start();

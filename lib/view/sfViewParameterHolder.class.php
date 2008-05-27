@@ -78,11 +78,13 @@ class sfViewParameterHolder extends sfParameterHolder
    */
   public function toArray()
   {
+    $event = $this->dispatcher->filter(new sfEvent($this, 'template.filter_parameters'), $this->getAll());
+    $parameters = $event->getReturnValue();
     $attributes = array();
 
     if ($this->isEscaped())
     {
-      $attributes['sf_data'] = sfOutputEscaper::escape($this->getEscapingMethod(), $this->getAll());
+      $attributes['sf_data'] = sfOutputEscaper::escape($this->getEscapingMethod(), $parameters);
       foreach ($attributes['sf_data'] as $key => $value)
       {
         $attributes[$key] = $value;
@@ -90,8 +92,8 @@ class sfViewParameterHolder extends sfParameterHolder
     }
     else if (in_array($this->getEscaping(), array('off', false), true))
     {
-      $attributes = $this->getAll();
-      $attributes['sf_data'] = sfOutputEscaper::escape(ESC_RAW, $this->getAll());
+      $attributes = $parameters;
+      $attributes['sf_data'] = sfOutputEscaper::escape(ESC_RAW, $parameters);
     }
     else
     {
@@ -167,25 +169,7 @@ class sfViewParameterHolder extends sfParameterHolder
    */
   public function serialize()
   {
-    $this->set('_sf_escaping_method', $this->escapingMethod);
-    $this->set('_sf_escaping', $this->escaping);
-
-    $tmp = clone $this;
-    foreach ($tmp->getNames() as $key)
-    {
-      if (0 === strpos($key, 'sf_'))
-      {
-        $tmp->remove($key);
-      }
-    }
-    $tmp->dispatcher = null;
-
-    $serialized = serialize($tmp->getAll());
-
-    $this->remove('_sf_escaping_method');
-    $this->remove('_sf_escaping');
-
-    return $serialized;
+    return serialize(array($this->getAll(), $this->escapingMethod, $this->escaping));
   }
 
   /**
@@ -195,11 +179,11 @@ class sfViewParameterHolder extends sfParameterHolder
    */
   public function unserialize($serialized)
   {
-    parent::unserialize($serialized);
+    list($this->parameters, $escapingMethod, $escaping) = unserialize($serialized);
 
     $this->initialize(sfContext::hasInstance() ? sfContext::getInstance()->getEventDispatcher() : new sfEventDispatcher());
 
-    $this->setEscapingMethod($this->remove('_sf_escaping_method'));
-    $this->setEscaping($this->remove('_sf_escaping'));
+    $this->setEscapingMethod($escapingMethod);
+    $this->setEscaping($escaping);
   }
 }
