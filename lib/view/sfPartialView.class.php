@@ -88,6 +88,8 @@ class sfPartialView extends sfPHPView
     // execute pre-render check
     $this->preRenderCheck();
 
+    $this->getAttributeHolder()->set('sf_type', 'partial');
+
     // render template
     $retval = $this->renderFile($this->getDirectory().'/'.$this->getTemplate());
 

@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 require_once($_test_dir.'/unit/sfContextMock.class.php');
 
-$t = new lime_test(24, new lime_output_color());
+$t = new lime_test(21, new lime_output_color());
 
 define('ESC_SPECIALCHARS', 'esc_specialchars');
 function esc_specialchars($value)
@@ -33,32 +33,13 @@ class myRequest
   }
 }
 
-class FilterParameters
-{
-  static public $context = null;
-
-  static function filter($event, $parameters)
-  {
-    $parameters['sf_request'] = self::$context->request;
-
-    return $parameters;
-  }
-}
-
-$context = sfContext::getInstance(array(
-  'request' => 'myRequest',
-));
+$context = sfContext::getInstance();
 $dispatcher = $context->dispatcher;
-
-FilterParameters::$context = $context;
-$dispatcher->connect('template.filter_parameters', array('FilterParameters', 'filter'));
 
 // ->initialize()
 $t->diag('->initialize()');
 $p = new sfViewParameterHolder($dispatcher);
-$t->is($p->get('sf_user'), $context->user, '->initialize() add some symfony shortcuts as parameters');
-$t->is($p->get('sf_request'), $context->request, '->initialize() add some symfony shortcuts as parameters');
-$t->is($p->get('sf_response'), $context->response, '->initialize() add some symfony shortcuts as parameters');
+$t->is($p->getAll(), array(), '->initialize() initializes the parameters as an empty array');
 
 $p->initialize($dispatcher, array('foo' => 'bar'));
 $t->is($p->get('foo'), 'bar', '->initialize() takes an array of default parameters as its second argument');
@@ -140,7 +121,3 @@ $t->diag('->serialize() / ->unserialize()');
 $p->initialize($dispatcher, array('foo' => 'bar'));
 $unserialized = unserialize(serialize($p));
 $t->is($p->toArray(), $unserialized->toArray(), 'sfViewParameterHolder implements the Serializable interface');
-
-// template.filter_parameters
-$p = new sfViewParameterHolder($dispatcher);
-$t->is($p->get('sf_request'), $context->request, '->initialize() add some symfony shortcuts as parameters');

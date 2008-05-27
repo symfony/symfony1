@@ -69,7 +69,7 @@ class sfPHPView extends sfView
     $this->loadCoreAndStandardHelpers();
 
     // EXTR_REFS can't be used (see #3595 and #3151)
-    extract($this->attributeHolder->toArray());
+    extract($this->dispatcher->filter(new sfEvent($this, 'template.filter_parameters'), $this->attributeHolder->toArray())->getReturnValue());
 
     // render
     ob_start();
@@ -129,6 +129,7 @@ class sfPHPView extends sfView
     $attributeHolder = $this->attributeHolder;
 
     $this->attributeHolder = $this->initializeAttributeHolder(array('sf_content' => new sfOutputEscaperSafe($content)));
+    $this->attributeHolder->set('sf_type', 'layout');
 
     // render the decorator template and return the result
     $ret = $this->renderFile($this->getDecoratorDirectory().'/'.$this->getDecoratorTemplate());
@@ -163,6 +164,8 @@ class sfPHPView extends sfView
     {
       // execute pre-render check
       $this->preRenderCheck();
+
+      $this->attributeHolder->set('sf_type', 'action');
 
       // render template file
       $content = $this->renderFile($this->getDirectory().'/'.$this->getTemplate());

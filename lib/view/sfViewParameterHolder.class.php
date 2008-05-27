@@ -53,9 +53,6 @@ class sfViewParameterHolder extends sfParameterHolder
   {
     $this->dispatcher = $dispatcher;
 
-    $event = $dispatcher->filter(new sfEvent($this, 'template.filter_parameters'), $parameters);
-    $parameters = $event->getReturnValue();
-
     $this->add($parameters);
 
     $this->setEscaping(isset($options['escaping_strategy']) ? $options['escaping_strategy'] : false);
