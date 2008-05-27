@@ -10,11 +10,12 @@
  */
 class ##MODULE_NAME##Actions extends sfActions
 {
-  /**
-   * Executes index action
-   *
-   */
-  public function executeIndex()
+ /**
+  * Executes index action
+  *
+  * @param sfRequest $request A request object
+  */
+  public function executeIndex($request)
   {
     $this->forward('default', 'module');
   }
