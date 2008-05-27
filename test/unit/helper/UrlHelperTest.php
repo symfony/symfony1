@@ -37,7 +37,7 @@ class myRequest
   }
 }
 
-$t = new lime_test(35, new lime_output_color());
+$t = new lime_test(37, new lime_output_color());
 
 $context = sfContext::getInstance(array('controller' => 'myController', 'request' => 'myRequest'));
 
@@ -56,13 +56,15 @@ $t->diag('link_to()');
 $t->is(link_to('test'), '<a href="module/action">test</a>', 'link_to() returns an HTML "a" tag');
 $t->is(link_to('test', '', array('absolute' => true)), '<a href="/module/action">test</a>', 'link_to() can take an "absolute" option');
 $t->is(link_to('test', '', array('absolute' => false)), '<a href="module/action">test</a>', 'link_to() can take an "absolute" option');
-$t->is(link_to('test', '', array('query_string' => 'foo=bar')), '<a href="module/action?foo=bar">test</a>', 'link_to() can take an "query_string" option');
+$t->is(link_to('test', '', array('query_string' => 'foo=bar')), '<a href="module/action?foo=bar">test</a>', 'link_to() can take a "query_string" option');
+$t->is(link_to('test', '', array('anchor' => 'bar')), '<a href="module/action#bar">test</a>', 'link_to() can take an "anchor" option');
 $t->is(link_to(''), '<a href="module/action">module/action</a>', 'link_to() takes the url as the link name if the first argument is empty');
 
 //button_to()
 $t->diag('button_to()');
 $t->is(button_to('test'), '<input value="test" type="button" onclick="document.location.href=\'module/action\';" />', 'button_to() returns an HTML "input" tag');
 $t->is(button_to('test','', array('query_string' => 'foo=bar')), '<input value="test" type="button" onclick="document.location.href=\'module/action?foo=bar\';" />', 'button_to() returns an HTML "input" tag');
+$t->is(button_to('test','', array('anchor' => 'bar')), '<input value="test" type="button" onclick="document.location.href=\'module/action#bar\';" />', 'button_to() returns an HTML "input" tag');
 $t->is(button_to('test','', array('popup' => 'true', 'query_string' => 'foo=bar')), '<input value="test" type="button" onclick="var w=window.open(\'module/action?foo=bar\');w.focus();return false;" />', 'button_to() returns an HTML "input" tag');
 $t->is(button_to('test','', 'popup=true'), '<input value="test" type="button" onclick="var w=window.open(\'module/action\');w.focus();return false;" />', 'button_to() accepts options as string');
 $t->is(button_to('test','', 'confirm=really?'), '<input value="test" type="button" onclick="if (confirm(\'really?\')) { return document.location.href=\'module/action\';} else return false;" />', 'button_to() works with confirm option');

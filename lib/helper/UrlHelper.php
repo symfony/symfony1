@@ -56,6 +56,7 @@ function url_for($internal_uri, $absolute = false)
  * <b>Options:</b>
  * - 'absolute' - if set to true, the helper outputs an absolute URL
  * - 'query_string' - to append a query string (starting by ?) to the routed url
+ * - 'anchor' - to append an anchor (starting by #) to the routed url
  * - 'confirm' - displays a javascript confirmation alert when the link is clicked
  * - 'popup' - if set to true, the link opens a new browser window 
  * - 'post' - if set to true, the link submits a POST request instead of GET (caution: do not use inside a form)
@@ -104,6 +105,12 @@ function link_to($name = '', $internal_uri = '', $options = array())
     unset($html_options['query_string']);
   }
 
+  if (isset($html_options['anchor']))
+  {
+    $html_options['href'] .= '#'.$html_options['anchor'];
+    unset($html_options['anchor']);
+  }
+
   if (is_object($name))
   {
     if (method_exists($name, '__toString'))
@@ -134,6 +141,7 @@ function link_to($name = '', $internal_uri = '', $options = array())
  * - 'tag' - the HTML tag that must enclose the name if the condition is false, defaults to <span>
  * - 'absolute' - if set to true, the helper outputs an absolute URL
  * - 'query_string' - to append a query string (starting by ?) to the routed url
+ * - 'anchor' - to append an anchor (starting by #) to the routed url
  * - 'confirm' - displays a javascript confirmation alert when the link is clicked
  * - 'popup' - if set to true, the link opens a new browser window 
  * - 'post' - if set to true, the link submits a POST request instead of GET (caution: do not use inside a form)
@@ -183,6 +191,7 @@ function link_to_if($condition, $name = '', $internal_uri = '', $options = array
  * - 'tag' - the HTML tag that must enclose the name if the condition is true, defaults to <span>
  * - 'absolute' - if set to true, the helper outputs an absolute URL
  * - 'query_string' - to append a query string (starting by ?) to the routed url
+ * - 'anchor' - to append an anchor (starting by #) to the routed url
  * - 'confirm' - displays a javascript confirmation alert when the link is clicked
  * - 'popup' - if set to true, the link opens a new browser window 
  * - 'post' - if set to true, the link submits a POST request instead of GET (caution: do not use inside a form)
@@ -249,6 +258,7 @@ function public_path($path, $absolute = false)
  * <b>Options:</b>
  * - 'absolute' - if set to true, the helper outputs an absolute URL
  * - 'query_string' - to append a query string (starting by ?) to the routed url
+ * - 'anchor' - to append an anchor (starting by #) to the routed url
  * - 'confirm' - displays a javascript confirmation alert when the button is clicked
  * - 'popup' - if set to true, the button opens a new browser window 
  * - 'post' - if set to true, the button submits a POST request instead of GET (caution: do not use inside a form)
@@ -288,6 +298,11 @@ function button_to($name, $internal_uri ='', $options = array())
   {
     $url = $url.'?'.$html_options['query_string'];
     unset($html_options['query_string']);
+  }
+  if (isset($html_options['anchor']))
+  {
+    $url = $url.'#'.$html_options['anchor'];
+    unset($html_options['anchor']);
   }
   $url = "'".$url."'";
   $html_options['type'] = 'button';
