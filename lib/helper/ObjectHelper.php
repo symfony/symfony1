@@ -117,7 +117,9 @@ function object_select_tag($object, $method, $options = array(), $default_value 
 
   $text_method = _get_option($options, 'text_method');
 
-  $select_options = _get_options_from_objects(sfContext::getInstance()->retrieveObjects($related_class, $peer_method), $text_method);
+  $key_method = _get_option($options, 'key_method', 'getPrimaryKey');
+
+  $select_options = _get_options_from_objects(sfContext::getInstance()->retrieveObjects($related_class, $peer_method), $text_method, $key_method);
 
   if ($value = _get_option($options, 'include_custom'))
   {
@@ -146,7 +148,7 @@ function object_select_tag($object, $method, $options = array(), $default_value 
   return select_tag(_convert_method_to_name($method, $options), $option_tags, $options);
 }
 
-function _get_options_from_objects($objects, $text_method = null)
+function _get_options_from_objects($objects, $text_method = null, $key_method = 'getPrimaryKey')
 {
   $select_options = array();
 
@@ -159,11 +161,11 @@ function _get_options_from_objects($objects, $text_method = null)
       if ($first)
       {
         // multi primary keys handling
-        $multi_primary_keys = is_array($tmp_object->getPrimaryKey()) ? true : false;
+        $multi_primary_keys = is_array($tmp_object->$key_method()) ? true : false;
 
         // which method to call?
         $methodToCall = '';
-        foreach (array($text_method, '__toString', 'toString', 'getPrimaryKey') as $method)
+        foreach (array($text_method, '__toString', 'toString', $key_method) as $method)
         {
           if (is_callable(array($tmp_object, $method)))
           {
@@ -175,7 +177,7 @@ function _get_options_from_objects($objects, $text_method = null)
         $first = false;
       }
 
-      $key   = $multi_primary_keys ? implode('/', $tmp_object->getPrimaryKey()) : $tmp_object->getPrimaryKey();
+      $key   = $multi_primary_keys ? implode('/', $tmp_object->$key_method()) : $tmp_object->$key_method();
       $value = $tmp_object->$methodToCall();
 
       $select_options[$key] = $value;
