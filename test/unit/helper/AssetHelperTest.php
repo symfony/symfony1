@@ -15,7 +15,7 @@ require_once(dirname(__FILE__).'/../../../lib/helper/TagHelper.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/UrlHelper.php');
 require_once(dirname(__FILE__).'/../../../lib/helper/AssetHelper.php');
 
-$t = new lime_test(53, new lime_output_color());
+$t = new lime_test(54, new lime_output_color());
 
 class myRequest
 {
@@ -105,6 +105,9 @@ $t->is(javascript_include_tag('xmlhr', array('absolute' => true)),
 $t->is(javascript_include_tag('xmlhr', array('raw_name' => true)),
   '<script type="text/javascript" src="xmlhr"></script>'."\n", 
   'javascript_include_tag() can take a raw_name option to bypass file name decoration');
+$t->is(javascript_include_tag('xmlhr', array('defer' => 'defer')),
+  '<script type="text/javascript" src="/js/xmlhr.js" defer="defer"></script>'."\n", 
+  'javascript_include_tag() can take additional html options like defer');
 
 // javascript_path()
 $t->diag('javascript_path()');
