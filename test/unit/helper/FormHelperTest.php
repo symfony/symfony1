@@ -42,7 +42,7 @@ class myResponse
   }
 }
 
-$t = new lime_test(87, new lime_output_color());
+$t = new lime_test(94, new lime_output_color());
 
 $context = sfContext::getInstance(array(
   'controller' => 'myController',
@@ -112,6 +112,18 @@ $t->like(select_language_tag('name', 'fr'), '/'.preg_quote('<option value="fr" s
 // option
 $t->like(select_language_tag('name', null, array('class' => 'foo')), '/'.preg_quote('<select name="name" id="name" class="foo">').'/', 'select_language_tag() takes an array of options as its third argument');
 $t->is(preg_match_all('/<option/', select_language_tag('name', null, array('languages' => array('fr', 'en'))), $matches), 2, 'select_language_tag() takes a "languages" option');
+
+// select_currency_tag()
+$t->diag('select_currency_tag()');
+$t->like(select_currency_tag('name'), '/'.preg_quote('<select name="name" id="name">').'/', 'select_currency_tag() takes a name as its first argument');
+$t->cmp_ok(preg_match_all('/<option/', select_currency_tag('name'), $matches), '>', 200, 'select_currency_tag() takes a name as its first argument');
+$t->like(select_currency_tag('name', 'EUR'), '/'.preg_quote('<option value="EUR" selected="selected">').'/', 'select_currency_tag() takes the selected currency as its second argument');
+
+// option
+$t->like(select_currency_tag('name', null, array('class' => 'foo')), '/'.preg_quote('<select name="name" id="name" class="foo">').'/', 'select_currency_tag() takes an array of options as its third argument');
+$t->is(preg_match_all('/<option/', select_currency_tag('name', null, array('currencies' => array('EUR', 'USD'))), $matches), 2, 'select_currency_tag() takes a "currencies" option');
+$t->like(select_currency_tag('name', 'USD', array('currencies' => array('USD'), 'display' => 'symbol')), '/'.preg_quote('<option value="USD" selected="selected">US$<').'/' , 'select_currency_tag() takes a "display" option');
+$t->like(select_currency_tag('name', 'USD', array('currencies' => array('USD'), 'display' => 'code')), '/'.preg_quote('<option value="USD" selected="selected">USD<').'/' , 'select_currency_tag() takes a "display" option');
 
 // input_tag()
 $t->diag('input_tag()');
