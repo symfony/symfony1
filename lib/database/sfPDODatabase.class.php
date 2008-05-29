@@ -55,7 +55,7 @@ class sfPDODatabase extends sfDatabase
       $password   = $this->getParameter('password');
       $persistent = $this->getParameter('persistent');
 
-      $options = ($persistent) ? array(PDO::ATTR_PERSISTENT => true) : array(PDO::ATTR_PERSISTENT => false);
+      $options = ($persistent) ? array(PDO::ATTR_PERSISTENT => true) : array();
 
       $this->connection = new $pdo_class($dsn, $username, $password, $options);
 
