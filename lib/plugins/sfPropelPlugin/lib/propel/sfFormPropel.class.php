@@ -208,11 +208,11 @@ abstract class sfFormPropel extends sfForm
   }
 
   /**
-   * Saves the associated i18n objects.
+   * Updates the associated i18n objects values.
    *
    * @param Connection $con An optional Connection object
    */
-  public function saveI18n($con = null)
+  public function updateI18nObjects()
   {
     if (!$this->isValid())
     {
@@ -224,11 +224,6 @@ abstract class sfFormPropel extends sfForm
       throw new sfException(sprintf('The model "%s" is not internationalized.', $this->getModelName()));
     }
 
-    if (is_null($con))
-    {
-      $con = $this->getConnection();
-    }
-
     $values = $this->getValues();
     $method = sprintf('getCurrent%s', $this->getI18nModelName());
     foreach ($this->cultures as $culture)
@@ -237,7 +232,6 @@ abstract class sfFormPropel extends sfForm
 
       $i18n = $this->object->$method($culture);
       $i18n->fromArray($values[$culture], BasePeer::TYPE_FIELDNAME);
-      $i18n->save($con);
     }
   }
 
@@ -288,13 +282,13 @@ abstract class sfFormPropel extends sfForm
 
     $this->updateObject();
 
-    $this->object->save($con);
-
     // i18n table
     if ($this->isI18n())
     {
-      $this->saveI18n($con);
+      $this->updateI18nObjects($con);
     }
+
+    $this->object->save($con);
   }
 
   /**
