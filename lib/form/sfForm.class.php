@@ -759,6 +759,9 @@ class sfForm implements ArrayAccess
     $this->validatorSchema = clone $this->validatorSchema;
 
     // we rebind the cloned form because Exceptions are not clonable
-    $this->bind($this->taintedValues, $this->taintedFiles);
+    if ($this->isBound())
+    {
+      $this->bind($this->taintedValues, $this->taintedFiles);
+    }
   }
 }
