@@ -82,7 +82,6 @@ class sfProjectConfiguration
       // global directory structure
       'sf_apps_dir'    => $rootDir.DIRECTORY_SEPARATOR.'apps',
       'sf_lib_dir'     => $rootDir.DIRECTORY_SEPARATOR.'lib',
-      'sf_bin_dir'     => $rootDir.DIRECTORY_SEPARATOR.'batch',
       'sf_log_dir'     => $rootDir.DIRECTORY_SEPARATOR.'log',
       'sf_data_dir'    => $rootDir.DIRECTORY_SEPARATOR.'data',
       'sf_config_dir'  => $rootDir.DIRECTORY_SEPARATOR.'config',
