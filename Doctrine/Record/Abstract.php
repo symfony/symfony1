@@ -131,7 +131,6 @@ abstract class Doctrine_Record_Abstract extends Doctrine_Access
             $this->_table->setOption('inheritanceMap', $map[get_class($this)]);
             return;
         }
-
         $this->_table->setOption('subclasses', array_keys($map));
     }
 
