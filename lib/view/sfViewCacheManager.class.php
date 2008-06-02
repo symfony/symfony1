@@ -115,7 +115,7 @@ class sfViewCacheManager
         throw new sfException(sprintf('"%s" cannot be called as a function.', var_export($callable, true)));
       }
 
-      return call_user_func($callable, $internalUri, $hostName, $vary);
+      return call_user_func($callable, $internalUri, $hostName, $vary, $contextualPrefix);
     }
 
     if (strpos($internalUri, '@') === 0 && strpos($internalUri, '@sf_cache_partial') === false)
@@ -128,7 +128,7 @@ class sfViewCacheManager
     if ($this->isContextual($internalUri))
     {
       // Contextual partial
-      if(!$contextualPrefix)
+      if (!$contextualPrefix)
       {
         list($route_name, $params) = $this->controller->convertUrlStringToParameters($this->routing->getCurrentInternalUri());
         $cacheKey = $this->convertParametersToKey($params);
@@ -148,6 +148,7 @@ class sfViewCacheManager
       {
         $cacheKey = 'sf_cache_partial/';
       }
+
       $cacheKey .= $this->convertParametersToKey($params);
     }
 
