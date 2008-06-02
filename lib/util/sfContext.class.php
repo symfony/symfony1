@@ -186,7 +186,7 @@ class sfContext
   /**
    * Returns the configuration instance.
    *
-   * @return sfConfiguration The sfConfiguration instance
+   * @return sfApplicationConfiguration  The current application configuration instance
    */
   public function getConfiguration()
   {
