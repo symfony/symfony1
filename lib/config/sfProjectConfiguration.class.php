@@ -239,8 +239,8 @@ class sfProjectConfiguration
 
     $finder = sfFinder::type('dir')->maxdepth(0)->follow_link()->relative();
 
-    $bundledPlugins = $finder->in(sfConfig::get('sf_symfony_lib_dir').'/plugins');
-    $projectPlugins = $finder->in(sfConfig::get('sf_plugins_dir'));
+    $bundledPlugins = $finder->discard('.*')->prune('.*')->in(sfConfig::get('sf_symfony_lib_dir').'/plugins');
+    $projectPlugins = $finder->discard('.*')->prune('.*')->in(sfConfig::get('sf_plugins_dir'));
 
     // bundled plugins
     foreach ($bundledPlugins as $plugin)
