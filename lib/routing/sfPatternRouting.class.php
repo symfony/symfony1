@@ -125,7 +125,7 @@ class sfPatternRouting extends sfRouting
       $params = array();
 
       // add parameters
-      foreach (array_keys($variables) as $variable)
+      foreach (array_keys(array_merge($defaults, $variables)) as $variable)
       {
         if ($variable == 'module' || $variable == 'action')
         {
