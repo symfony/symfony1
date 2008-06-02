@@ -1577,12 +1577,13 @@ abstract class Doctrine_Query_Abstract
     /**
      * getSql
      * shortcut for {@link getSqlQuery()}.
-     *
+     * 
+     * @param array $params (optional)
      * @return string   sql query string
      */
-    public function getSql()
+    public function getSql($params = array())
     {
-        return $this->getSqlQuery();
+        return $this->getSqlQuery($params);
     }
 
     /**
