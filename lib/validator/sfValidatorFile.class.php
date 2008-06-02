@@ -410,9 +410,9 @@ class sfValidatedFile
   }
 
   /**
-   * Returns true if the file has already been saved.
+   * Returns the path where the file has been saved
    *
-   * @return Boolean true if the file has already been saved, false otherwise
+   * @return string The path where the file has been saved
    */
   public function getSavedName()
   {
