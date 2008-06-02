@@ -105,7 +105,7 @@ class sfDatabaseConfigHandler extends sfYamlConfigHandler
     {
       if (isset($dbConfig['file']))
       {
-        $config[$name]['file'] = $this->replacePath($dbConfig['file']);
+        $config[$name]['file'] = self::replacePath($dbConfig['file']);
       }
     }
 

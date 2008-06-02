@@ -92,7 +92,7 @@ abstract class sfConfigHandler
    *
    * @return string The new path
    */
-  public static function replacePath($path)
+  static public function replacePath($path)
   {
     if (is_array($path))
     {
