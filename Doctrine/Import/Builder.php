@@ -903,7 +903,7 @@ class Doctrine_Import_Builder
 
             // If we have a package then we need to make this extend the package definition and not the base definition
             // The package definition will then extends the base definition
-            $topLevel['inheritance']['extends'] = (isset($topLevel['package']) && $topLevel['package']) ? $this->_packagesPrefix . $topLevel['className']:'Base' . $topLevel['className'];
+            $topLevel['inheritance']['extends'] = (isset($topLevel['package']) && $topLevel['package']) ? $this->_packagesPrefix . $topLevel['className']:$this->_baseClassPrefix . $topLevel['className'];
             $topLevel['no_definition'] = true;
             $topLevel['generate_once'] = true;
             $topLevel['is_main_class'] = true;
@@ -914,7 +914,7 @@ class Doctrine_Import_Builder
 
                 $packageLevel = $definition;
                 $packageLevel['className'] = $topLevel['inheritance']['extends'];
-                $packageLevel['inheritance']['extends'] = 'Base' . $topLevel['className'];
+                $packageLevel['inheritance']['extends'] = $this->_baseClassPrefix . $topLevel['className'];
                 $packageLevel['no_definition'] = true;
                 $packageLevel['abstract'] = true;
                 $packageLevel['override_parent'] = true;
@@ -933,7 +933,7 @@ class Doctrine_Import_Builder
             }
 
             $baseClass = $definition;
-            $baseClass['className'] = 'Base' . $baseClass['className'];
+            $baseClass['className'] = $this->_baseClassPrefix . $baseClass['className'];
             $baseClass['abstract'] = true;
             $baseClass['override_parent'] = false;
             $baseClass['is_base_class'] = true;
