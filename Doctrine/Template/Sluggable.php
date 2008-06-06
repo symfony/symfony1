@@ -47,7 +47,8 @@ class Doctrine_Template_Sluggable extends Doctrine_Template
                                 'fields'        =>  array(),
                                 'uniqueBy'      =>  array(),
                                 'uniqueIndex'   =>  true,
-                                'canUpdate'     =>  false
+                                'canUpdate'     =>  false,
+                                'indexName'     =>  'sluggable'
     );
 
     /**
@@ -73,8 +74,8 @@ class Doctrine_Template_Sluggable extends Doctrine_Template
         if ($this->_options['unique'] == true && $this->_options['uniqueIndex'] == true && ! empty($this->_options['fields'])) {
             $indexFields = array($this->_options['name']);
             $indexFields = array_merge($indexFields, $this->_options['uniqueBy']);
-            $this->index('sluggable', array('fields' => $indexFields,
-                                            'type' => 'unique'));
+            $this->index($this->_options['indexName'], array('fields' => $indexFields,
+                                                             'type' => 'unique'));
         }
 
         $this->addListener(new Doctrine_Template_Listener_Sluggable($this->_options));
