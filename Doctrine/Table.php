@@ -1214,11 +1214,14 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         }
 
         $id = is_array($id) ? array_values($id) : array($id);
-
-        return $this->createQuery()
-            ->where(implode(' = ? AND ', (array) $this->getIdentifier()) . ' = ?', $id)
-            ->limit(1)
-            ->fetchOne(array(), $hydrationMode);
+        
+        $q = $this->createQuery();
+        $q->where(implode(' = ? AND ', (array) $this->getIdentifier()) . ' = ?', $id)
+                ->limit(1);
+        $res = $q->fetchOne(array(), $hydrationMode);
+        $q->free();
+        
+        return $res;
     }
 
     /**

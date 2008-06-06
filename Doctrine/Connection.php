@@ -873,8 +873,10 @@ abstract class Doctrine_Connection extends Doctrine_Configurable implements Coun
     public function query($query, array $params = array(), $hydrationMode = null)
     {
         $parser = new Doctrine_Query($this);
+        $res = $parser->query($query, $params, $hydrationMode);
+        $parser->free();
 
-        return $parser->query($query, $params, $hydrationMode);
+        return $res;
     }
 
     /**
