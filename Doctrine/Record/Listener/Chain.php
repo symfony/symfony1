@@ -123,13 +123,6 @@ class Doctrine_Record_Listener_Chain extends Doctrine_Access implements Doctrine
         }
     }
 
-    public function postDqlSelect(Doctrine_Event $event)
-    {
-        foreach ($this->_listeners as $listener) {
-            $listener->preDqlSelect($event);
-        }
-    }
-
     public function preSave(Doctrine_Event $event)
     {
         foreach ($this->_listeners as $listener) {
@@ -151,13 +144,6 @@ class Doctrine_Record_Listener_Chain extends Doctrine_Access implements Doctrine
         }
     }
 
-    public function postDqlDelete(Doctrine_Event $event)
-    {
-        foreach ($this->_listeners as $listener) {
-            $listener->preDqlDelete($event);
-        }
-    }
-
     public function preDelete(Doctrine_Event $event)
     {
         foreach ($this->_listeners as $listener) {
@@ -173,13 +159,6 @@ class Doctrine_Record_Listener_Chain extends Doctrine_Access implements Doctrine
     }
 
     public function preDqlUpdate(Doctrine_Event $event)
-    {
-        foreach ($this->_listeners as $listener) {
-            $listener->preDqlUpdate($event);
-        }
-    }
-
-    public function postDqlUpdate(Doctrine_Event $event)
     {
         foreach ($this->_listeners as $listener) {
             $listener->preDqlUpdate($event);
