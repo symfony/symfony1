@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(88, new lime_output_color());
+$t = new lime_test(89, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -228,6 +228,25 @@ catch (InvalidArgumentException $e)
 {
   $t->pass('->bind() second argument is mandatory if the form is multipart');
 }
+
+$t->diag('bind with files in embed form');
+$pf = new FormTest(); //parent form
+$pf->setValidatorSchema(new sfValidatorSchema()); //cleaning sfValidatorSchema to silence `_token_`
+
+$ef = new FormTest(); //embed form
+
+$ef->setValidatorSchema(new sfValidatorSchema(array(
+  1 => new sfValidatorString(array('min_length' => 2)),
+  2 => new sfValidatorString(array('min_length' => 2)),
+  'file' => new sfValidatorFile(array('max_size' => 2)),
+)));
+$ef->setWidgetSchema(new sfWidgetFormSchema(array('file' => new sfWidgetFormInputFile())));
+$pf->embedForm('ef', $ef);
+$pf->bind(array('ef' => array(1 => 'f', 2 => 'potencier')), array('ef' => array(
+  'file' => array('name' => 'test1.txt', 'type' => 'text/plain', 'tmp_name' => '/tmp/test1.txt', 'error' => 0, 'size' => 100)
+)));
+$t->is($pf->getErrorSchema()->getCode(), 'ef [1 [min_length] file [max_size]]', '->bind() behaves correctly with files in embed form');
+
 
 // ->renderGlobalErrors()
 $t->diag('->renderGlobalErrors()');
