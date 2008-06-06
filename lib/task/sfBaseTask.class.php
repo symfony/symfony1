@@ -37,7 +37,9 @@ abstract class sfBaseTask extends sfCommandApplicationTask
       $this->checkAppExists($application);
 
       require_once sfConfig::get('sf_config_dir').'/ProjectConfiguration.class.php';
-      $this->configuration = ProjectConfiguration::getApplicationConfiguration($application, $env, true, null, $this->dispatcher);
+
+      $isDebug = $commandManager->getOptionSet()->hasOption('debug') ? $commandManager->getOptionValue('debug') : true;
+      $this->configuration = ProjectConfiguration::getApplicationConfiguration($application, $env, $isDebug, null, $this->dispatcher);
     }
     else
     {
