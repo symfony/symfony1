@@ -115,7 +115,8 @@ class Doctrine_Import_Schema
                                                           'autoComplete',
                                                           'onDelete',
                                                           'onUpdate',
-                                                          'equal'),
+                                                          'equal',
+                                                          'override'),
 
                                    'inheritance'=>  array('type',
                                                           'extends',
