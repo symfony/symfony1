@@ -116,7 +116,8 @@ class Doctrine_Import_Schema
                                                           'onDelete',
                                                           'onUpdate',
                                                           'equal',
-                                                          'override'),
+                                                          'override',
+                                                          'owningSide'),
 
                                    'inheritance'=>  array('type',
                                                           'extends',
