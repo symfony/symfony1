@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(60, new lime_output_color());
+$t = new lime_test(61, new lime_output_color());
 
 $w1 = new sfWidgetFormInput(array(), array('class' => 'foo1'));
 $w2 = new sfWidgetFormInput();
@@ -322,6 +322,28 @@ $t->is($rendered, $expected, '->render() renders a schema to HTML');
 $t->diag('Widget schema with only hidden fields');
 $w = new sfWidgetFormSchema(array('w1' => new sfWidgetFormInputHidden()));
 $t->is($w->render(null), '<input type="hidden" name="w1" id="w1" />', '->render() is able to render widget schema that only contains hidden fields');
+
+$t->diag('Widget schema with an embed form as the last field and hidden fields');
+$w = new sfWidgetFormSchema();
+$w['w1'] = new sfWidgetFormInputHidden();
+$ew = new sfWidgetFormSchema(array('w3' => new sfWidgetFormInput()));
+$w['w4'] = new sfWidgetFormSchemaDecorator($ew, $w->getFormFormatter()->getDecoratorFormat());
+$expected = <<<EOF
+<tr>
+  <th>W4</th>
+  <td>
+    <table>
+      <tr>
+        <th><label for="w4_w3">W3</label></th>
+        <td><input type="text" name="w4[w3]" id="w4_w3" /></td>
+      </tr>
+    </table>
+    <input type="hidden" name="w1" id="w1" />
+  </td>
+</tr>
+
+EOF;
+$t->is(str_replace("\n", '', preg_replace('/^ +/m', '', $w->render(null))), str_replace("\n", '', preg_replace('/^ +/m', '', $expected)), '->render() is able to render widget schema that only contains hidden fields when the last field is a form');
 
 // __clone()
 $t->diag('__clone()');
