@@ -79,7 +79,6 @@ abstract class Doctrine_Relation implements ArrayAccess
                                   'equal'       => false,
                                   'cascade'     => array(), // application-level cascades
                                   'owningSide'  => false, // whether this is the owning side
-                                  'override'    => false // whether to override if relation exists already
                                   );
 
     /**

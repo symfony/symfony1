@@ -135,17 +135,10 @@ class Doctrine_Relation_Parser
             throw new Doctrine_Relation_Exception('Relation type not set.');
         }
 
-        if ($this->hasRelation($alias) && (! isset($options['override']) || ! $options['override'])) {
-            throw new Doctrine_Relation_Exception('A relationship with the name "' . $alias . '" already exists.');
+        if ($this->hasRelation($alias)) {
+            unset($this->relations[$alias]);
+            unset($this->_pending[$alias]);
         }
-
-        if (isset($this->relations[$alias])) { 
-	 	    unset($this->relations[$alias]); 
-        }
-
-        if (isset($this->_pending[$alias])) { 
-	 	    unset($this->_pending[$alias]); 
-        } 
 
         $this->_pending[$alias] = array_merge($options, array('class' => $name, 'alias' => $alias));
         
