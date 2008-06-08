@@ -67,7 +67,7 @@ class Doctrine_Connection_UnitOfWork extends Doctrine_Connection_Module
             $record->preSave($event);
             $record->getTable()->getRecordListener()->preSave($event);
             $state = $record->state();
-
+            
             if ( ! $event->skipOperation) {
                 switch ($state) {
                     case Doctrine_Record::STATE_TDIRTY:

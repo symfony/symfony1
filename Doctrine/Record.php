@@ -833,7 +833,6 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
             if ($this->_data[$fieldName] === self::$_null && $load) {
                 $this->load();
             }
-
             if ($this->_data[$fieldName] === self::$_null) {
                 $value = null;
             } else {
@@ -845,7 +844,7 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
         if (isset($this->_values[$fieldName])) {
             return $this->_values[$fieldName];
         }
-
+        
         try {
             if ( ! isset($this->_references[$fieldName]) && $load) {
                 $rel = $this->_table->getRelation($fieldName);
@@ -1185,15 +1184,18 @@ abstract class Doctrine_Record extends Doctrine_Record_Abstract implements Count
                     break;
                 default:
                     if ($this->_data[$field] instanceof Doctrine_Record) {
-                        $this->_data[$field] = $this->_data[$field]->getIncremented();
+                        $a[$field] = $this->_data[$field]->getIncremented();
+                        if ($a[$field] !== null) {
+                            $this->_data[$field] = $a[$field];
+                        }
+                    } else {
+                        $a[$field] = $this->_data[$field];
                     }
                     /** TODO:
                     if ($this->_data[$v] === null) {
                         throw new Doctrine_Record_Exception('Unexpected null value.');
                     }
                     */
-
-                    $a[$field] = $this->_data[$field];
             }
         }
         $map = $this->_table->inheritanceMap;
