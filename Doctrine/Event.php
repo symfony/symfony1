@@ -312,6 +312,19 @@ class Doctrine_Event
     }
 
     /**
+     * setInvoker
+     * Defines new invoker (used in Hydrator)
+     *
+     * @param mixed $invoker
+     * @return void
+     */
+    public function setInvoker($invoker)
+    {
+        $this->_invoker = $invoker;
+    }
+
+
+    /**
      * getParams
      * returns the parameters of the query
      *

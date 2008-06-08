@@ -73,8 +73,6 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
             $driver = new Doctrine_Hydrator_RecordDriver();
         }
 
-        $event = new Doctrine_Event(null, Doctrine_Event::HYDRATE, null);
-
         // Used variables during hydration
         reset($this->_queryComponents);
         $rootAlias = key($this->_queryComponents);
@@ -111,6 +109,8 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
             $idTemplate[$dqlAlias] = '';
         }
 
+        $event = new Doctrine_Event(null, Doctrine_Event::HYDRATE, null);
+
         // Process result set
         $cache = array();
         while ($data = $stmt->fetch(Doctrine::FETCH_ASSOC)) {
@@ -123,6 +123,8 @@ class Doctrine_Hydrator extends Doctrine_Hydrator_Abstract
             //
             $table = $this->_queryComponents[$rootAlias]['table'];
             $componentName = $table->getComponentName();
+            // Ticket #1115 (getInvoker() should return the component that has addEventListener)
+            $event->setInvoker($table);
             $event->set('data', $rowData[$rootAlias]);
             $listeners[$componentName]->preHydrate($event);
 
