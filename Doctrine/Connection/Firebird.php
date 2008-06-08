@@ -102,6 +102,9 @@ class Doctrine_Connection_Firebird extends Doctrine_Connection
      */
     public function modifyLimitQuery($query, $limit = false, $offset = false, $isManip = false)
     {
+        if ( ! $offset) {
+            $offset = 0;
+        }
         if ($limit > 0) {
             $query = preg_replace('/^([\s(])*SELECT(?!\s*FIRST\s*\d+)/i',
                 "SELECT FIRST $limit SKIP $offset", $query);
