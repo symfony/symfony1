@@ -500,6 +500,25 @@ abstract class Doctrine_Query_Abstract
     }
 
     /**
+     * getParams
+     *
+     * @return array
+     */
+    public function getParams($params = array())
+    {
+        return array_merge($this->_params['join'], $this->_params['set'], $this->_params['where'], $this->_params['having'], $params);
+    }
+
+    /**
+     * setParams
+     *
+     * @param array $params
+     */
+    public function setParams(array $params = array()) {
+        $this->_params = $params;
+    }
+
+    /**
      * setView
      * sets a database view this query object uses
      * this method should only be called internally by doctrine
@@ -967,11 +986,7 @@ abstract class Doctrine_Query_Abstract
             $this->_hydrator->setHydrationMode($hydrationMode);
         }
 
-        $params = array_merge($this->_params['join'],
-                              $this->_params['set'],
-                              $this->_params['where'],
-                              $this->_params['having'],
-                              $params);
+        $params = $this->getParams($params);
 
         if ($this->_resultCache && $this->_type == self::SELECT) {
             $cacheDriver = $this->getResultCacheDriver();
