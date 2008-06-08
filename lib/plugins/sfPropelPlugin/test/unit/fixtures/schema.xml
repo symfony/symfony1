@@ -63,11 +63,11 @@
     <column name="created_at" type="timestamp" />
     <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
     <index name="my_index">
-      <index-column name="title" />
+      <index-column name="title" size="10" />
       <index-column name="user_id" />
     </index>
     <unique name="my_other_index">
-      <unique-column name="created_at" />
+      <unique-column name="created_at" size="10" />
     </unique>
     <foreign-key foreignTable="cd_user" onDelete="cascade">
       <reference local="user_id" foreign="id" />

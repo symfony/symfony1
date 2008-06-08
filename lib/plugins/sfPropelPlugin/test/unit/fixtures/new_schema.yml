@@ -57,9 +57,9 @@ classes:
         references:
           - { local: user_id, foreign: id }
     indexes:
-      my_index:       [title, user_id]
+      my_index:       [title(10), user_id]
     uniques:
-      my_other_index: [created_at]
+      my_other_index: [created_at(10)]
     behaviors:
       paranoid: { column: deleted_at }
       act_as_nested_set:

@@ -279,7 +279,15 @@ class sfPropelDatabaseSchema
           $xml .= "    <index name=\"$index_name\">\n";
           foreach ($index as $index_column)
           {
-            $xml .= "      <index-column name=\"$index_column\" />\n";
+            preg_match('/^(.+?)\(([\d]+)\)$/', $index_column, $matches);
+            if (isset($matches[2]))
+            {
+              $xml .= "      <index-column name=\"{$matches[1]}\" size=\"{$matches[2]}\" />\n";
+            }
+            else
+            {
+              $xml .= "      <index-column name=\"$index_column\" />\n";
+            }
           }
           $xml .= "    </index>\n";
         }
@@ -293,7 +301,15 @@ class sfPropelDatabaseSchema
           $xml .= "    <unique name=\"$unique_name\">\n";
           foreach ($index as $unique_column)
           {
-            $xml .= "      <unique-column name=\"$unique_column\" />\n";
+            preg_match('/^(.+?)\(([\d]+)\)$/', $unique_column, $matches);
+            if (isset($matches[2]))
+            {
+              $xml .= "      <unique-column name=\"{$matches[1]}\" size=\"{$matches[2]}\" />\n";
+            }
+            else
+            {
+              $xml .= "      <unique-column name=\"$unique_column\" />\n";
+            }
           }
           $xml .= "    </unique>\n";
         }
