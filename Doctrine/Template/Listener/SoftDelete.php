@@ -50,6 +50,9 @@ class Doctrine_Template_Listener_SoftDelete extends Doctrine_Record_Listener
      */
     public function __construct(array $options)
     {
+        // Enable dql callbacks since this event listener utilizes them
+        Doctrine_Manager::getInstance()->setAttribute('use_dql_callbacks', true);
+
         $this->_options = $options;
     }
 

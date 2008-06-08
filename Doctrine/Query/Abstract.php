@@ -1078,31 +1078,20 @@ abstract class Doctrine_Query_Abstract
 
         $this->_preQueried = true;
 
-        $callback = $this->_getDqlCallback();
+        if (Doctrine_Manager::getInstance()->getAttribute('use_dql_callbacks')) {
+            $callback = $this->_getDqlCallback();
 
-        // if there is no callback for the query type, then we can return early
-        if ( ! $callback) {
-            return;
-        }
-
-        // parse the FROM clause to find all models used in the DQL
-        $from = new Doctrine_Query_From($this);
-        $this->_components = array();
-        foreach ($this->_dqlParts['from'] as $key => $table) {
-            $componentClause = $from->parse($table, true);
-            foreach ($componentClause as $c) {
-                // remove the prefix if there is one (aka "f.Bar" => "Bar")
-                $component = explode('.', $c[0]);
-                $component = array_pop($component);
-                $alias = isset($c[1]) ? $c[1] : $component;
-                $this->_components[$component] = $alias;
+            // if there is no callback for the query type, then we can return early
+            if ( ! $callback) {
+                return;
             }
-        }
 
-        foreach ($this->_components as $component => $alias) {
-            if (class_exists($component)) {
-                $componentObj = Doctrine::getTable($component);
-                $record = $componentObj->getRecordInstance();
+            $copy = $this->copy();
+            $copy->getSqlQuery();
+
+            foreach ($copy->getQueryComponents() as $alias => $component) {
+                $table = $component['table'];
+                $record = $table->getRecordInstance();
 
                 // check (and call) preDql*() callback on the model class
                 if (method_exists($record, $callback['callback'])) {
@@ -1112,7 +1101,7 @@ abstract class Doctrine_Query_Abstract
                 // trigger preDql*() callback event
                 $params = array('component`' => $component, 'alias' => $alias);
                 $event = new Doctrine_Event($record, $callback['const'], $this, $params);
-                $componentObj->getRecordListener()->$callback['callback']($event);
+                $table->getRecordListener()->$callback['callback']($event);
             }
         }
 
