@@ -243,6 +243,11 @@ abstract class Doctrine_Query_Abstract
     protected $_components;
 
     /**
+     * @var bool Boolean variable for whether or not the preQuery process has been executed
+     */
+    protected $_preQueried = false;
+
+    /**
      * Constructor.
      *
      * @param Doctrine_Connection  The connection object the query will use.
@@ -982,6 +987,8 @@ abstract class Doctrine_Query_Abstract
      */
     public function execute($params = array(), $hydrationMode = null)
     {
+        $this->_preQuery();
+
         if ($hydrationMode !== null) {
             $this->_hydrator->setHydrationMode($hydrationMode);
         }
@@ -1020,6 +1027,106 @@ abstract class Doctrine_Query_Abstract
         }
 
         return $result;
+    }
+
+
+    /**
+     * Get the dql call back for this query
+     *
+     * @return array $callback
+     */
+    protected function _getDqlCallback()
+    {
+        $callback = false;
+        if ( ! empty($this->_dqlParts['from'])) {
+            switch ($this->_type) {
+                case self::DELETE:
+                    $callback = array(
+                        'callback' => 'preDqlDelete',
+                        'const' => Doctrine_Event::RECORD_DQL_DELETE
+                    );
+                break;
+                case self::UPDATE:
+                    $callback = array(
+                        'callback' => 'preDqlUpdate',
+                        'const' => Doctrine_Event::RECORD_DQL_UPDATE
+                    );
+                break;
+                case self::SELECT:
+                    $callback = array(
+                        'callback' => 'preDqlSelect',
+                        'const' => Doctrine_Event::RECORD_DQL_SELECT
+                    );
+                break;
+            }
+        }
+
+        return $callback;
+    }
+
+    /**
+     * Pre query method which invokes the pre*Query() methods on the model instance or any attached
+     * record listeners
+     *
+     * @return void
+     */
+    protected function _preQuery()
+    {
+        if ($this->_preQueried) {
+            return;
+        }
+
+        $this->_preQueried = true;
+
+        $callback = $this->_getDqlCallback();
+
+        // if there is no callback for the query type, then we can return early
+        if ( ! $callback) {
+            return;
+        }
+
+        // parse the FROM clause to find all models used in the DQL
+        $from = new Doctrine_Query_From($this);
+        $this->_components = array();
+        foreach ($this->_dqlParts['from'] as $key => $table) {
+            $componentClause = $from->parse($table, true);
+            foreach ($componentClause as $c) {
+                // remove the prefix if there is one (aka "f.Bar" => "Bar")
+                $component = explode('.', $c[0]);
+                $component = array_pop($component);
+                $alias = isset($c[1]) ? $c[1] : $component;
+                $this->_components[$component] = $alias;
+            }
+        }
+
+        foreach ($this->_components as $component => $alias) {
+            if (class_exists($component)) {
+                $componentObj = Doctrine::getTable($component);
+                $record = $componentObj->getRecordInstance();
+
+                // check (and call) preDql*() callback on the model class
+                if (method_exists($record, $callback['callback'])) {
+                    $record->$callback['callback']($this, $component, $alias);
+                }
+
+                // trigger preDql*() callback event
+                $params = array('component`' => $component, 'alias' => $alias);
+                $event = new Doctrine_Event($record, $callback['const'], $this, $params);
+                $componentObj->getRecordListener()->$callback['callback']($event);
+            }
+        }
+
+        // Invoke preQuery() hook on Doctrine_Query for child classes which implement this hook
+        $this->preQuery();
+    }
+
+    /**
+     * Blank hook methods which can be implemented in Doctrine_Query child classes
+     *
+     * @return void
+     */
+    public function preQuery()
+    {
     }
 
     /**
