@@ -139,7 +139,7 @@ class Doctrine_Validator extends Doctrine_Locator_Injectable
              case 'integer':
                  return (string)$var == strval(intval($var));
              case 'string':
-                 return is_string($var) || is_int($var) || is_float($var);
+                 return is_string($var) || is_numeric($var);
              case 'blob':
              case 'clob':
              case 'gzip':
