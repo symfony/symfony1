@@ -134,7 +134,7 @@ class sfValidatorDate extends sfValidatorBase
       ;
       if ($empties > 0 && $empties < 3)
       {
-        if (1 == $empties && !isset($value['second']) || empty($value['second']))
+        if (1 == $empties && (!isset($value['second']) || empty($value['second'])))
         {
           // OK
         }
