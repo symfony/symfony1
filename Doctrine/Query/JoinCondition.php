@@ -39,10 +39,30 @@ class Doctrine_Query_JoinCondition extends Doctrine_Query_Condition
         $e = $this->_tokenizer->sqlExplode($condition);
 
         if (count($e) > 2) {
+            $expr = new Doctrine_Expression($e[0], $this->query->getConnection());
+            $e[0] = $expr->getSql();
+
+            $operator  = $e[1];
+
+            $expr = new Doctrine_Expression($e[2], $this->query->getConnection());
+            $e[2] = $expr->getSql();
+
+            // We need to check for agg functions here
+            $hasLeftAggExpression = preg_match('/(.*)\(([^\)]*)\)([\)]*)/', $e[0], $leftMatches);
+
+            if ($hasLeftAggExpression) {
+                $e[0] = $leftMatches[2];
+            }
+
+            $hasRightAggExpression = preg_match('/(.*)\(([^\)]*)\)([\)]*)/', $e[2], $rightMatches);
+
+            if ($hasRightAggExpression) {
+                $e[2] = $rightMatches[2];
+            }
+
             $a         = explode('.', $e[0]);
             $field     = array_pop($a);
             $reference = implode('.', $a);
-            $operator  = $e[1];
             $value     = $e[2];
 
             $conn      = $this->query->getConnection();
@@ -103,11 +123,19 @@ class Doctrine_Query_JoinCondition extends Doctrine_Query_Condition
                         $value  = $enumIndex;
                     }
                 default:
-                    $condition  = $alias . '.' . $field . ' '
-                                . $operator . ' ' . $value;
+                    $leftExpr = (($hasLeftAggExpression) ? $leftMatches[1] . '(' : '') 
+                              . $alias . '.' . $field
+                              . (($hasLeftAggExpression) ? $leftMatches[3] . ')' : '') ;
+
+                    $rightExpr = (($hasRightAggExpression) ? $rightMatches[1] . '(' : '') 
+                              . $value
+                              . (($hasRightAggExpression) ? $rightMatches[3] . ')' : '') ;
+
+                    $condition  = $leftExpr . ' ' . $operator . ' ' . $rightExpr;
             }
 
         }
+
         return $condition;
     }
 }
