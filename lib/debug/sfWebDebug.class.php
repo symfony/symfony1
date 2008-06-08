@@ -353,7 +353,7 @@ class sfWebDebug
     $id = ucfirst(strtolower($id));
     $content = '
     <h2>'.$id.' <a href="#" onclick="sfWebDebugToggle(\'sfWebDebug'.$id.'\'); return false;">'.image_tag(sfConfig::get('sf_web_debug_web_dir').'/images/toggle.gif').'</a></h2>
-    <div id="sfWebDebug'.$id.'" style="display: none"><pre>'.htmlspecialchars(sfYaml::dump($values), ENT_QUOTES, sfConfig::get('sf_charset')).'</pre></div>
+    <div id="sfWebDebug'.$id.'" style="display: none"><pre>'.htmlspecialchars(sfYaml::dump(self::removeObjects($values)), ENT_QUOTES, sfConfig::get('sf_charset')).'</pre></div>
     ';
 
     return $content;
@@ -419,5 +419,27 @@ class sfWebDebug
     {
       return 'error';
     }
+  }
+
+  static protected function removeObjects($values)
+  {
+    $nvalues = array();
+    foreach ($values as $key => $value)
+    {
+      if (is_array($value))
+      {
+        $nvalues[$key] = self::removeObjects($value);
+      }
+      else if (is_object($value))
+      {
+        $nvalues[$key] = sprintf('%s Object()', get_class($value));
+      }
+      else
+      {
+        $nvalues[$key] = $value;
+      }
+    }
+
+    return $nvalues;
   }
 }
