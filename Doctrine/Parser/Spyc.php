@@ -545,8 +545,13 @@ class Doctrine_Parser_Spyc {
     } elseif (strtolower($value) == 'null' or $value == '' or $value == '~') {
       $value = NULL;
     } elseif (preg_match ('/^[0-9]+$/', $value)) {
-    // Cheeky change for compartibility with PHP < 4.2.0
-      $value = (int)$value;
+      // Cheeky change for compartibility with PHP < 4.2.0
+      $raw = $value;
+      $value = (int) $value;
+
+      if ((string) $value != (string) $raw) {
+          $value = (string) $raw;
+      }
     } elseif (in_array(strtolower($value),
                 array('true', 'on', '+', 'yes', 'y'))) {
       $value = true;
@@ -554,7 +559,12 @@ class Doctrine_Parser_Spyc {
                 array('false', 'off', '-', 'no', 'n'))) {
       $value = false;
     } elseif (is_numeric($value)) {
-      $value = (float)$value;
+      $raw = $value;
+      $value = (float) $value;
+
+      if ((string) $value != (string) $raw) {
+          $value = (string) $raw;
+      }
     } else {
       // Just a normal string, right?
       $value = trim(preg_replace('/#(.+)$/','',$value));
