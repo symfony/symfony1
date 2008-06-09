@@ -600,8 +600,8 @@ $t->is(array_keys($widgetSchema->getFields()), array('a', 'b', 'c', 'd'), 'merge
 $t->is(array_keys($validatorSchema->getFields()), array('a', 'b', 'c', 'd'), 'mergeForms() merges the correct validators');
 $t->isa_ok($widgetSchema['c'], 'sfWidgetFormTextarea', 'mergeForm() overrides original form widget');
 $t->isa_ok($validatorSchema['c'], 'sfValidatorPass', 'mergeForm() overrides original form validator');
-$t->isa_ok($validatorSchema->getPreValidator(), 'sfValidatorAnd', 'mergeForm() merges pre validator');
-$t->isa_ok($validatorSchema->getPostValidator(), 'sfValidatorAnd', 'mergeForm() merges post validator');
+$t->isa_ok($validatorSchema->getPreValidator(), 'sfValidatorPass', 'mergeForm() merges pre validator');
+$t->isa_ok($validatorSchema->getPostValidator(), 'sfValidatorPass', 'mergeForm() merges post validator');
 
 try
 {

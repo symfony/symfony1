@@ -269,7 +269,10 @@ class sfForm implements ArrayAccess
 
     $this->widgetSchema[$name] = new sfWidgetFormSchemaDecorator($widgetSchema, $decorator);
     $this->validatorSchema[$name] = $form->getValidatorSchema();
-    
+
+    $this->mergePreValidator($form->getValidatorSchema()->getPreValidator());
+    $this->mergePostValidator($form->getValidatorSchema()->getPostValidator());
+
     $this->resetFormFields();
   }
 
@@ -317,6 +320,9 @@ class sfForm implements ArrayAccess
     $this->widgetSchema[$name] = new sfWidgetFormSchemaDecorator(new sfWidgetFormSchemaForEach(new sfWidgetFormSchemaDecorator($widgetSchema, $innerDecorator), $n, $attributes, $options, $labels), $decorator);
     $this->validatorSchema[$name] = new sfValidatorSchemaForEach($form->getValidatorSchema(), $n);
 
+    $this->mergePreValidator($form->getValidatorSchema()->getPreValidator());
+    $this->mergePostValidator($form->getValidatorSchema()->getPostValidator());
+
     $this->resetFormFields();
   }
   
@@ -343,29 +349,66 @@ class sfForm implements ArrayAccess
     {
       $this->widgetSchema[$field] = $widget;
     }
-    
+
     foreach ($form->getValidatorSchema()->getFields() as $field => $validator)
     {
       $this->validatorSchema[$field] = $validator;
     }
-    
-    if (!is_null($form->getValidatorSchema()->getPreValidator()))
-    {
-      $this->validatorSchema->setPreValidator(new sfValidatorAnd(array(
-        !is_null($this->validatorSchema->getPreValidator()) ? $this->validatorSchema->getPreValidator() : new sfValidatorPass(), 
-        $form->getValidatorSchema()->getPreValidator(),
-      )));
-    }
-    
-    if (!is_null($form->getValidatorSchema()->getPostValidator()))
-    {
-      $this->validatorSchema->setPostValidator(new sfValidatorAnd(array(
-        !is_null($this->validatorSchema->getPostValidator()) ? $this->validatorSchema->getPostValidator() : new sfValidatorPass(), 
-        $form->getValidatorSchema()->getPostValidator(),
-      )));
-    }
+
+    $this->mergePreValidator($form->getValidatorSchema()->getPreValidator());
+    $this->mergePostValidator($form->getValidatorSchema()->getPostValidator());
 
     $this->resetFormFields();
+  }
+
+  /**
+   * Merges a validator with the current pre validators.
+   *
+   * @param sfValidatorBase $validator A validator to be merged
+   */
+  public function mergePreValidator(sfValidatorBase $validator = null)
+  {
+    if (is_null($validator))
+    {
+      return;
+    }
+
+    if (is_null($this->validatorSchema->getPreValidator()))
+    {
+      $this->validatorSchema->setPreValidator($validator);
+    }
+    else
+    {
+      $this->validatorSchema->setPreValidator(new sfValidatorAnd(array(
+        $this->validatorSchema->getPreValidator(),
+        $validator,
+      )));
+    }
+  }
+
+  /**
+   * Merges a validator with the current post validators.
+   *
+   * @param sfValidatorBase $validator A validator to be merged
+   */
+  public function mergePostValidator(sfValidatorBase $validator = null)
+  {
+    if (is_null($validator))
+    {
+      return;
+    }
+
+    if (is_null($this->validatorSchema->getPostValidator()))
+    {
+      $this->validatorSchema->setPostValidator($validator);
+    }
+    else
+    {
+      $this->validatorSchema->setPostValidator(new sfValidatorAnd(array(
+        $this->validatorSchema->getPostValidator(),
+        $validator,
+      )));
+    }
   }
 
   /**
