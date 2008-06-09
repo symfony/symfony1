@@ -90,14 +90,42 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
     public function preDelete(Doctrine_Event $event)
     {
         if ($this->_auditLog->getOption('auditLog')) {
-            $class = $this->_auditLog->getOption('className');
+	        $className = $this->_auditLog->getOption('className');
+	        $versionColumn = $this->_auditLog->getOption('versionColumn');
+	        $event->getInvoker()->set($versionColumn, null);
 
-            $record  = $event->getInvoker();
+	        $q = Doctrine_Query::create();
+	        foreach ((array) $this->_auditLog->getOption('table')->getIdentifier() as $id) {
+	            $conditions[] = 'obj.' . $id . ' = ?';
+	            $values[] = $event->getInvoker()->get($id);
+	        }
+
+	        $rows = $q->delete($className)
+					  ->from($className.' obj')
+					  ->where(implode(' AND ',$conditions))
+					  ->execute($values);
+
+	        if ( ! count($rows)){
+	           throw new Doctrine_Record_Exception('Can not delete Versions!',Doctrine::ERR_CANNOT_DELETE);
+	        }
+        }
+    }
+  
+    /**
+     * Pre update event hook for inserting new version record
+     *
+     * @param  Doctrine_Event $event
+     * @return void
+     */
+    public function preUpdate(Doctrine_Event $event)
+    {
+        if ($this->_auditLog->getOption('auditLog')) {
+            $class  = $this->_auditLog->getOption('className');
+            $record = $event->getInvoker();
 
             $versionColumn = $this->_auditLog->getOption('versionColumn');
-            $version = $record->get($versionColumn);
 
-            $record->set($versionColumn, ++$version);
+            $record->set($versionColumn, $this->_getNextVersion($record));
 
             $version = new $class();
             $version->merge($record->toArray());
@@ -106,26 +134,15 @@ class Doctrine_AuditLog_Listener extends Doctrine_Record_Listener
     }
 
     /**
-     * Pre update event hook for inserting new version record
+     * Get the next version for the audit log
      *
-     * @param  Doctrine_Event $event 
-     * @return void
+     * @param Doctrine_Record $record 
+     * @return integer $nextVersion
      */
-    public function preUpdate(Doctrine_Event $event)
+    protected function _getNextVersion(Doctrine_Record $record)
     {
-        if ($this->_auditLog->getOption('auditLog')) {
-            $class  = $this->_auditLog->getOption('className');
-            $record = $event->getInvoker(); 
-
-            $versionColumn = $this->_auditLog->getOption('versionColumn');
-
-            $version = $record->get($versionColumn);
-
-            $record->set($versionColumn, ++$version);
-        
-            $version = new $class();
-            $version->merge($record->toArray());
-            $version->save();
-        }
+      if ($this->_auditLog->getOption('auditLog')) {
+          return ($this->_auditLog->getMaxVersion($record) + 1);
+      }
     }
 }

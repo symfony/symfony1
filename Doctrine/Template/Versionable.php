@@ -37,7 +37,7 @@ class Doctrine_Template_Versionable extends Doctrine_Template
     /**
      * __construct
      *
-     * @param array $options 
+     * @param array $options
      * @return void
      */
     public function __construct(array $options = array())
@@ -69,5 +69,34 @@ class Doctrine_Template_Versionable extends Doctrine_Template
     public function getAuditLog()
     {
         return $this->_plugin;
+    }
+
+     /**
+     * revert
+     * reverts this record to given version, this method only works if versioning plugin
+     * is enabled
+     *
+     * @throws Doctrine_Record_Exception    if given version does not exist
+     * @param integer $version      an integer > 1
+     * @return Doctrine_Record      this object
+     */
+    public function revert($version)
+    {
+        $auditLog = $this->_plugin;
+
+        if ( ! $auditLog->getOption('auditLog')) {
+            throw new Doctrine_Record_Exception('Audit log is turned off, no version history is recorded.');
+        }
+
+        $data = $auditLog->getVersion($this->getInvoker(), $version);
+
+        if ( ! isset($data[0])) {
+            throw new Doctrine_Record_Exception('Version ' . $version . ' does not exist!');
+        }
+
+        $this->getInvoker()->merge($data[0]);
+
+
+        return $this->getInvoker();
     }
 }
