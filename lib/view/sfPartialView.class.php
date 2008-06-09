@@ -34,6 +34,7 @@ class sfPartialView extends sfPHPView
   public function setPartialVars(array $partialVars)
   {
     $this->partialVars = $partialVars;
+    $this->getAttributeHolder()->add($partialVars);
   }
 
   /**
@@ -82,8 +83,6 @@ class sfPartialView extends sfPHPView
         $this->context->setResponse($response = new $responseClass($this->context->getEventDispatcher(), $mainResponse->getOptions()));
       }
     }
-
-    $this->getAttributeHolder()->add($this->partialVars);
 
     // execute pre-render check
     $this->preRenderCheck();
