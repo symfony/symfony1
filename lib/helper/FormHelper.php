@@ -755,7 +755,7 @@ function input_date_tag($name, $value = null, $options = array())
 
   $jss = array(
     sfConfig::get('sf_calendar_web_dir').'/calendar',
-    $langFile
+    $langFile,
     sfConfig::get('sf_calendar_web_dir').'/calendar-setup',
   );
   foreach ($jss as $js)
