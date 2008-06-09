@@ -256,14 +256,30 @@ abstract class sfAction extends sfComponent
   }
 
   /**
-   * Appends the result of the given partial execution to the response content
-   * and bypasses the built-in view system.
+   * Returns the partial rendered content.
    *
    * If the vars parameter is omitted, the action's internal variables
    * will be passed, just as it would to a normal template.
    *
    * If the vars parameter is set then only those values are
    * available in the partial.
+   *
+   * @param  string $templateName partial name
+   * @param  array  $vars         vars
+   *
+   * @return string The partial content
+   */
+  public function getPartial($templateName, $vars = null)
+  {
+    sfLoader::loadHelpers('Partial');
+
+    $vars = !is_null($vars) ? $vars : $this->varHolder->getAll();
+
+    return get_partial($templateName, $vars);
+  }
+
+  /**
+   * Appends the result of the given partial execution to the response content.
    *
    * This method must be called as with a return:
    *
@@ -273,25 +289,40 @@ abstract class sfAction extends sfComponent
    * @param  array  $vars         vars
    *
    * @return sfView::NONE
+   *
+   * @see    getPartial
    */
   public function renderPartial($templateName, $vars = null)
   {
-    sfLoader::loadHelpers('Partial');
-
-    $vars = !is_null($vars) ? $vars : $this->varHolder->getAll();
-
-    return $this->renderText(get_partial($templateName, $vars));
+    return $this->renderText($this->getPartial($templateName, $vars));
   }
 
   /**
-   * Appends the result of the given component execution to the response content
-   * and bypasses the built-in view system.
+   * Returns the component rendered content.
    *
    * If the vars parameter is omitted, the action's internal variables
    * will be passed, just as it would to a normal template.
    *
    * If the vars parameter is set then only those values are
    * available in the component.
+   *
+   * @param  string  $moduleName    module name
+   * @param  string  $componentNae  component name
+   * @param  array   $vars          vars
+   *
+   * @return string  The component rendered content
+   */
+  public function getComponent($moduleName, $componentName, $vars = null)
+  {
+    sfLoader::loadHelpers('Partial');
+
+    $vars = !is_null($vars) ? $vars : $this->varHolder->getAll();
+
+    return get_component($moduleName, $componentName, $vars);
+  }
+
+  /**
+   * Appends the result of the given component execution to the response content.
    *
    * This method must be called as with a return:
    *
@@ -302,14 +333,12 @@ abstract class sfAction extends sfComponent
    * @param  array   $vars          vars
    *
    * @return sfView::NONE
+   *
+   * @see    getComponent
    */
   public function renderComponent($moduleName, $componentName, $vars = null)
   {
-    sfLoader::loadHelpers('Partial');
-
-    $vars = !is_null($vars) ? $vars : $this->varHolder->getAll();
-
-    return $this->renderText(get_component($moduleName, $componentName, $vars));
+    return $this->renderText($this->getComponent($moduleName, $componentName, $vars));
   }
 
   /**
