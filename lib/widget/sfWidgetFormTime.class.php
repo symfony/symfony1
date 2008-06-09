@@ -42,9 +42,9 @@ class sfWidgetFormTime extends sfWidgetForm
     $this->addOption('format', '%hour%:%minute%:%second%');
     $this->addOption('format_without_seconds', '%hour%:%minute%');
     $this->addOption('with_seconds', false);
-    $this->addOption('hours', array_combine(range(0, 23), range(0, 23)));
-    $this->addOption('minutes', array_combine(range(0, 59), range(0, 59)));
-    $this->addOption('seconds', array_combine(range(0, 59), range(0, 59)));
+    $this->addOption('hours', parent::generateTwoCharsRange(0, 23));
+    $this->addOption('minutes', parent::generateTwoCharsRange(0, 59));
+    $this->addOption('seconds', parent::generateTwoCharsRange(0, 59));
 
     $this->addOption('can_be_empty', true);
     $this->addOption('empty_values', array('hour' => '', 'minute' => '', 'second' => ''));

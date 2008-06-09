@@ -179,4 +179,21 @@ abstract class sfWidgetForm extends sfWidget
 
     return $name;
   }
+  
+  /**
+   * Generates a two chars range
+   *
+   * @param  int  $start
+   * @param  int  $stop
+   * @return array
+   */
+  static protected function generateTwoCharsRange($start, $stop)
+  {
+    $results = array();
+    for ($i = $start; $i <= $stop; $i++) 
+    {
+      $results[$i] = sprintf('%02d', $i);
+    }
+    return $results;
+  }
 }
