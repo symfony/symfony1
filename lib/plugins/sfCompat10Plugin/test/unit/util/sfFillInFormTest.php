@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../../../../../test/bootstrap/unit.php');
 require_once(dirname(__FILE__).'/../../../lib/util/sfFillInForm.class.php');
 
-$t = new lime_test(69, new lime_output_color());
+$t = new lime_test(72, new lime_output_color());
 
 $html = <<<EOF
 <html>
@@ -257,17 +257,24 @@ $xml = <<<EOF
   <body>
     <form action="#" method="post" name="form">
       <input type="text" name="foo" />
+      <select name="select">
+        <option value="first">first</option>
+        <option value="selected" selected="selected">selected</option>
+        <option value="last">last</option>
+      </select>
     </form>
   </body>
 </html>
 EOF;
 $xml = $f->fillInXml($xml, 'form', null, array('foo' => 'bar'));
 $t->like($xml, '#<input type="text" name="foo" value="bar"\s*/>#', '->fillInXml() outputs valid XML');
+$t->like($xml, '#<option value="selected" selected="selected">#', '->fillInXml() outputs valid XML');
 $t->like($xml, '#<\?xml version="1.0"\?>#',  '->fillInXml() outputs XML prolog');
 
 // ->fillInXhtml()
 $xml = $f->fillInXhtml($xml, 'form', null, array('foo' => 'bar'));
-$t->like($xml, '#<input type="text" name="foo" value="bar"\s*/>#', '->fillInXml() outputs valid XML');
+$t->like($xml, '#<input type="text" name="foo" value="bar"\s*/>#', '->fillInXhml() outputs valid XML');
+$t->like($xml, '#<option value="selected" selected="selected">#', '->fillInXhml() outputs valid XML');
 $t->unlike($xml, '#<\?xml version="1.0"\?>#',  '->fillInXhtml() does not output XML prolog');
 
 // ->fillInHtml()
@@ -279,12 +286,18 @@ $xml = <<<EOF
   <body>
     <form action="#" method="post" name="form">
       <input type="text" name="foo">
+      <select name="select">
+        <option value="first">first</option>
+        <option value="selected" selected="selected">selected</option>
+        <option value="last">last</option>
+      </select>
     </form>
   </body>
 </html>
 EOF;
 $xml = $f->fillInHtml($xml, 'form', null, array('foo' => 'bar'));
 $t->like($xml, '#<input type="text" name="foo" value="bar">#', '->fillInHtml() outputs valid HTML');
+$t->like($xml, '#<option value="selected" selected>#', '->fillInHtml() outputs valid HTML');
 
 $xml = <<<EOF
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -297,7 +310,7 @@ $xml = <<<EOF
 </html>
 EOF;
 $xml = $f->fillInHtml($xml, 'form', null, array('foo' => 'bar'));
-$t->like($xml, '#<input type="text" name="foo" value="bar">#', '->fillInHtml() outputs valid HTML');
+$t->like($xml, '#<input type="text" name="foo" value="bar">#', '->fillInHtml() outputs valid HTML with doctype');
 $t->unlike($xml, '#<head.*?>#', '->fillInHtml() outputs valid HTML doesnt add head when not in input');
 $t->unlike($xml, '#<meta http-equiv="Content-Type" content="text/html; charset=utf-8">#', '->fillInHtml() outputs valid HTML doesnt add meta when not in input');
 
