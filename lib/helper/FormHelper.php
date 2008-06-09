@@ -741,10 +741,21 @@ function input_date_tag($name, $value = null, $options = array())
   }
 
   // register our javascripts and stylesheets
-  $langFile = sfConfig::get('sf_calendar_web_dir').'/lang/calendar-'.strtolower(substr($culture, 0, 2));
+  $langFile = sfConfig::get('sf_calendar_web_dir').'/lang/calendar-'.$culture;
+  if((!is_readable(sfConfig::get('sf_symfony_data_dir').'/web/'.$langFile.'.js')) &&
+     (!is_readable(sfConfig::get('sf_web_dir').'/'.$langFile.'.js')))
+  {
+   $langFile = sfConfig::get('sf_calendar_web_dir').'/lang/calendar-'.substr($culture,0,2);
+   if((!is_readable(sfConfig::get('sf_symfony_data_dir').'/web/'.$langFile.'.js')) &&
+      (!is_readable(sfConfig::get('sf_web_dir').'/'.$langFile.'.js')))
+   {
+     $langFile = sfConfig::get('sf_calendar_web_dir').'/lang/calendar-en';
+   }
+  }
+
   $jss = array(
     sfConfig::get('sf_calendar_web_dir').'/calendar',
-    is_readable(sfConfig::get('sf_symfony_data_dir').'/web/'.$langFile.'.js') || is_readable(sfConfig::get('sf_web_dir').'/'.$langFile.'.js') ? $langFile : sfConfig::get('sf_calendar_web_dir').'/lang/calendar-en',
+    $langFile
     sfConfig::get('sf_calendar_web_dir').'/calendar-setup',
   );
   foreach ($jss as $js)
