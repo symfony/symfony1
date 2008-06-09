@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(89, new lime_output_color());
+$t = new lime_test(99, new lime_output_color());
 
 class FormTest extends sfForm
 {
@@ -548,3 +548,71 @@ $t->ok($a1->getWidgetSchema() == $a->getWidgetSchema(), '__clone() clones the wi
 
 $t->ok($a1->getErrorSchema() !== $a->getErrorSchema(), '__clone() clones the error schema');
 $t->ok($a1->getErrorSchema()->getMessage() == $a->getErrorSchema()->getMessage(), '__clone() clones the error schema');
+
+// mergeForm()
+$t->diag('mergeForm()');
+
+class TestForm1 extends FormTest
+{
+  public function configure()
+  {
+    $this->disableCSRFProtection();
+    $this->setWidgets(array(
+      'a' => new sfWidgetFormInput(),
+      'b' => new sfWidgetFormInput(),
+      'c' => new sfWidgetFormInput(),
+    ));
+    $this->setValidators(array(
+      'a' => new sfValidatorString(array('min_length' => 2)),
+      'b' => new sfValidatorString(array('max_length' => 3)),
+      'c' => new sfValidatorString(array('max_length' => 1000)),
+    ));
+  }
+}
+
+class TestForm2 extends FormTest
+{
+  public function configure()
+  {
+    $this->disableCSRFProtection();
+    $this->setWidgets(array(
+      'c' => new sfWidgetFormTextarea(),
+      'd' => new sfWidgetFormTextarea(),
+    ));
+    $this->setValidators(array(
+      'c' => new sfValidatorPass(),
+      'd' => new sfValidatorString(array('max_length' => 5)),
+    ));
+    $this->validatorSchema->setPreValidator(new sfValidatorPass());
+    $this->validatorSchema->setPostValidator(new sfValidatorPass());
+  }
+}
+
+$f1 = new TestForm1();
+$f2 = new TestForm2();
+$f1->mergeForm($f2);
+
+$widgetSchema = $f1->getWidgetSchema();
+$validatorSchema = $f1->getValidatorSchema();
+$t->is(count($widgetSchema->getFields()), 4, 'mergeForm() merges a widget form schema');
+$t->is(count($validatorSchema->getFields()), 4, 'mergeForm() merges a validator schema');
+$t->is(array_keys($widgetSchema->getFields()), array('a', 'b', 'c', 'd'), 'mergeForms() merges the correct widgets');
+$t->is(array_keys($validatorSchema->getFields()), array('a', 'b', 'c', 'd'), 'mergeForms() merges the correct validators');
+$t->isa_ok($widgetSchema['c'], 'sfWidgetFormTextarea', 'mergeForm() overrides original form widget');
+$t->isa_ok($validatorSchema['c'], 'sfValidatorPass', 'mergeForm() overrides original form validator');
+$t->isa_ok($validatorSchema->getPreValidator(), 'sfValidatorAnd', 'mergeForm() merges pre validator');
+$t->isa_ok($validatorSchema->getPostValidator(), 'sfValidatorAnd', 'mergeForm() merges post validator');
+
+try
+{
+  $f1->bind(array('a' => 'foo', 'b' => 'bar', 'd' => 'far_too_long_value'));
+  $f1->mergeForm($f2);
+  $t->fail('mergeForm() disallows merging already bound forms');
+}
+catch (LogicException $e)
+{
+  $t->pass('mergeForm() disallows merging already bound forms');
+}
+
+$errorSchema = $f1->getErrorSchema();
+$t->ok(array_key_exists('d', $errorSchema->getErrors()), 'mergeForm() merges errors after having been bound');
