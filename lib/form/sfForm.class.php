@@ -294,7 +294,7 @@ class sfForm implements ArrayAccess
     {
       throw new LogicException('A bound form cannot be embedded');
     }
-    
+
     $form = clone $form;
     unset($form[self::$CSRFFieldName]);
 
@@ -320,12 +320,9 @@ class sfForm implements ArrayAccess
     $this->widgetSchema[$name] = new sfWidgetFormSchemaDecorator(new sfWidgetFormSchemaForEach(new sfWidgetFormSchemaDecorator($widgetSchema, $innerDecorator), $n, $attributes, $options, $labels), $decorator);
     $this->validatorSchema[$name] = new sfValidatorSchemaForEach($form->getValidatorSchema(), $n);
 
-    $this->mergePreValidator($form->getValidatorSchema()->getPreValidator());
-    $this->mergePostValidator($form->getValidatorSchema()->getPostValidator());
-
     $this->resetFormFields();
   }
-  
+
   /**
    * Merges current form widget and validator schemas with the ones from the 
    * sfForm object passed as parameter
