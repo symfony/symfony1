@@ -35,7 +35,7 @@ class Doctrine_Query_JoinCondition extends Doctrine_Query_Condition
     public function load($condition) 
     {
         $condition = trim($condition);
-        
+
         $e = $this->_tokenizer->sqlExplode($condition);
 
         if (count($e) > 2) {
@@ -44,8 +44,10 @@ class Doctrine_Query_JoinCondition extends Doctrine_Query_Condition
 
             $operator  = $e[1];
 
-            $expr = new Doctrine_Expression($e[2], $this->query->getConnection());
-            $e[2] = $expr->getSql();
+            if (substr(trim($e[2]), 0, 1) != '(') {
+                $expr = new Doctrine_Expression($e[2], $this->query->getConnection());
+                $e[2] = $expr->getSql();
+            }
 
             // We need to check for agg functions here
             $hasLeftAggExpression = preg_match('/(.*)\(([^\)]*)\)([\)]*)/', $e[0], $leftMatches);
