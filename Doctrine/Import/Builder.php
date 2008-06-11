@@ -479,6 +479,10 @@ class Doctrine_Import_Builder
                     $a[] = '\'equal\' => ' . $this->varExport($relation['equal']);
                 }
 
+                if (isset($relation['owningSide']) && $relation['owningSide']) {
+                    $a[] = '\'owningSide\' => ' . $this->varExport($relation['owningSide']);
+                }
+
                 if ( ! empty($a)) {
                     $ret[$i] .= ', ' . 'array(';
                     $length = strlen($ret[$i]);
