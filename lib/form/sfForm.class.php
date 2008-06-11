@@ -270,9 +270,6 @@ class sfForm implements ArrayAccess
     $this->widgetSchema[$name] = new sfWidgetFormSchemaDecorator($widgetSchema, $decorator);
     $this->validatorSchema[$name] = $form->getValidatorSchema();
 
-    $this->mergePreValidator($form->getValidatorSchema()->getPreValidator());
-    $this->mergePostValidator($form->getValidatorSchema()->getPostValidator());
-
     $this->resetFormFields();
   }
 
