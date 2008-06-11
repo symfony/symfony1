@@ -128,13 +128,13 @@ class sfValidatorDate extends sfValidatorBase
       // if one time value is empty, all others must be empty too
       // but second can be empty
       $empties =
-        (!isset($value['hour']) || !$value['hour'] ? 1 : 0) +
-        (!isset($value['minute']) || !$value['minute'] ? 1 : 0) +
-        (!isset($value['second']) || !$value['second'] ? 1 : 0)
+        (!isset($value['hour']) || in_array($value['hour'], array(null, ''), true) ? 1 : 0) +
+        (!isset($value['minute']) || in_array($value['minute'], array(null, ''), true) ? 1 : 0) +
+        (!isset($value['second']) || in_array($value['second'], array(null, ''), true) ? 1 : 0)
       ;
       if ($empties > 0 && $empties < 3)
       {
-        if (1 == $empties && (!isset($value['second']) || empty($value['second'])))
+        if (1 == $empties && (!isset($value['second']) || in_array($value['second'], array(null, ''))))
         {
           // OK
         }

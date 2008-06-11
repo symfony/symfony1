@@ -10,7 +10,7 @@
 
 require_once(dirname(__FILE__).'/../../bootstrap/unit.php');
 
-$t = new lime_test(38, new lime_output_color());
+$t = new lime_test(40, new lime_output_color());
 
 $v = new sfValidatorDate();
 
@@ -123,6 +123,8 @@ $t->is($v->clean(array('year' => '2005', 'month' => '10', 'day' => '15', 'hour' 
 $t->is($v->clean(array('year' => '', 'month' => '', 'day' => '', 'hour' => '', 'minute' => '', 'second' => '')), null, '->clean() accepts an array as an input');
 $t->is($v->clean(array('year' => 2005, 'month' => 10, 'day' => 15, 'hour' => 12, 'minute' => 10, 'second' => '')), '2005-10-15 12:10:00', '->clean() accepts an array as an input');
 $t->is($v->clean(array('year' => 2005, 'month' => 10, 'day' => 15, 'hour' => 12, 'minute' => 10)), '2005-10-15 12:10:00', '->clean() accepts an array as an input');
+$t->is($v->clean(array('year' => 2005, 'month' => 10, 'day' => 15, 'hour' => 0, 'minute' => 10)), '2005-10-15 00:10:00', '->clean() accepts an array as an input');
+$t->is($v->clean(array('year' => 2005, 'month' => 10, 'day' => 15, 'hour' => '0', 'minute' => 10)), '2005-10-15 00:10:00', '->clean() accepts an array as an input');
 try
 {
   $v->clean(array('year' => 2005, 'month' => 1, 'day' => 15, 'hour' => 12, 'minute' => '', 'second' => 12));
