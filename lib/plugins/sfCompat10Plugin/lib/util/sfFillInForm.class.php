@@ -225,7 +225,7 @@ class sfFillInForm
       return true;
     }
 
-    return null !== sfToolkit::getArrayValueForPath($values, $name);
+    return sfToolkit::hasArrayValueForPath($values, $name);
   }
 
   // use reference to values so that arrays can be shifted.
@@ -233,17 +233,17 @@ class sfFillInForm
   {
     if (array_key_exists($name, $values))
     {
-      $return = $values[$name];
-      if ($shiftArray && is_array($return))
-      {
-        // we need to remove the first element from the array. Therefore we need a reference
-        $arrayRef = &$values[$name];
-        $return = array_shift($arrayRef);
-      }
-      return $return;
+      $return = &$values[$name];
+    } else {
+      $return = &sfToolkit::getArrayValueForPath($values, $name);
     }
 
-    return sfToolkit::getArrayValueForPath($values, $name);
+    if ($shiftArray && is_array($return))
+    {
+      // we need to remove the first element from the array. Therefore we need a reference
+      return array_shift($return);
+    }
+    return $return;
   }
 
   protected function escapeValue($value, $name)

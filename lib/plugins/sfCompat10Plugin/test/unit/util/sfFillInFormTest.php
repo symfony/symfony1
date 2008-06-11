@@ -11,7 +11,7 @@
 require_once(dirname(__FILE__).'/../../../../../../test/bootstrap/unit.php');
 require_once(dirname(__FILE__).'/../../../lib/util/sfFillInForm.class.php');
 
-$t = new lime_test(72, new lime_output_color());
+$t = new lime_test(74, new lime_output_color());
 
 $html = <<<EOF
 <html>
@@ -44,6 +44,8 @@ $html = <<<EOF
       <option value="3" selected="selected">3</option>
     </select>
     <input name="article[or][much][longer]" value="very long!"/>
+    <input name="article[description][]" value="default description" />
+    <input name="article[description][]" value="default description2" />
     <input name="multiple_text[]" value="text1"/>
     <input name="multiple_text[]" value="text2"/>
     <textarea name="multiple_textarea[]">area1</textarea>
@@ -98,6 +100,7 @@ $t->is(get_input_value($xml, 'multiple_text[]'), array('text1', 'text2'), '->fil
 $t->is($xml->xpath('//form[@name="form1"]/textarea[@name="multiple_textarea[]"]'), array('area1', 'area2'), '->fillInDom() preserves default values for multiple textareas');
 $t->is($xml->xpath('//form[@name="form1"]/select[@name="articles[]"][1]/option[@selected="selected"]'), array(2, 3), '->fillInDom() preserves default values for multiple select');
 $t->is($xml->xpath('//form[@name="form1"]/select[@name="articles[]"][2]/option[@selected="selected"]'), array(1, 3), '->fillInDom() preserves default values for multiple select');
+$t->is(get_input_value($xml, 'article[description][]'), array('default description', 'default description2'), '->fillInDom() preserves default values for long multiple text inputs (article[description][])');
 
 // check form selection by name
 $xml = simplexml_import_dom($f->fillInDom(clone $dom, 'foo', null, array()));
@@ -150,8 +153,11 @@ $values = array(
   'select' => 'first',
   'select_multiple' => array('first', 'last'),
   'textarea' => 'my content',
-  'article[title]' => 'my article title',
-  'article[category]' => array(1, 2),
+  'article' => array(
+    'title' => 'my article title',
+    'category' => array(1, 2),
+    'description' => array('new description', 'new description2'),
+  ),
   'multiple_text[]' => array('m1', 'm2'),
   'multiple_textarea[]' => array('a1', 'a2'),
   'articles[]' => array(array(1, 2),array(2, 3)),
@@ -168,6 +174,7 @@ $t->is(get_input_value($xml, 'input_checkbox_not_checked', 'checked'), 'checked'
 $t->is(get_input_value($xml, 'input_checkbox_multiple[]', 'checked'), array(null, 'checked'), '->fillInDom() fills in values for multiple checkboxes');
 $t->is($xml->xpath('//form[@name="form1"]/textarea[@name="textarea"]'), array('my content'), '->fillInDom() fills in values for textarea');
 $t->is($xml->xpath('//form[@name="form1"]/select[@name="select"]/option[@selected="selected"]'), array('first'), '->fillInDom() fills in values for select');
+$t->is(get_input_value($xml, 'article[description][]'), array('new description', 'new description2'), '->fillInDom() fills in values for multiple text inputs in second dimension array');
 $t->is($xml->xpath('//form[@name="form1"]/select[@name="select_multiple"]/option[@selected="selected"]'), array('first', 'last'), '->fillInDom() fills in values for multiple select');
 $t->is(get_input_value($xml, 'article[title]'), 'my article title', '->fillInDom() fills in values for text input');
 $t->is($xml->xpath('//form[@name="form1"]/select[@name="article[category]"]/option[@selected="selected"]'), array(1, 2), '->fillInDom() fills in values for select');
@@ -220,7 +227,7 @@ function get_input_value($xml, $name, $attribute = 'value', $form = null)
 
   $values = $xml->xpath($xpath);
 
-  if (count($values) > 1)
+  if (count($values) > 1 || substr($name,-2)=='[]')
   {
     foreach($values as $val)
     {

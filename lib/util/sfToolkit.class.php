@@ -482,11 +482,16 @@ class sfToolkit
    *
    * @return array
    */
-  public static function getArrayValueForPath($values, $name, $default = null)
+  public static function &getArrayValueForPath(&$values, $name, $default = null)
   {
     if (false === $offset = strpos($name, '['))
     {
-      return isset($values[$name]) ? $values[$name] : $default;
+      $return = $default;
+      if (isset($values[$name]))
+      {
+        $return = &$values[$name];
+      }
+      return $return;
     }
 
     if (!isset($values[substr($name, 0, $offset)]))
@@ -494,7 +499,7 @@ class sfToolkit
       return $default;
     }
 
-    $array = $values[substr($name, 0, $offset)];
+    $array = &$values[substr($name, 0, $offset)];
 
     while (false !== $pos = strpos($name, '[', $offset))
     {
@@ -512,7 +517,7 @@ class sfToolkit
       {
         return $default;
       }
-      $array = $array[substr($name, $pos + 1, $end - $pos - 1)];
+      $array = &$array[substr($name, $pos + 1, $end - $pos - 1)];
       $offset = $end;
     }
 
