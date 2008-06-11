@@ -2135,7 +2135,7 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
      */
     protected function findBy($fieldName, $value, $hydrationMode = null)
     {
-        return $this->createQuery()->where($fieldName . ' = ?')->execute(array($value), $hydrationMode);
+        return $this->createQuery()->where($fieldName . ' = ?', array($value))->execute(array(), $hydrationMode);
     }
 
     /**
@@ -2149,9 +2149,9 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
     protected function findOneBy($fieldName, $value, $hydrationMode = null)
     {
         $results = $this->createQuery()
-                        ->where($fieldName . ' = ?')
+                        ->where($fieldName . ' = ?',array($value))
                         ->limit(1)
-                        ->execute(array($value), $hydrationMode);
+                        ->execute(array(), $hydrationMode);
 
         if (is_array($results) && isset($results[0])) {
             return $results[0];
@@ -2188,7 +2188,6 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
 
             $fieldName = Doctrine_Inflector::tableize($by);
             $hydrationMode = isset($arguments[1]) ? $arguments[1]:null;
-
             if ($this->hasColumn($this->getColumnName($fieldName))) {
                 return $this->$method($fieldName, $arguments[0], $hydrationMode);
             } else if ($this->hasRelation($by)) {
