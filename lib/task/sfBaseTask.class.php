@@ -60,6 +60,11 @@ abstract class sfBaseTask extends sfCommandApplicationTask
       $autoloader->addDirectory($dir);
     }
 
+    if (!$this->commandApplication->withTrace())
+    {
+      sfConfig::set('sf_logging_enabled', false);
+    }
+
     return $this->execute($commandManager->getArgumentValues(), $commandManager->getOptionValues());
   }
 
