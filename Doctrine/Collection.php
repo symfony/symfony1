@@ -849,7 +849,7 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
      *
      * @return Doctrine_Collection
      */
-    public function delete(Doctrine_Connection $conn = null)
+    public function delete(Doctrine_Connection $conn = null, $clearColl = true)
     {
         if ($conn == null) {
             $conn = $this->_table->getConnection();
@@ -863,13 +863,31 @@ class Doctrine_Collection extends Doctrine_Access implements Countable, Iterator
         }
 
         $conn->commit();
-
-        $this->data = array();
+        
+        if ($clearColl) {
+            $this->clear();
+        }
         
         return $this;
     }
+    
+    /**
+     * Clears the collection.
+     *
+     * @return void
+     */
+    public function clear()
+    {
+        $this->data = array();
+    }
 
-
+    /**
+     * Frees the resources used by the collection.
+     * WARNING: After invoking free() the collection is no longer considered to
+     * be in a useable state. Subsequent usage may result in unexpected behavior.
+     *
+     * @return void
+     */
     public function free($deep = false)
     {
         foreach ($this->getData() as $key => $record) {
