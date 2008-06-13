@@ -511,6 +511,11 @@ class Doctrine_Import_Schema
                         $columnClassName = Doctrine_Inflector::classify(str_replace('_id', '', $column['name']));
                         if (isset($array[$columnClassName]) && !isset($array[$className]['relations'][$columnClassName])) {
                             $array[$className]['relations'][$columnClassName] = array();
+
+                            // Set the detected foreign key type and length to the same as the primary key
+                            // of the related table
+                            $array[$className]['columns'][$column['name']]['type'] = $array[$columnClassName]['columns']['id']['type'];
+                            $array[$className]['columns'][$column['name']]['length'] = $array[$columnClassName]['columns']['id']['length'];
                         }
                     }
                 }
