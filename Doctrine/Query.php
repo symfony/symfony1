@@ -1746,27 +1746,13 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
     }
 
     /**
-     * count
-     * fetches the count of the query
+     * Get count sql query for this Doctrine_Query instance
+     * Used in Doctrine_Query::count() for returning an integer for the number of records which will
+     * be returned when executed.
      *
-     * This method executes the main query without all the
-     * selected fields, ORDER BY part, LIMIT part and OFFSET part.
-     *
-     * Example:
-     * Main query:
-     *      SELECT u.*, p.phonenumber FROM User u
-     *          LEFT JOIN u.Phonenumber p
-     *          WHERE p.phonenumber = '123 123' LIMIT 10
-     *
-     * The modified DQL query:
-     *      SELECT COUNT(DISTINCT u.id) FROM User u
-     *          LEFT JOIN u.Phonenumber p
-     *          WHERE p.phonenumber = '123 123'
-     *
-     * @param array $params        an array of prepared statement parameters
-     * @return integer             the count of this query
+     * @return string $q
      */
-    public function count($params = array())
+    public function getCountQuery()
     {
         // triggers dql parsing/processing
         $this->getQuery(); // this is ugly
@@ -1816,12 +1802,39 @@ class Doctrine_Query extends Doctrine_Query_Abstract implements Countable, Seria
 
         $q .= ( ! empty($having)) ? ' HAVING ' . implode(' AND ', $having): '';
 
+        return $q;
+    }
+
+    /**
+     * count
+     * fetches the count of the query
+     *
+     * This method executes the main query without all the
+     * selected fields, ORDER BY part, LIMIT part and OFFSET part.
+     *
+     * Example:
+     * Main query:
+     *      SELECT u.*, p.phonenumber FROM User u
+     *          LEFT JOIN u.Phonenumber p
+     *          WHERE p.phonenumber = '123 123' LIMIT 10
+     *
+     * The modified DQL query:
+     *      SELECT COUNT(DISTINCT u.id) FROM User u
+     *          LEFT JOIN u.Phonenumber p
+     *          WHERE p.phonenumber = '123 123'
+     *
+     * @param array $params        an array of prepared statement parameters
+     * @return integer             the count of this query
+     */
+    public function count($params = array())
+    {
+        $q = $this->getCountQuery();
+
         if ( ! is_array($params)) {
             $params = array($params);
         }
 
-        // append parameters
-        $params = array_merge($this->_params['where'], $this->_params['having'], $this->_params['join'], $params);
+        $params = array_merge($this->_params['join'], $this->_params['where'], $this->_params['having'], $params);
 
         $params = $this->convertEnums($params);
 
